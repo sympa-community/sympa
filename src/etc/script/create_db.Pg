@@ -12,9 +12,6 @@ CREATE DATABASE sympa;
 -- 
 
 CREATE TABLE conf_table ( 
-	 robot_conf 	varchar(80), 
-	 label_conf 	varchar(80), 
-	 value_conf 	varchar(300), 
 	 CONSTRAINT ind_conf PRIMARY KEY (robot_conf, label_conf) 
  );
 
@@ -25,17 +22,6 @@ CREATE TABLE conf_table (
 -- 
 
 CREATE TABLE notification_table ( 
-	 type_notification 	varchar(15), 
-	 arrival_date_notification 	varchar(80), 
-	 status_notification 	varchar(100), 
-	 recipient_notification 	varchar(100), 
-	 message_notification 	text, 
-	 message_id_notification 	varchar(100), 
-	 date_notification 	int4 NOT NULL, 
-	 reception_option_notification 	varchar(20), 
-	 pk_notification 	serial NOT NULL, 
-	 list_notification 	varchar(50), 
-	 robot_notification 	varchar(80), 
 	 CONSTRAINT ind_notification PRIMARY KEY (pk_notification) 
  );
 
@@ -46,19 +32,6 @@ CREATE TABLE notification_table (
 -- 
 
 CREATE TABLE logs_table ( 
-	 list_logs 	varchar(50), 
-	 parameters_logs 	varchar(100), 
-	 msg_id_logs 	varchar(255), 
-	 action_logs 	varchar(50) NOT NULL, 
-	 client_logs 	varchar(100), 
-	 user_email_logs 	varchar(100), 
-	 daemon_logs 	varchar(10) NOT NULL, 
-	 target_email_logs 	varchar(100), 
-	 status_logs 	varchar(10) NOT NULL, 
-	 error_type_logs 	varchar(150), 
-	 robot_logs 	varchar(80), 
-	 date_logs 	int4 NOT NULL, 
-	 id_logs 	bigint NOT NULL, 
 	 CONSTRAINT ind_logs PRIMARY KEY (id_logs) 
  );
 
@@ -69,16 +42,6 @@ CREATE TABLE logs_table (
 -- 
 
 CREATE TABLE user_table ( 
-	 email_user 	varchar(100) NOT NULL, 
-	 last_login_date_user 	int4, 
-	 attributes_user 	varchar(500), 
-	 data_user 	varchar(500), 
-	 cookie_delay_user 	int4, 
-	 last_login_host_user 	varchar(60), 
-	 gecos_user 	varchar(150), 
-	 password_user 	varchar(40), 
-	 lang_user 	varchar(10), 
-	 wrong_login_count_user 	int4, 
 	 CONSTRAINT ind_user PRIMARY KEY (email_user) 
  );
 
@@ -89,9 +52,6 @@ CREATE TABLE user_table (
 -- 
 
 CREATE TABLE exclusion_table ( 
-	 user_exclusion 	varchar(100) NOT NULL, 
-	 date_exclusion 	int4, 
-	 list_exclusion 	varchar(50) NOT NULL, 
 	 CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion) 
  );
 
@@ -102,14 +62,6 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE session_table ( 
-	 data_session 	varchar(500), 
-	 id_session 	varchar(30) NOT NULL, 
-	 remote_addr_session 	varchar(60), 
-	 date_session 	int4 NOT NULL, 
-	 robot_session 	varchar(80), 
-	 hit_session 	int4, 
-	 email_session 	varchar(100), 
-	 start_date_session 	int4 NOT NULL, 
 	 CONSTRAINT ind_session PRIMARY KEY (id_session) 
  );
 
@@ -120,10 +72,6 @@ CREATE TABLE session_table (
 -- 
 
 CREATE TABLE netidmap_table ( 
-	 netid_netidmap 	varchar(100) NOT NULL, 
-	 email_netidmap 	varchar(100), 
-	 robot_netidmap 	varchar(80) NOT NULL, 
-	 serviceid_netidmap 	varchar(100) NOT NULL, 
 	 CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap) 
  );
 
@@ -134,15 +82,6 @@ CREATE TABLE netidmap_table (
 -- 
 
 CREATE TABLE bulkspool_table ( 
-	 dkim_selector_bulkspool 	varchar(50), 
-	 dkim_d_bulkspool 	varchar(50), 
-	 dkim_privatekey_bulkspool 	varchar(1000), 
-	 messageid_bulkspool 	varchar(100), 
-	 dkim_i_bulkspool 	varchar(100), 
-	 dkim_header_list_bulkspool 	varchar(500), 
-	 messagekey_bulkspool 	varchar(33) NOT NULL, 
-	 message_bulkspool 	text, 
-	 lock_bulkspool 	int4, 
 	 CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -153,20 +92,6 @@ CREATE TABLE bulkspool_table (
 -- 
 
 CREATE TABLE admin_table ( 
-	 date_admin 	timestamp with time zone NOT NULL, 
-	 update_admin 	timestamp with time zone, 
-	 info_admin 	varchar(150), 
-	 list_admin 	varchar(50) NOT NULL, 
-	 reception_admin 	varchar(20), 
-	 comment_admin 	varchar(150), 
-	 subscribed_admin 	int4, 
-	 profile_admin 	varchar(15), 
-	 role_admin 	varchar(15) NOT NULL, 
-	 included_admin 	int4, 
-	 user_admin 	varchar(100) NOT NULL, 
-	 include_sources_admin 	varchar(50), 
-	 robot_admin 	varchar(80) NOT NULL, 
-	 visibility_admin 	varchar(20), 
 	 CONSTRAINT ind_admin PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
  );
 
@@ -177,13 +102,6 @@ CREATE TABLE admin_table (
 -- 
 
 CREATE TABLE one_time_ticket_table ( 
-	 data_one_time_ticket 	varchar(200), 
-	 status_one_time_ticket 	varchar(60), 
-	 ticket_one_time_ticket 	varchar(30), 
-	 remote_addr_one_time_ticket 	varchar(60), 
-	 robot_one_time_ticket 	varchar(80), 
-	 date_one_time_ticket 	int4, 
-	 email_one_time_ticket 	varchar(100), 
 	 CONSTRAINT ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket) 
  );
 
@@ -194,21 +112,6 @@ CREATE TABLE one_time_ticket_table (
 -- 
 
 CREATE TABLE bulkmailer_table ( 
-	 priority_packet_bulkmailer 	int4, 
-	 receipients_bulkmailer 	varchar(500), 
-	 reception_date_bulkmailer 	int4, 
-	 packetid_bulkmailer 	varchar(33) NOT NULL, 
-	 priority_message_bulkmailer 	int4, 
-	 verp_bulkmailer 	int4, 
-	 merge_bulkmailer 	int4, 
-	 tracking_bulkmailer 	varchar(15), 
-	 returnpath_bulkmailer 	varchar(100), 
-	 messageid_bulkmailer 	varchar(100), 
-	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
-	 listname_bulkmailer 	varchar(50), 
-	 delivery_date_bulkmailer 	int4, 
-	 robot_bulkmailer 	varchar(80), 
-	 lock_bulkmailer 	varchar(30), 
 	 CONSTRAINT ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer) 
  );
 
@@ -219,26 +122,6 @@ CREATE TABLE bulkmailer_table (
 -- 
 
 CREATE TABLE subscriber_table ( 
-	 robot_subscriber 	varchar(80) NOT NULL, 
-	 reception_subscriber 	varchar(20), 
-	 custom_attribute_subscriber 	varchar(500), 
-	 list_subscriber 	varchar(50) NOT NULL, 
-	 visibility_subscriber 	varchar(20), 
-	 comment_subscriber 	varchar(150), 
-	 suspend_start_date_subscriber 	int4, 
-	 suspend_end_date_subscriber 	int4, 
-	 bounce_address_subscriber 	varchar(100), 
-	 bounce_subscriber 	varchar(35), 
-	 included_subscriber 	int4, 
-	 include_sources_subscriber 	varchar(50), 
-	 update_subscriber 	timestamp with time zone, 
-	 user_subscriber 	varchar(100) NOT NULL, 
-	 topics_subscriber 	varchar(200), 
-	 subscribed_subscriber 	int4, 
-	 date_subscriber 	timestamp with time zone NOT NULL, 
-	 bounce_score_subscriber 	int4, 
-	 number_messages_subscriber 	int4 NOT NULL, 
-	 suspend_subscriber 	int4, 
 	 CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
 
@@ -249,15 +132,5 @@ CREATE TABLE subscriber_table (
 -- 
 
 CREATE TABLE stat_table ( 
-	 daemon_stat 	varchar(10), 
-	 list_stat 	varchar(150), 
-	 parameter_stat 	varchar(50), 
-	 id_stat 	bigint NOT NULL, 
-	 email_stat 	varchar(100), 
-	 operation_stat 	varchar(50) NOT NULL, 
-	 user_ip_stat 	varchar(100), 
-	 read_stat 	tinyint(1) NOT NULL, 
-	 date_stat 	int4 NOT NULL, 
-	 robot_stat 	varchar(80) NOT NULL, 
 	 CONSTRAINT ind_stat PRIMARY KEY (id_stat) 
  );

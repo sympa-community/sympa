@@ -40,7 +40,7 @@ my %not_null = %Sympa::Constants::not_null;
 
 my %primary =  %Sympa::Constants::primary ;
 	       
-my %autoincrement = %Sympa::Constants::primary ;
+my %autoincrement = %Sympa::Constants::autoincrement ;
 
 ## List the required INDEXES
 ##   1st key is the concerned table
@@ -127,7 +127,7 @@ sub upgrade {
 
 	&do_log('notice','Migrating templates to TT2 format...');	
 	
-    my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
+	my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
 	unless (open EXEC, "$tpl_script|") {
 	    &do_log('err', "Unable to run $tpl_script");
 	    return undef;
@@ -727,6 +727,82 @@ sub upgrade {
     return 1;
 }
 
+# return 1 if table.field is autoincrement
+sub is_autoinc {
+    my $table = shift; my $field = shift;
+    &do_log('debug', 'is_autoinc(%s,%s)',$table,$field);    
+
+    return undef unless $table;
+    return undef unless $field;
+
+    my $seqname = $table.'_'.$field.'_seq';
+    my $sth;
+    my $dbh = &List::db_get_handler();
+
+    if ($Conf::Conf{'db_type'} eq 'Pg') {
+	my $sql_query = "SELECT relname FROM pg_class WHERE relname = '$seqname' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )";
+	unless ($sth = $dbh->prepare($sql_query)) {
+	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}	    
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}
+	my $autoinc = 0;
+	my $field = $sth->fetchrow();	    
+	$sth->finish();
+	return ($field eq $seqname);
+    }else{
+	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
+	return undef;
+    }
+}
+
+
+# modify table.field as autoincrement
+sub set_autoinc {
+    my $table = shift; my $field = shift;
+    &do_log('debug', 'set_autoinc(%s,%s)',$table,$field);    
+
+    return undef unless $table;
+    return undef unless $field;
+
+    my $seqname = $table.'_'.$field.'_seq';
+    my $sth;
+    my $dbh = &List::db_get_handler();
+
+    if ($Conf::Conf{'db_type'} eq 'Pg') {
+	my $sql_query = "CREATE SEQUENCE $seqname";
+	unless ($sth = $dbh->prepare($sql_query)) {
+	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}	    
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}
+	$sth->finish();
+	$sql_query = "ALTER TABLE $table ALTER COLUMN $field SET DEFAULT NEXTVAL('$seqname');";
+	unless ($sth = $dbh->prepare($sql_query)) {
+	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}	    
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}
+	
+	return ;
+    }else{
+	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
+	return undef;
+    }
+}
+
+
+
+
 sub probe_db {
     &do_log('debug3', 'List::probe_db()');    
     my (%checked, $table);
@@ -754,28 +830,32 @@ sub probe_db {
     }
     
     my $dbh = &List::db_get_handler();
-    
-    my (@tables, $fields, %real_struct);
+
+
+    my @tables ;
+    ## Get tables
     if ($Conf::Conf{'db_type'} eq 'mysql') {
-	
-	## Get tables
 	@tables = $dbh->tables();
 	
 	foreach my $t (@tables) {
 	    $t =~ s/^\`[^\`]+\`\.//;## Clean table names that would look like `databaseName`.`tableName` (mysql)
 	    $t =~ s/^\`(.+)\`$/$1/;## Clean table names that could be surrounded by `` (recent DBD::mysql release)
 	}
-	
-	unless (defined $#tables) {
-	    &do_log('info', 'Can\'t load tables list from database %s : %s', $Conf::Conf{'db_name'}, $dbh->errstr);
-	    return undef;
-	}
-	
+    }elsif($Conf::Conf{'db_type'} eq 'Pg') {
+	@tables = $dbh->tables(undef,'public',undef,'TABLE',{pg_noprefix => 1} );
+    }
+    unless (defined $#tables) {
+	&do_log('info', 'Can\'t load tables list from database %s : %s', $Conf::Conf{'db_name'}, $dbh->errstr);
+	return undef;
+    }
+    
+    my ( $fields, %real_struct);
+    if (($Conf::Conf{'db_type'} eq 'mysql') || ($Conf::Conf{'db_type'} eq 'Pg')){			
 	## Check required tables
 	foreach my $t1 (keys %{$db_struct{'mysql'}}) {
 	    my $found;
 	    foreach my $t2 (@tables) {
-		$found = 1 if ($t1 eq $t2);
+		$found = 1 if ($t1 eq $t2) ;
 	    }
 	    unless ($found) {
 		unless ($dbh->do("CREATE TABLE $t1 (temporary INT)")) {
@@ -789,36 +869,34 @@ sub probe_db {
 		$real_struct{$t1} = {};
 	    }
 	}
-	
 	## Get fields
 	foreach my $t (@tables) {
-	    my $sth;
-	    
+	    my $sth;	    
 	    #	    unless ($sth = $dbh->table_info) {
 	    #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
-	    my $sql_query = "SHOW FIELDS FROM $t";
+	    my $sql_query;
+
+	    if ( $Conf::Conf{'db_type'} eq 'Pg'){
+		$sql_query = 'SELECT a.attname AS field, t.typname AS type, a.atttypmod AS lengh FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = \''.$t.'\' and a.atttypid = t.oid order by a.attnum';
+	    }elsif ($Conf::Conf{'db_type'} eq 'mysql') {
+		$sql_query = "SHOW FIELDS FROM $t";
+	    }
 	    unless ($sth = $dbh->prepare($sql_query)) {
 		do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
 		return undef;
-	    }
-	    
+	    }	    
 	    unless ($sth->execute) {
 		do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
 		return undef;
 	    }
-	    
-	    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+	    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
 		$real_struct{$t}{$ref->{'field'}} = $ref->{'type'};
-	    }
-	    
+		if ( $Conf::Conf{'db_type'} eq 'Pg'){
+		    my $lengh = $ref->{'lengh'} - 4; # What a dirty method ! We give a Sympa tee shirt to anyone that suggest a clean solution ;-)
+		    $real_struct{$t}{$ref->{'field'}} = $ref->{'type'}.'('.$lengh.')' if ( $ref->{'type'} eq 'varchar');
+		}
+	    }	    
 	    $sth->finish();
-	}
-	
-    }elsif ($Conf::Conf{'db_type'} eq 'Pg') {
-	
-	unless (@tables = $dbh->tables) {
-	    &do_log('err', 'Can\'t load tables list from database %s', $Conf::Conf{'db_name'});
-	    return undef;
 	}
     }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
  	
@@ -922,6 +1000,7 @@ sub probe_db {
     ## Check tables structure if we could get it
     ## Only performed with mysql and SQLite
     if (%real_struct) {
+
 	foreach my $t (keys %{$db_struct{$Conf::Conf{'db_type'}}}) {
 	    unless ($real_struct{$t}) {
 		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf::Conf{'db_name'}, $Conf::Conf{'db_type'});
@@ -943,8 +1022,10 @@ sub probe_db {
 		    if ( $autoincrement{$t} eq $f) {
 					$options .= ' AUTO_INCREMENT PRIMARY KEY ';
 			}
-		    unless ($dbh->do("ALTER TABLE $t ADD $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options")) {
-			    &do_log('err', 'Could not add field \'%s\' to table\'%s\'.', $f, $t);
+		    my $sqlquery = "ALTER TABLE $t ADD $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options";
+		    
+		    unless ($dbh->do($sqlquery)) {
+			    &do_log('err', 'Could not add field \'%s\' to table\'%s\'. (%s)', $f, $t, $sqlquery);
 			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
 		    }
@@ -970,8 +1051,8 @@ sub probe_db {
 						 required_format => $db_struct{$Conf::Conf{'db_type'}}{$t}{$f})) {
 			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
 					      $f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
-			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
-				$f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
+			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...', 
+				$f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f},$real_struct{$t}{$f});
 			
 			my $options;
 			if ($not_null{$f}) {
@@ -997,16 +1078,49 @@ sub probe_db {
 		    }
 		}
 	    }
-	    if ($Conf::Conf{'db_type'} eq 'mysql') {
+	    if (($Conf::Conf{'db_type'} eq 'mysql')||($Conf::Conf{'db_type'} eq 'Pg')) {
 		## Check that primary key has the right structure.
 		my $should_update;
-		my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,'key');
-		my %primaryKeyFound;
-		foreach my $scannedResult ( keys %$test_request_result ) {
-		    if ( $scannedResult eq "PRI" ) {
-			$primaryKeyFound{$scannedResult} = 1;
+		my %primaryKeyFound;	      
+
+		my $sql_query ;
+		my $test_request_result ;
+
+		if ($Conf::Conf{'db_type'} eq 'mysql') { # get_primary_keys('mysql');
+
+		    $sql_query = "SHOW COLUMNS FROM $t";
+		    $test_request_result = $dbh->selectall_hashref($sql_query,'key');
+
+		    foreach my $scannedResult ( keys %$test_request_result ) {
+			if ( $scannedResult eq "PRI" ) {
+			    $primaryKeyFound{$scannedResult} = 1;
+			}
 		    }
+		}elsif ( $Conf::Conf{'db_type'} eq 'Pg'){# get_primary_keys('Pg');
+
+#		    $sql_query = "SELECT column_name FROM information_schema.columns WHERE table_name = $t";
+#		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary';
+#		    $test_request_result = $dbh->selectall_hashref($sql_query,'key');
+
+		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary';
+
+		    my $sth;
+		    unless ($sth = $dbh->prepare($sql_query)) {
+			do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+			return undef;
+		    }	    
+		    unless ($sth->execute) {
+			do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+			return undef;
+		    }
+		    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+			$primaryKeyFound{$ref->{'field'}} = 1;
+		    }	    
+		    $sth->finish();
+		   
+
 		}
+		
 		foreach my $field (@{$primary{$t}}) {		
 		    unless ($primaryKeyFound{$field}) {
 			$should_update = 1;
@@ -1075,14 +1189,33 @@ sub probe_db {
 		}
 		
 		## drop previous index if this index is not a primary key and was defined by a previous Sympa version
-		$test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');
+		#xxxxx $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');
 		my %index_columns;
-		
-		foreach my $indexName ( keys %$test_request_result ) {
-		    unless ( $indexName eq "PRIMARY" ) {
-			$index_columns{$indexName} = 1;
+		if ( $Conf::Conf{'db_type'} eq 'mysql' ){# get_index('Pg');
+		    $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');		
+		    foreach my $indexName ( keys %$test_request_result ) {
+			unless ( $indexName eq "PRIMARY" ) {
+			    $index_columns{$indexName} = 1;
+			}
 		    }
+		}elsif ( $Conf::Conf{'db_type'} eq 'Pg'){# get_index('Pg');
+		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey)';
+
+		    my $sth;
+		    unless ($sth = $dbh->prepare($sql_query)) {
+			do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+			return undef;
+		    }	    
+		    unless ($sth->execute) {
+			do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+			return undef;
+		    }
+		    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+			$index_columns{$ref->{'field'}} = 1;
+		    }	    
+		    $sth->finish();
 		}
+
 		
 		foreach my $idx ( keys %index_columns ) {
 		    
@@ -1159,7 +1292,17 @@ sub probe_db {
 		}
 	    }
 	}
-	## Try to run the create_db.XX script
+	# add autoincrement if needed
+	foreach my $table (keys %autoincrement) {
+	    unless (&is_autoinc ($table,$autoincrement{$table})){
+		if (&set_autoinc ($table,$autoincrement{$table})){
+		    &do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
+		}else{
+		    &do_log('err',"Could not set table $table field $autoincrement{$table} aa autoincrement");
+		}
+	    }
+	}	
+     ## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
         my $db_script =
             Sympa::Constants::SCRIPTDIR . "/create_db.$Conf::Conf{'db_type'}";
