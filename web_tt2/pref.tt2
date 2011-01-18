@@ -34,6 +34,7 @@
 </form>
 <br /> 
 
+[% IF ! use_sso %]
 <h4>[%|loc%]Changing your password[%END%]</h4>
   
 <form action="[% path_cgi %]" method="post">
@@ -44,7 +45,7 @@
 </fieldset>          
 </form>
 <br />
-
+[% END %]
 </div>
 
 <!-- end pref.tt2 -->
