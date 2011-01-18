@@ -441,6 +441,7 @@ sub store {
 
     #creation of a MIME entity to extract the real sender of a message
     my $parser = MIME::Parser->new();
+    $parser->output_to_core(1);
 
     my $msg_as_entity= $parser->parse_data($msg);
  
