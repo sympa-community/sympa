@@ -749,10 +749,22 @@ sub is_autoinc {
 	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
 	    return undef;
 	}
-	my $autoinc = 0;
 	my $field = $sth->fetchrow();	    
 	$sth->finish();
 	return ($field eq $seqname);
+    }elsif($Conf::Conf{'db_type'} eq 'mysql') {
+	my $sql_query = "SHOW FIELDS FROM `$table` WHERE Extra ='auto_increment' and Field = '$field'";
+	unless ($sth = $dbh->prepare($sql_query)) {
+	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}	    
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}
+	my $ref = $sth->fetchrow_hashref('NAME_lc') ;
+	$sth->finish();
+	return ($ref->{'field'} eq $field);
     }else{
 	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
 	return undef;
@@ -771,9 +783,11 @@ sub set_autoinc {
     my $seqname = $table.'_'.$field.'_seq';
     my $sth;
     my $dbh = &List::db_get_handler();
+    my $sql_query;
 
     if ($Conf::Conf{'db_type'} eq 'Pg') {
-	my $sql_query = "CREATE SEQUENCE $seqname";
+	$sql_query = "CREATE SEQUENCE $seqname";
+	$sql_query = "ALTER TABLE `$table` CHANGE `$field` `$field` BIGINT( 20 ) NOT NULL AUTO_INCREMENT";
 	unless ($sth = $dbh->prepare($sql_query)) {
 	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
 	    return undef;
@@ -794,13 +808,22 @@ sub set_autoinc {
 	}
 	
 	return ;
+    }elsif($Conf::Conf{'db_type'} eq 'mysql'){
+	$sql_query = "ALTER TABLE `$table` CHANGE `$field` `$field` BIGINT( 20 ) NOT NULL AUTO_INCREMENT";
+	unless ($sth = $dbh->prepare($sql_query)) {
+	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}	    
+	unless ($sth->execute) {
+	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
+	    return undef;
+	}
+	$sth->finish();
     }else{
 	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
 	return undef;
     }
 }
-
-
 
 
 sub probe_db {
@@ -1298,7 +1321,7 @@ sub probe_db {
 		if (&set_autoinc ($table,$autoincrement{$table})){
 		    &do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
 		}else{
-		    &do_log('err',"Could not set table $table field $autoincrement{$table} aa autoincrement");
+		    &do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
 		}
 	    }
 	}	
