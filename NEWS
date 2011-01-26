@@ -61,6 +61,183 @@
 	attachment is read is no longer viewmod, but modindex. Fixed by
 	specifying to mhonarc an attchment url root and a relative basedir.
 
+6.1.4		January 21, 2011
+
+  Changes:
+
+	A lot of translations have been updated:
+		- Swedish (P. Freyhult)
+		- Russian (S. Dukachev)
+		- Polish (M. Woloszyn)
+		- Japanese (S. Ikeda)
+		- Estonian (U. Buhvestov)
+		- Hungarian (A. Bendszak)
+		- German (J. Krehbiel-Graether)
+		- Catalan (J. Giralt Baldellou)
+	Many thanks to all of you, Sympa translators!
+
+	[6986] src/lib/List.pm, web_tt2/get_inactive_lists.tt2,
+	wwsympa/wwsympa.fcgi.in: [Submitted by M. Lievre, Orange] Adding
+	detailed informations to the get_inactive_lists page of the web
+	interface.
+
+	[6980] src/lib/List.pm: [#7392][Submitteb by A. Bernstein,
+	electricembers.net] Some MUA and the web page sending option in Sympa
+	use Multipart/related content-type. In this case, the footer was not
+	appended to messages.
+
+	[6972] mail_tt2/message_report.tt2, src/sympa.pl.in: [#7420][Submitted
+	by A. Bernstein, electricembers.net] When a message is rejected because
+	it exceeds the maximum allowed size for a list, the report now provides
+	informations regarding the size of the mesage, the maximum allowed size
+	for this list and a technical notice regarding attachments.
+
+	[6968] wwsympa/wwsympa.fcgi.in:  On list created through the web
+	interface, if the list name contains higher case letters, they are
+	lower cased to prevent any later inconsistencies in data describing the
+	list. The user is warned about it.
+
+	[6753] src/etc/script/sympa.in: [#6847][Submitted by S. Ikeda] The
+	sympa init script now actually waits for the dameon to be stopped (up
+	to 20 seconds) prior to issuing a status message (failed or success).
+
+  Bug fixes:
+
+	[6988] wwsympa/SympaSession.pm, wwsympa/cookielib.pm: [#7423][Reported
+	by M. Larchet, univ. Nancy 2] The CGI::Cookie.pm module issues a
+	warning when trying to parse an empty cookie. This led to overwhelming
+	warning logs in Apache error_log. Fixed by not trying to parse an empty
+	cookie and directly return undef, which would have happenned anyway
+	because the needed cookie is obviously not here in such a situation.
+
+	[6987] wwsympa/wwsympa.fcgi.in: [Reported by M. Larchet, univ. Nancy 2,
+	M.Lièvre, Orange and L. Grégoire, ENSEEIHT] Owners trying to access the
+	list config edition form, section "Sending/receiving setup" when:
+	1- No digest parameter was defined in the config file and
+	2- they had only read access to the digest parameter
+	were being displayed an empty page. this was due to a faulty population
+	of this parameter. Fixed by affecting a "type = enum" value to the
+	parameter hash.
+
+	[6984] src/lib/Upgrade.pm: [#7372][Reported by L. Breuil] Upgrading to
+	6.1.3 broke Sympa startup when using SQLite, because Sympa tried to use
+	the CHANGE query, which is unavailable in SQLite. Short term fixed by
+	not trying to change database fields with SQLite. The automatic upgrade
+	of database will be completely rewritten with version 6.2.
+
+	[6982] web_tt2/editsubscriber.tt2: [#7376][Submitted by A. Bernstein,
+	electricembers.net] If you narrowed your browser window or zoomed the
+	text size enough that the row of admin tabs had to wrap to a new line,
+	the entire contents of the editsubscriber.tt2 page would shift off to
+	the right side of the browser. What was left behind under the admin
+	tabs was just a blank box. Fixed by enclosing the whole
+	editsubscriber.tt2 file content with <div class="block"></div>.
+
+	[6981] src/lib/admin.pm: [#7391][Reported by A. Bernstein,
+	electricemebers.net] The homepage file was not copied when renaming a
+	list.
+
+	[6978] wwsympa/wwsympa.fcgi.in: [#7409]The template in
+	user_notification.tt2 for the sigrequest action was missing the $list
+	parameter, so the $list.name variable came out blank in the resulting
+	message to user. Fixed by adding the parameter to the $tt2_param list.
+
+	[6977] src/lib/List.pm: [#7410][Submitted by A. Bernstein,
+	electricembers.net] In List::send_file(), there were certain times when
+	the sender value was getting set to the recipient when it shouldn't be.
+	Fixed by checking that the sender field has not been previously set
+	before affecting the $who var to ist value.
+
+	[6976] wwsympa/wwsympa.fcgi.in: [#7411][Submitted by A. Bernstein,
+	electricembers.net] After editing a subscriber's options (do_set()), a
+	list owner was returned to the suboptions page by default (if
+	previous_action wasn't populated), which porduced an error message if
+	the owner happenned to not be subscribed to the list. Fixed by
+	redirecting to the list's info page instead.
+
+	[6974] wwsympa/wwsympa.fcgi.in: [#7412][Submitted by A. Bernstein,
+	electricembers] At the end of do_reviewbouncing(), the $param->{'size'}
+	setting was taken from $in{'size'}. ItI should actually be set to
+	$size, which is equal to $in{'size'} if it's provided or else defaults
+	to the wwsconf setting if not. This created an error under some
+	conditions.
+
+	[6973] src/lib/PlainDigest.pm: [#7417][Submitted by A. Bernstein,
+	electricembers.net] Some outdated MUA, like Eudora, use an uncommon
+	MIME type called text/enriched, which provides formatting without HTML.
+	Such a proprietary formatting is not worth a special develmopment -
+	ragarding what is possible with HTML, so we treat it now as text/plain.
+
+	[6971] wwsympa/wwsympa.fcgi.in: [#7421][Submitted by A. Bernstein,
+	electricembers.net] The message displayed on the web when attempting to
+	create a list which already exists was incorrect, due to a call to a
+	call to reject_report_web() using the wrong error condition.
+
+	[6970] src/etc/script/create_db.SQLite: [Reported by L. Breuil] Fixing
+	two typos in the create_db.SQLite script.
+
+	[6942] src/lib/Scenario.pm: [#7356][Submitted by A. Bernstein,
+	electricembers.net] a space between two auth methods in scenario (e.g.
+	smtp, md5 instead of smtp,md5) caused the second authentication method
+	to be ignored. Fixed by changing the regexp responsible of scenraio
+	rules extraction.
+
+	[6765] src/sympa.pl.in: [Reported by J. Arnoux, infomaniak.ch] When a
+	message was rejected because its size exceeded the allowed quotas, it
+	was forwarded with the rejection report message. It made no sense
+	because rejection based on the size is there to prevent the circulation
+	of too large files. In addiotion, very large messages caused Sympa to
+	hang on the reprot generation, doing nothing without crashing.
+
+	[6763] mail_tt2/listmaster_notification.tt2, wwsympa/bounced.pl.in:
+	[#6747][Reported by D. Pritts, Internet2] A call to
+	send_notify_to_listmaster was done using a non existing error_code.
+	Fixed by creating a dedicated error code to be issued when bounce related
+	errors occur.
+
+	[6757] src/etc/scenari/spam_status.x-spam-status: [#7076][Reported by
+	D. Pritts, Internet2] The default antispam scenario included the
+	following regexp test on the X-Spam-Status header: /yes/. this was true
+	for any antispam engine using the expression "bayes". fixed by changing
+	the regexp to /^\s*yes/.
+
+	[6755] src/lib/List.pm: [#6883][Submitted by S. Ikeda]* Topics tagging
+	did not work properly on encoded subject and on message body using
+	charset other than US-ASCII or UTF-8.
+	* case-ignore match was available only on Latin letters without
+	accents.
+
+	[6754] src/lib/Lock.pm: [#7015][Submitted by S. Ikeda] In some
+	distributions (RHEL 5 for example) File::temp package conflicts with
+	OS-bundled perl. Users need then to install the package manually.
+	Errors are then triggers when using NFS. Fixed by calling explcitely
+	the "new" sub when creating a File::NFS object.
+
+	[6752] src/lib/mail.pm: [#7003][Submitted by S. Ikeda] Bodies of
+	service messages were encoded by list character set, diregarding the
+	actual receipient lanquage preferences. Fixed by testing user
+	preferences prior to set the message charset.
+
+	[6751] src/lib/List.pm, src/lib/Message.pm:
+	[#6385][#6396][#7029][Submitted by S. Ikeda] Messages containing a
+	subject with illegal charset crashed sympa.pl. Fixed by verifying that
+	decoding is possible before doing it and leaving otherwise the subject
+	unchanged.
+
+	[6749] wwsympa/wwsympa.fcgi.in: [#6530][Submitted by S. Ikeda]If you
+	chose in WWSympa to have the digest for a list go out only on, say,
+	Saturday, it would instead go out on Sunday. There was a mismatch
+	somewhere between the days of the week referenced by WWSympa and by
+	sympa.pl. Fixed by replacing the call to "localtime" by a call to
+	"gmtime". See explanations by A. Berstein in the follwing URL for
+	details:
+	https://sourcesup.cru.fr/tracker/?group_id=23&atid=167&func=detail&aid=6530
+
+	[6745] src/lib/tools.pm, src/sympa_wizard.pl.in: [#7301][Submitted by
+	S. Ikeda] sympa.conf and cookies.history contain confidential
+	information. Access to them should be restricted. Fixed by making Sympa
+	set their access permissions to 740.
+
 6.2a.2		December 07, 2010
 
   Bug fixes:

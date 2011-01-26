@@ -287,6 +287,13 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 
 [%|loc%]See logs for more details.[%END%]
 
+[% ELSIF type == 'bounce_intern_error' -%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
+
+[%|loc(error)%]The following error occurred whila managing bounces: %&[%END%]
+
+[%|loc%]See logs for more details.[%END%]
+
 [%# INTERNAL SERVER ERROR  : WEB -%]
 [% ELSIF type == 'web_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]

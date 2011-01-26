@@ -106,7 +106,7 @@
  sub _do_toplevel {
  
   my $topent = shift;
-  if ($topent->effective_type =~ /^text\/plain$/i) {
+  if ($topent->effective_type =~ /^text\/plain$/i || $topent->effective_type =~ /^text\/enriched/i) {
     _do_text_plain($topent);
   }
   elsif ($topent->effective_type =~ /^text\/html$/i) {
@@ -133,7 +133,7 @@
 
   # cycle through each part and process accordingly
   foreach $subent ($topent->parts) {    
-     if ($subent->effective_type =~ /^text\/plain$/i) {
+     if ($subent->effective_type =~ /^text\/plain$/i || $subent->effective_type =~ /^text\/enriched/i) {
        _do_text_plain($subent);
      }
      elsif ($subent->effective_type =~ /^multipart\/related$/i){

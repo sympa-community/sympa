@@ -146,16 +146,14 @@ sub generic_get_cookie {
     my $http_cookie = shift;
     my $cookie_name = shift;
 
-    my %cookies = parse CGI::Cookie($http_cookie);
-        
-    foreach (keys %cookies) {
-	my $cookie = $cookies{$_};
-	
-	next unless ($cookie->name eq $cookie_name);
-
-	return ($cookie->value);
+    if ($http_cookie =~/\S+/g) {
+	my %cookies = parse CGI::Cookie($http_cookie);
+	foreach (keys %cookies) {
+	    my $cookie = $cookies{$_};
+	    next unless ($cookie->name eq $cookie_name);
+	    return ($cookie->value);
+	}
     }
-
     return (undef);
 }
 

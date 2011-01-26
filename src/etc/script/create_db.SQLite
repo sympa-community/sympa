@@ -5,6 +5,20 @@
 -- Table structure for table `conf_table`
 -- 
 
+CREATE TABLE user_table (
+  	email_user          	text NOT NULL,
+  	gecos_user          	text,
+  	password_user		text,
+	last_login_date_user	integer,	
+	last_login_host_user	text,
+    wrong_login_count_user  integer,
+	cookie_delay_user	integer,
+	lang_user		text,
+	attributes_user		text,
+	data_user		text,
+	PRIMARY KEY (email_user)
+);
+
 CREATE TABLE conf_table ( 
 	 robot_conf 	text, 
 	 label_conf 	text, 
@@ -61,6 +75,20 @@ CREATE TABLE logs_table (
 --
 -- Table structure for table `user_table`
 -- 
+
+CREATE TABLE bulkspool_table (
+  	messagekey_bulkspool  	varchar(33) NOT NULL,
+  	messageid_bulkspool  	varchar(100),
+	message_bulkspool 	text,
+	lock_bulkspool 	integer,
+        dkim_privatekey_bulkspool  varchar(100),
+	dkim_selector_bulkspool varchar(50),
+	dkim_d_bulkspool varchar(50),
+	dkim_i_bulkspool varchar(50),
+	dkim_header_list_bulkspool varchar(500),
+	PRIMARY KEY (messagekey_bulkspool)
+);
+CREATE INDEX bulkspool_idx ON bulkspool_table(messagekey_bulkspool);
 
 CREATE TABLE user_table ( 
 	 email_user 	text NOT NULL, 

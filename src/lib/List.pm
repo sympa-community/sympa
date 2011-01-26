@@ -1754,6 +1754,28 @@ sub increment_msg_count {
     return 1;
 }
 
+# Returns the number of messages sent to the list
+sub get_msg_count {
+    my $self = shift;
+    do_log('debug3', "Getting the number of messages for list %s",$self->{'name'});
+
+    ## Be sure the list has been loaded.
+    my $name = $self->{'name'};
+    my $file = "$self->{'dir'}/stats";
+    
+    my $count = 0 ;
+    if (open(MSG_COUNT, $file)) {	
+	while (<MSG_COUNT>){
+	    if ($_ =~ /^(\d+)\s+(.*)$/) {
+		$count=$1;	
+	    }
+	}
+	close MSG_COUNT ;
+    }
+
+    return $count;
+
+}
 ## last date of distribution message .
 sub get_latest_distribution_date {
     my $self = shift;
@@ -3103,7 +3125,7 @@ sub send_file {
 	return undef;
     }
 
-    $data->{'sender'} = $who;
+    $data->{'sender'} ||= $who;
     $data->{'list'}{'lang'} = $self->{'admin'}{'lang'};
     $data->{'list'}{'name'} = $name;
     $data->{'list'}{'domain'} = $data->{'robot_domain'} = $robot;
@@ -4543,9 +4565,9 @@ sub add_parts {
 	}
 
     }else {
-	if ($content_type =~ /^multipart\/alternative/i) {
+	if ($content_type =~ /^multipart\/alternative/i || $content_type =~ /^multipart\/related/i) {
 
-	    &do_log('notice', 'Making multipart/alternative into multipart/mixed'); 
+	    &do_log('notice', 'Making $1 into multipart/mixed'); 
 	    $msg->make_multipart("mixed",Force=>1); 
 	}
 	
@@ -5571,7 +5593,7 @@ sub get_first_list_member {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",bounce_address_subscriber \"bounce_address\", %s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substr(user_subscriber,instr(user_subscriber,'\@')+1) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5604,7 +5626,7 @@ sub get_first_list_member {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber \"email\", comment_subscriber \"gecos\", reception_subscriber \"reception\", topics_subscriber \"topics\", visibility_subscriber \"visibility\", bounce_subscriber \"bounce\", bounce_score_subscriber \"bounce_score\",  bounce_address_subscriber \"bounce_address\",%s \"date\", %s \"update_date\", subscribed_subscriber \"subscribed\", included_subscriber \"included\", include_sources_subscriber \"id\", custom_attribute_subscriber \"custom_attribute\", substring(user_subscriber,charindex('\@',user_subscriber)+1,100) \"dom\",suspend_subscriber \"suspend\", suspend_start_date_subscriber \"startdate\", suspend_end_date_subscriber \"enddate\" %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5640,7 +5662,7 @@ sub get_first_list_member {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, REVERSE(SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50)) AS \"dom\", suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5681,7 +5703,7 @@ sub get_first_list_member {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, substr(user_subscriber,0,func_index(user_subscriber,'\@')+1) AS \"dom\", suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5722,7 +5744,7 @@ sub get_first_list_member {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, %s AS \"date\", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, SUBSTRING(user_subscriber FROM position('\@' IN user_subscriber) FOR 50) AS \"dom\", suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $additional, 
@@ -5913,7 +5935,7 @@ sub get_first_list_admin {
 	
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substr(user_admin,instr(user_admin,'\@')+1) \"dom\"  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substr(user_admin,instr(user_admin,'\@')+1) \"dom\"  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5945,7 +5967,7 @@ sub get_first_list_admin {
 	$dbh->quote($role);
 	## SORT BY
 	if ($sortby eq 'domain') {
-	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substring(user_admin,charindex('\@',user_admin)+1,100) \"dom\" FROM admin_table WHERE (list_admin = %s  AND robot_admin = %s AND role_admin = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin \"email\", comment_admin \"gecos\", reception_admin \"reception\", visibility_admin \"visibility\", %s \"date\", %s \"update_date\", info_admin \"info\", profile_admin \"profile\", subscribed_admin \"subscribed\", included_admin \"included\", include_sources_admin \"id\", substring(user_admin,charindex('\@',user_admin)+1,100) \"dom\" FROM admin_table WHERE (list_admin = %s  AND robot_admin = %s AND role_admin = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -5981,7 +6003,7 @@ sub get_first_list_admin {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, REVERSE(SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50)) AS \"dom\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -6022,7 +6044,7 @@ sub get_first_list_admin {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, substr(user_admin,func_index(user_admin,'\@')+1,50) AS dom FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, substr(user_admin,func_index(user_admin,'\@')+1,50) AS \"dom\" FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s ) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 
@@ -6063,7 +6085,7 @@ sub get_first_list_admin {
 	if ($sortby eq 'domain') {
 	    ## Redefine query to set "dom"
 	    
-	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50) AS dom  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s) ORDER BY dom", 
+	    $statement = sprintf "SELECT user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS \"date\", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id, SUBSTRING(user_admin FROM position('\@' IN user_admin) FOR 50) AS \"dom\"  FROM admin_table WHERE (list_admin = %s AND robot_admin = %s AND role_admin = %s) ORDER BY \"dom\"", 
 	    $date_field, 
 	    $update_field, 
 	    $dbh->quote($name), 

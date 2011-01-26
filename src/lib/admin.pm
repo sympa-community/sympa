@@ -948,7 +948,7 @@ sub clone_list_as_empty {
 	    }
     }
     # copy optional files
-    foreach my $file ('message.footer','message.header','info') {
+    foreach my $file ('message.footer','message.header','info','homepage') {
 	if (-f $list->{'dir'}.'/'.$file) {
 	    unless (&File::Copy::copy ($list->{'dir'}.'/'.$file, $new_dir.'/'.$file)) {
 		&do_log('err','Admin::clone_list_as_empty : failed to copy %s : %s',$new_dir.'/'.$file, $!);

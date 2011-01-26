@@ -1859,7 +1859,7 @@ sub DoMessage{
 
     if ($max_size && $message->{'size'} > $max_size) {
 		&do_log('info', 'sympa::DoMessage(): Message for %s from %s rejected because too large (%d > %d)', $listname, $sender, $message->{'size'}, $max_size);
-		&report::reject_report_msg('user','message_too_large',$sender,{'message' => $message},$robot,$msg_string,$list);
+		&report::reject_report_msg('user','message_too_large',$sender,{'msg_size' => int($message->{'size'} / 1024),'max_size' => int($max_size / 1024)},$robot,'',$list);
 		&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'message_too_large','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef;
    }

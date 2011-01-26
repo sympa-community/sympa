@@ -48,8 +48,9 @@ Thank you for your attention.
 [%END%]
 [% ELSIF entry == 'message_too_large' -%]
 
-[%|loc(list.name)%]Your message could not be sent because its size 
-was over the maximum size allowed on this list.[%END%]
+[%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
+
+Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger that the original file.[%END%]
 [% ELSIF entry == 'list_unknown' -%]
 
 [%|loc(listname)%]List '%1' does not exist.[%END%]

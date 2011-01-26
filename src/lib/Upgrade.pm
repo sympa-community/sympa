@@ -1069,7 +1069,7 @@ sub probe_db {
 		}
 		
 		## Change DB types if different and if update_db_types enabled
-		if ($Conf::Conf{'update_db_field_types'} eq 'auto') {
+		if ($Conf::Conf{'update_db_field_types'} eq 'auto' && $Conf::Conf{'db_type'} ne 'SQLite') {
 		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
 						 required_format => $db_struct{$Conf::Conf{'db_type'}}{$t}{$f})) {
 			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 

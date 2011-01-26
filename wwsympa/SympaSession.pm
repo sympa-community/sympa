@@ -450,12 +450,13 @@ sub list_sessions {
 sub get_session_cookie {
     my $http_cookie = shift;
 
-    my %cookies = parse CGI::Cookie($http_cookie);
-        
-    foreach (keys %cookies) {
-	my $cookie = $cookies{$_};
-	next unless ($cookie->name eq 'sympa_session');
-	return ($cookie->value);
+    if ($http_cookie =~/\S+/g) {
+	my %cookies = parse CGI::Cookie($http_cookie);
+	foreach (keys %cookies) {
+	    my $cookie = $cookies{$_};
+	    next unless ($cookie->name eq 'sympa_session');
+	    return ($cookie->value);
+	}
     }
 
     return (undef);

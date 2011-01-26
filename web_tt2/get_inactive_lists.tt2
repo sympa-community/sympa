@@ -7,6 +7,12 @@
    <th><strong>[%|loc%]Most recent message[%END%]</strong></th>
    <th><strong>[%|loc%]Listname[%END%]</strong></th>
    <th><strong>[%|loc%]Subject[%END%]</strong></th>
+   <th><strong>[%|loc%]Number of subscribers[%END%]</strong></th>
+   <th><strong>[%|loc%]Number of messages[%END%]</strong></th>
+   <th><strong>[%|loc%]Send scenario[%END%]</strong></th>
+   <th><strong>[%|loc%]Creator[%END%]</strong></th>
+   <th><strong>[%|loc%]Owners[%END%]</strong></th>
+   <th><strong>[%|loc%]Editors[%END%]</strong></th>
  </tr>
 
 [% FOREACH list = inactive_lists %]
@@ -25,6 +31,12 @@
 </td>
 <td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
 <td>[% list.subject %]</td>
+<td>[% list.subscribers_count  %]</td>
+<td>[% list.msg_count  %]</td>
+<td>[% list.send_scenario  %]</td>
+<td>[% list.creator  %]</td>
+<td>[% list.owners  %]</td>
+<td>[% list.editors  %]</td>
 </tr>
 [% END %]
 </table>

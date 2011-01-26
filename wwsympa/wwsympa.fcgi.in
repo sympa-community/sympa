@@ -4637,7 +4637,7 @@ sub do_pref {
 		  'status' => 'success',
 	      });
 
-     return $in{'previous_action'} || 'suboptions';
+     return $in{'previous_action'} || 'info';
  }
  
 
@@ -5247,7 +5247,8 @@ sub do_auto_signoff {
 
        my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
        
-       my $tt2_param = {'type' => 'ticket_to_signoff', 
+       my $tt2_param = {'type' => 'ticket_to_signoff',
+			'list' => $list,
 			'one_time_ticket' => $ticket,
 			'email' => $in{'email'}};
        unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
@@ -8237,13 +8238,20 @@ sub do_get_inactive_lists {
 	 }
 
 
-	 push @unordered_lists, {'name' => $list->{'name'},
-				 'subject' => $list->{'admin'}{'subject'},
-				 'last_message_epoch' => $last_message,
-				 'last_message_date' => (gettext_strftime "%d %b %Y", localtime($last_message*86400)),
-				 'creation_date_epoch' => $list->{'admin'}{'creation'}{'date_epoch'},
-				 'creation_date' => (gettext_strftime "%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'})),
-				 };
+	 push @unordered_lists, {
+	    'name' => $list->{'name'},
+	    'creator' =>$list->{'admin'}{'creation'}{'email'},
+	    'send_scenario' =>$list->{'admin'}{'send'}{'name'},
+	    'owners' => join(", ", map {$_->{'email'}} @{$list->{'admin'}{'owner'}}),
+	    'editors' => join(", ", map {$_->{'email'}} @{$list->{'admin'}{'editor'}}),
+	    'subscribers_count' =>  $list->get_total('nocache'),
+	    'subject' => $list->{'admin'}{'subject'},
+	    'msg_count' => $list->get_msg_count(),
+	    'last_message_epoch' => $last_message,
+	    'last_message_date' => (gettext_strftime "%d %b %Y", localtime($last_message*86400)),
+	    'creation_date_epoch' => $list->{'admin'}{'creation'}{'date_epoch'},
+	    'creation_date' => (gettext_strftime "%d %b %Y", localtime($list->{'admin'}{'creation'}{'date_epoch'})),
+	};
      }
 
      foreach my $l (sort {$a->{'last_message_epoch'} <=> $b->{'last_message_epoch'}} @unordered_lists) {
@@ -8537,7 +8545,7 @@ Creates a list using a list template
 
      ## create liste
      if (my $testlist = new List($in{'listname'},$robot)){
-	  &report::reject_report_web('user','create_list : requested list '.$in{'listname'}.' already exist',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
+	  &report::reject_report_web('user','list_already_exists',{'new_listname'=> $in{'listname'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	  &wwslog('info','do_create_list: requested list %s already exist (from %s)',$in{'listname'},$param->{'user'}{'email'});
 	  &web_db_log({'parameters' => $in{'listname'},
 		       'list' => $in{'listname'},
@@ -8988,7 +8996,7 @@ sub do_home {
 	 $param->{'prev_page'} = $param->{'page'} - 1;
      }
 
-     $param->{'size'} = $in{'size'};
+     $param->{'size'} = $size;
 
      return 1;
  }
@@ -10070,12 +10078,17 @@ sub _prepare_edit_form {
 	     }
 	 }elsif ($pname eq 'digest') {
 	     foreach my $v (@{$p->{'value'}}) {
-		 next unless ($v->{'name'} eq 'days');
-
-		 foreach my $day (keys %{$v->{'value'}}) {
-		     $v->{'value'}{$day}{'title'} = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
-		 }
-	     }
+		next unless ($v->{'name'} eq 'days');
+		if (ref($v->{'value'}) eq 'ARRAY'){
+		    &tools::do_log('debug2','Empty digest parameter. Putting a dummy value.');
+		    $v->{'value'} = undef;
+		    $v->{'type'} = 'enum';
+		}else{
+		    foreach my $day (keys %{$v->{'value'}}) {
+			$v->{'value'}{$day}{'title'} = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
+		    }
+		}
+	    }
 	 }elsif ($pname eq 'lang') {
 	     my $saved_lang = &Language::GetLang();
 	     
@@ -10453,6 +10466,11 @@ sub do_copy_list {
 # in order to rename a list you must be list owner and you must be allowed to create new list
 sub do_rename_list {
      my $mode = shift;
+
+     if ($in{'new_listname'} =~ /[A-Z]/) {
+	 $in{'new_listname'} = lc($in{'new_listname'});
+	 &report::notice_report_web('listname_lowercased',{},$param->{'action'});
+     }
 
      &wwslog('info', 'do_rename_list(%s,%s, mode = %s)', $in{'new_listname'}, $in{'new_robot'},$mode);
 
