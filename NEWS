@@ -3,6 +3,89 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.4		January 26, 2011
+
+  Features:
+
+	[6975] src/etc/script/create_db.Pg, src/lib/Sympa/Constants.pm.in,
+	src/lib/Upgrade.pm:  add support of postgresql in automatic upgrade
+	process
+
+
+
+  Changes:
+
+	[6986] src/lib/List.pm, web_tt2/get_inactive_lists.tt2,
+	wwsympa/wwsympa.fcgi.in: [Submitted by M. Lievre, Orange] Adding
+	detailed informations to the get_inactive_lists page of the web
+	interface.
+
+	[6980] src/lib/List.pm: [#7392][Submitteb by A. Bernstein,
+	electricembers.net] Some MUA and the web page sending option in Sympa
+	use Multipart/related content-type. In this case, the footer was not
+	appended to messages.
+
+  Bug fixes:
+
+	[6988] wwsympa/SympaSession.pm, wwsympa/cookielib.pm: [#7423][Reported
+	by M. Larchet, univ. Nancy 2] The CGI::Cookie.pm module issues a
+	warning when trying to parse an empty cookie. This led to overwhelming
+	warning logs in Apache error_log. Fixed by not trying to parse an empty
+	cookie and directly return undef, which would have happenned anyway
+	because the needed cookie is obviously not here in such a situation.
+
+	[6987] wwsympa/wwsympa.fcgi.in: [Reported by M. Larchet, univ. Nancy 2,
+	M.Lièvre, Orange and L. Grégoire, ENSEEIHT] Owners trying to access the
+	list config edition form, section "Sending/receiving setup" when:
+	1- No digest parameter was defined in the config file and
+	2- they had only read access to the digest parameter
+	were being displayed an empty page. this was due to a faulty population
+	of this parameter. Fixed by affecting a "type = enum" value to the
+	parameter hash.
+
+	[6984] src/lib/Upgrade.pm: [#7372][Reported by L. Breuil] Upgrading to
+	6.1.3 broke Sympa startup when using SQLite, because Sympa tried to use
+	the CHANGE query, which is unavailable in SQLite. Short term fixed by
+	not trying to change database fields with SQLite. The automatic upgrade
+	of database will be completely rewritten with version 6.2.
+
+	[6983] web_tt2/pref.tt2:  pref action must not propose change password
+	if logged with sso
+
+	[6982] web_tt2/editsubscriber.tt2: [#7376][Submitted by A. Bernstein,
+	electricembers.net] If you narrowed your browser window or zoomed the
+	text size enough that the row of admin tabs had to wrap to a new line,
+	the entire contents of the editsubscriber.tt2 page would shift off to
+	the right side of the browser. What was left behind under the admin
+	tabs was just a blank box. Fixed by enclosing the whole
+	editsubscriber.tt2 file content with <div class="block"></div>.
+
+	[6981] src/lib/admin.pm: [#7391][Reported by A. Bernstein,
+	electricembers.net] The homepage file was not copied when renaming a
+	list.
+
+	[6979] src/lib/Bulk.pm:   Fix parser error where sympa.pl create a lot
+	of temporary messages in expl dir. This bug was introduced in revision
+	6505 of Bulk.pm
+
+	[6978] wwsympa/wwsympa.fcgi.in: [#7409]The template in
+	user_notification.tt2 for the sigrequest action was missing the $list
+	parameter, so the $list.name variable came out blank in the resulting
+	message to user. Fixed by adding the parameter to the $tt2_param list.
+
+	[6977] src/lib/List.pm: [#7410][Submitted by A. Bernstein,
+	electricembers.net] In List::send_file(), there were certain times when
+	the sender value was getting set to the recipient when it shouldn't be.
+	Fixed by checking that the sender field has not been previously set
+	before affecting the $who var to ist value.
+
+	[6976] wwsympa/wwsympa.fcgi.in: [#7411][Submitted by A. Bernstein,
+	electricembers.net] After editing a subscriber's options (do_set()), a
+	list owner was returned to the suboptions page by default (if
+	previous_action wasn't populated), which porduced an error message if
+	the owner happenned to not be subscribed to the list. Fixed by
+	redirecting to the list's info page instead.
+
 6.2a.3		January 12, 2011
 
   Features:
