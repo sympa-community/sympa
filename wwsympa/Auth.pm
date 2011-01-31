@@ -282,7 +282,7 @@ sub ldap_authentication {
      &do_log('debug3',"canonic: $canonic_email[0]");
      ## If the identifier provided was a valid email, return the provided email.
      ## Otherwise, return the canonical email guessed after the login.
-     if( &tools::valid_email($auth) && !$Conf::Conf{'robots'}{$robot}{'ldap_force_canonical_email'}) {
+     if( &tools::valid_email($auth) && !&Conf::get_robot_conf($robot,'ldap_force_canonical_email')) {
 	 return ($auth);
      }else{
 	 return lc($canonic_email[0]);
@@ -362,12 +362,8 @@ sub remote_app_check_password {
     # seach entry for trusted_application in Conf
     my @trusted_apps ;
     
-    # select trusted_apps from robot context or symap context
-    if ((defined $robot) &&  (defined $Conf::Conf{'robots'}{$robot}{'trusted_applications'})) {
- 	@trusted_apps = @{$Conf::Conf{'robots'}{$robot}{'trusted_applications'}{'trusted_application'}};
-    }else{
- 	@trusted_apps = @{$Conf::Conf{'trusted_applications'}{'trusted_application'}};
-    }
+    # select trusted_apps from robot context or sympa context
+    @trusted_apps = @{&Conf::get_robot_conf($robot,'trusted_applications')};
     
     foreach my $application (@trusted_apps){
 	

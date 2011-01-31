@@ -1026,8 +1026,7 @@ my $birthday = time ;
 	 $param->{'default_robot'} = 1;
      }
  
-     $param->{'cookie_domain'} = $Conf{'robots'}{$robot}{'cookie_domain'} if $Conf{'robots'}{$robot};
-     $param->{'cookie_domain'} ||= $wwsconf->{'cookie_domain'};
+     $param->{'cookie_domain'} = &Conf::get_robot_conf($robot,'cookie_domain');
      $ip = $ENV{'REMOTE_HOST'};
      $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
      $ip = 'undef' unless ($ip);
@@ -1040,7 +1039,7 @@ my $birthday = time ;
          $param->{'cookie_domain'} = $http_host;
      }
 
-     &Log::set_log_level($Conf{'robots'}{$robot}{'log_level'});
+     &Log::set_log_level(&Conf::get_robot_conf($robot, 'log_level'));
 
      ## Sympa parameters in $param->{'conf'}
      $param->{'conf'} = {};
@@ -8385,10 +8384,10 @@ sub do_set_pending_list_request {
      my $smtp;
      my (@suf, @addresses);
 
-     my $smtp_relay = $Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf{'list_check_smtp'};
-     my $smtp_helo = $Conf{'robots'}{$robot}{'list_check_helo'} || $Conf{'list_check_helo'} || $smtp_relay; 
+     my $smtp_relay = &Conf::get_robot_conf($robot, 'list_check_smtp');
+     my $smtp_helo = &Conf::get_robot_conf($robot, 'list_check_helo') || $smtp_relay;
      $smtp_helo =~ s/:[-\w]+$//;
-     my $suffixes = $Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf{'list_check_suffixes'};
+     my $suffixes = &Conf::get_robot_conf($robot, 'list_check_suffixes');
      return 0 
 	 unless ($smtp_relay && $suffixes);
      my $domain = &Conf::get_robot_conf($robot, 'host');

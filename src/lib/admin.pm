@@ -1085,10 +1085,10 @@ sub check_owner_defined {
      my $smtp;
      my (@suf, @addresses);
 
-     my $smtp_relay = $Conf::Conf{'robots'}{$robot}{'list_check_smtp'} || $Conf::Conf{'list_check_smtp'};
-     my $smtp_helo = $Conf::Conf{'robots'}{$robot}{'list_check_helo'} || $Conf::Conf{'list_check_helo'} || $smtp_relay;
+     my $smtp_relay = &Conf::get_robot_conf($robot, 'list_check_smtp');
+     my $smtp_helo = &Conf::get_robot_conf($robot, 'list_check_helo') || $smtp_relay;
      $smtp_helo =~ s/:[-\w]+$//;
-     my $suffixes = $Conf::Conf{'robots'}{$robot}{'list_check_suffixes'} || $Conf::Conf{'list_check_suffixes'};
+     my $suffixes = &Conf::get_robot_conf($robot, 'list_check_suffixes');
      return 0 
 	 unless ($smtp_relay && $suffixes);
      my $domain = &Conf::get_robot_conf($robot, 'host');

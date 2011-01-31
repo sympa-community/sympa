@@ -3206,6 +3206,45 @@ sub is_in_array {
 }
 
 ####################################################
+# a_is_older_than_b
+####################################################
+# Compares the last modifications date of two files
+# 
+# IN : - a hash with two entries:
+#
+#        * a_file : the full path to a file
+#        * b_file : the full path to a file
+#
+# OUT : string: 'true' it the last modification date of "a_file" is older than "b_file"'s, 'false' otherwise.
+#       return undef if the comparison could not be caried on.
+#######################################################    
+sub a_is_older_than_b {
+    my $param = shift;
+    my ($a_file_readable, $b_file_readable) = (0,0);
+    my $answer = undef;
+    if (-r $param->{'a_file'}) {
+	$a_file_readable = 1;
+    }else{
+	&do_log('err', 'Could not read file %s. Comparison impossible', $param->{'a_file'});
+    }
+    if (-r $param->{'b_file'}) {
+	$b_file_readable = 1;
+    }else{
+	&do_log('err', 'Could not read file %s. Comparison impossible', $param->{'b_file'});
+    }
+    if ($a_file_readable && $b_file_readable) {
+	my @a_stats = stat ($param->{'a_file'});
+	my @b_stats = stat ($param->{'b_file'});
+	if($a_stats[9] < $b_stats[9]){
+	    $answer = 1;
+	}else{
+	    $answer = 0;
+	}
+    }
+    return $answer;
+}
+
+####################################################
 # clean_msg_id
 ####################################################
 # clean msg_id to use it without  \n, \s or <,>

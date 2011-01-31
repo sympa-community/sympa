@@ -7180,15 +7180,13 @@ sub is_listmaster {
 
     return 0 unless ($who);
 
-    if ($robot && (defined $Conf::Conf{'robots'}{$robot}) && $Conf::Conf{'robots'}{$robot}{'listmasters'}) {
-	foreach my $listmaster (@{$Conf::Conf{'robots'}{$robot}{'listmasters'}}){
-	    return 1 if (lc($listmaster) eq lc($who));
-	} 
+    foreach my $listmaster (@{&Conf::get_robot_conf($robot,'listmasters')}){
+	return 1 if (lc($listmaster) eq lc($who));
     }
 	
     foreach my $listmaster (@{$Conf::Conf{'listmasters'}}){
-	    return 1 if (lc($listmaster) eq lc($who));
-	}    
+	return 1 if (lc($listmaster) eq lc($who));
+    }    
 
     return 0;
 }

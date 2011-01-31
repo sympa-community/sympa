@@ -155,7 +155,7 @@ our @params = (
     },
     {
         name    => 'queuedistribute',
-	file    => 'sympa.conf'
+		file    => 'sympa.conf'
     },
     {
         name    => 'queueautomatic',
@@ -288,10 +288,10 @@ our @params = (
     { title => 'General definition' },
     {
         name    => 'domain',
-        default => 'domain.tld',
         query   => 'Main robot hostname',
         edit    => '1',
         file    => 'sympa.conf',
+        vhost   => '1',
     },
     {
         name    => 'listmaster',
@@ -894,9 +894,9 @@ our @params = (
     },
     {
         name    => 'wwsympa_url',
-        default => 'http://host.domain.tld/sympa',
+        sample => 'http://host.domain.tld/sympa',
         query   => 'URL of main web page',
-	vhost   => '1',
+		vhost   => '1',
         file    => 'sympa.conf',
         edit    => '1',
     },
@@ -1011,7 +1011,7 @@ our @params = (
     },
     {
         name    => 'host',
-        default => undef,
+        optional => 1,
 	vhost   => '1',
     },
     {
@@ -1020,7 +1020,8 @@ our @params = (
     },
     {
         name    => 'tmpdir',
-    },
+        default => Sympa::Constants::SPOOLDIR . '/tmp',
+     },
     {
         name    => 'sleep',
         default => '5',
