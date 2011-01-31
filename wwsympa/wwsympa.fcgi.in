@@ -1059,7 +1059,7 @@ my $birthday = time ;
 
      foreach my $auth (keys  %{$Conf{'cas_id'}{$robot}}) {
 	 &do_log('debug2', "cas authentication service $auth");
-	 $param->{'sso'}{$auth} = $auth;
+	 $param->{'sso'}{$auth} = $Conf{'cas_id'}{$robot}{$auth}{'auth_service_friendly_name'};
      }
 
      foreach my $auth (keys  %{$Conf{'generic_sso_id'}{$robot}}) {

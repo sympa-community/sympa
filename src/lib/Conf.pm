@@ -735,7 +735,8 @@ sub _load_auth {
                     'service_validate_path' => '.*',
                     'proxy_path' => '.*',
                     'proxy_validate_path' => '.*',
-                    'auth_service_name' => '.*',
+                    'auth_service_name' => '[\w\-\.]+',
+                    'auth_service_friendly_name' => '.*',
                     'authentication_info_url' => 'http(s)?:/.*',
                     'ldap_host' => '[\w\.\-]+(:\d+)?(\s*,\s*[\w\.\-]+(:\d+)?)*',
                     'ldap_bind_dn' => '.+',
@@ -781,7 +782,7 @@ sub _load_auth {
     do_log('notice',"_load_auth: Unable to open %s: %s", $config_file, $!);
     return undef;
     }
-    
+
     $Conf{'cas_number'}{$robot} = 0;
     $Conf{'generic_sso_number'}{$robot} = 0;
     $Conf{'ldap_number'}{$robot} = 0;
@@ -822,7 +823,7 @@ sub _load_auth {
         if (defined($current_paragraph)) {
         
         if ($current_paragraph->{'auth_type'} eq 'cas') {
-            unless (defined $current_paragraph->{'base_url'}) {
+	    unless (defined $current_paragraph->{'base_url'}) {
             &do_log('err','Incorrect CAS paragraph in auth.conf');
             next;
             }
@@ -857,6 +858,10 @@ sub _load_auth {
 
             $Conf{'cas_number'}{$robot}  ++ ;
             $Conf{'cas_id'}{$robot}{$current_paragraph->{'auth_service_name'}} =  $#paragraphs+1 ; 
+
+	    ## Default value for auth_service_friendly_name IS auth_service_name
+	    $Conf{'cas_id'}{$robot}{$current_paragraph->{'auth_service_name'}}{'auth_service_friendly_name'} = $current_paragraph->{'auth_service_friendly_name'} || $current_paragraph->{'auth_service_name'};
+
             $current_paragraph->{'ldap_scope'} ||= 'sub'; ## Force the default scope because '' is interpreted as 'base'
         }elsif($current_paragraph->{'auth_type'} eq 'generic_sso') {         
           $Conf{'generic_sso_number'}{$robot}  ++ ;
