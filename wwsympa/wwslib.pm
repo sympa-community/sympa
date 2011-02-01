@@ -323,7 +323,7 @@ sub get_my_url {
 	$return_url = 'http';	
     }	     
 
-    $return_url .= '://'.$ENV{'HTTP_HOST'};
+    $return_url .= '://'.&main::get_header_field('HTTP_HOST');
     $return_url .= ':'.$ENV{'SERVER_PORT'} unless (($ENV{'SERVER_PORT'} eq '80')||($ENV{'SERVER_PORT'} eq '443'));
     $return_url .= $ENV{'REQUEST_URI'};
     return ($return_url);
