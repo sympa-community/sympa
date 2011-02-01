@@ -3315,7 +3315,7 @@ sub do_sso_login {
 		
 		# everything is ok to proceed to with possible sympa account created and traddional sso login
 		
-		
+		## TODO : netidmap_table should also be used when no confirmation is performed
 		if (defined $Conf{'auth_services'}{$robot}[$sso_id]{'internal_email_by_netid'}) {
 
 		    my $netid = $ENV{$Conf{'auth_services'}{$robot}[$sso_id]{'netid_http_header'}};
@@ -15325,6 +15325,18 @@ sub do_change_email {
 				    $param->{'action'},'',$old_email,$robot);
 	 &wwslog('info','change_email: update failed');
 	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
+	 return undef;
+     }
+
+     ## Update netidmap_table
+     unless ( &List::update_email_netidmap_db($robot, $old_email, $new_email) ){
+	 &report::reject_report_web('intern','update_netidmap_failed',{'user'=>$new_email,
+								       'old_email' => $old_email},
+				    $param->{'action'},'',$param->{'user'}{'email'},$robot);
+	 &wwslog('info','change_email: update failed');
+	 &web_db_log({'target_email' => $old_email,
+		      'status' => 'error',
+		      'error_type' => 'internal'});
 	 return undef;
      }
 

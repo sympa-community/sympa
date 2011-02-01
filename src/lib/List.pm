@@ -9798,10 +9798,36 @@ sub set_netidtoemail_db {
 
     $statement = sprintf "INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (%s, %s, %s, %s)", $dbh->quote($netid), $dbh->quote($idpname), $dbh->quote($email), $dbh->quote($robot);
 
-    push @sth_stack, $sth;
-
 
      unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	return undef;
+    }
+
+    return 1;
+}
+
+## Update netidmap table when user email address changes
+sub update_email_netidmap_db{
+    my ($robot, $old_email, $new_email) = @_;
+    my $statement;	
+    
+    unless (defined $robot && 
+	    defined $old_email &&
+	    defined $new_email) {
+	&do_log('err', 'Missing parameter');
+	return undef;
+    } 
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    
+    $statement = sprintf "UPDATE netidmap_table SET email_netidmap = %s WHERE (email_netidmap = %s AND robot_netidmap = %s)",$dbh->quote($new_email), $dbh->quote($old_email), $dbh->quote($robot);
+    
+    
+    unless ($dbh->do($statement)) {
 	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
