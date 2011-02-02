@@ -30,26 +30,27 @@ use POSIX qw(strftime);
 use Conf;
 use Log;
 use Sympa::Constants;
+use Sympa::DatabaseDescription;
 
 
 
 # db structure description has moved in Sympa/Constant.pm 
-my %db_struct = &Sympa::Constants::db_struct();
+my %db_struct = &Sympa::DatabaseDescription::db_struct();
 
-my %not_null = %Sympa::Constants::not_null;
+my %not_null = %Sympa::DatabaseDescription::not_null;
 
-my %primary =  %Sympa::Constants::primary ;
+my %primary =  %Sympa::DatabaseDescription::primary ;
 	       
-my %autoincrement = %Sympa::Constants::autoincrement ;
+my %autoincrement = %Sympa::DatabaseDescription::autoincrement ;
 
 ## List the required INDEXES
 ##   1st key is the concerned table
 ##   2nd key is the index name
 ##   the table lists the field on which the index applies
-my %indexes = %Sympa::Constants::indexes ;
+my %indexes = %Sympa::DatabaseDescription::indexes ;
 
 # table indexes that can be removed during upgrade process
-my @former_indexes =  %Sympa::Constants::primary ;
+my @former_indexes =  %Sympa::DatabaseDescription::primary ;
 
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
