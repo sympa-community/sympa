@@ -770,7 +770,7 @@ sub _load_auth {
                         'ldap_ssl_ciphers' => '[\w:]+',
                         'force_email_verify' => '1',
                         'internal_email_by_netid' => '1',
-                        'netid_http_header' => '\w+',
+                        'netid_http_header' => '[\w\-\.]+',
                     },
               'authentication_info_url' => 'http(s)?:/.*'
               );
