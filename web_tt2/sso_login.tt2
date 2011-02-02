@@ -29,27 +29,8 @@
 [% ELSIF subaction == 'validateemail' %]
 
 <br />
-  [%|loc(init_email)%]A confirmation password has been sent to your email address %1.<br />Please check your e-mail box for the message containing the confirmation password needed below.[%END%]
+  [%|loc(init_email)%]A confirmation password has been sent to your email address %1.<br />Please check your e-mail box for the message containing the confirmation link.[%END%]
   <br /><br />
 
-<form action="[% path_cgi %]" method="post"> 
-<fieldset>
-        <input type="hidden" name="previous_action" value="[% previous_action %]" />
-        <input type="hidden" name="previous_list" value="[% previous_list %]" />
-	<input type="hidden" name="referer" value="[% referer %]" />
-	<input type="hidden" name="auth_service_name" value="[% server.key %]" />
-	<input type="hidden" name="subaction" value="confirmemail" />
-	<input type="hidden" name="action" value="sso_login" />
-	<input type="hidden" name="nomenu" value="[% nomenu %]" />
-
-     	      <input type="hidden" name="list" value="[% list %]" />
-  <label for="email"><strong>[%|loc%]email address:[%END%] </strong></label>
-    <input id="email" type="text" name="email" size="30" value="[% init_email %]" /><br />
-  <label for="passwd"><strong>[%|loc%]password:[%END%] </strong></label>
-    <input id="passwd"  type="password" name="passwd" size="8" /><br />
-	      &nbsp;&nbsp;
-              <input type="submit" name="action_sso_login" value="[%|loc%]Validate Address[%END%]" />
-</fieldset>
-</form> 
 [% END %]
 <!-- end sso_login.tt2 -->

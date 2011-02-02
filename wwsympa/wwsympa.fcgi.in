@@ -345,7 +345,7 @@ my %action_args = ('default' => ['list'],
 		'latest_lists' => ['topic','subtopic'],   
 		'active_lists' => ['topic','subtopic'],  
 		'login' => ['email','passwd','previous_action','previous_list'],
-		'sso_login' => ['auth_service_name','subaction','previous_action','previous_list', 'email', 'passwd'],
+		'sso_login' => ['auth_service_name','subaction','email', 'ticket'],
 		'sso_login_succeeded' => ['auth_service_name','previous_action','previous_list'],
 		'loginrequest' => ['previous_action','previous_list'],
 		'logout' => ['previous_action','previous_list'],
@@ -1843,6 +1843,7 @@ sub _split_params {
 		$pname = $p;
 		$in{$pname} = $params[$i];
 	    }
+	    &wwslog('debug',"Incoming parameter: $pname=$in{$pname}");
 	    $i++;
 	}
     }    
@@ -3131,7 +3132,17 @@ sub do_ticket {
 
  }
 
- ## Login WWSympa
+## Login WWSympa
+## The sso_login action is made of 4 subactions that make a complete workflow.
+## Note that this comlexe workflow is only used if the SSO server does not provide
+## the user email address or if this email address is not trusted and therefore
+## needs to be checked. 
+## The workflow:
+##  1) init: determine if email address needs to be collected/checked
+##  2) requestemail: collect the user email address in a web form. Note that form may be initialized with 
+##     one email address provided by the SSO server
+##  3) validateemail: a challenge is sent to the email address to validate it
+##  4) confirmemail: user confirms his email address with the challenge
 sub do_sso_login {
     &wwslog('info', 'do_sso_login(%s)', $in{'auth_service_name'});
     
@@ -3185,15 +3196,15 @@ sub do_sso_login {
 	    &wwslog('info', 'do_sso_login(): POST request processing');
 	    
 	    if ($in{'subaction'} eq 'validateemail') {
-		$path .= "/validateemail/sso_login_succeeded/$in{'auth_service_name'}/$in{'email'}";
+		$path .= "/validateemail/$in{'email'}";
 		
 	    }elsif ($in{'subaction'} eq 'confirmemail') {
 		
-		$path .= "/$in{'subaction'}/sso_login_succeeded/$in{'auth_service_name'}/$in{'email'}/$in{'passwd'}";
+		$path .= "/confirmemail/$in{'email'}/$in{'ticket'}";
 		
 	    }else {
 		
-		$path .= "/init/sso_login_succeeded/$in{'auth_service_name'}";
+		$path .= "/init";
 	    }
 
 	    $service = "$param->{'base_url'}$param->{'path_cgi'}/sso_login/$in{'auth_service_name'}".$path;
@@ -3250,6 +3261,9 @@ sub do_sso_login {
 		$param->{'server'}{'key'} = $in{'auth_service_name'};
 		$param->{'init_email'} = $email;
 
+		## Replace sendpassword with one time ticket
+		$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'sso_login/confirmemail?auth_service_name='.$in{'auth_service_name'},$ip);
+
 		unless (&sendssopasswd($email)) {
 		    &report::reject_report_web('user','incorrect_email',{'email' => $email},$param->{'action'});
 		    $param->{'subaction'} = 'requestemail';
@@ -3267,11 +3281,11 @@ sub do_sso_login {
 		$in{'email'} = $email;
 		
 		#
-		# Check input parameters and verify passwd for email, stolen from do_login
+		# Check input parameters and verify ticket for email, stolen from do_login
 		#
 		unless ($in{'email'}) {
 		    &report::reject_report_web('user','no_email',{},$param->{'action'});
-		    &wwslog('info','do_sso_login: confirmemail: no email');
+		    &wwslog('info','confirmemail: no email');
 		    &web_db_log({'parameters' => $in{'auth_service_name'},
 				 'target_email' => $in{'email'},
 				 'status' => 'error',
@@ -3280,13 +3294,13 @@ sub do_sso_login {
 		    return 1;
 		}
 		
-		unless ($in{'passwd'}) {
+		unless ($in{'ticket'}) {
 		    $in{'init_email'} = $in{'email'};
 		    $param->{'init_email'} = $in{'email'};
 		    $param->{'escaped_init_email'} = &tools::escape_chars($in{'email'});
 		    
-		    &report::reject_report_web('user','missing_arg',{'argument' => 'passwd'},$param->{'action'});
-		    &wwslog('info','do_sso_login: confirmemail: missing parameter passwd');
+		    &report::reject_report_web('user','missing_arg',{'argument' => 'ticket'},$param->{'action'});
+		    &wwslog('info','do_sso_login: confirmemail: missing parameter ticket');
 		    &web_db_log({'parameters' => $in{'auth_service_name'},
 				 'target_email' => $in{'email'},
 				 'status' => 'error',
@@ -3295,9 +3309,9 @@ sub do_sso_login {
 		    return 1;		    
 		}
 		
-		##authentication of the sender
-		my $data;
-		unless($data = &Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
+		## Validate the ticket
+		my $ticket_output = &Auth::get_one_time_ticket($in{'ticket'}, $ip );
+		unless ($ticket_output->{'result'} eq 'success'){
 		    &report::reject_report_web('user','auth_failed',{},$param->{'action'});
 		    &web_db_log({'parameters' => $in{'auth_service_name'},
 				 'target_email' => $in{'email'},
@@ -3363,10 +3377,10 @@ sub do_sso_login {
 	}
 	
 	unless ($email) {
-	    &report::reject_report_web('intern','no_identified_user',{},$param->{'action'},'');
+	    &report::reject_report_web('intern','no_identified_user',{},$param->{'action'},'','',$robot);
 	    &wwslog('err','do_sso_login: user could not be identified, no %s HTTP header set', $Conf{'auth_services'}{$robot}[$sso_id]{'email_http_header'});
 	    &web_db_log({'parameters' => $in{'auth_service_name'},
-			 'target_email' => $in{'email'},
+
 			 'status' => 'error',
 			 'error_type' => 'no_email'});		      
 	    return 'home';	
