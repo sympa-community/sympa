@@ -273,9 +273,9 @@ while (!$end) {
 	    ### Parse an MIME::Entity message
 	    my $parser = new MIME::Parser;
 	    $parser->output_to_core(1);
-	    my $entity = $parser->parse_data($messageasstring_init); 
 	    	    
 	    foreach $rcpt (@rcpts) {
+		my $entity = $parser->parse_data($messageasstring_init); 
 		my $notification_id;
 		my $return_path;
 		my $escaped_rcpt = $rcpt;
