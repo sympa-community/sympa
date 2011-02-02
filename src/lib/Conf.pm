@@ -868,6 +868,12 @@ sub _load_auth {
           $Conf{'generic_sso_id'}{$robot}{$current_paragraph->{'service_id'}} =  $#paragraphs+1 ; 
           $current_paragraph->{'ldap_scope'} ||= 'sub'; ## Force the default scope because '' is interpreted as 'base'
           $current_paragraph->{'http_header_value_separator'} ||= ';'; ## default value for http_header_value_separator is ';'
+          
+          ## CGI.pm changes environment variable names ('-' => '_')
+          ## declared environment variable names needs to be transformed accordingly
+          foreach my $parameter ('http_header_list','email_http_header','netid_http_header') {
+                        $current_paragraph->{$parameter} =~ s/\-/\_/g if (defined $current_paragraph->{$parameter});
+          }
         }elsif($current_paragraph->{'auth_type'} eq 'ldap') {
             $Conf{'ldap'}{$robot}  ++ ;
             $Conf{'use_passwd'}{$robot} = 1;
