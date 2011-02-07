@@ -33,7 +33,7 @@ use List;
 use tools;
 use tt2;
 
-our @ISA = qw(Exporter);
+our @ISA = qw(Exporter Datasource);
 our @EXPORT = qw(%date_format);
 our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetch_timeout);
 

@@ -198,7 +198,7 @@ sub ldap_authentication {
      
      ## bind in order to have the user's DN
      my $param = &tools::dup_var($ldap);
-     my $ds = new Datasource('LDAP', $param);
+     my $ds = new LDAPSource($param);
      
      unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
        &do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'host'});
@@ -229,7 +229,7 @@ sub ldap_authentication {
      $param->{'ldap_bind_dn'} = $DN[0];
      $param->{'ldap_bind_password'} = $pwd;
      
-     $ds = new Datasource('LDAP', $param);
+     $ds = new LDAPSource($param);
      
      unless (defined $ds && ($ldap_passwd = $ds->connect())) {
        do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'host'});
@@ -313,7 +313,7 @@ sub get_email_by_net_id {
     my $ldap = @{$Conf{'auth_services'}{$robot}}[$auth_id];
 
     my $param = &tools::dup_var($ldap);
-    my $ds = new Datasource('LDAP', $param);
+    my $ds = new LDAPSource($param);
     my $ldap_anonymous;
     
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {

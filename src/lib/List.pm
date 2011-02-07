@@ -22,7 +22,9 @@ package List;
 
 use strict;
 use POSIX;
+use SQLSource;
 use Datasource;
+use LDAPSource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
 use Lock;
@@ -8174,7 +8176,7 @@ sub _include_users_ldap {
     #my $timeout = 30; 
     
     my $param2 = &tools::dup_var($param);
-    my $ds = new Datasource('LDAP', $param2);
+    my $ds = new LDAPSource($param2);
     if (defined $user) {
 	$param2->{'bind_dn'} = $user;
 	$param2->{'bind_password'} = $passwd;
@@ -8303,7 +8305,7 @@ sub _include_users_ldap_2level {
     my ($ldaph, $fetch);
 
     my $param2 = &tools::dup_var($param);
-    my $ds = new Datasource('LDAP', $param2);
+    my $ds = new LDAPSource($param2);
     if (defined $user) {
 	$param2->{'bind_dn'} = $user;
 	$param2->{'bind_password'} = $passwd;
@@ -8448,7 +8450,7 @@ sub _include_users_sql {
     &do_log('debug2','List::_include_users_sql()');
 
     my $id = Datasource::_get_datasource_id($param);
-    my $ds = new Datasource('SQL', $param);
+    my $ds = new SQLSource($param);
     unless ($ds->connect && ($ds->query($param->{'sql_query'}))) {
         return undef;
     }

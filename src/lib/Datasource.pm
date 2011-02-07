@@ -25,8 +25,6 @@ package Datasource;
 use strict;
 
 use Carp;
-
-use Conf;
 use Log;
 
 ############################################################
@@ -44,14 +42,10 @@ use Log;
 #
 ##############################################################
 sub new {
-    my($pkg, $type, $param_ref) = @_;
+    my($pkg, $param_ref) = @_;
     my $datasrc;
-    &do_log('debug2', 'Datasource::new(%s)',$type);
+    &do_log('debug2', 'Datasource::new($pkg)');
     
-    # import the desirable subs
-    eval "use ${type}Source qw(connect query disconnect fetch ping quote set_fetch_timeout)";
-    return undef if ($@);
-
     $datasrc->{'param'} = $param_ref;
 
     ## Bless Message object

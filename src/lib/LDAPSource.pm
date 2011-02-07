@@ -33,10 +33,9 @@ use Conf;
 use Log;
 use List;
 
-our @ISA = qw(Exporter);
+our @ISA = qw(Exporter Datasource);
 our @EXPORT = qw(%date_format);
 our @EXPORT_OK = qw(connect query disconnect fetch ping quote set_fetch_timeout);
-
 
 ############################################################
 #  connect
@@ -205,65 +204,13 @@ sub fetch {
     return $self->{'sth'}->fetchrow_arrayref;
 }
 
+## Does not make sense in LDAP context
+sub create_db {
+}
+
 sub disconnect {
     my $self = shift;
     $self->{'ldap_handler'}->unbind if $self->{'ldap_handler'};
-}
-
-## Try to create the database
-sub create_db {
-    &do_log('debug3', 'List::create_db()');    
-
-    &do_log('notice','Trying to create %s database...', $Conf{'db_name'});
-
-    unless ($Conf{'db_type'} eq 'mysql') {
-	&do_log('err', 'Cannot create %s DB', $Conf{'db_type'});
-	return undef;
-    }
-
-    my $drh;
-    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
-	&do_log('err', 'Cannot connect as root to database');
-	return undef;
-    }
-
-    ## Create DB
-    my $rc = $drh->func("createdb", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc) {
-	&do_log('err', 'Cannot create database %s : %s', $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    ## Re-connect to DB (to prevent "MySQL server has gone away" error)
-    unless ($drh = DBI->connect("DBI:mysql:dbname=mysql;host=localhost", 'root', '')) {
-	&do_log('err', 'Cannot connect as root to database');
-	return undef;
-    }
-
-    ## Grant privileges
-    unless ($drh->do("GRANT ALL ON $Conf{'db_name'}.* TO $Conf{'db_user'}\@localhost IDENTIFIED BY '$Conf{'db_passwd'}'")) {
-	&do_log('err', 'Cannot grant privileges to %s on database %s : %s', $Conf{'db_user'}, $Conf{'db_name'}, $drh->errstr);
-	return undef;
-    }
-
-    &do_log('notice', 'Database %s created', $Conf{'db_name'});
-
-    ## Reload MysqlD to take changes into account
-    my $rc2 = $drh->func("reload", $Conf{'db_name'}, 'localhost', $Conf{'db_user'}, $Conf{'db_passwd'}, 'admin');
-    unless (defined $rc2) {
-	&do_log('err', 'Cannot reload mysqld : %s', $drh->errstr);
-	return undef;
-    }
-
-    $drh->disconnect();
-
-    return 1;
-}
-
-sub quote {
-    my ($self, $string, $datatype) = @_;
-    
-    return $self->{'dbh'}->quote($string, $datatype); 
 }
 
 ## Does not make sense in LDAP context

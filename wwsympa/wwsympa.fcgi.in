@@ -3525,7 +3525,7 @@ sub do_sso_login_succeeded {
 	 next unless ($auth =~ /$ldap->{'regexp'}/i);
 
 	 my $param = &tools::dup_var($ldap);
-	 my $ds = new Datasource('LDAP', $param);
+	 my $ds = new LDAPSource($param);
 
 	 unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
 	     &do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});

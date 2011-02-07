@@ -999,7 +999,7 @@ sub search{
             return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
         }
 	
-	my $ds = new Datasource('SQL', $sql_conf->{'sql_named_filter_query'});
+	my $ds = new SQLSource($sql_conf->{'sql_named_filter_query'});
 	unless ($ds->connect() && $ds->ping) {
             do_log('notice','Unable to connect to the SQL server %s:%d',$sql_conf->{'db_host'}, $sql_conf->{'db_port'});
             return undef;
@@ -1079,7 +1079,7 @@ sub search{
 	
 	my $ldap;
 	my $param = &tools::dup_var(\%ldap_conf);
-	my $ds = new Datasource('LDAP', $param);
+	my $ds = new LDAPSource($param);
 	    
 	unless (defined $ds && ($ldap = $ds->connect())) {
 	    &do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'ldap_host'});

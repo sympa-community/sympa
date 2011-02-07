@@ -39,7 +39,6 @@ use Term::ProgressBar;
 use URI::Escape;
 use constant MAX => 100_000;
 
-use Datasource;
 use SQLSource qw(create_db %date_format);
 use Lock;
 use Task;
