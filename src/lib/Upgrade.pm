@@ -707,14 +707,6 @@ sub upgrade {
     return 1;
 }
 
-sub is_autoinc{
-    &SympaDatabaseManager::is_autoinc();
-}
-
-sub set_autoinc {
-    &SympaDatabaseManager::set_autoinc();
-}
-
 sub probe_db {
     &SympaDatabaseManager::probe_db();
 }
@@ -723,9 +715,6 @@ sub data_structure_uptodate {
     &SympaDatabaseManager::data_structure_uptodate();
 }
 
-sub check_db_field_type {
-    &SympaDatabaseManager::check_db_field_type();
-}
 ## used to encode files to UTF-8
 ## also add X-Attach header field if template requires it
 ## IN : - arrayref with list of filepath/lang pairs
