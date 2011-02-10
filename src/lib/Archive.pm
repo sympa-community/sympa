@@ -149,7 +149,7 @@ sub scan_dir_archive {
 	next unless ($file =~ /^\d+$/);
 	&do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
 
-	my $mail = new Message("$dir/$month/arctxt/$file",'noxsympato');
+	my $mail = new Message({'file'=>"$dir/$month/arctxt/$file",'noxsympato'=>'noxsympato'});
 	unless (defined $mail) {
 	    &do_log('err', 'Unable to create Message object %s', $file);
 	    return undef;

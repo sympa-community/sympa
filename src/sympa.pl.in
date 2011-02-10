@@ -1201,7 +1201,7 @@ sub DoFile {
     my ($listname, $robot);
     my $status;
     
-    my $message = new Message($file);
+    my $message = new Message({'file'=>$file});
 
     unless (defined $message) {
 	&do_log('err', 'Unable to create Message object %s', $file);
@@ -1230,8 +1230,8 @@ sub DoFile {
 
     # message prepared by wwsympa and distributed by sympa # dual
     if ( $hdr->get('X-Sympa-Checksum')) {
-	return (&DoSendMessage ($msg,$robot)) ;
-    }
+    	return (&DoSendMessage ($message,$robot)) ;
+       }
     
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
@@ -1558,10 +1558,12 @@ sub DoFile {
 #
 ############################################################## 
 sub DoSendMessage {
-    my $msg = shift;
+    my $message = shift;
     my $robot = shift;
+
     &do_log('debug', 'DoSendMessage()');
 
+    my $msg = $message->{'msg'};
     my $hdr = $msg->head;
     
     my ($chksum, $rcpt, $from) = ($hdr->get('X-Sympa-Checksum'), $hdr->get('X-Sympa-To'), $hdr->get('X-Sympa-From'));
@@ -1590,7 +1592,7 @@ sub DoSendMessage {
     ## Multiple recepients
     my @rcpts = split /,/,$rcpt;
    
-    unless (&mail::mail_forward($msg,$from,\@rcpts,$robot)) {
+    unless (&mail::mail_forward($message,$from,\@rcpts,$robot)) {
 	&do_log('err',"sympa::DoSendMessage(): Impossible to forward mail from $from");
 	&report::reject_report_msg('intern','Impossible to forward a message pushed in spool by another process than sympa.pl.',$sender,
 			  {'msg_id' => $msg_id,'message' => $msg},$robot,$string,'');
@@ -1732,8 +1734,8 @@ sub DoForward {
     
     my $rc;
     my $msg_copy = $msg->dup;
-
-unless (&mail::mail_forward($msg,&Conf::get_robot_conf($robot, 'request'),\@rcpt,$robot)) {
+        
+    unless (&mail::mail_forward($message,&Conf::get_robot_conf($robot, 'request'),\@rcpt,$robot)) {
 	&do_log('err',"Impossible to forward mail for $name-$function  ");
 	my $string = sprintf 'Impossible to forward a message for %s-%s',$name,$function;
 	my $sender = $hdr->get('From');
@@ -1747,6 +1749,7 @@ unless (&mail::mail_forward($msg,&Conf::get_robot_conf($robot, 'request'),\@rcpt
 	return undef;
     }
     &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $hdr->get('From'),'client' => $ip,'daemon' => $daemon_name});
+
     return 1;
 }
 
@@ -1770,7 +1773,7 @@ sub DoMessage{
     #&do_log('debug', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $message->{'msg'}, $robot, $message->{'sender'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
 
 #-------------------------------------------------------------------------------------------------------------------------
-    &do_log('notice', 'DoMessage(%s, %s, %s, msg from %s, %s, %s,%s)', $which, $message->{'msg'}, $robot, $message->{'sender'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
+    &do_log('notice', 'DoMessage(%s, %s, %s, msg from %s, %s, %s, %s)', $which, $message->{'msg'}, $robot, $message->{'sender'}, $message->{'size'}, $message->{'msg_as_string'}, $message->{'smime_crypted'});
 #-------------------------------------------------------------------------------------------------------------------------
     
     ## List and host.

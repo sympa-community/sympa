@@ -6362,7 +6362,7 @@ sub do_skinsedit {
 	 my $id = $1;
 
 	 ## Load msg
-	 my $mail = new Message("$Conf{'queuemod'}/$msg");
+	 my $mail = new Message({'file'=>"$Conf{'queuemod'}/$msg"});
 	 
 	 unless (defined $mail) {
 	     &report::reject_report_web('intern','cannot_get_msg',{'msg'=>"$Conf{'queuemod'}/$msg"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -6955,7 +6955,7 @@ sub do_viewmod {
 	 $in{'file'} =~ /\.(\w+)$/;
 	 $param->{'file_extension'} = $1;
 	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
-	 $param->{'bypass'} = 1;
+	 $param->{'bypass'} = 1; 
      }else {
 	 &tt2::add_include_path($tmp_dir) ;
      }
@@ -15932,7 +15932,7 @@ sub do_send_mail {
      my $filename = "$authqueue\/$listname".'@'."$robot\_$in{'authkey'}";
 
      my $mail ;
-     unless($mail  = new Message($filename,'noxsympato')) {
+     unless($mail  = new Message({'file'=>$filename,'noxsympato'=>'noxsympato'})) {
 	 &report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'});
 	 &wwslog('info','do_tag_topic_by_sender: cannot parse message %s',$filename);
 	 return undef;

@@ -120,11 +120,20 @@ Creates a new Message object.
 
 ## Creates a new object
 sub new {
-    my($pkg, $file, $noxsympato) = @_;
+    
+    my $pkg =shift;
+    my $datas = shift;
+
+    my $file = $datas->{'file'};
+    my $noxsympato = $datas->{'noxsympato'};
+    my $messageasstring = $datas->{'messageasstring'};
+    my $mimeentity = $datas->{'mimeentity'};
+    my $message_in_spool= $datas->{'message_in_spool'};
+
     my $message;
     &do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
     
-    if (ref($file) =~ /MIME::Entity/i) {
+    if ($mimeentity) {
 	$message->{'msg'} = $file;
 	$message->{'altered'} = '_ALTERED';
 
@@ -134,26 +143,40 @@ sub new {
 	return $message;
     }
 
-    ## Parse message as a MIME::Entity
-    $message->{'filename'} = $file;
-    unless (open FILE, $file) {
-	&do_log('err', 'Cannot open message file %s : %s',  $file, $!);
-	return undef;
-    }
-    
-    my $parser = new MIME::Parser;
+        my $parser = new MIME::Parser;
     $parser->output_to_core(1);
     
     my $msg;
-    unless ($msg = $parser->read(\*FILE)) {
-	do_log('err', 'Unable to parse message %s', $file);
-	return undef;
-    }
-    $message->{'msg'} = $msg;
-    $message->{'msg_as_string'} = $msg->as_string;
 
-    ## Message size
-    $message->{'size'} = -s $file;    
+    if ($message_in_spool){
+	$messageasstring = $message_in_spool->{'messageasstring'};
+	$message->{'messagekey'}= $message_in_spool->{'messagekey'};
+	$message->{'spoolname'}= $message_in_spool->{'spoolname'};
+    }
+    if ($file) {
+	## Parse message as a MIME::Entity
+	$message->{'filename'} = $file;
+	unless (open FILE, $file) {
+	    &do_log('err', 'Cannot open message file %s : %s',  $file, $!);
+	    return undef;
+	}
+    
+	unless ($msg = $parser->read(\*FILE)) {
+	    do_log('err', 'Unable to parse message %s', $file);
+	    close(FILE);
+	    return undef;
+	}
+	close(FILE);
+    }elsif($messageasstring){
+	if (ref ($messageasstring)){
+	    $msg = $parser->parse_data($messageasstring);
+	}else{
+	    $msg = $parser->parse_data(\$messageasstring);
+	}
+    }   
+    $message->{'msg'} = $msg;
+    $message->{'msg_as_string'} = $msg->as_string; 
+    $message->{'size'} = length($msg->as_string);
 
     my $hdr = $message->{'msg'}->head;
 
@@ -293,6 +316,7 @@ sub new {
 	    $message->{'orig_msg'} = $message->{'msg'};
 	    $message->{'msg'} = $dec;
 	    $message->{'msg_as_string'} = $dec_as_string;
+	    $message->{'decrypted_body'} = $dec_as_string;
 	    $hdr = $dec->head;
 	    do_log('debug', "message %s has been decrypted", $file);
 

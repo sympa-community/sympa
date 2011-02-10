@@ -925,7 +925,7 @@ sub dkim_sign {
 	&do_log('err', 'Cannot sign (DKIM) message');
 	return ($msg_as_string); 
     }
-    my $message = new Message($temporary_file,'noxsympato');
+    my $message = new Message({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
     unless ($message){
 	do_log('err',"unable to load $temporary_file as a message objet");
 	return ($msg_as_string); 

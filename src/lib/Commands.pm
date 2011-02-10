@@ -2031,7 +2031,7 @@ sub distribute {
     }
 
     ## Open and parse the file
-    my $message = new Message($file);
+    my $message = new Message({'file'=>$file});
     unless (defined $message) {
 	&do_log('err', 'Commands::distribute(): Unable to create Message object %s', $file);
 	&report::reject_report_msg('user','unfound_message',$sender,{'listname' => $name,'key'=> $key},$robot,'',$list);
@@ -2138,7 +2138,7 @@ sub confirm {
 	return 'wrong_auth';
     }
 
-    my $message = new Message ($file);
+    my $message = new Message ({'file'=>$file});
 
     unless (defined $message) {
 	&do_log('err', 'Commands::confirm(): Unable to create Message object %s', $file);

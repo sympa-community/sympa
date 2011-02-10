@@ -263,7 +263,7 @@ while (!$end) {
 		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 
 		   my $new_message;
-		   unless ($new_message = new Message("$arcpath/arctxt/$message",'noxsympato')) {
+		   unless ($new_message = new Message({'file'=>"$arcpath/arctxt/$message",'noxsympato'=>'noxsympato'})) {
 		      do_log('err',"unable to load new message $arcpath/arctxt/$message");
 		      next;
 		   }
@@ -1146,7 +1146,7 @@ sub clean_archived_message{
 	$filtered_file = $Conf::Conf{'tmpdir'}.'/'.$params->{'file'};
     }
     my $file_to_archive = $params->{'path'}.'/'.$params->{'file'};
-    if (my $msg = new Message($file_to_archive,1)){
+    if (my $msg = new Message({'file'=>$file_to_archive,'noxsympato'=>'noxsympato'})){
 	if($msg->clean_html()){
 	    if(open TMP, ">$filtered_file") {
 		print TMP $msg->{'msg'}->as_string;

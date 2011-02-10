@@ -121,7 +121,7 @@ sub mail_file {
 
     &do_log('debug2', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
 
-    my ($to,$message);
+    my ($to,$message_as_string);
 
     ## boolean
     $header_possible = 0 unless (defined $header_possible);
@@ -148,17 +148,17 @@ sub mail_file {
 	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
 	&tt2::parse_tt2($data, $path[$#path], \$output);
 	&Language::PopLang() if (defined $data->{'lang'});
-	$message .= join('',$output);
+	$message_as_string .= join('',$output);
 	$header_possible = 1;
 
     }else { # or not
-	$message .= $data->{'body'};
+	$message_as_string .= $data->{'body'};
        }
        
     ## ## Does the message include headers ?
     if ($header_possible) {
 	
-	foreach my $line (split(/\n/,$message)) {
+	foreach my $line (split(/\n/,$message_as_string)) {
 	    last if ($line=~/^\s*$/);
        
 	    if ($line=~/^[\w-]+:\s*/) { ## A header field
@@ -277,15 +277,20 @@ sub mail_file {
 	$listname = $data->{'list'};
     }
      
-    unless ($message = &reformat_message("$headers"."$message", \@msgs, $data->{'charset'})) {
+    unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
 	&do_log('err', "mail::mail_file: Failed to reformat message");
     }
+
+    
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
     
+
+    my $message = new Message ({'messageasstring'=>$message_as_string,'noxsympato'=>'noxsympato'});
+
     ## SENDING
-    return undef unless (defined &sending('msg' => $message,
+    return undef unless (defined &sending('message' => $message,
 					  'rcpt' => $rcpt,
 					  'from' => $data->{'return_path'},
 					  'robot' => $robot,
@@ -318,10 +323,10 @@ sub mail_message {
     my $message =  $params{'message'};
     my $list =  $params{'list'};
     my $verp = $params{'verp'};
-
     my @rcpt =  @{$params{'rcpt'}};
     my $dkim  =  $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
+
 
     my $host = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
@@ -341,9 +346,8 @@ sub mail_message {
     $msg_header = $message->{'msg'}->head;
     if ($message->{'altered'}) {
 	$msg_body = $message->{'msg'}->body_as_string;
-	
     }elsif ($message->{'smime_crypted'}) {
-	$msg_body = ${$message->{'msg_as_string'}};	
+	$msg_body = ${$message->{'msg_as_string'}}; # why is object message msg_as_string contain a body _as_string ? wrong name for this mesage property	
     }else{
 	## Get body from original file
 	unless (open MSG, $message->{'filename'}) {
@@ -360,7 +364,8 @@ sub mail_message {
 	}
 	close (MSG);
     }
-    
+    $message->{'body_as_string'} = $msg_body ;
+
     my %rcpt_by_dom ;
 
     my @sendto;
@@ -381,21 +386,21 @@ sub mail_message {
 	if (defined ($Conf::Conf{'nrcpt_by_domain'}{$dom}) && ( $rcpt_by_dom{$dom} >= $Conf::Conf{'nrcpt_by_domain'}{$dom} )){
 	    undef %rcpt_by_dom ;
 	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
-	    $numsmtp++ ; # if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $numsmtp++ ; 
 	    $nrcpt = $size = 0;
 	    @sendto = ();
 	}
 	
 	if ($j && $#sendto >= &Conf::get_robot_conf($robot, 'avg') && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
 	    undef %rcpt_by_dom ;
-	    $numsmtp++ ; # if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $numsmtp++ ; 
 	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
 	    $nrcpt = $size = 0;
 	    @sendto = ();
 	}
 	if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) {
 	    undef %rcpt_by_dom ;
-	    $numsmtp++  ; # if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	    $numsmtp++  ;
 	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
 	    $nrcpt = $size = 0;
 	    @sendto = ();
@@ -406,12 +411,12 @@ sub mail_message {
     }
 
     if ($#sendto >= 0) {
-	$numsmtp++ ;# if (&sendto($msg_header, $msg_body, $from, \@sendto, $robot));
+	$numsmtp++ ;
 	my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
     }
 
-    unless (&sendto('msg_header' => $msg_header, 
-		    'msg_body' => $msg_body,
+    
+    unless (&sendto('message' => $message,
 		    'from' => $from,
 		    'rcpt' => \@sendtobypacket,
 		    'listname' => $list->{'name'},
@@ -423,7 +428,8 @@ sub mail_message {
 		    'verp' => $verp,
 		    'dkim' => $dkim,
 		    'merge' => $list->{'admin'}{'merge_feature'},
-		    'tag_as_last' => $tag_as_last)) {
+		    'tag_as_last' => $tag_as_last
+		    )) {
 	do_log ('err',"Failed to send message to list %s", $list->{'name'});
 	return undef;
     }
@@ -453,7 +459,7 @@ sub mail_forward {
     
     if (ref($msg) eq 'Message') {
 	$message = $msg->{'msg'};
-	$messageasstring = $message->{'msg_as_string'};
+	$messageasstring = $message->as_string;
     }elsif(ref($msg) eq "MIME::Entity") {
 	$message = $msg;
 	$messageasstring = $message->as_string;
@@ -469,7 +475,6 @@ sub mail_forward {
       $message->head->add('Auto-Submitted', 'auto-forwarded');
     }
     
-
     unless (defined &sending('msg' => $messageasstring, 
 			     'rcpt' => $rcpt,
 			     'from' => $from,
@@ -537,8 +542,10 @@ sub reaper {
 ####################################################
 sub sendto {
     my %params = @_;
-    my $msg_header = $params{'msg_header'};
-    my $msg_body = $params{'msg_body'};
+    
+    my $message = $params{'message'};
+    my $msg_header = $message->{'msg'}->head;
+    my $msg_body = $message->{'body_as_string'};
     my $from = $params{'from'};
     my $rcpt = $params{'rcpt'};
     my $listname = $params{'listname'};    
@@ -568,13 +575,12 @@ sub sendto {
 		    do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
 		    return undef;
 		}
-		my $encrypted_msg_as_string;
-		unless ($encrypted_msg_as_string = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
+		unless ($message->{'msg_as_string'} = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
     		    do_log('err',"Failed to encrypt message"); 
 		    return undef;
                 }	
 
-		unless (&sending('msg' => $encrypted_msg_as_string,
+		unless (&sending('message' => $message,
 				 'rcpt' => $email,
 				 'from' => $from,
 				 'listname' => $listname,
@@ -590,27 +596,21 @@ sub sendto {
 	    }    
 	}
     }else{
-	$msg = $msg_header->as_string . "\n" . $msg_body;   
-	if ($msg) {
-	    # my $result = &sending($msg,$rcpt,$from,$robot,'','none');
-
-	    my $result = &sending('msg' => $msg,
-				  'rcpt' => $rcpt,
-				  'from' => $from,
-				  'listname' => $listname,
-				  'robot' => $robot,
-				  'priority' => $priority,
-				  'delivery_date' =>  $delivery_date,
-				  'verp' => $verp,
-				  'merge' => $merge,
-				  'use_bulk' => $use_bulk,
-				  'dkim' => $dkim,
-				  'tag_as_last' => $tag_as_last);
-	    return $result;
-	}else{
-	    do_log('err',"empty message, internal error");
-	    return undef;
-	}   
+	$message->{'msg_as_string'} = $msg_header->as_string . "\n" . $msg_body;   
+	my $result = &sending('message' => $message,
+			      'rcpt' => $rcpt,
+			      'from' => $from,
+			      'listname' => $listname,
+			      'robot' => $robot,
+			      'priority' => $priority,
+			      'delivery_date' =>  $delivery_date,
+			      'verp' => $verp,
+			      'merge' => $merge,
+			      'use_bulk' => $use_bulk,
+			      'dkim' => $dkim,
+			      'tag_as_last' => $tag_as_last);
+	return $result;
+	
     }
     return 1;
 }
@@ -640,7 +640,8 @@ sub sendto {
 ####################################################
 sub sending {
     my %params = @_;
-    my $msg = $params{'msg'};
+    my $message = $params{'message'};
+    my $msg = $message->{'msg_as_string'};
     my $msg_id;
     my $rcpt = $params{'rcpt'};
     my $from = $params{'from'};

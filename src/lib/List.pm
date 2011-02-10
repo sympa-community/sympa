@@ -3407,7 +3407,7 @@ sub send_msg {
 	    my $notice_msg = $saved_msg->dup;
 	    $notice_msg->bodyhandle(undef);    
 	    $notice_msg->parts([]);
-	    $new_message = new Message($notice_msg);
+	    $new_message = new Message({'mimeentity' => $notice_msg});
 
 	##Prepare message for txt reception mode
 	}elsif($array_name eq 'tabrcpt_txt'){
@@ -3421,7 +3421,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$txt_msg = $new_msg;
 	    }
-	    $new_message = new Message($txt_msg);
+	    $new_message = new Message({'mimeentity' => $txt_msg});
 
 	##Prepare message for html reception mode
 	}elsif($array_name eq 'tabrcpt_html'){
@@ -3434,7 +3434,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$html_msg = $new_msg;
 	    }
-	    $new_message = new Message($html_msg);
+	    $new_message = new Message({'mimeentity' => $html_msg});
 	    
 	##Prepare message for urlize reception mode
 	}elsif($array_name eq 'tabrcpt_url'){
@@ -3476,7 +3476,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$url_msg = $new_msg;
 	    } 
-	    $new_message = new Message($url_msg);
+	    $new_message = new Message({'mimeentity' => $url_msg});
 	}else {
 	    do_log('err', "Unknown variable/reception mode $array_name");
 	    return undef;
@@ -3987,7 +3987,7 @@ sub archive_send_last {
    return unless ($self->is_archived());
    my $dir = $self->{'dir'}.'/archives' ;
 
-   my $mail = new Message("$dir/last_message",'noxsympato');
+   my $mail = new Message({'file' => "$dir/last_message",'noxsympato'=>'noxsympato'});
    unless (defined $mail) {
        &do_log('err', 'Unable to create Message object %s', "$dir/last_message");
        return undef;
