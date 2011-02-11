@@ -1,5 +1,5 @@
-# SympaDatabaseManger.pm - This module contains all functions relative to
-# the maintainance of the Sympa database.
+# SympaDatabaseManager.pm - This module contains all functions relative to
+# the access and maintenance of the Sympa database.
 #<!-- RCS Identication ; $Revision: 7016 $ --> 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -17,7 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Softwarec
+# along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package SympaDatabaseManager;
@@ -30,15 +30,12 @@ use Exporter;
 use Conf;
 use Log;
 use List;
-use tt2;
 use Sympa::Constants;
+use SQLSource;
 
-our @ISA = qw(Exporter SQLSource);
-our @EXPORT_OK = qw(probe_db data_structure_uptodate check_db_field_type is_auto_inc set_auto_inc);
+our @ISA;
 
 use Sympa::DatabaseDescription;
-
-
 
 # db structure description has moved in Sympa/Constant.pm 
 my %db_struct = &Sympa::DatabaseDescription::db_struct();
@@ -58,8 +55,66 @@ my %indexes = %Sympa::DatabaseDescription::indexes ;
 # table indexes that can be removed during upgrade process
 my @former_indexes =  %Sympa::DatabaseDescription::primary ;
 
+my $db_handle;
+my $db_source;
+my $db_connected;
+
+## Get database handler
+sub db_get_handler {
+    &Log::do_log('debug3', 'Returning handle to sympa database');
+
+    if(&db_connect()) {
+	return $db_handle;
+    }else {
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+}
+
+## Connect to Database
+sub db_connect {
+    my $option = shift;
+
+    &Log::do_log('debug2', 'Connecting to Sympa database');
+
+    ## Check if already connected
+    if ($db_handle && $db_handle->ping()) {
+	&Log::do_log('debug2', 'DB handle already available');
+	return 1;
+    }
+
+    ## We keep trying to connect if this is the first attempt
+    ## Unless in a web context, because we can't afford long response time on the web interface
+    my $db_conf = &Conf::get_parameters_group('*','Database');
+    unless ($db_source = new SQLSource($db_conf)) {
+	&Log::do_log('err', 'Unable to create SQLSource object');
+    	return undef;
+    }
+    unless ( $db_handle = $db_source->connect({'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
+						 'warn'=>1 } )) {
+	&Log::do_log('err', 'Unable to connect to the Sympa database');
+	return undef;
+    }
+    &Log::do_log('debug2','Connected to Database %s',$Conf::Conf{'db_name'});
+    $db_connected = 1;
+
+    return 1;
+}
+
+## Disconnect from Database
+sub db_disconnect {
+    &Log::do_log('debug2', 'Disconnecting from Sympa database');
+
+    unless ($db_handle->disconnect()) {
+	&Log::do_log('err','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $db_handle->errstr);
+	return undef;
+    }
+
+    return 1;
+}
+
 sub probe_db {
-    &do_log('debug3', 'List::probe_db()');    
+    &do_log('debug3', 'Checking database structure');    
     my (%checked, $table);
     
     ## Database structure
@@ -73,18 +128,14 @@ sub probe_db {
     }
     
     unless (&List::check_db_connect()) {
-	unless (&SQLSource::create_db()) {
-	    return undef;
-	}
-	
 	if ($ENV{'HTTP_HOST'}) { ## Web context
-	    return undef unless &List::db_connect('just_try');
+	    return undef unless &db_connect('just_try');
 	}else {
-	    return undef unless &List::db_connect();
+	    return undef unless &db_connect();
 	}
     }
     
-    my $dbh = &List::db_get_handler();
+    my $dbh = &db_get_handler();
 
 
     my @tables ;

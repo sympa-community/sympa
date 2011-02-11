@@ -28,6 +28,7 @@ use Sys::Syslog;
 use Carp;
 use POSIX qw(mktime);
 use Encode;
+use List;
 
 
 our @ISA = qw(Exporter);

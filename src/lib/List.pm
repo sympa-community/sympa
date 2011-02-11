@@ -25,6 +25,7 @@ use POSIX;
 use SQLSource;
 use Datasource;
 use LDAPSource;
+use SympaDatabaseManager;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
 use Lock;
@@ -1499,46 +1500,29 @@ $DB_BTREE->{compare} = \&_compare_addresses;
 ## Connect to Database
 sub db_connect {
     my $option = shift;
-
     do_log('debug2', 'List::db_connect');
-
-    my $connect_string;
-
-    ## Check if already connected
-    if ($dbh && $dbh->ping()) {
-	&do_log('notice', 'List::db_connect(): Db handle already available');
+    
+    if(&SympaDatabaseManager::db_connect($option)) {
+	$dbh = &SympaDatabaseManager::db_get_handler();
+	$db_connected = 1;
 	return 1;
+    }else{
+	return undef;
     }
-
-    ## We keep trying to connect if this is the first attempt
-    ## Unless in a web context, because we can't afford long response time on the web interface
-    unless ( $dbh = &SQLSource::connect(\%Conf::Conf, {'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
-						 'warn'=>1 } )) {
-    	return undef;
-    }
-    do_log('debug3','Connected to Database %s',$Conf::Conf{'db_name'});
-    $db_connected = 1;
-
-    return 1;
 }
 
 ## Disconnect from Database
 sub db_disconnect {
     do_log('debug3', 'List::db_disconnect');
 
-    unless ($dbh->disconnect()) {
-	do_log('notice','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $dbh->errstr);
-	return undef;
-    }
+   return &SympaDatabaseManager::db_disconnect();
 
-    return 1;
 }
 
 ## Get database handler
 sub db_get_handler {
     do_log('debug3', 'List::db_get_handler');
-
-    return $dbh;
+   return &SympaDatabaseManager::db_get_handler();
 }
 
 ## Creates an object.

@@ -64,6 +64,8 @@ foreach my $hash(@confdef::params){
     $optional_key_words{$hash->{'name'}} = 1 if ($hash->{'optional'}); 
 }
 
+our $params_by_categories = &_get_parameters_names_by_category();
+
 my %old_params = (
     trusted_ca_options     => 'capath,cafile',
     msgcat                 => 'localedir',
@@ -244,6 +246,18 @@ sub get_robot_conf {
     return $Conf{$param} || $wwsconf->{$param};
 }
 
+## Returns a hash containing the values of all the parameters of the group
+## (as defined in confdef.pm) whose name is given as argument, in the context
+## of the robot given as argument.
+sub get_parameters_group {
+    my ($robot, $group) = @_;
+    &Log::do_log('debug3','Getting parameters for group "%s"',$group);
+    my $param_hash;
+    foreach my $param_name (keys %{$params_by_categories->{$group}}) {
+        $param_hash->{$param_name} = &get_robot_conf($robot,$param_name);
+    }
+    return $param_hash;
+}
 
 ## fetch the value from parameter $label of robot $robot from conf_table
 sub get_db_conf  {
@@ -1767,5 +1781,17 @@ sub _create_robot_like_config_for_main_robot {
     $Conf{'robots'}{$Conf{'domain'}} = $main_conf_no_robots;
 }
 
+sub _get_parameters_names_by_category {
+    my $param_by_categories;
+    my $current_category;
+    foreach my $entry (@confdef::params) {
+        if ($entry->{'title'}) {
+            $current_category = $entry->{'title'};
+        }else{
+            $param_by_categories->{$current_category}{$entry->{'name'}} = 1;
+        }
+    }
+    return $param_by_categories;
+}
 ## Packages must return true.
 1;

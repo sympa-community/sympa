@@ -43,10 +43,8 @@ use Log;
 ##############################################################
 sub new {
     my($pkg, $param_ref) = @_;
-    my $datasrc;
+    my $datasrc= $param_ref;
     &do_log('debug2', 'Datasource::new($pkg)');
-    
-    $datasrc->{'param'} = $param_ref;
 
     ## Bless Message object
     bless $datasrc, $pkg;
