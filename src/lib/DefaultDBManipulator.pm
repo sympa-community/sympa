@@ -1,4 +1,5 @@
-# DBManipulatorPostgres.pm - This module contains the code specific to using a Postgres server.
+# DefaultDBManipulator.pm - This module contains default manipulation functions.
+# they are used if not defined in the DBManipulator<*> subclasses.
 #<!-- RCS Identication ; $Revision: 7016 $ --> 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -16,22 +17,23 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Softwarec
+# along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package DBManipulatorPostgres;
+package DefaultDBManipulator;
 
 use strict;
 
 use Carp;
 use Log;
 
-use DefaultDBManipulator;
+use Datasource;
 
-our @ISA = qw(DefaultDBManipulator);
+our @ISA = qw(Datasource);
 
 sub build_connect_string{
     my $self = shift;
-    $self->{'connect_string'} = "DBI:Pg:dbname=$self->{'db_name'};host=$self->{'db_host'}";
+    $self->{'connect_string'} = "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
 }
+
 return 1;

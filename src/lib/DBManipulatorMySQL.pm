@@ -26,9 +26,9 @@ use strict;
 use Carp;
 use Log;
 
-use Datasource;
+use DefaultDBManipulator;
 
-our @ISA = qw(Datasource);
+our @ISA = qw(DefaultDBManipulator);
 
 sub build_connect_string{
     my $self = shift;

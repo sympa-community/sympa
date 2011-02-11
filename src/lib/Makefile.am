@@ -9,7 +9,7 @@ nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
 		      Sympa/DatabaseDescription.pm SympaDatabaseManager.pm \
 		      DBManipulatorMySQL.pm DBManipulatorSQLite.pm\
 		      DBManipulatorSybase.pm DBManipulatorOracle.pm \
-		      DBManipulatorPostgres.pm
+		      DBManipulatorPostgres.pm DefaultDBManipulator.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm
