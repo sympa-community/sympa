@@ -143,7 +143,7 @@ sub new {
 	return $message;
     }
 
-        my $parser = new MIME::Parser;
+    my $parser = new MIME::Parser;
     $parser->output_to_core(1);
     
     my $msg;
@@ -161,13 +161,17 @@ sub new {
 	    return undef;
 	}
     
-	unless ($msg = $parser->read(\*FILE)) {
-	    do_log('err', 'Unable to parse message %s', $file);
-	    close(FILE);
-	    return undef;
+	# unless ($msg = $parser->read(\*FILE)) {
+	#    do_log('err', 'Unable to parse message %s', $file);
+	#    close(FILE);
+	#    return undef;
+	#}
+	while (<FILE>){
+	    $messageasstring = $messageasstring.$_;
 	}
 	close(FILE);
-    }elsif($messageasstring){
+    }
+    if($messageasstring){
 	if (ref ($messageasstring)){
 	    $msg = $parser->parse_data($messageasstring);
 	}else{
@@ -235,69 +239,61 @@ sub new {
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};
-    unless (defined $noxsympato) { # message.pm can be used for mesage not in the spool but in archive
+    unless (defined $noxsympato) { # message.pm can be used not only for message comming from queue
 	unless ($message->{'rcpt'}) {
 	    do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
 	    return undef;
 	}
+	    
+	## get listname & robot
+	my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
 	
-	## Do not check listname if processing a web message
-	unless ($hdr->get('X-Sympa-From')) {
-	    ## get listname & robot
-	    my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
-	    
-	    $robot = lc($robot);
-	    $listname = lc($listname);
-	    $robot ||= $Conf::Conf{'domain'};
-	    
-
-	    ## Antispam feature.
-	    #my $spam_header_name = &Conf::get_robot_conf($robot,'antispam_tag_header_name');
-	    #my $spam_regexp = &Conf::get_robot_conf($robot,'antispam_tag_header_spam_regexp');
-	    ## my $ham_regexp = &Conf::get_robot_conf($robot,'antispam_tag_header_ham_regexp');
-	    
-	    ## if (&Conf::get_robot_conf($robot,'antispam_feature') =~ /on/i){
-	    ## 	if ($hdr->get($spam_header_name) =~ /$spam_regexp/i) {
-	    ## 		    $message->{'spam_status'} = 'spam';
-	    ## 		}elsif($hdr->get($spam_header_name) =~ /$ham_regexp/i) {
-	    ## 		    $message->{'spam_status'} = 'ham';
-	    ## 		}
-	    ##    }else{
-	    ## 	$message->{'spam_status'} = 'not configured';
-	    ##     }
-	    
-	    my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
-	    $message->{'spam_status'} = 'unkown';
-	    if(defined $spam_status) {
-		if (ref($spam_status ) eq 'HASH') {
-		    $message->{'spam_status'} =  $spam_status ->{'action'};
-		}else{
-		    $message->{'spam_status'} = $spam_status ;
-		}
-	    }
-
-	    my $conf_email = &Conf::get_robot_conf($robot, 'email');
-	    my $conf_host = &Conf::get_robot_conf($robot, 'host');
-	    unless ($listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
-		my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
-	        if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-		    $listname = $1;
-		}
-		
-		$message->{'list'} = new List ($listname, $robot);
-		unless ($message->{'rcpt'}) {
-		    do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
-		    return undef;
-		}
-		
-	    }
-	    # verify DKIM signature
-	    if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
-		$message->{'dkim_pass'} = &tools::dkim_verifier($message->{'msg_as_string'});
+	$robot = lc($robot);
+	$listname = lc($listname);
+	$robot ||= $Conf::Conf{'domain'};
+	my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
+	$message->{'spam_status'} = 'unkown';
+	if(defined $spam_status) {
+	    if (ref($spam_status ) eq 'HASH') {
+		$message->{'spam_status'} =  $spam_status ->{'action'};
+	    }else{
+		$message->{'spam_status'} = $spam_status ;
 	    }
 	}
+	
+	my $conf_email = &Conf::get_robot_conf($robot, 'email');
+	my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	unless ($listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
+	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
+		$listname = $1;
+	    }
+	    my $list = new List ($listname, $robot);
+	    if ($list) {
+		$message->{'list'} = $list;
+	    }else{
+		do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
+		#   return undef;
+	    }		
+	}
+	# verify DKIM signature
+	if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
+	    $message->{'dkim_pass'} = &tools::dkim_verifier($message->{'msg_as_string'});
+	}
     }
-    
+        
+    ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
+    if ( $hdr->get('X-Sympa-Checksum')) {
+	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
+	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
+
+	if ($chksum eq &tools::sympa_checksum($rcpt)) {
+	    $message->{'md5_check'} = 1 ;
+	}else{
+	    do_log('err',"incorrect X-Sympa-Checksum header");	
+	}
+    }
+
     ## S/MIME
     if ($Conf::Conf{'openssl'}) {
 
@@ -316,15 +312,13 @@ sub new {
 	    $message->{'orig_msg'} = $message->{'msg'};
 	    $message->{'msg'} = $dec;
 	    $message->{'msg_as_string'} = $dec_as_string;
-	    $message->{'decrypted_body'} = $dec_as_string;
 	    $hdr = $dec->head;
 	    do_log('debug', "message %s has been decrypted", $file);
-
 	}
 	
 	## Check S/MIME signatures
 	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
-	    $message->{'protected'} = 1; ## Messages that should not be altered (not footer)
+	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
 	    my $signed = &tools::smime_sign_check ($message);
 	    if ($signed->{'body'}) {
 		$message->{'smime_signed'} = 1;
@@ -333,18 +327,14 @@ sub new {
 	    }
 	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
 	}
-	
     }
-    
     ## TOPICS
     my $topics;
     if ($topics = $hdr->get('X-Sympa-Topic')){
 	$message->{'topic'} = $topics;
     }
 
-    ## Bless Message object
     bless $message, $pkg;
-
     return $message;
 }
 

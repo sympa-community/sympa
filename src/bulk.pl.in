@@ -233,6 +233,8 @@ while (!$end) {
 
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
 
+	    # &trace_smime($messageasstring_init,'initial');
+
 	    unless ( $messageasstring_init ) {
 		&do_log('err',"internal error : current packet (messagekey= %s) contains a ref to a null message",$bulk->{'messagekey'});
 		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
@@ -270,12 +272,10 @@ while (!$end) {
 
 	if (($bulk->{'verp'})||($bulk->{'merge'})||($bulk->{'tracking'}eq 'dsn')||($bulk->{'tracking'}eq 'mdn')){ # message needs personalization
 	    my $key ;
-	    ### Parse an MIME::Entity message
-	    my $parser = new MIME::Parser;
-	    $parser->output_to_core(1);
 	    	    
 	    foreach $rcpt (@rcpts) {
-		my $entity = $parser->parse_data($messageasstring_init); 
+		my $message = new Message ({'messageasstring'=>$messageasstring_init,'noxsympato'=>'noxsympato'});
+		my $entity = $message->{'msg'};
 		my $notification_id;
 		my $return_path;
 		my $escaped_rcpt = $rcpt;
@@ -286,15 +286,21 @@ while (!$end) {
 		    $notification_id = &tracking::find_notification_id_by_message($rcpt, $msgid, $listname,$robot);
 		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
-		    $messageasstring_init = $entity->as_string;
+		    if (($message->{'protected'})||($message->{'smime_crypted'})){
+			my $msg_body =$messageasstring_init; $msg_body =~ s/^.*\n\n//;      # remove headers
+			$messageasstring_init = $entity->head->as_string. "\n" . $msg_body; # concat headers from entity with original body
+		    }else{
+			$messageasstring_init = $entity->as_string;
+		    }
+		    # &trace_smime($messageasstring,'tracking');
 		}else{  # VERP
 		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'@'.$robot; 
 		}
-		if ($bulk->{'merge'}) { 		    		    
+		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
 			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
-		    }
-		    $messageasstring = $entity->as_string;		    
+		    }		    
+		    $messageasstring = $entity->as_string;		    		
 		}else{
 		    $messageasstring = $messageasstring_init;
 		}
@@ -309,6 +315,8 @@ while (!$end) {
 									   'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
 									   'dkim_header_list' =>$message_from_spool->{'dkim_header_list'} } );
 		}
+
+		# &trace_smime($messageasstring,'dkim');
 
 		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'},$notification_id);
 		# Message with customized data
@@ -327,6 +335,8 @@ while (!$end) {
 										 'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
 										 'dkim_header_list' =>$message_from_spool->{'dkim_header_list'} } );
 	    }
+
+	    # &trace_smime($messageasstring_init,'dkim 2');
 	    
 	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});		
 	    print SMTP $messageasstring_init;
@@ -369,3 +379,32 @@ sub sigterm {
     $end = 1;
 }
 
+
+
+
+
+sub trace_smime {
+
+    my $messageasstring_init = shift;
+    my $where = shift;
+
+    my $trusted_ca_options = '';
+    $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} " if ($Conf::Conf{'cafile'});
+    $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} " if ($Conf::Conf{'capath'});
+    
+    unless (open (MSGDUMP, "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options > /dev/null")) {	
+	do_log('err', "unable to verify smime signature");
+	return undef ;
+    }
+    
+    print MSGDUMP $messageasstring_init;
+    
+    close MSGDUMP;
+    
+    my $status = $?/256 ;
+    unless ($status == 0) {
+	do_log('debug', "signature SMIME NOT OK   (%s)",$where);    
+    }else{
+	do_log('debug', "signature SMIME OK    (%s)",$where);    
+    }
+}

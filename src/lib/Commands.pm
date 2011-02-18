@@ -99,7 +99,7 @@ sub parse {
    my $sign_mod = shift;
    my $message = shift;
 
-   &do_log('debug2', 'Commands::parse(%s, %s, %s, %s, %s)', $sender, $robot, $i, $sign_mod, $message );
+   &do_log('debug2', 'Commands::parse(%s, %s, %s, %s, %s)', $sender, $robot, $i, $sign_mod, $message->{'msg'}->as_string );
 
    my $j;
    $cmd_line = '';
@@ -2139,7 +2139,6 @@ sub confirm {
     }
 
     my $message = new Message ({'file'=>$file});
-
     unless (defined $message) {
 	&do_log('err', 'Commands::confirm(): Unable to create Message object %s', $file);
 	&report::reject_report_msg('user','wrong_format_message',$sender,{'key'=> $key},$robot,'','');
@@ -2148,11 +2147,9 @@ sub confirm {
 
     my $msg = $message->{'msg'};
     my $list = $message->{'list'};
-
     &Language::SetLang($list->{'admin'}{'lang'});
 
     my $name = $list->{'name'};
-   
     my $bytes = -s $file;
     my $hdr= $msg->head;
 

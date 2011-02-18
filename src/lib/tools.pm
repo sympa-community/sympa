@@ -776,6 +776,7 @@ sub dkim_verifier {
     my $msg_as_string = shift;
     my $dkim;
 
+    do_log('debug',"dkim verifier");
     unless (eval "require Mail::DKIM::Verifier") {
 	&do_log('err', "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature");
 	return undef;
@@ -817,7 +818,7 @@ sub dkim_verifier {
     
     foreach my $signature ($dkim->signatures) {
 	return 1 if  ($signature->result_detail eq "pass");
-    }    
+    }
     return undef;
 }
 
@@ -1040,9 +1041,8 @@ sub smime_sign_check {
     my $message = shift;
 
     my $sender = $message->{'sender'};
-    my $file = $message->{'filename'};
 
-    do_log('debug2', 'tools::smime_sign_check (message, %s, %s)', $sender, $file);
+    do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $sender, $message->{'filename'});
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -1057,27 +1057,29 @@ sub smime_sign_check {
     my $trusted_ca_options = '';
     $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} " if ($Conf::Conf{'cafile'});
     $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} " if ($Conf::Conf{'capath'});
-    do_log('debug3', "$Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
+    do_log('debug', "$Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
 
     unless (open (MSGDUMP, "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null")) {
 
 	do_log('err', "unable to verify smime signature from $sender $verify");
 	return undef ;
     }
-
-    if ($message->{'smime_crypted'}) {
+    
+    if ($message->{'smime_crypted'}){
 	$message->{'msg'}->head->print(\*MSGDUMP);
 	print MSGDUMP "\n";
-	print MSGDUMP ${$message->{'msg_as_string'}};
-    }else {
-	unless (open MSG, $file) {
-	    do_log('err', 'Unable to open file %s: %s', $file, $!);
+	print MSGDUMP $message->{'msg_as_string'};
+    }elsif (! $message->{'filename'}) {
+	print MSGDUMP $message->{'msg_as_string'};
+    }else{
+	unless (open MSG, $message->{'filename'}) {
+	    do_log('err', 'Unable to open file %s: %s', $message->{'filename'}, $!);
 	    return undef;
+
 	}
 	print MSGDUMP <MSG>;
+	close MSG;
     }
-
-    close MSG;
     close MSGDUMP;
 
     my $status = $?/256 ;
@@ -1085,7 +1087,6 @@ sub smime_sign_check {
 	do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
 	return undef ;
     }
-    
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
     my $signer = smime_parse_cert({file => $temporary_file});

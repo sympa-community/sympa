@@ -407,8 +407,8 @@ sub merge_data {
 sub store { 
     my %data = @_;
     
-    my $msg = $data{'msg'};
-    my $msg_id = $data{'msg_id'};
+    my $message = $data{'message'};
+    my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
     my $rcpts = $data{'rcpts'};
     my $from = $data{'from'};
     my $robot = $data{'robot'};
@@ -441,12 +441,11 @@ sub store {
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
 
-    my $msg_as_entity= $parser->parse_data($msg);
- 
-    my $msg_head = $msg_as_entity->head;
-
-
-    my @sender_hdr = Mail::Address->parse($msg_head->get('From'));
+    my $msg = $message->{'msg'}->as_string;
+    if ($message->{'protected'}) {
+	$msg = $message->{'msg_as_string'};
+    }
+    my @sender_hdr = Mail::Address->parse($message->{'msg'}->head->get('From'));
     my $message_sender = $sender_hdr[0]->address;
 
     
