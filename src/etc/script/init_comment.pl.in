@@ -26,6 +26,7 @@ use wwslib;
 use Sympa::Constants;
 
 use List;
+use SDM;
 use Log;
 
 ## Load sympa config
@@ -33,9 +34,9 @@ use Log;
 
 chdir $Conf::Conf{'home'};
 
-&List::db_connect() || die "Can't connect to database";
+&SDM::db_connect() || die "Can't connect to database";
 
-my $dbh = &List::db_get_handler();
+my $dbh = &SDM::db_get_handler();
 
 my $sth =  $dbh->prepare("SELECT user_subscriber, comment_subscriber FROM subscriber_table") || die "Can't prepare SQL statement";
 
@@ -68,4 +69,5 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
 $sth->finish();
 
-&List::db_disconnect();
+## Disconnect from Database
+SDM::db_disconnect if ($SDM::dbh);

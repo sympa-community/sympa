@@ -1,4 +1,4 @@
-# SympaDatabaseManager.pm - This module contains all functions relative to
+# SDM.pm - Sympa Database Manager : This module contains all functions relative to
 # the access and maintenance of the Sympa database.
 #<!-- RCS Identication ; $Revision: 7016 $ --> 
 #
@@ -20,7 +20,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package SympaDatabaseManager;
+package SDM;
 
 use strict;
 
@@ -32,8 +32,10 @@ use Log;
 use List;
 use Sympa::Constants;
 use SQLSource;
+use Data::Dumper;
 
 our @ISA;
+our $AUTOLOAD;
 
 use Sympa::DatabaseDescription;
 
@@ -55,20 +57,109 @@ my %indexes = %Sympa::DatabaseDescription::indexes ;
 # table indexes that can be removed during upgrade process
 my @former_indexes =  %Sympa::DatabaseDescription::primary ;
 
-my $db_handle;
-my $db_source;
-my $db_connected;
+our $db_source;
+our $use_db = 1;
+
+sub do_query {
+    my $query = shift;
+    my @params = @_;
+    my $sth;
+    unless ($use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+
+    unless(&db_connect()) {
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+    my $statement = sprintf $query, @params;
+
+    unless ($sth = $db_source->{'dbh'}->prepare($statement)) {
+	my $trace_statement = sprintf $query, @{&prepare_query_log_values(@params)};
+	do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $db_source->{'dbh'}->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute) {
+	my $trace_statement = sprintf $query, @{&prepare_query_log_values(@params)};
+	do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $db_source->{'dbh'}->errstr);
+	return undef;
+    }
+
+    return $sth;
+}
+
+sub do_prepared_statement {
+    my $query = shift;
+    my @params = @_;
+    my $sth;
+    unless ($use_db) {
+	&do_log('info', 'Sympa not setup to use DBI');
+	return undef;
+    }
+
+    unless(&db_connect()) {
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+
+    unless ($sth = $db_source->{'dbh'}->prepare($query)) {
+	do_log('err','Unable to prepare SQL statement : %s', $db_source->{'dbh'}->errstr);
+	return undef;
+    }
+    
+    unless ($sth->execute(@params)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $query, $db_source->{'dbh'}->errstr);
+	return undef;
+    }
+
+    return $sth;
+}
+
+sub prepare_query_log_values {
+    my @result;
+    foreach my $value (@_) {
+	my $cropped = substring($value,0,100);
+	if ($cropped ne $value) {
+	    $cropped .= "...[shortened]";
+	}
+	push @result, $cropped;
+    }
+    return \@result;
+}
 
 ## Get database handler
 sub db_get_handler {
     &Log::do_log('debug3', 'Returning handle to sympa database');
 
     if(&db_connect()) {
-	return $db_handle;
+	return $db_source->{'dbh'};
     }else {
 	&Log::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
+}
+
+## Just check if DB connection is ok
+sub check_db_connect {
+    
+    ## Is the Database defined
+    unless (&Conf::get_robot_conf('*','db_name')) {
+	&Log::do_log('err', 'No db_name defined in configuration file');
+	return undef;
+    }
+    
+    unless ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
+	unless (&db_connect('just_try')) {
+	    &Log::do_log('err', 'Failed to connect to database');	   
+	    return undef;
+	}
+    }
+
+    ## Used by List subroutines to check that the DB is available
+    $use_db = 1;
+    return 1;
 }
 
 ## Connect to Database
@@ -78,7 +169,7 @@ sub db_connect {
     &Log::do_log('debug2', 'Connecting to Sympa database');
 
     ## Check if already connected
-    if ($db_handle && $db_handle->ping()) {
+    if ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
 	&Log::do_log('debug2', 'DB handle already available');
 	return 1;
     }
@@ -90,13 +181,13 @@ sub db_connect {
 	&Log::do_log('err', 'Unable to create SQLSource object');
     	return undef;
     }
-    unless ( $db_handle = $db_source->connect({'keep_trying'=>($option ne 'just_try' && ( !$db_connected && !$ENV{'HTTP_HOST'})),
+    unless ( $db_source->{'dbh'} = $db_source->connect({'keep_trying'=>($option ne 'just_try' && ( !$db_source->{'connected'} && !$ENV{'HTTP_HOST'})),
 						 'warn'=>1 } )) {
 	&Log::do_log('err', 'Unable to connect to the Sympa database');
 	return undef;
     }
     &Log::do_log('debug2','Connected to Database %s',$Conf::Conf{'db_name'});
-    $db_connected = 1;
+    $db_source->{'connected'} = 1;
 
     return 1;
 }
@@ -105,8 +196,8 @@ sub db_connect {
 sub db_disconnect {
     &Log::do_log('debug2', 'Disconnecting from Sympa database');
 
-    unless ($db_handle->disconnect()) {
-	&Log::do_log('err','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $db_handle->errstr);
+    unless ($db_source->{'dbh'}->disconnect()) {
+	&Log::do_log('err','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $db_source->{'dbh'}->errstr);
 	return undef;
     }
 
@@ -122,12 +213,12 @@ sub probe_db {
     my @report;
 
     ## Is the Database defined
-    unless ($Conf::Conf{'db_name'}) {
+    unless (&Conf::get_robot_conf('*','db_name')) {
 	&do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
     
-    unless (&List::check_db_connect()) {
+    unless (&check_db_connect()) {
 	if ($ENV{'HTTP_HOST'}) { ## Web context
 	    return undef unless &db_connect('just_try');
 	}else {
@@ -726,7 +817,7 @@ sub is_autoinc {
 
     my $seqname = $table.'_'.$field.'_seq';
     my $sth;
-    my $dbh = &List::db_get_handler();
+    my $dbh = &SDM::db_get_handler();
 
     if ($Conf::Conf{'db_type'} eq 'Pg') {
 	my $sql_query = "SELECT relname FROM pg_class WHERE relname = '$seqname' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )";
@@ -770,7 +861,7 @@ sub set_autoinc {
 
     my $seqname = $table.'_'.$field.'_seq';
     my $sth;
-    my $dbh = &List::db_get_handler();
+    my $dbh = &SDM::db_get_handler();
     my $sql_query;
 
     if ($Conf::Conf{'db_type'} eq 'Pg') {
@@ -811,6 +902,56 @@ sub set_autoinc {
 	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
 	return undef;
     }
+}
+
+sub quote {
+    my $param = shift;
+    if(&db_connect()) {
+	return $db_source->quote($param);
+    }else{
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+}
+
+sub get_substring_clause {
+    my $param = shift;
+    if(&db_connect()) {
+	return $db_source->get_substring_clause($param);
+    }else{
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+}
+
+sub get_limit_clause {
+    my $param = shift;
+    if(&db_connect()) {
+	return ' '.$db_source->get_limit_clause($param).' ';
+    }else{
+	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+	return undef;
+    }
+}
+
+## Returns a character string corresponding to the expression to use in
+## a read query (e.g. SELECT) for the field given as argument.
+## This sub takes a single argument: the name of the field to be used in
+## the query.
+##
+sub get_canonical_write_date {
+    my $param = shift;
+    return $db_source->get_canonical_write_date($param);
+}
+
+## Returns a character string corresponding to the expression to use in 
+## a write query (e.g. UPDATE or INSERT) for the value given as argument.
+## This sub takes a single argument: the value of the date to be used in
+## the query.
+##
+sub get_canonical_read_date {
+    my $param = shift;
+    return $db_source->get_canonical_read_date($param);
 }
 
 return 1;

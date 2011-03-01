@@ -26,13 +26,19 @@ use strict;
 use Carp;
 use Log;
 
-use DefaultDBManipulator;
+use DBManipulatorDefault;
 
-our @ISA = qw(DefaultDBManipulator);
+our @ISA = qw(DBManipulatorDefault);
 
-sub build_connect_string{
-    my $self = shift;
-    $self->{'connect_string'} = "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
-}
+#####################   WARNING   ##############################
+###        DO NOT ADD ANY FUNCTION TO THIS MODULE !          ###
+### It is empty on purpose: The MySQL operations queries     ###
+### are the default in Sympa. So all the MySQL-specific subs ###
+### are located in DBManipulatorDefault.pm.                  ###
+###                                                          ###
+### We keep a MySQL module because the reference RDBMS could ###
+### change in the future and it is therefore better to treat ###
+### MySQL as any other supported RDBMS.                      ###
+################################################################
 
 return 1;

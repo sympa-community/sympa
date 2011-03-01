@@ -29,6 +29,7 @@ use Log;
 use Conf;
 use List;
 use report;
+use SDM;
 
 ## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
 sub password_fingerprint{
@@ -399,18 +400,10 @@ sub create_one_time_ticket {
     do_log('info', 'Auth::create_one_time_ticket(%s,%s,%s,%s) value = %s',$email,$robot,$data_string,$remote_addr,$ticket);
 
     my $date = time;
-    my $dbh = &List::db_get_handler();
     my $sth;
-
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-    }
     
-    my $statement = sprintf "INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES ('%s','%s','%s','%s','%s','%s','%s')",$ticket,$robot,$email,time,$data_string,$remote_addr,'open';
-
-    unless ($dbh->do($statement)) {
-	do_log('err','Unable to insert in table one_time_ticket_table while executing SQL statement "%s" : %s', $statement, $dbh->errstr);
+    unless (&SDM::do_query("INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES ('%s','%s','%s','%s','%s','%s','%s')",$ticket,$robot,$email,time,$data_string,$remote_addr,'open')) {
+	do_log('err','Unable to insert new one time ticket for user %s, robot %s in the database',$email,$robot);
 	return undef;
     }   
     return $ticket;
@@ -424,27 +417,14 @@ sub get_one_time_ticket {
     
     do_log('debug2', '(%s)',$ticket_number);
     
-    my $dbh = &List::db_get_handler();
     my $sth;
     
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return return {'result'=>'error'} unless &List::db_connect();
-    }
-    my $statement;
-    $statement = sprintf "SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS \"date\", data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = '%s' ", $ticket_number;
-    
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Auth::get_one_time_ticket: Unable to prepare SQL statement : %s', $dbh->errstr);
+    unless ($sth = &SDM::do_query("SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS \"date\", data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = '%s' ", $ticket_number)) {
+	do_log('err','Unable to retrieve one time ticket %s from database',$ticket_number);
 	return {'result'=>'error'};
     }
-    unless ($sth->execute) {
-	do_log('err','Auth::get_one_time_ticket: Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return {'result'=>'error'};
-    }    
  
     my $ticket = $sth->fetchrow_hashref('NAME_lc');
-    $sth->finish();
     
     unless ($ticket) {	
 	do_log('info','Auth::get_one_time_ticket: Unable to find one time ticket %s (SQL query %s)%s', $ticket,$statement, $dbh->errstr);
@@ -464,13 +444,11 @@ sub get_one_time_ticket {
     }else{
 	$result = 'success';
     }
-    $statement = sprintf "UPDATE one_time_ticket_table SET status_one_time_ticket = '%s' WHERE (ticket_one_time_ticket='%s')", $addr, $ticket_number;
-    
-    unless ($dbh->do($statement)) {
-    	do_log('err','Auth::get_one_time_ticket  Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    unless (&SDM::do_query("UPDATE one_time_ticket_table SET status_one_time_ticket = '%s' WHERE (ticket_one_time_ticket='%s')", $addr, $ticket_number)) {
+    	do_log('err','Unable to set one time tivket %s status to %s',$ticket_number, $addr);
     }
 
-    do_log('info', 'xxxx Auth::get_one_time_ticket(%s) : result : %s',$ticket_number,$result);
+    do_log('info', 'Auth::get_one_time_ticket(%s) : result : %s',$ticket_number,$result);
     return {'result'=>$result,
 	    'date'=>$ticket->{'date'},
 	    'email'=>$ticket->{'email'},

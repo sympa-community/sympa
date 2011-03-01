@@ -1126,7 +1126,7 @@ while (!$signal) {
 #List::dump();
 
 ## Disconnect from Database
-List::db_disconnect if ($List::dbh);
+SDM::db_disconnect if ($SDM::dbh);
 
 } #end of block while ($signal ne 'term'){
 

@@ -32,6 +32,7 @@ use Time::Local;
 use Log;
 use Conf;
 use SympaSession;
+use SDM;
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
 my %challenge_hard_attributes = ('id_challenge' => 1, 'date' => 1, 'robot'  => 1,'email' => 1, 'list' => 1);
@@ -77,27 +78,14 @@ sub load {
 	return undef;
     }
     
-    my $statement ;
-
-    $statement = sprintf "SELECT id_challenge AS id_challenge, date_challenge AS \"date\", remote_addr_challenge AS remote_addr, robot_challenge AS robot, email_challenge AS email, data_challenge AS data, hit_challenge AS hit, start_date_challenge AS start_date FROM challenge_table WHERE id_challenge = %s", $cookie;
-
-    my $dbh = &List::db_get_handler();
     my $sth;
 
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }
-    unless ($sth = $dbh->prepare($statement)) {
-	do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+    unless($sth = &SDM::do_query("SELECT id_challenge AS id_challenge, date_challenge AS 'date', remote_addr_challenge AS remote_addr, robot_challenge AS robot, email_challenge AS email, data_challenge AS data, hit_challenge AS hit, start_date_challenge AS start_date FROM challenge_table WHERE id_challenge = %s", $cookie)) {
+	&Log::do_log('err','Unable to retrieve challenge %s from database',$cookie);
 	return undef;
     }
-    unless ($sth->execute) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-	return undef;
-    }    
+
     my $challenge = $sth->fetchrow_hashref('NAME_lc');
-    $sth->finish();
     
     unless ($challenge) {
 	return 'not_found';
@@ -112,12 +100,11 @@ sub load {
     $challenge_datas->{'robot'} = $challenge->{'robot'};
     $challenge_datas->{'email'} = $challenge->{'email'};
 
-    my $del_statement = sprintf "DELETE FROM challenge_table WHERE (id_challenge=%s)",$id_challenge;
-	do_log('debug3', 'Challenge::load(): removing existing challenge del_statement = %s',$del_statement);	
-	unless ($dbh->do($del_statement)) {
-	    do_log('info','Challenge::load(): unable to remove existing challenge %s ',$id_challenge);
-	    return undef;
-	}	
+    &Log::do_log('debug3', 'Challenge::load(): removing existing challenge del_statement = %s',$del_statement);	
+    unless(&SDM::do_query("DELETE FROM challenge_table WHERE (id_challenge=%s)",$id_challenge)) {
+	&Log::do_log('err','Unable to delete challenge %s from database',$id_challenge);
+	return undef;
+    }
 
     return ('expired') if (time - $challenge_datas->{'date'} >= &tools::duration_conv($Conf{'challenge_table_ttl'}));
     return ($challenge_datas);
@@ -138,19 +125,12 @@ sub store {
 	$hash{$var} = $challenge->{$var};
     }
     my $data_string = &tools::hash_2_string (\%hash);
-    my $dbh = &List::db_get_handler();
     my $sth;
 
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &db_connect();
-    }	   
-
-    my $add_statement = sprintf "INSERT INTO challenge_table (id_challenge, date_challenge, robot_challenge, email_challenge, data_challenge) VALUES ('%s','%s','%s','%s','%s'')",$challenge->{'id_challenge'},$challenge->{'date'},$challenge->{'robot'},$challenge->{'email'},$data_string;
-    unless ($dbh->do($add_statement)) {
-	do_log('err','Unable to store challenge information in database while execute SQL statement "%s" : %s', $add_statement, $dbh->errstr);
+    unless(&SDM::do_query("INSERT INTO challenge_table (id_challenge, date_challenge, robot_challenge, email_challenge, data_challenge) VALUES ('%s','%s','%s','%s','%s'')",$challenge->{'id_challenge'},$challenge->{'date'},$challenge->{'robot'},$challenge->{'email'},$data_string)) {
+	&Log::do_log('err','Unable to store challenge %s informations in database (robot: %s, user: %s)',$challenge->{'id_challenge'},$challenge->{'robot'},$challenge->{'email'});
 	return undef;
-    }    
+    }
 }
 
 1;

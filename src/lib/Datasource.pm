@@ -26,6 +26,7 @@ use strict;
 
 use Carp;
 use Log;
+use Data::Dumper;
 
 ############################################################
 #  constructor
@@ -42,13 +43,12 @@ use Log;
 #
 ##############################################################
 sub new {
-    my($pkg, $param_ref) = @_;
-    my $datasrc= $param_ref;
-    &do_log('debug2', 'Datasource::new($pkg)');
-
+    my($pkg, $param) = @_;
+    &Log::do_log('debug', '');
+    my $self = $param;
     ## Bless Message object
-    bless $datasrc, $pkg;
-    return $datasrc;
+    bless $self, $pkg;
+    return $self;
 }
 
 # Returns a unique ID for an include datasource

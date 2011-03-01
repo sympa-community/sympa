@@ -30,9 +30,39 @@ use DefaultDBManipulator;
 
 our @ISA = qw(DefaultDBManipulator);
 
+our %date_format = (
+		   'read' => {
+		       'Sybase' => 'datediff(second, \'01/01/1970\',%s)',
+		       },
+		   'write' => {
+		       'Sybase' => 'dateadd(second,%s,\'01/01/1970\')',
+		       }
+	       );
+
 sub build_connect_string{
     my $self = shift;
     $self->{'connect_string'} = "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
+}
+
+## Returns an SQL clause to be inserted in a query.
+## This clause will compute a substring of max length
+## $param->{'substring_length'} starting from the first character equal
+## to $param->{'separator'} found in the value of field $param->{'source_field'}.
+sub get_substring_clause {
+    my $self = shift;
+    my $param = shift;
+    return "substring(".$param->{'source_field'}.",charindex('".$param->{'separator'}."',".$param->{'source_field'}.")+1,".$param->{'substring_length'}.")";
+}
+
+## Returns an SQL clause to be inserted in a query.
+## This clause will limit the number of records returned by the query to
+## $param->{'rows_count'}. If $param->{'offset'} is provided, an offset of
+## $param->{'offset'} rows is done from the first record before selecting
+## the rows to return.
+sub get_limit_clause {
+    my $self = shift;
+    my $param = shift;
+    return "";
 }
 
 return 1;

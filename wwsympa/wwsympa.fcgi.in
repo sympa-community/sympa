@@ -918,7 +918,7 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 $Language::default_lang = $Conf{'lang'};	 
 
 ## Important to leave this there because it defined defaults for user_data_source
-&List::check_db_connect();
+&SDM::check_db_connect();
 
 my $pinfo = &List::_apply_defaults();
 
@@ -975,7 +975,7 @@ my $birthday = time ;
 	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s). *** Switching to maintenance mode. ***', (getpwnam(Sympa::Constants::USER))[2], $>);
      }
 
-     unless (&List::check_db_connect()) {
+     unless (&SDM::check_db_connect()) {
 	 &report::reject_report_web('system_quiet','no_database',{},'','');
 	 &do_log('info','WWSympa requires a RDBMS to run');
      }

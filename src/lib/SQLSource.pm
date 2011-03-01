@@ -31,28 +31,11 @@ use List;
 use tools;
 use tt2;
 use Exporter;
+use Data::Dumper;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%date_format);
 our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetch_timeout);
-our $AUTOLOAD;
-
-our %date_format = (
-		   'read' => {
-		       'Pg' => 'date_part(\'epoch\',%s)',
-		       'mysql' => 'UNIX_TIMESTAMP(%s)',
-		       'Oracle' => '((to_number(to_char(%s,\'J\')) - to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) * 86400) +to_number(to_char(%s,\'SSSSS\'))',
-		       'Sybase' => 'datediff(second, \'01/01/1970\',%s)',
-		       'SQLite' => 'strftime(\'%%s\',%s,\'utc\')'
-		       },
-		   'write' => {
-		       'Pg' => '\'epoch\'::timestamp with time zone + \'%d sec\'',
-		       'mysql' => 'FROM_UNIXTIME(%d)',
-		       'Oracle' => 'to_date(to_char(round(%s/86400) + to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) || \':\' ||to_char(mod(%s,86400)), \'J:SSSSS\')',
-		       'Sybase' => 'dateadd(second,%s,\'01/01/1970\')',
-		       'SQLite' => 'datetime(%d,\'unixepoch\',\'localtime\')'
-		       }
-	       );
 
 ## Structure to keep track of active connections/connection status
 ## Key : connect_string (includes server+port+dbname+DB type)
@@ -60,6 +43,14 @@ our %date_format = (
 ## "status" can have value 'failed'
 ## 'first_try' contains an epoch date
 my %db_connections;
+
+sub redirector {
+    my $self = shift;
+    my $name = shift;
+    my $param = shift;
+    no strict 'refs';
+    return &{$name}($self,$param);
+}
 
 sub new {
     my $pkg = shift;
@@ -122,6 +113,7 @@ sub new {
     require DBI;
 
     bless $self, $pkg;
+
     return $self;
 }
 
@@ -134,7 +126,7 @@ sub new {
 #         currently accepts 'keep_trying' : wait and retry until
 #         db connection is ok (boolean) ; 'warn' : warn
 #         listmaster if connection fails (boolean)
-# OUT : $dbh
+# OUT : $self->{'dbh'}
 #     | undef
 #
 ##############################################################
@@ -185,7 +177,7 @@ sub connect {
 	$db_connections{$self->{'connect_string'}}{'dbh'}->ping()) {
       
       &do_log('debug', "Use previous connection");
-      $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'} if $self;
+      $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'};
       return $db_connections{$self->{'connect_string'}}{'dbh'};
 
     }else {
@@ -199,8 +191,7 @@ sub connect {
 	}
       }
       
-      my $dbh;
-      unless ($dbh = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})) {
+      unless ($self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})) {
     	
 	## Notify listmaster if warn option was set
 	## Unless the 'failed' status was set earlier
@@ -227,8 +218,8 @@ sub connect {
 	my $sleep_delay = 60;
 	while (1) {
 	  sleep $sleep_delay;
-	  $dbh = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'});
-	  last if ($dbh && $dbh->ping());
+	  $self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'});
+	  last if ($self->{'dbh'} && $self->{'dbh'}->ping());
 	  $sleep_delay += 10;
 	}
 	
@@ -242,13 +233,14 @@ sub connect {
       }
       
       if ($self->{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates
-	$dbh->do ("SET DATESTYLE TO 'ISO';");
+	$self->{'dbh'}->do ("SET DATESTYLE TO 'ISO';");
       }
       
       ## Set client encoding to UTF8
       if ($self->{'db_type'} eq 'mysql' ||
 	  $self->{'db_type'} eq 'Pg') {
-	$dbh->do("SET NAMES 'utf8'");
+	&Log::do_log('debug','Setting client encoding to UTF-8');
+	$self->{'dbh'}->do("SET NAMES 'utf8'");
       }elsif ($self->{'db_type'} eq 'oracle') { 
 	$ENV{'NLS_LANG'} = 'UTF8';
       }elsif ($self->{'db_type'} eq 'Sybase') { 
@@ -259,24 +251,23 @@ sub connect {
       if ($self->{'db_type'} eq 'Sybase') { 
 	my $dbname;
 	$dbname="use $self->{'db_name'}";
-        $dbh->do ($dbname);
+        $self->{'dbh'}->do ($dbname);
       }
       
       ## Force field names to be lowercased
       ## This has has been added after some problems of field names upercased with Oracle
-      $dbh->{'FetchHashKeyName'}='NAME_lc';
+      $self->{'dbh'}{'FetchHashKeyName'}='NAME_lc';
 
       if ($self->{'db_type'} eq 'SQLite') { # Configure to use sympa database
-        $dbh->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
-	if(defined $self->{'db_timeout'}) { $dbh->func( $self->{'db_timeout'}, 'busy_timeout' ); } else { $dbh->func( 5000, 'busy_timeout' ); };
+        $self->{'dbh'}->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
+	if(defined $self->{'db_timeout'}) { $self->{'dbh'}->func( $self->{'db_timeout'}, 'busy_timeout' ); } else { $self->{'dbh'}->func( 5000, 'busy_timeout' ); };
       }
       
-      $self->{'dbh'} = $dbh if $self;
+      $self->{'dbh'} = $self->{'dbh'} if $self;
       $self->{'connect_string'} = $self->{'connect_string'} if $self;     
-      $db_connections{$self->{'connect_string'}}{'dbh'} = $dbh;
-      
+      $db_connections{$self->{'connect_string'}}{'dbh'} = $self->{'dbh'};
       do_log('debug2','Connected to Database %s',$self->{'db_name'});
-      return $dbh;
+      return $self->{'dbh'};
     }
 }
 
@@ -385,25 +376,35 @@ sub ping {
 
 sub quote {
     my ($self, $string, $datatype) = @_;
-    
     return $self->{'dbh'}->quote($string, $datatype); 
 }
 
 sub set_fetch_timeout {
     my ($self, $timeout) = @_;
-
     return $self->{'fetch_timeout'} = $timeout;
 }
 
-sub AUTOLOAD {
+## Returns a character string corresponding to the expression to use in
+## a read query (e.g. SELECT) for the field given as argument.
+## This sub takes a single argument: the name of the field to be used in
+## the query.
+##
+sub get_canonical_write_date {
     my $self = shift;
-    my $name = $AUTOLOAD;
-    $name =~ /(.*):(.*)/;
-    &do_log('err',"Function %s was not found in module %s",$2,$1);
-    return undef;
+    my $field = shift;
+    return $self->get_formatted_date({'mode'=>'write','target'=>$field});
 }
 
-sub DESTROY {} ## Here to prevent AUTOLOAD calling when destroying the object.
+## Returns a character string corresponding to the expression to use in 
+## a write query (e.g. UPDATE or INSERT) for the value given as argument.
+## This sub takes a single argument: the value of the date to be used in
+## the query.
+##
+sub get_canonical_read_date {
+    my $self = shift;
+    my $value = shift;
+    return $self->get_formatted_date({'mode'=>'read','target'=>$value});
+}
 
 ## Packages must return true.
 1;

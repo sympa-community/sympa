@@ -30,9 +30,28 @@ use DefaultDBManipulator;
 
 our @ISA = qw(DefaultDBManipulator);
 
+our %date_format = (
+		   'read' => {
+		       'SQLite' => 'strftime(\'%%s\',%s,\'utc\')'
+		       },
+		   'write' => {
+		       'SQLite' => 'datetime(%d,\'unixepoch\',\'localtime\')'
+		       }
+	       );
+
 sub build_connect_string{
     my $self = shift;
     $self->{'connect_string'} = "DBI:SQLite:dbname=$self->{'db_name'}";
+}
+
+## Returns an SQL clause to be inserted in a query.
+## This clause will compute a substring of max length
+## $param->{'substring_length'} starting from the first character equal
+## to $param->{'separator'} found in the value of field $param->{'source_field'}.
+sub get_substring_clause {
+    my $self = shift;
+    my $param = shift;
+    return "substr(".$param->{'source_field'}.",func_index(".$param->{'source_field'}.",'".$param->{'separator'}."')+1,".$param->{'substring_length'}.")";
 }
 
 return 1;

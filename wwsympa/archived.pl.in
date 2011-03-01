@@ -108,7 +108,7 @@ if ($wwsconf->{'arc_path'}) {
 }
 
 ## Check databse connectivity
-unless (&List::check_db_connect()) {
+unless (&SDM::check_db_connect()) {
     &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
 }
 

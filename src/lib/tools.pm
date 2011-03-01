@@ -41,6 +41,7 @@ use Language;
 use Log;
 use Sympa::Constants;
 use Message;
+use SDM;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -3596,31 +3597,12 @@ sub md5_fingerprint {
 ############################################################
 sub get_db_random {
     
-    ## Database and SQL statement handlers
-    my ($dbh, $sth, @sth_stack);
-
-    $dbh = &List::db_get_handler();
-
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-	$dbh = &List::db_get_handler();
-    }
-    my $statement = sprintf "SELECT random FROM fingerprint_table;";
-    
-    push @sth_stack, $sth;
-    unless ($sth = $dbh->prepare($statement)) {
-	&do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-    unless ($sth->execute) {
-	&do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    my $sth;
+    unless ($sth = &SDM::do_query("SELECT random FROM fingerprint_table")) {
+	&do_log('err','Unable to retrieve random value from fingerprint_table');
 	return undef;
     }
     my $random = $sth->fetchrow_hashref('NAME_lc');
-    
-    $sth->finish();
-    $sth = pop @sth_stack;
 
     return $random;
 
@@ -3645,22 +3627,10 @@ sub init_db_random {
 
     my $random = int(rand($range)) + $minimum;
 
-    ## Database and SQL statement handlers
-    my ($dbh, $sth, @sth_stack);
-
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-	return undef unless &List::db_connect();
-    }
-    my $statement = sprintf "INSERT INTO fingerprint_table VALUES (%d)", $random;
-    
-    push @sth_stack, $sth;
-    
-    unless ($dbh->do($statement)) {
-	&do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    unless (&SDM::do_query('INSERT INTO fingerprint_table VALUES (%d)', $random)) {
+	&do_log('err','Unable to set random value in fingerprint_table');
 	return undef;
     }
-       
     return $random;
 }
 
