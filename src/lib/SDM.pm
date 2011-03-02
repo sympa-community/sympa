@@ -226,7 +226,7 @@ sub probe_db {
     }
     
     ## Check tables structure if we could get it
-    ## Only performed with mysql and SQLite
+    ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
 
 	foreach my $t (keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}}) {
@@ -241,35 +241,30 @@ sub probe_db {
 		unless ($real_struct{$t}{$f}) {
 		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
 		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
-		    
-		    my $options;
-		    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
-		    if ($not_null{$f}) {
-			$options .= 'NOT NULL';
-		    }
-		    if ( $autoincrement{$t} eq $f) {
-					$options .= ' AUTO_INCREMENT PRIMARY KEY ';
+
+		    my $rep;
+		    if ($rep = $db_source->add_field({
+			'table' => $t,
+			'field' => $f,
+			'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+			'notnull' => $not_null{$f},
+			'autoinc' => ( $autoincrement{$t} eq $f),
+			'primary' => ( $autoincrement{$t} eq $f),
+			})){
+			push @report, $rep;
+			$added_fields{$f} = 1;
+			
+			## Remove temporary DB field
+			if ($real_struct{$t}{'temporary'}) {
+			    unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
+				&do_log('err', 'Could not drop temporary table field : %s', $dbh->errstr);
+			    }
+			    delete $real_struct{$t}{'temporary'};
 			}
-		    my $sqlquery = "ALTER TABLE $t ADD $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options";
-		    
-		    unless ($dbh->do($sqlquery)) {
-			    &do_log('err', 'Could not add field \'%s\' to table\'%s\'. (%s)', $f, $t, $sqlquery);
-			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			    return undef;
+		    }else {
+			&Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			return undef;
 		    }
-		    
-		    push @report, sprintf('Field %s added to table %s (options : %s)', $f, $t, $options);
-		    &do_log('info', 'Field %s added to table %s  (options : %s)', $f, $t, $options);
-		    $added_fields{$f} = 1;
-		    
-		    ## Remove temporary DB field
-		    if ($real_struct{$t}{'temporary'}) {
-			unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
-			    &do_log('err', 'Could not drop temporary table field : %s', $dbh->errstr);
-			}
-			delete $real_struct{$t}{'temporary'};
-		    }
-		    
 		    next;
 		}
 		
@@ -277,26 +272,22 @@ sub probe_db {
 		if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
 		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
 						 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
-			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
-					      $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
-			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...', 
-				$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
+			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...',$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
 			
-			my $options;
-			if ($not_null{$f}) {
-			    $options .= 'NOT NULL';
-			}
+			&Log::do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...',$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
 			
-			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options");
-			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options");
-			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options")) {
-			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
-			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+			my $rep;
+			if ($rep = $db_source->update_field({
+			    'table' => $t,
+			    'field' => $f,
+			    'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+			    'notnull' => $not_null{$f},
+			    })){
+				push @report, $rep;
+			}else {
+			    &Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
 			}
-			
-			push @report, sprintf('Field %s in table %s, structure updated', $f, $t);
-			&do_log('info', 'Field %s in table %s, structure updated', $f, $t);
 		    }
 		}else {
 		    unless ($real_struct{$t}{$f} eq $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f}) {

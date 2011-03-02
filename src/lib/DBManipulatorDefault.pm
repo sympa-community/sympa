@@ -173,20 +173,59 @@ sub get_fields {
 ## Takes a hash as argument which must contain the following keys:
 ## * 'field' : the name of the field to update
 ## * 'table' : the name of the table whose fields will be updated.
+## * 'type' : the type of the field to add
+## * 'notnull' : specifies that the field must not be null
 ##
 sub update_field {
     my $self = shift;
     my $param = shift;
+    my $options;
+    if ($param->{'notnull'}) {
+	$options .= ' NOT NULL ';
+    }
+    my $report = sprintf("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
+    &Log::do_log('notice', "ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
+    unless ($self->do_query("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options)) {
+	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
+	return undef;
+    }
+    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    return $report;
 }
 
 ## Adds a field in a table from the database.
 ## Takes a hash as argument which must contain the following keys:
 ## * 'field' : the name of the field to add
 ## * 'table' : the name of the table where the field will be added.
+## * 'type' : the type of the field to add
+## * 'notnull' : specifies that the field must not be null
+## * 'autoinc' : specifies that the field must be autoincremental
+## * 'primary' : specifies that the field is a key
 ##
 sub add_field {
     my $self = shift;
     my $param = shift;
+    my $options;
+    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
+    if ($param->{'notnull'}) {
+	$options .= 'NOT NULL ';
+    }
+    if ( $param->{'autoinc'}) {
+	$options .= ' AUTO_INCREMENT ';
+    }
+    if ( $param->{'primary'}) {
+	$options .= ' PRIMARY KEY ';
+    }
+    unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
+	&do_log('err', 'Could not field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
+    &Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
+    
+    return $report;
 }
 
 return 1;
