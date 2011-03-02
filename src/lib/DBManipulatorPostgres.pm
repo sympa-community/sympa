@@ -116,16 +116,27 @@ sub set_autoinc {
 ##
 sub get_tables {
     my $self = shift;
+    my @raw_tables;
+    unless (@raw_tables = $self->{'dbh'}->tables(undef,'public',undef,'TABLE',{pg_noprefix => 1} )) {
+	&Log::do_log('err','Unable to retrieve the list of tables from database %s',$self->{'db_name'});
+	return undef;
+    }
+    return \@raw_tables;
 }
 
 ## Adds a table to the database
 ## Takes a hash as argument which must contain the following key:
 ## * 'table' : the name of the table to add
 ##
-## Returns 1 if the table add worked, undef otherwise
+## Returns a report if the table adding worked, undef otherwise
 sub add_table {
     my $self = shift;
     my $param = shift;
+    unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
+	&do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;;
+    }
+    return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
 }
 
 ## Returns a ref to an array containing the names of the fields in a table from the database.
@@ -135,6 +146,17 @@ sub add_table {
 sub get_fields {
     my $self = shift;
     my $param = shift;
+    my $sth;
+    my %result;
+    unless ($sth = $self->do_query("SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",$param->{'table'})) {
+	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;;
+    }
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
+	my $length = $ref->{'length'} - 4; # What a dirty method ! We give a Sympa tee shirt to anyone that suggest a clean solution ;-)
+	$result{$ref->{'field'}} = $ref->{'type'}.'('.$length.')' if ( $ref->{'type'} eq 'varchar');
+    }
+    return \%result;
 }
 
 ## Changes the type of a field in a table from the database.

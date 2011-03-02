@@ -182,17 +182,15 @@ sub probe_db {
 
     my $dbh = &db_get_handler();
 
-    my @tables = @{$db_source->get_tables()} ;
     ## Get tables
-    if ($Conf::Conf{'db_type'} eq 'mysql') {
-    }elsif($Conf::Conf{'db_type'} eq 'Pg') {
-	@tables = $dbh->tables(undef,'public',undef,'TABLE',{pg_noprefix => 1} );
+    my @tables;
+    my $list_of_tables;
+    if ($list_of_tables = $db_source->get_tables()) {
+	@tables = @{$list_of_tables};
+    }else{
+	@tables = ();
     }
-    unless (defined $#tables) {
-	&do_log('info', 'Can\'t load tables list from database %s : %s', $Conf::Conf{'db_name'}, $dbh->errstr);
-	return undef;
-    }
-    
+
     my ( $fields, %real_struct);
     if (($Conf::Conf{'db_type'} eq 'mysql') || ($Conf::Conf{'db_type'} eq 'Pg')){			
 	## Check required tables
@@ -202,45 +200,17 @@ sub probe_db {
 		$found = 1 if ($t1 eq $t2) ;
 	    }
 	    unless ($found) {
-		unless ($dbh->do("CREATE TABLE $t1 (temporary INT)")) {
-		    &do_log('err', 'Could not create table %s in database %s : %s', $t1, $Conf::Conf{'db_name'}, $dbh->errstr);
-		    next;
+		if (my $rep = $db_source->add_table({'table'=>$t1})) {
+		    push @report, $rep;
+		    &do_log('notice', 'Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
+		    push @tables, $t1;
+		    $real_struct{$t1} = {};
 		}
-		
-		push @report, sprintf('Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
-		&do_log('notice', 'Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
-		push @tables, $t1;
-		$real_struct{$t1} = {};
 	    }
 	}
 	## Get fields
 	foreach my $t (@tables) {
-	    my $sth;	    
-	    #	    unless ($sth = $dbh->table_info) {
-	    #	    unless ($sth = $dbh->prepare("LISTFIELDS $t")) {
-	    my $sql_query;
-
-	    if ( $Conf::Conf{'db_type'} eq 'Pg'){
-		$sql_query = 'SELECT a.attname AS field, t.typname AS type, a.atttypmod AS lengh FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = \''.$t.'\' and a.atttypid = t.oid order by a.attnum';
-	    }elsif ($Conf::Conf{'db_type'} eq 'mysql') {
-		$sql_query = "SHOW FIELDS FROM $t";
-	    }
-	    unless ($sth = $dbh->prepare($sql_query)) {
-		do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-		return undef;
-	    }	    
-	    unless ($sth->execute) {
-		do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-		return undef;
-	    }
-	    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
-		$real_struct{$t}{$ref->{'field'}} = $ref->{'type'};
-		if ( $Conf::Conf{'db_type'} eq 'Pg'){
-		    my $lengh = $ref->{'lengh'} - 4; # What a dirty method ! We give a Sympa tee shirt to anyone that suggest a clean solution ;-)
-		    $real_struct{$t}{$ref->{'field'}} = $ref->{'type'}.'('.$lengh.')' if ( $ref->{'type'} eq 'varchar');
-		}
-	    }	    
-	    $sth->finish();
+	    $real_struct{$t} = $db_source->get_fields({'table'=>$t});
 	}
     }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
  	

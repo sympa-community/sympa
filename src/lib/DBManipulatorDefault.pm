@@ -139,19 +139,34 @@ sub get_tables {
 ## Takes a hash as argument which must contain the following key:
 ## * 'table' : the name of the table to add
 ##
-## Returns 1 if the table add worked, undef otherwise
+## Returns a report if the table adding worked, undef otherwise
 sub add_table {
     my $self = shift;
     my $param = shift;
+    unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
+	&do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;;
+    }
+    return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
 }
 
-## Returns a ref to an array containing the names of the fields in a table from the database.
+## Returns a ref to an hash containing the description of the fields in a table from the database.
 ## Takes a hash as argument which must contain the following key:
 ## * 'table' : the name of the table whose fields are requested.
 ##
 sub get_fields {
     my $self = shift;
     my $param = shift;
+    my $sth;
+    my %result;
+    unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
+	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;;
+    }
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
+	$result{$ref->{'field'}} = $ref->{'type'};
+    }
+    return \%result;
 }
 
 ## Changes the type of a field in a table from the database.
