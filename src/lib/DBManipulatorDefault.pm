@@ -161,7 +161,7 @@ sub get_fields {
     my %result;
     unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
 	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;;
+	return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
 	$result{$ref->{'field'}} = $ref->{'type'};

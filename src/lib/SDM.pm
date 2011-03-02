@@ -150,7 +150,7 @@ sub connect_sympa_database {
 	&Log::do_log('err', 'Unable to connect to the Sympa database');
 	return undef;
     }
-    &Log::do_log('debug2','Connected to Database %s',$Conf::Conf{'db_name'});
+    &Log::do_log('debug2','Connected to Database %s',&Conf::get_robot_conf('*','db_name'));
 
     return 1;
 }
@@ -160,7 +160,7 @@ sub db_disconnect {
     &Log::do_log('debug', 'Disconnecting from Sympa database');
 
     unless ($db_source->{'dbh'}->disconnect()) {
-	&Log::do_log('err','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $db_source->{'dbh'}->errstr);
+	&Log::do_log('err','Can\'t disconnect from Database %s : %s',&Conf::get_robot_conf('*','db_name'), $db_source->{'dbh'}->errstr);
 	return undef;
     }
 
@@ -192,112 +192,26 @@ sub probe_db {
     }
 
     my ( $fields, %real_struct);
-    if (($Conf::Conf{'db_type'} eq 'mysql') || ($Conf::Conf{'db_type'} eq 'Pg')){			
 	## Check required tables
-	foreach my $t1 (keys %{$db_struct{'mysql'}}) {
-	    my $found;
-	    foreach my $t2 (@tables) {
-		$found = 1 if ($t1 eq $t2) ;
-	    }
-	    unless ($found) {
-		if (my $rep = $db_source->add_table({'table'=>$t1})) {
-		    push @report, $rep;
-		    &do_log('notice', 'Table %s created in database %s', $t1, $Conf::Conf{'db_name'});
-		    push @tables, $t1;
-		    $real_struct{$t1} = {};
-		}
-	    }
+    foreach my $t1 (keys %{$db_struct{'mysql'}}) {
+	my $found;
+	foreach my $t2 (@tables) {
+	    $found = 1 if ($t1 eq $t2) ;
 	}
-	## Get fields
-	foreach my $t (@tables) {
-	    $real_struct{$t} = $db_source->get_fields({'table'=>$t});
-	}
-    }elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
- 	
- 	unless (@tables = $dbh->tables) {
- 	    &do_log('err', 'Can\'t load tables list from database %s', $Conf::Conf{'db_name'});
- 	    return undef;
- 	}
-	
- 	foreach my $t (@tables) {
-	    $t =~ s/^"main"\.//; # needed for SQLite 3
-	    $t =~ s/^.*\"([^\"]+)\"$/$1/;
- 	}
-	
-	foreach my $t (@tables) {
-	    next unless (defined $db_struct{$Conf::Conf{'db_type'}}{$t});
-	    
-	    my $res = $dbh->selectall_arrayref("PRAGMA table_info($t)");
-	    unless (defined $res) {
-		&do_log('err','Failed to check DB tables structure : %s', $dbh->errstr);
-		next;
-	    }
-	    foreach my $field (@$res) {
-		# http://www.sqlite.org/datatype3.html
-		if($field->[2] =~ /int/) {
-		    $field->[2]="integer";
-		} elsif ($field->[2] =~ /char|clob|text/) {
-		    $field->[2]="text";
-		} elsif ($field->[2] =~ /blob/) {
-		    $field->[2]="none";
-		} elsif ($field->[2] =~ /real|floa|doub/) {
-		    $field->[2]="real";
-		} else {
-		    $field->[2]="numeric";
-		}
-		$real_struct{$t}{$field->[1]} = $field->[2];
+	unless ($found) {
+	    if (my $rep = $db_source->add_table({'table'=>$t1})) {
+		push @report, $rep;
+		&do_log('notice', 'Table %s created in database %s', $t1, &Conf::get_robot_conf('*','db_name'));
+		push @tables, $t1;
+		$real_struct{$t1} = {};
 	    }
 	}
-	
-	# Une simple requÂÃªte sqlite : PRAGMA table_info('nomtable') , retourne la liste des champs de la table en question.
-	# La liste retournÂÃ©e est composÂÃ©e d'un NÂÂ°Ordre, Nom du champ, Type (longueur), Null ou not null (99 ou 0),Valeur par dÂÃ©faut,ClÂÃ© primaire (1 ou 0)
-	
-    }elsif ($Conf::Conf{'db_type'} eq 'Oracle') {
- 	
- 	my $statement = "SELECT table_name FROM user_tables";	 
-	
-	my $sth;
-	
-	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
-	    return undef;
-     	}
-	
-       	unless ($sth->execute) {
-	    &do_log('err','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
-	    return undef;
-     	}
-	
-	## Process the SQL results
-     	while (my $table= $sth->fetchrow()) {
-	    push @tables, lc ($table);   	
-	}
-	
-     	$sth->finish();
-	
-    }elsif ($Conf::Conf{'db_type'} eq 'Sybase') {
-	
-	my $statement = sprintf "SELECT name FROM %s..sysobjects WHERE type='U'",$Conf::Conf{'db_name'};
-#	my $statement = "SELECT name FROM sympa..sysobjects WHERE type='U'";     
-	
-	my $sth;
-	unless ($sth = $dbh->prepare($statement)) {
-	    do_log('err','Unable to prepare SQL query : %s', $dbh->errstr);
-	    return undef;
-	}
-	unless ($sth->execute) {
-	    &do_log('err','Can\'t load tables list from database and Unable to perform SQL query %s : %s ',$statement, $dbh->errstr);
-	    return undef;
-	}
-	
-	## Process the SQL results
-	while (my $table= $sth->fetchrow()) {
-	    push @tables, lc ($table);   
-	}
-	
-	$sth->finish();
     }
-    
+    ## Get fields
+    foreach my $t (@tables) {
+	$real_struct{$t} = $db_source->get_fields({'table'=>$t});
+    }
+   
     foreach $table ( @tables ) {
 	$checked{$table} = 1;
     }
@@ -307,7 +221,7 @@ sub probe_db {
 	if ($checked{$table} || $checked{'public.' . $table}) {
 	    $found_tables++;
 	}else {
-	    &do_log('err', 'Table %s not found in database %s', $table, $Conf::Conf{'db_name'});
+	    &do_log('err', 'Table %s not found in database %s', $table, &Conf::get_robot_conf('*','db_name'));
 	}
     }
     
@@ -315,18 +229,18 @@ sub probe_db {
     ## Only performed with mysql and SQLite
     if (%real_struct) {
 
-	foreach my $t (keys %{$db_struct{$Conf::Conf{'db_type'}}}) {
+	foreach my $t (keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}}) {
 	    unless ($real_struct{$t}) {
-		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, $Conf::Conf{'db_name'}, $Conf::Conf{'db_type'});
+		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, &Conf::get_robot_conf('*','db_name'), &Conf::get_robot_conf('*','db_type'));
 		return undef;
 	    }
 	    
 	    my %added_fields;
 	    
-	    foreach my $f (sort keys %{$db_struct{$Conf::Conf{'db_type'}}{$t}}) {
+	    foreach my $f (sort keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}{$t}}) {
 		unless ($real_struct{$t}{$f}) {
-		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf::Conf{'db_name'});
-		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, $Conf::Conf{'db_name'});
+		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
+		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
 		    
 		    my $options;
 		    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
@@ -336,7 +250,7 @@ sub probe_db {
 		    if ( $autoincrement{$t} eq $f) {
 					$options .= ' AUTO_INCREMENT PRIMARY KEY ';
 			}
-		    my $sqlquery = "ALTER TABLE $t ADD $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options";
+		    my $sqlquery = "ALTER TABLE $t ADD $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options";
 		    
 		    unless ($dbh->do($sqlquery)) {
 			    &do_log('err', 'Could not add field \'%s\' to table\'%s\'. (%s)', $f, $t, $sqlquery);
@@ -360,22 +274,22 @@ sub probe_db {
 		}
 		
 		## Change DB types if different and if update_db_types enabled
-		if ($Conf::Conf{'update_db_field_types'} eq 'auto' && $Conf::Conf{'db_type'} ne 'SQLite') {
+		if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
 		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
-						 required_format => $db_struct{$Conf::Conf{'db_type'}}{$t}{$f})) {
+						 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
 			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...', 
-					      $f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
+					      $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
 			&do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...', 
-				$f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f},$real_struct{$t}{$f});
+				$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
 			
 			my $options;
 			if ($not_null{$f}) {
 			    $options .= 'NOT NULL';
 			}
 			
-			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options");
-			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options");
-			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{$Conf::Conf{'db_type'}}{$t}{$f} $options")) {
+			push @report, sprintf("ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options");
+			&do_log('notice', "ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options");
+			unless ($dbh->do("ALTER TABLE $t CHANGE $f $f $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f} $options")) {
 			    &do_log('err', 'Could not change field \'%s\' in table\'%s\'.', $f, $t);
 			    &do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			    return undef;
@@ -385,14 +299,14 @@ sub probe_db {
 			&do_log('info', 'Field %s in table %s, structure updated', $f, $t);
 		    }
 		}else {
-		    unless ($real_struct{$t}{$f} eq $db_struct{$Conf::Conf{'db_type'}}{$t}{$f}) {
-			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, $Conf::Conf{'db_name'}, $db_struct{$Conf::Conf{'db_type'}}{$t}{$f});
+		    unless ($real_struct{$t}{$f} eq $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f}) {
+			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
 			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 			return undef;
 		    }
 		}
 	    }
-	    if (($Conf::Conf{'db_type'} eq 'mysql')||($Conf::Conf{'db_type'} eq 'Pg')) {
+	    if ((&Conf::get_robot_conf('*','db_type') eq 'mysql')||(&Conf::get_robot_conf('*','db_type') eq 'Pg')) {
 		## Check that primary key has the right structure.
 		my $should_update;
 		my %primaryKeyFound;	      
@@ -400,7 +314,7 @@ sub probe_db {
 		my $sql_query ;
 		my $test_request_result ;
 
-		if ($Conf::Conf{'db_type'} eq 'mysql') { # get_primary_keys('mysql');
+		if (&Conf::get_robot_conf('*','db_type') eq 'mysql') { # get_primary_keys('mysql');
 
 		    $sql_query = "SHOW COLUMNS FROM $t";
 		    $test_request_result = $dbh->selectall_hashref($sql_query,'key');
@@ -410,7 +324,7 @@ sub probe_db {
 			    $primaryKeyFound{$scannedResult} = 1;
 			}
 		    }
-		}elsif ( $Conf::Conf{'db_type'} eq 'Pg'){# get_primary_keys('Pg');
+		}elsif ( &Conf::get_robot_conf('*','db_type') eq 'Pg'){# get_primary_keys('Pg');
 
 #		    $sql_query = "SELECT column_name FROM information_schema.columns WHERE table_name = $t";
 #		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary';
@@ -505,14 +419,14 @@ sub probe_db {
 		## drop previous index if this index is not a primary key and was defined by a previous Sympa version
 		#xxxxx $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');
 		my %index_columns;
-		if ( $Conf::Conf{'db_type'} eq 'mysql' ){# get_index('Pg');
+		if ( &Conf::get_robot_conf('*','db_type') eq 'mysql' ){# get_index('Pg');
 		    $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');		
 		    foreach my $indexName ( keys %$test_request_result ) {
 			unless ( $indexName eq "PRIMARY" ) {
 			    $index_columns{$indexName} = 1;
 			}
 		    }
-		}elsif ( $Conf::Conf{'db_type'} eq 'Pg'){# get_index('Pg');
+		}elsif ( &Conf::get_robot_conf('*','db_type') eq 'Pg'){# get_index('Pg');
 		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey)';
 
 		    my $sth;
@@ -567,7 +481,7 @@ sub probe_db {
 		    }
 		}	 
 	    }   
-	    elsif ($Conf::Conf{'db_type'} eq 'SQLite') {
+	    elsif (&Conf::get_robot_conf('*','db_type') eq 'SQLite') {
 		## Create required INDEX and PRIMARY KEY
 		my $should_update;
 		foreach my $field (@{$primary{$t}}) {
@@ -619,7 +533,7 @@ sub probe_db {
      ## Try to run the create_db.XX script
     }elsif ($found_tables == 0) {
         my $db_script =
-            Sympa::Constants::SCRIPTDIR . "/create_db.$Conf::Conf{'db_type'}";
+            Sympa::Constants::SCRIPTDIR . "/create_db.&Conf::get_robot_conf('*','db_type')";
 	unless (open SCRIPT, $db_script) {
 	    &do_log('err', "Failed to open '%s' file : %s", $db_script, $!);
 	    return undef;
@@ -632,7 +546,7 @@ sub probe_db {
 	my @scripts = split /;\n/,$script;
 
 	$db_script =
-        Sympa::Constants::SCRIPTDIR . "/create_db.$Conf::Conf{'db_type'}";
+        Sympa::Constants::SCRIPTDIR . "/create_db.&Conf::get_robot_conf('*','db_type')";
 	push @report, sprintf("Running the '%s' script...", $db_script);
 	&do_log('notice', "Running the '%s' script...", $db_script);
 	foreach my $sc (@scripts) {
@@ -645,20 +559,20 @@ sub probe_db {
 
 	## SQLite :  the only access permissions that can be applied are 
 	##           the normal file access permissions of the underlying operating system
-	if (($Conf::Conf{'db_type'} eq 'SQLite') &&  (-f $Conf::Conf{'db_name'})) {
-	    unless (&tools::set_file_rights(file => $Conf::Conf{'db_name'},
+	if ((&Conf::get_robot_conf('*','db_type') eq 'SQLite') &&  (-f &Conf::get_robot_conf('*','db_name'))) {
+	    unless (&tools::set_file_rights(file => &Conf::get_robot_conf('*','db_name'),
 					    user  => Sympa::Constants::USER,
 					    group => Sympa::Constants::GROUP,
 					    mode  => 0664,
 					    ))
 	    {
-		&do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
+		&do_log('err','Unable to set rights on %s',&Conf::get_robot_conf('*','db_name'));
 		return undef;
 	    }
 	}
 	
     }elsif ($found_tables < 3) {
-	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', $Conf::Conf{'db_type'});
+	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', &Conf::get_robot_conf('*','db_type'));
 	return undef;
     }
     
@@ -666,7 +580,7 @@ sub probe_db {
     $List::use_db = 1;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  $Conf::Conf{'domain'}, {'report' => \@report}) if ($#report >= 0);
+    &List::send_notify_to_listmaster('db_struct_updated',  &Conf::get_robot_conf('*','domain'), {'report' => \@report}) if ($#report >= 0);
 
     return 1;
 }
@@ -674,7 +588,7 @@ sub probe_db {
 ## Check if data structures are uptodate
 ## If not, no operation should be performed before the upgrade process is run
 sub data_structure_uptodate {
-     my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
+     my $version_file = "&Conf::get_robot_conf('*','etc')/data_structure.version";
      my $data_structure_version;
 
      if (-f $version_file) {

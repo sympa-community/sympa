@@ -80,6 +80,19 @@ sub set_autoinc {
 ##
 sub get_tables {
     my $self = shift;
+    my @raw_tables;
+    my @result;
+    unless (@raw_tables = $self->{'dbh'}->tables()) {
+	&Log::do_log('err','Unable to retrieve the list of tables from database %s',$self->{'db_name'});
+	return undef;
+    }
+    
+    foreach my $t (@raw_tables) {
+	$t =~ s/^"main"\.//; # needed for SQLite 3
+	$t =~ s/^.*\"([^\"]+)\"$/$1/;
+	push @result, $t;
+    }
+    return \@result;
 }
 
 ## Adds a table to the database
@@ -99,6 +112,28 @@ sub add_table {
 sub get_fields {
     my $self = shift;
     my $param = shift;
+    my $sth;
+    my %result;
+    unless ($sth = $self->do_query("PRAGMA table_info(%s)",$param->{'table'})) {
+	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    while (my $field = $sth->fetchrow_arrayref('NAME_lc')) {		
+	# http://www.sqlite.org/datatype3.html
+	if($field->[2] =~ /int/) {
+	    $field->[2]="integer";
+	} elsif ($field->[2] =~ /char|clob|text/) {
+	    $field->[2]="text";
+	} elsif ($field->[2] =~ /blob/) {
+	    $field->[2]="none";
+	} elsif ($field->[2] =~ /real|floa|doub/) {
+	    $field->[2]="real";
+	} else {
+	    $field->[2]="numeric";
+	}
+	$result{$field->[1]} = $field->[2];
+    }
+    return \%result;
 }
 
 ## Changes the type of a field in a table from the database.

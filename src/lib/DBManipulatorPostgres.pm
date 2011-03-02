@@ -134,7 +134,7 @@ sub add_table {
     my $param = shift;
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
 	&do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;;
+	return undef;
     }
     return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
 }

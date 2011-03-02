@@ -95,6 +95,16 @@ sub set_autoinc {
 ##
 sub get_tables {
     my $self = shift;
+    my @raw_tables;
+    my $sth;
+    unless ($sth = $self->do_query("SELECT table_name FROM user_tables")) {
+	&Log::do_log('err','Unable to retrieve the list of tables from database %s',$self->{'db_name'});
+	return undef;
+    }
+    while (my $table= $sth->fetchrow()) {
+	push @raw_tables, lc ($table);   	
+    }
+    return \@raw_tables;
 }
 
 ## Adds a table to the database
