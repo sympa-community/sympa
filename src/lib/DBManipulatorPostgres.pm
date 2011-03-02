@@ -69,4 +69,92 @@ sub get_limit_clause {
     }
 }
 
+## Returns 1 if the field is an autoincrement field.
+## Takes a hash as argument which can contain the following keys:
+## * 'field' : the name of the field to test
+## * 'table' : the name of the table to add
+##
+sub is_autoinc {
+    my $self = shift;
+    my $param = shift;
+    my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
+    my $sth;
+    unless ($sth = $self->do_query("SELECT relname FROM pg_class WHERE relname = '%s' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )",$seqname)) {
+	do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
+	return undef;
+    }	    
+    my $field = $sth->fetchrow();	    
+    return ($ref->{'field'} eq $seqname);
+}
+
+## Defines the field as an autoincrement field
+## Takes a hash as argument which must contain the following key:
+## * 'field' : the name of the field to set
+## * 'table' : the name of the table to add
+##
+sub set_autoinc {
+    my $self = shift;
+    my $param = shift;
+    my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
+    unless ($self->do_query("CREATE SEQUENCE %s",$seqname)) {
+	do_log('err','Unable to create sequence %s',$seqname);
+	return undef;
+    }
+    unless ($self->do_query("ALTER TABLE `%s` CHANGE `$field` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'})) {
+	do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
+	return undef;
+    }
+    unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s SET DEFAULT NEXTVAL('%s')",$param->{'table'},$param->{'field'},$seqname)) {
+	do_log('err','Unable to set sequence %s as value for field %s, table %s',$seqname,$param->{'field'},$param->{'table'});
+	return undef;
+    }
+    return 1;
+ }
+
+## Returns a ref to an array containing the list of tables in the database.
+## Returns undef if something goes wrong.
+##
+sub get_tables {
+    my $self = shift;
+}
+
+## Adds a table to the database
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table to add
+##
+## Returns 1 if the table add worked, undef otherwise
+sub add_table {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Returns a ref to an array containing the names of the fields in a table from the database.
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table whose fields are requested.
+##
+sub get_fields {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Changes the type of a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to update
+## * 'table' : the name of the table whose fields will be updated.
+##
+sub update_field {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Adds a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to add
+## * 'table' : the name of the table where the field will be added.
+##
+sub add_field {
+    my $self = shift;
+    my $param = shift;
+}
+
 return 1;

@@ -5583,7 +5583,7 @@ sub get_first_list_admin {
 	$statement .= &SDM::get_substring_clause({'rows_count'=>$rows,'offset'=>$offset});
     }
     
-    unless ($sth = SDM::do_query($statement)) {
+    unless ($sth = &SDM::do_query($statement)) {
 	do_log('err','Unable to get admins having role %s for list %s@%s', $role,$name,$self->{'domain'});
 	return undef;
     }
@@ -7763,11 +7763,10 @@ sub _include_users_ldap_2level {
 sub _include_users_sql {
     my ($users, $param, $default_user_options, $tied, $fetch_timeout) = @_;
 
-    &Log::do_log('debug2','List::_include_users_sql()');
-
+    &Log::do_log('debug','List::_include_users_sql()');
     my $id = Datasource::_get_datasource_id($param);
     my $ds = new SQLSource($param);
-    unless ($ds->connect && ($ds->query($param->{'sql_query'}))) {
+    unless ($ds->connect && ($ds->do_query($param->{'sql_query'}))) {
 	&Log::do_log('err','Unable to connect to SQL datasource with parameters host: %s, database: %s',$param->{'host'},$param->{'db_name'});
         return undef;
     }
@@ -7779,7 +7778,7 @@ sub _include_users_sql {
     my $array_of_users = $ds->fetch;
 	
     unless (defined $array_of_users && ref($array_of_users) eq 'ARRAY') {
-	&Log::do_log('err', 'Failed to include users from ',$param->{'name'});
+	&Log::do_log('err', 'Failed to include users from %s',$param->{'name'});
 	return undef;
     }
 

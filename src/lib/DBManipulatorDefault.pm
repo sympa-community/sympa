@@ -82,4 +82,96 @@ sub get_formatted_date {
 	return undef;
     }
 }
+
+## Returns 1 if the field is an autoincrement field.
+## Takes a hash as argument which can contain the following keys:
+## * 'field' : the name of the field to test
+## * 'table' : the name of the table to add
+##
+sub is_autoinc {
+    my $self = shift;
+    my $param = shift;
+    my $sth;
+    unless ($sth = $self->do_query("SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",$param->{'table'},$param->{'field'})) {
+	do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
+	return undef;
+    }	    
+    my $ref = $sth->fetchrow_hashref('NAME_lc') ;
+    return ($ref->{'field'} eq $param->{'field'});
+}
+
+## Defines the field as an autoincrement field
+## Takes a hash as argument which must contain the following key:
+## * 'field' : the name of the field to set
+## * 'table' : the name of the table to add
+##
+sub set_autoinc {
+    my $self = shift;
+    my $param = shift;
+    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
+	do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
+	return undef;
+    }
+    return 1;
+}
+
+## Returns a ref to an array containing the list of tables in the database.
+## Returns undef if something goes wrong.
+##
+sub get_tables {
+    my $self = shift;
+    my @raw_tables;
+    my @result;
+    unless (@raw_tables = $self->{'dbh'}->tables()) {
+	&Log::do_log('err','Unable to retrieve the list of tables from database %s',$self->{'db_name'});
+	return undef;
+    }
+    
+    foreach my $t (@raw_tables) {
+	$t =~ s/^\`[^\`]+\`\.//;## Clean table names that would look like `databaseName`.`tableName` (mysql)
+	$t =~ s/^\`(.+)\`$/$1/;## Clean table names that could be surrounded by `` (recent DBD::mysql release)
+	push @result, $t;
+    }
+    return \@result;
+}
+
+## Adds a table to the database
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table to add
+##
+## Returns 1 if the table add worked, undef otherwise
+sub add_table {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Returns a ref to an array containing the names of the fields in a table from the database.
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table whose fields are requested.
+##
+sub get_fields {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Changes the type of a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to update
+## * 'table' : the name of the table whose fields will be updated.
+##
+sub update_field {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Adds a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to add
+## * 'table' : the name of the table where the field will be added.
+##
+sub add_field {
+    my $self = shift;
+    my $param = shift;
+}
+
 return 1;

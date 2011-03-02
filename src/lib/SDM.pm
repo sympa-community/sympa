@@ -58,82 +58,47 @@ my %indexes = %Sympa::DatabaseDescription::indexes ;
 my @former_indexes =  %Sympa::DatabaseDescription::primary ;
 
 our $db_source;
-our $use_db = 1;
+our $use_db;
 
 sub do_query {
     my $query = shift;
     my @params = @_;
     my $sth;
-    unless ($use_db) {
-	&do_log('info', 'Sympa not setup to use DBI');
+    unless (&check_db_connect) {
+	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
 	return undef;
     }
 
-    unless(&db_connect()) {
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
-	return undef;
-    }
-    my $statement = sprintf $query, @params;
-
-    unless ($sth = $db_source->{'dbh'}->prepare($statement)) {
-	my $trace_statement = sprintf $query, @{&prepare_query_log_values(@params)};
-	do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $db_source->{'dbh'}->errstr);
-	return undef;
-    }
-    
-    unless ($sth->execute) {
-	my $trace_statement = sprintf $query, @{&prepare_query_log_values(@params)};
-	do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $db_source->{'dbh'}->errstr);
+    unless ($sth = $db_source->do_query($query,@params)) {
+	do_log('err','SQL query failed to execute in the Sympa database');
 	return undef;
     }
 
     return $sth;
 }
 
-sub do_prepared_statement {
+sub do_prepared_query {
     my $query = shift;
     my @params = @_;
     my $sth;
-    unless ($use_db) {
-	&do_log('info', 'Sympa not setup to use DBI');
+    unless (&check_db_connect) {
+	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
 	return undef;
     }
 
-    unless(&db_connect()) {
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
-	return undef;
-    }
-
-    unless ($sth = $db_source->{'dbh'}->prepare($query)) {
-	do_log('err','Unable to prepare SQL statement : %s', $db_source->{'dbh'}->errstr);
-	return undef;
-    }
-    
-    unless ($sth->execute(@params)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $query, $db_source->{'dbh'}->errstr);
+    unless ($sth = $db_source->do_prepared_query($query,@params)) {
+	do_log('err','SQL query failed to execute in the Sympa database');
 	return undef;
     }
 
     return $sth;
-}
-
-sub prepare_query_log_values {
-    my @result;
-    foreach my $value (@_) {
-	my $cropped = substring($value,0,100);
-	if ($cropped ne $value) {
-	    $cropped .= "...[shortened]";
-	}
-	push @result, $cropped;
-    }
-    return \@result;
 }
 
 ## Get database handler
 sub db_get_handler {
     &Log::do_log('debug3', 'Returning handle to sympa database');
 
-    if(&db_connect()) {
+    if(&check_db_connect()) {
 	return $db_source->{'dbh'};
     }else {
 	&Log::do_log('err', 'Unable to get a handle to Sympa database');
@@ -144,6 +109,7 @@ sub db_get_handler {
 ## Just check if DB connection is ok
 sub check_db_connect {
     
+    &Log::do_log('debug2', 'Checking connection to the Sympa database');
     ## Is the Database defined
     unless (&Conf::get_robot_conf('*','db_name')) {
 	&Log::do_log('err', 'No db_name defined in configuration file');
@@ -151,50 +117,47 @@ sub check_db_connect {
     }
     
     unless ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
-	unless (&db_connect('just_try')) {
+	unless (&connect_sympa_database('just_try')) {
 	    &Log::do_log('err', 'Failed to connect to database');	   
 	    return undef;
 	}
     }
 
-    ## Used by List subroutines to check that the DB is available
-    $use_db = 1;
     return 1;
 }
 
 ## Connect to Database
-sub db_connect {
+sub connect_sympa_database {
     my $option = shift;
 
-    &Log::do_log('debug2', 'Connecting to Sympa database');
-
-    ## Check if already connected
-    if ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
-	&Log::do_log('debug2', 'DB handle already available');
-	return 1;
-    }
+    &Log::do_log('debug', 'Connecting to Sympa database');
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
     my $db_conf = &Conf::get_parameters_group('*','Database');
+    $db_conf->{'reconnect_options'} = {'keep_trying'=>($option ne 'just_try' && ( !$db_source->{'connected'} && !$ENV{'HTTP_HOST'})),
+						 'warn'=>1 };
     unless ($db_source = new SQLSource($db_conf)) {
 	&Log::do_log('err', 'Unable to create SQLSource object');
     	return undef;
     }
-    unless ( $db_source->{'dbh'} = $db_source->connect({'keep_trying'=>($option ne 'just_try' && ( !$db_source->{'connected'} && !$ENV{'HTTP_HOST'})),
-						 'warn'=>1 } )) {
+    ## Used to check that connecting to the Sympa database works and the
+    ## SQLSource object is created.
+    $use_db = 1;
+
+    # Just in case, we connect to the database here. Probably not necessary.
+    unless ( $db_source->{'dbh'} = $db_source->connect()) {
 	&Log::do_log('err', 'Unable to connect to the Sympa database');
 	return undef;
     }
     &Log::do_log('debug2','Connected to Database %s',$Conf::Conf{'db_name'});
-    $db_source->{'connected'} = 1;
 
     return 1;
 }
 
 ## Disconnect from Database
 sub db_disconnect {
-    &Log::do_log('debug2', 'Disconnecting from Sympa database');
+    &Log::do_log('debug', 'Disconnecting from Sympa database');
 
     unless ($db_source->{'dbh'}->disconnect()) {
 	&Log::do_log('err','Can\'t disconnect from Database %s : %s',$Conf::Conf{'db_name'}, $db_source->{'dbh'}->errstr);
@@ -212,32 +175,16 @@ sub probe_db {
     ## Report changes to listmaster
     my @report;
 
-    ## Is the Database defined
-    unless (&Conf::get_robot_conf('*','db_name')) {
-	&do_log('err', 'No db_name defined in configuration file');
+    unless (&check_db_connect) {
+	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
 	return undef;
     }
-    
-    unless (&check_db_connect()) {
-	if ($ENV{'HTTP_HOST'}) { ## Web context
-	    return undef unless &db_connect('just_try');
-	}else {
-	    return undef unless &db_connect();
-	}
-    }
-    
+
     my $dbh = &db_get_handler();
 
-
-    my @tables ;
+    my @tables = @{$db_source->get_tables()} ;
     ## Get tables
     if ($Conf::Conf{'db_type'} eq 'mysql') {
-	@tables = $dbh->tables();
-	
-	foreach my $t (@tables) {
-	    $t =~ s/^\`[^\`]+\`\.//;## Clean table names that would look like `databaseName`.`tableName` (mysql)
-	    $t =~ s/^\`(.+)\`$/$1/;## Clean table names that could be surrounded by `` (recent DBD::mysql release)
-	}
     }elsif($Conf::Conf{'db_type'} eq 'Pg') {
 	@tables = $dbh->tables(undef,'public',undef,'TABLE',{pg_noprefix => 1} );
     }
@@ -691,11 +638,11 @@ sub probe_db {
 	}
 	# add autoincrement if needed
 	foreach my $table (keys %autoincrement) {
-	    unless (&is_autoinc ($table,$autoincrement{$table})){
-		if (&set_autoinc ($table,$autoincrement{$table})){
-		    &do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
+	    unless ($db_source->is_autoinc({'table'=>$table,'field'=>$autoincrement{$table}})){
+		if ($db_source->set_autoinc({'table'=>$table,'field'=>$autoincrement{$table}})){
+		    &Log::do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
 		}else{
-		    &do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
+		    &Log::do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
 		}
 	    }
 	}	
@@ -807,106 +754,9 @@ sub check_db_field_type {
     return 0;
 }
 
-# return 1 if table.field is autoincrement
-sub is_autoinc {
-    my $table = shift; my $field = shift;
-    &do_log('debug', 'is_autoinc(%s,%s)',$table,$field);    
-
-    return undef unless $table;
-    return undef unless $field;
-
-    my $seqname = $table.'_'.$field.'_seq';
-    my $sth;
-    my $dbh = &SDM::db_get_handler();
-
-    if ($Conf::Conf{'db_type'} eq 'Pg') {
-	my $sql_query = "SELECT relname FROM pg_class WHERE relname = '$seqname' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )";
-	unless ($sth = $dbh->prepare($sql_query)) {
-	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}	    
-	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}
-	my $field = $sth->fetchrow();	    
-	$sth->finish();
-	return ($field eq $seqname);
-    }elsif($Conf::Conf{'db_type'} eq 'mysql') {
-	my $sql_query = "SHOW FIELDS FROM `$table` WHERE Extra ='auto_increment' and Field = '$field'";
-	unless ($sth = $dbh->prepare($sql_query)) {
-	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}	    
-	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}
-	my $ref = $sth->fetchrow_hashref('NAME_lc') ;
-	$sth->finish();
-	return ($ref->{'field'} eq $field);
-    }else{
-	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
-	return undef;
-    }
-}
-
-# modify table.field as autoincrement
-sub set_autoinc {
-    my $table = shift; my $field = shift;
-    &do_log('debug', 'set_autoinc(%s,%s)',$table,$field);    
-
-    return undef unless $table;
-    return undef unless $field;
-
-    my $seqname = $table.'_'.$field.'_seq';
-    my $sth;
-    my $dbh = &SDM::db_get_handler();
-    my $sql_query;
-
-    if ($Conf::Conf{'db_type'} eq 'Pg') {
-	$sql_query = "CREATE SEQUENCE $seqname";
-	$sql_query = "ALTER TABLE `$table` CHANGE `$field` `$field` BIGINT( 20 ) NOT NULL AUTO_INCREMENT";
-	unless ($sth = $dbh->prepare($sql_query)) {
-	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}	    
-	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}
-	$sth->finish();
-	$sql_query = "ALTER TABLE $table ALTER COLUMN $field SET DEFAULT NEXTVAL('$seqname');";
-	unless ($sth = $dbh->prepare($sql_query)) {
-	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}	    
-	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}
-	
-	return ;
-    }elsif($Conf::Conf{'db_type'} eq 'mysql'){
-	$sql_query = "ALTER TABLE `$table` CHANGE `$field` `$field` BIGINT( 20 ) NOT NULL AUTO_INCREMENT";
-	unless ($sth = $dbh->prepare($sql_query)) {
-	    do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}	    
-	unless ($sth->execute) {
-	    do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-	    return undef;
-	}
-	$sth->finish();
-    }else{
-	do_log('debug',"automatic upgrade : autoincrement for table $table, field $field : test of existing autoinc not yet supported for db_type = $Conf::Conf{'db_type'} ");
-	return undef;
-    }
-}
-
 sub quote {
     my $param = shift;
-    if(&db_connect()) {
+    if(&check_db_connect()) {
 	return $db_source->quote($param);
     }else{
 	&Log::do_log('err', 'Unable to get a handle to Sympa database');
@@ -916,7 +766,7 @@ sub quote {
 
 sub get_substring_clause {
     my $param = shift;
-    if(&db_connect()) {
+    if(&check_db_connect()) {
 	return $db_source->get_substring_clause($param);
     }else{
 	&Log::do_log('err', 'Unable to get a handle to Sympa database');
@@ -926,7 +776,7 @@ sub get_substring_clause {
 
 sub get_limit_clause {
     my $param = shift;
-    if(&db_connect()) {
+    if(&check_db_connect()) {
 	return ' '.$db_source->get_limit_clause($param).' ';
     }else{
 	&Log::do_log('err', 'Unable to get a handle to Sympa database');

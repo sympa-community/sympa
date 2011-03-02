@@ -54,4 +54,71 @@ sub get_substring_clause {
     return "substr(".$param->{'source_field'}.",func_index(".$param->{'source_field'}.",'".$param->{'separator'}."')+1,".$param->{'substring_length'}.")";
 }
 
+## Returns 1 if the field is an autoincrement field.
+## Takes a hash as argument which can contain the following keys:
+## * 'field' : the name of the field to test
+## * 'table' : the name of the table to add
+##
+sub is_autoinc {
+    my $self = shift;
+    my $param = shift;
+    return 0;
+}
+
+## Defines the field as an autoincrement field
+## Takes a hash as argument which must contain the following key:
+## * 'field' : the name of the field to set
+## * 'table' : the name of the table to add
+##
+sub set_autoinc {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Returns a ref to an array containing the list of tables in the database.
+## Returns undef if something goes wrong.
+##
+sub get_tables {
+    my $self = shift;
+}
+
+## Adds a table to the database
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table to add
+##
+## Returns 1 if the table add worked, undef otherwise
+sub add_table {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Returns a ref to an array containing the names of the fields in a table from the database.
+## Takes a hash as argument which must contain the following key:
+## * 'table' : the name of the table whose fields are requested.
+##
+sub get_fields {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Changes the type of a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to update
+## * 'table' : the name of the table whose fields will be updated.
+##
+sub update_field {
+    my $self = shift;
+    my $param = shift;
+}
+
+## Adds a field in a table from the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to add
+## * 'table' : the name of the table where the field will be added.
+##
+sub add_field {
+    my $self = shift;
+    my $param = shift;
+}
+
 return 1;
