@@ -4991,11 +4991,14 @@ sub get_exclusion {
 
 ######################################################################
 ###  get_list_member                                                  #
-## Returns a subscriber of the list.                                 #
+## Returns a subscriber of the list.  
+## Options : 
+##    probe : don't log error if user does not exist                             #
 ######################################################################
 sub get_list_member {
     my  $self= shift;
     my  $email = &tools::clean_email(shift);
+    my %options = @_;
     
     &Log::do_log('debug2', '(%s)', $email);
 
@@ -5014,7 +5017,7 @@ sub get_list_member {
     my $user = &get_list_member_no_object($options);
 
     unless($user){
-	do_log('err','Unable to retrieve information from database for user %s', $email);
+	do_log('err','Unable to retrieve information from database for user %s', $email) unless ($options{'probe'});
 	return undef;
     }
     $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
@@ -10759,7 +10762,7 @@ sub get_subscription_requests {
 	    next;
 	}
 
-	my $user_entry = $self->get_list_member($email);
+	my $user_entry = $self->get_list_member($email, probe => 1);
 	 
 	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    &Log::do_log('err','User %s is subscribed to %s already. Deleting subscription request.', $email, $self->{'name'});
