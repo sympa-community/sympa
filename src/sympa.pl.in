@@ -168,6 +168,7 @@ $main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::opti
 
 my %loop_info;
 my %msgid_table;
+my $latest_msgid_table_cleanup = time;
 
 # this loop is run foreach HUP signal received
 my $signal = 0;
@@ -999,6 +1000,13 @@ while (!$signal) {
 	    &tools::CleanSpool($Conf{'queueautomatic'}, $Conf{'clean_delay_queueautomatic'});
 	}
     }
+    
+    ## Cleanup in-memory msgid table, only in a while
+    if (time > $latest_msgid_table_cleanup + $Conf{'msgid_table_cleanup_frequency'}) {
+	    &clean_msgid_table();
+	    $latest_msgid_table_cleanup = time;
+    }
+    
     my $filename;
     my $listname;
     my $robot;
@@ -1932,7 +1940,7 @@ sub DoMessage{
 	    eval { $numsmtp =$list->distribute_msg('message'=> $message,
 						   'apply_dkim_signature'=>$apply_dkim_signature)};
 	    ## Keep track of known message IDs...if any
-	    $msgid_table{$list->get_list_id()}{$messageid}++ if ($messageid);
+	    $msgid_table{$list->get_list_id()}{$messageid} = time if ($messageid);
 	    
 	    unless (defined($numsmtp)) {
 		&do_log('err','sympa::DoMessage(): Unable to send message to list %s', $listname);
@@ -2084,7 +2092,7 @@ sub DoCommand {
     }## Clean old files from spool
     
     ## Keep track of known message IDs...if any
-    $msgid_table{'sympa@'.$robot}{$messageid}++
+    $msgid_table{'sympa@'.$robot}{$messageid} = time
 	if ($messageid);
 
     ## If X-Sympa-To = <listname>-<subscribe|unsubscribe> parse as a unique command
@@ -2239,6 +2247,21 @@ sub SendDigest{
 	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "",'target_email' => '','msg_id' => '','status' => 'success','error_type' => '','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	}
     }
+}
+
+## Cleanup the msgid_table every 'msgid_table_cleanup_frequency' sec
+## Removes all entries older than 'msgid_table_cleanup_ttl' sec
+sub clean_msgid_table {
+	
+	foreach my $rcpt (keys %msgid_table) {
+		foreach my $msgid (keys %{$msgid_table{$rcpt}}) {
+			if (time > $msgid_table{$rcpt}{$msgid} + $Conf{'msgid_table_cleanup_ttl'}) {
+				delete $msgid_table{$rcpt}{$msgid};
+			}	
+		}	
+	}
+	
+	return 1;
 }
 
 1;

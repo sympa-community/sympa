@@ -543,6 +543,14 @@ our @params = (
         default => 'mailer-daemon|sympa|listserv|majordomo|smartlist|mailman',
 	vhost   => '1',
     },
+     {
+        name    => 'msgid_table_cleanup_frequency',
+        default => '3600',
+    },
+    {
+        name    => 'msgid_table_cleanup_ttl',
+        default => '86400',
+    },
     { title => 'Internationalization' },
     {
         name    => 'lang',
