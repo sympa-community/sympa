@@ -1,4 +1,4 @@
-From: SYMPA <[% conf.email %]@[% conf.host %]>
+From: [% conf.email_gecos %]  <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'intern_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]

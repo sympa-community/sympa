@@ -2946,7 +2946,7 @@ sub send_global_file {
 	return undef;
     }
 
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
+    foreach my $p ('email','email_gecos','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 
@@ -3072,7 +3072,7 @@ sub send_file {
 	&tt2::add_include_path($d);
     }
 
-    foreach my $p ('email','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
+    foreach my $p ('email','email_gecos','host','sympa','request','listmaster','wwsympa_url','title','listmaster_email') {
 	$data->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
     }
 

@@ -311,6 +311,15 @@ our @params = (
         file    => 'sympa.conf',
         advice  => 'Effective address will be \[EMAIL\]@\[HOST\]',
     },
+     {
+        name    => 'email_gecos',
+        default => 'SYMPA',
+        query   => 'Gecos for service mail send by Sympa itself',
+	vhost   => '1',
+        edit    => '1',
+        file    => 'sympa.conf',
+        advice  => 'This parameter is used in mail_tt2 files',
+    },
     {
         name    => 'create_list',
         default => 'public_listmaster',

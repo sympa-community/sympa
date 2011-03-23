@@ -1,4 +1,4 @@
-From: SYMPA <[% conf.email %]@[% conf.host %]>
+From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'auto_notify_bouncers' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]

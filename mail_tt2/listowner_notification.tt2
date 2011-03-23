@@ -1,4 +1,4 @@
-From: SYMPA <[% conf.email %]@[% conf.host %]>
+From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'arc_quota_exceeded' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 archive quota exceeded[%END%][%END%]

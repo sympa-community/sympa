@@ -1,4 +1,4 @@
-From: SYMPA <[% conf.email %]@[% conf.host %]>
+From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 To: [% newuser.email %]
 [% IF action == 'subrequest' -%]
 Subject: [% FILTER qencode %][%|loc(conf.title,list)%]%1 / subscribing to %2[%END%][%END%]
