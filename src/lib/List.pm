@@ -3572,7 +3572,7 @@ sub send_to_editor {
        my $tmp_dir = $modqueue.'/.'.$self->get_list_id().'_'.$modkey;
        unless (-d $tmp_dir) {
 	   unless (mkdir ($tmp_dir, 0777)) {
-	       &Log::do_log('err','Unable to create %s', $tmp_dir);
+	       &do_log('err','Unable to create %s: %s', $tmp_dir, $!);
 	       return undef;
 	   }
 	   my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
