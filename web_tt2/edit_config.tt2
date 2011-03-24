@@ -4,7 +4,7 @@
 
 <ul>
 [% FOREACH confparam IN editable_params %]
- [% IF confparam.title %]<li><a href="#[%confparam.title%]">[%confparam.title%]</a></li>[% END %]
+ [% IF confparam.title %]<li><a href="#[%confparam.title%]">[%|loc%][%confparam.title%][%END%]</a></li>[% END %]
 [% END %]
 </ul>
 <p>
@@ -13,8 +13,8 @@
   [% IF confparam.title %]
      [% close_table %]
      <a name="[%confparam.title%]">
-     <h4>[% confparam.title %]</h4>
-<table class="listOfItems"><tr><th>parameter name</th><th>value</th><th>apply to</th><th>default</th>[%# <th>semantic</th> %]</tr> 
+     <h4>[%|loc%][% confparam.title %][%END%]</h4>
+<table class="listOfItems"><tr><th>[%|loc%]parameter name[%END%]</th><th>[%|loc%]value[%END%]</th><th>[%|loc%]apply to[%END%]</th><th>[%|loc%]default[%END%]</th>[%# <th>semantic</th> %]</tr> 
   [% ELSE %]
      [% IF dark == '1' %]
        <tr> [% SET dark='0'%]
@@ -25,7 +25,7 @@
   <fieldset>
      <td [% IF confparam.query %]onmouseover="config_ctxhelp(this);"[% END %]>
 	<strong>[% confparam.name  %]</strong>
-	[% IF confparam.query %]<div style="position:absolute;display:none;margin-top:5px;border:1px solid black;background-color:[%color_5%];padding:3px">[% confparam.query %]</div>[% END %]
+	[% IF confparam.query %]<div style="position:absolute;display:none;margin-top:5px;border:1px solid black;background-color:[%color_5%];padding:3px">[%|loc%][% confparam.query %][%END%]</div>[% END %]
      </td>
      <td>
 
@@ -48,7 +48,7 @@
 	[% robot %]
   [% END %]
 [% ELSE %]
-	main conf
+	[%|loc%]main conf[%END%]
 [% END %]
 </td>
 <td>[% confparam.default %]</td>[%# <td>confparam.query</td> %]
