@@ -11,7 +11,7 @@
   [% ELSIF i_err.msg == 'inaccessible_archive' %][%|loc(i_err.year_month)%]Archives from %1 are not accessible[%END%]
   [% ELSIF i_err.msg == 'unable_to_load_list_of_topics' %][%|loc%]Unable to load list topics.[%END%]
   [% ELSIF i_err.msg == 'unable_to_load_create_list_templates' %][%|loc%]Unable to load create_list templates.[%END%]
-  [% ELSIF i_err.msg == 'sync_include_failed' %][%|loc%]Failed to inlude members[%END%] 
+  [% ELSIF i_err.msg == 'sync_include_failed' %][%|loc%]Failed to include members[%END%] 
   [% ELSIF i_err.msg == 'sync_include_admin_failed' %][%|loc%]Failed to include list admins[%END%] 
   [% ELSIF i_err.msg == 'no_owner_defined' %][%|loc%]No owner is defined for the list[%END%] 
   [% ELSIF i_err.msg == 'exportation_failed' %][%|loc(i_err.listname)%]The exportation failed for list '%1'[%END%] 
