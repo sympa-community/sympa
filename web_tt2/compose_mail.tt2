@@ -58,7 +58,7 @@
 	[% IF !subaction %]
 		[% balise_email = '['_'%'_' user.email '_'%'_']' %]
 		[% balise_fingerprint = '['_'%'_' user.fingerprint '_'%'_']' %]
-  		<textarea name="body" cols="80" rows="25"></textarea>
+  		<textarea name="body" cols="80" rows="25">[% body %]</textarea>
 		<br />
 		<br />
 		<b>[%|loc%]Messages customization: use the template syntax:[%END%] <a href="http://www.tt2.org">TT2</a></b><br />

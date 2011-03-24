@@ -15824,7 +15824,13 @@ sub do_send_mail {
     
      &report::notice_report_web('performed',{},$param->{'action'});
     &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-    return 'info';   
+    
+	if ($in{'sub_action'} eq 'sendmailtome') {
+		$param->{'body'} = $in{'body'};
+		return 'compose_mail';
+	}else {
+		return 'info';	   
+	}
 }
 
 ####################################################
