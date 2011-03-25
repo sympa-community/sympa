@@ -11018,6 +11018,7 @@ sub close_list {
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
     ## If list is included by another list, then it cannot be removed
+    ## TODO : we should also check owner_include and editor_include, but a bit more tricky
     my $all_lists = get_lists('*');
     foreach my $list (@{$all_lists}) {
 	    my $included_lists = $list->{'admin'}{'include_list'};
