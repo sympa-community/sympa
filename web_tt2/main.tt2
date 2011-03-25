@@ -42,7 +42,11 @@
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
 <!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
 
+[% IF conf.favicon_url %]
+<link rel="shortcut icon" href="[% conf.favicon_url %]" />
+[% ELSE %]
 <link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+[% END %]
 
 [% PROCESS javascript.tt2 %]
 

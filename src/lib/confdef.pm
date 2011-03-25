@@ -1398,6 +1398,11 @@ our @params = (
 	vhost   => '1',
     },
     {
+        name => 'favicon_url',
+        default => '',
+	vhost   => '1',
+    },
+    {
         name => 'main_menu_custom_button_1_title',
         default => '',
 	vhost   => '1',
