@@ -22,6 +22,19 @@ if [ -f --initdir--/functions ]; then
     use_functions=1
 fi
 
+# Sympa parameters
+
+# Sympa binaries directory
+sympadir="--sbindir--"
+# Sympa config files directory
+sympaconf="--CONFIG--"
+wwsympaconf="--WWSCONFIG--"
+
+sympapiddir="--piddir--"
+sympalockdir="--lockdir--"
+
+
+
 if [ -f /etc/sysconfig/network ]; then
     # Get config.
     . /etc/sysconfig/network
@@ -51,13 +64,6 @@ if [ -f /etc/slackware-version ] ; then
     OSTYPE='Slack'
 fi
 
-# Sympa parameters
-# Sympa binaries directory
-sympadir="--sbindir--"
-
-# Sympa config files directory
-sympaconf="--CONFIG--"
-wwsympaconf="--WWSCONFIG--"
 
 ##'echo -n' not supported with SH on Solaris
 if [ ${OSTYPE} = "SunOS" ]; then
@@ -82,8 +88,8 @@ sympa_status() {
 
     else
        # First try "/u1/home/sympa/*.pid" files
-       if [ -f --piddir--/$1.pid ] ; then
-             pid=`head -1 --piddir--/$1.pid | tr -s ' ' '|'`
+       if [ -f ${sympa_piddir}/$1.pid ] ; then
+             pid=`head -1 ${sympa_piddir}/$1.pid | tr -s ' ' '|'`
              if [ "$pid" != "" ] ; then
                  running=`ps -A | egrep "$pid"`
                  if [ "$running" != "" ]; then
@@ -152,9 +158,9 @@ sympa_stop() {
         return 1
     fi
  
-    if [ -f --piddir--/$1.pid ]; then
+    if [ -f ${sympa_piddir}/$1.pid ]; then
 	echo $echo_opt "Stopping module $1.pl: "
-	pids=`head -1 --piddir--/$1.pid`
+	pids=`head -1 ${sympa_piddir}/$1.pid`
 	runcount=0
 	if [ "$pids" != "" ]; then
 	    for pid in $pids; do
@@ -219,14 +225,14 @@ fi
 # See how we were called.
 case "$1" in
   start)
-	if [ ! -f --lockdir--/sympa ]; then
+	if [ ! -f ${sympalockdir}/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_start sympa
 		sympa_start bulk
 		sympa_start archived
 		sympa_start bounced
 		sympa_start task_manager
-		touch --lockdir--/sympa
+		touch ${sympalockdir}/sympa
 		echo
 	else
 
@@ -241,20 +247,20 @@ case "$1" in
 	sympa_stop archived
 	sympa_stop bulk
 	sympa_stop sympa
-	#if [ -f --piddir--/sympa-distribute.pid ]; then
+	#if [ -f ${sympa_piddir}/sympa-distribute.pid ]; then
 	#	sympa_stop sympa-distribute
 	#fi
-	if [ -f --piddir--/sympa-creation.pid ]; then
+	if [ -f ${sympa_piddir}/sympa-creation.pid ]; then
 		sympa_stop sympa-creation
 	fi
 	sympa_stop task_manager
-	if [ -f --lockdir--/sympa ]; then
-		rm -f --lockdir--/sympa
+	if [ -f ${sympalockdir}/sympa ]; then
+		rm -f ${sympalockdir}/sympa
 	fi
 	;;
   status)
 	echo "Status of Sympa subsystem: "
-	if [ -f --lockdir--/sympa ]; then
+	if [ -f ${sympalockdir}/sympa ]; then
 		echo "Status file for subsystem found."
 	else
 		echo "Status file for subsystem NOT found."
