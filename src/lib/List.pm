@@ -11017,6 +11017,22 @@ sub close_list {
     return undef 
 	unless ($self && ($list_of_lists{$self->{'domain'}}{$self->{'name'}}));
     
+    ## If list is included by another list, then it cannot be removed
+    my $all_lists = get_lists('*');
+    foreach my $list (@{$all_lists}) {
+	    my $included_lists = $list->{'admin'}{'include_list'};
+	    next unless (defined $included_lists);
+	    
+	    foreach my $included_list_name (@{$included_lists}) {
+
+		if ($included_list_name eq $self->get_list_id() ||
+		($included_list_name eq $self->{'name'} && $list->{'domain'} eq $self->{'domain'})) {
+			&Log::do_log('err','List %s is included by list %s : cannot close it', $self->get_list_id(), $list->get_list_id());
+			return undef;
+		}
+	    }
+    }
+    
     ## Dump subscribers, unless list is already closed
     unless ($self->{'admin'}{'status'} eq 'closed') {
 	$self->_save_list_members_file("$self->{'dir'}/subscribers.closed.dump");

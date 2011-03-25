@@ -10514,7 +10514,7 @@ sub do_rename_list {
        return undef;
        
      }elsif ($result eq 'internal') {
-       &report::reject_report_web('intern','UUUUnable_to_rename_list',{'new_listname' => $in{'new_listname'}},
+       &report::reject_report_web('intern','unable_to_rename_list',{'new_listname' => $in{'new_listname'}},
 				  $param->{'action'},$list,$param->{'user'}{'email'},$robot);
        &wwslog('err', "can't rename list %s to %s@%s", $list->get_list_address(), $in{'new_listname'}, $in{'new_robot'});
        &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
@@ -10612,11 +10612,15 @@ sub do_purge_list {
 
 	 return 'home';	
      }else{
-	 $list->close_list($param->{'user'}{'email'});
+	 unless ($list->close_list($param->{'user'}{'email'})) {
+		 &report::reject_report_web('intern','cannot_close_list',{},$param->{'action'},$list,$param->{'user'}{'email'}, $robot);
+		&wwslog('err','Cannot close list %s', $list->get_list_id());
+		&web_db_log({'status' => 'error',
+			'error_type' => 'unknown'});
+	 }
+	 
 	 &report::notice_report_web('list_closed',{},$param->{'action'});
 	 &web_db_log({'status' => 'success'});
-
-	 
 
          return 'admin';
      }
