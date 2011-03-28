@@ -313,13 +313,14 @@ our @params = (
         advice  => 'Effective address will be \[EMAIL\]@\[HOST\]',
     },
      {
-        name    => 'email_gecos',
+        name    => 'email_',
         default => 'SYMPA',
         query   => 'Gecos for service mail send by Sympa itself',
 	vhost   => '1',
         edit    => '1',
         file    => 'sympa.conf',
         advice  => 'This parameter is used in mail_tt2 files',
+        optional => '1',
     },
     {
         name    => 'create_list',
@@ -1401,6 +1402,7 @@ our @params = (
         name => 'favicon_url',
         default => '',
 	vhost   => '1',
+        optional => '1',
     },
     {
         name => 'main_menu_custom_button_1_title',

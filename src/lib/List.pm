@@ -2658,6 +2658,15 @@ sub distribute_msg {
 	}
     }
 
+    ## Add RFC5064 Archived-At SMTP header field
+    if (&Conf::get_robot_conf($robot, 'wwsympa_url') and $self->is_web_archived()) {
+	my @now = localtime(time);
+	my $yyyy = sprintf '%04d', 1900+$now[5];
+	my $mm = sprintf '%02d', $now[4]+1;
+	my $archived_msg_url = sprintf "%s/arcsearch_id/%s/%s-%s/%s", &Conf::get_robot_conf($robot, 'wwsympa_url'), $self->{'name'}, $yyyy, $mm, &tools::clean_msg_id($hdr->get('Message-Id'));	
+	$hdr->add('Archived-At', '<'.$archived_msg_url.'>');
+     }
+
     ## Remove outgoing header fileds
     ## Useful to remove some header fields that Sympa has set
     if ($self->{'admin'}{'remove_outgoing_headers'}) {
