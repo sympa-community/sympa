@@ -156,6 +156,15 @@ sub db_struct {
 						  'parameter_stat' => 'varchar(50)',
 						  'read_stat' => 'tinyint(1)',
 					      },
+				 'stat_counter_table' => {'id_counter' => 'bigint(20)',
+							  'beginning_date_counter' => 'int(11)',
+							  'ending_date_counter' => 'int(11)',
+							  'data_counter' => 'varchar(50)',
+							  'robot_counter' => 'varchar(80)',
+							  'list_counter' => 'varchar(150)',
+							  'variation_counter' => 'int',
+							  'total_counter' => 'int',
+				 },
 			       'conf_table' => {'robot_conf' => 'varchar(80)',
 						'label_conf' => 'varchar(80)',
 						'value_conf' => 'varchar(300)'}
@@ -246,6 +255,10 @@ our %not_null = ('email_user' => 1,
 		'operation_stat' => 1,
 		'robot_stat' => 1,
 		'read_stat' => 1,
+		'id_counter' => 1,
+		'beginning_date_counter' => 1,
+		'data_counter' => 1,
+		'robot_counter' => 1,
 		'date_notification' => 1,
 		'pk_notification' => 1
 	);
@@ -262,6 +275,7 @@ our %primary = ('user_table' => ['email_user'],
 	       'bulkspool_table' => ['messagekey_bulkspool'],
 	       'conf_table' => ['robot_conf','label_conf'],
 	       'stat_table' => ['id_stat'],
+	       'stat_counter_table' => ['id_counter'],
 	       'notification_table' => ['pk_notification']
 	       );
 	       

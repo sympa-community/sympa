@@ -17,9 +17,9 @@
 [% END %]
 
 [% IF stats_mail != NULL %]
-	<strong>envoi de messages : </strong>
+	<strong>messages sending: </strong>
 	[% FOREACH id = stats_mail %]
-	<p>from [% id.value.beginning_date_counter %] to [% id.value.end_date_counter %] : [% id.value.variation_counter %] messages send</p>
+	<p>from [% id.value.beginning_date_counter %] to [% id.value.end_date_counter %] : [% id.value.variation_counter %] messages sent</p>
 	[% END %]
 <br>
 [% END %]

@@ -323,7 +323,7 @@ sub db_stat_counter_log {
 	}
     }
 
-    unless(&SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
+    unless(&SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, ending_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
     $id,
     $date_deb,
     $date_fin,
