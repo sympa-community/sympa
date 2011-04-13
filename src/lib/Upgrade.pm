@@ -85,6 +85,9 @@ sub upgrade {
     }
 
     ## Always update config.bin files while upgrading
+    &Conf::delete_binaries();
+
+    ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     &Log::do_log('notice','Rebuilding config.bin files for ALL lists...it may take a while...');
     my $all_lists = &List::get_lists('*',{'reload_config' => 1});

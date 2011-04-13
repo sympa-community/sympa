@@ -119,19 +119,21 @@ sub load {
     my $config_file = shift;
     my $no_db = shift;
     my $return_result = shift;
+    my $force_reload = 1; # If set to 0, only binary cache will be used, if possible.
 
     my $config_err = 0;
-    my $force_reload = 0;
     my %line_numbered_config;
 
-    if(_source_has_not_changed({'config_file' => $config_file}) && !$return_result) {
+    if(_source_has_not_changed({'config_file' => $config_file}) && !$return_result && !$force_reload) {
         ##printf "Conf::load(): File %s has not changed since the last cache. Using cache.\n",$config_file;
         if (my $tmp_conf = _load_binary_cache({'config_file' => $config_file.$binary_file_extension})){
             %Conf = %{$tmp_conf};
+            $force_reload = 0; # Will force the robot.conf reloading, as sympa.conf is the default.
         }else{
             printf STDERR "Binary config file loading failed. Loading source file '%s'\n",$config_file;
         }
-    }else{
+    }
+    if($force_reload == 1){
         ##printf "Conf::load(): File %s has changed since the last cache. Loading file.\n",$config_file;
         $force_reload = 1; # Will force the robot.conf reloading, as sympa.conf is the default.
         ## Loading the Sympa main config file.
@@ -203,10 +205,9 @@ sub load_robots {
             "Conf::load_robots(): Unable to load config file %s\n", Sympa::Constants::WWSCONFIG;
     }
 
-    unless (opendir DIR,$Conf{'etc'} ) {
-        printf STDERR "Conf::load_robots(): Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
-        return undef;
-    }
+    my @robots;
+    return undef unless (@robots = @{&get_robots_list()});
+
     my $exiting = 0;
     ## Set the defaults based on sympa.conf and wwsympa.conf first
     foreach my $key (keys %valid_robot_key_words) {
@@ -223,14 +224,11 @@ sub load_robots {
     }
     return undef if ($exiting);
 
-    foreach my $robot (readdir(DIR)) {
+    foreach my $robot (@robots) {
         my $robot_config_file = "$Conf{'etc'}/$robot/robot.conf";
-        next unless (-d "$Conf{'etc'}/$robot");
-        next unless (-f $robot_config_file);
         $param->{'config_hash'}{'robots'}{$robot} = &_load_single_robot_config({'robot' => $robot, 'no_db' => $param->{'no_db'}, 'force_reload' => $param->{'force_reload'}});
         &_check_double_url_usage({'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
     }
-    closedir(DIR);        
 }
 
 ## returns a robot conf parameter
@@ -244,6 +242,43 @@ sub get_robot_conf {
     }
     ## default
     return $Conf{$param} || $wwsconf->{$param};
+}
+
+# deletes all the *.conf.bin files.
+sub delete_binaries {
+    &Log::do_log('notice',"Removing binary cache for sympa.conf, wwsympa.conf and all the robot.conf files");
+    my @files = (Sympa::Constants::CONFIG,Sympa::Constants::WWSCONFIG);
+    foreach my $robot (@{&get_robots_list()}) {
+        push @files, "$Conf{'etc'}/$robot/robot.conf";
+    }
+    foreach my $c_file (@files) {
+        my $binary_file = $c_file.".bin";
+        if( -f $binary_file) {
+            if (-w $binary_file) {
+                unlink $binary_file;
+            }else {
+                &Log::do_log('err',"Could not remove file %s. You should remove it manually to ensure the configuration used is valid.",$binary_file);
+            }
+        }
+    }
+}
+
+# Return a reference to an array containing the names of the robots on the server.
+sub get_robots_list {
+    &Log::do_log('debug2',"Retrieving the list of robots on the server");
+    my @robots_list;
+    unless (opendir DIR,$Conf{'etc'} ) {
+        printf STDERR "Conf::load_robots(): Unable to open directory $Conf{'etc'} for virtual robots config\n" ;
+        return undef;
+    }
+    foreach my $robot (readdir DIR) {
+        my $robot_config_file = "$Conf{'etc'}/$robot/robot.conf";
+        next unless (-d "$Conf{'etc'}/$robot");
+        next unless (-f $robot_config_file);
+        push @robots_list, $robot;
+    }
+    closedir(DIR);
+    return \@robots_list;
 }
 
 ## Returns a hash containing the values of all the parameters of the group
@@ -1651,19 +1686,23 @@ sub _save_binary_cache {
     unless ($lock->lock('write')) {
         return undef;
     }   
-    
-    eval {
-        &Storable::store($param->{'conf_to_save'},$param->{'target_file'});
-    };
+
+    eval {&Storable::store($param->{'conf_to_save'},$param->{'target_file'});};
     if ($@) {
         printf STDERR  'Conf::_save_binary_cache(): Failed to save the binary config %s. error: %s\n', $param->{'target_file'},$@;
-        ## Release the lock
         unless ($lock->unlock()) {
             return undef;
         }
         return undef;
     }
-    ## Release the lock
+    eval {chown ((getpwnam(Sympa::Constants::USER))[2], (getgrnam(Sympa::Constants::GROUP))[2], $param->{'target_file'});};
+    if ($@){
+        printf STDERR  'Conf::_save_binary_cache(): Failed to change owner of the binary file %s. error: %s\n', $param->{'target_file'},$@;
+        unless ($lock->unlock()) {
+            return undef;
+        }
+        return undef;
+     }
     unless ($lock->unlock()) {
         return undef;
     }
@@ -1753,5 +1792,6 @@ sub _get_parameters_names_by_category {
     }
     return $param_by_categories;
 }
+
 ## Packages must return true.
 1;
