@@ -119,21 +119,20 @@ sub load {
     my $config_file = shift;
     my $no_db = shift;
     my $return_result = shift;
-    my $force_reload = 1; # If set to 0, only binary cache will be used, if possible.
+    my $force_reload;
 
     my $config_err = 0;
     my %line_numbered_config;
 
-    if(_source_has_not_changed({'config_file' => $config_file}) && !$return_result && !$force_reload) {
+    if(_source_has_not_changed({'config_file' => $config_file}) && !$return_result) {
         ##printf "Conf::load(): File %s has not changed since the last cache. Using cache.\n",$config_file;
         if (my $tmp_conf = _load_binary_cache({'config_file' => $config_file.$binary_file_extension})){
             %Conf = %{$tmp_conf};
-            $force_reload = 0; # Will force the robot.conf reloading, as sympa.conf is the default.
+            $force_reload = 1; # Will force the robot.conf reloading, as sympa.conf is the default.
         }else{
             printf STDERR "Binary config file loading failed. Loading source file '%s'\n",$config_file;
         }
-    }
-    if($force_reload == 1){
+    }else{
         ##printf "Conf::load(): File %s has changed since the last cache. Loading file.\n",$config_file;
         $force_reload = 1; # Will force the robot.conf reloading, as sympa.conf is the default.
         ## Loading the Sympa main config file.
@@ -188,8 +187,6 @@ sub load {
     ## Load robot.conf files
     &load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload}) ;
     &_create_robot_like_config_for_main_robot();
-# Décommenter la ligne ci-dessous pour dumper la configuration à la fin du chargement.
-    open TMP,">/tmp/dumpconf";&tools::dump_var(\%Conf,0,\*TMP);close TMP;
     
     return 1;
 }
