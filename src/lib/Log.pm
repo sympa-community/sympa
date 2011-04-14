@@ -323,7 +323,7 @@ sub db_stat_counter_log {
 	}
     }
 
-    unless(&SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, ending_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
+    unless(&SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
     $id,
     $date_deb,
     $date_fin,
@@ -667,7 +667,7 @@ sub aggregate_data {
 	
     my $d_deb = localtime($begin_date);
     my $d_fin = localtime($end_date);
-    &do_log('info', 'data aggregated from %s to %s', $d_deb, $d_fin);
+    &do_log('debug2', 'data aggregated from %s to %s', $d_deb, $d_fin);
 }
 
 
@@ -956,6 +956,21 @@ sub get_last_date_aggregation {
     
     my $last_date = $sth->fetchrow_array;
     return $last_date;
+}
+
+sub agregate_daily_data {
+    my $param = shift;
+    &Log::do_log('debug2','Agregating data');
+    my $result;
+    foreach my $id (keys %{$param->{'hourly_data'}}) {
+	my $reftime = tools::get_midnight_time($param->{'hourly_data'}{$id}{'beginning_date_counter'});
+	if(defined $result->{$reftime}) {
+	    $result->{$reftime} += $param->{'hourly_data'}{$id}{'variation_counter'};
+	}else{
+	    $result->{$reftime} = $param->{'hourly_data'}{$id}{'variation_counter'};
+	}    
+    }
+    return $result;
 }
 1;
 

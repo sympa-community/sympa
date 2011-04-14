@@ -1,12 +1,46 @@
 <!-- $Id$ -->
 
 
-<h1>Statistics of list [% list %]</h1>
-<strong>[%|loc%]Shared document directory size:[%END%] [% shared_size %]K</strong><br />
+<h1>[%|loc(listname)%]List %1 statistics[%END%]</h1>
+<strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
 
-<strong>[%|loc%]Web archives size:[%END%] [% arc_size %]K</strong><br />
+<strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong><br />
 
 <br>
+[% FOREACH o IN stats %]
+[% SET chartid = "chartdiv" _ o.key %]
+[% SET chartcontainerid = "chartcontainer" _ o.key %]
+<div id="[% chartcontainerid %]" style="width:500px;">
+<h2>[%|loc%][% o.value.title %][%END%]</h2>
+[% IF o.value.defined('stats_values') %]
+<div id="[% chartid %]" style="height:400px;">
+	<script type = "text/javascript">
+	var line = [% o.value.stats_values %];
+	$.jqplot('[% chartid %]', [line], {
+		title : '[%|loc%][% o.value.title %][%END%]',
+		axesDefaults: {
+     		 tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+     		 tickOptions: {
+        		angle: -30,
+        		fontSize: '10pt'
+      		}},
+
+		axes:{
+			xaxis:{renderer:$.jqplot.CategoryAxisRenderer},
+			yaxis:{tickOptions: {
+				angle :0,
+				formatString:'%d'
+				}}
+ },
+	series:[{renderer:$.jqplot.BarRenderer}],
+});
+ </script>
+</div>
+[% ELSE %]
+<p>[%|loc%]No operation recorded in this field yet.[%END%]</p>
+[% END %]
+</div>
+[% END %]
 [% IF stats_subscribers != NULL %]
 	<strong>subscriptions : </strong>
 	[% FOREACH id = stats_subscriber %]
@@ -15,15 +49,6 @@
 	[% END %]
 	<br>
 [% END %]
-
-[% IF stats_mail != NULL %]
-	<strong>messages sending: </strong>
-	[% FOREACH id = stats_mail %]
-	<p>from [% id.value.beginning_date_counter %] to [% id.value.end_date_counter %] : [% id.value.variation_counter %] messages sent</p>
-	[% END %]
-<br>
-[% END %]
-<br>
 
 [% IF stats_unsubscriber != NULL %]
 	<strong>unsubscriptions : </strong>
@@ -60,30 +85,5 @@
 	[% END %]
 [% END %]
 
-
-<div id="chartdiv" style="height:400px;width:300px; "></div> 
-[% IF (action == 'stats') %]
-
-	<script type = "text/javascript">
-	var line = [% stats_values %];
-	$.jqplot('chartdiv', [line], {
-		title : 'Message sending',
-		axesDefaults: {
-     		 tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
-     		 tickOptions: {
-        		angle: -30,
-        		fontSize: '10pt'
-      		}},
-
-		axes:{
-			xaxis:{renderer:$.jqplot.CategoryAxisRenderer},
-			yaxis:{tickOptions: {angle :0}}
- },
-	series:[{renderer:$.jqplot.BarRenderer}],
-
-
-});
- </script>
-[% END %]
 
 <!-- end stats.tt2 -->

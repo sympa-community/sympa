@@ -2117,20 +2117,14 @@ sub adate {
     return $date;
 }
 
-## human format (used in task models and scenarii)
+## Return true if the time of the day for the epoch date given as argument is midnight
+sub get_midnight_time {
 
-# -> absolute date :
-#  xxxxYxxMxxDxxHxxMin
-# Y year ; M : month (1-12) ; D : day (1-28|29|30|31) ; H : hour (0-23) ; Min : minutes (0-59)
-# H and Min parameters are optionnal
-# ex 2001y9m13d14h10min
-
-# -> duration :
-# +|- xxYxxMxxWxxDxxHxxMin
-# W week, others are the same
-# all parameters are optionnals
-# before the duration you may write an absolute date, an epoch date or the keyword 'execution_date' which refers to the epoch date when the subroutine is executed. If you put nothing, the execution_date is used
-
+    my $epoch = $_[0];
+    &Log::do_log('debug3','Getting midnight time for: %s',$epoch);
+    my @date = localtime ($epoch);
+    return $epoch - $date[0] - $date[1]*60 - $date[2]*3600;
+}
 
 ## convert a human format date into an epoch date
 sub epoch_conv {
