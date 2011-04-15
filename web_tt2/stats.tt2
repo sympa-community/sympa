@@ -19,20 +19,25 @@
 	$.jqplot('[% chartid %]', [line], {
 		title : '[%|loc%][% o.title %][%END%]',
 		axesDefaults: {
+			min: 0,
      		 tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
      		 tickOptions: {
-        		angle: -30,
+        		angle: -60,
         		fontSize: '10pt'
       		}},
 
 		axes:{
-			xaxis:{renderer:$.jqplot.CategoryAxisRenderer},
+			xaxis:{renderer:$.jqplot.CategoryAxisRenderer,
+					tickOptions: {
+						showGridline: false,
+					}},
 			yaxis:{tickOptions: {
 				angle :0,
 				formatString:'%d'
 				}}
  },
-	series:[{renderer:$.jqplot.BarRenderer}],
+	series:[{renderer:$.jqplot.BarRenderer},
+],
 });
  </script>
 </div>
