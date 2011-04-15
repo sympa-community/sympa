@@ -962,13 +962,22 @@ sub agregate_daily_data {
     my $param = shift;
     &Log::do_log('debug2','Agregating data');
     my $result;
-    foreach my $id (keys %{$param->{'hourly_data'}}) {
-	my $reftime = tools::get_midnight_time($param->{'hourly_data'}{$id}{'beginning_date_counter'});
+    my $first_date = $param->{'first_date'} || time;
+    my $last_date = $param->{'last_date'} || time;
+    foreach my $begin_date (sort keys %{$param->{'hourly_data'}}) {
+	my $reftime = tools::get_midnight_time($begin_date);
+	unless (defined $param->{'first_date'}) {
+	    $first_date = $reftime if ($reftime < $first_date);
+	}
+	next if ($begin_date < $first_date || $param->{'hourly_data'}{$begin_date}{'end_date_counter'} > $last_date);
 	if(defined $result->{$reftime}) {
-	    $result->{$reftime} += $param->{'hourly_data'}{$id}{'variation_counter'};
+	    $result->{$reftime} += $param->{'hourly_data'}{$begin_date}{'variation_counter'};
 	}else{
-	    $result->{$reftime} = $param->{'hourly_data'}{$id}{'variation_counter'};
-	}    
+	    $result->{$reftime} = $param->{'hourly_data'}{$begin_date}{'variation_counter'};
+	}
+    }
+    for (my $date = $first_date; $date < $last_date; $date += 86400) {
+	$result->{$date} = 0 unless(defined $result->{$date});
     }
     return $result;
 }

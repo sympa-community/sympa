@@ -2117,7 +2117,7 @@ sub adate {
     return $date;
 }
 
-## Return true if the time of the day for the epoch date given as argument is midnight
+## Return the epoch date corresponding to the last midnight before date given as argument.
 sub get_midnight_time {
 
     my $epoch = $_[0];

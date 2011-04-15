@@ -8,16 +8,16 @@
 
 <br>
 [% FOREACH o IN stats %]
-[% SET chartid = "chartdiv" _ o.key %]
-[% SET chartcontainerid = "chartcontainer" _ o.key %]
+[% SET chartid = "chartdiv" _ o.stat_id %]
+[% SET chartcontainerid = "chartcontainer" _ o.stat_id %]
 <div id="[% chartcontainerid %]" style="width:500px;">
-<h2>[%|loc%][% o.value.title %][%END%]</h2>
-[% IF o.value.defined('stats_values') %]
+<h2>[%|loc%][% o.title %][%END%]</h2>
+[% IF o.defined('stats_values') %]
 <div id="[% chartid %]" style="height:400px;">
 	<script type = "text/javascript">
-	var line = [% o.value.stats_values %];
+	var line = [% o.stats_values %];
 	$.jqplot('[% chartid %]', [line], {
-		title : '[%|loc%][% o.value.title %][%END%]',
+		title : '[%|loc%][% o.title %][%END%]',
 		axesDefaults: {
      		 tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
      		 tickOptions: {

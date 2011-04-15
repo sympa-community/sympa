@@ -11279,7 +11279,7 @@ sub get_data {
 	&Log::do_log('err','Unable to get stat data %s for liste %s@%s',$data,$listname,$robotname);
 	return undef;
     }
-    my $res = $sth->fetchall_hashref('id_counter');
+    my $res = $sth->fetchall_hashref('beginning_date_counter');
     return $res;
 }
 

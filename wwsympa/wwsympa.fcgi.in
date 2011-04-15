@@ -16182,28 +16182,32 @@ sub do_stats {
      $param->{'shared_size'} = int (($list->get_shared_size + 512)/1024);
      $param->{'arc_size'} = int (($list->get_arc_size($wwsconf->{'arc_path'}) + 512)/1024);
 
-    $param->{'stats'}{'send_mail'}{'title'} = gettext("Mail sending");
-    $param->{'stats'}{'add_subscriber'}{'title'} = gettext("Subscription additions");
-    $param->{'stats'}{'unsubscription'}{'title'} = gettext("Unsubscription");
-    $param->{'stats'}{'deleted by admin'}{'title'} = gettext("Users deleted by admin");
+    my $stats;
+    my @stats_to_display;
+    $stats->{'send_mail'}{'title'} = gettext("Mail sending");
+    $stats->{'add_subscriber'}{'title'} = gettext("Subscription additions");
+    $stats->{'unsubscription'}{'title'} = gettext("Unsubscription");
+    $stats->{'deleted by admin'}{'title'} = gettext("Users deleted by admin");
     foreach my $operation (('send_mail','add_subscriber','unsubscription','deleted by admin')) {
 	my $raw_data = &List::get_data($operation, $robot , $in{'list'});
 	my $data = &Log::agregate_daily_data({'hourly_data'=>$raw_data});
-	my @key_counter = keys %{$data};
 	open TMP, ">>/tmp/dump";
 	print TMP &Dumper($data);
 	close TMP;
+	my @key_counter = keys %{$data};
 	if($#key_counter>-1) {
-	    $param->{'stats'}{$operation}{'stats_values'} = "[";
-	
-	    foreach my $date (sort keys(%{$data})){
+	    $stats->{$operation}{'stats_values'} = "[";
+	    foreach my $date (sort keys %{$data}){
 		my $formatted_date = gettext_strftime "%d %b %Y", localtime($date);
-		$param->{'stats'}{$operation}{'stats_values'} .= "['$formatted_date',".$data->{$date}."],";
+		$stats->{$operation}{'stats_values'} .= "['$formatted_date',".$data->{$date}."],";
 	    }
-	    $param->{'stats'}{$operation}{'stats_values'} =~ s/,$//;
-	    $param->{'stats'}{$operation}{'stats_values'} .= "]";
+	    $stats->{$operation}{'stats_values'} =~ s/,$//;
+	    $stats->{$operation}{'stats_values'} .= "]";
+	    $stats->{$operation}{'stat_id'} = $operation;
 	}
+	push @stats_to_display, $stats->{$operation};
     }
+    $param->{'stats'} = \@stats_to_display;
      #--------------------shared treatment-------------------------------------
      ##in this case, we group uploading, directory creations and file creations
      my $data_shared_up = &List::get_data('d_upload', $robot, $in{'list'});
