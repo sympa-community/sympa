@@ -4871,14 +4871,18 @@ sub do_subscribe {
 		$u->{'custom_attribute'} = $xml_custom_attribute if (defined $xml_custom_attribute);
 		$u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
 		$u->{'parameter'} = 'manual subscription';
-		
-		unless ($list->add_list_member($u)) {
-		    &report::reject_report_web('intern','add_subscriber_db_failed',{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		    &wwslog('info', 'do_subscribe: subscribe failed');
+
+		$list->add_list_member($u);
+		if (defined $list->{'add_outcome'}{'errors'}) {
+		    my $error = sprintf &gettext("Unable to add user %s in list %s : %s"),$u->{'email'},$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
+		    my $error_type = 'intern';
+		    $error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
+		    &report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		    &wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
 		    &web_db_log({'parameters' => $in{'email'},
-				 'status' => 'error',
-				 'error_type' => 'internal'});		      
-		    return undef;
+				'status' => 'error',
+				'error_type' => 'internal'});		      
+		    return "info";
 		}
 	    }
 	    
@@ -6190,14 +6194,17 @@ sub do_skinsedit {
 	 }
      }
      
-     $total = $list->add_list_member(@new_users);
-     unless( defined $total) {
-	 &report::reject_report_web('intern','add_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info','do_add: failed adding');
-	 &web_db_log({'target_email' => $in{'email'}||$in{'pending_email'},
-		      'status' => 'error',
-		      'error_type' => 'internal'});
-	 return undef;
+     $list->add_list_member(@new_users);
+     if (defined $list->{'add_outcome'}{'errors'}) {
+	my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
+	my $error_type = 'intern';
+	$error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
+	&report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	&wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
+	&web_db_log({'parameters' => $in{'email'},
+		    'status' => 'error',
+		    'error_type' => 'internal'});		      
+	return 'info';
      }
      
      ## Delete subscription request if any
@@ -9663,9 +9670,16 @@ sub do_edit_list {
 	    
 	    $list->{'total'} = 0;
 	    
-	    ## Insert users in database
-	    foreach my $user (@users) {
-		$list->add_list_member($user);
+	    $list->add_list_member(@users);
+	    if (defined $list->{'add_outcome'}{'errors'}) {
+		my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
+		my $error_type = 'intern';
+		$error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
+		&report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+		&wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
+		&web_db_log({'parameters' => $in{'email'},
+			    'status' => 'error',
+			    'error_type' => 'internal'});		      
 	    }
 	    
 	    $list->get_total();
@@ -10654,9 +10668,18 @@ sub do_purge_list {
 	 my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 
 	 ## Insert users in database
-	 foreach my $user (@users) {
-	     $list->add_list_member($user);
-	 }
+	$list->add_list_member(@users);
+	if (defined $list->{'add_outcome'}{'errors'}) {
+	    my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
+	    my $error_type = 'intern';
+	    $error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
+	    &report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	    &wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
+	    &web_db_log({'parameters' => $in{'email'},
+			'status' => 'error',
+			'error_type' => 'internal'});		      
+	}
+	    
      }
 
      $list->savestats(); 

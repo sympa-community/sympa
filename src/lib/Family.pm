@@ -2502,8 +2502,10 @@ sub _set_status_changes {
 	    my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
 	    
 	    ## Insert users in database
-	    foreach my $user (@users) {
-		$list->add_list_member($user);
+	    $list->add_list_member(@users);
+	    my $total = $list->{'add_outcome'}{'added_members'};
+	    if (defined $list->{'add_outcome'}{'errors'}) {
+		&Log::do_log('err', 'Failed to add users: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
 	    }
 	}
     }

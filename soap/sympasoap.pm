@@ -752,10 +752,11 @@ sub add {
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos;
 	$u->{'date'} = $u->{'update_date'} = time;
-	
-	unless ($list->add_list_member($u)) {
+
+	$list->add_list_member($u);
+	if (defined $list->{'add_outcome'}{'errors'}) {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
-	    my $error = "Unable to add user $email in list $listname";
+	    my $error = sprintf ("Unable to add user %s in list %s: %s"),$email,$listname,$list->{'add_outcome'}{'errors'}{'error_message'};
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Unable to add user')
 		->faultdetail($error);

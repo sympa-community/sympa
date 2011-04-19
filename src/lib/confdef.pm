@@ -562,6 +562,14 @@ our @params = (
         name    => 'msgid_table_cleanup_ttl',
         default => '86400',
     },
+    {
+        name    => 'default_max_list_members',
+        default => '0',
+        optional => '1',
+        query   => gettext('Default limit for the number of subscribers per list (0 means no limit)'),
+        vhost   => '1',
+        file    => 'sympa.conf',
+    },
     { title => gettext('Internationalization') },
     {
         name    => 'lang',

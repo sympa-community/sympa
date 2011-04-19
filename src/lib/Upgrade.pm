@@ -605,10 +605,10 @@ sub upgrade {
 		$list->{'total'} = 0;
 		
 		## Add users to the DB
-		my $total = $list->add_list_member(@users);
-		unless (defined $total) {
-		    &Log::do_log('err', 'Failed to add users');
-		    next;
+		$list->add_list_member(@users);
+		my $total = $list->{'add_outcome'}{'added_members'};
+		if (defined $list->{'add_outcome'}{'errors'}) {
+		    &Log::do_log('err', 'Failed to add users: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
 		}
 		
 		&Log::do_log('notice','%d subscribers have been loaded into the database', $total);

@@ -1136,6 +1136,13 @@ my %alias = ('reply-to' => 'reply_to',
 					'gettext_id' => "Regular expression applied to prevent loops with robots",
 					'group' => 'other'
 					},
+	    'max_list_members' => {'format' => '\d+',
+			   'length' => 8,
+			   'gettext_unit' => 'list members',
+			   'default' => {'conf' => 'default_max_list_members'},
+			   'gettext_id' => "Maximum number of list members",
+			   'group' => 'description'
+		       },
 	    'max_size' => {'format' => '\d+',
 			   'length' => 8,
 			   'gettext_unit' => 'bytes',
@@ -6334,14 +6341,22 @@ sub add_list_member {
     &Log::do_log('debug2', '%s', $self->{'name'});
     
     my $name = $self->{'name'};
-    my $total = 0;
+    $self->{'add_outcome'} = undef;
+    $self->{'add_outcome'}{'added_members'} = 0;
+    $self->{'add_outcome'}{'expected_number_of_added_users'} = $#new_users;
+    $self->{'add_outcome'}{'remaining_members_to_add'} = $self->{'add_outcome'}{'expected_number_of_added_users'};
     
     my $subscriptions = $self->get_subscription_requests();
+    my $current_list_members_count = $self->get_total();
 
     foreach my $new_user (@new_users) {
 	my $who = &tools::clean_email($new_user->{'email'});
 	next unless $who;
-	
+	unless ($current_list_members_count < $self->{'admin'}{'max_list_members'} || $self->{'admin'}{'max_list_members'} == 0) {
+	    $self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'} = 1;
+	    &Log::do_log('notice','Subscription of user %s failed: max number of subscribers (%s) reached',$new_user->{'email'},$self->{'admin'}{'max_list_members'});
+	    last;
+	}
 	# Delete from exclusion_table if new_user is in.
 	&insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete');
 
@@ -6371,6 +6386,7 @@ sub add_list_member {
 		## Insert in User Table
 		unless(&SDM::do_query("INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",&SDM::quote($who), &SDM::quote($new_user->{'gecos'}), &SDM::quote($new_user->{'lang'}), &SDM::quote($new_user->{'password'}))){
 		    &Log::do_log('err','Unable to add user %s to user_table.', $who);
+		    $self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'} = 1;
 		    next;
 		}
 	    }
@@ -6404,16 +6420,29 @@ sub add_list_member {
 	    &Log::do_log('err','Unable to add subscriber %s to table subscriber_table for list %s@%s %s', $who,$name,$self->{'domain'});
 	    next;
 	}
-	$total++;
+	$self->{'add_outcome'}{'added_members'}++;
+	$self->{'add_outcome'}{'remaining_member_to_add'}--;
+	$current_list_members_count++;
     }
 
-    $self->{'total'} += $total;
+    $self->{'total'} += $self->{'add_outcome'}{'added_members'};
     $self->savestats();
-
-    return $total;
+    $self->_create_add_error_string() if ($self->{'add_outcome'}{'errors'});
+    return 1;
 }
 
-
+sub _create_add_error_string {
+    my $self = shift;
+    $self->{'add_outcome'}{'errors'}{'error_message'} = '';
+    if ($self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'}) {
+	$self->{'add_outcome'}{'errors'}{'error_message'} .= sprintf &gettext('Attempt to exceed the max number of members (%s) for this list.'), $self->{'admin'}{'max_list_members'} ;
+    }
+    if ($self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}) {
+	$self->{'add_outcome'}{'error_message'} .= ' '.&gettext('Attempts to add some users in database failed.');
+    }
+    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '.sprintf &gettext('Added %s users out of %s required.'),$self->{'add_outcome'}{'added_members'},$self->{'add_outcome'}{'expected_number_of_added_users'};
+}
+    
 ## Adds a new list admin user, no overwrite.
 sub add_list_admin {
     my($self, $role, @new_admin_users) = @_;
@@ -8417,19 +8446,19 @@ sub sync_include {
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
 	    $u->{'date'} = time;
-	    @add_tab = ($u);
-	    my $user_added = 0;
-	    unless( $user_added = $self->add_list_member( @add_tab ) ) {
-		&Log::do_log('err', 'List:sync_include(%s): Failed to add new users', $name);
-		return undef;
+	    $self->add_list_member( $u );
+	    if (defined $self->{'add_outcome'}{'errors'}) {
+		&Log::do_log('err', 'List:sync_include(%s): Failed to add new users: %s', $name, $self->{'add_outcome'}{'errors'}{'error_message'});
+		unless (&List::send_notify_to_listmaster('subscribers_limit_exceeded', $self->{'domain'}, {'max_number_of_subscribers' => $self->{'admin'}{'max_list_members'}, 'listname' => $self->{'name'}})) {
+		    &Log::do_log('notice',"Unable to send notify 'sync_include_admmin_failed' to listmaster");
+		}
+		last;
 	    }
-	    if ($user_added) {
-		$users_added++;
-		## Send notification if the list config authorizes it only.
-		if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
-		    unless ($self->send_file('welcome', $u->{'email'}, $self->{'domain'},{})) {
-			&Log::do_log('err',"Unable to send template 'welcome' to $u->{'email'}");
-		    }
+	    $users_added++;
+	    ## Send notification if the list config authorizes it only.
+	    if ($self->{'admin'}{'inclusion_notification_feature'} eq 'on') {
+		unless ($self->send_file('welcome', $u->{'email'}, $self->{'domain'},{})) {
+		    &Log::do_log('err',"Unable to send template 'welcome' to $u->{'email'}");
 		}
 	    }
 	}

@@ -147,6 +147,10 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 [%|loc(param0)%]Until then we recommend your remove %1;
 default configuration will be used.[%END%]
 
+[% ELSIF type == 'subscribers_limit_exceeded' -%]
+Subject: [% FILTER qencode %][%|loc(listname)%]Limit of users count reached for list %1[%END%][%END%]
+
+[%|loc(listname,max_number_of_subscribers)%]Sympa could not include subscribers to list %1 because the maximum number of users was reached for this list. This limit is defined to %2.[%END%]
 [% ELSIF type == 'sync_include_failed' -%]
 Subject: [% FILTER qencode %][%|loc(listname)%]subscribers update failed for list %1[%END%][%END%]
 

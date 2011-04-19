@@ -472,8 +472,9 @@ if ($main::options{'dump'}) {
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos;
 
-	unless ($list->add_list_member($u)) {
-	    printf STDERR "\nCould not add %s\n", $email;
+	$list->add_list_member($u);
+	if (defined $list->{'add_outcome'}{'errors'}) {
+	    printf STDERR "\nCould not add %s. %s\n", $email,$list->{'add_outcome'}{'errors'}{'error_message'};
 	    next;
 	}
 	print STDERR '+';
