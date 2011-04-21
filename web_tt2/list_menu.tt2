@@ -103,6 +103,11 @@
 <li class="[% class %]"><a href="[% path_cgi %]/review/[% list %]" >[%|loc%]Review members[%END%]</a></li>
 
 [% END %]
+
+[% TRY %]
+[% PROCESS additional_list_menu_links.tt2 %]
+[% CATCH %]
+[% END %]
  </div>
 </div>
 <!-- end list_menu.tt2 -->
