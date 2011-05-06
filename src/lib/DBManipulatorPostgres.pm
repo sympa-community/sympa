@@ -26,9 +26,9 @@ use strict;
 use Carp;
 use Log;
 
-use DefaultDBManipulator;
+use DBManipulatorDefault;
 
-our @ISA = qw(DefaultDBManipulator);
+our @ISA = qw(DBManipulatorDefault);
 
 our %date_format = (
 		   'read' => {
@@ -80,11 +80,11 @@ sub is_autoinc {
     my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
     my $sth;
     unless ($sth = $self->do_query("SELECT relname FROM pg_class WHERE relname = '%s' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )",$seqname)) {
-	do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
+	&Log::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
 	return undef;
     }	    
     my $field = $sth->fetchrow();	    
-    return ($ref->{'field'} eq $seqname);
+    return ($field eq $seqname);
 }
 
 ## Defines the field as an autoincrement field
@@ -97,15 +97,15 @@ sub set_autoinc {
     my $param = shift;
     my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
     unless ($self->do_query("CREATE SEQUENCE %s",$seqname)) {
-	do_log('err','Unable to create sequence %s',$seqname);
+	&Log::do_log('err','Unable to create sequence %s',$seqname);
 	return undef;
     }
-    unless ($self->do_query("ALTER TABLE `%s` CHANGE `$field` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'})) {
-	do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
+    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
+	&Log::do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
 	return undef;
     }
     unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s SET DEFAULT NEXTVAL('%s')",$param->{'table'},$param->{'field'},$seqname)) {
-	do_log('err','Unable to set sequence %s as value for field %s, table %s',$seqname,$param->{'field'},$param->{'table'});
+	&Log::do_log('err','Unable to set sequence %s as value for field %s, table %s',$seqname,$param->{'field'},$param->{'table'});
 	return undef;
     }
     return 1;
@@ -133,7 +133,7 @@ sub add_table {
     my $self = shift;
     my $param = shift;
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
-	&do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
@@ -149,7 +149,7 @@ sub get_fields {
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",$param->{'table'})) {
-	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
@@ -177,6 +177,43 @@ sub update_field {
 sub add_field {
     my $self = shift;
     my $param = shift;
+}
+
+## Returns a ref to a hash containing in which each key is the name of a primary key.
+## Takes a hash as argument which must contain the following keys:
+## * 'table' : the name of the table for which the primary keys are requested.
+sub get_primary_key {
+    my $self = shift;
+    my $param = shift;
+
+    my %found_keys;
+    my $sth;
+    unless ($sth = $self->do_query("SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary",$param->{'table'})) {
+	&Log::do_log('err', 'Could not get the primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+	$found_keys{$ref->{'field'}} = 1;
+    }	    
+    return \%found_keys;
+}
+
+sub get_indexes {
+    my $self = shift;
+    my $param = shift;
+
+    my %found_indexes;
+    my $sth;
+    unless ($sth = $self->do_query("SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey)",$param->{'table'})) {
+	&Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+	$found_indexes{$ref->{'field'}} = 1;
+    }	    
+    return \%found_indexes;
 }
 
 return 1;

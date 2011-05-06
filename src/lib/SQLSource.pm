@@ -32,6 +32,11 @@ use tools;
 use tt2;
 use Exporter;
 use Data::Dumper;
+use DBManipulatorMySQL;
+use DBManipulatorSQLite;
+use DBManipulatorPostgres;
+use DBManipulatorOracle;
+use DBManipulatorSybase;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%date_format);
@@ -54,7 +59,7 @@ sub new {
     ## with "require" pragma and @ISA decalarations. Later, maybe...
     if ($param->{'db_type'} =~ /^mysql$/i) {
 	unless ( eval "require DBManipulatorMySQL" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorMySQL module");
+	    &Log::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
 	    return undef;
 	}
 	require DBManipulatorMySQL;
@@ -286,15 +291,16 @@ sub do_query {
     }
     my $statement = sprintf $query, @params;
 
+    &Log::do_log('debug', "Will perform query '%s'",$statement);
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 	my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-	do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+	&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
 	return undef;
     }
     
     unless ($self->{'sth'}->execute) {
 	my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-	do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
+	&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
 	return undef;
     }
 

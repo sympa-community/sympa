@@ -168,7 +168,7 @@ sub db_disconnect {
 }
 
 sub probe_db {
-    &do_log('debug3', 'Checking database structure');    
+    &Log::do_log('debug3', 'Checking database structure');    
     my (%checked, $table);
     
     ## Database structure
@@ -201,7 +201,7 @@ sub probe_db {
 	unless ($found) {
 	    if (my $rep = $db_source->add_table({'table'=>$t1})) {
 		push @report, $rep;
-		&do_log('notice', 'Table %s created in database %s', $t1, &Conf::get_robot_conf('*','db_name'));
+		&Log::do_log('notice', 'Table %s created in database %s', $t1, &Conf::get_robot_conf('*','db_name'));
 		push @tables, $t1;
 		$real_struct{$t1} = {};
 	    }
@@ -212,274 +212,45 @@ sub probe_db {
 	$real_struct{$t} = $db_source->get_fields({'table'=>$t});
     }
    
-    foreach $table ( @tables ) {
-	$checked{$table} = 1;
-    }
-    
-    my $found_tables = 0;
-    foreach $table('user_table', 'subscriber_table', 'admin_table') {
-	if ($checked{$table} || $checked{'public.' . $table}) {
-	    $found_tables++;
-	}else {
-	    &do_log('err', 'Table %s not found in database %s', $table, &Conf::get_robot_conf('*','db_name'));
-	}
-    }
-    
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
 
 	foreach my $t (keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}}) {
 	    unless ($real_struct{$t}) {
-		&do_log('err', 'Table \'%s\' not found in database \'%s\' ; you should create it with create_db.%s script', $t, &Conf::get_robot_conf('*','db_name'), &Conf::get_robot_conf('*','db_type'));
+		&Log::do_log('err', "Table '%s' not found in database '%s' ; you should create it with create_db.%s script", $t, &Conf::get_robot_conf('*','db_name'), &Conf::get_robot_conf('*','db_type'));
 		return undef;
 	    }
-	    
-	    my %added_fields;
-	    
-	    foreach my $f (sort keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}{$t}}) {
-		unless ($real_struct{$t}{$f}) {
-		    push @report, sprintf('Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
-		    &do_log('info', 'Field \'%s\' (table \'%s\' ; database \'%s\') was NOT found. Attempting to add it...', $f, $t, &Conf::get_robot_conf('*','db_name'));
-
-		    my $rep;
-		    if ($rep = $db_source->add_field({
-			'table' => $t,
-			'field' => $f,
-			'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
-			'notnull' => $not_null{$f},
-			'autoinc' => ( $autoincrement{$t} eq $f),
-			'primary' => ( $autoincrement{$t} eq $f),
-			})){
-			push @report, $rep;
-			$added_fields{$f} = 1;
-			
-			## Remove temporary DB field
-			if ($real_struct{$t}{'temporary'}) {
-			    unless ($dbh->do("ALTER TABLE $t DROP temporary")) {
-				&do_log('err', 'Could not drop temporary table field : %s', $dbh->errstr);
-			    }
-			    delete $real_struct{$t}{'temporary'};
-			}
-		    }else {
-			&Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			return undef;
-		    }
-		    next;
-		}
-		
-		## Change DB types if different and if update_db_types enabled
-		if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
-		    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
-						 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
-			push @report, sprintf('Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s). Attempting to change it...',$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
-			
-			&Log::do_log('notice', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...',$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
-			
-			my $rep;
-			if ($rep = $db_source->update_field({
-			    'table' => $t,
-			    'field' => $f,
-			    'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
-			    'notnull' => $not_null{$f},
-			    })){
-				push @report, $rep;
-			}else {
-			    &Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			    return undef;
-			}
-		    }
-		}else {
-		    unless ($real_struct{$t}{$f} eq $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f}) {
-			&do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
-			&do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
-			return undef;
-		    }
-		}
+	    unless (&check_fields({'table' => $t,'report' => \@report,'real_struct' => \%real_struct})) {
+		&Log::do_log('err', "Unable to check the valifity of fields definition for table %s. Aborting.", $t);
+		return undef;
 	    }
+	    ## Remove temporary DB field
+	    if ($real_struct{$t}{'temporary'}) {
+		$db_source->delete_field({
+		    'table' => $t,
+		    'field' => 'temporary',
+		    });
+		delete $real_struct{$t}{'temporary'};
+	    }
+
 	    if ((&Conf::get_robot_conf('*','db_type') eq 'mysql')||(&Conf::get_robot_conf('*','db_type') eq 'Pg')) {
 		## Check that primary key has the right structure.
-		my $should_update;
-		my %primaryKeyFound;	      
-
-		my $sql_query ;
-		my $test_request_result ;
-
-		if (&Conf::get_robot_conf('*','db_type') eq 'mysql') { # get_primary_keys('mysql');
-
-		    $sql_query = "SHOW COLUMNS FROM $t";
-		    $test_request_result = $dbh->selectall_hashref($sql_query,'key');
-
-		    foreach my $scannedResult ( keys %$test_request_result ) {
-			if ( $scannedResult eq "PRI" ) {
-			    $primaryKeyFound{$scannedResult} = 1;
-			}
-		    }
-		}elsif ( &Conf::get_robot_conf('*','db_type') eq 'Pg'){# get_primary_keys('Pg');
-
-#		    $sql_query = "SELECT column_name FROM information_schema.columns WHERE table_name = $t";
-#		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary';
-#		    $test_request_result = $dbh->selectall_hashref($sql_query,'key');
-
-		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary';
-
-		    my $sth;
-		    unless ($sth = $dbh->prepare($sql_query)) {
-			do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-			return undef;
-		    }	    
-		    unless ($sth->execute) {
-			do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-			return undef;
-		    }
-		    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-			$primaryKeyFound{$ref->{'field'}} = 1;
-		    }	    
-		    $sth->finish();
-		   
-
+		unless (&check_primary_key({'table' => $t,'report' => \@report})) {
+		    &Log::do_log('err', "Unable to check the valifity of primary key for table %s. Aborting.", $t);
+		    return undef;
 		}
 		
-		foreach my $field (@{$primary{$t}}) {		
-		    unless ($primaryKeyFound{$field}) {
-			$should_update = 1;
-			last;
-		    }
+		unless (&check_indexes({'table' => $t,'report' => \@report})) {
+		    &Log::do_log('err', "Unable to check the valifity of indexes for table %s. Aborting.", $t);
+		    return undef;
 		}
 		
-		## Create required PRIMARY KEY. Removes useless INDEX.
-		foreach my $field (@{$primary{$t}}) {		
-		    if ($added_fields{$field}) {
-			$should_update = 1;
-			last;
-		    }
-		}
-		
-		if ($should_update) {
-		    my $fields = join ',',@{$primary{$t}};
-		    my %definedPrimaryKey;
-		    foreach my $definedKeyPart (@{$primary{$t}}) {
-			$definedPrimaryKey{$definedKeyPart} = 1;
-		    }
-		    my $searchedKeys = ['field','key'];
-		    my $test_request_result = $dbh->selectall_hashref('SHOW COLUMNS FROM '.$t,$searchedKeys);
-		    my $expectedKeyMissing = 0;
-		    my $unExpectedKey = 0;
-		    my $primaryKeyFound = 0;
-		    my $primaryKeyDropped = 0;
-		    foreach my $scannedResult ( keys %$test_request_result ) {
-			if ( $$test_request_result{$scannedResult}{"PRI"} ) {
-			    $primaryKeyFound = 1;
-			    if ( !$definedPrimaryKey{$scannedResult}) {
-				&do_log('info','Unexpected primary key : %s',$scannedResult);
-				$unExpectedKey = 1;
-				next;
-			    }
-			}
-			else {
-			    if ( $definedPrimaryKey{$scannedResult}) {
-				&do_log('info','Missing expected primary key : %s',$scannedResult);
-				$expectedKeyMissing = 1;
-				next;
-			    }
-			}
-			
-		    }
-		    if( $primaryKeyFound && ( $unExpectedKey || $expectedKeyMissing ) ) {
-			## drop previous primary key
-			unless ($dbh->do("ALTER TABLE $t DROP PRIMARY KEY")) {
-			    &do_log('err', 'Could not drop PRIMARY KEY, table\'%s\'.', $t);
-			}
-			push @report, sprintf('Table %s, PRIMARY KEY dropped', $t);
-			&do_log('info', 'Table %s, PRIMARY KEY dropped', $t);
-			$primaryKeyDropped = 1;
-		    }
-		    
-		    ## Add primary key
-		    if ( $primaryKeyDropped || !$primaryKeyFound ) {
-			&do_log('debug', "ALTER TABLE $t ADD PRIMARY KEY ($fields)");
-			unless ($dbh->do("ALTER TABLE $t ADD PRIMARY KEY ($fields)")) {
-			    &do_log('err', 'Could not set field \'%s\' as PRIMARY KEY, table\'%s\'.', $fields, $t);
-			    return undef;
-			}
-			push @report, sprintf('Table %s, PRIMARY KEY set on %s', $t, $fields);
-			&do_log('info', 'Table %s, PRIMARY KEY set on %s', $t, $fields);
-		    }
-		}
-		
-		## drop previous index if this index is not a primary key and was defined by a previous Sympa version
-		#xxxxx $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');
-		my %index_columns;
-		if ( &Conf::get_robot_conf('*','db_type') eq 'mysql' ){# get_index('Pg');
-		    $test_request_result = $dbh->selectall_hashref('SHOW INDEX FROM '.$t,'key_name');		
-		    foreach my $indexName ( keys %$test_request_result ) {
-			unless ( $indexName eq "PRIMARY" ) {
-			    $index_columns{$indexName} = 1;
-			}
-		    }
-		}elsif ( &Conf::get_robot_conf('*','db_type') eq 'Pg'){# get_index('Pg');
-		    my $sql_query = 'SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid =\''.$t.'\'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey)';
-
-		    my $sth;
-		    unless ($sth = $dbh->prepare($sql_query)) {
-			do_log('err','Unable to prepare SQL query %s : %s', $sql_query, $dbh->errstr);
-			return undef;
-		    }	    
-		    unless ($sth->execute) {
-			do_log('err','Unable to execute SQL query %s : %s', $sql_query, $dbh->errstr);
-			return undef;
-		    }
-		    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-			$index_columns{$ref->{'field'}} = 1;
-		    }	    
-		    $sth->finish();
-		}
-
-		
-		foreach my $idx ( keys %index_columns ) {
-		    
-		    ## Check whether the index found should be removed
-		    my $index_name_is_known = 0;
-		    foreach my $known_index ( @former_indexes ) {
-			if ( $idx eq $known_index ) {
-			    $index_name_is_known = 1;
-			    last;
-			}
-		    }
-		    ## Drop indexes
-		    if( $index_name_is_known ) {
-			if ($dbh->do("ALTER TABLE $t DROP INDEX $idx")) {
-			    push @report, sprintf('Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
-			    &do_log('info', 'Deprecated INDEX \'%s\' dropped in table \'%s\'', $idx, $t);
-			}else {
-			    &do_log('err', 'Could not drop deprecated INDEX \'%s\' in table \'%s\'.', $idx, $t);
-			}
-			
-		    }
-		    
-		}
-		
-		## Create required indexes
-		foreach my $idx (keys %{$indexes{$t}}){ 
-		    
-		    unless ($index_columns{$idx}) {
-			my $columns = join ',', @{$indexes{$t}{$idx}};
-			if ($dbh->do("ALTER TABLE $t ADD INDEX $idx ($columns)")) {
-			    &do_log('info', 'Added INDEX \'%s\' in table \'%s\'', $idx, $t);
-			}else {
-			    &do_log('err', 'Could not add INDEX \'%s\' in table \'%s\'.', $idx, $t);
-			}
-		    }
-		}	 
 	    }   
 	    elsif (&Conf::get_robot_conf('*','db_type') eq 'SQLite') {
 		## Create required INDEX and PRIMARY KEY
 		my $should_update;
 		foreach my $field (@{$primary{$t}}) {
-		    if ($added_fields{$field}) {
-			$should_update = 1;
-			last;
-		    }
 		}
 		
 		if ($should_update) {
@@ -495,18 +266,18 @@ sub probe_db {
 		    
 		    if ($success) {
 			push @report, sprintf('Table %s, INDEX dropped', $t);
-			&do_log('info', 'Table %s, INDEX dropped', $t);
+			&Log::do_log('info', 'Table %s, INDEX dropped', $t);
 		    }else {
-			&do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
+			&Log::do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
 		    }
 		    
 		    ## Add INDEX
 		    unless ($dbh->do("CREATE INDEX IF NOT EXIST $t\_index ON $t ($fields)")) {
-			&do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
+			&Log::do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
 			return undef;
 		    }
 		    push @report, sprintf('Table %s, INDEX set on %s', $t, $fields);
-		    &do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
+		    &Log::do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
 		    
 		}
 	    }
@@ -518,52 +289,12 @@ sub probe_db {
 		    &Log::do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
 		}else{
 		    &Log::do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
+		    return undef;
 		}
 	    }
 	}	
-     ## Try to run the create_db.XX script
-    }elsif ($found_tables == 0) {
-        my $db_script =
-            Sympa::Constants::SCRIPTDIR . "/create_db.&Conf::get_robot_conf('*','db_type')";
-	unless (open SCRIPT, $db_script) {
-	    &do_log('err', "Failed to open '%s' file : %s", $db_script, $!);
-	    return undef;
-	}
-	my $script;
-	while (<SCRIPT>) {
-	    $script .= $_;
-	}
-	close SCRIPT;
-	my @scripts = split /;\n/,$script;
-
-	$db_script =
-        Sympa::Constants::SCRIPTDIR . "/create_db.&Conf::get_robot_conf('*','db_type')";
-	push @report, sprintf("Running the '%s' script...", $db_script);
-	&do_log('notice', "Running the '%s' script...", $db_script);
-	foreach my $sc (@scripts) {
-	    next if ($sc =~ /^\#/);
-	    unless ($dbh->do($sc)) {
-		&do_log('err', "Failed to run script '%s' : %s", $db_script, $dbh->errstr);
-		return undef;
-	    }
-	}
-
-	## SQLite :  the only access permissions that can be applied are 
-	##           the normal file access permissions of the underlying operating system
-	if ((&Conf::get_robot_conf('*','db_type') eq 'SQLite') &&  (-f &Conf::get_robot_conf('*','db_name'))) {
-	    unless (&tools::set_file_rights(file => &Conf::get_robot_conf('*','db_name'),
-					    user  => Sympa::Constants::USER,
-					    group => Sympa::Constants::GROUP,
-					    mode  => 0664,
-					    ))
-	    {
-		&do_log('err','Unable to set rights on %s',&Conf::get_robot_conf('*','db_name'));
-		return undef;
-	    }
-	}
-	
-    }elsif ($found_tables < 3) {
-	&do_log('err', 'Missing required tables in the database ; you should create them with create_db.%s script', &Conf::get_robot_conf('*','db_type'));
+    }else{
+	&Log::do_log('err',"Could not check the database structure. consider verify it manually before launching Sympa.");
 	return undef;
     }
     
@@ -573,6 +304,143 @@ sub probe_db {
     ## Notify listmaster
     &List::send_notify_to_listmaster('db_struct_updated',  &Conf::get_robot_conf('*','domain'), {'report' => \@report}) if ($#report >= 0);
 
+    return 1;
+}
+
+sub check_fields {
+    my $param = shift;
+    my $t = $param->{'table'};
+    my %real_struct = %{$param->{'real_struct'}};
+    my $report_ref = $param->{'report'};
+
+    foreach my $f (sort keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}{$t}}) {
+	unless ($real_struct{$t}{$f}) {
+	    push @{$report_ref}, sprintf("Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, &Conf::get_robot_conf('*','db_name'));
+	    &Log::do_log('info', "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, &Conf::get_robot_conf('*','db_name'));
+
+	    my $rep;
+	    if ($rep = $db_source->add_field({
+		'table' => $t,
+		'field' => $f,
+		'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+		'notnull' => $not_null{$f},
+		'autoinc' => ( $autoincrement{$t} eq $f),
+		'primary' => ( $autoincrement{$t} eq $f),
+		})){
+		push @{$report_ref}, $rep;
+		
+	    }else {
+		&Log::do_log('err', 'Addition of fields in database failed. Aborting.');
+		return undef;
+	    }
+	    next;
+	}
+	
+	## Change DB types if different and if update_db_types enabled
+	if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
+	    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
+					 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
+		push @{$report_ref}, sprintf("Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
+		
+		&Log::do_log('notice', "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...",$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
+		
+		my $rep;
+		if ($rep = $db_source->update_field({
+		    'table' => $t,
+		    'field' => $f,
+		    'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+		    'notnull' => $not_null{$f},
+		    })){
+			push @{$report_ref}, $rep;
+		}else {
+		    &Log::do_log('err', 'Fields update in database failed. Aborting.');
+		    return undef;
+		}
+	    }
+	}else {
+	    unless ($real_struct{$t}{$f} eq $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f}) {
+		&Log::do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
+		&Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
+		return undef;
+	    }
+	}
+    }
+    return 1;
+}
+
+sub check_primary_key {
+    my $param = shift;
+    my $t = $param->{'table'};
+    my $report_ref = $param->{'report'};
+
+    my $should_update = $db_source->check_primary_key({'table'=>$t,'expected_keys'=>$primary{$t}});
+    if ($should_update){
+	if ($should_update->{'empty'}) {
+	    ## Add primary key
+	    my $rep = undef;
+	    if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
+		push @{$report_ref}, $rep;
+	    }
+	}elsif($should_update->{'existing_key_correct'}) {
+	    my $list_of_keys = join ',',@{$primary{$t}};
+	    my $key_as_string = "$t [$list_of_keys]";
+	    &Log::do_log('debug',"Existing key correct (%s) nothing to change",$key_as_string);
+	}else{
+	    ## drop previous primary key
+	    my $rep = undef;
+	    if ($rep = $db_source->unset_primary_key({'table'=>$t})) {
+		push @{$report_ref}, $rep;
+	    }
+	    ## Add primary key
+	    my $rep = undef;
+	    if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
+		push @{$report_ref}, $rep;
+	    }
+	}
+    }else{
+	&Log::do_log('err','Unable to evaluate table %s primary key. Trying to reset primary key anyway.',$t);
+	## drop previous primary key
+	my $rep = undef;
+	if ($rep = $db_source->unset_primary_key({'table'=>$t})) {
+	    push @{$report_ref}, $rep;
+	}
+	## Add primary key
+	my $rep = undef;
+	if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
+	    push @{$report_ref}, $rep;
+	}
+    }
+    return 1;
+}
+
+sub check_indexes {
+    my $param = shift;
+    my $t = $param->{'table'};
+    my $report_ref = $param->{'report'};
+
+    ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
+    my %index_columns = %{$db_source->get_indexes({'table' => $t})};
+    foreach my $idx ( keys %index_columns ) {
+	## Remove the index if obsolete.
+	foreach my $known_index ( @former_indexes ) {
+	    if ( $idx eq $known_index ) {
+		if (my $rep = $db_source->unset_index({'table'=>$t})) {
+		    push @{$report_ref}, $rep;
+		}
+		last;
+	    }
+	}
+    }
+    
+    ## Create required indexes
+    foreach my $idx (keys %{$indexes{$t}}){ 
+	## Add indexes
+	unless ($index_columns{$idx}) {
+	    if (my $rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}})) {
+		push @{$report_ref}, $rep;
+	    }
+	}
+    }	 
     return 1;
 }
 
@@ -599,7 +467,7 @@ sub data_structure_uptodate {
 
      if (defined $data_structure_version &&
 	 $data_structure_version ne Sympa::Constants::VERSION) {
-	 &do_log('err', "Data structure (%s) is not uptodate for current release (%s)", $data_structure_version, Sympa::Constants::VERSION);
+	 &Log::do_log('err', "Data structure (%s) is not uptodate for current release (%s)", $data_structure_version, Sympa::Constants::VERSION);
 	 return 0;
      }
 

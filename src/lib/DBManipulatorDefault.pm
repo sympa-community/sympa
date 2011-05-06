@@ -28,8 +28,69 @@ use Carp;
 use Log;
 
 use Datasource;
+use Data::Dumper;
 
 our @ISA = qw(Datasource);
+
+# Returns a ref to a two level-hash. The keys of the first level are the database's tables name.
+# The keys of the second level are the name of the primary keys for the table whose name is
+# given by the first level key.
+sub get_all_primary_keys {
+    my $self = shift;
+    my %found_keys;
+    foreach my $table (@{$self->get_tables()}) {
+	$found_keys{$table} = $self->get_primary_key({'table'=>$table});
+    }
+    return \%found_keys;
+}
+
+# Returns a ref to a two level-hash. The keys of the first level are the database's tables name.
+# The keys of the second level are the name of the indexes for the table whose name is
+# given by the first level key.
+sub get_all_indexes {
+    my $self = shift;
+    my %found_indexes;
+    foreach my $table (@{$self->get_tables()}) {
+	$found_indexes{$table} = $self->get_indexes({'table'=>$table});
+    }
+    return \%found_indexes;
+}
+
+sub check_primary_key {
+    my $self = shift;
+    my $param = shift;
+    my $primaryKeysFound;
+    my $result;
+    return undef unless ($primaryKeysFound = $self->get_primary_key({'table'=>$param->{'table'}}));
+    
+    my @keys_list = keys %{$primaryKeysFound};
+    if ($#keys_list < 0) {
+	$result->{'empty'}=1;
+    }else{
+	$result->{'existing_key_correct'} = 1;
+	foreach my $field (@{$param->{'expected_keys'}}) {
+	    unless ($primaryKeysFound->{$field}) {
+		&Log::do_log('info','Missing expected primary key %s.',$field);
+		$result->{'missing_key'}{$field} = 1;
+		$result->{'existing_key_correct'} = 0;
+	    }
+	}		
+	foreach my $key_in_db ( keys %{$primaryKeysFound} ) {
+	    $result->{'unexpected_key'}{$key_in_db} = 1;
+	    foreach my $field (@{$param->{'expected_keys'}}) {
+		if ( $field eq $key_in_db) {
+		    $result->{'unexpected_key'}{$key_in_db} = 0;
+		    last;
+		}
+	    }
+	    if ($result->{'unexpected_key'}{$key_in_db} == 1) {
+		$result->{'existing_key_correct'} = 0;
+		&Log::do_log('info','Found unexpected primary key %s.',$key_in_db);
+	    }
+	}
+    }
+    return $result;
+}
 
 sub build_connect_string {
     my $self = shift;
@@ -144,7 +205,7 @@ sub add_table {
     my $self = shift;
     my $param = shift;
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
-	&do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;;
     }
     return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
@@ -160,7 +221,7 @@ sub get_fields {
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
-	&do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
@@ -218,13 +279,141 @@ sub add_field {
 	$options .= ' PRIMARY KEY ';
     }
     unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
-	&do_log('err', 'Could not field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	&Log::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
     &Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
     
+    return $report;
+}
+
+## Deletes a field from a table in the database.
+## Takes a hash as argument which must contain the following keys:
+## * 'field' : the name of the field to delete
+## * 'table' : the name of the table where the field will be deleted.
+##
+sub delete_field {
+    my $self = shift;
+    my $param = shift;
+
+    unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
+	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    my $report = sprintf('Field %s removed from table %s', $param->{'field'}, $param->{'table'});
+    &Log::do_log('info', 'Field %s removed from table %s', $param->{'field'}, $param->{'table'});
+    
+    return $report;
+}
+
+## Returns a ref to a hash containing in which each key is the name of a primary key.
+## Takes a hash as argument which must contain the following keys:
+## * 'table' : the name of the table for which the primary keys are requested.
+sub get_primary_key {
+    my $self = shift;
+    my $param = shift;
+
+    my %found_keys;
+    my $sth;
+    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s",$param->{'table'})) {
+	&Log::do_log('err', 'Could not get field list from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    my $test_request_result = $sth->fetchall_hashref('field');
+    foreach my $scannedResult ( keys %$test_request_result ) {
+	if ( $test_request_result->{$scannedResult}{'key'} eq "PRI" ) {
+	    $found_keys{$scannedResult} = 1;
+	}
+    }
+    return \%found_keys;
+}
+
+sub unset_primary_key {
+    my $self = shift;
+    my $param = shift;
+
+    my $sth;
+    unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
+	&Log::do_log('err', 'Could not drop primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
+    &Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
+
+    return $report;
+}
+
+sub set_primary_key {
+    my $self = shift;
+    my $param = shift;
+
+    my $sth;
+    my $fields = join ',',@{$param->{'fields'}};
+    unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
+	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
+    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'},$fields);
+    return $report;
+}
+
+## Returns a ref to a hash in which each key is the name of an index.
+## Takes a hash as argument which must contain the following keys:
+## * 'table' : the name of the table for which the indexes are requested.
+sub get_indexes {
+    my $self = shift;
+    my $param = shift;
+
+    my %found_indexes;
+    my $sth;
+    unless ($sth = $self->do_query("SHOW INDEX FROM %s",$param->{'table'})) {
+	&Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    my $test_request_result = $sth->fetchall_hashref('key_name');
+
+    foreach my $scannedResult ( keys %$test_request_result ) {
+	if ( $scannedResult ne "PRIMARY" ) {
+	    $found_indexes{$scannedResult} = 1;
+	}
+    }
+    return \%found_indexes;
+}
+
+sub unset_index {
+    my $self = shift;
+    my $param = shift;
+
+    my $sth;
+    unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
+	&Log::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    my $report = "Table $param->{'table'}, index $param->{'index'} dropped";
+    &Log::do_log('info', 'Table %s, index %s dropped', $param->{'table'},$param->{'index'});
+
+    return $report;
+}
+
+sub set_index {
+    my $self = shift;
+    my $param = shift;
+
+    my $sth;
+    my $fields = join ',',@{$param->{'fields'}};
+    &Log::do_log('debug', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
+    unless ($sth = $self->do_query("ALTER TABLE %s ADD INDEX %s (%s)",$param->{'table'}, $param->{'index_name'}, $fields)) {
+	&Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    my $report = "Table $param->{'table'}, index %s set using $fields";
+    &Log::do_log('info', 'Table %s, index %s set using fields %s',$param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
 

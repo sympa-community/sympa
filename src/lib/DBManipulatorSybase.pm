@@ -26,9 +26,9 @@ use strict;
 use Carp;
 use Log;
 
-use DefaultDBManipulator;
+use DBManipulatorDefault;
 
-our @ISA = qw(DefaultDBManipulator);
+our @ISA = qw(DBManipulatorDefault);
 
 our %date_format = (
 		   'read' => {
