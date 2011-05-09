@@ -16214,9 +16214,6 @@ sub do_stats {
     foreach my $operation (('send_mail','add_subscriber','unsubscription','deleted by admin')) {
 	my $raw_data = &List::get_data($operation, $robot , $in{'list'});
 	my $data = &Log::agregate_daily_data({'hourly_data'=>$raw_data});
-	open TMP, ">>/tmp/dump";
-	print TMP &Dumper($data);
-	close TMP;
 	my @key_counter = keys %{$data};
 	if($#key_counter>-1) {
 	    $stats->{$operation}{'stats_values'} = "[";

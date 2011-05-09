@@ -32,33 +32,78 @@ use Data::Dumper;
 
 our @ISA = qw(Datasource);
 
-# Returns a ref to a two level-hash. The keys of the first level are the database's tables name.
-# The keys of the second level are the name of the primary keys for the table whose name is
-# given by the first level key.
+############################
+#### Section containing generic functions          #
+#### without anything related to a specific RDBMS. #
+############################
+
+# Returns the primary keys for all the tables in the database.
+#
+# IN: Nothing. Uses all the tables found in the databse of the SQLSource.
+#
+# OUT: - Returns a ref to a two level-hash:
+#	* The keys of the first level are the database's tables name.
+#	* The keys of the second level are the name of the primary keys for the table whose name is
+# 	  given by the first level key.
+#      - Returns undef if something went wrong.
 sub get_all_primary_keys {
     my $self = shift;
-    my %found_keys;
+    &Log::do_log('debug','Retrieving all primary keys in database %s',$self->{'db_name'});
+    my %found_keys = undef;
     foreach my $table (@{$self->get_tables()}) {
-	$found_keys{$table} = $self->get_primary_key({'table'=>$table});
+	unless($found_keys{$table} = $self->get_primary_key({'table'=>$table})) {
+	    &Log::do_log('err','Primary key retrieval for table %s failed. Aborting.',$table);
+	    return undef;
+	}
     }
     return \%found_keys;
 }
 
-# Returns a ref to a two level-hash. The keys of the first level are the database's tables name.
-# The keys of the second level are the name of the indexes for the table whose name is
-# given by the first level key.
+# Returns the indexes for all the tables in the database.
+#
+# IN: Nothing. Uses all the tables found in the databse of the SQLSource.
+#
+# OUT: - Returns a ref to a two level-hash:
+#	* The keys of the first level are the database's tables name.
+#	* The keys of the second level are the name of the indexes for the table whose name is
+# 	  given by the first level key.
+#      - Returns undef if something went wrong.
 sub get_all_indexes {
     my $self = shift;
+    &Log::do_log('debug','Retrieving all indexes in database %s',$self->{'db_name'});
     my %found_indexes;
     foreach my $table (@{$self->get_tables()}) {
-	$found_indexes{$table} = $self->get_indexes({'table'=>$table});
+	unless($found_indexes{$table} = $self->get_indexes({'table'=>$table})) {
+	    &Log::do_log('err','Index retrieval for table %s failed. Aborting.',$table);
+	    return undef;
+	}
     }
     return \%found_indexes;
 }
 
+# Checks the compliance of the primary key of table compared to what is expected
+#
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which we want to check the primary key
+#	* 'expected_keys' : A ref to an array containing the list of fields that we
+#	   expect to be part of the key.
+#
+# OUT: - Returns a ref likely to contain the following values:
+#	* 'empty': if this key is defined, then no key was found for the table
+#	* 'existing_key_correct': if this key's value is 1, then a primary key
+#	   exists and is fair to the structure defined in the 'expected_keys' parameter hash.
+#	   Otherwise, the key is not correct.
+#	* 'missing_key': if this key is defined, then a part of the primary key was missing.
+#	   The value associated to this key is a hash whose keys are the names of the fields
+#	   missing in the key.
+#	* 'unexpected_key': if this key is defined, then we found fields in the actual
+#	   primary key that don't belong to the list provided in the 'expected_keys' parameter hash.
+#	   The value associated to this key is a hash whose keys are the names of the fields
+#	   unexpectedely found.
 sub check_primary_key {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Checking primary key structure for table %s',$param->{'table'});
     my $primaryKeysFound;
     my $result;
     return undef unless ($primaryKeysFound = $self->get_primary_key({'table'=>$param->{'table'}}));
@@ -92,29 +137,41 @@ sub check_primary_key {
     return $result;
 }
 
+############################
+#### Beginning the RDBMS-specific code. ######
+############################
+
+# Builds the string to be used by the DBI to connect to the database.
+#
+# IN: Nothing
+#
+# OUT: Nothing
 sub build_connect_string {
     my $self = shift;
+    &Log::do_log('debug','Building connection string to database %s',$self->{'db_name'});
     $self->{'connect_string'} = "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
 }
 
-## Returns an SQL clause to be inserted in a query.
-## This clause will compute a substring of max length
-## $param->{'substring_length'} starting from the first character equal
-## to $param->{'separator'} found in the value of field $param->{'source_field'}.
+# Returns an SQL clause to be inserted in a query.
+# This clause will compute a substring of max length
+# $param->{'substring_length'} starting from the first character equal
+# to $param->{'separator'} found in the value of field $param->{'source_field'}.
 sub get_substring_clause {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Building substring caluse');
     return "REVERSE(SUBSTRING(".$param->{'source_field'}." FROM position('".$param->{'separator'}."' IN ".$param->{'source_field'}.") FOR ".$param->{'substring_length'}."))";
 }
 
-## Returns an SQL clause to be inserted in a query.
-## This clause will limit the number of records returned by the query to
-## $param->{'rows_count'}. If $param->{'offset'} is provided, an offset of
-## $param->{'offset'} rows is done from the first record before selecting
-## the rows to return.
+# Returns an SQL clause to be inserted in a query.
+# This clause will limit the number of records returned by the query to
+# $param->{'rows_count'}. If $param->{'offset'} is provided, an offset of
+# $param->{'offset'} rows is done from the first record before selecting
+# the rows to return.
 sub get_limit_clause {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Building limit 1 caluse');
     if ($param->{'offset'}) {
 	return "LIMIT ".$param->{'offset'}.",".$param->{'rows_count'};
     }else{
@@ -122,18 +179,20 @@ sub get_limit_clause {
     }
 }
 
-## Returns a character string corresponding to the expression to use in a query
-## involving a date.
-## Takes a hash as argument which can contain the following keys:
-## * 'mode'
-##   authorized values:
-##	- 'write': the sub returns the expression to use in 'INSERT' or 'UPDATE' queries
-##	- 'read': the sub returns the expression to use in 'SELECT' queries
-## * 'target': the name of the field or the value to be used in the query
-##
+# Returns a character string corresponding to the expression to use in a query
+# involving a date.
+# IN: A ref to hash containing the following keys:
+#	* 'mode'
+# 	   authorized values:
+#		- 'write': the sub returns the expression to use in 'INSERT' or 'UPDATE' queries
+#		- 'read': the sub returns the expression to use in 'SELECT' queries
+#	* 'target': the name of the field or the value to be used in the query
+#
+# OUT: the formatted date or undef if the date format mode is unknonw.
 sub get_formatted_date {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
 	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
     }elsif(lc($param->{'mode'}) eq 'write') {
@@ -144,14 +203,16 @@ sub get_formatted_date {
     }
 }
 
-## Returns 1 if the field is an autoincrement field.
-## Takes a hash as argument which can contain the following keys:
-## * 'field' : the name of the field to test
-## * 'table' : the name of the table to add
-##
+# Checks whether a field is an autoincrement field or not.
+# IN: A ref to hash containing the following keys:
+# * 'field' : the name of the field to test
+# * 'table' : the name of the table to add
+#
+# OUT: Returns true if the field is an autoincrement field, false otherwise
 sub is_autoinc {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Checking whether field %s.%s is autoincremental',$param->{'field'},$param->{'table'});
     my $sth;
     unless ($sth = $self->do_query("SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",$param->{'table'},$param->{'field'})) {
 	do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
@@ -161,14 +222,16 @@ sub is_autoinc {
     return ($ref->{'field'} eq $param->{'field'});
 }
 
-## Defines the field as an autoincrement field
-## Takes a hash as argument which must contain the following key:
-## * 'field' : the name of the field to set
-## * 'table' : the name of the table to add
-##
+# Defines the field as an autoincrement field
+# IN: A ref to hash containing the following keys:
+# * 'field' : the name of the field to set
+# * 'table' : the name of the table to add
+#
+# OUT: 1 if the autoincrement could be set, undef otherwise.
 sub set_autoinc {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
     unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
 	do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
 	return undef;
@@ -176,11 +239,13 @@ sub set_autoinc {
     return 1;
 }
 
-## Returns a ref to an array containing the list of tables in the database.
-## Returns undef if something goes wrong.
-##
+# Returns 
+# Returns undef if something goes wrong.
+#
+# OUT: a ref to an array containing the list of the tables names in the database, undef if something went wrong
 sub get_tables {
     my $self = shift;
+    &Log::do_log('debug','Retrieving all tables in database %s',$self->{'db_name'});
     my @raw_tables;
     my @result;
     unless (@raw_tables = $self->{'dbh'}->tables()) {
@@ -189,35 +254,42 @@ sub get_tables {
     }
     
     foreach my $t (@raw_tables) {
-	$t =~ s/^\`[^\`]+\`\.//;## Clean table names that would look like `databaseName`.`tableName` (mysql)
-	$t =~ s/^\`(.+)\`$/$1/;## Clean table names that could be surrounded by `` (recent DBD::mysql release)
+	$t =~ s/^\`[^\`]+\`\.//;# Clean table names that would look like `databaseName`.`tableName` (mysql)
+	$t =~ s/^\`(.+)\`$/$1/;# Clean table names that could be surrounded by `` (recent DBD::mysql release)
 	push @result, $t;
     }
     return \@result;
 }
 
-## Adds a table to the database
-## Takes a hash as argument which must contain the following key:
-## * 'table' : the name of the table to add
-##
-## Returns a report if the table adding worked, undef otherwise
+# Adds a table to the database
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table to add
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
 sub add_table {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Adding table %s to database %s',$param->{'table'},$self->{'db_name'});
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
 	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;;
+	return undef;
     }
     return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
 }
 
-## Returns a ref to an hash containing the description of the fields in a table from the database.
-## Takes a hash as argument which must contain the following key:
-## * 'table' : the name of the table whose fields are requested.
-##
+# Returns a ref to an hash containing the description of the fields in a table from the database.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table whose fields are requested.
+#
+# OUT: A hash in which:
+#	* the keys are the field names
+#	* the values are the field type
+#	Returns undef if something went wrong.
+#
 sub get_fields {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Getting fields list from table %s in database %s',$param->{'table'},$self->{'db_name'});
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
@@ -230,16 +302,19 @@ sub get_fields {
     return \%result;
 }
 
-## Changes the type of a field in a table from the database.
-## Takes a hash as argument which must contain the following keys:
-## * 'field' : the name of the field to update
-## * 'table' : the name of the table whose fields will be updated.
-## * 'type' : the type of the field to add
-## * 'notnull' : specifies that the field must not be null
-##
+# Changes the type of a field in a table from the database.
+# IN: A ref to hash containing the following keys:
+# * 'field' : the name of the field to update
+# * 'table' : the name of the table whose fields will be updated.
+# * 'type' : the type of the field to add
+# * 'notnull' : specifies that the field must not be null
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub update_field {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
     my $options;
     if ($param->{'notnull'}) {
 	$options .= ' NOT NULL ';
@@ -255,20 +330,23 @@ sub update_field {
     return $report;
 }
 
-## Adds a field in a table from the database.
-## Takes a hash as argument which must contain the following keys:
-## * 'field' : the name of the field to add
-## * 'table' : the name of the table where the field will be added.
-## * 'type' : the type of the field to add
-## * 'notnull' : specifies that the field must not be null
-## * 'autoinc' : specifies that the field must be autoincremental
-## * 'primary' : specifies that the field is a key
-##
+# Adds a field in a table from the database.
+# IN: A ref to hash containing the following keys:
+#	* 'field' : the name of the field to add
+#	* 'table' : the name of the table where the field will be added.
+#	* 'type' : the type of the field to add
+#	* 'notnull' : specifies that the field must not be null
+#	* 'autoinc' : specifies that the field must be autoincremental
+#	* 'primary' : specifies that the field is a key
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub add_field {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
     my $options;
-    ## To prevent "Cannot add a NOT NULL column with default value NULL" errors
+    # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
 	$options .= 'NOT NULL ';
     }
@@ -289,14 +367,17 @@ sub add_field {
     return $report;
 }
 
-## Deletes a field from a table in the database.
-## Takes a hash as argument which must contain the following keys:
-## * 'field' : the name of the field to delete
-## * 'table' : the name of the table where the field will be deleted.
-##
+# Deletes a field from a table in the database.
+# IN: A ref to hash containing the following keys:
+#	* 'field' : the name of the field to delete
+#	* 'table' : the name of the table where the field will be deleted.
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub delete_field {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
 
     unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
 	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -309,12 +390,16 @@ sub delete_field {
     return $report;
 }
 
-## Returns a ref to a hash containing in which each key is the name of a primary key.
-## Takes a hash as argument which must contain the following keys:
-## * 'table' : the name of the table for which the primary keys are requested.
+# Returns the list fields being part of a table's primary key.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the primary keys are requested.
+#
+# OUT: A ref to a hash in which each key is the name of a primary key or undef if something went wrong.
+#
 sub get_primary_key {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Getting primary key for table %s',$param->{'table'});
 
     my %found_keys;
     my $sth;
@@ -332,9 +417,16 @@ sub get_primary_key {
     return \%found_keys;
 }
 
+# Drops the primary key of a table.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the primary keys must be dropped.
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub unset_primary_key {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Removing primary key from table %s',$param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
@@ -347,12 +439,20 @@ sub unset_primary_key {
     return $report;
 }
 
+# Sets the primary key of a table.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the primary keys must be defined.
+#	* 'fields' : a ref to an array containing the names of the fields used in the key.
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub set_primary_key {
     my $self = shift;
     my $param = shift;
 
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
+    &Log::do_log('debug','Setting primary key for table %s (%s)',$param->{'table'},$fields);
     unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
 	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
@@ -362,12 +462,16 @@ sub set_primary_key {
     return $report;
 }
 
-## Returns a ref to a hash in which each key is the name of an index.
-## Takes a hash as argument which must contain the following keys:
-## * 'table' : the name of the table for which the indexes are requested.
+# Returns a ref to a hash in which each key is the name of an index.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the indexes are requested.
+#
+# OUT: A ref to a hash in which each key is the name of an index or undef if something went wrong.
+#
 sub get_indexes {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Looking for indexes in %s',$param->{'table'});
 
     my %found_indexes;
     my $sth;
@@ -377,7 +481,6 @@ sub get_indexes {
     }
 
     my $test_request_result = $sth->fetchall_hashref('key_name');
-
     foreach my $scannedResult ( keys %$test_request_result ) {
 	if ( $scannedResult ne "PRIMARY" ) {
 	    $found_indexes{$scannedResult} = 1;
@@ -386,9 +489,17 @@ sub get_indexes {
     return \%found_indexes;
 }
 
+# Drops an index of a table.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the index must be dropped.
+#	* 'index' : the name of the index to be dropped.
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub unset_index {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Removing index %s from table %s',$param->{'index'},$param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
@@ -401,6 +512,14 @@ sub unset_index {
     return $report;
 }
 
+# Sets an index in a table.
+# IN: A ref to hash containing the following keys:
+#	* 'table' : the name of the table for which the index must be defined.
+#	* 'fields' : a ref to an array containing the names of the fields used in the index.
+#	* 'index_name' : the name of the index to be defined..
+#
+# OUT: A character string report of the operation done or undef if something went wrong.
+#
 sub set_index {
     my $self = shift;
     my $param = shift;

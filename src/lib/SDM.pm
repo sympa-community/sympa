@@ -55,7 +55,7 @@ my %autoincrement = %Sympa::DatabaseDescription::autoincrement ;
 my %indexes = %Sympa::DatabaseDescription::indexes ;
 
 # table indexes that can be removed during upgrade process
-my @former_indexes =  %Sympa::DatabaseDescription::primary ;
+my @former_indexes =  @Sympa::DatabaseDescription::former_indexes ;
 
 our $db_source;
 our $use_db;
@@ -372,6 +372,7 @@ sub check_primary_key {
     my $param = shift;
     my $t = $param->{'table'};
     my $report_ref = $param->{'report'};
+    &Log::do_log('debug','Checking primary keys for table %s',$t);
 
     my $should_update = $db_source->check_primary_key({'table'=>$t,'expected_keys'=>$primary{$t}});
     if ($should_update){
@@ -417,7 +418,7 @@ sub check_indexes {
     my $param = shift;
     my $t = $param->{'table'};
     my $report_ref = $param->{'report'};
-
+    &Log::do_log('debug','Checking indexes for table %s',$t);
     ## drop previous index if this index is not a primary key and was defined by a previous Sympa version
     my %index_columns = %{$db_source->get_indexes({'table' => $t})};
     foreach my $idx ( keys %index_columns ) {
@@ -436,7 +437,7 @@ sub check_indexes {
     foreach my $idx (keys %{$indexes{$t}}){ 
 	## Add indexes
 	unless ($index_columns{$idx}) {
-	    if (my $rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}})) {
+	    if (my $rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}{$idx}})) {
 		push @{$report_ref}, $rep;
 	    }
 	}

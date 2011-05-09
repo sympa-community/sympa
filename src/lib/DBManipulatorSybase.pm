@@ -30,6 +30,10 @@ use DBManipulatorDefault;
 
 our @ISA = qw(DBManipulatorDefault);
 
+#######################################################
+####### Beginning the RDBMS-specific code. ############
+#######################################################
+
 our %date_format = (
 		   'read' => {
 		       'Sybase' => 'datediff(second, \'01/01/1970\',%s)',

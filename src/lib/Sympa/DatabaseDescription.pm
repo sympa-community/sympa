@@ -132,7 +132,7 @@ sub db_struct {
 						     'dkim_i_bulkspool' => 'varchar(100)',
 						     'dkim_header_list_bulkspool' => 'varchar(500)',
 						 },
-			       'notification_table' => {'pk_notification' => 'int(11)',
+			       'notification_table' => {'pk_notification' => 'bigint(20)',
 							'message_id_notification' => 'varchar(100)',
 							'recipient_notification' => 'varchar(100)',
 							'reception_option_notification' => 'varchar(20)',
@@ -285,7 +285,7 @@ our %autoincrement = ('notification_table' => 'pk_notification');
 ##   1st key is the concerned table
 ##   2nd key is the index name
 ##   the table lists the field on which the index applies
-my %indexes = ('admin_table' => {'user_index' => ['user_admin']},
+our %indexes = ('admin_table' => {'user_index' => ['user_admin']},
 	       'subscriber_table' => {'user_index' => ['user_subscriber']},
 	       'stat_table' => {'user_index' => ['email_stat']}
 	       );

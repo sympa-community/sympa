@@ -110,7 +110,6 @@ sub new {
     require DBI;
 
     bless $self, $pkg;
-    open TMP, ">/tmp/sqlsource_dump"; print TMP &Dumper($self); close TMP;
     return $self;
 }
 

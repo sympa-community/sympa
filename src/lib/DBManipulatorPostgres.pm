@@ -30,6 +30,10 @@ use DBManipulatorDefault;
 
 our @ISA = qw(DBManipulatorDefault);
 
+#######################################################
+####### Beginning the RDBMS-specific code. ############
+#######################################################
+
 our %date_format = (
 		   'read' => {
 		       'Pg' => 'date_part(\'epoch\',%s)',
