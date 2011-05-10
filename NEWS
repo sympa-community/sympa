@@ -3,6 +3,210 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.5		May 10, 2011
+
+  Features:
+
+	[7073] web_tt2/list_menu.tt2:  Added a hook in the list_menu.tt2 web
+	template. This allows you to create a template called
+	"additional_list_menu_links.tt2". If the template is present in the
+	relevant web_tt2 directory (either list, robot or server), its content
+	will be added at the bottom of the list_menu panel.
+
+	[7067] mail_tt2/command_report.tt2,
+	mail_tt2/listmaster_notification.tt2, soap/sympasoap.pm,
+	src/etc/edit_list.conf, src/lib/Commands.pm, src/lib/Family.pm,
+	src/lib/List.pm, src/lib/Upgrade.pm, src/lib/confdef.pm,
+	src/sympa.pl.in, wwsympa/wwsympa.fcgi.in:  The maximum number of users
+	for a list can now be limited. This number is set using the new
+	"max_list_members" list parameter. If set to 0 (default), the number of
+	users is not limited. The default value for this list parameter is the
+	new sympa.conf parameter "default_max_list_members".
+
+	[7063] src/lib/Log.pm, src/lib/tools.pm, src/task_manager.pl.in,
+	web_tt2/stats.tt2, wwsympa/wwsympa.fcgi.in:  Improved stats display:
+	data are agregated for each day and all the available data are diaplyed
+	in charts.
+
+	[7046] src/lib/confdef.pm, web_tt2/main.tt2, wwsympa/wwsympa.fcgi.in:
+	[#6631][requested by O.Lumineau]Per-robot favicon URL
+
+	[7040] web_tt2/list_panel.tt2: [#7395][A.Bernstein]reorganized and
+	enhanced list_panel.tt2
+
+	[7039] src/lib/confdef.pm, web_tt2/edit_config.tt2:
+	[#7515][S.Ikeda]i18n-ize Edit robot config page
+
+	[7037] mail_tt2/certif_warning.tt2, mail_tt2/command_report.tt2,
+	mail_tt2/global_remind.tt2, mail_tt2/helpfile.tt2,
+	mail_tt2/index_archive.tt2, mail_tt2/list_created.tt2,
+	mail_tt2/list_rejected.tt2, mail_tt2/list_unknown.tt2,
+	mail_tt2/listeditor_notification.tt2,
+	mail_tt2/listmaster_notification.tt2,
+	mail_tt2/listowner_notification.tt2, mail_tt2/lists.tt2,
+	mail_tt2/message_report.tt2, mail_tt2/request_auth.tt2,
+	mail_tt2/sendpasswd.tt2, mail_tt2/user_notification.tt2,
+	mail_tt2/which.tt2, mail_tt2/your_infected_msg.tt2, src/lib/List.pm,
+	src/lib/confdef.pm: [#3802][submited by P.Crandall, U.Chicago] SYMPA
+	gecos used in service messages is no more hard-coded. New 'email_gecos'
+	sympa.conf parameter.
+
+	[7035] src/lib/confdef.pm, src/sympa.pl.in: [#6492]Provide expiration
+	of in-memory msgid_table. 2 new sympa.conf parameters :
+	msgid_table_cleanup_frequency msgid_table_cleanup_ttl
+
+	[7001] src/etc/auth.conf, src/lib/Conf.pm, wwsympa/wwsympa.fcgi.in: 
+	New 'auth_service_friendly_name' in auth.conf CAS paragraph. This
+	allows to set a display name for the CAS server, without the
+	constraints that 'auth_service_name' entry has ([\w\-\.]).
+
+
+
+  Changes:
+
+	[7060] src/lib/Conf.pm, src/lib/Upgrade.pm:  The binary cache for the
+	main configs are removed during the upgrade. This way, new default
+	values will be applied even on the binary cache.
+
+	[7045] src/etc/script/sympa.in: [#6722][D.Pritts, Internet2]modify init
+	script to have all configure variables defined at top of script
+
+	[7027] soap/sympa_soap_server.fcgi.in, src/bulk.pl.in,
+	src/etc/script/crypt_passwd.pl.in, src/etc/script/init_comment.pl.in,
+	src/lib/Bulk.pm, src/lib/Conf.pm, src/lib/DBManipulatorDefault.pm,
+	src/lib/DBManipulatorMySQL.pm, src/lib/DBManipulatorOracle.pm,
+	src/lib/DBManipulatorPostgres.pm, src/lib/DBManipulatorSQLite.pm,
+	src/lib/DBManipulatorSybase.pm, src/lib/Datasource.pm,
+	src/lib/LDAPSource.pm, src/lib/List.pm, src/lib/Log.pm,
+	src/lib/Makefile.am, src/lib/SDM.pm, src/lib/SQLSource.pm,
+	src/lib/SympaDatabaseManager.pm, src/lib/Upgrade.pm, src/lib/tools.pm,
+	src/lib/tracking.pm, src/sympa.pl.in, src/task_manager.pl.in,
+	wwsympa/Auth.pm, wwsympa/Challenge.pm, wwsympa/SympaSession.pm,
+	wwsympa/archived.pl.in, wwsympa/bounced.pl.in, wwsympa/wwsympa.fcgi.in:
+	 Refactoring : All the code related to database and LDAP access was
+	refactored. Main changes: 
+	- new module SDM.pm : handles all the connection and access to the
+	Sympa database. Now querying the Sympa database anywhere in the code
+	can be done by calling: '&SDM::do_query($statement, @variables). all
+	the connections, errors, statement preparation and executions are
+	handled in the SDM module.
+	- SQLSource and LDAPSource MUST now be manipulated through instances.
+	the usage of class methods have been removed, because, with the
+	exception of the Sympa database, all the usages are related to
+	non-resident connections, so there is no usage of class instances and
+	variables.
+
+	[7022] src/lib/DBManipulatorInformix.pm, src/lib/DBManipulatorMySQL.pm,
+	src/lib/DBManipulatorOracle.pm, src/lib/DBManipulatorPostgres.pm,
+	src/lib/DBManipulatorSQLite.pm, src/lib/DBManipulatorSybase.pm,
+	src/lib/DefaultDBManipulator.pm, src/lib/Makefile.am:  DBManipulator*
+	modules now inherit from a generic class called DefaultDBManipulator.
+	This class will implement all the required functions in MySQL syntax.
+	Therefore, functions in DBManipulator* files will only be needed if the
+	corresponding RDBMS has a specific behaviour.
+
+	[7021] src/lib/Bulk.pm, src/lib/Conf.pm,
+	src/lib/DBManipulatorInformix.pm, src/lib/DBManipulatorMySQL.pm,
+	src/lib/DBManipulatorOracle.pm, src/lib/DBManipulatorPostgres.pm,
+	src/lib/DBManipulatorSQLite.pm, src/lib/DBManipulatorSybase.pm,
+	src/lib/Datasource.pm, src/lib/List.pm, src/lib/Log.pm,
+	src/lib/Makefile.am, src/lib/SQLSource.pm,
+	src/lib/SympaDatabaseManager.pm:  Factorizing: creating the
+	DBManipulator*.pm modules. These modules contain the code specific to
+	each RDBMS Sympa supports. The inherit from the generic class
+	DataSource. Anytime Sympa tries to access data in an SQL database, it
+	must create a SQLSource object with, in argument, a hash containing the
+	connexion parameters. All the database manipulations are subsequently
+	done through this generic object, not having to take into account any
+	RDBMS specificity.
+	Also added the "SympaDatabaseManager.pm" module which is specialized in
+	manipulating the Sympa database: upgrade, connexion, version checking,
+	etc.
+
+	[7020] src/lib/Archive.pm, src/lib/Commands.pm, src/lib/List.pm,
+	src/lib/Message.pm, src/lib/mail.pm, src/lib/tools.pm, src/sympa.pl.in,
+	wwsympa/archived.pl.in, wwsympa/wwsympa.fcgi.in:  Now Message object is
+	used from sympa.pl down to mail::sending 
+
+	[7017] src/lib/Makefile.am, src/lib/SympaDatabaseManager.pm,
+	src/lib/Upgrade.pm:  All the code realted to database management in
+	Upgrade.pm was moved to a new module: SympaDatabaseManager.pm
+
+	[7013] src/lib/Conf.pm: [#7071]CGI.pm changes environment variable
+	names ('-' => '_')
+	While using generic_sso, declared environment variable names needs to
+	be transformed accordingly
+
+	[7007] src/lib/Makefile.am, src/lib/Sympa/Constants.pm.in,
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/Upgrade.pm:  The database
+	description is moved to a dedicated "DatabaseDescription.pm" module to
+	improve code lisibility and orthogonality.
+
+	[7000] src/lib/Conf.pm, src/lib/List.pm, src/lib/admin.pm,
+	src/lib/confdef.pm, src/lib/tools.pm, wwsympa/Auth.pm,
+	wwsympa/wwsympa.fcgi.in:  Now the sympa.conf, wwsympa.conf and
+	robot.conf are cached in binary form (e.g. sympa.conf.bin). This speeds
+	up that startup process. Full refactoring of Conf.pm to better
+	distinguish conf/robot loading. First step towards robot-independant
+	and on-the-fly config loading, and also wwsympa.cnf and sympa.conf
+	merge.
+
+  Bug fixes:
+
+	[7056] src/lib/Sympa/DatabaseDescription.pm:  reported by gauthier
+	Catteau Message-ID may be longer than 100 chars and so they may result
+	in a SQL error.
+
+	[7054] src/lib/Log.pm, src/lib/Sympa/DatabaseDescription.pm,
+	web_tt2/stats.tt2:  That stat_counter_table was never created and the
+	agregation query had an error; Consequently, stats were never
+	agregated.
+
+	[7047] src/lib/List.pm, wwsympa/wwsympa.fcgi.in: [#6609][reported by
+	V.Mathieu, univ Nancy2]Now preventing list closure if it is included by
+	another list
+
+	[7044] src/lib/List.pm, web_tt2/error.tt2: [#7384][requested by
+	A.Bernstein]inclusion should exclude badly formed addresses
+	Also fixed a bug in List::get_exclusion() since last SDM module
+	development
+
+	[7024] src/bulk.pl.in, src/lib/Bulk.pm, src/lib/Commands.pm,
+	src/lib/Message.pm, src/lib/mail.pm, src/lib/tools.pm, src/sympa.pl.in,
+	wwsympa/wwsympa.fcgi.in:  Internal changes Message object is used in
+	all subroutine from sympa.pl to Bulk::store and used by bulk.pl Message
+	submitted from web interface are still written in msg spool, but when
+	sympa.pl process them it does not need to send them to himself. Now
+	sympa.pl can run on a serveur without MTA ssmime signature of message
+	with attachement are not altered now message submitted from web
+	interface using authenticated http session are processed by sympa.pl
+	with 'md5' authentication level.
+
+	[7015] src/bulk.pl.in:	When using merge feature, the merge was don
+	only once, with the first user picked. The message was then sent to all
+	users with the first user's data. Fixed by reinitializing the message
+	object with the original message at each merge loop.
+
+	[7005] src/lib/Conf.pm: While using generic_sso, allow other characters
+	for the 'netid_http_header'parameter (including hyphen).
+
+	[7004] mail_tt2/sendssopasswd.tt2, web_tt2/sso_login.tt2,
+	wwsympa/wwsympa.fcgi.in: [#7070]Login with generic_sso failed when
+	'force_email_verify' was enabled
+	The problem was due to the user password no more stored in the user DB.
+	Usage of password to validate the user email address has been replaced
+	with one-time tickets.
+
+	[7003] src/lib/List.pm, wwsympa/wwsympa.fcgi.in: [#5989][submited by
+	A.Bendzsak] change_email web feature did not updae the netidmap_table.
+	Now it does.
+
+	[7002] wwsympa/wwslib.pm: [#3049][reported by L. Foucher, IUT P.
+	Sabatier] CAS authentication failed when Sympa web server was behind an
+	HTTP reverse proxy. The URL of the service passed to the CAS server was
+	incorrect. Now using get_header_field() that can use
+	'HTTP_X_FORWARDED_HOST' env variable if set.
+
 6.2a.4		January 26, 2011
 
   Features:
