@@ -22,6 +22,7 @@
 package DBManipulatorSQLite;
 
 use strict;
+use Data::Dumper;
 
 use Carp;
 use Log;

@@ -374,17 +374,18 @@ sub check_primary_key {
     my $report_ref = $param->{'report'};
     &Log::do_log('debug','Checking primary keys for table %s',$t);
 
-    my $should_update = $db_source->check_primary_key({'table'=>$t,'expected_keys'=>$primary{$t}});
+    my $should_update = $db_source->check_key({'table'=>$t,'key_name'=>'primary','expected_keys'=>$primary{$t}});
     if ($should_update){
+	my $list_of_keys = join ',',@{$primary{$t}};
+	my $key_as_string = "$t [$list_of_keys]";
 	if ($should_update->{'empty'}) {
+	    &Log::do_log('debug',"Primary key %s is missing. Adding it.",$key_as_string);
 	    ## Add primary key
 	    my $rep = undef;
 	    if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
 		push @{$report_ref}, $rep;
 	    }
 	}elsif($should_update->{'existing_key_correct'}) {
-	    my $list_of_keys = join ',',@{$primary{$t}};
-	    my $key_as_string = "$t [$list_of_keys]";
 	    &Log::do_log('debug',"Existing key correct (%s) nothing to change",$key_as_string);
 	}else{
 	    ## drop previous primary key
@@ -438,6 +439,44 @@ sub check_indexes {
 	## Add indexes
 	unless ($index_columns{$idx}) {
 	    if (my $rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}{$idx}})) {
+		push @{$report_ref}, $rep;
+	    }
+	}
+	my $index_check = $db_source->check_key({'table'=>$t,'key_name'=>$idx,'expected_keys'=>$indexes{$t}{$idx}});
+	if ($index_check){
+	    my $list_of_fields = join ',',@{$indexes{$t}{$idx}};
+	    my $index_as_string = "$t [$list_of_fields]";
+	    if ($index_check->{'empty'}) {
+		## Add index
+		my $rep = undef;
+		&Log::do_log('debug',"Index %s is missing. Adding it.",$index_as_string);
+		if ($rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}{$idx}})) {
+		    push @{$report_ref}, $rep;
+		}
+	    }elsif($index_check->{'existing_key_correct'}) {
+		&Log::do_log('debug',"Existing index correct (%s) nothing to change",$index_as_string);
+	    }else{
+		## drop previous index
+		my $rep = undef;
+		if ($rep = $db_source->unset_index({'table'=>$t, 'index'=> $idx})) {
+		    push @{$report_ref}, $rep;
+		}
+		## Add index
+		my $rep = undef;
+		if ($rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}{$idx}})) {
+		    push @{$report_ref}, $rep;
+		}
+	    }
+	}else{
+	    &Log::do_log('err','Unable to evaluate index %s in table %s. Trying to reset index anyway.',$t,$idx);
+	    ## drop previous index
+	    my $rep = undef;
+	    if ($rep = $db_source->unset_index({'table'=>$t, 'index'=> $idx})) {
+		push @{$report_ref}, $rep;
+	    }
+	    ## Add index
+	    my $rep = undef;
+	    if ($rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx,'fields'=>$indexes{$t}{$idx}})) {
 		push @{$report_ref}, $rep;
 	    }
 	}

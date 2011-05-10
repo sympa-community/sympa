@@ -22,6 +22,7 @@
 package DBManipulatorSybase;
 
 use strict;
+use Data::Dumper;
 
 use Carp;
 use Log;
