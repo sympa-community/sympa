@@ -32,6 +32,11 @@ use tools;
 use tt2;
 use Exporter;
 use Data::Dumper;
+use DBManipulatorMySQL;
+use DBManipulatorOracle;
+use DBManipulatorPostgres;
+use DBManipulatorSQLite;
+use DBManipulatorSybase;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%date_format);

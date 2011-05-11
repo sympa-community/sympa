@@ -129,7 +129,7 @@ sub set_autoinc {
     return 1;
 }
 
-# Returns 
+# Returns the list of the tables in the database.
 # Returns undef if something goes wrong.
 #
 # OUT: a ref to an array containing the list of the tables names in the database, undef if something went wrong
