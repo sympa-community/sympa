@@ -2974,7 +2974,7 @@ msgstr ""
 msgid "Submitting a bug, a feature request"
 msgstr ""
 
-#: ../src/lib/confdef.pm:692 ../web_tt2/nav.tt2:105
+#: ../src/lib/confdef.pm:1139 ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr ""
 
@@ -6199,7 +6199,7 @@ msgid "The following error occurred whila managing bounces: %&"
 msgstr ""
 
 #: ../mail_tt2/listmaster_notification.tt2:306
-#: ../mail_tt2/listmaster_notification.tt2:377 ../src/lib/confdef.pm:913
+#: ../mail_tt2/listmaster_notification.tt2:377
 msgid "Web interface"
 msgstr ""
 
@@ -7995,6 +7995,34 @@ msgid ""
 "via the web (web archives)"
 msgstr ""
 
+#: ../src/sympa_wizard.pl.in:249
+msgid "%s [%s] : "
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:271
+msgid "Incorrect parameter definition: %s\n"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/sympa_wizard.pl.in:302
+msgid "%d.%b.%Y-%H.%M.%S"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:307 ../src/sympa_wizard.pl.in:312
+msgid "Unable to rename %s : %s"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:318 ../src/sympa_wizard.pl.in:325
+msgid "Unable to open %s : %s"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:337
+msgid ""
+"%s and %s have been updated.\n"
+"Previous versions have been saved as %s and %s.\n"
+msgstr ""
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Bulk.pm:344
@@ -8007,404 +8035,716 @@ msgstr ""
 msgid "%A"
 msgstr ""
 
-#: ../src/lib/confdef.pm:43
-msgid "Directories and file location"
+#: ../src/lib/confdef.pm:44
+msgid "Site customization"
 msgstr ""
 
-#: ../src/lib/confdef.pm:47
+#: ../src/lib/confdef.pm:48
+msgid "Main robot hostname"
+msgstr ""
+
+#: ../src/lib/confdef.pm:57
+msgid "Local part of sympa email address"
+msgstr ""
+
+#: ../src/lib/confdef.pm:61
+msgid "Effective address will be [EMAIL]@[HOST]"
+msgstr ""
+
+#: ../src/lib/confdef.pm:66
+msgid "Gecos for service mail sent by Sympa itself"
+msgstr ""
+
+#: ../src/lib/confdef.pm:70
+msgid "This parameter is used in mail_tt2 files"
+msgstr ""
+
+#: ../src/lib/confdef.pm:76
+msgid "Listmasters email list comma separated"
+msgstr ""
+
+#: ../src/lib/confdef.pm:80
+msgid ""
+"Sympa will associate listmaster privileges to these email addresses (mail "
+"and web interfaces). Some error reports may also be sent to these addresses."
+msgstr ""
+
+#: ../src/lib/confdef.pm:85
+msgid "Local part of listmaster email address"
+msgstr ""
+
+#: ../src/lib/confdef.pm:91
+msgid "URL of main Web page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:324
+msgid ""
+"Directory for storing static contents (CSS, members pictures, documentation) "
+"directly delivered by Apache"
+msgstr ""
+
+#: ../src/lib/confdef.pm:332
+msgid "URL mapped with the static_content_path directory defined above"
+msgstr ""
+
+#: ../src/lib/confdef.pm:349
+msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1338 ../src/lib/confdef.pm:351
+msgid "Should not be changed ! May invalid all user password"
+msgstr ""
+
+#: ../src/lib/confdef.pm:357
+msgid "Who is able to create lists"
+msgstr ""
+
+#: ../src/lib/confdef.pm:361
+msgid ""
+"This parameter is a scenario, check sympa documentation about scenarios if "
+"you want to define one"
+msgstr ""
+
+#: ../src/lib/confdef.pm:389
+msgid ""
+"Used to define a custom parameter for your server. Do not forget the "
+"semicolon between the param name and the param value."
+msgstr ""
+
+#: ../src/lib/confdef.pm:396
+msgid "Directories"
+msgstr ""
+
+#: ../src/lib/confdef.pm:401
 msgid "Directory containing mailing lists subdirectories"
 msgstr ""
 
-#: ../src/lib/confdef.pm:54
+#: ../src/lib/confdef.pm:408
 msgid ""
 "Directory for configuration files; it also contains scenari/ and templates/ "
 "directories"
 msgstr ""
 
-#: ../src/lib/confdef.pm:60
+#: ../src/lib/confdef.pm:412
+msgid "System related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:417
+msgid "Syslog facility for sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:420
+msgid "Do not forget to edit syslog.conf"
+msgstr ""
+
+#: ../src/lib/confdef.pm:425
+msgid "Log verbosity"
+msgstr ""
+
+#: ../src/lib/confdef.pm:428
+msgid "0: normal, 2,3,4: for debug"
+msgstr ""
+
+#: ../src/lib/confdef.pm:433
+msgid "Communication mode with syslogd (unix | inet)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:439
 msgid "File containing Sympa PID while running"
 msgstr ""
 
-#: ../src/lib/confdef.pm:82
-msgid "File containing archived PID while running"
+#: ../src/lib/confdef.pm:441
+msgid ""
+"Sympa also locks this file to ensure that it is not running more than once. "
+"Caution: user sympa need to write access without special privilege."
 msgstr ""
 
-#: ../src/lib/confdef.pm:88
-msgid "File containing bounced PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:94
-msgid "File containing task_manager PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:100
+#: ../src/lib/confdef.pm:451
 msgid "Umask used for file creation by Sympa"
 msgstr ""
 
-#: ../src/lib/confdef.pm:106
+#: ../src/lib/confdef.pm:455
+msgid "Sending related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:464
+msgid ""
+"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
+msgstr ""
+
+#: ../src/lib/confdef.pm:466
+msgid ""
+"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
+"powerfull systems."
+msgstr ""
+
+#: ../src/lib/confdef.pm:476
+msgid ""
+"comma separated list of operations for which blacklist filter is applied"
+msgstr ""
+
+#: ../src/lib/confdef.pm:481
+msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+msgstr ""
+
+#: ../src/lib/confdef.pm:486
+msgid ""
+"If set, when a list editor report a spam, this external script is run by "
+"wwsympa or sympa, the spam is sent into script stdin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:493
+msgid ""
+"Default maximum size (in bytes) for messages (can be re-defined for each "
+"list)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:510
+msgid ""
+"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
+"file allows a different tuning per destination domain."
+msgstr ""
+
+#: ../src/lib/confdef.pm:516
+msgid "Max. number of different domains per call to Sendmail"
+msgstr ""
+
+#: ../src/lib/confdef.pm:526
+msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:529
+msgid ""
+"should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
+"\" is distributed with Postfix)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:541
+msgid "Specify which rfc2369 mailing list headers to add"
+msgstr ""
+
+#: ../src/lib/confdef.pm:547
+msgid "Specify header fields to be removed before message distribution"
+msgstr ""
+
+#: ../src/lib/confdef.pm:557
+msgid "Reject mail from automates (crontab, etc) sent to a list?"
+msgstr ""
+
+#: ../src/lib/confdef.pm:572
+msgid ""
+"SMTP server to which Sympa verify if alias with the same name as the list to "
+"be created"
+msgstr ""
+
+#: ../src/lib/confdef.pm:574
+msgid ""
+"Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
+"standard port."
+msgstr ""
+
+#: ../src/lib/confdef.pm:584
+msgid "SMTP HELO (EHLO) parameter used for alias verification"
+msgstr ""
+
+#: ../src/lib/confdef.pm:586
+msgid "Default value is the host part of list_check_smtp parameter."
+msgstr ""
+
+#: ../src/lib/confdef.pm:593
+msgid "Bulk mailer"
+msgstr ""
+
+#: ../src/lib/confdef.pm:602
+msgid "Default priority for a packet to be sent by bulk."
+msgstr ""
+
+#: ../src/lib/confdef.pm:609
+msgid ""
+"Minimum number of packets in database before the bulk forks to increase "
+"sending rate"
+msgstr ""
+
+#: ../src/lib/confdef.pm:616
+msgid "Max number of bulks that will run on the same server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:623
+msgid ""
+"The number of seconds a slave bulk will remain running without processing a "
+"message before it spontaneously dies."
+msgstr ""
+
+#: ../src/lib/confdef.pm:630
+msgid ""
+"The number of seconds a bulk sleeps between starting a new loop if it didn't "
+"find a message to send."
+msgstr ""
+
+#: ../src/lib/confdef.pm:632
+msgid "Keep it small if you want your server to be reactive."
+msgstr ""
+
+#: ../src/lib/confdef.pm:637
+msgid ""
+"Number of seconds a master bulk waits between two packets number checks."
+msgstr ""
+
+#: ../src/lib/confdef.pm:639
+msgid ""
+"Keep it small if you expect brutal increases in the message sending load."
+msgstr ""
+
+#: ../src/lib/confdef.pm:642
+msgid "Quotas"
+msgstr ""
+
+#: ../src/lib/confdef.pm:646
+msgid "Default disk quota for shared repository"
+msgstr ""
+
+#: ../src/lib/confdef.pm:656
+msgid "Spool related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:661
+msgid "Directory containing various specialized spools"
+msgstr ""
+
+#: ../src/lib/confdef.pm:663
+msgid "All spool are created at runtime by sympa.pl"
+msgstr ""
+
+#: ../src/lib/confdef.pm:668
+msgid "Directory for incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:679
+msgid "Directory for moderation spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:685
+msgid "Directory for digest spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:691
+msgid "Directory for authentication spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:697
+msgid "Directory for outgoing spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:703
+msgid "Directory for topic spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:709
+msgid "Directory for bounce incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:715
+msgid "Directory for task spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:721
+msgid "Directory for automatic list creation spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:727
+msgid "Temporary directory used by OpenSSL and antivirus plugins"
+msgstr ""
+
+#: ../src/lib/confdef.pm:732
+msgid "Must not be 0."
+msgstr ""
+
+#: ../src/lib/confdef.pm:771
+msgid "Internationalization related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:776
+msgid ""
+"Directory containing available NLS catalogues (Message internationalization)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:782
+msgid "Supported languages"
+msgstr ""
+
+#: ../src/lib/confdef.pm:786
+msgid ""
+"This is the set of language that will be proposed to your users for the "
+"Sympa GUI. Don't select a language if you don't have the proper locale "
+"packages installed."
+msgstr ""
+
+#: ../src/lib/confdef.pm:791
+msgid "Default language (one of supported languages)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:795
+msgid "This is the default language used by Sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:802
+msgid "Bounce related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:812
+msgid "Welcome message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:814
+msgid "If set to unique, new subcriber is removed if welcome message bounce"
+msgstr ""
+
+#: ../src/lib/confdef.pm:819
+msgid "Remind message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:821
+msgid ""
+"If set to unique, subcriber is removed if remind message bounce, use with "
+"care"
+msgstr ""
+
+#: ../src/lib/confdef.pm:830
+msgid "Task name for expiration of old bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:874
+msgid "Bouncing email rate for warn list owner"
+msgstr ""
+
+#: ../src/lib/confdef.pm:881
+msgid "Bouncing email rate for halt the list (not implemented)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:883
+msgid "Not yet used in current version, Default is 50"
+msgstr ""
+
+#: ../src/lib/confdef.pm:898
+msgid "Tuning"
+msgstr ""
+
+#: ../src/lib/confdef.pm:903
+msgid ""
+"Use of binary version of the list config structure on disk (none | "
+"binary_file)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:906
+msgid ""
+"Set this parameter to \"binary_file\" if you manage a big amount of lists "
+"(1000+); it should make the web interface startup faster"
+msgstr ""
+
+#: ../src/lib/confdef.pm:911
+msgid "flock | nfs"
+msgstr ""
+
+#: ../src/lib/confdef.pm:915
+msgid "Sympa commands priority"
+msgstr ""
+
+#: ../src/lib/confdef.pm:931
+#, fuzzy
+msgid "Default priority for list messages"
+msgstr "RSS പുതിയ കത്തുകള്‍ "
+
+#: ../src/lib/confdef.pm:936
+msgid "Database related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:945
+msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:948
+msgid "Be careful to the case"
+msgstr ""
+
+#: ../src/lib/confdef.pm:953
+msgid "Name of the database"
+msgstr ""
+
+#: ../src/lib/confdef.pm:956
+msgid "With SQLite, the name of the DB corresponds to the DB file"
+msgstr ""
+
+#: ../src/lib/confdef.pm:962
+msgid "Hostname of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:969
+msgid "Port of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:977
+msgid "User for the database connection"
+msgstr ""
+
+#: ../src/lib/confdef.pm:985
+msgid "Password for the database connection"
+msgstr ""
+
+#: ../src/lib/confdef.pm:988
+msgid ""
+"What ever you use a password or not, you must protect the SQL server (is it "
+"not a public internet service ?)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1000
+msgid "Environment variables setting for database"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1002
+msgid "This is useful for defining ORACLE_HOME "
+msgstr ""
+
+#: ../src/lib/confdef.pm:1008
+msgid "Database private extention to subscriber table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1010 ../src/lib/confdef.pm:1018
+msgid "You need to extend the database format with these fields"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1016
+msgid "Database private extention to user table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1035
+msgid "Number of months that elapse before a log is expired"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1057
+msgid ""
+"Default timeout between two scheduled synchronizations of list members with "
+"data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1063
+msgid ""
+"Default timeout between two action-triggered synchronizations of list "
+"members with data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1069
+msgid "Default timeout while performing a fetch for an include_sql_query sync"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1074
+msgid "Loop prevention"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1102
+msgid "S/MIME configuration"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1107
+msgid "Path to OpenSSL"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1110
+msgid "Sympa recognizes S/MIME if OpenSSL is installed"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1117
+msgid "Directory containing trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1125
+msgid "File containing bundled trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1133
+msgid "Password used to crypt lists private keys"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1150
+#, fuzzy
+msgid ""
+"Insert a DKIM signature to message from the robot, from the list or both"
+msgstr "RSS പുതിയ കത്തുകള്‍ "
+
+#: ../src/lib/confdef.pm:1157
+msgid ""
+"Type of message that is added a DKIM signature before distribution to "
+"subscribers. Possible values are \"none\", \"any\" or a list of the "
+"following keywords: \"md5_authenticated_messages\", "
+"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
+"\"editor_validated_messages\"."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1164
+msgid "Location of the file where DKIM private key is stored"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1171
+msgid ""
+"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1178
+msgid "The selector"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1185
+msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1193
+msgid "List of headers to be included into the message for signature"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1197
+msgid "Antivirus plug-in"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1203
+msgid "Path to the antivirus scanner engine"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1206
+msgid ""
+"supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
+"Micro/VirusWall"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1212
+msgid "Antivirus plugin command argument"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1221
+msgid "Tag based spam filtering"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1231
+msgid ""
+"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
+"spams, name of this header (example X-Spam-Status)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1239
+msgid "Regexp applied on this header to verify message is a spam (example Yes)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1247
+msgid ""
+"Regexp applied on this header to verify message is NOT a spam (example No)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1253
+msgid "wwsympa.conf parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1258
 msgid "Directory for storing HTML archives"
 msgstr ""
 
-#: ../src/lib/confdef.pm:114
+#: ../src/lib/confdef.pm:1261 ../src/lib/confdef.pm:1281
+msgid "Better if not in a critical partition"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1266
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
 "in chronological order"
 msgstr ""
 
-#: ../src/lib/confdef.pm:121
+#: ../src/lib/confdef.pm:1273
+msgid "File containing archived PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1279
+msgid "Directory for storing bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1286
+msgid "File containing bounced PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1292
+msgid "HTTP cookies lifetime"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1298
+msgid "HTTP cookies validity domain"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1305
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path on the file system to the script of the "
 "custom archiver."
 msgstr ""
 
-#: ../src/lib/confdef.pm:128
-msgid "Directory for storing bounces"
+#: ../src/lib/confdef.pm:1312
+msgid "Type of main Web page ( lists | home )"
 msgstr ""
 
-#: ../src/lib/confdef.pm:135
-msgid ""
-"Directory containing available NLS catalogues (Message internationalization)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:141
-msgid "Directory containing various specialized spools"
-msgstr ""
-
-#: ../src/lib/confdef.pm:148
-msgid "Directory for incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:154
-msgid "Directory for bounce incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:164
-msgid "Directory for automatic list creation spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:170
-msgid "Directory for digest spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:176
-msgid "Directory for moderation spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:182
-msgid "Directory for topic spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:188
-msgid "Directory for authentication spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:194
-msgid "Directory for outgoing spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:200
-msgid "Directory for task spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:206
-msgid "Directory for subscription spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:211
-msgid "URL of a virtual host"
-msgstr ""
-
-#: ../src/lib/confdef.pm:221
-msgid ""
-"Directory for storing static contents (CSS, members pictures, documentation) "
-"directly delivered by Apache"
-msgstr ""
-
-#: ../src/lib/confdef.pm:229
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr ""
-
-#: ../src/lib/confdef.pm:234
-msgid "Syslog"
-msgstr ""
-
-#: ../src/lib/confdef.pm:238
-msgid "Syslog facility for sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:246
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:252
+#: ../src/lib/confdef.pm:1320
 msgid "Syslog facility for wwsympa, archived and bounced"
 msgstr ""
 
-#: ../src/lib/confdef.pm:260
-msgid "Log intensity"
+#: ../src/lib/confdef.pm:1323
+msgid "Default is to use previously defined sympa log facility."
 msgstr ""
 
-#: ../src/lib/confdef.pm:285
-msgid "Number of months that elapse before a log is expired"
-msgstr ""
-
-#: ../src/lib/confdef.pm:289
-msgid "General definition"
-msgstr ""
-
-#: ../src/lib/confdef.pm:292
-msgid "Main robot hostname"
-msgstr ""
-
-#: ../src/lib/confdef.pm:300
-msgid "Listmasters email list comma separated"
-msgstr ""
-
-#: ../src/lib/confdef.pm:309
-msgid "Local part of sympa email address"
-msgstr ""
-
-#: ../src/lib/confdef.pm:328
-msgid "Who is able to create lists"
-msgstr ""
-
-#: ../src/lib/confdef.pm:339
-msgid "Tuning"
-msgstr ""
-
-#: ../src/lib/confdef.pm:343
-msgid ""
-"Use of binary version of the list config structure on disk (none | "
-"binary_file)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:350
-msgid "Sympa commands priority"
-msgstr ""
-
-#: ../src/lib/confdef.pm:356
-#, fuzzy
-msgid "Default priority for list messages"
-msgstr "RSS പുതിയ കത്തുകള്‍ "
-
-#: ../src/lib/confdef.pm:362
-msgid ""
-"Default timeout between two scheduled synchronizations of list members with "
-"data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:368
-msgid ""
-"Default timeout between two action-triggered synchronizations of list "
-"members with data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:374
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr ""
-
-#: ../src/lib/confdef.pm:380
-msgid "Default priority for a packet to be sent by bulk."
-msgstr ""
-
-#: ../src/lib/confdef.pm:397
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-
-#: ../src/lib/confdef.pm:404
-msgid "Max number of bulks that will run on the same server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:411
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-
-#: ../src/lib/confdef.pm:418
-msgid ""
-"Number of seconds a master bulk waits between two packets number checks."
-msgstr ""
-
-#: ../src/lib/confdef.pm:425
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-
-#: ../src/lib/confdef.pm:432
-msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
-msgstr ""
-
-#: ../src/lib/confdef.pm:440
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr ""
-
-#: ../src/lib/confdef.pm:447
-msgid "Password case (insensitive | sensitive)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:454
-msgid "HTTP cookies lifetime"
-msgstr ""
-
-#: ../src/lib/confdef.pm:460
-msgid "HTTP cookies validity domain"
-msgstr ""
-
-#: ../src/lib/confdef.pm:466
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-
-#: ../src/lib/confdef.pm:474
-msgid ""
-"Default maximum size (in bytes) for messages (can be re-defined for each "
-"list)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:482
-msgid ""
-"comma separated list of operations for which blacklist filter is applied"
-msgstr ""
-
-#: ../src/lib/confdef.pm:491
-msgid "Specify which rfc2369 mailing list headers to add"
-msgstr ""
-
-#: ../src/lib/confdef.pm:497
-msgid "Specify header fields to be removed before message distribution"
-msgstr ""
-
-#: ../src/lib/confdef.pm:503
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr ""
-
-#: ../src/lib/confdef.pm:569
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:573
-msgid "Internationalization"
-msgstr ""
-
-#: ../src/lib/confdef.pm:577
-msgid "Default language (one of supported languages)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:586
-msgid "Supported languages"
-msgstr ""
-
-#: ../src/lib/confdef.pm:592
-msgid "Errors management"
-msgstr ""
-
-#: ../src/lib/confdef.pm:596
-msgid "Bouncing email rate for warn list owner"
-msgstr ""
-
-#: ../src/lib/confdef.pm:603
-msgid "Bouncing email rate for halt the list (not implemented)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:610
-msgid "Task name for expiration of old bounces"
-msgstr ""
-
-#: ../src/lib/confdef.pm:616
-msgid "Welcome message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:622
-msgid "Remind message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:626
-msgid "MTA related"
-msgstr ""
-
-#: ../src/lib/confdef.pm:630
-msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:646
-msgid ""
-"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
-"file allows a different tuning per destination domain."
-msgstr ""
-
-#: ../src/lib/confdef.pm:652
-msgid "Max. number of different domains per call to Sendmail"
-msgstr ""
-
-#: ../src/lib/confdef.pm:658
-msgid ""
-"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
-msgstr ""
-
-#: ../src/lib/confdef.pm:662
-msgid "Plugin"
-msgstr ""
-
-#: ../src/lib/confdef.pm:667
-msgid "Path to the antivirus scanner engine"
-msgstr ""
-
-#: ../src/lib/confdef.pm:676
-msgid "Antivirus plugin command argument"
-msgstr ""
-
-#: ../src/lib/confdef.pm:687
+#: ../src/lib/confdef.pm:1328
 msgid "Path to MHonArc mail2html plugin"
 msgstr ""
 
-#: ../src/lib/confdef.pm:716
-msgid "Location of the file where DKIM private key is stored"
+#: ../src/lib/confdef.pm:1331
+msgid "This is required for HTML mail archiving"
 msgstr ""
 
-#: ../src/lib/confdef.pm:723
-msgid "The selector"
+#: ../src/lib/confdef.pm:1336
+msgid "Password case (insensitive | sensitive)"
 msgstr ""
 
-#: ../src/lib/confdef.pm:730
+#: ../src/lib/confdef.pm:1343
+msgid "Title of main Web page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1351
+msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1354
+msgid "This module provide much faster web interface"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1357
+msgid "Virtual host specific parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1361
+msgid "URL of a virtual host"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1392
+msgid "Default limit for the number of subscribers per list (0 means no limit)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1412
 msgid ""
-"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+"If set to \"on\", users will be able to post messages in HTML using a "
+"javascript WYSIWYG editor."
 msgstr ""
 
-#: ../src/lib/confdef.pm:737
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+#: ../src/lib/confdef.pm:1420
+msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr ""
 
-#: ../src/lib/confdef.pm:745
-msgid "List of headers to be included into the message for signature"
+#: ../src/lib/confdef.pm:1427
+msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: ../src/lib/confdef.pm:752
-msgid "Path to OpenSSL"
-msgstr ""
-
-#: ../src/lib/confdef.pm:762
-msgid "Directory containing trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:770
-msgid "File containing bundled trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:778
-msgid "Directory containing user certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:789
-msgid "Password used to crypt lists private keys"
-msgstr ""
-
-#: ../src/lib/confdef.pm:805
+#: ../src/lib/confdef.pm:1459
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -8412,92 +8752,26 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: ../src/lib/confdef.pm:833
-msgid "Database"
+#: ../src/lib/confdef.pm:1466
+msgid "If set to \"on\", enables support of legacy character set"
 msgstr ""
 
-#: ../src/lib/confdef.pm:837
-msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
+#: ../src/lib/confdef.pm:1468
+msgid ""
+"In some language environments, legacy encoding (character set) is preferred "
+"for e-mail messages: for example iso-2022-jp in Japanese language."
 msgstr ""
 
-#: ../src/lib/confdef.pm:845
-msgid "Name of the database"
+#: ../src/lib/confdef.pm:1502
+msgid "Directory for subscription spool"
 msgstr ""
 
-#: ../src/lib/confdef.pm:854
-msgid "Hostname of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:861
-msgid "Port of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:869
-msgid "User for the database connection"
-msgstr ""
-
-#: ../src/lib/confdef.pm:877
-msgid "Password for the database connection"
-msgstr ""
-
-#: ../src/lib/confdef.pm:884
-msgid "Environment variables setting for database"
-msgstr ""
-
-#: ../src/lib/confdef.pm:892
-msgid "Database private extention to user table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:900
-msgid "Database private extention to subscriber table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:917
-msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:925
-msgid "URL of main Web page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:933
-msgid "Title of main Web page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:941
-msgid "Type of main Web page ( lists | home )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:948
-msgid "Default disk quota for shared repository"
-msgstr ""
-
-#: ../src/lib/confdef.pm:960
+#: ../src/lib/confdef.pm:1507
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: ../src/lib/confdef.pm:967
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:974
-msgid ""
-"If set to \"on\", users will be able to post messages in HTML using a "
-"javascript WYSIWYG editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:982
-msgid "Path to the javascript file making the WYSIWYG HTML editor available"
-msgstr ""
-
-#: ../src/lib/confdef.pm:989
-msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:997
+#: ../src/lib/confdef.pm:1519
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -8506,25 +8780,18 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1005
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
+#: ../src/lib/confdef.pm:1527
+msgid "Directory containing user certificates"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1013
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
+#: ../src/lib/confdef.pm:1533
+msgid "File containing task_manager PID while running"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1021
+#: ../src/lib/confdef.pm:1538
 msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1029
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
+"Default number of lines of the array displaying the log entries in the logs "
+"page"
 msgstr ""
 
 #: ../src/lib/Conf.pm:964
@@ -9593,6 +9860,42 @@ msgstr ""
 
 #: ../wwsympa/wwslib.pm:37
 msgid "you do not receive your own posts"
+msgstr ""
+
+#: ../src/lib/confdef.pm:43
+msgid "Directories and file location"
+msgstr ""
+
+#: ../src/lib/confdef.pm:234
+msgid "Syslog"
+msgstr ""
+
+#: ../src/lib/confdef.pm:260
+msgid "Log intensity"
+msgstr ""
+
+#: ../src/lib/confdef.pm:289
+msgid "General definition"
+msgstr ""
+
+#: ../src/lib/confdef.pm:573
+msgid "Internationalization"
+msgstr ""
+
+#: ../src/lib/confdef.pm:592
+msgid "Errors management"
+msgstr ""
+
+#: ../src/lib/confdef.pm:626
+msgid "MTA related"
+msgstr ""
+
+#: ../src/lib/confdef.pm:662
+msgid "Plugin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:833
+msgid "Database"
 msgstr ""
 
 #: ../web_tt2/compose_mail.tt2:78
