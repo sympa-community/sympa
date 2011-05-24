@@ -1685,10 +1685,10 @@ msgstr "Você quer cancelar o upload ?"
 msgid "Additional information"
 msgstr "Informação adicional"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %] :"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1699,14 +1699,6 @@ msgstr "Elemento requerido"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Configurar a Lista"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1721,10 +1713,6 @@ msgstr "valor"
 #, fuzzy
 msgid "apply to"
 msgstr "Aplicar"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10875,6 +10863,18 @@ msgstr "sem correio (útil em caso de férias)"
 msgid "you do not receive your own posts"
 msgstr "você não recebe suas próprias mensagens"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10886,16 +10886,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Domínio da internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Modelos"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -10920,6 +10910,18 @@ msgstr ""
 #: ../web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %] :"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Domínio da internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Modelos"
 
 #, fuzzy
 #~ msgid "General definition"

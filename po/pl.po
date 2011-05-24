@@ -1628,9 +1628,10 @@ msgstr "Czy chcesz anulować wysyłanie?"
 msgid "Additional information"
 msgstr "Dodatkowe informacje"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
-msgstr "[% k.name %]:"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 msgid "*: Required element"
@@ -1639,14 +1640,6 @@ msgstr "Wymagany element"
 #: ../web_tt2/edit_config.tt2:2
 msgid "Edit robot config"
 msgstr "Edycja konfiguracji robota"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1661,10 +1654,6 @@ msgstr "wartość"
 #, fuzzy
 msgid "apply to"
 msgstr "Zastosuj"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10605,6 +10594,18 @@ msgstr "żadnej poczty (przydatne na urlop)"
 msgid "you do not receive your own posts"
 msgstr "nie otrzymuj swoich własnych postów"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10617,16 +10618,6 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Domena Internetowa"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Szablony"
-
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
 msgid "microcal"
@@ -10635,6 +10626,17 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %]:"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Domena Internetowa"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Szablony"
 
 #, fuzzy
 #~ msgid "General definition"

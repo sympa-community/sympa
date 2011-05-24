@@ -1652,10 +1652,10 @@ msgstr "Bạn có muốn thôi tải lên không?"
 msgid "Additional information"
 msgstr "Thông tin thêm"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %] :"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1666,14 +1666,6 @@ msgstr "Phần tử cần thiết"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Sửa cấu hình hộp thư chung:"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1688,10 +1680,6 @@ msgstr "giá trị"
 #, fuzzy
 msgid "apply to"
 msgstr "Áp dụng"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10872,6 +10860,18 @@ msgstr "không thư (có ích khi đi nghỉ)"
 msgid "you do not receive your own posts"
 msgstr "bạn không nhận bài thư được mình gửi"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10884,16 +10884,6 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Miền Internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Mẫu"
-
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
 msgid "microcal"
@@ -10902,6 +10892,18 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %] :"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Miền Internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Mẫu"
 
 #, fuzzy
 #~ msgid "General definition"

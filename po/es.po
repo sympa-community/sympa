@@ -1669,10 +1669,10 @@ msgstr "¿Quieres anular el subir un archivo?"
 msgid "Additional information"
 msgstr "Informaciones adicionales"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %]:"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1683,14 +1683,6 @@ msgstr "Información obligatoria"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Editar la configuración de la lista"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1705,10 +1697,6 @@ msgstr "valor"
 #, fuzzy
 msgid "apply to"
 msgstr "Aplicar"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10928,6 +10916,18 @@ msgstr "no mail (útil para las vacaciones)"
 msgid "you do not receive your own posts"
 msgstr "no recibes tus propios mensajes"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10939,16 +10939,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Dominio de Internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Los modelos"
 
 #: ../src/lib/confdef.pm:662
 msgid "Plugin"
@@ -10962,6 +10952,18 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %]:"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Dominio de Internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Los modelos"
 
 #, fuzzy
 #~ msgid "General definition"

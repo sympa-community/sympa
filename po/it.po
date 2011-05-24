@@ -1719,10 +1719,10 @@ msgstr "Vuoi davvero annullare l'upload ?"
 msgid "Additional information"
 msgstr "Informazioni aggiuntive"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %] :"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1733,14 +1733,6 @@ msgstr "Elemento richiesto"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Modifica la configurazione della lista"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1756,10 +1748,6 @@ msgstr "valore"
 #, fuzzy
 msgid "apply to"
 msgstr "Applica"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -11394,6 +11382,18 @@ msgstr "no mail (assenza prolungata)"
 msgid "you do not receive your own posts"
 msgstr "non ricevere i tuoi stessi messaggi"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -11405,17 +11405,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-# nlsref 16,33
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Dominio Internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Modelli"
 
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
@@ -11447,6 +11436,19 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %] :"
+
+# nlsref 16,33
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Dominio Internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Modelli"
 
 #, fuzzy
 #~ msgid "General definition"

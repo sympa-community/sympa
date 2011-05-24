@@ -1616,8 +1616,9 @@ msgstr "アップロードを取りやめてよいのですか。"
 msgid "Additional information"
 msgstr "追加情報"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1627,14 +1628,6 @@ msgstr "*: 必須の要素"
 #: ../web_tt2/edit_config.tt2:2
 msgid "Edit robot config"
 msgstr "ロボットの設定変更"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1649,10 +1642,6 @@ msgstr "値"
 #, fuzzy
 msgid "apply to"
 msgstr "適用"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10572,6 +10561,22 @@ msgstr "受け取らない (休暇のときなどに便利)"
 msgid "you do not receive your own posts"
 msgstr "自分が投稿したものは受け取らない"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10584,16 +10589,6 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "インターネットドメイン"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "テンプレート"
-
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
 msgid "microcal"
@@ -10602,6 +10597,14 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "インターネットドメイン"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "テンプレート"
 
 #, fuzzy
 #~ msgid "General definition"

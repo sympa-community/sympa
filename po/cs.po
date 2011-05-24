@@ -1703,8 +1703,9 @@ msgstr "Opravdu chcete smazat %1%2 ?"
 msgid "Additional information"
 msgstr "další údaje"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1716,14 +1717,6 @@ msgstr "Vyžadované aliasy"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Upravit konfiguraci konference"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1738,10 +1731,6 @@ msgstr "hodnota"
 #, fuzzy
 msgid "apply to"
 msgstr "Použij"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10864,6 +10853,22 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr "Pro získání hesla :"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
 msgstr ""
@@ -10871,16 +10876,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Doména"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Šablony"
 
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
@@ -10919,6 +10914,14 @@ msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Doména"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Šablony"
 
 #, fuzzy
 #~ msgid "Directories and file location"

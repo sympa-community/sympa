@@ -1629,9 +1629,10 @@ msgstr "Wollen Sie das Hochladen abbrechen?"
 msgid "Additional information"
 msgstr "Zusätzliche Informationen"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
-msgstr "[% k.name %]:"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 msgid "*: Required element"
@@ -1641,14 +1642,6 @@ msgstr "*: Obligatorisches Element"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Listenkonfiguration bearbeiten:"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1663,10 +1656,6 @@ msgstr "Wert"
 #, fuzzy
 msgid "apply to"
 msgstr "Übernehmen"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10672,6 +10661,18 @@ msgstr "keine Nachricht (nützlich für Urlaube)"
 msgid "you do not receive your own posts"
 msgstr "Sie empfangen Ihre eigenen Nachrichten nicht"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10683,16 +10684,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Internet-Domäne"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Vorlagen"
 
 #: ../src/lib/confdef.pm:662
 msgid "Plugin"
@@ -10706,6 +10697,17 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %]:"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Internet-Domäne"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Vorlagen"
 
 #, fuzzy
 #~ msgid "General definition"

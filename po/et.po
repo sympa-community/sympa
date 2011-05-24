@@ -1619,9 +1619,10 @@ msgstr "Olete kindel, et soovite tühistada üleslaadimise?"
 msgid "Additional information"
 msgstr "Lisainfo"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
-msgstr "[% k.name %]:"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 msgid "*: Required element"
@@ -1630,14 +1631,6 @@ msgstr "*: Kohustuslik element"
 #: ../web_tt2/edit_config.tt2:2
 msgid "Edit robot config"
 msgstr "Listi seadete muutmine"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1653,10 +1646,6 @@ msgstr "väärtus"
 #, fuzzy
 msgid "apply to"
 msgstr "Rakenda"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10745,6 +10734,18 @@ msgstr "ei saadeta maile (soovitav puhkuse ajaks)"
 msgid "you do not receive your own posts"
 msgstr "teile ei tule enda saadetud kirju"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10757,16 +10758,17 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-# nlsref 16,33
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Interneti domeeninimi"
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %]:"
 
-#: ../src/lib/confdef.pm:626
+# nlsref 16,33
 #, fuzzy
-msgid "MTA related"
-msgstr "Mallid"
+#~ msgid "Internationalization"
+#~ msgstr "Interneti domeeninimi"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Mallid"
 
 #, fuzzy
 #~ msgid "General definition"

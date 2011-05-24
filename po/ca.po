@@ -1667,10 +1667,10 @@ msgstr "Esteu segur que voleu cancel·lar la transferència ?"
 msgid "Additional information"
 msgstr "Informació addicional "
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %] :"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1681,14 +1681,6 @@ msgstr "Element obligatori"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Edita llista de configuració"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1703,10 +1695,6 @@ msgstr "valor"
 #, fuzzy
 msgid "apply to"
 msgstr "Aplica"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10993,6 +10981,18 @@ msgstr "sense correu (útil per vacances)"
 msgid "you do not receive your own posts"
 msgstr "No pot rebre els seus propis missatges"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -11005,16 +11005,6 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "domini d'Internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Plantilles"
-
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
 msgid "microcal"
@@ -11023,6 +11013,18 @@ msgstr ""
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %] :"
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "domini d'Internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Plantilles"
 
 #, fuzzy
 #~ msgid "General definition"

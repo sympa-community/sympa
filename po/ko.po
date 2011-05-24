@@ -1668,8 +1668,9 @@ msgstr "업로드를 취소 하시겠습니까?"
 msgid "Additional information"
 msgstr "개인 정보"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1681,14 +1682,6 @@ msgstr "요청했든 별명"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "리스트 구성 편집"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1703,10 +1696,6 @@ msgstr "값"
 #, fuzzy
 msgid "apply to"
 msgstr "적용"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10785,6 +10774,22 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10796,16 +10801,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "인터넷 도메인"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "템플렛"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -10830,6 +10825,14 @@ msgstr ""
 #: ../web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "인터넷 도메인"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "템플렛"
 
 #, fuzzy
 #~ msgid "General definition"

@@ -1650,8 +1650,9 @@ msgstr "確定要取消加載嗎？"
 msgid "Additional information"
 msgstr "不公開的信息"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1663,14 +1664,6 @@ msgstr "所需別名"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "編輯郵件列表配置"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1685,10 +1678,6 @@ msgstr "值"
 #, fuzzy
 msgid "apply to"
 msgstr "應用"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10658,6 +10647,22 @@ msgstr "不接收郵件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己發的郵件"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10669,16 +10674,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "網絡域"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "模板"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -10703,6 +10698,14 @@ msgstr ""
 #: ../web_tt2/viewmod.tt2:18
 msgid "Do Not Notify"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "網絡域"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "模板"
 
 #, fuzzy
 #~ msgid "General definition"

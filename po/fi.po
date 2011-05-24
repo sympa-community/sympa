@@ -1645,9 +1645,10 @@ msgstr "Haluatko perua lähetyksen?"
 msgid "Additional information"
 msgstr "Lisätietoja"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
-msgstr "[% k.nimi %]:"
+msgid "%1:"
+msgstr ""
 
 # element=?
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1657,14 +1658,6 @@ msgstr "*: pakollinen tieto"
 #: ../web_tt2/edit_config.tt2:2
 msgid "Edit robot config"
 msgstr "Muokkaa robotin asetuksia"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1680,10 +1673,6 @@ msgstr "arvo"
 #, fuzzy
 msgid "apply to"
 msgstr "Käytä"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -11127,6 +11116,18 @@ msgstr "ei posteja (hyödyllinen lomien aikana)"
 msgid "you do not receive your own posts"
 msgstr "et vastaanota lähettämiäsi viestejä"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
 msgstr ""
@@ -11135,20 +11136,21 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-# nlsref 16,33
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Internet domain (verkkotunnus)"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Mallit"
-
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
 msgstr ""
+
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.nimi %]:"
+
+# nlsref 16,33
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Internet domain (verkkotunnus)"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Mallit"
 
 #, fuzzy
 #~ msgid "Directories and file location"

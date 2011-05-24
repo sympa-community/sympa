@@ -1676,8 +1676,9 @@ msgstr "Yüklemeyi iptal etmek ister misiniz?"
 msgid "Additional information"
 msgstr "HTTPS doğrulama bilgisi"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1689,14 +1690,6 @@ msgstr "Gereken özellikler"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Liste ayar dosyasını değiştir"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1711,10 +1704,6 @@ msgstr "değer"
 #, fuzzy
 msgid "apply to"
 msgstr "Onayla"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10693,6 +10682,22 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr ""
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10704,21 +10709,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Internet domain"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Şablonlar"
-
-#: ../src/lib/confdef.pm:833
-#, fuzzy
-msgid "Database"
-msgstr "Tarih"
 
 #: ../web_tt2/compose_mail.tt2:78
 msgid "URL:"
@@ -10778,6 +10768,18 @@ msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Internet domain"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Şablonlar"
+
+#, fuzzy
+#~ msgid "Database"
+#~ msgstr "Tarih"
 
 #, fuzzy
 #~ msgid "General definition"

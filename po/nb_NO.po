@@ -1680,10 +1680,10 @@ msgstr "Ønsker du å avbryte opplastingen ?"
 msgid "Additional information"
 msgstr "Tilleggsinformasjon"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-#, fuzzy
-msgid "[% k.name %]:"
-msgstr "[% k.name %] :"
+msgid "%1:"
+msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1694,14 +1694,6 @@ msgstr "Påkrevd element"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Rediger listekonfigurasjon"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1716,10 +1708,6 @@ msgstr "verdi"
 #, fuzzy
 msgid "apply to"
 msgstr "Utfør"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -10583,6 +10571,18 @@ msgstr "ingen e-post (praktisk ved ferie)"
 msgid "you do not receive your own posts"
 msgstr "du mottar ikke selv dine egne meldinger"
 
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10598,11 +10598,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:573
 msgid "Internationalization"
 msgstr ""
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Maler"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -10635,6 +10630,14 @@ msgid ""
 "Your message could not be sent because its size \n"
 "was over the maximum size allowed on this list."
 msgstr ""
+
+#, fuzzy
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %] :"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Maler"
 
 #, fuzzy
 #~ msgid "General definition"

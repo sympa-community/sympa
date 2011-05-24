@@ -1704,8 +1704,9 @@ msgstr "Wilt u het volgende %1 echt verwijderen?"
 msgid "Additional information"
 msgstr "private informatie"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1717,14 +1718,6 @@ msgstr "Verplichte aliassen"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Wijzig lijstconfiguratie"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1739,10 +1732,6 @@ msgstr "waarde"
 #, fuzzy
 msgid "apply to"
 msgstr "Toepassen"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -11073,6 +11062,22 @@ msgstr "geen mail (handig voor vakanties)"
 msgid "you do not receive your own posts"
 msgstr "U ontvangt niet uw eigen e-mails"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
 msgstr ""
@@ -11080,16 +11085,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Internet domein"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Templates"
 
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
@@ -11114,6 +11109,14 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Internet domein"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Templates"
 
 #, fuzzy
 #~ msgid "Directories and file location"

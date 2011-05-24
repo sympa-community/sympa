@@ -1797,8 +1797,9 @@ msgstr "Do you really want to delete %1 ?"
 msgid "Additional information"
 msgstr "Informatii private"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1810,14 +1811,6 @@ msgstr "Aliasuri obligatorii"
 #, fuzzy
 msgid "Edit robot config"
 msgstr "Edit list config"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr ""
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:17
 #, fuzzy
@@ -1833,10 +1826,6 @@ msgstr "Valoare"
 #, fuzzy
 msgid "apply to"
 msgstr "Modifica\">"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr ""
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
@@ -11639,6 +11628,22 @@ msgstr ""
 msgid "you do not receive your own posts"
 msgstr "Pentru a primi parola:"
 
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "[% k.name %]:"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:7
+msgid "[%confparam.title%]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:16
+msgid "[% confparam.title %]"
+msgstr ""
+
+#: ../web_tt2/edit_config.tt2:28
+msgid "[% confparam.query %]"
+msgstr ""
+
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
 msgstr ""
@@ -11646,17 +11651,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-# nlsref 16,33
-#: ../src/lib/confdef.pm:573
-#, fuzzy
-msgid "Internationalization"
-msgstr "Domeniu internet"
-
-#: ../src/lib/confdef.pm:626
-#, fuzzy
-msgid "MTA related"
-msgstr "Templateuri"
 
 #: ../web_tt2/javascript.tt2:1096
 msgid "\"+src.id+\"_cal"
@@ -11688,6 +11682,15 @@ msgid ""
 "password\n"
 "in the setup wizard to complete your account configuration."
 msgstr ""
+
+# nlsref 16,33
+#, fuzzy
+#~ msgid "Internationalization"
+#~ msgstr "Domeniu internet"
+
+#, fuzzy
+#~ msgid "MTA related"
+#~ msgstr "Templateuri"
 
 #, fuzzy
 #~ msgid "Directories and file location"
