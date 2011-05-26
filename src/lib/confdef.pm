@@ -643,6 +643,7 @@ our @params = (
 
     {
         'name'     => 'default_shared_quota',
+        'default'  => '',
         'query'    => gettext('Default disk quota for shared repository'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',

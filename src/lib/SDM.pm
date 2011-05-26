@@ -134,7 +134,7 @@ sub connect_sympa_database {
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
-    my $db_conf = &Conf::get_parameters_group('*','Database');
+    my $db_conf = &Conf::get_parameters_group('*','Database related');
     $db_conf->{'reconnect_options'} = {'keep_trying'=>($option ne 'just_try' && ( !$db_source->{'connected'} && !$ENV{'HTTP_HOST'})),
 						 'warn'=>1 };
     unless ($db_source = new SQLSource($db_conf)) {
