@@ -200,45 +200,42 @@ sub establish_connection {
 	}
       }
       
-      unless ($self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})) {
-    	
-	## Notify listmaster if warn option was set
-	## Unless the 'failed' status was set earlier
-	if ($self->{'reconnect_options'}{'warn'}) {
-	  unless (defined $db_connections{$self->{'connect_string'}} &&
-		  $db_connections{$self->{'connect_string'}}{'status'} eq 'failed') { 
-
-	    unless (&List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
-	      &do_log('err',"Unable to send notify 'no_db' to listmaster");
+      $self->{'dbh'} = eval {DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})} ;
+      unless (defined $self->{'dbh'}) {
+	    ## Notify listmaster if warn option was set
+	    ## Unless the 'failed' status was set earlier
+	    if ($options->{'warn'}) {
+		unless (defined $db_connections{$connect_string} &&
+		    $db_connections{$connect_string}{'status'} eq 'failed') { 
+    
+		    unless (&List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
+			&do_log('err',"Unable to send notify 'no_db' to listmaster");
+		    }
+		}
 	    }
-	  }
-	}
-	
-	if ($self->{'reconnect_options'}{'keep_trying'}) {
-	  &do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
-	} else{
-	  do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
-	  $db_connections{$self->{'connect_string'}}{'status'} = 'failed';
-	  $db_connections{$self->{'connect_string'}}{'first_try'} ||= time;
-	  return undef;
-	}
-	
-	## Loop until connect works
-	my $sleep_delay = 60;
-	while (1) {
-	  sleep $sleep_delay;
-	  $self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'});
-	  last if ($self->{'dbh'} && $self->{'dbh'}->ping());
-	  $sleep_delay += 10;
-	}
-	
-	if ($self->{'reconnect_options'}{'warn'}) {
-	  do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
-	  unless (&send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
-	    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
-	  }
-	}
-	
+	    if ($options->{'keep_trying'}) {
+		&do_log('err','Can\'t connect to Database %s as %s, still trying...', $connect_string, $param->{'db_user'});
+	    } else{
+		do_log('err','Can\'t connect to Database %s as %s', $connect_string, $param->{'db_user'});
+		$db_connections{$connect_string}{'status'} = 'failed';
+		$db_connections{$connect_string}{'first_try'} ||= time;
+		return undef;
+	    }
+	    ## Loop until connect works
+	    my $sleep_delay = 60;
+	    while (1) {
+		sleep $sleep_delay;
+		eval {$dbh = DBI->connect($connect_string, $param->{'db_user'}, $param->{'db_passwd'})};
+		last if ($dbh && $dbh->ping());
+		$sleep_delay += 10;
+	    }
+	    
+	    if ($options->{'warn'}) {
+	    do_log('notice','Connection to Database %s restored.', $connect_string);
+		unless (&List::send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
+		    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
+		}
+	    }
       }
       
       if ($self->{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates

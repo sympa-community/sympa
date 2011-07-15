@@ -142,7 +142,7 @@ sub new {
 
     ## Keep the scenario in memory
     $all_scenarios{$scenario->{'file_path'}} = $scenario;
-    
+
     return $scenario;
 }
 
@@ -172,6 +172,7 @@ sub _parse_scenario {
         
 	if ($current_rule =~ /\s*(include\s*\(?\'?(.*)\'?\)?)\s*$/i) {
 	    $rule->{'condition'} = $1;
+	    push(@scenario, $rule);
 	}elsif ($current_rule =~ /^\s*(.*?)\s+((\s*(md5|pgp|smtp|smime|dkim)\s*,?)*)\s*->\s*(.*)\s*$/gi) {
 	    $rule->{'condition'} = $1;
 	    $rule->{'action'} = $5;
@@ -388,7 +389,6 @@ sub request_action {
 	## Add rules at the beginning of the array
 	unshift @rules, @{$include_scenario->{'rules'}};
     }
-
     ## Look for 'include' directives amongst rules first
     foreach my $index (0..$#rules) {
 	if ($rules[$index]{'condition'} =~ /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {

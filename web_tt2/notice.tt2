@@ -85,7 +85,7 @@
 [%|loc(notice.notified_user)%]User %1 has been notified[%END%]
 
 [% ELSE %]
-[% notice.msg %]
+[% notice.msg.replace('\n','<br/>') %]
 
 [% END %]
 

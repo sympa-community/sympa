@@ -3889,13 +3889,10 @@ sub wrap_text {
     $cols = 78 unless defined $cols;
     return $text unless $cols;
 
-    my $emailre = &tools::get_regexp('email');
     $text = Text::LineFold->new(
 	    Language => &Language::GetLang(),
 	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
-	    UserBreaking => ['NONBREAKURI',
-			     [qr/\b$emailre\b/ => sub { ($_[1]) }],
-			     ],
+	    Prep => 'NONBREAKURI',
 	    ColumnsMax => $cols
 	)->fold($init, $subs, $text);
 

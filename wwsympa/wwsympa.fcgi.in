@@ -5173,15 +5173,35 @@ sub do_auto_signoff {
 	 $param->{'user'}{'email'} = $in{'email'};
      }
 
-     unless ($list->is_list_member($param->{'user'}{'email'})) {
-	 &report::reject_report_web('user','not_subscriber',{'list'=>$list->{'name'}},$param->{'action'},$list);
+    my %result = &unsubscribe($authenticated_email_address, $list);
+    if ($result{'success'} == 1) {
+	&report::notice_report_web($result{'details'},{},$param->{'action'});
+	$param->{'is_subscriber'} = 0;
+	$param->{'may_signoff'} = 0;
+    }else{
+	&report::reject_report_web($result{'category_error'},$result{'reason_error'},{%{$result{'reason_error'}},'list'=>$list->{'name'}},$param->{'action'},$list);
+    }
+    return 'home';
+ }
+
+## Unsubscribe current user from a list.
+sub unsubscribe {
+    my $authenticated_email_address = shift;
+    my $list = shift;
+    my %report = ('success',1,'details','');
+    
+    unless ($list->is_userlist_member($authenticated_email_address)) {
 	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'not_subscriber'});
-	 return undef;
-     }
+	$report{'success'} = 0;
+	$report{'category_error'} = 'user';
+	$report{'reason_error'} = 'not_subscribed';
+	$report{'details_error'} = {};
+	return %report;
+    }
 
-     my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
+    my $result = $list->check_list_authz('unsubscribe',$param->{'auth_method'},
 					  {'sender' => $param->{'user'}{'email'},
 					   'remote_host' => $param->{'remote_host'},
 					   'remote_addr' => $param->{'remote_addr'}});
@@ -5195,28 +5215,35 @@ sub do_auto_signoff {
      $param->{'may_signoff'} = 1 if ($sig_is =~ /do_it|owner/);
 
      if ($sig_is =~ /reject/) {
-	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
 	 &wwslog('info', 'do_signoff: %s may not signoff from %s'
 		 , $param->{'user'}{'email'}, $param->{'list'});
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'authorization'});
-	 return undef;
+	$report{'success'} = 0;
+	$report{'category_error'} = 'auth';
+	$report{'reason_error'} = $reason;
+	$report{'details_error'} = {};
+	return %report;
      }elsif ($sig_is =~ /owner/) {
 	 unless ($list->send_notify_to_owner('sigrequest',{'who' => $param->{'user'}{'email'},
 							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'del')})) {
 	     &wwslog('notice',"Unable to send notify 'sigrequest' to $list->{'name'} list owner");
 	 }
-	 &report::notice_report_web('sent_to_owner',{},$param->{'action'});
 	 &wwslog('info', 'do_signoff: signoff sent to owner');
-	 return undef;
+	$report{'success'} = 1;
+	$report{'details'} = 'sent_to_owner';
+	return %report;
      }else {
-	     unless ($list->delete_list_member('users' => [$authenticated_email_address], 'exclude' =>' 1', 'parameter' => 'unsubscription', 'daemon' => 'wwsympa.fcgi')) {
-		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$authenticated_email_address},$param->{'action'},$list,$authenticated_email_address,$robot);
-		 &wwslog('info', 'do_signoff: signoff failed');
-		 &web_db_log({'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
+	 unless ($list->delete_list_member('users' => [$authenticated_email_address], 'exclude' =>' 1')) {
+	     &wwslog('info', 'do_signoff: signoff failed');
+	     &web_db_log({'status' => 'error',
+			  'error_type' => 'internal'});
+	    $report{'success'} = 0;
+	    $report{'category_error'} = 'intern';
+	    $report{'reason_error'} = 'delete_subscriber_db_failed';
+	    $report{'details_error'} = {'sub'=>$authenticated_email_address};
+	    return %report;
+	 }
 
 	 if ($sig_is =~ /notify/) {
 	     unless ($list->send_notify_to_owner('notice',{'who' => $authenticated_email_address,
@@ -5233,16 +5260,11 @@ sub do_auto_signoff {
 	     &wwslog('notice',"Unable to send template 'bye' to $authenticated_email_address");
 	 }
      }
-     &report::notice_report_web('performed',{},$param->{'action'});
      &web_db_log({'status' => 'success'});
-	
-
-    
-     $param->{'is_subscriber'} = 0;
-     $param->{'may_signoff'} = 0;
-
-     return 'home';
- }
+    $report{'success'} = 1;
+    $report{'details'} = 'performed';
+    return %report;
+}
 
  ## Unsubscription request (user not authenticated)
  sub do_sigrequest {
@@ -9082,7 +9104,7 @@ sub do_home {
      print REBUILD ' ';
      close REBUILD;
 
-     &report::notice_report_web('performed',{},$param->{'action'});
+     &report::notice_report_web('performed_soon',{},$param->{'action'});
      &web_db_log({'parameters' => $in{'month'},
 		  'status' => 'success'});
      return 'admin';
@@ -9111,7 +9133,7 @@ sub do_home {
 	 close REBUILD;
 
      }
-     &report::notice_report_web('performed',{},$param->{'action'});
+     &report::notice_report_web('performed_soon',{},$param->{'action'});
      &web_db_log({'status' => 'success'});
      return 'serveradmin';
  }
@@ -15607,6 +15629,7 @@ sub do_suspend_request_action {
 
 	# lists selected
 	@lists = split /\0/, $in{'listname'};
+	my $report = "";
 	foreach my $line (@lists) {
 
 	    my $unsub_list = new List ($line, $robot);
@@ -15615,7 +15638,22 @@ sub do_suspend_request_action {
 		return undef;
 	    }
 
-	    $unsub_list->delete_list_member('users' => [$param->{'user'}{'email'}],'exclude' => 1 ); 
+	    my %result = &unsubscribe($param->{'user'}{'email'}, $unsub_list);
+	    if ($result{'success'} == 1) {
+		if ($result{'details'} eq 'sent_to_owner') {
+		    $report .= sprintf(gettext("Your unsubscription request to list %s was sent to the list owner."),$unsub_list->{'name'});
+		}else{
+		    $report .= sprintf(gettext("You were successfully unsubscribed from list %s."),$unsub_list->{'name'});
+		}
+	    }else{
+		if ($result{'category_error'} eq 'auth') {
+		    $report .= sprintf(gettext("Unsubscription from list %s denied: Unsubscription from this list is closed."),$unsub_list->{'name'});
+		}else{
+		    $report .= sprintf(gettext("Unsubscription from list %s failed."),$unsub_list->{'name'});
+		}
+	    }
+	    $report .= "\n";
+
 	}
 	if($lists[0] eq ''){
 	    &report::reject_report_web('user','missing_arg',{'argument' => 'must picked one or more list(s)'}, $param->{'action'});
@@ -15623,7 +15661,7 @@ sub do_suspend_request_action {
 	    return 'suspend_request';
 	}
 	
-	&report::notice_report_web('performed',{},"You are unsubscribe from the list(s)");
+	&report::notice_report_web($report,{},'');
     }else{
 	&report::reject_report_web('user','unknown_action',{},$in{'sub_action'},$list);
 	&wwslog('info','unknown action %s', $in{'sub_action'});

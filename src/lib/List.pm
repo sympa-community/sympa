@@ -9132,11 +9132,37 @@ sub update_email_netidmap_db{
 	    defined $old_email &&
 	    defined $new_email) {
 	&Log::do_log('err', 'Missing parameter');
-	return undef;
-    } 
-    
+
     unless (&SDM::do_query( "UPDATE netidmap_table SET email_netidmap = %s WHERE (email_netidmap = %s AND robot_netidmap = %s)",&SDM::quote($new_email), &SDM::quote($old_email), &SDM::quote($robot))) {
 	&Log::do_log('err','Unable to set new email address %s in netidmap_table to replace old address %s for robot %s', $new_email, $old_email, $robot);
+	return undef;
+    }
+
+    return 1;
+}
+
+## Update netidmap table when user email address changes
+sub update_email_netidmap_db{
+    my ($robot, $old_email, $new_email) = @_;
+    my $statement;	
+    
+    unless (defined $robot && 
+	    defined $old_email &&
+	    defined $new_email) {
+	&do_log('err', 'Missing parameter');
+	return undef;
+    } 
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+	return undef unless &db_connect();
+    }
+    
+    $statement = sprintf "UPDATE netidmap_table SET email_netidmap = %s WHERE (email_netidmap = %s AND robot_netidmap = %s)",$dbh->quote($new_email), $dbh->quote($old_email), $dbh->quote($robot);
+    
+    
+    unless ($dbh->do($statement)) {
+	do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
 	return undef;
     }
 
@@ -10694,6 +10720,20 @@ sub _urlize_part {
     if ($head->recommended_filename) {
 	$filename = $head->recommended_filename;
     } else {
+        if ($head->mime_type =~ /multipart\//i) {
+          my $content_type = $head->get('Content-Type');
+          $content_type =~ s/multipart\/[^;]+/multipart\/mixed/g;
+          $message->head->replace('Content-Type', $content_type);
+          my @parts = $message->parts();
+          foreach my $i (0..$#parts) {
+              my $entity = &_urlize_part ($message->parts ($i), $list, $dir, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
+              if (defined $entity) {
+                $parts[$i] = $entity;
+              }
+          }
+          ## Replace message parts
+          $message->parts (\@parts);
+        }
         $filename ="msg.$i".$fileExt;
     }
   
