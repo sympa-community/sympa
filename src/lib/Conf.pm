@@ -160,7 +160,7 @@ sub load {
         #  set in the config file and simply use the hardcoded value.
         %Ignored_Conf = %{&_set_hardcoded_parameter_values({'config_hash' => \%Conf,})};
 
-        &_set_listmasters_entry({'config_hash' => \%Conf});
+        &_set_listmasters_entry({'config_hash' => \%Conf, 'main_config' => 1});
     
         ## Some parameters must have a value specifically defined in the config. If not, it is an error.
         $config_err += &_detect_missing_mandatory_parameters({'config_hash' => \%Conf,});
@@ -1617,7 +1617,15 @@ sub _set_listmasters_entry{
         }
     }else{
         printf STDERR "Conf::_set_listmasters_entry(): Robot %s config: No listmaster found in hash\n",$param->{'config_hash'}{'host'};
-        return undef;
+        if ($param->{'main_config'}) {
+			printf STDERR "Conf::_set_listmasters_entry(): This is the main config. It MUST define at least one listmaster. Stopping here.\n.";
+			return undef;
+		}else{
+			printf STDERR "Conf::_set_listmasters_entry(): Defaulting to the main server listmasters\n.";
+			$param->{'config_hash'}{'listmasters'} = $Conf{'listmasters'};
+			$param->{'config_hash'}{'listmaster'} = $Conf{'listmaster'};
+			$number_of_valid_email = $#{$param->{'config_hash'}{'listmasters'}};
+		}
     }
     if ($number_of_email_provided > $number_of_valid_email){
         printf STDERR "Conf::_set_listmasters_entry(): Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses.\n",$param->{'config_hash'}{'host'},$number_of_email_provided,$number_of_valid_email;

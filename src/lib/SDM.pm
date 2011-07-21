@@ -539,31 +539,43 @@ sub check_db_field_type {
 
 sub quote {
     my $param = shift;
-    if(&check_db_connect()) {
+    if (defined $db_source) {
 	return $db_source->quote($param);
     }else{
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
-	return undef;
+	if(&check_db_connect()) {
+	    return $db_source->quote($param);
+	}else{
+	    &Log::do_log('err', 'Unable to get a handle to Sympa database');
+	    return undef;
+	}
     }
 }
 
 sub get_substring_clause {
     my $param = shift;
-    if(&check_db_connect()) {
+    if (defined $db_source) {
 	return $db_source->get_substring_clause($param);
-    }else{
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
-	return undef;
+     }else{
+	if(&check_db_connect()) {
+	    return $db_source->get_substring_clause($param);
+	}else{
+	    &Log::do_log('err', 'Unable to get a handle to Sympa database');
+	    return undef;
+	}
     }
 }
 
 sub get_limit_clause {
     my $param = shift;
-    if(&check_db_connect()) {
+    if (defined $db_source) {
 	return ' '.$db_source->get_limit_clause($param).' ';
     }else{
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
-	return undef;
+	if(&check_db_connect()) {
+	    return ' '.$db_source->get_limit_clause($param).' ';
+	}else{
+	    &Log::do_log('err', 'Unable to get a handle to Sympa database');
+	    return undef;
+	}
     }
 }
 
@@ -574,7 +586,16 @@ sub get_limit_clause {
 ##
 sub get_canonical_write_date {
     my $param = shift;
-    return $db_source->get_canonical_write_date($param);
+    if (defined $db_source) {
+	return $db_source->get_canonical_write_date($param);
+    }else{
+	if(&check_db_connect()) {
+	    return $db_source->get_canonical_write_date($param);
+	}else{
+	    &Log::do_log('err', 'Unable to get a handle to Sympa database');
+	    return undef;
+	}
+    }
 }
 
 ## Returns a character string corresponding to the expression to use in 
@@ -584,7 +605,16 @@ sub get_canonical_write_date {
 ##
 sub get_canonical_read_date {
     my $param = shift;
-    return $db_source->get_canonical_read_date($param);
+    if (defined $db_source) {
+	return $db_source->get_canonical_read_date($param);
+    }else{
+	if(&check_db_connect()) {
+	    return $db_source->get_canonical_read_date($param);
+	}else{
+	    &Log::do_log('err', 'Unable to get a handle to Sympa database');
+	    return undef;
+	}
+    }
 }
 
 return 1;
