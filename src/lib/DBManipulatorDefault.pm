@@ -116,6 +116,7 @@ sub check_key {
 	$keysFound = $keysFound->{$param->{'key_name'}};
     }
     
+    open TMP, ">/tmp/indexes";print TMP &Dumper($keysFound);close TMP;
     my @keys_list = keys %{$keysFound};
     if ($#keys_list < 0) {
 	$result->{'empty'}=1;

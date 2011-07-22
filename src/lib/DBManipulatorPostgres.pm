@@ -192,11 +192,15 @@ sub get_fields {
     my %result;
     unless ($sth = $self->do_query("SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",$param->{'table'})) {
 	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;;
+	return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
 	my $length = $ref->{'length'} - 4; # What a dirty method ! We give a Sympa tee shirt to anyone that suggest a clean solution ;-)
-	$result{$ref->{'field'}} = $ref->{'type'}.'('.$length.')' if ( $ref->{'type'} eq 'varchar');
+	if ( $ref->{'type'} eq 'varchar') {
+	    $result{$ref->{'field'}} = $ref->{'type'}.'('.$length.')';
+	}else{
+	    $result{$ref->{'field'}} = $ref->{'type'};
+	}
     }
     return \%result;
 }
@@ -213,6 +217,20 @@ sub get_fields {
 sub update_field {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
+    my $options;
+    if ($param->{'notnull'}) {
+	$options .= ' NOT NULL ';
+    }
+    my $report = sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options);
+    &Log::do_log('notice', "ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options);
+    unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
+	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
+	return undef;
+    }
+    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    return $report;
 }
 
 # Adds a field in a table from the database.
@@ -229,6 +247,27 @@ sub update_field {
 sub add_field {
     my $self = shift;
     my $param = shift;
+    &Log::do_log('debug','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
+    my $options;
+    # To prevent "Cannot add a NOT NULL column with default value NULL" errors
+    if ($param->{'notnull'}) {
+	$options .= 'NOT NULL ';
+    }
+    ##if ( $param->{'autoinc'}) {
+	##$options .= ' AUTO_INCREMENT ';
+    ##}
+    if ( $param->{'primary'}) {
+	$options .= ' PRIMARY KEY ';
+    }
+    unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
+	&Log::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
+    &Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
+    
+    return $report;
 }
 
 # Deletes a field from a table in the database.
@@ -243,7 +282,7 @@ sub delete_field {
     my $param = shift;
     &Log::do_log('debug','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
 
-    unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
+    unless ($self->do_query("ALTER TABLE %s DROP COLUMN %s",$param->{'table'},$param->{'field'})) {
 	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
@@ -337,14 +376,20 @@ sub get_indexes {
 
     my %found_indexes;
     my $sth;
-    unless ($sth = $self->do_query("SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey)",$param->{'table'})) {
+    unless ($sth = $self->do_query("SELECT c.oid FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relname ~ \'^(%s)$\' AND pg_catalog.pg_table_is_visible(c.oid)",$param->{'table'})) {
+	&Log::do_log('err', 'Could not get the oid for table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+    my $ref = $sth->fetchrow_hashref('NAME_lc');
+    
+    unless ($sth = $self->do_query("SELECT c2.relname, regexp_replace(pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) ,E'CREATE INDEX .* ON .* USING .* ','') FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i WHERE c.oid = \'%s\' AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname",$ref->{'oid'})) {
 	&Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-	$found_indexes{$ref->{'field'}} = 1;
-    }	    
+	$found_indexes{$ref->{'relname'}} = 1;
+    }
     return \%found_indexes;
 }
 
@@ -358,10 +403,10 @@ sub get_indexes {
 sub unset_index {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Removing index %s from table %s',$param->{'index'},$param->{'table'});
+    &Log::do_log('trace','Removing index %s from table %s',$param->{'index'},$param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
+    unless ($sth = $self->do_query("DROP INDEX %s",$param->{'index'})) {
 	&Log::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
@@ -386,7 +431,7 @@ sub set_index {
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
     &Log::do_log('debug', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD INDEX %s (%s)",$param->{'table'}, $param->{'index_name'}, $fields)) {
+    unless ($sth = $self->do_query("CREATE INDEX %s ON %s (%s)", $param->{'index_name'},$param->{'table'}, $fields)) {
 	&Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }

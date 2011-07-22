@@ -211,7 +211,6 @@ sub probe_db {
     foreach my $t (@tables) {
 	$real_struct{$t} = $db_source->get_fields({'table'=>$t});
     }
-   
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
@@ -222,7 +221,7 @@ sub probe_db {
 		return undef;
 	    }
 	    unless (&check_fields({'table' => $t,'report' => \@report,'real_struct' => \%real_struct})) {
-		&Log::do_log('err', "Unable to check the valifity of fields definition for table %s. Aborting.", $t);
+		&Log::do_log('err', "Unable to check the validity of fields definition for table %s. Aborting.", $t);
 		return undef;
 	    }
 	    ## Remove temporary DB field
