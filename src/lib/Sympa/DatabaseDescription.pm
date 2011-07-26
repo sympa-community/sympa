@@ -189,7 +189,7 @@ sub db_struct {
 	  $trans_o =~ s/^datetime.*/date/g;	
 #Postgresql
 	  $trans_pg =~ s/^int(1)/smallint/g;
-	  $trans_pg =~ s/^int\(.*/int4/g;
+	  $trans_pg =~ s/^int\(?.*\)?/int4/g;
 	  $trans_pg =~ s/^smallint.*/int4/g;
 	  $trans_pg =~ s/^tinyint\(.*\)/int2/g;
 	  $trans_pg =~ s/^bigint.*/int8/g;
@@ -285,12 +285,12 @@ our %autoincrement = ('notification_table' => 'pk_notification');
 ##   1st key is the concerned table
 ##   2nd key is the index name
 ##   the table lists the field on which the index applies
-our %indexes = ('admin_table' => {'user_index' => ['user_admin']},
-	       'subscriber_table' => {'user_index' => ['user_subscriber']},
-	       'stat_table' => {'user_index' => ['email_stat']}
+our %indexes = ('admin_table' => {'admin_user_index' => ['user_admin']},
+	       'subscriber_table' => {'subscriber_user_index' => ['user_subscriber']},
+	       'stat_table' => {'stats_user_index' => ['email_stat']}
 	       );
 
 # table indexes that can be removed during upgrade process
-our @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index');
+our @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index','user_index');
 
 return 1;

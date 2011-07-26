@@ -116,12 +116,15 @@ sub check_key {
 	$keysFound = $keysFound->{$param->{'key_name'}};
     }
     
-    open TMP, ">/tmp/indexes";print TMP &Dumper($keysFound);close TMP;
     my @keys_list = keys %{$keysFound};
     if ($#keys_list < 0) {
 	$result->{'empty'}=1;
     }else{
 	$result->{'existing_key_correct'} = 1;
+	my %expected_keys;
+	foreach my $expected_field (@{$param->{'expected_keys'}}){
+	    $expected_keys{$expected_field} = 1;
+	}
 	foreach my $field (@{$param->{'expected_keys'}}) {
 	    unless ($keysFound->{$field}) {
 		&Log::do_log('info','Table %s: Missing expected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
@@ -129,17 +132,11 @@ sub check_key {
 		$result->{'existing_key_correct'} = 0;
 	    }
 	}		
-	foreach my $key_in_db ( keys %{$keysFound} ) {
-	    $result->{'unexpected_key'}{$key_in_db} = 1;
-	    foreach my $field (@{$param->{'expected_keys'}}) {
-		if ( $field eq $key_in_db) {
-		    $result->{'unexpected_key'}{$key_in_db} = 0;
-		    last;
-		}
-	    }
-	    if ($result->{'unexpected_key'}{$key_in_db} == 1) {
+	foreach my $field (keys %{$keysFound}) {
+	    unless ($expected_keys{$field}) {
+		&Log::do_log('info','Table %s: Found unexpected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
+		$result->{'unexpected_key'}{$field} = 1;
 		$result->{'existing_key_correct'} = 0;
-		&Log::do_log('info','Table %s: Found unexpected key part %s in %s key.',$param->{'table'},$key_in_db,$param->{'key_name'});
 	    }
 	}
     }
