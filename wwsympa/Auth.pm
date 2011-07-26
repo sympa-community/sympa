@@ -427,7 +427,7 @@ sub get_one_time_ticket {
     my $ticket = $sth->fetchrow_hashref('NAME_lc');
     
     unless ($ticket) {	
-	do_log('info','Auth::get_one_time_ticket: Unable to find one time ticket %s (SQL query %s)%s', $ticket,$statement, $dbh->errstr);
+	do_log('info','Auth::get_one_time_ticket: Unable to find one time ticket %s', $ticket);
 	return {'result'=>'not_found'};
     }
     

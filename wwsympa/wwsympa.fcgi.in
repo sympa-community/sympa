@@ -5190,7 +5190,7 @@ sub unsubscribe {
     my $list = shift;
     my %report = ('success',1,'details','');
     
-    unless ($list->is_userlist_member($authenticated_email_address)) {
+    unless ($list->is_list_member($authenticated_email_address)) {
 	 &wwslog('info','do_signoff: %s not subscribed to %s',$param->{'user'}{'email'}, $param->{'list'} );
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'not_subscriber'});

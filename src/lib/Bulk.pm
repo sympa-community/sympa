@@ -476,6 +476,9 @@ sub store {
 	}
 	my $packetid =  &tools::md5_fingerprint($rcptasstring);
 	my $packet_already_exist;
+	if (ref($listname) =~ /List/i) {
+	    $listname = $listname->{'name'};
+	}
 	if ($message_already_on_spool) {
 	    ## search if this packet is already in spool database : mailfile may perform multiple submission of exactly the same message 
 	    unless ($sth = &SDM::do_query( "SELECT count(*) FROM bulkmailer_table WHERE ( messagekey_bulkmailer = %s AND  packetid_bulkmailer = %s)", &SDM::quote($messagekey),&SDM::quote($packetid))) {

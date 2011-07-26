@@ -97,9 +97,9 @@ sub get_formatted_date {
     my $param = shift;
     &Log::do_log('debug','Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
+	return sprintf 'date_part(\'epoch\',%s)',$param->{'target'};
     }elsif(lc($param->{'mode'}) eq 'write') {
-	return sprintf 'FROM_UNIXTIME(%d)',$param->{'target'};
+	return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',$param->{'target'};
     }else {
 	&Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
 	return undef;

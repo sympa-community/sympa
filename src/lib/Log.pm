@@ -278,6 +278,9 @@ sub db_stat_log{
     my $id = $date.$random;
     my $read = 0; 
 
+    if (ref($list) =~ /List/i) {
+	$list = $list->{'name'};
+    }
     if($list =~ /(.+)\@(.+)/) {#remove the robot name of the list name
 	$list = $1;
 	unless($robot) {
