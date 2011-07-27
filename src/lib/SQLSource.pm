@@ -48,54 +48,19 @@ our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetc
 ## "status" can have value 'failed'
 ## 'first_try' contains an epoch date
 my %db_connections;
+our %superclasses = ('mysql' => 'DBManipulatorMySQL',
+		    'pg' => 'DBManipulatorPostgres',
+		    'sqlite' => 'DBManipulatorSQLite',
+		    'oracle' => 'DBManipulatorOracle',
+		    'sybase' => 'DBManipulatorSybase',
+		    );
 
 sub new {
     my $pkg = shift;
     my $param = shift;
     my $self = $param;
     &Log::do_log('debug',"Creating new SQLSource object for RDBMS '%s'",$param->{'db_type'});
-    ## Casting the object with the right DBManipulator<RDBMS> class according to
-    ## the parameters. It's repetitive code because it is hard to use variables
-    ## with "require" pragma and @ISA decalarations. Later, maybe...
-    if ($param->{'db_type'} =~ /^mysql$/i) {
-	unless ( eval "require DBManipulatorMySQL" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
-	    return undef;
-	}
-	require DBManipulatorMySQL;
-	our @ISA = qw(DBManipulatorMySQL);
-    }elsif ($param->{'db_type'} =~ /^sqlite$/i) {
-	unless ( eval "require DBManipulatorSQLite" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorSQLite module");
-	    return undef;
-	}
-	require DBManipulatorSQLite;
-	our @ISA = qw(DBManipulatorSQLite);
-    }elsif ($param->{'db_type'} =~ /^pg$/i) {
-	unless ( eval "require DBManipulatorPostgres" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorPostgres module");
-	    return undef;
-	}
-	require DBManipulatorPostgres;
-	our @ISA = qw(DBManipulatorPostgres);
-    }elsif ($param->{'db_type'} =~ /^oracle$/i) {
-	unless ( eval "require DBManipulatorOracle" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorOracle module");
-	    return undef;
-	}
-	require DBManipulatorOracle;
-	our @ISA = qw(DBManipulatorOracle);
-    }elsif ($param->{'db_type'} =~ /^sybase$/i) {
-	unless ( eval "require DBManipulatorSybase" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorSybase module");
-	    return undef;
-	}
-	require DBManipulatorSybase;
-	our @ISA = qw(DBManipulatorSybase);
-    }else {
-	&Log::do_log('err','Unknown RDBMS type "%s"',$param->{'db_type'});
-	return undef;
-    }
+    return undef unless &set_superclass($param->{'db_type'});
     $self = $pkg->SUPER::new($param);
     
     $self->{'db_host'} ||= $self->{'host'};
@@ -116,6 +81,7 @@ sub new {
 sub connect {
     my $self = shift;
     &Log::do_log('debug',"Checking connection to database %s",$self->{'db_name'});
+    return undef unless $self->check_superclass;
     if ($self->{'dbh'} && $self->{'dbh'}->ping) {
 	&Log::do_log('debug','Connection to database %s already available',$self->{'db_name'});
 	return 1;
@@ -402,6 +368,7 @@ sub set_fetch_timeout {
 sub get_canonical_write_date {
     my $self = shift;
     my $field = shift;
+    return undef unless $self->check_superclass;
     return $self->get_formatted_date({'mode'=>'write','target'=>$field});
 }
 
@@ -413,8 +380,70 @@ sub get_canonical_write_date {
 sub get_canonical_read_date {
     my $self = shift;
     my $value = shift;
+    return undef unless $self->check_superclass;
     return $self->get_formatted_date({'mode'=>'read','target'=>$value});
 }
 
+
+sub get_superclass {
+    return @ISA;
+}
+
+sub check_superclass {
+    my $self = shift;
+    if ($ISA[0] ne $superclasses{lc($self->{'db_type'})}) {
+	&Log::do_log('debug',"Current superclass is %s. Will set it to %s",$ISA[0],$superclasses{$self->{'db_type'}});
+	return undef unless &set_superclass($self->{'db_type'});
+    }
+    return 1;
+}
+
+sub set_superclass {
+    my $db_type = shift;
+    &Log::do_log('debug','Setting superclass for db type %s',$db_type);
+    ## Casting the object with the right DBManipulator<RDBMS> class according to
+    ## the parameters. It's repetitive code because it is hard to use variables
+    ## with "require" pragma and @ISA decalarations. Later, maybe...
+    if ($db_type =~ /^mysql$/i) {
+	unless ( eval "require DBManipulatorMySQL" ){
+	    &Log::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
+	    return undef;
+	}
+	require DBManipulatorMySQL;
+	our @ISA = qw(DBManipulatorMySQL);
+    }elsif ($db_type =~ /^sqlite$/i) {
+	unless ( eval "require DBManipulatorSQLite" ){
+	    &Log::do_log('err',"Unable to use DBManipulatorSQLite module");
+	    return undef;
+	}
+	require DBManipulatorSQLite;
+	our @ISA = qw(DBManipulatorSQLite);
+    }elsif ($db_type =~ /^pg$/i) {
+	unless ( eval "require DBManipulatorPostgres" ){
+	    &Log::do_log('err',"Unable to use DBManipulatorPostgres module");
+	    return undef;
+	}
+	require DBManipulatorPostgres;
+	our @ISA = qw(DBManipulatorPostgres);
+    }elsif ($db_type =~ /^oracle$/i) {
+	unless ( eval "require DBManipulatorOracle" ){
+	    &Log::do_log('err',"Unable to use DBManipulatorOracle module");
+	    return undef;
+	}
+	require DBManipulatorOracle;
+	our @ISA = qw(DBManipulatorOracle);
+    }elsif ($db_type =~ /^sybase$/i) {
+	unless ( eval "require DBManipulatorSybase" ){
+	    &Log::do_log('err',"Unable to use DBManipulatorSybase module");
+	    return undef;
+	}
+	require DBManipulatorSybase;
+	our @ISA = qw(DBManipulatorSybase);
+    }else {
+	&Log::do_log('err','Unknown RDBMS type "%s"',$db_type);
+	return undef;
+    }
+    return 1;
+}
 ## Packages must return true.
 1;
