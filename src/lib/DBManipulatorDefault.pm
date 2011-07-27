@@ -27,10 +27,10 @@ use strict;
 use Carp;
 use Log;
 
-use Datasource;
+use SQLSource;
 use Data::Dumper;
 
-our @ISA = qw(Datasource);
+our @ISA = qw(SQLSource);
 
 ############################
 #### Section containing generic functions          #
