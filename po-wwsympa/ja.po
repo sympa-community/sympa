@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2011-05-17 02:26+0200\n"
+"PO-Revision-Date: 2011-06-23 15:59+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
 "MIME-Version: 1.0\n"
@@ -635,24 +635,27 @@ msgstr ""
 "うことでもあります。"
 
 #: ../web_tt2/help_introduction.tt2:117
-#, fuzzy
 msgid ""
-"In most mailing list services, subscribers receive a List subscribers "
-"charter on subscription. Then they are obliged to respect all the rules "
-"contained in that charter."
+"In most mailing list services, subscribers receive a '<a target=\"_blank\" "
+"title=\"Example of subscribers charter (French)\" href=\"http://listes.cru."
+"fr/cnil/charte.abonne.html\">List subscribers charter</a>' on subscription. "
+"Then they are obliged to respect all the rules contained in that charter."
 msgstr ""
 "多くのリストサービスでは、読者は読者登録の際に「リストの読者の約款」を受け取"
 "ります。読者は、この約款に書いてあるすべてのとりきめを尊重する義務がありま"
 "す。"
 
-# 仮訳です。
 #: ../web_tt2/help_introduction.tt2:118
 msgid ""
-"If available, list owners and moderators have to conform to the Owner and "
-"moderator charter."
+"If available, list owners and moderators have to conform to the <a target="
+"\"_blank\" title=\"Example of charter aimed at owners and moderators (French)"
+"\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner and "
+"moderator charter</a>."
 msgstr ""
-"オーナーやモデレータは、「オーナーやモデレータの約款」があるのならその内容を"
-"知っていなければなりません。"
+"リストのオーナーとモデレータも、<a target=\"_blank\" title=\"オーナーとモデ"
+"レータのための約款の例 (フランス語)\" href=\"http://listes.cru.fr/cnil/"
+"charte.proprio.html\">オーナー、ファシリテーター、モデレータの約款</a>を (も"
+"しあれば) 守らなければなりません。"
 
 # See the comment for "Good Practices".
 #: ../web_tt2/help_introduction.tt2:119
@@ -1509,7 +1512,7 @@ msgstr ""
 "の表示にたいしてはたらきます。設定を変えるには次のようにします。"
 
 # * 6.1(?): "Your preferences" link has been moved to top bar.
-# 
+#
 # # "Dans la boîte en haut de la colonne de gauche, <strong>cliquez sur le "
 # # "lien 'Vos préférences'</strong>."
 #: ../web_tt2/help_user.tt2:129
@@ -4334,6 +4337,7 @@ msgstr ""
 "れるメッセージに、ここで指定したヘッダを付け加えます。Sympa 1.2.2 以降、複数"
 "のメッセージヘッダを設定できるようになりました。"
 
+# 訳者補足あり
 #: ../web_tt2/help_editlist.tt2:71
 msgid ""
 "This parameter is optional. It specifies a string which is added to the "
@@ -4341,13 +4345,11 @@ msgid ""
 "automatic tools to sort incoming messages). This string will be surrounded "
 "by [] characters."
 msgstr ""
-"このパラメータは、必要なければ入力しなくてかまいません。\n"
-"配送するメッセージの表題 (Subject) の前につける文字列を決めます\n"
-"(受け取ったメッセージを自動振り分けしていない人に便利です)。\n"
-"<!-- 訳者追加 -->\n"
-"[name] はリスト名に、[sequence] は投稿の連番に、それぞれ置き換えます。\n"
-"<!-- 追加おわり -->\n"
-"そうしてできたものを、[] で囲んで表題 (Subject) の前につけます。"
+"このパラメータは、必要なければ入力しなくてかまいません。配送するメッセージの"
+"表題 (Subject) の前につける文字列を決めます (受け取ったメッセージを自動振り分"
+"けしていない人に便利です)。<!-- 訳者追加 -->[%list.name%] はリスト名に、[%"
+"list.sequence%] は投稿の連番に、それぞれ置き換えます。<!-- 追加おわり -->そう"
+"してできたものを、[] で囲んで表題 (Subject) の前につけます。"
 
 #: ../web_tt2/help_editlist.tt2:73
 msgid ""
@@ -8218,16 +8220,13 @@ msgstr ""
 "読者が nomail (なにも受け取らない) モードにしていた場合、リストからのメッセー"
 "ジをまた一通ずつ受け取れるようになります。"
 
+# 仮訳です。
 #~ msgid ""
-#~ "If available, list owners and moderators have to conform to the <a target="
-#~ "\"_blank\" title=\"Example of charter aimed at owners and moderators "
-#~ "(French)\" href=\"http://listes.cru.fr/cnil/charte.proprio.html\">Owner "
-#~ "and moderator charter</a>."
+#~ "If available, list owners and moderators have to conform to the Owner and "
+#~ "moderator charter."
 #~ msgstr ""
-#~ "リストのオーナーとモデレータも、<a target=\"_blank\" title=\"オーナーとモ"
-#~ "デレータのための約款の例 (フランス語)\" href=\"http://listes.cru.fr/cnil/"
-#~ "charte.proprio.html\">オーナー、ファシリテーター、モデレータの約款</a>を "
-#~ "(もしあれば) 守らなければなりません。"
+#~ "オーナーやモデレータは、「オーナーやモデレータの約款」があるのならその内容"
+#~ "を知っていなければなりません。"
 
 # # "L'option '<strong>Cleartext</strong>' archive le message sous sa forme "
 # # "cryptée originale."
