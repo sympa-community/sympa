@@ -9,48 +9,51 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2007-08-29 02:32+0200\n"
-"Last-Translator: Heilig Szabolcs <cece@phphost.hu>\n"
+"PO-Revision-Date: 2011-07-05 08:56+0200\n"
+"Last-Translator: Laszlo <torlasz@net.sote.hu>\n"
 "Language-Team: Magyar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"#-#-#-#-#  blank_web_help_hu.po (sympa)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"#-#-#-#-#  tmp_web_help_hu.po (hu)  #-#-#-#-#\n"
-"X-Poedit-Language: Hungarian\n"
-"X-Poedit-Country: HUNGARY\n"
-"X-Generator: Pootle 0.10.1\n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.2\n"
 
 #: ../web_tt2/help.tt2:11
 msgid "Subscriber, moderator and owner documentation"
 msgstr ""
+"Dokumentáció a levelezőlisták tagjai, moderátorai és tulajdonosai részére"
 
 #: ../web_tt2/help.tt2:13
 msgid "In this documentation, you will find:"
-msgstr ""
+msgstr "A következő leírások állnak rendelkezésre:"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:15
 msgid ""
 "a <a href=\"%1/help/introduction\">general introduction</a> to mailing lists;"
 msgstr ""
+"egy <a href=\"%1/help/introduction\">általános bevezető</a> a levelezőlisták "
+"használatáról"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:16
 msgid "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
 msgstr ""
+"egy <a href=\"%1/help/user\">felhasználók számára készült leírás</a> a Sympa "
+"levelezőlista-rendszer használatáról"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:17
 msgid ""
 "an <a href=\"%1/help/admin\">administrator guide</a> about the use of Sympa."
 msgstr ""
+"egy <a href=\"%1/help/admin\">listatulajdonosok számára készült leírás</a> a "
+"Sympa levelezőlista-rendszer használatáról"
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:20
@@ -59,6 +62,9 @@ msgid ""
 "href=\"%1/help/introduction#features\">available features</a> in the mailing "
 "list management software Sympa."
 msgstr ""
+"Ha egy konkrét feladathoz van szüksége segítségre, akkor nézze meg a "
+"rendelkezésre álló <a href=\"%1/help/introduction#features\">szolgáltatások "
+"listáját.</a> "
 
 #. (path_cgi)
 #: ../web_tt2/help.tt2:21
@@ -68,14 +74,19 @@ msgid ""
 "to the <a href=\"%1/help/faqadmin\">administrators <acronym title="
 "\"Frequently asked questions\">FAQ</acronym></a>."
 msgstr ""
+"Ha valami problémája van a rendszer használatával, érdemes megnéznie a <a "
+"href=\"%1/help/faquser\">felhasználói <acronym title=\"Gyakran Ismételt "
+"Kérdések\">GYIK</acronym></a>-ot vagy a  <a href=\"%1/help/faqadmin"
+"\">listatulajdonosok <acronym title=\"Gyakran Ismételt Kérdések\">GYIK</"
+"acronym></a>-ját."
 
 #: ../web_tt2/help_introduction.tt2:3
 msgid "Mailing lists - General introduction"
-msgstr ""
+msgstr "Levelezőlisták - Általános bevezetés"
 
 #: ../web_tt2/help_introduction.tt2:5
 msgid "What is a mailing list?"
-msgstr ""
+msgstr "Mi az a levelezőlista?"
 
 #: ../web_tt2/help_introduction.tt2:6
 msgid ""
@@ -86,10 +97,18 @@ msgid ""
 "send messages, to reply to them or to read them without contributing (i.e. "
 "to \"lurk\")."
 msgstr ""
+"A levelezőlista egy <strong>kommunikációs csatorna, mely lehetővé teszi, "
+"hogy az emberek egy csoportja automatikusan megkapjon minden email üzenetet, "
+"amit egy adott címre (a lista címére) elküldenek</strong>: minden levél, "
+"amit egy listatag fölad a lista címére, kézbesítésre kerül az összes "
+"listatag levélládájába. Ha az ember tagja egy levelezési listának, akkor "
+"leveleket küldhet a listára, válaszolhat az onnan érkező levelekre, vagy az "
+"is lehet, hogy csak olvassa a listáról érkező leveleket, de ő maga nem szól "
+"hozzá semmihez (tehát csak \"hallgatózik\")."
 
 #: ../web_tt2/help_introduction.tt2:7
 msgid "Special cases:</strong>"
-msgstr ""
+msgstr "Speciális esetek:</strong>"
 
 #: ../web_tt2/help_introduction.tt2:9
 msgid ""
@@ -97,6 +116,9 @@ msgid ""
 "subscribed to it. However, you need to be subscribed to a list to receive "
 "its messages."
 msgstr ""
+"Bizonyos listákra akkor is küldhet levelet az ember, ha nem is tagja a "
+"kérdéses listának. De a listára érkező leveleket mindig csak a listatagok "
+"kapják meg, más nem."
 
 #: ../web_tt2/help_introduction.tt2:10
 msgid ""
@@ -105,10 +127,13 @@ msgid ""
 "used to transmit information from a unique sender to a large number of "
 "recipients."
 msgstr ""
+"Bizonyos listákra azonban még a listatagok sem írhatnak levelet: ezek a "
+"hirdetőlisták, amiket arra használnak, hogy nagy számú emberhez juttassanak "
+"el fontos bejelentéseket egy központi címről."
 
 #: ../web_tt2/help_introduction.tt2:13
 msgid "Interest of mailing lists"
-msgstr ""
+msgstr "A levelezőlisták haszna"
 
 #: ../web_tt2/help_introduction.tt2:14
 msgid ""
@@ -117,40 +142,47 @@ msgid ""
 "topic</strong> and to <strong>take part in exchanges about it</strong>. "
 "Examples are:"
 msgstr ""
+"Az emberek azért iratkoznak fel valamilyen levelezőlistára (angol rövidítése "
+"<acronym title=\"Mailing List\">ML</acronym>), hogy <strong>tájékozódjanak "
+"egy bizonyos témában</strong> és <strong>részt vegyenek az erről szóló "
+"eszmecserében</strong>. Néhány példa:"
 
 #: ../web_tt2/help_introduction.tt2:16
 msgid "mailing list for all the employees of a company;"
-msgstr ""
+msgstr "egy cég összes alkalmazottainak levelezőlistája"
 
 #: ../web_tt2/help_introduction.tt2:17
 msgid "mailing list reserved to the participants in a project;"
-msgstr ""
+msgstr "egy projekten dolgozó munkacsoport tagjainak levelezőlistája"
 
 #: ../web_tt2/help_introduction.tt2:18
 msgid "mailing list dedicated to a class of students;"
-msgstr ""
+msgstr "egy tanulócsoport tagjainak levelezőlistája"
 
 #: ../web_tt2/help_introduction.tt2:19
 msgid "mailing list about the latest news in computer security;"
 msgstr ""
+"a számítógépek legfrissebb biztonsági kockázatait közzétevő levelezőlista"
 
 #: ../web_tt2/help_introduction.tt2:20
 msgid "mailing list of mutual aid between handymen;"
-msgstr ""
+msgstr "a barkácsolással kapcsolatosan eszmét cserélő emberek levelezőlistája"
 
 #: ../web_tt2/help_introduction.tt2:21
 msgid ""
 "mailing list restricted to a family and dedicated to the organization of "
 "large family gatherings;"
 msgstr ""
+"egy család levelezőlistája, amin a nagyobb családi események szervezése "
+"zajlik"
 
 #: ../web_tt2/help_introduction.tt2:22
 msgid "and so on!"
-msgstr ""
+msgstr "és így tovább!"
 
 #: ../web_tt2/help_introduction.tt2:25
 msgid "Types of mailing lists"
-msgstr ""
+msgstr "A levelezőlisták fajtái"
 
 #: ../web_tt2/help_introduction.tt2:26
 msgid ""
@@ -159,12 +191,18 @@ msgid ""
 "conditions or not, etc. Those lists may have from a dozen up to several "
 "thousand members."
 msgstr ""
+"Az Interneten <strong>ezrével vannak levelezőlisták,</strong> és ezek "
+"fajtája is igen sokféle: nyilvános vagy zárt, ingyenes vagy nem, a tagság "
+"előfeltételekhez kötött vagy nem, stb. A listatagok száma (listától függően) "
+"a néhánytól a sokezerig terjed."
 
 #: ../web_tt2/help_introduction.tt2:27
 msgid ""
 "According to the way they work, we can distinguish between <strong>two types "
 "of lists</strong>:"
 msgstr ""
+"Működési módjuk szerint <strong>kétféle listát</strong> különböztethetünk "
+"meg:"
 
 #: ../web_tt2/help_introduction.tt2:29
 msgid ""
@@ -175,12 +213,20 @@ msgid ""
 "etc. With this type of mailing list, the information flows from a unique "
 "sender to a large number of recipients."
 msgstr ""
+"A <strong>hirdetőlisták</strong> üzeneteket juttatnak el a listatagokhoz, de "
+"a tagok nem írhatnak a listára. Az így eljuttatott üzenetek leggyakrabban "
+"hírlevelek: elektronikus magazinok, napi hírek (pl. horoszkóp, "
+"időjárásjelentés, biztonsági figyelmeztetések), egy weboldal változásairól "
+"szóló értesítések, stb. Az ilyen levelezőlista esetén egy meghatározott "
+"feladótól jut el az információ nagyszámú címzetthez."
 
 #: ../web_tt2/help_introduction.tt2:30
 msgid ""
 "<strong>Discussion lists</strong> allow all subscribers to take part in "
 "exchanges. Those lists can be moderated or not:"
 msgstr ""
+"A <strong>fórum típusú listákon</strong> minden tag részt vehet az "
+"eszmecserében. Ezek a listák lehetnek moderáltak vagy sem:"
 
 #: ../web_tt2/help_introduction.tt2:32
 msgid ""
@@ -190,6 +236,12 @@ msgid ""
 "will not receive off-topic messages, unsolicited commercial messages "
 "(spams), messages containing large attachments, etc."
 msgstr ""
+"A <strong>moderált fórumlistákon</strong>, a rendszer a lista címére érkező "
+"leveleket csak azt követően küldi ki a listatagoknak, ha azt a listán "
+"valamelyik erre a célra kijelölt szerkesztő (moderátor) engedélyezte. Ezen a "
+"módon biztosítható a lista megfelelő színvonala. Pl. nem kerülnek a listára "
+"témába nem vágó (off-topic) üzenetek, kéretlen reklámok (spam), túl nagy "
+"mellékleteket tartalmazó levelek, stb."
 
 #: ../web_tt2/help_introduction.tt2:33
 msgid ""
@@ -197,29 +249,34 @@ msgid ""
 "transmitted to all subscribers as soon as the mailing list management robot "
 "receives them."
 msgstr ""
+"A <strong>moderálatlan fórumlistákon</strong> a lista címére érkező "
+"üzeneteket a kiszolgáló azonnal továbbítja a listatagok címére."
 
 #: ../web_tt2/help_introduction.tt2:37
 msgid "Features"
-msgstr ""
+msgstr "Szolgáltatások"
 
 #: ../web_tt2/help_introduction.tt2:38
 msgid "Once subscribed to a mailing list service, you can:"
 msgstr ""
+"A webes felületre történő bejelentkezés után a következő lehetőségei vannak:"
 
 #: ../web_tt2/help_introduction.tt2:40
 msgid ""
 "search for mailing lists</strong> matching your main interests or your "
 "particular situation;"
 msgstr ""
+"a listák között keresést végezhet</strong> aszerint, hogy mi érdekli, ill. "
+"mire van szüksége"
 
 #: ../web_tt2/help_introduction.tt2:41
 msgid "manage your subscriptions</strong>:"
-msgstr ""
+msgstr "módosíthatja az egyes listákon való tagságát</strong>:"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:43
 msgid "<a href=\"%1/help/user#subscribe\">subscribe</a> to lists,"
-msgstr ""
+msgstr "új listákra <a href=\"%1/help/user#subscribe\">iratkozhat föl</a>"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:44
@@ -227,6 +284,8 @@ msgid ""
 "<a href=\"%1/help/user#unsubscribe\">unsubscribe</a> from lists to which you "
 "are subscribed,"
 msgstr ""
+"<a href=\"%1/help/user#unsubscribe\">leiratkozhat</a> azokról a listákról, "
+"aminek már tagja"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:45
@@ -234,6 +293,8 @@ msgid ""
 "change your <a href=\"%1/help/user#options\">subscriber options</a> list by "
 "list,"
 msgstr ""
+"megváltoztathatja a <a href=\"%1/help/user#options\">tagsági beállításait</"
+"a> az egyes listákon külön-külön"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:46
@@ -242,10 +303,13 @@ msgid ""
 "apply to the whole mailing list environment (name, password, language of the "
 "mailing list web interface, etc.);"
 msgstr ""
+"megváltoztathatja az <a href=\"%1/help/user#pref\">általános beállításait</"
+"a>, melyek az egész levelezőlista-szolgáltatásra vonatkoznak (név, jelszó, "
+"milyen nyelven működjön a szolgáltatás, stb.)"
 
 #: ../web_tt2/help_introduction.tt2:48
 msgid "use mailing lists"
-msgstr ""
+msgstr "használhatja a levelezőlistákat"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:50
@@ -254,6 +318,9 @@ msgid ""
 "you are not subscribed</a> if that archive is public and if your personal "
 "rights allow you to access those lists,"
 msgstr ""
+"olvashatja <a href=\"%1/help/arc\">azoknak a listáknak a webes archívumát, "
+"amiknek nem tagja</a>, de csak akkor, ha a kérdéses archívum nyilvános és a "
+"jogosultsági beállítások ezt megengedik"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:51
@@ -261,12 +328,16 @@ msgid ""
 "read the <a href=\"%1/help/arc\">archive of lists to which you are "
 "subscribed</a>,"
 msgstr ""
+"olvashatja <a href=\"%1/help/arc\">azoknak a listáknak a webes archívumát, "
+"amiknek tagja</a>"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:52
 msgid ""
 "perform <a href=\"%1/help/arc#arcsearch\">searches in the list archive</a>,"
 msgstr ""
+"<a href=\"%1/help/arc#arcsearch\">kereséseket hajthat végre a lista "
+"archívumában</a>"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:53
@@ -274,6 +345,8 @@ msgid ""
 "<a href=\"%1/help/sendmsg\">send messages</a> to lists to which you are "
 "subscribed,"
 msgstr ""
+"<a href=\"%1/help/sendmsg\">levelet küldhet</a> azokra a listákra, amiknek "
+"tagja"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:54
@@ -281,6 +354,8 @@ msgid ""
 "<a href=\"%1/help/shared#shared_read\">download documents</a> from the "
 "shared document web space,"
 msgstr ""
+"<a href=\"%1/help/shared#shared_read\">állományokat tölthet le</a> azon "
+"listák közös dokumentumtárából, melyeknek tagja"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:55 ../web_tt2/help_user.tt2:81
@@ -288,10 +363,13 @@ msgid ""
 "<a href=\"%1/help/shared#shared_upload\">upload documents</a> in the shared "
 "document web space;"
 msgstr ""
+"<a href=\"%1/help/shared#shared_upload\">állományokat tölthet föl</a> azon "
+"listák közös dokumentumtárába, melyeknek tagja"
 
 #: ../web_tt2/help_introduction.tt2:57
 msgid "manage mailing lists"
 msgstr ""
+"menedzselheti a levelezőlistákat (ehhez rendszerint külön jogosultság kell)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:59
@@ -299,16 +377,22 @@ msgid ""
 "<a href=\"%1/help/admin#create_list\">create new lists</a> (restricted "
 "access) - subject to authorization,"
 msgstr ""
+"<a href=\"%1/help/admin#create_list\">új listák létrehozását kérheti</a> (a "
+"listák csak jóváhagyás után használhatók)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:60
 msgid "<a href=\"%1/help/admin#edit_list\">configure lists</a> you own,"
 msgstr ""
+"<a href=\"%1/help/admin#edit_list\">módosíthatja a listák működési "
+"beállításait</a> (azokét, amiknek tulajdonosa)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:61
 msgid "<a href=\"%1/help/admin#manage_members\">manage subscriptions</a>,"
 msgstr ""
+"<a href=\"%1/help/admin#manage_members\">módosíthatja a listák tagságát</a> "
+"(azokét, amiknek tulajdonosa)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:62
@@ -316,6 +400,8 @@ msgid ""
 "<a href=\"%1/help/admin#manage_shared\">manage the shared document web "
 "space</a>,"
 msgstr ""
+"<a href=\"%1/help/admin#manage_shared\">módosíthatja a listák "
+"dokumentumtárát</a>  (rendszerint azokét, amiknek tulajdonosa)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:63
@@ -323,73 +409,85 @@ msgid ""
 "<a href=\"%1/help/admin#moderate\">moderate lists</a> for which you are a "
 "moderator."
 msgstr ""
+"<a href=\"%1/help/admin#moderate\">moderálhatja a listákat</a> (azokat, "
+"amiknek szerkesztője)"
 
 #: ../web_tt2/help_introduction.tt2:67
 msgid "How the mailing list service works: roles and responsibilities"
-msgstr ""
+msgstr "Hogyan működik a levelezőlista-szolgáltatás: szerepek és feladatok"
 
 #: ../web_tt2/help_introduction.tt2:69
 msgid "A mailing list service involves four types of roles:"
-msgstr ""
+msgstr "A levelezőlista-szolgáltatás négyféle szerepkört határoz meg:"
 
 #: ../web_tt2/help_introduction.tt2:71
 msgid "<strong>listmaster;</strong>"
-msgstr ""
+msgstr "<strong>listamester</strong>"
 
 #: ../web_tt2/help_introduction.tt2:72
 msgid "<strong>owner;</strong>"
-msgstr ""
+msgstr "<strong>tulajdonos</strong>"
 
 #: ../web_tt2/help_introduction.tt2:73
 msgid "<strong>moderator;</strong>"
-msgstr ""
+msgstr "<strong>szerkesztő (moderátor)</strong>"
 
 #: ../web_tt2/help_introduction.tt2:74
 msgid "<strong>subscriber.</strong>"
-msgstr ""
+msgstr "<strong>tag</strong>"
 
 #: ../web_tt2/help_introduction.tt2:76
 msgid ""
 "It is possible to have several roles at once (for example, you can be an "
 "owner and a moderator of a list and be subscribed to several others)."
 msgstr ""
+"Egy ember többféle szerepkört is betölthet egyszerre (lehet pl. egy listának "
+"egy személyben tulajdonosa és szerkesztője, ugyanakkor több más listának "
+"egyszerű tagja)."
 
 #: ../web_tt2/help_introduction.tt2:78
 msgid "Listmasters"
-msgstr ""
+msgstr "Listamesterek"
 
 #: ../web_tt2/help_introduction.tt2:79
 msgid ""
 "Listmasters are in charge of the <strong>management of the mailing list "
 "service</strong>. Their duties:"
 msgstr ""
+"A listamesterek felelnek  <strong>a szolgáltatás működtetéséért.</strong> "
+"Feladataik a következők:"
 
 #: ../web_tt2/help_introduction.tt2:81
 msgid ""
 "<strong>manage the mailing list server</strong> (deployment, maintenance, "
 "etc.);"
 msgstr ""
+"<strong>a szolgáltatást adó kiszolgáló felügyelete</strong> (üzembe "
+"helyezés, karbantartás, stb.)"
 
 #: ../web_tt2/help_introduction.tt2:82
 msgid ""
 "<strong>define the general orientations of the mailing list service</strong>:"
 msgstr ""
+"<strong>a levelezőlista-szolgáltatás főbb vonásainak meghatározása:</strong>"
 
 #: ../web_tt2/help_introduction.tt2:84
 msgid "who will be allowed to ask for the creation of a new list,"
-msgstr ""
+msgstr "ki kérheti új listák létrehozását"
 
 #: ../web_tt2/help_introduction.tt2:85
 msgid "which options will be available to manage lists (scenario definition),"
 msgstr ""
+"milyen működési változatokból válogathatnak a listatulajdonosok (scenario- "
+"azaz szabályrendszer-meghatározás)"
 
 #: ../web_tt2/help_introduction.tt2:86
 msgid "what the default files will contain (creation of templates),"
-msgstr ""
+msgstr "az alapértelmezett állományok meghatározása (sémák létrehozása)"
 
 #: ../web_tt2/help_introduction.tt2:87
 msgid "what will the mailing list web interface look like;"
-msgstr ""
+msgstr "a webes felület külalakjának meghatározása"
 
 #: ../web_tt2/help_introduction.tt2:89
 msgid ""
@@ -397,16 +495,23 @@ msgid ""
 "<strong>document those rules through providing charters</strong> to "
 "subscribers, moderators and owners;"
 msgstr ""
+"meghatározni a listatagok, -szerkesztők és -tulajdonosok számára, hogy "
+"<strong>mik a szolgáltatás használatának feltételei, szabályai</strong> "
+"valamint <strong>közzétenni ezt a szabályzatot</strong>"
 
 #: ../web_tt2/help_introduction.tt2:90
 msgid "<strong>approve of requests of mailing list creations</strong>;"
 msgstr ""
+"<strong>az új listák létrehozására vonatkozó kérelmek elbírálása</strong>"
 
 #: ../web_tt2/help_introduction.tt2:91
 msgid ""
 "<strong>temporarily replace list owners</strong> when necessary; on the "
 "other hand, listmasters are not supposed to take the place of moderators."
 msgstr ""
+"<strong>átmenetileg helyettesíteni a listatulajdonosokat</strong> ha a "
+"szükség úgy kívánja. Másrészt azonban nem helyes, ha a listamesterek "
+"moderátori feladatokat vesznek át."
 
 #: ../web_tt2/help_introduction.tt2:93
 msgid ""
@@ -415,10 +520,15 @@ msgid ""
 "order not to flood listmasters with messages, it is recommended that "
 "subscribers rather turn to list owners."
 msgstr ""
+"A listatulajdonosok és szerkesztők a listamesterekhez fordulhatnak</strong>, "
+"ha olyan gondjuk támad, amit a dokumentáció alapján nem tudnak megoldani, "
+"vagy egyszerűen tanácsra van szükségük. Fontos azonban, hogy a listatagok "
+"első körben a saját listatulajdonosukat keressék meg, ha problémájuk van, "
+"különben a listamestereket könnyen eláraszthatják az ilyen feladatok."
 
 #: ../web_tt2/help_introduction.tt2:95
 msgid "Owners"
-msgstr ""
+msgstr "Tulajdonosok"
 
 #: ../web_tt2/help_introduction.tt2:96
 msgid ""
@@ -426,6 +536,9 @@ msgid ""
 "person who requested the list creation or who became responsible for it. "
 "<strong>His/her role</strong>:"
 msgstr ""
+"A lista tulajdonosa rendszerint az, aki létrehozta a listát</strong>, vagy "
+"aki ezt kezdeményezte, ill. aki vállalta a tulajdonossággal együtt járó "
+"feladatokat. <strong>Feladatai</strong>:"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:98
@@ -433,6 +546,8 @@ msgid ""
 "<strong>define the <a href=\"%1/help/admin#edit_list\">way the list will be "
 "used</a></strong>;"
 msgstr ""
+"<strong>meghatározni <a href=\"%1/help/admin#edit_list\">a lista működési "
+"módját</a></strong>"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:99
@@ -440,6 +555,8 @@ msgid ""
 "<strong> write a <a href=\"%1/help/admin#charter\">list charter</a></strong> "
 "aimed at subscribers;"
 msgstr ""
+"<strong><a href=\"%1/help/admin#charter\">szabályzatot írni a lista "
+"működéséről</a></strong> a tagok számára"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:100
@@ -447,6 +564,8 @@ msgid ""
 "<strong>appoint one or several <a href=\"%1/help/listconfig#description"
 "\">moderators</a></strong>;"
 msgstr ""
+"<strong>kijelölni egy vagy több <a href=\"%1/help/listconfig#description"
+"\">szerkesztőt</a></strong> (ha ez szükséges)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:101
@@ -454,6 +573,8 @@ msgid ""
 "<strong>manage <a href=\"%1/help/admin#manage_members\">subscriptions and "
 "unsubscriptions</a></strong>;"
 msgstr ""
+"<strong>felügyelni <a href=\"%1/help/admin#manage_members\">a lista "
+"tagjainak fel- és leiratkozását</a></strong>"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:102
@@ -462,16 +583,20 @@ msgid ""
 "admin#manage_shared\">shared document web space</a></strong> at the "
 "subscribers' disposal;"
 msgstr ""
+"<strong>eldönteni, hogy a listának szüksége van-e <a href=\"%1/help/"
+"admin#manage_shared\">közös dokumentumtárra</a></strong>"
 
 #: ../web_tt2/help_introduction.tt2:103
 msgid ""
 "<strong>answer questions from subscribers and potential subscribers about "
 "the list;</strong>"
 msgstr ""
+"<strong>válaszolni azokra a listára vonatkozó kérdésekre, amiket a lista "
+"tagjai vagy a tagság iránt érdeklődők tesznek föl</strong>"
 
 #: ../web_tt2/help_admin.tt2:253 ../web_tt2/help_introduction.tt2:104
 msgid "etc."
-msgstr ""
+msgstr "stb."
 
 #: ../web_tt2/help_introduction.tt2:106
 msgid ""
@@ -479,10 +604,13 @@ msgid ""
 "strong> is reserved to the list's creator; other owners have a 'Normal' "
 "profile, which has fewer prerogatives."
 msgstr ""
+"Egy listának több tulajdonosa is lehet. Van egy ún.  <strong>\"kiemelt "
+"tulajdonos\"</strong>  (ez rendszerint a lista létrehozója) a többi "
+"tulajdonosok valamivel kevesebb joggal rendelkeznek."
 
 #: ../web_tt2/help_introduction.tt2:108
 msgid "Moderators"
-msgstr ""
+msgstr "Szerkesztők (moderátorok)"
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:110
@@ -495,24 +623,36 @@ msgid ""
 "is possibly followed by a notice to the sender in order to explain the "
 "reason for that rejection."
 msgstr ""
+"<strong>A szerkesztőket a listatulajdonos nevezi ki</strong>. A moderált "
+"listákra beérkező üzenetek először a csak a szerkesztőkhöz jutnak el, ők "
+"döntik el, hogy <strong>a hozzászólás megfelel-e a lista céljainak, "
+"szabályainak, és vagy jóváhagyják a levél listára kerülését, vagy "
+"elutasítják</strong>. Ha egy levél elutasításra kerül, akkor a feladó "
+"rendszerint kap egy üzenetet, amiben a szerkesztő jelezheti az elutasítás "
+"okát."
 
 #: ../web_tt2/help_introduction.tt2:111
 msgid ""
 "A list can have <strong>one or several moderators</strong>; generally, the "
 "list owner is also a moderator."
 msgstr ""
+"A listának <strong>egy vagy több szerkesztője is lehet</strong>; a "
+"listatulajdonosnak szerkesztői joga is van, így ezt a feladatot is "
+"elláthatja."
 
 #: ../web_tt2/help_introduction.tt2:112
 msgid "This concerns only moderated lists."
-msgstr ""
+msgstr "Mindez természetesen csak a moderált listákat érinti."
 
 #: ../web_tt2/help_introduction.tt2:114
 msgid "Regulatory framework"
-msgstr ""
+msgstr "Szabályzatok"
 
 #: ../web_tt2/help_introduction.tt2:115
 msgid "The use of a mailing list service means respecting a number of rules:"
 msgstr ""
+"A levelezőlista-szolgáltatás használata során néhány szabályt be kell "
+"tartani:"
 
 #: ../web_tt2/help_introduction.tt2:117
 msgid ""
@@ -520,18 +660,25 @@ msgid ""
 "charter on subscription. Then they are obliged to respect all the rules "
 "contained in that charter."
 msgstr ""
+"A legtöbb levelezőlista-szolgáltatónál a felhasználók kapnak egy "
+"\"Felhasználói szabályzatot\" a listákra történő feliratkozáskor. A "
+"szolgáltatás használata során ezeket a szabályokat kell betartaniuk."
 
 #: ../web_tt2/help_introduction.tt2:118
 msgid ""
 "If available, list owners and moderators have to conform to the Owner and "
 "moderator charter."
 msgstr ""
+"A listatulajdonosok és szerkesztők részére gyakran külön szabályzatot "
+"készítenek."
 
 #: ../web_tt2/help_introduction.tt2:119
 msgid ""
 "The use of mailing lists naturally means respecting the rules of good "
 "practices as regards email (the \"Netiquette\")."
 msgstr ""
+"A levelezőlisták használatakor természetesen figyelembe vesszük az "
+"Interneten egyébként is javasolt illemszabályokat (\"Netikett\")."
 
 #. (path_cgi)
 #: ../web_tt2/help_introduction.tt2:121
@@ -541,10 +688,14 @@ msgid ""
 "about <a href=\"%1/help/admin#rulesadmin\">good practices for owners and "
 "moderators</a>."
 msgstr ""
+"További tudnivalók olvashatók a  dokumentáció <a href=\"%1/help/"
+"sendmsg#rulesuser\">\"Tanácsok listatagoknak\"</a> és a <a href=\"%1/help/"
+"admin#rulesadmin\">\"Tanácsok listatulajdonosoknak és szerkesztőknek\"</a> "
+"című részein."
 
 #: ../web_tt2/help_user.tt2:3
 msgid "Mailing lists - User Guide"
-msgstr ""
+msgstr "Levelezőlisták - Felhasználói leírás"
 
 #: ../web_tt2/help_user.tt2:5
 msgid "How the mailing list service works"
