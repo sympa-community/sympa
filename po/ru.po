@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2011-07-26 12:54+0200\n"
 "Last-Translator: Serguei S. Dukachev <iam@dukess.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.1.2\n"
@@ -9594,12 +9594,6 @@ msgstr "Вы не получаете свои же письма"
 msgid "Gecos for service mail sent by Sympa itself"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1339 ../src/lib/confdef.pm:351
-#, fuzzy
-msgid "Should not be changed ! May invalid all user password"
-msgstr ""
-"Не должен меняться! Может сделать недействительными все пароли пользоватлей"
-
 #: ../src/lib/confdef.pm:476
 msgid ""
 "comma separated list of operations for which blacklist filter is applied"
@@ -9689,18 +9683,6 @@ msgstr ""
 msgid "All spool are created at runtime by sympa.pl"
 msgstr ""
 
-#: ../src/lib/confdef.pm:669
-msgid "Directory for incoming spool"
-msgstr "Каталог для входящей очереди"
-
-#: ../src/lib/confdef.pm:698
-msgid "Directory for outgoing spool"
-msgstr "Каталог для исходящей очереди"
-
-#: ../src/lib/confdef.pm:710
-msgid "Directory for bounce incoming spool"
-msgstr "Каталог для очереди возвращённых сообщений"
-
 #: ../src/lib/confdef.pm:722
 msgid "Directory for automatic list creation spool"
 msgstr ""
@@ -9716,36 +9698,6 @@ msgid ""
 "packages installed."
 msgstr ""
 
-#: ../src/lib/confdef.pm:792
-msgid "Default language (one of supported languages)"
-msgstr "Язык по умолчанию (один из поддерживаемых языков)"
-
-#: ../src/lib/confdef.pm:796
-msgid "This is the default language used by Sympa"
-msgstr "Это язык, используемый Sympa по умолчанию "
-
-#: ../src/lib/confdef.pm:813
-msgid "Welcome message return-path ( unique | owner )"
-msgstr "Обратный адрес для приветственного сообщения (unique | owner)"
-
-#: ../src/lib/confdef.pm:815
-msgid "If set to unique, new subcriber is removed if welcome message bounce"
-msgstr ""
-"Если установлен в unique, новый подписчик будет удалён в случае возврата "
-"приветственного сообщения"
-
-#: ../src/lib/confdef.pm:820
-msgid "Remind message return-path ( unique | owner )"
-msgstr "Обратный адрес для сообщения-напоминания (unique | owner)"
-
-#: ../src/lib/confdef.pm:822
-msgid ""
-"If set to unique, subcriber is removed if remind message bounce, use with "
-"care"
-msgstr ""
-"Если установлен в unique, подписчик будет удалён в случае возврата "
-"сообщения-напоминания. Используйте этот режим с осторожностью."
-
 #: ../src/lib/confdef.pm:831
 msgid "Task name for expiration of old bounces"
 msgstr ""
@@ -9758,26 +9710,6 @@ msgstr ""
 msgid "Bouncing email rate for halt the list (not implemented)"
 msgstr ""
 
-#: ../src/lib/confdef.pm:884
-msgid "Not yet used in current version, Default is 50"
-msgstr "В текущей версии не используется, по умолчанию равно 50"
-
-#: ../src/lib/confdef.pm:904
-msgid ""
-"Use of binary version of the list config structure on disk (none | "
-"binary_file)"
-msgstr ""
-"Использовать двоичную версию файла конфигурации списка рассылки (none | "
-"binary_file)"
-
-#: ../src/lib/confdef.pm:907
-msgid ""
-"Set this parameter to \"binary_file\" if you manage a big amount of lists "
-"(1000+); it should make the web interface startup faster"
-msgstr ""
-"Установите значение параметра в \"binary_file\", если Вы управляете большим "
-"(1000+) количеством списков рассылки; это ускорит запуск web-интерфейса"
-
 #: ../src/lib/confdef.pm:912
 msgid "flock | nfs"
 msgstr ""
@@ -9786,27 +9718,9 @@ msgstr ""
 msgid "Sympa commands priority"
 msgstr ""
 
-#: ../src/lib/confdef.pm:946
-msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
-msgstr "Тип базы данных (mysql|Pg|Oracle|Sybase|SQLite)"
-
 #: ../src/lib/confdef.pm:949
 msgid "Be careful to the case"
 msgstr ""
-
-#: ../src/lib/confdef.pm:957
-msgid "With SQLite, the name of the DB corresponds to the DB file"
-msgstr ""
-"При использовании SQLite имя базы данных совпадает с именем файла базы "
-"данных"
-
-#: ../src/lib/confdef.pm:963
-msgid "Hostname of the database server"
-msgstr "Имя сервера СУБД"
-
-#: ../src/lib/confdef.pm:970
-msgid "Port of the database server"
-msgstr "Порт сервера СУБД"
 
 #: ../src/lib/confdef.pm:989
 msgid ""
@@ -9846,14 +9760,6 @@ msgid ""
 "members with data sources."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1075
-msgid "Loop prevention"
-msgstr "Предотвращение зацикливания"
-
-#: ../src/lib/confdef.pm:1108
-msgid "Path to OpenSSL"
-msgstr "Путь к OpenSSL"
-
 #: ../src/lib/confdef.pm:1111
 msgid "Sympa recognizes S/MIME if OpenSSL is installed"
 msgstr ""
@@ -9866,10 +9772,6 @@ msgstr ""
 msgid "File containing bundled trusted CA certificates"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1134
-msgid "Password used to crypt lists private keys"
-msgstr "Пароль, используемый для шифрования приватных ключей списков рассылок"
-
 #: ../src/lib/confdef.pm:1158
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
@@ -9878,10 +9780,6 @@ msgid ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 msgstr ""
-
-#: ../src/lib/confdef.pm:1165
-msgid "Location of the file where DKIM private key is stored"
-msgstr "Путь к файлу, в котором хранятся секретные ключи DKIM"
 
 #: ../src/lib/confdef.pm:1172
 msgid ""
@@ -9994,18 +9892,6 @@ msgstr ""
 msgid "Password case (insensitive | sensitive)"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1344
-msgid "Title of main Web page"
-msgstr "Заголовок главной веб-страницы"
-
-#: ../src/lib/confdef.pm:1352
-msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
-msgstr "Установлен ли модуль fast_cgi для веб-сервера Apache или Roxen (0 | 1)"
-
-#: ../src/lib/confdef.pm:1355
-msgid "This module provide much faster web interface"
-msgstr "Этот модуль обеспечивает более быстрый web-интерфейс"
-
 #: ../src/lib/confdef.pm:1358
 msgid "Virtual host specific parameters"
 msgstr ""
@@ -10013,24 +9899,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:1362
 msgid "URL of a virtual host"
 msgstr ""
-
-#: ../src/lib/confdef.pm:1393
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-"Значение  по умолчанию максимального количества подписчиковв каждом списке "
-"рассылки (0 означает \"без ограничений\")"
-
-#: ../src/lib/confdef.pm:1413
-msgid ""
-"If set to \"on\", users will be able to post messages in HTML using a "
-"javascript WYSIWYG editor."
-msgstr ""
-"Если установлен в \"on\", пользователи могут отправлять сообщения в формате "
-"HTML, используя WYSIWYG-редактор."
-
-#: ../src/lib/confdef.pm:1421
-msgid "Path to the javascript file making the WYSIWYG HTML editor available"
-msgstr "Путь к файлу с javascript, содержащим WYSIWYG-редактор HTML."
 
 #: ../src/lib/confdef.pm:1428
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
@@ -10043,11 +9911,6 @@ msgid ""
 "be used to authenticate the user. Otherwise, use of the first email returned "
 "by the LDAP server will be used."
 msgstr ""
-
-#: ../src/lib/confdef.pm:1467
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr ""
-"Если установлен в \"on\", включается поддержка устаревших кодировок символов."
 
 #: ../src/lib/confdef.pm:1469
 msgid ""
@@ -10099,22 +9962,6 @@ msgstr ""
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
-#: ../wwsympa/wwsympa.fcgi.in:4877
-msgid "Unable to add user %s in list %s : %s"
-msgstr "Невозможно добавить пользователя %s в список рассылки %s : %s"
-
-#: ../web_tt2/edit_config.tt2:7
-msgid "[%confparam.title%]"
-msgstr "[%confparam.title%]"
-
-#: ../web_tt2/edit_config.tt2:16
-msgid "[% confparam.title %]"
-msgstr "[% confparam.title %]"
-
-#: ../web_tt2/edit_config.tt2:28
-msgid "[% confparam.query %]"
-msgstr "[% confparam.query %]"
-
 #: ../src/lib/confdef.pm:43
 msgid "Directories and file location"
 msgstr ""
@@ -10123,9 +9970,135 @@ msgstr ""
 msgid "Syslog"
 msgstr ""
 
-#: ../src/lib/confdef.pm:260
-msgid "Log intensity"
-msgstr "Подробность протокола"
+#, fuzzy
+#~ msgid "Should not be changed ! May invalid all user password"
+#~ msgstr ""
+#~ "Не должен меняться! Может сделать недействительными все пароли "
+#~ "пользоватлей"
+
+#~ msgid "Directory for incoming spool"
+#~ msgstr "Каталог для входящей очереди"
+
+#~ msgid "Directory for outgoing spool"
+#~ msgstr "Каталог для исходящей очереди"
+
+#~ msgid "Directory for bounce incoming spool"
+#~ msgstr "Каталог для очереди возвращённых сообщений"
+
+#~ msgid "Default language (one of supported languages)"
+#~ msgstr "Язык по умолчанию (один из поддерживаемых языков)"
+
+#~ msgid "This is the default language used by Sympa"
+#~ msgstr "Это язык, используемый Sympa по умолчанию "
+
+#~ msgid "Welcome message return-path ( unique | owner )"
+#~ msgstr "Обратный адрес для приветственного сообщения (unique | owner)"
+
+#~ msgid "If set to unique, new subcriber is removed if welcome message bounce"
+#~ msgstr ""
+#~ "Если установлен в unique, новый подписчик будет удалён в случае возврата "
+#~ "приветственного сообщения"
+
+#~ msgid "Remind message return-path ( unique | owner )"
+#~ msgstr "Обратный адрес для сообщения-напоминания (unique | owner)"
+
+#~ msgid ""
+#~ "If set to unique, subcriber is removed if remind message bounce, use with "
+#~ "care"
+#~ msgstr ""
+#~ "Если установлен в unique, подписчик будет удалён в случае возврата "
+#~ "сообщения-напоминания. Используйте этот режим с осторожностью."
+
+#~ msgid "Not yet used in current version, Default is 50"
+#~ msgstr "В текущей версии не используется, по умолчанию равно 50"
+
+#~ msgid ""
+#~ "Use of binary version of the list config structure on disk (none | "
+#~ "binary_file)"
+#~ msgstr ""
+#~ "Использовать двоичную версию файла конфигурации списка рассылки (none | "
+#~ "binary_file)"
+
+#~ msgid ""
+#~ "Set this parameter to \"binary_file\" if you manage a big amount of lists "
+#~ "(1000+); it should make the web interface startup faster"
+#~ msgstr ""
+#~ "Установите значение параметра в \"binary_file\", если Вы управляете "
+#~ "большим (1000+) количеством списков рассылки; это ускорит запуск web-"
+#~ "интерфейса"
+
+#~ msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
+#~ msgstr "Тип базы данных (mysql|Pg|Oracle|Sybase|SQLite)"
+
+#~ msgid "With SQLite, the name of the DB corresponds to the DB file"
+#~ msgstr ""
+#~ "При использовании SQLite имя базы данных совпадает с именем файла базы "
+#~ "данных"
+
+#~ msgid "Hostname of the database server"
+#~ msgstr "Имя сервера СУБД"
+
+#~ msgid "Port of the database server"
+#~ msgstr "Порт сервера СУБД"
+
+#~ msgid "Loop prevention"
+#~ msgstr "Предотвращение зацикливания"
+
+#~ msgid "Path to OpenSSL"
+#~ msgstr "Путь к OpenSSL"
+
+#~ msgid "Password used to crypt lists private keys"
+#~ msgstr ""
+#~ "Пароль, используемый для шифрования приватных ключей списков рассылок"
+
+#~ msgid "Location of the file where DKIM private key is stored"
+#~ msgstr "Путь к файлу, в котором хранятся секретные ключи DKIM"
+
+#~ msgid "Title of main Web page"
+#~ msgstr "Заголовок главной веб-страницы"
+
+#~ msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
+#~ msgstr ""
+#~ "Установлен ли модуль fast_cgi для веб-сервера Apache или Roxen (0 | 1)"
+
+#~ msgid "This module provide much faster web interface"
+#~ msgstr "Этот модуль обеспечивает более быстрый web-интерфейс"
+
+#~ msgid ""
+#~ "Default limit for the number of subscribers per list (0 means no limit)"
+#~ msgstr ""
+#~ "Значение  по умолчанию максимального количества подписчиковв каждом "
+#~ "списке рассылки (0 означает \"без ограничений\")"
+
+#~ msgid ""
+#~ "If set to \"on\", users will be able to post messages in HTML using a "
+#~ "javascript WYSIWYG editor."
+#~ msgstr ""
+#~ "Если установлен в \"on\", пользователи могут отправлять сообщения в "
+#~ "формате HTML, используя WYSIWYG-редактор."
+
+#~ msgid "Path to the javascript file making the WYSIWYG HTML editor available"
+#~ msgstr "Путь к файлу с javascript, содержащим WYSIWYG-редактор HTML."
+
+#~ msgid "If set to \"on\", enables support of legacy character set"
+#~ msgstr ""
+#~ "Если установлен в \"on\", включается поддержка устаревших кодировок "
+#~ "символов."
+
+#~ msgid "Unable to add user %s in list %s : %s"
+#~ msgstr "Невозможно добавить пользователя %s в список рассылки %s : %s"
+
+#~ msgid "[%confparam.title%]"
+#~ msgstr "[%confparam.title%]"
+
+#~ msgid "[% confparam.title %]"
+#~ msgstr "[% confparam.title %]"
+
+#~ msgid "[% confparam.query %]"
+#~ msgstr "[% confparam.query %]"
+
+#~ msgid "Log intensity"
+#~ msgstr "Подробность протокола"
 
 #~ msgid ""
 #~ "You <span style=\"font-weight: bold; font-size: 10px\">are</span> "
