@@ -44,12 +44,7 @@ our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetc
 ## "status" can have value 'failed'
 ## 'first_try' contains an epoch date
 my %db_connections;
-our %superclasses = ('mysql' => 'DBManipulatorMySQL',
-		    'pg' => 'DBManipulatorPostgres',
-		    'sqlite' => 'DBManipulatorSQLite',
-		    'oracle' => 'DBManipulatorOracle',
-		    'sybase' => 'DBManipulatorSybase',
-		    );
+
 sub new {
     my $pkg = shift;
     my $param = shift;
