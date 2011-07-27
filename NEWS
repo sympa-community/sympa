@@ -3,6 +3,85 @@
 
 (See Changelog file for the full changes log)
 
+6.1.6		July 20, 2011
+
+  Bug fixes:
+
+	[7135] web_tt2/notice.tt2, wwsympa/wwsympa.fcgi.in: [Reported by J.C.
+	granger, INRA] In the "Manage your subscriptions" page, list members
+	could unsubscribe from list where unsubscription was closed. Fixed by
+	checking authorization scenarios.
+
+	[7132] wwsympa/wwsympa.fcgi.in: [Reported by F. Gadin, univ. La
+	Rochelle] The code in wwsympa used the - deprecated - way of testing
+	hash emptiness. Fixed by removing the "defined" pragma when testing
+	whether the has contains a defined value.
+
+	[7131] src/lib/tools.pm:  In some cases, sympa.pl would reach 100% CPU
+	while processing a message. Fixed by updating the way the text is
+	wrapped when a message is constituted.
+
+	[7124] src/etc/mhonarc-ressources.tt2: [#7055][Submitted by Andras
+	Bendzsak] email with RFC5322-incompliant mailbox quoted by MTA such as
+	Postfix messes archive browsing.  Backported from trunk.
+
+	[7119] wwsympa/bounced.pl.in:  filehandle was not closed.  Backport
+	from trunk.
+
+6.1.5		June 06, 2011
+
+  Changes:
+
+	[7014] src/lib/Conf.pm: [#7071]CGI.pm changes environment variable
+	names ('-' => '_')
+	While using generic_sso, declared environment variable names needs to
+	be transformed accordingly
+
+  Bug fixes:
+
+	[7059] wwsympa/SympaSession.pm: [Reported by V. Carpier, AC Réunion
+	(but seriously, he was in the CRU before!)] SympaSession.pm caused
+	"fetch without execute" errors to be issued into the Apache error logs.
+	This was due to a second call to "fetchrow_hashref" after all the lines
+	had already been fetched, and the statement handler subsequently
+	finished. Fixed by including result fetching into a loop.
+
+	[7055] src/lib/Upgrade.pm:  reported by gauthier Catteau Message-ID may
+	be longer than 100 chars and so they may result in a SQL error.
+
+	[7019] src/lib/Scenario.pm: [#7521][Submitted by E. del Rio] Explicit
+	incldes in scenarios did not longer work because the rules using them
+	did not have an authentification method. Fixed by adding them to the
+	scenario list as soon as they are found in the main scenario body.
+
+	[7012] src/lib/SQLSource.pm: [Reported by J.C. Vergerolles, univ.
+	Bordeaux 2] Some DBD, such as DBD-Oracle, issue croak statements when
+	the connexion can't be established. This lead to sympa crashing just
+	beacuse the database is unreachable. Fixed putting each database
+	connection attempt in an eval block. If the connection fails, Sympa
+	retries to connect if asked or simply returns undef after logging.
+
+	[7011] src/lib/Conf.pm: [#7071][reported by I.Krzysztof]While using
+	generic_sso, allow other characters for the
+	'netid_http_header'parameter (including hyphen).
+
+	[7004] mail_tt2/sendssopasswd.tt2, web_tt2/sso_login.tt2,
+	wwsympa/wwsympa.fcgi.in: [#7070]Login with generic_sso failed when
+	'force_email_verify' was enabled
+	The problem was due to the user password no more stored in the user DB.
+	Usage of password to validate the user email address has been replaced
+	with one-time tickets.
+
+	[7003] src/lib/List.pm, wwsympa/wwsympa.fcgi.in: [#5989][submited by
+	A.Bendzsak] change_email web feature did not updae the netidmap_table.
+	Now it does.
+
+	[7002] wwsympa/wwslib.pm: [#3049][reported by L. Foucher, IUT P.
+	Sabatier] CAS authentication failed when Sympa web server was behind an
+	HTTP reverse proxy. The URL of the service passed to the CAS server was
+	incorrect. Now using get_header_field() that can use
+	'HTTP_X_FORWARDED_HOST' env variable if set.
+
 6.2a.6		May 11, 2011
 
   Features:
