@@ -12,13 +12,13 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.4, 6.2a.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2011-06-01 06:04+0200\n"
+"PO-Revision-Date: 2011-07-27 16:58+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.1.2\n"
 
@@ -9162,7 +9162,7 @@ msgstr "リストのメンバを定期的にデータソースと同期させる
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
-msgstr ""
+msgstr "この期間がすぎたら、なんらかの操作の際に必要に応じてリストの読者をデータソースと同期する。"
 
 #: ../src/lib/confdef.pm:1070
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
@@ -10380,24 +10380,21 @@ msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #: ../wwsympa/wwsympa.fcgi.in:15644
-#, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
-msgstr "申込をリストのオーナーに回送しました"
+msgstr "%s メーリングリストからの登録解除申込をリストのオーナーに回送しました"
 
 #: ../wwsympa/wwsympa.fcgi.in:15646
-#, fuzzy
 msgid "You were successfully unsubscribed from list %s."
-msgstr "あなたは %1 メーリングリストの登録解除を申し込みました。"
+msgstr "あなたは %1 メーリングリストから登録解除されました。"
 
 #: ../wwsympa/wwsympa.fcgi.in:15650
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
-msgstr ""
+msgstr "%s メーリングリストからの登録解除は認められませんでした。このリストは登録解除ができません。"
 
 #: ../wwsympa/wwsympa.fcgi.in:15652
-#, fuzzy
 msgid "Unsubscription from list %s failed."
-msgstr "%1 メーリングリストの登録解除"
+msgstr "%1 メーリングリストからの登録解除が失敗しました。"
 
 #: ../wwsympa/wwsympa.fcgi.in:16248
 msgid "Mail sending"
