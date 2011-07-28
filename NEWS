@@ -3,6 +3,63 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.7		July 28, 2011
+
+  Features:
+
+	[7144] src/lib/DBManipulatorDefault.pm,
+	src/lib/DBManipulatorPostgres.pm, src/lib/SDM.pm,
+	src/lib/Sympa/DatabaseDescription.pm:  Full support of automatic
+	database upgrade for PostgreSQL.
+
+
+
+  Changes:
+
+	[7142] src/lib/Conf.pm, src/lib/SDM.pm:  When no listmaster is defined
+	for a robot, the main server listmasters are the default listmasters.
+
+	[7093] src/lib/confdef.pm, src/sympa_wizard.pl.in: [#7689][Submitted by
+	S. Ikeda] Several improvments in the sympa_wizard.pl and default
+	parameters handling:
+	* Duplicated entries in confdef.pm were removed.
+	* Parameters definitions were sorted according to Sympa.org site
+	documentaion.
+	* parameter ``domain'' and ``wwsympa_url'' are allocated values when
+	sympa_wzard.pl is run.
+	* Some parameters were not found in Sympa 6.2 online documentation:
+	* list_check_helo
+	* bulk_sleep
+	They are now listed at and after ``Tag based spam filtering'' category.
+	* Enhancement: sympa_wizard.pl create_configuration() was i18n'ized.
+	* Some parameter defaults are differ between confdef.pm and online doc.
+	pictures_feature, automatic_list_creation,
+	misaddressed_commands_regexp, remove_headers, list_check_suffixes,
+	process_bouncers_task, session_table_ttl. 
+
+  Bug fixes:
+
+	[7135] web_tt2/notice.tt2, wwsympa/wwsympa.fcgi.in: [Reported by J.C.
+	granger, INRA] In the "Manage your subscriptions" page, list members
+	could unsubscribe from list where unsubscription was closed. Fixed by
+	checking authorization scenarios.
+
+	[7132] wwsympa/wwsympa.fcgi.in: [Reported by F. Gadin, univ. La
+	Rochelle] The code in wwsympa used the - deprecated - way of testing
+	hash emptiness. Fixed by removing the "defined" pragma when testing
+	whether the has contains a defined value.
+
+	[7131] src/lib/tools.pm:  In some cases, sympa.pl would reach 100% CPU
+	while processing a message. Fixed by updating the way the text is
+	wrapped when a message is constituted.
+
+	[7124] src/etc/mhonarc-ressources.tt2: [#7055][Submitted by Andras
+	Bendzsak] email with RFC5322-incompliant mailbox quoted by MTA such as
+	Postfix messes archive browsing.  Backported from trunk.
+
+	[7119] wwsympa/bounced.pl.in:  filehandle was not closed.  Backport
+	from trunk.
+
 6.1.6		July 20, 2011
 
   Bug fixes:
