@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2011-07-27 16:58+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.1.2\n"
 
@@ -3102,7 +3102,7 @@ msgstr "Sympa の翻訳"
 msgid "Submitting a bug, a feature request"
 msgstr "バグや仕様追加希望の登録"
 
-#: ../src/lib/confdef.pm:1140 ../web_tt2/nav.tt2:105
+#: ../src/lib/confdef.pm:1138 ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -8683,7 +8683,7 @@ msgstr ""
 "Secret used by Sympa 生成するウェブクッキー (MD5 ダイジェスト) を安全なものに"
 "するための、秘密の種"
 
-#: ../src/lib/confdef.pm:1339 ../src/lib/confdef.pm:351
+#: ../src/lib/confdef.pm:1337 ../src/lib/confdef.pm:351
 msgid "Should not be changed ! May invalid all user password"
 msgstr ""
 "これは、一度決めたら二度と変更してはなりません。すべての人のパスワードが使え"
@@ -8800,14 +8800,14 @@ msgstr ""
 "sympa デーモンやウェブインタフェースがそのスクリプトを実行します。スパムとさ"
 "れたメッセージはスクリプトの標準入力へ送られます。"
 
-#: ../src/lib/confdef.pm:493
+#: ../src/lib/confdef.pm:492
 msgid ""
 "Default maximum size (in bytes) for messages (can be re-defined for each "
 "list)"
 msgstr ""
 "メッセージのサイズの上限 (バイト) の初期値 (リストごとに再設定できます)"
 
-#: ../src/lib/confdef.pm:510
+#: ../src/lib/confdef.pm:509
 msgid ""
 "Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
 "file allows a different tuning per destination domain."
@@ -8815,15 +8815,15 @@ msgstr ""
 "Sendmail の呼び出しごとの宛先数上限。nrcpt_by_domain.conf 設定ファイルを使え"
 "ば、宛先のドメインごとにこの数を調整できます。"
 
-#: ../src/lib/confdef.pm:516
+#: ../src/lib/confdef.pm:515
 msgid "Max. number of different domains per call to Sendmail"
 msgstr "Sendmail の呼び出しごとの宛先ドメイン数上限"
 
-#: ../src/lib/confdef.pm:526
+#: ../src/lib/confdef.pm:525
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
 msgstr "メール転送エージェント (Sendmail、Postfix、exim、qmail) のパス"
 
-#: ../src/lib/confdef.pm:529
+#: ../src/lib/confdef.pm:528
 msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
@@ -8831,19 +8831,19 @@ msgstr ""
 "Sendmail 互換の実行ファイルを指定しなければいけません (たとえば、Postfix には"
 "「sendmail」という名の実行ファイルが同梱されています)。"
 
-#: ../src/lib/confdef.pm:541
+#: ../src/lib/confdef.pm:540
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr "RFC2369 のメーリングリストヘッダのうち、どれを付加するか"
 
-#: ../src/lib/confdef.pm:547
+#: ../src/lib/confdef.pm:546
 msgid "Specify header fields to be removed before message distribution"
 msgstr "メッセージを配送する前に除去するヘッダ"
 
-#: ../src/lib/confdef.pm:557
+#: ../src/lib/confdef.pm:556
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr "自動処理 (cronジョブなど) で送られる電子メールを拒否するか"
 
-#: ../src/lib/confdef.pm:572
+#: ../src/lib/confdef.pm:571
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
 "be created"
@@ -8851,7 +8851,7 @@ msgstr ""
 "リストを作成する前に、リストのエイリアスアドレスと同じアドレスがないかどうか "
 "Sympa が問い合わせる SMTP サーバ"
 
-#: ../src/lib/confdef.pm:574
+#: ../src/lib/confdef.pm:573
 msgid ""
 "Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
 "standard port."
@@ -8859,23 +8859,23 @@ msgstr ""
 "初期値はホスト自身の完全修飾ドメイン名。[ホスト]:[ポート] にすれば非標準ポー"
 "トも指定できます。"
 
-#: ../src/lib/confdef.pm:584
+#: ../src/lib/confdef.pm:583
 msgid "SMTP HELO (EHLO) parameter used for alias verification"
 msgstr "エイリアス問い合わせで使う SMTP HELO (EHLO) パラメータ"
 
-#: ../src/lib/confdef.pm:586
+#: ../src/lib/confdef.pm:585
 msgid "Default value is the host part of list_check_smtp parameter."
 msgstr "初期値は list_check_smtp パラメータのホスト名です。"
 
-#: ../src/lib/confdef.pm:593
+#: ../src/lib/confdef.pm:592
 msgid "Bulk mailer"
 msgstr "一括メール送信機能"
 
-#: ../src/lib/confdef.pm:602
+#: ../src/lib/confdef.pm:601
 msgid "Default priority for a packet to be sent by bulk."
 msgstr "bulk.pl デーモンによる一括送信の優先度"
 
-#: ../src/lib/confdef.pm:609
+#: ../src/lib/confdef.pm:608
 msgid ""
 "Minimum number of packets in database before the bulk forks to increase "
 "sending rate"
@@ -8883,115 +8883,115 @@ msgstr ""
 "データベースにある一括送信パケットがこの数を超えたら、bulk.pl デーモンは "
 "fork して配送頻度を上げる"
 
-#: ../src/lib/confdef.pm:616
+#: ../src/lib/confdef.pm:615
 msgid "Max number of bulks that will run on the same server"
 msgstr "ひとつのサーバで実行できる bulk.pl デーモンの最大数"
 
-#: ../src/lib/confdef.pm:623
+#: ../src/lib/confdef.pm:622
 msgid ""
 "The number of seconds a slave bulk will remain running without processing a "
 "message before it spontaneously dies."
 msgstr "スレーブの bulk デーモンは、この秒数の間処理がなければ終了する"
 
-#: ../src/lib/confdef.pm:630
+#: ../src/lib/confdef.pm:629
 msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
 msgstr ""
 "bulk デーモンは、送るものがないときはこの秒数だけ休んでから処理を再開する"
 
-#: ../src/lib/confdef.pm:632
+#: ../src/lib/confdef.pm:631
 msgid "Keep it small if you want your server to be reactive."
 msgstr "サーバの反応をよくしたければ、小さい値にしておきます。"
 
-#: ../src/lib/confdef.pm:637
+#: ../src/lib/confdef.pm:636
 msgid ""
 "Number of seconds a master bulk waits between two packets number checks."
 msgstr "マスタの bulk デーモンが一括配送パケットの数を調べる間隔 (秒)"
 
-#: ../src/lib/confdef.pm:639
+#: ../src/lib/confdef.pm:638
 msgid ""
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr "大量のメッセージで配送の負荷が高くなりそうなら、小さくしておきます。"
 
-#: ../src/lib/confdef.pm:642
+#: ../src/lib/confdef.pm:641
 msgid "Quotas"
 msgstr "容量制限"
 
-#: ../src/lib/confdef.pm:647
+#: ../src/lib/confdef.pm:646
 msgid "Default disk quota for shared repository"
 msgstr "共有文書保管庫の容量制限の初期値"
 
-#: ../src/lib/confdef.pm:657
+#: ../src/lib/confdef.pm:655
 msgid "Spool related"
 msgstr "キュー関連"
 
-#: ../src/lib/confdef.pm:662
+#: ../src/lib/confdef.pm:660
 msgid "Directory containing various specialized spools"
 msgstr "さまざまな用途のキューを収めているディレクトリ"
 
-#: ../src/lib/confdef.pm:664
+#: ../src/lib/confdef.pm:662
 msgid "All spool are created at runtime by sympa.pl"
 msgstr "キューは sympa デーモンが実行時に作成します。"
 
-#: ../src/lib/confdef.pm:669
+#: ../src/lib/confdef.pm:667
 msgid "Directory for incoming spool"
 msgstr "受け付けキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:680
+#: ../src/lib/confdef.pm:678
 msgid "Directory for moderation spool"
 msgstr "モデレーション待ちキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:686
+#: ../src/lib/confdef.pm:684
 msgid "Directory for digest spool"
 msgstr "まとめ読みキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:692
+#: ../src/lib/confdef.pm:690
 msgid "Directory for authentication spool"
 msgstr "認証キューのディレクトリ"
 
-#: ../src/lib/confdef.pm:698
+#: ../src/lib/confdef.pm:696
 msgid "Directory for outgoing spool"
 msgstr "送出キューのディレクトリ"
 
-#: ../src/lib/confdef.pm:704
+#: ../src/lib/confdef.pm:702
 msgid "Directory for topic spool"
 msgstr "トピックキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:710
+#: ../src/lib/confdef.pm:708
 msgid "Directory for bounce incoming spool"
 msgstr "配送エラー受け付けキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:716
+#: ../src/lib/confdef.pm:714
 msgid "Directory for task spool"
 msgstr "タスクキューのディレクトリ"
 
-#: ../src/lib/confdef.pm:722
+#: ../src/lib/confdef.pm:720
 msgid "Directory for automatic list creation spool"
 msgstr "リスト自動作成キューのディレクトリ"
 
-#: ../src/lib/confdef.pm:728
+#: ../src/lib/confdef.pm:726
 msgid "Temporary directory used by OpenSSL and antivirus plugins"
 msgstr "OpenSSLやウィルス検出プラグインが一時ファイルを置くディレクトリ"
 
-#: ../src/lib/confdef.pm:733
+#: ../src/lib/confdef.pm:731
 msgid "Must not be 0."
 msgstr "0 にはできません。"
 
-#: ../src/lib/confdef.pm:772
+#: ../src/lib/confdef.pm:770
 msgid "Internationalization related"
 msgstr "国際化関連"
 
-#: ../src/lib/confdef.pm:777
+#: ../src/lib/confdef.pm:775
 msgid ""
 "Directory containing available NLS catalogues (Message internationalization)"
 msgstr "国際化カタログ (国際化メッセージ) を収めているディレクトリ"
 
-#: ../src/lib/confdef.pm:783
+#: ../src/lib/confdef.pm:781
 msgid "Supported languages"
 msgstr "対応する言語"
 
-#: ../src/lib/confdef.pm:787
+#: ../src/lib/confdef.pm:785
 msgid ""
 "This is the set of language that will be proposed to your users for the "
 "Sympa GUI. Don't select a language if you don't have the proper locale "
@@ -9000,70 +9000,70 @@ msgstr ""
 "Sympaのユーザインタフェースで使える言語の一覧。適切な言語カタログがインストー"
 "ルされていない言語は選ばないようにしましょう。"
 
-#: ../src/lib/confdef.pm:792
+#: ../src/lib/confdef.pm:790
 msgid "Default language (one of supported languages)"
 msgstr "言語の初期値 (対応する言語のうちどれか)"
 
-#: ../src/lib/confdef.pm:796
+#: ../src/lib/confdef.pm:794
 msgid "This is the default language used by Sympa"
 msgstr "これが、Sympa で使う言語の初期値になります。"
 
-#: ../src/lib/confdef.pm:803
+#: ../src/lib/confdef.pm:801
 msgid "Bounce related"
 msgstr "配送エラー関連"
 
-#: ../src/lib/confdef.pm:813
+#: ../src/lib/confdef.pm:811
 msgid "Welcome message return-path ( unique | owner )"
 msgstr "歓迎メッセージのエンベロープ送信者 (unique|owner)"
 
-#: ../src/lib/confdef.pm:815
+#: ../src/lib/confdef.pm:813
 msgid "If set to unique, new subcriber is removed if welcome message bounce"
 msgstr ""
 "unique にすると、歓迎メッセージが配送エラーを起こしたら登録した読者を削除しま"
 "す。"
 
-#: ../src/lib/confdef.pm:820
+#: ../src/lib/confdef.pm:818
 msgid "Remind message return-path ( unique | owner )"
 msgstr "読者登録確認メッセージのエンベロープ送信者 (unique|owner)"
 
-#: ../src/lib/confdef.pm:822
+#: ../src/lib/confdef.pm:820
 msgid ""
 "If set to unique, subcriber is removed if remind message bounce, use with "
 "care"
 msgstr ""
 "unique にすると、登録確認メッセージが配送エラーを起こしたら読者を削除します。"
 
-#: ../src/lib/confdef.pm:831
+#: ../src/lib/confdef.pm:829
 msgid "Task name for expiration of old bounces"
 msgstr "古い配送エラーを消去するタスクの名前"
 
-#: ../src/lib/confdef.pm:875
+#: ../src/lib/confdef.pm:873
 msgid "Bouncing email rate for warn list owner"
 msgstr ""
 "配送エラーを起こしている読者の割合がこのパーセンテージに達したらオーナーに警"
 "告する"
 
-#: ../src/lib/confdef.pm:882
+#: ../src/lib/confdef.pm:880
 msgid "Bouncing email rate for halt the list (not implemented)"
 msgstr ""
 "配送エラーを起こしている読者の割合がこのパーセンテージに達したらリストを停止"
 "する (未実装)"
 
-#: ../src/lib/confdef.pm:884
+#: ../src/lib/confdef.pm:882
 msgid "Not yet used in current version, Default is 50"
 msgstr "現在のバージョンでは使っていません。初期値は 50。"
 
-#: ../src/lib/confdef.pm:899
+#: ../src/lib/confdef.pm:897
 msgid "Tuning"
 msgstr "パフォーマンスチューニング"
 
-#: ../src/lib/confdef.pm:904
+#: ../src/lib/confdef.pm:902
 msgid ""
 "Use of binary version of the list config structure on disk (none | "
 "binary_file)"
 msgstr "リスト設定情報をバイナリファイルとして保存 (none|binary_file)"
 
-#: ../src/lib/confdef.pm:907
+#: ../src/lib/confdef.pm:905
 msgid ""
 "Set this parameter to \"binary_file\" if you manage a big amount of lists "
 "(1000+); it should make the web interface startup faster"
@@ -9071,55 +9071,55 @@ msgstr ""
 "多数のリスト (1000 以上) を運用するのなら、このパラメータを「binary_file」に"
 "しましょう。ウェブインタフェースの起動が速くなります。"
 
-#: ../src/lib/confdef.pm:912
+#: ../src/lib/confdef.pm:910
 msgid "flock | nfs"
 msgstr "ファイルロックの方式 (flock | nfs)"
 
-#: ../src/lib/confdef.pm:916
+#: ../src/lib/confdef.pm:914
 msgid "Sympa commands priority"
 msgstr "Sympa メールコマンドの優先度"
 
-#: ../src/lib/confdef.pm:932
+#: ../src/lib/confdef.pm:930
 msgid "Default priority for list messages"
 msgstr "リストメッセージの優先度の初期値"
 
-#: ../src/lib/confdef.pm:937
+#: ../src/lib/confdef.pm:935
 msgid "Database related"
 msgstr "データベース関連"
 
-#: ../src/lib/confdef.pm:946
+#: ../src/lib/confdef.pm:944
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
 msgstr "データベースの種類 (mysql|Pg|Oracle|Sybase|SQLite)"
 
-#: ../src/lib/confdef.pm:949
+#: ../src/lib/confdef.pm:947
 msgid "Be careful to the case"
 msgstr "大文字と小文字の違いに注意。"
 
-#: ../src/lib/confdef.pm:954
+#: ../src/lib/confdef.pm:952
 msgid "Name of the database"
 msgstr "データベース名"
 
-#: ../src/lib/confdef.pm:957
+#: ../src/lib/confdef.pm:955
 msgid "With SQLite, the name of the DB corresponds to the DB file"
 msgstr "SQLite では、データベースファイルの名前をデータベース名とします。"
 
-#: ../src/lib/confdef.pm:963
+#: ../src/lib/confdef.pm:961
 msgid "Hostname of the database server"
 msgstr "データベースサーバのホスト名"
 
-#: ../src/lib/confdef.pm:970
+#: ../src/lib/confdef.pm:968
 msgid "Port of the database server"
 msgstr "データベースサーバのポート番号"
 
-#: ../src/lib/confdef.pm:978
+#: ../src/lib/confdef.pm:976
 msgid "User for the database connection"
 msgstr "データベース接続のユーザ名"
 
-#: ../src/lib/confdef.pm:986
+#: ../src/lib/confdef.pm:984
 msgid "Password for the database connection"
 msgstr "データベース接続のパスワード"
 
-#: ../src/lib/confdef.pm:989
+#: ../src/lib/confdef.pm:987
 msgid ""
 "What ever you use a password or not, you must protect the SQL server (is it "
 "not a public internet service ?)"
@@ -9127,83 +9127,85 @@ msgstr ""
 "パスワードを使っていても、SQL サーバにアクセスできるホストは制限しましょう "
 "(サービスをインターネットに公開していないでしょうね)。"
 
-#: ../src/lib/confdef.pm:1001
+#: ../src/lib/confdef.pm:999
 msgid "Environment variables setting for database"
 msgstr "データベース接続の環境変数"
 
-#: ../src/lib/confdef.pm:1003
+#: ../src/lib/confdef.pm:1001
 msgid "This is useful for defining ORACLE_HOME "
 msgstr "Oracle で ORACLE_HOME を設定するのに使えます。"
 
-#: ../src/lib/confdef.pm:1009
+#: ../src/lib/confdef.pm:1007
 msgid "Database private extention to subscriber table"
 msgstr "データベースの読者テーブル (subscriber_table) の独自拡張フィールド"
 
-#: ../src/lib/confdef.pm:1011 ../src/lib/confdef.pm:1019
+#: ../src/lib/confdef.pm:1009 ../src/lib/confdef.pm:1017
 msgid "You need to extend the database format with these fields"
 msgstr "データベーススキーマにこのフィールドを追加する必要があります。"
 
-#: ../src/lib/confdef.pm:1017
+#: ../src/lib/confdef.pm:1015
 msgid "Database private extention to user table"
 msgstr "データベースの利用者テーブル (user_table) の独自拡張"
 
-#: ../src/lib/confdef.pm:1036
+#: ../src/lib/confdef.pm:1034
 msgid "Number of months that elapse before a log is expired"
 msgstr "この期間 (月) を過ぎたログは消去する"
 
-#: ../src/lib/confdef.pm:1058
+#: ../src/lib/confdef.pm:1056
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr "リストのメンバを定期的にデータソースと同期させる間隔の初期値"
 
 # 使われているか不明
-#: ../src/lib/confdef.pm:1064
+#: ../src/lib/confdef.pm:1062
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
-msgstr "この期間がすぎたら、なんらかの操作の際に必要に応じてリストの読者をデータソースと同期する。"
+msgstr ""
+"この期間がすぎたら、なんらかの操作の際に必要に応じてリストの読者をデータソー"
+"スと同期する。"
 
-#: ../src/lib/confdef.pm:1070
+#: ../src/lib/confdef.pm:1068
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
 "「SQLクエリでの取り込み」(include_sql_query) の取得タイムアウトの初期値"
 
-#: ../src/lib/confdef.pm:1075
+#: ../src/lib/confdef.pm:1073
 msgid "Loop prevention"
 msgstr "ループ防止"
 
-#: ../src/lib/confdef.pm:1103
+#: ../src/lib/confdef.pm:1101
 msgid "S/MIME configuration"
 msgstr "S/MIME 設定"
 
-#: ../src/lib/confdef.pm:1108
+#: ../src/lib/confdef.pm:1106
 msgid "Path to OpenSSL"
 msgstr "OpenSSL のパス"
 
-#: ../src/lib/confdef.pm:1111
+#: ../src/lib/confdef.pm:1109
 msgid "Sympa recognizes S/MIME if OpenSSL is installed"
 msgstr "OpenSSL をインストールすると、Sympa が S/MIME を扱えるようになります。"
 
-#: ../src/lib/confdef.pm:1118
+#: ../src/lib/confdef.pm:1116
 msgid "Directory containing trusted CA certificates"
 msgstr "信頼する認証局証明書を置くディレクトリ"
 
-#: ../src/lib/confdef.pm:1126
+#: ../src/lib/confdef.pm:1124
 msgid "File containing bundled trusted CA certificates"
 msgstr "信頼する認証局証明書の入ったファイル"
 
-#: ../src/lib/confdef.pm:1134
+#: ../src/lib/confdef.pm:1132
 msgid "Password used to crypt lists private keys"
 msgstr "リストの秘密鍵を暗号化するためのパスワード"
 
-#: ../src/lib/confdef.pm:1151
+#: ../src/lib/confdef.pm:1149
 msgid ""
 "Insert a DKIM signature to message from the robot, from the list or both"
 msgstr ""
 "サービスメッセージ、リストのメッセージ、両方、のどれにDKIM署名を付けるか"
 
-#: ../src/lib/confdef.pm:1158
+#: ../src/lib/confdef.pm:1156
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -9218,36 +9220,36 @@ msgstr ""
 "「dkim_authenticated_messages」(DKIM署名で本人確認ずみ)、"
 "「editor_validated_messages」(モデレータ承認ずみ)。"
 
-#: ../src/lib/confdef.pm:1165
+#: ../src/lib/confdef.pm:1163
 msgid "Location of the file where DKIM private key is stored"
 msgstr "DKIM 秘密鍵を格納したファイルの場所"
 
-#: ../src/lib/confdef.pm:1172
+#: ../src/lib/confdef.pm:1170
 msgid ""
 "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
 msgstr "RFC 4871 での「d=」タグ。初期値は仮想ホストのドメイン名"
 
-#: ../src/lib/confdef.pm:1179
+#: ../src/lib/confdef.pm:1177
 msgid "The selector"
 msgstr "セレクタ"
 
-#: ../src/lib/confdef.pm:1186
+#: ../src/lib/confdef.pm:1184
 msgid "The \"i=\" tag as defined in rfc 4871, default is null"
 msgstr "RFC 4871 での「i=」タグ。初期値は空"
 
-#: ../src/lib/confdef.pm:1194
+#: ../src/lib/confdef.pm:1192
 msgid "List of headers to be included into the message for signature"
 msgstr "メッセージで署名の対象とするヘッダの一覧"
 
-#: ../src/lib/confdef.pm:1198
+#: ../src/lib/confdef.pm:1196
 msgid "Antivirus plug-in"
 msgstr "ウィルス検査プラグイン"
 
-#: ../src/lib/confdef.pm:1204
+#: ../src/lib/confdef.pm:1202
 msgid "Path to the antivirus scanner engine"
 msgstr "ウィルス検出プログラムのパス"
 
-#: ../src/lib/confdef.pm:1207
+#: ../src/lib/confdef.pm:1205
 msgid ""
 "supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
@@ -9255,15 +9257,15 @@ msgstr ""
 "対応しているウィルス検出ソフトウェアは、McAfee/uvscan、Fsecure/fsav、Sophos、"
 "AVP、Trend Micro/VirusWall。"
 
-#: ../src/lib/confdef.pm:1213
+#: ../src/lib/confdef.pm:1211
 msgid "Antivirus plugin command argument"
 msgstr "ウィルス検査プラグインのコマンドライン引数"
 
-#: ../src/lib/confdef.pm:1222
+#: ../src/lib/confdef.pm:1220
 msgid "Tag based spam filtering"
 msgstr "タグ付けによるスパム排除"
 
-#: ../src/lib/confdef.pm:1232
+#: ../src/lib/confdef.pm:1230
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
 "spams, name of this header (example X-Spam-Status)"
@@ -9271,57 +9273,57 @@ msgstr ""
 "スパム排除ソフトウェア (SpamAssassinやj-chkmail) がスパムの印のヘッダを追加す"
 "るのなら、そのヘッダ名 (たとえばX-Spam-Status)"
 
-#: ../src/lib/confdef.pm:1240
+#: ../src/lib/confdef.pm:1238
 msgid "Regexp applied on this header to verify message is a spam (example Yes)"
 msgstr ""
 "このヘッダで、メッセージがスパムであると判定する正規表現 (たとえば「Yes」)"
 
-#: ../src/lib/confdef.pm:1248
+#: ../src/lib/confdef.pm:1246
 msgid ""
 "Regexp applied on this header to verify message is NOT a spam (example No)"
 msgstr ""
 "このヘッダで、メッセージがスパムで*ではない*と判定する正規表現 (たとえば"
 "「No」)"
 
-#: ../src/lib/confdef.pm:1254
+#: ../src/lib/confdef.pm:1252
 msgid "wwsympa.conf parameters"
 msgstr "wwsympa.conf のパラメータ"
 
-#: ../src/lib/confdef.pm:1259
+#: ../src/lib/confdef.pm:1257
 msgid "Directory for storing HTML archives"
 msgstr "HTML の投稿保管庫を格納するディレクトリ"
 
-#: ../src/lib/confdef.pm:1262 ../src/lib/confdef.pm:1282
+#: ../src/lib/confdef.pm:1260 ../src/lib/confdef.pm:1280
 msgid "Better if not in a critical partition"
 msgstr "安全なパーティションに置いたほうがいいでしょう。"
 
-#: ../src/lib/confdef.pm:1267
+#: ../src/lib/confdef.pm:1265
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
 "in chronological order"
 msgstr "ウェブの投稿保管庫に入ったときの目次の構成。スレッドか新着順か"
 
-#: ../src/lib/confdef.pm:1274
+#: ../src/lib/confdef.pm:1272
 msgid "File containing archived PID while running"
 msgstr "実行中のarchiveデーモンのPIDが入っているファイル"
 
-#: ../src/lib/confdef.pm:1280
+#: ../src/lib/confdef.pm:1278
 msgid "Directory for storing bounces"
 msgstr "配送エラーを格納するディレクトリ"
 
-#: ../src/lib/confdef.pm:1287
+#: ../src/lib/confdef.pm:1285
 msgid "File containing bounced PID while running"
 msgstr "実行中のbounceデーモンのPIDが入っているファイル"
 
-#: ../src/lib/confdef.pm:1293
+#: ../src/lib/confdef.pm:1291
 msgid "HTTP cookies lifetime"
 msgstr "HTTP クッキーの有効期間"
 
-#: ../src/lib/confdef.pm:1299
+#: ../src/lib/confdef.pm:1297
 msgid "HTTP cookies validity domain"
 msgstr "HTTP クッキーを送信するドメイン"
 
-#: ../src/lib/confdef.pm:1306
+#: ../src/lib/confdef.pm:1304
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path on the file system to the script of the "
@@ -9329,57 +9331,57 @@ msgid ""
 msgstr ""
 "MHonArcのかわりに使う独自の投稿保管プログラム。投稿保管プログラムの絶対パス"
 
-#: ../src/lib/confdef.pm:1313
+#: ../src/lib/confdef.pm:1311
 msgid "Type of main Web page ( lists | home )"
 msgstr "ウェブのメインページの種類 (lists|home)"
 
-#: ../src/lib/confdef.pm:1321
+#: ../src/lib/confdef.pm:1319
 msgid "Syslog facility for wwsympa, archived and bounced"
 msgstr ""
 "ウェブインタフェース、archived デーモン、bounced デーモンの syslog ファシリ"
 "ティ"
 
-#: ../src/lib/confdef.pm:1324
+#: ../src/lib/confdef.pm:1322
 msgid "Default is to use previously defined sympa log facility."
 msgstr "初期値には、さきほど sympa デーモン用に決めたファシリティを使います。"
 
-#: ../src/lib/confdef.pm:1329
+#: ../src/lib/confdef.pm:1327
 msgid "Path to MHonArc mail2html plugin"
 msgstr "MHonArc (メールをHTMLに変換するプラグイン) のパス"
 
-#: ../src/lib/confdef.pm:1332
+#: ../src/lib/confdef.pm:1330
 msgid "This is required for HTML mail archiving"
 msgstr "HTMLの投稿保管庫のために必要です。"
 
-#: ../src/lib/confdef.pm:1337
+#: ../src/lib/confdef.pm:1335
 msgid "Password case (insensitive | sensitive)"
 msgstr "パスワードの大文字小文字を区別するか (insensitive|sensitive)"
 
-#: ../src/lib/confdef.pm:1344
+#: ../src/lib/confdef.pm:1342
 msgid "Title of main Web page"
 msgstr "ウェブのメインページの表題"
 
-#: ../src/lib/confdef.pm:1352
+#: ../src/lib/confdef.pm:1350
 msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
 msgstr "Apache や Roxen 用に FastCGI モジュールをインストールするか (0|1)"
 
-#: ../src/lib/confdef.pm:1355
+#: ../src/lib/confdef.pm:1353
 msgid "This module provide much faster web interface"
 msgstr "このモジュールで、ウェブインタフェースがとても高速になります。"
 
-#: ../src/lib/confdef.pm:1358
+#: ../src/lib/confdef.pm:1356
 msgid "Virtual host specific parameters"
 msgstr "仮想ホスト用のパラメータ"
 
-#: ../src/lib/confdef.pm:1362
+#: ../src/lib/confdef.pm:1360
 msgid "URL of a virtual host"
 msgstr "仮想ホストの URL"
 
-#: ../src/lib/confdef.pm:1393
+#: ../src/lib/confdef.pm:1391
 msgid "Default limit for the number of subscribers per list (0 means no limit)"
 msgstr "リストごとの読者数上限の初期値 (0 で上限なし)"
 
-#: ../src/lib/confdef.pm:1413
+#: ../src/lib/confdef.pm:1411
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -9387,15 +9389,15 @@ msgstr ""
 "「on」にすると、javaScript による WYSIWIG エディタを使って HTML のメッセージ"
 "を投稿できるようになる"
 
-#: ../src/lib/confdef.pm:1421
+#: ../src/lib/confdef.pm:1419
 msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr "WYSIWYGのHTMLエディタを使えるようにするためのjavaScriptファイル"
 
-#: ../src/lib/confdef.pm:1428
+#: ../src/lib/confdef.pm:1426
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr "WYSIWYGのHTMLエディタを使えるようにするためのjavaScriptコード"
 
-#: ../src/lib/confdef.pm:1460
+#: ../src/lib/confdef.pm:1458
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -9407,11 +9409,11 @@ msgstr ""
 "認証します。真に設定すると、LDAPサーバが返した電子メールアドレス (複数なら最"
 "初のもの) を使います。"
 
-#: ../src/lib/confdef.pm:1467
+#: ../src/lib/confdef.pm:1465
 msgid "If set to \"on\", enables support of legacy character set"
 msgstr "「on」にすると、従来キャラクタセット対応が有効になる"
 
-#: ../src/lib/confdef.pm:1469
+#: ../src/lib/confdef.pm:1467
 msgid ""
 "In some language environments, legacy encoding (character set) is preferred "
 "for e-mail messages: for example iso-2022-jp in Japanese language."
@@ -9420,16 +9422,16 @@ msgstr ""
 "しいことがあります。たとえば日本語では (utf-8 ではなく) iso-2022-jp を使いま"
 "す。"
 
-#: ../src/lib/confdef.pm:1503
+#: ../src/lib/confdef.pm:1501
 msgid "Directory for subscription spool"
 msgstr "読者登録キューのディレクトリ"
 
-#: ../src/lib/confdef.pm:1508
+#: ../src/lib/confdef.pm:1506
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr "読者一覧ページで一度に表示する利用者数の初期値"
 
-#: ../src/lib/confdef.pm:1520
+#: ../src/lib/confdef.pm:1518
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -9444,15 +9446,15 @@ msgstr ""
 "antispam_tag_header_name、antispam_tag_header_spam_regexp、"
 "antispam_tag_header_ham_regexp。"
 
-#: ../src/lib/confdef.pm:1528
+#: ../src/lib/confdef.pm:1526
 msgid "Directory containing user certificates"
 msgstr "ユーザ証明書を収めるディレクトリ"
 
-#: ../src/lib/confdef.pm:1534
+#: ../src/lib/confdef.pm:1532
 msgid "File containing task_manager PID while running"
 msgstr "実行中のtask_managerデーモンのPIDが入っているファイル"
 
-#: ../src/lib/confdef.pm:1539
+#: ../src/lib/confdef.pm:1537
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page"
@@ -10390,7 +10392,9 @@ msgstr "あなたは %1 メーリングリストから登録解除されまし�
 #: ../wwsympa/wwsympa.fcgi.in:15650
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
-msgstr "%s メーリングリストからの登録解除は認められませんでした。このリストは登録解除ができません。"
+msgstr ""
+"%s メーリングリストからの登録解除は認められませんでした。このリストは登録解除"
+"ができません。"
 
 #: ../wwsympa/wwsympa.fcgi.in:15652
 msgid "Unsubscription from list %s failed."

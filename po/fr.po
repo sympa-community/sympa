@@ -3179,7 +3179,7 @@ msgstr "Traduire Sympa"
 msgid "Submitting a bug, a feature request"
 msgstr "Soumettre un problème, une demande de fonctionnalité"
 
-#: ../src/lib/confdef.pm:1140 ../web_tt2/nav.tt2:105
+#: ../src/lib/confdef.pm:1138 ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -8978,7 +8978,7 @@ msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
 msgstr ""
 "Secret employé par Sympa pour calculer l'empreinte MD5 dans les cookies web"
 
-#: ../src/lib/confdef.pm:1339 ../src/lib/confdef.pm:351
+#: ../src/lib/confdef.pm:1337 ../src/lib/confdef.pm:351
 msgid "Should not be changed ! May invalid all user password"
 msgstr "Ne pas changer ! Cela pourrait invalider tous les mots de passe !"
 
@@ -9101,7 +9101,7 @@ msgstr ""
 "quand un modérateur reporte un spam, ce script externe sera exécuté par "
 "sympa ou wwsympa, avec le contenu du spam envoyé dans STDIN"
 
-#: ../src/lib/confdef.pm:493
+#: ../src/lib/confdef.pm:492
 msgid ""
 "Default maximum size (in bytes) for messages (can be re-defined for each "
 "list)"
@@ -9109,7 +9109,7 @@ msgstr ""
 "Taille maximum des messages (en octets). Peut être redéfini pour chaque "
 "liste."
 
-#: ../src/lib/confdef.pm:510
+#: ../src/lib/confdef.pm:509
 msgid ""
 "Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
 "file allows a different tuning per destination domain."
@@ -9118,15 +9118,15 @@ msgstr ""
 "nrcpt_by_domain.cong permet de définir un réglage spécifique pour chaque "
 "domaine de destination."
 
-#: ../src/lib/confdef.pm:516
+#: ../src/lib/confdef.pm:515
 msgid "Max. number of different domains per call to Sendmail"
 msgstr "Nombre maximum de domaines différents par appel à sendmail"
 
-#: ../src/lib/confdef.pm:526
+#: ../src/lib/confdef.pm:525
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
 msgstr "Chemin vers le MTA (sendmail, postfix, exim ou qmail)"
 
-#: ../src/lib/confdef.pm:529
+#: ../src/lib/confdef.pm:528
 msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
@@ -9134,25 +9134,25 @@ msgstr ""
 "Devrait pointer vers un exécutable compatible sendmail (par ex : un binaire "
 "nommé \"sendmail\" est distribué par postfix)"
 
-#: ../src/lib/confdef.pm:541
+#: ../src/lib/confdef.pm:540
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
 "Spécifie quels entêtes de mailing list (de la RFC 2369) doivent être ajoutés"
 
 # nlsref 15,4
-#: ../src/lib/confdef.pm:547
+#: ../src/lib/confdef.pm:546
 msgid "Specify header fields to be removed before message distribution"
 msgstr ""
 "Spécifie quels entêtes doivent être supprimés des messages avant leur "
 "distribution"
 
-#: ../src/lib/confdef.pm:557
+#: ../src/lib/confdef.pm:556
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr ""
 "Rejeter les mails générés automatiquement (crontab, etc.) envoyés à une "
 "liste ?"
 
-#: ../src/lib/confdef.pm:572
+#: ../src/lib/confdef.pm:571
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
 "be created"
@@ -9160,7 +9160,7 @@ msgstr ""
 "Si ce paramètre est défini avec l'adresse d'un serveur SMTP, Sympa vérifiera "
 "si l'alias d'une liste dont la création a été demandée existe sur ce serveur."
 
-#: ../src/lib/confdef.pm:574
+#: ../src/lib/confdef.pm:573
 msgid ""
 "Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
 "standard port."
@@ -9168,24 +9168,24 @@ msgstr ""
 "La valeur par défaut est le nom de domaine complètement qualifié (FQDN) de "
 "l'hôte. Spécifiez la valeur [HOST]:[PORT] pour utiliser un port spécifique."
 
-#: ../src/lib/confdef.pm:584
+#: ../src/lib/confdef.pm:583
 msgid "SMTP HELO (EHLO) parameter used for alias verification"
 msgstr "Paramètre SMTP HELO (EHLO) utilisé pour la vérification des alias"
 
-#: ../src/lib/confdef.pm:586
+#: ../src/lib/confdef.pm:585
 msgid "Default value is the host part of list_check_smtp parameter."
 msgstr ""
 "La valeur par défaut est la partie domaine du paramètre list_check_smtp"
 
-#: ../src/lib/confdef.pm:593
+#: ../src/lib/confdef.pm:592
 msgid "Bulk mailer"
 msgstr "Configuration du bulk mailer"
 
-#: ../src/lib/confdef.pm:602
+#: ../src/lib/confdef.pm:601
 msgid "Default priority for a packet to be sent by bulk."
 msgstr "Priorité par défaut des paquets expédiés par le bulkmailer."
 
-#: ../src/lib/confdef.pm:609
+#: ../src/lib/confdef.pm:608
 msgid ""
 "Minimum number of packets in database before the bulk forks to increase "
 "sending rate"
@@ -9193,11 +9193,11 @@ msgstr ""
 "Nombre minimum de paquets dans la base de données à atteindre pour que le "
 "bulkmailer se multiplie pour augmenter la cadence d'expédition"
 
-#: ../src/lib/confdef.pm:616
+#: ../src/lib/confdef.pm:615
 msgid "Max number of bulks that will run on the same server"
 msgstr "Nombre maximum de processus bulk pouvant tourner sur le même serveur"
 
-#: ../src/lib/confdef.pm:623
+#: ../src/lib/confdef.pm:622
 msgid ""
 "The number of seconds a slave bulk will remain running without processing a "
 "message before it spontaneously dies."
@@ -9205,7 +9205,7 @@ msgstr ""
 "La durée en secondes pendant laquelle un bulk esclave tournera sans avoir de "
 "messages à expédier avant de mourir."
 
-#: ../src/lib/confdef.pm:630
+#: ../src/lib/confdef.pm:629
 msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
@@ -9213,19 +9213,19 @@ msgstr ""
 "La durée, en secondes, pendant laquelle un processus bulk attend avant de "
 "commencer une nouvelle boucle s'il n'a pas trouvé de message à envoyer"
 
-#: ../src/lib/confdef.pm:632
+#: ../src/lib/confdef.pm:631
 msgid "Keep it small if you want your server to be reactive."
 msgstr ""
 "Garder cette valeur petite si vous voulez que votre service soit réactif"
 
-#: ../src/lib/confdef.pm:637
+#: ../src/lib/confdef.pm:636
 msgid ""
 "Number of seconds a master bulk waits between two packets number checks."
 msgstr ""
 "La durée, en secondes, pendant laquelle un bulk maître attend entre deux "
 "vérifications du nombre de paquets à envoyer"
 
-#: ../src/lib/confdef.pm:639
+#: ../src/lib/confdef.pm:638
 msgid ""
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
@@ -9233,88 +9233,88 @@ msgstr ""
 "brutaux."
 
 # nlsref 16,203
-#: ../src/lib/confdef.pm:642
+#: ../src/lib/confdef.pm:641
 msgid "Quotas"
 msgstr "Configuration des quotas"
 
-#: ../src/lib/confdef.pm:647
+#: ../src/lib/confdef.pm:646
 msgid "Default disk quota for shared repository"
 msgstr "Quota par défaut des répertoires de documents partagés"
 
-#: ../src/lib/confdef.pm:657
+#: ../src/lib/confdef.pm:655
 msgid "Spool related"
 msgstr "Configuration des spools"
 
-#: ../src/lib/confdef.pm:662
+#: ../src/lib/confdef.pm:660
 msgid "Directory containing various specialized spools"
 msgstr "Répertoire contenant les divers spools spécialisés de Sympa"
 
-#: ../src/lib/confdef.pm:664
+#: ../src/lib/confdef.pm:662
 msgid "All spool are created at runtime by sympa.pl"
 msgstr "Tous les spools sont créés lors de l'exécution de sympa.pl"
 
-#: ../src/lib/confdef.pm:669
+#: ../src/lib/confdef.pm:667
 msgid "Directory for incoming spool"
 msgstr "Répertoire du spool des messages entrants"
 
-#: ../src/lib/confdef.pm:680
+#: ../src/lib/confdef.pm:678
 msgid "Directory for moderation spool"
 msgstr "Répertoire du spool de modération"
 
 # nlsref 15,10
-#: ../src/lib/confdef.pm:686
+#: ../src/lib/confdef.pm:684
 msgid "Directory for digest spool"
 msgstr "Répertoire du spool de constitution des digests"
 
-#: ../src/lib/confdef.pm:692
+#: ../src/lib/confdef.pm:690
 msgid "Directory for authentication spool"
 msgstr "Répertoire du spool d'authentification"
 
-#: ../src/lib/confdef.pm:698
+#: ../src/lib/confdef.pm:696
 msgid "Directory for outgoing spool"
 msgstr "Répertoire du spool d'archivage"
 
 # nlsref 15,10
-#: ../src/lib/confdef.pm:704
+#: ../src/lib/confdef.pm:702
 msgid "Directory for topic spool"
 msgstr "Répertoire du spool des messages en attente de marquage par un topic"
 
-#: ../src/lib/confdef.pm:710
+#: ../src/lib/confdef.pm:708
 msgid "Directory for bounce incoming spool"
 msgstr "Répertoire du spool de gestion des erreurs"
 
 # nlsref 15,10
-#: ../src/lib/confdef.pm:716
+#: ../src/lib/confdef.pm:714
 msgid "Directory for task spool"
 msgstr "Répertoire du spool des tâches"
 
-#: ../src/lib/confdef.pm:722
+#: ../src/lib/confdef.pm:720
 msgid "Directory for automatic list creation spool"
 msgstr "Répertoire du spool des listes automatiques"
 
-#: ../src/lib/confdef.pm:728
+#: ../src/lib/confdef.pm:726
 msgid "Temporary directory used by OpenSSL and antivirus plugins"
 msgstr "Répertoire temporaire employé par openSSL et les plugins antivirus"
 
-#: ../src/lib/confdef.pm:733
+#: ../src/lib/confdef.pm:731
 msgid "Must not be 0."
 msgstr "Ne doit pas valoir 0"
 
 # nlsref 16,33
-#: ../src/lib/confdef.pm:772
+#: ../src/lib/confdef.pm:770
 msgid "Internationalization related"
 msgstr "Configuration de l'internationalisation"
 
-#: ../src/lib/confdef.pm:777
+#: ../src/lib/confdef.pm:775
 msgid ""
 "Directory containing available NLS catalogues (Message internationalization)"
 msgstr "Répertoire contenant les les catalogues d'internationalisation"
 
-#: ../src/lib/confdef.pm:783
+#: ../src/lib/confdef.pm:781
 msgid "Supported languages"
 msgstr "Langues supportées"
 
-#: ../src/lib/confdef.pm:787
+#: ../src/lib/confdef.pm:785
 msgid ""
 "This is the set of language that will be proposed to your users for the "
 "Sympa GUI. Don't select a language if you don't have the proper locale "
@@ -9324,33 +9324,33 @@ msgstr ""
 "GUI de Sympa. Ne sélectionnez pas un langage si vous n'avez pas la locale "
 "d'installée"
 
-#: ../src/lib/confdef.pm:792
+#: ../src/lib/confdef.pm:790
 msgid "Default language (one of supported languages)"
 msgstr "Langue par défault (une des langues supportées)"
 
-#: ../src/lib/confdef.pm:796
+#: ../src/lib/confdef.pm:794
 msgid "This is the default language used by Sympa"
 msgstr "Ceci est la langue par défaut utilisée par Sympa"
 
-#: ../src/lib/confdef.pm:803
+#: ../src/lib/confdef.pm:801
 msgid "Bounce related"
 msgstr "Relatif à la gestion des erreurs."
 
-#: ../src/lib/confdef.pm:813
+#: ../src/lib/confdef.pm:811
 msgid "Welcome message return-path ( unique | owner )"
 msgstr "Adresse de retour du message de bienvenue ( unique | propriétaire )"
 
-#: ../src/lib/confdef.pm:815
+#: ../src/lib/confdef.pm:813
 msgid "If set to unique, new subcriber is removed if welcome message bounce"
 msgstr ""
 "Si réglé sur unique, le nouvel inscrit est supprimé si le message de "
 "bienvenue revient"
 
-#: ../src/lib/confdef.pm:820
+#: ../src/lib/confdef.pm:818
 msgid "Remind message return-path ( unique | owner )"
 msgstr "Adresse de retour des rappels (unique | propriétaire )"
 
-#: ../src/lib/confdef.pm:822
+#: ../src/lib/confdef.pm:820
 msgid ""
 "If set to unique, subcriber is removed if remind message bounce, use with "
 "care"
@@ -9358,28 +9358,28 @@ msgstr ""
 "Si réglé sur unique, l'abonné est supprimé si le message de rappel revient "
 "en erreur"
 
-#: ../src/lib/confdef.pm:831
+#: ../src/lib/confdef.pm:829
 msgid "Task name for expiration of old bounces"
 msgstr "Nom de la tâche pour l'expiration des anciens rebonds"
 
-#: ../src/lib/confdef.pm:875
+#: ../src/lib/confdef.pm:873
 msgid "Bouncing email rate for warn list owner"
 msgstr "Taux d'erreurs avant de prévenir le propriétaire"
 
-#: ../src/lib/confdef.pm:882
+#: ../src/lib/confdef.pm:880
 msgid "Bouncing email rate for halt the list (not implemented)"
 msgstr "Taux d'erreurs avant d'arrêter la liste (pas implémenté)"
 
-#: ../src/lib/confdef.pm:884
+#: ../src/lib/confdef.pm:882
 msgid "Not yet used in current version, Default is 50"
 msgstr "Pas encore utilisé dans cette version, par défaut à 50."
 
-#: ../src/lib/confdef.pm:899
+#: ../src/lib/confdef.pm:897
 #, fuzzy
 msgid "Tuning"
 msgstr "en erreur"
 
-#: ../src/lib/confdef.pm:904
+#: ../src/lib/confdef.pm:902
 msgid ""
 "Use of binary version of the list config structure on disk (none | "
 "binary_file)"
@@ -9387,7 +9387,7 @@ msgstr ""
 "Utilisation de la version binaire de la liste de configuration de la "
 "structure sur le disque (non | fichier_binaire)"
 
-#: ../src/lib/confdef.pm:907
+#: ../src/lib/confdef.pm:905
 msgid ""
 "Set this parameter to \"binary_file\" if you manage a big amount of lists "
 "(1000+); it should make the web interface startup faster"
@@ -9395,63 +9395,63 @@ msgstr ""
 "Mettre ce paramètre à \"binary_file\" si vous gérez une grande quantité de "
 "listes (1 000+); ça devrait accélérer le démarrage de l'interface web"
 
-#: ../src/lib/confdef.pm:912
+#: ../src/lib/confdef.pm:910
 msgid "flock | nfs"
 msgstr "flock | nfs"
 
-#: ../src/lib/confdef.pm:916
+#: ../src/lib/confdef.pm:914
 msgid "Sympa commands priority"
 msgstr "Priorité des commandes Sympa"
 
 # nlsref 15,7
-#: ../src/lib/confdef.pm:932
+#: ../src/lib/confdef.pm:930
 #, fuzzy
 msgid "Default priority for list messages"
 msgstr "Message de rejet par défaut"
 
-#: ../src/lib/confdef.pm:937
+#: ../src/lib/confdef.pm:935
 #, fuzzy
 msgid "Database related"
 msgstr "La structure de la base de données a été mise à jour"
 
-#: ../src/lib/confdef.pm:946
+#: ../src/lib/confdef.pm:944
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
 msgstr "Type de la base de données (mysql|Pg|Oracle|Sybase|SQLite)"
 
-#: ../src/lib/confdef.pm:949
+#: ../src/lib/confdef.pm:947
 msgid "Be careful to the case"
 msgstr "Attention à la case"
 
-#: ../src/lib/confdef.pm:954
+#: ../src/lib/confdef.pm:952
 #, fuzzy
 msgid "Name of the database"
 msgstr "Impossible de mettre à jour la base de données."
 
-#: ../src/lib/confdef.pm:957
+#: ../src/lib/confdef.pm:955
 msgid "With SQLite, the name of the DB corresponds to the DB file"
 msgstr "Avec SQLite, le nom de la BDD correspond au fichier de la BDD"
 
-#: ../src/lib/confdef.pm:963
+#: ../src/lib/confdef.pm:961
 msgid "Hostname of the database server"
 msgstr "Nom du serveur de la base de données"
 
-#: ../src/lib/confdef.pm:970
+#: ../src/lib/confdef.pm:968
 msgid "Port of the database server"
 msgstr "Port du serveur de la base de données"
 
 # nlsref 16,148
-#: ../src/lib/confdef.pm:978
+#: ../src/lib/confdef.pm:976
 #, fuzzy
 msgid "User for the database connection"
 msgstr "variable d'environnement pour la connexion"
 
 # nlsref 16,148
-#: ../src/lib/confdef.pm:986
+#: ../src/lib/confdef.pm:984
 #, fuzzy
 msgid "Password for the database connection"
 msgstr "variable d'environnement pour la connexion"
 
-#: ../src/lib/confdef.pm:989
+#: ../src/lib/confdef.pm:987
 msgid ""
 "What ever you use a password or not, you must protect the SQL server (is it "
 "not a public internet service ?)"
@@ -9460,84 +9460,84 @@ msgstr ""
 "SQL (qui n'est pas un service internet ?)"
 
 # nlsref 16,148
-#: ../src/lib/confdef.pm:1001
+#: ../src/lib/confdef.pm:999
 #, fuzzy
 msgid "Environment variables setting for database"
 msgstr "variable d'environnement pour la connexion"
 
-#: ../src/lib/confdef.pm:1003
+#: ../src/lib/confdef.pm:1001
 msgid "This is useful for defining ORACLE_HOME "
 msgstr "C'est utile pour définir ORACLE_HOME"
 
-#: ../src/lib/confdef.pm:1009
+#: ../src/lib/confdef.pm:1007
 msgid "Database private extention to subscriber table"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1011 ../src/lib/confdef.pm:1019
+#: ../src/lib/confdef.pm:1009 ../src/lib/confdef.pm:1017
 msgid "You need to extend the database format with these fields"
 msgstr "Vous devez ajouter ces champs à la base de données"
 
-#: ../src/lib/confdef.pm:1017
+#: ../src/lib/confdef.pm:1015
 msgid "Database private extention to user table"
 msgstr "Extension privée de la table des utilisateurs dans la base de donnée"
 
-#: ../src/lib/confdef.pm:1036
+#: ../src/lib/confdef.pm:1034
 msgid "Number of months that elapse before a log is expired"
 msgstr "Nombre de mois avant expiration de la journalisation"
 
-#: ../src/lib/confdef.pm:1058
+#: ../src/lib/confdef.pm:1056
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1064
+#: ../src/lib/confdef.pm:1062
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1070
+#: ../src/lib/confdef.pm:1068
 #, fuzzy
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr "Délai d'attente pour la récolte des données par include_sql_query"
 
-#: ../src/lib/confdef.pm:1075
+#: ../src/lib/confdef.pm:1073
 msgid "Loop prevention"
 msgstr "Protection contre les boucles"
 
-#: ../src/lib/confdef.pm:1103
+#: ../src/lib/confdef.pm:1101
 #, fuzzy
 msgid "S/MIME configuration"
 msgstr "Configuration de DKIM"
 
-#: ../src/lib/confdef.pm:1108
+#: ../src/lib/confdef.pm:1106
 msgid "Path to OpenSSL"
 msgstr "Chemin vers OpenSSL"
 
-#: ../src/lib/confdef.pm:1111
+#: ../src/lib/confdef.pm:1109
 msgid "Sympa recognizes S/MIME if OpenSSL is installed"
 msgstr "Sympa reconnaît le S/MIME si OpenSSL est installé"
 
-#: ../src/lib/confdef.pm:1118
+#: ../src/lib/confdef.pm:1116
 msgid "Directory containing trusted CA certificates"
 msgstr "Repertoire contenant les AC de confiance"
 
-#: ../src/lib/confdef.pm:1126
+#: ../src/lib/confdef.pm:1124
 msgid "File containing bundled trusted CA certificates"
 msgstr "Fichier contenant les AC de confiance"
 
-#: ../src/lib/confdef.pm:1134
+#: ../src/lib/confdef.pm:1132
 msgid "Password used to crypt lists private keys"
 msgstr "Mot de passe utilisé pour chiffrer les clés privées des listes"
 
-#: ../src/lib/confdef.pm:1151
+#: ../src/lib/confdef.pm:1149
 #, fuzzy
 msgid ""
 "Insert a DKIM signature to message from the robot, from the list or both"
 msgstr "Insérer une signature aux messages postés par la liste."
 
-#: ../src/lib/confdef.pm:1158
+#: ../src/lib/confdef.pm:1156
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -9552,39 +9552,39 @@ msgstr ""
 "\"dkim_authenticated_messages\",\"editor_validated_messages\"(authentifiés "
 "par un modérateur)."
 
-#: ../src/lib/confdef.pm:1165
+#: ../src/lib/confdef.pm:1163
 msgid "Location of the file where DKIM private key is stored"
 msgstr "Chemin de stockage des clés privées DKIM"
 
-#: ../src/lib/confdef.pm:1172
+#: ../src/lib/confdef.pm:1170
 msgid ""
 "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1179
+#: ../src/lib/confdef.pm:1177
 #, fuzzy
 msgid "The selector"
 msgstr "Inverser la sélection"
 
-#: ../src/lib/confdef.pm:1186
+#: ../src/lib/confdef.pm:1184
 msgid "The \"i=\" tag as defined in rfc 4871, default is null"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1194
+#: ../src/lib/confdef.pm:1192
 #, fuzzy
 msgid "List of headers to be included into the message for signature"
 msgstr "Liste des entêtes SMTP qui doivent être inclus dans la signature DKIM."
 
-#: ../src/lib/confdef.pm:1198
+#: ../src/lib/confdef.pm:1196
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1204
+#: ../src/lib/confdef.pm:1202
 #, fuzzy
 msgid "Path to the antivirus scanner engine"
 msgstr "Chemin vers le moteur antivirus."
 
-#: ../src/lib/confdef.pm:1207
+#: ../src/lib/confdef.pm:1205
 msgid ""
 "supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
@@ -9592,15 +9592,15 @@ msgstr ""
 "Antivirus supportés: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
 
-#: ../src/lib/confdef.pm:1213
+#: ../src/lib/confdef.pm:1211
 msgid "Antivirus plugin command argument"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1222
+#: ../src/lib/confdef.pm:1220
 msgid "Tag based spam filtering"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1232
+#: ../src/lib/confdef.pm:1230
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
 "spams, name of this header (example X-Spam-Status)"
@@ -9608,33 +9608,33 @@ msgstr ""
 "Si l'anti-spam (comme spamassassin ou j-chkmail) place une entête smtp pour "
 "identifier les indésirables, nom de cet entête (exemple: X-Spam-Status)"
 
-#: ../src/lib/confdef.pm:1240
+#: ../src/lib/confdef.pm:1238
 msgid "Regexp applied on this header to verify message is a spam (example Yes)"
 msgstr ""
 "Expression rationelle appliquée sur cet entête pour identifier le message "
 "comme indésirable (exemple: Yes)"
 
-#: ../src/lib/confdef.pm:1248
+#: ../src/lib/confdef.pm:1246
 msgid ""
 "Regexp applied on this header to verify message is NOT a spam (example No)"
 msgstr ""
 "Expression rationelle appliquée sur cet entête pour identifier le message "
 "comme ACCEPTABLE (exemple: No)"
 
-#: ../src/lib/confdef.pm:1254
+#: ../src/lib/confdef.pm:1252
 #, fuzzy
 msgid "wwsympa.conf parameters"
 msgstr "Paramètres incorrects"
 
-#: ../src/lib/confdef.pm:1259
+#: ../src/lib/confdef.pm:1257
 msgid "Directory for storing HTML archives"
 msgstr "Répertoire de stockage des archives HTML"
 
-#: ../src/lib/confdef.pm:1262 ../src/lib/confdef.pm:1282
+#: ../src/lib/confdef.pm:1260 ../src/lib/confdef.pm:1280
 msgid "Better if not in a critical partition"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1267
+#: ../src/lib/confdef.pm:1265
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
 "in chronological order"
@@ -9642,27 +9642,27 @@ msgstr ""
 "Ordre d'affichage par défaut des archives web: par discussion (threaded) ou "
 "ordre chronologique (chronological)"
 
-#: ../src/lib/confdef.pm:1274
+#: ../src/lib/confdef.pm:1272
 msgid "File containing archived PID while running"
 msgstr "Fichier contenant le PID du démon archived quand il est lancé"
 
-#: ../src/lib/confdef.pm:1280
+#: ../src/lib/confdef.pm:1278
 msgid "Directory for storing bounces"
 msgstr "Répertoire de stockage des retours en erreur"
 
-#: ../src/lib/confdef.pm:1287
+#: ../src/lib/confdef.pm:1285
 msgid "File containing bounced PID while running"
 msgstr "Fichier contenant le PID du démon bounced quand il est lancé"
 
-#: ../src/lib/confdef.pm:1293
+#: ../src/lib/confdef.pm:1291
 msgid "HTTP cookies lifetime"
 msgstr "Durée de vie des cookies HTTP"
 
-#: ../src/lib/confdef.pm:1299
+#: ../src/lib/confdef.pm:1297
 msgid "HTTP cookies validity domain"
 msgstr "Domaine pour lequel les cookies HTTP sont valides"
 
-#: ../src/lib/confdef.pm:1306
+#: ../src/lib/confdef.pm:1304
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path on the file system to the script of the "
@@ -9671,60 +9671,60 @@ msgstr ""
 "Active un archiveur différent de MHonArc. La valeur de ce paramètre est le "
 "chemin absolu du script à utiliser."
 
-#: ../src/lib/confdef.pm:1313
+#: ../src/lib/confdef.pm:1311
 msgid "Type of main Web page ( lists | home )"
 msgstr ""
 "Type de page d'accueil ( \"lists\"(listes) | \"home\"(page d'accueil) )"
 
-#: ../src/lib/confdef.pm:1321
+#: ../src/lib/confdef.pm:1319
 msgid "Syslog facility for wwsympa, archived and bounced"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1324
+#: ../src/lib/confdef.pm:1322
 msgid "Default is to use previously defined sympa log facility."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1329
+#: ../src/lib/confdef.pm:1327
 msgid "Path to MHonArc mail2html plugin"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1332
+#: ../src/lib/confdef.pm:1330
 msgid "This is required for HTML mail archiving"
 msgstr "Requis pour l'archivage HTML des messages"
 
-#: ../src/lib/confdef.pm:1337
+#: ../src/lib/confdef.pm:1335
 msgid "Password case (insensitive | sensitive)"
 msgstr ""
 "Sensibilité à la casse des mots de passe ( \"insensitive\"(non) | \"sensitive"
 "\"(oui) )"
 
-#: ../src/lib/confdef.pm:1344
+#: ../src/lib/confdef.pm:1342
 msgid "Title of main Web page"
 msgstr "Titre de la page d'accueil"
 
-#: ../src/lib/confdef.pm:1352
+#: ../src/lib/confdef.pm:1350
 msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
 msgstr ""
 "Est-ce-que le module fast_cgi d'Apache (ou Roxen) est installé ( 0 | 1 )"
 
-#: ../src/lib/confdef.pm:1355
+#: ../src/lib/confdef.pm:1353
 msgid "This module provide much faster web interface"
 msgstr "Ce module fournit une interface beaucoup plus rapide"
 
-#: ../src/lib/confdef.pm:1358
+#: ../src/lib/confdef.pm:1356
 msgid "Virtual host specific parameters"
 msgstr "Paramètres spécifiques à l'Hôte Virtuel (VirtualHost)"
 
-#: ../src/lib/confdef.pm:1362
+#: ../src/lib/confdef.pm:1360
 msgid "URL of a virtual host"
 msgstr "URL d'un hôte virtuel"
 
-#: ../src/lib/confdef.pm:1393
+#: ../src/lib/confdef.pm:1391
 msgid "Default limit for the number of subscribers per list (0 means no limit)"
 msgstr ""
 "Limite par défaut du nombre d'abonnés par liste (0 signifie aucune limite)"
 
-#: ../src/lib/confdef.pm:1413
+#: ../src/lib/confdef.pm:1411
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -9732,15 +9732,15 @@ msgstr ""
 "Si ce paramètre est à \"on\", les utilisateurs auront accès à un éditeur "
 "riche en javascript (WYSIWYG) pour poster des messages HTML"
 
-#: ../src/lib/confdef.pm:1421
+#: ../src/lib/confdef.pm:1419
 msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr "Chemin du fichier javascript donnant accès à l'éditeur riche"
 
-#: ../src/lib/confdef.pm:1428
+#: ../src/lib/confdef.pm:1426
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1460
+#: ../src/lib/confdef.pm:1458
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -9752,11 +9752,11 @@ msgstr ""
 "sera utilisée pour l'authentiification. Sinon (\"true\"), la première "
 "adresse retourné par le serveur LDAP sera utilisé."
 
-#: ../src/lib/confdef.pm:1467
+#: ../src/lib/confdef.pm:1465
 msgid "If set to \"on\", enables support of legacy character set"
 msgstr "Si \"on\", active le support des anciennes tables de caractères"
 
-#: ../src/lib/confdef.pm:1469
+#: ../src/lib/confdef.pm:1467
 msgid ""
 "In some language environments, legacy encoding (character set) is preferred "
 "for e-mail messages: for example iso-2022-jp in Japanese language."
@@ -9764,12 +9764,12 @@ msgstr ""
 "Pour certaines langues, les anciennes tables de caractères sont préférables "
 "pour encoder les messages: par exemple iso-2022-jp pour le japonais"
 
-#: ../src/lib/confdef.pm:1503
+#: ../src/lib/confdef.pm:1501
 #, fuzzy
 msgid "Directory for subscription spool"
 msgstr "Rappel de votre abonnement à %1"
 
-#: ../src/lib/confdef.pm:1508
+#: ../src/lib/confdef.pm:1506
 #, fuzzy
 msgid ""
 "Default number of lines of the array displaying users in the review page"
@@ -9777,7 +9777,7 @@ msgstr ""
 "Nombre de lignes à afficher par défaut pour le tableau des utilisateurs dans "
 "la page \"review\""
 
-#: ../src/lib/confdef.pm:1520
+#: ../src/lib/confdef.pm:1518
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -9786,15 +9786,15 @@ msgid ""
 "antispam_tag_header_ham_regexp."
 msgstr ""
 
-#: ../src/lib/confdef.pm:1528
+#: ../src/lib/confdef.pm:1526
 msgid "Directory containing user certificates"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1534
+#: ../src/lib/confdef.pm:1532
 msgid "File containing task_manager PID while running"
 msgstr ""
 
-#: ../src/lib/confdef.pm:1539
+#: ../src/lib/confdef.pm:1537
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page"
