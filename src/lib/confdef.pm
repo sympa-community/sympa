@@ -482,11 +482,10 @@ our @params = (
     },
     {
         'name'     => 'reporting_spam_script_path',
-        'default'  => '',
+        'optional'  => '1',
         'query'    => gettext('If set, when a list editor report a spam, this external script is run by wwsympa or sympa, the spam is sent into script stdin'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
-        'edit'     => '1',
     },
     {
         'name'     => 'max_size',
@@ -647,7 +646,6 @@ our @params = (
         'query'    => gettext('Default disk quota for shared repository'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
-        'edit'     => '1',
     },
     {
         'name'     => 'default_archive_quota',
