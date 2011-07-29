@@ -30,14 +30,13 @@ sub gettext { shift } # to mark i18n'ed messages.
 ##   title  : Title for the group of parameters following
 ##   name   : Name of the parameter
 ##   default: Default value
+##   file   : Conf file where the param. is defined. If omitted, the parameter won't be added automatically to the config file, even if a default is set.
+##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless and can lead to errors on fresh install.
 ##   query  : Description of the parameter
 ##   file   : Conf file where the param. is defined
 ##   vhost   : 1|0 : if 1, the parameter can have a specific value in a virtual host
 ##   db   : 'db_first','file_first','no'
 ##   multiple   : 1|0: If 1, the parameter can have mutiple values. Default i 0.
-##   optional   : 1|0: If 1, the parameter is optional. It can have no value at all.
-##   edit   : 1|0
-##   advice : Additionnal advice concerning the parameter
 
 our @params = (
 
@@ -95,7 +94,7 @@ our @params = (
     },
     {
         'name'     => 'soap_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
@@ -254,68 +253,68 @@ our @params = (
     },
     {
         'name'     => 'logo_html_definition',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'favicon_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
         'optional' => '1',
     },
     {
         'name'     => 'main_menu_custom_button_1_title',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_1_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_1_target',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_2_title',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_2_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_2_target',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_3_title',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_3_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'main_menu_custom_button_3_target',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'css_path',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
         'name'     => 'css_url',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
     },
     {
@@ -372,7 +371,7 @@ our @params = (
     },
     {
         'name'     => 'automatic_list_removal',
-        'default'  => '', ## Can be 'if_empty',
+        'optional' => '1', ## Can be 'if_empty',
         'vhost'    => '1',
     },
     {
@@ -567,7 +566,7 @@ our @params = (
     },
     {
         'name'     => 'list_check_smtp',
-        'default'  => '',
+        'optional' => '1',
         'query'    => gettext('SMTP server to which Sympa verify if alias with the same name as the list to be created'),
         'vhost'    => '1',
         'advice'   => gettext('Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-standard port.'),
@@ -579,7 +578,7 @@ our @params = (
     },
     {
         'name'     => 'list_check_helo',
-        'default'  => '',
+        'optional' => '1',
         'query'    => gettext('SMTP HELO (EHLO) parameter used for alias verification'),
         'vhost'    => '1',
         'advice'   => gettext('Default value is the host part of list_check_smtp parameter.'),
@@ -642,14 +641,14 @@ our @params = (
 
     {
         'name'     => 'default_shared_quota',
-        'default'  => '',
+        'optional' => '1',
         'query'    => gettext('Default disk quota for shared repository'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'default_archive_quota',
-        'default'  => '',
+        'optional' => '1',
     },
 
     { 'title' => gettext('Spool related') },
@@ -891,7 +890,7 @@ our @params = (
     },
     {
         'name'     => 'default_remind_task',
-        'default'  => '',
+        'optional' => '1',
     },
 
     { 'title' => gettext('Tuning') },
@@ -1300,7 +1299,7 @@ our @params = (
     },
     {
         'name'     => 'custom_archiver',
-        'default'  => '',
+        'optional' => '1',
         'query'    => gettext('Activates a custom archiver to use instead of MHonArc. The value of this parameter is the absolute path on the file system to the script of the custom archiver.'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
@@ -1373,7 +1372,7 @@ our @params = (
     },
     {
         'name'     => 'chk_cert_expiration_task',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'crl_dir',
@@ -1382,7 +1381,7 @@ our @params = (
     },
     {
         'name'     => 'crl_update_task',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'default_max_list_members',
@@ -1430,27 +1429,27 @@ our @params = (
     },
     {
         'name'     => 'ldap_export_connection_timeout',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_export_dnmanager',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_export_host',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_export_name',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_export_password',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_export_suffix',
-        'default'  => '',
+        'optional' => '1',
     },
     {
         'name'     => 'ldap_force_canonical_email',
@@ -1468,13 +1467,13 @@ our @params = (
     },
     {
         'name'     => 'log_condition',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'log_module',
-        'default'  => '',
+        'optional' => '1',
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
     },
