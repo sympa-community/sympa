@@ -1000,7 +1000,7 @@ sub search{
         }
 	
 	my $ds = new SQLSource($sql_conf->{'sql_named_filter_query'});
-	unless ($ds->connect() && $ds->ping) {
+	unless (defined $ds && $ds->connect() && $ds->ping) {
             do_log('notice','Unable to connect to the SQL server %s:%d',$sql_conf->{'db_host'}, $sql_conf->{'db_port'});
             return undef;
         }

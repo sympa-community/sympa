@@ -7835,7 +7835,8 @@ sub _include_users_sql {
     &Log::do_log('debug','List::_include_users_sql()');
     my $id = Datasource::_get_datasource_id($param);
     my $ds = new SQLSource($param);
-    unless ($ds->connect && ($ds->do_query($param->{'sql_query'}))) {
+
+    unless (defined $ds && $ds->connect && ($ds->do_query($param->{'sql_query'}))) {
 	&Log::do_log('err','Unable to connect to SQL datasource with parameters host: %s, database: %s',$param->{'host'},$param->{'db_name'});
         return undef;
     }

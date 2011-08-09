@@ -92,8 +92,12 @@ sub new {
 	
 	$actualclass = "DBManipulatorSybase";
     }else {
-	&Log::do_log('err','Unknown RDBMS type "%s"',$param->{'db_type'});
-	return undef;
+	## We don't have a DB Manipulator for this RDBMS
+	## It might be an SQL source used to include list members/owners
+	## like CSV
+	require DBManipulatorDefault;
+	
+	$actualclass = "DBManipulatorDefault";
     }
     $self = $pkg->SUPER::new($param);
     
