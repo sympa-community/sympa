@@ -1241,8 +1241,8 @@ sub DoFile {
     if ( $message->{'md5_check'} ) { 
 	# message contain a valid checksum, it comes from wwsympa, so
         #  mail it without other proceding unless it is for a valid list
-	return (&DoSendMessage ($message,$robot)) unless(&Conf::valid_robot($robot)) ;
-	return (&DoSendMessage ($message,$robot)) unless( new List ($listname, $robot));	    	    
+	return (&DoSendMessage ($message,$robot)) unless(&Conf::valid_robot($robot, {'just_try' => 1})) ;
+	return (&DoSendMessage ($message,$robot)) unless( new List ($listname, $robot, {'just_try' => 1}));	    	    
     }
 
     # setting log_level using conf unless it is set by calling option

@@ -268,13 +268,11 @@ sub new {
 	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		$listname = $1;
 	    }
-	    my $list = new List ($listname, $robot);
+	    
+	    my $list = new List ($listname, $robot, {'just_try' => 1});
 	    if ($list) {
 		$message->{'list'} = $list;
-	    }else{
-		do_log('err', 'Could not create List object for list %s in robot %s', $listname, $robot);
-		#   return undef;
-	    }		
+	    }	
 	}
 	# verify DKIM signature
 	if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){

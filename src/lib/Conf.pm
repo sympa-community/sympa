@@ -649,27 +649,30 @@ sub checkfiles {
 }
 
 ## return 1 if the parameter is a known robot
+## Valid options : 
+##    'just_try' : prevent error logs if robot is not valid
 sub valid_robot {
     my $robot = shift;
+    my $options = shift;
 
     ## Main host
     return 1 if ($robot eq $Conf{'domain'});
 
     ## Missing etc directory
     unless (-d $Conf{'etc'}.'/'.$robot) {
-    &Log::do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'etc'}.'/'.$robot);
+    &Log::do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'etc'}.'/'.$robot) unless ($options->{'just_try'});
     return undef;
     }
 
     ## Missing expl directory
     unless (-d $Conf{'home'}.'/'.$robot) {
-    &Log::do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'home'}.'/'.$robot);
+    &Log::do_log('err', 'Robot %s undefined ; no %s directory', $robot, $Conf{'home'}.'/'.$robot) unless ($options->{'just_try'});
     return undef;
     }
     
     ## Robot not loaded
     unless (defined $Conf{'robots'}{$robot}) {
-    &Log::do_log('err', 'Robot %s was not loaded by this Sympa process', $robot);
+    &Log::do_log('err', 'Robot %s was not loaded by this Sympa process', $robot) unless ($options->{'just_try'});
     return undef;
     }
 
