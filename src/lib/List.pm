@@ -4776,6 +4776,11 @@ sub get_global_user {
     push @sth_stack, $sth;
 
     $sth = &SDM::do_query("SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, wrong_login_count_user AS wrong_login_count, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, &SDM::quote($who));
+    
+    unless (defined $sth) {
+	&Log::do_log('err','Failed to prepare SQL query');
+	return undef;
+    }
    
     my $user = $sth->fetchrow_hashref('NAME_lc');
  
@@ -7384,16 +7389,26 @@ sub _include_users_file {
 	    &Log::do_log('err','Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',$filename, $lines, $emails_found);
 	    return undef;
 	}
+	
+	## Each line is expected to start with a valid email address
+	## + an optional gecos
+	## Empty lines are skipped
 	next if /^\s*$/;
 	next if /^\s*\#/;
 
 	## Skip badly formed emails
-	unless (&tools::valid_email($_)) {
-		Log::do_log('err', "Skip badly formed email address: '%s'", $_);
+	unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
+		Log::do_log('err', "Skip badly formed line: '%s'", $_);
 		next;
 	}
 
 	my $email = &tools::clean_email($1);
+
+	unless (&tools::valid_email($email)) {
+		Log::do_log('err', "Skip badly formed email address: '%s'", $email);
+		next;
+	}
+	
         $lines++;
 	next unless $email;
 	my $gecos = $5;
@@ -7468,16 +7483,26 @@ sub _include_users_remote_file {
 		&Log::do_log('err','Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',$url, $lines, $emails_found);
 		return undef;
 	    }
+	    
+	    ## Each line is expected to start with a valid email address
+	    ## + an optional gecos
+	    ## Empty lines are skipped
 	    next if ($line =~ /^\s*$/);
 	    next if ($line =~ /^\s*\#/);
 
 	    ## Skip badly formed emails
-	    unless (&tools::valid_email($line)) {
-		Log::do_log('err', "Skip badly formed email address: '%s'", $line);
+	    unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
+		Log::do_log('err', "Skip badly formed line: '%s'", $line);
 		next;
 	    }
 
 	    my $email = &tools::clean_email($1);
+
+	    unless (&tools::valid_email($email)) {
+		Log::do_log('err', "Skip badly formed email address: '%s'", $line);
+		next;
+	    }
+
 	    $lines++;
 	    next unless $email;
 	    my $gecos = $5;		
@@ -7577,25 +7602,25 @@ sub _include_users_ldap {
 	## Multiple values
 	if (ref($entry) eq 'ARRAY') {
 	    foreach my $email (@{$entry}) {
+		my $cleanmail = &tools::clean_email($email);
 		## Skip badly formed emails
 		unless (&tools::valid_email($email)) {
 			Log::do_log('err', "Skip badly formed email address: '%s'", $email);
 			next;
 		}
 		    
-		my $cleanmail = &tools::clean_email($email);
 		next if ($emailsViewed{$cleanmail});
 		push @emails, $cleanmail;
 		$emailsViewed{$cleanmail} = 1;
 		last if ($ldap_select eq 'first');
 	    }
 	}else {
+	    my $cleanmail = &tools::clean_email($entry);
 	    ## Skip badly formed emails
 	    unless (&tools::valid_email($entry)) {
 		Log::do_log('err', "Skip badly formed email address: '%s'", $entry);
 		next;
 	    }
-	    my $cleanmail = &tools::clean_email($entry);
 	    unless ($emailsViewed{$cleanmail}) {
 		push @emails, $cleanmail;
 		$emailsViewed{$cleanmail} = 1;
@@ -7751,13 +7776,13 @@ sub _include_users_ldap_2level {
 	    ## Multiple values
 	    if (ref($entry) eq 'ARRAY') {
 		foreach my $email (@{$entry}) {
+		    my $cleanmail = &tools::clean_email($email);
 		    ## Skip badly formed emails
 		    unless (&tools::valid_email($email)) {
 			Log::do_log('err', "Skip badly formed email address: '%s'", $email);
 			next;
 		    }
 
-		    my $cleanmail = &tools::clean_email($email);
 		    next if (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/));
 		    next if ($emailsViewed{$cleanmail});
 		    push @emails, $cleanmail;
@@ -7765,13 +7790,13 @@ sub _include_users_ldap_2level {
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
+		my $cleanmail = &tools::clean_email($entry);
 		## Skip badly formed emails
 		unless (&tools::valid_email($entry)) {
 			Log::do_log('err', "Skip badly formed email address: '%s'", $entry);
 			next;
 		}
 
-		my $cleanmail = &tools::clean_email($entry);
 		unless( (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/))||$emailsViewed{$cleanmail}) {
 		    push @emails, $cleanmail;
 		    $emailsViewed{$cleanmail} = 1;
@@ -7857,13 +7882,14 @@ sub _include_users_sql {
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
+	$email = &tools::clean_email($email);
+
 	## Skip badly formed emails
 	unless (&tools::valid_email($email)) {
 		Log::do_log('err', "Skip badly formed email address: '%s'", $email);
 		next;
 	}
 
-	$email = &tools::clean_email($email);
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
