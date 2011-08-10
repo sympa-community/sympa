@@ -100,12 +100,31 @@ sub do_log {
         }
     }
 
-    ## Determine calling function and parameters
-    my @call = caller(1);
-    ## wwslog already adds this information
-    unless ($call[3] =~ /wwslog$/) {
-        $message = $call[3] . '() ' . $message if ($call[3]);
+    ## Determine calling function
+    my $caller_string;
+   
+    ## If in 'err' level, build a stack trace
+    if ($level eq 'err'){
+	my $go_back = 1;
+	my @calls;
+	while (my @call = caller($go_back)) {
+		unshift @calls, $call[3].'#'.$call[2];
+		$go_back++;
+	}
+	
+	$caller_string = join(' > ',@calls);
+    }else {
+	my @call = caller(1);
+	
+	## If called via wwslog, go one step ahead
+	if ($call[3] =~ /wwslog$/) {
+		my @call = caller(2);
+	}
+	
+	$caller_string = $call[3].'()';
     }
+    
+    $message = $caller_string. ' ' . $message if ($caller_string);
 
     ## Add facility to log entry
     $message = $level.' '.$message;
