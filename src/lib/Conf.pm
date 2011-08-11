@@ -1619,12 +1619,10 @@ sub _set_listmasters_entry{
             }
         }
     }else{
-        printf STDERR "Conf::_set_listmasters_entry(): Robot %s config: No listmaster found in hash\n",$param->{'config_hash'}{'host'};
         if ($param->{'main_config'}) {
-			printf STDERR "Conf::_set_listmasters_entry(): This is the main config. It MUST define at least one listmaster. Stopping here.\n.";
+			printf STDERR "Conf::_set_listmasters_entry(): Robot %s config: No listmaster defined. This is the main config. It MUST define at least one listmaster. Stopping here.\n.";
 			return undef;
 		}else{
-			printf STDERR "Conf::_set_listmasters_entry(): Defaulting to the main server listmasters\n.";
 			$param->{'config_hash'}{'listmasters'} = $Conf{'listmasters'};
 			$param->{'config_hash'}{'listmaster'} = $Conf{'listmaster'};
 			$number_of_valid_email = $#{$param->{'config_hash'}{'listmasters'}};
