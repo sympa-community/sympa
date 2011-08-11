@@ -88,8 +88,8 @@ sympa_status() {
 
     else
        # First try "/u1/home/sympa/*.pid" files
-       if [ -f ${sympa_piddir}/$1.pid ] ; then
-             pid=`head -1 ${sympa_piddir}/$1.pid | tr -s ' ' '|'`
+       if [ -f ${sympapiddir}/$1.pid ] ; then
+             pid=`head -1 ${sympapiddir}/$1.pid | tr -s ' ' '|'`
              if [ "$pid" != "" ] ; then
                  running=`ps -A | egrep "$pid"`
                  if [ "$running" != "" ]; then
@@ -158,9 +158,9 @@ sympa_stop() {
         return 1
     fi
  
-    if [ -f ${sympa_piddir}/$1.pid ]; then
+    if [ -f ${sympapiddir}/$1.pid ]; then
 	echo $echo_opt "Stopping module $1.pl: "
-	pids=`head -1 ${sympa_piddir}/$1.pid`
+	pids=`head -1 ${sympapiddir}/$1.pid`
 	runcount=0
 	if [ "$pids" != "" ]; then
 	    for pid in $pids; do
@@ -247,10 +247,10 @@ case "$1" in
 	sympa_stop archived
 	sympa_stop bulk
 	sympa_stop sympa
-	#if [ -f ${sympa_piddir}/sympa-distribute.pid ]; then
+	#if [ -f ${sympapiddir}/sympa-distribute.pid ]; then
 	#	sympa_stop sympa-distribute
 	#fi
-	if [ -f ${sympa_piddir}/sympa-creation.pid ]; then
+	if [ -f ${sympapiddir}/sympa-creation.pid ]; then
 		sympa_stop sympa-creation
 	fi
 	sympa_stop task_manager
