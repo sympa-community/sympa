@@ -1,8 +1,6 @@
 From: [% fromlist %]
 To: [% list.name %]-editor@[% list.host %]
-[% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Article to be tagged for list %1 from %2[%END%][%END%]
-[% ELSE -%]Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
-[% END -%]
+Subject: [% FILTER qencode %][%|loc(list.name,msg_from)%]Message for list %1 from %2 to be approved[%END%][%END%]
 Reply-To: [% conf.email %]@[% conf.host %]
 [% IF spam_status != 'spam' -%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
@@ -18,14 +16,13 @@ Content-Disposition: inline
 [%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] <[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]>
 
 [% IF method == 'md5' -%]
-[% IF request_topic -%][%|loc(list.name)%]To tag the message in list %1 for the appropriate topic, please use the following link:[%END%]
+[% IF request_topic -%][%|loc()%]This mailing list is configured to require topics; that's probably why this message went through the moderation process.[%END%]
+[%END%]
 
-[% conf.wwsympa_url %]/viewmod/[% list.name %]/[% modkey %]
-[%- ELSE -%]
 [%- IF spam_status == 'spam' -%]
-Because the new message is suspected to be a spam it is not attached to this one. You must use
-the web interface to reject or validate it.
+[%|loc%]Because the new message is suspected to be a spam it is not attached to this one. You must use the web interface to reject or validate it.[%END%]
 [%- ELSE -%]	
+[% IF ! request_topic %]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 <[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
@@ -35,7 +32,7 @@ DISTRIBUTE [% list.name %] [% modkey %]
 <[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%][% END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
-
+[%END%]
 [%|loc(conf.wwsympa_url)%]The messages moderating documentation:[%END%] <[% conf.wwsympa_url %]/help/admin#moderate>
 
 --[% boundary %]
@@ -48,6 +45,5 @@ X-Sympa-Attach: yes
 
 --[% boundary %]--
 [%- END -%]
-[% END %]
 [% END %]
 
