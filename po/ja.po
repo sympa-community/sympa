@@ -4986,7 +4986,7 @@ msgstr "探す期間"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16682
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16678
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y年%m月%d日 %H:%M:%S"
 
@@ -7395,59 +7395,60 @@ msgstr ""
 
 #. (list.name,msg_from)
 #: ../mail_tt2/moderate.tt2:3
-msgid "Article to be tagged for list %1 from %2"
-msgstr "トピックの印が要る投稿 (%2 から %1 メーリングリスト宛て)"
-
-#. (list.name,msg_from)
-#: ../mail_tt2/moderate.tt2:4
 msgid "Message for list %1 from %2 to be approved"
 msgstr "承認が必要な %1 メーリングリスト宛てメッセージ (%2 から)"
 
 #. (list.name,msg_from)
-#: ../mail_tt2/moderate.tt2:14
+#: ../mail_tt2/moderate.tt2:12
 msgid "One new message from list %1 from %2 arrived. "
 msgstr "%2 から %1 メーリングリストに新たなメッセージが届きました。"
 
-#: ../mail_tt2/moderate.tt2:15
+#: ../mail_tt2/moderate.tt2:13
 msgid "This message has been tagged as spam"
 msgstr "このメッセージにスパムの印をつけました"
 
 #. (mod_spool_size)
-#: ../mail_tt2/moderate.tt2:17
+#: ../mail_tt2/moderate.tt2:15
 msgid "They are %1 messages awaiting moderation."
 msgstr "このリストでモデレーションを待っているメッセージが %1 通あります。"
 
-#: ../mail_tt2/moderate.tt2:18
+#: ../mail_tt2/moderate.tt2:16
 msgid ""
 "To browse the awaiting messages, you should click on the following link:"
 msgstr "保留メッセージを見るには、次のリンクをクリックしてください:"
 
-#. (list.name)
-#: ../mail_tt2/moderate.tt2:21
+#: ../mail_tt2/moderate.tt2:19
+#, fuzzy
 msgid ""
-"To tag the message in list %1 for the appropriate topic, please use the "
-"following link:"
+"This mailing list is configured to require topics; that's probably why this "
+"message went through the moderation process."
 msgstr ""
-"%1 メーリングリストリスト宛てのメッセージを添付しました。これにトピックの印を"
-"つけるには、次のページへ行ってください:"
+"このリストでは、メッセージひとつひとつにトピックがなければいけないように設定"
+"してあります。"
+
+#: ../mail_tt2/moderate.tt2:23
+msgid ""
+"Because the new message is suspected to be a spam it is not attached to this "
+"one. You must use the web interface to reject or validate it."
+msgstr ""
 
 #. (list.name)
-#: ../mail_tt2/moderate.tt2:29
+#: ../mail_tt2/moderate.tt2:26
 msgid "To distribute the attached message in list %1:"
 msgstr "添付のメッセージを %1 メーリングリストに配送するには:"
 
 #. (conf.email,conf.host)
-#: ../mail_tt2/moderate.tt2:31 ../mail_tt2/moderate.tt2:36
+#: ../mail_tt2/moderate.tt2:28 ../mail_tt2/moderate.tt2:33
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr ""
 "あるいは、%1@%2 宛てに、次の表題 (subject) でメッセージを送ってください:"
 
-#: ../mail_tt2/moderate.tt2:34
+#: ../mail_tt2/moderate.tt2:31
 msgid "To reject it (it will be removed):"
 msgstr "拒否するには (削除されます):"
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/moderate.tt2:39 ../mail_tt2/modindex.tt2:10
+#: ../mail_tt2/moderate.tt2:36 ../mail_tt2/modindex.tt2:10
 msgid "The messages moderating documentation:"
 msgstr "メッセージのモデレーションについての説明:"
 
@@ -8616,7 +8617,7 @@ msgstr "%Y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10135
+#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10131
 msgid "%A"
 msgstr "%a"
 
@@ -9460,11 +9461,11 @@ msgid ""
 "page"
 msgstr "運用記録ページで一度に表示する項目数の初期値"
 
-#: ../src/lib/Conf.pm:964
+#: ../src/lib/Conf.pm:967
 msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
 msgstr "Conf::load_nrcpt_by_domain(): 間違いがあります (%d 行目): %s"
 
-#: ../src/lib/Conf.pm:1308
+#: ../src/lib/Conf.pm:1311
 msgid "Error at line %d: %s\n"
 msgstr "間違いがあります (%d 行目): %s\n"
 
@@ -9472,7 +9473,7 @@ msgstr "間違いがあります (%d 行目): %s\n"
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2593 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
 #: ../src/lib/List.pm:1881 ../wwsympa/Auth.pm:435
-#: ../wwsympa/wwsympa.fcgi.in:1079 ../wwsympa/wwsympa.fcgi.in:2932
+#: ../wwsympa/wwsympa.fcgi.in:1079 ../wwsympa/wwsympa.fcgi.in:2928
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y年%m月%d日%H時%M分%S秒"
 
@@ -10206,31 +10207,31 @@ msgstr "%Y年%m月%d日(%a)"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:3042 ../src/lib/List.pm:3043 ../src/lib/List.pm:3047
-#: ../wwsympa/wwsympa.fcgi.in:11347 ../wwsympa/wwsympa.fcgi.in:11416
-#: ../wwsympa/wwsympa.fcgi.in:11618 ../wwsympa/wwsympa.fcgi.in:11965
-#: ../wwsympa/wwsympa.fcgi.in:15462 ../wwsympa/wwsympa.fcgi.in:15469
-#: ../wwsympa/wwsympa.fcgi.in:16209 ../wwsympa/wwsympa.fcgi.in:16259
-#: ../wwsympa/wwsympa.fcgi.in:17032 ../wwsympa/wwsympa.fcgi.in:17033
-#: ../wwsympa/wwsympa.fcgi.in:4347 ../wwsympa/wwsympa.fcgi.in:4405
-#: ../wwsympa/wwsympa.fcgi.in:4982 ../wwsympa/wwsympa.fcgi.in:4983
-#: ../wwsympa/wwsympa.fcgi.in:6496 ../wwsympa/wwsympa.fcgi.in:7629
-#: ../wwsympa/wwsympa.fcgi.in:8244 ../wwsympa/wwsympa.fcgi.in:8291
-#: ../wwsympa/wwsympa.fcgi.in:8293 ../wwsympa/wwsympa.fcgi.in:8811
-#: ../wwsympa/wwsympa.fcgi.in:8812 ../wwsympa/wwsympa.fcgi.in:8846
-#: ../wwsympa/wwsympa.fcgi.in:8847 ../wwsympa/wwsympa.fcgi.in:9026
-#: ../wwsympa/wwsympa.fcgi.in:9027
+#: ../wwsympa/wwsympa.fcgi.in:11343 ../wwsympa/wwsympa.fcgi.in:11412
+#: ../wwsympa/wwsympa.fcgi.in:11614 ../wwsympa/wwsympa.fcgi.in:11961
+#: ../wwsympa/wwsympa.fcgi.in:15458 ../wwsympa/wwsympa.fcgi.in:15465
+#: ../wwsympa/wwsympa.fcgi.in:16205 ../wwsympa/wwsympa.fcgi.in:16255
+#: ../wwsympa/wwsympa.fcgi.in:17028 ../wwsympa/wwsympa.fcgi.in:17029
+#: ../wwsympa/wwsympa.fcgi.in:4343 ../wwsympa/wwsympa.fcgi.in:4401
+#: ../wwsympa/wwsympa.fcgi.in:4978 ../wwsympa/wwsympa.fcgi.in:4979
+#: ../wwsympa/wwsympa.fcgi.in:6492 ../wwsympa/wwsympa.fcgi.in:7625
+#: ../wwsympa/wwsympa.fcgi.in:8240 ../wwsympa/wwsympa.fcgi.in:8287
+#: ../wwsympa/wwsympa.fcgi.in:8289 ../wwsympa/wwsympa.fcgi.in:8807
+#: ../wwsympa/wwsympa.fcgi.in:8808 ../wwsympa/wwsympa.fcgi.in:8842
+#: ../wwsympa/wwsympa.fcgi.in:8843 ../wwsympa/wwsympa.fcgi.in:9022
+#: ../wwsympa/wwsympa.fcgi.in:9023
 msgid "%d %b %Y"
 msgstr "%Y年%m月%d日"
 
-#: ../src/lib/List.pm:6438
+#: ../src/lib/List.pm:6443
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr "当メーリングリストの読者数上限 (%s) を超えてしまいます。"
 
-#: ../src/lib/List.pm:6441
+#: ../src/lib/List.pm:6446
 msgid "Attempts to add some users in database failed."
 msgstr "読者のデータベースへの追加が (一部) 失敗しました。"
 
-#: ../src/lib/List.pm:6443
+#: ../src/lib/List.pm:6448
 msgid "Added %s users out of %s required."
 msgstr "%2$s人のうち%1$s人を追加しました。"
 
@@ -10364,61 +10365,61 @@ msgstr "(日付不明)"
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: ../wwsympa/wwsympa.fcgi.in:4877
+#: ../wwsympa/wwsympa.fcgi.in:4873
 msgid "Unable to add user %s in list %s : %s"
 msgstr "%2$s メーリングリストに %1$s を追加できません: %3$s"
 
-#: ../wwsympa/wwsympa.fcgi.in:10695 ../wwsympa/wwsympa.fcgi.in:6221
-#: ../wwsympa/wwsympa.fcgi.in:9697
+#: ../wwsympa/wwsympa.fcgi.in:10691 ../wwsympa/wwsympa.fcgi.in:6217
+#: ../wwsympa/wwsympa.fcgi.in:9693
 msgid "Unable to add users in list %s : %s"
 msgstr "%s メーリングリストに人を追加できません: %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
-#: ../wwsympa/wwsympa.fcgi.in:12199 ../wwsympa/wwsympa.fcgi.in:12332
-#: ../wwsympa/wwsympa.fcgi.in:14675 ../wwsympa/wwsympa.fcgi.in:8198
+#: ../wwsympa/wwsympa.fcgi.in:12195 ../wwsympa/wwsympa.fcgi.in:12328
+#: ../wwsympa/wwsympa.fcgi.in:14671 ../wwsympa/wwsympa.fcgi.in:8194
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
-#: ../wwsympa/wwsympa.fcgi.in:15644
+#: ../wwsympa/wwsympa.fcgi.in:15640
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "%s メーリングリストからの登録解除申込をリストのオーナーに回送しました"
 
-#: ../wwsympa/wwsympa.fcgi.in:15646
+#: ../wwsympa/wwsympa.fcgi.in:15642
 msgid "You were successfully unsubscribed from list %s."
 msgstr "あなたは %1 メーリングリストから登録解除されました。"
 
-#: ../wwsympa/wwsympa.fcgi.in:15650
+#: ../wwsympa/wwsympa.fcgi.in:15646
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 "%s メーリングリストからの登録解除は認められませんでした。このリストは登録解除"
 "ができません。"
 
-#: ../wwsympa/wwsympa.fcgi.in:15652
+#: ../wwsympa/wwsympa.fcgi.in:15648
 msgid "Unsubscription from list %s failed."
 msgstr "%1 メーリングリストからの登録解除が失敗しました。"
 
-#: ../wwsympa/wwsympa.fcgi.in:16248
+#: ../wwsympa/wwsympa.fcgi.in:16244
 msgid "Mail sending"
 msgstr "メッセージ配送"
 
-#: ../wwsympa/wwsympa.fcgi.in:16249
+#: ../wwsympa/wwsympa.fcgi.in:16245
 msgid "Subscription additions"
 msgstr "読者登録"
 
-#: ../wwsympa/wwsympa.fcgi.in:16250
+#: ../wwsympa/wwsympa.fcgi.in:16246
 msgid "Unsubscription"
 msgstr "登録解除"
 
-#: ../wwsympa/wwsympa.fcgi.in:16251
+#: ../wwsympa/wwsympa.fcgi.in:16247
 msgid "Users deleted by admin"
 msgstr "オーナーによる読者削除"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16627 ../wwsympa/wwsympa.fcgi.in:16628
+#: ../wwsympa/wwsympa.fcgi.in:16623 ../wwsympa/wwsympa.fcgi.in:16624
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 
@@ -10594,6 +10595,16 @@ msgstr ""
 #: ../web_tt2/edit_config.tt2:28
 msgid "[% confparam.query %]"
 msgstr ""
+
+#~ msgid "Article to be tagged for list %1 from %2"
+#~ msgstr "トピックの印が要る投稿 (%2 から %1 メーリングリスト宛て)"
+
+#~ msgid ""
+#~ "To tag the message in list %1 for the appropriate topic, please use the "
+#~ "following link:"
+#~ msgstr ""
+#~ "%1 メーリングリストリスト宛てのメッセージを添付しました。これにトピックの"
+#~ "印をつけるには、次のページへ行ってください:"
 
 #~ msgid "URL:"
 #~ msgstr "URL:"
