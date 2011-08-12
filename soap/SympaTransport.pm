@@ -16,7 +16,7 @@ sub request {
     if (my $request = $_[0]) {	
 	
 	## Select appropriate robot
-	if (defined $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
+	if ($Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
 	  $ENV{'SYMPA_ROBOT'} = $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
 	  &Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
 	}else {
