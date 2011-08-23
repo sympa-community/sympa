@@ -1705,7 +1705,7 @@ sub increment_msg_count {
     }
     
     unless (open(MSG_COUNT, ">$file.$$")) {
-	do_log('err', "Unable to create '%s.%s' : %s", $file,$$, $!);
+	&Log::do_log('err', "Unable to create '%s.%s' : %s", $file,$$, $!);
 	return undef;
     }
     foreach my $key (sort {$a <=> $b} keys %count) {
@@ -1714,7 +1714,7 @@ sub increment_msg_count {
     close MSG_COUNT ;
     
     unless (rename("$file.$$", $file)) {
-	do_log('err', "Unable to write '%s' : %s", $file, $!);
+	&Log::do_log('err', "Unable to write '%s' : %s", $file, $!);
 	return undef;
     }
     return 1;
@@ -1754,7 +1754,7 @@ sub get_latest_distribution_date {
     my %count ; 
     my $latest_date = 0 ; 
     unless (open(MSG_COUNT, $file)) {
-	do_log('debug2',"get_latest_distribution_date: unable to open $file");
+	&Log::do_log('debug2',"get_latest_distribution_date: unable to open $file");
 	return undef ;
     }
 
@@ -3386,7 +3386,7 @@ sub send_msg {
 	}elsif($array_name eq 'tabrcpt_txt'){
 	    my $txt_msg = $saved_msg->dup;
 	    if (&tools::as_singlepart($txt_msg, 'text/plain')) {
-		do_log('notice', 'Multipart message changed to singlepart');
+		&Log::do_log('notice', 'Multipart message changed to singlepart');
 	    }
 	    
 	    ## Add a footer
@@ -3400,7 +3400,7 @@ sub send_msg {
 	}elsif($array_name eq 'tabrcpt_html'){
 	    my $html_msg = $saved_msg->dup;
 	    if (&tools::as_singlepart($html_msg, 'text/html')) {
-		do_log('notice', 'Multipart message changed to singlepart');
+		&Log::do_log('notice', 'Multipart message changed to singlepart');
 	    }
 	    ## Add a footer
 	    my $new_msg = $self->add_parts($html_msg);
@@ -3416,7 +3416,7 @@ sub send_msg {
 	    my $expl = $self->{'dir'}.'/urlized';
 	    
 	    unless ((-d $expl) ||( mkdir $expl, 0775)) {
-		do_log('err', "Unable to create urlize directory $expl");
+		&Log::do_log('err', "Unable to create urlize directory $expl");
 		return undef;
 	    }
 	    
@@ -3427,7 +3427,7 @@ sub send_msg {
 	    $dir1 = '/'.$dir1;
 	    
 	    unless ( mkdir ("$expl/$dir1", 0775)) {
-		do_log('err', "Unable to create urlize directory $expl/$dir1");
+		&Log::do_log('err', "Unable to create urlize directory $expl/$dir1");
 		printf "Unable to create urlized directory $expl/$dir1";
 		return 0;
 	    }
@@ -3456,7 +3456,7 @@ sub send_msg {
 	}
 
 	unless (defined $new_message) {
-		do_log('err', "Failed to create Message object");
+		&Log::do_log('err', "Failed to create Message object");
 		return undef;	    
 	}
 
@@ -3588,7 +3588,7 @@ sub send_to_editor {
        my $tmp_dir = $modqueue.'/.'.$self->get_list_id().'_'.$modkey;
        unless (-d $tmp_dir) {
 	   unless (mkdir ($tmp_dir, 0777)) {
-	       &do_log('err','Unable to create %s: %s', $tmp_dir, $!);
+	       &Log::do_log('err','Unable to create %s: %s', $tmp_dir, $!);
 	       return undef;
 	   }
 	   my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
@@ -4157,7 +4157,7 @@ sub send_notify_to_owner {
     my $robot = $self->{'domain'};
 
     unless (@to) {
-	do_log('notice', 'No owner defined or all of them use nomail option in list %s ; using listmasters as default', $self->{'name'} );
+	&Log::do_log('notice', 'No owner defined or all of them use nomail option in list %s ; using listmasters as default', $self->{'name'} );
 	@to = split /,/, &Conf::get_robot_conf($robot, 'listmaster');
     }
     unless (defined $operation) {
@@ -4258,7 +4258,7 @@ sub delete_list_member_picture {
 	    return undef;  
 	}
 
-	do_log('notice', 'File deleted successfull '.$fullfilename);
+	&Log::do_log('notice', 'File deleted successfull '.$fullfilename);
     }
 
     return 1;
@@ -4289,7 +4289,7 @@ sub send_notify_to_editor {
     $param->{'auto_submitted'} = 'auto-generated';
       
       unless (@to) {
-	do_log('notice', 'Warning : no editor or owner defined or all of them use nomail option in list %s', $self->{'name'} );
+	&Log::do_log('notice', 'Warning : no editor or owner defined or all of them use nomail option in list %s', $self->{'name'} );
 	return undef;
     }
     unless (defined $operation) {
@@ -4820,7 +4820,7 @@ sub get_all_global_user {
     push @sth_stack, $sth;
     
     unless ($sth = &SDM::do_query("SELECT email_user FROM user_table")) {
-	do_log('err','Unable to gather all users in DB');
+	&Log::do_log('err','Unable to gather all users in DB');
 	return undef;
     }
     
@@ -5038,7 +5038,7 @@ sub get_list_member {
     my $user = &get_list_member_no_object($options);
 
     unless($user){
-	do_log('err','Unable to retrieve information from database for user %s', $email) unless ($options{'probe'});
+	&Log::do_log('err','Unable to retrieve information from database for user %s', $email) unless ($options{'probe'});
 	return undef;
     }
     $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
@@ -5204,7 +5204,7 @@ sub find_list_member_by_pattern_no_object {
     &SDM::quote($email_pattern), 
     &SDM::quote($name),
     &SDM::quote($options->{'domain'}))) {
-	do_log('err','Unable to gather informations corresponding to pattern %s for list %s@%s',$email_pattern,$name,$options->{'domain'});
+	&Log::do_log('err','Unable to gather informations corresponding to pattern %s for list %s@%s',$email_pattern,$name,$options->{'domain'});
 	return undef;
     }
     
@@ -5270,7 +5270,7 @@ sub get_list_member_no_object {
     &SDM::quote($email), 
     &SDM::quote($name),
     &SDM::quote($options->{'domain'}))) {
-	do_log('err','Unable to gather informations for user: %s', $email,$name,$options->{'domain'});
+	&Log::do_log('err','Unable to gather informations for user: %s', $email,$name,$options->{'domain'});
 	return undef;
     }
     my $user = $sth->fetchrow_hashref('NAME_lc');
@@ -5278,7 +5278,7 @@ sub get_list_member_no_object {
 	
 	$user->{'reception'} ||= 'mail';
 	$user->{'update_date'} ||= $user->{'date'};
-	do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
+	&Log::do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
 	if (defined $user->{custom_attribute}) {
 	    &Log::do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
@@ -5323,7 +5323,7 @@ sub get_list_admin {
 	&SDM::quote($name), 
 	&SDM::quote($self->{'domain'}),
 	&SDM::quote($role))) {
-	do_log('err','Unable to get admin %s for list %s@%s',$email,$name,$self->{'domain'});
+	&Log::do_log('err','Unable to get admin %s for list %s@%s',$email,$name,$self->{'domain'});
 	return undef;
     }
     
@@ -5433,7 +5433,7 @@ sub get_first_list_member {
     }
     
     unless ($sth = SDM::do_query($statement)) {
-	do_log('err','Unable to get members of list %s@%s', $name, $self->{'domain'});
+	&Log::do_log('err','Unable to get members of list %s@%s', $name, $self->{'domain'});
 	return undef;
     }
     
@@ -5608,7 +5608,7 @@ sub get_first_list_admin {
     }
     
     unless ($sth = &SDM::do_query($statement)) {
-	do_log('err','Unable to get admins having role %s for list %s@%s', $role,$name,$self->{'domain'});
+	&Log::do_log('err','Unable to get admins having role %s for list %s@%s', $role,$name,$self->{'domain'});
 	return undef;
     }
     
@@ -5665,7 +5665,7 @@ sub get_next_list_member {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
-	do_log('debug2', '(email = %s)', $user->{'email'});
+	&Log::do_log('debug2', '(email = %s)', $user->{'email'});
 	if (defined $user->{custom_attribute}) {
 	    &Log::do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
@@ -5869,7 +5869,7 @@ sub get_total_bouncing {
 
     ## Query the Database
     unless ($sth = &SDM::do_query( "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s  AND robot_subscriber = %s AND bounce_subscriber is not NULL)", &SDM::quote($name), &SDM::quote($self->{'domain'}))) {
-	do_log('err','Unable to gather bouncing subscribers count for list %s@%s',$name,$self->{'domain'});
+	&Log::do_log('err','Unable to gather bouncing subscribers count for list %s@%s',$name,$self->{'domain'});
 	return undef;
     }
     
@@ -5924,7 +5924,7 @@ sub is_list_member {
     
     ## Query the Database
     unless ( $sth = &SDM::do_query("SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND user_subscriber = %s)",&SDM::quote($name), &SDM::quote($self->{'domain'}), &SDM::quote($who))) {
-	do_log('err','Unable to check chether user %s is subscribed to list %s@%s : %s', $who, $name, $self->{'domain'});
+	&Log::do_log('err','Unable to check chether user %s is subscribed to list %s@%s : %s', $who, $name, $self->{'domain'});
 	return undef;
     }
     
@@ -6333,7 +6333,7 @@ sub add_global_user {
     ## Update field
     unless($sth = &SDM::do_query("INSERT INTO user_table (%s) VALUES (%s)"
 	, join(',', @insert_field), join(',', @insert_value))) {
-	    do_log('err','Unable to add user %s to the DB table user_table', $values->{'email'});
+	    &Log::do_log('err','Unable to add user %s to the DB table user_table', $values->{'email'});
 	    return undef;
 	}
     
@@ -6370,7 +6370,7 @@ sub add_list_member {
 	
 	my %custom_attr = %{ $subscriptions->{$who}{'custom_attribute'} } if (defined $subscriptions->{$who}{'custom_attribute'} );
 	$new_user->{'custom_attribute'} ||= &createXMLCustomAttribute(\%custom_attr) ;
-	do_log('debug2', 'custom_attribute = %s', $new_user->{'custom_attribute'});
+	&Log::do_log('debug2', 'custom_attribute = %s', $new_user->{'custom_attribute'});
 
 	## Crypt password if it was not crypted
 	unless ($new_user->{'password'} =~ /^crypt/) {
@@ -6761,7 +6761,7 @@ sub may_create_parameter {
     my $edit_conf = &tools::load_edit_list_conf($robot,$self);
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (! $edit_conf->{$parameter}) {
-	do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');
+	&Log::do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');
 	return undef;
     }
     if ($edit_conf->{$parameter}  =~ /^(owner|privileged_owner)$/i ) {
@@ -6908,7 +6908,7 @@ sub is_moderated {
 ## Is the list archived?
 sub is_archived {
     &Log::do_log('debug', 'List::is_archived');    
-    if (shift->{'admin'}{'web_archive'}{'access'}) {do_log('debug', 'List::is_archived : 1'); return 1 ;}  
+    if (shift->{'admin'}{'web_archive'}{'access'}) {&Log::do_log('debug', 'List::is_archived : 1'); return 1 ;}  
     &Log::do_log('debug', 'List::is_archived : undef');
     return undef;
 }
@@ -7076,7 +7076,7 @@ sub _load_task_title {
     my $title = {};
 
     unless (open TASK, $file) {
-	do_log('err', 'Unable to open file "%s"' , $file);
+	&Log::do_log('err', 'Unable to open file "%s"' , $file);
 	return undef;
     }
 
@@ -7216,7 +7216,7 @@ sub _include_users_remote_sympa_list {
 	$key_file =  &tools::get_filename('etc',{},'private_key',$robot,$self);
     }
     unless ((-r $cert_file) && ( -r $key_file)) {
-	do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
+	&Log::do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
 	return undef;
     }
     
@@ -7304,7 +7304,7 @@ sub _include_users_list {
     }
 
     unless ($includelist) {
-	do_log('info', 'Included list %s unknown' , $includelistname);
+	&Log::do_log('info', 'Included list %s unknown' , $includelistname);
 	return undef;
     }
     
@@ -7374,7 +7374,7 @@ sub _include_users_file {
     my $total = 0;
     
     unless (open(INCLUDE, "$filename")) {
-	do_log('err', 'Unable to open file "%s"' , $filename);
+	&Log::do_log('err', 'Unable to open file "%s"' , $filename);
 	return undef;
     }
     &Log::do_log('debug2','including file %s' , $filename);
@@ -7539,7 +7539,7 @@ sub _include_users_remote_file {
 	}
     }
     else {
-	do_log ('err',"List::include_users_remote_file: Unable to fetch remote file $url : %s", $res->message());
+	&Log::do_log ('err',"List::include_users_remote_file: Unable to fetch remote file $url : %s", $res->message());
 	return undef; 
     }
 
@@ -7584,7 +7584,7 @@ sub _include_users_ldap {
 			      attrs => [ "$ldap_attrs" ],
 			      scope => "$param->{'scope'}");
     if ($fetch->code()) {
-	do_log('err','Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+	&Log::do_log('err','Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
 	       $fetch->error(), $param->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
         return undef;
     }
@@ -7629,7 +7629,7 @@ sub _include_users_ldap {
     }
     
     unless ($ds->disconnect()) {
-	do_log('notice','Can\'t unbind from  LDAP server %s', $param->{'host'});
+	&Log::do_log('notice','Can\'t unbind from  LDAP server %s', $param->{'host'});
 	return undef;
     }
     
@@ -7680,7 +7680,7 @@ sub _include_users_ldap_2level {
     &Log::do_log('debug2', 'List::_include_users_ldap_2level');
     
     unless (eval "require Net::LDAP") {
-	do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
+	&Log::do_log('err',"Unable to use LDAP library, install perl-ldap (CPAN) first");
 	return undef;
     }
     require Net::LDAP;
@@ -7720,7 +7720,7 @@ sub _include_users_ldap_2level {
 			      attrs => [ "$ldap_attrs1" ],
 			      scope => "$ldap_scope1");
     if ($fetch->code()) {
-	do_log('err','LDAP search (1st level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+	&Log::do_log('err','LDAP search (1st level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
 	       $fetch->error(), $param2->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
         return undef;
     }
@@ -7756,7 +7756,7 @@ sub _include_users_ldap_2level {
 	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
 	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
 
-	do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
+	&Log::do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $param->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	$fetch = $ldaph->search ( base => "$suffix2",
 				  filter => "$filter2",
 				  attrs => [ "$ldap_attrs2" ],
@@ -7806,7 +7806,7 @@ sub _include_users_ldap_2level {
     }
     
     unless ($ds->disconnect()) {
-	do_log('err','Can\'t unbind from  LDAP server %s', $param->{'host'});
+	&Log::do_log('err','Can\'t unbind from  LDAP server %s', $param->{'host'});
 	return undef;
     }
     
@@ -8092,7 +8092,7 @@ sub _load_list_admin_from_include {
 		}elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1 ;
 		    if (&_inclusion_loop ($name,$incl,$depend_on)) {
-			do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
+			&Log::do_log('err','loop detection in list inclusion : could not include again %s in %s',$incl,$name);
 		    }else{
 			$depend_on->{$incl} = 1;
 			$included = _include_users_list (\%admin_users, $incl, $self->{'domain'}, \%option);
@@ -8849,7 +8849,7 @@ sub _load_total_db {
 
     ## Query the Database
     unless ($sth = &SDM::do_query( "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s)", &SDM::quote($self->{'name'}), &SDM::quote($self->{'domain'}))) {
-	do_log('debug','Unable to get subscriber count for list %s@%s',$self->{'name'},$self->{'domain'});
+	&Log::do_log('debug','Unable to get subscriber count for list %s@%s',$self->{'name'},$self->{'domain'});
 	return undef;
     }
     
@@ -8992,12 +8992,12 @@ sub get_lists {
 	    $robot_dir = $Conf::Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'domain'}));
 	    
 	    unless (-d $robot_dir) {
-		do_log('err',"unknown robot $robot, Unable to open $robot_dir");
+		&Log::do_log('err',"unknown robot $robot, Unable to open $robot_dir");
 		return undef ;
 	    }
 	    
 	    unless (opendir(DIR, $robot_dir)) {
-		do_log('err',"Unable to open $robot_dir");
+		&Log::do_log('err',"Unable to open $robot_dir");
 		return undef;
 	    }
 
@@ -9039,7 +9039,7 @@ sub get_robots {
     &Log::do_log('debug2', 'List::get_robots()');
 
     unless (opendir(DIR, $Conf::Conf{'etc'})) {
-	do_log('err',"Unable to open $Conf::Conf{'etc'}");
+	&Log::do_log('err',"Unable to open $Conf::Conf{'etc'}");
 	return undef;
     }
     my $use_default_robot = 1 ;
@@ -9305,7 +9305,7 @@ sub sort_dir_to_get_mod {
     
     # listing of all the shared documents of the directory
     unless (opendir DIR, "$dir") {
-	do_log('err',"sort_dir_to_get_mod : cannot open $dir : $!");
+	&Log::do_log('err',"sort_dir_to_get_mod : cannot open $dir : $!");
 	return undef;
     }
     
@@ -9345,7 +9345,7 @@ sub get_db_field_type {
     my ($table, $field) = @_;
 
     unless ($sth = &SDM::do_query("SHOW FIELDS FROM $table")) {
-	do_log('err','get the list of fields for table %s', $table);
+	&Log::do_log('err','get the list of fields for table %s', $table);
 	return undef;
     }
 	    
@@ -9365,7 +9365,7 @@ sub lowercase_field {
     my $total = 0;
 
     unless ($sth = &SDM::do_query( "SELECT $field from $table")) {
-	do_log('err','Unable to get values of field %s for table %s',$field,$table);
+	&Log::do_log('err','Unable to get values of field %s for table %s',$field,$table);
 	return undef;
     }
 
@@ -9377,7 +9377,7 @@ sub lowercase_field {
 
 	## Updating Db
 	unless ($sth = &SDM::do_query( "UPDATE $table SET $field=%s WHERE ($field=%s)", &SDM::quote($lower_cased), &SDM::quote($user->{$field}))) {
-	    do_log('err','Unable to set field % from table %s to value %s',$field,$lower_cased,$table);
+	    &Log::do_log('err','Unable to set field % from table %s to value %s',$field,$lower_cased,$table);
 	    next;
 	}
     }
@@ -9828,7 +9828,7 @@ sub get_cert {
 	@cert = <CERT>;
 	close CERT;
     }else {
-	do_log('err', "List::get_cert(): unknown '$format' certificate format");
+	&Log::do_log('err', "List::get_cert(): unknown '$format' certificate format");
 	return undef;
     }
     
@@ -11210,7 +11210,7 @@ sub remove_aliases {
     system ("$alias_manager del $self->{'name'} $self->{'admin'}{'host'}");
     my $status = $? / 256;
     unless ($status == 0) {
-	do_log('err','Failed to remove aliases ; status %d : %s', $status, $!);
+	&Log::do_log('err','Failed to remove aliases ; status %d : %s', $status, $!);
 	return undef;
     }
     

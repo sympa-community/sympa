@@ -70,7 +70,7 @@ sub do_query {
     }
 
     unless ($sth = $db_source->do_query($query,@params)) {
-	do_log('err','SQL query failed to execute in the Sympa database');
+	&Log::do_log('err','SQL query failed to execute in the Sympa database');
 	return undef;
     }
 
@@ -87,7 +87,7 @@ sub do_prepared_query {
     }
 
     unless ($sth = $db_source->do_prepared_query($query,@params)) {
-	do_log('err','SQL query failed to execute in the Sympa database');
+	&Log::do_log('err','SQL query failed to execute in the Sympa database');
 	return undef;
     }
 
@@ -495,7 +495,7 @@ sub data_structure_uptodate {
 
      if (-f $version_file) {
 	 unless (open VFILE, $version_file) {
-	     do_log('err', "Unable to open %s : %s", $version_file, $!);
+	     &Log::do_log('err', "Unable to open %s : %s", $version_file, $!);
 	     return undef;
 	 }
 	 while (<VFILE>) {

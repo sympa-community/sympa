@@ -32,7 +32,7 @@ use List;
 
 
 our @ISA = qw(Exporter);
-our @EXPORT = qw(fatal_err do_log do_openlog $log_level %levels);
+our @EXPORT = qw($log_level %levels);
 
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
 # When logs are not available, period of time to wait before sending another warning to listmaster.
@@ -54,6 +54,12 @@ our %levels = (
 
 our $last_date_aggregation;
 
+##sub import {
+	##my @call = caller(1);
+	##printf "Import from $call[3]\n";
+	##Log->export_to_level(1, @_);
+##}
+##
 sub fatal_err {
     my $m  = shift;
     my $errno  = $!;

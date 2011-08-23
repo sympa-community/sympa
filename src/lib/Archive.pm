@@ -34,7 +34,7 @@ my $serial_number = 0; # incremented on each archived mail
 sub outgoing {
     my($dir,$list_id,$msg) = @_;
     
-    do_log ('debug2',"outgoing for list $list_id to directory $dir");
+    &Log::do_log ('debug2',"outgoing for list $list_id to directory $dir");
     
     return 1 if ($dir eq '/dev/null');
 
@@ -42,7 +42,7 @@ sub outgoing {
     if (ref($msg) && 
 	($Conf::Conf{'ignore_x_no_archive_header_feature'} ne 'on') && 
 	(($msg->head->get('X-no-archive') =~ /yes/i) || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))) {
-	do_log('info',"Do not archive message with no-archive flag for list $list_id");
+	&Log::do_log('info',"Do not archive message with no-archive flag for list $list_id");
 	return 1;
     }
 
@@ -52,7 +52,7 @@ sub outgoing {
     unless (-d $dir) {
 	mkdir ($dir, 0775);
 	chmod 0774, $dir;
-	do_log('info',"creating $dir");
+	&Log::do_log('info',"creating $dir");
     }
     
     my @now  = localtime(time);
@@ -61,10 +61,10 @@ sub outgoing {
     my $filename = sprintf '%s/%s.%d.%d.%d', $dir, $list_id, time, $$, $serial_number;
     $serial_number = ($serial_number+1)%100000;
     unless ( open(OUT, "> $filename")) {
-	do_log('info',"error unable open outgoing dir $dir for list $list_id");
+	&Log::do_log('info',"error unable open outgoing dir $dir for list $list_id");
 	return undef;
     }
-    do_log('debug',"put message in $filename");
+    &Log::do_log('debug',"put message in $filename");
     if (ref ($msg)) {
   	$msg->print(\*OUT);
     }else {
@@ -79,7 +79,7 @@ sub outgoing {
 sub store_last {
     my($list, $msg) = @_;
     
-    do_log ('debug2','archive::store ()');
+    &Log::do_log ('debug2','archive::store ()');
     
     my($filename, $newfile);
     
@@ -107,18 +107,18 @@ sub store_last {
 sub list {
     my $name = shift;
 
-    &do_log ('debug',"archive::list($name)");
+    &Log::do_log ('debug',"archive::list($name)");
 
     my($filename, $newfile);
     my(@l, $i);
     
     unless (-d "$name") {
-	&do_log ('warning',"archive::list($name) failed, no directory $name");
+	&Log::do_log ('warning',"archive::list($name) failed, no directory $name");
 #      @l = ($msg::no_archives_available);
       return @l;
   }
     unless (opendir(DIR, "$name")) {
-	&do_log ('warning',"archive::list($name) failed, cannot open directory $name");
+	&Log::do_log ('warning',"archive::list($name) failed, cannot open directory $name");
 #	@l = ($msg::no_archives_available);
 	return @l;
     }
@@ -136,10 +136,10 @@ sub scan_dir_archive {
     
     my($dir, $month) = @_;
     
-    &do_log ('info',"archive::scan_dir_archive($dir, $month)");
+    &Log::do_log ('info',"archive::scan_dir_archive($dir, $month)");
 
     unless (opendir (DIR, "$dir/$month/arctxt")){
-	&do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
+	&Log::do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
 	return undef;
     }
     
@@ -147,15 +147,15 @@ sub scan_dir_archive {
     my $i = 0 ;
     foreach my $file (sort readdir(DIR)) {
 	next unless ($file =~ /^\d+$/);
-	&do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
+	&Log::do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
 
 	my $mail = new Message({'file'=>"$dir/$month/arctxt/$file",'noxsympato'=>'noxsympato'});
 	unless (defined $mail) {
-	    &do_log('err', 'Unable to create Message object %s', $file);
+	    &Log::do_log('err', 'Unable to create Message object %s', $file);
 	    return undef;
 	}
 	
-	&do_log('debug',"MAIL object : $mail");
+	&Log::do_log('debug',"MAIL object : $mail");
 
 	$i++;
 	my $msg = {};
@@ -172,7 +172,7 @@ sub scan_dir_archive {
 	
 	$msg->{'full_msg'} = $mail->{'msg'}->as_string;
 
-	&do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
+	&Log::do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
 
 	push @{$all_msg}, $msg ;
     }
@@ -197,18 +197,18 @@ sub search_msgid {
     
     my($dir, $msgid) = @_;
     
-    &do_log ('info',"archive::search_msgid($dir, $msgid)");
+    &Log::do_log ('info',"archive::search_msgid($dir, $msgid)");
 
     
     if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	&do_log('err','remove_arc: no message id found');return undef;
+	&Log::do_log('err','remove_arc: no message id found');return undef;
     } 
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-	&do_log ('info',"archive::search_msgid : dir $dir look unproper");
+	&Log::do_log ('info',"archive::search_msgid : dir $dir look unproper");
 	return undef;
     }
     unless (opendir (ARC, "$dir")){
-	&do_log ('info',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
+	&Log::do_log ('info',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
 	return undef;
     }
     chomp $msgid ;
@@ -246,7 +246,7 @@ sub last_path {
     
     my $list = shift;
 
-    &do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
+    &Log::do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
 
     return undef unless ($list->is_archived());
     my $file = $list->{'dir'}.'/archives/last_message';
@@ -261,11 +261,11 @@ sub last_path {
 sub load_html_message {
     my %parameters = @_;
 
-    &do_log ('debug2',$parameters{'file_path'});
+    &Log::do_log ('debug2',$parameters{'file_path'});
     my %metadata;
 
     unless (open ARC, $parameters{'file_path'}) {
-	&do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
+	&Log::do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
 	return undef;
     }
 

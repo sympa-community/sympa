@@ -13,7 +13,7 @@ use Sympa::Constants;
 unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";
 }
-&do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
     unless (&Upgrade::probe_db()) {

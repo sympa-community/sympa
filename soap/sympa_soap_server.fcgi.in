@@ -57,7 +57,7 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_log('info', 'SOAP server launched');
 
 unless (&SDM::check_db_connect()) {
-    &do_log('err','SOAP server requires a RDBMS to run');
+    &Log::do_log('err','SOAP server requires a RDBMS to run');
 }
 
 my $pinfo = &List::_apply_defaults();

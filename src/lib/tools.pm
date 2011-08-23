@@ -80,7 +80,7 @@ sub set_file_rights {
 
     if ($param{'user'}){
 	unless ($uid = (getpwnam($param{'user'}))[2]) {
-	    &do_log('err', "User %s can't be found in passwd file",$param{'user'});
+	    &Log::do_log('err', "User %s can't be found in passwd file",$param{'user'});
 	    return undef;
 	}
     }else {
@@ -88,19 +88,19 @@ sub set_file_rights {
     }
     if ($param{'group'}) {
 	unless ($gid = (getgrnam($param{'group'}))[2]) {
-	    &do_log('err', "Group %s can't be found",$param{'group'});
+	    &Log::do_log('err', "Group %s can't be found",$param{'group'});
 	    return undef;
 	}
     }else {
 	$gid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
     }
     unless (chown($uid,$gid, $param{'file'})){
-	&do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param{'file'},$param{'user'},$param{'group'}, $!);
+	&Log::do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param{'file'},$param{'user'},$param{'group'}, $!);
 	return undef;
     }
     if ($param{'mode'}){
 	unless (chmod($param{'mode'}, $param{'file'})){
-	    &do_log('err', "Can't change rights of file %s: %s",$Conf::Conf{'db_name'}, $!);
+	    &Log::do_log('err', "Can't change rights of file %s: %s",$Conf::Conf{'db_name'}, $!);
 	    return undef;
 	}
     }
@@ -110,7 +110,7 @@ sub set_file_rights {
 ## Returns an HTML::StripScripts::Parser object built with  the parameters provided as arguments.
 sub _create_xss_parser {
     my %parameters = @_;
-    &do_log('debug3','tools::_create_xss_parser(%s)',$parameters{'robot'});
+    &Log::do_log('debug3','tools::_create_xss_parser(%s)',$parameters{'robot'});
     my $hss = HTML::StripScripts::Parser->new({ Context => 'Document',
 						AllowSrc        => 1,
 						Rules => {
@@ -166,16 +166,16 @@ sub make_pictures_url {
 ## Returns sanitized version (using StripScripts) of the string provided as argument.
 sub sanitize_html {
     my %parameters = @_;
-    &do_log('debug3','tools::sanitize_html(%s,%s)',$parameters{'string'},$parameters{'robot'});
+    &Log::do_log('debug3','tools::sanitize_html(%s,%s)',$parameters{'string'},$parameters{'robot'});
 
     unless (defined $parameters{'string'}) {
-	&do_log('err',"No string provided.");
+	&Log::do_log('err',"No string provided.");
 	return undef;
     }
 
     my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
     unless (defined $hss) {
-	&do_log('err',"Can't create StripScript parser.");
+	&Log::do_log('err',"Can't create StripScript parser.");
 	return undef;
     }
     my $string = $hss -> filter_html($parameters{'string'});
@@ -185,16 +185,16 @@ sub sanitize_html {
 ## Returns sanitized version (using StripScripts) of the content of the file whose path is provided as argument.
 sub sanitize_html_file {
     my %parameters = @_;
-    &do_log('debug3','tools::sanitize_html_file(%s)',$parameters{'robot'});
+    &Log::do_log('debug3','tools::sanitize_html_file(%s)',$parameters{'robot'});
 
     unless (defined $parameters{'file'}) {
-	&do_log('err',"No path to file provided.");
+	&Log::do_log('err',"No path to file provided.");
 	return undef;
     }
 
     my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
     unless (defined $hss) {
-	&do_log('err',"Can't create StripScript parser.");
+	&Log::do_log('err',"Can't create StripScript parser.");
 	return undef;
     }
     $hss -> parse_file($parameters{'file'});
@@ -204,13 +204,13 @@ sub sanitize_html_file {
 ## Sanitize all values in the hash $var, starting from $level
 sub sanitize_var {
     my %parameters = @_;
-    &do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
+    &Log::do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
     unless (defined $parameters{'var'}){
-	&do_log('err','Missing var to sanitize.');
+	&Log::do_log('err','Missing var to sanitize.');
 	return undef;
     }
     unless (defined $parameters{'htmlAllowedParam'} && $parameters{'htmlToFilter'}){
-	&do_log('err','Missing var *** %s *** %s *** to ignore.',$parameters{'htmlAllowedParam'},$parameters{'htmlToFilter'});
+	&Log::do_log('err','Missing var *** %s *** %s *** to ignore.',$parameters{'htmlAllowedParam'},$parameters{'htmlToFilter'});
 	return undef;
     }
     my $level = $parameters{'level'};
@@ -260,7 +260,7 @@ sub sanitize_var {
 	}
     }
     else {
-	&do_log('err','Variable is neither a hash nor an array.');
+	&Log::do_log('err','Variable is neither a hash nor an array.');
 	return undef;
     }
     return 1;
@@ -300,11 +300,11 @@ sub safefork {
    for ($i = 1; $i < 4; $i++) {
       my($pid) = fork;
       return $pid if (defined($pid));
-      do_log ('warning', "Can't create new process in safefork: %m");
+      &Log::do_log ('warning', "Can't create new process in safefork: %m");
       ## should send a mail to the listmaster
       sleep(10 * $i);
    }
-   fatal_err("Can't create new process in safefork: %m");
+   &Log::fatal_err("Can't create new process in safefork: %m");
    ## No return.
 }
 
@@ -325,7 +325,7 @@ sub safefork {
 ###################################################### 
 sub checkcommand {
    my($msg, $sender, $robot) = @_;
-   do_log('debug3', 'tools::checkcommand(msg->head->get(subject): %s,%s)',$msg->head->get('Subject'), $sender);
+   &Log::do_log('debug3', 'tools::checkcommand(msg->head->get(subject): %s,%s)',$msg->head->get('Subject'), $sender);
 
    my($avoid, $i);
 
@@ -359,7 +359,7 @@ sub checkcommand {
 sub load_edit_list_conf {
     my $robot = shift;
     my $list = shift;
-    do_log('debug2', 'tools::load_edit_list_conf (%s)',$robot);
+    &Log::do_log('debug2', 'tools::load_edit_list_conf (%s)',$robot);
 
     my $file;
     my $conf ;
@@ -368,7 +368,7 @@ sub load_edit_list_conf {
 	unless ($file = &tools::get_filename('etc',{},'edit_list.conf',$robot,$list));
 
     unless (open (FILE, $file)) {
-	&do_log('info','Unable to open config file %s', $file);
+	&Log::do_log('info','Unable to open config file %s', $file);
 	return undef;
     }
 
@@ -384,7 +384,7 @@ sub load_edit_list_conf {
 		$r =~ s/^\s*(\S+)\s*$/$1/;
 		if ($r eq 'default') {
 		    $error_in_conf = 1;
-		    &do_log('notice', '"default" is no more recognised');
+		    &Log::do_log('notice', '"default" is no more recognised');
 		    foreach my $set ('owner','privileged_owner','listmaster') {
 			$conf->{$param}{$set} = $priv;
 		    }
@@ -393,14 +393,14 @@ sub load_edit_list_conf {
 		$conf->{$param}{$r} = $priv;
 	    }
 	}else{
-	    &do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf::Conf{'etc'}/edit_list.conf",$_ );
+	    &Log::do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf::Conf{'etc'}/edit_list.conf",$_ );
 	    next;
 	}
     }
 
     if ($error_in_conf) {
 	unless (&List::send_notify_to_listmaster('edit_list_error', $robot, [$file])) {
-	    &do_log('notice',"Unable to send notify 'edit_list_error' to listmaster");
+	    &Log::do_log('notice',"Unable to send notify 'edit_list_error' to listmaster");
 	}
     }
     
@@ -418,12 +418,12 @@ sub load_create_list_conf {
     
     $file = &tools::get_filename('etc',{}, 'create_list.conf', $robot);
     unless ($file) {
-	&do_log('info', 'unable to read %s', Sympa::Constants::DEFAULTDIR . '/create_list.conf');
+	&Log::do_log('info', 'unable to read %s', Sympa::Constants::DEFAULTDIR . '/create_list.conf');
 	return undef;
     }
 
     unless (open (FILE, $file)) {
-	&do_log('info','Unable to open config file %s', $file);
+	&Log::do_log('info','Unable to open config file %s', $file);
 	return undef;
     }
 
@@ -433,7 +433,7 @@ sub load_create_list_conf {
 	if (/^\s*(\S+)\s+(read|hidden)\s*$/i) {
 	    $conf->{$1} = lc($2);
 	}else{
-	    &do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf::Conf{'etc'}/create_list.conf",$_ );
+	    &Log::do_log ('info', 'unknown parameter in %s  (Ignored) %s', "$Conf::Conf{'etc'}/create_list.conf",$_ );
 	    next;
 	}
     }
@@ -498,10 +498,10 @@ sub get_list_list_tpl {
 sub copy_dir {
     my $dir1 = shift;
     my $dir2 = shift;
-    &do_log('debug','Copy directory %s to %s',$dir1,$dir2);
+    &Log::do_log('debug','Copy directory %s to %s',$dir1,$dir2);
 
     unless (-d $dir1){
-	&do_log('err',"Directory source '%s' doesn't exist. Copy impossible",$dir1);
+	&Log::do_log('err',"Directory source '%s' doesn't exist. Copy impossible",$dir1);
 	return undef;
     }
     return (&File::Copy::Recursive::dircopy($dir1,$dir2)) ;
@@ -510,7 +510,7 @@ sub copy_dir {
 #delete a directory and its content
 sub del_dir {
     my $dir = shift;
-    &do_log('debug','del_dir %s',$dir);
+    &Log::do_log('debug','del_dir %s',$dir);
     
     if(opendir DIR, $dir){
 	for (readdir DIR) {
@@ -520,9 +520,9 @@ sub del_dir {
 	    del_dir($path) if -d $path;
 	}
 	closedir DIR;
-	unless(rmdir $dir) {&do_log('err','Unable to delete directory %s: $!',$dir);}
+	unless(rmdir $dir) {&Log::do_log('err','Unable to delete directory %s: $!',$dir);}
     }else{
-	&do_log('err','Unable to open directory %s to delete the files it contains: $!',$dir);
+	&Log::do_log('err','Unable to open directory %s to delete the files it contains: $!',$dir);
     }
 }
 
@@ -575,10 +575,10 @@ sub mkdir_all {
 sub shift_file {
     my $file = shift;
     my $count = shift;
-    do_log('debug', "shift_file ($file,$count)");
+    &Log::do_log('debug', "shift_file ($file,$count)");
 
     unless (-f $file) {
-	do_log('info', "shift_file : unknown file $file");
+	&Log::do_log('info', "shift_file : unknown file $file");
 	return undef;
     }
     
@@ -586,7 +586,7 @@ sub shift_file {
     my $file_extention = strftime("%Y:%m:%d:%H:%M:%S", @date);
     
     unless (rename ($file,$file.'.'.$file_extention)) {
-	&do_log('err', "shift_file : Cannot rename file $file to $file.$file_extention" );
+	&Log::do_log('err', "shift_file : Cannot rename file $file to $file.$file_extention" );
 	return undef;
     }
     if ($count) {
@@ -594,7 +594,7 @@ sub shift_file {
 	my $dir = $1;
 
 	unless (opendir(DIR, $dir)) {
-	    &do_log('err', "shift_file : Cannot read dir $dir" );
+	    &Log::do_log('err', "shift_file : Cannot read dir $dir" );
 	    return ($file.'.'.$file_extention);
 	}
 	my $i = 0 ;
@@ -602,9 +602,9 @@ sub shift_file {
 	    $i ++;
 	    if ($count lt $i) {
 		if (unlink ($oldfile)) { 
-		    do_log('info', "shift_file : unlink $oldfile");
+		    &Log::do_log('info', "shift_file : unlink $oldfile");
 		}else{
-		    do_log('info', "shift_file : unable to unlink $oldfile");
+		    &Log::do_log('info', "shift_file : unable to unlink $oldfile");
 		}
 	    }
 	}
@@ -621,9 +621,9 @@ sub get_templates_list {
 
     my $listdir;
 
-    do_log('debug', "get_templates_list ($type, $robot, $list)");
+    &Log::do_log('debug', "get_templates_list ($type, $robot, $list)");
     unless (($type eq 'web')||($type eq 'mail')) {
-	do_log('info', 'get_templates_list () : internal error incorrect parameter');
+	&Log::do_log('info', 'get_templates_list () : internal error incorrect parameter');
     }
 
     my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
@@ -688,7 +688,7 @@ sub get_template_path {
     my $lang = shift || 'default';
     my $list = shift;
 
-    do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,%s)", $list->{'name'});
+    &Log::do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,%s)", $list->{'name'});
 
     my $listdir;
     if (defined $list) {
@@ -696,7 +696,7 @@ sub get_template_path {
     }
 
     unless (($type == 'web')||($type == 'mail')) {
-	do_log('info', 'get_templates_path () : internal error incorrect parameter');
+	&Log::do_log('info', 'get_templates_path () : internal error incorrect parameter');
     }
 
     my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
@@ -730,14 +730,14 @@ sub get_dkim_parameters {
 
     my $robot = $params->{'robot'};
     my $listname = $params->{'listname'};
-    do_log('debug2',"get_dkim_parameters (%s,%s)",$robot, $listname);
+    &Log::do_log('debug2',"get_dkim_parameters (%s,%s)",$robot, $listname);
 
     my $data ; my $keyfile ;
     if ($listname) {
 	# fetch dkim parameter in list context
 	my $list = new List ($listname,$robot);
 	unless ($list){
-	    do_log('err',"Could not load list %s@%s",$listname, $robot);
+	    &Log::do_log('err',"Could not load list %s@%s",$listname, $robot);
 	    return undef;
 	}
 
@@ -761,7 +761,7 @@ sub get_dkim_parameters {
 	$keyfile = &Conf::get_robot_conf($robot, 'dkim_private_key_path');
     }
     unless (open (KEY, $keyfile)) {
-	do_log('err',"Could not read dkim private key %s",&Conf::get_robot_conf($robot, 'dkim_signer_selector'));
+	&Log::do_log('err',"Could not read dkim private key %s",&Conf::get_robot_conf($robot, 'dkim_signer_selector'));
 	return undef;
     }
     while (<KEY>){
@@ -777,31 +777,31 @@ sub dkim_verifier {
     my $msg_as_string = shift;
     my $dkim;
 
-    do_log('debug',"dkim verifier");
+    &Log::do_log('debug',"dkim verifier");
     unless (eval "require Mail::DKIM::Verifier") {
-	&do_log('err', "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature");
+	&Log::do_log('err', "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature");
 	return undef;
     }
     
     unless ( $dkim = Mail::DKIM::Verifier->new() ){
-	&do_log('err', 'Could not create Mail::DKIM::Verifier');
+	&Log::do_log('err', 'Could not create Mail::DKIM::Verifier');
 	return undef;
     }
    
     my $temporary_file = $Conf::Conf{'tmpdir'}."/dkim.".$$ ;  
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
+	&Log::do_log('err', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
     print MSGDUMP $msg_as_string ;
 
     unless (close(MSGDUMP)){ 
-	do_log('err',"unable to dump message in temporary file $temporary_file"); 
+	&Log::do_log('err',"unable to dump message in temporary file $temporary_file"); 
 	return undef; 
     }
 
     unless (open (MSGDUMP, "$temporary_file")) {
-	&do_log('err', 'Can\'t read message in file %s', $temporary_file);
+	&Log::do_log('err', 'Can\'t read message in file %s', $temporary_file);
 	return undef;
     }
 
@@ -826,7 +826,7 @@ sub dkim_verifier {
 # input a msg as string, output idem without signature if invalid
 sub remove_invalid_dkim_signature {
 
-    do_log('debug',"removing invalide dkim signature");
+    &Log::do_log('debug',"removing invalide dkim signature");
 
     my $msg_as_string = shift;
 
@@ -835,7 +835,7 @@ sub remove_invalid_dkim_signature {
 	$parser->output_to_core(1);
 	my $entity = $parser->parse_data($msg_as_string);
 	unless($entity) {
-	    &do_log('err','could not parse message');
+	    &Log::do_log('err','could not parse message');
 	    return $msg_as_string ;
 	}
 	$entity->head->delete('DKIM-Signature');
@@ -856,31 +856,31 @@ sub dkim_sign {
     my $dkim_privatekey = $data->{'dkim_privatekey'};
     my $dkim_header_list = $data->{'dkim_header_list'};
 
-    do_log('debug2', 'tools::dkim_sign (msg:%s,dkim_d:%s,dkim_i%s,dkim_selector:%s,dkim_header_list:%s,dkim_privatekey:%s)',substr($msg_as_string,0,30),$dkim_d,$data->{'dkim_i'},$data->{'dkim_selector'},$data->{'dkim_header_list'}, substr($data->{'dkim_privatekey'},0,30));
+    &Log::do_log('debug2', 'tools::dkim_sign (msg:%s,dkim_d:%s,dkim_i%s,dkim_selector:%s,dkim_header_list:%s,dkim_privatekey:%s)',substr($msg_as_string,0,30),$dkim_d,$data->{'dkim_i'},$data->{'dkim_selector'},$data->{'dkim_header_list'}, substr($data->{'dkim_privatekey'},0,30));
 
     unless ($dkim_selector) {
-	do_log('err',"DKIM selector is undefined, could not sign message");
+	&Log::do_log('err',"DKIM selector is undefined, could not sign message");
 	return $msg_as_string;
     }
     unless ($dkim_privatekey) {
-	do_log('err',"DKIM key file is undefined, could not sign message");
+	&Log::do_log('err',"DKIM key file is undefined, could not sign message");
 	return $msg_as_string;
     }
     unless ($dkim_d) {
-	do_log('err',"DKIM d= tag is undefined, could not sign message");
+	&Log::do_log('err',"DKIM d= tag is undefined, could not sign message");
 	return $msg_as_string;
     }
     
     my $temporary_keyfile = $Conf::Conf{'tmpdir'}."/dkimkey.".$$ ;  
     if (!open(MSGDUMP,"> $temporary_keyfile")) {
-	&do_log('err', 'Can\'t store key in file %s', $temporary_keyfile);
+	&Log::do_log('err', 'Can\'t store key in file %s', $temporary_keyfile);
 	return $msg_as_string;
     }
     print MSGDUMP $dkim_privatekey ;
     close(MSGDUMP);
 
     unless (eval "require Mail::DKIM::Signer") {
-	&do_log('err', "Failed to load Mail::DKIM::signer perl module, ignoring DKIM signature");
+	&Log::do_log('err', "Failed to load Mail::DKIM::signer perl module, ignoring DKIM signature");
 	return ($msg_as_string); 
     }
     my $dkim ;
@@ -904,19 +904,19 @@ sub dkim_sign {
 					);
     }
     unless ($dkim) {
-	&do_log('err', 'Can\'t create Mail::DKIM::Signer');
+	&Log::do_log('err', 'Can\'t create Mail::DKIM::Signer');
 	return ($msg_as_string); 
     }    
     my $temporary_file = $Conf::Conf{'tmpdir'}."/dkim.".$$ ;  
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('err', 'Can\'t store message in file %s', $temporary_file);
+	&Log::do_log('err', 'Can\'t store message in file %s', $temporary_file);
 	return ($msg_as_string); 
     }
     print MSGDUMP $msg_as_string ;
     close(MSGDUMP);
 
     unless (open (MSGDUMP , $temporary_file)){
-	&do_log('err', 'Can\'t read temporary file %s', $temporary_file);
+	&Log::do_log('err', 'Can\'t read temporary file %s', $temporary_file);
 	return undef;
     }
 
@@ -924,17 +924,17 @@ sub dkim_sign {
 
     close (MSGDUMP);
     unless ($dkim->CLOSE) {
-	&do_log('err', 'Cannot sign (DKIM) message');
+	&Log::do_log('err', 'Cannot sign (DKIM) message');
 	return ($msg_as_string); 
     }
     my $message = new Message({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
     unless ($message){
-	do_log('err',"unable to load $temporary_file as a message objet");
+	&Log::do_log('err',"unable to load $temporary_file as a message objet");
 	return ($msg_as_string); 
     }
 
     if ($main::options{'debug'}) {
-	do_log('debug',"temporary file is $temporary_file");
+	&Log::do_log('debug',"temporary file is $temporary_file");
     }else{
 	unlink ($temporary_file);
     }
@@ -954,7 +954,7 @@ sub smime_sign {
     my $list = shift;
     my $robot = shift;
 
-    do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
+    &Log::do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
 
     my $self = new List($list, $robot);
     my($cert, $key) = &smime_find_keys($self->{dir}, 'sign');
@@ -975,7 +975,7 @@ sub smime_sign {
 
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('info', 'Can\'t store message in file %s', $temporary_file);
+	&Log::do_log('info', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
     $dup_msg->print(\*MSGDUMP);
@@ -983,18 +983,18 @@ sub smime_sign {
 
     if ($Conf::Conf{'key_passwd'} ne '') {
 	unless ( mkfifo($temporary_pwd,0600)) {
-	    do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
+	    &Log::do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
-    &do_log('debug', "$Conf::Conf{'openssl'} smime -sign -rand $Conf::Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file");    
+    &Log::do_log('debug', "$Conf::Conf{'openssl'} smime -sign -rand $Conf::Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file");    
     unless (open (NEWMSG,"$Conf::Conf{'openssl'} smime -sign  -rand $Conf::Conf{'tmpdir'}"."/rand -signer $cert $pass_option -inkey $key -in $temporary_file |")) {
-    	&do_log('notice', 'Cannot sign message (open pipe)');
+    	&Log::do_log('notice', 'Cannot sign message (open pipe)');
 	return undef;
     }
 
     if ($Conf::Conf{'key_passwd'} ne '') {
 	unless (open (FIFO,"> $temporary_pwd")) {
-	    do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+	    &Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
 	}
 
 	print FIFO $Conf::Conf{'key_passwd'};
@@ -1006,17 +1006,17 @@ sub smime_sign {
 
     $parser->output_to_core(1);
     unless ($signed_msg = $parser->read(\*NEWMSG)) {
-	do_log('notice', 'Unable to parse message');
+	&Log::do_log('notice', 'Unable to parse message');
 	return undef;
     }
     unless (close NEWMSG){
-	&do_log('notice', 'Cannot sign message (close pipe)');
+	&Log::do_log('notice', 'Cannot sign message (close pipe)');
 	return undef;
     } 
 
     my $status = $?/256 ;
     unless ($status == 0) {
-	do_log('notice', 'Unable to S/MIME sign message : status = %d', $status);
+	&Log::do_log('notice', 'Unable to S/MIME sign message : status = %d', $status);
 	return undef;	
     }
 
@@ -1043,7 +1043,7 @@ sub smime_sign_check {
 
     my $sender = $message->{'sender'};
 
-    do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $sender, $message->{'filename'});
+    &Log::do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $sender, $message->{'filename'});
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -1058,11 +1058,11 @@ sub smime_sign_check {
     my $trusted_ca_options = '';
     $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} " if ($Conf::Conf{'cafile'});
     $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} " if ($Conf::Conf{'capath'});
-    do_log('debug', "$Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
+    &Log::do_log('debug', "$Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file");
 
     unless (open (MSGDUMP, "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null")) {
 
-	do_log('err', "unable to verify smime signature from $sender $verify");
+	&Log::do_log('err', "unable to verify smime signature from $sender $verify");
 	return undef ;
     }
     
@@ -1074,7 +1074,7 @@ sub smime_sign_check {
 	print MSGDUMP $message->{'msg_as_string'};
     }else{
 	unless (open MSG, $message->{'filename'}) {
-	    do_log('err', 'Unable to open file %s: %s', $message->{'filename'}, $!);
+	    &Log::do_log('err', 'Unable to open file %s: %s', $message->{'filename'}, $!);
 	    return undef;
 
 	}
@@ -1085,7 +1085,7 @@ sub smime_sign_check {
 
     my $status = $?/256 ;
     unless ($status == 0) {
-	do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
+	&Log::do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
 	return undef ;
     }
     ## second step is the message signer match the sender
@@ -1094,17 +1094,17 @@ sub smime_sign_check {
 
     unless ($signer->{'email'}{lc($sender)}) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;
-	&do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$sender, join(',', keys %{$signer->{'email'}}));
+	&Log::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$sender, join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
 
-    &do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
+    &Log::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
     ## store the signer certificat
     unless (-d $Conf::Conf{'ssl_cert_dir'}) {
 	if ( mkdir ($Conf::Conf{'ssl_cert_dir'}, 0775)) {
-	    do_log('info', "creating spool $Conf::Conf{'ssl_cert_dir'}");
+	    &Log::do_log('info', "creating spool $Conf::Conf{'ssl_cert_dir'}");
 	}else{
-	    do_log('err', "Unable to create user certificat directory $Conf::Conf{'ssl_cert_dir'}");
+	    &Log::do_log('err', "Unable to create user certificat directory $Conf::Conf{'ssl_cert_dir'}");
 	}
     }
 
@@ -1119,7 +1119,7 @@ sub smime_sign_check {
     my $tmpcert = "$Conf::Conf{tmpdir}/cert.$$";
     my $nparts = $message->{msg}->parts;
     my $extracted = 0;
-    &do_log('debug2', "smime_sign_check: parsing $nparts parts");
+    &Log::do_log('debug2', "smime_sign_check: parsing $nparts parts");
     if($nparts == 0) { # could be opaque signing...
 	$extracted +=&smime_extract_certs($message->{msg}, $certbundle);
     } else {
@@ -1131,12 +1131,12 @@ sub smime_sign_check {
     }
     
     unless($extracted) {
-	&do_log('err', "No application/x-pkcs7-* parts found");
+	&Log::do_log('err', "No application/x-pkcs7-* parts found");
 	return undef;
     }
 
     unless(open(BUNDLE, $certbundle)) {
-	&do_log('err', "Can't open cert bundle $certbundle: $!");
+	&Log::do_log('err', "Can't open cert bundle $certbundle: $!");
 	return undef;
     }
     
@@ -1149,32 +1149,32 @@ sub smime_sign_check {
 	    my $workcert = $cert;
 	    $cert = '';
 	    unless(open(CERT, ">$tmpcert")) {
-		&do_log('err', "Can't create $tmpcert: $!");
+		&Log::do_log('err', "Can't create $tmpcert: $!");
 		return undef;
 	    }
 	    print CERT $workcert;
 	    close(CERT);
 	    my($parsed) = &smime_parse_cert({file => $tmpcert});
 	    unless($parsed) {
-		&do_log('err', 'No result from smime_parse_cert');
+		&Log::do_log('err', 'No result from smime_parse_cert');
 		return undef;
 	    }
 	    unless($parsed->{'email'}) {
-		&do_log('debug', "No email in cert for $parsed->{subject}, skipping");
+		&Log::do_log('debug', "No email in cert for $parsed->{subject}, skipping");
 		next;
 	    }
 	    
-	    &do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
+	    &Log::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
 	    if ($parsed->{'email'}{lc($sender)}) {
 		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
 		    $certs{'both'} = $workcert;
-		    &do_log('debug', 'Found a signing + encryption cert');
+		    &Log::do_log('debug', 'Found a signing + encryption cert');
 		}elsif ($parsed->{'purpose'}{'sign'}) {
 		    $certs{'sign'} = $workcert;
-		    &do_log('debug', 'Found a signing cert');
+		    &Log::do_log('debug', 'Found a signing cert');
 		} elsif($parsed->{'purpose'}{'enc'}) {
 		    $certs{'enc'} = $workcert;
-		    &do_log('debug', 'Found an encryption cert');
+		    &Log::do_log('debug', 'Found an encryption cert');
 		}
 	    }
 	    last if(($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
@@ -1182,7 +1182,7 @@ sub smime_sign_check {
     }
     close(BUNDLE);
     if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
-	&do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
+	&Log::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
     ## OK, now we have the certs, either a combined sign+encryption one
@@ -1197,9 +1197,9 @@ sub smime_sign_check {
 	    unlink("$fn\@enc");
 	    unlink("$fn\@sign");
 	}
-	&do_log('debug', "Saving $c cert in $fn");
+	&Log::do_log('debug', "Saving $c cert in $fn");
 	unless (open(CERT, ">$fn")) {
-	    &do_log('err', "Unable to create certificate file $fn: $!");
+	    &Log::do_log('err', "Unable to create certificate file $fn: $!");
 	    return undef;
 	}
 	print CERT $certs{$c};
@@ -1231,7 +1231,7 @@ sub smime_encrypt {
     my $cryptedmsg;
     my $encrypted_body;    
 
-    &do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
+    &Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
     if ($list eq 'list') {
 	my $self = new List($email);
 	($usercert, $dummy) = smime_find_keys($self->{dir}, 'encrypt');
@@ -1247,10 +1247,10 @@ sub smime_encrypt {
 	my $temporary_file = $Conf::Conf{'tmpdir'}."/".$email.".".$$ ;
 
 	## encrypt the incomming message parse it.
-        do_log ('debug3', "tools::smime_encrypt : $Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
+        &Log::do_log ('debug3', "tools::smime_encrypt : $Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert");
 
 	if (!open(MSGDUMP, "| $Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert")) {
-	    &do_log('info', 'Can\'t encrypt message for recipient %s', $email);
+	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s', $email);
 	}
 ## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
 ## that contains a whole header again... since MIME::Tools has got no function
@@ -1268,7 +1268,7 @@ sub smime_encrypt {
 
 	my $status = $?/256 ;
 	unless ($status == 0) {
-	    do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
+	    &Log::do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
 	    return undef ;
 	}
 
@@ -1277,7 +1277,7 @@ sub smime_encrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
-	    do_log('notice', 'Unable to parse message');
+	    &Log::do_log('notice', 'Unable to parse message');
 	    return undef;
 	}
 	close NEWMSG ;
@@ -1309,7 +1309,7 @@ unlink ($temporary_file) unless ($main::options{'debug'}) ;
 	}
 
     }else{
-	do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
+	&Log::do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
 	return undef;
     }
         
@@ -1321,7 +1321,7 @@ sub smime_decrypt {
     my $msg = shift;
     my $list = shift ; ## the recipient of the msg
     
-    &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list->{'name'});
+    &Log::do_log('debug2', 'tools::smime_decrypt message msg from %s,%s',$msg->head->get('from'),$list->{'name'});
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir = $list->{'dir'};
@@ -1330,7 +1330,7 @@ sub smime_decrypt {
     }
     my ($certs,$keys) = smime_find_keys($dir, 'decrypt');
     unless (defined $certs && @$certs) {
-	do_log('err', "Unable to decrypt message : missing certificate file");
+	&Log::do_log('err', "Unable to decrypt message : missing certificate file");
 	return undef;
     }
 
@@ -1339,7 +1339,7 @@ sub smime_decrypt {
 
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	&do_log('info', 'Can\'t store message in file %s',$temporary_file);
+	&Log::do_log('info', 'Can\'t store message in file %s',$temporary_file);
     }
     $msg->print(\*MSGDUMP);
     close(MSGDUMP);
@@ -1353,20 +1353,20 @@ sub smime_decrypt {
     ## try all keys/certs until one decrypts.
     while (my $certfile = shift @$certs) {
 	my $keyfile = shift @$keys;
-	&do_log('debug', "Trying decrypt with $certfile, $keyfile");
+	&Log::do_log('debug', "Trying decrypt with $certfile, $keyfile");
 	if ($Conf::Conf{'key_passwd'} ne '') {
 	    unless (mkfifo($temporary_pwd,0600)) {
-		&do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
+		&Log::do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	}
 
-	&do_log('debug',"$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option");
+	&Log::do_log('debug',"$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option");
 	open (NEWMSG, "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |");
 
 	if ($Conf::Conf{'key_passwd'} ne '') {
 	    unless (open (FIFO,"> $temporary_pwd")) {
-		&do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+		&Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	    print FIFO $Conf::Conf{'key_passwd'};
@@ -1381,7 +1381,7 @@ sub smime_decrypt {
 	my $status = $?/256;
 	
 	unless ($status == 0) {
-	    do_log('notice', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
+	    &Log::do_log('notice', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
 	    next;
 	}
 	
@@ -1390,13 +1390,13 @@ sub smime_decrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
-	    &do_log('notice', 'Unable to parse message');
+	    &Log::do_log('notice', 'Unable to parse message');
 	    last;
 	}
     }
 	
     unless (defined $decryptedmsg) {
-      &do_log('err', 'Message could not be decrypted');
+      &Log::do_log('err', 'Message could not be decrypted');
       return undef;
     }
 
@@ -1429,18 +1429,18 @@ sub smime_decrypt {
 
 ## Make a multipart/alternative, a singlepart
 sub as_singlepart {
-    &do_log('debug2', 'tools::as_singlepart()');
+    &Log::do_log('debug2', 'tools::as_singlepart()');
     my ($msg, $preferred_type, $loops) = @_;
     my $done = 0;
     $loops++;
     
     unless (defined $msg) {
-	&do_log('err', "Undefined message parameter");
+	&Log::do_log('err', "Undefined message parameter");
 	return undef;
     }
 
     if ($loops > 4) {
-	do_log('err', 'Could not change multipart to singlepart');
+	&Log::do_log('err', 'Could not change multipart to singlepart');
 	return undef;
     }
 
@@ -1684,7 +1684,7 @@ sub cookie_changed {
     my $changed = 1 ;
     if (-f "$Conf::Conf{'etc'}/cookies.history") {
 	unless (open COOK, "$Conf::Conf{'etc'}/cookies.history") {
-	    do_log('err', "Unable to read $Conf::Conf{'etc'}/cookies.history") ;
+	    &Log::do_log('err', "Unable to read $Conf::Conf{'etc'}/cookies.history") ;
 	    return undef ; 
 	}
 	my $oldcook = <COOK>;
@@ -1694,12 +1694,12 @@ sub cookie_changed {
 	
 
 	if ($cookies[$#cookies] eq $current) {
-	    do_log('debug2', "cookie is stable") ;
+	    &Log::do_log('debug2', "cookie is stable") ;
 	    $changed = 0;
 #	}else{
 #	    push @cookies, $current ;
 #	    unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
-#		do_log('err', "Unable to create $Conf::Conf{'etc'}/cookies.history") ;
+#		&Log::do_log('err', "Unable to create $Conf::Conf{'etc'}/cookies.history") ;
 #		return undef ; 
 #	    }
 #	    printf COOK "%s",join(" ",@cookies) ;
@@ -1711,7 +1711,7 @@ sub cookie_changed {
 	my $umask = umask 037;
 	unless (open COOK, ">$Conf::Conf{'etc'}/cookies.history") {
 	    umask $umask;
-	    do_log('err', "Unable to create $Conf::Conf{'etc'}/cookies.history") ;
+	    &Log::do_log('err', "Unable to create $Conf::Conf{'etc'}/cookies.history") ;
 	    return undef ; 
 	}
 	umask $umask;
@@ -1736,7 +1736,7 @@ sub crypt_password {
 ## decrypt a password
 sub decrypt_password {
     my $inpasswd = shift ;
-    do_log('debug2', 'tools::decrypt_password (%s)', $inpasswd);
+    Log::do_log('debug2', 'tools::decrypt_password (%s)', $inpasswd);
 
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
     $inpasswd = $1;
@@ -1745,7 +1745,7 @@ sub decrypt_password {
 	$cipher = ciphersaber_installed();
     }
     if ($cipher eq 'no_cipher') {
-	do_log('info','password seems crypted while CipherSaber is not installed !');
+	&Log::do_log('info','password seems crypted while CipherSaber is not installed !');
 	return $inpasswd ;
     }
     return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
@@ -1827,7 +1827,7 @@ sub split_mail {
 
 	    ## Store body in file 
 	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
-		&do_log('err', "Unable to create $dir/$pathname.$fileExt : $!") ;
+		&Log::do_log('err', "Unable to create $dir/$pathname.$fileExt : $!") ;
 		return undef ; 
 	    }
 	    
@@ -1840,7 +1840,7 @@ sub split_mail {
 
 		my $decoder = new MIME::Decoder $encoding;
 		unless (defined $decoder) {
-		    &do_log('err', 'Cannot create decoder for %s', $encoding);
+		    &Log::do_log('err', 'Cannot create decoder for %s', $encoding);
 		    return undef;
 		}
 		$decoder->decode(\*BODY, \*OFILE);
@@ -1863,24 +1863,24 @@ sub virus_infected {
     my $mail = shift ;
     my $file = shift ;
 
-    &do_log('debug2', 'Scan virus in %s', $file);
+    &Log::do_log('debug2', 'Scan virus in %s', $file);
     
     unless ($Conf::Conf{'antivirus_path'} ) {
-        &do_log('debug', 'Sympa not configured to scan virus in message');
+        &Log::do_log('debug', 'Sympa not configured to scan virus in message');
 	return 0;
     }
     my @name = split(/\//,$file);
     my $work_dir = $Conf::Conf{'tmpdir'}.'/antivirus';
     
     unless ((-d $work_dir) ||( mkdir $work_dir, 0755)) {
-	do_log('err', "Unable to create tmp antivirus directory $work_dir");
+	&Log::do_log('err', "Unable to create tmp antivirus directory $work_dir");
 	return undef;
     }
 
     $work_dir = $Conf::Conf{'tmpdir'}.'/antivirus/'.$name[$#name];
     
     unless ( (-d $work_dir) || mkdir ($work_dir, 0755)) {
-	do_log('err', "Unable to create tmp antivirus directory $work_dir");
+	&Log::do_log('err', "Unable to create tmp antivirus directory $work_dir");
 	return undef;
     }
 
@@ -1888,7 +1888,7 @@ sub virus_infected {
 
     ## Call the procedure of spliting mail
     unless (&split_mail ($mail,'msg', $work_dir)) {
-	&do_log('err', 'Could not split mail %s', $mail);
+	&Log::do_log('err', 'Could not split mail %s', $mail);
 	return undef;
     }
 
@@ -1901,7 +1901,7 @@ sub virus_infected {
 
 	# impossible to look for viruses with no option set
 	unless ($Conf::Conf{'antivirus_args'}) {
-	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    &Log::do_log('err', "Missing 'antivirus_args' in sympa.conf");
 	    return undef;
 	}
     
@@ -1957,7 +1957,7 @@ sub virus_infected {
 
 	# impossible to look for viruses with no option set
 	unless ($Conf::Conf{'antivirus_args'}) {
-	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    &Log::do_log('err', "Missing 'antivirus_args' in sympa.conf");
 	    return undef;
 	}
 
@@ -1980,7 +1980,7 @@ sub virus_infected {
 	}    
     }elsif($Conf::Conf{'antivirus_path'} =~ /f-prot\.sh$/) {
 
-        &do_log('debug2', 'f-prot is running');    
+        &Log::do_log('debug2', 'f-prot is running');    
 
         open (ANTIVIR,"$Conf::Conf{'antivirus_path'} $Conf::Conf{'antivirus_args'} $work_dir |") ;
         
@@ -1995,7 +1995,7 @@ sub virus_infected {
         
         my $status = $?/256 ;
         
-        &do_log('debug2', 'Status: '.$status);    
+        &Log::do_log('debug2', 'Status: '.$status);    
         
         ## f-prot status =3 (*256) => virus
         if (( $status == 3) and not($virusfound)) { 
@@ -2005,7 +2005,7 @@ sub virus_infected {
 
 	# impossible to look for viruses with no option set
 	unless ($Conf::Conf{'antivirus_args'}) {
-	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    &Log::do_log('err', "Missing 'antivirus_args' in sympa.conf");
 	    return undef;
 	}
     
@@ -2033,7 +2033,7 @@ sub virus_infected {
 	
         # impossible to look for viruses with no option set
 	unless ($Conf::Conf{'antivirus_args'}) {
-	    &do_log('err', "Missing 'antivirus_args' in sympa.conf");
+	    &Log::do_log('err', "Missing 'antivirus_args' in sympa.conf");
 	    return undef;
 	}
     
@@ -2084,7 +2084,7 @@ sub virus_infected {
 	unless (&List::send_notify_to_listmaster('virus_scan_failed', $Conf::Conf{'domain'},
 						 {'filename' => $file,
 						  'error_msg' => $error_msg})) {
-	    &do_log('notice',"Unable to send notify 'virus_scan_failed' to listmaster");
+	    &Log::do_log('notice',"Unable to send notify 'virus_scan_failed' to listmaster");
 	}
 
     }
@@ -2132,7 +2132,7 @@ sub epoch_conv {
     my $arg = $_[0]; # argument date to convert
     my $time = $_[1] || time; # the epoch current date
 
-    &do_log('debug3','tools::epoch_conv(%s, %d)', $arg, $time);
+    &Log::do_log('debug3','tools::epoch_conv(%s, %d)', $arg, $time);
 
     my $result;
     
@@ -2224,14 +2224,14 @@ sub get_filename {
     my ($type, $options, $name, $robot, $object) = @_;
     my $list;
     my $family;
-    &do_log('debug3','tools::get_filename(%s,%s,%s,%s,%s)', $type,  join('/',keys %$options), $name, $robot, $object->{'name'});
+    &Log::do_log('debug3','tools::get_filename(%s,%s,%s,%s,%s)', $type,  join('/',keys %$options), $name, $robot, $object->{'name'});
 
     
     if (ref($object) eq 'List') {
  	$list = $object;
  	if ($list->{'admin'}{'family_name'}) {
  	    unless ($family = $list->get_family()) {
- 		&do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$list->{'name'},$list->{'admin'}{'family_name'});
+ 		&Log::do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$list->{'name'},$list->{'admin'}{'family_name'});
  		$list->set_status_error_config('no_list_family',$list->{'name'}, $list->{'admin'}{'family_name'});
  		return undef;
  	    }  
@@ -2282,7 +2282,7 @@ sub get_filename {
 	}
 	my @result;
 	foreach my $f (@try) {
-	    &do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
+	    &Log::do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
 		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
@@ -2296,7 +2296,7 @@ sub get_filename {
 	}
     }
     
-    #&do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
+    #&Log::do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
     return undef;
 }
 ####################################################
@@ -2460,9 +2460,9 @@ sub qencode_hierarchy {
 	my $new_f = $f_struct->{'directory'}.'/'.$new_filename;
 
 	## Rename the file using utf8
-	&do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
+	&Log::do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
 	unless (rename $orig_f, $new_f) {
-	    &do_log('err', "Failed to rename %s to %s : %s", $orig_f, $new_f, $!);
+	    &Log::do_log('err', "Failed to rename %s to %s : %s", $orig_f, $new_f, $!);
 	    next;
 	}
 	$count++;
@@ -2487,8 +2487,8 @@ sub remove_pid {
     ## Then the pidfile contains a list of space-separated PIDs on a single line
     if($options->{'multiple_process'}){
 	unless (open(PFILE, $pidfile)) {
-	   # fatal_err('Could not open %s, exiting', $pidfile);
-	    do_log('err','Could not open %s to remove pid %s, ', $pidfile,$pid);
+	   # &Log::fatal_err('Could not open %s, exiting', $pidfile);
+	    &Log::do_log('err','Could not open %s to remove pid %s, ', $pidfile,$pid);
 	    return undef;
 	}
 	my $previous_pid = <PFILE>; chomp $previous_pid;
@@ -2499,31 +2499,31 @@ sub remove_pid {
 	if ($previous_pid =~ /^\s*$/){
 	    ## Release the lock
 	    unless (unlink $pidfile) {
-		&do_log('err', "Failed to remove $pidfile: %s", $!);
+		&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
 		return undef;
 	    }
 	}else{
 	    if(-f $pidfile){
 		unless (open(PFILE, ">$pidfile")) {
-		    &do_log('err', "Failed to open $pidfile: %s", $!);
+		    &Log::do_log('err', "Failed to open $pidfile: %s", $!);
 		    return undef;
 		}
 		print PFILE "$previous_pid\n";
 		close(PFILE);
 	    }else{
-		&do_log('notice','pidfile %s does not exist. Nothing to do.',$pidfile);
+		&Log::do_log('notice','pidfile %s does not exist. Nothing to do.',$pidfile);
 	    }
 	}
     }else{
 	unless (unlink $pidfile) {
-	    &do_log('err', "Failed to remove $pidfile: %s", $!);
+	    &Log::do_log('err', "Failed to remove $pidfile: %s", $!);
 	    return undef;
 	}
 	
 	my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
 	if (-f $err_file) {
 	    unless (unlink $err_file) {
-		&do_log('err', "Failed to remove $err_file: %s", $!);
+		&Log::do_log('err', "Failed to remove $err_file: %s", $!);
 		return undef;
 	    }
 	}
@@ -2563,7 +2563,7 @@ sub write_pid {
 				    group => Sympa::Constants::GROUP,
 				    ))
     {
-	&do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
+	&Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	return undef;
     }
 
@@ -2579,7 +2579,7 @@ sub write_pid {
     ## Print other pids + this one
     if($options->{'multiple_process'}){
 	unless (open(LCK, "> $pidfile")) {
-	    fatal_err('Could not open %s, exiting', $pidfile);
+	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
 	}
 
 	## Print other pids + this one
@@ -2589,16 +2589,16 @@ sub write_pid {
     }else{
 	## Create and write the pidfile
 	unless (open(LOCK, "+>> $pidfile")) {
-	    fatal_err('Could not open %s, exiting', $pidfile);
+	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
 	}
 	unless (flock(LOCK, 6)) {
-	    fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
+	    &Log::fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
 	}
 	
 	## The previous process died suddenly, without pidfile cleanup
 	## Send a notice to listmaster with STDERR of the previous process
 	if ($other_pid) {
-	    &do_log('notice', "Previous process $other_pid died suddenly ; notifying listmaster");
+	    &Log::do_log('notice', "Previous process $other_pid died suddenly ; notifying listmaster");
 	    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
 	    my (@err_output, $err_date);
 	    if (-f $err_file) {
@@ -2614,10 +2614,10 @@ sub write_pid {
 	}
 	
 	unless (open(LCK, "> $pidfile")) {
-	    fatal_err('Could not open %s, exiting', $pidfile);
+	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
 	}
 	unless (truncate(LCK, 0)) {
-	    fatal_err('Could not truncate %s, exiting.', $pidfile);
+	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
 	}
 	
 	print LCK "$pid\n";
@@ -2628,7 +2628,7 @@ sub write_pid {
 				    group => Sympa::Constants::GROUP,
 				    ))
     {
-	&do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
+	&Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	return undef;
     }
 
@@ -2641,7 +2641,7 @@ sub write_pid {
 				      group => Sympa::Constants::GROUP,
 				     ))
 	{
-	  &do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
+	  &Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	  return undef;
 	}
     }
@@ -2684,13 +2684,13 @@ sub valid_email {
     my $email = shift;
     
     unless ($email =~ /^$regexp{'email'}$/) {
-	do_log('err', "Invalid email address '%s'", $email);
+	&Log::do_log('err', "Invalid email address '%s'", $email);
 	return undef;
     }
     
     ## Forbidden characters
     if ($email =~ /[\|\$\*\?\!]/) {
-	do_log('err', "Invalid email address '%s'", $email);
+	&Log::do_log('err', "Invalid email address '%s'", $email);
 	return undef;
     }
 
@@ -2731,7 +2731,7 @@ sub get_canonical_email {
 ## or few direcoty paths
 sub remove_dir {
     
-    do_log('debug2','remove_dir()');
+    &Log::do_log('debug2','remove_dir()');
     
     foreach my $current_dir (@_){
 	finddepth({wanted => \&del, no_chdir => 1},$current_dir);
@@ -2768,7 +2768,7 @@ sub smime_find_keys {
     my $ext = ($oper eq 'sign' ? 'sign' : 'enc');
 
     unless (opendir(D, $dir)) {
-	do_log('err', "unable to opendir $dir: $!");
+	&Log::do_log('err', "unable to opendir $dir: $!");
 	return undef;
     }
 
@@ -2785,7 +2785,7 @@ sub smime_find_keys {
 	my $k = $c;
 	$k =~ s/\/cert\.pem/\/private_key/;
 	unless ($keys{$k}) {
-	    do_log('notice', "$c exists, but matching $k doesn't");
+	    &Log::do_log('notice', "$c exists, but matching $k doesn't");
 	    delete $certs{$c};
 	}
     }
@@ -2794,7 +2794,7 @@ sub smime_find_keys {
 	my $c = $k;
 	$c =~ s/\/private_key/\/cert\.pem/;
 	unless ($certs{$c}) {
-	    do_log('notice', "$k exists, but matching $c doesn't");
+	    &Log::do_log('notice', "$k exists, but matching $c doesn't");
 	    delete $keys{$k};
 	}
     }
@@ -2811,7 +2811,7 @@ sub smime_find_keys {
 	    $certs = "$dir/cert.pem";
 	    $keys = "$dir/private_key";
 	} else {
-	    do_log('info', "$dir: no certs/keys found for $oper");
+	    &Log::do_log('info', "$dir: no certs/keys found for $oper");
 	    return undef;
 	}
     }
@@ -3221,12 +3221,12 @@ sub a_is_older_than_b {
     if (-r $param->{'a_file'}) {
 	$a_file_readable = 1;
     }else{
-	&do_log('err', 'Could not read file %s. Comparison impossible', $param->{'a_file'});
+	&Log::do_log('err', 'Could not read file %s. Comparison impossible', $param->{'a_file'});
     }
     if (-r $param->{'b_file'}) {
 	$b_file_readable = 1;
     }else{
-	&do_log('err', 'Could not read file %s. Comparison impossible', $param->{'b_file'});
+	&Log::do_log('err', 'Could not read file %s. Comparison impossible', $param->{'b_file'});
     }
     if ($a_file_readable && $b_file_readable) {
 	my @a_stats = stat ($param->{'a_file'});
@@ -3270,14 +3270,14 @@ sub change_x_sympa_to {
     
     ## Change X-Sympa-To
     unless (open FILE, $file) {
-	&do_log('err', "Unable to open '%s' : %s", $file, $!);
+	&Log::do_log('err', "Unable to open '%s' : %s", $file, $!);
 	next;
     }	 
     my @content = <FILE>;
     close FILE;
     
     unless (open FILE, ">$file") {
-	&do_log('err', "Unable to open '%s' : %s", "$file", $!);
+	&Log::do_log('err', "Unable to open '%s' : %s", "$file", $!);
 	next;
     }	 
     foreach (@content) {
@@ -3370,26 +3370,26 @@ sub add_in_blacklist {
     my $robot = shift;
     my $list =shift;
 
-    &do_log('info',"tools::add_in_blacklist(%s,%s,%s)",$entry,$robot,$list->{'name'});
+    &Log::do_log('info',"tools::add_in_blacklist(%s,%s,%s)",$entry,$robot,$list->{'name'});
     $entry = lc($entry);
     chomp $entry;
 
     # robot blacklist not yet availible 
     unless ($list) {
-	 &do_log('info',"tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter");
+	 &Log::do_log('info',"tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter");
 	 return undef;
     }
     unless (($entry)&&($robot)) {
-	 &do_log('info',"tools::add_in_blacklist:  missing parameters");
+	 &Log::do_log('info',"tools::add_in_blacklist:  missing parameters");
 	 return undef;
     }
     if ($entry =~ /\*.*\*/) {
-	&do_log('info',"tools::add_in_blacklist: incorrect parameter $entry");
+	&Log::do_log('info',"tools::add_in_blacklist: incorrect parameter $entry");
 	return undef;
     }
     my $dir = $list->{'dir'}.'/search_filters';
     unless ((-d $dir) || mkdir ($dir, 0755)) {
-	&do_log('info','do_blacklist : unable to create dir %s',$dir);
+	&Log::do_log('info','do_blacklist : unable to create dir %s',$dir);
 	return undef;
     }
     my $file = $dir.'/blacklist.txt';
@@ -3402,14 +3402,14 @@ sub add_in_blacklist {
 	    $regexp =~ s/\*/.*/ ; 
 	    $regexp = '^'.$regexp.'$';
 	    if ($entry =~ /$regexp/i) { 
-		&do_log('notice','do_blacklist : %s already in blacklist(%s)',$entry,$_);
+		&Log::do_log('notice','do_blacklist : %s already in blacklist(%s)',$entry,$_);
 		return 0;
 	    }	
 	}
 	close BLACKLIST;
     }   
     unless (open BLACKLIST, ">> $file"){
-	&do_log('info','do_blacklist : append to file %s',$file);
+	&Log::do_log('info','do_blacklist : append to file %s',$file);
 	return undef;
     }
     printf BLACKLIST "$entry\n";
@@ -3593,7 +3593,7 @@ sub get_db_random {
     
     my $sth;
     unless ($sth = &SDM::do_query("SELECT random FROM fingerprint_table")) {
-	&do_log('err','Unable to retrieve random value from fingerprint_table');
+	&Log::do_log('err','Unable to retrieve random value from fingerprint_table');
 	return undef;
     }
     my $random = $sth->fetchrow_hashref('NAME_lc');
@@ -3622,7 +3622,7 @@ sub init_db_random {
     my $random = int(rand($range)) + $minimum;
 
     unless (&SDM::do_query('INSERT INTO fingerprint_table VALUES (%d)', $random)) {
-	&do_log('err','Unable to set random value in fingerprint_table');
+	&Log::do_log('err','Unable to set random value in fingerprint_table');
 	return undef;
     }
     return $random;
@@ -3732,17 +3732,17 @@ sub save_to_bad {
 
     if (! -d $queue.'/bad') {
 	unless (mkdir $queue.'/bad', 0775) {
-	    &do_log('notice','Unable to create %s/bad/ directory.',$queue);
+	    &Log::do_log('notice','Unable to create %s/bad/ directory.',$queue);
 	    unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname),{'dir' => "$queue/bad"}) {
-		&do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+		&Log::do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
 	    }
 	    return undef;
 	}
-	do_log('debug',"mkdir $queue/bad");
+	&Log::do_log('debug',"mkdir $queue/bad");
     }
-    &do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
+    &Log::do_log('notice',"Saving file %s to %s", $queue.'/'.$file, $queue.'/bad/'.$file);
     unless (rename($queue.'/'.$file ,$queue.'/bad/'.$file) ) {
-	&do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
+	&Log::do_log('notice', 'Could not rename %s to %s: %s', $queue.'/'.$file, $queue.'/bad/'.$file, $!);
 	return undef;
     }
     
@@ -3800,10 +3800,10 @@ Clean all messages in spool $spool_dir older than $clean_delay.
 ############################################################## 
 sub CleanSpool {
     my ($spool_dir, $clean_delay) = @_;
-    &do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
+    &Log::do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
 
     unless (opendir(DIR, $spool_dir)) {
-	&do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
+	&Log::do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
 	return undef;
     }
 
@@ -3816,13 +3816,13 @@ sub CleanSpool {
 	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
 	    if (-f "$spool_dir/$f") {
 		unlink ("$spool_dir/$f") ;
-		&do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
+		&Log::do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
 	    }elsif (-d "$spool_dir/$f") {
 		unless (&tools::remove_dir("$spool_dir/$f")) {
-		    &do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
+		    &Log::do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
 		    next;
 		}
-		&do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
+		&Log::do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
 	    }
 	}
     }
@@ -3858,7 +3858,7 @@ sub get_number_of_pids {
     my $pidfile = shift;
     my $p_count = 0;
     unless (open(PFILE, $pidfile)){
-	&do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
+	&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
 	return undef;
     }
     while (<PFILE>){
@@ -3936,7 +3936,7 @@ sub addrencode {
 # Generate a newsletter from an HTML URL or a file path.
 sub create_html_part_from_web_page {
     my $param = shift;
-    &do_log('debug',"Creating HTML MIME part. Source: %s",$param->{'source'});
+    &Log::do_log('debug',"Creating HTML MIME part. Source: %s",$param->{'source'});
     my $mailHTML = new MIME::Lite::HTML(
 					{
 					    From => $param->{'From'},
@@ -3953,7 +3953,7 @@ sub create_html_part_from_web_page {
     # parse return the MIME::Lite part to send
     my $part = $mailHTML->parse($param->{'source'});
     unless (defined($part)) {
-	&do_log('err', 'Unable to convert file %s to a MIME part',$param->{'source'});
+	&Log::do_log('err', 'Unable to convert file %s to a MIME part',$param->{'source'});
 	return undef;
     }
     return $part->as_string;

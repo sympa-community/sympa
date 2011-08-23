@@ -50,7 +50,7 @@ my $opt_F;
 my %options;
 
 unless (&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground')) {
-    &fatal_err("Unknown options.");
+    &Log::fatal_err("Unknown options.");
 }
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
@@ -72,27 +72,27 @@ my $adrlist = {};
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    &fatal_err('error : unable to load config file');
+    &Log::fatal_err('error : unable to load config file');
 }
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &fatal_err("error : unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("error : unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
-    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
 }
 
 ## Check that the data structure is uptodate
 unless (&Upgrade::data_structure_uptodate()) {
-    &fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
+    &Log::fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
 }
 
 ## Check for several files.
 unless (&Conf::checkfiles()) {
-    fatal_err("Missing files. Aborting.");
+    &Log::fatal_err("Missing files. Aborting.");
     ## No return.                                         
 }
 
@@ -120,15 +120,15 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$, $options);
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
-do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
+&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
-    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
 }else{
     &Log::set_log_level($Conf{'log_level'});
-    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
 
 ## Set the UserID & GroupID for the process
@@ -141,7 +141,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -149,7 +149,7 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &do_log('err',"error : unable to change to directory $Conf{'home'}");
+    &Log::do_log('err',"error : unable to change to directory $Conf{'home'}");
     exit (-1);
 }
 
@@ -262,7 +262,7 @@ while (!$end) {
    ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
 	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
-	&do_log ('err', "Failed to list task files in %s", $spool_task);
+	&Log::do_log ('err', "Failed to list task files in %s", $spool_task);
 	exit -1;
     }
 
@@ -330,28 +330,28 @@ while (!$end) {
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
 	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
-	&do_log ('err', "Failed to list task files in %s", $spool_task);
+	&Log::do_log ('err', "Failed to list task files in %s", $spool_task);
 	exit -1;
     }
 
     ## processing of tasks anterior to the current date
-    &do_log ('debug3', 'processing of tasks anterior to the current date');
+    &Log::do_log ('debug3', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
 	
 	last if $end;
 
 	my $task_file = $task->{'filepath'};
 
-	&do_log ('debug3', "procesing %s", $task_file);
+	&Log::do_log ('debug3', "procesing %s", $task_file);
 	last unless ($task->{'date'} < $current_date);
 	if ($task->{'object'} ne '_global') { # list task
 	    my $list = $task->{'list_object'};
 	    
 	    ## Skip closed lists
 	    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-		&do_log('notice','Removing task file %s because the list is not opened', $task_file);
+		&Log::do_log('notice','Removing task file %s because the list is not opened', $task_file);
 		unless (unlink $task_file) {
-		    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+		    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 		    next;
 		}
 		next;
@@ -360,9 +360,9 @@ while (!$end) {
 	    ## Skip if parameter is not defined
 	    if ( $task->{'model'} eq 'sync_include') {
 		unless ($list->{'admin'}{'status'} eq 'open') {
-		    &do_log('notice','Removing task file %s', $task_file);
+		    &Log::do_log('notice','Removing task file %s', $task_file);
 		    unless (unlink $task_file) {
-			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			&Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 			next;
 		    }
 		    next;
@@ -370,9 +370,9 @@ while (!$end) {
 	    }else {
 		unless (defined $list->{'admin'}{$task->{'model'}} && 
 			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
-		    &do_log('notice','Removing task file %s', $task_file);
+		    &Log::do_log('notice','Removing task file %s', $task_file);
 		    unless (unlink $task_file) {
-			&do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+			&Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 			next;
 		    }
 		    next;
@@ -389,7 +389,7 @@ while (!$end) {
     &mail::reaper;
 }
 
-&do_log ('notice', 'task_manager exited normally due to signal'); 
+&Log::do_log ('notice', 'task_manager exited normally due to signal'); 
 &tools::remove_pid($wwsconf->{'task_manager_pidfile'}, $$);
 
 exit(0);
@@ -405,7 +405,7 @@ sub create {
     my $model_choice  = shift;
     my $Rdata         = shift;
 
-    &do_log ('debug2', "create date : $date label : $label model $model : $model_choice Rdata :$Rdata");
+    &Log::do_log ('debug2', "create date : $date label : $label model $model : $model_choice Rdata :$Rdata");
 
     my $task_file;
     my $list_name;
@@ -426,12 +426,12 @@ sub create {
     my $model_file;
     my $model_name = $model.'.'.$model_choice.'.'.'task';
  
-    &do_log ('notice', "creation of $task_file");
+    &Log::do_log ('notice', "creation of $task_file");
 
      # for global model
     if ($object eq '_global') {
 	unless ($model_file = &tools::get_filename('etc',{},"global_task_models/$model_name", $Conf{'host'})) {
-	    &do_log ('err', "error : unable to find $model_name, creation aborted");
+	    &Log::do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;
 	}
     }
@@ -443,18 +443,18 @@ sub create {
 	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
 	unless ($model_file = &tools::get_filename('etc', {},"list_task_models/$model_name", $list->{'domain'}, $list)) {
-	    &do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
+	    &Log::do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
 	    return undef;
 	}
     }
    
-    &do_log ('notice', "with model $model_file");
+    &Log::do_log ('notice', "with model $model_file");
     
     ## creation
     open (TASK, ">$task_file");
     my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
     unless (defined $tt2 && $tt2->process($model_file, $Rdata, \*TASK)) {
-      &do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
+      &Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
     }
     #&parser::parse_tpl($Rdata, $model_file, \*TASK);
     close (TASK);
@@ -465,7 +465,7 @@ sub create {
 	my $list = new List($list_name, $robot);
 	if ($list->{'admin'}{'user_data_source'} eq 'include') {
 	    unless ( open (TASK, $task_file) ) {
-		&do_log ('err', "error : unable to read $task_file, checking is impossible");
+		&Log::do_log ('err', "error : unable to read $task_file, checking is impossible");
 		return undef;
 	    }
 	    while (<TASK>) {
@@ -473,7 +473,7 @@ sub create {
 		if (/.*delete_subs.*/) {
 		    close (TASK);
 		    undef $ok;
-		    &do_log ('err', "error : you are not allowed to use the delete_subs command on a list whose subscribers are included, creation aborted");
+		    &Log::do_log ('err', "error : you are not allowed to use the delete_subs command on a list whose subscribers are included, creation aborted");
 		    return undef;
 		}
 	    }
@@ -482,14 +482,14 @@ sub create {
     } # end of special checking
 
     if (!$ok) {
-	&do_log ('err', "$task_file is unappropriate for a list with include");
+	&Log::do_log ('err', "$task_file is unappropriate for a list with include");
     }
     
     if  (!$ok or !check ($task_file)) {
-	&do_log ('err', "error : syntax error in $task_file, you should check $model_file");
+	&Log::do_log ('err', "error : syntax error in $task_file, you should check $model_file");
 	unlink ($task_file) ? 
-	    &do_log ('notice', "$task_file deleted") 
-		: &do_log ('err', "error : unable to delete $task_file");	
+	    &Log::do_log ('notice', "$task_file deleted") 
+		: &Log::do_log ('err', "error : unable to delete $task_file");	
 	return undef;
     }
     return 1;
@@ -502,7 +502,7 @@ sub check {
 
     my $task_file = shift; # the task to check
 
-    &do_log ('debug2', "check($task_file)" );
+    &Log::do_log ('debug2', "check($task_file)" );
     my %result; # stores the result of the chk_line subroutine
     my $lnb = 0; # line number
     my %used_labels; # list of labels used as parameter in commands
@@ -511,7 +511,7 @@ sub check {
     my %vars; # list of declared vars
 
     unless ( open (TASK, $task_file) ) {
-	&do_log ('err', "error : unable to read $task_file, checking is impossible");
+	&Log::do_log ('err', "error : unable to read $task_file, checking is impossible");
 	return undef;
     }
 
@@ -524,8 +524,8 @@ sub check {
 
 	next if ( $_ =~ /^\s*\#/ ); 
 	unless (chk_line ($_, \%result)) {
-	    &do_log ('err', "error at line $lnb : $_");
-	    &do_log ('err', "$result{'error'}");
+	    &Log::do_log ('err', "error at line $lnb : $_");
+	    &Log::do_log ('err', "$result{'error'}");
 	    return undef;
 	}
 	
@@ -546,26 +546,26 @@ sub check {
 
     # are all labels used ?
     foreach my $label (keys %labels) {
-	&do_log ('debug3', "warning : label $label exists but is not used") unless ($used_labels{$label});
+	&Log::do_log ('debug3', "warning : label $label exists but is not used") unless ($used_labels{$label});
     }
 
     # do all used labels exist ?
     foreach my $label (keys %used_labels) {
 	unless ($labels{$label}) {
-	    &do_log ('err', "error : label $label is used but does not exist");
+	    &Log::do_log ('err', "error : label $label is used but does not exist");
 	    return undef;
 	}
     }
     
     # are all variables used ?
     foreach my $var (keys %vars) {
-	&do_log ('notice', "warning : var $var exists but is not used") unless ($used_vars{$var});
+	&Log::do_log ('notice', "warning : var $var exists but is not used") unless ($used_vars{$var});
     }
 
     # do all used variables exist ?
     foreach my $var (keys %used_vars) {
 	unless ($vars{$var}) {
-	    &do_log ('err', "error : var $var is used but does not exist");
+	    &Log::do_log ('err', "error : var $var is used but does not exist");
 	    return undef;
 	}
     }
@@ -582,7 +582,7 @@ sub chk_line {
     ## just in case...
     chomp $line;
 
-    &do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
+    &Log::do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
         
     $Rhash->{'nature'} = undef;
   
@@ -664,7 +664,7 @@ sub chk_cmd {
     my $Rused_labels = $_[3];
     my $Rused_vars = $_[4];
 
-    &do_log('debug2', 'chk_cmd(%s, %d, %s)', $cmd, $lnb, join(',',@{$Rargs}));
+    &Log::do_log('debug2', 'chk_cmd(%s, %d, %s)', $cmd, $lnb, join(',',@{$Rargs}));
     
     if (defined $commands{$cmd}) {
 	
@@ -672,8 +672,8 @@ sub chk_cmd {
 	my @args = @{$Rargs};
 	
 	unless ($#expected_args == $#args) {
-	    &do_log ('err', "error at line $lnb : wrong number of arguments for $cmd");
-	    &do_log ('err', "args = @args ; expected_args = @expected_args");
+	    &Log::do_log ('err', "error at line $lnb : wrong number of arguments for $cmd");
+	    &Log::do_log ('err', "args = @args ; expected_args = @expected_args");
 	    return undef;
 	}
 	
@@ -700,7 +700,7 @@ sub chk_cmd {
 	    }
 	    
 	    if ($error) {
-		&do_log ('err', "error at line $lnb : argument $_ is not valid");
+		&Log::do_log ('err', "error at line $lnb : argument $_ is not valid");
 		return undef;
 	    }
 	    
@@ -723,17 +723,17 @@ sub execute {
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &do_log('notice', 'Running task %s, line %d with vars %s)', $task_file, $lnb, join('/',  %vars));
+    &Log::do_log('notice', 'Running task %s, line %d with vars %s)', $task_file, $lnb, join('/',  %vars));
     
     unless ( open (TASK, $task_file) ) {
-	&do_log ('err', "error : can't read the task $task_file");
+	&Log::do_log ('err', "error : can't read the task $task_file");
 	return undef;
     }
 
     my $label = $task->{'label'};
     return undef if ($label eq 'ERROR');
 
-    &do_log ('debug2', "* execution of the task $task_file");
+    &Log::do_log ('debug2', "* execution of the task $task_file");
     unless ($label eq '') {
 	while ( <TASK> ) {
 	    chomp;
@@ -751,7 +751,7 @@ sub execute {
 	$lnb++;
 
 	unless ( chk_line ($_, \%result) ) {
-	    &do_log ('err', "error : $result{'error'}");
+	    &Log::do_log ('err', "error : $result{'error'}");
 	    return undef;
 	}
 	
@@ -771,17 +771,17 @@ sub execute {
     close (TASK);
 
     unless (defined $status) {
-	&do_log('err', 'Error while processing task, removing %s', $task_file);
+	&Log::do_log('err', 'Error while processing task, removing %s', $task_file);
 	unless (unlink($task_file)) {
-	    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+	    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 	    return undef;
 	}
 	return undef;
     }
     unless ($status >= 0) {
-	&do_log('notice', 'The task %s is now useless. Removing it.', $task_file);
+	&Log::do_log('notice', 'The task %s is now useless. Removing it.', $task_file);
 	unless (unlink($task_file)) {
-	    &do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
+	    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
 	    return undef;
 	}
     }
@@ -800,12 +800,12 @@ sub cmd_process {
 
     my $task_file = $task->{'filepath'};
 
-    &do_log('debug2', 'cmd_process(%s, %s, %d)', $command, $task_file, $lnb);
+    &Log::do_log('debug2', 'cmd_process(%s, %s, %d)', $command, $task_file, $lnb);
 
      # building of %context
     my %context = ('line_number' => $lnb);
 
-    &do_log('debug2','Current task : %s', join(':',%$task));
+    &Log::do_log('debug2','Current task : %s', join(':',%$task));
 
      # regular commands
     return stop ($task, \%context) if ($command eq 'stop');
@@ -864,10 +864,10 @@ sub stop {
     my ($task, $context) = @_;
     my $task_file = $spool_task.'/'.$task->{'filename'};
 
-    &do_log ('notice', "$context->{'line_number'} : stop $task_file");
+    &Log::do_log ('notice', "$context->{'line_number'} : stop $task_file");
     
     unlink ($task_file) ?  
-	&do_log ('notice', "--> $task_file deleted")
+	&Log::do_log ('notice', "--> $task_file deleted")
 	    : error ($task_file, "error in stop command : unable to delete task file");
 
     return 0;
@@ -881,16 +881,16 @@ sub send_msg {
     my $template = $tab[1];
     my $var = $tab[0];
     
-    &do_log ('notice', "line $context->{'line_number'} : send_msg (@{$Rarguments})");
+    &Log::do_log ('notice', "line $context->{'line_number'} : send_msg (@{$Rarguments})");
 
 
     if ($task->{'object'} eq '_global') {
 
 	foreach my $email (keys %{$Rvars->{$var}}) {
-	    &do_log ('notice', "--> message sent to $email");
+	    &Log::do_log ('notice', "--> message sent to $email");
  	    if (!$log) {
  		unless (&List::send_global_file ($template, $email, ,'',$Rvars->{$var}{$email}) ) {
- 		    &do_log ('notice', "Unable to send template $template to $email");
+ 		    &Log::do_log ('notice', "Unable to send template $template to $email");
  		}
  	    }
 	}
@@ -898,10 +898,10 @@ sub send_msg {
 	my $list = $task->{'list_object'};
 	
 	foreach my $email (keys %{$Rvars->{$var}}) {
-	    &do_log ('notice', "--> message sent to $email");
+	    &Log::do_log ('notice', "--> message sent to $email");
  	    if (!$log) {
  		unless ($list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}))  {
- 		    &do_log ('notice', "Unable to send template $template to $email");
+ 		    &Log::do_log ('notice', "Unable to send template $template to $email");
  		}
 	    }
 	}
@@ -917,7 +917,7 @@ sub next_cmd {
     my $date = &tools::epoch_conv ($tab[0], $task->{'date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
 
-    &do_log ('notice', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
+    &Log::do_log ('notice', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
     my $listname = $task->{'object'};
     my $model = $task->{'model'};
@@ -976,7 +976,7 @@ sub next_cmd {
 	return undef;
     }
 
-    &do_log ('notice', "--> new task $model ($human_date)");
+    &Log::do_log ('notice', "--> new task $model ($human_date)");
     
     return 0;
 }
@@ -988,7 +988,7 @@ sub select_subs {
     my @tab = @{$Rarguments};
     my $condition = $tab[0];
  
-    &do_log ('debug2', "line $context->{'line_number'} : select_subs ($condition)");
+    &Log::do_log ('debug2', "line $context->{'line_number'} : select_subs ($condition)");
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) { # conversion of the date argument into epoch format
 	my $date = &tools::epoch_conv ($2, $task->{'date'});
@@ -1015,13 +1015,13 @@ sub select_subs {
     # loop on the subscribers of $list_name
     foreach my $user (@users) {
 
-	# AF : voir 'update' do_log ('notice', "date $user->{'date'} & update $user->{'update'}");
+	# AF : voir 'update' &Log::do_log ('notice', "date $user->{'date'} & update $user->{'update'}");
 	# condition rewriting for older and newer
 	$new_condition = "$1($user->{'update_date'}, $2)" if ($condition =~ /(older|newer)\((\d+)\)/ );
 	
 	if (&Scenario::verify ($verify_context, $new_condition) == 1) {
 	    $selection{$user->{'email'}} = undef;
-	    &do_log ('notice', "--> user $user->{'email'} has been selected");
+	    &Log::do_log ('notice', "--> user $user->{'email'} has been selected");
 	}
     }
     
@@ -1035,7 +1035,7 @@ sub delete_subs_cmd {
     my @tab = @{$Rarguments};
     my $var = $tab[0];
 
-    &do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
+    &Log::do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
 
     
     my $list = $task->{'list_object'};
@@ -1043,7 +1043,7 @@ sub delete_subs_cmd {
 
     foreach my $email (keys %{$Rvars->{$var}}) {
 
-	&do_log ('notice', "email : $email");
+	&Log::do_log ('notice', "email : $email");
 	my $result = $list->check_list_authz('del', 'smime',
 					     {'sender'   => $Conf{'listmaster'},
 					      'email'    => $email,
@@ -1054,7 +1054,7 @@ sub delete_subs_cmd {
 	    error ($task->{'filepath'}, "error in delete_subs command : deletion of $email not allowed");
 	} else {
 	    my $u = $list->delete_list_member ($email) if (!$log);
-	    &do_log ('notice', "--> $email deleted");
+	    &Log::do_log ('notice', "--> $email deleted");
 	    $selection{$email} = {};
 	}
     }
@@ -1071,7 +1071,7 @@ sub create_cmd {
     my $model = $tab[1];
     my $model_choice = $tab[2];
 
-    &do_log ('notice', "line $context->{'line_number'} : create ($arg, $model, $model_choice)");
+    &Log::do_log ('notice', "line $context->{'line_number'} : create ($arg, $model, $model_choice)");
 
     # recovery of the object type and object
     my $type;
@@ -1108,7 +1108,7 @@ sub exec_cmd {
     my @tab = @{$Rarguments};
     my $file = $tab[0];
 
-    do_log ('notice', "line $context->{'line_number'} : exec ($file)");
+    &Log::do_log ('notice', "line $context->{'line_number'} : exec ($file)");
     system ($file);
     
     return 1;
@@ -1121,9 +1121,9 @@ sub purge_logs_table {
     my $execution_date = $task->{'date'};
     my @slots = ();
     
-    do_log('debug2','purge_logs_table()');
+    &Log::do_log('debug2','purge_logs_table()');
     unless(&Log::db_log_del()) {
-	&do_log('err','purge_logs_table(): Failed to delete logs');
+	&Log::do_log('err','purge_logs_table(): Failed to delete logs');
 	return undef;
     }
 
@@ -1149,32 +1149,32 @@ sub purge_logs_table {
     }
     #-------------------------------------------------------------------
 
-    &do_log('notice','purge_logs_table(): logs purged');
+    &Log::do_log('notice','purge_logs_table(): logs purged');
     return 1;
 }
 
 ## remove sessions from session_table if older than $Conf{'session_table_ttl'}
 sub purge_session_table {    
 
-    do_log('info','task_manager::purge_session_table()');
+    &Log::do_log('info','task_manager::purge_session_table()');
     my $removed = &SympaSession::purge_old_sessions('*');
     unless(defined $removed) {
-	&do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
+	&Log::do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
 	return undef;
     }
-    &do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
+    &Log::do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
     return 1;
 }
 
 ## remove messages from bulkspool table when no more packet have any pointer to this message
 sub purge_tables {    
 
-    do_log('info','task_manager::purge_tables()');
+    &Log::do_log('info','task_manager::purge_tables()');
     my $removed = &Bulk::purge_bulkspool();
     unless(defined $removed) {
-	&do_log('err','Failed to purge bulkspool');
+	&Log::do_log('err','Failed to purge bulkspool');
     }
-    &do_log('notice','%s rows removed in bulkspool_table',$removed);    
+    &Log::do_log('notice','%s rows removed in bulkspool_table',$removed);    
     #
     my $removed = 0;
     foreach my $robot (keys %{$Conf{'robots'}}) {
@@ -1183,7 +1183,7 @@ sub purge_tables {
 	    $removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
 	}
     }
-    &do_log('notice', "%s rows removed in tracking table",$removed);
+    &Log::do_log('notice', "%s rows removed in tracking table",$removed);
 
     return 1;
 }
@@ -1191,19 +1191,19 @@ sub purge_tables {
 ## remove one time ticket table if older than $Conf{'one_time_ticket_table_ttl'}
 sub purge_one_time_ticket_table {    
 
-    do_log('info','task_manager::purge_one_time_ticket_table()');
+    &Log::do_log('info','task_manager::purge_one_time_ticket_table()');
     my $removed = &SympaSession::purge_old_tickets('*');
     unless(defined $removed) {
-	&do_log('err','&SympaSession::purge_old_tickets(): Failed to remove old tickets');
+	&Log::do_log('err','&SympaSession::purge_old_tickets(): Failed to remove old tickets');
 	return undef;
     }
-    &do_log('notice','purge_one_time_ticket_table(): %s row removed in one_time_ticket_table',$removed);
+    &Log::do_log('notice','purge_one_time_ticket_table(): %s row removed in one_time_ticket_table',$removed);
     return 1;
 }
 
 sub purge_user_table {
     my ($task, $Rarguments, $context) = @_;
-    do_log('debug2','purge_user_table()');
+    &Log::do_log('debug2','purge_user_table()');
 
     ## Load user_table entries
     my @users = &List::get_all_global_user();
@@ -1248,14 +1248,14 @@ sub purge_user_table {
     my @purged_users;
     foreach (@users) {
 	unless ($known_people{$_}) {
-	    &do_log('debug2','User to purge: %s', $_);
+	    &Log::do_log('debug2','User to purge: %s', $_);
 	    push @purged_users, $_;
 	}
     }
     
     unless ($#purged_users < 0) {
 	unless (&List::delete_global_user(@purged_users)) {
-	    &do_log('err', 'purge_user_table error: Failed to delete users');
+	    &Log::do_log('err', 'purge_user_table error: Failed to delete users');
 	    return undef;
 	}
     }
@@ -1267,14 +1267,14 @@ sub purge_user_table {
 sub purge_orphan_bounces {
     my($task, $context) = @_;
     
-    do_log('info','purge_orphan_bounces()');
+    &Log::do_log('info','purge_orphan_bounces()');
     
     ## Hash {'listname' => 'bounced address' => 1}
     my %bounced_users;
     my $all_lists;
     
     unless ($all_lists = &List::get_lists('*')) {
-	&do_log('notice','No list available');
+	&Log::do_log('notice','No list available');
 	return 1;
     }
     
@@ -1291,13 +1291,13 @@ sub purge_orphan_bounces {
 	my $bounce_dir = $list->get_bounce_dir();
 	
 	unless (-d $bounce_dir) {
-	    &do_log('notice', 'No bouncing subscribers in list %s', $listname);
+	    &Log::do_log('notice', 'No bouncing subscribers in list %s', $listname);
 	    next;
 	}
 	
 	## then reading Bounce directory & compare with %bounced_users
 	unless (opendir(BOUNCE,$bounce_dir)) {
-	    &do_log('err','Error while opening bounce directory %s',$bounce_dir);
+	    &Log::do_log('err','Error while opening bounce directory %s',$bounce_dir);
 	    return undef;
 	}
 	
@@ -1305,9 +1305,9 @@ sub purge_orphan_bounces {
 	foreach my $bounce (readdir(BOUNCE)) {
 	    if ($bounce =~ /\@/){
 		unless (defined($bounced_users{$listname}{$bounce})) {
-		    &do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
+		    &Log::do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
 		    unless (unlink($bounce_dir.'/'.$bounce)) {
-			&do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
+			&Log::do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
 		    }
 		}
 	    }	    
@@ -1328,7 +1328,7 @@ sub purge_orphan_bounces {
      my @tab = @{$Rarguments};
      my $delay = $tab[0];
 
-     do_log('debug2','expire_bounce(%d)',$delay);
+     &Log::do_log('debug2','expire_bounce(%d)',$delay);
      my $all_lists = &List::get_lists('*');
      foreach my $list (@$all_lists ) {
 
@@ -1337,12 +1337,12 @@ sub purge_orphan_bounces {
 	 # the reference date is the date until which we expire bounces in second
 	 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
 	 if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
-	     # do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
+	     # &Log::do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
 	     next;
 	 }
 
 	 unless ($list->get_latest_distribution_date()) {
-	     do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
+	     &Log::do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
 	     next;
 	 }
 	 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
@@ -1354,12 +1354,12 @@ sub purge_orphan_bounces {
 		 my $email = $u->{'email'};
 
 		 unless ( $list->is_list_member($email) ) {
-		     do_log('info','expire_bounce: %s not subscribed', $email);
+		     &Log::do_log('info','expire_bounce: %s not subscribed', $email);
 		     next;
 		 }
 
 		 unless( $list->update_list_member($email, {'bounce' => 'NULL'},{'bounce_address' => 'NULL'})) {
-		     do_log('info','expire_bounce: failed update database for %s', $email);
+		     &Log::do_log('info','expire_bounce: failed update database for %s', $email);
 		     next;
 		 }
 		 my $escaped_email = &tools::escape_chars($email);
@@ -1367,10 +1367,10 @@ sub purge_orphan_bounces {
 		 my $bounce_dir = $list->get_bounce_dir();
 
 		 unless (unlink $bounce_dir.'/'.$escaped_email) {
-		     &do_log('info','expire_bounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
+		     &Log::do_log('info','expire_bounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
 		     next;
 		 }
-		 do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
+		 &Log::do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
 			$email,$listname,
 			&POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
 			&POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
@@ -1391,7 +1391,7 @@ sub purge_orphan_bounces {
      my $template = $tab[0];
      my $limit = &tools::duration_conv ($tab[1], $execution_date);
 
-     &do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
+     &Log::do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
 
      ## building of certificate list
      unless (opendir(DIR, $cert_dir)) {
@@ -1412,7 +1412,7 @@ sub purge_orphan_bounces {
 	 chomp ($date);
 
 	 unless ($date) {
-	     &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+	     &Log::do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
 	     next;
 	 }
 
@@ -1426,7 +1426,7 @@ sub purge_orphan_bounces {
 	 if ($expiration_date > $limit) { 
 	     # deletion of unuseful soon_expired file if it is existing
 	     if (-e $soon_expired_file) {
-		 unlink ($soon_expired_file) || &do_log ('err', "error : can't delete $soon_expired_file");
+		 unlink ($soon_expired_file) || &Log::do_log ('err', "error : can't delete $soon_expired_file");
 	     }
 	     next;
 	 }
@@ -1434,12 +1434,12 @@ sub purge_orphan_bounces {
 	 # expired certificate processing
 	 if ($expiration_date < $execution_date) {
 
-	     &do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
+	     &Log::do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
 	     if (!$log) {
-		 unlink ("$cert_dir/$_") || &do_log ('notice', "error : can't delete certificate file $_");
+		 unlink ("$cert_dir/$_") || &Log::do_log ('notice', "error : can't delete certificate file $_");
 	     }
 	     if (-e $soon_expired_file) {
-		 unlink ("$cert_dir/$soon_expired_file") || &do_log ('err', "error : can't delete $soon_expired_file");
+		 unlink ("$cert_dir/$soon_expired_file") || &Log::do_log ('err', "error : can't delete $soon_expired_file");
 	     }
 	     next;
 	 }
@@ -1450,7 +1450,7 @@ sub purge_orphan_bounces {
 	      !(-e $soon_expired_file) ) {
 
 	     unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
-		 &do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
+		 &Log::do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
 		 next;
 	     } else {close (FILE);}
 
@@ -1462,22 +1462,22 @@ sub purge_orphan_bounces {
 	     chomp ($id);
 
 	     unless ($id) {
-		 &do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+		 &Log::do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
 		 next;
 	     }
 
 	     $id =~ s/subject= //;
-	     do_log ('notice', "id : $id");
+	     &Log::do_log ('notice', "id : $id");
 	     $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
 	     $tpl_context{'certificate_id'} = $id;
 	     $tpl_context{'auto_submitted'} = 'auto-generated';
 	     
 	     if (!$log) {
 		 unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
-		     &do_log ('notice', "Unable to send template $template to $_");
+		     &Log::do_log ('notice', "Unable to send template $template to $_");
 		 }
 	     }
-	     &do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
+	     &Log::do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
 	 }
      }
      return 1;
@@ -1492,7 +1492,7 @@ sub purge_orphan_bounces {
      my @tab = @{$Rarguments};
      my $limit = &tools::epoch_conv ($tab[1], $task->{'date'});
      my $CA_file = "$Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
-     &do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
+     &Log::do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
 
      # building of CA list
      my @CA;
@@ -1510,9 +1510,9 @@ sub purge_orphan_bounces {
      my $crl_dir = "$Conf{'crl_dir'}";
      unless (-d $Conf{'crl_dir'}) {
 	 if ( mkdir ($Conf{'crl_dir'}, 0775)) {
-	     do_log('notice', "creating spool $Conf{'crl_dir'}");
+	     &Log::do_log('notice', "creating spool $Conf{'crl_dir'}");
 	 }else{
-	     do_log('err', "Unable to create CRLs directory $Conf{'crl_dir'}");
+	     &Log::do_log('err', "Unable to create CRLs directory $Conf{'crl_dir'}");
 	     return undef;
 	 }
      }
@@ -1536,7 +1536,7 @@ sub purge_orphan_bounces {
 	 chomp ($date);
 
 	 unless ($date) {
-	     &do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
+	     &Log::do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
 	     next;
 	 }
 
@@ -1553,7 +1553,7 @@ sub purge_orphan_bounces {
 
 	 if (&Scenario::verify ($verify_context, $condition) == 1) {
 	     unlink ($file);
-	     &do_log ('notice', "--> updating of the $file crl file");
+	     &Log::do_log ('notice', "--> updating of the $file crl file");
 	     my $cmd = "wget -O \'$file\' \'$url\'";
 	     open CMD, "| $cmd";
 	     close CMD;
@@ -1575,11 +1575,11 @@ sub eval_bouncers {
 	my $listname = $list->{'name'};
 	my $list_traffic = {};
 	
-	&do_log('info','eval_bouncers(%s)',$listname);
+	&Log::do_log('info','eval_bouncers(%s)',$listname);
 	
 	## Analizing file Msg-count and fill %$list_traffic
 	unless (open(COUNT,$list->{'dir'}.'/msg_count')){
-	    &do_log('debug','** Could not open msg_count FILE for list %s',$listname);
+	    &Log::do_log('debug','** Could not open msg_count FILE for list %s',$listname);
 	    next;
 	}    
 	while (<COUNT>) {
@@ -1596,7 +1596,7 @@ sub eval_bouncers {
 	    
 	    ## copying score into DataBase
 	    unless ($list->update_list_member($user_ref->{'email'},{'score' => $score }) ) {
-		&do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
+		&Log::do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
 		next;
 	    }
 	}
@@ -1614,7 +1614,7 @@ sub none {
 sub process_bouncers {
 ###################
     my ($task,$context) = @_;
-    &do_log('info','Processing automatic actions on bouncing users'); 
+    &Log::do_log('info','Processing automatic actions on bouncing users'); 
 
 ###########################################################################
 # This sub apply a treatment foreach category of bouncing-users
@@ -1676,7 +1676,7 @@ sub process_bouncers {
 	    if (@{$bouncers[$level]}){
 		## calling action subroutine with (list,email list) in parameter 
 		unless ($actions{$action}->($list,$bouncers[$level])){
-		    &do_log('err','error while calling action sub for bouncing users in list %s',$listname);
+		    &Log::do_log('err','error while calling action sub for bouncing users in list %s',$listname);
 		    return undef;
 		}
 
@@ -1690,11 +1690,11 @@ sub process_bouncers {
 	        if ($notification eq 'listmaster'){
 
 		    unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},$param)){
-			&do_log('err','error while notifying listmaster');
+			&Log::do_log('err','error while notifying listmaster');
 		    }
 		}elsif ($notification eq 'owner'){
 		    unless ($list->send_notify_to_owner('automatic_bounce_management',$param)){
-			&do_log('err','error while notifying owner');
+			&Log::do_log('err','error while notifying owner');
 		    }
 		}
 	    }
@@ -1709,7 +1709,7 @@ sub get_score {
     my $user_ref = shift;
     my $list_traffic = shift;
 
-    &do_log('debug','Get_score(%s) ',$user_ref->{'email'});
+    &Log::do_log('debug','Get_score(%s) ',$user_ref->{'email'});
 
     my $min_period = $Conf{'minimum_bouncing_period'};
     my $min_msg_count = $Conf{'minimum_bouncing_count'};
@@ -1727,13 +1727,13 @@ sub get_score {
 
     unless ($bounce_count >= $min_msg_count){
 	#not enough messages distributed to keep score
-	&do_log('debug','Not enough messages for evaluation of user %s',$user_ref->{'email'});
+	&Log::do_log('debug','Not enough messages for evaluation of user %s',$user_ref->{'email'});
 	return undef ;
     }
 
     unless (($EO_period - $BO_period) >= $min_period){
 	#too short bounce period to keep score
-	&do_log('debug','Too short period for evaluate %s',$user_ref->{'email'});
+	&Log::do_log('debug','Too short period for evaluate %s',$user_ref->{'email'});
 	return undef;
     } 
 
@@ -1802,9 +1802,9 @@ sub change_label {
     $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
 
     if (rename ($task_file, $new_task_file)) {
-	&do_log ('notice', "$task_file renamed in $new_task_file");
+	&Log::do_log ('notice', "$task_file renamed in $new_task_file");
     } else {
-	&do_log ('err', "error ; can't rename $task_file in $new_task_file");
+	&Log::do_log ('err', "error ; can't rename $task_file in $new_task_file");
     }
 }
 
@@ -1816,22 +1816,22 @@ sub error {
     my @param;
     $param[0] = "An error has occured during the execution of the task $task_file :
                  $message";
-    do_log ('err', "$message");
+    &Log::do_log ('err', "$message");
     change_label ($task_file, 'ERROR') unless ($task_file eq '');
     unless (&List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, \@param)) {
-    	&do_log('notice','error while notifying listmaster about "error_in_task"');
+    	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
     }
 }
 
 sub sync_include {
     my ($task, $context) = @_;
 
-    &do_log('debug2', 'sync_include(%s)', $task->{'id'});
+    &Log::do_log('debug2', 'sync_include(%s)', $task->{'id'});
 
     my $list = $task->{'list_object'};
 
     unless ( $list->{'admin'}{'user_data_source'} eq 'include2' ) {
-	&do_log('notice', 'sync_include() called for %s but user_data_source is %s', 
+	&Log::do_log('notice', 'sync_include() called for %s but user_data_source is %s', 
 		$list->{'name'}, $list->{'admin'}{'user_data_source'});                                                
 	return undef;                                                          
     }
@@ -1841,7 +1841,7 @@ sub sync_include {
 
     if (! $list->has_include_data_sources() &&
 	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {
-	&do_log('debug', "List $list->{'name'} no more require sync_include task");
+	&Log::do_log('debug', "List $list->{'name'} no more require sync_include task");
 	return -1;	
     }    
 }

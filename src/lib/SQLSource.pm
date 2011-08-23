@@ -149,14 +149,14 @@ sub establish_connection {
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name') {
 	unless ($self->{$db_param}) {
-	    do_log('info','Missing parameter %s for DBI connection', $db_param);
+	    &Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 	    return undef;
 	}
 	## SQLite just need a db_name
 	unless ($self->{'db_type'} eq 'SQLite') {
 	    foreach my $db_param ('db_host','db_user') {
 		unless ($self->{$db_param}) {
-		    do_log('info','Missing parameter %s for DBI connection', $db_param);
+		    &Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 		    return undef;
 		}
 	    }
@@ -165,7 +165,7 @@ sub establish_connection {
     
     ## Check if DBD is installed
     unless (eval "require DBD::$self->{'db_type'}") {
-	do_log('err',"No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN");
+	&Log::do_log('err',"No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN");
 	&List::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},{'db_type' => $self->{'db_type'}});
 	return undef;
     }
@@ -188,7 +188,7 @@ sub establish_connection {
 	defined $db_connections{$self->{'connect_string'}}{'dbh'} && 
 	$db_connections{$self->{'connect_string'}}{'dbh'}->ping()) {
       
-      &do_log('debug', "Use previous connection");
+      &Log::do_log('debug', "Use previous connection");
       $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'};
       return $db_connections{$self->{'connect_string'}}{'dbh'};
 
@@ -212,14 +212,14 @@ sub establish_connection {
 		    $db_connections{$self->{'connect_string'}}{'status'} eq 'failed') { 
     
 		    unless (&List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
-			&do_log('err',"Unable to send notify 'no_db' to listmaster");
+			&Log::do_log('err',"Unable to send notify 'no_db' to listmaster");
 		    }
 		}
 	    }
 	    if ($self->{'reconnect_options'}{'keep_trying'}) {
-		&do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
+		&Log::do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
 	    } else{
-		do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
+		&Log::do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
 		$db_connections{$self->{'connect_string'}}{'status'} = 'failed';
 		$db_connections{$self->{'connect_string'}}{'first_try'} ||= time;
 		return undef;
@@ -234,9 +234,9 @@ sub establish_connection {
 	    }
 	    
 	    if ($self->{'reconnect_options'}{'warn'}) {
-	    do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
+	    &Log::do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
 		unless (&List::send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
-		    &do_log('notice',"Unable to send notify 'db_restored' to listmaster");
+		    &Log::do_log('notice',"Unable to send notify 'db_restored' to listmaster");
 		}
 	    }
       }
@@ -317,12 +317,12 @@ sub do_prepared_query {
     }
 
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($query)) {
-	do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+	&Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 	return undef;
     }
     
     unless ($self->{'sth'}->execute(@params)) {
-	do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
+	&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
 	return undef;
     }
 
@@ -360,10 +360,10 @@ sub fetch {
 	return $status;
     };
     if ( $@ eq "TIMEOUT\n" ) {
-	do_log('err','Fetch timeout on remote SQL database');
+	&Log::do_log('err','Fetch timeout on remote SQL database');
         return undef;
     }elsif ($@) {
-	do_log('err','Fetch failed on remote SQL database');
+	&Log::do_log('err','Fetch failed on remote SQL database');
     return undef;
     }
 
@@ -378,7 +378,7 @@ sub disconnect {
 }
 
 sub create_db {
-    &do_log('debug3', 'List::create_db()');    
+    &Log::do_log('debug3', 'List::create_db()');    
     return 1;
 }
 

@@ -393,7 +393,7 @@ sub conf_2_db {
     ## Load configuration file. Ignoring database config and get result
     my $global_conf;
     unless ($global_conf= Conf::load($config_file,1,'return_result')) {
-    &fatal_err("Configuration file $config_file has errors.");  
+    &Log::fatal_err("Configuration file $config_file has errors.");  
     }
     
     for my $i ( 0 .. $#conf_parameters ) {

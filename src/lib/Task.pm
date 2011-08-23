@@ -39,7 +39,7 @@ my %task_by_model;
 sub new {
     my($pkg, $file) = @_;
     my $task;
-    &do_log('debug2', 'Task::new(%s)',$file);
+    &Log::do_log('debug2', 'Task::new(%s)',$file);
     
     $task->{'filepath'} = $file;
 
@@ -74,7 +74,7 @@ sub new {
 	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
     }else {
-	&do_log('err', "Unknown format for task '%s'", $task->{'filename'});
+	&Log::do_log('err', "Unknown format for task '%s'", $task->{'filename'});
 	return undef;
     }
 
@@ -93,7 +93,7 @@ sub list_tasks {
 
     ## Create required tasks
     unless (opendir(DIR, $spool_task)) {
-	&do_log ('err', "error : can't open dir %s: %m", $spool_task);
+	&Log::do_log ('err', "error : can't open dir %s: %m", $spool_task);
     }
     my @task_files = sort epoch_sort (grep !/^\.\.?$/, readdir DIR); # @tasks updating
     closedir DIR;

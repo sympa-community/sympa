@@ -81,7 +81,7 @@ sub lists {
 
     my @result;  
     
-    &do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
+    &Log::do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
    
     my $all_lists = &List::get_lists($robot);
     foreach my $list ( @$all_lists ) {
@@ -144,17 +144,17 @@ sub login {
     #&Log::do_log('notice', 'ENV %s = %s', $k, $ENV{$k});
     #}
     unless (defined $http_host){
-	&do_log('err', 'login(): SERVER_NAME not defined');
+	&Log::do_log('err', 'login(): SERVER_NAME not defined');
     } 
     unless (defined $email){
-	&do_log('err', 'login(): email not defined');
+	&Log::do_log('err', 'login(): email not defined');
     } 
     unless (defined $passwd){
-	&do_log('err', 'login(): passwd not defined');
+	&Log::do_log('err', 'login(): passwd not defined');
     } 
 
     unless ($http_host and $email and $passwd) {
-	&do_log('err', 'login(): incorrect number of parameters');
+	&Log::do_log('err', 'login(): incorrect number of parameters');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <HTTP host> <email> <password>');
@@ -164,11 +164,11 @@ sub login {
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
 
-    &do_log('debug', 'call check_auth(%s,%s)',$robot,$email);
+    &Log::do_log('debug', 'call check_auth(%s,%s)',$robot,$email);
     my $user = &Auth::check_auth($robot,$email,$passwd);
 
     unless($user){
-	&do_log('notice', "SOAP : login authentication failed");
+	&Log::do_log('notice', "SOAP : login authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Incorrect password for user $email or bad login");
@@ -197,14 +197,14 @@ sub casLogin {
     &Log::do_log('notice', 'casLogin(%s)', $proxyTicket);
     
     unless ($http_host and $proxyTicket) {
-	&do_log('err', 'casLogin(): incorrect number of parameters');
+	&Log::do_log('err', 'casLogin(): incorrect number of parameters');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <HTTP host> <proxyTicket>');
     }
     
 	unless ( eval "require AuthCAS" ){
-		do_log('err',"Unable to use AuthCAS library, install AuthCAS (CPAN) first");
+		&Log::do_log('err',"Unable to use AuthCAS library, install AuthCAS (CPAN) first");
 		return undef ;
     }
     require AuthCAS;
@@ -223,11 +223,11 @@ sub casLogin {
 	
 	($user, @proxies) = $cas->validatePT(&Conf::get_robot_conf($robot,'soap_url'), $proxyTicket);
 	unless (defined $user) {
-	    &do_log('err', 'CAS ticket %s not validated by server %s : %s', $proxyTicket, $auth_service->{'base_url'}, &AuthCAS::get_errors());
+	    &Log::do_log('err', 'CAS ticket %s not validated by server %s : %s', $proxyTicket, $auth_service->{'base_url'}, &AuthCAS::get_errors());
 	    next;
 	}
 
-	&do_log('notice', 'User %s authenticated against server %s', $user, $auth_service->{'base_url'});
+	&Log::do_log('notice', 'User %s authenticated against server %s', $user, $auth_service->{'base_url'});
 	
 	## User was authenticated
 	$cas_id = $service_id;
@@ -235,7 +235,7 @@ sub casLogin {
     }
     
     unless($user){
-	&do_log('notice', "SOAP : login authentication failed");
+	&Log::do_log('notice', "SOAP : login authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Proxy ticket could not be validated");
@@ -243,7 +243,7 @@ sub casLogin {
 
     ## Now fetch email attribute from LDAP
     unless ($email = &Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
-	&do_log('err','Could not get email address from LDAP for user %s', $user);
+	&Log::do_log('err','Could not get email address from LDAP for user %s', $user);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Could not get email address from LDAP directory");
@@ -268,10 +268,10 @@ sub authenticateAndRun {
     my ($self, $email, $cookie, $service, $parameters) = @_;
 
     my $session_id = $cookie;
-    &do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $session_id, $service, join(',',@$parameters));
+    &Log::do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $session_id, $service, join(',',@$parameters));
 
     unless ($session_id and $service) {
-      &do_log('err', "Missing parameter");
+      &Log::do_log('err', "Missing parameter");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <email> <cookie> <service>');
@@ -283,7 +283,7 @@ sub authenticateAndRun {
     my $session = new SympaSession($ENV{'SYMPA_ROBOT'},{'cookie' => $session_id});
     $email = $session->{'email'} if (defined $session);
     unless ($email or ($email eq 'unkown')  ) {
-      &do_log('err', "Failed to authenticate user with session ID $session_id");
+      &Log::do_log('err', "Failed to authenticate user with session ID $session_id");
       die SOAP::Fault->faultcode('Client')
 	->faultstring('Could not get email from cookie')
 	  ->faultdetail('');
@@ -299,10 +299,10 @@ sub authenticateAndRun {
 sub getUserEmailByCookie {
     my ($self, $cookie) = @_;
 
-    &do_log('debug3','getUserEmailByCookie(%s)', $cookie);
+    &Log::do_log('debug3','getUserEmailByCookie(%s)', $cookie);
     
     unless ($cookie) {
-      &do_log('err',"Missing parameter cookie");
+      &Log::do_log('err',"Missing parameter cookie");
       die SOAP::Fault->faultcode('Client')
 	->faultstring('Missing parameter')
 	  ->faultdetail('Use : <cookie>');
@@ -312,7 +312,7 @@ sub getUserEmailByCookie {
     
     
     unless (defined $session && ($session->{'email'} ne 'unkown')  ) {
-      &do_log('err',"Failed to load session for $cookie");
+      &Log::do_log('err',"Failed to load session for $cookie");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Could not get email from cookie')
 	    ->faultdetail('');
@@ -331,7 +331,7 @@ sub authenticateRemoteAppAndRun {
     my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
     my $robot = $ENV{'SYMPA_ROBOT'};
 
-    &do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s)', $appname, $vars, $service, join(',',@$parameters));
+    &Log::do_log('notice','authenticateRemoteAppAndRun(%s,%s,%s,%s)', $appname, $vars, $service, join(',',@$parameters));
 
     unless ($appname and $apppassword and $service) {
 	die SOAP::Fault->faultcode('Client')
@@ -341,7 +341,7 @@ sub authenticateRemoteAppAndRun {
     my $proxy_vars = &Auth::remote_app_check_password($appname, $apppassword, $robot);
         
     unless (defined $proxy_vars) {
-	&do_log('notice', "authenticateRemoteAppAndRun(): authentication failed");
+	&Log::do_log('notice', "authenticateRemoteAppAndRun(): authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Authentication failed for application $appname");
@@ -350,17 +350,17 @@ sub authenticateRemoteAppAndRun {
 
     foreach my $var (split(/,/,$vars)) {
 	# check if the remote application is trusted proxy for this variable
-	# &do_log('notice', "sympasoap::authenticateRemoteAppAndRun: Remote application is trusted proxy for  $var");		
+	# &Log::do_log('notice', "sympasoap::authenticateRemoteAppAndRun: Remote application is trusted proxy for  $var");		
 
 	my ($id,$value) = split(/=/,$var);
 	if (!defined $id) {	
-	    &do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe id");
+	    &Log::do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe id");
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Incorrect syntaxe id')
 		->faultdetail("Unrecognized syntaxe  $var");
 	}
 	if (!defined $value) {	
-	    &do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe value");
+	    &Log::do_log('notice', "authenticateRemoteAppAndRun(): incorrect syntaxe value");
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Incorrect syntaxe value')
 		->faultdetail("Unrecognized syntaxe  $var");
@@ -375,7 +375,7 @@ sub amI {
 
   my $robot = $ENV{'SYMPA_ROBOT'};
 
-  &do_log('notice','amI(%s,%s,%s)',$listname,$function,$user);
+  &Log::do_log('notice','amI(%s,%s,%s)',$listname,$function,$user);
 
   unless ($listname and $user and $function) {
       die SOAP::Fault->faultcode('Client')
@@ -774,17 +774,17 @@ sub add {
     ## Now send the welcome file to the user if it exists and notification is supposed to be sent.
     unless ($quiet || $action =~ /quiet/i) {
 	unless ($list->send_file('welcome', $email, $robot,{'auto_submitted' => 'auto-generated'})) {
-	    &do_log('notice',"Unable to send template 'welcome' to $email");
+	    &Log::do_log('notice',"Unable to send template 'welcome' to $email");
 	}
     }
     
-    &do_log('info', 'ADD %s %s from %s accepted (%d subscribers)', $list->{'name'}, $email, $sender, $list->get_total() );
+    &Log::do_log('info', 'ADD %s %s from %s accepted (%d subscribers)', $list->{'name'}, $email, $sender, $list->get_total() );
     if ($action =~ /notify/i) {
 	unless ($list->send_notify_to_owner('notice',{'who' => $email, 
 						      'gecos' => $gecos,
 						      'command' => 'add',
 						      'by' => $sender})) {
-	    &do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
+	    &Log::do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
 	}
     }
 }
@@ -859,7 +859,7 @@ sub del {
 
     my $user_entry = $list->get_list_member($email);
     unless ((defined $user_entry)) {
-	    &do_log('info', 'DEL %s %s from %s refused, not on list', $listname, $email, $sender);
+	    &Log::do_log('info', 'DEL %s %s from %s refused, not on list', $listname, $email, $sender);
 	    die SOAP::Fault->faultcode('Client')
 		->faultstring('Not subscribed')
 		->faultdetail('Not member of list or not subscribed');
@@ -872,7 +872,7 @@ sub del {
     my $u;
     unless ($u = $list->delete_list_member('users' => [$email], 'exclude' =>' 1')){
 	my $error = "Unable to delete user $email from list $listname for command 'del'";
-	&do_log('info', 'DEL %s %s from %s failed, '.$error);
+	&Log::do_log('info', 'DEL %s %s from %s failed, '.$error);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Unable to remove subscriber informations')
 	    ->faultdetail('Database access failed');	  
@@ -883,18 +883,18 @@ sub del {
     ## quiet del.
     unless ($quiet || $action =~ /quiet/i) {
 	unless ($list->send_file('removed', $email, $robot, {'auto_submitted' => 'auto-generated'})) {
-	    &do_log('notice',"Unable to send template 'removed' to $email");
+	    &Log::do_log('notice',"Unable to send template 'removed' to $email");
 	}
     }
     
     
-    &do_log('info', 'DEL %s %s from %s accepted (%d subscribers)', $listname, $email, $sender,  $list->get_total() );
+    &Log::do_log('info', 'DEL %s %s from %s accepted (%d subscribers)', $listname, $email, $sender,  $list->get_total() );
     if ($action =~ /notify/i) {
 	unless ($list->send_notify_to_owner('notice',{'who' => $email, 
 						      'gecos' => "", 
 						      'command' => 'del',
 						      'by' => $sender})) {
-	    &do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
+	    &Log::do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
 	}
     }
     return 1;
@@ -1266,7 +1266,7 @@ sub subscribe {
      my $self = shift;
      my @result;
      my $sender = $ENV{'USER_EMAIL'};
-     &do_log('notice', 'xx complexWhich(%s)',$sender);
+     &Log::do_log('notice', 'xx complexWhich(%s)',$sender);
 
      $self->which('complex');
  }
@@ -1277,7 +1277,7 @@ sub subscribe {
      my $subtopic = shift || '';
      my @result;
      my $sender = $ENV{'USER_EMAIL'};
-     &do_log('notice', 'complexLists(%s)',$sender);
+     &Log::do_log('notice', 'complexLists(%s)',$sender);
 
      $self->lists($topic, $subtopic, 'complex');
  }
@@ -1293,7 +1293,7 @@ sub which {
     my $sender = $ENV{'USER_EMAIL'};
     my $robot = $ENV{'SYMPA_ROBOT'};
 
-    &do_log('notice', 'which(%s,%s)',$sender,$mode);
+    &Log::do_log('notice', 'which(%s,%s)',$sender,$mode);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -1422,7 +1422,7 @@ sub get_reason_string {
     unless (&tt2::parse_tt2($data,'authorization_reject.tt2' ,\$string, $tt2_include_path)) {
 	my $error = &tt2::get_error();
 	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
-	&do_log('info', "get_reason_string : error parsing");
+	&Log::do_log('info', "get_reason_string : error parsing");
 	return '';
     }
     

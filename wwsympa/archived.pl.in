@@ -64,7 +64,7 @@ my $ip = $ENV{'REMOTE_HOST'};
 ## Check options
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F')) {
-    &fatal_err("Unknown options.");
+    &Log::fatal_err("Unknown options.");
 }
 
 if ($main::options{'debug'}) {
@@ -87,7 +87,7 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 ## Create arc_path if required
@@ -101,7 +101,7 @@ if ($wwsconf->{'arc_path'}) {
 					 mode  => 0775,
 					 ))
 	{
-	    &do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    &Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
 	    exit -1;
 	}
     }
@@ -109,7 +109,7 @@ if ($wwsconf->{'arc_path'}) {
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
-    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -138,14 +138,14 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
-    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
 }else{
     &Log::set_log_level($Conf{'log_level'});
-    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
-do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
+&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -158,7 +158,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -166,12 +166,12 @@ umask(oct($Conf{'umask'}));
 
 ## Check access to arc_path 
 unless ((-r $wwsconf->{'arc_path'}) && (-w $wwsconf->{'arc_path'})) {
-    do_log('err', 'Unsufficient access to %s directory', $wwsconf->{'arc_path'});
+    &Log::do_log('err', 'Unsufficient access to %s directory', $wwsconf->{'arc_path'});
 }
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-    &do_log('err','unable to change directory');
+    &Log::do_log('err','unable to change directory');
     exit (-1);
 }
 
@@ -179,7 +179,7 @@ my $pinfo = &List::_apply_defaults();
 
 $Language::default_lang = $Conf{'lang'};
 
-do_log('notice', "archived %s Started", Sympa::Constants::VERSION);
+&Log::do_log('notice', "archived %s Started", Sympa::Constants::VERSION);
 
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
@@ -191,7 +191,7 @@ $queue = $Conf{'queueoutgoing'};
 print "queue : $queue\n";
 
 #if (!chdir($queue)) {
-#   fatal_err("Can't chdir to %s: %m", $queue);
+#   &Log::fatal_err("Can't chdir to %s: %m", $queue);
 #   ## Function never returns.
 #}
 
@@ -201,7 +201,7 @@ while (!$end) {
     &List::init_list_cache();
     
    unless (opendir(DIR, $queue)) {
-       fatal_err("Can't open dir %s: %m", $queue); ## No return.
+       &Log::fatal_err("Can't open dir %s: %m", $queue); ## No return.
    }
 
    my @files =  (grep(/(^[^\.]|^\.(remove|rebuild)\.(.*))/, readdir DIR ));
@@ -222,18 +222,18 @@ while (!$end) {
 	   my $yyyymm = $3;
 	   my $arcpath = "$wwsconf->{'arc_path'}/$listadress/$yyyymm";
 
-	   do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	   &Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
 	  
 	   my $list;
 	   unless ($list = new List ($listadress)) {
-	       do_log('err',"remove : unknown list $listadress");
+	       &Log::do_log('err',"remove : unknown list $listadress");
 	       next;
 	   }
 
-	   do_log('debug',"remove found : $file for list $yyyymm");
+	   &Log::do_log('debug',"remove found : $file for list $yyyymm");
 
 	   unless (open REMOVE, "$queue/$file") {
-	        do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
+	        &Log::do_log ('err',"Ignoring file $queue/$file because couldn't read it, archived.pl must use the same uid as sympa");
 		   next;
 	       }
 
@@ -241,7 +241,7 @@ while (!$end) {
 
 	   foreach my $removeorder (<REMOVE>) { 
 	       unless($removeorder =~ /(.*)\|\|($email_regexp)/){
-		   do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
+		   &Log::do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
 		   next;
 	       }
 	       my $msgid = $1;
@@ -249,13 +249,13 @@ while (!$end) {
 
 	       chomp 	$msgid ;
 	       if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-		   do_log('err','remove_arc: no message id found');
+		   &Log::do_log('err','remove_arc: no message id found');
 		   next;
 	       } 
 
 	       my $message ;
 	       unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
-		   do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
+		   &Log::do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
 		   next;
 	       }
 
@@ -264,13 +264,13 @@ while (!$end) {
 
 		   my $new_message;
 		   unless ($new_message = new Message({'file'=>"$arcpath/arctxt/$message",'noxsympato'=>'noxsympato'})) {
-		      do_log('err',"unable to load new message $arcpath/arctxt/$message");
+		      &Log::do_log('err',"unable to load new message $arcpath/arctxt/$message");
 		      next;
 		   }
 		   my $messagesender = lc($new_message->{'sender'});
 		   
 		   unless ($sender == $messagesender) {
-		       &do_log('err', 'remove command by unauthorized sender');
+		       &Log::do_log('err', 'remove command by unauthorized sender');
 		       return undef;
 		   }
 	       }
@@ -283,19 +283,19 @@ while (!$end) {
 
 	       unless (-d "$arcpath/deleted"){
 		   unless (mkdir ("$arcpath/deleted",0777)) {
-		       do_log('info',"remove_arc: unable to create $arcpath/deleted : $!");
+		       &Log::do_log('info',"remove_arc: unable to create $arcpath/deleted : $!");
 		       last;
 		   }
 	       }
 
 	       unless (rename ("$arcpath/arctxt/$message","$arcpath/deleted/$message")) {
-		   do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
+		   &Log::do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
 		   next;
 	       }
 			       
 	       # remove directory if empty arctxt
 	       unless (opendir (DIR,"$arcpath/arctxt")) {
-		   do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
+		   &Log::do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
 		   next;
 	       }
 	       my @files = grep(/^\d+$/, readdir( DIR ));
@@ -308,15 +308,15 @@ while (!$end) {
 	   close REMOVE;
 
 	   unless (unlink("$queue/$file")) {
-	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+	       &Log::do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       next;
 	   }
 	   
        }elsif ($file  =~ /^\.rebuild\.(.*)$/ ) {
-	   do_log('debug',"rebuild found : $file for list $1");
+	   &Log::do_log('debug',"rebuild found : $file for list $1");
 	   &rebuild($1);	
 	   unless (unlink("$queue/$file")) {
-	       do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+	       &Log::do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
 	       next;
 	   }
        }else{
@@ -337,7 +337,7 @@ while (!$end) {
 	       $ss = sprintf '%02d', $now[0];
 	       
 	   }else {
-	       do_log ('err',"Ignoring file $queue/$file because not to be rebuid or liste archive");
+	       &Log::do_log ('err',"Ignoring file $queue/$file because not to be rebuid or liste archive");
                unlink("$queue/$file");
 	       next;
 	   }
@@ -347,11 +347,11 @@ while (!$end) {
 	       $listname = $1;
 	       $hostname = $2;
 	   }else {
-	       &do_log('err',"Match of list address '$adrlist' failed");
+	       &Log::do_log('err',"Match of list address '$adrlist' failed");
 	       return undef;
 	   }
 
-	   do_log('notice',"Archiving $file for list $adrlist");
+	   &Log::do_log('notice',"Archiving $file for list $adrlist");
 	   unless (mail2arc ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss)) {
 	       &tools::save_to_bad({
 		   'file' => $file,
@@ -359,20 +359,20 @@ while (!$end) {
 		   'queue' => $queue,
 	       });
 	       unless (&List::send_notify_to_listmaster('archiving_failed',$hostname,{'file' => "$file",'bad' => "$queue/bad"})) {
-		   &do_log('notice',"Unable to send notify 'archiving_failed' to listmaster");
+		   &Log::do_log('notice',"Unable to send notify 'archiving_failed' to listmaster");
 	       }
 	   }
 	   if (-f "$queue/$file") {
 	       unless (unlink("$queue/$file")) {
-		   do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
-		   do_log ('err',"exiting because I don't want to loop until file system is full");
+		   &Log::do_log ('err',"Ignoring file $queue/$file because couldn't remove it, archived.pl must use the same uid as sympa");
+		   &Log::do_log ('err',"exiting because I don't want to loop until file system is full");
 		   last;
 	       }
 	   }
        }
    }
 }
-do_log('notice', 'archived exited normally due to signal');
+&Log::do_log('notice', 'archived exited normally due to signal');
 &tools::remove_pid($wwsconf->{'archived_pidfile'}, $$);
 
 exit(0);
@@ -464,7 +464,7 @@ sub remove {
     my $adrlist = shift;
     my $msgid = shift;
 
-    do_log ('debug2',"remove ($adrlist, $msgid)");
+    &Log::do_log ('debug2',"remove ($adrlist, $msgid)");
     my $arc ;
 
     if ($adrlist =~ /^(.*)\.(\d{4}-\d{2})$/) {
@@ -472,12 +472,12 @@ sub remove {
         $arc = $2;
     }
 
-    do_log('notice',"Removing $msgid in list $adrlist section $2");
+    &Log::do_log('notice',"Removing $msgid in list $adrlist section $2");
 
     &Log::db_stat_log({'robot' => $robot, 'list' => $adrlist, 'operation' => 'remove archive', 'parameter' => '', 'mail' => 'test@cru.fr','client' => $ip, 'daemon' => $daemon_name});
 
     unless(&Log::db_log({'robot' => $robot,'list' => $adrlist,'action' => 'remove','parameters' => $msgid.','.$adrlist,'target_email' => '','msg_id' => $msgid,'status' => 'succes','error_type' => '','user_email' =>'','client' => $ip,'daemon' => $daemon_name})){
-	&do_log('error','archived::remove: unable to log event');
+	&Log::do_log('error','archived::remove: unable to log event');
     }
   
     $arc =~ /^(\d{4})-(\d{2})$/ ;
@@ -537,7 +537,7 @@ sub rebuild {
     my $adrlist = shift;
     my $arc ;
 
-    do_log ('debug2',"rebuild ($adrlist)");
+    &Log::do_log ('debug2',"rebuild ($adrlist)");
 
     if ($adrlist =~ /^(.*)\.(\d{4}-\d{2})$/) {
 	$adrlist = $1;
@@ -549,7 +549,7 @@ sub rebuild {
 	$listname = $1;
 	$hostname = $2;
     }else {
-	&do_log('err',"Match of list address '$adrlist' failed");
+	&Log::do_log('err',"Match of list address '$adrlist' failed");
 	       return undef;
     }
 
@@ -557,7 +557,7 @@ sub rebuild {
 
     my $list = new List($listname, $hostname);
 
-    do_log('debug',"Rebuilding $adrlist archive ($2)");
+    &Log::do_log('debug',"Rebuilding $adrlist archive ($2)");
 
     my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
@@ -567,10 +567,10 @@ sub rebuild {
 	&unset_hidden_mode();
     }
 
-    &do_log('notice',"Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s",$ENV{'M2H_ADDRESSMODIFYCODE'});
+    &Log::do_log('notice',"Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s",$ENV{'M2H_ADDRESSMODIFYCODE'});
 
     if ($arc) {
-        &do_log('notice',"Rebuilding  $arc of $adrlist archive");
+        &Log::do_log('notice',"Rebuilding  $arc of $adrlist archive");
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
@@ -582,7 +582,7 @@ sub rebuild {
 	    my @files = (grep(/^\d+$/,(readdir DIR )));
 	    close (DIR);
 	    if ($#files == -1) { 
-		do_log('notice', "Removing empty directory $arcdir");
+		&Log::do_log('notice', "Removing empty directory $arcdir");
 		&tools::remove_dir ($arcdir);
 		next ;	 
 	    } 
@@ -614,7 +614,7 @@ sub rebuild {
 
 	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 
-	do_log('debug',"System call : $cmd");
+	&Log::do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode / 256;
 
@@ -625,7 +625,7 @@ sub rebuild {
 	
 	## Remove lock if required
 	if ($exitcode == 75) {
-	    &do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
+	    &Log::do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
 	    rmdir $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
 
 	    $exitcode= system($cmd);
@@ -633,13 +633,13 @@ sub rebuild {
 	}
 
 	if ($exitcode) {
-	    do_log('err',"Command $cmd failed with exit code $exitcode");
+	    &Log::do_log('err',"Command $cmd failed with exit code $exitcode");
 	}
     }else{
-        do_log('notice',"Rebuilding $adrlist archive completely");
+        &Log::do_log('notice',"Rebuilding $adrlist archive completely");
 
 	if (!opendir(DIR, "$wwsconf->{'arc_path'}/$adrlist" )) {
-	    do_log('err',"unable to open $wwsconf->{'arc_path'}/$adrlist to rebuild archive");
+	    &Log::do_log('err',"unable to open $wwsconf->{'arc_path'}/$adrlist to rebuild archive");
 	    return ;
 	}
 	my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));
@@ -683,14 +683,14 @@ sub rebuild {
 
 	    ## Remove lock if required
 	    if ($exitcode == 75) {
-		&do_log('notice', 'Removing lock directory %s', $arcdir.'/.mhonarc.lck');
+		&Log::do_log('notice', 'Removing lock directory %s', $arcdir.'/.mhonarc.lck');
 		rmdir $arcdir.'/.mhonarc.lck';
 		
 		$exitcode = system($cmd);
 		$exitcode = $exitcode / 256;	    
 	    }
 	    if ($exitcode) {
-		do_log('err',"Command $cmd failed with exit code $exitcode");
+		&Log::do_log('err',"Command $cmd failed with exit code $exitcode");
 	    }
 	    
 	}
@@ -775,7 +775,7 @@ sub mail2arc {
     my $list = new List($listname, $hostname);
 
     unless (defined $list) {
-	&do_log('err', 'Unknown list %s@%s', $listname, $hostname);
+	&Log::do_log('err', 'Unknown list %s@%s', $listname, $hostname);
 	return undef;
     }
 
@@ -787,7 +787,7 @@ sub mail2arc {
 	&unset_hidden_mode();
     }    
 
-    do_log('debug',"mail2arc $file for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list->get_list_id());
+    &Log::do_log('debug',"mail2arc $file for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list->get_list_id());
     #    chdir($wwsconf->{'arc_path'});
 
     if ($wwsconf->{'custom_archiver'}) {
@@ -799,12 +799,12 @@ sub mail2arc {
 	
 	if (! -d $basedir) {
 	    unless (mkdir $basedir, 0775) {
-		&do_log('err', 'Cannot create directory %s', $basedir);
+		&Log::do_log('err', 'Cannot create directory %s', $basedir);
 		unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname,{'dir' => "$basedir"})) {
-		    &do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
+		    &Log::do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
 		}
 	    }
-	    do_log('debug',"mkdir $basedir");
+	    &Log::do_log('debug',"mkdir $basedir");
 	}
 	
 	## Check quota
@@ -812,17 +812,17 @@ sub mail2arc {
 	    my $used = $list->get_arc_size("$arcpath") ;
 	    
 	    if ($used >= $list->{'admin'}{'web_archive'}{'quota'} * 1024){
-		&do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
+		&Log::do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
 		unless ($list->send_notify_to_owner('arc_quota_exceeded',{'size' => $used})) {
-		    &do_log('notice',"Unable to send notify 'arc_quota_exceeded' to $list->{'name'} owner");	
+		    &Log::do_log('notice',"Unable to send notify 'arc_quota_exceeded' to $list->{'name'} owner");	
 		}
 		return undef;
 	    }
 	    if ($used >= ($list->{'admin'}{'web_archive'}{'quota'} * 1024 * 0.95)){
-		&do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
+		&Log::do_log('err',"archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}");
 		unless ($list->send_notify_to_owner('arc_quota_95',{'size' => $used,
 								    'rate' => int($used * 100 / ($list->{'admin'}{'web_archive'}{'quota'} * 1024 ))})) {
-		    &do_log('notice',"Unable to send notify 'arc_quota_95' to $list->{'name'} owner");	
+		    &Log::do_log('notice',"Unable to send notify 'arc_quota_95' to $list->{'name'} owner");	
 		}
 	    }
 	}
@@ -831,11 +831,11 @@ sub mail2arc {
 	
 	if (! -d $monthdir) {
 	    unless (mkdir ($monthdir, 0775)) {
-		&do_log('err', 'Cannot create directory %s', $monthdir);
+		&Log::do_log('err', 'Cannot create directory %s', $monthdir);
 		return undef;
 	    }
 	    
-	    do_log('debug',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_list_id());
+	    &Log::do_log('debug',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_list_id());
 	    
 	    if ($list->{'admin'}{'web_archive'}{'max_month'}){ # maybe need to remove some old archive
 		if (opendir DIR,$arcpath.'/'.$list->get_list_id()) {
@@ -844,7 +844,7 @@ sub mail2arc {
 		    my $nb_month = $#archives + 1 ;
 		    my $i = 0 ;
 		    while ( $nb_month >  $list->{'admin'}{'web_archive'}{'max_month'}) {
-			do_log('info',"removing  $arcpath/%s/$archives[$i]", $list->get_list_id());
+			&Log::do_log('info',"removing  $arcpath/%s/$archives[$i]", $list->get_list_id());
 			&tools::remove_dir ($arcpath.'/'.$list->get_list_id().'/'.$archives[$i]);
 			$i ++; $nb_month --;		    
 		    }
@@ -856,16 +856,16 @@ sub mail2arc {
 	
 	if (! -d $arctxtdir) {
 	    unless (mkdir ($arctxtdir, 0775)) {
-		&do_log('err', 'Cannot create directory %s', $arctxtdir);
+		&Log::do_log('err', 'Cannot create directory %s', $arctxtdir);
 		return undef;
 	    }
-	    do_log('debug',"mkdir $arctxtdir");
+	    &Log::do_log('debug',"mkdir $arctxtdir");
 	}
 	
 	## copy the file in the arctxt and in "mhonarc -add"
 	if( -f $monthdir."/index" )
 	{
-	    open(IDX,"<$monthdir/index") || fatal_err("couldn't read index for $listname");
+	    open(IDX,"<$monthdir/index") || &Log::fatal_err("couldn't read index for $listname");
 	    $newfile = <IDX>;
 	    chomp($newfile);
 	    $newfile++;
@@ -882,10 +882,10 @@ sub mail2arc {
 	$file_to_archive = $cleaned_file if($cleaned_file);
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 	
-	do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
+	&Log::do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
 	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $file_to_archive";
 	
-	do_log('debug',"System call : $cmd");
+	&Log::do_log('debug',"System call : $cmd");
 	
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode / 256;
@@ -895,19 +895,19 @@ sub mail2arc {
 
 	## Remove lock if required
 	if ($exitcode == 75) {
-	    &do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
+	    &Log::do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
 	    rmdir $monthdir.'/.mhonarc.lck';
 	    
 	    $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;	    
 	}
 	if ($exitcode) {
-	    do_log('err',"Command $cmd failed with exit code $exitcode");
+	    &Log::do_log('err',"Command $cmd failed with exit code $exitcode");
 	}
 	
 	
-	open (ORIG, "$queue/$file") || fatal_err("couldn't open file $queue/$file");
-	open (DEST, ">$arctxtdir/$newfile") || fatal_err("couldn't open file $newfile");
+	open (ORIG, "$queue/$file") || &Log::fatal_err("couldn't open file $queue/$file");
+	open (DEST, ">$arctxtdir/$newfile") || &Log::fatal_err("couldn't open file $newfile");
 	while (<ORIG>) {
 	    print DEST $_ ;
 	}
@@ -1033,12 +1033,12 @@ Saves the archives index file
 
 sub save_idx {
     my ($index,$lst) = @_;
-#    &do_log('notice', "save_idx($index,$lst)");
+#    &Log::do_log('notice', "save_idx($index,$lst)");
     
-    open(INDEXF,">$index") || fatal_err("couldn't overwrite index $index");
+    open(INDEXF,">$index") || &Log::fatal_err("couldn't overwrite index $index");
     print INDEXF "$lst\n";
     close INDEXF;
-    #   do_log('debug',"last arc entry for $index is $lst");
+    #   &Log::do_log('debug',"last arc entry for $index is $lst");
 }
 
 ## Create the 'index' file for one archive subdir
@@ -1048,7 +1048,7 @@ sub create_idx {
     my $arc_txt_dir = $arc_dir.'/arctxt';
 
     unless (opendir (DIR, $arc_txt_dir)) {
-	&do_log('err', "Failed to open directory '$arc_txt_dir'");
+	&Log::do_log('err', "Failed to open directory '$arc_txt_dir'");
 	return undef;
     }
 
@@ -1109,12 +1109,12 @@ sub get_tag {
 
 sub clean_archive_directory{
     my $params = shift;
-    &do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
+    &Log::do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
     my $answer;
     $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
     $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'}.'/'.$params->{'dir_to_rebuild'};
     unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
-	&do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
+	&Log::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
 	return undef;
     }
     if(opendir ARCDIR,$answer->{'cleaned_dir'}){
@@ -1125,11 +1125,11 @@ sub clean_archive_directory{
 	}
 	closedir DIR;
 	if ($files_left_uncleaned) {
-	    &do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
+	    &Log::do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
 	}
 	$answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
     }else{
-	&do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
+	&Log::do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
 	&tools::del_dir($answer->{'cleaned_dir'});
 	return undef;
     }
@@ -1138,7 +1138,7 @@ sub clean_archive_directory{
 
 sub clean_archived_message{
     my $params = shift;
-    &do_log('debug',"Cleaning HTML in archived file '%s/%s' (overwrite: %s).",$params->{'path'},$params->{'file'},$params->{'overwrite'});
+    &Log::do_log('debug',"Cleaning HTML in archived file '%s/%s' (overwrite: %s).",$params->{'path'},$params->{'file'},$params->{'overwrite'});
     my $filtered_file;
     if ($params->{'overwrite'}){
 	$filtered_file = $params->{'path'}.'/'.$params->{'file'};
@@ -1153,15 +1153,15 @@ sub clean_archived_message{
 		close TMP;
 		$file_to_archive = $filtered_file;
 	    }else{
-		&do_log('err','Unable to create a tmp file to write clean HTML to file %s',$filtered_file);
+		&Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$filtered_file);
 		return undef;
 	    }
 	}else{
-	    &do_log('err','HTML cleaning in file %s failed.',$file_to_archive);
+	    &Log::do_log('err','HTML cleaning in file %s failed.',$file_to_archive);
 	    return undef;
 	}
     }else{
-	&do_log('err','Unable to create a Message object with file %s',$file_to_archive);
+	&Log::do_log('err','Unable to create a Message object with file %s',$file_to_archive);
 	return undef;
     }
     return $file_to_archive;

@@ -80,7 +80,7 @@ use wwslib;
 ## Check options
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F')) {
-    &fatal_err("Unknown options.");
+    &Log::fatal_err("Unknown options.");
 }
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
@@ -109,7 +109,7 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 
@@ -117,7 +117,7 @@ unshift @INC, $wwsconf->{'wws_path'};
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
-    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -147,14 +147,14 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
-    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
 }else{
     &Log::set_log_level($Conf{'log_level'});
-    do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
-do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
+&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -166,7 +166,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -174,13 +174,13 @@ umask(oct($Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf{'home'})) {
-     &do_log('info','Unable to change directory');
+     &Log::do_log('info','Unable to change directory');
     exit (-1);
 }
 
 my $pinfo = &List::_apply_defaults();
 
-do_log('notice', "bounced Started");
+&Log::do_log('notice', "bounced Started");
 
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
@@ -190,7 +190,7 @@ my $end = 0;
 
 my $queue = $Conf{'queuebounce'};
 
-do_log('debug','starting infinite loop');
+&Log::do_log('debug','starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     ## this sleep is important to be raisonably sure that sympa is not currently
@@ -201,7 +201,7 @@ while (!$end) {
     &List::init_list_cache();
 
     unless (opendir(DIR, $queue)) {
-	fatal_err("Can't open dir %s: %m", $queue); ## No return.
+	&Log::fatal_err("Can't open dir %s: %m", $queue); ## No return.
     }
 
 
@@ -216,7 +216,7 @@ while (!$end) {
 	unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
 	    my @s = stat("$queue/$file");
 	    if (POSIX::S_ISREG($s[2])) {
-		do_log ('notice',"Ignoring file $queue/$file because unknown format");
+		&Log::do_log ('notice',"Ignoring file $queue/$file because unknown format");
 		&ignore_bounce({'file' => $file, 
 				'queue' => $queue,
 			    });
@@ -234,7 +234,7 @@ while (!$end) {
 	$robot ||= &List::search_list_among_robots($listname);
 
 	if (-z "$queue/$file") {
-	    do_log ('notice',"Ignoring file $queue/$file because empty file");
+	    &Log::do_log ('notice',"Ignoring file $queue/$file because empty file");
 	    &ignore_bounce({'file' => $file,
 			    'robot' => $robot,
 			    'queue' => $queue,
@@ -243,7 +243,7 @@ while (!$end) {
 	}
          
 	unless (open BOUNCE, "$queue/$file") {
-	    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+	    &Log::do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
 	    &ignore_bounce({'file' => $file,
 			    'robot' => $robot,
 			    'queue' => $queue,
@@ -261,7 +261,7 @@ while (!$end) {
 	my $who;
 	my $distribution_id;
 	chomp $to;	
-	&do_log('debug', 'bounce for :%s:  Conf{bounce_email_prefix}=%',$to,$Conf{'bounce_email_prefix'});
+	&Log::do_log('debug', 'bounce for :%s:  Conf{bounce_email_prefix}=%',$to,$Conf{'bounce_email_prefix'});
 	
 	
 	$to =~ s/<//;
@@ -280,7 +280,7 @@ while (!$end) {
 		$local_part = $1;
 	    }else{
 		undef $distribution_id ;
-		&do_log('err', 'NOT ID PART in the bounce for :%s', $to);
+		&Log::do_log('err', 'NOT ID PART in the bounce for :%s', $to);
 	    }
 
 	    $local_part =~ s/\=\=a\=\=/\@/ ;
@@ -288,13 +288,13 @@ while (!$end) {
 	    $who = $1;
 	    $listname = $2;
 
-	    &do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot);
+	    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot);
 
 	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
-		&do_log('debug', "VERP for a service message, try to remove the subscriber");
+		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
 		my $list = new List ($listname, $robot);		
 		unless($list) {
-		    do_log('notice','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
+		    &Log::do_log('notice','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
 		    &ignore_bounce({'file' => $file,
 				    'robot' => $robot,
 				    'queue' => $queue,
@@ -311,7 +311,7 @@ while (!$end) {
 		if ($action =~ /do_it/i) {
 		    if ($list->is_list_member($who)) {
 			my $u = $list->delete_list_member('users' => [$who], 'exclude' =>' 1');
-			do_log ('notice',"$who has been removed from $listname because welcome message bounced");
+			&Log::do_log ('notice',"$who has been removed from $listname because welcome message bounced");
 			&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'del',
 				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
 				      'daemon' => 'bounced'});
@@ -329,7 +329,7 @@ while (!$end) {
 			}
 		    }
 		}else{
-		    do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
+		    &Log::do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
 		    &ignore_bounce({'file' => $file,
 				    'robot' => $robot,
 				    'queue' => $queue,
@@ -342,7 +342,7 @@ while (!$end) {
 
         my $list = new List ($listname, $robot);
         unless($list) {
-            do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
+            &Log::do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
             &ignore_bounce({'file' => $file,
                  'robot' => $robot,
                  'queue' => $queue,
@@ -404,7 +404,7 @@ while (!$end) {
 			#if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i) && (!$distribution_id) ) {
 			#    $distribution_id = $1;
 			#    chomp $distribution_id;
-	      	    	#    do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $distribution_id);
+	      	    	#    &Log::do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $distribution_id);
 			#}
                         if ($line =~ /arrival\-date\:\s*(.+)/i) {
                             $arrival_date = $1;
@@ -423,41 +423,41 @@ while (!$end) {
                 ($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
             }
 
-	    do_log ('debug2',"FINAL DSN Action Detected, value : %s", $dsn_status);
-	    do_log ('debug2',"FINAL DSN Recipient Detected, value : %s", $original_rcpt);
-	    do_log ('debug2',"FINAL DSN final Recipient Detected, value : %s", $final_rcpt);
-	    do_log ('debug2',"FINAL DSN Message-Id Detected, value : %s", $msg_id);
-	    do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
+	    &Log::do_log ('debug2',"FINAL DSN Action Detected, value : %s", $dsn_status);
+	    &Log::do_log ('debug2',"FINAL DSN Recipient Detected, value : %s", $original_rcpt);
+	    &Log::do_log ('debug2',"FINAL DSN final Recipient Detected, value : %s", $final_rcpt);
+	    &Log::do_log ('debug2',"FINAL DSN Message-Id Detected, value : %s", $msg_id);
+	    &Log::do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
 
 	    unless  ($dsn_status =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
-		&do_log('err', "Non failed dsn status $dsn_status");
+		&Log::do_log('err', "Non failed dsn status $dsn_status");
 		unless ($distribution_id) {
-                    &do_log('err', "error: Id not found in to address %s, will ignore",$to);
+                    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
  	            unlink("$queue/$file");
                     next;
 		}
 		unless ($original_rcpt) {
-                    &do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
+                    &Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
  	            unlink("$queue/$file");
                     next;
 		}
 		unless ($msg_id) {
-                    &do_log('err', "error: message_id not found in dsn will ignore");
+                    &Log::do_log('err', "error: message_id not found in dsn will ignore");
  	            unlink("$queue/$file");
                     next;
 		}
 	    }
 	                 
 	    if (&tracking::db_insert_notification($distribution_id, 'DSN', $dsn_status, $arrival_date,$notification_as_string )) {
-		&do_log('notice', "DSN Correctly treated...");
+		&Log::do_log('notice', "DSN Correctly treated...");
 	    }else{
-		do_log('err','Not able to fill database with notification data');
+		&Log::do_log('err','Not able to fill database with notification data');
 	    }
 	    unless($dsn_status =~ /failed/) { 
 		if (unlink("$queue/$file")){
-		    &do_log('debug2', "DSN Correctly removed...");
+		    &Log::do_log('debug2', "DSN Correctly removed...");
 		}else{
-		    &do_log('err', "could not unlink $queue/$file");
+		    &Log::do_log('err', "could not unlink $queue/$file");
 		}
 		next;
 	    }
@@ -527,48 +527,48 @@ while (!$end) {
 	    # let's use VERP 
 	    $original_rcpt = $who;
 
-	    do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $mdn_status);
-	    do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $original_rcpt);
-	    do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $msg_id);
-	    do_log ('debug2',"FINAL MDN Date Detected, value : %s", $date);
+	    &Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $mdn_status);
+	    &Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $original_rcpt);
+	    &Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $msg_id);
+	    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $date);
             	     
 	    unless ($distribution_id) {
-                    &do_log('err', "error: Id not found in to address %s, will ignore",$to);
+                    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
  	            unlink("$queue/$file");
                     next;
 	    }
 	    unless ($original_rcpt) {
-                    &do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
+                    &Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
  	            unlink("$queue/$file");
                     next;
 	    }
 	    unless ($msg_id) {
-                    &do_log('err', "error: message_id not found in dsn will ignore");
+                    &Log::do_log('err', "error: message_id not found in dsn will ignore");
  	            unlink("$queue/$file");
                     next;
 	    }
 	    unless ($mdn_status) {
-                    &do_log('err', "error: dsn status not found in dsn: %s, will ignore",$msg_id);
+                    &Log::do_log('err', "error: dsn status not found in dsn: %s, will ignore",$msg_id);
  	            unlink("$queue/$file");
                     next;
 	    }
              
-            &do_log('debug2', "Save in database...");
+            &Log::do_log('debug2', "Save in database...");
 	    unless (&tracking::db_insert_notification($distribution_id, 'MDN',$mdn_status, $date,$notification_as_string )) {
-                   do_log('err','Not able to fill database with notification data');
+                   &Log::do_log('err','Not able to fill database with notification data');
 	    }
-            &do_log('notice', "MDN Correctly treated...");
+            &Log::do_log('notice', "MDN Correctly treated...");
 	    if( unlink("$queue/$file")){
-		&do_log('debug2', "MDN Correctly removed...");
+		&Log::do_log('debug2', "MDN Correctly removed...");
 	    }else{
-		&do_log('debug2', "could not unlink queue/$file");
+		&Log::do_log('debug2', "could not unlink queue/$file");
 	    }
 	    next;
 	}
 
 	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=feedback-report/)) {
 	    # this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
-	    do_log ('notice',"processing  Email Feedback Report");
+	    &Log::do_log ('notice',"processing  Email Feedback Report");
 	    my @parts = $entity->parts();
 	    my $original_rcpt;
 	    my $user_agent;
@@ -600,14 +600,14 @@ while (!$end) {
 			}
 		    }
 		}elsif ($content =~ /message\/rfc822/) {
-		    # do_log ('notice',"xxx processing  Email Feedback Report : message/rfc822 part");
+		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : message/rfc822 part");
 		    my @subparts = $p->parts();
 		    foreach my $subp (@subparts) {
-			# do_log ('notice',"xxx subparts : subps");
+			# &Log::do_log ('notice',"xxx subparts : subps");
 			my $subph =  $subp->head;
 			$listname = $subph->get('X-Loop');
 		    }
-		    # do_log ('notice',"xxx processing  Email Feedback Report : extract listname $listname");
+		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : extract listname $listname");
 		}
 	    }
 	    my $forward ;
@@ -616,9 +616,9 @@ while (!$end) {
 	    ## but we don't take action if we meet them yet. This is to be done, if relevant.
 	    if (($feedback_type =~ /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i) && (defined $version) && (defined $user_agent)) {
 		
-		do_log ('debug',"Email Feedback Report: $listname feedback-type: $feedback_type");
+		&Log::do_log ('debug',"Email Feedback Report: $listname feedback-type: $feedback_type");
 		if (defined $original_rcpt) {
-		    do_log ('debug',"Recognized user : $original_rcpt list");		
+		    &Log::do_log ('debug',"Recognized user : $original_rcpt list");		
 		    my @lists;
 		    
 		    if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $listname)) {
@@ -629,7 +629,7 @@ while (!$end) {
 			$robot = $2;
 			my $list = new List ($listname, $robot);
 			unless($list) {
-			    do_log('err','Skipping Feedback Report for unknown list %s@%s',$file,$listname,$robot);
+			    &Log::do_log('err','Skipping Feedback Report for unknown list %s@%s',$file,$listname,$robot);
 			    &ignore_bounce({'file' => $file,
 					    'robot' => $robot,
 					    'queue' => $queue,
@@ -641,7 +641,7 @@ while (!$end) {
 		    }elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
 			@lists = &List::get_which($original_rcpt,$robot,'member');
 		    }else {
-			&do_log('notice','Ignoring Feedback Report %s : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
+			&Log::do_log('notice','Ignoring Feedback Report %s : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
 			&ignore_bounce({'file' => $file,
 					'robot' => $robot,
 					'queue' => $queue,
@@ -655,23 +655,23 @@ while (!$end) {
 			    if ($list->is_list_member($original_rcpt)) {
 				my $u = $list->delete_list_member('users' => [$original_rcpt], 'exclude' =>' 1');
 				
-				do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
+				&Log::do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
 				unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {
-				    &do_log('notice',"Unable to send notify 'automatic_del' to $list->{'name'} list owner");
+				    &Log::do_log('notice',"Unable to send notify 'automatic_del' to $list->{'name'} list owner");
 				}
 			    }else{
-				do_log('err','Ignore Feedback Report %s for list %s@%s : user %s not subscribed',$file,$list->name,$robot,$original_rcpt);
+				&Log::do_log('err','Ignore Feedback Report %s for list %s@%s : user %s not subscribed',$file,$list->name,$robot,$original_rcpt);
 				unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
-				    &do_log('notice',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
+				    &Log::do_log('notice',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
 				}
 			    }
 			}else{
 			    $forward = 'request';
-			    do_log('err','Ignore Feedback Report %s for list %s@%s : user %s is not allowed to unsubscribe',$file,$list->name,$robot,$original_rcpt);
+			    &Log::do_log('err','Ignore Feedback Report %s for list %s@%s : user %s is not allowed to unsubscribe',$file,$list->name,$robot,$original_rcpt);
 			}
 		    }
 		}else{
-		    do_log ('err','Ignoring Feedback Report %s : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$file, $feedback_type, $listname );		
+		    &Log::do_log ('err','Ignoring Feedback Report %s : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$file, $feedback_type, $listname );		
 		    &ignore_bounce({'file' => $file,
 				    'notify' => 1,
 				    'robot' => $robot,
@@ -680,7 +680,7 @@ while (!$end) {
 				});
 		}
 	    }else{
-		do_log ('err','Ignoring Feedback Report %s : Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
+		&Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',$file, $feedback_type, $original_rcpt, $listname );		
 		&ignore_bounce({'file' => $file,
 				'notify' => 1,
 				'robot' => $robot,
@@ -698,7 +698,7 @@ while (!$end) {
 	# else (not welcome or remind) 
 	my $list = new List ($listname, $robot);
 	if (! $list) {
- 	    &do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
+ 	    &Log::do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
 	    &ignore_bounce({'file' => $file,
 			    'robot' => $robot,
 			    'queue' => $queue,
@@ -706,10 +706,10 @@ while (!$end) {
   	    unlink("$queue/$file");
   	    next;
  	}else{
-	    &do_log('debug',"Processing bouncefile $file for list $listname");      
+	    &Log::do_log('debug',"Processing bouncefile $file for list $listname");      
 
 	    unless (open BOUNCE, "$queue/$file") {
-		&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		&Log::do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
 		&ignore_bounce({'file' => $file,
 				'robot' => $robot,
 				'queue' => $queue,
@@ -726,7 +726,7 @@ while (!$end) {
 	    unless ($bounce_count) {
 		close BOUNCE;
 		unless (open BOUNCE, "$queue/$file") {
-		    &do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+		    &Log::do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
 		    &ignore_bounce({'file' => $file,
 				    'robot' => $robot,
 				    'queue' => $queue,
@@ -744,7 +744,7 @@ while (!$end) {
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
 		    &List::send_notify_to_listmaster('bounce_intern_error',$Conf{'domain'},{'error' => "Failed to list create bounce directory $bounce_dir"});
-		    &do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
+		    &Log::do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
 		    exit;
 		} 
 	    }
@@ -770,7 +770,7 @@ while (!$end) {
 		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
-		    &do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
+		    &Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
 		    &ignore_bounce({'file' => $file,
 				    'robot' => $robot,
 				    'queue' => $queue,
@@ -781,7 +781,7 @@ while (!$end) {
 	}
 	
 	unless (unlink("$queue/$file")) {
-	    do_log ('err',"Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID");
+	    &Log::do_log ('err',"Could not remove $queue/$file ; $0 might NOT be running with the right UID or file was not created with the right UID");
 	    &ignore_bounce({'file' => $file,
 			    'notify' => 1,
 			    'robot' => $robot,
@@ -796,7 +796,7 @@ while (!$end) {
     &mail::reaper;
 
 }
-do_log('notice', 'bounced exited normally due to signal');
+&Log::do_log('notice', 'bounced exited normally due to signal');
 &tools::remove_pid($wwsconf->{'bounced_pidfile'}, $$);
 
 exit(0);
@@ -815,13 +815,13 @@ sub store_bounce {
     my $file= shift;
     my $rcpt=shift;
     
-    do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir,$file,$rcpt);
+    &Log::do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir,$file,$rcpt);
 
     my $queue = $Conf{'queuebounce'};
 
     #Store bounce 
     unless (open BOUNCE, "$queue/$file") {
-	&do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
+	&Log::do_log('notice', 'Could not open %s/%s: %s', $queue, $file, $!);
 	&ignore_bounce({'file' => $file,
 			'queue' => $queue,
 		    });
@@ -831,7 +831,7 @@ sub store_bounce {
     my $filename = &tools::escape_chars($rcpt);    
     
     unless (open ARC, ">$bounce_dir/$filename") {
-	&do_log('notice', "Unable to write $bounce_dir/$filename");
+	&Log::do_log('notice', "Unable to write $bounce_dir/$filename");
 	&ignore_bounce({'file' => $file,
 			'queue' => $queue,
 		    });
@@ -870,7 +870,7 @@ sub update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status = shift;
     
-    &do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)',$list->{'name'},$rcpt,$bouncefor,$status); 
+    &Log::do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)',$list->{'name'},$rcpt,$bouncefor,$status); 
 
     my $first = my $last = time;
     my $count = 0;
@@ -878,7 +878,7 @@ sub update_subscriber_bounce_history {
     my $user = $list->get_list_member($bouncefor);
     
     unless ($user) {
-	&do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $bouncefor); 		    
+	&Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $bouncefor); 		    
 	return undef;
     }
     
@@ -887,8 +887,8 @@ sub update_subscriber_bounce_history {
     }
     $count++;
     if ($rcpt ne $bouncefor) {
-	&do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
-	&do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
+	&Log::do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
+	&Log::do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
 	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce','parameters' => "address=$rcpt",
@@ -896,7 +896,7 @@ sub update_subscriber_bounce_history {
 		      'daemon' => 'bounced'});
     }else{
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status"});
-	&do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list->{'name'});
+	&Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list->{'name'});
 	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce',
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
@@ -926,7 +926,7 @@ sub ignore_bounce {
 										    'bad' => "$queue/bad",
 										    'error' => $error,
 										})) {
-	    &do_log('notice',"Unable to send notify 'bounce_management_failed' to listmaster");
+	    &Log::do_log('notice',"Unable to send notify 'bounce_management_failed' to listmaster");
 	}
     }
 }

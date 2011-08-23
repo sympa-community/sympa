@@ -90,7 +90,7 @@ Creates a new Message object.
 
 =over 
 
-=item * do_log
+=item * &Log::do_log
 
 =item * Conf::get_robot_conf
 
@@ -131,7 +131,7 @@ sub new {
     my $message_in_spool= $datas->{'message_in_spool'};
 
     my $message;
-    &do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
+    &Log::do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
     
     if ($mimeentity) {
 	$message->{'msg'} = $file;
@@ -157,12 +157,12 @@ sub new {
 	## Parse message as a MIME::Entity
 	$message->{'filename'} = $file;
 	unless (open FILE, $file) {
-	    &do_log('err', 'Cannot open message file %s : %s',  $file, $!);
+	    &Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
 	    return undef;
 	}
     
 	# unless ($msg = $parser->read(\*FILE)) {
-	#    do_log('err', 'Unable to parse message %s', $file);
+	#    &Log::do_log('err', 'Unable to parse message %s', $file);
 	#    close(FILE);
 	#    return undef;
 	#}
@@ -186,18 +186,18 @@ sub new {
 
     ## Extract sender address
     unless ($hdr->get('From')) {
-	do_log('err', 'No From found in message %s, skipping.', $file);
+	&Log::do_log('err', 'No From found in message %s, skipping.', $file);
 	return undef;
     }   
     my @sender_hdr = Mail::Address->parse($hdr->get('From'));
     if ($#sender_hdr == -1) {
-	do_log('err', 'No valid address in From: field in %s, skipping', $file);
+	&Log::do_log('err', 'No valid address in From: field in %s, skipping', $file);
 	return undef;
     }
     $message->{'sender'} = lc($sender_hdr[0]->address);
 
     unless (&tools::valid_email($message->{'sender'})) {
-	do_log('err', "Invalid From: field '%s'", $message->{'sender'});
+	&Log::do_log('err', "Invalid From: field '%s'", $message->{'sender'});
 	return undef;
     }
 
@@ -241,7 +241,7 @@ sub new {
     chomp $message->{'rcpt'};
     unless (defined $noxsympato) { # message.pm can be used not only for message comming from queue
 	unless ($message->{'rcpt'}) {
-	    do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
+	    &Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
 	    return undef;
 	}
 	    
@@ -288,7 +288,7 @@ sub new {
 	if ($chksum eq &tools::sympa_checksum($rcpt)) {
 	    $message->{'md5_check'} = 1 ;
 	}else{
-	    do_log('err',"incorrect X-Sympa-Checksum header");	
+	    &Log::do_log('err',"incorrect X-Sympa-Checksum header");	
 	}
     }
 
@@ -301,7 +301,7 @@ sub new {
 	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
 	    
 	    unless (defined $dec) {
-		do_log('debug', "Message %s could not be decrypted", $file);
+		&Log::do_log('debug', "Message %s could not be decrypted", $file);
 		return undef;
 		## We should the sender and/or the listmaster
 	    }
@@ -311,7 +311,7 @@ sub new {
 	    $message->{'msg'} = $dec;
 	    $message->{'msg_as_string'} = $dec_as_string;
 	    $hdr = $dec->head;
-	    do_log('debug', "message %s has been decrypted", $file);
+	    &Log::do_log('debug', "message %s has been decrypted", $file);
 	}
 	
 	## Check S/MIME signatures
@@ -321,7 +321,7 @@ sub new {
 	    if ($signed->{'body'}) {
 		$message->{'smime_signed'} = 1;
 		$message->{'smime_subject'} = $signed->{'subject'};
-		do_log('debug', "message %s is signed, signature is checked", $file);
+		&Log::do_log('debug', "message %s is signed, signature is checked", $file);
 	    }
 	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
 	}
@@ -517,7 +517,7 @@ sub fix_html_part {
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
-	    &do_log('err', "Failed to save message : $!");
+	    &Log::do_log('err', "Failed to save message : $!");
 	    return undef;
 	}
 	$io->print($filtered_body);

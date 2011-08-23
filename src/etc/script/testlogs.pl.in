@@ -14,12 +14,12 @@ my %options;
 my $config_file = $main::options{'config'} || '/etc/sympa.conf';
 ## Load configuration file
 unless (Conf::load($config_file)) {
-   &fatal_err("Configuration file $config_file has errors.");
+   &Log::fatal_err("Configuration file $config_file has errors.");
 }
 
 
 ## Open the syslog and say we're read out stuff.
-do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {

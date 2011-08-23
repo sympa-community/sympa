@@ -63,7 +63,7 @@ local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as mas
 ##  --mail : logs every sendmail calls
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F','mail|m')) {
-    &fatal_err("Unknown options.");
+    &Log::fatal_err("Unknown options.");
 }
 
 if ($main::options{'debug'}) {
@@ -77,23 +77,23 @@ my $sympa_conf_file = Sympa::Constants::CONFIG;
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
 }
 
 ## Check database connectivity
 unless (&SDM::check_db_connect()) {
-    &fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf::Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf::Conf{'db_name'});
 }
 
-do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+&Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
-    do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
 }else{
     &Log::set_log_level($Conf::Conf{'log_level'});
-    do_log('info', "Configuration file read, default log level $Conf::Conf{'log_level'}"); 
+    &Log::do_log('info', "Configuration file read, default log level $Conf::Conf{'log_level'}"); 
 }
 
 ## Set the process as main bulk daemon by default.
@@ -109,11 +109,11 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-       do_log('info',"Starting bulk master daemon, pid %s",$child_pid);
+       &Log::do_log('info',"Starting bulk master daemon, pid %s",$child_pid);
        exit(0);
    }
 }
-do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+&Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
@@ -132,7 +132,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -140,13 +140,13 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    &do_log('err','unable to change directory');
+    &Log::do_log('err','unable to change directory');
     exit (-1);
 }
 
 my $pinfo = &List::_apply_defaults();
 
-do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
+&Log::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
 
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
@@ -193,10 +193,10 @@ while (!$end) {
 		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
 		
 		if($Conf::Conf{'bulk_max_count'} > 1) {
-		    &do_log('info','Workload increased: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
+		    &Log::do_log('info','Workload increased: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
 		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
 			if ((my $child_pid = fork) != 0) {
-			    do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
+			    &Log::do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
 			    # Saves the pid number
 			    &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
 			    sleep 1; 
@@ -204,8 +204,8 @@ while (!$end) {
 			    ## We're in a child bulk process
 			    $date_of_last_activity = time();
 			    $main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
-			    do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
-			    do_log('info', "Bulk slave daemon started with pid %s", $$);
+			    &Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+			    &Log::do_log('info', "Bulk slave daemon started with pid %s", $$);
 			    last;
 			}
 		    }
@@ -218,7 +218,7 @@ while (!$end) {
     if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
 		(time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && 
 		!(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
-		&do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, $Conf::Conf{'bulk_lazytime'});
+		&Log::do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, $Conf::Conf{'bulk_lazytime'});
 		last;
     }
 	
@@ -236,9 +236,9 @@ while (!$end) {
 	    # &trace_smime($messageasstring_init,'initial');
 
 	    unless ( $messageasstring_init ) {
-		&do_log('err',"internal error : current packet (messagekey= %s) contains a ref to a null message",$bulk->{'messagekey'});
+		&Log::do_log('err',"internal error : current packet (messagekey= %s) contains a ref to a null message",$bulk->{'messagekey'});
 		unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
-		    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+		    &Log::do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
 		}
 	    }
 	    $messagekey = $bulk->{'messagekey'};
@@ -298,7 +298,7 @@ while (!$end) {
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
-			&do_log('err', 'Erreur d appel &Bulk::merge_msg');
+			&Log::do_log('err', 'Erreur d appel &Bulk::merge_msg');
 		    }		    
 		    $messageasstring = $entity->as_string;		    		
 		}else{
@@ -345,12 +345,12 @@ while (!$end) {
 	
 	## Remove packet once it has been processed
 	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
-	    &do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+	    &Log::do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
 	}
 
 	
 	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 5){
-	    &do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date.', 
+	    &Log::do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date.', 
 		    $bulk->{'messageid'}, 
 		    $bulk->{'listname'}, 
 		    $bulk->{'robot'}, 
@@ -366,7 +366,7 @@ while (!$end) {
 
     
 }
-&do_log('notice', 'bulk.pl exited normally due to signal');
+&Log::do_log('notice', 'bulk.pl exited normally due to signal');
 &tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
 
 exit(0);
@@ -375,7 +375,7 @@ exit(0);
 ## When we catch SIGTERM, just change the value of the loop
 ## variable.
 sub sigterm {
-    &do_log('notice', 'signal TERM received, still processing current task');
+    &Log::do_log('notice', 'signal TERM received, still processing current task');
     $end = 1;
 }
 
@@ -393,7 +393,7 @@ sub trace_smime {
     $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} " if ($Conf::Conf{'capath'});
     
     unless (open (MSGDUMP, "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options > /dev/null")) {	
-	do_log('err', "unable to verify smime signature");
+	&Log::do_log('err', "unable to verify smime signature");
 	return undef ;
     }
     
@@ -403,8 +403,8 @@ sub trace_smime {
     
     my $status = $?/256 ;
     unless ($status == 0) {
-	do_log('debug', "signature SMIME NOT OK   (%s)",$where);    
+	&Log::do_log('debug', "signature SMIME NOT OK   (%s)",$where);    
     }else{
-	do_log('debug', "signature SMIME OK    (%s)",$where);    
+	&Log::do_log('debug', "signature SMIME OK    (%s)",$where);    
     }
 }

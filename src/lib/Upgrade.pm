@@ -347,7 +347,7 @@ sub upgrade {
 		&Log::do_log('notice','Updating subscribed field of the subscriber table...');
 		my $rows = $dbh->do($statement);
 		unless (defined $rows) {
-		    &fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
+		    &Log::fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
 		}
 		&Log::do_log('notice','%d rows have been updated', $rows);
 				

@@ -38,10 +38,10 @@ sub new {
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
-    &do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
+    &Log::do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
     
     unless (ref($list) =~ /List/i) {
-	&do_log('err', 'SharedDocument::new : incorrect list parameter');
+	&Log::do_log('err', 'SharedDocument::new : incorrect list parameter');
 	return undef;
     }
 
@@ -52,7 +52,7 @@ sub new {
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
-	&do_log('err',"SharedDocument::new : %s : description file", $document->{'path'});
+	&Log::do_log('err',"SharedDocument::new : %s : description file", $document->{'path'});
 	return undef;
     }
 
@@ -72,13 +72,13 @@ sub new {
 
     ### Document exist ? 
     unless (-r $document->{'absolute_path'}) {
-	&do_log('err',"SharedDocument::new : unable to read %s : no such file or directory", $document->{'absolute_path'});
+	&Log::do_log('err',"SharedDocument::new : unable to read %s : no such file or directory", $document->{'absolute_path'});
 	return undef;
     }
     
     ### Document has non-size zero?
     unless (-s $document->{'absolute_path'}) {
-	&do_log('err',"SharedDocument::new : unable to read %s : empty document", $document->{'absolute_path'});
+	&Log::do_log('err',"SharedDocument::new : unable to read %s : empty document", $document->{'absolute_path'});
 	return undef;
     }
     
@@ -139,7 +139,7 @@ sub new {
 	if ($document->{'absolute_path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
 	    $desc_file = $1.'.desc.'.$3;
 	}else {
-	    &do_log('err',"SharedDocument::new() : cannot determine desc file for %s", $document->{'absolute_path'});
+	    &Log::do_log('err',"SharedDocument::new() : cannot determine desc file for %s", $document->{'absolute_path'});
 	    return undef;
 	}
     }
@@ -209,7 +209,7 @@ sub new {
 	
 	# listing of all the shared documents of the directory
 	unless (opendir DIR, $document->{'absolute_path'}) {
-	    &do_log('err',"SharedDocument::new() : cannot open %s : %s", $document->{'absolute_path'}, $!);
+	    &Log::do_log('err',"SharedDocument::new() : cannot open %s : %s", $document->{'absolute_path'}, $!);
 	    return undef;
 	}
 	
@@ -295,7 +295,7 @@ sub check_access_control {
 
     my $list = $self->{'list'};
 
-    &do_log('debug', "check_access_control(%s)", $self->{'path'});
+    &Log::do_log('debug', "check_access_control(%s)", $self->{'path'});
 
     # Control for editing
     my $may_read = 1;

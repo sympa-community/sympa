@@ -42,17 +42,17 @@ my %challenge_hard_attributes = ('id_challenge' => 1, 'date' => 1, 'robot'  => 1
 sub create {
     my ($robot, $email, $context) = @_;
 
-    do_log('debug', 'Challenge::new(%s, %s, %s)', $challenge_id, $email, $robot);
+    &Log::do_log('debug', 'Challenge::new(%s, %s, %s)', $challenge_id, $email, $robot);
 
     my $challenge={};
     
     unless ($robot) {
-	&do_log('err', 'Missing robot parameter, cannot create challenge object') ;
+	&Log::do_log('err', 'Missing robot parameter, cannot create challenge object') ;
 	return undef;
     }
     
     unless ($email) {
-	&do_log('err', 'Missing email parameter, cannot create challenge object') ;
+	&Log::do_log('err', 'Missing email parameter, cannot create challenge object') ;
 	return undef;
     }
 
@@ -71,10 +71,10 @@ sub load {
 
     my $id_challenge = shift;
 
-    do_log('debug', 'Challenge::load(%s)', $id_challenge);
+    &Log::do_log('debug', 'Challenge::load(%s)', $id_challenge);
 
     unless ($challenge_id) {
-	do_log('err', 'Challenge::load() : internal error, SympaSession::load called with undef id_challenge');
+	&Log::do_log('err', 'Challenge::load() : internal error, SympaSession::load called with undef id_challenge');
 	return undef;
     }
     
@@ -114,7 +114,7 @@ sub load {
 sub store {
 
     my $challenge = shift;
-    do_log('debug', 'Challenge::store()');
+    &Log::do_log('debug', 'Challenge::store()');
 
     return undef unless ($challenge->{'id_challenge'});
 

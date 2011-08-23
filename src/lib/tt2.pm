@@ -128,7 +128,7 @@ sub maketext {
 
     ## Strangely the path is sometimes empty...
     ## TODO : investigate
-#    &do_log('notice', "PATH: $path ; $template_name");
+#    &Log::do_log('notice', "PATH: $path ; $template_name");
 
     ## Sample code to dump the STASH
     # my $s = $stash->_dump();    
@@ -257,8 +257,8 @@ sub parse_tt2 {
 
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
-	&do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
-	&do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
+	&Log::do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
+	&Log::do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
 
 
 	return undef;
