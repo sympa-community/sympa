@@ -3,6 +3,34 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.11		August 23, 2011
+
+  Changes:
+
+	[7182] soap/sympa_soap_server.fcgi.in, soap/sympasoap.pm,
+	src/bulk.pl.in, src/etc/script/mod2html.pl.in,
+	src/etc/script/testlogs.pl.in, src/etc/script/tpl2tt2.pl.in,
+	src/lib/Archive.pm, src/lib/Commands.pm, src/lib/Conf.pm,
+	src/lib/Config_XML.pm, src/lib/DBManipulatorMySQL.pm,
+	src/lib/DBManipulatorOracle.pm, src/lib/DBManipulatorSQLite.pm,
+	src/lib/DBManipulatorSybase.pm, src/lib/Family.pm, src/lib/Fetch.pm,
+	src/lib/LDAPSource.pm, src/lib/Language.pm, src/lib/List.pm,
+	src/lib/Lock.pm, src/lib/Log.pm, src/lib/Message.pm, src/lib/SDM.pm,
+	src/lib/SQLSource.pm, src/lib/Scenario.pm, src/lib/Task.pm,
+	src/lib/Upgrade.pm, src/lib/admin.pm, src/lib/mail.pm,
+	src/lib/report.pm, src/lib/tools.pm, src/lib/tt2.pm, src/sympa.pl.in,
+	src/task_manager.pl.in, wwsympa/Auth.pm, wwsympa/Challenge.pm,
+	wwsympa/SharedDocument.pm, wwsympa/archived.pl.in,
+	wwsympa/bounced.pl.in, wwsympa/cookielib.pm, wwsympa/wwslib.pm,
+	wwsympa/wwsympa.fcgi.in:  functions from Log.pm are no longer exported.
+	Therefore, they can't be called in the local namespace of the caller
+	and must always be prefixed by 'Log::'.
+
+  Bug fixes:
+
+	[7179] src/etc/script/sympa.in: Fixed bug introduced in revision 7045 :
+	variable name was sympa_piddir instead of sympapiddir
+
 6.2a.9		July 29, 2011
 
   Changes:

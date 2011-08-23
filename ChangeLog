@@ -1,4 +1,96 @@
 ------------------------------------------------------------------------
+r7184 | sympa-authors | 2011-08-23 14:02:35 +0200 (mar 23 aoû 2011) | 1 ligne
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/po/et.po
+   M /branches/sympa-6.2-branch/po/ja.po
+   M /branches/sympa-6.2-branch/po/nl.po
+
+[-feature]Committing updated catalogues from Pootle
+------------------------------------------------------------------------
+r7183 | sympa-authors | 2011-08-23 13:52:29 +0200 (mar 23 aoû 2011) | 1 ligne
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/po/et.po
+   M /branches/sympa-6.2-branch/po/ja.po
+   M /branches/sympa-6.2-branch/po/nl.po
+
+[-feature]Committing latest translations from Pootle
+------------------------------------------------------------------------
+r7182 | david.verdin | 2011-08-23 13:43:00 +0200 (mar 23 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/soap/sympa_soap_server.fcgi.in
+   M /branches/sympa-6.2-branch/soap/sympasoap.pm
+   M /branches/sympa-6.2-branch/src/bulk.pl.in
+   M /branches/sympa-6.2-branch/src/etc/script/mod2html.pl.in
+   M /branches/sympa-6.2-branch/src/etc/script/testlogs.pl.in
+   M /branches/sympa-6.2-branch/src/etc/script/tpl2tt2.pl.in
+   M /branches/sympa-6.2-branch/src/lib/Archive.pm
+   M /branches/sympa-6.2-branch/src/lib/Commands.pm
+   M /branches/sympa-6.2-branch/src/lib/Conf.pm
+   M /branches/sympa-6.2-branch/src/lib/Config_XML.pm
+   M /branches/sympa-6.2-branch/src/lib/DBManipulatorMySQL.pm
+   M /branches/sympa-6.2-branch/src/lib/DBManipulatorOracle.pm
+   M /branches/sympa-6.2-branch/src/lib/DBManipulatorSQLite.pm
+   M /branches/sympa-6.2-branch/src/lib/DBManipulatorSybase.pm
+   M /branches/sympa-6.2-branch/src/lib/Family.pm
+   M /branches/sympa-6.2-branch/src/lib/Fetch.pm
+   M /branches/sympa-6.2-branch/src/lib/LDAPSource.pm
+   M /branches/sympa-6.2-branch/src/lib/Language.pm
+   M /branches/sympa-6.2-branch/src/lib/List.pm
+   M /branches/sympa-6.2-branch/src/lib/Lock.pm
+   M /branches/sympa-6.2-branch/src/lib/Log.pm
+   M /branches/sympa-6.2-branch/src/lib/Message.pm
+   M /branches/sympa-6.2-branch/src/lib/SDM.pm
+   M /branches/sympa-6.2-branch/src/lib/SQLSource.pm
+   M /branches/sympa-6.2-branch/src/lib/Scenario.pm
+   M /branches/sympa-6.2-branch/src/lib/Task.pm
+   M /branches/sympa-6.2-branch/src/lib/Upgrade.pm
+   M /branches/sympa-6.2-branch/src/lib/admin.pm
+   M /branches/sympa-6.2-branch/src/lib/mail.pm
+   M /branches/sympa-6.2-branch/src/lib/report.pm
+   M /branches/sympa-6.2-branch/src/lib/tools.pm
+   M /branches/sympa-6.2-branch/src/lib/tt2.pm
+   M /branches/sympa-6.2-branch/src/sympa.pl.in
+   M /branches/sympa-6.2-branch/src/task_manager.pl.in
+   M /branches/sympa-6.2-branch/wwsympa/Auth.pm
+   M /branches/sympa-6.2-branch/wwsympa/Challenge.pm
+   M /branches/sympa-6.2-branch/wwsympa/SharedDocument.pm
+   M /branches/sympa-6.2-branch/wwsympa/archived.pl.in
+   M /branches/sympa-6.2-branch/wwsympa/bounced.pl.in
+   M /branches/sympa-6.2-branch/wwsympa/cookielib.pm
+   M /branches/sympa-6.2-branch/wwsympa/wwslib.pm
+   M /branches/sympa-6.2-branch/wwsympa/wwsympa.fcgi.in
+
+[change] functions from Log.pm are no longer exported. Therefore, they can't be called in the local namespace of the caller and must always be prefixed by 'Log::'.
+
+------------------------------------------------------------------------
+r7181 | olivier.salaun | 2011-08-12 13:38:41 +0200 (ven 12 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/soap/SympaTransport.pm
+
+[-bug]SOAP server could not set the SYMPA_ROBOT correctly. No more use defined function because entries of $Conf::Conf{'robot_by_soap_url'} seem to be defined but empty
+
+------------------------------------------------------------------------
+r7180 | olivier.salaun | 2011-08-11 15:59:15 +0200 (jeu 11 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/lib/Conf.pm
+
+[-change]remove warning at processes startup "Conf::_set_listmasters_entry(): Defaulting to the main server listmasters"
+
+------------------------------------------------------------------------
+r7179 | olivier.salaun | 2011-08-11 15:54:54 +0200 (jeu 11 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/etc/script/sympa.in
+
+[bug]Fixed bug introduced in revision 7045 : variable name was sympa_piddir instead of sympapiddir
+
+------------------------------------------------------------------------
+r7177 | sympa-authors | 2011-08-11 14:48:21 +0200 (jeu 11 aoû 2011) | 1 ligne
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/ChangeLog
+   M /branches/sympa-6.2-branch/configure.ac
+
+[-release]Preparing version 6.2a.10
+------------------------------------------------------------------------
 r7176 | sympa-authors | 2011-08-11 14:38:38 +0200 (jeu 11 aoû 2011) | 1 ligne
 Chemins modifiés :
    M /branches/sympa-6.2-branch/po/ar.po
