@@ -321,9 +321,14 @@ sub mail_message {
     my $dkim  =  $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
 
-
     my $host = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
+
+    unless (defined $message && ref($message) eq 'Message') {
+	&Log::do_log('err', 'Invalid message parameter');
+	return undef;	
+    }
+
 
     # normal return_path (ie used if verp is not enabled)
     my $from = $list->{'name'}.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host;
