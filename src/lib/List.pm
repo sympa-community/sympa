@@ -3181,7 +3181,7 @@ sub send_msg {
 	$sender_hash{lc($email->address)} = 1;
     }
    
-    unless (ref($message) eq 'Message') {
+    unless (defined $message && ref($message) eq 'Message') {
 	&Log::do_log('err', 'Invalid message paramater');
 	return undef;	
     }
@@ -3317,7 +3317,6 @@ sub send_msg {
     ## Storing the not empty subscribers' arrays into a hash.
     my $available_rcpt;
     my $available_verp_rcpt;
-
 
     if (@tabrcpt) {
 	$available_rcpt->{'tabrcpt'} = \@tabrcpt;
@@ -3479,7 +3478,8 @@ sub send_msg {
 	
 	## Preparing VERP receipients.
 	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@possible_verptabrcpt);
-	my $verp= 'off';		
+	my $verp= 'off';
+
 	my $result = &mail::mail_message('message'=>$new_message, 
 					 'rcpt'=> \@selected_tabrcpt, 
 					 'list'=>$self, 
@@ -3487,7 +3487,7 @@ sub send_msg {
 					 'dkim_parameters'=>$dkim_parameters,
 					 'tag_as_last' => $tags_to_use->{'tag_noverp'});
 	unless (defined $result) {
-	    &Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
+	    &Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp disabled)");
 	    return undef;
 	}
 	$tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
