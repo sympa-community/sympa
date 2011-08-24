@@ -134,7 +134,7 @@ sub new {
     &Log::do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
     
     if ($mimeentity) {
-	$message->{'msg'} = $file;
+	$message->{'msg'} = $mimeentity;
 	$message->{'altered'} = '_ALTERED';
 
 	## Bless Message object
