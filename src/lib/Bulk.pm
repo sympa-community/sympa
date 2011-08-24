@@ -505,6 +505,7 @@ sub store {
 	&Log::do_log('err','Unable to unlock packet %s in bulkmailer_table',$messagekey);
 	return undef;
     }
+    return 1;
 }
 
 ## remove file that are not referenced by any packet
