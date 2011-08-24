@@ -3,6 +3,20 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.12		August 24, 2011
+
+  Bug fixes:
+
+	[7190] src/lib/Message.pm:  In Message::new, when a MIME entity was
+	passed as argument, the "file" parameter was used instead of the
+	"mimeentity" parameter. It lead to the creation of empty Message
+	objects.
+
+	[7187] src/lib/Bulk.pm:  Bulk::store is supposed to return an undefined
+	value is the message storing went well. Until now, it didn't return
+	anything at the end of the function. Making it return true explicitely
+	to prevent any surprise.
+
 6.2a.11		August 23, 2011
 
   Changes:

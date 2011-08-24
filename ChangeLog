@@ -1,4 +1,79 @@
 ------------------------------------------------------------------------
+r7191 | sympa-authors | 2011-08-24 18:53:20 +0200 (mer 24 aoû 2011) | 1 ligne
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/po/ar.po
+   M /branches/sympa-6.2-branch/po/bg.po
+   M /branches/sympa-6.2-branch/po/br.po
+   M /branches/sympa-6.2-branch/po/ca.po
+   M /branches/sympa-6.2-branch/po/cs.po
+   M /branches/sympa-6.2-branch/po/de.po
+   M /branches/sympa-6.2-branch/po/el.po
+   M /branches/sympa-6.2-branch/po/en_US.po
+   M /branches/sympa-6.2-branch/po/es.po
+   M /branches/sympa-6.2-branch/po/et.po
+   M /branches/sympa-6.2-branch/po/eu.po
+   M /branches/sympa-6.2-branch/po/fi.po
+   M /branches/sympa-6.2-branch/po/fr.po
+   M /branches/sympa-6.2-branch/po/hu.po
+   M /branches/sympa-6.2-branch/po/id.po
+   M /branches/sympa-6.2-branch/po/it.po
+   M /branches/sympa-6.2-branch/po/ja.po
+   M /branches/sympa-6.2-branch/po/ko.po
+   M /branches/sympa-6.2-branch/po/la.po
+   M /branches/sympa-6.2-branch/po/ml.po
+   M /branches/sympa-6.2-branch/po/nb_NO.po
+   M /branches/sympa-6.2-branch/po/nl.po
+   M /branches/sympa-6.2-branch/po/oc.po
+   M /branches/sympa-6.2-branch/po/pl.po
+   M /branches/sympa-6.2-branch/po/pt.po
+   M /branches/sympa-6.2-branch/po/pt_BR.po
+   M /branches/sympa-6.2-branch/po/ro.po
+   M /branches/sympa-6.2-branch/po/ru.po
+   M /branches/sympa-6.2-branch/po/sv.po
+   M /branches/sympa-6.2-branch/po/sympa.pot
+   M /branches/sympa-6.2-branch/po/tr.po
+   M /branches/sympa-6.2-branch/po/vi.po
+   M /branches/sympa-6.2-branch/po/zh_CN.po
+   M /branches/sympa-6.2-branch/po/zh_TW.po
+
+[-feature]Committing updated catalogues from Pootle
+------------------------------------------------------------------------
+r7190 | david.verdin | 2011-08-24 18:33:47 +0200 (mer 24 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/lib/Message.pm
+
+[bug] In Message::new, when a MIME entity was passed as argument, the "file" parameter was used instead of the "mimeentity" parameter. It lead to the creation of empty Message objects.
+
+------------------------------------------------------------------------
+r7189 | david.verdin | 2011-08-24 18:31:47 +0200 (mer 24 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/lib/List.pm
+
+[-change] Cosmetic changes to List.pm. Also, now we test that the message object is defined before testing its class.
+
+------------------------------------------------------------------------
+r7188 | david.verdin | 2011-08-24 18:29:39 +0200 (mer 24 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/lib/mail.pm
+
+[-change] The validity of the message object is now tested at the beginning of mail::mail_message function. This function accepts Message objects only as parameter and MUST return undef if anything else is passed.
+
+------------------------------------------------------------------------
+r7187 | david.verdin | 2011-08-24 18:27:05 +0200 (mer 24 aoû 2011) | 2 lignes
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/src/lib/Bulk.pm
+
+[bug] Bulk::store is supposed to return an undefined value is the message storing went well. Until now, it didn't return anything at the end of the function. Making it return true explicitely to prevent any surprise.
+
+------------------------------------------------------------------------
+r7185 | sympa-authors | 2011-08-23 14:09:45 +0200 (mar 23 aoû 2011) | 1 ligne
+Chemins modifiés :
+   M /branches/sympa-6.2-branch/ChangeLog
+   M /branches/sympa-6.2-branch/NEWS
+   M /branches/sympa-6.2-branch/configure.ac
+
+[-release]Preparing version 6.2a.11
+------------------------------------------------------------------------
 r7184 | sympa-authors | 2011-08-23 14:02:35 +0200 (mar 23 aoû 2011) | 1 ligne
 Chemins modifiés :
    M /branches/sympa-6.2-branch/po/et.po
