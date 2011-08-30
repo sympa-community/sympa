@@ -1259,6 +1259,134 @@ sub check_topics {
     return undef;
 }
 
+# change a user email address for both his memberships and ownerships
+# 
+# IN  : - current_email : current user email address
+#       - new_email     : new user email address
+#       - robot         : virtual robot
+#
+# OUT : - status(scalar)          : status of the subroutine
+#       - failed_for(arrayref)    : list of lists for which the change could not be done (because user was
+#                                   included or for authorization reasons)                 
+sub change_user_email {
+    my %in = @_;
+
+    my @failed_for;
+
+    unless ($in{'current_email'} && $in{'new_email'} && $in{'robot'}) {
+	&Log::do_log('err','Missing incoming parameter');
+	return undef;
+    }
+
+    ## Change email as list MEMBER
+    foreach my $list ( &List::get_which($in{'current_email'},$in{'robot'}, 'member') ) {
+	 
+	 my $l = $list->{'name'};
+	 
+	 my $user_entry = $list->get_list_member($in{'current_email'});
+	 
+	 if ($user_entry->{'included'} == 1) {
+	     ## Check the type of data sources
+	     ## If only include_list of local mailing lists, then no problem
+	     ## Otherwise, notify list owner
+	     ## We could also force a sync_include for local lists
+	     my $use_external_data_sources;
+	     foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
+		 my $datasource = $list->search_datasource($datasource_id);
+		 if (!defined $datasource || $datasource->{'type'} ne 'include_list' || ($datasource->{'def'} =~ /\@(.+)$/ && $1 ne $in{'robot'})) {
+		     $use_external_data_sources = 1;
+		     last;
+		 }
+	     }
+	     if ($use_external_data_sources) {
+		 ## Notify list owner
+		 $list->send_notify_to_owner('failed_to_change_included_member',
+					     {'current_email' => $in{'current_email'}, 
+					      'new_email' => $in{'new_email'},
+					      'datasource' => $list->get_datasource_name($user_entry->{'id'})});
+		 push @failed_for, $list;
+		 &Log::do_log('err', 'could not change member email for list %s because member is included', $l);
+		 next;
+	     }
+	 }
+
+	 ## Check if user is already member of the list with his new address
+	 ## then we just need to remove the old address
+	 if ($list->is_list_member($in{'new_email'})) {
+	     unless ($list->delete_list_member('users' => [$in{'current_email'}]) ) {
+		 push @failed_for, $list;
+		 &Log::do_log('info', 'could not remove email from list %s', $l);		 
+	     }
+	     
+	 }else {
+	     
+	     unless ($list->update_list_member($in{'current_email'}, {'email' => $in{'new_email'}, 'update_date' => time}) ) {
+		 push @failed_for, $list;
+		 &Log::do_log('err', 'could not change email for list %s', $l);
+	     }
+	 }
+     }
+    
+    ## Change email as list OWNER/MODERATOR
+    my %updated_lists;
+    foreach my $role ('owner', 'editor') { 
+	foreach my $list ( &List::get_which($in{'current_email'},$in{'robot'}, $role) ) {
+	    
+	    ## Check if admin is include via an external datasource
+	    my $admin_user = $list->get_list_admin($role, $in{'current_email'});
+	    if ($admin_user->{'included'}) {
+		## Notify listmaster
+		&List::send_notify_to_listmaster('failed_to_change_included_admin',$in{'robot'},{'list' => $list,
+											   'current_email' => $in{'current_email'}, 
+											   'new_email' => $in{'new_email'},
+											   'datasource' => $list->get_datasource_name($admin_user->{'id'})});
+		push @failed_for, $list;
+		&Log::do_log('err', 'could not change %s email for list %s because admin is included', $role, $list->{'name'});
+		next;
+	    }
+	    
+	    ## Go through owners/editors of the list
+	    foreach my $admin (@{$list->{'admin'}{$role}}) {
+		next unless (lc($admin->{'email'}) eq lc($in{'current_email'}));
+		
+		## Update entry with new email address
+		$admin->{'email'} = $in{'new_email'};
+		$updated_lists{$list->{'name'}}++;
+	    }
+	    
+	    ## Update Db cache for the list
+	    $list->sync_include_admin();
+	    $list->save_config();
+	}
+    }
+    ## Notify listmasters that list owners/moderators email have changed
+    if (keys %updated_lists) {
+	&List::send_notify_to_listmaster('listowner_email_changed',$in{'robot'}, 
+					 {'previous_email' => $in{'current_email'},
+					  'new_email' => $in{'new_email'},
+					  'updated_lists' => keys %updated_lists})
+    }
+    
+    ## Update User_table and remove existing entry first (to avoid duplicate entries)
+    &List::delete_global_user($in{'new_email'},);
+    
+    unless ( &List::update_global_user($in{'current_email'},
+				       {'email' => $in{'new_email'},					
+				       })) {
+	&Log::do_log('err','change_email: update failed');
+	return undef;
+    }
+    
+    ## Update netidmap_table
+    unless ( &List::update_email_netidmap_db($in{'robot'}, $in{'current_email'}, $in{'new_email'}) ){
+	&Log::do_log('err','change_email: update failed');
+	return undef;
+    }
+    
+    
+    return (1,\@failed_for);
+}
+
 =pod 
 
 =head1 AUTHORS 

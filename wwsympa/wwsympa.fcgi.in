@@ -15268,134 +15268,23 @@ sub do_change_email {
 	 $password = $newuser->{'password'};
      }
 
-     ## Change email as list MEMBER
-     foreach my $list ( &List::get_which($old_email,$robot, 'member') ) {
-
-	 
-	 my $l = $list->{'name'};
-	 
-	 my $user_entry = $list->get_list_member($old_email);
-	 
-	 if ($user_entry->{'included'} == 1) {
-	     ## Check the type of data sources
-	     ## If only include_list of local mailing lists, then no problem
-	     ## Otherwise, notify list owner
-	     ## We could also force a sync_include for local lists
-	     my $use_external_data_sources;
-	     foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
-		 my $datasource = $list->search_datasource($datasource_id);
-		 if (!defined $datasource || $datasource->{'type'} ne 'include_list' || ($datasource->{'def'} =~ /\@(.+)$/ && $1 ne $robot)) {
-		     $use_external_data_sources = 1;
-		     last;
-		 }
-	     }
-	     if ($use_external_data_sources) {
-		 ## Notify list owner
-		 $list->send_notify_to_owner('failed_to_change_included_member',
-		    {'current_email' => $old_email, 
-		     'new_email' => $new_email,
-		     'datasource' => $list->get_datasource_name($user_entry->{'id'})});
-    
-		 &report::reject_report_web('user','change_member_email_failed_included',{'listname'=>$list->{'name'}},
-					    $param->{'action'},$list,$old_email,$robot);
-		 &wwslog('err', 'could not change member email for list %s because member is included', $l);
-		 next;
-	     }
-	 }
-
-	 ## Check if user is already member of the list with his new address
-	 ## then we just need to remove the old address
-	 if ($list->is_list_member($new_email)) {
-	     unless ($list->delete_list_member('users' => [$old_email]) ) {
-		 &report::reject_report_web('intern','delete_subscriber_db_failed',{'sub'=>$new_email},
-					    $param->{'action'},$list,$old_email,$robot);
-		 &wwslog('info', 'do_change_email: could not remove email from list %s', $l);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
-	     }
-	     
-	 }else {
-	     
-	     unless ($list->update_list_member($old_email, {'email' => $new_email, 'update_date' => time}) ) {
-		 &report::reject_report_web('intern','update_subscriber_db_failed',{'sub'=>$new_email},
-										    'old_email' => $old_email,
-					    $param->{'action'},$list,$old_email,$robot);
-		 &wwslog('info', 'do_change_email: could not change email for list %s', $l);
-		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
-	     }
-	 }
+     ## Do the change_email
+     my ($status, $failed_for) = &admin::change_user_email(current_email => $old_email, 
+							   new_email => $new_email,
+							   robot => $robot);
+     unless (defined $status) {
+	 &wwslog('err', 'Failed to change user email address');
+	 return undef;
      }
-     
+
+     foreach my $failed_list (@$failed_for) {
+	 &report::reject_report_web('user','change_member_email_failed_included',{'listname'=>$failed_list->{'name'}},
+										  $param->{'action'},$failed_list,$old_email,$robot);
+	 &web_db_log({'robot' => $in{'robot'},'list' => $failed_list->{'name'},'action' => $param->{'action'},'parameters' => $new_email,'target_email' => $new_email,'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
+     }
+
      &report::notice_report_web('performed',{},$param->{'action'});
      
-     ## Change email as list OWNER/MODERATOR
-     my %updated_lists;
-     foreach my $role ('owner', 'editor') { 
-	 foreach my $list ( &List::get_which($old_email,$robot, $role) ) {
-
-	     ## Check if admin is include via an external datasource
-	     my $admin_user = $list->get_list_admin($role, $old_email);
-	     if ($admin_user->{'included'}) {
-		 ## Notify listmaster
-		 &List::send_notify_to_listmaster('failed_to_change_included_admin',$robot,{'list' => $list,
-											    'current_email' => $old_email, 
-											    'new_email' => $new_email,
-											    'datasource' => $list->get_datasource_name($admin_user->{'id'})});
-		 
-		 &report::reject_report_web('user','change_admin_email_failed_included',{'listname'=>$list->{'name'}},
-					    $param->{'action'},$list,$old_email,$robot);
-		 &wwslog('err', 'could not change %s email for list %s because admin is included', $role, $list->{'name'});
-		 next;
-	     }
-
-	     ## Go through owners/editors of the list
-	     foreach my $admin (@{$list->{'admin'}{$role}}) {
-		 next unless (lc($admin->{'email'}) eq lc($old_email));
-		 
-		 ## Update entry with new email address
-		 $admin->{'email'} = $new_email;
-		 $updated_lists{$list->{'name'}}++;
-	     }
-	     
-	     ## Update Db cache for the list
-	     $list->sync_include_admin();
-	     $list->save_config();
-	 }
-     }
-     ## Notify listmasters that list owners/moderators email have changed
-     if (keys %updated_lists) {
-	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
-					  {'list' => $list,
-					   'previous_email' => $old_email,
-					   'new_email' => $new_email,
-					   'updated_lists' => keys %updated_lists})
-	 }
-     
-     ## Update User_table and remove existing entry first (to avoid duplicate entries)
-     &List::delete_global_user($new_email,);
-     
-     unless ( &List::update_global_user($old_email,
-				    {'email' => $new_email,
-				   
-				 })) {
-	 &report::reject_report_web('intern','update_user_db_failed',{'user'=>$new_email,
-								      'old_email' => $old_email},
-				    $param->{'action'},'',$old_email,$robot);
-	 &wwslog('info','change_email: update failed');
-	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
-	 return undef;
-     }
-
-     ## Update netidmap_table
-     unless ( &List::update_email_netidmap_db($robot, $old_email, $new_email) ){
-	 &report::reject_report_web('intern','update_netidmap_failed',{'user'=>$new_email,
-								       'old_email' => $old_email},
-				    $param->{'action'},'',$param->{'user'}{'email'},$robot);
-	 &wwslog('info','change_email: update failed');
-	 &web_db_log({'target_email' => $old_email,
-		      'status' => 'error',
-		      'error_type' => 'internal'});
-	 return undef;
-     }
 
      ## Update the data structure that tells which lists the current user is member/owner/editor of
      unless ($edited_by_listmaster == 1) {

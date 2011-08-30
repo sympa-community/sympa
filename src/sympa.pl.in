@@ -77,6 +77,8 @@ Options:
    --add_list=family_name --robot=robot_name --input_file=/path/to/file.xml
                                          : add the list described by the file.xml under robot_name, to the family
                                            family_name.
+   --change_user_email --current_email=xx --new_email=xx : changes a user email address in all Sympa 
+                                           databases (subscriber_table, list config, etc) for all virtual robots.
    --close_family=family_name --robot=robot_name 
                                          : close lists of family_name family under robot_name.      
 
@@ -127,7 +129,8 @@ encryption.
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
 		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
-		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s','robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s',
+		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s',
+		    'robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s','change_user_email','current_email=s','new_email=s',
 		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db')) {
     &Log::fatal_err("Unknown options.");
 }
@@ -143,6 +146,7 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'make_alias_file'} ||
 				$main::options{'lowercase'} ||
 				$main::options{'md5_encode_password'} ||
+				$main::options{'change_user_email'} ||
 				$main::options{'close_list'} ||
 				$main::options{'purge_list'} ||
 				$main::options{'create_list'} ||
@@ -538,6 +542,32 @@ if ($main::options{'dump'}) {
     }
 
     printf STDOUT "List %s has been closed, aliases have been removed\n", $list->{'name'};
+    
+    exit 0;
+}elsif ($main::options{'change_user_email'}) {
+
+    unless ($main::options{'current_email'} && $main::options{'new_email'}) {
+	print STDERR "Missing current_email or new_email parameter\n";
+	exit 1;
+    }
+
+    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+	
+	printf STDOUT "Doing processing for virtual robot %s...\n", $robot;
+	my ($status, $failed_for) = &admin::change_user_email(current_email => $main::options{'current_email'}, 
+							      new_email => $main::options{'new_email'},
+							      robot => $robot);
+	unless (defined $status) {
+	    printf STDERR "Failed to change user email address in virtual robot %s'}\n", $robot;
+	    exit 1;
+	}
+	
+	foreach my $failed_list (@$failed_for) {
+	    printf STDERR "Failed to change user email address for list %s'}\n", $failed_list->{'name'};
+	}
+    }
+
+    printf STDOUT "Email address %s has been changed to %s\n", $main::options{'current_email'}, $main::options{'new_email'};
     
     exit 0;
 }elsif ($main::options{'purge_list'}) {
