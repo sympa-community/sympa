@@ -1138,47 +1138,57 @@ sub install_aliases {
     return 1
 	if ($Conf::Conf{'sendmail_aliases'} =~ /^none$/i);
 
-    my $alias_installed = 0;
     my $alias_manager = $Conf::Conf{'alias_manager' };
+    my $error_output_file = $Conf::Conf{'tmpdir'}.'/aliasmanager.stderr.'.$$;
     &Log::do_log('debug2',"admin::install_aliases : $alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
-     if (-x $alias_manager) {
-	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'}") ;
+ 
+    unless (-x $alias_manager) {
+		&Log::do_log('err','admin::install_aliases : Failed to install aliases: %s', $!);
+		return undef;
+	}
+	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'} 2>  $error_output_file") ;
 	 my $status = $? / 256;
 	 if ($status == 0) {
 	     &Log::do_log('info','admin::install_aliases : Aliases installed successfully') ;
-	     $alias_installed = 1;
-	 }elsif ($status == 1) {
-	     &Log::do_log('err','admin::install_aliases : Configuration file %s has errors', Sympa::Constants::CONFIG);
-	 }elsif ($status == 2)  {
-	     &Log::do_log('err','admin::install_aliases : Internal error : Incorrect call to alias_manager');
-	 }elsif ($status == 3)  {
-	     &Log::do_log('err','admin::install_aliases : Could not read sympa config file, report to httpd error_log') ;
-	 }elsif ($status == 4)  {
-	     &Log::do_log('err','admin::install_aliases : Could not get default domain, report to httpd error_log') ;
-	 }elsif ($status == 5)  {
-	     &Log::do_log('err','admin::install_aliases : Unable to append to alias file') ;
-	 }elsif ($status == 6)  {
-	     &Log::do_log('err','admin::install_aliases : Unable to run newaliases') ;
-	 }elsif ($status == 7)  {
-	     &Log::do_log('err','admin::install_aliases : Unable to read alias file, report to httpd error_log') ;
-	 }elsif ($status == 8)  {
-	     &Log::do_log('err','admin::install_aliases : Could not create temporay file, report to httpd error_log') ;
-	 }elsif ($status == 13) {
-	     &Log::do_log('err','admin::install_aliases : Some of list aliases already exist') ;
-	 }elsif ($status == 14) {
-	     &Log::do_log('err','admin::install_aliases : Can not open lock file, report to httpd error_log') ;
-	 }elsif ($status == 15) {
-	     &Log::do_log('err','The parser returned empty aliases') ;
-	 }else {
-	     &Log::do_log('err',"admin::install_aliases : Unknown error $status while running alias manager $alias_manager");
-	 } 
-     }else {
-	 &Log::do_log('err','admin::install_aliases : Failed to install aliases: %s', $!);
+	     return 1;
      }
-    
-    return undef unless ($alias_installed);
 
-    return 1;
+	## get error code
+	my $error_output;
+	open ERR, $error_output_file;
+	while (<ERR>) {
+		$error_output .= $_;
+	}
+	close ERR;
+	unlink $error_output_file;
+
+     if ($status == 1) {
+		&Log::do_log('err','Configuration file %s has errors : %s', Sympa::Constants::CONFIG, $error_output);
+     }elsif ($status == 2)  {
+         &Log::do_log('err','admin::install_aliases : Internal error : Incorrect call to alias_manager : %s', $error_output);
+     }elsif ($status == 3)  {
+	     &Log::do_log('err','admin::install_aliases : Could not read sympa config file, report to httpd error_log: %s', $error_output) ;
+	 }elsif ($status == 4)  {
+	     &Log::do_log('err','admin::install_aliases : Could not get default domain, report to httpd error_log: %s', $error_output) ;
+	 }elsif ($status == 5)  {
+	     &Log::do_log('err','admin::install_aliases : Unable to append to alias file: %s', $error_output) ;
+	 }elsif ($status == 6)  {
+	     &Log::do_log('err','admin::install_aliases : Unable to run newaliases: %s', $error_output) ;
+	 }elsif ($status == 7)  {
+	     &Log::do_log('err','admin::install_aliases : Unable to read alias file, report to httpd error_log: %s', $error_output) ;
+	 }elsif ($status == 8)  {
+	     &Log::do_log('err','admin::install_aliases : Could not create temporay file, report to httpd error_log: %s', $error_output) ;
+	 }elsif ($status == 13) {
+	     &Log::do_log('err','admin::install_aliases : Some of list aliases already exist: %s', $error_output) ;
+	 }elsif ($status == 14) {
+	     &Log::do_log('err','admin::install_aliases : Can not open lock file, report to httpd error_log: %s', $error_output) ;
+	 }elsif ($status == 15) {
+	     &Log::do_log('err','The parser returned empty aliases: %s', $error_output) ;
+	 }else {
+	     &Log::do_log('err',"admin::install_aliases : Unknown error $status while running alias manager $alias_manager : %s", $error_output);
+	 } 
+    
+    return undef;
 }
 
 
