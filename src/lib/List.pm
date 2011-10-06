@@ -1423,7 +1423,7 @@ my %alias = ('reply-to' => 'reply_to',
 						 },
 				      'email' => {'format' => '(listmaster|automatic|'.&tools::get_regexp('email').')',
 						  'length' => 30,
-						  'occurrence' => '1',
+						  'occurrence' => '0-1',
 						  'gettext_id' => 'who updated the config',
 						  'order' => 1
 						  }
@@ -5038,7 +5038,7 @@ sub get_list_member {
     my $user = &get_list_member_no_object($options);
 
     unless($user){
-	&Log::do_log('err','Unable to retrieve information from database for user %s', $email) unless ($options{'probe'});
+	&Log::do_log('err','Unable to retrieve information from database for user %s ; list %s', $email, $self->get_list_id()) unless ($options{'probe'});
 	return undef;
     }
     $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
