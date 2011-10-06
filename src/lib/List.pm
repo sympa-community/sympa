@@ -5669,6 +5669,9 @@ sub get_next_list_member {
 	if (defined $user->{custom_attribute}) {
 	    &Log::do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+	    unless (%custom_attr) {
+		    &Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
+	    }
 	    $user->{'custom_attribute'} = \%custom_attr ;
 	    &Log::do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
 	    &Log::do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
