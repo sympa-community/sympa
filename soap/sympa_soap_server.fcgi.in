@@ -56,6 +56,12 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'soap');
 &Log::do_log('info', 'SOAP server launched');
 
+## We set the real UID with the effective UID value
+## It is usefull to allow execution of scripts like alias_manager
+## that otherwise might loose the benefit of SetUID
+$< = $>; ## UID
+$( = $); ## GID
+
 unless (&SDM::check_db_connect()) {
     &Log::do_log('err','SOAP server requires a RDBMS to run');
 }
