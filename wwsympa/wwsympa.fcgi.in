@@ -975,7 +975,14 @@ my $birthday = time ;
 	 &wwslog('err','Config error: wwsympa should run with UID %s (instead of %s). *** Switching to maintenance mode. ***', (getpwnam(Sympa::Constants::USER))[2], $>);
      }
 
-     unless (&SDM::check_db_connect()) {
+     ## We set the real UID with the effective UID value
+     ## It is usefull to allow execution of scripts like alias_manager
+     ## that otherwise might loose the benefit of SetUID
+     $< = $>; ## UID
+     $( = $); ## GID
+
+
+    unless (&SDM::check_db_connect()) {
 	 &report::reject_report_web('system_quiet','no_database',{},'','');
 	 &Log::do_log('info','WWSympa requires a RDBMS to run');
      }
