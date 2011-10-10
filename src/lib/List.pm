@@ -1530,11 +1530,12 @@ sub new {
 
     ## Only process the list if the name is valid.
     my $listname_regexp = &tools::get_regexp('listname');
-    unless ($name and ($name =~ /^$listname_regexp$/io) ) {
+    unless ($name and ($name =~ /^($listname_regexp)$/io) ) {
 	&Log::do_log('err', 'Incorrect listname "%s"',  $name) unless ($options->{'just_try'});
 	return undef;
     }
     ## Lowercase the list name.
+    $name = $1;
     $name =~ tr/A-Z/a-z/;
     
     ## Reject listnames with reserved list suffixes
@@ -8882,8 +8883,8 @@ sub _save_stats_file {
     }
 
     &Log::do_log('debug2', 'List::_save_stats_file(%s, %d, %d, %d)', $file, $total,$last_sync,$last_sync_admin_user );
-    
-    open(L, "> $file") || return undef;
+    my $untainted_filename = sprintf ("%s",$file);
+    open(L, "> $untainted_filename") || return undef;
     printf L "%d %.0f %.0f %.0f %d %d %d\n", @{$stats}, $total, $last_sync, $last_sync_admin_user;
     close(L);
 }

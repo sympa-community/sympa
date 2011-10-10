@@ -250,7 +250,8 @@ sub _lock_file {
     
     ## Read access to prevent "Bad file number" error on Solaris
     my $fh;
-    unless (open $fh, $open_mode.$lock_file) {
+    my $untainted_lock_mode = sprintf("%s%s",$open_mode,$lock_file);
+    unless (open $fh, $untainted_lock_mode) {
 	&Log::do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 	return undef;
     }

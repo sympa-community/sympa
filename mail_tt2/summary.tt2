@@ -3,10 +3,10 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Summary of list %1[%END%][%END%]
 
 [% table_of_content %][%|loc%]:[%END%]
 
-[%|wrap(0,4)%][% FOREACH m = msg_list -%]
-[% m.id %]. [% m.subject %]   [% m.from %]
+[% FOREACH m = msg_list -%]
+[%|wrap(0,4)%][% m.id %]. [% m.subject %]   [% m.from %][%END#wrap%]
 [% IF conf.wwsympa_url %]
    [% conf.wwsympa_url %]/arcsearch_id/[% list.name %]/[% m.month %]/[% m.message_id %]
 [% END %]
-[% END %][%END#wrap%]
+[% END %]
 
