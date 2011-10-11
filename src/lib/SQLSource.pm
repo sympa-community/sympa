@@ -284,10 +284,6 @@ sub do_query {
     my $query = shift;
     my @params = @_;
 
-    unless($self->connect()) {
-	&Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
-	return undef;
-    }
     my $statement = sprintf $query, @params;
 
     &Log::do_log('debug', "Will perform query '%s'",$statement);
@@ -298,9 +294,16 @@ sub do_query {
     }
     
     unless ($self->{'sth'}->execute) {
-	my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-	&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
-	return undef;
+	# Check connection to database in case it would be the cause of the problem.
+	unless($self->connect()) {
+	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	}else {
+	    unless ($self->{'sth'}->execute) {
+		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
+		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
+		return undef;
+	    }
+	}
     }
 
     return $self->{'sth'};
@@ -311,19 +314,22 @@ sub do_prepared_query {
     my $query = shift;
     my @params = @_;
 
-    unless($self->connect()) {
-	&Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
-	return undef;
-    }
-
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($query)) {
 	&Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 	return undef;
     }
     
     unless ($self->{'sth'}->execute(@params)) {
-	&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
-	return undef;
+	# Check database connection in case it would be the cause of the problem.
+	unless($self->connect()) {
+	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    return undef;
+	}else {
+	    unless ($self->{'sth'}->execute(@params)) {
+		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
+		return undef;
+	    }
+	}
     }
 
     return $self->{'sth'};
