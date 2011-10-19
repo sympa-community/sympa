@@ -1131,7 +1131,6 @@ sub purge_logs_table {
     my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($execution_date);
     $min = 0;
     $sec = 0;
-    $hour++;
     my $date_end = timelocal($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
 
     my $date_deb = $date_end-(86400*365);
