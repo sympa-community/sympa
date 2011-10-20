@@ -7495,7 +7495,7 @@ sub _include_users_remote_file {
 	    next if ($line =~ /^\s*\#/);
 
 	    ## Skip badly formed emails
-	    unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
+	    unless ($line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
 		Log::do_log('err', "Skip badly formed line: '%s'", $line);
 		next;
 	    }
