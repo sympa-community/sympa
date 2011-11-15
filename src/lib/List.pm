@@ -4920,6 +4920,8 @@ sub insert_delete_exclusion {
     my $robot = shift;
     my $action = shift;
     &Log::do_log('info', 'List::insert_delete_exclusion("%s", "%s", "%s", "%s")', $email, $list, $robot, $action);
+    
+    my $r = 1;
 
     if($action eq 'insert'){
 	## INSERT only if $user->{'included'} eq '1'
@@ -4949,14 +4951,17 @@ sub insert_delete_exclusion {
 	    push @users_excluded, $data_excluded->{'emails'}->[$key];
 	    $key = $key + 1;
 	}
-
+	
+	$r = 0;
+	my $sth;
 	foreach my $users (@users_excluded) {
 	    if($email eq $users){
 		## Delete : list, user and date
-		unless (&SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND user_exclusion = %s)", &SDM::quote($list), &SDM::quote($email))) {
+		unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND user_exclusion = %s)", &SDM::quote($list), &SDM::quote($email))) {
 		    &Log::do_log('err','Unable to remove entry %s for liste %s for table exclusion_table', $email, $list);
 		    return undef;
 		}
+		$r = $sth->rows;
 	    }
 	}
 
@@ -4965,7 +4970,7 @@ sub insert_delete_exclusion {
 	return undef;
     }
    
-    return 1;
+    return $r;
 }
 
 ######################################################################
@@ -6366,8 +6371,12 @@ sub add_list_member {
 	    &Log::do_log('notice','Subscription of user %s failed: max number of subscribers (%s) reached',$new_user->{'email'},$self->{'admin'}{'max_list_members'});
 	    last;
 	}
-	# Delete from exclusion_table if new_user is in.
-	&insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete');
+
+	# Delete from exclusion_table and force a sync_include if new_user was excluded
+	if(&insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete')) {
+		$self->sync_include();
+		next if($self->is_list_member($who));
+	}
 
 	$new_user->{'date'} ||= time;
 	$new_user->{'update_date'} ||= $new_user->{'date'};
