@@ -288,16 +288,37 @@ sub do_query {
 
     &Log::do_log('debug', "Will perform query '%s'",$statement);
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
-	my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-	&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
-	return undef;
+	# Check connection to database in case it would be the cause of the problem.
+	unless($self->connect()) {
+	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    return undef;
+	}else {
+	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
+		&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+		return undef;
+	    }
+	}
     }
-    
     unless ($self->{'sth'}->execute) {
 	# Check connection to database in case it would be the cause of the problem.
 	unless($self->connect()) {
 	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    return undef;
 	}else {
+	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+		# Check connection to database in case it would be the cause of the problem.
+		unless($self->connect()) {
+		    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    return undef;
+		}else {
+		    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
+			my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
+			&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+			return undef;
+		    }
+		}
+	    }
 	    unless ($self->{'sth'}->execute) {
 		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
 		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
@@ -314,25 +335,52 @@ sub do_prepared_query {
     my $query = shift;
     my @params = @_;
 
-    unless ($self->{'sth'} = $self->{'dbh'}->prepare($query)) {
-	&Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
-	return undef;
-    }
+    my $sth;
+
+    unless ($self->{'cached_prepared_statements'}{$query}) {
+	&Log::do_log('debug3','Did not find prepared statement for %s. Doing it.',$query);
+	unless ($sth = $self->{'dbh'}->prepare($query)) {
+	    unless($self->connect()) {
+		&Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		return undef;
+	    }else {
+		unless ($sth = $self->{'dbh'}->prepare($query)) {
+		    &Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+		    return undef;
+		}
+	    }
+	}
+	$self->{'cached_prepared_statements'}{$query} = $sth;
+    }else {
+	&Log::do_log('debug3','Reusing prepared statement for %s',$query);
+    }	
     
-    unless ($self->{'sth'}->execute(@params)) {
+    unless ($self->{'cached_prepared_statements'}{$query}->execute(@params)) {
 	# Check database connection in case it would be the cause of the problem.
 	unless($self->connect()) {
 	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
-	    unless ($self->{'sth'}->execute(@params)) {
+	    unless ($sth = $self->{'dbh'}->prepare($query)) {
+		unless($self->connect()) {
+		    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    return undef;
+		}else {
+		    unless ($sth = $self->{'dbh'}->prepare($query)) {
+			&Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+			return undef;
+		    }
+		}
+	    }
+	    $self->{'cached_prepared_statements'}{$query} = $sth;
+	    unless ($self->{'cached_prepared_statements'}{$query}->execute(@params)) {
 		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
     }
 
-    return $self->{'sth'};
+    return $self->{'cached_prepared_statements'}{$query};
 }
 
 sub prepare_query_log_values {

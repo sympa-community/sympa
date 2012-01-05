@@ -64,10 +64,6 @@ sub do_query {
     my $query = shift;
     my @params = @_;
     my $sth;
-    unless (&check_db_connect) {
-	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
-	return undef;
-    }
 
     unless ($sth = $db_source->do_query($query,@params)) {
 	&Log::do_log('err','SQL query failed to execute in the Sympa database');
@@ -81,10 +77,6 @@ sub do_prepared_query {
     my $query = shift;
     my @params = @_;
     my $sth;
-    unless (&check_db_connect) {
-	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
-	return undef;
-    }
 
     unless ($sth = $db_source->do_prepared_query($query,@params)) {
 	&Log::do_log('err','SQL query failed to execute in the Sympa database');

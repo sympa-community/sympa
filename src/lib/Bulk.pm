@@ -93,7 +93,7 @@ sub next {
     }
 
     # Select the most prioritary packet to lock.
-    unless ($sth = &SDM::do_query( "SELECT %s messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid FROM bulkmailer_table WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= %d %s %s", $limit_sybase, time(), $limit_oracle, $order)) {
+    unless ($sth = &SDM::do_prepared_query( sprintf("SELECT %s messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid FROM bulkmailer_table WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= ? %s %s",$limit_sybase, $limit_oracle, $order), int(time()))) {
 	&Log::do_log('err','Unable to get the most prioritary packet from database');
 	return undef;
     }
@@ -611,7 +611,7 @@ sub get_remaining_packets_count {
 
     my $m_count = 0;
 
-    unless ($sth = &SDM::do_query( "SELECT COUNT(*) FROM bulkmailer_table")) {
+    unless ($sth = &SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table")) {
 	&Log::do_log('err','Unable to count remaining packets in bulkmailer_table');
 	return undef;
     }
