@@ -1836,7 +1836,7 @@ sub sync_include {
     }
  
     $list->sync_include();
-    $list->sync_include_admin();
+    $list->sync_include_admin() if ((defined $list->{'admin'}{'editor_include'} && $#{$list->{'admin'}{'editor_include'}}>-1) || (defined $list->{'admin'}{'owner_include'} && $#{$list->{'admin'}{'owner_include'}}>-1));
 
     if (! $list->has_include_data_sources() &&
 	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2011-08-03 18:53+0200\n"
+"PO-Revision-Date: 2011-09-05 11:24+0200\n"
 "Last-Translator: Laszlo <torlasz@net.sote.hu>\n"
 "Language-Team: Magyar\n"
 "MIME-Version: 1.0\n"
@@ -1696,31 +1696,33 @@ msgstr ""
 
 #: ../web_tt2/help_admin.tt2:3
 msgid "Mailing lists - Owner and moderator guide"
-msgstr ""
+msgstr "Levelezőlisták - Leírás tulajdonosok és szerkesztők részére"
 
 #: ../web_tt2/help_admin.tt2:5
 msgid "Introduction: who is in charge of managing mailing lists?"
-msgstr ""
+msgstr "Bevezetés: kik és hogyan felügyelik a levelezőlistákat?"
 
 #: ../web_tt2/help_admin.tt2:6
 msgid "Reminder: a mailing list service involves four types of roles:"
 msgstr ""
+"Emlékeztető: a levelezőlista-szolgáltatásban az embereknek négyféle szerepük "
+"van:"
 
 #: ../web_tt2/help_admin.tt2:8
 msgid "listmaster;"
-msgstr ""
+msgstr "listamester"
 
 #: ../web_tt2/help_admin.tt2:9
 msgid "owner;"
-msgstr ""
+msgstr "tulajdonos"
 
 #: ../web_tt2/help_admin.tt2:10
 msgid "moderator;"
-msgstr ""
+msgstr "szerkesztő"
 
 #: ../web_tt2/help_admin.tt2:11
 msgid "subscriber."
-msgstr ""
+msgstr "tag"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:13
@@ -1728,10 +1730,12 @@ msgid ""
 "Refer to the <a href=\"%1/help/introduction#roles\">description of each "
 "role</a> to know more about this."
 msgstr ""
+"Mindez részletesebben olvasható <a href=\"%1/help/introduction#roles\">ebben "
+"a leírásban</a>."
 
 #: ../web_tt2/help_admin.tt2:15
 msgid "Requesting the creation of a mailing list"
-msgstr ""
+msgstr "Hogyan kezdeményezhetjük új levelezőlista létrehozását?"
 
 #: ../web_tt2/help_admin.tt2:16
 msgid ""
@@ -1740,10 +1744,13 @@ msgid ""
 "creation</strong> will nevertheless be <strong>subject to approval by the "
 "listmasters</strong>."
 msgstr ""
+"Egy <strong>új lista létrehozásának igényléséhez több előfeltételnek is "
+"teljesülnie kell</strong>. Ha ezek mind teljesülnek is, az új listák "
+"létrehozását mindenképpen <strong>listamesternek kell jóváhagynia</strong>."
 
 #: ../web_tt2/help_admin.tt2:17
 msgid "To request the creation of a mailing list, do as follows:"
-msgstr ""
+msgstr "Új lista létrehozásának igényléséhez a következőképpen kell eljárnia:"
 
 #. (path_cgi,conf.host)
 #: ../web_tt2/help_admin.tt2:19
@@ -1751,16 +1758,22 @@ msgid ""
 "Go to the <strong><a href=\"%1/home\">list environment homepage</a></strong> "
 "and <a href=\"%1/help/user#sympa_auth\"><strong>log on</strong></a>."
 msgstr ""
+"Menjen a szolgáltatás webes felületének <strong><a href=\"%1/home"
+"\">kezdőoldalára</a></strong> és <a href=\"%1/help/user#sympa_auth"
+"\"><strong>jelentkezzen be</strong></a>!"
 
 #: ../web_tt2/help_admin.tt2:20
 msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
 msgstr ""
+"A felső menüsorban kattintson a <strong>\"Lista létrehozása\"</strong> fülre!"
 
 #: ../web_tt2/help_admin.tt2:21
 msgid ""
 "If this link does not display, it means that you do not have the privileges "
 "required to create a list."
 msgstr ""
+"Ha nincs olyan fül, amin ez a szöveg olvasható, akkor Önnek nincs "
+"jogosultsága új lista létrehozására."
 
 #. (conf.host)
 #: ../web_tt2/help_admin.tt2:22
@@ -1769,12 +1782,18 @@ msgid ""
 "and the domain name; example: <em class=\"example\">languages_spanish</em> "
 "and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
+"<strong>Nevezze el a listát</strong> (az email címből csak a \"@\" előtti "
+"részt írja be, a  \"@\"  és a tartomány neve nem kell; pl. <em class="
+"\"example\">spanyol_nyelv</em> és nem <em class=\"example\">spanyol_nyelv@%"
+"1</em>)."
 
 #: ../web_tt2/help_admin.tt2:23
 msgid ""
 "Do not use any spaces, accents or specials characters in list names: those "
 "characters might cause problems."
 msgstr ""
+"Ne használjon különleges karaktereket a listanevekben (pl. szóköz, ékezetes "
+"betűk, stb.): ezek többsége gondot okoz."
 
 #: ../web_tt2/help_admin.tt2:24
 msgid ""
@@ -1784,6 +1803,12 @@ msgid ""
 "prefix; thus they will be sorted together and will be easily recognizable "
 "(example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
+"Válasszon egyértelmű, de rövid elnevezést: gondoljon azokra a "
+"felhasználókra, akiknek majd minden alkalommal be kell írniuk ezt a címet, "
+"amikor levelet küldenek a listára! Ha több hasonló listát kezel, akkor adjon "
+"nekik egy közös prefixumot; így felsoroláskor egymás mellé kerülnek, és "
+"könnyen felismerhetők (pl. <em class=\"example\">xx-users@%1, xx-hotline@%1</"
+"em>, stb.)."
 
 #: ../web_tt2/help_admin.tt2:25
 msgid ""
@@ -1793,6 +1818,12 @@ msgid ""
 "the list beyond the options offered in the list administration module, by "
 "asking the listmasters)."
 msgstr ""
+"Válasszon ki a <strong>listának egy típust</strong> az előre megadottak "
+"közül (ezek csak a legtipikusabb példák, amiket a lista létrehozását "
+"követően a listatulajdonosok könnyen módosíthatnak. Sőt a listák "
+"tulajdonságainak megváltoztatására olyan lehetőségek is vannak, amiket az "
+"adminisztrációs felület nem tesz lehetővé, de ezekhez már a listamester "
+"segítsége kell)."
 
 #: ../web_tt2/help_admin.tt2:26
 msgid ""
@@ -1801,16 +1832,24 @@ msgid ""
 "pages (list of lists, list of your subscriptions, etc.) and in the browser "
 "title bar."
 msgstr ""
+"Adja meg a  lista <strong>tárgyát</strong>! Ez a lista céljának egy igen "
+"rövid, egymondatos leírása, mely a webes felület számos helyén megjelenik: a "
+"listához tartozó minden oldalon, a böngészőablak fejlécében, továbbá a "
+"listák bármilyen célból történő felsorolásakor, stb."
 
 #: ../web_tt2/help_admin.tt2:28
 msgid "Choose a <strong>topic</strong> in the 'Topics' drop-menu."
 msgstr ""
+"Válasszon egy <strong>témakört</strong> a megadottak közül, a legördülő "
+"menüből!"
 
 #: ../web_tt2/help_admin.tt2:29
 msgid ""
 "If no topic suits your needs, you can request the creation of a new topic by "
 "asking the listmasters."
 msgstr ""
+"Ha egyik témakör sem felel meg igazán, a listamestereket meg lehet kérni, "
+"hogy hozzanak létre egy újat."
 
 #: ../web_tt2/help_admin.tt2:30
 msgid ""
@@ -1819,28 +1858,34 @@ msgid ""
 "by email to each new subscriber, under the 'List subject' heading. This "
 "description may involve explanations about the following issues:"
 msgstr ""
+"Adja meg a lista <strong>leírását</strong>!  Ez akár egy hosszabb szöveg is "
+"lehet, ami megjelenik a lista információs oldalán, és bekerül minden frissen "
+"föliratkozott felhasználónak küldött visszaigazoló levélbe \"Listaszabályzat"
+"\" elnevezéssel. Ez a leírás a következő témákat szokta érinteni:"
 
 #: ../web_tt2/help_admin.tt2:32
 msgid "object of the list and targets;"
-msgstr ""
+msgstr "a lista tárgya ill. céljai"
 
 #: ../web_tt2/help_admin.tt2:33
 msgid "topics discussed;"
-msgstr ""
+msgstr "a tárgyalandó témák"
 
 #: ../web_tt2/help_admin.tt2:34
 msgid "operation of the list (liabilities, status of the list, etc.);"
-msgstr ""
+msgstr "a lista működése (felelősségek, jogi helyzet, stb.)"
 
 #: ../web_tt2/help_admin.tt2:35
 msgid "rules applying;"
-msgstr ""
+msgstr "a listára vonatkozó szabályok"
 
 #: ../web_tt2/help_admin.tt2:36
 msgid ""
 "description of the typical subscribers (their occupations, the projects they "
 "manage, their nationalities, etc.)."
 msgstr ""
+"az átlagos listatag jellemzése (foglalkozás, milyen projektekkel "
+"foglalkozik, nemzetiség, stb.)"
 
 #: ../web_tt2/help_admin.tt2:38
 msgid ""
@@ -1850,10 +1895,15 @@ msgid ""
 "keyboard); otherwise, it might not be entirely visible in your browser "
 "window."
 msgstr ""
+"A lista leírásának elkészítésekor <acronym lang=\"en\" xml:lang=\"en \" "
+"title=\"HyperText Markup Language\">HTML</acronym> címkéket is használhat. "
+"Figyelem: ha a leírás túlságosan hosszú, akkor sorvégek bevitelével (az "
+"ENTER billentyű lenyomásával) tördelje a sorokat rövidebbre, különben a "
+"böngészőablakban nem biztos, hogy az egész sor látszani fog."
 
 #: ../web_tt2/help_admin.tt2:40
 msgid "Click on the '<strong>Submit your creation request</strong>' button."
-msgstr ""
+msgstr "Kattintson a <strong>\"Kérelem elküldése\"</strong> gombra!"
 
 #: ../web_tt2/help_admin.tt2:43
 msgid ""
@@ -1863,6 +1913,12 @@ msgid ""
 "will be actually installed and made visible on the server only after "
 "approval by a listmaster."
 msgstr ""
+"Ezt követően megjelenik egy tájékoztató szöveg a következőkről: a lista "
+"létrehozására vontakozó igény továbbításra került a listamestereknek; "
+"mostantól az \"Admin\" gombra kattintva módosíthatja a lista beállításait; "
+"de a lista nem lesz valójában működőképes, sőt még csak látható sem a többi "
+"felhasználó számára, míg valamelyik listamester jóvá nem hagyja és be nem "
+"fejezi a lista létrehozását."
 
 #: ../web_tt2/help_admin.tt2:44
 msgid ""
@@ -1871,6 +1927,11 @@ msgid ""
 "notice message entitled '<strong>Creation of the nameofthelist list</"
 "strong>', informing you that your list was actually created."
 msgstr ""
+"Ezt követően <strong>meg kell várnia, míg valamelyik listamester jóváhagyja "
+"és befejezi a lista létrehozását</strong>. Ha ez megtörtént, a rendszertől "
+"automatikus értesítést fog kapni  '<strong>XXXX nevű lista létrejött</"
+"strong>' tárggyal, ahol XXX helyett a lista neve áll. Ekkor a lista már "
+"működőképes."
 
 #: ../web_tt2/help_admin.tt2:45
 msgid ""
@@ -1878,14 +1939,17 @@ msgid ""
 "its owner or moderator does not mean that you are automatically subscribed "
 "to it!"
 msgstr ""
+"<strong>Végül, iratkozzon föl a listára!</strong> Abból, hogy Ön a lista "
+"létrehozója, tulajdonosa vagy szerkesztője még nem következik, hogy tagja is "
+"a listának."
 
 #: ../web_tt2/help_admin.tt2:47
 msgid "Managing a list"
-msgstr ""
+msgstr "A lista felügyelete"
 
 #: ../web_tt2/help_admin.tt2:49
 msgid "To manage a list you own, do as follows:"
-msgstr ""
+msgstr "A lista felügyelete a következőképpen lehetséges:"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:51
@@ -1893,74 +1957,87 @@ msgid ""
 "Go to the <strong>list environment homepage</strong> and <strong><a href=\"%"
 "1/help/user#sympa_auth\">log on</a></strong>."
 msgstr ""
+"Böngészőprogramjával keresse fel a <strong>webes felület kezdőoldalát</"
+"strong> és <strong><a href=\"%1/help/user#sympa_auth\">jelentkezzen be!</a></"
+"strong>"
 
 #: ../web_tt2/help_admin.tt2:52
 msgid ""
 "If you are subscribed to the list with several addresses, use the address "
 "with which you requested the list creation."
 msgstr ""
+"Ha többféle email címmel is használja a rendszert, azzal jelentkezzen be, "
+"amivel a listát igényelte!"
 
 #: ../web_tt2/help_admin.tt2:53
 msgid "Go to the information page of the list</strong> you want to manage."
 msgstr ""
+"Menjen annak a listának az információs oldalára</strong>, amelyiket "
+"felügyelni szeretne!"
 
 #: ../web_tt2/help_admin.tt2:54
 msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
 msgstr ""
+"A bal oldali menüben <strong>kattintson az \"Admin\" feliratra!</strong>"
 
 #: ../web_tt2/help_admin.tt2:57
 msgid ""
 "To browse the sections of the administration module, click on the links "
 "below the 'Admin' link, in the left menu."
 msgstr ""
+"Az adminisztrációs felület különböző részei közötti navigációhoz "
+"használhatja a bal oldali menü egyes pontjait ill. a listanév és leírás "
+"alatt megjelenő navigációs füleket."
 
 #: ../web_tt2/help_admin.tt2:58
 msgid "Those different sections allow you to:"
-msgstr ""
+msgstr "Többek között a következő feladatokat végezheti el:"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:60
 msgid "<a href=\"%1/help/listconfig\">configure the list</a>;"
-msgstr ""
+msgstr "<a href=\"%1/help/listconfig\">a listabeállítások módosítása</a>"
 
 #: ../web_tt2/help_admin.tt2:61
 msgid "<a href=\"#customize\">customize files related to the list</a>;"
-msgstr ""
+msgstr "<a href=\"#customize\">a listához tartozó állományok testreszabása</a>"
 
 #: ../web_tt2/help_admin.tt2:62
 msgid "<a href=\"#manage_members\">manage subscribers</a>;"
-msgstr ""
+msgstr "<a href=\"#manage_members\">listatagok kezelése</a>"
 
 #: ../web_tt2/help_admin.tt2:63
 msgid ""
 "<a href=\"#manage_archives\">manage the message archive of the list</a>;"
-msgstr ""
+msgstr "<a href=\"#manage_archives\">a lista archívumának kezelése</a>"
 
 #: ../web_tt2/help_admin.tt2:64
 msgid "<a href=\"#manage_bounces\">manage bounces</a>;"
-msgstr ""
+msgstr "<a href=\"#manage_bounces\">visszapattanások kezelése</a>"
 
 #: ../web_tt2/help_admin.tt2:65
 msgid ""
 "<a href=\"#manage_shared\">create, delete or restore the shared document web "
 "space</a>;"
 msgstr ""
+"<a href=\"#manage_shared\">a dokumentumtárral kapcsolatos feladatok</a>"
 
 #: ../web_tt2/help_admin.tt2:66
 msgid "<a href=\"#renamelist\">rename the list</a>;"
-msgstr ""
+msgstr "<a href=\"#renamelist\">a lista átnevezése</a>"
 
 #: ../web_tt2/help_admin.tt2:67
 msgid "<a href=\"#supprlist\">delete the list</a>."
-msgstr ""
+msgstr "<a href=\"#supprlist\">a lista törlése</a>"
 
 #: ../web_tt2/help_admin.tt2:70
 msgid "The options available in the 'Moderate' submenu allow you to:"
 msgstr ""
+"Bal oldalon a \"Moderálás\" alatti almenü a következőket teszi lehetővé:"
 
 #: ../web_tt2/help_admin.tt2:72
 msgid "<a href=\"#moderate\">moderate messages</a> sent to the list;"
-msgstr ""
+msgstr "a listára küldött <a href=\"#moderate\">levelek moderálása</a>"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:73
@@ -1968,14 +2045,18 @@ msgid ""
 "<a href=\"%1/help/shared\">moderate documents</a> available in the shared "
 "document web space;"
 msgstr ""
+"a dokumentumtárba feltöltött <a href=\"%1/help/shared\">állományok "
+"moderálása</a>"
 
 #: ../web_tt2/help_admin.tt2:74
 msgid "<a href=\"#manage_members\">moderate pending subscriptions</a>."
 msgstr ""
+"feliratkozásuk jóváhagyására váró <a href=\"#manage_members\">személyek "
+"moderálása</a>"
 
 #: ../web_tt2/help_admin.tt2:77 ../web_tt2/help_listconfig.tt2:3
 msgid "Configuring the list"
-msgstr ""
+msgstr "A listabeállítások módosítása"
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:78
@@ -1983,20 +2064,25 @@ msgid ""
 "To learn how to configure the list, please refer to the <a href=\"%1/help/"
 "listconfig\"><strong>documentation about list configuration</strong></a>."
 msgstr ""
+"A listabeállításokról többet tudhat meg <a href=\"%1/help/listconfig"
+"\"><strong>az erről szóló részletes leírásból</strong></a>."
 
 #: ../web_tt2/help_admin.tt2:80
 msgid "Customizing the list"
-msgstr ""
+msgstr "A lista testreszabása"
 
 #: ../web_tt2/help_admin.tt2:81
 msgid ""
 "From this page, you can <strong>edit a number of files relating to your "
 "list</strong>, among which:"
 msgstr ""
+"Ezen az oldalon lehetősége van <strong>több, a listával kapcsolatos "
+"állományt módosítania</strong>, pl.:"
 
 #: ../web_tt2/help_admin.tt2:83
 msgid "typical messages sent to subscribers in particular occasions:"
 msgstr ""
+"levelek, melyeket a rendszer küld bizonyos esetekben a lista tagjainak:"
 
 #: ../web_tt2/help_admin.tt2:85
 msgid ""
@@ -2007,12 +2093,20 @@ msgid ""
 "message (reserved to the <acronym lang=\"en\" xml:lang=\"en\" title="
 "\"Multipurpose Internet Mail Extensions\">MIME</acronym> format experts);"
 msgstr ""
+"<strong>üdvözlő levél</strong>: ezt a levelet küldi el a rendszer a frissen "
+"föliratkozott tagok részére, visszaigazolásként. Érdemes megírnia egy "
+"listaszabályzatot, mely hozzáadható ehhez a levélhez. Strukturált <acronym "
+"lang=\"en\" xml:lang=\"en\" title=\"Multipurpose Internet Mail Extensions"
+"\">MIME</acronym> formátumú levelet is készíthet, de ez csak hozzáértő MIME-"
+"tudoroknak ajánlott."
 
 #: ../web_tt2/help_admin.tt2:86
 msgid ""
 "<strong>unsubscribe message</strong>: this message is sent to people "
 "unsubscribing from the list;"
 msgstr ""
+"<strong>leiratkozóknak szóló levél</strong>: ezt a levelet küldi a rendszer "
+"a listáról leiratkozóknak, visszaigazolásként"
 
 #: ../web_tt2/help_admin.tt2:87
 msgid ""
@@ -2020,6 +2114,10 @@ msgid ""
 "unsubscribe from the list (DEL command), especially because their address "
 "caused bounces;"
 msgstr ""
+"<strong>törlési levél</strong>: ezt a levelet küldi el a rendszer azoknak, "
+"akiket a listatulajdonos töröl a tagok közül (pl. a DEL levélparanccsal). "
+"Ennek többnyire az az oka, ha az érintett tag címéről rendszeresen "
+"visszapattannak a levelek."
 
 #: ../web_tt2/help_admin.tt2:88
 msgid ""
@@ -2029,28 +2127,45 @@ msgid ""
 "people whose current address is not their subscription address anymore, or "
 "even who forgot that they were subscribed to the list;"
 msgstr ""
+"<strong>emlékeztető levél</strong>: ezt a levelet küldi ki a rendszer a "
+"lista tagjainak emlékeztetőként arról, hogy ők a lista tagjai és milyen "
+"címmel vannak föliratkozva. Ez pl. a REMIND levélparanccsal kezdeményezhető. "
+"Ez hasznos funkció, mert a legtöbb visszapattanás oka az, hogy a tagok egy "
+"részének megváltozik az email címe, de a listára még a régi címmel vannak "
+"föliratkozva, sőt vannak olyanok is, akik azt is el is felejtik, hogy "
+"egyáltalán föliratkoztak valaha."
 
 #: ../web_tt2/help_admin.tt2:89
 msgid ""
 "<strong>subscribing invitation message</strong>: this message is sent to "
 "people you invite to subscribe to the list using the INVITE command;"
 msgstr ""
+"<strong>meghívólevél a listára</strong>: ezt a levelet küldi ki a rendszer "
+"azoknak, akiket egy listatag vagy a tulajdonos meghív, hogy csatlakozzék a "
+"lista tagjaihoz"
 
 #: ../web_tt2/help_admin.tt2:90
 msgid ""
 "<strong>notice of message rejected by the moderator</strong>: this message "
 "is sent to the sender of a message rejected by the moderator;"
 msgstr ""
+"<strong>értesítés a listára küldött levél visszautasításáról</strong>: ezt a "
+"levelet küldi ki a rendszer annak a feladónak, akinek a listára küldött "
+"levelét a szerkesztő visszautasítja (csak moderált listákon érdekes)"
 
 #: ../web_tt2/help_admin.tt2:91
 msgid ""
 "<strong>notice of message rejected because of a virus</strong>: this message "
 "is sent to the sender of a message in which a virus was found."
 msgstr ""
+"<strong>értesítés vírussal fertőzött levél elutasításáról</strong>: ezt a "
+"levelet annak a feladónak küldi ki a rendszer, aki vírussal fertőzött "
+"levelet küldött a listára, amit a rendszer észrevett és ezért nem továbbítja "
+"a listatagoknak"
 
 #: ../web_tt2/help_admin.tt2:94
 msgid "miscellaneous files:"
-msgstr ""
+msgstr "egyéb állományok:"
 
 #: ../web_tt2/help_admin.tt2:96
 msgid ""
@@ -2059,6 +2174,11 @@ msgid ""
 "message (subscription notice). It is not the same as the list presentation "
 "page displayed on the mailing list web interface;"
 msgstr ""
+"<strong>a lista leírása</strong>: ezt az állományt küldi el a levelezőlista-"
+"szolgáltatás az INFO levélparancsra válaszképpen. Alapértelmezetten része "
+"annak az üdvözlő levélnek is, amit a frissen föliratkozott tagok kapnak "
+"visszaigazolásul. Ez az állomány azonban nem azonos a lista saját "
+"weboldalával."
 
 #: ../web_tt2/help_admin.tt2:97
 msgid ""
@@ -2068,6 +2188,11 @@ msgid ""
 "you do not use this format, use <code>&lt;br /&gt;</code> tags to indicate "
 "line breaks;"
 msgstr ""
+"<strong>a lista honlapja</strong>: a lista információs oldalán megjelenő "
+"leírás. Szerkesztésekor <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"HyperText Markup Language\">HTML</acronym> címkék is használhatók. De ha "
+"nem használ HTML-t, hanem sima szövegként írja ezt az állományt, a sorvégek "
+"jelzésére akkor is <code>&lt;br /&gt;</code> címkéket használjon!"
 
 #: ../web_tt2/help_admin.tt2:98
 msgid ""
@@ -2076,6 +2201,9 @@ msgid ""
 "\">MIME</acronym> attachment at the beginning of each message distributed to "
 "the list;"
 msgstr ""
+"<strong>levél fejléc</strong>: ha rendelkezésre áll, akkor minden kiküldött "
+"levél elejére kerül <acronym lang=\"en\" xml:lang=\"en\" title="
+"\"Multipurpose Internet Mail Extensions\"\"\">MIME</acronym> mellékletként"
 
 #: ../web_tt2/help_admin.tt2:99
 msgid ""
@@ -2084,6 +2212,9 @@ msgid ""
 "\">MIME</acronym> attachment at the end of each message distributed to the "
 "list."
 msgstr ""
+"<strong>levél lábléc</strong>: ha rendelkezésre áll, akkor minden kiküldött "
+"levél végére kerül <acronym lang=\"en\" xml:lang=\"en\" title=\"Multipurpose "
+"Internet Mail Extensions\"\"\">MIME</acronym> mellékletként"
 
 #: ../web_tt2/help_admin.tt2:103
 msgid ""
@@ -2094,16 +2225,25 @@ msgid ""
 "<strong>'Subject' field</strong> (subject line) and the <strong>message "
 "body</strong>."
 msgstr ""
+"Ha a listatulajdonos nem módosít semmit, a Sympa alapértelmezett "
+"állományokat használ, ilyenkor a listához tartozó állományok üresek. "
+"<strong>A módosításhoz kattintsunk a megfelelő állomány melletti "
+"\"Szerkesztés\" gombra!</strong> Megváltoztatható a <strong>\"From\" mező</"
+"strong> (a feladó), a <strong>\"Subject\" mező</strong> (a tárgy sora) és "
+"persze maga a  <strong>levéltörzs</strong> (a levél szövege)."
 
 #: ../web_tt2/help_admin.tt2:104
 msgid ""
 "Be careful: the values between square brackets are variables. Do not change "
 "them, unless you really know what you are doing..."
 msgstr ""
+"Figyelem: szögletes zárójelekben levő dolgok változók, amik a nekik "
+"megfelelő értékkel cserélődnek ki a levél kiküldése előtt. Ezekhez nem "
+"érdemes hozzányúlni, kivéve, ha egészen biztos abban, hogy mit csinál..."
 
 #: ../web_tt2/help_admin.tt2:107
 msgid "Managing the shared document web space"
-msgstr ""
+msgstr "A dokumentumtár felügyelete"
 
 #: ../web_tt2/help_admin.tt2:108
 msgid ""
@@ -2111,6 +2251,10 @@ msgid ""
 "create it. To do that, go to the <strong>list administration module</strong> "
 "and click on the '<strong>Create shared</strong>' link."
 msgstr ""
+"A listáknak létrehozáskor rendszerint nincs dokumentumtáruk. A "
+"listatulajdonos azonban a webes felületen bármikor létre tudja hozni. Ehhez "
+"a <strong>lista adminisztrációs felületére</strong> kell menni és a  <strong>"
+"\"Dokumentumtár létrehozása\"</strong> gombra kell kattintani."
 
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:110
@@ -4049,15 +4193,15 @@ msgstr ""
 
 #: ../web_tt2/help_faquser.tt2:3
 msgid "Users Frequently Asked Questions"
-msgstr ""
+msgstr "Felhasználók gyakran ismételt kérdései"
 
 #: ../web_tt2/help_faquser.tt2:5
 msgid "You can not subscribe to a list"
-msgstr ""
+msgstr "Nem tud feliratkozni egy listára"
 
 #: ../web_tt2/help_faquser.tt2:13 ../web_tt2/help_faquser.tt2:6
 msgid "This problem may be due to the following reasons:"
-msgstr ""
+msgstr "Ez a probléma a következő okok miatt léphet fel:"
 
 #: ../web_tt2/help_faquser.tt2:8
 msgid ""
@@ -4066,16 +4210,23 @@ msgid ""
 "Resubmit your request before <a href=\"#contactadmin\">contacting list "
 "owners directly</a>."
 msgstr ""
+"A lista tulajdonosai elfelejtették elbírálni a feliratkozási kérelmét</"
+"strong>: tévedni emberi dolog, és az ön kérelme elkeveredhetett sok egyéb "
+"üzenet között! Küldje el újra a kérelmet, vagy <a href=\"#contactadmin"
+"\">forduljon levélben közvetlenül a tulajdonosokhoz</a>!"
 
 #: ../web_tt2/help_faquser.tt2:9
 msgid ""
 "Subscription to the list is reserved to a certain category of people</"
 "strong>. To know more, <a href=\"#contactadmin\">contact list owners</a>."
 msgstr ""
+"Lehet, hogy a feliratkozás bizonyos feltételekhez van kötve</strong>. "
+"Ilyenkor, ha többet akar megtudni, <a href=\"#contactadmin\">a "
+"listatulajdonosokhoz érdemes fordulnia</a>."
 
 #: ../web_tt2/help_faquser.tt2:12
 msgid "You can not log on to the mailing list web interface"
-msgstr ""
+msgstr "Nem tud bejelentkezni a szolgáltatás webes felületére"
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:15
@@ -4084,6 +4235,11 @@ msgid ""
 "href=\"%1/sendpasswd\">First login?</a> link from the homepage. You will "
 "receive your new password by email."
 msgstr ""
+"<strong>Önnek még nincs jelszava</strong>. Jelszóhoz úgy juthat, ha az "
+"induló oldalon az <a href=\"%1/sendpasswd\">Ez az első bejelentkezése?</a> "
+"szövegre kattint. Ezt követően, ha beírja az email címét, kap egy levelet, "
+"melynek segítségével már be tud jelentkezni és jelszót tud magának "
+"beállítani."
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:16
@@ -4092,12 +4248,17 @@ msgid ""
 "password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
 "\">Lost password?</a> link from the homepage."
 msgstr ""
+"<strong>Nem a jó jelszót írta be</strong>. Ha elfelejtette a jelszavát, újat "
+"tud beállítani. Ehhez a kezdőoldalon kattintson az <a href=\"%1/renewpasswd"
+"\">Elveszett a jelszava?</a> szövegre!"
 
 #: ../web_tt2/help_faquser.tt2:18
 msgid ""
 "<strong>You are not using the correct username</strong> (the email address "
 "with which you are subscribed to the list)."
 msgstr ""
+"<strong>Nem megfelelő felhasználónevet írt be</strong> (ez az email cím, "
+"amivel föliratkozott a listára)."
 
 #: ../web_tt2/help_faquser.tt2:20
 msgid ""
@@ -4105,44 +4266,52 @@ msgid ""
 "into another application (such as your email client) and copy and paste it "
 "into your web browser."
 msgstr ""
+"Ha biztos akar lenni abban, hogy a jó jelszót írja be, megteheti, hogy "
+"először egy más alkalmazásba (pl. a levelezőprogramjába) írja be valahova a "
+"jelszót, és a megszokott módon a másolás/beillesztés funkciókkal írja át a "
+"böngészőprogramba."
 
 #: ../web_tt2/help_faquser.tt2:22
 msgid "You do not receive (all) messages sent to a list"
-msgstr ""
+msgstr "Nem kapja meg a listára küldött leveleket (vagy nem mindet kapja meg)"
 
 #: ../web_tt2/help_faquser.tt2:23 ../web_tt2/help_faquser.tt2:46
 #: ../web_tt2/help_faquser.tt2:64
 msgid "This problem can have multiple reasons:"
-msgstr ""
+msgstr "Ennek több oka is lehet:"
 
 #: ../web_tt2/help_faquser.tt2:25
 msgid "You have never been subscribed to the list"
-msgstr ""
+msgstr "Nem is volt soha föliratkozva a kérdéses listára"
 
 #: ../web_tt2/help_faquser.tt2:27
 msgid ""
 "Maybe you made a mistake in your email address when you tried to subscribe."
-msgstr ""
+msgstr "Lehet, hogy feliratkozáskor nem a megfelelő email címet adta meg."
 
 #: ../web_tt2/help_faquser.tt2:28
 msgid ""
 "Maybe you are subscribed with an email address other than the one you are "
 "checking."
 msgstr ""
+"Lehet, hogy nem azzal a címmel van feliratkozva, aminek a levélládáját éppen "
+"nézi."
 
 #: ../web_tt2/help_faquser.tt2:29
 msgid "Maybe your subscription request was rejected by the list owners."
-msgstr ""
+msgstr "A listatulajdonosok elutasították a föliratkozási kérelmét."
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:31
 msgid ""
 "In any case, try and <a href=\"%1/help/user#subscribe\">subscribe</a> again."
 msgstr ""
+"Bármelyik is az ok, próbáljon meg ismét <a href=\"%1/help/user#subscribe"
+"\">feliratkozni</a>."
 
 #: ../web_tt2/help_faquser.tt2:32
 msgid "You are not subscribed to the list anymore"
-msgstr ""
+msgstr "Már nincs föliratkozva a kérdéses listára"
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:34
@@ -4152,12 +4321,18 @@ msgid ""
 "and <a href=\"%1/help/user#subscribe\">subscribe again</a> after ensuring "
 "that your email address will not be in trouble again."
 msgstr ""
+"Ha a címéről már egy ideje visszapattannak a levelek (nem kézbesíthetőek), "
+"akkor lehetséges, hogy maga a program (vagy a listatulajdonosok) levették a "
+"listáról. Miután ellenőrizte, hogy az adott email címen tud leveleket "
+"fogadni, próbáljon újra <a href=\"%1/help/user#subscribe\">feliratkozni</a>."
 
 #: ../web_tt2/help_faquser.tt2:35
 msgid ""
 "If you have not respected the different rules applying to the mailing list, "
 "the list owners might have \"banned\" you..."
 msgstr ""
+"Ha nem tartotta be az adott listára érvényes előírásokat, előfordulhat, hogy "
+"a listatulajdonosok letiltották a listáról."
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:36
@@ -4167,6 +4342,10 @@ msgid ""
 "for any subscription and unsubscription request... In that case, try and <a "
 "href=\"%1/help/user#subscribe\">subscribe</a> again."
 msgstr ""
+"Ha a lista úgy van konfigurálva, hogy a leiratkozási szándékot nem kell egy "
+"külön emailben megerősíteni (ez nagyon ritka), akkor előfordulhat, hogy "
+"valaki más iratkoztatta le Önt. Ebben az esetben próbáljon újra <a href=\"%1/"
+"help/user#subscribe\">föliratkozni</a>."
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:38
@@ -4175,6 +4354,9 @@ msgid ""
 "not allow you to receive messages</strong>: for example, it is the case with "
 "the 'Nomail' delivery mode."
 msgstr ""
+"<strong>Az Ön <a href=\"%1/help/user#deliverymode\">kézbesítési beállítása</"
+"a> miatt nem kapja meg a leveleket</strong>: például, ha a kézbesítési mód "
+"'Kézbesítés kikapcsolva' állapotban van."
 
 #: ../web_tt2/help_faquser.tt2:39
 msgid ""
@@ -4184,6 +4366,13 @@ msgid ""
 "address causes trouble on a regular basis, you might be unsubscribed by the "
 "list owners or by the system. Thus, you should clean your inbox frequently."
 msgstr ""
+"<strong>Megtelt a levélládája</strong>.  Figyelem: ha a levélládája már "
+"majdnem megtelt, akkor a kisméretű leveleket megkapja, de a nagyobbakat már "
+"nem. Ilyenkor nehezebb rájönni, hogy egyes leveleket miért nem kap meg. Azt "
+"is érdemes tudni, hogy ha rendszeresen előfordul, hogy a levélcímén nem tud "
+"leveleket fogadni, akkor a levelezőlista-rendszerek automatikusan törölhetik "
+"Önt a listákról. Ezért érdemes odafigyelni, hogy ne teljen be a levélládája, "
+"törölje rendszeresen a leveleit!"
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:40
@@ -4194,28 +4383,39 @@ msgid ""
 "we advise you to choose the <a href=\"%1/help/user#deliverymode\">Urlize "
 "delivery mode</a>."
 msgstr ""
+"<strong>Az Ön levelezési szolgáltatása bizonyos korlátozásokkal működik</"
+"strong>: pl. egyáltalán nem engedi a mellékleteket tartalmazó levelek "
+"kézbesítését, vagy kiszűri azokat a leveleket, melyek bizonyos típusú "
+"mellékleteket tartalmaznak, vagy korlátozza az átvehető levelek méretét, "
+"stb. Ezekben az esetekben hasznos lehet az <a href=\"%1/help/"
+"user#deliverymode\">URL-esítő kézbesítési mód</a> használata."
 
 #: ../web_tt2/help_faquser.tt2:45
 msgid "You can not send messages to a list"
-msgstr ""
+msgstr "Nem tud levelet küldeni egy listára"
 
 #: ../web_tt2/help_faquser.tt2:48
 msgid ""
 "<strong>You have <a href=\"#notsubscribedyet\">never been subscribed</a></"
 "strong> to the list."
 msgstr ""
+"<strong>Ön <a href=\"#notsubscribedyet\">soha nem is iratkozott föl </a></"
+"strong> a kérdéses listára."
 
 #: ../web_tt2/help_faquser.tt2:49
 msgid ""
 "<strong>You are <a href=\"#notsubscribedanymore\">not subscribed to the list "
 "anymore</a></strong>."
 msgstr ""
+"<strong>Korábban föl volt ugyan iratkozva, <a href=\"#notsubscribedanymore"
+"\">de jelenleg már nem tagja a listának</a></strong>."
 
 #: ../web_tt2/help_faquser.tt2:50 ../web_tt2/help_faquser.tt2:66
 msgid ""
 "<strong>You are using another address</strong> than the one with which you "
 "are subscribed to the list."
 msgstr ""
+"<strong>Más email címről ír</strong>, mint amivel föliratkozott a listára."
 
 #: ../web_tt2/help_faquser.tt2:51
 msgid ""
@@ -4224,6 +4424,11 @@ msgid ""
 "list night and day! Thus the distribution of your message might be a bit "
 "delayed."
 msgstr ""
+"<strong>Ha a lista moderált, akkor a listára küldött leveleket a "
+"szerkesztőknek jóvá kell hagyniuk, mielőtt a rendszer továbbítja őket a "
+"lista tagjai számára</strong>: lehet, hogy a szerkesztők nem értek rá "
+"átnézni a beérkezett leveleket. Emiatt a levelek kisebb-nagyobb késéssel "
+"kerülnek csak ki a listákra."
 
 #. (conf.host)
 #: ../web_tt2/help_faquser.tt2:52
@@ -4233,6 +4438,10 @@ msgid ""
 "possibly send a message to nameofthelist-request@%1 to ask for an "
 "explanation."
 msgstr ""
+"<strong>Ha a lista moderált, akkor az is lehetséges, hogy a szerkesztő "
+"elutasította a levél továbbítását a listára</strong>. Ha erről nem kapott "
+"jelzést, akkor a lista tulajdonosainál érdeklődhet a listanév-request@%1 "
+"címen (ahol a 'listanév' a lista tényleges nevével helyettesítendő)."
 
 #: ../web_tt2/help_faquser.tt2:53
 msgid ""
@@ -4241,18 +4450,24 @@ msgid ""
 "forbidden type of attachment or even contain any type of attachment (in case "
 "attachments are forbidden on the list)."
 msgstr ""
+"<strong>A levél, amit elküldött, nem felel meg a listára érvényes "
+"korlátozásoknak</strong>: lehet, hogy túl nagy, vagy tiltott típusú "
+"mellékletet tartalmaz, vagy az is lehet, hogy egyszerűen az a baj, hogy "
+"melléklet van benne (ha a mellékletek teljesen tiltottak az adott listán)."
 
 #: ../web_tt2/help_faquser.tt2:54
 msgid "<strong>The problem may also come from your email account</strong>:"
 msgstr ""
+"<strong>Az is lehet, hogy a saját levelezési szolgáltatásával van baj</"
+"strong>:"
 
 #: ../web_tt2/help_faquser.tt2:56
 msgid "The mail server is temporarily unavailable."
-msgstr ""
+msgstr "A levelezését működtető kiszolgáló átmenetileg nem működik."
 
 #: ../web_tt2/help_faquser.tt2:57
 msgid "Your inbox is full and it prevents you from sending new messages."
-msgstr ""
+msgstr "Az Ön levélládája megtelt, és emiatt nem tud leveleket küldeni."
 
 #: ../web_tt2/help_faquser.tt2:58
 msgid ""
@@ -4260,16 +4475,22 @@ msgid ""
 "messages with attachments, bans some types of attachments or limits the "
 "maximum size of outgoing messages."
 msgstr ""
+"A levelezési szolgáltatása korlátozásokat érvényesít: nem engedi olyan "
+"levelek kiküldését, melyek bizonyos típusú mellékleteket tartalmaznak "
+"(esetleg mindenfajta melléklet csatolását tiltja), vagy korlátozza a "
+"kiküldhető levelek méretét."
 
 #: ../web_tt2/help_faquser.tt2:60
 msgid ""
 "Last, <strong>you might have made a mistake in the list address</strong> "
 "when sending your message!"
 msgstr ""
+"Végül az is lehetséges, hogy <strong>egyszerűen rossz címet írt be</strong>, "
+"amikor a listára küldte a levelet!"
 
 #: ../web_tt2/help_faquser.tt2:63
 msgid "You can not unsubscribe from a list"
-msgstr ""
+msgstr "Nem tud leiratkozni egy listáról"
 
 #: ../web_tt2/help_faquser.tt2:67
 msgid ""
@@ -4279,6 +4500,12 @@ msgid ""
 "allow you to unsubscribe. <a href=\"#contactadmin\">Contact the list owners</"
 "a> to know more about this."
 msgstr ""
+"<strong>Lehet, hogy a listát úgy konfigurálták, hogy a tagság dinamikus</"
+"strong>, ami azt jelenti, hogy a listatagokat külső adatforrásból (pl. "
+"adatbázis,  <acronym lang=\"en\" xml:lang=\"en\" title=\"Lightweight "
+"Directory Access Protocol\">LDAP</acronym> címtár, stb.) veszi a "
+"szolgáltatás. Ilyenkor előfordulhat, hogy nem tud leiratkozni. Ebben az "
+"esetben <a href=\"#contactadmin\">forduljon a listatulajdonosokhoz</a>!"
 
 #: ../web_tt2/help_faquser.tt2:68
 msgid ""
@@ -4287,10 +4514,14 @@ msgid ""
 "other messages! Resubmit your request before <a href=\"#contactadmin"
 "\">contacting list owners directly</a>."
 msgstr ""
+"<strong>A lista tulajdonosai elfelejtették elbírálni a leiratkozási "
+"kérelmét</strong>: tévedni emberi dolog, és az ön kérelme elkeveredhetett "
+"sok egyéb üzenet között! Küldje el újra a kérelmet, vagy <a href="
+"\"#contactadmin\">forduljon levélben közvetlenül a tulajdonosokhoz</a>!"
 
 #: ../web_tt2/help_faquser.tt2:71
 msgid "You want to contact list owners"
-msgstr ""
+msgstr "Kapcsolatba szeretne kerülni a lista tulajdonosaival"
 
 #. (conf.host)
 #: ../web_tt2/help_faquser.tt2:72
@@ -4303,6 +4534,15 @@ msgid ""
 "nameofthelist-request@%1</strong> (replace 'nameofthelist' by the name of "
 "the list)."
 msgstr ""
+"A lista tulajdonosainak, szerkesztőinek neve a bal oldali menüben olvasható, "
+"így esetleg személyesen is megkeresheti őket. Ha viszont úgy dönt, hogy "
+"inkább levelet ír, akkor jobb, ha nem a személyes email címükre küldi a "
+"levelet, több okból is: lehet, hogy pont az a személy akinek írt, éppen nem "
+"olvassa a leveleit; az üzenet így könnyebben elkeveredik a személyes levelek "
+"között; és jobb, ha egyszerre ír az összes tulajdonosnak (szerkesztőnek). "
+"Ezért ha megjegyzése, vagy kérdése van,  <strong>a következő címre írjon: "
+"listanév-request@%1</strong> (ahol a \"listanév\" helyett persze a lista "
+"tényleges nevét helyettesítsük be)!"
 
 #: ../web_tt2/help_listconfig.tt2:4
 msgid ""

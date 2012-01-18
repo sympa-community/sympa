@@ -4922,7 +4922,8 @@ sub insert_delete_exclusion {
     &Log::do_log('info', 'List::insert_delete_exclusion("%s", "%s", "%s", "%s")', $email, $list, $robot, $action);
     
     my $r = 1;
-
+    
+	my $r = 1;
     if($action eq 'insert'){
 	## INSERT only if $user->{'included'} eq '1'
 
@@ -6384,10 +6385,10 @@ sub add_list_member {
 	my %custom_attr = %{ $subscriptions->{$who}{'custom_attribute'} } if (defined $subscriptions->{$who}{'custom_attribute'} );
 	$new_user->{'custom_attribute'} ||= &createXMLCustomAttribute(\%custom_attr) ;
 	&Log::do_log('debug2', 'custom_attribute = %s', $new_user->{'custom_attribute'});
-
+	
 	## Crypt password if it was not crypted
 	unless ($new_user->{'password'} =~ /^crypt/) {
-	    $new_user->{'password'} = &tools::crypt_password($new_user->{'password'});
+		$new_user->{'password'} = &tools::crypt_password($new_user->{'password'});
 	}
 	
 	$list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who} = undef;
@@ -6395,7 +6396,7 @@ sub add_list_member {
 	## Either is_included or is_subscribed must be set
 	## default is is_subscriber for backward compatibility reason
 	unless ($new_user->{'included'}) {
-	    $new_user->{'subscribed'} = 1;
+		$new_user->{'subscribed'} = 1;
 	}
 	
 	unless ($new_user->{'included'}) {
@@ -6407,7 +6408,7 @@ sub add_list_member {
 		    $self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'} = 1;
 		    next;
 		}
-	    }
+		}
 	}	    
 	
 	$new_user->{'subscribed'} ||= 0;
