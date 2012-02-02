@@ -3,6 +3,111 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.13		February 02, 2012
+
+  Features:
+
+	[7201] src/lib/admin.pm, src/sympa.pl.in, wwsympa/wwsympa.fcgi.in:  new
+	--change_user_email for sympa.pl. It allows to change a user email
+	address in all virtual robots with a single command
+
+
+
+  Changes:
+
+	[7277] src/lib/admin.pm:  Replacing usage of the "rename" function by
+	"File::Copy::move". this is more likely to work on different systems.
+
+	[7253] src/lib/Bulk.pm, src/lib/SDM.pm, src/lib/SQLSource.pm:  Now
+	queries are cached once prepared to save database workload.
+
+	[7234] src/lib/SQLSource.pm:  Removed the systematic ping when
+	performing a query to the database. The connection check is now done
+	only if a quyery fails, the query is then resubmitted.
+
+	[7219] src/lib/List.pm: Making the email subparameter of the update
+	parameter optional to get rid of useless errors when loading the
+	config.
+
+	[7213] src/lib/admin.pm:  changed code to collect error messages from
+	alias manager
+
+	[7204] src/etc/scenari/send.editorkeyonly,
+	src/etc/scenari/send.editorkeyonlyauth,
+	src/etc/scenari/send.privateandnomultipartoreditorkey,
+	src/etc/scenari/send.privatekeyandeditorkeyonly:  ***** scenarios using
+	the editorkey action needs to be adapted to work with the new code. You
+	should remove rules o
+	f type "is_editor() md5 -> do_it" to prevent message from editor sent
+	throught the web "Post" function to escape from the mo
+	deration process. This change is required because web posted messages
+	now REALLY are considered to have the "md5" authentication method.
+
+  Bug fixes:
+
+	[7278] src/lib/admin.pm:  bounces and archives were not moved when a
+	list was renamed, due to a bad usage of tests on	the list name.
+
+	[7276] web_tt2/title.tt2:  The maililng list service title was no
+	longer displayed in the web interface.
+
+	[7261] src/lib/List.pm: [Reported by J.H. Belpois, univ. Brest] When a
+	lot of lists used inclusions for their members, displaying the list of
+	lists could lead an error 500. This was due to attempts to include list
+	ADMINS even though they were not included from external sources. These
+	attempts led to the creation of write locks (include_admins.lock) that,
+	beyond a certain number of lists, led to automatic collisions with read
+	locks used when gathering the admins mail addresses. After a certain
+	number of collisions, the web request timed out. Fixed by quitting the
+	skipping the admin sync when no admin source is defined.
+
+	[7254] src/bulk.pl.in: [Submitted by P. Vandry, TZoNE.ORG] The VERP
+	return path was never correctly set due to a bad variable
+	initialization.
+
+	[7251] src/bulk.pl.in: [#8094][Submitted by A. Piper, univ. Marburg] In
+	some contexts, using the unsubscription UL
+
+	[7248] src/lib/List.pm: [#7424] Excluding then restoring (eg manually
+	subscribing) an included member resulted in member being included and
+	subscribed at the same time.
+
+	[7218] soap/sympa_soap_server.fcgi.in: wwsympa.fcgi failed to execute
+	alias_manager.pl as user 'sympa'. Running the system command made us
+	loose the Effecive UID of the process. Nom forcing the real UID to the
+	value of the effective UID.
+
+	[7217] wwsympa/wwsympa.fcgi.in: wwsympa.fcgi failed to execute
+	alias_manager.pl as user 'sympa'. Running the system command made us
+	loose the Effective UID of the process. Nom forcing the real UID to the
+	value of the effective UID.
+
+	[7215] src/lib/List.pm, src/lib/Lock.pm: [Reported and boldly tested by
+	O. Menkens] In perl, when the real and effective uids of a sccript are
+	different, the tainted mode is activated. This caused mod_fcgid to
+	issue a lot of "Insecure dependency" errors in the Apache logs. Fixed
+	by untainting the variables causing these errors.
+
+	[7211] mail_tt2/summary.tt2: [Submitted by A. Bernstein,
+	electricembers.net] The summary.tt2 template contained a wrap TT2
+	command that caused the URL to be broken. Fixed by moving this command
+	around parts of the message that don't contain URLs.
+
+	[7208] configure.ac: [Submitted by R. di Cosmo] When installing Sympa,
+	if configure was used with the --enable-fsh option, then the lists
+	directory was incorrectly set.
+
+	[7205] src/sympa_wizard.pl.in:	When using the SOAP server, if the
+	lists subjects or gecos
+	fields included UTF-8 characters. The response content-length header
+	was
+	smaller than the real character count in the response document, thus,
+	clients created too small buffers to process the XML document and
+	validation
+	of said document failed. This issue was due to the fact that libwww is
+	counting characters instead of bytes.
+	Fixed by upgrading to the latest version of SOAP::Lite.
+
 6.1.8		January 09, 2012
 
   Bug fixes:
