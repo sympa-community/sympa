@@ -5458,7 +5458,6 @@ sub get_first_list_member {
 
 	############################################################################	    
 	if (defined $user->{custom_attribute}) {
-	    &Log::do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
 	    $user->{'custom_attribute'} = \%custom_attr ;
 	}
@@ -5672,18 +5671,13 @@ sub get_next_list_member {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
-	&Log::do_log('debug2', '(email = %s)', $user->{'email'});
 	if (defined $user->{custom_attribute}) {
-	    &Log::do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    unless (%custom_attr) {
+	    unless (keys %custom_attr > -1) {
 		    &Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
 	    }
 	    $user->{'custom_attribute'} = \%custom_attr ;
-	    &Log::do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
-	    &Log::do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
 	    my @k = sort keys %custom_attr ;
-	    &Log::do_log('debug2', "keys custom_attribute  = @k");
 	}
     }
     else {
