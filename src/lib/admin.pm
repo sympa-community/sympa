@@ -41,7 +41,7 @@ use Language;
 use Log;
 use tools;
 use Sympa::Constants;
-use File::Copy:
+use File::Copy;
 
 =pod 
 
@@ -785,7 +785,7 @@ sub rename_list{
 	 ## Rename archive
 	 my $arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
 	 my $new_arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
-	 if (-d $arc_dir) {
+	 if (-d $arc_dir && $arc_dir ne $new_arc_dir) {
 	     unless (move ($arc_dir,$new_arc_dir)) {
 		 &Log::do_log('err',"Unable to rename archive $arc_dir");
 		 # continue even if there is some troubles with archives
@@ -796,9 +796,7 @@ sub rename_list{
 	 ## Rename bounces
 	 my $bounce_dir = $list->get_bounce_dir();
 	 my $new_bounce_dir = &Conf::get_robot_conf($param{'new_robot'}, 'bounce_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
-	 if (-d $bounce_dir &&
-	     ($list->{'name'} ne $param{'new_listname'})
-	     ) {
+	 if (-d $bounce_dir && $bounce_dir ne $new_bounce_dir) {
 	     unless (move ($bounce_dir,$new_bounce_dir)) {
 		 &Log::do_log('err',"Unable to rename bounces from $bounce_dir to $new_bounce_dir");
 	     }
