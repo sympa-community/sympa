@@ -31,15 +31,15 @@ msgstr ""
 "d'aquí pot modificar totes les opcions de subscripció i preferències de la "
 "llista."
 
-#: ../web_tt2/home.tt2:13
+#: ../web_tt2/home.tt2:7
 msgid "Mailing lists categories"
 msgstr "Categories de llistes de correu"
 
-#: ../web_tt2/home.tt2:23
+#: ../web_tt2/home.tt2:17
 msgid "Others"
 msgstr "Altres"
 
-#: ../web_tt2/home.tt2:48
+#: ../web_tt2/home.tt2:42
 msgid "RSS news"
 msgstr "RSS - Novetats"
 
@@ -64,7 +64,7 @@ msgstr "RSS - Últimes llistes"
 msgid "RSS Active lists"
 msgstr "RSS - Llistes actives"
 
-#: ../web_tt2/main.tt2:63
+#: ../web_tt2/main.tt2:59
 msgid "Please activate JavaScript in your web browser"
 msgstr "Si us plau, activeu el JavaScript del vostre navegador."
 
@@ -96,7 +96,7 @@ msgstr "Inici"
 #: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
-#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6 ../web_tt2/pref.tt2:4
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
 #: ../web_tt2/suspend_request.tt2:64
@@ -116,7 +116,7 @@ msgstr "administrador"
 msgid "Privileged owner"
 msgstr "Propietari amb privilegis"
 
-#: ../src/lib/List.pm:1221 ../web_tt2/login_menu.tt2:15
+#: ../src/lib/List.pm:1187 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Propietari"
 
@@ -147,98 +147,82 @@ msgstr "Preferències"
 msgid "Manage your subscriptions"
 msgstr "Gestiona les teves subscripcions"
 
-#: ../web_tt2/lists.tt2:29 ../web_tt2/your_lists.tt2:14
+#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
 msgid "admin"
 msgstr "administra"
 
-#: ../web_tt2/lists.tt2:73 ../web_tt2/search_user.tt2:77
+#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
 #: ../web_tt2/your_lists.tt2:23
 msgid "No mailing list available."
 msgstr "No hi ha cap llista disponible."
 
-#: ../web_tt2/list_menu.tt2:10
-msgid ""
-"You <span style=\"font-weight: bold; font-size: 10px\">are</span> subscribed"
-msgstr ""
-
-#: ../web_tt2/list_menu.tt2:13
+#: ../web_tt2/list_menu.tt2:11
 msgid "Subscriber Options"
 msgstr "Opcions del subscriptor"
 
 #. (list)
-#: ../web_tt2/list_menu.tt2:17
+#: ../web_tt2/list_menu.tt2:15
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Voleu confirmar la baixa de la llista %1?"
 
-#: ../web_tt2/list_menu.tt2:17 ../web_tt2/list_menu.tt2:30
+#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
 #: ../web_tt2/suspend_request.tt2:57
 msgid "Unsubscribe"
 msgstr "Donar-se de baixa"
 
-#: ../web_tt2/list_menu.tt2:21
-msgid ""
-"You <span style=\"font-weight: bold; font-size: 10px\">are not</span> "
-"subscribed"
-msgstr ""
-
 #. (list)
-#: ../web_tt2/list_menu.tt2:25
+#: ../web_tt2/list_menu.tt2:20
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Voleu donar-vos d'alta de la llista %1?"
 
-#: ../web_tt2/list_menu.tt2:25 ../web_tt2/subrequest.tt2:68
+#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
 msgid "Subscribe"
 msgstr "Subscriure's"
 
-#: ../web_tt2/list_menu.tt2:43
+#: ../web_tt2/list_menu.tt2:31
 msgid "Info"
 msgstr "Informació"
 
-#: ../web_tt2/list_menu.tt2:47
+#: ../web_tt2/list_menu.tt2:34
 msgid "Admin"
 msgstr "Administració"
 
 #: ../web_tt2/admin_menu.tt2:35 ../web_tt2/admin_menu.tt2:41
-#: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:49
+#: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:37
 msgid "Moderate"
 msgstr "Moderació"
 
-#: ../web_tt2/list_menu.tt2:55 ../web_tt2/viewlogs.tt2:91
+#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
 msgid "Message"
 msgstr "Missatge"
 
 #: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
-#: ../web_tt2/list_menu.tt2:57
+#: ../web_tt2/list_menu.tt2:45
 msgid "Document"
 msgstr "Document"
 
-#: ../web_tt2/list_menu.tt2:62
+#: ../web_tt2/list_menu.tt2:50
 msgid "Subscriptions"
 msgstr "Subscripcions"
 
-#: ../web_tt2/list_menu.tt2:68
-#, fuzzy
-msgid "Statistics"
-msgstr "Estat"
-
-#: ../web_tt2/list_menu.tt2:76 ../web_tt2/list_menu.tt2:78
+#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
 msgid "Archive"
 msgstr "Arxiu"
 
-#: ../web_tt2/list_menu.tt2:84 ../web_tt2/list_menu.tt2:86
+#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
 msgid "Post"
 msgstr "Missatge"
 
-#: ../web_tt2/list_menu.tt2:90
+#: ../web_tt2/list_menu.tt2:75
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1359 ../web_tt2/list_menu.tt2:95
-#: ../web_tt2/list_menu.tt2:97
+#: ../src/lib/List.pm:1325 ../web_tt2/list_menu.tt2:80
+#: ../web_tt2/list_menu.tt2:82
 msgid "Shared documents"
 msgstr "Documents compartits"
 
-#: ../web_tt2/list_menu.tt2:103
+#: ../web_tt2/list_menu.tt2:88
 msgid "Review members"
 msgstr "Mostra els membres"
 
@@ -250,29 +234,27 @@ msgstr "Llista tancada"
 msgid "List not yet activated"
 msgstr "Llista pendent d'activació"
 
-#: ../web_tt2/list_panel.tt2:13 ../web_tt2/list_panel.tt2:15
+#: ../web_tt2/list_panel.tt2:11
 msgid "Subscribers:"
 msgstr "Subscriptors:"
 
-#: ../web_tt2/list_panel.tt2:25
+#: ../web_tt2/list_panel.tt2:12
 msgid "Error rate:"
 msgstr "Ràtio d'error:"
 
-#: ../web_tt2/get_inactive_lists.tt2:14 ../web_tt2/list_panel.tt2:31
-#: ../web_tt2/list_panel.tt2:33
+#: ../web_tt2/get_inactive_lists.tt2:14 ../web_tt2/list_panel.tt2:13
 msgid "Owners"
 msgstr "Propietaris"
 
-#: ../src/lib/List.pm:706 ../web_tt2/list_panel.tt2:42
-#: ../web_tt2/list_panel.tt2:45
+#: ../src/lib/List.pm:679 ../web_tt2/list_panel.tt2:20
 msgid "Moderators"
 msgstr "Moderadors"
 
-#: ../web_tt2/list_panel.tt2:59
+#: ../web_tt2/list_panel.tt2:26
 msgid "Load certificate"
 msgstr "Carregueu el certificat "
 
-#: ../web_tt2/list_panel.tt2:61 ../web_tt2/list_panel.tt2:63
+#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
 msgid "Contact owners"
 msgstr "Propietaris de contacte"
 
@@ -482,7 +464,7 @@ msgstr "Data creació"
 #: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
 #: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
 #: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:38 ../web_tt2/review_family.tt2:9
+#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Assumpte"
 
@@ -499,8 +481,8 @@ msgid "Add subscribers"
 msgstr "Afegir subscriptors"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:107 ../web_tt2/review.tt2:141
-#: ../web_tt2/reviewbouncing.tt2:127
+#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:74 ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "silenciós"
 
@@ -513,12 +495,12 @@ msgid "Subscribers"
 msgstr "Subscriptors"
 
 #: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
-#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:64
+#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:64
 msgid "Edit List Config"
 msgstr "Edita llista de configuració"
 
 #: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
-#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:67
+#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:67
 msgid "Customizing"
 msgstr "Personalitza"
 
@@ -528,7 +510,7 @@ msgid "Manage Archives"
 msgstr "Gestió arxius"
 
 #: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
-#: ../web_tt2/lists.tt2:43 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
+#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
 #: ../web_tt2/review.tt2:44
 msgid "Bounces"
 msgstr "Retornats"
@@ -593,7 +575,7 @@ msgstr "Gestió de l'arxiu"
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/editsubscriber.tt2:37
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
-#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6
+#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:20
@@ -652,7 +634,7 @@ msgid "Search field:"
 msgstr "Camp de cerca :"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:90 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:89 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "Cerca"
 
@@ -732,7 +714,7 @@ msgid "Sender"
 msgstr "Remitent"
 
 #: ../web_tt2/arcsearch_form.tt2:49 ../web_tt2/latest_arc.tt2:19
-#: ../web_tt2/modindex.tt2:105 ../web_tt2/modindex.tt2:39
+#: ../web_tt2/modindex.tt2:152 ../web_tt2/modindex.tt2:68
 #: ../web_tt2/subindex.tt2:13 ../web_tt2/viewlogs.tt2:127
 msgid "Date"
 msgstr "Data"
@@ -951,7 +933,7 @@ msgstr ""
 "Necessita seleccionar una contrasenya per la interfície web.\n"
 "Necessitarà aquesta contrasenya per realitzar les operacions restringides."
 
-#: ../web_tt2/choosepasswd.tt2:11 ../web_tt2/pref.tt2:42
+#: ../web_tt2/choosepasswd.tt2:11 ../web_tt2/pref.tt2:41
 #, fuzzy
 msgid "New password:"
 msgstr "Nova contrasenya :"
@@ -962,7 +944,7 @@ msgid "New password again:"
 msgstr "Repeteix la nova contrasenya :"
 
 #: ../web_tt2/choosepasswd.tt2:13 ../web_tt2/picture_upload.tt2:13
-#: ../web_tt2/pref.tt2:20 ../web_tt2/pref.tt2:44
+#: ../web_tt2/pref.tt2:20 ../web_tt2/pref.tt2:43
 msgid "Submit"
 msgstr "Acceptar"
 
@@ -1019,7 +1001,8 @@ msgstr "Assumpte de la llista"
 msgid "Send to me"
 msgstr "Missatge recordatori"
 
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modform.tt2:10
+#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/viewmod.tt2:32
 msgid "This list is configured to require topic(s)."
 msgstr "El tema és obligatori en aquesta llista."
 
@@ -1076,21 +1059,10 @@ msgid ""
 "named \"organization\"."
 msgstr ""
 
-#: ../web_tt2/compose_mail.tt2:79
-msgid "Select the source of your HTML newsletter"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:82
-msgid "Send the page from the following URL:"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:85
-msgid "OR"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:87
-msgid "<strong>Send an HTML file from your computer:"
-msgstr ""
+#: ../web_tt2/compose_mail.tt2:78
+#, fuzzy
+msgid "URL:"
+msgstr "URL"
 
 #: ../web_tt2/copy_template.tt2:3
 msgid "Copying template"
@@ -1137,8 +1109,7 @@ msgstr "robot"
 msgid "list"
 msgstr "llista"
 
-#: ../web_tt2/copy_template.tt2:25 ../web_tt2/edit_config.tt2:17
-#: ../web_tt2/edit_list_request.tt2:410
+#: ../web_tt2/copy_template.tt2:25 ../web_tt2/edit_list_request.tt2:410
 msgid "default"
 msgstr "per defecte"
 
@@ -1242,7 +1213,7 @@ msgstr "Temes:"
 msgid "--Select a topic--"
 msgstr "--Selecciona un tema--"
 
-#: ../web_tt2/create_list_request.tt2:89
+#: ../web_tt2/create_list_request.tt2:89 ../web_tt2/javascript.tt2:101
 msgid "Other"
 msgstr "Altres"
 
@@ -1465,8 +1436,8 @@ msgid "Listing of root folder"
 msgstr "Contingut de la carpeta arrel"
 
 #: ../web_tt2/d_read.tt2:59 ../web_tt2/d_read.tt2:61
-#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:106
-#: ../web_tt2/modindex.tt2:37
+#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:153
+#: ../web_tt2/modindex.tt2:69
 msgid "Author"
 msgstr "Autor"
 
@@ -1667,10 +1638,10 @@ msgstr "Esteu segur que voleu cancel·lar la transferència ?"
 msgid "Additional information"
 msgstr "Informació addicional "
 
-#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "%1:"
-msgstr ""
+#, fuzzy
+msgid "[% k.name %]:"
+msgstr "[% k.name %] :"
 
 #: ../web_tt2/edit_attributes.tt2:24
 #, fuzzy
@@ -1682,28 +1653,9 @@ msgstr "Element obligatori"
 msgid "Edit robot config"
 msgstr "Edita llista de configuració"
 
-#: ../web_tt2/edit_config.tt2:17
-#, fuzzy
-msgid "parameter name"
-msgstr "valor del paràmetre"
-
-#: ../src/lib/List.pm:1302 ../web_tt2/edit_config.tt2:17
-msgid "value"
-msgstr "valor"
-
-#: ../web_tt2/edit_config.tt2:17
-#, fuzzy
-msgid "apply to"
-msgstr "Aplica"
-
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
 msgstr ""
-
-#: ../web_tt2/edit_config.tt2:51
-#, fuzzy
-msgid "main conf"
-msgstr "Edita llista de configuració"
 
 #: ../web_tt2/editfile.tt2:4
 msgid "Edit list templates"
@@ -1825,14 +1777,14 @@ msgstr "Configuració dels orígens de dades"
 msgid "scenario source"
 msgstr "Font de l'escenari"
 
-#: ../mail_tt2/helpfile.tt2:62 ../mail_tt2/listmaster_notification.tt2:287
-#: ../mail_tt2/listmaster_notification.tt2:306
-#: ../mail_tt2/listmaster_notification.tt2:377
+#: ../mail_tt2/helpfile.tt2:62 ../mail_tt2/listmaster_notification.tt2:283
+#: ../mail_tt2/listmaster_notification.tt2:302
+#: ../mail_tt2/listmaster_notification.tt2:373
 #: ../mail_tt2/listowner_notification.tt2:81 ../mail_tt2/lists.tt2:7
 #: ../mail_tt2/summary.tt2:4 ../web_tt2/edit_list_request.tt2:102
 #: ../web_tt2/edit_list_request.tt2:104 ../web_tt2/edit_list_request.tt2:260
 #: ../web_tt2/edit_list_request.tt2:262 ../web_tt2/editsubscriber.tt2:47
-#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:107
+#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:104
 #: ../web_tt2/rss.tt2:4 ../web_tt2/subindex.tt2:39
 msgid ":"
 msgstr ""
@@ -2000,17 +1952,16 @@ msgstr "No trobem el mes '%1'"
 msgid "Archives from %1 are not accessible"
 msgstr "Els arxius de %1 no estan disponibles"
 
-#: ../mail_tt2/listmaster_notification.tt2:342 ../web_tt2/error.tt2:12
+#: ../mail_tt2/listmaster_notification.tt2:338 ../web_tt2/error.tt2:12
 msgid "Unable to load list topics."
 msgstr "Impossible carregar la llista de temes."
 
-#: ../mail_tt2/listmaster_notification.tt2:343 ../web_tt2/error.tt2:13
+#: ../mail_tt2/listmaster_notification.tt2:339 ../web_tt2/error.tt2:13
 msgid "Unable to load create_list templates."
 msgstr "Impossible carregar les plantilles create_list ."
 
 #: ../web_tt2/error.tt2:14
-#, fuzzy
-msgid "Failed to include members"
+msgid "Failed to inlude members"
 msgstr "Error al incloure els membres"
 
 #: ../web_tt2/error.tt2:15
@@ -2027,7 +1978,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "La exportació de la llista '%1' ha fallat."
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:356 ../web_tt2/error.tt2:18
+#: ../mail_tt2/listmaster_notification.tt2:352 ../web_tt2/error.tt2:18
 msgid "Cannot unzip file '%1'."
 msgstr "Impossible descomprimir el fitxer '%1'."
 
@@ -2043,7 +1994,7 @@ msgstr ""
 
 #. (i_err.key)
 #. (zipfile)
-#: ../mail_tt2/listmaster_notification.tt2:364 ../web_tt2/error.tt2:21
+#: ../mail_tt2/listmaster_notification.tt2:360 ../web_tt2/error.tt2:21
 msgid "File not found."
 msgstr "Fitxer no localitzat."
 
@@ -2136,45 +2087,32 @@ msgstr "Introduïu una adreça electrònica "
 msgid "Missing argument %1"
 msgstr "Falta el paràmetre %1"
 
-#: ../web_tt2/error.tt2:54
-msgid ""
-"You didn't define the web page you want to use to create your newsletter. "
-"Please specify either an URL or a file to upload."
-msgstr ""
-
-#: ../web_tt2/error.tt2:55 ../web_tt2/error.tt2:56
-msgid ""
-"You specified both an URL and a file to upload. Sympa can't choose which one "
-"to send. Please fill the form with one of them only. A web page OR a file to "
-"upload."
-msgstr ""
-
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:57
+#: ../web_tt2/error.tt2:54
 msgid "Wrong value for parameter %1"
 msgstr "Valor incorrecta del paràmetre %1"
 
-#: ../web_tt2/error.tt2:147 ../web_tt2/error.tt2:58
+#: ../web_tt2/error.tt2:144 ../web_tt2/error.tt2:55
 msgid "You need to login"
 msgstr "Necessita validar-se "
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:59
+#: ../web_tt2/error.tt2:56
 msgid "Address \"%1\" is incorrect"
 msgstr "L'adreça \"%1\" és incorrecta"
 
-#: ../web_tt2/error.tt2:60
+#: ../web_tt2/error.tt2:57
 msgid "Provided password is incorrect"
 msgstr "La contrasenya és incorrecta"
 
-#: ../web_tt2/error.tt2:61
+#: ../web_tt2/error.tt2:58
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "No ha canviat mai la contrasenya, sol·liciti un recordatori de la "
 "contrasenya inicial "
 
-#: ../web_tt2/error.tt2:62
+#: ../web_tt2/error.tt2:59
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -2183,81 +2121,81 @@ msgstr ""
 "li un recordatori."
 
 #. (u_err.nb_days)
-#: ../web_tt2/error.tt2:63
+#: ../web_tt2/error.tt2:60
 msgid "The period is too long (%1 days)"
 msgstr "El període és massa llarg (%1 dies)"
 
-#: ../web_tt2/error.tt2:64
+#: ../web_tt2/error.tt2:61
 msgid "List has no subscribers"
 msgstr "La llista no té cap subscriptor"
 
 #. (u_err.page)
-#: ../web_tt2/error.tt2:65
+#: ../web_tt2/error.tt2:62
 msgid "No page %1"
 msgstr "Cap pàgina %1"
 
-#: ../web_tt2/error.tt2:66
+#: ../web_tt2/error.tt2:63
 msgid "Missing filter"
 msgstr "Filtre absent"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:68
+#: ../web_tt2/error.tt2:65
 msgid "Not subscribed: %1"
 msgstr "No donat d'alta: %1"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:69
+#: ../web_tt2/error.tt2:66
 msgid "You are not subscribed to list %1"
 msgstr "No esteu donat d'alta a la llista %1"
 
-#: ../web_tt2/error.tt2:71
+#: ../web_tt2/error.tt2:68
 msgid "Check the additional information"
 msgstr "Verifiqueu la informació addicional"
 
 #. (u_err.reception_mode)
-#: ../web_tt2/error.tt2:72
+#: ../web_tt2/error.tt2:69
 msgid "%1 is not an available reception mode"
 msgstr "%1 no és un mode de recepció vàlid"
 
 #. (u_err.file)
-#: ../web_tt2/error.tt2:73
+#: ../web_tt2/error.tt2:70
 #, fuzzy
 msgid "%1: file not editable"
 msgstr "%1 : fitxer no editable"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:74
+#: ../web_tt2/error.tt2:71
 msgid "You are already subscribed to the list %1"
 msgstr "Ja esteu subscrit a la llista %1"
 
 #. (u_err.email,u_err.list)
-#: ../web_tt2/error.tt2:75
+#: ../web_tt2/error.tt2:72
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 ja està subscrit a la llista %2"
 
-#: ../web_tt2/error.tt2:76
+#: ../web_tt2/error.tt2:73
 msgid "Please provide your password"
 msgstr "Heu d'introduir una contrasenya"
 
-#: ../web_tt2/error.tt2:77
+#: ../web_tt2/error.tt2:74
 msgid "The passwords you typed do not match"
 msgstr "Les contrasenyes no coincideixen"
 
 #. (u_err.tpl)
-#: ../web_tt2/error.tt2:78
+#: ../web_tt2/error.tt2:75
 msgid "Provided path is incorrect for template '%1'"
 msgstr "El camí de la plantilla '%1' és incorrecte"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:79
+#: ../web_tt2/error.tt2:76
 msgid "Cannot open file '%1'"
 msgstr "El fitxer '%1' no es pot obrir"
 
-#: ../web_tt2/error.tt2:80
+#: ../web_tt2/error.tt2:77
 msgid "You need to provide list name"
 msgstr "Heu d'indicar un nom de llista"
 
-#: ../web_tt2/error.tt2:81
+#: ../web_tt2/error.tt2:78
 #, fuzzy
 msgid ""
 "Failed to moderate a message; it was probably moderated by another moderator"
@@ -2265,248 +2203,248 @@ msgstr ""
 "Error al moderar un missatge ; probablement ha estat moderat per un altre "
 "moderador"
 
-#: ../web_tt2/error.tt2:82
+#: ../web_tt2/error.tt2:79
 msgid "Tagging message is required for this list"
 msgstr "L'etiquetatge dels missatges és obligatori en aquesta llista"
 
-#: ../web_tt2/error.tt2:83
+#: ../web_tt2/error.tt2:80
 msgid "Archives are empty for this list"
 msgstr "El arxius d'aquesta llista estan buits"
 
-#: ../web_tt2/error.tt2:84
+#: ../web_tt2/error.tt2:81
 msgid "You did not select an action to perform"
 msgstr "No heu seleccionat cap acció"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:85
+#: ../web_tt2/error.tt2:82
 msgid "No bounce for user  %1"
 msgstr "Cap missatge retornat per l'usuari %1"
 
-#: ../web_tt2/error.tt2:86
+#: ../web_tt2/error.tt2:83
 msgid "List has no bouncing subscribers"
 msgstr "Aquesta llista no té cap missatge retornat"
 
-#: ../web_tt2/error.tt2:87
+#: ../web_tt2/error.tt2:84
 msgid "No parameter was edited"
 msgstr "No ha estat modificat cap paràmetre."
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:88
+#: ../web_tt2/error.tt2:85
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "El fitxer de configuració ha estat modificat per %1. Els seus canvis no es "
 "poden efectuar."
 
-#: ../web_tt2/error.tt2:89
+#: ../web_tt2/error.tt2:86
 msgid "Topic \"other\" is a reserved word"
 msgstr "El tema \"altres\" és una paraula reservada"
 
 #. (u_err.p_name)
-#: ../web_tt2/error.tt2:90
+#: ../web_tt2/error.tt2:87
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "El paràmetre '%1' és obligatori. Eliminació ignorada."
 
 #. (u_err.param)
-#: ../web_tt2/error.tt2:91
+#: ../web_tt2/error.tt2:88
 msgid "Parameter '%1' must have values"
 msgstr "El paràmetre '%1' ha de tenir valors"
 
 #. (u_err.param,u_err.val)
-#: ../web_tt2/error.tt2:92
+#: ../web_tt2/error.tt2:89
 #, fuzzy
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "El paràmetre '%1' té el valor '%2' incorrecte."
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:93
+#: ../web_tt2/error.tt2:90
 msgid "The list '%1' is already closed"
 msgstr "La llista '%1' ja està tancada"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:94
+#: ../web_tt2/error.tt2:91
 msgid "The list '%1' is not closed"
 msgstr "La llista '%1' no està tancada"
 
 #. (u_err.bad_listname)
-#: ../web_tt2/error.tt2:95
+#: ../web_tt2/error.tt2:92
 #, fuzzy
 msgid "'%1': bad listname"
 msgstr "'%1' : nom de llista incorrecte"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:96
+#: ../web_tt2/error.tt2:93
 msgid "'%1' list already exists"
 msgstr "la llista '%1' ja existeix"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:97
+#: ../web_tt2/error.tt2:94
 #, fuzzy
 msgid "Incorrect listname '%1': matches one of service aliases"
 msgstr "Nom de llista incorrecte '%1' : coincideix amb un àlies del servei"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:98
+#: ../web_tt2/error.tt2:95
 msgid "Failed to remove list aliases for list %1"
 msgstr "L'eliminació de l'àlies de la llista %1 ha fallat"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:99
+#: ../web_tt2/error.tt2:96
 #, fuzzy
 msgid "%1: No such file or directory"
 msgstr "%1 : Fitxer o carpeta inexistent"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:100
+#: ../web_tt2/error.tt2:97
 #, fuzzy
 msgid "Unable to read %1: empty document"
 msgstr "Impossible llegir %1 : document buit"
 
-#: ../web_tt2/error.tt2:101
+#: ../web_tt2/error.tt2:98
 msgid "There is no shared documents"
 msgstr "No hi ha documents compartits"
 
-#: ../web_tt2/error.tt2:102
+#: ../web_tt2/error.tt2:99
 msgid "The shared document space is empty"
 msgstr "La carpeta compartida està buida"
 
-#: ../web_tt2/error.tt2:103
+#: ../web_tt2/error.tt2:100
 msgid "The shared directory cannot have any description"
 msgstr "La carpeta compartida no pot tenir cap descripció"
 
-#: ../web_tt2/error.tt2:104
+#: ../web_tt2/error.tt2:101
 msgid "No description specified"
 msgstr "Cap descripció feta"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:105
+#: ../web_tt2/error.tt2:102
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Impossible fer una descripció, el document '%1' no existeix"
 
-#: ../web_tt2/error.tt2:106
+#: ../web_tt2/error.tt2:103
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "Les dades del disc han canviat. Els canvis no es poden aplicar."
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:107
+#: ../web_tt2/error.tt2:104
 #, fuzzy
 msgid "%1: incorrect name"
 msgstr "%1 : nom incorrete"
 
-#: ../web_tt2/error.tt2:108
+#: ../web_tt2/error.tt2:105
 #, fuzzy
 msgid "Failed: your content is empty"
 msgstr "Error : el contingut no pot estar buit"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:109
+#: ../web_tt2/error.tt2:106
 #, fuzzy
 msgid "Cannot overwrite file %1:"
 msgstr "El fitxer %1 no es pot sobrescriure"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:110
+#: ../web_tt2/error.tt2:107
 #, fuzzy
 msgid "A directory named '%1' already exists:"
 msgstr "La carpeta '%1' ja existeix"
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:111
+#: ../web_tt2/error.tt2:108
 #, fuzzy
 msgid "This is an already existing document: '%1'"
 msgstr "Aquest document ja existeix : '%1'"
 
-#: ../web_tt2/error.tt2:112
+#: ../web_tt2/error.tt2:109
 msgid "No name specified"
 msgstr "No s'ha especificat cap nom"
 
-#: ../web_tt2/error.tt2:113
+#: ../web_tt2/error.tt2:110
 msgid "The document repository exceed disk quota."
 msgstr "Quota de disc superada."
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:114
+#: ../web_tt2/error.tt2:111
 #, fuzzy
 msgid "Cannot upload file %1:"
 msgstr "El fitxer %1 no es pot carregar."
 
 #. (u_err.dir)
-#: ../web_tt2/error.tt2:115
+#: ../web_tt2/error.tt2:112
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "No tens permís per carregar el fitxer INDEX.HTML a %1"
 
-#: ../web_tt2/error.tt2:116
+#: ../web_tt2/error.tt2:113
 msgid "The upload failed, try it again"
 msgstr "Error al carregar el fitxer. Torni a intentar-ho."
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:117
+#: ../web_tt2/error.tt2:114
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "No s'ha pogut copiar la carpeta %1 i el seu contingut :"
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:118
+#: ../web_tt2/error.tt2:115
 #, fuzzy
 msgid "File %1 was not copied: %2 "
 msgstr "El fitxer %1 no s'ha copiat : %2"
 
 #. (u_err.directory)
-#: ../web_tt2/error.tt2:119
+#: ../web_tt2/error.tt2:116
 #, fuzzy
 msgid "Failed: %1 not empty"
 msgstr "Error : %1 no està buit"
 
-#: ../web_tt2/error.tt2:120
+#: ../web_tt2/error.tt2:117
 msgid "No certificate for this list"
 msgstr "Cap certificat per la llista"
 
-#: ../web_tt2/error.tt2:121
+#: ../web_tt2/error.tt2:118
 msgid "This list has no message topic"
 msgstr "Aquesta llista no té cap tema "
 
-#: ../web_tt2/error.tt2:122
+#: ../web_tt2/error.tt2:119
 msgid "Tag message with topic is required for this list"
 msgstr "Etiquetar els missatges amb un tema és obligatori en aquesta llista"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:123
+#: ../web_tt2/error.tt2:120
 msgid "No entry for user '%1'"
 msgstr "Cap entrada a nom de '%1'"
 
-#: ../web_tt2/error.tt2:124
+#: ../web_tt2/error.tt2:121
 msgid "Please select archive months"
 msgstr "Seleccioni els mesos dels arxius "
 
-#: ../web_tt2/error.tt2:125
+#: ../web_tt2/error.tt2:122
 msgid "No SOAP service"
 msgstr "Servei SOAP no disponible"
 
-#: ../web_tt2/error.tt2:126
+#: ../web_tt2/error.tt2:123
 msgid "Authentication failed"
 msgstr "Error d'autenticació "
 
 #. (u_err.status)
-#: ../web_tt2/error.tt2:127
+#: ../web_tt2/error.tt2:124
 msgid "Service unavailable because list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:128
+#: ../web_tt2/error.tt2:125
 msgid "This Template '%1' already exists"
 msgstr "La plantilla '%1' ja existeix"
 
 #. (u_err.file_del)
-#: ../web_tt2/error.tt2:129
+#: ../web_tt2/error.tt2:126
 msgid "Cannot delete this file '%1'"
 msgstr "No es pot eliminar aquest fitxer '%1'"
 
 #. (u_err.filename)
-#: ../web_tt2/error.tt2:130
+#: ../web_tt2/error.tt2:127
 msgid "Invalid filename: '%1'"
 msgstr "Invàlid nom de fitxer: '%1'"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:131
+#: ../web_tt2/error.tt2:128
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
@@ -2514,7 +2452,7 @@ msgstr ""
 "'%1', el propietari de la llista ha estat notificat."
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:132
+#: ../web_tt2/error.tt2:129
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
@@ -2522,12 +2460,12 @@ msgstr ""
 "llista '%1', el propietari de la llista ha estat notificat."
 
 #. (auth.action)
-#: ../web_tt2/error.tt2:141
+#: ../web_tt2/error.tt2:138
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "AUTORITZACIÓ REFUSADA (%1)"
 
 #. (auth.listname)
-#: ../web_tt2/error.tt2:143
+#: ../web_tt2/error.tt2:140
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -2543,7 +2481,8 @@ msgstr "Llistes tancades"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
-#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:139
+#: ../web_tt2/modindex.tt2:125 ../web_tt2/modindex.tt2:182
+#: ../web_tt2/modindex.tt2:64 ../web_tt2/review.tt2:138
 #: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
 #: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
 #: ../web_tt2/subscriber_table.tt2:7
@@ -2617,6 +2556,11 @@ msgstr "Llistes pendents"
 msgid "Requested date"
 msgstr "Data de sol·licitud"
 
+#: ../web_tt2/info.tt2:8
+#, fuzzy
+msgid "List informations"
+msgstr "Informacions privades"
+
 #: ../web_tt2/install_pending_list.tt2:11 ../web_tt2/scenario_test.tt2:13
 #: ../web_tt2/set_pending_list_request.tt2:7
 #, fuzzy
@@ -2633,139 +2577,148 @@ msgstr "Sol·licitant "
 msgid "on %1"
 msgstr "el %1"
 
-#: ../web_tt2/javascript.tt2:22
-msgid "January"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "February"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "March"
-msgstr "Cerca"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "April"
-msgstr "perfil"
-
-#: ../web_tt2/javascript.tt2:22
-msgid "May"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "June"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "July"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-msgid "August"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "September"
-msgstr "Membres de la llista"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "October"
-msgstr "Altres"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "November"
-msgstr "Membres de la llista"
-
-#: ../web_tt2/javascript.tt2:22
-#, fuzzy
-msgid "December"
-msgstr "Membres de la llista"
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Su"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Mo"
-msgstr "Més"
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Tu"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-msgid "We"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-msgid "Th"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Fr"
-msgstr "Des de"
-
-#: ../web_tt2/javascript.tt2:23
-#, fuzzy
-msgid "Sa"
-msgstr "Guardar"
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Sunday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-#, fuzzy
-msgid "Monday"
-msgstr "Cos"
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Tuesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Wednesday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Thursday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-msgid "Friday"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:24
-#, fuzzy
-msgid "Saturday"
-msgstr "Cos"
-
-#: ../web_tt2/javascript.tt2:25
-msgid "Calendar"
-msgstr ""
-
-#: ../web_tt2/javascript.tt2:26
-#, fuzzy
-msgid "today"
-msgstr "Cos"
-
-#: ../web_tt2/javascript.tt2:38
+#: ../web_tt2/javascript.tt2:833
 #, fuzzy
 msgid "Start date"
 msgstr "Última actualització"
 
-#: ../web_tt2/javascript.tt2:39
+#: ../web_tt2/javascript.tt2:834
 #, fuzzy
 msgid "End date"
 msgstr "data"
+
+#: ../web_tt2/javascript.tt2:838
+msgid "January"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "February"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "March"
+msgstr "Cerca"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "April"
+msgstr "perfil"
+
+#: ../web_tt2/javascript.tt2:838
+msgid "May"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "June"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "July"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+msgid "August"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "September"
+msgstr "Membres de la llista"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "October"
+msgstr "Altres"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "November"
+msgstr "Membres de la llista"
+
+#: ../web_tt2/javascript.tt2:838
+#, fuzzy
+msgid "December"
+msgstr "Membres de la llista"
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Su"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Mo"
+msgstr "Més"
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Tu"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+msgid "We"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+msgid "Th"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Fr"
+msgstr "Des de"
+
+#: ../web_tt2/javascript.tt2:839
+#, fuzzy
+msgid "Sa"
+msgstr "Guardar"
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Sunday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+#, fuzzy
+msgid "Monday"
+msgstr "Cos"
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Tuesday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Wednesday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Thursday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+msgid "Friday"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:840
+#, fuzzy
+msgid "Saturday"
+msgstr "Cos"
+
+#: ../web_tt2/javascript.tt2:841
+msgid "Calendar"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:842
+#, fuzzy
+msgid "today"
+msgstr "Cos"
+
+#. (+cpt)
+#: ../web_tt2/javascript.tt2:1056
+msgid "microcal"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:1096
+msgid "\"+src.id+\"_cal"
+msgstr ""
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -2820,7 +2773,7 @@ msgid " The latest lists of this robot"
 msgstr "Últimes llistes d'aquest robot"
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:110
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:109
 msgid "%1 occurrence(s) found"
 msgstr "%1 coincidències"
 
@@ -2829,21 +2782,21 @@ msgstr "%1 coincidències"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong>%1</strong> està inscrit a les següents llistes"
 
-#: ../web_tt2/lists.tt2:39 ../web_tt2/nav.tt2:69
+#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:69
 msgid "Manage Subscribers"
 msgstr "Gestió subscriptors"
 
-#: ../web_tt2/lists.tt2:41 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
+#: ../web_tt2/lists.tt2:40 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
 msgid "Blacklist"
 msgstr "Llista negra"
 
-#: ../web_tt2/lists.tt2:45 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
+#: ../web_tt2/lists.tt2:44 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
 #: ../web_tt2/serveradmin.tt2:123
 msgid "Logs"
 msgstr "Registre"
 
 #. (user.email)
-#: ../web_tt2/lists.tt2:67
+#: ../web_tt2/lists.tt2:62
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Cap subscripció amb l'adreça <strong>%1</strong>!"
 
@@ -3049,12 +3002,48 @@ msgstr "Introduïu un nom de llista"
 msgid "Search lists"
 msgstr "Busca llistes"
 
-#: ../web_tt2/modform.tt2:17 ../web_tt2/modform.tt2:23
-#: ../web_tt2/modform.tt2:6
+#: ../web_tt2/modindex.tt2:61 ../web_tt2/modindex.tt2:9
+msgid "Listing messages to moderate"
+msgstr "Llistat de missatges a moderar"
+
+#: ../web_tt2/modindex.tt2:113 ../web_tt2/modindex.tt2:115
+#: ../web_tt2/modindex.tt2:14 ../web_tt2/modindex.tt2:19
+#: ../web_tt2/viewmod.tt2:10 ../web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "Distribuir"
 
-#: ../web_tt2/modform.tt2:11
+#: ../web_tt2/modindex.tt2:117 ../web_tt2/modindex.tt2:146
+#: ../web_tt2/modindex.tt2:185 ../web_tt2/modindex.tt2:25
+#: ../web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "Rebutjar"
+
+#: ../web_tt2/modindex.tt2:25
+#, fuzzy
+msgid ""
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification?"
+msgstr ""
+"No hauria de notificar al remitent aquest missatge detectat com spam, perquè "
+"molt provablement sigui fals (spoof). Desitja realment notificar al remitent "
+"aquests tipus de missatges ?"
+
+#: ../web_tt2/modindex.tt2:31
+#, fuzzy
+msgid "Server default rejection message"
+msgstr "Últims missatge"
+
+#: ../web_tt2/modindex.tt2:39
+msgid "Reject without notification "
+msgstr "Rebuig sense notificació"
+
+#: ../web_tt2/modindex.tt2:41
+#, fuzzy
+msgid "Add to blacklist"
+msgstr "Editar la llista negra"
+
+#: ../web_tt2/modindex.tt2:52
 #, fuzzy
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
@@ -3063,101 +3052,54 @@ msgstr ""
 "Seleccioneu un o més temes que corresponguin als missatges que voleu "
 "distribuir :"
 
-#: ../web_tt2/modform.tt2:19
-#, fuzzy
-msgid "You must select a topic"
-msgstr "--Selecciona un tema--"
-
-#: ../web_tt2/modform.tt2:26 ../web_tt2/modform.tt2:54
-#: ../web_tt2/modform.tt2:56 ../web_tt2/modindex.tt2:138
-#: ../web_tt2/modindex.tt2:99
-msgid "Reject"
-msgstr "Rebutjar"
-
-#: ../web_tt2/modform.tt2:30
-#, fuzzy
-msgid "Rejecting message"
-msgstr "Últims missatge"
-
-#: ../web_tt2/modform.tt2:32
-#, fuzzy
-msgid "Choose notification "
-msgstr "norificació"
-
-#: ../web_tt2/modform.tt2:34
-#, fuzzy
-msgid "No notification"
-msgstr "norificació"
-
-#: ../web_tt2/modform.tt2:38
-#, fuzzy
-msgid "Server default rejection message"
-msgstr "Últims missatge"
-
-#: ../web_tt2/modform.tt2:43
-#, fuzzy
-msgid "Report message as undetected spam "
-msgstr "El teu missatge ha estat rebutjat."
-
-#: ../web_tt2/modform.tt2:46
-#, fuzzy
-msgid "Add sender to blacklist"
-msgstr "Editar la llista negra"
-
-#: ../web_tt2/modform.tt2:49
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
-#: ../web_tt2/modindex.tt2:31 ../web_tt2/modindex.tt2:6
-msgid "Listing messages to moderate"
-msgstr "Llistat de missatges a moderar"
-
-#: ../web_tt2/modindex.tt2:21
-#, fuzzy
-msgid "loading message..."
-msgstr "Missatge de recordatori global"
-
-#: ../web_tt2/modindex.tt2:108 ../web_tt2/modindex.tt2:40
+#: ../web_tt2/modindex.tt2:155 ../web_tt2/modindex.tt2:71
 msgid "Size"
 msgstr "Mida"
 
-#: ../web_tt2/modindex.tt2:68
+#: ../web_tt2/modindex.tt2:102
 msgid "No subject"
 msgstr "Cap tema"
 
-#: ../web_tt2/modindex.tt2:96
-msgid "Listing of shared documents to moderate"
-msgstr "Llista dels documents compartits a moderar"
-
-#: ../web_tt2/modindex.tt2:137 ../web_tt2/modindex.tt2:98
-msgid "Install"
-msgstr "Instalar"
-
-#: ../web_tt2/modindex.tt2:100 ../web_tt2/modindex.tt2:139
+#: ../web_tt2/modindex.tt2:118 ../web_tt2/modindex.tt2:147
+#: ../web_tt2/modindex.tt2:186
 #, fuzzy
 msgid "Notified reject"
 msgstr "Notificar el refús"
 
-#: ../web_tt2/modindex.tt2:102
+#: ../web_tt2/modindex.tt2:120
+msgid "Reject and blacklist sender"
+msgstr "Refusar i afegir a la llista negra el remitent"
+
+#: ../web_tt2/modindex.tt2:128
+msgid "Toggle spams"
+msgstr "Passar a la selecció de missatges no desitjats (spam)"
+
+#: ../web_tt2/modindex.tt2:143
+msgid "Listing of shared documents to moderate"
+msgstr "Llista dels documents compartits a moderar"
+
+#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:184
+msgid "Install"
+msgstr "Instalar"
+
+#: ../web_tt2/modindex.tt2:149
 msgid "Listing of documents shared to moderate"
 msgstr "Llista dels documents compartits a moderar"
 
-#: ../web_tt2/modindex.tt2:107
+#: ../web_tt2/modindex.tt2:154
 msgid "Path"
 msgstr "Camí"
 
-#: ../web_tt2/modindex.tt2:133 ../web_tt2/modindex.tt2:152
+#: ../web_tt2/modindex.tt2:180 ../web_tt2/modindex.tt2:199
 msgid "edit blacklist"
 msgstr "Editar la llista negra"
 
-#: ../web_tt2/modindex.tt2:145
+#: ../web_tt2/modindex.tt2:192
 #, fuzzy
 msgid "Moderation management"
 msgstr "Gestió de retornats"
 
-#: ../web_tt2/modindex.tt2:154
+#: ../web_tt2/modindex.tt2:201
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "Últims missatge"
@@ -3200,7 +3142,7 @@ msgstr "Traduir Sympa"
 msgid "Submitting a bug, a feature request"
 msgstr "Notifica un error, o una petició de nova funcionalitat"
 
-#: ../src/lib/confdef.pm:1137 ../web_tt2/nav.tt2:105
+#: ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr ""
 
@@ -3211,62 +3153,6 @@ msgstr "Missatge recordatori"
 
 #: ../web_tt2/nav.tt2:119
 msgid "Send an html page"
-msgstr ""
-
-#: ../web_tt2/news.tt2:9
-#, fuzzy
-msgid "Administration Tasks"
-msgstr "Panell d'administració"
-
-#: ../web_tt2/news.tt2:10
-msgid "The following items are waiting for your validation"
-msgstr ""
-
-#. (list_to_admin.key)
-#: ../web_tt2/news.tt2:15
-#, fuzzy
-msgid "List %1:"
-msgstr "llista %1"
-
-#. (list_to_admin.value.mod_message)
-#. (year.value.item(month))
-#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
-#: ../web_tt2/news.tt2:16
-msgid "%1 message(s)"
-msgstr "%1 missatge(s)"
-
-#. (list_to_admin.value.mod_shared_total)
-#: ../web_tt2/news.tt2:17
-#, fuzzy
-msgid "%1 document(s)"
-msgstr "Documents compartits"
-
-#. (list_to_admin.value.mod_subscription)
-#: ../web_tt2/news.tt2:18
-#, fuzzy
-msgid "%1 subscription request(s)"
-msgstr "No hi ha peticions per donar-se d'alta (subscripció)"
-
-#: ../web_tt2/news.tt2:29
-#, fuzzy
-msgid "User Errors"
-msgstr "Inicialitza els errors"
-
-#: ../web_tt2/news.tt2:30
-msgid ""
-"We received error reports while trying to send you messages. Some of them "
-"may have been lost."
-msgstr ""
-
-#. (user_with_errors.key)
-#: ../web_tt2/news.tt2:34
-#, fuzzy
-msgid " List %1: "
-msgstr "Llista %1 / %2"
-
-#. (user_with_errors.value)
-#: ../web_tt2/news.tt2:35
-msgid " %1 error(s)"
 msgstr ""
 
 #. (last_login_host,last_login_date)
@@ -3458,11 +3344,11 @@ msgstr "Nova adreça electrònica :"
 msgid "Change Email"
 msgstr "Canvia la meva adreça electrònica"
 
-#: ../web_tt2/pref.tt2:38
+#: ../web_tt2/pref.tt2:37
 msgid "Changing your password"
 msgstr "Canviant la seva contrasenya"
 
-#: ../web_tt2/pref.tt2:43
+#: ../web_tt2/pref.tt2:42
 #, fuzzy
 msgid "Re-enter your new password:"
 msgstr "Torneu a introduir la nova contrasenya :"
@@ -3608,7 +3494,7 @@ msgstr "Desconegut"
 msgid "This list is configured to require topic(s) foreach message."
 msgstr "Aquesta llista requereix que cada missatge tingui un tema assignat."
 
-#: ../web_tt2/request_topic.tt2:7
+#: ../web_tt2/request_topic.tt2:7 ../web_tt2/viewmod.tt2:34
 #, fuzzy
 msgid ""
 "Please select one or more topic(s) that corresponds to your message below:"
@@ -3653,7 +3539,7 @@ msgstr ""
 "Esteu segur que voleu enviar un missatge recordatori a tots els subscriptors "
 "de %1 ?"
 
-#: ../web_tt2/review.tt2:127 ../web_tt2/review.tt2:27
+#: ../web_tt2/review.tt2:126 ../web_tt2/review.tt2:27
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3664,7 +3550,7 @@ msgstr "Pàgina anterior"
 msgid "page %1 / %2"
 msgstr "pàgina %1 / %2"
 
-#: ../web_tt2/review.tt2:133 ../web_tt2/review.tt2:33
+#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:33
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3674,7 +3560,7 @@ msgstr "Següent pàgina"
 msgid "Table which display list bounces"
 msgstr "Taula que mostra els retornats"
 
-#: ../web_tt2/review.tt2:149 ../web_tt2/reviewbouncing.tt2:61
+#: ../web_tt2/review.tt2:148 ../web_tt2/reviewbouncing.tt2:61
 #: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/subscriber_table.tt2:12 ../web_tt2/subscriber_table.tt2:15
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
@@ -3710,7 +3596,7 @@ msgstr "Visualitza l'últim retornat"
 msgid "no score"
 msgstr "puntuació retornats"
 
-#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:139
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "Elimina les adreces seleccionades"
@@ -3741,7 +3627,7 @@ msgstr "noves llistes"
 msgid "Page size"
 msgstr "Mida de la pàgina"
 
-#: ../web_tt2/review.tt2:130 ../web_tt2/review.tt2:30
+#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:30
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "pàgina"
@@ -3768,46 +3654,41 @@ msgstr "Afegir un usuari:"
 
 #: ../web_tt2/review.tt2:75
 #, fuzzy
-msgid "Add quietly"
-msgstr "silenciós"
-
-#: ../web_tt2/review.tt2:76
-#, fuzzy
 msgid "Multiple add"
 msgstr "Afegir-ne molts"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:87
 #, fuzzy
 msgid "Search user by e-mail: "
 msgstr "Búsqueda per adreça electrònica"
 
-#: ../web_tt2/review.tt2:89
+#: ../web_tt2/review.tt2:88
 msgid "Search user by email"
 msgstr "Búsqueda per adreça electrònica"
 
-#: ../web_tt2/review.tt2:94
+#: ../web_tt2/review.tt2:93
 msgid "Selection too wide, can not show selection"
 msgstr "Selecció massa gran, no es possible mostrar-la."
 
 #. (similar_subscribers_occurence)
-#: ../web_tt2/review.tt2:118
+#: ../web_tt2/review.tt2:117
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr ""
 
-#: ../web_tt2/review.tt2:138
+#: ../web_tt2/review.tt2:137
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Esteu segur que voleu donar de baixa a TOTS els seleccionats?"
 
-#: ../web_tt2/review.tt2:146
+#: ../web_tt2/review.tt2:145
 msgid "Excluded users"
 msgstr ""
 
-#: ../web_tt2/review.tt2:147 ../web_tt2/show_exclude.tt2:13
+#: ../web_tt2/review.tt2:146 ../web_tt2/show_exclude.tt2:13
 #, fuzzy
 msgid "List of exclude"
 msgstr "Llistat de la carpeta"
 
-#: ../web_tt2/review.tt2:150 ../web_tt2/show_exclude.tt2:16
+#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:16
 #, fuzzy
 msgid "Since"
 msgstr "Mida"
@@ -4611,9 +4492,9 @@ msgstr ""
 "color lletres i vores de:<UL><LI> pràcticament tot exeptuant les vores de "
 "&lt;TD/&gt; i el color dels links, els butons i alguns títols.</LI></UL>"
 
-#: ../web_tt2/skinsedit.tt2:107
-msgid "Background color for the news area of the home page."
-msgstr ""
+#: ../web_tt2/skinsedit.tt2:107 ../web_tt2/skinsedit.tt2:179
+msgid "unused"
+msgstr "Sense utilitzar"
 
 #: ../web_tt2/skinsedit.tt2:113
 msgid "font color of:"
@@ -4713,10 +4594,6 @@ msgstr ""
 msgid "Default background color of the tables."
 msgstr ""
 
-#: ../web_tt2/skinsedit.tt2:179
-msgid "unused"
-msgstr "Sense utilitzar"
-
 #: ../web_tt2/skinsedit.tt2:185 ../web_tt2/skinsedit.tt2:191
 #: ../web_tt2/skinsedit.tt2:197 ../web_tt2/skinsedit.tt2:203
 #: ../web_tt2/skinsedit.tt2:209 ../web_tt2/skinsedit.tt2:215
@@ -4774,36 +4651,15 @@ msgstr ""
 ">Si us plau comprova la teva bústia de correu pel missatge que contè la "
 "contrasenya de confirmació que necessitaràs més avall."
 
-#. (listname)
-#: ../web_tt2/stats.tt2:4
+#: ../web_tt2/stats.tt2:2
 #, fuzzy
-msgid "List %1 statistics"
-msgstr "La llista %1 està tancada"
-
-#: ../web_tt2/stats.tt2:6
-msgid "This page displays overall informations regarding the list activity"
-msgstr ""
-
-#. (shared_size)
-#: ../web_tt2/stats.tt2:7
-#, fuzzy
-msgid "Shared document directory size: %1 kB"
+msgid "Shared document directory size:"
 msgstr "Mida del directori de documents compartits"
 
-#. (arc_size)
-#: ../web_tt2/stats.tt2:9
+#: ../web_tt2/stats.tt2:3
 #, fuzzy
-msgid "Web archives size: %1 kB"
+msgid "Web archives size:"
 msgstr "Mida dels arxius web"
-
-#: ../web_tt2/stats.tt2:16 ../web_tt2/stats.tt2:22
-#, fuzzy
-msgid "[% o.title %]"
-msgstr "[% k.name %] :"
-
-#: ../web_tt2/stats.tt2:47
-msgid "No operation recorded in this field yet."
-msgstr ""
 
 #: ../web_tt2/subindex.tt2:4 ../web_tt2/subindex.tt2:8
 msgid "Listing subscription to moderate"
@@ -5093,44 +4949,6 @@ msgstr "S'ha autentificat"
 msgid "The validation link has an unknow format or has expired"
 msgstr "L'enllaç de validació té un format desconegut o ha caducat"
 
-#: ../web_tt2/tracking.tt2:13 ../web_tt2/tracking.tt2:4
-#, fuzzy
-msgid "Message tracking"
-msgstr "Marcatge de missatges"
-
-#. (fromname,fromaddr,listname)
-#: ../web_tt2/tracking.tt2:6
-msgid "Message from %1 %2 for list %3 "
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:10
-#, fuzzy
-msgid "Distribution ended at"
-msgstr "Distribuir"
-
-#: ../web_tt2/tracking.tt2:14
-msgid "Recipient Email"
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:14
-#, fuzzy
-msgid "Reception Option"
-msgstr "Recepció"
-
-#: ../web_tt2/tracking.tt2:15
-msgid "Delivery status"
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:16
-#, fuzzy
-msgid "Notification Date"
-msgstr "norificació"
-
-#: ../web_tt2/tracking.tt2:17
-#, fuzzy
-msgid "Notification"
-msgstr "norificació"
-
 #: ../web_tt2/tt2_error.tt2:8
 msgid "Sympa error - could not display web page"
 msgstr "Error Sympa - no es pot mostrar la plana web"
@@ -5222,7 +5040,7 @@ msgstr "Cerca per període: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16678
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16239
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5279,6 +5097,15 @@ msgstr "Veure altres events identificats en aquests identificador de missatge."
 #: ../web_tt2/viewlogs.tt2:214
 msgid "Other events"
 msgstr "Altres events"
+
+#: ../web_tt2/viewmod.tt2:17
+#, fuzzy
+msgid "Default rejection message"
+msgstr "Últims missatge"
+
+#: ../web_tt2/viewmod.tt2:18
+msgid "Do Not Notify"
+msgstr "No notificar"
 
 #: ../web_tt2/view_template.tt2:7
 #, fuzzy
@@ -5820,7 +5647,7 @@ msgstr "Error en la Sintaxi de l'ordre."
 #. (u_err.listname)
 #. (glob.listname)
 #. (listname)
-#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:180
+#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:178
 #: ../mail_tt2/message_report.tt2:56
 msgid "List '%1' does not exist."
 msgstr "La llista '%1' no existeix."
@@ -5889,17 +5716,17 @@ msgstr ""
 "Probablement vas confirmar la teva subscripció utilitzant una adreça\n"
 "de correu diferent. Per favor utilitza l'adreá de correu canónica."
 
-#: ../mail_tt2/command_report.tt2:152
+#: ../mail_tt2/command_report.tt2:150
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "Missatge ignorat per causa d'un error intern"
 
-#: ../mail_tt2/command_report.tt2:154
+#: ../mail_tt2/command_report.tt2:152
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "Aquestes comandes han fallat degut a un error intern del servidor:"
 
-#: ../mail_tt2/command_report.tt2:171
+#: ../mail_tt2/command_report.tt2:169
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
 "your command in the subject)."
@@ -5907,16 +5734,16 @@ msgstr ""
 "Cos del missatge ignorat, si us plau, utilitzar només text/pla (o afegir les "
 "comandes en l'assumpte del missatge)"
 
-#: ../mail_tt2/command_report.tt2:174
+#: ../mail_tt2/command_report.tt2:172
 msgid "No command found in message."
 msgstr "No s'ha trobat cap ordre en el missatge"
 
-#: ../mail_tt2/command_report.tt2:177
+#: ../mail_tt2/command_report.tt2:175
 msgid "Ignoring message because of an internal server error."
 msgstr "Ignorant el missatge perquè "
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/command_report.tt2:187
+#: ../mail_tt2/command_report.tt2:185
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "Per més informació, si us plau revisi la pàgina web de les llistes de "
@@ -5928,7 +5755,7 @@ msgid "%1 Digest %2"
 msgstr "%1 resum %2"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2732
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2801
 msgid "Table of contents:"
 msgstr "Taula de continguts:"
 
@@ -6029,7 +5856,7 @@ msgstr "Donar-se de baixa (desubscripció) :"
 msgid "Archive of %1, file %2"
 msgstr "Arxiu de %1. fitxer %2"
 
-#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1635
+#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1628
 msgid "Subscription summary"
 msgstr "Síntesi de les teves subscripcions "
 
@@ -6615,10 +6442,10 @@ msgstr "Impossible %1."
 #: ../mail_tt2/listmaster_notification.tt2:124
 #: ../mail_tt2/listmaster_notification.tt2:130
 #: ../mail_tt2/listmaster_notification.tt2:138
-#: ../mail_tt2/listmaster_notification.tt2:292
-#: ../mail_tt2/listmaster_notification.tt2:299
-#: ../mail_tt2/listmaster_notification.tt2:370
-#: ../mail_tt2/listmaster_notification.tt2:382
+#: ../mail_tt2/listmaster_notification.tt2:288
+#: ../mail_tt2/listmaster_notification.tt2:295
+#: ../mail_tt2/listmaster_notification.tt2:366
+#: ../mail_tt2/listmaster_notification.tt2:378
 msgid "See logs for more details."
 msgstr "Mira el log per a més detalls."
 
@@ -6692,23 +6519,10 @@ msgstr ""
 
 #. (listname)
 #: ../mail_tt2/listmaster_notification.tt2:151
-#, fuzzy
-msgid "Limit of users count reached for list %1"
-msgstr "ha fallat l'actualització de subscriptors per a la llista %1. "
-
-#. (listname,max_number_of_subscribers)
-#: ../mail_tt2/listmaster_notification.tt2:153
-msgid ""
-"Sympa could not include subscribers to list %1 because the maximum number of "
-"users was reached for this list. This limit is defined to %2."
-msgstr ""
-
-#. (listname)
-#: ../mail_tt2/listmaster_notification.tt2:155
 msgid "subscribers update failed for list %1"
 msgstr "ha fallat l'actualització de subscriptors per a la llista %1. "
 
-#: ../mail_tt2/listmaster_notification.tt2:157
+#: ../mail_tt2/listmaster_notification.tt2:153
 #, fuzzy
 msgid ""
 "Sympa could not include subscribers from the following external data sources:"
@@ -6718,21 +6532,21 @@ msgstr ""
 "probablement no es pugui arribar a la base de dades o al directori LDAP."
 
 #. (e.name,e.type)
-#: ../mail_tt2/listmaster_notification.tt2:160
+#: ../mail_tt2/listmaster_notification.tt2:156
 msgid "Include of datasource %1 (type %2) failed."
 msgstr ""
 
-#: ../mail_tt2/listmaster_notification.tt2:163
-#: ../mail_tt2/listmaster_notification.tt2:170
+#: ../mail_tt2/listmaster_notification.tt2:159
+#: ../mail_tt2/listmaster_notification.tt2:166
 msgid "Check Sympa log files for more precise information"
 msgstr "Revisar els arxius de log de Sympa per a informació més precisa "
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:167
+#: ../mail_tt2/listmaster_notification.tt2:163
 msgid "admins update failed for list %1"
 msgstr "Ha fallat l'actualiltzació dels administradors per a la llista %1"
 
-#: ../mail_tt2/listmaster_notification.tt2:169
+#: ../mail_tt2/listmaster_notification.tt2:165
 #, fuzzy
 msgid ""
 "Sympa could not include admins from external data sources; the database or "
@@ -6743,50 +6557,50 @@ msgstr ""
 "LDAP."
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:173
-#: ../mail_tt2/listmaster_notification.tt2:198
-#: ../mail_tt2/listmaster_notification.tt2:206
-#: ../mail_tt2/listmaster_notification.tt2:213
-#: ../mail_tt2/listmaster_notification.tt2:241
-#: ../mail_tt2/listmaster_notification.tt2:248
-#: ../mail_tt2/listmaster_notification.tt2:255
+#: ../mail_tt2/listmaster_notification.tt2:169
+#: ../mail_tt2/listmaster_notification.tt2:194
+#: ../mail_tt2/listmaster_notification.tt2:202
+#: ../mail_tt2/listmaster_notification.tt2:209
+#: ../mail_tt2/listmaster_notification.tt2:237
+#: ../mail_tt2/listmaster_notification.tt2:244
+#: ../mail_tt2/listmaster_notification.tt2:251
 msgid "list %1 in status error_config"
 msgstr "Llista %1 en estat error_config"
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:175
+#: ../mail_tt2/listmaster_notification.tt2:171
 msgid "No owner is defined for list %1."
 msgstr "No s'ha definit propietari per a la llista %1."
 
-#: ../mail_tt2/listmaster_notification.tt2:176
-#: ../mail_tt2/listmaster_notification.tt2:201
-#: ../mail_tt2/listmaster_notification.tt2:209
-#: ../mail_tt2/listmaster_notification.tt2:216
-#: ../mail_tt2/listmaster_notification.tt2:244
-#: ../mail_tt2/listmaster_notification.tt2:251
-#: ../mail_tt2/listmaster_notification.tt2:258
+#: ../mail_tt2/listmaster_notification.tt2:172
+#: ../mail_tt2/listmaster_notification.tt2:197
+#: ../mail_tt2/listmaster_notification.tt2:205
+#: ../mail_tt2/listmaster_notification.tt2:212
+#: ../mail_tt2/listmaster_notification.tt2:240
+#: ../mail_tt2/listmaster_notification.tt2:247
+#: ../mail_tt2/listmaster_notification.tt2:254
 msgid "The list status has been set to error_config."
 msgstr "L'estat de la llista ha estat establert a error_config"
 
-#: ../mail_tt2/listmaster_notification.tt2:177
-#: ../mail_tt2/listmaster_notification.tt2:202
-#: ../mail_tt2/listmaster_notification.tt2:210
-#: ../mail_tt2/listmaster_notification.tt2:217
-#: ../mail_tt2/listmaster_notification.tt2:224
-#: ../mail_tt2/listmaster_notification.tt2:231
-#: ../mail_tt2/listmaster_notification.tt2:245
-#: ../mail_tt2/listmaster_notification.tt2:252
-#: ../mail_tt2/listmaster_notification.tt2:259
+#: ../mail_tt2/listmaster_notification.tt2:173
+#: ../mail_tt2/listmaster_notification.tt2:198
+#: ../mail_tt2/listmaster_notification.tt2:206
+#: ../mail_tt2/listmaster_notification.tt2:213
+#: ../mail_tt2/listmaster_notification.tt2:220
+#: ../mail_tt2/listmaster_notification.tt2:227
+#: ../mail_tt2/listmaster_notification.tt2:241
+#: ../mail_tt2/listmaster_notification.tt2:248
+#: ../mail_tt2/listmaster_notification.tt2:255
 msgid "Check Sympa log files for more precise information."
 msgstr "Revisar els arxius de log de Sympa per a informació més precisa "
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:181
+#: ../mail_tt2/listmaster_notification.tt2:177
 msgid "List owner/editor email changes"
 msgstr "Canvi de l'adreça d'un administradro/moderador"
 
 #. (previous_email,new_email)
-#: ../mail_tt2/listmaster_notification.tt2:183
+#: ../mail_tt2/listmaster_notification.tt2:179
 #, fuzzy
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
@@ -6797,13 +6611,13 @@ msgstr ""
 "següents: "
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:190
+#: ../mail_tt2/listmaster_notification.tt2:186
 #, fuzzy
 msgid "List %1: Failed to change admin email address"
 msgstr "Canvia la meva adreça electrònica"
 
 #. (current_email,new_email,datasource)
-#: ../mail_tt2/listmaster_notification.tt2:194
+#: ../mail_tt2/listmaster_notification.tt2:190
 msgid ""
 "Admin %1 could not change his admin email address (new email address is %2) "
 "because he is included via a the following data sources: %3.\n"
@@ -6819,19 +6633,19 @@ msgstr ""
 "la nova adreça de correu. "
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:200
+#: ../mail_tt2/listmaster_notification.tt2:196
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 "Va ocórrer un error copiant l'arxiu de la família %2 en la carpeta de la "
 "llista %1. "
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:208
+#: ../mail_tt2/listmaster_notification.tt2:204
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "llistes %1 la configuració no respecta les regles de la família %2. "
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:215
+#: ../mail_tt2/listmaster_notification.tt2:211
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -6839,56 +6653,56 @@ msgstr ""
 "Sympa no va poder verificar les regles de la família %2 amb l'arxiu "
 "param_constraint.conf de la llista %1. "
 
-#: ../mail_tt2/listmaster_notification.tt2:221
-#: ../mail_tt2/listmaster_notification.tt2:228
+#: ../mail_tt2/listmaster_notification.tt2:217
+#: ../mail_tt2/listmaster_notification.tt2:224
 msgid "errors in param_constraint.conf file"
 msgstr "error en el fitxer param_constraint.conf "
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:223
-#: ../mail_tt2/listmaster_notification.tt2:230
+#: ../mail_tt2/listmaster_notification.tt2:219
+#: ../mail_tt2/listmaster_notification.tt2:226
 msgid "Error(s) found in the file %1."
 msgstr "Error(s) troba(s) en el fitxer %1."
 
-#: ../mail_tt2/listmaster_notification.tt2:234
+#: ../mail_tt2/listmaster_notification.tt2:230
 msgid "File removed"
 msgstr "Fixer eliminat"
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:236
+#: ../mail_tt2/listmaster_notification.tt2:232
 #, fuzzy
 msgid "The following file has been removed: %1"
 msgstr "El següent fitxer ha estat eliminat : %1"
 
 #. (param1)
-#: ../mail_tt2/listmaster_notification.tt2:237
+#: ../mail_tt2/listmaster_notification.tt2:233
 #, fuzzy
 msgid "A backup of the file has been made: %1"
 msgstr "S'ha realitzat un backup del fitxer : %1"
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:243
+#: ../mail_tt2/listmaster_notification.tt2:239
 msgid "Sympa could not load family %2 for list %1."
 msgstr "Sympa no pot carregar la familía %2 per a la llista %1."
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:250
+#: ../mail_tt2/listmaster_notification.tt2:246
 msgid "Failed to instantiate family %2 for list %1"
 msgstr "Ha fallat al instanciar la família %2 per a la llista %1. "
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:257
+#: ../mail_tt2/listmaster_notification.tt2:253
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa no va poder modificar la llista %1 (Família %2) "
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:263
+#: ../mail_tt2/listmaster_notification.tt2:259
 #: ../mail_tt2/listowner_notification.tt2:43
 msgid "List %1 automatic bounce management"
 msgstr "Llista %1 gestió automàtica de rebotats"
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:267
+#: ../mail_tt2/listmaster_notification.tt2:263
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6899,7 +6713,7 @@ msgstr ""
 " notificats que podrian ser eliminats de la llista %2: "
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:270
+#: ../mail_tt2/listmaster_notification.tt2:266
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6910,7 +6724,7 @@ msgstr ""
 "eliminats de la llista %2: "
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:273
+#: ../mail_tt2/listmaster_notification.tt2:269
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6920,44 +6734,44 @@ msgstr ""
 "llistats a sota han estat\n"
 "seleccionats per Sympa com a adreces amb greus problemes d'entrega:"
 
-#: ../mail_tt2/listmaster_notification.tt2:280
+#: ../mail_tt2/listmaster_notification.tt2:276
 #: ../mail_tt2/listowner_notification.tt2:60
 msgid "Managing bouncing subscribers:"
 msgstr "administrant subscriptors amb errors :"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:284
-#: ../mail_tt2/listmaster_notification.tt2:295
-#: ../mail_tt2/listmaster_notification.tt2:303
+#: ../mail_tt2/listmaster_notification.tt2:280
+#: ../mail_tt2/listmaster_notification.tt2:291
+#: ../mail_tt2/listmaster_notification.tt2:299
 #, fuzzy
 msgid "Listmaster: internal server error "
 msgstr "Administrador del Servei : Error intern del servidor"
 
 #. (who)
-#: ../mail_tt2/listmaster_notification.tt2:286
-#: ../mail_tt2/listmaster_notification.tt2:305
+#: ../mail_tt2/listmaster_notification.tt2:282
+#: ../mail_tt2/listmaster_notification.tt2:301
 msgid " User %1 has encountered an internal server error"
 msgstr "L'usuari %1 ha trobat un error intern del servidor"
 
 #. (error)
-#: ../mail_tt2/listmaster_notification.tt2:297
+#: ../mail_tt2/listmaster_notification.tt2:293
 msgid "The following error occurred whila managing bounces: %&"
 msgstr ""
 
-#: ../mail_tt2/listmaster_notification.tt2:306
-#: ../mail_tt2/listmaster_notification.tt2:377
+#: ../mail_tt2/listmaster_notification.tt2:302
+#: ../mail_tt2/listmaster_notification.tt2:373
 msgid "Web interface"
 msgstr "Interfície web"
 
-#: ../mail_tt2/listmaster_notification.tt2:308
+#: ../mail_tt2/listmaster_notification.tt2:304
 msgid "Unable to change directory."
 msgstr "Impossible canviar directori"
 
-#: ../mail_tt2/listmaster_notification.tt2:309
+#: ../mail_tt2/listmaster_notification.tt2:305
 msgid "The authentication server name is not defined."
 msgstr "No s'ha definir el nom del servidor d'autenticació "
 
-#: ../mail_tt2/listmaster_notification.tt2:310
+#: ../mail_tt2/listmaster_notification.tt2:306
 #, fuzzy
 msgid ""
 "auth.conf error: either email_http_header or ldap_host/"
@@ -6967,301 +6781,301 @@ msgstr ""
 "email_http_header, o de ldap_host/ldap_get_email_by_uid_filter. "
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:311
+#: ../mail_tt2/listmaster_notification.tt2:307
 msgid "Unkown authentication service %1."
 msgstr "Servei d'autenticació %1 desconegut."
 
 #. (user)
-#: ../mail_tt2/listmaster_notification.tt2:312
+#: ../mail_tt2/listmaster_notification.tt2:308
 msgid "Add user '%1' in DB failed."
 msgstr "L'addició de l'usuari '%1' a la DB ha fallat."
 
 #. (user)
-#: ../mail_tt2/listmaster_notification.tt2:313
+#: ../mail_tt2/listmaster_notification.tt2:309
 msgid "Update user '%1' in DB failed"
 msgstr "L'actualització de l'usuari '%1' a la DB ha fallat."
 
 #. (old_email)
-#: ../mail_tt2/listmaster_notification.tt2:313
-#: ../mail_tt2/listmaster_notification.tt2:315
+#: ../mail_tt2/listmaster_notification.tt2:309
+#: ../mail_tt2/listmaster_notification.tt2:311
 #, fuzzy
 msgid " (old email: %1)"
 msgstr "(antic correu electrònic: %1)"
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:314
+#: ../mail_tt2/listmaster_notification.tt2:310
 msgid "Add subscriber '%1' in DB failed."
 msgstr "L'addició de subscripció '%1' a la DB ha fallat."
 
 #. (sub,old_email)
-#: ../mail_tt2/listmaster_notification.tt2:315
+#: ../mail_tt2/listmaster_notification.tt2:311
 msgid "Update subscriber '%1' in DB failed"
 msgstr "L'actualització de subscripció '%1' a la DB ha fallat."
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:316
+#: ../mail_tt2/listmaster_notification.tt2:312
 msgid "Delete subscriber '%1' in DB failed."
 msgstr "L'eliminació de subscripció '%1' a la DB ha fallat."
 
 #. (old_email)
-#: ../mail_tt2/listmaster_notification.tt2:317
+#: ../mail_tt2/listmaster_notification.tt2:313
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
 "L'eliminació d'usuari a la DB per a l'antic correu electrònic '%1' ha fallat."
 
 #. (email,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:318
+#: ../mail_tt2/listmaster_notification.tt2:314
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "No s'ha trobat el/la subscriptor '%1' a la llista %2."
 
 #. (filepath)
-#: ../mail_tt2/listmaster_notification.tt2:319
+#: ../mail_tt2/listmaster_notification.tt2:315
 #, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "Impossible llegir el fitxer : '%1'"
 
 #. (filepath)
-#: ../mail_tt2/listmaster_notification.tt2:320
+#: ../mail_tt2/listmaster_notification.tt2:316
 #, fuzzy
 msgid "Unable to write file: '%1'."
 msgstr "Impossible escriure al fitxer : '%1'."
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:321
+#: ../mail_tt2/listmaster_notification.tt2:317
 msgid "Unable to open file '%1'."
 msgstr "Impossible obrir el fitxer '%1'."
 
 #. (directory)
-#: ../mail_tt2/listmaster_notification.tt2:322
+#: ../mail_tt2/listmaster_notification.tt2:318
 msgid "Unable to open directory '%1'."
 msgstr "Impossible obrir el directori '%1'."
 
 #. (dir)
-#: ../mail_tt2/listmaster_notification.tt2:323
+#: ../mail_tt2/listmaster_notification.tt2:319
 msgid "Unable to create directory '%1'."
 msgstr "Impossible crear el directori '%1'."
 
 #. (spool)
-#: ../mail_tt2/listmaster_notification.tt2:324
+#: ../mail_tt2/listmaster_notification.tt2:320
 msgid "Unable to open spool '%1'."
 msgstr "Impossible obrir el carret (spool) '%1'."
 
 #. (msg)
-#: ../mail_tt2/listmaster_notification.tt2:325
+#: ../mail_tt2/listmaster_notification.tt2:321
 msgid "Unable to get message '%1'."
 msgstr "Impossible recuperar el missatge '%1'."
 
 #. (old,new)
-#: ../mail_tt2/listmaster_notification.tt2:326
+#: ../mail_tt2/listmaster_notification.tt2:322
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "Impossible renombrar el fitxer '%1' dins de '%2'."
 
 #. (old,new)
-#: ../mail_tt2/listmaster_notification.tt2:327
+#: ../mail_tt2/listmaster_notification.tt2:323
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "Impossible renombrar el directori '%1' dins de '%2'."
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:328
+#: ../mail_tt2/listmaster_notification.tt2:324
 msgid "Unable to erase file '%1'."
 msgstr "Impossible eliminar el fitxer '%1'."
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:329
+#: ../mail_tt2/listmaster_notification.tt2:325
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "Impossible enviar la comanda  DISTRIBUTE de '%1' a la llista '%2'."
 
 #. (dir)
-#: ../mail_tt2/listmaster_notification.tt2:330
+#: ../mail_tt2/listmaster_notification.tt2:326
 msgid "No HTML version of the message available in '%1'."
 msgstr "No hi ha versió HTML del missatge disponible  a '%1'."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:331
+#: ../mail_tt2/listmaster_notification.tt2:327
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "Impossible actualitzar el fitxer config_changes per la llista '%1'."
 
 #. (month,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:332
+#: ../mail_tt2/listmaster_notification.tt2:328
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "Impossible trobar mes '%1' per a la llista '%2'"
 
 #. (dir)
 #. (path)
-#: ../mail_tt2/listmaster_notification.tt2:332
-#: ../mail_tt2/listmaster_notification.tt2:333
-#: ../mail_tt2/listmaster_notification.tt2:334
+#: ../mail_tt2/listmaster_notification.tt2:328
+#: ../mail_tt2/listmaster_notification.tt2:329
+#: ../mail_tt2/listmaster_notification.tt2:330
 #, fuzzy
 msgid ": unable to read '%1'."
 msgstr ": impossible llegir '%1'."
 
 #. (arc_file,list.name,path)
-#: ../mail_tt2/listmaster_notification.tt2:333
+#: ../mail_tt2/listmaster_notification.tt2:329
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "Impossible trobar l'arxiu '%1' per a la llista '%2'"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:334
+#: ../mail_tt2/listmaster_notification.tt2:330
 msgid "Unable to find archive for list '%1'"
 msgstr "Impossible trobar l'arxiu per a la llista '%1' "
 
-#: ../mail_tt2/listmaster_notification.tt2:335
+#: ../mail_tt2/listmaster_notification.tt2:331
 #, fuzzy
 msgid "Unable to send archive: no message id found."
 msgstr "Impossible enviar arxiu : no s'ha trobat id de missatge"
 
 #. (msgid)
-#: ../mail_tt2/listmaster_notification.tt2:336
+#: ../mail_tt2/listmaster_notification.tt2:332
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr ""
 "No s'ha trobat cap missatge en els arxius que coincideixi amb el Message-ID "
 "'%1'."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:337
+#: ../mail_tt2/listmaster_notification.tt2:333
 msgid "Cannot save config file for list '%1'."
 msgstr "No es pot guardar l'arxiu de configuració per a la llista '%1'."
 
-#: ../mail_tt2/listmaster_notification.tt2:338
+#: ../mail_tt2/listmaster_notification.tt2:334
 msgid "Failed to install aliases."
 msgstr "fallada a l'instal·lar els àlies."
 
-#: ../mail_tt2/listmaster_notification.tt2:339
+#: ../mail_tt2/listmaster_notification.tt2:335
 msgid "Failed to remove aliases."
 msgstr "fallada a l'eliminar àlies."
 
-#: ../mail_tt2/listmaster_notification.tt2:340
+#: ../mail_tt2/listmaster_notification.tt2:336
 msgid "Internal scenario error for 'create_list'."
 msgstr "escenari d'error intern per a 'createlist'. "
 
-#: ../mail_tt2/listmaster_notification.tt2:341
+#: ../mail_tt2/listmaster_notification.tt2:337
 msgid "Unable to create list."
 msgstr "Impossible crear la llista"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:344
+#: ../mail_tt2/listmaster_notification.tt2:340
 msgid "Unable to get family for list '%1'."
 msgstr "Impossible recuperar la família per a la llista '%1'"
 
 #. (new_listname)
-#: ../mail_tt2/listmaster_notification.tt2:345
+#: ../mail_tt2/listmaster_notification.tt2:341
 msgid "Unable to reload list with new listname '%1'."
 msgstr "Impossible tornar a carregar la llista amb el nou nom de llista '%1'."
 
-#: ../mail_tt2/listmaster_notification.tt2:345
+#: ../mail_tt2/listmaster_notification.tt2:341
 msgid "Unable to reload list"
 msgstr "Impossible tornar a carregar la llista"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:346
+#: ../mail_tt2/listmaster_notification.tt2:342
 msgid "Failed to inlude members for list '%1'"
 msgstr "fallada a l'incloure membres a la llista '%1' "
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:347
+#: ../mail_tt2/listmaster_notification.tt2:343
 msgid "Failed to include list admins for list '%1'"
 msgstr "Fallada a l'incloure llista d'administradors per a la llista '%1'"
 
-#: ../mail_tt2/listmaster_notification.tt2:348
+#: ../mail_tt2/listmaster_notification.tt2:344
 msgid "No owner is defined for the list '%1'"
 msgstr "No s'ha definit administrador per a la llista '%1'"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:349
+#: ../mail_tt2/listmaster_notification.tt2:345
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "La exportació a un directori LDAP ha fallat per a la llista '%1'"
 
 #. (new_listname)
-#: ../mail_tt2/listmaster_notification.tt2:350
+#: ../mail_tt2/listmaster_notification.tt2:346
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "Impossible comprovar el nom de la llista '%1' en el servidro SMTP"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:351
+#: ../mail_tt2/listmaster_notification.tt2:347
 msgid "Cannot create shared for list '%1'."
 msgstr "No s'ha pogut crear documents compartits per a la llista '%1'."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:352
+#: ../mail_tt2/listmaster_notification.tt2:348
 msgid "Cannot restore shared for list '%1'."
 msgstr "No s'ha pogut recuperar documents compartits per a la llista '%1'."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:353
+#: ../mail_tt2/listmaster_notification.tt2:349
 msgid "Cannot delete shared for list '%1'."
 msgstr "No s'ha eliminar crear documents compartits per a la llista '%1'."
 
-#: ../mail_tt2/listmaster_notification.tt2:354
+#: ../mail_tt2/listmaster_notification.tt2:350
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "impossible fullejar els documents compartits per a la llista %1. "
 
 #. (path)
-#: ../mail_tt2/listmaster_notification.tt2:355
+#: ../mail_tt2/listmaster_notification.tt2:351
 msgid "Cannot upload file '%1'."
 msgstr "No s'ha pogut actualitzar el fitxer '%1'."
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:357
+#: ../mail_tt2/listmaster_notification.tt2:353
 msgid "Errors while unzipping file '%1'."
 msgstr "error mentre descomprimia l'arxiu'%1'."
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:358
+#: ../mail_tt2/listmaster_notification.tt2:354
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "Impossible enviar la comanda REMIND de '%1' a la llista '%2'. "
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:359
+#: ../mail_tt2/listmaster_notification.tt2:355
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "Impossible enviar un missatg des de '%1' a la llista '%2'"
 
 #. (key,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:360
+#: ../mail_tt2/listmaster_notification.tt2:356
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
 "Impossible accedir al missatge autenticat amb la clau '%'1 per a la llista '%"
 "2'."
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:361
+#: ../mail_tt2/listmaster_notification.tt2:357
 msgid "Unable to delete subscription request for user '%1'."
 msgstr ""
 "Impossible esborrar la sol·licitud de subscripció de l'usuari/usuària '%1'. "
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:362
+#: ../mail_tt2/listmaster_notification.tt2:358
 msgid "Unable to add file '%1' to archives."
 msgstr "Impossible afegir fitxer '%1' als arxius. "
 
 #. (zipfile)
-#: ../mail_tt2/listmaster_notification.tt2:363
+#: ../mail_tt2/listmaster_notification.tt2:359
 msgid "Unable to write file zip '%1'."
 msgstr "Impossible escrire el fitxer zip '%1'"
 
 #. (path,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:365
+#: ../mail_tt2/listmaster_notification.tt2:361
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
 "Impossible crear un document compartit amb el path '%1' per a la llista '%2'."
 
-#: ../mail_tt2/listmaster_notification.tt2:366
+#: ../mail_tt2/listmaster_notification.tt2:362
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "El paràmetre de cookie no està definit, fallada d'autenticació. "
 
 #. (env)
-#: ../mail_tt2/listmaster_notification.tt2:367
+#: ../mail_tt2/listmaster_notification.tt2:363
 #, fuzzy
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "Error de galeta: '%1' no està definit, fallada d'autenticació. "
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:374
+#: ../mail_tt2/listmaster_notification.tt2:370
 #, fuzzy
 msgid "Listmaster: system error "
 msgstr "Administrador del servei : error de sistema"
 
 #. (who)
-#: ../mail_tt2/listmaster_notification.tt2:376
+#: ../mail_tt2/listmaster_notification.tt2:372
 msgid " User %1 has encountered a system error"
 msgstr "Usuari %1 ha trobat un error de sistema"
 
@@ -7767,25 +7581,30 @@ msgstr ""
 
 #. (list.name,msg_from)
 #: ../mail_tt2/moderate.tt2:3
+msgid "Article to be tagged for list %1 from %2"
+msgstr "Articulo a ser marcat per a la llista %1 enviat per %2. "
+
+#. (list.name,msg_from)
+#: ../mail_tt2/moderate.tt2:4
 msgid "Message for list %1 from %2 to be approved"
 msgstr "Missatge de %2 per a la llista %1 està a l'espera d'aprovació"
 
 #. (list.name,msg_from)
-#: ../mail_tt2/moderate.tt2:12
+#: ../mail_tt2/moderate.tt2:14
 msgid "One new message from list %1 from %2 arrived. "
 msgstr "Ha arribat un nou missatge de %2 per a la llista %1."
 
-#: ../mail_tt2/moderate.tt2:13
+#: ../mail_tt2/moderate.tt2:15
 msgid "This message has been tagged as spam"
 msgstr "Aquest missatge ha estat marcat com a correu brossa (spam)."
 
 #. (mod_spool_size)
-#: ../mail_tt2/moderate.tt2:15
+#: ../mail_tt2/moderate.tt2:17
 #, fuzzy
 msgid "They are %1 messages awaiting moderation."
 msgstr "El fitxer %1 resta pendent de moderació"
 
-#: ../mail_tt2/moderate.tt2:16
+#: ../mail_tt2/moderate.tt2:18
 #, fuzzy
 msgid ""
 "To browse the awaiting messages, you should click on the following link:"
@@ -7793,36 +7612,35 @@ msgstr ""
 "Per a veure la llista de missatges en espera, hauria de consultar aquest "
 "enllaç: %1/tiquet/%2. "
 
-#: ../mail_tt2/moderate.tt2:19
+#. (list.name)
+#: ../mail_tt2/moderate.tt2:21
 #, fuzzy
 msgid ""
-"This mailing list is configured to require topics; that's probably why this "
-"message went through the moderation process."
-msgstr "Aquesta llista requereix que cada missatge tingui un tema assignat."
-
-#: ../mail_tt2/moderate.tt2:23
-msgid ""
-"Because the new message is suspected to be a spam it is not attached to this "
-"one. You must use the web interface to reject or validate it."
+"To tag the message in list %1 for the appropriate topic, please use the "
+"following link:"
 msgstr ""
+"Per a triar un tema adequat al teu missatge dirigit a la llista %1, visita "
+"la pàgina següent :\n"
+"\n"
+"%2/viewmod/%1/%3\n"
 
 #. (list.name)
-#: ../mail_tt2/moderate.tt2:26
+#: ../mail_tt2/moderate.tt2:29
 msgid "To distribute the attached message in list %1:"
 msgstr "Per a distribuir el missatge annexat per a la llista %1:"
 
 #. (conf.email,conf.host)
-#: ../mail_tt2/moderate.tt2:28 ../mail_tt2/moderate.tt2:33
+#: ../mail_tt2/moderate.tt2:31 ../mail_tt2/moderate.tt2:36
 #, fuzzy
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "O envia un missatge a  %1@%2 amb el següent assumpte : "
 
-#: ../mail_tt2/moderate.tt2:31
+#: ../mail_tt2/moderate.tt2:34
 msgid "To reject it (it will be removed):"
 msgstr "Per a rebutjar-lo (el missatge serà esborrat) :"
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/moderate.tt2:36 ../mail_tt2/modindex.tt2:10
+#: ../mail_tt2/moderate.tt2:39 ../mail_tt2/modindex.tt2:10
 #, fuzzy
 msgid "The messages moderating documentation:"
 msgstr ""
@@ -8444,7 +8262,6 @@ msgstr "Restringit a la llista d'administradors"
 #: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
 #: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
 #: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
-#: ../src/etc/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "Restringit als subscriptors"
 
@@ -8524,7 +8341,7 @@ msgstr "Ningú pot revisar"
 msgid "restricted to subscribers or local domain users"
 msgstr "reservat a subscriptors o usuaris del domini local"
 
-#: ../src/etc/scenari/review.owner:1 ../src/etc/scenari/tracking.owner:1
+#: ../src/etc/scenari/review.owner:1
 msgid "only owner (and listmaster)"
 msgstr "Només administrador (i administrador del servei)"
 
@@ -8619,6 +8436,7 @@ msgid "public list multipart messages are rejected"
 msgstr "llista pública, els missatges multipart no estan permesos "
 
 #: ../src/etc/scenari/spam_status.x-spam-status:1
+#: ../src/etc/scenari/spam_status.x-spam-status~:1
 msgid "test x-spam-status  header"
 msgstr ""
 
@@ -8736,6 +8554,11 @@ msgstr "accés a intranet"
 msgid "conceal even for subscribers"
 msgstr "ocult inclús per a subscritors/res"
 
+#. (year.value.item(month))
+#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
+msgid "%1 message(s)"
+msgstr "%1 missatge(s)"
+
 #: ../src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "Cerca avançada"
@@ -8789,8 +8612,8 @@ msgstr "Estàs segur que vols esborrar aquests missatges ? "
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/etc/mhonarc-ressources.tt2:306 ../src/etc/mhonarc-ressources.tt2:310
-#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:573
-#: ../src/etc/mhonarc-ressources.tt2:577 ../src/etc/mhonarc-ressources.tt2:581
+#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:563
+#: ../src/etc/mhonarc-ressources.tt2:567 ../src/etc/mhonarc-ressources.tt2:571
 msgid "%m/%d/%Y"
 msgstr "%m/%d/%Y"
 
@@ -8810,37 +8633,37 @@ msgstr "<em>Missatge no disponible</em>"
 msgid "picture"
 msgstr "imatge"
 
-#: ../src/etc/mhonarc-ressources.tt2:472
+#: ../src/etc/mhonarc-ressources.tt2:469
 msgid "Reply to sender"
 msgstr "Respon a l'emissor "
 
-#: ../src/etc/mhonarc-ressources.tt2:474
+#: ../src/etc/mhonarc-ressources.tt2:471
 msgid "to list"
 msgstr "A llista"
 
-#: ../src/etc/mhonarc-ressources.tt2:476
+#: ../src/etc/mhonarc-ressources.tt2:473
 #, fuzzy
 msgid "to both"
 msgstr "robot"
 
-#: ../src/etc/mhonarc-ressources.tt2:479
+#: ../src/etc/mhonarc-ressources.tt2:476
 msgid "Reply"
 msgstr "Respon"
 
 #. (user.email)
-#: ../src/etc/mhonarc-ressources.tt2:480
+#: ../src/etc/mhonarc-ressources.tt2:477
 msgid "send it back to %1"
 msgstr "tornar-li a %1"
 
-#: ../src/etc/mhonarc-ressources.tt2:486
+#: ../src/etc/mhonarc-ressources.tt2:483
 msgid "tag this mail for deletion"
 msgstr "MArca aquest missatge per a eliminar"
 
-#: ../src/etc/mhonarc-ressources.tt2:486
+#: ../src/etc/mhonarc-ressources.tt2:483
 msgid "Do you really want to delete this message ?"
 msgstr "Realment vols eliminar aquest missatge ?"
 
-#: ../src/etc/mhonarc-ressources.tt2:489
+#: ../src/etc/mhonarc-ressources.tt2:486
 #, fuzzy
 msgid "view source"
 msgstr "Visualitza l'últim retornat"
@@ -8848,15 +8671,15 @@ msgstr "Visualitza l'últim retornat"
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/etc/mhonarc-ressources.tt2:626
+#: ../src/etc/mhonarc-ressources.tt2:616
 msgid "%y/%m/%d"
 msgstr "%y/%m/%d"
 
-#: ../src/etc/mhonarc-ressources.tt2:636
+#: ../src/etc/mhonarc-ressources.tt2:626
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Dilluns:Dimarts:Dimecres:Dijous:Divendres:Dissabte:Diumenge"
 
-#: ../src/etc/mhonarc-ressources.tt2:654
+#: ../src/etc/mhonarc-ressources.tt2:644
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -9013,1640 +8836,776 @@ msgstr ""
 "Els missatges poden ser llegits via per correu electrònic(subscripció) o\n"
 " per web (arxius web) "
 
-#: ../src/sympa_wizard.pl.in:249
-msgid "%s [%s] : "
-msgstr ""
-
-#: ../src/sympa_wizard.pl.in:271
-msgid "Incorrect parameter definition: %s\n"
-msgstr ""
-
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/sympa_wizard.pl.in:302
-#, fuzzy
-msgid "%d.%b.%Y-%H.%M.%S"
-msgstr "%d %b %Y %H:%M:%S"
-
-#: ../src/sympa_wizard.pl.in:307 ../src/sympa_wizard.pl.in:312
-#, fuzzy
-msgid "Unable to rename %s : %s"
-msgstr "Impossible crear la llista"
-
-#: ../src/sympa_wizard.pl.in:318 ../src/sympa_wizard.pl.in:325
-#, fuzzy
-msgid "Unable to open %s : %s"
-msgstr "Impossible obrir el carret (spool) '%1'."
-
-#: ../src/sympa_wizard.pl.in:337
-msgid ""
-"%s and %s have been updated.\n"
-"Previous versions have been saved as %s and %s.\n"
-msgstr ""
-
-#. This entry is a date/time format
-#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Bulk.pm:344
+#: ../src/lib/Bulk.pm:387
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10131
+#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9835
 msgid "%A"
 msgstr "%A"
 
-#: ../src/lib/confdef.pm:43
-#, fuzzy
-msgid "Site customization"
-msgstr "Personalitza"
-
-#: ../src/lib/confdef.pm:47
-msgid "Main robot hostname"
-msgstr ""
-
-#: ../src/lib/confdef.pm:56
-#, fuzzy
-msgid "Local part of sympa email address"
-msgstr "Introduïu una adreça electrònica "
-
-#: ../src/lib/confdef.pm:60
-msgid "Effective address will be [EMAIL]@[HOST]"
-msgstr ""
-
-#: ../src/lib/confdef.pm:65
-msgid "Gecos for service mail sent by Sympa itself"
-msgstr ""
-
-#: ../src/lib/confdef.pm:69
-#, fuzzy
-msgid "This parameter is used in mail_tt2 files"
-msgstr "El paràmetre css_path està definit com a"
-
-#: ../src/lib/confdef.pm:75
-msgid "Listmasters email list comma separated"
-msgstr ""
-
-#: ../src/lib/confdef.pm:79
-msgid ""
-"Sympa will associate listmaster privileges to these email addresses (mail "
-"and web interfaces). Some error reports may also be sent to these addresses."
-msgstr ""
-
-#: ../src/lib/confdef.pm:84
-#, fuzzy
-msgid "Local part of listmaster email address"
-msgstr "Introduïu una adreça electrònica "
-
-#: ../src/lib/confdef.pm:90
-#, fuzzy
-msgid "URL of main Web page"
-msgstr "Pàgina d'administració %1"
-
-#: ../src/lib/confdef.pm:323
-msgid ""
-"Directory for storing static contents (CSS, members pictures, documentation) "
-"directly delivered by Apache"
-msgstr ""
-
-#: ../src/lib/confdef.pm:331
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr ""
-
-#: ../src/lib/confdef.pm:348
-msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1336 ../src/lib/confdef.pm:350
-msgid "Should not be changed ! May invalid all user password"
-msgstr ""
-
-#: ../src/lib/confdef.pm:356
-#, fuzzy
-msgid "Who is able to create lists"
-msgstr "Impossible crear la llista"
-
-#: ../src/lib/confdef.pm:360
-msgid ""
-"This parameter is a scenario, check sympa documentation about scenarios if "
-"you want to define one"
-msgstr ""
-
-#: ../src/lib/confdef.pm:388
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-
-#: ../src/lib/confdef.pm:395
-#, fuzzy
-msgid "Directories"
-msgstr "Carpeta"
-
-#: ../src/lib/confdef.pm:400
-msgid "Directory containing mailing lists subdirectories"
-msgstr ""
-
-#: ../src/lib/confdef.pm:407
-msgid ""
-"Directory for configuration files; it also contains scenari/ and templates/ "
-"directories"
-msgstr ""
-
-#: ../src/lib/confdef.pm:411
-#, fuzzy
-msgid "System related"
-msgstr "Plantilles"
-
-#: ../src/lib/confdef.pm:416
-msgid "Syslog facility for sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:419
-#, fuzzy
-msgid "Do not forget to edit syslog.conf"
-msgstr "format incorrecte de edit_list.conf"
-
-#: ../src/lib/confdef.pm:424
-msgid "Log verbosity"
-msgstr ""
-
-#: ../src/lib/confdef.pm:427
-msgid "0: normal, 2,3,4: for debug"
-msgstr ""
-
-#: ../src/lib/confdef.pm:432
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:438
-msgid "File containing Sympa PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:440
-msgid ""
-"Sympa also locks this file to ensure that it is not running more than once. "
-"Caution: user sympa need to write access without special privilege."
-msgstr ""
-
-#: ../src/lib/confdef.pm:450
-msgid "Umask used for file creation by Sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:454
-#, fuzzy
-msgid "Sending related"
-msgstr "Llistes pendents"
-
-#: ../src/lib/confdef.pm:463
-msgid ""
-"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
-msgstr ""
-
-#: ../src/lib/confdef.pm:465
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerfull systems."
-msgstr ""
-
-#: ../src/lib/confdef.pm:475
-msgid ""
-"comma separated list of operations for which blacklist filter is applied"
-msgstr ""
-
-#: ../src/lib/confdef.pm:480
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-
-#: ../src/lib/confdef.pm:485
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-
-#: ../src/lib/confdef.pm:491
-msgid ""
-"Default maximum size (in bytes) for messages (can be re-defined for each "
-"list)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:508
-msgid ""
-"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
-"file allows a different tuning per destination domain."
-msgstr ""
-
-#: ../src/lib/confdef.pm:514
-msgid "Max. number of different domains per call to Sendmail"
-msgstr ""
-
-#: ../src/lib/confdef.pm:524
-msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:527
-msgid ""
-"should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
-"\" is distributed with Postfix)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:539
-msgid "Specify which rfc2369 mailing list headers to add"
-msgstr ""
-
-#: ../src/lib/confdef.pm:545
-#, fuzzy
-msgid "Specify header fields to be removed before message distribution"
-msgstr ""
-"Plaç màxim a partir d'una sincronizació abans que aquesta  sigui provocada "
-"per l'enviament d'un missatge"
-
-#: ../src/lib/confdef.pm:555
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr ""
-
-#: ../src/lib/confdef.pm:570
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-
-#: ../src/lib/confdef.pm:572
-msgid ""
-"Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
-"standard port."
-msgstr ""
-
-#: ../src/lib/confdef.pm:582
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr ""
-
-#: ../src/lib/confdef.pm:584
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr ""
-
-#: ../src/lib/confdef.pm:591
-#, fuzzy
-msgid "Bulk mailer"
-msgstr "Error del gestor de correo en masa"
-
-#: ../src/lib/confdef.pm:600
-msgid "Default priority for a packet to be sent by bulk."
-msgstr ""
-
-#: ../src/lib/confdef.pm:607
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-
-#: ../src/lib/confdef.pm:614
-msgid "Max number of bulks that will run on the same server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:621
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-
-#: ../src/lib/confdef.pm:628
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-
-#: ../src/lib/confdef.pm:630
-msgid "Keep it small if you want your server to be reactive."
-msgstr ""
-
-#: ../src/lib/confdef.pm:635
-msgid ""
-"Number of seconds a master bulk waits between two packets number checks."
-msgstr ""
-
-#: ../src/lib/confdef.pm:637
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr ""
-
-#: ../src/lib/confdef.pm:640
-#, fuzzy
-msgid "Quotas"
-msgstr "quota"
-
-#: ../src/lib/confdef.pm:645
-msgid "Default disk quota for shared repository"
-msgstr ""
-
-#: ../src/lib/confdef.pm:654
-#, fuzzy
-msgid "Spool related"
-msgstr "Plantilles"
-
-#: ../src/lib/confdef.pm:659
-msgid "Directory containing various specialized spools"
-msgstr ""
-
-#: ../src/lib/confdef.pm:661
-msgid "All spool are created at runtime by sympa.pl"
-msgstr ""
-
-#: ../src/lib/confdef.pm:666
-msgid "Directory for incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:677
-#, fuzzy
-msgid "Directory for moderation spool"
-msgstr "El fitxer %1 resta pendent de moderació"
-
-#: ../src/lib/confdef.pm:683
-#, fuzzy
-msgid "Directory for digest spool"
-msgstr "Directori de llistes"
-
-#: ../src/lib/confdef.pm:689
-#, fuzzy
-msgid "Directory for authentication spool"
-msgstr "restringit al propierati amb autenticació"
-
-#: ../src/lib/confdef.pm:695
-msgid "Directory for outgoing spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:701
-#, fuzzy
-msgid "Directory for topic spool"
-msgstr "Directori de llistes"
-
-#: ../src/lib/confdef.pm:707
-msgid "Directory for bounce incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:713
-#, fuzzy
-msgid "Directory for task spool"
-msgstr "Directori de llistes"
-
-#: ../src/lib/confdef.pm:719
-msgid "Directory for automatic list creation spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:725
-msgid "Temporary directory used by OpenSSL and antivirus plugins"
-msgstr ""
-
-#: ../src/lib/confdef.pm:730
-msgid "Must not be 0."
-msgstr ""
-
-#: ../src/lib/confdef.pm:769
-#, fuzzy
-msgid "Internationalization related"
-msgstr "domini d'Internet"
-
-#: ../src/lib/confdef.pm:774
-msgid ""
-"Directory containing available NLS catalogues (Message internationalization)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:780
-#, fuzzy
-msgid "Supported languages"
-msgstr "Idioma"
-
-#: ../src/lib/confdef.pm:784
-msgid ""
-"This is the set of language that will be proposed to your users for the "
-"Sympa GUI. Don't select a language if you don't have the proper locale "
-"packages installed."
-msgstr ""
-
-#: ../src/lib/confdef.pm:789
-msgid "Default language (one of supported languages)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:793
-msgid "This is the default language used by Sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:800
-#, fuzzy
-msgid "Bounce related"
-msgstr "puntuació retornats"
-
-#: ../src/lib/confdef.pm:810
-msgid "Welcome message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:812
-msgid "If set to unique, new subcriber is removed if welcome message bounce"
-msgstr ""
-
-#: ../src/lib/confdef.pm:817
-msgid "Remind message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:819
-msgid ""
-"If set to unique, subcriber is removed if remind message bounce, use with "
-"care"
-msgstr ""
-
-#: ../src/lib/confdef.pm:828
-msgid "Task name for expiration of old bounces"
-msgstr ""
-
-#: ../src/lib/confdef.pm:872
-msgid "Bouncing email rate for warn list owner"
-msgstr ""
-
-#: ../src/lib/confdef.pm:879
-msgid "Bouncing email rate for halt the list (not implemented)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:881
-msgid "Not yet used in current version, Default is 50"
-msgstr ""
-
-#: ../src/lib/confdef.pm:896
-#, fuzzy
-msgid "Tuning"
-msgstr "retornats"
-
-#: ../src/lib/confdef.pm:901
-msgid ""
-"Use of binary version of the list config structure on disk (none | "
-"binary_file)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:904
-msgid ""
-"Set this parameter to \"binary_file\" if you manage a big amount of lists "
-"(1000+); it should make the web interface startup faster"
-msgstr ""
-
-#: ../src/lib/confdef.pm:909
-msgid "flock | nfs"
-msgstr ""
-
-#: ../src/lib/confdef.pm:913
-msgid "Sympa commands priority"
-msgstr ""
-
-#: ../src/lib/confdef.pm:929
-#, fuzzy
-msgid "Default priority for list messages"
-msgstr "Últims missatge"
-
-#: ../src/lib/confdef.pm:934
-#, fuzzy
-msgid "Database related"
-msgstr "Actualitzada l'estructura de base de dades"
-
-#: ../src/lib/confdef.pm:943
-msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:946
-msgid "Be careful to the case"
-msgstr ""
-
-#: ../src/lib/confdef.pm:951
-#, fuzzy
-msgid "Name of the database"
-msgstr "Error en actualitzar la base de dades."
-
-#: ../src/lib/confdef.pm:954
-msgid "With SQLite, the name of the DB corresponds to the DB file"
-msgstr ""
-
-#: ../src/lib/confdef.pm:960
-msgid "Hostname of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:967
-msgid "Port of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:975
-#, fuzzy
-msgid "User for the database connection"
-msgstr "variables d'entorn  per a la connexió de base de dades"
-
-#: ../src/lib/confdef.pm:983
-#, fuzzy
-msgid "Password for the database connection"
-msgstr "variables d'entorn  per a la connexió de base de dades"
-
-#: ../src/lib/confdef.pm:986
-msgid ""
-"What ever you use a password or not, you must protect the SQL server (is it "
-"not a public internet service ?)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:998
-#, fuzzy
-msgid "Environment variables setting for database"
-msgstr "variables d'entorn  per a la connexió de base de dades"
-
-#: ../src/lib/confdef.pm:1000
-msgid "This is useful for defining ORACLE_HOME "
-msgstr ""
-
-#: ../src/lib/confdef.pm:1006
-msgid "Database private extention to subscriber table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1008 ../src/lib/confdef.pm:1016
-msgid "You need to extend the database format with these fields"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1014
-msgid "Database private extention to user table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1033
-msgid "Number of months that elapse before a log is expired"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1055
-msgid ""
-"Default timeout between two scheduled synchronizations of list members with "
-"data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1061
-msgid ""
-"Default timeout between two action-triggered synchronizations of list "
-"members with data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1067
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1072
-msgid "Loop prevention"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1100
-#, fuzzy
-msgid "S/MIME configuration"
-msgstr "Còpia la configuració de la llista"
-
-#: ../src/lib/confdef.pm:1105
-msgid "Path to OpenSSL"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1108
-msgid "Sympa recognizes S/MIME if OpenSSL is installed"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1115
-msgid "Directory containing trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1123
-msgid "File containing bundled trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1131
-msgid "Password used to crypt lists private keys"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1148
-#, fuzzy
-msgid ""
-"Insert a DKIM signature to message from the robot, from the list or both"
-msgstr "Enviant un missatge a la llista"
-
-#: ../src/lib/confdef.pm:1155
-msgid ""
-"Type of message that is added a DKIM signature before distribution to "
-"subscribers. Possible values are \"none\", \"any\" or a list of the "
-"following keywords: \"md5_authenticated_messages\", "
-"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
-"\"editor_validated_messages\"."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1162
-msgid "Location of the file where DKIM private key is stored"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1169
-msgid ""
-"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1176
-#, fuzzy
-msgid "The selector"
-msgstr "Communtar la selecció"
-
-#: ../src/lib/confdef.pm:1183
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1191
-msgid "List of headers to be included into the message for signature"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1195
-msgid "Antivirus plug-in"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1201
-msgid "Path to the antivirus scanner engine"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1204
-msgid ""
-"supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
-"Micro/VirusWall"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1210
-msgid "Antivirus plugin command argument"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1219
-msgid "Tag based spam filtering"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1229
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1237
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1245
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1251
-#, fuzzy
-msgid "wwsympa.conf parameters"
-msgstr "Paràmetres incorrectes"
-
-#: ../src/lib/confdef.pm:1256
-msgid "Directory for storing HTML archives"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1259 ../src/lib/confdef.pm:1279
-msgid "Better if not in a critical partition"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1264
-msgid ""
-"Default index organization when entering the web archive: either threaded or "
-"in chronological order"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1271
-msgid "File containing archived PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1277
-msgid "Directory for storing bounces"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1284
-msgid "File containing bounced PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1290
-msgid "HTTP cookies lifetime"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1296
-msgid "HTTP cookies validity domain"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1303
-msgid ""
-"Activates a custom archiver to use instead of MHonArc. The value of this "
-"parameter is the absolute path on the file system to the script of the "
-"custom archiver."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1310
-msgid "Type of main Web page ( lists | home )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1318
-msgid "Syslog facility for wwsympa, archived and bounced"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1321
-msgid "Default is to use previously defined sympa log facility."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1326
-msgid "Path to MHonArc mail2html plugin"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1329
-msgid "This is required for HTML mail archiving"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1334
-msgid "Password case (insensitive | sensitive)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1341
-msgid "Title of main Web page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1349
-msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1352
-msgid "This module provide much faster web interface"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1355
-msgid "Virtual host specific parameters"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1359
-msgid "URL of a virtual host"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1390
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1410
-msgid ""
-"If set to \"on\", users will be able to post messages in HTML using a "
-"javascript WYSIWYG editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1418
-msgid "Path to the javascript file making the WYSIWYG HTML editor available"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1425
-msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1457
-msgid ""
-"When using LDAP authentication, if the identifier provided by the user was a "
-"valid email, if this parameter is set to false, then the provided email will "
-"be used to authenticate the user. Otherwise, use of the first email returned "
-"by the LDAP server will be used."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1464
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1466
-msgid ""
-"In some language environments, legacy encoding (character set) is preferred "
-"for e-mail messages: for example iso-2022-jp in Japanese language."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1500
-#, fuzzy
-msgid "Directory for subscription spool"
-msgstr "Recordatori de la teva subscripció a %1"
-
-#: ../src/lib/confdef.pm:1505
-msgid ""
-"Default number of lines of the array displaying users in the review page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1517
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1525
-msgid "Directory containing user certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1531
-msgid "File containing task_manager PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1536
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr ""
-
-#: ../src/lib/Conf.pm:967
-msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
-msgstr ""
-
-#: ../src/lib/Conf.pm:1311
+#: ../src/lib/Conf.pm:141
 #, fuzzy
 msgid "Error at line %d: %s\n"
 msgstr "Error en la línia %d : %s"
 
+#: ../src/lib/Conf.pm:438
+#, fuzzy
+msgid "Error at line %d: %s"
+msgstr "Error en la línia %d : %s"
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2593 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:1881 ../wwsympa/Auth.pm:435
-#: ../wwsympa/wwsympa.fcgi.in:1079 ../wwsympa/wwsympa.fcgi.in:2928
+#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
+#: ../src/lib/List.pm:1894 ../wwsympa/Auth.pm:459
+#: ../wwsympa/wwsympa.fcgi.in:1067 ../wwsympa/wwsympa.fcgi.in:2870
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d %b %Y at %H:%M:%S"
 
-#: ../src/lib/List.pm:325
+#: ../src/lib/List.pm:322
 msgid "Account"
 msgstr "Compte"
 
-#: ../src/lib/List.pm:329
+#: ../src/lib/List.pm:326
 msgid "Who can add subscribers"
 msgstr "Qui pot afegir subscriptors "
 
-#: ../src/lib/List.pm:333
+#: ../src/lib/List.pm:330
 msgid "Anonymous sender"
 msgstr "Remitent anònim"
 
-#: ../src/lib/List.pm:338
+#: ../src/lib/List.pm:335
 msgid "frequency"
 msgstr "Freqüencia"
 
-#: ../src/lib/List.pm:1460 ../src/lib/List.pm:343
+#: ../src/lib/List.pm:1426 ../src/lib/List.pm:340
 msgid "access right"
 msgstr "Drets d'accés"
 
-#: ../src/lib/List.pm:347
+#: ../src/lib/List.pm:344
 msgid "Text archives"
 msgstr "Arxius de text"
 
-#: ../src/lib/List.pm:352
+#: ../src/lib/List.pm:349
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arxivar els correus xifrats com a text clar"
 
-#: ../src/lib/List.pm:1196 ../src/lib/List.pm:1236 ../src/lib/List.pm:359
-#: ../src/lib/List.pm:560 ../src/lib/List.pm:686 ../src/lib/List.pm:721
+#: ../src/lib/List.pm:1162 ../src/lib/List.pm:1202 ../src/lib/List.pm:356
+#: ../src/lib/List.pm:532 ../src/lib/List.pm:659 ../src/lib/List.pm:694
 msgid "reception mode"
 msgstr "mode de recepció"
 
-#: ../src/lib/List.pm:362
+#: ../src/lib/List.pm:359
 msgid "Available subscription options"
 msgstr "Opcions de subscripció disponibles"
 
-#: ../src/lib/List.pm:370
+#: ../src/lib/List.pm:367
 msgid "warn rate"
 msgstr "rati d'avís"
 
-#: ../src/lib/List.pm:377
+#: ../src/lib/List.pm:374
 msgid "halt rate"
 msgstr "rati d'aturada"
 
-#: ../src/lib/List.pm:381
+#: ../src/lib/List.pm:378
 msgid "Bounces management"
 msgstr "Administració de retornats"
 
-#: ../src/lib/List.pm:388 ../src/lib/List.pm:409
+#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
 msgid "threshold"
 msgstr "llindar"
 
-#: ../src/lib/List.pm:393 ../src/lib/List.pm:414
+#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
 msgid "action for this population"
 msgstr "acció per a aquesta gent"
 
-#: ../src/lib/List.pm:398 ../src/lib/List.pm:419
+#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
 msgid "notification"
 msgstr "norificació"
 
-#: ../src/lib/List.pm:402
+#: ../src/lib/List.pm:399
 msgid "Management of bouncers, 1st level"
 msgstr "Gestió de missatges retornats, 1er. nivell "
 
-#: ../src/lib/List.pm:423
+#: ../src/lib/List.pm:420
 msgid "Management of bouncers, 2nd level"
 msgstr "Gestió de missatges retornats, 2on nivell "
 
-#: ../src/lib/List.pm:430
+#: ../src/lib/List.pm:427
 msgid "Expiration of unmoderated messages"
 msgstr "Expiració dels missatges no moderats "
 
-#: ../src/lib/List.pm:436
+#: ../src/lib/List.pm:433
 msgid "Secret string for generating unique keys"
 msgstr "Cadena Secreta per a generar claus úniques "
 
-#: ../src/lib/List.pm:441
-msgid "tracking message by delivery status notification"
-msgstr ""
-
-#: ../src/lib/List.pm:446
-msgid "tracking message by message delivery notification"
-msgstr ""
-
-#: ../src/lib/List.pm:450
-#, fuzzy
-msgid "who can view message tracking"
-msgstr "Marcatge de missatges"
-
-#: ../src/lib/List.pm:457
-msgid "Tracking datas are removed after this number of days"
-msgstr ""
-
-#: ../src/lib/List.pm:462
-#, fuzzy
-msgid "Message tracking feature"
-msgstr "Marcatge de missatges"
-
-#: ../src/lib/List.pm:1116 ../src/lib/List.pm:1416 ../src/lib/List.pm:466
+#: ../src/lib/List.pm:1089 ../src/lib/List.pm:1382 ../src/lib/List.pm:438
 msgid "epoch date"
 msgstr "date epoch"
 
-#: ../src/lib/List.pm:470
+#: ../src/lib/List.pm:442
 msgid "human readable"
 msgstr ""
 
-#: ../src/lib/List.pm:475
+#: ../src/lib/List.pm:447
 #, fuzzy
 msgid "who created the list"
 msgstr "Qui pot actualitzar la configuració"
 
-#: ../src/lib/List.pm:479
+#: ../src/lib/List.pm:451
 msgid "Creation of the list"
 msgstr "Creació de la llista"
 
-#: ../src/lib/List.pm:490
+#: ../src/lib/List.pm:462
 msgid "internal identifier"
 msgstr "Indentificardor intern"
 
-#: ../src/lib/List.pm:498
+#: ../src/lib/List.pm:470
 msgid "label"
 msgstr "Nom "
 
-#: ../src/lib/List.pm:504
+#: ../src/lib/List.pm:476
 msgid "additional comment"
 msgstr "Comentari addicional"
 
-#: ../src/lib/List.pm:511
+#: ../src/lib/List.pm:483
 msgid "type"
 msgstr "Tipus"
 
-#: ../src/lib/List.pm:517
+#: ../src/lib/List.pm:489
 msgid "possible attribute values (if enum is used)"
 msgstr "Possibles valors d'atribut (si enum és utilitzat)"
 
-#: ../src/lib/List.pm:522
+#: ../src/lib/List.pm:494
 #, fuzzy
 msgid "is the attribute optional?"
 msgstr "L'atribut és opcional ?"
 
-#: ../src/lib/List.pm:528
+#: ../src/lib/List.pm:500
 msgid "Custom user attributes"
 msgstr "Atributs d'usuari personalitzats"
 
-#: ../src/lib/List.pm:534
+#: ../src/lib/List.pm:506
 msgid "Custom header field"
 msgstr "Camp de capçalera customitzat"
 
-#: ../src/lib/List.pm:539
+#: ../src/lib/List.pm:511
 msgid "Subject tagging"
 msgstr "Etiquetat del tema"
 
-#: ../src/lib/List.pm:553
+#: ../src/lib/List.pm:525
 msgid "custom parameters"
 msgstr "paràmetres de personalització"
 
-#: ../src/lib/List.pm:1201 ../src/lib/List.pm:1241 ../src/lib/List.pm:565
-#: ../src/lib/List.pm:691 ../src/lib/List.pm:726
+#: ../src/lib/List.pm:1167 ../src/lib/List.pm:1207 ../src/lib/List.pm:537
+#: ../src/lib/List.pm:664 ../src/lib/List.pm:699
 msgid "visibility"
 msgstr "visibilitat"
 
-#: ../src/lib/List.pm:569
+#: ../src/lib/List.pm:541
 msgid "Subscription profile"
 msgstr "perfil de subscripció"
 
-#: ../src/lib/List.pm:573
+#: ../src/lib/List.pm:545
 msgid "Who can delete subscribers"
 msgstr "Qui pot eliminar subscriptors"
 
-#: ../src/lib/List.pm:578
+#: ../src/lib/List.pm:550
 msgid "Delivery time (hh:mm)"
 msgstr "Temps d'enviament (hh:mm)"
 
-#: ../src/lib/List.pm:428 ../src/lib/List.pm:455 ../src/lib/List.pm:586
+#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
 msgid "days"
 msgstr "Dies"
 
-#: ../src/lib/List.pm:592
+#: ../src/lib/List.pm:564
 msgid "hour"
 msgstr "Hora"
 
-#: ../src/lib/List.pm:598
+#: ../src/lib/List.pm:570
 msgid "minute"
 msgstr "Minut"
 
-#: ../src/lib/List.pm:602
+#: ../src/lib/List.pm:574
 msgid "Digest frequency"
 msgstr "Freqüencia del resum"
 
-#: ../src/lib/List.pm:610
+#: ../src/lib/List.pm:582
 msgid "Digest maximum number of messages"
 msgstr "màxim nombre de missatges del resum"
 
-#: ../src/lib/List.pm:617
+#: ../src/lib/List.pm:590
 msgid "Inclusions timeout for message distribution"
 msgstr ""
 "Plaç màxim a partir d'una sincronizació abans que aquesta  sigui provocada "
 "per l'enviament d'un missatge"
 
-#: ../src/lib/List.pm:624
+#: ../src/lib/List.pm:597
 #, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Enviant un missatge a la llista"
 
-#: ../src/lib/List.pm:632
+#: ../src/lib/List.pm:605
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: ../src/lib/List.pm:639
+#: ../src/lib/List.pm:612
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: ../src/lib/List.pm:647
+#: ../src/lib/List.pm:620
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: ../src/lib/List.pm:675
+#: ../src/lib/List.pm:648
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "Còpia la configuració de la llista"
 
-#: ../src/lib/List.pm:1191 ../src/lib/List.pm:681
+#: ../src/lib/List.pm:1157 ../src/lib/List.pm:654
 msgid "email address"
 msgstr "adreça electrònica"
 
-#: ../src/lib/List.pm:1206 ../src/lib/List.pm:696
+#: ../src/lib/List.pm:1172 ../src/lib/List.pm:669
 msgid "name"
 msgstr "nom"
 
-#: ../src/lib/List.pm:1211 ../src/lib/List.pm:701
+#: ../src/lib/List.pm:1177 ../src/lib/List.pm:674
 msgid "private information"
 msgstr "informació privada"
 
-#: ../src/lib/List.pm:736
+#: ../src/lib/List.pm:709
 msgid "Periodical subscription expiration task"
 msgstr "Tasca períodica d'expiració de subscripció"
 
-#: ../src/lib/List.pm:747
+#: ../src/lib/List.pm:720
 msgid "Attachment type"
 msgstr "tipus d'annex"
 
-#: ../src/lib/List.pm:751
+#: ../src/lib/List.pm:724
 msgid "Forced reply address"
 msgstr "adreça de resposta forçada"
 
-#: ../src/lib/List.pm:757
+#: ../src/lib/List.pm:730
 msgid "Internet domain"
 msgstr "domini d'Internet"
 
-#: ../src/lib/List.pm:763
+#: ../src/lib/List.pm:736
 msgid "File inclusion"
 msgstr "inclusió fitxer"
 
-#: ../src/lib/List.pm:767
+#: ../src/lib/List.pm:740
 msgid "data location URL"
 msgstr "URL de data local"
 
-#: ../src/lib/List.pm:1065 ../src/lib/List.pm:773 ../src/lib/List.pm:806
-#: ../src/lib/List.pm:887
+#: ../src/lib/List.pm:1038 ../src/lib/List.pm:746 ../src/lib/List.pm:779
+#: ../src/lib/List.pm:860
 msgid "remote user"
 msgstr "usuari remot"
 
-#: ../src/lib/List.pm:1070 ../src/lib/List.pm:780 ../src/lib/List.pm:812
-#: ../src/lib/List.pm:893
+#: ../src/lib/List.pm:1043 ../src/lib/List.pm:753 ../src/lib/List.pm:785
+#: ../src/lib/List.pm:866
 msgid "remote password"
 msgstr "contrasenya remota"
 
-#: ../src/lib/List.pm:1026 ../src/lib/List.pm:1084 ../src/lib/List.pm:785
-#: ../src/lib/List.pm:848 ../src/lib/List.pm:972
+#: ../src/lib/List.pm:1057 ../src/lib/List.pm:758 ../src/lib/List.pm:821
+#: ../src/lib/List.pm:945 ../src/lib/List.pm:999
 msgid "short name for this source"
 msgstr "nom curt per a aquesta font"
 
-#: ../src/lib/List.pm:790
+#: ../src/lib/List.pm:763
 msgid "Remote file inclusion"
 msgstr "inclusió remota de fitxer"
 
-#: ../src/lib/List.pm:1004 ../src/lib/List.pm:1043 ../src/lib/List.pm:796
-#: ../src/lib/List.pm:877
+#: ../src/lib/List.pm:1016 ../src/lib/List.pm:769 ../src/lib/List.pm:850
+#: ../src/lib/List.pm:977
 msgid "remote host"
 msgstr "origen remot"
 
-#: ../src/lib/List.pm:1010 ../src/lib/List.pm:801 ../src/lib/List.pm:882
+#: ../src/lib/List.pm:774 ../src/lib/List.pm:855 ../src/lib/List.pm:983
 msgid "remote port"
 msgstr "port remot"
 
-#: ../src/lib/List.pm:816
+#: ../src/lib/List.pm:789
 msgid "suffix"
 msgstr "sufix"
 
-#: ../src/lib/List.pm:822
+#: ../src/lib/List.pm:795
 msgid "filter"
 msgstr "filtre"
 
-#: ../src/lib/List.pm:828
+#: ../src/lib/List.pm:801
 msgid "extracted attribute"
 msgstr "atribut extret"
 
-#: ../src/lib/List.pm:833
+#: ../src/lib/List.pm:806
 msgid "selection (if multiple)"
 msgstr "selecció (si és múltiple)"
 
-#: ../src/lib/List.pm:838
+#: ../src/lib/List.pm:811
 msgid "search scope"
 msgstr "cerca marcador"
 
-#: ../src/lib/List.pm:844
+#: ../src/lib/List.pm:817
 msgid "connection timeout"
 msgstr "connexió finalitzada"
 
-#: ../src/lib/List.pm:872
+#: ../src/lib/List.pm:845
 msgid "LDAP query inclusion"
 msgstr "inclusió de consulta LDAP"
 
-#: ../src/lib/List.pm:897
+#: ../src/lib/List.pm:870
 msgid "first-level suffix"
 msgstr "sufix de primer nivell"
 
-#: ../src/lib/List.pm:903
+#: ../src/lib/List.pm:876
 msgid "first-level filter"
 msgstr "filtre de primer nivell"
 
-#: ../src/lib/List.pm:908
+#: ../src/lib/List.pm:881
 msgid "first-level extracted attribute"
 msgstr "atribut"
 
-#: ../src/lib/List.pm:913
+#: ../src/lib/List.pm:886
 msgid "first-level selection"
 msgstr "Primer nivelld e subscripció"
 
-#: ../src/lib/List.pm:918
+#: ../src/lib/List.pm:891
 msgid "first-level search scope"
 msgstr "àmbit de primer nivel de cerca"
 
-#: ../src/lib/List.pm:924
+#: ../src/lib/List.pm:897
 msgid "first-level connection timeout"
 msgstr "temps màxim de connexió de primer nivell"
 
-#: ../src/lib/List.pm:930
+#: ../src/lib/List.pm:903
 msgid "first-level regular expression"
 msgstr "expressió regular de segon nivell"
 
-#: ../src/lib/List.pm:934
+#: ../src/lib/List.pm:907
 msgid "second-level suffix template"
 msgstr "model de sufix de segon nivell"
 
-#: ../src/lib/List.pm:940
+#: ../src/lib/List.pm:913
 msgid "second-level filter template"
 msgstr "Filtre de plantilla de segon nivell"
 
-#: ../src/lib/List.pm:946
+#: ../src/lib/List.pm:919
 msgid "second-level extracted attribute"
 msgstr "atribut extret de segon nivell"
 
-#: ../src/lib/List.pm:951
+#: ../src/lib/List.pm:924
 msgid "second-level selection"
 msgstr "Segon nivell de selecció"
 
-#: ../src/lib/List.pm:956
+#: ../src/lib/List.pm:929
 msgid "second-level search scope"
 msgstr "Àmbit de cerca de segon nivell"
 
-#: ../src/lib/List.pm:962
+#: ../src/lib/List.pm:935
 msgid "second-level connection timeout"
 msgstr "temps d'inactivitat connexió de segon nivell"
 
-#: ../src/lib/List.pm:968
+#: ../src/lib/List.pm:941
 msgid "second-level regular expression"
 msgstr "expressió regular de segon nivell"
 
-#: ../src/lib/List.pm:994
+#: ../src/lib/List.pm:967
 msgid "LDAP 2-level query inclusion"
 msgstr "Inclusió d'una consulta LDAP (2 sol·licituds) "
 
-#: ../src/lib/List.pm:999
+#: ../src/lib/List.pm:972
 msgid "List inclusion"
 msgstr "Inclusió de llista"
 
-#: ../src/lib/List.pm:1016
+#: ../src/lib/List.pm:989
 msgid "remote path of sympa list dump"
 msgstr "ruta remota per a volcar dades de la llista sympa "
 
-#: ../src/lib/List.pm:1021
+#: ../src/lib/List.pm:994
 msgid "certificate for authentication by remote Sympa"
 msgstr "Certificat per a l'autenticació per Sympa remot"
 
-#: ../src/lib/List.pm:1033
+#: ../src/lib/List.pm:1006
 msgid "remote list inclusion"
 msgstr "inclusió de llista remota"
 
-#: ../src/lib/List.pm:1038
+#: ../src/lib/List.pm:1011
 msgid "database type"
 msgstr "tipus de base de dades"
 
-#: ../src/lib/List.pm:1047
+#: ../src/lib/List.pm:1020
 msgid "database port"
 msgstr "port de la base dades"
 
-#: ../src/lib/List.pm:1052
+#: ../src/lib/List.pm:1025
 msgid "database name"
 msgstr "nom de la base de dades"
 
-#: ../src/lib/List.pm:1056
+#: ../src/lib/List.pm:1029
 msgid "connection options"
 msgstr "opcions de connexió"
 
-#: ../src/lib/List.pm:1061
+#: ../src/lib/List.pm:1034
 #, fuzzy
 msgid "environment variables for database connection"
 msgstr "variables d'entorn  per a la connexió de base de dades"
 
-#: ../src/lib/List.pm:1076
+#: ../src/lib/List.pm:1049
 msgid "SQL query"
 msgstr "consulta SQL"
 
-#: ../src/lib/List.pm:1080
+#: ../src/lib/List.pm:1053
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 "Carpeta on s'enmagatzema la base de dades (utilitzant nomçes per a DBD::CSV)"
 
-#: ../src/lib/List.pm:1091
+#: ../src/lib/List.pm:1064
 msgid "SQL query inclusion"
 msgstr "consulta d'inclusió SQL"
 
-#: ../src/lib/List.pm:1097
+#: ../src/lib/List.pm:1070
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "Ja esteu subscrit a la llista %1"
 
-#: ../src/lib/List.pm:1101
+#: ../src/lib/List.pm:1074
 msgid "Who can view list information"
 msgstr "Qui pot veure la informació de la llista"
 
-#: ../src/lib/List.pm:1105
+#: ../src/lib/List.pm:1078
 msgid "Who can invite people"
 msgstr "Qui pot convidar gent"
 
-#: ../src/lib/List.pm:1111
+#: ../src/lib/List.pm:1084
 msgid "Language of the list"
 msgstr "Llenguatge de la llista"
 
-#: ../src/lib/List.pm:1136
+#: ../src/lib/List.pm:1109
 msgid "Regular expression applied to prevent loops with robots"
 msgstr "Expressió regular aplicada per a prevenir bucles amb robots"
 
-#: ../src/lib/List.pm:1143
-#, fuzzy
-msgid "Maximum number of list members"
-msgstr "noves llistes"
-
-#: ../src/lib/List.pm:1150
+#: ../src/lib/List.pm:1116
 msgid "Maximum message size"
 msgstr "Mida màxima del missatge"
 
-#: ../src/lib/List.pm:1156
+#: ../src/lib/List.pm:1122
 msgid "Message topic name"
 msgstr "Nom del tema del missatge"
 
-#: ../src/lib/List.pm:1161
+#: ../src/lib/List.pm:1127
 msgid "Message topic keywords"
 msgstr "Lletres del tema del missatge"
 
-#: ../src/lib/List.pm:1167
+#: ../src/lib/List.pm:1133
 msgid "Message topic title"
 msgstr "Títol del tema del missatge"
 
-#: ../src/lib/List.pm:1172
+#: ../src/lib/List.pm:1138
 msgid "Topics for message categorization"
 msgstr "Temes per a la categorització de missatges"
 
-#: ../src/lib/List.pm:1178
+#: ../src/lib/List.pm:1144
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 "Defineix quines parts dels missatges, les paraules claus de tòpics seran "
 "aplicades"
 
-#: ../src/lib/List.pm:1185
+#: ../src/lib/List.pm:1151
 msgid "Message tagging"
 msgstr "Marcatge de missatges"
 
-#: ../src/lib/List.pm:1216 ../src/lib/List.pm:1246
+#: ../src/lib/List.pm:1182 ../src/lib/List.pm:1212
 msgid "profile"
 msgstr "perfil"
 
-#: ../src/lib/List.pm:1257
+#: ../src/lib/List.pm:1223
 msgid "Priority"
 msgstr "Prioritat"
 
-#: ../src/lib/List.pm:1263
+#: ../src/lib/List.pm:1229
 msgid "Reject mail from automates (crontab, etc)?"
 msgstr ""
 
-#: ../src/lib/List.pm:1267
+#: ../src/lib/List.pm:1233
 msgid "Who can start a remind process"
 msgstr "Qui pot iniciar un procés de recordatori"
 
-#: ../src/lib/List.pm:1272
+#: ../src/lib/List.pm:1238
 msgid "Return-path of the REMIND command"
 msgstr "Adreça de resposta per a la comanda RECORDATORI "
 
-#: ../src/lib/List.pm:1296 ../src/lib/List.pm:1316
+#: ../src/lib/List.pm:1262 ../src/lib/List.pm:1282
 msgid "Reply address"
 msgstr "Adreça de resposta"
 
-#: ../src/lib/List.pm:1307
+#: ../src/lib/List.pm:1268
+msgid "value"
+msgstr "valor"
+
+#: ../src/lib/List.pm:1273
 msgid "other email address"
 msgstr "una altra adreça de correu"
 
-#: ../src/lib/List.pm:1312
+#: ../src/lib/List.pm:1278
 msgid "respect of existing header field"
 msgstr "respectar el camp de capçalera existent "
 
-#: ../src/lib/List.pm:1321
+#: ../src/lib/List.pm:1287
 msgid "Who can review subscribers"
 msgstr "qui pot revisar els subscriptors"
 
-#: ../src/lib/List.pm:1328
+#: ../src/lib/List.pm:1294
 msgid "RFC 2369 Header fields"
 msgstr "Camps de capçalera RFC 2369"
 
-#: ../src/lib/List.pm:1332
+#: ../src/lib/List.pm:1298
 msgid "Who can send messages"
 msgstr "Qui pot enviar missatges"
 
-#: ../src/lib/List.pm:1339
+#: ../src/lib/List.pm:1305
 msgid "Serial number of the config"
 msgstr "Número de sèrie de la configuració"
 
-#: ../src/lib/List.pm:1344
+#: ../src/lib/List.pm:1310
 msgid "Who can view"
 msgstr "Qui pot veure"
 
-#: ../src/lib/List.pm:1348
+#: ../src/lib/List.pm:1314
 msgid "Who can edit"
 msgstr "Qui pot editar"
 
-#: ../src/lib/List.pm:1355 ../src/lib/List.pm:1467
+#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1433
 msgid "quota"
 msgstr "quota"
 
-#: ../src/lib/List.pm:1364 ../src/lib/List.pm:1369
+#: ../src/lib/List.pm:1330 ../src/lib/List.pm:1335
 msgid "email address protection method"
 msgstr "mètode de protecció de l'adreça de correu electrònic"
 
-#: ../src/lib/List.pm:1375
+#: ../src/lib/List.pm:1341
 msgid "Status of the list"
 msgstr "estat de la llista"
 
-#: ../src/lib/List.pm:1383
+#: ../src/lib/List.pm:1349
 msgid "Timeout for fetch of include_sql_query"
 msgstr ""
 
-#: ../src/lib/List.pm:1389
+#: ../src/lib/List.pm:1355
 msgid "Subject of the list"
 msgstr "Assumpte de la llista"
 
-#: ../src/lib/List.pm:1393
+#: ../src/lib/List.pm:1359
 msgid "Who can subscribe to the list"
 msgstr "Qui es pot subscriure a la llsita"
 
-#: ../src/lib/List.pm:1399
+#: ../src/lib/List.pm:1365
 msgid "Topics for the list"
 msgstr "Temes per a la llista"
 
-#: ../src/lib/List.pm:1406
+#: ../src/lib/List.pm:1372
 msgid "Inclusions timeout"
 msgstr "incloure temps d'inactivitat"
 
-#: ../src/lib/List.pm:1410
+#: ../src/lib/List.pm:1376
 msgid "Who can unsubscribe"
 msgstr "Qui pot desubscriure's"
 
-#: ../src/lib/List.pm:1431
+#: ../src/lib/List.pm:1397
 msgid "Last update of config"
 msgstr "Darrera actualització de la configuració"
 
-#: ../src/lib/List.pm:1438
+#: ../src/lib/List.pm:1404
 msgid "User data source"
 msgstr "Origen de les dades d'usuari"
 
-#: ../src/lib/List.pm:1444
+#: ../src/lib/List.pm:1410
 #, fuzzy
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr "Permetre visualitzar la imatge? (ha d'habilitar el robot actual)"
 
-#: ../src/lib/List.pm:1450
+#: ../src/lib/List.pm:1416
 #, fuzzy
 msgid "Allow message personnalization"
 msgstr "Temes per a la categorització de missatges"
 
-#: ../src/lib/List.pm:1456
+#: ../src/lib/List.pm:1422
 msgid "Visibility of the list"
 msgstr "Visibilitat de la llista"
 
-#: ../src/lib/List.pm:1472
+#: ../src/lib/List.pm:1438
 msgid "Maximum number of month archived"
 msgstr "Nombre màxim de mesos arxivats"
 
-#: ../src/lib/List.pm:1477
+#: ../src/lib/List.pm:1443
 msgid "Web archives"
 msgstr "Arxius web"
 
-#: ../src/lib/List.pm:1483
+#: ../src/lib/List.pm:1449
 msgid "Welcome return-path"
 msgstr "path de retorn de benvinguda"
 
-#: ../src/lib/List.pm:1488
+#: ../src/lib/List.pm:1454
 msgid "percentage of list members in VERP mode"
 msgstr "Percentatge de membres de la llista en mode VERB"
 
-#: ../src/lib/List.pm:368 ../src/lib/List.pm:375
+#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
 msgid "%"
 msgstr "%"
 
-#: ../src/lib/List.pm:386 ../src/lib/List.pm:407
+#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
 msgid "points"
 msgstr "punts"
 
-#: ../src/lib/List.pm:544
+#: ../src/lib/List.pm:516
 msgid "var name"
 msgstr "nom de la variable"
 
-#: ../src/lib/List.pm:549
+#: ../src/lib/List.pm:521
 msgid "var value"
 msgstr "valor de la variable"
 
-#: ../src/lib/List.pm:608
+#: ../src/lib/List.pm:580
 #, fuzzy
 msgid "messages"
 msgstr "# missatge"
 
-#: ../src/lib/List.pm:1381 ../src/lib/List.pm:1404 ../src/lib/List.pm:616
-#: ../src/lib/List.pm:843 ../src/lib/List.pm:923 ../src/lib/List.pm:961
+#: ../src/lib/List.pm:1347 ../src/lib/List.pm:1370 ../src/lib/List.pm:588
+#: ../src/lib/List.pm:816 ../src/lib/List.pm:896 ../src/lib/List.pm:934
 msgid "seconds"
 msgstr "segons"
 
-#: ../src/lib/List.pm:654
+#: ../src/lib/List.pm:627
 msgid "List of headers to be included ito the message for signature"
 msgstr ""
 
-#: ../src/lib/List.pm:661
+#: ../src/lib/List.pm:634
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: ../src/lib/List.pm:668
+#: ../src/lib/List.pm:641
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: ../src/lib/List.pm:711
+#: ../src/lib/List.pm:684
 #, fuzzy
 msgid "the data source"
 msgstr "les dades d'origen"
 
-#: ../src/lib/List.pm:716
+#: ../src/lib/List.pm:689
 #, fuzzy
 msgid "data source parameters"
 msgstr "paràmetres de les dades d'origen"
 
-#: ../src/lib/List.pm:732
+#: ../src/lib/List.pm:705
 #, fuzzy
 msgid "Moderators defined in an external data source"
 msgstr "Els moderadors estan definits en una font de dades externa"
 
-#: ../src/lib/List.pm:741
+#: ../src/lib/List.pm:714
 msgid "Family name"
 msgstr "nom de la família"
 
-#: ../src/lib/List.pm:854 ../src/lib/List.pm:978
+#: ../src/lib/List.pm:827 ../src/lib/List.pm:951
 msgid "use SSL (LDAPS)"
 msgstr "utilitzar SSL (LDAPS)"
 
-#: ../src/lib/List.pm:859 ../src/lib/List.pm:983
+#: ../src/lib/List.pm:832 ../src/lib/List.pm:956
 msgid "SSL version"
 msgstr "versió SSL"
 
-#: ../src/lib/List.pm:864 ../src/lib/List.pm:988
+#: ../src/lib/List.pm:837 ../src/lib/List.pm:961
 msgid "SSL ciphers used"
 msgstr "utilitzats SSL ciphers"
 
-#: ../src/lib/List.pm:1120 ../src/lib/List.pm:1421
+#: ../src/lib/List.pm:1093 ../src/lib/List.pm:1387
 msgid "date"
 msgstr "data"
 
-#: ../src/lib/List.pm:1125
+#: ../src/lib/List.pm:1098
 msgid "who ran the instantiation"
 msgstr "qui pot fer còrrer la instal·lació"
 
-#: ../src/lib/List.pm:1129
+#: ../src/lib/List.pm:1102
 msgid "Latest family instantiation"
 msgstr "darrera instal·lació de família"
 
-#: ../src/lib/List.pm:1141
-#, fuzzy
-msgid "list members"
-msgstr "Membres de la llista"
-
-#: ../src/lib/List.pm:1148
+#: ../src/lib/List.pm:1114
 msgid "bytes"
 msgstr "bytes"
 
-#: ../src/lib/List.pm:1226
+#: ../src/lib/List.pm:1192
 msgid "the datasource"
 msgstr "les dades d'origen"
 
-#: ../src/lib/List.pm:1231
+#: ../src/lib/List.pm:1197
 msgid "datasource parameters"
 msgstr "paràmetres de les dades d'origen"
 
-#: ../src/lib/List.pm:1251
+#: ../src/lib/List.pm:1217
 #, fuzzy
 msgid "Owners defined in an external data source"
 msgstr "Administradors definits en una font de dades externa"
 
-#: ../src/lib/List.pm:1276
+#: ../src/lib/List.pm:1242
 msgid "Periodical subscription reminder task"
 msgstr "Tasca recordatoria de subcripció períodica"
 
-#: ../src/lib/List.pm:1281
+#: ../src/lib/List.pm:1247
 #, fuzzy
 msgid "Incoming SMTP header fields to be removed"
 msgstr "Els camps de les capçaleres SMTP per eliminar"
 
-#: ../src/lib/List.pm:1288
+#: ../src/lib/List.pm:1254
 #, fuzzy
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "Les capçaleres dels camps SMTP de sortida per eliminar"
 
-#: ../src/lib/List.pm:1354 ../src/lib/List.pm:1466
+#: ../src/lib/List.pm:1320 ../src/lib/List.pm:1432
 msgid "Kbytes"
 msgstr "Kbytes"
 
-#: ../src/lib/List.pm:1427
+#: ../src/lib/List.pm:1393
 msgid "who updated the config"
 msgstr "Qui pot actualitzar la configuració"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2850
+#: ../src/lib/List.pm:2919
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d %b %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2851
+#: ../src/lib/List.pm:2920
 msgid "%a, %d %b %Y"
 msgstr "%a, %d %b %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3042 ../src/lib/List.pm:3043 ../src/lib/List.pm:3047
-#: ../wwsympa/wwsympa.fcgi.in:11343 ../wwsympa/wwsympa.fcgi.in:11412
-#: ../wwsympa/wwsympa.fcgi.in:11614 ../wwsympa/wwsympa.fcgi.in:11961
-#: ../wwsympa/wwsympa.fcgi.in:15458 ../wwsympa/wwsympa.fcgi.in:15465
-#: ../wwsympa/wwsympa.fcgi.in:16205 ../wwsympa/wwsympa.fcgi.in:16255
-#: ../wwsympa/wwsympa.fcgi.in:17028 ../wwsympa/wwsympa.fcgi.in:17029
-#: ../wwsympa/wwsympa.fcgi.in:4343 ../wwsympa/wwsympa.fcgi.in:4401
-#: ../wwsympa/wwsympa.fcgi.in:4978 ../wwsympa/wwsympa.fcgi.in:4979
-#: ../wwsympa/wwsympa.fcgi.in:6492 ../wwsympa/wwsympa.fcgi.in:7625
-#: ../wwsympa/wwsympa.fcgi.in:8240 ../wwsympa/wwsympa.fcgi.in:8287
-#: ../wwsympa/wwsympa.fcgi.in:8289 ../wwsympa/wwsympa.fcgi.in:8807
-#: ../wwsympa/wwsympa.fcgi.in:8808 ../wwsympa/wwsympa.fcgi.in:8842
-#: ../wwsympa/wwsympa.fcgi.in:8843 ../wwsympa/wwsympa.fcgi.in:9022
-#: ../wwsympa/wwsympa.fcgi.in:9023
+#: ../src/lib/List.pm:3111 ../src/lib/List.pm:3112 ../src/lib/List.pm:3116
+#: ../wwsympa/wwsympa.fcgi.in:11017 ../wwsympa/wwsympa.fcgi.in:11086
+#: ../wwsympa/wwsympa.fcgi.in:11288 ../wwsympa/wwsympa.fcgi.in:11635
+#: ../wwsympa/wwsympa.fcgi.in:15086 ../wwsympa/wwsympa.fcgi.in:15093
+#: ../wwsympa/wwsympa.fcgi.in:15811 ../wwsympa/wwsympa.fcgi.in:16589
+#: ../wwsympa/wwsympa.fcgi.in:16590 ../wwsympa/wwsympa.fcgi.in:4280
+#: ../wwsympa/wwsympa.fcgi.in:4338 ../wwsympa/wwsympa.fcgi.in:4909
+#: ../wwsympa/wwsympa.fcgi.in:4910 ../wwsympa/wwsympa.fcgi.in:6432
+#: ../wwsympa/wwsympa.fcgi.in:7451 ../wwsympa/wwsympa.fcgi.in:7994
+#: ../wwsympa/wwsympa.fcgi.in:8041 ../wwsympa/wwsympa.fcgi.in:8043
+#: ../wwsympa/wwsympa.fcgi.in:8519 ../wwsympa/wwsympa.fcgi.in:8520
+#: ../wwsympa/wwsympa.fcgi.in:8554 ../wwsympa/wwsympa.fcgi.in:8555
+#: ../wwsympa/wwsympa.fcgi.in:8734 ../wwsympa/wwsympa.fcgi.in:8735
 msgid "%d %b %Y"
 msgstr "%d %b %Y"
 
-#: ../src/lib/List.pm:6443
-msgid "Attempt to exceed the max number of members (%s) for this list."
-msgstr ""
-
-#: ../src/lib/List.pm:6446
-msgid "Attempts to add some users in database failed."
-msgstr ""
-
-#: ../src/lib/List.pm:6448
-msgid "Added %s users out of %s required."
-msgstr ""
-
-#: ../src/lib/mail.pm:54
+#: ../src/lib/mail.pm:53
 #, fuzzy
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
@@ -10660,7 +9619,7 @@ msgstr ""
 "És necessari modificar el mòdul smtp.pm per a fixar un\n"
 " valor de la variable $max_arg.\n"
 
-#: ../src/lib/mail.pm:922
+#: ../src/lib/mail.pm:812
 msgid "Unable to create a channel in smtpto: %m"
 msgstr "Impossible crear un canal a smtpa: %m"
 
@@ -10779,70 +9738,41 @@ msgstr "(data desconeguda)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1080
+#: ../wwsympa/wwsympa.fcgi.in:1068
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: ../wwsympa/wwsympa.fcgi.in:4873
-#, fuzzy
-msgid "Unable to add user %s in list %s : %s"
-msgstr "No es pot accedir al directori %s : %m"
-
-#: ../wwsympa/wwsympa.fcgi.in:10691 ../wwsympa/wwsympa.fcgi.in:6217
-#: ../wwsympa/wwsympa.fcgi.in:9693
-#, fuzzy
-msgid "Unable to add users in list %s : %s"
-msgstr "No es pot accedir al directori %s : %m"
-
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
-#: ../wwsympa/wwsympa.fcgi.in:12195 ../wwsympa/wwsympa.fcgi.in:12328
-#: ../wwsympa/wwsympa.fcgi.in:14671 ../wwsympa/wwsympa.fcgi.in:8194
+#: ../wwsympa/SympaSession.pm:436 ../wwsympa/SympaSession.pm:437
+#: ../wwsympa/wwsympa.fcgi.in:11869 ../wwsympa/wwsympa.fcgi.in:12002
+#: ../wwsympa/wwsympa.fcgi.in:14315 ../wwsympa/wwsympa.fcgi.in:7948
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
-#: ../wwsympa/wwsympa.fcgi.in:15640
+#: ../wwsympa/wwsympa.fcgi.in:15268
 #, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "La teva petició s'ha redireccionat al propietari de la llista"
 
-#: ../wwsympa/wwsympa.fcgi.in:15642
+#: ../wwsympa/wwsympa.fcgi.in:15270
 #, fuzzy
 msgid "You were successfully unsubscribed from list %s."
 msgstr "Has sol·licitat donar-se de baixa de la llista %1"
 
-#: ../wwsympa/wwsympa.fcgi.in:15646
+#: ../wwsympa/wwsympa.fcgi.in:15274
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 
-#: ../wwsympa/wwsympa.fcgi.in:15648
+#: ../wwsympa/wwsympa.fcgi.in:15276
 #, fuzzy
 msgid "Unsubscription from list %s failed."
 msgstr "Dona'm de baixa de la llista %1"
 
-#: ../wwsympa/wwsympa.fcgi.in:16244
-msgid "Mail sending"
-msgstr ""
-
-#: ../wwsympa/wwsympa.fcgi.in:16245
-#, fuzzy
-msgid "Subscription additions"
-msgstr "Subscripcions"
-
-#: ../wwsympa/wwsympa.fcgi.in:16246
-#, fuzzy
-msgid "Unsubscription"
-msgstr "Donar-se de baixa (desubscripció) :"
-
-#: ../wwsympa/wwsympa.fcgi.in:16247
-msgid "Users deleted by admin"
-msgstr ""
-
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16623 ../wwsympa/wwsympa.fcgi.in:16624
+#: ../wwsympa/wwsympa.fcgi.in:16184 ../wwsympa/wwsympa.fcgi.in:16185
 #, fuzzy
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y/%m/%d/%H/%M/%S"
@@ -10997,13 +9927,778 @@ msgstr "sense correu (útil per vacances)"
 msgid "you do not receive your own posts"
 msgstr "No pot rebre els seus propis missatges"
 
-#. (+cpt)
-#: ../web_tt2/javascript.tt2:1056
-msgid "microcal"
+#: ../web_tt2/list_menu.tt2:10
+msgid ""
+"You <span style=\"font-weight: bold; font-size: 10px\">are</span> subscribed"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:1096
-msgid "\"+src.id+\"_cal"
+#: ../web_tt2/list_menu.tt2:21
+msgid ""
+"You <span style=\"font-weight: bold; font-size: 10px\">are not</span> "
+"subscribed"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:79
+msgid "Select the source of your HTML newsletter"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:82
+msgid "Send the page from the following URL:"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:85
+msgid "OR"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:87
+msgid "<strong>Send an HTML file from your computer:"
+msgstr ""
+
+#. (k.name)
+#: ../web_tt2/edit_attributes.tt2:7
+msgid "%1:"
+msgstr ""
+
+#: ../web_tt2/error.tt2:54
+msgid ""
+"You didn't define the web page you want to use to create your newsletter. "
+"Please specify either an URL or a file to upload."
+msgstr ""
+
+#: ../web_tt2/error.tt2:55 ../web_tt2/error.tt2:56
+msgid ""
+"You specified both an URL and a file to upload. Sympa can't choose which one "
+"to send. Please fill the form with one of them only. A web page OR a file to "
+"upload."
+msgstr ""
+
+#: ../web_tt2/modform.tt2:49
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
+
+#: ../web_tt2/news.tt2:10
+msgid "The following items are waiting for your validation"
+msgstr ""
+
+#: ../web_tt2/news.tt2:30
+msgid ""
+"We received error reports while trying to send you messages. Some of them "
+"may have been lost."
+msgstr ""
+
+#. (user_with_errors.value)
+#: ../web_tt2/news.tt2:35
+msgid " %1 error(s)"
+msgstr ""
+
+#: ../web_tt2/skinsedit.tt2:107
+msgid "Background color for the news area of the home page."
+msgstr ""
+
+#: ../web_tt2/stats.tt2:6
+msgid "This page displays overall informations regarding the list activity"
+msgstr ""
+
+#: ../web_tt2/stats.tt2:47
+msgid "No operation recorded in this field yet."
+msgstr ""
+
+#. (fromname,fromaddr,listname)
+#: ../web_tt2/tracking.tt2:6
+msgid "Message from %1 %2 for list %3 "
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:14
+msgid "Recipient Email"
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:15
+msgid "Delivery status"
+msgstr ""
+
+#. (listname,max_number_of_subscribers)
+#: ../mail_tt2/listmaster_notification.tt2:153
+msgid ""
+"Sympa could not include subscribers to list %1 because the maximum number of "
+"users was reached for this list. This limit is defined to %2."
+msgstr ""
+
+#: ../mail_tt2/moderate.tt2:23
+msgid ""
+"Because the new message is suspected to be a spam it is not attached to this "
+"one. You must use the web interface to reject or validate it."
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:249
+msgid "%s [%s] : "
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:271
+msgid "Incorrect parameter definition: %s\n"
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:337
+msgid ""
+"%s and %s have been updated.\n"
+"Previous versions have been saved as %s and %s.\n"
+msgstr ""
+
+#: ../src/lib/confdef.pm:47
+msgid "Main robot hostname"
+msgstr ""
+
+#: ../src/lib/confdef.pm:60
+msgid "Effective address will be [EMAIL]@[HOST]"
+msgstr ""
+
+#: ../src/lib/confdef.pm:65
+msgid "Gecos for service mail sent by Sympa itself"
+msgstr ""
+
+#: ../src/lib/confdef.pm:75
+msgid "Listmasters email list comma separated"
+msgstr ""
+
+#: ../src/lib/confdef.pm:79
+msgid ""
+"Sympa will associate listmaster privileges to these email addresses (mail "
+"and web interfaces). Some error reports may also be sent to these addresses."
+msgstr ""
+
+#: ../src/lib/confdef.pm:323
+msgid ""
+"Directory for storing static contents (CSS, members pictures, documentation) "
+"directly delivered by Apache"
+msgstr ""
+
+#: ../src/lib/confdef.pm:331
+msgid "URL mapped with the static_content_path directory defined above"
+msgstr ""
+
+#: ../src/lib/confdef.pm:348
+msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1336 ../src/lib/confdef.pm:350
+msgid "Should not be changed ! May invalid all user password"
+msgstr ""
+
+#: ../src/lib/confdef.pm:360
+msgid ""
+"This parameter is a scenario, check sympa documentation about scenarios if "
+"you want to define one"
+msgstr ""
+
+#: ../src/lib/confdef.pm:388
+msgid ""
+"Used to define a custom parameter for your server. Do not forget the "
+"semicolon between the param name and the param value."
+msgstr ""
+
+#: ../src/lib/confdef.pm:400
+msgid "Directory containing mailing lists subdirectories"
+msgstr ""
+
+#: ../src/lib/confdef.pm:407
+msgid ""
+"Directory for configuration files; it also contains scenari/ and templates/ "
+"directories"
+msgstr ""
+
+#: ../src/lib/confdef.pm:416
+msgid "Syslog facility for sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:424
+msgid "Log verbosity"
+msgstr ""
+
+#: ../src/lib/confdef.pm:427
+msgid "0: normal, 2,3,4: for debug"
+msgstr ""
+
+#: ../src/lib/confdef.pm:432
+msgid "Communication mode with syslogd (unix | inet)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:438
+msgid "File containing Sympa PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:440
+msgid ""
+"Sympa also locks this file to ensure that it is not running more than once. "
+"Caution: user sympa need to write access without special privilege."
+msgstr ""
+
+#: ../src/lib/confdef.pm:450
+msgid "Umask used for file creation by Sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:463
+msgid ""
+"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
+msgstr ""
+
+#: ../src/lib/confdef.pm:465
+msgid ""
+"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
+"powerfull systems."
+msgstr ""
+
+#: ../src/lib/confdef.pm:475
+msgid ""
+"comma separated list of operations for which blacklist filter is applied"
+msgstr ""
+
+#: ../src/lib/confdef.pm:480
+msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+msgstr ""
+
+#: ../src/lib/confdef.pm:485
+msgid ""
+"If set, when a list editor report a spam, this external script is run by "
+"wwsympa or sympa, the spam is sent into script stdin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:491
+msgid ""
+"Default maximum size (in bytes) for messages (can be re-defined for each "
+"list)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:508
+msgid ""
+"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
+"file allows a different tuning per destination domain."
+msgstr ""
+
+#: ../src/lib/confdef.pm:514
+msgid "Max. number of different domains per call to Sendmail"
+msgstr ""
+
+#: ../src/lib/confdef.pm:524
+msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:527
+msgid ""
+"should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
+"\" is distributed with Postfix)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:539
+msgid "Specify which rfc2369 mailing list headers to add"
+msgstr ""
+
+#: ../src/lib/confdef.pm:555
+msgid "Reject mail from automates (crontab, etc) sent to a list?"
+msgstr ""
+
+#: ../src/lib/confdef.pm:570
+msgid ""
+"SMTP server to which Sympa verify if alias with the same name as the list to "
+"be created"
+msgstr ""
+
+#: ../src/lib/confdef.pm:572
+msgid ""
+"Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
+"standard port."
+msgstr ""
+
+#: ../src/lib/confdef.pm:582
+msgid "SMTP HELO (EHLO) parameter used for alias verification"
+msgstr ""
+
+#: ../src/lib/confdef.pm:584
+msgid "Default value is the host part of list_check_smtp parameter."
+msgstr ""
+
+#: ../src/lib/confdef.pm:600
+msgid "Default priority for a packet to be sent by bulk."
+msgstr ""
+
+#: ../src/lib/confdef.pm:607
+msgid ""
+"Minimum number of packets in database before the bulk forks to increase "
+"sending rate"
+msgstr ""
+
+#: ../src/lib/confdef.pm:614
+msgid "Max number of bulks that will run on the same server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:621
+msgid ""
+"The number of seconds a slave bulk will remain running without processing a "
+"message before it spontaneously dies."
+msgstr ""
+
+#: ../src/lib/confdef.pm:628
+msgid ""
+"The number of seconds a bulk sleeps between starting a new loop if it didn't "
+"find a message to send."
+msgstr ""
+
+#: ../src/lib/confdef.pm:630
+msgid "Keep it small if you want your server to be reactive."
+msgstr ""
+
+#: ../src/lib/confdef.pm:635
+msgid ""
+"Number of seconds a master bulk waits between two packets number checks."
+msgstr ""
+
+#: ../src/lib/confdef.pm:637
+msgid ""
+"Keep it small if you expect brutal increases in the message sending load."
+msgstr ""
+
+#: ../src/lib/confdef.pm:645
+msgid "Default disk quota for shared repository"
+msgstr ""
+
+#: ../src/lib/confdef.pm:659
+msgid "Directory containing various specialized spools"
+msgstr ""
+
+#: ../src/lib/confdef.pm:661
+msgid "All spool are created at runtime by sympa.pl"
+msgstr ""
+
+#: ../src/lib/confdef.pm:666
+msgid "Directory for incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:695
+msgid "Directory for outgoing spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:707
+msgid "Directory for bounce incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:719
+msgid "Directory for automatic list creation spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:725
+msgid "Temporary directory used by OpenSSL and antivirus plugins"
+msgstr ""
+
+#: ../src/lib/confdef.pm:730
+msgid "Must not be 0."
+msgstr ""
+
+#: ../src/lib/confdef.pm:774
+msgid ""
+"Directory containing available NLS catalogues (Message internationalization)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:784
+msgid ""
+"This is the set of language that will be proposed to your users for the "
+"Sympa GUI. Don't select a language if you don't have the proper locale "
+"packages installed."
+msgstr ""
+
+#: ../src/lib/confdef.pm:789
+msgid "Default language (one of supported languages)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:793
+msgid "This is the default language used by Sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:810
+msgid "Welcome message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:812
+msgid "If set to unique, new subcriber is removed if welcome message bounce"
+msgstr ""
+
+#: ../src/lib/confdef.pm:817
+msgid "Remind message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:819
+msgid ""
+"If set to unique, subcriber is removed if remind message bounce, use with "
+"care"
+msgstr ""
+
+#: ../src/lib/confdef.pm:828
+msgid "Task name for expiration of old bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:872
+msgid "Bouncing email rate for warn list owner"
+msgstr ""
+
+#: ../src/lib/confdef.pm:879
+msgid "Bouncing email rate for halt the list (not implemented)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:881
+msgid "Not yet used in current version, Default is 50"
+msgstr ""
+
+#: ../src/lib/confdef.pm:901
+msgid ""
+"Use of binary version of the list config structure on disk (none | "
+"binary_file)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:904
+msgid ""
+"Set this parameter to \"binary_file\" if you manage a big amount of lists "
+"(1000+); it should make the web interface startup faster"
+msgstr ""
+
+#: ../src/lib/confdef.pm:909
+msgid "flock | nfs"
+msgstr ""
+
+#: ../src/lib/confdef.pm:913
+msgid "Sympa commands priority"
+msgstr ""
+
+#: ../src/lib/confdef.pm:943
+msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:946
+msgid "Be careful to the case"
+msgstr ""
+
+#: ../src/lib/confdef.pm:954
+msgid "With SQLite, the name of the DB corresponds to the DB file"
+msgstr ""
+
+#: ../src/lib/confdef.pm:960
+msgid "Hostname of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:967
+msgid "Port of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:986
+msgid ""
+"What ever you use a password or not, you must protect the SQL server (is it "
+"not a public internet service ?)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1000
+msgid "This is useful for defining ORACLE_HOME "
+msgstr ""
+
+#: ../src/lib/confdef.pm:1006
+msgid "Database private extention to subscriber table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1008 ../src/lib/confdef.pm:1016
+msgid "You need to extend the database format with these fields"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1014
+msgid "Database private extention to user table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1033
+msgid "Number of months that elapse before a log is expired"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1055
+msgid ""
+"Default timeout between two scheduled synchronizations of list members with "
+"data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1061
+msgid ""
+"Default timeout between two action-triggered synchronizations of list "
+"members with data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1067
+msgid "Default timeout while performing a fetch for an include_sql_query sync"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1072
+msgid "Loop prevention"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1105
+msgid "Path to OpenSSL"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1108
+msgid "Sympa recognizes S/MIME if OpenSSL is installed"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1115
+msgid "Directory containing trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1123
+msgid "File containing bundled trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1131
+msgid "Password used to crypt lists private keys"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1155
+msgid ""
+"Type of message that is added a DKIM signature before distribution to "
+"subscribers. Possible values are \"none\", \"any\" or a list of the "
+"following keywords: \"md5_authenticated_messages\", "
+"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
+"\"editor_validated_messages\"."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1162
+msgid "Location of the file where DKIM private key is stored"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1169
+msgid ""
+"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1183
+msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1191
+msgid "List of headers to be included into the message for signature"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1195
+msgid "Antivirus plug-in"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1201
+msgid "Path to the antivirus scanner engine"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1204
+msgid ""
+"supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
+"Micro/VirusWall"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1210
+msgid "Antivirus plugin command argument"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1219
+msgid "Tag based spam filtering"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1229
+msgid ""
+"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
+"spams, name of this header (example X-Spam-Status)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1237
+msgid "Regexp applied on this header to verify message is a spam (example Yes)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1245
+msgid ""
+"Regexp applied on this header to verify message is NOT a spam (example No)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1256
+msgid "Directory for storing HTML archives"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1259 ../src/lib/confdef.pm:1279
+msgid "Better if not in a critical partition"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1264
+msgid ""
+"Default index organization when entering the web archive: either threaded or "
+"in chronological order"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1271
+msgid "File containing archived PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1277
+msgid "Directory for storing bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1284
+msgid "File containing bounced PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1290
+msgid "HTTP cookies lifetime"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1296
+msgid "HTTP cookies validity domain"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1303
+msgid ""
+"Activates a custom archiver to use instead of MHonArc. The value of this "
+"parameter is the absolute path on the file system to the script of the "
+"custom archiver."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1310
+msgid "Type of main Web page ( lists | home )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1318
+msgid "Syslog facility for wwsympa, archived and bounced"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1321
+msgid "Default is to use previously defined sympa log facility."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1326
+msgid "Path to MHonArc mail2html plugin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1329
+msgid "This is required for HTML mail archiving"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1334
+msgid "Password case (insensitive | sensitive)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1341
+msgid "Title of main Web page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1349
+msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1352
+msgid "This module provide much faster web interface"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1355
+msgid "Virtual host specific parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1359
+msgid "URL of a virtual host"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1390
+msgid "Default limit for the number of subscribers per list (0 means no limit)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1410
+msgid ""
+"If set to \"on\", users will be able to post messages in HTML using a "
+"javascript WYSIWYG editor."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1418
+msgid "Path to the javascript file making the WYSIWYG HTML editor available"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1425
+msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1457
+msgid ""
+"When using LDAP authentication, if the identifier provided by the user was a "
+"valid email, if this parameter is set to false, then the provided email will "
+"be used to authenticate the user. Otherwise, use of the first email returned "
+"by the LDAP server will be used."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1464
+msgid "If set to \"on\", enables support of legacy character set"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1466
+msgid ""
+"In some language environments, legacy encoding (character set) is preferred "
+"for e-mail messages: for example iso-2022-jp in Japanese language."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1505
+msgid ""
+"Default number of lines of the array displaying users in the review page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1517
+msgid ""
+"Messages are supposed to be filtered by an antispam that add one more "
+"headers to messages. This parameter is used to select a special scenario in "
+"order to decide the message spam status: ham, spam or unsure. This parameter "
+"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
+"antispam_tag_header_ham_regexp."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1525
+msgid "Directory containing user certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1531
+msgid "File containing task_manager PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1536
+msgid ""
+"Default number of lines of the array displaying the log entries in the logs "
+"page"
+msgstr ""
+
+#: ../src/lib/Conf.pm:967
+msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
+msgstr ""
+
+#: ../src/lib/List.pm:441
+msgid "tracking message by delivery status notification"
+msgstr ""
+
+#: ../src/lib/List.pm:446
+msgid "tracking message by message delivery notification"
+msgstr ""
+
+#: ../src/lib/List.pm:457
+msgid "Tracking datas are removed after this number of days"
+msgstr ""
+
+#: ../src/lib/List.pm:6443
+msgid "Attempt to exceed the max number of members (%s) for this list."
+msgstr ""
+
+#: ../src/lib/List.pm:6446
+msgid "Attempts to add some users in database failed."
+msgstr ""
+
+#: ../src/lib/List.pm:6448
+msgid "Added %s users out of %s required."
+msgstr ""
+
+#: ../wwsympa/wwsympa.fcgi.in:16244
+msgid "Mail sending"
+msgstr ""
+
+#: ../wwsympa/wwsympa.fcgi.in:16247
+msgid "Users deleted by admin"
 msgstr ""
 
 #: ../web_tt2/edit_config.tt2:7
@@ -11030,75 +10725,310 @@ msgstr ""
 msgid "Log intensity"
 msgstr ""
 
-#~ msgid "Article to be tagged for list %1 from %2"
-#~ msgstr "Articulo a ser marcat per a la llista %1 enviat per %2. "
+#, fuzzy
+#~ msgid "Statistics"
+#~ msgstr "Estat"
 
 #, fuzzy
-#~ msgid ""
-#~ "To tag the message in list %1 for the appropriate topic, please use the "
-#~ "following link:"
-#~ msgstr ""
-#~ "Per a triar un tema adequat al teu missatge dirigit a la llista %1, "
-#~ "visita la pàgina següent :\n"
-#~ "\n"
-#~ "%2/viewmod/%1/%3\n"
+#~ msgid "parameter name"
+#~ msgstr "valor del paràmetre"
 
 #, fuzzy
-#~ msgid "URL:"
-#~ msgstr "URL"
+#~ msgid "apply to"
+#~ msgstr "Aplica"
 
 #, fuzzy
-#~ msgid "[% k.name %]:"
-#~ msgstr "[% k.name %] :"
+#~ msgid "main conf"
+#~ msgstr "Edita llista de configuració"
 
-#~ msgid "Failed to inlude members"
+#, fuzzy
+#~ msgid "Failed to include members"
 #~ msgstr "Error al incloure els membres"
 
 #, fuzzy
-#~ msgid "List informations"
-#~ msgstr "Informacions privades"
+#~ msgid "You must select a topic"
+#~ msgstr "--Selecciona un tema--"
 
 #, fuzzy
-#~ msgid ""
-#~ "You should probably not reject message detected as spam with notification "
-#~ "because the message sender is probably spoofed. Do you really want to "
-#~ "reject those messages with notification?"
-#~ msgstr ""
-#~ "No hauria de notificar al remitent aquest missatge detectat com spam, "
-#~ "perquè molt provablement sigui fals (spoof). Desitja realment notificar "
-#~ "al remitent aquests tipus de missatges ?"
-
-#~ msgid "Reject without notification "
-#~ msgstr "Rebuig sense notificació"
+#~ msgid "Rejecting message"
+#~ msgstr "Últims missatge"
 
 #, fuzzy
-#~ msgid "Add to blacklist"
+#~ msgid "Choose notification "
+#~ msgstr "norificació"
+
+#, fuzzy
+#~ msgid "No notification"
+#~ msgstr "norificació"
+
+#, fuzzy
+#~ msgid "Report message as undetected spam "
+#~ msgstr "El teu missatge ha estat rebutjat."
+
+#, fuzzy
+#~ msgid "Add sender to blacklist"
 #~ msgstr "Editar la llista negra"
 
-#~ msgid "Reject and blacklist sender"
-#~ msgstr "Refusar i afegir a la llista negra el remitent"
-
-#~ msgid "Toggle spams"
-#~ msgstr "Passar a la selecció de missatges no desitjats (spam)"
+#, fuzzy
+#~ msgid "loading message..."
+#~ msgstr "Missatge de recordatori global"
 
 #, fuzzy
-#~ msgid "Shared document directory size:"
+#~ msgid "Administration Tasks"
+#~ msgstr "Panell d'administració"
+
+#, fuzzy
+#~ msgid "List %1:"
+#~ msgstr "llista %1"
+
+#, fuzzy
+#~ msgid "%1 document(s)"
+#~ msgstr "Documents compartits"
+
+#, fuzzy
+#~ msgid "%1 subscription request(s)"
+#~ msgstr "No hi ha peticions per donar-se d'alta (subscripció)"
+
+#, fuzzy
+#~ msgid "User Errors"
+#~ msgstr "Inicialitza els errors"
+
+#, fuzzy
+#~ msgid " List %1: "
+#~ msgstr "Llista %1 / %2"
+
+#, fuzzy
+#~ msgid "Add quietly"
+#~ msgstr "silenciós"
+
+#, fuzzy
+#~ msgid "List %1 statistics"
+#~ msgstr "La llista %1 està tancada"
+
+#, fuzzy
+#~ msgid "Shared document directory size: %1 kB"
 #~ msgstr "Mida del directori de documents compartits"
 
 #, fuzzy
-#~ msgid "Web archives size:"
+#~ msgid "Web archives size: %1 kB"
 #~ msgstr "Mida dels arxius web"
 
 #, fuzzy
-#~ msgid "Default rejection message"
-#~ msgstr "Últims missatge"
-
-#~ msgid "Do Not Notify"
-#~ msgstr "No notificar"
+#~ msgid "[% o.title %]"
+#~ msgstr "[% k.name %] :"
 
 #, fuzzy
-#~ msgid "Error at line %d: %s"
-#~ msgstr "Error en la línia %d : %s"
+#~ msgid "Message tracking"
+#~ msgstr "Marcatge de missatges"
+
+#, fuzzy
+#~ msgid "Distribution ended at"
+#~ msgstr "Distribuir"
+
+#, fuzzy
+#~ msgid "Reception Option"
+#~ msgstr "Recepció"
+
+#, fuzzy
+#~ msgid "Notification Date"
+#~ msgstr "norificació"
+
+#, fuzzy
+#~ msgid "Notification"
+#~ msgstr "norificació"
+
+#, fuzzy
+#~ msgid "Limit of users count reached for list %1"
+#~ msgstr "ha fallat l'actualització de subscriptors per a la llista %1. "
+
+#, fuzzy
+#~ msgid ""
+#~ "This mailing list is configured to require topics; that's probably why "
+#~ "this message went through the moderation process."
+#~ msgstr "Aquesta llista requereix que cada missatge tingui un tema assignat."
+
+#, fuzzy
+#~ msgid "%d.%b.%Y-%H.%M.%S"
+#~ msgstr "%d %b %Y %H:%M:%S"
+
+#, fuzzy
+#~ msgid "Unable to rename %s : %s"
+#~ msgstr "Impossible crear la llista"
+
+#, fuzzy
+#~ msgid "Unable to open %s : %s"
+#~ msgstr "Impossible obrir el carret (spool) '%1'."
+
+#, fuzzy
+#~ msgid "Site customization"
+#~ msgstr "Personalitza"
+
+#, fuzzy
+#~ msgid "Local part of sympa email address"
+#~ msgstr "Introduïu una adreça electrònica "
+
+#, fuzzy
+#~ msgid "This parameter is used in mail_tt2 files"
+#~ msgstr "El paràmetre css_path està definit com a"
+
+#, fuzzy
+#~ msgid "Local part of listmaster email address"
+#~ msgstr "Introduïu una adreça electrònica "
+
+#, fuzzy
+#~ msgid "URL of main Web page"
+#~ msgstr "Pàgina d'administració %1"
+
+#, fuzzy
+#~ msgid "Who is able to create lists"
+#~ msgstr "Impossible crear la llista"
+
+#, fuzzy
+#~ msgid "Directories"
+#~ msgstr "Carpeta"
+
+#, fuzzy
+#~ msgid "System related"
+#~ msgstr "Plantilles"
+
+#, fuzzy
+#~ msgid "Do not forget to edit syslog.conf"
+#~ msgstr "format incorrecte de edit_list.conf"
+
+#, fuzzy
+#~ msgid "Sending related"
+#~ msgstr "Llistes pendents"
+
+#, fuzzy
+#~ msgid "Specify header fields to be removed before message distribution"
+#~ msgstr ""
+#~ "Plaç màxim a partir d'una sincronizació abans que aquesta  sigui "
+#~ "provocada per l'enviament d'un missatge"
+
+#, fuzzy
+#~ msgid "Bulk mailer"
+#~ msgstr "Error del gestor de correo en masa"
+
+#, fuzzy
+#~ msgid "Quotas"
+#~ msgstr "quota"
+
+#, fuzzy
+#~ msgid "Spool related"
+#~ msgstr "Plantilles"
+
+#, fuzzy
+#~ msgid "Directory for moderation spool"
+#~ msgstr "El fitxer %1 resta pendent de moderació"
+
+#, fuzzy
+#~ msgid "Directory for digest spool"
+#~ msgstr "Directori de llistes"
+
+#, fuzzy
+#~ msgid "Directory for authentication spool"
+#~ msgstr "restringit al propierati amb autenticació"
+
+#, fuzzy
+#~ msgid "Directory for topic spool"
+#~ msgstr "Directori de llistes"
+
+#, fuzzy
+#~ msgid "Directory for task spool"
+#~ msgstr "Directori de llistes"
+
+#, fuzzy
+#~ msgid "Internationalization related"
+#~ msgstr "domini d'Internet"
+
+#, fuzzy
+#~ msgid "Supported languages"
+#~ msgstr "Idioma"
+
+#, fuzzy
+#~ msgid "Bounce related"
+#~ msgstr "puntuació retornats"
+
+#, fuzzy
+#~ msgid "Tuning"
+#~ msgstr "retornats"
+
+#, fuzzy
+#~ msgid "Default priority for list messages"
+#~ msgstr "Últims missatge"
+
+#, fuzzy
+#~ msgid "Database related"
+#~ msgstr "Actualitzada l'estructura de base de dades"
+
+#, fuzzy
+#~ msgid "Name of the database"
+#~ msgstr "Error en actualitzar la base de dades."
+
+#, fuzzy
+#~ msgid "User for the database connection"
+#~ msgstr "variables d'entorn  per a la connexió de base de dades"
+
+#, fuzzy
+#~ msgid "Password for the database connection"
+#~ msgstr "variables d'entorn  per a la connexió de base de dades"
+
+#, fuzzy
+#~ msgid "Environment variables setting for database"
+#~ msgstr "variables d'entorn  per a la connexió de base de dades"
+
+#, fuzzy
+#~ msgid "S/MIME configuration"
+#~ msgstr "Còpia la configuració de la llista"
+
+#, fuzzy
+#~ msgid ""
+#~ "Insert a DKIM signature to message from the robot, from the list or both"
+#~ msgstr "Enviant un missatge a la llista"
+
+#, fuzzy
+#~ msgid "The selector"
+#~ msgstr "Communtar la selecció"
+
+#, fuzzy
+#~ msgid "wwsympa.conf parameters"
+#~ msgstr "Paràmetres incorrectes"
+
+#, fuzzy
+#~ msgid "Directory for subscription spool"
+#~ msgstr "Recordatori de la teva subscripció a %1"
+
+#, fuzzy
+#~ msgid "who can view message tracking"
+#~ msgstr "Marcatge de missatges"
+
+#, fuzzy
+#~ msgid "Message tracking feature"
+#~ msgstr "Marcatge de missatges"
+
+#, fuzzy
+#~ msgid "Maximum number of list members"
+#~ msgstr "noves llistes"
+
+#, fuzzy
+#~ msgid "list members"
+#~ msgstr "Membres de la llista"
+
+#, fuzzy
+#~ msgid "Unable to add user %s in list %s : %s"
+#~ msgstr "No es pot accedir al directori %s : %m"
+
+#, fuzzy
+#~ msgid "Unable to add users in list %s : %s"
+#~ msgstr "No es pot accedir al directori %s : %m"
+
+#, fuzzy
+#~ msgid "Subscription additions"
+#~ msgstr "Subscripcions"
+
+#, fuzzy
+#~ msgid "Unsubscription"
+#~ msgstr "Donar-se de baixa (desubscripció) :"
 
 #, fuzzy
 #~ msgid "Internationalization"
