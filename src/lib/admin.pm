@@ -784,7 +784,7 @@ sub rename_list{
      
 	 ## Rename archive
 	 my $arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
-	 my $new_arc_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
+	 my $new_arc_dir = &Conf::get_robot_conf($param{'new_robot'}, 'arc_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
 	 if (-d $arc_dir && $arc_dir ne $new_arc_dir) {
 	     unless (move ($arc_dir,$new_arc_dir)) {
 		 &Log::do_log('err',"Unable to rename archive $arc_dir");
@@ -807,6 +807,26 @@ sub rename_list{
 	     &List::rename_list_db ($list,$param{'new_listname'},$param{'new_robot'});
 	 }
      }
+     ## Move stats
+    unless (&SDM::do_query("UPDATE stat_table SET list_stat=%s, robot_stat=%s WHERE (list_stat = %s AND robot_stat = %s )", 
+    &SDM::quote($param{'new_listname'}), 
+    &SDM::quote($param{'new_robot'}), 
+    &SDM::quote($list->{'name'}), 
+    &SDM::quote($robot)
+    )) {
+	&Log::do_log('err','Unable to transfer stats from list %s@%s to list %s@%s',$param{'new_listname'}, $param{'new_robot'}, $list->{'name'}, $robot);
+    }
+
+     ## Move stat counters
+    unless (&SDM::do_query("UPDATE stat_counter_table SET list_counter=%s, robot_counter=%s WHERE (list_counter = %s AND robot_counter = %s )", 
+    &SDM::quote($param{'new_listname'}), 
+    &SDM::quote($param{'new_robot'}), 
+    &SDM::quote($list->{'name'}), 
+    &SDM::quote($robot)
+    )) {
+	&Log::do_log('err','Unable to transfer stat counter from list %s@%s to list %s@%s',$param{'new_listname'}, $param{'new_robot'}, $list->{'name'}, $robot);
+    }
+
      ## Install new aliases
      $param{'listname'} = $param{'new_listname'};
      
@@ -814,7 +834,7 @@ sub rename_list{
 	 &Log::do_log('err',"Unable to load $param{'new_listname'} while renaming");
 	 return 'internal';
      }
-
+     
      ## Check custom_subject
      if (defined $list->{'admin'}{'custom_subject'} &&
 	 $list->{'admin'}{'custom_subject'} =~ /$old_listname/) {
