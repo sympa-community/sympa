@@ -3,6 +3,16 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.14		February 03, 2012
+
+  Bug fixes:
+
+	[7283] src/lib/List.pm:  The test to verify that the custom attributes
+	were correctly parsed was wrong and returned false even if the ca were
+	correctly loaded. Fixed by testing the umber of keyx in the hash. If
+	the parsing succeeded, it MUST contain at least one key for the root
+	XML element.
+
 6.2a.13		February 02, 2012
 
   Features:
