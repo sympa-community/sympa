@@ -37,6 +37,7 @@ use wwslib;
 use confdef;
 use tools;
 use Sympa::Constants;
+use Data::Dumper;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
@@ -144,7 +145,6 @@ sub load {
             printf STDERR  "Conf::load(): Unable to load %s. Aborting\n", $config_file;
             return undef;
         }
-        
         # Returning the config file content if this is what has been asked.
         return (\%line_numbered_config) if ($return_result);
 
@@ -163,7 +163,7 @@ sub load {
         &_set_listmasters_entry({'config_hash' => \%Conf, 'main_config' => 1});
     
         ## Some parameters must have a value specifically defined in the config. If not, it is an error.
-        $config_err += &_detect_missing_mandatory_parameters({'config_hash' => \%Conf,});
+        $config_err += &_detect_missing_mandatory_parameters({'config_hash' => \%Conf,'file_to_check' => $config_file});
 
         # Some parameters need special treatments to get their final values.
         &_infer_server_specific_parameter_values({'config_hash' => \%Conf,});
@@ -187,7 +187,6 @@ sub load {
     ## Load robot.conf files
     &load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload}) ;
     &_create_robot_like_config_for_main_robot();
-    
     return 1;
 }
 
@@ -1505,7 +1504,10 @@ sub _set_hardcoded_parameter_values{
 sub _detect_missing_mandatory_parameters {
     my $param = shift;
     my $number_of_errors = 0;
+    $param->{'file_to_check'} =~ /^(\/.*\/)?([^\/]+)$/;
+    my $config_file_name = $2;
     foreach my $parameter (keys %params) {
+        next if (defined $params{$parameter}->{'file'} && $params{$parameter}->{'file'} ne $config_file_name);
         unless (defined $param->{'config_hash'}{$parameter} or defined $params{$parameter}->{'default'} or defined $params{$parameter}->{'optional'}) {
             printf STDERR "Conf::_detect_missing_mandatory_parameters(): Required field not found in sympa.conf: %s\n", $parameter;
             $number_of_errors++;
