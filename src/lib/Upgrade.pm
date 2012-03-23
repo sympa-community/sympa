@@ -642,7 +642,8 @@ sub upgrade {
 	foreach my $subdir (sort grep (!/^\.+$/,readdir(BOUNCEDIR))) {
 	  my $other_dir = &Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path').'/'.$subdir.'/OTHER';
 	  if (-d $other_dir) {
-	    &tools::remove_dir($other_dir) & &Log::do_log('notice', "Directory $other_dir removed");
+	    &tools::remove_dir($other_dir);
+	    &Log::do_log('notice', "Directory $other_dir removed");
 	  }
 	}
 	

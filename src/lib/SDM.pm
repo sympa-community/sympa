@@ -385,7 +385,7 @@ sub check_primary_key {
 		push @{$report_ref}, $rep;
 	    }
 	    ## Add primary key
-	    my $rep = undef;
+	    $rep = undef;
 	    if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
 		push @{$report_ref}, $rep;
 	    }
@@ -398,7 +398,7 @@ sub check_primary_key {
 	    push @{$report_ref}, $rep;
 	}
 	## Add primary key
-	my $rep = undef;
+	$rep = undef;
 	if ($rep = $db_source->set_primary_key({'table'=>$t,'fields'=>$primary{$t}})) {
 	    push @{$report_ref}, $rep;
 	}
@@ -457,7 +457,7 @@ sub check_indexes {
 		    push @{$report_ref}, $rep;
 		}
 		## Add index
-		my $rep = undef;
+		$rep = undef;
 		if ($rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx, 'fields'=>$indexes{$t}{$idx}})) {
 		    push @{$report_ref}, $rep;
 		}
@@ -470,7 +470,7 @@ sub check_indexes {
 		push @{$report_ref}, $rep;
 	    }
 	    ## Add index
-	    my $rep = undef;
+	    $rep = undef;
 	    if ($rep = $db_source->set_index({'table'=>$t, 'index_name'=> $idx,'fields'=>$indexes{$t}{$idx}})) {
 		push @{$report_ref}, $rep;
 	    }

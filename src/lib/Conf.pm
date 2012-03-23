@@ -1242,7 +1242,7 @@ sub _load_a_param {
     $value = $p->{'default'};
     }
     ## lower case if usefull
-    $value = lc($value) if ($p->{'case'} eq 'insensitive'); 
+    $value = lc($value) if (defined $p->{'case'} && $p->{'case'} eq 'insensitive'); 
     
     ## Do we need to split param if it is not already an array
     if (($p->{'occurrence'} =~ /n$/)
@@ -1294,7 +1294,7 @@ sub _load_config_file_to_hash {
                 $value = qx/$1/;
                 chomp($value);
             }
-            if($params{$keyword}{'multiple'} == 1){
+            if(defined $params{$keyword}{'multiple'} && $params{$keyword}{'multiple'} == 1){
                 if(defined $result->{'config'}{$keyword}) {
                     push @{$result->{'config'}{$keyword}}, $value;
                     push @{$result->{'numbered_config'}{$keyword}}, [$value, $line_num];

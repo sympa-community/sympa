@@ -4923,7 +4923,6 @@ sub insert_delete_exclusion {
     
     my $r = 1;
     
-	my $r = 1;
     if($action eq 'insert'){
 	## INSERT only if $user->{'included'} eq '1'
 

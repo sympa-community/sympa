@@ -140,7 +140,7 @@ sub load_config {
 
     ## Valid params
     foreach my $key (keys %Conf::params) {
-	if ($Conf::params{$key}{'file'} eq 'wwsympa.conf') {
+	if (defined $Conf::params{$key}{'file'} && $Conf::params{$key}{'file'} eq 'wwsympa.conf') {
 	    $default_conf{$key} = $Conf::params{$key}{'default'};
 	}
     }
