@@ -167,7 +167,34 @@ sub db_struct {
 				 },
 			       'conf_table' => {'robot_conf' => 'varchar(80)',
 						'label_conf' => 'varchar(80)',
-						'value_conf' => 'varchar(300)'}
+						'value_conf' => 'varchar(300)'},
+					'oauthconsumer_sessions_table' => {
+						'user_oauthconsumer' => 'varchar(100)',
+						'provider_oauthconsumer' => 'varchar(100)',
+						'tmp_token_oauthconsumer' => 'varchar(100)',
+						'tmp_secret_oauthconsumer' => 'varchar(100)',
+						'access_token_oauthconsumer' => 'varchar(100)',
+						'access_secret_oauthconsumer' => 'varchar(100)',
+					},
+					'oauthprovider_sessions_table' => {
+						'id_oauthprovider' => 'int(11)',
+						'token_oauthprovider' => 'varchar(32)',
+						'secret_oauthprovider' => 'varchar(32)',
+						'isaccess_oauthprovider' => 'tinyint(1)',
+						'accessgranted_oauthprovider' => 'tinyint(1)',
+						'consumer_oauthprovider' => 'varchar(100)',
+						'user_oauthprovider' => 'varchar(100)',
+						'firsttime_oauthprovider' => 'int(11)',
+						'lasttime_oauthprovider' => 'int(11)',
+						'verifier_oauthprovider' => 'varchar(32)',
+						'callback_oauthprovider' => 'varchar(100)',
+					},
+					'oauthprovider_nonces_table' => {
+						'id_nonce' => 'int(11)',
+						'id_oauthprovider' => 'int(11)',
+						'nonce_oauthprovider' => 'varchar(100)',
+						'time_oauthprovider' => 'int(11)',
+					}
 			   },
 		   );
   
@@ -259,7 +286,17 @@ our %not_null = ('email_user' => 1,
 		'data_counter' => 1,
 		'robot_counter' => 1,
 		'date_notification' => 1,
-		'pk_notification' => 1
+		'pk_notification' => 1,
+		'id_oauthprovider' => 1,
+		'user_oauthconsumer' => 1,
+		'token_oauthprovider' => 1,
+		'secret_oauthprovider' => 1,
+		'consumer_oauthprovider' => 1,
+		'fisrttime_oauthprovider' => 1,
+		'lasttime_oauthprovider' => 1,
+		'nonce_oauthprovider' => 1,
+		'provider_oauthconsumer' => 1,
+		'id_nonce' => 1,
 	);
 
 our %primary = ('user_table' => ['email_user'],
@@ -275,10 +312,17 @@ our %primary = ('user_table' => ['email_user'],
 	       'conf_table' => ['robot_conf','label_conf'],
 	       'stat_table' => ['id_stat'],
 	       'stat_counter_table' => ['id_counter'],
-	       'notification_table' => ['pk_notification']
+	       'notification_table' => ['pk_notification'],
+	       'oauthconsumer_sessions_table' => ['user_oauthconsumer', 'provider_oauthconsumer'],
+	       'oauthprovider_sessions_table' => ['id_oauthprovider'],
+	       'oauthprovider_nonces_table' => ['id_nonce'],
 	       );
 	       
-our %autoincrement = ('notification_table' => 'pk_notification');
+our %autoincrement = (
+	'notification_table' => 'pk_notification',
+	'oauthprovider_sessions_table' => 'id_oauthprovider',
+	'oauthprovider_nonces_table' => 'id_nonce',
+);
 
 ## List the required INDEXES
 ##   1st key is the concerned table

@@ -90,6 +90,21 @@ You are not allowed to send this message for the following reason:[%END%]
 [% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
 [%##################### %]
+[%# OAUTH STATUS ERROR %]
+[%##################### %]
+[% ELSIF type == 'oauth' -%]
+Subject: [% FILTER qencode %][%|loc(consumer_name,oauth_provider)%]Your OAuth token used by consumer %1 may have expired.[%END%][%END%]
+Content-Type: multipart/mixed; boundary="[% boundary %]"
+Content-Transfer-Encoding: 8bit
+
+--[% boundary %]
+Content-Disposition: inline
+
+[%|loc(consumer_name,oauth_provider,conf.wwsympa_url)%]Sympa failed to retreive data using %1 consumer, this may be because your access token for OAuth provider %2 is out of date.
+
+Visit  %3/oauth_check/%2 to check the token state and renew it if necessary.[%END%]
+
+[%##################### %]
 [%###### SUCCESS NOTICE %]
 [%##################### %]
 [% ELSIF type == 'success' -%]

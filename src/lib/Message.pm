@@ -177,7 +177,13 @@ sub new {
 	}else{
 	    $msg = $parser->parse_data(\$messageasstring);
 	}
+    }  
+     
+    unless ($msg) {
+	&Log::do_log('err', 'Unable to parse message from file %s, skipping.', $file);
+	return undef;
     }   
+    
     $message->{'msg'} = $msg;
     $message->{'msg_as_string'} = $msg->as_string; 
     $message->{'size'} = length($msg->as_string);

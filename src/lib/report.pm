@@ -56,7 +56,7 @@ sub reject_report_msg {
     my ($type,$error,$user,$param,$robot,$msg_string,$list) = @_;
     &Log::do_log('debug2', "reject::reject_report_msg(%s,%s,%s)", $type,$error,$user);
 
-    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user'|| $type eq 'auth') {
+    unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user'|| $type eq 'auth'|| $type eq 'oauth') {
 	&Log::do_log('err',"report::reject_report_msg(): error to prepare parsing 'message_report' template to $user : not a valid error type");
 	return undef
     }
@@ -83,6 +83,10 @@ sub reject_report_msg {
     } elsif ($type eq 'auth') {
 	$param->{'entry'} = $error;
 	$param->{'type'} = 'authorization_reject';
+
+    } elsif ($type eq 'oauth') {
+	$param->{'entry'} = $error;
+	$param->{'type'} = 'oauth';
 
     } else {
 	$param->{'type'} = 'intern_error';

@@ -38,6 +38,8 @@ use Data::Dumper;
 # xxxxxxx faut-il virer encode ? Faut en faire un use ? 
 require Encode;
 
+use VOOTConsumer;
+
 use tt2;
 use Sympa::Constants;
 
@@ -1091,6 +1093,37 @@ my %alias = ('reply-to' => 'reply_to',
 				    'gettext_id' => "SQL query inclusion",
 				    'group' => 'data_source'
 				    },
+		'include_voot_group' => {
+			'format' => {
+				'name' => {
+					'format' => '.+',
+					'gettext_id' => "short name for this source",
+					'length' => 15,
+					'order' => 1
+				},
+				'user' => {
+					'format' => '\S+',
+					'occurrence' => '1',
+					'gettext_id' => "user",
+					'order' => 2
+				},
+				'provider' => {
+					'format' => '\S+',
+					'occurrence' => '1',
+					'gettext_id' => "provider",
+					'order' => 3
+				},
+				'group' => {
+					'format' => '\S+',
+					'occurrence' => '1',
+					'gettext_id' => "group",
+					'order' => 4 
+				}
+			},
+			'occurrence' => '0-n',
+			'gettext_id' => "VOOT group inclusion",
+			'group' => 'data_source'
+		},
 	    'inclusion_notification_feature' => {'format' => ['on','off'],
 						 'occurence' => '0-1',
 						 'default' => 'off',
@@ -5670,9 +5703,10 @@ sub get_next_list_member {
 	## In case it was not set in the database
 	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
 
+	&Log::do_log('debug2', '(email = %s)', $user->{'email'});
 	if (defined $user->{custom_attribute}) {
 	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    unless (keys %custom_attr > -1) {
+	    unless (%custom_attr) {
 		    &Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
 	    }
 	    $user->{'custom_attribute'} = \%custom_attr ;
@@ -7557,6 +7591,77 @@ sub _include_users_remote_file {
     return $total ;
 }
 
+## Includes users from voot group
+sub _include_users_voot_group {
+	my($users, $param, $default_user_options, $tied) = @_;
+	
+	&Log::do_log('debug', "List::_include_users_voot_group(%s, %s, %s)", $param->{'user'}, $param->{'provider'}, $param->{'group'});
+
+	my $id = Datasource::_get_datasource_id($param);
+	
+	my $consumer = new VOOTConsumer(
+		user => $param->{'user'},
+		provider => $param->{'provider'}
+	);
+	
+	# Here we need to check if we are in a web environment and set consumer's webEnv accordingly
+	
+	unless($consumer) {
+		&Log::do_log('err', 'Cannot create VOOT consumer. Cancelling.');
+		return undef;
+	}
+	
+	my $members = $consumer->getGroupMembers(group => $param->{'group'});
+	unless(defined $members) {
+		my $url = $consumer->getOAuthConsumer()->mustRedirect();
+		# Report error with redirect url
+		#return &do_redirect($url) if(defined $url);
+		return undef;
+	}
+	
+	my $email_regexp = &tools::get_regexp('email');
+	my $total = 0;
+	
+	foreach my $member (@$members) {
+		#foreach my $email (@{$member->{'emails'}}) {
+		if(my $email = shift(@{$member->{'emails'}})) {
+			unless(&tools::valid_email($email)) {
+				&Log::do_log('err', "Skip badly formed email address: '%s'", $email);
+				next;
+			}
+			next unless($email);
+			
+			## Check if user has already been included
+			my %u;
+			if($users->{$email}) {
+				%u = $tied ? split("\n", $users->{$email}) : %{$users->{$email}};
+			}else{
+				%u = %{$default_user_options};
+				$total++;
+			}
+			
+			$u{'email'} = $email;
+			$u{'gecos'} = $member->{'displayName'};
+			$u{'id'} = join (',', split(',', $u{'id'}), $id);
+			
+			$u{'visibility'} = $default_user_options->{'visibility'} if(defined $default_user_options->{'visibility'});
+			$u{'reception'} = $default_user_options->{'reception'} if(defined $default_user_options->{'reception'});
+			$u{'profile'} = $default_user_options->{'profile'} if(defined $default_user_options->{'profile'});
+			$u{'info'} = $default_user_options->{'info'} if(defined $default_user_options->{'info'});
+			
+			if($tied) {
+				$users->{$email} = join("\n", %u);
+			}else{
+				$users->{$email} = \%u;
+			}
+		}
+	}
+	
+	&Log::do_log('info',"included %d users from VOOT group %s at provider %s", $total, $param->{'group'}, $param->{'provider'});
+	
+	return $total;
+}
+
 
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
@@ -7944,7 +8049,7 @@ sub _load_list_members_from_include {
     my @errors;
     my $result;
 
-    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
+    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file', 'include_voot_group') {
 	last unless (defined $total);
 	    
 	foreach my $tmp_incl (@{$admin->{$type}}) {
@@ -7998,6 +8103,11 @@ sub _load_list_members_from_include {
 		}
 	    }elsif ($type eq 'include_remote_file') {
 		$included = _include_users_remote_file (\%users, $incl, $admin->{'default_user_options'});
+		unless (defined $included){
+		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
+		}
+	    }elsif ($type eq 'include_voot_group') {
+		$included = _include_users_voot_group(\%users, $incl, $admin->{'default_user_options'});
 		unless (defined $included){
 		    push @errors, {'type' => $type, 'name' => $incl->{'name'}};
 		}
@@ -8069,7 +8179,7 @@ sub _load_list_admin_from_include {
 	} else {
 	    $include_admin_user = &_load_include_admin_user_file($self->{'domain'},$include_file);
 	}
-	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file') {
+	foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file', 'include_voot_group') {
 	    last unless (defined $total);
 	    
 	    foreach my $tmp_incl (@{$include_admin_user->{$type}}) {
@@ -8108,7 +8218,10 @@ sub _load_list_admin_from_include {
 		    $included = _include_users_file (\%admin_users, $incl, \%option);
 		}elsif ($type eq 'include_remote_file') {
 		    $included = _include_users_remote_file (\%admin_users, $incl, \%option);
-		}
+		}elsif ($type eq 'include_voot_group') {
+			$included = _include_users_voot_group(\%admin_users, $incl, \%option);
+	    }
+
 		unless (defined $included) {
 		    &Log::do_log('err', 'Inclusion %s %s failed in list %s', $role, $type, $name);
 		    next;
@@ -8355,6 +8468,37 @@ sub sync_include {
 	    unless (&List::send_notify_to_listmaster('sync_include_failed', $self->{'domain'}, {'errors' => \@errors, 'listname' => $self->{'name'}})) {
 		&Log::do_log('notice',"Unable to send notify 'sync_include_failed' to listmaster");
 	    }
+	    foreach my $e (@errors) {
+			next unless($e->{'type'} eq 'include_voot_group');
+			my $cfg = undef;
+			foreach my $p (@{$self->{'admin'}{'include_voot_group'}}) {
+				$cfg = $p if($p->{'name'} eq $e->{'name'});
+			}
+			next unless(defined $cfg);
+			&report::reject_report_web(
+				'user',
+				'sync_include_voot_failed',
+				{
+					'oauth_provider' => 'voot:'.$cfg->{'provider'}
+				},
+				'sync_include',
+				$self->{'domain'},
+				$cfg->{'user'},
+				$self->{'name'}
+			);
+			&report::reject_report_msg(
+				'oauth',
+				'sync_include_voot_failed',
+				$cfg->{'user'},
+				{
+					'consumer_name' => 'VOOT',
+					'oauth_provider' => 'voot:'.$cfg->{'provider'}
+				},
+				$self->{'domain'},
+				'',
+				$self->{'name'}
+			);
+		}
 	    return undef;
 	}
     }
@@ -11290,7 +11434,7 @@ sub has_include_data_sources {
     my $self = shift;
 
     foreach my $type ('include_file','include_list','include_remote_sympa_list','include_sql_query','include_remote_file',
-		      'include_ldap_query','include_ldap_2level_query','include_admin','owner_include','editor_include') {
+		      'include_ldap_query','include_ldap_2level_query','include_admin','owner_include','editor_include', 'include_voot_group') {
 	if (ref($self->{'admin'}{$type}) eq 'ARRAY' && $#{$self->{'admin'}{$type}} >= 0) {
 	    return 1;
 	}

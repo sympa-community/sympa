@@ -56,6 +56,10 @@ webtemplate_DATA = active_lists.tt2 \
 		   edit_config.tt2 \
 		   editfile.tt2 \
 		   edit_list_request.tt2 \
+		   oauth_check.tt2 \
+		   oauth_authorize.tt2 \
+		   select_voot_provider_request.tt2 \
+		   select_voot_groups_request.tt2 \
 		   editsubscriber.tt2 \
 		   edit_template.tt2 \
 		   error.tt2 \

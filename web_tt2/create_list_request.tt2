@@ -82,7 +82,11 @@
 	  >[% topic.value.current_title %]</option>
 	  [% IF topic.value.sub %]
 	  [% FOREACH subtopic = topic.value.sub %]
-	     <option value="[% topic.key %]/[% subtopic.key %]">[% topic.value.current_title %] / [% subtopic.value.current_title %]</option>
+	     <option value="[% topic.key %]/[% subtopic.key %]"
+		[% IF subtopic.value.selected %]
+			selected="selected"
+		[% END %]
+	     >[% topic.value.current_title %] / [% subtopic.value.current_title %]</option>
 	  [% END %]
 	  [% END %]
 	[% END %]

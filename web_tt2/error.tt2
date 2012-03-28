@@ -6,7 +6,7 @@
 [%#### INTERN  ERROR -%]
 [%###################-%]
 [% FOREACH i_err = intern_errors %]
-[%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] - 
+  [%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] - 
   [% IF i_err.msg == 'month_not_found' %][%|loc(i_err.month)%]Unable to find month '%1'[%END%]
   [% ELSIF i_err.msg == 'inaccessible_archive' %][%|loc(i_err.year_month)%]Archives from %1 are not accessible[%END%]
   [% ELSIF i_err.msg == 'unable_to_load_list_of_topics' %][%|loc%]Unable to load list topics.[%END%]
@@ -23,24 +23,25 @@
   [% ELSIF i_err.msg == 'db_update_failed' %][%|loc(i_err.key)%]Failed to update database.[%END%]
   [% ELSIF i_err.msg == 'file_update_failed' %][%|loc(i_err.key)%]Failed to update a file.[%END%]
   [% ELSIF i_err.msg == 'create_list' %][%|loc(i_err.listname)%]Failed creating list '%1'. The list might already exist or listname might include forbidden characters.[%END%]
-
 [% END %]
+<br />
 	
 [% END %]
+
 [%###################-%]
 [%#### SYSTEM  ERROR -%]
 [%###################-%]
 [% FOREACH s_err = system_errors %]
-[%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]   
-  [% IF s_err.msg == 'a' %]
-  [% END %]
-	
+  [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]   
+  [% IF s_err.msg == 'a' %][% END %]
+  <br />
 [% END %]
+
 [%###################-%]
 [%#### USER  ERROR   -%]
 [%###################-%]
 [% FOREACH u_err = user_errors %]
-[%|loc(u_err.action)%]ERROR (%1) [%END-%] -    
+  [%|loc(u_err.action)%]ERROR (%1) [%END-%] -    
   [% IF u_err.msg == 'wrong_param' %][%|loc()%]Wrong parameters[%END%]
   [% ELSIF u_err.msg == 'unknown_action' %][%|loc()%]Unknown action[%END%]
   [% ELSIF u_err.msg == 'syntax_errors' %][%|loc(u_err.params)%]Syntax errors with the following parameters: %1[%END%]
@@ -130,22 +131,24 @@
   [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]
   [% ELSIF u_err.msg == 'change_member_email_failed_included' %][%|loc(u_err.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
   [% ELSIF u_err.msg == 'change_admin_email_failed_included' %][%|loc(u_err.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
-  [% ELSIF u_err.msg %][%u_err.msg%]
+  [% ELSIF u_err.msg == 'sync_include_voot_failed' %][%|loc(base_url,path_cgi,u_err.oauth_provider)%]Failed to include members from VOOT group, use the following link to check the OAuth status : <a href="%1%2/oauth_check/%3">%1%2/oauth_check/%3</a>[%END%] 
+ [% ELSIF u_err.msg %][%u_err.msg%]
   [% END %]
-	
+  <br />
 [% END %]
+
 [%#####################-%]
 [%# AUTHORIZATION ERROR-%]
 [%#####################-%]
 [% FOREACH auth = auth_rejects %]
-[%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]   
+  [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]   
   [% IF auth.change_email_failed %][%|loc(auth.listname)%]Could not change your subscription address for the list '%1' 
      because your new address is not allowed to subscribe/unsubscribe:[%END%][% END %]
   [% SET reason = auth.msg -%] 
   [% IF reason == 'edit_right' %][% SET role = auth.role -%][% SET right = auth.right -%][% END -%] 	 
   [% PROCESS authorization_reject.tt2 -%]	
   [% IF auth.login %]<br />[%|loc%]You need to login[%END%][% END %]
-
+  <br />
 [% END %]
 
 <form >

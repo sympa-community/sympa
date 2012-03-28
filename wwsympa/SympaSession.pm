@@ -173,14 +173,14 @@ sub store {
     if ($self->{'new_session'}) {
 	## Store the new session ID in the DB
 	unless(&SDM::do_query( "INSERT INTO session_table (id_session, date_session, remote_addr_session, robot_session, email_session, start_date_session, hit_session, data_session) VALUES (%s,%d,%s,%s,%s,%d,%d,%s)",&SDM::quote($self->{'id_session'}),time,&SDM::quote($ENV{'REMOTE_ADDR'}),&SDM::quote($self->{'robot'}),&SDM::quote($self->{'email'}),$self->{'start_date'},$self->{'hit'}, &SDM::quote($data_string))) {
-	    &Log::&Log::do_log('err','Unable to add new session %s informations in database', $self->{'id_session'});
+	    &Log::do_log('err','Unable to add new session %s informations in database', $self->{'id_session'});
 	    return undef;
 	}   
       ## If the session already exists in DB, then perform an UPDATE
     }else {
 	## Update the new session in the DB
 	unless(&SDM::do_query("UPDATE session_table SET date_session=%d, remote_addr_session=%s, robot_session=%s, email_session=%s, start_date_session=%d, hit_session=%d, data_session=%s WHERE (id_session=%s)",time,&SDM::quote($ENV{'REMOTE_ADDR'}),&SDM::quote($self->{'robot'}),&SDM::quote($self->{'email'}),$self->{'start_date'},$self->{'hit'}, &SDM::quote($data_string), &SDM::quote($self->{'id_session'}))) {
-	    &Log::&Log::do_log('err','Unable to update session %s information in database', $self->{'id_session'});
+	    &Log::do_log('err','Unable to update session %s information in database', $self->{'id_session'});
 	    return undef;
 	}    
     }
@@ -211,7 +211,7 @@ sub renew {
 
     ## First remove the DB entry for the previous session ID
     unless(&SDM::do_query("UPDATE session_table SET id_session=%s WHERE (id_session=%s)",&SDM::quote($new_id), &SDM::quote($self->{'id_session'}))) {
-	&Log::&Log::do_log('err','Unable to renew session ID for session %s',$self->{'id_session'});
+	&Log::do_log('err','Unable to renew session ID for session %s',$self->{'id_session'});
 	return undef;
     }	 
 

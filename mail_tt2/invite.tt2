@@ -7,6 +7,6 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Invitation to join list %1[%END%
 [%|loc%]To subscribe just hit the following link:[%END%]
 [% url %]
 
-[%|loc(conf.sympa,subject)%]Or send a message to %1 with subject: "sub %2"[%END%]
+[%|loc(conf.sympa,list.name)%]Or send a message to %1 with subject: "sub %2"[%END%]
 
 [%|loc%]If you don't want to subscribe just ignore this message.[%END%]
