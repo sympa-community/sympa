@@ -3,6 +3,37 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.15		April 04, 2012
+
+  Features:
+
+	[7311] mail_tt2/invite.tt2, mail_tt2/message_report.tt2,
+	soap/sympa.wsdl, soap/sympasoap.pm, src/lib/List.pm,
+	src/lib/Makefile.am, src/lib/Message.pm,
+	src/lib/OAuthConsumer.pm:7310), src/lib/OAuthProvider.pm:7310),
+	src/lib/Sympa/DatabaseDescription.pm, src/lib/VOOTConsumer.pm:7310),
+	src/lib/VOOTProvider.pm:7310), src/lib/report.pm, web_tt2/Makefile.am,
+	web_tt2/create_list_request.tt2, web_tt2/css.tt2, web_tt2/error.tt2,
+	web_tt2/list_menu.tt2, web_tt2/oauth_authorize.tt2:7310),
+	web_tt2/oauth_check.tt2:7310),
+	web_tt2/select_voot_groups_request.tt2:7310),
+	web_tt2/select_voot_provider_request.tt2:7310),
+	wwsympa/SympaSession.pm, wwsympa/wwsympa.fcgi.in:  Adding OAuth/VOOT
+	provider/consumer capabilities.
+	VOOT is a Opensocial/OAuth based group membership sharing protocol.
+	It allows to easily synchronize external groups with any Sympa list
+	using Opensocial requests.
+	It also allows to include members from an external Opensocial capable
+	group manager in a list.
+	For more information on VOOT, see :
+	https://github.com/andreassolberg/voot/wiki/Protocol
+
+
+  Bug fixes:
+
+	[7299] src/lib/Message.pm:  Malformed spool file caused parsing error
+	and thus sympa.pl crash, adding test to skip message if so.
+
 6.2a.14		February 03, 2012
 
   Bug fixes:
