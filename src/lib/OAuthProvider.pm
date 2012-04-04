@@ -289,7 +289,7 @@ sub checkRequest {
 	
 	return 401 unless($timestamp > time - $self->{'constants'}{'old_request_timeout'});
 	
-	unless(&SDM::do_query('DELETE FROM oauthprovider_nonce_table WHERE time_oauthprovider<%d', time - $self->{'constants'}{'nonce_timeout'})) {
+	unless(&SDM::do_query('DELETE FROM oauthprovider_nonces_table WHERE time_oauthprovider<%d', time - $self->{'constants'}{'nonce_timeout'})) {
 		&Log::do_log('err', 'Unable to clean nonce store in database');
 		return 401;
 	}
@@ -309,7 +309,7 @@ sub checkRequest {
 			my $id = $data->{'id'};
 			
 			unless($sth = &SDM::do_prepared_query(
-				'SELECT nonce_oauthprovider AS nonce FROM oauthprovider_nonce_table WHERE id_oauthprovider=? AND nonce_oauthprovider=?',
+				'SELECT nonce_oauthprovider AS nonce FROM oauthprovider_nonces_table WHERE id_oauthprovider=? AND nonce_oauthprovider=?',
 				$id,
 				$nonce
 			)) {
@@ -320,7 +320,7 @@ sub checkRequest {
 			return 401 if($sth->fetchrow_hashref('NAME_lc')); # Already used nonce
 			
 			unless(&SDM::do_query(
-				'INSERT INTO oauthprovider_nonce_table(id_oauthprovider, nonce_oauthprovider, time_oauthprovider) VALUES (%d, %s, %d)',
+				'INSERT INTO oauthprovider_nonces_table(id_oauthprovider, nonce_oauthprovider, time_oauthprovider) VALUES (%d, %s, %d)',
 				$id,
 				&SDM::quote($nonce),
 				time
