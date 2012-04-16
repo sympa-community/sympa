@@ -12,6 +12,9 @@
 [% ELSIF notice.msg == 'add_performed' %]
 [%|loc(notice.total)%]%1 subscribers added[%END%]
 
+[% ELSIF notice.msg == 'time_limit_for_include' %]
+[%|loc()%]You're not allowed to make sync, time limit in action[%END%]
+
 [% ELSIF notice.msg == 'del_performed' %]
 [%|loc(notice.total)%]%1 addresses have been removed[%END%]
 

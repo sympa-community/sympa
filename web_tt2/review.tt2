@@ -57,7 +57,9 @@
   <input type="hidden" name="list" value="[% list %]"/>
   </form>
   [% END %]
+  [%|loc%]<strong>Last update:[%END%] [% update.curr_update %]</strong><br />
   <br />
+  
   <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
   <input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');"/>
   <input type="hidden" name="list" value="[% list %]"/>
@@ -164,7 +166,6 @@
    [% END %]
    </fieldset>
    </form>
-
 </div>
 [% PROCESS picture_upload.tt2 %]
 

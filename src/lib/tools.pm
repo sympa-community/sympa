@@ -54,6 +54,8 @@ my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -----
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
 ## also be changed
+my $time_regexp = '[012]?[0-9](?:\:[0-5][0-9])?';
+my $time_range_regexp = $time_regexp.'-'.$time_regexp;
 my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
 	      'template_name' => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*', ## Allow \s
@@ -65,6 +67,9 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'task' => '\w+',
 	      'datasource' => '[\w-]+',
 	      'uid' => '[\w\-\.\+]+',
+	      'time' => $time_regexp,
+	      'time_range' => $time_range_regexp,
+	      'time_ranges' => $time_range_regexp.'(?:\s+'.$time_range_regexp.')*'
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
