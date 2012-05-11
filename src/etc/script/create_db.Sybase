@@ -48,31 +48,6 @@ go
 
 /* -------------------------------------------------------- */
 
-/* Table structure for table `logs_table` */
- 
-
-create table logs_table 
-( 
-	 list_logs 	varchar(50), 
-	 parameters_logs 	varchar(100), 
-	 msg_id_logs 	varchar(255), 
-	 action_logs 	varchar(50) NOT NULL, 
-	 client_logs 	varchar(100), 
-	 user_email_logs 	varchar(100), 
-	 daemon_logs 	varchar(10) NOT NULL, 
-	 target_email_logs 	varchar(100), 
-	 status_logs 	varchar(10) NOT NULL, 
-	 error_type_logs 	varchar(150), 
-	 robot_logs 	varchar(80), 
-	 date_logs 	numeric NOT NULL, 
-	 id_logs 	numeric NOT NULL, 
-	 constraint ind_logs PRIMARY KEY (id_logs)
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
 /* Table structure for table `user_table` */
  
 
@@ -89,21 +64,6 @@ create table user_table
 	 lang_user 	varchar(10), 
 	 wrong_login_count_user 	numeric, 
 	 constraint ind_user PRIMARY KEY (email_user)
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
-/* Table structure for table `exclusion_table` */
- 
-
-create table exclusion_table 
-( 
-	 user_exclusion 	varchar(100) NOT NULL, 
-	 date_exclusion 	numeric, 
-	 list_exclusion 	varchar(50) NOT NULL, 
-	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion)
 )
 go 
 
@@ -130,16 +90,18 @@ go
 
 /* -------------------------------------------------------- */
 
-/* Table structure for table `netidmap_table` */
+/* Table structure for table `oauthconsumer_sessions_table` */
  
 
-create table netidmap_table 
+create table oauthconsumer_sessions_table 
 ( 
-	 netid_netidmap 	varchar(100) NOT NULL, 
-	 email_netidmap 	varchar(100), 
-	 robot_netidmap 	varchar(80) NOT NULL, 
-	 serviceid_netidmap 	varchar(100) NOT NULL, 
-	 constraint ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
+	 tmp_secret_oauthconsumer 	varchar(100), 
+	 user_oauthconsumer 	varchar(100) NOT NULL, 
+	 provider_oauthconsumer 	varchar(100) NOT NULL, 
+	 access_token_oauthconsumer 	varchar(100), 
+	 tmp_token_oauthconsumer 	varchar(100), 
+	 access_secret_oauthconsumer 	varchar(100), 
+	 constraint ind_oauthconsumer_sessions PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer)
 )
 go 
 
@@ -154,7 +116,7 @@ create table bulkspool_table
 	 dkim_selector_bulkspool 	varchar(50), 
 	 dkim_d_bulkspool 	varchar(50), 
 	 dkim_privatekey_bulkspool 	varchar(1000), 
-	 messageid_bulkspool 	varchar(100), 
+	 messageid_bulkspool 	varchar(200), 
 	 dkim_i_bulkspool 	varchar(100), 
 	 dkim_header_list_bulkspool 	varchar(500), 
 	 messagekey_bulkspool 	varchar(33) NOT NULL, 
@@ -190,6 +152,149 @@ create table admin_table
 )
 go 
 
+create index _fk on admin_table () 
+go
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `oauthprovider_nonces_table` */
+ 
+
+create table oauthprovider_nonces_table 
+( 
+	 id_oauthprovider 	numeric NOT NULL, 
+	 id_nonce 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 nonce_oauthprovider 	varchar(100) NOT NULL, 
+	 time_oauthprovider 	numeric, 
+	 constraint ind_oauthprovider_nonces PRIMARY KEY (id_nonce)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `stat_table` */
+ 
+
+create table stat_table 
+( 
+	 daemon_stat 	varchar(10), 
+	 list_stat 	varchar(150), 
+	 parameter_stat 	varchar(50), 
+	 id_stat 	numeric NOT NULL, 
+	 email_stat 	varchar(100), 
+	 operation_stat 	varchar(50) NOT NULL, 
+	 user_ip_stat 	varchar(100), 
+	 read_stat 	tinyint(1) NOT NULL, 
+	 date_stat 	numeric NOT NULL, 
+	 robot_stat 	varchar(80) NOT NULL, 
+	 constraint ind_stat PRIMARY KEY (id_stat)
+)
+go 
+
+create index _fk on stat_table () 
+go
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `oauthprovider_sessions_table` */
+ 
+
+create table oauthprovider_sessions_table 
+( 
+	 accessgranted_oauthprovider 	tinyint(1), 
+	 user_oauthprovider 	varchar(100), 
+	 token_oauthprovider 	varchar(32) NOT NULL, 
+	 firsttime_oauthprovider 	numeric, 
+	 isaccess_oauthprovider 	tinyint(1), 
+	 lasttime_oauthprovider 	numeric NOT NULL, 
+	 verifier_oauthprovider 	varchar(32), 
+	 id_oauthprovider 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 secret_oauthprovider 	varchar(32) NOT NULL, 
+	 callback_oauthprovider 	varchar(100), 
+	 consumer_oauthprovider 	varchar(100) NOT NULL, 
+	 constraint ind_oauthprovider_sessions PRIMARY KEY (id_oauthprovider)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `logs_table` */
+ 
+
+create table logs_table 
+( 
+	 list_logs 	varchar(50), 
+	 parameters_logs 	varchar(100), 
+	 msg_id_logs 	varchar(255), 
+	 action_logs 	varchar(50) NOT NULL, 
+	 client_logs 	varchar(100), 
+	 user_email_logs 	varchar(100), 
+	 daemon_logs 	varchar(10) NOT NULL, 
+	 target_email_logs 	varchar(100), 
+	 status_logs 	varchar(10) NOT NULL, 
+	 error_type_logs 	varchar(150), 
+	 robot_logs 	varchar(80), 
+	 date_logs 	numeric NOT NULL, 
+	 id_logs 	numeric NOT NULL, 
+	 constraint ind_logs PRIMARY KEY (id_logs)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `exclusion_table` */
+ 
+
+create table exclusion_table 
+( 
+	 user_exclusion 	varchar(100) NOT NULL, 
+	 date_exclusion 	numeric, 
+	 list_exclusion 	varchar(50) NOT NULL, 
+	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `stat_counter_table` */
+ 
+
+create table stat_counter_table 
+( 
+	 end_date_counter 	numeric, 
+	 list_counter 	varchar(150), 
+	 id_counter 	numeric NOT NULL, 
+	 robot_counter 	varchar(80) NOT NULL, 
+	 beginning_date_counter 	numeric NOT NULL, 
+	 data_counter 	varchar(50) NOT NULL, 
+	 variation_counter 	numeric, 
+	 total_counter 	numeric, 
+	 constraint ind_stat_counter PRIMARY KEY (id_counter)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `netidmap_table` */
+ 
+
+create table netidmap_table 
+( 
+	 netid_netidmap 	varchar(100) NOT NULL, 
+	 email_netidmap 	varchar(100), 
+	 robot_netidmap 	varchar(80) NOT NULL, 
+	 serviceid_netidmap 	varchar(100) NOT NULL, 
+	 constraint ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
+)
+go 
+
 
 /* -------------------------------------------------------- */
 
@@ -206,33 +311,6 @@ create table one_time_ticket_table
 	 date_one_time_ticket 	numeric, 
 	 email_one_time_ticket 	varchar(100), 
 	 constraint ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket)
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
-/* Table structure for table `bulkmailer_table` */
- 
-
-create table bulkmailer_table 
-( 
-	 priority_packet_bulkmailer 	numeric, 
-	 receipients_bulkmailer 	varchar(500), 
-	 reception_date_bulkmailer 	numeric, 
-	 packetid_bulkmailer 	varchar(33) NOT NULL, 
-	 priority_message_bulkmailer 	numeric, 
-	 verp_bulkmailer 	numeric, 
-	 merge_bulkmailer 	numeric, 
-	 tracking_bulkmailer 	varchar(15), 
-	 returnpath_bulkmailer 	varchar(100), 
-	 messageid_bulkmailer 	varchar(100), 
-	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
-	 listname_bulkmailer 	varchar(50), 
-	 delivery_date_bulkmailer 	numeric, 
-	 robot_bulkmailer 	varchar(80), 
-	 lock_bulkmailer 	varchar(30), 
-	 constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
 )
 go 
 
@@ -262,30 +340,38 @@ create table subscriber_table
 	 subscribed_subscriber 	numeric, 
 	 date_subscriber 	datetime NOT NULL, 
 	 bounce_score_subscriber 	numeric, 
-	 number_messages_subscriber 	numeric NOT NULL, 
+	 number_messages_subscriber 	numeric, 
 	 suspend_subscriber 	numeric, 
 	 constraint ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
 )
 go 
 
+create index _fk on subscriber_table () 
+go
+
 
 /* -------------------------------------------------------- */
 
-/* Table structure for table `stat_table` */
+/* Table structure for table `bulkmailer_table` */
  
 
-create table stat_table 
+create table bulkmailer_table 
 ( 
-	 daemon_stat 	varchar(10), 
-	 list_stat 	varchar(150), 
-	 parameter_stat 	varchar(50), 
-	 id_stat 	numeric NOT NULL, 
-	 email_stat 	varchar(100), 
-	 operation_stat 	varchar(50) NOT NULL, 
-	 user_ip_stat 	varchar(100), 
-	 read_stat 	tinyint(1) NOT NULL, 
-	 date_stat 	numeric NOT NULL, 
-	 robot_stat 	varchar(80) NOT NULL, 
-	 constraint ind_stat PRIMARY KEY (id_stat)
+	 priority_packet_bulkmailer 	numeric, 
+	 receipients_bulkmailer 	varchar(500), 
+	 reception_date_bulkmailer 	numeric, 
+	 packetid_bulkmailer 	varchar(33) NOT NULL, 
+	 priority_message_bulkmailer 	numeric, 
+	 verp_bulkmailer 	numeric, 
+	 merge_bulkmailer 	numeric, 
+	 tracking_bulkmailer 	varchar(15), 
+	 returnpath_bulkmailer 	varchar(100), 
+	 messageid_bulkmailer 	varchar(200), 
+	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
+	 listname_bulkmailer 	varchar(50), 
+	 delivery_date_bulkmailer 	numeric, 
+	 robot_bulkmailer 	varchar(80), 
+	 lock_bulkmailer 	varchar(30), 
+	 constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
 )
 go 
