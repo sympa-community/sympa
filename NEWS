@@ -3,6 +3,28 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.16		May 11, 2012
+
+  Features:
+
+*****	[7325] src/lib/Datasource.pm, src/lib/List.pm, src/lib/tools.pm,
+*****	web_tt2/notice.tt2, web_tt2/review.tt2:  Adding a datasource config
+*****	parameter to disable sync include when in specified time ranges.
+*****	Ranges are described as a space separated list of time periods.
+*****	A time period consists in 2 times separated by an hyphen.
+*****	A time can be either just the hours digits or also hours and minutes if
+*****	separated by a colon.
+*****	Examples of time periods :
+*****	17:45-19:35
+*****	08:20-12:00
+*****	8:20-12
+*****	21-23
+*****	23-02:10
+*****	23-02
+*****	23-2
+*****	As a bonus the big pinfo list parameter description hash gets a new
+*****	indentation for increased readability.
+
 6.2a.15		April 04, 2012
 
   Features:
