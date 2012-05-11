@@ -9912,7 +9912,7 @@ sub do_edit_list {
 
      ## Syntax errors
      if ($#syntax_error > -1) {
-	 &report::reject_report_web('user','syntax_errors',{'params' => 'filter'},$param->{'action'},$list);
+	 &report::reject_report_web('user','syntax_errors',{'params' => join(',', @syntax_error)},$param->{'action'},$list);
 	 &wwslog('info','do_edit_list: Syntax errors for parameters %s', join(',', @syntax_error));
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'syntax_errors'});

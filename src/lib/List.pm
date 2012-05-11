@@ -1702,11 +1702,23 @@ my %alias = ('reply-to' => 'reply_to',
 				'default' => 'mail',
 				'length' => 15
 			},
-			'select' => {
+			'email_entry' => {
 				'order' => 9,
+				'gettext_id' => "Name of email entry",
+				'format' => '\S+',
+				'occurence' => '1'
+			},
+			'select' => {
+				'order' => 10,
 				'gettext_id' => "selection (if multiple)",
 				'format' => ['all', 'first'],
 				'default' => 'first'
+			},
+			'nosync_time_ranges' => {
+				'order' => 11,
+				'gettext_id' => "Time ranges when inclusion is not allowed",
+				'format' => &tools::get_regexp('time_ranges'),
+				'occurrence' => '0-1'
 			}
 		},
 		'occurrence' => '0-n'
@@ -1853,6 +1865,18 @@ my %alias = ('reply-to' => 'reply_to',
 				'format' => '.+',
 				'default' => '',
 				'length' => 50
+			},
+			'email_entry' => {
+				'order' => 18,
+				'gettext_id' => "Name of email entry",
+				'format' => '\S+',
+				'occurence' => '1'
+			},
+			'nosync_time_ranges' => {
+				'order' => 19,
+				'gettext_id' => "Time ranges when inclusion is not allowed",
+				'format' => &tools::get_regexp('time_ranges'),
+				'occurrence' => '0-1'
 			}
 		},
 		'occurrence' => '0-n'
@@ -1925,18 +1949,18 @@ my %alias = ('reply-to' => 'reply_to',
 				'gettext_id' => "Directory where the database is stored (used for DBD::CSV only)",
 				'format' => '.+'
 			},
-			'mapping' => {
-				'order' => 10,
-				'gettext_id' => "Mapping :",
-				'format' => '.+',
-				'length' => 100
-			},
 			'email_entry' => {
-				'order' => 11,
+				'order' => 10,
 				'gettext_id' => "Name of email entry",
 				'format' => '\S+',
 				'occurence' => '1'
 			},
+			'nosync_time_ranges' => {
+				'order' => 11,
+				'gettext_id' => "Time ranges when inclusion is not allowed",
+				'format' => &tools::get_regexp('time_ranges'),
+				'occurrence' => '0-1'
+			}
 		},
 		'occurrence' => '0-n'
 	},
@@ -8674,7 +8698,7 @@ sub _include_users_ldap_2level {
     }
 
     &Log::do_log('debug2',"unbinded from LDAP server %s ", $source->{'host'}) ;
-    &Log::do_log('info','%d new users included from LDAP query',$total);
+    &Log::do_log('info','%d new users included from LDAP query 2level',$total);
 
     my $result;
     $result->{'total'} = $total;
@@ -8682,24 +8706,91 @@ sub _include_users_ldap_2level {
     return $result;
 }
 
-sub _include_ca_sql {
+sub _include_sql_ca {
 	my $source = shift;
-	my $ca;
-	my $ca_res
 	
-	&Log::do_log('debug','List::_include_ca_sql()');
+	return {} unless($source->connect());
+	
+	&Log::do_log('debug', '%s, email_entry = %s', $source->{'sql_query'}, $source->{'email_entry'});
     
 	my $sth = $source->do_query($source->{'sql_query'});
-	my $mail = $source->{'email_entry'};
-	$ca = $sth->fetchall_hashref($mail);
+	my $mailkey = $source->{'email_entry'};
+	my $ca = $sth->fetchall_hashref($mailkey);
 	my $result;
 	foreach my $email (keys %{$ca}) {
 		foreach my $custom_attribute (keys %{$ca->{$email}}) {
-				$result->{$email}{$custom_attribute}{'value'} = $ca->{$email}{$custom_attribute};
-				
+			$result->{$email}{$custom_attribute}{'value'} = $ca->{$email}{$custom_attribute} unless($custom_attribute eq $mailkey);
 		}
 	}
 	return $result;
+}
+
+sub _include_ldap_ca {
+	my $source = shift;
+	
+	return {} unless($source->connect());
+	
+	&Log::do_log('debug', 'server %s ; suffix %s ; filter %s ; attrs: %s', $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+	
+	my @attrs = split(/\s*,\s*/, $source->{'attrs'});
+	
+	my $results = $source->{'ldap_handler'}->search(
+		base => $source->{'suffix'},
+		filter => $source->{'filter'},
+		attrs => @attrs,
+		scope => $source->{'scope'}
+	);
+	if($results->code()) {
+		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $fetch->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		return {};
+	}
+    
+	my $attributes;
+	while(my $entry = $results->shift_entry) {
+		my $email = $entry->get_value($source->{'email_entry'});
+		next unless($email);
+		foreach my $attr (@attrs) {
+			next if($attr eq $source->{'email_entry'});
+			$attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
+		}
+	}
+    
+	return $attributes;
+}
+
+sub _include_ldap_level2_ca {
+	my $source = shift;
+	
+	return {} unless($source->connect());
+	
+	return {};
+	
+	&Log::do_log('debug', 'server %s ; suffix %s ; filter %s ; attrs: %s', $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+	
+	my @attrs = split(/\s*,\s*/, $source->{'attrs'});
+	
+	my $results = $source->{'ldap_handler'}->search(
+		base => $source->{'suffix'},
+		filter => $source->{'filter'},
+		attrs => @attrs,
+		scope => $source->{'scope'}
+	);
+	if($results->code()) {
+		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $fetch->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		return {};
+	}
+    
+	my $attributes;
+	while(my $entry = $results->shift_entry) {
+		my $email = $entry->get_value($source->{'email_entry'});
+		next unless($email);
+		foreach my $attr (@attrs) {
+			next if($attr eq $source->{'email_entry'});
+			$attributes->{$email}{$attr}{'value'} = $entry->get_value($attr);
+		}
+	}
+    
+	return $attributes;
 }
 
 
@@ -8786,7 +8877,7 @@ sub _load_list_members_from_include {
     my @ex_sources;
     
     
-    foreach my $type ('include_sql_ca','include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file', 'include_voot_group') {
+    foreach my $type ('include_list','include_remote_sympa_list','include_file','include_ldap_query','include_ldap_2level_query','include_sql_query','include_remote_file', 'include_voot_group') {
 	last unless (defined $total);
 	    
 	foreach my $tmp_incl (@{$admin->{$type}}) {
@@ -8804,6 +8895,7 @@ sub _load_list_members_from_include {
 	    if ($type eq 'include_sql_query') {
 			my $source = new SQLSource($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
+				&Log::do_log('debug', 'is_new %d, syncing', $source_is_new);
 				$included = _include_users_sql(\%users, $source_id, $source, $admin->{'default_user_options'}, 'untied', $admin->{'sql_fetch_timeout'});
 				unless (defined $included){
 					push @errors, {'type' => $type, 'name' => $incl->{'name'}};
@@ -8818,11 +8910,6 @@ sub _load_list_members_from_include {
 				push @ex_sources, $exclusion_data;
 				$included = 0;
 			}
-		}elsif ($type eq 'include_sql_ca') {
-			my $source = new SQLSource($incl);
-			my $ca = _include_ca_sql($source);
-			
-			
 	    }elsif ($type eq 'include_ldap_query') {
 			my $source = new LDAPSource($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
@@ -9230,39 +9317,96 @@ sub get_list_of_sources_id {
 
 sub sync_include_ca {
 	my $self = shift;
-	my $name = $self->{'name'}; 
 	my $admin = $self->{'admin'};
-    my %old_subscribers;
-    my $email;
-    
-    foreach my $type ('include_sql_ca') {
+	my $purge = shift;
+	my %users;
+	my %changed;
+	
+	$self->purge_ca() if($purge);
+	
+	&Log::do_log('debug', 'syncing CA');
+	
+	for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_list_member()) {
+		$users{$user->{'email'}} = $user->{'custom_attribute'};
+	}
+	
+	foreach my $type ('include_sql_ca') {
 		foreach my $tmp_incl (@{$admin->{$type}}) {
 			## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
 			my $incl = &tools::dup_var($tmp_incl);
+			my $source = undef;
+			my $srcca = undef;
 			if ($type eq 'include_sql_ca') {
-				my $source = new SQLSource($incl);
-				my $ca = _include_ca_sql($source);
-				## Load a hash with the old subscribers
-				my $users_to_update;
-				for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_list_member()) {
-					if(defined $ca->{$user->{'email'}}) {
-						$users_to_update->{$user->{'email'}} = $ca->{$user->{'email'}};
+				$source = new SQLSource($incl);
+			}elsif(($type eq 'include_ldap_ca') or ($type eq 'include_ldap_2level_ca')) {
+				$source = new LDAPSource($incl);
+			}
+			next unless(defined($source));
+			if($source->is_allowed_to_sync()) {
+				my $getter = '_'.$type;
+				{ # Magic inside
+					no strict "refs";
+					$srcca = &$getter($source);
+				}
+				if(defined($srcca)) {
+					foreach my $email (keys %$srcca) {
+						$users{$email} = {} unless(defined $users{$email});
+						foreach my $key (keys %{$srcca->{$email}}) {
+							next if($users{$email}{$key}{'value'} eq $srcca->{$email}{$key}{'value'});
+							$users{$email}{$key} = $srcca->{$email}{$key};
+							$changed{$email} = 1;
+						}
 					}
 				}
-				open TMP , ">/tmp/user_ca";
-				print TMP &Dumper($users_to_update);
-				close TMP;
-				foreach my $user_email (keys %{$users_to_update}) {
-					if($self->update_list_member($user_email, {'custom_attribute'=>&createXMLCustomAttribute($users_to_update->{$user_email})})) {
-						&Log::do_log('debug2', 'Updated user %s',$user_email);
-					}else{
-						&Log::do_log('error', 'could not update user %s',$user_email);
-					}
-				}
+			}
+			unless($source->disconnect()) {
+				&Log::do_log('notice','Can\'t unbind from source %s', $type);
+				return undef;
 			}
 		}
 	}
 	
+	foreach my $email (keys %changed) {
+		if($self->update_list_member($email, {'custom_attribute' => &createXMLCustomAttribute($users{$email})})) {
+			&Log::do_log('debug', 'Updated user %s', $email);
+		}else{
+			&Log::do_log('error', 'could not update user %s', $email);
+		}
+	}
+	
+	return 1;
+}
+
+### Purge synced custom attributes from user records, only keep user writable ones
+sub purge_ca {
+	my $self = shift;
+	my $admin = $self->{'admin'};
+	my %userattributes;
+	my %users;
+	
+	&Log::do_log('debug', 'purge CA');
+	
+	foreach my $attr (@{$admin->{'custom_attribute'}}) {
+		$userattributes{$attr->{'id'}} = 1;
+	}
+	
+	for (my $user=$self->get_first_list_member(); $user; $user=$self->get_next_list_member()) {
+		next unless(keys %{$user->{'custom_attribute'}});
+		my $attributes;
+		foreach my $id (keys %{$user->{'custom_attribute'}}) {
+			next unless(defined $userattributes{$id});
+			$attributes->{$id} = $user->{'custom_attribute'}{$id};
+		}
+		$users{$user->{'email'}} = $attributes;
+	}
+	
+	foreach my $email (keys %users) {
+		if($self->update_list_member($email, {'custom_attribute' => &createXMLCustomAttribute($users{$email})})) {
+			&Log::do_log('debug', 'Updated user %s', $email);
+		}else{
+			&Log::do_log('error', 'could not update user %s', $email);
+		}
+	}
 	
 	return 1;
 }
@@ -9529,7 +9673,7 @@ sub sync_include {
     $self->{'total'} = $self->_load_total_db('nocache');
     $self->{'last_sync'} = time;
     $self->savestats();
-    $self->sync_include_ca();
+    $self->sync_include_ca($option eq 'purge');
 		
 
     return 1;

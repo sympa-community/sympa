@@ -220,7 +220,6 @@ sub db_struct {
 	  $trans_pg =~ s/^smallint.*/int4/g;
 	  $trans_pg =~ s/^tinyint\(.*\)/int2/g;
 	  $trans_pg =~ s/^bigint.*/int8/g;
-	  $trans_pg =~ s/^enum.*/varchar(15)/g;
 	  $trans_pg =~ s/^text.*/varchar(500)/g;
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
