@@ -96,6 +96,27 @@ CREATE TABLE oauthconsumer_sessions_table (
 
 -- --------------------------------------------------------
 --
+-- Table structure for table `list_table`
+-- 
+
+CREATE TABLE list_table ( 
+	 creation_epoch_list 	 datetime, 
+	 name_list 	 varchar(100) NOT NULL, 
+	 topics_list 	 varchar(100), 
+	 status_list 	 enum('open','closed','pending','error_config','family_closed'), 
+	 robot_list 	 varchar(100) NOT NULL, 
+	 path_list 	 varchar(100), 
+	 web_archive_list 	 tinyint(1), 
+	 owners_list 	 varchar(100), 
+	 subject_list 	 varchar(100), 
+	 creation_email_list 	 varchar(100), 
+	 editors_list 	 varchar(100), 
+	 PRIMARY KEY (name_list, robot_list) 
+ );
+
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `bulkspool_table`
 -- 
 
@@ -226,9 +247,10 @@ CREATE TABLE logs_table (
 
 CREATE TABLE exclusion_table ( 
 	 user_exclusion 	 varchar(100) NOT NULL, 
+	 robot_exclusion 	 varchar(50) NOT NULL, 
 	 date_exclusion 	 int(11), 
 	 list_exclusion 	 varchar(50) NOT NULL, 
-	 PRIMARY KEY (list_exclusion, user_exclusion) 
+	 PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
 
 

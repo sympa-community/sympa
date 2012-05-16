@@ -124,6 +124,31 @@ create trigger notification_table_trigger before insert on notification_table fo
 
 ## --------------------------------------------------------
 ##
+## Table structure for table `list_table`
+## 
+
+CREATE TABLE list_table ( 
+	 creation_epoch_list 	date, 
+	 name_list 	varchar2(100) NOT NULL, 
+	 topics_list 	varchar2(100), 
+	 robot_list 	varchar2(100) NOT NULL, 
+	 status_list 	varchar2(20), 
+	 path_list 	varchar2(100), 
+	 web_archive_list 	tinyint(1), 
+	 owners_list 	varchar2(100), 
+	 subject_list 	varchar2(100), 
+	 creation_email_list 	varchar2(100), 
+	 editors_list 	varchar2(100), 
+	 CONSTRAINT ind_list PRIMARY KEY (name_list, robot_list) 
+ );
+
+create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
+create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
+
+
+
+## --------------------------------------------------------
+##
 ## Table structure for table `bulkspool_table`
 ## 
 
@@ -285,10 +310,11 @@ create trigger oauthprovider_sessions_table_trigger before insert on oauthprovid
 ## 
 
 CREATE TABLE exclusion_table ( 
+	 robot_exclusion 	varchar2(50) NOT NULL, 
 	 user_exclusion 	varchar2(100) NOT NULL, 
 	 date_exclusion 	number, 
 	 list_exclusion 	varchar2(50) NOT NULL, 
-	 CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion) 
+	 CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
 
 create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;

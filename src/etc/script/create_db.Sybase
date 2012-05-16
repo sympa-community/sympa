@@ -108,6 +108,29 @@ go
 
 /* -------------------------------------------------------- */
 
+/* Table structure for table `list_table` */
+ 
+
+create table list_table 
+( 
+	 creation_epoch_list 	datetime, 
+	 name_list 	varchar(100) NOT NULL, 
+	 topics_list 	varchar(100), 
+	 robot_list 	varchar(100) NOT NULL, 
+	 status_list 	varchar(15), 
+	 path_list 	varchar(100), 
+	 web_archive_list 	tinyint(1), 
+	 owners_list 	varchar(100), 
+	 subject_list 	varchar(100), 
+	 creation_email_list 	varchar(100), 
+	 editors_list 	varchar(100), 
+	 constraint ind_list PRIMARY KEY (name_list, robot_list)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
 /* Table structure for table `bulkspool_table` */
  
 
@@ -252,10 +275,11 @@ go
 
 create table exclusion_table 
 ( 
+	 robot_exclusion 	varchar(50) NOT NULL, 
 	 user_exclusion 	varchar(100) NOT NULL, 
 	 date_exclusion 	numeric, 
 	 list_exclusion 	varchar(50) NOT NULL, 
-	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion)
+	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion)
 )
 go 
 
