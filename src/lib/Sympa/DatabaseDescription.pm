@@ -223,6 +223,7 @@ sub db_struct {
 	  $trans_pg =~ s/^text.*/varchar(500)/g;
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
+	  $trans_pg =~ s/^enum.*/varchar(15)/g;
 #Sybase		
 	  $trans_syb =~ s/^int.*/numeric/g;
 	  $trans_syb =~ s/^text.*/varchar(500)/g;

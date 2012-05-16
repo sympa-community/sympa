@@ -25,7 +25,7 @@ CREATE TABLE conf_table (
 -- 
 
 CREATE TABLE notification_table ( 
-	 type_notification 	enum('DSN', 'MDN'), 
+	 type_notification 	varchar(15), 
 	 arrival_date_notification 	varchar(80), 
 	 status_notification 	varchar(100), 
 	 recipient_notification 	varchar(100), 
@@ -126,8 +126,8 @@ CREATE TABLE admin_table (
 	 reception_admin 	varchar(20), 
 	 comment_admin 	varchar(150), 
 	 subscribed_admin 	int4, 
-	 profile_admin 	enum('privileged','normal'), 
-	 role_admin 	enum('listmaster','owner','editor') NOT NULL, 
+	 profile_admin 	varchar(15), 
+	 role_admin 	varchar(15) NOT NULL, 
 	 included_admin 	int4, 
 	 user_admin 	varchar(100) NOT NULL, 
 	 include_sources_admin 	varchar(50), 
@@ -326,7 +326,7 @@ CREATE TABLE bulkmailer_table (
 	 priority_message_bulkmailer 	int4, 
 	 verp_bulkmailer 	int4, 
 	 merge_bulkmailer 	int4, 
-	 tracking_bulkmailer 	enum('mdn','dsn'), 
+	 tracking_bulkmailer 	varchar(15), 
 	 returnpath_bulkmailer 	varchar(100), 
 	 messageid_bulkmailer 	varchar(200), 
 	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
