@@ -347,7 +347,9 @@ sub create_list_old{
     if ($list->has_include_data_sources()) {
 	&Log::do_log('notice', "Synchronizing list members...");
 	$list->sync_include();
-    }   
+    }
+    
+    $list->save_config;
    return $return;
 }
 
@@ -447,7 +449,7 @@ sub create_list{
                 $param->{'listname'}, $family->{'name'},$robot);
       return undef;
     }
-
+    
      ## Create the list directory
      my $list_dir;
 
@@ -506,7 +508,25 @@ sub create_list{
 	print INFO $param->{'description'};
     }
     close INFO;
-    
+
+    ## Create associated files if a template was given.
+    for my $file ('message.footer','message.header','message.footer.mime','message.header.mime','info') {
+	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
+	if (defined $template_file) {
+	    my $file_content;
+	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
+	    unless (defined $tt_result) {
+		&do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
+			$param->{'listname'}, $family->{'name'},$robot,$file);
+	    }
+	    unless (open FILE, '>:utf8', "$list_dir/$file") {
+		&do_log('err','Impossible to create %s/%s : %s',$list_dir,$file,$!);
+	    }
+	    print FILE $file_content;
+	    close FILE;
+	}
+    }
+
     ## Create list object
     my $list;
     unless ($list = new List ($param->{'listname'}, $robot)) {
@@ -803,9 +823,8 @@ sub rename_list{
 	 }
 	 
 	 # if subscribtion are stored in database rewrite the database
-	 if ($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) {
-	     &List::rename_list_db ($list,$param{'new_listname'},$param{'new_robot'});
-	 }
+	 &List::rename_list_db($list, $param{'new_listname'},
+			       $param{'new_robot'});
      }
      ## Move stats
     unless (&SDM::do_query("UPDATE stat_table SET list_stat=%s, robot_stat=%s WHERE (list_stat = %s AND robot_stat = %s )", 
@@ -857,10 +876,11 @@ sub rename_list{
 		 &Log::do_log('err', "Unable to open '%s' spool : %s", $Conf::Conf{$spool}, $!);
 	     }
 	     
-	     foreach my $file (sort grep (!/^\.+$/,readdir(DIR))) {
+	     foreach my $file (sort readdir(DIR)) {
 		 next unless ($file =~ /^$old_listname\_/ ||
 			      $file =~ /^$old_listname\./ ||
 			      $file =~ /^$old_listname\@$robot\./ ||
+			      $file =~ /^\.$old_listname\@$robot\_/ ||
 			      $file =~ /^$old_listname\@$robot\_/ ||
 			      $file =~ /\.$old_listname$/);
 		 
@@ -873,6 +893,8 @@ sub rename_list{
 		     $newfile =~ s/^$old_listname\@$robot\./$param{'new_listname'}\@$param{'new_robot'}\./;
 		 }elsif ($file =~ /^$old_listname\@$robot\_/) {
 		     $newfile =~ s/^$old_listname\@$robot\_/$param{'new_listname'}\@$param{'new_robot'}\_/;
+		 }elsif ($file =~ /^\.$old_listname\@$robot\_/) {
+		     $newfile =~ s/^\.$old_listname\@$robot\_/\.$param{'new_listname'}\@$param{'new_robot'}\_/;
 		 }elsif ($file =~ /\.$old_listname$/) {
 		     $newfile =~ s/\.$old_listname$/\.$param{'new_listname'}/;
 		 }

@@ -114,6 +114,7 @@ Options:
    --rename_list=listname\@robot --new_listname=newlistname --new_listrobot=newrobot : renames a list or move it to another virtual robot
    --service=process_command|process_message|process_creation  : process dedicated to messages distribution, commands or to automatic lists creation (default three of them)
    --sync_include=listname\@robot        : trigger the list members update
+   --sync_list_db [--list=listname]      : syncs filesystem list configs to the database cache of list configs, optionally sync an individual list if specified.
    --test_database_message_buffer        : test the database message buffer size
    --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
    --upgrade_shared  --[listname=X] --[robot=Y] : rename files in shared.
@@ -128,7 +129,7 @@ encryption.
 ## Check --dump option
 my %options;
 unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foreground', 'service=s','config|f=s', 
-		    'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','md5_encode_password',
+            'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','sync_list_db','md5_encode_password',
 		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s',
 		    'robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s','change_user_email','current_email=s','new_email=s',
 		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db')) {
@@ -161,7 +162,8 @@ $main::options{'batch'} = 1 if ($main::options{'dump'} ||
 				$main::options{'upgrade_shared'} ||
 				$main::options{'test_database_message_buffer'} || 
 				$main::options{'conf_2_db'} || 
-				$main::options{'reload_list_config'}
+				$main::options{'reload_list_config'} ||
+				$main::options{'sync_list_db'}
 				 );
 
 # Some option force foreground mode
@@ -958,7 +960,29 @@ elsif ($main::options{'close_family'}) {
     print STDOUT $string;
     exit 0;
 }
- 
+##########################################
+elsif ($main::options{'sync_list_db'}) {       
+    unless ($Conf{'db_list_cache'} eq 'on') {
+       print STDOUT "\nSympa not configured to use database list caching \n";
+       exit 1;
+    }
+    my $listname = $main::options{'list'} || '';
+    if (length($listname) > 1) {
+	my $list = new List ($listname); 
+	unless (defined $list) {
+	    print STDOUT "\nList '$listname' does not exist. \n";
+	    exit 1;
+	}
+	$list->_update_list_db;
+    } else {
+        &List::_flush_list_db();
+        my $all_lists = &List::get_lists('*', { 'use_files' => 1 });
+        foreach my $list (@$all_lists) {
+           $list->_update_list_db;
+        }
+    }
+    exit 0;
+}
 
 ## Do we have right access in the directory
 if ($main::options{'keepcopy'}) {

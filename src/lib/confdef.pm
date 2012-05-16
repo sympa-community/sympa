@@ -519,6 +519,12 @@ our @params = (
         'default'  => Sympa::Constants::SBINDIR . '/alias_manager.pl',
     },
     {
+        name    => 'db_list_cache',
+        default => 'off',
+        advice  => gettext('Whether or not to cache lists in the database'),
+    },
+    { title => 'Internationalization' },
+    {
         'name'     => 'sendmail',
         'default'  => '/usr/sbin/sendmail',
         'query'    => gettext('Path to the MTA (sendmail, postfix, exim or qmail)'),

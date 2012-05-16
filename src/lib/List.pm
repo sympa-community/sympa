@@ -125,6 +125,7 @@ Returns a default option of the list for subscription.
 
 Returns the number of subscribers to the list.
 
+
 =item get_global_user ( USER )
 
 Returns a hash with the information regarding the indicated
@@ -1126,7 +1127,7 @@ my %alias = ('reply-to' => 'reply_to',
 		'gettext_id' => "Notify subscribers when they are included from a data source?",
 		'format' => ['on', 'off'],
 		'occurence' => '0-1',
-		'default' => 'off'
+		'default' => 'off',
 	},
 	
 	'sql_fetch_timeout' => {
@@ -1137,15 +1138,15 @@ my %alias = ('reply-to' => 'reply_to',
 		'length' => 6,
 		'default' => {
 			'conf' => 'default_sql_fetch_timeout'
-		}
+		},
 	},
 	
 	'user_data_source' => {
 		'group' => 'data_source',
 		'gettext_id' => "User data source",
-		'format' => ['database', 'file', 'include', 'include2'],
+		'format' => '\S+',
 		'default' => 'include2',
-		'obsolete_values' => ['database', 'file', 'include']
+		'obsolete' => 1,
 	},
 	
 	'include_file' => {
@@ -1153,7 +1154,7 @@ my %alias = ('reply-to' => 'reply_to',
 		'gettext_id' => "File inclusion",
 		'format' => '\S+',
 		'occurrence' => '0-n',
-		'length' => 20
+		'length' => 20,
 	},
 	
 	'include_remote_file' => {
@@ -2693,6 +2694,12 @@ sub save_config {
 	return undef;
     }
 
+    if ($List::use_db) {
+        unless (&_update_list_db) {
+            &do_log('err', "Unable to update list_table");
+        }
+    }
+
     return 1;
 }
 
@@ -2843,8 +2850,8 @@ sub load {
      } 
 
     $self->{'as_x509_cert'} = 1  if ((-r "$self->{'dir'}/cert.pem") || (-r "$self->{'dir'}/cert.pem.enc"));
-       
-    ## Load stats file if first new() or stats file changed
+
+   ## Load stats file if first new() or stats file changed
     my ($stats, $total);
     if (! $self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
 	($stats, $total, $self->{'last_sync'}, $self->{'last_sync_admin_user'}) = _load_stats_file("$self->{'dir'}/stats");
@@ -5725,15 +5732,15 @@ sub insert_delete_exclusion {
 
 	if ($user->{'included'} eq '1') {
 	    ## Insert : list, user and date
-	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s)", &SDM::quote($list), &SDM::quote($email), &SDM::quote($date))) {
-		&Log::do_log('err','Unable to exclude user %s fomr liste %s@%s', $email, $list, $robot);
+	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s)", &SDM::quote($list), &SDM::quote($robot), &SDM::quote($email), &SDM::quote($date))) {
+		&Log::do_log('err','Unable to exclude user %s from liste %s@%s', $email, $list, $robot);
 		return undef;
 	    }
 	}
 	
     }elsif($action eq 'delete') {
 	## If $email is in exclusion_table, delete it.
-	my $data_excluded = &get_exclusion($list);
+	my $data_excluded = &get_exclusion($list,$robot);
 	my @users_excluded;
 
 	my $key =0;
@@ -5747,8 +5754,8 @@ sub insert_delete_exclusion {
 	foreach my $users (@users_excluded) {
 	    if($email eq $users){
 		## Delete : list, user and date
-		unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND user_exclusion = %s)", &SDM::quote($list), &SDM::quote($email))) {
-		    &Log::do_log('err','Unable to remove entry %s for liste %s for table exclusion_table', $email, $list);
+		unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)", &SDM::quote($list), &SDM::quote($robot), &SDM::quote($email))) {
+		    &Log::do_log('err','Unable to remove entry %s for liste %s@%s for table exclusion_table', $email, $list, $robot);
 		    return undef;
 		}
 		$r = $sth->rows;
@@ -5756,7 +5763,7 @@ sub insert_delete_exclusion {
 	}
 
     }else{
-	&Log::do_log('err','You must choose an action');
+	&Log::do_log('err','Unknown action %s',$action);
 	return undef;
     }
    
@@ -5774,13 +5781,14 @@ sub insert_delete_exclusion {
 sub get_exclusion {
     
     my  $name= shift;
-    &Log::do_log('debug2', 'List::get_exclusion(%s)', $name);
-   
+    my  $robot= shift;
+    &Log::do_log('debug2', 'List::get_exclusion(%s@%s)', $name,$robot);
+
     push @sth_stack, $sth;
 
-    unless ($sth = &SDM::do_query("SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s", 
-    &SDM::quote($name))) {
-	&Log::do_log('err','Unable to retrieve excluded users for list %s',$name);
+    unless ($sth = &SDM::do_query("SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s AND robot_exclusion=%s", 
+    &SDM::quote($name), &SDM::quote($robot))) {
+	&Log::do_log('err','Unable to retrieve excluded users for list %s@%s',$name, $robot);
 	return undef;
     }
 
@@ -5800,7 +5808,7 @@ sub get_exclusion {
     $sth = pop @sth_stack;
    
     unless($data_exclu){
-	&Log::do_log('err','Unable to retrieve information from database for list %s', $name);
+	&Log::do_log('err','Unable to retrieve information from database for list %s@%s', $name,$robot);
 	return undef;
     }
     return $data_exclu;
@@ -5839,8 +5847,6 @@ sub get_list_member {
     }
     $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
     unless ($self->is_available_reception_mode($user->{'reception'}));
-    ## In case it was not set in the database
-    $user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');	
 
     ## Set session cache
     $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
@@ -6128,9 +6134,6 @@ sub get_list_admin {
     if (defined $admin_user) {
 	$admin_user->{'reception'} ||= 'mail';
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
-	
-	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1 if ($self->{'admin'}{'user_data_source'} eq 'database');
     }
     
     $sth->finish();
@@ -6222,6 +6225,7 @@ sub get_first_list_member {
     }elsif ($sortby eq 'name') {
 	$statement .= ' ORDER BY gecos';
     } 
+    push @sth_stack, $sth;
     
     ## LIMIT clause
     if (defined($rows) and defined($offset)) {
@@ -6235,44 +6239,35 @@ sub get_first_list_member {
     
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
-	&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	    if (! $user->{'email'});
-	$user->{'reception'} ||= 'mail';
-	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	unless ($self->is_available_reception_mode($user->{'reception'}));
-	$user->{'update_date'} ||= $user->{'date'};
-	
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $user->{'email'});
+		$user->{'reception'} ||= 'mail';
+		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+		unless ($self->is_available_reception_mode($user->{'reception'}));
+		$user->{'update_date'} ||= $user->{'date'};
 
-	############################################################################	    
-	if (defined $user->{custom_attribute}) {
-	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    $user->{'custom_attribute'} = \%custom_attr ;
-	}
-
-
+		############################################################################	    
+		if (defined $user->{custom_attribute}) {
+			my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+			$user->{'custom_attribute'} = \%custom_attr ;
+		}
     }
     else {
-	$sth->finish;
-	$sth = pop @sth_stack;
+		$sth->finish;
+		$sth = pop @sth_stack;
 	
-	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-	    
-	    ## Release the Shared lock
-	    unless ($lock->unlock()) {
-		return undef;
-	    }
-	}
+		## Release the Shared lock
+		unless ($lock->unlock()) {
+			return undef;
+		}
     }
     
     ## If no offset (for LIMIT) was used, update total of subscribers
     unless ($offset) {
-	my $total = $self->_load_total_db('nocache');
-	if ($total != $self->{'total'}) {
-	    $self->{'total'} = $total;
-	    $self->savestats();
-	}
+		my $total = $self->_load_total_db('nocache');
+		if ($total != $self->{'total'}) {
+			$self->{'total'} = $total;
+			$self->savestats();
+		}
     }
     
     return $user;
@@ -6413,10 +6408,6 @@ sub get_first_list_admin {
 	    if (! $admin_user->{'email'});
 	$admin_user->{'reception'} ||= 'mail';
 	$admin_user->{'update_date'} ||= $admin_user->{'date'};
-
-	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1 if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
-
     }else {
 	$sth->finish;
         $sth = pop @sth_stack;
@@ -6449,46 +6440,36 @@ sub get_next_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
     
     if (defined $user) {
-	&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	    if (! $user->{'email'});
-	$user->{'reception'} ||= 'mail';
-	unless ($self->is_available_reception_mode($user->{'reception'})){
-	    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	}
-	$user->{'update_date'} ||= $user->{'date'};
-	
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1 if (defined($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
+		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $user->{'email'});
+		$user->{'reception'} ||= 'mail';
+		unless ($self->is_available_reception_mode($user->{'reception'})){
+			$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+		}
+		$user->{'update_date'} ||= $user->{'date'};
 
-	&Log::do_log('debug2', '(email = %s)', $user->{'email'});
-	if (defined $user->{custom_attribute}) {
-	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    unless (%custom_attr) {
-		    &Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
-	    }
-	    $user->{'custom_attribute'} = \%custom_attr ;
-	    my @k = sort keys %custom_attr ;
-	}
-    }
-    else {
-	$sth->finish;
-	$sth = pop @sth_stack;
+		&Log::do_log('debug2', '(email = %s)', $user->{'email'});
+		if (defined $user->{custom_attribute}) {
+			my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+			unless (%custom_attr) {
+				&Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
+			}
+			$user->{'custom_attribute'} = \%custom_attr ;
+			my @k = sort keys %custom_attr ;
+		}
+    }else {
+		$sth->finish;
+		$sth = pop @sth_stack;
 	
-	if ($self->{'admin'}{'user_data_source'} eq 'include2') {
-	    
-	    ## Release lock
-	    my $lock = new Lock ($self->{'dir'}.'/include');
-	    unless (defined $lock) {
-		&Log::do_log('err','Could not create new lock');
-		return undef;
-	    }
-	    unless ($lock->unlock()) {
-		return undef;
-	    }
-	}
+		## Release lock
+		my $lock = new Lock ($self->{'dir'}.'/include');
+		unless (defined $lock) {
+			&do_log('err','Could not create new lock');
+			return undef;
+		}
+		unless ($lock->unlock()) {
+			return undef;
+		}
     }
-    
-#	$self->{'total'}++;
     
     return $user;
 }
@@ -6499,35 +6480,30 @@ sub get_next_list_admin {
     &Log::do_log('debug2', ''); 
 
     unless (defined $sth) {
-	&Log::do_log('err','Statement handle not defined in get_next_list_admin for list %s', $self->{'name'});
-	return undef;
+		&Log::do_log('err','Statement handle not defined in get_next_list_admin for list %s', $self->{'name'});
+		return undef;
     }
     
     my $admin_user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $admin_user) {
-	&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	    if (! $admin_user->{'email'});
-	$admin_user->{'reception'} ||= 'mail';
-	$admin_user->{'update_date'} ||= $admin_user->{'date'};
+		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $admin_user->{'email'});
+		$admin_user->{'reception'} ||= 'mail';
+		$admin_user->{'update_date'} ||= $admin_user->{'date'};
+    }else {
+		$sth->finish;
+		$sth = pop @sth_stack;
 	
-	## In case it was not set in the database
-	$admin_user->{'subscribed'} = 1 if (defined($admin_user) && ($self->{'admin'}{'user_data_source'} eq 'database'));
-    }
-    else {
-	$sth->finish;
-	$sth = pop @sth_stack;
+		## Release the Shared lock
+		my $lock = new Lock($self->{'dir'}.'/include_admin_user');
+		unless (defined $lock) {
+			&Log::do_log('err','Could not create new lock');
+			return undef;
+		}
 	
-	## Release the Shared lock
-	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
-	    return undef;
-	}
-	
-	unless ($lock->unlock()) {
-	    return undef;
-	}
+		unless ($lock->unlock()) {
+			return undef;
+		}
     }
     return $admin_user;
 }
@@ -6575,20 +6551,15 @@ sub get_first_bouncing_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
 	    
     if (defined $user) {
-	&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	    if (! $user->{'email'});
-	
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1 if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
-
+		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $user->{'email'});
     }else {
-	$sth->finish;
-	$sth = pop @sth_stack;
+		$sth->finish;
+		$sth = pop @sth_stack;
 	
-	## Release the Shared lock
-	unless ($lock->unlock()) {
-	    return undef;
-	}
+		## Release the Shared lock
+		unless ($lock->unlock()) {
+			return undef;
+		}
     }
     return $user;
 }
@@ -6599,36 +6570,33 @@ sub get_next_bouncing_list_member {
     &Log::do_log('debug2', '');
 
     unless (defined $sth) {
-	&Log::do_log('err', 'No handle defined, get_first_bouncing_list_member(%s) was not run', $self->{'name'});
-	return undef;
+		&Log::do_log('err', 'No handle defined, get_first_bouncing_list_member(%s) was not run', $self->{'name'});
+		return undef;
     }
     
     my $user = $sth->fetchrow_hashref('NAME_lc');
     
     if (defined $user) {
-	&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) 
-	    if (! $user->{'email'});
+		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $user->{'email'});
 	
-	## In case it was not set in the database
-	$user->{'subscribed'} = 1 if (defined ($user) && ($self->{'admin'}{'user_data_source'} eq 'database'));    
-	if (defined $user->{custom_attribute}) {
+		if (defined $user->{custom_attribute}) {
 	    	my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
 	    	$user->{'custom_attribute'} = \%custom_attr ;
 	    }
 
     }else {
-	$sth->finish;
-	$sth = pop @sth_stack;
+		$sth->finish;
+		$sth = pop @sth_stack;
 	
-	## Release the Shared lock
-	my $lock = new Lock ($self->{'dir'}.'/include');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
-	    return undef;
-	}
-	unless ($lock->unlock()) {
-	    return undef;
-	}
+		## Release the Shared lock
+		my $lock = new Lock ($self->{'dir'}.'/include');
+		unless (defined $lock) {
+			&Log::do_log('err','Could not create new lock');
+			return undef;
+		}
+		unless ($lock->unlock()) {
+			return undef;
+		}
     }
 
     return $user;
@@ -7316,6 +7284,7 @@ sub rename_list_db {
 
     my $statement_subscriber;
     my $statement_admin;
+    my $statement_list_cache;
     
     unless(&SDM::do_query("UPDATE subscriber_table SET list_subscriber=%s, robot_subscriber=%s WHERE (list_subscriber=%s AND robot_subscriber=%s)", 
     &SDM::quote($new_listname), 
@@ -7339,6 +7308,21 @@ sub rename_list_db {
     }
     &Log::do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
     
+    if ($List::use_db) {
+      $statement_admin =  sprintf "UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
+      $dbh->quote($new_listname),
+      $dbh->quote($new_robot),
+      $dbh->quote($self->{'name'}),
+      $dbh->quote($self->{'domain'}) ;
+
+      do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
+
+      unless ($dbh->do($statement_admin)) {
+        do_log('err','Unable to execute SQL statement "%s" : %s', $statement_admin, $dbh->errstr);
+        return undef;
+      }
+    }
+
     return 1;
 }
 
@@ -9239,7 +9223,8 @@ sub _load_include_admin_user_file {
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
-		    &Log::do_log('info', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $file);
+		    chomp($paragraph[$i]);
+		    &Log::do_log('info', 'Bad entry "%s" for key "%s", paragraph "%s" in %s', $paragraph[$i], $key, $pname, $file);
 		    next;
 		}
 	       
@@ -9280,6 +9265,7 @@ sub _load_include_admin_user_file {
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
+		chomp($paragraph[0]);
 		&Log::do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $file);
 		next;
 	    }
@@ -9517,8 +9503,8 @@ sub sync_include {
 	my $data_exclu;
 	my @subscriber_exclusion;
 
-	## Récupérer un array d'emails pour une liste donnée in 'exclusion_table'
-	$data_exclu = &get_exclusion($name);
+	## Gathering a list of emails for a the list in 'exclusion_table'
+	$data_exclu = &get_exclusion($name,$self->{'domain'});
 
 	my $key =0;
 	while ($data_exclu->{'emails'}->[$key]){
@@ -10140,11 +10126,73 @@ sub store_digest {
 ## Returns a ref to an array of List objects
 sub get_lists {
     my $robot_context = shift || '*';
-    my $options = shift;
+    my $options = shift || {};
     my $requested_lists = shift; ## Optional parameter to load only a subset of all lists
+    my $use_files;
+    my $cond_perl;
+    my $cond_sql;
 
     my(@lists, $l,@robots);
     &Log::do_log('debug2', 'List::get_lists(%s)',$robot_context);
+
+    # Determin if files are used instead of list_table DB cache.
+    if ($Conf::Conf{'db_list_cache'} ne 'on' or defined $requested_lists) {
+	$use_files = 1;
+    } else {
+	$use_files = $options->{'use_files'};
+    }
+
+    # Build query: Perl expression for files and SQL expression for list_table.
+    my @query = (@{$options->{'filter_query'} || []});
+    my @clause_perl = ();
+    my @clause_sql = ();
+    while (1 < scalar @query) {
+        my @expr_perl = ();
+        my @expr_sql = ();
+        my @keys = split /[|]/, shift @query;
+        my @vals = split /[|]/, shift @query;
+
+        foreach my $k (@keys) {
+            next unless $k =~ /\S/;
+            $k =~ s/^\s+//;
+            $k =~ s/\s+$//;
+
+            foreach my $v (@vals) {
+                if ($k eq 'web_archive') {
+                    push @expr_perl, sprintf '&is_web_archived($list) == %d',
+                                             ($v+0 ? 1 : 0);
+                } elsif ($k =~ /^(name|robot)$/) {
+                    push @expr_perl, sprintf '$list->{"%s"} eq "%s"',
+                                             quotemeta $k, quotemeta $v;
+                } elsif ($k =~ /^(status|subject)$/) {
+                    push @expr_perl, sprintf '$list->{"admin"}{"%s"} eq "%s"',
+                                             quotemeta $k, quotemeta $v;
+                } else {
+                    do_log('err', "bug in logic. Ask developer");
+                    return undef;
+                }
+                if ($k eq 'web_archive') {
+                    push @expr_sql, sprintf 'web_archive_list = %d',
+                                            ($v+0 ? 1 : 0);
+                } else {
+                    push @expr_sql, sprintf '%s_list = %s',
+                                            $k, $dbh->quote($v);
+                }
+            }
+        }
+        if (scalar @expr_perl) {
+            push @clause_perl, join ' || ', @expr_perl;
+            push @clause_sql, join ' OR ', @expr_sql;
+        }
+    }
+    if (scalar @clause_perl) {
+        $cond_perl = join ' && ', map { "($_)" } @clause_perl;
+        $cond_sql = join ' AND ', map { "($_)" } @clause_sql;
+        do_log('debug2', 'query %s; %s', $cond_perl, $cond_sql);
+    } else {
+        $cond_perl = undef;
+        $cond_sql = undef;
+    }
 
     if ($robot_context eq '*') {
 	@robots = &get_robots ;
@@ -10153,11 +10201,17 @@ sub get_lists {
     }
     
     foreach my $robot (@robots) {
-    
 	## Check cache first
 	if (defined $list_cache{'get_lists'}{$robot}) {
-	    push @lists, @{$list_cache{'get_lists'}{$robot}};
-	}else {
+	    if (defined $cond_perl) {
+		foreach my $list (@{$list_cache{'get_lists'}{$robot}}) {
+		    next unless eval $cond_perl;
+		    push @lists, $list;
+		}
+	    } else {
+		push @lists, @{$list_cache{'get_lists'}{$robot}};
+	    }
+	} else {
 	    my $robot_dir =  $Conf::Conf{'home'}.'/'.$robot ;
 	    $robot_dir = $Conf::Conf{'home'}  unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'domain'}));
 	    
@@ -10166,18 +10220,26 @@ sub get_lists {
 		return undef ;
 	    }
 	    
-	    unless (opendir(DIR, $robot_dir)) {
-		&Log::do_log('err',"Unable to open $robot_dir");
-		return undef;
-	    }
-
 	    ## Load only requested lists if $requested_list is set
 	    ## otherwise load all lists
 	    my @files;
-	    if ( defined($requested_lists)){
-	      @files = sort @{$requested_lists};
-	    }else {
-	      @files = sort readdir(DIR);
+	    if (defined($requested_lists)){
+		@files = sort @{$requested_lists};
+	    } elsif ($use_files) {
+		unless (opendir(DIR, $robot_dir)) {
+		    do_log('err',"Unable to open $robot_dir");
+		    return undef;
+		}
+		@files = sort readdir(DIR);
+		closedir DIR;
+	    } else {
+		# get list names from list cache table
+		my $where = sprintf 'robot_list = %s', $dbh->quote($robot);  
+		if (defined $cond_sql) {
+		    $where .= " AND $cond_sql";
+		}
+		my $files = &get_lists_db($where);
+		@files = @{$files};
 	    }
 
 	    foreach my $l (@files) {
@@ -10186,17 +10248,20 @@ sub get_lists {
 		my $list = new List ($l, $robot, $options);
 		
 		next unless (defined $list);
+
+		if ($use_files and defined $cond_perl) {
+		    next unless eval $cond_perl;
+		}
 		
 		push @lists, $list;
 		
 		## Also feed the cache
 		## Unless we only loaded a subset of all lists ($requested_lists parameter used)
-		unless (defined $requested_lists) {
-		  push @{$list_cache{'get_lists'}{$robot}}, $list;
+		unless (defined $requested_lists or defined $cond_perl) {
+		    push @{$list_cache{'get_lists'}{$robot}}, $list;
 		}
 		
 	    }
-	    closedir DIR;
 	}
     }
     return \@lists;
@@ -10811,14 +10876,6 @@ sub _apply_defaults {
 	}
     }
 
-    ## Default for user_data_source is 'file'
-    ## if not using a RDBMS
-    if ($SDM::use_db) {
-	$::pinfo{'user_data_source'}{'default'} = 'include2';
-    }else {
-	$::pinfo{'user_data_source'}{'default'} = 'file';
-    }
-    
     return \%::pinfo;
 }
 
@@ -10907,12 +10964,6 @@ sub _load_list_param {
     ## Synonyms
     if (defined $p->{'synonym'}{$value}) {
 	$value = $p->{'synonym'}{$value};
-    }
-
-    ## Include mode should not be used anymore
-    ## Change value to include2 to shift to new behavior
-    if ($key eq 'user_data_source' && $value eq 'include') {
-	$value = 'include2';
     }
 
     ## Scenario
@@ -11131,7 +11182,8 @@ sub _load_list_config_file {
 		}
 		
 		unless ($paragraph[$i] =~ /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i) {
-		    &Log::do_log('err', 'Bad entry "%s" in paragraph "%s" in %s', $paragraph[$i], $key, $pname, $config_file);
+		    chomp($paragraph[$i]);
+		    &Log::do_log('err', 'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"', $paragraph[$i], $key, $pname, $config_file);
 		    next;
 		}
 
@@ -11175,6 +11227,7 @@ sub _load_list_config_file {
 	    }
 
 	    unless ($paragraph[0] =~ /^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
+		chomp($paragraph[0]);
 		&Log::do_log('info', 'Bad entry "%s" in %s', $paragraph[0], $config_file);
 		next;
 	    }
@@ -11288,27 +11341,14 @@ sub _load_list_config_file {
     }
 
     ############################################
-    ## Bellow are constraints between parameters
+    ## Below are constraints between parameters
     ############################################
 
-    ## Subscription and unsubscribe add and del are closed 
-    ## if subscribers are extracted via external include method
-    ## (current version external method are SQL or LDAP query
-    if ($admin{'user_data_source'} eq 'include') {
-	foreach my $p ('subscribe','add','invite','unsubscribe','del') {
-	    $admin{$p} = &_load_list_param($robot,$p, 'closed', $::pinfo{$p}, 'closed', $directory);
-	}
-
-    }
-
     ## Do we have a database config/access
-    if (($admin{'user_data_source'} eq 'database') ||
-	($admin{'user_data_source'} eq 'include2')){
-	unless ($SDM::use_db) {
-	    &Log::do_log('info', 'Sympa not setup to use DBI or no database access');
-	    ## We should notify the listmaster here...
-	    #return undef;
-	}
+    unless ($SDM::use_db) {
+		&Log::do_log('info', 'Sympa not setup to use DBI or no database access');
+		## We should notify the listmaster here...
+		#return undef;
     }
 
     ## This default setting MUST BE THE LAST ONE PERFORMED
@@ -12510,23 +12550,142 @@ sub get_list_id {
 
     return $self->{'name'}.'@'.$self->{'domain'};
 }
-
+ 
 ##connect to stat_counter_table and extract data.
 sub get_data {
     my ($data, $robotname, $listname) = @_;
 
     unless ( $sth = &SDM::do_query( "SELECT * FROM stat_counter_table WHERE data_counter = '%s' AND robot_counter = '%s' AND list_counter = '%s'", $data,$robotname, $listname)) {
-	&Log::do_log('err','Unable to get stat data %s for liste %s@%s',$data,$listname,$robotname);
-	return undef;
+		&Log::do_log('err','Unable to get stat data %s for liste %s@%s',$data,$listname,$robotname);
+		return undef;
     }
     my $res = $sth->fetchall_hashref('beginning_date_counter');
     return $res;
 }
 
-    
+## Support for list config caching in database
+sub get_lists_db {
+    my $where = shift || '';
+    do_log('debug2', 'List::get_lists_db(%s)', $where);
 
-    
+    unless ($List::use_db) {
+       &do_log('info', 'Sympa not setup to use DBI');
+       return undef;
+    }
 
+    my $statement = 'SELECT name_list FROM list_table';
+    $statement .= " WHERE $where" if $where;
+
+    my ($l, @lists);
+
+    ## Check database connection
+    unless ($dbh and $dbh->ping) {
+       return undef unless &db_connect();
+    }
+    push @sth_stack, $sth;
+    &do_log('debug2','SQL: %s', $statement);
+    unless ($sth = $dbh->prepare($statement)) {
+       &do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+       return undef;
+    } 
+    unless ($sth->execute) {
+       do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr); 
+       return undef;
+    } 
+    while ($l = $sth->fetchrow_hashref) {
+       my $name = $l->{'name_list'};
+       push @lists, $name;
+    }  
+    $sth->finish();
+    $sth = pop @sth_stack;
+
+    return \@lists;
+}
+
+sub _update_list_db
+{
+    my ($self) = shift;
+    my @admins;
+    my $i;
+    my $adm_txt;
+    my $ed_txt;
+
+    my $name = $self->{'name'};
+    my $subject = $self->{'admin'}{'subject'} || '';
+    my $status = $self->{'admin'}{'status'};
+    my $robot = $self->{'admin'}{'host'};
+    my $web_archive  = &is_web_archived($self) || 0; 
+    my $topics = '';
+    if ($self->{'admin'}{'topics'}) {
+       $topics = join(',',@{$self->{'admin'}{'topics'}});
+    }
+    
+    foreach $i (@{$self->{'admin'}{'owner'}}) {
+       if (ref($i->{'email'})) {
+           push(@admins, @{$i->{'email'}});
+       } elsif ($i->{'email'}) {
+           push(@admins, $i->{'email'});
+       }
+    }
+    $adm_txt = join(',',@admins) || '';
+
+    undef @admins;
+    foreach $i (@{$self->{'admin'}{'editor'}}) {
+       if (ref($i->{'email'})) {
+           push(@admins, @{$i->{'email'}});
+       } elsif ($i->{'email'}) {
+           push(@admins, $i->{'email'});
+       }
+    }
+    $ed_txt = join(',',@admins) || '';
+
+    my $statement;
+    $statement = sprintf 'INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
+			 $dbh->quote($status), $dbh->quote($name),
+			 $dbh->quote($robot), $dbh->quote($subject),
+			 ($web_archive ? 1 : 0), $dbh->quote($topics),
+			 $dbh->quote($adm_txt), $dbh->quote($ed_txt);
+    unless ($dbh->do($statement)) {
+	$statement = sprintf 'UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
+			     $dbh->quote($status), $dbh->quote($name),
+			     $dbh->quote($robot), $dbh->quote($subject),
+			     ($web_archive ? 1 : 0), $dbh->quote($topics),
+			     $dbh->quote($adm_txt),$dbh->quote($ed_txt),
+			     $dbh->quote($robot), $dbh->quote($name);
+	unless ($dbh->do($statement)) {
+	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	    return undef;
+	}
+    }
+    return 1;
+}
+
+sub _flush_list_db
+{
+    my ($listname) = shift;
+    my $statement;
+    unless ($listname) {
+	if ($Conf::Conf{'db_type'} eq 'SQLite') {
+	    # SQLite does not have TRUNCATE TABLE.
+	    $statement = "DELETE FROM list_table";
+	} else {
+	    $statement =  "TRUNCATE TABLE list_table";
+	}
+    } else {
+        $statement = sprintf "DELETE FROM list_table WHERE name_list = %s", $dbh->quote($listname);
+    } 
+
+    unless ($sth = $dbh->prepare($statement)) {
+    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+    return undef;
+    }
+    unless ($sth->execute) {
+    do_log('err',"Unable to execute SQL statement '%s' : %s", $statement, $dbh->errstr);
+    return undef;
+    }
+}
+
+>>>>>>> .fusion-droit.r7372
 ###### END of the List package ######
 
 ## This package handles Sympa virtual robots

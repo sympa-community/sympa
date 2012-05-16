@@ -1,4 +1,4 @@
-#!--PERL-- -U
+#!--PERL--
 # wwsympa.fcgi - This script provides the web interface to Sympa 
 # RCS Identication ; $Revision$ ; $Date$ 
 #
@@ -1206,7 +1206,7 @@ my $birthday = time ;
      unless (defined $session) {
 	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
 	 &wwslog('info','Failed to create session');
-	 $session->{'email'}= 'nobody'; $session->{'id_session'} = &get_random();
+	 $session->{'email'}= 'nobody'; $session->{'id_session'} = &SympaSession::get_random();
      }
      
      # Retreive oauth_token from session if it exists and if we have a (newly) identified user
@@ -2878,8 +2878,7 @@ Use it to create a List object and initialize output parameters.
 	    }
 	    
 	    
- 	    if (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-		$list->has_include_data_sources() &&
+ 	    if ($list->has_include_data_sources() &&
 		$param->{'is_owner'}) {
 		$param->{'may_sync'} = 1;
 	    }
@@ -2907,7 +2906,7 @@ Use it to create a List object and initialize output parameters.
 	 my $r_action;
 	 $r_action = $result->{'action'} if (ref($result) eq 'HASH');
 
-	 $param->{'may_suboptions'} = 1 unless ($list->{'admin'}{'user_data_source'} eq 'include');
+	 $param->{'may_suboptions'} = 1;
 	 $param->{'total'} = $list->get_total();
 	 $param->{'may_review'} = 1 if ($r_action =~ /do_it/);
 	 $param->{'list_status'} = $list->{'admin'}{'status'};
@@ -4326,8 +4325,7 @@ sub do_renewpasswd {
 
      ## We might not use LIMIT clause
      my ($limit_not_used, $count);
-     unless (($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) && 
-	     ($Conf{'db_type'} =~ /^(Pg|mysql$)/)) {
+     unless (($Conf{'db_type'} =~ /^(Pg|mysql$)/)) {
 	 $limit_not_used = 1;
      }
 
@@ -4406,7 +4404,7 @@ sub do_show_exclude {
 
     &wwslog('info', 'do_exclude()');
     # Get the emails of the exclude about a list and the date of their insertion
-    my $data_exclu = &List::get_exclusion($list->{'name'});
+    my $data_exclu = &List::get_exclusion($list->{'name'},$list->{'domain'});
     
     my $excluded;
     my $key = 0;
@@ -4434,26 +4432,21 @@ sub do_search {
     return undef unless (defined &check_authz('do_search', 'review'));
     ## Regexp
     $param->{'filter'} = $in{'filter'};
-    my $regexp = &tools::escape_regexp($param->{'filter'});
-    
-    my $sql_regexp;
-    if ($list->{'admin'}{'user_data_source'} eq 'database') {
-	$sql_regexp = $param->{'filter'};
-	$sql_regexp =~ s/\%/\\\%/g;
-	$sql_regexp =~ s/\*/\%/g;
-	#$sql_regexp = '%'.$sql_regexp.'%';
-    }
-    
+    ## Decode regexp to Unicode for case-insensitive match.
+    my $regexp = &tools::escape_regexp(Encode::decode_utf8($param->{'filter'} || ''));
+
     my $record = 0;
     ## Maximum size of selection
     my $max_select = 50;
     
     ## Members list
-    for (my $i = $list->get_first_list_member({'sql_regexp' => $sql_regexp, 'sortby' => 'email'}); $i; $i = $list->get_next_list_member()) {
-	
+    for (my $i = $list->get_first_user({'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
+
+	## Decode gecos to Unicode for case-insensitive match.
+	my $gecos = Encode::decode_utf8($i->{'gecos'} || '');
 	## Search filter
 	next if ($i->{'email'} !~ /$regexp/i
-		 && $i->{'gecos'} !~ /$regexp/i);
+		 && $gecos !~ /$regexp/i);
 	
 	next if (($i->{'visibility'} eq 'conceal')
 		 and (! $param->{'is_owner'}) );
@@ -4465,7 +4458,7 @@ sub do_search {
 	push @{$param->{'members'}}, $i;
     }
     
-    my $data_exclu =  &List::get_exclusion($list->{'name'});
+    my $data_exclu =  &List::get_exclusion($list->{'name'},$list->{'domain'});
     my $key = 0;
     ## Exclude users are searched too
     while (($data_exclu->{emails}->[$key]) && ($data_exclu->{date}->[$key])){
@@ -7155,7 +7148,9 @@ sub do_viewmod_old {
      unless ($in{'file'}) {
 	 ## Messages edition
 	 foreach my $f ('info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2') {
-	     next unless ($list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
+	     my $filename_for_auth = $f;
+	     $filename_for_auth = 'info.file' if ($filename_for_auth eq 'info');
+	     next unless ($list->may_edit($filename_for_auth, $param->{'user'}{'email'}) eq 'write');
 	     if ($wwslib::filenames{$f}{'gettext_id'}) {
 		 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
 	     }else {
@@ -7183,7 +7178,9 @@ sub do_viewmod_old {
      }
 
      if ($param->{'list'}) {
-	 my ($role,$right) = $list->may_edit($in{'file'}, $param->{'user'}{'email'});
+	 my $filename_for_auth = $in{'file'};
+	 $filename_for_auth = 'info.file' if ($filename_for_auth eq 'info');
+	 my ($role,$right) = $list->may_edit($filename_for_auth, $param->{'user'}{'email'});
 
 	 unless ($right eq 'write') {
 	     &report::reject_report_web('auth','edit_right',{'role'=>$role, 'right' => $right},$param->{'action'},$list);
@@ -8258,14 +8255,13 @@ sub do_remove_arc {
      ## Checking families and other virtual hosts.
      &get_server_details();
 
-     my $all_lists = &List::get_lists($robot);
-     foreach my $list ( @$all_lists ) {
-	 if ($list->{'admin'}{'status'} eq 'pending') {
-	     $param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
-	     $param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
-	     $param->{'pending'}{$list->{'name'}}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
-	 }
-     }
+    my $all_lists = &List::get_lists($robot,
+				     { 'filter_query' => [ 'status' => 'pending' ] });
+    foreach my $list ( @$all_lists ) {
+	$param->{'pending'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
+	$param->{'pending'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
+	$param->{'pending'}{$list->{'name'}}{'date'} = gettext_strftime "%d %b %y  %H:%M", localtime($list->{'admin'}{'creation'}{'date_epoch'});
+    }
 
      return 1;
  }
@@ -8278,14 +8274,12 @@ sub do_remove_arc {
      ## Checking families and other virtual hosts.
      &get_server_details();
 
-     my $all_lists = &List::get_lists($robot);
-     foreach my $list ( @$all_lists ) {
-	 if ($list->{'admin'}{'status'} eq 'closed' ||
-	     $list->{'admin'}{'status'} eq 'family_closed') {
-	     $param->{'closed'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
-	     $param->{'closed'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
-	 }
-     }
+    my $all_lists = &List::get_lists($robot,
+				     { 'filter_query' => [ 'status' => 'closed|family_closed' ] });
+    foreach my $list ( @$all_lists ) {
+	$param->{'closed'}{$list->{'name'}}{'subject'} = $list->{'admin'}{'subject'};
+	$param->{'closed'}{$list->{'name'}}{'by'} = $list->{'admin'}{'creation'}{'email'};
+    }
 
      return 1;
  }
@@ -9993,8 +9987,6 @@ sub do_edit_list {
 	    $pname = $parameter;
 	}
 	
-	my @users;
-	
 	## If new owners/editors have been added, then notify them	
 	foreach my $admin_type ('owner','editor') {
 	  my (%previous_emails, %new_emails);
@@ -10021,32 +10013,8 @@ sub do_edit_list {
 	}	  
 	
 	## If datasource config changed
-	if ($pname =~ /^(include_.*|user_data_source|ttl)$/) {
+	if ($pname =~ /^(include_.*|ttl)$/) {
 	    $data_source_updated = 1;
-	}
-	
-	## User Data Source
-	if ($pname eq 'user_data_source') {
-	    ## Migrating to database
-	    if (($list->{'admin'}{'user_data_source'} eq 'file') && ($new_admin->{'user_data_source'} eq 'database' || $new_admin->{'user_data_source'} eq 'include2')) {
-		unless (-f "$list->{'dir'}/subscribers") {
-		    &wwslog('notice', 'No subscribers to load in database');
-		    &web_db_log({'status' => 'error',
-				 'error_type' => 'no_subsciber'});
-		}
-		@users = &List::_load_list_members_file("$list->{'dir'}/subscribers");
-	    }elsif (($list->{'admin'}{'user_data_source'} ne 'include2') &&
-		    ($new_admin->{'user_data_source'} eq 'include2')) {
-		$list->update_list_member('*', {'subscribed' => 1});
-		&report::notice_report_web('subscribers_updated_soon',{},$param->{'action'});
-	    }elsif (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-		    ($new_admin->{'user_data_source'} eq 'database')) {
-		$list->sync_include('purge');
-	    }
-	    
-	    ## Update total of subscribers
-	    $list->{'total'} = $list->_load_total_db();
-	    $list->savestats();
 	}
 	
 	$list->{'admin'}{$pname} = $new_admin->{$pname};
@@ -10056,27 +10024,6 @@ sub do_edit_list {
 	    $list->{'admin'}{'defaults'}{$pname} = 1;
 	}
 	
-	if (($pname eq 'user_data_source') &&
-	    ($#users >= 0)) {
-	    
-	    $list->{'total'} = 0;
-	    
-	    $list->add_list_member(@users);
-	    if (defined $list->{'add_outcome'}{'errors'}) {
-		my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
-		my $error_type = 'intern';
-		$error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
-		&report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		&wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
-		&web_db_log({'parameters' => $in{'email'},
-			    'status' => 'error',
-			    'error_type' => 'internal'});		      
-	    }
-	    
-	    $list->get_total();
-	    $list->{'mtime'}[1] = 0;
-	}
-	    
 	if (($pname eq 'owner') || ($pname eq 'owner_include')){
 	  $owner_update = 1;
 	}
@@ -10129,29 +10076,16 @@ sub do_edit_list {
 	 }
      }
 
-     ## call sync_include_admin if there are changes about owners or editors and we're in mode include2
-     if ( ($list->{'admin'}{'user_data_source'} eq 'include2')) {
-	 unless ($list->sync_include_admin()) {
-	     &report::reject_report_web('intern','sync_include_admin_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('info','do_edit_list: sync_include_admin() failed');
-	     &web_db_log({'status' => 'error',
-			  'error_type' => 'internal'});
-	     return undef;
-	 }
-     }
-#($owner_update || $editor_update) &&
-     ## checking there is some owner(s)	in case of sync_include_admin not called
-     if (($owner_update || $data_source_updated) && ($list->{'admin'}{'user_data_source'} ne 'include2')) {
-
-	 unless ( $list->get_nb_owners()) {
-	     &report::reject_report_web('intern','no_owner_defined',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('info','do_edit_list: no owner defined for list %s',$list->{'name'});
-	     &web_db_log({'status' => 'error',
-			  'error_type' => 'internal'});
-	     return undef;
-	 }
-     }
-
+    ## call sync_include_admin if there are changes about owners or editors and we're in mode include2
+    unless ($list->sync_include_admin()) {
+	&report::reject_report_web('intern', 'sync_include_admin_failed',
+				   {}, $param->{'action'}, $list,
+				   $param->{'user'}{'email'}, $robot);
+	&wwslog('info','do_edit_list: sync_include_admin() failed');
+	&web_db_log({'status' => 'error',
+		     'error_type' => 'internal'});
+	return undef;
+    }
 
      ## Tag changed parameters
      foreach my $pname (keys %changed) {
@@ -10973,7 +10907,7 @@ sub do_rename_list {
      $param->{'list'} = $in{'new_listname'};
      &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
 		  'status' => 'success'});
-     
+     $list->save_config();
      return 1;     
 }
 
@@ -11048,29 +10982,15 @@ sub do_purge_list {
      $list->{'admin'}{'status'} = 'open';
      $list->save_config($param->{'user'}{'email'});
 
-     if ($list->{'admin'}{'user_data_source'} eq 'file') {
-	 $list->{'users'} = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
-     }elsif ($list->{'admin'}{'user_data_source'} =~ /^(database|include2)$/) {
-	 unless (-f "$list->{'dir'}/subscribers.closed.dump") {
-	     &wwslog('notice', 'No subscribers to restore');
-	     &web_db_log({'status' => 'error',
-			  'error_type' => 'no_subscribers'});
-	 }
-	 my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
-
-	 ## Insert users in database
-	$list->add_list_member(@users);
-	if (defined $list->{'add_outcome'}{'errors'}) {
-	    my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
-	    my $error_type = 'intern';
-	    $error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
-	    &report::reject_report_web($error_type,$error,{'sub'=>$param->{'user'}{'email'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	    &wwslog('info', 'do_subscribe: subscribe failed: %s',$list->{'add_outcome'}{'errors'}{'error_message'});
-	    &web_db_log({'parameters' => $in{'email'},
-			'status' => 'error',
-			'error_type' => 'internal'});		      
-	}
-	    
+     unless (-f "$list->{'dir'}/subscribers.closed.dump") {
+	 &wwslog('notice', 'No subscribers to restore');
+	 &web_db_log({'status' => 'error',
+		      'error_type' => 'no_subscribers'});
+     }
+     my @users = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+     ## Insert users in database
+     foreach my $user (@users) {
+	 $list->add_user($user);
      }
 
      $list->savestats(); 
@@ -16969,6 +16889,11 @@ sub do_viewlogs {
 sub do_arc_manage {
     &wwslog('info', "do_arc_manage ($in{'list'})");
 
+    ## Access control
+    unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	return undef;
+    }
+    
     my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
     opendir ARC, "$search_base";
     foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
@@ -16985,6 +16910,11 @@ sub do_arc_manage {
 sub do_arc_download {
     
     &wwslog('info', "do_arc_download ($in{'list'})");
+    
+    ## Access control
+    unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	return undef;
+    }
     
     ##zip file name:listname_archives.zip  
     my $zip_file_name = $in{'list'}.'_archives.zip';
@@ -17085,6 +17015,11 @@ sub do_arc_delete {
     my @abs_dirs;
     
     &wwslog('info', "do_arc_delete ($in{'list'})");
+    
+    ## Access control
+    unless (defined &check_authz('do_arc', 'web_archive.access')) {
+	return undef;
+    }
     
     unless (defined  $in{'directories'}){
       	&report::reject_report_web('user','select_month',{},$param->{'action'});

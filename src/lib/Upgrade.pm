@@ -31,6 +31,7 @@ use Conf;
 use Log;
 use Sympa::Constants;
 use SDM;
+use Data::Dumper;
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
@@ -695,6 +696,52 @@ sub upgrade {
 		}
 		
    }	
+   if (&tools::lower_version($previous_version, '6.1.11')) {
+       ## Exclusion table was not robot-enabled.
+       &Log::do_log('notice','fixing robot column of exclusion table.');
+	my $statement = "SELECT * FROM exclusion_table"; 
+	my $sth;
+	unless ($sth = $dbh->prepare($statement)) {
+	    &Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+	}
+	unless ($sth->execute) {
+	    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	}
+	my @robots = &List::get_robots();
+	while (my $data = $sth->fetchrow_hashref){
+	    next if (defined $data->{'robot_exclusion'} && $data->{'robot_exclusion'} ne '');
+	    ## Guessing right robot for each exclusion.
+	    my $valid_robot = '';
+	    my @valid_robot_candidates;
+	    foreach my $robot (@robots) {
+		if (my $list = new List($data->{'list_exclusion'},$robot)) {
+		    if ($list->is_user($data->{'user_exclusion'})) {
+			push @valid_robot_candidates,$robot;
+		    }
+		}
+	    }
+	    if ($#valid_robot_candidates == 0) {
+		$valid_robot = $valid_robot_candidates[0];
+		my $statement = sprintf "UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s", $dbh->quote($valid_robot),$dbh->quote($data->{'list_exclusion'}),$dbh->quote($data->{'user_exclusion'});  
+		my $sth;
+		unless ($sth = $dbh->prepare($statement)) {
+		    &Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+		}
+		unless ($sth->execute) {
+		    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		}
+	    }else {
+		&Log::do_log('err',"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appear in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",$data->{'list_exclusion'},$data->{'user_exclusion'},@valid_robot_candidates);
+	    }
+	}
+	## Caching all lists config subset to database
+	&Log::do_log('notice','Caching all lists config subset to database');
+	&List::_flush_list_db();
+	my $all_lists = &List::get_lists('*', { 'use_files' => 1 });
+	foreach my $list (@$all_lists) {
+	    $list->_update_list_db;
+	}
+   }
 
     return 1;
 }

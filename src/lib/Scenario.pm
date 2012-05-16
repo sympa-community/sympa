@@ -857,16 +857,32 @@ sub verify {
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
 
+	# Reject potentially harmful regexp, "(?{ code })" or "(??{ code })".
+	return -1 * $negation if $regexp =~ /\(\?\??\{.*\}/s;
+
+	# wrap matches with eval{} to avoid crash by malformed regexp.
+	my $r = 0;
 	if (ref($args[0])) {
-	    foreach my $arg (@{$args[0]}) {
-		return $negation 
-		    if ($arg =~ /$regexp/i);
-	    }
-	}else {
-	    if ($args[0] =~ /$regexp/i) {
-		return $negation ;
-	    }
+	    eval {
+		foreach my $arg (@{$args[0]}) {
+		    if ($arg =~ /$regexp/i) {
+			$r = 1;
+			last;
+		    }
+		}
+	    };
+	} else {
+	    eval {
+		if ($args[0] =~ /$regexp/i) {
+		    $r = 1;
+		}
+	    };
 	}
+	if ($@) {
+	    &do_log('err', 'cannot evaluate match: %s', $@);
+	    return undef;
+	}
+	return $negation if $r;
 	
 	return -1 * $negation ;
 
@@ -895,12 +911,11 @@ sub verify {
 	    foreach my $arg (@{$args[0]}) {
 		&Log::do_log('debug3', 'ARG: %s', $arg);
 		return $negation 
-		    if ($arg =~ /^$args[1]$/i);
+		    if lc($arg) eq lc($args[1]);
 	    }
-	}else {
-	    if ($args[0] =~ /^$args[1]$/i) {
-		return $negation ;
-	    }
+	} else {
+	    return $negation
+		if lc($args[0]) eq lc($args[1]);
 	}
 	return -1 * $negation ;
     }

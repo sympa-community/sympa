@@ -309,8 +309,7 @@ while (!$end) {
 		    my $model_task_parameter = "$model".'_task';
 		    
 		    if ( $model eq 'sync_include') {
-			next unless (($list->{'admin'}{'user_data_source'} eq 'include2') &&
-				     $list->has_include_data_sources() &&
+			next unless ($list->has_include_data_sources() &&
 				     ($list->{'admin'}{'status'} eq 'open'));
 
 			create ($current_date, 'INIT', $model, 'ttl', \%data);
@@ -459,33 +458,7 @@ sub create {
     #&parser::parse_tpl($Rdata, $model_file, \*TASK);
     close (TASK);
     
-    # special checking for list whose user_data_source config parmater is include. The task won't be created if there is a delete_subs command
-    my $ok = 1;
-    if ($object eq 'list') {
-	my $list = new List($list_name, $robot);
-	if ($list->{'admin'}{'user_data_source'} eq 'include') {
-	    unless ( open (TASK, $task_file) ) {
-		&Log::do_log ('err', "error : unable to read $task_file, checking is impossible");
-		return undef;
-	    }
-	    while (<TASK>) {
-		chomp;
-		if (/.*delete_subs.*/) {
-		    close (TASK);
-		    undef $ok;
-		    &Log::do_log ('err', "error : you are not allowed to use the delete_subs command on a list whose subscribers are included, creation aborted");
-		    return undef;
-		}
-	    }
-	    close (TASK);
-	} 
-    } # end of special checking
-
-    if (!$ok) {
-	&Log::do_log ('err', "$task_file is unappropriate for a list with include");
-    }
-    
-    if  (!$ok or !check ($task_file)) {
+    if (!check($task_file)) {
 	&Log::do_log ('err', "error : syntax error in $task_file, you should check $model_file");
 	unlink ($task_file) ? 
 	    &Log::do_log ('notice', "$task_file deleted") 
@@ -942,11 +915,6 @@ sub next_cmd {
 	$data{'list'}{'robot'} = $list->{'domain'};
 	
 	if ( $model eq 'sync_include') {
-	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
-		error ($filename, "List $list->{'name'} no more require sync_include task");
-		return undef;
-	    }
-
 	    $data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 	    $model_choice = 'ttl';
 	}else {
@@ -999,10 +967,8 @@ sub select_subs {
     my %selection; # hash of subscribers who match the condition
     my $list = $task->{'list_object'};
     
-    if ( $list->{'admin'}{'user_data_source'} =~ /database|file|include2/) {
-        for ( my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member() ) { 
-            push (@users, $user);
-	}
+    for ( my $user = $list->get_first_user(); $user; $user = $list->get_next_user() ) { 
+	push (@users, $user);
     }
     
     # parameter of subroutine Scenario::verify
@@ -1335,10 +1301,6 @@ sub purge_orphan_bounces {
 
 	 # the reference date is the date until which we expire bounces in second
 	 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
-	 if ( ($list->{'admin'}{'user_data_source'} eq 'include' )||( $list->{'admin'}{'user_data_source'} eq 'file' )) {
-	     # &Log::do_log('notice','bounce expiration : skipping list %s because not using database',$listname);
-	     next;
-	 }
 
 	 unless ($list->get_latest_distribution_date()) {
 	     &Log::do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
@@ -1829,12 +1791,6 @@ sub sync_include {
 
     my $list = $task->{'list_object'};
 
-    unless ( $list->{'admin'}{'user_data_source'} eq 'include2' ) {
-	&Log::do_log('notice', 'sync_include() called for %s but user_data_source is %s', 
-		$list->{'name'}, $list->{'admin'}{'user_data_source'});                                                
-	return undef;                                                          
-    }
- 
     $list->sync_include();
     $list->sync_include_admin() if ((defined $list->{'admin'}{'editor_include'} && $#{$list->{'admin'}{'editor_include'}}>-1) || (defined $list->{'admin'}{'owner_include'} && $#{$list->{'admin'}{'owner_include'}}>-1));
 

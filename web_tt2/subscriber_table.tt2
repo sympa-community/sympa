@@ -40,7 +40,6 @@
           <th>
 	  [%|loc%]Reception[%END%]
 	  </th>
-	  [% IF list_conf.user_data_source == 'include2' %]
             [% IF sortby == 'sources' %]
   	      <th class="sortby">
 	      [%|loc%]Sources[%END%]
@@ -49,7 +48,6 @@
 	      <a href="[% path_cgi %]/review/[% list %]/1/[% size %]/sources" >[%|loc%]Sources[%END%]</a>
 	    [% END %]
 	    </th>
-          [% END %]
 	  [% IF sortby == 'date' %]
   	    <th class="sortby">
 	    [%|loc%]Sub date[%END%]
@@ -121,7 +119,6 @@
   	    <td>
   	      [% u.reception %]
 	    </td>
-          [% IF list_conf.user_data_source == 'include2' %]
             <td>
             [% IF u.subscribed %]
               [% IF u.included %]
@@ -133,7 +130,6 @@
               [% u.sources %]
             [% END %]   
             </td>
-          [% END %]
 	    <td>
 	      [% u.date %]
 	    </td>

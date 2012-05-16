@@ -519,7 +519,24 @@ sub fix_html_part {
 	my $bodyh = $part->bodyhandle;
 	# Encoded body or null body won't be modified.
 	return $part if !$bodyh or $bodyh->is_encoded;
-	my $filtered_body = &tools::sanitize_html('string' => $bodyh->as_string, 'robot'=> $robot);
+
+	my $body = $bodyh->as_string;
+	# Re-encode parts with 7-bit charset (ISO-2022-*), since
+	# StripScripts cannot handle them correctly.
+	my $cset = MIME::Charset->new($part->head->mime_attr('Content-Type.Charset') || '');
+	unless ($cset->decoder) {
+	    # Charset is unknown.  Detect 7-bit charset.
+	    my ($dummy, $charset) =
+		$cset->body_encode($body, Detect7Bit => 'YES');
+	    $cset = MIME::Charset->new($charset);
+	}
+	if ($cset->decoder and $cset->as_string =~ /^ISO-2022-/i) {
+	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
+	    $cset->encoder('UTF-8');
+	    $body = $cset->encode($body);
+	}
+
+	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot);
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {

@@ -2486,54 +2486,54 @@ sub dump_encoding {
 
 ## Remove PID file and STDERR output
 sub remove_pid {
-    my ($pidfile, $pid, $options) = @_;
-
-    ## If in multi_process mode (bulk.pl for instance can have child processes)
-    ## Then the pidfile contains a list of space-separated PIDs on a single line
-    if($options->{'multiple_process'}){
-	unless (open(PFILE, $pidfile)) {
-	   # &Log::fatal_err('Could not open %s, exiting', $pidfile);
-	    &Log::do_log('err','Could not open %s to remove pid %s, ', $pidfile,$pid);
-	    return undef;
-	}
-	my $previous_pid = <PFILE>; chomp $previous_pid;
-	close PFILE;
-	$previous_pid =~ s/$pid//g;
-
-	## If no PID left, then remove the file
-	if ($previous_pid =~ /^\s*$/){
-	    ## Release the lock
-	    unless (unlink $pidfile) {
-		&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-		return undef;
-	    }
-	}else{
-	    if(-f $pidfile){
-		unless (open(PFILE, ">$pidfile")) {
-		    &Log::do_log('err', "Failed to open $pidfile: %s", $!);
-		    return undef;
-		}
-		print PFILE "$previous_pid\n";
-		close(PFILE);
-	    }else{
-		&Log::do_log('notice','pidfile %s does not exist. Nothing to do.',$pidfile);
-	    }
-	}
-    }else{
-	unless (unlink $pidfile) {
-	    &Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-	    return undef;
-	}
+	my ($pidfile, $pid, $options) = @_;
 	
-	my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
-	if (-f $err_file) {
-	    unless (unlink $err_file) {
-		&Log::do_log('err', "Failed to remove $err_file: %s", $!);
-		return undef;
-	    }
+	## If in multi_process mode (bulk.pl for instance can have child processes)
+	## Then the pidfile contains a list of space-separated PIDs on a single line
+	if($options->{'multiple_process'}) {
+		unless(open(PFILE, $pidfile)) {
+			# fatal_err('Could not open %s, exiting', $pidfile);
+			&Log::do_log('err','Could not open %s to remove pid %s', $pidfile, $pid);
+			return undef;
+		}
+		my $l = <PFILE>;
+		close PFILE;	
+		my @pids = grep {/[0-9]+/} split(/\s+/, $l);
+		@pids = grep {!/^$pid$/} @pids;
+		
+		## If no PID left, then remove the file
+		if($#pids < 0) {
+			## Release the lock
+			unless(unlink $pidfile) {
+				&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
+				return undef;
+			}
+		}else{
+			if(-f $pidfile) {
+				unless(open(PFILE, '> '.$pidfile)) {
+					&Log::do_log('err', "Failed to open $pidfile: %s", $!);
+					return undef;
+				}
+				print PFILE join(' ', @pids)."\n";
+				close(PFILE);
+			}else{
+				&&Log::do_log('notice', 'pidfile %s does not exist. Nothing to do.', $pidfile);
+			}
+		}
+	}else{
+		unless(unlink $pidfile) {
+			&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
+			return undef;
+		}
+		my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
+		if(-f $err_file) {
+			unless(unlink $err_file) {
+				&Log::do_log('err', "Failed to remove $err_file: %s", $!);
+				return undef;
+			}
+		}
 	}
-    }
-    return 1;
+	return 1;
 }
 
 # input user agent string and IP. return 1 if suspected to be a crawler.
@@ -2553,105 +2553,106 @@ sub is_a_crawler {
 }
 
 sub write_pid {
-    my ($pidfile, $pid, $options) = @_;
-
-   my $piddir = $pidfile;
-    $piddir =~ s/\/[^\/]+$//;
-
-    ## Create piddir
-    unless (-d $piddir) {
-	mkdir $piddir, 0755;
-    }
-    
-    unless (&tools::set_file_rights(file => $piddir,
-				    user  => Sympa::Constants::USER,
-				    group => Sympa::Constants::GROUP,
-				    ))
-    {
-	&Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
-	return undef;
-    }
-
-    ## If pidfile exists, read the PID
-    my ($other_pid);
-    if (-f $pidfile) {
-	open PFILE, $pidfile;
-	$other_pid = <PFILE>; chomp $other_pid;
-	close PFILE;	
-    }
-
-    ## If we can have multiple options for the process.
-    ## Print other pids + this one
-    if($options->{'multiple_process'}){
-	unless (open(LCK, "> $pidfile")) {
-	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
+	my ($pidfile, $pid, $options) = @_;
+	
+	my $piddir = $pidfile;
+	$piddir =~ s/\/[^\/]+$//;
+	
+	## Create piddir
+	mkdir($piddir, 0755) unless(-d $piddir);
+	
+	unless(&tools::set_file_rights(
+		file => $piddir,
+		user  => Sympa::Constants::USER,
+		group => Sympa::Constants::GROUP,
+	)) {
+		&Log::do_log('err', 'Unable to set rights on %s', $Conf::Conf{'db_name'});
+		return undef;
 	}
-
+	
+	my @pids;
+	
+	## If pidfile exists, read the PIDs
+	if(-f $pidfile) {
+		open(PFILE, $pidfile);
+		my $l = <PFILE>;
+		close PFILE;	
+		@pids = grep {/[0-9]+/} split(/\s+/, $l);
+	}
+	
+	## If we can have multiple options for the process.
 	## Print other pids + this one
-	print LCK "$other_pid $pid\n";
-
-	close(LCK);
-    }else{
-	## Create and write the pidfile
-	unless (open(LOCK, "+>> $pidfile")) {
-	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
-	}
-	unless (flock(LOCK, 6)) {
-	    &Log::fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
-	}
-	
-	## The previous process died suddenly, without pidfile cleanup
-	## Send a notice to listmaster with STDERR of the previous process
-	if ($other_pid) {
-	    &Log::do_log('notice', "Previous process $other_pid died suddenly ; notifying listmaster");
-	    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
-	    my (@err_output, $err_date);
-	    if (-f $err_file) {
-		open ERR, $err_file;
-		@err_output = <ERR>;
-		close ERR;
+	if($options->{'multiple_process'}) {
+		unless(open(LCK, '> '.$pidfile)) {
+			fatal_err('Could not open %s, exiting', $pidfile);
+		}
 		
-		$err_date = strftime("%d %b %Y  %H:%M", localtime( (stat($err_file))[9]));
-	    }
-	    
-	    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'},
-					     {'crash_err' => \@err_output, 'crash_date' => $err_date});
+		## Print other pids + this one
+		push(@pids, $pid);
+		print LCK join(' ', @pids)."\n";
+		close(LCK);
+	}else{
+		## Create and write the pidfile
+		unless(open(LOCK, '+>> '.$pidfile)) {
+			fatal_err('Could not open %s, exiting', $pidfile);
+		}
+		unless(flock(LOCK, 6)) {
+			fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
+		}
+		
+		## The previous process died suddenly, without pidfile cleanup
+		## Send a notice to listmaster with STDERR of the previous process
+		if($#pids >= 0) {
+			my $other_pid = $pids[0];
+			&do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
+			my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
+			my (@err_output, $err_date);
+			if(-f $err_file) {
+				open(ERR, $err_file);
+				@err_output = <ERR>;
+				close ERR;
+				
+				$err_date = strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
+			}
+			
+			&List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crash_err' => \@err_output, 'crash_date' => $err_date});
+		}
+		
+		unless(open(LCK, '> '.$pidfile)) {
+			fatal_err('Could not open %s, exiting', $pidfile);
+		}
+		unless(truncate(LCK, 0)) {
+			fatal_err('Could not truncate %s, exiting.', $pidfile);
+		}
+		
+		print LCK $pid."\n";
+		close(LCK);
 	}
 	
-	unless (open(LCK, "> $pidfile")) {
-	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
-	}
-	unless (truncate(LCK, 0)) {
-	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
+	unless(&tools::set_file_rights(
+		file => $pidfile,
+		user  => Sympa::Constants::USER,
+		group => Sympa::Constants::GROUP,
+	)) {
+		&do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
+		return undef;
 	}
 	
-	print LCK "$pid\n";
-	close(LCK);
-    }
-    unless (&tools::set_file_rights(file => $pidfile,
-				    user  => Sympa::Constants::USER,
-				    group => Sympa::Constants::GROUP,
-				    ))
-    {
-	&Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
-	return undef;
-    }
-
-    ## Error output is stored in a file with PID-based name
-    ## Usefull if process crashes
-    unless ($options->{'stderr_to_tty'}) {
-      open(STDERR, '>>',  $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr') unless ($main::options{'foreground'});
-      unless (&tools::set_file_rights(file => $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr',
-				      user  => Sympa::Constants::USER,
-				      group => Sympa::Constants::GROUP,
-				     ))
-	{
-	  &Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
-	  return undef;
+	## Error output is stored in a file with PID-based name
+	## Usefull if process crashes
+	unless($options->{'stderr_to_tty'}) {
+		open(STDERR, '>>', $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr') unless($main::options{'foreground'});
+		unless(&tools::set_file_rights(
+			file => $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr',
+			user  => Sympa::Constants::USER,
+			group => Sympa::Constants::GROUP,
+		)) {
+			&do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
+			return undef;
+		}
 	}
-    }
-
-    return 1;
+	
+	return 1;
 }
 
 sub get_message_id {
@@ -3627,8 +3628,8 @@ sub init_db_random {
     my $random = int(rand($range)) + $minimum;
 
     unless (&SDM::do_query('INSERT INTO fingerprint_table VALUES (%d)', $random)) {
-	&Log::do_log('err','Unable to set random value in fingerprint_table');
-	return undef;
+		&Log::do_log('err','Unable to set random value in fingerprint_table');
+		return undef;
     }
     return $random;
 }
@@ -3860,17 +3861,15 @@ sub smart_lessthan {
 
 ## Returns the number of pid identifiers in the pid file.
 sub get_number_of_pids {
-    my $pidfile = shift;
-    my $p_count = 0;
-    unless (open(PFILE, $pidfile)){
-	&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
-	return undef;
-    }
-    while (<PFILE>){
-	$p_count += &count_numbers_in_string($_);
-    }
-    close PFILE;
-    return $p_count;
+	my $pidfile = shift;
+	unless (open(PFILE, $pidfile)) {
+		&do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
+		return undef;
+	}
+	my $l = <PFILE>;
+	close PFILE;
+	my @pids = grep {/[0-9]+/} split(/\s+/, $l);
+	return $#pids + 1;
 }
 
 ## Returns the counf of numbers found in the string given as argument.

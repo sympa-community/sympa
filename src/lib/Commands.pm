@@ -1923,13 +1923,6 @@ sub set {
 	return 'unknown_list';
     }
 
-    ## No subscriber pref if 'include'
-    if ($list->{'admin'}{'user_data_source'} eq 'include') {
-	&report::reject_report_cmd('user','no_subscriber_preference',{'listname' => $which},$cmd_line);
-	&Log::do_log('info', 'SET %s %s from %s refused, user_data_source include',  $which, $mode, $sender);
-	return 'not allowed';
-    }
-    
     &Language::SetLang($list->{'admin'}{'lang'});
 
     ## Check if we know this email on the list and remove it. Otherwise

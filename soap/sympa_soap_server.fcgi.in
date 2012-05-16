@@ -1,4 +1,4 @@
-#! --PERL-- -U
+#! --PERL--
 
 
 use SOAP::Lite;
