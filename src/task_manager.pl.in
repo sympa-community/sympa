@@ -1099,8 +1099,14 @@ sub purge_logs_table {
     $sec = 0;
     my $date_end = timelocal($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst);
 
-    my $date_deb = $date_end-(86400*365);
-
+	my $sth;
+	unless($sth = &SDM::do_query("SELECT date_stat FROM stat_table WHERE read_stat = 0 ORDER BY date_stat ASC LIMIT 1")) {
+		&do_log('err', 'Unable to retrieve oldest non processed stat');
+		return undef;
+	}
+	my @res = $sth->fetchrow_array;
+	return unless($#res >= 0);
+	my $date_deb = $res[0] - ($res[0] % 3600);
 
     #hour to hour
     for  (my $i=$date_deb; $i <= $date_end; $i=$i+3600){
