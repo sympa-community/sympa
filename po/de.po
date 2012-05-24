@@ -99,7 +99,7 @@ msgstr "Hauptseite"
 #: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
-#: ../web_tt2/suspend_request.tt2:64
+#: ../web_tt2/suspend_request.tt2:5
 msgid "Help"
 msgstr "Hilfe"
 
@@ -116,7 +116,7 @@ msgid "Privileged owner"
 msgstr "Privilegierter Eigentümer"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:349 ../web_tt2/login_menu.tt2:15
+#: ../src/lib/List.pm:350 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "Eigentümer"
 
@@ -238,7 +238,7 @@ msgstr "Senden"
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:876 ../web_tt2/list_menu.tt2:96
+#: ../src/lib/List.pm:877 ../web_tt2/list_menu.tt2:96
 #: ../web_tt2/list_menu.tt2:98
 msgid "Shared documents"
 msgstr "Gemeinsame Dokumente"
@@ -269,7 +269,7 @@ msgid "Owners"
 msgstr "Eigentümer"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:432 ../web_tt2/list_panel.tt2:42
+#: ../src/lib/List.pm:433 ../web_tt2/list_panel.tt2:42
 #: ../web_tt2/list_panel.tt2:45
 msgid "Moderators"
 msgstr "Moderatoren"
@@ -596,7 +596,7 @@ msgstr "Archiv-Verwaltung"
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:20
-#: ../web_tt2/subscriber_table.tt2:108
+#: ../web_tt2/subscriber_table.tt2:106
 msgid "Open in a new window"
 msgstr "In einem neuen Fenster öffnen"
 
@@ -1460,16 +1460,16 @@ msgid "Size (Kb)"
 msgstr "Größe (KB)"
 
 #: ../web_tt2/d_read.tt2:69 ../web_tt2/d_read.tt2:71
-#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/subscriber_table.tt2:61
+#: ../web_tt2/latest_d_read.tt2:18 ../web_tt2/subscriber_table.tt2:59
 msgid "Last update"
 msgstr "Letzte Aktualisierung"
 
 #: ../web_tt2/d_read.tt2:75 ../web_tt2/editfile.tt2:30
-#: ../web_tt2/editfile.tt2:31 ../web_tt2/editfile.tt2:36
-#: ../web_tt2/editfile.tt2:37 ../web_tt2/editfile.tt2:38
-#: ../web_tt2/editfile.tt2:40 ../web_tt2/editfile.tt2:45
-#: ../web_tt2/editfile.tt2:46 ../web_tt2/editfile.tt2:50
-#: ../web_tt2/editfile.tt2:51 ../web_tt2/manage_template.tt2:35
+#: ../web_tt2/editfile.tt2:31 ../web_tt2/editfile.tt2:35
+#: ../web_tt2/editfile.tt2:36 ../web_tt2/editfile.tt2:37
+#: ../web_tt2/editfile.tt2:39 ../web_tt2/editfile.tt2:44
+#: ../web_tt2/editfile.tt2:45 ../web_tt2/editfile.tt2:49
+#: ../web_tt2/editfile.tt2:50 ../web_tt2/manage_template.tt2:35
 #: ../web_tt2/manage_template.tt2:56 ../web_tt2/serveradmin.tt2:149
 #: ../web_tt2/serveradmin.tt2:162
 msgid "Edit"
@@ -1664,7 +1664,7 @@ msgstr "Listenkonfiguration bearbeiten"
 msgid "parameter name"
 msgstr "Parametername"
 
-#: ../src/lib/List.pm:710 ../web_tt2/edit_config.tt2:17
+#: ../src/lib/List.pm:711 ../web_tt2/edit_config.tt2:17
 msgid "value"
 msgstr "Wert"
 
@@ -1709,20 +1709,21 @@ msgstr ""
 "rechten Seite der Listen-Hauptseite ausgegeben. (Hier wird normalerweise die "
 "Listenbeschreibung übernommen.)"
 
-#: ../web_tt2/editfile.tt2:32
+#: ../web_tt2/editfile.tt2:31
+#, fuzzy
 msgid ""
-"List description: This text is sent as an answer to the mail command\n"
-"INFO. It can also be included in the <em>Welcome message</em>."
+"List description: This text is sent as an answer to the mail command INFO. "
+"It can also be included in the <em>Welcome message</em>."
 msgstr ""
 "Listenbeschreibung: Dieser Text wird als Antwort auf den E-Mail-Befehl\n"
 "INFO ausgegeben. Er kann auch in die <em>Willkommensnachricht</em> "
 "aufgenommen werden."
 
-#: ../web_tt2/editfile.tt2:34
+#: ../web_tt2/editfile.tt2:33
 msgid "Automatic messages"
 msgstr "Automatische Nachrichten"
 
-#: ../web_tt2/editfile.tt2:36
+#: ../web_tt2/editfile.tt2:35
 msgid ""
 "Welcome message: This message is sent to new subscribers. It can be a full "
 "MIME structured message (only for MIME gurus)."
@@ -1730,7 +1731,7 @@ msgstr ""
 "Willkommensnachricht: Diese Nachricht wird an neue Abonnenten geschickt. Sie "
 "kann eine vollgültige MIME-strukturierte Mail sein (nur für MIME-Gurus)."
 
-#: ../web_tt2/editfile.tt2:37
+#: ../web_tt2/editfile.tt2:36
 msgid ""
 "Rejection message: when a message is rejected by list editor, a notification "
 "can be sent to the original author. You may prepare various rejection "
@@ -1740,7 +1741,7 @@ msgstr ""
 "wird, kann der ursprüngliche Verfasser benachrichtigt werden. Sie können "
 "verschiedene Ablehnungsnachrichten vorformulieren."
 
-#: ../web_tt2/editfile.tt2:39
+#: ../web_tt2/editfile.tt2:38
 msgid ""
 "Remind message: This message is sent to each subscriber\n"
 "when using the command  REMIND. It's very useful to help people who are "
@@ -1752,7 +1753,7 @@ msgstr ""
 "Personen, die nicht mehr genau Bescheid wissen, unter welchen Adressen sie "
 "Listen abonniert haben oder sich nicht mehr austragen können."
 
-#: ../web_tt2/editfile.tt2:41
+#: ../web_tt2/editfile.tt2:40
 msgid ""
 "Subscribing invitation message: sent to a person if someone  \n"
 "uses the INVITE command to invite someone to subscribe."
@@ -1761,11 +1762,11 @@ msgstr ""
 "wenn jemand den Befehl INVITE verwendet, um jemanden zum Abonnieren "
 "einzuladen."
 
-#: ../web_tt2/editfile.tt2:43
+#: ../web_tt2/editfile.tt2:42
 msgid "Added in distributed messages"
 msgstr "Zusatz zu verteilten Nachrichten"
 
-#: ../web_tt2/editfile.tt2:45
+#: ../web_tt2/editfile.tt2:44
 msgid ""
 "Message footer: If this file is not empty, it is added as a MIME attachment "
 "at the end of each message distributed to the list."
@@ -1773,7 +1774,7 @@ msgstr ""
 "Nachrichtenfuß: Wenn diese Datei nicht leer ist, wird sie als MIME-"
 "Attachment am Ende jeder auf der Liste verteilten Nachricht angehängt."
 
-#: ../web_tt2/editfile.tt2:46
+#: ../web_tt2/editfile.tt2:45
 msgid ""
 "Message header: If this file is not empty, it is added as a MIME attachment "
 "at the beginning of each message distributed to the list."
@@ -1781,17 +1782,17 @@ msgstr ""
 "Nachrichtenkopf: Wenn diese Datei nicht leer ist, wird sie als MIME-"
 "Attachment an den Anfang jeder auf der Liste verteilten Nachricht gestellt."
 
-#: ../web_tt2/editfile.tt2:48
+#: ../web_tt2/editfile.tt2:47
 msgid "More"
 msgstr "Mehr"
 
-#: ../web_tt2/editfile.tt2:50
+#: ../web_tt2/editfile.tt2:49
 msgid "Unsubscribe message: This message is sent when users leave the list."
 msgstr ""
 "Austragungsnachricht: Diese Nachricht wird verschickt, wenn Benutzer die "
 "Liste verlassen."
 
-#: ../web_tt2/editfile.tt2:52
+#: ../web_tt2/editfile.tt2:51
 msgid ""
 "Deletion message: This message is sent to users when you\n"
 "remove them from the list using the DEL command (unless you hit the Quiet "
@@ -3163,7 +3164,7 @@ msgstr "Sympa übersetzen"
 msgid "Submitting a bug, a feature request"
 msgstr "Fehler/Wunsch"
 
-#: ../src/lib/confdef.pm:1137 ../web_tt2/nav.tt2:105
+#: ../src/lib/confdef.pm:1143 ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr "DKIM"
 
@@ -4921,21 +4922,21 @@ msgstr "Bild"
 msgid "Reception"
 msgstr "Empfang"
 
-#: ../web_tt2/subscriber_table.tt2:46 ../web_tt2/subscriber_table.tt2:49
+#: ../web_tt2/subscriber_table.tt2:45 ../web_tt2/subscriber_table.tt2:48
 msgid "Sources"
 msgstr "Quellen"
 
-#: ../web_tt2/subscriber_table.tt2:55 ../web_tt2/subscriber_table.tt2:58
+#: ../web_tt2/subscriber_table.tt2:53 ../web_tt2/subscriber_table.tt2:56
 #: ../web_tt2/viewlogs.tt2:124
 msgid "Sub date"
 msgstr "Datum"
 
-#: ../web_tt2/subscriber_table.tt2:91
+#: ../web_tt2/subscriber_table.tt2:89
 msgid "bouncing"
 msgstr "Zustellfehler"
 
 #. (u.email)
-#: ../web_tt2/subscriber_table.tt2:108
+#: ../web_tt2/subscriber_table.tt2:106
 msgid "%1's picture"
 msgstr "%1's Bild"
 
@@ -5178,7 +5179,7 @@ msgstr "Suchzeitraum: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16940
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16860
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d. %B %Y %H:%M:%S"
 
@@ -5859,7 +5860,7 @@ msgid "%1 Digest %2"
 msgstr "%1 Nachrichtenkompilat %2"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:3523
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:3530
 msgid "Table of contents:"
 msgstr "Inhaltsverzeichnis:"
 
@@ -8903,7 +8904,7 @@ msgstr "%d.%e.%Y %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10504
+#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10438
 msgid "%A"
 msgstr "%A"
 
@@ -8976,7 +8977,7 @@ msgstr ""
 "Von Sympa verwendeter Schlüssel zum Schutz der MD5-Prüfsummen in den Web-"
 "Cookies."
 
-#: ../src/lib/confdef.pm:1336 ../src/lib/confdef.pm:350
+#: ../src/lib/confdef.pm:1342 ../src/lib/confdef.pm:350
 msgid "Should not be changed ! May invalid all user password"
 msgstr ""
 "Sollte nicht geändert werden! Kann alle Benutzerpasswörter ungültig machen"
@@ -9124,10 +9125,14 @@ msgid "Max. number of different domains per call to Sendmail"
 msgstr "Maximale Anzahl unterschiedlicher Domains je Aufruf von Sendmail"
 
 #: ../src/lib/confdef.pm:524
+msgid "Whether or not to cache lists in the database"
+msgstr ""
+
+#: ../src/lib/confdef.pm:530
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
 msgstr "Pfad zum MTA (sendmail, postfix, exim oder qmail)"
 
-#: ../src/lib/confdef.pm:527
+#: ../src/lib/confdef.pm:533
 msgid ""
 "should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
 "\" is distributed with Postfix)"
@@ -9135,22 +9140,22 @@ msgstr ""
 "sollte auf eine Sendmail-kompatible Binärdatei verweisen (eine Binärdatei "
 "namens \"sendmail\" ist z.B. Teil der Postfix-Distribution)"
 
-#: ../src/lib/confdef.pm:539
+#: ../src/lib/confdef.pm:545
 msgid "Specify which rfc2369 mailing list headers to add"
 msgstr ""
 "Geben Sie an, welche rfc2369 Mailinglisten-Kopfzeilen hinzugefügt werden "
 "sollen"
 
-#: ../src/lib/confdef.pm:545
+#: ../src/lib/confdef.pm:551
 #, fuzzy
 msgid "Specify header fields to be removed before message distribution"
 msgstr "Zeitlimit für Einbindevorgänge bei Nachrichtenverteilung"
 
-#: ../src/lib/confdef.pm:555
+#: ../src/lib/confdef.pm:561
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr "Automatisiert (crontab, etc.) an die Liste gesendete E-Mails abweisen?"
 
-#: ../src/lib/confdef.pm:570
+#: ../src/lib/confdef.pm:576
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
 "be created"
@@ -9158,7 +9163,7 @@ msgstr ""
 "Dieser Wert ist ein Szenario. Siehe \"Szenarios\" in der Sympa-"
 "Dokumentation, falls Sie eines definieren möchten"
 
-#: ../src/lib/confdef.pm:572
+#: ../src/lib/confdef.pm:578
 msgid ""
 "Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
 "standard port."
@@ -9166,24 +9171,24 @@ msgstr ""
 "Der Standardwert ist der reale FQDN des Host. Setzen Sie [HOST]:[PORT] um "
 "einen vom Standard abweichenden Port zu definieren."
 
-#: ../src/lib/confdef.pm:582
+#: ../src/lib/confdef.pm:588
 msgid "SMTP HELO (EHLO) parameter used for alias verification"
 msgstr "SMTP HELO (EHLO)-Parameter zur Alias-Prüfung"
 
-#: ../src/lib/confdef.pm:584
+#: ../src/lib/confdef.pm:590
 msgid "Default value is the host part of list_check_smtp parameter."
 msgstr "Standardwert ist der Host-Teil des list_check_smtp Parameters."
 
-#: ../src/lib/confdef.pm:591
+#: ../src/lib/confdef.pm:597
 #, fuzzy
 msgid "Bulk mailer"
 msgstr "Bulkmailer-Fehler"
 
-#: ../src/lib/confdef.pm:600
+#: ../src/lib/confdef.pm:606
 msgid "Default priority for a packet to be sent by bulk."
 msgstr "Standardpriorität eines Paketes im Massenversand."
 
-#: ../src/lib/confdef.pm:607
+#: ../src/lib/confdef.pm:613
 msgid ""
 "Minimum number of packets in database before the bulk forks to increase "
 "sending rate"
@@ -9191,12 +9196,12 @@ msgstr ""
 "Minimale Paketanzahl in der Datenbank vor dem Splitten des Massenversandes "
 "zur Erhöhung der Senderate."
 
-#: ../src/lib/confdef.pm:614
+#: ../src/lib/confdef.pm:620
 msgid "Max number of bulks that will run on the same server"
 msgstr ""
 "Maximale Anzahl an Massenversänden, die über den gleichen Server laufen"
 
-#: ../src/lib/confdef.pm:621
+#: ../src/lib/confdef.pm:627
 msgid ""
 "The number of seconds a slave bulk will remain running without processing a "
 "message before it spontaneously dies."
@@ -9204,7 +9209,7 @@ msgstr ""
 "Anzahl an Sekunden, die ein abgesplitteter Massenversandprozess leer "
 "weiterläuft, bevor er sich selbst beendet."
 
-#: ../src/lib/confdef.pm:628
+#: ../src/lib/confdef.pm:634
 msgid ""
 "The number of seconds a bulk sleeps between starting a new loop if it didn't "
 "find a message to send."
@@ -9212,116 +9217,116 @@ msgstr ""
 "Anzahl an Sekunden, die ein Massenversandprozess im Leerlauf wartet, bevor "
 "er in die nächste Runde geht."
 
-#: ../src/lib/confdef.pm:630
+#: ../src/lib/confdef.pm:636
 msgid "Keep it small if you want your server to be reactive."
 msgstr ""
 "Halten Sie den Wert klein, falls Sie einen schnell ansprechenden Server "
 "wollen. "
 
-#: ../src/lib/confdef.pm:635
+#: ../src/lib/confdef.pm:641
 msgid ""
 "Number of seconds a master bulk waits between two packets number checks."
 msgstr ""
 "Anzahl an Sekunden, die ein Massenversand-Hauptprozess zwischen zwei "
 "Paketanzahl-Prüfungen wartet."
 
-#: ../src/lib/confdef.pm:637
+#: ../src/lib/confdef.pm:643
 msgid ""
 "Keep it small if you expect brutal increases in the message sending load."
 msgstr ""
 "Halten Sie den Wert klein, falls Sie schlagartigen Zuwachs an zu sendenden "
 "Nachrichten erwarten."
 
-#: ../src/lib/confdef.pm:640
+#: ../src/lib/confdef.pm:646
 #, fuzzy
 msgid "Quotas"
 msgstr "Quota"
 
-#: ../src/lib/confdef.pm:645
+#: ../src/lib/confdef.pm:651
 msgid "Default disk quota for shared repository"
 msgstr "Standard Festplatten-Quota des gemeinsamen Speichers"
 
-#: ../src/lib/confdef.pm:654
+#: ../src/lib/confdef.pm:660
 #, fuzzy
 msgid "Spool related"
 msgstr "Vorlagen"
 
-#: ../src/lib/confdef.pm:659
+#: ../src/lib/confdef.pm:665
 msgid "Directory containing various specialized spools"
 msgstr "Verzeichnis mit verschiedenen spezialisierten Warteschlangen"
 
-#: ../src/lib/confdef.pm:661
+#: ../src/lib/confdef.pm:667
 msgid "All spool are created at runtime by sympa.pl"
 msgstr "Alle Warteschlangen werden im laufenden Betrieb von sympa.pl erstellt"
 
-#: ../src/lib/confdef.pm:666
+#: ../src/lib/confdef.pm:672
 msgid "Directory for incoming spool"
 msgstr "Verzeichnis für eingehende Warteschlangen"
 
-#: ../src/lib/confdef.pm:677
+#: ../src/lib/confdef.pm:683
 #, fuzzy
 msgid "Directory for moderation spool"
 msgstr "Datei %1 wartet auf eine Moderation"
 
-#: ../src/lib/confdef.pm:683
+#: ../src/lib/confdef.pm:689
 #, fuzzy
 msgid "Directory for digest spool"
 msgstr "Listenübersicht"
 
-#: ../src/lib/confdef.pm:689
+#: ../src/lib/confdef.pm:695
 #, fuzzy
 msgid "Directory for authentication spool"
 msgstr "beschränkt auf Eigentümer mit Legitimierung"
 
-#: ../src/lib/confdef.pm:695
+#: ../src/lib/confdef.pm:701
 msgid "Directory for outgoing spool"
 msgstr "Verzeichnis für ausgehende Warteschlangen"
 
-#: ../src/lib/confdef.pm:701
+#: ../src/lib/confdef.pm:707
 #, fuzzy
 msgid "Directory for topic spool"
 msgstr "Listenübersicht"
 
-#: ../src/lib/confdef.pm:707
+#: ../src/lib/confdef.pm:713
 msgid "Directory for bounce incoming spool"
 msgstr "Verzeichnis für Warteschlange eingehender Zustellfehler"
 
-#: ../src/lib/confdef.pm:713
+#: ../src/lib/confdef.pm:719
 #, fuzzy
 msgid "Directory for task spool"
 msgstr "Listenübersicht"
 
-#: ../src/lib/confdef.pm:719
+#: ../src/lib/confdef.pm:725
 msgid "Directory for automatic list creation spool"
 msgstr "Verzeichnis für Warteschlangen automatisch erstellter Listen"
 
-#: ../src/lib/confdef.pm:725
+#: ../src/lib/confdef.pm:731
 msgid "Temporary directory used by OpenSSL and antivirus plugins"
 msgstr ""
 "Temporäres Verzeichnis zur Benutzung durch OpenSSL und AntiVirus-"
 "Erweiterungen"
 
-#: ../src/lib/confdef.pm:730
+#: ../src/lib/confdef.pm:736
 msgid "Must not be 0."
 msgstr "Darf nicht 0 sein."
 
-#: ../src/lib/confdef.pm:769
+#: ../src/lib/confdef.pm:775
 #, fuzzy
 msgid "Internationalization related"
 msgstr "Internet-Domäne"
 
-#: ../src/lib/confdef.pm:774
+#: ../src/lib/confdef.pm:780
 msgid ""
 "Directory containing available NLS catalogues (Message internationalization)"
 msgstr ""
 "Verzeichnis mit verfügbaren NLS-Katalogen (Nachrichten-Internationalisierung)"
 
-#: ../src/lib/confdef.pm:780
+#: ../src/lib/confdef.pm:786
 #, fuzzy
 msgid "Supported languages"
 msgstr "Sprache wählen"
 
-#: ../src/lib/confdef.pm:784
+#: ../src/lib/confdef.pm:790
 msgid ""
 "This is the set of language that will be proposed to your users for the "
 "Sympa GUI. Don't select a language if you don't have the proper locale "
@@ -9331,34 +9336,34 @@ msgstr ""
 "Oberfläche zur Verfügung stehen. Aktivieren Sie keine Sprache, für die Sie "
 "nicht die korrekten \"locale\"-Pakete installiert haben."
 
-#: ../src/lib/confdef.pm:789
+#: ../src/lib/confdef.pm:795
 msgid "Default language (one of supported languages)"
 msgstr "Standardsprache (eine der unterstützen Sprachen)"
 
-#: ../src/lib/confdef.pm:793
+#: ../src/lib/confdef.pm:799
 msgid "This is the default language used by Sympa"
 msgstr "Dies ist die Standardsprache, die von Sympa verwendet wird"
 
-#: ../src/lib/confdef.pm:800
+#: ../src/lib/confdef.pm:806
 #, fuzzy
 msgid "Bounce related"
 msgstr "Zustellfehler-Punktzahl"
 
-#: ../src/lib/confdef.pm:810
+#: ../src/lib/confdef.pm:816
 msgid "Welcome message return-path ( unique | owner )"
 msgstr "Rückkehrpfad für Begrüßungs-Nachrichten ( unique | owner )"
 
-#: ../src/lib/confdef.pm:812
+#: ../src/lib/confdef.pm:818
 msgid "If set to unique, new subcriber is removed if welcome message bounce"
 msgstr ""
 "Wenn auf \"unique\" gesetzt, werden neue Abonnenten entfernt, falls die "
 "Begrüßungs-Nachricht nicht zustellbar war."
 
-#: ../src/lib/confdef.pm:817
+#: ../src/lib/confdef.pm:823
 msgid "Remind message return-path ( unique | owner )"
 msgstr "Rückkehrpfad für Erinnerungs-Nachrichten ( unique | owner )"
 
-#: ../src/lib/confdef.pm:819
+#: ../src/lib/confdef.pm:825
 msgid ""
 "If set to unique, subcriber is removed if remind message bounce, use with "
 "care"
@@ -9366,29 +9371,29 @@ msgstr ""
 "Wenn auf \"unique\" gesetzt, wird der Abonnent entfernt, falls die "
 "Erinnerungs-Nachricht nicht zustellbar war. Mit Vorsicht zu benutzen!"
 
-#: ../src/lib/confdef.pm:828
+#: ../src/lib/confdef.pm:834
 msgid "Task name for expiration of old bounces"
 msgstr "Name der Aufgabe zum Entfernen alter nicht zustellbarer E-Mails"
 
-#: ../src/lib/confdef.pm:872
+#: ../src/lib/confdef.pm:878
 msgid "Bouncing email rate for warn list owner"
 msgstr "Zustellfehlerrate für Warnung an den Listeneigentümer"
 
-#: ../src/lib/confdef.pm:879
+#: ../src/lib/confdef.pm:885
 msgid "Bouncing email rate for halt the list (not implemented)"
 msgstr "Zustellfehlerrate für Stopp des Versands (noch nicht implementiert)"
 
-#: ../src/lib/confdef.pm:881
+#: ../src/lib/confdef.pm:887
 msgid "Not yet used in current version, Default is 50"
 msgstr ""
 "Steht in der aktuellen Version noch nicht zur Verfügung. Standard ist 50"
 
-#: ../src/lib/confdef.pm:896
+#: ../src/lib/confdef.pm:902
 #, fuzzy
 msgid "Tuning"
 msgstr "mit Zustellfehlern"
 
-#: ../src/lib/confdef.pm:901
+#: ../src/lib/confdef.pm:907
 msgid ""
 "Use of binary version of the list config structure on disk (none | "
 "binary_file)"
@@ -9396,7 +9401,7 @@ msgstr ""
 "Benutzung einer Binär-Version der Listenkonfigurations-Struktur von "
 "Festplatte (keine | Binär-Datei)"
 
-#: ../src/lib/confdef.pm:904
+#: ../src/lib/confdef.pm:910
 msgid ""
 "Set this parameter to \"binary_file\" if you manage a big amount of lists "
 "(1000+); it should make the web interface startup faster"
@@ -9405,60 +9410,60 @@ msgstr ""
 "+) zu verwalten haben; dies sollte den Start der Web-Schnittstelle "
 "beschleunigen"
 
-#: ../src/lib/confdef.pm:909
+#: ../src/lib/confdef.pm:915
 msgid "flock | nfs"
 msgstr "flock | nfs"
 
-#: ../src/lib/confdef.pm:913
+#: ../src/lib/confdef.pm:919
 msgid "Sympa commands priority"
 msgstr "Priotität der Sympa-Befehle"
 
-#: ../src/lib/confdef.pm:929
+#: ../src/lib/confdef.pm:935
 #, fuzzy
 msgid "Default priority for list messages"
 msgstr "Vorgabe-Ablehnungsnachricht"
 
-#: ../src/lib/confdef.pm:934
+#: ../src/lib/confdef.pm:940
 #, fuzzy
 msgid "Database related"
 msgstr "Datenbankstruktur aktualisiert"
 
-#: ../src/lib/confdef.pm:943
+#: ../src/lib/confdef.pm:949
 msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
 msgstr "Art der Datenbank (mysql|Pg|Oracle|Sybase|SQLite)"
 
-#: ../src/lib/confdef.pm:946
+#: ../src/lib/confdef.pm:952
 msgid "Be careful to the case"
 msgstr "Achten Sie auf die Groß-/Kleinschreibung"
 
-#: ../src/lib/confdef.pm:951
+#: ../src/lib/confdef.pm:957
 #, fuzzy
 msgid "Name of the database"
 msgstr "Fehler bei der Aktualisierung der Datenbank."
 
-#: ../src/lib/confdef.pm:954
+#: ../src/lib/confdef.pm:960
 msgid "With SQLite, the name of the DB corresponds to the DB file"
 msgstr "Bei SQLite entspricht der Name der Datenbank der DB-Datei"
 
-#: ../src/lib/confdef.pm:960
+#: ../src/lib/confdef.pm:966
 msgid "Hostname of the database server"
 msgstr "Hostname des Datenbankservers"
 
-#: ../src/lib/confdef.pm:967
+#: ../src/lib/confdef.pm:973
 msgid "Port of the database server"
 msgstr "Port des Datenbankservers"
 
-#: ../src/lib/confdef.pm:975
+#: ../src/lib/confdef.pm:981
 #, fuzzy
 msgid "User for the database connection"
 msgstr "Umgebungsvariablen für die Datenbankverbindung"
 
-#: ../src/lib/confdef.pm:983
+#: ../src/lib/confdef.pm:989
 #, fuzzy
 msgid "Password for the database connection"
 msgstr "Umgebungsvariablen für die Datenbankverbindung"
 
-#: ../src/lib/confdef.pm:986
+#: ../src/lib/confdef.pm:992
 msgid ""
 "What ever you use a password or not, you must protect the SQL server (is it "
 "not a public internet service ?)"
@@ -9466,32 +9471,32 @@ msgstr ""
 "Ob Sie ein Passwort benutzen oder nicht: Sichern Sie den SQL-Server! (Ist "
 "das etwa kein öffentlicher Webservice?)"
 
-#: ../src/lib/confdef.pm:998
+#: ../src/lib/confdef.pm:1004
 #, fuzzy
 msgid "Environment variables setting for database"
 msgstr "Umgebungsvariablen für die Datenbankverbindung"
 
-#: ../src/lib/confdef.pm:1000
+#: ../src/lib/confdef.pm:1006
 msgid "This is useful for defining ORACLE_HOME "
 msgstr "Nützlich um ORACLE_HOME zu definieren"
 
-#: ../src/lib/confdef.pm:1006
+#: ../src/lib/confdef.pm:1012
 msgid "Database private extention to subscriber table"
 msgstr "Private Datenbankerweiterung zur Abonnentenliste"
 
-#: ../src/lib/confdef.pm:1008 ../src/lib/confdef.pm:1016
+#: ../src/lib/confdef.pm:1014 ../src/lib/confdef.pm:1022
 msgid "You need to extend the database format with these fields"
 msgstr "Sie müssen das Datenbankformat um diese Felder erweitern"
 
-#: ../src/lib/confdef.pm:1014
+#: ../src/lib/confdef.pm:1020
 msgid "Database private extention to user table"
 msgstr "Private Datenbankerweiterung zur Benutzerliste"
 
-#: ../src/lib/confdef.pm:1033
+#: ../src/lib/confdef.pm:1039
 msgid "Number of months that elapse before a log is expired"
 msgstr "Anzahl Monate, die Protokolle aufbewahrt werden"
 
-#: ../src/lib/confdef.pm:1055
+#: ../src/lib/confdef.pm:1061
 msgid ""
 "Default timeout between two scheduled synchronizations of list members with "
 "data sources."
@@ -9499,7 +9504,7 @@ msgstr ""
 "Standard-Wartezeit zwischen zwei geplanten Synchronisierungen der "
 "Listenmitgliedern mit Datenquellen"
 
-#: ../src/lib/confdef.pm:1061
+#: ../src/lib/confdef.pm:1067
 msgid ""
 "Default timeout between two action-triggered synchronizations of list "
 "members with data sources."
@@ -9507,48 +9512,48 @@ msgstr ""
 "Standard-Wartezeit zwischen zwei interaktiv ausgelösten Synchronisierungen "
 "der Listenmitgliedern mit Datenquellen"
 
-#: ../src/lib/confdef.pm:1067
+#: ../src/lib/confdef.pm:1073
 msgid "Default timeout while performing a fetch for an include_sql_query sync"
 msgstr ""
 "Standard-Wartezeit während des Holens einer include_sql_query "
 "Synchronisierung"
 
-#: ../src/lib/confdef.pm:1072
+#: ../src/lib/confdef.pm:1078
 msgid "Loop prevention"
 msgstr "Loop-Vermeidung"
 
-#: ../src/lib/confdef.pm:1100
+#: ../src/lib/confdef.pm:1106
 #, fuzzy
 msgid "S/MIME configuration"
 msgstr "Listenkonfiguration kopieren"
 
-#: ../src/lib/confdef.pm:1105
+#: ../src/lib/confdef.pm:1111
 msgid "Path to OpenSSL"
 msgstr "Pfad zu OpenSSL"
 
-#: ../src/lib/confdef.pm:1108
+#: ../src/lib/confdef.pm:1114
 msgid "Sympa recognizes S/MIME if OpenSSL is installed"
 msgstr "Sympa erkennt S/MIME falls OpenSSL installiert ist"
 
-#: ../src/lib/confdef.pm:1115
+#: ../src/lib/confdef.pm:1121
 msgid "Directory containing trusted CA certificates"
 msgstr "Verzeichnis mit Zertifikaten der vertrauenswürdigen CAs"
 
-#: ../src/lib/confdef.pm:1123
+#: ../src/lib/confdef.pm:1129
 msgid "File containing bundled trusted CA certificates"
 msgstr "Datei mit Zertifikaten der vertrauenswürdigen CAs"
 
-#: ../src/lib/confdef.pm:1131
+#: ../src/lib/confdef.pm:1137
 msgid "Password used to crypt lists private keys"
 msgstr "Passwort zum verschlüsseln der privaten Schlüssel der Mailingliste"
 
-#: ../src/lib/confdef.pm:1148
+#: ../src/lib/confdef.pm:1154
 #, fuzzy
 msgid ""
 "Insert a DKIM signature to message from the robot, from the list or both"
 msgstr "Nachricht an die Liste senden"
 
-#: ../src/lib/confdef.pm:1155
+#: ../src/lib/confdef.pm:1161
 msgid ""
 "Type of message that is added a DKIM signature before distribution to "
 "subscribers. Possible values are \"none\", \"any\" or a list of the "
@@ -9562,39 +9567,39 @@ msgstr ""
 "\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
 "\"editor_validated_messages\"."
 
-#: ../src/lib/confdef.pm:1162
+#: ../src/lib/confdef.pm:1168
 msgid "Location of the file where DKIM private key is stored"
 msgstr "Speicherort der Datei mit dem privaten DKIM-Schlüssel"
 
-#: ../src/lib/confdef.pm:1169
+#: ../src/lib/confdef.pm:1175
 msgid ""
 "The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
 msgstr ""
 "Der \"d=\"-Tag, wie in RFC4871 definiert, Standard ist der Domainname des "
 "virtuellen Hosts"
 
-#: ../src/lib/confdef.pm:1176
+#: ../src/lib/confdef.pm:1182
 #, fuzzy
 msgid "The selector"
 msgstr "Auswahl invertieren"
 
-#: ../src/lib/confdef.pm:1183
+#: ../src/lib/confdef.pm:1189
 msgid "The \"i=\" tag as defined in rfc 4871, default is null"
 msgstr "Der \"i=\"-Tag, wie in RFC4871 definiert, Standard ist Null"
 
-#: ../src/lib/confdef.pm:1191
+#: ../src/lib/confdef.pm:1197
 msgid "List of headers to be included into the message for signature"
 msgstr "Liste der zum Signieren in die Nachricht zu integrierenden Kopfzeilen"
 
-#: ../src/lib/confdef.pm:1195
+#: ../src/lib/confdef.pm:1201
 msgid "Antivirus plug-in"
 msgstr "AntiVirus-Erweiterung"
 
-#: ../src/lib/confdef.pm:1201
+#: ../src/lib/confdef.pm:1207
 msgid "Path to the antivirus scanner engine"
 msgstr "Pfad zum AntiVirus-Scanner"
 
-#: ../src/lib/confdef.pm:1204
+#: ../src/lib/confdef.pm:1210
 msgid ""
 "supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
 "Micro/VirusWall"
@@ -9602,15 +9607,15 @@ msgstr ""
 "unterstützte AntiVirus-Scanner: McAfee/uvscan, Fsecure/fsav, Sophos, AVP und "
 "Trend Micro/VirusWall"
 
-#: ../src/lib/confdef.pm:1210
+#: ../src/lib/confdef.pm:1216
 msgid "Antivirus plugin command argument"
 msgstr "Befehlsoptionen für die AntiVirus-Erweiterung"
 
-#: ../src/lib/confdef.pm:1219
+#: ../src/lib/confdef.pm:1225
 msgid "Tag based spam filtering"
 msgstr "Tag-basierter Spamfilter"
 
-#: ../src/lib/confdef.pm:1229
+#: ../src/lib/confdef.pm:1235
 msgid ""
 "If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
 "spams, name of this header (example X-Spam-Status)"
@@ -9618,33 +9623,33 @@ msgstr ""
 "Name der Kopfzeile, die ein Spamfilter (wie spamassassin oder j-chkmail) zum "
 "Markieren von Spam hinzufügt (z.B. X-Spam-Status)"
 
-#: ../src/lib/confdef.pm:1237
+#: ../src/lib/confdef.pm:1243
 msgid "Regexp applied on this header to verify message is a spam (example Yes)"
 msgstr ""
 "Regexp, die auf diese Kopfzeile angewendet wird, um sie als Spam zu "
 "identifizieren (z.B. Yes)"
 
-#: ../src/lib/confdef.pm:1245
+#: ../src/lib/confdef.pm:1251
 msgid ""
 "Regexp applied on this header to verify message is NOT a spam (example No)"
 msgstr ""
 "Regexp, die auf diese Kopfzeile angewendet wird, um sie als \"KEIN Spam\" zu "
 "identifizieren (z.B. No)"
 
-#: ../src/lib/confdef.pm:1251
+#: ../src/lib/confdef.pm:1257
 #, fuzzy
 msgid "wwsympa.conf parameters"
 msgstr "Falsche Parameter"
 
-#: ../src/lib/confdef.pm:1256
+#: ../src/lib/confdef.pm:1262
 msgid "Directory for storing HTML archives"
 msgstr "Verzeichnis zum Speichern von HTML-Archiven"
 
-#: ../src/lib/confdef.pm:1259 ../src/lib/confdef.pm:1279
+#: ../src/lib/confdef.pm:1265 ../src/lib/confdef.pm:1285
 msgid "Better if not in a critical partition"
 msgstr "Besser nicht auf einer kritischen Partition"
 
-#: ../src/lib/confdef.pm:1264
+#: ../src/lib/confdef.pm:1270
 msgid ""
 "Default index organization when entering the web archive: either threaded or "
 "in chronological order"
@@ -9652,27 +9657,27 @@ msgstr ""
 "Standard-Sortierung des Index bei Aufruf des Web-Archives: nach Thema oder "
 "chronologisch"
 
-#: ../src/lib/confdef.pm:1271
+#: ../src/lib/confdef.pm:1277
 msgid "File containing archived PID while running"
 msgstr "Datei mit archivierter PID im laufenden Betrieb"
 
-#: ../src/lib/confdef.pm:1277
+#: ../src/lib/confdef.pm:1283
 msgid "Directory for storing bounces"
 msgstr "Verzeichnis zum Speichern nicht zustellbarer E-Mails"
 
-#: ../src/lib/confdef.pm:1284
+#: ../src/lib/confdef.pm:1290
 msgid "File containing bounced PID while running"
 msgstr "Datei mit zurückgewiesenen PID im laufenden Betrieb"
 
-#: ../src/lib/confdef.pm:1290
+#: ../src/lib/confdef.pm:1296
 msgid "HTTP cookies lifetime"
 msgstr "Lebensdauer der HTTP-Cookies"
 
-#: ../src/lib/confdef.pm:1296
+#: ../src/lib/confdef.pm:1302
 msgid "HTTP cookies validity domain"
 msgstr "Gültigkeitsbereich der HTTP-Cookies"
 
-#: ../src/lib/confdef.pm:1303
+#: ../src/lib/confdef.pm:1309
 msgid ""
 "Activates a custom archiver to use instead of MHonArc. The value of this "
 "parameter is the absolute path on the file system to the script of the "
@@ -9682,58 +9687,58 @@ msgstr ""
 "dieses Parameters ist der absolute Pfad zum Skript  des gewünschten "
 "Packprogrammes im Dateisystem."
 
-#: ../src/lib/confdef.pm:1310
+#: ../src/lib/confdef.pm:1316
 msgid "Type of main Web page ( lists | home )"
 msgstr "Art der Haupt-Webseite ( lists | home )"
 
-#: ../src/lib/confdef.pm:1318
+#: ../src/lib/confdef.pm:1324
 msgid "Syslog facility for wwsympa, archived and bounced"
 msgstr ""
 "Systemprotokoll-Einrichtung für wwsympa, archivierte und nicht zustellbare "
 "Nachrichten"
 
-#: ../src/lib/confdef.pm:1321
+#: ../src/lib/confdef.pm:1327
 msgid "Default is to use previously defined sympa log facility."
 msgstr "Standard ist die zuvor definierte sympa-Protokolleinrichtung."
 
-#: ../src/lib/confdef.pm:1326
+#: ../src/lib/confdef.pm:1332
 msgid "Path to MHonArc mail2html plugin"
 msgstr "Pfad zur MHonArc mail2html-Erweiterung"
 
-#: ../src/lib/confdef.pm:1329
+#: ../src/lib/confdef.pm:1335
 msgid "This is required for HTML mail archiving"
 msgstr "Notwendig zum Archivieren von HTML-Mails"
 
-#: ../src/lib/confdef.pm:1334
+#: ../src/lib/confdef.pm:1340
 msgid "Password case (insensitive | sensitive)"
 msgstr "Groß-/Kleinschreibung von Passwörtern (insensitive | sensitive)"
 
-#: ../src/lib/confdef.pm:1341
+#: ../src/lib/confdef.pm:1347
 msgid "Title of main Web page"
 msgstr "Titel der Haupt-Webseite"
 
-#: ../src/lib/confdef.pm:1349
+#: ../src/lib/confdef.pm:1355
 msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
 msgstr "Ist das fast_cgi - Modul für Apache (oder Roxen) installiert? (0 | 1)"
 
-#: ../src/lib/confdef.pm:1352
+#: ../src/lib/confdef.pm:1358
 msgid "This module provide much faster web interface"
 msgstr "Dieses Modul bietet eine wesentlich schnellere Web-Schnittstelle"
 
-#: ../src/lib/confdef.pm:1355
+#: ../src/lib/confdef.pm:1361
 msgid "Virtual host specific parameters"
 msgstr "Parameter des virtuellen Host"
 
-#: ../src/lib/confdef.pm:1359
+#: ../src/lib/confdef.pm:1365
 msgid "URL of a virtual host"
 msgstr "URL des virtuellen Host"
 
-#: ../src/lib/confdef.pm:1390
+#: ../src/lib/confdef.pm:1396
 msgid "Default limit for the number of subscribers per list (0 means no limit)"
 msgstr ""
 "Standard-Höchstwert der Abonnenten-Anzahl pro Liste (0 = keine Begrenzung)"
 
-#: ../src/lib/confdef.pm:1410
+#: ../src/lib/confdef.pm:1416
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
@@ -9741,17 +9746,17 @@ msgstr ""
 "Falls auf \"on\" gesetzt, können die Benutzer mittels JavaScript-WYSIWYG-"
 "Editor HTML-Nachrichten verfassen."
 
-#: ../src/lib/confdef.pm:1418
+#: ../src/lib/confdef.pm:1424
 msgid "Path to the javascript file making the WYSIWYG HTML editor available"
 msgstr "Pfad zur Datei, die den JavaScript-WYSIWYG-Editor zur Verfügung stellt"
 
-#: ../src/lib/confdef.pm:1425
+#: ../src/lib/confdef.pm:1431
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 "JavaScript-Code zum aktivieren und konfigurieren des JavaScript-WYSIWYG-"
 "Editors."
 
-#: ../src/lib/confdef.pm:1457
+#: ../src/lib/confdef.pm:1463
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -9763,11 +9768,11 @@ msgstr ""
 "Adresse zur Benutzeranmeldung verwendet. Andernfalls wird die erste vom LDAP-"
 "Server zurückgegebene E-Mail-Adresse benutzt."
 
-#: ../src/lib/confdef.pm:1464
+#: ../src/lib/confdef.pm:1470
 msgid "If set to \"on\", enables support of legacy character set"
 msgstr "\"on\" aktiviert die Unterstützung für \"traditionelle\" Zeichensätze"
 
-#: ../src/lib/confdef.pm:1466
+#: ../src/lib/confdef.pm:1472
 msgid ""
 "In some language environments, legacy encoding (character set) is preferred "
 "for e-mail messages: for example iso-2022-jp in Japanese language."
@@ -9775,17 +9780,17 @@ msgstr ""
 "In manchen Sprachumgebungen wird für E-Mails die \"traditionelle\" "
 "Zeichenkodierungen vorgezogen: z.B. iso-2022-jp für Japanisch."
 
-#: ../src/lib/confdef.pm:1500
+#: ../src/lib/confdef.pm:1506
 #, fuzzy
 msgid "Directory for subscription spool"
 msgstr "Erinnerung an Ihr Abonnement der Liste %1"
 
-#: ../src/lib/confdef.pm:1505
+#: ../src/lib/confdef.pm:1511
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr "Standard-Linienanzahl der Benutzerliste auf der Bericht-Seite"
 
-#: ../src/lib/confdef.pm:1517
+#: ../src/lib/confdef.pm:1523
 msgid ""
 "Messages are supposed to be filtered by an antispam that add one more "
 "headers to messages. This parameter is used to select a special scenario in "
@@ -9799,15 +9804,15 @@ msgstr ""
 "antispam_tag_header_name, antispam_tag_header_spam_regexp und "
 "antispam_tag_header_ham_regexp."
 
-#: ../src/lib/confdef.pm:1525
+#: ../src/lib/confdef.pm:1531
 msgid "Directory containing user certificates"
 msgstr "Verzeichnis mit Benutzerzertifikaten"
 
-#: ../src/lib/confdef.pm:1531
+#: ../src/lib/confdef.pm:1537
 msgid "File containing task_manager PID while running"
 msgstr "Datei mit der task_manager PID im laufenden Betrieb"
 
-#: ../src/lib/confdef.pm:1536
+#: ../src/lib/confdef.pm:1542
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page"
@@ -9824,836 +9829,836 @@ msgstr "Fehler in Zeile %d: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2593 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
-#: ../src/lib/List.pm:2672 ../wwsympa/Auth.pm:435
-#: ../wwsympa/wwsympa.fcgi.in:1142 ../wwsympa/wwsympa.fcgi.in:3000
+#: ../src/lib/Family.pm:2591 ../src/lib/Family.pm:388 ../src/lib/Family.pm:665
+#: ../src/lib/List.pm:2673 ../wwsympa/Auth.pm:435
+#: ../wwsympa/wwsympa.fcgi.in:1142 ../wwsympa/wwsympa.fcgi.in:2999
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %B %Y um %H:%M:%S"
 
-#: ../src/lib/List.pm:331
+#: ../src/lib/List.pm:332
 msgid "Subject of the list"
 msgstr "Thema der Liste"
 
-#: ../src/lib/List.pm:339
+#: ../src/lib/List.pm:340
 msgid "Visibility of the list"
 msgstr "Sichtbarkeit der Liste"
 
-#: ../src/lib/List.pm:353 ../src/lib/List.pm:436
+#: ../src/lib/List.pm:354 ../src/lib/List.pm:437
 msgid "email address"
 msgstr "E-Mail-Adresse"
 
-#: ../src/lib/List.pm:360 ../src/lib/List.pm:455
+#: ../src/lib/List.pm:361 ../src/lib/List.pm:456
 msgid "name"
 msgstr "Name"
 
-#: ../src/lib/List.pm:366 ../src/lib/List.pm:461
+#: ../src/lib/List.pm:367 ../src/lib/List.pm:462
 msgid "private information"
 msgstr "private Information"
 
-#: ../src/lib/List.pm:372 ../src/lib/List.pm:422
+#: ../src/lib/List.pm:373 ../src/lib/List.pm:423
 msgid "profile"
 msgstr "Profil"
 
-#: ../src/lib/List.pm:378 ../src/lib/List.pm:410 ../src/lib/List.pm:443
-#: ../src/lib/List.pm:487 ../src/lib/List.pm:617 ../src/lib/List.pm:632
+#: ../src/lib/List.pm:379 ../src/lib/List.pm:411 ../src/lib/List.pm:444
+#: ../src/lib/List.pm:488 ../src/lib/List.pm:618 ../src/lib/List.pm:633
 msgid "reception mode"
 msgstr "Empfangsmodus"
 
-#: ../src/lib/List.pm:384 ../src/lib/List.pm:416 ../src/lib/List.pm:449
-#: ../src/lib/List.pm:493 ../src/lib/List.pm:638
+#: ../src/lib/List.pm:385 ../src/lib/List.pm:417 ../src/lib/List.pm:450
+#: ../src/lib/List.pm:494 ../src/lib/List.pm:639
 msgid "visibility"
 msgstr "Sichtbarkeit"
 
-#: ../src/lib/List.pm:503
+#: ../src/lib/List.pm:504
 msgid "Topics for the list"
 msgstr "Themen der Liste"
 
-#: ../src/lib/List.pm:511
+#: ../src/lib/List.pm:512
 msgid "Internet domain"
 msgstr "Internet-Domäne"
 
-#: ../src/lib/List.pm:521
+#: ../src/lib/List.pm:522
 msgid "Language of the list"
 msgstr "Sprache der Liste"
 
-#: ../src/lib/List.pm:539
+#: ../src/lib/List.pm:540
 #, fuzzy
 msgid "Maximum number of list members"
 msgstr "Abonnenten verwalten"
 
-#: ../src/lib/List.pm:550
+#: ../src/lib/List.pm:551
 msgid "Priority"
 msgstr "Priorität"
 
-#: ../src/lib/List.pm:562
+#: ../src/lib/List.pm:563
 msgid "Who can send messages"
 msgstr "Wer kann Nachrichten senden"
 
-#: ../src/lib/List.pm:568
+#: ../src/lib/List.pm:569
 msgid "Delivery time (hh:mm)"
 msgstr "Auslieferungszeit (hh:mm)"
 
-#: ../src/lib/List.pm:576
+#: ../src/lib/List.pm:577
 msgid "Digest frequency"
 msgstr "Häufigkeit der Kompilierung"
 
-#: ../src/lib/List.pm:1094 ../src/lib/List.pm:2061 ../src/lib/List.pm:581
+#: ../src/lib/List.pm:1095 ../src/lib/List.pm:2062 ../src/lib/List.pm:582
 msgid "days"
 msgstr "Tage"
 
-#: ../src/lib/List.pm:588
+#: ../src/lib/List.pm:589
 msgid "hour"
 msgstr "Stunde"
 
-#: ../src/lib/List.pm:595
+#: ../src/lib/List.pm:596
 msgid "minute"
 msgstr "Minute"
 
-#: ../src/lib/List.pm:605
+#: ../src/lib/List.pm:606
 msgid "Digest maximum number of messages"
 msgstr "Maximale Anzahl Nachrichten pro Kompilat"
 
-#: ../src/lib/List.pm:614
+#: ../src/lib/List.pm:615
 msgid "Available subscription options"
 msgstr "Verfügbare Abonnement-Optionen"
 
-#: ../src/lib/List.pm:628
+#: ../src/lib/List.pm:629
 msgid "Subscription profile"
 msgstr "Abonnementprofil"
 
-#: ../src/lib/List.pm:647
+#: ../src/lib/List.pm:648
 msgid "Topics for message categorization"
 msgstr "Themen, um Nachrichten zu gruppieren"
 
-#: ../src/lib/List.pm:651
+#: ../src/lib/List.pm:652
 msgid "Message topic name"
 msgstr "Name für Nachrichtenthema"
 
-#: ../src/lib/List.pm:658
+#: ../src/lib/List.pm:659
 msgid "Message topic keywords"
 msgstr "Schlagwörter für Nachrichtenthema"
 
-#: ../src/lib/List.pm:664
+#: ../src/lib/List.pm:665
 msgid "Message topic title"
 msgstr "Titel für Nachrichtenthema"
 
-#: ../src/lib/List.pm:675
+#: ../src/lib/List.pm:676
 msgid "Defines to which part of messages topic keywords are applied"
 msgstr ""
 "Legt fest, welchem Teil der Nachrichten Themen-Stichworte zugeordnet werden"
 
-#: ../src/lib/List.pm:683
+#: ../src/lib/List.pm:684
 msgid "Message tagging"
 msgstr "Nachrichtenmarkierung"
 
-#: ../src/lib/List.pm:691 ../src/lib/List.pm:706
+#: ../src/lib/List.pm:692 ../src/lib/List.pm:707
 msgid "Reply address"
 msgstr "Antwortadresse"
 
-#: ../src/lib/List.pm:699
+#: ../src/lib/List.pm:700
 msgid "Forced reply address"
 msgstr "Erzwungene Antwortadresse"
 
-#: ../src/lib/List.pm:717
+#: ../src/lib/List.pm:718
 msgid "other email address"
 msgstr "andere E-Mail-Adresse"
 
-#: ../src/lib/List.pm:722
+#: ../src/lib/List.pm:723
 msgid "respect of existing header field"
 msgstr "Berücksichtung existierender Felder im Nachrichtenkopf"
 
-#: ../src/lib/List.pm:731
+#: ../src/lib/List.pm:732
 msgid "Anonymous sender"
 msgstr "Anonymer Absender"
 
-#: ../src/lib/List.pm:737
+#: ../src/lib/List.pm:738
 msgid "Custom header field"
 msgstr "Eigene Kopfzeile"
 
-#: ../src/lib/List.pm:745
+#: ../src/lib/List.pm:746
 msgid "Subject tagging"
 msgstr "Titelmarkierung"
 
-#: ../src/lib/List.pm:752
+#: ../src/lib/List.pm:753
 msgid "Attachment type"
 msgstr "Anlagentyp"
 
-#: ../src/lib/List.pm:759
+#: ../src/lib/List.pm:760
 msgid "Maximum message size"
 msgstr "Maximale Nachrichtengröße"
 
-#: ../src/lib/List.pm:770
+#: ../src/lib/List.pm:771
 msgid "Allow message personnalization"
 msgstr "Nachrichten-Personalisierung zulassen"
 
-#: ../src/lib/List.pm:780
+#: ../src/lib/List.pm:781
 msgid "Reject mail from automates (crontab, etc)?"
 msgstr "Automatisch erstellte Mails (crontab, etc) abweisen?"
 
-#: ../src/lib/List.pm:812
+#: ../src/lib/List.pm:813
 msgid "RFC 2369 Header fields"
 msgstr "Kopfzeilen nach RFC 2369"
 
-#: ../src/lib/List.pm:825
+#: ../src/lib/List.pm:826
 msgid "Who can view list information"
 msgstr "Wer kann Listen-Information ansehen"
 
-#: ../src/lib/List.pm:831
+#: ../src/lib/List.pm:832
 msgid "Who can subscribe to the list"
 msgstr "Wer kann die Liste abonnieren"
 
-#: ../src/lib/List.pm:837
+#: ../src/lib/List.pm:838
 msgid "Who can add subscribers"
 msgstr "Wer kann Abonnenten hinzufügen"
 
-#: ../src/lib/List.pm:843
+#: ../src/lib/List.pm:844
 msgid "Who can unsubscribe"
 msgstr "Wer kann abbestellen"
 
-#: ../src/lib/List.pm:849
+#: ../src/lib/List.pm:850
 msgid "Who can delete subscribers"
 msgstr "Wer kann Abonnenten löschen"
 
-#: ../src/lib/List.pm:855
+#: ../src/lib/List.pm:856
 msgid "Who can invite people"
 msgstr "Wer kann Personen einladen"
 
-#: ../src/lib/List.pm:861
+#: ../src/lib/List.pm:862
 msgid "Who can start a remind process"
 msgstr "Wer kann Erinnerungen veranlassen"
 
-#: ../src/lib/List.pm:867
+#: ../src/lib/List.pm:868
 msgid "Who can review subscribers"
 msgstr "Wer kann Abonnenten auflisten"
 
-#: ../src/lib/List.pm:880
+#: ../src/lib/List.pm:881
 msgid "Who can view"
 msgstr "Wer kann ansehen"
 
-#: ../src/lib/List.pm:885
+#: ../src/lib/List.pm:886
 msgid "Who can edit"
 msgstr "Wer kann bearbeiten"
 
-#: ../src/lib/List.pm:890 ../src/lib/List.pm:914
+#: ../src/lib/List.pm:891 ../src/lib/List.pm:915
 msgid "quota"
 msgstr "Quota"
 
-#: ../src/lib/List.pm:905
+#: ../src/lib/List.pm:906
 msgid "Web archives"
 msgstr "Webarchive"
 
-#: ../src/lib/List.pm:909 ../src/lib/List.pm:945
+#: ../src/lib/List.pm:910 ../src/lib/List.pm:946
 msgid "access right"
 msgstr "Zugriffsrechte"
 
-#: ../src/lib/List.pm:924
+#: ../src/lib/List.pm:925
 msgid "Maximum number of month archived"
 msgstr "Maximale Anzahl an Monaten, die archiviert werden sollen"
 
-#: ../src/lib/List.pm:933
+#: ../src/lib/List.pm:934
 msgid "Text archives"
 msgstr "Textarchive"
 
-#: ../src/lib/List.pm:937
+#: ../src/lib/List.pm:938
 msgid "frequency"
 msgstr "Turnus"
 
-#: ../src/lib/List.pm:956
+#: ../src/lib/List.pm:957
 msgid "Archive encrypted mails as cleartext"
 msgstr "Verschlüsselte E-Mails im Klartext archivieren"
 
-#: ../src/lib/List.pm:2161 ../src/lib/List.pm:963
+#: ../src/lib/List.pm:2162 ../src/lib/List.pm:964
 msgid "email address protection method"
 msgstr "Methode zum Schutz der E-Mail-Adresse"
 
 # #-#-#-#-#  de.po (PACKAGE VERSION)  #-#-#-#-#
-#: ../src/lib/List.pm:974
+#: ../src/lib/List.pm:975
 msgid "Bounces management"
 msgstr "Verwaltung der Zustellfehler"
 
-#: ../src/lib/List.pm:978
+#: ../src/lib/List.pm:979
 msgid "warn rate"
 msgstr "Warnungsrate"
 
-#: ../src/lib/List.pm:988
+#: ../src/lib/List.pm:989
 msgid "halt rate"
 msgstr "Stopprate"
 
-#: ../src/lib/List.pm:1001
+#: ../src/lib/List.pm:1002
 msgid "Management of bouncers, 1st level"
 msgstr "Benutzer mit Zustellfehlern verwalten, 1. Ebene"
 
-#: ../src/lib/List.pm:1005 ../src/lib/List.pm:1034
+#: ../src/lib/List.pm:1006 ../src/lib/List.pm:1035
 msgid "threshold"
 msgstr "Grenzwert"
 
-#: ../src/lib/List.pm:1015 ../src/lib/List.pm:1044
+#: ../src/lib/List.pm:1016 ../src/lib/List.pm:1045
 msgid "action for this population"
 msgstr "Aktion für diese Gruppe"
 
-#: ../src/lib/List.pm:1021 ../src/lib/List.pm:1050
+#: ../src/lib/List.pm:1022 ../src/lib/List.pm:1051
 msgid "notification"
 msgstr "Benachrichtigung"
 
-#: ../src/lib/List.pm:1030
+#: ../src/lib/List.pm:1031
 msgid "Management of bouncers, 2nd level"
 msgstr "Benutzer mit Zustellfehlern verwalten, 2. Ebene"
 
-#: ../src/lib/List.pm:1059
+#: ../src/lib/List.pm:1060
 msgid "percentage of list members in VERP mode"
 msgstr "Prozent der Abonnenten im VERP-Modus"
 
-#: ../src/lib/List.pm:1068
+#: ../src/lib/List.pm:1069
 #, fuzzy
 msgid "Message tracking feature"
 msgstr "Nachrichtenmarkierung"
 
-#: ../src/lib/List.pm:1072
+#: ../src/lib/List.pm:1073
 msgid "tracking message by delivery status notification"
 msgstr "verfolge Nachricht anhand der Lieferstatus-Benachrichtigung"
 
-#: ../src/lib/List.pm:1080
+#: ../src/lib/List.pm:1081
 msgid "tracking message by message delivery notification"
 msgstr "verfolge Nachricht anhand des Zustellungsberichtes"
 
-#: ../src/lib/List.pm:1088
+#: ../src/lib/List.pm:1089
 #, fuzzy
 msgid "who can view message tracking"
 msgstr "Nachrichtenmarkierung"
 
-#: ../src/lib/List.pm:1093
+#: ../src/lib/List.pm:1094
 msgid "Tracking datas are removed after this number of days"
 msgstr "Anzahl Tage bevor Verfolgungsdaten entfernt werden "
 
-#: ../src/lib/List.pm:1106
+#: ../src/lib/List.pm:1107
 msgid "Welcome return-path"
 msgstr "Rücklaufpfad für Begrüßungen"
 
-#: ../src/lib/List.pm:1115
+#: ../src/lib/List.pm:1116
 msgid "Return-path of the REMIND command"
 msgstr "Rückantwort-Adresse für den REMIND-Befehl"
 
-#: ../src/lib/List.pm:1126
+#: ../src/lib/List.pm:1127
 msgid "Notify subscribers when they are included from a data source?"
 msgstr ""
 "Abonnenten informieren, wenn Sie über eine Datenquelle eingebunden werden?"
 
-#: ../src/lib/List.pm:1134
+#: ../src/lib/List.pm:1135
 msgid "Timeout for fetch of include_sql_query"
 msgstr "Wartezeit, nach der die Abfrage von include_sql_query abgebrochen wird"
 
-#: ../src/lib/List.pm:1145
+#: ../src/lib/List.pm:1146
 msgid "User data source"
 msgstr "Benutzerdatenquelle"
 
-#: ../src/lib/List.pm:1153
+#: ../src/lib/List.pm:1154
 msgid "File inclusion"
 msgstr "Dateieinbindung"
 
-#: ../src/lib/List.pm:1161
+#: ../src/lib/List.pm:1162
 msgid "Remote file inclusion"
 msgstr "Einbindung entfernter Dateien"
 
-#: ../src/lib/List.pm:1165 ../src/lib/List.pm:1207 ../src/lib/List.pm:1247
-#: ../src/lib/List.pm:1348 ../src/lib/List.pm:1500 ../src/lib/List.pm:1577
-#: ../src/lib/List.pm:1626 ../src/lib/List.pm:1733 ../src/lib/List.pm:1891
+#: ../src/lib/List.pm:1166 ../src/lib/List.pm:1208 ../src/lib/List.pm:1248
+#: ../src/lib/List.pm:1349 ../src/lib/List.pm:1501 ../src/lib/List.pm:1578
+#: ../src/lib/List.pm:1627 ../src/lib/List.pm:1734 ../src/lib/List.pm:1892
 msgid "short name for this source"
 msgstr "Kurzname für diese Quelle"
 
-#: ../src/lib/List.pm:1171
+#: ../src/lib/List.pm:1172
 msgid "data location URL"
 msgstr "URL der Daten"
 
-#: ../src/lib/List.pm:1178 ../src/lib/List.pm:1284 ../src/lib/List.pm:1385
-#: ../src/lib/List.pm:1539 ../src/lib/List.pm:1663 ../src/lib/List.pm:1770
-#: ../src/lib/List.pm:1930
+#: ../src/lib/List.pm:1179 ../src/lib/List.pm:1285 ../src/lib/List.pm:1386
+#: ../src/lib/List.pm:1540 ../src/lib/List.pm:1664 ../src/lib/List.pm:1771
+#: ../src/lib/List.pm:1931
 msgid "remote user"
 msgstr "Benutzer auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1184 ../src/lib/List.pm:1289 ../src/lib/List.pm:1390
-#: ../src/lib/List.pm:1545 ../src/lib/List.pm:1668 ../src/lib/List.pm:1775
-#: ../src/lib/List.pm:1936
+#: ../src/lib/List.pm:1185 ../src/lib/List.pm:1290 ../src/lib/List.pm:1391
+#: ../src/lib/List.pm:1546 ../src/lib/List.pm:1669 ../src/lib/List.pm:1776
+#: ../src/lib/List.pm:1937
 msgid "remote password"
 msgstr "Passwort auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1196
+#: ../src/lib/List.pm:1197
 msgid "List inclusion"
 msgstr "Listeneinbindung"
 
-#: ../src/lib/List.pm:1203
+#: ../src/lib/List.pm:1204
 msgid "remote list inclusion"
 msgstr "Listeneinbindung auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1213 ../src/lib/List.pm:1253 ../src/lib/List.pm:1354
-#: ../src/lib/List.pm:1512 ../src/lib/List.pm:1632 ../src/lib/List.pm:1739
-#: ../src/lib/List.pm:1903
+#: ../src/lib/List.pm:1214 ../src/lib/List.pm:1254 ../src/lib/List.pm:1355
+#: ../src/lib/List.pm:1513 ../src/lib/List.pm:1633 ../src/lib/List.pm:1740
+#: ../src/lib/List.pm:1904
 msgid "remote host"
 msgstr "entfernter Rechner"
 
-#: ../src/lib/List.pm:1219 ../src/lib/List.pm:1259 ../src/lib/List.pm:1360
-#: ../src/lib/List.pm:1638 ../src/lib/List.pm:1745
+#: ../src/lib/List.pm:1220 ../src/lib/List.pm:1260 ../src/lib/List.pm:1361
+#: ../src/lib/List.pm:1639 ../src/lib/List.pm:1746
 msgid "remote port"
 msgstr "Port auf entferntem Rechner"
 
-#: ../src/lib/List.pm:1226
+#: ../src/lib/List.pm:1227
 msgid "remote path of sympa list dump"
 msgstr "entfernter Pfad der Sympa-Listen-Auflistung"
 
-#: ../src/lib/List.pm:1233
+#: ../src/lib/List.pm:1234
 msgid "certificate for authentication by remote Sympa"
 msgstr "Zertifikat zur Legitimierung bei einer entfernten Sympa-Instanz"
 
-#: ../src/lib/List.pm:1243
+#: ../src/lib/List.pm:1244
 msgid "LDAP query inclusion"
 msgstr "Einbindung per LDAP-Anfrage"
 
-#: ../src/lib/List.pm:1296 ../src/lib/List.pm:1675
+#: ../src/lib/List.pm:1297 ../src/lib/List.pm:1676
 msgid "suffix"
 msgstr "Suffix"
 
-#: ../src/lib/List.pm:1301 ../src/lib/List.pm:1680
+#: ../src/lib/List.pm:1302 ../src/lib/List.pm:1681
 msgid "search scope"
 msgstr "Suchbereich"
 
-#: ../src/lib/List.pm:1307 ../src/lib/List.pm:1686
+#: ../src/lib/List.pm:1308 ../src/lib/List.pm:1687
 msgid "connection timeout"
 msgstr "Verbindungs-Zeitlimit"
 
-#: ../src/lib/List.pm:1314 ../src/lib/List.pm:1693
+#: ../src/lib/List.pm:1315 ../src/lib/List.pm:1694
 msgid "filter"
 msgstr "Filter"
 
-#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1700
+#: ../src/lib/List.pm:1322 ../src/lib/List.pm:1701
 msgid "extracted attribute"
 msgstr "extrahiertes Attribut"
 
-#: ../src/lib/List.pm:1328 ../src/lib/List.pm:1713
+#: ../src/lib/List.pm:1329 ../src/lib/List.pm:1714
 msgid "selection (if multiple)"
 msgstr "Auswahl (falls mehrere)"
 
-#: ../src/lib/List.pm:1334 ../src/lib/List.pm:1486 ../src/lib/List.pm:1563
-#: ../src/lib/List.pm:1719 ../src/lib/List.pm:1877 ../src/lib/List.pm:1960
+#: ../src/lib/List.pm:1335 ../src/lib/List.pm:1487 ../src/lib/List.pm:1564
+#: ../src/lib/List.pm:1720 ../src/lib/List.pm:1878 ../src/lib/List.pm:1961
 #, fuzzy
 msgid "Time ranges when inclusion is not allowed"
 msgstr "Hinzufügen von Benutzern zur Liste ist nicht erlaubt."
 
-#: ../src/lib/List.pm:1344
+#: ../src/lib/List.pm:1345
 msgid "LDAP 2-level query inclusion"
 msgstr "Einbindung per zweistufiger LDAP-Abfrage"
 
-#: ../src/lib/List.pm:1397 ../src/lib/List.pm:1782
+#: ../src/lib/List.pm:1398 ../src/lib/List.pm:1783
 msgid "first-level suffix"
 msgstr "Suffix, 1. Ebene"
 
-#: ../src/lib/List.pm:1402 ../src/lib/List.pm:1787
+#: ../src/lib/List.pm:1403 ../src/lib/List.pm:1788
 msgid "first-level search scope"
 msgstr "Suchbereich, 1. Ebene"
 
-#: ../src/lib/List.pm:1408 ../src/lib/List.pm:1793
+#: ../src/lib/List.pm:1409 ../src/lib/List.pm:1794
 msgid "first-level connection timeout"
 msgstr "Verbindungszeitüberschreitung, 1. Ebene"
 
-#: ../src/lib/List.pm:1415 ../src/lib/List.pm:1800
+#: ../src/lib/List.pm:1416 ../src/lib/List.pm:1801
 msgid "first-level filter"
 msgstr "Filter, 1. Ebene"
 
-#: ../src/lib/List.pm:1422 ../src/lib/List.pm:1807
+#: ../src/lib/List.pm:1423 ../src/lib/List.pm:1808
 msgid "first-level extracted attribute"
 msgstr "extrahiertes Attribut, 1. Ebene"
 
-#: ../src/lib/List.pm:1428 ../src/lib/List.pm:1813
+#: ../src/lib/List.pm:1429 ../src/lib/List.pm:1814
 msgid "first-level selection"
 msgstr "Auswahl, 1. Ebene"
 
-#: ../src/lib/List.pm:1434 ../src/lib/List.pm:1819
+#: ../src/lib/List.pm:1435 ../src/lib/List.pm:1820
 msgid "first-level regular expression"
 msgstr "regulärer Ausdruck, 1. Ebene"
 
-#: ../src/lib/List.pm:1441 ../src/lib/List.pm:1826
+#: ../src/lib/List.pm:1442 ../src/lib/List.pm:1827
 msgid "second-level suffix template"
 msgstr "Suffixvorlage, 2. Ebene"
 
-#: ../src/lib/List.pm:1446 ../src/lib/List.pm:1831
+#: ../src/lib/List.pm:1447 ../src/lib/List.pm:1832
 msgid "second-level search scope"
 msgstr "Suchbereich, 2. Ebene"
 
-#: ../src/lib/List.pm:1452 ../src/lib/List.pm:1837
+#: ../src/lib/List.pm:1453 ../src/lib/List.pm:1838
 msgid "second-level connection timeout"
 msgstr "Verbindungszeitüberschreitung, 2. Ebene"
 
-#: ../src/lib/List.pm:1459 ../src/lib/List.pm:1844
+#: ../src/lib/List.pm:1460 ../src/lib/List.pm:1845
 msgid "second-level filter template"
 msgstr "Filtervorlage, 2. Ebene"
 
-#: ../src/lib/List.pm:1466 ../src/lib/List.pm:1851
+#: ../src/lib/List.pm:1467 ../src/lib/List.pm:1852
 msgid "second-level extracted attribute"
 msgstr "extrahiertes Attribut, 2. Ebene"
 
-#: ../src/lib/List.pm:1473 ../src/lib/List.pm:1858
+#: ../src/lib/List.pm:1474 ../src/lib/List.pm:1859
 msgid "second-level selection"
 msgstr "Auswahl, 2. Ebene"
 
-#: ../src/lib/List.pm:1479 ../src/lib/List.pm:1864
+#: ../src/lib/List.pm:1480 ../src/lib/List.pm:1865
 msgid "second-level regular expression"
 msgstr "regulärer Ausdruck, 2. Ebene"
 
-#: ../src/lib/List.pm:1496
+#: ../src/lib/List.pm:1497
 msgid "SQL query inclusion"
 msgstr "Einbindung per SQL-Abfrage"
 
-#: ../src/lib/List.pm:1506 ../src/lib/List.pm:1897
+#: ../src/lib/List.pm:1507 ../src/lib/List.pm:1898
 msgid "database type"
 msgstr "Datenbanktyp"
 
-#: ../src/lib/List.pm:1518 ../src/lib/List.pm:1909
+#: ../src/lib/List.pm:1519 ../src/lib/List.pm:1910
 msgid "database port"
 msgstr "Datenbankport"
 
-#: ../src/lib/List.pm:1523 ../src/lib/List.pm:1914
+#: ../src/lib/List.pm:1524 ../src/lib/List.pm:1915
 msgid "database name"
 msgstr "Datanbankname"
 
-#: ../src/lib/List.pm:1529 ../src/lib/List.pm:1920
+#: ../src/lib/List.pm:1530 ../src/lib/List.pm:1921
 msgid "connection options"
 msgstr "Verbindungseinstellungen"
 
-#: ../src/lib/List.pm:1534 ../src/lib/List.pm:1925
+#: ../src/lib/List.pm:1535 ../src/lib/List.pm:1926
 msgid "environment variables for database connection"
 msgstr "Umgebungsvariablen für die Datenbankverbindung"
 
-#: ../src/lib/List.pm:1551 ../src/lib/List.pm:1942
+#: ../src/lib/List.pm:1552 ../src/lib/List.pm:1943
 msgid "SQL query"
 msgstr "SQL-Abfrage"
 
-#: ../src/lib/List.pm:1558 ../src/lib/List.pm:1949
+#: ../src/lib/List.pm:1559 ../src/lib/List.pm:1950
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr ""
 "Verzeichnis, in dem die Datenbank gespeichert ist (nur benutzt von DBD::CSV)"
 
-#: ../src/lib/List.pm:1573
+#: ../src/lib/List.pm:1574
 #, fuzzy
 msgid "VOOT group inclusion"
 msgstr "Einbindung per SQL-Abfrage"
 
-#: ../src/lib/List.pm:1583
+#: ../src/lib/List.pm:1584
 #, fuzzy
 msgid "user"
 msgstr "Benutzer"
 
-#: ../src/lib/List.pm:1589
+#: ../src/lib/List.pm:1590
 #, fuzzy
 msgid "provider"
 msgstr "Profil"
 
-#: ../src/lib/List.pm:1595
+#: ../src/lib/List.pm:1596
 msgid "group"
 msgstr ""
 
-#: ../src/lib/List.pm:1605
+#: ../src/lib/List.pm:1606
 msgid "Inclusions timeout"
 msgstr "Zeitüberschreitung beim Einbinden"
 
-#: ../src/lib/List.pm:1614
+#: ../src/lib/List.pm:1615
 msgid "Inclusions timeout for message distribution"
 msgstr "Zeitlimit für Einbindevorgänge bei Nachrichtenverteilung"
 
-#: ../src/lib/List.pm:1622
+#: ../src/lib/List.pm:1623
 #, fuzzy
 msgid "LDAP query custom attribute"
 msgstr "Einbindung per LDAP-Anfrage"
 
-#: ../src/lib/List.pm:1707 ../src/lib/List.pm:1871 ../src/lib/List.pm:1954
+#: ../src/lib/List.pm:1708 ../src/lib/List.pm:1872 ../src/lib/List.pm:1955
 msgid "Name of email entry"
 msgstr ""
 
-#: ../src/lib/List.pm:1729
+#: ../src/lib/List.pm:1730
 #, fuzzy
 msgid "LDAP 2-level query custom attribute"
 msgstr "Einbindung per zweistufiger LDAP-Abfrage"
 
-#: ../src/lib/List.pm:1887
+#: ../src/lib/List.pm:1888
 #, fuzzy
 msgid "SQL query custom attribute"
 msgstr "Benutzereigene Attribute"
 
-#: ../src/lib/List.pm:1972
+#: ../src/lib/List.pm:1973
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "DKIM-Signatur an Nachrichten anfügen, die an die Liste gesendet werden"
 
-#: ../src/lib/List.pm:1983
+#: ../src/lib/List.pm:1984
 msgid "DKIM configuration"
 msgstr "DKIM Konfiguration"
 
-#: ../src/lib/List.pm:1988
+#: ../src/lib/List.pm:1989
 msgid "File path for list DKIM private key"
 msgstr "Dateisystem-Pfad des privaten DKIM-Schlüssels der Liste"
 
-#: ../src/lib/List.pm:1998
+#: ../src/lib/List.pm:1999
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr "Auswahl der DNS-Anfrage für öffentliche DKIM-Schlüssel"
 
-#: ../src/lib/List.pm:2039
+#: ../src/lib/List.pm:2040
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 "Kategorien an die Liste zu sendender Nachrichten, die per DKIM signiert "
 "werden sollen."
 
-#: ../src/lib/List.pm:2053
+#: ../src/lib/List.pm:2054
 msgid "Account"
 msgstr "Account"
 
-#: ../src/lib/List.pm:2060
+#: ../src/lib/List.pm:2061
 msgid "Expiration of unmoderated messages"
 msgstr "Verfall unmoderierter Nachrichten"
 
-#: ../src/lib/List.pm:2071
+#: ../src/lib/List.pm:2072
 msgid "Secret string for generating unique keys"
 msgstr "Geheime Zeichenkette zum Erzeugen eindeutiger Schlüssel"
 
-#: ../src/lib/List.pm:2081
+#: ../src/lib/List.pm:2082
 msgid "custom parameters"
 msgstr "eigene Parameter"
 
-#: ../src/lib/List.pm:2101
+#: ../src/lib/List.pm:2102
 msgid "Periodical subscription expiration task"
 msgstr "Periodische Aufgabe zum Abonnement-Ablauf"
 
-#: ../src/lib/List.pm:2132
+#: ../src/lib/List.pm:2133
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 "Regulärer Ausdruck, der angewendet wird, um Schleifen mit Robots zu "
 "verhindern"
 
-#: ../src/lib/List.pm:2142
+#: ../src/lib/List.pm:2143
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "Anzeigen von Bildern erlauben? (muss für den aktuellen Robot aktiviert sein)"
 
-#: ../src/lib/List.pm:2168
+#: ../src/lib/List.pm:2169
 msgid "Creation of the list"
 msgstr "Erzeugung der Liste"
 
-#: ../src/lib/List.pm:2122 ../src/lib/List.pm:2172 ../src/lib/List.pm:2211
+#: ../src/lib/List.pm:2123 ../src/lib/List.pm:2173 ../src/lib/List.pm:2212
 msgid "epoch date"
 msgstr "Epoche-Datum"
 
-#: ../src/lib/List.pm:2178
+#: ../src/lib/List.pm:2179
 msgid "human readable"
 msgstr "menschenlesbar"
 
-#: ../src/lib/List.pm:2183
+#: ../src/lib/List.pm:2184
 msgid "who created the list"
 msgstr "der die Liste erstellt hat"
 
-#: ../src/lib/List.pm:2194
+#: ../src/lib/List.pm:2195
 msgid "Last update of config"
 msgstr "Letze Konfigurationsänderung"
 
-#: ../src/lib/List.pm:2222
+#: ../src/lib/List.pm:2223
 msgid "Status of the list"
 msgstr "Status der Liste"
 
-#: ../src/lib/List.pm:2230
+#: ../src/lib/List.pm:2231
 msgid "Serial number of the config"
 msgstr "Seriennummer der Konfiguration"
 
-#: ../src/lib/List.pm:2239
+#: ../src/lib/List.pm:2240
 msgid "Custom user attributes"
 msgstr "Benutzereigene Attribute"
 
-#: ../src/lib/List.pm:2243
+#: ../src/lib/List.pm:2244
 msgid "internal identifier"
 msgstr "interner Bezeichner"
 
-#: ../src/lib/List.pm:2250
+#: ../src/lib/List.pm:2251
 msgid "label"
 msgstr "Kennung"
 
-#: ../src/lib/List.pm:2257
+#: ../src/lib/List.pm:2258
 msgid "additional comment"
 msgstr "zusätzlicher Kommentar"
 
-#: ../src/lib/List.pm:2263
+#: ../src/lib/List.pm:2264
 msgid "type"
 msgstr "Typ"
 
-#: ../src/lib/List.pm:2270
+#: ../src/lib/List.pm:2271
 msgid "possible attribute values (if enum is used)"
 msgstr "evtl. Attributwerte (falls Enum verwendet wird)"
 
-#: ../src/lib/List.pm:2276
+#: ../src/lib/List.pm:2277
 msgid "is the attribute optional?"
 msgstr "ist das Attribut optional?"
 
-#: ../src/lib/List.pm:394
+#: ../src/lib/List.pm:395
 msgid "Owners defined in an external data source"
 msgstr "Eigentümer in einer externen Datenquelle definiert"
 
-#: ../src/lib/List.pm:398
+#: ../src/lib/List.pm:399
 msgid "the datasource"
 msgstr "die Datenquelle"
 
-#: ../src/lib/List.pm:404
+#: ../src/lib/List.pm:405
 msgid "datasource parameters"
 msgstr "Parameter der Datenquelle"
 
-#: ../src/lib/List.pm:471
+#: ../src/lib/List.pm:472
 msgid "Moderators defined in an external data source"
 msgstr "in einer externen Datenquelle definierte Moderatoren"
 
-#: ../src/lib/List.pm:475
+#: ../src/lib/List.pm:476
 msgid "the data source"
 msgstr "die Datenquelle"
 
-#: ../src/lib/List.pm:481
+#: ../src/lib/List.pm:482
 msgid "data source parameters"
 msgstr "Parameter der Datenquelle"
 
-#: ../src/lib/List.pm:531
+#: ../src/lib/List.pm:532
 msgid "Family name"
 msgstr "Name der Familie"
 
-#: ../src/lib/List.pm:540
+#: ../src/lib/List.pm:541
 #, fuzzy
 msgid "list members"
 msgstr "Listenabonnenten"
 
-#: ../src/lib/List.pm:606
+#: ../src/lib/List.pm:607
 msgid "messages"
 msgstr "Nachrichten"
 
-#: ../src/lib/List.pm:760
+#: ../src/lib/List.pm:761
 msgid "bytes"
 msgstr "Byte"
 
-#: ../src/lib/List.pm:790
+#: ../src/lib/List.pm:791
 msgid "Incoming SMTP header fields to be removed"
 msgstr "Beim Eingang zu entfernende SMTP-Kopfzeilen"
 
-#: ../src/lib/List.pm:801
+#: ../src/lib/List.pm:802
 msgid "Outgoing SMTP header fields to be removed"
 msgstr "Beim Ausgang zu entfernende SMTP-Kopfzeilen"
 
-#: ../src/lib/List.pm:891 ../src/lib/List.pm:915
+#: ../src/lib/List.pm:892 ../src/lib/List.pm:916
 msgid "Kbytes"
 msgstr "KByte"
 
-#: ../src/lib/List.pm:979 ../src/lib/List.pm:989
+#: ../src/lib/List.pm:980 ../src/lib/List.pm:990
 msgid "%"
 msgstr "%"
 
-#: ../src/lib/List.pm:1006 ../src/lib/List.pm:1035
+#: ../src/lib/List.pm:1007 ../src/lib/List.pm:1036
 msgid "points"
 msgstr "Punkte"
 
-#: ../src/lib/List.pm:1135 ../src/lib/List.pm:1308 ../src/lib/List.pm:1409
-#: ../src/lib/List.pm:1453 ../src/lib/List.pm:1606 ../src/lib/List.pm:1615
-#: ../src/lib/List.pm:1687 ../src/lib/List.pm:1794 ../src/lib/List.pm:1838
+#: ../src/lib/List.pm:1136 ../src/lib/List.pm:1309 ../src/lib/List.pm:1410
+#: ../src/lib/List.pm:1454 ../src/lib/List.pm:1607 ../src/lib/List.pm:1616
+#: ../src/lib/List.pm:1688 ../src/lib/List.pm:1795 ../src/lib/List.pm:1839
 msgid "seconds"
 msgstr "Sekunden"
 
-#: ../src/lib/List.pm:1266 ../src/lib/List.pm:1367 ../src/lib/List.pm:1645
-#: ../src/lib/List.pm:1752
+#: ../src/lib/List.pm:1267 ../src/lib/List.pm:1368 ../src/lib/List.pm:1646
+#: ../src/lib/List.pm:1753
 msgid "use SSL (LDAPS)"
 msgstr "SSL (LDAPS) benutzen"
 
-#: ../src/lib/List.pm:1272 ../src/lib/List.pm:1373 ../src/lib/List.pm:1651
-#: ../src/lib/List.pm:1758
+#: ../src/lib/List.pm:1273 ../src/lib/List.pm:1374 ../src/lib/List.pm:1652
+#: ../src/lib/List.pm:1759
 msgid "SSL version"
 msgstr "SSL-Version"
 
-#: ../src/lib/List.pm:1278 ../src/lib/List.pm:1379 ../src/lib/List.pm:1657
-#: ../src/lib/List.pm:1764
+#: ../src/lib/List.pm:1279 ../src/lib/List.pm:1380 ../src/lib/List.pm:1658
+#: ../src/lib/List.pm:1765
 msgid "SSL ciphers used"
 msgstr "Verwendete SSL-Schlüssel"
 
 # english mistake: ito -> into
-#: ../src/lib/List.pm:2008
+#: ../src/lib/List.pm:2009
 msgid "List of headers to be included ito the message for signature"
 msgstr ""
 "Liste der Kopfzeilen, die mit der Nachricht DKIM-signiert werden sollen"
 
-#: ../src/lib/List.pm:2018
+#: ../src/lib/List.pm:2019
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 "DKIM \"d=\" Markierung; vermutlich sollten Sie den Standardwert verwenden."
 
-#: ../src/lib/List.pm:2028
+#: ../src/lib/List.pm:2029
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 "DKIM \"i=\" Markierung; vermutlich sollten Sie diesen Wert leer lassen."
 
-#: ../src/lib/List.pm:2085
+#: ../src/lib/List.pm:2086
 msgid "var name"
 msgstr "Var.-Name"
 
-#: ../src/lib/List.pm:2091
+#: ../src/lib/List.pm:2092
 msgid "var value"
 msgstr "Var.-Wert"
 
-#: ../src/lib/List.pm:2107
+#: ../src/lib/List.pm:2108
 msgid "Latest family instantiation"
 msgstr "Neueste Familieninstanziierung"
 
-#: ../src/lib/List.pm:2111
+#: ../src/lib/List.pm:2112
 msgid "who ran the instantiation"
 msgstr "Instanziierung durchgeführt von"
 
-#: ../src/lib/List.pm:2117 ../src/lib/List.pm:2205
+#: ../src/lib/List.pm:2118 ../src/lib/List.pm:2206
 msgid "date"
 msgstr "Datum"
 
-#: ../src/lib/List.pm:2152
+#: ../src/lib/List.pm:2153
 msgid "Periodical subscription reminder task"
 msgstr "Periodische Aufgabe zur Abonnenten-Erinnerung"
 
-#: ../src/lib/List.pm:2198
+#: ../src/lib/List.pm:2199
 msgid "who updated the config"
 msgstr "Konfigurationsaktualisierung durchgeführt von"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3641
+#: ../src/lib/List.pm:3648
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%a, %d. %B %Y %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3642
+#: ../src/lib/List.pm:3649
 msgid "%a, %d %b %Y"
 msgstr "%a, %d. %B %Y"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3833 ../src/lib/List.pm:3834 ../src/lib/List.pm:3838
-#: ../wwsympa/wwsympa.fcgi.in:11716 ../wwsympa/wwsympa.fcgi.in:11785
-#: ../wwsympa/wwsympa.fcgi.in:11987 ../wwsympa/wwsympa.fcgi.in:12334
-#: ../wwsympa/wwsympa.fcgi.in:15720 ../wwsympa/wwsympa.fcgi.in:15727
-#: ../wwsympa/wwsympa.fcgi.in:16467 ../wwsympa/wwsympa.fcgi.in:16517
-#: ../wwsympa/wwsympa.fcgi.in:17290 ../wwsympa/wwsympa.fcgi.in:17291
-#: ../wwsympa/wwsympa.fcgi.in:4415 ../wwsympa/wwsympa.fcgi.in:4473
-#: ../wwsympa/wwsympa.fcgi.in:5050 ../wwsympa/wwsympa.fcgi.in:5051
-#: ../wwsympa/wwsympa.fcgi.in:6564 ../wwsympa/wwsympa.fcgi.in:7697
-#: ../wwsympa/wwsympa.fcgi.in:8312 ../wwsympa/wwsympa.fcgi.in:8359
-#: ../wwsympa/wwsympa.fcgi.in:8361 ../wwsympa/wwsympa.fcgi.in:8885
-#: ../wwsympa/wwsympa.fcgi.in:8886 ../wwsympa/wwsympa.fcgi.in:8920
-#: ../wwsympa/wwsympa.fcgi.in:8921 ../wwsympa/wwsympa.fcgi.in:9100
-#: ../wwsympa/wwsympa.fcgi.in:9101
+#: ../src/lib/List.pm:3840 ../src/lib/List.pm:3841 ../src/lib/List.pm:3845
+#: ../wwsympa/wwsympa.fcgi.in:11636 ../wwsympa/wwsympa.fcgi.in:11705
+#: ../wwsympa/wwsympa.fcgi.in:11907 ../wwsympa/wwsympa.fcgi.in:12254
+#: ../wwsympa/wwsympa.fcgi.in:15640 ../wwsympa/wwsympa.fcgi.in:15647
+#: ../wwsympa/wwsympa.fcgi.in:16387 ../wwsympa/wwsympa.fcgi.in:16437
+#: ../wwsympa/wwsympa.fcgi.in:17225 ../wwsympa/wwsympa.fcgi.in:17226
+#: ../wwsympa/wwsympa.fcgi.in:4413 ../wwsympa/wwsympa.fcgi.in:4466
+#: ../wwsympa/wwsympa.fcgi.in:5043 ../wwsympa/wwsympa.fcgi.in:5044
+#: ../wwsympa/wwsympa.fcgi.in:6557 ../wwsympa/wwsympa.fcgi.in:7694
+#: ../wwsympa/wwsympa.fcgi.in:8306 ../wwsympa/wwsympa.fcgi.in:8353
+#: ../wwsympa/wwsympa.fcgi.in:8355 ../wwsympa/wwsympa.fcgi.in:8879
+#: ../wwsympa/wwsympa.fcgi.in:8880 ../wwsympa/wwsympa.fcgi.in:8914
+#: ../wwsympa/wwsympa.fcgi.in:8915 ../wwsympa/wwsympa.fcgi.in:9094
+#: ../wwsympa/wwsympa.fcgi.in:9095
 msgid "%d %b %Y"
 msgstr "%d. %B %Y"
 
-#: ../src/lib/List.pm:7241
+#: ../src/lib/List.pm:7209
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 "Versuch, die maximal zulässige Mitgliederzahl der Liste (%s) zu "
 "überschreiten."
 
-#: ../src/lib/List.pm:7244
+#: ../src/lib/List.pm:7212
 msgid "Attempts to add some users in database failed."
 msgstr "Der Versuch, Benutzer zur Datenbank hinzuzufügen, ist gescheitert."
 
-#: ../src/lib/List.pm:7246
+#: ../src/lib/List.pm:7214
 msgid "Added %s users out of %s required."
 msgstr "%s Benutzer von %s erforderlichen wurden hinzugefügt."
 
@@ -10787,12 +10792,11 @@ msgstr "(unbekanntes Datum)"
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: ../wwsympa/wwsympa.fcgi.in:4945
+#: ../wwsympa/wwsympa.fcgi.in:4938
 msgid "Unable to add user %s in list %s : %s"
 msgstr "Konnte Benutzer %s zur Liste %s nicht hinzufügen: %s"
 
-#: ../wwsympa/wwsympa.fcgi.in:10066 ../wwsympa/wwsympa.fcgi.in:11064
-#: ../wwsympa/wwsympa.fcgi.in:6289
+#: ../wwsympa/wwsympa.fcgi.in:6282
 #, fuzzy
 msgid "Unable to add users in list %s : %s"
 msgstr "Kann Listen-Themen nicht laden."
@@ -10800,54 +10804,54 @@ msgstr "Kann Listen-Themen nicht laden."
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
-#: ../wwsympa/wwsympa.fcgi.in:12568 ../wwsympa/wwsympa.fcgi.in:12701
-#: ../wwsympa/wwsympa.fcgi.in:15044 ../wwsympa/wwsympa.fcgi.in:8266
+#: ../wwsympa/wwsympa.fcgi.in:12488 ../wwsympa/wwsympa.fcgi.in:12621
+#: ../wwsympa/wwsympa.fcgi.in:14964 ../wwsympa/wwsympa.fcgi.in:8263
 msgid "%d %b %y  %H:%M"
 msgstr "%d. %b %y %H:%M"
 
-#: ../wwsympa/wwsympa.fcgi.in:15902
+#: ../wwsympa/wwsympa.fcgi.in:15822
 #, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "Ihre Anfrage wurde an den Listeneigentümer weitergeleitet."
 
-#: ../wwsympa/wwsympa.fcgi.in:15904
+#: ../wwsympa/wwsympa.fcgi.in:15824
 #, fuzzy
 msgid "You were successfully unsubscribed from list %s."
 msgstr "Sie haben die Abmeldung von Liste %1 beantragt"
 
-#: ../wwsympa/wwsympa.fcgi.in:15908
+#: ../wwsympa/wwsympa.fcgi.in:15828
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 "Abmelden von Liste %s verweigert: Von dieser Liste ist die Abmeldung nicht "
 "zugelassen."
 
-#: ../wwsympa/wwsympa.fcgi.in:15910
+#: ../wwsympa/wwsympa.fcgi.in:15830
 #, fuzzy
 msgid "Unsubscription from list %s failed."
 msgstr "Abbestellen der Liste %1"
 
-#: ../wwsympa/wwsympa.fcgi.in:16506
+#: ../wwsympa/wwsympa.fcgi.in:16426
 msgid "Mail sending"
 msgstr "E-Mail wird gesendet"
 
-#: ../wwsympa/wwsympa.fcgi.in:16507
+#: ../wwsympa/wwsympa.fcgi.in:16427
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Abonnements"
 
-#: ../wwsympa/wwsympa.fcgi.in:16508
+#: ../wwsympa/wwsympa.fcgi.in:16428
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Abbestellen:"
 
-#: ../wwsympa/wwsympa.fcgi.in:16509
+#: ../wwsympa/wwsympa.fcgi.in:16429
 msgid "Users deleted by admin"
 msgstr "Benutzer vom Administrator gelöscht"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16885 ../wwsympa/wwsympa.fcgi.in:16886
+#: ../wwsympa/wwsympa.fcgi.in:16805 ../wwsympa/wwsympa.fcgi.in:16806
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%d. %m %Y %H:%M:%S"
 
@@ -10999,20 +11003,19 @@ msgstr "keine Nachricht (nützlich für Urlaube)"
 msgid "you do not receive your own posts"
 msgstr "Sie empfangen Ihre eigenen Nachrichten nicht"
 
-#~ msgid "URL:"
-#~ msgstr "URL:"
-
-#~ msgid "[% k.name %]:"
-#~ msgstr "[% k.name %]:"
-
-#, fuzzy
 #~ msgid ""
-#~ "List description: This text is sent as an answer to the mail command "
+#~ "List description: This text is sent as an answer to the mail command\n"
 #~ "INFO. It can also be included in the <em>Welcome message</em>."
 #~ msgstr ""
 #~ "Listenbeschreibung: Dieser Text wird als Antwort auf den E-Mail-Befehl\n"
 #~ "INFO ausgegeben. Er kann auch in die <em>Willkommensnachricht</em> "
 #~ "aufgenommen werden."
+
+#~ msgid "URL:"
+#~ msgstr "URL:"
+
+#~ msgid "[% k.name %]:"
+#~ msgstr "[% k.name %]:"
 
 #~ msgid "Failed to inlude members"
 #~ msgstr "Fehler beim Einbinden der Mitglieder"
