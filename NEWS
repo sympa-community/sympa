@@ -3,6 +3,33 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.18		May 29, 2012
+
+  Changes:
+
+	[7381] src/task_manager.pl.in:	Task manager now aggregates stats
+	starting from oldest non-processed stat_table entry,
+	not form 1 year ago like before, in normal use this avoid thousand of
+	useless requests (2 per hour over 1 year,
+	even if there is nothing to process) but still allows processing of
+	stats if the task_manager was stopped for more than 1 day.
+
+  Bug fixes:
+
+	[7372] configure.ac: [Submitted by X. Bachelot] Configure option
+	"--with-staticdir" was broken.
+
+	[7371] src/lib/Scenario.pm: [#8047] sympa.pl may crash if (a) argument
+	of an 'equal' condition were given argument with regexp metacharacter;
+	(b) any of 'match' conditions contain malformed regexp.  Changes are
+	(a) use case-folded comparison instead of regexp; (b) trap fatal error
+	by eval{}.  Moreover, (c) prevent evaluating match with potentially
+	harmful regexp.
+
+6.2a.17		May 29, 2012
+
+	Never released due to problems when building the tar.gz
+
 6.2a.16		May 11, 2012
 
   Features:
