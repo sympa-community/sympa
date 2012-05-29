@@ -516,11 +516,11 @@ sub create_list{
 	    my $file_content;
 	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
 	    unless (defined $tt_result) {
-		&do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
+		&Log::do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
 			$param->{'listname'}, $family->{'name'},$robot,$file);
 	    }
 	    unless (open FILE, '>:utf8', "$list_dir/$file") {
-		&do_log('err','Impossible to create %s/%s : %s',$list_dir,$file,$!);
+		&Log::do_log('err','Impossible to create %s/%s : %s',$list_dir,$file,$!);
 	    }
 	    print FILE $file_content;
 	    close FILE;

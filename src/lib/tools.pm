@@ -2604,7 +2604,7 @@ sub write_pid {
 		## Send a notice to listmaster with STDERR of the previous process
 		if($#pids >= 0) {
 			my $other_pid = $pids[0];
-			&do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
+			&Log::do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
 			my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
 			my (@err_output, $err_date);
 			if(-f $err_file) {
@@ -2619,10 +2619,10 @@ sub write_pid {
 		}
 		
 		unless(open(LCK, '> '.$pidfile)) {
-			fatal_err('Could not open %s, exiting', $pidfile);
+			&Log::fatal_err('Could not open %s, exiting', $pidfile);
 		}
 		unless(truncate(LCK, 0)) {
-			fatal_err('Could not truncate %s, exiting.', $pidfile);
+			&Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
 		}
 		
 		print LCK $pid."\n";
@@ -2634,7 +2634,7 @@ sub write_pid {
 		user  => Sympa::Constants::USER,
 		group => Sympa::Constants::GROUP,
 	)) {
-		&do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
+		&Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
 		return undef;
 	}
 	
@@ -2647,7 +2647,7 @@ sub write_pid {
 			user  => Sympa::Constants::USER,
 			group => Sympa::Constants::GROUP,
 		)) {
-			&do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
+			&Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
 			return undef;
 		}
 	}
@@ -3863,7 +3863,7 @@ sub smart_lessthan {
 sub get_number_of_pids {
 	my $pidfile = shift;
 	unless (open(PFILE, $pidfile)) {
-		&do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
+		&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
 		return undef;
 	}
 	my $l = <PFILE>;

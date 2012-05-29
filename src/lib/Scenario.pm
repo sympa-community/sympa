@@ -879,7 +879,7 @@ sub verify {
 	    };
 	}
 	if ($@) {
-	    &do_log('err', 'cannot evaluate match: %s', $@);
+	    &Log::do_log('err', 'cannot evaluate match: %s', $@);
 	    return undef;
 	}
 	return $negation if $r;

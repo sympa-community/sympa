@@ -1101,7 +1101,7 @@ sub purge_logs_table {
 
 	my $sth;
 	unless($sth = &SDM::do_query("SELECT date_stat FROM stat_table WHERE read_stat = 0 ORDER BY date_stat ASC LIMIT 1")) {
-		&do_log('err', 'Unable to retrieve oldest non processed stat');
+		&Log::do_log('err', 'Unable to retrieve oldest non processed stat');
 		return undef;
 	}
 	my @res = $sth->fetchrow_array;

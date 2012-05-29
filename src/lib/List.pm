@@ -2696,7 +2696,7 @@ sub save_config {
 
     if ($List::use_db) {
         unless (&_update_list_db) {
-            &do_log('err', "Unable to update list_table");
+            &Log::do_log('err', "Unable to update list_table");
         }
     }
 
@@ -6463,7 +6463,7 @@ sub get_next_list_member {
 		## Release lock
 		my $lock = new Lock ($self->{'dir'}.'/include');
 		unless (defined $lock) {
-			&do_log('err','Could not create new lock');
+			&Log::do_log('err','Could not create new lock');
 			return undef;
 		}
 		unless ($lock->unlock()) {
@@ -10164,7 +10164,7 @@ sub get_lists {
                     push @expr_perl, sprintf '$list->{"admin"}{"%s"} eq "%s"',
                                              quotemeta $k, quotemeta $v;
                 } else {
-                    do_log('err', "bug in logic. Ask developer");
+                    &Log::do_log('err', "bug in logic. Ask developer");
                     return undef;
                 }
                 if ($k eq 'web_archive') {
@@ -10184,7 +10184,7 @@ sub get_lists {
     if (scalar @clause_perl) {
         $cond_perl = join ' && ', map { "($_)" } @clause_perl;
         $cond_sql = join ' AND ', map { "($_)" } @clause_sql;
-        do_log('debug2', 'query %s; %s', $cond_perl, $cond_sql);
+        &Log::do_log('debug2', 'query %s; %s', $cond_perl, $cond_sql);
     } else {
         $cond_perl = undef;
         $cond_sql = undef;
@@ -10223,7 +10223,7 @@ sub get_lists {
 		@files = sort @{$requested_lists};
 	    } elsif ($use_files) {
 		unless (opendir(DIR, $robot_dir)) {
-		    do_log('err',"Unable to open $robot_dir");
+		    &Log::do_log('err',"Unable to open $robot_dir");
 		    return undef;
 		}
 		@files = sort readdir(DIR);
@@ -12562,10 +12562,10 @@ sub get_data {
 ## Support for list config caching in database
 sub get_lists_db {
     my $where = shift || '';
-    do_log('debug2', 'List::get_lists_db(%s)', $where);
+    &Log::do_log('debug2', 'List::get_lists_db(%s)', $where);
 
     unless ($List::use_db) {
-       &do_log('info', 'Sympa not setup to use DBI');
+       &Log::do_log('info', 'Sympa not setup to use DBI');
        return undef;
     }
 
