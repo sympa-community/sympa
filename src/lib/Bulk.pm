@@ -393,7 +393,6 @@ sub store {
     my $msg = $message->{'msg'}->as_string;
     if ($message->{'protected'}) {
 	$msg = $message->{'msg_as_string'};
-	$dbh = &List::db_get_handler();
     }
     my @sender_hdr = Mail::Address->parse($message->{'msg'}->head->get('From'));
     my $message_sender = $sender_hdr[0]->address;

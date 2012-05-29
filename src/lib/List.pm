@@ -7309,18 +7309,14 @@ sub rename_list_db {
     &Log::do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
     
     if ($List::use_db) {
-      $statement_admin =  sprintf "UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
-      $dbh->quote($new_listname),
-      $dbh->quote($new_robot),
-      $dbh->quote($self->{'name'}),
-      $dbh->quote($self->{'domain'}) ;
-
-      do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
-
-      unless ($dbh->do($statement_admin)) {
-        do_log('err','Unable to execute SQL statement "%s" : %s', $statement_admin, $dbh->errstr);
-        return undef;
-      }
+	unless (&SDM::do_query("UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
+	    &SDM::quote($new_listname),
+	    &SDM::quote($new_robot),
+	    &SDM::quote($self->{'name'}),
+	    &SDM::quote($self->{'domain'}))) {
+		&Log::do_log('err',"Unable to rename list in database");
+		return undef;
+	    }	
     }
 
     return 1;
@@ -8725,7 +8721,7 @@ sub _include_ldap_ca {
 		scope => $source->{'scope'}
 	);
 	if($results->code()) {
-		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $fetch->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
 		return {};
 	}
     
@@ -8760,7 +8756,7 @@ sub _include_ldap_level2_ca {
 		scope => $source->{'scope'}
 	);
 	if($results->code()) {
-		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $fetch->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		&Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
 		return {};
 	}
     
@@ -10176,7 +10172,7 @@ sub get_lists {
                                             ($v+0 ? 1 : 0);
                 } else {
                     push @expr_sql, sprintf '%s_list = %s',
-                                            $k, $dbh->quote($v);
+                                            $k, &SDM::quote($v);
                 }
             }
         }
@@ -10234,7 +10230,7 @@ sub get_lists {
 		closedir DIR;
 	    } else {
 		# get list names from list cache table
-		my $where = sprintf 'robot_list = %s', $dbh->quote($robot);  
+		my $where = sprintf 'robot_list = %s', &SDM::quote($robot);  
 		if (defined $cond_sql) {
 		    $where .= " AND $cond_sql";
 		}
@@ -12578,25 +12574,15 @@ sub get_lists_db {
 
     my ($l, @lists);
 
-    ## Check database connection
-    unless ($dbh and $dbh->ping) {
-       return undef unless &db_connect();
-    }
+    unless ($sth = &SDM::do_query()) {
+	&Log::do_log('err',"Unable to gather the list of lists from lists table");
+	return undef;
+    }	
     push @sth_stack, $sth;
-    &do_log('debug2','SQL: %s', $statement);
-    unless ($sth = $dbh->prepare($statement)) {
-       &do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-       return undef;
-    } 
-    unless ($sth->execute) {
-       do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr); 
-       return undef;
-    } 
     while ($l = $sth->fetchrow_hashref) {
        my $name = $l->{'name_list'};
        push @lists, $name;
     }  
-    $sth->finish();
     $sth = pop @sth_stack;
 
     return \@lists;
@@ -12639,23 +12625,21 @@ sub _update_list_db
     }
     $ed_txt = join(',',@admins) || '';
 
-    my $statement;
-    $statement = sprintf 'INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
-			 $dbh->quote($status), $dbh->quote($name),
-			 $dbh->quote($robot), $dbh->quote($subject),
-			 ($web_archive ? 1 : 0), $dbh->quote($topics),
-			 $dbh->quote($adm_txt), $dbh->quote($ed_txt);
-    unless ($dbh->do($statement)) {
-	$statement = sprintf 'UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
-			     $dbh->quote($status), $dbh->quote($name),
-			     $dbh->quote($robot), $dbh->quote($subject),
-			     ($web_archive ? 1 : 0), $dbh->quote($topics),
-			     $dbh->quote($adm_txt),$dbh->quote($ed_txt),
-			     $dbh->quote($robot), $dbh->quote($name);
-	unless ($dbh->do($statement)) {
-	    do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+    unless ($sth = &SDM::do_query('INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
+			 &SDM::quote($status), &SDM::quote($name),
+			 &SDM::quote($robot), &SDM::quote($subject),
+			 ($web_archive ? 1 : 0), &SDM::quote($topics),
+			 &SDM::quote($adm_txt), &SDM::quote($ed_txt))) {
+
+	unless ($sth = &SDM::do_query('UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
+			     &SDM::quote($status), &SDM::quote($name),
+			     &SDM::quote($robot), &SDM::quote($subject),
+			     ($web_archive ? 1 : 0), &SDM::quote($topics),
+			     &SDM::quote($adm_txt),&SDM::quote($ed_txt),
+			     &SDM::quote($robot), &SDM::quote($name))) {
+	    &Log::do_log('err','Unable to update or insert list %s@%s in database', $name,$robot);
 	    return undef;
-	}
+	}	
     }
     return 1;
 }
@@ -12672,20 +12656,15 @@ sub _flush_list_db
 	    $statement =  "TRUNCATE TABLE list_table";
 	}
     } else {
-        $statement = sprintf "DELETE FROM list_table WHERE name_list = %s", $dbh->quote($listname);
+        $statement = "DELETE FROM list_table WHERE name_list = %s";
     } 
 
-    unless ($sth = $dbh->prepare($statement)) {
-    do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-    return undef;
-    }
-    unless ($sth->execute) {
-    do_log('err',"Unable to execute SQL statement '%s' : %s", $statement, $dbh->errstr);
-    return undef;
-    }
+    unless ($sth = &SDM::do_query($statement, &SDM::quote($listname))) {
+	&Log::do_log('err','Unable to flush lists table');
+	return undef;
+    }	
 }
 
->>>>>>> .fusion-droit.r7372
 ###### END of the List package ######
 
 ## This package handles Sympa virtual robots

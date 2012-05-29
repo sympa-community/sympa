@@ -2517,7 +2517,7 @@ sub remove_pid {
 				print PFILE join(' ', @pids)."\n";
 				close(PFILE);
 			}else{
-				&&Log::do_log('notice', 'pidfile %s does not exist. Nothing to do.', $pidfile);
+				&Log::do_log('notice', 'pidfile %s does not exist. Nothing to do.', $pidfile);
 			}
 		}
 	}else{
