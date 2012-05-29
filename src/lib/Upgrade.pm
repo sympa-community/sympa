@@ -711,7 +711,7 @@ sub upgrade {
 	    my @valid_robot_candidates;
 	    foreach my $robot (@robots) {
 		if (my $list = new List($data->{'list_exclusion'},$robot)) {
-		    if ($list->is_user($data->{'user_exclusion'})) {
+		    if ($list->is_list_member($data->{'user_exclusion'})) {
 			push @valid_robot_candidates,$robot;
 		    }
 		}
@@ -723,7 +723,7 @@ sub upgrade {
 		    &Log::do_log('err','Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',$data->{'list_exclusion'},$data->{'user_exclusion'},$valid_robot);
 		}
 	    }else {
-		&Log::do_log('err',"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appear in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",$data->{'list_exclusion'},$data->{'user_exclusion'},@valid_robot_candidates);
+		&Log::do_log('err',"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",$data->{'user_exclusion'},$data->{'list_exclusion'},@valid_robot_candidates);
 	    }
 	}
 	## Caching all lists config subset to database
