@@ -12,13 +12,13 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2012-05-29 12:00+0200\n"
+"PO-Revision-Date: 2012-05-29 16:27+0200\n"
 "Last-Translator: UniGe <webteam@csita.unige.it>\n"
 "Language-Team: Italiano\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.1.2\n"
 
@@ -2066,7 +2066,7 @@ msgid ""
 "include forbidden characters."
 msgstr ""
 "Creazione della lista '%1' fallita. La lista potrebbe esistere già o il nome "
-"della lista potrebbe contenere dei caratteri non consentiti."
+"della lista potrebbe contenere dei caratteri non ammessi."
 
 #. (s_err.action)
 #: ../web_tt2/error.tt2:35
@@ -3224,7 +3224,7 @@ msgstr "%1 richieste di iscrizione"
 
 #: ../web_tt2/news.tt2:29
 msgid "User Errors"
-msgstr "Errori utenti"
+msgstr "Errori utente"
 
 #: ../web_tt2/news.tt2:30
 msgid ""
@@ -3715,7 +3715,7 @@ msgstr "Rimuovi gli indirizzi email selezionati"
 
 #: ../web_tt2/reviewbouncing.tt2:128
 msgid "Reset errors for selected users"
-msgstr "Azzera gli errori per gli indirizzi email selezionati"
+msgstr "Azzera gli errori per gli indirizzi selezionati"
 
 #: ../web_tt2/review_family.tt2:4
 msgid "Table which display family lists"
@@ -5869,17 +5869,15 @@ msgstr "Questi comandi sono falliti a causa di un errore interno del server:"
 
 # nlsref 4,37
 #: ../mail_tt2/command_report.tt2:171
-#, fuzzy
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
 "your command in the subject)."
 msgstr ""
-"Messaggio di comando nel testo ignorato perche' non in text/plain.\n"
-"Utilizzare solo text/plain (o mettere il comando nel soggetto).\n"
+"Testo del messaggio di comando ignorato perche' non text/plain.\n"
+"Utilizzare solo text/plain (o mettere il comando nell'Oggetto)."
 
 # nlsref 4,39
 #: ../mail_tt2/command_report.tt2:174
-#, fuzzy
 msgid "No command found in message."
 msgstr "Nessun comando trovato nel messaggio"
 
@@ -5925,13 +5923,12 @@ msgstr "Il tuo documento è stato inserito."
 # nlsref 4,38
 #. (filename,list.name,list.host,installed_by)
 #: ../mail_tt2/d_install_shared.tt2:5
-#, fuzzy
 msgid ""
 "Your document %1 for list %2@%3\n"
 "has been installed by %4 list editor."
 msgstr ""
 "Il tuo documento %1 per la lista %2@%3\n"
-"è stato inserito da %4, moderatore della lista.\n"
+"è stato inserito da %4, moderatore della lista."
 
 #: ../mail_tt2/d_install_shared.tt2:7
 #, fuzzy
@@ -6621,7 +6618,7 @@ msgstr ""
 # nlsref 16,7
 #: ../mail_tt2/listmaster_notification.tt2:133
 msgid "A bounce management failed"
-msgstr "La gestione dei bounce è fallita"
+msgstr "Problema nella gestione dei rimbalzi"
 
 #. (file,bad)
 #: ../mail_tt2/listmaster_notification.tt2:135
@@ -6868,7 +6865,7 @@ msgstr "Sympa non pu`o modificare la lista %1 (famiglia %2)"
 #: ../mail_tt2/listmaster_notification.tt2:263
 #: ../mail_tt2/listowner_notification.tt2:43
 msgid "List %1 automatic bounce management"
-msgstr "Gestione automatica dei bounce per la lista %1"
+msgstr "Gestione automatica dei bounce della lista %1"
 
 #. (total,list.name)
 #: ../mail_tt2/listmaster_notification.tt2:267
@@ -6924,8 +6921,7 @@ msgstr "L'utente %1 ha incontrato un errore interno al server"
 #. (error)
 #: ../mail_tt2/listmaster_notification.tt2:297
 msgid "The following error occurred whila managing bounces: %&"
-msgstr ""
-"Il seguente errore è stato riscontrato durante la gestione dei bounce: %&"
+msgstr "E' stato riscontrato un errore durante la gestione dei bounce: %1"
 
 #: ../mail_tt2/listmaster_notification.tt2:306
 #: ../mail_tt2/listmaster_notification.tt2:377
@@ -7641,8 +7637,8 @@ msgid ""
 "Impossible to forward your message to '%1-%2' because of an internal server "
 "error."
 msgstr ""
-"Impossibile inoltrare il tuo messaggio a '%1-%2' a causa di un errore "
-"interno del server."
+"E' stato impossibile distribuire il tuo messaggio a '%1-%2' a causa di un "
+"errore interno del server."
 
 #. (list.name)
 #: ../mail_tt2/message_report.tt2:14
@@ -7650,8 +7646,8 @@ msgid ""
 "Impossible to distribute your message for list '%1' because of an internal "
 "server error."
 msgstr ""
-"Impossibile inoltrare il tuo messaggio alla lista '%1' a causa di un errore "
-"interno del server."
+"E' stato impossibile distribuire il tuo messaggio alla lista '%1' a causa di "
+"un errore interno del server."
 
 #. (list.name,list.host)
 #: ../mail_tt2/message_report.tt2:16 ../mail_tt2/message_report.tt2:72
@@ -7660,21 +7656,20 @@ msgid "For further information, please contact %1-request@%2"
 msgstr "Per ulteriori informazioni, contatta %1-request@%2"
 
 #: ../mail_tt2/message_report.tt2:22
-#, fuzzy
 msgid "Message distribution: User error"
-msgstr "Azzera gli errori"
+msgstr "Stato distribuzione messaggio: errore utente"
 
 #. (list.name)
 #: ../mail_tt2/message_report.tt2:30
 msgid ""
 "Impossible to distribute your message for list '%1' for the following reason:"
 msgstr ""
-"Impossibile inoltrare il tuo messaggio alla lista '%1' per il seguente "
-"motivo:"
+"E' stato impossibile distribuire il tuo messaggio alla lista '%1' per il "
+"seguente motivo:"
 
 #: ../mail_tt2/message_report.tt2:32
 msgid "Impossible to distribute your message for the following reason:"
-msgstr "Impossibile inoltrare il tuo messaggio per il seguente motivo:"
+msgstr "E' impossibile distribuire il tuo messaggio per il seguente motivo:"
 
 # nlsref 5,3
 #. (list.name,conf.sympa,list.host)
