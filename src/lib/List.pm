@@ -5841,16 +5841,20 @@ sub get_list_member {
 
     my $user = &get_list_member_no_object($options);
 
-    unless($user){
+    unless(defined $user){
 	&Log::do_log('err','Unable to retrieve information from database for user %s ; list %s', $email, $self->get_list_id()) unless ($options{'probe'});
 	return undef;
+    }else {
+	unless ($user) {
+	    &Log::do_log('info','User %s was not found in the subscribers of list %s@%s.',$email,$self->{'name'},$self->{'domain'});
+	    $user = undef;
+	}
+	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+	unless ($self->is_available_reception_mode($user->{'reception'}));
+
+	## Set session cache
+	$list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
     }
-    $user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-    unless ($self->is_available_reception_mode($user->{'reception'}));
-
-    ## Set session cache
-    $list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
-
     return $user;
 }
 
@@ -6083,10 +6087,16 @@ sub get_list_member_no_object {
 	    $user->{'custom_attribute'} = &parseCustomAttribute($user->{'custom_attribute'});
 	}
 
+    }else {
+	my $error = $sth->err;
+	if ($error) {
+	    &Log::do_log('err',"An error occured while fetching the data from the database.");
+	}else{
+	    &Log::do_log('info',"No user with the email %s is subscribed to list %s@%s",$email,$name,$options->{'domain'});
+	    $user=0;
+	}
     }
  
-    $sth->finish();
-
     $sth = pop @sth_stack;
     ## Set session cache
     $list_cache{'get_list_member'}{$options->{'domain'}}{$name}{$email} = $user;
