@@ -3,6 +3,24 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.20		May 30, 2012
+
+  Changes:
+
+	[7402] src/lib/List.pm:  When a user did not exist in database, trying
+	to retrieve information would lead to a log indicating that it was not
+	possible to retrieve informations about the user in the database.
+	Though true, this message could lead admins to think that connection to
+	the databdase was faulty. Now, the messages clearly distinguish the
+	cases when the database had troubles and when the query did not return
+	any records.
+
+  Bug fixes:
+
+	[7400] src/lib/List.pm:  Got rid of the "Failed to parse custom
+	attributes" errors by checking whether the parsing was actually
+	successful or not.
+
 6.2a.19		May 30, 2012
 
   Bug fixes:
