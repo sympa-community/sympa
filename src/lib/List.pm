@@ -6017,9 +6017,7 @@ sub find_list_member_by_pattern_no_object {
 	    $user->{'escaped_email'} = &tools::escape_chars($user->{'email'});
 	    $user->{'update_date'} ||= $user->{'date'};
 	    if (defined $user->{custom_attribute}) {
-		my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-		$user->{'custom_attribute'} = \%custom_attr ;
-		my @k = sort keys %custom_attr ;
+		$user->{'custom_attribute'} = &parseCustomAttribute($user->{'custom_attribute'});
 	    }
 	push @ressembling_users, $user;
 	}
@@ -6082,13 +6080,7 @@ sub get_list_member_no_object {
 	$user->{'update_date'} ||= $user->{'date'};
 	&Log::do_log('debug2', 'custom_attribute  = (%s)', $user->{custom_attribute});
 	if (defined $user->{custom_attribute}) {
-	    &Log::do_log('debug2', '1. custom_attribute  = (%s)', $user->{custom_attribute});
-	    my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    $user->{'custom_attribute'} = \%custom_attr ;
-	    &Log::do_log('debug2', '2. custom_attribute  = (%s)', %custom_attr);
-	    &Log::do_log('debug2', '3. custom_attribute  = (%s)', $user->{custom_attribute});
-	    my @k = sort keys %custom_attr ;
-	    &Log::do_log('debug2', "keys custom_attribute  = @k");
+	    $user->{'custom_attribute'} = &parseCustomAttribute($user->{'custom_attribute'});
 	}
 
     }
@@ -6247,8 +6239,7 @@ sub get_first_list_member {
 
 		############################################################################	    
 		if (defined $user->{custom_attribute}) {
-			my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-			$user->{'custom_attribute'} = \%custom_attr ;
+			$user->{'custom_attribute'} = &parseCustomAttribute($user->{'custom_attribute'});
 		}
     }
     else {
@@ -6304,7 +6295,7 @@ sub parseCustomAttribute {
 	        my $value = Encode::encode_utf8($ca->getElementsByTagName('value'));
 		$ca{$id} = {value=>$value} ;
 	}
-	return %ca ;
+	return \%ca ;
 }
 
 # Create an XML Custom attribute to be stored into data base.
@@ -6449,12 +6440,11 @@ sub get_next_list_member {
 
 		&Log::do_log('debug2', '(email = %s)', $user->{'email'});
 		if (defined $user->{custom_attribute}) {
-			my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-			unless (%custom_attr) {
+			my $custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
+			unless (defined $custom_attr) {
 				&Log::do_log('err',"Failed to parse custom attributes for user %s, list %s", $user->{'email'}, $self->get_list_id());
 			}
-			$user->{'custom_attribute'} = \%custom_attr ;
-			my @k = sort keys %custom_attr ;
+			$user->{'custom_attribute'} = $custom_attr ;
 		}
     }else {
 		$sth->finish;
@@ -6580,9 +6570,8 @@ sub get_next_bouncing_list_member {
 		&Log::do_log('err','Warning: entry with empty email address in list %s', $self->{'name'}) if (! $user->{'email'});
 	
 		if (defined $user->{custom_attribute}) {
-	    	my %custom_attr = &parseCustomAttribute($user->{'custom_attribute'});
-	    	$user->{'custom_attribute'} = \%custom_attr ;
-	    }
+		    $user->{'custom_attribute'} = &parseCustomAttribute($user->{'custom_attribute'});
+		}
 
     }else {
 		$sth->finish;
@@ -8779,7 +8768,13 @@ sub _include_users_sql {
     my ($users, $id, $source, $default_user_options, $tied, $fetch_timeout) = @_;
 
     &Log::do_log('debug','List::_include_users_sql()');
-    unless ($source->connect && ($source->do_query($source->{'sql_query'}))) {
+    
+    unless (ref($source) =~ /DBManipulator/) {
+	&Log::do_log('err','source object has not a DBManipulator type : %s',$source);
+        return undef;
+    }
+
+    unless ($source->connect() && ($source->do_query($source->{'sql_query'}))) {
 	&Log::do_log('err','Unable to connect to SQL datasource with parameters host: %s, database: %s',$source->{'host'},$source->{'db_name'});
         return undef;
     }
@@ -9044,11 +9039,14 @@ sub _load_list_admin_from_include {
 		## get the list of admin users
 		## does it need to define a 'default_admin_user_option'?
 		if ($type eq 'include_sql_query') {
-		    $included = _include_users_sql(\%admin_users, $incl,\%option, 'untied', $list_admin->{'sql_fetch_timeout'}); 
+		    my $source = new SQLSource($incl);
+		    $included = _include_users_sql(\%admin_users, $incl,$source,\%option, 'untied', $list_admin->{'sql_fetch_timeout'}); 
 		}elsif ($type eq 'include_ldap_query') {
-		    $included = _include_users_ldap(\%admin_users, $incl,\%option); 
+		    my $source = new LDAPSource($incl);
+		    $included = _include_users_ldap(\%admin_users, $incl,$source,\%option); 
 		}elsif ($type eq 'include_ldap_2level_query') {
-		    my $result = _include_users_ldap_2level(\%admin_users, $incl,\%option); 
+		    my $source = new LDAPSource($incl);
+		    my $result = _include_users_ldap_2level(\%admin_users, $incl,$source,\%option); 
 		    if (defined $result) {
 			$included = $result->{'total'};
 			if (defined $result->{'errors'}){
@@ -12091,11 +12089,11 @@ sub get_subscription_requests {
 	    next;
 	}
 	## Following lines may contain custom attributes in an XML format
-	my %xml = &parseCustomAttribute(\*REQUEST) ;
+	my $xml = &parseCustomAttribute(\*REQUEST) ;
 	close REQUEST;
 	
 	$subscriptions{$email} = {'gecos' => $gecos,
-				  'custom_attribute' => \%xml};
+				  'custom_attribute' => $xml};
 	unless($subscriptions{$email}{'gecos'}) {
 		my $user = get_global_user($email);
 		if ($user->{'gecos'}) {
