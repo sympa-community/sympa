@@ -3,6 +3,17 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.19		May 30, 2012
+
+  Bug fixes:
+
+        Some multi-valued parameters were badly defined, using, as a split
+        charater, a comma stuck to a white space. This lead Sympa to misinterpret
+        lists not using spaces after a comme. Fixed by removing the white space
+        in the split_cchar definition sub-parameter. Also fixed an error in log
+        during upgrade process.
+
+
 6.2a.18		May 29, 2012
 
   Changes:
