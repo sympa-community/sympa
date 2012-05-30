@@ -4440,7 +4440,7 @@ sub do_search {
     my $max_select = 50;
     
     ## Members list
-    for (my $i = $list->get_first_user({'sortby' => 'email'}); $i; $i = $list->get_next_user()) {
+    for (my $i = $list->get_first_list_member({'sortby' => 'email'}); $i; $i = $list->get_next_list_member()) {
 
 	## Decode gecos to Unicode for case-insensitive match.
 	my $gecos = Encode::decode_utf8($i->{'gecos'} || '');
