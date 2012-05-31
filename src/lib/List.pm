@@ -5847,7 +5847,7 @@ sub get_list_member {
     }else {
 	unless ($user) {
 	    &Log::do_log('info','User %s was not found in the subscribers of list %s@%s.',$email,$self->{'name'},$self->{'domain'});
-	    $user = undef;
+	    return undef;
 	}
 	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
 	unless ($self->is_available_reception_mode($user->{'reception'}));
