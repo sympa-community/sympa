@@ -5848,9 +5848,10 @@ sub get_list_member {
 	unless ($user) {
 	    &Log::do_log('info','User %s was not found in the subscribers of list %s@%s.',$email,$self->{'name'},$self->{'domain'});
 	    return undef;
+	}else{
+		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
+		unless ($self->is_available_reception_mode($user->{'reception'}));
 	}
-	$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}
-	unless ($self->is_available_reception_mode($user->{'reception'}));
 
 	## Set session cache
 	$list_cache{'get_list_member'}{$self->{'domain'}}{$self->{'name'}}{$email} = $user;
@@ -6091,9 +6092,10 @@ sub get_list_member_no_object {
 	my $error = $sth->err;
 	if ($error) {
 	    &Log::do_log('err',"An error occured while fetching the data from the database.");
+	    return undef;
 	}else{
 	    &Log::do_log('info',"No user with the email %s is subscribed to list %s@%s",$email,$name,$options->{'domain'});
-	    $user=0;
+	    return 0;
 	}
     }
  
