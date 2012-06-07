@@ -2553,106 +2553,118 @@ sub is_a_crawler {
 }
 
 sub write_pid {
-	my ($pidfile, $pid, $options) = @_;
-	
-	my $piddir = $pidfile;
-	$piddir =~ s/\/[^\/]+$//;
-	
-	## Create piddir
-	mkdir($piddir, 0755) unless(-d $piddir);
-	
-	unless(&tools::set_file_rights(
-		file => $piddir,
-		user  => Sympa::Constants::USER,
-		group => Sympa::Constants::GROUP,
-	)) {
-		&Log::do_log('err', 'Unable to set rights on %s', $Conf::Conf{'db_name'});
-		return undef;
+    my ($pidfile, $pid, $options) = @_;
+
+    my $piddir = $pidfile;
+    $piddir =~ s/\/[^\/]+$//;
+
+    ## Create piddir
+    mkdir($piddir, 0755) unless(-d $piddir);
+
+    unless(&tools::set_file_rights(
+	file => $piddir,
+	user  => Sympa::Constants::USER,
+	group => Sympa::Constants::GROUP,
+    )) {
+	&fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
+    }
+
+    my @pids;
+
+    # Lock pid file
+    my $lock = new Lock ($pidfile);
+    unless (defined $lock) {
+	&fatal_err('Lock could not be created. Exiting.');
+    }
+    $lock->set_timeout(5); 
+    unless ($lock->lock('write')) {
+	&fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+    }
+    ## If pidfile exists, read the PIDs
+    if(-f $pidfile) {
+	# Read pid file
+	open(PFILE, $pidfile);
+	my $l = <PFILE>;
+	close PFILE;	
+	@pids = grep {/[0-9]+/} split(/\s+/, $l);
+    }
+
+    ## If we can have multiple instances for the process.
+    ## Print other pids + this one
+    if($options->{'multiple_process'}) {
+	unless(open(PIDFILE, '> '.$pidfile)) {
+	    ## Unlock pid file
+	    $lock->unlock();
+	    &fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
 	}
-	
-	my @pids;
-	
-	## If pidfile exists, read the PIDs
-	if(-f $pidfile) {
-		open(PFILE, $pidfile);
-		my $l = <PFILE>;
-		close PFILE;	
-		@pids = grep {/[0-9]+/} split(/\s+/, $l);
-	}
-	
-	## If we can have multiple options for the process.
 	## Print other pids + this one
-	if($options->{'multiple_process'}) {
-		unless(open(LCK, '> '.$pidfile)) {
-			fatal_err('Could not open %s, exiting', $pidfile);
-		}
-		
-		## Print other pids + this one
-		push(@pids, $pid);
-		print LCK join(' ', @pids)."\n";
-		close(LCK);
-	}else{
-		## Create and write the pidfile
-		unless(open(LOCK, '+>> '.$pidfile)) {
-			fatal_err('Could not open %s, exiting', $pidfile);
-		}
-		unless(flock(LOCK, 6)) {
-			fatal_err('Could not lock %s, process is probably already running : %s', $pidfile, $!);
-		}
-		
-		## The previous process died suddenly, without pidfile cleanup
-		## Send a notice to listmaster with STDERR of the previous process
-		if($#pids >= 0) {
-			my $other_pid = $pids[0];
-			&Log::do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
-			my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
-			my (@err_output, $err_date);
-			if(-f $err_file) {
-				open(ERR, $err_file);
-				@err_output = <ERR>;
-				close ERR;
-				
-				$err_date = strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
-			}
-			
-			&List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crash_err' => \@err_output, 'crash_date' => $err_date});
-		}
-		
-		unless(open(LCK, '> '.$pidfile)) {
-			&Log::fatal_err('Could not open %s, exiting', $pidfile);
-		}
-		unless(truncate(LCK, 0)) {
-			&Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
-		}
-		
-		print LCK $pid."\n";
-		close(LCK);
+	push(@pids, $pid);
+	print PIDFILE join(' ', @pids)."\n";
+	close(PIDFILE);
+    }else{
+	## Create and write the pidfile
+	unless(open(PIDFILE, '+>> '.$pidfile)) {
+	    ## Unlock pid file
+	    $lock->unlock();
+	    &fatal_err('Could not open %s, exiting: %s', $pidfile);
+	}
+	## The previous process died suddenly, without pidfile cleanup
+	## Send a notice to listmaster with STDERR of the previous process
+	if($#pids >= 0) {
+	    my $other_pid = $pids[0];
+	    &Log::do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
+	    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
+	    my (@err_output, $err_date);
+	    if(-f $err_file) {
+		open(ERR, $err_file);
+		@err_output = <ERR>;
+		close ERR;
+		$err_date = strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
+	    }
+	    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crash_err' => \@err_output, 'crash_date' => $err_date});
 	}
 	
+	unless(open(PIDFILE, '> '.$pidfile)) {
+	    ## Unlock pid file
+	    $lock->unlock();
+	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
+	}
+	unless(truncate(PIDFILE, 0)) {
+	    ## Unlock pid file
+	    $lock->unlock();
+	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
+	}
+	
+	print PIDFILE $pid."\n";
+	close(PIDFILE);
+    }
+
+    unless(&tools::set_file_rights(
+	file => $pidfile,
+	user  => Sympa::Constants::USER,
+	group => Sympa::Constants::GROUP,
+    )) {
+	## Unlock pid file
+	$lock->unlock();
+	&Log::fatal_err('Unable to set rights on %s', $Conf::Conf{'db_name'});
+    }
+    ## Unlock pid file
+    $lock->unlock();
+
+    ## Error output is stored in a file with PID-based name
+    ## Usefull if process crashes
+    unless($options->{'stderr_to_tty'}) {
+	open(STDERR, '>>', $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr') unless($main::options{'foreground'});
 	unless(&tools::set_file_rights(
-		file => $pidfile,
-		user  => Sympa::Constants::USER,
-		group => Sympa::Constants::GROUP,
+	    file => $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr',
+	    user  => Sympa::Constants::USER,
+	    group => Sympa::Constants::GROUP,
 	)) {
-		&Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
-		return undef;
+	    &Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
+	    return undef;
 	}
-	
-	## Error output is stored in a file with PID-based name
-	## Usefull if process crashes
-	unless($options->{'stderr_to_tty'}) {
-		open(STDERR, '>>', $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr') unless($main::options{'foreground'});
-		unless(&tools::set_file_rights(
-			file => $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr',
-			user  => Sympa::Constants::USER,
-			group => Sympa::Constants::GROUP,
-		)) {
-			&Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
-			return undef;
-		}
-	}
-	
-	return 1;
+    }
+    return 1;
 }
 
 sub get_message_id {
