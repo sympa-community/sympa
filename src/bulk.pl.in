@@ -161,7 +161,7 @@ my $messageasstring_init;  # the current message as a string
 my $messageasstring;  # the transformed message.
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
-my $last_check_date = time();
+my $last_check_date = 0;
 
 $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
