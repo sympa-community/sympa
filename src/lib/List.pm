@@ -38,8 +38,6 @@ use Data::Dumper;
 # xxxxxxx faut-il virer encode ? Faut en faire un use ? 
 require Encode;
 
-use VOOTConsumer;
-
 use tt2;
 use Sympa::Constants;
 
@@ -8332,7 +8330,7 @@ sub _include_users_remote_file {
 ## Includes users from voot group
 sub _include_users_voot_group {
 	my($users, $param, $default_user_options, $tied) = @_;
-	
+
 	&Log::do_log('debug', "List::_include_users_voot_group(%s, %s, %s)", $param->{'user'}, $param->{'provider'}, $param->{'group'});
 
 	my $id = Datasource::_get_datasource_id($param);

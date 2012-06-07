@@ -98,6 +98,11 @@ our @params = (
         'vhost'    => '1',
     },
     {
+        'name'     => 'voot_feature',
+        'default'  => 'off',
+        'file'     => 'sympa.conf',
+    },
+    {
         'name'     => 'max_wrong_password',
         'default'  => '19',
         'vhost'    => '1',

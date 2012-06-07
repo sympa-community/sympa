@@ -74,11 +74,6 @@ use tracking;
 use Mail::Header;
 use Mail::Address;
 
-use OAuthProvider;
-use OAuthConsumer;
-use VOOTProvider;
-use VOOTConsumer;
-
 my $crypt_openssl_x509_ok;
 BEGIN {
     if (eval "require Crypt::OpenSSL::X509") {
@@ -138,6 +133,31 @@ if ($wwsconf->{'use_fast_cgi'}) {
     require CGI;
 }
 my $mime_types = &wwslib::load_mime_types();
+
+if (&Conf::get_robot_conf('*','voot_feature') eq 'on') {
+    unless ( eval "require OAuthProvider" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load OAuthProvider module: $@");
+	return undef;
+    }
+    require OAuthProvider;
+    unless ( eval "require OAuthConsumer" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load OAuthConsumer module: $@");
+	return undef;
+    }
+    require OAuthConsumer;
+    unless ( eval "require VOOTProvider" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load VOOTProvider module: $@");
+	return undef;
+    }
+    require VOOTProvider;
+    unless ( eval "require VOOTConsumer" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load module: $@");
+	return undef;
+    }
+    require VOOTConsumer;
+}else {
+    &Log::do_log('err','Sympa is configured to use VOOT but the required modules are not accessible.');
+}
 
 
 # hash of all the description files already loaded
