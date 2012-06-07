@@ -34,12 +34,6 @@ use Conf;
 my %list_of_locks;
 my $default_timeout = 60 * 20; ## After this period a lock can be stolen
 
-
-#sub &Log::do_log {
-#    my $level = shift; my $s = shift;
-#    printf STDERR "$s\n", @_;
-#}
-
 ## Creates a new object
 sub new {
     my($pkg, $filepath) = @_;
@@ -58,6 +52,14 @@ sub new {
 	close $fh;
    }
     
+    unless(&tools::set_file_rights(
+	file => $lock_filename,
+	user  => Sympa::Constants::USER,
+	group => Sympa::Constants::GROUP,
+    )) {
+	&Log::fatal_err('Unable to set rights on %s', $lock_filename);
+    }
+	
     ## Bless Message object
     bless $lock, $pkg;
     
