@@ -79,6 +79,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   help_mail_commands.tt2 \
 		   help_sendmsg.tt2 \
 		   help_shared.tt2 \
+		   help_suspend.tt2 \
 		   help.tt2 \
 		   help_user_options.tt2 \
 		   help_user.tt2 \
