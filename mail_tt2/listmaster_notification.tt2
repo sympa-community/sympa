@@ -39,9 +39,9 @@ Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%
 
 
 [% ELSIF type == 'crash' -%]
-Subject: [% FILTER qencode %][%|loc%]Previous process crashed[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(crashed_process)%]Previous process %1 crashed[%END%][%END%]
 
-[%|loc%]Previous process has died unexpectedly.[%END%]
+[%|loc(crashed_process,pid)%]Previous process %1 (with pid %2) has died unexpectedly.[%END%]
 [%|loc(crash_date)%]Date of crash: %1[%END%]
 [%|loc%]Errors:[%END%]
 

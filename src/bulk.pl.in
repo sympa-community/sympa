@@ -162,6 +162,7 @@ my $messageasstring;  # the transformed message.
 
 my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
 my $last_check_date = 0;
+my %created_children;
 
 $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
@@ -177,15 +178,40 @@ while (!$end) {
 	## Only the main bulk process (DAEMON_MASTER) can create child processes
  	## Check if we need to run new child processes every 'bulk_wait_to_fork' (sympa.conf parameter) seconds 
 	if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
-	    
-	    ## Start new processes if at least 'bulk_fork_threshold' (sympa.conf parameter) in the bulkmailer_table table
-	    ## Only if no bulk child process is still running
-	    my $number_of_pids = &tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'});
-	    unless (defined($number_of_pids)){
-		&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
-		$number_of_pids = &tools::get_number_of_pids($Conf::Conf{'pidfile_bulk'});
+	    ## Clean up pid file (in case some child bulks would have died)
+	    my @actual_children = &tools::get_children_processes_list();
+	    my @remaining_children;
+	    my %dead_children = %created_children;
+	    foreach my $apid (@actual_children) {
+		if (defined $dead_children{$apid}) {
+		    push @remaining_children, $apid;
+		    delete $dead_children{$apid};
+		}
 	    }
-	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && defined($number_of_pids) && ($number_of_pids <= 1) ){
+	    my @pids_leftover = keys %dead_children;
+	    if ($#pids_leftover > -1) {
+		my @dc;
+		&Log::do_log('debug2','Some childs of current process disappeared. Checking whether they shut down cleanly or not.');
+		my $pids_in_pfile = &tools::get_pids_in_pid_file($Conf::Conf{'pidfile_bulk'});
+		foreach my $fpid (@{$pids_in_pfile}) {
+		    if (defined $dead_children{$fpid}) {
+			&Log::do_log('err','The %s child exists in the pid file but is no longer running. Removing it and notyfying listmaster.',$fpid);
+			my $pname = $0;
+			$pname =~ s/.*\/(\w+)/$1/;
+			&tools::send_crash_report(('pid'=>$fpid,'pname'=>$pname));
+			&tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $fpid, $options);
+			delete $dead_children{$fpid};
+			push @dc, $fpid;
+		    }
+		}
+	    }
+	    my $pids_in_pfile = &tools::get_pids_in_pid_file($Conf::Conf{'pidfile_bulk'});
+	    unless (defined($pids_in_pfile)){
+		&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+		$pids_in_pfile = [$$];
+	    }
+	    ## Start new processes if there remain at least 'bulk_fork_threshold' packets to send in the bulkmailer_table table
+	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && ($#remaining_children+1 < $Conf::Conf{'bulk_max_count'}) ){
 		
 		## disconnect from database before fork
 		## to prevent DB handlers to be shared by different processes
@@ -193,13 +219,15 @@ while (!$end) {
 		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
 		
 		if($Conf::Conf{'bulk_max_count'} > 1) {
-		    &Log::do_log('info','Workload increased: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-1);
-		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-1){
+		    &Log::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-($#remaining_children+1));
+		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-($#remaining_children+1)){
+			&Log::do_log('info', "Will fork: %s", $process_count);
 			if ((my $child_pid = fork) != 0) {
 			    &Log::do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
 			    # Saves the pid number
 			    &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
-			    sleep 1; 
+			    $created_children{$child_pid} = 1;
+			    sleep 1;
 			}else{
 			    ## We're in a child bulk process
 			    $date_of_last_activity = time();
@@ -231,6 +259,14 @@ while (!$end) {
 	    $messagekey = $bulk->{'messagekey'};
 	    $message_from_spool = &Bulk::message_from_spool($bulk->{'messagekey'});
 
+	    &Log::do_log('notice','Start sending message "%s" (key "%s") to list "%s@%s" (priority %s) (starting %s seconds after scheduled expedition date)',
+			$bulk->{'messageid'},
+			$bulk->{'messagekey'},
+			$bulk->{'listname'}, 
+			$bulk->{'robot'}, 
+			$bulk->{'priority_message'}, 
+			time() - $bulk->{'delivery_date'});
+			
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
 
 	    # &trace_smime($messageasstring_init,'initial');
@@ -350,8 +386,9 @@ while (!$end) {
 
 	
 	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 5){
-	    &Log::do_log('notice','Done sending message %s to list %s@%s (priority %s) in %s seconds since scheduled expedition date.', 
+	    &Log::do_log('notice','Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.', 
 		    $bulk->{'messageid'}, 
+		    $bulk->{'messagekey'}, 
 		    $bulk->{'listname'}, 
 		    $bulk->{'robot'}, 
 		    $bulk->{'priority_message'}, 

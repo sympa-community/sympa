@@ -35,6 +35,7 @@ use Encode::Guess; ## Usefull when encoding should be guessed
 use Encode::MIME::Header;
 use Text::LineFold;
 use MIME::Lite::HTML;
+use Proc::ProcessTable;
 
 use Conf;
 use Language;
@@ -2613,15 +2614,9 @@ sub write_pid {
 	if($#pids >= 0) {
 	    my $other_pid = $pids[0];
 	    &Log::do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
-	    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$other_pid.'.stderr';
-	    my (@err_output, $err_date);
-	    if(-f $err_file) {
-		open(ERR, $err_file);
-		@err_output = <ERR>;
-		close ERR;
-		$err_date = strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
-	    }
-	    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crash_err' => \@err_output, 'crash_date' => $err_date});
+	    my $pname = $0;
+	    $pname =~ s/.*\/(\w+)/$1/;
+	    &send_crash_report(('pid'=>$other_pid,'pname'=>$pname));
 	}
 	
 	unless(open(PIDFILE, '> '.$pidfile)) {
@@ -2665,6 +2660,21 @@ sub write_pid {
 	}
     }
     return 1;
+}
+
+# Send content of $pid.stderr to listmaster for process whose pid is $pid.
+sub send_crash_report {
+    my %data = @_;
+    &Log::do_log('debug','Sending crash report for process %s',$data{'pid'}),
+    my $err_file = $Conf::Conf{'tmpdir'}.'/'.$data{'pid'}.'.stderr';
+    my (@err_output, $err_date);
+    if(-f $err_file) {
+	open(ERR, $err_file);
+	@err_output = <ERR>;
+	close ERR;
+	$err_date = strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
+    }
+    &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crashed_process' => $data{'pname'}, 'crash_err' => \@err_output, 'crash_date' => $err_date, 'pid' => $data{'pid'}});
 }
 
 sub get_message_id {
@@ -3871,8 +3881,8 @@ sub smart_lessthan {
     } 
 }
 
-## Returns the number of pid identifiers in the pid file.
-sub get_number_of_pids {
+## Returns the list of pid identifiers in the pid file.
+sub get_pids_in_pid_file {
 	my $pidfile = shift;
 	unless (open(PFILE, $pidfile)) {
 		&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
@@ -3881,7 +3891,7 @@ sub get_number_of_pids {
 	my $l = <PFILE>;
 	close PFILE;
 	my @pids = grep {/[0-9]+/} split(/\s+/, $l);
-	return $#pids + 1;
+	return \@pids;
 }
 
 ## Returns the counf of numbers found in the string given as argument.
@@ -3975,5 +3985,17 @@ sub create_html_part_from_web_page {
     return $part->as_string;
 }
 
+sub get_children_processes_list {
+    &Log::do_log('debug3','');
+    my @children;
+    for my $p (@{new Proc::ProcessTable->table}){
+	if($p->ppid == $$) {
+	    push @children, $p->pid;
+	}
+    }
+    return @children;
+}
 
+sub fix_children {
+}
 1;

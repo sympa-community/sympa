@@ -540,6 +540,12 @@ sub check_cpan {
 			'perl' => {
 				   required_version =>'5.008',
 				  },
+			'Proc::ProcessTable' => {
+				       package_name => 'Proc-ProcessTable',
+				       required_version =>'0.44', 
+				       mandatory => 1,
+				       usage => 'Used by the bulk.pl daemon to check the number of slave bulks running.',
+				      },
 			'SOAP::Lite' => {
 					 required_version =>'0.712',
 					 package_name => 'SOAP-Lite',
