@@ -131,7 +131,6 @@ sub db_struct {
 						     'dkim_selector_bulkspool' => 'varchar(50)',
 						     'dkim_d_bulkspool' => 'varchar(50)',
 						     'dkim_i_bulkspool' => 'varchar(100)',
-						     'dkim_header_list_bulkspool' => 'varchar(500)',
 						 },
 			       'notification_table' => {'pk_notification' => 'bigint(20)',
 							'message_id_notification' => 'varchar(100)',

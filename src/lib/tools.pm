@@ -860,7 +860,7 @@ sub dkim_sign {
     my $dkim_selector = $data->{'dkim_selector'};
     my $dkim_privatekey = $data->{'dkim_privatekey'};
 
-    &Log::do_log('debug2', 'tools::dkim_sign (msg:%s,dkim_d:%s,dkim_i%s,dkim_selector:%s,dkim_header_list:%s,dkim_privatekey:%s)',substr($msg_as_string,0,30),$dkim_d,$data->{'dkim_i'},$data->{'dkim_selector'},$data->{'dkim_header_list'}, substr($data->{'dkim_privatekey'},0,30));
+    &Log::do_log('debug2', 'tools::dkim_sign (msg:%s,dkim_d:%s,dkim_i%s,dkim_selector:%s,dkim_privatekey:%s)',substr($msg_as_string,0,30),$dkim_d,$dkim_i,$dkim_selector, substr($dkim_privatekey,0,30));
 
     unless ($dkim_selector) {
 	&Log::do_log('err',"DKIM selector is undefined, could not sign message");
@@ -4053,7 +4053,6 @@ sub decode_header {
     }
 }
 
-=======
 sub fix_children {
 }
 1;

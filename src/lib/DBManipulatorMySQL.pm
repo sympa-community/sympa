@@ -160,7 +160,7 @@ sub add_table {
     my $self = shift;
     my $param = shift;
     &Log::do_log('debug','Adding table %s to database %s',$param->{'table'},$self->{'db_name'});
-    unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
+    unless ($self->do_query("CREATE TABLE %s (temporary INT) DEFAULT CHARACTER SET utf8",$param->{'table'})) {
 	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }

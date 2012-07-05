@@ -38,6 +38,7 @@ use Data::Dumper;
 # xxxxxxx faut-il virer encode ? Faut en faire un use ? 
 require Encode;
 
+use VOOTConsumer;
 use tt2;
 use Sympa::Constants;
 
@@ -4079,7 +4080,8 @@ sub send_msg {
 		push @tabrcpt_verp, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');
 	    }else{	    
 		push @tabrcpt, $user->{'email'} unless ($sender_hash{$user->{'email'}})&&($user->{'reception'} eq 'not_me');}
-	    }	    
+	    }
+	}    
     }
 
     unless (@tabrcpt || @tabrcpt_notice || @tabrcpt_txt || @tabrcpt_html || @tabrcpt_url || @tabrcpt_verp || @tabrcpt_notice_verp || @tabrcpt_txt_verp || @tabrcpt_html_verp || @tabrcpt_url_verp) {

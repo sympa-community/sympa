@@ -428,7 +428,7 @@ sub store {
 	
 	# if message is not found in bulkspool_table store it
 	if ($message_already_on_spool == 0) {
-	    unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool,dkim_header_list_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s)",&SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($msg),&SDM::quote($dkim->{d}), &SDM::quote($dkim->{i}),&SDM::quote($dkim->{selector}),&SDM::quote($dkim->{private_key}))) {
+	    unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s)",&SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($msg),&SDM::quote($dkim->{d}), &SDM::quote($dkim->{i}),&SDM::quote($dkim->{selector}),&SDM::quote($dkim->{private_key}))) {
 		&Log::do_log('err','Unable to add message %s to database spool', $msg_id);
 		return undef;
 	    }

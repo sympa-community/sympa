@@ -1203,14 +1203,6 @@ our @params = (
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
-    {
-        'name'     => 'dkim_header_list',
-        'vhost'    => '1',
-        'file'     => 'sympa.conf',
-        'query'    => gettext('List of headers to be included into the message for signature'),
-        'default'  => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
-    },
-
     { 'title' => gettext('Antivirus plug-in') },
 
     {
