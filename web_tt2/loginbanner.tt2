@@ -48,7 +48,7 @@
 
 [% IF use_passwd == '1' %]
 [% IF authentication_info_url %]
-   <a class="menuLinks" href="[%conf.authentication_info.url%]">[%|loc%]Authentication help[% END %]</a><br />
+   <a class="menuLinks" href="[%authentication_info_url%]">[%|loc%]Authentication help[% END %]</a><br />
 [% ELSE %]
   <div class="remember">
   <b>

@@ -176,7 +176,7 @@ sub message_from_spool {
     my $messagekey = shift;
     &Log::do_log('debug', '(messagekey : %s)',$messagekey);
     
-    unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector,dkim_header_list_bulkspool AS dkim_header_list FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
+    unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
 	&Log::do_log('err','Unable to retrieve message %s full data from database', $messagekey);
 	return undef;
     }
@@ -189,8 +189,7 @@ sub message_from_spool {
 	    'dkim_d' => $message_from_spool->{'dkim_d'},
 	    'dkim_i' => $message_from_spool->{'dkim_i'},
 	    'dkim_selector' => $message_from_spool->{'dkim_selector'},
-	    'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
-	    'dkim_header_list' => $message_from_spool->{'dkim_header_list'}});
+	    'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},});
 
 }
 
@@ -429,11 +428,10 @@ sub store {
 	
 	# if message is not found in bulkspool_table store it
 	if ($message_already_on_spool == 0) {
-	    unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool,dkim_header_list_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s ,%s)",&SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($msg),&SDM::quote($dkim->{d}), &SDM::quote($dkim->{i}),&SDM::quote($dkim->{selector}),&SDM::quote($dkim->{private_key}), &SDM::quote($dkim->{header_list}))) {
+	    unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool,dkim_header_list_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s)",&SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($msg),&SDM::quote($dkim->{d}), &SDM::quote($dkim->{i}),&SDM::quote($dkim->{selector}),&SDM::quote($dkim->{private_key}))) {
 		&Log::do_log('err','Unable to add message %s to database spool', $msg_id);
 		return undef;
 	    }
-
 
 	    #log in stat_table to make statistics...
 	    unless($message_sender =~ /($robot)\@/) { #ignore messages sent by robot

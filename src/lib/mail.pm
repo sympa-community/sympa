@@ -28,6 +28,7 @@ use Carp;
 
 #use strict;
 use POSIX;
+use Time::Local;
 use MIME::Charset;
 use MIME::Tools;
 use Conf;
@@ -106,7 +107,6 @@ sub set_send_spool {
 #            -d : d=tag
 #            -i : i=tag (optionnal)
 #            -selector : dkim dns selector
-#            -header_list : headers part of the signed infos
 #            -key : the RSA private key
 #      -$robot(+)
 #      -$sign_mode :'smime' | '' | undef
@@ -167,7 +167,7 @@ sub mail_file {
 		last;
 	    }
 	    
-	    foreach my $header ('to','from','subject','reply-to','mime-version', 'content-type','content-transfer-encoding') {
+	    foreach my $header ('date', 'to','from','subject','reply-to','mime-version', 'content-type','content-transfer-encoding') {
 		if ($line=~/^$header:/i) {
 		    $header_ok{$header} = 1;
 		    last;
@@ -179,7 +179,28 @@ sub mail_file {
     ## ADD MISSING HEADERS
     my $headers="";
 
+    unless ($header_ok{'date'}) {
+	my $now = time;
+	my $tzoff = timegm(localtime $now) - $now;
+	my $sign;
+	if ($tzoff < 0) {
+	   ($sign, $tzoff) = ('-', -$tzoff);
+	} else {
+	   $sign = '+';
+	}
+	$tzoff = sprintf '%s%02d%02d',
+			 $sign, int($tzoff / 3600), int($tzoff / 60) % 60;
+	Language::PushLang('en_US');
+	$headers .= 'Date: ' .
+		    POSIX::strftime("%a, %d %b %Y %H:%M:%S $tzoff",
+				    localtime $now) .
+		    "\n";
+	Language::PopLang();
+    }
+
     unless ($header_ok{'to'}) {
+	# Currently, bare e-mail address is assumed.  Complex ones such as
+	# "phrase" <email> won't be allowed.
 	if (ref ($rcpt)) {
 	    if ($data->{'to'}) {
 		$to = $data->{'to'};
@@ -189,10 +210,7 @@ sub mail_file {
 	}else{
 	    $to = $rcpt;
 	}   
-	$headers .= "To: ".MIME::EncWords::encode_mimewords(
-	    Encode::decode('utf8', $to),
-	    'Encoding' => 'A', 'Charset' => $data->{'charset'}, 'Field' => 'To'
-	    )."\n"; 
+	$headers .= "To: $to\n";
     }     
     unless ($header_ok{'from'}) {
 	if ($data->{'from'} eq 'sympa') {
@@ -919,8 +937,8 @@ sub smtpto {
    
 
    if (!pipe(IN, OUT)) {
-       &Log::fatal_err(sprintf gettext("Unable to create a channel in smtpto: %m"), $!); ## No return
-       }
+       &Log::fatal_err(sprintf gettext("Unable to create a channel in smtpto: %s"), "$!"); ## No return
+   }
    $pid = &tools::safefork();
    $pid{$pid} = 0;
        

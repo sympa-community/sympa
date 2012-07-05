@@ -23,6 +23,9 @@ package Archive;
 
 use strict;
 
+use Encode qw(decode_utf8 encode_utf8);
+use HTML::Entities qw(decode_entities);
+
 use Log;
 
 my $serial_number = 0; # incremented on each archived mail
@@ -161,15 +164,10 @@ sub scan_dir_archive {
 	my $msg = {};
 	$msg->{'id'} = $i;
 
-	$msg->{'subject'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Subject'), Charset=>'utf8');
-	chomp $msg->{'subject'};
+	$msg->{'subject'} = &tools::decode_header($mail, 'Subject');
+	$msg->{'from'} = &tools::decode_header($mail, 'From');
+	$msg->{'date'} = &tools::decode_header($mail, 'Date');
 
-	$msg->{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
-	chomp $msg->{'from'};    	        	
-        
-	$msg->{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
-	chomp $msg->{'date'};
-	
 	$msg->{'full_msg'} = $mail->{'msg'}->as_string;
 
 	&Log::do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
@@ -274,6 +272,7 @@ sub load_html_message {
 
 	if (/^<!--(\S+): (.*) -->$/) {
 	    my ($key, $value) = ($1, $2);
+	    $value = encode_utf8(decode_entities(decode_utf8($value)));
 	    if ($key eq 'X-From-R13') {
 		$metadata{'X-From'} = $value;
 		$metadata{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/; ## Mhonarc protection of email addresses

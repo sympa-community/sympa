@@ -527,7 +527,7 @@ sub fix_html_part {
 	unless ($cset->decoder) {
 	    # Charset is unknown.  Detect 7-bit charset.
 	    my ($dummy, $charset) =
-		$cset->body_encode($body, Detect7Bit => 'YES');
+		MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
 	    $cset = MIME::Charset->new($charset);
 	}
 	if ($cset->decoder and $cset->as_string =~ /^ISO-2022-/i) {

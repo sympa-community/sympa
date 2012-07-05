@@ -72,6 +72,7 @@ my %old_params = (
     msgcat                 => 'localedir',
     queueexpire            => '',
     clean_delay_queueother => '',
+    dkim_header_list => '',
     web_recode_to          => 'filesystem_encoding',
 );
 

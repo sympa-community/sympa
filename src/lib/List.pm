@@ -3609,13 +3609,10 @@ sub send_msg_digest {
     my @all_msg;
     foreach $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
-	my $subject = &MIME::EncWords::decode_mimewords($mail->head->get('Subject'), Charset=>'utf8');
-	chomp $subject;
-	my $from = &MIME::EncWords::decode_mimewords($mail->head->get('From'), Charset=>'utf8');
-	chomp $from;    
-	my $date = &MIME::EncWords::decode_mimewords($mail->head->get('Date'), Charset=>'utf8');
-	chomp $date;    
-	
+	my $subject = &tools::decode_header($mail, 'Subject');
+	my $from = &tools::decode_header($mail, 'From');
+	my $date = &tools::decode_header($mail, 'Date');
+
         my $msg = {};
 	$msg->{'id'} = $i+1;
         $msg->{'subject'} = $subject;	
@@ -4003,7 +4000,15 @@ sub send_msg {
     my (@tabrcpt, @tabrcpt_notice, @tabrcpt_txt, @tabrcpt_html, @tabrcpt_url, @tabrcpt_verp, @tabrcpt_notice_verp, @tabrcpt_txt_verp, @tabrcpt_html_verp, @tabrcpt_url_verp, @tabrcpt_digestplain, @tabrcpt_digest, @tabrcpt_summary, @tabrcpt_nomail, @tabrcpt_digestplain_verp, @tabrcpt_digest_verp, @tabrcpt_summary_verp, @tabrcpt_nomail_verp );
     my $mixed = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
     my $alternative = ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/alternative/i);
+    my $recip = $message->{'msg'}->head->get('X-Sympa-Receipient');
  
+
+    if ($recip) {
+	@tabrcpt = split /,/, $recip;
+	$message->{'msg'}->head->delete('X-Sympa-Receipient');
+
+    } else {
+
     for ( my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member() ){
 	unless ($user->{'email'}) {
 	    &Log::do_log('err','Skipping user with no email address in list %s', $name);
@@ -4052,22 +4057,22 @@ sub send_msg {
 		    push @tabrcpt_html_verp, $user->{'email'};
 		}else{
 		    push @tabrcpt_html, $user->{'email'};
-		}    
+		}
 	    }
-	}elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+	} elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
 	    if ($user->{'bounce_address'}) {
-		push @tabrcpt_url_verp, $user->{'email'};
+	        push @tabrcpt_url_verp, $user->{'email'};
 	    }else{
-		push @tabrcpt_url, $user->{'email'};
+	        push @tabrcpt_url, $user->{'email'};
 	    }
-	}elsif ($message->{'smime_crypted'} && 
-		 (! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
-		  ! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
-	    ## Missing User certificate
-	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $message->{'msg'}->head->get('Subject'),
-												     'sender' => $message->{'msg'}->head->get('From')},
-											  'auto_submitted' => 'auto-generated'})) {
-	    &Log::do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
+	} elsif ($message->{'smime_crypted'} && 
+      	     (! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}) &&
+       	      ! -r $Conf::Conf{'ssl_cert_dir'}.'/'.&tools::escape_chars($user->{'email'}.'@enc' ))) {
+       	    ## Missing User certificate
+	    my $subject = $message->{'msg'}->head->get('Subject');
+	    my $sender = $message->{'msg'}->head->get('From');
+	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $subject, 'sender' => $sender}, 'auto_submitted' => 'auto-generated'})) {
+	        &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
 	    }
 	}else{
 	    if ($user->{'bounce_score'}) {
@@ -4227,13 +4232,16 @@ sub send_msg {
 		return 0;
 	    }
 	    my $mime_types = &tools::load_mime_types();
-	    my @parts = $url_msg->parts();
-	    
-	    foreach my $i (0..$#parts) {
-		my $entity = &_urlize_part ($url_msg->parts ($i), $self, $dir1, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url')) ;
+	    my @parts = ();
+	    my $i = 0;
+	    foreach my $part ($url_msg->parts()) {
+		my $entity = &_urlize_part($part, $self, $dir1, $i, $mime_types,  &Conf::get_robot_conf($robot, 'wwsympa_url'));
 		if (defined $entity) {
-		    $parts[$i] = $entity;
+		    push @parts, $entity;
+		} else {
+		    push @parts, $part;
 		}
+		$i++;
 	    }
 	    
 	    ## Replace message parts
@@ -4429,7 +4437,7 @@ sub send_to_editor {
        }
    }
    
-   my $subject = MIME::EncWords::decode_mimewords($hdr->get('Subject'), Charset=>'utf8');
+   my $subject = tools::decode_header($hdr, 'Subject');
    my $param = {'modkey' => $modkey,
 		'boundary' => $boundary,
 		'msg_from' => $message->{'sender'},
@@ -4765,14 +4773,11 @@ sub archive_send_last {
    my @msglist;
    my $msg = {};
    $msg->{'id'} = 1;
-   
-   $msg->{'subject'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Subject'), Charset=>'utf8');
-   chomp $msg->{'subject'};   
-   $msg->{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
-   chomp $msg->{'from'};    	        	
-   $msg->{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
-   chomp $msg->{'date'};
-   
+
+   $msg->{'subject'} = &tools::decode_header($mail, 'Subject');
+   $msg->{'from'} = &tools::decode_header($mail, 'From');
+   $msg->{'date'} = &tools::decode_header($mail, 'Date');
+
    $msg->{'full_msg'} = $mail->{'msg'}->as_string;
    
    push @msglist,$msg;
@@ -5267,82 +5272,45 @@ sub add_parts {
     }
     
     ## No footer/header
-    unless (-f $footer or -f $header) {
+    unless (($footer and -s $footer) or ($header and -s $header)) {
  	return undef;
     }
     
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-
-    ## Msg Content-Type
-    my $content_type = $msg->head->get('Content-Type');
-    
-    ## MIME footer/header
     if ($type eq 'append'){
-
-	my (@footer_msg, @header_msg);
-	if ($header) {
+	## append footer/header
+	my ($footer_msg, $header_msg);
+	if ($header and -s $header) {
 	    open HEADER, $header;
-	    @header_msg = <HEADER>;
+	    $header_msg = join '', <HEADER>;
 	    close HEADER;
+	    $header_msg = '' unless $header_msg =~ /\S/;
 	}
-	
-	if ($footer) {
+	if ($footer and -s $footer) {
 	    open FOOTER, $footer;
-	    @footer_msg = <FOOTER>;
+	    $footer_msg = join '', <FOOTER>;
 	    close FOOTER;
+	    $footer_msg = '' unless $footer_msg =~ /\S/;
 	}
-	
-	if (!$content_type or $content_type =~ /^text\/plain/i) {
-		    
-	    my @body;
-	    if (defined $msg->bodyhandle) {
-		@body = $msg->bodyhandle->as_lines;
-	    }
-
-	    $msg->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
-
-	}elsif ($content_type =~ /^multipart\/mixed/i) {
-	    ## Append to first part if text/plain
-	    
-	    if ($msg->parts(0)->head->get('Content-Type') =~ /^text\/plain/i) {
-		
-		my $part = $msg->parts(0);
-		my @body;
-		
-		if (defined $part->bodyhandle) {
-		    @body = $part->bodyhandle->as_lines;
-		}
-		$part->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
-	    }else {
-		&Log::do_log('notice', 'First part of message not in text/plain ; ignoring footers and headers');
-	    }
-
-	}elsif ($content_type =~ /^multipart\/alternative/i) {
-	    ## Append to first text/plain part
-
-	    foreach my $part ($msg->parts) {
-		&Log::do_log('debug3', 'TYPE: %s', $part->head->get('Content-Type'));
-		if ($part->head->get('Content-Type') =~ /^text\/plain/i) {
-
-		    my @body;
-		    if (defined $part->bodyhandle) {
-			@body = $part->bodyhandle->as_lines;
-		    }
-		    $part->bodyhandle (new MIME::Body::Scalar [@header_msg,@body,@footer_msg] );
-		    next;
-		}
+	if (length $header_msg or length $footer_msg) {
+	    if (&_append_parts($msg, $header_msg, $footer_msg)) {
+		$msg->sync_headers(Length => 'COMPUTE')
+		    if $msg->head->get('Content-Length');
 	    }
 	}
+    } else {
+	## MIME footer/header
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
 
-    }else {
+	my $content_type = $msg->effective_type || 'text/plain';
+
 	if ($content_type =~ /^multipart\/alternative/i || $content_type =~ /^multipart\/related/i) {
 
 	    &Log::do_log('notice', 'Making $1 into multipart/mixed'); 
 	    $msg->make_multipart("mixed",Force=>1); 
 	}
 	
-	if ($header) {
+	if ($header and -s $header) {
 	    if ($header =~ /\.mime$/) {
 		
 		my $header_part = $parser->parse_in($header);    
@@ -5361,7 +5329,7 @@ sub add_parts {
 		$msg->add_part($header_part, 0);
 	    }
 	}
-	if ($footer) {
+	if ($footer and -s $footer) {
 	    if ($footer =~ /\.mime$/) {
 		
 		my $footer_part = $parser->parse_in($footer);    
@@ -5385,8 +5353,75 @@ sub add_parts {
     return $msg;
 }
 
+sub _append_parts {
+    my $part = shift;
+    my $header_msg = shift || '';
+    my $footer_msg = shift || '';
 
+    my $eff_type = $part->effective_type || 'text/plain';
 
+    if ($eff_type eq 'text/plain') {
+	my $cset = MIME::Charset->new('UTF-8');
+	$cset->encoder($part->head->mime_attr('Content-Type.Charset')||'NONE');
+
+	my $body;
+	if (defined $part->bodyhandle) {
+	    $body = $part->bodyhandle->as_string;
+	} else {
+	    $body = '';
+	}
+
+	## Only encodable footer/header are allowed.
+	if ($cset->encoder) {
+	    eval {
+		$header_msg = $cset->encode($header_msg, 1);
+	    };
+	    $header_msg = '' if $@;
+	    eval {
+		$footer_msg = $cset->encode($footer_msg, 1);
+	    };
+	    $footer_msg = '' if $@;
+	} else {
+	    $header_msg = '' if $header_msg =~ /[^\x01-\x7F]/;
+	    $footer_msg = '' if $footer_msg =~ /[^\x01-\x7F]/;
+	}
+
+	if (length $header_msg or length $footer_msg) {
+	    $header_msg .= "\n"
+		if length $header_msg and $header_msg !~ /\n$/;
+	    $body .= "\n"
+		if length $footer_msg and length $body and $body !~ /\n$/;
+
+	    my $io = $part->bodyhandle->open('w');
+	    unless (defined $io) {
+		&do_log('err', "List::add_parts: Failed to save message : $!");
+		return undef;
+	    }
+	    $io->print($header_msg);
+	    $io->print($body);
+	    $io->print($footer_msg);
+	    $io->close;
+	    $part->sync_headers(Length => 'COMPUTE')
+		if $part->head->get('Content-Length');
+	}
+	return 1;
+    } elsif ($eff_type eq 'multipart/mixed') {
+	## Append to first part if text/plain
+	if ($part->parts and
+	    &_append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    return 1;
+	}
+    } elsif ($eff_type eq 'multipart/alternative') {
+	## Append to first text/plain part
+	foreach my $p ($part->parts) {
+	    if (&_append_parts($p, $header_msg, $footer_msg)) {
+		return 1;
+	    }
+	}
+    }
+
+    return undef;
+}
 
 ## Delete a user in the user_table
 sub delete_global_user {
@@ -5840,7 +5875,6 @@ sub get_list_member {
     my $user = &get_list_member_no_object($options);
 
     unless(defined $user){
-	&Log::do_log('err','Unable to retrieve information from database for user %s ; list %s', $email, $self->get_list_id()) unless ($options{'probe'});
 	return undef;
     }else {
 	unless ($user) {
@@ -11629,7 +11663,7 @@ sub compute_topic {
     # We convert it to Unicode for case-ignore match with non-ASCII keywords.
     my $mail_string = '';
     if ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject'){
-	$mail_string = &MIME::EncWords::decode_mimewords($msg->head->get('subject'), Charset=>'_UNICODE_')."\n";
+	$mail_string = Encode::decode_utf8(&tools::decode_header($msg, 'Subject'))."\n";
     }
     unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
 	# get bodies of any text/* parts, not digging nested subparts.
@@ -11955,9 +11989,11 @@ sub _urlize_part {
     ##create the linked file 	
     ## Store body in file 
     if (open OFILE, ">$expl/$dir/$filename") {
-	my @ct = split(/;/,$head->get('Content-type'));
-	chomp ($ct[0]); 
-   	printf OFILE "Content-type: %s\n\n", $ct[0];
+	my $ct = $message->effective_type || 'text/plain';
+	printf OFILE "Content-type: %s", $ct;
+	printf OFILE "; Charset=%s", $head->mime_attr('Content-Type.Charset')
+	    if $head->mime_attr('Content-Type.Charset') =~ /\S/;
+	print OFILE "\n\n";
     } else {
 	&Log::do_log('notice', "Unable to open $expl/$dir/$filename") ;
 	return undef ; 
@@ -12050,10 +12086,10 @@ sub store_subscription_request {
     }
 
     ## First line of the file contains the user email address + his/her name
-    printf REQUEST "$email\t$gecos\n";
+    print REQUEST "$email\t$gecos\n";
 
     ## Following lines may contain custom attributes in an XML format
-    printf REQUEST "$custom_attr\n";
+    print REQUEST "$custom_attr\n";
 
     close REQUEST;
 

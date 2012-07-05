@@ -100,10 +100,12 @@ sub do_log {
     my $errno = $!;
 
     ## Do not display variables which are references.
-    foreach my $i (0..$#param) {
-        if (ref($param[$i])){
-            $param[$i] = ref($param[$i])
-        }
+    foreach my $p (@param) {
+	unless (defined $p) {
+	    $p = ''; # prevent 'Use of uninitialized value' warning
+	} elsif (ref $p) {
+	    $p = ref $p;
+	}
     }
 
     ## Determine calling function

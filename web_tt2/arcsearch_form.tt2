@@ -13,7 +13,7 @@
 
 <input name="key_word" type="text" size="30" value="[% key_word %]" />
 <input name="action" type="hidden" value="arcsearch" />
-<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />
+<input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" onClick="if (document.getElementsByName('key_word')[0].value.replace(/\s+/g, '')) return true; else return false;" />
 <br />
 
 <label for="how">[%|loc%]Search:[%END%]  </label>

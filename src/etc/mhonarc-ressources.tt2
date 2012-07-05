@@ -49,7 +49,7 @@ SEARCH_FORM
 	<input name="subj"  type="hidden" value="true" />
 	<input name="key_word"     type="text"   size="12" />
 	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" />
+	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" onClick="if (document.getElementsByName('key_word')[0].value.replace(/\s+/g, '')) return true; else return false;" />
 	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
 	</form>
     </div>

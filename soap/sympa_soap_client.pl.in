@@ -295,7 +295,7 @@ sub print_result {
 	    #printf "R: $r->result\n";
 	    @ret = @{$r->result};
 	}elsif (ref $r->result) {
-	    printf "Pb $r->result\n";
+	    print "Pb ".($r->result)."\n";
 	    return undef;
 	}else {
 	    @ret = $r->result;

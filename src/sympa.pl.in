@@ -1302,8 +1302,10 @@ sub DoFile {
     my $msg = $message->{'msg'};
     my $hdr = $msg->head;
     my $rcpt = $message->{'rcpt'};
-    
-    &Log::do_log('notice', 'Processing %s ; sender: %s ; message-id: %s', $file, $hdr->get('From'), $hdr->get('Message-ID'));
+    my $from = $hdr->get('From');
+    my $msg_id = $hdr->get('Message-ID');
+
+    &Log::do_log('notice', 'Processing %s ; sender: %s ; message-id: %s', $file, $from, $msg_id);
 
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
@@ -1335,7 +1337,7 @@ sub DoFile {
     my $sender = $message->{'sender'};
     unless ($sender) {
 	&Log::do_log('err', 'No From found in message, skipping.');
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'no_sender','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id,'status' => 'error','error_type' => 'no_sender','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
 
@@ -1370,7 +1372,7 @@ sub DoFile {
     unless (&Conf::valid_robot($robot)){
 	&Log::do_log('err', 'sympa::DoFile() : robot %s does not exist',$robot);
 	&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname,'message' => $message},$robot,$message->{'msg'}->as_string,'');
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_robot','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id,'status' => 'error','error_type' => 'unknown_robot','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
     
@@ -1385,7 +1387,7 @@ sub DoFile {
 	    unless ($dyn_list_family) {
 		&Log::do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
 		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname,'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id,'status' => 'error','error_type' => 'unknown_list','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef;
 	    }
 
@@ -1410,12 +1412,12 @@ sub DoFile {
 						    'automatic_listname'=>$listname });
 	    my $r_action;
 	    unless (defined $result) {
-		&Log::do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $hdr->get('Message-Id'),$listname);
+		&Log::do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $msg_id, $listname);
 		&report::reject_report_msg('intern','Message ignored because scenario "automatic_list_creation" cannot be evaluated',$sender,
-					   {'msg_id' => $hdr->get('Message-Id'),'message' => $message}, $robot,$message->{'msg'}->as_string);
+					   {'msg_id' => $msg_id, 'message' => $message}, $robot,$message->{'msg_as_string'});
 		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file"]);
 		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile',
-			      'parameters' => $hdr->get('Message-Id').",$robot",'target_email' => '','msg_id' => hdr->get('Message-Id'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+			      'parameters' => "$msg_id,$robot",'target_email' => '','msg_id' => $msg_id, 'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef ;
 	    }
 	    
@@ -1507,7 +1509,7 @@ sub DoFile {
 	    }
 	}
 	&Log::do_log('notice', "Message for %s from %s ignored, virus %s found", $list_address, $sender, $rc);
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'virus','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id,'status' => 'error','error_type' => 'virus','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
 
     }elsif (! defined($rc)) {
@@ -1522,7 +1524,7 @@ sub DoFile {
 	if (($rcpt =~ /^$Conf{'listmaster_email'}(\@(\S+))?$/) || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o) || ($type =~ /^(request|owner|editor)$/o)) {
 	    &Log::do_log('err','internal serveur error : distribution daemon should never proceed with command');
 	    &report::global_report_cmd('intern','Distribution daemon proceed with command',{},$sender,$robot,1);
-	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	    &Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id, 'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	} 
     }
@@ -1532,7 +1534,7 @@ sub DoFile {
             unless (defined $list->sync_include()) {
 		&Log::do_log('err', 'sympa::DoFile() : Failed to synchronize list members of dynamic list %s from %s family',$listname, $dyn_list_family);
 		&report::reject_report_msg('user','dyn_cant_create',$sender,{'listname' => $listname,'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'dyn_cant_sync','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id, 'status' => 'error','error_type' => 'dyn_cant_sync','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		# purge the unwanted empty automatic list
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
 		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
@@ -1547,7 +1549,7 @@ sub DoFile {
             unless ($list->get_total() > 0) {
 		&Log::do_log('err', 'sympa::DoFile() : Dynamic list %s from %s family has ZERO subscribers',$listname, $dyn_list_family);
 		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname, 'host'=>$robot},'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'list_unknown','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id, 'status' => 'error','error_type' => 'list_unknown','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		# purge the unwanted empty automatic list
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
 		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
@@ -1567,11 +1569,11 @@ sub DoFile {
         #do not process messages in list creation only mode, move them to main spool
         unless ($list->move_message($message->{'filename'}, $Conf{'queue'})) {
             &Log::do_log('err','sympa::DoFile(): Unable to move in spool for processing message to list %s (daemon_usage = creation)', $listname);
-            &report::reject_report_msg('intern','',$sender,{'msg_id' => $hdr->get('Message-ID'),'message' => $message},$robot,$message->{'msg'}->as_string,$list);
+            &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id, 'message' => $message},$robot,$message->{'msg_as_string'},$list);
             return undef;
         }
         &Log::do_log('info', ($dyn_just_created ? 'After automatic list creation, ' : '') 
-           . 'Message for %s from %s moved in spool %s for processing message-id=%s', $listname, $sender, $Conf{'queue'},$hdr->get('Message-ID'));
+           . 'Message for %s from %s moved in spool %s for processing message-id=%s', $listname, $sender, $Conf{'queue'}, $msg_id);
         $status = 1;
 
     }elsif ($rcpt =~ /^listmaster(\@(\S+))?$/) {
@@ -1633,7 +1635,7 @@ sub DoFile {
 
 	## Send the reply message
 	&report::send_report_cmd($sender,$robot);
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile','parameters' => "$file",'target_email' => "",'msg_id' => $msg_id, 'status' => 'success','error_type' => '','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 
     }
     
@@ -1660,8 +1662,10 @@ sub DoSendMessage {
 
     my $hdr = $message->{'msg'}->head;
     
-    my ($rcpt, $from) = ($hdr->get('X-Sympa-To'), $hdr->get('X-Sympa-From'));
-    chomp $rcpt; chomp $from;
+    my $chksum = $hdr->get('X-Sympa-Checksum');
+    my $rcpt = $hdr->get('X-Sympa-To');
+    my $from = $hdr->get('X-Sympa-From');
+    chomp $rcpt; chomp $chksum; chomp $from;
 
     &Log::do_log('info', "Processing web message for %s", $rcpt);
     
@@ -1714,7 +1718,8 @@ sub DoForward {
     my $hdr = $msg->head;
     my $messageid = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
-
+    my $sender = $hdr->get('From');
+    chomp $sender;
 
     if ($message->{'spam_status'} eq 'spam'){
 	&Log::do_log('notice', "Message for %s-%s ignored, because tagued as spam (Message-id: %s)",$name, $function,$messageid);
@@ -1731,8 +1736,6 @@ sub DoForward {
     }else {
 	unless ($list = new List ($name, $robot)) {
 	    &Log::do_log('notice', "Message for %s-%s ignored, unknown list %s (Message-id: %s)",$name, $function, $name,$messageid);
-	    my $sender = $hdr->get('From');
-	    chomp $sender;
 	    my $sympa_email = &Conf::get_robot_conf($robot, 'sympa');
 	    unless (&List::send_global_file('list_unknown', $sender, $robot,
 					    {'list' => $name,
@@ -1804,7 +1807,6 @@ sub DoForward {
 	else {
 	    &Log::do_log('err', "sympa::DoForward(): Message for %s-%s ignored, %s undefined in list %s", $name, $function, $function, $name);
 	    my $string = sprintf 'Impossible to forward a message to %s-%s : undefined in this list',$name,$function;
-	    my $sender = $hdr->get('From');
 	    &report::reject_report_msg('intern',$string,$sender,
 				       {'msg_id' => $messageid,
 					'entry' => 'forward',
@@ -1821,7 +1823,6 @@ sub DoForward {
     unless (&mail::mail_forward($message,&Conf::get_robot_conf($robot, 'request'),\@rcpt,$robot)) {
 	&Log::do_log('err',"Impossible to forward mail for $name-$function  ");
 	my $string = sprintf 'Impossible to forward a message for %s-%s',$name,$function;
-	my $sender = $hdr->get('From');
 	&report::reject_report_msg('intern',$string,$sender,
 			  {'msg_id' => $messageid,
 			   'entry' => 'forward',
@@ -1831,7 +1832,7 @@ sub DoForward {
 	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
-    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $hdr->get('From'),'client' => $ip,'daemon' => $daemon_name});
+    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoForward','parameters' => "$name,$function",'target_email' => '','msg_id' => $messageid,'status' => 'success','error_type' => '','user_email' => $sender, 'client' => $ip,'daemon' => $daemon_name});
 
     return 1;
 }
@@ -1927,15 +1928,7 @@ sub DoMessage{
   }
     
     my $customheader = $admin->{'custom_header'};
-#    $host = $admin->{'host'} if ($admin->{'host'});
 
-    ## Check if the message is a return receipt
-    if ($hdr->get('multipart/report')) {
-	&Log::do_log('notice', 'Message for %s from %s ignored because it is a report', $listname, $sender);
-	&Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'ignored_report','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
-    
     ## Check if the message is too large
     # my $max_size = $list->get_max_size() ||  &Conf::get_robot_conf($robot,'max_size');
     my $max_size = $list->get_max_size();
@@ -2226,8 +2219,23 @@ sub DoCommand {
 
 	## check Content-type
 	my $mime = $hdr->get('Mime-Version') ;
-	my $content_type = $hdr->get('Content-type');
-	my $transfert_encoding = $hdr->get('Content-transfer-encoding');
+	my $content_type = $msg->effective_type;
+	## Get charset
+	my $cset =
+	    MIME::Charset->new($hdr->mime_attr('Content-Type.Charset'));
+	unless ($cset->decoder) {
+	    # Charset is unknown.  Detect 7-bit charset.
+	    my ($dummy, $charset) =
+		MIME::Charset::body_encode($msg->bodyhandle->as_string,
+					   '', Detect7Bit => 'YES');
+	    $cset = MIME::Charset->new($charset);
+	}
+	if ($cset->decoder) {
+	    $cset->encoder('UTF-8');
+	} else {
+	    $cset = MIME::Charset->new('US-ASCII');
+	}
+
 	unless (($content_type =~ /text/i and !$mime)
 		or !($content_type) 
 		or ($content_type =~ /text\/plain/i)) {
@@ -2239,10 +2247,9 @@ sub DoCommand {
 	
 	my @body = $msg->bodyhandle->as_lines();
 	foreach $i (@body) {
-	    if ($transfert_encoding =~ /quoted-printable/i) {
-		$i = MIME::QuotedPrint::decode($i);
-	    }
-	    
+	    $i = $cset->encode($i);
+
+	    last if ($i =~ /^-- $/); ## ignore signature
 	    last if ($i =~ /^-- $/); ## ignore signature
 	    $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
 	    next if ($i =~ /^$/); ## skip empty lines

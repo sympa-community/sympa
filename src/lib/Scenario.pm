@@ -546,8 +546,8 @@ sub verify {
     
     if (defined ($context->{'msg'})) {
 	my $header = $context->{'msg'}->head;
-	unless (($header->get('to') && ($header->get('to') =~ /$context->{'listname'}/i)) || 
-		($header->get('cc') && ($header->get('cc') =~ /$context->{'listname'}/i))) {
+	unless (($header->get('to') && (join(', ', $header->get('to')) =~ /$context->{'listname'}/i)) || 
+		($header->get('cc') && (join(', ', $header->get('cc')) =~ /$context->{'listname'}/i))) {
 	    $context->{'is_bcc'} = 1;
 	}else{
 	    $context->{'is_bcc'} = 0;
@@ -667,14 +667,12 @@ sub verify {
 	    return -1 * $negation unless (defined ($context->{'msg'}));
 	    
 	    my @bodies;
-	    my @parts = $context->{'msg'}->parts();
-	    
-	    ## Should be recurcive...
-	    foreach my $i (0..$#parts) {
-		next unless ($parts[$i]->effective_type() =~ /^text/);
-		next unless (defined $parts[$i]->bodyhandle);
+	    ## FIXME:Should be recurcive...
+	    foreach my $part ($context->{'msg'}->parts) {
+		next unless ($part->effective_type() =~ /^text/);
+		next unless (defined $part->bodyhandle);
 		
-		push @bodies, $parts[$i]->bodyhandle->as_string();
+		push @bodies, $part->bodyhandle->as_string();
 	    }
 	    $value = \@bodies;
 	    
@@ -682,9 +680,8 @@ sub verify {
 	    return -1 * $negation unless (defined ($context->{'msg'}));
 	    
 	    my @types;
-	    my @parts = $context->{'msg'}->parts();
-	    foreach my $i (0..$#parts) {
-		push @types, $parts[$i]->effective_type();
+	    foreach my $part ($context->{'msg'}->parts) {
+		push @types, $part->effective_type();
 	    }
 	    $value = \@types;
 
@@ -856,9 +853,6 @@ sub verify {
             $reghost =~ s/\./\\./g ;
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
-
-	# Reject potentially harmful regexp, "(?{ code })" or "(??{ code })".
-	return -1 * $negation if $regexp =~ /\(\?\??\{.*\}/s;
 
 	# wrap matches with eval{} to avoid crash by malformed regexp.
 	my $r = 0;

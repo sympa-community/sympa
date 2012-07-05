@@ -1,4 +1,45 @@
 <!-- $Id$ -->
+
+ <form action="[% path_cgi %]" method="post" name="moderate_mail">
+ <fieldset>
+  <input type="hidden" name="list" value="[% list %]" />
+  <input type="hidden" name="id" value="[% id %]" />
+  <input type="hidden" name="file" value="[% file %]" />
+
+ [%- IF topic_required -%]
+  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" onclick="return checkbox_check_topic(moderate_mail)" />
+ [%- ELSE -%]
+  <input class="MainMenuLinks" type="submit" name="action_distribute" value="[%|loc%]Distribute[%END%]" />
+ [%- END -%]
+  <input class="MainMenuLinks" type="submit" name="action_reject" value="[%|loc%]Reject[%END%]" />
+
+  <select  name="message_template">
+  <option  value="reject">[%|loc %]Default rejection message[%END%]</option>
+  <option  value="quiet">[%|loc %]Do Not Notify[%END%]</option>	 
+   [% FOREACH file = available_files %]
+  <option  value="reject_[%  file  %]"> [%  file  %]</option> 
+   [%- END- %]
+  </select>
+</fieldset>
+
+</form>
+
+ [%- IF request_topic -%]
+ <form action="[% path_cgi %]" method="post" name="moderate_mail_2">
+ <fieldset>
+  <br /><br />
+ [%|loc%]This list is configured to require topic(s).[%END%]
+  <br />
+ <label for="topic_[%t.name%]">[%|loc%]Please select one or more topic(s) that corresponds to your message below:[%END%] 
+  <br /><br />
+ [% FOREACH t = available_topics %]
+   <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+  <br />
+ [%- END- %]
+ <br />
+</fieldset>
+</form>
+[%- END -%]
 [% PROCESS 'msg00000.html' %]
 
 <!-- end viewmod.tt2 -->

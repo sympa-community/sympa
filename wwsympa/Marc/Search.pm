@@ -3,6 +3,8 @@ package Marc::Search;
 use strict;
 
 use File::Find;
+use HTML::Entities qw(decode_entities encode_entities);
+use Encode qw(decode_utf8 encode_utf8 is_utf8);
 
 use Marc;
 
@@ -93,6 +95,26 @@ sub subj_count
   return $self->{subj_count} += $count;
 }
 
+sub key_word
+{
+  my $self = shift;
+
+  if (scalar @_)
+  {
+    my $key_word = shift;
+    if (defined $key_word)
+    {
+      $key_word = decode_utf8($key_word) unless is_utf8($key_word);
+      $self->{'key_word'} = $key_word;
+    }
+    else
+    {
+      $self->{'key_word'} = undef;
+    }
+  }
+  return $self->{'key_word'};
+}
+
 ##------------------------------------------------------------------------##
 ## Handle Actual Search
 ## PRIVATE METHOD
@@ -103,32 +125,32 @@ sub _find_match
   my $body_string = '';
   my $match       = 0;
   my $res         = undef;
-  
+
   # Check for a match in subject
   if (($self->subj) && ($_ = $subj) && (&{$self->{function2}}))  
     {
-      $subj =~ s,($self->{key_word}),<B>$1</B>,g; # Bold any matches
+      $subj =~ s,($self->{key_word}),\001$1\002,g; # Bold any matches
       $self->subj_count(1);	# Keeping count
       $match = 1;		# We'll be printing this one
     }
   # Check for a match in from
   if (($self->from) && ($_ = $from) && (&{$self->{function2}}))
     {
-      $from =~ s,($self->{key_word}),<B>$1</B>,g;
+      $from =~ s,($self->{key_word}),\001$1\002,g;
       $self->from_count(1);
       $match = 1;
     }
   # Check for a match in date
   if (($self->date) && ($_ = $date) && (&{$self->{function2}}))
     {
-      $date =~ s,($self->{key_word}),<B>$1</B>,g;
+      $date =~ s,($self->{key_word}),\001$1\002,g;
       $self->date_count(1);
       $match = 1;
     }
   # Check for a match in id
   if (($self->id) && ($_ = $id) && (&{$self->{function2}}))
     {
-      $id =~ s,($self->{key_word}),<B>$1</B>,g;
+      $id =~ s,($self->{key_word}),\001$1\002,g;
       $self->id_count(1);
       $match = 1;
     }
@@ -168,7 +190,7 @@ sub _find_match
 		      $line = $matches{$hit} + 1; 
 		      $body_string .= "line $line: $body[$matches{$hit}]";
 		    }
-		$body_string =~ s,($self->{key_word}),<B>$1</B>,g;
+		$body_string =~ s,($self->{key_word}),\001$1\002,g;
 		last BODY;
 	      }
 	  }
@@ -182,7 +204,7 @@ sub _find_match
 	    if (($_ = $body[$i]) && (&{$self->{function2}})) 
 	      {
 		($body_string = $body[($i - 1)] . $body[$i] . 
-		 $body[($i + 1)]) =~ s,($self->{key_word}),<B>$1</B>,g;
+		 $body[($i + 1)]) =~ s,($self->{key_word}),\001$1\002,g;
 		$self->body_count(1);
 		$match = 1;
 		last BODY;
@@ -195,10 +217,30 @@ sub _find_match
 		$file =~ s,$self->{'search_base'},$self->{'base_href'},;
 		$res->{'file'} = $file;
 		$res->{'body_string'} = $body_string;
-        $res->{'id'} = $id;
-     	$res->{'date'} = $date;
-     	$res->{'from'} = $from;
-     	$res->{'subj'} = $subj;
+		$res->{'id'} = $id;
+		$res->{'date'} = $date;
+		$res->{'from'} = $from;
+		$res->{'subj'} = $subj;
+		$res->{'rich'} = {};
+		foreach my $k (qw(body_string id date from subj)) {
+			my @rich = ();
+			foreach my $s (split /(\n|\001.*?\002)/, $res->{$k}) {
+				next unless length $s;
+				if ($s =~ /\n/) {
+					push @rich, { 'text' => '', 'format' => 'br' };
+				} elsif ($s =~ /\001(.*)\002/) {
+					push @rich, { 'text' => encode_utf8($1), 'format' => 'b' };
+				} else {
+					push @rich, { 'text' => encode_utf8($s), 'format' => '' };
+				}
+			}
+			$res->{'rich'}->{$k} = \@rich;
+			$res->{$k} = encode_entities($res->{$k}, '<>&"');
+			$res->{$k} =~ s,\001,<B>,g;
+			$res->{$k} =~ s,\002,</B>,g;
+			$res->{$k} =~ s,\n,<BR/>,g;
+			$res->{$k} = encode_utf8($res->{$k});
+		}
         push @{$self->{'res'}}, $res;
     }
 
@@ -244,7 +286,7 @@ sub search
 	foreach $file (@MSGFILES) 
 	{
 		my ($subj,$from,$date,$id,$body_ref);
-		unless (open FH, ,'<:bytes',  $file)
+		unless (open FH, '<:utf8', $file)
 		{
 #			$self->error("Couldn't open file $file, $!");
 		}
@@ -274,16 +316,22 @@ sub search
 			    last if (/-->/);
 			} 
 		} 
+		$subj =~ s/ *-->$//;
+
 		($from = <FH>) =~ s/^<!--X-From-R13: (.*) -->/$1/;
 
 		## No more need to decode header fields
 		#$from = &MIME::Words::decode_mimewords($from);
 		
 		$from =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
+
 		($date = <FH>) =~ s/^<!--X-Date: (.*) -->/$1/;
-        ($id = <FH>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
+
+		($id = <FH>) =~ s/^<!--X-Message-Id: (.*) -->/$1/;
+
 		if ($body)
 		{
+			my $lines = '';
 			while (<FH>) 
 			{
 				# Messages are contained between Body-of-Message tags
@@ -291,15 +339,49 @@ sub search
 				$_ = <FH>;		
 				while (! eof && ($_ !~ /^<!--X-MsgBody-End-->/)) 
 				{	
-					push(@$body_ref,$_);
+					$lines .= $_;
 					$_ = <FH>;
 				}
 				last;			
 			}
+			# Remove HTML comments
+			$lines =~ s/<!--[^<>]*?-->//g;
+			# Translate newlines
+			$lines =~ s{<PRE\b[^>]*>(.*?)</PRE\b[^>]*>}
+					   { my $s = $1; $s =~ s,\r\n|\r|\n,<BR/>,g; $s; }egis;
+			$lines =~ s/[\r\n]/ /g;
+			$lines =~ s/<(BR|DIV|P)\b[^>]*>[ \t]*/\n/gi;
+			# Remove other HTML tags
+			$lines =~ s,[ \t]*</[^>]*>,,g;
+			$lines =~ s/<[^>]*>[ \t]*//g;
+			$lines =~ s/[<>]/ /g;
+			# Decode entities
+			$lines = decode_entities($lines);
+			$lines =~ s/[\001\002]/ /g;
+			# Split lines
+			$body_ref = [split /(?<=\n)/, $lines];
 		}
 		unless (close FH)
 		{
 #            $self->error("Couldn't close file $file, $!");
+		}
+
+		# Decode entities
+		if ($subj) {
+			$subj = decode_entities($subj);
+			$subj =~ s/[\001\002\r\n]/ /g;
+		}
+		if ($from) {
+			$from = decode_entities($from);
+			$from =~ s/[\001\002\r\n]/ /g;
+		}
+		if ($date) {
+			$date = decode_entities($date);
+			$date =~ s/[\001\002\r\n]/ /g;
+		}
+		if ($id) {
+			$id = decode_entities($id);
+			$id =~ s/[\001\002\r\n]/ /g;
 		}
 
 		if ($self->_find_match($file,$subj,$from,$date,$id,$body_ref))
@@ -337,6 +419,7 @@ sub match_any
   if ($self->case) {$tail = '/i'} else {$tail = '/'};
   my $code = <<EOCODE;
 sub {
+      use utf8;
 EOCODE
   $code .= <<EOCODE if @_ > 5;
       study;
@@ -363,6 +446,7 @@ sub body_match_all
   if ($self->case) {$tail = '/i'} else {$tail = '/'};
   my $code = <<EOCODE;
 sub {
+	use utf8;
 	my(\@matches);
 EOCODE
   $code .= <<EOCODE if @pat > 5;
@@ -398,7 +482,7 @@ sub match_all
     $sep = "/ && /";
     $tail = "/ }";
   }
-  my $code =	"sub { /" . join ("$sep", @_) . $tail;
+  my $code =	"sub { use utf8; /" . join ("$sep", @_) . $tail;
   my $function = eval $code;
   die "bad pattern: $@" if $@;
   return $function;
@@ -410,10 +494,14 @@ sub match_this
   my $self = shift;
   my $string = join(' ', @_);
   $string = '(?i)' . $string if ($self->case);
-  my $code = "sub { /" . $string . "/ }";
+  my $code = "sub { use utf8; /" . $string . "/ }";
   my $function = eval $code;
   die "bad pattern: $@" if $@;
   return $function;
 }
 
 1;
+__END__
+
+vim:ts=4
+

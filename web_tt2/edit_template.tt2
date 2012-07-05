@@ -21,9 +21,8 @@
 </p><br />
 <form action="[% path_cgi %]/edit_template" method="post">
 <fieldset>
- <textarea wrap="off" name="content" cols="90" rows="[% rows %]" />
-[% template_content %]
-</textarea><br /><br />
+ <textarea wrap="off" name="content" cols="90" rows="[% rows %]">
+[% template_content %]</textarea><br /><br />
 <input type="hidden" name="webormail" value="[% webormail %]" />
 <input type="hidden" name="template_name" value="[% template_name %]" />
 <input type="hidden" name="action" value="edit_template" />

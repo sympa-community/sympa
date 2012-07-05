@@ -181,11 +181,11 @@
       return undef;
   }
   
-  my $from = $msgent->head->get('From') ? MIME::EncWords::decode_mimewords($msgent->head->get('From'), Charset=>'utf8') : gettext("[Unknown]");
-  my $subject = $msgent->head->get('Subject') ? MIME::EncWords::decode_mimewords($msgent->head->get('Subject'), Charset=>'utf8') : '';
-  my $date = $msgent->head->get('Date') ? MIME::EncWords::decode_mimewords($msgent->head->get('Date'), Charset=>'utf8') : '';
-  my $to = $msgent->head->get('To') ? MIME::EncWords::decode_mimewords($msgent->head->get('To'), Charset=>'utf8') : '';
-  my $cc = $msgent->head->get('Cc') ? MIME::EncWords::decode_mimewords($msgent->head->get('Cc'), Charset=>'utf8') : '';
+  my $from = $msgent->head->get('From') ? tools::decode_header($msgent, 'From') : gettext("[Unknown]");
+  my $subject = $msgent->head->get('Subject') ? tools::decode_header($msgent, 'Subject') : '';
+  my $date = $msgent->head->get('Date') ? tools::decode_header($msgent, 'Date') : '';
+  my $to = $msgent->head->get('To') ? tools::decode_header($msgent, 'To', ', ') : '';
+  my $cc = $msgent->head->get('Cc') ? tools::decode_header($msgent, 'Cc', ', ') : '';
   
   chomp $from;
   chomp $to;

@@ -644,7 +644,9 @@ my %required_args = ('active_lists' => ['for|count'],
 ## Defines the required privileges to access privileged actions
 ## You can define a set ofequiivalent privileges in the ARRAYREF
 my %required_privileges = ('admin' => ['owner','editor'],
+			   'arc_delete' => ['owner'],
 			   'arc_download' => ['owner'],
+			   'arc_manage' => ['owner'],
 			   'blacklist' => ['owner','editor'],
 			   'close_list' => ['privileged_owner'],
 			   'close_list_request' => ['privileged_owner'],
@@ -1024,7 +1026,7 @@ my $birthday = time ;
 
  ## Main loop
  my $loop_count;
- my $start_time = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime(time));
+ my $start_time = time;
  while ($query = &new_loop()) {
 
      undef %::changed_params;
@@ -1110,6 +1112,7 @@ my $birthday = time ;
      }
  
      $param->{'cookie_domain'} = &Conf::get_robot_conf($robot,'cookie_domain');
+
      $ip = $ENV{'REMOTE_HOST'};
      $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
      $ip = 'undef' unless ($ip);
@@ -1121,7 +1124,6 @@ my $birthday = time ;
          &wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
          $param->{'cookie_domain'} = $http_host;
      }
-
      &Log::set_log_level(&Conf::get_robot_conf($robot, 'log_level'));
 
      ## Sympa parameters in $param->{'conf'}
@@ -1676,7 +1678,7 @@ my $birthday = time ;
  	 print "Content-Type: application/rss+xml; charset=utf-8\n\n";
  
  	 ## Icons
- 	 $param->{'icons_url'} = $Conf{'static_content_url'}.'/icons';
+ 	 $param->{'icons_url'} = &Conf::get_robot_conf($robot, 'static_content_url').'/icons';
  
  	 ## Retro compatibility concerns
  	 $param->{'active'} = 1;
@@ -2391,6 +2393,7 @@ sub check_action_parameters {
 	  &wwslog('info',"missing parameter '$arg_name'");
 	  &web_db_log({'status' => 'error',
 		       'error_type' => 'missing_parameter'});
+	  delete $param->{'list'};
 	  return undef;
 	}
       }
@@ -2412,6 +2415,7 @@ sub check_action_parameters {
       &wwslog('info','authorization failed, insufficient privileges');
       &web_db_log({'status' => 'error',
 		   'error_type' => 'authorization'});		      
+      delete $param->{'list'};
       return undef;
     }
   }
@@ -2427,20 +2431,20 @@ sub send_html {
     ## Send HTML
     if ($param->{'date'}) {
 	Language::PushLang("en_US");
-	  printf "Date: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime(time));
-	  Language::PopLang();
-      }
+	printf "Date: %s\n", &POSIX::strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime(time));
+	Language::PopLang();
+    }
     ## If we set the header indicating the last time the file to send was modified, add an HTTP header (limitate web harvesting).
     if ($param->{'header_date'}) {
 	Language::PushLang("en_US");
-	  printf "Last-Modified: %s\n", &POSIX::strftime('%a, %d %b %Y %R %z',localtime($param->{'header_date'}));
-	  Language::PopLang();
-      }
+	printf "Last-Modified: %s\n", &POSIX::strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime($param->{'header_date'}));
+	Language::PopLang();
+    }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n\n";
     
     ## Icons
-    $param->{'icons_url'} =  $Conf{'static_content_url'}.'/icons';
+    $param->{'icons_url'} = &Conf::get_robot_conf($robot, 'static_content_url').'/icons';
     
     
     ## Retro compatibility concerns
@@ -2742,7 +2746,7 @@ Use it to create a List object and initialize output parameters.
      &wwslog('debug2', 'check_param_out');
 
      $param->{'loop_count'} = $loop_count;
-     $param->{'start_time'} = $start_time;
+     $param->{'start_time'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($start_time);
      $param->{'process_id'} = $$;
 
      ## listmaster has owner and editor privileges for the list
@@ -3029,7 +3033,7 @@ sub do_ticket {
 	    $param->{'user'} =  &List::get_global_user($session->{'email'});
 	    $param->{'user'}{'email'} =  $session->{'email'} ;
 	    $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
-	    $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'})) if ($param->{'user'}{'last_login_date'}); 
+	    $param->{'last_login_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'}) if ($param->{'user'}{'last_login_date'}); 
 	    &List::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
 	}elsif($param->{'ticket_context'}{'result'} eq 'closed'){
 	    &wwslog('info', 'do_ticket(%s) : Refusing to perform login because the ticket has been used before', $in{'ticket'});
@@ -3150,7 +3154,7 @@ sub do_ticket {
      } 
      $param->{'user'} = $data->{'user'};
      $param->{'last_login_host'} = $data->{'user'}{'last_login_host'};
-     $param->{'last_login_date'} = &POSIX::strftime("%d %b %Y at %H:%M:%S", localtime($data->{'user'}{'last_login_date'})) if ($data->{'user'}{'last_login_date'});
+     $param->{'last_login_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($data->{'user'}{'last_login_date'}) if ($data->{'user'}{'last_login_date'});
      $session->{'auth'} = $data->{'auth'};
      my $email = lc($param->{'user'}{'email'});
      $session->{'email'} = $email;
@@ -3265,7 +3269,8 @@ sub do_sso_login {
 	    $in{'action'} = 'redirect';
 	    $param->{'redirect_to'} = $redirect_url;
 	    $param->{'bypass'} = 'extreme';
-	    $session->set_cookie('localhost','session');
+	    $session->set_cookie($param->{'cookie_domain'},'session');
+	    #$session->set_cookie('localhost','session');
 	    print "Location: $param->{'redirect_to'}\n\n";
 	}
 	
@@ -3712,7 +3717,8 @@ sub do_redirect {
     # because of some bug Sympa did redirection to un empty URL. Next line should prevent it.
     $redirect_to ||= $param->{'base_url'}.$param->{'path_cgi'};
 
-    $session->set_cookie('localhost','session');
+    #$session->set_cookie('localhost','session');
+    $session->set_cookie($param->{'cookie_domain'},'session');
     print "Location: $redirect_to\n\n";
     $param->{'bypass'} = 'extreme';
     return 1;
@@ -6483,10 +6489,10 @@ sub do_skinsedit {
 
 
 	 $param->{'spool'}{$id}{'size'} = int( (-s "$Conf{'queuemod'}/$msg") / 1024 + 0.5);
-	 $param->{'spool'}{$id}{'subject'} =  &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Subject'), Charset=>'utf8');
+	 $param->{'spool'}{$id}{'subject'} =  &tools::decode_header($mail, 'Subject');
 	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$id}{'date'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('Date'), Charset=>'utf8');
-	 $param->{'spool'}{$id}{'from'} = &MIME::EncWords::decode_mimewords($mail->{'msg'}->head->get('From'), Charset=>'utf8');
+	 $param->{'spool'}{$id}{'date'} = &tools::decode_header($mail, 'Date');
+	 $param->{'spool'}{$id}{'from'} = &tools::decode_header($mail, 'From');
 	 $param->{'spool'}{$id}{'spam_status'} = $mail->{'spam_status'};
 	 foreach my $field ('subject','date','from') {
 	     $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
@@ -6844,8 +6850,7 @@ sub do_skinsedit {
 		 my $rejected_sender = $sender_hdr[0]->address;
 		 unless ($in{'quiet'}) {
 		     my %context;
-		     $context{'subject'} = &MIME::EncWords::decode_mimewords($msg->head->get('subject'), Charset=>'utf8');
-		     chomp $context{'subject'};
+		     $context{'subject'} = &tools::decode_header($msg, 'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
 		     unless ($list->send_file($in{'message_template'}, $rejected_sender, $robot, \%context)) {
@@ -7855,7 +7860,12 @@ sub do_remove_arc {
 	 next unless (open MAIL,"$arcpath/arctxt/$file") ;
 	 while (<MAIL>) {
 	     last if /^$/ ;
-	     if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
+	     my $idline = $_;
+	     if (/^Message-id\s*:\s*$/i) {
+		chomp $idline;
+		$idline .= <MAIL>;
+	     }
+	     if ($idline =~ /^Message-id\s*:\s*<?([^>\s]+)>?\s?/i ) {
 		 my $id = $1;
 		 if ($id eq $in{'msgid'}) {
 		     $msgfile = $file ;
@@ -7931,7 +7941,12 @@ sub do_remove_arc {
 	 next unless (open MAIL,"$arcpath/arctxt/$file") ;
 	 while (<MAIL>) {
 	     last if /^$/ ;
-	     if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
+	     my $idline = $_;
+	     if (/^Message-id\s*:\s*$/i) {
+		chomp $idline;
+		$idline .= <MAIL>;
+	     }
+	     if ($idline =~ /^Message-id\s*:\s*<?([^>\s]+)>?\s?/i ) {
 		 my $id = $1;
 		 if ($id eq $in{'msgid'}) {
 		     $msgfile = $file ;
@@ -7948,9 +7963,9 @@ sub do_remove_arc {
 	 }
 
 	 $param->{'bypass'} = 'extreme';
-	 printf "Content-Type: text/plain\n\n";
+	 print "Content-Type: text/plain\n\n";
 	 while (<MSG>){
-	     printf $_ ;
+	     print $_;
 	 }
 	 close MSG;
 
@@ -8099,13 +8114,9 @@ sub do_remove_arc {
 	 &report::reject_report_web('user','missing_arg',{'argument' => 'key_word'},$param->{'action'});
 	 &wwslog('info','do_arcsearch: no search term');
 	 return undef;
-     }elsif ($in{'key_word'} =~ /[<>\\\*\$]/) {
-	 &report::reject_report_web('user','syntax_errors',{'params' => 'key_word'},$param->{'action'});
-	 &wwslog('info','do_arcsearch: syntax error');
-	 return undef;
      }
 
-     $param->{'key_word'} = &tools::escape_regexp($in{'key_word'});
+     $param->{'key_word'} = $in{'key_word'};
 
      $search->limit ($in{'limit'});
 
@@ -8115,15 +8126,17 @@ sub do_remove_arc {
      $search->match (1) 
 	 if (($in{'match'} eq 'partial') or ($in{'match'} eq '1'));
 
-     my @words = split(/\s+/,&tools::escape_regexp($in{'key_word'}));
-     $search->words (\@words);
      $search->clean_words ($in{'key_word'});
-     my @clean_words = @words;
-
-     for my $i (0 .. $#words) {
-	 $words[$i] =~ s,/,\\/,g;
-	 $words[$i] = '\b' . $words[$i] . '\b' if ($in{'match'} eq 'exact');
+     my @clean_words = split(/\s+/, $in{'key_word'});
+     my @words = @clean_words;
+     foreach my $w (@words) {
+	 $w = &tools::escape_regexp($w);
+	 $w =~ s,/,\\/,g;
+	 $w = '\b' . $w . '\b'
+	     if $in{'match'} eq 'exact';
      }
+     $search->words(\@words);
+
      $search->key_word (join('|',@words));
 
      if ($in{'case'} eq 'off') {
@@ -8180,11 +8193,6 @@ sub do_remove_arc {
 
      $param->{'res'} = $search->res;
 
-     ## Decode subject header fields
-     foreach my $m (@{$param->{'res'}}) {
-	 $m->{'subj'} = &MIME::EncWords::decode_mimewords($m->{'subj'}, Charset=>'utf8');
-     }
-
      return 1;
  }
 
@@ -8226,19 +8234,21 @@ sub do_remove_arc {
 	 return undef;
      }
 
-     $param->{'msgid'} = &tools::unescape_chars($in{'msgid'});
-     $in{'msgid'} = &tools::escape_regexp($in{'msgid'});
-
-     ## Mhonarc escapes some characters : '-' (&#45;) and '&' (&#38;)
-     $in{'msgid'} =~ s/\&/\&\#38\;/g;
-     $in{'msgid'} =~ s/\-/\&\#45\;/g;
+     $in{'msgid'} = &tools::unescape_chars($in{'msgid'});
+     $param->{'msgid'} = $in{'msgid'};
 
      $search->limit (1);
 
-     my @words = split(/\s+/,$in{'msgid'});
-     $search->words (\@words);
      $search->clean_words ($in{'msgid'});
-     my @clean_words = @words;
+     my @words = split(/\s+/, $in{'msgid'});
+     foreach my $w (@words) {
+	$w = &tools::escape_regexp($w);
+	$w =~ s,/,\\/,g;
+	# Mhonarc escapes some characters : '-' (&#45;) and '&' (&#38;)
+	$w =~ s/\&/\&\#38\;/g;
+	$w =~ s/\-/\&\#45\;/g;
+     }
+     $search->words (\@words);
 
      $search->key_word (join('|',@words));
 
@@ -8459,12 +8469,14 @@ sub do_set_pending_list_request {
      }
 
      ## Notify listmasters
+     my @listmasters = split /\s*,\s*/,
+			     &Conf::get_robot_conf($robot, 'listmaster');
      if ($in{'status'} eq 'open') {
-	 unless ($list->send_file('list_created', &Conf::get_robot_conf($robot, 'listmaster'), $robot,{})) {
+	 unless ($list->send_file('list_created', \@listmasters, $robot, {})) {
 	     &wwslog('notice',"Unable to send template 'list_created' to listmaster");
 	 }
      }elsif ($in{'status'} eq 'closed') {
-	 unless ($list->send_file('list_rejected', &Conf::get_robot_conf($robot, 'listmaster'), $robot,{})) {
+	 unless ($list->send_file('list_rejected', \@listmasters, $robot, {})) {
 	     &wwslog('notice',"Unable to send template 'list_rejected' to listmaster");
 	 }
      }
@@ -15406,7 +15418,7 @@ sub do_upload_pictures {
     # type of the file
     my $filetype;
     if ($fn =~ /\.(jpg|jpeg|png|gif)$/i) {
-	$filetype = $1; 
+	$filetype = lc $1; 
     }
     else {$filetype = undef};
     
@@ -16152,15 +16164,11 @@ sub do_send_mail {
      my $msg = $parser->parse(\*FILE);
      my $head = $msg->head();
      # headers will be encoded later.
-     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($head->get('subject'));
-     $param->{'subject'} = MIME::EncWords::decode_mimewords($head->get('subject'), Charset=>'utf8');
-     chomp $param->{'subject'};
+     $param->{'subject'} = tools::decode_header($head, 'Subject');
      $param->{'subject'} = &tools::escape_html($param->{'subject'});
-     $param->{'from'} = MIME::EncWords::decode_mimewords($head->get('from'), Charset=>'utf8');
-     chomp  $param->{'from'};
+     $param->{'from'} = tools::decode_header($head, 'From');
      $param->{'from'} = &tools::escape_html($param->{'from'});
-     $param->{'date'} = MIME::EncWords::decode_mimewords($head->get('date'), Charset=>'utf8');
-     chomp  $param->{'date'};
+     $param->{'date'} = tools::decode_header($head, 'Date');
      $param->{'date'} =  &tools::escape_html($param->{'date'});
      $param->{'message_id'} = &tools::clean_msg_id($head->get('Message-Id'));
 
@@ -16579,7 +16587,7 @@ sub do_blacklist {
 		$param->{'ignored_linest'} .=  $line."\n";
 		$param->{'ignored'} += 1;
 	    }else{
-		printf BLACKLIST "$line\n";
+		print BLACKLIST "$line\n";
 		$param->{'blacklist'} .=  $line."\n";
 		$param->{'rows'} += 1;
         	$count += 1  unless ($line =~ /^\s*$/o || /^[\#\;]/o);
@@ -17009,7 +17017,7 @@ sub do_arc_download {
 
     ##Sending Zip to browser
     $param->{'bypass'} ='extreme';
-    printf("Content-Type: application/zip;\nContent-disposition: filename=\"%s\";\n\n",$zip_file_name);
+    printf("Content-Type: application/zip;\nContent-disposition: attachment; filename=\"%s\";\n\n",$zip_file_name);
     ##MIME Header
     unless (open (ZIP,$zip_abs_file)) {
 	&report::reject_report_web('intern','cannot_open_file',{'file' => $zip_abs_file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);

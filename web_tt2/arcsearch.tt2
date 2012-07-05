@@ -46,7 +46,27 @@
 <ul>
 <dl>
 [% FOREACH u = res %]
-	<dt><li><b><a href=[% u.file %]>[% u.subj %]</b></a> -- <em>[% u.date %]</em><dd>[% u.from %]<pre>[% u.body_string %]</pre></dd>
+	<dt><li><b><a href=[% u.file %]>
+[%- FOREACH r = u.rich.subj -%]
+  [%- IF r.format == 'b' %]<b>[% r.text %]</b>
+  [%- ELSIF r.format == 'br' %]<br />
+  [%- ELSE%][% r.text %][%END%][%END -%]
+</a></b> -- <em>
+[%- FOREACH r = u.rich.date -%]
+  [%- IF r.format == 'b' %]<b>[% r.text %]</b>
+  [%- ELSIF r.format == 'br' %]<br />
+  [%- ELSE%][% r.text %][%END%][%END -%]
+</em><dd>
+[%- FOREACH r = u.rich.from -%]
+  [%- IF r.format == 'b' %]<b>[% r.text %]</b>
+  [%- ELSIF r.format == 'br' %]<br />
+  [%- ELSE%][% r.text %][%END%][%END -%]
+<pre>
+[%- FOREACH r = u.rich.body_string -%]
+  [%- IF r.format == 'b' %]<b>[% r.text %]</b>
+  [%- ELSIF r.format == 'br' %]<br />
+  [%- ELSE%][% r.text %][%END%][%END -%]
+</pre></dd>
 [% END %]
 </dl>
 </ul>
