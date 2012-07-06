@@ -31,6 +31,12 @@
   <li> <a class="MainMenuLinks"  [% IF  conf.main_menu_custom_button_3_target %] target ="[% conf.main_menu_custom_button_3_target %]"[% END %] href="[% conf.main_menu_custom_button_3_url %]">[% conf.main_menu_custom_button_3_title %]</a></li>
 [%END%]
 
+[% FOREACH alf IN conf.automatic_list_families.keys %]
+ [% IF session.is_family_owner.$alf %]
+   [% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]                                              <li><a class="[% class %]" href="[% path_cgi %]/automatic_lists_request/[% conf.automatic_list_families.$alf.name %]" >[% conf.automatic_list_families.$alf.display %]</a></li>
+ [% END %]
+[% END %]
+
 </ul>
 
 

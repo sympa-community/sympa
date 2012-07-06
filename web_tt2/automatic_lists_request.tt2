@@ -1,0 +1,17 @@
+<!-- Begin automatic_lists_request.tt2 -->
+<div>
+<h1>[% family.display %]</h1>
+<p>[%|loc%]In this form, you will be able to create and / or access lists created on the basis of parameters you will defined.[% END %]</p>
+<form action="[% path_cgi %]" method="post" class="add-request" name="automatic_lists">
+[% FOREACH p = family.description.class %]
+<h2>[% p.stamp %]</h2>
+<p> [% p.description %]</p>
+[% FOREACH i = p.instances %]
+<input type="radio" name="automatic_list_part_[% p.order %]" value="[% i.value %]"[% IF i.default %] checked="checked"[% END %]> [% i.tag %]<br>
+[%END%]
+[%END%]
+<input class="MainMenuLinks" type="submit" name="action_automatic_lists" value="[%|loc%]Go to list[%END%]" />
+<input type="hidden" name="family" value="[% family.name %]" />
+</form>
+</div>
+<!-- End automatic_lists_request.tt2 -->

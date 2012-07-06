@@ -1,0 +1,5 @@
+title.gettext Restricted to people subscribed to the list of family owners.
+
+is_listmaster([sender])	smtp,dkim,md5,smime		->	do_it
+is_subscriber([family->family_owners_list],[sender])	smtp,dkim,md5,smime		->	do_it
+true()	smtp,dkim,md5,smime		->	reject,quiet

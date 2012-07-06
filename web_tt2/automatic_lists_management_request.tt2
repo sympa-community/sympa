@@ -1,0 +1,9 @@
+<!-- Begin automatic_list_management_request.tt2 -->
+<div>
+<h1>[%|loc%]Automatic lists management[% END %]</h1>
+<p>[%|loc(automatic_lists_description.family_name)%]The automatic lists are based on the $1 family[% END %]</p>
+[% FOREACH p = automatic_lists_description.class %]
+<p>Found class [% p.name %]</p>
+[%END%]
+</div>
+<!-- End automatic_list_management_request.tt2 -->

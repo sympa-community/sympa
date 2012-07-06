@@ -997,6 +997,78 @@ sub load_sql_filter {
     return (&load_generic_conf_file($file,\%sql_named_filter_params, 'abort'));
 }
 
+## load automatic_list_description.conf configuration file
+sub load_automatic_lists_description {
+    my $robot = shift;
+    my $family = shift;
+    &Log::do_log('debug2','Starting: robot %s family %s',$robot,$family);
+    
+    my %automatic_lists_params = (
+	'class' => {
+	    'occurrence' => '1-n',
+	    'format' => { 
+		'name' => {'format' => '.*', 'occurrence' => '1', },
+		'stamp' => {'format' => '.*', 'occurrence' => '1', },
+		'description' => {'format' => '.*', 'occurrence' => '1', },
+		'order' => {'format' => '\d+', 'occurrence' => '1',  },
+		'instances' => {'occurrence' => '1','format' => '.*',},
+		    #'format' => {
+			#'instance' => {
+			    #'occurrence' => '1-n',
+			    #'format' => {
+				#'value' => {'format' => '.*', 'occurrence' => '1', },
+				#'tag' => {'format' => '.*', 'occurrence' => '1', },
+				#'order' => {'format' => '\d+', 'occurrence' => '1',  },
+				#},
+			    #},
+			#},
+		},
+	    },
+	);
+    # find appropriate automatic_lists_description.tt2 file
+    my $config ;
+    if (defined $robot) {
+	$config = $Conf{'etc'}.'/'.$robot.'/families/'.$family.'/automatic_lists_description.conf';
+    }else{
+	$config = $Conf{'etc'}.'/families/'.$family.'/automatic_lists_description.conf';
+    }
+    return undef unless  (-r $config);
+    my $description = &load_generic_conf_file($config,\%automatic_lists_params);
+
+    ## Now doing some structuration work because Conf::load_automatic_lists_description() can't handle
+    ## data structured beyond one level of hash. This needs to be changed.
+    my @structured_data;
+    foreach my $class (@{$description->{'class'}}){
+	my @structured_instances;
+	my @instances = split '%%%',$class->{'instances'};
+	my $default_found = 0;
+	foreach my $instance (@instances) {
+	    my $structured_instance;
+	    my @instance_params = split '---',$instance;
+	    foreach my $instance_param (@instance_params) {
+		$instance_param =~ /^\s*(\S+)\s+(.*)\s*$/;
+		my $key = $1;
+		my $value = $2;
+		$key =~ s/^\s*//;
+		$key =~ s/\s*$//;
+		$value =~ s/^\s*//;
+		$value =~ s/\s*$//;
+		$structured_instance->{$key} = $value;
+	    }
+	    $structured_instances[$structured_instance->{'order'}] = $structured_instance;
+	    if (defined $structured_instance->{'default'}) {
+		$default_found = 1;
+	    }
+	}
+	unless($default_found) {$structured_instances[0]->{'default'} = 1;}
+	$class->{'instances'} = \@structured_instances;
+	$structured_data[$class->{'order'}] = $class;
+    }
+    $description->{'class'} = \@structured_data;
+    return $description;
+}
+
+
 ## load trusted_application.conf configuration file
 sub load_trusted_application {
     my $robot = shift;
@@ -1453,6 +1525,26 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'static_content_url'} ||= $Conf{'static_content_url'};
     $param->{'config_hash'}{'static_content_path'} ||= $Conf{'static_content_path'};
 
+    # Hack because multi valued parameters are not available for Sympa 6.1.
+    if (defined $param->{'config_hash'}{'automatic_list_families'}) {
+	my @families = split ';',$param->{'config_hash'}{'automatic_list_families'};
+	my %families_description;
+	foreach my $family_description (@families) {
+	    my %family;
+	    my @family_parameters = split ':',$family_description;
+	    foreach my $family_parameter (@family_parameters) {
+		my @parameter = split '=', $family_parameter;
+		$family{$parameter[0]} = $parameter[1];
+	    }
+	    $family{'escaped_prefix_separator'} = $family{'prefix_separator'};
+	    $family{'escaped_prefix_separator'} =~ s/([+*?.])/\\$1/g;
+	    $family{'escaped_classes_separator'} = $family{'classes_separator'};
+	    $family{'escaped_classes_separator'} =~ s/([+*?.])/\\$1/g;
+	    $families_description{$family{'name'}} = \%family;
+	    $families_description{$family{'name'}}{'description'} = &load_automatic_lists_description(undef,$family{'name'});
+	}
+	$param->{'config_hash'}{'automatic_list_families'} = \%families_description;
+    }
     ## CSS
     my $final_separator = '';
     $final_separator = '/' if ($param->{'config_hash'}{'robot_name'});

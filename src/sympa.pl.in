@@ -1400,54 +1400,21 @@ sub DoFile {
 		return undef;
             }
             
-	    # check authorization
 	    my $auth_level =  'smtp';
 	    $auth_level = 'dkim' if $message->{'dkim_pass'};
 	    $auth_level = 'md5' if $message->{'md5_check'};
 	    $auth_level = 'smime' if $message->{'smime_signed'};
-	    my $result = &Scenario::request_action('automatic_list_creation',$auth_level,$robot,
-						   {'sender' => $sender, 
-						    'message' => $message, 
-						    'family'=>$dyn_list_family, 
-						    'automatic_listname'=>$listname });
-	    my $r_action;
-	    unless (defined $result) {
-		&Log::do_log('err', 'sympa::DoFile(): message (%s) ignored because unable to evaluate scenario "automatic_list_creation" for list %s',  $msg_id, $listname);
-		&report::reject_report_msg('intern','Message ignored because scenario "automatic_list_creation" cannot be evaluated',$sender,
-					   {'msg_id' => $msg_id, 'message' => $message}, $robot,$message->{'msg_as_string'});
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file"]);
-		&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'DoFile',
-			      'parameters' => "$msg_id,$robot",'target_email' => '','msg_id' => $msg_id, 'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	    if ($list = $dyn_family->create_automatic_list(('listname' => $listname,'auth_level' => $auth_level,'sender'=>$sender,'message'=>$message))) {
+		$dyn_just_created = 1;
+	    }else {
+		&Log::do_log('err', 'Unable to create list %s. Message %s ignored.', $listname,'msg_id' => $hdr->get('Message-Id'));
+		&report::reject_report_msg('intern',"Message ignored because automatic list '$listname' creation could not be performed.",$sender,
+					   {'msg_id' => $hdr->get('Message-Id'),'message' => $message}, $dyn_family->{'robot'},$message->{'msg_as_string'});
+		&List::send_notify_to_listmaster('automatic_list_creation_failed',$dyn_family->{'robot'},["Failed to process $file"]);
+		&Log::db_log({'robot' => $dyn_family->{'robot'},'list' => $listname,'action' => 'DoFile',
+			      'parameters' => $hdr->get('Message-Id').",$dyn_family->{'robot'}",'target_email' => '','msg_id' => hdr->get('Message-Id'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef ;
-	    }
-	    
-	    if (ref($result) eq 'HASH') {
-		$r_action = $result->{'action'};
-	    }
-	    unless ($r_action =~ /do_it/) {
-		&Log::do_log('info', 'automatic_list_creation %s@%s from %s refused', $listname,$robot,$sender);
-		&report::reject_report_msg('auth',$result->{'reason'},$sender,{'listname' => $listname,
-			'list'=>{'name'=>$listname, 'host'=>$robot},'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file"]);
-		return undef;
-	    }
-            
-            $result = $dyn_family->add_list({listname=>$listname}, 1);
-            unless (defined $result->{'ok'}) {
-		my $details = $result->{'string_error'} || $result->{'string_info'} || [];
-                &Log::do_log('err', "Failed to add a dynamic list to the family %s : ", $dyn_list_family, join(';', @{$details}));
-                &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname},'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file."]);
-		return undef;
             }
-            $list = new List ($listname, $robot);
-            unless (defined $list) {
-                &Log::do_log('err', 'sympa::DoFile() : dynamic list %s could not be created',$listname);
-                &report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname, 'list'=>{'name'=>$listname},'message' => $message},$robot,$message->{'msg'}->as_string,'');
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file."]);
-		return undef;
-            }
-	    $dyn_just_created = 1;
         }
 	$host = $list->{'admin'}{'host'};
 	$name = $list->{'name'};

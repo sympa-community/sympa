@@ -589,6 +589,11 @@ sub verify {
 	    $value =~ s/\[custom_vars\-\>([\w\-]+)\]/$context->{'custom_vars'}{$1}/;
 	}
 	
+	## Family vars
+	if ($value =~ /\[family\-\>([\w\-]+)\]/i) {
+	    $value =~ s/\[family\-\>([\w\-]+)\]/$context->{'family'}{$1}/;
+	}
+	
 	## Config param
 	elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
 	    if (my $conf_value = &Conf::get_robot_conf($robot, $1)) {

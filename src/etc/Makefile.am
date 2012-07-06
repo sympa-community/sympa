@@ -72,6 +72,7 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/add.owner_notify \
 		      scenari/automatic_list_creation.listmaster \
 		      scenari/automatic_list_creation.public \
+		      scenari/automatic_list_creation.family_owner \
 		      scenari/create_list.intranet \
 		      scenari/create_list.listmaster \
 		      scenari/create_list.public_listmaster \

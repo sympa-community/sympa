@@ -30,6 +30,9 @@ webtemplate_DATA = active_lists.tt2 \
 		   arcsearch.tt2 \
 		   arc.tt2 \
 		   auto_signoff.tt2 \
+		   automatic_lists_management_request.tt2 \
+		   automatic_lists_request.tt2 \
+		   automatic_lists.tt2 \
 		   blacklist.tt2 \
 		   button_footer.tt2 \
 		   button_header.tt2 \
@@ -63,6 +66,8 @@ webtemplate_DATA = active_lists.tt2 \
 		   editsubscriber.tt2 \
 		   edit_template.tt2 \
 		   error.tt2 \
+		   family_signoff.tt2 \
+		   family_signoff_request.tt2 \
 		   footer.tt2 \
 		   get_closed_lists.tt2 \
 		   get_inactive_lists.tt2 \

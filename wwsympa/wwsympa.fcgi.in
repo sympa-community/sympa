@@ -41,6 +41,7 @@ use lib '--modulesdir--';
 
 use Getopt::Long;
 use Archive::Zip;
+use Data::Dumper;
   
 use strict 'vars';
 use Time::Local;
@@ -206,6 +207,8 @@ my %comm = ('home' => 'do_home',
 	 'suboptions' => 'do_suboptions',
 	 'signoff' => 'do_signoff',
 	 'auto_signoff' => 'do_auto_signoff',
+	 'family_signoff' => 'do_family_signoff',
+	 'family_signoff_request' => 'do_family_signoff_request',
 	 'multiple_signoff' => 'do_multiple_sigoff',
 	 'sigrequest' => 'do_sigrequest',
 	 'ignoresub' => 'do_ignoresub',
@@ -361,6 +364,10 @@ my %comm = ('home' => 'do_home',
 	 'show_exclude' => 'do_show_exclude',
 	 'ca' => 'do_ca', # 'ca' stands for 'custom_action'. I used a short name to make it discrete in a URL.
 	 'lca' => 'do_lca', # 'lca' stands for 'list_custom_action'. I used a short name to make it discrete in a URL.
+	 'automatic_lists_management_request' => 'do_automatic_lists_management_request',
+	 'automatic_lists_management' => 'do_automatic_lists_management',
+	 'automatic_lists_request' => 'do_automatic_lists_request',
+	 'automatic_lists' => 'do_automatic_lists',
 	 );
 
 my %auth_action = ('logout' => 1,
@@ -429,6 +436,8 @@ my %action_args = ('default' => ['list'],
                 'ignoresub' => ['list','@email','@gecos'],
 		'signoff' => ['list','email','passwd'],
 		'auto_signoff' => ['list','email'],
+		'family_signoff' => ['family','email'],
+		'family_signoff_request' => ['family','email'],
 		'sigrequest' => ['list','email'],
 		'set' => ['list','email','reception','gecos'],
 		'serveradmin' => ['subaction'],
@@ -497,6 +506,10 @@ my %action_args = ('default' => ['list'],
 		'show_exclude' => ['list'],
 		'ca' => ['custom_action','@cap'],
 		'lca' => ['custom_action','list','@cap'],
+		'automatic_lists_management_request' => [],
+		'automatic_lists_management' => [],
+		'automatic_lists_request' => ['family'],
+		'automatic_lists' => [],
 		);
 
 ## Define the required parameters for each action
@@ -519,6 +532,8 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'arcsearch' => ['param.list'],
 		     'arcsearch_form' => ['param.list'],
 		     'arcsearch_id' => ['param.list'],
+		     'automatic_lists_request' => ['family'],
+		     'automatic_lists' => ['family'],
 		     'attach' => ['param.list'],
 		     'blacklist' => ['param.list'],
 		     'change_email' => ['param.user.email'],
@@ -706,6 +721,8 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'viewbounce' => ['owner'],
 			   'viewlogs' => ['owner','editor'],
 			   'viewmod' => ['editor'],
+			    'automatic_lists_management_request' => ['listmaster'],
+			    'automatic_lists_management' => ['listmaster'],
 			  );
 
 # this definition is used to choose the left side menu type (admin -> listowner admin menu | serveradmin -> server_admin menu | none list or your_list menu)
@@ -773,7 +790,9 @@ my %action_type = ('editfile' => 'admin',
 		'set_loglevel' => 'serveradmin',
 		'editfile' => 'serveradmin',
 		'unset_dumpvars' => 'serveradmin',
-		'set_dumpvars' => 'serveradmin'
+		'set_dumpvars' => 'serveradmin',
+		'automatic_lists_management_request' => 'serveradmin',
+		'automatic_lists_management' => 'serveradmin',
 );
 
 ## actions tthat are not used in return of login,
@@ -878,6 +897,7 @@ my %in_regexp = (
 
 		 ## Family names
 		 'family_name' => &tools::get_regexp('family_name'),
+		 'family' => &tools::get_regexp('family_name'),
 
 		 ## Email addresses
 		 'email' => &tools::get_regexp('email').'|'.&tools::get_regexp('uid'),
@@ -888,6 +908,7 @@ my %in_regexp = (
 		 'sender' => &tools::get_regexp('email'),
 		 'fromaddr' =>  &tools::get_regexp('email'),
 		 'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
+		 'automatic_list_part_*' => '[\w\-\.\+]*',
 
 		 ## Host
 		 'new_robot' => &tools::get_regexp('host'),
@@ -1134,7 +1155,7 @@ my $birthday = time ;
 	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature','custom_robot_parameter',
                     'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15',
-		    'reporting_spam_script_path'
+		    'reporting_spam_script_path','automatic_list_families',
 		    ) {
 
 	 $param->{'conf'}{$p} = &Conf::get_robot_conf($robot, $p);
@@ -1237,7 +1258,21 @@ my $birthday = time ;
 		 delete $session->{'oauth_token'};
 	 }
 
+    $session->{'is_family_owner'} = undef;
+    foreach my $key (keys %{&Conf::get_robot_conf($robot,'automatic_list_families')}){
+	my $family;
+	if ($family = new Family($key,$robot)) {
+	    if ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
+		$session->{'is_family_owner'}{$key} = 1;
+	    }else{
+		$session->{'is_family_owner'}{$key} = undef;
+	    }		    
+	}
+    }
+
      $param->{'session'} = $session->as_hashref();
+     open TMP, ">/tmp/param_session_dump"; print TMP &Dumper ($param->{'session'}); close TMP;
+     open TMP, ">/tmp/session_dump"; print TMP &Dumper ($session); close TMP;
      
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
@@ -1538,7 +1573,7 @@ my $birthday = time ;
 	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
 	 }
-
+	
 	 ## Set cookies "your_subscribtions" unless in one list page
 	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
 
@@ -5165,7 +5200,7 @@ sub do_subrequest {
     return 1;
 }
 sub do_auto_signoff {
-     &wwslog('info', 'do_signoff');
+     &wwslog('info', 'do_auto_signoff');
      ## If the URL isn't valid, then go to home page. No need to guide the user: this function is supposed to be used by clicking on autocreated URL only.
      return 'home' unless $in{'email'};
 
@@ -5216,6 +5251,49 @@ sub do_auto_signoff {
      ## If OK, return the page displaying the informations to the user.
      return 1;
      
+}
+sub do_family_signoff_request {
+    &wwslog('info', 'do_family_signoff_request');
+    ## If the URL isn't valid, then go to home page. No need to guide the user: this function is supposed to be used by clicking on autocreated URL only.
+    return 'home' unless $in{'email'};
+
+    my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'family_signoff/'.$in{'family'}.'/'.$in{'email'},$ip);
+
+    my $tt2_param = {
+	'family' => $in{'family'},
+	'type' => 'ticket_to_family_signoff', 
+	'one_time_ticket' => $ticket,
+	'email' => $in{'email'},
+	'context' => 'family_signoff',
+	'ip' => $ip,
+    };
+    unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
+	&do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	return undef;
+    }
+    $param->{'signing_off_email'} = $in {'email'};
+    $param->{'family'} = $in {'family'};
+    ## If OK, return the page displaying the informations to the user.
+    return 1;
+
+}
+
+sub do_family_signoff {
+    &wwslog('info', 'do_family_signoff');
+    $param->{'signing_off_email'} = $in {'email'};
+    $param->{'family'} = $in {'family'};
+
+    unless ($in{'email'} eq $session->{'email'}) {
+	&report::reject_report_web('user','cannot_do_signoff');
+	&wwslog('err','do_signoff: user %s tried to unsubscribe address %s from family %s',$session->{'email'}, $in{'email'},$in {'family'});
+	return undef;
+    }
+    unless (List::insert_delete_exclusion($in{'email'},&SympaSession::get_random(),$robot,'insert',$in{'family'})) {
+	&report::reject_report_web('user','cannot_do_signoff');
+	&wwslog('err','do_signoff: Unsubscription of address %s from family %s failed.',$in{'email'},$in {'family'});
+	return undef;
+    }
+    return 1;
 }
 ####################################################
 # do_signoff
@@ -17574,6 +17652,78 @@ sub do_maintenance {
     return 1;
 }
 
+sub do_automatic_lists_management_request {
+    &wwslog('notice', 'Starting');
+    $param->{'automatic_lists_description'} = &Conf::load_automatic_lists_description();
+    return 1;
+}
+
+sub do_automatic_lists_management {
+    &wwslog('notice', 'Starting');
+    
+    return 1;
+}
+
+sub do_automatic_lists_request {
+    &wwslog('notice', 'Starting');
+    # check authorization
+    my $family;
+    unless ($family = new Family($in{'family'},$robot)) {
+	&wwslog('err', "Failed to instantiate family %s. This family does not exist.",$in{'family'});
+	&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to instantiate family $in{'family'}. This family does not exist."]);
+	return undef;
+    }
+    
+    unless ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
+	&report::reject_report_web('auth',"You are not allowed to create list in this family",{},$param->{'action'});
+	&wwslog('err', 'Access to automatic list creation form denied to user %s.', $session->{'email'});
+	return undef;
+    }
+
+    $param->{'family'} = $family;
+    return 1;
+}
+
+sub do_automatic_lists {
+    &wwslog('notice', 'Starting');
+    my $family_name = $in{'family'};
+    my $family;
+    
+    my @list_name_parts;
+    my $families_config = &Conf::get_robot_conf($robot,'automatic_list_families');
+    my $family_config = $families_config->{$family_name};
+    my $listname = $family_config->{'prefix'}.$family_config->{'prefix_separator'};
+    foreach my $input (keys %in) {
+	next unless ($input =~ /automatic_list_part_(\d+)/);
+	$list_name_parts[$1] = $in{$input};
+    }
+    foreach my $list_name_part (@list_name_parts) {
+	$listname .= "$list_name_part$family_config->{'classes_separator'}";
+    }
+    my $sep = $family_config->{'classes_separator'}.'$';
+    if ($listname =~ /(.*)($sep)/) {
+	$listname = $1;
+    }
+
+    $list = new List ($listname, $robot);
+    unless (defined $list) {
+	## Automatic creation of a mailing list, based on a family
+	unless ($family = new Family($family_name,$robot)) {
+	    &Log::do_log('err', "Failed to create the dynamic list $listname: family $family_name does not exist.");
+	    &List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to create the dynamic list $listname: family $family_name does not exist."]);
+	    return undef;
+	}
+	
+	unless ($list = $family->create_automatic_list(('listname' => $listname,'auth_level' => 'md5','sender'=>$session->{'email'}))) {
+	    &Log::do_log('err', "Failed to create the dynamic list $listname.");
+	    &List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to create the dynamic list $listname."]);
+	    return undef;
+	}
+    }
+    
+    $in{'list'} = $listname;
+    return 'compose_mail';
+}
 =pod 
 
 =head1 AUTHORS 

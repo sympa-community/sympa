@@ -42,6 +42,7 @@ use Log;
 use tools;
 use Sympa::Constants;
 use File::Copy;
+use Data::Dumper;
 
 =pod 
 
@@ -442,6 +443,8 @@ sub create_list{
 	return undef;
     }
 
+    my $family_config = &Conf::get_robot_conf($robot,'automatic_list_families');
+    $param->{'family_config'} = $family_config->{$family->{'name'}};
     my $conf;
     my $tt_result = &tt2::parse_tt2($param, 'config.tt2', \$conf, [$family->{'dir'}]);
     unless (defined $tt_result || !$abort_on_error) {
@@ -521,6 +524,24 @@ sub create_list{
 	    }
 	    unless (open FILE, '>:utf8', "$list_dir/$file") {
 		&Log::do_log('err','Impossible to create %s/%s : %s',$list_dir,$file,$!);
+	    }
+	    print FILE $file_content;
+	    close FILE;
+	}
+    }
+
+    ## Create associated files if a template was given.
+    for my $file ('message.footer','message.header','message.footer.mime','message.header.mime','info') {
+	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
+	if (defined $template_file) {
+	    my $file_content;
+	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
+	    unless (defined $tt_result) {
+		&do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
+			$param->{'listname'}, $family->{'name'},$robot,$file);
+	    }
+	    unless (open FILE, '>:utf8', "$list_dir/$file") {
+		&do_log('err','Impossible to create %s/%s : %s',$list_dir,$file,$!);
 	    }
 	    print FILE $file_content;
 	    close FILE;

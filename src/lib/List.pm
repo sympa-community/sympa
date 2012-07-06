@@ -5751,7 +5751,8 @@ sub insert_delete_exclusion {
     my $list = shift;
     my $robot = shift;
     my $action = shift;
-    &Log::do_log('info', 'List::insert_delete_exclusion("%s", "%s", "%s", "%s")', $email, $list, $robot, $action);
+    my $family = shift;
+    &Log::do_log('info', 'List::insert_delete_exclusion("%s", "%s", "%s", "%s", "%s")', $email, $list, $robot, $action, $family);
     
     my $r = 1;
     
@@ -5765,9 +5766,9 @@ sub insert_delete_exclusion {
 	my $user = &get_list_member_no_object($options);
 	my $date = time;
 
-	if ($user->{'included'} eq '1') {
+	if ($user->{'included'} eq '1' or defined $family) {
 	    ## Insert : list, user and date
-	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s)", &SDM::quote($list), &SDM::quote($robot), &SDM::quote($email), &SDM::quote($date))) {
+	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, family_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s)", &SDM::quote($list), &SDM::quote($family), &SDM::quote($robot), &SDM::quote($email), &SDM::quote($date))) {
 		&Log::do_log('err','Unable to exclude user %s from liste %s@%s', $email, $list, $robot);
 		return undef;
 	    }
@@ -5789,9 +5790,15 @@ sub insert_delete_exclusion {
 	foreach my $users (@users_excluded) {
 	    if($email eq $users){
 		## Delete : list, user and date
-		unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)", &SDM::quote($list), &SDM::quote($robot), &SDM::quote($email))) {
-		    &Log::do_log('err','Unable to remove entry %s for liste %s@%s for table exclusion_table', $email, $list, $robot);
-		    return undef;
+		if (defined $family) {
+
+		    unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (family_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)",	&SDM::quote($family), &SDM::quote($robot), &SDM::quote($email))) {
+			&Log::do_log('err','Unable to remove entry %s for family %s (robot %s) from table exclusion_table', $email, $family, $robot);
+		    }
+		}else{
+		    unless ($sth = &SDM::do_query("DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)",	&SDM::quote($list), &SDM::quote($robot), &SDM::quote($email))) {
+			&Log::do_log('err','Unable to remove entry %s for list %s@%s from table exclusion_table', $email, $family, $robot);
+		    }
 		}
 		$r = $sth->rows;
 	    }
@@ -5819,13 +5826,28 @@ sub get_exclusion {
     my  $robot= shift;
     &Log::do_log('debug2', 'List::get_exclusion(%s@%s)', $name,$robot);
 
-    push @sth_stack, $sth;
-
-    unless ($sth = &SDM::do_query("SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s AND robot_exclusion=%s", 
-    &SDM::quote($name), &SDM::quote($robot))) {
-	&Log::do_log('err','Unable to retrieve excluded users for list %s@%s',$name, $robot);
+    my $list = new List($name, $robot);
+    unless (defined $list) {
+	&Log::do_log('err','List %s@%s does not exist', $name,$robot);
 	return undef;
     }
+
+    if (defined $list->{'admin'}{'family_name'} && $list->{'admin'}{'family_name'} ne '') {
+	unless ($sth = &SDM::do_query("SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE (list_exclusion = %s OR family_exclusion = %s) AND robot_exclusion=%s", 
+				      &SDM::quote($name),&SDM::quote($list->{'admin'}{'family_name'}), &SDM::quote($robot))) {
+	    &Log::do_log('err','Unable to retrieve excluded users for list %s@%s',$name, $robot);
+	    return undef;
+	}
+    }else{
+	unless ($sth = &SDM::do_query("SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s AND robot_exclusion=%s", 
+				      &SDM::quote($name), &SDM::quote($robot))) {
+	    &Log::do_log('err','Unable to retrieve excluded users for list %s@%s',$name, $robot);
+	    return undef;
+	}
+    }
+ 
+    push @sth_stack, $sth;
+
 
     my @users;
     my @date;
@@ -9612,6 +9634,17 @@ sub sync_include {
     my @add_tab;
     $users_added = 0;
     foreach my $email (keys %{$new_subscribers}) {
+	my $compare = 0;
+	foreach my $sub_exclu (@subscriber_exclusion){
+	    if ($email eq $sub_exclu){
+		$compare = 1;
+		last;
+	    }
+	}
+	if($compare == 1){
+	    delete $new_subscribers->{$email};
+	    next;
+	}
 		if (defined($old_subscribers{$email}) ) {
 			if ($old_subscribers{$email}{'included'}) {
 				## If one user attribute has changed, then we should update the user entry
