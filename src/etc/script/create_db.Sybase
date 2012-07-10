@@ -181,6 +181,86 @@ go
 
 /* -------------------------------------------------------- */
 
+/* Table structure for table `notification_table` */
+ 
+
+create table notification_table 
+( 
+	 type_notification 	varchar(15), 
+	 arrival_date_notification 	varchar(80), 
+	 status_notification 	varchar(100), 
+	 recipient_notification 	varchar(100), 
+	 message_notification 	text, 
+	 message_id_notification 	varchar(100), 
+	 date_notification 	numeric NOT NULL, 
+	 reception_option_notification 	varchar(20), 
+	 pk_notification 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 list_notification 	varchar(50), 
+	 robot_notification 	varchar(80), 
+	 constraint ind_notification PRIMARY KEY (pk_notification)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `oauthconsumer_sessions_table` */
+ 
+
+create table oauthconsumer_sessions_table 
+( 
+	 tmp_secret_oauthconsumer 	varchar(100), 
+	 user_oauthconsumer 	varchar(100) NOT NULL, 
+	 provider_oauthconsumer 	varchar(100) NOT NULL, 
+	 access_token_oauthconsumer 	varchar(100), 
+	 tmp_token_oauthconsumer 	varchar(100), 
+	 access_secret_oauthconsumer 	varchar(100), 
+	 constraint ind_oauthconsumer_sessions PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `oauthprovider_nonces_table` */
+ 
+
+create table oauthprovider_nonces_table 
+( 
+	 id_oauthprovider 	numeric NOT NULL, 
+	 id_nonce 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 nonce_oauthprovider 	varchar(100) NOT NULL, 
+	 time_oauthprovider 	numeric, 
+	 constraint ind_oauthprovider_nonces PRIMARY KEY (id_nonce)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `oauthprovider_sessions_table` */
+ 
+
+create table oauthprovider_sessions_table 
+( 
+	 accessgranted_oauthprovider 	tinyint(1), 
+	 user_oauthprovider 	varchar(100), 
+	 token_oauthprovider 	varchar(32) NOT NULL, 
+	 firsttime_oauthprovider 	numeric, 
+	 isaccess_oauthprovider 	tinyint(1), 
+	 lasttime_oauthprovider 	numeric NOT NULL, 
+	 verifier_oauthprovider 	varchar(32), 
+	 id_oauthprovider 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 secret_oauthprovider 	varchar(32) NOT NULL, 
+	 callback_oauthprovider 	varchar(100), 
+	 consumer_oauthprovider 	varchar(100) NOT NULL, 
+	 constraint ind_oauthprovider_sessions PRIMARY KEY (id_oauthprovider)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
 /* Table structure for table `one_time_ticket_table` */
  
 
@@ -216,6 +296,51 @@ create table session_table
 	 constraint ind_session PRIMARY KEY (id_session)
 )
 go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `stat_counter_table` */
+ 
+
+create table stat_counter_table 
+( 
+	 end_date_counter 	numeric, 
+	 list_counter 	varchar(150), 
+	 id_counter 	numeric NOT NULL, 
+	 robot_counter 	varchar(80) NOT NULL, 
+	 beginning_date_counter 	numeric NOT NULL, 
+	 data_counter 	varchar(50) NOT NULL, 
+	 variation_counter 	numeric, 
+	 total_counter 	numeric, 
+	 constraint ind_stat_counter PRIMARY KEY (id_counter)
+)
+go 
+
+
+/* -------------------------------------------------------- */
+
+/* Table structure for table `stat_table` */
+ 
+
+create table stat_table 
+( 
+	 daemon_stat 	varchar(10), 
+	 list_stat 	varchar(150), 
+	 parameter_stat 	varchar(50), 
+	 id_stat 	numeric NOT NULL, 
+	 email_stat 	varchar(100), 
+	 operation_stat 	varchar(50) NOT NULL, 
+	 user_ip_stat 	varchar(100), 
+	 read_stat 	tinyint(1) NOT NULL, 
+	 date_stat 	numeric NOT NULL, 
+	 robot_stat 	varchar(80) NOT NULL, 
+	 constraint ind_stat PRIMARY KEY (id_stat)
+)
+go 
+
+create index _fk on stat_table () 
+go
 
 
 /* -------------------------------------------------------- */

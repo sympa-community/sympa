@@ -17,15 +17,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-es\n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2012-04-12 02:08+0200\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2012-07-10 10:18+0200\n"
+"Last-Translator: Daniel Viñar Ulriksen <dani@belvil.net>\n"
 "Language-Team: Español <sympa-users@sympa.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.1.2\n"
+"X-Generator: Pootle 2.1.5\n"
 
 #: ../web_tt2/home.tt2:2
 msgid "Mailing lists server"
@@ -235,7 +235,7 @@ msgstr "Estadísticas"
 
 #: ../web_tt2/list_menu.tt2:69
 msgid "OpenSocial"
-msgstr ""
+msgstr "OpenSocial"
 
 #: ../web_tt2/list_menu.tt2:77 ../web_tt2/list_menu.tt2:79
 msgid "Archive"
@@ -1671,27 +1671,24 @@ msgid "Edit robot config"
 msgstr "Editar la configuración del robot"
 
 #: ../web_tt2/edit_config.tt2:17
-#, fuzzy
 msgid "parameter name"
-msgstr "valor del parámetro"
+msgstr "nombre del parámetro"
 
 #: ../src/lib/List.pm:711 ../web_tt2/edit_config.tt2:17
 msgid "value"
 msgstr "valor"
 
 #: ../web_tt2/edit_config.tt2:17
-#, fuzzy
 msgid "apply to"
-msgstr "Aplicar"
+msgstr "se aplica a"
 
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
 msgstr "Definir"
 
 #: ../web_tt2/edit_config.tt2:51
-#, fuzzy
 msgid "main conf"
-msgstr "Editar la configuración de la lista"
+msgstr "configuración principal"
 
 #: ../web_tt2/editfile.tt2:4
 msgid "Edit list templates"
@@ -1721,13 +1718,13 @@ msgstr ""
 "es la descripción de la lista)"
 
 #: ../web_tt2/editfile.tt2:31
-#, fuzzy
 msgid ""
 "List description: This text is sent as an answer to the mail command INFO. "
 "It can also be included in the <em>Welcome message</em>."
 msgstr ""
-"Descripción de la lista: Este texto se envía como respuesta a un comando\n"
-"INFO. También puede ser incluído en el <em>Mensaje de Bienvenida</em>."
+"Descripción de la lista: Este texto se envía como respuesta al comando por "
+"correo <code>INFO [nombre de la lista]</code>.\n"
+" También se lo incluye en el <em>mensaje de Bienvenida</em>."
 
 #: ../web_tt2/editfile.tt2:33
 msgid "Automatic messages"
@@ -2014,7 +2011,6 @@ msgid "Unable to load create_list templates."
 msgstr "Imposible cargar los modelos create_list."
 
 #: ../web_tt2/error.tt2:14
-#, fuzzy
 msgid "Failed to include members"
 msgstr "Imposible construir la lista de miembros"
 
@@ -2072,7 +2068,7 @@ msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
 msgstr ""
-"Falló el crear la lista '%1'. Probablemente la liste existe o el nombre de "
+"Falló el crear la lista '%1'. Probablemente la lista existe o el nombre de "
 "lista incluye caracteres prohibidos."
 
 #. (s_err.action)
@@ -2479,7 +2475,7 @@ msgstr "La fase deutenticación fracasó"
 #. (u_err.status)
 #: ../web_tt2/error.tt2:128
 msgid "Service unavailable because list status is '%1'"
-msgstr "Servicio indisponible porque el estatuto de la liste es '%1'"
+msgstr "Servicio indisponible porque el estatuto de la lista es '%1'"
 
 #. (u_err.argument)
 #: ../web_tt2/error.tt2:129
@@ -2518,6 +2514,9 @@ msgid ""
 "Failed to include members from VOOT group, use the following link to check "
 "the OAuth status : <a href=\"%1%2/oauth_check/%3\">%1%2/oauth_check/%3</a>"
 msgstr ""
+"Fracaso de inclusión del grupo VOOT. Visita el siguiente enlace para "
+"verificar el estatuto OAuth&160;: <a href=\"%1%2/oauth_check/%3\">%1%"
+"2/oauth_check/%3</a>"
 
 #. (auth.action)
 #: ../web_tt2/error.tt2:144
@@ -3035,44 +3034,38 @@ msgstr ""
 "distribuyes:"
 
 #: ../web_tt2/modform.tt2:19
-#, fuzzy
 msgid "You must select a topic"
-msgstr "--Seleccione una categoría--"
+msgstr "Debes seleccionar un tema (topic)"
 
 #: ../web_tt2/modform.tt2:26 ../web_tt2/modform.tt2:54
 #: ../web_tt2/modform.tt2:56 ../web_tt2/modindex.tt2:138
 #: ../web_tt2/modindex.tt2:99
 msgid "Reject"
-msgstr "Rechazar sin avisar al autor"
+msgstr "Rechazar"
 
 #: ../web_tt2/modform.tt2:30
-#, fuzzy
 msgid "Rejecting message"
-msgstr "Mensaje de supresión"
+msgstr "Rechazar el mensaje"
 
 #: ../web_tt2/modform.tt2:32
-#, fuzzy
 msgid "Choose notification "
-msgstr "notificación"
+msgstr "Elige una notificación"
 
 #: ../web_tt2/modform.tt2:34
-#, fuzzy
 msgid "No notification"
-msgstr "notificación"
+msgstr "Sin notificación"
 
 #: ../web_tt2/modform.tt2:38
 msgid "Server default rejection message"
 msgstr "Mensaje de rechazo por omisión del servidor"
 
 #: ../web_tt2/modform.tt2:43
-#, fuzzy
 msgid "Report message as undetected spam "
-msgstr "Tu mensaje fue rechazado."
+msgstr "Señalar el mensaje como SPAM no detectado"
 
 #: ../web_tt2/modform.tt2:46
-#, fuzzy
 msgid "Add sender to blacklist"
-msgstr "Agregar a la lista negra"
+msgstr "Agregar el remitente a la lista negra"
 
 #: ../web_tt2/modform.tt2:49
 msgid ""
@@ -3088,9 +3081,8 @@ msgid "Listing messages to moderate"
 msgstr "Lista de mensajes para moderar"
 
 #: ../web_tt2/modindex.tt2:21
-#, fuzzy
 msgid "loading message..."
-msgstr "Mensaje de recordatorio global"
+msgstr "Cargando mensaje..."
 
 #: ../web_tt2/modindex.tt2:108 ../web_tt2/modindex.tt2:40
 msgid "Size"
@@ -3183,9 +3175,8 @@ msgid "Send an html page"
 msgstr "Enviar una página web"
 
 #: ../web_tt2/news.tt2:9
-#, fuzzy
 msgid "Administration Tasks"
-msgstr "Panel de administración de listas"
+msgstr "Tareas de administración en espera"
 
 #: ../web_tt2/news.tt2:10
 msgid "The following items are waiting for your validation"
@@ -3193,9 +3184,8 @@ msgstr "Los siguientes elementos están a la espera de tu validación"
 
 #. (list_to_admin.key)
 #: ../web_tt2/news.tt2:15
-#, fuzzy
 msgid "List %1:"
-msgstr "lista %1"
+msgstr "Lista %1:"
 
 #. (list_to_admin.value.mod_message)
 #. (year.value.item(month))
@@ -3206,20 +3196,17 @@ msgstr "%1 mensaje(s)"
 
 #. (list_to_admin.value.mod_shared_total)
 #: ../web_tt2/news.tt2:17
-#, fuzzy
 msgid "%1 document(s)"
-msgstr "Documentos compartidos"
+msgstr "%1 documento(s)"
 
 #. (list_to_admin.value.mod_subscription)
 #: ../web_tt2/news.tt2:18
-#, fuzzy
 msgid "%1 subscription request(s)"
-msgstr "Ninguna solicitud de suscripción"
+msgstr "%1 solicitud(es) de suscripción"
 
 #: ../web_tt2/news.tt2:29
-#, fuzzy
 msgid "User Errors"
-msgstr "Borrar los errores"
+msgstr "Errores de usuario"
 
 #: ../web_tt2/news.tt2:30
 msgid ""
@@ -3231,9 +3218,8 @@ msgstr ""
 
 #. (user_with_errors.key)
 #: ../web_tt2/news.tt2:34
-#, fuzzy
 msgid " List %1: "
-msgstr "lista %1 / %2"
+msgstr "  Lista %1:  "
 
 #. (user_with_errors.value)
 #: ../web_tt2/news.tt2:35
@@ -3255,9 +3241,8 @@ msgid "%1 subscribers added"
 msgstr "%1 suscriptores añadidos"
 
 #: ../web_tt2/notice.tt2:16
-#, fuzzy
 msgid "You're not allowed to make sync, time limit in action"
-msgstr "No tienes permiso para realizar esta acción."
+msgstr "No tienes permiso para hacer un sync, tiempo límite en acción"
 
 #. (notice.total)
 #: ../web_tt2/notice.tt2:19
@@ -3372,50 +3357,48 @@ msgstr "Se notificó al usuario %1"
 
 #: ../web_tt2/oauth_authorize.tt2:4
 msgid "OAuth authorize"
-msgstr ""
+msgstr "Autorización Oauth"
 
 #. (consumer_key)
 #: ../web_tt2/oauth_authorize.tt2:7
-#, fuzzy
 msgid "Authorize %1 ?"
-msgstr "Autor/a"
+msgstr "¿Autorizar %1?"
 
 #: ../web_tt2/oauth_authorize.tt2:12
-#, fuzzy
 msgid "Authorize"
-msgstr "Autor/a"
+msgstr "Autorizar"
 
 #: ../web_tt2/oauth_authorize.tt2:13
 msgid "Don't authorize"
-msgstr ""
+msgstr "No autorizar"
 
 #: ../web_tt2/oauth_check.tt2:4
 msgid "OAuth check"
-msgstr ""
+msgstr "Verificación OAuth"
 
 #: ../web_tt2/oauth_check.tt2:10
 msgid "Got new access token, everything is alright."
-msgstr ""
+msgstr "Se obtuvo una nueva ficha de acceso"
 
 #: ../web_tt2/oauth_check.tt2:12
-#, fuzzy
 msgid "Everything is alright."
-msgstr "Todo acerca de esta lista:"
+msgstr "Todo está ok."
 
 #: ../web_tt2/oauth_check.tt2:15
 msgid ""
 "Unable to check, provider may not be available or access token may be "
 "outdated and failed to be get new one."
 msgstr ""
+"Verificación imposible. El servidor puede no estar accesible, o la ficha de "
+"acceso está vencida y no fue posible renovarla.  "
 
 #: ../web_tt2/oauth_check.tt2:18
 msgid "Unable to load consumer, configuration may be erroneous."
-msgstr ""
+msgstr "Imposible cargar el cliente. La configuración debe estar errónea."
 
 #: ../web_tt2/oauth_check.tt2:21
-#, fuzzy
 msgid "Unknown provider."
-msgstr "Error desconocido."
+msgstr "Fuente desconocida."
 
 #: ../web_tt2/picture_upload.tt2:4
 msgid "Setting your picture for this list"
@@ -3756,9 +3739,8 @@ msgid "Synchronize members with data sources"
 msgstr "Sincronizar miembros con las fuentes de datos"
 
 #: ../web_tt2/review.tt2:60
-#, fuzzy
 msgid "<strong>Last update:"
-msgstr "Última actualización:"
+msgstr "<strong>Última actualización:"
 
 #: ../web_tt2/review.tt2:64
 msgid "Remind all"
@@ -3769,9 +3751,8 @@ msgid "Add an user: "
 msgstr "Agregar un usuario:"
 
 #: ../web_tt2/review.tt2:77
-#, fuzzy
 msgid "Add quietly"
-msgstr "sin avisar"
+msgstr "Agregar sin avisar"
 
 #: ../web_tt2/review.tt2:78
 msgid "Multiple add"
@@ -3984,7 +3965,7 @@ msgstr "modo de recepción"
 
 #: ../web_tt2/search_user.tt2:15
 msgid "topics"
-msgstr "categorías"
+msgstr "Temas - categorías"
 
 #: ../web_tt2/search_user.tt2:17
 msgid "bounce"
@@ -4003,30 +3984,33 @@ msgid "editor"
 msgstr "moderador"
 
 #: ../web_tt2/select_voot_groups_request.tt2:4
-#, fuzzy
 msgid "Select group"
-msgstr "--Seleccione una categoría--"
+msgstr "Selecciona un grupo"
 
 #: ../web_tt2/select_voot_groups_request.tt2:6
 msgid ""
 "Hereafter is the list of the groups you accepted to share with Sympa. Select "
 "which group you want members to be included in your list."
 msgstr ""
+"He aquí una lista de grupos que aceptas de compartir con el servidor de "
+"listas. Selecciona el grupo del cual quieres incluir los miembros en tu "
+"lista."
 
 #: ../web_tt2/select_voot_groups_request.tt2:20
-#, fuzzy
 msgid "Set as source"
-msgstr "la fuente de datos"
+msgstr "Define una fuente"
 
 #: ../web_tt2/select_voot_provider_request.tt2:4
 msgid "Select VOOT provider"
-msgstr ""
+msgstr "Selecciona un servidor VOOT."
 
 #: ../web_tt2/select_voot_provider_request.tt2:6
 msgid ""
 "Hereafter is the list of VOOT providers that share group information with "
 "Sympa. Select which provider you want to use your groups from."
 msgstr ""
+"He aquí una lista de servidores VOOT que comparten grupos con el servidor de "
+"listas. Selecciona el servidor del cual quieres utilizar los grupos. "
 
 #: ../web_tt2/serveradmin.tt2:7
 msgid "Manage lists"
@@ -4761,9 +4745,8 @@ msgstr ""
 
 #. (listname)
 #: ../web_tt2/stats.tt2:4
-#, fuzzy
 msgid "List %1 statistics"
-msgstr "la lista %1 esta clausurada"
+msgstr "Estadísticas de la lista %1."
 
 #: ../web_tt2/stats.tt2:6
 msgid "This page displays overall informations regarding the list activity"
@@ -4773,20 +4756,17 @@ msgstr ""
 
 #. (shared_size)
 #: ../web_tt2/stats.tt2:7
-#, fuzzy
 msgid "Shared document directory size: %1 kB"
-msgstr "Tamaño del espacio de documentos compartidos"
+msgstr "Tamaño del espacio de documentos compartidos: %1 kB"
 
 #. (arc_size)
 #: ../web_tt2/stats.tt2:9
-#, fuzzy
 msgid "Web archives size: %1 kB"
-msgstr "Tamaño de los archivos web"
+msgstr "Tamaño de los archivos web: %1 kB"
 
 #: ../web_tt2/stats.tt2:16 ../web_tt2/stats.tt2:22
-#, fuzzy
 msgid "[% o.title %]"
-msgstr "[% k.name %]:"
+msgstr "[% o.title %]"
 
 #: ../web_tt2/stats.tt2:47
 msgid "No operation recorded in this field yet."
@@ -5056,9 +5036,8 @@ msgid "The validation link has an unknow format or has expired"
 msgstr "No se reconoce el enlace de confirmación, o ya expiró."
 
 #: ../web_tt2/tracking.tt2:13 ../web_tt2/tracking.tt2:4
-#, fuzzy
 msgid "Message tracking"
-msgstr "marcando mensajes"
+msgstr "Seguimiento de la difusión (correlación des opiniones)"
 
 #. (fromname,fromaddr,listname)
 #: ../web_tt2/tracking.tt2:6
@@ -5066,32 +5045,28 @@ msgid "Message from %1 %2 for list %3 "
 msgstr "Mensaje de %1 %2 para la lista %3 "
 
 #: ../web_tt2/tracking.tt2:10
-#, fuzzy
 msgid "Distribution ended at"
-msgstr "Distribuir"
+msgstr "La distribución finalizó en "
 
 #: ../web_tt2/tracking.tt2:14
 msgid "Recipient Email"
 msgstr "Destinatario del correo"
 
 #: ../web_tt2/tracking.tt2:14
-#, fuzzy
 msgid "Reception Option"
-msgstr "Recepción"
+msgstr "Opción de recepción"
 
 #: ../web_tt2/tracking.tt2:15
 msgid "Delivery status"
 msgstr "Estatuto de entrega"
 
 #: ../web_tt2/tracking.tt2:16
-#, fuzzy
 msgid "Notification Date"
-msgstr "notificación"
+msgstr "Fecha de notificación"
 
 #: ../web_tt2/tracking.tt2:17
-#, fuzzy
 msgid "Notification"
-msgstr "notificación"
+msgstr "Notificación"
 
 #: ../web_tt2/tt2_error.tt2:8
 msgid "Sympa error - could not display web page"
@@ -5490,12 +5465,11 @@ msgstr "La suscripción a esta lista requiere una firma S/MIME."
 
 #: ../mail_tt2/authorization_reject.tt2:140
 msgid "Topics visibility is restricted to listmaster."
-msgstr "Sólo el listmaster puede consultar las categorías."
+msgstr "Sólo el listmaster puede consultar los temas"
 
 #: ../mail_tt2/authorization_reject.tt2:143
 msgid "Topics visibility is restricted to identified users."
-msgstr ""
-"Sólo las usuarias y usuarios identificados pueden consultar las categorías."
+msgstr "Sólo las usuarias y usuarios identificados pueden consultar los temas."
 
 #: ../mail_tt2/authorization_reject.tt2:146
 msgid "It is not possible to unsubscribe from this list."
@@ -6569,9 +6543,8 @@ msgstr ""
 
 #. (listname)
 #: ../mail_tt2/listmaster_notification.tt2:151
-#, fuzzy
 msgid "Limit of users count reached for list %1"
-msgstr "falló la actualización de suscriptores para la lista %1"
+msgstr "La lista %1 llegó al límite en cantidad de suscriptores"
 
 #. (listname,max_number_of_subscribers)
 #: ../mail_tt2/listmaster_notification.tt2:153
@@ -7578,7 +7551,7 @@ msgstr ""
 #. (consumer_name,oauth_provider)
 #: ../mail_tt2/message_report.tt2:96
 msgid "Your OAuth token used by consumer %1 may have expired."
-msgstr ""
+msgstr "Tu ficha OAuth utilizada por el cliente %1 expiró."
 
 #. (consumer_name,oauth_provider,conf.wwsympa_url)
 #: ../mail_tt2/message_report.tt2:105
@@ -7588,6 +7561,10 @@ msgid ""
 "\n"
 "Visit  %3/oauth_check/%2 to check the token state and renew it if necessary."
 msgstr ""
+"El servidor de listas no pudo recuperar datos del cliente %1. Tu ficha de "
+"acceso al servidor %2 ha sin duda vencido.\n"
+"^nVisita el enlace %3/oauth_check/%2 para verificar el estado de la ficha y "
+"renovarla si fuera necesario."
 
 #: ../mail_tt2/message_report.tt2:111
 msgid "Message distribution"
@@ -7658,11 +7635,12 @@ msgstr ""
 "Para ver la lista de mensajes en espera, debería consultar este enlace:"
 
 #: ../mail_tt2/moderate.tt2:19
-#, fuzzy
 msgid ""
 "This mailing list is configured to require topics; that's probably why this "
 "message went through the moderation process."
-msgstr "Esta lista está configurada para requerir tema(s) en cada mensaje."
+msgstr ""
+"Esta lista está configurada para requerir temas; es probablemente por eso "
+"que este mensaje fue desviado al proceso de moderación."
 
 #: ../mail_tt2/moderate.tt2:23
 msgid ""
@@ -8841,19 +8819,16 @@ msgstr "Definición incorrecta del parámetro: %s\n"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/sympa_wizard.pl.in:302
-#, fuzzy
 msgid "%d.%b.%Y-%H.%M.%S"
 msgstr "%d %b %Y %H:%M:%S"
 
 #: ../src/sympa_wizard.pl.in:307 ../src/sympa_wizard.pl.in:312
-#, fuzzy
 msgid "Unable to rename %s : %s"
-msgstr "Imposible crear la lista."
+msgstr "Imposible cambiar el nombre de la lista %s: %s"
 
 #: ../src/sympa_wizard.pl.in:318 ../src/sympa_wizard.pl.in:325
-#, fuzzy
 msgid "Unable to open %s : %s"
-msgstr "Imposible abrira el <i>spool</i> '%1'."
+msgstr "Imposible abrir %s : %s"
 
 #: ../src/sympa_wizard.pl.in:337
 msgid ""
@@ -8876,18 +8851,16 @@ msgid "%A"
 msgstr "%A"
 
 #: ../src/lib/confdef.pm:43
-#, fuzzy
 msgid "Site customization"
-msgstr "Personalizar"
+msgstr "Personalización del servidor"
 
 #: ../src/lib/confdef.pm:47
 msgid "Main robot hostname"
 msgstr "Nombre del host del robot principal"
 
 #: ../src/lib/confdef.pm:56
-#, fuzzy
 msgid "Local part of sympa email address"
-msgstr "Por favor, ingresa una dirección de correo"
+msgstr "Parte local de la direccióbn email de Sympa"
 
 #: ../src/lib/confdef.pm:60
 msgid "Effective address will be [EMAIL]@[HOST]"
@@ -8898,9 +8871,8 @@ msgid "Gecos for service mail sent by Sympa itself"
 msgstr "Gecos para el servicio de correo enviado por el mismo Sympa"
 
 #: ../src/lib/confdef.pm:69
-#, fuzzy
 msgid "This parameter is used in mail_tt2 files"
-msgstr "El parámetro css_path está definido, su valor es"
+msgstr "Este parámetro se usa en los archivos mail_tt2"
 
 #: ../src/lib/confdef.pm:75
 msgid "Listmasters email list comma separated"
@@ -8916,14 +8888,12 @@ msgstr ""
 "estas direcciones. "
 
 #: ../src/lib/confdef.pm:84
-#, fuzzy
 msgid "Local part of listmaster email address"
-msgstr "Por favor, ingresa una dirección de correo"
+msgstr "Parte local de la direccióbn email del listmaster"
 
 #: ../src/lib/confdef.pm:90
-#, fuzzy
 msgid "URL of main Web page"
-msgstr "%1 página de administracion"
+msgstr "URL de la página web principal"
 
 #: ../src/lib/confdef.pm:323
 msgid ""
@@ -8949,9 +8919,8 @@ msgstr ""
 "No debe ser modificada! Puede invalidar todas las contraseñas de usuario"
 
 #: ../src/lib/confdef.pm:356
-#, fuzzy
 msgid "Who is able to create lists"
-msgstr "Imposible crear la lista."
+msgstr "Quién tiene derecho de crear una lista"
 
 #: ../src/lib/confdef.pm:360
 msgid ""
@@ -8970,9 +8939,8 @@ msgstr ""
 "del punto y coma entre el nombre y el valor del parámetro."
 
 #: ../src/lib/confdef.pm:395
-#, fuzzy
 msgid "Directories"
-msgstr "Carpeta"
+msgstr "Carpetas"
 
 #: ../src/lib/confdef.pm:400
 msgid "Directory containing mailing lists subdirectories"
@@ -8987,18 +8955,16 @@ msgstr ""
 "scenari/ y templates/"
 
 #: ../src/lib/confdef.pm:411
-#, fuzzy
 msgid "System related"
-msgstr "Los modelos"
+msgstr "Configuración ligada al sistema"
 
 #: ../src/lib/confdef.pm:416
 msgid "Syslog facility for sympa"
 msgstr "Funcionalidad Syslog para sympa"
 
 #: ../src/lib/confdef.pm:419
-#, fuzzy
 msgid "Do not forget to edit syslog.conf"
-msgstr "formato incorrecto de edit_list.conf"
+msgstr "No te olvides de modificar edit_list.conf"
 
 #: ../src/lib/confdef.pm:424
 msgid "Log verbosity"
@@ -9030,9 +8996,8 @@ msgid "Umask used for file creation by Sympa"
 msgstr "Umask para la creación de archivos por Sympa"
 
 #: ../src/lib/confdef.pm:454
-#, fuzzy
 msgid "Sending related"
-msgstr "Listas pendientes"
+msgstr "Configuración ligada al envío de mensajes"
 
 #: ../src/lib/confdef.pm:463
 msgid ""
@@ -9094,7 +9059,7 @@ msgstr "Máximo número de dominios diferentes por invocación de Sendmail."
 
 #: ../src/lib/confdef.pm:524
 msgid "Whether or not to cache lists in the database"
-msgstr ""
+msgstr "Indica si se usa una cache de listas en la base de datos"
 
 #: ../src/lib/confdef.pm:530
 msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
@@ -9116,24 +9081,23 @@ msgstr ""
 "añadir."
 
 #: ../src/lib/confdef.pm:551
-#, fuzzy
 msgid "Specify header fields to be removed before message distribution"
 msgstr ""
-"Plazo máximo a partir de una sincronización antes que ésta sea provocada por "
-"el envío de un mensaje"
+"Especifica qué encabezados deben ser suprimidos de los mensajes antes de su "
+"distribución"
 
 #: ../src/lib/confdef.pm:561
 msgid "Reject mail from automates (crontab, etc) sent to a list?"
 msgstr "¿Se rechaza correo automatizado (crontab, etc) enviado a la lista?"
 
 #: ../src/lib/confdef.pm:576
-#, fuzzy
 msgid ""
 "SMTP server to which Sympa verify if alias with the same name as the list to "
 "be created"
 msgstr ""
-"Servidor SMTP en el que Sympa verifica si un alias con el mismo nombre que "
-"la lista se creará."
+"Si este parámetro se define con la dirección de un servidor SMTP, Sympa "
+"verifica si el alias de una lista cuya creación fue pedida existe en este "
+"servidor."
 
 #: ../src/lib/confdef.pm:578
 msgid ""
@@ -9155,9 +9119,8 @@ msgstr ""
 "del parámetro list_check_smtp."
 
 #: ../src/lib/confdef.pm:597
-#, fuzzy
 msgid "Bulk mailer"
-msgstr "Error del manejador de correo en masa"
+msgstr "Configuración del bulk mailer (manejador de correo en masa)"
 
 #: ../src/lib/confdef.pm:606
 msgid "Default priority for a packet to be sent by bulk."
@@ -9210,18 +9173,16 @@ msgstr ""
 "mensajes."
 
 #: ../src/lib/confdef.pm:646
-#, fuzzy
 msgid "Quotas"
-msgstr "cuota"
+msgstr "Configuración de cuotas"
 
 #: ../src/lib/confdef.pm:651
 msgid "Default disk quota for shared repository"
 msgstr "Cuota de disco por defecto para el repositorio compartido"
 
 #: ../src/lib/confdef.pm:660
-#, fuzzy
 msgid "Spool related"
-msgstr "Los modelos"
+msgstr "Configuración de spools"
 
 #: ../src/lib/confdef.pm:665
 msgid "Directory containing various specialized spools"
@@ -9229,71 +9190,64 @@ msgstr "Directorio contenedor de varias colas especializadas"
 
 #: ../src/lib/confdef.pm:667
 msgid "All spool are created at runtime by sympa.pl"
-msgstr ""
+msgstr "Todos los spools son creados cuando se ejecuta sympa.pl"
 
 #: ../src/lib/confdef.pm:672
 msgid "Directory for incoming spool"
-msgstr ""
+msgstr "Carpeta del spool de los mensajes entrantes"
 
 #: ../src/lib/confdef.pm:683
-#, fuzzy
 msgid "Directory for moderation spool"
-msgstr "Archivo %1 en espera de ser moderado"
+msgstr "Carpetas del spool de moderación"
 
 #: ../src/lib/confdef.pm:689
-#, fuzzy
 msgid "Directory for digest spool"
-msgstr "Directorio de listas"
+msgstr "Carpeta del spool de constitución de digests"
 
 #: ../src/lib/confdef.pm:695
-#, fuzzy
 msgid "Directory for authentication spool"
-msgstr "restringido al dueño con autentificacioón"
+msgstr "Carpeta del spool de autenticación"
 
 #: ../src/lib/confdef.pm:701
 msgid "Directory for outgoing spool"
-msgstr ""
+msgstr "Carpeta del spool de archivado "
 
 #: ../src/lib/confdef.pm:707
-#, fuzzy
 msgid "Directory for topic spool"
-msgstr "Directorio de listas"
+msgstr "Carpeta del spool de mensajes en espera de marcado por un tema"
 
 #: ../src/lib/confdef.pm:713
 msgid "Directory for bounce incoming spool"
-msgstr ""
+msgstr "Carpeta del spool de gestión de errores"
 
 #: ../src/lib/confdef.pm:719
-#, fuzzy
 msgid "Directory for task spool"
-msgstr "Directorio de listas"
+msgstr "Carpeta del spool de tareas"
 
 #: ../src/lib/confdef.pm:725
 msgid "Directory for automatic list creation spool"
-msgstr ""
+msgstr "Carpeta del spool de las listas automáticas"
 
 #: ../src/lib/confdef.pm:731
 msgid "Temporary directory used by OpenSSL and antivirus plugins"
-msgstr ""
+msgstr "Carpeta temporaria utilizada por OpenSSL y los plugins antivirus"
 
 #: ../src/lib/confdef.pm:736
 msgid "Must not be 0."
-msgstr ""
+msgstr "No debe valer 0"
 
 #: ../src/lib/confdef.pm:775
-#, fuzzy
 msgid "Internationalization related"
-msgstr "Dominio de Internet"
+msgstr "Configuración de la intenacionalización"
 
 #: ../src/lib/confdef.pm:780
 msgid ""
 "Directory containing available NLS catalogues (Message internationalization)"
-msgstr ""
+msgstr "Carpeta que contriene los catálogos de internacionalización"
 
 #: ../src/lib/confdef.pm:786
-#, fuzzy
 msgid "Supported languages"
-msgstr "Validar"
+msgstr "Idiomas soportados"
 
 #: ../src/lib/confdef.pm:790
 msgid ""
@@ -9301,31 +9255,36 @@ msgid ""
 "Sympa GUI. Don't select a language if you don't have the proper locale "
 "packages installed."
 msgstr ""
+"Esto es la lista de idiomas que será propuesta a tus usuarios por la GUI de "
+"Sympa. No selecciones un idioma su no tienes instalada la local. "
 
 #: ../src/lib/confdef.pm:795
 msgid "Default language (one of supported languages)"
-msgstr ""
+msgstr "Idioma por omisión (uno de los idiomas soportados)"
 
 #: ../src/lib/confdef.pm:799
 msgid "This is the default language used by Sympa"
-msgstr ""
+msgstr "Esto es el idioma por omisión de Sympa"
 
 #: ../src/lib/confdef.pm:806
-#, fuzzy
 msgid "Bounce related"
-msgstr "Tasa de errores (rebotes)"
+msgstr "Configuración de la tasa de errores"
 
 #: ../src/lib/confdef.pm:816
 msgid "Welcome message return-path ( unique | owner )"
 msgstr ""
+"Camino de respuesta (return-path) del mensaje de bienvenida  ( unique | "
+"owner )"
 
 #: ../src/lib/confdef.pm:818
 msgid "If set to unique, new subcriber is removed if welcome message bounce"
 msgstr ""
+"Si se lo indica a unique, un nuevo suscriptor se suprime si el mensaje de "
+"bienvenida rebota"
 
 #: ../src/lib/confdef.pm:823
 msgid "Remind message return-path ( unique | owner )"
-msgstr ""
+msgstr "Return-path de los mensajes recordatorios ( unique | owner )"
 
 #: ../src/lib/confdef.pm:825
 msgid ""
@@ -10558,15 +10517,15 @@ msgstr "%a, %d/%b/%Y"
 msgid "%d %b %Y"
 msgstr "%d/%b/%Y"
 
-#: ../src/lib/List.pm:7208
+#: ../src/lib/List.pm:7209
 msgid "Attempt to exceed the max number of members (%s) for this list."
 msgstr ""
 
-#: ../src/lib/List.pm:7211
+#: ../src/lib/List.pm:7212
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
-#: ../src/lib/List.pm:7213
+#: ../src/lib/List.pm:7214
 msgid "Added %s users out of %s required."
 msgstr "%s usuarios añadidos de %s que se requerían."
 

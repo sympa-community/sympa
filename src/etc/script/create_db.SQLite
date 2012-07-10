@@ -6,16 +6,16 @@
 -- 
 
 CREATE TABLE admin_table ( 
-	 date_admin 	numeric NOT NULL, 
-	 update_admin 	numeric, 
+	 date_admin 	timestamp NOT NULL, 
+	 update_admin 	timestamp, 
 	 info_admin 	text, 
 	 list_admin 	text NOT NULL, 
 	 reception_admin 	text, 
 	 comment_admin 	text, 
-	 subscribed_admin 	numeric, 
+	 subscribed_admin 	boolean, 
 	 profile_admin 	text, 
 	 role_admin 	text NOT NULL, 
-	 included_admin 	numeric, 
+	 included_admin 	boolean, 
 	 user_admin 	text NOT NULL, 
 	 include_sources_admin 	text, 
 	 robot_admin 	text NOT NULL, 
@@ -37,8 +37,8 @@ CREATE TABLE bulkmailer_table (
 	 reception_date_bulkmailer 	integer, 
 	 packetid_bulkmailer 	text NOT NULL, 
 	 priority_message_bulkmailer 	integer, 
-	 verp_bulkmailer 	numeric, 
-	 merge_bulkmailer 	numeric, 
+	 verp_bulkmailer 	boolean, 
+	 merge_bulkmailer 	boolean, 
 	 tracking_bulkmailer 	text, 
 	 returnpath_bulkmailer 	text, 
 	 messageid_bulkmailer 	text, 
@@ -63,8 +63,8 @@ CREATE TABLE bulkspool_table (
 	 messageid_bulkspool 	text, 
 	 dkim_i_bulkspool 	text, 
 	 messagekey_bulkspool 	text NOT NULL, 
-	 message_bulkspool 	text, 
-	 lock_bulkspool 	numeric, 
+	 message_bulkspool 	longtext, 
+	 lock_bulkspool 	boolean, 
 	 PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -102,13 +102,13 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 creation_epoch_list 	numeric, 
+	 creation_epoch_list 	timestamp, 
 	 name_list 	text NOT NULL, 
 	 topics_list 	text, 
 	 robot_list 	text NOT NULL, 
 	 status_list 	text, 
 	 path_list 	text, 
-	 web_archive_list 	numeric, 
+	 web_archive_list 	tinyint(1), 
 	 owners_list 	text, 
 	 subject_list 	text, 
 	 creation_email_list 	text, 
@@ -156,6 +156,78 @@ CREATE TABLE netidmap_table (
 
 -- --------------------------------------------------------
 --
+-- Table structure for table `notification_table`
+-- 
+
+CREATE TABLE notification_table ( 
+	 type_notification 	text, 
+	 arrival_date_notification 	text, 
+	 status_notification 	text, 
+	 recipient_notification 	text, 
+	 message_notification 	longtext, 
+	 message_id_notification 	text, 
+	 date_notification 	integer NOT NULL, 
+	 reception_option_notification 	text, 
+	 pk_notification 	integer NOT NULL, 
+	 list_notification 	text, 
+	 robot_notification 	text, 
+	 PRIMARY KEY (pk_notification) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthconsumer_sessions_table`
+-- 
+
+CREATE TABLE oauthconsumer_sessions_table ( 
+	 tmp_secret_oauthconsumer 	text, 
+	 user_oauthconsumer 	text NOT NULL, 
+	 provider_oauthconsumer 	text NOT NULL, 
+	 access_token_oauthconsumer 	text, 
+	 tmp_token_oauthconsumer 	text, 
+	 access_secret_oauthconsumer 	text, 
+	 PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthprovider_nonces_table`
+-- 
+
+CREATE TABLE oauthprovider_nonces_table ( 
+	 id_oauthprovider 	integer NOT NULL, 
+	 id_nonce 	integer NOT NULL, 
+	 nonce_oauthprovider 	text NOT NULL, 
+	 time_oauthprovider 	integer, 
+	 PRIMARY KEY (id_nonce) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthprovider_sessions_table`
+-- 
+
+CREATE TABLE oauthprovider_sessions_table ( 
+	 accessgranted_oauthprovider 	tinyint(1), 
+	 user_oauthprovider 	text, 
+	 token_oauthprovider 	text NOT NULL, 
+	 firsttime_oauthprovider 	integer, 
+	 isaccess_oauthprovider 	tinyint(1), 
+	 lasttime_oauthprovider 	integer NOT NULL, 
+	 verifier_oauthprovider 	text, 
+	 id_oauthprovider 	integer NOT NULL, 
+	 secret_oauthprovider 	text NOT NULL, 
+	 callback_oauthprovider 	text, 
+	 consumer_oauthprovider 	text NOT NULL, 
+	 PRIMARY KEY (id_oauthprovider) 
+ );
+
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `one_time_ticket_table`
 -- 
 
@@ -191,6 +263,46 @@ CREATE TABLE session_table (
 
 -- --------------------------------------------------------
 --
+-- Table structure for table `stat_counter_table`
+-- 
+
+CREATE TABLE stat_counter_table ( 
+	 end_date_counter 	integer, 
+	 list_counter 	text, 
+	 id_counter 	integer NOT NULL, 
+	 robot_counter 	text NOT NULL, 
+	 beginning_date_counter 	integer NOT NULL, 
+	 data_counter 	text NOT NULL, 
+	 variation_counter 	integer, 
+	 total_counter 	integer, 
+	 PRIMARY KEY (id_counter) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `stat_table`
+-- 
+
+CREATE TABLE stat_table ( 
+	 daemon_stat 	text, 
+	 list_stat 	text, 
+	 parameter_stat 	text, 
+	 id_stat 	integer NOT NULL, 
+	 email_stat 	text, 
+	 operation_stat 	text NOT NULL, 
+	 user_ip_stat 	text, 
+	 read_stat 	tinyint(1) NOT NULL, 
+	 date_stat 	integer NOT NULL, 
+	 robot_stat 	text NOT NULL, 
+	 PRIMARY KEY (id_stat) 
+ );
+
+CREATE INDEX stat_idx ON stat_table (  ); 
+
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `subscriber_table`
 -- 
 
@@ -214,7 +326,7 @@ CREATE TABLE subscriber_table (
 	 date_subscriber 	timestamp NOT NULL, 
 	 bounce_score_subscriber 	integer, 
 	 number_messages_subscriber 	integer, 
-	 suspend_subscriber 	numeric, 
+	 suspend_subscriber 	boolean, 
 	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
 

@@ -16,13 +16,13 @@ msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2012-05-17 04:04+0200\n"
+"PO-Revision-Date: 2012-06-23 13:30+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.1.2\n"
 
@@ -1428,10 +1428,10 @@ msgid ""
 "can access them through a <acronym title=\"Uniform Resource Locator\" lang="
 "\"en\" xml:lang=\"en\">URL</acronym> provided in the message."
 msgstr ""
-"<strong>添付ファイルをURLにして送る</strong> (urlize): このモードでは、添付"
-"ファイルを受け取らなくてすみます。その添付ファイルのかわりにメッセージには "
-"<acronym title=\"Uniform Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</"
-"acronym> が入っているので、それを使えば投稿保管庫で読めます。"
+"<strong>添付ファイルを URL にする</strong> (urlize): "
+"このモードでは、添付ファイルを受け取らなくてすみます。その添付ファイルのかわりにメッセージには <acronym title=\"Uniform "
+"Resource Locator\" lang=\"en\" xml:lang=\"en\">URL</acronym> "
+"が入っているので、それを使えば投稿保管庫で読めます。"
 
 # # "<strong>Normal</strong> : ce mode est le mode de réception par défaut ; "
 # # "il permet d'annuler les autres modes d'abonnement."
@@ -4477,7 +4477,6 @@ msgstr ""
 "conf) に設定してあるロボットのドメイン名です。"
 
 #: ../web_tt2/help_editlist.tt2:101
-#, fuzzy
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
@@ -4486,28 +4485,24 @@ msgstr ""
 "電子メールアドレスです (行頭が「#」のものは無視されます)。"
 
 #: ../web_tt2/help_editlist.tt2:103
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
 "second-level queries convert the DNs into e-mail addresses. This feature "
 "requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
-"ここでは、読者一覧を返す 二段階クエリのパラメータを設定します。通常、第一段階"
-"のクエリで識別名 (DN) の一覧を取得し、第二段階で識別名を電子メールアドレスに"
-"変換します。この機能には Net::LDAP (perlldap) PERL モジュールが必要です。"
+"ここでは、読者一覧を返す 二段階クエリのパラメータを設定します。通常、第一段階のクエリで識別名 (DN) "
+"の一覧を取得し、第二段階で識別名を電子メールアドレスに変換します。この機能には Net::LDAP (perlldap) Perl "
+"モジュールが必要です。"
 
 #: ../web_tt2/help_editlist.tt2:105
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
-"ここでは、読者一覧を返すクエリのパラメータを設定します。この機能には Net::"
-"LDAP (perlldap) PERL モジュールが必要です。"
+"ここでは、読者一覧を返すクエリのパラメータを設定します。この機能には Net::LDAP (perlldap) Perl モジュールが必要です。"
 
 #: ../web_tt2/help_editlist.tt2:107
-#, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -4517,13 +4512,10 @@ msgid ""
 "list B and then list B in list A, since this will give rise to an infinite "
 "loop."
 msgstr ""
-"他のリストから読者を取り込みます。設定したリストの読者はすべて、このリストの"
-"読者になります。取り込みたいリストについて一行ずつ include_list 行を書くこと"
-"で、いくつでも必要なだけリストを取り込むことができます。たとえ取り込み先のリ"
-"ストの user_data_source 設定が不適切でも、さらにはほかのリストを取り込んでい"
-"るリストであっても、取り込むことができます。なお、A メーリングリストを B メー"
-"リングリストに取り込み、さらに A メーリングリストに B メーリングリストを取り"
-"込むと、無限ループを引き起こします。ご注意ください。"
+"他のリストから読者を取り込みます。設定したリストの読者はすべて、このリストの読者になります。取り込みたいリストについて一行ずつ include_list "
+"行を書くことで、いくつでも必要なだけリストを取り込むことができます。ほかのリストを取り込んでいるリストであっても、取り込むことができます。なお、A "
+"メーリングリストを B メーリングリストに取り込み、さらに A メーリングリストに B "
+"メーリングリストを取り込むと、無限ループを引き起こします。ご注意ください。"
 
 #: ../web_tt2/help_editlist.tt2:109
 msgid ""
@@ -4551,11 +4543,10 @@ msgstr ""
 "する権限を与えることだけです。読者一覧シナリオでこの動作を制御します。 "
 
 #: ../web_tt2/help_editlist.tt2:112
-#, fuzzy
 msgid ""
 "This parameter is used to begin a paragraph defining the SQL query "
 "parameters. "
-msgstr "ここから SQL クエリを決める設定が始まります。 "
+msgstr "ここから、SQL クエリを決める設定が始まります。"
 
 #: ../web_tt2/help_editlist.tt2:114
 msgid ""
@@ -5081,11 +5072,9 @@ msgid ""
 "we advise you to choose the <a href=\"%1/help/user#deliverymode\">Urlize "
 "delivery mode</a>."
 msgstr ""
-"<strong>メールボックスになんらかの制限がある</strong>。添付ファイルのあるメッ"
-"セージを受け付けなかったり、ある種の添付ファイルを禁止していたり、受け取れる"
-"メッセージの大きさに制限があったりする。こういう場合は、<a href=\"%1/help/"
-"user#deliverymode\">添付ファイルを URL にして送る</a>モードに変えることをお勧"
-"めします。"
+"<strong>メールボックスになんらかの制限がある</strong>。添付ファイルのあるメッセージを受け付けなかったり、ある種の添付ファイルを禁止して"
+"いたり、受け取れるメッセージの大きさに制限があったりする。こういう場合は、<a href=\"%"
+"1/help/user#deliverymode\">添付ファイルを URL にする</a>モードに変えることをお勧めします。"
 
 #: ../web_tt2/help_faquser.tt2:45
 msgid "You can not send messages to a list"
