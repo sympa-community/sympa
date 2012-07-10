@@ -3,6 +3,206 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.21		July 10, 2012
+
+  Features:
+
+	[7448] mail_tt2/user_notification.tt2, src/etc/Makefile.am,
+	src/etc/scenari/automatic_list_creation.family_owner:7447),
+	src/lib/Conf.pm, src/lib/Family.pm, src/lib/List.pm,
+	src/lib/Scenario.pm, src/lib/Upgrade.pm, src/lib/admin.pm,
+	src/lib/confdef.pm, src/sympa.pl.in, web_tt2/Makefile.am,
+	web_tt2/automatic_lists.tt2:7447),
+	web_tt2/automatic_lists_management_request.tt2:7447),
+	web_tt2/automatic_lists_request.tt2:7447),
+	web_tt2/family_signoff.tt2:7447),
+	web_tt2/family_signoff_request.tt2:7447),
+	web_tt2/family_signoff_request2.tt2:7447), web_tt2/menu.tt2,
+	wwsympa/wwsympa.fcgi.in: [Requested and funded by the CNRS] Automatic
+	lists can now be manipulated through the sympa web interface, in a
+	"user friendly" form. This is merely a web layer around the general
+	autmatic lists feature. This feature is fully documented here:
+	https://www.sympa.org/manual_6.2/user_friendly_autolists
+	Additionnally, it is now possible to unsubscribe to all the lists of a
+	given family in two clicks.
+
+	[7414] src/lib/List.pm, src/lib/confdef.pm, src/sympa.pl.in,
+	src/sympa_wizard.pl.in, wwsympa/wwsympa.fcgi.in:  New "voot_feature"
+	sympa.conf paramter. Default value is "off". If set to "on", enables
+	the VOOT feature.
+
+
+
+  Changes:
+
+*****	[7444] mail_tt2/listmaster_notification.tt2, src/bulk.pl.in,
+*****	src/lib/tools.pm, src/sympa_wizard.pl.in: Now the bulk master daemon
+*****	checks its actual children processes, compare the pid found to the list
+*****	of children it created. If some children died, the listmaster is
+*****	notified and new children are created to reach the maximum allowed
+*****	number of processes. This functionnalityt introduces a new dependency
+*****	to the Proc::ProcessTable module. In addition, Sympa processes put a
+*****	lock on pid files when changing its content. This prevents multiple
+*****	instannces process from failing to write to the pid file.
+
+	[7416] src/bulk.pl.in:	Now bulk master daemon checks the number of
+	packets to send at its first loop, preventing it from trying to send
+	packets before forking. This will speed up the distribution process if
+	the bulk starts when a lot of packets are already waiting to be sent.
+
+	[7415] src/lib/tools.pm:  Now a lock is put on pid file before
+	modifying them. This will prevent conflicts when a Sympa process can
+	run in multiple instances.
+
+	[7413] src/lib/Lock.pm:  Now the "new" function in Lock.pm
+	systematically give ownership of the ".lock" files to the Sympa user to
+	prevent lock modification impossibility due to write permission denial.
+
+  Bug fixes:
+
+*****	[7449] src/lib/Upgrade.pm: [#8400][Submitted by M. Deranek] Issue #3
+*****	(#2 was solved): On SQLite, fields with 'NOT NULL' constraint won't be
+*****	added so upgrade process will fail.
+*****	Workaround is to assign DEFAULT value 0 or "" to such fields.
+
+*****	[7443] src/etc/script/create_db.SQLite, src/lib/Upgrade.pm:
+*****	[#8400][Submitted by M. Deranek] Issue #1: On SQLite, data types should
+*****	be normalized.	Otherwise, upgrade process will fail.
+
+*****	[7442] src/bulk.pl.in, src/etc/script/create_db.Oracle,
+*****	src/etc/script/create_db.Pg, src/etc/script/create_db.SQLite,
+*****	src/etc/script/create_db.Sybase, src/etc/script/create_db.mysql,
+*****	src/lib/Bulk.pm, src/lib/Conf.pm, src/lib/List.pm, src/lib/Upgrade.pm,
+*****	src/lib/confdef.pm, src/lib/mail.pm, src/lib/tools.pm:	The
+*****	"dkim_header_list" sympa.conf parameter and "dkim > header_list" list
+*****	parameter are in fact unapplicable using the Mail::DKIM module. This
+*****	doesn't allow the list of headers to be modified. Consequently, anybody
+*****	using these parameters could find the DKIM signature to be broken
+*****	because the list of signed headers in the "h" tag of the DKIM signature
+*****	would not match the actual headers used to compute the signature. Fixed
+*****	by obsoleting this parameter.
+*****	In addition, the algorithm computing the signature now use $dkim->PRINT
+*****	instead of $dkim->load. Indeed, the load function computing time grows
+*****	exponentially relatively to the message size; this is not the case when
+*****	using PRINT directly.
+
+	[7439] wwsympa/wwsympa.fcgi.in: [#7540][Submitted by J.M. Kubeck, univ.
+	J.F. Champollion] Sympa generates two cookies.	Always use
+	cookie_domain parameter instead 'localhost'.
+
+	[7437] src/lib/Archive.pm: [#8377] Subscriber pictures not shown when
+	email contains any punctuations.
+	Now Archive::load_html_message() returns metadata with punctuations
+	decoded.
+
+	[7433] wwsympa/wwsympa.fcgi.in: [#7444][Submitted by A. Bernstein,
+	Electric Embers] very long Message-id will break do_send_me() and
+	do_view_source().
+	Commited a bit improved patch.
+
+*****	[7432] web_tt2/arcsearch.tt2, wwsympa/Marc/Search.pm: [#3918] HTML tags
+*****	escaped in search results.
+*****	Improved Marc::Search:
+*****	- Now it also gives rich text information.
+*****	arcsearch template was modified so that it would build HTML text from
+*****	that information.
+*****	- Strip HTML tags in the file generated from HTML message.
+*****	Entity references are also unescaped.
+*****	- Texts are handled as Unicode instead binary text to perform
+*****	case-insensitive match on non-ASCII characters.
+
+*****	[7430] src/etc/mhonarc-ressources.tt2, web_tt2/arcsearch_form.tt2,
+*****	wwsympa/wwsympa.fcgi.in:  Fixed some bugs on arcsearch.
+*****	- Submission to arcsearch with empty key_word causes "Missing argument
+*****	key_word" error then takes user to empty page.
+*****	Workaround is to check key_word by JavaScript.	To enable it, archives
+*****	must be reconstructed.
+*****	- Escaped key_word is shown in search result and form entry.
+*****	- The key_word with some characters (<>\\\*\$) causes "syntax_errors"
+*****	error
+*****	then takes user to empty page.
+*****	Now these characters are also allowed.
+*****	- Subjects in search result were decoded twice.
+*****	- arcsearch_id could not search message-ID containing regexp
+*****	metacharacters.
+*****	Now regexp metacharacters are properly escaped.
+
+	[7429] web_tt2/Makefile.am:  help_suspend.tt2 was not install by make
+	install, because it was not referenced in Makefile.am.
+
+	[7428] src/lib/mail.pm, wwsympa/wwsympa.fcgi.in: [#8042] 'To' e-mail
+	address(es) of 'list_created' or 'list_rejected' notification sent to
+	listmaster(s) can be "encoded" due to line length.
+	Disabled mime-encoding of 'To' header by mail::mail_file(), because
+	this function will be given not addr-spec but email, and because
+	mime-encoding of structured header should be done with special function
+	such as tools::addrencode().
+	n.b. These notifications to listmaster would like to be compiled into
+	'listmaster_notification' template.
+
+	[7427] src/etc/script/create_db.mysql, src/lib/Upgrade.pm: [Reported by
+	F.P. Goncharov via Debian Project] Sympa must create MySQL database &
+	tables with charset utf8 instead default latin1.
+	cf. http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=574646
+
+	[7425] wwsympa/wwsympa.fcgi.in:  HTTP Date & Last-Modified headers are
+	not RFC-compliant, and strftime format %z is not portable.  Modify
+	format and use GMT.
+
+	[7424] wwsympa/SympaSession.pm:  If 'cookie_domain' parameter is
+	'localhost' (default), when cookie was expired or HTTPd was restarted,
+	user's cookie jar repeatedly sends session cookie with older session
+	ID.
+	Destroy cookie with default domain (no domain parameter) before sending
+	new session id with explicit domain.
+
+	[7423] wwsympa/wwsympa.fcgi.in: [By E. Bouthenot, Debian Project]
+	Properly fix CVE-2012-2352.
+	http://bugs.debian.org/672893
+
+	[7421] src/lib/tools.pm:  Headers in S/MIME encrypted/decrypted/signed
+	messages are broken.
+
+	[7420] wwsympa/wwsympa.fcgi.in: [Submitted by Mitar] static_content_url
+	was not robot-specific.
+
+*****	[7419] src/lib/mail.pm:  mail::send_file() did not complement Date
+*****	header.
+*****	As a result, a message posted from WWSympa were archived as the newest
+*****	messages when archive was reconstructed, and so on.
+
+	[7418] src/task_manager.pl.in:	A call to get_next_user and
+	get_first_user remained in the task_manager, causing it to crash. Fixed
+	by replacing them with get_next_list_member and get_first_list_member.
+
+	[7417] wwsympa/wwsympa.fcgi.in: [#8378] Uploading subscriber pictures
+	with uppercase extension does not work
+
+*****	[7412] src/lib/Upgrade.pm: [#8291][Reported by Heaton Anselm, Netuxo]
+*****	--md5_encode_password does not take case sensitivity in account.
+*****	Use Auth::password_fingerprint() instead of tools::md5_fingerprint().
+
+	[7411] src/lib/List.pm:  Incoherent cached/returned values when getting
+	list member info broke subscription.
+
+*****	[7410] src/lib/Archive.pm, src/lib/Commands.pm, src/lib/List.pm,
+*****	src/lib/PlainDigest.pm, src/lib/Scenario.pm, src/lib/report.pm,
+*****	src/lib/tools.pm, src/sympa.pl.in, wwsympa/wwsympa.fcgi.in:  fix in
+*****	r7387 was not effective.  Fixed again.
+*****	Decode headers to UTF-8 with new function tools::decode_header which
+*****	always returns scalar.	To ensure value of head->get() is scalar,
+*****	assign it to scalar variable then use it in other expressions.
+
+	[7408] src/lib/List.pm:  Appended message header/footer cause
+	"mojibake".  Encode header/footer by charset of body parts.
+
+	[7407] src/lib/List.pm:  the get_list_member function did not return
+	undef when a user was not found in the database, leading to the
+	situation where any address was considered to be already subscribed.
+
+	[7405] src/lib/List.pm:  Save charset info of urlized part.
+
+
 6.2a.20		May 30, 2012
 
   Changes:
