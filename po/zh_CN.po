@@ -10909,6 +10909,14 @@ msgstr "不接收邮件（用于假期）"
 msgid "you do not receive your own posts"
 msgstr "不接收自己发的邮件"
 
+#: ../mail_tt2/listmaster_notification.tt2:42
+msgid "Previous process crashed"
+msgstr "以前的进程崩溃了。"
+
+#: ../mail_tt2/listmaster_notification.tt2:44
+msgid "Previous process has died unexpectedly."
+msgstr "以前的进程意外失效。"
+
 #. (list.name)
 #: ../mail_tt2/user_notification.tt2:53
 msgid ""
@@ -10919,6 +10927,10 @@ msgstr ""
 #: ../src/lib/confdef.pm:1197
 msgid "List of headers to be included into the message for signature"
 msgstr ""
+
+#: ../src/lib/mail.pm:922
+msgid "Unable to create a channel in smtpto: %m"
+msgstr "无法在smtpto：%m中创建渠道"
 
 #. (+cpt)
 #: ../web_tt2/javascript.tt2:1056
@@ -10963,15 +10975,6 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
-
-#~ msgid "Previous process crashed"
-#~ msgstr "以前的进程崩溃了。"
-
-#~ msgid "Previous process has died unexpectedly."
-#~ msgstr "以前的进程意外失效。"
-
-#~ msgid "Unable to create a channel in smtpto: %m"
-#~ msgstr "无法在smtpto：%m中创建渠道"
 
 #, fuzzy
 #~ msgid ""
