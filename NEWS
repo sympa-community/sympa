@@ -3,6 +3,14 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.22		July 11, 2012
+
+  Bug fixes:
+
+	[7460] wwsympa/wwsympa.fcgi.in:  The automatic list families loading
+	was done by directly casting the result &Conf::get_parameters, which
+	led wwsympa to crash when no automatic list was defined.
+
 6.2a.21		July 10, 2012
 
   Features:
