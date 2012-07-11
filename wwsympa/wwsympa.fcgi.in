@@ -1259,14 +1259,17 @@ my $birthday = time ;
 	 }
 
     $session->{'is_family_owner'} = undef;
-    foreach my $key (keys %{&Conf::get_robot_conf($robot,'automatic_list_families')}){
-	my $family;
-	if ($family = new Family($key,$robot)) {
-	    if ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
-		$session->{'is_family_owner'}{$key} = 1;
-	    }else{
-		$session->{'is_family_owner'}{$key} = undef;
-	    }		    
+    my $automatic_list_families = &Conf::get_robot_conf($robot,'automatic_list_families');
+    if (defined $automatic_list_families) {
+	foreach my $key (keys %{$automatic_list_families}){
+	    my $family;
+	    if ($family = new Family($key,$robot)) {
+		if ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
+		    $session->{'is_family_owner'}{$key} = 1;
+		}else{
+		    $session->{'is_family_owner'}{$key} = undef;
+		}		    
+	    }
 	}
     }
 
