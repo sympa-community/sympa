@@ -199,12 +199,12 @@ sub edit_configuration {
 
     ## Load config 
     unless ($wwsconf = wwslib::load_config($wwsympa_conf)) {
-        die("Unable to load config file $wwsympa_conf");
+	&Log::fatal_err("Unable to load sympa configuration, file $wwsympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
     }
 
     ## Load sympa config (but not using database)
     unless (Conf::load( $sympa_conf,'nodb')) {
-        die("Unable to load sympa config file $sympa_conf");
+	&Log::fatal_err("Unable to load sympa configuration, file $sympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
     }
 
     my (@new_wwsympa_conf, @new_sympa_conf);

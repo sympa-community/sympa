@@ -39,12 +39,12 @@ my $sympa_conf_file = Sympa::Constants::CONFIG;
 
 ## Load config 
 unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &Log::fatal_err('Unable to load config file %s', $conf_file);
+    &Log::fatal_err("Unable to load sympa configuration, file $conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 ## Load sympa config
 unless (&Conf::load($sympa_conf_file)) {
-    &Log::fatal_err('Unable to load sympa config file %s', $sympa_conf_file);
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 &Log::set_log_level($Conf{'log_level'}) if ($Conf{'log_level'}); 

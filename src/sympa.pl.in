@@ -187,7 +187,7 @@ my $config_file = $main::options{'config'} || Sympa::Constants::CONFIG;
 
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
 unless (Conf::load($config_file,1)) {
-   &Log::fatal_err("Configuration file $config_file has errors.");  
+   &Log::fatal_err("Unable to load sympa configuration, file $config_file or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 ## Open the syslog and say we're read out stuff.

@@ -132,10 +132,10 @@ sub load {
             %Conf = %{$tmp_conf};
             $force_reload = 1; # Will force the robot.conf reloading, as sympa.conf is the default.
         }else{
-            printf STDERR "Binary config file loading failed. Loading source file '%s'\n",$config_file;
+            printf STDERR "Binary config file loading failed while loading source file '%s'\n",$config_file;
         }
     }else{
-        ##printf "Conf::load(): File %s has changed since the last cache. Loading file.\n",$config_file;
+        printf "Conf::load(): File %s has changed since the last cache. Loading file.\n",$config_file;
         $force_reload = 1; # Will force the robot.conf reloading, as sympa.conf is the default.
         ## Loading the Sympa main config file.
         if(my $config_loading_result = &_load_config_file_to_hash({'path_to_config_file' => $config_file})) {
@@ -186,7 +186,7 @@ sub load {
     &_load_robot_secondary_config_files({'config_hash' => \%Conf});
 
     ## Load robot.conf files
-    &load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload}) ;
+    return undef unless (&load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload})) ;
     &_create_robot_like_config_for_main_robot();
     return 1;
 }
@@ -200,6 +200,7 @@ sub load_robots {
     unless ($wwsconf = &wwslib::load_config(Sympa::Constants::WWSCONFIG)) {
         printf STDERR 
             "Conf::load_robots(): Unable to load config file %s\n", Sympa::Constants::WWSCONFIG;
+        return undef;
     }
 
     my @robots;
@@ -226,6 +227,7 @@ sub load_robots {
         $param->{'config_hash'}{'robots'}{$robot} = &_load_single_robot_config({'robot' => $robot, 'no_db' => $param->{'no_db'}, 'force_reload' => $param->{'force_reload'}});
         &_check_double_url_usage({'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
     }
+    return 1;
 }
 
 ## returns a robot conf parameter
@@ -1367,7 +1369,7 @@ sub _load_config_file_to_hash {
                 $value = qx/$1/;
                 chomp($value);
             }
-            if(defined $params{$keyword}{'multiple'} && $params{$keyword}{'multiple'} == 1){
+            if(exists $params{$keyword} && defined $params{$keyword}{'multiple'} && $params{$keyword}{'multiple'} == 1){
                 if(defined $result->{'config'}{$keyword}) {
                     push @{$result->{'config'}{$keyword}}, $value;
                     push @{$result->{'numbered_config'}{$keyword}}, [$value, $line_num];

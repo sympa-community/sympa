@@ -77,7 +77,7 @@ my $sympa_conf_file = Sympa::Constants::CONFIG;
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");
 }
 
 ## Check database connectivity

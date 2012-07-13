@@ -72,12 +72,12 @@ my $adrlist = {};
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    &Log::fatal_err('error : unable to load config file');
+    &Log::fatal_err("Unable to load sympa configuration, file $wwsympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("error : unable to load sympa configuration, file $sympa_conf_file has errors.");
+    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 ## Check databse connectivity

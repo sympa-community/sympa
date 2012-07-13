@@ -456,7 +456,7 @@ our @params = (
     },
     {
         'name'    => 'automatic_list_removal',
-        'default' => '', ## Can be 'if_empty'
+        'default' => 'none',
         'vhost'   => '1',
     },
     {
