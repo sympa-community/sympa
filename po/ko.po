@@ -31,15 +31,15 @@ msgstr ""
 "에서부터, 구독 옵션, 등록취소,\n"
 "보관, 리스트 관리 등등."
 
-#: ../web_tt2/home.tt2:7
+#: ../web_tt2/home.tt2:13
 msgid "Mailing lists categories"
 msgstr "메일링 리스트 종류"
 
-#: ../web_tt2/home.tt2:17
+#: ../web_tt2/home.tt2:23
 msgid "Others"
 msgstr "기타"
 
-#: ../web_tt2/home.tt2:42
+#: ../web_tt2/home.tt2:48
 msgid "RSS news"
 msgstr "RSS 뉴스"
 
@@ -64,7 +64,7 @@ msgstr "RSS 최신 리스트"
 msgid "RSS Active lists"
 msgstr "RSS 활성(사용) 리스트"
 
-#: ../web_tt2/main.tt2:59
+#: ../web_tt2/main.tt2:63
 msgid "Please activate JavaScript in your web browser"
 msgstr "활성화하는 웹 브라우저에 JavaScript"
 
@@ -89,14 +89,14 @@ msgstr "홈"
 #: ../web_tt2/compose_mail.tt2:5 ../web_tt2/create_list_request.tt2:26
 #: ../web_tt2/create_list_request.tt2:33 ../web_tt2/create_list_request.tt2:38
 #: ../web_tt2/create_list_request.tt2:42 ../web_tt2/create_list_request.tt2:68
-#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:93
+#: ../web_tt2/create_list_request.tt2:73 ../web_tt2/create_list_request.tt2:97
 #: ../web_tt2/d_control.tt2:5 ../web_tt2/d_editfile.tt2:12
 #: ../web_tt2/d_editfile.tt2:14 ../web_tt2/d_properties.tt2:10
 #: ../web_tt2/d_properties.tt2:6 ../web_tt2/d_properties.tt2:8
 #: ../web_tt2/d_read.tt2:22 ../web_tt2/d_read.tt2:47
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/menu.tt2:22
-#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9 ../web_tt2/pref.tt2:4
+#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:21
 #: ../web_tt2/suspend_request.tt2:5
@@ -117,7 +117,7 @@ msgstr "리스트마스터"
 msgid "Privileged owner"
 msgstr "권한 소유자"
 
-#: ../src/lib/List.pm:1188 ../web_tt2/login_menu.tt2:15
+#: ../src/lib/List.pm:349 ../web_tt2/login_menu.tt2:15
 msgid "Owner"
 msgstr "소유자"
 
@@ -149,82 +149,102 @@ msgstr "기본설정"
 msgid "Manage your subscriptions"
 msgstr "대기 중 구독들"
 
-#: ../web_tt2/lists.tt2:27 ../web_tt2/your_lists.tt2:14
+#: ../web_tt2/lists.tt2:29 ../web_tt2/your_lists.tt2:14
 msgid "admin"
 msgstr "관리"
 
-#: ../web_tt2/lists.tt2:68 ../web_tt2/search_user.tt2:77
+#: ../web_tt2/lists.tt2:73 ../web_tt2/search_user.tt2:77
 #: ../web_tt2/your_lists.tt2:23
 msgid "No mailing list available."
 msgstr "유효한 메일링 리스트 없습니다."
 
-#: ../web_tt2/list_menu.tt2:11
+#: ../web_tt2/list_menu.tt2:10
+msgid ""
+"You <span style=\"font-weight: bold; font-size: 10px\">are</span> subscribed"
+msgstr ""
+
+#: ../web_tt2/list_menu.tt2:13
 msgid "Subscriber Options"
 msgstr "가입자 옵션"
 
 #. (list)
-#: ../web_tt2/list_menu.tt2:15
+#: ../web_tt2/list_menu.tt2:17
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "%1 메일링 리스트에서 등록취소하시겠습니까?"
 
-#: ../web_tt2/list_menu.tt2:15 ../web_tt2/list_menu.tt2:25
+#: ../web_tt2/list_menu.tt2:17 ../web_tt2/list_menu.tt2:30
 #: ../web_tt2/suspend_request.tt2:57
 msgid "Unsubscribe"
 msgstr "등록취소"
 
+#: ../web_tt2/list_menu.tt2:21
+msgid ""
+"You <span style=\"font-weight: bold; font-size: 10px\">are not</span> "
+"subscribed"
+msgstr ""
+
 #. (list)
-#: ../web_tt2/list_menu.tt2:20
+#: ../web_tt2/list_menu.tt2:25
 msgid "Do you really want to subscribe to list %1?"
 msgstr "이 %1 메일링 리스트를 등록구독하시겠습니까?"
 
-#: ../web_tt2/list_menu.tt2:20 ../web_tt2/subrequest.tt2:68
+#: ../web_tt2/list_menu.tt2:25 ../web_tt2/subrequest.tt2:68
 msgid "Subscribe"
 msgstr "등록구독"
 
-#: ../web_tt2/list_menu.tt2:31
+#: ../web_tt2/list_menu.tt2:43
 msgid "Info"
 msgstr "정보"
 
-#: ../web_tt2/list_menu.tt2:34
+#: ../web_tt2/list_menu.tt2:47
 msgid "Admin"
 msgstr "관리하기"
 
 #: ../web_tt2/admin_menu.tt2:35 ../web_tt2/admin_menu.tt2:41
-#: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:37
+#: ../web_tt2/admin_menu.tt2:45 ../web_tt2/list_menu.tt2:49
 msgid "Moderate"
 msgstr "살펴보기"
 
-#: ../web_tt2/list_menu.tt2:43 ../web_tt2/viewlogs.tt2:91
+#: ../web_tt2/list_menu.tt2:55 ../web_tt2/viewlogs.tt2:91
 msgid "Message"
 msgstr "메시지"
 
 #: ../web_tt2/d_read.tt2:54 ../web_tt2/d_read.tt2:56
-#: ../web_tt2/list_menu.tt2:45
+#: ../web_tt2/list_menu.tt2:57
 msgid "Document"
 msgstr "문서"
 
-#: ../web_tt2/list_menu.tt2:50
+#: ../web_tt2/list_menu.tt2:62
 msgid "Subscriptions"
 msgstr "구독"
 
-#: ../web_tt2/list_menu.tt2:61 ../web_tt2/list_menu.tt2:63
+#: ../web_tt2/list_menu.tt2:68
+#, fuzzy
+msgid "Statistics"
+msgstr "상태"
+
+#: ../web_tt2/list_menu.tt2:69
+msgid "OpenSocial"
+msgstr ""
+
+#: ../web_tt2/list_menu.tt2:77 ../web_tt2/list_menu.tt2:79
 msgid "Archive"
 msgstr "보관(저장)"
 
-#: ../web_tt2/list_menu.tt2:69 ../web_tt2/list_menu.tt2:71
+#: ../web_tt2/list_menu.tt2:85 ../web_tt2/list_menu.tt2:87
 msgid "Post"
 msgstr "포스트"
 
-#: ../web_tt2/list_menu.tt2:75
+#: ../web_tt2/list_menu.tt2:91
 msgid "RSS"
 msgstr "RSS"
 
-#: ../src/lib/List.pm:1326 ../web_tt2/list_menu.tt2:80
-#: ../web_tt2/list_menu.tt2:82
+#: ../src/lib/List.pm:876 ../web_tt2/list_menu.tt2:96
+#: ../web_tt2/list_menu.tt2:98
 msgid "Shared documents"
 msgstr "공용 문서"
 
-#: ../web_tt2/list_menu.tt2:88
+#: ../web_tt2/list_menu.tt2:104
 msgid "Review members"
 msgstr "가입자 검토하기"
 
@@ -236,28 +256,30 @@ msgstr "종료된 리스트"
 msgid "List not yet activated"
 msgstr "아직 활성화된 리스트"
 
-#: ../web_tt2/list_panel.tt2:11
+#: ../web_tt2/list_panel.tt2:13 ../web_tt2/list_panel.tt2:15
 msgid "Subscribers:"
 msgstr "가입자:"
 
-#: ../web_tt2/list_panel.tt2:12
+#: ../web_tt2/list_panel.tt2:25
 #, fuzzy
 msgid "Error rate:"
 msgstr "에러율:"
 
-#: ../web_tt2/get_inactive_lists.tt2:14 ../web_tt2/list_panel.tt2:13
+#: ../web_tt2/get_inactive_lists.tt2:14 ../web_tt2/list_panel.tt2:31
+#: ../web_tt2/list_panel.tt2:33
 msgid "Owners"
 msgstr "소유자"
 
-#: ../src/lib/List.pm:680 ../web_tt2/list_panel.tt2:20
+#: ../src/lib/List.pm:432 ../web_tt2/list_panel.tt2:42
+#: ../web_tt2/list_panel.tt2:45
 msgid "Moderators"
 msgstr "중재자"
 
-#: ../web_tt2/list_panel.tt2:26
+#: ../web_tt2/list_panel.tt2:59
 msgid "Load certificate"
 msgstr "인증서 로드하기"
 
-#: ../web_tt2/list_panel.tt2:29 ../web_tt2/list_panel.tt2:31
+#: ../web_tt2/list_panel.tt2:61 ../web_tt2/list_panel.tt2:63
 msgid "Contact owners"
 msgstr "소유자 에게 문의하기"
 
@@ -474,7 +496,7 @@ msgstr "작성일"
 #: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
 #: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
 #: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:70 ../web_tt2/review_family.tt2:9
+#: ../web_tt2/modindex.tt2:38 ../web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "제목"
 
@@ -491,8 +513,8 @@ msgid "Add subscribers"
 msgstr "가입자 추가"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:106 ../web_tt2/review.tt2:140
-#: ../web_tt2/review.tt2:74 ../web_tt2/reviewbouncing.tt2:127
+#: ../web_tt2/review.tt2:109 ../web_tt2/review.tt2:143
+#: ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "자동 모드"
 
@@ -505,12 +527,12 @@ msgid "Subscribers"
 msgstr "가입자"
 
 #: ../web_tt2/admin_menu.tt2:24 ../web_tt2/admin_menu.tt2:29
-#: ../web_tt2/lists.tt2:36 ../web_tt2/nav.tt2:64
+#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:64
 msgid "Edit List Config"
 msgstr "리스트 구성 편집"
 
 #: ../web_tt2/admin_menu.tt2:52 ../web_tt2/admin_menu.tt2:58
-#: ../web_tt2/lists.tt2:37 ../web_tt2/nav.tt2:67
+#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:67
 msgid "Customizing"
 msgstr "사용자 지정"
 
@@ -520,7 +542,7 @@ msgid "Manage Archives"
 msgstr "보관 관리"
 
 #: ../web_tt2/admin_menu.tt2:81 ../web_tt2/admin_menu.tt2:87
-#: ../web_tt2/lists.tt2:42 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
+#: ../web_tt2/lists.tt2:43 ../web_tt2/nav.tt2:101 ../web_tt2/nav.tt2:81
 #: ../web_tt2/review.tt2:44
 msgid "Bounces"
 msgstr "반송된 메세지"
@@ -585,7 +607,7 @@ msgstr "보관(저장) 관리"
 #: ../web_tt2/edit_list_request.tt2:39 ../web_tt2/edit_list_request.tt2:4
 #: ../web_tt2/editfile.tt2:4 ../web_tt2/editsubscriber.tt2:37
 #: ../web_tt2/latest_d_read.tt2:29 ../web_tt2/latest_d_read.tt2:32
-#: ../web_tt2/modindex.tt2:192 ../web_tt2/modindex.tt2:9
+#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:6
 #: ../web_tt2/picture_upload.tt2:21 ../web_tt2/pref.tt2:4
 #: ../web_tt2/rename_list_request.tt2:3 ../web_tt2/review.tt2:5
 #: ../web_tt2/reviewbouncing.tt2:3 ../web_tt2/suboptions.tt2:20
@@ -643,7 +665,7 @@ msgid "Search field:"
 msgstr "검색 필드 :"
 
 #: ../src/etc/mhonarc-ressources.tt2:52 ../web_tt2/arcsearch_form.tt2:16
-#: ../web_tt2/review.tt2:89 ../web_tt2/reviewbouncing.tt2:13
+#: ../web_tt2/review.tt2:92 ../web_tt2/reviewbouncing.tt2:13
 msgid "Search"
 msgstr "검색"
 
@@ -723,7 +745,7 @@ msgid "Sender"
 msgstr "보낸 사람"
 
 #: ../web_tt2/arcsearch_form.tt2:49 ../web_tt2/latest_arc.tt2:19
-#: ../web_tt2/modindex.tt2:152 ../web_tt2/modindex.tt2:68
+#: ../web_tt2/modindex.tt2:105 ../web_tt2/modindex.tt2:39
 #: ../web_tt2/subindex.tt2:13 ../web_tt2/viewlogs.tt2:127
 msgid "Date"
 msgstr "날짜"
@@ -966,7 +988,7 @@ msgstr ""
 "WWSympa 환경을 위한 패스워드를 선택할 필요가 있습니다.\n"
 "권한이 가동을 수행하는 필요로 할 것 이 패스워드"
 
-#: ../web_tt2/choosepasswd.tt2:11 ../web_tt2/pref.tt2:41
+#: ../web_tt2/choosepasswd.tt2:11 ../web_tt2/pref.tt2:42
 #, fuzzy
 msgid "New password:"
 msgstr "새 패스워드 :"
@@ -977,7 +999,7 @@ msgid "New password again:"
 msgstr "다시 새 패스워드 :"
 
 #: ../web_tt2/choosepasswd.tt2:13 ../web_tt2/picture_upload.tt2:13
-#: ../web_tt2/pref.tt2:20 ../web_tt2/pref.tt2:43
+#: ../web_tt2/pref.tt2:20 ../web_tt2/pref.tt2:44
 msgid "Submit"
 msgstr "전송"
 
@@ -1034,7 +1056,7 @@ msgstr "리스트의 제목"
 msgid "Send to me"
 msgstr "미리 알림"
 
-#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modindex.tt2:50
+#: ../web_tt2/compose_mail.tt2:47 ../web_tt2/modform.tt2:10
 #: ../web_tt2/viewmod.tt2:31
 msgid "This list is configured to require topic(s)."
 msgstr "이 리스트 화제 를 요청하기 위해 화제 필요합니다."
@@ -1092,10 +1114,21 @@ msgid ""
 "named \"organization\"."
 msgstr ""
 
-#: ../web_tt2/compose_mail.tt2:78
-#, fuzzy
-msgid "URL:"
-msgstr "URL"
+#: ../web_tt2/compose_mail.tt2:79
+msgid "Select the source of your HTML newsletter"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:82
+msgid "Send the page from the following URL:"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:85
+msgid "OR"
+msgstr ""
+
+#: ../web_tt2/compose_mail.tt2:87
+msgid "<strong>Send an HTML file from your computer:"
+msgstr ""
 
 #: ../web_tt2/copy_template.tt2:3
 msgid "Copying template"
@@ -1142,7 +1175,8 @@ msgstr "해당장치(robot)"
 msgid "list"
 msgstr "리스트"
 
-#: ../web_tt2/copy_template.tt2:25 ../web_tt2/edit_list_request.tt2:410
+#: ../web_tt2/copy_template.tt2:25 ../web_tt2/edit_config.tt2:17
+#: ../web_tt2/edit_list_request.tt2:410
 msgid "default"
 msgstr "기본"
 
@@ -1238,19 +1272,19 @@ msgstr "화제:"
 msgid "--Select a topic--"
 msgstr "--선택하기--"
 
-#: ../web_tt2/create_list_request.tt2:89 ../web_tt2/javascript.tt2:101
+#: ../web_tt2/create_list_request.tt2:93
 msgid "Other"
 msgstr "기타"
 
-#: ../web_tt2/create_list_request.tt2:93
+#: ../web_tt2/create_list_request.tt2:97
 msgid "A few lines describing the list"
 msgstr "몇몇 라인은 리스트의 설명입니다."
 
-#: ../web_tt2/create_list_request.tt2:94
+#: ../web_tt2/create_list_request.tt2:98
 msgid "Description:"
 msgstr "설명:"
 
-#: ../web_tt2/create_list_request.tt2:97
+#: ../web_tt2/create_list_request.tt2:101
 msgid "Submit your creation request"
 msgstr "제목 생성 요청"
 
@@ -1462,8 +1496,8 @@ msgid "Listing of root folder"
 msgstr "루트 폴더의 목록"
 
 #: ../web_tt2/d_read.tt2:59 ../web_tt2/d_read.tt2:61
-#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:153
-#: ../web_tt2/modindex.tt2:69
+#: ../web_tt2/latest_d_read.tt2:20 ../web_tt2/modindex.tt2:106
+#: ../web_tt2/modindex.tt2:37
 msgid "Author"
 msgstr "작성자"
 
@@ -1576,7 +1610,7 @@ msgstr "제목"
 msgid "URL"
 msgstr "URL"
 
-#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:73
+#: ../web_tt2/d_read.tt2:352 ../web_tt2/review.tt2:75
 msgid "Add"
 msgstr "추가"
 
@@ -1665,8 +1699,9 @@ msgstr "업로드를 취소 하시겠습니까?"
 msgid "Additional information"
 msgstr "개인 정보"
 
+#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "[% k.name %]:"
+msgid "%1:"
 msgstr ""
 
 #: ../web_tt2/edit_attributes.tt2:24
@@ -1679,9 +1714,28 @@ msgstr "요청했든 별명"
 msgid "Edit robot config"
 msgstr "리스트 구성 편집"
 
+#: ../web_tt2/edit_config.tt2:17
+#, fuzzy
+msgid "parameter name"
+msgstr "매개 변수 값"
+
+#: ../src/lib/List.pm:710 ../web_tt2/edit_config.tt2:17
+msgid "value"
+msgstr "값"
+
+#: ../web_tt2/edit_config.tt2:17
+#, fuzzy
+msgid "apply to"
+msgstr "적용"
+
 #: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
 msgid "Set"
 msgstr ""
+
+#: ../web_tt2/edit_config.tt2:51
+#, fuzzy
+msgid "main conf"
+msgstr "리스트 구성 편집"
 
 #: ../web_tt2/editfile.tt2:4
 #, fuzzy
@@ -1838,14 +1892,14 @@ msgstr "데이터 원본 설치"
 msgid "scenario source"
 msgstr "시나리오 원본"
 
-#: ../mail_tt2/helpfile.tt2:62 ../mail_tt2/listmaster_notification.tt2:283
-#: ../mail_tt2/listmaster_notification.tt2:302
-#: ../mail_tt2/listmaster_notification.tt2:373
+#: ../mail_tt2/helpfile.tt2:62 ../mail_tt2/listmaster_notification.tt2:287
+#: ../mail_tt2/listmaster_notification.tt2:306
+#: ../mail_tt2/listmaster_notification.tt2:377
 #: ../mail_tt2/listowner_notification.tt2:81 ../mail_tt2/lists.tt2:7
 #: ../mail_tt2/summary.tt2:4 ../web_tt2/edit_list_request.tt2:102
 #: ../web_tt2/edit_list_request.tt2:104 ../web_tt2/edit_list_request.tt2:260
 #: ../web_tt2/edit_list_request.tt2:262 ../web_tt2/editsubscriber.tt2:47
-#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:104
+#: ../web_tt2/editsubscriber.tt2:55 ../web_tt2/error.tt2:108
 #: ../web_tt2/rss.tt2:4 ../web_tt2/subindex.tt2:39
 msgid ":"
 msgstr ""
@@ -2013,16 +2067,17 @@ msgstr "'%1' 라는 달 를 찾을 수 없습니다."
 msgid "Archives from %1 are not accessible"
 msgstr "%1 의 보관(저장)이 액세스가 가능하지 않습니다"
 
-#: ../mail_tt2/listmaster_notification.tt2:338 ../web_tt2/error.tt2:12
+#: ../mail_tt2/listmaster_notification.tt2:342 ../web_tt2/error.tt2:12
 msgid "Unable to load list topics."
 msgstr "리스트 화제를 로드하지 못했습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:339 ../web_tt2/error.tt2:13
+#: ../mail_tt2/listmaster_notification.tt2:343 ../web_tt2/error.tt2:13
 msgid "Unable to load create_list templates."
 msgstr "create_list 템플렛을 로드하지 못했습니다."
 
 #: ../web_tt2/error.tt2:14
-msgid "Failed to inlude members"
+#, fuzzy
+msgid "Failed to include members"
 msgstr "가입자(들)을 포함하기 실패했습니다"
 
 #: ../web_tt2/error.tt2:15
@@ -2039,7 +2094,7 @@ msgid "The exportation failed for list '%1'"
 msgstr "수출 리스트 가 '%1' 를 위해 실패한"
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:352 ../web_tt2/error.tt2:18
+#: ../mail_tt2/listmaster_notification.tt2:356 ../web_tt2/error.tt2:18
 msgid "Cannot unzip file '%1'."
 msgstr "파일 '%1' 를 압축(unzip)할 수 없습니다."
 
@@ -2054,7 +2109,7 @@ msgstr ""
 
 #. (i_err.key)
 #. (zipfile)
-#: ../mail_tt2/listmaster_notification.tt2:360 ../web_tt2/error.tt2:21
+#: ../mail_tt2/listmaster_notification.tt2:364 ../web_tt2/error.tt2:21
 msgid "File not found."
 msgstr "파일을 찾을 수 없습니다."
 
@@ -2082,53 +2137,53 @@ msgstr ""
 "가 특성을 포함할 수도 있습니다."
 
 #. (s_err.action)
-#: ../web_tt2/error.tt2:34
+#: ../web_tt2/error.tt2:35
 msgid "SYSTEM ERROR (%1)"
 msgstr "시스템 에러 (%1)"
 
 #. (u_err.action)
-#: ../web_tt2/error.tt2:43
+#: ../web_tt2/error.tt2:44
 msgid "ERROR (%1) "
 msgstr "에러 (%1) "
 
-#: ../web_tt2/error.tt2:44
+#: ../web_tt2/error.tt2:45
 msgid "Wrong parameters"
 msgstr "틀린 매개 변수"
 
-#: ../web_tt2/error.tt2:45
+#: ../web_tt2/error.tt2:46
 msgid "Unknown action"
 msgstr "확인 불가 작업"
 
 #. (u_err.params)
-#: ../web_tt2/error.tt2:46
+#: ../web_tt2/error.tt2:47
 #, fuzzy
 msgid "Syntax errors with the following parameters: %1"
 msgstr "다음 매개 변수에 구문 에러: %1"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:47
+#: ../web_tt2/error.tt2:48
 #, fuzzy
 msgid "%1: unknown list"
 msgstr "%1 : 확인 불가 리스트 (확인안됨)"
 
 #. (u_err.new_robot)
-#: ../web_tt2/error.tt2:48
+#: ../web_tt2/error.tt2:49
 #, fuzzy
 msgid "%1: unknown robot"
 msgstr "%1 : 확인 불가 해당장치(robot)"
 
 #. (u_err.family)
-#: ../web_tt2/error.tt2:49
+#: ../web_tt2/error.tt2:50
 #, fuzzy
 msgid "%1: unknown family"
 msgstr "%1 : 확인 불가 종류 (종류 확인안됨)"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:50
+#: ../web_tt2/error.tt2:51
 msgid "You are already logged in as %1"
 msgstr "%1 로 이미 로그인됩니다."
 
-#: ../web_tt2/error.tt2:51
+#: ../web_tt2/error.tt2:52
 #, fuzzy
 msgid ""
 "You can not get a password reminder; probably because your password is "
@@ -2137,39 +2192,52 @@ msgstr ""
 "패스워드 미리 알림를 받올 수 없습니다; 패스워드가 이기 때문에 아마관리했든 외"
 "부 Sympa를 (단 하나 개시 미리 알림 체계 또는 LDAP 디렉토리)."
 
-#: ../web_tt2/error.tt2:52
+#: ../web_tt2/error.tt2:53
 msgid "Please provide email address"
 msgstr "이메일 주소 를 임륙하십시오"
 
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:53
+#: ../web_tt2/error.tt2:54
 msgid "Missing argument %1"
 msgstr "%1 인수 없음"
 
+#: ../web_tt2/error.tt2:55
+msgid ""
+"You didn't define the web page you want to use to create your newsletter. "
+"Please specify either an URL or a file to upload."
+msgstr ""
+
+#: ../web_tt2/error.tt2:56 ../web_tt2/error.tt2:57
+msgid ""
+"You specified both an URL and a file to upload. Sympa can't choose which one "
+"to send. Please fill the form with one of them only. A web page OR a file to "
+"upload."
+msgstr ""
+
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:54
+#: ../web_tt2/error.tt2:58
 msgid "Wrong value for parameter %1"
 msgstr "매개 변수 %1 를 위한 틀린 값"
 
-#: ../web_tt2/error.tt2:144 ../web_tt2/error.tt2:55
+#: ../web_tt2/error.tt2:150 ../web_tt2/error.tt2:59
 msgid "You need to login"
 msgstr "로그인 필요가 있습니다"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:56
+#: ../web_tt2/error.tt2:60
 msgid "Address \"%1\" is incorrect"
 msgstr "\"%1\" 주소는 잘 못 되었습니다."
 
-#: ../web_tt2/error.tt2:57
+#: ../web_tt2/error.tt2:61
 msgid "Provided password is incorrect"
 msgstr "제공했든 패스워드를 잘못됩니다"
 
-#: ../web_tt2/error.tt2:58
+#: ../web_tt2/error.tt2:62
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr "패스워드 선택하지 않를, 요청하는 처음 패스워드의 미리 알림"
 
-#: ../web_tt2/error.tt2:59
+#: ../web_tt2/error.tt2:63
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post "
 "you a reminder"
@@ -2178,350 +2246,357 @@ msgstr ""
 "알림"
 
 #. (u_err.nb_days)
-#: ../web_tt2/error.tt2:60
+#: ../web_tt2/error.tt2:64
 msgid "The period is too long (%1 days)"
 msgstr "기간 너무 깁니다 ( %1 일)"
 
-#: ../web_tt2/error.tt2:61
+#: ../web_tt2/error.tt2:65
 msgid "List has no subscribers"
 msgstr "리스트가 가입자 없음"
 
 #. (u_err.page)
-#: ../web_tt2/error.tt2:62
+#: ../web_tt2/error.tt2:66
 msgid "No page %1"
 msgstr "%1 란 페이지 없음"
 
-#: ../web_tt2/error.tt2:63
+#: ../web_tt2/error.tt2:67
 msgid "Missing filter"
 msgstr "필터 없음"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:65
+#: ../web_tt2/error.tt2:69
 msgid "Not subscribed: %1"
 msgstr "등록구독되지 않는: %1"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:66
+#: ../web_tt2/error.tt2:70
 msgid "You are not subscribed to list %1"
 msgstr "%1 메일링 리스트를 등록구독되지 않습니다."
 
-#: ../web_tt2/error.tt2:68
+#: ../web_tt2/error.tt2:72
 #, fuzzy
 msgid "Check the additional information"
 msgstr "HTTPS 인증 정보"
 
 #. (u_err.reception_mode)
-#: ../web_tt2/error.tt2:69
+#: ../web_tt2/error.tt2:73
 msgid "%1 is not an available reception mode"
 msgstr "%1는 받기 모드(reception mode)가 가능하지 않습니다."
 
 #. (u_err.file)
-#: ../web_tt2/error.tt2:70
+#: ../web_tt2/error.tt2:74
 #, fuzzy
 msgid "%1: file not editable"
 msgstr "%1 : 파일 수정불가"
 
 #. (u_err.list)
-#: ../web_tt2/error.tt2:71
+#: ../web_tt2/error.tt2:75
 msgid "You are already subscribed to the list %1"
 msgstr "%1 메일링 리스트를 이미 등록구독됩니다."
 
 #. (u_err.email,u_err.list)
-#: ../web_tt2/error.tt2:72
+#: ../web_tt2/error.tt2:76
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1가 이미 %2메일링 리스트에 등록 되었습니다"
 
-#: ../web_tt2/error.tt2:73
+#: ../web_tt2/error.tt2:77
 msgid "Please provide your password"
 msgstr "패스워드를 임륙하십시오"
 
-#: ../web_tt2/error.tt2:74
+#: ../web_tt2/error.tt2:78
 msgid "The passwords you typed do not match"
 msgstr "입력한 패스워드 일치하지 않습니다"
 
 #. (u_err.tpl)
-#: ../web_tt2/error.tt2:75
+#: ../web_tt2/error.tt2:79
 msgid "Provided path is incorrect for template '%1'"
 msgstr "제공했든 경로를 템플렛 '%1'를 위해 잘못됩니다."
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:76
+#: ../web_tt2/error.tt2:80
 msgid "Cannot open file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
-#: ../web_tt2/error.tt2:77
+#: ../web_tt2/error.tt2:81
 msgid "You need to provide list name"
 msgstr "리스트 이름 를 입력해야 합니다"
 
-#: ../web_tt2/error.tt2:78
+#: ../web_tt2/error.tt2:82
 #, fuzzy
 msgid ""
 "Failed to moderate a message; it was probably moderated by another moderator"
 msgstr ""
 "메시지를 살펴보기 실패했습니다. 다른 중재자 살펴보기 되었을 수 있습니다니다."
 
-#: ../web_tt2/error.tt2:79
+#: ../web_tt2/error.tt2:83
 msgid "Tagging message is required for this list"
 msgstr "메시지를 태그를 붙이는 이 리스트를 위해 요청됩니다"
 
-#: ../web_tt2/error.tt2:80
+#: ../web_tt2/error.tt2:84
 msgid "Archives are empty for this list"
 msgstr "보관(저장)이 이 리스트를 위해 비워있습니다"
 
-#: ../web_tt2/error.tt2:81
+#: ../web_tt2/error.tt2:85
 msgid "You did not select an action to perform"
 msgstr "수행하기 위해 선택하지 않았 작업을"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:82
+#: ../web_tt2/error.tt2:86
 msgid "No bounce for user  %1"
 msgstr "%1 가 반송된 메시지 없음"
 
-#: ../web_tt2/error.tt2:83
+#: ../web_tt2/error.tt2:87
 msgid "List has no bouncing subscribers"
 msgstr "리스트가 반송된 가입자 없음"
 
-#: ../web_tt2/error.tt2:84
+#: ../web_tt2/error.tt2:88
 #, fuzzy
 msgid "No parameter was edited"
 msgstr "매개 변수 값"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:85
+#: ../web_tt2/error.tt2:89
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "구성 파일은 %1에 의해 변경됐습니다. 변경요청은 적용할 수 없습니다."
 
-#: ../web_tt2/error.tt2:86
+#: ../web_tt2/error.tt2:90
 msgid "Topic \"other\" is a reserved word"
 msgstr "화제 \"other\" 은 예약된 단어입니다"
 
 #. (u_err.p_name)
-#: ../web_tt2/error.tt2:87
+#: ../web_tt2/error.tt2:91
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr ""
 
 #. (u_err.param)
-#: ../web_tt2/error.tt2:88
+#: ../web_tt2/error.tt2:92
 msgid "Parameter '%1' must have values"
 msgstr "매개 변수 '%1' 에는 값 가 있어야 합니다"
 
 #. (u_err.param,u_err.val)
-#: ../web_tt2/error.tt2:89
+#: ../web_tt2/error.tt2:93
 #, fuzzy
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "매개 변수 '%1' 는 틀린 값이 잘못되었습니다 : %2"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:90
+#: ../web_tt2/error.tt2:94
 msgid "The list '%1' is already closed"
 msgstr "'%1' 리스트 이미 종료되었습니다"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:91
+#: ../web_tt2/error.tt2:95
 msgid "The list '%1' is not closed"
 msgstr "'%1' 리스트 닫히지 않습니다"
 
 #. (u_err.bad_listname)
-#: ../web_tt2/error.tt2:92
+#: ../web_tt2/error.tt2:96
 #, fuzzy
 msgid "'%1': bad listname"
 msgstr "'%1' : 적합하지 않은 리스트 이름"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:93
+#: ../web_tt2/error.tt2:97
 msgid "'%1' list already exists"
 msgstr "'%1'리스트는 이미 있습니다"
 
 #. (u_err.new_listname)
-#: ../web_tt2/error.tt2:94
+#: ../web_tt2/error.tt2:98
 #, fuzzy
 msgid "Incorrect listname '%1': matches one of service aliases"
 msgstr "잘못된 리스트 이름 '%1' : 서비스 별명 중 하나와 동일함"
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:95
+#: ../web_tt2/error.tt2:99
 #, fuzzy
 msgid "Failed to remove list aliases for list %1"
 msgstr "리스트 '%1' 위한 관리자(들)을 포함하기 실패했습니다"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:96
+#: ../web_tt2/error.tt2:100
 #, fuzzy
 msgid "%1: No such file or directory"
 msgstr "%1 : 다음과 같은 파일 또는 디렉토리 없음"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:97
+#: ../web_tt2/error.tt2:101
 #, fuzzy
 msgid "Unable to read %1: empty document"
 msgstr "%1 를 읽을 수 없음 : 빈 문서"
 
-#: ../web_tt2/error.tt2:98
+#: ../web_tt2/error.tt2:102
 msgid "There is no shared documents"
 msgstr "공용 문서 가 없음"
 
-#: ../web_tt2/error.tt2:99
+#: ../web_tt2/error.tt2:103
 msgid "The shared document space is empty"
 msgstr "공용 문서 공간 빕니다"
 
-#: ../web_tt2/error.tt2:100
+#: ../web_tt2/error.tt2:104
 msgid "The shared directory cannot have any description"
 msgstr "공용 디렉토리가 묘사 가질 수 없습니다"
 
-#: ../web_tt2/error.tt2:101
+#: ../web_tt2/error.tt2:105
 msgid "No description specified"
 msgstr "지정된 묘사 없음"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:102
+#: ../web_tt2/error.tt2:106
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "기술할 수 없음 는 , 문서 '%1' 존재하지 않습니다"
 
-#: ../web_tt2/error.tt2:103
+#: ../web_tt2/error.tt2:107
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "데이터는 디스크에 변경되었습니다. 당신의 변경은 적용할 수 없습니다"
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:104
+#: ../web_tt2/error.tt2:108
 #, fuzzy
 msgid "%1: incorrect name"
 msgstr "%1 : 잘못된 이름"
 
-#: ../web_tt2/error.tt2:105
+#: ../web_tt2/error.tt2:109
 #, fuzzy
 msgid "Failed: your content is empty"
 msgstr "실패: 내용은 빕니다"
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:106
+#: ../web_tt2/error.tt2:110
 #, fuzzy
 msgid "Cannot overwrite file %1:"
 msgstr "파일 %1 를 중복해 쓸 수 없습니다."
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:107
+#: ../web_tt2/error.tt2:111
 #, fuzzy
 msgid "A directory named '%1' already exists:"
 msgstr "'%1' 라는 디렉토리 이미 있습니다"
 
 #. (u_err.name)
-#: ../web_tt2/error.tt2:108
+#: ../web_tt2/error.tt2:112
 #, fuzzy
 msgid "This is an already existing document: '%1'"
 msgstr "다음 문서가 이미 있습니다 : '%1'"
 
-#: ../web_tt2/error.tt2:109
+#: ../web_tt2/error.tt2:113
 msgid "No name specified"
 msgstr "지정된 이름 없음"
 
-#: ../web_tt2/error.tt2:110
+#: ../web_tt2/error.tt2:114
 msgid "The document repository exceed disk quota."
 msgstr "문서 창고가 디스크 할당량 초과합니다."
 
 #. (u_err.path)
-#: ../web_tt2/error.tt2:111
+#: ../web_tt2/error.tt2:115
 #, fuzzy
 msgid "Cannot upload file %1:"
 msgstr "파일 %1 를 업로드할 수 없습니다."
 
 #. (u_err.dir)
-#: ../web_tt2/error.tt2:112
+#: ../web_tt2/error.tt2:116
 msgid "You're not authorized to upload an INDEX.HTML in %1"
 msgstr "%1 에 INDEX.HTML를 업로드하는 인증되지 않았습니다."
 
-#: ../web_tt2/error.tt2:113
+#: ../web_tt2/error.tt2:117
 msgid "The upload failed, try it again"
 msgstr "업로드 실패하고, 다시 시도 그것에 가"
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:114
+#: ../web_tt2/error.tt2:118
 #, fuzzy
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "디렉토리 %1 와 내용은 복사할 수 없었습니다 : %2"
 
 #. (u_err.name,u_err.reason)
-#: ../web_tt2/error.tt2:115
+#: ../web_tt2/error.tt2:119
 #, fuzzy
 msgid "File %1 was not copied: %2 "
 msgstr "파일 %1 는 복사할 수 없습니다 : %2 "
 
 #. (u_err.directory)
-#: ../web_tt2/error.tt2:116
+#: ../web_tt2/error.tt2:120
 #, fuzzy
 msgid "Failed: %1 not empty"
 msgstr "실패: %1 는 비지 않음"
 
-#: ../web_tt2/error.tt2:117
+#: ../web_tt2/error.tt2:121
 msgid "No certificate for this list"
 msgstr "리스트의 인증서 없음"
 
-#: ../web_tt2/error.tt2:118
+#: ../web_tt2/error.tt2:122
 msgid "This list has no message topic"
 msgstr "이 리스트가 메시지 화제 없습니다"
 
-#: ../web_tt2/error.tt2:119
+#: ../web_tt2/error.tt2:123
 msgid "Tag message with topic is required for this list"
 msgstr "화제에 태그 메시지 이 리스트를 위해 요청됩니다"
 
 #. (u_err.email)
-#: ../web_tt2/error.tt2:120
+#: ../web_tt2/error.tt2:124
 msgid "No entry for user '%1'"
 msgstr "사용자 '%1' 를 위한 입장 없음"
 
-#: ../web_tt2/error.tt2:121
+#: ../web_tt2/error.tt2:125
 msgid "Please select archive months"
 msgstr "보관 달 선택하십시오"
 
-#: ../web_tt2/error.tt2:122
+#: ../web_tt2/error.tt2:126
 msgid "No SOAP service"
 msgstr "SOAP 서비스 없음"
 
-#: ../web_tt2/error.tt2:123
+#: ../web_tt2/error.tt2:127
 msgid "Authentication failed"
 msgstr "인증이 실패 되었습니다"
 
 #. (u_err.status)
-#: ../web_tt2/error.tt2:124
+#: ../web_tt2/error.tt2:128
 msgid "Service unavailable because list status is '%1'"
 msgstr ""
 
 #. (u_err.argument)
-#: ../web_tt2/error.tt2:125
+#: ../web_tt2/error.tt2:129
 #, fuzzy
 msgid "This Template '%1' already exists"
 msgstr "파일 %1 이미 있습니다"
 
 #. (u_err.file_del)
-#: ../web_tt2/error.tt2:126
+#: ../web_tt2/error.tt2:130
 #, fuzzy
 msgid "Cannot delete this file '%1'"
 msgstr "'%1' 파일를 열 수 없습니다"
 
 #. (u_err.filename)
-#: ../web_tt2/error.tt2:127
+#: ../web_tt2/error.tt2:131
 #, fuzzy
 msgid "Invalid filename: '%1'"
 msgstr "파일을 읽을 수 없음 : '%1'."
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:128
+#: ../web_tt2/error.tt2:132
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
 msgstr ""
 
 #. (u_err.listname)
-#: ../web_tt2/error.tt2:129
+#: ../web_tt2/error.tt2:133
 msgid ""
 "Failed to update admin email in list '%1', list owner has been notified."
 msgstr ""
 
+#. (base_url,path_cgi,u_err.oauth_provider)
+#: ../web_tt2/error.tt2:134
+msgid ""
+"Failed to include members from VOOT group, use the following link to check "
+"the OAuth status : <a href=\"%1%2/oauth_check/%3\">%1%2/oauth_check/%3</a>"
+msgstr ""
+
 #. (auth.action)
-#: ../web_tt2/error.tt2:138
+#: ../web_tt2/error.tt2:144
 msgid "AUTHORIZATION REJECT (%1)"
 msgstr "허가 거부 (%1)"
 
 #. (auth.listname)
-#: ../web_tt2/error.tt2:140
+#: ../web_tt2/error.tt2:146
 #, fuzzy
 msgid ""
 "Could not change your subscription address for the list '%1' \n"
@@ -2567,8 +2642,7 @@ msgstr "종료된 리스트들"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
-#: ../web_tt2/modindex.tt2:125 ../web_tt2/modindex.tt2:182
-#: ../web_tt2/modindex.tt2:64 ../web_tt2/review.tt2:138
+#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:141
 #: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
 #: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
 #: ../web_tt2/subscriber_table.tt2:7
@@ -2642,11 +2716,6 @@ msgstr "대기 중 리스트들"
 msgid "Requested date"
 msgstr "요청했든 날짜"
 
-#: ../web_tt2/info.tt2:8
-#, fuzzy
-msgid "List informations"
-msgstr "개인 정보"
-
 #: ../web_tt2/install_pending_list.tt2:11 ../web_tt2/scenario_test.tt2:13
 #: ../web_tt2/set_pending_list_request.tt2:7
 #, fuzzy
@@ -2663,150 +2732,141 @@ msgstr "요청하는 사람"
 msgid "on %1"
 msgstr "(%1)"
 
-#: ../web_tt2/javascript.tt2:833
-#, fuzzy
-msgid "Start date"
-msgstr "최신 정보"
-
-#: ../web_tt2/javascript.tt2:834
-#, fuzzy
-msgid "End date"
-msgstr "날짜"
-
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "January"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "February"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "March"
 msgstr "검색"
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "April"
 msgstr "프로파일"
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "May"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "June"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "July"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 msgid "August"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "September"
 msgstr "리스트 가입자"
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "October"
 msgstr "기타"
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "November"
 msgstr "리스트 가입자"
 
-#: ../web_tt2/javascript.tt2:838
+#: ../web_tt2/javascript.tt2:22
 #, fuzzy
 msgid "December"
 msgstr "리스트 가입자"
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 msgid "Su"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 #, fuzzy
 msgid "Mo"
 msgstr "살펴보기"
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 msgid "Tu"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 msgid "We"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 msgid "Th"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 #, fuzzy
 msgid "Fr"
 msgstr "보낸 사람"
 
-#: ../web_tt2/javascript.tt2:839
+#: ../web_tt2/javascript.tt2:23
 #, fuzzy
 msgid "Sa"
 msgstr "저장"
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 #, fuzzy
 msgid "Sunday"
 msgstr "매시지의 요약"
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 #, fuzzy
 msgid "Monday"
 msgstr "메시지 본문"
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 #, fuzzy
 msgid "Tuesday"
 msgstr "매시지의 요약"
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 msgid "Wednesday"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 msgid "Thursday"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 msgid "Friday"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:840
+#: ../web_tt2/javascript.tt2:24
 #, fuzzy
 msgid "Saturday"
 msgstr "매시지의 요약"
 
-#: ../web_tt2/javascript.tt2:841
+#: ../web_tt2/javascript.tt2:25
 msgid "Calendar"
 msgstr ""
 
-#: ../web_tt2/javascript.tt2:842
+#: ../web_tt2/javascript.tt2:26
 #, fuzzy
 msgid "today"
 msgstr "메시지 본문"
 
-#. (+cpt)
-#: ../web_tt2/javascript.tt2:1056
-msgid "microcal"
-msgstr ""
+#: ../web_tt2/javascript.tt2:38
+#, fuzzy
+msgid "Start date"
+msgstr "최신 정보"
 
-#: ../web_tt2/javascript.tt2:1096
-msgid "\"+src.id+\"_cal"
-msgstr ""
+#: ../web_tt2/javascript.tt2:39
+#, fuzzy
+msgid "End date"
+msgstr "날짜"
 
 #. (count)
 #: ../web_tt2/latest_arc.tt2:6
@@ -2861,7 +2921,7 @@ msgid " The latest lists of this robot"
 msgstr " 이 해당장치(robot)의 최신 리스트들"
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:109
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:112
 msgid "%1 occurrence(s) found"
 msgstr "%1가 발견 되었습니다"
 
@@ -2870,21 +2930,21 @@ msgstr "%1가 발견 되었습니다"
 msgid "<strong>%1</strong> is subscribed to the following mailing lists"
 msgstr "<strong> %1는 다음의 메일링 리스트에 가입되었습니다."
 
-#: ../web_tt2/lists.tt2:38 ../web_tt2/nav.tt2:69
+#: ../web_tt2/lists.tt2:39 ../web_tt2/nav.tt2:69
 msgid "Manage Subscribers"
 msgstr "가입자 관리"
 
-#: ../web_tt2/lists.tt2:40 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
+#: ../web_tt2/lists.tt2:41 ../web_tt2/nav.tt2:73 ../web_tt2/review.tt2:42
 msgid "Blacklist"
 msgstr "블랙리스트"
 
-#: ../web_tt2/lists.tt2:44 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
+#: ../web_tt2/lists.tt2:45 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
 #: ../web_tt2/serveradmin.tt2:123
 msgid "Logs"
 msgstr "로그"
 
 #. (user.email)
-#: ../web_tt2/lists.tt2:62
+#: ../web_tt2/lists.tt2:67
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr ""
 "<strong>%1</strong> 라는 주소을 위한 사용자 구독 메일링 리스트는 없것 같은데."
@@ -3104,98 +3164,113 @@ msgstr "리스트 이름 입력하십시오"
 msgid "Search lists"
 msgstr "리스트 검색"
 
-#: ../web_tt2/modindex.tt2:61 ../web_tt2/modindex.tt2:9
-msgid "Listing messages to moderate"
-msgstr "살펴보기 목록 메시지"
-
-#: ../web_tt2/modindex.tt2:113 ../web_tt2/modindex.tt2:115
-#: ../web_tt2/modindex.tt2:14 ../web_tt2/modindex.tt2:19
-#: ../web_tt2/viewmod.tt2:10 ../web_tt2/viewmod.tt2:12
+#: ../web_tt2/modform.tt2:17 ../web_tt2/modform.tt2:23
+#: ../web_tt2/modform.tt2:6 ../web_tt2/viewmod.tt2:10
+#: ../web_tt2/viewmod.tt2:12
 msgid "Distribute"
 msgstr "배포하기"
 
-#: ../web_tt2/modindex.tt2:117 ../web_tt2/modindex.tt2:146
-#: ../web_tt2/modindex.tt2:185 ../web_tt2/modindex.tt2:25
-#: ../web_tt2/viewmod.tt2:14
-msgid "Reject"
-msgstr "거부하기"
-
-#: ../web_tt2/modindex.tt2:25
-msgid ""
-"You should probably not reject message detected as spam with notification "
-"because the message sender is probably spoofed. Do you really want to reject "
-"those messages with notification?"
-msgstr ""
-
-#: ../web_tt2/modindex.tt2:31
-#, fuzzy
-msgid "Server default rejection message"
-msgstr "편집자 거부 메시지"
-
-#: ../web_tt2/modindex.tt2:39
-#, fuzzy
-msgid "Reject without notification "
-msgstr "인증 없는 소유자 에 의해"
-
-#: ../web_tt2/modindex.tt2:41
-#, fuzzy
-msgid "Add to blacklist"
-msgstr "블랙리스트 편집"
-
-#: ../web_tt2/modindex.tt2:52
+#: ../web_tt2/modform.tt2:11
 #, fuzzy
 msgid ""
 "Please select one or more topic(s) that correspond to the messages you wish "
 "to distribute:"
 msgstr "한개 이상 바라는 메시지에 대응하는 화제 (s)를 선택하기배포하기 위해:"
 
-#: ../web_tt2/modindex.tt2:155 ../web_tt2/modindex.tt2:71
+#: ../web_tt2/modform.tt2:19
+#, fuzzy
+msgid "You must select a topic"
+msgstr "--선택하기--"
+
+#: ../web_tt2/modform.tt2:26 ../web_tt2/modform.tt2:54
+#: ../web_tt2/modform.tt2:56 ../web_tt2/modindex.tt2:138
+#: ../web_tt2/modindex.tt2:99 ../web_tt2/viewmod.tt2:14
+msgid "Reject"
+msgstr "거부하기"
+
+#: ../web_tt2/modform.tt2:30
+#, fuzzy
+msgid "Rejecting message"
+msgstr "삭제 메시지"
+
+#: ../web_tt2/modform.tt2:32
+#, fuzzy
+msgid "Choose notification "
+msgstr "알림"
+
+#: ../web_tt2/modform.tt2:34
+#, fuzzy
+msgid "No notification"
+msgstr "알림"
+
+#: ../web_tt2/modform.tt2:38
+#, fuzzy
+msgid "Server default rejection message"
+msgstr "편집자 거부 메시지"
+
+#: ../web_tt2/modform.tt2:43
+#, fuzzy
+msgid "Report message as undetected spam "
+msgstr "메시지가 거부했습니다."
+
+#: ../web_tt2/modform.tt2:46
+#, fuzzy
+msgid "Add sender to blacklist"
+msgstr "블랙리스트 편집"
+
+#: ../web_tt2/modform.tt2:49
+msgid ""
+"You should rejet spams quietly because the sender of a spam is often "
+"spoofed, if you really want to send this notification, please confirm "
+msgstr ""
+
+#: ../web_tt2/modindex.tt2:31 ../web_tt2/modindex.tt2:6
+msgid "Listing messages to moderate"
+msgstr "살펴보기 목록 메시지"
+
+#: ../web_tt2/modindex.tt2:21
+#, fuzzy
+msgid "loading message..."
+msgstr "전체 미리 알림"
+
+#: ../web_tt2/modindex.tt2:108 ../web_tt2/modindex.tt2:40
 msgid "Size"
 msgstr "크기"
 
-#: ../web_tt2/modindex.tt2:102
+#: ../web_tt2/modindex.tt2:68
 msgid "No subject"
 msgstr "제목"
 
-#: ../web_tt2/modindex.tt2:118 ../web_tt2/modindex.tt2:147
-#: ../web_tt2/modindex.tt2:186
-msgid "Notified reject"
-msgstr "거부 통지"
-
-#: ../web_tt2/modindex.tt2:120
-msgid "Reject and blacklist sender"
-msgstr "거부하고 보낸 사람를 블랙리스트하기"
-
-#: ../web_tt2/modindex.tt2:128
-msgid "Toggle spams"
-msgstr ""
-
-#: ../web_tt2/modindex.tt2:143
+#: ../web_tt2/modindex.tt2:96
 msgid "Listing of shared documents to moderate"
 msgstr "살펴보기 공용 문서의 목록"
 
-#: ../web_tt2/modindex.tt2:145 ../web_tt2/modindex.tt2:184
+#: ../web_tt2/modindex.tt2:137 ../web_tt2/modindex.tt2:98
 msgid "Install"
 msgstr "설치하기"
 
-#: ../web_tt2/modindex.tt2:149
+#: ../web_tt2/modindex.tt2:100 ../web_tt2/modindex.tt2:139
+msgid "Notified reject"
+msgstr "거부 통지"
+
+#: ../web_tt2/modindex.tt2:102
 msgid "Listing of documents shared to moderate"
 msgstr "문서의 목록 는 살펴보기 하기 위해 공용됬습니다"
 
-#: ../web_tt2/modindex.tt2:154
+#: ../web_tt2/modindex.tt2:107
 msgid "Path"
 msgstr "경로"
 
-#: ../web_tt2/modindex.tt2:180 ../web_tt2/modindex.tt2:199
+#: ../web_tt2/modindex.tt2:133 ../web_tt2/modindex.tt2:152
 msgid "edit blacklist"
 msgstr "블랙리스트 편집"
 
-#: ../web_tt2/modindex.tt2:192
+#: ../web_tt2/modindex.tt2:145
 #, fuzzy
 msgid "Moderation management"
 msgstr "사용자 관리"
 
-#: ../web_tt2/modindex.tt2:201
+#: ../web_tt2/modindex.tt2:154
 #, fuzzy
 msgid "Manage rejection messages"
 msgstr "편집자 거부 메시지"
@@ -3238,7 +3313,7 @@ msgstr "Sympa 를 번역하기"
 msgid "Submitting a bug, a feature request"
 msgstr "버그 제출, 기능 요청"
 
-#: ../web_tt2/nav.tt2:105
+#: ../src/lib/confdef.pm:1172 ../web_tt2/nav.tt2:105
 msgid "DKIM"
 msgstr ""
 
@@ -3249,6 +3324,62 @@ msgstr "미리 알림"
 
 #: ../web_tt2/nav.tt2:119
 msgid "Send an html page"
+msgstr ""
+
+#: ../web_tt2/news.tt2:9
+#, fuzzy
+msgid "Administration Tasks"
+msgstr "리스트 관리 제어판"
+
+#: ../web_tt2/news.tt2:10
+msgid "The following items are waiting for your validation"
+msgstr ""
+
+#. (list_to_admin.key)
+#: ../web_tt2/news.tt2:15
+#, fuzzy
+msgid "List %1:"
+msgstr "%1 메일링 리스트"
+
+#. (list_to_admin.value.mod_message)
+#. (year.value.item(month))
+#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
+#: ../web_tt2/news.tt2:16
+msgid "%1 message(s)"
+msgstr "%1의 메시지"
+
+#. (list_to_admin.value.mod_shared_total)
+#: ../web_tt2/news.tt2:17
+#, fuzzy
+msgid "%1 document(s)"
+msgstr "공용 문서"
+
+#. (list_to_admin.value.mod_subscription)
+#: ../web_tt2/news.tt2:18
+#, fuzzy
+msgid "%1 subscription request(s)"
+msgstr "구독 요청 없음"
+
+#: ../web_tt2/news.tt2:29
+#, fuzzy
+msgid "User Errors"
+msgstr "에러들를 다시 리셋"
+
+#: ../web_tt2/news.tt2:30
+msgid ""
+"We received error reports while trying to send you messages. Some of them "
+"may have been lost."
+msgstr ""
+
+#. (user_with_errors.key)
+#: ../web_tt2/news.tt2:34
+#, fuzzy
+msgid " List %1: "
+msgstr "%1 메일링 리스트 / %2"
+
+#. (user_with_errors.value)
+#: ../web_tt2/news.tt2:35
+msgid " %1 error(s)"
 msgstr ""
 
 #. (last_login_host,last_login_date)
@@ -3265,117 +3396,169 @@ msgstr "리스트 소유자으로 요청 전달되었습니다"
 msgid "%1 subscribers added"
 msgstr "%1 가입자가 추가되었습니다"
 
-#. (notice.total)
 #: ../web_tt2/notice.tt2:16
+#, fuzzy
+msgid "You're not allowed to make sync, time limit in action"
+msgstr "이 작업을 수행할 수 없습니다."
+
+#. (notice.total)
+#: ../web_tt2/notice.tt2:19
 msgid "%1 addresses have been removed"
 msgstr "%1 주소가 삭제 되었습니다"
 
 #. (notice.action)
-#: ../web_tt2/notice.tt2:19
+#: ../web_tt2/notice.tt2:22
 msgid "%1: action completed"
 msgstr "%1 : 작업완료"
 
 #. (notice.action)
-#: ../web_tt2/notice.tt2:22
+#: ../web_tt2/notice.tt2:25
 msgid "%1: action will complete soon"
 msgstr "%1 : 작업은 곧 완료될 것입니다"
 
-#: ../web_tt2/notice.tt2:25
+#: ../web_tt2/notice.tt2:28
 msgid "Configuration file has been updated"
 msgstr "구성 파일 업데이트 되었습니다"
 
-#: ../web_tt2/notice.tt2:28
+#: ../web_tt2/notice.tt2:31
 msgid "List has been purged"
 msgstr "리스트 깨끗이 했습니다"
 
-#: ../web_tt2/notice.tt2:31
+#: ../web_tt2/notice.tt2:34
 msgid "List has been closed"
 msgstr "리스트 닫혔습니다"
 
-#: ../web_tt2/notice.tt2:34
+#: ../web_tt2/notice.tt2:37
 msgid "List has been restored"
 msgstr "리스트 복구되었습니다"
 
 #. (notice.path)
-#: ../web_tt2/notice.tt2:37
+#: ../web_tt2/notice.tt2:40
 msgid "File %1 successfully uploaded!"
 msgstr "파일 %1 기능이 업로드되었습니다!"
 
 #. (notice.path)
-#: ../web_tt2/notice.tt2:40
+#: ../web_tt2/notice.tt2:43
 msgid "File %1 unziped!"
 msgstr "파일 %1 압축이 해제 되었습니다!"
 
 #. (notice.path)
-#: ../web_tt2/notice.tt2:43
+#: ../web_tt2/notice.tt2:46
 msgid "Old file %1 has been erased"
 msgstr "오래된 파일 %1 를 삭제되었습니다"
 
 #. (notice.path)
-#: ../web_tt2/notice.tt2:46
+#: ../web_tt2/notice.tt2:49
 msgid "File %1 waiting for moderation"
 msgstr "파일 %1 는 중재기다리 중"
 
 #. (notice.path)
-#: ../web_tt2/notice.tt2:49
+#: ../web_tt2/notice.tt2:52
 msgid "File %1 saved"
 msgstr "파일 %1 저장되었습니다"
 
-#: ../web_tt2/notice.tt2:52
+#: ../web_tt2/notice.tt2:55
 msgid "Your password has been emailed to you"
 msgstr "패스워드가 이메일로 전송되었습니다"
 
-#: ../web_tt2/notice.tt2:55
+#: ../web_tt2/notice.tt2:58
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "패스워드를 선택하기의해, 위 메뉴에서 '기본설정' 보십시오."
 
 #. (notice.list)
-#: ../web_tt2/notice.tt2:58
+#: ../web_tt2/notice.tt2:61
 msgid "No message and no document to moderate for list %1"
 msgstr "%1 메일링 리스트에 등록된 메시지와 문서가 없습니다."
 
-#: ../web_tt2/notice.tt2:61
+#: ../web_tt2/notice.tt2:64
 msgid "The list of list members have been built/updated."
 msgstr "리스트 가입자의 목록 건설되고/업데이트 되었습니다."
 
-#: ../web_tt2/notice.tt2:64
+#: ../web_tt2/notice.tt2:67
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "리스트 가입자의 목록 곧 건설되고/업데이트 할 것 (몇 분)."
 
-#: ../web_tt2/notice.tt2:67
+#: ../web_tt2/notice.tt2:70
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "삭제된 Topic(화제)에 대해서 관련된 구독자에게 안내 됐습니다."
 
 #. (notice.total)
-#: ../web_tt2/notice.tt2:70
+#: ../web_tt2/notice.tt2:73
 msgid "%1 addresses have been subscribed"
 msgstr "%1 주소는 등록 되었습니다"
 
-#: ../web_tt2/notice.tt2:73
+#: ../web_tt2/notice.tt2:76
 msgid "You have been authenticated"
 msgstr "확인되었습니다"
 
 #. (notice.orig_file,notice.new_file)
-#: ../web_tt2/notice.tt2:76
+#: ../web_tt2/notice.tt2:79
 msgid "File %1 has been renamed to %2"
 msgstr "파일 %1 는 %2에 이름이 바꿔었습니다."
 
-#: ../web_tt2/notice.tt2:79
+#: ../web_tt2/notice.tt2:82
 #, fuzzy
 msgid "List has been set to the pending status; listmaster need to validate it"
 msgstr ""
 "리스트은 팬딩되어 상태에 놓였습니다; 그것을 유효하기 리스트마스터 관리자 필요"
 
-#: ../web_tt2/notice.tt2:82
+#: ../web_tt2/notice.tt2:85
 #, fuzzy
 msgid "List name has been lowercased"
 msgstr "리스트 닫혔습니다"
 
 #. (notice.notified_user)
-#: ../web_tt2/notice.tt2:85
+#: ../web_tt2/notice.tt2:88
 #, fuzzy
 msgid "User %1 has been notified"
 msgstr "리스트 닫혔습니다"
+
+#: ../web_tt2/oauth_authorize.tt2:4
+msgid "OAuth authorize"
+msgstr ""
+
+#. (consumer_key)
+#: ../web_tt2/oauth_authorize.tt2:7
+#, fuzzy
+msgid "Authorize %1 ?"
+msgstr "작성자"
+
+#: ../web_tt2/oauth_authorize.tt2:12
+#, fuzzy
+msgid "Authorize"
+msgstr "작성자"
+
+#: ../web_tt2/oauth_authorize.tt2:13
+msgid "Don't authorize"
+msgstr ""
+
+#: ../web_tt2/oauth_check.tt2:4
+msgid "OAuth check"
+msgstr ""
+
+#: ../web_tt2/oauth_check.tt2:10
+msgid "Got new access token, everything is alright."
+msgstr ""
+
+#: ../web_tt2/oauth_check.tt2:12
+#, fuzzy
+msgid "Everything is alright."
+msgstr "이 메일링 리스트에 관해 모두:"
+
+#: ../web_tt2/oauth_check.tt2:15
+msgid ""
+"Unable to check, provider may not be available or access token may be "
+"outdated and failed to be get new one."
+msgstr ""
+
+#: ../web_tt2/oauth_check.tt2:18
+msgid "Unable to load consumer, configuration may be erroneous."
+msgstr ""
+
+#: ../web_tt2/oauth_check.tt2:21
+#, fuzzy
+msgid "Unknown provider."
+msgstr "확인 불가"
 
 #: ../web_tt2/picture_upload.tt2:4
 msgid "Setting your picture for this list"
@@ -3435,11 +3618,11 @@ msgstr "새로운 이메일 주소 :"
 msgid "Change Email"
 msgstr "표적 하는 이메일"
 
-#: ../web_tt2/pref.tt2:37
+#: ../web_tt2/pref.tt2:38
 msgid "Changing your password"
 msgstr "당신의 패스워드 바꾸기"
 
-#: ../web_tt2/pref.tt2:42
+#: ../web_tt2/pref.tt2:43
 #, fuzzy
 msgid "Re-enter your new password:"
 msgstr "새 패스워드를 다시 입력하십시오 :"
@@ -3611,13 +3794,13 @@ msgid "Remind all subscribers"
 msgstr "모든가입자들에께 알림 보내기"
 
 #. (total)
-#: ../web_tt2/review.tt2:62 ../web_tt2/reviewbouncing.tt2:19
+#: ../web_tt2/review.tt2:64 ../web_tt2/reviewbouncing.tt2:19
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr "%1 구독 미리 알림 메시지를 %1 가입자에게 보내고 싶습까?"
 
-#: ../web_tt2/review.tt2:126 ../web_tt2/review.tt2:27
+#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:27
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3628,7 +3811,7 @@ msgstr "이전 페이지"
 msgid "page %1 / %2"
 msgstr "%2 페이지중 %1 페이지"
 
-#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:33
+#: ../web_tt2/review.tt2:135 ../web_tt2/review.tt2:33
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3638,7 +3821,7 @@ msgstr "다음 페이지"
 msgid "Table which display list bounces"
 msgstr "테이블에 놓 표시하는 리스트 반송"
 
-#: ../web_tt2/review.tt2:148 ../web_tt2/reviewbouncing.tt2:61
+#: ../web_tt2/review.tt2:151 ../web_tt2/reviewbouncing.tt2:61
 #: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/subscriber_table.tt2:12 ../web_tt2/subscriber_table.tt2:15
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
@@ -3675,7 +3858,7 @@ msgstr "최신 반송된 매시지 보기"
 msgid "no score"
 msgstr "반송 점수"
 
-#: ../web_tt2/review.tt2:105 ../web_tt2/review.tt2:139
+#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:142
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "선택된 주소을 삭제하기"
@@ -3705,7 +3888,7 @@ msgstr " 새로운 리스트들 "
 msgid "Page size"
 msgstr "페이지 크기"
 
-#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:30
+#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:30
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "페이지"
@@ -3722,50 +3905,60 @@ msgstr ""
 msgid "Synchronize members with data sources"
 msgstr "가입자와 데이터 원본을 동기화합기"
 
-#: ../web_tt2/review.tt2:62
+#: ../web_tt2/review.tt2:60
+#, fuzzy
+msgid "<strong>Last update:"
+msgstr "최신 정보:"
+
+#: ../web_tt2/review.tt2:64
 msgid "Remind all"
 msgstr "모든께 알림 보내기"
 
-#: ../web_tt2/review.tt2:71
+#: ../web_tt2/review.tt2:73
 msgid "Add an user: "
 msgstr ""
 
-#: ../web_tt2/review.tt2:75
+#: ../web_tt2/review.tt2:77
+#, fuzzy
+msgid "Add quietly"
+msgstr "자동 모드"
+
+#: ../web_tt2/review.tt2:78
 msgid "Multiple add"
 msgstr "여러 개의 추가"
 
-#: ../web_tt2/review.tt2:87
+#: ../web_tt2/review.tt2:90
 #, fuzzy
 msgid "Search user by e-mail: "
 msgstr "이메일으로 사용자 검색"
 
-#: ../web_tt2/review.tt2:88
+#: ../web_tt2/review.tt2:91
 msgid "Search user by email"
 msgstr "이메일으로 사용자 검색"
 
-#: ../web_tt2/review.tt2:93
+#: ../web_tt2/review.tt2:96
 msgid "Selection too wide, can not show selection"
 msgstr "선택 너무 넓게, 보여줄 수 없습니다"
 
 #. (similar_subscribers_occurence)
-#: ../web_tt2/review.tt2:117
+#: ../web_tt2/review.tt2:120
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr ""
 
-#: ../web_tt2/review.tt2:137
+#: ../web_tt2/review.tt2:140
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "모든 선택된 가입자를 등록취소하시겠습니까?"
 
-#: ../web_tt2/review.tt2:145
+#: ../web_tt2/review.tt2:148
 msgid "Excluded users"
 msgstr ""
 
-#: ../web_tt2/review.tt2:146 ../web_tt2/show_exclude.tt2:13
+#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:13
 #, fuzzy
 msgid "List of exclude"
 msgstr "폴더의 목록"
 
-#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:16
+#: ../web_tt2/review.tt2:152 ../web_tt2/show_exclude.tt2:16
 #, fuzzy
 msgid "Since"
 msgstr "크기"
@@ -3976,6 +4169,32 @@ msgstr "소유자"
 #: ../web_tt2/search_user.tt2:37
 msgid "editor"
 msgstr "편집자"
+
+#: ../web_tt2/select_voot_groups_request.tt2:4
+#, fuzzy
+msgid "Select group"
+msgstr "--선택하기--"
+
+#: ../web_tt2/select_voot_groups_request.tt2:6
+msgid ""
+"Hereafter is the list of the groups you accepted to share with Sympa. Select "
+"which group you want members to be included in your list."
+msgstr ""
+
+#: ../web_tt2/select_voot_groups_request.tt2:20
+#, fuzzy
+msgid "Set as source"
+msgstr "데이터 원본"
+
+#: ../web_tt2/select_voot_provider_request.tt2:4
+msgid "Select VOOT provider"
+msgstr ""
+
+#: ../web_tt2/select_voot_provider_request.tt2:6
+msgid ""
+"Hereafter is the list of VOOT providers that share group information with "
+"Sympa. Select which provider you want to use your groups from."
+msgstr ""
 
 #: ../web_tt2/serveradmin.tt2:7
 #, fuzzy
@@ -4500,8 +4719,8 @@ msgid ""
 "exceptions for fonts are links, buttons and some titles."
 msgstr ""
 
-#: ../web_tt2/skinsedit.tt2:107 ../web_tt2/skinsedit.tt2:179
-msgid "unused"
+#: ../web_tt2/skinsedit.tt2:107
+msgid "Background color for the news area of the home page."
 msgstr ""
 
 #: ../web_tt2/skinsedit.tt2:113
@@ -4602,6 +4821,10 @@ msgstr ""
 msgid "Default background color of the tables."
 msgstr ""
 
+#: ../web_tt2/skinsedit.tt2:179
+msgid "unused"
+msgstr ""
+
 #: ../web_tt2/skinsedit.tt2:185 ../web_tt2/skinsedit.tt2:191
 #: ../web_tt2/skinsedit.tt2:197 ../web_tt2/skinsedit.tt2:203
 #: ../web_tt2/skinsedit.tt2:209 ../web_tt2/skinsedit.tt2:215
@@ -4654,15 +4877,35 @@ msgstr ""
 "확인 패스워드는 사용자의 이메일 주소 %1 에 전송되었습니다.<br/>아래의 요청된 "
 "확인 패스워드를 포함 하고 있는 당신의 이메일을 확인 하십시요."
 
-#: ../web_tt2/stats.tt2:2
+#. (listname)
+#: ../web_tt2/stats.tt2:4
 #, fuzzy
-msgid "Shared document directory size:"
+msgid "List %1 statistics"
+msgstr "%1 메일링 리스트 는 종료되었습니다"
+
+#: ../web_tt2/stats.tt2:6
+msgid "This page displays overall informations regarding the list activity"
+msgstr ""
+
+#. (shared_size)
+#: ../web_tt2/stats.tt2:7
+#, fuzzy
+msgid "Shared document directory size: %1 kB"
 msgstr "공용 문서 디렉토리 크기"
 
-#: ../web_tt2/stats.tt2:3
+#. (arc_size)
+#: ../web_tt2/stats.tt2:9
 #, fuzzy
-msgid "Web archives size:"
+msgid "Web archives size: %1 kB"
 msgstr "웹 보관하는 크기"
+
+#: ../web_tt2/stats.tt2:16 ../web_tt2/stats.tt2:22
+msgid "[% o.title %]"
+msgstr ""
+
+#: ../web_tt2/stats.tt2:47
+msgid "No operation recorded in this field yet."
+msgstr ""
 
 #: ../web_tt2/subindex.tt2:4 ../web_tt2/subindex.tt2:8
 msgid "Listing subscription to moderate"
@@ -4949,6 +5192,44 @@ msgstr "확인 패스워드 전송하기"
 msgid "The validation link has an unknow format or has expired"
 msgstr "요청하는 인증 그 후에 소유자 승인"
 
+#: ../web_tt2/tracking.tt2:13 ../web_tt2/tracking.tt2:4
+#, fuzzy
+msgid "Message tracking"
+msgstr "메시지 태그를 붙이기"
+
+#. (fromname,fromaddr,listname)
+#: ../web_tt2/tracking.tt2:6
+msgid "Message from %1 %2 for list %3 "
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:10
+#, fuzzy
+msgid "Distribution ended at"
+msgstr "배포하기"
+
+#: ../web_tt2/tracking.tt2:14
+msgid "Recipient Email"
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:14
+#, fuzzy
+msgid "Reception Option"
+msgstr "받기"
+
+#: ../web_tt2/tracking.tt2:15
+msgid "Delivery status"
+msgstr ""
+
+#: ../web_tt2/tracking.tt2:16
+#, fuzzy
+msgid "Notification Date"
+msgstr "알림"
+
+#: ../web_tt2/tracking.tt2:17
+#, fuzzy
+msgid "Notification"
+msgstr "알림"
+
 #: ../web_tt2/tt2_error.tt2:8
 msgid "Sympa error - could not display web page"
 msgstr "Sympa 에러은 - 웹 페이지 를 표시할 수 없었습니다"
@@ -5041,7 +5322,7 @@ msgstr "검색 기간: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16264
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16969
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 %H:%M:%S"
 
@@ -5609,7 +5890,7 @@ msgstr "명령 구문 에러."
 #. (u_err.listname)
 #. (glob.listname)
 #. (listname)
-#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:178
+#: ../mail_tt2/command_report.tt2:104 ../mail_tt2/command_report.tt2:180
 #: ../mail_tt2/message_report.tt2:56
 msgid "List '%1' does not exist."
 msgstr "'%1' 리스트 는 존재하지 않습니다."
@@ -5677,17 +5958,17 @@ msgstr ""
 "달라던 것\n"
 "를 사용해 아마 확인했든 %1 이메일 주소. 교회법에 의한 주소를 사용하는 테스트."
 
-#: ../mail_tt2/command_report.tt2:150
+#: ../mail_tt2/command_report.tt2:152
 #, fuzzy
 msgid "Command has failed because of an internal server error:"
 msgstr "명령은 내부 서버 에러 때문에 실패했습니다 :"
 
-#: ../mail_tt2/command_report.tt2:152
+#: ../mail_tt2/command_report.tt2:154
 #, fuzzy
 msgid "These commands have failed because of an internal server error:"
 msgstr "이들 명령은 내부 서버 에러 때문에 실패했습니다 :"
 
-#: ../mail_tt2/command_report.tt2:169
+#: ../mail_tt2/command_report.tt2:171
 msgid ""
 "Ignoring message body not in text/plain, please use text/plain only (or put "
 "your command in the subject)."
@@ -5695,16 +5976,16 @@ msgstr ""
 "원본에서 아닙니다 메시지 본문를 text/plain, text/plain 단지 이용하기 (또는 두"
 "하기제목에 자신 명령)."
 
-#: ../mail_tt2/command_report.tt2:172
+#: ../mail_tt2/command_report.tt2:174
 msgid "No command found in message."
 msgstr "아무 명령 메시지에서 찾았습니다."
 
-#: ../mail_tt2/command_report.tt2:175
+#: ../mail_tt2/command_report.tt2:177
 msgid "Ignoring message because of an internal server error."
 msgstr "메시지를 무시 하십시요. 내부 서버 에러 때문입니다."
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/command_report.tt2:185
+#: ../mail_tt2/command_report.tt2:187
 msgid "For further information, check the mailing list web site %1"
 msgstr "자세한 내용은 다음 메일링 리스트 웹사이트 %1 를 참조하십시오"
 
@@ -5714,7 +5995,7 @@ msgid "%1 Digest %2"
 msgstr "%1 - 다이제스트 %2"
 
 #: ../mail_tt2/digest.tt2:10 ../mail_tt2/digest_plain.tt2:9
-#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:2736
+#: ../mail_tt2/get_archive.tt2:9 ../src/lib/List.pm:3529
 msgid "Table of contents:"
 msgstr "목차:"
 
@@ -5814,7 +6095,7 @@ msgstr "등록취소 :"
 msgid "Archive of %1, file %2"
 msgstr "%1 의 보관(저장), 파일 %2"
 
-#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1628
+#: ../mail_tt2/global_remind.tt2:2 ../src/lib/Commands.pm:1635
 msgid "Subscription summary"
 msgstr "구독 개요"
 
@@ -6140,7 +6421,7 @@ msgstr ""
 "이 메시지에 정당한 응답을 등록구독하거나 다음과 오는 mailto URL를 명중하기 위"
 "해:"
 
-#. (conf.sympa,subject)
+#. (conf.sympa,list.name)
 #: ../mail_tt2/invite.tt2:10
 #, fuzzy
 msgid "Or send a message to %1 with subject: \"sub %2\""
@@ -6275,12 +6556,16 @@ msgstr ""
 "%1 를 위해 설치된 데이타베이스 드라이버 없음; CPAN에서 DBD::%1 를 다운로드하"
 "고 설치해야 합니다."
 
+#. (crashed_process)
 #: ../mail_tt2/listmaster_notification.tt2:42
-msgid "Previous process crashed"
+#, fuzzy
+msgid "Previous process %1 crashed"
 msgstr "이전 프로세스 부쉈습니다"
 
+#. (crashed_process,pid)
 #: ../mail_tt2/listmaster_notification.tt2:44
-msgid "Previous process has died unexpectedly."
+#, fuzzy
+msgid "Previous process %1 (with pid %2) has died unexpectedly."
 msgstr "이전 프로세스 의외로 죽었습니다."
 
 #. (crash_date)
@@ -6383,10 +6668,10 @@ msgstr "불가"
 #: ../mail_tt2/listmaster_notification.tt2:124
 #: ../mail_tt2/listmaster_notification.tt2:130
 #: ../mail_tt2/listmaster_notification.tt2:138
-#: ../mail_tt2/listmaster_notification.tt2:288
-#: ../mail_tt2/listmaster_notification.tt2:295
-#: ../mail_tt2/listmaster_notification.tt2:366
-#: ../mail_tt2/listmaster_notification.tt2:378
+#: ../mail_tt2/listmaster_notification.tt2:292
+#: ../mail_tt2/listmaster_notification.tt2:299
+#: ../mail_tt2/listmaster_notification.tt2:370
+#: ../mail_tt2/listmaster_notification.tt2:382
 msgid "See logs for more details."
 msgstr "로그 세부사항 더를 위해 봅니다 로그."
 
@@ -6457,10 +6742,23 @@ msgstr ""
 
 #. (listname)
 #: ../mail_tt2/listmaster_notification.tt2:151
+#, fuzzy
+msgid "Limit of users count reached for list %1"
+msgstr "%1 메일링 리스트의 가입자 업데이트 실패했습니다"
+
+#. (listname,max_number_of_subscribers)
+#: ../mail_tt2/listmaster_notification.tt2:153
+msgid ""
+"Sympa could not include subscribers to list %1 because the maximum number of "
+"users was reached for this list. This limit is defined to %2."
+msgstr ""
+
+#. (listname)
+#: ../mail_tt2/listmaster_notification.tt2:155
 msgid "subscribers update failed for list %1"
 msgstr "%1 메일링 리스트의 가입자 업데이트 실패했습니다"
 
-#: ../mail_tt2/listmaster_notification.tt2:153
+#: ../mail_tt2/listmaster_notification.tt2:157
 #, fuzzy
 msgid ""
 "Sympa could not include subscribers from the following external data sources:"
@@ -6469,21 +6767,21 @@ msgstr ""
 "데이타베이스 또는 LDAP 디렉토리는 도달할 수 없음."
 
 #. (e.name,e.type)
-#: ../mail_tt2/listmaster_notification.tt2:156
+#: ../mail_tt2/listmaster_notification.tt2:160
 msgid "Include of datasource %1 (type %2) failed."
 msgstr ""
 
-#: ../mail_tt2/listmaster_notification.tt2:159
-#: ../mail_tt2/listmaster_notification.tt2:166
+#: ../mail_tt2/listmaster_notification.tt2:163
+#: ../mail_tt2/listmaster_notification.tt2:170
 msgid "Check Sympa log files for more precise information"
 msgstr "보다 정확한 정보를 위한 Sympa 로그기록 파일 검사하기"
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:163
+#: ../mail_tt2/listmaster_notification.tt2:167
 msgid "admins update failed for list %1"
 msgstr "%1 메일링 리스트를 위해 관리자 업데이트 실패했습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:165
+#: ../mail_tt2/listmaster_notification.tt2:169
 #, fuzzy
 msgid ""
 "Sympa could not include admins from external data sources; the database or "
@@ -6493,63 +6791,63 @@ msgstr ""
 "LDAP 디렉토리 도달할 수 없습니다."
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:169
-#: ../mail_tt2/listmaster_notification.tt2:194
-#: ../mail_tt2/listmaster_notification.tt2:202
-#: ../mail_tt2/listmaster_notification.tt2:209
-#: ../mail_tt2/listmaster_notification.tt2:237
-#: ../mail_tt2/listmaster_notification.tt2:244
-#: ../mail_tt2/listmaster_notification.tt2:251
-msgid "list %1 in status error_config"
-msgstr "%1 메일링 리스트 상태는 error_config"
-
-#. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:171
-msgid "No owner is defined for list %1."
-msgstr "'%1' 메일링 리스트를 소유자 정의없읍니다."
-
-#: ../mail_tt2/listmaster_notification.tt2:172
-#: ../mail_tt2/listmaster_notification.tt2:197
-#: ../mail_tt2/listmaster_notification.tt2:205
-#: ../mail_tt2/listmaster_notification.tt2:212
-#: ../mail_tt2/listmaster_notification.tt2:240
-#: ../mail_tt2/listmaster_notification.tt2:247
-#: ../mail_tt2/listmaster_notification.tt2:254
-msgid "The list status has been set to error_config."
-msgstr "리스트의 상태가 error_config으로 설정되었습니다."
-
 #: ../mail_tt2/listmaster_notification.tt2:173
 #: ../mail_tt2/listmaster_notification.tt2:198
 #: ../mail_tt2/listmaster_notification.tt2:206
 #: ../mail_tt2/listmaster_notification.tt2:213
-#: ../mail_tt2/listmaster_notification.tt2:220
-#: ../mail_tt2/listmaster_notification.tt2:227
 #: ../mail_tt2/listmaster_notification.tt2:241
 #: ../mail_tt2/listmaster_notification.tt2:248
 #: ../mail_tt2/listmaster_notification.tt2:255
+msgid "list %1 in status error_config"
+msgstr "%1 메일링 리스트 상태는 error_config"
+
+#. (param0)
+#: ../mail_tt2/listmaster_notification.tt2:175
+msgid "No owner is defined for list %1."
+msgstr "'%1' 메일링 리스트를 소유자 정의없읍니다."
+
+#: ../mail_tt2/listmaster_notification.tt2:176
+#: ../mail_tt2/listmaster_notification.tt2:201
+#: ../mail_tt2/listmaster_notification.tt2:209
+#: ../mail_tt2/listmaster_notification.tt2:216
+#: ../mail_tt2/listmaster_notification.tt2:244
+#: ../mail_tt2/listmaster_notification.tt2:251
+#: ../mail_tt2/listmaster_notification.tt2:258
+msgid "The list status has been set to error_config."
+msgstr "리스트의 상태가 error_config으로 설정되었습니다."
+
+#: ../mail_tt2/listmaster_notification.tt2:177
+#: ../mail_tt2/listmaster_notification.tt2:202
+#: ../mail_tt2/listmaster_notification.tt2:210
+#: ../mail_tt2/listmaster_notification.tt2:217
+#: ../mail_tt2/listmaster_notification.tt2:224
+#: ../mail_tt2/listmaster_notification.tt2:231
+#: ../mail_tt2/listmaster_notification.tt2:245
+#: ../mail_tt2/listmaster_notification.tt2:252
+#: ../mail_tt2/listmaster_notification.tt2:259
 msgid "Check Sympa log files for more precise information."
 msgstr "보다 정확한 정보를 위한 Sympa 로그기록 파일 검사하기 "
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:177
+#: ../mail_tt2/listmaster_notification.tt2:181
 msgid "List owner/editor email changes"
 msgstr ""
 
 #. (previous_email,new_email)
-#: ../mail_tt2/listmaster_notification.tt2:179
+#: ../mail_tt2/listmaster_notification.tt2:183
 msgid ""
 "Member %1 has changed his owner/editor email address to %2. This change has "
 "been performed for the following lists:"
 msgstr ""
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:186
+#: ../mail_tt2/listmaster_notification.tt2:190
 #, fuzzy
 msgid "List %1: Failed to change admin email address"
 msgstr "나의 이메일 주소 바꾸기"
 
 #. (current_email,new_email,datasource)
-#: ../mail_tt2/listmaster_notification.tt2:190
+#: ../mail_tt2/listmaster_notification.tt2:194
 msgid ""
 "Admin %1 could not change his admin email address (new email address is %2) "
 "because he is included via a the following data sources: %3.\n"
@@ -6559,19 +6857,19 @@ msgid ""
 msgstr ""
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:196
+#: ../mail_tt2/listmaster_notification.tt2:200
 msgid "Errors occured while copying family %2 file in list %1 directory."
 msgstr ""
 " 에러들은 리스트 %1 디렉토리안에서 family %2 파일은 카피하는 동안 발생했습니"
 "다"
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:204
+#: ../mail_tt2/listmaster_notification.tt2:208
 msgid "List %1 configuration does not respect family %2 rules."
 msgstr "%1 메일링 리스트 는 구성 존경받는 리스트들의 정보변경 %2의 규칙."
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:211
+#: ../mail_tt2/listmaster_notification.tt2:215
 msgid ""
 "Sympa could not check family %2 rules with list %1 param_constraint.conf "
 "file."
@@ -6579,59 +6877,59 @@ msgstr ""
 "Sympa 메일링 리스트 %1 와 리스트들의 정보변경 %2 의 규칙 검사할 수 없었 "
 "param_constraint.conf파일."
 
-#: ../mail_tt2/listmaster_notification.tt2:217
-#: ../mail_tt2/listmaster_notification.tt2:224
+#: ../mail_tt2/listmaster_notification.tt2:221
+#: ../mail_tt2/listmaster_notification.tt2:228
 msgid "errors in param_constraint.conf file"
 msgstr "param_constraint.conf에 에러"
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:219
-#: ../mail_tt2/listmaster_notification.tt2:226
+#: ../mail_tt2/listmaster_notification.tt2:223
+#: ../mail_tt2/listmaster_notification.tt2:230
 msgid "Error(s) found in the file %1."
 msgstr "파일 %1 에서 에러를 찾았습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:230
+#: ../mail_tt2/listmaster_notification.tt2:234
 msgid "File removed"
 msgstr "파일을 삭제되었습니다"
 
 #. (param0)
-#: ../mail_tt2/listmaster_notification.tt2:232
+#: ../mail_tt2/listmaster_notification.tt2:236
 #, fuzzy
 msgid "The following file has been removed: %1"
 msgstr "다음 파일 삭제했습니다: %1"
 
 #. (param1)
-#: ../mail_tt2/listmaster_notification.tt2:233
+#: ../mail_tt2/listmaster_notification.tt2:237
 #, fuzzy
 msgid "A backup of the file has been made: %1"
 msgstr "파일의 백업이 만들어 졌습니다. : %1"
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:239
+#: ../mail_tt2/listmaster_notification.tt2:243
 msgid "Sympa could not load family %2 for list %1."
 msgstr ""
 "Sympa 메일링 리스트 %1 를 위한 리스트들의 정보변경 %2를 로드할 수 없었습니다."
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:246
+#: ../mail_tt2/listmaster_notification.tt2:250
 msgid "Failed to instantiate family %2 for list %1"
 msgstr ""
 "%1 메일링 리스트를 위한 %2 리스트들의 정보변경 에 관해 인스턴스 생성하기가 실"
 "패했습니다!"
 
 #. (param0,param1)
-#: ../mail_tt2/listmaster_notification.tt2:253
+#: ../mail_tt2/listmaster_notification.tt2:257
 msgid "Sympa could not modify list %1 (Family %2)"
 msgstr "Sympa 메일링 리스트 %1 (리스트들의 정보변경 %2) 변경할 수 없었습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:259
+#: ../mail_tt2/listmaster_notification.tt2:263
 #: ../mail_tt2/listowner_notification.tt2:43
 msgid "List %1 automatic bounce management"
 msgstr "%1 메일링 리스트 를 자동 반송된 관리"
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:263
+#: ../mail_tt2/listmaster_notification.tt2:267
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6641,7 +6939,7 @@ msgstr ""
 "전달된 것 처럼 메일링 리스트로부터 삭제 될 것입니다."
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:266
+#: ../mail_tt2/listmaster_notification.tt2:270
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6651,7 +6949,7 @@ msgstr ""
 "는 전달된 것 처럼 메일링 리스트로부터 삭제되었습니다."
 
 #. (total,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:269
+#: ../mail_tt2/listmaster_notification.tt2:273
 msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been\n"
@@ -6660,44 +6958,44 @@ msgstr ""
 " 많은 non-delivery(배달 못 함) 보고서를 받았기 때문에, 아래의 %1 가입자(들)"
 "는 전달된 것 처럼 Sympa서버에의해 반송 주소로 등록 되었습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:276
+#: ../mail_tt2/listmaster_notification.tt2:280
 #: ../mail_tt2/listowner_notification.tt2:60
 msgid "Managing bouncing subscribers:"
 msgstr "관리 가입자를 튀기:"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:280
-#: ../mail_tt2/listmaster_notification.tt2:291
-#: ../mail_tt2/listmaster_notification.tt2:299
+#: ../mail_tt2/listmaster_notification.tt2:284
+#: ../mail_tt2/listmaster_notification.tt2:295
+#: ../mail_tt2/listmaster_notification.tt2:303
 #, fuzzy
 msgid "Listmaster: internal server error "
 msgstr "리스트마스터 : 내부 서버 에러 "
 
 #. (who)
-#: ../mail_tt2/listmaster_notification.tt2:282
-#: ../mail_tt2/listmaster_notification.tt2:301
+#: ../mail_tt2/listmaster_notification.tt2:286
+#: ../mail_tt2/listmaster_notification.tt2:305
 msgid " User %1 has encountered an internal server error"
 msgstr " %1 가 내부 서버 에러를 발생시켰습니다"
 
 #. (error)
-#: ../mail_tt2/listmaster_notification.tt2:293
+#: ../mail_tt2/listmaster_notification.tt2:297
 msgid "The following error occurred whila managing bounces: %&"
 msgstr ""
 
-#: ../mail_tt2/listmaster_notification.tt2:302
-#: ../mail_tt2/listmaster_notification.tt2:373
+#: ../mail_tt2/listmaster_notification.tt2:306
+#: ../mail_tt2/listmaster_notification.tt2:377
 msgid "Web interface"
 msgstr "웹 인터페이스"
 
-#: ../mail_tt2/listmaster_notification.tt2:304
+#: ../mail_tt2/listmaster_notification.tt2:308
 msgid "Unable to change directory."
 msgstr "디렉토리를 바꿀 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:305
+#: ../mail_tt2/listmaster_notification.tt2:309
 msgid "The authentication server name is not defined."
 msgstr "인증 서버 이름 정의되지 않습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:306
+#: ../mail_tt2/listmaster_notification.tt2:310
 #, fuzzy
 msgid ""
 "auth.conf error: either email_http_header or ldap_host/"
@@ -6707,294 +7005,294 @@ msgstr ""
 "ldap_get_email_by_uid_filter 입장 정의되어야 합니다."
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:307
+#: ../mail_tt2/listmaster_notification.tt2:311
 msgid "Unkown authentication service %1."
 msgstr "%1 인증 서비스 확인 불가."
 
 #. (user)
-#: ../mail_tt2/listmaster_notification.tt2:308
+#: ../mail_tt2/listmaster_notification.tt2:312
 msgid "Add user '%1' in DB failed."
 msgstr "'%1' DB에서 사용자 추가가 실패 되었습니다."
 
 #. (user)
-#: ../mail_tt2/listmaster_notification.tt2:309
+#: ../mail_tt2/listmaster_notification.tt2:313
 msgid "Update user '%1' in DB failed"
 msgstr "DB에서 사용자 '%1' 업데이트 작업 실패헸습니다"
 
 #. (old_email)
-#: ../mail_tt2/listmaster_notification.tt2:309
-#: ../mail_tt2/listmaster_notification.tt2:311
+#: ../mail_tt2/listmaster_notification.tt2:313
+#: ../mail_tt2/listmaster_notification.tt2:315
 #, fuzzy
 msgid " (old email: %1)"
 msgstr " (오래된 이메일 : %1 )"
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:310
+#: ../mail_tt2/listmaster_notification.tt2:314
 msgid "Add subscriber '%1' in DB failed."
 msgstr "'%1' DB에서 가입자 추가가 실패 되었습니다."
 
 #. (sub,old_email)
-#: ../mail_tt2/listmaster_notification.tt2:311
+#: ../mail_tt2/listmaster_notification.tt2:315
 msgid "Update subscriber '%1' in DB failed"
 msgstr "DB에서 가입자 '%1' 업데이트 작업 실패헸습니다"
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:312
+#: ../mail_tt2/listmaster_notification.tt2:316
 msgid "Delete subscriber '%1' in DB failed."
 msgstr " DB 에서 가입자 '%1'의 삭제하기가 실패했습니다."
 
 #. (old_email)
-#: ../mail_tt2/listmaster_notification.tt2:313
+#: ../mail_tt2/listmaster_notification.tt2:317
 msgid "Delete user in DB for old email '%1' failed."
 msgstr "DB 에 사용자의 오래된 이메일 주소 '%1'의 삭제하기가 실패했습니다."
 
 #. (email,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:314
+#: ../mail_tt2/listmaster_notification.tt2:318
 msgid "Subscriber '%1' is not found in list %2."
 msgstr "가입자 '%1' 는 리스트 %2에서 있지 않습니다."
 
 #. (filepath)
-#: ../mail_tt2/listmaster_notification.tt2:315
+#: ../mail_tt2/listmaster_notification.tt2:319
 #, fuzzy
 msgid "Unable to read file: '%1'."
 msgstr "파일을 읽을 수 없음 : '%1'."
 
 #. (filepath)
-#: ../mail_tt2/listmaster_notification.tt2:316
+#: ../mail_tt2/listmaster_notification.tt2:320
 #, fuzzy
 msgid "Unable to write file: '%1'."
 msgstr "파일을 쓸 수 없음 : '%1'."
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:317
+#: ../mail_tt2/listmaster_notification.tt2:321
 msgid "Unable to open file '%1'."
 msgstr "'%1' 파일을 열 수 없음니다."
 
 #. (directory)
-#: ../mail_tt2/listmaster_notification.tt2:318
+#: ../mail_tt2/listmaster_notification.tt2:322
 msgid "Unable to open directory '%1'."
 msgstr "디렉토리 '%1' 를 열 수 없습니다."
 
 #. (dir)
-#: ../mail_tt2/listmaster_notification.tt2:319
+#: ../mail_tt2/listmaster_notification.tt2:323
 msgid "Unable to create directory '%1'."
 msgstr "디렉토리 '%1' 를 만들 수 없습니다."
 
 #. (spool)
-#: ../mail_tt2/listmaster_notification.tt2:320
+#: ../mail_tt2/listmaster_notification.tt2:324
 msgid "Unable to open spool '%1'."
 msgstr "스풀 '%1' 를 열 수 없습니다."
 
 #. (msg)
-#: ../mail_tt2/listmaster_notification.tt2:321
+#: ../mail_tt2/listmaster_notification.tt2:325
 msgid "Unable to get message '%1'."
 msgstr "메시지 '%1' 를 받을 수 없습니다."
 
 #. (old,new)
-#: ../mail_tt2/listmaster_notification.tt2:322
+#: ../mail_tt2/listmaster_notification.tt2:326
 msgid "Unable to rename file '%1' into '%2'."
 msgstr "%2 로 파일 '%1' 를 이름을 바꾸지 못했습니다."
 
 #. (old,new)
-#: ../mail_tt2/listmaster_notification.tt2:323
+#: ../mail_tt2/listmaster_notification.tt2:327
 msgid "Unable to rename directory '%1' into '%2'."
 msgstr "%2 로 디렉토리 '%1' 를 이름을 바꾸지 못했습니다."
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:324
+#: ../mail_tt2/listmaster_notification.tt2:328
 msgid "Unable to erase file '%1'."
 msgstr "파일 '%1' 를 삭제할 수 없습니다."
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:325
+#: ../mail_tt2/listmaster_notification.tt2:329
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr "리스트 %2 에 '%1' 에게서 DISTRIBUTE 명령 를 보낼 수 없습니다."
 
 #. (dir)
-#: ../mail_tt2/listmaster_notification.tt2:326
+#: ../mail_tt2/listmaster_notification.tt2:330
 msgid "No HTML version of the message available in '%1'."
 msgstr "'%1' 에서 유효한 메시지 의 HTML 버전 없음."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:327
+#: ../mail_tt2/listmaster_notification.tt2:331
 msgid "Unable to update file config_changes for list '%1'."
 msgstr "'%1' 리스트를 위한 파일 config_changes를 업데이트 할 수 없습니다."
 
 #. (month,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:328
+#: ../mail_tt2/listmaster_notification.tt2:332
 msgid "Unable to find month '%1' for list '%2'"
 msgstr "리스트 %2를 위한 '%1' 라는 달 를 찾을 수 없습니다."
 
 #. (dir)
 #. (path)
-#: ../mail_tt2/listmaster_notification.tt2:328
-#: ../mail_tt2/listmaster_notification.tt2:329
-#: ../mail_tt2/listmaster_notification.tt2:330
+#: ../mail_tt2/listmaster_notification.tt2:332
+#: ../mail_tt2/listmaster_notification.tt2:333
+#: ../mail_tt2/listmaster_notification.tt2:334
 #, fuzzy
 msgid ": unable to read '%1'."
 msgstr " : '%1'를 읽을 수 없습니다."
 
 #. (arc_file,list.name,path)
-#: ../mail_tt2/listmaster_notification.tt2:329
+#: ../mail_tt2/listmaster_notification.tt2:333
 msgid "Unable to find archive '%1' for list '%2'"
 msgstr "리스트 %2를 위한 보관 '%1' 를 찾을 수 없습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:330
+#: ../mail_tt2/listmaster_notification.tt2:334
 msgid "Unable to find archive for list '%1'"
 msgstr "'%1' 리스트를 위한 보관를 찾을 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:331
+#: ../mail_tt2/listmaster_notification.tt2:335
 #, fuzzy
 msgid "Unable to send archive: no message id found."
 msgstr "보관를 보낼 수 없음 : 아무 메시지도 ID는 찾아내지 않았습니다."
 
 #. (msgid)
-#: ../mail_tt2/listmaster_notification.tt2:332
+#: ../mail_tt2/listmaster_notification.tt2:336
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "보관에서 메시지ID '%1' 가지고 있는 메시지 찾을 수 없습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:333
+#: ../mail_tt2/listmaster_notification.tt2:337
 msgid "Cannot save config file for list '%1'."
 msgstr "'%1' 메일링 리스트를 위한 설치 파일을 저장할 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:334
+#: ../mail_tt2/listmaster_notification.tt2:338
 msgid "Failed to install aliases."
 msgstr "별명을 설치하기 실패했습니다"
 
-#: ../mail_tt2/listmaster_notification.tt2:335
+#: ../mail_tt2/listmaster_notification.tt2:339
 msgid "Failed to remove aliases."
 msgstr "별명 삭제하기를 실패했습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:336
+#: ../mail_tt2/listmaster_notification.tt2:340
 msgid "Internal scenario error for 'create_list'."
 msgstr "create_list 를 위한 내부 시나리오 에러."
 
-#: ../mail_tt2/listmaster_notification.tt2:337
+#: ../mail_tt2/listmaster_notification.tt2:341
 msgid "Unable to create list."
 msgstr "리스트를 만들 수 없습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:340
+#: ../mail_tt2/listmaster_notification.tt2:344
 msgid "Unable to get family for list '%1'."
 msgstr "'%1' 메일링 리스트를 위한 리스트들의 정보변경을 가져올 수 없습니다."
 
 #. (new_listname)
-#: ../mail_tt2/listmaster_notification.tt2:341
+#: ../mail_tt2/listmaster_notification.tt2:345
 msgid "Unable to reload list with new listname '%1'."
 msgstr "새로운 리스트 '%1' 에 리스트에 다시 드하기을 잴 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:341
+#: ../mail_tt2/listmaster_notification.tt2:345
 msgid "Unable to reload list"
 msgstr "리스트 에 다시 드하기을 잴 수 없습니다"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:342
+#: ../mail_tt2/listmaster_notification.tt2:346
 msgid "Failed to inlude members for list '%1'"
 msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:343
+#: ../mail_tt2/listmaster_notification.tt2:347
 msgid "Failed to include list admins for list '%1'"
 msgstr "리스트 '%1' 위한 관리자(들)을 포함하기 실패했습니다"
 
-#: ../mail_tt2/listmaster_notification.tt2:344
+#: ../mail_tt2/listmaster_notification.tt2:348
 msgid "No owner is defined for the list '%1'"
 msgstr "리스트 '%1' 를 위해 소유자 정의없음"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:345
+#: ../mail_tt2/listmaster_notification.tt2:349
 msgid "The exportation to an Ldap directory failed for list '%1'"
 msgstr "LDAP 디렉토리에 수출 리스트 가 '%1' 를 위해 실패한"
 
 #. (new_listname)
-#: ../mail_tt2/listmaster_notification.tt2:346
+#: ../mail_tt2/listmaster_notification.tt2:350
 msgid "Unable to check listname '%1' on SMTP server"
 msgstr "SMTP 서버 에 리스트 '%1' 를 검사할 수 없습니다"
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:347
+#: ../mail_tt2/listmaster_notification.tt2:351
 msgid "Cannot create shared for list '%1'."
 msgstr "'%1' 리스트를 위한 공용 문서 만들 수 없습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:348
+#: ../mail_tt2/listmaster_notification.tt2:352
 msgid "Cannot restore shared for list '%1'."
 msgstr "리스트 ‘%1’에 대한 공용폴더를 복구할 수 없습니다."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:349
+#: ../mail_tt2/listmaster_notification.tt2:353
 msgid "Cannot delete shared for list '%1'."
 msgstr "'%1' 리스트를 위해 공용폴더를 삭제할 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:350
+#: ../mail_tt2/listmaster_notification.tt2:354
 msgid "Impossible to browse shared documents for list '%1'."
 msgstr "리스트 '%1'를 위한 공용 문서 찾아보게 불가."
 
 #. (path)
-#: ../mail_tt2/listmaster_notification.tt2:351
+#: ../mail_tt2/listmaster_notification.tt2:355
 msgid "Cannot upload file '%1'."
 msgstr "파일 '%1' 를 업로드할 수 없습니다."
 
 #. (name)
-#: ../mail_tt2/listmaster_notification.tt2:353
+#: ../mail_tt2/listmaster_notification.tt2:357
 msgid "Errors while unzipping file '%1'."
 msgstr "에러는 파일 '%1' 를 압축해제 하는 동안 발생했습니다."
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:354
+#: ../mail_tt2/listmaster_notification.tt2:358
 msgid "Unable to send command REMIND from '%1' to list '%2'."
 msgstr "리스트 %2 에 '%1' 에게서 REMIND 명령 하를 보낼 수 없습니다."
 
 #. (from,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:355
+#: ../mail_tt2/listmaster_notification.tt2:359
 msgid "Unable to send mail from '%1' to list '%2'."
 msgstr "리스트 %2 에 '%1' 에게서 메일을 보낼 수 없습니다."
 
 #. (key,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:356
+#: ../mail_tt2/listmaster_notification.tt2:360
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr "리스트 %2를 위한 '%1' 키의 확인된 메시지를 액세스할 수 없습니다."
 
 #. (sub)
-#: ../mail_tt2/listmaster_notification.tt2:357
+#: ../mail_tt2/listmaster_notification.tt2:361
 msgid "Unable to delete subscription request for user '%1'."
 msgstr "사용자 '%1' 를 위한 구독 요청를 삭제할 수 없습니다."
 
 #. (file)
-#: ../mail_tt2/listmaster_notification.tt2:358
+#: ../mail_tt2/listmaster_notification.tt2:362
 msgid "Unable to add file '%1' to archives."
 msgstr "보관에 파일 '%1' 를 추가할 수 없습니다."
 
 #. (zipfile)
-#: ../mail_tt2/listmaster_notification.tt2:359
+#: ../mail_tt2/listmaster_notification.tt2:363
 msgid "Unable to write file zip '%1'."
 msgstr "Zip 파일 '%1' 를 쓸 수 없습니다."
 
 #. (path,list.name)
-#: ../mail_tt2/listmaster_notification.tt2:361
+#: ../mail_tt2/listmaster_notification.tt2:365
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr "리스트 %2를 위한 경로 '%1' 에 SharedDocument를 만들 수 없습니다."
 
-#: ../mail_tt2/listmaster_notification.tt2:362
+#: ../mail_tt2/listmaster_notification.tt2:366
 msgid "Parameter cookie undefined, authentication failure."
 msgstr "확정되지 않는 매개 변수 cookie, 인증 실패."
 
 #. (env)
-#: ../mail_tt2/listmaster_notification.tt2:363
+#: ../mail_tt2/listmaster_notification.tt2:367
 #, fuzzy
 msgid "Cookie error: '%1' undefined, authentication failure."
 msgstr "쿠기 에러: '%1' 는 확정되지 않았습니다, 인증 실패."
 
 #. (list.name)
-#: ../mail_tt2/listmaster_notification.tt2:370
+#: ../mail_tt2/listmaster_notification.tt2:374
 #, fuzzy
 msgid "Listmaster: system error "
 msgstr "리스트마스터 : 시스템 에러 "
 
 #. (who)
-#: ../mail_tt2/listmaster_notification.tt2:372
+#: ../mail_tt2/listmaster_notification.tt2:376
 msgid " User %1 has encountered a system error"
 msgstr " %1 가 시스템 에러를 발생시켰습니다"
 
@@ -7440,22 +7738,36 @@ msgstr ""
 "(아래에 붙어 있습니다.) 리스트 는 '%1' 를 위한 메시지 거부했습니다.\n"
 "다음 이유를 위한 이 메세지를 보내는 것을 허용되지 않습니다:"
 
+#. (consumer_name,oauth_provider)
 #: ../mail_tt2/message_report.tt2:96
+msgid "Your OAuth token used by consumer %1 may have expired."
+msgstr ""
+
+#. (consumer_name,oauth_provider,conf.wwsympa_url)
+#: ../mail_tt2/message_report.tt2:105
+msgid ""
+"Sympa failed to retreive data using %1 consumer, this may be because your "
+"access token for OAuth provider %2 is out of date.\n"
+"\n"
+"Visit  %3/oauth_check/%2 to check the token state and renew it if necessary."
+msgstr ""
+
+#: ../mail_tt2/message_report.tt2:111
 msgid "Message distribution"
 msgstr "메시지 배포"
 
 #. (list.name)
-#: ../mail_tt2/message_report.tt2:100
+#: ../mail_tt2/message_report.tt2:115
 msgid "Your message for list %1 has been forwarded to editor(s)"
 msgstr "%1 메일링 리스트를 위한 메시지는 편집자에 전달되었습니다."
 
 #. (key,list.name)
-#: ../mail_tt2/message_report.tt2:104
+#: ../mail_tt2/message_report.tt2:119
 msgid "Message %1 for list '%2' has been distributed."
 msgstr "%2 메일링 리스트 를 위한 메시지 %1 는 배포되었습니다."
 
 #. (key,list.name)
-#: ../mail_tt2/message_report.tt2:108
+#: ../mail_tt2/message_report.tt2:123
 #, fuzzy
 msgid ""
 "Message %1 for list '%2' has been validated; it will be distributed soon."
@@ -7464,19 +7776,19 @@ msgstr ""
 "다."
 
 #. (key,list.name)
-#: ../mail_tt2/message_report.tt2:112
+#: ../mail_tt2/message_report.tt2:127
 msgid "Message %1 for list '%2' has been rejected."
 msgstr "%2 메일링 리스트를 위한 메시지 %1 는 거부했습니다."
 
 #. (key,list.name)
-#: ../mail_tt2/message_report.tt2:116
+#: ../mail_tt2/message_report.tt2:131
 msgid ""
 "Your message for list '%2' with the %1 ID has been confirmed and distributed."
 msgstr ""
 "% 에 메일링 리스트 는 %2를 위한 메시지 %1 의 ID 확인되고 배포되었습니다."
 
 #. (key,list.name)
-#: ../mail_tt2/message_report.tt2:120
+#: ../mail_tt2/message_report.tt2:135
 #, fuzzy
 msgid ""
 "Your message for list '%2' with the %1 ID has been confirmed; it will be "
@@ -7487,66 +7799,62 @@ msgstr ""
 
 #. (list.name,msg_from)
 #: ../mail_tt2/moderate.tt2:3
-msgid "Article to be tagged for list %1 from %2"
-msgstr "태그를 붙일 대기중 문서 (%2 에서 %1 메일링 리스트)"
-
-#. (list.name,msg_from)
-#: ../mail_tt2/moderate.tt2:4
 #, fuzzy
 msgid "Message for list %1 from %2 to be approved"
 msgstr "%2 메일링 리스트를 위한 메시지 %1 는 거부했습니다."
 
 #. (list.name,msg_from)
-#: ../mail_tt2/moderate.tt2:14
+#: ../mail_tt2/moderate.tt2:12
 #, fuzzy
 msgid "One new message from list %1 from %2 arrived. "
 msgstr "메일링 리스트 %1@%2를 위한 암호화된 메시지"
 
-#: ../mail_tt2/moderate.tt2:15
+#: ../mail_tt2/moderate.tt2:13
 #, fuzzy
 msgid "This message has been tagged as spam"
 msgstr "기타 (표를 붙이지 않는 메시지) "
 
 #. (mod_spool_size)
-#: ../mail_tt2/moderate.tt2:17
+#: ../mail_tt2/moderate.tt2:15
 #, fuzzy
 msgid "They are %1 messages awaiting moderation."
 msgstr "리스트의 중재를 기다리는 메시지의 수 : %1 개"
 
-#: ../mail_tt2/moderate.tt2:18
+#: ../mail_tt2/moderate.tt2:16
 msgid ""
 "To browse the awaiting messages, you should click on the following link:"
 msgstr ""
 
-#. (list.name)
-#: ../mail_tt2/moderate.tt2:21
+#: ../mail_tt2/moderate.tt2:19
 #, fuzzy
 msgid ""
-"To tag the message in list %1 for the appropriate topic, please use the "
-"following link:"
+"This mailing list is configured to require topics; that's probably why this "
+"message went through the moderation process."
+msgstr "이 리스트 화제 for each 메시지를 요청하기 위해 필요합니다."
+
+#: ../mail_tt2/moderate.tt2:23
+msgid ""
+"Because the new message is suspected to be a spam it is not attached to this "
+"one. You must use the web interface to reject or validate it."
 msgstr ""
-"%1 리스트 에 붙어 있던 메시지를 태그를 붙이기 위해 다음과 오는 페이지에 가하"
-"기:\n"
-"\n"
-"%2/viewmod/%1/%3\n"
 
 #. (list.name)
-#: ../mail_tt2/moderate.tt2:29
+#: ../mail_tt2/moderate.tt2:26
 msgid "To distribute the attached message in list %1:"
 msgstr "%1 메일링 리스트 에 붙어 있던 메시지를 배포하는 :"
 
 #. (conf.email,conf.host)
-#: ../mail_tt2/moderate.tt2:31 ../mail_tt2/moderate.tt2:36
+#: ../mail_tt2/moderate.tt2:28 ../mail_tt2/moderate.tt2:33
 #, fuzzy
 msgid "Or send a message to %1@%2 with the following subject:"
 msgstr "다음 제목에 %1@%2 에 또는 메시지를 %2 전송합니다 :"
 
-#: ../mail_tt2/moderate.tt2:34
+#: ../mail_tt2/moderate.tt2:31
 msgid "To reject it (it will be removed):"
 msgstr "그것을 거부하는 (삭제될 것입니다):"
 
 #. (conf.wwsympa_url)
-#: ../mail_tt2/moderate.tt2:39 ../mail_tt2/modindex.tt2:10
+#: ../mail_tt2/moderate.tt2:36 ../mail_tt2/modindex.tt2:10
 #, fuzzy
 msgid "The messages moderating documentation:"
 msgstr "리스트의 중재를 기다리는 메시지의 수 : %1 개"
@@ -8150,6 +8458,7 @@ msgstr "리스트 소유자으로 제한됩니다"
 #: ../src/etc/scenari/d_edit.private:1 ../src/etc/scenari/d_read.private:1
 #: ../src/etc/scenari/info.private:1 ../src/etc/scenari/invite.private:1
 #: ../src/etc/scenari/review.private:1 ../src/etc/scenari/send.private:1
+#: ../src/etc/scenari/tracking.private:1
 msgid "restricted to subscribers"
 msgstr "가입자만 에 제한됩니다"
 
@@ -8223,7 +8532,7 @@ msgstr "아무도 검토할 수 없습니다"
 msgid "restricted to subscribers or local domain users"
 msgstr "가입자 또는 로컬 도메인 사용자에 제한됩니다"
 
-#: ../src/etc/scenari/review.owner:1
+#: ../src/etc/scenari/review.owner:1 ../src/etc/scenari/tracking.owner:1
 msgid "only owner (and listmaster)"
 msgstr "소유자 와 리스트마스터 만"
 
@@ -8317,7 +8626,6 @@ msgid "public list multipart messages are rejected"
 msgstr "공용 리스트. 여러 부분 메시지는 거부됩니다"
 
 #: ../src/etc/scenari/spam_status.x-spam-status:1
-#: ../src/etc/scenari/spam_status.x-spam-status~:1
 msgid "test x-spam-status  header"
 msgstr ""
 
@@ -8435,11 +8743,6 @@ msgstr "인트라넷 액세스"
 msgid "conceal even for subscribers"
 msgstr "가입자를 위해 조차 은폐합니다"
 
-#. (year.value.item(month))
-#: ../src/etc/mhonarc-ressources.tt2:25 ../src/etc/mhonarc-ressources.tt2:26
-msgid "%1 message(s)"
-msgstr "%1의 메시지"
-
 #: ../src/etc/mhonarc-ressources.tt2:53
 msgid "Advanced search"
 msgstr "고급 검색"
@@ -8493,8 +8796,8 @@ msgstr "이 메시지들를 삭제하시겠습니까?"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/etc/mhonarc-ressources.tt2:306 ../src/etc/mhonarc-ressources.tt2:310
-#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:563
-#: ../src/etc/mhonarc-ressources.tt2:567 ../src/etc/mhonarc-ressources.tt2:571
+#: ../src/etc/mhonarc-ressources.tt2:314 ../src/etc/mhonarc-ressources.tt2:573
+#: ../src/etc/mhonarc-ressources.tt2:577 ../src/etc/mhonarc-ressources.tt2:581
 msgid "%m/%d/%Y"
 msgstr "%Y년%m월%d일"
 
@@ -8515,37 +8818,37 @@ msgstr "<em>매시지 사용할 수 없습니다.</em>"
 msgid "picture"
 msgstr "그립"
 
-#: ../src/etc/mhonarc-ressources.tt2:469
+#: ../src/etc/mhonarc-ressources.tt2:472
 msgid "Reply to sender"
 msgstr "보낸 사람 회신"
 
-#: ../src/etc/mhonarc-ressources.tt2:471
+#: ../src/etc/mhonarc-ressources.tt2:474
 msgid "to list"
 msgstr "리스트에께"
 
-#: ../src/etc/mhonarc-ressources.tt2:473
+#: ../src/etc/mhonarc-ressources.tt2:476
 #, fuzzy
 msgid "to both"
 msgstr "해당장치(robot)"
 
-#: ../src/etc/mhonarc-ressources.tt2:476
+#: ../src/etc/mhonarc-ressources.tt2:479
 msgid "Reply"
 msgstr "응답"
 
 #. (user.email)
-#: ../src/etc/mhonarc-ressources.tt2:477
+#: ../src/etc/mhonarc-ressources.tt2:480
 msgid "send it back to %1"
 msgstr "%1에 전송"
 
-#: ../src/etc/mhonarc-ressources.tt2:483
+#: ../src/etc/mhonarc-ressources.tt2:486
 msgid "tag this mail for deletion"
 msgstr "이 메세지를 삭제"
 
-#: ../src/etc/mhonarc-ressources.tt2:483
+#: ../src/etc/mhonarc-ressources.tt2:486
 msgid "Do you really want to delete this message ?"
 msgstr "이 메시지를 삭제하시겠습니까?"
 
-#: ../src/etc/mhonarc-ressources.tt2:486
+#: ../src/etc/mhonarc-ressources.tt2:489
 #, fuzzy
 msgid "view source"
 msgstr "최신 반송된 매시지 보기"
@@ -8553,15 +8856,15 @@ msgstr "최신 반송된 매시지 보기"
 #. ("$YYYYMMDD$")
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/etc/mhonarc-ressources.tt2:616
+#: ../src/etc/mhonarc-ressources.tt2:626
 msgid "%y/%m/%d"
 msgstr "%Y년%m월%d일"
 
-#: ../src/etc/mhonarc-ressources.tt2:626
+#: ../src/etc/mhonarc-ressources.tt2:636
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "일요일:월요일:화요일:수요일:목요일:금요일:토요일"
 
-#: ../src/etc/mhonarc-ressources.tt2:644
+#: ../src/etc/mhonarc-ressources.tt2:654
 msgid ""
 "January:February:March:April:May:June:July:August:September:October:November:"
 "December"
@@ -8708,779 +9011,1693 @@ msgstr ""
 "웹을 통해 포럼 참가 가능, 이메일 또는 구독을 통해 \n"
 "진행됨"
 
+#: ../src/sympa_wizard.pl.in:249
+msgid "%s [%s] : "
+msgstr ""
+
+#: ../src/sympa_wizard.pl.in:271
+msgid "Incorrect parameter definition: %s\n"
+msgstr ""
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Bulk.pm:389
+#: ../src/sympa_wizard.pl.in:302
+#, fuzzy
+msgid "%d.%b.%Y-%H.%M.%S"
+msgstr "%Y년%m월%d일 %H:%M:%S"
+
+#: ../src/sympa_wizard.pl.in:307 ../src/sympa_wizard.pl.in:312
+#, fuzzy
+msgid "Unable to rename %s : %s"
+msgstr "리스트를 만들 수 없습니다."
+
+#: ../src/sympa_wizard.pl.in:318 ../src/sympa_wizard.pl.in:325
+#, fuzzy
+msgid "Unable to open %s : %s"
+msgstr "스풀 '%1' 를 열 수 없습니다."
+
+#: ../src/sympa_wizard.pl.in:337
+msgid ""
+"%s and %s have been updated.\n"
+"Previous versions have been saved as %s and %s.\n"
+msgstr ""
+
+#. This entry is a date/time format
+#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
+#: ../src/lib/Bulk.pm:343
 #, fuzzy
 msgid "%d %b %Y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:963 ../wwsympa/wwsympa.fcgi.in:9869
+#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10551
 msgid "%A"
 msgstr "%a"
 
-#: ../src/lib/Conf.pm:143
+#: ../src/lib/confdef.pm:43
+#, fuzzy
+msgid "Site customization"
+msgstr "사용자 지정"
+
+#: ../src/lib/confdef.pm:47
+msgid "Main robot hostname"
+msgstr ""
+
+#: ../src/lib/confdef.pm:56
+#, fuzzy
+msgid "Local part of sympa email address"
+msgstr "이메일 주소 를 임륙하십시오"
+
+#: ../src/lib/confdef.pm:60
+msgid "Effective address will be [EMAIL]@[HOST]"
+msgstr ""
+
+#: ../src/lib/confdef.pm:65
+msgid "Gecos for service mail sent by Sympa itself"
+msgstr ""
+
+#: ../src/lib/confdef.pm:69
+#, fuzzy
+msgid "This parameter is used in mail_tt2 files"
+msgstr "css_path 매개 변수 정의된 , 값 가"
+
+#: ../src/lib/confdef.pm:75
+msgid "Listmasters email list comma separated"
+msgstr ""
+
+#: ../src/lib/confdef.pm:79
+msgid ""
+"Sympa will associate listmaster privileges to these email addresses (mail "
+"and web interfaces). Some error reports may also be sent to these addresses."
+msgstr ""
+
+#: ../src/lib/confdef.pm:84
+#, fuzzy
+msgid "Local part of listmaster email address"
+msgstr "이메일 주소 를 임륙하십시오"
+
+#: ../src/lib/confdef.pm:90
+#, fuzzy
+msgid "URL of main Web page"
+msgstr "%1 관리자 페이지"
+
+#: ../src/lib/confdef.pm:328
+msgid ""
+"Directory for storing static contents (CSS, members pictures, documentation) "
+"directly delivered by Apache"
+msgstr ""
+
+#: ../src/lib/confdef.pm:336
+msgid "URL mapped with the static_content_path directory defined above"
+msgstr ""
+
+#: ../src/lib/confdef.pm:353
+msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1363 ../src/lib/confdef.pm:355
+msgid "Should not be changed ! May invalid all user password"
+msgstr ""
+
+#: ../src/lib/confdef.pm:361
+#, fuzzy
+msgid "Who is able to create lists"
+msgstr "리스트를 만들 수 없습니다."
+
+#: ../src/lib/confdef.pm:365
+msgid ""
+"This parameter is a scenario, check sympa documentation about scenarios if "
+"you want to define one"
+msgstr ""
+
+#: ../src/lib/confdef.pm:378
+msgid ""
+"Used to define a custom parameter for your server. Do not forget the "
+"semicolon between the param name and the param value."
+msgstr ""
+
+#: ../src/lib/confdef.pm:385
+#, fuzzy
+msgid "Directories"
+msgstr "디렉토리"
+
+#: ../src/lib/confdef.pm:390
+msgid "Directory containing mailing lists subdirectories"
+msgstr ""
+
+#: ../src/lib/confdef.pm:397
+msgid ""
+"Directory for configuration files; it also contains scenari/ and templates/ "
+"directories"
+msgstr ""
+
+#: ../src/lib/confdef.pm:401
+#, fuzzy
+msgid "System related"
+msgstr "템플렛"
+
+#: ../src/lib/confdef.pm:406
+msgid "Syslog facility for sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:409
+#, fuzzy
+msgid "Do not forget to edit syslog.conf"
+msgstr "edit_list.conf의 잘못된 형식"
+
+#: ../src/lib/confdef.pm:414
+msgid "Log verbosity"
+msgstr ""
+
+#: ../src/lib/confdef.pm:417
+msgid "0: normal, 2,3,4: for debug"
+msgstr ""
+
+#: ../src/lib/confdef.pm:422
+msgid "Communication mode with syslogd (unix | inet)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:428
+msgid "File containing Sympa PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:430
+msgid ""
+"Sympa also locks this file to ensure that it is not running more than once. "
+"Caution: user sympa need to write access without special privilege."
+msgstr ""
+
+#: ../src/lib/confdef.pm:440
+msgid "Umask used for file creation by Sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:444
+#, fuzzy
+msgid "Sending related"
+msgstr "대기 중 리스트들"
+
+#: ../src/lib/confdef.pm:453
+msgid ""
+"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
+msgstr ""
+
+#: ../src/lib/confdef.pm:455
+msgid ""
+"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
+"powerfull systems."
+msgstr ""
+
+#: ../src/lib/confdef.pm:496
+msgid ""
+"comma separated list of operations for which blacklist filter is applied"
+msgstr ""
+
+#: ../src/lib/confdef.pm:501
+msgid "Setting this parameter to \"none\" will hide the blacklist feature"
+msgstr ""
+
+#: ../src/lib/confdef.pm:506
+msgid ""
+"If set, when a list editor report a spam, this external script is run by "
+"wwsympa or sympa, the spam is sent into script stdin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:512
+msgid ""
+"Default maximum size (in bytes) for messages (can be re-defined for each "
+"list)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:529
+msgid ""
+"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
+"file allows a different tuning per destination domain."
+msgstr ""
+
+#: ../src/lib/confdef.pm:535
+msgid "Max. number of different domains per call to Sendmail"
+msgstr ""
+
+#: ../src/lib/confdef.pm:545
+msgid "Whether or not to cache lists in the database"
+msgstr ""
+
+#: ../src/lib/confdef.pm:551
+msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:554
+msgid ""
+"should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
+"\" is distributed with Postfix)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:566
+msgid "Specify which rfc2369 mailing list headers to add"
+msgstr ""
+
+#: ../src/lib/confdef.pm:572
+#, fuzzy
+msgid "Specify header fields to be removed before message distribution"
+msgstr "메시지 배포"
+
+#: ../src/lib/confdef.pm:582
+msgid "Reject mail from automates (crontab, etc) sent to a list?"
+msgstr ""
+
+#: ../src/lib/confdef.pm:597
+msgid ""
+"SMTP server to which Sympa verify if alias with the same name as the list to "
+"be created"
+msgstr ""
+
+#: ../src/lib/confdef.pm:599
+msgid ""
+"Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
+"standard port."
+msgstr ""
+
+#: ../src/lib/confdef.pm:609
+msgid "SMTP HELO (EHLO) parameter used for alias verification"
+msgstr ""
+
+#: ../src/lib/confdef.pm:611
+msgid "Default value is the host part of list_check_smtp parameter."
+msgstr ""
+
+#: ../src/lib/confdef.pm:618
+msgid "Bulk mailer"
+msgstr ""
+
+#: ../src/lib/confdef.pm:627
+msgid "Default priority for a packet to be sent by bulk."
+msgstr ""
+
+#: ../src/lib/confdef.pm:634
+msgid ""
+"Minimum number of packets in database before the bulk forks to increase "
+"sending rate"
+msgstr ""
+
+#: ../src/lib/confdef.pm:641
+msgid "Max number of bulks that will run on the same server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:648
+msgid ""
+"The number of seconds a slave bulk will remain running without processing a "
+"message before it spontaneously dies."
+msgstr ""
+
+#: ../src/lib/confdef.pm:655
+msgid ""
+"The number of seconds a bulk sleeps between starting a new loop if it didn't "
+"find a message to send."
+msgstr ""
+
+#: ../src/lib/confdef.pm:657
+msgid "Keep it small if you want your server to be reactive."
+msgstr ""
+
+#: ../src/lib/confdef.pm:662
+msgid ""
+"Number of seconds a master bulk waits between two packets number checks."
+msgstr ""
+
+#: ../src/lib/confdef.pm:664
+msgid ""
+"Keep it small if you expect brutal increases in the message sending load."
+msgstr ""
+
+#: ../src/lib/confdef.pm:667
+#, fuzzy
+msgid "Quotas"
+msgstr "할당량"
+
+#: ../src/lib/confdef.pm:672
+msgid "Default disk quota for shared repository"
+msgstr ""
+
+#: ../src/lib/confdef.pm:681
+#, fuzzy
+msgid "Spool related"
+msgstr "템플렛"
+
+#: ../src/lib/confdef.pm:686
+msgid "Directory containing various specialized spools"
+msgstr ""
+
+#: ../src/lib/confdef.pm:688
+msgid "All spool are created at runtime by sympa.pl"
+msgstr ""
+
+#: ../src/lib/confdef.pm:693
+msgid "Directory for incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:712
+#, fuzzy
+msgid "Directory for moderation spool"
+msgstr "파일 %1 는 중재기다리 중"
+
+#: ../src/lib/confdef.pm:718
+#, fuzzy
+msgid "Directory for digest spool"
+msgstr "리스트의 디렉토리"
+
+#: ../src/lib/confdef.pm:724
+#, fuzzy
+msgid "Directory for authentication spool"
+msgstr "인증에 소유자에 제한됩니다"
+
+#: ../src/lib/confdef.pm:730
+msgid "Directory for outgoing spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:736
+#, fuzzy
+msgid "Directory for topic spool"
+msgstr "리스트의 디렉토리"
+
+#: ../src/lib/confdef.pm:742
+msgid "Directory for bounce incoming spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:748
+#, fuzzy
+msgid "Directory for task spool"
+msgstr "리스트의 디렉토리"
+
+#: ../src/lib/confdef.pm:754
+msgid "Directory for automatic list creation spool"
+msgstr ""
+
+#: ../src/lib/confdef.pm:760
+msgid "Temporary directory used by OpenSSL and antivirus plugins"
+msgstr ""
+
+#: ../src/lib/confdef.pm:765
+msgid "Must not be 0."
+msgstr ""
+
+#: ../src/lib/confdef.pm:804
+#, fuzzy
+msgid "Internationalization related"
+msgstr "인터넷 도메인"
+
+#: ../src/lib/confdef.pm:809
+msgid ""
+"Directory containing available NLS catalogues (Message internationalization)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:815
+#, fuzzy
+msgid "Supported languages"
+msgstr "언어"
+
+#: ../src/lib/confdef.pm:819
+msgid ""
+"This is the set of language that will be proposed to your users for the "
+"Sympa GUI. Don't select a language if you don't have the proper locale "
+"packages installed."
+msgstr ""
+
+#: ../src/lib/confdef.pm:824
+msgid "Default language (one of supported languages)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:828
+msgid "This is the default language used by Sympa"
+msgstr ""
+
+#: ../src/lib/confdef.pm:835
+#, fuzzy
+msgid "Bounce related"
+msgstr "반송 점수"
+
+#: ../src/lib/confdef.pm:845
+msgid "Welcome message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:847
+msgid "If set to unique, new subcriber is removed if welcome message bounce"
+msgstr ""
+
+#: ../src/lib/confdef.pm:852
+msgid "Remind message return-path ( unique | owner )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:854
+msgid ""
+"If set to unique, subcriber is removed if remind message bounce, use with "
+"care"
+msgstr ""
+
+#: ../src/lib/confdef.pm:863
+msgid "Task name for expiration of old bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:907
+msgid "Bouncing email rate for warn list owner"
+msgstr ""
+
+#: ../src/lib/confdef.pm:914
+msgid "Bouncing email rate for halt the list (not implemented)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:916
+msgid "Not yet used in current version, Default is 50"
+msgstr ""
+
+#: ../src/lib/confdef.pm:931
+#, fuzzy
+msgid "Tuning"
+msgstr "반송된"
+
+#: ../src/lib/confdef.pm:936
+msgid ""
+"Use of binary version of the list config structure on disk (none | "
+"binary_file)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:939
+msgid ""
+"Set this parameter to \"binary_file\" if you manage a big amount of lists "
+"(1000+); it should make the web interface startup faster"
+msgstr ""
+
+#: ../src/lib/confdef.pm:944
+msgid "flock | nfs"
+msgstr ""
+
+#: ../src/lib/confdef.pm:948
+msgid "Sympa commands priority"
+msgstr ""
+
+#: ../src/lib/confdef.pm:964
+#, fuzzy
+msgid "Default priority for list messages"
+msgstr "편집자 거부 메시지"
+
+#: ../src/lib/confdef.pm:969
+#, fuzzy
+msgid "Database related"
+msgstr "데이타베이스 구조 업데이트했습니다"
+
+#: ../src/lib/confdef.pm:978
+msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:981
+msgid "Be careful to the case"
+msgstr ""
+
+#: ../src/lib/confdef.pm:986
+#, fuzzy
+msgid "Name of the database"
+msgstr "데이타베이스를 업데이트 하기가 실패했습니다."
+
+#: ../src/lib/confdef.pm:989
+msgid "With SQLite, the name of the DB corresponds to the DB file"
+msgstr ""
+
+#: ../src/lib/confdef.pm:995
+msgid "Hostname of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1002
+msgid "Port of the database server"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1010
+#, fuzzy
+msgid "User for the database connection"
+msgstr "데이터베이스 연결을 위한 환경 변수"
+
+#: ../src/lib/confdef.pm:1018
+#, fuzzy
+msgid "Password for the database connection"
+msgstr "데이터베이스 연결을 위한 환경 변수"
+
+#: ../src/lib/confdef.pm:1021
+msgid ""
+"What ever you use a password or not, you must protect the SQL server (is it "
+"not a public internet service ?)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1033
+#, fuzzy
+msgid "Environment variables setting for database"
+msgstr "데이터베이스 연결을 위한 환경 변수"
+
+#: ../src/lib/confdef.pm:1035
+msgid "This is useful for defining ORACLE_HOME "
+msgstr ""
+
+#: ../src/lib/confdef.pm:1041
+msgid "Database private extention to subscriber table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1043 ../src/lib/confdef.pm:1051
+msgid "You need to extend the database format with these fields"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1049
+msgid "Database private extention to user table"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1068
+msgid "Number of months that elapse before a log is expired"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1090
+msgid ""
+"Default timeout between two scheduled synchronizations of list members with "
+"data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1096
+msgid ""
+"Default timeout between two action-triggered synchronizations of list "
+"members with data sources."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1102
+msgid "Default timeout while performing a fetch for an include_sql_query sync"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1107
+msgid "Loop prevention"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1135
+#, fuzzy
+msgid "S/MIME configuration"
+msgstr "구성 파일"
+
+#: ../src/lib/confdef.pm:1140
+msgid "Path to OpenSSL"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1143
+msgid "Sympa recognizes S/MIME if OpenSSL is installed"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1150
+msgid "Directory containing trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1158
+msgid "File containing bundled trusted CA certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1166
+msgid "Password used to crypt lists private keys"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1183
+#, fuzzy
+msgid ""
+"Insert a DKIM signature to message from the robot, from the list or both"
+msgstr "메세지를 보내중   : %1"
+
+#: ../src/lib/confdef.pm:1190
+msgid ""
+"Type of message that is added a DKIM signature before distribution to "
+"subscribers. Possible values are \"none\", \"any\" or a list of the "
+"following keywords: \"md5_authenticated_messages\", "
+"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
+"\"editor_validated_messages\"."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1197
+msgid "Location of the file where DKIM private key is stored"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1204
+msgid ""
+"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1211
+#, fuzzy
+msgid "The selector"
+msgstr "모두 선택/해제"
+
+#: ../src/lib/confdef.pm:1218
+msgid "The \"i=\" tag as defined in rfc 4871, default is null"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1222
+msgid "Antivirus plug-in"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1228
+msgid "Path to the antivirus scanner engine"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1231
+msgid ""
+"supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
+"Micro/VirusWall"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1237
+msgid "Antivirus plugin command argument"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1246
+msgid "Tag based spam filtering"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1256
+msgid ""
+"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
+"spams, name of this header (example X-Spam-Status)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1264
+msgid "Regexp applied on this header to verify message is a spam (example Yes)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1272
+msgid ""
+"Regexp applied on this header to verify message is NOT a spam (example No)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1278
+#, fuzzy
+msgid "wwsympa.conf parameters"
+msgstr "틀린 매개 변수"
+
+#: ../src/lib/confdef.pm:1283
+msgid "Directory for storing HTML archives"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1286 ../src/lib/confdef.pm:1306
+msgid "Better if not in a critical partition"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1291
+msgid ""
+"Default index organization when entering the web archive: either threaded or "
+"in chronological order"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1298
+msgid "File containing archived PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1304
+msgid "Directory for storing bounces"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1311
+msgid "File containing bounced PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1317
+msgid "HTTP cookies lifetime"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1323
+msgid "HTTP cookies validity domain"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1330
+msgid ""
+"Activates a custom archiver to use instead of MHonArc. The value of this "
+"parameter is the absolute path on the file system to the script of the "
+"custom archiver."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1337
+msgid "Type of main Web page ( lists | home )"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1345
+msgid "Syslog facility for wwsympa, archived and bounced"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1348
+msgid "Default is to use previously defined sympa log facility."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1353
+msgid "Path to MHonArc mail2html plugin"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1356
+msgid "This is required for HTML mail archiving"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1361
+msgid "Password case (insensitive | sensitive)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1368
+msgid "Title of main Web page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1376
+msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1379
+msgid "This module provide much faster web interface"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1382
+msgid "Virtual host specific parameters"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1386
+msgid "URL of a virtual host"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1417
+msgid "Default limit for the number of subscribers per list (0 means no limit)"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1437
+msgid ""
+"If set to \"on\", users will be able to post messages in HTML using a "
+"javascript WYSIWYG editor."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1445
+msgid "Path to the javascript file making the WYSIWYG HTML editor available"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1452
+msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1484
+msgid ""
+"When using LDAP authentication, if the identifier provided by the user was a "
+"valid email, if this parameter is set to false, then the provided email will "
+"be used to authenticate the user. Otherwise, use of the first email returned "
+"by the LDAP server will be used."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1491
+msgid "If set to \"on\", enables support of legacy character set"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1493
+msgid ""
+"In some language environments, legacy encoding (character set) is preferred "
+"for e-mail messages: for example iso-2022-jp in Japanese language."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1527
+#, fuzzy
+msgid "Directory for subscription spool"
+msgstr "%1 메일링 리스트에 구독의 미리 알림"
+
+#: ../src/lib/confdef.pm:1532
+msgid ""
+"Default number of lines of the array displaying users in the review page"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1544
+msgid ""
+"Messages are supposed to be filtered by an antispam that add one more "
+"headers to messages. This parameter is used to select a special scenario in "
+"order to decide the message spam status: ham, spam or unsure. This parameter "
+"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
+"antispam_tag_header_ham_regexp."
+msgstr ""
+
+#: ../src/lib/confdef.pm:1552
+msgid "Directory containing user certificates"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1558
+msgid "File containing task_manager PID while running"
+msgstr ""
+
+#: ../src/lib/confdef.pm:1563
+msgid ""
+"Default number of lines of the array displaying the log entries in the logs "
+"page"
+msgstr ""
+
+#: ../src/lib/Conf.pm:952
+msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
+msgstr ""
+
+#: ../src/lib/Conf.pm:1368
 #, fuzzy
 msgid "Error at line %d: %s\n"
-msgstr "에러 (%d 행) : %s"
-
-#: ../src/lib/Conf.pm:460
-#, fuzzy
-msgid "Error at line %d: %s"
 msgstr "에러 (%d 행) : %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/Family.pm:2598 ../src/lib/Family.pm:395 ../src/lib/Family.pm:672
-#: ../src/lib/List.pm:1895 ../wwsympa/Auth.pm:459
-#: ../wwsympa/wwsympa.fcgi.in:1090 ../wwsympa/wwsympa.fcgi.in:2636
-#: ../wwsympa/wwsympa.fcgi.in:2911 ../wwsympa/wwsympa.fcgi.in:2922
-#: ../wwsympa/wwsympa.fcgi.in:3043
+#: ../src/lib/List.pm:2672 ../wwsympa/Auth.pm:435
+#: ../wwsympa/wwsympa.fcgi.in:1185 ../wwsympa/wwsympa.fcgi.in:2787
+#: ../wwsympa/wwsympa.fcgi.in:3061 ../wwsympa/wwsympa.fcgi.in:3074
+#: ../wwsympa/wwsympa.fcgi.in:3195
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y년%m월%d일 %H시%M분%S초"
 
-#: ../src/lib/List.pm:322
-msgid "Account"
-msgstr "계정"
+#: ../src/lib/List.pm:331
+msgid "Subject of the list"
+msgstr "리스트의 제목"
 
-#: ../src/lib/List.pm:326
-msgid "Who can add subscribers"
-msgstr "가입자 추가 권한이 있는 사용자"
+#: ../src/lib/List.pm:339
+msgid "Visibility of the list"
+msgstr "리스트의 시정"
 
-#: ../src/lib/List.pm:330
-msgid "Anonymous sender"
-msgstr "익명의 보낸 사람"
-
-#: ../src/lib/List.pm:335
-msgid "frequency"
-msgstr "주파수"
-
-#: ../src/lib/List.pm:1427 ../src/lib/List.pm:340
-msgid "access right"
-msgstr "액세스 권한"
-
-#: ../src/lib/List.pm:344
-msgid "Text archives"
-msgstr "텍스트 보관"
-
-#: ../src/lib/List.pm:349
-msgid "Archive encrypted mails as cleartext"
-msgstr "암호화된 메일을 텍스트로 보관"
-
-#: ../src/lib/List.pm:1163 ../src/lib/List.pm:1203 ../src/lib/List.pm:356
-#: ../src/lib/List.pm:532 ../src/lib/List.pm:660 ../src/lib/List.pm:695
-msgid "reception mode"
-msgstr "받기 모드"
-
-#: ../src/lib/List.pm:359
-msgid "Available subscription options"
-msgstr "유효한 구독 옵션"
-
-#: ../src/lib/List.pm:367
-msgid "warn rate"
-msgstr "경고 비율"
-
-#: ../src/lib/List.pm:374
-msgid "halt rate"
-msgstr "정지 비율"
-
-#: ../src/lib/List.pm:378
-msgid "Bounces management"
-msgstr "반송 관리"
-
-#: ../src/lib/List.pm:385 ../src/lib/List.pm:406
-msgid "threshold"
-msgstr "임계값"
-
-#: ../src/lib/List.pm:390 ../src/lib/List.pm:411
-msgid "action for this population"
-msgstr "이 인구를 위한 작업"
-
-#: ../src/lib/List.pm:395 ../src/lib/List.pm:416
-msgid "notification"
-msgstr "알림"
-
-#: ../src/lib/List.pm:399
-msgid "Management of bouncers, 1st level"
-msgstr "매일을 반송된 사용자의 관리, 제 수준"
-
-#: ../src/lib/List.pm:420
-msgid "Management of bouncers, 2nd level"
-msgstr "매일을 반송된 사용자의 관리, 제 2 수준"
-
-#: ../src/lib/List.pm:427
-msgid "Expiration of unmoderated messages"
-msgstr "비진행중 메시지들의 기간만료"
-
-#: ../src/lib/List.pm:433
-msgid "Secret string for generating unique keys"
-msgstr "유일한 패스워드 키를  생성하기는 string"
-
-#: ../src/lib/List.pm:1090 ../src/lib/List.pm:1383 ../src/lib/List.pm:438
-msgid "epoch date"
-msgstr "Epoch 날짜"
-
-#: ../src/lib/List.pm:442
-msgid "human readable"
-msgstr ""
-
-#: ../src/lib/List.pm:447
-#, fuzzy
-msgid "who created the list"
-msgstr "설치 을 업데이트했는 분"
-
-#: ../src/lib/List.pm:451
-msgid "Creation of the list"
-msgstr "리스트의 생성"
-
-#: ../src/lib/List.pm:462
-msgid "internal identifier"
-msgstr ""
-
-#: ../src/lib/List.pm:470
-msgid "label"
-msgstr ""
-
-#: ../src/lib/List.pm:476
-msgid "additional comment"
-msgstr ""
-
-#: ../src/lib/List.pm:483
-#, fuzzy
-msgid "type"
-msgstr "유형"
-
-#: ../src/lib/List.pm:489
-msgid "possible attribute values (if enum is used)"
-msgstr ""
-
-#: ../src/lib/List.pm:494
-msgid "is the attribute optional?"
-msgstr ""
-
-#: ../src/lib/List.pm:500
-msgid "Custom user attributes"
-msgstr ""
-
-#: ../src/lib/List.pm:506
-msgid "Custom header field"
-msgstr "사용자 지정 헤더 필드"
-
-#: ../src/lib/List.pm:511
-msgid "Subject tagging"
-msgstr "제목를 태그하기"
-
-#: ../src/lib/List.pm:525
-#, fuzzy
-msgid "custom parameters"
-msgstr "틀린 매개 변수"
-
-#: ../src/lib/List.pm:1168 ../src/lib/List.pm:1208 ../src/lib/List.pm:537
-#: ../src/lib/List.pm:665 ../src/lib/List.pm:700
-msgid "visibility"
-msgstr "시정"
-
-#: ../src/lib/List.pm:541
-msgid "Subscription profile"
-msgstr "구독 프로파일"
-
-#: ../src/lib/List.pm:545
-msgid "Who can delete subscribers"
-msgstr "가입자 삭제 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:550
-msgid "Delivery time (hh:mm)"
-msgstr ""
-
-#: ../src/lib/List.pm:425 ../src/lib/List.pm:558
-msgid "days"
-msgstr "일"
-
-#: ../src/lib/List.pm:564
-msgid "hour"
-msgstr "시간"
-
-#: ../src/lib/List.pm:570
-msgid "minute"
-msgstr "분"
-
-#: ../src/lib/List.pm:574
-msgid "Digest frequency"
-msgstr "다이제스트 사용빈도"
-
-#: ../src/lib/List.pm:582
-msgid "Digest maximum number of messages"
-msgstr "다이제스트 메시지의 최대 숫자"
-
-#: ../src/lib/List.pm:590
-#, fuzzy
-msgid "Inclusions timeout for message distribution"
-msgstr "메시지 배포"
-
-#: ../src/lib/List.pm:597
-#, fuzzy
-msgid "Insert DKIM signature to messages sent to the list"
-msgstr "메세지를 보내중   : %1"
-
-#: ../src/lib/List.pm:605
-msgid ""
-"The categories of messages sent to the list that will be signed using DKIM."
-msgstr ""
-
-#: ../src/lib/List.pm:612
-msgid "File path for list DKIM private key"
-msgstr ""
-
-#: ../src/lib/List.pm:620
-msgid "Selector for DNS lookup of DKIM public key"
-msgstr ""
-
-#: ../src/lib/List.pm:649
-#, fuzzy
-msgid "DKIM configuration"
-msgstr "구성 파일"
-
-#: ../src/lib/List.pm:1158 ../src/lib/List.pm:655
+#: ../src/lib/List.pm:353 ../src/lib/List.pm:436
 msgid "email address"
 msgstr "이메일 주소"
 
-#: ../src/lib/List.pm:1173 ../src/lib/List.pm:670
+#: ../src/lib/List.pm:360 ../src/lib/List.pm:455
 msgid "name"
 msgstr "이름"
 
-#: ../src/lib/List.pm:1178 ../src/lib/List.pm:675
+#: ../src/lib/List.pm:366 ../src/lib/List.pm:461
 msgid "private information"
 msgstr "개인 정보"
 
-#: ../src/lib/List.pm:710
-msgid "Periodical subscription expiration task"
-msgstr "정기적 구독 만료 업무"
+#: ../src/lib/List.pm:372 ../src/lib/List.pm:422
+msgid "profile"
+msgstr "프로파일"
 
-#: ../src/lib/List.pm:721
-msgid "Attachment type"
-msgstr "첨부 파일 유형"
+#: ../src/lib/List.pm:378 ../src/lib/List.pm:410 ../src/lib/List.pm:443
+#: ../src/lib/List.pm:487 ../src/lib/List.pm:617 ../src/lib/List.pm:632
+msgid "reception mode"
+msgstr "받기 모드"
 
-#: ../src/lib/List.pm:725
-msgid "Forced reply address"
-msgstr "강제 응답 주소"
+#: ../src/lib/List.pm:384 ../src/lib/List.pm:416 ../src/lib/List.pm:449
+#: ../src/lib/List.pm:493 ../src/lib/List.pm:638
+msgid "visibility"
+msgstr "시정"
 
-#: ../src/lib/List.pm:731
+#: ../src/lib/List.pm:503
+msgid "Topics for the list"
+msgstr "리스트를 위한 화제"
+
+#: ../src/lib/List.pm:511
 msgid "Internet domain"
 msgstr "인터넷 도메인"
 
+#: ../src/lib/List.pm:521
+msgid "Language of the list"
+msgstr "리스트의 언어"
+
+#: ../src/lib/List.pm:539
+#, fuzzy
+msgid "Maximum number of list members"
+msgstr " 새로운 리스트들 "
+
+#: ../src/lib/List.pm:550
+msgid "Priority"
+msgstr "우선 순위"
+
+#: ../src/lib/List.pm:562
+msgid "Who can send messages"
+msgstr "메세지 를 보낼 권한이 있는 사용자"
+
+#: ../src/lib/List.pm:568
+msgid "Delivery time (hh:mm)"
+msgstr ""
+
+#: ../src/lib/List.pm:576
+msgid "Digest frequency"
+msgstr "다이제스트 사용빈도"
+
+#: ../src/lib/List.pm:1094 ../src/lib/List.pm:2061 ../src/lib/List.pm:581
+msgid "days"
+msgstr "일"
+
+#: ../src/lib/List.pm:588
+msgid "hour"
+msgstr "시간"
+
+#: ../src/lib/List.pm:595
+msgid "minute"
+msgstr "분"
+
+#: ../src/lib/List.pm:605
+msgid "Digest maximum number of messages"
+msgstr "다이제스트 메시지의 최대 숫자"
+
+#: ../src/lib/List.pm:614
+msgid "Available subscription options"
+msgstr "유효한 구독 옵션"
+
+#: ../src/lib/List.pm:628
+msgid "Subscription profile"
+msgstr "구독 프로파일"
+
+#: ../src/lib/List.pm:647
+msgid "Topics for message categorization"
+msgstr "메시지 분류를 위한 화제"
+
+#: ../src/lib/List.pm:651
+msgid "Message topic name"
+msgstr "메시지 화제 이름"
+
+#: ../src/lib/List.pm:658
+msgid "Message topic keywords"
+msgstr "메시지 화제 키워드"
+
+#: ../src/lib/List.pm:664
+msgid "Message topic title"
+msgstr "메시지 화제 제목"
+
+#: ../src/lib/List.pm:675
+msgid "Defines to which part of messages topic keywords are applied"
+msgstr "topic키워드의 어떤 메시지가 적용되었는지 정의 합니다."
+
+#: ../src/lib/List.pm:683
+msgid "Message tagging"
+msgstr "메시지 태그를 붙이기"
+
+#: ../src/lib/List.pm:691 ../src/lib/List.pm:706
+msgid "Reply address"
+msgstr "응답 주소"
+
+#: ../src/lib/List.pm:699
+msgid "Forced reply address"
+msgstr "강제 응답 주소"
+
+#: ../src/lib/List.pm:717
+msgid "other email address"
+msgstr "기타 메일 주소"
+
+#: ../src/lib/List.pm:722
+msgid "respect of existing header field"
+msgstr "기존하는 헤더 필드의 존경"
+
+#: ../src/lib/List.pm:731
+msgid "Anonymous sender"
+msgstr "익명의 보낸 사람"
+
 #: ../src/lib/List.pm:737
-msgid "File inclusion"
-msgstr "구독하는 포함"
+msgid "Custom header field"
+msgstr "사용자 지정 헤더 필드"
 
-#: ../src/lib/List.pm:741
-msgid "data location URL"
-msgstr "데이터 위치 URL"
+#: ../src/lib/List.pm:745
+msgid "Subject tagging"
+msgstr "제목를 태그하기"
 
-#: ../src/lib/List.pm:1039 ../src/lib/List.pm:747 ../src/lib/List.pm:780
-#: ../src/lib/List.pm:861
-msgid "remote user"
-msgstr "원격 사용자"
+#: ../src/lib/List.pm:752
+msgid "Attachment type"
+msgstr "첨부 파일 유형"
 
-#: ../src/lib/List.pm:1044 ../src/lib/List.pm:754 ../src/lib/List.pm:786
-#: ../src/lib/List.pm:867
-msgid "remote password"
-msgstr "원격 패스워드"
+#: ../src/lib/List.pm:759
+msgid "Maximum message size"
+msgstr "최대 메시지 크기"
 
-#: ../src/lib/List.pm:1000 ../src/lib/List.pm:1058 ../src/lib/List.pm:759
-#: ../src/lib/List.pm:822 ../src/lib/List.pm:946
-msgid "short name for this source"
-msgstr "이 원본의 짧은 이름"
+#: ../src/lib/List.pm:770
+#, fuzzy
+msgid "Allow message personnalization"
+msgstr "메시지 분류를 위한 화제"
 
-#: ../src/lib/List.pm:764
-msgid "Remote file inclusion"
-msgstr "원격 파일 포함"
-
-#: ../src/lib/List.pm:1017 ../src/lib/List.pm:770 ../src/lib/List.pm:851
-#: ../src/lib/List.pm:978
-msgid "remote host"
-msgstr "원격 호스트"
-
-#: ../src/lib/List.pm:775 ../src/lib/List.pm:856 ../src/lib/List.pm:984
-msgid "remote port"
-msgstr "원격 포트"
-
-#: ../src/lib/List.pm:790
-msgid "suffix"
-msgstr "접미사"
-
-#: ../src/lib/List.pm:796
-msgid "filter"
-msgstr "필터"
-
-#: ../src/lib/List.pm:802
-msgid "extracted attribute"
-msgstr "추출했든 속성"
-
-#: ../src/lib/List.pm:807
-msgid "selection (if multiple)"
-msgstr "(만약에 배수) 선택"
+#: ../src/lib/List.pm:780
+msgid "Reject mail from automates (crontab, etc)?"
+msgstr ""
 
 #: ../src/lib/List.pm:812
-msgid "search scope"
-msgstr "검색 범위"
+msgid "RFC 2369 Header fields"
+msgstr "RFC 2369 헤더 필드"
 
-#: ../src/lib/List.pm:818
-msgid "connection timeout"
-msgstr "연결 시간 초과"
+#: ../src/lib/List.pm:825
+msgid "Who can view list information"
+msgstr "리스트 정보 를 보기 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:846
-msgid "LDAP query inclusion"
-msgstr "LDAP 쿼리 포함"
+#: ../src/lib/List.pm:831
+msgid "Who can subscribe to the list"
+msgstr "리스트를 등록구독 권한이 있는 분"
 
-#: ../src/lib/List.pm:871
-msgid "first-level suffix"
-msgstr "1단계 접미사"
+#: ../src/lib/List.pm:837
+msgid "Who can add subscribers"
+msgstr "가입자 추가 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:877
-msgid "first-level filter"
-msgstr "1단계 필터"
+#: ../src/lib/List.pm:843
+msgid "Who can unsubscribe"
+msgstr "등록취소 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:882
-msgid "first-level extracted attribute"
-msgstr "1단계 추출된 속성"
+#: ../src/lib/List.pm:849
+msgid "Who can delete subscribers"
+msgstr "가입자 삭제 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:887
-msgid "first-level selection"
-msgstr "1단계 선택"
+#: ../src/lib/List.pm:855
+msgid "Who can invite people"
+msgstr "사람를 초대할 수 있는 사용자"
 
-#: ../src/lib/List.pm:892
-msgid "first-level search scope"
-msgstr "1단계 검색 범위"
+#: ../src/lib/List.pm:861
+msgid "Who can start a remind process"
+msgstr "알림 프로세스 를 시작할 수 있는 사용자"
 
-#: ../src/lib/List.pm:898
-msgid "first-level connection timeout"
-msgstr "1단계 연결 시간 초과"
+#: ../src/lib/List.pm:867
+msgid "Who can review subscribers"
+msgstr "가입자 를 검토할 수 있는 사용자"
 
-#: ../src/lib/List.pm:904
-msgid "first-level regular expression"
-msgstr "1단계 정규식"
+#: ../src/lib/List.pm:880
+msgid "Who can view"
+msgstr "보기 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:908
-msgid "second-level suffix template"
-msgstr "두번째수준 접미사 템플렛"
+#: ../src/lib/List.pm:885
+msgid "Who can edit"
+msgstr "편집 권한이 있는 사용자"
 
-#: ../src/lib/List.pm:914
-msgid "second-level filter template"
-msgstr "두번째수준 필터 템플렛"
+#: ../src/lib/List.pm:890 ../src/lib/List.pm:914
+msgid "quota"
+msgstr "할당량"
 
-#: ../src/lib/List.pm:920
-msgid "second-level extracted attribute"
-msgstr "두번째수준 추출했든 속성"
+#: ../src/lib/List.pm:905
+msgid "Web archives"
+msgstr "웹 보관"
 
-#: ../src/lib/List.pm:925
-msgid "second-level selection"
-msgstr "두번째수준 선택"
+#: ../src/lib/List.pm:909 ../src/lib/List.pm:945
+msgid "access right"
+msgstr "액세스 권한"
 
-#: ../src/lib/List.pm:930
-msgid "second-level search scope"
-msgstr "두번째수준 검색 범위"
+#: ../src/lib/List.pm:924
+msgid "Maximum number of month archived"
+msgstr "보관된 달의 최대 숫자"
 
-#: ../src/lib/List.pm:936
-msgid "second-level connection timeout"
-msgstr "두번째수준 연결 시간 초과"
+#: ../src/lib/List.pm:933
+msgid "Text archives"
+msgstr "텍스트 보관"
 
-#: ../src/lib/List.pm:942
-msgid "second-level regular expression"
-msgstr "두번째수준 정규식"
+#: ../src/lib/List.pm:937
+msgid "frequency"
+msgstr "주파수"
 
-#: ../src/lib/List.pm:968
-msgid "LDAP 2-level query inclusion"
-msgstr "LDAP 2수준 쿼리 포함"
+#: ../src/lib/List.pm:956
+msgid "Archive encrypted mails as cleartext"
+msgstr "암호화된 메일을 텍스트로 보관"
 
-#: ../src/lib/List.pm:973
-msgid "List inclusion"
-msgstr "리스트 포함"
+#: ../src/lib/List.pm:2161 ../src/lib/List.pm:963
+msgid "email address protection method"
+msgstr "이메일 주소 보호 방법"
 
-#: ../src/lib/List.pm:990
-msgid "remote path of sympa list dump"
-msgstr "sympa 리스트 덤프의 원격 경로"
+#: ../src/lib/List.pm:974
+msgid "Bounces management"
+msgstr "반송 관리"
 
-#: ../src/lib/List.pm:995
-msgid "certificate for authentication by remote Sympa"
-msgstr "원격 Sympa의 인증을 위한 인증서"
+#: ../src/lib/List.pm:978
+msgid "warn rate"
+msgstr "경고 비율"
 
-#: ../src/lib/List.pm:1007
-msgid "remote list inclusion"
-msgstr "원격 리스트 포함"
+#: ../src/lib/List.pm:988
+msgid "halt rate"
+msgstr "정지 비율"
 
-#: ../src/lib/List.pm:1012
-msgid "database type"
-msgstr "데이타베이스 유형"
+#: ../src/lib/List.pm:1001
+msgid "Management of bouncers, 1st level"
+msgstr "매일을 반송된 사용자의 관리, 제 수준"
 
-#: ../src/lib/List.pm:1021
-msgid "database port"
-msgstr "데이타베이스 포트"
+#: ../src/lib/List.pm:1005 ../src/lib/List.pm:1034
+msgid "threshold"
+msgstr "임계값"
 
-#: ../src/lib/List.pm:1026
-msgid "database name"
-msgstr "데이타베이스 이름"
+#: ../src/lib/List.pm:1015 ../src/lib/List.pm:1044
+msgid "action for this population"
+msgstr "이 인구를 위한 작업"
+
+#: ../src/lib/List.pm:1021 ../src/lib/List.pm:1050
+msgid "notification"
+msgstr "알림"
 
 #: ../src/lib/List.pm:1030
-msgid "connection options"
-msgstr "연결 옵션"
+msgid "Management of bouncers, 2nd level"
+msgstr "매일을 반송된 사용자의 관리, 제 2 수준"
 
-#: ../src/lib/List.pm:1035
+#: ../src/lib/List.pm:1059
+msgid "percentage of list members in VERP mode"
+msgstr "VERP 모드에 리스트 가입자의 백분율"
+
+#: ../src/lib/List.pm:1068
 #, fuzzy
-msgid "environment variables for database connection"
-msgstr "데이터베이스 연결을 위한 환경 변수"
+msgid "Message tracking feature"
+msgstr "메시지 태그를 붙이기"
 
-#: ../src/lib/List.pm:1050
-msgid "SQL query"
-msgstr "SQL 쿼리"
+#: ../src/lib/List.pm:1072
+msgid "tracking message by delivery status notification"
+msgstr ""
 
-#: ../src/lib/List.pm:1054
-msgid "Directory where the database is stored (used for DBD::CSV only)"
-msgstr "데이타베이스가 저장된 디렉토리 (DBD::CSV 만)"
+#: ../src/lib/List.pm:1080
+msgid "tracking message by message delivery notification"
+msgstr ""
 
-#: ../src/lib/List.pm:1065
-msgid "SQL query inclusion"
-msgstr "SQL 쿼리 포함"
+#: ../src/lib/List.pm:1088
+#, fuzzy
+msgid "who can view message tracking"
+msgstr "메시지 태그를 붙이기"
 
-#: ../src/lib/List.pm:1071
+#: ../src/lib/List.pm:1093
+msgid "Tracking datas are removed after this number of days"
+msgstr ""
+
+#: ../src/lib/List.pm:1106
+msgid "Welcome return-path"
+msgstr "환영받은 돌려보내경로"
+
+#: ../src/lib/List.pm:1115
+msgid "Return-path of the REMIND command"
+msgstr "알림 하 명령의 돌려보내경로"
+
+#: ../src/lib/List.pm:1126
 #, fuzzy
 msgid "Notify subscribers when they are included from a data source?"
 msgstr "등록구독 매개 변수 정의하는 리스트를 등록구독을 위한 규칙."
 
-#: ../src/lib/List.pm:1075
-msgid "Who can view list information"
-msgstr "리스트 정보 를 보기 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:1079
-msgid "Who can invite people"
-msgstr "사람를 초대할 수 있는 사용자"
-
-#: ../src/lib/List.pm:1085
-msgid "Language of the list"
-msgstr "리스트의 언어"
-
-#: ../src/lib/List.pm:1110
-msgid "Regular expression applied to prevent loops with robots"
-msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
-
-#: ../src/lib/List.pm:1117
-msgid "Maximum message size"
-msgstr "최대 메시지 크기"
-
-#: ../src/lib/List.pm:1123
-msgid "Message topic name"
-msgstr "메시지 화제 이름"
-
-#: ../src/lib/List.pm:1128
-msgid "Message topic keywords"
-msgstr "메시지 화제 키워드"
-
 #: ../src/lib/List.pm:1134
-msgid "Message topic title"
-msgstr "메시지 화제 제목"
-
-#: ../src/lib/List.pm:1139
-msgid "Topics for message categorization"
-msgstr "메시지 분류를 위한 화제"
-
-#: ../src/lib/List.pm:1145
-msgid "Defines to which part of messages topic keywords are applied"
-msgstr "topic키워드의 어떤 메시지가 적용되었는지 정의 합니다."
-
-#: ../src/lib/List.pm:1152
-msgid "Message tagging"
-msgstr "메시지 태그를 붙이기"
-
-#: ../src/lib/List.pm:1183 ../src/lib/List.pm:1213
-msgid "profile"
-msgstr "프로파일"
-
-#: ../src/lib/List.pm:1224
-msgid "Priority"
-msgstr "우선 순위"
-
-#: ../src/lib/List.pm:1230
-msgid "Reject mail from automates (crontab, etc)?"
-msgstr ""
-
-#: ../src/lib/List.pm:1234
-msgid "Who can start a remind process"
-msgstr "알림 프로세스 를 시작할 수 있는 사용자"
-
-#: ../src/lib/List.pm:1239
-msgid "Return-path of the REMIND command"
-msgstr "알림 하 명령의 돌려보내경로"
-
-#: ../src/lib/List.pm:1263 ../src/lib/List.pm:1283
-msgid "Reply address"
-msgstr "응답 주소"
-
-#: ../src/lib/List.pm:1269
-msgid "value"
-msgstr "값"
-
-#: ../src/lib/List.pm:1274
-msgid "other email address"
-msgstr "기타 메일 주소"
-
-#: ../src/lib/List.pm:1279
-msgid "respect of existing header field"
-msgstr "기존하는 헤더 필드의 존경"
-
-#: ../src/lib/List.pm:1288
-msgid "Who can review subscribers"
-msgstr "가입자 를 검토할 수 있는 사용자"
-
-#: ../src/lib/List.pm:1295
-msgid "RFC 2369 Header fields"
-msgstr "RFC 2369 헤더 필드"
-
-#: ../src/lib/List.pm:1299
-msgid "Who can send messages"
-msgstr "메세지 를 보낼 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:1306
-msgid "Serial number of the config"
-msgstr "설치의 일련 번호"
-
-#: ../src/lib/List.pm:1311
-msgid "Who can view"
-msgstr "보기 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:1315
-msgid "Who can edit"
-msgstr "편집 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:1322 ../src/lib/List.pm:1434
-msgid "quota"
-msgstr "할당량"
-
-#: ../src/lib/List.pm:1331 ../src/lib/List.pm:1336
-msgid "email address protection method"
-msgstr "이메일 주소 보호 방법"
-
-#: ../src/lib/List.pm:1342
-msgid "Status of the list"
-msgstr "리스트의 상태"
-
-#: ../src/lib/List.pm:1350
 msgid "Timeout for fetch of include_sql_query"
 msgstr ""
 
-#: ../src/lib/List.pm:1356
-msgid "Subject of the list"
-msgstr "리스트의 제목"
-
-#: ../src/lib/List.pm:1360
-msgid "Who can subscribe to the list"
-msgstr "리스트를 등록구독 권한이 있는 분"
-
-#: ../src/lib/List.pm:1366
-msgid "Topics for the list"
-msgstr "리스트를 위한 화제"
-
-#: ../src/lib/List.pm:1373
-msgid "Inclusions timeout"
-msgstr "포함 타임아웃"
-
-#: ../src/lib/List.pm:1377
-msgid "Who can unsubscribe"
-msgstr "등록취소 권한이 있는 사용자"
-
-#: ../src/lib/List.pm:1398
-msgid "Last update of config"
-msgstr "설치의 최신 정보"
-
-#: ../src/lib/List.pm:1404
+#: ../src/lib/List.pm:1145
 msgid "User data source"
 msgstr "사용자 데이터 원본"
 
-#: ../src/lib/List.pm:1411
+#: ../src/lib/List.pm:1153
+msgid "File inclusion"
+msgstr "구독하는 포함"
+
+#: ../src/lib/List.pm:1161
+msgid "Remote file inclusion"
+msgstr "원격 파일 포함"
+
+#: ../src/lib/List.pm:1165 ../src/lib/List.pm:1207 ../src/lib/List.pm:1247
+#: ../src/lib/List.pm:1348 ../src/lib/List.pm:1500 ../src/lib/List.pm:1577
+#: ../src/lib/List.pm:1626 ../src/lib/List.pm:1733 ../src/lib/List.pm:1891
+msgid "short name for this source"
+msgstr "이 원본의 짧은 이름"
+
+#: ../src/lib/List.pm:1171
+msgid "data location URL"
+msgstr "데이터 위치 URL"
+
+#: ../src/lib/List.pm:1178 ../src/lib/List.pm:1284 ../src/lib/List.pm:1385
+#: ../src/lib/List.pm:1539 ../src/lib/List.pm:1663 ../src/lib/List.pm:1770
+#: ../src/lib/List.pm:1930
+msgid "remote user"
+msgstr "원격 사용자"
+
+#: ../src/lib/List.pm:1184 ../src/lib/List.pm:1289 ../src/lib/List.pm:1390
+#: ../src/lib/List.pm:1545 ../src/lib/List.pm:1668 ../src/lib/List.pm:1775
+#: ../src/lib/List.pm:1936
+msgid "remote password"
+msgstr "원격 패스워드"
+
+#: ../src/lib/List.pm:1196
+msgid "List inclusion"
+msgstr "리스트 포함"
+
+#: ../src/lib/List.pm:1203
+msgid "remote list inclusion"
+msgstr "원격 리스트 포함"
+
+#: ../src/lib/List.pm:1213 ../src/lib/List.pm:1253 ../src/lib/List.pm:1354
+#: ../src/lib/List.pm:1512 ../src/lib/List.pm:1632 ../src/lib/List.pm:1739
+#: ../src/lib/List.pm:1903
+msgid "remote host"
+msgstr "원격 호스트"
+
+#: ../src/lib/List.pm:1219 ../src/lib/List.pm:1259 ../src/lib/List.pm:1360
+#: ../src/lib/List.pm:1638 ../src/lib/List.pm:1745
+msgid "remote port"
+msgstr "원격 포트"
+
+#: ../src/lib/List.pm:1226
+msgid "remote path of sympa list dump"
+msgstr "sympa 리스트 덤프의 원격 경로"
+
+#: ../src/lib/List.pm:1233
+msgid "certificate for authentication by remote Sympa"
+msgstr "원격 Sympa의 인증을 위한 인증서"
+
+#: ../src/lib/List.pm:1243
+msgid "LDAP query inclusion"
+msgstr "LDAP 쿼리 포함"
+
+#: ../src/lib/List.pm:1296 ../src/lib/List.pm:1675
+msgid "suffix"
+msgstr "접미사"
+
+#: ../src/lib/List.pm:1301 ../src/lib/List.pm:1680
+msgid "search scope"
+msgstr "검색 범위"
+
+#: ../src/lib/List.pm:1307 ../src/lib/List.pm:1686
+msgid "connection timeout"
+msgstr "연결 시간 초과"
+
+#: ../src/lib/List.pm:1314 ../src/lib/List.pm:1693
+msgid "filter"
+msgstr "필터"
+
+#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1700
+msgid "extracted attribute"
+msgstr "추출했든 속성"
+
+#: ../src/lib/List.pm:1328 ../src/lib/List.pm:1713
+msgid "selection (if multiple)"
+msgstr "(만약에 배수) 선택"
+
+#: ../src/lib/List.pm:1334 ../src/lib/List.pm:1486 ../src/lib/List.pm:1563
+#: ../src/lib/List.pm:1719 ../src/lib/List.pm:1877 ../src/lib/List.pm:1960
+#, fuzzy
+msgid "Time ranges when inclusion is not allowed"
+msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
+
+#: ../src/lib/List.pm:1344
+msgid "LDAP 2-level query inclusion"
+msgstr "LDAP 2수준 쿼리 포함"
+
+#: ../src/lib/List.pm:1397 ../src/lib/List.pm:1782
+msgid "first-level suffix"
+msgstr "1단계 접미사"
+
+#: ../src/lib/List.pm:1402 ../src/lib/List.pm:1787
+msgid "first-level search scope"
+msgstr "1단계 검색 범위"
+
+#: ../src/lib/List.pm:1408 ../src/lib/List.pm:1793
+msgid "first-level connection timeout"
+msgstr "1단계 연결 시간 초과"
+
+#: ../src/lib/List.pm:1415 ../src/lib/List.pm:1800
+msgid "first-level filter"
+msgstr "1단계 필터"
+
+#: ../src/lib/List.pm:1422 ../src/lib/List.pm:1807
+msgid "first-level extracted attribute"
+msgstr "1단계 추출된 속성"
+
+#: ../src/lib/List.pm:1428 ../src/lib/List.pm:1813
+msgid "first-level selection"
+msgstr "1단계 선택"
+
+#: ../src/lib/List.pm:1434 ../src/lib/List.pm:1819
+msgid "first-level regular expression"
+msgstr "1단계 정규식"
+
+#: ../src/lib/List.pm:1441 ../src/lib/List.pm:1826
+msgid "second-level suffix template"
+msgstr "두번째수준 접미사 템플렛"
+
+#: ../src/lib/List.pm:1446 ../src/lib/List.pm:1831
+msgid "second-level search scope"
+msgstr "두번째수준 검색 범위"
+
+#: ../src/lib/List.pm:1452 ../src/lib/List.pm:1837
+msgid "second-level connection timeout"
+msgstr "두번째수준 연결 시간 초과"
+
+#: ../src/lib/List.pm:1459 ../src/lib/List.pm:1844
+msgid "second-level filter template"
+msgstr "두번째수준 필터 템플렛"
+
+#: ../src/lib/List.pm:1466 ../src/lib/List.pm:1851
+msgid "second-level extracted attribute"
+msgstr "두번째수준 추출했든 속성"
+
+#: ../src/lib/List.pm:1473 ../src/lib/List.pm:1858
+msgid "second-level selection"
+msgstr "두번째수준 선택"
+
+#: ../src/lib/List.pm:1479 ../src/lib/List.pm:1864
+msgid "second-level regular expression"
+msgstr "두번째수준 정규식"
+
+#: ../src/lib/List.pm:1496
+msgid "SQL query inclusion"
+msgstr "SQL 쿼리 포함"
+
+#: ../src/lib/List.pm:1506 ../src/lib/List.pm:1897
+msgid "database type"
+msgstr "데이타베이스 유형"
+
+#: ../src/lib/List.pm:1518 ../src/lib/List.pm:1909
+msgid "database port"
+msgstr "데이타베이스 포트"
+
+#: ../src/lib/List.pm:1523 ../src/lib/List.pm:1914
+msgid "database name"
+msgstr "데이타베이스 이름"
+
+#: ../src/lib/List.pm:1529 ../src/lib/List.pm:1920
+msgid "connection options"
+msgstr "연결 옵션"
+
+#: ../src/lib/List.pm:1534 ../src/lib/List.pm:1925
+#, fuzzy
+msgid "environment variables for database connection"
+msgstr "데이터베이스 연결을 위한 환경 변수"
+
+#: ../src/lib/List.pm:1551 ../src/lib/List.pm:1942
+msgid "SQL query"
+msgstr "SQL 쿼리"
+
+#: ../src/lib/List.pm:1558 ../src/lib/List.pm:1949
+msgid "Directory where the database is stored (used for DBD::CSV only)"
+msgstr "데이타베이스가 저장된 디렉토리 (DBD::CSV 만)"
+
+#: ../src/lib/List.pm:1573
+#, fuzzy
+msgid "VOOT group inclusion"
+msgstr "SQL 쿼리 포함"
+
+#: ../src/lib/List.pm:1583
+#, fuzzy
+msgid "user"
+msgstr "사용자들"
+
+#: ../src/lib/List.pm:1589
+#, fuzzy
+msgid "provider"
+msgstr "프로파일"
+
+#: ../src/lib/List.pm:1595
+msgid "group"
+msgstr ""
+
+#: ../src/lib/List.pm:1605
+msgid "Inclusions timeout"
+msgstr "포함 타임아웃"
+
+#: ../src/lib/List.pm:1614
+#, fuzzy
+msgid "Inclusions timeout for message distribution"
+msgstr "메시지 배포"
+
+#: ../src/lib/List.pm:1622
+#, fuzzy
+msgid "LDAP query custom attribute"
+msgstr "LDAP 쿼리 포함"
+
+#: ../src/lib/List.pm:1707 ../src/lib/List.pm:1871 ../src/lib/List.pm:1954
+msgid "Name of email entry"
+msgstr ""
+
+#: ../src/lib/List.pm:1729
+#, fuzzy
+msgid "LDAP 2-level query custom attribute"
+msgstr "LDAP 2수준 쿼리 포함"
+
+#: ../src/lib/List.pm:1887
+#, fuzzy
+msgid "SQL query custom attribute"
+msgstr "추출했든 속성"
+
+#: ../src/lib/List.pm:1972
+#, fuzzy
+msgid "Insert DKIM signature to messages sent to the list"
+msgstr "메세지를 보내중   : %1"
+
+#: ../src/lib/List.pm:1983
+#, fuzzy
+msgid "DKIM configuration"
+msgstr "구성 파일"
+
+#: ../src/lib/List.pm:1988
+msgid "File path for list DKIM private key"
+msgstr ""
+
+#: ../src/lib/List.pm:1998
+msgid "Selector for DNS lookup of DKIM public key"
+msgstr ""
+
+#: ../src/lib/List.pm:2039
+msgid ""
+"The categories of messages sent to the list that will be signed using DKIM."
+msgstr ""
+
+#: ../src/lib/List.pm:2053
+msgid "Account"
+msgstr "계정"
+
+#: ../src/lib/List.pm:2060
+msgid "Expiration of unmoderated messages"
+msgstr "비진행중 메시지들의 기간만료"
+
+#: ../src/lib/List.pm:2071
+msgid "Secret string for generating unique keys"
+msgstr "유일한 패스워드 키를  생성하기는 string"
+
+#: ../src/lib/List.pm:2081
+#, fuzzy
+msgid "custom parameters"
+msgstr "틀린 매개 변수"
+
+#: ../src/lib/List.pm:2101
+msgid "Periodical subscription expiration task"
+msgstr "정기적 구독 만료 업무"
+
+#: ../src/lib/List.pm:2132
+msgid "Regular expression applied to prevent loops with robots"
+msgstr "정규식 해당장치(robot)에 루프를 는 방지하기 위해 적용했습니다"
+
+#: ../src/lib/List.pm:2142
 #, fuzzy
 msgid "Allow picture display? (must be enabled for the current robot)"
 msgstr ""
 "사진 디스플레이(Display)를 허용합니까? (현재 해당장치(robot)에 활성화 되어야 "
 "합니다)"
 
-#: ../src/lib/List.pm:1417
-#, fuzzy
-msgid "Allow message personnalization"
-msgstr "메시지 분류를 위한 화제"
+#: ../src/lib/List.pm:2168
+msgid "Creation of the list"
+msgstr "리스트의 생성"
 
-#: ../src/lib/List.pm:1423
-msgid "Visibility of the list"
-msgstr "리스트의 시정"
+#: ../src/lib/List.pm:2122 ../src/lib/List.pm:2172 ../src/lib/List.pm:2211
+msgid "epoch date"
+msgstr "Epoch 날짜"
 
-#: ../src/lib/List.pm:1439
-msgid "Maximum number of month archived"
-msgstr "보관된 달의 최대 숫자"
-
-#: ../src/lib/List.pm:1444
-msgid "Web archives"
-msgstr "웹 보관"
-
-#: ../src/lib/List.pm:1450
-msgid "Welcome return-path"
-msgstr "환영받은 돌려보내경로"
-
-#: ../src/lib/List.pm:1455
-msgid "percentage of list members in VERP mode"
-msgstr "VERP 모드에 리스트 가입자의 백분율"
-
-#: ../src/lib/List.pm:365 ../src/lib/List.pm:372
-#, fuzzy
-msgid "%"
-msgstr "%a"
-
-#: ../src/lib/List.pm:383 ../src/lib/List.pm:404
-msgid "points"
+#: ../src/lib/List.pm:2178
+msgid "human readable"
 msgstr ""
 
-#: ../src/lib/List.pm:516
+#: ../src/lib/List.pm:2183
 #, fuzzy
-msgid "var name"
-msgstr "이름"
+msgid "who created the list"
+msgstr "설치 을 업데이트했는 분"
 
-#: ../src/lib/List.pm:521
-#, fuzzy
-msgid "var value"
-msgstr "값"
+#: ../src/lib/List.pm:2194
+msgid "Last update of config"
+msgstr "설치의 최신 정보"
 
-#: ../src/lib/List.pm:580
-#, fuzzy
-msgid "messages"
-msgstr "# 메시지"
+#: ../src/lib/List.pm:2222
+msgid "Status of the list"
+msgstr "리스트의 상태"
 
-#: ../src/lib/List.pm:1348 ../src/lib/List.pm:1371 ../src/lib/List.pm:588
-#: ../src/lib/List.pm:817 ../src/lib/List.pm:897 ../src/lib/List.pm:935
-msgid "seconds"
+#: ../src/lib/List.pm:2230
+msgid "Serial number of the config"
+msgstr "설치의 일련 번호"
+
+#: ../src/lib/List.pm:2239
+msgid "Custom user attributes"
 msgstr ""
 
-#: ../src/lib/List.pm:627
-msgid "List of headers to be included ito the message for signature"
+#: ../src/lib/List.pm:2243
+msgid "internal identifier"
 msgstr ""
 
-#: ../src/lib/List.pm:635
-msgid "DKIM \"d=\" tag, you should probably use the default value"
+#: ../src/lib/List.pm:2250
+msgid "label"
 msgstr ""
 
-#: ../src/lib/List.pm:642
-msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
+#: ../src/lib/List.pm:2257
+msgid "additional comment"
 msgstr ""
 
-#: ../src/lib/List.pm:685
+#: ../src/lib/List.pm:2263
 #, fuzzy
-msgid "the data source"
-msgstr "데이터 원본"
+msgid "type"
+msgstr "유형"
 
-#: ../src/lib/List.pm:690
-#, fuzzy
-msgid "data source parameters"
-msgstr "데이터 원본 매개 변수"
+#: ../src/lib/List.pm:2270
+msgid "possible attribute values (if enum is used)"
+msgstr ""
 
-#: ../src/lib/List.pm:706
-#, fuzzy
-msgid "Moderators defined in an external data source"
-msgstr "외부 데이터 원본에서 정의된 중재자"
+#: ../src/lib/List.pm:2276
+msgid "is the attribute optional?"
+msgstr ""
 
-#: ../src/lib/List.pm:715
-msgid "Family name"
-msgstr "리스트들의 정보변경 이름"
-
-#: ../src/lib/List.pm:828 ../src/lib/List.pm:952
-msgid "use SSL (LDAPS)"
-msgstr "SSL 사용 (LDAPS)"
-
-#: ../src/lib/List.pm:833 ../src/lib/List.pm:957
-msgid "SSL version"
-msgstr "SSL 버전"
-
-#: ../src/lib/List.pm:838 ../src/lib/List.pm:962
-msgid "SSL ciphers used"
-msgstr "사용된 SSL 패스워드"
-
-#: ../src/lib/List.pm:1094 ../src/lib/List.pm:1388
-msgid "date"
-msgstr "날짜"
-
-#: ../src/lib/List.pm:1099
-msgid "who ran the instantiation"
-msgstr "인스턴스 를 실행했는 분"
-
-#: ../src/lib/List.pm:1103
-msgid "Latest family instantiation"
-msgstr "최신 리스트들의 정보변경 인스턴스 생성"
-
-#: ../src/lib/List.pm:1115
-#, fuzzy
-msgid "bytes"
-msgstr "안녕 !"
-
-#: ../src/lib/List.pm:1193
-msgid "the datasource"
-msgstr "데이터 원본"
-
-#: ../src/lib/List.pm:1198
-msgid "datasource parameters"
-msgstr "데이터 원본 매개 변수"
-
-#: ../src/lib/List.pm:1218
+#: ../src/lib/List.pm:394
 #, fuzzy
 msgid "Owners defined in an external data source"
 msgstr "외부 데이터 원본에서 정의된 소유자"
 
-#: ../src/lib/List.pm:1243
-msgid "Periodical subscription reminder task"
-msgstr "정기적 구독 미리 알림 업무"
+#: ../src/lib/List.pm:398
+msgid "the datasource"
+msgstr "데이터 원본"
 
-#: ../src/lib/List.pm:1248
+#: ../src/lib/List.pm:404
+msgid "datasource parameters"
+msgstr "데이터 원본 매개 변수"
+
+#: ../src/lib/List.pm:471
+#, fuzzy
+msgid "Moderators defined in an external data source"
+msgstr "외부 데이터 원본에서 정의된 중재자"
+
+#: ../src/lib/List.pm:475
+#, fuzzy
+msgid "the data source"
+msgstr "데이터 원본"
+
+#: ../src/lib/List.pm:481
+#, fuzzy
+msgid "data source parameters"
+msgstr "데이터 원본 매개 변수"
+
+#: ../src/lib/List.pm:531
+msgid "Family name"
+msgstr "리스트들의 정보변경 이름"
+
+#: ../src/lib/List.pm:540
+#, fuzzy
+msgid "list members"
+msgstr "리스트 가입자"
+
+#: ../src/lib/List.pm:606
+#, fuzzy
+msgid "messages"
+msgstr "# 메시지"
+
+#: ../src/lib/List.pm:760
+#, fuzzy
+msgid "bytes"
+msgstr "안녕 !"
+
+#: ../src/lib/List.pm:790
 msgid "Incoming SMTP header fields to be removed"
 msgstr ""
 
-#: ../src/lib/List.pm:1255
+#: ../src/lib/List.pm:801
 msgid "Outgoing SMTP header fields to be removed"
 msgstr ""
 
-#: ../src/lib/List.pm:1321 ../src/lib/List.pm:1433
+#: ../src/lib/List.pm:891 ../src/lib/List.pm:915
 msgid "Kbytes"
 msgstr ""
 
-#: ../src/lib/List.pm:1394
+#: ../src/lib/List.pm:979 ../src/lib/List.pm:989
+#, fuzzy
+msgid "%"
+msgstr "%a"
+
+#: ../src/lib/List.pm:1006 ../src/lib/List.pm:1035
+msgid "points"
+msgstr ""
+
+#: ../src/lib/List.pm:1135 ../src/lib/List.pm:1308 ../src/lib/List.pm:1409
+#: ../src/lib/List.pm:1453 ../src/lib/List.pm:1606 ../src/lib/List.pm:1615
+#: ../src/lib/List.pm:1687 ../src/lib/List.pm:1794 ../src/lib/List.pm:1838
+msgid "seconds"
+msgstr ""
+
+#: ../src/lib/List.pm:1266 ../src/lib/List.pm:1367 ../src/lib/List.pm:1645
+#: ../src/lib/List.pm:1752
+msgid "use SSL (LDAPS)"
+msgstr "SSL 사용 (LDAPS)"
+
+#: ../src/lib/List.pm:1272 ../src/lib/List.pm:1373 ../src/lib/List.pm:1651
+#: ../src/lib/List.pm:1758
+msgid "SSL version"
+msgstr "SSL 버전"
+
+#: ../src/lib/List.pm:1278 ../src/lib/List.pm:1379 ../src/lib/List.pm:1657
+#: ../src/lib/List.pm:1764
+msgid "SSL ciphers used"
+msgstr "사용된 SSL 패스워드"
+
+#: ../src/lib/List.pm:2008
+msgid "List of headers to be included ito the message for signature"
+msgstr ""
+
+#: ../src/lib/List.pm:2018
+msgid "DKIM \"d=\" tag, you should probably use the default value"
+msgstr ""
+
+#: ../src/lib/List.pm:2028
+msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
+msgstr ""
+
+#: ../src/lib/List.pm:2085
+#, fuzzy
+msgid "var name"
+msgstr "이름"
+
+#: ../src/lib/List.pm:2091
+#, fuzzy
+msgid "var value"
+msgstr "값"
+
+#: ../src/lib/List.pm:2107
+msgid "Latest family instantiation"
+msgstr "최신 리스트들의 정보변경 인스턴스 생성"
+
+#: ../src/lib/List.pm:2111
+msgid "who ran the instantiation"
+msgstr "인스턴스 를 실행했는 분"
+
+#: ../src/lib/List.pm:2117 ../src/lib/List.pm:2205
+msgid "date"
+msgstr "날짜"
+
+#: ../src/lib/List.pm:2152
+msgid "Periodical subscription reminder task"
+msgstr "정기적 구독 미리 알림 업무"
+
+#: ../src/lib/List.pm:2198
 msgid "who updated the config"
 msgstr "설치 을 업데이트했는 분"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2851
+#: ../src/lib/List.pm:3644
 msgid "%a, %d %b %Y %H:%M:%S"
 msgstr "%Y년%m월%d일 (%a) %H:%M:%S"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:2852
+#: ../src/lib/List.pm:3645
 msgid "%a, %d %b %Y"
 msgstr "%Y년%m월%d일 (%a)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/List.pm:3043 ../src/lib/List.pm:3044 ../src/lib/List.pm:3048
-#: ../wwsympa/wwsympa.fcgi.in:11046 ../wwsympa/wwsympa.fcgi.in:11115
-#: ../wwsympa/wwsympa.fcgi.in:11317 ../wwsympa/wwsympa.fcgi.in:11664
-#: ../wwsympa/wwsympa.fcgi.in:15115 ../wwsympa/wwsympa.fcgi.in:15122
-#: ../wwsympa/wwsympa.fcgi.in:15836 ../wwsympa/wwsympa.fcgi.in:16629
-#: ../wwsympa/wwsympa.fcgi.in:16630 ../wwsympa/wwsympa.fcgi.in:4322
-#: ../wwsympa/wwsympa.fcgi.in:4375 ../wwsympa/wwsympa.fcgi.in:4946
-#: ../wwsympa/wwsympa.fcgi.in:4947 ../wwsympa/wwsympa.fcgi.in:6512
-#: ../wwsympa/wwsympa.fcgi.in:7534 ../wwsympa/wwsympa.fcgi.in:8079
-#: ../wwsympa/wwsympa.fcgi.in:8126 ../wwsympa/wwsympa.fcgi.in:8128
-#: ../wwsympa/wwsympa.fcgi.in:8606 ../wwsympa/wwsympa.fcgi.in:8607
-#: ../wwsympa/wwsympa.fcgi.in:8641 ../wwsympa/wwsympa.fcgi.in:8642
-#: ../wwsympa/wwsympa.fcgi.in:8821 ../wwsympa/wwsympa.fcgi.in:8822
+#: ../src/lib/List.pm:3836 ../src/lib/List.pm:3837 ../src/lib/List.pm:3841
+#: ../wwsympa/wwsympa.fcgi.in:11749 ../wwsympa/wwsympa.fcgi.in:11818
+#: ../wwsympa/wwsympa.fcgi.in:12020 ../wwsympa/wwsympa.fcgi.in:12367
+#: ../wwsympa/wwsympa.fcgi.in:15753 ../wwsympa/wwsympa.fcgi.in:15760
+#: ../wwsympa/wwsympa.fcgi.in:16496 ../wwsympa/wwsympa.fcgi.in:16546
+#: ../wwsympa/wwsympa.fcgi.in:17334 ../wwsympa/wwsympa.fcgi.in:17335
+#: ../wwsympa/wwsympa.fcgi.in:4477 ../wwsympa/wwsympa.fcgi.in:4530
+#: ../wwsympa/wwsympa.fcgi.in:5107 ../wwsympa/wwsympa.fcgi.in:5108
+#: ../wwsympa/wwsympa.fcgi.in:6664 ../wwsympa/wwsympa.fcgi.in:7800
+#: ../wwsympa/wwsympa.fcgi.in:8417 ../wwsympa/wwsympa.fcgi.in:8464
+#: ../wwsympa/wwsympa.fcgi.in:8466 ../wwsympa/wwsympa.fcgi.in:8992
+#: ../wwsympa/wwsympa.fcgi.in:8993 ../wwsympa/wwsympa.fcgi.in:9027
+#: ../wwsympa/wwsympa.fcgi.in:9028 ../wwsympa/wwsympa.fcgi.in:9207
+#: ../wwsympa/wwsympa.fcgi.in:9208
 msgid "%d %b %Y"
 msgstr "%Y년%m월%d일"
 
-#: ../src/lib/mail.pm:54
+#: ../src/lib/List.pm:7266
+msgid "Attempt to exceed the max number of members (%s) for this list."
+msgstr ""
+
+#: ../src/lib/List.pm:7269
+msgid "Attempts to add some users in database failed."
+msgstr ""
+
+#: ../src/lib/List.pm:7271
+msgid "Added %s users out of %s required."
+msgstr ""
+
+#: ../src/lib/mail.pm:55
 #, fuzzy
 msgid ""
 "Your system does not conform to the POSIX P1003.1 standard, or\n"
@@ -9493,7 +10710,7 @@ msgstr ""
 "에서 는 일정한 _SC_ARG_MAX도서관. smtp.pm 값\n"
 "를 놓기 위해 단위를 변경해야 합니다.변하기 쉬운 $max_arg를 위해.\n"
 
-#: ../src/lib/mail.pm:829
+#: ../src/lib/mail.pm:940
 #, fuzzy
 msgid "Unable to create a channel in smtpto: %s"
 msgstr "smtpto: %m 에 채널를 만들 수 없음"
@@ -9618,41 +10835,69 @@ msgstr "(확인 불가 날짜)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1091
+#: ../wwsympa/wwsympa.fcgi.in:1186
 msgid "%H:%M:%S"
 msgstr ""
 
+#: ../wwsympa/wwsympa.fcgi.in:5002
+#, fuzzy
+msgid "Unable to add user %s in list %s : %s"
+msgstr "디렉토리 %s : %m 에 액세스할 수 없습니다"
+
+#: ../wwsympa/wwsympa.fcgi.in:6389
+#, fuzzy
+msgid "Unable to add users in list %s : %s"
+msgstr "디렉토리 %s : %m 에 액세스할 수 없습니다"
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/SympaSession.pm:436 ../wwsympa/SympaSession.pm:437
-#: ../wwsympa/wwsympa.fcgi.in:11898 ../wwsympa/wwsympa.fcgi.in:12031
-#: ../wwsympa/wwsympa.fcgi.in:14344 ../wwsympa/wwsympa.fcgi.in:8036
+#: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
+#: ../wwsympa/wwsympa.fcgi.in:12601 ../wwsympa/wwsympa.fcgi.in:12734
+#: ../wwsympa/wwsympa.fcgi.in:15077 ../wwsympa/wwsympa.fcgi.in:8374
 msgid "%d %b %y  %H:%M"
 msgstr "%y/%m/%d %H:%M"
 
-#: ../wwsympa/wwsympa.fcgi.in:15297
+#: ../wwsympa/wwsympa.fcgi.in:15935
 #, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "리스트 소유자으로 요청 전달되었습니다"
 
-#: ../wwsympa/wwsympa.fcgi.in:15299
+#: ../wwsympa/wwsympa.fcgi.in:15937
 #, fuzzy
 msgid "You were successfully unsubscribed from list %s."
 msgstr "%1 메일링 리스트 에서 가입되지 않 요청했습니다."
 
-#: ../wwsympa/wwsympa.fcgi.in:15303
+#: ../wwsympa/wwsympa.fcgi.in:15941
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 
-#: ../wwsympa/wwsympa.fcgi.in:15305
+#: ../wwsympa/wwsympa.fcgi.in:15943
 #, fuzzy
 msgid "Unsubscription from list %s failed."
 msgstr "%1 메일링 리스트에서 등록취소"
 
+#: ../wwsympa/wwsympa.fcgi.in:16535
+msgid "Mail sending"
+msgstr ""
+
+#: ../wwsympa/wwsympa.fcgi.in:16536
+#, fuzzy
+msgid "Subscription additions"
+msgstr "구독"
+
+#: ../wwsympa/wwsympa.fcgi.in:16537
+#, fuzzy
+msgid "Unsubscription"
+msgstr "등록취소 :"
+
+#: ../wwsympa/wwsympa.fcgi.in:16538
+msgid "Users deleted by admin"
+msgstr ""
+
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16209 ../wwsympa/wwsympa.fcgi.in:16210
+#: ../wwsympa/wwsympa.fcgi.in:16914 ../wwsympa/wwsympa.fcgi.in:16915
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr ""
 
@@ -9811,861 +11056,28 @@ msgstr "메일 없음 (휴가 동안 유용한)"
 msgid "you do not receive your own posts"
 msgstr "사용자의 포스트를 받지 않습니다"
 
-#: ../web_tt2/list_menu.tt2:10
-msgid ""
-"You <span style=\"font-weight: bold; font-size: 10px\">are</span> subscribed"
-msgstr ""
-
-#: ../web_tt2/list_menu.tt2:21
-msgid ""
-"You <span style=\"font-weight: bold; font-size: 10px\">are not</span> "
-"subscribed"
-msgstr ""
-
-#: ../web_tt2/list_menu.tt2:69
-msgid "OpenSocial"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:79
-msgid "Select the source of your HTML newsletter"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:82
-msgid "Send the page from the following URL:"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:85
-msgid "OR"
-msgstr ""
-
-#: ../web_tt2/compose_mail.tt2:87
-msgid "<strong>Send an HTML file from your computer:"
-msgstr ""
-
-#. (k.name)
 #: ../web_tt2/edit_attributes.tt2:7
-msgid "%1:"
+msgid "[% k.name %]:"
 msgstr ""
 
-#: ../web_tt2/error.tt2:55
+#. (+cpt)
+#: ../web_tt2/javascript.tt2:1056
+msgid "microcal"
+msgstr ""
+
+#: ../web_tt2/javascript.tt2:1096
+msgid "\"+src.id+\"_cal"
+msgstr ""
+
+#: ../web_tt2/modindex.tt2:25
 msgid ""
-"You didn't define the web page you want to use to create your newsletter. "
-"Please specify either an URL or a file to upload."
+"You should probably not reject message detected as spam with notification "
+"because the message sender is probably spoofed. Do you really want to reject "
+"those messages with notification?"
 msgstr ""
 
-#: ../web_tt2/error.tt2:56 ../web_tt2/error.tt2:57
-msgid ""
-"You specified both an URL and a file to upload. Sympa can't choose which one "
-"to send. Please fill the form with one of them only. A web page OR a file to "
-"upload."
-msgstr ""
-
-#. (base_url,path_cgi,u_err.oauth_provider)
-#: ../web_tt2/error.tt2:134
-msgid ""
-"Failed to include members from VOOT group, use the following link to check "
-"the OAuth status : <a href=\"%1%2/oauth_check/%3\">%1%2/oauth_check/%3</a>"
-msgstr ""
-
-#: ../web_tt2/modform.tt2:49
-msgid ""
-"You should rejet spams quietly because the sender of a spam is often "
-"spoofed, if you really want to send this notification, please confirm "
-msgstr ""
-
-#: ../web_tt2/news.tt2:10
-msgid "The following items are waiting for your validation"
-msgstr ""
-
-#: ../web_tt2/news.tt2:30
-msgid ""
-"We received error reports while trying to send you messages. Some of them "
-"may have been lost."
-msgstr ""
-
-#. (user_with_errors.value)
-#: ../web_tt2/news.tt2:35
-msgid " %1 error(s)"
-msgstr ""
-
-#: ../web_tt2/oauth_authorize.tt2:4
-msgid "OAuth authorize"
-msgstr ""
-
-#: ../web_tt2/oauth_authorize.tt2:13
-msgid "Don't authorize"
-msgstr ""
-
-#: ../web_tt2/oauth_check.tt2:4
-msgid "OAuth check"
-msgstr ""
-
-#: ../web_tt2/oauth_check.tt2:10
-msgid "Got new access token, everything is alright."
-msgstr ""
-
-#: ../web_tt2/oauth_check.tt2:15
-msgid ""
-"Unable to check, provider may not be available or access token may be "
-"outdated and failed to be get new one."
-msgstr ""
-
-#: ../web_tt2/oauth_check.tt2:18
-msgid "Unable to load consumer, configuration may be erroneous."
-msgstr ""
-
-#: ../web_tt2/select_voot_groups_request.tt2:6
-msgid ""
-"Hereafter is the list of the groups you accepted to share with Sympa. Select "
-"which group you want members to be included in your list."
-msgstr ""
-
-#: ../web_tt2/select_voot_provider_request.tt2:4
-msgid "Select VOOT provider"
-msgstr ""
-
-#: ../web_tt2/select_voot_provider_request.tt2:6
-msgid ""
-"Hereafter is the list of VOOT providers that share group information with "
-"Sympa. Select which provider you want to use your groups from."
-msgstr ""
-
-#: ../web_tt2/skinsedit.tt2:107
-msgid "Background color for the news area of the home page."
-msgstr ""
-
-#: ../web_tt2/stats.tt2:6
-msgid "This page displays overall informations regarding the list activity"
-msgstr ""
-
-#: ../web_tt2/stats.tt2:16 ../web_tt2/stats.tt2:22
-msgid "[% o.title %]"
-msgstr ""
-
-#: ../web_tt2/stats.tt2:47
-msgid "No operation recorded in this field yet."
-msgstr ""
-
-#. (fromname,fromaddr,listname)
-#: ../web_tt2/tracking.tt2:6
-msgid "Message from %1 %2 for list %3 "
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:14
-msgid "Recipient Email"
-msgstr ""
-
-#: ../web_tt2/tracking.tt2:15
-msgid "Delivery status"
-msgstr ""
-
-#. (listname,max_number_of_subscribers)
-#: ../mail_tt2/listmaster_notification.tt2:153
-msgid ""
-"Sympa could not include subscribers to list %1 because the maximum number of "
-"users was reached for this list. This limit is defined to %2."
-msgstr ""
-
-#. (consumer_name,oauth_provider)
-#: ../mail_tt2/message_report.tt2:96
-msgid "Your OAuth token used by consumer %1 may have expired."
-msgstr ""
-
-#. (consumer_name,oauth_provider,conf.wwsympa_url)
-#: ../mail_tt2/message_report.tt2:105
-msgid ""
-"Sympa failed to retreive data using %1 consumer, this may be because your "
-"access token for OAuth provider %2 is out of date.\n"
-"\n"
-"Visit  %3/oauth_check/%2 to check the token state and renew it if necessary."
-msgstr ""
-
-#: ../mail_tt2/moderate.tt2:23
-msgid ""
-"Because the new message is suspected to be a spam it is not attached to this "
-"one. You must use the web interface to reject or validate it."
-msgstr ""
-
-#: ../src/sympa_wizard.pl.in:249
-msgid "%s [%s] : "
-msgstr ""
-
-#: ../src/sympa_wizard.pl.in:271
-msgid "Incorrect parameter definition: %s\n"
-msgstr ""
-
-#: ../src/sympa_wizard.pl.in:337
-msgid ""
-"%s and %s have been updated.\n"
-"Previous versions have been saved as %s and %s.\n"
-msgstr ""
-
-#: ../src/lib/confdef.pm:47
-msgid "Main robot hostname"
-msgstr ""
-
-#: ../src/lib/confdef.pm:60
-msgid "Effective address will be [EMAIL]@[HOST]"
-msgstr ""
-
-#: ../src/lib/confdef.pm:65
-msgid "Gecos for service mail sent by Sympa itself"
-msgstr ""
-
-#: ../src/lib/confdef.pm:75
-msgid "Listmasters email list comma separated"
-msgstr ""
-
-#: ../src/lib/confdef.pm:79
-msgid ""
-"Sympa will associate listmaster privileges to these email addresses (mail "
-"and web interfaces). Some error reports may also be sent to these addresses."
-msgstr ""
-
-#: ../src/lib/confdef.pm:328
-msgid ""
-"Directory for storing static contents (CSS, members pictures, documentation) "
-"directly delivered by Apache"
-msgstr ""
-
-#: ../src/lib/confdef.pm:336
-msgid "URL mapped with the static_content_path directory defined above"
-msgstr ""
-
-#: ../src/lib/confdef.pm:353
-msgid "Secret used by Sympa to make MD5 fingerprint in web cookies secure"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1363 ../src/lib/confdef.pm:355
-msgid "Should not be changed ! May invalid all user password"
-msgstr ""
-
-#: ../src/lib/confdef.pm:365
-msgid ""
-"This parameter is a scenario, check sympa documentation about scenarios if "
-"you want to define one"
-msgstr ""
-
-#: ../src/lib/confdef.pm:378
-msgid ""
-"Used to define a custom parameter for your server. Do not forget the "
-"semicolon between the param name and the param value."
-msgstr ""
-
-#: ../src/lib/confdef.pm:390
-msgid "Directory containing mailing lists subdirectories"
-msgstr ""
-
-#: ../src/lib/confdef.pm:397
-msgid ""
-"Directory for configuration files; it also contains scenari/ and templates/ "
-"directories"
-msgstr ""
-
-#: ../src/lib/confdef.pm:406
-msgid "Syslog facility for sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:414
-msgid "Log verbosity"
-msgstr ""
-
-#: ../src/lib/confdef.pm:417
-msgid "0: normal, 2,3,4: for debug"
-msgstr ""
-
-#: ../src/lib/confdef.pm:422
-msgid "Communication mode with syslogd (unix | inet)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:428
-msgid "File containing Sympa PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:430
-msgid ""
-"Sympa also locks this file to ensure that it is not running more than once. "
-"Caution: user sympa need to write access without special privilege."
-msgstr ""
-
-#: ../src/lib/confdef.pm:440
-msgid "Umask used for file creation by Sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:453
-msgid ""
-"Max. number of Sendmail processes (launched by Sympa) running simultaneously"
-msgstr ""
-
-#: ../src/lib/confdef.pm:455
-msgid ""
-"Proposed value is quite low, you can rise it up to 100, 200 or even 300 with "
-"powerfull systems."
-msgstr ""
-
-#: ../src/lib/confdef.pm:496
-msgid ""
-"comma separated list of operations for which blacklist filter is applied"
-msgstr ""
-
-#: ../src/lib/confdef.pm:501
-msgid "Setting this parameter to \"none\" will hide the blacklist feature"
-msgstr ""
-
-#: ../src/lib/confdef.pm:506
-msgid ""
-"If set, when a list editor report a spam, this external script is run by "
-"wwsympa or sympa, the spam is sent into script stdin"
-msgstr ""
-
-#: ../src/lib/confdef.pm:512
-msgid ""
-"Default maximum size (in bytes) for messages (can be re-defined for each "
-"list)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:529
-msgid ""
-"Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf "
-"file allows a different tuning per destination domain."
-msgstr ""
-
-#: ../src/lib/confdef.pm:535
-msgid "Max. number of different domains per call to Sendmail"
-msgstr ""
-
-#: ../src/lib/confdef.pm:545
-msgid "Whether or not to cache lists in the database"
-msgstr ""
-
-#: ../src/lib/confdef.pm:551
-msgid "Path to the MTA (sendmail, postfix, exim or qmail)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:554
-msgid ""
-"should point to a sendmail-compatible binary (eg: a binary named \"sendmail"
-"\" is distributed with Postfix)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:566
-msgid "Specify which rfc2369 mailing list headers to add"
-msgstr ""
-
-#: ../src/lib/confdef.pm:582
-msgid "Reject mail from automates (crontab, etc) sent to a list?"
-msgstr ""
-
-#: ../src/lib/confdef.pm:597
-msgid ""
-"SMTP server to which Sympa verify if alias with the same name as the list to "
-"be created"
-msgstr ""
-
-#: ../src/lib/confdef.pm:599
-msgid ""
-"Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-"
-"standard port."
-msgstr ""
-
-#: ../src/lib/confdef.pm:609
-msgid "SMTP HELO (EHLO) parameter used for alias verification"
-msgstr ""
-
-#: ../src/lib/confdef.pm:611
-msgid "Default value is the host part of list_check_smtp parameter."
-msgstr ""
-
-#: ../src/lib/confdef.pm:618
-msgid "Bulk mailer"
-msgstr ""
-
-#: ../src/lib/confdef.pm:627
-msgid "Default priority for a packet to be sent by bulk."
-msgstr ""
-
-#: ../src/lib/confdef.pm:634
-msgid ""
-"Minimum number of packets in database before the bulk forks to increase "
-"sending rate"
-msgstr ""
-
-#: ../src/lib/confdef.pm:641
-msgid "Max number of bulks that will run on the same server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:648
-msgid ""
-"The number of seconds a slave bulk will remain running without processing a "
-"message before it spontaneously dies."
-msgstr ""
-
-#: ../src/lib/confdef.pm:655
-msgid ""
-"The number of seconds a bulk sleeps between starting a new loop if it didn't "
-"find a message to send."
-msgstr ""
-
-#: ../src/lib/confdef.pm:657
-msgid "Keep it small if you want your server to be reactive."
-msgstr ""
-
-#: ../src/lib/confdef.pm:662
-msgid ""
-"Number of seconds a master bulk waits between two packets number checks."
-msgstr ""
-
-#: ../src/lib/confdef.pm:664
-msgid ""
-"Keep it small if you expect brutal increases in the message sending load."
-msgstr ""
-
-#: ../src/lib/confdef.pm:672
-msgid "Default disk quota for shared repository"
-msgstr ""
-
-#: ../src/lib/confdef.pm:686
-msgid "Directory containing various specialized spools"
-msgstr ""
-
-#: ../src/lib/confdef.pm:688
-msgid "All spool are created at runtime by sympa.pl"
-msgstr ""
-
-#: ../src/lib/confdef.pm:693
-msgid "Directory for incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:730
-msgid "Directory for outgoing spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:742
-msgid "Directory for bounce incoming spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:754
-msgid "Directory for automatic list creation spool"
-msgstr ""
-
-#: ../src/lib/confdef.pm:760
-msgid "Temporary directory used by OpenSSL and antivirus plugins"
-msgstr ""
-
-#: ../src/lib/confdef.pm:765
-msgid "Must not be 0."
-msgstr ""
-
-#: ../src/lib/confdef.pm:809
-msgid ""
-"Directory containing available NLS catalogues (Message internationalization)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:819
-msgid ""
-"This is the set of language that will be proposed to your users for the "
-"Sympa GUI. Don't select a language if you don't have the proper locale "
-"packages installed."
-msgstr ""
-
-#: ../src/lib/confdef.pm:824
-msgid "Default language (one of supported languages)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:828
-msgid "This is the default language used by Sympa"
-msgstr ""
-
-#: ../src/lib/confdef.pm:845
-msgid "Welcome message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:847
-msgid "If set to unique, new subcriber is removed if welcome message bounce"
-msgstr ""
-
-#: ../src/lib/confdef.pm:852
-msgid "Remind message return-path ( unique | owner )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:854
-msgid ""
-"If set to unique, subcriber is removed if remind message bounce, use with "
-"care"
-msgstr ""
-
-#: ../src/lib/confdef.pm:863
-msgid "Task name for expiration of old bounces"
-msgstr ""
-
-#: ../src/lib/confdef.pm:907
-msgid "Bouncing email rate for warn list owner"
-msgstr ""
-
-#: ../src/lib/confdef.pm:914
-msgid "Bouncing email rate for halt the list (not implemented)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:916
-msgid "Not yet used in current version, Default is 50"
-msgstr ""
-
-#: ../src/lib/confdef.pm:936
-msgid ""
-"Use of binary version of the list config structure on disk (none | "
-"binary_file)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:939
-msgid ""
-"Set this parameter to \"binary_file\" if you manage a big amount of lists "
-"(1000+); it should make the web interface startup faster"
-msgstr ""
-
-#: ../src/lib/confdef.pm:944
-msgid "flock | nfs"
-msgstr ""
-
-#: ../src/lib/confdef.pm:948
-msgid "Sympa commands priority"
-msgstr ""
-
-#: ../src/lib/confdef.pm:978
-msgid "Type of the database (mysql|Pg|Oracle|Sybase|SQLite)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:981
-msgid "Be careful to the case"
-msgstr ""
-
-#: ../src/lib/confdef.pm:989
-msgid "With SQLite, the name of the DB corresponds to the DB file"
-msgstr ""
-
-#: ../src/lib/confdef.pm:995
-msgid "Hostname of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1002
-msgid "Port of the database server"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1021
-msgid ""
-"What ever you use a password or not, you must protect the SQL server (is it "
-"not a public internet service ?)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1035
-msgid "This is useful for defining ORACLE_HOME "
-msgstr ""
-
-#: ../src/lib/confdef.pm:1041
-msgid "Database private extention to subscriber table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1043 ../src/lib/confdef.pm:1051
-msgid "You need to extend the database format with these fields"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1049
-msgid "Database private extention to user table"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1068
-msgid "Number of months that elapse before a log is expired"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1090
-msgid ""
-"Default timeout between two scheduled synchronizations of list members with "
-"data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1096
-msgid ""
-"Default timeout between two action-triggered synchronizations of list "
-"members with data sources."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1102
-msgid "Default timeout while performing a fetch for an include_sql_query sync"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1107
-msgid "Loop prevention"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1140
-msgid "Path to OpenSSL"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1143
-msgid "Sympa recognizes S/MIME if OpenSSL is installed"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1150
-msgid "Directory containing trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1158
-msgid "File containing bundled trusted CA certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1166
-msgid "Password used to crypt lists private keys"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1190
-msgid ""
-"Type of message that is added a DKIM signature before distribution to "
-"subscribers. Possible values are \"none\", \"any\" or a list of the "
-"following keywords: \"md5_authenticated_messages\", "
-"\"smime_authenticated_messages\", \"dkim_authenticated_messages\", "
-"\"editor_validated_messages\"."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1197
-msgid "Location of the file where DKIM private key is stored"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1204
-msgid ""
-"The \"d=\" tag as defined in rfc 4871, default is virtual host domain name"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1218
-msgid "The \"i=\" tag as defined in rfc 4871, default is null"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1222
-msgid "Antivirus plug-in"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1228
-msgid "Path to the antivirus scanner engine"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1231
-msgid ""
-"supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend "
-"Micro/VirusWall"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1237
-msgid "Antivirus plugin command argument"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1246
-msgid "Tag based spam filtering"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1256
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag "
-"spams, name of this header (example X-Spam-Status)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1264
-msgid "Regexp applied on this header to verify message is a spam (example Yes)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1272
-msgid ""
-"Regexp applied on this header to verify message is NOT a spam (example No)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1283
-msgid "Directory for storing HTML archives"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1286 ../src/lib/confdef.pm:1306
-msgid "Better if not in a critical partition"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1291
-msgid ""
-"Default index organization when entering the web archive: either threaded or "
-"in chronological order"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1298
-msgid "File containing archived PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1304
-msgid "Directory for storing bounces"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1311
-msgid "File containing bounced PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1317
-msgid "HTTP cookies lifetime"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1323
-msgid "HTTP cookies validity domain"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1330
-msgid ""
-"Activates a custom archiver to use instead of MHonArc. The value of this "
-"parameter is the absolute path on the file system to the script of the "
-"custom archiver."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1337
-msgid "Type of main Web page ( lists | home )"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1345
-msgid "Syslog facility for wwsympa, archived and bounced"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1348
-msgid "Default is to use previously defined sympa log facility."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1353
-msgid "Path to MHonArc mail2html plugin"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1356
-msgid "This is required for HTML mail archiving"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1361
-msgid "Password case (insensitive | sensitive)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1368
-msgid "Title of main Web page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1376
-msgid "Is fast_cgi module for Apache (or Roxen) installed (0 | 1)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1379
-msgid "This module provide much faster web interface"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1382
-msgid "Virtual host specific parameters"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1386
-msgid "URL of a virtual host"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1417
-msgid "Default limit for the number of subscribers per list (0 means no limit)"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1437
-msgid ""
-"If set to \"on\", users will be able to post messages in HTML using a "
-"javascript WYSIWYG editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1445
-msgid "Path to the javascript file making the WYSIWYG HTML editor available"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1452
-msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1484
-msgid ""
-"When using LDAP authentication, if the identifier provided by the user was a "
-"valid email, if this parameter is set to false, then the provided email will "
-"be used to authenticate the user. Otherwise, use of the first email returned "
-"by the LDAP server will be used."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1491
-msgid "If set to \"on\", enables support of legacy character set"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1493
-msgid ""
-"In some language environments, legacy encoding (character set) is preferred "
-"for e-mail messages: for example iso-2022-jp in Japanese language."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1532
-msgid ""
-"Default number of lines of the array displaying users in the review page"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1544
-msgid ""
-"Messages are supposed to be filtered by an antispam that add one more "
-"headers to messages. This parameter is used to select a special scenario in "
-"order to decide the message spam status: ham, spam or unsure. This parameter "
-"replace antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-
-#: ../src/lib/confdef.pm:1552
-msgid "Directory containing user certificates"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1558
-msgid "File containing task_manager PID while running"
-msgstr ""
-
-#: ../src/lib/confdef.pm:1563
-msgid ""
-"Default number of lines of the array displaying the log entries in the logs "
-"page"
-msgstr ""
-
-#: ../src/lib/Conf.pm:967
-msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
-msgstr ""
-
-#: ../src/lib/List.pm:1072
-msgid "tracking message by delivery status notification"
-msgstr ""
-
-#: ../src/lib/List.pm:1080
-msgid "tracking message by message delivery notification"
-msgstr ""
-
-#: ../src/lib/List.pm:1093
-msgid "Tracking datas are removed after this number of days"
-msgstr ""
-
-#: ../src/lib/List.pm:1595
-msgid "group"
-msgstr ""
-
-#: ../src/lib/List.pm:1707 ../src/lib/List.pm:1871 ../src/lib/List.pm:1954
-msgid "Name of email entry"
-msgstr ""
-
-#: ../src/lib/List.pm:7266
-msgid "Attempt to exceed the max number of members (%s) for this list."
-msgstr ""
-
-#: ../src/lib/List.pm:7269
-msgid "Attempts to add some users in database failed."
-msgstr ""
-
-#: ../src/lib/List.pm:7271
-msgid "Added %s users out of %s required."
-msgstr ""
-
-#: ../wwsympa/wwsympa.fcgi.in:16535
-msgid "Mail sending"
-msgstr ""
-
-#: ../wwsympa/wwsympa.fcgi.in:16538
-msgid "Users deleted by admin"
+#: ../web_tt2/modindex.tt2:128
+msgid "Toggle spams"
 msgstr ""
 
 #. (list.name)
@@ -10704,367 +11116,57 @@ msgid "Log intensity"
 msgstr ""
 
 #, fuzzy
-#~ msgid "Statistics"
-#~ msgstr "상태"
+#~ msgid "URL:"
+#~ msgstr "URL"
 
-#, fuzzy
-#~ msgid "parameter name"
-#~ msgstr "매개 변수 값"
-
-#, fuzzy
-#~ msgid "apply to"
-#~ msgstr "적용"
-
-#, fuzzy
-#~ msgid "main conf"
-#~ msgstr "리스트 구성 편집"
-
-#, fuzzy
-#~ msgid "Failed to include members"
+#~ msgid "Failed to inlude members"
 #~ msgstr "가입자(들)을 포함하기 실패했습니다"
 
 #, fuzzy
-#~ msgid "You must select a topic"
-#~ msgstr "--선택하기--"
+#~ msgid "List informations"
+#~ msgstr "개인 정보"
 
 #, fuzzy
-#~ msgid "Rejecting message"
-#~ msgstr "삭제 메시지"
+#~ msgid "Reject without notification "
+#~ msgstr "인증 없는 소유자 에 의해"
 
 #, fuzzy
-#~ msgid "Choose notification "
-#~ msgstr "알림"
-
-#, fuzzy
-#~ msgid "No notification"
-#~ msgstr "알림"
-
-#, fuzzy
-#~ msgid "Report message as undetected spam "
-#~ msgstr "메시지가 거부했습니다."
-
-#, fuzzy
-#~ msgid "Add sender to blacklist"
+#~ msgid "Add to blacklist"
 #~ msgstr "블랙리스트 편집"
 
-#, fuzzy
-#~ msgid "loading message..."
-#~ msgstr "전체 미리 알림"
+#~ msgid "Reject and blacklist sender"
+#~ msgstr "거부하고 보낸 사람를 블랙리스트하기"
 
 #, fuzzy
-#~ msgid "Administration Tasks"
-#~ msgstr "리스트 관리 제어판"
-
-#, fuzzy
-#~ msgid "List %1:"
-#~ msgstr "%1 메일링 리스트"
-
-#, fuzzy
-#~ msgid "%1 document(s)"
-#~ msgstr "공용 문서"
-
-#, fuzzy
-#~ msgid "%1 subscription request(s)"
-#~ msgstr "구독 요청 없음"
-
-#, fuzzy
-#~ msgid "User Errors"
-#~ msgstr "에러들를 다시 리셋"
-
-#, fuzzy
-#~ msgid " List %1: "
-#~ msgstr "%1 메일링 리스트 / %2"
-
-#, fuzzy
-#~ msgid "You're not allowed to make sync, time limit in action"
-#~ msgstr "이 작업을 수행할 수 없습니다."
-
-#, fuzzy
-#~ msgid "Authorize %1 ?"
-#~ msgstr "작성자"
-
-#, fuzzy
-#~ msgid "Authorize"
-#~ msgstr "작성자"
-
-#, fuzzy
-#~ msgid "Everything is alright."
-#~ msgstr "이 메일링 리스트에 관해 모두:"
-
-#, fuzzy
-#~ msgid "Unknown provider."
-#~ msgstr "확인 불가"
-
-#, fuzzy
-#~ msgid "<strong>Last update:"
-#~ msgstr "최신 정보:"
-
-#, fuzzy
-#~ msgid "Add quietly"
-#~ msgstr "자동 모드"
-
-#, fuzzy
-#~ msgid "Select group"
-#~ msgstr "--선택하기--"
-
-#, fuzzy
-#~ msgid "Set as source"
-#~ msgstr "데이터 원본"
-
-#, fuzzy
-#~ msgid "List %1 statistics"
-#~ msgstr "%1 메일링 리스트 는 종료되었습니다"
-
-#, fuzzy
-#~ msgid "Shared document directory size: %1 kB"
+#~ msgid "Shared document directory size:"
 #~ msgstr "공용 문서 디렉토리 크기"
 
 #, fuzzy
-#~ msgid "Web archives size: %1 kB"
+#~ msgid "Web archives size:"
 #~ msgstr "웹 보관하는 크기"
 
-#, fuzzy
-#~ msgid "Message tracking"
-#~ msgstr "메시지 태그를 붙이기"
-
-#, fuzzy
-#~ msgid "Distribution ended at"
-#~ msgstr "배포하기"
-
-#, fuzzy
-#~ msgid "Reception Option"
-#~ msgstr "받기"
-
-#, fuzzy
-#~ msgid "Notification Date"
-#~ msgstr "알림"
-
-#, fuzzy
-#~ msgid "Notification"
-#~ msgstr "알림"
-
-#, fuzzy
-#~ msgid "Previous process %1 crashed"
+#~ msgid "Previous process crashed"
 #~ msgstr "이전 프로세스 부쉈습니다"
 
-#, fuzzy
-#~ msgid "Previous process %1 (with pid %2) has died unexpectedly."
+#~ msgid "Previous process has died unexpectedly."
 #~ msgstr "이전 프로세스 의외로 죽었습니다."
 
-#, fuzzy
-#~ msgid "Limit of users count reached for list %1"
-#~ msgstr "%1 메일링 리스트의 가입자 업데이트 실패했습니다"
+#~ msgid "Article to be tagged for list %1 from %2"
+#~ msgstr "태그를 붙일 대기중 문서 (%2 에서 %1 메일링 리스트)"
 
 #, fuzzy
 #~ msgid ""
-#~ "This mailing list is configured to require topics; that's probably why "
-#~ "this message went through the moderation process."
-#~ msgstr "이 리스트 화제 for each 메시지를 요청하기 위해 필요합니다."
+#~ "To tag the message in list %1 for the appropriate topic, please use the "
+#~ "following link:"
+#~ msgstr ""
+#~ "%1 리스트 에 붙어 있던 메시지를 태그를 붙이기 위해 다음과 오는 페이지에 가"
+#~ "하기:\n"
+#~ "\n"
+#~ "%2/viewmod/%1/%3\n"
 
 #, fuzzy
-#~ msgid "%d.%b.%Y-%H.%M.%S"
-#~ msgstr "%Y년%m월%d일 %H:%M:%S"
-
-#, fuzzy
-#~ msgid "Unable to rename %s : %s"
-#~ msgstr "리스트를 만들 수 없습니다."
-
-#, fuzzy
-#~ msgid "Unable to open %s : %s"
-#~ msgstr "스풀 '%1' 를 열 수 없습니다."
-
-#, fuzzy
-#~ msgid "Site customization"
-#~ msgstr "사용자 지정"
-
-#, fuzzy
-#~ msgid "Local part of sympa email address"
-#~ msgstr "이메일 주소 를 임륙하십시오"
-
-#, fuzzy
-#~ msgid "This parameter is used in mail_tt2 files"
-#~ msgstr "css_path 매개 변수 정의된 , 값 가"
-
-#, fuzzy
-#~ msgid "Local part of listmaster email address"
-#~ msgstr "이메일 주소 를 임륙하십시오"
-
-#, fuzzy
-#~ msgid "URL of main Web page"
-#~ msgstr "%1 관리자 페이지"
-
-#, fuzzy
-#~ msgid "Who is able to create lists"
-#~ msgstr "리스트를 만들 수 없습니다."
-
-#, fuzzy
-#~ msgid "Directories"
-#~ msgstr "디렉토리"
-
-#, fuzzy
-#~ msgid "System related"
-#~ msgstr "템플렛"
-
-#, fuzzy
-#~ msgid "Do not forget to edit syslog.conf"
-#~ msgstr "edit_list.conf의 잘못된 형식"
-
-#, fuzzy
-#~ msgid "Sending related"
-#~ msgstr "대기 중 리스트들"
-
-#, fuzzy
-#~ msgid "Specify header fields to be removed before message distribution"
-#~ msgstr "메시지 배포"
-
-#, fuzzy
-#~ msgid "Quotas"
-#~ msgstr "할당량"
-
-#, fuzzy
-#~ msgid "Spool related"
-#~ msgstr "템플렛"
-
-#, fuzzy
-#~ msgid "Directory for moderation spool"
-#~ msgstr "파일 %1 는 중재기다리 중"
-
-#, fuzzy
-#~ msgid "Directory for digest spool"
-#~ msgstr "리스트의 디렉토리"
-
-#, fuzzy
-#~ msgid "Directory for authentication spool"
-#~ msgstr "인증에 소유자에 제한됩니다"
-
-#, fuzzy
-#~ msgid "Directory for topic spool"
-#~ msgstr "리스트의 디렉토리"
-
-#, fuzzy
-#~ msgid "Directory for task spool"
-#~ msgstr "리스트의 디렉토리"
-
-#, fuzzy
-#~ msgid "Internationalization related"
-#~ msgstr "인터넷 도메인"
-
-#, fuzzy
-#~ msgid "Supported languages"
-#~ msgstr "언어"
-
-#, fuzzy
-#~ msgid "Bounce related"
-#~ msgstr "반송 점수"
-
-#, fuzzy
-#~ msgid "Tuning"
-#~ msgstr "반송된"
-
-#, fuzzy
-#~ msgid "Default priority for list messages"
-#~ msgstr "편집자 거부 메시지"
-
-#, fuzzy
-#~ msgid "Database related"
-#~ msgstr "데이타베이스 구조 업데이트했습니다"
-
-#, fuzzy
-#~ msgid "Name of the database"
-#~ msgstr "데이타베이스를 업데이트 하기가 실패했습니다."
-
-#, fuzzy
-#~ msgid "User for the database connection"
-#~ msgstr "데이터베이스 연결을 위한 환경 변수"
-
-#, fuzzy
-#~ msgid "Password for the database connection"
-#~ msgstr "데이터베이스 연결을 위한 환경 변수"
-
-#, fuzzy
-#~ msgid "Environment variables setting for database"
-#~ msgstr "데이터베이스 연결을 위한 환경 변수"
-
-#, fuzzy
-#~ msgid "S/MIME configuration"
-#~ msgstr "구성 파일"
-
-#, fuzzy
-#~ msgid ""
-#~ "Insert a DKIM signature to message from the robot, from the list or both"
-#~ msgstr "메세지를 보내중   : %1"
-
-#, fuzzy
-#~ msgid "The selector"
-#~ msgstr "모두 선택/해제"
-
-#, fuzzy
-#~ msgid "wwsympa.conf parameters"
-#~ msgstr "틀린 매개 변수"
-
-#, fuzzy
-#~ msgid "Directory for subscription spool"
-#~ msgstr "%1 메일링 리스트에 구독의 미리 알림"
-
-#, fuzzy
-#~ msgid "Maximum number of list members"
-#~ msgstr " 새로운 리스트들 "
-
-#, fuzzy
-#~ msgid "Message tracking feature"
-#~ msgstr "메시지 태그를 붙이기"
-
-#, fuzzy
-#~ msgid "who can view message tracking"
-#~ msgstr "메시지 태그를 붙이기"
-
-#, fuzzy
-#~ msgid "Time ranges when inclusion is not allowed"
-#~ msgstr "리스트에 사용자를 추가하기는 것이 허용되지 않습니다."
-
-#, fuzzy
-#~ msgid "VOOT group inclusion"
-#~ msgstr "SQL 쿼리 포함"
-
-#, fuzzy
-#~ msgid "user"
-#~ msgstr "사용자들"
-
-#, fuzzy
-#~ msgid "provider"
-#~ msgstr "프로파일"
-
-#, fuzzy
-#~ msgid "LDAP query custom attribute"
-#~ msgstr "LDAP 쿼리 포함"
-
-#, fuzzy
-#~ msgid "LDAP 2-level query custom attribute"
-#~ msgstr "LDAP 2수준 쿼리 포함"
-
-#, fuzzy
-#~ msgid "SQL query custom attribute"
-#~ msgstr "추출했든 속성"
-
-#, fuzzy
-#~ msgid "list members"
-#~ msgstr "리스트 가입자"
-
-#, fuzzy
-#~ msgid "Unable to add user %s in list %s : %s"
-#~ msgstr "디렉토리 %s : %m 에 액세스할 수 없습니다"
-
-#, fuzzy
-#~ msgid "Unable to add users in list %s : %s"
-#~ msgstr "디렉토리 %s : %m 에 액세스할 수 없습니다"
-
-#, fuzzy
-#~ msgid "Subscription additions"
-#~ msgstr "구독"
-
-#, fuzzy
-#~ msgid "Unsubscription"
-#~ msgstr "등록취소 :"
+#~ msgid "Error at line %d: %s"
+#~ msgstr "에러 (%d 행) : %s"
 
 #~ msgid "Unable to create a channel in smtpto: %m"
 #~ msgstr "smtpto: %m 에 채널를 만들 수 없음"
