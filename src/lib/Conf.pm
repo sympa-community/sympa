@@ -194,39 +194,22 @@ sub load {
 ## load each virtual robots configuration files
 sub load_robots {
     my $param = shift;
-    my $robot_conf ;
-
-    ## Load wwsympa.conf
-    unless ($wwsconf = &wwslib::load_config(Sympa::Constants::WWSCONFIG)) {
-        printf STDERR 
-            "Conf::load_robots(): Unable to load config file %s\n", Sympa::Constants::WWSCONFIG;
-        return undef;
-    }
-
     my @robots;
+
     return undef unless (@robots = @{&get_robots_list()});
-
     my $exiting = 0;
-    ## Set the defaults based on sympa.conf and wwsympa.conf first
-    foreach my $key (keys %valid_robot_key_words) {
-        if(defined $wwsconf->{$key}){
-            $robot_conf->{$Conf{'domain'}}{$key} = $wwsconf->{$key};
-        }elsif(defined $Conf{$key}){
-            $robot_conf->{$Conf{'domain'}}{$key} = $Conf{$key};
-        }else{
-            unless ($optional_key_words{$key}){
-                printf STDERR "Conf::load_robots(): Parameter $key seems to be neither a wwsympa.conf nor a sympa.conf parameter.\n" ;
-                $exiting = 1;
-            }
-        }
-    }
-    return undef if ($exiting);
-
     foreach my $robot (@robots) {
         my $robot_config_file = "$Conf{'etc'}/$robot/robot.conf";
-        $param->{'config_hash'}{'robots'}{$robot} = &_load_single_robot_config({'robot' => $robot, 'no_db' => $param->{'no_db'}, 'force_reload' => $param->{'force_reload'}});
+        my $robot_conf = undef;
+        unless ($robot_conf = &_load_single_robot_config({'robot' => $robot, 'no_db' => $param->{'no_db'}, 'force_reload' => $param->{'force_reload'}})) {
+            printf STDERR "The config for robot %s contain errors: it could not be correctly loaded.\n";
+            $exiting = 1;
+        }else{
+            $param->{'config_hash'}{'robots'}{$robot} = $robot_conf;
+        }
         &_check_double_url_usage({'config_hash' => $param->{'config_hash'}{'robots'}{$robot}});
     }
+    return undef if ($exiting);
     return 1;
 }
 
@@ -1359,7 +1342,7 @@ sub _load_config_file_to_hash {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
             ##  'tri' is a synonym for 'sort'
-            ## (for compatibilyty with older versions)
+            ## (for compatibility with older versions)
             $keyword = 'sort' if ($keyword eq 'tri');
             ##  'key_password' is a synonym for 'key_passwd'
             ## (for compatibilyty with older versions)
@@ -1580,7 +1563,8 @@ sub _load_robot_secondary_config_files {
     my $robot_name_for_auth_storing  = $param->{'config_hash'}{'robot_name'} || $Conf{'domain'};
     my $is_main_robot = 0;
     $is_main_robot = 1 unless ($param->{'config_hash'}{'robot_name'});
-    $Conf{'auth_services'}{$robot_name_for_auth_storing} = &_load_auth($param->{'config_hash'}{'robot_name'}, $is_main_robot);    
+    $Conf{'auth_services'}{$robot_name_for_auth_storing} = &_load_auth($param->{'config_hash'}{'robot_name'}, $is_main_robot);
+    return 1;
 }
 ## For parameters whose value is hard_coded, as per %hardcoded_params, set the
 ## parameter value to the hardcoded value, whatever is defined in the config.
@@ -1661,7 +1645,7 @@ sub _load_single_robot_config{
     unless (-r "$Conf{'etc'}/$robot/robot.conf") {
         printf STDERR "Conf::_load_single_robot_config(): No read access on %s\n", "$Conf{'etc'}/$robot/robot.conf";
         &List::send_notify_to_listmaster('cannot_access_robot_conf',$Conf{'domain'}, ["No read access on $Conf{'etc'}/$robot/robot.conf. you should change privileges on this file to activate this virtual host. "]);
-        next;
+        return undef;
     }
     my $config_err;
     my $config_file = "$Conf{'etc'}/$robot/robot.conf";
@@ -1692,6 +1676,7 @@ sub _load_single_robot_config{
         
         &_store_source_file_name({'config_hash' => $robot_conf,'config_file' => $config_file});
         &_save_config_hash_to_binary({'config_hash' => $robot_conf,'source_file' => $config_file});
+        return undef if ($config_err);
     }
     &_replace_file_value_by_db_value({'config_hash' => $robot_conf}) unless $param->{'no_db'};
     &_load_robot_secondary_config_files({'config_hash' => $robot_conf});
