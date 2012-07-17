@@ -202,7 +202,16 @@ sub load_robots {
     my $param = shift;
     my @robots;
 
-    return undef unless (@robots = @{&get_robots_list()});
+    my $robots_list_ref = &get_robots_list();
+    unless (defined $robots_list_ref) {
+        printf STDERR "robots config loading failed.\n";
+        return undef;
+    }else {
+        @robots = @{$robots_list_ref};
+    }
+    unless ($#robots > -1) {
+        return 1;
+    }
     my $exiting = 0;
     foreach my $robot (@robots) {
         my $robot_config_file = "$Conf{'etc'}/$robot/robot.conf";
