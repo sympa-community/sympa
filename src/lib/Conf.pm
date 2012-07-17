@@ -171,7 +171,10 @@ sub load {
         
         &_infer_robot_parameter_values({'config_hash' => \%Conf});
 
-        return undef if ($config_err);
+        if ($config_err) {
+            printf STDERR "Errors while parsing main config file %s\n",$config_file;
+            return undef;
+        }
 
         &_store_source_file_name({'config_hash' => \%Conf,'config_file' => $config_file});
         &_save_config_hash_to_binary({'config_hash' => \%Conf,});
@@ -186,7 +189,10 @@ sub load {
     &_load_robot_secondary_config_files({'config_hash' => \%Conf});
 
     ## Load robot.conf files
-    return undef unless (&load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload})) ;
+    unless (&load_robots({'config_hash' => \%Conf, 'no_db' => $no_db, 'force_reload' => $force_reload})){
+        printf STDERR "Unable to load robots\n";
+        return undef;
+    }
     &_create_robot_like_config_for_main_robot();
     return 1;
 }
