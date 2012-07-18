@@ -1319,9 +1319,9 @@ my %alias = ('reply-to' => 'reply_to',
 			'attrs' => {
 				'order' => 8,
 				'gettext_id' => "extracted attribute",
-				'format' => '\w+',
+				'format' => '\w+(\s*,\s*\w+)',
 				'default' => 'mail',
-				'length' => 15
+				'length' => 50
 			},
 			'select' => {
 				'order' => 9,
@@ -1464,9 +1464,9 @@ my %alias = ('reply-to' => 'reply_to',
 			'attrs2' => {
 				'order' => 15,
 				'gettext_id' => "second-level extracted attribute",
-				'format' => '\w+',
+				'format' => '\w+(\s*,\s*\w+)',
 				'default' => 'mail',
-				'length' => 15
+				'length' => 50
 			},
 			'select2' => {
 				'order' => 16,
@@ -8469,6 +8469,10 @@ sub _include_users_ldap {
     my $ldap_attrs = $source->{'attrs'};
     my $ldap_select = $source->{'select'};
     
+    my ($email_attr, $gecos_attr) = split(/\s*,\s*/, $ldap_attrs);
+    my @ldap_attrs = ($email_attr);
+    push @ldap_attrs, $gecos_attr if($gecos_attr);
+    
     ## LDAP and query handler
     my ($ldaph, $fetch);
 
@@ -8482,7 +8486,7 @@ sub _include_users_ldap {
     &Log::do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $fetch = $source->{'ldap_handler'}->search ( base => "$ldap_suffix",
 			      filter => "$ldap_filter",
-			      attrs => [ "$ldap_attrs" ],
+			      attrs => @ldap_attrs,
 			      scope => "$source->{'scope'}");
     if ($fetch->code()) {
 	&Log::do_log('err','Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
@@ -8497,12 +8501,13 @@ sub _include_users_ldap {
     my %emailsViewed;
 
     while (my $e = $fetch->shift_entry) {
-
-	my $entry = $e->get_value($ldap_attrs, asref => 1);
+	my $emailentry = $e->get_value($email_attr, asref => 1);
+	my $gecosentry = $e->get_value($gecos_attr, asref => 1);
+	$gecosentry = $gecosentry->[0] if(ref($gecosentry) eq 'ARRAY');
 	
 	## Multiple values
-	if (ref($entry) eq 'ARRAY') {
-	    foreach my $email (@{$entry}) {
+	if (ref($emailentry) eq 'ARRAY') {
+	    foreach my $email (@{$emailentry}) {
 		my $cleanmail = &tools::clean_email($email);
 		## Skip badly formed emails
 		unless (&tools::valid_email($email)) {
@@ -8511,19 +8516,19 @@ sub _include_users_ldap {
 		}
 		    
 		next if ($emailsViewed{$cleanmail});
-		push @emails, $cleanmail;
+		push @emails, [$cleanmail, $gecosentry];
 		$emailsViewed{$cleanmail} = 1;
 		last if ($ldap_select eq 'first');
 	    }
 	}else {
-	    my $cleanmail = &tools::clean_email($entry);
+	    my $cleanmail = &tools::clean_email($emailentry);
 	    ## Skip badly formed emails
-	    unless (&tools::valid_email($entry)) {
-		Log::do_log('err', "Skip badly formed email address: '%s'", $entry);
+	    unless (&tools::valid_email($emailentry)) {
+		Log::do_log('err', "Skip badly formed email address: '%s'", $emailentry);
 		next;
 	    }
 	    unless ($emailsViewed{$cleanmail}) {
-		push @emails, $cleanmail;
+		push @emails, [$cleanmail, $gecosentry];
 		$emailsViewed{$cleanmail} = 1;
 	    }
 	}
@@ -8534,7 +8539,8 @@ sub _include_users_ldap {
 	return undef;
     }
     
-    foreach my $email (@emails) {
+    foreach my $emailgecos (@emails) {
+	my ($email, $gecos) = @$emailgecos;
 	next if ($email =~ /^\s*$/);
 
 	$email = &tools::clean_email($email);
@@ -8552,6 +8558,7 @@ sub _include_users_ldap {
 	}
 
 	$u{'email'} = $email;
+	$u{'gecos'} = $gecos if($gecos);
 	$u{'date'} = time;
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
@@ -8596,7 +8603,11 @@ sub _include_users_ldap_2level {
     my $ldap_regex2 = $source->{'regex2'};
     my @sync_errors = ();
     
-    ## LDAP and query handler
+    my ($email_attr, $gecos_attr) = split(/\s*,\s*/, $ldap_attrs2);
+    my @ldap_attrs2 = ($email_attr);
+    push @ldap_attrs2, $gecos_attr if($gecos_attr);
+    
+   ## LDAP and query handler
     my ($ldaph, $fetch);
 
     unless (defined $source && ($ldaph = $source->connect())) {
@@ -8649,7 +8660,7 @@ sub _include_users_ldap_2level {
 	&Log::do_log('debug2', 'Searching on server %s ; suffix %s ; filter %s ; attrs: %s', $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	$fetch = $ldaph->search ( base => "$suffix2",
 				  filter => "$filter2",
-				  attrs => [ "$ldap_attrs2" ],
+				  attrs => @ldap_attrs2,
 				  scope => "$ldap_scope2");
 	if ($fetch->code()) {
 	    &Log::do_log('err','LDAP search (2nd level) failed : %s. Node: %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
@@ -8661,11 +8672,13 @@ sub _include_users_ldap_2level {
 	##  the second level hash's hold the attributes
 	
 	while (my $e = $fetch->shift_entry) {
-	    my $entry = $e->get_value($ldap_attrs2, asref => 1);
+		my $emailentry = $e->get_value($email_attr, asref => 1);
+		my $gecosentry = $e->get_value($gecos_attr, asref => 1);
+		$gecosentry = $gecosentry->[0] if(ref($gecosentry) eq 'ARRAY');
 
 	    ## Multiple values
-	    if (ref($entry) eq 'ARRAY') {
-		foreach my $email (@{$entry}) {
+	    if (ref($emailentry) eq 'ARRAY') {
+		foreach my $email (@{$emailentry}) {
 		    my $cleanmail = &tools::clean_email($email);
 		    ## Skip badly formed emails
 		    unless (&tools::valid_email($email)) {
@@ -8675,20 +8688,20 @@ sub _include_users_ldap_2level {
 
 		    next if (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/));
 		    next if ($emailsViewed{$cleanmail});
-		    push @emails, $cleanmail;
+		    push @emails, [$cleanmail, $gecosentry];
 		    $emailsViewed{$cleanmail} = 1;
 		    last if ($ldap_select2 eq 'first');
 		}
 	    }else {
-		my $cleanmail = &tools::clean_email($entry);
+		my $cleanmail = &tools::clean_email($emailentry);
 		## Skip badly formed emails
-		unless (&tools::valid_email($entry)) {
-			Log::do_log('err', "Skip badly formed email address: '%s'", $entry);
+		unless (&tools::valid_email($emailentry)) {
+			Log::do_log('err', "Skip badly formed email address: '%s'", $emailentry);
 			next;
 		}
 
 		unless( (($ldap_select2 eq 'regex') && ($cleanmail !~ /$ldap_regex2/))||$emailsViewed{$cleanmail}) {
-		    push @emails, $cleanmail;
+		    push @emails, [$cleanmail, $gecosentry];
 		    $emailsViewed{$cleanmail} = 1;
 		}
 	    }
@@ -8700,7 +8713,8 @@ sub _include_users_ldap_2level {
 	return undef;
     }
     
-    foreach my $email (@emails) {
+    foreach my $emailgecos (@emails) {
+	my ($email, $gecos) = @$emailgecos;
 	next if ($email =~ /^\s*$/);
 
 	$email = &tools::clean_email($email);
@@ -8718,6 +8732,7 @@ sub _include_users_ldap_2level {
 	}
 
 	$u{'email'} = $email;
+	$u{'gecos'} = $gecos if($gecos);
 	$u{'date'} = time;
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
@@ -8860,6 +8875,7 @@ sub _include_users_sql {
 
     foreach my $row (@{$array_of_users}) {
 	my $email = $row->[0]; ## only get first field
+	my $gecos = $row->[1]; ## second field (if it exists) is gecos
 	## Empty value
 	next if ($email =~ /^\s*$/);
 
@@ -8885,6 +8901,7 @@ sub _include_users_sql {
 	}
 
 	$u{'email'} = $email;
+	$u{'gecos'} = $gecos if($gecos);
 	$u{'date'} = time;
 	$u{'update_date'} = time;
 	$u{'id'} = join (',', split(',', $u{'id'}), $id);
@@ -12653,7 +12670,7 @@ sub get_lists_db {
 
     my ($l, @lists);
 
-    unless ($sth = &SDM::do_query()) {
+    unless ($sth = &SDM::do_query($statement)) {
 	&Log::do_log('err',"Unable to gather the list of lists from lists table");
 	return undef;
     }	
