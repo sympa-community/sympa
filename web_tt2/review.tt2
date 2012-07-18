@@ -91,6 +91,8 @@
 <input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
 <input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
 <br />
+[%|loc%]Searches are limited to 50 results, except when using a @domain mask.[%END%]
+<br />
 [% IF action == 'search' %]
 [% IF too_many_select %]
 [%|loc%]Selection too wide, can not show selection[%END%]
