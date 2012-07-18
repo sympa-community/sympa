@@ -2693,7 +2693,7 @@ sub save_config {
 	return undef;
     }
 
-    if ($List::use_db) {
+    if ($SDM::use_db) {
         unless (&_update_list_db) {
             &Log::do_log('err', "Unable to update list_table");
         }
@@ -7365,7 +7365,7 @@ sub rename_list_db {
     }
     &Log::do_log('debug', 'List::rename_list_db statement : %s',  $statement_admin );
     
-    if ($List::use_db) {
+    if ($SDM::use_db) {
 	unless (&SDM::do_query("UPDATE list_table SET name_list=%s, robot_list=%s WHERE (name_list=%s AND robot_list=%s)",
 	    &SDM::quote($new_listname),
 	    &SDM::quote($new_robot),
@@ -12660,7 +12660,7 @@ sub get_lists_db {
     my $where = shift || '';
     &Log::do_log('debug2', 'List::get_lists_db(%s)', $where);
 
-    unless ($List::use_db) {
+    unless ($SDM::use_db) {
        &Log::do_log('info', 'Sympa not setup to use DBI');
        return undef;
     }
