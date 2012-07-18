@@ -2427,7 +2427,7 @@ sub set_status_family_closed {
 	    &Log::do_log('err','Impossible to set the list %s in status family_closed');
 	    return undef;
 	}
-	&Log::do_log('err', 'The list "%s" is set in status family_closed',$self->{'name'});
+	&Log::do_log('info', 'The list "%s" is set in status family_closed',$self->{'name'});
 	unless ($self->send_notify_to_owner($message,\@param)){
 	    &Log::do_log('err','Impossible to send notify to owner informing status family_closed for the list %s',$self->{'name'});
 	}
@@ -12720,24 +12720,32 @@ sub _update_list_db
        }
     }
     $ed_txt = join(',',@admins) || '';
-
-    unless ($sth = &SDM::do_query('INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
-			 &SDM::quote($status), &SDM::quote($name),
-			 &SDM::quote($robot), &SDM::quote($subject),
-			 ($web_archive ? 1 : 0), &SDM::quote($topics),
-			 &SDM::quote($adm_txt), &SDM::quote($ed_txt))) {
-
-	unless ($sth = &SDM::do_query('UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
+    
+    my $sth = &SDM::do_query('SELECT name_list FROM list_table WHERE name_list = %s', &SDM::quote($name));
+    if($sth->fetch) {
+		unless(&SDM::do_query('UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
 			     &SDM::quote($status), &SDM::quote($name),
 			     &SDM::quote($robot), &SDM::quote($subject),
 			     ($web_archive ? 1 : 0), &SDM::quote($topics),
 			     &SDM::quote($adm_txt),&SDM::quote($ed_txt),
-			     &SDM::quote($robot), &SDM::quote($name))) {
-	    &Log::do_log('err','Unable to update or insert list %s@%s in database', $name,$robot);
-	    return undef;
-	}	
-    }
-    return 1;
+			     &SDM::quote($robot), &SDM::quote($name)
+		)) {
+			&Log::do_log('err','Unable to update list %s@%s in database', $name,$robot);
+			return undef;
+		}
+	}else{
+		unless(&SDM::do_query('INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
+			 &SDM::quote($status), &SDM::quote($name),
+			 &SDM::quote($robot), &SDM::quote($subject),
+			 ($web_archive ? 1 : 0), &SDM::quote($topics),
+			 &SDM::quote($adm_txt), &SDM::quote($ed_txt)
+		)) {
+			&Log::do_log('err','Unable to insert list %s@%s in database', $name,$robot);
+			return undef;
+		}
+	}
+	
+	return 1;
 }
 
 sub _flush_list_db

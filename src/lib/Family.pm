@@ -46,6 +46,8 @@ use Config_XML;
 use File::Copy;
 use Sympa::Constants;
 
+use Term::ProgressBar;
+
 my %list_of_families;
 my @uncompellable_param = ('msg_topic.keywords','owner_include.source_parameters', 'editor_include.source_parameters');
 
@@ -892,6 +894,19 @@ sub instantiate {
 	return undef;
     }
 
+	my $created = 0;
+	my $total = $#{@{$self->{'list_to_generate'}}} + 1;
+	my $progress = Term::ProgressBar->new({
+		name  => 'Creating lists',
+		count => $total,
+		ETA   => 'linear'
+	});
+	$progress->max_update_rate(1);
+	my $next_update = 0;
+    my $aliasmanager_output_file = $Conf::Conf{'tmpdir'}.'/aliasmanager.stdout.'.$$;
+    my $output_file = $Conf::Conf{'tmpdir'}.'/instantiate_family.stdout.'.$$;
+	my $output = '';
+                                         
     ## EACH FAMILY LIST
     foreach my $listname (@{$self->{'list_to_generate'}}) {
 
@@ -977,8 +992,37 @@ sub instantiate {
 	    &Log::do_log('err','Instantiation stopped on list %s',$list->{'name'});
 	    return undef;
 	}
-
+		$created++;
+		$progress->message(sprintf("List \"%s\" (%i/%i) created/updated", $list->{'name'}, $created, $total));
+		$next_update = $progress->update($created) if($created > $next_update);
+		
+		if(-f $aliasmanager_output_file) {
+			open OUT, $aliasmanager_output_file;
+			while(<OUT>) {
+				$output .= $_;
+			}
+			close OUT;
+			unlink $aliasmanager_output_file; # remove file to catch next call
+		}
     }
+    
+	$progress->update($total);
+	
+	if($output && !$main::options{'quiet'}) {
+		print STDOUT "There is unread output from the instantiation proccess (aliasmanager messages ...), do you want to see it ? (y or n)";
+	    my $answer = <STDIN>;
+	    chomp($answer);
+	    $answer ||= 'n';
+	    print $output if($answer eq 'y');
+	    
+		if(open OUT, '>'.$output_file) {
+			print OUT $output;
+			close OUT;
+			print STDOUT "\nOutput saved in $output_file\n";
+		}else{
+			print STDERR "\nUnable to save output in $output_file\n";
+		}
+	}
 
     ## PREVIOUS LIST LEFT
     foreach my $l (keys %{$previous_family_lists}) {
@@ -1118,7 +1162,7 @@ sub get_instantiation_results {
 	    foreach my $l (keys %{$without_aliases}) {
 		$string .= " $without_aliases->{$l}";
 	    }
-            push(@{$result->{'warn'}}, $string);
+            push(@{$result->{'warn'}}, $string."\n");
 	}
     }
     
@@ -1133,7 +1177,7 @@ sub get_instantiation_results {
 	    foreach my $l (keys %{$aliases_to_install}) {
 		$string .= " $aliases_to_install->{$l}";
 	    }
-            push(@{$result->{'warn'}}, $string);
+            push(@{$result->{'warn'}}, $string."\n");
 	}
     }
     
@@ -1144,7 +1188,7 @@ sub get_instantiation_results {
 	    foreach my $l (keys %{$aliases_to_remove}) {
 		$string .= " $aliases_to_remove->{$l}";
 	    }
-            push(@{$result->{'warn'}}, $string);
+            push(@{$result->{'warn'}}, $string."\n");
 	}
     }
 	    

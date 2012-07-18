@@ -1201,6 +1201,7 @@ sub install_aliases {
 	if ($Conf::Conf{'sendmail_aliases'} =~ /^none$/i);
 
     my $alias_manager = $Conf::Conf{'alias_manager' };
+    my $output_file = $Conf::Conf{'tmpdir'}.'/aliasmanager.stdout.'.$$;
     my $error_output_file = $Conf::Conf{'tmpdir'}.'/aliasmanager.stderr.'.$$;
     &Log::do_log('debug2',"admin::install_aliases : $alias_manager add $list->{'name'} $list->{'admin'}{'host'}");
  
@@ -1208,7 +1209,7 @@ sub install_aliases {
 		&Log::do_log('err','admin::install_aliases : Failed to install aliases: %s', $!);
 		return undef;
 	}
-	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'} 2>  $error_output_file") ;
+	 system ("$alias_manager add $list->{'name'} $list->{'admin'}{'host'} >$output_file 2>  $error_output_file") ;
 	 my $status = $? / 256;
 	 if ($status == 0) {
 	     &Log::do_log('info','admin::install_aliases : Aliases installed successfully') ;
@@ -1241,7 +1242,7 @@ sub install_aliases {
 	 }elsif ($status == 8)  {
 	     &Log::do_log('err','admin::install_aliases : Could not create temporay file, report to httpd error_log: %s', $error_output) ;
 	 }elsif ($status == 13) {
-	     &Log::do_log('err','admin::install_aliases : Some of list aliases already exist: %s', $error_output) ;
+	     &Log::do_log('info','admin::install_aliases : Some of list aliases already exist: %s', $error_output) ;
 	 }elsif ($status == 14) {
 	     &Log::do_log('err','admin::install_aliases : Can not open lock file, report to httpd error_log: %s', $error_output) ;
 	 }elsif ($status == 15) {
