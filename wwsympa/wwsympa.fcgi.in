@@ -292,6 +292,7 @@ my %comm = ('home' => 'do_home',
 	 'get_closed_lists' => 'do_get_closed_lists', 
 	 'get_latest_lists' => 'do_get_latest_lists', 
 	 'get_inactive_lists' => 'do_get_inactive_lists', 
+	 'get_biggest_lists' => 'do_get_biggest_lists', 
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
 	 'edit_config' => 'do_edit_config',
@@ -447,6 +448,7 @@ my %action_args = ('default' => ['list'],
 		'get_closed_lists' => [],
 		'get_latest_lists' => [],
 		'get_inactive_lists' => [],
+		'get_biggest_lists' => [],
 		'search_list' => ['filter'],
 		'shared' => ['list','@path'],
 		'd_read' => ['list','@path'],
@@ -585,6 +587,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'get_closed_lists' => ['param.user.email'],
 		     'get_inactive_lists' => ['param.user.email'],
 		     'get_latest_lists' => ['param.user.email'],
+		     'get_biggest_lists' => ['param.user.email'],
 		     'get_pending_lists' => ['param.user.email'],
 		     'ignoresub' => ['param.list','param.user.email'],
 		     'info' => ['param.list'],
@@ -686,6 +689,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'get_closed_lists' => ['listmaster'],
 			   'get_inactive_lists' => ['listmaster'],
 			   'get_latest_lists' => ['listmaster'],
+			   'get_biggest_lists' => ['listmaster'],
 			   'get_pending_lists' => ['listmaster'],
 			   'ignoresub' => ['owner'],
 			   'install_pending_list' => ['listmaster'],
@@ -779,6 +783,7 @@ my %action_type = ('editfile' => 'admin',
 		'get_closed_lists' => 'serveradmin',
 		'get_inactive_lists' => 'serveradmin',
 		'get_latest_lists' => 'serveradmin',
+		'get_biggest_lists' => 'serveradmin',
 		'ls_templates' => 'serveradmin',
 		'skinedit' => 'serveradmin',
 		'review_family' => 'serveradmin',
@@ -8473,6 +8478,32 @@ sub do_get_inactive_lists {
 
      return 1;
  }
+
+ # get ordered biggest lists
+ sub do_get_biggest_lists {
+	&wwslog('info', 'get_biggest_lists');
+	
+	## Checking families and other virtual hosts.
+	&get_server_details();
+	
+	my @unordered_lists;
+	my $all_lists = &List::get_lists($robot);
+	foreach my $list (@$all_lists) {
+		push @unordered_lists, {
+			'name' => $list->{'name'},
+			'subject' => $list->{'admin'}{'subject'},
+			'creation_date' => $list->{'admin'}{'creation'}{'date_epoch'},
+			'subscribers' => $list->get_total
+		};
+	}
+	
+	foreach my $l (sort {$b->{'subscribers'} <=> $a->{'subscribers'}} @unordered_lists) {
+		$l->{'creation_date'} = gettext_strftime "%d %b %Y", localtime($l->{'creation_date'});
+		push @{$param->{'biggest_lists'}}, $l;
+	}
+	
+	return 1;
+}
 
 ## show a list parameters
 sub do_set_pending_list_request {

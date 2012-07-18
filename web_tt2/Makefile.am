@@ -72,6 +72,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   get_closed_lists.tt2 \
 		   get_inactive_lists.tt2 \
 		   get_latest_lists.tt2 \
+		   get_biggest_lists.tt2 \
 		   get_pending_lists.tt2 \
 		   help_admin.tt2 \
 		   help_arc.tt2 \

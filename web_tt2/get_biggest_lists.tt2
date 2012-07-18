@@ -1,0 +1,27 @@
+<!-- $Id: get_biggest_lists.tt2 5682 2012-07-18 13:37:00Z etiennemelear $ -->
+
+<div class="block">
+<table summary="[%|loc%]Biggests Lists[%END%]" class="table_style">
+ <tr class="color_light">
+   <th><strong>[%|loc%]Creation date[%END%]</strong></th>
+   <th><strong>[%|loc%]Listname[%END%]</strong></th>
+   <th><strong>[%|loc%]Subject[%END%]</strong></th>
+   <th><strong>[%|loc%]Subscribers[%END%]</strong></th>
+ </tr>
+
+[% FOREACH list = biggest_lists %]
+[% IF dark == '1' %]
+  <tr>[% SET dark = 0 %]
+[% ELSE %]
+  <tr class="color0">[% SET dark = 1 %]
+[% END %]
+<td>[% list.creation_date %]</td>
+<td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
+<td>[% list.subject %]</td>
+<td>[% list.subscribers %]</td>
+</tr>
+[% END %]
+</table>
+</div>
+
+<!-- end get_biggest_lists.tt2 -->
