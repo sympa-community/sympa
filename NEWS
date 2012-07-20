@@ -3,6 +3,32 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.24		July 20, 2012
+
+  Features:
+
+	[7486] web_tt2/review.tt2, wwsympa/wwsympa.fcgi.in: [#8318][Submitted
+	by Dominique Fournier] Subscriber search results aren't limited anymore
+	when using a @domain search mask. "similar subscribers" results do not
+	repeat the found subscribers anymore and are limited to 50 results.
+
+	[7485] web_tt2/Makefile.am, web_tt2/get_biggest_lists.tt2,
+	web_tt2/serveradmin.tt2, wwsympa/wwsympa.fcgi.in: [#8338][Submitted by
+	Dominique Marant] Added a "view lists sorted by subscriber count"
+	functionnality to sympa admin.
+
+	[7483] src/lib/List.pm: [#1119][#8403][#8413][#8414][Submitted by
+	Patrick von der Hagen, Renan Manola and Steve Shipway] sql, ldap and
+	ldap2 user inclusions now handles gecos. It uses 2nd returned column
+	for sql and 2nd given attribute for ldap (comma separated).
+
+  Bug fixes:
+
+	[7487] src/lib/Family.pm, src/lib/List.pm, src/lib/admin.pm:
+	[#8116][Submitted by Jean-Hugues Belpois] Added a progressbar to list
+	family instantiation. Fixed dumb list table insert/update workflow that
+	was generating useless errors.
+
 6.2a.23		July 16, 2012
 
   Bug fixes:
