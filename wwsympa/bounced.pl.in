@@ -199,7 +199,8 @@ while (!$end) {
     sleep $Conf{'sleep'};
     
     &List::init_list_cache();
-
+	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
+	
     unless (opendir(DIR, $queue)) {
 	&Log::fatal_err("Can't open dir %s: %m", $queue); ## No return.
     }

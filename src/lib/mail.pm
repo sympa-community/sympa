@@ -115,7 +115,7 @@ sub set_send_spool {
 ####################################################
 sub mail_file {
    
-    my ($filename, $rcpt, $data, $robot) = @_;
+    my ($filename, $rcpt, $data, $robot, $return_message_as_string) = @_;
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
 
@@ -298,6 +298,7 @@ sub mail_file {
     ## Set it in case it was not set
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
     
+    return $message_as_string if($return_message_as_string);
 
     my $message = new Message ({'messageasstring'=>$message_as_string,'noxsympato'=>'noxsympato'});
 

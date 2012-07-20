@@ -258,7 +258,8 @@ while (!$end) {
 
     ## Empty cache of the List.pm module
     &List::init_list_cache();
-
+	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
+	
    ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
 	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});

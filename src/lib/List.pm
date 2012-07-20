@@ -2295,6 +2295,8 @@ use DB_File;
 
 $DB_BTREE->{compare} = \&_compare_addresses;
 
+our %listmaster_messages_stack;
+
 ## Creates an object.
 sub new {
     my($pkg, $name, $robot, $options) = @_;
@@ -3772,7 +3774,11 @@ sub send_global_file {
     }
     
     $data->{'use_bulk'} = 1  unless ($data->{'alarm'}) ; # use verp excepted for alarms. We should make this configurable in order to support Sympa server on a machine without any MTA service
-    unless (&mail::mail_file($filename, $who, $data, $robot)) {
+    
+    my $r = &mail::mail_file($filename, $who, $data, $robot, $options->{'parse_and_return'});
+    return $r if($options->{'parse_and_return'});
+    
+    unless ($r) {
 	&Log::do_log('err',"List::send_global_file, could not send template $filename to $who");
 	return undef;
     }
@@ -4822,117 +4828,162 @@ sub archive_send_last {
 #       
 ###################################################### 
 sub send_notify_to_listmaster {
-
-    my ($operation, $robot, $param) = @_;
-    unless ($operation eq 'logs_failed') {
-	&Log::do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
-    }
-
-    unless ($operation eq 'logs_failed') {
-	unless (defined $operation) {
-	    &Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
-	    return undef;
-	}
-	unless (defined $robot) {
-	    &Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"');
-	    return undef;
-	}
-    }
-    my $host = &Conf::get_robot_conf($robot, 'host');
-    my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
-    my $to = "$Conf::Conf{'listmaster_email'}\@$host";
-    my $options = {}; ## options for send_global_file()    
-
-    if ($operation eq 'logs_failed') {
-	my $data = {'to' => $to,
-		    'type' => $operation,
-		    'auto_submitted' => 'auto-generated',
-		    'alarm' => 1, # bypass bulk
-		};
+	my ($operation, $robot, $data, $checkstack) = @_;
 	
-	for my $i(0..$#{$param}) {
-	    $data->{"param$i"} = $param->[$i];
-	}
-	unless (&send_global_file('listmaster_notification', $listmaster, $robot, $data, $options)) {
-	    return undef;
-	}
-	return 1;
-    }
-
-    if (ref($param) eq 'HASH') {
-
-	$param->{'to'} = $to;
-	$param->{'type'} = $operation;
-	$param->{'auto_submitted'} = 'auto-generated';
-
-	## Prepare list-related data
-	if ($param->{'list'} && ref($param->{'list'}) eq 'List') {
-	  my $list = $param->{'list'};
-	  $param->{'list'} = {'name' => $list->{'name'},
-			      'host' => $list->{'domain'},
-			      'subject' => $list->{'admin'}{'subject'},
-			  };
-	}
-
-	## Automatic action done on bouncing adresses
-	if ($operation eq 'automatic_bounce_management') {
-	    my $list = new List ($param->{'listname'}, $robot);
-	    unless (defined $list) {
-		&Log::do_log('err','Parameter %s is not a valid list', $param->{'listname'});
-		return undef;
-	    }
-	    unless ($list->send_file('listmaster_notification',$listmaster, $robot, $param, $options)) {
-		&Log::do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
-		return undef;
-	    }
-	    
-	}else {		
-	    
-	    ## No DataBase |  DataBase restored
-	    if (($operation eq 'no_db')||($operation eq 'db_restored')) {
-		
-		$param->{'db_name'} = &Conf::get_robot_conf($robot, 'db_name');  
-		$options->{'skip_db'} = 1; ## Skip DB access because DB is not accessible
-		
+	if($checkstack) {
+		foreach my $robot (keys %List::listmaster_messages_stack) {
+			foreach my $operation (keys %{$List::listmaster_messages_stack{$robot}}) {
+				my $first_age = time - $List::listmaster_messages_stack{$robot}{$operation}{'first'};
+				my $last_age = time - $List::listmaster_messages_stack{$robot}{$operation}{'last'};
+				next unless(($last_age > 30) or ($first_age > 60)); # not old enough to send and first not too old
+				next unless($List::listmaster_messages_stack{$robot}{$operation}{'messages'});
 				
-	    ## Loop detected in Sympa
-	    }elsif ($operation eq 'loop_command') {
-		$param->{'boundary'} = '----------=_'.&tools::get_message_id($robot);
-		&tt2::allow_absolute_path();
-	    }
-
-
-	    foreach my $email (split (/\,/, $listmaster)) {	
-		if (($operation eq 'request_list_creation')or($operation eq 'request_list_renaming')) {
-		    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($email,$robot,'get_pending_lists',$param->{'ip'});
+				my %messages = %{$List::listmaster_messages_stack{$robot}{$operation}{'messages'}};
+				&Log::do_log('info', 'got messages about "%s" (%s)', $operation, join(', ', keys %messages));
+				
+				##### bulk send
+				foreach my $email (keys %messages) {
+					my $param = {
+						to => $email,
+						auto_submitted => 'auto-generated',
+						alarm => 1,
+						operation => $operation,
+						notification_messages => $messages{$email},
+						boundary => '----------=_'.&tools::get_message_id($robot)
+					};
+					
+					my $options = {};
+					$options->{'skip_db'} = 1 if(($operation eq 'no_db') || ($operation eq 'db_restored'));
+					
+					&Log::do_log('info', 'send messages to %s', $email);
+					unless(&send_global_file('listmaster_groupednotifications', $email, $robot, $param, $options)) {
+						&Log::do_log('notice',"Unable to send template 'listmaster_notification' to $email") unless($operation eq 'logs_failed');
+						return undef;
+					}
+				}
+			}
+			
+			delete $List::listmaster_messages_stack{$robot};
 		}
-		$param->{'alarm'} = 1;
-		unless (&send_global_file('listmaster_notification', $email, $robot, $param, $options)) {
-		    &Log::do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
-		    return undef;
-		}
-	    }
+		return 1;
 	}
-    
-    }elsif(ref($param) eq 'ARRAY') {
 	
-	my $data = {'to' => $to,
-		    'type' => $operation,
-		    'auto_submitted' => 'auto-generated',
-		    'alarm' => 1
-		    };
-	for my $i(0..$#{$param}) {
-	    $data->{"param$i"} = $param->[$i];
+	my $stack = 0;
+	$List::listmaster_messages_stack{$robot}{$operation}{'first'} = time unless($List::listmaster_messages_stack{$robot}{$operation}{'first'});
+	$List::listmaster_messages_stack{$robot}{$operation}{'counter'}++;
+	$List::listmaster_messages_stack{$robot}{$operation}{'last'} = time;
+	if($List::listmaster_messages_stack{$robot}{$operation}{'counter'} > 3) { # stack if too much messages w/ same code
+		$stack = 1;
 	}
-	unless (&send_global_file('listmaster_notification', $listmaster, $robot, $data, $options)) {
-	    &Log::do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
-	    return undef;
+	
+	unless($operation eq 'logs_failed') {
+		&Log::do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 	}
-    }else {
-	&Log::do_log('err','List::send_notify_to_listmaster(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY', $operation, $robot );
-	return undef;
-    }
-    return 1;
+	
+	unless($operation eq 'logs_failed') {
+		unless(defined $operation) {
+			&Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
+			return undef;
+		}
+		unless (defined $robot) {
+			&Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"');
+			return undef;
+		}
+	}
+	
+	my $host = &Conf::get_robot_conf($robot, 'host');
+	my $listmaster = &Conf::get_robot_conf($robot, 'listmaster');
+	my $to = "$Conf::Conf{'listmaster_email'}\@$host";
+	my $options = {}; ## options for send_global_file()
+	
+	if((ref($data) ne 'HASH') and (ref($data) ne 'ARRAY')) {
+		&Log::do_log('err','List::send_notify_to_listmaster(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY', $operation, $robot ) unless($operation eq 'logs_failed');
+		return undef;
+	}
+	
+	if(ref($data) ne 'HASH') {
+		my $d = {};
+		for my $i(0..$#{$data}) {
+			$d->{"param$i"} = $data->[$i];
+		}
+		$data = $d;
+	}
+	
+	$data->{'to'} = $to;
+	$data->{'type'} = $operation;
+	$data->{'auto_submitted'} = 'auto-generated';
+	$data->{'alarm'} = 1;
+	
+	if($data->{'list'} && ref($data->{'list'}) eq 'List') {
+		my $list = $data->{'list'};
+		$data->{'list'} = {
+			'name' => $list->{'name'},
+			'host' => $list->{'domain'},
+			'subject' => $list->{'admin'}{'subject'},
+		};
+	}
+	
+	my @tosend;
+	
+	if($operation eq 'automatic_bounce_management') {
+		## Automatic action done on bouncing adresses
+		delete $data->{'alarm'};
+		my $list = new List ($data->{'list'}{'name'}, $robot);
+		unless(defined $list) {
+			&Log::do_log('err','Parameter %s is not a valid list', $data->{'list'}{'name'});
+			return undef;
+		}
+		unless($list->send_file('listmaster_notification',$listmaster, $robot, $data, $options)) {
+			&Log::do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster");
+			return undef;
+		}
+		return 1;
+	}
+	
+	if(($operation eq 'no_db') || ($operation eq 'db_restored')) {
+		## No DataBase |  DataBase restored
+		$data->{'db_name'} = &Conf::get_robot_conf($robot, 'db_name');  
+		$options->{'skip_db'} = 1; ## Skip DB access because DB is not accessible
+	}
+	
+	if($operation eq 'loop_command') {
+		## Loop detected in Sympa
+		$data->{'boundary'} = '----------=_'.&tools::get_message_id($robot);
+		&tt2::allow_absolute_path();
+	}
+	
+	if(($operation eq 'request_list_creation') or ($operation eq 'request_list_renaming')) {
+		foreach my $email (split (/\,/, $listmaster)) {
+			my $cdata = &dup_var($data);
+			$cdata->{'one_time_ticket'} = &Auth::create_one_time_ticket($email,$robot,'get_pending_lists',$cdata->{'ip'});
+			push @tosend, {
+				email => $listmaster,
+				data => $cdata
+			};
+		}
+	}else{
+		push @tosend, {
+			email => $listmaster,
+			data => $data
+		};
+	}
+	
+	foreach my $ts (@tosend) {
+		$options->{'parse_and_return'} = 1 if($stack);
+		my $r = &send_global_file('listmaster_notification', $ts->{'email'}, $robot, $ts->{'data'}, $options);
+		if($stack) {
+			&Log::do_log('info', 'stacking message about "%s" for %s (%s)', $operation, $ts->{'email'}, $robot);
+			push @{$List::listmaster_messages_stack{$robot}{$operation}{'messages'}{$ts->{'email'}}}, $r;
+			return 1;
+		}
+		
+		unless($r) {
+			&Log::do_log('notice',"Unable to send template 'listmaster_notification' to $listmaster") unless($operation eq 'logs_failed');
+			return undef;
+		}
+	}
+	
+	return 1;
 }
 
 

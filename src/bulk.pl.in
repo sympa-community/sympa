@@ -169,6 +169,8 @@ $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'
 
 while (!$end) {
     &List::init_list_cache();
+	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
+	
     my $bulk;
     my $message_from_spool ;
 	

@@ -38,6 +38,7 @@ mailtemplate_DATA = authorization_reject.tt2 \
 		    list_created.tt2 \
 		    listeditor_notification.tt2 \
 		    listmaster_notification.tt2 \
+		    listmaster_groupednotifications.tt2 \
 		    listowner_notification.tt2 \
 		    list_rejected.tt2 \
 		    lists.tt2 \
