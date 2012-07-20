@@ -471,15 +471,17 @@ msgstr "Üzenetek száma"
 msgid "Average per day"
 msgstr "Napi átlag"
 
-#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
-#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
+#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_biggest_lists.tt2:6
+#: ../web_tt2/get_inactive_lists.tt2:6 ../web_tt2/get_latest_lists.tt2:6
+#: ../web_tt2/latest_lists.tt2:21
 msgid "Creation date"
 msgstr "Létrehozva"
 
 #: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
-#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
-#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:38 ../web_tt2/review_family.tt2:9
+#: ../web_tt2/get_biggest_lists.tt2:8 ../web_tt2/get_inactive_lists.tt2:9
+#: ../web_tt2/get_latest_lists.tt2:8 ../web_tt2/latest_arc.tt2:20
+#: ../web_tt2/latest_lists.tt2:22 ../web_tt2/modindex.tt2:38
+#: ../web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Tárgy"
 
@@ -496,7 +498,7 @@ msgid "Add subscribers"
 msgstr "Tagok hozzáadása"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:109 ../web_tt2/review.tt2:143
+#: ../web_tt2/review.tt2:111 ../web_tt2/review.tt2:145
 #: ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "értesítés nélkül"
@@ -506,6 +508,7 @@ msgid "List Administration Panel"
 msgstr "Lista adminisztrációs oldal"
 
 #: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
+#: ../web_tt2/get_biggest_lists.tt2:9
 msgid "Subscribers"
 msgstr "Listatagok"
 
@@ -553,7 +556,7 @@ msgid "Privileges"
 msgstr "Jogosultságok"
 
 #: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
-#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:99 ../web_tt2/serveradmin.tt2:109
+#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:99 ../web_tt2/serveradmin.tt2:110
 msgid "Archives"
 msgstr "Archívum"
 
@@ -1498,8 +1501,8 @@ msgstr "Utolsó módosítás"
 #: ../web_tt2/editfile.tt2:38 ../web_tt2/editfile.tt2:43
 #: ../web_tt2/editfile.tt2:44 ../web_tt2/editfile.tt2:48
 #: ../web_tt2/editfile.tt2:49 ../web_tt2/manage_template.tt2:35
-#: ../web_tt2/manage_template.tt2:56 ../web_tt2/serveradmin.tt2:149
-#: ../web_tt2/serveradmin.tt2:162
+#: ../web_tt2/manage_template.tt2:56 ../web_tt2/serveradmin.tt2:150
+#: ../web_tt2/serveradmin.tt2:163
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -1705,7 +1708,7 @@ msgstr "Érték"
 msgid "apply to"
 msgstr "Alkalmaz"
 
-#: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
+#: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:214
 msgid "Set"
 msgstr "Beállít"
 
@@ -2585,6 +2588,17 @@ msgstr ""
 "Egy megerősítő levelet küldtünk erre a címre. A levélben szereplő linkre "
 "kattintva véglegesen leiratkozhat a(z) %1 listáról."
 
+#: ../web_tt2/get_biggest_lists.tt2:4
+#, fuzzy
+msgid "Biggests Lists"
+msgstr "Legújabb listák"
+
+#: ../web_tt2/get_biggest_lists.tt2:7 ../web_tt2/get_inactive_lists.tt2:8
+#: ../web_tt2/get_latest_lists.tt2:7 ../web_tt2/latest_lists.tt2:20
+#: ../web_tt2/review_family.tt2:7
+msgid "Listname"
+msgstr "Lista neve"
+
 #: ../web_tt2/get_closed_lists.tt2:6 ../web_tt2/get_closed_lists.tt2:7
 #: ../web_tt2/serveradmin.tt2:10
 msgid "Closed lists"
@@ -2592,7 +2606,7 @@ msgstr "Bezárt listák"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
-#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:141
+#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:143
 #: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
 #: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
 #: ../web_tt2/subscriber_table.tt2:7
@@ -2623,11 +2637,6 @@ msgstr "Inaktív listák"
 #: ../web_tt2/get_inactive_lists.tt2:7
 msgid "Most recent message"
 msgstr "Legutolsó üzenet"
-
-#: ../web_tt2/get_inactive_lists.tt2:8 ../web_tt2/get_latest_lists.tt2:7
-#: ../web_tt2/latest_lists.tt2:20 ../web_tt2/review_family.tt2:7
-msgid "Listname"
-msgstr "Lista neve"
 
 #: ../web_tt2/get_inactive_lists.tt2:10
 msgid "Number of subscribers"
@@ -2854,7 +2863,7 @@ msgid " The latest lists of this robot"
 msgstr "A robot legfrissebb listái"
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:112
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:114
 msgid "%1 occurrence(s) found"
 msgstr "%1 találat"
 
@@ -2872,7 +2881,7 @@ msgid "Blacklist"
 msgstr "Tiltólista"
 
 #: ../web_tt2/lists.tt2:45 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
-#: ../web_tt2/serveradmin.tt2:123
+#: ../web_tt2/serveradmin.tt2:124
 msgid "Logs"
 msgstr "Naplók"
 
@@ -3204,19 +3213,19 @@ msgstr "Szerkesztői visszautasítás szövege"
 msgid "Lists"
 msgstr "Listák"
 
-#: ../web_tt2/nav.tt2:17 ../web_tt2/serveradmin.tt2:54
+#: ../web_tt2/nav.tt2:17 ../web_tt2/serveradmin.tt2:55
 msgid "Users"
 msgstr "Felhasználók"
 
-#: ../web_tt2/nav.tt2:23 ../web_tt2/serveradmin.tt2:141
+#: ../web_tt2/nav.tt2:23 ../web_tt2/serveradmin.tt2:142
 msgid "Templates"
 msgstr "Sablonok"
 
-#: ../web_tt2/nav.tt2:25 ../web_tt2/serveradmin.tt2:186
+#: ../web_tt2/nav.tt2:25 ../web_tt2/serveradmin.tt2:187
 msgid "Skins, CSS and colors"
 msgstr "Kinézetek, CSS és színek"
 
-#: ../web_tt2/nav.tt2:28 ../web_tt2/serveradmin.tt2:22
+#: ../web_tt2/nav.tt2:28 ../web_tt2/serveradmin.tt2:23
 msgid "Virtual Robots"
 msgstr "Virtuális robotok"
 
@@ -3225,15 +3234,15 @@ msgid "Edit Robot Config"
 msgstr "Robot beállítások szerkesztése"
 
 # nlsref 8,7
-#: ../web_tt2/nav.tt2:34 ../web_tt2/serveradmin.tt2:38
+#: ../web_tt2/nav.tt2:34 ../web_tt2/serveradmin.tt2:39
 msgid "Families"
 msgstr "Családok"
 
-#: ../web_tt2/nav.tt2:37 ../web_tt2/serveradmin.tt2:229
+#: ../web_tt2/nav.tt2:37 ../web_tt2/serveradmin.tt2:230
 msgid "Translating Sympa"
 msgstr "Sympa fordítása"
 
-#: ../web_tt2/nav.tt2:39 ../web_tt2/serveradmin.tt2:239
+#: ../web_tt2/nav.tt2:39 ../web_tt2/serveradmin.tt2:240
 msgid "Submitting a bug, a feature request"
 msgstr "Hibák bejelentése, új funkciók kérése"
 
@@ -3720,7 +3729,7 @@ msgid ""
 "subscribers?"
 msgstr "Tényleg emlékeztetőt akar küldeni %1 tagnak levelezőlista tagságukról?"
 
-#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:27
+#: ../web_tt2/review.tt2:131 ../web_tt2/review.tt2:27
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3731,7 +3740,7 @@ msgstr "Előző oldal"
 msgid "page %1 / %2"
 msgstr "%1.-ik oldal %2 oldalból"
 
-#: ../web_tt2/review.tt2:135 ../web_tt2/review.tt2:33
+#: ../web_tt2/review.tt2:137 ../web_tt2/review.tt2:33
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3741,7 +3750,7 @@ msgstr "Következő oldal"
 msgid "Table which display list bounces"
 msgstr "A visszapattanó listatagokat tartalmazó táblázat"
 
-#: ../web_tt2/review.tt2:151 ../web_tt2/reviewbouncing.tt2:61
+#: ../web_tt2/review.tt2:153 ../web_tt2/reviewbouncing.tt2:61
 #: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/subscriber_table.tt2:12 ../web_tt2/subscriber_table.tt2:15
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
@@ -3772,7 +3781,7 @@ msgstr "Utolsó visszapattanás"
 msgid "no score"
 msgstr "nincs pontszám"
 
-#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:142
+#: ../web_tt2/review.tt2:110 ../web_tt2/review.tt2:144
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "A kijelölt email címek törlése"
@@ -3801,7 +3810,7 @@ msgstr "Listatagságok kezelése"
 msgid "Page size"
 msgstr "Oldal méret"
 
-#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:30
+#: ../web_tt2/review.tt2:134 ../web_tt2/review.tt2:30
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "oldal"
@@ -3848,28 +3857,32 @@ msgstr "Felhasználó keresése:"
 msgid "Search user by email"
 msgstr "Felhasználó keresése:"
 
-#: ../web_tt2/review.tt2:96
+#: ../web_tt2/review.tt2:94
+msgid "Searches are limited to 50 results, except when using a @domain mask."
+msgstr ""
+
+#: ../web_tt2/review.tt2:98
 msgid "Selection too wide, can not show selection"
 msgstr "Túl sokat jelölt ki, nem tudom megjeleníteni."
 
 #. (similar_subscribers_occurence)
-#: ../web_tt2/review.tt2:120
+#: ../web_tt2/review.tt2:122
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr "Hasonló email cím(ek) (%1)"
 
-#: ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:142
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Tényleg le akar iratkozni az ÖSSZES kiválasztott listáról?"
 
-#: ../web_tt2/review.tt2:148
+#: ../web_tt2/review.tt2:150
 msgid "Excluded users"
 msgstr "Kizárt felhasználók"
 
-#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:13
+#: ../web_tt2/review.tt2:151 ../web_tt2/show_exclude.tt2:13
 msgid "List of exclude"
 msgstr "Lizárt felhasználók listázása"
 
-#: ../web_tt2/review.tt2:152 ../web_tt2/show_exclude.tt2:16
+#: ../web_tt2/review.tt2:154 ../web_tt2/show_exclude.tt2:16
 msgid "Since"
 msgstr "Kizárás dátuma"
 
@@ -4117,52 +4130,57 @@ msgstr "Listák sorbarendezése létrehozás dátuma alapján"
 msgid "Lists sorted by last message date"
 msgstr "Listák sorbarendezése utolsó üzenet szerint"
 
-#: ../web_tt2/serveradmin.tt2:25
+#: ../web_tt2/serveradmin.tt2:16
+#, fuzzy
+msgid "Lists sorted by subscriber count"
+msgstr "Listák sorbarendezése létrehozás dátuma alapján"
+
+#: ../web_tt2/serveradmin.tt2:26
 msgid "The following virtual robots are running on this server:"
 msgstr "A következő virtuális robotok érhetők el a szerveren:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Sympa URL:"
 msgstr "Sympa URL:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Mail domain:"
 msgstr "Levelezési domén:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Listmaster(s):"
 msgstr "Listmaster(ek)"
 
-#: ../web_tt2/serveradmin.tt2:30
+#: ../web_tt2/serveradmin.tt2:31
 msgid "No Virtual Robot defined on this server"
 msgstr "A szerveren nincs virtuális robot."
 
-#: ../web_tt2/serveradmin.tt2:46
+#: ../web_tt2/serveradmin.tt2:47
 msgid "Review lists from this family"
 msgstr "A családba tartozó listák áttekintése"
 
-#: ../web_tt2/serveradmin.tt2:60
+#: ../web_tt2/serveradmin.tt2:61
 msgid "Search User"
 msgstr "Felhasználó keresése"
 
-#: ../web_tt2/serveradmin.tt2:69
+#: ../web_tt2/serveradmin.tt2:70
 msgid "Delay for active sessions (minutes)"
 msgstr "Hány perccel ezelőttig tekintsünk egy munkamenetet aktívnak"
 
-#: ../web_tt2/serveradmin.tt2:71
+#: ../web_tt2/serveradmin.tt2:72
 msgid "Show only connected users"
 msgstr "Csak a bejelentkezett felhasználókat mutassuk"
 
 # nlsref 17,1
-#: ../web_tt2/serveradmin.tt2:73
+#: ../web_tt2/serveradmin.tt2:74
 msgid "Show sessions"
 msgstr "A munkamenetek listája"
 
-#: ../web_tt2/serveradmin.tt2:79
+#: ../web_tt2/serveradmin.tt2:80
 msgid "You can change your users email address here:"
 msgstr "A felhasználók email címének megváltoztatása:"
 
-#: ../web_tt2/serveradmin.tt2:81
+#: ../web_tt2/serveradmin.tt2:82
 msgid ""
 "Changing a user's email address will apply the change his memberships but it "
 "will also apply to his ownerships if he is owner of some lists."
@@ -4170,23 +4188,23 @@ msgstr ""
 "Az email cím megváltoztatása frissíti a feliratkozásokat és a tulajdonosi "
 "jogköröket is (ha vannak)."
 
-#: ../web_tt2/serveradmin.tt2:86
+#: ../web_tt2/serveradmin.tt2:87
 msgid "Current user email address: "
 msgstr "A felhasználó jelenlegi email címe:"
 
-#: ../web_tt2/serveradmin.tt2:88
+#: ../web_tt2/serveradmin.tt2:89
 msgid "New user email address: "
 msgstr "A felhasználó új email címe:"
 
-#: ../web_tt2/serveradmin.tt2:90
+#: ../web_tt2/serveradmin.tt2:91
 msgid "Update user memberships"
 msgstr "Az email cím megváltoztatása"
 
-#: ../web_tt2/serveradmin.tt2:95
+#: ../web_tt2/serveradmin.tt2:96
 msgid "Change identity"
 msgstr "Felhasználóváltás"
 
-#: ../web_tt2/serveradmin.tt2:97
+#: ../web_tt2/serveradmin.tt2:98
 msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges. The "
@@ -4196,31 +4214,31 @@ msgstr ""
 "hasznos lehet, ha egy felhasználó segítségre szorul, vagy ellenőrizni kell a "
 "jogosultságát. A felhasználóváltás erre a munkamenetre lesz érvényes."
 
-#: ../web_tt2/serveradmin.tt2:101
+#: ../web_tt2/serveradmin.tt2:102
 msgid "change identity as: "
 msgstr "Felhasználóváltás erre az email címre:"
 
-#: ../web_tt2/serveradmin.tt2:111
+#: ../web_tt2/serveradmin.tt2:112
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "HTML archívum frissítése az \"arctxt\" könyvtár felhasználásával."
 
-#: ../web_tt2/serveradmin.tt2:114
+#: ../web_tt2/serveradmin.tt2:115
 msgid "listname: "
 msgstr "lista neve: "
 
-#: ../web_tt2/serveradmin.tt2:114
+#: ../web_tt2/serveradmin.tt2:115
 msgid "Rebuild archive"
 msgstr "Archívum frissítése"
 
-#: ../web_tt2/serveradmin.tt2:115
+#: ../web_tt2/serveradmin.tt2:116
 msgid "Rebuild all"
 msgstr "Mind frissítése"
 
-#: ../web_tt2/serveradmin.tt2:115
+#: ../web_tt2/serveradmin.tt2:116
 msgid "  May take a lot of CPU time,  be careful!"
 msgstr "  Csak óvatosan,  mivel nagyon gépigényes !"
 
-#: ../web_tt2/serveradmin.tt2:125
+#: ../web_tt2/serveradmin.tt2:126
 msgid ""
 "You can increase the log level specified by configuration only for your "
 "current session. On a production server, this allow to keep logs rather "
@@ -4230,31 +4248,31 @@ msgstr ""
 "éles szerveren ez maximális naplózási szintet tesz lehetőve megfelelően kis "
 "naplóméret mellett."
 
-#: ../web_tt2/serveradmin.tt2:129
+#: ../web_tt2/serveradmin.tt2:130
 msgid "Log level:"
 msgstr "Naplózási szint:"
 
-#: ../web_tt2/serveradmin.tt2:135
+#: ../web_tt2/serveradmin.tt2:136
 msgid "Set log level"
 msgstr "Naplózási szint beállítása"
 
-#: ../web_tt2/serveradmin.tt2:145
+#: ../web_tt2/serveradmin.tt2:146
 msgid "Setting defaults list templates"
 msgstr "A lista alapértelmezett sablonjainak beállítása"
 
-#: ../web_tt2/serveradmin.tt2:158
+#: ../web_tt2/serveradmin.tt2:159
 msgid "Setting site templates"
 msgstr "A rendszer sablonjainak beállítása"
 
-#: ../web_tt2/serveradmin.tt2:166
+#: ../web_tt2/serveradmin.tt2:167
 msgid "view translations"
 msgstr "fordítások mutatása"
 
-#: ../web_tt2/serveradmin.tt2:167
+#: ../web_tt2/serveradmin.tt2:168
 msgid "Customize templates"
 msgstr "Sablonok módosítása"
 
-#: ../web_tt2/serveradmin.tt2:172
+#: ../web_tt2/serveradmin.tt2:173
 msgid ""
 "When customizing Sympa web templates, it is needed to known which variables "
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
@@ -4264,25 +4282,25 @@ msgstr ""
 "tudja a tt2 elemző használni. Ez a gomb a sablon változók megjelenítését "
 "szabályozza:"
 
-#: ../web_tt2/serveradmin.tt2:175
+#: ../web_tt2/serveradmin.tt2:176
 msgid "Unset template vars dump"
 msgstr "Sablon változók elrejtése"
 
 # nlsref 15,18
-#: ../web_tt2/serveradmin.tt2:177
+#: ../web_tt2/serveradmin.tt2:178
 msgid "Set template vars dump"
 msgstr "Sablon változók megjelenítése"
 
-#: ../web_tt2/serveradmin.tt2:188
+#: ../web_tt2/serveradmin.tt2:189
 msgid "Skins administration page"
 msgstr "Kinézet adminisztrációs oldal"
 
-#: ../web_tt2/serveradmin.tt2:192
+#: ../web_tt2/serveradmin.tt2:193
 #, fuzzy
 msgid "View main config"
 msgstr "Lista beállítások szerkesztése"
 
-#: ../web_tt2/serveradmin.tt2:231
+#: ../web_tt2/serveradmin.tt2:232
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service mail messages and web interface). All translations for one language "
@@ -4290,7 +4308,7 @@ msgid ""
 "gettext tools."
 msgstr ""
 
-#: ../web_tt2/serveradmin.tt2:234
+#: ../web_tt2/serveradmin.tt2:235
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language: "
@@ -4298,12 +4316,12 @@ msgstr ""
 "Nézzen rá a fordítás GYIK-re ha szeretné az anyanyelvére lefordítani a Sympa "
 "GUI-t:"
 
-#: ../web_tt2/serveradmin.tt2:241
+#: ../web_tt2/serveradmin.tt2:242
 msgid "You can submit a problem or request a new feature: "
 msgstr "Egy probléma bejelentése vagy új funkció kérése:"
 
 #. (process_id,loop_count,start_time)
-#: ../web_tt2/serveradmin.tt2:249
+#: ../web_tt2/serveradmin.tt2:250
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "Ez a FastCGI folyamat (%1) %3 óta %2 kérést szolgált ki."
 
@@ -5246,7 +5264,7 @@ msgstr "Keresési tartomány:"
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16969
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:17009
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -9048,7 +9066,7 @@ msgstr "%Y. %b. %d   %H.%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10551
+#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10591
 msgid "%A"
 msgstr "%A"
 
@@ -9855,22 +9873,22 @@ msgid ""
 "page"
 msgstr ""
 
-#: ../src/lib/Conf.pm:952
+#: ../src/lib/Conf.pm:967
 msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
 msgstr ""
 
 # nlsref 1,3
-#: ../src/lib/Conf.pm:1368
+#: ../src/lib/Conf.pm:1383
 msgid "Error at line %d: %s\n"
 msgstr "Hiba a(z) %d sorban: %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2598 ../src/lib/Family.pm:395 ../src/lib/Family.pm:672
+#: ../src/lib/Family.pm:2642 ../src/lib/Family.pm:397 ../src/lib/Family.pm:674
 #: ../src/lib/List.pm:2672 ../wwsympa/Auth.pm:435
-#: ../wwsympa/wwsympa.fcgi.in:1185 ../wwsympa/wwsympa.fcgi.in:2787
-#: ../wwsympa/wwsympa.fcgi.in:3061 ../wwsympa/wwsympa.fcgi.in:3074
-#: ../wwsympa/wwsympa.fcgi.in:3195
+#: ../wwsympa/wwsympa.fcgi.in:1190 ../wwsympa/wwsympa.fcgi.in:2792
+#: ../wwsympa/wwsympa.fcgi.in:3066 ../wwsympa/wwsympa.fcgi.in:3079
+#: ../wwsympa/wwsympa.fcgi.in:3200
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%Y. %b. %-d., %H.%M.%S"
 
@@ -10778,19 +10796,19 @@ msgstr "%Y. %b. %-d., %A"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:3836 ../src/lib/List.pm:3837 ../src/lib/List.pm:3841
-#: ../wwsympa/wwsympa.fcgi.in:11749 ../wwsympa/wwsympa.fcgi.in:11818
-#: ../wwsympa/wwsympa.fcgi.in:12020 ../wwsympa/wwsympa.fcgi.in:12367
-#: ../wwsympa/wwsympa.fcgi.in:15753 ../wwsympa/wwsympa.fcgi.in:15760
-#: ../wwsympa/wwsympa.fcgi.in:16496 ../wwsympa/wwsympa.fcgi.in:16546
-#: ../wwsympa/wwsympa.fcgi.in:17334 ../wwsympa/wwsympa.fcgi.in:17335
-#: ../wwsympa/wwsympa.fcgi.in:4477 ../wwsympa/wwsympa.fcgi.in:4530
-#: ../wwsympa/wwsympa.fcgi.in:5107 ../wwsympa/wwsympa.fcgi.in:5108
-#: ../wwsympa/wwsympa.fcgi.in:6664 ../wwsympa/wwsympa.fcgi.in:7800
-#: ../wwsympa/wwsympa.fcgi.in:8417 ../wwsympa/wwsympa.fcgi.in:8464
-#: ../wwsympa/wwsympa.fcgi.in:8466 ../wwsympa/wwsympa.fcgi.in:8992
-#: ../wwsympa/wwsympa.fcgi.in:8993 ../wwsympa/wwsympa.fcgi.in:9027
-#: ../wwsympa/wwsympa.fcgi.in:9028 ../wwsympa/wwsympa.fcgi.in:9207
-#: ../wwsympa/wwsympa.fcgi.in:9208
+#: ../wwsympa/wwsympa.fcgi.in:11789 ../wwsympa/wwsympa.fcgi.in:11858
+#: ../wwsympa/wwsympa.fcgi.in:12060 ../wwsympa/wwsympa.fcgi.in:12407
+#: ../wwsympa/wwsympa.fcgi.in:15793 ../wwsympa/wwsympa.fcgi.in:15800
+#: ../wwsympa/wwsympa.fcgi.in:16536 ../wwsympa/wwsympa.fcgi.in:16586
+#: ../wwsympa/wwsympa.fcgi.in:17374 ../wwsympa/wwsympa.fcgi.in:17375
+#: ../wwsympa/wwsympa.fcgi.in:4482 ../wwsympa/wwsympa.fcgi.in:4537
+#: ../wwsympa/wwsympa.fcgi.in:5121 ../wwsympa/wwsympa.fcgi.in:5122
+#: ../wwsympa/wwsympa.fcgi.in:6678 ../wwsympa/wwsympa.fcgi.in:7814
+#: ../wwsympa/wwsympa.fcgi.in:8431 ../wwsympa/wwsympa.fcgi.in:8478
+#: ../wwsympa/wwsympa.fcgi.in:8480 ../wwsympa/wwsympa.fcgi.in:8510
+#: ../wwsympa/wwsympa.fcgi.in:9032 ../wwsympa/wwsympa.fcgi.in:9033
+#: ../wwsympa/wwsympa.fcgi.in:9067 ../wwsympa/wwsympa.fcgi.in:9068
+#: ../wwsympa/wwsympa.fcgi.in:9247 ../wwsympa/wwsympa.fcgi.in:9248
 msgid "%d %b %Y"
 msgstr "%Y. %b. %-d."
 
@@ -10941,18 +10959,18 @@ msgstr "(ismeretlen dátum)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1186
+#: ../wwsympa/wwsympa.fcgi.in:1191
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 # nlsref 3,1
-#: ../wwsympa/wwsympa.fcgi.in:5002
+#: ../wwsympa/wwsympa.fcgi.in:5016
 #, fuzzy
 msgid "Unable to add user %s in list %s : %s"
 msgstr "A(z) %s könyvtár nem elérhető: %m"
 
 # nlsref 3,1
-#: ../wwsympa/wwsympa.fcgi.in:6389
+#: ../wwsympa/wwsympa.fcgi.in:6403
 #, fuzzy
 msgid "Unable to add users in list %s : %s"
 msgstr "A(z) %s könyvtár nem elérhető: %m"
@@ -10960,57 +10978,57 @@ msgstr "A(z) %s könyvtár nem elérhető: %m"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
-#: ../wwsympa/wwsympa.fcgi.in:12601 ../wwsympa/wwsympa.fcgi.in:12734
-#: ../wwsympa/wwsympa.fcgi.in:15077 ../wwsympa/wwsympa.fcgi.in:8374
+#: ../wwsympa/wwsympa.fcgi.in:12641 ../wwsympa/wwsympa.fcgi.in:12774
+#: ../wwsympa/wwsympa.fcgi.in:15117 ../wwsympa/wwsympa.fcgi.in:8388
 msgid "%d %b %y  %H:%M"
 msgstr "%Y. %b. %-d., %H.%M"
 
 # nlsref 6,18
-#: ../wwsympa/wwsympa.fcgi.in:15935
+#: ../wwsympa/wwsympa.fcgi.in:15975
 #, fuzzy
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "A(z) %s listáról törölték."
 
-#: ../wwsympa/wwsympa.fcgi.in:15937
+#: ../wwsympa/wwsympa.fcgi.in:15977
 #, fuzzy
 msgid "You were successfully unsubscribed from list %s."
 msgstr "Leiratkozását kérte a(z) %1 levelezési listáról."
 
 # nlsref 8,24
-#: ../wwsympa/wwsympa.fcgi.in:15941
+#: ../wwsympa/wwsympa.fcgi.in:15981
 #, fuzzy
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr "Leiratkozási kérelem a(z) %s listán"
 
 # nlsref 8,24
-#: ../wwsympa/wwsympa.fcgi.in:15943
+#: ../wwsympa/wwsympa.fcgi.in:15983
 #, fuzzy
 msgid "Unsubscription from list %s failed."
 msgstr "Leiratkozási kérelem a(z) %s listán"
 
-#: ../wwsympa/wwsympa.fcgi.in:16535
+#: ../wwsympa/wwsympa.fcgi.in:16575
 #, fuzzy
 msgid "Mail sending"
 msgstr "Levelezési domén:"
 
-#: ../wwsympa/wwsympa.fcgi.in:16536
+#: ../wwsympa/wwsympa.fcgi.in:16576
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Feliratkozások"
 
-#: ../wwsympa/wwsympa.fcgi.in:16537
+#: ../wwsympa/wwsympa.fcgi.in:16577
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Leiratkozáshoz:"
 
-#: ../wwsympa/wwsympa.fcgi.in:16538
+#: ../wwsympa/wwsympa.fcgi.in:16578
 msgid "Users deleted by admin"
 msgstr ""
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16914 ../wwsympa/wwsympa.fcgi.in:16915
+#: ../wwsympa/wwsympa.fcgi.in:16954 ../wwsympa/wwsympa.fcgi.in:16955
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%Y-%m-%d-%H-%M-%S"
 

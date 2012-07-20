@@ -465,15 +465,17 @@ msgstr "Kirjade arv"
 msgid "Average per day"
 msgstr "Keskmiselt päevas"
 
-#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_inactive_lists.tt2:6
-#: ../web_tt2/get_latest_lists.tt2:6 ../web_tt2/latest_lists.tt2:21
+#: ../web_tt2/active_lists.tt2:22 ../web_tt2/get_biggest_lists.tt2:6
+#: ../web_tt2/get_inactive_lists.tt2:6 ../web_tt2/get_latest_lists.tt2:6
+#: ../web_tt2/latest_lists.tt2:21
 msgid "Creation date"
 msgstr "Loomisaeg"
 
 #: ../web_tt2/active_lists.tt2:23 ../web_tt2/arcsearch_form.tt2:48
-#: ../web_tt2/get_inactive_lists.tt2:9 ../web_tt2/get_latest_lists.tt2:8
-#: ../web_tt2/latest_arc.tt2:20 ../web_tt2/latest_lists.tt2:22
-#: ../web_tt2/modindex.tt2:38 ../web_tt2/review_family.tt2:9
+#: ../web_tt2/get_biggest_lists.tt2:8 ../web_tt2/get_inactive_lists.tt2:9
+#: ../web_tt2/get_latest_lists.tt2:8 ../web_tt2/latest_arc.tt2:20
+#: ../web_tt2/latest_lists.tt2:22 ../web_tt2/modindex.tt2:38
+#: ../web_tt2/review_family.tt2:9
 msgid "Subject"
 msgstr "Teema"
 
@@ -490,7 +492,7 @@ msgid "Add subscribers"
 msgstr "Lisa tellijaid"
 
 #: ../web_tt2/add_request.tt2:13 ../web_tt2/editsubscriber.tt2:62
-#: ../web_tt2/review.tt2:109 ../web_tt2/review.tt2:143
+#: ../web_tt2/review.tt2:111 ../web_tt2/review.tt2:145
 #: ../web_tt2/reviewbouncing.tt2:127
 msgid "quiet"
 msgstr "teavituseta"
@@ -500,6 +502,7 @@ msgid "List Administration Panel"
 msgstr "Listi haldamine"
 
 #: ../web_tt2/admin_menu.tt2:10 ../web_tt2/admin_menu.tt2:16
+#: ../web_tt2/get_biggest_lists.tt2:9
 msgid "Subscribers"
 msgstr "Tellijad"
 
@@ -547,7 +550,7 @@ msgid "Privileges"
 msgstr "Õigused"
 
 #: ../web_tt2/admin_menu.tt2:151 ../web_tt2/edit_list_request.tt2:14
-#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:99 ../web_tt2/serveradmin.tt2:109
+#: ../web_tt2/nav.tt2:19 ../web_tt2/nav.tt2:99 ../web_tt2/serveradmin.tt2:110
 msgid "Archives"
 msgstr "Arhiivid"
 
@@ -1474,8 +1477,8 @@ msgstr "Viimati uuendatud"
 #: ../web_tt2/editfile.tt2:38 ../web_tt2/editfile.tt2:43
 #: ../web_tt2/editfile.tt2:44 ../web_tt2/editfile.tt2:48
 #: ../web_tt2/editfile.tt2:49 ../web_tt2/manage_template.tt2:35
-#: ../web_tt2/manage_template.tt2:56 ../web_tt2/serveradmin.tt2:149
-#: ../web_tt2/serveradmin.tt2:162
+#: ../web_tt2/manage_template.tt2:56 ../web_tt2/serveradmin.tt2:150
+#: ../web_tt2/serveradmin.tt2:163
 msgid "Edit"
 msgstr "Redigeeri"
 
@@ -1678,7 +1681,7 @@ msgstr "väärtus"
 msgid "apply to"
 msgstr "kohaldatakse"
 
-#: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:213
+#: ../web_tt2/edit_config.tt2:35 ../web_tt2/serveradmin.tt2:214
 msgid "Set"
 msgstr "Sea"
 
@@ -2549,6 +2552,17 @@ msgstr ""
 "Sellel aadressil saadeti kinnituskiri. Klikides viitele selle sees, "
 "lõpetatakse  listi %1 tellimus"
 
+#: ../web_tt2/get_biggest_lists.tt2:4
+#, fuzzy
+msgid "Biggests Lists"
+msgstr "Uusimad listid"
+
+#: ../web_tt2/get_biggest_lists.tt2:7 ../web_tt2/get_inactive_lists.tt2:8
+#: ../web_tt2/get_latest_lists.tt2:7 ../web_tt2/latest_lists.tt2:20
+#: ../web_tt2/review_family.tt2:7
+msgid "Listname"
+msgstr "Listi nimi"
+
 #: ../web_tt2/get_closed_lists.tt2:6 ../web_tt2/get_closed_lists.tt2:7
 #: ../web_tt2/serveradmin.tt2:10
 msgid "Closed lists"
@@ -2556,7 +2570,7 @@ msgstr "Suletud listid"
 
 #: ../src/etc/mhonarc-ressources.tt2:212 ../src/etc/mhonarc-ressources.tt2:328
 #: ../web_tt2/get_closed_lists.tt2:29 ../web_tt2/get_closed_lists.tt2:9
-#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:141
+#: ../web_tt2/modindex.tt2:135 ../web_tt2/review.tt2:143
 #: ../web_tt2/reviewbouncing.tt2:131 ../web_tt2/reviewbouncing.tt2:60
 #: ../web_tt2/subindex.tt2:10 ../web_tt2/subindex.tt2:57
 #: ../web_tt2/subscriber_table.tt2:7
@@ -2587,11 +2601,6 @@ msgstr "Mitteaktiivsed listid"
 #: ../web_tt2/get_inactive_lists.tt2:7
 msgid "Most recent message"
 msgstr "Viimane kiri"
-
-#: ../web_tt2/get_inactive_lists.tt2:8 ../web_tt2/get_latest_lists.tt2:7
-#: ../web_tt2/latest_lists.tt2:20 ../web_tt2/review_family.tt2:7
-msgid "Listname"
-msgstr "Listi nimi"
 
 #: ../web_tt2/get_inactive_lists.tt2:10
 msgid "Number of subscribers"
@@ -2818,7 +2827,7 @@ msgid " The latest lists of this robot"
 msgstr " Viimased listid"
 
 #. (occurrence)
-#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:112
+#: ../web_tt2/lists.tt2:7 ../web_tt2/review.tt2:114
 msgid "%1 occurrence(s) found"
 msgstr "leiti %1 vastavus(t)"
 
@@ -2836,7 +2845,7 @@ msgid "Blacklist"
 msgstr "Must nimekiri"
 
 #: ../web_tt2/lists.tt2:45 ../web_tt2/nav.tt2:21 ../web_tt2/nav.tt2:85
-#: ../web_tt2/serveradmin.tt2:123
+#: ../web_tt2/serveradmin.tt2:124
 msgid "Logs"
 msgstr "Logi"
 
@@ -3149,19 +3158,19 @@ msgstr "Äraütlemiskirjade haldus"
 msgid "Lists"
 msgstr "Listid"
 
-#: ../web_tt2/nav.tt2:17 ../web_tt2/serveradmin.tt2:54
+#: ../web_tt2/nav.tt2:17 ../web_tt2/serveradmin.tt2:55
 msgid "Users"
 msgstr "Kasutajad"
 
-#: ../web_tt2/nav.tt2:23 ../web_tt2/serveradmin.tt2:141
+#: ../web_tt2/nav.tt2:23 ../web_tt2/serveradmin.tt2:142
 msgid "Templates"
 msgstr "Mallid"
 
-#: ../web_tt2/nav.tt2:25 ../web_tt2/serveradmin.tt2:186
+#: ../web_tt2/nav.tt2:25 ../web_tt2/serveradmin.tt2:187
 msgid "Skins, CSS and colors"
 msgstr "Kest, CSS ja värvid"
 
-#: ../web_tt2/nav.tt2:28 ../web_tt2/serveradmin.tt2:22
+#: ../web_tt2/nav.tt2:28 ../web_tt2/serveradmin.tt2:23
 msgid "Virtual Robots"
 msgstr "Virtuaalsed serverid"
 
@@ -3170,15 +3179,15 @@ msgid "Edit Robot Config"
 msgstr "Listserveri seadete muutmine"
 
 # nlsref 8,7
-#: ../web_tt2/nav.tt2:34 ../web_tt2/serveradmin.tt2:38
+#: ../web_tt2/nav.tt2:34 ../web_tt2/serveradmin.tt2:39
 msgid "Families"
 msgstr "Grupid"
 
-#: ../web_tt2/nav.tt2:37 ../web_tt2/serveradmin.tt2:229
+#: ../web_tt2/nav.tt2:37 ../web_tt2/serveradmin.tt2:230
 msgid "Translating Sympa"
 msgstr "Sympa tõlkimine"
 
-#: ../web_tt2/nav.tt2:39 ../web_tt2/serveradmin.tt2:239
+#: ../web_tt2/nav.tt2:39 ../web_tt2/serveradmin.tt2:240
 msgid "Submitting a bug, a feature request"
 msgstr "Teavita vigadest või uute võimaluste soovist"
 
@@ -3660,7 +3669,7 @@ msgid ""
 "subscribers?"
 msgstr "Olete kindel, et soovite saata meeldetuletuse kõigile %1 tellijatele?"
 
-#: ../web_tt2/review.tt2:129 ../web_tt2/review.tt2:27
+#: ../web_tt2/review.tt2:131 ../web_tt2/review.tt2:27
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
 #: ../web_tt2/viewlogs.tt2:31
 msgid "Previous page"
@@ -3671,7 +3680,7 @@ msgstr "Eelmine leht"
 msgid "page %1 / %2"
 msgstr "lk %1 / %2"
 
-#: ../web_tt2/review.tt2:135 ../web_tt2/review.tt2:33
+#: ../web_tt2/review.tt2:137 ../web_tt2/review.tt2:33
 #: ../web_tt2/reviewbouncing.tt2:121 ../web_tt2/reviewbouncing.tt2:50
 #: ../web_tt2/viewlogs.tt2:37
 msgid "Next page"
@@ -3681,7 +3690,7 @@ msgstr "Järgmine leht"
 msgid "Table which display list bounces"
 msgstr "Kohalejõudmate kirjade tabel"
 
-#: ../web_tt2/review.tt2:151 ../web_tt2/reviewbouncing.tt2:61
+#: ../web_tt2/review.tt2:153 ../web_tt2/reviewbouncing.tt2:61
 #: ../web_tt2/show_exclude.tt2:15 ../web_tt2/subindex.tt2:11
 #: ../web_tt2/subscriber_table.tt2:12 ../web_tt2/subscriber_table.tt2:15
 #: ../web_tt2/viewlogs.tt2:54 ../web_tt2/viewlogs.tt2:63
@@ -3712,7 +3721,7 @@ msgstr "Viimane veateade"
 msgid "no score"
 msgstr "kohaletoimetamata kirju pole"
 
-#: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:142
+#: ../web_tt2/review.tt2:110 ../web_tt2/review.tt2:144
 #: ../web_tt2/reviewbouncing.tt2:126
 msgid "Delete selected email addresses"
 msgstr "Valitud aadresside kustutamine"
@@ -3741,7 +3750,7 @@ msgstr "Tellijate haldamine"
 msgid "Page size"
 msgstr "Lehe suurus"
 
-#: ../web_tt2/review.tt2:132 ../web_tt2/review.tt2:30
+#: ../web_tt2/review.tt2:134 ../web_tt2/review.tt2:30
 #: ../web_tt2/viewlogs.tt2:34
 msgid "page"
 msgstr "leht"
@@ -3787,28 +3796,32 @@ msgstr "E-maili järgi otsimine: "
 msgid "Search user by email"
 msgstr "E-maili otsimine"
 
-#: ../web_tt2/review.tt2:96
+#: ../web_tt2/review.tt2:94
+msgid "Searches are limited to 50 results, except when using a @domain mask."
+msgstr ""
+
+#: ../web_tt2/review.tt2:98
 msgid "Selection too wide, can not show selection"
 msgstr "Liiga palju vastuseid, ei saa näidata"
 
 #. (similar_subscribers_occurence)
-#: ../web_tt2/review.tt2:120
+#: ../web_tt2/review.tt2:122
 msgid " Other similar subscriber's email(s) (%1)"
 msgstr " Teised sarnased tellija(te) aadressid (%1)"
 
-#: ../web_tt2/review.tt2:140
+#: ../web_tt2/review.tt2:142
 msgid "Do you really want to unsubscribe ALL selected subscribers?"
 msgstr "Olete kindel, et soovite listist kõrvaldada KÕIK valitud aadressid?"
 
-#: ../web_tt2/review.tt2:148
+#: ../web_tt2/review.tt2:150
 msgid "Excluded users"
 msgstr "Välista kasutajad"
 
-#: ../web_tt2/review.tt2:149 ../web_tt2/show_exclude.tt2:13
+#: ../web_tt2/review.tt2:151 ../web_tt2/show_exclude.tt2:13
 msgid "List of exclude"
 msgstr "Välistused"
 
-#: ../web_tt2/review.tt2:152 ../web_tt2/show_exclude.tt2:16
+#: ../web_tt2/review.tt2:154 ../web_tt2/show_exclude.tt2:16
 msgid "Since"
 msgstr "Alates"
 
@@ -4054,52 +4067,57 @@ msgstr "Listid sorteeritult tegemise aja järgi"
 msgid "Lists sorted by last message date"
 msgstr "Listid sorteeritult viimase kirja aja järgi"
 
-#: ../web_tt2/serveradmin.tt2:25
+#: ../web_tt2/serveradmin.tt2:16
+#, fuzzy
+msgid "Lists sorted by subscriber count"
+msgstr "Listid sorteeritult tegemise aja järgi"
+
+#: ../web_tt2/serveradmin.tt2:26
 msgid "The following virtual robots are running on this server:"
 msgstr "Teie serveris käivad virtuaalsed listserverid:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Sympa URL:"
 msgstr "Sympa aadress:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Mail domain:"
 msgstr "Domeen:"
 
-#: ../web_tt2/serveradmin.tt2:27
+#: ../web_tt2/serveradmin.tt2:28
 msgid "Listmaster(s):"
 msgstr "Listiülem(ad):"
 
-#: ../web_tt2/serveradmin.tt2:30
+#: ../web_tt2/serveradmin.tt2:31
 msgid "No Virtual Robot defined on this server"
 msgstr "Siin serveris ei ole virtuaalseid listservereid"
 
-#: ../web_tt2/serveradmin.tt2:46
+#: ../web_tt2/serveradmin.tt2:47
 msgid "Review lists from this family"
 msgstr "Vaata selle perekonna liste"
 
-#: ../web_tt2/serveradmin.tt2:60
+#: ../web_tt2/serveradmin.tt2:61
 msgid "Search User"
 msgstr "Kasutajate otsimine"
 
-#: ../web_tt2/serveradmin.tt2:69
+#: ../web_tt2/serveradmin.tt2:70
 msgid "Delay for active sessions (minutes)"
 msgstr "Aktiivsete sessioonide viivituse pikkus (minutites)"
 
-#: ../web_tt2/serveradmin.tt2:71
+#: ../web_tt2/serveradmin.tt2:72
 msgid "Show only connected users"
 msgstr "Näita vaid sisse logitud kasutajaid"
 
 # nlsref 17,1
-#: ../web_tt2/serveradmin.tt2:73
+#: ../web_tt2/serveradmin.tt2:74
 msgid "Show sessions"
 msgstr "Sessioonid"
 
-#: ../web_tt2/serveradmin.tt2:79
+#: ../web_tt2/serveradmin.tt2:80
 msgid "You can change your users email address here:"
 msgstr "E-posti aadressi muutmine:"
 
-#: ../web_tt2/serveradmin.tt2:81
+#: ../web_tt2/serveradmin.tt2:82
 msgid ""
 "Changing a user's email address will apply the change his memberships but it "
 "will also apply to his ownerships if he is owner of some lists."
@@ -4107,23 +4125,23 @@ msgstr ""
 "Kasutaja e-posti aadressi muutmine mõjub nii listide tellimise kui ka "
 "listide õiguste kohta."
 
-#: ../web_tt2/serveradmin.tt2:86
+#: ../web_tt2/serveradmin.tt2:87
 msgid "Current user email address: "
 msgstr "Praegune e-posti aadress: "
 
-#: ../web_tt2/serveradmin.tt2:88
+#: ../web_tt2/serveradmin.tt2:89
 msgid "New user email address: "
 msgstr "Uus e-posti aadress: "
 
-#: ../web_tt2/serveradmin.tt2:90
+#: ../web_tt2/serveradmin.tt2:91
 msgid "Update user memberships"
 msgstr "Kasutaja tellimuste uuendamine"
 
-#: ../web_tt2/serveradmin.tt2:95
+#: ../web_tt2/serveradmin.tt2:96
 msgid "Change identity"
 msgstr "Identiteedi muutmine"
 
-#: ../web_tt2/serveradmin.tt2:97
+#: ../web_tt2/serveradmin.tt2:98
 msgid ""
 "As listmaster, you can change your identity and act as someone else. This is "
 "may be usefull when providing assistance or to test users privileges. The "
@@ -4133,31 +4151,31 @@ msgstr ""
 "kasutajana. See võib olla kasulik kasutaja abistamisel või õiguste "
 "testimisel. Uus identiteet on seotud vaid praeguse sessiooniga"
 
-#: ../web_tt2/serveradmin.tt2:101
+#: ../web_tt2/serveradmin.tt2:102
 msgid "change identity as: "
 msgstr "uus identiteet: "
 
-#: ../web_tt2/serveradmin.tt2:111
+#: ../web_tt2/serveradmin.tt2:112
 msgid "Rebuild HTML archives using \"arctxt\" directories as input."
 msgstr "Arhiivide veebiversioonide taasloomine kasutades \"arctxt\" kaustu."
 
-#: ../web_tt2/serveradmin.tt2:114
+#: ../web_tt2/serveradmin.tt2:115
 msgid "listname: "
 msgstr "listi nimi: "
 
-#: ../web_tt2/serveradmin.tt2:114
+#: ../web_tt2/serveradmin.tt2:115
 msgid "Rebuild archive"
 msgstr "Arhiivide taasloomine"
 
-#: ../web_tt2/serveradmin.tt2:115
+#: ../web_tt2/serveradmin.tt2:116
 msgid "Rebuild all"
 msgstr "Taasloo kõik arhiivid"
 
-#: ../web_tt2/serveradmin.tt2:115
+#: ../web_tt2/serveradmin.tt2:116
 msgid "  May take a lot of CPU time,  be careful!"
 msgstr " Ettevaatust, võib tekitada suurt koormust serveri protsessorile!"
 
-#: ../web_tt2/serveradmin.tt2:125
+#: ../web_tt2/serveradmin.tt2:126
 msgid ""
 "You can increase the log level specified by configuration only for your "
 "current session. On a production server, this allow to keep logs rather "
@@ -4167,31 +4185,31 @@ msgstr ""
 "jaoks. See aitab hoida logid väikesed aga samas testida mõnda võimalust "
 "maksimaalse logi tasemel. "
 
-#: ../web_tt2/serveradmin.tt2:129
+#: ../web_tt2/serveradmin.tt2:130
 msgid "Log level:"
 msgstr "Logimise tase:"
 
-#: ../web_tt2/serveradmin.tt2:135
+#: ../web_tt2/serveradmin.tt2:136
 msgid "Set log level"
 msgstr "Sea logimise tase"
 
-#: ../web_tt2/serveradmin.tt2:145
+#: ../web_tt2/serveradmin.tt2:146
 msgid "Setting defaults list templates"
 msgstr "Listimallidele vaikeväärtuste kohandamine"
 
-#: ../web_tt2/serveradmin.tt2:158
+#: ../web_tt2/serveradmin.tt2:159
 msgid "Setting site templates"
 msgstr "Veebimallide kohandamine"
 
-#: ../web_tt2/serveradmin.tt2:166
+#: ../web_tt2/serveradmin.tt2:167
 msgid "view translations"
 msgstr "tõlked"
 
-#: ../web_tt2/serveradmin.tt2:167
+#: ../web_tt2/serveradmin.tt2:168
 msgid "Customize templates"
 msgstr "Mallide kohandamine"
 
-#: ../web_tt2/serveradmin.tt2:172
+#: ../web_tt2/serveradmin.tt2:173
 msgid ""
 "When customizing Sympa web templates, it is needed to known which variables "
 "can be processed by the tt2 parser.This button is for controlling tt2 vars "
@@ -4201,23 +4219,23 @@ msgstr ""
 "töödelda tt2 parser. Nupp on kontrollimaks tt2 muutujate tõmmise tegemise "
 "võimalust:"
 
-#: ../web_tt2/serveradmin.tt2:175
+#: ../web_tt2/serveradmin.tt2:176
 msgid "Unset template vars dump"
 msgstr "Muutujate tõmmise tegemise välja lülitamine"
 
-#: ../web_tt2/serveradmin.tt2:177
+#: ../web_tt2/serveradmin.tt2:178
 msgid "Set template vars dump"
 msgstr "Muutujate tõmmise tegemise sisse lülitamine"
 
-#: ../web_tt2/serveradmin.tt2:188
+#: ../web_tt2/serveradmin.tt2:189
 msgid "Skins administration page"
 msgstr "Kestade haldamine"
 
-#: ../web_tt2/serveradmin.tt2:192
+#: ../web_tt2/serveradmin.tt2:193
 msgid "View main config"
 msgstr "Põhiseaded"
 
-#: ../web_tt2/serveradmin.tt2:231
+#: ../web_tt2/serveradmin.tt2:232
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service mail messages and web interface). All translations for one language "
@@ -4229,7 +4247,7 @@ msgstr ""
 "keele tõlked kogutakse kokku ühte PO faili, mida on võimalik töödelda "
 "sdandardsete GNU gettext programmiga."
 
-#: ../web_tt2/serveradmin.tt2:234
+#: ../web_tt2/serveradmin.tt2:235
 msgid ""
 "Check our translation FAQ if you wish to translate Sympa GUI in your native "
 "language: "
@@ -4237,12 +4255,12 @@ msgstr ""
 "Vaadake meie tõlke KKK, kui tahate tõlkida Sympa kasutajaliidest oma "
 "emakeelde: "
 
-#: ../web_tt2/serveradmin.tt2:241
+#: ../web_tt2/serveradmin.tt2:242
 msgid "You can submit a problem or request a new feature: "
 msgstr "Te võite teatada vigadest või soovitada mõnda uut võimalust: "
 
 #. (process_id,loop_count,start_time)
-#: ../web_tt2/serveradmin.tt2:249
+#: ../web_tt2/serveradmin.tt2:250
 msgid "This FastCGI process (%1) has served %2 pages since %3."
 msgstr "See FastCGI protsess (%1) on täitnud %2 päringut alates %3."
 
@@ -5152,7 +5170,7 @@ msgstr "Perioodi otsing: "
 #. (date_to_formated)
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:16969
+#: ../web_tt2/viewlogs.tt2:113 ../wwsympa/wwsympa.fcgi.in:17009
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -8892,7 +8910,7 @@ msgstr "%d. %b %Y  %H:%M"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10551
+#: ../src/lib/Commands.pm:966 ../wwsympa/wwsympa.fcgi.in:10591
 msgid "%A"
 msgstr "%A"
 
@@ -9695,22 +9713,22 @@ msgid ""
 "page"
 msgstr ""
 
-#: ../src/lib/Conf.pm:952
+#: ../src/lib/Conf.pm:967
 msgid "Conf::load_nrcpt_by_domain(): Error at line %d: %s"
 msgstr ""
 
 # nlsref 1,3
-#: ../src/lib/Conf.pm:1368
+#: ../src/lib/Conf.pm:1383
 msgid "Error at line %d: %s\n"
 msgstr "Viga real %d : %s\n"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../src/lib/Family.pm:2598 ../src/lib/Family.pm:395 ../src/lib/Family.pm:672
+#: ../src/lib/Family.pm:2642 ../src/lib/Family.pm:397 ../src/lib/Family.pm:674
 #: ../src/lib/List.pm:2672 ../wwsympa/Auth.pm:435
-#: ../wwsympa/wwsympa.fcgi.in:1185 ../wwsympa/wwsympa.fcgi.in:2787
-#: ../wwsympa/wwsympa.fcgi.in:3061 ../wwsympa/wwsympa.fcgi.in:3074
-#: ../wwsympa/wwsympa.fcgi.in:3195
+#: ../wwsympa/wwsympa.fcgi.in:1190 ../wwsympa/wwsympa.fcgi.in:2792
+#: ../wwsympa/wwsympa.fcgi.in:3066 ../wwsympa/wwsympa.fcgi.in:3079
+#: ../wwsympa/wwsympa.fcgi.in:3200
 msgid "%d %b %Y at %H:%M:%S"
 msgstr "%d. %b %Y at %H:%M:%S"
 
@@ -10617,19 +10635,19 @@ msgstr "%a, %d. %b %Y"
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../src/lib/List.pm:3836 ../src/lib/List.pm:3837 ../src/lib/List.pm:3841
-#: ../wwsympa/wwsympa.fcgi.in:11749 ../wwsympa/wwsympa.fcgi.in:11818
-#: ../wwsympa/wwsympa.fcgi.in:12020 ../wwsympa/wwsympa.fcgi.in:12367
-#: ../wwsympa/wwsympa.fcgi.in:15753 ../wwsympa/wwsympa.fcgi.in:15760
-#: ../wwsympa/wwsympa.fcgi.in:16496 ../wwsympa/wwsympa.fcgi.in:16546
-#: ../wwsympa/wwsympa.fcgi.in:17334 ../wwsympa/wwsympa.fcgi.in:17335
-#: ../wwsympa/wwsympa.fcgi.in:4477 ../wwsympa/wwsympa.fcgi.in:4530
-#: ../wwsympa/wwsympa.fcgi.in:5107 ../wwsympa/wwsympa.fcgi.in:5108
-#: ../wwsympa/wwsympa.fcgi.in:6664 ../wwsympa/wwsympa.fcgi.in:7800
-#: ../wwsympa/wwsympa.fcgi.in:8417 ../wwsympa/wwsympa.fcgi.in:8464
-#: ../wwsympa/wwsympa.fcgi.in:8466 ../wwsympa/wwsympa.fcgi.in:8992
-#: ../wwsympa/wwsympa.fcgi.in:8993 ../wwsympa/wwsympa.fcgi.in:9027
-#: ../wwsympa/wwsympa.fcgi.in:9028 ../wwsympa/wwsympa.fcgi.in:9207
-#: ../wwsympa/wwsympa.fcgi.in:9208
+#: ../wwsympa/wwsympa.fcgi.in:11789 ../wwsympa/wwsympa.fcgi.in:11858
+#: ../wwsympa/wwsympa.fcgi.in:12060 ../wwsympa/wwsympa.fcgi.in:12407
+#: ../wwsympa/wwsympa.fcgi.in:15793 ../wwsympa/wwsympa.fcgi.in:15800
+#: ../wwsympa/wwsympa.fcgi.in:16536 ../wwsympa/wwsympa.fcgi.in:16586
+#: ../wwsympa/wwsympa.fcgi.in:17374 ../wwsympa/wwsympa.fcgi.in:17375
+#: ../wwsympa/wwsympa.fcgi.in:4482 ../wwsympa/wwsympa.fcgi.in:4537
+#: ../wwsympa/wwsympa.fcgi.in:5121 ../wwsympa/wwsympa.fcgi.in:5122
+#: ../wwsympa/wwsympa.fcgi.in:6678 ../wwsympa/wwsympa.fcgi.in:7814
+#: ../wwsympa/wwsympa.fcgi.in:8431 ../wwsympa/wwsympa.fcgi.in:8478
+#: ../wwsympa/wwsympa.fcgi.in:8480 ../wwsympa/wwsympa.fcgi.in:8510
+#: ../wwsympa/wwsympa.fcgi.in:9032 ../wwsympa/wwsympa.fcgi.in:9033
+#: ../wwsympa/wwsympa.fcgi.in:9067 ../wwsympa/wwsympa.fcgi.in:9068
+#: ../wwsympa/wwsympa.fcgi.in:9247 ../wwsympa/wwsympa.fcgi.in:9248
 msgid "%d %b %Y"
 msgstr "%d. %b %Y"
 
@@ -10776,68 +10794,68 @@ msgstr "(tundamtu kuupäev)"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:1186
+#: ../wwsympa/wwsympa.fcgi.in:1191
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
 # nlsref 3,1
-#: ../wwsympa/wwsympa.fcgi.in:5002
+#: ../wwsympa/wwsympa.fcgi.in:5016
 msgid "Unable to add user %s in list %s : %s"
 msgstr "Ei saa lisada kasutajat %s listi %s: %s"
 
 # nlsref 3,1
-#: ../wwsympa/wwsympa.fcgi.in:6389
+#: ../wwsympa/wwsympa.fcgi.in:6403
 msgid "Unable to add users in list %s : %s"
 msgstr "Ei saa lisada kasutajajaid listi %s: %s"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
 #: ../wwsympa/SympaSession.pm:355 ../wwsympa/SympaSession.pm:356
-#: ../wwsympa/wwsympa.fcgi.in:12601 ../wwsympa/wwsympa.fcgi.in:12734
-#: ../wwsympa/wwsympa.fcgi.in:15077 ../wwsympa/wwsympa.fcgi.in:8374
+#: ../wwsympa/wwsympa.fcgi.in:12641 ../wwsympa/wwsympa.fcgi.in:12774
+#: ../wwsympa/wwsympa.fcgi.in:15117 ../wwsympa/wwsympa.fcgi.in:8388
 msgid "%d %b %y  %H:%M"
 msgstr "%d %b %y  %H:%M"
 
 # nlsref 6,18
-#: ../wwsympa/wwsympa.fcgi.in:15935
+#: ../wwsympa/wwsympa.fcgi.in:15975
 msgid "Your unsubscription request to list %s was sent to the list owner."
 msgstr "Teie taotlus listist %s lahkumiseks saadeti listiomanikule."
 
-#: ../wwsympa/wwsympa.fcgi.in:15937
+#: ../wwsympa/wwsympa.fcgi.in:15977
 msgid "You were successfully unsubscribed from list %s."
 msgstr "Olete edukalt eemaldatud listist %s."
 
 # nlsref 8,24
-#: ../wwsympa/wwsympa.fcgi.in:15941
+#: ../wwsympa/wwsympa.fcgi.in:15981
 msgid ""
 "Unsubscription from list %s denied: Unsubscription from this list is closed."
 msgstr ""
 "Lahkumissoov listist %s keelatud: Lahkumisavalduste vastuvõtt lõpetatud."
 
 # nlsref 8,24
-#: ../wwsympa/wwsympa.fcgi.in:15943
+#: ../wwsympa/wwsympa.fcgi.in:15983
 msgid "Unsubscription from list %s failed."
 msgstr "Eemaldamine listist %s ebaõnnestus."
 
-#: ../wwsympa/wwsympa.fcgi.in:16535
+#: ../wwsympa/wwsympa.fcgi.in:16575
 msgid "Mail sending"
 msgstr "Kirja saatmine"
 
-#: ../wwsympa/wwsympa.fcgi.in:16536
+#: ../wwsympa/wwsympa.fcgi.in:16576
 msgid "Subscription additions"
 msgstr "Liitumise lisanid"
 
-#: ../wwsympa/wwsympa.fcgi.in:16537
+#: ../wwsympa/wwsympa.fcgi.in:16577
 msgid "Unsubscription"
 msgstr "Listist lahkumine"
 
-#: ../wwsympa/wwsympa.fcgi.in:16538
+#: ../wwsympa/wwsympa.fcgi.in:16578
 msgid "Users deleted by admin"
 msgstr "Administraator kustutas kasutajad"
 
 #. This entry is a date/time format
 #. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html
-#: ../wwsympa/wwsympa.fcgi.in:16914 ../wwsympa/wwsympa.fcgi.in:16915
+#: ../wwsympa/wwsympa.fcgi.in:16954 ../wwsympa/wwsympa.fcgi.in:16955
 msgid "%Y-%m-%d-%H-%M-%S"
 msgstr "%d/%m/%Y-%H%:M:%S"
 
