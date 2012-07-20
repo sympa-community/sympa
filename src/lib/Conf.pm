@@ -1433,7 +1433,7 @@ sub _infer_server_specific_parameter_values {
     unless ( (defined $param->{'config_hash'}{'cafile'}) || (defined $param->{'config_hash'}{'capath'} )) {
         $param->{'config_hash'}{'cafile'} = Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
     } 
-      
+    
     unless ($param->{'config_hash'}{'DKIM_feature'} eq 'on'){
         # dkim_signature_apply_ on nothing if DKIM_feature is off
         $param->{'config_hash'}{'dkim_signature_apply_on'} = ['']; # empty array
@@ -1525,26 +1525,6 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'static_content_url'} ||= $Conf{'static_content_url'};
     $param->{'config_hash'}{'static_content_path'} ||= $Conf{'static_content_path'};
 
-    # Hack because multi valued parameters are not available for Sympa 6.1.
-    if (defined $param->{'config_hash'}{'automatic_list_families'}) {
-	my @families = split ';',$param->{'config_hash'}{'automatic_list_families'};
-	my %families_description;
-	foreach my $family_description (@families) {
-	    my %family;
-	    my @family_parameters = split ':',$family_description;
-	    foreach my $family_parameter (@family_parameters) {
-		my @parameter = split '=', $family_parameter;
-		$family{$parameter[0]} = $parameter[1];
-	    }
-	    $family{'escaped_prefix_separator'} = $family{'prefix_separator'};
-	    $family{'escaped_prefix_separator'} =~ s/([+*?.])/\\$1/g;
-	    $family{'escaped_classes_separator'} = $family{'classes_separator'};
-	    $family{'escaped_classes_separator'} =~ s/([+*?.])/\\$1/g;
-	    $families_description{$family{'name'}} = \%family;
-	    $families_description{$family{'name'}}{'description'} = &load_automatic_lists_description(undef,$family{'name'});
-	}
-	$param->{'config_hash'}{'automatic_list_families'} = \%families_description;
-    }
     ## CSS
     my $final_separator = '';
     $final_separator = '/' if ($param->{'config_hash'}{'robot_name'});
@@ -1565,6 +1545,27 @@ sub _infer_robot_parameter_values {
         $url =~ s/^http(s)?:\/\/(.+)$/$2/;
         $Conf{'robot_by_soap_url'}{$url} = $param->{'config_hash'}{'robot_name'};
     }
+    # Hack because multi valued parameters are not available for Sympa 6.1.
+    if (defined $param->{'config_hash'}{'automatic_list_families'}) {
+        my @families = split ';',$param->{'config_hash'}{'automatic_list_families'};
+        my %families_description;
+        foreach my $family_description (@families) {
+            my %family;
+            my @family_parameters = split ':',$family_description;
+            foreach my $family_parameter (@family_parameters) {
+            my @parameter = split '=', $family_parameter;
+            $family{$parameter[0]} = $parameter[1];
+            }
+            $family{'escaped_prefix_separator'} = $family{'prefix_separator'};
+            $family{'escaped_prefix_separator'} =~ s/([+*?.])/\\$1/g;
+            $family{'escaped_classes_separator'} = $family{'classes_separator'};
+            $family{'escaped_classes_separator'} =~ s/([+*?.])/\\$1/g;
+            $families_description{$family{'name'}} = \%family;
+            $families_description{$family{'name'}}{'description'} = &load_automatic_lists_description(undef,$family{'name'});
+        }
+        $param->{'config_hash'}{'automatic_list_families'} = \%families_description;
+    }
+
     &_parse_custom_robot_parameters({'config_hash' => $param->{'config_hash'}});
 }
 
@@ -1657,19 +1658,25 @@ sub _load_single_robot_config{
     my $robot = $param->{'robot'};
     my $robot_conf;
     
-    unless (-r "$Conf{'etc'}/$robot/robot.conf") {
-        printf STDERR "Conf::_load_single_robot_config(): No read access on %s\n", "$Conf{'etc'}/$robot/robot.conf";
-        &List::send_notify_to_listmaster('cannot_access_robot_conf',$Conf{'domain'}, ["No read access on $Conf{'etc'}/$robot/robot.conf. you should change privileges on this file to activate this virtual host. "]);
-        return undef;
-    }
-    my $config_err;
+   my $config_err;
     my $config_file = "$Conf{'etc'}/$robot/robot.conf";
-    if(!$param->{'force_reload'} && &_source_has_not_changed({'config_file' => $config_file})) {
-        ##printf "Conf::_load_single_robot_config(): File %s has not changed since the last cache. Using cache.\n",$config_file;
-        unless ($robot_conf = _load_binary_cache({'config_file' => $config_file.$binary_file_extension})){
-            printf STDERR "Binary config file loading failed. Loading source file '%s'\n",$config_file;
+    my $force_reload = $param->{'force_reload'};
+    if(!$force_reload && &_source_has_not_changed({'config_file' => $config_file})) {
+        $force_reload = 0;
+    }
+    if(!$force_reload) {
+        printf "Conf::_load_single_robot_config(): File %s has not changed since the last cache. Using cache.\n",$config_file;
+        unless (-r $config_file) {
+            printf STDERR "Conf::_load_single_robot_config(): No read access on %s\n", $config_file;
+            &List::send_notify_to_listmaster('cannot_access_robot_conf',$Conf{'domain'}, ["No read access on $config_file. you should change privileges on this file to activate this virtual host. "]);
+            return undef;
         }
-    }else{
+         unless ($robot_conf = _load_binary_cache({'config_file' => $config_file.$binary_file_extension})){
+            printf STDERR "Binary config file loading failed. Loading source file '%s'\n",$config_file;
+            $force_reload = 1;
+        }
+    }
+    if($force_reload){
         if(my $config_loading_result = &_load_config_file_to_hash({'path_to_config_file' => $config_file})) {
             $robot_conf = $config_loading_result->{'config'};
             $config_err = $config_loading_result->{'errors'};
@@ -1877,6 +1884,7 @@ sub _get_config_file_name {
 }
 
 sub _create_robot_like_config_for_main_robot {
+    return if (defined $Conf::Conf{'robots'}{$Conf::Conf{'domain'}});
     my $main_conf_no_robots = &tools::dup_var(\%Conf);
     delete $main_conf_no_robots->{'robots'};
     &_remove_unvalid_robot_entry({'config_hash' => $main_conf_no_robots, 'quiet' => 1 });
