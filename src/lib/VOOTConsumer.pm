@@ -169,7 +169,9 @@ sub isMemberOf {
 	my $data = $self->{'oauth_consumer'}->fetchRessource(url => $self->{'conf'}{'voot.BaseURL'}.'/groups/@me');
 	return undef unless(defined $data);
 	
-	return &_get_groups(decode_json($data));
+	$data = _decode_json($data);
+	return [] unless(defined $data);
+	return &_get_groups($data);
 }
 sub check {
 	my $self = shift;
@@ -221,7 +223,9 @@ sub getGroupMembers {
 	my $data = $self->{'oauth_consumer'}->fetchRessource(url => $self->{'conf'}{'voot.BaseURL'}.'/people/@me/'.$param{'group'});
 	return undef unless(defined $data);
 	
-	return &_get_members(decode_json($data));
+	$data = _decode_json($data);
+	return [] unless(defined $data);
+	return &_get_members($data);
 }
 
 =pod 
@@ -375,7 +379,8 @@ sub _get_config_for {
 	chomp @ctn;
 	close $fh;
 	
-	my $conf = decode_json(join('', @ctn)); # Returns array ref
+	my $conf = _decode_json(join('', @ctn)); # Returns array ref
+	return {} unless(defined $conf);
 	foreach my $item (@$conf) {
 		next unless($item->{'voot.ProviderID'} eq $provider);
 		return $item;
@@ -431,12 +436,54 @@ sub getProviders {
 	chomp @ctn;
 	close $fh;
 	
-	my $conf = decode_json(join('', @ctn)); # Returns array ref
+	my $conf = _decode_json(join('', @ctn)); # Returns array ref
+	return {} unless(defined $conf);
 	foreach my $item (@$conf) {
 		$list->{$item->{'voot.ProviderID'}} = $item->{'voot.ProviderID'};
 	}
 	
 	return $list;
+}
+
+=pod 
+
+=head2 sub _decode_json
+
+Decode a response in JSON format, handling dies, croak and the likes in submodule
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$v>, the JSON as a string.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<string> ref
+
+=item * I<undef>, if something went wrong
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * None
+
+=back 
+
+=cut 
+
+sub _decode_json {
+	my $v;
+	eval { $v = decode_json(shift) };
+	return undef if($@);
+	return $v;
 }
 
 ## Packages must return true.

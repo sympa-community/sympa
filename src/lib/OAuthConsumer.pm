@@ -223,7 +223,7 @@ sub fetchRessource {
 	);
 	
 	unless($res->is_success) {
-		if($res->status == 400 || $res->status == 401) {
+		if($res->code == 400 || $res->code == 401) {
 			my $auth_header = $res->header('WWW-Authenticate');
 			if($auth_header && $auth_header =~ /^OAuth/) {
 				# access token may be expired,

@@ -247,7 +247,7 @@ sub response {
 		$r->{'totalResults'} = $#{$r->{'entry'}} + 1;
 	}
 	
-	return encode_json($r);
+	return _encode_json($r);
 }
 
 =pod 
@@ -389,6 +389,47 @@ sub _subscriber_to_member {
 		emails => [$user->{'email'}],
 		voot_membership_role => $role
 	};
+}
+
+=pod 
+
+=head2 sub _encode_json
+
+Encode a response in JSON format, handling dies, croak and the likes in submodule
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$v>, the variable.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<string> JSON
+
+=item * I<undef>, if something went wrong
+
+=back 
+
+=head3 Calls 
+
+=over 
+
+=item * None
+
+=back 
+
+=cut 
+
+sub _encode_json {
+	my $v;
+	eval { $v = encode_json(shift) };
+	return undef if($@);
+	return $v;
 }
 
 ## Packages must return true.
