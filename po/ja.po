@@ -12,13 +12,13 @@ msgstr ""
 "Project-Id-Version: Sympa-6.1.4, 6.2a.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2002-07-16 17:27+0800\n"
-"PO-Revision-Date: 2012-07-12 16:00+0200\n"
+"PO-Revision-Date: 2012-07-20 04:10+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.1.5\n"
 
@@ -822,16 +822,16 @@ msgstr "自動リスト管理"
 msgid "The automatic lists are based on the $1 family"
 msgstr "$1設定族による自動リスト"
 
+# 仮訳
 #: ../web_tt2/automatic_lists_request.tt2:4
 msgid ""
 "In this form, you will be able to create and / or access lists created on "
 "the basis of parameters you will defined."
-msgstr ""
+msgstr "このフォームで、あらかじめ決めておいたパラメータに基づいてリストを作成したり、そのリストにアクセスしたりできます。"
 
 #: ../web_tt2/automatic_lists_request.tt2:13
-#, fuzzy
 msgid "Go to list"
-msgstr "リストに"
+msgstr "リストへ移動"
 
 #: ../web_tt2/automatic_lists.tt2:3
 msgid "Automatic lists result"
@@ -2521,24 +2521,17 @@ msgstr "すべて登録解除"
 
 #. (signing_off_email,family)
 #: ../web_tt2/family_signoff.tt2:2 ../web_tt2/family_signoff_request2.tt2:2
-#, fuzzy
 msgid "You successfully unsubscribed the address %1 from family %2."
-msgstr ""
-"%2 メーリング リストでのメール アドレス %1 の登録解除をするリンクをクリックし"
-"ましたね。"
+msgstr "%2 設定族のリストから、メール アドレス %1 を登録解除しました。"
 
 #: ../web_tt2/family_signoff_request.tt2:1
-#, fuzzy
 msgid "Global unsubscription request"
-msgstr "読者登録申込はありません"
+msgstr "一括登録解除の申込"
 
 #. (signing_off_email,family)
 #: ../web_tt2/family_signoff_request.tt2:2
-#, fuzzy
 msgid "You clicked a link to unsubscribe the address %1 from family %2."
-msgstr ""
-"%2 メーリング リストでのメール アドレス %1 の登録解除をするリンクをクリックし"
-"ましたね。"
+msgstr "%2 設定族のリストでメール アドレス %1 の登録解除をするリンクをクリックしましたね。"
 
 #. (family)
 #: ../web_tt2/family_signoff_request.tt2:3
@@ -6380,15 +6373,13 @@ msgstr ""
 
 #. (crashed_process)
 #: ../mail_tt2/listmaster_notification.tt2:42
-#, fuzzy
 msgid "Previous process %1 crashed"
-msgstr "前回、プロセスがクラッシュしました"
+msgstr "前回、プロセス %1 がクラッシュしました"
 
 #. (crashed_process,pid)
 #: ../mail_tt2/listmaster_notification.tt2:44
-#, fuzzy
 msgid "Previous process %1 (with pid %2) has died unexpectedly."
-msgstr "前回、プロセスが不意に終了してしまいました。"
+msgstr "前回、プロセス %1 (プロセスID %2) が不意に終了してしまいました。"
 
 #. (crash_date)
 #: ../mail_tt2/listmaster_notification.tt2:45
@@ -10550,9 +10541,8 @@ msgstr ""
 "せん。\n"
 
 #: ../src/lib/mail.pm:940
-#, fuzzy
 msgid "Unable to create a channel in smtpto: %s"
-msgstr "smtpto: %m でチャンネルを生成できません"
+msgstr "smtptoチャンネルを生成できません: %s"
 
 #: ../src/lib/PlainDigest.pm:180
 msgid ""
