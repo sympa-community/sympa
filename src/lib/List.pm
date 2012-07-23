@@ -1319,7 +1319,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'attrs' => {
 				'order' => 8,
 				'gettext_id' => "extracted attribute",
-				'format' => '\w+(\s*,\s*\w+)',
+				'format' => '\w+(\s*,\s*\w+)?',
 				'default' => 'mail',
 				'length' => 50
 			},
@@ -1464,7 +1464,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'attrs2' => {
 				'order' => 15,
 				'gettext_id' => "second-level extracted attribute",
-				'format' => '\w+(\s*,\s*\w+)',
+				'format' => '\w+(\s*,\s*\w+)?',
 				'default' => 'mail',
 				'length' => 50
 			},
