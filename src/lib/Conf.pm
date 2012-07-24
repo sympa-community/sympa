@@ -1531,8 +1531,10 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'css_url'} ||= $param->{'config_hash'}{'static_content_url'}.'/css'.$final_separator.$param->{'config_hash'}{'robot_name'};
     $param->{'config_hash'}{'css_path'} ||= $param->{'config_hash'}{'static_content_path'}.'/css'.$final_separator.$param->{'config_hash'}{'robot_name'};
 
-    $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
-    $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
+    if (defined $param->{'config_hash'}{'email'}) {
+        $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
+        $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
+    }
 
     # split action list for blacklist usage
     foreach my $action (split(/,/, $Conf{'use_blacklist'})) {

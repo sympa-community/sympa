@@ -1285,6 +1285,7 @@ our @params = (
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
         'advice'   => gettext('Better if not in a critical partition'),
+        'vhost'     => '1',
     },
     {
         'name'     => 'archive_default_index',

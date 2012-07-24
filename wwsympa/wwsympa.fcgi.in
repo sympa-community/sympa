@@ -7561,7 +7561,7 @@ sub do_arc {
 	return 'arc_protect'  unless ($session->{'archive_sniffer'} eq 'false') ;
     }
     
-    my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+    my $arc_path = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
     ## Calendar
     unless (opendir ARC, $arc_path) {
 	&report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
@@ -7708,7 +7708,7 @@ sub do_arc {
 	 $nb_arc = $NB_ARC_MAX;
      }       
 
-     my $arc_path = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+     my $arc_path = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
     unless (opendir ARC_DIR, $arc_path) {
 	 &report::reject_report_web('user','empty_archives',{},$param->{'action'},$list);
 	 &wwslog('err','do_latest_arc: no directory %s', $arc_path);
@@ -7880,7 +7880,7 @@ sub get_timelocal_from_date {
 sub do_remove_arc {
     &wwslog('info', 'do_remove_arc : list %s, yyyy %s, mm %s, #message %s', $in{'list'}, $in{'yyyy'}, $in{'month'});
 
-    my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
+    my $arcpath = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
 
     ## Access control
 
@@ -7956,7 +7956,7 @@ sub do_remove_arc {
 	 return undef;
      } 
      ## 
-     my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
+     my $arcpath = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
 
      opendir ARC, "$arcpath/arctxt";
      my $msgfile;
@@ -8037,7 +8037,7 @@ sub do_remove_arc {
 	 return undef;
      } 
      ## 
-     my $arcpath = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
+     my $arcpath = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id().'/'.$in{'yyyy'}.'-'.$in{'month'};
 
      opendir ARC, "$arcpath/arctxt";
      my $msgfile;
@@ -8157,7 +8157,7 @@ sub do_remove_arc {
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch_form', 'web_archive.access'));
 
-     my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+     my $search_base = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
      opendir ARC, "$search_base";
      foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	 if ($dir =~ /^(\d{4})-(\d{2})$/) {
@@ -8182,7 +8182,7 @@ sub do_remove_arc {
      use Marc::Search;
 
      my $search = new Marc::Search;
-     $search->search_base ($wwsconf->{'arc_path'} . '/' . $list->get_list_id());
+     $search->search_base (&Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
      $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
      $search->archive_name ($in{'archive_name'});
 
@@ -8192,7 +8192,7 @@ sub do_remove_arc {
 	$archive_name = POSIX::strftime '%Y-%m', localtime(time)
 	    unless $archive_name =~ /^\d{4}-\d{2}$/;
 	my @directories = ();
-	 my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+	 my $search_base = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
 	 opendir ARC, "$search_base";
 	 foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	     if ($dir =~ /^(\d{4})-(\d{2})$/) {
@@ -8319,7 +8319,7 @@ sub do_remove_arc {
      use Marc::Search;
 
      my $search = new Marc::Search;
-     $search->search_base ($wwsconf->{'arc_path'} . '/' . $list->get_list_id());
+     $search->search_base (&Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
      $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
 
      $search->archive_name ($in{'archive_name'});
@@ -16586,7 +16586,7 @@ sub do_stats {
      &wwslog('info', 'do_stats');
 
      $param->{'shared_size'} = int (($list->get_shared_size + 512)/1024);
-     $param->{'arc_size'} = int (($list->get_arc_size($wwsconf->{'arc_path'}) + 512)/1024);
+     $param->{'arc_size'} = int (($list->get_arc_size(&Conf::get_robot_conf($robot, 'arc_path')) + 512)/1024);
 
     my $stats;
     my @stats_to_display;
@@ -17043,7 +17043,7 @@ sub do_arc_manage {
 	return undef;
     }
     
-    my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+    my $search_base = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
     opendir ARC, "$search_base";
     foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	if ($dir =~ /^(\d{4})-(\d{2})$/) {
@@ -17085,7 +17085,7 @@ sub do_arc_download {
 	    $dir = $1;
 	}
 
-	my $abs_dir = $wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$dir.'/arctxt';
+	my $abs_dir = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id().'/'.$dir.'/arctxt';
 	##check arc directory
 	unless (-d $abs_dir) {
 	    &report::reject_report_web('intern','arc_not_found',{'arc_file' => $dir,
@@ -17185,7 +17185,7 @@ sub do_arc_delete {
   
     
     foreach my $dir (split/\0/, $in{'directories'}) {
-	push(@abs_dirs ,$wwsconf->{'arc_path'}.'/'.$list->get_list_id().'/'.$dir);
+	push(@abs_dirs ,&Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id().'/'.$dir);
     }
 
     unless (tools::remove_dir(@abs_dirs)) {

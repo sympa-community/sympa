@@ -38,6 +38,7 @@ This script must be run along with sympa. It regularly checks the 'outgoing' spo
 =cut 
 
 use lib '--modulesdir--';
+use strict;
 
 use List;
 use Message;
@@ -74,10 +75,10 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-$wwsympa_conf    = Sympa::Constants::WWSCONFIG;
-$sympa_conf_file = Sympa::Constants::CONFIG;
+my $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
+my $sympa_conf_file = Sympa::Constants::CONFIG;
 
-$wwsconf = {};
+my $wwsconf = {};
 
 # Load WWSympa configuration
 unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
@@ -88,23 +89,6 @@ unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
 # Load sympa.conf
 unless (Conf::load($sympa_conf_file)) {
     &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
-}
-
-## Create arc_path if required
-if ($wwsconf->{'arc_path'}) {
-    unless (-d $wwsconf->{'arc_path'}) {
-	printf STDERR "Creating missing %s directory\n", $wwsconf->{'arc_path'};
-	mkdir $wwsconf->{'arc_path'}, 0775;
-	unless (&tools::set_file_rights(file => $wwsconf->{'arc_path'},
-					 user  => Sympa::Constants::USER,
-					 group => Sympa::Constants::GROUP,
-					 mode  => 0775,
-					 ))
-	{
-	    &Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
-	    exit -1;
-	}
-    }
 }
 
 ## Check databse connectivity
@@ -164,9 +148,18 @@ unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa
 ## Sets the UMASK
 umask(oct($Conf{'umask'}));
 
-## Check access to arc_path 
-unless ((-r $wwsconf->{'arc_path'}) && (-w $wwsconf->{'arc_path'})) {
-    &Log::do_log('err', 'Unsufficient access to %s directory', $wwsconf->{'arc_path'});
+foreach my $robot (@{&Conf::get_robots_list()}) {
+    my $arc_dir = &Conf::get_robot_conf($robot,'arc_path');
+    ## Create arc_path if required
+    if ($arc_dir) {
+	unless (&directory_check($arc_dir)) {
+	    &Log::do_log('err','No vailable directory to store archives. Exiting.');
+	    exit -1;
+	}
+    }else{
+	&Log::do_log('err','Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in wwsympa.conf.');
+	exit -1;
+    }
 }
 
 ## Change to list root
@@ -184,16 +177,11 @@ $Language::default_lang = $Conf{'lang'};
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
-$end = 0;
+my $end = 0;
 
 
-$queue = $Conf{'queueoutgoing'};
+my $queue = $Conf{'queueoutgoing'};
 print "queue : $queue\n";
-
-#if (!chdir($queue)) {
-#   &Log::fatal_err("Can't chdir to %s: %m", $queue);
-#   ## Function never returns.
-#}
 
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
@@ -221,16 +209,17 @@ while (!$end) {
 	   my $arclistdir = $1;
 	   my $listadress = $2;
 	   my $yyyymm = $3;
-	   my $arcpath = "$wwsconf->{'arc_path'}/$listadress/$yyyymm";
-
-	   &Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	   ##my $arcpath = "$arcpath/$listadress/$yyyymm";
 	  
 	   my $list;
 	   unless ($list = new List ($listadress)) {
 	       &Log::do_log('err',"remove : unknown list $listadress");
 	       next;
 	   }
+	   my $arcpath = &Conf::get_robot_conf($list->{'domain'},'arc_path')."/$listadress/$yyyymm";
 
+	   &Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	    
 	   &Log::do_log('debug',"remove found : $file for list $yyyymm");
 
 	   unless (open REMOVE, "$queue/$file") {
@@ -321,7 +310,7 @@ while (!$end) {
 	       next;
 	   }
        }else{
-	   my ($yyyy, $mm, $dd, $min, $ss, $adrlist);
+	   my ($yyyy, $mm, $dd, $hh, $min, $ss, $adrlist);
 	   
 	   if ($file =~ /^(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(.*)$/) {
 	       ($yyyy, $mm, $dd, $hh, $min, $ss, $adrlist) = ($1, $2, $3, $4, $5, $6, $7);
@@ -464,6 +453,7 @@ Removes the message having the identifier $msgid from the list named $adrlist.
 sub remove {
     my $adrlist = shift;
     my $msgid = shift;
+    my $robot = shift;
 
     &Log::do_log ('debug2',"remove ($adrlist, $msgid)");
     my $arc ;
@@ -480,13 +470,13 @@ sub remove {
     unless(&Log::db_log({'robot' => $robot,'list' => $adrlist,'action' => 'remove','parameters' => $msgid.','.$adrlist,'target_email' => '','msg_id' => $msgid,'status' => 'succes','error_type' => '','user_email' =>'','client' => $ip,'daemon' => $daemon_name})){
 	&Log::do_log('error','archived::remove: unable to log event');
     }
-  
+    my $arcpath = &Conf::get_robot_conf($robot,'arc_path');
     $arc =~ /^(\d{4})-(\d{2})$/ ;
     my $yyyy = $1 ;
     my $mm = $2 ;
     
     $msgid =~ s/\$/\\\$/g;
-    system "$wwsconf->{'mhonarc'}  -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm -rmm $msgid";
+    system "$wwsconf->{'mhonarc'}  -outdir $arcpath/$adrlist/$yyyy-$mm -rmm $msgid";
 }
 
 =pod 
@@ -557,7 +547,8 @@ sub rebuild {
     my $tag = &get_tag($listname);
 
     my $list = new List($listname, $hostname);
-
+    my $robot = $list->{'domain'};
+    my $arcpath = &Conf::get_robot_conf($robot,'arc_path');
     &Log::do_log('debug',"Rebuilding $adrlist archive ($2)");
 
     my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
@@ -577,7 +568,7 @@ sub rebuild {
 	my $mm = $2 ;
 
 	# remove empty directory
-	my $arcdir = $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm ;
+	my $arcdir = $arcpath.'/'.$adrlist.'/'.$yyyy.'-'.$mm ;
 	my $arctxt = $arcdir.'/arctxt' ;
 	if (opendir (DIR,$arctxt)) {
 	    my @files = (grep(/^\d+$/,(readdir DIR )));
@@ -599,21 +590,21 @@ sub rebuild {
 	}
 
 	## Remove .mhonarc.db
-	unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
+	unlink $arcpath.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/.mhonarc.db';
 	
 	## Remove existing HTML files
-	opendir HTML, "$wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm";
+	opendir HTML, "$arcpath/$adrlist/$yyyy-$mm";
 	
 	## Skip arctxt/ . and ..
 	foreach my $html_file (grep !/^arctxt$|^index$|\.+$/, readdir(HTML)) {
-	    unlink $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
+	    unlink $arcpath.'/'.$adrlist.'/'.$yyyy.'-'.$mm.'/'.$html_file;
 	}	
 	closedir HTML;
 
-	my $arcs_dir = &clean_archive_directory({'arc_root' => $wwsconf->{'arc_path'},'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	my $arcs_dir = &clean_archive_directory({'arc_root' => $arcpath,'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
 	my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if($arcs_dir);
 
-	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $wwsconf->{'arc_path'}/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 
 	&Log::do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
@@ -626,8 +617,8 @@ sub rebuild {
 	
 	## Remove lock if required
 	if ($exitcode == 75) {
-	    &Log::do_log('notice', 'Removing lock directory %s', $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
-	    rmdir $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
+	    &Log::do_log('notice', 'Removing lock directory %s', $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck');
+	    rmdir $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
 
 	    $exitcode= system($cmd);
 	    $exitcode = $exitcode / 256;	    
@@ -639,8 +630,8 @@ sub rebuild {
     }else{
         &Log::do_log('notice',"Rebuilding $adrlist archive completely");
 
-	if (!opendir(DIR, "$wwsconf->{'arc_path'}/$adrlist" )) {
-	    &Log::do_log('err',"unable to open $wwsconf->{'arc_path'}/$adrlist to rebuild archive");
+	if (!opendir(DIR, "$arcpath/$adrlist" )) {
+	    &Log::do_log('err',"unable to open $arcpath/$adrlist to rebuild archive");
 	    return ;
 	}
 	my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));
@@ -651,7 +642,7 @@ sub rebuild {
 	    my $yyyy = $1 ;
 	    my $mm = $2 ;
 
-	    my $arcdir = $wwsconf->{'arc_path'}.'/'.$adrlist.'/'.$yyyy.'-'.$mm;
+	    my $arcdir = $arcpath.'/'.$adrlist.'/'.$yyyy.'-'.$mm;
 
 	    ## Remove .mhonarc.db
 	    unlink $arcdir.'/.mhonarc.db';
@@ -663,8 +654,8 @@ sub rebuild {
 		unlink $arcdir.'/'.$html_file;
 	    }	
 	    closedir HTML;
-	    my $dir_to_rebuild = "$wwsconf->{'arc_path'}/$adrlist/$arc/arctxt";
-	    my $arcs_dir = &clean_archive_directory({'arc_root' => $wwsconf->{'arc_path'},'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	    my $dir_to_rebuild = "$arcpath/$adrlist/$arc/arctxt";
+	    my $arcs_dir = &clean_archive_directory({'arc_root' => $arcpath,'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
 	    if($arcs_dir) {
 		$dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
 	    }
@@ -673,7 +664,7 @@ sub rebuild {
 		&create_idx($arcdir);
 	    }
 
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;
 
@@ -770,10 +761,10 @@ Archives one message into one list archives directory.
 sub mail2arc {
 
     my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
-    my $arcpath = $wwsconf->{'arc_path'};
     my $newfile;
 
     my $list = new List($listname, $hostname);
+    my $arcpath = &Conf::get_robot_conf($list->{'domain'},'arc_path');
 
     unless (defined $list) {
 	&Log::do_log('err', 'Unknown list %s@%s', $listname, $hostname);
@@ -789,7 +780,7 @@ sub mail2arc {
     }    
 
     &Log::do_log('debug',"mail2arc $file for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list->get_list_id());
-    #    chdir($wwsconf->{'arc_path'});
+    #    chdir($arcpath);
 
     if ($wwsconf->{'custom_archiver'}) {
 	`$wwsconf->{'custom_archiver'} --list=$listname\@$hostname --file=$queue/$file`;
@@ -884,7 +875,7 @@ sub mail2arc {
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 	
 	&Log::do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
-	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$wwsconf->{'arc_path'} base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $file_to_archive";
+	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $file_to_archive";
 	
 	&Log::do_log('debug',"System call : $cmd");
 	
@@ -1168,6 +1159,31 @@ sub clean_archived_message{
     return $file_to_archive;
 }
 
+# Checks if directory exists and we have write and read accec to it.
+sub directory_check {
+    my $dir = shift;
+    unless (-d $dir) {
+	printf STDERR "Creating missing %s directory\n", $dir;
+	unless (mkdir $dir, 0775) {
+	    &Log::do_log('err','Unable to create directory %s',$dir);
+	    return undef;
+	}
+	unless (&tools::set_file_rights(file => $dir,
+					 user  => Sympa::Constants::USER,
+					 group => Sympa::Constants::GROUP,
+					 mode  => 0775,
+					 ))
+	{
+	    &Log::do_log('err','Unable to set rights on %s',$dir);
+	    return undef;
+	}
+    }
+    unless ((-r $dir) && (-w $dir)) {
+	&Log::do_log('err', 'Unsufficient access to %s directory', $dir);
+	return undef;
+    }
+    return 1;
+}
 =pod 
 
 =head1 AUTHORS 
