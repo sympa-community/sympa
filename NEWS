@@ -3,6 +3,74 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.25		July 24, 2012
+
+  Features:
+
+	[7511] src/lib/tt2.pm, wwsympa/wwsympa.fcgi.in:  Now WWSympa responds
+	with "404 Not Found" status code, instead of sending notification to
+	listmaster, if any random pages under /sympa/help/ are requested.
+	Added new option 'has_header' for tt2::parse_tt2() to prepend newline
+	to page body so that TT2 parse error can be handled before all HTTP
+	headers have been sent.
+
+	[7501] mail_tt2/Makefile.am,
+	mail_tt2/listmaster_groupednotifications.tt2, src/bulk.pl.in,
+	src/lib/List.pm, src/lib/mail.pm, src/sympa.pl.in,
+	src/task_manager.pl.in, wwsympa/archived.pl.in, wwsympa/bounced.pl.in: 
+	Listmaster notifications can now be grouped.
+	If, for a specific robot, several notifications are issued within a
+	short period
+	of time with the same operation code only the first ones are sent, the
+	next ones
+	are stacked. The stacking ends when no notifications are issued
+	anymore, or when
+	the first one is too old. All the stacked notifications are then sent
+	as attachments
+	of a single message.
+	Internal settings :
+	- Stack if more than 3 notifications with the same operation code are
+	issued
+	for the same robot
+	- Send stacked notifications if no new one satisfying the condition
+	above was
+	received for more than 30 seconds
+	- Send stacked notifications if the oldest one was issued more than 60
+	seconds ago
+
+
+
+  Changes:
+
+*****	[7518] src/lib/Conf.pm, src/lib/confdef.pm, wwsympa/archived.pl.in,
+*****	wwsympa/wwsympa.fcgi.in:  The arc_path wwsympa.conf parameter can now
+*****	be defined at the robot level. If you want to use this feature, follow
+*****	these steps:
+*****	1- stop archived.pl
+*****	2- move the robot archives to the location specified in the arc_path
+*****	robot parameter
+*****	3- restart wwsympa.fcgi
+*****	4- start archived.pl
+
+  Bug fixes:
+
+	[7517] src/lib/Conf.pm:  the wwsympa.conf file was not loaded in
+	Conf.pm, thus disabling the main config defaults for virtaul hosts.
+	fixed by loading this file at the beginning of the module.
+
+	[7510] src/lib/List.pm:  gecos attr name was not optionnal in
+	ldap/ldap2 source config
+
+	[7509] src/lib/Conf.pm, src/lib/confdef.pm:  User firendly automatic
+	lists were not robot-enabled. Fixed.
+
+	[7499] src/lib/OAuthConsumer.pm, src/lib/VOOTConsumer.pm,
+	src/lib/VOOTProvider.pm:  VOOTConsumer didn't getting well formed JSON
+	led to process death due to the use of Carp::croak in JSON::XS module
+	Process could die if JSON::XS module failed to encode responses to JSON
+	in VOOTProvider due to the use of Carp::croak Getting HTTP response's
+	"code" instead of non existing "status" in OAuthConsumer
+
 6.2a.24		July 20, 2012
 
   Features:
