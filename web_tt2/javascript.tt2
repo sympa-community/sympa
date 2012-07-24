@@ -1,8 +1,8 @@
 <!-- $Id$ -->
 
 <!-- DEVELOPMENT WARNING
-Don't add javascript to this file, except if you need to initialize variables using TT2 parsing.
-Use the src/etc/script/js/sympa. file instead to write your scripts. -->
+ //Don't add javascript to this file, except if you need to initialize variables using TT2 parsing.
+ //Use the src/etc/script/js/sympa.js file instead to write your scripts. -->
 
 <script type="text/javascript">
 
@@ -11,7 +11,14 @@ Use the src/etc/script/js/sympa. file instead to write your scripts. -->
 // Miscellaneous vars
 var path_cgi = '[% path_cgi %]/';
 
-// Variables used by the color chooser
+</script>
+
+<script type="text/javascript">
+
+[% IF action=='skinsedit' %]
+
+// A few configuration settings
+>>>>>>> .fusion-droit.r7510
 var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
 var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
 var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';

@@ -22,7 +22,7 @@
 
 package cookielib;
 
-use strict vars;
+use strict "vars";
 
 use Digest::MD5;
 use POSIX;

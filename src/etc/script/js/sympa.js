@@ -199,28 +199,39 @@ function checkbox_check_topic(form,warningId) {
     }
 }
 
+function set_select_value(s, v) {
+	for(var i=0; i<s.options.length; i++) s.options[i].selected = false;
+	for(var i=0; i<s.options.length; i++) if(s.options[i].value == v) {
+		s.options[i].selected = true;
+		return;
+	}
+}
+
 //launch a search by message Id
 function searched_by_msgId(id) {
-	var lgt_type_searched = document.log_form.type_searched.options.length;
-	var length = document.log_form.target_type.options.length;
-	document.log_form.target_type.options[length-2].selected = true;
-	document.log_form.elements["target_searched"].value=id;
-	document.log_form.type_searched.options[lgt_type_searched-1].selected = true;
-	document.log_form.submit();
+	var f = document.forms["log_form"];
+	
+	set_select_value(f.elements["type"], 'all_actions');
+	
+	set_select_value(f.elements["target_type"], 'msg_id');
+	
+	f.elements["target"].value = id;
+	f.submit();
 }
 
 //reset all field in log form.
 function clear_log_form() {
-	var lgt_target_type = document.log_form.target_type.options.length;
-	var lgt_type_searched = document.log_form.type_searched.options.length;
-	document.log_form.target_type.options[lgt_target_type-3].selected = true;
-	document.log_form.elements["target_searched"].value='';
-	document.log_form.elements["date_from"].value='';
-	document.log_form.elements["date_to"].value='';
-	document.log_form.type_searched.options[lgt_type_searched-10].selected = true;
-	var lgt_list_searched = document.log_form.list_searched.options.length;
-	document.log_form.list_searched.options[lgt_list_searched-11].selected = true;
-	document.log_form.elements["ip_searched"].value='';
+	var f = document.forms["log_form"];
+	
+	set_select_value(f.elements["type"], 'all_actions');
+	
+	set_select_value(f.elements["target_type"], 'msg_id');
+	
+	f.elements["target"].value = '';
+
+	f.elements["date_from"].value = '';
+	f.elements["date_to"].value = '';
+	f.elements["ip"].value = '';
 }
 
 //set a form field value to empty string. It uses the value of the field whose id is given

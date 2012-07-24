@@ -68,9 +68,9 @@
     <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
 
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
-      <input type="text" id="date_deb" name="date_debm" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
+      <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
           <label for="date_to">[%|loc%]to:[%END%]</label>
-      <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
+      <input type="text" id="date_to" name="date_to" maxlength="10" size="10" value="[% date_to %]" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" ><noscript><em>[%|loc%]ex: 24-05-2006[%END%]</em></noscript>
       <br />
     <label for="type">[%|loc%]Search by type:[%END%]</label>
       <select id="type" name="type">
@@ -102,20 +102,19 @@
    [% END %]
 
        <label for="submit"></label>
-	 <input  class="MainMenuLinks" id="submit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
+	 <input  class="MainMenuLinks" id="btnsubmit" type="submit" name="action_viewlogs" value="[%|loc%]View[%END%]" />
        &nbsp;&nbsp;
-         <input  class="MainMenuLinks" id="reset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
+         <input  class="MainMenuLinks" id="btnreset" type="button" value="[%|loc%]Reset[%END%]" onclick="javascript:clear_log_form()"/>
 </fieldset>
 </form>
 
 
 
 <em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
+[% IF total_results %]
 <em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
-[% IF rows_nb %]
-  <br />
-  <em>[%|loc(rows_nb)%]%1 results[%END%].</em>
-[% END %]
+<br />
+<em>[%|loc(total_results)%]%1 results[%END%].</em>
 <div id="table_container">
 <table class="listOfItems" summary="logs table">
       <tr>
@@ -241,6 +240,7 @@
       [% END %]
 </table>
 </div>
+[% END %]
 
 </div>
 <!-- end viewlogs.tt2 -->

@@ -678,7 +678,7 @@ sub chk_cmd {
 		return undef;
 	    }
 	    
-	    $Rused_labels->{$args[1]} =1 if ($cmd eq 'next' && ($args[1]));   
+	    $Rused_labels->{$args[1]} = 1 if ($cmd eq 'next' && ($args[1]));   
 	    $Rused_vars->{$args[0]} = 1 if ($var_commands{$cmd});
 	}
     }

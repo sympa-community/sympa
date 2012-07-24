@@ -2340,7 +2340,8 @@ sub new {
     }
 
     my $status ;
-    if ($list_of_lists{$robot}{$name}){
+    ## If list already in memory and not previously purged by another process
+    if ($list_of_lists{$robot}{$name} and -d $list_of_lists{$robot}{$name}{'dir'}){
 	# use the current list in memory and update it
 	$list=$list_of_lists{$robot}{$name};
 	
@@ -3349,16 +3350,22 @@ sub distribute_msg {
 
 	## If subject is tagged, replace it with new tag
 	## Splitting the subject in two parts :
-	##   - what is before the custom subject (probably some "Re:")
-	##   - what is after it : the orginal subject sent to the list.
+	##   - what will be before the custom subject (probably some "Re:")
+	##   - what will be after it : the orginal subject sent to the list.
 	## The custom subject is not kept.
-	my $before_tag = '';
-	my $after_tag = $subject_field;
-	$after_tag =~ s/.*\[$tag_regexp\]\s*//;
-        $after_tag =~ s/\s*$//;
+	my $before_tag;
+	my $after_tag;
+	if ($custom_subject =~ /\S/) {
+	    $subject_field =~ s/\s*\[$tag_regexp\]\s*/ /;
+	}
+	$subject_field =~ s/\s+$//;
 
-        if($subject_field =~ /(.*)\s*\[$tag_regexp\].*/) {
-	    $before_tag = $1;
+	# truncate multiple "Re:" and equivalents.
+	my $re_regexp = tools::get_regexp('re');
+	if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
+	    ($before_tag, $after_tag) = ($1, $'); #'
+	} else {
+	    ($before_tag, $after_tag) = ('', $subject_field);
 	}
 	
  	## Encode subject using initial charset
@@ -12535,6 +12542,17 @@ sub purge {
 	&tools::remove_dir($arc_dir.'/'.$self->get_list_id());
 	&tools::remove_dir($self->get_bounce_dir());
     }
+    
+    ## Clean list table if needed
+    if ($Conf::Conf{'db_list_cache'} eq 'on') {
+		my $statement = sprintf 'DELETE FROM list_table WHERE name_list = %s AND robot_list = %s', $dbh->quote($self->{'name'}), $dbh->quote($self->{'domain'});
+		unless ($dbh->do($statement)) {
+			&do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
+		}
+	}
+    
+    ## Clean memory cache
+    delete $list_of_lists{$self->{'domain'}}{$self->{'name'}};
 
     &tools::remove_dir($self->{'dir'});
 

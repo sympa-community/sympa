@@ -2151,7 +2151,8 @@ sub DoCommand {
     ## Search and process a command in the Subject field
     my $subject_field = $message->{'decoded_subject'};
     $subject_field =~ s/\n//mg; ## multiline subjects
-    $subject_field =~ s/^\s*(Re:)?\s*(.*)\s*$/$2/i;
+    my $re_regexp = tools::get_regexp('re');
+    $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
 
     my $auth_level = 'dkim' if ($message->{'dkim_pass'});
     $auth_level = $is_signed->{'subject'} if ($is_signed->{'subject'}) ;
@@ -2284,7 +2285,7 @@ sub SendDigest{
  	my ($listname, $listrobot) = split /\@/, $listaddress;
  	my $list = new List ($listname, $listrobot);
 	unless ($list) {
-	    &Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename,$listname, $listrobot );
+	    &Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename, $listname, $listrobot);
 	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	    unlink $filename;
 	    return undef;

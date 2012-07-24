@@ -71,6 +71,7 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'time' => $time_regexp,
 	      'time_range' => $time_range_regexp,
 	      'time_ranges' => $time_range_regexp.'(?:\s+'.$time_range_regexp.')*'
+	      're' => '(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re|Rif|SV|VS)\s*:',
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
@@ -3067,7 +3068,7 @@ sub dump_html_var2 {
 	    }    
 	    $html .= '</ul>';
 	}else {
-	    $html .= sprintf "<li>'%s'"."</li>", ref($var);
+	    $html .= sprintf "<li>'%s'</li>", ref($var);
 	}
     }else{
 	if (defined $var) {

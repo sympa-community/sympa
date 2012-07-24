@@ -269,8 +269,8 @@ while (!$end) {
 		      next;
 		   }
 		   my $messagesender = lc($new_message->{'sender'});
-		   
-		   unless ($sender == $messagesender) {
+
+		   unless ($sender eq $messagesender) {
 		       &Log::do_log('err', 'remove command by unauthorized sender');
 		       return undef;
 		   }

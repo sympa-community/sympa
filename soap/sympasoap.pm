@@ -24,7 +24,7 @@ package SOAP::XMLSchema1999::Serializer;
 
 package sympasoap;
 
-use strict vars;
+use strict "vars";
 
 use Exporter;
 use HTTP::Cookies;
@@ -748,10 +748,13 @@ sub add {
     }else {
 	my $u;
 	my $defaults = $list->get_default_user_options();
+	my $u2 = &List::get_user_db($email);
 	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
-	$u->{'gecos'} = $gecos;
+	$u->{'gecos'} = $gecos || $u2->{'gecos'};
 	$u->{'date'} = $u->{'update_date'} = time;
+	$u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
+	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
 
 	$list->add_list_member($u);
 	if (defined $list->{'add_outcome'}{'errors'}) {
@@ -762,13 +765,6 @@ sub add {
 		->faultdetail($error);
 	}
 	$list->delete_subscription_request($email);
-    }
-    
-    if ($List::use_db) {
-	my $u = &List::get_global_user($email);	
-	&List::update_global_user($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
-				       'password' => $u->{'password'} || &tools::tmp_passwd($email)
-				       });
     }
     
     ## Now send the welcome file to the user if it exists and notification is supposed to be sent.

@@ -337,12 +337,11 @@ sub create_list_old{
     my $return = {};
     $return->{'list'} = $list;
 
-    if ($param->{'status'} eq 'open') {
+    if ($list->{'admin'}{'status'} eq 'open') {
 	$return->{'aliases'} = &install_aliases($list,$robot);
-	return $return;
-    }
-
+    }else{
     $return->{'aliases'} = 1;
+    }
 
     ## Synchronize list members if required
     if ($list->has_include_data_sources()) {
@@ -580,10 +579,9 @@ sub create_list{
 
     if ($list->{'admin'}{'status'} eq 'open') {
 	$return->{'aliases'} = &install_aliases($list,$robot);
-	return $return;
-    }
-
+    }else{
     $return->{'aliases'} = 1;
+    }
 
     ## Synchronize list members if required
     if ($list->has_include_data_sources()) {
