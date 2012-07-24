@@ -485,7 +485,7 @@ my %action_args = ('default' => ['list'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
-		'viewlogs' => ['list','first'],
+		'viewlogs' => ['list','page','size','sortby'],
 		'wsdl' => [],
 		'sync_include' => ['list'],
 		'review_family' => ['family_name'],
@@ -8187,16 +8187,24 @@ sub do_remove_arc {
      $search->archive_name ($in{'archive_name'});
 
      unless (defined($in{'directories'})) {
-	 # by default search in current month and in the previous none empty one
+	# by default search in current month and in the previous non-empty one
+	my $archive_name = $in{'archive_name'} || '';
+	$archive_name = POSIX::strftime '%Y-%m', localtime(time)
+	    unless $archive_name =~ /^\d{4}-\d{2}$/;
+	my @directories = ();
 	 my $search_base = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
 	 opendir ARC, "$search_base";
 	 foreach my $dir (sort {$b cmp $a} grep(!/^\./,readdir ARC)) {
 	     if ($dir =~ /^(\d{4})-(\d{2})$/) {
-		 push @{$param->{'yyyymm'}}, $dir;
+		if ($archive_name) {
+		    push @directories, $dir if $dir le $archive_name;
+		    $archive_name = '' if $dir lt $archive_name;
+		}
+		push @{$param->{'yyyymm'}}, $dir;
 	     }
 	 }
 	 closedir ARC;
-	 $in{'directories'} = join "\0",@{$param->{'yyyymm'}} ;
+	 $in{'directories'} = join "\0", @directories;
      }
 
      if (defined($in{'directories'})) {
@@ -16955,95 +16963,77 @@ sub get_protected_email_address {
  ## of there robot or there is real problems with privacy policy and law in such services.
  ## 
 sub do_viewlogs {
-    &wwslog('info', 'do_viewlogs(%d)',$in{'page'});
+	&wwslog('info', 'do_viewlogs(%d)',$in{'page'});
+	
+	$param->{'page'} = int($in{'page'}) || 1;
+	$param->{'size'} = int($in{'size'}) || $wwsconf->{'viewlogs_page_size'};
+	$param->{'sortby'} = $in{'sortby'} || 'email';
+	
+	$param->{'total_results'} = 0;
+	
+	my @date = &Log::get_log_date();
+	$param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[0]);
+	$param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[1]);
+	
+	#display and search parameters preparation
+	my $select = {};
+	
+	$select->{'robot'} = $robot;
+	$select->{'list'} = $param->{'list'};
+	
+	foreach my $p ('target_type','target','date_from','date_to','type','ip') {
+		$param->{$p} = $in{$p};
+		$select->{$p} = $in{$p};
+	}
+	
+	if($in{'target_type'} or $in{'page'} or $in{'size'}) {
+		#sending of search parameters for the query
+		my $line = &Log::get_first_db_log($select); 
+		while(defined $line->{'date'}) {
+			$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($line->{'date'});
+			push @{$param->{'log_entries'}}, $line;
+			$line = &Log::get_next_db_log();
+		}
 
-    my $size = $in{'size'} || $wwsconf->{'viewlogs_page_size'};
-    my $sortby = $in{'sortby'} || 'email';
-    my @date = &Log::get_log_date();
-       
-    $param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[0]);
-    $param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[1]);
-
-    $param->{'total'} = '17';
-    
-    unless ($param->{'total'}) {
-	&report::reject_report_web('user','no_logs',{},$param->{'action'});
-	&wwslog('info','do_viewlogs: no subscriber');
+		#display the number of rows of the query.
+		$param->{'total_results'} = $#{$param->{'log_entries'}} + 1;
+		$param->{'total_results'} = &Log::return_rows_nb() if(&Log::return_rows_nb() != 0);
+		
+		unless($param->{'total_results'}) {
+			&report::reject_report_web('user','no_logs',{},$param->{'action'});
+			&wwslog('info','do_viewlogs: no results');
+			return 1;
+		}
+		
+		$param->{'total_page'} = int($param->{'total_results'} / $param->{'size'});
+		$param->{'total_page'}++ if($param->{'total_results'} % $param->{'size'});
+		
+		if($param->{'page'} > $param->{'total_page'}) {
+			&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
+			# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot,'','out of pages');
+			&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
+			return undef;
+		}
+		
+		my $offset = 0;
+		if($param->{'page'} > 1) {
+			$offset = (($param->{'page'} - 1) * $param->{'size'});
+			$param->{'prev_page'} = $param->{'page'} - 1;
+		}
+		
+		unless(($offset + $param->{'size'}) >= $param->{'total_results'}) {
+			$param->{'next_page'} = $param->{'page'} + 1;
+		}
+		
+		@{$param->{'log_entries'}} = sort { lc $a->{$param->{'sortby'}} cmp lc $b->{$param->{'sortby'}} } @{$param->{'log_entries'}};
+		
+		my $last = $offset + $param->{'size'};
+		$last = $param->{'total_results'} - 1 if($last >= $param->{'total_results'});
+		@{$param->{'log_entries'}} = @{$param->{'log_entries'}}[$offset..$last];
+	}
+	
 	return 1;
-    }
-    
-    ## Owner
-    $param->{'page'} = $in{'page'} || 1;
-    $param->{'total_page'} = int ($param->{'total'} / $size);
-    $param->{'total_page'} ++ if ($param->{'total'} % $size);
-    
-    if ($param->{'page'} > $param->{'total_page'}) {
-	&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-	&web_db_log({'status' => 'error', 'error_type' => 'out of pages'});
-	&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
-	return undef;
-    }
-    
-    my $offset;
-    if ($param->{'page'} > 1) {
-	$offset = (($param->{'page'} - 1) * $size);
-    }else {
-	$offset = 0;
-    }
-    
-    
-    my @lines;
-
-    #display and search parameters preparation
-    my $select = {};
-
-    $select->{'robot'} = $robot;
-    $select->{'list'} = $param->{'list'};
-    
-    foreach my $p ('target_type','target','date_deb','date_fin','type','ip') {
-	$param->{$p} = $in{$p};
-	$select->{$p} = $in{$p};
-    }
-
-    unless ($in{'first'}) {
-	#sending of search parameters for the query
-	my $line = &Log::get_first_db_log($select); 
-	unless (defined $line) {
-	    &report::reject_report_web('intern','db_error',{},$param->{'action'}, $param->{'list'}, $param->{'user'}{'email'}, $robot);
-	    &wwslog('info','do_viewlogs failed to get logs from DB');
-	    return undef;
-	}
-
-	do {
-	    last unless (defined $line->{'date'}); ## Means an empty entry
-	    $line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($line->{'date'});
-	    push @{$param->{'log_entries'}}, $line;	    
-	} while ($line = &Log::get_next_db_log());
-
-
-	#display the number of rows of the query.
-	if (&Log::return_rows_nb() != 0) {
-	    $param->{'rows_nb'} = &Log::return_rows_nb();
-	}else {
-	    $param->{'rows_nb'} = undef;
-	}
-
-	if ($param->{'page'} > 1) {
-	    $param->{'prev_page'} = $param->{'page'} - 1;
-	}
-	
-	unless (($offset + $size) >= $param->{'total'}) {
-	    $param->{'next_page'} = $param->{'page'} + 1;
-	}
-	
-	$param->{'size'} = $size;
-	$param->{'sortby'} = $sortby;
-    }	
-
-
-    return 1;
 }
-
 
 sub do_arc_manage {
     &wwslog('info', "do_arc_manage ($in{'list'})");

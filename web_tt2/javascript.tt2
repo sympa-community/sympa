@@ -18,11 +18,12 @@ var path_cgi = '[% path_cgi %]/';
 [% IF action=='skinsedit' %]
 
 // A few configuration settings
->>>>>>> .fusion-droit.r7510
 var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
 var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
 var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';
 var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
+
+[% END %]
 
 // Variables used by the calendar js.
 var pDefaut = { 
@@ -60,6 +61,7 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 <script type="text/javascript" src="[% static_content_url %]/js/jqplot.CanvasTextRenderer.js"></script>
 <link rel="stylesheet" type="text/css" href="[% static_content_url %]/js/jquery.jqplot.css" />
 <script type="text/javascript" src="[% static_content_url %]/js/sympa.js"></script>
+
 [% IF use_html_editor %]
 <script type="text/javascript" src="[% static_content_url %]/js/[% html_editor_file %]"></script>
 <script type="text/javascript">

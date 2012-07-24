@@ -12549,11 +12549,10 @@ sub purge {
     
     ## Clean list table if needed
     if ($Conf::Conf{'db_list_cache'} eq 'on') {
-		my $statement = sprintf 'DELETE FROM list_table WHERE name_list = %s AND robot_list = %s', $dbh->quote($self->{'name'}), $dbh->quote($self->{'domain'});
-		unless ($dbh->do($statement)) {
-			&do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
-		}
+	unless (&SDM::do_query('DELETE FROM list_table WHERE name_list = %s AND robot_list = %s', &SDM::quote($self->{'name'}), &SDM::quote($self->{'domain'}))) {
+	    &do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
 	}
+    }
     
     ## Clean memory cache
     delete $list_of_lists{$self->{'domain'}}{$self->{'name'}};
