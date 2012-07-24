@@ -110,7 +110,7 @@ my %trusted_applications = ('trusted_application' => {
 my $binary_file_extension = ".bin";
 
 
-my $wwsconf;
+my $wwsconf = &wwslib::load_config(Sympa::Constants::WWSCONFIG);
 our %Conf = ();
 
 ## Loads and parses the configuration file. Reports errors if any.
