@@ -3335,11 +3335,15 @@ sub distribute_msg {
 	## tag_regexp will be used to remove the custom subject if it is already present in the message subject.
 	## Remember that the value of custom_subject can be "dude number [%list.sequence"%]" whereas the actual
 	## subject will contain "dude number 42".
+	my $list_name_escaped = $self->{'name'};
+	$list_name_escaped =~ s/(\W)/\\$1/g;
 	my $tag_regexp = $custom_subject;
-	$tag_regexp =~ s/([\[\]\*\-\(\)\+\{\}\?])/\\$1/g;  ## cleanup, just in case dangerous chars were left
-	$tag_regexp =~ s/\\\[%\S+%\\\]/[^\]]\+/g; ## Replaces variables declarations by "[^\]]+"
+	$tag_regexp =~ s/([^\w\s\x80-\xFF])/\\$1/g;  ## cleanup, just in case dangerous chars were left
+	$tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g; ## Replaces "[%list.sequence%]" by "\d+"
+	$tag_regexp =~ s/\\\[\\\%\s*list\\\.name\s*\\\%\\\]/$list_name_escaped/g; ## Replace "[%list.name%]" by escaped list name
+	$tag_regexp =~ s/\\\[\\\%\s*[^]]+\s*\\\%\\\]/[^]]+/g; ## Replaces variables declarations by "[^\]]+"
 	$tag_regexp =~ s/\s+/\\s+/g; ## Takes spaces into account
-	
+
 	## Add subject tag
 	$message->{'msg'}->head->delete('Subject');
 	my $parsed_tag;

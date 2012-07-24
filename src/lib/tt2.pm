@@ -209,6 +209,7 @@ sub get_error {
 sub parse_tt2 {
     my ($data, $template, $output, $include_path, $options) = @_;
     $include_path ||= [Sympa::Constants::DEFAULTDIR];
+    $options ||= {};
 
     ## Add directories that may have been added
     push @{$include_path}, @other_include_path;
@@ -251,6 +252,13 @@ sub parse_tt2 {
     if ($allow_absolute) {
 	$config->{'ABSOLUTE'} = 1;
 	$allow_absolute = 0;
+    }
+    if ($options->{'has_header'}) { # body is separated by an empty line.
+	if (ref $template) {
+	    $template = \("\n" . $$template);
+	} else {
+	    $template = \"\n[% PROCESS $template %]";
+	}
     }
 
     my $tt2 = Template->new($config) or die "Template error: ".Template->error();

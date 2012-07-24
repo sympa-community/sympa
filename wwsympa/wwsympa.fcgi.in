@@ -2328,7 +2328,7 @@ sub send_html {
 	Language::PopLang();
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
-    print "Content-Type: text/html\n\n";
+    print "Content-Type: text/html\n";
     
     ## Icons
     $param->{'icons_url'} = &Conf::get_robot_conf($robot, 'static_content_url').'/icons';
@@ -2366,12 +2366,22 @@ sub send_html {
 	}
     }
     
-    unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT, $tt2_include_path, {})) {
+    unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT,
+	    $tt2_include_path, { 'has_header' => 1 })) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	$param_copy->{'tt2_error'} = $error;
-	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
-	&tt2::parse_tt2($param_copy,'tt2_error.tt2' , \*STDOUT, $tt2_include_path);
+
+	if ($param->{'action'} eq 'help' and
+	    ref $error and $error->type eq 'file') {
+	    # "Not Found" response for random help page.
+	    print "Status: 404 Not Found\n";
+	} else {
+	    &List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
+	}
+
+	&tt2::parse_tt2($param_copy,'tt2_error.tt2' , \*STDOUT,
+			$tt2_include_path, { 'has_header' => 1 });
     }
 }
 
