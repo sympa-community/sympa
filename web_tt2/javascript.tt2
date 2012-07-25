@@ -15,15 +15,11 @@ var path_cgi = '[% path_cgi %]/';
 
 <script type="text/javascript">
 
-[% IF action=='skinsedit' %]
-
 // A few configuration settings
 var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
 var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
 var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';
 var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
-
-[% END %]
 
 // Variables used by the calendar js.
 var pDefaut = { 
