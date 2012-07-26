@@ -298,7 +298,7 @@ CREATE TABLE stat_table (
 	 PRIMARY KEY (id_stat) 
  );
 
-CREATE INDEX stat_idx ON stat_table (  ); 
+CREATE INDEX stats_user_index ON stat_table ( email_stat ); 
 
 
 -- --------------------------------------------------------

@@ -339,7 +339,7 @@ create table stat_table
 )
 go 
 
-create index _fk on stat_table () 
+create index stats_user_index on stat_table ( email_stat ) 
 go
 
 
