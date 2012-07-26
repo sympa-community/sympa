@@ -23,7 +23,7 @@ CREATE TABLE admin_table (
 	 PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
  );
 
-CREATE INDEX admin_idx ON admin_table (  ); 
+CREATE INDEX admin_user_index ON admin_table ( user_admin ); 
 
 
 -- --------------------------------------------------------
@@ -39,10 +39,9 @@ CREATE TABLE bulkmailer_table (
 	 priority_message_bulkmailer 	integer, 
 	 verp_bulkmailer 	boolean, 
 	 merge_bulkmailer 	boolean, 
-	 tracking_bulkmailer 	text, 
 	 returnpath_bulkmailer 	text, 
-	 messageid_bulkmailer 	text, 
 	 messagekey_bulkmailer 	text NOT NULL, 
+	 messageid_bulkmailer 	text, 
 	 listname_bulkmailer 	text, 
 	 delivery_date_bulkmailer 	integer, 
 	 robot_bulkmailer 	text, 
@@ -91,6 +90,7 @@ CREATE TABLE exclusion_table (
 	 robot_exclusion 	text NOT NULL, 
 	 user_exclusion 	text NOT NULL, 
 	 date_exclusion 	integer, 
+	 family_exclusion 	text, 
 	 list_exclusion 	text NOT NULL, 
 	 PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
@@ -108,7 +108,7 @@ CREATE TABLE list_table (
 	 robot_list 	text NOT NULL, 
 	 status_list 	text, 
 	 path_list 	text, 
-	 web_archive_list 	tinyint(1), 
+	 web_archive_list 	integer, 
 	 owners_list 	text, 
 	 subject_list 	text, 
 	 creation_email_list 	text, 
@@ -317,20 +317,19 @@ CREATE TABLE subscriber_table (
 	 suspend_end_date_subscriber 	integer, 
 	 bounce_address_subscriber 	text, 
 	 bounce_subscriber 	text, 
-	 included_subscriber 	boolean, 
+	 included_subscriber 	numeric, 
 	 include_sources_subscriber 	text, 
-	 update_subscriber 	timestamp, 
+	 update_subscriber 	numeric, 
 	 user_subscriber 	text NOT NULL, 
 	 topics_subscriber 	text, 
-	 subscribed_subscriber 	boolean, 
-	 date_subscriber 	timestamp NOT NULL, 
+	 subscribed_subscriber 	numeric, 
+	 date_subscriber 	numeric NOT NULL, 
 	 bounce_score_subscriber 	integer, 
-	 number_messages_subscriber 	integer, 
 	 suspend_subscriber 	boolean, 
 	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
 
-CREATE INDEX subscriber_idx ON subscriber_table (  ); 
+CREATE INDEX subscriber_user_index ON subscriber_table ( user_subscriber ); 
 
 
 -- --------------------------------------------------------

@@ -55,10 +55,9 @@ CREATE TABLE bulkmailer_table (
 	 priority_message_bulkmailer 	number, 
 	 verp_bulkmailer 	number, 
 	 merge_bulkmailer 	number, 
-	 tracking_bulkmailer 	varchar2(20), 
 	 returnpath_bulkmailer 	varchar2(100), 
-	 messageid_bulkmailer 	varchar2(200), 
 	 messagekey_bulkmailer 	varchar2(80) NOT NULL, 
+	 messageid_bulkmailer 	varchar2(200), 
 	 listname_bulkmailer 	varchar2(50), 
 	 delivery_date_bulkmailer 	number, 
 	 robot_bulkmailer 	varchar2(80), 
@@ -113,6 +112,7 @@ CREATE TABLE exclusion_table (
 	 robot_exclusion 	varchar2(50) NOT NULL, 
 	 user_exclusion 	varchar2(100) NOT NULL, 
 	 date_exclusion 	number, 
+	 family_exclusion 	varchar2(50), 
 	 list_exclusion 	varchar2(50) NOT NULL, 
 	 CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
@@ -407,7 +407,6 @@ CREATE TABLE subscriber_table (
 	 subscribed_subscriber 	number, 
 	 date_subscriber 	date NOT NULL, 
 	 bounce_score_subscriber 	number, 
-	 number_messages_subscriber 	number, 
 	 suspend_subscriber 	number, 
 	 CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );

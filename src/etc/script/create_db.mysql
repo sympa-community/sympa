@@ -27,8 +27,7 @@ CREATE TABLE admin_table (
 	 robot_admin 	 varchar(80) NOT NULL, 
 	 visibility_admin 	 varchar(20), 
 	 PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin), 
- 	 INDEX user_index (  ) 
- 
+ 	 INDEX admin_user_index ( user_admin ) 
  );
 
 
@@ -45,7 +44,6 @@ CREATE TABLE bulkmailer_table (
 	 packetid_bulkmailer 	 varchar(33) NOT NULL, 
 	 verp_bulkmailer 	 int(1), 
 	 merge_bulkmailer 	 int(1), 
-	 tracking_bulkmailer 	 enum('mdn','dsn'), 
 	 messagekey_bulkmailer 	 varchar(80) NOT NULL, 
 	 messageid_bulkmailer 	 varchar(200), 
 	 returnpath_bulkmailer 	 varchar(100), 
@@ -97,6 +95,7 @@ CREATE TABLE exclusion_table (
 	 user_exclusion 	 varchar(100) NOT NULL, 
 	 robot_exclusion 	 varchar(50) NOT NULL, 
 	 date_exclusion 	 int(11), 
+	 family_exclusion 	 varchar(50), 
 	 list_exclusion 	 varchar(50) NOT NULL, 
 	 PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
@@ -332,10 +331,8 @@ CREATE TABLE subscriber_table (
 	 date_subscriber 	 datetime NOT NULL, 
 	 bounce_score_subscriber 	 smallint(6), 
 	 suspend_subscriber 	 int(1), 
-	 number_messages_subscriber 	 int(5), 
 	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber), 
- 	 INDEX user_index (  ) 
- 
+ 	 INDEX subscriber_user_index ( user_subscriber ) 
  );
 
 
