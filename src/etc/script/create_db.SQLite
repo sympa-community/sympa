@@ -6,16 +6,16 @@
 -- 
 
 CREATE TABLE admin_table ( 
-	 date_admin 	timestamp NOT NULL, 
-	 update_admin 	timestamp, 
+	 date_admin 	numeric NOT NULL, 
+	 update_admin 	numeric, 
 	 info_admin 	text, 
 	 list_admin 	text NOT NULL, 
 	 reception_admin 	text, 
 	 comment_admin 	text, 
-	 subscribed_admin 	boolean, 
+	 subscribed_admin 	numeric, 
 	 profile_admin 	text, 
 	 role_admin 	text NOT NULL, 
-	 included_admin 	boolean, 
+	 included_admin 	numeric, 
 	 user_admin 	text NOT NULL, 
 	 include_sources_admin 	text, 
 	 robot_admin 	text NOT NULL, 
@@ -37,11 +37,12 @@ CREATE TABLE bulkmailer_table (
 	 reception_date_bulkmailer 	integer, 
 	 packetid_bulkmailer 	text NOT NULL, 
 	 priority_message_bulkmailer 	integer, 
-	 verp_bulkmailer 	boolean, 
-	 merge_bulkmailer 	boolean, 
+	 verp_bulkmailer 	numeric, 
+	 merge_bulkmailer 	numeric, 
+	 tracking_bulkmailer 	text, 
 	 returnpath_bulkmailer 	text, 
-	 messagekey_bulkmailer 	text NOT NULL, 
 	 messageid_bulkmailer 	text, 
+	 messagekey_bulkmailer 	text NOT NULL, 
 	 listname_bulkmailer 	text, 
 	 delivery_date_bulkmailer 	integer, 
 	 robot_bulkmailer 	text, 
@@ -63,7 +64,7 @@ CREATE TABLE bulkspool_table (
 	 dkim_i_bulkspool 	text, 
 	 messagekey_bulkspool 	text NOT NULL, 
 	 message_bulkspool 	longtext, 
-	 lock_bulkspool 	boolean, 
+	 lock_bulkspool 	numeric, 
 	 PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -90,7 +91,6 @@ CREATE TABLE exclusion_table (
 	 robot_exclusion 	text NOT NULL, 
 	 user_exclusion 	text NOT NULL, 
 	 date_exclusion 	integer, 
-	 family_exclusion 	text, 
 	 list_exclusion 	text NOT NULL, 
 	 PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
  );
@@ -102,7 +102,7 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 creation_epoch_list 	timestamp, 
+	 creation_epoch_list 	numeric, 
 	 name_list 	text NOT NULL, 
 	 topics_list 	text, 
 	 robot_list 	text NOT NULL, 
@@ -211,11 +211,11 @@ CREATE TABLE oauthprovider_nonces_table (
 -- 
 
 CREATE TABLE oauthprovider_sessions_table ( 
-	 accessgranted_oauthprovider 	tinyint(1), 
+	 accessgranted_oauthprovider 	integer, 
 	 user_oauthprovider 	text, 
 	 token_oauthprovider 	text NOT NULL, 
 	 firsttime_oauthprovider 	integer, 
-	 isaccess_oauthprovider 	tinyint(1), 
+	 isaccess_oauthprovider 	integer, 
 	 lasttime_oauthprovider 	integer NOT NULL, 
 	 verifier_oauthprovider 	text, 
 	 id_oauthprovider 	integer NOT NULL, 
@@ -292,7 +292,7 @@ CREATE TABLE stat_table (
 	 email_stat 	text, 
 	 operation_stat 	text NOT NULL, 
 	 user_ip_stat 	text, 
-	 read_stat 	tinyint(1) NOT NULL, 
+	 read_stat 	integer NOT NULL, 
 	 date_stat 	integer NOT NULL, 
 	 robot_stat 	text NOT NULL, 
 	 PRIMARY KEY (id_stat) 
@@ -325,7 +325,8 @@ CREATE TABLE subscriber_table (
 	 subscribed_subscriber 	numeric, 
 	 date_subscriber 	numeric NOT NULL, 
 	 bounce_score_subscriber 	integer, 
-	 suspend_subscriber 	boolean, 
+	 number_messages_subscriber 	integer, 
+	 suspend_subscriber 	numeric, 
 	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
 

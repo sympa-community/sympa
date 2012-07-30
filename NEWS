@@ -3,6 +3,35 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.26		July 30, 2012
+
+  Changes:
+
+	[7525] src/lib/Sympa/DatabaseDescription.pm:  Now SQLite fields
+	corresponding to booleans or timestamps are defined as plain numeric.
+
+  Bug fixes:
+
+	[7537] src/bulk.pl.in, src/lib/Conf.pm, src/lib/SQLSource.pm,
+	src/lib/tools.pm, src/sympa.pl.in, src/task_manager.pl.in,
+	web_tt2/menu.tt2, wwsympa/archived.pl.in, wwsympa/bounced.pl.in:  The
+	bulk.pl processes were not logging in the right spool/tmp/<pid>.stderr
+	file. There was a shift due to the saring of the filehadle to STDERR
+	between the master bulk and the slaves bulks.
+	Fixed by removing the opening of the filehandle to STDERR from the
+	write_pid funwtion and putting it in a different sub called
+	direct_stderr_to_file.
+
+	[7526] web_tt2/subscriber_table.tt2, wwsympa/wwsympa.fcgi.in:
+	[#6931][Reported by D. Pritts, Internet2] On the review page for the
+	list without any subscribers, a message "ERROR (review) - List has no
+	subscribers" is shown.	It is not an error.
+
+	[7523] src/etc/script/create_db.Oracle, src/etc/script/create_db.Pg,
+	src/etc/script/create_db.SQLite, src/etc/script/create_db.Sybase,
+	src/etc/script/create_db.mysql:  Updating database creation scripts
+	with correct indexes definition.
+
 6.2a.25		July 24, 2012
 
   Features:
