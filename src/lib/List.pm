@@ -5830,7 +5830,7 @@ sub insert_delete_exclusion {
 
 	if ($user->{'included'} eq '1' or defined $family) {
 	    ## Insert : list, user and date
-	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, family_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s)", &SDM::quote($list), &SDM::quote($family), &SDM::quote($robot), &SDM::quote($email), &SDM::quote($date))) {
+	    unless (&SDM::do_query("INSERT INTO exclusion_table (list_exclusion, family_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s, %s)", &SDM::quote($list), &SDM::quote($family), &SDM::quote($robot), &SDM::quote($email), &SDM::quote($date))) {
 		&Log::do_log('err','Unable to exclude user %s from liste %s@%s', $email, $list, $robot);
 		return undef;
 	    }
