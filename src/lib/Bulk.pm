@@ -609,12 +609,13 @@ sub get_remaining_packets_count {
 
     my $m_count = 0;
 
-    unless ($sth = &SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table")) {
+    unless ($sth = &SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table WHERE lock_bulkmailer IS NULL")) {
 	&Log::do_log('err','Unable to count remaining packets in bulkmailer_table');
 	return undef;
     }
 
     my @result = $sth->fetchrow_array();
+    
     return $result[0];
 }
 
