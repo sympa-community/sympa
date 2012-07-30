@@ -118,6 +118,9 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
 &tools::write_pid($wwsconf->{'archived_pidfile'}, $$, $options);
+unless ($options->{'stderr_to_tty'}) {
+    &tools::direct_stderr_to_file(('pid' => $$));
+}
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {

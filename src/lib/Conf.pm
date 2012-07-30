@@ -193,7 +193,7 @@ sub load {
         printf STDERR "Unable to load robots\n";
         return undef;
     }
-    &_create_robot_like_config_for_main_robot();
+    ##&_create_robot_like_config_for_main_robot();
     return 1;
 }
 
@@ -1563,7 +1563,6 @@ sub _infer_robot_parameter_values {
             $family{'escaped_classes_separator'} = $family{'classes_separator'};
             $family{'escaped_classes_separator'} =~ s/([+*?.])/\\$1/g;
             $families_description{$family{'name'}} = \%family;
-            $families_description{$family{'name'}}{'description'} = &load_automatic_lists_description(undef,$family{'name'});
         }
         $param->{'config_hash'}{'automatic_list_families'} = \%families_description;
     }
@@ -1582,6 +1581,11 @@ sub _load_robot_secondary_config_files {
     my $is_main_robot = 0;
     $is_main_robot = 1 unless ($param->{'config_hash'}{'robot_name'});
     $Conf{'auth_services'}{$robot_name_for_auth_storing} = &_load_auth($param->{'config_hash'}{'robot_name'}, $is_main_robot);
+    if (defined $param->{'config_hash'}{'automatic_list_families'}) {
+        foreach my $family (keys %{$param->{'config_hash'}{'automatic_list_families'}}) {
+            $param->{'config_hash'}{'automatic_list_families'}{$family}{'description'} = &load_automatic_lists_description($param->{'config_hash'}{'robot_name'},$param->{'config_hash'}{'automatic_list_families'}{$family}{'name'});
+        }
+    }
     return 1;
 }
 ## For parameters whose value is hard_coded, as per %hardcoded_params, set the

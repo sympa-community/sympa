@@ -378,6 +378,9 @@ if ($signal ne 'hup') {
 	my $options;
 	$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 	&tools::write_pid($file, $$, $options);
+	unless ($options->{'stderr_to_tty'}) {
+	    &tools::direct_stderr_to_file(('pid' => $$));
+	}
     }	
 
 

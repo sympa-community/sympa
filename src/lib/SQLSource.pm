@@ -354,7 +354,6 @@ sub do_prepared_query {
     }else {
 	&Log::do_log('debug3','Reusing prepared statement for %s',$query);
     }	
-    
     unless ($self->{'cached_prepared_statements'}{$query}->execute(@params)) {
 	# Check database connection in case it would be the cause of the problem.
 	unless($self->connect()) {

@@ -118,6 +118,10 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 &tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$, $options);
+unless ($options->{'stderr_to_tty'}) {
+    &tools::direct_stderr_to_file(('pid' => $$));
+}
+
 
 $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 &Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');

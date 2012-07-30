@@ -2667,18 +2667,21 @@ sub write_pid {
     ## Unlock pid file
     $lock->unlock();
 
+    return 1;
+}
+
+sub direct_stderr_to_file {
+    my %data = @_;
     ## Error output is stored in a file with PID-based name
     ## Usefull if process crashes
-    unless($options->{'stderr_to_tty'}) {
-	open(STDERR, '>>', $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr') unless($main::options{'foreground'});
-	unless(&tools::set_file_rights(
-	    file => $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr',
-	    user  => Sympa::Constants::USER,
-	    group => Sympa::Constants::GROUP,
-	)) {
-	    &Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'db_name'});
-	    return undef;
-	}
+    open(STDERR, '>>', $Conf::Conf{'tmpdir'}.'/'.$data{'pid'}.'.stderr');
+    unless(&tools::set_file_rights(
+	file => $Conf::Conf{'tmpdir'}.'/'.$data{'pid'}.'.stderr',
+	user  => Sympa::Constants::USER,
+	group => Sympa::Constants::GROUP,
+    )) {
+	&Log::do_log('err','Unable to set rights on %s', $Conf::Conf{'tmpdir'}.'/'.$data{'pid'}.'.stderr');
+	return undef;
     }
     return 1;
 }

@@ -121,7 +121,9 @@ $options->{'multiple_process'} = 0;
 
 # Saves the pid number
 &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
-
+unless ($options->{'stderr_to_tty'}) {
+    &tools::direct_stderr_to_file(('pid' => $$));
+}
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
 $< = $> = (getpwnam(Sympa::Constants::USER))[2];
@@ -210,6 +212,8 @@ while (!$end) {
 	    my $pids_in_pfile = &tools::get_pids_in_pid_file($Conf::Conf{'pidfile_bulk'});
 	    unless (defined($pids_in_pfile)){
 		&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+		close STDERR;
+		&tools::direct_stderr_to_file(('pid' => $$));
 		$pids_in_pfile = [$$];
 	    }
 	    ## Start new processes if there remain at least 'bulk_fork_threshold' packets to send in the bulkmailer_table table
@@ -232,6 +236,8 @@ while (!$end) {
 			    sleep 1;
 			}else{
 			    ## We're in a child bulk process
+			    close STDERR;
+			    &tools::direct_stderr_to_file(('pid' => $$));
 			    $date_of_last_activity = time();
 			    $main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
 			    &Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');

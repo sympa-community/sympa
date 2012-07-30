@@ -144,6 +144,9 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
 &tools::write_pid($wwsconf->{'bounced_pidfile'}, $$, $options);
+unless ($options->{'stderr_to_tty'}) {
+    &tools::direct_stderr_to_file(('pid' => $$));
+}
 
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
