@@ -167,7 +167,8 @@ sub db_struct {
 				 },
 			       'conf_table' => {'robot_conf' => 'varchar(80)',
 						'label_conf' => 'varchar(80)',
-						'value_conf' => 'varchar(300)'},
+						'value_conf' => 'varchar(300)'
+						},
 					'oauthconsumer_sessions_table' => {
 						'user_oauthconsumer' => 'varchar(100)',
 						'provider_oauthconsumer' => 'varchar(100)',
