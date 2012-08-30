@@ -10981,9 +10981,13 @@ sub _restrict_values {
 
 sub do_copy_list {
     &wwslog('info', 'do_copy_list(%s,%s)', $in{'new_listname'}, $in{'new_robot'});
-    &do_rename_list('copy');
-    &web_db_stat_log({'robot' => $robot, 'list' => $in{'new_listname'}, 'operation' => 'copy list', 'parameter' =>'', 'mail' => $param->{'user'}{'email'},
+    my $success = &do_rename_list('copy');
+    if($success == 1) {
+		&web_db_stat_log({'robot' => $robot, 'list' => $in{'new_listname'}, 'operation' => 'copy list', 'parameter' =>'', 'mail' => $param->{'user'}{'email'},
 		      'client' => '', 'dameon' => $daemon_name});
+		return $success;
+	}
+	return undef;
 }
 
 # in order to rename a list you must be list owner and you must be allowed to create new list
