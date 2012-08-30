@@ -4839,14 +4839,14 @@ sub archive_send_last {
 #       
 ###################################################### 
 sub send_notify_to_listmaster {
-	my ($operation, $robot, $data, $checkstack) = @_;
+	my ($operation, $robot, $data, $checkstack, $purge) = @_;
 	
-	if($checkstack) {
+	if($checkstack or $purge) {
 		foreach my $robot (keys %List::listmaster_messages_stack) {
 			foreach my $operation (keys %{$List::listmaster_messages_stack{$robot}}) {
 				my $first_age = time - $List::listmaster_messages_stack{$robot}{$operation}{'first'};
 				my $last_age = time - $List::listmaster_messages_stack{$robot}{$operation}{'last'};
-				next unless(($last_age > 30) or ($first_age > 60)); # not old enough to send and first not too old
+				next unless($purge or ($last_age > 30) or ($first_age > 60)); # not old enough to send and first not too old
 				next unless($List::listmaster_messages_stack{$robot}{$operation}{'messages'});
 				
 				my %messages = %{$List::listmaster_messages_stack{$robot}{$operation}{'messages'}};
@@ -4872,9 +4872,10 @@ sub send_notify_to_listmaster {
 						return undef;
 					}
 				}
+				
+				&Log::do_log('info', 'cleaning stacked notifications');
+				delete $List::listmaster_messages_stack{$robot}{$operation};
 			}
-			
-			delete $List::listmaster_messages_stack{$robot};
 		}
 		return 1;
 	}
@@ -4887,15 +4888,13 @@ sub send_notify_to_listmaster {
 		$stack = 1;
 	}
 	
-	unless($operation eq 'logs_failed') {
-		&Log::do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
+	unless(defined $operation) {
+		&Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
+		return undef;
 	}
 	
 	unless($operation eq 'logs_failed') {
-		unless(defined $operation) {
-			&Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"');
-			return undef;
-		}
+		&Log::do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )', $operation, $robot );
 		unless (defined $robot) {
 			&Log::do_log('err','List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"');
 			return undef;
@@ -4965,10 +4964,10 @@ sub send_notify_to_listmaster {
 	
 	if(($operation eq 'request_list_creation') or ($operation eq 'request_list_renaming')) {
 		foreach my $email (split (/\,/, $listmaster)) {
-			my $cdata = &dup_var($data);
+			my $cdata = &tools::dup_var($data);
 			$cdata->{'one_time_ticket'} = &Auth::create_one_time_ticket($email,$robot,'get_pending_lists',$cdata->{'ip'});
 			push @tosend, {
-				email => $listmaster,
+				email => $email,
 				data => $cdata
 			};
 		}

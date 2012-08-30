@@ -1071,6 +1071,7 @@ my $birthday = time ;
 
      ## Empty cache of the List.pm module
      &List::init_list_cache();
+     &List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
 
      ## Check effective ID
      unless ($> eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -1783,7 +1784,9 @@ my $birthday = time ;
 
  }
 
- ##############################################################
+&List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
+
+##############################################################
  #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
  ##############################################################
 
