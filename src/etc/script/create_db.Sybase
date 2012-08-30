@@ -15,19 +15,19 @@ go
 
 create table admin_table 
 ( 
+	 comment_admin 	varchar(150), 
 	 date_admin 	datetime NOT NULL, 
-	 update_admin 	datetime, 
+	 include_sources_admin 	varchar(50), 
+	 included_admin 	numeric, 
 	 info_admin 	varchar(150), 
 	 list_admin 	varchar(50) NOT NULL, 
-	 reception_admin 	varchar(20), 
-	 comment_admin 	varchar(150), 
-	 subscribed_admin 	numeric, 
 	 profile_admin 	varchar(15), 
-	 role_admin 	varchar(15) NOT NULL, 
-	 included_admin 	numeric, 
-	 user_admin 	varchar(100) NOT NULL, 
-	 include_sources_admin 	varchar(50), 
+	 reception_admin 	varchar(20), 
 	 robot_admin 	varchar(80) NOT NULL, 
+	 role_admin 	varchar(15) NOT NULL, 
+	 subscribed_admin 	numeric, 
+	 update_admin 	datetime, 
+	 user_admin 	varchar(100) NOT NULL, 
 	 visibility_admin 	varchar(20), 
 	 constraint ind_admin PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin)
 )
@@ -44,21 +44,21 @@ go
 
 create table bulkmailer_table 
 ( 
+	 delivery_date_bulkmailer 	numeric, 
+	 listname_bulkmailer 	varchar(50), 
+	 lock_bulkmailer 	varchar(30), 
+	 merge_bulkmailer 	numeric, 
+	 messageid_bulkmailer 	varchar(200), 
+	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
+	 packetid_bulkmailer 	varchar(33) NOT NULL, 
+	 priority_message_bulkmailer 	numeric, 
 	 priority_packet_bulkmailer 	numeric, 
 	 receipients_bulkmailer 	varchar(500), 
 	 reception_date_bulkmailer 	numeric, 
-	 packetid_bulkmailer 	varchar(33) NOT NULL, 
-	 priority_message_bulkmailer 	numeric, 
-	 verp_bulkmailer 	numeric, 
-	 merge_bulkmailer 	numeric, 
-	 tracking_bulkmailer 	varchar(15), 
 	 returnpath_bulkmailer 	varchar(100), 
-	 messageid_bulkmailer 	varchar(200), 
-	 messagekey_bulkmailer 	varchar(80) NOT NULL, 
-	 listname_bulkmailer 	varchar(50), 
-	 delivery_date_bulkmailer 	numeric, 
 	 robot_bulkmailer 	varchar(80), 
-	 lock_bulkmailer 	varchar(30), 
+	 tracking_bulkmailer 	varchar(15), 
+	 verp_bulkmailer 	numeric, 
 	 constraint ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
 )
 go 
@@ -71,14 +71,14 @@ go
 
 create table bulkspool_table 
 ( 
-	 dkim_selector_bulkspool 	varchar(50), 
 	 dkim_d_bulkspool 	varchar(50), 
-	 dkim_privatekey_bulkspool 	varchar(1000), 
-	 messageid_bulkspool 	varchar(200), 
 	 dkim_i_bulkspool 	varchar(100), 
-	 messagekey_bulkspool 	varchar(33) NOT NULL, 
-	 message_bulkspool 	text, 
+	 dkim_privatekey_bulkspool 	varchar(1000), 
+	 dkim_selector_bulkspool 	varchar(50), 
 	 lock_bulkspool 	numeric, 
+	 message_bulkspool 	text, 
+	 messageid_bulkspool 	varchar(200), 
+	 messagekey_bulkspool 	varchar(33) NOT NULL, 
 	 constraint ind_bulkspool PRIMARY KEY (messagekey_bulkspool)
 )
 go 
@@ -91,8 +91,8 @@ go
 
 create table conf_table 
 ( 
-	 robot_conf 	varchar(80), 
 	 label_conf 	varchar(80), 
+	 robot_conf 	varchar(80), 
 	 value_conf 	varchar(300), 
 	 constraint ind_conf PRIMARY KEY (robot_conf, label_conf)
 )
@@ -106,10 +106,10 @@ go
 
 create table exclusion_table 
 ( 
-	 robot_exclusion 	varchar(50) NOT NULL, 
-	 user_exclusion 	varchar(100) NOT NULL, 
 	 date_exclusion 	numeric, 
 	 list_exclusion 	varchar(50) NOT NULL, 
+	 robot_exclusion 	varchar(50) NOT NULL, 
+	 user_exclusion 	varchar(100) NOT NULL, 
 	 constraint ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion)
 )
 go 
@@ -122,17 +122,17 @@ go
 
 create table list_table 
 ( 
+	 creation_email_list 	varchar(100), 
 	 creation_epoch_list 	datetime, 
+	 editors_list 	varchar(100), 
 	 name_list 	varchar(100) NOT NULL, 
-	 topics_list 	varchar(100), 
+	 owners_list 	varchar(100), 
+	 path_list 	varchar(100), 
 	 robot_list 	varchar(100) NOT NULL, 
 	 status_list 	varchar(15), 
-	 path_list 	varchar(100), 
-	 web_archive_list 	tinyint(1), 
-	 owners_list 	varchar(100), 
 	 subject_list 	varchar(100), 
-	 creation_email_list 	varchar(100), 
-	 editors_list 	varchar(100), 
+	 topics_list 	varchar(100), 
+	 web_archive_list 	tinyint(1), 
 	 constraint ind_list PRIMARY KEY (name_list, robot_list)
 )
 go 
@@ -145,19 +145,19 @@ go
 
 create table logs_table 
 ( 
-	 list_logs 	varchar(50), 
-	 parameters_logs 	varchar(100), 
-	 msg_id_logs 	varchar(255), 
 	 action_logs 	varchar(50) NOT NULL, 
 	 client_logs 	varchar(100), 
-	 user_email_logs 	varchar(100), 
 	 daemon_logs 	varchar(10) NOT NULL, 
-	 target_email_logs 	varchar(100), 
-	 status_logs 	varchar(10) NOT NULL, 
-	 error_type_logs 	varchar(150), 
-	 robot_logs 	varchar(80), 
 	 date_logs 	numeric NOT NULL, 
+	 error_type_logs 	varchar(150), 
 	 id_logs 	numeric NOT NULL, 
+	 list_logs 	varchar(50), 
+	 msg_id_logs 	varchar(255), 
+	 parameters_logs 	varchar(100), 
+	 robot_logs 	varchar(80), 
+	 status_logs 	varchar(10) NOT NULL, 
+	 target_email_logs 	varchar(100), 
+	 user_email_logs 	varchar(100), 
 	 constraint ind_logs PRIMARY KEY (id_logs)
 )
 go 
@@ -170,8 +170,8 @@ go
 
 create table netidmap_table 
 ( 
-	 netid_netidmap 	varchar(100) NOT NULL, 
 	 email_netidmap 	varchar(100), 
+	 netid_netidmap 	varchar(100) NOT NULL, 
 	 robot_netidmap 	varchar(80) NOT NULL, 
 	 serviceid_netidmap 	varchar(100) NOT NULL, 
 	 constraint ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap)
@@ -186,17 +186,17 @@ go
 
 create table notification_table 
 ( 
-	 type_notification 	varchar(15), 
 	 arrival_date_notification 	varchar(80), 
-	 status_notification 	varchar(100), 
-	 recipient_notification 	varchar(100), 
-	 message_notification 	text, 
-	 message_id_notification 	varchar(100), 
 	 date_notification 	numeric NOT NULL, 
-	 reception_option_notification 	varchar(20), 
-	 pk_notification 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
 	 list_notification 	varchar(50), 
+	 message_id_notification 	varchar(100), 
+	 message_notification 	text, 
+	 pk_notification 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 reception_option_notification 	varchar(20), 
+	 recipient_notification 	varchar(100), 
 	 robot_notification 	varchar(80), 
+	 status_notification 	varchar(100), 
+	 type_notification 	varchar(15), 
 	 constraint ind_notification PRIMARY KEY (pk_notification)
 )
 go 
@@ -209,12 +209,12 @@ go
 
 create table oauthconsumer_sessions_table 
 ( 
-	 tmp_secret_oauthconsumer 	varchar(100), 
-	 user_oauthconsumer 	varchar(100) NOT NULL, 
-	 provider_oauthconsumer 	varchar(100) NOT NULL, 
-	 access_token_oauthconsumer 	varchar(100), 
-	 tmp_token_oauthconsumer 	varchar(100), 
 	 access_secret_oauthconsumer 	varchar(100), 
+	 access_token_oauthconsumer 	varchar(100), 
+	 provider_oauthconsumer 	varchar(100) NOT NULL, 
+	 tmp_secret_oauthconsumer 	varchar(100), 
+	 tmp_token_oauthconsumer 	varchar(100), 
+	 user_oauthconsumer 	varchar(100) NOT NULL, 
 	 constraint ind_oauthconsumer_sessions PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer)
 )
 go 
@@ -227,8 +227,8 @@ go
 
 create table oauthprovider_nonces_table 
 ( 
-	 id_oauthprovider 	numeric NOT NULL, 
 	 id_nonce 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 id_oauthprovider 	numeric NOT NULL, 
 	 nonce_oauthprovider 	varchar(100) NOT NULL, 
 	 time_oauthprovider 	numeric, 
 	 constraint ind_oauthprovider_nonces PRIMARY KEY (id_nonce)
@@ -244,16 +244,16 @@ go
 create table oauthprovider_sessions_table 
 ( 
 	 accessgranted_oauthprovider 	tinyint(1), 
-	 user_oauthprovider 	varchar(100), 
-	 token_oauthprovider 	varchar(32) NOT NULL, 
-	 firsttime_oauthprovider 	numeric, 
-	 isaccess_oauthprovider 	tinyint(1), 
-	 lasttime_oauthprovider 	numeric NOT NULL, 
-	 verifier_oauthprovider 	varchar(32), 
-	 id_oauthprovider 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
-	 secret_oauthprovider 	varchar(32) NOT NULL, 
 	 callback_oauthprovider 	varchar(100), 
 	 consumer_oauthprovider 	varchar(100) NOT NULL, 
+	 firsttime_oauthprovider 	numeric, 
+	 id_oauthprovider 	numeric NOT NULL DEFAULT AUTOINCREMENT, 
+	 isaccess_oauthprovider 	tinyint(1), 
+	 lasttime_oauthprovider 	numeric NOT NULL, 
+	 secret_oauthprovider 	varchar(32) NOT NULL, 
+	 token_oauthprovider 	varchar(32) NOT NULL, 
+	 user_oauthprovider 	varchar(100), 
+	 verifier_oauthprovider 	varchar(32), 
 	 constraint ind_oauthprovider_sessions PRIMARY KEY (id_oauthprovider)
 )
 go 
@@ -267,12 +267,12 @@ go
 create table one_time_ticket_table 
 ( 
 	 data_one_time_ticket 	varchar(200), 
-	 status_one_time_ticket 	varchar(60), 
-	 ticket_one_time_ticket 	varchar(30), 
-	 remote_addr_one_time_ticket 	varchar(60), 
-	 robot_one_time_ticket 	varchar(80), 
 	 date_one_time_ticket 	numeric, 
 	 email_one_time_ticket 	varchar(100), 
+	 remote_addr_one_time_ticket 	varchar(60), 
+	 robot_one_time_ticket 	varchar(80), 
+	 status_one_time_ticket 	varchar(60), 
+	 ticket_one_time_ticket 	varchar(30), 
 	 constraint ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket)
 )
 go 
@@ -286,12 +286,12 @@ go
 create table session_table 
 ( 
 	 data_session 	varchar(500), 
+	 date_session 	numeric NOT NULL, 
+	 email_session 	varchar(100), 
+	 hit_session 	numeric, 
 	 id_session 	varchar(30) NOT NULL, 
 	 remote_addr_session 	varchar(60), 
-	 date_session 	numeric NOT NULL, 
 	 robot_session 	varchar(80), 
-	 hit_session 	numeric, 
-	 email_session 	varchar(100), 
 	 start_date_session 	numeric NOT NULL, 
 	 constraint ind_session PRIMARY KEY (id_session)
 )
@@ -305,14 +305,14 @@ go
 
 create table stat_counter_table 
 ( 
-	 end_date_counter 	numeric, 
-	 list_counter 	varchar(150), 
-	 id_counter 	numeric NOT NULL, 
-	 robot_counter 	varchar(80) NOT NULL, 
 	 beginning_date_counter 	numeric NOT NULL, 
 	 data_counter 	varchar(50) NOT NULL, 
-	 variation_counter 	numeric, 
+	 end_date_counter 	numeric, 
+	 id_counter 	numeric NOT NULL, 
+	 list_counter 	varchar(150), 
+	 robot_counter 	varchar(80) NOT NULL, 
 	 total_counter 	numeric, 
+	 variation_counter 	numeric, 
 	 constraint ind_stat_counter PRIMARY KEY (id_counter)
 )
 go 
@@ -326,15 +326,15 @@ go
 create table stat_table 
 ( 
 	 daemon_stat 	varchar(10), 
-	 list_stat 	varchar(150), 
-	 parameter_stat 	varchar(50), 
-	 id_stat 	numeric NOT NULL, 
-	 email_stat 	varchar(100), 
-	 operation_stat 	varchar(50) NOT NULL, 
-	 user_ip_stat 	varchar(100), 
-	 read_stat 	tinyint(1) NOT NULL, 
 	 date_stat 	numeric NOT NULL, 
+	 email_stat 	varchar(100), 
+	 id_stat 	numeric NOT NULL, 
+	 list_stat 	varchar(150), 
+	 operation_stat 	varchar(50) NOT NULL, 
+	 parameter_stat 	varchar(50), 
+	 read_stat 	tinyint(1) NOT NULL, 
 	 robot_stat 	varchar(80) NOT NULL, 
+	 user_ip_stat 	varchar(100), 
 	 constraint ind_stat PRIMARY KEY (id_stat)
 )
 go 
@@ -350,26 +350,26 @@ go
 
 create table subscriber_table 
 ( 
-	 robot_subscriber 	varchar(80) NOT NULL, 
-	 reception_subscriber 	varchar(20), 
-	 custom_attribute_subscriber 	varchar(500), 
-	 list_subscriber 	varchar(50) NOT NULL, 
-	 visibility_subscriber 	varchar(20), 
-	 comment_subscriber 	varchar(150), 
-	 suspend_start_date_subscriber 	numeric, 
-	 suspend_end_date_subscriber 	numeric, 
 	 bounce_address_subscriber 	varchar(100), 
+	 bounce_score_subscriber 	numeric, 
 	 bounce_subscriber 	varchar(35), 
-	 included_subscriber 	numeric, 
+	 comment_subscriber 	varchar(150), 
+	 custom_attribute_subscriber 	varchar(500), 
+	 date_subscriber 	datetime NOT NULL, 
 	 include_sources_subscriber 	varchar(50), 
+	 included_subscriber 	numeric, 
+	 list_subscriber 	varchar(50) NOT NULL, 
+	 number_messages_subscriber 	numeric, 
+	 reception_subscriber 	varchar(20), 
+	 robot_subscriber 	varchar(80) NOT NULL, 
+	 subscribed_subscriber 	numeric, 
+	 suspend_end_date_subscriber 	numeric, 
+	 suspend_start_date_subscriber 	numeric, 
+	 suspend_subscriber 	numeric, 
+	 topics_subscriber 	varchar(200), 
 	 update_subscriber 	datetime, 
 	 user_subscriber 	varchar(100) NOT NULL, 
-	 topics_subscriber 	varchar(200), 
-	 subscribed_subscriber 	numeric, 
-	 date_subscriber 	datetime NOT NULL, 
-	 bounce_score_subscriber 	numeric, 
-	 number_messages_subscriber 	numeric, 
-	 suspend_subscriber 	numeric, 
+	 visibility_subscriber 	varchar(20), 
 	 constraint ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
 )
 go 
@@ -385,15 +385,15 @@ go
 
 create table user_table 
 ( 
-	 email_user 	varchar(100) NOT NULL, 
-	 last_login_date_user 	numeric, 
 	 attributes_user 	varchar(500), 
-	 data_user 	varchar(500), 
 	 cookie_delay_user 	numeric, 
-	 last_login_host_user 	varchar(60), 
+	 data_user 	varchar(500), 
+	 email_user 	varchar(100) NOT NULL, 
 	 gecos_user 	varchar(150), 
-	 password_user 	varchar(40), 
 	 lang_user 	varchar(10), 
+	 last_login_date_user 	numeric, 
+	 last_login_host_user 	varchar(60), 
+	 password_user 	varchar(40), 
 	 wrong_login_count_user 	numeric, 
 	 constraint ind_user PRIMARY KEY (email_user)
 )

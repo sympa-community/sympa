@@ -3,6 +3,29 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.27		August 30, 2012
+
+  Changes:
+
+	[7541] src/lib/Bulk.pm:  Now the bulk master will fork slave bulks only
+	if the number of UNLOCKED remaining packets exceeds the threshold
+	defined in 'bulk_fork_threshold' sympa.conf parameter.
+
+  Bug fixes:
+
+	[7569] wwsympa/wwsympa.fcgi.in:  Corrected do_copy_list so that it will
+	lead to error message in case of copy error.
+
+	[7568] src/bulk.pl.in, src/lib/List.pm, src/sympa.pl.in,
+	src/task_manager.pl.in, wwsympa/archived.pl.in, wwsympa/bounced.pl.in,
+	wwsympa/wwsympa.fcgi.in:  Fixed listmaster notification grouping.
+	Notification stack was not checked in fcgi and incorrectly cleaned.
+	Added calls to send all stacked messages upon process shutdown.
+
+	[7540] src/lib/List.pm:  An insert query in bounced.pl did not use the
+	same number of fields and values. This led to the inclusion failure.
+	Fixed.
+
 6.2a.26		July 30, 2012
 
   Changes:
