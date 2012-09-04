@@ -1,3 +1,6 @@
+[%- IF notification_messages.size == 1 -%]
+[%- notification_messages.first -%]
+[%- ELSE -%]
 From: [% conf.email_gecos %]  <[% conf.email %]@[% conf.host %]>
 To: [% FILTER qencode %][%|loc%]Listmaster[%END%] <[% to %]>[%END%]
 Subject: [% FILTER qencode %][%|loc(notification_messages.size,operation)%]You have %1 "%2" tagged notifications[%END%][%END%]
@@ -20,3 +23,4 @@ Content-Disposition: inline
 [%END%]
 
 --[% boundary %]--
+[% END %]
