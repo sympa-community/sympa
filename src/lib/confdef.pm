@@ -457,7 +457,7 @@ our @params = (
         vhost   => '1',
         file    => 'sympa.conf',
         edit    => '1',
-        advice  => gettext('This is the set of language that will be proposed to your users for the Sympa GUI. Don\'t select a language if you don\'t have the proper locale packages installed.'),
+        advice  => gettext("This is the set of language that will be proposed to your users for the Sympa GUI. Don\'t select a language if you don\'t have the proper locale packages installed."),
     },
     { 'title' => gettext('Sending related') },
     {
