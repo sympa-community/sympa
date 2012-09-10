@@ -402,7 +402,7 @@ sub create_one_time_ticket {
     my $date = time;
     my $sth;
     
-    unless (&SDM::do_query("INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES ('%s','%s','%s','%s','%s','%s','%s')",$ticket,$robot,$email,time,$data_string,$remote_addr,'open')) {
+    unless (&SDM::do_query("INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES (%s, %s, %s, %d, %s, %s, %s)",&SDM::do_query($ticket),&SDM::do_query($robot),&SDM::do_query($email),time,&SDM::do_query($data_string),&SDM::do_query($remote_addr,&SDM::do_query('open')))) {
 	&Log::do_log('err','Unable to insert new one time ticket for user %s, robot %s in the database',$email,$robot);
 	return undef;
     }   
@@ -419,7 +419,7 @@ sub get_one_time_ticket {
     
     my $sth;
     
-    unless ($sth = &SDM::do_query("SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS \"date\", data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = '%s' ", $ticket_number)) {
+    unless ($sth = &SDM::do_query("SELECT ticket_one_time_ticket AS ticket, robot_one_time_ticket AS robot, email_one_time_ticket AS email, date_one_time_ticket AS \"date\", data_one_time_ticket AS data, remote_addr_one_time_ticket AS remote_addr, status_one_time_ticket as status FROM one_time_ticket_table WHERE ticket_one_time_ticket = %s ", &SDM::do_query($ticket_number))) {
 	&Log::do_log('err','Unable to retrieve one time ticket %s from database',$ticket_number);
 	return {'result'=>'error'};
     }
@@ -444,8 +444,8 @@ sub get_one_time_ticket {
     }else{
 	$result = 'success';
     }
-    unless (&SDM::do_query("UPDATE one_time_ticket_table SET status_one_time_ticket = '%s' WHERE (ticket_one_time_ticket='%s')", $addr, $ticket_number)) {
-    	&Log::do_log('err','Unable to set one time tivket %s status to %s',$ticket_number, $addr);
+    unless (&SDM::do_query("UPDATE one_time_ticket_table SET status_one_time_ticket = %s WHERE (ticket_one_time_ticket=%s)", &SDM::do_query($addr), &SDM::do_query($ticket_number))) {
+    	&Log::do_log('err','Unable to set one time ticket %s status to %s',$ticket_number, $addr);
     }
 
     &Log::do_log('info', 'Auth::get_one_time_ticket(%s) : result : %s',$ticket_number,$result);

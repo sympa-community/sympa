@@ -1,6 +1,6 @@
 <!-- $Id: show_sessions.tt2 3907 2006-09-25 14:50:16Z serge.aumont $ -->
 <table summary="[%|loc%]Sessions list[%END%]" class="listOfItems text_center">
- <tr> <th>last hit date</th><th>start date</th><th>hit count</th><th>remote address</th><th>robot</th><th>User email</th></tr>
+ <tr> <th>[%|loc%]last hit date[%END%]</th><th>[%|loc%]start date[%END%]</th><th>[%|loc%]hit count[%END%]</th><th>[%|loc%]remote address[%END%]</th><th>[%|loc%]robot[%END%]</th><th>[%|loc%]User email[%END%]</th></tr>
   [% FOREACH session = sessions %]
    [% IF dark == '1' %]<tr>[% SET dark = '0' %][% ELSE %]<tr class="color0">[% SET dark = '1' %][% END %]
     <td>[% session.formated_date %]</td><td>[% session.formated_start_date %]</td><td>[% session.hit_session %]</td><td>[% session.remote_addr_session %]</td><td>[% session.robot_session %]</td><td>[% session.email_session %]</td>

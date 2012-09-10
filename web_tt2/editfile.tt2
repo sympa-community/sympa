@@ -3,9 +3,10 @@
 
 <h2>[%|loc%]Edit list templates[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#customize" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 
+[% IF file %]
 <form class="noborder" action="[% path_cgi %]" method="post">
 <fieldset>
-[% IF file %]
+<h3>[% IF complete %][%|loc(complete)%]Edit the file %1[%END%][% ELSE %][%|loc(file)%]Edit the file %1[%END%][% END %]</h3>
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="file" value="[% file %]" />
 <textarea name="content" cols="80" rows="25">
@@ -21,37 +22,78 @@
 
 [%|loc%]You can edit several messages/files associated with your list:[%END%]<br /><br />
 
-<dl>
-<dd><input type="hidden" name="list" value="[% list %]" />
-
+[% item1 = 'homepage'
+   item2 = 'info' %]
+[% IF files.$item1 || files.$item2 %]
 <h3>[%|loc%]HTML pages[%END%]</h3>
 
+[% IF files.$item1 %]
 <a href="[% path_cgi %]/editfile/[%list%]/homepage" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List homepage: HTML text to describe the list. It is printed on the right-hand side of the main list page. (default for this is the list description)[%END%]<br />
+[% END %]
+[% IF files.$item2 %]
 <a href="[% path_cgi %]/editfile/[%list%]/info" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]List description: This text is sent as an answer to the mail command INFO. It can also be included in the <em>Welcome message</em>.[%END%]<br />
+[% END %]
 
+[% END %]
+
+[% item1 = 'welcome.tt2'
+   item2 = 'reject.tt2'
+   item3 = 'remind.tt2'
+   item4 = 'invite.tt2' %]
+[% IF files.$item1 || files.$item2 || files.$item3 || files.$item4 %]
 <h3>[%|loc%]Automatic messages[%END%]</h3>
 
+[% IF files.$item1 %]
 <a href="[% path_cgi %]/editfile/[%list%]/welcome.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Welcome message: This message is sent to new subscribers. It can be a full MIME structured message (only for MIME gurus).[%END%]<br />
+[% END %]
+[% IF files.$item2 %]
 <a href="[% path_cgi %]/manage_template/ls_template/[% list %]/reject" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Rejection message: when a message is rejected by list editor, a notification can be sent to the original author. You may prepare various rejection messages.[%END%]<br />
+[% END %]
+[% IF files.$item3 %]
 <a href="[% path_cgi %]/editfile/[%list%]/remind.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Remind message: This message is sent to each subscriber
 when using the command  REMIND. It's very useful to help people who are confused about their own subscription emails or people who are not able to unsubscribe themselves.[%END%]<br />
+[% END %]
+[% IF files.$item4 %]
 <a href="[% path_cgi %]/editfile/[%list%]/invite.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Subscribing invitation message: sent to a person if someone  
 uses the INVITE command to invite someone to subscribe.[%END%]<br />
+[% END %]
 
+[% END %]
+
+[% item1 = 'message.footer'
+   item2 = 'message.header' %]
+[% IF files.$item1 || files.$item2 %]
 <h3>[%|loc%]Added in distributed messages[%END%]</h3>
 
+[% IF files.$item1 %]
 <a href="[% path_cgi %]/editfile/[%list%]/message.footer" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message footer: If this file is not empty, it is added as a MIME attachment at the end of each message distributed to the list.[%END%]<br />
+[% END %]
+[% IF files.$item2 %]
 <a href="[% path_cgi %]/editfile/[%list%]/message.header" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Message header: If this file is not empty, it is added as a MIME attachment at the beginning of each message distributed to the list.[%END%]<br />
+[% END %]
 
+[% END %]
+
+[% item1 = 'bye.tt2'
+   item2 = 'removed.tt2'
+   item3 = 'your_infected_msg.tt2' %]
+[% IF files.$item1 || files.$item2 || files.$item3 %]
 <h3>[%|loc%]More[%END%]</h3>
 
+[% IF files.$item1 %]
 <a href="[% path_cgi %]/editfile/[%list%]/bye.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Unsubscribe message: This message is sent when users leave the list.[%END%]<br />
+[% END %]
+[% IF files.$item2 %]
 <a href="[% path_cgi %]/editfile/[%list%]/removed.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Deletion message: This message is sent to users when you
 remove them from the list using the DEL command (unless you hit the Quiet button).[%END%]<br />
+[% END %]
+[% IF files.$item3 %]
+<a href="[% path_cgi %]/editfile/[%list%]/your_infected_msg.tt2" class="MainMenuLinks">[%|loc%]Edit[%END%]</a> [%|loc%]Virus infection message: This message is sent to the sender of a message in which a virus was found.[%END%]<br />
+[% END %]
 
-</fieldset>
-</form>	
+[% END %]
 
+</fieldset></form>
 [% END %]
 
 </div>

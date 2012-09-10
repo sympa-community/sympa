@@ -440,9 +440,38 @@ our @params = (
         'query'    => gettext('Umask used for file creation by Sympa'),
         'file'     => 'sympa.conf',
     },
-
+    { title => 'Internationalization' },
+    {
+        name    => 'lang',
+        default => 'en',
+        query   => 'Default lang (ca | cs | de | el | es | et_EE | en | fr | fi | hu | it | ja_JP | ko | nl | nb_NO | oc | pl | pt_BR | ru | sv | tr | vi | zh_CN | zh_TW)',
+        vhost   => '1',
+        file    => 'sympa.conf',
+        edit    => '1',
+        advice  => gettext('This is the default language used by Sympa'),
+    },
+    {
+        name    => 'supported_lang',
+        default => 'ca,cs,de,el,es,et_EE,en,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
+        query   => 'Supported languages',
+        vhost   => '1',
+        file    => 'sympa.conf',
+        edit    => '1',
+        advice  => gettext('This is the set of language that will be proposed to your users for the Sympa GUI. Don\'t select a language if you don\'t have the proper locale packages installed.'),
+    },
     { 'title' => gettext('Sending related') },
-
+    {
+        'name'     => 'sendmail',
+        'default'  => '/usr/sbin/sendmail',
+        'query'    => gettext('Path to the MTA (sendmail, postfix, exim or qmail)'),
+        'file'     => 'sympa.conf',
+        'edit'     => '1',
+        'advice'   => gettext('should point to a sendmail-compatible binary (eg: a binary named "sendmail" is distributed with Postfix)'),
+    },
+    {
+        'name'     => 'sendmail_args',
+        'default'  => '-oi -odi -oem',
+    },
     {
         'name'     => 'distribution_mode',
         'default'  => 'single',
@@ -544,19 +573,6 @@ our @params = (
         name    => 'db_list_cache',
         default => 'off',
         advice  => gettext('Whether or not to cache lists in the database'),
-    },
-    { title => 'Internationalization' },
-    {
-        'name'     => 'sendmail',
-        'default'  => '/usr/sbin/sendmail',
-        'query'    => gettext('Path to the MTA (sendmail, postfix, exim or qmail)'),
-        'file'     => 'sympa.conf',
-        'edit'     => '1',
-        'advice'   => gettext('should point to a sendmail-compatible binary (eg: a binary named "sendmail" is distributed with Postfix)'),
-    },
-    {
-        'name'     => 'sendmail_args',
-        'default'  => '-oi -odi -oem',
     },
     {
         'name'     => 'sendmail_aliases',

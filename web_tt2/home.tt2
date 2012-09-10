@@ -17,10 +17,31 @@
 
  <div id="global_mailing_lists">
  
+  [% SET single_topic = "other" %]
+  [% FOREACH topic = list_of_topics %]
+    [% IF topic.id && topic.id != "other" && topic.id != "topicsless" %]
+      [% SET single_topic = "" %]
+      [% LAST %]
+    [% ELSIF topic.sub %]
+      [% FOREACH subtopic = topic.sub %]
+	[% SET single_topic = "" %]
+	[% LAST %]
+      [% END %]
+    [% END %]
+  [% END %]
+  [% IF single_topic != "" %]
+    <ul class="mailing_lists_menu">
+      <li><a href="[% path_cgi %]/lists"><strong>[%|loc%]List of lists[%END%]</strong></a></li>
+    </ul>
+  [% ELSE %]
       <ul class="mailing_lists_menu">
+    [% SET topic_other = 0 %]
     [% FOREACH topic = topics %]
-      [% IF topic.id == 'topicsless' %]
-       <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[%|loc%]Others[%END%]</strong></a></li>
+      [% IF topic.id == 'other' || topic.id == 'topicsless' %]
+	[% UNLESS topic_other %]
+          <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong></a></li>
+	  [% SET topic_other = 1 %]
+	[% END %]
       [% ELSE %]
        <li><a href="[% path_cgi %]/lists/[% topic.id %]"><strong>[% topic.current_title %]</strong></a></li>
       [% END %]
@@ -40,6 +61,7 @@
       [% END %]
     [% END %]
       </ul>
+  [% END %]
 
   </div>
 <div id="home_search_list">

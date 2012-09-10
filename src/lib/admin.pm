@@ -202,19 +202,23 @@ sub create_list_old{
 	}
     }    
 
+    if ($param->{'listname'} eq &Conf::get_robot_conf($robot,'email')) {
+	&do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
+	return undef;
+    }
+
     ## Check listname on SMTP server
-    my $res = &list_check_smtp($param->{'listname'});
+    my $res = &list_check_smtp($param->{'listname'}, $robot);
     unless (defined $res) {
-	&Log::do_log('err', "admin::create_list_old : can't check list %.128s on %.128s",
-		$param->{'listname'},
-		$Conf::Conf{'list_check_smtp'});
+	&Log::do_log('err', "admin::create_list_old : can't check list %.128s on %s",
+		$param->{'listname'}, $robot);
 	return undef;
     }
     
     ## Check this listname doesn't exist already.
     if( $res || new List ($param->{'listname'}, $robot, {'just_try' => 1})) {
-	&Log::do_log('err', 'admin::create_list_old : could not create already existing list %s for ', 
-		$param->{'listname'});
+	&Log::do_log('err', 'admin::create_list_old : could not create already existing list %s on %s for ', 
+		$param->{'listname'}, $robot);
 	foreach my $o (@{$param->{'owner'}}){
 	    &Log::do_log('err',$o->{'email'});
 	}
@@ -417,18 +421,21 @@ sub create_list{
 	    return undef;
 	}
     }    
+    if ($param->{'listname'} eq &Conf::get_robot_conf($robot,'email')) {
+	&do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
+	return undef;
+    }
 
     ## Check listname on SMTP server
-    my $res = &list_check_smtp($param->{'listname'});
+    my $res = &list_check_smtp($param->{'listname'}, $robot);
     unless (defined $res) {
-	&Log::do_log('err', "admin::create_list : can't check list %.128s on %.128s",
-		$param->{'listname'},
-		$Conf::Conf{'list_check_smtp'});
+	&Log::do_log('err', "admin::create_list : can't check list %.128s on %s",
+		$param->{'listname'}, $robot);
 	return undef;
     }
 
     if ($res) {
-	&Log::do_log('err', 'admin::create_list : could not create already existing list %s for ',$param->{'listname'});
+	&Log::do_log('err', 'admin::create_list : could not create already existing list %s on %s for ', $param->{'listname'}, $robot);
 	foreach my $o (@{$param->{'owner'}}){
 	    &Log::do_log('err',$o->{'email'});
 	}
@@ -751,14 +758,15 @@ sub rename_list{
     ## Check listname on SMTP server
     my $res = list_check_smtp($param{'new_listname'}, $param{'new_robot'});
     unless ( defined($res) ) {
-      &Log::do_log('err', "can't check list %.128s on %.128s", $param{'new_listname'}, &Conf::get_robot_conf($param{'new_robot'}, 'list_check_smtp'));
+      &Log::do_log('err', "can't check list %.128s on %.128s",
+	      $param{'new_listname'}, $param{'new_robot'});
       return 'internal';
     }
 
     if( $res || 
 	($list->{'name'} ne $param{'new_listname'}) && ## Do not test if listname did not change
 	(new List ($param{'new_listname'}, $param{'new_robot'}, {'just_try' => 1}))) {
-      &Log::do_log('err', 'Could not rename list %s : new list %s already existing list', $list->{'name'}, $param{'new_listname'});
+      &Log::do_log('err', 'Could not rename list %s on %s: new list %s on %s already existing list', $list->{'name'}, $robot, $param{'new_listname'}, 	$param{'new_robot'});
       return 'list_already_exists';
     }
     
@@ -1152,8 +1160,8 @@ sub check_owner_defined {
      return 0 
 	 unless ($smtp_relay && $suffixes);
      my $domain = &Conf::get_robot_conf($robot, 'host');
-     &Log::do_log('debug2', 'list_check_smtp(%s)',$list);
-     @suf = split(/[,\s]+/,$suffixes);
+     &Log::do_log('debug2', 'list_check_smtp(%s,%s)', $list, $robot);
+     @suf = split(/,/,$suffixes);
      return 0 if ! @suf;
      for(@suf) {
 	 push @addresses, $list."-$_\@".$domain;

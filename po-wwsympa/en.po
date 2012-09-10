@@ -14,15 +14,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2011-03-22 02:39+0200\n"
-"Last-Translator: Anonymous Pootle User\n"
+"PO-Revision-Date: 2012-07-27 08:49+0200\n"
+"Last-Translator: Julian <julian-sym@d-and-j.net>\n"
 "Language-Team: English <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.1.2\n"
+"X-Generator: Pootle 2.1.5\n"
 
 #: ../web_tt2/help.tt2:11
 msgid "Subscriber, moderator and owner documentation"
@@ -633,28 +633,27 @@ msgid "The use of a mailing list service means respecting a number of rules:"
 msgstr "The use of a mailing list service means respecting a number of rules:"
 
 #: ../web_tt2/help_introduction.tt2:117
-#, fuzzy
 msgid ""
 "In most mailing list services, subscribers receive a 'List subscribers "
 "charter' on subscription. Then they are obliged to respect all the rules "
 "contained in that charter."
 msgstr ""
-"In most mailing list services, subscribers receive a '<a target=\"_blank\" "
-"title=\"Example of subscribers charter (French)\" href=\"http://listes.cru."
-"fr/cnil/charte.abonne.html\">List subscribers charter</a>' on subscription. "
-"Then they are obliged to respect all the rules contained in that charter."
+"In most mailing list services, subscribers receive a 'List subscribers "
+"charter' on subscription. Then they are obliged to respect all the rules "
+"contained in that charter."
 
 #: ../web_tt2/help_introduction.tt2:118
 msgid ""
 "If available, list owners and moderators have to conform to the 'Owner and "
 "moderator charter'."
 msgstr ""
+"If available, list owners and moderators have to conform to the 'Owner and "
+"moderator charter'."
 
 #: ../web_tt2/help_introduction.tt2:119
-#, fuzzy
 msgid ""
 "The use of mailing lists naturally means respecting the rules of good "
-"practices as regards to email."
+"practices as regards email (the \"Netiquette\")."
 msgstr ""
 "The use of mailing lists naturally means respecting the rules of good "
 "practices as regards email (the \"Netiquette\")."
@@ -1036,8 +1035,8 @@ msgstr ""
 "enter your email address and password. Shortly afterward you will receive an "
 "email with a validation link."
 
+# typo in original (no->not, at->to)
 #: ../web_tt2/help_user.tt2:65
-#, fuzzy
 msgid ""
 "<strong>If the unique authentication process does not apply to you and you "
 "do no have a list password yet</strong>, click on '<strong>First login?</"
@@ -1045,11 +1044,9 @@ msgid ""
 "that address. Then you will be able to choose your password."
 msgstr ""
 "<strong>If the unique authentication process does not apply to you and you "
-"do no have a list password yet</strong>, click on '<strong>First login ?</"
-"strong>' and type in your email address. Your new password will be sent at "
-"that address. Then you will be able to log on by typing your <strong>email "
-"address</strong> as a login and your <strong>list password</strong> in the "
-"'Password' field."
+"do not have a list password yet</strong>, click on '<strong>First login?</"
+"strong>' and type in your email address. A confirmation URL will be sent to "
+"that address. Then you will be able to choose your password."
 
 #: ../web_tt2/help_user.tt2:68
 msgid ""
@@ -1124,11 +1121,12 @@ msgstr ""
 
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:83
-#, fuzzy
 msgid ""
 "<a href=\"%1/help/suspend\">suspend or resume</a> your subscription of each "
 "list;"
-msgstr "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr ""
+"<a href=\"%1/help/suspend\">suspend or resume</a> your subscription of each "
+"list;"
 
 #: ../web_tt2/help_user.tt2:84
 msgid "<a href=\"#unsubscribe\">unsubscribe</a> from the list."
@@ -1372,6 +1370,11 @@ msgid ""
 "unsubscription, you can keep track of your subscription and reactivate it at "
 "any time by visiting the \"Manage your subscription\" section."
 msgstr ""
+"<strong>suspended</strong>: this mode allows you to suspend your "
+"subscription to one or more lists for a a specified or unspecified period. "
+"Unlike unsubscription, you can keep track of your subscription and "
+"reactivate it at any time by visiting the \"Manage your subscription\" "
+"section."
 
 #: ../web_tt2/help_user.tt2:118
 msgid "<strong>Choose a visibility option</strong>:"
@@ -1607,19 +1610,17 @@ msgstr ""
 "space documentation</strong></a>."
 
 #: ../web_tt2/help_user.tt2:164
-#, fuzzy
 msgid "Suspending or resuming your subscription of each list"
-msgstr "a <a href=\"%1/help/user\">user guide</a> about the use of Sympa;"
+msgstr "Suspending or resuming your subscription of each list"
 
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:165
-#, fuzzy
 msgid ""
 "Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
 "management documentation</strong></a>."
 msgstr ""
-"Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
-"strong></a>."
+"Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
+"management documentation</strong></a>."
 
 #: ../web_tt2/help_user.tt2:167
 msgid "Unsubscribing from lists"
@@ -2657,9 +2658,8 @@ msgstr ""
 "subject</strong>."
 
 #: ../web_tt2/help_admin.tt2:186
-#, fuzzy
 msgid "You have <strong>two options</strong>:"
-msgstr "You have <strong>three options</strong>:"
+msgstr "You have <strong>two options</strong>:"
 
 #: ../web_tt2/help_admin.tt2:188
 msgid "<strong>authorize the message distribution</strong> on the list;"
@@ -3087,16 +3087,13 @@ msgstr ""
 "page of the list administration module."
 
 #: ../web_tt2/help_admin.tt2:257
-#, fuzzy
 msgid ""
 "When available, the 'Owner and moderator charter' provides list owners and "
 "moderators with all the necessary information to carry out their roles. This "
 "Charter involves all the rights and responsibilities of owners and "
 "moderators."
 msgstr ""
-"When available, the <a target=\"_blank\" title=\"Example of charter aimed at "
-"owners and moderators (French)\" href=\"http://listes.cru.fr/cnil/charte."
-"proprio.html\">Owner and moderator charter</a> provides list owners and "
+"When available, the 'Owner and moderator charter' provides list owners and "
 "moderators with all the necessary information to carry out their roles. This "
 "Charter involves all the rights and responsibilities of owners and "
 "moderators."
@@ -3634,70 +3631,64 @@ msgstr ""
 "a full MIME structured message (only for MIME gurus)."
 
 #: ../web_tt2/help_editfile.tt2:9
-#, fuzzy
 msgid ""
 "Unsubscribe message: This message is sent when users leave the list\n"
 "using the UNSUBSCRIBE command."
 msgstr ""
-"Unsubscribe message : This message is sent when users leave the list\n"
+"Unsubscribe message: This message is sent when users leave the list\n"
 "using the UNSUBSCRIBE command."
 
+# missing parenthesis in original
 #: ../web_tt2/help_editfile.tt2:13
-#, fuzzy
 msgid ""
 "Deletion message: This message is sent to users when you\n"
 "remove them from the list using the DEL command (unless you hit the\n"
 "Quiet button."
 msgstr ""
-"Deletion message : This message is sent to users when you\n"
+"Deletion message: This message is sent to users when you\n"
 "remove them from the list using the DEL command (unless you hit the\n"
-"Quiet button."
+"Quiet button)."
 
 #: ../web_tt2/help_editfile.tt2:18
-#, fuzzy
 msgid ""
 "Remind message: This message is sent to each subscriber\n"
 "when using the command  REMIND. It's very useful to help people who are\n"
 "confused about their own subscription emails or people who are not able to\n"
 "unsubscribe themselves."
 msgstr ""
-"Remind message : This message is sent to each subscriber\n"
-"when using the command  REMIND. It's very useful to help people who are\n"
+"Remind message: This message is sent to each subscriber\n"
+"when using the command REMIND. It's very useful to help people who are\n"
 "confused about their own subscription emails or people who are not able to\n"
 "unsubscribe themselves."
 
 #: ../web_tt2/help_editfile.tt2:21
-#, fuzzy
 msgid ""
 "Subscribing invitation message: sent to a person if someone  \n"
 "uses the INVITE command to invite someone to subscribe."
 msgstr ""
-"Subscribing invitation message : sent to a person if someone  \n"
-"uses the INVITE command to invite someone to subscribe."
+"Subscribing invitation message: sent to a person if someone \n"
+"uses the INVITE command to invite someone else to subscribe."
 
 #: ../web_tt2/help_editfile.tt2:24
-#, fuzzy
 msgid "Other files/pages description:"
-msgstr "Other files/pages description :"
+msgstr "Other files/pages description:"
 
 #: ../web_tt2/help_editfile.tt2:28
-#, fuzzy
 msgid ""
 "List homepage: HTML text to describe the list. It is printed on the\n"
 "right-hand side of the main list page. (default for this is the list "
 "description)"
 msgstr ""
-"List homepage : HTML text to describe the list. It is printed on the\n"
+"List homepage: HTML text to describe the list. It is printed on the\n"
 "right-hand side of the main list page. (default for this is the list "
 "description)"
 
 #: ../web_tt2/help_editfile.tt2:31
-#, fuzzy
 msgid ""
 "List description: This text is sent as an answer to the mail command\n"
 "INFO. It can also be included in the <em>Welcome message</em>."
 msgstr ""
-"List description : This text is sent as an answer to the mail command\n"
+"List description: This text is sent as an answer to the mail command\n"
 "INFO. It can also be included in the <em>Welcome message</em>."
 
 #: ../web_tt2/help_editfile.tt2:34
@@ -3709,17 +3700,16 @@ msgstr ""
 "attachment at the beginning of each message distributed to the list."
 
 #: ../web_tt2/help_editfile.tt2:37
-#, fuzzy
 msgid ""
 "Message footer: same as <em>Message header,</em> but attached at the\n"
 "end of the message."
 msgstr ""
-"Message footer : same as <em>Message header,</em> but attached at the\n"
+"Message footer: same as <em>Message header,</em> but attached at the\n"
 "end of the message."
 
 #: ../web_tt2/help_editlist.tt2:5
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #: ../web_tt2/help_editlist.tt2:9
 msgid "Privilege for adding (ADD command) a subscriber to the list"
@@ -3964,13 +3954,12 @@ msgstr ""
 "who will decide whether to distribute or reject it."
 
 #: ../web_tt2/help_editlist.tt2:84
-#, fuzzy
 msgid ""
 "FYI: Defining editors will not make the list moderated; you will have to set "
 "the \"send\" parameter."
 msgstr ""
-"FYI: Defining editors will not make the list moderated ; you will have to "
-"set the \"send\" parameter."
+"FYI: Defining editors will not make the list moderated; you will have to set "
+"the \"send\" parameter."
 
 #: ../web_tt2/help_editlist.tt2:85
 msgid ""
@@ -4030,17 +4019,14 @@ msgstr ""
 "robot.conf file or in file /etc/sympa.conf."
 
 #: ../web_tt2/help_editlist.tt2:101
-#, fuzzy
 msgid ""
 "Include subscribers from this file.  The file should contain one e-mail "
 "address per line (lines beginning with a \"#\" are ignored)."
 msgstr ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include. The file should contain one e-mail address per line (lines "
-"beginning with a \"#\" are ignored)."
+"Include subscribers from this file.  The file should contain one e-mail "
+"address per line (lines beginning with a \"#\" are ignored)."
 
 #: ../web_tt2/help_editlist.tt2:103
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -4049,22 +4035,18 @@ msgid ""
 msgstr ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
-"second-level queries convert the DNs into e-mail addresses. This paragraph "
-"is used only if user_data_source is set to include. This feature requires "
-"the Net::LDAP (perlldap) PERL module."
+"second-level queries convert the DNs into e-mail addresses. This feature "
+"requires the Net::LDAP (perlldap) PERL module."
 
 #: ../web_tt2/help_editlist.tt2:105
-#, fuzzy
 msgid ""
 "This paragraph defines parameters for a query returning a list of "
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
 "This paragraph defines parameters for a query returning a list of "
-"subscribers. This paragraph is used only if user_data_source is set to "
-"include. This feature requires the Net::LDAP (perlldap) PERL module."
+"subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 
 #: ../web_tt2/help_editlist.tt2:107
-#, fuzzy
 msgid ""
 "Include subscribers from other list. All subscribers of list listname become "
 "subscribers of the current list. You may include as many lists as required, "
@@ -4074,14 +4056,13 @@ msgid ""
 "list B and then list B in list A, since this will give rise to an infinite "
 "loop."
 msgstr ""
-"This parameter will be interpreted only if user_data_source is set to "
-"include. All subscribers of list listname become subscribers of the current "
-"list. You may include as many lists as required, using one include_list "
-"listname line for each included list. Any list at all may be included; the "
-"user_data_source definition of the included list is irrelevant, and you may "
-"therefore include lists which are also defined by the inclusion of other "
-"lists. Be careful, however, not to include list A in list B and then list B "
-"in list A, since this will give rise to an infinite loop."
+"Include subscribers from other list. All subscribers of list listname become "
+"subscribers of the current list. You may include as many lists as required, "
+"using one include_list listname line for each included list. Any list at all "
+"may be included; you may therefore include lists which are also defined by "
+"the inclusion of other lists. Be careful, however, not to include list A in "
+"list B and then list B in list A, since this will give rise to an infinite "
+"loop."
 
 #: ../web_tt2/help_editlist.tt2:109
 msgid ""
@@ -4110,13 +4091,11 @@ msgstr ""
 "scenario."
 
 #: ../web_tt2/help_editlist.tt2:112
-#, fuzzy
 msgid ""
 "This parameter is used to begin a paragraph defining the SQL query "
 "parameters. "
 msgstr ""
-"This parameter will be interpreted only if the user_data_source value is set "
-"to include, and is used to begin a paragraph defining the SQL query "
+"This parameter is used to begin a paragraph defining the SQL query "
 "parameters. "
 
 #: ../web_tt2/help_editlist.tt2:114
@@ -4500,15 +4479,14 @@ msgstr ""
 
 #. (path_cgi)
 #: ../web_tt2/help_faquser.tt2:16
-#, fuzzy
 msgid ""
 "<strong>You entered an incorrect password</strong>. If you forgot your "
 "password, you can reset it. To do so, follow the <a href=\"%1/renewpasswd"
 "\">Lost password?</a> link from the homepage."
 msgstr ""
-"<strong>You entered an incorrect password</strong>. If you forgot your "
-"password, you can receive a reminder of it by email. To do that, follow the "
-"<a href=\"%1/remindpasswd\">Lost password?</a> link from the homepage."
+"<strong>You entered an incorrect password</strong>. If you have forgotten "
+"your password, you can reset it. To do so, follow the <a href=\"%1/"
+"renewpasswd\">Lost password?</a> link from the homepage."
 
 #: ../web_tt2/help_faquser.tt2:18
 msgid ""
@@ -6727,9 +6705,8 @@ msgstr ""
 "files and folders that are already online:"
 
 #: ../web_tt2/help_shared.tt2:102
-#, fuzzy
 msgid "by changing their access rights (read and write);"
-msgstr "by changing their access rights (read and right);"
+msgstr "by changing their access rights (read and write);"
 
 #: ../web_tt2/help_shared.tt2:103
 msgid "by editing them;"
@@ -7084,26 +7061,28 @@ msgstr ""
 "characters</strong>."
 
 #: ../web_tt2/help_suspend.tt2:3
-#, fuzzy
 msgid "Manage your subscriptions"
-msgstr "Checking your subscriptions"
+msgstr "Manage your subscriptions"
 
 #: ../web_tt2/help_suspend.tt2:5
 msgid "How does the suspension work?"
-msgstr ""
+msgstr "How does the suspension work?"
 
 #: ../web_tt2/help_suspend.tt2:6
-#, fuzzy
 msgid ""
 "In order to <strong>suspend your subscription</strong> to one or more lists, "
 "follow these steps:"
-msgstr "<strong>date of subscription</strong> to the list;"
+msgstr ""
+"In order to <strong>suspend your subscription</strong> to one or more lists, "
+"follow these steps:"
 
 #: ../web_tt2/help_suspend.tt2:8
 msgid ""
 "Select a start date through the calendar that appears when you click on the "
 "\"start date\" field;"
 msgstr ""
+"Select a start date using the calendar that appears when you click on the "
+"\"start date\" field;"
 
 #: ../web_tt2/help_suspend.tt2:9
 msgid ""
@@ -7112,33 +7091,44 @@ msgid ""
 "In this case, you will have to return to this page to resume your "
 "subscription;"
 msgstr ""
+"if you wish, you can specify the date when you want your subscription to "
+"resume. Do it using the \"end date\" field. Alternatively, you can click on "
+"\"indefinite.\" In this case, you will have to return to this page to resume "
+"your subscription;"
 
+# typo in original: Toogle for Toggle
 #: ../web_tt2/help_suspend.tt2:10
 msgid ""
 "Select the lists which you want to suspend your subscription for. The "
 "\"Toogle selection\" button allows you to invert the selection;"
 msgstr ""
+"Select the lists for which you wish to suspend your subscription. The "
+"\"Toggle selection\" button allows you to invert the selection;"
 
 #: ../web_tt2/help_suspend.tt2:11
 msgid "Click on \"Suspend my subscriptions\" to confirm the suspension."
-msgstr ""
+msgstr "Click on \"Suspend my subscriptions\" to confirm the suspension."
 
 #: ../web_tt2/help_suspend.tt2:13
-#, fuzzy
 msgid ""
 "<strong>To resume your subscription</strong> to one or more lists, follow "
 "these steps:"
-msgstr "<strong>date of subscription</strong> to the list;"
+msgstr ""
+"<strong>To resume your subscription</strong> to one or more lists, follow "
+"these steps:"
 
+# type "toogle" -> "toggle"
 #: ../web_tt2/help_suspend.tt2:15
 msgid ""
 "Select the list(s) you want to reactivate. The \"Toogle selection\" button "
 "allows you to invert the selection;"
 msgstr ""
+"Select the list(s) you want to reactivate. The \"Toggle selection\" button "
+"allows you to invert the selection;"
 
 #: ../web_tt2/help_suspend.tt2:16
 msgid "Click \"Resume\"."
-msgstr ""
+msgstr "Click \"Resume\"."
 
 #: ../web_tt2/help_user_options.tt2:3
 msgid ""

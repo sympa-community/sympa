@@ -190,7 +190,7 @@ sub mail_file {
 	}
 	$tzoff = sprintf '%s%02d%02d',
 			 $sign, int($tzoff / 3600), int($tzoff / 60) % 60;
-	Language::PushLang('en_US');
+	Language::PushLang('en');
 	$headers .= 'Date: ' .
 		    POSIX::strftime("%a, %d %b %Y %H:%M:%S $tzoff",
 				    localtime $now) .
@@ -389,6 +389,12 @@ sub mail_message {
     my @sendto;
     my @sendtobypacket;
 
+    my $cmd_size = length(&Conf::get_robot_conf($robot, 'sendmail')) + 1 +
+		   length(&Conf::get_robot_conf($robot, 'sendmail_args')) +
+		   length(' -N success,delay,failure -V ') + 32 +
+		   length(" -f $from ");
+    my $db_type = $Conf::Conf{'db_type'};
+
     while (defined ($i = shift(@rcpt))) {
 	my @k = reverse(split(/[\.@]/, $i));
 	my @l = reverse(split(/[\.@]/, $j));
@@ -401,28 +407,30 @@ sub mail_message {
 	$rcpt_by_dom{$dom} += 1 ;
 	&Log::do_log('debug2', "domain: $dom ; rcpt by dom: $rcpt_by_dom{$dom} ; limit for this domain: $Conf::Conf{'nrcpt_by_domain'}{$dom}");
 
-	if (defined ($Conf::Conf{'nrcpt_by_domain'}{$dom}) && ( $rcpt_by_dom{$dom} >= $Conf::Conf{'nrcpt_by_domain'}{$dom} )){
-	    undef %rcpt_by_dom ;
-	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
-	    $numsmtp++ ; 
+	if (
+	    # number of recipients by each domain
+	    (defined $Conf::Conf{'nrcpt_by_domain'}{$dom} and
+	     $rcpt_by_dom{$dom} >= $Conf::Conf{'nrcpt_by_domain'}{$dom}) or
+	    # number of different domains
+	    ($j and $#sendto >= &Conf::get_robot_conf($robot, 'avg') and
+	     lc "$k[0] $k[1]" ne lc "$l[0] $l[1]") or
+	    # number of recipients in general, and ARG_MAX limitation
+	    ($#sendto >= 0 and
+	     ($cmd_size + $size + length($i) + 5 > $max_arg or
+	      $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) or
+	    # length of recipients field stored into bulkmailer table
+	    # (these limits might be relaxed by future release of Sympa)
+	    ($db_type eq 'mysql' and $size + length($i) + 5 > 65535) or
+	    ($db_type !~ /^(mysql|SQLite)$/ and $size + length($i) + 5 > 500)
+	   ) {
+	    undef %rcpt_by_dom;
+	    # do not replace this line by "push @sendtobypacket, \@sendto" !!!
+	    my @tab =  @sendto; push @sendtobypacket, \@tab;
+	    $numsmtp++;
 	    $nrcpt = $size = 0;
 	    @sendto = ();
 	}
 	
-	if ($j && $#sendto >= &Conf::get_robot_conf($robot, 'avg') && lc("$k[0] $k[1]") ne lc("$l[0] $l[1]")) {
-	    undef %rcpt_by_dom ;
-	    $numsmtp++ ; 
-	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
-	    $nrcpt = $size = 0;
-	    @sendto = ();
-	}
-	if ($#sendto >= 0 && (($size + length($i)) > $max_arg || $nrcpt >= &Conf::get_robot_conf($robot, 'nrcpt'))) {
-	    undef %rcpt_by_dom ;
-	    $numsmtp++  ;
-	    my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
-	    $nrcpt = $size = 0;
-	    @sendto = ();
-	}
 	$nrcpt++; $size += length($i) + 5;
 	push(@sendto, $i);
 	$j = $i;

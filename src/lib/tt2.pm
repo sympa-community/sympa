@@ -265,7 +265,7 @@ sub parse_tt2 {
 
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
-	&Log::do_log('err', 'Failed to parse %s : %s', $template, $tt2->error());
+	&Log::do_log('err', 'Failed to parse %s : %s', $template, "$last_error");
 	&Log::do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
 
 

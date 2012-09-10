@@ -46,7 +46,7 @@
       [% IF template.value.comment %]
       <li>
         <input type="radio" name="template" value="[% template.key %]"
-     [% IF template.value.selected %]
+     [% IF template.value.selected || loop.size == 1 %]
        checked="checked"
      [% END %]
        />
@@ -70,11 +70,28 @@
     <input type="text" name="subject" id="subject" size="60" value="[% saved.subject %]" />
    <br />
  
+[% SET single_topic = "other" %]
+[% FOREACH topic = list_of_topics %]
+  [% IF loop.size > 1 || (topic.key && topic.key != "other") %]
+    [% SET single_topic = "" %]
+    [% LAST %]
+  [% ELSIF topic.value.sub %]
+    [% FOREACH subtopic = topic.value.sub %]
+      [% SET single_topic = "" %]
+      [% LAST %]
+    [% END %]
+  [% END %]
+[% END %]
+[% IF single_topic != "" %]
+  <input id="topics" name="topics" type="hidden" value="[% single_topic %]" />
+[% ELSE %]
   <img src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]List classification in the directory[%END%]" />
   <label for="topics"><strong>[%|loc%]Topics:[%END%]</strong></label>
     <select id="topics" name="topics">
 	<option value="">[%|loc%]--Select a topic--[%END%]</option>
+	[% SET topic_other = 0 %]
 	[% FOREACH topic = list_of_topics %]
+	  [% IF topic.key == "other" %][% SET topic_other = 1 %][% END %]
 	  <option value="[% topic.key %]"
 	  [% IF topic.value.selected %]
 	    selected="selected"
@@ -90,9 +107,12 @@
 	  [% END %]
 	  [% END %]
 	[% END %]
+	[% UNLESS topic_other %]
 	<option value="other">[%|loc%]Other[%END%]</option>
+	[% END %]
      </select>
      <br />
+[% END %]
 
   <img class="align_top" src="[% icons_url %]/unknown.png" alt="[%|loc%]Help[%END%]" title="[%|loc%]A few lines describing the list[%END%]" />
   <label for="info" class="align_top"><strong>[%|loc%]Description:[%END%]</strong></label>

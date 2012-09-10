@@ -47,7 +47,9 @@
 [% IF editor %]
 <span style="font-weight: normal;">
    [% FOREACH e = editor %]
- 	[% IF e.value.gecos %][% e.value.gecos %][% ELSE %][% e.value.local %][% END %][% IF ! loop.last %],[% END %] 
+      [% IF e.value.visibility != 'conceal' %]
+ 	[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %],[% END %]</span>[% END %]<br />
+      [% END %]
    [% END %]
 [% ELSE %]
 <span style="font-weight: normal;">

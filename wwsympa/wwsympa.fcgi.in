@@ -854,8 +854,8 @@ my %in_regexp = (
 		 'template_path' => '[\w\-\.\/_]+',
 		 'arc_file' => '[^<>\\\*\$\n]+',
 		 'path' => '[^<>\\\*\$\n]+',
-		 'uploaded_file' => '[^<>\*\$\n]+', # Could be precised (use of "'")
-		 'unzipped_file' => '[^<>\*\$\n]+',
+		 'uploaded_file' => '(.*[\/\\])?[^<>\*\$\n]+', # Could be precised (use of "'")
+		 'unzipped_file' => '(.*[\/\\])?[^<>\*\$\n]+',
 		 'dir' => '[^<>\\\*\$\n]+',
 		 'name_doc' => '[^<>\\\*\$\[\]\/\n]+',
 		 'shortname' => '[^<>\\\*\$\n]+',
@@ -1280,9 +1280,7 @@ my $birthday = time ;
     }
 
      $param->{'session'} = $session->as_hashref();
-     open TMP, ">/tmp/param_session_dump"; print TMP &Dumper ($param->{'session'}); close TMP;
-     open TMP, ">/tmp/session_dump"; print TMP &Dumper ($session); close TMP;
-     
+
      &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
@@ -2476,19 +2474,21 @@ sub send_html {
 
     ## Send HTML
     if ($param->{'date'}) {
-	Language::PushLang("en_US");
+	Language::PushLang("en");
 	printf "Date: %s\n", &POSIX::strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime(time));
 	Language::PopLang();
     }
     ## If we set the header indicating the last time the file to send was modified, add an HTTP header (limitate web harvesting).
     if ($param->{'header_date'}) {
-	Language::PushLang("en_US");
+	Language::PushLang("en");
 	printf "Last-Modified: %s\n", &POSIX::strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime($param->{'header_date'}));
 	Language::PopLang();
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n";
-    
+    ## Workaround for Internet Explorer 8.
+    print "X-UA-Compatible: IE=7\n";
+
     ## Icons
     $param->{'icons_url'} = &Conf::get_robot_conf($robot, 'static_content_url').'/icons';
     
@@ -3117,11 +3117,11 @@ sub do_ticket {
 	 $next_action = $in{'previous_action'};
 	 $in{'list'} = $in{'previous_list'};
      }else {
-	 $next_action = 'home';
+	$next_action = &Conf::get_robot_conf($robot, 'default_home');
      }
-      # never return to login or logout when login.
-      $next_action = 'home' if ($in{'next_action'} eq 'login') ;
-      $next_action = 'home' if ($in{'next_action'} eq 'logout') ;
+    # never return to login or logout when login.
+    $next_action = &Conf::get_robot_conf($robot, 'default_home')
+	if $in{'next_action'} =~ /^(login|logout)$/;
 
      if ($param->{'user'}{'email'}) {
 	 &report::reject_report_web('user','already_login',{'email' => $param->{'user'}{'email'}},$param->{'action'},'');
@@ -3145,7 +3145,8 @@ sub do_ticket {
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
 		      'error_type' => "no_email"});		      
-	 return $in{'previous_action'} || 'home';
+	 return $in{'previous_action'} ||
+		&Conf::get_robot_conf($robot, 'default_home');
      }
 
      $session->{'unauthenticated_email'} = $param->{'unauthenticated_email'} = $in{'email'};
@@ -3301,8 +3302,8 @@ sub do_sso_login {
 	&wwslog('err','do_login: user %s already logged in', $param->{'user'}{'email'});
 	&web_db_log({'parameters' => $in{'auth_service_name'},
 		     'status' => 'error',
-		     'error_type' => "already_login"});		      
-	return 'home';
+		     'error_type' => "already_login"});
+	return &Conf::get_robot_conf($robot, 'default_home');
     }
     
     
@@ -3489,8 +3490,8 @@ sub do_sso_login {
 			&web_db_log({'parameters' => $in{'auth_service_name'},
 				     'target_email' => $in{'email'},
 				     'status' => 'error',
-				     'error_type' => 'internal'});		      
-			return 'home';
+				     'error_type' => 'internal'});
+			return &Conf::get_robot_conf($robot, 'default_home');
 		    }
 		    
 		}else {
@@ -3836,7 +3837,7 @@ sub do_redirect {
 	 $param->{'referer'} = &tools::escape_chars($in{'previous_list'});
      }
 
-     return 'home';
+    return &Conf::get_robot_conf($robot, 'default_home');
  }
 
 sub sendssopasswd {
@@ -3989,7 +3990,12 @@ sub do_renewpasswd {
      &wwslog('debug','do_requestpasswd: sending one time ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
-     $param->{'newuser'} =  &List::get_global_user($in{'email'});
+     unless ($param->{'newuser'} = &List::get_global_user($in{'email'})) {
+	$param->{'newuser'} =
+	    { 'email' => &tools::clean_email($in{'email'}) };
+	$param->{'newuser'}{'escaped_email'} = 
+	    &tools::escape_chars($param->{'newuser'}{'email'});
+     }
      if ($param->{'one_time_ticket'}) {
 	 $param->{'login_error'}='ticket_sent';
 	 unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
@@ -4104,20 +4110,30 @@ sub do_renewpasswd {
 	     $list_info->{'is_subscriber'} = 1;
 	 }
 
-	 ## no topic ; List all lists
-
+	 ## Filter lists by topic.
+	 ## topic argument 'topicsless' or 'other' means 'lists with topic
+	 ## "other" or without topics'.
+	 ## no topic argument; List all lists
 	 if (! $in{'topic'}) {
 	     $param->{'which'}{$list->{'name'}} = $list_info;
 	 }elsif ($list->{'admin'}{'topics'}) {
 	     foreach my $topic (@{$list->{'admin'}{'topics'}}) {
 		 my @tree = split '/', $topic;
 
+		if (($in{'topic'} eq 'other' and ! $in{'subtopic'}) or
+		    $in{'topic'} eq 'topicsless') {
+		    $param->{'which'}{$list->{'name'}} = $list_info
+			if $tree[0] eq 'other' and ! $tree[1];
+		    next;
+		}
+
 		 next if (($in{'topic'}) && ($tree[0] ne $in{'topic'}));
 		 next if (($in{'subtopic'}) && ($tree[1] ne $in{'subtopic'}));
 
 		 $param->{'which'}{$list->{'name'}} = $list_info;
 	     }
-	 }elsif ($in{'topic'} eq 'topicsless') {
+	 } elsif (($in{'topic'} eq 'other' and ! $in{'subtopic'}) or
+		  $in{'topic'} eq 'topicsless') {
 	     $param->{'which'}{$list->{'name'}} = $list_info;
 	 }
      }
@@ -5202,6 +5218,16 @@ sub do_subrequest {
 	    $param->{'status'} = 'notauth_noemail';
 	    return 1;
 	}
+	## valid email address?
+	unless (&tools::valid_email($in{'email'})) {
+	    &report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'},$list);
+	    &wwslog('info','do_subrequest: incorrect email %s', $in{'email'});
+	    &web_db_log({'target_email' => $in{'email'},
+			 'status' => 'error',
+			 'error_type' => 'incorrect_email'});
+	    $param->{'status'} = 'notauth_noemail';
+	    return 1;
+	}
 	## Subscriber ?
 	if ($list->is_list_member($in{'email'})) {
 	    $param->{'status'} = 'notauth_subscriber';
@@ -5215,7 +5241,12 @@ sub do_subrequest {
 	$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
 	$param->{'login_error'}='ticket_sent';
 	$param->{'request_from_host'} = $ip;
-	$param->{'newuser'} =  &List::get_global_user($in{'email'});
+	unless ($param->{'newuser'} = &List::get_global_user($in{'email'})) {
+	    $param->{'newuser'} =
+		{ 'email' => &tools::clean_email($in{'email'}) };
+	    $param->{'newuser'}{'escaped_email'} =
+		&tools::escape_chars($param->{'newuser'}{'email'});
+	}
 	unless (&List::send_global_file('sendpasswd', $in{'email'}, $robot, $param)) {
 	  &wwslog('notice',"Unable to send template 'sendpasswd' to $in{'email'}");
 	  $param->{'login_error'}='unable_to_send_ticket';
@@ -5231,7 +5262,7 @@ sub do_subrequest {
 sub do_auto_signoff {
      &wwslog('info', 'do_auto_signoff');
      ## If the URL isn't valid, then go to home page. No need to guide the user: this function is supposed to be used by clicking on autocreated URL only.
-     return 'home' unless $in{'email'};
+     return &Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
 
      ## If unsubscribe is forbidden, reject the request. Other
 
@@ -5274,7 +5305,7 @@ sub do_auto_signoff {
 	 return undef;
        }
    }else{
-       return 'home';
+	return &Conf::get_robot_conf($robot, 'default_home');
    }
      $param->{'signing_off_email'} = $in {'email'};
      ## If OK, return the page displaying the informations to the user.
@@ -5284,7 +5315,7 @@ sub do_auto_signoff {
 sub do_family_signoff_request {
     &wwslog('info', 'do_family_signoff_request');
     ## If the URL isn't valid, then go to home page. No need to guide the user: this function is supposed to be used by clicking on autocreated URL only.
-    return 'home' unless $in{'email'};
+    return &Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
 
     my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'family_signoff/'.$in{'family'}.'/'.$in{'email'},$ip);
 
@@ -5375,7 +5406,7 @@ sub do_family_signoff {
     }else{
 	&report::reject_report_web($result{'category_error'},$result{'reason_error'},{%{$result{'reason_error'}},'list'=>$list->{'name'}},$param->{'action'},$list);
     }
-    return 'home';
+    return &Conf::get_robot_conf($robot, 'default_home');
  }
 
 ## Unsubscribe current user from a list.
@@ -5474,8 +5505,15 @@ sub unsubscribe {
      unless ($in{'email'}) {
 	 return 1;
      }
-
-     
+     ## valid email address?
+     unless (&tools::valid_email($in{'email'})) {
+	&report::reject_report_web('user','incorrect_email',{'email' => $in{'email'}},$param->{'action'},$list);
+	&wwslog('info','do_sigrequest: incorrect email %s', $in{'email'});
+	&web_db_log({'target_email' => $in{'email'},
+		    'status' => 'error',
+		    'error_type' => 'incorrect_email'});
+	return 1;
+     }
      if ($list->is_list_member($in{'email'})) {
 
        my $ticket = &Auth::create_one_time_ticket($in{'email'},$robot,'signoff/'.$list->{'name'},$ip);
@@ -7303,6 +7341,7 @@ sub do_viewmod_old {
      }
 
      $param->{'file'} = $in{'file'};
+     $param->{'complete'} = gettext($wwslib::filenames{$in{'file'}}{'gettext_id'});
 
      my $subdir = '';
      if ($in{'file'} =~ /\.tt2$/) {
@@ -8359,9 +8398,6 @@ sub do_remove_arc {
      foreach my $w (@words) {
 	$w = &tools::escape_regexp($w);
 	$w =~ s,/,\\/,g;
-	# Mhonarc escapes some characters : '-' (&#45;) and '&' (&#38;)
-	$w =~ s/\&/\&\#38\;/g;
-	$w =~ s/\-/\&\#45\;/g;
      }
      $search->words (\@words);
 
@@ -8653,47 +8689,6 @@ sub do_set_pending_list_request {
      return 1;
  }
 
- ## check if the requested list exists already using smtp 'rcpt to'
- sub list_check_smtp {
-     my $list = shift;
-     my $conf = '';
-     my $smtp;
-     my (@suf, @addresses);
-
-     my $smtp_relay = &Conf::get_robot_conf($robot, 'list_check_smtp');
-     my $smtp_helo = &Conf::get_robot_conf($robot, 'list_check_helo') || $smtp_relay;
-     $smtp_helo =~ s/:[-\w]+$//;
-     my $suffixes = &Conf::get_robot_conf($robot, 'list_check_suffixes');
-     return 0 
-	 unless ($smtp_relay && $suffixes);
-     my $domain = &Conf::get_robot_conf($robot, 'host');
-     &wwslog('debug2', 'list_check_smtp(%s)',$in{'listname'});
-     @suf = split(/[,\s]+/,$suffixes);
-     return 0 if ! @suf;
-     for(@suf) {
-	 push @addresses, $list."-$_\@".$domain;
-     }
-     push @addresses,"$list\@" . $domain;
-
-     unless (eval "require Net::SMTP") {
-	 wwslog ('err',"Unable to use Net library, Net::SMTP required, install it (CPAN) first");
-	 return undef;
-     }
-     require Net::SMTP;
-
-     if( $smtp = Net::SMTP->new($smtp_relay,
-				Hello => $smtp_helo,
-				Timeout => 30) ) {
-	 $smtp->mail('');
-	 for(@addresses) {
-		 $conf = $smtp->to($_);
-		 last if $conf;
-	 }
-	 $smtp->quit();
-	 return $conf;
-    }
-    return undef;
- }
 
 =pod 
 
@@ -8778,7 +8773,7 @@ Creates a list using a list template
 		      'list' => $in{'listname'},
 		      'status' => 'error',
 		      'error_type' => 'authorization'});	     
-	 return undef;
+	 return 'home';
 
      ## If the action is reserved to listmaster, note that it will have to be moderated
      }elsif ($param->{'create_action'} =~ /listmaster/i) {
@@ -8796,7 +8791,7 @@ Creates a list using a list template
 		      'list' => $in{'listname'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});	     
-	 return undef;
+	 return 'create_list_request';
      }
 
      ## 'other' topic means no topic
@@ -8826,7 +8821,7 @@ Creates a list using a list template
 		       'list' => $in{'listname'},
 		       'status' => 'error',
 		       'error_type' => 'user'});
-	  return undef
+	  return 'create_list_request';
       }
      my $resul = &admin::create_list_old($parameters,$in{'template'},$robot,"web", $param->{'user'}{'email'});
      unless(defined $resul) {
@@ -8836,7 +8831,7 @@ Creates a list using a list template
 		      'list' => $in{'listname'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});	     
-	 return undef
+	 return 'create_list_request';
      }
      
      ## Create list object
@@ -8857,7 +8852,7 @@ Creates a list using a list template
      unless (defined $list) {
        &wwslog('info',"failed to create list object for list '%s'",$in{'listname'});
        &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-       return undef;
+       return 'create_list_request';
      }
 
      if ($param->{'create_action'} =~ /notify/) {
@@ -16502,7 +16497,7 @@ sub do_send_mail {
        return $in{'previous_action'};
      }
 
-     return 'home';
+     return &Conf::get_robot_conf($robot, 'default_home');
  }
  ## Function do_attach
  sub do_attach {

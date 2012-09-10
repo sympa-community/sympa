@@ -134,9 +134,9 @@
             <td>
             [% IF u.subscribed %]
               [% IF u.included %]
-                 subscribed<br />[% u.sources %]
+                 [%|loc%]subscribed[%END%]<br />[% u.sources %]
               [% ELSE %]
-                 subscribed
+                 [%|loc%]subscribed[%END%]
               [% END %]
             [% ELSE %]
               [% u.sources %]

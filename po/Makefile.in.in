@@ -366,7 +366,7 @@ update-po: Makefile
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
 	cd $(srcdir); \
-	if test "$$lang" = "en_US"; then\
+	if test "$$lang" = "en"; then\
           $(MSGEN) -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
         else \
 	  if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
@@ -423,7 +423,7 @@ clean-po:
 	  test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	  echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
 	  cd $(srcdir); \
-	  if test "$$lang" = "en_US"; then\
+	  if test "$$lang" = "en"; then\
 	    if $(MSGATTRIB) --no-fuzzy -o $$tmpdir/$$lang.previous.po $$lang.po; then \
 	      if cmp $$lang.po $$tmpdir/$$lang.previous.po >/dev/null 2>&1; then \
 	        rm -f $$tmpdir/$$lang.new.po; \
@@ -432,7 +432,7 @@ clean-po:
                 $(MSGCAT) --use-first -o $$tmpdir/$$lang.new.po $$lang.po $$tmpdir/$$lang.new.po; \
 	      fi; \
 	    else \
-	      echo "Could not gather not fuzzy translated strings in en_US.po" 1>&2; \
+	      echo "Could not gather not fuzzy translated strings in en.po" 1>&2; \
 	    fi;\
           else \
 	    if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
