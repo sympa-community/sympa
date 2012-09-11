@@ -3,67 +3,80 @@
 <div class="list_panel">
 
 <ul>
-   [% IF list_status == 'closed' %]
-   <li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
-   [% ELSIF list_status == 'pending' %]
-   <li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
-   [% END %]
-
-[% IF may_review %]
-   <li class="menuLinks"><a href="[% path_cgi %]/review/[% list %]">[%|loc%]Subscribers:[%END%]</a>
-[% ELSE %]
-[%|loc%]Subscribers:[%END%]
-[% END %]
- [% total %]
-[% IF may_review %]
-</li>
-[% ELSE %]
-<br>
-[% END %]
-   [% IF is_priv %]
-<span style="font-weight: normal;">
-&nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
-</span>
-<br />
-[% END %]
-
-[% IF is_priv %]
-   <li class="menuLinks"><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Owners[%END%]:</a>
-[% ELSE %]
-[%|loc%]Owners[%END%]:
-[% END %]
-<span style="font-weight: normal;">
-   [% FOREACH o = owner %]
-	[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %],[% END %] 
-   [% END %]
-</span>
-</li>
-  [% IF is_priv %]
-<li class="menuLinks"><a href="[% path_cgi %]/edit_list_request/[% list %]/description">[%|loc%]Moderators[%END%]:</a>
-[% ELSE %]
-<br>
-[%|loc%]Moderators[%END%]:
-[% END %]
-[% IF editor %]
-<span style="font-weight: normal;">
-   [% FOREACH e = editor %]
-      [% IF e.value.visibility != 'conceal' %]
- 	[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %],[% END %]</span>[% END %]<br />
-      [% END %]
-   [% END %]
-[% ELSE %]
-<span style="font-weight: normal;">
-   <i>(same as owners)</i>
-</span>
-[% END %]
-</span>
-</li>
-   [% IF list_as_x509_cert %]<br /><a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a><br />[% END %]
-  [% IF protection_type == 'javascript' %]
-   <li class="menuLinks">[% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]<\/a>[% hidden_end %]</li>
-  [% ELSE %]
-   <li class="menuLinks"><a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a></li>
-  [% END %]
+	
+	[% IF list_status == 'closed' %]
+	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
+	[% ELSIF list_status == 'pending' %]
+	<li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
+	[% END %]
+	
+	<li class="menuLinks">
+		[%|loc%]Subscribers:[%END%] [% total %]
+		[% IF may_review %]
+		<span style="font-weight: normal;">
+			<a href="[% path_cgi %]/review/[% list %]">[%|loc%](review)[%END%]</a>
+		</span>
+		[% END %]
+		
+		[% IF is_priv %]
+		<br />
+		<span style="font-weight: normal;">
+			&nbsp;&nbsp;(<a href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Error rate:[%END%]</a> [% bounce_rate %]% )
+		</span>
+		<br />
+		[% END %]
+	</li>
+	
+	<li class="menuLinks">
+		[%|loc%]Owners[%END%]:
+		<span style="font-weight: normal;">
+		[% FOREACH o = owner %]
+			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %],[% END %] 
+		[% END %]
+		</span>
+		
+		[% IF is_priv %]
+		<span style="font-weight: normal;">
+			<a href="[% path_cgi %]/edit_list_request/[% list %]/description#owner">[%|loc%](edit)[%END%]</a>
+		</span>
+		[% END %]
+	</li>
+	
+	<li class="menuLinks">
+		[%|loc%]Moderators[%END%]:
+		<span style="font-weight: normal;">
+		[% IF editor %]
+			[% FOREACH e = editor %]
+				[% IF e.value.visibility != 'conceal' %]
+					[% IF e.value.gecos %]<span>[% e.value.gecos %]</span>[% ELSE %]<span>[% e.value.local %][% IF ! loop.last %],[% END %]</span>[% END %]<br />
+				[% END %]
+			[% END %]
+		[% ELSE %]
+			<i>(same as owners)</i>
+		[% END %]
+		</span>
+		
+		[% IF is_priv %]
+		<span style="font-weight: normal;">
+			<a href="[% path_cgi %]/edit_list_request/[% list %]/description#editor">[%|loc%](edit)[%END%]</a>
+		</span>
+		[% END %]
+	</li>
+	
+	[% IF list_as_x509_cert %]
+	<li class="menuLinks">
+		<a href="[% path_cgi %]/load_cert/[% list %]">[%|loc%]Load certificate[%END%]</a>
+	</li>
+	[% END %]
+	
+	<li class="menuLinks">
+	[% IF protection_type == 'javascript' %]
+		[% hidden_head %]<a href=\"mailto:[% list %]-request[% hidden_at %][% domain %]\">[%|loc%]Contact owners[%END%]</a>[% hidden_end %]
+	[% ELSE %]
+		<a href="mailto:[% hidden_head %][% list %]-request[% hidden_at %][% domain %][% hidden_end %]">[%|loc%]Contact owners[%END%]</a>
+	[% END %]
+	</li>
+	
 </ul>
 
 </div>
