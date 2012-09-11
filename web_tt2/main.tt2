@@ -107,7 +107,7 @@
 
         <div class="ContentBlock">
          [% PROCESS notice.tt2 IF notices %]
-	 [% IF action == 'edit_list_request' %]<br /><br />[% END %]
+	 [% IF action == 'edit_list_request' || action == 'editfile' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
       <div class="top"><a href="#top" title="Top of Page"><img src="[% icons_url %]/top.png" alt="Top of page" /></a></div>

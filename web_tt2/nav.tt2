@@ -63,8 +63,6 @@
 [% IF action == 'edit_list_request' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a  href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit List Config[%END%]</a></li>
 [% IF is_owner %]
-[% IF action == 'editfile' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-    <li class="[% class %]"><a  href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing[%END%]</a></li>
 [% IF action == 'review' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a  href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
 [% END %]
@@ -88,7 +86,7 @@
   </ul>
 </div>
 
-[% IF action == 'edit_list_request' %]
+[% IF action == 'edit_list_request' || action == 'editfile' %]
 <div id="subnav">
   <ul>
 [% IF group == 'description' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
@@ -103,6 +101,8 @@
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/data_source" >[%|loc%]Data sources setup[%END%]</a></li>
 [% IF group == 'dkim' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/dkim" >[%|loc%]DKIM[%END%]</a></li>
+[% IF action == 'editfile' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a  href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing[%END%]</a></li>
 [% IF group == 'other' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
      <li class="[% class %]"><a href="[% path_cgi %]/edit_list_request/[% list %]/other" >[%|loc%]Miscellaneous[%END%]</a></li>
   </ul>
