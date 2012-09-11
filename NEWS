@@ -3,6 +3,32 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.28		September 11, 2012
+
+  Changes:
+
+	[7585] web_tt2/list_panel.tt2:	Adding/updating links to quickly edit
+	owners and editors from list panel
+
+	[7583] web_tt2/edit_list_request.tt2, web_tt2/main.tt2,
+	web_tt2/nav.tt2:  Moving the "Customising" link from main list admin to
+	list config sub section as list related text files are in a way list
+	configuration parameters as well.
+
+	[7577] wwsympa/wwsympa.fcgi.in:  When an error occurs when creating a
+	list through the web interface, the user stays on the list creation
+	page with her previously filled list description still present.
+
+	[7576] src/lib/admin.pm:  Now Sympa prevents users from creating a list
+	whose local part of email address would be the local part used by sympa
+	for mail commands.
+
+  Bug fixes:
+
+	[7573] wwsympa/Auth.pm, wwsympa/wwsympa.fcgi.in: [Reported by R.
+	Tassoni, National Library of Australia] Requests for new password with
+	email address containing an apostrophe, SQL queries fail.
+
 6.2a.27		August 30, 2012
 
   Changes:
