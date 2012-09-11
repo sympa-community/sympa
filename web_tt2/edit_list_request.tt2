@@ -22,7 +22,7 @@
   <fieldset>
     <input type="hidden" name="serial" value="[% serial %]" />
         [% FOREACH p = param %]
-
+		<a name="[% p.name %]"></a>
         [% IF p.may_edit != 'hidden' %]
 
           [% IF p.changed == '1' %]
