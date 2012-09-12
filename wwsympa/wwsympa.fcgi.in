@@ -385,7 +385,7 @@ my %auth_action = ('logout' => 1,
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
 my %action_args = ('default' => ['list'],
-		'editfile' => ['list','file'],
+		'editfile' => ['list','file','previous_action'],
 		'viewfile' => ['list','file'],
 		'requestpasswd' => ['email'],
 		'choosepasswd' => ['email','passwd'],
@@ -7314,23 +7314,32 @@ sub do_viewmod_old {
      &wwslog('info', 'do_editfile(%s)', $in{'file'});
 
      $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
-
-     unless ($in{'file'}) {
-	 ## Messages edition
-	 foreach my $f ('info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2') {
-	     my $filename_for_auth = $f;
-	     $filename_for_auth = 'info.file' if ($filename_for_auth eq 'info');
-	     next unless ($list->may_edit($filename_for_auth, $param->{'user'}{'email'}) eq 'write');
-	     if ($wwslib::filenames{$f}{'gettext_id'}) {
-		 $param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
-	     }else {
-		 $param->{'files'}{$f}{'complete'} = $f;
-	     }
-	     $param->{'files'}{$f}{'selected'} = '';
-	 }
-	 return 1;
-     }
-
+     
+	my %files = (
+		description_templates => ['info', 'homepage'],
+		message_templates => ['welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2'],
+		all_templates => ['info','homepage','welcome.tt2','bye.tt2','removed.tt2','message.footer','message.header','remind.tt2','invite.tt2','reject.tt2','your_infected_msg.tt2']
+	);
+	
+	$in{'file'} = 'all_templates' unless($in{'file'});
+	$param->{'selected_file'} = $in{'file'};
+	$param->{'previous_action'} = $in{'previous_action'} || '';
+	
+	if(defined $files{$in{'file'}}) {
+		foreach my $f (@{$files{$in{'file'}}}) {
+			my $filename_for_auth = $f;
+			$filename_for_auth = 'info.file' if($filename_for_auth eq 'info');
+			next unless($list->may_edit($filename_for_auth, $param->{'user'}{'email'}) eq 'write');
+			if($wwslib::filenames{$f}{'gettext_id'}) {
+				$param->{'files'}{$f}{'complete'} = gettext($wwslib::filenames{$f}{'gettext_id'});
+			}else {
+				$param->{'files'}{$f}{'complete'} = $f;
+			}
+			$param->{'files'}{$f}{'selected'} = '';
+		}
+		return 1;
+	}
+	
      unless (defined $wwslib::filenames{$in{'file'}}) {
 	 &report::reject_report_web('user','file_not_editable',{'file' => $in{'file'}},$param->{'action'});
 	 &wwslog('err','do_editfile: file %s not editable', $in{'file'});
@@ -7556,7 +7565,9 @@ sub do_viewmod_old {
 
  #    undef $in{'file'};
  #    undef $param->{'file'};  
-     return 'editfile';
+	my $pa = 'editfile';
+	$pa = $in{'previous_action'} if($in{'previous_action'});
+     return $pa;
  }
 
  ## Access to web archives
@@ -17319,6 +17330,54 @@ sub do_review_family {
     return 1;
 }
 
+# Get custom action file
+sub _ca_get_file {
+	my $custom_action = shift;
+	my $robot = shift;
+	my $list = shift;
+	
+	my $file = &tools::get_filename('etc', {}, 'custom_actions/'.$custom_action, $robot, $list);
+	return undef unless($file);
+	
+	&_ca_add_file_path_to_tt2_include_path($file);
+	
+	return $file;
+}
+
+# Adds custom action path to tt2 path
+sub _ca_add_file_path_to_tt2_include_path {
+	my $file = shift;
+	$file =~ s/\/[^\/]+$//;
+	tt2::add_include_path($file);
+}
+
+# Process custom action
+sub _ca_process {
+	my $custom_action = shift;
+	my $cap = shift;
+	my $robot = shift;
+	my $list = shift;
+	
+	my $file = &_ca_get_file($custom_action.'.pm', $robot, $list);
+	return undef unless($file);
+	
+	eval { require "$file"; };
+	if($@) {
+		&Log::do_log('err', 'Error requiring %s : %s (%s)', $custom_action, "$@", ref($@));
+		return undef;
+	}
+	
+	unshift @{$cap}, $list if($list);
+	my $res;
+	eval "\$res = ".$custom_action."_plugin::process(\@{\$cap});";
+	if($@) {
+		&Log::do_log('err', 'Error evaluating %s : %s (%s)', $custom_action, "$@", ref($@));
+		return undef;
+	}
+	
+	return $res;
+}
+
 ################################################################
 ## do_ca : executes a custom action
 ##
@@ -17326,19 +17385,67 @@ sub do_review_family {
 ##    - 'custom_action': ther name of the custom action (and subsequent tt2 file to use, see below)
 ##    - '@cap': an array of parameters.
 ##
-## Custom actions are used to display user defined templates.
-## To use it, follow these steps:
-## 1- create a new file "your_action.tt2" and put it in the relevant dir (either etc or expl)
-## 2- in this file, add the HTML fragment you want to insert to the web interface. You don't need the <head/> section or the <body/> tag.
-## 3- you can type your action URL: http://your-sympa-server-root-url/ca/your_action/param2/param2/param3/...
+## Custom actions are used to run specific code and/or display user defined templates.
+## You can create a <your_action>.pm module under etc/custom_actions or etc/<robot>/custom_actions (<your_action>_plugin package) with a "process" sub to add custom processing.
+## You can also create a <your_action>.tt2 file at the same place to display your template. You don't need the <head/> section or the <body/> tag.
+## The HTML code in '<your_action>.tt2' can make use of the parameters this way: [% cap.1 %] for param1, [% cap.2 %] for param, and so on.
+## If the module is not defined the template is displayed.
 ##
-## the HTML code in 'your_action.tt2' can make use of the parameters this way: [% cap.1 %] for param1, [% cap.2 %] for param, and so on.
+## You can even have a robot-common <your_action>.pm module with a specific <your_action>.tt2 for each robot as the file (.pm or .tt2) is conducted in this order :
+##   - expl/<robot>/<list>/custom_actions (if list context and robot support)
+##   - expl/<list>/custom_actions (if list context and no robot support)
+##   - etc/<robot>/custom_actions (if robot support)
+##   - etc/custom_actions
+##
+## Your custom action is reachable using URL: http://your-sympa-server-root-url/ca/your_action/param2/param2/param3/...
+##
+## The module process sub receive @cap entries as arguments
+##
+## The module process sub return value can be either :
+## 	1 to parse and display the custom action related tt2
+## 	<a global action name> to display its template
+## 	ca:<other_custom_action> to parse and display another custom action related tt2
+## 	a hash which entries will override $param ones, in case "custom_action" or "next_action" are present they act as described above.
+##
 ###############################################################
 sub do_ca {
-    &wwslog('info', 'custom action: %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$robot,$in{'cap'});
-    $param->{'custom_action'} = $in{'custom_action'};
-    $param->{'cap'} = [split '/',$in{'cap'}];
-    return 1;
+	&wwslog('info', 'custom action: %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$robot,$in{'cap'});
+	
+	my $custom_action = $in{'custom_action'};
+	my $cap = [split '/', $in{'cap'}];
+	$param->{'custom_action'} = $custom_action;
+	$param->{'cap'} = $cap;
+	
+	my $res = &_ca_process($custom_action, $cap, $robot);
+	
+	if($res) {
+		my $next_action = 1;
+		if(ref $res eq 'HASH') {
+			for my $k (keys %$res) {
+				$param->{$k} = $res->{$k};
+			}
+			$next_action = $res->{'custom_action'} if($res->{'custom_action'});
+			$next_action = $res->{'next_action'} if($res->{'next_action'});
+		}else{
+			$next_action = scalar($res);
+		}
+		
+		return 1 if($next_action =~ /^1$/); # self tt2
+		
+		if($next_action =~ /^l?ca:(.+)$/) { # other custom action tt2
+			$param->{'custom_action'} = $1;
+			&_ca_get_file($1.'.tt2', $robot);
+			return 1;
+		}
+		
+		return $next_action; # global action
+	}
+	
+	my $file = &_ca_get_file($custom_action.'.tt2', $robot);
+	return 1 if($file);
+	
+	&Log::do_log('err', 'Plugin not found : %s', $custom_action);
+	return undef;
 }
 
 ################################################################
@@ -17349,19 +17456,67 @@ sub do_ca {
 ##    - 'list': the nalme of the list (without the '@robot' part) in the context of which the action is executed.
 ##    - '@lcap': an array of parameters.
 ##
-## Custom actions are used to display user defined templates.
-## To use it, follow these steps:
-## 1- create a new file "your_action.tt2" and put it in the relevant dir (either etc or expl)
-## 2- in this file, add the HTML fragment you want to insert to the web interface. You don't need the <head/> section or the <body/> tag.
-## 3- you can type your action URL: http://your-sympa-server-root-url/ca/your_action/param2/param2/param3/...
+## Custom actions are used to run specific code and/or display user defined templates.
+## You can create a <your_action>.pm module under etc/custom_actions or etc/<robot>/custom_actions or expl(/<robot>)?/<list>/custom_actions (<your_action>_plugin package) with a "process" sub to add custom processing.
+## You can also create a <your_action>.tt2 file at the same place to display your template. You don't need the <head/> section or the <body/> tag.
+## The HTML code in '<your_action>.tt2' can make use of the parameters this way: [% cap.1 %] for param1, [% cap.2 %] for param, and so on.
+## If the module is not defined the template is displayed.
 ##
-## the HTML code in 'your_action.tt2' can make use of the parameters this way: [% lcap.1 %] for param1, [% lcap.2 %] for param, and so on.
+## You can even have a robot-common <your_action>.pm module with a specific <your_action>.tt2 for each robot as the file (.pm or .tt2) is conducted in this order :
+##   - expl/<robot>/<list>/custom_actions (if list context and robot support)
+##   - expl/<list>/custom_actions (if list context and no robot support)
+##   - etc/<robot>/custom_actions (if robot support)
+##   - etc/custom_actions
+##
+## Your custom action is reachable using URL: http://your-sympa-server-root-url/lca/your_action/listname/param2/param2/param3/...
+##
+## The module process sub receive the List object and @cap entries as arguments
+##
+## The module process sub return value can be either :
+## 	1 to parse and display the custom action related tt2
+## 	<a global action name> to display its template
+## 	ca:<other_custom_action> to parse and display another custom action related tt2
+## 	a hash which entries will override $param ones, in case "custom_action" or "next_action" are present they act as described above.
+##
 ###############################################################
 sub do_lca {
-    &wwslog('info', 'List custom action: %s for list %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$in{'list'},$robot,$in{'lcap'});
-    $param->{'custom_action'} = $in{'custom_action'};
-    $param->{'cap'} = [split '/',$in{'cap'}];
-    return 1;
+	&wwslog('info', 'List custom action: %s for list %s (robot %s) with params: (%s, %s, %s, %s, %s)',$in{'custom_action'},$in{'list'},$robot,$in{'lcap'});
+    
+	my $custom_action = $in{'custom_action'};
+	my $cap = [split '/', $in{'cap'}];
+	$param->{'custom_action'} = $custom_action;
+	$param->{'cap'} = $cap;
+	
+	my $res = &_ca_process($custom_action, $cap, $robot, $list);
+	
+	if($res) {
+		my $next_action = 1;
+		if(ref $res eq 'HASH') {
+			for my $k (keys %$res) {
+				$param->{$k} = $res->{$k};
+			}
+			$next_action = $res->{'custom_action'} if($res->{'custom_action'});
+			$next_action = $res->{'next_action'} if($res->{'next_action'});
+		}else{
+			$next_action = scalar($res);
+		}
+		
+		return 1 if($next_action =~ /^1$/); # self tt2
+		
+		if($next_action =~ /^l?ca:(.+)$/) { # other custom action tt2
+			$param->{'custom_action'} = $1;
+			&_ca_get_file($1.'.tt2', $robot, $list);
+			return 1;
+		}
+		
+		return $next_action; # global action
+	}
+	
+	my $file = &_ca_get_file($custom_action.'.tt2', $robot, $list);
+	return 1 if($file);
+	
+	&Log::do_log('err', 'Plugin not found : %s', $custom_action);
+	return undef;
 }
 
 ## Prepare subscriber data to be prompted on the web interface
