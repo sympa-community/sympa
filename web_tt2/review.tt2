@@ -5,170 +5,191 @@
 <h2>[%|loc%]Manage list members[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_members" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 [% END %]
 
-[% IF action != 'search' %]
-<div class="search_form">
-  <form class="noborder" action="[% path_cgi %]">
-  <fieldset>
-  <label for="size">[%|loc%]Page size[%END%]</label>
-  <input type="hidden" name="sortby" value="[% sortby %]" />
-  <input type="hidden" name="action" value="review" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <select id="size" name="size" onchange="this.form.submit();">
-          <option value="[% size %]" selected="selected">[% size %]</option>
-	  <option value="25">25</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-	  <option value="500">500</option>
-  </select>
-  </fieldset>
-  </form>
-<br />
-   [% IF prev_page %]
-    <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-   [% END %]
-   [% IF page %]
-     [%|loc%]page[%END%] [% page %] / [% total_page %]
-   [% END %]
-   [% IF next_page %]
-     <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-   [% END %]
-</div>
-[% END %]
-
 [% IF is_owner %]
-  <br />
-  <a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a> 
-  [% IF conf.use_blacklist != 'none' %]
-    <a class="actionMenuLinks" href="[% path_cgi %]/blacklist/[% list %]">[%|loc%]Blacklist[%END%]</a>
-  [% END %]
-  <a class="actionMenuLinks" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a>
-  [% IF action == 'search' %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% filter %]">[%|loc%]Dump[%END%]</a>
-  [% ELSE %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/light">[%|loc%]Dump[%END%]</a> 
-  [% END %]
-     <a class="actionMenuLinks" href="[% path_cgi %]/show_exclude/[% list %]">[%|loc%]Exclude[%END%]</a> 
-  <br />
-
-  [% IF may_sync %]
-  <br />
-  <form name="synchronize_list_members" action="[% path_cgi %]" method="post">
-  <input class="MainMenuLinks" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]"/>
-  <input type="hidden" name="list" value="[% list %]"/>
-  </form>
-  [% END %]
-  [%|loc%]<strong>Last update:[%END%] [% update.curr_update %]</strong><br />
-  <br />
-  
-  <form class="noborder" name="synchronize_list_members" action="[% path_cgi %]" method="post">
-  <input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');"/>
-  <input type="hidden" name="list" value="[% list %]"/>
-  </form>
-  <br /><br />
-  <form action="[% path_cgi %]" method="post" id="myform">
-  <fieldset>
-   <input type="hidden" name="previous_action" value="review" />
-   <input type="hidden" name="list" value="[% list %]" />
-   <input type="hidden" name="action" value="add" />
-   <label for="email_search">[%|loc%]Add an user: [%END%]</label>
-   <input id="email_search" type="text" name="email" size="35" />
-   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
-   <input id="quietly" type="hidden" name="quiet" value="0"/>
-   <input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add quietly[%END%]" onclick="setnsubmit('quietly','value','1','myform');return false;"/>
-   &nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
-  </fieldset>
-  </form>
-
+	<div class="form">
+		<a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a>
+		
+		[% IF may_sync %]
+		<form class="inline" name="synchronize_list_members" action="[% path_cgi %]" method="post">
+			<input class="MainMenuLinks" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]" />
+			<input type="hidden" name="list" value="[% list %]" />
+		</form>
+		[% END %]
+		
+		<form class="inline" name="synchronize_list_members" action="[% path_cgi %]" method="post">
+			<input class="MainMenuLinks" type="submit" name="action_remind" value="[%|loc%]Remind all[%END%]" onclick="return request_confirm('[% FILTER escape_quote %][%|loc(total)%]Do you really want to send a subscription reminder message to the %1 subscribers?[%END%][%END%]');" />
+			<input type="hidden" name="list" value="[% list %]" />
+		</form>
+		
+		<br /><br />
+		
+		<a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% IF action == 'search' %][% filter %][% ELSE %]light[% END %]">[%|loc%]Dump[%END%]</a> 
+		
+		[% IF conf.use_blacklist != 'none' %]
+		<a class="actionMenuLinks" href="[% path_cgi %]/blacklist/[% list %]">[%|loc%]Blacklist[%END%]</a>
+		[% END %]
+		
+		<a class="actionMenuLinks" href="[% path_cgi %]/reviewbouncing/[% list %]">[%|loc%]Bounces[%END%]</a>
+		
+		<a class="actionMenuLinks" href="[% path_cgi %]/show_exclude/[% list %]">[%|loc%]Exclude[%END%]</a>
+		
+		<br /><br />
+		
+		[%|loc%]<strong>Last update:[%END%] [% update.curr_update %]</strong>
+	</div>
+	
+	<br />
+	
+	<form action="[% path_cgi %]" method="post" id="myform">
+		<fieldset>
+			<input type="hidden" name="previous_action" value="review" />
+			<input type="hidden" name="list" value="[% list %]" />
+			<input type="hidden" name="action" value="add" />
+			<label for="email_search">[%|loc%]Add an user: [%END%]</label>
+			<input id="email_search" type="text" name="email" size="35" />
+			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
+			<input id="quietly" type="hidden" name="quiet" value="0"/>
+			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add quietly[%END%]" onclick="setnsubmit('quietly','value','1','myform');return false;" />
+			&nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
+		</fieldset>
+	</form>
 [% END %]
 
-<br />
 <form action="[% path_cgi %]" method="post"> 
-<fieldset>
-<input type="hidden" name="previous_action" value="review" />
-<input type="hidden" name="list" value="[% list %]" />
-<input type="hidden" name="action" value="search" />
-<label for="filter">[%|loc%]Search user by e-mail: [%END%]</label>
-<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
-<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" /> 
-<br />
-[%|loc%]Searches are limited to 50 results, except when using a @domain mask.[%END%]
-<br />
-[% IF action == 'search' %]
-[% IF too_many_select %]
-[%|loc%]Selection too wide, can not show selection[%END%]
-[% END %]
-[% END %]
-</fieldset>
+	<fieldset>
+		<input type="hidden" name="previous_action" value="review" />
+		<input type="hidden" name="list" value="[% list %]" />
+		<input type="hidden" name="action" value="search" />
+		<label for="filter">[%|loc%]Search user by e-mail: [%END%]</label>
+		<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
+		<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+		<br />
+		[%|loc%]Searches are limited to 50 results, except when using a @domain mask.[%END%]
+		<br />
+		[% IF action == 'search' %]
+			[% IF too_many_select %]
+				[%|loc%]Selection too wide, can not show selection[%END%]
+			[% END %]
+		[% END %]
+	</fieldset>
 </form>
-<br /><br />
+
 <form name="myform" action="[% path_cgi %]" method="post">
-<fieldset>
-  <input type="hidden" name="previous_action" value="[% action %]" />
-  <input type="hidden" name="previous_list" value="[% list %]" />
-  <input type="hidden" name="list" value="[% list %]" />
-  [% IF is_owner %]
-    <input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-    <input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
-  [% END %]
-[% IF action == 'search' %]
-<h2>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</h2>
-[% END %]
+	<fieldset>
+		<input type="hidden" name="previous_action" value="[% action %]" />
+		<input type="hidden" name="previous_list" value="[% list %]" />
+		<input type="hidden" name="list" value="[% list %]" />
+		
+		[% IF action != 'search' %]
+		<div class="search_form">
+			<form class="noborder" action="[% path_cgi %]">
+				<fieldset>
+					<label for="size">[%|loc%]Page size[%END%]</label>
+					<input type="hidden" name="sortby" value="[% sortby %]" />
+					<input type="hidden" name="action" value="review" />
+					<input type="hidden" name="list" value="[% list %]" />
+					<select id="size" name="size" onchange="this.form.submit();">
+						<option value="[% size %]" selected="selected">[% size %]</option>
+						<option value="25">25</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+						<option value="500">500</option>
+					</select>
+				</fieldset>
+			</form>
+			
+			[% IF prev_page %]
+			<a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]">
+				<img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" />
+			</a>
+			[% END %]
+			
+			[% IF page %]
+				[%|loc%]page[%END%] [% page %] / [% total_page %]
+			[% END %]
+			
+			[% IF next_page %]
+			<a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]">
+				<img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" />
+			</a>
+			[% END %]
+		</div>
+		[% END %]
+		
+		[% IF is_owner %]
+		<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+		<input id="quiet" type="checkbox" name="quiet" /> <label for="quiet">[%|loc%]quiet[%END%]</label>
+		[% END %]
+		
+		[% IF action == 'search' %]
+		<h2>[%|loc(occurrence)%]%1 occurrence(s) found[%END%]</h2>
+		[% END %]
 
-[% SET thosesubscribers = members %]
-[% PROCESS subscriber_table.tt2 %]
+		[% SET thosesubscribers = members %]
+		[% PROCESS subscriber_table.tt2 %]
 
-[% IF action == 'search' %]	
-  [% IF similar_subscribers_occurence != 0 %]
-    <h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
-  [% SET thosesubscribers = similar_subscribers %]
-  [% PROCESS subscriber_table.tt2 %]
-  [% END %]
-[% END %]
+		[% IF action == 'search' %]	
+			[% IF similar_subscribers_occurence != 0 %]
+				<h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
+				[% SET thosesubscribers = similar_subscribers %]
+				[% PROCESS subscriber_table.tt2 %]
+			[% END %]
+		[% END %]
 
-   [% IF action != 'search' %]
-    <div class="search_form">
-       [% IF prev_page %]
-	 <a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
-       [% END %]
-       [% IF page %]
-  	  [%|loc%]page[%END%] [% page %] / [% total_page %]
-       [% END %]
-       [% IF next_page %]
-	  <a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
-       [% END %]
-    </div>
-   [% END %]
-      [% IF is_owner %]
-        <!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
-        <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" /><br />
-	<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
-        <input type="checkbox" name="quiet" />[%|loc%]quiet[%END%]
-      [% END %]
-    <br /><br />
+		[% IF action != 'search' %]
+		<div class="search_form">
+			[% IF prev_page %]
+			<a href="[% path_cgi %]/review/[% list %]/[% prev_page %]/[% size %]/[% sortby %]">
+				<img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" />
+			</a>
+			[% END %]
+			
+			[% IF page %]
+				[%|loc%]page[%END%] [% page %] / [% total_page %]
+			[% END %]
+			
+			[% IF next_page %]
+			<a href="[% path_cgi %]/review/[% list %]/[% next_page %]/[% size %]/[% sortby %]">
+				<img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" />
+			</a>
+			[% END %]
+		</div>
+		[% END %]
+		
+		[% IF is_owner %]
+		<!--input type="button" name="action_del" value="Delete selected email addresses" onclick="return request_confirm('[%|loc%]Do you really want to unsubscribe ALL selected subscribers?[%END%]')" /-->
+		<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" /><br />
+		<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected email addresses[%END%]" />
+		<input type="checkbox" name="quiet" />[%|loc%]quiet[%END%]
+		[% END %]
+		
+		<br /><br />
+		
+		[% IF action == 'search' %]
+		<h4>[%|loc%]Excluded users[%END%]</h4>
+		<table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
+			<tr>
+				<th>[%|loc%]Email[%END%]</th>
+				<th>[%|loc%]Since[%END%]</th>
+			</tr>
+			
+			[% IF user.email %]
+				[% IF exclude_users %]
+					[% FOREACH exc = exclude_users %] 
+			<tr class="color0">
+				<td>&nbsp;[% exc.email %]&nbsp;</td>
+				<td>&nbsp;[% exc.since %]&nbsp;</td>
+			</tr>
+					[% END %]
+				[% END %]
+			[% END %]
+		</table>
+		[% END %]
+	</fieldset>
+</form>
 
-   [% IF action == 'search' %]
-     <h4>[%|loc%]Excluded users[%END%]</h4>
-     <table summary="[%|loc%]List of exclude[%END%]" class="listOfItems">
-      <tr>
-	<th>[%|loc%]Email[%END%]</th>
-        <th>[%|loc%]Since[%END%]</th>
-      </tr>
-
-      [% IF user.email %]
-        [% IF exclude_users %]
-          [% FOREACH exc = exclude_users %] 
-            <tr class="color0">
-              <td>&nbsp;[% exc.email %]&nbsp;</td>
-	      <td>&nbsp;[% exc.since %]&nbsp;</td>
-            </tr>
-	  [% END %]
-        [% END %]
-      [% END %]
-    </table>
-   [% END %]
-   </fieldset>
-   </form>
 </div>
+
 [% PROCESS picture_upload.tt2 %]
 
 <!-- end review.tt2 (distrib) -->

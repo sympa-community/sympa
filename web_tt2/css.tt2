@@ -310,7 +310,7 @@ td.review_cels_mail {
 .search_form, .edit_list_request_help { 
                                         float: right;
                                         }
-
+.search_form { text-align: center }
 #home_rss_news {
                  float: right;
                  }
@@ -1159,7 +1159,7 @@ a.ArcMenuLinksSortInactive {
          border-radius:4px;
          }
 
-.block form {
+.block form, .block .form {
               border:1px solid [% color_11 %];
               margin:0.5em 0;
               -moz-border-radius:4px;
@@ -1172,6 +1172,25 @@ a.ArcMenuLinksSortInactive {
 .block form fieldset {
                        padding:0.5em;
                        }
+
+.block .form {
+	padding: 0.5em;
+}
+
+.block .form .actionMenuLinks {
+	padding: 1px 5px !important;
+}
+
+form.inline {
+	display: inline;
+	border-width: 0 !important;
+	margin: 0;
+	padding: 0;
+}
+
+form.inline .MainMenuLinks {
+	margin-top: 0;
+}
 
 .block blockquote {
 	margin: 16px 40px;
