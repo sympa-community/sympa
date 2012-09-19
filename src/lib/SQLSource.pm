@@ -203,7 +203,7 @@ sub establish_connection {
 	}
       }
       
-      $self->{'dbh'} = eval {DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})} ;
+      $self->{'dbh'} = eval {DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'}, { PrintError => 0 })} ;
       unless (defined $self->{'dbh'}) {
 	    ## Notify listmaster if warn option was set
 	    ## Unless the 'failed' status was set earlier
@@ -228,7 +228,7 @@ sub establish_connection {
 	    my $sleep_delay = 60;
 	    while (1) {
 		sleep $sleep_delay;
-		eval {$self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'})};
+		eval {$self->{'dbh'} = DBI->connect($self->{'connect_string'}, $self->{'db_user'}, $self->{'db_passwd'}, { PrintError => 0 })};
 		last if ($self->{'dbh'} && $self->{'dbh'}->ping());
 		$sleep_delay += 10;
 	    }

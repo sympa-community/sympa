@@ -4371,7 +4371,7 @@ sub do_renewpasswd {
 
  ## Subscribers' list
  sub do_review {
-     &wwslog('info', 'do_review(%d)', $in{'page'});
+     &wwslog('info', 'do_review(%s)', $in{'page'});
      my $record;
      my @users;
      my $size ;
@@ -8519,7 +8519,7 @@ sub do_get_inactive_lists {
 	     next;
 	 }
 
-	 my $last_message;
+	 my $last_message = 0;
 
 	 if (open COUNT, $list->{'dir'}.'/msg_count') {
 	     while (<COUNT>) {
@@ -9214,7 +9214,7 @@ sub do_home {
 
  ## Bouncing addresses review
  sub do_reviewbouncing {
-     &wwslog('info', 'do_reviewbouncing(%d)', $in{'page'});
+     &wwslog('info', 'do_reviewbouncing(%s)', $in{'page'});
      my $size = $in{'size'} || $wwsconf->{'review_page_size'};
 
      ## Owner
@@ -16698,7 +16698,7 @@ sub export_topics {
 
 # manage blacklist
 sub do_blacklist {
-    &wwslog('info', 'do_blacklist(%d)', $param->{'list'});
+    &wwslog('info', 'do_blacklist(%s)', $param->{'list'});
     
     unless ($param->{'list'}){
 	&report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
@@ -16975,7 +16975,7 @@ sub get_protected_email_address {
  ## of there robot or there is real problems with privacy policy and law in such services.
  ## 
 sub do_viewlogs {
-	&wwslog('info', 'do_viewlogs(%d)',$in{'page'});
+	&wwslog('info', 'do_viewlogs(%s)', $in{'page'});
 	
 	$param->{'page'} = int($in{'page'}) || 1;
 	$param->{'size'} = int($in{'size'}) || $wwsconf->{'viewlogs_page_size'};

@@ -344,7 +344,7 @@ sub add_list {
         $hash_list = {config=>$data};
     } else {
 	#copy the xml file in another file
-	unless (open (FIC, '>:utf8', "$self->{'dir'}/_new_list.xml")) {
+	unless (open (FIC, '>', "$self->{'dir'}/_new_list.xml")) {
 	    &Log::do_log('err','Family::add_list(%s) : impossible to create the temp file %s/_new_list.xml : %s',$self->{'name'},$self->{'dir'},$!);
 	}
 	while (<$data>) {
@@ -384,7 +384,7 @@ sub add_list {
     }
 	    
     # config_changes
-    unless (open FILE, '>:utf8', "$list->{'dir'}/config_changes") {
+    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
 	push @{$return->{'string_info'}}, "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config";
     }
@@ -526,7 +526,7 @@ sub modify_list {
     $return->{'string_error'} = undef; ## fatal errors
 
     #copy the xml file in another file
-    unless (open (FIC, '>:utf8', "$self->{'dir'}/_mod_list.xml")) {
+    unless (open (FIC, '>', "$self->{'dir'}/_mod_list.xml")) {
 	&Log::do_log('err','Family::modify_list(%s) : impossible to create the temp file %s/_mod_list.xml : %s',$self->{'name'},$self->{'dir'},$!);
     }
     while (<$fh>) {
@@ -593,9 +593,9 @@ sub modify_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
-	$hash_list->{'config'}{'description'} =~ s/\015//g;
+	$hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 	
-	unless (open INFO, '>:utf8', "$list->{'dir'}/info") {
+	unless (open INFO, '>', "$list->{'dir'}/info") {
 	    push @{$return->{'string_info'}}, "Impossible to create new $list->{'dir'}/info file : $!";
 	}
 	print INFO $hash_list->{'config'}{'description'};
@@ -612,8 +612,8 @@ sub modify_list {
 	    ################
 #	}
 #	if ($f eq 'info') {
-#	    $hash_list->{'config'}{'description'} =~ s/\015//g;
-#	    unless (open INFO, '>:utf8', "$list_dir/info") {
+#	    $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
+#	    unless (open INFO, '>', "$list_dir/info") {
 		################
 #	    }
 #	    print INFO $hash_list->{'config'}{'description'};
@@ -656,7 +656,7 @@ sub modify_list {
 
     }
 
-    unless (open FILE, '>:utf8', "$list->{'dir'}/config_changes") {
+    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
 	push @{$return->{'string_info'}}, "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config.";
     }
@@ -979,7 +979,7 @@ sub instantiate {
 	    }
 	    
 	    # config_changes
-	    unless (open FILE, '>:utf8', "$list->{'dir'}/config_changes") {
+	    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
 		&Log::do_log('err','Family::instantiate : impossible to create file %s/config_changes : %s',$list->{'dir'},$!);
 		push (@{$self->{'generated_lists'}{'file_error'}},$list->{'name'});
 		$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});
@@ -2224,9 +2224,9 @@ sub _update_existing_list {
 
     ## info file
     unless ($config_changes->{'file'}{'info'}) {
-	$hash_list->{'config'}{'description'} =~ s/\015//g;
+	$hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 	
-	unless (open INFO, '>:utf8', "$list->{'dir'}/info") {
+	unless (open INFO, '>', "$list->{'dir'}/info") {
 	    &Log::do_log('err','Impossible to open %s/info : %s',$list->{'dir'},$!);
 	}
 	print INFO $hash_list->{'config'}{'description'};
@@ -2243,8 +2243,8 @@ sub _update_existing_list {
 	    ################
 #	}
 #	if ($f eq 'info') {
-#	    $hash_list->{'config'}{'description'} =~ s/\015//g;
-#	    unless (open INFO, '>:utf8', "$list_dir/info") {
+#	    $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
+#	    unless (open INFO, '>', "$list_dir/info") {
 		################
 #	    }
 #	    print INFO $hash_list->{'config'}{'description'};
@@ -2288,7 +2288,7 @@ sub _update_existing_list {
 
     }
 
-    unless (open FILE, '>:utf8', "$list->{'dir'}/config_changes") {
+    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
 	&Log::do_log('err','impossible to open file %s/config_changes : %s',$list->{'dir'},$!);
 	push (@{$self->{'generated_lists'}{'file_error'}},$list->{'name'});
 	$list->set_status_error_config('error_copy_file',$list->{'name'},$self->{'name'});

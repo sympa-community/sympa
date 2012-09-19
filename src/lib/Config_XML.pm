@@ -329,9 +329,8 @@ sub _getChildren {
 	    
 	# TEXT_NODE
 	}elsif ($type == 3) {
-	    my $value = $child->nodeValue;
-#	    $value =~ s/(\s)+//;
-	    $value =~ s/^(\s)+//;
+	    my $value = Encode::encode_utf8($child->nodeValue);
+	    $value =~ s/^\s+//;
 	    unless ($value eq "") {
 		$string = $string.$value;
 		if ($return eq "hash") {
@@ -343,7 +342,7 @@ sub _getChildren {
 
 	# CDATA_SECTION_NODE
 	}elsif ($type == 4) { 
-	    $string = $string.$child->nodeValue;
+	    $string = $string . Encode::encode_utf8($child->nodeValue);
 	    if ($return eq "hash") {
 		$error = 1;
 	    }
