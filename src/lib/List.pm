@@ -6221,7 +6221,7 @@ sub get_list_member_no_object {
 	    &Log::do_log('err',"An error occured while fetching the data from the database.");
 	    return undef;
 	}else{
-	    &Log::do_log('info',"No user with the email %s is subscribed to list %s@%s",$email,$name,$options->{'domain'});
+	    &Log::do_log('debug2',"No user with the email %s is subscribed to list %s@%s",$email,$name,$options->{'domain'});
 	    return 0;
 	}
     }
