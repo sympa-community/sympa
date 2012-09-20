@@ -203,9 +203,8 @@ my %full_db_struct = (
     'bulkspool_table' => {
 	'fields' => {
 	    'messagekey_bulkspool' => {
-		'struct'=> 'bigint(20)',
-		'doc'=>'autoincrement key',
-		'autoincrement'=>1,
+		'struct'=> 'varchar(33)',
+		'doc'=>'primary key',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>1,
@@ -214,11 +213,6 @@ my %full_db_struct = (
 		'struct'=> 'longtext',
 		'doc'=>'message as string b64 encoded',
 		'order'=>2,
-	    },
-	    'messagelock_bulkspool' => {
-		'struct'=> 'varchar(90)',
-		'doc'=>'a unique string for each process : $$@hostname',
-		'order'=>3,
 	    },
 	    'messageid_bulkspool' => {
 		'struct'=> 'varchar(300)',
