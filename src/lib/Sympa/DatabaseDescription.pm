@@ -200,7 +200,7 @@ my %full_db_struct = (
 	'doc' => 'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if he never log through the web interface.',
 	'order'=>2,
     },
-    'bulkspool' => {
+    'bulkspool_table' => {
 	'fields' => {
 	    'messagekey_bulkspool' => {
 		'struct'=> 'bigint(20)',
