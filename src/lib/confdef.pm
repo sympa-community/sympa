@@ -1514,13 +1514,11 @@ our @params = (
         'name'     => 'log_condition',
         'optional' => '1',
         'vhost'    => '1',
-        'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'log_module',
         'optional' => '1',
         'vhost'    => '1',
-        'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'merge_feature',

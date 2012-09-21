@@ -4496,7 +4496,7 @@ sub send_to_editor {
        unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($recipient,$robot,'modindex/'.$name,'mail')){
 	   &Log::do_log('notice',"Unable to create one_time_ticket for $recipient, service modindex/$name");
        }else{
-	   &Log::do_log('notice',"ticket : $param->{'one_time_ticket'}");
+	   &Log::do_log('debug',"ticket $param->{'one_time_ticket'} created");
        }
        &tt2::allow_absolute_path();
        $param->{'auto_submitted'} = 'auto-forwarded';
@@ -5973,7 +5973,7 @@ sub get_list_member {
 	return undef;
     }else {
 	unless ($user) {
-	    &Log::do_log('info','User %s was not found in the subscribers of list %s@%s.',$email,$self->{'name'},$self->{'domain'});
+	    &Log::do_log('debug','User %s was not found in the subscribers of list %s@%s.',$email,$self->{'name'},$self->{'domain'});
 	    return undef;
 	}else{
 		$user->{'reception'} = $self->{'admin'}{'default_user_options'}{'reception'}

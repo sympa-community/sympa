@@ -252,10 +252,19 @@ sub request_action {
     my (@rules, $name, $scenario) ;
 
     my $log_it ; # this var is defined to control if log scenario is activated or not
-    if ($Conf::Conf{'loging_for_module'}{'scenario'} == 1){
-	$log_it = 1 unless ($Conf::Conf{'loging_condition'});                                    #activate log if no condition is defined
-	$log_it = 1 if ($Conf::Conf{'loging_condition'}{'ip'} =~ /$context->{'remote_addr'}/);   #activate log if ip match
-	$log_it = 1 if ($Conf::Conf{'loging_condition'}{'email'}=~ /$context->{'email'}/i);      #activate log if email match
+    my $loging_targets = &Conf::get_robot_conf($robot,'loging_for_module');
+    if ($loging_targets->{'scenario'} == 1){
+	#activate log if no condition is defined
+	unless (&Conf::get_robot_conf($robot,'loging_condition')) {
+	    $log_it = 1;
+	}else {
+	    #activate log if ip or email match
+	    my $loging_conditions = &Conf::get_robot_conf($robot,'loging_condition');
+	    if ($loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/ || $loging_conditions->{'email'} =~ /$context->{'email'}/i) {
+		&Log::do_log('info','Will log scenario process for user with email: "%s", IP: "%s"',$context->{'email'},$context->{'remote_addr'});
+		$log_it = 1;
+	    }
+	}
     }
 
     ## Include a Blacklist rules if configured for this action
@@ -268,14 +277,14 @@ sub request_action {
 	}
     }
 
-    if ($context->{'listname'}) {
-        unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
-	    &Log::do_log('info',"request_action :  unable to create object $context->{'listname'}");
-	    return undef ;
+    if ($log_it) {
+	if ($context->{'list_object'}) {
+	    $trace_scenario = 'scenario request '.$operation.' for list '.$context->{'list_object'}{'name'}.'@'.$robot.' :';
+	    &Log::do_log('info','Will evaluate scenario %s for list %s@%s',$operation,$context->{'list_object'}{'name'},$robot);
+	}else{
+	    $trace_scenario = 'scenario request '.$operation.' for robot '.$robot.' :';
+	    &Log::do_log('info','Will evaluate scenario %s for robot %s',$operation,$robot);
 	}
-	$trace_scenario = 'scenario request '.$operation.' for list '.$context->{'listname'}.'@'.$robot.' :';
-    }else{
-	$trace_scenario = 'scenario request '.$operation.' for robot '.$robot.' :';
     }
     
     ## The current action relates to a list
@@ -374,7 +383,7 @@ sub request_action {
     $name = $scenario->{'name'};
 
     unless ($name) {
-	# &Log::do_log('err',"internal error : configuration for operation $operation is not yet performed by scenario");
+	&Log::do_log('err',"internal error : configuration for operation $operation is not yet performed by scenario");
 	return undef;
     }
 
@@ -408,10 +417,14 @@ sub request_action {
 
     my $return = {};
     foreach my $rule (@rules) {
-	# &Log::do_log('info', 'List::request_action : verify rule %s',$rule->{'condition'});
-
+	if ($log_it){
+	     &Log::do_log('info', 'Verify rule %s, auth %s, action %s',$rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
+	}
 	if ($auth_method eq $rule->{'auth_method'}) {
-	    my $result =  &verify ($context,$rule->{'condition'});
+	    if ($log_it){
+		 &Log::do_log('info', 'Context uses auth method %s',$rule->{'auth_method'});
+	    }
+	    my $result =  &verify ($context,$rule->{'condition'},$log_it);
 
 	    ## Cope with errors
 	    if (! defined ($result)) {
@@ -435,7 +448,7 @@ sub request_action {
 	    ## Rule returned false
 	    if ($result == -1) {
 		if ($log_it){
-		    &Log::do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} ignored");
+		    &Log::do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} not verified.");
 		}
 		next;
 	    }
@@ -476,15 +489,16 @@ sub request_action {
 	    $return->{'action'} = $action;
 	    
 	    if ($log_it){
-		&Log::do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} condition applied result : $action");
+		&Log::do_log('info',"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} issued result : $action");
 	    }	    
 	    
 	    if ($result == 1) {
-		&Log::do_log('debug3',"rule $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'} accepted");
+		if ($log_it){
+		     &Log::do_log('info',"rule '%s %s -> %s' accepted",$rule->{'condition'},$rule->{'auth_method'},$rule->{'action'});
+		}
 		if ($debug) {
 		    $return->{'auth_method'} = $rule->{'auth_method'};
 		    $return->{'condition'} = $rule->{'condition'};
-
 		    return $return;
 		}
 
@@ -495,9 +509,13 @@ sub request_action {
 		}
 		return $return;
 	    }
+	}else {
+	    if ($log_it){
+		 &Log::do_log('info', 'Context does not use auth method %s',$rule->{'auth_method'});
+	    }
 	}
     }
-    &Log::do_log('debug3',"no rule match, reject");
+    &Log::do_log('info',"no rule match, reject");
 
     if ($log_it){
 	&Log::do_log('info',"$trace_scenario : no rule match request rejected");
@@ -513,8 +531,8 @@ sub request_action {
 
 ## check if email respect some condition
 sub verify {
-    my ($context, $condition) = @_;
-    &Log::do_log('debug2', '(%s)', $condition);
+    my ($context, $condition, $log_it) = @_;
+    &Log::do_log('debug2', 'condition %s, log %s', $condition, $log_it);
     
     my $robot = $context->{'robot_domain'};
     
@@ -532,7 +550,7 @@ sub verify {
     my $list;
     if ($context->{'listname'} && ! defined $context->{'list_object'}) {
         unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
-	    &Log::do_log('info',"Unable to create object $context->{'listname'}");
+	    &Log::do_log('info',"Unable to create List object for list $context->{'listname'}");
 	    return undef ;
 	}
     }    
@@ -601,6 +619,9 @@ sub verify {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    }else{
 		&Log::do_log('debug',"undefine variable context $value in rule $condition");
+		if ($log_it == 1) {
+		    &Log::do_log('info',"undefine variable context $value in rule $condition");
+		}
 		# a condition related to a undefined context variable is always false
 		return -1 * $negation;
 	    }
@@ -619,6 +640,9 @@ sub verify {
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
 	    }else{
 		&Log::do_log('err','Unknown list parameter %s in rule %s', $value, $condition);
+		if ($log_it == 1) {
+		    &Log::do_log('info','Unknown list parameter %s in rule %s', $value, $condition);
+		}
 		return undef;
 	    }
 	    
@@ -658,18 +682,29 @@ sub verify {
 		
 		$value = \@fields;
 	    }else {
+		if ($log_it == 1) {
+		    &Log::do_log('info','no message object found to evaluate rule %s', $condition);
+		}
 		return -1 * $negation;
 	    }
 	    
 	}elsif ($value =~ /\[msg_body\]/i) {
-	    return -1 * $negation unless (defined ($context->{'msg'}));
-	    return -1 * $negation unless (defined ($context->{'msg'}->effective_type() =~ /^text/));
-	    return -1 * $negation unless (defined $context->{'msg'}->bodyhandle);
+	    unless (defined ($context->{'msg'}) && defined ($context->{'msg'}->effective_type() =~ /^text/) && defined ($context->{'msg'}->bodyhandle)) {
+		if ($log_it == 1) {
+		    &Log::do_log('info','no proper textual message body to evaluate rule %s', $condition);
+		}
+		return -1 * $negation;
+	    }
 	    
 	    $value = $context->{'msg'}->bodyhandle->as_string();
 	    
 	}elsif ($value =~ /\[msg_part\-\>body\]/i) {
-	    return -1 * $negation unless (defined ($context->{'msg'}));
+	    unless (defined ($context->{'msg'})) {
+		if ($log_it == 1) {
+		    &Log::do_log('info','no message to evaluate rule %s', $condition);
+		}
+		return -1 * $negation;
+	    }
 	    
 	    my @bodies;
 	    ## FIXME:Should be recurcive...
@@ -682,7 +717,12 @@ sub verify {
 	    $value = \@bodies;
 	    
 	}elsif ($value =~ /\[msg_part\-\>type\]/i) {
-	    return -1 * $negation unless (defined ($context->{'msg'}));
+	    unless (defined ($context->{'msg'})) {
+		if ($log_it == 1) {
+		    &Log::do_log('info','no message to evaluate rule %s', $condition);
+		}
+		return -1 * $negation;
+	    }
 	    
 	    my @types;
 	    foreach my $part ($context->{'msg'}->parts) {
@@ -701,9 +741,11 @@ sub verify {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    }else{
 		&Log::do_log('debug',"undefine variable context $value in rule $condition");
+		if ($log_it == 1) {
+		    &Log::do_log('info',"undefine variable context $value in rule $condition");
+		}
 		# a condition related to a undefined context variable is always false
 		return -1 * $negation;
- #		return undef;
 	    }
 	    
 	}elsif ($value =~ /^'(.*)'$/ || $value =~ /^"(.*)"$/) {
@@ -747,18 +789,30 @@ sub verify {
     ## Now eval the condition
     ##### condition : true
     if ($condition_key =~ /^(true|any|all)$/i) {
+	if ($log_it == 1) {
+	    &Log::do_log('info','Condition %s is always true (rule %s)',$condition_key,$condition);
+	}
 	return $negation;
     }
     ##### condition is_listmaster
     if ($condition_key eq 'is_listmaster') {
 	
 	if ($args[0] eq 'nobody') {
+	    if ($log_it == 1) {
+		&Log::do_log('info','%s is not listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
+	    }
 	    return -1 * $negation ;
 	}
 
 	if ( &List::is_listmaster($args[0],$robot)) {
+	    if ($log_it == 1) {
+		&Log::do_log('info','%s is listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
+	    }
 	    return $negation;
 	}else{
+	    if ($log_it == 1) {
+		&Log::do_log('info','%s is not listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
+	    }
 	    return -1 * $negation;
 	}
     }
@@ -769,6 +823,9 @@ sub verify {
 	## Check that the IP address of the client is available
 	## Means we are in a web context
 	unless (defined $ENV{'REMOTE_ADDR'}) {
+	    if ($log_it == 1) {
+		&Log::do_log('info','REMOTE_ADDR env variable not set (rule %s)',$condition);
+	    }
 	    return -1; ## always skip this rule because we can't evaluate it
 	}
 	my $block;
@@ -777,8 +834,14 @@ sub verify {
 	    return undef;
 	}
 	if ($block->match ($ENV{'REMOTE_ADDR'})) {
+	    if ($log_it == 1) {
+		&Log::do_log('info','REMOTE_ADDR %s matches %s (rule %s)',$ENV{'REMOTE_ADDR'},$args[0],$condition);
+	    }
 	    return $negation;
 	}else{
+	    if ($log_it == 1) {
+		&Log::do_log('info','REMOTE_ADDR %s does not match %s (rule %s)',$ENV{'REMOTE_ADDR'},$args[0],$condition);
+	    }
 	    return -1 * $negation;
 	}
     }
@@ -792,8 +855,14 @@ sub verify {
  
 	&Log::do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
  	if ($arg0 <= $arg1 ) {
+	    if ($log_it == 1) {
+		&Log::do_log('info','%s is smaller than %s (rule %s)',$arg0, $arg1,$condition);
+	    }
  	    return $negation;
  	}else{
+	    if ($log_it == 1) {
+		&Log::do_log('info','%s is NOT smaller than %s (rule %s)',$arg0, $arg1,$condition);
+	    }
  	    return -1 * $negation;
  	}
      }
@@ -804,6 +873,9 @@ sub verify {
 	my ($list2);
 
 	if ($args[1] eq 'nobody') {
+	    if ($log_it == 1) {
+		&Log::do_log('info',"%s can't be used to evaluate (rule %s)",$args[1],$condition);
+	    }
 	    return -1 * $negation ;
 	}
 
@@ -822,22 +894,40 @@ sub verify {
 	if ($condition_key eq 'is_subscriber') {
 
 	    if ($list2->is_list_member($args[1])) {
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is member of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return $negation ;
 	    }else{
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is NOT member of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return -1 * $negation ;
 	    }
 
 	}elsif ($condition_key eq 'is_owner') {
 	    if ($list2->am_i('owner',$args[1])) {
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is owner of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return $negation ;
 	    }else{
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is NOT owner of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return -1 * $negation ;
 	    }
 
 	}elsif ($condition_key eq 'is_editor') {
 	    if ($list2->am_i('editor',$args[1])) {
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is editor of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return $negation ;
 	    }else{
+		if ($log_it == 1) {
+		    &Log::do_log('info',"%s is NOT editor of list %s (rule %s)",$args[1],$args[0],$condition);
+		}
 		return -1 * $negation ;
 	    }
 	}
@@ -851,7 +941,12 @@ sub verify {
 	my $regexp = $1;
 	
 	# Nothing can match an empty regexp.
-	return -1 * $negation if ($regexp =~ /^$/);
+	if ($regexp =~ /^$/) {
+	    if ($log_it == 1) {
+		&Log::do_log('info',"regexp '%s' is empty (rule %s)",$regexp,$condition);
+	    }
+	    return -1 * $negation;
+	}
 
 	if ($regexp =~ /\[host\]/) {
 	    my $reghost = &Conf::get_robot_conf($robot, 'host');
@@ -881,10 +976,33 @@ sub verify {
 	    &Log::do_log('err', 'cannot evaluate match: %s', $@);
 	    return undef;
 	}
-	return $negation if $r;
-	
-	return -1 * $negation ;
-
+	if ($r) {
+	    if ($log_it == 1) {
+		my $args_as_string = '';
+		if (ref($args[0])) {
+		    foreach my $arg (@{$args[0]}) {
+			$args_as_string .= "$arg, ";
+		    }
+		}else{
+		    $args_as_string = $args[0];
+		}
+		&Log::do_log('info',"'%s' matches regexp '%s' (rule %s)",$args_as_string,$regexp,$condition);
+	    }
+	    return $negation;
+	}else{
+	    if ($log_it == 1) {
+		my $args_as_string = '';
+		if (ref($args[0])) {
+		    foreach my $arg (@{$args[0]}) {
+			$args_as_string .= "$arg, ";
+		    }
+		}else{
+		    $args_as_string = $args[0];
+		}
+		&Log::do_log('info',"'%s' does not match regexp '%s' (rule %s)",$args_as_string,$regexp,$condition);
+	    }
+	    return -1 * $negation ;
+	}
     }
     
     ## search rule
@@ -897,9 +1015,15 @@ sub verify {
  	    $val_search = &search($args[0],$context,$robot);
  	}
 	return undef unless defined $val_search;
-	if($val_search == 1) { 
+	if($val_search == 1) {
+	    if ($log_it == 1) {
+		&Log::do_log('info',"'%s' found in '%s', robot %s (rule %s)",$context->{'sender'},$args[0],$robot,$condition);
+	    }
 	    return $negation;
 	}else {
+	    if ($log_it == 1) {
+		&Log::do_log('info',"'%s' NOT found in '%s', robot %s (rule %s)",$context->{'sender'},$args[0],$robot,$condition);
+	    }
 	    return -1 * $negation;
     	}
     }
@@ -909,12 +1033,23 @@ sub verify {
 	if (ref($args[0])) {
 	    foreach my $arg (@{$args[0]}) {
 		&Log::do_log('debug3', 'ARG: %s', $arg);
-		return $negation 
-		    if lc($arg) eq lc($args[1]);
+		    if (lc($arg) eq lc($args[1])) {
+			if ($log_it == 1) {
+			    &Log::do_log('info',"'%s' equals '%s' (rule %s)",lc($arg),lc($args[1]),$condition);
+			}
+			return $negation;
+		    }
 	    }
 	} else {
-	    return $negation
-		if lc($args[0]) eq lc($args[1]);
+	    if (lc($args[0]) eq lc($args[1])) {
+		if ($log_it == 1) {
+		    &Log::do_log('info',"'%s' equals '%s' (rule %s)",lc($args[0]),lc($args[1]),$condition);
+		}
+		return $negation;
+	    }
+	}
+	if ($log_it == 1) {
+	    &Log::do_log('info',"'%s' does NOT equal '%s' (rule %s)",lc($args[0]),lc($args[1]),$condition);
 	}
 	return -1 * $negation ;
     }
@@ -924,7 +1059,27 @@ sub verify {
     	my $condition = $1;
     	
     	my $res = &verify_custom($condition, \@args, $robot, $list);
-	return undef unless defined $res;
+	unless (defined $res) {
+	    if ($log_it == 1) {
+		my $args_as_string = '';
+		foreach my $arg (@args) {
+		    $args_as_string .= ", $arg";
+		}
+		&Log::do_log('info',"custom condition '%s' returned an undef value with arguments '%s' (rule %s)",$condition,$args_as_string,$condition);
+	    }
+	    return undef;
+	}
+	if ($log_it == 1) {
+	    my $args_as_string = '';
+	    foreach my $arg (@args) {
+		$args_as_string .= ", $arg";
+	    }
+	    if ($res == 1) {
+		&Log::do_log('info',"'%s' verifies custom condition '%s' (rule %s)",$args_as_string,$condition,$condition);
+	    }else {
+		&Log::do_log('info',"'%s' does not verify custom condition '%s' (rule %s)",$args_as_string,$condition,$condition);
+	    }
+	}
 	return $res * $negation ;
     }
     
@@ -933,15 +1088,25 @@ sub verify {
 	if (ref($args[0])) {
 	    foreach my $arg (@{$args[0]}) {
 		&Log::do_log('debug3', 'ARG: %s', $arg);
-		return $negation 
-		    if (&tools::smart_lessthan($arg, $args[1]));
+		    if (&tools::smart_lessthan($arg, $args[1])){
+			if ($log_it == 1) {
+			    &Log::do_log('info',"'%s' is less than '%s' (rule %s)",$arg, $args[1],$condition);
+			}
+			return $negation;
+		    }
 	    }
 	}else {
 	    if (&tools::smart_lessthan($args[0], $args[1])) {
+		if ($log_it == 1) {
+		    &Log::do_log('info',"'%s' is less than '%s' (rule %s)",$args[0], $args[1],$condition);
+		}
 		return $negation ;
 	    }
 	}
 	
+	if ($log_it == 1) {
+	    &Log::do_log('info',"'%s' is NOT less than '%s' (rule %s)",$args[0], $args[1],$condition);
+	}
 	return -1 * $negation ;
     }
     return undef;
