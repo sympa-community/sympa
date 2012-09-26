@@ -426,7 +426,7 @@ sub fetch {
 sub disconnect {
     my $self = shift;
     $self->{'sth'}->finish if $self->{'sth'};
-    $self->{'dbh'}->disconnect;
+    if ($self->{'dbh'}) {$self->{'dbh'}->disconnect;}
     delete $db_connections{$self->{'connect_string'}};
 }
 
