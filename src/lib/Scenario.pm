@@ -54,7 +54,7 @@ sub new {
     }
 
     ## Determine the file path of the scenario
-	
+
     if ($parameters{'file_path'} eq 'ERROR') {
 	return $all_scenarios{$scenario->{'file_path'}};
     }
@@ -68,7 +68,7 @@ sub new {
 	    return undef;
 	}
 	($parameters{'function'}, $parameters{'name'}) = ($1, $2);
-	
+
     }else {
 	## We can't use &tools::get_filename() because we don't have a List object yet ; it's being constructed
 	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, Sympa::Constants::DEFAULTDIR);
@@ -90,7 +90,7 @@ sub new {
 	if ($parameters{'options'}{'dont_reload_scenario'}) {
 	    return $all_scenarios{$scenario->{'file_path'}};
 	}
-	
+
 	## Use cache unless file has changed on disk
 	if ($all_scenarios{$scenario->{'file_path'}}{'date'} >= (stat($scenario->{'file_path'}))[9]) {
 	    return $all_scenarios{$scenario->{'file_path'}};
@@ -267,16 +267,6 @@ sub request_action {
 	}
     }
 
-    ## Include a Blacklist rules if configured for this action
-    if ($Conf::Conf{'blacklist'}{$operation}) {
-	foreach my $auth ('smtp','dkim','md5','pgp','smime'){
-	    my $blackrule = {'condition' => "search('blacklist.txt',[sender])",
-			     'action' => 'reject,quiet',
-			     'auth_method' => $auth};	
-	    push(@rules, $blackrule);
-	}
-    }
-
     if ($log_it) {
 	if ($context->{'list_object'}) {
 	    $trace_scenario = 'scenario request '.$operation.' for list '.$context->{'list_object'}{'name'}.'@'.$robot.' :';
@@ -414,6 +404,18 @@ sub request_action {
 	    }	    
 	}
     }
+    
+    ## Include a Blacklist rules if configured for this action
+    if ($Conf::Conf{'blacklist'}{$operation}) {
+	foreach my $auth ('smtp','dkim','md5','pgp','smime'){
+	    my $blackrule = {'condition' => "search('blacklist.txt',[sender])",
+			     'action' => 'reject,quiet',
+			     'auth_method' => $auth};	
+	    ## Add rules at the beginning of the array
+	    unshift @rules, ($blackrule);
+	}
+    }
+
 
     my $return = {};
     foreach my $rule (@rules) {
