@@ -18,7 +18,7 @@
  <div id="global_mailing_lists">
  
   [% SET single_topic = "other" %]
-  [% FOREACH topic = list_of_topics %]
+  [% FOREACH topic = topics %]
     [% IF topic.id && topic.id != "other" && topic.id != "topicsless" %]
       [% SET single_topic = "" %]
       [% LAST %]
