@@ -78,6 +78,8 @@ sub new {
 	    if (-r $tmp_path) {
 		$scenario->{'file_path'} = $tmp_path;
 		last;
+	    }else {
+		&Log::do_log('debug','Unable to read file %s',$tmp_path);
 	    }
 	}
     }
