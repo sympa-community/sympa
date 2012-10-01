@@ -23,20 +23,20 @@ temporary tablespace TEMP;
 
 CREATE TABLE admin_table ( 
 	 comment_admin 	varchar2(150), 
-	 date_admin 	date NOT NULL, 
+	 date_admin 	date, 
 	 include_sources_admin 	varchar2(50), 
 	 included_admin 	number, 
 	 info_admin 	varchar2(150), 
-	 list_admin 	varchar2(50) NOT NULL, 
+	 list_admin 	varchar2(50), 
 	 profile_admin 	varchar2(20), 
 	 reception_admin 	varchar2(20), 
-	 robot_admin 	varchar2(80) NOT NULL, 
-	 role_admin 	varchar2(20) NOT NULL, 
+	 robot_admin 	varchar2(80), 
+	 role_admin 	varchar2(20), 
 	 subscribed_admin 	number, 
 	 update_admin 	date, 
-	 user_admin 	varchar2(100) NOT NULL, 
+	 user_admin 	varchar2(100), 
 	 visibility_admin 	varchar2(20), 
-	 CONSTRAINT ind_admin PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
+	 CONSTRAINT ind_admin PRIMARY KEY (list_admin, role_admin, user_admin, robot_admin) 
  );
 
 
@@ -53,8 +53,8 @@ CREATE TABLE bulkmailer_table (
 	 lock_bulkmailer 	varchar2(30), 
 	 merge_bulkmailer 	number, 
 	 messageid_bulkmailer 	varchar2(200), 
-	 messagekey_bulkmailer 	varchar2(80) NOT NULL, 
-	 packetid_bulkmailer 	varchar2(33) NOT NULL, 
+	 messagekey_bulkmailer 	varchar2(80), 
+	 packetid_bulkmailer 	varchar2(33), 
 	 priority_message_bulkmailer 	number, 
 	 priority_packet_bulkmailer 	number, 
 	 receipients_bulkmailer 	varchar2(500), 
@@ -63,7 +63,7 @@ CREATE TABLE bulkmailer_table (
 	 robot_bulkmailer 	varchar2(80), 
 	 tracking_bulkmailer 	varchar2(20), 
 	 verp_bulkmailer 	number, 
-	 CONSTRAINT ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer) 
+	 CONSTRAINT ind_bulkmailer PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
  );
 
 
@@ -81,8 +81,8 @@ CREATE TABLE bulkspool_table (
 	 dkim_selector_bulkspool 	varchar2(50), 
 	 lock_bulkspool 	number, 
 	 message_bulkspool 	long, 
-	 messageid_bulkspool 	varchar2(200), 
-	 messagekey_bulkspool 	varchar2(33) NOT NULL, 
+	 messageid_bulkspool 	varchar2(300), 
+	 messagekey_bulkspool 	varchar2(33), 
 	 CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -111,10 +111,10 @@ CREATE TABLE conf_table (
 
 CREATE TABLE exclusion_table ( 
 	 date_exclusion 	number, 
-	 list_exclusion 	varchar2(50) NOT NULL, 
-	 robot_exclusion 	varchar2(50) NOT NULL, 
-	 user_exclusion 	varchar2(100) NOT NULL, 
-	 CONSTRAINT ind_exclusion PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
+	 list_exclusion 	varchar2(50), 
+	 robot_exclusion 	varchar2(50), 
+	 user_exclusion 	varchar2(100), 
+	 CONSTRAINT ind_exclusion PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
  );
 
 
@@ -129,10 +129,10 @@ CREATE TABLE list_table (
 	 creation_email_list 	varchar2(100), 
 	 creation_epoch_list 	date, 
 	 editors_list 	varchar2(100), 
-	 name_list 	varchar2(100) NOT NULL, 
+	 name_list 	varchar2(100), 
 	 owners_list 	varchar2(100), 
 	 path_list 	varchar2(100), 
-	 robot_list 	varchar2(100) NOT NULL, 
+	 robot_list 	varchar2(100), 
 	 status_list 	varchar2(20), 
 	 subject_list 	varchar2(100), 
 	 topics_list 	varchar2(100), 
@@ -149,17 +149,17 @@ CREATE TABLE list_table (
 ## 
 
 CREATE TABLE logs_table ( 
-	 action_logs 	varchar2(50) NOT NULL, 
+	 action_logs 	varchar2(50), 
 	 client_logs 	varchar2(100), 
-	 daemon_logs 	varchar2(10) NOT NULL, 
-	 date_logs 	number NOT NULL, 
+	 daemon_logs 	varchar2(10), 
+	 date_logs 	number, 
 	 error_type_logs 	varchar2(150), 
-	 id_logs 	number NOT NULL, 
+	 id_logs 	number, 
 	 list_logs 	varchar2(50), 
 	 msg_id_logs 	varchar2(255), 
 	 parameters_logs 	varchar2(100), 
 	 robot_logs 	varchar2(80), 
-	 status_logs 	varchar2(10) NOT NULL, 
+	 status_logs 	varchar2(10), 
 	 target_email_logs 	varchar2(100), 
 	 user_email_logs 	varchar2(100), 
 	 CONSTRAINT ind_logs PRIMARY KEY (id_logs) 
@@ -175,10 +175,10 @@ CREATE TABLE logs_table (
 
 CREATE TABLE netidmap_table ( 
 	 email_netidmap 	varchar2(100), 
-	 netid_netidmap 	varchar2(100) NOT NULL, 
-	 robot_netidmap 	varchar2(80) NOT NULL, 
-	 serviceid_netidmap 	varchar2(100) NOT NULL, 
-	 CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap) 
+	 netid_netidmap 	varchar2(100), 
+	 robot_netidmap 	varchar2(80), 
+	 serviceid_netidmap 	varchar2(100), 
+	 CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, robot_netidmap, serviceid_netidmap) 
  );
 
 
@@ -191,11 +191,11 @@ CREATE TABLE netidmap_table (
 
 CREATE TABLE notification_table ( 
 	 arrival_date_notification 	varchar2(80), 
-	 date_notification 	number NOT NULL, 
+	 date_notification 	number, 
 	 list_notification 	varchar2(50), 
 	 message_id_notification 	varchar2(100), 
 	 message_notification 	long, 
-	 pk_notification 	number NOT NULL, 
+	 pk_notification 	number, 
 	 reception_option_notification 	varchar2(20), 
 	 recipient_notification 	varchar2(100), 
 	 robot_notification 	varchar2(80), 
@@ -204,8 +204,6 @@ CREATE TABLE notification_table (
 	 CONSTRAINT ind_notification PRIMARY KEY (pk_notification) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
 
 
 
@@ -217,15 +215,13 @@ create trigger notification_table_trigger before insert on notification_table fo
 CREATE TABLE oauthconsumer_sessions_table ( 
 	 access_secret_oauthconsumer 	varchar2(100), 
 	 access_token_oauthconsumer 	varchar2(100), 
-	 provider_oauthconsumer 	varchar2(100) NOT NULL, 
+	 provider_oauthconsumer 	varchar2(100), 
 	 tmp_secret_oauthconsumer 	varchar2(100), 
 	 tmp_token_oauthconsumer 	varchar2(100), 
-	 user_oauthconsumer 	varchar2(100) NOT NULL, 
-	 CONSTRAINT ind_oauthconsumer_sessions PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer) 
+	 user_oauthconsumer 	varchar2(100), 
+	 CONSTRAINT ind_oauthconsumer_sessions PRIMARY KEY (provider_oauthconsumer, user_oauthconsumer) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
 
 
 
@@ -235,17 +231,13 @@ create trigger notification_table_trigger before insert on notification_table fo
 ## 
 
 CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	number NOT NULL, 
-	 id_oauthprovider 	number NOT NULL, 
-	 nonce_oauthprovider 	varchar2(100) NOT NULL, 
+	 id_nonce 	number, 
+	 id_oauthprovider 	number, 
+	 nonce_oauthprovider 	varchar2(100), 
 	 time_oauthprovider 	number, 
 	 CONSTRAINT ind_oauthprovider_nonces PRIMARY KEY (id_nonce) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
 
 
 
@@ -257,24 +249,18 @@ create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider
 CREATE TABLE oauthprovider_sessions_table ( 
 	 accessgranted_oauthprovider 	tinyint(1), 
 	 callback_oauthprovider 	varchar2(100), 
-	 consumer_oauthprovider 	varchar2(100) NOT NULL, 
+	 consumer_oauthprovider 	varchar2(100), 
 	 firsttime_oauthprovider 	number, 
-	 id_oauthprovider 	number NOT NULL, 
+	 id_oauthprovider 	number, 
 	 isaccess_oauthprovider 	tinyint(1), 
-	 lasttime_oauthprovider 	number NOT NULL, 
-	 secret_oauthprovider 	varchar2(32) NOT NULL, 
-	 token_oauthprovider 	varchar2(32) NOT NULL, 
+	 lasttime_oauthprovider 	number, 
+	 secret_oauthprovider 	varchar2(32), 
+	 token_oauthprovider 	varchar2(32), 
 	 user_oauthprovider 	varchar2(100), 
 	 verifier_oauthprovider 	varchar2(32), 
 	 CONSTRAINT ind_oauthprovider_sessions PRIMARY KEY (id_oauthprovider) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -294,12 +280,6 @@ CREATE TABLE one_time_ticket_table (
 	 CONSTRAINT ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -310,22 +290,16 @@ create trigger oauthprovider_sessions_table_trigger before insert on oauthprovid
 
 CREATE TABLE session_table ( 
 	 data_session 	varchar2(500), 
-	 date_session 	number NOT NULL, 
+	 date_session 	number, 
 	 email_session 	varchar2(100), 
 	 hit_session 	number, 
-	 id_session 	varchar2(30) NOT NULL, 
+	 id_session 	varchar2(30), 
 	 remote_addr_session 	varchar2(60), 
 	 robot_session 	varchar2(80), 
-	 start_date_session 	number NOT NULL, 
+	 start_date_session 	number, 
 	 CONSTRAINT ind_session PRIMARY KEY (id_session) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -335,23 +309,17 @@ create trigger oauthprovider_sessions_table_trigger before insert on oauthprovid
 ## 
 
 CREATE TABLE stat_counter_table ( 
-	 beginning_date_counter 	number NOT NULL, 
-	 data_counter 	varchar2(50) NOT NULL, 
+	 beginning_date_counter 	number, 
+	 data_counter 	varchar2(50), 
 	 end_date_counter 	number, 
-	 id_counter 	number NOT NULL, 
+	 id_counter 	number, 
 	 list_counter 	varchar2(150), 
-	 robot_counter 	varchar2(80) NOT NULL, 
+	 robot_counter 	varchar2(80), 
 	 total_counter 	number, 
 	 variation_counter 	number, 
 	 CONSTRAINT ind_stat_counter PRIMARY KEY (id_counter) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -362,24 +330,18 @@ create trigger oauthprovider_sessions_table_trigger before insert on oauthprovid
 
 CREATE TABLE stat_table ( 
 	 daemon_stat 	varchar2(10), 
-	 date_stat 	number NOT NULL, 
+	 date_stat 	number, 
 	 email_stat 	varchar2(100), 
-	 id_stat 	number NOT NULL, 
+	 id_stat 	number, 
 	 list_stat 	varchar2(150), 
-	 operation_stat 	varchar2(50) NOT NULL, 
+	 operation_stat 	varchar2(50), 
 	 parameter_stat 	varchar2(50), 
-	 read_stat 	tinyint(1) NOT NULL, 
-	 robot_stat 	varchar2(80) NOT NULL, 
+	 read_stat 	tinyint(1), 
+	 robot_stat 	varchar2(80), 
 	 user_ip_stat 	varchar2(100), 
 	 CONSTRAINT ind_stat PRIMARY KEY (id_stat) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -394,30 +356,24 @@ CREATE TABLE subscriber_table (
 	 bounce_subscriber 	varchar2(35), 
 	 comment_subscriber 	varchar2(150), 
 	 custom_attribute_subscriber 	varchar2(500), 
-	 date_subscriber 	date NOT NULL, 
+	 date_subscriber 	date, 
 	 include_sources_subscriber 	varchar2(50), 
 	 included_subscriber 	number, 
-	 list_subscriber 	varchar2(50) NOT NULL, 
+	 list_subscriber 	varchar2(50), 
 	 number_messages_subscriber 	number, 
 	 reception_subscriber 	varchar2(20), 
-	 robot_subscriber 	varchar2(80) NOT NULL, 
+	 robot_subscriber 	varchar2(80), 
 	 subscribed_subscriber 	number, 
 	 suspend_end_date_subscriber 	number, 
 	 suspend_start_date_subscriber 	number, 
 	 suspend_subscriber 	number, 
 	 topics_subscriber 	varchar2(200), 
 	 update_subscriber 	date, 
-	 user_subscriber 	varchar2(100) NOT NULL, 
+	 user_subscriber 	varchar2(100), 
 	 visibility_subscriber 	varchar2(20), 
 	 CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 
 
 
@@ -430,7 +386,7 @@ CREATE TABLE user_table (
 	 attributes_user 	varchar2(500), 
 	 cookie_delay_user 	number, 
 	 data_user 	varchar2(500), 
-	 email_user 	varchar2(100) NOT NULL, 
+	 email_user 	varchar2(100), 
 	 gecos_user 	varchar2(150), 
 	 lang_user 	varchar2(10), 
 	 last_login_date_user 	number, 
@@ -440,10 +396,4 @@ CREATE TABLE user_table (
 	 CONSTRAINT ind_user PRIMARY KEY (email_user) 
  );
 
-create sequence notification_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger notification_table_trigger before insert on notification_table for each row begin select notification_table_seq.nextval into :new.pk_notification from dual; end;
-create sequence oauthprovider_nonces_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_nonces_table_trigger before insert on oauthprovider_nonces_table for each row begin select oauthprovider_nonces_table_seq.nextval into :new.id_nonce from dual; end;
-create sequence oauthprovider_sessions_table_seq  start with 1 increment by 1  nomaxvalue;
-create trigger oauthprovider_sessions_table_trigger before insert on oauthprovider_sessions_table for each row begin select oauthprovider_sessions_table_seq.nextval into :new.id_oauthprovider from dual; end;
 

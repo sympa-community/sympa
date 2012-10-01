@@ -7,20 +7,20 @@
 
 CREATE TABLE admin_table ( 
 	 comment_admin 	text, 
-	 date_admin 	numeric NOT NULL, 
+	 date_admin 	numeric, 
 	 include_sources_admin 	text, 
 	 included_admin 	numeric, 
 	 info_admin 	text, 
-	 list_admin 	text NOT NULL, 
+	 list_admin 	text, 
 	 profile_admin 	text, 
 	 reception_admin 	text, 
-	 robot_admin 	text NOT NULL, 
-	 role_admin 	text NOT NULL, 
+	 robot_admin 	text, 
+	 role_admin 	text, 
 	 subscribed_admin 	numeric, 
 	 update_admin 	numeric, 
-	 user_admin 	text NOT NULL, 
+	 user_admin 	text, 
 	 visibility_admin 	text, 
-	 PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin) 
+	 PRIMARY KEY (list_admin, role_admin, user_admin, robot_admin) 
  );
 
 CREATE INDEX admin_user_index ON admin_table ( user_admin ); 
@@ -37,8 +37,8 @@ CREATE TABLE bulkmailer_table (
 	 lock_bulkmailer 	text, 
 	 merge_bulkmailer 	numeric, 
 	 messageid_bulkmailer 	text, 
-	 messagekey_bulkmailer 	text NOT NULL, 
-	 packetid_bulkmailer 	text NOT NULL, 
+	 messagekey_bulkmailer 	text, 
+	 packetid_bulkmailer 	text, 
 	 priority_message_bulkmailer 	integer, 
 	 priority_packet_bulkmailer 	integer, 
 	 receipients_bulkmailer 	text, 
@@ -47,7 +47,7 @@ CREATE TABLE bulkmailer_table (
 	 robot_bulkmailer 	text, 
 	 tracking_bulkmailer 	text, 
 	 verp_bulkmailer 	numeric, 
-	 PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer) 
+	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
  );
 
 
@@ -64,7 +64,7 @@ CREATE TABLE bulkspool_table (
 	 lock_bulkspool 	numeric, 
 	 message_bulkspool 	longtext, 
 	 messageid_bulkspool 	text, 
-	 messagekey_bulkspool 	text NOT NULL, 
+	 messagekey_bulkspool 	text, 
 	 PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -89,10 +89,10 @@ CREATE TABLE conf_table (
 
 CREATE TABLE exclusion_table ( 
 	 date_exclusion 	integer, 
-	 list_exclusion 	text NOT NULL, 
-	 robot_exclusion 	text NOT NULL, 
-	 user_exclusion 	text NOT NULL, 
-	 PRIMARY KEY (list_exclusion, user_exclusion, robot_exclusion) 
+	 list_exclusion 	text, 
+	 robot_exclusion 	text, 
+	 user_exclusion 	text, 
+	 PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
  );
 
 
@@ -105,10 +105,10 @@ CREATE TABLE list_table (
 	 creation_email_list 	text, 
 	 creation_epoch_list 	numeric, 
 	 editors_list 	text, 
-	 name_list 	text NOT NULL, 
+	 name_list 	text, 
 	 owners_list 	text, 
 	 path_list 	text, 
-	 robot_list 	text NOT NULL, 
+	 robot_list 	text, 
 	 status_list 	text, 
 	 subject_list 	text, 
 	 topics_list 	text, 
@@ -123,17 +123,17 @@ CREATE TABLE list_table (
 -- 
 
 CREATE TABLE logs_table ( 
-	 action_logs 	text NOT NULL, 
+	 action_logs 	text, 
 	 client_logs 	text, 
-	 daemon_logs 	text NOT NULL, 
-	 date_logs 	integer NOT NULL, 
+	 daemon_logs 	text, 
+	 date_logs 	integer, 
 	 error_type_logs 	text, 
-	 id_logs 	integer NOT NULL, 
+	 id_logs 	integer, 
 	 list_logs 	text, 
 	 msg_id_logs 	text, 
 	 parameters_logs 	text, 
 	 robot_logs 	text, 
-	 status_logs 	text NOT NULL, 
+	 status_logs 	text, 
 	 target_email_logs 	text, 
 	 user_email_logs 	text, 
 	 PRIMARY KEY (id_logs) 
@@ -147,10 +147,10 @@ CREATE TABLE logs_table (
 
 CREATE TABLE netidmap_table ( 
 	 email_netidmap 	text, 
-	 netid_netidmap 	text NOT NULL, 
-	 robot_netidmap 	text NOT NULL, 
-	 serviceid_netidmap 	text NOT NULL, 
-	 PRIMARY KEY (netid_netidmap, serviceid_netidmap, robot_netidmap) 
+	 netid_netidmap 	text, 
+	 robot_netidmap 	text, 
+	 serviceid_netidmap 	text, 
+	 PRIMARY KEY (netid_netidmap, robot_netidmap, serviceid_netidmap) 
  );
 
 
@@ -161,11 +161,11 @@ CREATE TABLE netidmap_table (
 
 CREATE TABLE notification_table ( 
 	 arrival_date_notification 	text, 
-	 date_notification 	integer NOT NULL, 
+	 date_notification 	integer, 
 	 list_notification 	text, 
 	 message_id_notification 	text, 
 	 message_notification 	longtext, 
-	 pk_notification 	integer NOT NULL, 
+	 pk_notification 	integer, 
 	 reception_option_notification 	text, 
 	 recipient_notification 	text, 
 	 robot_notification 	text, 
@@ -183,11 +183,11 @@ CREATE TABLE notification_table (
 CREATE TABLE oauthconsumer_sessions_table ( 
 	 access_secret_oauthconsumer 	text, 
 	 access_token_oauthconsumer 	text, 
-	 provider_oauthconsumer 	text NOT NULL, 
+	 provider_oauthconsumer 	text, 
 	 tmp_secret_oauthconsumer 	text, 
 	 tmp_token_oauthconsumer 	text, 
-	 user_oauthconsumer 	text NOT NULL, 
-	 PRIMARY KEY (user_oauthconsumer, provider_oauthconsumer) 
+	 user_oauthconsumer 	text, 
+	 PRIMARY KEY (provider_oauthconsumer, user_oauthconsumer) 
  );
 
 
@@ -197,9 +197,9 @@ CREATE TABLE oauthconsumer_sessions_table (
 -- 
 
 CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	integer NOT NULL, 
-	 id_oauthprovider 	integer NOT NULL, 
-	 nonce_oauthprovider 	text NOT NULL, 
+	 id_nonce 	integer, 
+	 id_oauthprovider 	integer, 
+	 nonce_oauthprovider 	text, 
 	 time_oauthprovider 	integer, 
 	 PRIMARY KEY (id_nonce) 
  );
@@ -213,13 +213,13 @@ CREATE TABLE oauthprovider_nonces_table (
 CREATE TABLE oauthprovider_sessions_table ( 
 	 accessgranted_oauthprovider 	integer, 
 	 callback_oauthprovider 	text, 
-	 consumer_oauthprovider 	text NOT NULL, 
+	 consumer_oauthprovider 	text, 
 	 firsttime_oauthprovider 	integer, 
-	 id_oauthprovider 	integer NOT NULL, 
+	 id_oauthprovider 	integer, 
 	 isaccess_oauthprovider 	integer, 
-	 lasttime_oauthprovider 	integer NOT NULL, 
-	 secret_oauthprovider 	text NOT NULL, 
-	 token_oauthprovider 	text NOT NULL, 
+	 lasttime_oauthprovider 	integer, 
+	 secret_oauthprovider 	text, 
+	 token_oauthprovider 	text, 
 	 user_oauthprovider 	text, 
 	 verifier_oauthprovider 	text, 
 	 PRIMARY KEY (id_oauthprovider) 
@@ -250,13 +250,13 @@ CREATE TABLE one_time_ticket_table (
 
 CREATE TABLE session_table ( 
 	 data_session 	text, 
-	 date_session 	integer NOT NULL, 
+	 date_session 	integer, 
 	 email_session 	text, 
 	 hit_session 	integer, 
-	 id_session 	text NOT NULL, 
+	 id_session 	text, 
 	 remote_addr_session 	text, 
 	 robot_session 	text, 
-	 start_date_session 	integer NOT NULL, 
+	 start_date_session 	integer, 
 	 PRIMARY KEY (id_session) 
  );
 
@@ -267,12 +267,12 @@ CREATE TABLE session_table (
 -- 
 
 CREATE TABLE stat_counter_table ( 
-	 beginning_date_counter 	integer NOT NULL, 
-	 data_counter 	text NOT NULL, 
+	 beginning_date_counter 	integer, 
+	 data_counter 	text, 
 	 end_date_counter 	integer, 
-	 id_counter 	integer NOT NULL, 
+	 id_counter 	integer, 
 	 list_counter 	text, 
-	 robot_counter 	text NOT NULL, 
+	 robot_counter 	text, 
 	 total_counter 	integer, 
 	 variation_counter 	integer, 
 	 PRIMARY KEY (id_counter) 
@@ -286,14 +286,14 @@ CREATE TABLE stat_counter_table (
 
 CREATE TABLE stat_table ( 
 	 daemon_stat 	text, 
-	 date_stat 	integer NOT NULL, 
+	 date_stat 	integer, 
 	 email_stat 	text, 
-	 id_stat 	integer NOT NULL, 
+	 id_stat 	integer, 
 	 list_stat 	text, 
-	 operation_stat 	text NOT NULL, 
+	 operation_stat 	text, 
 	 parameter_stat 	text, 
-	 read_stat 	integer NOT NULL, 
-	 robot_stat 	text NOT NULL, 
+	 read_stat 	integer, 
+	 robot_stat 	text, 
 	 user_ip_stat 	text, 
 	 PRIMARY KEY (id_stat) 
  );
@@ -312,20 +312,20 @@ CREATE TABLE subscriber_table (
 	 bounce_subscriber 	text, 
 	 comment_subscriber 	text, 
 	 custom_attribute_subscriber 	text, 
-	 date_subscriber 	numeric NOT NULL, 
+	 date_subscriber 	numeric, 
 	 include_sources_subscriber 	text, 
 	 included_subscriber 	numeric, 
-	 list_subscriber 	text NOT NULL, 
+	 list_subscriber 	text, 
 	 number_messages_subscriber 	integer, 
 	 reception_subscriber 	text, 
-	 robot_subscriber 	text NOT NULL, 
+	 robot_subscriber 	text, 
 	 subscribed_subscriber 	numeric, 
 	 suspend_end_date_subscriber 	integer, 
 	 suspend_start_date_subscriber 	integer, 
 	 suspend_subscriber 	numeric, 
 	 topics_subscriber 	text, 
 	 update_subscriber 	numeric, 
-	 user_subscriber 	text NOT NULL, 
+	 user_subscriber 	text, 
 	 visibility_subscriber 	text, 
 	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
  );
@@ -342,7 +342,7 @@ CREATE TABLE user_table (
 	 attributes_user 	text, 
 	 cookie_delay_user 	integer, 
 	 data_user 	text, 
-	 email_user 	text NOT NULL, 
+	 email_user 	text, 
 	 gecos_user 	text, 
 	 lang_user 	text, 
 	 last_login_date_user 	integer, 
