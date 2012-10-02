@@ -356,10 +356,16 @@ my %full_db_struct = (
 		'primary'=>1,
 		'not_null'=>1,
 	    },
+	    'family_exclusion' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'',
+		'primary'=>1,
+		'order' => 4,
+	    },
 	    'date_exclusion' => {
 		'struct'=> 'int(11)',
 		'doc'=>'',
-		'order' => 4,
+		'order' => 5,
 	    },
 	},
 	'doc'=>'exclusion table is used in order to manage unsubscription for subsceriber inclued from an external data source',
