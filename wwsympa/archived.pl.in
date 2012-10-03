@@ -264,7 +264,7 @@ while (!$end) {
 
 		   unless ($sender eq $messagesender) {
 		       &Log::do_log('err', 'remove command by unauthorized sender');
-		       return undef;
+		       next;
 		   }
 	       }
 	       # this point : requested command is from a authorized personn (message sender or list admin or listmaster
