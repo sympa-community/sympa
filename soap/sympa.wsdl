@@ -25,6 +25,14 @@
 		</complexContent>
 	</complexType>
 
+	<complexType name="ArrayOfUsers">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:userType[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+
 	<complexType name="ArrayOfString">
 		<complexContent>
 			<restriction base="SOAP-ENC:Array">
@@ -55,6 +63,16 @@
 		<element name="bounceCount"  minOccurs="0"  type="int"/>
 		<element name="bounceCode" minOccurs="0"  type="string"/>
 		<element name="bounceScore" minOccurs="0"  type="int"/>
+           </all>
+	</complexType>
+	
+	<complexType name="userType">
+           <all>
+		<element name="email" minOccurs="1" type="string"/>
+		<element name="gecos" minOccurs="0" type="string"/>
+		<element name="isSubscriber" minOccurs="0" type="boolean"/>
+		<element name="isOwner" minOccurs="0" type="boolean"/>
+		<element name="isEditor" minOccurs="0" type="boolean"/>
            </all>
 	</complexType>
 </schema>
@@ -101,6 +119,14 @@
 
 <message name="reviewResponse">
 	<part name="return" type="tns:ArrayOfString"/>
+</message>
+
+<message name="fullReviewRequest">
+	<part name="list" type="xsd:string"/>
+</message>
+
+<message name="fullReviewResponse">
+	<part name="return" type="tns:ArrayOfUsers"/>
 </message>
 
 <message name="signoffRequest">
@@ -275,6 +301,10 @@
 		<input message="tns:reviewRequest" />
 		<output message="tns:reviewResponse" />
 	</operation>
+	<operation name="fullReview">
+		<input message="tns:fullReviewRequest" />
+		<output message="tns:fullReviewResponse" />
+	</operation>
 	<operation name="subscribe">
 		<input message="tns:subscribeRequest" />
 		<output message="tns:subscribeResponse" />
@@ -428,6 +458,19 @@
 	</operation>
 	<operation name="review">
 		<soap:operation soapAction="urn:sympasoap#review"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="fullReview">
+		<soap:operation soapAction="urn:sympasoap#fullReview"/>
 			<input>
 				<soap:body use="encoded" 
 					namespace="urn:sympasoap" 

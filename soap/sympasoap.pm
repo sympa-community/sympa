@@ -43,7 +43,9 @@ my %types = ('listType' => {'listAddress' => 'string',
 			    'isSubscriber' => 'boolean',
 			    'isOwner' => 'boolean',
 			    'isEditor' => 'boolean',
-			    'subject' => 'string'}
+			    'subject' => 'string',
+			    'email' => 'string',
+			    'gecos' => 'string'}
 	     );
 
 sub checkCookie {
@@ -984,6 +986,117 @@ sub review {
     die SOAP::Fault->faultcode('Server')
 	->faultstring('Unknown requested action')
 	    ->faultdetail("SOAP review : %s from %s aborted because unknown requested action in scenario",$listname,$sender);
+}
+
+sub fullReview {
+	my $class = shift;
+	my $listname  = shift;
+	
+	my $sender = $ENV{'USER_EMAIL'};
+	my $robot = $ENV{'SYMPA_ROBOT'};
+	
+	unless($sender) {
+		die SOAP::Fault->faultcode('Client')
+			->faultstring('User not authentified')
+			->faultdetail('You should login first');
+	}
+	
+	unless($listname) {
+		die SOAP::Fault->faultcode('Client')
+			->faultstring('Incorrect number of parameters')
+			->faultdetail('Use : <list>');
+	}
+	
+	&Log::do_log('debug', 'SOAP fullReview(%s,%s)', $listname, $robot);
+	
+	my $list = new List($listname, $robot);
+	unless($list) {
+		&Log::do_log('info', 'Review %s from %s refused, list unknown to robot %s', $listname, $sender, $robot);
+		die SOAP::Fault->faultcode('Server')
+			->faultstring('Unknown list')
+			->faultdetail("List $listname unknown");
+	}
+	
+	unless($list->is_listmaster($sender, $robot) || $list->am_i('owner', $sender)) {
+		die SOAP::Fault->faultcode('Client')
+			->faultstring('Not enough privileges')
+			->faultdetail('Listmaster or listowner required');
+	}
+	
+	my $sympa = &Conf::get_robot_conf($robot, 'sympa');
+	
+	my $is_owner = $list->am_i('owner', $sender);
+	
+	## Members list synchronization if include is in use
+	if($list->has_include_data_sources()) {
+		unless($list->on_the_fly_sync_include('use_ttl' => 1)) {
+			&Log::do_log('notice','Unable to synchronize list %s.', $listname);
+		}
+	}
+	
+	my $members;
+	my $user;
+	if($user = $list->get_first_list_member({'sortby' => 'email'})) {
+		do {
+			$user->{'email'} =~ y/A-Z/a-z/;
+			
+			my $res;
+			$res->{'email'} = $user->{'email'};
+			$res->{'gecos'} = $user->{'gecos'};
+			$res->{'isOwner'} = 0;
+			$res->{'isEditor'} = 0;
+			$res->{'isSubscriber'} = 0;
+			if($list->is_list_member($user->{'email'})) {
+				$res->{'isSubscriber'} = 1;
+			}
+			
+			$members->{$user->{'email'}} = $res;
+		} while ($user = $list->get_next_list_member());
+	}
+	
+	my $editors = $list->get_editors();
+	if($editors) {
+		foreach my $user (@$editors) {
+			$user->{'email'} =~ y/A-Z/a-z/;
+			if(defined $members->{$user->{'email'}}) {
+				$members->{$user->{'email'}}{'isEditor'} = 1;
+			}else{
+				my $res;
+				$res->{'email'} = $user->{'email'};
+				$res->{'gecos'} = $user->{'gecos'};
+				$res->{'isOwner'} = 0;
+				$res->{'isEditor'} = 1;
+				$res->{'isSubscriber'} = 0;
+				$members->{$user->{'email'}} = $res;
+			}
+		}
+	}
+	
+	my $owners = $list->get_owners();
+	if($owners) {
+		foreach my $user (@$owners) {
+			$user->{'email'} =~ y/A-Z/a-z/;
+			if(defined $members->{$user->{'email'}}) {
+				$members->{$user->{'email'}}{'isOwner'} = 1;
+			}else{
+				my $res;
+				$res->{'email'} = $user->{'email'};
+				$res->{'gecos'} = $user->{'gecos'};
+				$res->{'isOwner'} = 1;
+				$res->{'isEditor'} = 0;
+				$res->{'isSubscriber'} = 0;
+				$members->{$user->{'email'}} = $res;
+			}
+		}
+	}
+	
+	my @result;
+	foreach my $email (keys %$members) {
+		push @result, struct_to_soap($members->{$email});
+	}
+	
+	&Log::do_log('info', 'SOAP : fullReview %s from %s accepted', $listname, $sender);
+	return SOAP::Data->name('return')->value(\@result);
 }
 
 sub signoff {
