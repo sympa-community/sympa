@@ -8,7 +8,9 @@
    <p>
      [% info_content %]
    </p>
-
+	[% IF is_priv %]
+	<div class="text_right"><a href="[% path_cgi %]/editfile/[%list%]/description_templates/info">[%|loc%]Edit[%END%]</a></div>
+	[% END %]
 </div>
 [% END %]
 

@@ -89,10 +89,11 @@ CREATE TABLE conf_table (
 
 CREATE TABLE exclusion_table ( 
 	 date_exclusion 	integer, 
+	 family_exclusion 	text, 
 	 list_exclusion 	text, 
 	 robot_exclusion 	text, 
 	 user_exclusion 	text, 
-	 PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
+	 PRIMARY KEY (user_exclusion, robot_exclusion, family_exclusion, list_exclusion) 
  );
 
 

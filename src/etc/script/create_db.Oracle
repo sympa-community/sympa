@@ -111,10 +111,11 @@ CREATE TABLE conf_table (
 
 CREATE TABLE exclusion_table ( 
 	 date_exclusion 	number, 
+	 family_exclusion 	varchar2(50), 
 	 list_exclusion 	varchar2(50), 
 	 robot_exclusion 	varchar2(50), 
 	 user_exclusion 	varchar2(100), 
-	 CONSTRAINT ind_exclusion PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
+	 CONSTRAINT ind_exclusion PRIMARY KEY (user_exclusion, robot_exclusion, family_exclusion, list_exclusion) 
  );
 
 

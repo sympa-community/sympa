@@ -6,7 +6,6 @@
 <ul>
 	  <li><strong><a href="[% path_cgi %]/edit_list_request/[% list %]">[%|loc%]Edit list config:[%END%]</a></strong>  [%|loc%]Use it with care: it allows you to modify some of the list parameters. The list of the parameters you can modify depends on your privileges.[%END%]</li>
 [% IF is_owner %]
-          <li><strong><a href="[% path_cgi %]/editfile/[% list %]">[%|loc%]Customizing: [%END%]</a></strong> [%|loc%]Editing of various files and messages attached to your list.[%END%]</li>
           <li><strong><a href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage subscribers:[%END%]</a></strong> [%|loc%]Allows you to add or delete list subscribers, moderate subscriptions and so on.[%END%]</li>
 [% IF conf.use_blacklist != 'none' %]
      	  <li><strong><a href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist:[%END%]</a></strong> [%|loc%]Handles the set of black-listed mail addresses for this list.[%END%]</li>
