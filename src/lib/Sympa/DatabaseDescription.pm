@@ -359,7 +359,6 @@ my %full_db_struct = (
 	    'family_exclusion' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'',
-		'primary'=>1,
 		'order' => 4,
 	    },
 	    'date_exclusion' => {
