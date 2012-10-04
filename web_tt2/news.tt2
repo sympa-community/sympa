@@ -2,9 +2,9 @@
 
 <!-- beginning of the admin news -->
 
-[% IF admin_summary.size > 0 || errors_summary.size > 0-%]
+[% IF admin_summary.size || errors_summary.size-%]
 <div class="news_container">
-[% IF admin_summary.size > 0 -%]
+[% IF admin_summary.size -%]
 
 <h2>[%|loc%]Administration Tasks[%END%]</h2>
 <p>[%|loc%]The following items are waiting for your validation[%END%]</p>
@@ -25,7 +25,7 @@
 [% END %]
 
 <!-- list of new errors-->
-[% IF errors_summary.size > 0 -%]
+[% IF errors_summary.size -%]
 <h2>[%|loc%]User Errors[%END%]</h2>
 <p>[%|loc%]We received error reports while trying to send you messages. Some of them may have been lost.[%END%]</p>
 <div id="home_admin_summary">
