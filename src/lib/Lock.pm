@@ -173,6 +173,7 @@ sub unlock {
     else {
 	return undef unless($self->remove_lock());
 	$previous_mode = pop @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}};
+	unlink $self->{'lock_filename'};
     }
     return 1;
 }

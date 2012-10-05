@@ -3,7 +3,7 @@ nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
 		      List.pm Log.pm mail.pm Ldap.pm Upgrade.pm Lock.pm \
 		      Fetch.pm Message.pm Task.pm Datasource.pm SQLSource.pm \
 		      LDAPSource.pm Scenario.pm PlainDigest.pm report.pm \
-		      tools.pm tt2.pm time_utils.pm Sympa/Constants.pm \
+		      Sympaspool.pm tools.pm tt2.pm time_utils.pm Sympa/Constants.pm \
 		      Sympa/Template/Compat.pm Robot.pm WebAgent.pm \
 		      HTML/myFormatText.pm tracking.pm \
 		      Sympa/DatabaseDescription.pm SDM.pm \

@@ -42,11 +42,11 @@ use Sympa::DatabaseDescription;
 # db structure description has moved in Sympa/Constant.pm 
 my %db_struct = &Sympa::DatabaseDescription::db_struct();
 
-my %not_null = %Sympa::DatabaseDescription::not_null;
+my %not_null = &Sympa::DatabaseDescription::not_null();
 
-my %primary =  %Sympa::DatabaseDescription::primary ;
+my %primary =  &Sympa::DatabaseDescription::primary() ;
 	       
-my %autoincrement = %Sympa::DatabaseDescription::autoincrement ;
+my %autoincrement = &Sympa::DatabaseDescription::autoincrement() ;
 
 ## List the required INDEXES
 ##   1st key is the concerned table
@@ -101,7 +101,7 @@ sub db_get_handler {
 ## Just check if DB connection is ok
 sub check_db_connect {
     
-    &Log::do_log('debug2', 'Checking connection to the Sympa database');
+    #&Log::do_log('debug2', 'Checking connection to the Sympa database');
     ## Is the Database defined
     unless (&Conf::get_robot_conf('*','db_name')) {
 	&Log::do_log('err', 'No db_name defined in configuration file');
@@ -163,16 +163,11 @@ sub probe_db {
     &Log::do_log('debug3', 'Checking database structure');    
     my (%checked, $table);
     
+    my $dbh = &db_get_handler();
+
     ## Database structure
     ## Report changes to listmaster
     my @report;
-
-    unless (&check_db_connect) {
-	&Log::do_log('err', 'Unable to get a connection to the Sympa database');
-	return undef;
-    }
-
-    my $dbh = &db_get_handler();
 
     ## Get tables
     my @tables;
@@ -207,7 +202,7 @@ sub probe_db {
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
 
-	foreach my $t (keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}}) {
+	foreach my $t (keys %{$db_struct{'mysql'}}) {
 	    unless ($real_struct{$t}) {
 		&Log::do_log('err', "Table '%s' not found in database '%s' ; you should create it with create_db.%s script", $t, &Conf::get_robot_conf('*','db_name'), &Conf::get_robot_conf('*','db_type'));
 		return undef;
@@ -225,7 +220,7 @@ sub probe_db {
 		delete $real_struct{$t}{'temporary'};
 	    }
 
-	    if ((&Conf::get_robot_conf('*','db_type') eq 'mysql')||(&Conf::get_robot_conf('*','db_type') eq 'Pg')) {
+	    if ((&Conf::get_robot_conf('*','db_type') eq 'mysql')||(&Conf::get_robot_conf('*','db_type') eq 'Pg')||(&Conf::get_robot_conf('*','db_type') eq 'SQLite')) {
 		## Check that primary key has the right structure.
 		unless (&check_primary_key({'table' => $t,'report' => \@report})) {
 		    &Log::do_log('err', "Unable to check the valifity of primary key for table %s. Aborting.", $t);
@@ -238,52 +233,20 @@ sub probe_db {
 		}
 		
 	    }   
-	    elsif (&Conf::get_robot_conf('*','db_type') eq 'SQLite') {
-		## Create required INDEX and PRIMARY KEY
-		my $should_update;
-		foreach my $field (@{$primary{$t}}) {
-		}
-		
-		if ($should_update) {
-		    my $fields = join ',',@{$primary{$t}};
-		    ## drop previous index
-		    my $success;
-		    foreach my $field (@{$primary{$t}}) {
-			unless ($dbh->do("DROP INDEX $field")) {
-			    next;
-			}
-			$success = 1; last;
-		    }
-		    
-		    if ($success) {
-			push @report, sprintf('Table %s, INDEX dropped', $t);
-			&Log::do_log('info', 'Table %s, INDEX dropped', $t);
-		    }else {
-			&Log::do_log('err', 'Could not drop INDEX, table \'%s\'.', $t);
-		    }
-		    
-		    ## Add INDEX
-		    unless ($dbh->do("CREATE INDEX IF NOT EXIST $t\_index ON $t ($fields)")) {
-			&Log::do_log('err', 'Could not set INDEX on field \'%s\', table\'%s\'.', $fields, $t);
-			return undef;
-		    }
-		    push @report, sprintf('Table %s, INDEX set on %s', $t, $fields);
-		    &Log::do_log('info', 'Table %s, INDEX set on %s', $t, $fields);
-		    
-		}
-	    }
 	}
 	# add autoincrement if needed
 	foreach my $table (keys %autoincrement) {
+	    &Log::do_log('notice',"Checking autoincrement for table $table, field $autoincrement{$table}");
 	    unless ($db_source->is_autoinc({'table'=>$table,'field'=>$autoincrement{$table}})){
-		if ($db_source->set_autoinc({'table'=>$table,'field'=>$autoincrement{$table}})){
+		if ($db_source->set_autoinc({'table'=>$table,'field'=>$autoincrement{$table},
+		'field_type'=>$db_struct{'mysql'}{$table}{'fields'}{$autoincrement{$table}}{'struct'}})){
 		    &Log::do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
 		}else{
 		    &Log::do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
 		    return undef;
 		}
 	    }
-	}	
+	}
     }else{
 	&Log::do_log('err',"Could not check the database structure. consider verify it manually before launching Sympa.");
 	return undef;
@@ -364,6 +327,10 @@ sub check_primary_key {
     my $t = $param->{'table'};
     my $report_ref = $param->{'report'};
     &Log::do_log('debug','Checking primary key for table %s',$t);
+
+    my $list_of_keys = join ',',@{$primary{$t}};
+    my $key_as_string = "$t [$list_of_keys]";
+    &Log::do_log('debug','Checking primary keys for table %s expected_keys %s',$t,$key_as_string );
 
     my $should_update = $db_source->check_key({'table'=>$t,'key_name'=>'primary','expected_keys'=>$primary{$t}});
     if ($should_update){

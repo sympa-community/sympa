@@ -8,7 +8,7 @@
 </div>
 [% END %]
 
-[% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' %]
+[% IF action == 'serveradmin' or action == 'skinsedit'  or action == 'edit_config' or action == 'get_pending_lists'  or action == 'get_closed_lists' or action == 'get_latest_lists' or action == 'get_inactive_lists'  or action ==  'viewspools' %]
 <div id="nav">
   <ul>
 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
@@ -17,6 +17,8 @@
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/users">[%|loc%]Users[%END%]</a></li>
 [% IF subaction == 'archives' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/archives">[%|loc%]Archives[%END%]</a></li>
+[% IF subaction == 'viewspools' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
+    <li class="[% class %]"><a href="[% path_cgi %]/viewspools">[%|loc%]Spools[%END%]</a></li>
 [% IF subaction == 'logs' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/logs">[%|loc%]Logs[%END%]</a></li>
 [% IF subaction == 'templates' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]

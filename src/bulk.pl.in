@@ -45,13 +45,14 @@ use Conf;
 use Log;
 use Commands;
 use Getopt::Long;
-
+use Data::Dumper;
 use mail;
 use Bulk;
 use List;
 use tools;
 use tracking;
 use Sympa::Constants;
+use Sympaspool;
 
 my $daemon_name = &Log::set_daemon($0);
 my $date_of_last_activity = time();
@@ -169,6 +170,9 @@ my %created_children;
 $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
 
+
+my $spool = new Sympaspool('bulk');
+
 while (!$end) {
     &List::init_list_cache();
 	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
@@ -259,14 +263,14 @@ while (!$end) {
     }
 	
 	## Go through the bulk_mailer table and process messages
+
     if ($bulk = Bulk::next()) {
 	if ($bulk->{'messagekey'} ne $messagekey) {
 	    # current packet is not related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
 
 	    $messagekey = $bulk->{'messagekey'};
-	    $message_from_spool = &Bulk::message_from_spool($bulk->{'messagekey'});
-
+	    $message_from_spool = $spool->get_message({'messagekey' => $bulk->{'messagekey'}});
 	    &Log::do_log('notice','Start sending message "%s" (key "%s") to list "%s@%s" (priority %s) (starting %s seconds after scheduled expedition date)',
 			$bulk->{'messageid'},
 			$bulk->{'messagekey'},
@@ -276,7 +280,8 @@ while (!$end) {
 			time() - $bulk->{'delivery_date'});
 			
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
-
+	    
+	    #my $dump = &Dumper($messageasstring_init); open (DUMP,">>/tmp/dumper"); printf DUMP 'messageasstring recup par bulk \n%s',$dump ; close DUMP; 
 	    # &trace_smime($messageasstring_init,'initial');
 
 	    unless ( $messageasstring_init ) {
@@ -287,7 +292,6 @@ while (!$end) {
 	    }
 	    $messagekey = $bulk->{'messagekey'};
 	}
-
 	my $data; #HASH which will contain the attributes of the subscriber
 	
 	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
@@ -297,7 +301,7 @@ while (!$end) {
 	$data->{'wwsympa_url'} = &Conf::get_robot_conf($bulk->{'robot'},'wwsympa_url');
 	
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
-	my @rcpts = split /,/,$bulk->{'receipients'}; # Contain all the subscribers
+	my @rcpts = split /,/,$bulk->{'receipients'}; # / Contain all the subscribers 
 	## Use an intermediate handler to encode to filesystem_encoding
 	my $user;
 	
@@ -331,7 +335,7 @@ while (!$end) {
 		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
 		    if (($message->{'protected'})||($message->{'smime_crypted'})){
-			my $msg_body =$messageasstring_init; $msg_body =~ s/^.*\n\n//;      # remove headers
+			my $msg_body = &Message::get_body_from_msg_as_string($messageasstring_init);
 			$messageasstring_init = $entity->head->as_string. "\n" . $msg_body; # concat headers from entity with original body
 		    }else{
 			$messageasstring_init = $entity->as_string;
@@ -344,7 +348,7 @@ while (!$end) {
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
 			&Log::do_log('err', 'Erreur d appel &Bulk::merge_msg');
 		    }		    
-		    $messageasstring = $entity->as_string;		    		
+		    $messageasstring = $entity->as_string;		
 		}else{
 		    $messageasstring = $messageasstring_init;
 		}
@@ -424,9 +428,6 @@ sub sigterm {
     &Log::do_log('notice', 'signal TERM received, still processing current task');
     $end = 1;
 }
-
-
-
 
 
 sub trace_smime {

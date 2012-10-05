@@ -200,59 +200,161 @@ my %full_db_struct = (
 	'doc' => 'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if he never log through the web interface.',
 	'order'=>2,
     },
-    'bulkspool_table' => {
+    'spool_table' => {
 	'fields' => {
-	    'messagekey_bulkspool' => {
-		'struct'=> 'varchar(33)',
+	    'messagekey_spool' => {
+		'struct'=> 'bigint(20)',
 		'doc'=>'primary key',
 		'primary'=>1,
 		'not_null'=>1,
+		'autoincrement'=>1,
 		'order'=>1,
 	    },
-	    'message_bulkspool' => {
-		'struct'=> 'longtext',
-		'doc'=>'message as string b64 encoded',
+	    'spoolname_spool'=> {
+		'struct'=>  "enum('msg','auth','mod','digest','archive','bounce','subscribe','topic','bulk','validated','task')",
+		'doc'=>'the spool name',
+		'not_null'=>1,
 		'order'=>2,
 	    },
-	    'messageid_bulkspool' => {
-		'struct'=> 'varchar(300)',
-		'doc'=>'stored to list spool content faster',
+	    'list_spool'=> {
+		'struct'=> 'varchar(50)',
+		'doc' => '',
+		'order'=>3,
+	    },
+	    'robot_spool' =>{
+		'struct'=> 'varchar(80)',
+		'doc'=>'',
 		'order'=>4,
 	    },
-	    'lock_bulkspool' => {
-		'struct'=> 'int(1)',
-		'doc'=>'when set to 1, this field prevents Sympa from processing the message',
+	    'priority_spool'=> {
+		'struct'=> 'varchar(2)',
+		'doc'=>'priority (list priority, owner pririty etc)',
 		'order'=>5,
 	    },
-	    'dkim_privatekey_bulkspool' => {
-		'struct'=> 'varchar(1000)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
+	    'date_spool'=> {
+		'struct'=> 'int(11)',
+		'doc'=>'the date a message is copied in spool table',
 		'order'=>6,
 	    },
-	    'dkim_selector_bulkspool' => {
-		'struct'=> 'varchar(50)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
+	    'message_spool' => {
+		'struct'=> 'longtext',
+		'doc'=>'message as string b64 encoded',
 		'order'=>7,
 	    },
-	    'dkim_d_bulkspool' => {
-		'struct'=> 'varchar(50)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
+	    'messagelock_spool' => {
+		'struct'=> 'varchar(90)',
+		'doc'=>'a unique string for each process : $$@hostname',
 		'order'=>8,
 	    },
-	    'dkim_i_bulkspool' => {
-		'struct'=> 'varchar(100)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
+	    'lockdate_spool' => {
+		'struct'=> 'int(11)',
+		'doc'=>'the date a lock is set. Used in order detect old locks',
 		'order'=>9,
 	    },
+	    'message_status_spool' => {
+		'struct'=> "enum('ok','bad')",
+		'doc'=>'if problem when processed entries have bad status',
+		'order'=>10,
+	    },
+	    'message_diag_spool' =>{
+		'struct'=> 'text',
+		'doc'=>'the reason why a message is moved to bad',
+		'order'=>11,
+	    },
+	    'type_spool'=> {
+		'struct'=> 'varchar(15)',
+		'doc'=>'list, list-request,, sympa robot or other rcp ',
+		'order'=>12,
+	    },
+	    'authkey_spool' => {
+		'struct'=> 'varchar(33)',
+		'doc'=>' authentication key for email chalenge',
+		'order'=>13,
+	    },
+	    'headerdate_spool' => {
+		'struct'=> 'varchar(80)',
+		'doc'=>'the message header date',
+		'order'=>14,
+	    },
+	    'create_list_if_needed_spool'=> {
+		'struct'=> 'int(1)',
+		'doc'=>'set to 1 if message is related to a dynamic list, set to 0 if list as been created or if list is static',
+		'order'=>15,
+	    },
+	    'subject_spool'=>{
+		'struct'=> 'varchar(110)',
+		'doc'=>'subject of the message stored to list spool content faster',
+		'order'=>16,
+	    },
+	    'sender_spool'=>{
+		'struct'=> 'varchar(110)',
+		'doc'=>'this info is stored to browse spool content faster',
+		'order'=>17,
+	    },
+	    'messageid_spool' => {
+		'struct'=> 'varchar(300)',
+		'doc'=>'stored to list spool content faster',
+		'order'=>18,
+	    },
+	    'spam_status_spool' => {
+		'struct'=> 'varchar(12)',
+		'doc'=>'spamstatus scenario result',
+		'order'=>19,
+	    },
+	    'size_spool' => {
+		'struct'=> 'int(11)',
+		'doc'=>'info stored in order to browse spool content faster',
+		'order'=>20,
+	    },
+	    'task_date_spool' => {
+		'struct'=> 'int(11)',
+		'doc'=>'date for a task',
+		'order'=>21,
+	    },
+	    'task_label_spool' => {
+		'struct'=> 'varchar(20)',
+		'doc'=>'label for a task',
+		'order'=>22,
+	    },
+	    'task_model_spool' => {
+		'struct'=> 'varchar(40)',
+		'doc'=>'model of related task',
+		'order'=>23,
+	    },
+	    'task_object_spool' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'object of related task',
+		'order'=>24,
+	    },
+	    'dkim_privatekey_spool' => {
+		'struct'=> 'varchar(1000)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
+		'order'=>35,
+	    },
+	    'dkim_selector_spool' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
+		'order'=>36,
+	    },
+	    'dkim_d_spool' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
+		'order'=>37,
+	    },
+	    'dkim_i_spool' => {
+		'struct'=> 'varchar(100)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
+		'order'=>38,
+	    },
 	},
-	'doc'=>'This table contains the messages to be sent by bulk.pl',
+	'doc'=>'This table is created in version 6.2. It replace most of spools on file system for clustering purpose',
 	'order'=>3,	    
     },
     'bulkmailer_table' => {
 	'fields' => {
 	    'messagekey_bulkmailer' => {
 		'struct'=> 'varchar(80)',
-		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_bulkspool',
+		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_spool',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>1,
@@ -894,7 +996,7 @@ my %full_db_struct = (
     'oauthprovider_sessions_table' => {
 	'fields' => {
 	    'id_oauthprovider' => {
-		'struct' => 'int(11)',
+		'struct' => 'bigint(20)',
 		'doc' => 'Autoincremental key',
 		'order' => 1,
 		'primary'=>1,
@@ -963,7 +1065,7 @@ my %full_db_struct = (
     'oauthprovider_nonces_table' => {
 	'fields' => {
 	    'id_nonce' => {
-		'struct' => 'int(11)',
+		'struct' => 'bigint(20)',
 		'doc' => 'Autoincremental key',
 		'order' => 1,
 		'primary'=>1,
@@ -1126,7 +1228,7 @@ sub not_null {
     my %db_struct = &db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
-	    $not_null{'$field'} = $full_db_struct{$table}{'fields'}{'not_null'}; 
+	    $not_null{'$field'} = $full_db_struct{$table}{'fields'}{$field}{'not_null'}; 
 	}
     }
     return %not_null;
@@ -1138,7 +1240,7 @@ sub autoincrement {
     my %db_struct = &db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {		
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
-	    $autoincrement{$table} = $field if ($full_db_struct{$table}{'fields'}{'autoincrement'}); 
+	    $autoincrement{$table} = $field if ($full_db_struct{$table}{'fields'}{$field}{'autoincrement'}); 
 	}
     }
     return %autoincrement;

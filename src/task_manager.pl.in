@@ -26,6 +26,7 @@
 
 use lib '--modulesdir--';
 use strict "vars";
+use Data::Dumper;
 
 use Task;
 use List;
@@ -36,6 +37,7 @@ use Time::Local;
 use Digest::MD5;
 use Scenario;
 use SympaSession;
+use Sympaspool;
 use tracking;
 use Bulk;
 use mail;
@@ -157,6 +159,8 @@ unless (chdir($Conf{'home'})) {
     exit (-1);
 }
 
+&Task::set_spool(); # force initialisation of $taskspool in module Task 
+
 my $pinfo = &List::_apply_defaults();
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
@@ -253,7 +257,7 @@ foreach (keys %asgn_commands) {
     $commands{$_} = $asgn_commands{$_};
 }                                    
      
-###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
+###### INFINITE LOOP SCANING THE SPOOL (unless a sig TERM is received) ######
 while (!$end) {
 
     my $current_date = time; # current epoch date
@@ -262,12 +266,12 @@ while (!$end) {
 
     ## Empty cache of the List.pm module
     &List::init_list_cache();
-	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
+    &List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
 	
    ## List all tasks
-    unless (&Task::list_tasks($spool_task)) {
-	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in $spool_task"});
-	&Log::do_log ('err', "Failed to list task files in %s", $spool_task);
+    unless (&Task::list_tasks) {
+	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in spool"});
+	&Log::do_log ('err', "Failed to list task files in spool");
 	exit -1;
     }
 
@@ -279,9 +283,9 @@ while (!$end) {
     ### creation of required tasks 
     my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
 			'execution_date' => 'execution_date');
-
     ## global tasks
     foreach my $key (keys %global_models) {	
+	&Log::do_log('debug2',"global_model : $key");
 	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf{$key}) { 
 		my %data = %default_data; # hash of datas necessary to the creation of tasks
@@ -289,26 +293,28 @@ while (!$end) {
 		$used_models{$1} = 1;
 	    }
 	}
-    }    
-
+    }    	
     
     ## list tasks
     foreach my $robot (keys %{$Conf{'robots'}}) {
+	&Log::do_log('debug3',"creating list task : current bot  is $robot");
 	my $all_lists = &List::get_lists($robot);
 	foreach my $list ( @$all_lists ) {
-	    
+	    &Log::do_log('debug3',"creating list task : current list  is $list->{'name'}");
 	    my %data = %default_data;
 	
 	    $data{'list'} = {'name' => $list->{'name'},
 			     'robot' => $list->{'domain'}};
 	
 	    my %used_list_models; # stores which models already have a task 
-	    foreach (@list_models) { $used_list_models{$_} = undef; }
-	    
-	    foreach my $model (&Task::get_used_models($list->get_list_id())) {
+	    foreach (@list_models) { 
+		$used_list_models{$_} = undef;
+	    }	    
+	    foreach my $model (&Task::get_used_models($list->get_list_id())) {		
 		$used_list_models{$model} = 1; 
 	    }
-	    
+	    &Log::do_log('debug3',"creating list task using models");my $tt= 0;
+
 	    foreach my $model (@list_models) {
 		unless ($used_list_models{$model}) {
 		    my $model_task_parameter = "$model".'_task';
@@ -318,18 +324,19 @@ while (!$end) {
 				     ($list->{'admin'}{'status'} eq 'open'));
 
 			create ($current_date, 'INIT', $model, 'ttl', \%data);
+			&Log::do_log('debug3',"sync_include task ceration done");$tt++;
 			
 		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
 			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
 			    ($list->{'admin'}{'status'} eq 'open')) {
 			
 			create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
+			$tt++;
 		    }
 		}
 	    }
 	}
     }
-
     ## Execute existing tasks
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
@@ -343,42 +350,29 @@ while (!$end) {
     foreach my $task ( &Task::get_task_list() ) {
 	
 	last if $end;
-
-	my $task_file = $task->{'filepath'};
-
-	&Log::do_log ('debug3', "procesing %s", $task_file);
 	last unless ($task->{'date'} < $current_date);
 	if ($task->{'object'} ne '_global') { # list task
 	    my $list = $task->{'list_object'};
 	    
 	    ## Skip closed lists
 	    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-		&Log::do_log('notice','Removing task file %s because the list is not opened', $task_file);
-		unless (unlink $task_file) {
-		    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-		    next;
-		}
+		&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
+		$task->remove;
 		next;
 	    }
 	    
 	    ## Skip if parameter is not defined
 	    if ( $task->{'model'} eq 'sync_include') {
 		unless ($list->{'admin'}{'status'} eq 'open') {
-		    &Log::do_log('notice','Removing task file %s', $task_file);
-		    unless (unlink $task_file) {
-			&Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-			next;
-		    }
+		    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
+		    $task->remove;
 		    next;
 		}
 	    }else {
 		unless (defined $list->{'admin'}{$task->{'model'}} && 
 			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
-		    &Log::do_log('notice','Removing task file %s', $task_file);
-		    unless (unlink $task_file) {
-			&Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-			next;
-		    }
+		    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
+		    $task->remove;
 		    next;
 		}		
 	    }
@@ -386,7 +380,7 @@ while (!$end) {
 	execute ($task);
     }
 
-    sleep 60;
+    sleep 30;
     #$end = 1;
 
     ## Free zombie sendmail processes
@@ -411,29 +405,26 @@ sub create {
     my $model_choice  = shift;
     my $Rdata         = shift;
 
-    &Log::do_log ('debug2', "create date : $date label : $label model $model : $model_choice Rdata :$Rdata");
+    &Log::do_log ('debug', "create task date: $date label: $label model: $model model_choice: $model_choice Rdata :$Rdata");
 
-    my $task_file;
     my $list_name;
     my $robot;
     my $object;
     if (defined $Rdata->{'list'}) { 
 	$list_name = $Rdata->{'list'}{'name'};
 	$robot = $Rdata->{'list'}{'robot'};
-	$task_file  = "$spool_task/$date.$label.$model.$list_name\@$robot";
+	# $task_file  = "$spool_task/$date.$label.$model.$list_name\@$robot";
 	$object = 'list';
     }
     else {
 	$object = '_global';
-	$task_file  = $spool_task.'/'.$date.'.'.$label.'.'.$model.'.'.$object;
+	# $task_file  = $spool_task.'/'.$date.'.'.$label.'.'.$model.'.'.$object;
     }
 
     ## model recovery
     my $model_file;
     my $model_name = $model.'.'.$model_choice.'.'.'task';
  
-    &Log::do_log ('notice', "creation of $task_file");
-
      # for global model
     if ($object eq '_global') {
 	unless ($model_file = &tools::get_filename('etc',{},"global_task_models/$model_name", $Conf{'host'})) {
@@ -454,24 +445,40 @@ sub create {
 	}
     }
    
-    &Log::do_log ('notice', "with model $model_file");
+    &Log::do_log ('notice', "create task with with tt2 template $model_file");
     
     ## creation
-    open (TASK, ">$task_file");
+    my $task_as_string = '';
     my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
-    unless (defined $tt2 && $tt2->process($model_file, $Rdata, \*TASK)) {
-      &Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
+
+    unless (defined $tt2 && $tt2->process($model_file, $Rdata, \$task_as_string)) {
+	&Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
     }
-    #&parser::parse_tpl($Rdata, $model_file, \*TASK);
-    close (TASK);
-    
-    if (!check($task_file)) {
-	&Log::do_log ('err', "error : syntax error in $task_file, you should check $model_file");
-	unlink ($task_file) ? 
-	    &Log::do_log ('notice', "$task_file deleted") 
-		: &Log::do_log ('err', "error : unable to delete $task_file");	
+        
+    if  (!check ($task_as_string)) {
+	&Log::do_log ('err', "error : syntax error in $task_as_string, you should check $model_file");
+	&Log::do_log ('notice', "Ignoring creation task request") ;
 	return undef;
     }
+    # task is accetable, store it in spool
+    my $taskspool = new Sympaspool('task');
+    my %meta;
+    $meta{'task_date'}=$date;
+    $meta{'task_label'}=$label;
+    $meta{'task_model'}=$model;
+    $meta{'robot'}= $robot if $robot;
+    if ($list_name) {
+	$meta{'list'}=$list_name ;
+	$meta{'object'}=$list_name.'@'.$robot ;
+    }else{
+	$meta{'object'}= '_global' ;
+    }
+
+    #my $dump = &Dumper($task_as_string); open (DUMP,">>/tmp/dumper"); printf DUMP 'DUMP\n%s',$dump ; close DUMP; 
+    #my $dump = &Dumper(\%meta); open (DUMP,">>/tmp/dumper"); printf DUMP '%s\n',$dump ; close DUMP; 
+
+    &Log::do_log ('debug3', "task creation done  date: $date label: $label model: $model  model_choice: $model_choice, Rdata :$Rdata");
+    $taskspool->store($task_as_string,\%meta);
     return 1;
 }
 
@@ -480,9 +487,9 @@ sub create {
 ## check the syntax of a task
 sub check {
 
-    my $task_file = shift; # the task to check
+    my $task_as_string = shift; # the task to check
 
-    &Log::do_log ('debug2', "check($task_file)" );
+    &Log::do_log ('debug2', "check($task_as_string)" );
     my %result; # stores the result of the chk_line subroutine
     my $lnb = 0; # line number
     my %used_labels; # list of labels used as parameter in commands
@@ -490,21 +497,18 @@ sub check {
     my %used_vars; # list of vars used as parameter in commands
     my %vars; # list of declared vars
 
-    unless ( open (TASK, $task_file) ) {
-	&Log::do_log ('err', "error : unable to read $task_file, checking is impossible");
-	return undef;
-    }
+    my @task_by_lines = split('\n',$task_as_string);
 
-    
-    while (<TASK>) {
 
-	chomp;
+    foreach my $line (@task_by_lines) {
 
+
+	chomp $line;
 	$lnb++;
 
-	next if ( $_ =~ /^\s*\#/ ); 
-	unless (chk_line ($_, \%result)) {
-	    &Log::do_log ('err', "error at line $lnb : $_");
+	next if ( $line =~ /^\s*\#/ ); 
+	unless (chk_line ($line, \%result)) {
+	    &Log::do_log ('err', "error at line $lnb : $line");
 	    &Log::do_log ('err', "$result{'error'}");
 	    return undef;
 	}
@@ -697,40 +701,36 @@ sub chk_cmd {
 sub execute {
 
     my $task = shift;
-    my $task_file = $task->{'filepath'}; # task to execute
+    my $taskasstring = $task->{'taskasstring'}; # task to execute
 
     my %result; # stores the result of the chk_line subroutine
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &Log::do_log('notice', 'Running task %s, line %d with vars %s)', $task_file, $lnb, join('/',  %vars));
-    
-    unless ( open (TASK, $task_file) ) {
-	&Log::do_log ('err', "error : can't read the task $task_file");
-	return undef;
-    }
+    &Log::do_log('notice', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
 
     my $label = $task->{'label'};
     return undef if ($label eq 'ERROR');
 
-    &Log::do_log ('debug2', "* execution of the task $task_file");
-    unless ($label eq '') {
-	while ( <TASK> ) {
-	    chomp;
-	    $lnb++;
-	    chk_line ($_, \%result);
-	    last if ($result{'label'} eq $label);
-	}
-    }
+    &Log::do_log ('debug2', "* execution of the task id = %s", $task->{'messagekey'});
 
-    # execution
-    my $status;
-    while ( <TASK> ) {
-  
-	chomp;
+    my @tasklines = split('\n',$taskasstring);
+
+    my $labelfound = 0;my $status;
+    $labelfound = 1 if ($label eq '') ;
+    
+    foreach my $line (@tasklines){
+	chomp $line;
 	$lnb++;
-
-	unless ( chk_line ($_, \%result) ) {
+	unless ($labelfound ) {
+	    chk_line ($line, \%result);
+	    if ($result{'label'} eq $label) { 
+		$labelfound = 1;
+	    }else{
+		next;
+	    }
+	}
+	unless ( chk_line ($line, \%result) ) {
 	    &Log::do_log ('err', "error : $result{'error'}");
 	    return undef;
 	}
@@ -748,22 +748,14 @@ sub execute {
 	}
     } 
 
-    close (TASK);
-
     unless (defined $status) {
-	&Log::do_log('err', 'Error while processing task, removing %s', $task_file);
-	unless (unlink($task_file)) {
-	    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-	    return undef;
-	}
+	&Log::do_log('err', 'Error while processing task %s - %s (%s)  (messagekey=%s), removing it', $task->{'model'}, $task->{'label'},$task->{'id'}, $task->{'messagekey'});
+	$task->remove;
 	return undef;
     }
     unless ($status >= 0) {
-	&Log::do_log('notice', 'The task %s is now useless. Removing it.', $task_file);
-	unless (unlink($task_file)) {
-	    &Log::do_log('err', 'Unable to remove task file %s : %s', $task_file, $!);
-	    return undef;
-	}
+	&Log::do_log('notice', 'The task %s - %s (%s) is now useless. Removing it (messagekey=%s)', $task->{'model'}, $task->{'label'},$task->{'id'}, $task->{'messagekey'});
+	$task->remove;
     }
 
     return 1;
@@ -778,9 +770,9 @@ sub cmd_process {
     my $Rvars = $_[3]; # variable list of the task
     my $lnb = $_[4]; # line number
 
-    my $task_file = $task->{'filepath'};
+    my $taskasstring = $task->{'taskasstring'};
 
-    &Log::do_log('debug2', 'cmd_process(%s, %s, %d)', $command, $task_file, $lnb);
+    &Log::do_log('debug2', 'cmd_process(%s, %d)', $command, $lnb);
 
      # building of %context
     my %context = ('line_number' => $lnb);
@@ -842,15 +834,13 @@ sub rm_file {
 sub stop {
     
     my ($task, $context) = @_;
-    my $task_file = $spool_task.'/'.$task->{'filename'};
 
-    &Log::do_log ('notice', "$context->{'line_number'} : stop $task_file");
+    &Log::do_log ('notice', "$context->{'line_number'} : stop $task->{'mesageid'}");
     
-    unlink ($task_file) ?  
-	&Log::do_log ('notice', "--> $task_file deleted")
-	    : error ($task_file, "error in stop command : unable to delete task file");
-
-    return 0;
+    unless ($task->remove) { 
+	error ($task->{'mesagekey'}, "error in stop command : unable to delete task $task->{'messagekey'}");
+	return 0;
+    }
 }
 
 sub send_msg {
@@ -901,7 +891,6 @@ sub next_cmd {
 
     my $listname = $task->{'object'};
     my $model = $task->{'model'};
-    my $filename = $task->{'filepath'};
 
     ## Determine type
     my ($type, $model_choice);
@@ -922,11 +911,16 @@ sub next_cmd {
 	$data{'list'}{'robot'} = $list->{'domain'};
 	
 	if ( $model eq 'sync_include') {
+	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
+		error ($task->{'messagekey'}, "List $list->{'name'} no more require sync_include task");
+		return undef;
+	    }
+
 	    $data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 	    $model_choice = 'ttl';
 	}else {
 	    unless (defined $list->{'admin'}{"$model\_task"}) {
-		error ($filename, "List $list->{'name'} no more require $model task");
+		error ($task->{'messagekey'}, "List $list->{'name'} no more require $model task");
 		return undef;
 	    }
 
@@ -935,19 +929,14 @@ sub next_cmd {
     }
 
     unless (create ($date, $tab[1], $model, $model_choice, \%data)) {
-	error ($filename, "error in create command : creation subroutine failure");
+	error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
 	return undef;
     }
 
-#    my $new_task = "$date.$label.$name[2].$name[3]";
     my $human_date = &tools::adate ($date);
-#    my $new_task_file = "$spool_task/$new_task";
-#    unless (rename ($filename, $new_task_file)) {
-#	error ($filename, "error in next command : unable to rename task file into $new_task");
-#	return undef;
-#    }
-    unless (unlink ($filename)) {
-	error ($filename, "error in next command : unable to remove task file $filename");
+
+    unless ($task->remove) {
+	error ($task->{'messagekey'}, "error in next command : unable to remove task");
 	return undef;
     }
 
@@ -1053,7 +1042,7 @@ sub create_cmd {
 	$type = $1;
 	$object = $3;
     } else {
-	error ($task->{'filepath'}, "error in create command : don't know how to create $arg");
+	error ($task->{'messagekey'}, "error in create command : don't know how to create $arg");
 	return undef;
     }
 
@@ -1067,7 +1056,7 @@ sub create_cmd {
     }
     $type = '_global';
     unless (create ($task->{'date'}, '', $model, $model_choice, \%data)) {
-	error ($task->{'filepath'}, "error in create command : creation subroutine failure");
+	error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
 	return undef;
     }
     
@@ -1784,14 +1773,14 @@ sub change_label {
 
 ## send a error message to list-master, log it, and change the label task into 'ERROR' 
 sub error {
-    my $task_file = $_[0];
+    my $task_id = $_[0];
     my $message = $_[1];
 
     my @param;
-    $param[0] = "An error has occured during the execution of the task $task_file :
+    $param[0] = "An error has occured during the execution of the task $task_id :
                  $message";
     &Log::do_log ('err', "$message");
-    change_label ($task_file, 'ERROR') unless ($task_file eq '');
+    change_label ($task_id, 'ERROR') unless ($task_id eq '');
     unless (&List::send_notify_to_listmaster ('error in task', $Conf{'domain'}, \@param)) {
     	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
     }

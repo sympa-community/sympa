@@ -23,7 +23,7 @@ SUBDIRS = etc lib
 
 AM_CPPFLAGS = -DCONFIG=\"$(CONFIG)\"
 
-sbin_SCRIPTS = sympa.pl bulk.pl alias_manager.pl task_manager.pl sympa_wizard.pl
+sbin_SCRIPTS = sympa.pl bulk.pl spooler.pl alias_manager.pl task_manager.pl sympa_wizard.pl
 sbin_PROGRAMS = aliaswrapper virtualwrapper
 aliaswrapper_SOURCES = aliaswrapper.c
 aliaswrapper_CPPFLAGS = $(AM_CPPFLAGS) \
@@ -46,6 +46,7 @@ EXTRA_DIST = $(modules_DATA) \
 	     bulk.pl.in \
 	     alias_manager.pl.in \
 	     sympa.pl.in \
+	     spooler.pl.in \
 	     sympa_wizard.pl.in \
 	     task_manager.pl.in
 
@@ -72,7 +73,7 @@ install-exec-hook:
 	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/virtualwrapper
 	chmod 4750 $(DESTDIR)$(sbindir)/virtualwrapper
 
-alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
+alias_manager.pl bulk.pl task_manager.pl sympa.pl spooler.pl sympa_wizard.pl: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -83,5 +84,6 @@ alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
 alias_manager.pl: $(srcdir)/alias_manager.pl.in
 bulk.pl: $(srcdir)/bulk.pl.in
 sympa.pl: $(srcdir)/sympa.pl.in
+spooler.pl: $(srcdir)/spooler.pl.in
 sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
 task_manager.pl: $(srcdir)/task_manager.pl.in

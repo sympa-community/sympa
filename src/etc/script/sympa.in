@@ -228,6 +228,7 @@ case "$1" in
 	if [ ! -f ${sympalockdir}/sympa ]; then
 		echo "Starting Sympa subsystem: "
 		sympa_start sympa
+		sympa_start spooler
 		sympa_start bulk
 		sympa_start archived
 		sympa_start bounced
@@ -243,6 +244,7 @@ case "$1" in
 	;;
   stop)
 	echo "Stopping Sympa subsystem: "
+	sympa_stop spooler
 	sympa_stop bounced
 	sympa_stop archived
 	sympa_stop bulk
@@ -265,6 +267,7 @@ case "$1" in
 	else
 		echo "Status file for subsystem NOT found."
 	fi
+	sympa_status spooler
 	sympa_status sympa
 	sympa_status bulk
 	sympa_status archived

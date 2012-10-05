@@ -121,8 +121,9 @@ sub is_autoinc {
 sub set_autoinc {
     my $self = shift;
     my $param = shift;
+    my $field_type = defined ($param->{'field_type'}) ? $param->{'field_type'} : 'BIGINT( 20 )';
     &Log::do_log('debug','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
-    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
+    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` %s NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'},$field_type)) {
 	&Log::do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
 	return undef;
     }

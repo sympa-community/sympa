@@ -1,0 +1,9 @@
+<!-- $Id: viewspool_message_dump.tt2 6796 2010-11-25 15:40:21Z serge.aumont $ -->
+
+[% IF msg_file %]
+Message flushed in file [% msg_file %]
+[% ELSE %]
+Could not make a file copy of this message !
+[% END %]
+
+<!-- end viewspool_message.tt2 -->

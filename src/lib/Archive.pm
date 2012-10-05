@@ -22,7 +22,7 @@
 package Archive;
 
 use strict;
-
+use Cwd;
 use Encode qw(decode_utf8 encode_utf8);
 use HTML::Entities qw(decode_entities);
 
@@ -31,50 +31,6 @@ use Log;
 my $serial_number = 0; # incremented on each archived mail
 
 ## RCS identification.
-
-## copie a message in $dir using a unique file name based on liSTNAME
-
-sub outgoing {
-    my($dir,$list_id,$msg) = @_;
-    
-    &Log::do_log ('debug2',"outgoing for list $list_id to directory $dir");
-    
-    return 1 if ($dir eq '/dev/null');
-
-    ## ignoring message with a no-archive flag
-    if (ref($msg) && 
-	($Conf::Conf{'ignore_x_no_archive_header_feature'} ne 'on') && 
-	(($msg->head->get('X-no-archive') =~ /yes/i) || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))) {
-	&Log::do_log('info',"Do not archive message with no-archive flag for list $list_id");
-	return 1;
-    }
-
-    
-    ## Create the archive directory if needed
-    
-    unless (-d $dir) {
-	mkdir ($dir, 0775);
-	chmod 0774, $dir;
-	&Log::do_log('info',"creating $dir");
-    }
-    
-    my @now  = localtime(time);
-#    my $prefix= sprintf("%04d-%02d-%02d-%02d-%02d-%02d",1900+$now[5],$now[4]+1,$now[3],$now[2],$now[1],$now[0]);
-#    my $filename = "$dir"."/"."$prefix-$list_id";
-    my $filename = sprintf '%s/%s.%d.%d.%d', $dir, $list_id, time, $$, $serial_number;
-    $serial_number = ($serial_number+1)%100000;
-    unless ( open(OUT, "> $filename")) {
-	&Log::do_log('info',"error unable open outgoing dir $dir for list $list_id");
-	return undef;
-    }
-    &Log::do_log('debug',"put message in $filename");
-    if (ref ($msg)) {
-  	$msg->print(\*OUT);
-    }else {
- 	print OUT $msg;
-    }
-    close (OUT);
-}
 
 ## Does the real job : stores the message given as an argument into
 ## the indicated directory.
@@ -202,11 +158,11 @@ sub search_msgid {
 	&Log::do_log('err','remove_arc: no message id found');return undef;
     } 
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-	&Log::do_log ('info',"archive::search_msgid : dir $dir look unproper");
+	&Log::do_log ('err',"archive::search_msgid : dir $dir look unproper");
 	return undef;
     }
     unless (opendir (ARC, "$dir")){
-	&Log::do_log ('info',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
+	&Log::do_log ('err',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
 	return undef;
     }
     chomp $msgid ;
@@ -287,6 +243,132 @@ sub load_html_message {
     return \%metadata;
 }
 
+
+sub clean_archive_directory{
+    my $params = shift;
+    &Log::do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
+    my $answer;
+    $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
+    $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'}.'/'.$params->{'dir_to_rebuild'};
+    unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
+	&Log::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
+	return undef;
+    }
+    if(opendir ARCDIR,$answer->{'cleaned_dir'}){
+	my $files_left_uncleaned = 0;
+	foreach my $file (readdir(ARCDIR)){
+	    next if($file =~ /^\./);	    
+	    $file = $answer->{'cleaned_dir'}.'/'.$file;
+	    $files_left_uncleaned++ unless(&clean_archived_message({'input'=>$file ,'output'=>$file})); 
+	}
+	closedir DIR;
+	if ($files_left_uncleaned) {
+	    &Log::do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
+	}
+	$answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
+    }else{
+	&Log::do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
+	&tools::del_dir($answer->{'cleaned_dir'});
+	return undef;
+    }
+    return $answer;
+}
+
+sub clean_archived_message{
+    my $params = shift;
+    &Log::do_log('debug',"Cleaning HTML parts of a message input %s , output  %s ",$params->{'input'},$params->{'output'});
+
+    my $input = $params->{'input'};
+    my $output = $params->{'output'};
+
+
+    if (my $msg = new Message({'file'=>$input})){
+	if($msg->clean_html()){
+	    if(open TMP, ">$output") {
+		print TMP $msg->{'msg'}->as_string;
+		close TMP;
+	    }else{
+		&Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$output);
+		return undef;
+	    }
+	}else{
+	    &Log::do_log('err','HTML cleaning in file %s failed.',$output);
+	    return undef;
+	}
+    }else{
+	&Log::do_log('err','Unable to create a Message object with file %s',$input);
+	exit;
+	return undef;
+    }
+}
+
+#############################
+# convert a messsage to html. 
+#    result is stored in $destination_dir
+#    attachement_url is used to link attachement
+#    
+sub convert_single_msg_2_html {
+    
+    my $data =shift;
+    my $msg_as_string = $data->{'msg_as_string'};
+    my $destination_dir = $data->{'destination_dir'};
+    my $attachement_url = $data->{'attachement_url'};
+    my $list = $data->{'list'};
+    my $robot = $data->{'robot'};
+    my $messagekey = $data->{'messagekey'};
+
+    my $listname =''; my $msg_file;
+    my $host = $robot;
+    if ($list) {
+	$host = $list->{'admin'}{'host'};
+	$robot = $list->{'robot'};
+	$listname = $list->{'name'};
+	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$list->get_list_id().'_'.$$;
+    }else{
+	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$messagekey.'_'.$$;
+    }
+
+    my $pwd = getcwd;  #  mhonarc require du change workdir so this proc must retore it    
+    unless (open(OUT, ">$msg_file")) {
+&Log::do_log('notice', 'Could Not open %s', $msg_file);
+	return undef;
+    }
+    printf OUT $msg_as_string ;
+    close(OUT);
+
+    unless (-d $destination_dir) {
+	unless (&tools::mkdir_all($destination_dir, 0777)) {
+	    &Log::do_log('err','Unable to create %s', $destination_dir);
+	    return undef;
+	}
+    }
+    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot,$list);
+    
+    unless ($mhonarc_ressources) {
+&Log::do_log('notice',"Cannot find any MhOnArc ressource file");
+	return undef;
+    }
+    ## generate HTML
+    unless (chdir $destination_dir) {
+&Log::do_log('err',"Could not change working directory to %s",$destination_dir);
+    }
+    my $tracepwd = getcwd ;
+
+
+    my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
+    my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
+    #open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file |";
+    #open MSG, ">msg00000.html";
+    #&Log::do_log('debug', "$mhonarc  --outdir .. -single -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host $msg_file");
+    #print MSG <ARCMOD>;
+    #close MSG;
+    #close ARCMOD;
+    `$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file > msg00000.html`;
+
+    # restore current wd 
+    chdir $pwd;		
+
+    return 1;
+}
+
 1;
-
-

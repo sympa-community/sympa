@@ -1,0 +1,11 @@
+<!-- $Id: viewspool_message_remove.tt2 6796 2010-11-25 15:40:21Z serge.aumont $ -->
+
+[% IF removed %]
+Message [% messagekey %]  removed.
+
+<div class="removed_ok" style="display:none">div used to hidde a line</div>
+[% ELSE %]
+Could not remove message !
+[% END %]
+
+<!-- end viewspool_message_remove.tt2 -->

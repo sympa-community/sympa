@@ -11,8 +11,15 @@
   <form action="[% path_cgi %]" method="post">
   <fieldset>
   <select name="list">
-  [% FOREACH l = get_which_owner %]
-     <option value="[% l.name %]">[% l.name %]</option>
+
+  [% IF is_listmaster %]
+      [% FOREACH l = all_lists %]
+         <option value="[% l.name %]">[% l.name %]</option>
+      [% END %]
+  [% ELSE %]
+      [% FOREACH l = get_which_owner %]
+        <option value="[% l.name %]">[% l.name %]</option>
+      [% END %]
   [% END %]
   </select>
   <label for="new_listname">[%|loc%]New list name:[%END%]</label> <input id="new_listname" name="new_listname" value="" />

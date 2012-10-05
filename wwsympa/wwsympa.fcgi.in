@@ -69,11 +69,17 @@ use cookielib;
 use tt2;
 #use DateTime;
 use tracking;
+use Sympaspool;
 
 #use open ':utf8'; ## Default is to consider files utf8 
 
 use Mail::Header;
 use Mail::Address;
+
+use OAuthProvider;
+use OAuthConsumer;
+use VOOTProvider;
+use VOOTConsumer;
 
 my $crypt_openssl_x509_ok;
 BEGIN {
@@ -345,6 +351,11 @@ my %comm = ('home' => 'do_home',
 	 'attach' => 'do_attach',
 	 'stats' => 'do_stats',
 	 'viewlogs'=> 'do_viewlogs',
+	 'viewspools'=> 'do_viewspools',
+	 'viewspool_message'=> 'do_viewspool_message',
+	 'viewspool_message_dump'=> 'do_viewspool_message_dump',
+	 'viewspool_message_remove'=> 'do_viewspool_message_remove',
+	 'viewspool_message_mv'=> 'do_viewspool_message_mv',
 	 'wsdl'=> 'do_wsdl',
 	 'sync_include' => 'do_sync_include',
 	 'review_family' => 'do_review_family',
@@ -486,6 +497,11 @@ my %action_args = ('default' => ['list'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
 		'viewlogs' => ['list','page','size','sortby'],
+		'viewspools' => ['spoolname','spool_status'],
+		'viewspool_message' => ['spoolname','messagekey','spool_status'],
+		'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
+		'viewspool_message_remove' => ['spoolname','messagekey','spool_status'],
+		'viewspool_message_mv' => ['spoolname','messagekey','spool_status','new_spoolname','new_status'],
 		'wsdl' => [],
 		'sync_include' => ['list'],
 		'review_family' => ['family_name'],
@@ -654,6 +670,11 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'viewbounce' => ['param.list','email'],
 		     'viewfile' => ['file','param.list'],
 		     'viewlogs' => ['param.list'],
+		     'viewspools' => [],
+		     'viewspool_message' => ['spoolname','messagekey'],
+		     'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
+		     'viewspool_message_remove' => ['spoolname','messagekey','spool_status'],
+		     'viewspool_message_mv' => ['spoolname','messagekey','spool_status','new_spoolname','new_status'],
 		     'viewmod' => ['param.list','param.user.email','id|idspam'],
 		     'wsdl' => [],
 		     'which' => ['param.user.email'],
@@ -724,6 +745,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'view_template' => ['listmaster'],
 			   'viewbounce' => ['owner'],
 			   'viewlogs' => ['owner','editor'],
+			   'viewlogs' => ['owner'],
 			   'viewmod' => ['editor'],
 			    'automatic_lists_management_request' => ['listmaster'],
 			    'automatic_lists_management' => ['listmaster'],
@@ -778,6 +800,11 @@ my %action_type = ('editfile' => 'admin',
 		'edit_template' => 'admin',
 		'blacklist' => 'admin',
 		'viewlogs' => 'admin',
+		'viewspools' => 'admin',
+		'viewspool_message' => 'admin',
+		'viewspool_message_remove' => 'admin',
+		'viewspool_message_mv' => 'admin',
+		'viewspool_message_dump' => 'admin',
 		'serveradmin' => 'serveradmin',
 		'get_pending_lists' => 'serveradmin',
 		'get_closed_lists' => 'serveradmin',
@@ -1144,7 +1171,7 @@ my $birthday = time ;
      $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
      $ip = 'undef' unless ($ip);
       ## In case HTTP_HOST does not match cookie_domain
-    my $http_host = &get_header_field('HTTP_HOST');
+    my $http_host = get_header_field('HTTP_HOST');
      $http_host =~ s/:\d+$//; ## suppress port
      unless (($http_host =~ /$param->{'cookie_domain'}$/) || 
              ($param->{'cookie_domain'} eq 'localhost')) {
@@ -1671,16 +1698,16 @@ my $birthday = time ;
      if ($param->{'bypass'}) {
 
 	## if bypass = 'extreme' leave the action send the content-type and the content itself
-	unless ($param->{'bypass'} eq 'extreme') {
-
+	 unless ($param->{'bypass'} eq 'extreme') {
+	     
 	     ## if bypass = 'asis', file content-type is in the file itself as is define by the action in $param->{'content_type'};
 	     unless ($param->{'bypass'} eq 'asis') {
 		 my $type = $param->{'content_type'} || $mime_types->{$param->{'file_extension'}} || 'application/octet-stream';
 		 printf "Content-Type: %s\n\n", $type;
 	     }
-
+	     
 	     #  $param->{'file'} or $param->{'error'} must be define in this case.
-
+	     
 	     if (open (FILE, $param->{'file'})){
 		 print <FILE>;
 		 close FILE;
@@ -1790,7 +1817,7 @@ my $birthday = time ;
 
 
  ## Write to log
- sub wwslog {
+sub wwslog {
      my $facility = shift;
 
      # do not log if log level if too high regarding the log requested by user 
@@ -1875,7 +1902,7 @@ sub web_db_stat_log {
 
 ####################################	
 
- sub new_loop {
+sub new_loop {
      $loop++;
      my $query;
 
@@ -1997,9 +2024,8 @@ sub get_parameters {
     
     $param->{'path_info'} = $ENV{'PATH_INFO'};
     $param->{'http_method'} = $ENV{'REQUEST_METHOD'}; ## Usefull to skip previous_action when using POST
-    
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
-	&_split_params ($ENV{'PATH_INFO'});
+	&_split_params ($ENV{'PATH_INFO'});	
     }elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
 	    ## POST
 
@@ -2627,7 +2653,7 @@ Use it to create a List object and initialize output parameters.
 =cut 
 
  ## Analysis of incoming parameters
- sub check_param_in {
+sub check_param_in {
      &wwslog('debug2', 'check_param_in');
 
      ## Lowercase list name
@@ -2798,7 +2824,7 @@ Use it to create a List object and initialize output parameters.
  }
 
  ## Prepare outgoing params
- sub check_param_out {
+sub check_param_out {
      &wwslog('debug2', 'check_param_out');
 
      $param->{'loop_count'} = $loop_count;
@@ -3105,7 +3131,7 @@ sub do_ticket {
 
 
  ## Login WWSympa
- sub do_login {
+sub do_login {
      &wwslog('info', 'do_login(%s)', $in{'email'});
      my $user;
      my $next_action;     
@@ -3430,7 +3456,7 @@ sub do_sso_login {
 		$in{'email'} = $email;
 		
 		#
-		# Check input parameters and verify ticket for email, stolen from &Log::do_login
+		# Check input parameters and verify ticket for email, stolen from & do_login
 		#
 		unless ($in{'email'}) {
 		    &report::reject_report_web('user','no_email',{},$param->{'action'});
@@ -3640,7 +3666,7 @@ sub do_sso_login_succeeded {
     }
 }
 
- sub is_ldap_user {
+sub is_ldap_user {
      my $auth = shift; ## User email or UID
      &wwslog('debug2',"is_ldap_user ($auth)");
 
@@ -3713,7 +3739,7 @@ sub do_sso_login_succeeded {
  }
 
  ## send back login form
- sub do_loginrequest {
+sub do_loginrequest {
      &wwslog('info','do_loginrequest');
 
      if ($param->{'user'}{'email'}) {
@@ -3740,7 +3766,7 @@ sub do_sso_login_succeeded {
  }
 
  ## Help / about WWSympa
- sub do_help {
+sub do_help {
      &wwslog('info','do_help(%s)', $in{'help_topic'});
 
      ## Contextual help
@@ -3782,7 +3808,7 @@ sub do_redirect {
 }
 
  ## Logout from WWSympa
- sub do_logout {
+sub do_logout {
      &wwslog('info','do_logout(%s)', $param->{'user'}{'email'});
 
      delete $param->{'user'};
@@ -3958,7 +3984,7 @@ sub do_renewpasswd {
 # OUT : 'renewpasswd' |  1 | 'loginrequest' | undef
 #
 ####################################################
- sub do_requestpasswd {
+sub do_requestpasswd {
      &wwslog('info', 'do_requestpasswd(%s)', $in{'email'}); 
      my ($passwd, $user);
 
@@ -4014,7 +4040,7 @@ sub do_renewpasswd {
 
  ## Which list the user is subscribed to 
  ## TODO (pour listmaster, toutes les listes)
- sub do_which {
+sub do_which {
      my $which = {};
 
      &wwslog('info', 'do_which');
@@ -4061,7 +4087,7 @@ sub do_renewpasswd {
  }
 
  ## The list of list
- sub do_lists {
+sub do_lists {
      my @lists;
      &wwslog('info', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
 
@@ -4148,7 +4174,7 @@ sub do_renewpasswd {
  }
 
  ## The list of latest created lists
- sub do_latest_lists {
+sub do_latest_lists {
      &wwslog('info', "do_latest_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
 
      unless (&do_lists()) {
@@ -4208,7 +4234,7 @@ sub do_renewpasswd {
 
 
  ## The list of the most active lists
- sub do_active_lists {
+sub do_active_lists {
      &wwslog('info', "do_active_lists($in{'for'}, $in{'count'},$in{'topic'}, $in{'subtopic'})");
 
      unless (&do_lists()) {
@@ -4284,7 +4310,7 @@ sub do_renewpasswd {
      return 1;
  }
 
- sub count_total_msg_since {
+sub count_total_msg_since {
      my $oldest_day = shift;
      my $count = shift;
 
@@ -4299,7 +4325,7 @@ sub do_renewpasswd {
  }
 
  ## List information page
- sub do_info {
+sub do_info {
      &wwslog('info', 'do_info');
 
      ## Access control    
@@ -4352,7 +4378,7 @@ sub do_renewpasswd {
 
 
  ## List subcriber count page
- sub do_subscriber_count {
+sub do_subscriber_count {
      &wwslog('info', 'do_subscriber_count');
 
      unless (&do_info()) {
@@ -4370,7 +4396,7 @@ sub do_renewpasswd {
 
 
  ## Subscribers' list
- sub do_review {
+sub do_review {
      &wwslog('info', 'do_review(%s)', $in{'page'});
      my $record;
      my @users;
@@ -4623,7 +4649,7 @@ sub do_pref {
  }
 
  ## Set the initial password
- sub do_choosepasswd {
+sub do_choosepasswd {
      &wwslog('info', 'do_choosepasswd');
 
      if($session->{'auth'} eq 'ldap'){
@@ -4668,7 +4694,7 @@ sub do_pref {
 #
 # OUT :'loginrequest'|'info' | undef
 
- sub do_set {
+sub do_set {
      &wwslog('info', 'do_set(%s, %s)', $in{'reception'}, $in{'visibility'});
 
      my ($reception, $visibility) = ($in{'reception'}, $in{'visibility'});
@@ -4863,7 +4889,7 @@ sub check_custom_attribute {
 
 
  ## Update of user preferences
- sub do_setpref {
+sub do_setpref {
      &wwslog('info', 'do_setpref');
      my $changes = {};
 
@@ -4913,7 +4939,7 @@ sub check_custom_attribute {
  }
 
  ## Prendre en compte les défauts
- sub do_viewfile {
+sub do_viewfile {
      &wwslog('info', 'do_viewfile');
 
      unless (defined $wwslib::filenames{$in{'file'}}) {
@@ -5328,7 +5354,7 @@ sub do_family_signoff_request {
 	'ip' => $ip,
     };
     unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
-	&do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	&Log::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
 	return undef;
     }
     $param->{'signing_off_email'} = $in {'email'};
@@ -5366,7 +5392,7 @@ sub do_family_signoff {
 #
 ####################################################
  ## Unsubscribe from list
- sub do_signoff {
+sub do_signoff {
      &wwslog('info', 'do_signoff');
 
 
@@ -5492,7 +5518,7 @@ sub unsubscribe {
 }
 
  ## Unsubscription request (user not authenticated)
- sub do_sigrequest {
+sub do_sigrequest {
      &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
 
      ## If user is authenticated then redirect him to the signoff action but 
@@ -5538,7 +5564,7 @@ sub unsubscribe {
 
 
  ## Update of password
- sub do_setpasswd {
+sub do_setpasswd {
      &wwslog('info', 'do_setpasswd');
      my $user;
 
@@ -5594,7 +5620,7 @@ sub unsubscribe {
  }
 
  ## List admin page
- sub do_admin {
+sub do_admin {
      &wwslog('info', 'do_admin');
 
      ## Messages edition
@@ -5617,7 +5643,7 @@ sub unsubscribe {
  }
 
  ## Server admin page
- sub do_serveradmin {
+sub do_serveradmin {
      &wwslog('info', 'do_serveradmin');
 
      my $f;
@@ -6302,7 +6328,7 @@ sub do_skinsedit {
 }
 
  ## Multiple add
- sub do_add_request {
+sub do_add_request {
      &wwslog('info', 'do_add_request(%s)', $in{'email'});
 
      ## Access control
@@ -6324,7 +6350,7 @@ sub do_skinsedit {
 #      | undef
 ####################################################
 ## TODO: vérifier validité email
- sub do_add {
+sub do_add {
      &wwslog('info', 'do_add(%s)', $in{'email'}||$in{'pending_email'});
      my $subscriptions = $list->get_subscription_requests();
      
@@ -6491,7 +6517,7 @@ sub do_skinsedit {
 #
 ####################################################
  ## TODO: vérifier validité email
- sub do_del {
+sub do_del {
      &wwslog('info', 'do_del()');
 
      $in{'email'} = &tools::unescape_chars($in{'email'});
@@ -6601,51 +6627,28 @@ sub do_skinsedit {
 # OUT : 'loginrequest' | 'admin' | '1' | undef
 #
 ####################################################### 
- sub do_modindex {
+sub do_modindex {
      &wwslog('info', 'do_modindex');
      my $msg;
      my $doc;
 
-     ## Loads message list
-     unless (opendir SPOOL, $Conf{'queuemod'}) {
-	 &report::reject_report_web('intern','cannot_open_spool',{'spool'=>$Conf{'queuemod'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('err','do_modindex: unable to read spool');
-	 return 'admin';
-     }
-
      my $list_name = $list->{'name'};
-     my $list_id = $list->get_list_id();
-     foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
-	 next
-	     unless ($msg =~ /^$list_id\_(\w+)$/ ||
-		     $msg =~ /^$list_name\_(\w+)$/);
+     my $modspool = new Sympaspool('mod');
+     my @messages  = $modspool->get_content({'selector'=>{'list'=>$list_name,'robot'=>$robot}});
+     foreach $msg ( @messages ) {
 
-	 my $id = $1;
-
-	 ## Load msg
-	 my $mail = new Message({'file'=>"$Conf{'queuemod'}/$msg"});
-	 
-	 unless (defined $mail) {
-	     &report::reject_report_web('intern','cannot_get_msg',{'msg'=>"$Conf{'queuemod'}/$msg"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_modindex: unable to parse msg %s', $msg);
-	     closedir SPOOL;
-	     next;
-	 }
-
-
-	 $param->{'spool'}{$id}{'size'} = int( (-s "$Conf{'queuemod'}/$msg") / 1024 + 0.5);
-	 $param->{'spool'}{$id}{'subject'} =  &tools::decode_header($mail, 'Subject');
-	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$id}{'date'} = &tools::decode_header($mail, 'Date');
-	 $param->{'spool'}{$id}{'from'} = &tools::decode_header($mail, 'From');
-	 $param->{'spool'}{$id}{'spam_status'} = $mail->{'spam_status'};
+	 $param->{'spool'}{$msg->{'authkey'}}{'size'} = int( $msg->{'size'} / 1024 + 0.5);
+	 $param->{'spool'}{$msg->{'authkey'}}{'subject'} =  &MIME::EncWords::decode_mimewords($msg->{'subject'}, Charset=>'utf8');
+	 $param->{'spool'}{$msg->{'authkey'}}{'subject'} ||= 'no_subject';
+	 $param->{'spool'}{$msg->{'authkey'}}{'date'} = &MIME::EncWords::decode_mimewords($msg->{'headerdate'}, Charset=>'utf8');
+	 $param->{'spool'}{$msg->{'authkey'}}{'from'} = &MIME::EncWords::decode_mimewords($msg->{'sender'}, Charset=>'utf8');
+	 $param->{'spool'}{$msg->{'authkey'}}{'spam_status'} = $msg->{'spam_status'};
 	 foreach my $field ('subject','date','from') {
-	     $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
-	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/g;
-	     $param->{'spool'}{$id}{$field} =~ s/>/&gt;/g;
+	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/&/&amp;/g;
+	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/</&lt;/g;
+	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/>/&gt;/g;
 	 }
      }
-     closedir SPOOL;
 
      if ($list->is_there_msg_topic()) {
 
@@ -6741,7 +6744,7 @@ sub do_skinsedit {
  }
 
 ### installation of moderated documents of shared
- sub do_d_install_shared {
+sub do_d_install_shared {
      &wwslog('info', 'do_d_install_shared(%s)', $in{'id'});
 
      if ($in{'mode_cancel'}) {
@@ -6865,7 +6868,7 @@ sub do_skinsedit {
  }
 
 ### reject moderated documents of shared
- sub do_d_reject_shared {
+sub do_d_reject_shared {
      &wwslog('info', 'do_d_reject_shared(%s)', $in{'id'});
   
      my $shareddir =  $list->{'dir'}.'/shared';
@@ -6940,7 +6943,7 @@ sub do_skinsedit {
 # OUT : 'loginrequest' | 'modindex' | undef
 #      
 ####################################################
- sub do_reject {
+sub do_reject {
 
      # toggle selection javascript have a distinction of spam and ham base on the checkbox name . It is not useful here so join id list and idspam list. 
      $in{'id'} .= ','.$in{'idspam'} if ($in{'idspam'});
@@ -7068,13 +7071,15 @@ sub do_skinsedit {
 # OUT : 'loginrequest' | 'modindex' | undef
 #      
 ###################################################### 
- sub do_distribute {
+sub do_distribute {
 
      $in{'id'} .= ','.$in{'idspam'} if ( $in{'idspam'});
      $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
 
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
+
+     my $modspool = new Sympaspool('mod');
      my ($msg, $file);
 
      my $time = time;
@@ -7101,76 +7106,65 @@ sub do_skinsedit {
 	 return undef;
      } 
 
-
      ## messages
      foreach my $id (split (/,/, $in{'id'})) {
-	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
-	 $data->{'body'} .= $mail_command;
 
-	 ## For compatibility concerns
-	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
-	     last if (-f $file);
-	 }
+	 
+	 my $message_in_spool = $modspool->get_message({'list'=>$list->{'name'},'robot'=>$robot,'authkey'=>$id});
 
-	 unless (-f $file) {
+	 unless ($message_in_spool) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
-	     &wwslog('err','do_distribute: Unable to open %s', $file);
+	     &wwslog('err','do_distribute: Unable to find message in spool mod with authkey  %s', $id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
 	     next;
 	 }
+	 $data->{'body'} .= sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 
 	 ## TAG 
 	 if ($list_topics) {
 
-	     my $parser = new MIME::Parser;
-	     $parser->output_to_core(1);
-	     
-	     unless (open FILE, "$file") {
-		 &wwslog('notice', 'do_distribute: Cannot open file %s', $file);
-		 &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &web_db_log({'parameters' => $in{'id'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
-
-	     my $msg = $parser->parse(\*FILE);
+	     my $message = new Message({'message_in_spool'=> $message_in_spool});
+	     my $msg = $message->{'msg'};
 	     my $head = $msg->head();
 	     my $filetopic = $list->tag_topic(&tools::clean_msg_id($head->get('Message-Id')),$list_topics,'editor');
 	 }
-	 
-	 unless (rename($file,"$file.distribute")) {
-	     &report::reject_report_web('intern','rename_file',{'old'=>$file,
-								'new'=>"$file.distribute"},
+
+         # move message in spool of validated messages
+         unless ($modspool->update({'list'=>$list->{'name'},'robot'=>$robot,'authkey'=>$id},{'spoolname'=>'validated'}) ) {
+
+	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
+								 'new'=>"validated"},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_distribute: failed to rename %s', $file);
+	     &wwslog('err','do_distribute: failed to move message in validated spool, key %s', $id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
+
 	 }
+	 # clean html view of the message
+	 &tools::remove_dir ( $Conf::Conf{'viewmail_dir'}.'/mod/'.$list->get_list_id().'/'.$id);	
      }
 
      $data->{'not_auto_submitted'} = 1;
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'), $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('err','do_distribute: failed to send message for file %s', $file);
+	 &wwslog('err','do_distribute: failed to send message for list %s, id %s', $list->{'name'},$in{'id'});
 	 &web_db_log({'parameters' => $in{'id'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});
 	 return undef;
      }
-
+     
      &web_db_log({'parameters' => $in{'id'},
 		  'status' => 'success'});
 
      &report::notice_report_web('performed_soon',{},$param->{'action'});
 
      return 'modindex';
- }
+}
 
 ####################################################
 #  do_viewmod
@@ -7187,7 +7181,7 @@ sub do_viewmod {
      &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
 
      my $msg;
-     my $tmp_dir;
+
 
      my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
      foreach my $file (keys %$available_files) {
@@ -7196,28 +7190,23 @@ sub do_viewmod {
          $file =~ s/.tt2$//;
 	 push (@{$param->{'available_files'}},$file); 
      }
-
-     ## For compatibility concerns
-     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
-	 if (-d $tmp_dir) {
-	     last;
-	 }
-     }
      
-     unless (-d $tmp_dir) {
-	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
-	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
+     my $html_dir = $Conf::Conf{'viewmail_dir'}.'/mod/'.$list->get_list_id().'/'.$in{'id'};
+
+     unless (-d $html_dir) {
+	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $html_dir},$param->{'action'});
+	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $html_dir);
 	 return undef;
      }     
+
 
      if ($in{'file'}) {
 	 $in{'file'} =~ /\.(\w+)$/;
 	 $param->{'file_extension'} = $1;
-	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
+	 $param->{'file'} = $html_dir.'/'.$in{'file'};
 	 $param->{'bypass'} = 1; 
      }else {
-	 &tt2::add_include_path($tmp_dir) ;
+	 &tt2::add_include_path($html_dir) ;
      }
 
      $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};     
@@ -7237,80 +7226,12 @@ sub do_viewmod {
 
      return 1;
  }
-
-
-####################################################
-#  do_viewmod
-####################################################
-#  Web page for an editor to moderate a mail and/or 
-#  to tag it in message topic context
-# 
-# IN : -
-#
-# OUT : 'login,request' | '1' | undef
-#
-####################################################
-sub do_viewmod_old {
-     &wwslog('info', 'do_viewmod(%s,%s)', $in{'id'},$in{'file'});
-
-     my $msg;
-     my $tmp_dir;
-
-     my $available_files = &tools::get_templates_list('mail','',$list, {'ignore_global' => 1});
-     foreach my $file (keys %$available_files) {
-	 next unless($file =~ /^reject_/);
-	 $file =~ s/^reject_//;
-         $file =~ s/.tt2$//;
-	 push (@{$param->{'available_files'}},$file); 
-     }
-
-     ## For compatibility concerns
-     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
-	 if (-d $tmp_dir) {
-	     last;
-	 }
-     }
-     
-     unless (-d $tmp_dir) {
-	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
-	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
-	 return undef;
-     }     
-
-     if ($in{'file'}) {
-	 $in{'file'} =~ /\.(\w+)$/;
-	 $param->{'file_extension'} = $1;
-	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
-	 $param->{'bypass'} = 1;
-     }else {
-	 &tt2::add_include_path($tmp_dir) ;
-     }
-
-     $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};     
-     $param->{'id'} = $in{'id'};
-
-     if ($list->is_there_msg_topic()) {
-
-	 $param->{'request_topic'} = 1;
-     
-	 foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
-	     if ($top->{'name'}) {
-		 push (@{$param->{'available_topics'}},$top);
-	     }
-	 }
-	 $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
-     }
-
-     return 1;
- }
-
 
 ## Edition of list/sympa files
 ## No list -> sympa files (helpfile,...)
 ## TODO : upload
 ## TODO : edit family file ???
- sub do_editfile {
+sub do_editfile {
      &wwslog('info', 'do_editfile(%s)', $in{'file'});
 
      $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
@@ -7450,7 +7371,7 @@ sub do_viewmod_old {
 #####################################################################################
 
  ## Saving of list files
- sub do_savefile {
+sub do_savefile {
      &wwslog('info', 'do_savefile(%s)', $in{'file'});
 
      $param->{'subtitle'} = sprintf $param->{'subtitle'}, $in{'file'};
@@ -7661,6 +7582,7 @@ sub do_arc {
     
     ## File exist ?
     my $arc_file_path = $arc_month_path.'/'.$in{'arc_file'};
+
     unless (-r $arc_file_path) {
 	&wwslog('err',"unable to read $arc_file_path");
 	&report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
@@ -7729,7 +7651,7 @@ sub do_arc {
 }
 
  ## Access to latest web archives
- sub do_latest_arc {
+sub do_latest_arc {
      &wwslog('info', 'do_latest_arc(%s,%s,%s)', $in{'list'}, $in{'for'}, $in{'count'});
 
      ## Access control
@@ -7950,27 +7872,17 @@ sub do_remove_arc {
 	 return undef;
      } 
 
-    my $file = $Conf{'queueoutgoing'}.'/.remove.'.$list->get_list_id().'.'.$in{'yyyy'}.'-'.$in{'month'}.'.'.time;
-    unless (open REBUILD, ">$file") {
-	&report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	&wwslog('info','do_remove: cannot create %s', $file);
-	&web_db_log({'parameters' => $in{'msgid'},
-		     'msg_id' => $in{'msgid'},
-		     'status' => 'error',
-		     'error_type' => 'internal'});
-	closedir ARC;
-	return undef;
-    }
+    my $removeorder = sprintf "remove.%s-%s.%s\n",$in{'yyyy'},$in{'month'},time;
 
     foreach my $msgid (@msgids) {	
 	chomp $msgid ;	
-	printf REBUILD ('%s||%s',$msgid,$param->{'user'}{'email'}) ; printf  REBUILD "\n";
-	#########################################################################
-	# Tracking
+	$removeorder .= sprintf "%s||%s\n",$msgid,$param->{'user'}{'email'} ;
+	# Removing tracking should be done by archived.
 	&tracking::remove_message_by_id($msgid, $in{'list'},$robot);
-	########################################################################
     }
-    close REBUILD;	
+    my $spoolarchive = new Sympaspool('archive');
+    $spoolarchive->store($removeorder,{'list'=>$in{'list'},'robot'=>$robot});
+
     &wwslog('info', 'do_remove_arc %d messages marked to be removed by archived', $#msgids+1);
     &web_db_log({'parameters' => $in{'msgid'},
 		 'msg_id' => $in{'msgid'},
@@ -7980,7 +7892,6 @@ sub do_remove_arc {
 	#'client' => $ip, 'daemon' => $daemon_name});
 
     $param->{'status'} = 'done';
-
     return 1;
 }
  
@@ -7997,7 +7908,7 @@ sub do_remove_arc {
 # OUT : 'arc' | 1 | undef
 #
 #################################################### 
- sub do_send_me {
+sub do_send_me {
      &wwslog('info', 'do_send_me(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
      if (! $in{'msgid'} || 
@@ -8070,7 +7981,7 @@ sub do_remove_arc {
 # OUT : 'arc' | 1 | undef
 #
 #################################################### 
- sub do_view_source   {
+sub do_view_source   {
      &wwslog('info', 'do_view_source(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
 
@@ -8147,7 +8058,7 @@ sub do_remove_arc {
 # OUT : 'arc' | 1 | undef
 #
 #################################################### 
- sub do_tracking   {
+sub do_tracking   {
      &wwslog('info', 'do_tracking(%s, %s, %s, %s', $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
      ## Access control     
@@ -8180,7 +8091,7 @@ sub do_remove_arc {
      }
      if (! $in{'msgid'} || 
 	 $in{'msgid'} =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	 &report::reject_report_web('err','no_msgid',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &report::reject_report_web('intern','no_msgid',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 &wwslog('err','view_source: no message id found');
 	 $param->{'status'} = 'no_msgid';
 	 return undef;
@@ -8194,7 +8105,7 @@ sub do_remove_arc {
      $param->{'listname'} = $in{'list'};
 
      unless($param->{'tracking_info'} = &tracking::get_recipients_status($in{'msgid'}, $in{'list'},$robot)){
-         &report::reject_report_web('err','could_not_get_tracking_info',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+         &report::reject_report_web('intern','could_not_get_tracking_info',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
          &wwslog('err',"could not get tracking info for message_id $in{'msgid'} and list $in{'list'}");
          $param->{'status'} = 'could_not_get_tracking_info';
          return undef;
@@ -8203,7 +8114,7 @@ sub do_remove_arc {
  }
 
  ## Output an initial form to search in web archives
- sub do_arcsearch_form {
+sub do_arcsearch_form {
      &wwslog('info', 'do_arcsearch_form(%s)', $param->{'list'});
 
      ## Access control
@@ -8225,7 +8136,7 @@ sub do_remove_arc {
  }
 
  ## Search in web archives
- sub do_arcsearch {
+sub do_arcsearch {
      &wwslog('info', 'do_arcsearch(%s)', $param->{'list'});
 
      ## Access control
@@ -8362,7 +8273,7 @@ sub do_remove_arc {
  }
 
  ## Search message-id in web archives
- sub do_arcsearch_id {
+sub do_arcsearch_id {
      &wwslog('info', 'do_arcsearch_id(%s,%s,%s)', $param->{'list'},$in{'archive_name'},$in{'msgid'});
 
      ## Access control
@@ -8440,7 +8351,7 @@ sub do_remove_arc {
  }
 
  # get pendings lists
- sub do_get_pending_lists {
+sub do_get_pending_lists {
 
      &wwslog('info', 'get_pending_lists');
 
@@ -8459,7 +8370,7 @@ sub do_remove_arc {
  }
 
  # get closed lists
- sub do_get_closed_lists {
+sub do_get_closed_lists {
 
      &wwslog('info', 'get_closed_lists');
 
@@ -8477,7 +8388,7 @@ sub do_remove_arc {
  }
 
  # get ordered latest lists
- sub do_get_latest_lists {
+sub do_get_latest_lists {
 
      &wwslog('info', 'get_latest_lists');
 
@@ -8556,7 +8467,7 @@ sub do_get_inactive_lists {
  }
 
  # get ordered biggest lists
- sub do_get_biggest_lists {
+sub do_get_biggest_lists {
 	&wwslog('info', 'get_biggest_lists');
 	
 	## Checking families and other virtual hosts.
@@ -8604,7 +8515,7 @@ sub do_set_pending_list_request {
  }
 
  ## show a list parameters
- sub do_install_pending_list {
+sub do_install_pending_list {
      &wwslog('info', 'do_install_pending_list(%s,%s,%s)',$in{'list'},$in{'status'},$in{'notify'});
 
      unless ($in{'status'} && (($in{'status'} eq 'open') || ($in{'status'} eq 'closed'))) {
@@ -8748,7 +8659,7 @@ Creates a list using a list template
 =cut 
 
 ## create a liste using a list template. 
- sub do_create_list {
+sub do_create_list {
 
      &wwslog('info', 'do_create_list(%s,%s,%s)',$in{'listname'},$in{'subject'},$in{'template'});
 
@@ -8937,7 +8848,7 @@ Sends back the list creation edition form.
 =cut 
 
  ## Return the creation form
- sub do_create_list_request {
+sub do_create_list_request {
      &wwslog('info', 'do_create_list_request()');
 
      my $result = &Scenario::request_action('create_list',$param->{'auth_method'},$robot,
@@ -8964,6 +8875,8 @@ Sends back the list creation edition form.
 	 &wwslog('info','do_create_list: not allowed');
 	 return undef;
      }
+     $param->{'all_lists'} = &List::get_lists($robot);
+
 
      my %topics;
      unless (%topics = &List::load_topics($robot)) {
@@ -9039,7 +8952,7 @@ sub do_home {
 
 }
 
- sub do_editsubscriber {
+sub do_editsubscriber {
      &wwslog('info', 'do_editsubscriber(%s)', $in{'email'});
 
      my $subscriber;
@@ -9140,7 +9053,7 @@ sub do_home {
      return 1;
  }
 
- sub do_viewbounce {
+sub do_viewbounce {
      &wwslog('info', 'do_viewbounce(%s)', $in{'email'});
 
      my $escaped_email = &tools::escape_chars($in{'email'});
@@ -9159,7 +9072,7 @@ sub do_home {
  }
 
  ## some help for listmaster and developpers
- sub do_scenario_test {
+sub do_scenario_test {
      &wwslog('info', 'do_scenario_test');
 
      ## List available scenarii
@@ -9213,7 +9126,7 @@ sub do_home {
  }
 
  ## Bouncing addresses review
- sub do_reviewbouncing {
+sub do_reviewbouncing {
      &wwslog('info', 'do_reviewbouncing(%s)', $in{'page'});
      my $size = $in{'size'} || $wwsconf->{'review_page_size'};
 
@@ -9288,7 +9201,7 @@ sub do_home {
      return 1;
  }
 
- sub do_resetbounce {
+sub do_resetbounce {
      &wwslog('info', 'do_resetbounce()');
 
      $in{'email'} = &tools::unescape_chars($in{'email'});
@@ -9332,58 +9245,66 @@ sub do_home {
  }
 
  ## Rebuild an archive using arctxt/
- sub do_rebuildarc {
+sub do_rebuildarc {
      &wwslog('info', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
+     
+     my $spoolarchive = new Sympaspool('archive');
 
-     my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
-
-     unless (open REBUILD, ">$file") {
-	 &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('info','do_rebuildarc: cannot create %s', $file);
+     unless (     $spoolarchive->store('rebuild',{'list'=>$list->{'name'},'robot'=>$list->{'robot'}} )){
+	 &report::reject_report_web('intern','cannot_store_rebuild_order',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	 &wwslog('info','do_rebuildarc: cannot store rebuild order for list %s',$list->{'name'});
 	 &web_db_log({'parameters' => $in{'month'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});
 	 return undef;
      }
-
-     &wwslog('info', 'File: %s', $file);
-
-     print REBUILD ' ';
-     close REBUILD;
-
+     
+     &wwslog('info', 'rebuild requested for list %s', $list->{'name'});
      &report::notice_report_web('performed_soon',{},$param->{'action'});
      &web_db_log({'parameters' => $in{'month'},
 		  'status' => 'success'});
      return 'admin';
- }
+}
 
- ## Rebuild all archives using arctxt/
- sub do_rebuildallarc {
-     &wwslog('info', 'do_rebuildallarc');
+## Rebuild all archives using arctxt/
+sub do_rebuildallarc {
+    &wwslog('info', 'do_rebuildallarc');
 
-     my $all_lists = &List::get_lists($robot);
-     foreach my $list ( @$all_lists ) {
-	 next unless (defined $list->{'admin'}{'web_archive'});
-	 my $file = $Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+    my $errors = 0;
+    my $spoolarchive;
+    unless ($spoolarchive = new Sympaspool('archive')){
+	&report::reject_report_web('intern','cannot fetch archive spool',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	&wwslog('err','error in  new Sympaspool(archive) ');
+    }
+    my $all_lists = &List::get_lists($robot);
+    foreach my $list ( @$all_lists ) {
+	next unless (defined $list->{'admin'}{'web_archive'});
 
-	 unless (open REBUILD, ">$file") {
-	     &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
-	     &wwslog('info','do_rebuildarc: cannot create %s', $file);
-	     &web_db_log({'status' => 'error',
-			  'error_type' => 'internal'});
-	     return undef;
-	 }
+	unless ($spoolarchive->store('rebuild',{'list'=>$list->{'name'},'robot'=>$list->{'robot'} } )){
+	    &report::reject_report_web('intern','cannot_store_rebuild_order',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	    &wwslog('info','do_rebuildarc: cannot store rebuild order for list %s',$list->{'name'});
+	    &web_db_log({'parameters' => $in{'month'},
+			 'status' => 'error',
+			 'error_type' => 'internal'});
+	    $errors =1;
+	    next;
+	}
+    }
+    if ($errors == 1){
+	&report::reject_report_web('intern','cannot_store_rebuild_order',{},$param->{'action'},$param->{'user'}{'email'},$robot);
+	&wwslog('info','do_rebuildallarc: cannot store rebuild archive order for all lists, see logs' );
+	&web_db_log({'parameters' => $in{'month'},
+		     'status' => 'error',
+		     'error_type' => 'internal'});
+	
+	return undef;
+    }
+    
+    &report::notice_report_web('performed',{},$param->{'action'});
+    &web_db_log({'status' => 'success'});
 
-	 &wwslog('info', 'File: %s', $file);
-
-	 print REBUILD ' ';
-	 close REBUILD;
-
-     }
-     &report::notice_report_web('performed_soon',{},$param->{'action'});
-     &web_db_log({'status' => 'success'});
-     return 'serveradmin';
- }
+    return 'serveradmin';
+}
 
 # Consumer requests a temporary token
 sub do_oauth_temporary {
@@ -9681,14 +9602,14 @@ sub do_select_voot_groups {
 }
 
  ## Search among lists
- sub do_edit_attributes {
+sub do_edit_attributes {
      &wwslog('info', 'do_edit_attributes(%s)', $in{'filter'});
      
      return 1;
  }     
  
  ## Search among lists
- sub do_search_list {
+sub do_search_list {
      &wwslog('info', 'do_search_list(%s)', $in{'filter'});
 
      unless ($in{'filter'}) {
@@ -10286,7 +10207,7 @@ sub do_edit_list {
 
  ## Shift tokens to get a reference to the desired 
  ## entry in $var (recursive)
- sub _shift_var {
+sub _shift_var {
      my ($i, $var, @tokens) = @_;
      &wwslog('debug3','shift_var(%s,%s,%s)',$i, $var, join('.',@tokens));
      my $newvar;
@@ -10374,7 +10295,7 @@ Sends back the list config edition form.
 =cut 
 
  ## Send back the list config edition form
- sub do_edit_list_request {
+sub do_edit_list_request {
      &wwslog('info', 'do_edit_list_request(%s)', $in{'group'});
 
      if ($in{'group'}) {
@@ -10693,7 +10614,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 =cut
 
- sub _prepare_data {
+sub _prepare_data {
     my ($name, $struct,$data,$may_edit,$family,$main_p) = @_;
     #    &wwslog('debug2', '_prepare_data(%s, %s)', $name, $data);
     # $family and $main_p (recursive call) are optionnal
@@ -10937,7 +10858,7 @@ sub _restrict_values {
 }
 
  ## NOT USED anymore (expect chinese)
- sub do_close_list_request {
+sub do_close_list_request {
      &wwslog('info', 'do_close_list_request()');
 
      if ($list->{'admin'}{'status'} eq 'closed') {
@@ -10951,7 +10872,7 @@ sub _restrict_values {
 
 
  # in order to rename a list you must be list owner and you must be allowed to create new list
- sub do_rename_list_request {
+sub do_rename_list_request {
      &wwslog('info', 'do_rename_list_request()');
 
      my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot,
@@ -11115,7 +11036,7 @@ sub do_purge_list {
      return 'get_closed_lists';
  }
 
- sub do_close_list {
+sub do_close_list {
      &wwslog('info', "do_close_list($list->{'name'})");
 
      if ($list->{'admin'}{'status'} eq 'closed') {
@@ -11149,7 +11070,7 @@ sub do_purge_list {
 
  }
 
- sub do_restore_list {
+sub do_restore_list {
      &wwslog('info', 'do_restore_list()');
 
 
@@ -11195,7 +11116,7 @@ sub do_purge_list {
  }
 
 
- sub get_desc_file {
+sub get_desc_file {
      my $file = shift;
      my $ligne;
      my %hash;
@@ -11252,14 +11173,14 @@ sub do_purge_list {
  }
 
 
- sub show_cert {
+sub show_cert {
      return 1;
  }
 
  ## Function synchronize
  ## Return true if the file in parameter can be overwrited
  ## false if it has changes since the parameter date_epoch
- sub synchronize {
+sub synchronize {
      # args : 'path' , 'date_epoch'
      my $path = shift;
      my $date_epoch = shift;
@@ -11290,7 +11211,7 @@ sub do_purge_list {
  #                        control A)
 
 
- sub d_access_control {
+sub d_access_control {
      # Arguments:
      # (\%mode,$path)
      # if mode->{'read'} control access only for read
@@ -11563,7 +11484,7 @@ sub merge_edit{
 
 
  # create the root shared document
- sub do_d_admin {
+sub do_d_admin {
      &wwslog('info', 'do_d_admin(%s,%s)', $in{'list'}, $in{'d_admin'});
 
      my %mode;
@@ -11657,7 +11578,7 @@ sub merge_edit{
 
  # Function which sorts a hash of documents
  # Sort by various parameters
- sub by_order {
+sub by_order {
      my $order = shift;
      my $hash = shift;
      # $order = 'order_by_size'/'order_by_doc'/'order_by_author'/'order_by_date'
@@ -12252,7 +12173,7 @@ sub select_my_files {
 
  ## Useful function to get off the slash at the end of the path
  ## at its end
- sub no_slash_end {
+sub no_slash_end {
      my $path = shift;
 
      ## supress ending '/'
@@ -12369,7 +12290,7 @@ sub do_latest_d_read {
  }
 
 ##  browse a directory recursively and return documents younger than $oldest_day
- sub directory_browsing {
+sub directory_browsing {
      my ($dir,$oldest_day,$may_control) = @_;
      &wwslog('debug2',"directory_browsing($dir,$oldest_day)");
      
@@ -12543,7 +12464,7 @@ sub do_latest_d_read {
  #               edit a file
  #*******************************************
 
- sub do_d_editfile {
+sub do_d_editfile {
      &wwslog('info', 'do_d_editfile(%s)', $in{'path'});
 
      # Variables
@@ -12686,7 +12607,7 @@ sub do_latest_d_read {
  #               change a file properties 
  #*******************************************
 
- sub do_d_properties {
+sub do_d_properties {
      &wwslog('info', 'do_d_properties(%s)', $in{'path'});
 
      # Variables
@@ -12819,7 +12740,7 @@ sub do_latest_d_read {
  #               the file
  #******************************************
 
- sub do_d_describe {
+sub do_d_describe {
      &wwslog('info', 'do_d_describe(%s)', $in{'path'});
 
      # Variables
@@ -13184,7 +13105,7 @@ sub do_d_savefile {
  #               uploaded file
  #******************************************
 
- sub do_d_overwrite {
+sub do_d_overwrite {
      &wwslog('info', 'do_d_overwrite(%s)', $in{'path'});
 
      # Variables
@@ -13390,7 +13311,7 @@ sub do_d_savefile {
  #               uploaded file
 #******************************************
 
- sub do_d_upload {
+sub do_d_upload {
      # Parameters of the uploaded file (from d_read.tt2)
      my $fn = $in{'uploaded_file'};
 
@@ -13970,7 +13891,7 @@ sub creation_desc_file {
  #               from an uploaded zip file
  #******************************************
 
- sub do_d_unzip {
+sub do_d_unzip {
      # Parameters of the uploaded file (from d_read.tt2)
      my $fn = $in{'unzipped_file'};
 
@@ -14583,7 +14504,7 @@ sub d_test_existing_and_rights {
  #               (file or directory)
  #******************************************
 
- sub do_d_delete {
+sub do_d_delete {
      &wwslog('info', 'do_d_delete(%s)', $in{'path'});
 
      #useful variables
@@ -14706,7 +14627,7 @@ sub d_test_existing_and_rights {
  #               (file or directory)
  #******************************************
 
- sub do_d_rename {
+sub do_d_rename {
      &wwslog('info', 'do_d_rename(%s)', $in{'path'});
 
      #useful variables
@@ -14842,7 +14763,7 @@ sub d_test_existing_and_rights {
  # Function : do_d_create_dir
  # Description : Creates a new file / directory
  #******************************************
- sub do_d_create_dir {
+sub do_d_create_dir {
      &wwslog('info', 'do_d_create_dir(%s)', $in{'name_doc'});
 
      #useful variables
@@ -15053,7 +14974,7 @@ sub d_test_existing_and_rights {
  #               to edit access for a doc
  #*******************************************
 
- sub do_d_control {
+sub do_d_control {
      &wwslog('info', "do_d_control $in{'path'}");
 
      # Variables
@@ -15197,7 +15118,7 @@ sub d_test_existing_and_rights {
  #               the file
  #******************************************
 
- sub do_d_change_access {
+sub do_d_change_access {
      &wwslog('info', 'do_d_change_access(%s)', $in{'path'});
 
      # Variables
@@ -15312,7 +15233,7 @@ sub d_test_existing_and_rights {
 
  }	
 
- sub do_d_set_owner {
+sub do_d_set_owner {
      &wwslog('info', 'do_d_set_owner(%s)', $in{'path'});
 
      # Variables
@@ -15454,7 +15375,7 @@ sub d_test_existing_and_rights {
  }
 
  ## Protecting archives from Email Sniffers
- sub do_arc_protect {
+sub do_arc_protect {
      &wwslog('info', 'do_arc_protect()');
 
      return 1;
@@ -15470,7 +15391,7 @@ sub d_test_existing_and_rights {
 # OUT : 'loginrequest' | 'admin' | undef
 #
 #####################################################
- sub do_remind {
+sub do_remind {
      &wwslog('info', 'do_remind()');
 
      ## Access control
@@ -15522,7 +15443,7 @@ sub d_test_existing_and_rights {
  }
 
  ## Load list certificat
- sub do_load_cert {
+sub do_load_cert {
      &wwslog('info','do_load_cert(%s)', $param->{'list'});
 
      my @cert = $list->get_cert('der');
@@ -16270,7 +16191,7 @@ sub do_send_mail {
 # OUT : '1' | 'loginrequest' | undef
 #
 ####################################################
- sub do_request_topic {
+sub do_request_topic {
      &wwslog('info', 'do_request_topic(%s)', $in{'authkey'});
 
      unless ($list->is_there_msg_topic()) {
@@ -16290,29 +16211,18 @@ sub do_send_mail {
      $param->{'authkey'} = $in{'authkey'};
 
      my $listname = $list->{'name'};
-     my $authqueue = &Conf::get_robot_conf($robot,'queueauth');
-     my $filename = "$authqueue\/$listname\_$in{'authkey'}";
 
-     ## For compatibility concerns
-     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	 $filename = $authqueue.'/'.$list_id.'_'.$in{'authkey'};
-	 last if (-f $filename);
-     }
+     my $spoolauth = new Sympaspool('auth');
 
-     my $parser;
-     unless ($parser = new MIME::Parser) {
-	  &report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('notice', 'Cannot parse message %s', $filename);
+     my $authmessage = $spoolauth->get_message({'list'=> $list->{'name'},'robot'=>$robot,'authkey'=>$in{'authkey'}});
+     unless ($authmessage) {
+	 &report::reject_report_web('user','unkown_auth_key',{},$param->{'action'},$list);
+	 &wwslog('info','do_request_topic: unknown authentication key');
 	 return undef;
      }
-     $parser->output_to_core(1);
+     my $message = new Message({'message_in_spool'=> $authmessage});
 
-     unless (open FILE, "$filename") {
-	 &report::reject_report_web('intern','cannot_open_file',{'file' => $filename},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('notice', 'Cannot open file %s', $filename);
-	 return undef;
-     }
-     my $msg = $parser->parse(\*FILE);
+     my $msg = $message->{'msg'};
      my $head = $msg->head();
      # headers will be encoded later.
      $param->{'subject'} = tools::decode_header($head, 'Subject');
@@ -16345,18 +16255,27 @@ sub do_send_mail {
 # OUT : 'loginrequest' | 'info' | undef
 #
 ####################################################
- sub do_tag_topic_by_sender {
+sub do_tag_topic_by_sender {
      &wwslog('info', 'do_tag_topic_by_sender');
 
      my $parser;
      my $listname = $list->{'name'};
-     my $authqueue = &Conf::get_robot_conf($robot,'queueauth');
-     my $filename = "$authqueue\/$listname".'@'."$robot\_$in{'authkey'}";
 
      my $mail ;
-     unless($mail  = new Message({'file'=>$filename,'noxsympato'=>'noxsympato'})) {
-	 &report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'});
-	 &wwslog('info','do_tag_topic_by_sender: cannot parse message %s',$filename);
+     
+     my $authspool = new Sympaspool('auth');
+     my $messagespool = $authspool->get_message({'list'=>$listname, 'robot' => $robot , 'authkey'=> $in{'authkey'}});
+
+     unless($messagespool){
+	 &report::reject_report_web('user','unkown authentication key %s for list %s@%s',$in{'authkey'},$listname,$robot );
+	 &wwslog('info','unkown authentication key %s for list %s@%s',$in{'authkey'},$listname,$robot );
+	 return undef;
+     }
+     
+
+     unless($mail  = new Message({'message_in_spool'=>$messagespool,'noxsympato'=>'noxsympato'})) {
+	 &report::reject_report_web('intern','cannot_parse_message retrived by key %s for list %s@%s',$in{'authkey'},$listname,$robot );
+	 &wwslog('info','do_tag_topic_by_sender: cannot parse message retrived by key %s for list %s@%s',$in{'authkey'},$listname,$robot );
 	 return undef;
      }
      my $sender = $mail->{'sender'};
@@ -16390,29 +16309,14 @@ sub do_send_mail {
      my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>',
 			       'X-Sympa-NoWrap' => 'yes'},
 		 'from'=> $sender};
-
      $data->{'body'} = sprintf ("QUIET CONFIRM %s\n",$in{'authkey'});
-
-     my $queueauth = &Conf::get_robot_conf($robot, 'queueauth');
-     my $filemsg = "$queueauth/$list->{'name'}_$in{'authkey'}";
-
-     ## For compatibility concerns
-     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	 $filemsg = $queueauth.'/'.$list_id.'_'.$in{'authkey'};
-	 last if (-f $filemsg);
-     }
-
-     unless ($filemsg && (-r $filemsg)) {
-	 &report::reject_report_web('intern','tag_topic_by_sender_failed',{'key' => $in{'authkey'}},$param->{'action'},$robot);
-	 &wwslog('err', 'do_tag_topic_by_sender: Unable to find message %s from %s, auth failed', $in{'authkey'},$param->{'user'}{'email'});
-	 return undef;
-     }
-
      $data->{'not_auto_submitted'} = 1;
+
+
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'),$data,$robot)) {
 	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('err','do_tag_topic_by_sender: failed to send message for file %s', $filemsg);
+	 &wwslog('err','do_tag_topic_by_sender: failed to send message for list %s@%s authenticated by key %s',$listname,$robot,$in{'authkey'} );
 	 return undef;
      }
 
@@ -16422,7 +16326,7 @@ sub do_send_mail {
 
 
 
- sub do_search_user {
+sub do_search_user {
      &wwslog('info', 'do_search_user');
 
      if ($in{'email'} =~ /[<>\\\*\$]/) {
@@ -16475,7 +16379,7 @@ sub do_send_mail {
  }
 
  ## Set language
- sub do_set_lang {
+sub do_set_lang {
      &wwslog('info', 'do_set_lang(%s)', $in{'lang'});
 
      $session->{'lang'} = $in{'lang'} ;
@@ -16511,7 +16415,7 @@ sub do_send_mail {
      return &Conf::get_robot_conf($robot, 'default_home');
  }
  ## Function do_attach
- sub do_attach {
+sub do_attach {
      &wwslog('info', 'do_attach(%s,%s)', $in{'dir'},$in{'file'});
 
 
@@ -16558,7 +16462,7 @@ sub do_send_mail {
      return 1;
  }
 
- sub do_subindex {
+sub do_subindex {
      &wwslog('info', 'do_subindex');
 
      my $subscriptions = $list->get_subscription_requests();
@@ -16571,7 +16475,7 @@ sub do_send_mail {
      return 1;
  }
 
- sub do_ignoresub {
+sub do_ignoresub {
      &wwslog('info', 'do_ignoresub');
 
      my @users;
@@ -16823,7 +16727,7 @@ sub do_dump_scenario {
 }
 
  ## Subscribers' list
- sub do_dump {
+sub do_dump {
      &wwslog('info', "do_dump($param->{'list'})");
 
      ## Whatever the action return, it must never send a complex html page
@@ -17046,6 +16950,316 @@ sub do_viewlogs {
 	
 	return 1;
 }
+
+ ## view logs stored in RDBMS
+ ## this function as been writen in order to allow list owner and listmater to views logs
+ ## of there robot or there is real problems with privacy policy and law in such services.
+ ## 
+sub do_viewspools {
+
+    my $spoolname = 'msg';
+    $spoolname = $in{'spoolname'} if ($in{'spoolname'});
+    $param->{'spoolname'} = $spoolname;
+
+    my $spool_status = 'ok';
+    $spool_status = $in{'spool_status'} if ($in{'spool_status'});
+    $param->{'spool_status'} = $spool_status;
+
+    &wwslog('info', 'do_viewspools(%s,%s)',$spoolname,$spool_status);
+
+    unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
+	unless ($param->{'is_owner'} && $in{'list'}) {
+	    &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
+	    &wwslog('info','do_viewspools: not owner');
+	    return undef;
+	}
+    }
+
+    $param->{'global_count_ok'} = &Sympaspool::global_count('ok');
+    $param->{'global_count_bad'} = &Sympaspool::global_count('bad');
+
+    my $spool_page_size;
+    if($in{'spool_page_size'}){
+	$spool_page_size =   $in{'spool_page_size'}; 
+	$session->{'spool_page_size'} = $in{'spool_page_size'} ; 
+    }else{
+	$spool_page_size = $session->{'review_page_spool_page_size'} || 25 ;
+    }
+    $param->{'spool_page_size'} = $spool_page_size;
+    
+
+    my $spool = new Sympaspool($spoolname,$spool_status);
+    unless ($spool) {
+	&report::reject_report_web('intern','unkown spool');
+	&wwslog('info','do_viewspools: unkown spool');
+	return undef;
+    }
+
+    $param->{'total'} = $spool->count;
+
+    unless ($param->{'total'}) {
+	$param->{'total'} = 0;
+	return 1;
+    }
+
+    $param->{'current_page'} = $in{'current_page'} || 1;
+    $param->{'total_page'} = int ($param->{'total'} / $spool_page_size);
+    $param->{'total_page'} ++
+	if ($param->{'total'} % $spool_page_size);
+    
+    if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
+	&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'},$list);
+	&web_db_log({'status' => 'error', 'error_type' => 'out of pages'});
+	&wwslog('info','do_viewspools: no page %d', $param->{'page'});
+	return undef;
+    }
+
+    if ($in{'nav'} eq 'next') {
+	$param->{'current_page'} += 1;
+    }elsif($in{'nav'} eq 'last') {
+	$param->{'current_page'} = $param->{'total_page'} ;
+    }elsif($in{'nav'} eq 'previous') {
+	$param->{'current_page'} -= 1;
+    }elsif($in{'nav'} eq 'first') {
+	$param->{'current_page'} = 1;
+    }
+    $param->{'current_page'} = 1 unless (($param->{'current_page'} >= 1) && ($param->{'current_page'} <= $param->{'total_page'} ));
+
+    my $ofset = ($param->{'current_page'} -  1) * $spool_page_size;
+
+    # force sortby to a correct value
+    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
+    $param->{'sortby'} = $in{'sortby'};
+
+    $in{'way'} = 'asc' unless ($in{'way'} eq 'desc');
+    $param->{'way'} = $in{'way'};
+
+    # 'index' in user interface is mapped to 'messagekey' table field
+    $in{'sortby'} = 'messagekey' if ($in{'sortby'} eq 'index') ;
+
+    my %selector = ();
+    if ($in{'list'}) {
+	$selector{'list'}=$in{'list'};
+    }
+    my @messages = $spool->get_content({'selector'=> \%selector ,'selection'=>'*_but_message','ofset'=>$ofset,'page_size' => $spool_page_size,'sortby' => $in{'sortby'},'way' => $in{'way'}});
+    $param->{'spool_content'} = \@messages;
+    return 1;
+}
+
+ ## deliver a view of an message identified by the spoolname and the messagekey
+sub do_viewspool_message {
+    
+    my $messagekey = $in{'messagekey'};
+    my $spoolname = $in{'spoolname'};
+    $param->{'spoolname'} = $spoolname;
+    my $status = 'ok';
+    $status = $in{'spool_status'} if ($in{'spool_status'});
+    $param->{'spool_status'} = $status;
+			       
+    &wwslog('info', 'do_viewspool_message(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
+
+    my $spool = new Sympaspool($spoolname,$status);
+    unless ($spool) {
+	&report::reject_report_web('intern','unkown spool');
+	&wwslog('info','do_viewspools: unkown spool');
+	return undef;
+    }
+    my @messages = $spool->get_content({'selector'=> {'messagekey'=>$messagekey},'selection'=>'*'});
+    
+    unless ($#messages == 0){
+	&report::reject_report_web('intern','could not find message');
+	&wwslog('info','do_viewspool_mesasge : could not find message %s',$#messages);
+	    return;
+    }
+
+    # take care that wwsympa must fetch the message first, then check which list it is for in order to perform authz
+    my $list;
+    # if user is not lismaster then the message must be related to a list owned by the user.
+    unless  ( $param->{'is_listmaster'}){
+	my $message_listname = $messages[0]->{'list'};
+	if ($message_listname){
+	    $list = new List($message_listname,$robot);
+	}   
+	unless ($list && ($list->am_i('privileged_owner', $param->{'user'}{'email'})|| $list->am_i('owner', $param->{'user'}{'email'})||$list->am_i('editor', $param->{'user'}{'email'}))) {	    
+	    &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
+	    &wwslog('info','do_viewspools: not owner');
+	    return undef;
+	}
+    }
+
+    $param->{'spool_message_asstring'} = @messages[0]->{'messageasstring'};
+    return 1;
+
+    # the following code is not executed because of a bug. It should be able to disply message as html....
+
+
+    my $destination_dir = $Conf::Conf{'viewmail_dir'}.'/spool/viewmail/'.$messagekey;
+
+    unless (-d $destination_dir) {
+	&Archive::convert_single_msg_2_html ({'msg_as_string'=>$param->{'spool_message_asstring'},
+					      'destination_dir'=>$destination_dir,
+					      'attachement_url'=>"viewspool_message/$messagekey",
+					      'list'=>$list,
+					      'robot'=>$robot,
+					      'messagekey'=>$messagekey,} );
+	
+	
+    }
+
+    unless (open (HTMLMAIL ,$destination_dir.'/msg00000.html')){
+	&report::reject_report_web('intern','could not show message as html');
+	&wwslog('info','do_viewspool_message : could not show message as html');
+	return;
+    }
+    
+    while (<HTMLMAIL>){
+	$param->{'spool_message_ashtml'} .= $_;
+
+    }
+    close HTMLMAIL;
+
+    return 1;
+}
+
+ ## deliver a view of an message identified by the spoolname and the messagekey
+sub do_viewspool_message_dump {
+    
+    my $messagekey = $in{'messagekey'};
+    my $spoolname = $in{'spoolname'};
+    $param->{'spoolname'} = $spoolname;
+    my $status = 'ok';
+    $status = $in{'spool_status'} if ($in{'spool_status'});
+    $param->{'spool_status'} = $status;
+			       
+    &wwslog('info', 'do_viewspool_message_dump(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
+
+
+    unless  ( $param->{'is_listmaster'}){
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
+	&wwslog('info','authorization failed, insufficient privileges');
+    }
+
+    my $spool = new Sympaspool($spoolname,$status);
+    unless ($spool) {
+	&report::reject_report_web('intern','unkown spool');
+	&wwslog('info','do_viewspools: unkown spool');
+	return undef;
+    }
+    my @messages = $spool->get_content({'selector'=> {'messagekey'=>$messagekey},'selection'=>'*'});
+    
+    unless ($#messages == 0){
+	&report::reject_report_web('intern','could not find message');
+	&wwslog('info','do_viewspool_message_dump : could not find message %s',$#messages);
+	    return;
+    }
+
+
+    $param->{'msg_file'} = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$messagekey.'_'.$$;
+    
+
+    unless (open(OUT, ">$param->{'msg_file'}")) {
+	&Log::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
+	return undef;
+    }
+    printf OUT  @messages[0]->{'messageasstring'};
+    if (close(OUT)) {
+	&Log::do_log('info',"message (messagekey = %s) flushed in file %s",$messagekey,$param->{'msg_file'});
+    }
+    return 1;
+}
+
+
+ ## remove a message identified by the spoolname and the messagekey
+sub do_viewspool_message_remove {
+    
+    my $messagekey = $in{'messagekey'};
+    $param->{'messagekey'} = $messagekey;
+    my $spoolname = $in{'spoolname'};
+    $param->{'spoolname'} = $spoolname;
+    my $status = 'ok';
+    $status = $in{'spool_status'} if ($in{'spool_status'});
+    $param->{'spool_status'} = $status;
+			       
+    &wwslog('info', 'do_viewspool_message_remove(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
+
+    unless  ( $param->{'is_listmaster'}){
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
+	&wwslog('info','authorization failed, insufficient privileges');
+    }
+
+    my $spool = new Sympaspool($spoolname,$status);
+    unless ($spool) {
+	&report::reject_report_web('intern','unkown spool');
+	&wwslog('info','do_viewspools: unkown spool');
+	return undef;
+    }
+    unless ($spool->remove_message({'messagekey'=>$messagekey})){
+	&report::reject_report_web('intern','could not remove message');
+	&wwslog('info','do_viewspool_message_remove : could not remove message');
+	return;	
+	
+    }
+    
+    $param->{'removed'} = 1;
+    return 1;
+}
+
+
+## Move a message from a spool to another one
+sub do_viewspool_message_mv {
+    
+    my $messagekey = $in{'messagekey'};
+    my $spoolname = $in{'spoolname'};
+    my $status = $in{'status'};
+    my $newspool = $in{'new_spoolname'};
+    my $newstatus = $in{'new_status'};
+
+
+   &Log::do_log('info',"move message %s from spool %s status %s to spool %s with status %s",$messagekey,$spoolname,$status,$newspool,$newstatus);
+
+
+    $param->{'messagekey'} = $messagekey;
+    $param->{'spoolname'} = $spoolname;
+
+    $status = 'ok' unless ($status);
+    $newspool = $spoolname unless ($spoolname);
+    $newstatus = 'ok' unless ($newstatus);
+
+    unless (($newspool) && ($newstatus)){
+	&report::reject_report_web('intern','unkown spool %s or status %s',$newspool,$newstatus);
+	&wwslog('info','do_viewspool_message_mv: unkown spool %s,%s',$spoolname,$status);
+	return undef;
+    }
+			       
+    unless  ( $param->{'is_listmaster'}){
+	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
+	&wwslog('info','authorization failed, insufficient privileges');
+    }
+
+    my $spool = new Sympaspool($spoolname,$status);
+    unless ($spool) {
+	&report::reject_report_web('intern','unkown spool');
+	&wwslog('info','do_viewspool_message_mv: unkown spool %s,%s',$spoolname,$status);
+	return undef;
+    }
+
+    unless ( new Sympaspool($newspool,$newstatus)) {
+	&report::reject_report_web('user','unkopwn spool');
+	&wwslog('info','do_viewspool_message_mv : could not move message to unkown spool %s,%s',$newspool,$newstatus);
+	return;	
+    }
+
+
+    unless ($spool->update({'messagekey'=>$messagekey},{'message_status'=>$newstatus,'spoolname'=>$newspool})){
+	&report::reject_report_web('intern','could not move message to spool');
+	&wwslog('info','do_viewspool_message : could not move message to spool %s, status %s',$newspool,$newstatus);
+	return;		
+    }
+   &Log::do_log('debug2',"message %s moved to spool %s with status %s",$messagekey,$newspool,$newstatus);
+    $param->{'moved'} = 1;
+    return 1;
+}
+
 
 sub do_arc_manage {
     &wwslog('info', "do_arc_manage ($in{'list'})");

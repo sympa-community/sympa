@@ -118,9 +118,9 @@ sub new {
 
 sub connect {
     my $self = shift;
-    &Log::do_log('debug',"Checking connection to database %s",$self->{'db_name'});
+    &Log::do_log('debug3',"Checking connection to database %s",$self->{'db_name'});
     if ($self->{'dbh'} && $self->{'dbh'}->ping) {
-	&Log::do_log('debug','Connection to database %s already available',$self->{'db_name'});
+	&Log::do_log('debug3','Connection to database %s already available',$self->{'db_name'});
 	return 1;
     }
     unless($self->establish_connection()) {

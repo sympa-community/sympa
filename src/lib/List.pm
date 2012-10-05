@@ -34,13 +34,15 @@ use Scenario;
 use Fetch;
 use WebAgent;
 use Exporter;
-use Data::Dumper;
+use Sympaspool;
+use Archive;
 # xxxxxxx faut-il virer encode ? Faut en faire un use ? 
 require Encode;
 
 use VOOTConsumer;
 use tt2;
 use Sympa::Constants;
+use Data::Dumper;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%list_of_lists);
@@ -2318,6 +2320,8 @@ sub new {
 	return undef;
     }
 
+    $list->{'robot'} = $robot;
+
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
@@ -3294,7 +3298,7 @@ sub distribute_msg {
     if ($self->is_there_msg_topic()) {
 	my $msg_id = $hdr->get('Message-ID');
 	chomp($msg_id);
-	$info_msg_topic = $self->load_msg_topic_file($msg_id,$robot);
+	$info_msg_topic = $self->load_msg_topic($msg_id,$robot);
 
 	# add X-Sympa-Topic header
 	if (ref($info_msg_topic) eq "HASH") {
@@ -3304,24 +3308,19 @@ sub distribute_msg {
 
     ## Hide the sender if the list is anonymoused
     if ( $self->{'admin'}{'anonymous_sender'} ) {
-
 	foreach my $field (@{$Conf::Conf{'anonymous_header_fields'}}) {
 	    $hdr->delete($field);
 	}
-	
 	$hdr->add('From',"$self->{'admin'}{'anonymous_sender'}");
-	my $new_id = "$self->{'name'}.$sequence\@anonymous";
-	$hdr->add('Message-id',"<$new_id>");
+	my $new_id = '<'."$self->{'name'}.$sequence\@anonymous".'>';
+	$hdr->add('Message-id',$new_id);
 	
-	# rename msg_topic filename
+	# rename update topic content id of the message
 	if ($info_msg_topic) {
-	    my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
-	    my $listname = "$self->{'name'}\@$robot";
-	    rename("$queuetopic/$info_msg_topic->{'filename'}","$queuetopic/$listname.$new_id");
-	    $info_msg_topic->{'filename'} = "$listname.$new_id";
+	    my $topicspool = new Sympaspool ('topic');	    
+	    $topicspool->update({'list' => $self->{'name'},'robot' => $robot},'messagekey' => $info_msg_topic->{'messagekey'},{'messageid'=>$new_id});	
 	}
-	
-	## Virer eventuelle signature S/MIME
+	## TODO remove S/MIME and PGP signature if any
     }
     
     ## Add Custom Subject
@@ -3386,7 +3385,6 @@ sub distribute_msg {
 										    [Encode::decode('utf8', '['.$parsed_tag.']'), &Language::GetCharset()]
 										    ], Encoding=>'A', Field=>'Subject') . ' ' . $after_tag;
 	}
-
 	$message->{'msg'}->head->add('Subject', $subject_field);
     }
 
@@ -3409,12 +3407,9 @@ sub distribute_msg {
     }
 
     ## Archives
-    my $msgtostore = $message->{'msg'};
-    if (($message->{'smime_crypted'} eq 'smime_crypted') &&
-	($self->{admin}{archive_crypted_msg} eq 'original')) {
-	$msgtostore = $message->{'orig_msg'};
-    }
-    $self->archive_msg($msgtostore);
+
+    $self->archive_msg($message);
+    
     
     ## Change the reply-to header if necessary. 
     if ($self->{'admin'}{'reply_to_header'}) {
@@ -3439,6 +3434,7 @@ sub distribute_msg {
     
     ## Add useful headers
     $hdr->add('X-Loop', "$name\@$host");
+    $message->{'msg'}->head->add('X-Loop', "$name\@$host");
     $hdr->add('X-Sequence', $sequence);
     $hdr->add('Errors-to', $name.&Conf::get_robot_conf($robot, 'return_path_suffix').'@'.$host);
     $hdr->add('Precedence', 'list');
@@ -3494,7 +3490,7 @@ sub distribute_msg {
     
     ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
     if (($self->is_digest()) and ($message->{'smime_crypted'} ne 'smime_crypted')) {
-	$self->archive_msg_digest($msgtostore);
+	$self->store_digest($message);
     }
 
     ## Synchronize list members, required if list uses include sources
@@ -3505,7 +3501,6 @@ sub distribute_msg {
 
     ## Blindly send the message to all users.
     my $numsmtp = $self->send_msg('message'=> $message, 'apply_dkim_signature'=>$apply_dkim_signature, 'apply_tracking'=>$apply_tracking);
-
     $self->savestats() if (defined ($numsmtp));
     return $numsmtp;
 }
@@ -3517,25 +3512,24 @@ sub distribute_msg {
 # reception digest, digestplain or summary
 # 
 # IN : -$self(+) : ref(List)
-#
+#      $message_in_spool : an digest spool entry in database
 # OUT : 1 : ok
 #       | 0 if no subscriber for sending digest
 #       | undef
 ####################################################
 sub send_msg_digest {
-    my ($self) = @_;
+    my $self = shift;
+    my $messagekey = shift;
+   &Log::do_log('debug',"send_msg_disgest(%s)",$messagekey);
+
+    # fetch and lock message. 
+    my $digestspool = new Sympaspool ('digest');
+
+    my $message_in_spool = $digestspool->next({'messagekey'=>$messagekey});
 
     my $listname = $self->{'name'};
     my $robot = $self->{'domain'};
     &Log::do_log('debug2', 'List:send_msg_digest(%s)', $listname);
-    
-    my $filename;
-    ## Backward compatibility concern
-    if (-f "$Conf::Conf{'queuedigest'}/$listname") {
- 	$filename = "$Conf::Conf{'queuedigest'}/$listname";
-    }else {
- 	$filename = $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id();
-    }
     
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => $self->get_list_address(),
@@ -3587,34 +3581,19 @@ sub send_msg_digest {
 	return 0;
     }
 
-    my $old = $/;
-    local $/ = "\n\n" . &tools::get_separator() . "\n\n";
-    
-    ## Digest split in individual messages
-    open DIGEST, $filename or return undef;
-    foreach (<DIGEST>){
-	
-	my @text = split /\n/;
-	pop @text; pop @text;
-	
-	## Restore carriage returns
-	foreach $i (0 .. $#text) {
-	    $text[$i] .= "\n";
-	}
-	
+    my $separator = "\n\n" . &tools::get_separator() . "\n\n";
+    my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
+
+    foreach my $message_as_string (@messages_as_string){  
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	$parser->extract_uuencode(1);  
 	$parser->extract_nested_messages(1);
-#   $parser->output_dir($Conf::Conf{'spool'} ."/tmp");    
-	my $mail = $parser->parse_data(\@text);
-	
+	#   $parser->output_dir($Conf::Conf{'spool'} ."/tmp");    
+	my $mail = $parser->parse_data($message_as_string);
 	next unless (defined $mail);
-
 	push @list_of_mail, $mail;
     }
-    close DIGEST;
-    local $/ = $old;
 
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
@@ -3689,8 +3668,7 @@ sub send_msg_digest {
 	    unless ($self->send_file('digest_plain', \@tabrcptplain, $robot, $param)) {
 		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
 	    }
-	}    
-	
+	}    	
 	
 	## send summary
 	if (@tabrcptsummary) {
@@ -3699,7 +3677,7 @@ sub send_msg_digest {
 	    }
 	}
     }    
-    
+    $digestspool->remove_message({'messagekey'=>$messagekey});    
     return 1;
 }
 
@@ -3945,6 +3923,7 @@ sub send_file {
 	$data->{'dkim'} = &tools::get_dkim_parameters({'robot' => $self->{'domain'}});
     } 
     $data->{'use_bulk'} = 1  unless ($data->{'alarm'}) ; # use verp excepted for alarms. We should make this configurable in order to support Sympa server on a machine without any MTA service
+	  # my $dump = &Dumper($data); open (DUMP,">>/tmp/dumper2"); printf DUMP '----------------data \n%s',$dump ; close DUMP; 
     unless (&mail::mail_file($filename, $who, $data, $self->{'domain'})) {
 	&Log::do_log('err',"List::send_file, could not send template $filename to $who");
 	return undef;
@@ -4090,7 +4069,7 @@ sub send_msg {
 	    my $subject = $message->{'msg'}->head->get('Subject');
 	    my $sender = $message->{'msg'}->head->get('From');
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $subject, 'sender' => $sender}, 'auto_submitted' => 'auto-generated'})) {
-	        &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
+	        &Log::do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
 	    }
 	}else{
 	    if ($user->{'bounce_score'}) {
@@ -4372,17 +4351,16 @@ sub send_msg {
 #################################################################
 sub send_to_editor {
    my($self, $method, $message) = @_;
-   my ($msg, $file, $encrypt) = ($message->{'msg'}, $message->{'filename'});
-
-   $encrypt = 'smime_crypted' if ($message->{'smime_crypted'}); 
-   &Log::do_log('debug3', "List::send_to_editor, msg: $msg, file: $file method : $method, encrypt : $encrypt");
+   my $msg = $message->{'msg'};
+   my $encrypt = 'smime_crypted' if ($message->{'smime_crypted'}); 
+  &Log::do_log('debug', "List::send_to_editor, messagekey: $message->{'messagekey'}, method : $method, encrypt : $encrypt");
 
    my($i, @rcpt);
    my $admin = $self->{'admin'};
    my $name = $self->{'name'};
    my $host = $admin->{'host'};
    my $robot = $self->{'domain'};
-   my $modqueue = $Conf::Conf{'queuemod'};
+
    return unless ($name && $admin);
   
    my @now = localtime(time);
@@ -4391,49 +4369,18 @@ sub send_to_editor {
    my $modkey=Digest::MD5::md5_hex(join('/', $self->get_cookie(),$messageid));
    my $boundary ="__ \<$messageid\>";
    
-   ## Keeps a copy of the message
    if ($method eq 'md5'){  
-       my $mod_file = $modqueue.'/'.$self->get_list_id().'_'.$modkey;
-       unless (open(OUT, ">$mod_file")) {
-	   &Log::do_log('notice', 'Could Not open %s', $mod_file);
-	   return undef;
-       }
+       # move message to spool  mod
+       my $spoolmod = new Sympaspool('mod');
+       $spoolmod->update({'messagekey' => $message->{'messagekey'}},{"authkey" => $modkey,'messagelock'=> 'NULL'});
 
-       unless (open (MSG, $file)) {
-	   &Log::do_log('notice', 'Could not open %s', $file);
-	   return undef;   
-       }
-
-       print OUT <MSG>;
-       close MSG ;
-       close(OUT);
-
-       my $tmp_dir = $modqueue.'/.'.$self->get_list_id().'_'.$modkey;
-       unless (-d $tmp_dir) {
-	   unless (mkdir ($tmp_dir, 0777)) {
-	       &Log::do_log('err','Unable to create %s: %s', $tmp_dir, $!);
-	       return undef;
-	   }
-	   my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
-
-	   unless ($mhonarc_ressources) {
-	       &Log::do_log('notice',"Cannot find any MhOnArc ressource file");
-	       return undef;
-	   }
-	   ## generate HTML
-	   chdir $tmp_dir;
-	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
-	   my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
-	   open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host -attachmenturl=viewmod/$name/$modkey $mod_file|";
-	   open MSG, ">msg00000.html";
-	   &Log::do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file");
-	   print MSG <ARCMOD>;
-	   close MSG;
-	   close ARCMOD;
-	   chdir $Conf::Conf{'home'};
-       }
+       # prepare html view of this message
+       my $destination_dir  = $Conf::Conf{'viewmail_dir'}.'/mod/'.$self->get_list_id().'/'.$modkey;
+       &Archive::convert_single_msg_2_html ({'msg_as_string'=>$message->{'msg_as_string'},
+					     'destination_dir'=>$destination_dir,
+					     'attachement_url' => "viewmod/$name/$modkey",
+					     'list'=>$self} );
    }
-
    @rcpt = $self->get_editors_email();
    
    my $hdr = $message->{'msg'}->head;
@@ -4455,21 +4402,21 @@ sub send_to_editor {
 	   return undef;
        }
    }
-   
+
    my $subject = tools::decode_header($hdr, 'Subject');
    my $param = {'modkey' => $modkey,
 		'boundary' => $boundary,
 		'msg_from' => $message->{'sender'},
 		'subject' => $subject,
 		'spam_status' => $message->{'spam_status'},
-		'mod_spool_size' => $self->get_mod_spool_size(),
+		'mod_spool_size' => $self->get_mod_spool_size,
 		'method' => $method};
 
    if ($self->is_there_msg_topic()) {
        $param->{'request_topic'} = 1;
    }
 
-       foreach my $recipient (@rcpt) {
+   foreach my $recipient (@rcpt) {
        if ($encrypt eq 'smime_crypted') {	       
 	   ## is $msg->body_as_string respect base64 number of char per line ??
 	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); 
@@ -4478,21 +4425,12 @@ sub send_to_editor {
 	       #  send a generic error message : X509 cert missing
 	       return undef;
 	   }
-
-	   my $crypted_file = $Conf::Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
-	   unless (open CRYPTED, ">$crypted_file") {
-	       &Log::do_log('notice', 'Could not create file %s', $crypted_file);
-	       return undef;
-	   }
-	   print CRYPTED $cryptedmsg;
-	   close CRYPTED;
-	   $param->{'msg_path'} = $crypted_file;
-
-   }else{
-       $param->{'msg_path'} = $file;
+	   $param->{'msg_as_string'} = $cryptedmsg;
+       }else{
+	   $param->{'msg_as_string'} = $message->{'msg_as_string'};
        }
        # create a one time ticket that will be used as un md5 URL credential
-
+       
        unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($recipient,$robot,'modindex/'.$name,'mail')){
 	   &Log::do_log('notice',"Unable to create one_time_ticket for $recipient, service modindex/$name");
        }else{
@@ -4506,49 +4444,6 @@ sub send_to_editor {
 	   return undef;
        }
    }
-#  Old code 5.4 and before to be removed in 5.5
-#   if ($encrypt eq 'smime_crypted') {
-#
-#       ## Send a different crypted message to each moderator
-#       foreach my $recipient (@rcpt) {
-#
-#	   # create a one time ticket that will be used as un md5 URL credential
-#	   $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'modindex/'.$name,$ip)
-#
-#	   ## $msg->body_as_string respecte-t-il le Base64 ??
-#	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); #
-#	   unless ($cryptedmsg) {
-#	       &Log::do_log('notice', 'Failed encrypted message for moderator');
-#	       # xxxx send a generic error message : X509 cert missing
-#	       return undef;
-#	   }
-#
-#	   my $crypted_file = $Conf::Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
-#	   unless (open CRYPTED, ">$crypted_file") {
-#	       &Log::do_log('notice', 'Could not create file %s', $crypted_file);
-#	       return undef;
-#	   }
-#	   print CRYPTED $cryptedmsg;
-#	   close CRYPTED;
-#	   
-#
-#	   $param->{'msg_path'} = $crypted_file;
-#
-#	   &tt2::allow_absolute_path();
-#	   unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
-#	       &Log::do_log('notice',"Unable to send template 'moderate' to $recipient");
-#	       return undef;
-#	   }
-#       }
-#   }else{
-#       $param->{'msg_path'} = $file;
-#
-#       &tt2::allow_absolute_path();
-#       unless ($self->send_file('moderate', \@rcpt, $self->{'domain'}, $param)) {
-#	   &Log::do_log('notice',"Unable to send template 'moderate' to $self->{'name'} editors");
-#	   return undef;
-#       }
-#  }
    return $modkey;
 }
 
@@ -4591,22 +4486,10 @@ sub send_auth {
                    .int(rand(6)).int(rand(6)).int(rand(6)).int(rand(6))
 		   .int(rand(6)).int(rand(6))."\@".$host;
    my $authkey = Digest::MD5::md5_hex(join('/', $self->get_cookie(),$messageid));
-     
-   my $auth_file = $authqueue.'/'.$self->get_list_id().'_'.$authkey;   
-   unless (open OUT, ">$auth_file") {
-       &Log::do_log('notice', 'Cannot create file %s', $auth_file);
-       return undef;
-   }
-
-   unless (open IN, $file) {
-       &Log::do_log('notice', 'Cannot open file %s', $file);
-       return undef;
-   }
-   
-   print OUT <IN>;
-
-   close IN; close OUT;
-
+   chomp $authkey;
+  
+   my $spool = new Sympaspool('auth');
+   $spool->update({'messagekey' => $message->{'messagekey'}},{"spoolname" => 'auth','authkey'=> $authkey, 'messagelock'=> 'NULL'});
    my $param = {'authkey' => $authkey,
 		'boundary' => "----------------- Message-Id: \<$messageid\>",
 		'file' => $file};
@@ -5467,7 +5350,7 @@ sub _append_parts {
 
 	    my $io = $part->bodyhandle->open('w');
 	    unless (defined $io) {
-		&do_log('err', "List::add_parts: Failed to save message : $!");
+		&Log::do_log('err', "List::add_parts: Failed to save message : $!");
 		return undef;
 	    }
 	    $io->print($header_msg);
@@ -6195,7 +6078,7 @@ sub get_list_member_no_object {
     if ($Conf::Conf{'db_additional_subscriber_fields'}) {
 	$additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
     }
-    unless ($sth = SDM::do_query( "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
+    unless ($sth = SDM::do_query( "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate, number_messages_subscriber AS number_messages %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)", 
     &SDM::get_canonical_read_date('date_subscriber'), 
     &SDM::get_canonical_read_date('update_subscriber'), 
     $additional, 
@@ -7786,36 +7669,43 @@ sub archive_ls {
 
 ## Archive 
 sub archive_msg {
-    my($self, $msg ) = @_;
-    &Log::do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
+    my($self, $message ) = @_;
+   &Log::do_log('debug', 'List::archive_msg for %s',$self->{'name'});
 
-    my $is_archived = $self->is_archived();
-    Archive::store_last($self, $msg) if ($is_archived);
-
-    Archive::outgoing("$Conf::Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
-      if ($self->is_web_archived());
-}
-
-sub archive_msg_digest {
-   my($self, $msg) = @_;
-   &Log::do_log('debug2', 'List::archive_msg_digest');
-
-   $self->store_digest( $msg) if ($self->{'name'});
+    if ($self->is_archived()){
+	
+	my $msgtostore = $message->{'msg_as_string'};
+	if (($message->{'smime_crypted'} eq 'smime_crypted') && ($self->{admin}{archive_crypted_msg} eq 'original')) {
+	    $msgtostore = $message->{'orig_msg'}->as_string;
+	}
+#	Archive::store_last($self, $msgtostore) ;
+	
+	if (($Conf::Conf{'ignore_x_no_archive_header_feature'} ne 'on') && (($message->{'msg'}->head->get('X-no-archive') =~ /yes/i) || ($message->{'msg'}->head->get('Restrict') =~ /no\-external\-archive/i))) {
+	    ## ignoring message with a no-archive flag	    
+	   &Log::do_log('info',"Do not archive message with no-archive flag for list %s",$self->get_list_id());
+	}else{
+	    my $spoolarchive = new Sympaspool ('archive');
+	    unless ($message->{'messagekey'}) {
+	&Log::do_log('err', "could not store message in archive spool, messagekey missing");
+		return undef;
+	    }
+	    unless ($spoolarchive->store($msgtostore,{'robot'=>$self->{'robot'},'list'=>$self->{'name'}})){
+	&Log::do_log('err', "could not store message in archive spool, unkown reason");
+		return undef;
+	    }
+	}
+    }
 }
 
 ## Is the list moderated?                                                          
 sub is_moderated {
-    
-    return 1 if (defined shift->{'admin'}{'editor'});
-                                                          
+    return 1 if (defined shift->{'admin'}{'editor'});                                                          
     return 0;
 }
 
 ## Is the list archived?
 sub is_archived {
-    &Log::do_log('debug', 'List::is_archived');    
     if (shift->{'admin'}{'web_archive'}{'access'}) {&Log::do_log('debug', 'List::is_archived : 1'); return 1 ;}  
-    &Log::do_log('debug', 'List::is_archived : undef');
     return undef;
 }
 
@@ -7829,19 +7719,11 @@ sub is_web_archived {
 ## Returns 1 if the  digest  must be send 
 sub get_nextdigest {
     my $self = shift;
-    &Log::do_log('debug3', 'List::get_nextdigest (%s)');
+    my $date = shift;   # the date epoch as stored in the spool database
+
+   &Log::do_log('debug3', 'List::get_nextdigest (list = %s)',$self->{'name'});
 
     my $digest = $self->{'admin'}{'digest'};
-    my $listname = $self->{'name'};
-
-    ## Reverse compatibility concerns
-    my $filename;
-    foreach my $f ("$Conf::Conf{'queuedigest'}/$listname",
- 		   $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id()) {
- 	$filename = $f if (-f $f);
-    }
-    
-    return undef unless (defined $filename);
 
     unless ($digest) {
 	return undef;
@@ -7852,7 +7734,7 @@ sub get_nextdigest {
      
     my @now  = localtime(time);
     my $today = $now[6]; # current day
-    my @timedigest = localtime( (stat $filename)[9]);
+    my @timedigest = localtime($date);
 
     ## Should we send a digest today
     my $send_digest = 0;
@@ -7863,8 +7745,7 @@ sub get_nextdigest {
 	}
     }
 
-    return undef
-	unless ($send_digest == 1);
+    return undef unless ($send_digest == 1);
 
     if (($now[2] * 60 + $now[1]) >= ($hh * 60 + $mm) and 
 	(timelocal(0, $mm, $hh, $now[3], $now[4], $now[5]) > timelocal(0, $timedigest[1], $timedigest[2], $timedigest[3], $timedigest[4], $timedigest[5]))
@@ -10239,48 +10120,43 @@ sub _compare_addresses {
    return ($ra cmp $rb);
 }
 
-## Does the real job : stores the message given as an argument into
-## the digest of the list.
+## Store the message in spool digest  by creating a new enrty for it or updating an existing one for this list
+## 
 sub store_digest {
-    my($self,$msg) = @_;
-    &Log::do_log('debug3', 'List::store_digest');
 
-    my($filename, $newfile);
+    my($self,$message) = @_;
+   &Log::do_log('debug', 'List::store_digest (list= %s)',$self->{'name'});
     my $separator = &tools::get_separator();  
 
-    unless ( -d "$Conf::Conf{'queuedigest'}") {
-	return;
-    }
-    
     my @now  = localtime(time);
 
-    ## Reverse compatibility concern
-    if (-f "$Conf::Conf{'queuedigest'}/$self->{'name'}") {
-  	$filename = "$Conf::Conf{'queuedigest'}/$self->{'name'}";
-    }else {
- 	$filename = $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id();
-    }
+    my $digestspool = new Sympaspool('digest');
+    my $current_digest = $digestspool->next({'list'=>$self->{'name'},'robot'=>$self->{'robot'}}); # remember that spool->next lock the selected message if any
+    my $message_as_string;
 
-    $newfile = !(-e $filename);
-    my $oldtime=(stat $filename)[9] unless($newfile);
-  
-    open(OUT, ">> $filename") || return;
-    if ($newfile) {
-	## create header
-	printf OUT "\nThis digest for list has been created on %s\n\n",
-      POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
-	print OUT "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
-	printf OUT "\n%s\n\n", &tools::get_separator();
-
-       # send the date of the next digest to the users
+    if($current_digest) {
+	$message_as_string = $current_digest->{'messageasstring'};
+    }else{
+	$message_as_string =  sprintf "\nThis digest for list has been created on %s\n\n", POSIX::strftime("%a %b %e %H:%M:%S %Y", @now);
+	$message_as_string .= sprintf "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
+	$message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
     }
-    #$msg->head->delete('Received') if ($msg->head->get('received'));
-    $msg->print(\*OUT);
-    printf OUT "\n%s\n\n", &tools::get_separator();
-    close(OUT);
-    
-    #replace the old time
-    utime $oldtime,$oldtime,$filename   unless($newfile);
+    $message_as_string .= $message->{'msg_as_string'} ;
+    $message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
+
+    # update and unlock current digest message or create it
+    if ($current_digest) {
+	# update does not modify the date field, this is needed in order to send digest when needed.
+	unless ($digestspool->update({'messagekey'=>$current_digest->{'messagekey'}},{'message'=>$message_as_string,'messagelock'=>'NULL'})){
+	   &Log::do_log('err',"could not update digest adding this message (digest spool entry key %s)",$current_digest->{'messagekey'});
+	    return undef;
+	}
+    }else{
+	unless ($digestspool->store($message_as_string,{'list'=>$self->{'name'},'robot'=>$self->{'robot'}})){
+	   &Log::do_log('err',"could not store message in digest spool messafge digestkey %s",$current_digest->{'messagekey'})	;
+	    return undef;
+	}
+    }
 }
 
 ## List of lists hosted a robot
@@ -10641,25 +10517,20 @@ sub get_which {
     return @which;
 }
 
-
-
 ## return total of messages awaiting moderation
 sub get_mod_spool_size {
     my $self = shift;
     &Log::do_log('debug3', 'List::get_mod_spool_size()');    
-    my @msg;
+
+    my $spool = new Sympaspool('mod');
+    my $count =  $spool->get_content({'selector' =>{'list'=> $self->{'name'},'robot'=> $self->{'robot'} },
+				      'selection'=>'count'});
     
-    unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
-	&Log::do_log('err', 'Unable to read spool %s', $Conf::Conf{'queuemod'});
-	return undef;
+    if ($count) {
+	return $count;
+    }else{
+	return 0;
     }
-
-    my $list_name = $self->{'name'};
-    my $list_id = $self->get_list_id();
-    @msg = sort grep(/^($list_id|$list_name)\_\w+$/, readdir SPOOL);
-
-    closedir SPOOL;
-    return ($#msg + 1);
 }
 
 ### moderation for shared
@@ -11157,7 +11028,6 @@ sub _load_list_param {
 	return $value;
     }
 }
-
 
 
 ## Load the certificat file
@@ -11720,9 +11590,7 @@ sub automatic_tag {
     my $topic_list = $self->compute_topic($msg,$robot);
 
     if ($topic_list) {
-	my $filename = $self->tag_topic($msg_id,$topic_list,'auto');
-
-	unless ($filename) {
+	unless ($self->tag_topic($msg_id,$topic_list,'auto')) {
 	    &Log::do_log('err','Unable to tag message %s with topic "%s"',$msg_id,$topic_list);
 	    return undef;
 	}
@@ -11761,16 +11629,13 @@ sub compute_topic {
     ## TAGGING INHERITED BY THREAD
     # getting reply-to
     my $reply_to = $msg->head->get('In-Reply-To');
-    $reply_to =  &tools::clean_msg_id($reply_to);
-    my $info_msg_reply_to = $self->load_msg_topic_file($reply_to,$robot);
+    my $info_msg_reply_to = $self->load_msg_topic($reply_to,$robot);
 
     # is msg reply to already tagged?	
     if (ref($info_msg_reply_to) eq "HASH") { 
 	return $info_msg_reply_to->{'topic'};
     }
      
-
-
     ## TAGGING BY KEYWORDS
     # getting keywords
     foreach my $topic (@{$self->{'admin'}{'msg_topic'}}) {
@@ -11850,39 +11715,26 @@ sub compute_topic {
 #      -$method (+) : 'auto'|'editor'|'sender'
 #         the method used for tagging
 #
-# OUT : string - msg topic filename
+# OUT : string - msg topic messagekey
 #       | undef
 ####################################################
 sub tag_topic {
     my ($self,$msg_id,$topic_list,$method) = @_;
     &Log::do_log('debug3','tag_topic(%s,%s,"%s",%s)',$self->{'name'},$msg_id,$topic_list,$method);
 
-    my $robot = $self->{'domain'};
-    my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
-    my $list_id = $self->get_list_id();
-    $msg_id = &tools::clean_msg_id($msg_id);
-    $msg_id =~ s/>$//;
-    my $file = $list_id.'.'.$msg_id;
-
-    unless (open (FILE, ">$queuetopic/$file")) {
-	&Log::do_log('info','Unable to create msg topic file %s/%s : %s', $queuetopic,$file, $!);
-	return undef;
-    }
-
-    print FILE "TOPIC   $topic_list\n";
-    print FILE "METHOD  $method\n";
-
-    close FILE;
-
-    return "$queuetopic/$file";
+    my $topic_item =  sprintf  "TOPIC   $topic_list\n";
+    $topic_item .= sprintf  "METHOD  $method\n";
+    my $topicspool = new Sympaspool ('topic');
+    
+    return ($topicspool->store($topic_item,{'list'=>$self->{'name'},'robot'=> $self->{'domain'},'messageid'=>$msg_id}));
 }
 
 
 
 ####################################################
-# load_msg_topic_file
+# load_msg_topic
 ####################################################
-#  Looks for a msg topic file from the msg_id of 
+#  Looks for a msg topic using the msg_id of 
 # the message, loads it and return contained information 
 # in a HASH
 #
@@ -11897,26 +11749,25 @@ sub tag_topic {
 #         - filename : name of the file containing this information 
 #     | undef 
 ####################################################
-sub load_msg_topic_file {
+sub load_msg_topic {
     my ($self,$msg_id,$robot) = @_;
-    $msg_id = &tools::clean_msg_id($msg_id);
-    &Log::do_log('debug3','List::load_msg_topic_file(%s,%s)',$self->{'name'},$msg_id);
-    
-    my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
-    my $list_id = $self->get_list_id();
-    my $file = "$list_id.$msg_id";
-    
-    unless (open (FILE, "$queuetopic/$file")) {
-	&Log::do_log('debug','No topic define ; unable to open %s/%s : %s', $queuetopic,$file, $!);
+
+    &Log::do_log('debug','List::load_msg_topic(%s,%s)',$self->{'name'},$msg_id);    
+    my  $topicspool = new Sympaspool('topic');
+
+    my $topics_from_spool = $topicspool->get_message({'listname' =>$self->{'name'},'robot' => $robot, 'messageid' => $msg_id});
+    unless ($topics_from_spool) {
+	&Log::do_log('debug','No topic define ; unable to find topic for message %s / list  %s', $msg_id,$self->{'name'});
 	return undef;
     }
     
     my %info = ();
     
-    while (<FILE>) {
-	next if /^\s*(\#.*|\s*)$/;
+    my @topics = split(/\n/,$topics_from_spool->{'messageasstring'});
+    foreach my $topic (@topics) {
+	next if ($topic =~ /^\s*(\#.*|\s*)$/);
 	
-	if (/^(\S+)\s+(.+)$/io) {
+	if ($topic =~/^(\S+)\s+(.+)$/io) {
 	    my($keyword, $value) = ($1, $2);
 	    $value =~ s/\s*$//;
 	    
@@ -11927,18 +11778,16 @@ sub load_msg_topic_file {
 		if ($value =~ /^(editor|sender|auto)$/) {
 		    $info{'method'} = $value;
 		}else {
-		    &Log::do_log('err','List::load_msg_topic_file(%s,%s): syntax error in file %s/%s : %s', $queuetopic,$file, $!);
+		    &Log::do_log('err','List::load_msg_topic(%s,%s): syntax error in record %s@%s : %s', $$self->{'name'},$robot,$msg_id);
 		    return undef;
 		}
 	    }
 	}
     }
-    close FILE;
     
     if ((exists $info{'topic'}) && (exists $info{'method'})) {
 	$info{'msg_id'} = $msg_id;
-	$info{'filename'} = $file;
-	
+	$info{'messagekey'} = $topics_from_spool->{'messagekey'};	
 	return \%info;
     }
     return undef;
@@ -12176,46 +12025,15 @@ sub store_subscription_request {
     my ($self, $email, $gecos, $custom_attr) = @_;
     &Log::do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $email, $gecos, $custom_attr);
 
-    my $filename = $Conf::Conf{'queuesubscribe'}.'/'.$self->get_list_id().'.'.time.'.'.int(rand(1000));
-
-    unless (opendir SUBSPOOL, "$Conf::Conf{'queuesubscribe'}") {
-	&Log::do_log('err', 'Could not open %s', $Conf::Conf{'queuesubscribe'});
-	return undef;
-    }
+    my $subscription_request_spool = new Sympaspool ('subscribe');
     
-    my @req_files = sort grep (!/^\.+$/,readdir(SUBSPOOL));
-    closedir SUBSPOOL;
-
-    my $listaddr = $self->get_list_id();
-
-    foreach my $file (@req_files) {
-	next unless ($file =~ /$listaddr\..*/) ;
-	unless (open OLDREQUEST, "$Conf::Conf{'queuesubscribe'}/$file") {
-	    &Log::do_log('err', 'Could not open %s for verification', $file);
-	    return undef;
-	}
-	foreach my $line (<OLDREQUEST>) {
-	    if ($line =~ /^$email/i) {
-		&Log::do_log('notice', 'Subscription already requested by %s', $email);
-		return undef;
-	    }
-	}
-	close OLDREQUEST;
-    }
-
-    unless (open REQUEST, ">$filename") {
-	&Log::do_log('notice', 'Could not open %s', $filename);
+    if ($subscription_request_spool->get_content({'selector' =>{'list'=> $self->{'name'},'robot'=> $self->{'robot'},'sender'=>$email},'selection'=>'count'}) != 0) {
+	&Log::do_log('notice', 'Subscription already requested by %s', $email);
 	return undef;
+    }else{
+	my $subrequest = sprintf "$gecos||$custom_attr\n";
+	$subscription_request_spool->store($subrequest,{'list'=>$self->{'name'},'robot'=> $self->{'robot'},'sender'=>$email });
     }
-
-    ## First line of the file contains the user email address + his/her name
-    print REQUEST "$email\t$gecos\n";
-
-    ## Following lines may contain custom attributes in an XML format
-    print REQUEST "$custom_attr\n";
-
-    close REQUEST;
-
     return 1;
 } 
 
@@ -12225,41 +12043,30 @@ sub get_subscription_requests {
 
     my %subscriptions;
 
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-	&Log::do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
-	return undef;
-    }
+    my $subscription_request_spool = new Sympaspool ('subscribe');
+    my @subrequests = $subscription_request_spool->get_content({'selector' =>{'list'=> $self->{'name'},'robot'=> $self->{'robot'}},'selection'=>'*'});
 
-    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	unless (open REQUEST, "<:bytes", "$Conf::Conf{'queuesubscribe'}/$filename") {
-	    &Log::do_log('err', 'Could not open %s', $filename);
-	    closedir SPOOL;
+    foreach my $subrequest ( $subscription_request_spool->get_content({'selector' =>{'list'=> $self->{'name'},'robot'=> $self->{'robot'}},'selection'=>'*'})) {
+
+	my $email = $subrequest->{'sender'};
+	my $gecos; my $customattributes;
+	if ($subrequest->{'messageasstring'} =~ /(.*)\|\|.*$/) {
+	    $gecos = $1; $customattributes = $subrequest->{'messageasstring'} ; $customattributes =~ s/^.*\|\|// ; 
+	}else{
+	    &Log::do_log('err', "Failed to parse subscription request %s",$subrequest->{'messagekey'});
 	    next;
 	}
-
-	## First line of the file contains the user email address + his/her name
-	my $line = <REQUEST>;
-	my ($email, $gecos);
-	if ($line =~ /^((\S+|\".*\")\@\S+)\s*([^\t]*)\t(.*)$/) {
-	    ($email, $gecos) = ($1, $3); 
-	    
-	}else {
-	    &Log::do_log('err', "Failed to parse subscription request %s",$filename);
-	    next;
-	}
-
 	my $user_entry = $self->get_list_member($email, probe => 1);
 	 
 	if ( defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
 	    &Log::do_log('err','User %s is subscribed to %s already. Deleting subscription request.', $email, $self->{'name'});
-	    unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
-		&Log::do_log('err', 'Could not delete file %s', $filename);
+	    unless ($subscription_request_spool->remove_message({'list'=> $self->{'name'},'robot'=> $self->{'robot'},'sender'=>$email})) {
+		&Log::do_log('err', 'Could not delete subrequest %s for list %s@%s from %s', $subrequest->{'messagekey'},$self->{'name'},$self->{'robot'},$subrequest->{'sender'});
 	    }
 	    next;
 	}
 	## Following lines may contain custom attributes in an XML format
-	my $xml = &parseCustomAttribute(\*REQUEST) ;
-	close REQUEST;
+	my $xml = &parseCustomAttribute($customattributes) ;
 	
 	$subscriptions{$email} = {'gecos' => $gecos,
 				  'custom_attribute' => $xml};
@@ -12269,9 +12076,7 @@ sub get_subscription_requests {
 			$subscriptions{$email}{'gecos'} = $user->{'gecos'};
 		}
 	}
-
-	$filename =~ /^$self->{'name'}(\@$self->{'domain'})?\.(\d+)\.\d+$/;
-	$subscriptions{$email}{'date'} = $2;
+	$subscriptions{$email}{'date'} = $subrequest->{'date'};
     }
     closedir SPOOL;
 
@@ -12280,66 +12085,27 @@ sub get_subscription_requests {
 
 sub get_subscription_request_count {
     my ($self) = shift;
-    &Log::do_log('debug2', 'List::get_subscription_requests_count(%s)', $self->{'name'});
 
-    my %subscriptions;
-    my $i = 0 ;
-
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-	&Log::do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
-	return undef;
-    }
-
-    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	$i++;
-    }
-    closedir SPOOL;
-
-    return $i;
+    my $subscription_request_spool = new Sympaspool ('subscribe');    
+    return $subscription_request_spool->get_content({'selector' =>{'list'=> $self->{'name'},'robot'=> $self->{'robot'}},'selection'=>'count'});
 } 
+
 
 sub delete_subscription_request {
     my ($self, @list_of_email) = @_;
     &Log::do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, join(',',@list_of_email));
 
-    my $removed_file = 0;
-    my $email_regexp = &tools::get_regexp('email');
-    
-    unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
-	&Log::do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
-	return undef;
+    my $subscription_request_spool = new Sympaspool ('subscribe');
+
+    my $removed = 0;
+    foreach my $email (@list_of_email) {
+	$removed++ if  $subscription_request_spool->remove_message({'list'=> $self->{'name'},'robot'=> $self->{'robot'},'sender'=>$email}) ;	
     }
 
-    foreach my $filename (sort grep(/^$self->{'name'}(\@$self->{'domain'})?\.\d+\.\d+$/, readdir SPOOL)) {
-	
-	unless (open REQUEST, "$Conf::Conf{'queuesubscribe'}/$filename") {
-	    &Log::do_log('notice', 'Could not open %s', $filename);
-	    next;
-	}
-	my $line = <REQUEST>;
-	close REQUEST;
-
-	foreach my $email (@list_of_email) {
-
-	    unless ($line =~ /^($email_regexp)\s*/ && ($1 eq $email)) {
-		next;
-	    }
-	    
-	    unless (unlink "$Conf::Conf{'queuesubscribe'}/$filename") {
-		&Log::do_log('err', 'Could not delete file %s', $filename);
-		last;
-	    }
-	    $removed_file++;
-	}
-    }
-
-    closedir SPOOL;
-    
-    unless ($removed_file > 0) {
+    unless ($removed > 0) {
 	&Log::do_log('debug2', 'No pending subscription was found for users %s', join(',',@list_of_email));
 	return undef;
     }
-
     return 1;
 } 
 
@@ -12559,7 +12325,7 @@ sub purge {
     ## Clean list table if needed
     if ($Conf::Conf{'db_list_cache'} eq 'on') {
 	unless (&SDM::do_query('DELETE FROM list_table WHERE name_list = %s AND robot_list = %s', &SDM::quote($self->{'name'}), &SDM::quote($self->{'domain'}))) {
-	    &do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
+	    &Log::do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
 	}
     }
     

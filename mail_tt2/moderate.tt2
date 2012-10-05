@@ -21,7 +21,7 @@ Content-Disposition: inline
 
 [%- IF spam_status == 'spam' -%]
 [%|loc%]Because the new message is suspected to be a spam it is not attached to this one. You must use the web interface to reject or validate it.[%END%]
-[%- ELSE -%]	
+[%- ELSE -%]
 [% IF ! request_topic %]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 <[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]>
@@ -29,7 +29,8 @@ Content-Disposition: inline
 DISTRIBUTE [% list.name %] [% modkey %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
-<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%][% END %]>
+<[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=REJECT [%list.name%] [%modkey%]
+[% END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
 [%END%]
@@ -39,11 +40,9 @@ REJECT [% list.name %] [% modkey %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-X-Sympa-Attach: yes
+X-Sympa-Attach: Yes
 
-[% INSERT $msg_path IF msg_path %]
-
+[% msg_as_string %]
 --[% boundary %]--
 [%- END -%]
-[% END %]
-
+[% END -%]

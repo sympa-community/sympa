@@ -43,6 +43,7 @@ use Data::Dumper;
 #
 ##############################################################
 sub new {
+
     my($pkg, $param) = @_;
     &Log::do_log('debug', '');
     my $self = $param;

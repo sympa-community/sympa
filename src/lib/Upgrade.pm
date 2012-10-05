@@ -695,7 +695,20 @@ sub upgrade {
 			}
 		}
 		
-   }	
+   }		
+    if (&tools::lower_version($previous_version, '6.3a')) {
+	# move spools from file to database.
+	my %spools_def = ('queue' =>  'msg',
+			  'bouncequeue' => 'bounce',
+			  'queuedistribute' => 'msg',
+			  'queuedigest' => 'digest',
+			  'queuemod' => 'mod',
+			  'queuesubscribe' =>  'subscribe',
+			  'queuetopic' => 'topic',
+			  'queueautomatic' => 'automatic',
+			  'queueauth' => 'auth',
+			  'queueoutgoing' => 'archive',
+			  'queuetask' => 'task');
    if (&tools::lower_version($previous_version, '6.1.11')) {
        ## Exclusion table was not robot-enabled.
        &Log::do_log('notice','fixing robot column of exclusion table.');
@@ -735,6 +748,156 @@ sub upgrade {
 	}
    }
 
+	foreach my $spoolparameter (keys %spools_def ){
+	    next if ($spoolparameter eq 'queuetask'); # task is to be done later
+	    
+	    my $spooldir = $Conf::Conf{$spoolparameter};
+	    
+	    unless (-d $spooldir){
+		&Log::do_log('info',"Could not perform migration of spool %s because it is not a directory", $spoolparameter);
+		next;
+	    }
+	    &Log::do_log('notice',"Performing upgrade for spool  %s ",$spooldir);
+
+	    my $spool = new Sympaspool($spools_def{$spoolparameter});
+	    if (!opendir(DIR, $spooldir)) {
+		&Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
+	    }
+	    my @qfile = sort tools::by_date grep (!/^\./,readdir(DIR));
+	    closedir(DIR);
+	    my $filename;
+	    my $listname;
+	    my $robot;
+
+	    my $ignored = '';
+	    my $performed = '';
+	    
+	    ## Scans files in queue
+	    foreach my $filename (sort @qfile) {
+		my $type;
+		my $list;
+		my ($listname, $robot);	
+		my %meta ;
+
+		&Log::do_log('notice'," spool : $spooldir, fichier $filename");
+		if (-d $spooldir.'/'.$filename){
+		    &Log::do_log('notice',"%s/%s est un répertoire",$spooldir,$filename);
+		    next;
+		}				
+
+		if (($spoolparameter eq 'queuedigest')){
+		    unless ($filename =~ /^([^@]*)\@([^@]*)$/){$ignored .= ','.$filename; next;}
+		    $listname = $1;
+		    $robot = $2;
+		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
+		}elsif (($spoolparameter eq 'queueauth')||($spoolparameter eq 'queuemod')){
+		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
+		    $listname = $1;
+		    $robot = $2;
+		    $meta{'authkey'} = $3;
+		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
+		}elsif ($spoolparameter eq 'queuetopic'){
+		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
+		    $listname = $1;
+		    $robot = $2;
+		    $meta{'authkey'} = $3;
+		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
+		}elsif ($spoolparameter eq 'queuesubscribe'){
+		    my $match = 0;		    
+		    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+			&Log::do_log('notice',"robot : $robot");
+			if ($filename =~ /^([^@]*)\@$robot\.(.*)$/){
+			    $listname = $1;
+			    $robot = $2;
+			    $meta{'authkey'} = $3;
+			    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
+			    $match = 1;
+			}
+		    }
+		    unless ($match){$ignored .= ','.$filename;next;}
+		}elsif (($spoolparameter eq 'queue')||($spoolparameter eq 'bouncequeue')||($spoolparameter eq 'queueoutgoing')){
+
+		    ## Don't process temporary files created by queue bouncequeue queueautomatic (T.xxx)
+		    next if ($filename =~ /^T\./);
+
+		    unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/){$ignored .= ','.$filename;next;}
+		    ($listname, $robot) = split(/\@/,$1);
+		    $meta{'date'} = $2;
+		    
+		    if ($spoolparameter eq 'queue') {
+			my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+			if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
+			    ($listname, $type) = ($1, $2);
+			    $meta{'type'} = $type if $type;
+
+			    my $email = &Conf::get_robot_conf($robot, 'email');	
+			    
+			    my $priority;
+			    
+			    if ($listname eq $Conf::Conf{'listmaster_email'}) {
+				$priority = 0;
+			    }elsif ($type eq 'request') {
+				$priority = &Conf::get_robot_conf($robot, 'request_priority');
+			    }elsif ($type eq 'owner') {
+				$priority = &Conf::get_robot_conf($robot, 'owner_priority');
+			    }elsif ($listname =~ /^(sympa|$email)(\@$Conf::Conf{'host'})?$/i) {	
+				$priority = &Conf::get_robot_conf($robot,'sympa_priority');
+				$listname ='';
+			    }
+			    $meta{'priority'} = $priority;
+			    
+			}
+		    }
+		}
+		
+		$listname = lc($listname);
+		if ($robot) {
+		    $robot=lc($robot);
+		}else{
+		    $robot = lc(&Conf::get_robot_conf($robot, 'host'));
+		}
+
+		$meta{'robot'} = $robot if $robot;
+		$meta{'list'} = $listname if $listname;
+		$meta{'priority'} = 1 unless $meta{'priority'};
+		
+		unless (open FILE, $spooldir.'/'.$filename) {
+		    &Log::do_log('err', 'Cannot open message file %s : %s',  $filename, $!);
+		    return undef;
+		}
+		my $messageasstring;
+		while (<FILE>){
+		    $messageasstring = $messageasstring.$_;
+		}
+		close(FILE);
+		
+		my $messagekey = $spool->store($messageasstring,\%meta);
+		unless($messagekey) {
+		    &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
+		    next;
+		}
+
+		mkdir $spooldir.'/copy_by_upgrade_process/'  unless (-d $spooldir.'/copy_by_upgrade_process/');		
+		
+		my $source = $spooldir.'/'.$filename;
+		my $goal = $spooldir.'/copy_by_upgrade_process/'.$filename;
+
+		&Log::do_log('notice','source %s, goal %s',$source,$goal);
+		# unless (&File::Copy::copy($spooldir.'/'.$filename, $spooldir.'/copy_by_upgrade_process/'.$filename)) {
+		unless (&File::Copy::copy($source, $goal)) {
+		    &Log::do_log('err', 'Could not rename %s to %s: %s', $source,$goal, $!);
+		    exit;
+		}
+		
+		unless (unlink ($spooldir.'/'.$filename)) {
+		    &Log::do_log('err',"Could not unlink message %s/%s . Exiting",$spooldir, $filename);
+		}
+		$performed .= ','.$filename;
+	    } 	    
+	    &Log::do_log('info',"Upgrade process for spool %s : ignored files %s",$spooldir,$ignored);
+	    &Log::do_log('info',"Upgrade process for spool %s : performed files %s",$spooldir,$performed);
+	}	
+    }
     return 1;
 }
 

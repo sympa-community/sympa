@@ -831,12 +831,12 @@ sub dkim_verifier {
 
 # input a msg as string, output idem without signature if invalid
 sub remove_invalid_dkim_signature {
-
     &Log::do_log('debug',"removing invalide dkim signature");
-
     my $msg_as_string = shift;
 
     unless (&tools::dkim_verifier($msg_as_string)){
+	my $body_as_string = &Message::get_body_from_msg_as_string ($msg_as_string);
+
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	my $entity = $parser->parse_data($msg_as_string);
@@ -845,7 +845,8 @@ sub remove_invalid_dkim_signature {
 	    return $msg_as_string ;
 	}
 	$entity->head->delete('DKIM-Signature');
-	return $entity->as_string;
+&Log::do_log('debug',"removing invalide dkim signature header");
+	return $entity->head->as_string."\n".$body_as_string;
     }else{
 	return ($msg_as_string); # sgnature is valid.
     }
@@ -956,7 +957,7 @@ sub dkim_sign {
     
     $message->{'msg'}->head->add('DKIM-signature',$dkim->signature->as_string);
 
-    return $message->{'msg'}->as_string ;
+    return $message->{'msg'}->head->as_string."\n".&Message::get_body_from_msg_as_string($msg_as_string);
 }
 
 # input object msg and listname, output signed message object
@@ -1339,7 +1340,7 @@ sub smime_decrypt {
     my $list = shift ; ## the recipient of the msg
     my $from = $msg->head->get('from');
 
-    &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s', $from, $list->{'name'});
+    &Log::do_log('debug2', 'tools::smime_decrypt message msg from %s,%s', $from, $list->{'name'});
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir = $list->{'dir'};
@@ -1881,8 +1882,8 @@ sub split_mail {
 
 sub virus_infected {
     my $mail = shift ;
-    my $file = shift ;
 
+    my $file = int(rand(time)) ; # in, version previous from db spools, $file was the filename of the message 
     &Log::do_log('debug2', 'Scan virus in %s', $file);
     
     unless ($Conf::Conf{'antivirus_path'} ) {
@@ -1936,7 +1937,7 @@ sub virus_infected {
 	}
 	close ANTIVIR;
     
-	my $status = $?/256 ;
+	my $status = $? / 256 ; # /
 
         ## uvscan status =12 or 13 (*256) => virus
         if (( $status == 13) || ($status == 12)) { 
@@ -2126,6 +2127,16 @@ sub virus_infected {
 
 ## subroutines for epoch and human format date processings
 
+
+## convert an epoch date into a readable date scalar
+sub epoch2yyyymmjj_hhmmss {
+
+    my $epoch = $_[0];
+    my @date = localtime ($epoch);
+    my $date = strftime ("%Y-%m-%d  %H:%M:%S", @date);
+    
+    return $date;
+}
 
 ## convert an epoch date into a readable date scalar
 sub adate {
@@ -2409,6 +2420,7 @@ sub make_tt2_include_path {
 	}
     }
 
+    unshift @include_path,$Conf::Conf{'viewmaildir'};
     return \@include_path;
 
 }
@@ -2588,7 +2600,7 @@ sub write_pid {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	&fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
+	&Log::fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
     }
 
     my @pids;
@@ -2596,11 +2608,11 @@ sub write_pid {
     # Lock pid file
     my $lock = new Lock ($pidfile);
     unless (defined $lock) {
-	&fatal_err('Lock could not be created. Exiting.');
+	&Log::fatal_err('Lock could not be created. Exiting.');
     }
     $lock->set_timeout(5); 
     unless ($lock->lock('write')) {
-	&fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+	&Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
     }
     ## If pidfile exists, read the PIDs
     if(-f $pidfile) {
@@ -2617,7 +2629,7 @@ sub write_pid {
 	unless(open(PIDFILE, '> '.$pidfile)) {
 	    ## Unlock pid file
 	    $lock->unlock();
-	    &fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
+	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
 	}
 	## Print other pids + this one
 	push(@pids, $pid);
@@ -2628,7 +2640,7 @@ sub write_pid {
 	unless(open(PIDFILE, '+>> '.$pidfile)) {
 	    ## Unlock pid file
 	    $lock->unlock();
-	    &fatal_err('Could not open %s, exiting: %s', $pidfile);
+	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile);
 	}
 	## The previous process died suddenly, without pidfile cleanup
 	## Send a notice to listmaster with STDERR of the previous process
@@ -3840,22 +3852,22 @@ Clean all messages in spool $spool_dir older than $clean_delay.
 =cut 
 
 ############################################################
-#  CleanSpool
+#  CleanDir
 ############################################################
 #  Cleans files older than $clean_delay from spool $spool_dir
 #  
-# IN : -$spool_dir (+): the spool directory
+# IN : -$dir (+): the spool directory
 #      -$clean_delay (+): delay in days 
 #
 # OUT : 1
 #
 ############################################################## 
-sub CleanSpool {
-    my ($spool_dir, $clean_delay) = @_;
-    &Log::do_log('debug', 'CleanSpool(%s,%s)', $spool_dir, $clean_delay);
+sub CleanDir {
+    my ($dir, $clean_delay) = @_;
+    &Log::do_log('debug', 'CleanSpool(%s,%s)', $dir, $clean_delay);
 
-    unless (opendir(DIR, $spool_dir)) {
-	&Log::do_log('err', "Unable to open '%s' spool : %s", $spool_dir, $!);
+    unless (opendir(DIR, $dir)) {
+	&Log::do_log('err', "Unable to open '%s' spool : %s", $dir, $!);
 	return undef;
     }
 
@@ -3865,20 +3877,19 @@ sub CleanSpool {
     my ($curlist,$moddelay);
     foreach my $f (sort @qfile) {
 
-	if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
-	    if (-f "$spool_dir/$f") {
-		unlink ("$spool_dir/$f") ;
-		&Log::do_log('notice', 'Deleting old file %s', "$spool_dir/$f");
-	    }elsif (-d "$spool_dir/$f") {
-		unless (&tools::remove_dir("$spool_dir/$f")) {
-		    &Log::do_log('err', 'Cannot remove old directory %s : %s', "$spool_dir/$f", $!);
+	if ((stat "$dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24)) {
+	    if (-f "$dir/$f") {
+		unlink ("$dir/$f") ;
+		&Log::do_log('notice', 'Deleting old file %s', "$dir/$f");
+	    }elsif (-d "$dir/$f") {
+		unless (&tools::remove_dir("$dir/$f")) {
+		    &Log::do_log('err', 'Cannot remove old directory %s : %s', "$dir/$f", $!);
 		    next;
 		}
-		&Log::do_log('notice', 'Deleting old directory %s', "$spool_dir/$f");
+		&Log::do_log('notice', 'Deleting old directory %s', "$dir/$f");
 	    }
 	}
     }
-
     return 1;
 }
 

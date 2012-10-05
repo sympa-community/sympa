@@ -152,6 +152,11 @@ webtemplate_DATA = active_lists.tt2 \
 		   tt2_error.tt2 \
 		   viewbounce.tt2 \
 		   viewlogs.tt2 \
+		   viewspools.tt2 \
+		   viewspool_message.tt2 \
+		   viewspool_message_dump.tt2 \
+		   viewspool_message_remove.tt2 \
+		   viewspool_message_mv.tt2 \
 		   viewmod.tt2 \
 		   view_template.tt2 \
 		   your_lists.tt2

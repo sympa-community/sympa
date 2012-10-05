@@ -72,6 +72,8 @@ my %old_params = (
     msgcat                 => 'localedir',
     queueexpire            => '',
     clean_delay_queueother => '',
+    pidfile_distribute     => '',
+    pidfile_creation       => '',
     dkim_header_list => '',
     web_recode_to          => 'filesystem_encoding',
 );
@@ -536,15 +538,6 @@ sub checkfiles {
         &Log::do_log('err', 'Unable to send notify "queuebounce_and_bounce_path_are_the_same" to listmaster');    
     }
     $config_err++;
-    }
-
-    ## automatic_list_creation enabled but queueautomatic pointing to queue
-    if (($Conf{automatic_list_feature} eq 'on') && $Conf{'queue'} eq $Conf{'queueautomatic'}) {
-        &Log::do_log('err', 'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)', $Conf{'queue'});
-        unless (&List::send_notify_to_listmaster('queue_and_queueautomatic_are_the_same', $Conf{'domain'}, [$Conf{'queue'}])) {
-            &Log::do_log('err', 'Unable to send notify "queue_and_queueautomatic_are_the_same" to listmaster');
-        }
-        $config_err++;
     }
 
     #  create pictures dir if usefull for each robot
