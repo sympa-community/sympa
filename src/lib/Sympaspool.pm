@@ -365,7 +365,7 @@ sub store {
 
     my $b64msg = MIME::Base64::encode($message_asstring);
     my $message;
-    if ($self->{'spoolname'} ne 'task') {
+    if ($self->{'spoolname'} ne 'task' && $message_asstring ne 'rebuild' ) {
 	$message = new Message({'messageasstring'=>$message_asstring});
     }
     

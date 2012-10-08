@@ -585,8 +585,13 @@ sub rebuild {
         &Log::do_log('notice',"Rebuilding $adrlist archive completely");
 
 	if (!opendir(DIR, "$arcpath/$adrlist" )) {
-	    &Log::do_log('err',"unable to open $arcpath/$adrlist to rebuild archive");
-	    return ;
+	    if (-d "$arcpath/$adrlist") {
+		&Log::do_log('err',"unable to open $arcpath/$adrlist to rebuild archive");
+		return undef;
+	    }else{
+		&Log::do_log('err',"No archives found for list $adrlist (looked for in $arcpath/$adrlist)");
+		return 0;
+	    }
 	}
 	my @archives = (grep (/^\d{4}-\d{2}/, readdir(DIR)));
 	close DIR ; 

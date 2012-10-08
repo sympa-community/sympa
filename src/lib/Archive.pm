@@ -282,7 +282,7 @@ sub clean_archived_message{
     my $output = $params->{'output'};
 
 
-    if (my $msg = new Message({'file'=>$input})){
+    if (my $msg = new Message({'file'=>$input, 'noxsympato' => 1})){
 	if($msg->clean_html()){
 	    if(open TMP, ">$output") {
 		print TMP $msg->{'msg'}->as_string;
