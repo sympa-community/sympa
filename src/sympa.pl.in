@@ -2085,6 +2085,7 @@ sub SendDigest{
 
 	    &Log::do_log('info', 'Digest of the list %s sent (%d seconds)', $list->{'name'},time - $start_time);
 	    &Log::db_log({'robot' => $list->{'robot'},'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "",'target_email' => '','msg_id' => '','status' => 'success','error_type' => '','user_email' => '','client' => $ip,'daemon' => $daemon_name});
+	    $digestspool->remove_message({'messagekey'=>$digest->{'messagekey'}});
 	}
     }
 }
