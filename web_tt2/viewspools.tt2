@@ -4,7 +4,7 @@
 <h2>Spool browser</h2>
 <p>
 
-[% FOREACH existingspool IN [ 'msg' 'auth' 'mod' 'digest' 'archive' 'bounce' 'subscribe' 'topic' 'bulk' 'validated' ] %]
+[% FOREACH existingspool IN [ 'msg' 'auth' 'mod' 'digest' 'archive' 'bounce' 'subscribe' 'topic' 'bulk' 'validated' 'task' ] %]
    [% IF existingspool == spoolname %]
      <b>[% existingspool %]</b>
    [% ELSE %]
