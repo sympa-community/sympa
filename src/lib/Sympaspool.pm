@@ -74,7 +74,7 @@ my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 sub new {
     my($pkg, $spoolname, $selection_status) = @_;
     my $spool={};
-   &Log::do_log('debug2', 'Spool::new(%s)', $spoolname);
+   &Log::do_log('debug2', 'Spool::new(%s,%s)', $spoolname, $selection_status);
     
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(topic)|(validated)|(task)$/){
 &Log::do_log('err','internal error unknown spool %s',$spoolname);
@@ -203,14 +203,14 @@ sub next {
     my $lock = $$.'@'.hostname(); 
     my $epoch=time; # should we use milli or nano seconds ? 
 
-    my $statement = sprintf "UPDATE spool_table SET messagelock_spool=%s, lockdate_spool =%s WHERE messagelock_spool IS NULL AND spoolname_spool =%s AND %s ORDER BY priority_spool, date_spool LIMIT 1", &SDM::quote($lock),&SDM::quote($epoch),&SDM::quote($self->{'spoolname'}),$sql_where;
+    my $statement = sprintf "UPDATE spool_table SET messagelock_spool=%s, lockdate_spool =%s WHERE messagelock_spool IS NULL AND spoolname_spool =%s AND %s ORDER BY priority_spool, date_spool LIMIT 1", &SDM::quote($lock),$epoch,&SDM::quote($self->{'spoolname'}),$sql_where;
     push @sth_stack, $sth;
 
     $sth = &SDM::do_query($statement);
     return undef unless ($sth->rows); # spool is empty
 
     my $star_select = &_selectfields();
-    my $statement = sprintf "SELECT %s FROM spool_table WHERE spoolname_spool = %s AND message_status_spool= %s AND messagelock_spool = %s AND lockdate_spool = %s AND (priority_spool != 'z' OR priority_spool IS NULL) ORDER by priority_spool LIMIT 1", $star_select ,&SDM::quote($self->{'spoolname'}),&SDM::quote($self->{'selection_status'}),&SDM::quote($lock),&SDM::quote($epoch);
+    my $statement = sprintf "SELECT %s FROM spool_table WHERE spoolname_spool = %s AND message_status_spool= %s AND messagelock_spool = %s AND lockdate_spool = %s AND (priority_spool != 'z' OR priority_spool IS NULL) ORDER by priority_spool LIMIT 1", $star_select ,&SDM::quote($self->{'spoolname'}),&SDM::quote($self->{'selection_status'}),&SDM::quote($lock),$epoch;
 
     $sth = &SDM::do_query($statement);
     my $message = $sth->fetchrow_hashref('NAME_lc');
@@ -327,7 +327,7 @@ sub update {
 		$set =  $set .', lockdate_spool = NULL ';
 	    }else{		
 		# when setting a lock always set the lockdate
-		$set =  $set .', lockdate_spool = '.&SDM::quote(time);
+		$set =  $set .', lockdate_spool = '.time;
 	    }    
 	}
     }
@@ -403,7 +403,7 @@ sub store {
 
     $sth = &SDM::do_query ($statement);
 
-    $statement = sprintf "SELECT messagekey_spool as messagekey FROM spool_table WHERE messagelock_spool = %s AND date_spool = %s",&SDM::quote($lock),&SDM::quote($metadata->{'date'});
+    $statement = sprintf "SELECT messagekey_spool as messagekey FROM spool_table WHERE messagelock_spool = %s AND date_spool = %s",&SDM::quote($lock),$metadata->{'date'};
     $sth = &SDM::do_query ($statement);
     # this query returns the autoinc primary key as result of this insert
 
@@ -457,23 +457,24 @@ sub remove_message {
 sub clean {  
     my $self = shift;
     my $filter = shift;
-
+    &Log::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
+    my $bad = 0;
     my $delay = $filter->{'delay'};
-    my $bad =  $filter->{'bad'};
-    
+    if ($self->{'selection_status'} eq 'bad') {
+	$bad =  1;
+    }
 
-    &Log::do_log('debug', 'Spool::clean(%s,$delay)',$self->{'spoolname'},$delay);
     my $spoolname = $self->{'spoolname'};
     return undef unless $spoolname;
     return undef unless $delay;
     
     my $freshness_date = time - ($delay * 60 * 60 * 24);
 
-    my $sqlquery = sprintf "DELETE FROM spool_table WHERE spoolname_spool = %s AND date_spool < %s ",&SDM::quote($spoolname),&SDM::quote($freshness_date);
+    my $sqlquery = sprintf "DELETE FROM spool_table WHERE spoolname_spool = %s AND date_spool < %s ",&SDM::quote($spoolname),$freshness_date;
     if ($bad) {	
-	$sqlquery  = 	$sqlquery . " AND bad_spool IS NOTNULL ";
+	$sqlquery  = 	$sqlquery . " AND message_status_spool = 'bad' ";
     }else{
-	$sqlquery  = 	$sqlquery . " AND bad_spool IS NULL ";
+	$sqlquery  = 	$sqlquery . " AND message_status_spool != 'bad'";
     }
     
     push @sth_stack, $sth;
