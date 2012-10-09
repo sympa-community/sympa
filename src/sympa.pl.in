@@ -980,7 +980,7 @@ while (!$signal) {
     ## Clean queue (bad)
     if ($index_cleanqueue++ >= 1000){
 	$index_cleanqueue=0;
-	
+	&Log::do_log('debug','Cleaning spools');
 	my $msg_bad = new Sympaspool('msg','bad'); 
 	$msg_bad->clean({'delay'=>$Conf{'clean_delay_queue'}});
 	my $archive_bad = new Sympaspool('archive','bad'); 
