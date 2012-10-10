@@ -124,10 +124,10 @@ sub get_content {
     my $selection=$data->{'selection'};   # the list of field to select. possible values are :
                                           #    -  a comma separated list of field to select. 
                                           #    -  '*'  is the default .
-                                          #    -  '*_but_message' mean any field except message which may be hugue and unusefull while listing spools
+                                          #    -  '*_but_message' mean any field except message which may be huge and unusefull while listing spools
                                           #    - 'count' mean the selection is just a count.
                                           # should be used mainly to select all but 'message' that may be huge and may be unusefull
-    my $ofset = $data->{'ofset'};         # for pagination, start fetch at element number = $ofset;
+    my $offset = $data->{'offset'};         # for pagination, start fetch at element number = $offset;
     my $page_size = $data->{'page_size'}; # for pagination, limit answers to $page_size
     my $orderby = $data->{'sortby'};      # sort
     my $way = $data->{'way'};             # asc or desc 
@@ -156,7 +156,7 @@ sub get_content {
 	$statement = $statement. ' DESC' if ($way eq 'desc') ;
     }
     if ($page_size) {
-	$statement = $statement . ' LIMIT '.$ofset.' , '.$page_size;
+	$statement = $statement . ' LIMIT '.$offset.' , '.$page_size;
     }
 
     push @sth_stack, $sth;
@@ -189,7 +189,7 @@ sub next {
     my $self = shift;
     my $selector = shift;
 
-    &Log::do_log('debug', 'Spool::next(%s,%s)',$self->{'spoolname'},$self->{'selection_status'});
+    &Log::do_log('debug', 'Getting next spool entry in %s, %s',$self->{'spoolname'},$self->{'selection_status'});
     
     my $sql_where = _sqlselector($selector);
 

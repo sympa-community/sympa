@@ -31,7 +31,7 @@ Select messages by status :
 [% ELSE %]
 
 <li>Total spools :[% global_count = global_count_ok  + global_count_bad %] [% global_count %]  ([% global_count_ok %] entries with status ok, [% global_count_bad %] entries with status bad) </li>
-<li>This spool content :  #[% total %] entries with status [% spool_status %] </li>
+<li>This spool contains: [% total %] entries with status [% spool_status %] </li>
 
 
 
@@ -98,7 +98,15 @@ Select messages by status :
       [% END %] 
       this.form.submit()">
    </th>
+[%- IF spoolname == 'task' -%]
+   <th>
+    <input  type="button" name="action_viewspools" value="Task"  onclick="this.form.elements['sortby'].value='task' ; this.form.elements['nav'].value='first'; 
+      [% IF sortby == 'task' %]
+          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
+      [% END %] 
+      this.form.submit()">
    </th>
+[% ELSE -%]
 [%- IF conf.antispam_feature == 'on' -%]
    <th>
    <input  type="button" name="action_viewspools" value="Spam"  onclick="this.form.elements['sortby'].value='spam_status' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
@@ -117,11 +125,14 @@ Select messages by status :
    <th>
    <input  class="sortby" type="button" name="action_viewspools" value="Priority"  onclick="this.form.elements['sortby'].value='priority' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
+   [%- IF spool_status == 'bad' -%]
    <th>
    <input  class="sortby" type="button" name="action_viewspools" value="Diag"  onclick="this.form.elements['sortby'].value='diag' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
+   [%- END -%]
    <th>
    <input  class="sortby" type="button" name="action_viewspools" value="Size"  onclick="this.form.elements['sortby'].value='size' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+[% END %]
 </tr>
 
       </tr>	 
@@ -161,7 +172,11 @@ Select messages by status :
 	<td>
 	[% msg.listname %]
         </td>
-
+	[%- IF spoolname == 'task' -%]
+	<td>
+	[% msg.task_model %]
+        </td>
+	[%- ELSE -%]
         [%- IF conf.antispam_feature == 'on' -%]
 	 <td>
 	  [%- IF msg.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
@@ -180,13 +195,14 @@ Select messages by status :
 	</td>
 
         <td>[% msg.priority %]</td>
-
+	[% IF spool_status == 'bad' %]
         <td>[% msg.message_diag %]</td>
+	[%- END -%]
 	<td>
 	[% IF msg.size %]
 	[% size = msg.size / 1000 %][% size %] kb
         [% ELSE %]&nbsp;[% END %]
-
+	[%- END -%]
 	</tr>
       [% END %] 
     </table>

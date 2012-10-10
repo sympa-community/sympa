@@ -502,7 +502,7 @@ sub store {
 sub purge_bulkspool {
     &Log::do_log('debug', 'purge_bulkspool');
 
-    unless ($sth = &SDM::do_query( "SELECT messagekey_bulkspool AS messagekey FROM bulkspool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0")) {
+    unless ($sth = &SDM::do_query( "SELECT messagekey_spool AS messagekey FROM spool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0")) {
 	&Log::do_log('err','Unable to check messages unreferenced by packets in database');
 	return undef;
     }

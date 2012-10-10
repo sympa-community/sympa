@@ -17025,10 +17025,10 @@ sub do_viewspools {
     }
     $param->{'current_page'} = 1 unless (($param->{'current_page'} >= 1) && ($param->{'current_page'} <= $param->{'total_page'} ));
 
-    my $ofset = ($param->{'current_page'} -  1) * $spool_page_size;
+    my $offset = ($param->{'current_page'} -  1) * $spool_page_size;
 
     # force sortby to a correct value
-    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
+    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(task)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
     $param->{'sortby'} = $in{'sortby'};
 
     $in{'way'} = 'asc' unless ($in{'way'} eq 'desc');
@@ -17037,11 +17037,14 @@ sub do_viewspools {
     # 'index' in user interface is mapped to 'messagekey' table field
     $in{'sortby'} = 'messagekey' if ($in{'sortby'} eq 'index') ;
 
+    # 'index' in user interface is mapped to 'messagekey' table field
+    $in{'sortby'} = 'task_model' if ($in{'sortby'} eq 'task') ;
+
     my %selector = ();
     if ($in{'list'}) {
 	$selector{'list'}=$in{'list'};
     }
-    my @messages = $spool->get_content({'selector'=> \%selector ,'selection'=>'*_but_message','ofset'=>$ofset,'page_size' => $spool_page_size,'sortby' => $in{'sortby'},'way' => $in{'way'}});
+    my @messages = $spool->get_content({'selector'=> \%selector ,'selection'=>'*_but_message','offset'=>$offset,'page_size' => $spool_page_size,'sortby' => $in{'sortby'},'way' => $in{'way'}});
     $param->{'spool_content'} = \@messages;
     return 1;
 }
