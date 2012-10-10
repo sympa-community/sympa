@@ -195,6 +195,7 @@ sub load {
         printf STDERR "Unable to load robots\n";
         return undef;
     }
+    ##use Data::Dumper; open TMP, ">/tmp/dump_conf"; print TMP &Dumper(\%Conf); close TMP;
     ##&_create_robot_like_config_for_main_robot();
     return 1;
 }
@@ -1524,11 +1525,11 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'css_url'} ||= $param->{'config_hash'}{'static_content_url'}.'/css'.$final_separator.$param->{'config_hash'}{'robot_name'};
     $param->{'config_hash'}{'css_path'} ||= $param->{'config_hash'}{'static_content_path'}.'/css'.$final_separator.$param->{'config_hash'}{'robot_name'};
 
-    if (defined $param->{'config_hash'}{'email'}) {
-        $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
-        $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
-    }
-
+    unless ($param->{'config_hash'}{'email'}) {
+        $param->{'config_hash'}{'email'} = $Conf{'email'};
+    } 
+    $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
+    $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
     # split action list for blacklist usage
     foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
