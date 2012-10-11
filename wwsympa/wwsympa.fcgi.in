@@ -6961,44 +6961,31 @@ sub do_reject {
      }     
      
     &wwslog('info', 'do_reject(%s)', $in{'id'});
+     my $modspool = new Sympaspool('mod');
      my ($msg, $file);
 
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
      foreach my $id (split (/,/, $in{'id'})) {
 	 
-	 ## For compatibility concerns
-	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
-	     last if (-f $file);
-	 }
+	 my $message_in_spool = $modspool->get_message({'list'=>$list->{'name'},'robot'=>$robot,'authkey'=>$id});
 
-	 ## Open the file
-	 unless (open(IN, $file)) {
+	 unless ($message_in_spool) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
-	     &wwslog('err','do_reject: Unable to open %s', $file);
+	     &wwslog('err','do_distribute: Unable to find message in spool mod with authkey  %s', $id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
 	     next;
 	 }
-
          #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
 	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
-	     my $msg;
-	     my $parser = new MIME::Parser;
-	     $parser->output_to_core(1);
-	     unless ($msg = $parser->read(\*IN)) {
-		 &wwslog('err', 'Unable to parse message %s', $file);
-		 next;
-	     }	   
-
-	     my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
-	     unless  ($#sender_hdr == -1) {
-		 my $rejected_sender = $sender_hdr[0]->address;
+	     my $rejected_sender = $message_in_spool->{'sender'};
+	     if  ($rejected_sender) {
+		 
 		 unless ($in{'quiet'}) {
 		     my %context;
-		     $context{'subject'} = &tools::decode_header($msg, 'Subject');
+		     $context{'subject'} = &tools::decode_header($message_in_spool->{'subject'});
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
 		     unless ($list->send_file($in{'message_template'}, $rejected_sender, $robot, \%context)) {
@@ -7014,21 +7001,17 @@ sub do_reject {
 			 $param->{'blacklist_ignored'} += 0;
 		     }
 		 }
+	     } else {
+		 &Log::do_log('err',"No sender found for message %s, unable to use her address to add to blacklist or send notification",$message_in_spool->{'messagekey'});
 	     }
 	 }
-	 close(IN);  
+
 	 if (($in{'signal_spam'}) && ($Conf{'reporting_spam_script_path'} ne '')){
 	     if (-x $Conf{'reporting_spam_script_path'}){
-		 unless (open(IN, $file)) {
-		     &Log::do_log('err',"could not open $file");
-		 }
 		 unless (open(SCRIPT, "|$Conf{'reporting_spam_script_path'}")) {
 		     &Log::do_log('err',"could not execute $Conf{'reporting_spam_script_path'}");
 		 }
-		 while(<IN>){
-		     print SCRIPT $_;
-		 }
-		 close (IN);
+		 print SCRIPT $message_in_spool->{'msg_as_string'};
 		 if (close(SCRIPT)){		 
 		     &Log::do_log('info',"message $file reported as spam by $param->{'user'}{'email'}") ;
 		 }else{
@@ -7039,14 +7022,20 @@ sub do_reject {
 	     }	
 	 }
 
-	 unless (unlink($file)) {
-	     &report::reject_report_web('intern','erase_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	     &wwslog('err','do_reject: failed to erase %s', $file);
+         # move message in spool of validated messages
+         unless ($modspool->update({'list'=>$list->{'name'},'robot'=>$robot,'authkey'=>$id},{'spoolname'=>'validated'}) ) {
+
+	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
+								 'new'=>"validated"},
+					$param->{'action'},$list,$param->{'user'}{'email'},$robot);
+	     &wwslog('err','do_distribute: failed to move message in validated spool, key %s', $id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
-	     return undef;
+
 	 }
+	 # clean html view of the message
+	 &tools::remove_dir ( $Conf::Conf{'viewmail_dir'}.'/mod/'.$list->get_list_id().'/'.$id);	
 
      }
      &web_db_log({'parameters' => $in{'id'},

@@ -2262,14 +2262,14 @@ sub reject {
 
     my $modspool = new Sympaspool('mod');
     my $message_in_spool = $modspool->get_message({'list'=>$list->{'name'},'robot'=>$robot,'authkey'=>$key});
-
+ 
     unless ($message_in_spool) {
 	&Log::do_log('info', 'REJECT %s %s from %s refused, auth failed', $which, $key, $sender);
 	&report::reject_report_msg('user','unfound_message',$sender,{'key'=> $key},$robot,'',$list);
 	return 'wrong_auth';
     }
     my $message = new Message({'message_in_spool'=> $message_in_spool});
-    unless ($message_) {
+    unless ($message) {
 	&Log::do_log('err', 'Could not parse spool message %s %s from %s refused, auth failed', $which, $key, $sender);
 	&report::reject_report_msg('user','unfound_message',$sender,{'key'=> $key},$robot,'',$list);
 	return 'wrong_auth';
@@ -2280,7 +2280,7 @@ sub reject {
     my $customheader = $list->{'admin'}{'custom_header'};
     my $to_field = $hdr->get('To');
     
-    my @sender_hdr = Mail::Address->parse($message->head->get('From'));
+    my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
     unless  ($#sender_hdr == -1) {
 	my $rejected_sender = $sender_hdr[0]->address;
 	my %context;
@@ -2288,7 +2288,7 @@ sub reject {
 	$context{'rejected_by'} = $sender;
 	$context{'editor_msg_body'} = $editor_msg->{'msg'}->body_as_string if ($editor_msg) ;
 	
-	&Log::do_log('debug', 'message %s by %s rejected sender %s',$context{'subject'},$context{'rejected_by'},$rejected_sender);
+	&Log::do_log('debug', 'message %s from sender %s rejected by %s',$context{'subject'},$rejected_sender,$context{'rejected_by'});
 
 	## Notify author of message
 	unless ($quiet) {
