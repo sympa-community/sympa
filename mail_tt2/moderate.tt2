@@ -40,8 +40,9 @@ REJECT [% list.name %] [% modkey %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
+X-Sympa-Attach: yes
 
-[% msg_as_string %]
+[%# msg_as_string %]
 --[% boundary %]--
 [%- END -%]
 [% END -%]

@@ -4425,9 +4425,9 @@ sub send_to_editor {
 	       #  send a generic error message : X509 cert missing
 	       return undef;
 	   }
-	   $param->{'msg_as_string'} = $cryptedmsg;
+	   $param->{'msg'} = $cryptedmsg;
        }else{
-	   $param->{'msg_as_string'} = $message->{'msg_as_string'};
+	   $param->{'msg'} = $msg;
        }
        # create a one time ticket that will be used as un md5 URL credential
        
