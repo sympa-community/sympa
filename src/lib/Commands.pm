@@ -2343,68 +2343,23 @@ sub modindex {
 
     &Language::SetLang($list->{'admin'}{'lang'});
 
-    my $modqueue = &Conf::get_robot_conf($robot,'queuemod');
-    
-    my $i;
-    
     unless ($list->may_do('modindex', $sender)) {
 	&report::reject_report_cmd('auth','restricted_modindex',{},$cmd_line);
 	&Log::do_log('info', 'MODINDEX %s from %s refused, not allowed', $name,$sender);
 	return 'not_allowed';
     }
 
-    # purge the queuemod -> delete old files
-    if (!opendir(DIR, $modqueue)) {
-	&Log::do_log('info', 'WARNING unable to read %s directory', $modqueue);
-    }
-    my @qfile = sort grep (!/^\.+$/,readdir(DIR));
-    closedir(DIR);
-    my ($curlist,$moddelay);
-    foreach $i (sort @qfile) {
+    my $spool = new Sympaspool('mod');
 
-	next if (-d "$modqueue/$i");
-
-	$i=~/\_(.+)$/;
-	$curlist = new List ($`,$robot);
-	if ($curlist) {
-	    # list loaded    
-	    if (exists $curlist->{'admin'}{'clean_delay_queuemod'}){
-		$moddelay = $curlist->{'admin'}{'clean_delay_queuemod'}
-	    }else{
-		$moddelay = &Conf::get_robot_conf($robot,'clean_delay_queuemod');
-	    }
-	    
-	    if ((stat "$modqueue/$i")[9] < (time -  $moddelay*86400) ){
-		unlink ("$modqueue/$i") ;
-		&Log::do_log('notice', 'Deleting unmoderated message %s, too old', $i);
-	    };
-	}
-    }
-
-    opendir(DIR, $modqueue);
-
-    my $list_id = $list->get_list_id();
-    my @files = ( sort grep (/^($name|$list_id)\_/,readdir(DIR)));
-    closedir(DIR);
     my $n;
     my @now = localtime(time);
 
     ## List of messages
     my @spool;
 
-    foreach $i (@files) {
-	## skip message already marked to be distributed using WWS
-	next if ($i =~ /.distribute$/) ;
-
-	## Push message for building MODINDEX
-	my $raw_msg;
-	open(IN, "$modqueue\/$i");
-	while (<IN>) {
-	    $raw_msg .= $_;
-	}
-	close IN;
-	push @spool, $raw_msg;
-
+    foreach my $msg ( $spool->get_content({'selector' =>{'list'=> $name,'robot'=> $robot},'selection'=>'*','sortby' => 'date','way' => 'asc'})) {
+	my $message = new Message({'message_in_spool' => $msg});
+	push @spool, $message->{'msg'};
 	$n++;
     }
     
@@ -2414,16 +2369,17 @@ sub modindex {
 	return 'no_file';
     }  
     
-    unless ($list->send_file('modindex', $sender, $robot, {'spool' => \@spool,
-					   'total' => $n,
-					   'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
-							   'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="})){
-	&Log::do_log('notice',"Unable to send template 'modindex' to $sender");
-	&report::reject_report_cmd('intern_quiet','',{'listname'=> $name},$cmd_line,$sender,$robot);
-    }
+    unless ($list->send_file('modindex', $sender, $robot, {
+	'spool' => \@spool,
+	'total' => $n,
+	'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
+	'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="}))
+	{
+	    &Log::do_log('notice',"Unable to send template 'modindex' to $sender");
+	    &report::reject_report_cmd('intern_quiet','',{'listname'=> $name},$cmd_line,$sender,$robot);
+	}
 
-    &Log::do_log('info', 'MODINDEX %s from %s accepted (%d seconds)', $name,
-	   $sender,time-$time_command);
+    &Log::do_log('info', 'MODINDEX %s from %s accepted (%d seconds)', $name,$sender,time-$time_command);
     
     return 1;
 }

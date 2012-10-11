@@ -7,6 +7,8 @@ Content-Disposition: inline
 
 [%|loc(total,list.name,list.host)%]There are %1 messages to be moderated for list %2@%3[%END%]
 
+[%|loc%]You can moderate them using the web interface:[%END%] <[% conf.wwsympa_url %]/modindex/[% list.name %]>
+
 [%|loc%]The messages moderating documentation:[%END%] <[% conf.wwsympa_url %]/help/admin#moderate>
 
 [% IF spool %]
@@ -23,8 +25,6 @@ Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
-
-[% msg %]
 
 [% END %]
 --[% boundary2 %]--
