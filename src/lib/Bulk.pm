@@ -502,17 +502,17 @@ sub store {
 sub purge_bulkspool {
     &Log::do_log('debug', 'purge_bulkspool');
 
-    unless ($sth = &SDM::do_query( "SELECT messagekey_spool AS messagekey FROM spool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0")) {
+    unless ($sth = &SDM::do_query( "SELECT messagekey_spool AS messagekey FROM spool_table LEFT JOIN bulkmailer_table ON messagekey_spool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND messagelock_spool IS NULL AND spoolname_spool = %s",&SDM::quote('bulk'))) {
 	&Log::do_log('err','Unable to check messages unreferenced by packets in database');
 	return undef;
     }
 
     my $count = 0;
     while (my $key = $sth->fetchrow_hashref('NAME_lc')) {	
-	if ( &Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
+	if ( &Bulk::remove_bulkspool_message('spool',$key->{'messagekey'}) ) {
 	    $count++;
 	}else{
-	    &Log::do_log('err','Unable to remove message (key = %s) from bulkspool_table',$key->{'messagekey'});	    
+	    &Log::do_log('err','Unable to remove message (key = %s) from spool_table',$key->{'messagekey'});	    
 	}
    }
     $sth->finish;
