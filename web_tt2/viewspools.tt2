@@ -1,7 +1,7 @@
 <!-- $Id: viewspools.tt2 6913 2010-12-03 10:21:58Z serge.aumont $ -->
 <div class="block">
 
-<h2>Spool browser</h2>
+<h2>[% |loc %]Spools browser[% END %]</h2>
 <p>
 
 [% FOREACH existingspool IN [ 'msg' 'auth' 'mod' 'digest' 'archive' 'bounce' 'subscribe' 'topic' 'bulk' 'validated' 'task' ] %]
@@ -20,18 +20,18 @@
  <fieldset>
 
 <ul>
-Select messages by status : 
+[% |loc %]Select messages by status:[% END %]
   <select id="spool_status" name="spool_status" onchange="this.form.submit();">
           <option value="ok" [% IF spool_status == 'ok' %] selected="selected" [%END%]>ok</option>
           <option value="bad" [% IF spool_status == 'bad' %] selected="selected" [%END%]>bad</option>
   </select>
 
 [% IF total == 0 %] 
-<li>Spool empty.</li></ul>
+<li>[% |loc %]This spool is empty.[% END %]</li></ul>
 [% ELSE %]
-
-<li>Total spools :[% global_count = global_count_ok  + global_count_bad %] [% global_count %]  ([% global_count_ok %] entries with status ok, [% global_count_bad %] entries with status bad) </li>
-<li>This spool contains: [% total %] entries with status [% spool_status %] </li>
+[% global_count = global_count_ok  + global_count_bad %]
+<li>[% |loc(global_count,global_count_ok,global_count_bad) %]All spools count: %1  (%2 entries with status ok, %3 entries with status bad) [% END %]</li>
+<li>[% |loc(total,spool_status) %]This spool contains: %1 entries with status %2 [% END %]</li>
 
 
 
