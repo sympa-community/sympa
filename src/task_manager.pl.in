@@ -346,11 +346,12 @@ while (!$end) {
     }
 
     ## processing of tasks anterior to the current date
-    &Log::do_log ('debug3', 'processing of tasks anterior to the current date');
+    &Log::do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
+    &Log::do_log ('debug3', 'processing of task %s, %s',$task->{'messagekey'},$task->{'model'});
 	
 	last if $end;
-	last unless ($task->{'date'} < $current_date);
+	next unless ($task->{'date'} <= $current_date);
 	if ($task->{'object'} ne '_global') { # list task
 	    my $list = $task->{'list_object'};
 	    
@@ -377,6 +378,7 @@ while (!$end) {
 		}		
 	    }
 	}
+	    
 	execute ($task);
     }
 
@@ -469,9 +471,9 @@ sub create {
     $meta{'robot'}= $robot if $robot;
     if ($list_name) {
 	$meta{'list'}=$list_name ;
-	$meta{'object'}=$list_name.'@'.$robot ;
+	$meta{'task_object'}=$list_name.'@'.$robot ;
     }else{
-	$meta{'object'}= '_global' ;
+	$meta{'task_object'}= '_global' ;
     }
 
     #my $dump = &Dumper($task_as_string); open (DUMP,">>/tmp/dumper"); printf DUMP 'DUMP\n%s',$dump ; close DUMP; 
@@ -707,7 +709,7 @@ sub execute {
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &Log::do_log('notice', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
+    &Log::do_log('debug2', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
 
     my $label = $task->{'label'};
     return undef if ($label eq 'ERROR');

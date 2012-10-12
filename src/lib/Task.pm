@@ -57,6 +57,7 @@ sub new {
     $task->{'date'} = $task_in_spool->{'task_date'};    
     $task->{'label'} = $task_in_spool->{'task_label'};    
     $task->{'model'} = $task_in_spool->{'task_model'};    
+    $task->{'object'} = $task_in_spool->{'task_object'};    
     $task->{'domain'} = $task_in_spool->{'robot'};    
 	
     if ($task_in_spool->{'list'}) { # list task

@@ -433,7 +433,7 @@ sub remove_message {
     
     ## search if this message is already in spool database : mailfile may perform multiple submission of exactly the same message 
     unless ($self->get_message($selector)){
-	&Log::do_log('err',"message not in spool"); 
+	&Log::do_log('err',"message %s not in spool",$selector->{'messagekey'}); 
 		return undef;
     }
     
