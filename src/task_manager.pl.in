@@ -275,68 +275,8 @@ while (!$end) {
 	exit -1;
     }
 
-    my %used_models; # models for which a task exists
-    foreach my $model (&Task::get_used_models) {
-	$used_models{$model} = 1;
-    }
+    &create_required_tasks($current_date);
 
-    ### creation of required tasks 
-    my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
-			'execution_date' => 'execution_date');
-    ## global tasks
-    foreach my $key (keys %global_models) {	
-	&Log::do_log('debug2',"global_model : $key");
-	unless ($used_models{$global_models{$key}}) {
-	    if ($Conf{$key}) { 
-		my %data = %default_data; # hash of datas necessary to the creation of tasks
-		create ($current_date, '', $global_models{$key}, $Conf{$key}, \%data);
-		$used_models{$1} = 1;
-	    }
-	}
-    }    	
-    
-    ## list tasks
-    foreach my $robot (keys %{$Conf{'robots'}}) {
-	&Log::do_log('debug3',"creating list task : current bot  is $robot");
-	my $all_lists = &List::get_lists($robot);
-	foreach my $list ( @$all_lists ) {
-	    &Log::do_log('debug3',"creating list task : current list  is $list->{'name'}");
-	    my %data = %default_data;
-	
-	    $data{'list'} = {'name' => $list->{'name'},
-			     'robot' => $list->{'domain'}};
-	
-	    my %used_list_models; # stores which models already have a task 
-	    foreach (@list_models) { 
-		$used_list_models{$_} = undef;
-	    }	    
-	    foreach my $model (&Task::get_used_models($list->get_list_id())) {		
-		$used_list_models{$model} = 1; 
-	    }
-	    &Log::do_log('debug3',"creating list task using models");my $tt= 0;
-
-	    foreach my $model (@list_models) {
-		unless ($used_list_models{$model}) {
-		    my $model_task_parameter = "$model".'_task';
-		    
-		    if ( $model eq 'sync_include') {
-			next unless ($list->has_include_data_sources() &&
-				     ($list->{'admin'}{'status'} eq 'open'));
-
-			create ($current_date, 'INIT', $model, 'ttl', \%data);
-			&Log::do_log('debug3',"sync_include task ceration done");$tt++;
-			
-		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
-			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
-			    ($list->{'admin'}{'status'} eq 'open')) {
-			
-			create ($current_date, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
-			$tt++;
-		    }
-		}
-	    }
-	}
-    }
     ## Execute existing tasks
     ## List all tasks
     unless (&Task::list_tasks($spool_task)) {
@@ -348,7 +288,7 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &Log::do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
-    &Log::do_log ('debug3', 'processing of task %s, %s',$task->{'messagekey'},$task->{'model'});
+    &Log::do_log ('trace', 'processing of task %s, %s',$task->{'messagekey'},$task->{'model'});
 	
 	last if $end;
 	next unless ($task->{'date'} <= $current_date);
@@ -378,7 +318,6 @@ while (!$end) {
 		}		
 	    }
 	}
-	    
 	execute ($task);
     }
 
@@ -397,6 +336,79 @@ while (!$end) {
 exit(0);
 
 ####### SUBROUTINES #######
+
+sub create_required_tasks {
+    my $current_date = shift;
+    &Log::do_log('trace','Creating required tasks from models');
+    my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
+			'execution_date' => 'execution_date');
+    create_required_global_tasks({'data' => \%default_data,'current_date' => $current_date});
+    create_required_lists_tasks({'data' => \%default_data});
+}
+
+sub create_required_global_tasks {
+    my $param = shift;
+    my $data = $param->{'data'};
+    &Log::do_log('trace','Creating required tasks from global models');
+    my %used_models; # models for which a task exists
+    foreach my $model (&Task::get_used_models) {
+	$used_models{$model} = 1;
+    }
+    foreach my $key (keys %global_models) {	
+	&Log::do_log('debug2',"global_model : $key");
+	unless ($used_models{$global_models{$key}}) {
+	    if ($Conf{$key}) { 
+		create ($param->{'current_date'}, '', $global_models{$key}, $Conf{$key}, $data);
+		$used_models{$1} = 1;
+	    }
+	}
+    }
+}
+
+sub create_required_lists_tasks {
+    my $param = shift;
+    &Log::do_log('trace','Creating required tasks from list models');
+    foreach my $robot (keys %{$Conf{'robots'}}) {
+	&Log::do_log('debug3',"creating list task : current bot  is $robot");
+	my $all_lists = &List::get_lists($robot);
+	foreach my $list ( @$all_lists ) {
+	    &Log::do_log('debug3',"creating list task : current list  is $list->{'name'}");
+	    my %data = %{$param->{'data'}};
+	    $data{'list'} = {'name' => $list->{'name'},
+			     'robot' => $list->{'domain'}};
+	    
+	    my %used_list_models; # stores which models already have a task 
+	    foreach (@list_models) { 
+		$used_list_models{$_} = undef;
+	    }	    
+	    foreach my $model (&Task::get_used_models($list->get_list_id())) {		
+		$used_list_models{$model} = 1; 
+	    }
+	    &Log::do_log('debug3',"creating list task using models");my $tt= 0;
+
+	    foreach my $model (@list_models) {
+		unless ($used_list_models{$model}) {
+		    my $model_task_parameter = "$model".'_task';
+		    
+		    if ( $model eq 'sync_include') {
+			next unless ($list->has_include_data_sources() &&
+				     ($list->{'admin'}{'status'} eq 'open'));
+
+			create ($param->{'current_date'}, 'INIT', $model, 'ttl', \%data);
+			&Log::do_log('debug3',"sync_include task ceration done");$tt++;
+			
+		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
+			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
+			    ($list->{'admin'}{'status'} eq 'open')) {
+			
+			create ($param->{'current_date'}, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
+			$tt++;
+		    }
+		}
+	    }
+	}
+    }
+}
 
 ## task creations
 sub create {
@@ -568,7 +580,7 @@ sub chk_line {
     ## just in case...
     chomp $line;
 
-    &Log::do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
+    &Log::do_log('trace', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
         
     $Rhash->{'nature'} = undef;
   
@@ -709,12 +721,12 @@ sub execute {
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &Log::do_log('debug2', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
+    &Log::do_log('trace', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
 
     my $label = $task->{'label'};
     return undef if ($label eq 'ERROR');
 
-    &Log::do_log ('debug2', "* execution of the task id = %s", $task->{'messagekey'});
+    &Log::do_log ('trace', "* execution of the task id = %s", $task->{'messagekey'});
 
     my @tasklines = split('\n',$taskasstring);
 
@@ -774,12 +786,12 @@ sub cmd_process {
 
     my $taskasstring = $task->{'taskasstring'};
 
-    &Log::do_log('debug2', 'cmd_process(%s, %d)', $command, $lnb);
+    &Log::do_log('trace', 'cmd_process(%s, %d)', $command, $lnb);
 
      # building of %context
     my %context = ('line_number' => $lnb);
 
-    &Log::do_log('debug2','Current task : %s', join(':',%$task));
+    &Log::do_log('trace','Current task : %s', join(':',%$task));
 
      # regular commands
     return stop ($task, \%context) if ($command eq 'stop');
@@ -859,22 +871,23 @@ sub send_msg {
     if ($task->{'object'} eq '_global') {
 
 	foreach my $email (keys %{$Rvars->{$var}}) {
-	    &Log::do_log ('notice', "--> message sent to $email");
  	    if (!$log) {
  		unless (&List::send_global_file ($template, $email, ,'',$Rvars->{$var}{$email}) ) {
  		    &Log::do_log ('notice', "Unable to send template $template to $email");
- 		}
+ 		}else{
+		    &Log::do_log ('notice', "--> message sent to $email");
+		}
  	    }
 	}
     } else {
 	my $list = $task->{'list_object'};
-	
 	foreach my $email (keys %{$Rvars->{$var}}) {
-	    &Log::do_log ('notice', "--> message sent to $email");
  	    if (!$log) {
  		unless ($list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}))  {
  		    &Log::do_log ('notice', "Unable to send template $template to $email");
- 		}
+ 		}else{
+		    &Log::do_log ('notice', "--> message sent to $email");
+		}
 	    }
 	}
     }
@@ -889,7 +902,7 @@ sub next_cmd {
     my $date = &tools::epoch_conv ($tab[0], $task->{'date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
 
-    &Log::do_log ('notice', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
+    &Log::do_log ('trace', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
     my $listname = $task->{'object'};
     my $model = $task->{'model'};
@@ -942,7 +955,7 @@ sub next_cmd {
 	return undef;
     }
 
-    &Log::do_log ('notice', "--> new task $model ($human_date)");
+    &Log::do_log ('trace', "--> new task $model ($human_date)");
     
     return 0;
 }
