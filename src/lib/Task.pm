@@ -253,7 +253,7 @@ sub epoch_sort {
 
 sub create_required_tasks {
     my $current_date = shift;
-    &Log::do_log('trace','Creating required tasks from models');
+    &Log::do_log('debug','Creating required tasks from models');
     my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
 			'execution_date' => 'execution_date');
     create_required_global_tasks({'data' => \%default_data,'current_date' => $current_date});
@@ -263,7 +263,7 @@ sub create_required_tasks {
 sub create_required_global_tasks {
     my $param = shift;
     my $data = $param->{'data'};
-    &Log::do_log('trace','Creating required tasks from global models');
+    &Log::do_log('debug','Creating required tasks from global models');
     my %used_models; # models for which a task exists
     foreach my $model (&Task::get_used_models) {
 	$used_models{$model} = 1;
@@ -281,7 +281,7 @@ sub create_required_global_tasks {
 
 sub create_required_lists_tasks {
     my $param = shift;
-    &Log::do_log('trace','Creating required tasks from list models');
+    &Log::do_log('debug','Creating required tasks from list models');
     foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
 	&Log::do_log('debug3',"creating list task : current bot  is $robot");
 	my $all_lists = &List::get_lists($robot);
@@ -494,7 +494,7 @@ sub chk_line {
     ## just in case...
     chomp $line;
 
-    &Log::do_log('trace', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
+    &Log::do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
         
     $Rhash->{'nature'} = undef;
   
@@ -635,12 +635,12 @@ sub execute {
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &Log::do_log('trace', 'Running task id = %s, line %d with vars %s)', $self->{'messagekey'}, $lnb, join('/',  %vars));
+    &Log::do_log('debug', 'Running task id = %s, line %d with vars %s)', $self->{'messagekey'}, $lnb, join('/',  %vars));
 
     my $label = $self->{'label'};
     return undef if ($label eq 'ERROR');
 
-    &Log::do_log ('trace', "* execution of the task id = %s", $self->{'messagekey'});
+    &Log::do_log ('debug2', "* execution of the task id = %s", $self->{'messagekey'});
 
     my @tasklines = split('\n',$taskasstring);
 
@@ -700,12 +700,12 @@ sub cmd_process {
 
     my $taskasstring = $task->{'taskasstring'};
 
-    &Log::do_log('trace', 'cmd_process(%s, %d)', $command, $lnb);
+    &Log::do_log('debug', 'cmd_process(%s, %d)', $command, $lnb);
 
      # building of %context
     my %context = ('line_number' => $lnb);
 
-    &Log::do_log('trace','Current task : %s', join(':',%$task));
+    &Log::do_log('debug2','Current task : %s', join(':',%$task));
 
      # regular commands
     return stop ($task, \%context) if ($command eq 'stop');
@@ -812,7 +812,7 @@ sub next_cmd {
     my $date = &tools::epoch_conv ($tab[0], $task->{'date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
 
-    &Log::do_log ('trace', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
+    &Log::do_log ('debug2', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
     my $listname = $task->{'object'};
     my $model = $task->{'model'};
@@ -865,7 +865,7 @@ sub next_cmd {
 	return undef;
     }
 
-    &Log::do_log ('trace', "--> new task $model ($human_date)");
+    &Log::do_log ('debug2', "--> new task $model ($human_date)");
     
     return 0;
 }
@@ -1725,7 +1725,7 @@ sub sync_include {
 sub check_list_task_is_valid {
     my $self = shift;
     my $list = $self->{'list_object'};
-
+    &Log::do_log('debug','Checking %s task validity for list %s@%s',$self->{'model'},$list->{'name'},$list->{'domain'});
     ### Check list object validity; recreate it if needed.
 
     ## Skip closed lists
@@ -1737,8 +1737,8 @@ sub check_list_task_is_valid {
 
     ## Skip if parameter is not defined
     if ( $self->{'model'} eq 'sync_include') {
-	foreach my $source_type (grep /_include/, keys %List::pinfo ) {
-	    if ($list->{'admin'}{$source_type}) {
+	foreach my $source_type (grep /include/, keys %{&List::_apply_defaults()} ) {
+	    if (defined $list->{'admin'}{$source_type}) {
 		return 1;
 	    }		
 	}

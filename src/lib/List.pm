@@ -10890,7 +10890,6 @@ sub _apply_defaults {
 		$::pinfo{$p}{'file_format'}{$k}{'file_format'} ||= join '|', @{$::pinfo{$p}{'format'}{$k}{'format'}};
 	    }
 
-	    
 	    if (($::pinfo{$p}{'file_format'}{$k}{'occurrence'} =~ /n$/) 
 		&& $::pinfo{$p}{'file_format'}{$k}{'split_char'}) {
 		my $format = $::pinfo{$p}{'file_format'}{$k}{'file_format'};
