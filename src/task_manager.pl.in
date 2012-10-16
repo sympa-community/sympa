@@ -189,41 +189,14 @@ while (!$end) {
     &Log::do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
     &Log::do_log ('trace', 'processing of task %s, %s',$task->{'messagekey'},$task->{'model'});
-	
 	last if $end;
 	next unless ($task->{'date'} <= $current_date);
 	if ($task->{'object'} ne '_global') { # list task
-	    my $list = $task->{'list_object'};
-	    
-	    ## Skip closed lists
-	    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-		&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
-		$task->remove;
-		next;
-	    }
-	    
-	    ## Skip if parameter is not defined
-	    if ( $task->{'model'} eq 'sync_include') {
-		unless ($list->{'admin'}{'status'} eq 'open') {
-		    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
-		    $task->remove;
-		    next;
-		}
-	    }else {
-		unless (defined $list->{'admin'}{$task->{'model'}} && 
-			defined $list->{'admin'}{$task->{'model'}}{'name'}) {
-		    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $task->{'model'}, $task->{'label'}, $task->{'messagekey'},$task->{'id'});
-		    $task->remove;
-		    next;
-		}		
-	    }
+	    $task->check_list_task_is_valid();
 	}
 	$task->execute;
     }
-
     sleep 30;
-    #$end = 1;
-
     ## Free zombie sendmail processes
     &mail::reaper;
 }

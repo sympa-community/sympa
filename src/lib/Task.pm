@@ -1722,5 +1722,38 @@ sub sync_include {
     }    
 }
 
+sub check_list_task_is_valid {
+    my $self = shift;
+    my $list = $self->{'list_object'};
+
+    ### Check list object validity; recreate it if needed.
+
+    ## Skip closed lists
+    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
+	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	$self->remove;
+	return 0;
+    }
+
+    ## Skip if parameter is not defined
+    if ( $self->{'model'} eq 'sync_include') {
+	foreach my $source_type (grep /_include/, keys %List::pinfo ) {
+	    if ($list->{'admin'}{$source_type}) {
+		return 1;
+	    }		
+	}
+	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	$self->remove;
+	return 0;
+    }else {
+	unless (defined $list->{'admin'}{$self->{'model'}} && 
+		defined $list->{'admin'}{$self->{'model'}}{'name'}) {
+	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	    $self->remove;
+	    return 0;
+	}		
+    }
+    return 1;
+}
 ## Packages must return true.
 1;
