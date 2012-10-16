@@ -140,9 +140,6 @@ sub new {
     my $task;
     &Log::do_log('debug2', 'Task::new  messagekey = %s',$task_in_spool->{'messagekey'});
     
-    my $listname_regexp = &tools::get_regexp('listname');
-    my $host_regexp = &tools::get_regexp('host');
-    
     $task->{'messagekey'} = $task_in_spool->{'messagekey'};    
     $task->{'taskasstring'} = $task_in_spool->{'messageasstring'};    
     $task->{'date'} = $task_in_spool->{'task_date'};    
@@ -154,8 +151,10 @@ sub new {
     if ($task_in_spool->{'list'}) { # list task
 	$task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
 	$task->{'domain'} = $task->{'list_object'}{'domain'};
+	unless (defined $task->{'list_object'}) {
+	    &Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});
+	}
     }
-
     $task->{'id'} = $task->{'list_object'}{'name'};
     $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
 
@@ -257,7 +256,7 @@ sub create_required_tasks {
     my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
 			'execution_date' => 'execution_date');
     create_required_global_tasks({'data' => \%default_data,'current_date' => $current_date});
-    create_required_lists_tasks({'data' => \%default_data});
+    create_required_lists_tasks({'data' => \%default_data,'current_date' => $current_date});
 }
 
 sub create_required_global_tasks {
@@ -382,7 +381,9 @@ sub create {
     unless (defined $tt2 && $tt2->process($model_file, $Rdata, \$task_as_string)) {
 	&Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
     }
-        
+    foreach my $line (split '\n',$task_as_string) {
+	&Log::do_log('trace', 'Resulting task_as_string: %s', $line);
+    }
     if  (!check ($task_as_string)) {
 	&Log::do_log ('err', "error : syntax error in $task_as_string, you should check $model_file");
 	&Log::do_log ('notice', "Ignoring creation task request") ;
