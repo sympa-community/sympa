@@ -628,19 +628,19 @@ sub chk_cmd {
 
 sub execute {
 
-    my $task = shift;
-    my $taskasstring = $task->{'taskasstring'}; # task to execute
+    my $self = shift;
+    my $taskasstring = $self->{'taskasstring'}; # task to execute
 
     my %result; # stores the result of the chk_line subroutine
     my %vars; # list of task vars
     my $lnb = 0; # line number
 
-    &Log::do_log('trace', 'Running task id = %s, line %d with vars %s)', $task->{'messagekey'}, $lnb, join('/',  %vars));
+    &Log::do_log('trace', 'Running task id = %s, line %d with vars %s)', $self->{'messagekey'}, $lnb, join('/',  %vars));
 
-    my $label = $task->{'label'};
+    my $label = $self->{'label'};
     return undef if ($label eq 'ERROR');
 
-    &Log::do_log ('trace', "* execution of the task id = %s", $task->{'messagekey'});
+    &Log::do_log ('trace', "* execution of the task id = %s", $self->{'messagekey'});
 
     my @tasklines = split('\n',$taskasstring);
 
@@ -665,25 +665,25 @@ sub execute {
 	
 	# processing of the assignments
 	if ($result{'nature'} eq 'assignment') {
-	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task, \%vars, $lnb);
+	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $self, \%vars, $lnb);
 	    last unless defined($status);
 	}
 	
 	# processing of the commands
 	if ($result{'nature'} eq 'command') {
-	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $task, \%vars, $lnb);
+	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $self, \%vars, $lnb);
 	    last unless (defined($status) && $status >= 0);
 	}
     } 
 
     unless (defined $status) {
-	&Log::do_log('err', 'Error while processing task %s - %s (%s)  (messagekey=%s), removing it', $task->{'model'}, $task->{'label'},$task->{'id'}, $task->{'messagekey'});
-	$task->remove;
+	&Log::do_log('err', 'Error while processing task %s - %s (%s)  (messagekey=%s), removing it', $self->{'model'}, $self->{'label'},$self->{'id'}, $self->{'messagekey'});
+	$self->remove;
 	return undef;
     }
     unless ($status >= 0) {
-	&Log::do_log('notice', 'The task %s - %s (%s) is now useless. Removing it (messagekey=%s)', $task->{'model'}, $task->{'label'},$task->{'id'}, $task->{'messagekey'});
-	$task->remove;
+	&Log::do_log('notice', 'The task %s - %s (%s) is now useless. Removing it (messagekey=%s)', $self->{'model'}, $self->{'label'},$self->{'id'}, $self->{'messagekey'});
+	$self->remove;
     }
 
     return 1;

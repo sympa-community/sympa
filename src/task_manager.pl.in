@@ -218,7 +218,7 @@ while (!$end) {
 		}		
 	    }
 	}
-	&Task::execute ($task);
+	$task->execute;
     }
 
     sleep 30;
