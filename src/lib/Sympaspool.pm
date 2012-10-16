@@ -28,7 +28,6 @@ use Datasource;
 use SQLSource qw(create_db %date_format);
 use Upgrade;
 use Lock;
-use Task;
 use Scenario;
 use Fetch;
 use WebAgent;

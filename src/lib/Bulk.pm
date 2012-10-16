@@ -43,7 +43,6 @@ use Sys::Hostname;
 
 
 use Lock;
-use Task;
 use Fetch;
 use WebAgent;
 use tools;
