@@ -402,9 +402,6 @@ sub create {
 	$meta{'task_object'}= '_global' ;
     }
 
-    #my $dump = &Dumper($task_as_string); open (DUMP,">>/tmp/dumper"); printf DUMP 'DUMP\n%s',$dump ; close DUMP; 
-    #my $dump = &Dumper(\%meta); open (DUMP,">>/tmp/dumper"); printf DUMP '%s\n',$dump ; close DUMP; 
-
     &Log::do_log ('debug3', "task creation done  date: $date label: $label model: $model  model_choice: $model_choice, Rdata :$Rdata");
     $taskspool->store($task_as_string,\%meta);
     return 1;
@@ -644,12 +641,14 @@ sub execute {
 
     my @tasklines = split('\n',$taskasstring);
 
-    my $labelfound = 0;my $status;
+    my $labelfound = 0;
+    my $status;
     $labelfound = 1 if ($label eq '') ;
     
     foreach my $line (@tasklines){
 	chomp $line;
 	$lnb++;
+	## Ignore all lines until a label is found.
 	unless ($labelfound ) {
 	    chk_line ($line, \%result);
 	    if ($result{'label'} eq $label) { 
@@ -658,12 +657,13 @@ sub execute {
 		next;
 	    }
 	}
+	## Now that we have found a label, the line must contain something consistent.
 	unless ( chk_line ($line, \%result) ) {
 	    &Log::do_log ('err', "error : $result{'error'}");
 	    return undef;
 	}
 	
-	# processing of the assignments
+	# processing of the assignments: Looking for values that will be used in subsequent command.
 	if ($result{'nature'} eq 'assignment') {
 	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $self, \%vars, $lnb);
 	    last unless defined($status);
@@ -1737,14 +1737,13 @@ sub check_list_task_is_valid {
 
     ## Skip if parameter is not defined
     if ( $self->{'model'} eq 'sync_include') {
-	foreach my $source_type (grep /include/, keys %{&List::_apply_defaults()} ) {
-	    if (defined $list->{'admin'}{$source_type}) {
-		return 1;
-	    }		
+	if ($list->has_include_data_sources()) {
+	    return 1;
+	}else{
+	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	    $self->remove;
+	    return 0;
 	}
-	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
-	$self->remove;
-	return 0;
     }else {
 	unless (defined $list->{'admin'}{$self->{'model'}} && 
 		defined $list->{'admin'}{$self->{'model'}}{'name'}) {
