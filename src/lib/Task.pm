@@ -139,24 +139,30 @@ sub new {
     my($pkg,$task_in_spool) = @_;
     my $task;
     &Log::do_log('debug2', 'Task::new  messagekey = %s',$task_in_spool->{'messagekey'});
-    
-    $task->{'messagekey'} = $task_in_spool->{'messagekey'};    
-    $task->{'taskasstring'} = $task_in_spool->{'messageasstring'};    
-    $task->{'date'} = $task_in_spool->{'task_date'};    
-    $task->{'label'} = $task_in_spool->{'task_label'};    
-    $task->{'model'} = $task_in_spool->{'task_model'};    
-    $task->{'object'} = $task_in_spool->{'task_object'};    
-    $task->{'domain'} = $task_in_spool->{'robot'};    
-	
-    if ($task_in_spool->{'list'}) { # list task
-	$task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
-	$task->{'domain'} = $task->{'list_object'}{'domain'};
-	unless (defined $task->{'list_object'}) {
-	    &Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});
+
+    if ($task_in_spool) {
+	$task->{'messagekey'} = $task_in_spool->{'messagekey'};    
+	$task->{'taskasstring'} = $task_in_spool->{'messageasstring'};    
+	$task->{'date'} = $task_in_spool->{'task_date'};    
+	$task->{'label'} = $task_in_spool->{'task_label'};    
+	$task->{'model'} = $task_in_spool->{'task_model'};    
+	$task->{'object'} = $task_in_spool->{'task_object'};    
+	$task->{'domain'} = $task_in_spool->{'robot'};
+	    
+	if ($task_in_spool->{'list'}) { # list task
+	    $task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
+	    $task->{'domain'} = $task->{'list_object'}{'domain'};
+	    unless (defined $task->{'list_object'}) {
+		&Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});
+		return undef;
+	    }
+	    $task->{'id'} = $task->{'list_object'}{'name'};
+	    $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
 	}
+	$task->{'description'} = get_description($task);
+    }else {
+	$task->{'date'} = time;
     }
-    $task->{'id'} = $task->{'list_object'}{'name'};
-    $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
 
     ## Bless Task object
     bless $task, $pkg;
@@ -270,8 +276,9 @@ sub create_required_global_tasks {
     foreach my $key (keys %global_models) {	
 	&Log::do_log('debug2',"global_model : $key");
 	unless ($used_models{$global_models{$key}}) {
-	    if ($Conf::Conf{$key}) { 
-		create ($param->{'current_date'}, '', $global_models{$key}, $Conf::Conf{$key}, $data);
+	    if ($Conf::Conf{$key}) {
+		my $task = new Task;
+		$task->create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'model_choice' => $Conf::Conf{$key}, 'data' =>$data});
 		$used_models{$1} = 1;
 	    }
 	}
@@ -306,15 +313,15 @@ sub create_required_lists_tasks {
 		    if ( $model eq 'sync_include') {
 			next unless ($list->has_include_data_sources() &&
 				     ($list->{'admin'}{'status'} eq 'open'));
-
-			create ($param->{'current_date'}, 'INIT', $model, 'ttl', \%data);
+			my $task = new Task;
+			$task->create ({'creation_date' => $param->{'current_date'}, 'label' => 'INIT', 'model' => $model, 'model_choice' => 'ttl', 'data' => \%data});
 			&Log::do_log('debug3',"sync_include task ceration done");$tt++;
 			
 		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
 			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
 			    ($list->{'admin'}{'status'} eq 'open')) {
-			
-			create ($param->{'current_date'}, '', $model, $list->{'admin'}{$model_task_parameter}{'name'}, \%data);
+			my $task = new Task;
+			$task->create ({'creation_date' => $param->{'current_date'}, 'model' => $model, 'model_choice' => $list->{'admin'}{$model_task_parameter}{'name'}, 'data' => \%data});
 			$tt++;
 		    }
 		}
@@ -325,35 +332,77 @@ sub create_required_lists_tasks {
 
 ## task creations
 sub create {
-        
-    my $date          = shift;
-    my $label         = shift;
-    my $model         = shift;
-    my $model_choice  = shift;
-    my $Rdata         = shift;
 
-    &Log::do_log ('debug', "create task date: $date label: $label model: $model model_choice: $model_choice Rdata :$Rdata");
+    my $self = shift;
+    my $param = shift;
+    
+    &Log::do_log ('debug', "create task date: %s label: %s model: %s model_choice: %s Rdata :%s",$param->{'creation_date'},$param->{'label'},$param->{'model'},$param->{'model_choice'},$param->{'data'});
+    $self->{'date'}          = $param->{'creation_date'};
+    $self->{'label'}         = $param->{'label'};
+    $self->{'model'}         = $param->{'model'};
+    $self->{'model_choice'}  = $param->{'model_choice'};
+    my $Rdata         = $param->{'data'};
 
-    my $list_name;
-    my $robot;
-    my $object;
+    $Rdata->{'list'}{'ttl'} ;#= $list->{'admin'}{'ttl'};
     if (defined $Rdata->{'list'}) { 
-	$list_name = $Rdata->{'list'}{'name'};
-	$robot = $Rdata->{'list'}{'robot'};
-	# $task_file  = "$spool_task/$date.$label.$model.$list_name\@$robot";
-	$object = 'list';
+	$self->{'list'} = $Rdata->{'list'}{'name'};
+	$self->{'domain'} = $Rdata->{'list'}{'robot'};
+	$self->{'object'} = 'list';
     }
     else {
-	$object = '_global';
-	# $task_file  = $spool_task.'/'.$date.'.'.$label.'.'.$model.'.'.$object;
+	$self->{'object'} = '_global';
     }
 
     ## model recovery
+    my $model_file = $self->get_template;
+    &Log::do_log ('notice', "create task with with tt2 template $model_file");
+    
+    ## creation
+    my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
+    my $taskasstring = '';
+    unless (defined $tt2 && $tt2->process($model_file, $Rdata, \$taskasstring)) {
+	&Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
+    }
+    $self->{'taskasstring'} = $taskasstring;
+    foreach my $line (split '\n',$self->{'taskasstring'}) {
+	&Log::do_log('debug2', 'Resulting task_as_string: %s', $line);
+    }
+    if  (!$self->check) {
+	&Log::do_log ('err', "error : syntax error in $self->{'taskasstring'}, you should check $model_file");
+	&Log::do_log ('notice', "Ignoring creation task request") ;
+	return undef;
+    }
+    # task is accetable, store it in spool
+    my $taskspool = new Sympaspool('task');
+    my %meta;
+    $meta{'task_date'}=$self->{'date'};
+    $meta{'task_label'}=$self->{'label'};
+    $meta{'task_model'}=$self->{'model'};
+    $meta{'robot'}= $self->{'domain'} if $self->{'domain'};
+    if ($self->{'list'}) {
+	$meta{'list'}=$self->{'list'} ;
+	$meta{'task_object'}=$self->{'list'}.'@'.$self->{'domain'} ;
+    }else{
+	$meta{'task_object'}= '_global' ;
+    }
+
+    &Log::do_log ('debug3', "task creation done  date: $self->{'date'} label: $self->{'label'} model: $self->{'model'}  model_choice: $self->{'model_choice'}, Rdata :$Rdata");
+    unless($taskspool->store($self->{'taskasstring'},\%meta)) {
+	&Log::do_log('err','Unable to store task %s in database.',$self->get_description);
+	return 0;
+    }
+    &Log::do_log ('debug3', 'task %s successfully stored.',$self->get_description);
+    return 1;
+}
+
+sub get_template {
+    my $self = shift;
+    &Log::do_log ('debug2','Computing model file path for task %s',$self->get_description);
     my $model_file;
-    my $model_name = $model.'.'.$model_choice.'.'.'task';
+    my $model_name = $self->{'model'}.'.'.$self->{'model_choice'}.'.'.'task';
  
      # for global model
-    if ($object eq '_global') {
+    if ($self->{'object'} eq '_global') {
 	unless ($model_file = &tools::get_filename('etc',{},"global_task_models/$model_name", $Conf::Conf{'host'})) {
 	    &Log::do_log ('err', "error : unable to find $model_name, creation aborted");
 	    return undef;
@@ -361,61 +410,36 @@ sub create {
     }
 
     # for a list
-    if ($object  eq 'list') {
-	my $list = new List($list_name, $robot);
-
-	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
-
+    if ($self->{'object'}  eq 'list') {
+	my $list = new List($self->{'list'}, $self->{'domain'});
 	unless ($model_file = &tools::get_filename('etc', {},"list_task_models/$model_name", $list->{'domain'}, $list)) {
-	    &Log::do_log ('err', "error : unable to find $model_name, for list $list_name creation aborted");
+	    &Log::do_log ('err', "error : unable to find $model_name, for list $self->{'list'} creation aborted");
 	    return undef;
 	}
     }
-   
-    &Log::do_log ('notice', "create task with with tt2 template $model_file");
-    
-    ## creation
-    my $task_as_string = '';
-    my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
-
-    unless (defined $tt2 && $tt2->process($model_file, $Rdata, \$task_as_string)) {
-	&Log::do_log('err', "Failed to parse task template '%s' : %s", $model_file, $tt2->error());
-    }
-    foreach my $line (split '\n',$task_as_string) {
-	&Log::do_log('trace', 'Resulting task_as_string: %s', $line);
-    }
-    if  (!check ($task_as_string)) {
-	&Log::do_log ('err', "error : syntax error in $task_as_string, you should check $model_file");
-	&Log::do_log ('notice', "Ignoring creation task request") ;
-	return undef;
-    }
-    # task is accetable, store it in spool
-    my $taskspool = new Sympaspool('task');
-    my %meta;
-    $meta{'task_date'}=$date;
-    $meta{'task_label'}=$label;
-    $meta{'task_model'}=$model;
-    $meta{'robot'}= $robot if $robot;
-    if ($list_name) {
-	$meta{'list'}=$list_name ;
-	$meta{'task_object'}=$list_name.'@'.$robot ;
-    }else{
-	$meta{'task_object'}= '_global' ;
-    }
-
-    &Log::do_log ('debug3', "task creation done  date: $date label: $label model: $model  model_choice: $model_choice, Rdata :$Rdata");
-    $taskspool->store($task_as_string,\%meta);
-    return 1;
+    return $model_file;
 }
 
+sub get_description {
+    my $self = shift;
+    &Log::do_log ('debug3','Computing textual description for task %s.%s,',$self->{'model'},$self->{'model_choice'});
+    unless ($self->{'description'}) {
+	$self->{'description'} = sprintf '%s.%s',$self->{'model'},$self->{'object'};
+	if ($self->{'list'}) { # list task
+	    $self->{'description'} .= sprintf ' (list %s@%s)',$self->{'list'},$self->{'domain'};
+	}
+    }
+    return $self->{'description'};
+}
+    
 ### SYNTAX CHECKING SUBROUTINES ###
 
 ## check the syntax of a task
 sub check {
 
-    my $task_as_string = shift; # the task to check
+    my $self = shift; # the task to check
 
-    &Log::do_log ('debug2', "check($task_as_string)" );
+    &Log::do_log ('debug2', 'check(%s)', $self->get_description);
     my %result; # stores the result of the chk_line subroutine
     my $lnb = 0; # line number
     my %used_labels; # list of labels used as parameter in commands
@@ -423,37 +447,7 @@ sub check {
     my %used_vars; # list of vars used as parameter in commands
     my %vars; # list of declared vars
 
-    my @task_by_lines = split('\n',$task_as_string);
-
-
-    foreach my $line (@task_by_lines) {
-
-
-	chomp $line;
-	$lnb++;
-
-	next if ( $line =~ /^\s*\#/ ); 
-	unless (chk_line ($line, \%result)) {
-	    &Log::do_log ('err', "error at line $lnb : $line");
-	    &Log::do_log ('err', "$result{'error'}");
-	    return undef;
-	}
-	
-	if ( $result{'nature'} eq 'assignment' ) {
-	    if (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \%used_labels, \%used_vars)) {
-		$vars{$result{'var'}} = 1;
-	    } else {
-		return undef;}
-	}
-	
-	if ( $result{'nature'} eq 'command' ) {
-	    return undef unless (chk_cmd ($result{'command'}, $lnb, $result{'Rarguments'}, \%used_labels, \%used_vars));
-	} 
-			 
-	$labels{$result{'label'}} = 1 if ( $result{'nature'} eq 'label' );
-	
-    }
-
+    $self->parse;
     # are all labels used ?
     foreach my $label (keys %labels) {
 	&Log::do_log ('debug3', "warning : label $label exists but is not used") unless ($used_labels{$label});
@@ -485,46 +479,32 @@ sub check {
 
 ## check a task line
 sub chk_line {
+    my $param =shift;
+    &Log::do_log('debug2', 'chk_line(%s)', $param->{'line'});
 
-    my $line = $_[0];
-    my $Rhash = $_[1]; # will contain nature of line (label, command, error...)
-
-    ## just in case...
-    chomp $line;
-
-    &Log::do_log('debug2', 'chk_line(%s, %s)', $line, $Rhash->{'nature'});
+    my $line = $param->{'line'};
+    my $Rhash; # will contain nature of line (label, command, error...)
         
     $Rhash->{'nature'} = undef;
+    $Rhash->{'line_number'} = $param->{'line_number'};
   
     # empty line
     if (! $line) {
 	$Rhash->{'nature'} = 'empty line';
-	return 1;
-    }
-  
     # comment
-    if ($line =~ /^\s*\#.*/) {
+    }elsif ($line =~ /^\s*\#.*/) {
 	$Rhash->{'nature'} = 'comment';
-	return 1;
-    } 
-
     # title
-    if ($line =~ /^\s*title\...\s*(.*)\s*/i) {
+    }elsif ($line =~ /^\s*title\...\s*(.*)\s*/i) {
 	$Rhash->{'nature'} = 'title';
 	$Rhash->{'title'} = $1;
-	return 1;
-    }
-
     # label
-    if ($line =~ /^\s*\/\s*(.*)/) {
+    }elsif ($line =~ /^\s*\/\s*(.*)/) {
 	$Rhash->{'nature'} = 'label';
 	$Rhash->{'label'} = $1;
-	return 1;
-    }
-
+	return $Rhash;
     # command
-    if ($line =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
-    
+     }elsif ($line =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
 	my $command = lc ($1);
 	my @args = split (/,/, $2);
 	foreach (@args) { s/\s//g;}
@@ -532,37 +512,33 @@ sub chk_line {
 	unless ($commands{$command}) { 
 	    $Rhash->{'nature'} = 'error';
 	    $Rhash->{'error'} = "unknown command $command";
-	    return 0;
+	}else {
+	    $Rhash->{'nature'} = 'command';
+	    $Rhash->{'command'} = $command;
+
+	    # arguments recovery. no checking of their syntax !!!
+	    $Rhash->{'Rarguments'} = \@args;
 	}
-    
-	$Rhash->{'nature'} = 'command';
-	$Rhash->{'command'} = $command;
-
-	# arguments recovery. no checking of their syntax !!!
-	$Rhash->{'Rarguments'} = \@args;
-	return 1;
-    }
-  
     # assignment
-    if ($line =~ /^\s*(@\w+)\s*=\s*(.+)/) {
+    }elsif ($line =~ /^\s*(@\w+)\s*=\s*(.+)/) {
 
-	my %hash2;
-	chk_line ($2, \%hash2);
-	unless ( $asgn_commands{$hash2{'command'}} ) { 
+	my $hash2 = chk_line ({$2, $Rhash->{'line_number'}});
+	
+	unless ( $asgn_commands{$hash2->{'command'}} ) { 
 	    $Rhash->{'nature'} = 'error';
 	    $Rhash->{'error'} = "non valid assignment $2";
-	    return 0;
+	}else {
+	    $Rhash->{'nature'} = 'assignment';
+	    $Rhash->{'var'} = $1;
+	    $Rhash->{'command'} = $hash2->{'command'};
+	    $Rhash->{'Rarguments'} = $hash2->{'Rarguments'};
 	}
-	$Rhash->{'nature'} = 'assignment';
-	$Rhash->{'var'} = $1;
-	$Rhash->{'command'} = $hash2{'command'};
-	$Rhash->{'Rarguments'} = $hash2{'Rarguments'};
-	return 1;
+    }else {
+	$Rhash->{'nature'} = 'error'; 
+	$Rhash->{'error'} = 'syntax error';
     }
-
-    $Rhash->{'nature'} = 'error'; 
-    $Rhash->{'error'} = 'syntax error';
-    return 0;
+    return undef if ($Rhash->{'nature'} eq 'error');
+    return $Rhash;
 }
 
 ## check the arguments of a command 
@@ -627,114 +603,119 @@ sub chk_cmd {
 sub execute {
 
     my $self = shift;
-    my $taskasstring = $self->{'taskasstring'}; # task to execute
-
-    my %result; # stores the result of the chk_line subroutine
-    my %vars; # list of task vars
-    my $lnb = 0; # line number
-
-    &Log::do_log('debug', 'Running task id = %s, line %d with vars %s)', $self->{'messagekey'}, $lnb, join('/',  %vars));
-
-    my $label = $self->{'label'};
-    return undef if ($label eq 'ERROR');
-
-    &Log::do_log ('debug2', "* execution of the task id = %s", $self->{'messagekey'});
-
-    my @tasklines = split('\n',$taskasstring);
-
-    my $labelfound = 0;
-    my $status;
-    $labelfound = 1 if ($label eq '') ;
-    
-    foreach my $line (@tasklines){
-	chomp $line;
-	$lnb++;
-	## Ignore all lines until a label is found.
-	unless ($labelfound ) {
-	    chk_line ($line, \%result);
-	    if ($result{'label'} eq $label) { 
-		$labelfound = 1;
-	    }else{
-		next;
-	    }
-	}
-	## Now that we have found a label, the line must contain something consistent.
-	unless ( chk_line ($line, \%result) ) {
-	    &Log::do_log ('err', "error : $result{'error'}");
-	    return undef;
-	}
-	
-	# processing of the assignments: Looking for values that will be used in subsequent command.
-	if ($result{'nature'} eq 'assignment') {
-	    $status = $vars{$result{'var'}} = &cmd_process ($result{'command'}, $result{'Rarguments'}, $self, \%vars, $lnb);
-	    last unless defined($status);
-	}
-	
-	# processing of the commands
-	if ($result{'nature'} eq 'command') {
-	    $status = &cmd_process ($result{'command'}, $result{'Rarguments'}, $self, \%vars, $lnb);
-	    last unless (defined($status) && $status >= 0);
-	}
-    } 
-
-    unless (defined $status) {
-	&Log::do_log('err', 'Error while processing task %s - %s (%s)  (messagekey=%s), removing it', $self->{'model'}, $self->{'label'},$self->{'id'}, $self->{'messagekey'});
-	$self->remove;
+    &Log::do_log('debug', 'Running task id = %s, %s)', $self->{'messagekey'}, $self->get_description);
+    unless($self->parse) {
+	&Log::do_log('err','Unable to parse task %s',$self->get_description);
 	return undef;
     }
-    unless ($status >= 0) {
-	&Log::do_log('notice', 'The task %s - %s (%s) is now useless. Removing it (messagekey=%s)', $self->{'model'}, $self->{'label'},$self->{'id'}, $self->{'messagekey'});
+    unless ($self->process_all) {
+	&Log::do_log('err', 'Error while processing task %s (messagekey=%s), removing it',$self->get_description,$self->{'messagekey'});
+	$self->remove;
+	return undef;
+    }else{
+	&Log::do_log('notice', 'The task %s has been correctly executed. Removing it (messagekey=%s)', $self->get_description, $self->{'messagekey'});
 	$self->remove;
     }
-
     return 1;
 }
 
+sub parse {
+    my $self = shift;
+    &Log::do_log ('debug2', "* Parsing task id = %s : %s", $self->{'messagekey'},$self->get_description);
+    
+    my $taskasstring = $self->{'taskasstring'}; # task to execute
+    unless ($taskasstring) {
+	&Log::do_log('err','No string describing the task available in %s',$self->get_description);
+	return undef;
+    }
+    my $lnb = 0; # line number
+    foreach my $line (split('\n',$taskasstring)){
+	my $result;
+	$lnb++;
+	unless ($result = chk_line ({'line' =>$line, 'line_number' => $lnb}) ) {
+	    &Log::do_log ('err', "error : $result->{'error'}");
+	    return undef;
+	}
+	push @{$self->{'parsed_instructions'}},$result;
+    }
+    return 1;
+}
+
+sub process_all {
+    my $self = shift;
+    my $variables;
+    my $result;
+    &Log::do_log('debug','Processing all instructions found in task %s',$self->get_description);
+    foreach my $instruction (@{$self->{'parsed_instructions'}}) {
+	$instruction->{'variables'} = $variables;
+	unless ($result = $self->process_line($instruction)) {
+	    &Log::do_log('err','Error at line %s, task %s',$instruction->{'line_number'},$self->get_description);
+	    return undef;
+	}
+	if ($result->{'type'} eq 'variables') {
+	    $variables = $result->{'variables'};
+	}
+    }
+    return 1;
+}
+
+sub process_line {
+    my $self = shift;
+    my $instruction = shift;
+    my $status;
+    if ($instruction->{'nature'} eq 'assignment' || $instruction->{'nature'} eq 'command') {
+	$status = $self->cmd_process ($instruction);
+    }else{
+	$status->{'output'} = 'Nothing to compute';
+    }
+    return $status;
+}
 
 sub cmd_process {
 
-    my $command = $_[0]; # command name
-    my $Rarguments = $_[1]; # command arguments
-    my $task = $_[2]; # task
-    my $Rvars = $_[3]; # variable list of the task
-    my $lnb = $_[4]; # line number
+    my $self = shift;
+    my $instruction = shift;# The parsed instruction to execute.
+    my $command = $instruction->{'command'}; # command name
+    my $Rarguments = $instruction->{'Rarguments'};; # command arguments
+    my $Rvars = $instruction->{'variables'};; # variable list of the task
+    my $lnb = $instruction->{'line_number'}; # line number
 
-    my $taskasstring = $task->{'taskasstring'};
+    my $taskasstring = $self->{'taskasstring'};
 
     &Log::do_log('debug', 'cmd_process(%s, %d)', $command, $lnb);
 
      # building of %context
     my %context = ('line_number' => $lnb);
 
-    &Log::do_log('debug2','Current task : %s', join(':',%$task));
+    &Log::do_log('debug2','Current task : %s', join(':',%$self));
 
      # regular commands
-    return stop ($task, \%context) if ($command eq 'stop');
-    return next_cmd ($task, $Rarguments, \%context) if ($command eq 'next');
-    return create_cmd ($task, $Rarguments, \%context) if ($command eq 'create');
-    return exec_cmd ($task, $Rarguments) if ($command eq 'exec');
-    return update_crl ($task, $Rarguments, \%context) if ($command eq 'update_crl');
-    return expire_bounce ($task, $Rarguments, \%context) if ($command eq 'expire_bounce');
-    return purge_user_table ($task, \%context) if ($command eq 'purge_user_table');
-    return purge_logs_table ($task, \%context) if ($command eq 'purge_logs_table');
-    return purge_session_table ($task, \%context) if ($command eq 'purge_session_table');
-    return purge_tables ($task, \%context) if ($command eq 'purge_tables');
-    return purge_one_time_ticket_table ($task, \%context) if ($command eq 'purge_one_time_ticket_table');
-    return sync_include($task, \%context) if ($command eq 'sync_include');
-    return purge_orphan_bounces ($task, \%context) if ($command eq 'purge_orphan_bounces');
-    return eval_bouncers ($task, \%context) if ($command eq 'eval_bouncers');
-    return process_bouncers ($task, \%context) if ($command eq 'process_bouncers');
+    return stop ($self, \%context) if ($command eq 'stop');
+    return next_cmd ($self, $Rarguments, \%context) if ($command eq 'next');
+    return create_cmd ($self, $Rarguments, \%context) if ($command eq 'create');
+    return exec_cmd ($self, $Rarguments) if ($command eq 'exec');
+    return update_crl ($self, $Rarguments, \%context) if ($command eq 'update_crl');
+    return expire_bounce ($self, $Rarguments, \%context) if ($command eq 'expire_bounce');
+    return purge_user_table ($self, \%context) if ($command eq 'purge_user_table');
+    return purge_logs_table ($self, \%context) if ($command eq 'purge_logs_table');
+    return purge_session_table ($self, \%context) if ($command eq 'purge_session_table');
+    return purge_tables ($self, \%context) if ($command eq 'purge_tables');
+    return purge_one_time_ticket_table ($self, \%context) if ($command eq 'purge_one_time_ticket_table');
+    return sync_include($self, \%context) if ($command eq 'sync_include');
+    return purge_orphan_bounces ($self, \%context) if ($command eq 'purge_orphan_bounces');
+    return eval_bouncers ($self, \%context) if ($command eq 'eval_bouncers');
+    return process_bouncers ($self, \%context) if ($command eq 'process_bouncers');
 
      # commands which use a variable
-    return send_msg ($task, $Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
-    return rm_file ($task, $Rarguments, $Rvars, \%context) if ($command eq 'rm_file');
+    return send_msg ($self, $Rarguments, $Rvars, \%context) if ($command eq 'send_msg');       
+    return rm_file ($self, $Rarguments, $Rvars, \%context) if ($command eq 'rm_file');
 
      # commands which return a variable
-    return select_subs ($task, $Rarguments, \%context) if ($command eq 'select_subs');
-    return chk_cert_expiration ($task, $Rarguments, \%context) if ($command eq 'chk_cert_expiration');
+    return select_subs ($self, $Rarguments, \%context) if ($command eq 'select_subs');
+    return chk_cert_expiration ($self, $Rarguments, \%context) if ($command eq 'chk_cert_expiration');
 
      # commands which return and use a variable
-    return delete_subs_cmd ($task, $Rarguments, $Rvars, \%context) if ($command eq 'delete_subs');  
+    return delete_subs_cmd ($self, $Rarguments, $Rvars, \%context) if ($command eq 'delete_subs');  
 }
 
 
