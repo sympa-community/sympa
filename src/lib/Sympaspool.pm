@@ -391,9 +391,9 @@ sub store {
     $metadata->{'message_status'} = 'ok';
 
     my $insertpart1; my $insertpart2;
-    foreach my $meta ('list','robot','message_status','priority','date','type','subject','sender','messageid','size','headerdate','spam_status','dkim_privatekey','dkim_d','dkim_i','dkim_selector','create_list_if_needed','task_label','task_date','task_model','task_object') {
+    foreach my $meta ('list','robot','message_status','priority','date','type','subject','sender','messageid','size','headerdate','spam_status','dkim_privatekey','dkim_d','dkim_i','dkim_selector','create_list_if_needed','task_label','task_date','task_model','task_flavour','task_object') {
 	$insertpart1 = $insertpart1. ', '.$meta.'_spool';
-	$insertpart2 = $insertpart2. ', '.&SDM::quote($metadata->{$meta});   
+	$insertpart2 = $insertpart2. ', '.&SDM::quote($metadata->{$meta});
     }
     my $lock = $$.'@'.hostname() ;
 

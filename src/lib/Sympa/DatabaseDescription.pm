@@ -321,10 +321,15 @@ my %full_db_struct = (
 		'doc'=>'model of related task',
 		'order'=>23,
 	    },
+	    'task_flavour_spool' => {
+		'struct'=> 'varchar(60)',
+		'doc'=>'the declinaison of the model used with this task',
+		'order'=>24,
+	    },
 	    'task_object_spool' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'object of related task',
-		'order'=>24,
+		'order'=>25,
 	    },
 	    'dkim_privatekey_spool' => {
 		'struct'=> 'varchar(1000)',
