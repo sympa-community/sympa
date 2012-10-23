@@ -88,7 +88,7 @@ sub get_limit_clause {
 sub get_formatted_date {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Building SQL date formatting');
+    &Log::do_log('debug3','Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
 	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
     }elsif(lc($param->{'mode'}) eq 'write') {
@@ -108,7 +108,7 @@ sub get_formatted_date {
 sub is_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Checking whether field %s.%s is autoincremental',$param->{'field'},$param->{'table'});
+    &Log::do_log('debug3','Checking whether field %s.%s is autoincremental',$param->{'field'},$param->{'table'});
     my $sth;
     unless ($sth = $self->do_query("SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",$param->{'table'},$param->{'field'})) {
 	&Log::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
@@ -127,7 +127,7 @@ sub is_autoinc {
 sub set_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
+    &Log::do_log('debug3','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
     unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
 	&Log::do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
 	return undef;
@@ -162,7 +162,7 @@ sub get_tables {
 sub add_table {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Adding table %s to database %s',$param->{'table'},$self->{'db_name'});
+    &Log::do_log('debug3','Adding table %s to database %s',$param->{'table'},$self->{'db_name'});
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
 	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
@@ -182,7 +182,7 @@ sub add_table {
 sub get_fields {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Getting fields list from table %s in database %s',$param->{'table'},$self->{'db_name'});
+    &Log::do_log('debug3','Getting fields list from table %s in database %s',$param->{'table'},$self->{'db_name'});
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
@@ -207,7 +207,7 @@ sub get_fields {
 sub update_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
+    &Log::do_log('debug3','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
     my $options;
     if ($param->{'notnull'}) {
 	$options .= ' NOT NULL ';
@@ -237,7 +237,7 @@ sub update_field {
 sub add_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
+    &Log::do_log('debug3','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
     my $options;
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
@@ -270,7 +270,7 @@ sub add_field {
 sub delete_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
+    &Log::do_log('debug3','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
 
     unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
 	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -292,7 +292,7 @@ sub delete_field {
 sub get_primary_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Getting primary key for table %s',$param->{'table'});
+    &Log::do_log('debug3','Getting primary key for table %s',$param->{'table'});
 
     my %found_keys;
     my $sth;
@@ -319,7 +319,7 @@ sub get_primary_key {
 sub unset_primary_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Removing primary key from table %s',$param->{'table'});
+    &Log::do_log('debug3','Removing primary key from table %s',$param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
@@ -345,7 +345,7 @@ sub set_primary_key {
 
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
-    &Log::do_log('debug','Setting primary key for table %s (%s)',$param->{'table'},$fields);
+    &Log::do_log('debug3','Setting primary key for table %s (%s)',$param->{'table'},$fields);
     unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
 	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
@@ -366,7 +366,7 @@ sub set_primary_key {
 sub get_indexes {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Looking for indexes in %s',$param->{'table'});
+    &Log::do_log('debug3','Looking for indexes in %s',$param->{'table'});
 
     my %found_indexes;
     my $sth;
@@ -396,7 +396,7 @@ sub get_indexes {
 sub unset_index {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Removing index %s from table %s',$param->{'index'},$param->{'table'});
+    &Log::do_log('debug3','Removing index %s from table %s',$param->{'index'},$param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
@@ -423,7 +423,7 @@ sub set_index {
 
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
-    &Log::do_log('debug', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
+    &Log::do_log('debug3', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
     unless ($sth = $self->do_query("ALTER TABLE %s ADD INDEX %s (%s)",$param->{'table'}, $param->{'index_name'}, $fields)) {
 	&Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;

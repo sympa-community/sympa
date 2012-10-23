@@ -48,7 +48,7 @@ our @ISA = qw(SQLSource);
 #      - Returns undef if something went wrong.
 sub get_all_primary_keys {
     my $self = shift;
-    &Log::do_log('debug','Retrieving all primary keys in database %s',$self->{'db_name'});
+    &Log::do_log('debug3','Retrieving all primary keys in database %s',$self->{'db_name'});
     my %found_keys = undef;
     foreach my $table (@{$self->get_tables()}) {
 	unless($found_keys{$table} = $self->get_primary_key({'table'=>$table})) {
@@ -70,7 +70,7 @@ sub get_all_primary_keys {
 #      - Returns undef if something went wrong.
 sub get_all_indexes {
     my $self = shift;
-    &Log::do_log('debug','Retrieving all indexes in database %s',$self->{'db_name'});
+    &Log::do_log('debug3','Retrieving all indexes in database %s',$self->{'db_name'});
     my %found_indexes;
     foreach my $table (@{$self->get_tables()}) {
 	unless($found_indexes{$table} = $self->get_indexes({'table'=>$table})) {
@@ -106,7 +106,7 @@ sub get_all_indexes {
 sub check_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Checking %s key structure for table %s',$param->{'key_name'},$param->{'table'});
+    &Log::do_log('debug3','Checking %s key structure for table %s',$param->{'key_name'},$param->{'table'});
     my $keysFound;
     my $result;
     if (lc($param->{'key_name'}) eq 'primary') {
