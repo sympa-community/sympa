@@ -188,13 +188,13 @@ while (!$end) {
     ## processing of tasks anterior to the current date
     &Log::do_log ('debug2', 'processing of tasks anterior to the current date');
     foreach my $task ( &Task::get_task_list() ) {
-    &Log::do_log ('trace', 'processing of task %s, %s',$task->{'messagekey'},$task->get_description);
-	last if $end;
-	next unless ($task->{'date'} <= $current_date);
-	if ($task->{'object'} ne '_global') { # list task
-	    $task->check_list_task_is_valid();
-	}
-	$task->execute;
+        &Log::do_log ('debug2', 'processing of task %s, %s',$task->{'messagekey'},$task->get_description);
+        last if $end;
+        next unless ($task->{'date'} <= $current_date);
+        if ($task->{'object'} ne '_global') { # list task
+            $task->check_list_task_is_valid();
+        }
+        $task->execute;
     }
     sleep 30;
     ## Free zombie sendmail processes

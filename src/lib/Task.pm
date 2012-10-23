@@ -370,6 +370,7 @@ sub create {
 	&Log::do_log ('notice', "Ignoring creation task request") ;
 	return undef;
     }
+    $self->crop_after_label($self->{'label'});
     # task is accetable, store it in spool
     my $taskspool = new Sympaspool('task');
     my %meta;
@@ -420,6 +421,35 @@ sub get_template {
     return $model_file;
 }
 
+sub crop_after_label {
+    my $self = shift;
+    my $label = shift;
+
+    &Log::do_log('debug', 'Cropping task content to keep only the content located starting label %s',$label);
+
+    my $label_found_in_task=0; # If this variable still contains 0 at the end of the sub, that means that the label after which we want to crop does not exist in the task. We will therefore not crop anything and return the task with the same content.
+    my @new_parsed_instructions;
+    $self->parse unless (defined $self->{'parsed_instructions'} && $#{$self->{'parsed_instructions'}} > -1);
+    foreach my $line (@{$self->{'parsed_instructions'}}) {
+	if ($line->{'nature'} eq 'label' && $line->{'label'} eq $label) {
+	    $label_found_in_task=1;
+	    push @new_parsed_instructions, {'nature' => 'empty line','line_as_string' => ''};
+	}
+	if($label_found_in_task || $line->{'nature'} eq 'title') {
+	    push @new_parsed_instructions, $line;
+	}
+    }
+    unless ($label_found_in_task) {
+	&Log::do_log('err','The label %s does not exist in task %s. We can not crop after it.');
+	return undef;
+    }else {
+	$self->{'parsed_instructions'} = \@new_parsed_instructions;
+	$self->stringify_parsed_instructions;
+    }
+	
+    return 1;
+}
+
 sub get_description {
     my $self = shift;
     &Log::do_log ('debug3','Computing textual description for task %s.%s',$self->{'model'},$self->{'flavour'});
@@ -430,6 +460,43 @@ sub get_description {
 	}
     }
     return $self->{'description'};
+}
+
+sub stringify_parsed_instructions {
+    my $self = shift;
+    &Log::do_log('debug2','Resetting taskasstring key of task object from the parsed content of %s',$self->get_description);
+
+    my $new_string = $self->as_string;
+    unless (defined $new_string) {
+	&Log::do_log('err','task %s has no parsed content. Leaving taskasstring key unchanged',$self->get_description);
+	return undef;
+    }else {
+	$self->{'taskasstring'} = $new_string;
+	##if ($Log::get_log_level > 1) {
+	    &Log::do_log('debug2','task %s content regenerated. New content:',$self->get_description);
+	    foreach (split "\n",$self->{'taskasstring'}) {
+		&Log::do_log('debug2','%s',$_);
+	    }
+	##}
+    }
+    return 1;
+}
+
+sub as_string {
+    my $self = shift;
+    &Log::do_log('debug2','Generating task string from the parsed content of task %s',$self->get_description);
+
+    my $task_as_string = '';
+    if (defined $self->{'parsed_instructions'} && $#{$self->{'parsed_instructions'}} > -1) {
+	foreach my $line (@{$self->{'parsed_instructions'}}) {
+	    $task_as_string .= "$line->{'line_as_string'}\n";
+	}
+	$task_as_string =~ s/\n\n$/\n/;
+    }else {
+	&Log::do_log('err', 'Task %s appears to have no parsed instructions.');
+	$task_as_string = undef;
+    }
+    return $task_as_string;
 }
 
 sub get_short_listname {
@@ -661,6 +728,10 @@ sub process_all {
     my $result;
     &Log::do_log('debug','Processing all instructions found in task %s',$self->get_description);
     foreach my $instruction (@{$self->{'parsed_instructions'}}) {
+	if (defined $self->{'must_stop'}) {
+	    &Log::do_log('debug2','Stopping here for task %s',$self->get_description);
+	    last;
+	}
 	$instruction->{'variables'} = $variables;
 	unless ($result = $self->process_line($instruction)) {
 	    &Log::do_log('err','Error at line %s, task %s',$instruction->{'line_number'},$self->get_description);
@@ -810,6 +881,7 @@ sub next_cmd {
 
     &Log::do_log ('debug2', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
+    $task->{'must_stop'} = 1;
     my $listname = $task->{'object'};
     my $model = $task->{'model'};
 
@@ -856,7 +928,6 @@ sub next_cmd {
 
     my $human_date = &tools::adate ($date);
     &Log::do_log ('debug2', "--> new task $model ($human_date)");
-    
     return 1;
 }
 
