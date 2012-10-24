@@ -38,67 +38,10 @@ use mail;
 use Scenario;
 use Sympaspool;
 use TaskSpool;
+use TaskInstruction;
 use tools;
 use tracking;
 use tt2;
-
-###### DEFINITION OF AVAILABLE COMMANDS FOR TASKS ######
-
-our $date_arg_regexp1 = '\d+|execution_date';
-our $date_arg_regexp2 = '(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?'; 
-our $date_arg_regexp3 = '(\d+|execution_date)(\+|\-)(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?';
-our $delay_regexp = '(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?';
-our $var_regexp ='@\w+'; 
-our $subarg_regexp = '(\w+)(|\((.*)\))'; # for argument with sub argument (ie arg(sub_arg))
-                 
-# regular commands
-our %commands = ('next'                  => ['date', '\w*'],
-		                           # date   label
-                'stop'                  => [],
-		'create'                => ['subarg', '\w+', '\w+'],
-		                           #object    model  model choice
-		'exec'                  => ['.+'],
-		                           #script
-		'update_crl'            => ['\w+', 'date'], 
-		                           #file    #delay
-		'expire_bounce'         => ['\d+'],
-		                           #Number of days (delay)
-		'chk_cert_expiration'   => ['\w+', 'date'],
-		                           #template  date
-		'sync_include'          => [],
-		'purge_user_table'      => [],
-		'purge_logs_table'      => [],
-		'purge_session_table'   => [],
-		'purge_tables'   => [],
-		'purge_one_time_ticket_table'   => [],
-		'purge_orphan_bounces'  => [],
-		'eval_bouncers'         => [],
-		'process_bouncers'      => []
-		);
-
-# commands which use a variable. If you add such a command, the first parameter must be the variable
-our %var_commands = ('delete_subs'      => ['var'],
-		                          # variable 
-		    'send_msg'         => ['var',  '\w+' ],
-		                          #variable template
-		    'rm_file'          => ['var'],
-		                          # variable
-		    );
-
-foreach (keys %var_commands) {
-    $commands{$_} = $var_commands{$_};
-}                                     
- 
-# commands which are used for assignments
-our %asgn_commands = ('select_subs'      => ['subarg'],
-		                            # condition
-		     'delete_subs'      => ['var'],
-		                            # variable
-		     );
-
-foreach (keys %asgn_commands) {
-    $commands{$_} = $asgn_commands{$_};
-}                                    
 
 #### Task level subs ####
 ##########################
@@ -233,6 +176,9 @@ sub generate_from_template {
     ## creation
     my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
     my $taskasstring = '';
+    if ($self->{'model'} eq 'sync_include') {
+	$self->{'Rdata'}{'list'}{'ttl'} = $self->{'list_object'}{'admin'}{'ttl'};
+    }
     unless (defined $tt2 && $tt2->process($self->{'template'}, $self->{'Rdata'}, \$taskasstring)) {
 	&Log::do_log('err', "Failed to parse task template '%s' : %s", $self->{'template'}, $tt2->error());
 	return undef;
@@ -352,6 +298,10 @@ sub stringify_parsed_instructions {
 }
 
 ## Returns a string built from parsed isntructions or undef if no parsed instructions exist.
+## This sub reprensents what we obtain when concatenating the lines found in the parsed
+## instructions only. we don't try to save anything. If there are no parsed instructions,
+## You end up with an undef value and that's it. If you want to obtain the task as a string
+## and don't know whether the instructions were parsed before or not, use stringify_parsed_instructions().
 sub as_string {
     my $self = shift;
     &Log::do_log('debug2','Generating task string from the parsed content of task %s',$self->get_description);
@@ -463,8 +413,8 @@ sub parse {
     my $lnb = 0; # line number
     foreach my $line (split('\n',$taskasstring)){
 	$lnb++;
-	my $result = chk_line ({'line' =>$line, 'line_number' => $lnb});
-	unless ( defined $result-{'error'}) {
+	my $result = new TaskInstruction ({'line_as_string' =>$line, 'line_number' => $lnb});
+	if ( defined $result->{'error'}) {
 	    &Log::do_log ('err', "error : $result->{'error'}");
 	    return undef;
 	}
@@ -564,124 +514,6 @@ sub check_list_task_is_valid {
 
 #### Task line level subs ####
 ##############################
-
-## Parses the line of a task and returns a hash that can be executed.
-sub chk_line {
-    my $param =shift;
-    &Log::do_log('debug2', 'chk_line(%s)', $param->{'line'});
-
-    my $Rhash; # will contain nature of line (label, command, error...)
-        
-    $Rhash->{'line_as_string'} = $param->{'line'};
-    $Rhash->{'nature'} = undef;
-    $Rhash->{'line_number'} = $param->{'line_number'};
-  
-    # empty line
-    if (! $Rhash->{'line_as_string'}) {
-	$Rhash->{'nature'} = 'empty line';
-    # comment
-    }elsif ($Rhash->{'line_as_string'} =~ /^\s*\#.*/) {
-	$Rhash->{'nature'} = 'comment';
-    # title
-    }elsif ($Rhash->{'line_as_string'} =~ /^\s*title\...\s*(.*)\s*/i) {
-	$Rhash->{'nature'} = 'title';
-	$Rhash->{'title'} = $1;
-    # label
-    }elsif ($Rhash->{'line_as_string'} =~ /^\s*\/\s*(.*)/) {
-	$Rhash->{'nature'} = 'label';
-	$Rhash->{'label'} = $1;
-    # command
-     }elsif ($Rhash->{'line_as_string'} =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
-	my $command = lc ($1);
-	my @args = split (/,/, $2);
-	foreach (@args) { s/\s//g;}
-
-	unless ($commands{$command}) { 
-	    $Rhash->{'nature'} = 'error';
-	    $Rhash->{'error'} = "unknown command $command";
-	}else {
-	    $Rhash->{'nature'} = 'command';
-	    $Rhash->{'command'} = $command;
-
-	    # arguments recovery. no checking of their syntax !!!
-	    $Rhash->{'Rarguments'} = \@args;
-	}
-    # assignment
-    }elsif ($Rhash->{'line_as_string'} =~ /^\s*(@\w+)\s*=\s*(.+)/) {
-
-	my $hash2 = chk_line ({$2, $Rhash->{'line_number'}});
-	
-	unless ( $asgn_commands{$hash2->{'command'}} ) { 
-	    $Rhash->{'nature'} = 'error';
-	    $Rhash->{'error'} = "non valid assignment $2";
-	}else {
-	    $Rhash->{'nature'} = 'assignment';
-	    $Rhash->{'var'} = $1;
-	    $Rhash->{'command'} = $hash2->{'command'};
-	    $Rhash->{'Rarguments'} = $hash2->{'Rarguments'};
-	}
-    }else {
-	$Rhash->{'nature'} = 'error'; 
-	$Rhash->{'error'} = 'syntax error';
-    }
-    return $Rhash;
-}
-
-## Checks the arguments of a command 
-sub chk_cmd {
-    
-    my $cmd = $_[0]; # command name
-    my $lnb = $_[1]; # line number
-    my $Rargs = $_[2]; # argument list
-    my $Rused_labels = $_[3];
-    my $Rused_vars = $_[4];
-
-    &Log::do_log('debug2', 'chk_cmd(%s, %d, %s)', $cmd, $lnb, join(',',@{$Rargs}));
-    
-    if (defined $commands{$cmd}) {
-	
-	my @expected_args = @{$commands{$cmd}};
-	my @args = @{$Rargs};
-	
-	unless ($#expected_args == $#args) {
-	    &Log::do_log ('err', "error at line $lnb : wrong number of arguments for $cmd");
-	    &Log::do_log ('err', "args = @args ; expected_args = @expected_args");
-	    return undef;
-	}
-	
-	foreach (@args) {
-	    
-	    undef my $error;
-	    my $regexp = $expected_args[0];
-	    shift (@expected_args);
-	    
-	    if ($regexp eq 'date') {
-		$error = 1 unless ( (/^$date_arg_regexp1$/i) or (/^$date_arg_regexp2$/i) or (/^$date_arg_regexp3$/i) );
-	    }
-	    elsif ($regexp eq 'delay') {
-		$error = 1 unless (/^$delay_regexp$/i);
-	    }
-	    elsif ($regexp eq 'var') {
-		$error = 1 unless (/^$var_regexp$/i);
-	    }
-	    elsif ($regexp eq 'subarg') {
-		$error = 1 unless (/^$subarg_regexp$/i);
-	    }
-	    else {
-		$error = 1 unless (/^$regexp$/i);
-	    }
-	    
-	    if ($error) {
-		&Log::do_log ('err', "error at line $lnb : argument $_ is not valid");
-		return undef;
-	    }
-	    
-	    $Rused_labels->{$args[1]} = 1 if ($cmd eq 'next' && ($args[1]));   
-	    $Rused_vars->{$args[0]} = 1 if ($var_commands{$cmd});
-	}
-    }
-    return 1;
-}
 
 ## Executes a single parsed line of a task.
 sub process_line {
@@ -950,45 +782,45 @@ sub delete_subs_cmd {
     return \%selection;
 }
 
-sub create_cmd {
-
-    my ($task, $Rarguments, $context) = @_;
-
-    my @tab = @{$Rarguments};
-    my $arg = $tab[0];
-    my $model = $tab[1];
-    my $flavour = $tab[2];
-
-    &Log::do_log ('notice', "line $context->{'line_number'} : create ($arg, $model, $flavour)");
-
-    # recovery of the object type and object
-    my $type;
-    my $object;
-    if ($arg =~ /$subarg_regexp/) {
-	$type = $1;
-	$object = $3;
-    } else {
-	error ($task->{'messagekey'}, "error in create command : don't know how to create $arg");
-	return undef;
-    }
-
-    # building of the data hash necessary to the create subroutine
-    my %data = ('creation_date'  => $task->{'date'},
-		'execution_date' => 'execution_date');
-
-    if ($type eq 'list') {
-	my $list = new List ($object);
-	$data{'list'}{'name'} = $list->{'name'};
-    }
-    $type = '_global';
-    unless (create ($task->{'date'}, '', $model, $flavour, \%data)) {
-	error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
-	return undef;
-    }
-    
-    return 1;
-}
-
+##sub create_cmd {
+##
+    ##my ($task, $Rarguments, $context) = @_;
+##
+    ##my @tab = @{$Rarguments};
+    ##my $arg = $tab[0];
+    ##my $model = $tab[1];
+    ##my $flavour = $tab[2];
+##
+    ##&Log::do_log ('notice', "line $context->{'line_number'} : create ($arg, $model, $flavour)");
+##
+    ### recovery of the object type and object
+    ##my $type;
+    ##my $object;
+    ##if ($arg =~ /$subarg_regexp/) {
+	##$type = $1;
+	##$object = $3;
+    ##} else {
+	##error ($task->{'messagekey'}, "error in create command : don't know how to create $arg");
+	##return undef;
+    ##}
+##
+    ### building of the data hash necessary to the create subroutine
+    ##my %data = ('creation_date'  => $task->{'date'},
+		##'execution_date' => 'execution_date');
+##
+    ##if ($type eq 'list') {
+	##my $list = new List ($object);
+	##$data{'list'}{'name'} = $list->{'name'};
+    ##}
+    ##$type = '_global';
+    ##unless (create ($task->{'date'}, '', $model, $flavour, \%data)) {
+	##error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
+	##return undef;
+    ##}
+    ##
+    ##return 1;
+##}
+##
 sub exec_cmd {
 
     my ($task, $Rarguments, $context) = @_;
