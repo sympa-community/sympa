@@ -45,48 +45,111 @@ our $var_regexp ='@\w+';
 our $subarg_regexp = '(\w+)(|\((.*)\))'; # for argument with sub argument (ie arg(sub_arg))
                  
 # regular commands
-our %commands = ('next'                  => ['date', '\w*'],
-		                           # date   label
-                'stop'                  => [],
-		'create'                => ['subarg', '\w+', '\w+'],
-		                           #object    model  model choice
-		'exec'                  => ['.+'],
-		                           #script
-		'update_crl'            => ['\w+', 'date'], 
-		                           #file    #delay
-		'expire_bounce'         => ['\d+'],
-		                           #Number of days (delay)
-		'chk_cert_expiration'   => ['\w+', 'date'],
-		                           #template  date
-		'sync_include'          => [],
-		'purge_user_table'      => [],
-		'purge_logs_table'      => [],
-		'purge_session_table'   => [],
-		'purge_tables'   => [],
-		'purge_one_time_ticket_table'   => [],
-		'purge_orphan_bounces'  => [],
-		'eval_bouncers'         => [],
-		'process_bouncers'      => []
+our %commands = ('next'          		=>	{
+											'args' =>['date', '\w*'],
+													# date   label
+											'sub' => \&next_cmd,
+											},
+                'stop'                  =>	{
+											'args' => [],
+											'sub' => \&stop,
+											},
+				'create'                =>	{
+											'args' => ['subarg', '\w+', '\w+'],
+														#object    model  model choice
+											'sub' => \&create_cmd,
+											},
+				'exec'                  =>	{
+											'args' => ['.+'],
+													#script
+											'sub' => \&exec_cmd,
+											},
+				'update_crl'            =>	{
+											'args' => ['\w+', 'date'], 
+														#file    #delay
+											'sub' => \&update_crl,
+											},
+				'expire_bounce'         =>	{
+											'args' => ['\d+'],
+													#Number of days (delay)
+											'sub' => \&expire_bounce,
+											},
+				'chk_cert_expiration'   =>	{
+											'args' => ['\w+', 'date'],
+														#template  date
+											'sub' => \&chk_cert_expiration,
+											},
+				'sync_include'          =>	{
+											'args' => [],
+											'sub' => \&sync_include,
+											},
+				'purge_user_table'      =>	{
+											'args' => [],
+											'sub' => \&purge_user_table,
+											},
+				'purge_logs_table'      =>	{
+											'args' => [],
+											'sub' => \&purge_logs_table,
+											},
+				'purge_session_table'   =>	{
+											'args' => [],
+											'sub' => \&purge_session_table,
+											},
+				'purge_tables'   		=>	{
+											'args' => [],
+											'sub' => \&purge_tables,
+											},
+				'purge_one_time_ticket_table'   =>	{
+											'args' => [],
+											'sub' => \&purge_one_time_ticket_table,
+											},
+				'purge_orphan_bounces'  =>	{
+											'args' => [],
+											'sub' => \&purge_orphan_bounces,
+											},
+				'eval_bouncers'         =>	{
+											'args' => [],
+											'sub' => \&eval_bouncers,
+											},
+				'process_bouncers'      =>	{
+											'args' => [],
+											'sub' => \&process_bouncers,
+											},
 		);
 
 # commands which use a variable. If you add such a command, the first parameter must be the variable
-our %var_commands = ('delete_subs'      => ['var'],
-		                          # variable 
-		    'send_msg'         => ['var',  '\w+' ],
-		                          #variable template
-		    'rm_file'          => ['var'],
-		                          # variable
+our %var_commands = ('delete_subs'      =>	{
+											'args' => ['var'],
+													# variable 
+											'sub' => \&delete_subs_cmd,
+											},
+					'send_msg'         =>	{
+											'args' => ['var',  '\w+' ],
+													#variable template
+											'sub' => \&send_msg,
+											},
+					'rm_file'          =>	{
+											'args' => ['var'],
+													# variable
+											'sub' => \&rm_file,
+											},
 		    );
 
 foreach (keys %var_commands) {
     $commands{$_} = $var_commands{$_};
-}                                     
- 
+}
+
 # commands which are used for assignments
-our %asgn_commands = ('select_subs'      => ['subarg'],
-		                            # condition
-		     'delete_subs'      => ['var'],
-		                            # variable
+our %asgn_commands = ('select_subs'      =>	{
+											'args' => ['subarg'],
+													# condition
+											'sub' => \&select_subs,
+											},
+					'delete_subs'      =>	{
+											'args' => ['var'],
+													# variable
+											'sub' => \&delete_subs_cmd,
+											},
 		     );
 
 foreach (keys %asgn_commands) {
@@ -170,7 +233,7 @@ sub chk_cmd {
     
     if (defined $commands{$self->{'command'}}) {
 	
-	my @expected_args = @{$commands{$self->{'command'}}};
+	my @expected_args = @{$commands{$self->{'command'}}{'args'}};
 	my @args = @{$self->{'Rarguments'}};
 	
 	unless ($#expected_args == $#args) {
@@ -222,36 +285,9 @@ sub cmd_process {
     my $taskasstring = $task->{'taskasstring'};
 
     &Log::do_log('debug', 'Processing "%s" (line %d of task %s)', $self->{'line_as_string'}, $self->{'line_number'},$task->get_description);
-    # building of %context
-    my %context = ('line_number' => $self->{'line_number'});
 
-     # regular commands
-    return stop ($task, \%context) if ($self->{'command'} eq 'stop');
-    return next_cmd ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'next');
-    return create_cmd ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'create');
-    return exec_cmd ($task, $self->{'Rarguments'}) if ($self->{'command'} eq 'exec');
-    return update_crl ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'update_crl');
-    return expire_bounce ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'expire_bounce');
-    return purge_user_table ($task, \%context) if ($self->{'command'} eq 'purge_user_table');
-    return purge_logs_table ($task, \%context) if ($self->{'command'} eq 'purge_logs_table');
-    return purge_session_table ($task, \%context) if ($self->{'command'} eq 'purge_session_table');
-    return purge_tables ($task, \%context) if ($self->{'command'} eq 'purge_tables');
-    return purge_one_time_ticket_table ($task, \%context) if ($self->{'command'} eq 'purge_one_time_ticket_table');
-    return sync_include($task, \%context) if ($self->{'command'} eq 'sync_include');
-    return purge_orphan_bounces ($task, \%context) if ($self->{'command'} eq 'purge_orphan_bounces');
-    return eval_bouncers ($task, \%context) if ($self->{'command'} eq 'eval_bouncers');
-    return process_bouncers ($task, \%context) if ($self->{'command'} eq 'process_bouncers');
-
-     # commands which use a variable
-    return send_msg ($task, $self->{'Rarguments'}, $self->{'variables'}, \%context) if ($self->{'command'} eq 'send_msg');       
-    return rm_file ($task, $self->{'Rarguments'}, $self->{'variables'}, \%context) if ($self->{'command'} eq 'rm_file');
-
-     # commands which return a variable
-    return select_subs ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'select_subs');
-    return chk_cert_expiration ($task, $self->{'Rarguments'}, \%context) if ($self->{'command'} eq 'chk_cert_expiration');
-
-     # commands which return and use a variable
-    return delete_subs_cmd ($task, $self->{'Rarguments'}, $self->{'variables'}, \%context) if ($self->{'command'} eq 'delete_subs');  
+	# regular commands
+	return &{$commands{$self->{'command'}}{'sub'}}($self,$task);
 }
 
 ### command subroutines ###
@@ -259,13 +295,13 @@ sub cmd_process {
 # remove files whose name is given in the key 'file' of the hash
 sub rm_file {
     
-    my ($task, $Rarguments,$Rvars, $context) = @_;
+    my ($self,$task) = @_;
     
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $var = $tab[0];
 
-    foreach my $key (keys %{$Rvars->{$var}}) {
-	my $file = $Rvars->{$var}{$key}{'file'};
+    foreach my $key (keys %{$self->{'variables'}{$var}}) {
+	my $file = $self->{'variables'}{$var}{$key}{'file'};
 	next unless ($file);
 	unless (unlink ($file)) {
 	    error ($task->{'filepath'}, "error in rm_file command : unable to remove $file");
@@ -278,9 +314,9 @@ sub rm_file {
 
 sub stop {
     
-    my ($task, $context) = @_;
+    my ($self,$task) = @_;
 
-    &Log::do_log ('notice', "$context->{'line_number'} : stop $task->{'messagekey'}");
+    &Log::do_log ('notice', "$self->{'line_number'} : stop $task->{'messagekey'}");
     
     unless ($task->remove) {
 	error ($task->{'messagekey'}, "error in stop command : unable to delete task $task->{'messagekey'}");
@@ -290,18 +326,18 @@ sub stop {
 
 sub send_msg {
         
-    my ($task, $Rarguments, $Rvars, $context) = @_;
+    my ($self,$task) = @_;
     
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $template = $tab[1];
     my $var = $tab[0];
     
-    &Log::do_log ('notice', "line $context->{'line_number'} : send_msg (@{$Rarguments})");
+    &Log::do_log ('notice', "line $self->{'line_number'} : send_msg (@{$self->{'Rarguments'}})");
 
     if ($task->{'object'} eq '_global') {
 
-	foreach my $email (keys %{$Rvars->{$var}}) {
-	    unless (&List::send_global_file ($template, $email, ,'',$Rvars->{$var}{$email}) ) {
+	foreach my $email (keys %{$self->{'variables'}{$var}}) {
+	    unless (&List::send_global_file ($template, $email, ,'',$self->{'variables'}{$var}{$email}) ) {
 		&Log::do_log ('notice', "Unable to send template $template to $email");
 	    }else{
 		&Log::do_log ('notice', "--> message sent to $email");
@@ -309,8 +345,8 @@ sub send_msg {
 	}
     } else {
 	my $list = $task->{'list_object'};
-	foreach my $email (keys %{$Rvars->{$var}}) {
-	    unless ($list->send_file ($template, $email, $list->{'domain'}, $Rvars->{$var}{$email}))  {
+	foreach my $email (keys %{$self->{'variables'}{$var}}) {
+	    unless ($list->send_file ($template, $email, $list->{'domain'}, $self->{'variables'}{$var}{$email}))  {
 		&Log::do_log ('notice', "Unable to send template $template to $email");
 	    }else{
 		&Log::do_log ('notice', "--> message sent to $email");
@@ -322,13 +358,13 @@ sub send_msg {
 
 sub next_cmd {
         
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
     
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $date = &tools::epoch_conv ($tab[0], $task->{'date'}); # conversion of the date argument into epoch format
     my $label = $tab[1];
 
-    &Log::do_log ('debug2', "line $context->{'line_number'} of $task->{'model'} : next ($date, $label)");
+    &Log::do_log ('debug2', "line $self->{'line_number'} of $task->{'model'} : next ($date, $label)");
 
     $task->{'must_stop'} = 1;
     my $listname = $task->{'object'};
@@ -382,12 +418,12 @@ sub next_cmd {
 
 sub select_subs {
 
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
 
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $condition = $tab[0];
  
-    &Log::do_log ('debug2', "line $context->{'line_number'} : select_subs ($condition)");
+    &Log::do_log ('debug2', "line $self->{'line_number'} : select_subs ($condition)");
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) { # conversion of the date argument into epoch format
 	my $date = &tools::epoch_conv ($2, $task->{'date'});
@@ -427,18 +463,18 @@ sub select_subs {
 
 sub delete_subs_cmd {
 
-    my ($task, $Rarguments, $Rvars,  $context) = @_;
+    my ($self,$task) = @_;
 
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $var = $tab[0];
 
-    &Log::do_log ('notice', "line $context->{'line_number'} : delete_subs ($var)");
+    &Log::do_log ('notice', "line $self->{'line_number'} : delete_subs ($var)");
 
     
     my $list = $task->{'list_object'};
     my %selection; # hash of subscriber emails who are successfully deleted
 
-    foreach my $email (keys %{$Rvars->{$var}}) {
+    foreach my $email (keys %{$self->{'variables'}{$var}}) {
 
 	&Log::do_log ('notice', "email : $email");
 	my $result = $list->check_list_authz('del', 'smime',
@@ -461,14 +497,14 @@ sub delete_subs_cmd {
 
 sub create_cmd {
 
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
 
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $arg = $tab[0];
     my $model = $tab[1];
     my $flavour = $tab[2];
 
-    &Log::do_log ('notice', "line $context->{'line_number'} : create ($arg, $model, $flavour)");
+    &Log::do_log ('notice', "line $self->{'line_number'} : create ($arg, $model, $flavour)");
 
     # recovery of the object type and object
     my $type;
@@ -500,12 +536,12 @@ sub create_cmd {
 
 sub exec_cmd {
 
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
 
-    my @tab = @{$Rarguments};
+    my @tab = @{$self->{'Rarguments'}};
     my $file = $tab[0];
 
-    &Log::do_log ('notice', "line $context->{'line_number'} : exec ($file)");
+    &Log::do_log ('notice', "line $self->{'line_number'} : exec ($file)");
     system ($file);
     
     return 1;
@@ -513,7 +549,7 @@ sub exec_cmd {
 
 sub purge_logs_table {
     # If a log is older then $list->get_latest_distribution_date()-$delai expire the log
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
     my $date;
     my $execution_date = $task->{'date'};
     my @slots = ();
@@ -558,6 +594,7 @@ sub purge_logs_table {
 ## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}
 sub purge_session_table {    
 
+    my ($self,$task) = @_;
     &Log::do_log('info','task_manager::purge_session_table()');
     require SympaSession;
 
@@ -573,6 +610,7 @@ sub purge_session_table {
 ## remove messages from bulkspool table when no more packet have any pointer to this message
 sub purge_tables {    
 
+    my ($self,$task) = @_;
     &Log::do_log('info','task_manager::purge_tables()');
     require SympaSession;
     my $removed = &Bulk::purge_bulkspool();
@@ -596,6 +634,7 @@ sub purge_tables {
 ## remove one time ticket table if older than $Conf::Conf{'one_time_ticket_table_ttl'}
 sub purge_one_time_ticket_table {    
 
+    my ($self,$task) = @_;
     &Log::do_log('info','task_manager::purge_one_time_ticket_table()');
     my $removed = &SympaSession::purge_old_tickets('*');
     unless(defined $removed) {
@@ -607,7 +646,7 @@ sub purge_one_time_ticket_table {
 }
 
 sub purge_user_table {
-    my ($task, $Rarguments, $context) = @_;
+    my ($self,$task) = @_;
     &Log::do_log('debug2','purge_user_table()');
 
     ## Load user_table entries
@@ -672,7 +711,7 @@ sub purge_user_table {
 
 ## Subroutine which remove bounced message of no-more known users
 sub purge_orphan_bounces {
-    my($task, $context) = @_;
+    my ($self,$task) = @_;
     
     &Log::do_log('info','purge_orphan_bounces()');
     
@@ -729,10 +768,10 @@ sub purge_orphan_bounces {
  sub expire_bounce {
      # If a bounce is older then $list->get_latest_distribution_date()-$delai expire the bounce
      # Is this variable my be set in to task modele ?
-     my ($task, $Rarguments, $context) = @_;
+     my ($self,$task) = @_;
 
      my $execution_date = $task->{'date'};
-     my @tab = @{$Rarguments};
+     my @tab = @{$self->{'Rarguments'}};
      my $delay = $tab[0];
 
      &Log::do_log('debug2','expire_bounce(%d)',$delay);
@@ -787,15 +826,15 @@ sub purge_orphan_bounces {
 
  sub chk_cert_expiration {
 
-     my ($task, $Rarguments, $context) = @_;
+     my ($self,$task) = @_;
 
     my $cert_dir = &Conf::get_robot_conf('*','ssl_cert_dir');
      my $execution_date = $task->{'date'};
-     my @tab = @{$Rarguments};
+     my @tab = @{$self->{'Rarguments'}};
      my $template = $tab[0];
      my $limit = &tools::duration_conv ($tab[1], $execution_date);
 
-     &Log::do_log ('notice', "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})");
+     &Log::do_log ('notice', "line $self->{'line_number'} : chk_cert_expiration (@{$self->{'Rarguments'}})");
 
      ## building of certificate list
      unless (opendir(DIR, $cert_dir)) {
@@ -886,12 +925,12 @@ sub purge_orphan_bounces {
  ## attention, j'ai n'ai pas pu comprendre les retours d'erreurs des commandes wget donc pas de verif sur le bon fonctionnement de cette commande
  sub update_crl {
 
-     my ($task, $Rarguments, $context) = @_;
+     my ($self,$task) = @_;
 
-     my @tab = @{$Rarguments};
+     my @tab = @{$self->{'Rarguments'}};
      my $limit = &tools::epoch_conv ($tab[1], $task->{'date'});
      my $CA_file = "$Conf::Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
-     &Log::do_log ('notice', "line $context->{'line_number'} : update_crl (@tab)");
+     &Log::do_log ('notice', "line $self->{'line_number'} : update_crl (@tab)");
 
      # building of CA list
      my @CA;
@@ -966,7 +1005,7 @@ sub purge_orphan_bounces {
  # give a score for each bouncing user
 sub eval_bouncers {
     #################       
-    my ($task, $context) = @_;
+    my ($self,$task) = @_;
     
     my $all_lists = &List::get_lists('*');
     foreach my $list (@$all_lists) {
@@ -1012,7 +1051,7 @@ sub none {
 ##
 sub process_bouncers {
 ###################
-    my ($task,$context) = @_;
+    my ($self,$task) = @_;
     &Log::do_log('info','Processing automatic actions on bouncing users'); 
 
 ###########################################################################
@@ -1173,7 +1212,7 @@ sub get_score {
 }
 
 sub sync_include {
-    my ($task, $context) = @_;
+    my ($self,$task) = @_;
 
     &Log::do_log('debug2', 'sync_include(%s)', $task->{'id'});
 
