@@ -129,59 +129,14 @@ our %asgn_commands = ('select_subs'      => ['subarg'],
 foreach (keys %asgn_commands) {
     $commands{$_} = $asgn_commands{$_};
 }                                    
-     
+
+#### Spool level subs ####
+##########################
+
+# Initialize Sympaspool global object.
 sub set_spool {
     $taskspool = new Sympaspool('task');
 }
-
-## Creates a new Task object
-sub new {
-    my($pkg,$task_in_spool) = @_;
-    my $task;
-    &Log::do_log('debug2', 'Task::new  messagekey = %s',$task_in_spool->{'messagekey'});
-
-    if ($task_in_spool) {
-	$task->{'messagekey'} = $task_in_spool->{'messagekey'};    
-	$task->{'taskasstring'} = $task_in_spool->{'messageasstring'};    
-	$task->{'date'} = $task_in_spool->{'task_date'};    
-	$task->{'label'} = $task_in_spool->{'task_label'};    
-	$task->{'model'} = $task_in_spool->{'task_model'};    
-	$task->{'flavour'} = $task_in_spool->{'task_flavour'};    
-	$task->{'object'} = $task_in_spool->{'task_object'};    
-	$task->{'domain'} = $task_in_spool->{'robot'};
-	    
-	if ($task_in_spool->{'list'}) { # list task
-	    $task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
-	    $task->{'domain'} = $task->{'list_object'}{'domain'};
-	    unless (defined $task->{'list_object'}) {
-		&Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});
-		return undef;
-	    }
-	    $task->{'id'} = $task->{'list_object'}{'name'};
-	    $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
-	}
-	$task->{'description'} = get_description($task);
-    }else {
-	$task->{'date'} = time;
-    }
-
-    ## Bless Task object
-    bless $task, $pkg;
-
-    return $task;
-}
-
-
-##remove a task using message key
-sub remove {
-    my $self = shift;
-    &Log::do_log('debug',"Removing task '%s'",$self->{'messagekey'});
-    unless ($taskspool->remove_message({'messagekey'=>$self->{'messagekey'}})){
-	&Log::do_log('err', 'Unable to remove task (messagekey = %s)', $self->{'messagekey'});
-	return undef;
-    }
-}
-
 
 ## Build all Task objects
 sub list_tasks {
@@ -220,6 +175,7 @@ sub get_tasks_by_list {
     return values %{$task_by_list{$list_id}};
 }
 
+## Returns a hash containing the model used. The models returned are all the global models or, if a list name is given as argument, the models used for this list.
 sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
@@ -239,13 +195,13 @@ sub get_used_models {
     }
 }
 
+## Returns a ref to @task_list, previously defined in the "list_task" sub.
 sub get_task_list {
     &Log::do_log('debug',"Getting tasks list");
     return @task_list;
 }
 
-####### SUBROUTINES #######
-
+## Checks that all the required tasks at the server level are defined. Create them if needed.
 sub create_required_tasks {
     my $current_date = shift;
     &Log::do_log('debug','Creating required tasks from models');
@@ -255,6 +211,7 @@ sub create_required_tasks {
     create_required_lists_tasks({'data' => \%default_data,'current_date' => $current_date});
 }
 
+## Checks that all the required GLOBAL tasks at the serever level are defined. Create them if needed.
 sub create_required_global_tasks {
     my $param = shift;
     my $data = $param->{'data'};
@@ -278,6 +235,7 @@ sub create_required_global_tasks {
     }
 }
 
+## Checks that all the required LIST tasks are defined. Create them if needed.
 sub create_required_lists_tasks {
     my $param = shift;
     &Log::do_log('debug','Creating required tasks from list models');
@@ -327,7 +285,48 @@ sub create_required_lists_tasks {
     }
 }
 
-## task creations
+#### Task level subs ####
+##########################
+
+## Creates a new Task object
+sub new {
+    my($pkg,$task_in_spool) = @_;
+    my $task;
+    &Log::do_log('debug2', 'Task::new  messagekey = %s',$task_in_spool->{'messagekey'});
+
+    if ($task_in_spool) {
+	$task->{'messagekey'} = $task_in_spool->{'messagekey'};    
+	$task->{'taskasstring'} = $task_in_spool->{'messageasstring'};    
+	$task->{'date'} = $task_in_spool->{'task_date'};    
+	$task->{'label'} = $task_in_spool->{'task_label'};    
+	$task->{'model'} = $task_in_spool->{'task_model'};    
+	$task->{'flavour'} = $task_in_spool->{'task_flavour'};    
+	$task->{'object'} = $task_in_spool->{'task_object'};    
+	$task->{'domain'} = $task_in_spool->{'robot'};
+	    
+	if ($task_in_spool->{'list'}) { # list task
+	    $task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
+	    $task->{'domain'} = $task->{'list_object'}{'domain'};
+	    unless (defined $task->{'list_object'}) {
+		&Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});
+		return undef;
+	    }
+	    $task->{'id'} = $task->{'list_object'}{'name'};
+	    $task->{'id'} .= '@'.$task->{'domain'} if (defined $task->{'domain'});
+	}
+	$task->{'description'} = get_description($task);
+    }else {
+	$task->{'date'} = time;
+    }
+
+    ## Bless Task object
+    bless $task, $pkg;
+
+    return undef unless $task->parse;
+    return $task;
+}
+
+## task creation in spool
 sub create {
     my $param = shift;
     
@@ -371,6 +370,7 @@ sub create {
     return 1;
 }
 
+## Sets and returns the path to the file that must be used to generate the task as string.
 sub get_template {
     my $self = shift;
     &Log::do_log ('debug2','Computing model file path for task %s',$self->get_description);
@@ -405,6 +405,7 @@ sub get_template {
     return $self->{'template'};
 }
 
+## Uses the template of this task to generate the task as string.
 sub generate_from_template {
     my $self = shift;
     &Log::do_log ('debug', "Generate task content with tt2 template %s",$self->{'template'});
@@ -432,6 +433,8 @@ sub generate_from_template {
     &Log::do_log('debug2', 'Resulting task_as_string: %s', $self->as_string);
     return 1;
 }
+
+# Chop whetever content the task as string could contain (except titles) before the label of the task.
 sub crop_after_label {
     my $self = shift;
     my $label = shift;
@@ -461,6 +464,7 @@ sub crop_after_label {
     return 1;
 }
 
+## Stores the task to database
 sub store {
     my $self = shift;
 
@@ -488,6 +492,17 @@ sub store {
     return 1;
 }
 
+## Removes a task using message key
+sub remove {
+    my $self = shift;
+    &Log::do_log('debug',"Removing task '%s'",$self->{'messagekey'});
+    unless ($taskspool->remove_message({'messagekey'=>$self->{'messagekey'}})){
+	&Log::do_log('err', 'Unable to remove task (messagekey = %s)', $self->{'messagekey'});
+	return undef;
+    }
+}
+
+## Builds a string giving the name of the model of the task, along with its flavour and, if the task is in list context, the name of the list.
 sub get_description {
     my $self = shift;
     &Log::do_log ('debug3','Computing textual description for task %s.%s',$self->{'model'},$self->{'flavour'});
@@ -500,6 +515,7 @@ sub get_description {
     return $self->{'description'};
 }
 
+## Uses the parsed instructions to build a new task as string. If no parsed instructions are found, returns the original task as string.
 sub stringify_parsed_instructions {
     my $self = shift;
     &Log::do_log('debug2','Resetting taskasstring key of task object from the parsed content of %s',$self->get_description);
@@ -520,6 +536,7 @@ sub stringify_parsed_instructions {
     return 1;
 }
 
+## Returns a string built from parsed isntructions or undef if no parsed instructions exist.
 sub as_string {
     my $self = shift;
     &Log::do_log('debug2','Generating task string from the parsed content of task %s',$self->get_description);
@@ -537,6 +554,7 @@ sub as_string {
     return $task_as_string;
 }
 
+## Returns the local part of the list name of the task if the task is in list context, undef otherwise.
 sub get_short_listname {
     my $self = shift;
     if (defined $self->{'list_object'}) {
@@ -544,7 +562,8 @@ sub get_short_listname {
     }
     return undef;
 }
-    
+
+## Returns the full list name of the task if the task is in list context, undef otherwise.
 sub get_full_listname {
     my $self = shift;
     if (defined $self->{'list_object'}) {
@@ -553,9 +572,7 @@ sub get_full_listname {
     return undef;
 }
     
-### SYNTAX CHECKING SUBROUTINES ###
-
-## check the syntax of a task
+## Check the syntax of a task
 sub check {
 
     my $self = shift; # the task to check
@@ -598,7 +615,142 @@ sub check {
     return 1;
 }
 
-## check a task line
+## Executes the task
+sub execute {
+
+    my $self = shift;
+    &Log::do_log('debug', 'Running task id = %s, %s)', $self->{'messagekey'}, $self->get_description);
+    unless($self->parse) {
+	&Log::do_log('err','Unable to parse task %s',$self->get_description);
+	return undef;
+    }
+    unless ($self->process_all) {
+	&Log::do_log('err', 'Error while processing task %s (messagekey=%s), removing it',$self->get_description,$self->{'messagekey'});
+	$self->remove;
+	return undef;
+    }else{
+	&Log::do_log('notice', 'The task %s has been correctly executed. Removing it (messagekey=%s)', $self->get_description, $self->{'messagekey'});
+	$self->remove;
+    }
+    return 1;
+}
+
+## Parses the task as string into parsed instructions.
+sub parse {
+    my $self = shift;
+    &Log::do_log ('debug2', "* Parsing task id = %s : %s", $self->{'messagekey'},$self->get_description);
+    
+    my $taskasstring = $self->{'taskasstring'}; # task to execute
+    unless ($taskasstring) {
+	&Log::do_log('err','No string describing the task available in %s',$self->get_description);
+	return undef;
+    }
+    my $lnb = 0; # line number
+    foreach my $line (split('\n',$taskasstring)){
+	$lnb++;
+	my $result = chk_line ({'line' =>$line, 'line_number' => $lnb});
+	unless ( defined $result-{'error'}) {
+	    &Log::do_log ('err', "error : $result->{'error'}");
+	    return undef;
+	}
+	push @{$self->{'parsed_instructions'}},$result;
+    }
+    return 1;
+}
+
+## Processes all parsed instructions sequentially.
+sub process_all {
+    my $self = shift;
+    my $variables;
+    my $result;
+    &Log::do_log('debug','Processing all instructions found in task %s',$self->get_description);
+    foreach my $instruction (@{$self->{'parsed_instructions'}}) {
+	if (defined $self->{'must_stop'}) {
+	    &Log::do_log('debug2','Stopping here for task %s',$self->get_description);
+	    last;
+	}
+	$instruction->{'variables'} = $variables;
+	unless ($result = $self->process_line($instruction)) {
+	    &Log::do_log('err','Error while executing %s at line %s, task %s',$instruction->{'line_as_string'},$instruction->{'line_number'},$self->get_description);
+	    return undef;
+	}
+	if (ref $result && $result->{'type'} eq 'variables') {
+	    $variables = $result->{'variables'};
+	}
+    }
+    return 1;
+}
+
+## Changes the label of a task file
+sub change_label {
+    my $task_file = $_[0];
+    my $new_label = $_[1];
+    
+    my $new_task_file = $task_file;
+    $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
+
+    if (rename ($task_file, $new_task_file)) {
+	&Log::do_log ('notice', "$task_file renamed in $new_task_file");
+	return 1;
+    } else {
+	&Log::do_log ('err', "error ; can't rename $task_file in $new_task_file");
+	return undef;
+    }
+}
+
+## send a error message to list-master, log it, and change the label task into 'ERROR' 
+sub error {
+    my $task_id = $_[0];
+    my $message = $_[1];
+
+    my @param;
+    $param[0] = "An error has occured during the execution of the task $task_id :
+                 $message";
+    &Log::do_log ('err', "Error in task: $message");
+    change_label ($task_id, 'ERROR') unless ($task_id eq '');
+    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, \@param)) {
+    	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
+    }
+}
+
+## Check that a task in list context is still legitimate. for example, a list whose all datasource inclusions parameters would have been removed should not keep a sync_include task.
+sub check_list_task_is_valid {
+    my $self = shift;
+    my $list = $self->{'list_object'};
+    &Log::do_log('debug','Checking %s task validity for list %s@%s',$self->{'model'},$list->{'name'},$list->{'domain'});
+    ### Check list object validity; recreate it if needed.
+
+    ## Skip closed lists
+    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
+	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	$self->remove;
+	return 0;
+    }
+
+    ## Skip if parameter is not defined
+    if ( $self->{'model'} eq 'sync_include') {
+	if ($list->has_include_data_sources()) {
+	    return 1;
+	}else{
+	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	    $self->remove;
+	    return 0;
+	}
+    }else {
+	unless (defined $list->{'admin'}{$self->{'model'}} && 
+		defined $list->{'admin'}{$self->{'model'}}{'name'}) {
+	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	    $self->remove;
+	    return 0;
+	}		
+    }
+    return 1;
+}
+
+#### Task line level subs ####
+##############################
+
+## Parses the line of a task and returns a hash that can be executed.
 sub chk_line {
     my $param =shift;
     &Log::do_log('debug2', 'chk_line(%s)', $param->{'line'});
@@ -660,7 +812,7 @@ sub chk_line {
     return $Rhash;
 }
 
-## check the arguments of a command 
+## Checks the arguments of a command 
 sub chk_cmd {
     
     my $cmd = $_[0]; # command name
@@ -716,72 +868,7 @@ sub chk_cmd {
     return 1;
 }
 
-    
-### TASK EXECUTION SUBROUTINES ###
-
-sub execute {
-
-    my $self = shift;
-    &Log::do_log('debug', 'Running task id = %s, %s)', $self->{'messagekey'}, $self->get_description);
-    unless($self->parse) {
-	&Log::do_log('err','Unable to parse task %s',$self->get_description);
-	return undef;
-    }
-    unless ($self->process_all) {
-	&Log::do_log('err', 'Error while processing task %s (messagekey=%s), removing it',$self->get_description,$self->{'messagekey'});
-	$self->remove;
-	return undef;
-    }else{
-	&Log::do_log('notice', 'The task %s has been correctly executed. Removing it (messagekey=%s)', $self->get_description, $self->{'messagekey'});
-	$self->remove;
-    }
-    return 1;
-}
-
-sub parse {
-    my $self = shift;
-    &Log::do_log ('debug2', "* Parsing task id = %s : %s", $self->{'messagekey'},$self->get_description);
-    
-    my $taskasstring = $self->{'taskasstring'}; # task to execute
-    unless ($taskasstring) {
-	&Log::do_log('err','No string describing the task available in %s',$self->get_description);
-	return undef;
-    }
-    my $lnb = 0; # line number
-    foreach my $line (split('\n',$taskasstring)){
-	$lnb++;
-	my $result = chk_line ({'line' =>$line, 'line_number' => $lnb});
-	unless ( defined $result-{'error'}) {
-	    &Log::do_log ('err', "error : $result->{'error'}");
-	    return undef;
-	}
-	push @{$self->{'parsed_instructions'}},$result;
-    }
-    return 1;
-}
-
-sub process_all {
-    my $self = shift;
-    my $variables;
-    my $result;
-    &Log::do_log('debug','Processing all instructions found in task %s',$self->get_description);
-    foreach my $instruction (@{$self->{'parsed_instructions'}}) {
-	if (defined $self->{'must_stop'}) {
-	    &Log::do_log('debug2','Stopping here for task %s',$self->get_description);
-	    last;
-	}
-	$instruction->{'variables'} = $variables;
-	unless ($result = $self->process_line($instruction)) {
-	    &Log::do_log('err','Error while executing %s at line %s, task %s',$instruction->{'line_as_string'},$instruction->{'line_number'},$self->get_description);
-	    return undef;
-	}
-	if (ref $result && $result->{'type'} eq 'variables') {
-	    $variables = $result->{'variables'};
-	}
-    }
-    return 1;
-}
-
+## Executes a single parsed line of a task.
 sub process_line {
     my $self = shift;
     my $instruction = shift;
@@ -794,6 +881,7 @@ sub process_line {
     return $status;
 }
 
+## Calls the appropriate functions for a parsed line of a task.
 sub cmd_process {
 
     my $self = shift;
@@ -843,7 +931,7 @@ sub cmd_process {
 
 ### command subroutines ###
  
- # remove files whose name is given in the key 'file' of the hash
+# remove files whose name is given in the key 'file' of the hash
 sub rm_file {
     
     my ($task, $Rarguments,$Rvars, $context) = @_;
@@ -1760,53 +1848,6 @@ sub get_score {
     return  $note;
 }
 
-
-
-### MISCELLANEOUS SUBROUTINES ### 
-
-## sort task name by their epoch date
-sub epoch_sort {
-
-    $a =~ /(\d+)\..+/;
-    my $date1 = $1;
-    $b =~ /(\d+)\..+/;
-    my $date2 = $1;
-    
-    $date1 <=> $date2;
-}
-
-## change the label of a task file
-sub change_label {
-    my $task_file = $_[0];
-    my $new_label = $_[1];
-    
-    my $new_task_file = $task_file;
-    $new_task_file =~ s/(.+\.)(\w*)(\.\w+\.\w+$)/$1$new_label$3/;
-
-    if (rename ($task_file, $new_task_file)) {
-	&Log::do_log ('notice', "$task_file renamed in $new_task_file");
-	return 1;
-    } else {
-	&Log::do_log ('err', "error ; can't rename $task_file in $new_task_file");
-	return undef;
-    }
-}
-
-## send a error message to list-master, log it, and change the label task into 'ERROR' 
-sub error {
-    my $task_id = $_[0];
-    my $message = $_[1];
-
-    my @param;
-    $param[0] = "An error has occured during the execution of the task $task_id :
-                 $message";
-    &Log::do_log ('err', "Error in task: $message");
-    change_label ($task_id, 'ERROR') unless ($task_id eq '');
-    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, \@param)) {
-    	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
-    }
-}
-
 sub sync_include {
     my ($task, $context) = @_;
 
@@ -1825,37 +1866,18 @@ sub sync_include {
     return 1;  
 }
 
-sub check_list_task_is_valid {
-    my $self = shift;
-    my $list = $self->{'list_object'};
-    &Log::do_log('debug','Checking %s task validity for list %s@%s',$self->{'model'},$list->{'name'},$list->{'domain'});
-    ### Check list object validity; recreate it if needed.
+### MISCELLANEOUS SUBROUTINES ### 
 
-    ## Skip closed lists
-    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
-	$self->remove;
-	return 0;
-    }
+## sort task name by their epoch date
+sub epoch_sort {
 
-    ## Skip if parameter is not defined
-    if ( $self->{'model'} eq 'sync_include') {
-	if ($list->has_include_data_sources()) {
-	    return 1;
-	}else{
-	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
-	    $self->remove;
-	    return 0;
-	}
-    }else {
-	unless (defined $list->{'admin'}{$self->{'model'}} && 
-		defined $list->{'admin'}{$self->{'model'}}{'name'}) {
-	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
-	    $self->remove;
-	    return 0;
-	}		
-    }
-    return 1;
+    $a =~ /(\d+)\..+/;
+    my $date1 = $1;
+    $b =~ /(\d+)\..+/;
+    my $date2 = $1;
+    
+    $date1 <=> $date2;
 }
+
 ## Packages must return true.
 1;
