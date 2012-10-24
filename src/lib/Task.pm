@@ -1866,18 +1866,5 @@ sub sync_include {
     return 1;  
 }
 
-### MISCELLANEOUS SUBROUTINES ### 
-
-## sort task name by their epoch date
-sub epoch_sort {
-
-    $a =~ /(\d+)\..+/;
-    my $date1 = $1;
-    $b =~ /(\d+)\..+/;
-    my $date2 = $1;
-    
-    $date1 <=> $date2;
-}
-
 ## Packages must return true.
 1;
