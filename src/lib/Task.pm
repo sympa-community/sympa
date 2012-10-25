@@ -530,5 +530,13 @@ sub process_line {
     return $status;
 }
 
+sub error {
+    my $self = shift;
+    &Log::do_log('err',$self->{'error_message'});
+    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, [$self->{'error_message'}])) {
+	&Log::do_log('notice','error while notifying listmaster about errors in task');
+    }
+}
+
 ## Packages must return true.
 1;

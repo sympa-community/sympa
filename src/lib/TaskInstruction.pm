@@ -307,14 +307,13 @@ sub rm_file {
     my $var = $tab[0];
 
     foreach my $key (keys %{$self->{'variables'}{$var}}) {
-	my $file = $self->{'variables'}{$var}{$key}{'file'};
-	next unless ($file);
-	unless (unlink ($file)) {
-	    error ($task->{'filepath'}, "error in rm_file command : unable to remove $file");
-	    return undef;
-	}
+		my $file = $self->{'variables'}{$var}{$key}{'file'};
+		next unless ($file);
+		unless (unlink ($file)) {
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in rm_file command : unable to remove $file"});
+			return undef;
+		}
     }
-
     return 1;
 }
 
@@ -325,7 +324,7 @@ sub stop {
     &Log::do_log ('notice', "$self->{'line_number'} : stop $task->{'messagekey'}");
     
     unless ($task->remove) {
-	error ($task->{'messagekey'}, "error in stop command : unable to delete task $task->{'messagekey'}");
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in stop command : unable to delete task $task->{'messagekey'}"});
 	return undef;
     }
 }
@@ -396,16 +395,16 @@ sub next_cmd {
 	
 	if ( $model eq 'sync_include') {
 	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
-		error ($task->{'messagekey'}, "List $list->{'name'} no more require sync_include task");
-		return undef;
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require sync_include task"});
+			return undef;
 	    }
 
 	    $data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 	    $flavour = 'ttl';
 	}else {
 	    unless (defined $list->{'admin'}{"$model\_task"}) {
-		error ($task->{'messagekey'}, "List $list->{'name'} no more require $model task");
-		return undef;
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require $model task"});
+			return undef;
 	    }
 
 	    $flavour = $list->{'admin'}{"$model\_task"}{'name'};
@@ -413,8 +412,8 @@ sub next_cmd {
     }
     &Log::do_log('debug2','Will create next task');
     unless (Task::create ({'creation_date' => $date, 'label' => $tab[1], 'model' => $model, 'flavour' => $flavour, 'data' => \%data})) {
-	error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : creation subroutine failure"});
+		return undef;
     }
 
     my $human_date = &tools::adate ($date);
@@ -490,7 +489,7 @@ sub delete_subs_cmd {
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	if ($action =~ /reject/i) {
-	    error ($task->{'filepath'}, "error in delete_subs command : deletion of $email not allowed");
+	    $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in delete_subs command : deletion of $email not allowed"});
 	} else {
 	    my $u = $list->delete_list_member ($email);
 	    &Log::do_log ('notice', "--> $email deleted");
@@ -516,11 +515,11 @@ sub create_cmd {
     my $type;
     my $object;
     if ($arg =~ /$subarg_regexp/) {
-	$type = $1;
-	$object = $3;
+		$type = $1;
+		$object = $3;
     } else {
-	error ($task->{'messagekey'}, "error in create command : don't know how to create $arg");
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : don't know how to create $arg"});
+		return undef;
     }
 
     # building of the data hash necessary to the create subroutine
@@ -528,13 +527,13 @@ sub create_cmd {
 		'execution_date' => 'execution_date');
 
     if ($type eq 'list') {
-	my $list = new List ($object);
-	$data{'list'}{'name'} = $list->{'name'};
+		my $list = new List ($object);
+		$data{'list'}{'name'} = $list->{'name'};
     }
     $type = '_global';
     unless (create ($task->{'date'}, '', $model, $flavour, \%data)) {
-	error ($task->{'messagekey'}, "error in create command : creation subroutine failure");
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : creation subroutine failure"});
+		return undef;
     }
     
     return 1;
@@ -844,7 +843,7 @@ sub purge_orphan_bounces {
 
      ## building of certificate list
      unless (opendir(DIR, $cert_dir)) {
-	 error ($task->{'filepath'}, "error in chk_cert_expiration command : can't open dir $cert_dir");
+	 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in chk_cert_expiration command : can't open dir $cert_dir"});
 	 return undef;
      }
      my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
@@ -941,7 +940,7 @@ sub purge_orphan_bounces {
      # building of CA list
      my @CA;
      unless (open (FILE, $CA_file)) {
-	 error ($task->{'filepath'}, "error in update_crl command : can't open $CA_file file");
+	 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in update_crl command : can't open $CA_file file"});
 	 return undef;
      }
      while (<FILE>) {
@@ -1235,16 +1234,27 @@ sub sync_include {
     return 1;  
 }
 
-## send an error message to listmaster, log it, and change the label task into 'ERROR' 
+## Marks the task as being in error with details of the exact error.
 sub error {
-    my $task_id = $_[0];
-    my $message = $_[1];
-
-    my $error_message = sprintf 'An error has occured during the execution of the task %s : %s',$task_id,$message;
-    &Log::do_log ('err', "Error in task: $message");
-    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, [$error_message])) {
-    	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
-    }
+    my $self = shift;
+    my $param = shift;
+	
+    &Log::do_log ('err', 'Error in task: %s',$param->{'message'});
+    my $task = $param->{'task'};
+    my $error_description;
+    $error_description->{'message'} = $param->{'message'};
+    $error_description->{'type'} = $param->{'type'};
+    if (defined $task) {
+		if (defined $task->{'errors'}) {
+			push @{$task->{'errors'}}, $error_description;
+		}else{
+			$task->{'errors'} = [$error_description];
+		}
+	}else{
+		&Log::do_log('err','No task object to register error. It will not be used in the reports.');
+		return undef;
+	}
+	return 1;
 }
 
 # Packages must return true;
