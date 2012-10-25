@@ -325,7 +325,7 @@ sub stop {
     
     unless ($task->remove) {
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in stop command : unable to delete task $task->{'messagekey'}"});
-	return undef;
+		return undef;
     }
 }
 
@@ -340,23 +340,26 @@ sub send_msg {
     &Log::do_log ('notice', "line $self->{'line_number'} : send_msg (@{$self->{'Rarguments'}})");
 
     if ($task->{'object'} eq '_global') {
-
-	foreach my $email (keys %{$self->{'variables'}{$var}}) {
-	    unless (&List::send_global_file ($template, $email, ,'',$self->{'variables'}{$var}{$email}) ) {
-		&Log::do_log ('notice', "Unable to send template $template to $email");
-	    }else{
-		&Log::do_log ('notice', "--> message sent to $email");
-	    }
-	}
+		foreach my $email (keys %{$self->{'variables'}{$var}}) {
+			unless (&List::send_global_file ($template, $email, ,'',$self->{'variables'}{$var}{$email}) ) {
+				&Log::do_log ('notice', "Unable to send template $template to $email");
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $email"});
+				return undef;
+			}else{
+				&Log::do_log ('notice', "--> message sent to $email");
+			}
+		}
     } else {
-	my $list = $task->{'list_object'};
-	foreach my $email (keys %{$self->{'variables'}{$var}}) {
-	    unless ($list->send_file ($template, $email, $list->{'domain'}, $self->{'variables'}{$var}{$email}))  {
-		&Log::do_log ('notice', "Unable to send template $template to $email");
-	    }else{
-		&Log::do_log ('notice', "--> message sent to $email");
-	    }
-	}
+		my $list = $task->{'list_object'};
+		foreach my $email (keys %{$self->{'variables'}{$var}}) {
+			unless ($list->send_file ($template, $email, $list->{'domain'}, $self->{'variables'}{$var}{$email}))  {
+				&Log::do_log ('notice', "Unable to send template $template to $email");
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $email"});
+				return undef;
+			}else{
+				&Log::do_log ('notice', "--> message sent to $email");
+			}
+		}
     }
     return 1;
 }
@@ -377,42 +380,39 @@ sub next_cmd {
 
     ## Determine type
     my ($type, $flavour);
-    my %data = ('creation_date'  => $task->{'date'},
-		'execution_date' => 'execution_date');
+    my %data = ('creation_date'  => $task->{'date'}, 'execution_date' => 'execution_date');
     if ($listname eq '_global') {
-	$type = '_global';
-	foreach my $key (keys %TaskSpool::global_models) {
-	    if ($TaskSpool::global_models{$key} eq $model) {
-		$flavour = $Conf::Conf{$key};
-		last;
-	    }
-	}
+		$type = '_global';
+		foreach my $key (keys %TaskSpool::global_models) {
+			if ($TaskSpool::global_models{$key} eq $model) {
+				$flavour = $Conf::Conf{$key};
+				last;
+			}
+		}
     }else {
-	$type = 'list';
-	my $list = $task->{'list_object'};
-	$data{'list'}{'name'} = $list->{'name'};
-	$data{'list'}{'robot'} = $list->{'domain'};
-	
-	if ( $model eq 'sync_include') {
-	    unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
-			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require sync_include task"});
-			return undef;
-	    }
-
-	    $data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
-	    $flavour = 'ttl';
-	}else {
-	    unless (defined $list->{'admin'}{"$model\_task"}) {
-			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require $model task"});
-			return undef;
-	    }
-
-	    $flavour = $list->{'admin'}{"$model\_task"}{'name'};
-	}
+		$type = 'list';
+		my $list = $task->{'list_object'};
+		$data{'list'}{'name'} = $list->{'name'};
+		$data{'list'}{'robot'} = $list->{'domain'};
+		
+		if ( $model eq 'sync_include') {
+			unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require sync_include task"});
+				return undef;
+			}
+			$data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
+			$flavour = 'ttl';
+		}else {
+			unless (defined $list->{'admin'}{"$model\_task"}) {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require $model task"});
+				return undef;
+			}
+			$flavour = $list->{'admin'}{"$model\_task"}{'name'};
+		}
     }
     &Log::do_log('debug2','Will create next task');
     unless (Task::create ({'creation_date' => $date, 'label' => $tab[1], 'model' => $model, 'flavour' => $flavour, 'data' => \%data})) {
-		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : creation subroutine failure"});
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : Failed to create task $model.$flavour"});
 		return undef;
     }
 
@@ -431,7 +431,7 @@ sub select_subs {
     &Log::do_log ('debug2', "line $self->{'line_number'} : select_subs ($condition)");
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) { # conversion of the date argument into epoch format
-	my $date = &tools::epoch_conv ($2, $task->{'date'});
+		my $date = &tools::epoch_conv ($2, $task->{'date'});
         $condition = "$1($date)";
     }  
  
@@ -440,29 +440,25 @@ sub select_subs {
     my $list = $task->{'list_object'};
     
     for ( my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member() ) { 
-	push (@users, $user);
+		push (@users, $user);
     }
     
     # parameter of subroutine Scenario::verify
-    my $verify_context = {'sender' => 'nobody',
-			  'email' => 'nobody',
-			  'remote_host' => 'unknown_host',
-			  'listname' => $task->{'object'}};
+    my $verify_context = {	'sender' => 'nobody',
+							'email' => 'nobody',
+							'remote_host' => 'unknown_host',
+							'listname' => $task->{'object'}};
     
     my $new_condition = $condition; # necessary to the older & newer condition rewriting
     # loop on the subscribers of $list_name
     foreach my $user (@users) {
-
-	# AF : voir 'update' &Log::do_log ('notice', "date $user->{'date'} & update $user->{'update'}");
-	# condition rewriting for older and newer
-	$new_condition = "$1($user->{'update_date'}, $2)" if ($condition =~ /(older|newer)\((\d+)\)/ );
-	
-	if (&Scenario::verify ($verify_context, $new_condition) == 1) {
-	    $selection{$user->{'email'}} = undef;
-	    &Log::do_log ('notice', "--> user $user->{'email'} has been selected");
-	}
+		# condition rewriting for older and newer
+		$new_condition = "$1($user->{'update_date'}, $2)" if ($condition =~ /(older|newer)\((\d+)\)/ );
+		if (&Scenario::verify ($verify_context, $new_condition) == 1) {
+			$selection{$user->{'email'}} = undef;
+			&Log::do_log ('notice', "--> user $user->{'email'} has been selected");
+		}
     }
-    
     return \%selection;
 }
 
@@ -480,21 +476,24 @@ sub delete_subs_cmd {
     my %selection; # hash of subscriber emails who are successfully deleted
 
     foreach my $email (keys %{$self->{'variables'}{$var}}) {
-
-	&Log::do_log ('notice', "email : $email");
-	my $result = $list->check_list_authz('del', 'smime',
-					     {'sender'   => $Conf::Conf{'listmaster'},
-					      'email'    => $email,
-					  });
-	my $action;
-	$action = $result->{'action'} if (ref($result) eq 'HASH');
-	if ($action =~ /reject/i) {
-	    $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in delete_subs command : deletion of $email not allowed"});
-	} else {
-	    my $u = $list->delete_list_member ($email);
-	    &Log::do_log ('notice', "--> $email deleted");
-	    $selection{$email} = {};
-	}
+		&Log::do_log ('notice', "email : $email");
+		my $result = $list->check_list_authz('del', 'smime',
+							 {'sender'   => $Conf::Conf{'listmaster'},
+							  'email'    => $email,
+						  });
+		my $action;
+		$action = $result->{'action'} if (ref($result) eq 'HASH');
+		if ($action =~ /reject/i) {
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Deletion of $email not allowed"});
+			return undef;
+		} else {
+			unless (my $u = $list->delete_list_member ($email)) {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Deletion of $email frome list $list->get_list_id failed"});
+			}else{
+				&Log::do_log ('notice', "--> $email deleted");
+				$selection{$email} = {};
+			}
+		}
     }
 
     return \%selection;
@@ -518,7 +517,7 @@ sub create_cmd {
 		$type = $1;
 		$object = $3;
     } else {
-		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : don't know how to create $arg"});
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Don't know how to create $arg"});
 		return undef;
     }
 
@@ -531,11 +530,10 @@ sub create_cmd {
 		$data{'list'}{'name'} = $list->{'name'};
     }
     $type = '_global';
-    unless (create ($task->{'date'}, '', $model, $flavour, \%data)) {
-		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in create command : creation subroutine failure"});
+    unless (Task::create ($task->{'date'}, '', $model, $flavour, \%data)) {
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Creation of task $model.$flavour failed"});
 		return undef;
     }
-    
     return 1;
 }
 
@@ -547,8 +545,24 @@ sub exec_cmd {
     my $file = $tab[0];
 
     &Log::do_log ('notice', "line $self->{'line_number'} : exec ($file)");
-    system ($file);
     
+    system ($file);
+
+	if ($? != 0) {
+		my $message;
+		if ($? == -1) {
+			$message = "Failed to execute: $!";
+		}
+		elsif ($? & 127) {
+			$message = sprintf 'Child died with signal %d, %s coredump',
+			($? & 127), ($? & 128) ? 'with' : 'without';
+		}
+		else {
+			$message = "Child exited with value %d", $? >> 8;
+		}
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => $message});
+		return undef;
+	}
     return 1;
 }
 
@@ -561,8 +575,8 @@ sub purge_logs_table {
     
     &Log::do_log('debug2','purge_logs_table()');
     unless(&Log::db_log_del()) {
-	&Log::do_log('err','purge_logs_table(): Failed to delete logs');
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Failed to delete logs"});
+		return undef;
     }
 
     #-----------Data aggregation, to make statistics-----------------
@@ -573,22 +587,20 @@ sub purge_logs_table {
 
 	my $sth;
 	unless($sth = &SDM::do_query("SELECT date_stat FROM stat_table WHERE read_stat = 0 ORDER BY date_stat ASC LIMIT 1")) {
-		&Log::do_log('err', 'Unable to retrieve oldest non processed stat');
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Unable to retrieve oldest non processed stat'});
 		return undef;
 	}
 	my @res = $sth->fetchrow_array;
-	return unless($#res >= 0);
+	return 1 unless($#res >= 0);
 	my $date_deb = $res[0] - ($res[0] % 3600);
 
     #hour to hour
-    for  (my $i=$date_deb; $i <= $date_end; $i=$i+3600){
-	push(@slots, $i);
-	
-    }
+	for  (my $i=$date_deb; $i <= $date_end; $i=$i+3600){
+		push(@slots, $i);
+	}
 
     for (my $j=1; $j <= scalar(@slots); $j++){
-	 
-	&Log::aggregate_data($slots[$j-1], $slots[$j]);
+		&Log::aggregate_data($slots[$j-1], $slots[$j]);
     }
     #-------------------------------------------------------------------
 
@@ -605,10 +617,10 @@ sub purge_session_table {
 
     my $removed = &SympaSession::purge_old_sessions('*');
     unless(defined $removed) {
-	&Log::do_log('err','&SympaSession::purge_old_sessions(): Failed to remove old sessions');
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to remove old sessions'});
+		return undef;
     }
-    &Log::do_log('notice','purge_session_table(): %s row removed in session_table',$removed);
+    &Log::do_log('notice','purge_session_table(): %s rows removed in session_table',$removed);
     return 1;
 }
 
@@ -620,16 +632,16 @@ sub purge_tables {
     require SympaSession;
     my $removed = &Bulk::purge_bulkspool();
     unless(defined $removed) {
-	&Log::do_log('err','Failed to purge bulkspool');
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to purge tables'});
     }
     &Log::do_log('notice','%s rows removed in bulkspool_table',$removed);    
     #
     my $removed = 0;
     foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
-	my $all_lists = &List::get_lists($robot);
-	foreach my $list ( @$all_lists ) {
-	    $removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
-	}
+		my $all_lists = &List::get_lists($robot);
+		foreach my $list ( @$all_lists ) {
+			$removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
+		}
     }
     &Log::do_log('notice', "%s rows removed in tracking table",$removed);
 
@@ -643,8 +655,8 @@ sub purge_one_time_ticket_table {
     &Log::do_log('info','task_manager::purge_one_time_ticket_table()');
     my $removed = &SympaSession::purge_old_tickets('*');
     unless(defined $removed) {
-	&Log::do_log('err','&SympaSession::purge_old_tickets(): Failed to remove old tickets');
-	return undef;
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to remove old tickets'});
+		return undef;
     }
     &Log::do_log('notice','purge_one_time_ticket_table(): %s row removed in one_time_ticket_table',$removed);
     return 1;
@@ -667,47 +679,47 @@ sub purge_user_table {
 
     foreach my $r (keys %{$Conf::Conf{'robots'}}) {
 
-	my $all_lists = &List::get_lists($r);
-	foreach my $list (@$all_lists){
+		my $all_lists = &List::get_lists($r);
+		foreach my $list (@$all_lists){
 
-	    ## Owners
-	    my $owners = $list->get_owners();
-	    if (defined $owners) {
-		foreach my $o (@{$owners}) {
-		    $known_people{$o->{'email'}} = 1;
-		}
-	    }
+			## Owners
+			my $owners = $list->get_owners();
+			if (defined $owners) {
+				foreach my $o (@{$owners}) {
+					$known_people{$o->{'email'}} = 1;
+				}
+			}
 
-	    ## Editors
-	    my $editors = $list->get_editors();
-	    if (defined $editors) {		
-		foreach my $e (@{$editors}) {
-		    $known_people{$e->{'email'}} = 1;
+			## Editors
+			my $editors = $list->get_editors();
+			if (defined $editors) {		
+				foreach my $e (@{$editors}) {
+					$known_people{$e->{'email'}} = 1;
+				}
+			}
+			
+			## Subscribers
+			for (my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member()) {
+				$known_people{$user->{'email'}} = 1;
+			}
 		}
-	    }
-	    
-	    ## Subscribers
-	    for (my $user = $list->get_first_list_member(); $user; $user = $list->get_next_list_member()) {
-		$known_people{$user->{'email'}} = 1;
-	    }
-	}
     }    
 
     ## Look for unused entries
     my @purged_users;
     foreach (@users) {
-	unless ($known_people{$_}) {
-	    &Log::do_log('debug2','User to purge: %s', $_);
-	    push @purged_users, $_;
-	}
+		unless ($known_people{$_}) {
+			&Log::do_log('debug2','User to purge: %s', $_);
+			push @purged_users, $_;
+		}
     }
     
     unless ($#purged_users < 0) {
-	unless (&List::delete_global_user(@purged_users)) {
-	    &Log::do_log('err', 'purge_user_table error: Failed to delete users');
-	    return undef;
+		unless (&List::delete_global_user(@purged_users)) {
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to delete users'});
+			return undef;
+		}
 	}
-    }
 
     my $result;
     $result->{'purged_users'} = $#purged_users + 1;
@@ -725,46 +737,42 @@ sub purge_orphan_bounces {
     my $all_lists;
     
     unless ($all_lists = &List::get_lists('*')) {
-	&Log::do_log('notice','No list available');
-	return 1;
+		&Log::do_log('notice','No list available');
+		return 1;
     }
     
     foreach my $list (@$all_lists) {
-	
-	my $listname = $list->{'name'};
-	
-	## first time: loading DB entries into %bounced_users
-	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
-	    my $user_id = $user_ref->{'email'};
-	    $bounced_users{$listname}{$user_id} = 1;
-	}
-	
-	my $bounce_dir = $list->get_bounce_dir();
-	
-	unless (-d $bounce_dir) {
-	    &Log::do_log('notice', 'No bouncing subscribers in list %s', $listname);
-	    next;
-	}
-	
-	## then reading Bounce directory & compare with %bounced_users
-	unless (opendir(BOUNCE,$bounce_dir)) {
-	    &Log::do_log('err','Error while opening bounce directory %s',$bounce_dir);
-	    return undef;
-	}
-	
-	## Finally removing orphan files
-	foreach my $bounce (readdir(BOUNCE)) {
-	    if ($bounce =~ /\@/){
-		unless (defined($bounced_users{$listname}{$bounce})) {
-		    &Log::do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
-		    unless (unlink($bounce_dir.'/'.$bounce)) {
-			&Log::do_log('err','Error while removing file %s/%s', $bounce_dir, $bounce);
-		    }
+		my $listname = $list->{'name'};
+		## first time: loading DB entries into %bounced_users
+		for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
+			my $user_id = $user_ref->{'email'};
+			$bounced_users{$listname}{$user_id} = 1;
 		}
-	    }	    
-	}
-	
-	closedir BOUNCE;
+		my $bounce_dir = $list->get_bounce_dir();
+		unless (-d $bounce_dir) {
+			&Log::do_log('notice', 'No bouncing subscribers in list %s', $listname);
+			next;
+		}
+		
+		## then reading Bounce directory & compare with %bounced_users
+		unless (opendir(BOUNCE,$bounce_dir)) {
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while opening bounce directory $bounce_dir"});
+			return undef;
+		}
+		
+		## Finally removing orphan files
+		foreach my $bounce (readdir(BOUNCE)) {
+			if ($bounce =~ /\@/){
+				unless (defined($bounced_users{$listname}{$bounce})) {
+					&Log::do_log('info','removing orphan Bounce for user %s in list %s',$bounce,$listname);
+					unless (unlink($bounce_dir.'/'.$bounce)) {
+						$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while removing file $bounce_dir/$bounce"});
+					}
+				}
+			}	    
+		}
+		
+		closedir BOUNCE;
     }
     return 1;
 }
@@ -782,48 +790,45 @@ sub purge_orphan_bounces {
      &Log::do_log('debug2','expire_bounce(%d)',$delay);
      my $all_lists = &List::get_lists('*');
      foreach my $list (@$all_lists ) {
-
-	 my $listname = $list->{'name'};
-
-	 # the reference date is the date until which we expire bounces in second
-	 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
-
-	 unless ($list->get_latest_distribution_date()) {
-	     &Log::do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
-	     next;
-	 }
-	 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
-
-	 for (my $u = $list->get_first_bouncing_list_member(); $u ; $u = $list->get_next_bouncing_list_member()) {
-	     $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
-	     $u->{'last_bounce'} = $2;
-	     if ($u->{'last_bounce'} < $refdate) {
-		 my $email = $u->{'email'};
-
-		 unless ( $list->is_list_member($email) ) {
-		     &Log::do_log('info','expire_bounce: %s not subscribed', $email);
-		     next;
+		 my $listname = $list->{'name'};
+		 # the reference date is the date until which we expire bounces in second
+		 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
+		 unless ($list->get_latest_distribution_date()) {
+			 &Log::do_log('debug2','bounce expiration : skipping list %s because could not get latest distribution date',$listname);
+			 next;
 		 }
+		 my $refdate = (($list->get_latest_distribution_date() - $delay) * 3600 * 24);
 
-		 unless( $list->update_list_member($email, {'bounce' => 'NULL'},{'bounce_address' => 'NULL'})) {
-		     &Log::do_log('info','expire_bounce: failed update database for %s', $email);
-		     next;
+		 for (my $u = $list->get_first_bouncing_list_member(); $u ; $u = $list->get_next_bouncing_list_member()) {
+			 $u->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+			 $u->{'last_bounce'} = $2;
+			 if ($u->{'last_bounce'} < $refdate) {
+				 my $email = $u->{'email'};
+
+				 unless ( $list->is_list_member($email) ) {
+					 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "$email not subscribed"});
+					 next;
+				 }
+
+				 unless( $list->update_list_member($email, {'bounce' => 'NULL'},{'bounce_address' => 'NULL'})) {
+					 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "failed update database for $email"});
+					 next;
+				 }
+				 my $escaped_email = &tools::escape_chars($email);
+
+				 my $bounce_dir = $list->get_bounce_dir();
+
+				 unless (unlink $bounce_dir.'/'.$escaped_email) {
+					 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "failed deleting $bounce_dir/$escaped_email"});
+					 next;
+				 }
+				 &Log::do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
+					$email,$listname,
+					&POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
+					&POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
+
+			 }
 		 }
-		 my $escaped_email = &tools::escape_chars($email);
-
-		 my $bounce_dir = $list->get_bounce_dir();
-
-		 unless (unlink $bounce_dir.'/'.$escaped_email) {
-		     &Log::do_log('info','expire_bounce: failed deleting %s', $bounce_dir.'/'.$escaped_email);
-		     next;
-		 }
-		 &Log::do_log('info','expire bounces for subscriber %s of list %s (last distribution %s, last bounce %s )',
-			$email,$listname,
-			&POSIX::strftime("%d %b %Y", localtime($list->get_latest_distribution_date() * 3600 * 24)),
-			&POSIX::strftime("%d %b %Y", localtime($u->{'last_bounce'})));
-
-	     }
-	 }
      }
 
      return 1;

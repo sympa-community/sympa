@@ -124,7 +124,7 @@ sub create {
     # task is accetable, store it in spool
     return undef unless ($self->store);
     
-    return 1;
+    return $self;
 }
 
 ## Sets and returns the path to the file that must be used to generate the task as string.
