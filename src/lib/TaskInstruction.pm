@@ -175,35 +175,35 @@ sub parse {
     $self->{'nature'} = undef;
     # empty line
     if (! $self->{'line_as_string'}) {
-	$self->{'nature'} = 'empty line';
+		$self->{'nature'} = 'empty line';
     # comment
     }elsif ($self->{'line_as_string'} =~ /^\s*\#.*/) {
-	$self->{'nature'} = 'comment';
+		$self->{'nature'} = 'comment';
     # title
     }elsif ($self->{'line_as_string'} =~ /^\s*title\...\s*(.*)\s*/i) {
-	$self->{'nature'} = 'title';
-	$self->{'title'} = $1;
+		$self->{'nature'} = 'title';
+		$self->{'title'} = $1;
     # label
     }elsif ($self->{'line_as_string'} =~ /^\s*\/\s*(.*)/) {
-	$self->{'nature'} = 'label';
-	$self->{'label'} = $1;
+		$self->{'nature'} = 'label';
+		$self->{'label'} = $1;
     # command
-     }elsif ($self->{'line_as_string'} =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
-	my $command = lc ($1);
-	my @args = split (/,/, $2);
-	foreach (@args) { s/\s//g;}
+    }elsif ($self->{'line_as_string'} =~ /^\s*(\w+)\s*\((.*)\)\s*/i ) { 
+		my $command = lc ($1);
+		my @args = split (/,/, $2);
+		foreach (@args) { s/\s//g;}
 
-	unless ($commands{$command}) { 
-	    $self->{'nature'} = 'error';
-	    $self->{'error'} = "unknown command $command";
-	}else {
-	    $self->{'nature'} = 'command';
-	    $self->{'command'} = $command;
+		unless ($commands{$command}) { 
+			$self->{'nature'} = 'error';
+			$self->{'error'} = "unknown command $command";
+		}else {
+			$self->{'nature'} = 'command';
+			$self->{'command'} = $command;
 
-	    # arguments recovery. no checking of their syntax !!!
-	    $self->{'Rarguments'} = \@args;
-	    $self->chk_cmd;
-	}
+			# arguments recovery. no checking of their syntax !!!
+			$self->{'Rarguments'} = \@args;
+			$self->chk_cmd;
+		}
     # assignment
     }elsif ($self->{'line_as_string'} =~ /^\s*(@\w+)\s*=\s*(.+)/) {
 
@@ -274,6 +274,12 @@ sub chk_cmd {
 	}
     }
     return 1;
+}
+
+sub as_string {
+	my $self = shift;
+	&Log::do_log('debug3','Computing string representation of the instruction.');
+	return $self->{'line_as_string'};
 }
 
 ## Calls the appropriate functions for a parsed line of a task.
@@ -1229,17 +1235,14 @@ sub sync_include {
     return 1;  
 }
 
-## send a error message to list-master, log it, and change the label task into 'ERROR' 
+## send an error message to listmaster, log it, and change the label task into 'ERROR' 
 sub error {
     my $task_id = $_[0];
     my $message = $_[1];
 
-    my @param;
-    $param[0] = "An error has occured during the execution of the task $task_id :
-                 $message";
+    my $error_message = sprintf 'An error has occured during the execution of the task %s : %s',$task_id,$message;
     &Log::do_log ('err', "Error in task: $message");
-    change_label ($task_id, 'ERROR') unless ($task_id eq '');
-    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, \@param)) {
+    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, [$error_message])) {
     	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
     }
 }

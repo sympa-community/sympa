@@ -339,44 +339,35 @@ sub get_full_listname {
     
 ## Check the syntax of a task
 sub check {
-
     my $self = shift; # the task to check
-
-    &Log::do_log ('debug2', 'check(%s)', $self->get_description);
-    my %result; # stores the result of the chk_line subroutine
-    my $lnb = 0; # line number
-    my %used_labels; # list of labels used as parameter in commands
-    my %labels; # list of declared labels
-    my %used_vars; # list of vars used as parameter in commands
-    my %vars; # list of declared vars
+    &Log::do_log ('debug2', 'check %s', $self->get_description);
 
     $self->parse;
     # are all labels used ?
-    foreach my $label (keys %labels) {
-	&Log::do_log ('debug3', "warning : label $label exists but is not used") unless ($used_labels{$label});
+    foreach my $label (keys %{$self->{'labels'}}) {
+	&Log::do_log ('debug2', 'Warning : label %s exists but is not used in %s',$label, $self->get_description) unless (defined $self->{'used_labels'}{$label});
     }
 
     # do all used labels exist ?
-    foreach my $label (keys %used_labels) {
-	unless ($labels{$label}) {
-	    &Log::do_log ('err', "error : label $label is used but does not exist");
+    foreach my $label (keys %{$self->{'used_labels'}}) {
+	unless (defined $self->{'labels'}{$label}) {
+	    &Log::do_log ('err', 'Error : label %s is used but does not exist in %s',$label, $self->get_description);
 	    return undef;
 	}
     }
     
     # are all variables used ?
-    foreach my $var (keys %vars) {
-	&Log::do_log ('notice', "warning : var $var exists but is not used") unless ($used_vars{$var});
+    foreach my $var (keys %{$self->{'vars'}}) {
+	&Log::do_log ('debug2', 'Warning : var %s exists but is not used in %s',$var, $self->get_description) unless (defined $self->{'used_vars'}{$var});
     }
 
     # do all used variables exist ?
-    foreach my $var (keys %used_vars) {
-	unless ($vars{$var}) {
-	    &Log::do_log ('err', "error : var $var is used but does not exist");
+    foreach my $var (keys %{$self->{'used_vars'}}) {
+	unless (defined $self->{'vars'}{$var}) {
+	    &Log::do_log ('err', 'Error : var %s is used but does not exist in %s',$var, $self->get_description);
 	    return undef;
 	}
     }
-
     return 1;
 }
 
@@ -403,7 +394,7 @@ sub execute {
 ## Parses the task as string into parsed instructions.
 sub parse {
     my $self = shift;
-    &Log::do_log ('debug2', "* Parsing task id = %s : %s", $self->{'messagekey'},$self->get_description);
+    &Log::do_log ('debug2', "Parsing task id = %s : %s", $self->{'messagekey'},$self->get_description);
     
     my $taskasstring = $self->{'taskasstring'}; # task to execute
     unless ($taskasstring) {
@@ -420,6 +411,7 @@ sub parse {
 	}
 	push @{$self->{'parsed_instructions'}},$result;
     }
+    $self->make_summary;
     return 1;
 }
 
@@ -431,7 +423,7 @@ sub process_all {
     &Log::do_log('debug','Processing all instructions found in task %s',$self->get_description);
     foreach my $instruction (@{$self->{'parsed_instructions'}}) {
 	if (defined $self->{'must_stop'}) {
-	    &Log::do_log('debug2','Stopping here for task %s',$self->get_description);
+	    &Log::do_log('debug','Stopping here for task %s',$self->get_description);
 	    last;
 	}
 	$instruction->{'variables'} = $variables;
@@ -492,11 +484,36 @@ sub check_list_task_is_valid {
 	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
 	    $self->remove;
 	    return 0;
-	}		
+	}
     }
     return 1;
 }
 
+sub make_summary {
+    my $self = shift;
+    &Log::do_log('debug2','Computing general informations about the task %s',$self->get_description);
+
+    $self->{'labels'} = {};
+    $self->{'used_labels'} = {};
+    $self->{'vars'} = {};
+    $self->{'used_vars'} = {};
+    
+    foreach my $instruction (@{$self->{'parsed_instructions'}}) {
+	if ($instruction->{'nature'} eq 'label') {
+	    $self->{'labels'}{$instruction->{'label'}} = 1;
+	}elsif ($instruction->{'nature'} eq 'assignment' && $instruction->{'var'}) {
+	    $self->{'vars'}{$instruction->{'var'}} = 1;
+	}elsif($instruction->{'nature'} eq 'command') {
+	    foreach my $used_var (keys %{$instruction->{'used_vars'}}) {
+		$self->{'used_vars'}{$used_var} = 1;
+	    }
+	    foreach my $used_label (keys %{$instruction->{'used_labels'}}) {
+		$self->{'used_labels'}{$used_label} = 1;
+	    }
+	}
+    }
+	
+}
 #### Task line level subs ####
 ##############################
 

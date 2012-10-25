@@ -159,7 +159,7 @@ sub create_required_global_tasks {
 	unless ($used_models{$global_models{$key}}) {
 	    if ($Conf::Conf{$key}) {
 		unless($task = Task::create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'flavour' => $Conf::Conf{$key}, 'data' =>$data})) {
-		    &Log::do_log('err','Unable to create task with parameters creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$param->{'current_date'},$global_models{$key},$Conf::Conf{$key},$data);
+		    creation_error(sprintf 'Unable to create task with parameters creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$param->{'current_date'},$global_models{$key},$Conf::Conf{$key},$data);
 		}
 		$used_models{$1} = 1;
 	    }
@@ -199,7 +199,7 @@ sub create_required_lists_tasks {
 			next unless ($list->has_include_data_sources() &&
 				     ($list->{'admin'}{'status'} eq 'open'));
 			unless ($task = Task::create ({'creation_date' => $param->{'current_date'}, 'label' => 'INIT', 'model' => $model, 'flavour' => 'ttl', 'data' => \%data})) {
-			    &Log::do_log('err','Unable to create task with parameters list = "%s", creation_date = "%s", label = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},'INIT',$model,'ttl',\%data);
+			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", label = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},'INIT',$model,'ttl',\%data);
 			}
 			&Log::do_log('debug3',"sync_include task creation done");$tt++;
 			
@@ -207,13 +207,21 @@ sub create_required_lists_tasks {
 			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
 			    ($list->{'admin'}{'status'} eq 'open')) {
 			unless ($task = Task::create ({'creation_date' => $param->{'current_date'}, 'model' => $model, 'flavour' => $list->{'admin'}{$model_task_parameter}{'name'}, 'data' => \%data})) {
-			    &Log::do_log('err','Unable to create task with parameters list = "%s", creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},$model,$list->{'admin'}{$model_task_parameter}{'name'},\%data);
+			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},$model,$list->{'admin'}{$model_task_parameter}{'name'},\%data);
 			}
 			$tt++;
 		    }
 		}
 	    }
 	}
+    }
+}
+
+sub creation_error {
+    my $message = shift;
+    &Log::do_log('err',$message);
+    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, [$message])) {
+	&Log::do_log('notice','error while notifying listmaster about "error_in_task"');
     }
 }
 
