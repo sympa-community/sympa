@@ -838,7 +838,7 @@ sub purge_orphan_bounces {
 
      my ($self,$task) = @_;
 
-    my $cert_dir = &Conf::get_robot_conf('*','ssl_cert_dir');
+	my $cert_dir = &Conf::get_robot_conf('*','ssl_cert_dir');
      my $execution_date = $task->{'date'};
      my @tab = @{$self->{'Rarguments'}};
      my $template = $tab[0];
@@ -848,85 +848,90 @@ sub purge_orphan_bounces {
 
      ## building of certificate list
      unless (opendir(DIR, $cert_dir)) {
-	 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in chk_cert_expiration command : can't open dir $cert_dir"});
-	 return undef;
+		 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in chk_cert_expiration command : can't open dir $cert_dir"});
+		 return undef;
      }
      my @certificates = grep !/^(\.\.?)|(.+expired)$/, readdir DIR;
      closedir (DIR);
 
      foreach (@certificates) {
+		 my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user is warned that his certificate is soon expired
 
-	 my $soon_expired_file = $_.'.soon_expired'; # an empty .soon_expired file is created when a user is warned that his certificate is soon expired
+		 # recovery of the certificate expiration date 
+		 open (ENDDATE, "openssl x509 -enddate -in $cert_dir/$_ -noout |");
+		 my $date = <ENDDATE>; # expiration date
+		 close (ENDDATE);
+		 chomp ($date);
 
-	 # recovery of the certificate expiration date 
-	 open (ENDDATE, "openssl x509 -enddate -in $cert_dir/$_ -noout |");
-	 my $date = <ENDDATE>; # expiration date
-	 close (ENDDATE);
-	 chomp ($date);
+		 unless ($date) {
+			 &Log::do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
+			 next;
+		 }
 
-	 unless ($date) {
-	     &Log::do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
-	     next;
-	 }
+		 $date =~ /notAfter=(\w+)\s*(\d+)\s[\d\:]+\s(\d+).+/;
+		 my @date = (0, 0, 0, $2, $TaskSpool::months{$1}, $3 - 1900);
+		 $date =~ s/notAfter=//;
+		 my $expiration_date = timegm (@date); # epoch expiration date
+		 my $rep = &tools::adate ($expiration_date);
 
-	 $date =~ /notAfter=(\w+)\s*(\d+)\s[\d\:]+\s(\d+).+/;
-	 my @date = (0, 0, 0, $2, $TaskSpool::months{$1}, $3 - 1900);
-	 $date =~ s/notAfter=//;
-	 my $expiration_date = timegm (@date); # epoch expiration date
-	 my $rep = &tools::adate ($expiration_date);
+		 # no near expiration nor expiration processing
+		 if ($expiration_date > $limit) { 
+			 # deletion of unuseful soon_expired file if it is existing
+			 if (-e $soon_expired_file) {
+				 unless(unlink ($soon_expired_file)) {
+					 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't delete $soon_expired_file"});
+				 }
+			 }
+			 next;
+		 }
 
-	 # no near expiration nor expiration processing
-	 if ($expiration_date > $limit) { 
-	     # deletion of unuseful soon_expired file if it is existing
-	     if (-e $soon_expired_file) {
-		 unlink ($soon_expired_file) || &Log::do_log ('err', "error : can't delete $soon_expired_file");
-	     }
-	     next;
-	 }
+		 # expired certificate processing
+		 if ($expiration_date < $execution_date) {
 
-	 # expired certificate processing
-	 if ($expiration_date < $execution_date) {
+			 &Log::do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
+			 unless (unlink ("$cert_dir/$_")) {
+				 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't delete certificate file $_"});
+			 }
+			 if (-e $soon_expired_file) {
+				 unless (unlink ("$cert_dir/$soon_expired_file")) {
+					  $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't delete $soon_expired_file"});
+				  }
+			 }
+			 next;
+		 }
 
-	     &Log::do_log ('notice', "--> $_ certificate expired ($date), certificate file deleted");
-	     unlink ("$cert_dir/$_") || &Log::do_log ('notice', "error : can't delete certificate file $_");
-	     if (-e $soon_expired_file) {
-		 unlink ("$cert_dir/$soon_expired_file") || &Log::do_log ('err', "error : can't delete $soon_expired_file");
-	     }
-	     next;
-	 }
+		 # soon expired certificate processing
+		 if ( ($expiration_date > $execution_date) && 
+			  ($expiration_date < $limit) &&
+			  !(-e $soon_expired_file) ) {
 
-	 # soon expired certificate processing
-	 if ( ($expiration_date > $execution_date) && 
-	      ($expiration_date < $limit) &&
-	      !(-e $soon_expired_file) ) {
+			 unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't create $soon_expired_file"});
+				next;
+			 } else {close (FILE);}
 
-	     unless (open (FILE, ">$cert_dir/$soon_expired_file")) {
-		 &Log::do_log ('err', "error in chk_cert_expiration : can't create $soon_expired_file");
-		 next;
-	     } else {close (FILE);}
+			 my %tpl_context; # datas necessary to the template
 
-	     my %tpl_context; # datas necessary to the template
+			 open (ID, "openssl x509 -subject -in $cert_dir/$_ -noout |");
+			 my $id = <ID>; # expiration date
+			 close (ID);
+			 chomp ($id);
 
-	     open (ID, "openssl x509 -subject -in $cert_dir/$_ -noout |");
-	     my $id = <ID>; # expiration date
-	     close (ID);
-	     chomp ($id);
+			 unless ($id) {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't get expiration date for $_ by using the x509 openssl command"});
+				next;
+			 }
 
-	     unless ($id) {
-		 &Log::do_log ('err', "error in chk_cert_expiration command : can't get expiration date for $_ by using the x509 openssl command");
-		 next;
-	     }
-
-	     $id =~ s/subject= //;
-	     &Log::do_log ('notice', "id : $id");
-	     $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
-	     $tpl_context{'certificate_id'} = $id;
-	     $tpl_context{'auto_submitted'} = 'auto-generated';
-	     unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
-		 &Log::do_log ('notice', "Unable to send template $template to $_");
-	     }
-	     &Log::do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
-	 }
+			 $id =~ s/subject= //;
+			 &Log::do_log ('notice', "id : $id");
+			 $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
+			 $tpl_context{'certificate_id'} = $id;
+			 $tpl_context{'auto_submitted'} = 'auto-generated';
+			 unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
+				 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $_"});
+			 }
+			 &Log::do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
+		 }
      }
      return 1;
  }
@@ -945,8 +950,8 @@ sub purge_orphan_bounces {
      # building of CA list
      my @CA;
      unless (open (FILE, $CA_file)) {
-	 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in update_crl command : can't open $CA_file file"});
-	 return undef;
+		 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "error in update_crl command : can't open $CA_file file"});
+		 return undef;
      }
      while (<FILE>) {
 	 chomp;
@@ -956,13 +961,13 @@ sub purge_orphan_bounces {
 
      # updating of crl files
      my $crl_dir = "$Conf::Conf{'crl_dir'}";
-     unless (-d $Conf::Conf{'crl_dir'}) {
-	 if ( mkdir ($Conf::Conf{'crl_dir'}, 0775)) {
-	     &Log::do_log('notice', "creating spool $Conf::Conf{'crl_dir'}");
-	 }else{
-	     &Log::do_log('err', "Unable to create CRLs directory $Conf::Conf{'crl_dir'}");
-	     return undef;
-	 }
+		 unless (-d $Conf::Conf{'crl_dir'}) {
+		 if ( mkdir ($Conf::Conf{'crl_dir'}, 0775)) {
+			 &Log::do_log('notice', "creating spool $Conf::Conf{'crl_dir'}");
+		 }else{
+			 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to create CRLs directory $Conf::Conf{'crl_dir'}"});
+			 return undef;
+		 }
      }
 
      foreach my $url (@CA) {
@@ -984,7 +989,7 @@ sub purge_orphan_bounces {
 	 chomp ($date);
 
 	 unless ($date) {
-	     &Log::do_log ('err', "error in update_crl command : can't get expiration date for $file crl file by using the crl openssl command");
+		 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't get expiration date for $file crl file by using the crl openssl command"});
 	     next;
 	 }
 
@@ -1019,35 +1024,39 @@ sub eval_bouncers {
     
     my $all_lists = &List::get_lists('*');
     foreach my $list (@$all_lists) {
-	
-	my $listname = $list->{'name'};
-	my $list_traffic = {};
-	
-	&Log::do_log('info','eval_bouncers(%s)',$listname);
-	
-	## Analizing file Msg-count and fill %$list_traffic
-	unless (open(COUNT,$list->{'dir'}.'/msg_count')){
-	    &Log::do_log('debug','** Could not open msg_count FILE for list %s',$listname);
-	    next;
-	}    
-	while (<COUNT>) {
-	    if ( /^(\w+)\s+(\d+)/) {
-		my ($a, $b) = ($1, $2);
-		$list_traffic->{$a} = $b;	
-	    }
-	}    	
-	close(COUNT);
-	
-	#for each bouncing user
-	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
-	    my $score = &get_score($user_ref,$list_traffic) || 0;
-	    
-	    ## copying score into DataBase
-	    unless ($list->update_list_member($user_ref->{'email'},{'score' => $score }) ) {
-		&Log::do_log('err','Task eval_bouncers :Error while updating DB for user %s',$user_ref->{'email'});
-		next;
-	    }
-	}
+		my $listname = $list->{'name'};
+		my $list_traffic = {};
+		
+		&Log::do_log('info','eval_bouncers(%s)',$listname);
+		
+		## Analizing file Msg-count and fill %$list_traffic
+		unless (open(COUNT,$list->{'dir'}.'/msg_count')){
+			if (-f $list->{'dir'}.'/msg_count') {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Could not open 'msg_count' file for list $listname"});
+				next;
+			}else{
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "File 'msg_count' does not exist for list $listname"});
+				next;
+			}
+		}    
+		while (<COUNT>) {
+			if ( /^(\w+)\s+(\d+)/) {
+			my ($a, $b) = ($1, $2);
+			$list_traffic->{$a} = $b;	
+			}
+		}    	
+		close(COUNT);
+		
+		#for each bouncing user
+		for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
+			
+			my $score = &get_score($user_ref,$list_traffic) || 0;
+			## copying score into DataBase
+			unless ($list->update_list_member($user_ref->{'email'},{'score' => $score }) ) {
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while updating DB for user $user_ref->{'email'}"});
+				next;
+			}
+		}
     }
     return 1;
 }
@@ -1086,67 +1095,64 @@ sub process_bouncers {
 
     my $all_lists = &List::get_lists();
     foreach my $list (@$all_lists) {
-	my $listname = $list->{'name'};
-	
-	my @bouncers;
-	# @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one line 
-	#               ['email1', 'email2', 'email3',....,],    foreach bounce 
-	#               ['email1', 'email2', 'email3',....,],)   level.
-   
-	next unless ($list);
-
-	my $max_level;    
-	for (my $level = 1;defined ($list->{'admin'}{'bouncers_level'.$level});$level++) {
-	    $max_level = $level;
-	}
-	
-	##  first, bouncing email are sorted in @bouncer 
-	for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()) {	   
-
-	    ## Skip included users (cannot be removed)
-	    next if ($user_ref->{'is_included'});
- 
-	    for ( my $level = $max_level;($level >= 1) ;$level--) {
-
-		if ($user_ref->{'bounce_score'} >= $list->{'admin'}{'bouncers_level'.$level}{'rate'}){
-		    push(@{$bouncers[$level]}, $user_ref->{'email'});
-		    $level = ($level-$max_level);		   
-		}
-	    }
-	}
-	
-	## then, calling action foreach level
-	for ( my $level = $max_level;($level >= 1) ;$level--) {
-
-	    my $action = $list->{'admin'}{'bouncers_level'.$level}{'action'};
-	    my $notification = $list->{'admin'}{'bouncers_level'.$level}{'notification'};
-	  
-	    if (defined $bouncers[$level] && @{$bouncers[$level]}){
-		## calling action subroutine with (list,email list) in parameter 
-		unless ($actions{$action}->($list,$bouncers[$level])){
-		    &Log::do_log('err','error while calling action sub for bouncing users in list %s',$listname);
-		    return undef;
-		}
-
-		## calling notification subroutine with (list,action, email list) in parameter  
+		my $listname = $list->{'name'};
 		
-		my $param = {'listname' => $listname,
-			     'action' => $action,
-			     'user_list' => \@{$bouncers[$level]},
-			     'total' => $#{$bouncers[$level]} + 1};
+		my @bouncers;
+		# @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one line 
+		#               ['email1', 'email2', 'email3',....,],    foreach bounce 
+		#               ['email1', 'email2', 'email3',....,],)   level.
+	   
+		next unless ($list);
 
-	        if ($notification eq 'listmaster'){
-
-		    unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},$param)){
-			&Log::do_log('err','error while notifying listmaster');
-		    }
-		}elsif ($notification eq 'owner'){
-		    unless ($list->send_notify_to_owner('automatic_bounce_management',$param)){
-			&Log::do_log('err','error while notifying owner');
-		    }
+		my $max_level;    
+		for (my $level = 1;defined ($list->{'admin'}{'bouncers_level'.$level});$level++) {
+			$max_level = $level;
 		}
-	    }
-	}
+		
+		##  first, bouncing email are sorted in @bouncer 
+		for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()) {	   
+
+			## Skip included users (cannot be removed)
+			next if ($user_ref->{'is_included'});
+	 
+			for ( my $level = $max_level;($level >= 1) ;$level--) {
+				if ($user_ref->{'bounce_score'} >= $list->{'admin'}{'bouncers_level'.$level}{'rate'}){
+					push(@{$bouncers[$level]}, $user_ref->{'email'});
+					$level = ($level-$max_level);		   
+				}
+			}
+		}
+		
+		## then, calling action foreach level
+		for ( my $level = $max_level;($level >= 1) ;$level--) {
+
+			my $action = $list->{'admin'}{'bouncers_level'.$level}{'action'};
+			my $notification = $list->{'admin'}{'bouncers_level'.$level}{'notification'};
+		  
+			if (defined $bouncers[$level] && @{$bouncers[$level]}){
+				## calling action subroutine with (list,email list) in parameter 
+				unless ($actions{$action}->($list,$bouncers[$level])){
+					$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while trying to execute action for bouncing users in list $listname"});
+					return undef;
+				}
+
+				## calling notification subroutine with (list,action, email list) in parameter  
+				my $param = {'listname' => $listname,
+						 'action' => $action,
+						 'user_list' => \@{$bouncers[$level]},
+						 'total' => $#{$bouncers[$level]} + 1};
+
+					if ($notification eq 'listmaster'){
+						unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},$param)){
+							$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'error while notifying listmaster'});
+						}
+				}elsif ($notification eq 'owner'){
+					unless ($list->send_notify_to_owner('automatic_bounce_management',$param)){
+						$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'error while notifying listmaster'});
+					}
+				}
+			}
+		}
     }     
     return 1;
 }
@@ -1174,30 +1180,30 @@ sub get_score {
     my $min_day = $EO_period;
 
     unless ($bounce_count >= $min_msg_count){
-	#not enough messages distributed to keep score
-	&Log::do_log('debug','Not enough messages for evaluation of user %s',$user_ref->{'email'});
-	return undef ;
+		#not enough messages distributed to keep score
+		&Log::do_log('debug','Not enough messages for evaluation of user %s',$user_ref->{'email'});
+		return undef ;
     }
 
     unless (($EO_period - $BO_period) >= $min_period){
-	#too short bounce period to keep score
-	&Log::do_log('debug','Too short period for evaluate %s',$user_ref->{'email'});
-	return undef;
-    } 
+		#too short bounce period to keep score
+		&Log::do_log('debug','Too short period for evaluate %s',$user_ref->{'email'});
+		return undef;
+	} 
 
     # calculate number of messages distributed in list while user was bouncing
     foreach my $date (sort {$b <=> $a} keys (%$list_traffic)) {
-	if (($date >= $BO_period) && ($date <= $EO_period)) {
-	    $min_day = $date;
-	    $msg_count += $list_traffic->{$date};
-	}
+		if (($date >= $BO_period) && ($date <= $EO_period)) {
+			$min_day = $date;
+			$msg_count += $list_traffic->{$date};
+		}
     }
 
     #Adjust bounce_count when msg_count file is too recent, compared to the bouncing period
     my $tmp_bounce_count = $bounce_count;
     unless ($EO_period == $BO_period) {
-	my $ratio  = (($EO_period - $min_day) / ($EO_period - $BO_period));
-	$tmp_bounce_count *= $ratio;
+		my $ratio  = (($EO_period - $min_day) / ($EO_period - $BO_period));
+		$tmp_bounce_count *= $ratio;
     }
     
     ## Regularity rate tells how much user has bounced compared to list traffic
@@ -1208,7 +1214,7 @@ sub get_score {
     my $type_rate = 1;
     $bounce_type =~ /(\d)\.(\d)\.(\d)/;    
     if ($1 == 4) { # if its a temporary Error: score = score/2
-	$type_rate = .5;
+		$type_rate = .5;
     }
 
     my $note = $bounce_count * $regularity_rate * $type_rate;
@@ -1228,14 +1234,15 @@ sub sync_include {
 
     my $list = $task->{'list_object'};
 
-    $list->sync_include();
-    $list->sync_include_admin() if ((defined $list->{'admin'}{'editor_include'} && $#{$list->{'admin'}{'editor_include'}}>-1) || (defined $list->{'admin'}{'owner_include'} && $#{$list->{'admin'}{'owner_include'}}>-1));
-
-    if (! $list->has_include_data_sources() &&
-	(!$list->{'last_sync'} || ($list->{'last_sync'} > (stat("$list->{'dir'}/config"))[9]))) {
-	&Log::do_log('debug', "List $list->{'name'} no more require sync_include task");
-	return -1;	
-    }
+    unless ($list->sync_include()) {
+		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while synchronizing list members for list $list->get_list_id"});
+	}
+    if ((defined $list->{'admin'}{'editor_include'} && $#{$list->{'admin'}{'editor_include'}}>-1) || (defined $list->{'admin'}{'owner_include'} && $#{$list->{'admin'}{'owner_include'}}>-1)) {
+		unless($list->sync_include_admin()) {
+			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while synchronizing list admins for list $list->get_list_id"});
+		}
+	}
+	return undef if ($self->{'errors'});
     return 1;  
 }
 

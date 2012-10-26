@@ -406,7 +406,7 @@ sub parse {
 	$lnb++;
 	my $result = new TaskInstruction ({'line_as_string' =>$line, 'line_number' => $lnb});
 	if ( defined $result->{'error'}) {
-	    &Log::do_log ('err', "error : $result->{'error'}");
+	    $result->error({'task' => $self, 'type' => 'parsing', 'message' => $result->{'error'}});
 	    return undef;
 	}
 	push @{$self->{'parsed_instructions'}},$result;
