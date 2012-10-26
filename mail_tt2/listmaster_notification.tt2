@@ -12,6 +12,26 @@ Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" cre
 [%|loc%]To activate/delete this mailing list:[%END%]
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
+[%- ELSIF type == 'task_error' -%]
+Subject: [% FILTER qencode %][%|loc(task.description)%]Error in task %1[%END%][%END%]
+
+[%|loc(task.description,task.human_date,task.template)%]Execution of the task %1 failed at %2.[%END%]
+
+[% IF task.errors.size > 0 -%]
+[%|loc()%]Below are the errors that caused the problem:[%END%]
+
+[% FOREACH error IN task.errors -%]
+[% IF error.type == 'execution'-%]
+- [%|loc(error.line,error.message)%]Line %1: execution error: %2[%END%]
+[% ELSIF error.type == 'parsing' -%]
+- [%|loc(error.line,error.message)%]Line %1: parse error: %2[%END%]
+[% ELSE -%]
+- [%|loc(error.line,error.message)%]Line %1: error: %2[%END%]
+[% END -%]
+[% END -%]
+[% ELSE -%]
+[%|loc()%]A very unexpected error happenned while running task. Nothing to report here. Please, check the logs for more details.[%END%]
+[% END -%]
 [%- ELSIF type == 'request_list_renaming' -%]
 [%- IF mode == 'copy' -%]
 Subject: [% FILTER qencode %][%|loc(new_listname)%]%1 mailing list creation[%END%][%END%]

@@ -159,10 +159,13 @@ foreach (keys %asgn_commands) {
 sub new {
 	my $pkg = shift;
 	my $data = shift; #Instructions are built by parsing a single line of a task string.
+	my $task = shift;
 	my $self = &tools::dup_var($data);
-
 	bless $self, $pkg;
 	$self->parse;
+	if ( defined $self->{'error'}) {
+	    $self->error({'task' => $task, 'type' => 'parsing', 'message' => $self->{'error'}});
+	}
 	return $self;
 }
 
@@ -222,6 +225,7 @@ sub parse {
 		$self->{'nature'} = 'error'; 
 		$self->{'error'} = 'syntax error';
     }
+    return 1;
 }
 
 ## Checks the arguments of a command 
@@ -265,8 +269,9 @@ sub chk_cmd {
 	    }
 	    
 	    if ($error) {
-		&Log::do_log ('err', "error at line $self->{'line_number'} : argument $_ is not valid");
-		return undef;
+			$self->{'nature'} = 'error';
+			$self->{'error'} = "Argument $_ is not valid";
+			return undef;
 	    }
 	    
 	    $self->{'used_labels'}{$args[1]} = 1 if ($self->{'command'} eq 'next' && ($args[1]));   
@@ -1251,11 +1256,12 @@ sub error {
     my $self = shift;
     my $param = shift;
 	
-    &Log::do_log ('err', 'Error in task: %s',$param->{'message'});
     my $task = $param->{'task'};
+    &Log::do_log ('err', 'Error at line %s in task %s: %s',$self->{'line_number'},$task->get_description,$param->{'message'});
     my $error_description;
     $error_description->{'message'} = $param->{'message'};
     $error_description->{'type'} = $param->{'type'};
+    $error_description->{'line'} = $self->{'line_number'};
     if (defined $task) {
 		if (defined $task->{'errors'}) {
 			push @{$task->{'errors'}}, $error_description;

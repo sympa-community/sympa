@@ -87,7 +87,7 @@ sub new {
 sub create {
     my $param = shift;
     
-    &Log::do_log ('debug', "create task date: %s label: %s model: %s flavour: %s Rdata :%s",$param->{'creation_date'},$param->{'label'},$param->{'model'},$param->{'flavour'},$param->{'data'});
+    &Log::do_log ('notice', "create task date: %s label: %s model: %s flavour: %s Rdata :%s",$param->{'creation_date'},$param->{'label'},$param->{'model'},$param->{'flavour'},$param->{'data'});
     
     # Creating task object. Simulating data retrieved from the database.
     my $task_in_spool;
@@ -375,13 +375,16 @@ sub check {
 sub execute {
 
     my $self = shift;
-    &Log::do_log('debug', 'Running task id = %s, %s)', $self->{'messagekey'}, $self->get_description);
-    unless($self->parse) {
-	&Log::do_log('err','Unable to parse task %s',$self->get_description);
+    &Log::do_log('notice', 'Running task id = %s, %s)', $self->{'messagekey'}, $self->get_description);
+    if(!$self->parse) {
+	$self->{'error'} = 'parse';
+	$self->error_report;
+	$self->remove;
 	return undef;
     }
-    unless ($self->process_all) {
-	&Log::do_log('err', 'Error while processing task %s (messagekey=%s), removing it',$self->get_description,$self->{'messagekey'});
+    elsif (!$self->process_all) {
+	$self->{'error'} = 'execution';
+	$self->error_report;
 	$self->remove;
 	return undef;
     }else{
@@ -404,9 +407,9 @@ sub parse {
     my $lnb = 0; # line number
     foreach my $line (split('\n',$taskasstring)){
 	$lnb++;
-	my $result = new TaskInstruction ({'line_as_string' =>$line, 'line_number' => $lnb});
-	if ( defined $result->{'error'}) {
-	    $result->error({'task' => $self, 'type' => 'parsing', 'message' => $result->{'error'}});
+	my $result = new TaskInstruction ({'line_as_string' =>$line, 'line_number' => $lnb},$self);
+	if ( defined $self->{'errors'}) {
+	    $self->error_report;
 	    return undef;
 	}
 	push @{$self->{'parsed_instructions'}},$result;
@@ -514,6 +517,21 @@ sub make_summary {
     }
 	
 }
+
+sub error_report {
+    my $self = shift;
+    &Log::do_log('debug2','Producing error report for task %s',$self->get_description);
+
+    my $data;
+    if (defined $self->{'list_object'}) {$data->{'list'} = $self->{'list_object'};}
+    $self->{'human_date'} = &tools::adate($self->{'date'});
+    $data->{'task'} = $self;
+    &Log::do_log('err','Execution of task %s failed. sending detailed report to listmaster',$self->get_description);
+    unless (&List::send_notify_to_listmaster ('task_error', $Conf::Conf{'domain'}, $data)) {
+	&Log::do_log('notice','Error while notifying listmaster about errors in task %s',$self->get_description);
+    }
+}
+
 #### Task line level subs ####
 ##############################
 
@@ -528,14 +546,6 @@ sub process_line {
 	$status->{'output'} = 'Nothing to compute';
     }
     return $status;
-}
-
-sub error {
-    my $self = shift;
-    &Log::do_log('err',$self->{'error_message'});
-    unless (&List::send_notify_to_listmaster ('error in task', $Conf::Conf{'domain'}, [$self->{'error_message'}])) {
-	&Log::do_log('notice','error while notifying listmaster about errors in task');
-    }
 }
 
 ## Packages must return true.
