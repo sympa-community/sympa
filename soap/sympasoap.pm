@@ -750,7 +750,7 @@ sub add {
     }else {
 	my $u;
 	my $defaults = $list->get_default_user_options();
-	my $u2 = &List::get_user_db($email);
+	my $u2 = &List::get_global_user($email);
 	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos || $u2->{'gecos'};

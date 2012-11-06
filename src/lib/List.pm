@@ -8881,7 +8881,7 @@ sub _load_list_members_from_include {
     my $name = $self->{'name'}; 
     my $admin = $self->{'admin'};
     my $dir = $self->{'dir'};
-    &Log::do_log('debug2', 'List::_load_users_include for list %s',$name);
+    &Log::do_log('debug2', 'Loading included users for list %s',$name);
     my (%users, $depend_on, $ref);
     my $total = 0;
     my @errors;

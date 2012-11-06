@@ -11080,10 +11080,10 @@ sub do_restore_list {
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'no_subscribers'});
      }
-     my @users = &List::_load_users_file("$list->{'dir'}/subscribers.closed.dump");
+     my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
      ## Insert users in database
      foreach my $user (@users) {
-	 $list->add_user($user);
+	 $list->add_list_member($user);
      }
 
      $list->savestats(); 
