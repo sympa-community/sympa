@@ -98,6 +98,13 @@
       [% END %] 
       this.form.submit()">
    </th>
+   <th>
+    <input  type="button" name="action_viewspools" value="Robot"  onclick="this.form.elements['sortby'].value='robot' ; this.form.elements['nav'].value='first'; 
+      [% IF sortby == 'robot' %]
+          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
+      [% END %] 
+      this.form.submit()">
+   </th>
 [%- IF spoolname == 'task' -%]
    <th>
     <input  type="button" name="action_viewspools" value="Task"  onclick="this.form.elements['sortby'].value='task' ; this.form.elements['nav'].value='first'; 
@@ -178,6 +185,9 @@
         </td>
 	<td>
 	[% msg.listname %]
+        </td>
+	<td>
+	[% msg.robot %]
         </td>
 	[%- IF spoolname == 'task' -%]
 	<td>

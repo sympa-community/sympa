@@ -17017,7 +17017,7 @@ sub do_viewspools {
     my $offset = ($param->{'current_page'} -  1) * $spool_page_size;
 
     # force sortby to a correct value
-    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
+    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(robot)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
     $param->{'sortby'} = $in{'sortby'};
 
     $in{'way'} = 'asc' unless ($in{'way'} eq 'desc');
