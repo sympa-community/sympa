@@ -3538,16 +3538,6 @@ sub send_msg_digest {
 	return 0;
     }
 
-    my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
-		 'to' => $self->get_list_address(),
-		 'table_of_content' => sprintf(gettext("Table of contents:")),
-		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
-		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
-		 };
-    if ($self->get_reply_to() =~ /^list$/io) {
-	$param->{'replyto'}= "$param->{'to'}";
-    }
-    
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
 
@@ -3563,10 +3553,6 @@ sub send_msg_digest {
     ## Digest index
     my @all_msg = $self->prepare_messages_for_digest({'list_of_mail' => \@list_of_mail});
 
-    my @now  = localtime(time);
-    $param->{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
-    $param->{'date'} = gettext_strftime "%a, %d %b %Y", @now;
-
     ## Split messages into groups of digest_max_size size
     my @group_of_msg;
     while (@all_msg) {
@@ -3574,10 +3560,9 @@ sub send_msg_digest {
 	
 	push @group_of_msg, \@group;
     }
-    
 
-    $param->{'current_group'} = 0;
-    $param->{'total_group'} = $#group_of_msg + 1;
+    my $param = $self->prepare_digest_parameters({'group_of_msg' => \@group_of_msg});
+    
     ## Foreach set of digest_max_size messages...
     foreach my $group (@group_of_msg) {
 	
@@ -3651,6 +3636,7 @@ sub get_lists_of_digest_receipients {
 
 sub prepare_messages_for_digest {
     my $self = shift;
+    &Log::do_log('trace','Preparing messages for digest for list %s',$self->get_list_id);
     my $param = shift;
     my @list_of_mail = @{$param->{'list_of_mail'}};
     my @all_msg;
@@ -3680,6 +3666,28 @@ sub prepare_messages_for_digest {
 	push @all_msg, $msg ;	
     }
     return @all_msg;
+}
+
+sub prepare_digest_parameters {
+    my $self = shift;
+    &Log::do_log('trace','Preparing digest parameters for list %s',$self->get_list_id);
+    my $param = shift;
+    my @group_of_msg = @{$param->{'group_of_msg'}};
+    my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
+		 'to' => $self->get_list_address(),
+		 'table_of_content' => sprintf(gettext("Table of contents:")),
+		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
+		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
+		 };
+    if ($self->get_reply_to() =~ /^list$/io) {
+	$param->{'replyto'}= "$param->{'to'}";
+    }
+    my @now  = localtime(time);
+    $param->{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
+    $param->{'date'} = gettext_strftime "%a, %d %b %Y", @now;
+    $param->{'current_group'} = 0;
+    $param->{'total_group'} = $#group_of_msg + 1;
+    return $param;
 }
 #########################   TEMPLATE SENDING  ##########################################
 
