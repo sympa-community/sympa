@@ -3522,17 +3522,16 @@ sub send_msg_digest {
     my $messagekey = shift;
     &Log::do_log('debug2', 'Sending digest with key %s for list %s',$messagekey,$self->{'name'});
 
-    # fetch and lock message. 
-    my $digestspool = new Sympaspool ('digest');
-    my $message_in_spool = $digestspool->next({'messagekey'=>$messagekey});
-    
     ## Create the list of subscribers in various digest modes
     return 0 unless ($self->get_lists_of_digest_receipients());
 
-    my @list_of_mail = $self->split_spooled_digest_to_messages({'message_in_spool' => $message_in_spool});
+    # fetch and lock message. 
+    my $digestspool = new Sympaspool ('digest');
+    
+    $self->split_spooled_digest_to_messages({'message_in_spool' => $digestspool->next({'messagekey'=>$messagekey})});
     
     ## Digest index
-    my @all_msg = $self->prepare_messages_for_digest({'list_of_mail' => \@list_of_mail});
+    my @all_msg = $self->prepare_messages_for_digest();
 
     ## Split messages into groups of digest_max_size size
     my @group_of_msg;
@@ -3595,29 +3594,29 @@ sub split_spooled_digest_to_messages {
     my $param = shift;
     &Log::do_log('trace','Splitting spooled digest into message objects for list %s',$self->get_list_id);
     my $message_in_spool = $param->{'message_in_spool'};
-    my @list_of_mail;
+    $self->{'list_of_mail'} = [];
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
 
     foreach my $message_as_string (@messages_as_string){  
 	my $mail = new Message({'messageasstring' => $message_as_string});
 	next unless (defined $mail);
-	push @list_of_mail, $mail;
+	push @{$self->{'list_of_mail'}}, $mail;
     }
 
     ## Deletes the introduction part
-    splice @list_of_mail, 0, 1;
-    return @list_of_mail;
+    splice @{$self->{'list_of_mail'}}, 0, 1;
+    return 1;
 }
 
 sub prepare_messages_for_digest {
     my $self = shift;
     my $param = shift;
     &Log::do_log('trace','Preparing messages for digest for list %s',$self->get_list_id);
-    my @list_of_mail = @{$param->{'list_of_mail'}};
     my @all_msg;
-    foreach my $i (0 .. $#list_of_mail){
-	my $mail = $list_of_mail[$i];
+    return undef unless($self->{'list_of_mail'});
+    foreach my $i (0 .. $#{$self->{'list_of_mail'}}){
+	my $mail = ${$self->{'list_of_mail'}}[$i];
 	my $subject = &tools::decode_header($mail, 'Subject');
 	my $from = &tools::decode_header($mail, 'From');
 	my $date = &tools::decode_header($mail, 'Date');
