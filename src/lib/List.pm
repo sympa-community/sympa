@@ -3520,22 +3520,17 @@ sub distribute_msg {
 sub send_msg_digest {
     my $self = shift;
     my $messagekey = shift;
-   &Log::do_log('debug',"send_msg_disgest(%s)",$messagekey);
+    &Log::do_log('debug2', 'Sending digest with key %s for list %s',$messagekey,$self->{'name'});
 
     # fetch and lock message. 
     my $digestspool = new Sympaspool ('digest');
-
     my $message_in_spool = $digestspool->next({'messagekey'=>$messagekey});
-
-    my $listname = $self->{'name'};
-    my $robot = $self->{'domain'};
-    &Log::do_log('debug2', 'List:send_msg_digest(%s)', $listname);
     
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => $self->get_list_address(),
 		 'table_of_content' => sprintf(gettext("Table of contents:")),
-		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
-		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
+		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
+		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
 		 };
     if ($self->get_reply_to() =~ /^list$/io) {
 	$param->{'replyto'}= "$param->{'to'}";
@@ -3544,14 +3539,12 @@ sub send_msg_digest {
     my @tabrcpt ;
     my @tabrcptsummary;
     my @tabrcptplain;
-    my $i;
-    
     my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
     $self->get_lists_of_digest_receipients({'mime_rcpts' => \@tabrcpt,'summary_rcpts' => \@tabrcptsummary,'plain_rcpts' => \@tabrcptplain});
     if (($#tabrcptsummary == -1) and ($#tabrcpt == -1) and ($#tabrcptplain == -1)) {
-	&Log::do_log('info', 'No subscriber for sending digest in list %s', $listname);
+	&Log::do_log('info', 'No subscriber for sending digest in list %s', $self->{'name'});
 	return 0;
     }
 
@@ -3569,7 +3562,7 @@ sub send_msg_digest {
     
     ## Digest index
     my @all_msg;
-    foreach $i (0 .. $#list_of_mail){
+    foreach my $i (0 .. $#list_of_mail){
 	my $mail = $list_of_mail[$i];
 	my $subject = &tools::decode_header($mail, 'Subject');
 	my $from = &tools::decode_header($mail, 'From');
@@ -3620,7 +3613,7 @@ sub send_msg_digest {
 	## Prepare Digest
 	if (@tabrcpt) {
 	    ## Send digest
-	    unless ($self->send_file('digest', \@tabrcpt, $robot, $param)) {
+	    unless ($self->send_file('digest', \@tabrcpt, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
 	    }
 	}    
@@ -3628,14 +3621,14 @@ sub send_msg_digest {
 	## Prepare Plain Text Digest
 	if (@tabrcptplain) {
 	    ## Send digest-plain
-	    unless ($self->send_file('digest_plain', \@tabrcptplain, $robot, $param)) {
+	    unless ($self->send_file('digest_plain', \@tabrcptplain, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
 	    }
 	}    	
 	
 	## send summary
 	if (@tabrcptsummary) {
-	    unless ($self->send_file('summary', \@tabrcptsummary, $robot, $param)) {
+	    unless ($self->send_file('summary', \@tabrcptsummary, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
 	    }
 	}
