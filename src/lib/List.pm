@@ -3549,33 +3549,7 @@ sub send_msg_digest {
     my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
-    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
-	my $options;
-	$options->{'email'} = $user->{'email'};
-	$options->{'name'} = $self->{'name'};
-	$options->{'domain'} = $self->{'domain'};
-	my $user_data = &get_list_member_no_object($options);
-	## test to know if the rcpt suspended her subscription for this list
-	## if yes, don't send the message
-	if ($user_data->{'suspend'} eq '1'){
-	    if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
-		next;
-	    }elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
-		## If end date is < time, update the BDD by deleting the suspending's data
-		&restore_suspended_subscription($user->{'email'},$self->{'name'},$self->{'domain'});
-	    }
-	}
-	if ($user->{'reception'} eq "digest") {
-	    push @tabrcpt, $user->{'email'};
-
-	}elsif ($user->{'reception'} eq "summary") {
-	    ## Create the list of subscribers in summary mode
-	    push @tabrcptsummary, $user->{'email'};
-        
-	}elsif ($user->{'reception'} eq "digestplain") {
-	    push @tabrcptplain, $user->{'email'};              
-	}
-    }
+    $self->get_lists_of_digest_receipients({'mime_rcpts' => \@tabrcpt,'summary_rcpts' => \@tabrcptsummary,'plain_rcpts' => \@tabrcptplain});
     if (($#tabrcptsummary == -1) and ($#tabrcpt == -1) and ($#tabrcptplain == -1)) {
 	&Log::do_log('info', 'No subscriber for sending digest in list %s', $listname);
 	return 0;
@@ -3585,12 +3559,7 @@ sub send_msg_digest {
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
 
     foreach my $message_as_string (@messages_as_string){  
-	my $parser = new MIME::Parser;
-	$parser->output_to_core(1);
-	$parser->extract_uuencode(1);  
-	$parser->extract_nested_messages(1);
-	#   $parser->output_dir($Conf::Conf{'spool'} ."/tmp");    
-	my $mail = $parser->parse_data($message_as_string);
+	my $mail = new Message({'messageasstring' => $message_as_string});
 	next unless (defined $mail);
 	push @list_of_mail, $mail;
     }
@@ -3611,19 +3580,13 @@ sub send_msg_digest {
         $msg->{'subject'} = $subject;	
 	$msg->{'from'} = $from;
 	$msg->{'date'} = $date;
-	
-	#$mail->tidy_body;
-	
-        ## Commented because one Spam made Sympa die (MIME::tools 5.413)
-	#$mail->remove_sig;
-	
-	$msg->{'full_msg'} = $mail->as_string;
-	$msg->{'body'} = $mail->body_as_string;
-	$msg->{'plain_body'} = $mail->PlainDigest::plain_body_as_string();
+	$msg->{'full_msg'} = $mail->{'msg_as_string'};
+	$msg->{'body'} = $mail->{'msg'}->body_as_string;
+	$msg->{'plain_body'} = $mail->{'msg'}->PlainDigest::plain_body_as_string();
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
 	chomp $msg->{'from'};
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
-	$msg->{'message_id'} = &tools::clean_msg_id($mail->head->get('Message-Id'));
+	$msg->{'message_id'} = &tools::clean_msg_id($mail->{'msg'}->head->get('Message-Id'));
 	
 	## Clean up Message-ID
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
@@ -3681,7 +3644,42 @@ sub send_msg_digest {
     return 1;
 }
 
+sub get_lists_of_digest_receipients {
+    my $self = shift;
+    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
+    my $param = shift;
+    my $tabrcpt = $param->{'mime_rcpts'};
+    my $tabrcptsummary = $param->{'summary_rcpts'};
+    my $tabrcptplain = $param->{'plain_rcpts'};
+    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
+	my $options;
+	$options->{'email'} = $user->{'email'};
+	$options->{'name'} = $self->{'name'};
+	$options->{'domain'} = $self->{'domain'};
+	my $user_data = &get_list_member_no_object($options);
+	## test to know if the rcpt suspended her subscription for this list
+	## if yes, don't send the message
+	if ($user_data->{'suspend'} eq '1'){
+	    if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
+		next;
+	    }elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
+		## If end date is < time, update the BDD by deleting the suspending's data
+		&restore_suspended_subscription($user->{'email'},$self->{'name'},$self->{'domain'});
+	    }
+	}
+	if ($user->{'reception'} eq "digest") {
+	    push @{$tabrcpt}, $user->{'email'};
 
+	}elsif ($user->{'reception'} eq "summary") {
+	    ## Create the list of subscribers in summary mode
+	    push @{$tabrcptsummary}, $user->{'email'};
+        
+	}elsif ($user->{'reception'} eq "digestplain") {
+	    push @{$tabrcptplain}, $user->{'email'};              
+	}
+    }
+    return 1;
+}
 #########################   TEMPLATE SENDING  ##########################################
 
 
