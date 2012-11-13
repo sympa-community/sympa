@@ -3526,16 +3526,8 @@ sub send_msg_digest {
     my $digestspool = new Sympaspool ('digest');
     my $message_in_spool = $digestspool->next({'messagekey'=>$messagekey});
     
-    my @tabrcpt ;
-    my @tabrcptsummary;
-    my @tabrcptplain;
-
     ## Create the list of subscribers in various digest modes
-    $self->get_lists_of_digest_receipients({'mime_rcpts' => \@tabrcpt,'summary_rcpts' => \@tabrcptsummary,'plain_rcpts' => \@tabrcptplain});
-    if (($#tabrcptsummary == -1) and ($#tabrcpt == -1) and ($#tabrcptplain == -1)) {
-	&Log::do_log('info', 'No subscriber for sending digest in list %s', $self->{'name'});
-	return 0;
-    }
+    return 0 unless ($self->get_lists_of_digest_receipients());
 
     my @list_of_mail = $self->split_spooled_digest_to_messages({'message_in_spool' => $message_in_spool});
     
@@ -3552,8 +3544,49 @@ sub send_msg_digest {
 
     my $param = $self->prepare_digest_parameters({'group_of_msg' => \@group_of_msg});
 
-    $self->do_digest_sending({'group_of_msg' => \@group_of_msg,'tabrcpt' =>\@tabrcpt,'tabrcptsummary' =>\@tabrcptsummary,'tabrcptplain' =>\@tabrcptplain,'param' => $param});
+    $self->do_digest_sending({'group_of_msg' => \@group_of_msg,'param' => $param});
     $digestspool->remove_message({'messagekey'=>$messagekey});    
+    return 1;
+}
+
+sub get_lists_of_digest_receipients {
+    my $self = shift;
+    my $param = shift;
+    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
+    $self->{'tabrcpt'} = [];
+    $self->{'tabrcptsummary'} = [];
+    $self->{'tabrcptplain'} = [];
+    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
+	my $options;
+	$options->{'email'} = $user->{'email'};
+	$options->{'name'} = $self->{'name'};
+	$options->{'domain'} = $self->{'domain'};
+	my $user_data = &get_list_member_no_object($options);
+	## test to know if the rcpt suspended her subscription for this list
+	## if yes, don't send the message
+	if ($user_data->{'suspend'} eq '1'){
+	    if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
+		next;
+	    }elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
+		## If end date is < time, update the BDD by deleting the suspending's data
+		&restore_suspended_subscription($user->{'email'},$self->{'name'},$self->{'domain'});
+	    }
+	}
+	if ($user->{'reception'} eq "digest") {
+	    push @{$self->{'tabrcpt'}}, $user->{'email'};
+
+	}elsif ($user->{'reception'} eq "summary") {
+	    ## Create the list of subscribers in summary mode
+	    push @{$self->{'tabrcptsummary'}}, $user->{'email'};
+        
+	}elsif ($user->{'reception'} eq "digestplain") {
+	    push @{$self->{'tabrcptplain'}}, $user->{'email'};              
+	}
+    }
+    if (($#{$self->{'tabrcpt'}} == -1) and ($#{$self->{'tabrcptsummary'}} == -1) and ($#{$self->{'tabrcptplain'}} == -1)) {
+	&Log::do_log('info', 'No subscriber for sending digest in list %s', $self->{'name'});
+	return 0;
+    }
     return 1;
 }
 
@@ -3575,43 +3608,6 @@ sub split_spooled_digest_to_messages {
     ## Deletes the introduction part
     splice @list_of_mail, 0, 1;
     return @list_of_mail;
-}
-
-sub get_lists_of_digest_receipients {
-    my $self = shift;
-    my $param = shift;
-    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
-    my $tabrcpt = $param->{'mime_rcpts'};
-    my $tabrcptsummary = $param->{'summary_rcpts'};
-    my $tabrcptplain = $param->{'plain_rcpts'};
-    for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
-	my $options;
-	$options->{'email'} = $user->{'email'};
-	$options->{'name'} = $self->{'name'};
-	$options->{'domain'} = $self->{'domain'};
-	my $user_data = &get_list_member_no_object($options);
-	## test to know if the rcpt suspended her subscription for this list
-	## if yes, don't send the message
-	if ($user_data->{'suspend'} eq '1'){
-	    if(($user_data->{'startdate'} <= time) && ((time <= $user_data->{'enddate'}) || (!$user_data->{'enddate'}))){
-		next;
-	    }elsif(($user_data->{'enddate'} < time) && ($user_data->{'enddate'})){
-		## If end date is < time, update the BDD by deleting the suspending's data
-		&restore_suspended_subscription($user->{'email'},$self->{'name'},$self->{'domain'});
-	    }
-	}
-	if ($user->{'reception'} eq "digest") {
-	    push @{$tabrcpt}, $user->{'email'};
-
-	}elsif ($user->{'reception'} eq "summary") {
-	    ## Create the list of subscribers in summary mode
-	    push @{$tabrcptsummary}, $user->{'email'};
-        
-	}elsif ($user->{'reception'} eq "digestplain") {
-	    push @{$tabrcptplain}, $user->{'email'};              
-	}
-    }
-    return 1;
 }
 
 sub prepare_messages_for_digest {
@@ -3675,9 +3671,6 @@ sub do_digest_sending {
     my $param2 = shift;
     &Log::do_log('trace','Actually sending digest for list %s',$self->get_list_id);
     my @group_of_msg = @{$param2->{'group_of_msg'}};
-    my @tabrcpt = @{$param2->{'tabrcpt'}};
-    my @tabrcptplain = @{$param2->{'tabrcptplain'}};
-    my @tabrcptsummary = @{$param2->{'tabrcptsummary'}};
     my $param = $param2->{'param'};
     foreach my $group (@group_of_msg) {
 	
@@ -3686,24 +3679,24 @@ sub do_digest_sending {
 	$param->{'auto_submitted'} = 'auto-forwarded';
 	
 	## Prepare Digest
-	if (@tabrcpt) {
+	if ($#{$self->{'tabrcpt'}} > -1) {
 	    ## Send digest
-	    unless ($self->send_file('digest', \@tabrcpt, $self->{'domain'}, $param)) {
+	    unless ($self->send_file('digest', $self->{'tabrcpt'}, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
 	    }
 	}    
 	
 	## Prepare Plain Text Digest
-	if (@tabrcptplain) {
+	if ($#{$self->{'tabrcptplain'}} > -1) {
 	    ## Send digest-plain
-	    unless ($self->send_file('digest_plain', \@tabrcptplain, $self->{'domain'}, $param)) {
+	    unless ($self->send_file('digest_plain', $self->{'tabrcptplain'}, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
 	    }
 	}    	
 	
 	## send summary
-	if (@tabrcptsummary) {
-	    unless ($self->send_file('summary', \@tabrcptsummary, $self->{'domain'}, $param)) {
+	if ($#{$self->{'tabrcptsummary'}} > -1) {
+	    unless ($self->send_file('summary', $self->{'tabrcptsummary'}, $self->{'domain'}, $param)) {
 		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
 	    }
 	}
