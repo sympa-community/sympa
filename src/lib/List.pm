@@ -3531,19 +3531,13 @@ sub send_msg_digest {
     $self->split_spooled_digest_to_messages({'message_in_spool' => $digestspool->next({'messagekey'=>$messagekey})});
     
     ## Digest index
-    my @all_msg = $self->prepare_messages_for_digest();
+    $self->prepare_messages_for_digest();
 
-    ## Split messages into groups of digest_max_size size
-    my @group_of_msg;
-    while (@all_msg) {
-	my @group = splice @all_msg, 0, $self->{'admin'}{'digest_max_size'};
-	
-	push @group_of_msg, \@group;
-    }
+    $self->prepare_digest_parameters();
 
-    my $param = $self->prepare_digest_parameters({'group_of_msg' => \@group_of_msg});
+    $self->do_digest_sending();
 
-    $self->do_digest_sending({'group_of_msg' => \@group_of_msg,'param' => $param});
+    delete $self->{'digest'};
     $digestspool->remove_message({'messagekey'=>$messagekey});    
     return 1;
 }
@@ -3551,10 +3545,10 @@ sub send_msg_digest {
 sub get_lists_of_digest_receipients {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
-    $self->{'tabrcpt'} = [];
-    $self->{'tabrcptsummary'} = [];
-    $self->{'tabrcptplain'} = [];
+    &Log::do_log('debug','Getting list of digest receipients for list %s',$self->get_list_id);
+    $self->{'digest'}{'tabrcpt'} = [];
+    $self->{'digest'}{'tabrcptsummary'} = [];
+    $self->{'digest'}{'tabrcptplain'} = [];
     for (my $user = $self->get_first_list_member(); $user; $user = $self->get_next_list_member()) {
 	my $options;
 	$options->{'email'} = $user->{'email'};
@@ -3572,17 +3566,17 @@ sub get_lists_of_digest_receipients {
 	    }
 	}
 	if ($user->{'reception'} eq "digest") {
-	    push @{$self->{'tabrcpt'}}, $user->{'email'};
+	    push @{$self->{'digest'}{'tabrcpt'}}, $user->{'email'};
 
 	}elsif ($user->{'reception'} eq "summary") {
 	    ## Create the list of subscribers in summary mode
-	    push @{$self->{'tabrcptsummary'}}, $user->{'email'};
+	    push @{$self->{'digest'}{'tabrcptsummary'}}, $user->{'email'};
         
 	}elsif ($user->{'reception'} eq "digestplain") {
-	    push @{$self->{'tabrcptplain'}}, $user->{'email'};              
+	    push @{$self->{'digest'}{'tabrcptplain'}}, $user->{'email'};              
 	}
     }
-    if (($#{$self->{'tabrcpt'}} == -1) and ($#{$self->{'tabrcptsummary'}} == -1) and ($#{$self->{'tabrcptplain'}} == -1)) {
+    if (($#{$self->{'digest'}{'tabrcpt'}} == -1) and ($#{$self->{'digest'}{'tabrcptsummary'}} == -1) and ($#{$self->{'digest'}{'tabrcptplain'}} == -1)) {
 	&Log::do_log('info', 'No subscriber for sending digest in list %s', $self->{'name'});
 	return 0;
     }
@@ -3592,31 +3586,31 @@ sub get_lists_of_digest_receipients {
 sub split_spooled_digest_to_messages {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('trace','Splitting spooled digest into message objects for list %s',$self->get_list_id);
+    &Log::do_log('debug2','Splitting spooled digest into message objects for list %s',$self->get_list_id);
     my $message_in_spool = $param->{'message_in_spool'};
-    $self->{'list_of_mail'} = [];
+    $self->{'digest'}{'list_of_mail'} = [];
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
 
     foreach my $message_as_string (@messages_as_string){  
 	my $mail = new Message({'messageasstring' => $message_as_string});
 	next unless (defined $mail);
-	push @{$self->{'list_of_mail'}}, $mail;
+	push @{$self->{'digest'}{'list_of_mail'}}, $mail;
     }
 
     ## Deletes the introduction part
-    splice @{$self->{'list_of_mail'}}, 0, 1;
+    splice @{$self->{'digest'}{'list_of_mail'}}, 0, 1;
     return 1;
 }
 
 sub prepare_messages_for_digest {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('trace','Preparing messages for digest for list %s',$self->get_list_id);
-    my @all_msg;
-    return undef unless($self->{'list_of_mail'});
-    foreach my $i (0 .. $#{$self->{'list_of_mail'}}){
-	my $mail = ${$self->{'list_of_mail'}}[$i];
+    &Log::do_log('debug2','Preparing messages for digest for list %s',$self->get_list_id);
+    $self->{'digest'}{'all_msg'} = [];
+    return undef unless($self->{'digest'}{'list_of_mail'});
+    foreach my $i (0 .. $#{$self->{'digest'}{'list_of_mail'}}){
+	my $mail = ${$self->{'digest'}{'list_of_mail'}}[$i];
 	my $subject = &tools::decode_header($mail, 'Subject');
 	my $from = &tools::decode_header($mail, 'From');
 	my $date = &tools::decode_header($mail, 'Date');
@@ -3638,64 +3632,66 @@ sub prepare_messages_for_digest {
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
         #push @{$param->{'msg_list'}}, $msg ;
-	push @all_msg, $msg ;	
+	push @{$self->{'digest'}{'all_msg'}}, $msg ;	
     }
-    return @all_msg;
+    $self->{'digest'}{'group_of_msg'} = [];
+    ## Split messages into groups of digest_max_size size
+    while (@{$self->{'digest'}{'all_msg'}}) {
+	my @group = splice @{$self->{'digest'}{'all_msg'}}, 0, $self->{'admin'}{'digest_max_size'};
+	push @{$self->{'digest'}{'group_of_msg'}}, \@group;
+    }
+    return 1;
 }
 
 sub prepare_digest_parameters {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('trace','Preparing digest parameters for list %s',$self->get_list_id);
-    my @group_of_msg = @{$param->{'group_of_msg'}};
-    my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
+    &Log::do_log('debug2','Preparing digest parameters for list %s',$self->get_list_id);
+    $self->{'digest'}{'template_params'} = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => $self->get_list_address(),
 		 'table_of_content' => sprintf(gettext("Table of contents:")),
 		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
 		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
 		 };
     if ($self->get_reply_to() =~ /^list$/io) {
-	$param->{'replyto'}= "$param->{'to'}";
+	$self->{'digest'}{'template_params'}{'replyto'}= "$param->{'to'}";
     }
     my @now  = localtime(time);
-    $param->{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
-    $param->{'date'} = gettext_strftime "%a, %d %b %Y", @now;
-    $param->{'current_group'} = 0;
-    $param->{'total_group'} = $#group_of_msg + 1;
-    return $param;
+    $self->{'digest'}{'template_params'}{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
+    $self->{'digest'}{'template_params'}{'date'} = gettext_strftime "%a, %d %b %Y", @now;
+    $self->{'digest'}{'template_params'}{'current_group'} = 0;
+    $self->{'digest'}{'template_params'}{'total_group'} = $#{$self->{'digest'}{'group_of_msg'}} + 1;
+    return 1;
 }
 
 sub do_digest_sending {
     my $self = shift;
-    my $param2 = shift;
-    &Log::do_log('trace','Actually sending digest for list %s',$self->get_list_id);
-    my @group_of_msg = @{$param2->{'group_of_msg'}};
-    my $param = $param2->{'param'};
-    foreach my $group (@group_of_msg) {
+    &Log::do_log('debug2','Actually sending digest for list %s',$self->get_list_id);
+    foreach my $group (@{$self->{'digest'}{'group_of_msg'}}) {
 	
-	$param->{'current_group'}++;
-	$param->{'msg_list'} = $group;
-	$param->{'auto_submitted'} = 'auto-forwarded';
+	$self->{'digest'}{'template_params'}{'current_group'}++;
+	$self->{'digest'}{'template_params'}{'msg_list'} = $group;
+	$self->{'digest'}{'template_params'}{'auto_submitted'} = 'auto-forwarded';
 	
 	## Prepare Digest
-	if ($#{$self->{'tabrcpt'}} > -1) {
+	if ($#{$self->{'digest'}{'tabrcpt'}} > -1) {
 	    ## Send digest
-	    unless ($self->send_file('digest', $self->{'tabrcpt'}, $self->{'domain'}, $param)) {
+	    unless ($self->send_file('digest', $self->{'digest'}{'tabrcpt'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
 	    }
 	}    
 	
 	## Prepare Plain Text Digest
-	if ($#{$self->{'tabrcptplain'}} > -1) {
+	if ($#{$self->{'digest'}{'tabrcptplain'}} > -1) {
 	    ## Send digest-plain
-	    unless ($self->send_file('digest_plain', $self->{'tabrcptplain'}, $self->{'domain'}, $param)) {
+	    unless ($self->send_file('digest_plain', $self->{'digest'}{'tabrcptplain'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
 	    }
 	}    	
 	
 	## send summary
-	if ($#{$self->{'tabrcptsummary'}} > -1) {
-	    unless ($self->send_file('summary', $self->{'tabrcptsummary'}, $self->{'domain'}, $param)) {
+	if ($#{$self->{'digest'}{'tabrcptsummary'}} > -1) {
+	    unless ($self->send_file('summary', $self->{'digest'}{'tabrcptsummary'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
 	    }
 	}
