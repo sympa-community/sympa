@@ -3526,16 +3526,6 @@ sub send_msg_digest {
     my $digestspool = new Sympaspool ('digest');
     my $message_in_spool = $digestspool->next({'messagekey'=>$messagekey});
     
-    my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
-		 'to' => $self->get_list_address(),
-		 'table_of_content' => sprintf(gettext("Table of contents:")),
-		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
-		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
-		 };
-    if ($self->get_reply_to() =~ /^list$/io) {
-	$param->{'replyto'}= "$param->{'to'}";
-    }
-    
     my @tabrcpt ;
     my @tabrcptsummary;
     my @tabrcptplain;
@@ -3548,6 +3538,16 @@ sub send_msg_digest {
 	return 0;
     }
 
+    my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
+		 'to' => $self->get_list_address(),
+		 'table_of_content' => sprintf(gettext("Table of contents:")),
+		 'boundary1' => '----------=_'.&tools::get_message_id($self->{'domain'}),
+		 'boundary2' => '----------=_'.&tools::get_message_id($self->{'domain'}),
+		 };
+    if ($self->get_reply_to() =~ /^list$/io) {
+	$param->{'replyto'}= "$param->{'to'}";
+    }
+    
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
 
@@ -3561,33 +3561,8 @@ sub send_msg_digest {
     splice @list_of_mail, 0, 1;
     
     ## Digest index
-    my @all_msg;
-    foreach my $i (0 .. $#list_of_mail){
-	my $mail = $list_of_mail[$i];
-	my $subject = &tools::decode_header($mail, 'Subject');
-	my $from = &tools::decode_header($mail, 'From');
-	my $date = &tools::decode_header($mail, 'Date');
+    my @all_msg = $self->prepare_messages_for_digest({'list_of_mail' => \@list_of_mail});
 
-        my $msg = {};
-	$msg->{'id'} = $i+1;
-        $msg->{'subject'} = $subject;	
-	$msg->{'from'} = $from;
-	$msg->{'date'} = $date;
-	$msg->{'full_msg'} = $mail->{'msg_as_string'};
-	$msg->{'body'} = $mail->{'msg'}->body_as_string;
-	$msg->{'plain_body'} = $mail->{'msg'}->PlainDigest::plain_body_as_string();
-	#$msg->{'body'} = $mail->bodyhandle->as_string();
-	chomp $msg->{'from'};
-	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
-	$msg->{'message_id'} = &tools::clean_msg_id($mail->{'msg'}->head->get('Message-Id'));
-	
-	## Clean up Message-ID
-	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
-
-        #push @{$param->{'msg_list'}}, $msg ;
-	push @all_msg, $msg ;	
-    }
-    
     my @now  = localtime(time);
     $param->{'datetime'} = gettext_strftime "%a, %d %b %Y %H:%M:%S", @now;
     $param->{'date'} = gettext_strftime "%a, %d %b %Y", @now;
@@ -3672,6 +3647,39 @@ sub get_lists_of_digest_receipients {
 	}
     }
     return 1;
+}
+
+sub prepare_messages_for_digest {
+    my $self = shift;
+    my $param = shift;
+    my @list_of_mail = @{$param->{'list_of_mail'}};
+    my @all_msg;
+    foreach my $i (0 .. $#list_of_mail){
+	my $mail = $list_of_mail[$i];
+	my $subject = &tools::decode_header($mail, 'Subject');
+	my $from = &tools::decode_header($mail, 'From');
+	my $date = &tools::decode_header($mail, 'Date');
+
+        my $msg = {};
+	$msg->{'id'} = $i+1;
+        $msg->{'subject'} = $subject;	
+	$msg->{'from'} = $from;
+	$msg->{'date'} = $date;
+	$msg->{'full_msg'} = $mail->{'msg_as_string'};
+	$msg->{'body'} = $mail->{'msg'}->body_as_string;
+	$msg->{'plain_body'} = $mail->{'msg'}->PlainDigest::plain_body_as_string();
+	#$msg->{'body'} = $mail->bodyhandle->as_string();
+	chomp $msg->{'from'};
+	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
+	$msg->{'message_id'} = &tools::clean_msg_id($mail->{'msg'}->head->get('Message-Id'));
+	
+	## Clean up Message-ID
+	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
+
+        #push @{$param->{'msg_list'}}, $msg ;
+	push @all_msg, $msg ;	
+    }
+    return @all_msg;
 }
 #########################   TEMPLATE SENDING  ##########################################
 
