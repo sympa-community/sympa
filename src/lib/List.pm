@@ -3529,7 +3529,6 @@ sub send_msg_digest {
     my @tabrcpt ;
     my @tabrcptsummary;
     my @tabrcptplain;
-    my (@list_of_mail);
 
     ## Create the list of subscribers in various digest modes
     $self->get_lists_of_digest_receipients({'mime_rcpts' => \@tabrcpt,'summary_rcpts' => \@tabrcptsummary,'plain_rcpts' => \@tabrcptplain});
@@ -3538,17 +3537,7 @@ sub send_msg_digest {
 	return 0;
     }
 
-    my $separator = "\n\n" . &tools::get_separator() . "\n\n";
-    my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
-
-    foreach my $message_as_string (@messages_as_string){  
-	my $mail = new Message({'messageasstring' => $message_as_string});
-	next unless (defined $mail);
-	push @list_of_mail, $mail;
-    }
-
-    ## Deletes the introduction part
-    splice @list_of_mail, 0, 1;
+    my @list_of_mail = $self->split_spooled_digest_to_messages({'message_in_spool' => $message_in_spool});
     
     ## Digest index
     my @all_msg = $self->prepare_messages_for_digest({'list_of_mail' => \@list_of_mail});
@@ -3562,45 +3551,36 @@ sub send_msg_digest {
     }
 
     my $param = $self->prepare_digest_parameters({'group_of_msg' => \@group_of_msg});
-    
-    ## Foreach set of digest_max_size messages...
-    foreach my $group (@group_of_msg) {
-	
-	$param->{'current_group'}++;
-	$param->{'msg_list'} = $group;
-	$param->{'auto_submitted'} = 'auto-forwarded';
-	
-	## Prepare Digest
-	if (@tabrcpt) {
-	    ## Send digest
-	    unless ($self->send_file('digest', \@tabrcpt, $self->{'domain'}, $param)) {
-		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
-	    }
-	}    
-	
-	## Prepare Plain Text Digest
-	if (@tabrcptplain) {
-	    ## Send digest-plain
-	    unless ($self->send_file('digest_plain', \@tabrcptplain, $self->{'domain'}, $param)) {
-		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
-	    }
-	}    	
-	
-	## send summary
-	if (@tabrcptsummary) {
-	    unless ($self->send_file('summary', \@tabrcptsummary, $self->{'domain'}, $param)) {
-		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
-	    }
-	}
-    }    
+
+    $self->do_digest_sending({'group_of_msg' => \@group_of_msg,'tabrcpt' =>\@tabrcpt,'tabrcptsummary' =>\@tabrcptsummary,'tabrcptplain' =>\@tabrcptplain,'param' => $param});
     $digestspool->remove_message({'messagekey'=>$messagekey});    
     return 1;
 }
 
+sub split_spooled_digest_to_messages {
+    my $self = shift;
+    my $param = shift;
+    &Log::do_log('trace','Splitting spooled digest into message objects for list %s',$self->get_list_id);
+    my $message_in_spool = $param->{'message_in_spool'};
+    my @list_of_mail;
+    my $separator = "\n\n" . &tools::get_separator() . "\n\n";
+    my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
+
+    foreach my $message_as_string (@messages_as_string){  
+	my $mail = new Message({'messageasstring' => $message_as_string});
+	next unless (defined $mail);
+	push @list_of_mail, $mail;
+    }
+
+    ## Deletes the introduction part
+    splice @list_of_mail, 0, 1;
+    return @list_of_mail;
+}
+
 sub get_lists_of_digest_receipients {
     my $self = shift;
-    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
     my $param = shift;
+    &Log::do_log('trace','Getting list of digest receipients for list %s',$self->get_list_id);
     my $tabrcpt = $param->{'mime_rcpts'};
     my $tabrcptsummary = $param->{'summary_rcpts'};
     my $tabrcptplain = $param->{'plain_rcpts'};
@@ -3636,8 +3616,8 @@ sub get_lists_of_digest_receipients {
 
 sub prepare_messages_for_digest {
     my $self = shift;
-    &Log::do_log('trace','Preparing messages for digest for list %s',$self->get_list_id);
     my $param = shift;
+    &Log::do_log('trace','Preparing messages for digest for list %s',$self->get_list_id);
     my @list_of_mail = @{$param->{'list_of_mail'}};
     my @all_msg;
     foreach my $i (0 .. $#list_of_mail){
@@ -3670,8 +3650,8 @@ sub prepare_messages_for_digest {
 
 sub prepare_digest_parameters {
     my $self = shift;
-    &Log::do_log('trace','Preparing digest parameters for list %s',$self->get_list_id);
     my $param = shift;
+    &Log::do_log('trace','Preparing digest parameters for list %s',$self->get_list_id);
     my @group_of_msg = @{$param->{'group_of_msg'}};
     my $param = {'replyto' => "$self->{'name'}-request\@$self->{'admin'}{'host'}",
 		 'to' => $self->get_list_address(),
@@ -3688,6 +3668,46 @@ sub prepare_digest_parameters {
     $param->{'current_group'} = 0;
     $param->{'total_group'} = $#group_of_msg + 1;
     return $param;
+}
+
+sub do_digest_sending {
+    my $self = shift;
+    my $param2 = shift;
+    &Log::do_log('trace','Actually sending digest for list %s',$self->get_list_id);
+    my @group_of_msg = @{$param2->{'group_of_msg'}};
+    my @tabrcpt = @{$param2->{'tabrcpt'}};
+    my @tabrcptplain = @{$param2->{'tabrcptplain'}};
+    my @tabrcptsummary = @{$param2->{'tabrcptsummary'}};
+    my $param = $param2->{'param'};
+    foreach my $group (@group_of_msg) {
+	
+	$param->{'current_group'}++;
+	$param->{'msg_list'} = $group;
+	$param->{'auto_submitted'} = 'auto-forwarded';
+	
+	## Prepare Digest
+	if (@tabrcpt) {
+	    ## Send digest
+	    unless ($self->send_file('digest', \@tabrcpt, $self->{'domain'}, $param)) {
+		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
+	    }
+	}    
+	
+	## Prepare Plain Text Digest
+	if (@tabrcptplain) {
+	    ## Send digest-plain
+	    unless ($self->send_file('digest_plain', \@tabrcptplain, $self->{'domain'}, $param)) {
+		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
+	    }
+	}    	
+	
+	## send summary
+	if (@tabrcptsummary) {
+	    unless ($self->send_file('summary', \@tabrcptsummary, $self->{'domain'}, $param)) {
+		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
+	    }
+	}
+    }    
 }
 #########################   TEMPLATE SENDING  ##########################################
 
