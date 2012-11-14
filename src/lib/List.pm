@@ -3525,16 +3525,10 @@ sub send_msg_digest {
     ## Create the list of subscribers in various digest modes
     return 0 unless ($self->get_lists_of_digest_receipients());
 
-    # fetch and lock message. 
     my $digestspool = new Sympaspool ('digest');
-    
     $self->split_spooled_digest_to_messages({'message_in_spool' => $digestspool->next({'messagekey'=>$messagekey})});
-    
-    ## Digest index
     $self->prepare_messages_for_digest();
-
     $self->prepare_digest_parameters();
-
     $self->do_digest_sending();
 
     delete $self->{'digest'};
@@ -3591,15 +3585,15 @@ sub split_spooled_digest_to_messages {
     $self->{'digest'}{'list_of_mail'} = [];
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
     my @messages_as_string = split (/$separator/,$message_in_spool->{'messageasstring'}); 
+    splice @messages_as_string, 0, 1;
 
     foreach my $message_as_string (@messages_as_string){  
 	my $mail = new Message({'messageasstring' => $message_as_string});
-	next unless (defined $mail);
+	next unless ($mail);
 	push @{$self->{'digest'}{'list_of_mail'}}, $mail;
     }
 
     ## Deletes the introduction part
-    splice @{$self->{'digest'}{'list_of_mail'}}, 0, 1;
     return 1;
 }
 
@@ -3672,25 +3666,27 @@ sub do_digest_sending {
 	$self->{'digest'}{'template_params'}{'current_group'}++;
 	$self->{'digest'}{'template_params'}{'msg_list'} = $group;
 	$self->{'digest'}{'template_params'}{'auto_submitted'} = 'auto-forwarded';
-	
 	## Prepare Digest
 	if ($#{$self->{'digest'}{'tabrcpt'}} > -1) {
 	    ## Send digest
+	    Log::do_log('debug2','Sending MIME digest');
 	    unless ($self->send_file('digest', $self->{'digest'}{'tabrcpt'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'digest' to $self->{'name'} list subscribers");
 	    }
-	}    
+	}
 	
 	## Prepare Plain Text Digest
 	if ($#{$self->{'digest'}{'tabrcptplain'}} > -1) {
 	    ## Send digest-plain
+	    Log::do_log('debug2','Sending plain digest');
 	    unless ($self->send_file('digest_plain', $self->{'digest'}{'tabrcptplain'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'digest_plain' to $self->{'name'} list subscribers");
 	    }
-	}    	
+	}
 	
 	## send summary
 	if ($#{$self->{'digest'}{'tabrcptsummary'}} > -1) {
+	    Log::do_log('debug2','Sending summary digest');
 	    unless ($self->send_file('summary', $self->{'digest'}{'tabrcptsummary'}, $self->{'domain'}, $self->{'digest'}{'template_params'})) {
 		&Log::do_log('notice',"Unable to send template 'summary' to $self->{'name'} list subscribers");
 	    }
