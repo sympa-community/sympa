@@ -245,7 +245,7 @@ sub new {
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};
-    unless (defined $noxsympato) { # message.pm can be used not only for message comming from queue
+    unless (defined $noxsympato) { # message.pm can be used not only for message coming from queue
 	unless ($message->{'rcpt'}) {
 	    &Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
 	    return undef;
