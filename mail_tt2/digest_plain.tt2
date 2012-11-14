@@ -2,27 +2,74 @@ From: [% fromlist %]
 To: [% to %]
 Reply-to: [% replyto %]
 Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %][%END%]
-X-Sympa-NoWrap: yes
+Content-Type: multipart/alternative; boundary="[% boundary1 %]"
+Content-Transfer-Encoding: 8bit
 
-[%|loc(list.name,date)%]%1 Digest %2[%END%]
+This is a multi-part message in MIME format.
+--[% boundary1 %]
+Content-Type: text/plain; charset=UTF-8;
+Content-Transfer-Encoding: 8bit
+
+[%|loc(list.name,date)%]%1 digest %2[%END%] 
 
 [%|loc%]Table of contents:[%END%]
 
-[%|wrap(0,4)%][% FOREACH m = msg_list -%]
-[% m.id %]. [% m.subject %] - [% m.from %]
-[% END %][%END#wrap%]
-
-----------------------------------------------------------------------
+[% FOREACH m = msg_list -%]
+* [% m.id %] - [% m.subject %] - [% m.from %]
+[% END %]
 
 [% FOREACH m = msg_list -%]
-[%|wrap(0,4)%]Date: [% m.date %]
-From: [% m.from %]
-Subject: [% m.subject %][%END#wrap%]
+<[% m.id %] - [%|loc%]Date:[% END %] [% m.date %] [%|loc%]Author:[% END %] [% m.from %]
+[%|loc%]Subject:[% END %] [% m.subject %]
 
 [% m.plain_body %]
 
-------------------------------
+*********************************************
 
 [% END %]
 [%|loc(list.name,date)%]End of %1 Digest %2[%END%]
-*********************************************
+
+--[% boundary1 %]
+Content-Type: text/html; charset=UTF-8;
+Content-Transfer-Encoding: 8bit
+
+<html>
+<head></head>
+<body>
+<h2>[%|loc(list.name,date)%]%1 digest %2[%END%]</h2>
+
+<h3>[%|loc%]Table of contents:[%END%]</h3>
+
+<ul>
+[% FOREACH m = msg_list -%]
+<li><a name="N0"><a href="#N[% m.id %]">[% m.id %] - [% m.subject %]</a> - [% m.from %] </li>
+[% END %]
+</ul>
+<hr color="black">
+
+[% FOREACH m = msg_list -%]
+<p></b><a name="N[% m.id %]">[% m.id %] -</a> [%|loc%]Date:[% END %] [% datetime %] [%|loc%]Author:[% END %] [% m.from %] <br>
+[%|loc%]Subject:[% END %] <b><font color="#0000ff"> [% m.subject %] </b></font><br>
+
+[% m.plain_body.replace('\n', '<br/>') %]
+
+<br>
+<table align="center">
+<tr>
+<td><a href="mailto:[% m.from %]?Subject=Re:[% m.subject %]"> [%|loc%]Answer to author[% END %]</a></td>
+<td>&nbsp;<-->&nbsp;</td>
+<td><a href="mailto:[% list.name %]@[% list.domain %]?Subject=Re:[% m.subject %]&In-Reply-To=[% m.message_id %]"> [%|loc%]Answer to list[% END %]</a></td>
+<td>&nbsp;<-->&nbsp;</td>
+<td><a href="#N0">[%|loc%]Back to table of content[% END %]</a></td>
+</tr>
+</table>
+<hr color="darkgrey"></font>
+
+[% END %]
+
+<br>
+[%|loc(list.name,date)%]End of %1 Digest %2[%END%]
+<br>
+</body></html>
+
+--[% boundary1 %]--
