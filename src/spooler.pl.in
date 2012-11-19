@@ -294,7 +294,7 @@ if ($signal ne 'hup') {
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
 
-	&Log::do_log('debug','Using spool %s',$spooldir);
+	&Log::do_log('debug','Scanning spool %s',$spooldir);
 	if (!opendir(DIR, $spooldir)) {
 	    &Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
 	}
@@ -308,6 +308,7 @@ if ($signal ne 'hup') {
 	
 	## Scans files in queue
 	foreach my $filename (sort @qfile) {
+	    &Log::do_log('info','Processing file %s',$filename);
 	    my $type;
 	    my $list;
 	    my ($listname, $robot);	
@@ -321,7 +322,6 @@ if ($signal ne 'hup') {
 
 	    ## Don't process temporary files created by queue (T.xxx)
 	    next if ($filename =~ /^T\./);
-
 
 	    ## Lock file
 	    my $lock = new Lock ($spooldir.'/'.$filename);
