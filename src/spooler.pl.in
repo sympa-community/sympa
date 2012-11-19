@@ -293,12 +293,11 @@ if ($signal ne 'hup') {
     ## This is the main loop : look for files in the directory, handles
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
-
 	&Log::do_log('debug','Scanning spool %s',$spooldir);
 	if (!opendir(DIR, $spooldir)) {
 	    &Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
 	}
-	@qfile = sort tools::by_date grep (!/^\./,readdir(DIR));
+	@qfile = sort tools::by_date grep (!/^\.|^bad$/,readdir(DIR));
 	closedir(DIR);
 	my $filename;
 	my $listname;
