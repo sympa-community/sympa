@@ -222,6 +222,10 @@
  sub _do_text_plain {
   my $entity = shift;    
 
+  if($entity->head->get('content-disposition') =~ /attachment/) {
+	  return _do_other($entity);
+  }
+
   my $thispart = $entity->bodyhandle->as_string;
   
   # deal with CR/LF left over - a problem from Outlook which 

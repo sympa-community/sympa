@@ -331,7 +331,7 @@ sub get_email_by_net_id {
 				      filter => $filter,
 				      scope => $ldap->{'ldap_scope'},
 				      timeout => $ldap->{'ldap_timeout'},
-				      attrs =>  $ldap->{'ldap_email_attribute'}
+				      attrs =>  [$ldap->{'ldap_email_attribute'}],
 				      );
 	my $count = $emails->count();
 
