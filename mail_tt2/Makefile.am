@@ -24,6 +24,7 @@ mailtemplate_DATA = authorization_reject.tt2 \
 		    command_report.tt2 \
 		    digest_plain.tt2 \
 		    digest.tt2 \
+		    dsn.tt2 \
 		    d_install_shared.tt2 \
 		    d_reject_shared.tt2 \
 		    expire_deletion.tt2 \
@@ -42,7 +43,6 @@ mailtemplate_DATA = authorization_reject.tt2 \
 		    listowner_notification.tt2 \
 		    list_rejected.tt2 \
 		    lists.tt2 \
-		    list_unknown.tt2 \
 		    message_report.tt2 \
 		    moderate.tt2 \
 		    modindex.tt2 \

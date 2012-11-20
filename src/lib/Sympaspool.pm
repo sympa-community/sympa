@@ -136,7 +136,7 @@ sub get_content {
     if ($self->{'selection_status'} eq 'bad') {
 	$sql_where = $sql_where."AND message_status_spool = 'bad' " ;
     }else{
-	$sql_where = $sql_where."AND message_status_spool != 'bad' " ;
+	$sql_where = $sql_where."AND message_status_spool <> 'bad' " ;
     }
     $sql_where =~s/^AND//;
 
@@ -159,9 +159,14 @@ sub get_content {
     }
 
     push @sth_stack, $sth;
-    $sth = &SDM::do_query($statement);
+    unless ($sth = &SDM::do_query($statement)) {
+	$sth = pop @sth_stack;
+	return undef;
+    }
     if($selection eq 'count') {
 	my @result = $sth->fetchrow_array();
+	$sth->finish;
+	$sth = pop @sth_stack;
 	return $result[0];
     }else{
 	my @messages;
@@ -184,7 +189,6 @@ sub get_content {
 #  next : return next spool entry ordered by priority next lock the message_in_spool that is returned
 # 
 sub next {
-
     my $self = shift;
     my $selector = shift;
 
@@ -195,29 +199,74 @@ sub next {
     if ($self->{'selection_status'} eq 'bad') {
 	$sql_where = $sql_where."AND message_status_spool = 'bad' " ;
     }else{
-	$sql_where = $sql_where."AND message_status_spool != 'bad' " ;
+	$sql_where = $sql_where."AND message_status_spool <> 'bad' " ;
     }
     $sql_where =~ s/^\s*AND//;
 
     my $lock = $$.'@'.hostname(); 
     my $epoch=time; # should we use milli or nano seconds ? 
 
-    my $statement = sprintf "UPDATE spool_table SET messagelock_spool=%s, lockdate_spool =%s WHERE messagelock_spool IS NULL AND spoolname_spool =%s AND %s ORDER BY priority_spool, date_spool LIMIT 1", &SDM::quote($lock),$epoch,&SDM::quote($self->{'spoolname'}),$sql_where;
     push @sth_stack, $sth;
 
-    $sth = &SDM::do_query($statement);
-    return undef unless ($sth->rows); # spool is empty
+    my $messagekey;
+    while (1) {
+	unless ($sth = &SDM::do_query(
+	    q{SELECT messagekey_spool FROM spool_table
+	      WHERE messagelock_spool IS NULL AND spoolname_spool = %s AND
+		    (priority_spool <> 'z' OR priority_spool IS NULL) AND %s
+	      ORDER by priority_spool, date_spool
+	      LIMIT 1},
+	    &SDM::quote($self->{'spoolname'}), $sql_where
+	)) {
+	    &Log::do_log('err', 'Could not search spool %s',
+			 $self->{'spoolname'});
+	    $sth = pop @sth_stack;
+	    return undef;
+	}
+	$messagekey = $sth->fetchrow_array();
+	$sth->finish();
 
-    my $star_select = &_selectfields();
-    my $statement = sprintf "SELECT %s FROM spool_table WHERE spoolname_spool = %s AND message_status_spool= %s AND messagelock_spool = %s AND lockdate_spool = %s AND (priority_spool != 'z' OR priority_spool IS NULL) ORDER by priority_spool LIMIT 1", $star_select ,&SDM::quote($self->{'spoolname'}),&SDM::quote($self->{'selection_status'}),&SDM::quote($lock),$epoch;
+	unless (defined $messagekey) { # spool is empty
+	    $sth = pop @sth_stack;
+	    return undef;
+	}
 
-    $sth = &SDM::do_query($statement);
+	unless ($sth = &SDM::do_prepared_query(
+	    q{UPDATE spool_table
+	      SET messagelock_spool = ?, lockdate_spool = ?
+	      WHERE messagekey_spool = ? AND messagelock_spool IS NULL},
+	    $lock, $epoch, $messagekey
+	)) {
+	    &Log::do_log('err', 'Could not update spool %s',
+			 $self->{'spoolname'});
+	    $sth = pop @sth_stack;
+	    return undef;
+	}
+	unless ($sth->rows) { # locked by another process?  retry.
+	    next;
+	}
+	last;
+    }
+
+    unless ($sth = &SDM::do_prepared_query(
+	sprintf(
+	    q{SELECT %s
+	      FROM spool_table
+	      WHERE messagekey_spool = ? AND messagelock_spool = ?},
+	    &_selectfields()
+	), $messagekey, $lock
+    )) {
+	&Log::do_log('err', 'Could not search message previously locked');
+	$sth = pop @sth_stack;
+	return undef;
+    }
     my $message = $sth->fetchrow_hashref('NAME_lc');
     $sth->finish();
+
     $sth = pop @sth_stack;
 
-    unless ($message->{'message'}){
-&Log::do_log('err',"INTERNAL Could not find message previouly locked");
+    unless ($message and $message->{'message'}){
+&Log::do_log('err','INTERNAL Could not find message previouly locked');
 	return undef;
     }
     $message->{'messageasstring'} = MIME::Base64::decode($message->{'message'});
@@ -225,7 +274,23 @@ sub next {
 &Log::do_log('err',"Could not decode %s",$message->{'message'});
 	return undef;
     }
-    return $message  ;
+
+    ## add objects
+    my $robot_id = $message->{'robot'};
+    my $listname = $message->{'list'};
+    my $robot;
+
+    if ($robot_id and $robot_id ne '*') {
+	$robot = Robot->new($robot_id);
+    }
+    if ($robot) {
+	if ($listname and length $listname) {
+	    $message->{'list_object'} = List->new($listname, $robot);
+	}
+	$message->{'robot_object'} = $robot;
+    }
+
+    return $message;
 }
 
 #################"
@@ -342,7 +407,7 @@ sub update {
     my $statement = sprintf "UPDATE spool_table SET %s WHERE (%s)", $set,$where ;
 
     unless (&SDM::do_query($statement)) {
-&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	&Log::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
 	return undef;
     }    
     return 1;
@@ -473,12 +538,12 @@ sub clean {
     if ($bad) {	
 	$sqlquery  = 	$sqlquery . " AND message_status_spool = 'bad' ";
     }else{
-	$sqlquery  = 	$sqlquery . " AND message_status_spool != 'bad'";
+	$sqlquery  = 	$sqlquery . " AND message_status_spool <> 'bad'";
     }
     
     push @sth_stack, $sth;
-    &SDM::do_query($sqlquery);
-    $sth-> finish;
+    $sth = &SDM::do_query('%s', $sqlquery);
+    $sth->finish;
    &Log::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
     $sth = pop @sth_stack;
     return 1;

@@ -39,15 +39,15 @@ use strict;
 
 use OAuth::Lite::ServerUtil;
 use URI::Escape;
-
+# tentative
 use Data::Dumper;
 
-#use List;
+#use List; # load in Auth
 use Auth;
-use tools;
-#use tt2;
-use Conf;
-use Log;
+#use tools; # load in Conf
+#use tt2; # load in List
+#use Conf; # load in List - Site
+#use Log; # load in Conf
 
 =pod 
 
@@ -766,7 +766,7 @@ sub _getConsumerConfigFor {
 	
 	&Log::do_log('debug2', 'OAuthProvider::_getConsumerConfig(%s)', $key);
 	
-	my $file = $Conf::Conf{'etc'}.'/oauth_provider.conf';
+	my $file = Site->etc . '/oauth_provider.conf';
 	return undef unless (-f $file);
 	
 	my $c = {};

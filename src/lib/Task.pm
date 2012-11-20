@@ -31,17 +31,17 @@ use Exporter;
 use Time::Local;
 
 use Bulk;
-use Conf;
+#use Conf;
 use List;
-use Log;
-use mail;
+#use Log;
+#use mail;
 use Scenario;
 use Sympaspool;
 use TaskSpool;
 use TaskInstruction;
-use tools;
+#use tools;
 use tracking;
-use tt2;
+#use tt2;
 
 #### Task level subs ####
 ##########################
@@ -96,8 +96,14 @@ sub create {
     $task_in_spool->{'task_model'}         = $param->{'model'};
     $task_in_spool->{'task_flavour'}  = $param->{'flavour'};
     if (defined $param->{'data'}{'list'}) { 
-	$task_in_spool->{'list'} = $param->{'data'}{'list'}{'name'};
-	$task_in_spool->{'domain'} = $param->{'data'}{'list'}{'robot'};
+	my $list = $param->{'data'}{'list'};
+	if (ref $list eq 'List') {
+	    $task_in_spool->{'list'} = $list->name;
+	    $task_in_spool->{'domain'} = $list->domain;
+	} else {
+	    $task_in_spool->{'list'} = $list->{'name'};
+	    $task_in_spool->{'domain'} = $list->{'robot'};
+    }
 	$task_in_spool->{'task_object'} = 'list';
     }
     else {
@@ -144,7 +150,7 @@ sub get_template {
  
      # for global model
     if ($self->{'object'} eq '_global') {
-	unless ($self->{'template'} = &tools::get_filename('etc',{},"global_task_models/$self->{'model_name'}", $Conf::Conf{'host'})) {
+	unless ($self->{'template'} = Site->get_etc_filename("global_task_models/$self->{'model_name'}")) {
 	    &Log::do_log ('err', 'Unable to find task model %s. Creation aborted',$self->{'model_name'});
 	    return undef;
 	}
@@ -153,7 +159,7 @@ sub get_template {
     # for a list
     if ($self->{'object'}  eq 'list') {
 	my $list = $self->{'list_object'};
-	unless ($self->{'template'} = &tools::get_filename('etc', {},"list_task_models/$self->{'model_name'}", $list->{'domain'}, $list)) {
+	unless ($self->{'template'} = $list->get_etc_filename("list_task_models/$self->{'model_name'}")) {
 	    &Log::do_log ('err', 'Unable to find task model %s for list %s. Creation aborted',$self->{'model_name'},$self->get_full_listname);
 	    return undef;
 	}
@@ -527,7 +533,7 @@ sub error_report {
     $self->{'human_date'} = &tools::adate($self->{'date'});
     $data->{'task'} = $self;
     &Log::do_log('err','Execution of task %s failed. sending detailed report to listmaster',$self->get_description);
-    unless (&List::send_notify_to_listmaster ('task_error', $Conf::Conf{'domain'}, $data)) {
+    unless (Site->send_notify_to_listmaster('task_error', $data)) {
 	&Log::do_log('notice','Error while notifying listmaster about errors in task %s',$self->get_description);
     }
 }

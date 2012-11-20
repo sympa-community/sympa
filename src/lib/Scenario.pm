@@ -22,14 +22,14 @@
 package Scenario;
 
 use strict;
-
+use Carp qw(croak);
 use Net::Netmask;
 
-use tools;
+#use tools; # used in Conf
 use List;
-use Log;
-use Conf;
-use Sympa::Constants;
+#use Log; # used in Conf
+#use Conf; # used in List - Site
+#use Sympa::Constants; # used in Conf - confdef
 
 my %all_scenarios;
 my %persistent_cache;
@@ -38,9 +38,9 @@ my %persistent_cache;
 ## Supported parameters : function, robot, name, directory, file_path, options
 ## Output object has the following entries : name, file_path, rules, date, title, struct, data
 sub new {
+    &Log::do_log('debug2', '(%s, ...)', @_);
    my($pkg, @args) = @_;
     my %parameters = @args;
-    &Log::do_log('debug2', '');
  
     my $scenario = {};
 
@@ -53,33 +53,42 @@ sub new {
 	return undef;
     }
 
+    ##FIXME: really may be Site?
+    my $robot = Robot::clean_robot($parameters{'robot'}, 'maybe_site');
+
+    my $directory = $parameters{'directory'};
+    my $file_path = $parameters{'file_path'};
+    my $function = $parameters{'function'};
+    my $name = $parameters{'name'};
+    my $options = $parameters{'options'} || {};
+
     ## Determine the file path of the scenario
 
-    if ($parameters{'file_path'} eq 'ERROR') {
+    if ($file_path eq 'ERROR') {
 	return $all_scenarios{$scenario->{'file_path'}};
     }
 
-    if (defined $parameters{'file_path'}) {
-	$scenario->{'file_path'} = $parameters{'file_path'};
-	my @tokens = split /\//, $parameters{'file_path'};
+    if (defined $file_path) {
+	$scenario->{'file_path'} = $file_path;
+	my @tokens = split /\//, $file_path;
 	my $filename = $tokens[$#tokens];
 	unless ($filename =~ /^([^\.]+)\.(.+)$/) {
-	    &Log::do_log('err',"Failed to determine scenario type and name from '$parameters{'file_path'}'");
+	    &Log::do_log('err','Failed to determine scenario type and name from "%s"', $file_path);
 	    return undef;
 	}
-	($parameters{'function'}, $parameters{'name'}) = ($1, $2);
+	($function, $name) = ($1, $2);
 
     }else {
-	## We can't use &tools::get_filename() because we don't have a List object yet ; it's being constructed
-	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, Sympa::Constants::DEFAULTDIR);
-	unshift @dirs, $parameters{'directory'} if (defined $parameters{'directory'});
+	## We can't use get_etc_filename() because we don't have a List object yet ; it's being constructed
+	my @dirs = (Site->etc . '/' . $robot->domain, Site->etc, Sympa::Constants::DEFAULTDIR);
+	unshift @dirs, $directory if defined $directory;
 	foreach my $dir (@dirs) {
-	    my $tmp_path = $dir.'/scenari/'.$parameters{'function'}.'.'.$parameters{'name'};
+	    my $tmp_path = $dir.'/scenari/'.$function.'.'.$name;
 	    if (-r $tmp_path) {
 		$scenario->{'file_path'} = $tmp_path;
 		last;
 	    }else {
-		&Log::do_log('debug','Unable to read file %s',$tmp_path);
+		##&Log::do_log('debug','Unable to read file %s',$tmp_path);
 	    }
 	}
     }
@@ -89,7 +98,7 @@ sub new {
 
 	## Option 'dont_reload_scenario' prevents scenario reloading
 	## Usefull for performances reasons
-	if ($parameters{'options'}{'dont_reload_scenario'}) {
+	if ($options->{'dont_reload_scenario'}) {
 	    return $all_scenarios{$scenario->{'file_path'}};
 	}
 
@@ -113,15 +122,15 @@ sub new {
 	## Keep rough scenario
 	$scenario->{'data'} = $data;
 
-	$scenario_struct = &_parse_scenario($parameters{'function'}, $parameters{'robot'}, $parameters{'name'}, $data, $parameters{'directory'});
-    }elsif ($parameters{'function'} eq 'include') {
+	$scenario_struct = &_parse_scenario($function, $robot, $name, $data, $directory);
+    }elsif ($function eq 'include') {
 	## include.xx not found will not raise an error message
 	return undef;
 	
     }else {
 	## Default rule is 'true() smtp -> reject'
-	&Log::do_log('err',"Unable to find scenario file '$parameters{'function'}.$parameters{'name'}', please report to listmaster"); 
-	$scenario_struct = &_parse_scenario($parameters{'function'}, $parameters{'robot'}, $parameters{'name'}, 'true() smtp -> reject', $parameters{'directory'});
+	&Log::do_log('err',"Unable to find scenario file '$function.$name', please report to listmaster"); 
+	$scenario_struct = &_parse_scenario($function, $robot, $name, 'true() smtp -> reject', $directory);
 	$scenario->{'file_path'} = 'ERROR'; ## special value
 	$scenario->{'data'} = 'true() smtp -> reject';
     }
@@ -130,7 +139,7 @@ sub new {
     $scenario->{'date'} = time;
 
     unless (ref($scenario_struct) eq 'HASH') {
-	&Log::do_log('err',"Failed to load scenario '$parameters{'function'}.$parameters{'name'}'");
+	&Log::do_log('err',"Failed to load scenario '$function.$name'");
 	return undef;
     }
 
@@ -150,9 +159,9 @@ sub new {
 
 ## Parse scenario rules
 sub _parse_scenario {
+    &Log::do_log('debug3', '(%s, %s, %s, ...)', @_);
     my ($function, $robot, $scenario_name, $paragraph, $directory ) = @_;
-    &Log::do_log('debug2', "($function, $scenario_name, $robot)");
-    
+
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
     my @scenario;
@@ -229,12 +238,12 @@ sub _parse_scenario {
 #           (defined if $debug)
 ###################################################### 
 sub request_action {
+    &Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $operation = shift;
     my $auth_method = shift;
-    my $robot=shift;
+    my $robot = Robot::clean_robot(shift, 1); #FIXME: really may be Site?
     my $context = shift;
     my $debug = shift;
-    &Log::do_log('debug', 'List::request_action %s,%s,%s',$operation,$auth_method,$robot);
 
     my $trace_scenario ;
 
@@ -242,7 +251,8 @@ sub request_action {
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host' ;
-    $context->{'robot_domain'} = $robot ;
+    $context->{'robot_domain'} = $robot->domain;
+    $context->{'robot_object'} = $robot;
     $context->{'msg'} = $context->{'message'}->{'msg'} if (defined $context->{'message'});
     $context->{'msg_encrypted'} = 'smime' if (defined $context->{'message'} && 
 					      $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
@@ -254,14 +264,13 @@ sub request_action {
     my (@rules, $name, $scenario) ;
 
     my $log_it ; # this var is defined to control if log scenario is activated or not
-    my $loging_targets = &Conf::get_robot_conf($robot,'loging_for_module');
-    if ($loging_targets->{'scenario'} == 1){
+    if (${$robot->loging_for_module || {}}{'scenario'} == 1){
 	#activate log if no condition is defined
-	unless (&Conf::get_robot_conf($robot,'loging_condition')) {
+	unless (scalar keys %{$robot->loging_condition || {}}) {
 	    $log_it = 1;
 	}else {
 	    #activate log if ip or email match
-	    my $loging_conditions = &Conf::get_robot_conf($robot,'loging_condition');
+	    my $loging_conditions = $robot->loging_condition || {};
 	    if ($loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/ || $loging_conditions->{'email'} =~ /$context->{'email'}/i) {
 		&Log::do_log('info','Will log scenario process for user with email: "%s", IP: "%s"',$context->{'email'},$context->{'remote_addr'});
 		$log_it = 1;
@@ -271,11 +280,15 @@ sub request_action {
 
     if ($log_it) {
 	if ($context->{'list_object'}) {
-	    $trace_scenario = 'scenario request '.$operation.' for list '.$context->{'list_object'}{'name'}.'@'.$robot.' :';
-	    &Log::do_log('info','Will evaluate scenario %s for list %s@%s',$operation,$context->{'list_object'}{'name'},$robot);
+	    $trace_scenario = 'scenario request ' . $operation .
+		' for list ' . ($context->{'list_object'}->get_id) . ' :';
+	    &Log::do_log('info', 'Will evaluate scenario %s for list %s',
+		$operation, $context->{'list_object'});
 	}else{
-	    $trace_scenario = 'scenario request '.$operation.' for robot '.$robot.' :';
-	    &Log::do_log('info','Will evaluate scenario %s for robot %s',$operation,$robot);
+	    $trace_scenario = 'scenario request ' . $operation .
+		' for robot ' . ($robot->domain) . ' :';
+	    &Log::do_log('info', 'Will evaluate scenario %s for robot %s',
+		$operation, $robot);
 	}
     }
     
@@ -285,45 +298,33 @@ sub request_action {
 
 	## The $operation refers to a list parameter of the same name
 	## The list parameter might be structured ('.' is a separator)
-	my @operations = split /\./, $operation;
-	my $scenario_path;
-	
-	if ($#operations == 0) {
-	    ## Simple parameter
-	    $scenario_path = $list->{'admin'}{$operation}{'file_path'};
-	}else{
-	    ## Structured parameter
-	    $scenario_path = $list->{'admin'}{$operations[0]}{$operations[1]}{'file_path'} if (defined $list->{'admin'}{$operations[0]});
-	}
+	$scenario = $list->get_scenario($operation, $context->{'options'});
 
 	## List parameter might not be defined (example : web_archive.access)
-	unless (defined $scenario_path) {
+	unless ($scenario) {
 	    my $return = {'action' => 'reject',
 			  'reason' => 'parameter-not-defined',
 			  'auth_method' => '',
 			  'condition' => ''
 			  };
 	    if ($log_it){
-		 &Log::do_log('info',"$trace_scenario rejected reason parameter not defined");
+		&Log::do_log('info',
+		    '%s rejected reason parameter not defined',
+		    $trace_scenario
+		);
 	    }
 	    return $return;
 	}
 
 	## Prepares custom_vars in $context
-	if (defined $list->{'admin'}{'custom_vars'}) {
-	    foreach my $var (@{$list->{'admin'}{'custom_vars'}}) {
+	if (scalar @{$list->custom_vars}) {
+	    foreach my $var (@{$list->custom_vars}) {
 		$context->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
 	    }
 	}
-	
-	## Create Scenario object
-	$scenario = new Scenario ('robot' => $robot, 
-				  'directory' => $list->{'dir'},
-				  'file_path' => $scenario_path,
-				  'options' => $context->{'options'});
 
 	## pending/closed lists => send/visibility are closed
-	unless ($list->{'admin'}{'status'} eq 'open') {
+	unless ($list->status eq 'open') {
 	    if ($operation =~ /^(send|visibility)$/) {
 		my $return = {'action' => 'reject',
 			      'reason' => 'list-no-open',
@@ -339,10 +340,11 @@ sub request_action {
 	
 	### the following lines are used by the document sharing action 
 	if (defined $context->{'scenario'}) { 
-	    
+	    my @operations = split /\./, $operation;
+
 	    # loading of the structure
 	    $scenario = new Scenario ('robot' => $robot, 
-				      'directory' => $list->{'dir'},
+				      'directory' => $list->dir,
 				      'function' => $operations[$#operations],
 				      'name' => $context->{'scenario'},
 				      'options' => $context->{'options'});
@@ -353,21 +355,27 @@ sub request_action {
 
 	$scenario = new Scenario ('robot' => $robot, 
 				  'function' => 'topics_visibility',
-				  'name' => $List::list_of_topics{$robot}{$context->{'topicname'}}{'visibility'},
+				  'name' => $List::list_of_topics{$robot->domain}{$context->{'topicname'}}{'visibility'},
 				  'options' => $context->{'options'});
 
     }else{	
 	## Global scenario (ie not related to a list) ; example : create_list
-	
-	my $p = &Conf::get_robot_conf($robot, $operation);
-	$scenario = new Scenario ('robot' => $robot, 
+	my @p;
+	if ((   @p =
+		grep { $_->{'name'} and $_->{'name'} eq $operation }
+		@confdef::params
+	    ) and $p[0]->{'scenario'}) {
+	    $scenario = new Scenario(
+		'robot'    => $robot,
 				  'function' => $operation,
-				  'name' => $p,
-				  'options' => $context->{'options'});
+		'name'     => $robot->$operation,
+		'options'  => $context->{'options'}
+		);
+    }
     }
 
-    unless ((defined $scenario) && (defined $scenario->{'rules'})) {
-	&Log::do_log('err',"Failed to load scenario for '$operation'");
+    unless (defined $scenario and defined $scenario->{'rules'}) {
+	&Log::do_log('err', 'Failed to load scenario for "%s"', $operation);
 	return undef ;
     }
 
@@ -384,31 +392,35 @@ sub request_action {
 		 'robot' => $robot, 
 		 'name' => $operation.'.header',
 		 'options' => $context->{'options'});
-    $param{'directory'} = $context->{'list_object'}{'dir'} if (defined $context->{'list_object'});
+    $param{'directory'} = $context->{'list_object'}->dir
+	if defined $context->{'list_object'};
     my $include_scenario = new Scenario %param;
     if (defined $include_scenario) {
 	## Add rules at the beginning of the array
 	unshift @rules, @{$include_scenario->{'rules'}};
     }
     ## Look for 'include' directives amongst rules first
-    foreach my $index (0..$#rules) {
-	if ($rules[$index]{'condition'} =~ /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
+    for (my $idx = 0; $idx < scalar @rules; $idx++) {
+	if ($rules[$idx]->{'condition'} =~ /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
 	    my $include_file = $1;
 	    my %param = ('function' => 'include',
 			 'robot' => $robot, 
 			 'name' => $include_file,
 			 'options' => $context->{'options'});
-	    $param{'directory'} = $context->{'list_object'}{'dir'} if (defined $context->{'list_object'});
+	    $param{'directory'} = $context->{'list_object'}->dir
+		if defined $context->{'list_object'};
 	    my $include_scenario = new Scenario %param;
 	    if (defined $include_scenario) {
-		## Removes the include directive and replace it with included rules
-		splice @rules, $index, 1, @{$include_scenario->{'rules'}};
-	    }	    
+		## Removes the include directive and replace it with
+		## included rules
+		##FIXME: possibie recursive include
+		splice @rules, $idx, 1, @{$include_scenario->{'rules'}};
 	}
+    }
     }
     
     ## Include a Blacklist rules if configured for this action
-    if ($Conf::Conf{'blacklist'}{$operation}) {
+    if (Site->blacklist->{$operation}) {
 	foreach my $auth ('smtp','dkim','md5','pgp','smime'){
 	    my $blackrule = {'condition' => "search('blacklist.txt',[sender])",
 			     'action' => 'reject,quiet',
@@ -443,7 +455,10 @@ sub request_action {
 			   };
 		    return $return;
 		}
-		unless (&List::send_notify_to_listmaster('error-performing-condition', $robot, [$context->{'listname'}."  ".$rule->{'condition'}] )) {
+		my $list = $context->{'list_object'};
+		unless ($list->robot->send_notify_to_listmaster(
+		    'error-performing-condition',
+		    [$context->{'listname'}."  ".$rule->{'condition'}] )) {
 		    &Log::do_log('notice',"Unable to send notify 'error-performing-condition' to listmaster");
 		}
 		return undef;
@@ -538,8 +553,15 @@ sub verify {
     my ($context, $condition, $log_it) = @_;
     &Log::do_log('debug2', 'condition %s, log %s', $condition, $log_it);
     
-    my $robot = $context->{'robot_domain'};
-    
+    my $robot;
+    if ($context->{'list_object'}) {
+	$robot = $context->{'list_object'}->robot;
+    } elsif ($context->{'robot_object'}) {
+	$robot = $context->{'robot_object'};
+    } elsif ($context->{'robot_domain'}) {
+	$robot = Robot::clean_robot($context->{'robot_domain'});
+    }
+
 #    while (my($k,$v) = each %{$context}) {
 #	&Log::do_log('debug3',"verify: context->{$k} = $v");
 #    }
@@ -561,9 +583,9 @@ sub verify {
     
     if (defined ($context->{'list_object'})) {
 	$list = $context->{'list_object'};
-	$context->{'listname'} = $list->{'name'};
+	$context->{'listname'} = $list->name;
 	
-	$context->{'host'} = $list->{'admin'}{'host'};
+	$context->{'host'} = $list->host;
     }
     
     if (defined ($context->{'msg'})) {
@@ -618,13 +640,20 @@ sub verify {
 	
 	## Config param
 	elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
-	    if (my $conf_value = &Conf::get_robot_conf($robot, $1)) {
-		
+	    my $conf_key = $1;
+	    my $conf_value;
+	    if (scalar(grep { $_->{'name'} and $_->{'name'} eq $conf_key }
+		@confdef::params) and
+		($conf_value = $robot->$conf_key)) {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    }else{
-		&Log::do_log('debug',"undefine variable context $value in rule $condition");
+		&Log::do_log('debug',
+		    'undefine variable context %s in rule %s',
+		    $value, $condition);
 		if ($log_it == 1) {
-		    &Log::do_log('info',"undefine variable context $value in rule $condition");
+		    &Log::do_log('info',
+			'undefine variable context %s in rule %s',
+			$value, $condition);
 		}
 		# a condition related to a undefined context variable is always false
 		return -1 * $negation;
@@ -657,12 +686,12 @@ sub verify {
 	    ## Sender's user/subscriber attributes (if subscriber)
 	}elsif ($value =~ /\[user\-\>([\w\-]+)\]/i) {
 	    
-	    $context->{'user'} ||= &List::get_global_user($context->{'sender'});	    
+	    $context->{'user'} ||= User::get_global_user($context->{'sender'});	    
 	    $value =~ s/\[user\-\>([\w\-]+)\]/$context->{'user'}{$1}/;
 	    
 	}elsif ($value =~ /\[user_attributes\-\>([\w\-]+)\]/i) {
 	    
-	    $context->{'user'} ||= &List::get_global_user($context->{'sender'});
+	    $context->{'user'} ||= User::get_global_user($context->{'sender'});
 	    $value =~ s/\[user_attributes\-\>([\w\-]+)\]/$context->{'user'}{'attributes'}{$1}/;
 	    
 	}elsif (($value =~ /\[subscriber\-\>([\w\-]+)\]/i) && defined ($context->{'sender'} ne 'nobody')) {
@@ -808,7 +837,7 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	if ( &List::is_listmaster($args[0],$robot)) {
+	if ( $robot->is_listmaster($args[0])) {
 	    if ($log_it == 1) {
 		&Log::do_log('info','%s is listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
 	    }
@@ -953,7 +982,7 @@ sub verify {
 	}
 
 	if ($regexp =~ /\[host\]/) {
-	    my $reghost = &Conf::get_robot_conf($robot, 'host');
+	    my $reghost = $robot->host;
             $reghost =~ s/\./\\./g ;
             $regexp =~ s/\[host\]/$reghost/g ;
 	}
@@ -1123,21 +1152,31 @@ sub search{
     my $robot = shift;
     my $list = shift;
 
+    my $that;
+    if (ref $list) {
+	$that = $list;
+    } elsif (ref $robot) {
+	$that = $robot;
+    } elsif ($robot) {
+	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
+    }
+
     my $sender = $context->{'sender'};
 
     &Log::do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
     
     if ($filter_file =~ /\.sql$/) {
  
-	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	my $file = $that->get_etc_filename("search_filters/$filter_file");
 	
         my $timeout = 3600;
         my ($sql_conf, $tsth);
         my $time = time;
 	
         unless ($sql_conf = &Conf::load_sql_filter($file)) {
-            $list->send_notify_to_owner('named_filter',{'filter' => $filter_file})
-                if (defined $list && ref($list) eq 'List');
+            $that->send_notify_to_owner('named_filter',
+		{'filter' => $filter_file})
+                if ref $that eq 'List';
             return undef;
         }
 	
@@ -1213,7 +1252,7 @@ sub search{
  
      }elsif ($filter_file =~ /\.ldap$/) {	
 	## Determine full path of the filter file
-	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	my $file = $that->get_etc_filename("search_filters/$filter_file");
 	
 	unless ($file) {
 	    &Log::do_log('err', 'Could not find search filter %s', $filter_file);
@@ -1298,7 +1337,8 @@ sub search{
 
     }elsif($filter_file =~ /\.txt$/){ 
 	# &Log::do_log('info', 'List::search: eval %s', $filter_file);
-	my @files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list); 
+	my @files = $that->get_etc_filename("search_filters/$filter_file",
+	    {'order'=>'all'}); 
 
 	## Raise an error except for blacklist.txt
 	unless (@files) {
@@ -1339,7 +1379,11 @@ sub search{
 sub verify_custom {
 	my ($condition, $args_ref, $robot, $list) = @_;
         my $timeout = 3600;
-	
+
+    if ($robot) {
+	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
+    }
+
 	my $filter = join ('*', @{$args_ref});
 	&Log::do_log('debug2', 'List::verify_custom(%s,%s,%s,%s)', $condition, $filter, $robot, $list);
         if (defined ($persistent_cache{'named_filter'}{$condition}{$filter}) &&
@@ -1349,8 +1393,8 @@ sub verify_custom {
         }
 
     	# use this if your want per list customization (be sure you know what you are doing)
-	#my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot, $list);
-	my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot);
+	#my $file = $list->get_etc_filename("custom_conditions/${condition}.pm");
+	my $file = $robot->get_etc_filename("custom_conditions/${condition}.pm");
 	unless ($file) {
 	    &Log::do_log('err', 'No module found for %s custom condition', $condition);
 	    return undef;

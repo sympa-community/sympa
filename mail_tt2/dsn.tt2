@@ -1,0 +1,62 @@
+Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
+Content-Type: multipart/report; report-type=delivery-status; 
+	boundary="[% boundary %]"
+
+--[% boundary %]
+Content-Disposition: inline
+Content-Description: Notification
+
+[%|loc%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
+[% IF action == "delivered" -%]
+[%|loc%]Message was successfully delivered to following address:[%END%]
+
+	[% recipient %]
+
+[% ELSE -%]
+[%|loc(recipient)%]Impossible to distribute your message for list '%1' for the following reason:[%END%]
+
+[%   IF status == '4.2.1' -%]
+[%|loc(listname)%]The %1 list could not be created.[%END%]
+
+[%   ELSIF status == '4.2.4' || status == '5.3.5' -%]
+[%|loc(listname)%]List '%1' does not exist.[%END%]
+
+[%   ELSIF status == '5.1.2' -%]
+[%|loc(recipient)%]List '%1' does not exist.[%END%]
+
+[%   ELSIF status == '5.2.3' -%]
+[%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
+
+Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger that the original file.[%END%]
+
+[%   ELSE -%]
+[%|loc%]The following address is not a known mailing list:[%END%]
+
+	[% recipient %]
+
+[%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
+
+	mailto:[% conf.email %]@[% conf.host %]?subject=WHICH
+
+[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+
+[%   END -%]
+[% END -%]
+--[% boundary %]
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; [% conf.host %]
+Arrival-Date: [% date %]
+
+Final-Recipient: rfc822; [% recipient %]
+Action: [% action %]
+Status: [% status %]
+Remote-MTA: dns; [% conf.host %]
+Diagnostic-Code: X-Sympa; [% diagnostic_code %]
+
+--[% boundary %]
+Content-Type: text/rfc822-headers
+
+[% header %]
+
+--[% boundary %]--

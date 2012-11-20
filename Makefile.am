@@ -60,10 +60,6 @@ installconfig: installdir
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
 			|| /bin/true; \
-		$(top_srcdir)/src/sympa_wizard.pl.install \
-			--create wwsympa.conf \
-			--target $(DESTDIR)$(confdir)/wwsympa.conf \
-			|| /bin/true; \
 		rm -f $(top_srcdir)/src/sympa_wizard.pl.install; \
 	fi; \
 	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \

@@ -16,38 +16,38 @@
 <input class="MainMenuLinks" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" onClick="if (document.getElementsByName('key_word')[0].value.replace(/\s+/g, '')) return true; else return false;" />
 <br />
 
-<label for="how">[%|loc%]Search:[%END%]  </label>
-  <input id="how" type="radio" name="how" value="phrase" checked="checked" /> <em>[%|loc%]this sentence[%END%]</em>
-  <input id="how" type="radio" name="how" value="all" /> <em>[%|loc%]all of these words[%END%]</em>
-  <input id="how" type="radio" name="how" value="any" /> <em>[%|loc%]one of these words[%END%]</em>
+[%|loc%]Search:[%END%]
+  <input id="how.phrase" type="radio" name="how" value="phrase" checked="checked" /> <label for="how.phrase"><em>[%|loc%]this sentence[%END%]</em></label>
+  <input id="how.all" type="radio" name="how" value="all" /> <label for="how.all"><em>[%|loc%]all of these words[%END%]</em></label>
+  <input id="how.any" type="radio" name="how" value="any" /> <label for="how.any"><em>[%|loc%]one of these words[%END%]</em></label>
 <br />
 
-<label for="age">[%|loc%]Prefer:[%END%]  </label>
-  <input id="age" type="radio" name="age" value="new" checked="checked" /> <em>[%|loc%]newest messages[%END%]</em>
-  <input id="age" type="radio" name="age" value="old" /> <em>[%|loc%]oldest messages[%END%]</em>
+[%|loc%]Prefer:[%END%]
+  <input id="age.new" type="radio" name="age" value="new" checked="checked" /> <label for="age.new"><em>[%|loc%]newest messages[%END%]</em></label>
+  <input id="age.old" type="radio" name="age" value="old" /> <label for="age.old"><em>[%|loc%]oldest messages[%END%]</em></label>
 <br />
 
-<label for="case">[%|loc%]Case:[%END%]   </label>
-  <input id="case" type="radio" name="case" value="off" checked="checked" /> <em>[%|loc%]insensitive[%END%]</em>
-  <input id="case" type="radio" name="case" value="on" /> <em>[%|loc%]sensitive[%END%]</em>
+[%|loc%]Case:[%END%]
+  <input id="case.off" type="radio" name="case" value="off" checked="checked" /> <label for="case.off"><em>[%|loc%]insensitive[%END%]</em></label>
+  <input id="case.on" type="radio" name="case" value="on" /> <label for="case.on"><em>[%|loc%]sensitive[%END%]</em></label>
 <br />
 
-<label for="match">[%|loc%]Check:[%END%]  </label>
-  <input id="match" type="radio" name="match" value="partial" checked="checked" /> <em>[%|loc%]part of word[%END%]</em>
-  <input id="match" type="radio" name="match" value="exact" /> <em>[%|loc%]entire word[%END%]</em>
+[%|loc%]Check:[%END%]
+  <input id="match.partial" type="radio" name="match" value="partial" checked="checked" /> <label for="match.partial"><em>[%|loc%]part of word[%END%]</em></label>
+  <input id="match.exact" type="radio" name="match" value="exact" /> <label for="match.exact"><em>[%|loc%]entire word[%END%]</em></label>
 <br />
 
-<label for="limit">[%|loc%]Layout:[%END%]  </label>
-  <input id="limit" type="radio" name="limit" value="10" checked="checked" /> <em>10</em> [%|loc%]results by page[%END%]
-  <input id="limit" type="radio" name="limit" value="25" /> <em>25</em> [%|loc%]results by page[%END%]
-  <input id="limit" type="radio" name="limit" value="50" /> <em>50</em> [%|loc%]results by page[%END%]
+[%|loc%]Layout:[%END%]
+  <input id="limit.10" type="radio" name="limit" value="10" checked="checked" /> <label for="limit.10"><em>10</em> [%|loc%]results by page[%END%]</label>
+  <input id="limit.25" type="radio" name="limit" value="25" /> <label for="limit.25"><em>25</em> [%|loc%]results by page[%END%]</label>
+  <input id="limit.50" type="radio" name="limit" value="50" /> <label for="limit.50"><em>50</em> [%|loc%]results by page[%END%]</label>
 <br />
 
-<label for="from" rowspan="2">[%|loc%]Search area:[%END%]  </label>
-  <input id="from" type="checkbox" name="from" value="True" /> <em>[%|loc%]Sender[%END%]  </em>
-  <input id="from" type="checkbox" name="subj" value="True" checked="checked" /> <em>[%|loc%]Subject[%END%]  </em>
-  <input type="checkbox" name="date" value="True" /> <em>[%|loc%]Date[%END%]  </em>
-  <input type="checkbox" name="body" value="True" checked="checked" /> <em>[%|loc%]Body[%END%]  </em>
+[%|loc%]Search area:[%END%]
+  <input id="from" type="checkbox" name="from" value="True" /> <label for="from"><em>[%|loc%]Sender[%END%]  </em></label>
+  <input id="subj" type="checkbox" name="subj" value="True" checked="checked" /> <label for="subj"><em>[%|loc%]Subject[%END%]  </em></label>
+  <input id="date" type="checkbox" name="date" value="True" /> <label for="date"><em>[%|loc%]Date[%END%]  </em></label>
+  <input id="body" type="checkbox" name="body" value="True" checked="checked" /> <label for="body"><em>[%|loc%]Body[%END%]  </em></label>
 <br />
 <br />
 

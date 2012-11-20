@@ -1,7 +1,7 @@
 #!--PERL--
 # bounced.pl - This script runs as a daemon ; it does the incoming 
 # non-delivery reports analysis and storage
-# RCS Identication ; $Revision$ ; $Date$ 
+# RCS Identication ; $Revision$ ; $Date$
 #
 # Sympa - SYsteme de Multi-Postage Automatique
 # Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
@@ -36,18 +36,18 @@ use lib '--modulesdir--';
 use strict;
 
 use FileHandle;
-
-use List;
-use Conf;
-use Log;
-use mail;
 #use Getopt::Std;
 use Getopt::Long;
 use POSIX;
 
-use tt2;
-use tools;
-use Sympa::Constants;
+use List;
+#use Conf; # used in List - Site
+#use Log; # used in Conf
+#use mail; # used in List
+
+#use tt2; # used in List
+#use tools; # used in Conf
+#use Sympa::Constants; # used in Conf - confdef
 use tracking;
 
 ## Equivalents relative to RFC 1893
@@ -55,7 +55,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 	      "receiver not found" => '5.1.1',
 	      "the recipient name is not recognized" => '5.1.1',
 	      "sorry, no mailbox here by that name" => '5.1.1',
-	      "utilisateur non recensé dans le carnet d'adresses public" => '5.1.1',
+	      "utilisateur non recens\xE9 dans le carnet d'adresses public" => '5.1.1',
 	      "unknown address" => '5.1.1',
 	      "unknown user" => '5.1.1',
 	      "550" => '5.1.1',
@@ -74,7 +74,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 
 
 use Bounce;
-use wwslib;
+#use wwslib; # no longer used
 
 #getopts('dF');
 ## Check options
@@ -92,32 +92,22 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-
-my $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
 my $daemon_name = &Log::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
 
-my $wwsconf = {};
-
-# Load WWSympa configuration
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    print STDERR 'unable to load config file';
-    exit;
-}
-
 # Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+unless (defined Robot::get_robots()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s has errors.',
+	Conf::get_sympa_conf()
+    );
 }
 
-
-unshift @INC, $wwsconf->{'wws_path'};
+##unshift @INC, Site->wws_path;
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
-    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -143,21 +133,26 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
-&tools::write_pid($wwsconf->{'bounced_pidfile'}, $$, $options);
+&tools::write_pid(Site->bounced_pidfile, $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
 
 if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
-}else{
-    &Log::set_log_level($Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    ); 
+} else {
+    Log::set_log_level(Site->log_level);
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	Site->log_level
+    ); 
 }
 
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
+&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -173,18 +168,17 @@ unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa
 }
 
 ## Sets the UMASK
-umask(oct($Conf{'umask'}));
+umask(oct(Site->umask));
 
 ## Change to list root
-unless (chdir($Conf{'home'})) {
-     &Log::do_log('info','Unable to change directory');
+unless (chdir(Site->home)) {
+    &Log::do_log('info', 'Unable to change directory');
     exit (-1);
 }
 
 my $pinfo = &List::_apply_defaults();
 
 &Log::do_log('notice', "bounced Started");
-
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -197,19 +191,30 @@ my $spool = new Sympaspool('bounce');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     
-    sleep $Conf{'sleep'};
+    sleep Site->sleep;
     
     &List::init_list_cache();
-	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
-	
+    # Process grouped notifications
+    Site->send_notify_to_listmaster(undef, undef, 1, undef);
+
     my $bounce;
     while ($bounce = $spool->next) {
 
 	my $listname = $bounce->{'list'};
-	my $robot = $bounce->{'robot'};
-	
-	$robot ||= &List::search_list_among_robots($listname);
-	
+	my $robot_id = $bounce->{'robot'};
+	my $list = $bounce->{'list_object'};
+	my $robot = $bounce->{'robot_object'};
+
+	unless ($robot_id and $robot_id ne '*') {
+	    $robot_id = List::search_list_among_robots($listname);
+	    if ($robot_id) {
+		$robot = Robot->new($robot_id);
+		if ($robot) {
+		    $list = List->new($listname, $robot);
+		}
+	    }
+	}
+
 	unless ($bounce->{'messageasstring'}) {
 	   &Log::do_log ('notice',"Ignoring bounce where messagekey = %s  because empty",$bounce->{'messagekey'});
 	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
@@ -225,13 +230,15 @@ while (!$end) {
 	my $who;
 	my $distribution_id;
 	chomp $to;	
-	&Log::do_log('debug', 'bounce for :%s:  Conf{bounce_email_prefix}=%',$to,$Conf{'bounce_email_prefix'});
+	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
+	    $to, Site->bounce_email_prefix);
 		
 	$to =~ s/<//;
 	$to =~ s/>//;
-	if ($to =~ /^$Conf{'bounce_email_prefix'}\+(.*)\@(.*)$/) { #VERP in use
+	my $bounce_email_prefix = Site->bounce_email_prefix;
+	if ($to =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
 	    my $local_part = $1;
-	    my $robot = $2;
+	    my $robot_id = $2;
 	    my $unique;
 	    if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
 		$local_part = $1;
@@ -251,18 +258,18 @@ while (!$end) {
 	    $who = $1;
 	    $listname = $2;
 	    
-	    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot);
+	    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot_id);
 	    
 	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
-		my $list = new List ($listname, $robot);		
+		my $list = new List ($listname, $robot);
 		unless($list) {
-		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot);
+		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
 		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 		    next;
 		}
 		my $result =$list->check_list_authz('del','smtp',
-						    {'sender' => $Conf{'listmasters'}[0],
+						    {'sender' => [Site->listmasters]->[0],
 						     'email' => $who});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -271,11 +278,11 @@ while (!$end) {
 		    if ($list->is_list_member($who)) {
 			my $u = $list->delete_list_member('users' => [$who], 'exclude' =>' 1');
 			&Log::do_log ('notice',"$who has been removed from $listname because welcome message bounced");
-			&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'del',
+			&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'del',
 				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
 				      'daemon' => 'bounced'});
 			
-			&Log::db_stat_log({'robot' => $list->{'domain'}, 'list' => $list->{'name'}, 'operation' => 'auto_del', 'parameter' => "",
+			&Log::db_stat_log({'robot' => $list->domain, 'list' => $list->name, 'operation' => 'auto_del', 'parameter' => "",
 					   'mail' => $who, 'client' => "", 'daemon' => 'bounced.pl'});
 			
 			if ($action =~ /notify/) {
@@ -283,7 +290,7 @@ while (!$end) {
 								{'who' => $who,
 								 'by' => 'bounce manager',
 								 'reason' => 'welcome'})) {
-				&wwslog('err',"Unable to send notify 'automatic_del' to $list->{'name'} list owner");
+				&wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $list);
 			    } 
 			}
 		    }
@@ -296,9 +303,9 @@ while (!$end) {
 	    }# close VERP + remind or welcome block
 	}# close VERP in use block
 
-	my $list = new List ($listname, $robot);
+	my $list = new List ($listname, $robot_id);
 	unless($list) {
-	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot);
+	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
 	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 	    next;
 	}
@@ -306,14 +313,13 @@ while (!$end) {
 	#----------------------------------------------------------------------------------------------------------------------
 	# If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
 	my $tracking_in_use;
-	$tracking_in_use = 1 if ($list->{'admin'}{'tracking'}{'delivery_status_notification'} eq "on");
-	$tracking_in_use = 1 if ($list->{'admin'}{'tracking'}{'message_delivery_notification'} eq "on");
-	$tracking_in_use = 1 if ($list->{'admin'}{'tracking'}{'message_delivery_notification'} eq "on_demand");
+	$tracking_in_use = 1 if ($list->tracking->{'delivery_status_notification'} eq "on");
+	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on");
+	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on_demand");
 	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($tracking_in_use)) {
 	    
 	    my @parts = $entity->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $listname, $robot;
 	    my $arrival_date;
 	    
 	    my $msg_id = $head->get('Message-Id');
@@ -414,11 +420,10 @@ while (!$end) {
 	} 
 	#-----------------------------------------------------------------------------------------------------------------------------------
 	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
-	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->{'admin'}{'tracking'}{'message_delivery_notification'} eq "on")||($list->{'admin'}{'tracking'}{'message_delivery_notification'} eq "on_demand"))) {
+	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {
 	    
 	    my @parts = $entity->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $listname, $robot;
 	    my $date;
 	    my $mdn_status;
 	    
@@ -523,7 +528,7 @@ while (!$end) {
 	    my $version;
 	    my $feedback_type = '';
 	    my $listname;
-	    my $robot;
+	    my $robot_id;
 	    foreach my $p (@parts) {
 		my $h = $p->head();
 		my $content = $h->get('Content-type');
@@ -575,16 +580,18 @@ while (!$end) {
 		    chomp $listname ;
 		    $listname =~ /(.*)\@(.*)/;
 		    $listname = $1;
-		    $robot = $2;
-		    my $list = new List ($listname, $robot);
+		    $robot_id = $2;
+		    my $list = new List ($listname, $robot_id);
 		    unless($list) {
-			&Log::do_log('err','Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot);
+			&Log::do_log('err',
+			    'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
+			    $bounce->{'messagekey'}, $listname, $robot_id);
 			$spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 			next;
 		    }
 		    push @lists, $list;
 		}elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
-		    @lists = &List::get_which($original_rcpt,$robot,'member');
+		    @lists = &List::get_which($original_rcpt, $robot_id, 'member');
 		}else {
 		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $listname );		
 		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
@@ -599,17 +606,19 @@ while (!$end) {
 			    
 				&Log::do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
 				unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {
-				    &Log::do_log('notice',"Unable to send notify 'automatic_del' to $list->{'name'} list owner");
+				    &Log::do_log('notice', 'Unable to send notify "automatic_del" to %s list owner', $list);
 				}
 			    }else{
-				&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$bounce->{'messagekey'},$list->name,$robot,$original_rcpt);
+				&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$bounce->{'messagekey'},$list->name,$robot_id,$original_rcpt);
 				unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
-				    &Log::do_log('notice',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
+				    &Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
 				}
 			    }
 			}else{
 			    $forward = 'request';
-			    &Log::do_log('err','Ignore Feedback Report (bounce where messagekey=%s) for list %s@%s : user %s is not allowed to unsubscribe',$bounce->{'messagekey'},$list->name,$robot,$original_rcpt);
+			    &Log::do_log('err',
+				'Ignore Feedback Report (bounce where messagekey=%s) for list %s : user %s is not allowed to unsubscribe',
+				$bounce->{'messagekey'}, $list, $original_rcpt);
 			}
 		    }
 		}else{
@@ -626,9 +635,9 @@ while (!$end) {
     
 	# Fin section feedback report
 	# else (not welcome or remind) 
-	my $list = new List ($listname, $robot);
+	my $list = new List ($listname, $robot_id);
 	if (! $list) {
-	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot);
+	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
 	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 	    next;
 	}else{
@@ -650,7 +659,8 @@ while (!$end) {
 	    ## Bounce directory
 	    if (! -d $bounce_dir) {
 		unless (mkdir $bounce_dir, 0777) {
-		    &List::send_notify_to_listmaster('bounce_intern_error',$Conf{'domain'},{'error' => "Failed to list create bounce directory $bounce_dir"});
+		    Site->send_notify_to_listmaster('bounce_intern_error',
+			{'error' => "Failed to list create bounce directory $bounce_dir"});
 		    &Log::do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
 		exit;
 		} 
@@ -658,8 +668,8 @@ while (!$end) {
 	    
 	    my $adr_count;
 	    ## Bouncing addresses
-	    # Voir si pas mettre un test conditionnel sur le status code pour detecter les dsn positifs et ne pas fausser les statistiques de l'abonné.
-	    # Peut être possibilité de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
+	    # Voir si pas mettre un test conditionnel sur le status code pour detecter les dsn positifs et ne pas fausser les statistiques de l'abonnÃ©.
+	    # Peut Ãªtre possibilitÃ© de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
 	    while (my ($rcpt, $status) = each %hash) {
 		$adr_count++;
 		my $bouncefor = $who;
@@ -677,7 +687,7 @@ while (!$end) {
 		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
-		    &Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $list->{'name'});
+		    &Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $list);
 		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 		    next;
 		}
@@ -694,13 +704,11 @@ while (!$end) {
     }
 }
 
-
-
-
-&List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
+# Purge grouped notifications
+Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 &Log::do_log('notice', 'bounced exited normally due to signal');
-&tools::remove_pid($wwsconf->{'bounced_pidfile'}, $$);
+&tools::remove_pid(Site->bounced_pidfile, $$);
 
 exit(0);
 
@@ -720,7 +728,7 @@ sub store_bounce {
     
     &Log::do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir,$rcpt);
 
-    my $queue = $Conf{'queuebounce'};
+    my $queue = Site->queuebounce;
 
     my $filename = &tools::escape_chars($rcpt);    
     
@@ -762,7 +770,7 @@ sub update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status = shift;
     
-    &Log::do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)',$list->{'name'},$rcpt,$bouncefor,$status); 
+    &Log::do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
 
     my $first = my $last = time;
     my $count = 0;
@@ -770,7 +778,7 @@ sub update_subscriber_bounce_history {
     my $user = $list->get_list_member($bouncefor);
     
     unless ($user) {
-	&Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list->{'name'}, $bouncefor); 		    
+	&Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list, $bouncefor); 		    
 	return undef;
     }
     
@@ -783,13 +791,13 @@ sub update_subscriber_bounce_history {
 	&Log::do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
-	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce','parameters' => "address=$rcpt",
+	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce','parameters' => "address=$rcpt",
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
     }else{
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status"});
-	&Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list->{'name'});
-	&Log::db_log({'robot' => $list->{'domain'},'list' => $list->{'name'},'action' => 'get_bounce',
+	&Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list);
+	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce',
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
     }

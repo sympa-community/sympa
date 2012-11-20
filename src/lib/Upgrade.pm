@@ -24,18 +24,21 @@ package Upgrade;
 
 use strict;
 
-use Carp;
+#use Carp; # currently not used
 use POSIX qw(strftime);
 
-use Conf;
-use Log;
-use Sympa::Constants;
-use SDM;
+use Site;
+#use Conf; # used in Site
+#use Log; # used in Conf
+#use Sympa::Constants; # used in Conf - confdef
+#use SDM; # used in Conf
+
+# tentative
 use Data::Dumper;
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
-    my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
+    my $version_file = Site->etc . '/data_structure.version';
     my $previous_version;
     
     if (-f $version_file) {
@@ -59,11 +62,11 @@ sub get_previous_version {
 }
 
 sub update_version {
-    my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
+    my $version_file = Site->etc . '/data_structure.version';
 
     ## Saving current version if required
     unless (open VFILE, ">$version_file") {
-	&Log::do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, $Conf::Conf{'etc'}, $!);
+	&Log::do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, Site->etc, $!);
 	return undef;
     }
     printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
@@ -117,7 +120,7 @@ sub upgrade {
 	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+	    my $file = Site->queueoutgoing.'/.rebuild.'.$list->get_list_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&Log::do_log('err','Cannot create %s', $file);
@@ -144,15 +147,15 @@ sub upgrade {
 
 	my @directories;
 
-	if (-d "$Conf::Conf{'etc'}/web_tt2") {
-	    push @directories, "$Conf::Conf{'etc'}/web_tt2";
+	if (-d Site->etc . '/web_tt2') {
+	    push @directories, Site->etc . '/web_tt2';
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+	foreach my $vr (keys %{Site->robots_config}) {
 
-	    if (-d "$Conf::Conf{'etc'}/$vr/web_tt2") {
-		push @directories, "$Conf::Conf{'etc'}/$vr/web_tt2";
+	    if (-d Site->etc . "/$vr/web_tt2") {
+		push @directories, Site->etc . "/$vr/web_tt2";
 	    }
 	}
 
@@ -216,7 +219,7 @@ sub upgrade {
 	## Fill the robot_subscriber and robot_admin fields in DB
 	&Log::do_log('notice','Updating the new robot_subscriber and robot_admin  Db fields...');
 
-	foreach my $r (keys %{$Conf::Conf{'robots'}}) {
+	foreach my $r (keys %{Site->robots_config}) {
 	    my $all_lists = &List::get_lists($r, {'skip_sync_admin' => 1});
 	    foreach my $list ( @$all_lists ) {
 		
@@ -228,7 +231,9 @@ sub upgrade {
 		    $table,
 		    &SDM::quote($list->{'name'}))) {
 			&Log::do_log('err','Unable to fille the robot_admin and robot_subscriber fields in database for robot %s.',$r);
-			&List::send_notify_to_listmaster('upgrade_failed', $Conf::Conf{'domain'},{'error' => $SDM::db_source->{'db_handler'}->errstr});
+			Site->send_notify_to_listmaster(
+			    'upgrade_failed',
+			    {'error' => $SDM::db_source->{'db_handler'}->errstr});
 			return undef;
 		    }
 		}
@@ -241,7 +246,7 @@ sub upgrade {
 	## Rename web archive directories using 'domain' instead of 'host'
 	&Log::do_log('notice','Renaming web archive directories with the list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'domain'},'arc_path');
+	my $root_dir = Site->arc_path;
 	unless (opendir ARCDIR, $root_dir) {
 	    &Log::do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -252,7 +257,7 @@ sub upgrade {
 		     
 	    my ($listname, $listdomain) = split /\@/, $dir;
 
-	    next unless ($listname & $listdomain);
+	    next unless ($listname && $listdomain);
 
 	    my $list = new List $listname;
 	    unless (defined $list) {
@@ -283,7 +288,7 @@ sub upgrade {
     ## DB fields of enum type have been changed to int
     if (&tools::lower_version($previous_version, '5.2a.1')) {
 	
-	if (&SDM::use_db & $Conf::Conf{'db_type'} eq 'mysql') {
+	if (&SDM::use_db && Site->db_type eq 'mysql') {
 	    my %check = ('subscribed_subscriber' => 'subscriber_table',
 			 'included_subscriber' => 'subscriber_table',
 			 'subscribed_admin' => 'admin_table',
@@ -361,7 +366,7 @@ sub upgrade {
 
 	&Log::do_log('notice','Renaming bounce sub-directories adding list domain...');
 	
-	my $root_dir = &Conf::get_robot_conf($Conf::Conf{'domain'},'bounce_path');
+	my $root_dir = Site->bounce_path;
 	unless (opendir BOUNCEDIR, $root_dir) {
 	    &Log::do_log('err',"Unable to open $root_dir : $!");
 	    return undef;
@@ -427,10 +432,10 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.6')) {
 	
 	&Log::do_log('notice','Looking for customized mhonarc-ressources.tt2 files...');
-	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
-	    my $etc_dir = $Conf::Conf{'etc'};
+	foreach my $vr (keys %{Site->robots_config}) {
+	    my $etc_dir = Site->etc;
 
-	    if ($vr ne $Conf::Conf{'domain'}) {
+	    if ($vr ne Site->domain) {
 		$etc_dir .= '/'.$vr;
 	    }
 
@@ -438,7 +443,8 @@ sub upgrade {
 		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
 		rename $etc_dir.'/mhonarc-ressources.tt2', $new_filename;
 		&Log::do_log('notice', "Custom %s file has been backed up as %s", $etc_dir.'/mhonarc-ressources.tt2', $new_filename);
-		&List::send_notify_to_listmaster('file_removed',$Conf::Conf{'domain'},
+		Site->send_notify_to_listmaster(
+		    'file_removed',
 						 [$etc_dir.'/mhonarc-ressources.tt2', $new_filename]);
 	    }
 	}
@@ -449,7 +455,7 @@ sub upgrade {
 	foreach my $list ( @$all_lists ) {
 
 	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
+	    my $file = Site->queueoutgoing.'/.rebuild.'.$list->get_list_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&Log::do_log('err','Cannot create %s', $file);
@@ -466,10 +472,11 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.8')) {
 	&Log::do_log('notice','Q-Encoding web documents filenames...');
 
+	Language::PushLang(Site->lang);
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
 	    if (-d $list->{'dir'}.'/shared') {
-		&Log::do_log('notice','  Processing list %s...', $list->get_list_address());
+		&Log::do_log('notice','  Processing list %s...', $list);
 
 		## Determine default lang for this list
 		## It should tell us what character encoding was used for filenames
@@ -483,8 +490,8 @@ sub upgrade {
 		}
 	    }
 	}
-
-    }    
+	Language::PopLang();
+    }
 
     ## We now support UTF-8 only for custom templates, config files, headers and footers, info files
     ## + web_tt2, scenari, create_list_templatee, families
@@ -495,33 +502,33 @@ sub upgrade {
 
 	## Site level
 	foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
-	    if (-d $Conf::Conf{'etc'}.'/'.$type) {
-		push @directories, [$Conf::Conf{'etc'}.'/'.$type, $Conf::Conf{'lang'}];
+	    if (-d Site->etc.'/'.$type) {
+		push @directories, [Site->etc.'/'.$type, Site->lang];
 	    }
 	}
 
 	foreach my $f (
-        Sympa::Constants::CONFIG,
-        Sympa::Constants::WWSCONFIG,
-        $Conf::Conf{'etc'}.'/'.'topics.conf',
-        $Conf::Conf{'etc'}.'/'.'auth.conf'
+	    Conf::get_sympa_conf(),
+	    Conf::get_wwsympa_conf(),
+	    Site->etc . '/topics.conf',
+	    Site->etc . '/auth.conf'
     ) {
 	    if (-f $f) {
-		push @files, [$f, $Conf::Conf{'lang'}];
+		push @files, [$f, Site->lang];
 	    }
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
+	foreach my $vr (keys %{Site->robots_config}) {
 	    foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
-		if (-d $Conf::Conf{'etc'}.'/'.$vr.'/'.$type) {
-		    push @directories, [$Conf::Conf{'etc'}.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
+		if (-d Site->etc.'/'.$vr.'/'.$type) {
+		    push @directories, [Site->etc.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
 		}
 	    }
 
 	    foreach my $f ('robot.conf','topics.conf','auth.conf') {
-		if (-f $Conf::Conf{'etc'}.'/'.$vr.'/'.$f) {
-		    push @files, [$Conf::Conf{'etc'}.'/'.$vr.'/'.$f, $Conf::Conf{'lang'}];
+		if (-f Site->etc.'/'.$vr.'/'.$f) {
+		    push @files, [Site->etc.'/'.$vr.'/'.$f, Site->lang];
 		}
 	    }
 	}
@@ -561,7 +568,7 @@ sub upgrade {
 	    }elsif ($d =~ /(create_list_templates|families)$/) {
 		foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
 		    if (-d "$d/$subdir") {
-			push @directories, ["$d/$subdir", $Conf::Conf{'lang'}];
+			push @directories, ["$d/$subdir", Site->lang];
 		    }
 		}
 		closedir DIR;
@@ -574,8 +581,8 @@ sub upgrade {
 		next;
 	    }
 	    foreach my $file (readdir DIR) {
-		next unless (($d =~ /mail_tt2|web_tt2|create_list_templates|families/ & $file =~ /\.tt2$/) ||
-			     ($d =~ /scenari$/ & $file =~ /\w+\.\w+$/));
+		next unless (($d =~ /mail_tt2|web_tt2|create_list_templates|families/ && $file =~ /\.tt2$/) ||
+			     ($d =~ /scenari$/ && $file =~ /\w+\.\w+$/));
 		push @files, [$d.'/'.$file, $lang];
 	    }
 	    closedir DIR;
@@ -638,10 +645,10 @@ sub upgrade {
 
       ## Remove OTHER/ subdirectories in bounces
       &Log::do_log('notice', "Removing obsolete OTHER/ bounce directories");
-      if (opendir BOUNCEDIR, &Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path')) {
+      if (opendir BOUNCEDIR, Site->bounce_path) {
 	
 	foreach my $subdir (sort grep (!/^\.+$/,readdir(BOUNCEDIR))) {
-	  my $other_dir = &Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path').'/'.$subdir.'/OTHER';
+	  my $other_dir = Site->bounce_path . '/'.$subdir.'/OTHER';
 	  if (-d $other_dir) {
 	    &tools::remove_dir($other_dir);
 	    &Log::do_log('notice', "Directory $other_dir removed");
@@ -651,7 +658,7 @@ sub upgrade {
 	close BOUNCEDIR;
  
       }else {
-	&Log::do_log('err', "Failed to open directory $Conf::Conf{'queuebounce'} : $!");	
+	&Log::do_log('err', "Failed to open directory Site->queuebounce : $!");	
       }
 
    }
@@ -665,7 +672,7 @@ sub upgrade {
 		my $all_lists = &List::get_lists('*');
 		foreach my $list ( @$all_lists ) {
 			if (-d $list->{'dir'}.'/shared') {
-				&Log::do_log('notice','  Processing list %s...', $list->get_list_address());
+				&Log::do_log('notice','  Processing list %s...', $list);
 
 				my @all_files;
 				&tools::list_dir($list->{'dir'}, \@all_files, 'utf-8');
@@ -739,24 +746,21 @@ sub upgrade {
 		&Log::do_log('err',"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",$data->{'user_exclusion'},$data->{'list_exclusion'},@valid_robot_candidates);
 	    }
 	}
-	## Caching all lists config subset to database
-	&Log::do_log('notice','Caching all lists config subset to database');
-	&List::_flush_list_db();
-	my $all_lists = &List::get_lists('*', { 'use_files' => 1 });
-	foreach my $list (@$all_lists) {
-	    $list->_update_list_db;
+	## Caching all list config
+	&Log::do_log('notice', 'Caching all list config to database...');
+	&List::get_lists('*', { 'reload_config' => 1 });
+	&Log::do_log('notice', '...done');
 	}
-   }
 
 	foreach my $spoolparameter (keys %spools_def ){
 	    next if ($spoolparameter eq 'queuetask'); # task is to be done later
 	    
-	    my $spooldir = $Conf::Conf{$spoolparameter};
+	    my $spooldir = Site->$spoolparameter;
 	    
 	    unless (-d $spooldir){
 		&Log::do_log('info',"Could not perform migration of spool %s because it is not a directory", $spoolparameter);
 		next;
-	    }
+   }
 	    &Log::do_log('notice',"Performing upgrade for spool  %s ",$spooldir);
 
 	    my $spool = new Sympaspool($spools_def{$spoolparameter});
@@ -804,7 +808,7 @@ sub upgrade {
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif ($spoolparameter eq 'queuesubscribe'){
 		    my $match = 0;		    
-		    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+		    foreach my $robot (keys %{Site->robots_config}) {
 			&Log::do_log('notice',"robot : $robot");
 			if ($filename =~ /^([^@]*)\@$robot\.(.*)$/){
 			    $listname = $1;
@@ -831,16 +835,17 @@ sub upgrade {
 			    $meta{'type'} = $type if $type;
 
 			    my $email = &Conf::get_robot_conf($robot, 'email');	
-			    
+			    my $host = Site->host;
+
 			    my $priority;
 			    
-			    if ($listname eq $Conf::Conf{'listmaster_email'}) {
+			    if ($listname eq Site->listmaster_email) {
 				$priority = 0;
 			    }elsif ($type eq 'request') {
 				$priority = &Conf::get_robot_conf($robot, 'request_priority');
 			    }elsif ($type eq 'owner') {
 				$priority = &Conf::get_robot_conf($robot, 'owner_priority');
-			    }elsif ($listname =~ /^(sympa|$email)(\@$Conf::Conf{'host'})?$/i) {	
+			    }elsif ($listname =~ /^(sympa|$email)(\@$host)?$/i) {	
 				$priority = &Conf::get_robot_conf($robot,'sympa_priority');
 				$listname ='';
 			    }
@@ -898,6 +903,218 @@ sub upgrade {
 	    &Log::do_log('info',"Upgrade process for spool %s : performed files %s",$spooldir,$performed);
 	}	
     }
+
+    ## We have obsoleted wwsympa.conf.  It would be migrated to sympa.conf.
+    if (&tools::lower_version($previous_version, '6.2a.33')) {
+	my $sympa_conf = Conf::get_sympa_conf();
+	my $wwsympa_conf = Conf::get_wwsympa_conf();
+	my $fh;
+	my %migrated = ();
+	my @newconf = ();
+	my $date;
+
+	## Some sympa.conf parameters were overridden by wwsympa.conf.
+	## Others prefer sympa.conf.
+	my %wwsconf_override = (
+	    'arc_path'                   => 'yes',
+	    'archive_default_index'      => 'yes',
+	    'archived_pidfile'           => 'yes',
+	    'bounce_path'                => 'yes',
+	    'bounced_pidfile'            => 'yes',
+	    'cookie_domain'              => 'NO',
+	    'cookie_expire'              => 'yes',
+	    'custom_archiver'            => 'yes',
+	    'default_home'               => 'NO',
+	    'export_topics'              => 'yes',
+	    'htmlarea_url'               => 'yes',
+	    'html_editor_file'           => 'NO',
+	    'html_editor_init'           => 'NO',
+	    'ldap_force_canonical_email' => 'NO',
+	    'log_facility'               => 'yes',
+	    'mhonarc'                    => 'yes',
+	    'password_case'              => 'NO',
+	    'review_page_size'           => 'yes',
+	    'task_manager_pidfile'       => 'yes',
+	    'title'                      => 'NO',
+	    'use_fast_cgi'               => 'yes',
+	    'use_html_editor'            => 'NO',
+	    'viewlogs_page_size'         => 'yes',
+	    'wws_path'                   => undef,
+	);
+	## Old params
+	my %old_param = (
+	    'alias_manager' => 'No more used, using ' . Site->alias_manager,
+	    'wws_path'      => 'No more used',
+	    'icons_url' =>
+		'No more used. Using static_content/icons instead.',
+	    'robots' =>
+		'Not used anymore. Robots are fully described in their respective robot.conf file.',
+	);
+
+	## Set language of new file content
+	Language::PushLang(Site->lang);
+	$date = Language::gettext_strftime("%d.%b.%Y-%H.%M.%S",
+	    localtime time);
+
+	if (-r $wwsympa_conf) {
+	    ## load only sympa.conf
+	    my $conf = Conf::load_robot_conf(
+		{'robot' => '*', 'no_db' => 1, 'return_result' => 1}
+	    );
+
+	    my %infile = ();
+	    ## load defaults
+	    foreach my $p (@confdef::params) {
+		next if $p->{'title'};
+		next unless $p->{'file'};
+		next unless $p->{'file'} eq 'wwsympa.conf';
+		$infile{$p->{'name'}} = $p->{'default'};
+	    }
+	    ## get content of wwsympa.conf
+	    open my $fh, '<', $wwsympa_conf;
+	    while (<$fh>) {
+		next if /^\s*#/;
+		chomp $_;
+		next unless /^\s*(\S+)\s+(.+)$/i;
+		my ($k, $v) = ($1, $2);
+		$infile{$k} = $v;
+	    }
+	    close $fh;
+
+	    my $name;
+	    foreach my $p (@confdef::params) {
+		next if $p->{'title'};
+		$name = $p->{'name'};
+		next unless exists $infile{$name};
+
+		unless ($p->{'file'} and $p->{'file'} eq 'wwsympa.conf') {
+		    ## may it exist in wwsympa.conf?
+		    $migrated{'unknown'} ||= {};
+		    $migrated{'unknown'}->{$name} = [$p, $infile{$name}];
+		} elsif (exists $conf->{$name}) {
+		    if ($wwsconf_override{$name} eq 'yes') {
+			## does it override sympa.conf?
+			$migrated{'override'} ||= {};
+			$migrated{'override'}->{$name} = [$p, $infile{$name}];
+		    } elsif (defined $conf->{$name}) {
+			## or, is it there in sympa.conf?
+			$migrated{'duplicate'} ||= {};
+			$migrated{'duplicate'}->{$name} = [$p, $infile{$name}];
+		    } else {
+			## otherwise, use values in wwsympa.conf
+			$migrated{'add'} ||= {};
+			$migrated{'add'}->{$name} = [$p, $infile{$name}];
+		    }
+		} else {
+		    ## otherwise, use values in wwsympa.conf
+		    $migrated{'add'} ||= {};
+		    $migrated{'add'}->{$name} = [$p, $infile{$name}];
+		}
+		delete $infile{$name};
+	    }
+	    ## obsoleted or unknown parameters
+	    foreach my $name (keys %infile) {
+		if ($old_param{$name}) {
+		    $migrated{'obsolete'} ||= {};
+		    $migrated{'obsolete'}->{$name} =
+			[{'name' => $name, 'query' => $old_param{$name}},
+			 $infile{$name}];
+		} else {
+		    $migrated{'unknown'} ||= {};
+		    $migrated{'unknown'}->{$name} =
+			[{'name' => $name,
+			  'query' => Language::gettext("Unknown parameter")},
+			 $infile{$name}];
+		}
+	    }
+	}
+
+	## Add contents to sympa.conf
+	if (%migrated) {
+	    open $fh, '<', $sympa_conf or die $!;
+	    @newconf = <$fh>;
+	    close $fh;
+	    $newconf[$#newconf] .= "\n" unless $newconf[$#newconf] =~ /\n\z/;
+
+	    push @newconf, "\n" . ('#' x 76) . "\n" . '#### ' .
+		Language::gettext("Migration from wwsympa.conf") .  "\n" .
+		'#### ' . $date . "\n" .  ('#' x 76) . "\n\n";
+
+	    foreach my $type (qw(duplicate add obsolete unknown)) {
+		my %newconf = %{$migrated{$type} || {}};
+		next unless scalar keys %newconf;
+
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Migrated Parameters\nFollowing parameters were migrated from wwsympa.conf."), '#### ', '#### ') . "\n"
+		    if $type eq 'add';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Overrididing Parameters\nFollowing parameters existed both in sympa.conf and  wwsympa.conf.  Previous release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to be disabled."), '#### ', '#### ') . "\n"
+		    if $type eq 'override';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Duplicate of sympa.conf\nThese parameters were found in both sympa.conf and wwsympa.conf.  Previous release of Sympa used those in sympa.conf.  Uncomment ones you wish to be enabled."), '#### ', '#### ') . "\n"
+		    if $type eq 'duplicate';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Old Parameters\nThese parameters are no longer used."),
+		    '#### ', '#### ') . "\n"
+		    if $type eq 'obsolete';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Unknown Parameters\nThough these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."),
+		    '#### ', '#### ') . "\n"
+		    if $type eq 'unknown';
+
+		foreach my $k (sort keys %newconf) {
+		    my ($param, $v) = @{$newconf{$k}};
+
+		    push @newconf, tools::wrap_text(
+			Language::gettext($param->{'query'}), '## ', '## ')
+			if defined $param->{'query'};
+		    push @newconf, tools::wrap_text(
+			Language::gettext($param->{'advice'}), '## ', '## ')
+			if defined $param->{'advice'};
+		    if (defined $v and
+			($type eq 'add' or $type eq 'override')) {
+			push @newconf,
+			    sprintf("%s\t%s\n\n", $param->{'name'}, $v);
+		    } else {
+			push @newconf,
+			    sprintf("#%s\t%s\n\n", $param->{'name'}, $v);
+		    }
+		}
+	    }
+	}
+
+	## Restore language
+	Language::PopLang();
+
+	if (%migrated) {
+	    warn sprintf("Unable to rename %s : %s", $sympa_conf, $!)
+		unless rename $sympa_conf, "$sympa_conf.$date";
+	    ## Write new config files
+	    my $umask = umask 037;
+	    unless (open $fh, '>', $sympa_conf) {
+		umask $umask;
+		die sprintf("Unable to open %s : %s", $sympa_conf, $!);
+	    }
+	    umask $umask;
+	    chown [getpwnam(Sympa::Constants::USER)]->[2],
+		[getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
+	    print $fh @newconf;
+	    close $fh;
+
+	    ## Keep old config file
+	    printf "%s has been updated.\nPrevious version has been saved as %s.\n",
+		$sympa_conf, "$sympa_conf.$date";
+	}
+
+	if (-r $wwsympa_conf) {
+	    ## Keep old config file
+	    warn sprintf("Unable to rename %s : %s", $wwsympa_conf, $!)
+		unless rename $wwsympa_conf, "$wwsympa_conf.$date";
+	    printf "%s will NO LONGER be used.\nPrevious version has been saved as %s.\n",
+		$wwsympa_conf, "$wwsympa_conf.$date";
+	}
+    }
+
     return 1;
 }
 
@@ -940,7 +1157,7 @@ sub to_utf8 {
 	}
 	
 	# Add X-Sympa-Attach: headers if required.
-	if (($file =~ /mail_tt2/) & ($file =~ /\/($with_attachments)$/)) {
+	if (($file =~ /mail_tt2/) && ($file =~ /\/($with_attachments)$/)) {
 	    while (<TEMPLATE>) {
 		$text .= $_;
 		if (m/^Content-Type:\s*message\/rfc822/i) {
@@ -1003,7 +1220,7 @@ sub to_utf8 {
 					mode =>  0644,
 					))
 	{
-	    &Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
+	    &Log::do_log('err','Unable to set rights on %s',Site->db_name);
 	    next;
 	}
 	&Log::do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'@'.$date);

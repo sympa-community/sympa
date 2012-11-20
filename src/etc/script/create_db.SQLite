@@ -103,17 +103,19 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
+	 name_list		text,
+	 robot_list		text,
 	 creation_email_list 	text, 
-	 creation_epoch_list 	numeric, 
-	 editors_list 	text, 
-	 name_list 	text, 
-	 owners_list 	text, 
-	 path_list 	text, 
-	 robot_list 	text, 
+	 creation_epoch_list 	integer, 
+	 update_email_list	text,
+	 update_epoch_list	integer,
 	 status_list 	text, 
-	 subject_list 	text, 
+	 searchkey_list 	text, 
 	 topics_list 	text, 
-	 web_archive_list 	integer, 
+	 web_archive_list 	numeric,
+	 total_list		integer,
+	 cache_epoch_list	integer,
+	 config_list		none,
 	 PRIMARY KEY (name_list, robot_list) 
  );
 
@@ -293,7 +295,7 @@ CREATE TABLE stat_table (
 	 list_stat 	text, 
 	 operation_stat 	text, 
 	 parameter_stat 	text, 
-	 read_stat 	integer, 
+	 read_stat 	numeric,
 	 robot_stat 	text, 
 	 user_ip_stat 	text, 
 	 PRIMARY KEY (id_stat) 

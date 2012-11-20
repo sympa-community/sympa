@@ -108,17 +108,19 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 creation_email_list 	 varchar(100), 
-	 creation_epoch_list 	 datetime, 
-	 editors_list 	 varchar(100), 
-	 name_list 	 varchar(100), 
-	 owners_list 	 varchar(100), 
-	 path_list 	 varchar(100), 
-	 robot_list 	 varchar(100), 
+	 name_list		varchar(100),
+	 robot_list		varchar(100),
+	 creation_email_list 	varchar(100),
+	 creation_epoch_list 	int(11), 
+	 update_email_list	varchar(100),
+         update_epoch_list	int(11),
 	 status_list 	 enum('open','closed','pending','error_config','family_closed'), 
-	 subject_list 	 varchar(100), 
-	 topics_list 	 varchar(100), 
-	 web_archive_list 	 tinyint(1), 
+	 searchkey_list		varchar(255),
+	 web_archive_list	tinyint(1),
+	 topics_list		varchar(255), 
+	 total_list		int(7),
+	 cache_epoch_list	int(11),
+	 config_list		mediumblob,
 	 PRIMARY KEY (name_list, robot_list) 
  ) DEFAULT CHARACTER SET utf8;
 

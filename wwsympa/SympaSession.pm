@@ -28,8 +28,8 @@ use POSIX;
 use CGI::Cookie;
 use Time::Local;
 
-use Log;
-use Conf;
+#use Log;
+#use Conf;
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
 my %session_hard_attributes = ('id_session' => 1, 
@@ -229,8 +229,8 @@ sub purge_old_sessions {
 
     &Log::do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
 
-    my $delay = &tools::duration_conv($Conf{'session_table_ttl'}) ; 
-    my $anonymous_delay = &tools::duration_conv($Conf{'anonymous_session_table_ttl'}) ; 
+    my $delay = &tools::duration_conv(Site->session_table_ttl) ; 
+    my $anonymous_delay = &tools::duration_conv(Site->anonymous_session_table_ttl) ; 
 
     unless ($delay) { &Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
     unless ($anonymous_delay) { &Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with anonymous delay null',$robot); return;}
@@ -292,7 +292,7 @@ sub purge_old_tickets {
 
     &Log::do_log('info', 'SympaSession::purge_old_tickets(%s,%s)',$robot);
 
-    my $delay = &tools::duration_conv($Conf{'one_time_ticket_table_ttl'}) ; 
+    my $delay = &tools::duration_conv(Site->one_time_ticket_table_ttl) ; 
 
     unless ($delay) { &Log::do_log('info', 'SympaSession::purge_old_tickets(%s) exit with delay null',$robot); return;}
 

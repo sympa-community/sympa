@@ -7,26 +7,29 @@ Content-Transfer-Encoding: 8bit
 
 This is a multi-part message in MIME format.
 --[% boundary1 %]
-Content-Type: text/plain; charset=UTF-8;
-Content-Transfer-Encoding: 8bit
+X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 digest %2[%END%] 
 
 [%|loc%]Table of contents:[%END%]
 
-[% FOREACH m = msg_list -%]
+[%|wrap(0,2)%][% FOREACH m = msg_list -%]
 * [% m.id %] - [% m.subject %] - [% m.from %]
-[% END %]
+[% END %]%END#wrap%]
+----------------------------------------------------------------------
 
 [% FOREACH m = msg_list -%]
-<[% m.id %] - [%|loc%]Date:[% END %] [% m.date %] [%|loc%]Author:[% END %] [% m.from %]
-[%|loc%]Subject:[% END %] [% m.subject %]
+[%|wrap(0,1)%]Message-ID: <[% m.id %]>
+Date: [% m.date %]
+From: [% m.from %]
+Subject: [% m.subject %][%END#wrap%]
 
 [% m.plain_body %]
 
+------------------------------
+[% END %]
 *********************************************
 
-[% END %]
 [%|loc(list.name,date)%]End of %1 Digest %2[%END%]
 
 --[% boundary1 %]

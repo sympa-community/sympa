@@ -109,17 +109,19 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 creation_email_list 	varchar(100), 
-	 creation_epoch_list 	timestamptz, 
-	 editors_list 	varchar(100), 
-	 name_list 	varchar(100), 
-	 owners_list 	varchar(100), 
-	 path_list 	varchar(100), 
-	 robot_list 	varchar(100), 
-	 status_list 	varchar(15), 
-	 subject_list 	varchar(100), 
-	 topics_list 	varchar(100), 
-	 web_archive_list 	int2, 
+	 name_list		varchar(100), 
+	 robot_list		varchar(100), 
+	 creation_email_list	varchar(100),
+	 creation_epoch_list	int4,
+	 update_email_list	varchar(100),
+	 update_epoch_list	int4,
+	 status_list		varchar(15),
+	 searchkey_list		varchar(255),
+	 topics_list		varchar(255),
+	 web_archive_list	int2,
+	 total_list		int4,
+	 cache_epoch_list	int4,
+	 config_list		bytea,
 	 CONSTRAINT ind_list PRIMARY KEY (name_list, robot_list) 
  );
 

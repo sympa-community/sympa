@@ -221,7 +221,7 @@ sub update_field {
 	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
 	return undef;
     }
-    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    $report .= sprintf("\nField %s in table %s, structure updated", $param->{'field'}, $param->{'table'});
     &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
     return $report;
 }
@@ -436,4 +436,11 @@ sub set_index {
     return $report;
 }
 
-return 1;
+## For BLOB types.
+sub AS_BLOB {
+    return ( { 'ora_type' => DBD::Oracle::ORA_BLOB() } => $_[1] )
+	if scalar @_ > 1;
+    return ();
+}
+
+1;

@@ -109,37 +109,45 @@ local $main::daemon_usage;
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
-my $config_file = $main::options{'config'} || Sympa::Constants::CONFIG;
-
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
-unless (Conf::load($config_file,1)) {
-   &fatal_err("Configuration file $config_file has errors.");  
+unless (defined Robot::get_robots('no_db' => 1, 'force_reload' => 1)) {
+    &fatal_err('Configuration file %s has errors.', Conf::get_sympa_conf());  
 }
 
-
 ## Open the syslog and say we're read out stuff.
-&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'spooler');
+Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    ); 
 }else{
-    &Log::set_log_level($Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    Log::set_log_level(Site->log_level);
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	Site->log_level
+    ); 
 }
 
 ## Probe Db if defined
-if ($Conf{'db_name'} and $Conf{'db_type'}) {
+if (Site->db_name and Site->db_type) {
     unless (&Upgrade::probe_db()) {
-	&Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf', $Conf{'db_name'});
+	&Log::fatal_err(
+	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
+	    Site->db_name
+	);
     }
 }
 
 ## Now trying to load full config (including database)
-unless (Conf::load($config_file)) {
-   &Log::fatal_err("Configuration file $config_file has errors.");
-   
+unless (defined Robot::get_robots()) {
+    &Log::fatal_err(
+	'Configuration file %s has errors.',
+	Conf::get_sympa_conf()
+    );
 }
 
 ## Apply defaults to %List::pinfo
@@ -147,8 +155,8 @@ unless (Conf::load($config_file)) {
 
 
 ## Main program
-if (!chdir($Conf{'home'})) {
-   &Log::fatal_err("Can't chdir to %s: %m", $Conf{'home'});
+if (!chdir(Site->home)) {
+   &Log::fatal_err("Can't chdir to %s: %m", Site->home);
    ## Function never returns.
 }
 
@@ -188,9 +196,9 @@ if ($signal ne 'hup') {
 	}else{
 	    foreach my $possible_spool ('queue', 'bouncequeue', 'queueautomatic'){
 		&Log::do_log('debug','Checking usage of spool %s',$possible_spool);
-		if ($Conf{$possible_spool}) {
-		    &Log::do_log('debug','Spool %s is used and the dir is "%s"',$possible_spool,$Conf{$possible_spool});
-		    $distinct_spools{$Conf{$possible_spool}} = 1;
+		if (Site->$possible_spool) {
+		    &Log::do_log('debug','Spool %s is used and the dir is "%s"',$possible_spool, Site->$possible_spool);
+		    $distinct_spools{Site->$possible_spool} = 1;
 		}
 	    }
 	}
@@ -216,17 +224,17 @@ if ($signal ne 'hup') {
 	if ($main::options{'queue'}){
 	    $spooldir = $main::options{'queue'};
 	}else{
-	    $spooldir = $Conf{'queue'};
+	    $spooldir = Site->queue;
 	}
 	&Log::do_log('debug','Using spool %s',$spooldir);
 	$signal = '0';
     }
-    &Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'spooler');
+    &Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
     &Log::do_log('debug', "Running server $$ for spooler purpose ");
 
     unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
-	my $file = $Conf{'pidfile_spooler'};
+	my $file = Site->pidfile_spooler;
 	## If process is running in foreground, don't write STDERR to a dedicated file
 	my $options;
 	$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
@@ -248,7 +256,7 @@ if ($signal ne 'hup') {
     }
 
     # Sets the UMASK
-    umask(oct($Conf{'umask'}));
+    umask(oct(Site->umask));
 
     ## Most initializations have now been done.
     &Log::do_log('notice', "Sympa spooler %s started", Sympa::Constants::VERSION);
@@ -310,7 +318,7 @@ if ($signal ne 'hup') {
 	    &Log::do_log('info','Processing file %s',$filename);
 	    my $type;
 	    my $list;
-	    my ($listname, $robot);	
+	    my ($listname, $robot_id);
 	    my %meta ;
 	    my $spool;
 
@@ -333,7 +341,7 @@ if ($signal ne 'hup') {
 		next;
 	    }   
 
-	    ($listname, $robot) = split(/\@/,$1);
+	    ($listname, $robot_id) = split(/\@/,$1);
 	    $meta{'date'} = $2;
 
 	    # spooler is able to recognize if message is bounce or automatic family list creation.'
@@ -351,39 +359,43 @@ if ($signal ne 'hup') {
 	    }
 	    
 	    $listname = lc($listname);
-	    if ($robot) {
-		$robot=lc($robot);
+	    if ($robot_id) {
+		$robot_id = lc($robot_id);
 	    }else{
-		$robot = lc(&Conf::get_robot_conf($robot, 'host'));
+		$robot_id = Site->host; #FIXME: is "domain" better?
 	    }
 
-	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+	    my $robot = Robot->new($robot_id);
+
+	    my $list_check_regexp = $robot->list_check_regexp;
 
 	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		($listname, $type) = ($1, $2);
 	    }
-	    my $email = &Conf::get_robot_conf($robot, 'email');	
+	    my $email = $robot->email;	
+	    my $site_host = Site->host;
 
 	    my $priority;
 
-	    if ($listname eq $Conf{'listmaster_email'}) {
+	    #FIXME: robot addresses should be checked too.
+	    if ($listname eq Site->listmaster_email) {
 		$priority = 0;
 	    }elsif ($type eq 'request') {
-		$priority = &Conf::get_robot_conf($robot, 'request_priority');
+		$priority = Site->request_priority;
 	    }elsif ($type eq 'owner') {
-		$priority = &Conf::get_robot_conf($robot, 'owner_priority');
-	    }elsif ($listname =~ /^(sympa|$email)(\@$Conf{'host'})?$/i) {	
-		$priority = &Conf::get_robot_conf($robot,'sympa_priority');
+		$priority = Site->owner_priority;
+	    }elsif ($listname =~ /^(sympa|$email)(\@$site_host)?$/i) {	
+		$priority = Site->sympa_priority;
 		$listname ='';
 	    }
 	    my $list =  new List ($listname, $robot, {'just_try' => 1});
 	    if ($list) {
-		$priority = $list->{'admin'}{'priority'};
+		$priority = $list->priority;
 	    }else {
-		$priority = &Conf::get_robot_conf($robot, 'default_list_priority');
+		$priority = Site->default_list_priority;
 	    }
 
-	    $meta{'robot'} = $robot if $robot;
+	    $meta{'robot'} = $robot_id if $robot_id;
 	    $meta{'list'} = $listname if $listname;
 	    if ($priority) {
 		$meta{'priority'} = $priority ;
@@ -416,7 +428,7 @@ if ($signal ne 'hup') {
 	} 
 
 	unless ($filename) {
-	    sleep(&Conf::get_robot_conf($robot, 'sleep'));
+	    sleep(Site->sleep);
 	    next;
 	}
     }
@@ -424,7 +436,7 @@ if ($signal ne 'hup') {
     SDM::db_disconnect;
 }
 &Log::do_log('notice', 'spooler exited normally due to signal');
-my $file = $Conf{'pidfile_spooler'};
+my $file = Site->pidfile_spooler;
 &tools::remove_pid($file, $$);
 
 exit(0);

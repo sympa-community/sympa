@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="[% iso639 = locale.match('^(.)(.)'); iso639.0; iso639.1 %]" xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- $Id$ -->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Sympa" />
+
+<title> [% main_title %] - [% action %] </title>
+
+[% IF custom_css || session.custom_css %]
+<style type="text/css">
+[% PROCESS css.tt2 %]
+</style>
+
+[% ELSE %]
+<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Sympa CSS" />
+[% END %]
+
+[% PROCESS css_ie.tt2 %]
+
+<!-- the following CSS have to be improved before to be used -->
+<!-- <link rel="stylesheet" href="[% css_url %]/print.css" type="text/css" media="print" />                                            -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
+
+[% IF conf.favicon_url %]
+<link rel="shortcut icon" href="[% conf.favicon_url %]" />
+[% ELSE %]
+<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+[% END %]
+
+[% IF base %] <base href="[% base %]" /> [% END %]
+
+</head>
+
+<body>
+
+[% PROCESS login_menu.tt2 %]
+
+<div id="Canvas">
+  <div id="Header">
+    [% PROCESS title.tt2 %]
+    [% PROCESS menu.tt2 %]
+  </div> <!-- end div Header -->
+
+  <div id="Stretcher">&nbsp;<br />
+     <div id="Paint">
+        <div class="ContentBlock">
+
+         <h1>[%|loc%]Internal Server Error[%END%]</h1>
+         <p>[%|loc%]Sympa encountered an internal error.[%END%]</p>
+         <p>[%|loc%]Please contact the listmaster.[%END%]</p>
+
+         [% IF 0 %][%# Change if you want to display traceback. %]
+           <p>[%|loc(error_message)%]Error: %1[%END%]</p>
+
+           <h2>[%|loc%]Traceback[%END%]</h2>
+
+           <ul>
+           [% FOREACH t = traceback %]
+             <li>[%|loc(t.subroutine, t.filename, t.line)%]In %1 at %2 line %3[%END%]</li>
+           [% END %]
+           </ul>
+         [% END %]
+
+       </div><!-- End div ContentBlock -->
+     </div><!-- End div Paint -->
+  </div><!-- end div Stretcher -->
+</div> <!-- end div canvas -->
+
+  [% PROCESS footer.tt2 %]
+</body>
+<!-- end crash.tt2 -->
+</html>

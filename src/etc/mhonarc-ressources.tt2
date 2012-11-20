@@ -196,7 +196,7 @@ IDXPGEND
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)
+<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)
 
 <b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
 </LITEMPLATE> 
@@ -303,15 +303,15 @@ TIDXPGEND
 </THEAD>
 
 <TSINGLETXT>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSINGLETXT>
 
 <TTOPBEGIN>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TTOPBEGIN>
 
 <TLITXT>
-<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TLITXT>
 
 <TTOPEND>
@@ -469,12 +469,25 @@ $POWERED_BY$
           <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
       ($tag$% END %$tag$)
   ($tag$% ELSE %$tag$)
-      ($tag$%|loc%$tag$)Reply to sender($tag$%END%$tag$)
-      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" checked />
-      ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
-      <input type="radio" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
-      ($tag$%|loc%$tag$)to both($tag$%END%$tag$)
-      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+      ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
+      <input id="to_sender" type="radio" name="to"
+       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
+       ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
+	checked
+	($tag$%END%$tag$) />
+      <label for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
+      <input id="to_list" type="radio" name="to"
+       value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
+       ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
+	checked
+	($tag$%END%$tag$) />
+      <label for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
+      <input id="to_both" type="radio" name="to"
+       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
+       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
+	checked
+	($tag$%END%$tag$) />
+      <label for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
   ($tag$% END %$tag$)
   <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
   <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />

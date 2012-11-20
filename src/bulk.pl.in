@@ -41,17 +41,17 @@ use lib '--modulesdir--';
 
 use strict;
 
-use Conf;
-use Log;
+#use Conf; # used in List
+#use Log; # used in Conf
 use Commands;
 use Getopt::Long;
 use Data::Dumper;
 use mail;
 use Bulk;
 use List;
-use tools;
+#use tools; # used in Conf
 use tracking;
-use Sympa::Constants;
+#use Sympa::Constants; # used in confdef, in Conf
 use Sympaspool;
 
 my $daemon_name = &Log::set_daemon($0);
@@ -74,27 +74,34 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
 # Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");
+unless (defined Robot::get_robots()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );
 }
+
+&Log::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
 
 ## Check database connectivity
 unless (&SDM::check_db_connect()) {
-    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf::Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
 }
-
-&Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
     &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    &Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    ); 
 }else{
-    &Log::set_log_level($Conf::Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf::Conf{'log_level'}"); 
+    &Log::set_log_level(Site->log_level);
+    &Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	Site->log_level
+    ); 
 }
 
 ## Set the process as main bulk daemon by default.
@@ -114,14 +121,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
        exit(0);
    }
 }
-&Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+&Log::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 $options->{'multiple_process'} = 0;
 
 # Saves the pid number
-&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+&tools::write_pid(Site->pidfile_bulk, $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -139,10 +146,10 @@ unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa
 }
 
 ## Sets the UMASK
-umask(oct($Conf::Conf{'umask'}));
+umask(oct(Site->umask));
 
 ## Change to list root
-unless (chdir($Conf::Conf{'home'})) {
+unless (chdir(Site->home)) {
     &Log::do_log('err','unable to change directory');
     exit (-1);
 }
@@ -150,7 +157,6 @@ unless (chdir($Conf::Conf{'home'})) {
 my $pinfo = &List::_apply_defaults();
 
 &Log::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
-
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -163,20 +169,21 @@ my $messagekey;       # the key of the current message in the message_table
 my $messageasstring_init;  # the current message as a string
 my $messageasstring;  # the transformed message.
 
-my $timeout = $Conf::Conf{'bulk_wait_to_fork'};
+my $timeout = Site->bulk_wait_to_fork;
 my $last_check_date = 0;
 my %created_children;
 
 $options->{'multiple_process'} = 1;
-$Conf::Conf{'maxsmtp'} = int($Conf::Conf{'maxsmtp'}/$Conf::Conf{'bulk_max_count'});
+$Conf::Conf{'maxsmtp'} = int(Site->maxsmtp / Site->bulk_max_count); #FIXME
 
 
 my $spool = new Sympaspool('bulk');
 
 while (!$end) {
     &List::init_list_cache();
-	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
-	
+    # Process grouped notifications
+    Site->send_notify_to_listmaster(undef, undef, 1, undef);
+
     my $bulk;
     my $message_from_spool ;
 	
@@ -200,42 +207,42 @@ while (!$end) {
 	    if ($#pids_leftover > -1) {
 		my @dc;
 		&Log::do_log('debug2','Some childs of current process disappeared. Checking whether they shut down cleanly or not.');
-		my $pids_in_pfile = &tools::get_pids_in_pid_file($Conf::Conf{'pidfile_bulk'});
+		my $pids_in_pfile = &tools::get_pids_in_pid_file(Site->pidfile_bulk);
 		foreach my $fpid (@{$pids_in_pfile}) {
 		    if (defined $dead_children{$fpid}) {
 			&Log::do_log('err','The %s child exists in the pid file but is no longer running. Removing it and notyfying listmaster.',$fpid);
 			my $pname = $0;
 			$pname =~ s/.*\/(\w+)/$1/;
 			&tools::send_crash_report(('pid'=>$fpid,'pname'=>$pname));
-			&tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $fpid, $options);
+			&tools::remove_pid(Site->pidfile_bulk, $fpid, $options);
 			delete $dead_children{$fpid};
 			push @dc, $fpid;
 		    }
 		}
 	    }
-	    my $pids_in_pfile = &tools::get_pids_in_pid_file($Conf::Conf{'pidfile_bulk'});
+	    my $pids_in_pfile = &tools::get_pids_in_pid_file(Site->pidfile_bulk);
 	    unless (defined($pids_in_pfile)){
-		&tools::write_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+		&tools::write_pid(Site->pidfile_bulk, $$, $options);
 		close STDERR;
 		&tools::direct_stderr_to_file(('pid' => $$));
 		$pids_in_pfile = [$$];
 	    }
 	    ## Start new processes if there remain at least 'bulk_fork_threshold' packets to send in the bulkmailer_table table
-	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && ($#remaining_children+1 < $Conf::Conf{'bulk_max_count'}) ){
+	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && ($#remaining_children+1 < Site->bulk_max_count) ){
 		
 		## disconnect from database before fork
 		## to prevent DB handlers to be shared by different processes
 		my $dbh = &SDM::db_get_handler();
 		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
 		
-		if($Conf::Conf{'bulk_max_count'} > 1) {
-		    &Log::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-($#remaining_children+1));
-		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-($#remaining_children+1)){
+		if(Site->bulk_max_count > 1) {
+		    &Log::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, Site->bulk_max_count-($#remaining_children+1));
+		    for my $process_count(1..Site->bulk_max_count-($#remaining_children+1)){
 			&Log::do_log('info', "Will fork: %s", $process_count);
 			if ((my $child_pid = fork) != 0) {
 			    &Log::do_log('info', "Starting bulk child daemon, pid %s", $child_pid);
 			    # Saves the pid number
-			    &tools::write_pid($Conf::Conf{'pidfile_bulk'}, $child_pid, $options);
+			    &tools::write_pid(Site->pidfile_bulk, $child_pid, $options);
 			    $created_children{$child_pid} = 1;
 			    sleep 1;
 			}else{
@@ -244,7 +251,7 @@ while (!$end) {
 			    &tools::direct_stderr_to_file(('pid' => $$));
 			    $date_of_last_activity = time();
 			    $main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
-			    &Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
+			    &Log::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
 			    &Log::do_log('info', "Bulk slave daemon started with pid %s", $$);
 			    last;
 			}
@@ -256,9 +263,9 @@ while (!$end) {
     }
     ## If a child bulk process is running for long enough, stop it (if the number of remaining packets to send is reasonnable).
     if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
-		(time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}) && 
+		(time() - $date_of_last_activity > Site->bulk_lazytime) && 
 		!(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
-		&Log::do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, $Conf::Conf{'bulk_lazytime'});
+		&Log::do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, Site->bulk_lazytime);
 		last;
     }
 	
@@ -332,7 +339,7 @@ while (!$end) {
 		if(($bulk->{'tracking'} eq 'dsn')||($bulk->{'tracking'} eq 'mdn')){ # tracking by MDN required tracking by DSN to
 		    my $msgid = $entity->head->get('Message-Id'); chomp $msgid;		    
 		    $notification_id = &tracking::find_notification_id_by_message($rcpt, $msgid, $listname,$robot);
-		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
+		    $return_path = Site->bounce_email_prefix.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
 		    if (($message->{'protected'})||($message->{'smime_crypted'})){
 			my $msg_body = &Message::get_body_from_msg_as_string($messageasstring_init);
@@ -342,7 +349,7 @@ while (!$end) {
 		    }
 		    # &trace_smime($messageasstring,'tracking');
 		}else{  # VERP
-		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'@'.$robot; 
+		    $return_path = Site->bounce_email_prefix.'+'.$escaped_rcpt.'=='.$listname.'@'.$robot; 
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
@@ -395,7 +402,7 @@ while (!$end) {
 	}
 
 	
-	if($bulk->{'priority_packet'} == $Conf::Conf{'sympa_packet_priority'} + 5){
+	if($bulk->{'priority_packet'} == Site->sympa_packet_priority + 5){
 	    &Log::do_log('notice','Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.', 
 		    $bulk->{'messageid'}, 
 		    $bulk->{'messagekey'}, 
@@ -407,17 +414,18 @@ while (!$end) {
 	$date_of_last_activity = time();
     }else{
 	## Sleep for a while if bulk_mailer DB table is empty
-	sleep $Conf::Conf{'bulk_sleep'}; 
+	sleep Site->bulk_sleep; 
     }
     &mail::reaper;
 
     
 }
 
-&List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
+# Purge grouped notifications
+Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 &Log::do_log('notice', 'bulk.pl exited normally due to signal');
-&tools::remove_pid($Conf::Conf{'pidfile_bulk'}, $$, $options);
+&tools::remove_pid(Site->pidfile_bulk, $$, $options);
 
 exit(0);
 
@@ -436,10 +444,10 @@ sub trace_smime {
     my $where = shift;
 
     my $trusted_ca_options = '';
-    $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} " if ($Conf::Conf{'cafile'});
-    $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} " if ($Conf::Conf{'capath'});
+    $trusted_ca_options = "-CAfile ".Site->cafile." " if Site->cafile;
+    $trusted_ca_options .= "-CApath ".Site->capath." " if Site->capath;
     
-    unless (open (MSGDUMP, "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options > /dev/null")) {	
+    unless (open (MSGDUMP, "| ".Site->openssl." smime -verify  $trusted_ca_options > /dev/null")) {	
 	&Log::do_log('err', "unable to verify smime signature");
 	return undef ;
     }

@@ -52,7 +52,7 @@
   [% FOREACH template = list_list_tpl %]
       [% IF template.value.comment %]
       <li>
-        <input type="radio" name="template" value="[% template.key %]"
+        <input id="template.[% template.key %]" type="radio" name="template" value="[% template.key %]"
      [% IF template.value.selected || loop.size == 1 %]
        checked="checked"
      [% END %]
@@ -61,11 +61,11 @@
      </li>
      [% ELSE %]
      <li>
-        <input type="radio" name="template" value="[% template.key %]"
+        <input id="template.[% template.key %]" type="radio" name="template" value="[% template.key %]"
      [% IF template.value.selected %]
        checked="checked"
      [% END %]
-       /> [% template.key %]
+       /> <label for="template.[% template.key %]">[% template.key %]</label>
      </li>
      [% END %]
   [% END %]

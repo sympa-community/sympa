@@ -41,20 +41,19 @@ use URI::Escape;
 use constant MAX => 100_000;
 use Sys::Hostname;
 
-
-use Lock;
+#use Lock;
 use Fetch;
 use WebAgent;
-use tools;
-use tt2;
-use Language;
-use Log;
-use Conf;
-use mail;
+#use tools;
+#use tt2;
+use Language qw(gettext_strftime);
+#use Log;
+#use Conf;
+#use mail;
 use Ldap;
-use Message;
 use List;
-use SDM;
+use Message;
+#use SDM;
 
 ## Database and SQL statement handlers
 my $sth;
@@ -86,11 +85,12 @@ sub next {
     my $limit_sybase='';
 	## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
-    if (lc($Conf::Conf{'db_type'}) eq 'mysql' || lc($Conf::Conf{'db_type'}) eq 'Pg' || lc($Conf::Conf{'db_type'}) eq 'SQLite'){
+    if (Site->db_type eq 'mysql' or Site->db_type eq 'Pg' or
+	Site->db_type eq 'SQLite') {
 	$order.=' LIMIT 1';
-    }elsif (lc($Conf::Conf{'db_type'}) eq 'Oracle'){
+    } elsif (Site->db_type eq 'Oracle') {
 	$limit_oracle = 'AND rownum<=1';
-    }elsif (lc($Conf::Conf{'db_type'}) eq 'Sybase'){
+    } elsif (Site->db_type eq 'Sybase') {
 	$limit_sybase = 'TOP 1';
     }
 
@@ -431,7 +431,9 @@ sub store {
 	$last_stored_message_key = $message->{'messagekey'};
 	
 	#log in stat_table to make statistics...
-	unless($message_sender =~ /($robot)\@/) { #ignore messages sent by robot
+	#FIXME: use OO instead of robot name.
+	my $robot_domain = ($robot eq '*') ? Site->domain : $robot;
+	unless($message_sender =~ /($robot_domain)\@/) { #ignore messages sent by robot
 	    unless ($message_sender =~ /($listname)-request/) { #ignore messages of requests			
 		&Log::db_stat_log({'robot' => $robot, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
 				   'mail' => $message_sender, 'client' => '', 'daemon' => 'sympa.pl'});
@@ -553,7 +555,7 @@ sub get_remaining_packets_count {
 sub there_is_too_much_remaining_packets {
     &Log::do_log('debug3', 'there_is_too_much_remaining_packets');
     my $remaining_packets = &get_remaining_packets_count();
-    if ($remaining_packets > &Conf::get_robot_conf('*','bulk_fork_threshold')) {
+    if ($remaining_packets > Site->bulk_fork_threshold) {
 	return $remaining_packets;
     }else{
 	return 0;

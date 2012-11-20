@@ -5,7 +5,7 @@
 	<form action="[% path_cgi %]" method="post">
 	<fieldset>
 	  <input type="hidden" name="list" value="[% list %]" />
-	  <label for="new_robot">[%|loc%]New list name:[%END%]</label> <input id="new_robot" name="new_listname" value="" /> @
+	  <label for="new_listname">[%|loc%]New list name:[%END%]</label> <input id="new_listname" name="new_listname" value="" /> @
 	[% IF robots %]
            <select name="new_robot">
            [% FOREACH vr = robots %]

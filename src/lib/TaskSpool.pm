@@ -74,7 +74,7 @@ sub set_spool {
 sub list_tasks {
 
     &Log::do_log('debug',"Listing all tasks");
-    my $spool_task = &Conf::get_robot_conf('*','queuetask');
+    my $spool_task = Site->queuetask;
     ## Reset the list of tasks
     undef @task_list;
     undef %task_by_list;
@@ -157,9 +157,9 @@ sub create_required_global_tasks {
     foreach my $key (keys %global_models) {	
 	&Log::do_log('debug2',"global_model : $key");
 	unless ($used_models{$global_models{$key}}) {
-	    if ($Conf::Conf{$key}) {
-		unless($task = Task::create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'flavour' => $Conf::Conf{$key}, 'data' =>$data})) {
-		    creation_error(sprintf 'Unable to create task with parameters creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$param->{'current_date'},$global_models{$key},$Conf::Conf{$key},$data);
+	    if (Site->$key) {
+		unless($task = Task::create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'flavour' => Site->$key, 'data' =>$data})) {
+		    creation_error(sprintf 'Unable to create task with parameters creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$param->{'current_date'},$global_models{$key}, Site->$key, $data);
 		}
 		$used_models{$1} = 1;
 	    }
@@ -173,7 +173,7 @@ sub create_required_lists_tasks {
     &Log::do_log('debug','Creating required tasks from list models');
 
     my $task;
-    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $robot (keys %{Site->robots_config}) {
 	&Log::do_log('debug3',"creating list task : current bot  is $robot");
 	my $all_lists = &List::get_lists($robot);
 	foreach my $list ( @$all_lists ) {
@@ -220,7 +220,7 @@ sub create_required_lists_tasks {
 sub creation_error {
     my $message = shift;
     &Log::do_log('err',$message);
-    unless (&List::send_notify_to_listmaster ('Task creation error', $Conf::Conf{'domain'}, [$message])) {
+    unless (Site->send_notify_to_listmaster('Task creation error', $message)) {
 	&Log::do_log('notice','error while notifying listmaster about "Task creation error"');
     }
 }

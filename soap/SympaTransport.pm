@@ -16,12 +16,12 @@ sub request {
     if (my $request = $_[0]) {	
 	
 	## Select appropriate robot
-	if ($Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
-	  $ENV{'SYMPA_ROBOT'} = $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
+	if (Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
+	  $ENV{'SYMPA_ROBOT'} = Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
 	  &Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
 	}else {
 	  &Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
-	  $ENV{'SYMPA_ROBOT'} =  $Conf::Conf{'host'} ;
+	  $ENV{'SYMPA_ROBOT'} =  Site->host;
 	}
 
 	## Empty cache of the List.pm module
@@ -54,7 +54,8 @@ sub response {
     
     if (my $response = $_[0]) {
 	if (defined $ENV{'SESSION_ID'}) {
-	    my $expire = $main::param->{'user'}{'cookie_delay'} || $main::wwsconf->{'cookie_expire'};
+	    my $expire =
+		$main::param->{'user'}{'cookie_delay'} || Site->cookie_expire;
 	    my $cookie = &cookielib::set_cookie_soap($ENV{'SESSION_ID'}, $ENV{'SERVER_NAME'}, $expire);
 	
 	    $response->headers->push_header('Set-Cookie2' => $cookie);

@@ -24,6 +24,7 @@ package DBManipulatorSQLite;
 use strict;
 use Data::Dumper;
 
+use version;
 use Carp;
 use Log;
 
@@ -51,7 +52,7 @@ our %date_format = (
 # OUT: Nothing
 sub build_connect_string{
     my $self = shift;
-    $self->{'connect_string'} = "DBI:SQLite:dbname=$self->{'db_name'}";
+    $self->{'connect_string'} = "DBI:SQLite(sqlite_use_immediate_transaction=>1):dbname=$self->{'db_name'}";
 }
 
 ## Returns an SQL clause to be inserted in a query.
@@ -94,10 +95,8 @@ sub get_formatted_date {
     my $self = shift;
     my $param = shift;
     &Log::do_log('debug3','Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
-    }elsif(lc($param->{'mode'}) eq 'write') {
-	return sprintf 'FROM_UNIXTIME(%d)',$param->{'target'};
+    if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
+	return $param->{'target'};
     }else {
 	&Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
 	return undef;
@@ -113,14 +112,16 @@ sub get_formatted_date {
 sub is_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Checking whether field %s.%s is autoincremental',$param->{'field'},$param->{'table'});
-    my $sth;
-    unless ($sth = $self->do_query("SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",$param->{'table'},$param->{'field'})) {
-	&Log::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
-	return undef;
-    }	    
-    my $ref = $sth->fetchrow_hashref('NAME_lc') ;
-    return ($ref->{'field'} eq $param->{'field'});
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+
+    &Log::do_log('debug3','Checking whether field %s.%s is autoincremental',
+		 $table, $field);
+
+    my $type = $self->_get_field_type($table, $field);
+    return undef unless $type;
+    return $type =~ /\bAUTOINCREMENT\b/i or
+	   $type =~ /^integer\s+PRIMARY\s+KEY\b/i;
 }
 
 # Defines the field as an autoincrement field
@@ -132,9 +133,38 @@ sub is_autoinc {
 sub set_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
-    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
-	&Log::do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+
+    &Log::do_log('debug3','Setting field %s.%s as autoincremental',
+		 $table, $field);
+
+    my $type = $self->_get_field_type($table, $field);
+    return undef unless $type;
+
+    my $r;
+    my $pk;
+    if ($type =~ /^integer\s+PRIMARY\s+KEY\b/i) {
+	## INTEGER PRIMARY KEY is auto-increment.
+	return 1;
+    } elsif ($type =~ /\bPRIMARY\s+KEY\b/i) {
+	$r = $self->_update_table($table,
+				  qr(\b$field\s[^,]+),
+				  "$field\tinteger PRIMARY KEY");
+    } elsif ($pk = $self->get_primary_key({ 'table' => $table }) and
+	     $pk->{$field} and scalar keys %$pk == 1) {
+	$self->unset_primary_key({ 'table' => $table });
+	$r = $self->_update_table($table,
+				  qr(\b$field\s[^,]+),
+				  "$field\tinteger PRIMARY KEY");
+    } else {
+	$r = $self->_update_table($table,
+				  qr(\b$field\s[^,]+),
+				  "$field\t$type AUTOINCREMENT");
+    }
+
+    unless ($r) {
+	&Log::do_log('err','Unable to set field %s in table %s as autoincremental', $field, $table);
 	return undef;
     }
     return 1;
@@ -189,26 +219,28 @@ sub add_table {
 sub get_fields {
     my $self = shift;
     my $param = shift;
+    my $table = $param->{'table'};
     my $sth;
     my %result;
-    unless ($sth = $self->do_query("PRAGMA table_info(%s)",$param->{'table'})) {
-	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+    unless ($sth = $self->do_query(q{PRAGMA table_info('%s')}, $table)) {
+	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $table, $self->{'db_name'});
 	return undef;
     }
-    while (my $field = $sth->fetchrow_arrayref('NAME_lc')) {		
+    while (my $field = $sth->fetchrow_hashref('NAME_lc')) {		
 	# http://www.sqlite.org/datatype3.html
-	if($field->[2] =~ /int/) {
-	    $field->[2]="integer";
-	} elsif ($field->[2] =~ /char|clob|text/) {
-	    $field->[2]="text";
-	} elsif ($field->[2] =~ /blob/) {
-	    $field->[2]="none";
-	} elsif ($field->[2] =~ /real|floa|doub/) {
-	    $field->[2]="real";
+	my $type = $field->{'type'};
+	if($type =~ /int/) {
+	    $type = 'integer';
+	} elsif ($type =~ /char|clob|text/) {
+	    $type = 'text';
+	} elsif ($type =~ /blob|none/) {
+	    $type = 'none';
+	} elsif ($type =~ /real|floa|doub/) {
+	    $type = 'real';
 	} else {
-	    $field->[2]="numeric";
+	    $type = 'numeric';
 	}
-	$result{$field->[1]} = $field->[2];
+	$result{$field->{'name'}} = $type;
     }
     return \%result;
 }
@@ -224,19 +256,30 @@ sub get_fields {
 sub update_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
-    my $options;
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+    my $type = $param->{'type'};
+    my $options = '';
     if ($param->{'notnull'}) {
-	$options .= ' NOT NULL ';
+	$options .= ' NOT NULL';
     }
-    my $report = sprintf("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
-    &Log::do_log('notice', "ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
-    unless ($self->do_query("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options)) {
-	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
+    my $report;
+
+    &Log::do_log('debug3', 'Updating field %s in table %s (%s%s)',
+		 $field, $table, $type, $options);
+    my $r = $self->_update_table($table,
+				 qr(\b$field\s[^,]+),
+				 "$field\t$type$options");
+    unless (defined $r) {
+	&Log::do_log('err', 'Could not update field %s in table %s (%s%s)',
+		     $field, $table, $type, $options);
 	return undef;
     }
-    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
-    &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    $report = $r;
+    &Log::do_log('info', '%s', $r);
+    $report .= "\nTable $table, field $field updated";
+    &Log::do_log('info', 'Table %s, field %s updated', $table, $field);
+
     return $report;
 }
 
@@ -254,26 +297,57 @@ sub update_field {
 sub add_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
-    my $options;
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+    my $type = $param->{'type'};
+
+    my $options = '';
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
-    if ($param->{'notnull'}) {
-	$options .= 'NOT NULL ';
+    if ($param->{'primary'}) {
+	$options .= ' PRIMARY KEY';
     }
     if ( $param->{'autoinc'}) {
-	$options .= ' AUTO_INCREMENT ';
+	$options .= ' AUTOINCREMENT';
     }
-    if ( $param->{'primary'}) {
-	$options .= ' PRIMARY KEY ';
+    if ( $param->{'notnull'}) {
+	$options .= ' NOT NULL';
     }
-    unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
-	&Log::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+    &Log::do_log('debug3','Adding field %s in table %s (%s%s)',
+		 $field, $table, $type, $options);
+
+    my $report = '';
+
+    if ($param->{'primary'}) {
+	$report = $self->_update_table($table,
+				       qr{[(]\s*},
+				       "(\n\t $field\t$type$options,\n\t ");
+	unless (defined $report) {
+	    &Log::do_log('err', 'Could not add field %s to table %s in database %s', $field, $table, $self->{'db_name'});
 	return undef;
     }
+    } else { 
+	unless ($self->do_query(
+	    q{ALTER TABLE %s ADD %s %s%s},
+	    $table, $field, $type, $options
+	)) {
+	    &Log::do_log('err', 'Could not add field %s to table %s in database %s', $field, $table, $self->{'db_name'});
+	    return undef;
+	}
+	if ($self->_vernum <= 3.001003) {
+	    unless ($self->do_query(q{VACUUM})) {
+		&Log::do_log('err', 'Could not vacuum database %s',
+			     $self->{'db_name'});
+		return undef;
+	    }
+	}
+    }
 
-    my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
-    &Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
-    
+    $report .= "\n" if $report;
+    $report .= sprintf 'Field %s added to table %s (%s%s)',
+		       $field, $table, $type, $options;
+    &Log::do_log('info', 'Field %s added to table %s (%s%s)',
+		 $field, $table, $type, $options);
+
     return $report;
 }
 
@@ -287,16 +361,15 @@ sub add_field {
 sub delete_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+    &Log::do_log('debug3','Deleting field %s from table %s', $field, $table);
 
-    unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
-	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
-	return undef;
-    }
+    ## SQLite does not support removal of columns
 
-    my $report = sprintf('Field %s removed from table %s', $param->{'field'}, $param->{'table'});
-    &Log::do_log('info', 'Field %s removed from table %s', $param->{'field'}, $param->{'table'});
-    
+    my $report = "Could not remove field $field from table $table since SQLite does not support removal of columns";
+    &Log::do_log('info', '%s', $report);
+
     return $report;
 }
 
@@ -309,21 +382,26 @@ sub delete_field {
 sub get_primary_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Getting primary key for table %s',$param->{'table'});
+    my $table = $param->{'table'};
+    &Log::do_log('debug3','Getting primary key for table %s', $table);
 
-    my %found_keys;
+    my %found_keys = ();
+
     my $sth;
-    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s",$param->{'table'})) {
-	&Log::do_log('err', 'Could not get field list from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+    unless ($sth = $self->do_query(
+	q{PRAGMA table_info('%s')},
+	$table
+    )) {
+	&Log::do_log('err', 'Could not get field list from table %s in database %s', $table, $self->{'db_name'});
 	return undef;
     }
-
-    my $test_request_result = $sth->fetchall_hashref('field');
-    foreach my $scannedResult ( keys %$test_request_result ) {
-	if ( $test_request_result->{$scannedResult}{'key'} eq "PRI" ) {
-	    $found_keys{$scannedResult} = 1;
-	}
+    my $l;
+    while ($l = $sth->fetchrow_hashref('NAME_lc')) {
+	next unless $l->{'pk'};
+	$found_keys{$l->{'name'}} = 1;
     }
+    $sth->finish;
+
     return \%found_keys;
 }
 
@@ -336,15 +414,22 @@ sub get_primary_key {
 sub unset_primary_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Removing primary key from table %s',$param->{'table'});
+    my $table = $param->{'table'};
+    my $report;
+    &Log::do_log('debug3', 'Removing primary key from table %s', $table);
 
-    my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
-	&Log::do_log('err', 'Could not drop primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+    my $r = $self->_update_table($table,
+				 qr{,\s*PRIMARY\s+KEY\s+[(][^)]+[)]},
+				 '');
+    unless (defined $r) {
+	&Log::do_log('err', 'Could not remove primary key from table %s',
+		     $table);
 	return undef;
     }
-    my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
-    &Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
+    $report = $r;
+    &Log::do_log('info', '%s', $r);
+    $report .= "\nTable $table, PRIMARY KEY dropped";
+    &Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $table);
 
     return $report;
 }
@@ -359,16 +444,25 @@ sub unset_primary_key {
 sub set_primary_key {
     my $self = shift;
     my $param = shift;
-
-    my $sth;
+    my $table = $param->{'table'};
     my $fields = join ',',@{$param->{'fields'}};
-    &Log::do_log('debug3','Setting primary key for table %s (%s)',$param->{'table'},$fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
-	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
+    my $report;
+    &Log::do_log('debug3', 'Setting primary key for table %s (%s)',
+		 $table, $fields);
+
+    my $r = $self->_update_table($table,
+				 qr{\s*[)]\s*$},
+				 ",\n\t PRIMARY KEY ($fields)\n )");
+    unless (defined $r) {
+	&Log::do_log('debug', 'Could not set primary key for table %s (%s)',
+		     $table, $fields);
 	return undef;
     }
-    my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
-    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'},$fields);
+    $report = $r;
+    &Log::do_log('info', '%s', $r);
+    $report .= "\nTable $table, PRIMARY KEY set on $fields";
+    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $table, $fields);
+
     return $report;
 }
 
@@ -387,19 +481,34 @@ sub get_indexes {
 
     my %found_indexes;
     my $sth;
-    unless ($sth = $self->do_query("SHOW INDEX FROM %s",$param->{'table'})) {
+    my $l;
+    unless ($sth = $self->do_query(
+	q{PRAGMA index_list('%s')},
+	$param->{'table'}
+    )) {
 	&Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
-    my $index_part;
-    while($index_part = $sth->fetchrow_hashref('NAME_lc')) {
-	if ( $index_part->{'key_name'} ne "PRIMARY" ) {
-	    my $index_name = $index_part->{'key_name'};
-	    my $field_name = $index_part->{'column_name'};
-	    $found_indexes{$index_name}{$field_name} = 1;
+    while($l = $sth->fetchrow_hashref('NAME_lc')) {
+	next if $l->{'unique'};
+	$found_indexes{$l->{'name'}} = {};
 	}
+    $sth->finish;
+
+    foreach my $index_name (keys %found_indexes) {
+	unless ($sth = $self->do_query(
+	    q{PRAGMA index_info('%s')},
+	    $index_name
+	)) {
+	    &Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	    return undef;
     }
-    open TMP, ">>/tmp/toto"; print TMP &Dumper(\%found_indexes); close TMP;
+	while($l = $sth->fetchrow_hashref('NAME_lc')) {
+	    $found_indexes{$index_name}{$l->{'name'}} = {};
+	}
+	$sth->finish;
+    }
+
     return \%found_indexes;
 }
 
@@ -416,7 +525,10 @@ sub unset_index {
     &Log::do_log('debug3','Removing index %s from table %s',$param->{'index'},$param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
+    unless ($sth = $self->do_query(
+	q{DROP INDEX "%s"},
+	$param->{'index'}
+    )) {
 	&Log::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
@@ -441,7 +553,10 @@ sub set_index {
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
     &Log::do_log('debug3', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD INDEX %s (%s)",$param->{'table'}, $param->{'index_name'}, $fields)) {
+    unless ($sth = $self->do_query(
+	q{CREATE INDEX %s ON %s (%s)},
+	$param->{'index_name'}, $param->{'table'}, $fields
+    )) {
 	&Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
@@ -450,4 +565,268 @@ sub set_index {
     return $report;
 }
 
-return 1;
+############################################################################
+## Overridden methods
+############################################################################
+
+## To prevent "database is locked" error, acquire "immediate" lock
+## by each query.  All queries including "SELECT" need to lock in this
+## manner.
+
+sub do_query {
+    my $self = shift;
+    my $sth;
+    my $rc;
+
+    my $need_lock =
+	($_[0] =~ /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i);
+
+    ## acquire "immediate" lock
+    unless (! $need_lock or $self->{'dbh'}->begin_work) {
+	&Log::do_log('err', 'Could not lock database: (%s) %s',
+		     $self->{'dbh'}->err, $self->{'dbh'}->errstr);
+	return undef;
+    }
+
+    ## do query
+    $sth = $self->SUPER::do_query(@_);
+
+    ## release lock
+    return $sth unless $need_lock;
+    eval {
+	if ($sth) {
+	    $rc = $self->{'dbh'}->commit;
+	} else {
+	    $rc = $self->{'dbh'}->rollback;
+	}
+    };
+    if ($@ or ! $rc) {
+	&Log::do_log('err', 'Could not unlock database: %s',
+		     $@ || sprintf('(%s) %s', $self->{'dbh'}->err,
+				   $self->{'dbh'}->errstr));
+	return undef;
+    }
+
+    return $sth;
+}
+
+sub do_prepared_query {
+    my $self = shift;
+    my $sth;
+    my $rc;
+
+    my $need_lock =
+	($_[0] =~ /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i);
+
+    ## acquire "immediate" lock
+    unless (! $need_lock or $self->{'dbh'}->begin_work) {
+	&Log::do_log('err', 'Could not lock database: (%s) %s',
+		     $self->{'dbh'}->err, $self->{'dbh'}->errstr);
+	return undef;
+    }
+
+    ## do query
+    $sth = $self->SUPER::do_prepared_query(@_);
+
+    ## release lock
+    return $sth unless $need_lock;
+    eval {
+	if ($sth) {
+	    $rc = $self->{'dbh'}->commit;
+	} else {
+	    $rc = $self->{'dbh'}->rollback;
+	}
+    };
+    if ($@ or ! $rc) {
+	&Log::do_log('err', 'Could not unlock database: %s',
+		     $@ || sprintf('(%s) %s', $self->{'dbh'}->err,
+				   $self->{'dbh'}->errstr));
+	return undef;
+    }
+
+    return $sth;
+}
+
+## For BLOB types.
+sub AS_BLOB {
+    return ( { TYPE => DBI::SQL_BLOB() } => $_[1] )
+	if scalar @_ > 1;
+    return ();
+}
+
+############################################################################
+## private methods
+############################################################################
+
+## get numified version of SQLite
+sub _vernum {
+    my $self = shift;
+    return version->new('v' . $self->{'dbh'}->{'sqlite_version'})->numify;
+}
+
+## get raw type of column
+sub _get_field_type {
+    my $self = shift;
+    my $table = shift;
+    my $field = shift;
+
+    my $sth;
+    unless ($sth = $self->do_query(q{PRAGMA table_info('%s')}, $table)) {
+	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $table, $self->{'db_name'});
+	return undef;
+    }
+    my $l;
+    while ($l = $sth->fetchrow_hashref('NAME_lc')) {
+	if (lc $l->{'name'} eq lc $field) {
+	    $sth->finish;
+	    return $l->{'type'};
+	}
+    }
+    $sth->finish;
+
+    &Log::do_log('err', 'Could not gather information of field %s from table %s in database %s', $field, $table, $self->{'db_name'});
+    return undef;
+}
+
+## update table structure
+## old table will be saved as "<table name>_<YYmmddHHMMSS>_<PID>".
+sub _update_table {
+    my $self = shift;
+    my $table = shift;
+    my $regex = shift;
+    my $replacement = shift;
+    my $statement;
+    my $table_saved = sprintf '%s_%s_%d', $table,
+			      POSIX::strftime("%Y%m%d%H%M%S", gmtime $^T),
+			      $$;
+    my $report;
+
+    ## create temporary table with new structure
+    $statement = $self->_get_create_table($table);
+    unless (defined $statement) {
+	&Log::do_log('err', 'Table \'%s\' does not exist', $table);
+	return undef;
+    }
+    $statement=~ s/^\s*CREATE\s+TABLE\s+([\"\w]+)/CREATE TABLE ${table_saved}_new/;
+    $statement =~ s/$regex/$replacement/;
+    my $s = $statement; $s =~ s/\n\s*/ /g; $s =~ s/\t/ /g;
+    &Log::do_log('info', '%s', $s);
+    unless ($self->do_query('%s', $statement)) {
+	&Log::do_log('err', 'Could not create temporary table \'%s_new\'',
+		     $table_saved);
+	return undef;
+    }
+
+    &Log::do_log('info', 'Copy \'%s\' to \'%s_new\'', $table, $table_saved);
+    ## save old table
+    my $indexes = $self->get_indexes({ 'table' => $table });
+    unless (defined $self->_copy_table($table, "${table_saved}_new") and
+	    defined $self->_rename_or_drop_table($table, $table_saved) and
+	    defined $self->_rename_table("${table_saved}_new", $table)) {
+	return undef;
+    }
+    ## recreate indexes
+    foreach my $name (keys %{$indexes || {}}) {
+	unless (defined $self->unset_index(
+		    { 'table' => "${table_saved}_new", 'index' => $name }) and
+		defined $self->set_index(
+		    { 'table' => $table, 'index_name' => $name,
+		      'fields' => [ sort keys %{$indexes->{$name}} ] })
+	) {
+	    return undef;
+	}
+    }
+
+    $report = "Old table was saved as \'$table_saved\'";
+    return $report;
+}
+
+## Get SQL statement by which table was created.
+sub _get_create_table {
+    my $self = shift;
+    my $table = shift;
+    my $sth;
+
+    unless ($sth = $self->do_query(
+	q{SELECT sql
+	  FROM sqlite_master
+	  WHERE type = 'table' AND name = '%s'},
+	$table
+    )) {
+	&Log::do_log('Could not get table \'%s\' on database \'%s\'',
+		     $table, $self->{'db_name'});
+	return undef;
+    }
+    my $sql = $sth->fetchrow_array();
+    $sth->finish;
+
+    return $sql || undef;
+}
+
+## copy table content to another table
+## target table must have all columns source table has.
+sub _copy_table {
+    my $self = shift;
+    my $table = shift;
+    my $table_new = shift;
+    return undef unless defined $table and defined $table_new;
+
+    my $fields = join ', ',
+		      sort keys %{$self->get_fields({ 'table' => $table })};
+
+    my $sth;
+    unless ($sth = $self->do_query(
+	q{INSERT INTO "%s" (%s) SELECT %s FROM "%s"},
+	$table_new, $fields, $fields, $table
+    )) {
+	&Log::do_log('err', 'Could not copy talbe \'%s\' to temporary table \'%s_new\'', $table, $table_new);
+	return undef;
+    }
+
+    return 1;
+}
+
+## rename table
+## if target already exists, do nothing and return 0.
+sub _rename_table {
+    my $self = shift;
+    my $table = shift;
+    my $table_new = shift;
+    return undef unless defined $table and defined $table_new;
+
+    if ($self->_get_create_table($table_new)) {
+	return 0;
+    }
+    unless ($self->do_query(
+	q{ALTER TABLE %s RENAME TO %s},
+	$table, $table_new
+    )) {
+	&Log::do_log('err', 'Could not rename table \'%s\' to \'%s\'',
+		     $table, $table_new);
+	return undef;
+    }
+    return 1;
+}
+
+## rename table
+## if target already exists, drop source table.
+sub _rename_or_drop_table {
+    my $self = shift;
+    my $table = shift;
+    my $table_new = shift;
+
+    my $r = $self->_rename_table($table, $table_new);
+    unless (defined $r) {
+	return undef;
+    } elsif ($r) {
+	return $r;
+    } else {
+	unless ($self->do_query(q{DROP TABLE "%s"}, $table)) {
+	    &Log::do_log('err', 'Could not drop table \'%s\'', $table);
+	    return undef;
+	}
+	return 0;
+    }
+}
+
+1;

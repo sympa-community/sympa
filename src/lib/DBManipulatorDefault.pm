@@ -143,4 +143,22 @@ sub check_key {
     return $result;
 }
 
-return 1;
+# Helper functions to return the binding type and value used by
+# do_prepared_query().
+# Overridden by inherited classes.
+#
+# IN: - parameter value
+#
+# OUT: - One of:
+#	* An array ( { sql_type => SQL_type }, value ).
+#	* Single value (i.e. an array with single item), if special
+#	  treatment won't be needed.
+#	* Empty array () if arguments were not given.
+
+# For BLOB types.
+sub AS_BLOB {
+    return $_[1] if scalar @_ > 1;
+    return ();
+}
+
+1;

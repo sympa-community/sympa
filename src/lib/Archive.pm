@@ -22,6 +22,7 @@
 package Archive;
 
 use strict;
+use Carp qw(carp);
 use Cwd;
 use Encode qw(decode_utf8 encode_utf8);
 use HTML::Entities qw(decode_entities);
@@ -249,7 +250,7 @@ sub clean_archive_directory{
     &Log::do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
     my $answer;
     $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
-    $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'}.'/'.$params->{'dir_to_rebuild'};
+    $answer->{'cleaned_dir'} = Site->tmpdir.'/'.$params->{'dir_to_rebuild'};
     unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
 	&Log::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
 	return undef;
@@ -307,6 +308,7 @@ sub clean_archived_message{
 #    result is stored in $destination_dir
 #    attachement_url is used to link attachement
 #    
+# NOTE: This might be moved to Site package as a mutative method.
 sub convert_single_msg_2_html {
     
     my $data =shift;
@@ -314,18 +316,22 @@ sub convert_single_msg_2_html {
     my $destination_dir = $data->{'destination_dir'};
     my $attachement_url = $data->{'attachement_url'};
     my $list = $data->{'list'};
-    my $robot = $data->{'robot'};
+    my $robot = Robot::clean_robot($data->{'robot'});
     my $messagekey = $data->{'messagekey'};
 
-    my $listname =''; my $msg_file;
-    my $host = $robot;
+    my $listname ='';
+    my $msg_file;
+    #XXXmy $host = $robot;
+    my $host;
     if ($list) {
-	$host = $list->{'admin'}{'host'};
-	$robot = $list->{'robot'};
-	$listname = $list->{'name'};
-	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$list->get_list_id().'_'.$$;
-    }else{
-	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$messagekey.'_'.$$;
+	$host = $list->host;
+	$robot = $list->robot;
+	$listname = $list->name;
+	$msg_file = $robot->tmpdir . '/' . $list->get_id() . '_' . $$;
+    } else {
+	$host = $robot->host;
+	$listname = '';
+	$msg_file = $robot->tmpdir . '/' . $messagekey . '_' . $$;
     }
 
     my $pwd = getcwd;  #  mhonarc require du change workdir so this proc must retore it    
@@ -342,7 +348,8 @@ sub convert_single_msg_2_html {
 	    return undef;
 	}
     }
-    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot,$list);
+    my $mhonarc_ressources = ($list || $robot)->get_etc_filename(
+	'mhonarc-ressources.tt2');
     
     unless ($mhonarc_ressources) {
 &Log::do_log('notice',"Cannot find any MhOnArc ressource file");
@@ -355,8 +362,8 @@ sub convert_single_msg_2_html {
     my $tracepwd = getcwd ;
 
 
-    my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
-    my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
+    my $mhonarc = $robot->mhonarc;
+    my $base_url = $robot->wwsympa_url;
     #open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file |";
     #open MSG, ">msg00000.html";
     #&Log::do_log('debug', "$mhonarc  --outdir .. -single -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host $msg_file");

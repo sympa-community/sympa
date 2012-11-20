@@ -43,6 +43,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   close_list.tt2 \
 		   compose_mail.tt2 \
 		   copy_template.tt2 \
+		   crash.tt2 \
 		   create_list_request.tt2 \
 		   create_list.tt2 \
 		   css.tt2 \

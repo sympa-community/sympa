@@ -240,7 +240,7 @@ sub update_field {
 	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
 	return undef;
     }
-    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    $report .= sprintf("\nField %s in table %s, structure updated", $param->{'field'}, $param->{'table'});
     &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
     return $report;
 }
@@ -339,10 +339,37 @@ sub unset_primary_key {
     &Log::do_log('debug3','Removing primary key from table %s',$param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
-	&Log::do_log('err', 'Could not drop primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+
+    ## PostgreSQL does not have 'ALTER TABLE ... DROP PRIMARY KEY'.
+    ## Instead, get a name of constraint then drop it.
+    my $key_name;
+
+    unless ($sth = $self->do_query(
+	q{SELECT tc.constraint_name
+	  FROM information_schema.table_constraints AS tc
+	  WHERE tc.table_catalog = %s AND tc.table_name = %s AND
+		tc.constraint_type = 'PRIMARY KEY'},
+	&SDM::quote($self->{'db_name'}), &SDM::quote($param->{'table'})
+    )) {
+	&Log::do_log('err', 'Could not search primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
+
+    $key_name = $sth->fetchrow_array();
+    $sth->finish;
+    unless (defined $key_name) {
+	&Log::do_log('err', 'Could not get primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
+    unless ($sth = $self->do_query(
+	q{ALTER TABLE %s DROP CONSTRAINT "%s"},
+	$param->{'table'}, $key_name
+    )) {
+	&Log::do_log('err', 'Could not drop primary key "%s" from table %s in database %s', $key_name, $param->{'table'}, $self->{'db_name'});
+	return undef;
+    }
+
     my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
     &Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
 
@@ -361,14 +388,27 @@ sub set_primary_key {
     my $param = shift;
 
     my $sth;
+
+    ## Give fixed key name if possible.
+    my $key;
+    if ($param->{'table'} =~ /^(.+)_table$/) {
+	$key = sprintf 'CONSTRAINT "ind_%s" PRIMARY KEY', $1;
+    } else {
+	$key = 'PRIMARY KEY';
+    }
+
     my $fields = join ',',@{$param->{'fields'}};
     &Log::do_log('debug3','Setting primary key for table %s (%s)',$param->{'table'},$fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
+    unless ($sth = $self->do_query(
+	q{ALTER TABLE %s ADD %s (%s)},
+	$param->{'table'}, $key, $fields
+    )) {
 	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
+
     my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
-    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'},$fields);
+    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'}, $fields);
     return $report;
 }
 
@@ -399,7 +439,7 @@ sub get_indexes {
     }
 
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-	$ref->{'description'} =~ s/CREATE INDEX .* ON .* USING .* \((.*)\)$/\1/i;
+	$ref->{'description'} =~ s/CREATE INDEX .* ON .* USING .* \((.*)\)$/$1/i;
 	$ref->{'description'} =~ s/\s//i;
 	my @index_members = split ',',$ref->{'description'};
 	foreach my $member (@index_members) {
@@ -457,4 +497,11 @@ sub set_index {
     return $report;
 }
 
-return 1;
+## For BLOB types.
+sub AS_BLOB {
+    return ( { 'pg_type' => DBD::Pg::PG_BYTEA() } => $_[1] )
+	if scalar @_ > 1;
+    return ();
+}
+
+1;

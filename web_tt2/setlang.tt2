@@ -6,8 +6,8 @@
      <input type="hidden" name="previous_action" value="[% action %]"/>
      <input type="hidden" name="previous_list" value="[% list %]"/>
 [% IF languages.size > 1 %]
-     <label for="lang">[%|loc%]Language selection[% END %]</label>
-	<select id="lang" name="lang" onchange="this.form.submit();">
+     <label for="language_selection">[%|loc%]Language selection[% END %]</label>
+	<select id="language_selection" name="lang" onchange="this.form.submit();">
 
      [% FOREACH lang = languages %]
      <option value="[% lang.key %]" [% lang.value.selected %]>[% lang.value.complete %]</option>

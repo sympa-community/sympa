@@ -120,8 +120,8 @@ sub GetSupportedLanguages {
 
 ## Keep the previous lang ; can be restored with PopLang
 sub PushLang {
+    &Log::do_log('debug2', '(%s)', @_);
     my $locale = shift;
-    &Log::do_log('debug', 'Language::PushLang(%s)', $locale);
 
     push @previous_locale, $current_locale;
     &SetLang($locale);
@@ -130,7 +130,7 @@ sub PushLang {
 }
 
 sub PopLang {
-    &Log::do_log('debug', '');
+    &Log::do_log('debug2', '()');
 
     my $locale = pop @previous_locale;
     &SetLang($locale);
@@ -140,8 +140,8 @@ sub PopLang {
 
 sub SetLang {
 ###########
+    &Log::do_log('debug2', '(%s)', @_);
     my $locale = shift;
-    &Log::do_log('debug2', 'Language::SetLang(%s)', $locale);
 
     my $lang = $locale || $default_lang;## Use default_lang if an empty parameter
 
@@ -195,8 +195,7 @@ sub SetLang {
 
     $current_lang = $lang;
     $current_locale = $locale;
-    my $locale2charset = &Conf::get_robot_conf('', 'locale2charset');
-    $current_charset = $locale2charset->{$locale} || 'utf-8';
+    $current_charset = Site->locale2charset->{$locale} || 'utf-8';
 
     return $locale;
 }#SetLang

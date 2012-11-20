@@ -7,7 +7,7 @@
 
 <ul>
 [% IF (is_subscriber == '1') %]
-   <span style="font-size: 10px">[%|loc%]You <span style="font-weight: bold; font-size: 10px">are</span> subscribed[%END%] -- go to:<br></span>
+   <span style="font-size: 10px">[%|loc%]You <span style="font-weight: bold; font-size: 10px">are</span> subscribed[%END%][%|loc%] -- go to:[%END%]<br></span>
   [% IF may_suboptions == '1' %]
       [% IF action == 'suboptions' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
   <li class="[% class %]"><a href="[% path_cgi %]/suboptions/[% list %]" >[%|loc%]Subscriber Options[%END%]</a></li>

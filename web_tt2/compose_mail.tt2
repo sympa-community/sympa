@@ -49,7 +49,7 @@
    		[%|loc%]Please select one or more topic(s) that corresponds to your message:[%END%]
    		<br />
    		[% FOREACH t = available_topics %] 
-     			<input type="checkbox" name="topic_[%t.name%]" value="1"/> [% t.title %]
+     			<input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1"/> <label for="topic_[%t.name%]">[% t.title %]</label>
      			<br />
    		[% END %]
    		<br />

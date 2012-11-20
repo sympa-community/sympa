@@ -30,15 +30,15 @@ use strict "vars";
 use Data::Dumper;
 use Getopt::Long;
 
-use Conf;
-use List;
-use Log;
-use SDM;
-use Sympa::Constants;
+#use Conf;
+#use List;
+#use Log;
+#use SDM;
+#use Sympa::Constants;
 use Task;
-use TaskSpool;
-use tools;
-use wwslib;
+#use TaskSpool;
+#use tools;
+##XXXuse wwslib;
 
 my $opt_d;
 my $opt_F;
@@ -59,25 +59,36 @@ $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::option
 
 my $Version = '0.1';
 
-my $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
-my $wwsconf = {};
 my $adrlist = {};
 
-# Load WWSympa configuration
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $wwsympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
+# Load sympa.conf
+unless (defined Robot::get_robots()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );
 }
 
-# Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
+&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'task_manager');
+
+# setting log_level using conf unless it is set by calling option
+if ($main::options{'log_level'}) {
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    );
+} else {
+    Log::set_log_level(Site->log_level);
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	Site->log_level
+    );
 }
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
-    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf{'db_name'});
+    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
 }
 
 ## Check that the data structure is uptodate
@@ -112,22 +123,9 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-&tools::write_pid($wwsconf->{'task_manager_pidfile'}, $$, $options);
+&tools::write_pid(Site->task_manager_pidfile, $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
-}
-
-
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'task_manager');
-
-# setting log_level using conf unless it is set by calling option
-if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
-}else{
-    &Log::set_log_level($Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
 
 ## Set the UserID & GroupID for the process
@@ -144,11 +142,12 @@ unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa
 }
 
 ## Sets the UMASK
-umask(oct($Conf{'umask'}));
+umask(oct(Site->umask));
 
 ## Change to list root
-unless (chdir($Conf{'home'})) {
-    &Log::do_log('err',"error : unable to change to directory $Conf{'home'}");
+unless (chdir(Site->home)) {
+    &Log::do_log('err', 'error : unable to change to directory %s',
+	Site->home);
     exit (-1);
 }
 
@@ -174,11 +173,14 @@ while (!$end) {
 
     ## Empty cache of the List.pm module
     &List::init_list_cache();
-    &List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
+
+    # Process grouped notifications
+    Site->send_notify_to_listmaster(undef, undef, 1, undef);
 	
    ## List all tasks
     unless (&TaskSpool::list_tasks) {
-	&List::send_notify_to_listmaster('intern_error',$Conf{'domain'},{'error' => "Failed to list task files in spool"});
+	Site->send_notify_to_listmaster('intern_error',
+	    {'error' => "Failed to list task files in spool"});
 	&Log::do_log ('err', "Failed to list task files in spool");
 	exit -1;
     }
@@ -207,10 +209,11 @@ sub sigterm {
     $end = 1;
 }
 
-&List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
+# Purge grouped notifications
+Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 &Log::do_log ('notice', 'task_manager exited normally due to signal'); 
-&tools::remove_pid($wwsconf->{'task_manager_pidfile'}, $$);
+&tools::remove_pid(Site->task_manager_pidfile, $$);
 
 exit(0);
 

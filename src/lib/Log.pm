@@ -21,15 +21,14 @@
 
 package Log;
 
-use strict "vars";
+use strict;
 
 use Exporter;
 use Sys::Syslog;
 use Carp;
 use POSIX qw(mktime);
 use Encode;
-use List;
-
+#XXXuse List; # no longer used
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw($log_level %levels);
@@ -40,7 +39,7 @@ my $warning_timeout = 600;
 # Date of the last time a message was sent to warn the listmaster that the logs are unavailable.
 my $warning_date = 0;
 
-our $log_level = 0;
+our $log_level = undef;
 
 our %levels = (
     err    => 0,
@@ -70,7 +69,7 @@ sub fatal_err {
     };
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
+	unless(Site->send_notify_to_listmaster('logs_failed', [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -79,7 +78,7 @@ sub fatal_err {
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    unless (&List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'}, [$full_msg])) {
+    unless (Site->send_notify_to_listmaster('sympa_died', [$full_msg])) {
 	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
     }
 
@@ -91,35 +90,62 @@ sub fatal_err {
 sub do_log {
     my $level = shift;
 
+    unless (defined $levels{$level}) {
+	&do_log('err', 'Invalid $level: "%s"', $level);
+	$level = 'info';
+    }
+
     # do not log if log level if too high regarding the log requested by user 
-    return if ($levels{$level} > $log_level);
+    return if defined $log_level and $levels{$level} > $log_level;
+    return if ! defined $log_level and $levels{$level} > 0;
 
     my $message = shift;
-    my @param = @_;
+    my @param = ();
 
     my $errno = $!;
 
     ## Do not display variables which are references.
-    foreach my $p (@param) {
+    my @n = ($message =~ /(%[^%])/g);
+    for (my $i = 0; $i < scalar @n; $i++) {
+	my $p = $_[$i];
 	unless (defined $p) {
-	    $p = ''; # prevent 'Use of uninitialized value' warning
+	    # prevent 'Use of uninitialized value' warning
+	    push @param, '';
 	} elsif (ref $p) {
-	    $p = ref $p;
+	    if (ref $p eq 'ARRAY') {
+		push @param, '[...]';
+	    } elsif (ref $p eq 'HASH') {
+		push @param, sprintf('{%s}', join('/', keys %{$p}));
+	    } elsif ($p->can('get_id')) {
+		push @param, sprintf('%s <%s>', ref $p, $p->get_id);
+	    } else {
+		push @param, ref $p;
 	}
+	} else {
+	    push @param, $p;
+    }
     }
 
     ## Determine calling function
     my $caller_string;
    
-    ## If in 'err' level, build a stack trace
-    if ($level eq 'err'){
+    ## If in 'err' level, build a stack trace,
+    ## except if syslog has not been setup yet.
+    if (defined $log_level and $level eq 'err'){
 	my $go_back = 1;
 	my @calls;
-	while (my @call = caller($go_back)) {
-		unshift @calls, $call[3].'#'.$call[2];
-		$go_back++;
+
+	my @f = caller($go_back);
+	if ($f[3] =~ /wwslog$/) { ## If called via wwslog, go one step ahead
+	    @f = caller(++$go_back);
 	}
-	
+	@calls = ('#'.$f[2]);
+	while (@f = caller(++$go_back)) {
+	    $calls[0] = $f[3].$calls[0];
+	    unshift @calls, '#'.$f[2];
+	}
+	$calls[0] = '(top-level)'.$calls[0];
+
 	$caller_string = join(' > ',@calls);
     }else {
 	my @call = caller(1);
@@ -145,6 +171,16 @@ sub do_log {
         $level = 'debug';
     }
 
+    ## Output to STDERR if needed
+    if (! defined $log_level or
+	($main::options{'foreground'} and $main::options{'log_to_stderr'}) or
+	($main::options{'foreground'} and $main::options{'batch'} and
+	 $level eq 'err')) {
+	$message =~ s/%m/$errno/g;
+	printf STDERR "$message\n", @param;
+    }
+
+    return unless defined $log_level;
     eval {
         unless (syslog($level, $message, @param)) {
             &do_connect();
@@ -154,20 +190,8 @@ sub do_log {
 
     if ($@ && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
-        &List::send_notify_to_listmaster(
-            'logs_failed', $Conf::Conf{'domain'}, [$@]
-        );
-    };
-
-    if ($main::options{'foreground'}) {
-        if (
-            $main::options{'log_to_stderr'} ||
-            ($main::options{'batch'} && $level eq 'err')
-        ) {
-            $message =~ s/%m/$errno/g;
-            printf STDERR "$message\n", @param;
+        Site->send_notify_to_listmaster('logs_failed', [$@]);
         }
-    }    
 }
 
 
@@ -193,7 +217,7 @@ sub do_connect {
     eval {openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
+	unless(Site->send_notify_to_listmaster('logs_failed', [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -251,15 +275,24 @@ sub db_log {
     unless($user_email) {
 	$user_email = 'anonymous';
     }
+
+    my $listname;
     unless($list) {
-	$list = '';
-    }
+	$listname = '';
+    } elsif (ref $list and ref $list eq 'List') {
+	$listname = $list->name;
+	$robot ||= $list->robot;
+    } elsif ($list =~ /(.+)\@(.+)/) {
     #remove the robot name of the list name
-    if($list =~ /(.+)\@(.+)/) {
-	$list = $1;
-	unless($robot) {
-	    $robot = $2;
+	$listname = $1;
+	$robot ||= $2;
 	}
+
+    my $robot_id;
+    if (ref $robot and ref $robot eq 'Robot') {
+	$robot_id = $robot->name;
+    } else {
+	$robot_id = $robot || '';
     }
 
     unless ($daemon =~ /^(task|archived|sympa|wwsympa|bounced|sympa_soap)$/) {
@@ -272,8 +305,8 @@ sub db_log {
     unless(&SDM::do_query( 'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
     $id, 
     $date, 
-    &SDM::quote($robot), 
-    &SDM::quote($list), 
+    &SDM::quote($robot_id), 
+    &SDM::quote($listname), 
     &SDM::quote($action), 
     &SDM::quote(substr($parameters,0,100)),
     &SDM::quote($target_email),
@@ -310,7 +343,7 @@ sub db_stat_log{
     my $read = 0; 
 
     if (ref($list) =~ /List/i) {
-	$list = $list->{'name'};
+	$list = $list->get_id;
     }
     if($list =~ /(.+)\@(.+)/) {#remove the robot name of the list name
 	$list = $1;
@@ -376,7 +409,7 @@ sub db_stat_counter_log {
 
 # delete logs in RDBMS
 sub db_log_del {
-    my $exp = &Conf::get_robot_conf('*','logs_expiration_period');
+    my $exp = Site->logs_expiration_period;
     my $date = time - ($exp * 30 * 24 * 60 * 60);
 
     unless(&SDM::do_query( "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", &SDM::quote($date))) {
@@ -540,7 +573,7 @@ sub aggregate_data {
     my $aggregated_data; # the hash containing aggregated data that the sub deal_data will return.
     
     unless ($sth = &SDM::do_query("SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date)) {
-	&do_log('err','Unable to retrieve stat entries between date % and date %s', $begin_date, $end_date);
+	&do_log('err','Unable to retrieve stat entries between date %s and date %s', $begin_date, $end_date);
 	return undef;
     }
 
@@ -552,7 +585,7 @@ sub aggregate_data {
     
     #the line is read, so update the read_stat from 0 to 1
     unless ($sth = &SDM::do_query( "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date)) {
-	&do_log('err','Unable to set stat entries between date % and date %s as read', $begin_date, $end_date);
+	&do_log('err','Unable to set stat entries between date %s and date %s as read', $begin_date, $end_date);
 	return undef;
     }
     

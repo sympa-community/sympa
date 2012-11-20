@@ -24,28 +24,28 @@ package SharedDocument;
 
 use strict;
 
-use Carp;
+#use Carp; # currently not used
 use POSIX;
 
 use tools;
-use List;
+#use List; # not used
 use Log;
 
 ## Creates a new object
 sub new {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my($pkg, $list, $path, $param) = @_;
 
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
-    &Log::do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
-    
+
     unless (ref($list) =~ /List/i) {
 	&Log::do_log('err', 'SharedDocument::new : incorrect list parameter');
 	return undef;
     }
 
-    $document->{'root_path'} = $list->{'dir'}.'/shared';
+    $document->{'root_path'} = $list->dir.'/shared';
 
     $document->{'path'} = &main::no_slash_end($path);
     $document->{'escaped_path'} = &tools::escape_chars($document->{'path'}, '/');
@@ -304,8 +304,8 @@ sub check_access_control {
     my $why_not_edit = ''; 
     
     ## First check privileges on the root shared directory
-    $result{'scenario'}{'read'} = $list->{'admin'}{'shared_doc'}{'d_read'}{'name'};
-    $result{'scenario'}{'edit'} = $list->{'admin'}{'shared_doc'}{'d_edit'}{'name'};
+    $result{'scenario'}{'read'} = $list->shared_doc->{'d_read'}{'name'};
+    $result{'scenario'}{'edit'} = $list->shared_doc->{'d_edit'}{'name'};
     
     ## Privileged owner has all privileges
     if ($param->{'is_privileged_owner'}) {

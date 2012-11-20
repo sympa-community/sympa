@@ -23,37 +23,26 @@ use Conf;
 use Log;
 use Language;
 use sympasoap;
-use Sympa::Constants;
+#XXXuse Sympa::Constants;
 
 ## WWSympa librairies
 use cookielib;
 
 my $birthday = time ;
 
-## Configuration
-my $wwsconf = {};
-
-## Change to your wwsympa.conf location
-my $conf_file       = Sympa::Constants::WWSCONFIG;
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
-## Load config 
-unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
-}
-
 ## Load sympa config
-unless (&Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
+unless (defined Robot::get_robots()) {
+    &Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );  
 }
 
-&Log::set_log_level($Conf{'log_level'}) if ($Conf{'log_level'}); 
+&Log::set_log_level(Site->log_level);
 
 
 ## Open log
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'soap');
+&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'soap');
 &Log::do_log('info', 'SOAP server launched');
 
 ## We set the real UID with the effective UID value
@@ -70,7 +59,7 @@ my $pinfo = &List::_apply_defaults();
 
 ## The process should not fork for sending mail
 ## Messages will be spooled instead
-&mail::set_send_spool($Conf{'queue'});
+&mail::set_send_spool(Site->queue);
 
 ## Loading all Lists at startup, in order to increase execution speed
 

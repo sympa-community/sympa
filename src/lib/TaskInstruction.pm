@@ -31,7 +31,7 @@ use Digest::MD5;
 use Exporter;
 use Time::Local;
 
-use tools;
+#use tools; # load in Conf - Site - List
 use Task;
 use List;
 
@@ -346,7 +346,7 @@ sub send_msg {
 
     if ($task->{'object'} eq '_global') {
 		foreach my $email (keys %{$self->{'variables'}{$var}}) {
-			unless (&List::send_global_file ($template, $email, ,'',$self->{'variables'}{$var}{$email}) ) {
+			unless (Site->send_file($template, $email, $self->{'variables'}{$var}{$email}) ) {
 				&Log::do_log ('notice', "Unable to send template $template to $email");
 				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $email"});
 				return undef;
@@ -357,7 +357,7 @@ sub send_msg {
     } else {
 		my $list = $task->{'list_object'};
 		foreach my $email (keys %{$self->{'variables'}{$var}}) {
-			unless ($list->send_file ($template, $email, $list->{'domain'}, $self->{'variables'}{$var}{$email}))  {
+			unless ($list->send_file ($template, $email, $self->{'variables'}{$var}{$email}))  {
 				&Log::do_log ('notice', "Unable to send template $template to $email");
 				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $email"});
 				return undef;
@@ -390,7 +390,7 @@ sub next_cmd {
 		$type = '_global';
 		foreach my $key (keys %TaskSpool::global_models) {
 			if ($TaskSpool::global_models{$key} eq $model) {
-				$flavour = $Conf::Conf{$key};
+				$flavour = Site->$key;
 				last;
 			}
 		}
@@ -483,7 +483,7 @@ sub delete_subs_cmd {
     foreach my $email (keys %{$self->{'variables'}{$var}}) {
 		&Log::do_log ('notice', "email : $email");
 		my $result = $list->check_list_authz('del', 'smime',
-							 {'sender'   => $Conf::Conf{'listmaster'},
+							 {'sender'   => Site->listmaster,
 							  'email'    => $email,
 						  });
 		my $action;
@@ -563,7 +563,7 @@ sub exec_cmd {
 			($? & 127), ($? & 128) ? 'with' : 'without';
 		}
 		else {
-			$message = "Child exited with value %d", $? >> 8;
+			$message = sprintf 'Child exited with value %d', $? >> 8;
 		}
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => $message});
 		return undef;
@@ -613,7 +613,7 @@ sub purge_logs_table {
     return 1;
 }
 
-## remove sessions from session_table if older than $Conf::Conf{'session_table_ttl'}
+## remove sessions from session_table if older than Site->session_table_ttl
 sub purge_session_table {    
 
     my ($self,$task) = @_;
@@ -642,7 +642,7 @@ sub purge_tables {
     &Log::do_log('notice','%s rows removed in bulkspool_table',$removed);    
     #
     my $removed = 0;
-    foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $robot (keys %{Site->robots_config}) {
 		my $all_lists = &List::get_lists($robot);
 		foreach my $list ( @$all_lists ) {
 			$removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
@@ -653,11 +653,13 @@ sub purge_tables {
     return 1;
 }
 
-## remove one time ticket table if older than $Conf::Conf{'one_time_ticket_table_ttl'}
+## remove one time ticket table if older than Site->one_time_ticket_table_ttl
 sub purge_one_time_ticket_table {    
 
     my ($self,$task) = @_;
     &Log::do_log('info','task_manager::purge_one_time_ticket_table()');
+    require SympaSession;
+
     my $removed = &SympaSession::purge_old_tickets('*');
     unless(defined $removed) {
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to remove old tickets'});
@@ -672,17 +674,17 @@ sub purge_user_table {
     &Log::do_log('debug2','purge_user_table()');
 
     ## Load user_table entries
-    my @users = &List::get_all_global_user();
+    my @users = User::get_all_global_user();
 
     ## Load known subscribers/owners/editors
     my %known_people;
 
     ## Listmasters
-    foreach my $l (@{$Conf::Conf{'listmasters'}}) {
+    foreach my $l (@{Site->listmasters}) {
 	$known_people{$l} = 1;
     }
 
-    foreach my $r (keys %{$Conf::Conf{'robots'}}) {
+    foreach my $r (keys %{Site->robots_config}) {
 
 		my $all_lists = &List::get_lists($r);
 		foreach my $list (@$all_lists){
@@ -720,7 +722,7 @@ sub purge_user_table {
     }
     
     unless ($#purged_users < 0) {
-		unless (&List::delete_global_user(@purged_users)) {
+		unless (User::delete_global_user(@purged_users)) {
 			$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to delete users'});
 			return undef;
 		}
@@ -843,7 +845,7 @@ sub purge_orphan_bounces {
 
      my ($self,$task) = @_;
 
-	my $cert_dir = &Conf::get_robot_conf('*','ssl_cert_dir');
+    my $cert_dir = Site->ssl_cert_dir;
      my $execution_date = $task->{'date'};
      my @tab = @{$self->{'Rarguments'}};
      my $template = $tab[0];
@@ -932,7 +934,7 @@ sub purge_orphan_bounces {
 			 $tpl_context{'expiration_date'} = &tools::adate ($expiration_date);
 			 $tpl_context{'certificate_id'} = $id;
 			 $tpl_context{'auto_submitted'} = 'auto-generated';
-			 unless (&List::send_global_file ($template, $_,'', \%tpl_context)) {
+			 unless (Site->send_file($template, $_, \%tpl_context)) {
 				 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to send template $template to $_"});
 			 }
 			 &Log::do_log ('notice', "--> $_ certificate soon expired ($date), user warned");
@@ -949,7 +951,7 @@ sub purge_orphan_bounces {
 
      my @tab = @{$self->{'Rarguments'}};
      my $limit = &tools::epoch_conv ($tab[1], $task->{'date'});
-     my $CA_file = "$Conf::Conf{'home'}/$tab[0]"; # file where CA urls are stored ;
+     my $CA_file = Site->home . "/$tab[0]"; # file where CA urls are stored ;
      &Log::do_log ('notice', "line $self->{'line_number'} : update_crl (@tab)");
 
      # building of CA list
@@ -965,15 +967,15 @@ sub purge_orphan_bounces {
      close (FILE);
 
      # updating of crl files
-     my $crl_dir = "$Conf::Conf{'crl_dir'}";
-		 unless (-d $Conf::Conf{'crl_dir'}) {
-		 if ( mkdir ($Conf::Conf{'crl_dir'}, 0775)) {
-			 &Log::do_log('notice', "creating spool $Conf::Conf{'crl_dir'}");
-		 }else{
-			 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Unable to create CRLs directory $Conf::Conf{'crl_dir'}"});
-			 return undef;
-		 }
-     }
+    my $crl_dir = Site->crl_dir;
+    unless (-d Site->crl_dir) {
+	if ( mkdir (Site->crl_dir, 0775)) {
+	    &Log::do_log('notice', 'creating spool %s', Site->crl_dir);
+	} else {
+	    $self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Unable to create CRLs directory ' . Site->crl_dir});
+	    return undef;
+	}
+    }
 
      foreach my $url (@CA) {
 
@@ -1148,7 +1150,7 @@ sub process_bouncers {
 						 'total' => $#{$bouncers[$level]} + 1};
 
 					if ($notification eq 'listmaster'){
-						unless(&List::send_notify_to_listmaster('automatic_bounce_management',$list->{'domain'},$param)){
+						unless($list->robot->send_notify_to_listmaster('automatic_bounce_management', $param)){
 							$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'error while notifying listmaster'});
 						}
 				}elsif ($notification eq 'owner'){
@@ -1170,14 +1172,14 @@ sub get_score {
 
     &Log::do_log('debug','Get_score(%s) ',$user_ref->{'email'});
 
-    my $min_period = $Conf::Conf{'minimum_bouncing_period'};
-    my $min_msg_count = $Conf::Conf{'minimum_bouncing_count'};
+    my $min_period = Site->minimum_bouncing_period;
+    my $min_msg_count = Site->minimum_bouncing_count;
 	
     # Analizing bounce_subscriber_field and keep usefull infos for notation
     $user_ref->{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 
-    my $BO_period = int($1 / 86400) - $Conf::Conf{'bounce_delay'};
-    my $EO_period = int($2 / 86400) - $Conf::Conf{'bounce_delay'};
+    my $BO_period = int($1 / 86400) - Site->bounce_delay;
+    my $EO_period = int($2 / 86400) - Site->bounce_delay;
     my $bounce_count = $3;
     my $bounce_type = $4;
 

@@ -216,7 +216,7 @@ sub update_field {
 	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
 	return undef;
     }
-    $report .= sprintf('\nField %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    $report .= sprintf("\nField %s in table %s, structure updated", $param->{'field'}, $param->{'table'});
     &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
     return $report;
 }

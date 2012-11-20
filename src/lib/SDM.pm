@@ -27,9 +27,9 @@ use strict;
 use Carp;
 use Exporter;
 
-use Conf;
+#use Conf; # SDM is used in Conf
 use Log;
-use List;
+#use List; # no longer used
 use Sympa::Constants;
 use SQLSource;
 use Data::Dumper;
@@ -103,7 +103,7 @@ sub check_db_connect {
     
     #&Log::do_log('debug2', 'Checking connection to the Sympa database');
     ## Is the Database defined
-    unless (&Conf::get_robot_conf('*','db_name')) {
+    unless (Site->db_name) {
 	&Log::do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
@@ -120,9 +120,8 @@ sub check_db_connect {
 
 ## Connect to Database
 sub connect_sympa_database {
+    &Log::do_log('debug2', '(%s)', @_);
     my $option = shift;
-
-    &Log::do_log('debug', 'Connecting to Sympa database');
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
@@ -142,17 +141,17 @@ sub connect_sympa_database {
 	&Log::do_log('err', 'Unable to connect to the Sympa database');
 	return undef;
     }
-    &Log::do_log('debug2','Connected to Database %s',&Conf::get_robot_conf('*','db_name'));
+    &Log::do_log('debug3', 'Connected to Database %s', Site->db_name);
 
     return 1;
 }
 
 ## Disconnect from Database
 sub db_disconnect {
-    &Log::do_log('debug', 'Disconnecting from Sympa database');
+    &Log::do_log('debug2', '()');
 
     unless ($db_source->{'dbh'}->disconnect()) {
-	&Log::do_log('err','Can\'t disconnect from Database %s : %s',&Conf::get_robot_conf('*','db_name'), $db_source->{'dbh'}->errstr);
+	&Log::do_log('err','Can\'t disconnect from Database %s : %s',Site->db_name, $db_source->{'dbh'}->errstr);
 	return undef;
     }
 
@@ -188,14 +187,14 @@ sub probe_db {
 	unless ($found) {
 	    if (my $rep = $db_source->add_table({'table'=>$t1})) {
 		push @report, $rep;
-		&Log::do_log('notice', 'Table %s created in database %s', $t1, &Conf::get_robot_conf('*','db_name'));
+		&Log::do_log('notice', 'Table %s created in database %s', $t1, Site->db_name);
 		push @tables, $t1;
 		$real_struct{$t1} = {};
 	    }
 	}
     }
     ## Get fields
-    foreach my $t (@tables) {
+    foreach my $t (keys %{$db_struct{'mysql'}}) {
 	$real_struct{$t} = $db_source->get_fields({'table'=>$t});
     }
     ## Check tables structure if we could get it
@@ -204,7 +203,7 @@ sub probe_db {
 
 	foreach my $t (keys %{$db_struct{'mysql'}}) {
 	    unless ($real_struct{$t}) {
-		&Log::do_log('err', "Table '%s' not found in database '%s' ; you should create it with create_db.%s script", $t, &Conf::get_robot_conf('*','db_name'), &Conf::get_robot_conf('*','db_type'));
+		&Log::do_log('err', "Table '%s' not found in database '%s' ; you should create it with create_db.%s script", $t, Site->db_name, Site->db_type);
 		return undef;
 	    }
 	    unless (&check_fields({'table' => $t,'report' => \@report,'real_struct' => \%real_struct})) {
@@ -220,7 +219,8 @@ sub probe_db {
 		delete $real_struct{$t}{'temporary'};
 	    }
 
-	    if ((&Conf::get_robot_conf('*','db_type') eq 'mysql')||(&Conf::get_robot_conf('*','db_type') eq 'Pg')||(&Conf::get_robot_conf('*','db_type') eq 'SQLite')) {
+	    if (Site->db_type eq 'mysql' or Site->db_type eq 'Pg' or
+		Site->db_type eq 'SQLite') {
 		## Check that primary key has the right structure.
 		unless (&check_primary_key({'table' => $t,'report' => \@report})) {
 		    &Log::do_log('err', "Unable to check the valifity of primary key for table %s. Aborting.", $t);
@@ -253,10 +253,11 @@ sub probe_db {
     }
     
     ## Used by List subroutines to check that the DB is available
-    $List::use_db = 1;
+    $Site::use_db = 1;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  &Conf::get_robot_conf('*','domain'), {'report' => \@report}) if ($#report >= 0);
+    Site->send_notify_to_listmaster('db_struct_updated', {'report' => \@report})
+	if scalar @report;
 
     return 1;
 }
@@ -267,16 +268,16 @@ sub check_fields {
     my %real_struct = %{$param->{'real_struct'}};
     my $report_ref = $param->{'report'};
 
-    foreach my $f (sort keys %{$db_struct{&Conf::get_robot_conf('*','db_type')}{$t}}) {
+    foreach my $f (sort keys %{$db_struct{Site->db_type}{$t}}) {
 	unless ($real_struct{$t}{$f}) {
-	    push @{$report_ref}, sprintf("Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, &Conf::get_robot_conf('*','db_name'));
-	    &Log::do_log('info', "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, &Conf::get_robot_conf('*','db_name'));
+	    push @{$report_ref}, sprintf("Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, Site->db_name);
+	    &Log::do_log('info', "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...", $f, $t, Site->db_name);
 
 	    my $rep;
 	    if ($rep = $db_source->add_field({
 		'table' => $t,
 		'field' => $f,
-		'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+		'type' => $db_struct{Site->db_type}{$t}{$f},
 		'notnull' => $not_null{$f},
 		'autoinc' => ( $autoincrement{$t} eq $f),
 		'primary' => ( $autoincrement{$t} eq $f),
@@ -291,18 +292,18 @@ sub check_fields {
 	}
 	
 	## Change DB types if different and if update_db_types enabled
-	if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
+	if (Site->update_db_field_types eq 'auto') {
 	    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
-					 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
-		push @{$report_ref}, sprintf("Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
+					 required_format => $db_struct{Site->db_type}{$t}{$f})) {
+		push @{$report_ref}, sprintf("Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",$f, $t, Site->db_name, $db_struct{Site->db_type}{$t}{$f});
 		
-		&Log::do_log('notice', "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...",$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},$real_struct{$t}{$f});
+		&Log::do_log('notice', "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...",$f, $t, Site->db_name, $db_struct{Site->db_type}{$t}{$f},$real_struct{$t}{$f});
 		
 		my $rep;
 		if ($rep = $db_source->update_field({
 		    'table' => $t,
 		    'field' => $f,
-		    'type' => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f},
+		    'type' => $db_struct{Site->db_type}{$t}{$f},
 		    'notnull' => $not_null{$f},
 		    })){
 			push @{$report_ref}, $rep;
@@ -312,8 +313,8 @@ sub check_fields {
 		}
 	    }
 	}else {
-	    unless ($real_struct{$t}{$f} eq $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f}) {
-		&Log::do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
+	    unless ($real_struct{$t}{$f} eq $db_struct{Site->db_type}{$t}{$f}) {
+		&Log::do_log('err', 'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).', $f, $t, Site->db_name, $db_struct{Site->db_type}{$t}{$f});
 		&Log::do_log('err', 'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES');
 		return undef;
 	    }
@@ -449,7 +450,7 @@ sub check_indexes {
 ## Check if data structures are uptodate
 ## If not, no operation should be performed before the upgrade process is run
 sub data_structure_uptodate {
-     my $version_file = "&Conf::get_robot_conf('*','etc')/data_structure.version";
+     my $version_file = Site->etc . '/data_structure.version';
      my $data_structure_version;
 
      if (-f $version_file) {
@@ -579,4 +580,12 @@ sub get_canonical_read_date {
     }
 }
 
-return 1;
+## bound parameters for do_prepared_query().
+## returns an array ( { sql_type => SQL_type }, value ),
+## single scalar or empty array.
+##
+sub AS_BLOB {
+    return $db_source->AS_BLOB(@_);
+}
+
+1;

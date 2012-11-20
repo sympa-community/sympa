@@ -24,12 +24,12 @@ package Auth;
 
 use Digest::MD5;
 
-use Language;
-use Log;
-use Conf;
+use Language qw(gettext_strftime);
+#use Log;
+#use Conf;
 use List;
 use report;
-use SDM;
+#use SDM;
 
 ## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
 sub password_fingerprint{
@@ -37,7 +37,7 @@ sub password_fingerprint{
     &Log::do_log('debug', 'Auth::password_fingerprint');
 
     my $pwd = shift;
-    if(&Conf::get_robot_conf('*','password_case') eq 'insensitive') {
+    if(Site->password_case eq 'insensitive') {
 	return &tools::md5_fingerprint(lc($pwd));
     }else{
 	return &tools::md5_fingerprint($pwd);
@@ -58,7 +58,7 @@ sub password_fingerprint{
 	 return &authentication($robot, $auth,$pwd);
      }else{
 	 ## This is an UID
-	 foreach my $ldap (@{$Conf{'auth_services'}{$robot}}){
+	 foreach my $ldap (@{Site->auth_services->{$robot}}){
 	     # only ldap service are to be applied here
 	     next unless ($ldap->{'auth_type'} eq 'ldap');
 	     
@@ -67,7 +67,7 @@ sub password_fingerprint{
 	 }
 	 if ($canonic){
 	     
-	     unless($user = &List::get_global_user($canonic)){
+	     unless($user = User::get_global_user($canonic)){
 		 $user = {'email' => $canonic};
 	     }
 	     return {'user' => $user,
@@ -93,7 +93,7 @@ sub may_use_sympa_native_auth {
 
     my $ok = 0;
     ## check each auth.conf paragrpah
-    foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
+    foreach my $auth_service (@{Site->auth_services->{$robot}}){
 	next unless ($auth_service->{'auth_type'} eq 'user_table');
 
 	next if ($auth_service->{'regexp'} && ($user_email !~ /$auth_service->{'regexp'}/i));
@@ -111,7 +111,7 @@ sub authentication {
     &Log::do_log('debug', 'Auth::authentication(%s)', $email);
 
 
-    unless ($user = &List::get_global_user($email)) {
+    unless ($user = User::get_global_user($email)) {
 	$user = {'email' => $email };
     }    
     unless ($user->{'password'}) {
@@ -120,12 +120,12 @@ sub authentication {
     
     if ($user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
 	# too many wrong login attemp
-	&List::update_global_user($email,{wrong_login_count => $user->{'wrong_login_count'}+1}) ;
+	User::update_global_user($email,{wrong_login_count => $user->{'wrong_login_count'}+1}) ;
 	&report::reject_report_web('user','too_many_wrong_login',{}) unless ($ENV{'SYMPA_SOAP'});
 	&Log::do_log('err','login is blocked : too many wrong password submission for %s', $email);
 	return undef;
     }
-    foreach my $auth_service (@{$Conf{'auth_services'}{$robot}}){
+    foreach my $auth_service (@{Site->auth_services->{$robot}}){
 	next if ($auth_service->{'auth_type'} eq 'authentication_info_url');
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
@@ -136,7 +136,7 @@ sub authentication {
 	    my $fingerprint = &password_fingerprint ($pwd);	    	    
 	    
 	    if ($fingerprint eq $user->{'password'}) {
-		&List::update_global_user($email,{wrong_login_count => 0}) ;
+		User::update_global_user($email,{wrong_login_count => 0}) ;
 		return {'user' => $user,
 			'auth' => 'classic',
 			'alt_emails' => {$email => 'classic'}
@@ -144,10 +144,10 @@ sub authentication {
 	    }
 	}elsif($auth_service->{'auth_type'} eq 'ldap') {
 	    if ($canonic = &ldap_authentication($robot, $auth_service, $email,$pwd,'email_filter')){
-		unless($user = &List::get_global_user($canonic)){
+		unless($user = User::get_global_user($canonic)){
 		    $user = {'email' => $canonic};
 		}
-		&List::update_global_user($canonic,{wrong_login_count => 0}) ;
+		User::update_global_user($canonic,{wrong_login_count => 0}) ;
 		return {'user' => $user,
 			'auth' => 'ldap',
 			'alt_emails' => {$email => 'ldap'}
@@ -157,7 +157,7 @@ sub authentication {
     }
 
     # increment wrong login count.
-    &List::update_global_user($email,{wrong_login_count =>$user->{'wrong_login_count'}+1}) ;
+    User::update_global_user($email,{wrong_login_count =>$user->{'wrong_login_count'}+1}) ;
 
     &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
     &Log::do_log('err','authentication: incorrect password for user %s', $email);
@@ -174,12 +174,15 @@ sub ldap_authentication {
      &Log::do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,'****',$whichfilter);
      &Log::do_log('debug3','Password used: %s',$pwd);
 
-     unless (&tools::get_filename('etc',{},'auth.conf', $robot)) {
+    ## Compatibility: $robot may be a string
+    $robot = Robot->new($robot) unless ref $robot;
+
+     unless ($robot->get_etc_filename('auth.conf')) {
 	 return undef;
      }
 
      ## No LDAP entry is defined in auth.conf
-     if ($#{$Conf{'auth_services'}{$robot}} < 0) {
+     if ($#{Site->auth_services->{$robot->domain}} < 0) {
 	 &Log::do_log('notice', 'Skipping empty auth.conf');
 	 return undef;
      }
@@ -283,7 +286,7 @@ sub ldap_authentication {
      &Log::do_log('debug3',"canonic: $canonic_email[0]");
      ## If the identifier provided was a valid email, return the provided email.
      ## Otherwise, return the canonical email guessed after the login.
-     if( &tools::valid_email($auth) && !&Conf::get_robot_conf($robot,'ldap_force_canonical_email')) {
+     if( &tools::valid_email($auth) && ! $robot->ldap_force_canonical_email) {
 	 return ($auth);
      }else{
 	 return lc($canonic_email[0]);
@@ -300,18 +303,18 @@ sub get_email_by_net_id {
     
     &Log::do_log ('debug',"Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
     
-    if (defined $Conf{'auth_services'}{$robot}[$auth_id]{'internal_email_by_netid'}) {
-	my $sso_config = @{$Conf{'auth_services'}{$robot}}[$auth_id];
+    if (defined Site->auth_services->{$robot}[$auth_id]{'internal_email_by_netid'}) {
+	my $sso_config = @{Site->auth_services->{$robot}}[$auth_id];
 	my $netid_cookie = $sso_config->{'netid_http_header'} ;
 	
 	$netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 	
-	$email = &List::get_netidtoemail_db($robot, $netid_cookie, $Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
+	$email = &List::get_netidtoemail_db($robot, $netid_cookie, Site->auth_services->{$robot}[$auth_id]{'service_id'});
 	
 	return $email;
     }
  
-    my $ldap = @{$Conf{'auth_services'}{$robot}}[$auth_id];
+    my $ldap = @{Site->auth_services->{$robot}}[$auth_id];
 
     my $param = &tools::dup_var($ldap);
     my $ds = new LDAPSource($param);

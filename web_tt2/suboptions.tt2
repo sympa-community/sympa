@@ -27,23 +27,23 @@
  	 <BLOCKQUOTE>	
  	  [% FOREACH t = available_topics %]
  	    [%IF topic_checked.${t.name} %]	
-             <input type="checkbox" name="topic_[%t.name%]" value="1" checked="1"> [% t.title %] </input>
+             <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" checked="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
  	    [%ELSE%]
- 	     <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+ 	     <input id="topic_[%t.name%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%]">[% t.title %] </label>
  	    [%END%] 	
  	     <br />
  	  [% END %]
  	  [%IF topic_checked.other %]
- 	   <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
+ 	   <input id="topic_other" type="checkbox" name="topic_other" value="1"  checked="1"/> <label for="topic_other">[%|loc%]Other (messages not tagged) [%END%]</label>
           [%ELSE%]	
-           <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%] 	
+           <input id="topic_other" type="checkbox" name="topic_other" value="1" /> <label for="topic_other">[%|loc%]Other (messages not tagged) [%END%]</label>
  	  [%END%] 
  	  <br />
           </BLOCKQUOTE>
   
  	  [%IF sub_user_topic %]
 	   <br />	
- 	   <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
+ 	   <input id="no_topic" type="checkbox" name="no_topic" value="1" /> <label for="no_topic">[%|loc%]Disable topics subscription[%END%]</label>
  	   <br />
  	  [%END%]
        	

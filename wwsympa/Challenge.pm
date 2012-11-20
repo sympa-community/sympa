@@ -106,7 +106,7 @@ sub load {
 	return undef;
     }
 
-    return ('expired') if (time - $challenge_datas->{'date'} >= &tools::duration_conv($Conf{'challenge_table_ttl'}));
+    return ('expired') if (time - $challenge_datas->{'date'} >= &tools::duration_conv(Site->challenge_table_ttl));
     return ($challenge_datas);
 }
 

@@ -10,7 +10,7 @@
      <h3> [%|loc%]This list is configured to require topic(s).[%END%]</h3>
      <br />[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] <br />
      [% FOREACH t = available_topics %]
-       <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input><br />
+       <input id="topic_[%t.name%].[%line_count%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%].[%line_count%]">[% t.title %] </label><br />
      [%- END- %]
      <br />
    [%- END -%]
@@ -40,10 +40,10 @@
   <br />
   [% IF conf.reporting_spam_script_path %]
      [%- IF msg.value.spam_status != 'spam' -%]
-        <br /> <input type=checkbox name="signal_spam" />[%|loc %]Report message as undetected spam [%END%]</option>
+        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /><label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam [%END%]</label>
      [% END %] 
   [% END %] 
-  <br /> <input type=checkbox name="blacklist" />[%|loc %]Add sender to blacklist[%END%]</option>
+  <br /> <input id="blacklist[% line_count %]" type=checkbox name="blacklist" /><label for="blacklist[% line_count %]">[%|loc %]Add sender to blacklist[%END%]</label>
   <br />
   <div class="formError" style="display:none"  id="warningSpam[% line_count %]">
    [%|loc%]You should rejet spams quietly because the sender of a spam is often spoofed, if you really want to send this notification, please confirm [%END%]

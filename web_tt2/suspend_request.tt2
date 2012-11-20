@@ -17,7 +17,7 @@
         [% IF suspend_list %]
           [% FOREACH sub = suspend_list %]
             <tr class="color0">
-              <td><input type="checkbox" checked="checked" name="listname" value="[% sub.listname %]" /> [% hidden_head %][% sub.listname %][% hidden_end %]&nbsp;</td>
+              <td><input id="listname.[% sub.listname %]" type="checkbox" checked="checked" name="listname" value="[% sub.listname %]" /> <label for="listname.[% sub.listname %]">[% hidden_head %][% sub.listname %][% hidden_end %]&nbsp;</label></td>
 	      [% IF sub.listsuspend %]
 	        <td></td>
 	        <td>&nbsp;[%|loc%]Suspended from[% END %] [% sub.liststartdate %] [%|loc%]to[% END %] [% IF sub.listenddate %][% sub.listenddate %][% ELSE %][%|loc%]indefinite end date[% END %][% END %]</td>	        
@@ -43,7 +43,7 @@
  	  [%|loc%]From:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
           [%|loc%]To:[%END%] <noscript>(dd-mm-yyyy)</noscript><input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" >      
       	</b>
-	<input type="checkbox" name="indefinite" /> [%|loc%]Check this box if you want to suspend your subscription indefinitely.[%END%]
+	<input id="indefinite" type="checkbox" name="indefinite" /> <label for="indefinite">[%|loc%]Check this box if you want to suspend your subscription indefinitely.[%END%]</label>
 	<br />
 	<input type="hidden" name="action" value="suspend_request_action"/>
 	<input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]"/>

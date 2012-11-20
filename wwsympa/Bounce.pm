@@ -156,7 +156,7 @@ sub anabounce {
 
     # this old subroutine do not use message object but parse the message itself !!! It should be rewrited
     # a temporary file is used when introducing database spool. It should be rewrited! It should be rewrited! It should be rewrited! Yes, tt should be rewrited !
-    my $tmpfile = $Conf::Conf{'tmpdir'}.'/bounce.'.$$ ;
+    my $tmpfile = Site->tmpdir.'/bounce.'.$$ ;
     unless (open (BOUNCE,"> $tmpfile")){
 &Log::do_log('err',"could not create $tmpfile");
 	return undef;

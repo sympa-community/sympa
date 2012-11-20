@@ -21,11 +21,10 @@
 
 package Ldap;
 
-use strict "vars";
-
+use strict;
 use Exporter;
 
-use Conf;
+use Log;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Ldap);

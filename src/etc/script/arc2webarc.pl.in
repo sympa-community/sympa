@@ -216,7 +216,7 @@ sub store_messages {
 		$date = $1;
 		
 		# Date type : Mon, 8 Dec 97 13:33:47 +0100
-		if ($date =~ /^\w{2,3},\s+\d{1,2}\s+([\wéû]{2,3})\s+(\d{2,4})/) {
+		if ($date =~ /^\w{2,3},\s+\d{1,2}\s+([\w\x80-\xFF]{2,3})\s+(\d{2,4})/) { #FIXME
 		    $month = $1;
 		    $year =$2;
 		    #print STDERR "$month/$year\n";
@@ -244,7 +244,8 @@ sub store_messages {
 		
 		# Month format
 		if ($month !~ /^\d+$/) {
-		    $month =~ y/éûA-Z/eua-z/;
+		    $month =~ s/\xe9\xfb/eu/; #FIXME
+		    $month =~ y/A-Z/a-z/;
 		    if (!$month_idx{$month}) {
 			$incorrect = 1;
 		    }else {

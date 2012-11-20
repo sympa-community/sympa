@@ -28,11 +28,11 @@ use Exporter;
 use Datasource;
 use Carp;
 
-use tools;
-use tt2;
-use Conf;
+#use tools; # not used
+#use tt2; # not used
+#use Conf; # not used
 use Log;
-use List;
+#use List; # not used
 use Data::Dumper;
 
 our @ISA = qw(Datasource Exporter);
@@ -145,7 +145,7 @@ sub connect {
 	return undef;
     }
 
-    ## Using startçtls() will convert the existing connection to using Transport Layer Security (TLS), which pro-
+    ## Using start_tls() will convert the existing connection to using Transport Layer Security (TLS), which pro-
     ## vides an encrypted connection. This is only possible if the connection uses LDAPv3, and requires that the
     ## server advertizes support for LDAP_EXTENSION_START_TLS. Use "supported_extension" in Net::LDAP::RootDSE to
     ## check this.

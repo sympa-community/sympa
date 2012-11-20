@@ -684,7 +684,7 @@ my %full_db_struct = (
 	    },
 	    'error_type_logs' => {
 		'struct'=> 'varchar(150)',
-		'doc'=>'name of the error string – if any – issued by the subroutine',
+		'doc'=>'name of the error string (if any) issued by the subroutine',
 		'order'=>11,
 	    },
 	    'client_logs' => {
@@ -1099,73 +1099,108 @@ my %full_db_struct = (
     },
     'list_table' => {
 	'fields' => {
+	    ## Identification
 	    'name_list'=> => {
 		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'Name of the list',
 		'order' => 1,
 		'primary'=>1,
 		'not_null'=>1,
 	    },
 	    'robot_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'Name of the robot (domain) the list belongs to',
 		'order' => 2,
 		'primary'=>1,
 		'not_null'=>1,
 	    },
-	    'path_list' => {
+	    ## basic profile
+	    'family_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'Name of the family the list belongs to',
 		'order' => 3,
 	    },
 	    'status_list' => {
 		'struct' => "enum('open','closed','pending','error_config','family_closed')",
-		'doc' => 'FIXME',
+		'doc' => 'Status of the list',
 		'order' => 4,
 	    },
 	    'creation_email_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'Email of user who created the list',
 		'order' => 5,
 	    },
 	    'creation_epoch_list' => {
-		'struct' => 'datetime',
-		'doc' => 'FIXME',
+		'struct' => 'int(11)',
+		'doc' => 'UNIX time when the list was created',
 		'order' => 6,
 	    },
-	    'subject_list' => {
+	    'update_email_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'Email of user who updated the list',
 		'order' => 7,
+	    },
+	    'update_epoch_list' => {
+		'struct' => 'int(11)',
+		'doc' => 'UNIX time when the list was updated',
+		'order' => 8,
+	    },
+	    ## Other indices to help searching lists
+	    'searchkey_list' => {
+		'struct' => 'varchar(255)',
+		'doc' => 'Case-folded list subject to help searching',
+		'order' => 10,
 	    },
 	    'web_archive_list' => {
 		'struct' => 'tinyint(1)',
-		'doc' => 'FIXME',
-		'order' => 8,
-	    },
-	    'topics_list' => {
-		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
-		'order' => 9,
-	    },
-	    'editors_list' => {
-		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
-		'order' => 10,
-	    },
-	    'owners_list' => {
-		'struct' => 'varchar(100)',
-		'doc' => 'FIXME',
+		'doc' => 'If the list has archives',
 		'order' => 11,
 	    },
+	    'topics_list' => {
+		'struct' => 'varchar(255)',
+		'doc' => 'Topics of the list, separated and enclosed by commas',
+		'order' => 12,
+	    },
+	    ## total cache
+	    'total_list' => {
+		'struct' => 'int(7)',
+		'doc' => 'Estimated number of subscribers',
+		'order' => 90,
+	    },
+	    ## cache management
+	    'cache_epoch_list' => {
+		'struct' => 'int(11)',
+		'doc' => 'UNIX time of cache entry',
+		'order' => 98,
+	    },
+	    ## admin cache
+	    'config_list' => {
+		'struct' => 'mediumblob',
+		'doc' => 'Serialized list config',
+		'order' => 99,
+	    },
 	},
-	'doc' => 'FIXME',
+	'doc' => 'The list_table holds cached list config and some items to help searching lists.',
 	'order' => 18,
     },
 );
 return %full_db_struct;
 }
-    
+
+## Conversion of column data types.  Basic definitions are based on MySQL.
+## Following types are recognized:
+## varchar(X)     : Text with length upto X.  X must be lower than 2^16 - 2.
+## int(1):        : Boolean, 1 or 0.
+## int(11)        : Unix time (a.k.a. "epoch").
+## int(X)         : Integer with columns upto X, -2^31 to 2^31 - 1.
+## tinyint        : Integer, -2^7 to 2^7 - 1.
+## smallint       : Integer, -2^15 to 2^15 - 1.
+## bigint         : Integer, -2^63 to 2^63 - 1.
+## enum           : Keyword with length upto 20 o.
+## text           : Text with length upto 500 o.
+## longtext       : Text with length upto 2^32 - 4 o.
+## datetime:      : Timestamp.
+## mediumblob     : Binary data with length upto 2^24 - 3 o.
 
 sub db_struct {
 
@@ -1189,6 +1224,7 @@ sub db_struct {
 	  $trans_o =~ s/^text.*/varchar2(500)/g;	
 	  $trans_o =~ s/^longtext.*/long/g;	
 	  $trans_o =~ s/^datetime.*/date/g;	
+	  $trans_o =~ s/^mediumblob/blob/g;
 #Postgresql
 	  $trans_pg =~ s/^int(1)/smallint/g;
 	  $trans_pg =~ s/^int\(?.*\)?/int4/g;
@@ -1199,6 +1235,7 @@ sub db_struct {
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
 	  $trans_pg =~ s/^enum.*/varchar(15)/g;
+	  $trans_pg =~ s/^mediumblob/bytea/g;
 #Sybase		
 	  $trans_syb =~ s/^int.*/numeric/g;
 	  $trans_syb =~ s/^text.*/varchar(500)/g;
@@ -1206,16 +1243,19 @@ sub db_struct {
 	  $trans_syb =~ s/^bigint.*/numeric/g;
 	  $trans_syb =~ s/^longtext.*/text/g;
 	  $trans_syb =~ s/^enum.*/varchar(15)/g;
+	  $trans_syb =~ s/^mediumblob/long binary/g;
 #Sqlite		
 	  $trans_sq =~ s/^varchar.*/text/g;
-	  $trans_sq =~ s/^int\(1\).*/numeric/g;
+	  $trans_sq =~ s/^.*int\(1\).*/numeric/g;
 	  $trans_sq =~ s/^int.*/integer/g;
 	  $trans_sq =~ s/^tinyint.*/integer/g;
 	  $trans_sq =~ s/^bigint.*/integer/g;
 	  $trans_sq =~ s/^smallint.*/integer/g;
+	  $trans_sq =~ s/^longtext.*/text/g;
 	  $trans_sq =~ s/^datetime.*/numeric/g;
 	  $trans_sq =~ s/^enum.*/text/g;	 
-	  
+	  $trans_sq =~ s/^mediumblob/none/g;
+
 	  $db_struct{'mysql'}{$table}{$field} = $trans;
 	  $db_struct{'Pg'}{$table}{$field} = $trans_pg;
 	  $db_struct{'Oracle'}{$table}{$field} = $trans_o;
@@ -1225,7 +1265,6 @@ sub db_struct {
   }   
   return %db_struct;
 }
-
 
 sub not_null {
     my %not_null;

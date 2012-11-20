@@ -23,13 +23,17 @@
 package Lock;
 
 use strict;
-
+use warnings;
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use FileHandle;
+#use Carp; # currently not used
 
-use Carp;
 use Log;
-use Conf;
+#use Conf; # this package is imported by Conf
+use Sympa::Constants;
+
+#### NOTE: Accessors for Site class (e.g. Site->lock_method) must not be
+#### used because site configuration may not be fully initialized.
 
 my %list_of_locks;
 my $default_timeout = 60 * 20; ## After this period a lock can be stolen
@@ -246,6 +250,7 @@ sub _lock_file {
 
     if ($mode eq 'read') {
 	$operation = LOCK_SH;
+	$open_mode = '<';
     }else {
 	$operation = LOCK_EX;
 	$open_mode = '>';
@@ -253,8 +258,7 @@ sub _lock_file {
     
     ## Read access to prevent "Bad file number" error on Solaris
     my $fh;
-    my $untainted_lock_mode = sprintf("%s%s",$open_mode,$lock_file);
-    unless (open $fh, $untainted_lock_mode) {
+    unless (open $fh, $open_mode, $lock_file) {
 	&Log::do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 	return undef;
     }
@@ -275,7 +279,7 @@ sub _lock_file {
 		return undef;	    		
 	    }
 	    
-	    unless (open $fh, ">$lock_file") {
+	    unless (open $fh, '>', $lock_file) {
 		&Log::do_log('err', 'Cannot open %s: %s', $lock_file, $!);
 		return undef;	    
 	    }
