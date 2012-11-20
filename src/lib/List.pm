@@ -2538,54 +2538,54 @@ sub new {
     my $list;
 
     unless ($options->{'skip_name_check'}) {
-    ## Allow robot in the name
-    if ($name =~ /\@/) {
-	my @parts = split /\@/, $name;
-	$robot ||= $parts[1];
-	$name = $parts[0];
-    }
+	## Allow robot in the name
+	if ($name =~ /\@/) {
+	    my @parts = split /\@/, $name;
+	    $robot ||= $parts[1];
+	    $name = $parts[0];
+	}
 
 	unless ($robot) {
-    ## Look for the list if no robot was provided
+	    ## Look for the list if no robot was provided
 	    $robot = &search_list_among_robots($name);
 	}
 
 	$robot = Robot::clean_robot($robot);
 
-    unless ($robot) {
+	unless ($robot) {
 	    &Log::do_log('err',
 		'Missing robot parameter, cannot create list object for %s',
 		$name)
 		unless ($options->{'just_try'});
-	return undef;
-    }
+	    return undef;
+	}
 
-    ## Only process the list if the name is valid.
-    my $listname_regexp = &tools::get_regexp('listname');
+	## Only process the list if the name is valid.
+	my $listname_regexp = &tools::get_regexp('listname');
 	unless ($name and ($name =~ /^($listname_regexp)$/io)) {
 	    &Log::do_log('err', 'Incorrect listname "%s"', $name)
 		unless $options->{'just_try'};
-	return undef;
-    }
-    ## Lowercase the list name.
+	    return undef;
+	}
+	## Lowercase the list name.
 	$name = lc $1;
 
-    ## Reject listnames with reserved list suffixes
+	## Reject listnames with reserved list suffixes
 	my $regx = $robot->list_check_regexp;
 	if ($regx) {
 	    my $result = eval { $name =~ /^(\S+)-($regx)$/; };
 	    if ($@) {
 		&Log::do_log('err', 'Incorrect list_check_regexp: %s', $@);
-	    return undef;
+		return undef;
 	    } elsif ($result) {
 		&Log::do_log(
 		    'err',
 		    'Incorrect name: listname "%s" matches one of service aliases',
 		     $name
-		    ) unless ($options->{'just_try'});
+		) unless ($options->{'just_try'});
 		return undef;
+	    }
 	}
-    }
     } else {
 	$robot = Robot::clean_robot($robot);
     }
@@ -2599,7 +2599,7 @@ sub new {
 	# create a new object list
 	$list = bless {} => $pkg;
     }
-	$status = $list->load($name, $robot, $options);
+    $status = $list->load($name, $robot, $options);
     unless (defined $status) {
 	return undef;
     }
@@ -2634,8 +2634,8 @@ sub search_list_among_robots {
     foreach my $robot (@{Robot::get_robots() || []}) {
 	if (-d $robot->home . '/' . $listname) {
 	    return $robot->domain;
+	}
     }
-	 }
 
      return 0;
 }
@@ -2662,7 +2662,7 @@ sub set_status_error_config {
 	    ) {
 	    &Log::do_log('notice', 'Unable to send notify "%s" to listmaster',
 		$message);
-    }
+	}
     }
 }
 
@@ -2934,8 +2934,8 @@ sub save_config {
     $self->serial($self->serial + 1);
     $self->update({
 	'email'      => $email,
-				  'date_epoch' => time,
-				  'date' => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time)),
+	'date_epoch' => time,
+	'date'       => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime time),
     });
 
     unless (
@@ -2987,12 +2987,12 @@ sub load {
 	    &Log::do_log('err', 'No such robot (virtual domain) %s', $robot)
 		unless ($options->{'just_try'});
 	    return undef;
-		}
+	}
 
 	$self->{'robot'}  = $robot;
 	$self->{'domain'} = $robot->domain;
 	$self->{'name'}   = $name;
-	    }
+    }
 
     unless ($self->{'name'} eq $name and
 	$self->{'domain'} eq $robot->domain) {
@@ -3051,8 +3051,8 @@ sub load {
 		$self->set_status_error_config('no_list_family',
 		    $self->family_name);
 		$self->list_cache_purge;
-	    return undef;
-	}
+		return undef;
+	    }
 
 	    my $error = $family->check_param_constraint($self);
 	    unless ($error) {
@@ -3066,7 +3066,7 @@ sub load {
 
 	# config was reloaded.  Update cache too.
 	$self->list_cache_update_admin;
- 	}
+    }
 
     ## Check if the current list has a public key X.509 certificate.
     $self->{'as_x509_cert'} =
@@ -10849,7 +10849,7 @@ sub get_lists {
 	    @robots = @{Robot::get_robots()};
 	} else {
 	    croak 'bug in logic.  Ask developer';
-    }
+	}
     }
 
     $options->{'reload_config'} = 1 if $options->{'use_files'};  # For compat.
@@ -10971,7 +10971,7 @@ sub get_lists {
 		    if ($ve eq 'others' or $ve eq 'topicsless') {
 			push @expr_perl,
 			    '! scalar(grep { $_ ne "others" } @{$list->topics || []})';
-                } else {
+                    } else {
 			$ve =~ s/([^ \w\x80-\xFF])/\\$1/g;
 			push @expr_perl,
 			    sprintf(
@@ -10998,15 +10998,15 @@ sub get_lists {
 		    my $ve = lc $v;
 		    if ($ve eq 'others' or $ve eq 'topicsless') {
 			push @expr_sql, "topics_list = ''";
-                } else {
+		    } else {
 			$ve = &SDM::quote($ve);
 			$ve =~ s/^["'](.*)['"]$/$1/;
 			$ve =~ s/([%_])/\\$1/g;
 			push @expr_sql,
 			    sprintf("topics_list LIKE '%%,%s,%%'", $ve);
-                }
-            }
-        }
+		    }
+		}
+	    }
 	}
         if (scalar @expr_perl) {
 	    push @clause_perl,
@@ -11045,7 +11045,7 @@ sub get_lists {
 		    sprintf
 		    '$a->%s->{"date_epoch"} <=> $b->%s->{"date_epoch"}', $key,
 		    $key;
-    }
+	    }
 	} elsif ($key eq 'name') {
 	    if ($desc) {
 		push @keys_perl, '$b->name cmp $a->name';
@@ -11096,12 +11096,12 @@ sub get_lists {
 		use sort "stable";
 		push @lists, sort { eval $order_perl } @l;
 		use sort "defaults";
-	} else {
+	    } else {
 		push @lists, @l;
 	    }
 
 	    next;    # foreach my $robot
-		}
+	}
 
 	## check existence of robot directory
 	my $robot_dir = $robot->home;
@@ -11123,7 +11123,7 @@ sub get_lists {
 			'SELECT list_subscriber FROM subscriber_table WHERE robot_subscriber = ? AND user_subscriber = ?',
 			$robot->domain, $which_user
 		    );
-	    } else {
+		} else {
 		    $sth = &SDM::do_prepared_query(
 			'SELECT list_admin FROM admin_table WHERE robot_admin = ? AND user_admin = ? AND role_admin = ?',
 			$robot->domain, $which_user, $which_role);
@@ -11138,7 +11138,7 @@ sub get_lists {
 		    );
 		    $sth = pop @sth_stack;
 		    return undef;
-	    }
+		}
 		my @row;
 		while (@row = $sth->fetchrow_array) {
 		    my $listname = $row[0];
@@ -11151,7 +11151,7 @@ sub get_lists {
 		# none found
 		next unless %r;    # foreach my $robot
 		%requested_lists = %r;
-		}
+	    }
 
 	    ## If entire lists on a robot are requested,
 	    ## check orphan entries on cache.
@@ -11172,16 +11172,16 @@ sub get_lists {
 		my @row;
 		while (@row = $sth->fetchrow_array) {
 		    $orphan{$row[0]} = 1;
-	    }
+		}
 		$sth->finish;
 
 		$sth = pop @sth_stack;
-	}
+	    }
 
 	    unless (opendir(DIR, $robot_dir)) {
 		&Log::do_log('err', 'Unable to open %s', $robot_dir);
 		return undef;
-    }
+	    }
 	    my @l = ();
 	    foreach my $listname (sort readdir(DIR)) {
 		next if $listname =~ /^\.+$/;
@@ -11202,11 +11202,11 @@ sub get_lists {
 		## filter by condition
 		if (defined $cond_perl) {
 		    next unless eval $cond_perl;
-    }
+		}
 
 		push @l, $list;
-    }
-    closedir DIR;
+	    }
+	    closedir DIR;
 
 	    ## All lists are in memory cache
 	    $robot->lists_ok(1) unless %requested_lists;
@@ -11300,7 +11300,7 @@ sub get_lists {
 	    unless ($list = __PACKAGE__->new($l->{'name'}, $robot,
 		{%$options, 'skip_name_check' => 1, 'skip_sync_admin' => 1})) {
 		next;
-    }
+	    }
 
 	    ## save subscriber/admin information to memory cache.
 	    if (defined $which_role) {
@@ -11454,7 +11454,7 @@ sub get_which {
 	&Log::do_log('err',
 	    'Internal error, unknown or undefined parameter "%s"', $role);
 	return undef;
-	}
+    }
 
     my $all_lists = &get_lists(
 	$robot->domain,
@@ -11462,7 +11462,7 @@ sub get_which {
 		$role      => $email,
 		'! status' => 'closed|family_closed'
 	    ]
-	    }
+	}
     );
 
     return @{$all_lists || []};

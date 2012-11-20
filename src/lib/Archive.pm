@@ -44,7 +44,7 @@ sub store_last {
     my($filename, $newfile);
     
     return unless $list->is_archived();
-    my $dir = $list->{'dir'}.'/archives';
+    my $dir = $list->dir.'/archives';
     
     ## Create the archive directory if needed
     mkdir ($dir, "0775") if !(-d $dir);
@@ -201,12 +201,12 @@ sub last_path {
     
     my $list = shift;
 
-    &Log::do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
+    &Log::do_log('debug', 'Archived::last_path(%s)', $list->name);
 
     return undef unless ($list->is_archived());
-    my $file = $list->{'dir'}.'/archives/last_message';
+    my $file = $list->dir.'/archives/last_message';
 
-    return ($list->{'dir'}.'/archives/last_message') if (-f $list->{'dir'}.'/archives/last_message'); 
+    return ($list->dir.'/archives/last_message') if (-f $list->dir.'/archives/last_message'); 
     return undef;
 
 }
