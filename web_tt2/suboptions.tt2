@@ -11,17 +11,27 @@
   [%|loc%]Last update:[%END%] [% subscriber.update_date %]  <br /><br />
      <input type="hidden" name="list" value="[% list %]" />
      [%|loc%]Receiving mode:[%END%] 
+    [% SET single_option = 0 %][% FOREACH r = reception %]
+      [% IF loop.size == 1 %][% SET single_option = 1 %][% END %][% LAST %]
+    [% END %]
+    [% IF single_option %]
+      [% FOREACH r = reception %]
+	<input type="hidden" name="reception" value="[% r.key %]" />
+	[% r.value.description %]
+      [% END %]
+    [% ELSE %]
      <select name="reception">
         [% FOREACH r = reception %]
           <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
         [% END %]
      </select>
+    [% END %]
 
-      <a class="actionMenuLinks" href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
+      <a class="input" href="[% path_cgi %]/nomenu/help/user_options" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">
      [%|loc%]Help[%END%]</a>
  
-     <br /><br />
      [%IF available_topics %]	
+	<br /><br />
         [%|loc%]Topic subscription:[%END%]		
         [%IF possible_topic %]
  	 <BLOCKQUOTE>	

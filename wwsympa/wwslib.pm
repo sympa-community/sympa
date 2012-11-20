@@ -25,6 +25,7 @@ use Log;
 use Conf;
 use Sympa::Constants;
 
+## No longer used: Use List->get_option_title().
 %reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
 		   'digest' => {'gettext_id' => 'digest MIME format'},
 		   'digestplain' => {'gettext_id' => 'digest plain text format'},
@@ -47,6 +48,7 @@ use Sympa::Constants;
 		  10800 => {'gettext_id' => "1 week"},
 		  43200 => {'gettext_id' => "30 days"});
 
+## No longer used: Use List->get_option_title().
 %visibility_mode = ('noconceal' => {'gettext_id' => "listed in the list review page"},
 		    'conceal' => {'gettext_id' => "concealed"}
 		    );

@@ -23,7 +23,7 @@
 	        <td>&nbsp;[%|loc%]Suspended from[% END %] [% sub.liststartdate %] [%|loc%]to[% END %] [% IF sub.listenddate %][% sub.listenddate %][% ELSE %][%|loc%]indefinite end date[% END %][% END %]</td>	        
 	      [% ELSE %]
 	      <td>
-		 [% sub.listreception %] 
+		 [%|optdesc('reception')%][% sub.listreception %][% END %]
 	      </td>
 	      <td></td>
 	      [% END %]

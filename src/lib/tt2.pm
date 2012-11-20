@@ -177,6 +177,26 @@ sub wrap {
     };
 }
 
+# IN:
+#    $context: Context.
+#    $type: type of list parameter value: 'reception', 'visibility', 'status'
+#        or others (default).
+#    $withval: if parameter value is added to the description. False by
+#        default.
+# OUT:
+#    Subref to generate i18n'ed description of list parameter value.
+sub optdesc {
+    my ($context, $type, $withval) = @_;
+    return sub {
+	my $x = shift;
+	return undef unless defined $x;
+	return undef unless $x =~ /\S/;
+	$x =~ s/^\s+//;
+	$x =~ s/\s+$//;
+	return List->get_option_title($x, $type, $withval);
+    };
+}
+
 ## To add a directory to the TT2 include_path
 sub add_include_path {
     my $path = shift;
@@ -237,6 +257,7 @@ sub parse_tt2 {
 	    helploc => [\&tt2::maketext, 1],
 	    locdt => [\&tt2::locdatetime, 1],
 	    wrap => [\&tt2::wrap, 1],
+	    optdesc => [\&tt2::optdesc, 1],
 	    qencode => [\&qencode, 0],
  	    escape_xml => [\&escape_xml, 0],
 	    escape_url => [\&escape_url, 0],

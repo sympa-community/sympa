@@ -51,7 +51,7 @@
                         [% END %]
                       [% IF is_listmaster %]
                         [% IF p.default == '1' %]
-                          (default)
+                          [%|loc%](default)[%END%]
                         [% END %]
                       [% END %]
                      </h4>
@@ -64,7 +64,7 @@
                         <!-- Multiple Enum -->
                        
                           [% IF p.may_edit == 'write' %]
-                            <select name="multiple_param.[% p.name %]" multiple="multiple">
+                            <select name="multiple_param.[% p.name %]" multiple="multiple" style="vertical-align: top">
                               [% FOREACH enum = p.value %]
                                 <option value="[% enum.key %]"
                                 [% IF enum.value.selected == '1' %]
@@ -73,7 +73,7 @@
                                 [% IF enum.value.title %]
                                   >[% enum.value.title %]</option>
                                 [% ELSE %]
-                                  >[% enum.key %]</option>
+                                  >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                 [% END %]
                               [% END %]
                             </select>
@@ -83,7 +83,7 @@
                                 [% IF enum.value.title %]
                                   [% enum.value.title %]
                                 [% ELSE %]
-                                  [% enum.key %]
+                                  [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -101,9 +101,9 @@
                                 [% IF key.may_edit != 'hidden' %]
                                       <label for="single_param.[% p.name %].[% o_INDEX %].[% key.name %]">
                                         [% IF key.title %]
-                                          [% key.title %][%|loc%]:[%END%]
+                                          [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
                                         [% ELSE %]
-                                          [% key.name %][%|loc%]:[%END%]
+                                          [%|optdesc('',is_listmaster)%][% key.name %][%END%][%|loc%]:[%END%]
                                         [% END %]
                                       </label>
 
@@ -116,14 +116,14 @@
                                               [%- IF enum.value.selected == '1' -%]
                                                 selected="selected"
                                               [%- END -%]
-                                              >[% enum.key %]
+                                              >[% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
                                               </option>
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH enum = key.value %]
                                             [% IF enum.value.selected == '1' %]
-                                              [% enum.key %]
+                                              [% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
                                               <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% enum.key %]" />
                                             [% END %]
                                           [% END %]
@@ -145,7 +145,7 @@
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH source = key.value %]
                                             [% IF source.value.selected == '1' %]
-                                              [% source.value.title %] ([% source.value.name %])
+                                              [% source.value.title %][% IF is_listmaster && source.value.name %] ([% source.value.name %])[% END %]
                                               <input type="hidden" name="single_param.[% p.name %].[% o_INDEX %].[% key.name %]" value="[% source.value.name %]" />
                                             [% END %]
                                           [% END %]
@@ -201,7 +201,7 @@
                                     [% IF scenario.value.selected == '1' %]
                                       selected="selected"
                                     [% END %]
-                                    >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
+                                    >[% scenario.value.web_title %][% IF is_listmaster && scenario.value.name %] ([% scenario.value.name %])[% END %]</option>
 				  [% END %]
                                 [% END %]
                               </select>
@@ -209,7 +209,7 @@
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH scenario = p.value %]
                                 [% IF scenario.value.selected == '1' %]
-                                  [% scenario.value.web_title %] ([% scenario.value.name %])
+                                  [% scenario.value.web_title %][% IF is_listmaster && scenario.value.name %] ([% scenario.value.name %])[% END %]
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -223,13 +223,13 @@
                                   [% IF task.value.selected == '1' %]
                                     selected="selected"
                                   [% END %]
-                                  >[% task.value.title %] ([% task.value.name %])</option>
+                                  >[% task.value.title %][% IF is_listmaster && task.value.name %] ([% task.value.name %])[% END %]</option>
                                 [% END %]
                               </select>
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH task = p.value %]
                                 [% IF task.value.selected == '1' %]
-                                  [% task.value.title %] ([% task.value.name %])
+                                  [% task.value.title %][% IF is_listmaster && task.vakue.name %] ([% task.value.name %])[% END %]
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -242,13 +242,13 @@
                                   [% IF source.value.selected == '1' %]
                                     selected="selected"
                                   [% END %]
-                                  >[% source.value.title %] ([% source.value.name %])</option>
+                                  >[% source.value.title %][% IF is_listmaster && source.value.name %] ([% source.value.name %])[% END %]</option>
                                 [% END %]
                               </select>
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH source = p.value %]
                                 [% IF source.value.selected == '1' %]
-                                  [% source.value.title %] ([% source.value.name %])
+                                  [% source.value.title %][% IF is_listmaster && source.value.name %] ([% source.value.name %])[% END %]
                                 [% END %]
                               [% END %]
                             [% END %]
@@ -259,9 +259,9 @@
                                 [% IF key.may_edit != 'hidden' %]
                                       <label for="single_param.[% p.name %].[% key.name %].name">
                                         [% IF key.title %]
-                                          [% key.title %][%|loc%]:[%END%]
+                                          [% key.title %][% IF is_listmaster %] ([% key.name %])[% END %][%|loc%]:[%END%]
                                         [% ELSE %]
-                                          [% key.name %][%|loc%]:[%END%]
+                                          [%|optdesc('',is_listmaster)%][% key.name %][%END%][%|loc%]:[%END%]
                                         [% END %]
                                       </label>
                                     
@@ -274,14 +274,14 @@
                                               [% IF scenario.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
-                                              >[% scenario.value.web_title %] ([% scenario.value.name %])</option>
+                                              >[% scenario.value.web_title %][% IF is_listmaster && scenario.value.name %] ([% scenario.value.name %])[% END %]</option>
                                             [% END %]
                                           </select>
 					  <br />
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH scenario = key.value %]
                                             [% IF scenario.value.selected == '1' %]
-                                              [% scenario.value.web_title %] ([% scenario.value.name %])
+                                              [% scenario.value.web_title %][% IF is_listmaster && scenario.value.name %] ([% scenario.value.name %])[% END %]
                                             [% END %]
                                           [% END %]
                                         [% END %]
@@ -294,13 +294,13 @@
                                               [% IF task.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
-                                              >[% task.value.title %] ([% task.value.name %])</option>
+                                              >[% task.value.title %][% IF is_listmaster && task.value.name %] ([% task.value.name %])[% END %]</option>
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
                                           [% FOREACH task = key.value %]
                                             [% IF task.value.selected == '1' %]
-                                              [% task.value.title %] ([% task.value.name %])
+                                              [% task.value.title %][% IF is_listmaster && task.value.name %] ([% task.value.name %])[% END %]
                                             [% END %]
                                           [% END %]
                                         [% END %]
@@ -313,13 +313,13 @@
                                               [% IF source.value.selected == '1' %]
                                                 selected="selected"
                                               [% END %]
-                                              >[% source.value.title %] ([% source.value.name %])</option>
+                                              >[% source.value.title %][% IF is_listmaster && source.value.name %] ([% source.value.name %])[% END %]</option>
                                             [% END %]
                                           </select>
                                         [% ELSIF key.may_edit == 'read' %]
                                         [% FOREACH source = key.value %]
                                           [% IF source.value.selected == '1' %]
-                                            [% source.value.title %] ([% source.value.name %])
+                                            [% source.value.title %][% IF is_listmaster && source.value.name %] ([% source.value.name %])[% END %]
                                           [% END %]
                                         [% END %]
                                       [% END %]
@@ -328,7 +328,7 @@
                                         <!-- Enum -->
                                         [% IF key.may_edit == 'write' %]
                                           [% IF key.occurrence == 'multiple' %]
-                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple">
+                                            <select name="multiple_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name" multiple="multiple" style="vertical-align: top">
                                           [% ELSE %]
                                             <select name="single_param.[% p.name %].[% key.name %]" id="single_param.[% p.name %].[% key.name %].name">
                                           [% END %]
@@ -340,7 +340,7 @@
                                               [% IF enum.value.title %]
                                                 >[% enum.value.title %]</option>
                                               [% ELSE %]
-                                                >[% enum.key %]</option>
+                                                >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                               [% END %]
                                           [% END %]
                                           </select>
@@ -349,9 +349,9 @@
                                           [% FOREACH enum = key.value %]
                                             [% IF enum.value.selected == '1' %]
                                               [% IF enum.value.title %]
-                                                [% enum.value.title %] 
+                                                [% enum.value.title %]
                                               [% ELSE %]
-                                                [% enum.key %]
+                                                [%|optdesc('',is_listmaster)%][% enum.key %][%END%]
                                               [% END %]
                                             [% END %]
                                           [% END %]
@@ -385,14 +385,14 @@
                                   [% IF enum.value.title %]
                                     >[% enum.value.title %]</option>
                                   [% ELSE %]
-                                    >[% enum.key %]</option>
+                                    >[%|optdesc('',is_listmaster)%][% enum.key %][%END%]</option>
                                   [% END %]
                                 [% END %]
                               </select>
                             [% ELSIF p.may_edit == 'read' %]
                               [% FOREACH enum = p.value %]
                                 [% IF enum.value.selected == '1' %]
-                                  [% enum.key %]
+                                  [% IF enum.value.title %][% enum.value.title %][% ELSE %][%|optdesc('',is_listmaster)%][% enum.key %][%END%][% END %]
                                 [% END %]
                               [% END %]
                             [% END %]

@@ -37,7 +37,7 @@
            [% IF l.value.is_editor %][%|loc%]editor[%END%] [% END %]
         </td>
         <td>
-	[% l.value.reception %]
+	[%|optdesc('reception')%][% l.value.reception %][% END %]
         </td>
         <td>
         [% l.value.topic %]

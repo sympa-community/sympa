@@ -5219,24 +5219,24 @@ sub do_suboptions {
     $s->{'date'} = gettext_strftime "%d %b %Y", localtime($s->{'date'});
     $s->{'update_date'} = gettext_strftime "%d %b %Y", localtime($s->{'update_date'});
     
-    foreach $m (keys %wwslib::reception_mode) {
-	if ($list->is_available_reception_mode($m)) {
-	    $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
+    foreach $m ($list->available_reception_mode) {
+	    $param->{'reception'}{$m}{'description'} =
+		$list->get_option_title($m, 'reception');
 	    if ($s->{'reception'} eq $m) {
-		$param->{'reception'}{$m}{'selected'} = 'selected="selected"';
+		$param->{'reception'}{$m}{'selected'} = ' selected';
 		if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
 		    $param->{'possible_topic'} = 1;
 		}
 	    }else {
 		$param->{'reception'}{$m}{'selected'} = '';
 	    }
-	}
     }
     
-    foreach $m (keys %wwslib::visibility_mode) {
-	$param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+    foreach $m (qw(conceal noconceal)) {
+	$param->{'visibility'}{$m}{'description'} =
+	    $list->get_option_title($m, 'visibility');
 	if ($s->{'visibility'} eq $m) {
-	    $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	    $param->{'visibility'}{$m}{'selected'} = ' selected';
 	}else {
 	    $param->{'visibility'}{$m}{'selected'} = '';
 	}
@@ -9012,21 +9012,21 @@ sub do_editsubscriber {
      my $user = User::get_global_user($in{'email'});
      $param->{'current_subscriber'}{'lang'} = &Language::GetLangName($user->{'lang'});
 
-     foreach my $m (keys %wwslib::reception_mode) {		
-       if ($list->is_available_reception_mode($m)) {
-	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
+     foreach my $m ($list->available_reception_mode) {		
+	 $param->{'reception'}{$m}{'description'} =
+	    $list->get_option_title($m, 'reception');
 	 if ($param->{'current_subscriber'}{'reception'} eq $m) {
-	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
+	     $param->{'reception'}{$m}{'selected'} = ' selected';
 	 }else {
 	     $param->{'reception'}{$m}{'selected'} = '';
 	 }
-       }
      }
 
-     foreach my $m (keys %wwslib::visibility_mode) {
-	 $param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+     foreach my $m (qw(conceal noconceal)) {
+	 $param->{'visibility'}{$m}{'description'} =
+	    $list->get_option_title($m, 'visibility');
 	 if ($param->{'current_subscriber'}{'visibility'} eq $m) {
-	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	     $param->{'visibility'}{$m}{'selected'} = ' selected';
 	 }else {
 	     $param->{'visibility'}{$m}{'selected'} = '';
 	 }
@@ -10545,8 +10545,9 @@ sub _prepare_edit_form {
 	     foreach my $selected_topic (@topics) {
 		 next unless (defined $selected_topic);
 		 $p->{'value'}{$selected_topic}{'selected'} = 1;
-		 $p->{'value'}{$selected_topic}{'title'} = "Unknown ($selected_topic)"
-		     unless (defined $p->{'value'}{$selected_topic}{'title'});
+		 $p->{'value'}{$selected_topic}{'title'} =
+		    sprintf gettext("Unknown (%s)"), $selected_topic
+		    unless (defined $p->{'value'}{$selected_topic}{'title'});
 	     }
 	 }elsif ($pname eq 'digest') {
 	     foreach my $v (@{$p->{'value'}}) {
@@ -10557,7 +10558,10 @@ sub _prepare_edit_form {
 		    $v->{'type'} = 'enum';
 		}else{
 		    foreach my $day (keys %{$v->{'value'}}) {
-			$v->{'value'}{$day}{'title'} = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
+			my $t = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
+			$t = sprintf '%s (%s)', $t, $day
+			    if $robot->is_listmaster($param->{'user'}{'email'});
+			$v->{'value'}{$day}{'title'} = $t;
 		    }
 		}
 	    }
@@ -10565,11 +10569,36 @@ sub _prepare_edit_form {
 	     my $saved_lang = &Language::GetLang();
 	     
 	     foreach my $lang (keys %{$p->{'value'}}) {
-		 #&wwslog('notice','LANG: %s', $lang);
-		 &Language::SetLang($lang);
-		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
+		&Language::SetLang($lang);
+		my $t = gettext('_language_');
+		$t = sprintf '%s (%s)', $t, $lang
+		    if $robot->is_listmaster($param->{'user'}{'email'});
+		$p->{'value'}{$lang}{'title'} = $t;
 	     }
 	     &Language::SetLang($saved_lang);
+	 } elsif ($pname eq 'available_user_options' or
+		  $pname eq 'default_user_options') {
+	    foreach my $v (@{$p->{'value'}}) {
+		if ($v->{'name'} eq 'reception') {
+		    foreach my $x (keys %{$v->{'value'}}) {
+			$v->{'value'}{$x}{'title'} =
+			    $list->get_option_title($x, 'reception',
+				$robot->is_listmaster($param->{'user'}{'email'}));
+		    }
+		} elsif ($v->{'name'} eq 'visibility') {
+		    foreach my $x (keys %{$v->{'value'}}) {
+			$v->{'value'}{$x}{'title'} =
+			    $list->get_option_title($x, 'visibility',
+				$robot->is_listmaster($param->{'user'}{'email'}));
+		    }
+		}
+	    }
+	 } elsif ($pname eq 'status') {
+	    foreach my $x (keys %{$p->{'value'}}) {
+		$p->{'value'}{$x}{'title'} =
+		    $list->get_option_title($x, 'status',
+			$robot->is_listmaster($param->{'user'}{'email'}));
+	    }
 	 }
 
 	 push @{$param->{'param'}}, $p;	
@@ -15777,15 +15806,15 @@ sub do_suspend_request {
 
 	$member_info->{'reception'} ||= 'mail';
 	$member_info->{'visibility'} ||= 'noconceal';
-	foreach my $mode (keys %wwslib::reception_mode) {
-	    if ($list->is_available_reception_mode($mode)) {
-		$param->{'reception'}{$list->name}{$mode}{'description'} = sprintf(gettext($wwslib::reception_mode{$mode}->{'gettext_id'}));
+	foreach my $mode ($list->available_reception_mode) {
+		$param->{'reception'}{$list->name}{$mode}{'description'} =
+		     $list->get_option_title($mode, 'reception');
 		if ($member_info->{'reception'} eq $mode) {
-		    $param->{'reception'}{$list->name}{$mode}{'selected'} = 'selected="selected"';
+		    $param->{'reception'}{$list->name}{$mode}{'selected'} =
+			' selected';
 		}else {
 		    $param->{'reception'}{$list->name}{$mode}{'selected'} = '';
 		}
-	    }
 	}
 	
 	my $subscription = {'listname' => $list->name,
@@ -16621,7 +16650,6 @@ sub export_topics {
 
      $param->{'topics'}[int($total / 2)]{'next'} = 1;
  }
-
 
 # manage blacklist
 sub do_blacklist {
@@ -17774,9 +17802,9 @@ sub _prepare_subscriber {
     ## Reception mode and topics
     $user->{'reception'} ||= 'mail';
     if (($user->{'reception'} eq 'mail') &&  $user->{'topics'}) {
-	$user->{'reception'} = "topic ($user->{'topics'})";
+       $user->{'reception'} = sprintf gettext("topic (%s)"), $user->{'topics'};
     }
-    
+
     $user->{'email'} =~ /\@(.+)$/;
     $user->{'domain'} = $1;
     $user->{'pictures_url'} = &tools::make_pictures_url('email' => $user->{'email'}, 'list' => $list);

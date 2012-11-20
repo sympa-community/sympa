@@ -2316,6 +2316,202 @@ my %alias = (
 	}
 );
 
+## List parameter values except for parameters below.
+my %list_option = (
+
+    # reply_to_header.apply
+    'forced'  => {'gettext_id' => 'overwrite Reply-To: header field'},
+    'respect' => {'gettext_id' => 'preserve existing header field'},
+
+    # reply_to_header.value
+    'sender' => {'gettext_id' => 'sender'},
+
+    # reply_to_header.value, include_remote_sympa_list.cert
+    'list' => {'gettext_id' => 'list'},
+
+    # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
+    # include_ldap_query.select, reply_to_header.value
+    'all' => {'gettext_id' => 'all'},
+
+    # reply_to_header.value
+    'other_email' => {'gettext_id' => 'other email address'},
+
+    # msg_topic_keywords_apply_on
+    'subject'          => {'gettext_id' => 'subject field'},
+    'body'             => {'gettext_id' => 'message body'},
+    'subject_and_body' => {'gettext_id' => 'subject and body'},
+
+    # bouncers_level2.notification, bouncers_level2.action,
+    # bouncers_level1.notification, bouncers_level1.action,
+    # spam_protection, dkim_signature_apply_on, web_archive_spam_protection
+    'none' => {'gettext_id' => 'do nothing'},
+
+    # bouncers_level2.notification, bouncers_level1.notification,
+    # welcome_return_path, remind_return_path, rfc2369_header_fields,
+    # archive.access
+    'owner' => {'gettext_id' => 'owner'},
+
+    # bouncers_level2.notification, bouncers_level1.notification
+    'listmaster' => {'gettext_id' => 'listmaster'},
+
+    # bouncers_level2.action, bouncers_level1.action
+    'remove_bouncers' => {'gettext_id' => 'remove bouncing users'},
+    'notify_bouncers' => {'gettext_id' => 'send notify to bouncing users'},
+
+    # pictures_feature, dkim_feature, merge_feature,
+    # inclusion_notification_feature
+    'on'  => {'gettext_id' => 'enabled'},
+    'off' => {'gettext_id' => 'disabled'},
+
+    # include_remote_sympa_list.cert
+    'robot' => {'gettext_id' => 'robot'},
+
+    # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
+    # include_ldap_query.select
+    'first' => {'gettext_id' => 'first entry'},
+
+    # include_ldap_2level_query.select2, include_ldap_2level_query.select1
+    'regex' => {'gettext_id' => 'entries matching regular expression'},
+
+    # include_ldap_2level_query.scope2, include_ldap_2level_query.scope1,
+    # include_ldap_query.scope
+    'base' => {'gettext_id' => 'base'},
+    'one'  => {'gettext_id' => 'one level'},
+    'sub'  => {'gettext_id' => 'subtree'},
+
+    # include_ldap_2level_query.use_ssl, include_ldap_query.use_ssl
+    'yes' => {'gettext_id' => 'yes'},
+    'no'  => {'gettext_id' => 'no'},
+
+    # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
+    'sslv2' => {'gettext_id' => 'SSL version 2'},
+    'sslv3' => {'gettext_id' => 'SSL version 3'},
+    'tls'   => {'gettext_id' => 'TLS'},
+
+    # editor.reception, owner_include.reception, owner.reception,
+    # editor_include.reception
+    'mail'   => {'gettext_id' => 'receive notification email'},
+    'nomail' => {'gettext_id' => 'no notifications'},
+
+    # editor.visibility, owner_include.visibility, owner.visibility,
+    # editor_include.visibility
+    'conceal'   => {'gettext_id' => 'concealed from list menu'},
+    'noconceal' => {'gettext_id' => 'listed on the list menu'},
+
+    # welcome_return_path, remind_return_path
+    'unique' => {'gettext_id' => 'bounce management'},
+
+    # owner_include.profile, owner.profile
+    'privileged' => {'gettext_id' => 'privileged owner'},
+    'normal'     => {'gettext_id' => 'normal owner'},
+
+    # priority
+    '0' => {'gettext_id' => '0 - highest priority'},
+    '9' => {'gettext_id' => '9 - lowest priority'},
+    'z' => {'gettext_id' => 'queue messages only'},
+
+    # spam_protection, web_archive_spam_protection
+    'at'         => {'gettext_id' => 'replace @ characters'},
+    'javascript' => {'gettext_id' => 'use JavaScript'},
+
+    # msg_topic_tagging
+    'required_sender' => {'gettext_id' => 'required to post message'},
+    'required_moderator' =>
+	{'gettext_id' => 'required to distribute message'},
+
+    # msg_topic_tagging, custom_attribute.optional
+    'optional' => {'gettext_id' => 'optional'},
+
+    # custom_attribute.optional
+    'required' => {'gettext_id' => 'required'},
+
+    # custom_attribute.type
+    'string'  => {'gettext_id' => 'string'},
+    'text'    => {'gettext_id' => 'multi-line text'},
+    'integer' => {'gettext_id' => 'number'},
+    'enum'    => {'gettext_id' => 'set of keywords'},
+
+    # footer_type
+    'mime'   => {'gettext_id' => 'add a new MIME part'},
+    'append' => {'gettext_id' => 'append to message body'},
+
+    # archive.access
+    'open'    => {'gettext_id' => 'open'},
+    'closed'  => {'gettext_id' => 'closed'},
+    'private' => {'gettext_id' => 'subscribers only'},
+    'public'  => {'gettext_id' => 'public'},
+
+##    ## user_data_source
+##    'database' => {'gettext_id' => 'RDBMS'},
+##    'file'     => {'gettext_id' => 'include from local file'},
+##    'include'  => {'gettext_id' => 'include from external source'},
+##    'include2' => {'gettext_id' => 'general datasource'},
+
+    # rfc2369_header_fields
+    'help'        => {'gettext_id' => 'help'},
+    'subscribe'   => {'gettext_id' => 'subscription'},
+    'unsubscribe' => {'gettext_id' => 'unsubscription'},
+    'post'        => {'gettext_id' => 'posting address'},
+    'archive'     => {'gettext_id' => 'list archive'},
+
+    # dkim_signature_apply_on
+    'md5_authenticated_messages' =>
+	{'gettext_id' => 'authenticated by password'},
+    'smime_authenticated_messages' =>
+	{'gettext_id' => 'authenticated by S/MIME signature'},
+    'dkim_authenticated_messages' =>
+	{'gettext_id' => 'authenticated by DKIM signature'},
+    'editor_validated_messages' => {'gettext_id' => 'approved by editor'},
+    'any'                       => {'gettext_id' => 'any messages'},
+
+    # archive.period
+    'day'     => {'gettext_id' => 'daily'},
+    'week'    => {'gettext_id' => 'weekly'},
+    'month'   => {'gettext_id' => 'monthly'},
+    'quarter' => {'gettext_id' => 'quarterly'},
+    'year'    => {'gettext_id' => 'yearly'},
+
+    # web_archive_spam_protection
+    'cookie' => {'gettext_id' => 'use HTTP cookie'},
+
+    # verp_rate
+    '100%' => {'gettext_id' => '100% - always'},
+    '0%'   => {'gettext_id' => '0% - never'},
+
+    # archive_crypted_msg
+    'original'  => {'gettext_id' => 'original messages'},
+    'decrypted' => {'gettext_id' => 'decrypted messages'},
+);
+
+## Values for subscriber reception mode.
+my %reception_mode = (
+    'mail'        => {'gettext_id' => 'standard (direct reception)'},
+    'digest'      => {'gettext_id' => 'digest MIME format'},
+    'digestplain' => {'gettext_id' => 'digest plain text format'},
+    'summary'     => {'gettext_id' => 'summary mode'},
+    'notice'      => {'gettext_id' => 'notice mode'},
+    'txt'         => {'gettext_id' => 'text-only mode'},
+    'html'        => {'gettext_id' => 'html-only mode'},
+    'urlize'      => {'gettext_id' => 'urlize mode'},
+    'nomail'      => {'gettext_id' => 'no mail'},
+    'not_me'      => {'gettext_id' => 'you do not receive your own posts'}
+);
+
+## Values for subscriber visibility mode.
+my %visibility_mode = (
+    'noconceal' => {'gettext_id' => 'listed in the list review page'},
+    'conceal'   => {'gettext_id' => 'concealed'}
+);
+
+## Values for list status.
+my %list_status = (
+    'open'          => {'gettext_id' => 'in operation'},
+    'pending'       => {'gettext_id' => 'pending'},
+    'error_config'  => {'gettext_id' => 'erroneous configuration'},
+    'family_closed' => {'gettext_id' => 'closed family instance'},
+    'closed'        => {'gettext_id' => 'closed list'},
+);
+
 ## This is the generic hash which keeps all lists in memory.
 our %list_of_topics = ();
 my %edit_list_conf = ();
@@ -12339,8 +12535,11 @@ sub is_available_reception_mode {
 }
 
 # List the parameter reception of the available_user_options section
+# Note: Since Sympa 6.2a.33, this returns an array under array context.
 sub available_reception_mode {
-  my $self = shift;
+    my $self = shift;
+    return @{$self->available_user_options->{'reception'}}
+	if wantarray;
     return join(' ', @{$self->available_user_options->{'reception'}});
 }
 
@@ -14027,6 +14226,32 @@ sub user {
     ## Set cache
     return $self->{'user'}{$role}{$who} = $info;
 }
+
+##
+## Method for UI
+##
+
+sub get_option_title {
+    my $self = shift;
+    my $option = shift;
+    my $type = shift || '';
+    my $withval = shift || 0;
+
+    my $map = { 'reception' => \%reception_mode,
+                'visibility' => \%visibility_mode,
+                'status' => \%list_status,
+              }->{$type} || \%list_option;
+    my $t = $map->{$option} || {};
+    if ($t->{'gettext_id'}) {
+	my $ret = gettext($t->{'gettext_id'});
+	$ret =~ s/^\s+//;
+	$ret =~ s/\s+$//;
+	return sprintf '%s (%s)', $ret, $option if $withval;
+	return $ret;
+    }
+    return $option;
+}
+
 
 ###### END of the List package ######
 

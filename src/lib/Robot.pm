@@ -68,8 +68,8 @@ sub new {
 	my $status = $robot->load($name, %options);
 	unless (defined $status) {
 	    Site->robots($name, undef);
-	return undef;
-    }
+	    return undef;
+	}
     }
 
     ## Initialize internal list cache

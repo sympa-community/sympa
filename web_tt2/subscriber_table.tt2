@@ -129,7 +129,7 @@
           </td>
 	  [% IF is_owner %]
   	    <td>
-  	      [% u.reception %]
+  	      [%|optdesc('reception')%][% u.reception %][% END %]
 	    </td>
             <td>
             [% IF u.subscribed %]

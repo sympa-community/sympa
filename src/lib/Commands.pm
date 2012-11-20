@@ -1199,8 +1199,11 @@ sub info {
 		($list->digest->{'minute'});
 	}
 
+	## Reception mode
 	$data->{'available_reception_mode'} =
 	    $list->available_reception_mode();
+	$data->{'available_reception_modeA'} =
+	    [$list->available_reception_mode()];
 
 	my $wwsympa_url = $robot->wwsympa_url;
 	$data->{'url'} = $wwsympa_url . '/info/' . $list->name;
@@ -2536,8 +2539,10 @@ sub set {
 	    &report::reject_report_cmd(
 		'user',
 		'available_reception_mode',
-		{   'listname' => $which,
-		    'modes'    => $list->available_reception_mode
+		{   'listname'        => $which,
+		    'modes'           =>
+			join(' ', $list->available_reception_mode()),
+		    'reception_modes' => [$list->available_reception_mode()]
 		},
 		$cmd_line
 	    );
