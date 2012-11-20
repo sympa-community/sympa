@@ -14290,7 +14290,7 @@ sub list_cache_fetch {
 	    ) {
 	    $sth = pop @sth_stack;
 	    return undef;
-    }
+	}
 	$l = $sth->fetchrow_hashref('NAME_lc');
 	$sth->finish;
 
@@ -14304,7 +14304,7 @@ sub list_cache_fetch {
 		'Unable to deserialize binary config of %s: %s',
 		$self, $@ || 'possible format error');
 	    return undef;
-       }
+	}
 
 	return {
 	    'epoch' => $l->{'epoch'},
@@ -14319,7 +14319,7 @@ sub list_cache_fetch {
 	unless (defined $lock) {
 	    &Log::do_log('err', 'Could not create new lock');
 	    return undef;
-    }
+	}
 	$lock->set_timeout(5);
 	unless ($lock->lock('read')) {
 	    &Log::do_log('err', 'Could not create new lock');
@@ -14336,7 +14336,7 @@ sub list_cache_fetch {
 	    );
 	    $lock->unlock();
 	    return undef;
-       }
+	}
 
 	$lock->unlock();
 
@@ -14361,11 +14361,11 @@ sub list_cache_update_admin {
 	unless (defined $lock) {
 	    &Log::do_log('err', 'Could not create new lock');
 	    return undef;
-		}
+	}
 	$lock->set_timeout(5);
 	unless ($lock->lock('write')) {
 			return undef;
-		}
+	}
 
 	eval { &Storable::store($self->admin, $self->dir . '/config.bin') };
 	if ($@) {
@@ -14395,9 +14395,9 @@ sub list_cache_update_admin {
     my $family;
     if ($self->family) {
 	$family = $self->family->name;
-	} else {
+    } else {
 	$family = undef;
-	}
+    }
 
     my $web_archive = $self->is_web_archived ? 1 : 0;
     my $topics =
@@ -14508,7 +14508,7 @@ sub list_cache_purge {
 	$lock->set_timeout(5);
 	unless ($lock->lock('write')) {
 	    return undef;
-    }
+	}
 
 	unlink($self->dir . '/config.bin');
 
