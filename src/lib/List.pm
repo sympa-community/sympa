@@ -7531,7 +7531,7 @@ sub load_scenario_list {
     &Log::do_log('debug3', 'List::load_scenario_list(%s,%s)', $action,
 	$robot);
 
-    my $directory = "$self->dir";
+    my $directory = $self->dir;
     my %list_of_scenario;
     my %skip_scenario;
 
@@ -7637,7 +7637,7 @@ sub load_task_list {
     my ($self, $action, $robot) = @_;
     &Log::do_log('debug2', 'List::load_task_list(%s,%s)', $action, $robot);
 
-    my $directory = "$self->dir";
+    my $directory = $self->dir;
     my %list_of_task;
 
     foreach my $dir (

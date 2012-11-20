@@ -11110,12 +11110,12 @@ sub do_restore_list {
      $list->status('open');
      $list->save_config($param->{'user'}{'email'});
 
-     unless (-f "$list->dir/subscribers.closed.dump") {
+     unless (-f $list->dir . '/subscribers.closed.dump') {
 	 &wwslog('notice', 'No subscribers to restore');
 	 &web_db_log({'status' => 'error',
 		      'error_type' => 'no_subscribers'});
      }
-     my @users = &List::_load_list_members_file("$list->dir/subscribers.closed.dump");
+     my @users = &List::_load_list_members_file($list->dir . '/subscribers.closed.dump');
      ## Insert users in database
      foreach my $user (@users) {
 	 $list->add_list_member($user);
@@ -16783,10 +16783,10 @@ sub do_dump {
 	 }
 	 close LIGHTDUMP;
 	 close DUMP;
-	 $param->{'file'} = "$list->dir/subscribers.db.dump.light";
+	 $param->{'file'} = $list->dir . '/subscribers.db.dump.light';
 
      }	else {
-	 $param->{'file'} = "$list->dir/select.dump";
+	 $param->{'file'} = $list->dir . '/select.dump';
 	 &wwslog('info','opening %s',$param->{'file'});
 
 	 unless (open (DUMP,">$param->{'file'}")) {
@@ -16989,7 +16989,7 @@ sub do_viewspools {
 
     &wwslog('info', 'do_viewspools(%s,%s)',$spoolname,$spool_status);
 
-    unless ($robot->is_listmaster($param->{'user'}{'email'},$robot)) {
+    unless ($robot->is_listmaster($param->{'user'}{'email'})) {
 	unless ($param->{'is_owner'} && $in{'list'}) {
 	    &report::reject_report_web('auth','action_owner',{},$param->{'action'},$list);
 	    &wwslog('info','do_viewspools: not owner');

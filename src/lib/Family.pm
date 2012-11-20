@@ -2624,7 +2624,7 @@ sub _end_update_list {
     
     ## copy files in the list directory
     if ($xml_file) { # copying the xml file
-	unless ($self->_copy_files($list->dir,"$list->name.xml")) {
+	unless ($self->_copy_files($list->dir, $list->name . '.xml')) {
 	    push (@{$self->{'generated_lists'}{'file_error'}},$list->name);
 	    $list->set_status_error_config('error_copy_file',
 					   $self->name);
