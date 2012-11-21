@@ -480,7 +480,6 @@ styles.  At last modifications have been done, this shall be removed.
 sub clean_robot {
     my $robot      = shift;
     my $maybe_site = shift;
-
     unless (ref $robot or
 	($maybe_site and !ref $robot and $robot eq 'Site')) {
 	my $level = $Carp::CarpLevel;

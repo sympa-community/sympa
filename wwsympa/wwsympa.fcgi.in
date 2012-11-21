@@ -18095,8 +18095,8 @@ sub get_server_details {
      }
 
      ## Families
-     my @families = &Family::get_available_families($robot_id);
-
+     my %families = Family::get_available_families($robot_id);
+     my @families = keys %families;
      if (@families) {
 	 $param->{'families'} = \@families;
      }    

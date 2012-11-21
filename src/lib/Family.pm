@@ -118,7 +118,8 @@ sub get_families {
 	## If we can create a Family object with what we find in the family
 	## directory, then it is worth being added to the list.
 	foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
-	    if (my $family = new Family($subdir, $robot)) { 
+	    next unless -d ("$dir/$subdir");
+	    if (my $family = new Family($subdir, $robot)) {
 		push @families, $family;
 	    }
 	}
@@ -128,7 +129,19 @@ sub get_families {
 }
 
 sub get_available_families {
-    return { map { $_->name => $_ } get_families() };
+    my $robot_id = shift;
+    my $families;
+    my %hash;
+    if ($families = get_families($robot_id)) {
+	foreach my $family (@$families) {
+	    if (ref $family eq 'Family') {
+		$hash{$family->name} = $family;
+	    }
+	}
+	return %hash;
+     }else{
+	return undef;
+    }
 }
 
 =pod 
@@ -220,7 +233,6 @@ sub new {
     }
     # create a new object family
     bless $self, $class;
-    $robot->families($name, $self);
 
     my $family_name_regexp = &tools::get_regexp('family_name');
 
@@ -267,6 +279,7 @@ sub new {
     ## state of the family for the use of check_param_constraint : 'no_check' or 'normal'
     ## check_param_constraint  only works in state "normal"
     $self->{'state'} = 'normal';
+    $robot->families($name, $self);
     return $self;
 }
      
