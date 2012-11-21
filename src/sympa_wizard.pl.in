@@ -62,10 +62,18 @@ use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
 use Sys::Hostname qw(hostname);
+
 use Sympa::Constants;
 
+## check if CPAN modules might be missing
+my $modfail;
+BEGIN {
+    eval { require Site; };
+    $modfail = 1 if $@;
+}
+
 ## sympa configuration file
-my $sympa_conf   = Sympa::Constants::CONFIG;
+my $sympa_conf = Sympa::Constants::CONFIG;
 
 my %options;
 GetOptions(
@@ -89,14 +97,19 @@ if ($options{help}) {
 exit 0;
 
 sub create_configuration {
-    eval {
-	require Site;
-	die unless defined Site->load(
-	    'config_file' => $sympa_conf, 'no_db' => 1);
-    };
-    if ($@) {
+    require confdef;
+
+    if ($modfail) {
 	*{Language::gettext} = sub { shift };
-	*{tools::wrap_text} = sub { "$_[1]$_[0]\n" };
+
+	eval { require Text::Wrap; };
+	if ($@) {
+	    *{tools::wrap_text} = sub { "$_[1]$_[0]\n" };
+	} else {
+	    $Text::Wrap::columns = 78;
+	    *{tools::wrap_text} =
+		sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
+	}
     } else {
 	Language::SetLang('');
     }
@@ -114,7 +127,7 @@ sub create_configuration {
         exit 1;
     }
 
-    unless (open (NEWF,"> $conf")){
+    unless (open NEWF, '>', $conf) {
         die "Unable to open $conf : $!";
     };
 
@@ -162,9 +175,13 @@ sub create_configuration {
 }
 
 sub edit_configuration {
-    die "You must run as superuser.\n" if $<;
+    die "You must run as superuser.\n"
+	if $UID;
+    die "Installation of Sympa has not been completed.\n" .
+	"Run sympa_wizard.pl --check\n"
+	if $modfail;
 
-    require confdef;
+    require Robot;
     # complement required fields.
     foreach my $param (@confdef::params) {
         next unless $param->{'name'};
@@ -173,13 +190,6 @@ sub edit_configuration {
         } elsif ($param->{'name'} eq 'wwsympa_url') {
             $param->{'default'} = sprintf 'http://%s/sympa', hostname();
         }
-    }
-
-    eval {
-	require Robot;
-    };
-    if ($@) {
-        die "Installation of Sympa has not been completed.\nRun sympa_wizard.pl --check\n";
     }
 
     ## Load sympa config (but not using database)
