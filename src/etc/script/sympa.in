@@ -28,7 +28,6 @@ fi
 sympadir="--sbindir--"
 # Sympa config files directory
 sympaconf="--CONFIG--"
-wwsympaconf="--WWSCONFIG--"
 
 sympapiddir="--piddir--"
 sympalockdir="--lockdir--"
@@ -220,7 +219,6 @@ fi
 # Check config files
 [ -d $sympadir ] || exit 0
 [ -f $sympaconf ] || exit 0
-[ -f $wwsympaconf ] || exit 0
 
 # See how we were called.
 case "$1" in
