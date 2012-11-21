@@ -111,7 +111,9 @@ sub create_configuration {
 		sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
 	}
     } else {
-	Language::SetLang('');
+	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || '';
+	$lang =~ s/\..*//;
+	Language::SetLang($lang);
     }
 
     my $conf;
