@@ -3825,9 +3825,12 @@ sub do_help {
 		 if ($pinfo->{$pname}{'gettext_id'}) {
 		     $param->{'param'}{$pname}{'title'} = gettext($pinfo->{$pname}{'gettext_id'});
 		 } else {
-		     $param->{'param'}{$pname}{'title'} = $pinfo->{$pname}{'title'}{$param->{'lang'}};
+		    $param->{'param'}{$pname}{'title'} = $pname;
 		 }
-		 $param->{'param'}{$pname}{'comment'} = $pinfo->{$pname}{'comment'}{$param->{'lang'}};
+		if ($pinfo->{$pname}{'gettext_comment'}) {
+		    $param->{'param'}{$pname}{'comment'} =
+			gettext($pinfo->{$pname}{'gettext_comment'});
+		}
 	     }
 	 }
 
@@ -10673,9 +10676,7 @@ sub _prepare_data {
     next if ($struct->{'obsolete'});
 
      ## Prepare data structure for the parser
-     my $p_glob = {'name' => $name,
-		   'comment' => $struct->{'comment'}{$param->{'lang'}}
-	       };
+    my $p_glob = {'name' => $name};
 
     ## Check if some family constraint modify the editing rights.
     my $restrict = 0;
@@ -10711,6 +10712,9 @@ sub _prepare_data {
 	$p_glob->{'title'} = gettext($struct->{'gettext_id'});
     }else {
 	$p_glob->{'title'} = $name;
+    }
+    if ($struct->{'gettext_comment'}) {
+	$p_glob->{'comment'} = gettext($struct->{'gettext_comment'});
     }
 
     ## Occurrences : if the parameter can have multiple occurences,

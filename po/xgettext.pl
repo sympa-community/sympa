@@ -6,7 +6,7 @@ eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
 # $Revision$ $Change: 5999 $ $DateTime: 2003/05/20 07:50:59 $
 ## [O. Salaun] 12/08/02 : Also look for gettext() in perl code
 ##                        No more escape '\' chars
-##                        Extract gettext_id and gettext_unit entries from List.pm
+##                        Extract gettext_comment, gettext_id and gettext_unit entries from List.pm
 ##                        Extract title.gettext entries from scenarios
 
 ## [D. Verdin] 05/11/2007 : 
@@ -299,7 +299,7 @@ foreach my $file (@ordered_files) {
 
 	    # Sympa variables (gettext_id and gettext_unit)
 	    $line = 1; pos($_) = 0;
-	    while (/\G.*?\'(gettext_id|gettext_unit)\'\s*=>\s*\"([^\"]+)\"/sg) {
+	    while (/\G.*?\'(gettext_comment|gettext_id|gettext_unit)\'\s*=>\s*\"([^\"]+)\"/sg) {
 		my $str = $2;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 		&add_expression({'expression' => $str,
@@ -308,7 +308,7 @@ foreach my $file (@ordered_files) {
 	    }
 
 	    $line = 1; pos($_) = 0;
-	    while (/\G.*?\'(gettext_id|gettext_unit)\'\s*=>\s*\'([^\']+)\'/sg) {
+	    while (/\G.*?\'(gettext_comment|gettext_id|gettext_unit)\'\s*=>\s*\'([^\']+)\'/sg) {
 		my $str = $2;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 		&add_expression({'expression' => $str,
