@@ -44,6 +44,9 @@ use Mail::Address;
 use MIME::Entity;
 use MIME::EncWords;
 use MIME::Parser;
+use POSIX qw(mkfifo);
+
+use Site;
 
 #use List;
 ##The line above was removed to avoid dependency loop.
@@ -53,6 +56,11 @@ use MIME::Parser;
 #use Conf; # loaded in List - Site
 #use Log; # loaded in Conf
 
+my %openssl_errors = (1 => 'an error occurred parsing the command options',
+		      2 => 'one of the input files could not be read',
+		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
+		      4 => 'an error occurred decrypting or verifying the message',
+		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 =pod 
 
 =head1 SUBFUNCTIONS 
@@ -94,7 +102,7 @@ Creates a new Message object.
 
 =over 
 
-=item * &Log::do_log
+=item * Log::do_log
 
 =item * Conf::get_robot_conf
 
@@ -139,7 +147,7 @@ sub new {
     $input = 'messageasstring' if $messageasstring; 
     $input = 'message_in_spool' if $message_in_spool; 
     $input = 'mimeentity' if $mimeentity; 
-    &Log::do_log('debug2', 'Message::new(input= %s, noxsympato= %s)',$input,$noxsympato);
+    Log::do_log('debug2', 'Message::new(input= %s, noxsympato= %s)',$input,$noxsympato);
     
     if ($mimeentity) {
 	$message->{'msg'} = $mimeentity;
@@ -166,7 +174,7 @@ sub new {
 	## Parse message as a MIME::Entity
 	$message->{'filename'} = $file;
 	unless (open FILE, "$file") {
-	    &Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
+	    Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
 	    return undef;
 	}
 	while (<FILE>){
@@ -206,7 +214,7 @@ sub new {
     }  
 
     unless ($msg){
-	&Log::do_log('err',"could not parse message"); 
+	Log::do_log('err',"could not parse message"); 
 	return undef;
     }
     $message->{'msg'} = $msg;
@@ -218,18 +226,18 @@ sub new {
 
     ## Extract sender address
     unless ($hdr->get('From')) {
-	&Log::do_log('err', 'No From found in message %s, skipping.', $file);
+	Log::do_log('err', 'No From found in message %s, skipping.', $file);
 	return undef;
     }   
     my @sender_hdr = Mail::Address->parse($hdr->get('From'));
     if ($#sender_hdr == -1) {
-	&Log::do_log('err', 'No valid address in From: field in %s, skipping', $file);
+	Log::do_log('err', 'No valid address in From: field in %s, skipping', $file);
 	return undef;
     }
     $message->{'sender'} = lc($sender_hdr[0]->address);
 
     unless (&tools::valid_email($message->{'sender'})) {
-	&Log::do_log('err', "Invalid From: field '%s'", $message->{'sender'});
+	Log::do_log('err', "Invalid From: field '%s'", $message->{'sender'});
 	return undef;
     }
 
@@ -273,7 +281,7 @@ sub new {
     chomp $message->{'rcpt'};
     unless (defined $noxsympato) { # message.pm can be used not only for message coming from queue
 	unless ($message->{'rcpt'}) {
-	    &Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
+	    Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
 	    return undef;
 	}
 	    
@@ -322,7 +330,7 @@ sub new {
 	if ($chksum eq &tools::sympa_checksum($rcpt)) {
 	    $message->{'md5_check'} = 1 ;
 	}else{
-	    &Log::do_log('err',"incorrect X-Sympa-Checksum header");	
+	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
 	}
     }
 
@@ -332,20 +340,13 @@ sub new {
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
-	    
-	    unless (defined $dec) {
-		&Log::do_log('debug', "Message %s could not be decrypted", $file);
+	    unless (defined smime_decrypt($message)) {
+		Log::do_log('debug', "Message %s could not be decrypted", $file);
 		return undef;
-		## We should the sender and/or the listmaster
+		## We should warn the sender and/or the listmaster
 	    }
-
-	    $message->{'smime_crypted'} = 'smime_crypted';
-	    $message->{'orig_msg'} = $message->{'msg'};
-	    $message->{'msg'} = $dec;
-	    $message->{'msg_as_string'} = $dec_as_string;
-	    $hdr = $dec->head;
-	    &Log::do_log('debug', "message %s has been decrypted", $file);
+	    $hdr = $message->{'msg'}->head;
+	    Log::do_log('debug', "message %s has been decrypted", $file);
 	}
 	
 	## Check S/MIME signatures
@@ -355,7 +356,7 @@ sub new {
 	    if ($signed->{'body'}) {
 		$message->{'smime_signed'} = 1;
 		$message->{'smime_subject'} = $signed->{'subject'};
-		&Log::do_log('debug', "message %s is signed, signature is checked", $file);
+		Log::do_log('debug', "message %s is signed, signature is checked", $file);
 	    }
 	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
 	}
@@ -568,7 +569,7 @@ sub fix_html_part {
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
-	    &Log::do_log('err', "Failed to save message : $!");
+	    Log::do_log('err', "Failed to save message : $!");
 	    return undef;
 	}
 	$io->print($filtered_body);
@@ -587,6 +588,139 @@ sub get_body_from_msg_as_string {
     return (join ("\n\n",@bodysection));  # convert it back as string
 }
 
+# input : msg object for a list, return a new message object decrypted
+sub smime_decrypt {
+    my $self = shift;
+    my $from = $self->{'msg'}->head->get('from');
+    my $list = $self->{'list'};
+
+    use Data::Dumper;
+    Log::do_log('debug2', 'Decrypting message from %s,%s', $from, $list->{'name'});
+
+    ## an empty "list" parameter means mail to sympa@, listmaster@...
+    my $dir = $list->{'dir'};
+    unless ($dir) {
+	$dir = Site->home . '/sympa';
+    }
+    my ($certs,$keys) = tools::smime_find_keys($dir, 'decrypt');
+    unless (defined $certs && @$certs) {
+	Log::do_log('err', "Unable to decrypt message : missing certificate file");
+	return undef;
+    }
+
+    my $temporary_file = Site->tmpdir."/".$list->get_list_id().".".$$ ;
+    my $temporary_pwd = Site->tmpdir.'/pass.'.$$;
+
+    ## dump the incoming message.
+    if (!open(MSGDUMP,"> $temporary_file")) {
+	Log::do_log('info', 'Can\'t store message in file %s',$temporary_file);
+	return undef;
+    }
+    $self->{'msg'}->print(\*MSGDUMP);
+    close(MSGDUMP);
+    
+    my $pass_option;
+    $self->{'decrypted_msg_as_string'} = '';
+    if (Site->key_passwd ne '') {
+	# if password is defined in sympa.conf pass the password to OpenSSL
+	$pass_option = "-passin file:$temporary_pwd";	
+    }
+
+    ## try all keys/certs until one decrypts.
+    while (my $certfile = shift @$certs) {
+	my $keyfile = shift @$keys;
+	Log::do_log('debug', "Trying decrypt with $certfile, $keyfile");
+	if (Site->key_passwd ne '') {
+	    unless (mkfifo($temporary_pwd,0600)) {
+		Log::do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
+		return undef;
+	    }
+	}
+	my $cmd = sprintf '%s smime -decrypt -in %s -recip %s -inkey %s %s',
+	    Site->openssl, $temporary_file, $certfile, $keyfile,
+	    $pass_option;
+	Log::do_log('debug3', $cmd);
+	open (NEWMSG, "$cmd |");
+
+	if (defined Site->key_passwd and Site->key_passwd ne '') {
+	    unless (open (FIFO,"> $temporary_pwd")) {
+		Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+		return undef;
+	    }
+	    print FIFO Site->key_passwd;
+	    close FIFO;
+	    unlink ($temporary_pwd);
+	}
+	
+	while (<NEWMSG>) {
+	    $self->{'decrypted_msg_as_string'} .= $_;
+	}
+	close NEWMSG ;
+	my $status = $?/256;
+	
+	unless ($status == 0) {
+	    Log::do_log('notice', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
+	    next;
+	}
+	
+	unlink ($temporary_file) unless ($main::options{'debug'}) ;
+	
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
+	unless ($self->{'decrypted_msg'} = $parser->parse_data($self->{'decrypted_msg_as_string'})) {
+	    Log::do_log('notice', 'Unable to parse message');
+	    last;
+	}
+    }
+	
+    unless (defined $self->{'decrypted_msg'}) {
+      Log::do_log('err', 'Message could not be decrypted');
+      return undef;
+    }
+
+    ## Now remove headers from $self->{'decrypted_msg_as_string'}
+    my @msg_tab = split(/\n/, $self->{'decrypted_msg_as_string'});
+    my $line;
+    do {$line = shift(@msg_tab)} while ($line !~ /^\s*$/);
+    $self->{'decrypted_msg_as_string'} = join("\n", @msg_tab);
+    
+    ## foreach header defined in the incoming message but undefined in the
+    ## decrypted message, add this header in the decrypted form.
+    my $predefined_headers ;
+    foreach my $header ($self->{'decrypted_msg'}->head->tags) {
+	if ($self->{'decrypted_msg'}->head->get($header)) {
+	    $predefined_headers->{lc $header} = 1;
+	}
+    }
+    foreach my $header (split /\n(?![ \t])/, $self->{'msg'}->head->as_string) {
+	next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+	my ($tag, $val) = ($1, $2);
+	unless ($predefined_headers->{lc $tag}) {
+	    $self->{'decrypted_msg'}->head->add($tag, $val);
+	}
+    }
+    ## Some headers from the initial message should not be restored
+    ## Content-Disposition and Content-Transfer-Encoding if the result is multipart
+    $self->{'decrypted_msg'}->head->delete('Content-Disposition') if ($self->{'decrypted_msg'}->head->get('Content-Disposition'));
+    if ($self->{'decrypted_msg'}->head->get('Content-Type') =~ /multipart/) {
+	$self->{'decrypted_msg'}->head->delete('Content-Transfer-Encoding') if ($self->{'decrypted_msg'}->head->get('Content-Transfer-Encoding'));
+    }
+
+    ## Now add headers to message as string
+    $self->{'decrypted_msg_as_string'}  = $self->{'decrypted_msg'}->head->as_string."\n".$self->{'decrypted_msg_as_string'};
+    
+    $self->{'smime_crypted'} = 'smime_crypted';
+    $self->{'orig_msg'} = $self->{'msg'};
+    $self->{'msg'} = $self->{'decrypted_msg'};
+    $self->{'msg_as_string'} = $self->{'decrypted_msg_as_string'};
+    delete $self->{'decrypted_msg_as_string'};
+    delete $self->{'decrypted_msg'};
+    foreach my $line (split '\n', &Dumper($self)) {
+	Log::do_log('trace','%s',$line);
+    }
+
+    return 1;
+}
 
 ## Packages must return true.
 1;
