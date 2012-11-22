@@ -4621,7 +4621,7 @@ sub send_to_editor {
 	if ($encrypt eq 'smime_crypted') {
 	   ## is $msg->body_as_string respect base64 number of char per line ??
 	    my $cryptedmsg =
-		&tools::smime_encrypt($msg->head, $msg->body_as_string,
+		&Message::smime_encrypt($msg->head, $msg->body_as_string,
 		$recipient);
 	   unless ($cryptedmsg) {
 		&Log::do_log('notice',

@@ -580,7 +580,7 @@ sub sendto {
 		    &Log::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
 		    return undef;
 		}
-		unless ($message->{'msg_as_string'} = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
+		unless ($message->{'msg_as_string'} = &Message::smime_encrypt ($msg_header, $msg_body, $email)){
     		    &Log::do_log('err',"Failed to encrypt message"); 
 		    return undef;
                 }	
