@@ -222,6 +222,9 @@ sub new {
     $message->{'msg_as_string'} = $messageasstring; 
     $message->{'size'} = length($msg->as_string);
 
+    ## Bless Message object
+    bless $message, $pkg;
+
     my $hdr = $message->{'msg'}->head;
 
     ## Extract sender address
@@ -340,7 +343,7 @@ sub new {
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    unless (defined smime_decrypt($message)) {
+	    unless (defined $message->smime_decrypt()) {
 		Log::do_log('debug', "Message %s could not be decrypted", $file);
 		return undef;
 		## We should warn the sender and/or the listmaster
@@ -352,13 +355,11 @@ sub new {
 	## Check S/MIME signatures
 	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
 	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
-	    my $signed = smime_sign_check ($message);
-	    if ($signed->{'body'}) {
-		$message->{'smime_signed'} = 1;
-		$message->{'smime_subject'} = $signed->{'subject'};
+	    $message->smime_sign_check();
+	    if($message->{'smime_signed'}) {
 		Log::do_log('debug', "message %s is signed, signature is checked", $file);
 	    }
-	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
+	    ## TODO: Handle errors (0 different from undef)
 	}
 	
     }
@@ -368,296 +369,7 @@ sub new {
 	$message->{'topic'} = $topics;
     }
 
-    bless $message, $pkg;
     return $message;
-}
-
-# input : msg object, return a new message object encrypted
-sub smime_encrypt {
-    ##my $self = shift;
-    my $msg_header = shift;
-    my $msg_body = shift;
-    my $email = shift ;
-    my $list = shift ;
-
-    my $usercert;
-    my $dummy;
-    my $cryptedmsg;
-    my $encrypted_body;    
-
-    &Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
-    if ($list eq 'list') {
-	my $self = new List($email);
-	($usercert, $dummy) = smime_find_keys($self->{dir}, 'encrypt');
-    }else{
-	my $base = Site->ssl_cert_dir . '/' . &tools::escape_chars($email);
-	if(-f "$base\@enc") {
-	    $usercert = "$base\@enc";
-	} else {
-	    $usercert = "$base";
-	}
-    }
-    if (-r $usercert) {
-	my $temporary_file = Site->tmpdir."/".$email.".".$$ ;
-
-	## encrypt the incomming message parse it.
-	my $cmd = sprintf '%s smime -encrypt -out %s -des3 %s',
-	    Site->openssl, $temporary_file, $usercert;
-        &Log::do_log ('debug3', '%s', $cmd);
-	if (!open(MSGDUMP, "| $cmd")) {
-	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s',
-		$email);
-	}
-## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
-## that contains a whole header again... since MIME::Tools has got no function
-## for this, we need to manually extract only the MIME headers...
-##	$msg_header->print(\*MSGDUMP);
-##	printf MSGDUMP "\n%s", $msg_body;
-	my $mime_hdr = $msg_header->dup();
-	foreach my $t ($mime_hdr->tags()) {
-	  $mime_hdr->delete($t) unless ($t =~ /^(mime|content)-/i);
-	}
-	$mime_hdr->print(\*MSGDUMP);
-
-	printf MSGDUMP "\n%s", $msg_body;
-	close(MSGDUMP);
-
-	my $status = $?/256 ;
-	unless ($status == 0) {
-	    &Log::do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
-	    return undef ;
-	}
-
-        ## Get as MIME object
-	open (NEWMSG, $temporary_file);
-	my $parser = new MIME::Parser;
-	$parser->output_to_core(1);
-	unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
-	    &Log::do_log('notice', 'Unable to parse message');
-	    return undef;
-	}
-	close NEWMSG ;
-
-        ## Get body
-	open (NEWMSG, $temporary_file);
-        my $in_header = 1 ;
-	while (<NEWMSG>) {
-	   if ( !$in_header)  { 
-	     $encrypted_body .= $_;       
-	   }else {
-	     $in_header = 0 if (/^$/); 
-	   }
-	}						    
-	close NEWMSG;
-
-unlink ($temporary_file) unless ($main::options{'debug'}) ;
-
-	## foreach header defined in  the incomming message but undefined in the
-        ## crypted message, add this header in the crypted form.
-	my $predefined_headers ;
-	foreach my $header ($cryptedmsg->head->tags) {
-	    $predefined_headers->{lc $header} = 1 
-	        if ($cryptedmsg->head->get($header)) ;
-	}
-	foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
-	    next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
-	    my ($tag, $val) = ($1, $2);
-	    $cryptedmsg->head->add($tag, $val) 
-	        unless $predefined_headers->{lc $tag};
-	}
-
-    }else{
-	&Log::do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
-	return undef;
-    }
-        
-    return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
-}
-
-sub smime_sign_check {
-    my $message = shift;
-
-    my $sender = $message->{'sender'};
-
-    &Log::do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $sender, $message->{'filename'});
-
-    my $is_signed = {};
-    $is_signed->{'body'} = undef;   
-    $is_signed->{'subject'} = undef;
-
-    my $verify ;
-
-    ## first step is the msg signing OK ; /tmp/sympa-smime.$$ is created
-    ## to store the signer certificat for step two. I known, that's durty.
-
-    my $temporary_file = Site->tmpdir."/".'smime-sender.'.$$ ;
-    my $trusted_ca_options = '';
-    $trusted_ca_options = "-CAfile " . Site->cafile . " " if Site->cafile;
-    $trusted_ca_options .= "-CApath " . Site->capath . " " if Site->capath;
-    my $cmd = sprintf '%s smime -verify %s -signer %s',
-	Site->openssl, $trusted_ca_options, $temporary_file;
-    &Log::do_log('debug3', '%s', $cmd);
-
-    unless (open MSGDUMP, "| $cmd > /dev/null") {
-	&Log::do_log('err',
-	    'unable to verify smime signature from %s %s',
-	    $sender, $verify);
-	return undef ;
-    }
-    
-    if ($message->{'smime_crypted'}){
-	$message->{'msg'}->head->print(\*MSGDUMP);
-	print MSGDUMP "\n";
-	print MSGDUMP $message->{'msg_as_string'};
-    }elsif (! $message->{'filename'}) {
-	print MSGDUMP $message->{'msg_as_string'};
-    }else{
-	unless (open MSG, $message->{'filename'}) {
-	    &Log::do_log('err', 'Unable to open file %s: %s', $message->{'filename'}, $!);
-	    return undef;
-
-	}
-	print MSGDUMP <MSG>;
-	close MSG;
-    }
-    close MSGDUMP;
-
-    my $status = $?/256 ;
-    unless ($status == 0) {
-	&Log::do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
-	return undef ;
-    }
-    ## second step is the message signer match the sender
-    ## a better analyse should be performed to extract the signer email. 
-    my $signer = tools::smime_parse_cert({file => $temporary_file});
-
-    unless ($signer->{'email'}{lc($sender)}) {
-	unlink($temporary_file) unless ($main::options{'debug'}) ;
-	&Log::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$sender, join(',', keys %{$signer->{'email'}}));
-	return undef;
-    }
-
-    &Log::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
-    ## store the signer certificat
-    unless (-d Site->ssl_cert_dir) {
-	if ( mkdir (Site->ssl_cert_dir, 0775)) {
-	    &Log::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
-	}else{
-	    &Log::do_log('err',
-		'Unable to create user certificat directory %s',
-		Site->ssl_cert_dir);
-	}
-    }
-
-    ## It gets a bit complicated now. openssl smime -signer only puts
-    ## the _signing_ certificate into the given file; to get all included
-    ## certs, we need to extract them from the signature proper, and then
-    ## we need to check if they are for our user (CA and intermediate certs
-    ## are also included), and look at the purpose:
-    ## "S/MIME signing : Yes/No"
-    ## "S/MIME encryption : Yes/No"
-    my $certbundle = Site->tmpdir . "/certbundle.$$";
-    my $tmpcert = Site->tmpdir . "/cert.$$";
-    my $nparts = $message->{msg}->parts;
-    my $extracted = 0;
-    &Log::do_log('debug2', "smime_sign_check: parsing $nparts parts");
-    if($nparts == 0) { # could be opaque signing...
-	$extracted +=tools::smime_extract_certs($message->{msg}, $certbundle);
-    } else {
-	for (my $i = 0; $i < $nparts; $i++) {
-	    my $part = $message->{msg}->parts($i);
-	    $extracted += tools::smime_extract_certs($part, $certbundle);
-	    last if $extracted;
-	}
-    }
-    
-    unless($extracted) {
-	&Log::do_log('err', "No application/x-pkcs7-* parts found");
-	return undef;
-    }
-
-    unless(open(BUNDLE, $certbundle)) {
-	&Log::do_log('err', "Can't open cert bundle $certbundle: $!");
-	return undef;
-    }
-    
-    ## read it in, split on "-----END CERTIFICATE-----"
-    my $cert = '';
-    my(%certs);
-    while(<BUNDLE>) {
-	$cert .= $_;
-	if(/^-----END CERTIFICATE-----$/) {
-	    my $workcert = $cert;
-	    $cert = '';
-	    unless(open(CERT, ">$tmpcert")) {
-		&Log::do_log('err', "Can't create $tmpcert: $!");
-		return undef;
-	    }
-	    print CERT $workcert;
-	    close(CERT);
-	    my($parsed) = tools::smime_parse_cert({file => $tmpcert});
-	    unless($parsed) {
-		&Log::do_log('err', 'No result from smime_parse_cert');
-		return undef;
-	    }
-	    unless($parsed->{'email'}) {
-		&Log::do_log('debug', "No email in cert for $parsed->{subject}, skipping");
-		next;
-	    }
-	    
-	    &Log::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
-	    if ($parsed->{'email'}{lc($sender)}) {
-		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
-		    $certs{'both'} = $workcert;
-		    &Log::do_log('debug', 'Found a signing + encryption cert');
-		}elsif ($parsed->{'purpose'}{'sign'}) {
-		    $certs{'sign'} = $workcert;
-		    &Log::do_log('debug', 'Found a signing cert');
-		} elsif($parsed->{'purpose'}{'enc'}) {
-		    $certs{'enc'} = $workcert;
-		    &Log::do_log('debug', 'Found an encryption cert');
-		}
-	    }
-	    last if(($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
-	}
-    }
-    close(BUNDLE);
-    if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
-	&Log::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
-	return undef;
-    }
-    ## OK, now we have the certs, either a combined sign+encryption one
-    ## or a pair of single-purpose. save them, as email@addr if combined,
-    ## or as email@addr@sign / email@addr@enc for split certs.
-    foreach my $c (keys %certs) {
-	my $fn = Site->ssl_cert_dir . '/' . tools::escape_chars(lc($sender));
-	if ($c ne 'both') {
-	    unlink($fn); # just in case there's an old cert left...
-	    $fn .= "\@$c";
-	}else {
-	    unlink("$fn\@enc");
-	    unlink("$fn\@sign");
-	}
-	&Log::do_log('debug', "Saving $c cert in $fn");
-	unless (open(CERT, ">$fn")) {
-	    &Log::do_log('err', "Unable to create certificate file $fn: $!");
-	    return undef;
-	}
-	print CERT $certs{$c};
-	close(CERT);
-    }
-
-    unless ($main::options{'debug'}) {
-	unlink($temporary_file);
-	unlink($tmpcert);
-	unlink($certbundle);
-    }
-
-    $is_signed->{'body'} = 'smime';
-    
-    # futur version should check if the subject was part of the SMIME signature.
-    $is_signed->{'subject'} = $signer;
-    return $is_signed;
 }
 
 
@@ -1009,6 +721,284 @@ sub smime_decrypt {
 	##Log::do_log('trace','%s',$line);
     ##}
 
+    return 1;
+}
+
+# input : msg object, return a new message object encrypted
+sub smime_encrypt {
+    ##my $self = shift;
+    my $msg_header = shift;
+    my $msg_body = shift;
+    my $email = shift ;
+    my $list = shift ;
+
+    my $usercert;
+    my $dummy;
+    my $cryptedmsg;
+    my $encrypted_body;    
+
+    &Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
+    if ($list eq 'list') {
+	my $self = new List($email);
+	($usercert, $dummy) = smime_find_keys($self->{dir}, 'encrypt');
+    }else{
+	my $base = Site->ssl_cert_dir . '/' . &tools::escape_chars($email);
+	if(-f "$base\@enc") {
+	    $usercert = "$base\@enc";
+	} else {
+	    $usercert = "$base";
+	}
+    }
+    if (-r $usercert) {
+	my $temporary_file = Site->tmpdir."/".$email.".".$$ ;
+
+	## encrypt the incomming message parse it.
+	my $cmd = sprintf '%s smime -encrypt -out %s -des3 %s',
+	    Site->openssl, $temporary_file, $usercert;
+        &Log::do_log ('debug3', '%s', $cmd);
+	if (!open(MSGDUMP, "| $cmd")) {
+	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s',
+		$email);
+	}
+## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
+## that contains a whole header again... since MIME::Tools has got no function
+## for this, we need to manually extract only the MIME headers...
+##	$msg_header->print(\*MSGDUMP);
+##	printf MSGDUMP "\n%s", $msg_body;
+	my $mime_hdr = $msg_header->dup();
+	foreach my $t ($mime_hdr->tags()) {
+	  $mime_hdr->delete($t) unless ($t =~ /^(mime|content)-/i);
+	}
+	$mime_hdr->print(\*MSGDUMP);
+
+	printf MSGDUMP "\n%s", $msg_body;
+	close(MSGDUMP);
+
+	my $status = $?/256 ;
+	unless ($status == 0) {
+	    &Log::do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
+	    return undef ;
+	}
+
+        ## Get as MIME object
+	open (NEWMSG, $temporary_file);
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
+	unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
+	    &Log::do_log('notice', 'Unable to parse message');
+	    return undef;
+	}
+	close NEWMSG ;
+
+        ## Get body
+	open (NEWMSG, $temporary_file);
+        my $in_header = 1 ;
+	while (<NEWMSG>) {
+	   if ( !$in_header)  { 
+	     $encrypted_body .= $_;       
+	   }else {
+	     $in_header = 0 if (/^$/); 
+	   }
+	}						    
+	close NEWMSG;
+
+unlink ($temporary_file) unless ($main::options{'debug'}) ;
+
+	## foreach header defined in  the incomming message but undefined in the
+        ## crypted message, add this header in the crypted form.
+	my $predefined_headers ;
+	foreach my $header ($cryptedmsg->head->tags) {
+	    $predefined_headers->{lc $header} = 1 
+	        if ($cryptedmsg->head->get($header)) ;
+	}
+	foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
+	    next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+	    my ($tag, $val) = ($1, $2);
+	    $cryptedmsg->head->add($tag, $val) 
+	        unless $predefined_headers->{lc $tag};
+	}
+
+    }else{
+	&Log::do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
+	return undef;
+    }
+        
+    return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
+}
+
+sub smime_sign_check {
+    my $message = shift;
+
+    Log::do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $message->{'sender'}, $message->{'filename'});
+
+    my $is_signed = {};
+    $is_signed->{'body'} = undef;   
+    $is_signed->{'subject'} = undef;
+
+    my $verify ;
+
+    ## first step is the msg signing OK ; /tmp/sympa-smime.$$ is created
+    ## to store the signer certificat for step two. I known, that's dirty.
+
+    my $temporary_file = Site->tmpdir."/".'smime-sender.'.$$ ;
+    my $trusted_ca_options = '';
+    $trusted_ca_options = "-CAfile " . Site->cafile . " " if Site->cafile;
+    $trusted_ca_options .= "-CApath " . Site->capath . " " if Site->capath;
+    my $cmd = sprintf '%s smime -verify %s -signer %s',
+	Site->openssl, $trusted_ca_options, $temporary_file;
+    &Log::do_log('debug3', '%s', $cmd);
+
+    unless (open MSGDUMP, "| $cmd > /dev/null") {
+	&Log::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
+	return undef ;
+    }
+    
+    $message->{'msg'}->head->print(\*MSGDUMP);
+    print MSGDUMP "\n";
+    print MSGDUMP $message->{'msg_as_string'};
+    close MSGDUMP;
+
+    my $status = $?/256 ;
+    unless ($status == 0) {
+	&Log::do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
+	return undef ;
+    }
+    ## second step is the message signer match the sender
+    ## a better analyse should be performed to extract the signer email. 
+    my $signer = tools::smime_parse_cert({file => $temporary_file});
+
+    unless ($signer->{'email'}{lc($message->{'sender'})}) {
+	unlink($temporary_file) unless ($main::options{'debug'}) ;
+	&Log::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$message->{'sender'}, join(',', keys %{$signer->{'email'}}));
+	return undef;
+    }
+
+    &Log::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
+    ## store the signer certificat
+    unless (-d Site->ssl_cert_dir) {
+	if ( mkdir (Site->ssl_cert_dir, 0775)) {
+	    &Log::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
+	}else{
+	    &Log::do_log('err',
+		'Unable to create user certificat directory %s',
+		Site->ssl_cert_dir);
+	}
+    }
+
+    ## It gets a bit complicated now. openssl smime -signer only puts
+    ## the _signing_ certificate into the given file; to get all included
+    ## certs, we need to extract them from the signature proper, and then
+    ## we need to check if they are for our user (CA and intermediate certs
+    ## are also included), and look at the purpose:
+    ## "S/MIME signing : Yes/No"
+    ## "S/MIME encryption : Yes/No"
+    my $certbundle = Site->tmpdir . "/certbundle.$$";
+    my $tmpcert = Site->tmpdir . "/cert.$$";
+    my $nparts = $message->{msg}->parts;
+    my $extracted = 0;
+    &Log::do_log('debug2', "smime_sign_check: parsing $nparts parts");
+    if($nparts == 0) { # could be opaque signing...
+	$extracted +=tools::smime_extract_certs($message->{msg}, $certbundle);
+    } else {
+	for (my $i = 0; $i < $nparts; $i++) {
+	    my $part = $message->{msg}->parts($i);
+	    $extracted += tools::smime_extract_certs($part, $certbundle);
+	    last if $extracted;
+	}
+    }
+    
+    unless($extracted) {
+	&Log::do_log('err', "No application/x-pkcs7-* parts found");
+	return undef;
+    }
+
+    unless(open(BUNDLE, $certbundle)) {
+	&Log::do_log('err', "Can't open cert bundle $certbundle: $!");
+	return undef;
+    }
+    
+    ## read it in, split on "-----END CERTIFICATE-----"
+    my $cert = '';
+    my(%certs);
+    while(<BUNDLE>) {
+	$cert .= $_;
+	if(/^-----END CERTIFICATE-----$/) {
+	    my $workcert = $cert;
+	    $cert = '';
+	    unless(open(CERT, ">$tmpcert")) {
+		&Log::do_log('err', "Can't create $tmpcert: $!");
+		return undef;
+	    }
+	    print CERT $workcert;
+	    close(CERT);
+	    my($parsed) = tools::smime_parse_cert({file => $tmpcert});
+	    unless($parsed) {
+		&Log::do_log('err', 'No result from smime_parse_cert');
+		return undef;
+	    }
+	    unless($parsed->{'email'}) {
+		&Log::do_log('debug', "No email in cert for $parsed->{subject}, skipping");
+		next;
+	    }
+	    
+	    &Log::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
+	    if ($parsed->{'email'}{lc($message->{'sender'})}) {
+		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
+		    $certs{'both'} = $workcert;
+		    &Log::do_log('debug', 'Found a signing + encryption cert');
+		}elsif ($parsed->{'purpose'}{'sign'}) {
+		    $certs{'sign'} = $workcert;
+		    &Log::do_log('debug', 'Found a signing cert');
+		} elsif($parsed->{'purpose'}{'enc'}) {
+		    $certs{'enc'} = $workcert;
+		    &Log::do_log('debug', 'Found an encryption cert');
+		}
+	    }
+	    last if(($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
+	}
+    }
+    close(BUNDLE);
+    if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
+	&Log::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
+	return undef;
+    }
+    ## OK, now we have the certs, either a combined sign+encryption one
+    ## or a pair of single-purpose. save them, as email@addr if combined,
+    ## or as email@addr@sign / email@addr@enc for split certs.
+    foreach my $c (keys %certs) {
+	my $fn = Site->ssl_cert_dir . '/' . tools::escape_chars(lc($message->{'sender'}));
+	if ($c ne 'both') {
+	    unlink($fn); # just in case there's an old cert left...
+	    $fn .= "\@$c";
+	}else {
+	    unlink("$fn\@enc");
+	    unlink("$fn\@sign");
+	}
+	&Log::do_log('debug', "Saving $c cert in $fn");
+	unless (open(CERT, ">$fn")) {
+	    &Log::do_log('err', "Unable to create certificate file $fn: $!");
+	    return undef;
+	}
+	print CERT $certs{$c};
+	close(CERT);
+    }
+
+    unless ($main::options{'debug'}) {
+	unlink($temporary_file);
+	unlink($tmpcert);
+	unlink($certbundle);
+    }
+
+    $is_signed->{'body'} = 'smime';
+    
+    # futur version should check if the subject was part of the SMIME signature.
+    $is_signed->{'subject'} = $signer;
+
+    if ($is_signed->{'body'}) {
+	$message->{'smime_signed'} = 1;
+	$message->{'smime_subject'} = $is_signed->{'subject'};
+    }
+    
     return 1;
 }
 
