@@ -290,7 +290,7 @@ sub do_query {
 
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
-    &Log::do_log('debug3', "Will perform query '%s'", $s);
+    &Log::do_log('debug2', "Will perform query '%s'", $s);
 
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 	# Check connection to database in case it would be the cause of the problem.
