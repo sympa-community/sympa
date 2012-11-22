@@ -640,7 +640,7 @@ my %full_db_struct = (
 		'order'=>2,
 	    },
 	    'date_logs' => {
-		'struct'=> 'int(11)',
+		'struct'=> 'double',
 		'doc'=>'date when the action was executed',
 		'not_null'=>1,
 		'order'=>3,
@@ -1196,6 +1196,7 @@ return %full_db_struct;
 ## tinyint        : Integer, -2^7 to 2^7 - 1.
 ## smallint       : Integer, -2^15 to 2^15 - 1.
 ## bigint         : Integer, -2^63 to 2^63 - 1.
+## double         : IEEE floating point number, 8 bytes.
 ## enum           : Keyword with length upto 20 o.
 ## text           : Text with length upto 500 o.
 ## longtext       : Text with length upto 2^32 - 4 o.
@@ -1220,6 +1221,7 @@ sub db_struct {
 	  $trans_o =~ s/^int.*/number/g;	
 	  $trans_o =~ s/^bigint.*/number/g;	
 	  $trans_o =~ s/^smallint.*/number/g;	
+	  $trans_o =~ s/^double/float(24)/g;
 	  $trans_o =~ s/^enum.*/varchar2(20)/g;	
 	  $trans_o =~ s/^text.*/varchar2(500)/g;	
 	  $trans_o =~ s/^longtext.*/long/g;	
@@ -1231,6 +1233,7 @@ sub db_struct {
 	  $trans_pg =~ s/^smallint.*/int4/g;
 	  $trans_pg =~ s/^tinyint\(.*\)/int2/g;
 	  $trans_pg =~ s/^bigint.*/int8/g;
+	  $trans_pg =~ s/^double/float8/g;
 	  $trans_pg =~ s/^text.*/varchar(500)/g;
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
@@ -1241,6 +1244,7 @@ sub db_struct {
 	  $trans_syb =~ s/^text.*/varchar(500)/g;
 	  $trans_syb =~ s/^smallint.*/numeric/g;
 	  $trans_syb =~ s/^bigint.*/numeric/g;
+	  $trans_syb =~ s/^double/double precision/g;
 	  $trans_syb =~ s/^longtext.*/text/g;
 	  $trans_syb =~ s/^enum.*/varchar(15)/g;
 	  $trans_syb =~ s/^mediumblob/long binary/g;
@@ -1251,6 +1255,7 @@ sub db_struct {
 	  $trans_sq =~ s/^tinyint.*/integer/g;
 	  $trans_sq =~ s/^bigint.*/integer/g;
 	  $trans_sq =~ s/^smallint.*/integer/g;
+	  $trans_sq =~ s/^double/real/g;
 	  $trans_sq =~ s/^longtext.*/text/g;
 	  $trans_sq =~ s/^datetime.*/numeric/g;
 	  $trans_sq =~ s/^enum.*/text/g;	 

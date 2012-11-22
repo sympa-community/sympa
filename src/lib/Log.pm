@@ -22,12 +22,13 @@
 package Log;
 
 use strict;
-
+#use Carp; # currently not used
+#use Encode; # not used
 use Exporter;
-use Sys::Syslog;
-use Carp;
 use POSIX qw(mktime);
-use Encode;
+use Sys::Syslog;
+use Time::HiRes;
+
 #XXXuse List; # no longer used
 
 our @ISA = qw(Exporter);
@@ -259,7 +260,7 @@ sub db_log {
     my $list = $arg->{'list'};
     my $robot = $arg->{'robot'};
     my $action = $arg->{'action'};
-    my $parameters = &tools::clean_msg_id($arg->{'parameters'});
+    my $parameters = $arg->{'parameters'};
     my $target_email = $arg->{'target_email'};
     my $msg_id = &tools::clean_msg_id($arg->{'msg_id'});
     my $status = $arg->{'status'};
@@ -267,10 +268,9 @@ sub db_log {
     my $user_email = &tools::clean_msg_id($arg->{'user_email'});
     my $client = $arg->{'client'};
     my $daemon = $arg->{'daemon'};
-    my $date=time;
+    my $date = Time::HiRes::time;
     my $random = int(rand(1000000));
-#    my $id = $date*1000000+$random;
-    my $id = $date.$random;
+    my $id = int($date * 1000) . $random;
 
     unless($user_email) {
 	$user_email = 'anonymous';
@@ -283,10 +283,10 @@ sub db_log {
 	$listname = $list->name;
 	$robot ||= $list->robot;
     } elsif ($list =~ /(.+)\@(.+)/) {
-    #remove the robot name of the list name
+	#remove the robot name of the list name
 	$listname = $1;
 	$robot ||= $2;
-	}
+    }
 
     my $robot_id;
     if (ref $robot and ref $robot eq 'Robot') {
@@ -302,20 +302,16 @@ sub db_log {
     
     ## Insert in log_table
 
-    unless(&SDM::do_query( 'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-    $id, 
-    $date, 
-    &SDM::quote($robot_id), 
-    &SDM::quote($listname), 
-    &SDM::quote($action), 
-    &SDM::quote(substr($parameters,0,100)),
-    &SDM::quote($target_email),
-    &SDM::quote($msg_id),
-    &SDM::quote($status),
-    &SDM::quote($error_type),
-    &SDM::quote($user_email),
-    &SDM::quote($client),
-    &SDM::quote($daemon))) {
+    unless (SDM::do_prepared_query(
+	q{INSERT INTO logs_table
+	  (id_logs, date_logs, robot_logs, list_logs, action_logs,
+	   parameters_logs, target_email_logs, msg_id_logs, status_logs,
+	   error_type_logs, user_email_logs, client_logs, daemon_logs)
+	  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+	$id, $date, $robot_id, $listname, $action,
+	substr($parameters, 0, 100), $target_email, $msg_id, $status,
+	$error_type, $user_email, $client, $daemon
+    )) {
 	do_log('err','Unable to insert new db_log entry in the database');
 	return undef;
     }
