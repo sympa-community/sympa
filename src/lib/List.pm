@@ -2514,7 +2514,7 @@ $DB_BTREE->{compare} = \&_compare_addresses;
 
 ## Creates an object.
 sub new {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    &Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -2947,7 +2947,7 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    &Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -6144,7 +6144,7 @@ sub get_first_list_member {
     }
     $lock->set_timeout(10 * 60);
 
-    &Log::do_log('debug2', '(%s, sortby=%s, offset=%s, rows=%s)',
+    &Log::do_log('debug3', '(%s, sortby=%s, offset=%s, rows=%s)',
 	$self, $sortby, $offset, $rows);
 
     ## Get an Shared lock
@@ -6320,7 +6320,7 @@ sub get_first_list_admin {
     $sql_regexp = $data->{'sql_regexp'};
     my $fh;
 
-    Log::do_log('debug2', '(%s, %s, sortby=%s, offset=%s, rows=%s)',
+    Log::do_log('debug3', '(%s, %s, sortby=%s, offset=%s, rows=%s)',
 	$self, $role, $sortby, $offset, $rows);
 
     my $lock = new Lock($self->dir . '/include_admin_user');
@@ -6428,7 +6428,7 @@ sub get_first_list_admin {
 ## Loop for all subsequent users.
 sub get_next_list_member {
     my $self = shift;
-    &Log::do_log('debug2', '');
+    &Log::do_log('debug3', '');
 
     unless (defined $sth) {
 	&Log::do_log('err',
@@ -6486,7 +6486,7 @@ sub get_next_list_member {
 ## Loop for all subsequent admin users with the role defined in get_first_list_admin.
 sub get_next_list_admin {
     my $self = shift;
-    &Log::do_log('debug2', '');
+    &Log::do_log('debug3', '');
 
     unless (defined $sth) {
 	&Log::do_log(
@@ -7958,7 +7958,7 @@ sub _load_stats_file {
 ## Loads the list of subscribers.
 sub _load_list_members_file {
     my $file = shift;
-    &Log::do_log('debug2', '(%s)', $file);
+    &Log::do_log('debug3', '(%s)', $file);
 
     ## Open the file and switch to paragraph mode.
     open(L, $file) || return undef;
@@ -8001,7 +8001,7 @@ sub _include_users_remote_sympa_list {
     my $id = Datasource::_get_datasource_id($param);
 
     &Log::do_log(
-	'debug3',
+	'debug2',
 	'%s: https://%s:%s/%s using cert %s',
 	$self,
 	$host,
@@ -8284,7 +8284,7 @@ sub _include_users_remote_file {
 
     my $url = $param->{'url'};
 
-    &Log::do_log('debug', "List::_include_users_remote_file($url)");
+    &Log::do_log('debug2', "List::_include_users_remote_file($url)");
 
     my $total = 0;
     my $id = Datasource::_get_datasource_id($param);
@@ -8401,7 +8401,7 @@ sub _include_users_remote_file {
 sub _include_users_voot_group {
     my ($users, $param, $default_user_options, $tied) = @_;
 
-    &Log::do_log('debug', "List::_include_users_voot_group(%s, %s, %s)",
+    &Log::do_log('debug2', "List::_include_users_voot_group(%s, %s, %s)",
 	$param->{'user'}, $param->{'provider'}, $param->{'group'});
 
 	my $id = Datasource::_get_datasource_id($param);
@@ -8857,7 +8857,7 @@ sub _include_sql_ca {
     return {} unless ($source->connect());
 
     &Log::do_log(
-	'debug',
+	'debug2',
 	'%s, email_entry = %s',
 	$source->{'sql_query'},
 	$source->{'email_entry'}
@@ -8883,7 +8883,7 @@ sub _include_ldap_ca {
     return {} unless ($source->connect());
 
     &Log::do_log(
-	'debug',
+	'debug2',
 	'server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'},
 	$source->{'suffix'},
@@ -8933,7 +8933,7 @@ sub _include_ldap_level2_ca {
 	return {};
 
     &Log::do_log(
-	'debug',
+	'debug2',
 	'server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'},
 	$source->{'suffix'},
@@ -8980,7 +8980,7 @@ sub _include_users_sql {
     my ($users, $id, $source, $default_user_options, $tied, $fetch_timeout) =
 	@_;
 
-    &Log::do_log('debug', 'List::_include_users_sql()');
+    &Log::do_log('debug2', 'List::_include_users_sql()');
 
     unless (ref($source) =~ /DBManipulator/) {
 	&Log::do_log('err', 'source object has not a DBManipulator type : %s',
@@ -9067,7 +9067,7 @@ sub _include_users_sql {
 
 ## Loads the list of subscribers from an external include source
 sub _load_list_members_from_include {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Log::do_log('debug3', '(%s, %s)', @_);
 
     my $self = shift;
     my $old_subs = shift;
@@ -9246,7 +9246,7 @@ sub _load_list_members_from_include {
 
 ## Loads the list of admin users from an external include source
 sub _load_list_admin_from_include {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Log::do_log('debug3', '(%s, %s)', @_);
 
     my $self = shift;
     my $role = shift;
@@ -9397,7 +9397,7 @@ sub _load_list_admin_from_include {
 
 # Load an include admin user file (xx.incl)
 sub _load_include_admin_user_file {
-    &Log::do_log('debug2', '(%s, %s, %s)', @_);
+    &Log::do_log('debug3', '(%s, %s, %s)', @_);
 
     my ($robot, $file, $parsing) = @_;
 
@@ -10485,7 +10485,7 @@ sub _load_list_admin_from_config {
     my $name = $self->name;
     my %admin_users;
 
-    &Log::do_log('debug2', '(%s) for list %s', $role, $name);
+    &Log::do_log('debug3', '(%s) for list %s', $role, $name);
 
     ##FIXME: check $role argument
     foreach my $entry (@{$self->$role}) {

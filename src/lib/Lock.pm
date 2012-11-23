@@ -41,7 +41,7 @@ my $default_timeout = 60 * 20; ## After this period a lock can be stolen
 ## Creates a new object
 sub new {
     my($pkg, $filepath) = @_;
-    &Log::do_log('debug', 'Lock::new(%s)',$filepath);
+    &Log::do_log('debug3', 'Lock::new(%s)',$filepath);
     
     my $lock_filename = $filepath.'.lock';
     my $lock = {'lock_filename' => $lock_filename};
@@ -96,7 +96,7 @@ sub get_file_handle {
 sub lock {
     my $self = shift;
     my $mode = shift; ## read | write
-    &Log::do_log('debug', 'Trying to put a lock on %s in mode %s',$self->{'lock_filename'}, $mode);
+    &Log::do_log('debug3', 'Trying to put a lock on %s in mode %s',$self->{'lock_filename'}, $mode);
 
     ## If file was already locked by this process, we will add a new lock.
     ## We will need to create a new lock if the state must change.
@@ -105,7 +105,7 @@ sub lock {
 	## If the mode for the new lock is 'write' and was previously 'read'
 	## then we unlock and redo a lock
 	if ($mode eq 'write' && $list_of_locks{$self->{'lock_filename'}}{'mode'} eq 'read') {
-	    &Log::do_log('debug', "Need to unlock and redo locking on %s", $self->{'lock_filename'});
+	    &Log::do_log('debug3', "Need to unlock and redo locking on %s", $self->{'lock_filename'});
 	    ## First release previous lock
 	    return undef unless ($self->remove_lock());
 	    ## Next, lock in write mode
@@ -123,9 +123,9 @@ sub lock {
 	    return 1;
 	}
 	## Otherwise, the previous lock was probably a 'read' lock, so no worries, just increase the locks count.
-	&Log::do_log('debug', "No need to change filesystem or NFS lock for %s. Just increasing count.", $self->{'lock_filename'});
+	&Log::do_log('debug3', "No need to change filesystem or NFS lock for %s. Just increasing count.", $self->{'lock_filename'});
 	push @{$list_of_locks{$self->{'lock_filename'}}{'states_list'}}, 'read';
-	&Log::do_log('debug', "Locked %s again; total locks: %d", $self->{'lock_filename'}, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
+	&Log::do_log('debug3', "Locked %s again; total locks: %d", $self->{'lock_filename'}, $#{$list_of_locks{$self->{'lock_filename'}}{'states_list'}} +1);
 	return 1;
     }
     
@@ -143,7 +143,7 @@ sub lock {
 
 sub unlock {
     my $self = shift;
-    &Log::do_log('debug', 'Removing lock on %s',$self->{'lock_filename'});
+    &Log::do_log('debug3', 'Removing lock on %s',$self->{'lock_filename'});
 
     unless (defined $list_of_locks{$self->{'lock_filename'}}) {
 	&Log::do_log('err', "Failed to unlock file %s ; file is not locked", $self->{'lock_filename'});

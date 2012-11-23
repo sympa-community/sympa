@@ -179,10 +179,10 @@ while (!$end) {
 	
    ## List all tasks
     unless (&TaskSpool::list_tasks) {
-	Site->send_notify_to_listmaster('intern_error',
-	    {'error' => "Failed to list task files in spool"});
-	&Log::do_log ('err', "Failed to list task files in spool");
-	exit -1;
+        Site->send_notify_to_listmaster('intern_error',
+            {'error' => "Failed to list task files in spool"});
+        &Log::do_log ('err', "Failed to list task files in spool");
+        exit -1;
     }
 
     &TaskSpool::create_required_tasks($current_date);
