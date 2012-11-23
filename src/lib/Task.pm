@@ -63,7 +63,7 @@ sub new {
 	$task->{'domain'} = $task_in_spool->{'robot'};
 	    
 	if ($task_in_spool->{'list'}) { # list task
-	    $task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'});
+	    $task->{'list_object'} = new List ($task_in_spool->{'list'},$task_in_spool->{'robot'},{'skip_sync_admin' => 1});
 	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	    unless (defined $task->{'list_object'}) {
 		&Log::do_log('err','Unable to create new task object for list %s@%s. This list does not exist',$task_in_spool->{'list'},$task_in_spool->{'robot'});

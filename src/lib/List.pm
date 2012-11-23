@@ -8189,7 +8189,7 @@ sub _include_users_list {
 
 sub _include_users_file {
     my ($users, $filename, $default_user_options, $tied) = @_;
-    &Log::do_log('debug2', 'List::_include_users_file(%s)', $filename);
+    &Log::do_log('debug3', 'List::_include_users_file(%s)', $filename);
 
     my $total = 0;
 
@@ -8274,8 +8274,6 @@ sub _include_users_file {
     }
     close INCLUDE;
 
-    &Log::do_log('info', "include %d new users from file %s",
-	$total, $filename);
     return $total;
 }
 
@@ -9762,7 +9760,7 @@ sub sync_include {
     my $self = shift;
     my $option = shift;
     my $name   = $self->name;
-    &Log::do_log('debug', 'List:sync_include(%s)', $name);
+    &Log::do_log('notice', 'List:sync_include(%s)', $name);
     my %old_subscribers;
     my $total           = 0;
     my $errors_occurred = 0;
