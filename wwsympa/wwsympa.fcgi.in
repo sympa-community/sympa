@@ -5479,7 +5479,7 @@ sub do_signoff {
 	$param->{'is_subscriber'} = 0;
 	$param->{'may_signoff'} = 0;
     }else{
-	&report::reject_report_web($result{'category_error'},$result{'reason_error'},{%{$result{'reason_error'}},'list'=>$list->name},$param->{'action'},$list);
+	&report::reject_report_web($result{'category_error'},$result{'reason_error'},{%result,'list'=>$list->name},$param->{'action'},$list);
     }
     return $robot->default_home;
  }
@@ -5496,7 +5496,7 @@ sub unsubscribe {
 		      'error_type' => 'not_subscriber'});
 	$report{'success'} = 0;
 	$report{'category_error'} = 'user';
-	$report{'reason_error'} = 'not_subscribed';
+	$report{'reason_error'} = 'not_subscriber';
 	$report{'details_error'} = {};
 	return %report;
     }
