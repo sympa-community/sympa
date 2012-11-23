@@ -361,17 +361,17 @@ sub mail_message {
     ## If message contain a footer or header added by Sympa  use the object message else
     ## Extract body from original file to preserve signature
     my $msg_body; my $msg_header;
-    $msg_header = $message->{'msg'}->head;
-    if (!($message->{'protected'})) {
-	$msg_body = $message->{'msg'}->body_as_string;
-    }elsif ($message->{'smime_crypted'}) {
-	$msg_body = ${$message->{'msg_as_string'}}; # why is object message msg_as_string contain a body _as_string ? wrong name for this mesage property	
-    }else{
+    $msg_header = $message->get_mime_message->head;
+    ##if (!($message->{'protected'})) {
+	##$msg_body = $message->get_mime_message->body_as_string;
+    ##}elsif ($message->{'smime_crypted'}) {
+	##$msg_body = ${$message->{'msg_as_string'}};
+    ##}else{
 	## Get body from original message body
-	my @bodysection =split("\n\n",$message->{'msg_as_string'});  # convert it as a tab with headers as first element
+	my @bodysection =split("\n\n",$message->get_message_as_string);  # convert it as a tab with headers as first element
 	shift @bodysection;                                          # remove headers
 	$msg_body = join ("\n\n",@bodysection);                      # convert it back as string
-    }	
+    ##}	
     $message->{'body_as_string'} = $msg_body ;
 	
     my %rcpt_by_dom ;
@@ -479,7 +479,7 @@ sub mail_forward {
 	return undef;
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
-    $message->{'msg'}->head->add('Auto-Submitted', 'auto-forwarded');
+    $message->get_mime_message->head->add('Auto-Submitted', 'auto-forwarded');
     
     unless (defined &sending('message' => $message, 
 			     'rcpt' => $rcpt,
@@ -549,7 +549,7 @@ sub sendto {
     my %params = @_;
     
     my $message = $params{'message'};
-    my $msg_header = $message->{'msg'}->head;
+    my $msg_header = $message->get_mime_message->head;
     my $msg_body = $message->{'body_as_string'};
     my $from = $params{'from'};
     my $rcpt = $params{'rcpt'};
@@ -580,7 +580,7 @@ sub sendto {
 		    &Log::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
 		    return undef;
 		}
-		unless ($message->{'msg_as_string'} = &Message::smime_encrypt ($msg_header, $msg_body, $email)){
+		unless ($message->smime_encrypt ($email)){
     		    &Log::do_log('err',"Failed to encrypt message"); 
 		    return undef;
                 }	
@@ -666,14 +666,14 @@ sub sending {
     my $signed_msg; # if signing
 
     if ($sign_mode eq 'smime') {
-	if ($signed_msg = &tools::smime_sign($message->{'msg'}, $listname, $robot)) {
+	if ($signed_msg = &tools::smime_sign($message->get_mime_message, $listname, $robot)) {
 	    $message->{'msg'} = $signed_msg->dup;
 	}else{
 	    &Log::do_log('notice', 'mail::sending : unable to sign message from %s', $listname);
 	    return undef;
 	}
     }
-    # my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
+    # my $msg_id = $message->get_mime_message->head->get('Message-ID'); chomp $msg_id;
 
     my $verpfeature = (($verp eq 'on')||($verp eq 'mdn')||($verp eq 'dsn'));
     my $trackingfeature ;
@@ -748,7 +748,7 @@ sub sending {
     }else{ # send it now
 	&Log::do_log('debug',"NOT USING BULK");
 	*SMTP = &smtpto($from, $rcpt, $robot);	
-	print SMTP $message->{'msg'}->as_string ;	
+	print SMTP $message->get_mime_message->as_string ;	
 	unless (close SMTP) {
 	    &Log::do_log('err', 'could not close safefork to sendmail');
 	    return undef;

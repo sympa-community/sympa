@@ -169,6 +169,7 @@ sub new {
 	$message->{'messagekey'}= $message_in_spool->{'messagekey'};
 	$message->{'spoolname'}= $message_in_spool->{'spoolname'};
 	$message->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
+	$message->{'list'} = $message_in_spool->{'list_object'}
     }
     if ($file) {
 	## Parse message as a MIME::Entity
@@ -528,7 +529,7 @@ sub clean_html {
     $listname = lc($listname);
     $robot ||= Site->host;
     my $new_msg;
-    if($new_msg = &fix_html_part($self->{'msg'},$robot)) {
+    if($new_msg = &fix_html_part($self->get_encrypted_mime_message,$robot)) {
 	$self->{'msg'} = $new_msg;
 	return 1;
     }
@@ -712,37 +713,25 @@ sub smime_decrypt {
     $self->{'decrypted_msg_as_string'}  = $self->{'decrypted_msg'}->head->as_string."\n".$self->{'decrypted_msg_as_string'};
     
     $self->{'smime_crypted'} = 'smime_crypted';
-    $self->{'orig_msg'} = $self->{'msg'};
-    $self->{'msg'} = $self->{'decrypted_msg'};
-    $self->{'msg_as_string'} = $self->{'decrypted_msg_as_string'};
-    delete $self->{'decrypted_msg_as_string'};
-    delete $self->{'decrypted_msg'};
-    ##foreach my $line (split '\n', &Dumper($self)) {
-	##Log::do_log('trace','%s',$line);
-    ##}
 
     return 1;
 }
 
 # input : msg object, return a new message object encrypted
 sub smime_encrypt {
-    ##my $self = shift;
-    my $msg_header = shift;
-    my $msg_body = shift;
+    my $self = shift;
     my $email = shift ;
     my $list = shift ;
 
     my $usercert;
     my $dummy;
-    my $cryptedmsg;
-    my $encrypted_body;    
 
-    &Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
+    Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
     if ($list eq 'list') {
 	my $self = new List($email);
-	($usercert, $dummy) = smime_find_keys($self->{dir}, 'encrypt');
+	($usercert, $dummy) = tools::smime_find_keys($self->{dir}, 'encrypt');
     }else{
-	my $base = Site->ssl_cert_dir . '/' . &tools::escape_chars($email);
+	my $base = Site->ssl_cert_dir . '/' . tools::escape_chars($email);
 	if(-f "$base\@enc") {
 	    $usercert = "$base\@enc";
 	} else {
@@ -752,7 +741,7 @@ sub smime_encrypt {
     if (-r $usercert) {
 	my $temporary_file = Site->tmpdir."/".$email.".".$$ ;
 
-	## encrypt the incomming message parse it.
+	## encrypt the incoming message parse it.
 	my $cmd = sprintf '%s smime -encrypt -out %s -des3 %s',
 	    Site->openssl, $temporary_file, $usercert;
         &Log::do_log ('debug3', '%s', $cmd);
@@ -760,23 +749,23 @@ sub smime_encrypt {
 	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s',
 		$email);
 	}
-## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
-## that contains a whole header again... since MIME::Tools has got no function
-## for this, we need to manually extract only the MIME headers...
-##	$msg_header->print(\*MSGDUMP);
-##	printf MSGDUMP "\n%s", $msg_body;
-	my $mime_hdr = $msg_header->dup();
+	## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
+	## that contains a whole header again... since MIME::Tools has got no function
+	## for this, we need to manually extract only the MIME headers...
+	##	$self->head->print(\*MSGDUMP);
+	##	printf MSGDUMP "\n%s", $self->body;
+	my $mime_hdr = $self->get_mime_message->head->dup();
 	foreach my $t ($mime_hdr->tags()) {
 	  $mime_hdr->delete($t) unless ($t =~ /^(mime|content)-/i);
 	}
 	$mime_hdr->print(\*MSGDUMP);
 
-	printf MSGDUMP "\n%s", $msg_body;
+	printf MSGDUMP "\n%s", $self->get_mime_message->body;
 	close(MSGDUMP);
 
 	my $status = $?/256 ;
 	unless ($status == 0) {
-	    &Log::do_log('err', 'Unable to S/MIME encrypt message : %s', $openssl_errors{$status});
+	    &Log::do_log('err', 'Unable to S/MIME encrypt message (error %s) : %s', $status, $openssl_errors{$status});
 	    return undef ;
 	}
 
@@ -784,7 +773,7 @@ sub smime_encrypt {
 	open (NEWMSG, $temporary_file);
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
-	unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
+	unless ($self->{'crypted_message'} = $parser->read(\*NEWMSG)) {
 	    &Log::do_log('notice', 'Unable to parse message');
 	    return undef;
 	}
@@ -795,26 +784,26 @@ sub smime_encrypt {
         my $in_header = 1 ;
 	while (<NEWMSG>) {
 	   if ( !$in_header)  { 
-	     $encrypted_body .= $_;       
+	     $self->{'encrypted_body'} .= $_;       
 	   }else {
 	     $in_header = 0 if (/^$/); 
 	   }
 	}						    
 	close NEWMSG;
 
-unlink ($temporary_file) unless ($main::options{'debug'}) ;
+	unlink ($temporary_file) unless ($main::options{'debug'}) ;
 
 	## foreach header defined in  the incomming message but undefined in the
         ## crypted message, add this header in the crypted form.
 	my $predefined_headers ;
-	foreach my $header ($cryptedmsg->head->tags) {
+	foreach my $header ($self->{'crypted_message'}->head->tags) {
 	    $predefined_headers->{lc $header} = 1 
-	        if ($cryptedmsg->head->get($header)) ;
+	        if ($self->{'crypted_message'}->head->get($header)) ;
 	}
-	foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
+	foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string) {
 	    next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
 	    my ($tag, $val) = ($1, $2);
-	    $cryptedmsg->head->add($tag, $val) 
+	    $self->{'crypted_message'}->head->add($tag, $val) 
 	        unless $predefined_headers->{lc $tag};
 	}
 
@@ -823,7 +812,7 @@ unlink ($temporary_file) unless ($main::options{'debug'}) ;
 	return undef;
     }
         
-    return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
+    return 1;
 }
 
 sub smime_sign_check {
@@ -853,9 +842,9 @@ sub smime_sign_check {
 	return undef ;
     }
     
-    $message->{'msg'}->head->print(\*MSGDUMP);
+    $message->get_mime_message->head->print(\*MSGDUMP);
     print MSGDUMP "\n";
-    print MSGDUMP $message->{'msg_as_string'};
+    print MSGDUMP $message->get_message_as_string;
     close MSGDUMP;
 
     my $status = $?/256 ;
@@ -894,14 +883,14 @@ sub smime_sign_check {
     ## "S/MIME encryption : Yes/No"
     my $certbundle = Site->tmpdir . "/certbundle.$$";
     my $tmpcert = Site->tmpdir . "/cert.$$";
-    my $nparts = $message->{msg}->parts;
+    my $nparts = $message->get_mime_message->parts;
     my $extracted = 0;
     &Log::do_log('debug2', "smime_sign_check: parsing $nparts parts");
     if($nparts == 0) { # could be opaque signing...
-	$extracted +=tools::smime_extract_certs($message->{msg}, $certbundle);
+	$extracted +=tools::smime_extract_certs($message->get_mime_message, $certbundle);
     } else {
 	for (my $i = 0; $i < $nparts; $i++) {
-	    my $part = $message->{msg}->parts($i);
+	    my $part = $message->get_mime_message->parts($i);
 	    $extracted += tools::smime_extract_certs($part, $certbundle);
 	    last if $extracted;
 	}
@@ -1000,6 +989,32 @@ sub smime_sign_check {
     }
     
     return 1;
+}
+
+sub get_mime_message {
+    my $self = shift;
+    if ($self->{'smime_crypted'}) {
+	return $self->{'decrypted_msg'};
+    }
+    return $self->{'msg'};
+}
+
+sub get_encrypted_mime_message {
+    my $self = shift;
+    return $self->{'msg'};
+}
+
+sub get_message_as_string {
+    my $self = shift;
+    if ($self->{'smime_crypted'}) {
+	return $self->{'decrypted_msg_as_string'};
+    }
+    return $self->{'msg_as_string'};
+}
+
+sub get_encrypted_message_as_string {
+    my $self = shift;
+    return $self->{'msg_as_string'};
 }
 
 ## Packages must return true.

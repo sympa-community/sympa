@@ -405,8 +405,7 @@ if ($signal ne 'hup') {
 	    $meta{'type'} = $type if $type;
 	    
 	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
-
-    #	my $dump = &Dumper($message->{'msg_as_string'}); open (DUMP,">>/tmp/dumper"); printf DUMP 'Storing in db spool message \n%s',$dump ; close DUMP; 
+	    
 	    my $messagekey = $spool->store($message->{'msg_as_string'},\%meta);
 	    unless($messagekey) {
 	       &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);

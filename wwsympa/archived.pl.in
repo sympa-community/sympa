@@ -871,7 +871,7 @@ sub mail2arc {
 
 	
 	# prepare a temporary file with clean message content (htlm parts are cleaned) 
-	my $safe = &Archive::clean_archived_message({'input'=>$file,'output' => $output });
+	my $safe = &Archive::clean_archived_message({'input'=>$message_in_spool,'output' => $output });
 	unless ($safe) {
 	   &Log::do_log('err',"Could not clean message, ignoring message");
 	    next;

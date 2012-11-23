@@ -279,26 +279,19 @@ sub clean_archived_message{
     my $params = shift;
     &Log::do_log('debug',"Cleaning HTML parts of a message input %s , output  %s ",$params->{'input'},$params->{'output'});
 
-    my $input = $params->{'input'};
+    my $msg = new Message({'message_in_spool' => $params->{'input'},'noxsympato' => 1});
     my $output = $params->{'output'};
 
-
-    if (my $msg = new Message({'file'=>$input, 'noxsympato' => 1})){
-	if($msg->clean_html()){
-	    if(open TMP, ">$output") {
-		print TMP $msg->{'msg'}->as_string;
-		close TMP;
-	    }else{
-		&Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$output);
-		return undef;
-	    }
+    if($msg->clean_html()){
+	if(open TMP, ">$output") {
+	    print TMP $msg->get_encrypted_message_as_string;
+	    close TMP;
 	}else{
-	    &Log::do_log('err','HTML cleaning in file %s failed.',$output);
+	    &Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$output);
 	    return undef;
 	}
     }else{
-	&Log::do_log('err','Unable to create a Message object with file %s',$input);
-	exit;
+	&Log::do_log('err','HTML cleaning in file %s failed.',$output);
 	return undef;
     }
 }

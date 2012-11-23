@@ -7601,17 +7601,18 @@ sub archive_msg {
 
     if ($self->is_archived()) {
 
-	my $msgtostore = $message->{'msg_as_string'};
+	my $msgtostore = $message->get_message_as_string;
 	if (($message->{'smime_crypted'} eq 'smime_crypted') &&
 	    ($self->{admin}{archive_crypted_msg} eq 'original')) {
-	    $msgtostore = $message->{'orig_msg'}->as_string;
+		Log::do_log('trace','Will store encrypted message');
+		$msgtostore = $message->get_encrypted_message_as_string;
+	}else {
+	    Log::do_log('trace','Will store UNencrypted message');
 	}
 
-	#	Archive::store_last($self, $msgtostore) ;
-
 	if ((Site->ignore_x_no_archive_header_feature ne 'on') &&
-	    (   ($message->{'msg'}->head->get('X-no-archive') =~ /yes/i) ||
-		($message->{'msg'}->head->get('Restrict') =~
+	    (   ($message->get_mime_message->head->get('X-no-archive') =~ /yes/i) ||
+		($message->get_mime_message->head->get('Restrict') =~
 		    /no\-external\-archive/i)
 	    )
 	    ) {
