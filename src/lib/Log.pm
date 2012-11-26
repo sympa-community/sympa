@@ -418,8 +418,6 @@ sub db_log_del {
 
 # Scan log_table with appropriate select 
 sub get_first_db_log {
-    my $dbh = &SDM::db_get_handler();
-
     my $select = shift;
 
     my %action_type = ('message' => ['reject','distribute','arc_delete','arc_download',
@@ -494,10 +492,11 @@ sub get_first_db_log {
 	
     }
     
-    #if the listmaster want to make a search by an IP adress.    if($select->{'ip'}) {
-	$statement .= sprintf "AND client_logs = '%s'",$select->{'ip'};
-    
-    
+    #if the listmaster want to make a search by an IP adress.
+    if ($select->{'ip'}) {
+	$statement .= sprintf "AND client_logs = '%s' ", $select->{'ip'};
+    }
+
     ## Currently not used
     #if the search is on the actor of the action
     if ($select->{'user_email'}) {
@@ -529,14 +528,14 @@ sub get_first_db_log {
     }
 
     ## We can't use the "AS date" directive in the SELECT statement because "date" is a reserved keywork with Oracle
-    $log->{date} = $log->{date_logs} if defined($log->{date_logs});
+    $log->{'date'} = $log->{'date_logs'} if defined $log->{'date_logs'};
     return $log;
-
-    
 }
+
 sub return_rows_nb {
     return $rows_nb;
 }
+
 sub get_next_db_log {
 
     my $log = $sth->fetchrow_hashref('NAME_lc');
