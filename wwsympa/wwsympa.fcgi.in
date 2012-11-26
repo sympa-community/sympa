@@ -3301,10 +3301,16 @@ sub do_login {
      unless($param->{'alt_emails'}{$email}){
 	 unless(&cookielib::set_cookie_extern(Site->cookie,$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	     &wwslog('notice', 'Could not set HTTP cookie for external_auth');
-	     &web_db_log({'parameters' => Site->cookie.','.$param->{'cookie_domain'}.','."%{$param->{'alt_emails'}}",
-			  'target_email' => $in{'email'},
-			  'status' => 'error',
-			  'error_type' => 'cookie'});
+	    web_db_log(
+		{
+		    'parameters' => $param->{'cookie_domain'}.','.
+		    join(',', map { "$_ => $param->{'alt_emails'}{$_}" }
+			keys %{$param->{'alt_emails'} || {}}),
+		    'target_email' => $in{'email'},
+		    'status' => 'error',
+		    'error_type' => 'cookie'
+		}
+	    );
 	     return undef;
 	 }
      }
