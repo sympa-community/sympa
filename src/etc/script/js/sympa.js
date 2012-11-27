@@ -218,6 +218,17 @@ function searched_by_msgId(id) {
 	f.elements["target"].value = id;
 	f.submit();
 }
+function searched_by_target(target_type, target) {
+	var f = document.forms["log_form"];
+
+	set_select_value(f.elements["type"], 'all_actions');
+
+	set_select_value(f.elements["target_type"], target_type);
+
+	f.elements["target"].value = target;
+	f.submit();
+}
+
 
 //reset all field in log form.
 function clear_log_form() {

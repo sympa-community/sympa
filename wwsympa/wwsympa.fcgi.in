@@ -947,7 +947,7 @@ my %in_regexp = (
 
 		 ##Logs
 		 'target_type' => '[\w\-\.\:]*', 
-		 'target' => &tools::get_regexp('email'),
+		 'target' => '.*', ##&tools::get_regexp('email'),
 		 'date_from' => '[\d\/]+',
 		 'date_to' => '[\d\/]+',
 		 'ip' => &tools::get_regexp('host'),
@@ -16940,74 +16940,77 @@ sub get_protected_email_address {
  ## 
 sub do_viewlogs {
 	&wwslog('info', 'do_viewlogs(%s)', $in{'page'});
-	
+
 	$param->{'page'} = int($in{'page'}) || 1;
 	$param->{'size'} = int($in{'size'}) || Site->viewlogs_page_size;
-	$param->{'sortby'} = $in{'sortby'} || 'email';
-	
-	$param->{'total_results'} = 0;
-	
+
 	my @date = &Log::get_log_date();
 	$param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[0]);
 	$param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[1]);
-	
+
 	#display and search parameters preparation
 	my $select = {};
-	
+
 	$select->{'robot'} = $robot_id;
 	$select->{'list'} = $param->{'list'};
-	
+
 	foreach my $p ('target_type','target','date_from','date_to','type','ip') {
 		$param->{$p} = $in{$p};
 		$select->{$p} = $in{$p};
 	}
-	
-	if($in{'target_type'} or $in{'page'} or $in{'size'}) {
-		#sending of search parameters for the query
-		my $line = &Log::get_first_db_log($select); 
-		while(defined $line->{'date'}) {
-			$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($line->{'date'});
-			push @{$param->{'log_entries'}}, $line;
-			$line = &Log::get_next_db_log();
-		}
 
+	my $sortby = $in{'sortby'} || 'date';
+	$sortby = 'user_email' if $sortby eq 'email'; ## compat.
+	$param->{'sortby'} = $sortby;
+
+	if ($in{'target_type'} or $in{'page'} or $in{'size'}) {
+		#sending of search parameters for the query
+		my $line = Log::get_first_db_log($select, $sortby); 
 		#display the number of rows of the query.
-		$param->{'total_results'} = $#{$param->{'log_entries'}} + 1;
-		$param->{'total_results'} = &Log::return_rows_nb() if(&Log::return_rows_nb() != 0);
-		
-		unless($param->{'total_results'}) {
-			&report::reject_report_web('user','no_logs',{},$param->{'action'});
+		##$param->{'total_results'} = $#{$param->{'log_entries'}} + 1;
+		##$param->{'total_results'} = &Log::return_rows_nb() if(&Log::return_rows_nb() != 0);
+		$param->{'total_results'} = Log::return_rows_nb();
+
+		unless($line and $param->{'total_results'}) {
+			##&report::reject_report_web('user','no_logs',{},$param->{'action'});
 			&wwslog('info','do_viewlogs: no results');
 			return 1;
 		}
-		
+
 		$param->{'total_page'} = int($param->{'total_results'} / $param->{'size'});
 		$param->{'total_page'}++ if($param->{'total_results'} % $param->{'size'});
-		
+
 		if($param->{'page'} > $param->{'total_page'}) {
 			&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-			# &List::db_log('wwsympa',$param->{'user'}{'email'},$param->{'auth_method'},$ip,'review',$param->{'list'},$robot_id,'','out of pages');
 			&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
 			return undef;
 		}
-		
+
 		my $offset = 0;
 		if($param->{'page'} > 1) {
 			$offset = (($param->{'page'} - 1) * $param->{'size'});
 			$param->{'prev_page'} = $param->{'page'} - 1;
 		}
-		
+
 		unless(($offset + $param->{'size'}) >= $param->{'total_results'}) {
 			$param->{'next_page'} = $param->{'page'} + 1;
 		}
-		
-		@{$param->{'log_entries'}} = sort { lc $a->{$param->{'sortby'}} cmp lc $b->{$param->{'sortby'}} } @{$param->{'log_entries'}};
-		
+
 		my $last = $offset + $param->{'size'};
-		$last = $param->{'total_results'} - 1 if($last >= $param->{'total_results'});
-		@{$param->{'log_entries'}} = @{$param->{'log_entries'}}[$offset..$last];
+		$last = $param->{'total_results'} - 1
+		    if $last >= $param->{'total_results'};
+
+		my $i;
+		for ($i = 0; $i <= $last; $i++) {
+		    if ($offset <= $i) {
+			$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S",
+			    localtime $line->{'date'};
+			push @{$param->{'log_entries'}}, $line;
+		    }
+		    $line = Log::get_next_db_log();
+		}
 	}
-	
+
 	return 1;
 }
 

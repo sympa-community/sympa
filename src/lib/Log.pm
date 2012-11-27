@@ -408,7 +408,11 @@ sub db_log_del {
     my $exp = Site->logs_expiration_period;
     my $date = time - ($exp * 30 * 24 * 60 * 60);
 
-    unless(&SDM::do_query( "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", &SDM::quote($date))) {
+    unless(SDM::do_query(
+	q{DELETE FROM logs_table
+	  WHERE logs_table.date_logs <= %d},
+	$date
+    )) {
 	do_log('err','Unable to delete db_log entry from the database');
 	return undef;
     }
@@ -419,6 +423,11 @@ sub db_log_del {
 # Scan log_table with appropriate select 
 sub get_first_db_log {
     my $select = shift;
+    my $sortby = shift || 'date';
+    $sortby = 'date'
+	unless $sortby =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
+    $select->{'target_type'} = 'none'
+	unless $select->{'target_type'} =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
 
     my %action_type = ('message' => ['reject','distribute','arc_delete','arc_download',
 				     'sendMessage','remove','record_email','send_me',
@@ -494,23 +503,31 @@ sub get_first_db_log {
     
     #if the listmaster want to make a search by an IP adress.
     if ($select->{'ip'}) {
-	$statement .= sprintf "AND client_logs = '%s' ", $select->{'ip'};
+	$statement .= sprintf 'AND client_logs = %s ', SDM::quote($select->{'ip'});
     }
 
     ## Currently not used
     #if the search is on the actor of the action
     if ($select->{'user_email'}) {
 	$select->{'user_email'} = lc ($select->{'user_email'});
-	$statement .= sprintf "AND user_email_logs = '%s' ",$select->{'user_email'}; 
+	$statement .= sprintf 'AND user_email_logs = %s ', SDM::quote($select->{'user_email'});
     }
     
     #if a list is specified -just for owner or above-
     if($select->{'list'}) {
 	$select->{'list'} = lc ($select->{'list'});
-	$statement .= sprintf "AND list_logs = '%s' ",$select->{'list'};
+	$statement .= sprintf 'AND list_logs = %s ', SDM::quote($select->{'list'});
     }
-    
-    $statement .= sprintf "ORDER BY date_logs "; 
+
+    if ($sortby eq 'date') {
+	$statement .= 'ORDER BY date_logs ';
+    } elsif (Site->db_type =~ /^(mysql|Sybase)$/) {
+	# On MySQL, collation is case-insensitive by default.
+	# On Sybase, collation is defined at the time of database creation.
+	$statement .= sprintf 'ORDER BY %s_logs, date_logs ', $sortby;
+    } else {
+	$statement .= sprintf 'ORDER BY lower(%s_logs), date_logs ', $sortby;
+    }
 
     push @sth_stack, $sth;
     unless($sth = &SDM::do_query($statement)) {
@@ -524,6 +541,8 @@ sub get_first_db_log {
     ## If no rows returned, return an empty hash
     ## Required to differenciate errors and empty results
     if ($rows_nb == 0) {
+	$sth->finish;
+	$sth = pop @sth_stack;
 	return {};
     }
 
