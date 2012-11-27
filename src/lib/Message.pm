@@ -343,22 +343,22 @@ sub new {
 
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
-	    ($hdr->get('Content-Type') !~ /signed-data/)){
+	    ($hdr->get('Content-Type') !~ /signed-data/i)){
 	    unless (defined $message->smime_decrypt()) {
-		Log::do_log('debug', "Message %s could not be decrypted", $file);
+		Log::do_log('err', "Message %s could not be decrypted", $file);
 		return undef;
 		## We should warn the sender and/or the listmaster
 	    }
 	    $hdr = $message->{'msg'}->head;
-	    Log::do_log('debug', "message %s has been decrypted", $file);
+	    Log::do_log('notice', "message %s has been decrypted", $file);
 	}
 	
 	## Check S/MIME signatures
-	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
+	if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
 	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
 	    $message->smime_sign_check();
 	    if($message->{'smime_signed'}) {
-		Log::do_log('debug', "message %s is signed, signature is checked", $file);
+		Log::do_log('notice', "message %s is signed, signature is checked", $file);
 	    }
 	    ## TODO: Handle errors (0 different from undef)
 	}
@@ -808,7 +808,7 @@ sub smime_encrypt {
 	}
 
     }else{
-	&Log::do_log ('notice','unable to encrypt message to %s (missing certificat %s)',$email,$usercert);
+	&Log::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
 	return undef;
     }
         

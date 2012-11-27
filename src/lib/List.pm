@@ -187,10 +187,6 @@ Delete the indicated users from the list.
 
 Delete the indicated admin user with the predefined role from the list.
 
-=item get_cookie ()
-
-Returns the cookie for a list, if available.
-
 =item get_max_size ()
 
 Returns the maximum allowed size for a message.
@@ -4519,7 +4515,7 @@ sub send_msg {
 #################################################################
 sub send_to_editor {
     my ($self, $method, $message) = @_;
-    my $msg = $message->{'msg'};
+    my $msg = $message->get_mime_message;
     my $encrypt = 'smime_crypted' if ($message->{'smime_crypted'});
     &Log::do_log('debug',
 	"List::send_to_editor, messagekey: $message->{'messagekey'}, method : $method, encrypt : $encrypt"
@@ -4543,7 +4539,7 @@ sub send_to_editor {
 	int(rand(6)) .
 	int(rand(6)) . "\@" . $host;
     my $modkey =
-	Digest::MD5::md5_hex(join('/', $self->get_cookie(), $messageid));
+	Digest::MD5::md5_hex(join('/', $self->cookie, $messageid));
     my $boundary = "__ \<$messageid\>";
 
     if ($method eq 'md5') {
@@ -4563,7 +4559,8 @@ sub send_to_editor {
 	    {   'msg_as_string'   => $message->{'msg_as_string'},
 		'destination_dir' => $destination_dir,
 		'attachement_url' => "viewmod/$name/$modkey",
-		'list'            => $self
+		'list'            => $self,
+		'robot'	          => $robot,
 	    }
 	);
     }
@@ -4619,20 +4616,13 @@ sub send_to_editor {
 
    foreach my $recipient (@rcpt) {
 	if ($encrypt eq 'smime_crypted') {
-	   ## is $msg->body_as_string respect base64 number of char per line ??
-	    my $cryptedmsg =
-		&Message::smime_encrypt($msg->head, $msg->body_as_string,
-		$recipient);
-	   unless ($cryptedmsg) {
-		&Log::do_log('notice',
-		    'Failed encrypted message for moderator');
-
-	       #  send a generic error message : X509 cert missing
-	       return undef;
-	   }
-	    $param->{'msg'} = $cryptedmsg;
+	    $message->smime_encrypt($recipient);
+	    unless($message->{'smime_crypted'} eq 'smime_crypted') {
+		Log::do_log('err','Could not encrypt message for moderator %s',$recipient);
+	    }
+	    $param->{'msg'} = $message->get_encrypted_mime_message;
 	} else {
-	    $param->{'msg'} = $msg;
+	    $param->{'msg'} = $message->get_mime_message;
 	}
 
        # create a one time ticket that will be used as un md5 URL credential
@@ -4705,7 +4695,7 @@ sub send_auth {
 	int(rand(6)) .
 	int(rand(6)) . "\@" . $host;
     my $authkey =
-	Digest::MD5::md5_hex(join('/', $self->get_cookie(), $messageid));
+	Digest::MD5::md5_hex(join('/', $self->cookie, $messageid));
     chomp $authkey;
 
     my $spool = new Sympaspool('auth');

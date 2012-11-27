@@ -2727,7 +2727,7 @@ sub distribute {
 	$sender,
 	time - $start_time,
 	$numsmtp,
-	$list->get_total(),
+	$list->total(),
 	$hdr->get('Message-Id'),
 	$message->{'size'}
     );
