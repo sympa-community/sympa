@@ -201,7 +201,7 @@
 	  </td>
 	  <td>
   	      [% IF l.target_email %]
-                <a href="javascript:searched_by_target('target_email', '[% l.target_email %]')" title="[%|loc%]view other events related to this email.[%END%]">[%|loc%][% l.target_email %][%END%]</a>
+                <a href="javascript:searched_by_target('target_email', '[% l.target_email %]')" title="[%|loc%]view other events related to this email.[%END%]">[% l.target_email %]</a>
 	      [% END %]
 	  </td>
 	  <td>
@@ -225,7 +225,7 @@
 	  [% IF is_listmaster || is_owner %]
 	  <td>
 	    [% IF l.client %]
-		<a href="javascript:searched_by_target('client', '[% l.client %]')" title="[%|loc%]view other events related to this IP address.[%END%]">[%|loc%][% l.client %][%END%]</a>
+		<a href="javascript:searched_by_target('client', '[% l.client %]')" title="[%|loc%]view other events related to this IP address.[%END%]">[% l.client %]</a>
             [% END %]
 	  </td>
 	  [% END %]
