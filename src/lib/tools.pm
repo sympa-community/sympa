@@ -819,7 +819,12 @@ sub dkim_verifier {
     unlink ($temporary_file);
     
     foreach my $signature ($dkim->signatures) {
-	return 1 if  ($signature->result_detail eq "pass");
+	if  ($signature->result_detail eq "pass") {
+	    Log::do_log('debug', 'Verification of signature from domain %s issued result "pass"',$signature->domain, );
+	    return 1;
+	}else{
+	    Log::do_log('debug', 'Verification of signature from domain %s issued result %s',$signature->domain, $signature->result_detail);
+	}
     }
     return undef;
 }

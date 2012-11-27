@@ -363,6 +363,12 @@ sub check_cpan {
 						 package_name => 'CipherSaber',
 						 usage => 'this module provides reversible encryption of user passwords in the database.usefull only when updating from old version with password reversible encryption.',
 						},
+			'Crypt::OpenSSL::Bignum' => {
+					      required_version =>'0.04',
+					      package_name => 'Crypt::OpenSSL::Bignum',
+					      mandatory => 1, 
+					      usage => 'required to prevent Mail::DKIM from crashing Sympa processes.',
+					     },
 			'DB_File' => {
 				      required_version =>'1.75',
 				      package_name => 'DB_FILE',
@@ -462,6 +468,12 @@ sub check_cpan {
 					      required_version =>'0.90',
 					      package_name => 'IO-Socket-SSL',
 					      usage => 'required when including members of a remote list',
+					     },
+			'IO::Socket::INET6' => {
+					      required_version =>'2.69',
+					      package_name => 'IO::Socket::INET6',
+					      mandatory => 1, 
+					      usage => 'required to prevent Mail::DKIM from crashing Sympa processes.',
 					     },
 			'JSON::XS' => {
 					      required_version =>'2.32',

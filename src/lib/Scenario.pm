@@ -246,7 +246,6 @@ sub request_action {
     my $debug = shift;
 
     my $trace_scenario ;
-
     ## Defining default values for parameters.
     $context->{'sender'} ||= 'nobody' ;
     $context->{'email'} ||= $context->{'sender'};
