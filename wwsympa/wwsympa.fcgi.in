@@ -7042,14 +7042,15 @@ sub do_reject {
 			  'error_type' => 'internal'});
 	     next;
 	 }
+	 my $message = new Message({'message_in_spool' => $message_in_spool});
          #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
 	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
-	     my $rejected_sender = $message_in_spool->{'sender'};
+	     my $rejected_sender = $message->{'sender'};
 	     if  ($rejected_sender) {
 		 
 		 unless ($in{'quiet'}) {
 		     my %context;
-		     $context{'subject'} = &tools::decode_header($message_in_spool->{'subject'});
+		     $context{'subject'} = &tools::decode_header($message,'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
 		     unless ($list->send_file($in{'message_template'}, $rejected_sender, \%context)) {
@@ -7066,7 +7067,7 @@ sub do_reject {
 		     }
 		 }
 	     } else {
-		 &Log::do_log('err',"No sender found for message %s, unable to use her address to add to blacklist or send notification",$message_in_spool->{'messagekey'});
+		 &Log::do_log('err',"No sender found for message %s, %s unable to use her address to add to blacklist or send notification",$message->{'messagekey'},$message->get_mime_message->head->get('Message-Id'));
 	     }
 	 }
 
@@ -7076,7 +7077,7 @@ sub do_reject {
 		     &Log::do_log('err', 'could not execute %s',
 			Site->reporting_spam_script_path);
 		 }
-		 print SCRIPT $message_in_spool->{'msg_as_string'};
+		 print SCRIPT $message->get_encrypted_message_as_string; #Sending encrypted form in case a crypted message would be sent by error.
 		 if (close(SCRIPT)){		 
 		     &Log::do_log('info',"message $file reported as spam by $param->{'user'}{'email'}") ;
 		 }else{
