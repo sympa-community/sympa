@@ -7048,7 +7048,7 @@ sub do_reject {
 	     my $rejected_sender = $message->{'sender'};
 	     if  ($rejected_sender) {
 		 
-		 unless ($in{'quiet'}) {
+		 unless ($in{'message_template'} eq 'reject_quiet') {
 		     my %context;
 		     $context{'subject'} = &tools::decode_header($message,'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
