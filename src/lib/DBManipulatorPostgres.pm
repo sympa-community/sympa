@@ -497,6 +497,13 @@ sub set_index {
     return $report;
 }
 
+## For DOUBLE types.
+sub AS_DOUBLE {
+    return ( { 'pg_type' => DBD::Pg::PG_FLOAT8() } => $_[1] )
+	if scalar @_ > 1;
+    return ();
+}
+
 ## For BLOB types.
 sub AS_BLOB {
     return ( { 'pg_type' => DBD::Pg::PG_BYTEA() } => $_[1] )

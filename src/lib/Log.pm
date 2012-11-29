@@ -308,7 +308,7 @@ sub db_log {
 	   parameters_logs, target_email_logs, msg_id_logs, status_logs,
 	   error_type_logs, user_email_logs, client_logs, daemon_logs)
 	  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-	$id, $date, $robot_id, $listname, $action,
+	$id, SDM::AS_DOUBLE($date), $robot_id, $listname, $action,
 	substr($parameters, 0, 100), $target_email, $msg_id, $status,
 	$error_type, $user_email, $client, $daemon
     )) {

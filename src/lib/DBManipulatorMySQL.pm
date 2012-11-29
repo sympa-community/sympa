@@ -431,4 +431,11 @@ sub set_index {
     return $report;
 }
 
+## For DOUBLE type.
+sub AS_DOUBLE {
+    return ( { 'mysql_type' => DBD::mysql::FIELD_TYPE_DOUBLE() } => $_[1] )
+	if scalar @_ > 1;
+    return ();
+}
+
 return 1;

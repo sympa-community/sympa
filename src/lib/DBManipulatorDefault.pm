@@ -155,6 +155,12 @@ sub check_key {
 #	  treatment won't be needed.
 #	* Empty array () if arguments were not given.
 
+# For DOUBLE type.
+sub AS_DOUBLE {
+    return $_[1] if scalar @_ > 1;
+    return ();
+}
+
 # For BLOB types.
 sub AS_BLOB {
     return $_[1] if scalar @_ > 1;
