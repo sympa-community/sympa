@@ -121,18 +121,18 @@
 [% END %] 
 
 [% IF subaction == 'logs' %]
-<h2>[%|loc%]Logs[%END%]</h2><br />
+<h2>[%|loc%]System log[%END%]</h2><br />
 <div>
 [%|loc%]You can increase the log level specified by configuration only for your current session. On a production server, this allow to keep logs rather small and to test some features with the maximum log level. [%END%]<br/>
 
 <form class="bold_label" action="[% path_cgi %]" method="post">
 <fieldset>
 [%|loc%]Log level:[%END%] 
-0 <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> |
-1 <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> |
-2 <input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> |
-3 <input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/> |
-4 <input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/>   
+<input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/> <label for="log_level_0">0</label> |
+<input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/> <label for="log_level_1">1</label> |
+<input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/> <label for="log_level_2">2</label> |
+<input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/> <label for="log_level_3">3</label> |
+<input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/> <label for="log_level_4">4</label>  
 <input class="MainMenuLinks" type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" /></fieldset>
 </form>
 </div>
