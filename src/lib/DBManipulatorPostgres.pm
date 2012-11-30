@@ -229,19 +229,50 @@ sub get_fields {
 sub update_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
-    my $options;
+    my $table = $param->{'table'};
+    my $field = $param->{'field'};
+    my $type = $param->{'type'};
+    Log::do_log('debug3', 'Updating field %s in table %s (%s, %s)',
+	$field, $table, $type, $param->{'notnull'});
+    my $options = '';
     if ($param->{'notnull'}) {
 	$options .= ' NOT NULL ';
     }
-    my $report = sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options);
-    &Log::do_log('notice', "ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options);
-    unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
-	&Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
-	return undef;
+    my $report;
+    my @sql;
+
+    ## Conversion between timestamp and integer is not obvious.
+    ## So create new column then copy contents.
+    my $fields = $self->get_fields({'table' => $table});
+    if ($fields->{$field} eq 'timestamptz' and $type =~ /^int/i) {
+	@sql = (
+	    "ALTER TABLE list_table RENAME $field TO ${field}_tmp",
+	    "ALTER TABLE list_table ADD $field $type$options",
+	    "UPDATE list_table SET $field = date_part('epoch', ${field}_tmp)",
+	    "ALTER TABLE list_table DROP ${field}_tmp"
+	);	
+    } else {
+	@sql = sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s %s",
+	    $table, $field, $type, $options);
     }
-    $report .= sprintf("\nField %s in table %s, structure updated", $param->{'field'}, $param->{'table'});
-    &Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    foreach my $sql (@sql) {
+	Log::do_log('notice', '%s', $sql);
+	if ($report) {
+	    $report .= "\n$sql";
+	} else {
+	    $report = $sql;
+	}
+	unless ($self->do_query('%s', $sql)) {
+	    Log::do_log('err',
+		'Could not change field \'%s\' in table\'%s\'.',
+		$param->{'field'}, $param->{'table'});
+	    return undef;
+	}
+    }
+    $report .= sprintf("\nField %s in table %s, structure updated",
+	$field, $table);
+    &Log::do_log('info', 'Field %s in table %s, structure updated',
+	$field, $table);
     return $report;
 }
 
