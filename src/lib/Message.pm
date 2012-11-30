@@ -163,7 +163,7 @@ sub new {
     }  
 
     unless ($message){
-	Log::do_log('err',"could not parse message");
+	Log::do_log('err',"Could not parse message");
 	return undef;
     }
 
@@ -171,60 +171,13 @@ sub new {
     bless $message, $pkg;
 
     $message->{'size'} = length($message->{'msg_as_string'});
+
+    return undef unless($message->get_sender_email);
+
+    $message->get_subject;
+
     my $hdr = $message->{'msg'}->head;
-
-    ## Extract sender address
-    unless ($hdr->get('From')) {
-	Log::do_log('err', 'No From found in message %s, skipping.', $file);
-	return undef;
-    }   
-    my @sender_hdr = Mail::Address->parse($hdr->get('From'));
-    if ($#sender_hdr == -1) {
-	Log::do_log('err', 'No valid address in From: field in %s, skipping', $file);
-	return undef;
-    }
-    $message->{'sender'} = lc($sender_hdr[0]->address);
-
-    unless (&tools::valid_email($message->{'sender'})) {
-	Log::do_log('err', "Invalid From: field '%s'", $message->{'sender'});
-	return undef;
-    }
-
-    ## Store decoded subject and its original charset
-    my $subject = $hdr->get('Subject');
-    if ($subject =~ /\S/) {
-	my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
-	$message->{'subject_charset'} = 'US-ASCII';
-	foreach my $token (@decoded_subject) {
-	    unless ($token->[1]) {
-		# don't decode header including raw 8-bit bytes.
-		if ($token->[0] =~ /[^\x00-\x7F]/) {
-		    $message->{'subject_charset'} = undef;
-		    last;
-		}
-		next;
-	    }
-	    my $cset = MIME::Charset->new($token->[1]);
-	    # don't decode header encoded with unknown charset.
-	    unless ($cset->decoder) {
-		$message->{'subject_charset'} = undef;
-		last;
-	    }
-	    unless ($cset->output_charset eq 'US-ASCII') {
-		$message->{'subject_charset'} = $token->[1];
-	    }
-	}
-    } else {
-	$message->{'subject_charset'} = undef;
-    }
-    if ($message->{'subject_charset'}) {
-	$message->{'decoded_subject'} =
-	    MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
-    } else {
-	$message->{'decoded_subject'} = $subject;
-    }
-    chomp $message->{'decoded_subject'};
-
+    
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};
@@ -322,6 +275,7 @@ sub create_message_from_mime_entity {
     my $pkg = shift;
     my $self = shift;
     my $mimeentity = shift;
+    Log::do_log('debug','Creating message object from MIME entity %s',$mimeentity);
     
     $self->{'msg'} = $mimeentity;
     $self->{'altered'} = '_ALTERED';
@@ -336,6 +290,7 @@ sub create_message_from_mime_entity {
 sub create_message_from_spool {
     my $message_in_spool = shift;
     my $self;
+    Log::do_log('debug','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
     
     $self = create_message_from_string($message_in_spool->{'messageasstring'});
     $self->{'messagekey'}= $message_in_spool->{'messagekey'};
@@ -350,6 +305,7 @@ sub create_message_from_file {
     my $file = shift;
     my $self;
     my $messageasstring;
+    Log::do_log('debug','Creating message object from file %s',$file);
     
     unless (open FILE, "$file") {
 	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
@@ -369,6 +325,7 @@ sub create_message_from_file {
 sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
+    Log::do_log('debug','Creating message object from character string');
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
@@ -409,6 +366,74 @@ sub create_message_from_string {
     return $self;
 }
 
+sub get_sender_email {
+    my $self = shift;
+
+    unless ($self->{'sender'}) {
+	my $hdr = $self->{'msg'}->head;
+
+	## Extract sender address
+	unless ($hdr->get('From')) {
+	    Log::do_log('err', 'No From found in message, skipping.');
+	    return undef;
+	}   
+	my @sender_hdr = Mail::Address->parse($hdr->get('From'));
+	if ($#sender_hdr == -1) {
+	    Log::do_log('err', 'No valid address in From: field. skipping');
+	    return undef;
+	}
+	$self->{'sender'} = lc($sender_hdr[0]->address);
+
+	unless (&tools::valid_email($self->{'sender'})) {
+	    Log::do_log('err', "Invalid From: field '%s'", $self->{'sender'});
+	    return undef;
+	}
+    }
+    return $self->{'sender'};
+}
+
+sub get_subject {
+    my $self = shift;
+
+    unless ($self->{'decoded_subject'}) {
+	my $hdr = $self->{'msg'}->head;
+	## Store decoded subject and its original charset
+	my $subject = $hdr->get('Subject');
+	if ($subject =~ /\S/) {
+	    my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
+	    $self->{'subject_charset'} = 'US-ASCII';
+	    foreach my $token (@decoded_subject) {
+		unless ($token->[1]) {
+		    # don't decode header including raw 8-bit bytes.
+		    if ($token->[0] =~ /[^\x00-\x7F]/) {
+			$self->{'subject_charset'} = undef;
+			last;
+		    }
+		    next;
+		}
+		my $cset = MIME::Charset->new($token->[1]);
+		# don't decode header encoded with unknown charset.
+		unless ($cset->decoder) {
+		    $self->{'subject_charset'} = undef;
+		    last;
+		}
+		unless ($cset->output_charset eq 'US-ASCII') {
+		    $self->{'subject_charset'} = $token->[1];
+		}
+	    }
+	} else {
+	    $self->{'subject_charset'} = undef;
+	}
+	if ($self->{'subject_charset'}) {
+	    $self->{'decoded_subject'} =
+		MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
+	} else {
+	    $self->{'decoded_subject'} = $subject;
+	}
+	chomp $self->{'decoded_subject'};
+    }
+    return $self->{'decoded_subject'};
+}
 =pod 
 
 =head2 sub dump
