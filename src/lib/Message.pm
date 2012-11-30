@@ -172,6 +172,7 @@ sub new {
     $message->{'noxsympato'} = $noxsympato;
     $message->{'size'} = length($message->{'msg_as_string'});
     $message->{'msg_id'} = $message->{'msg'}->head->get('Message-Id');
+    chomp $message->{'msg_id'};
 
     return undef unless($message->get_sender_email);
 
@@ -183,51 +184,17 @@ sub new {
 	Log::do_log('err','Unable to get message receipient');
 	return undef;
     }
+
+    $message->check_x_sympa_checksum;
     
-    ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
-    if ( $hdr->get('X-Sympa-Checksum')) {
-	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
-	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
-
-	if ($chksum eq &tools::sympa_checksum($rcpt)) {
-	    $message->{'md5_check'} = 1 ;
-	}else{
-	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
-	}
-    }
-
     ## S/MIME
     if (Site->openssl) {
-
-	## Decrypt messages
-	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
-	    ($hdr->get('Content-Type') !~ /signed-data/i)){
-	    unless (defined $message->smime_decrypt()) {
-		Log::do_log('err', "Message %s could not be decrypted", $file);
-		return undef;
-		## We should warn the sender and/or the listmaster
-	    }
-	    $hdr = $message->{'msg'}->head;
-	    Log::do_log('notice', "message %s has been decrypted", $file);
-	}
-	
-	## Check S/MIME signatures
-	if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
-	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
-	    $message->smime_sign_check();
-	    if($message->{'smime_signed'}) {
-		Log::do_log('notice', "message %s is signed, signature is checked", $file);
-	    }
-	    ## TODO: Handle errors (0 different from undef)
-	}
-	
+	return undef unless $message->decrypt;
+	$message->check_smime_signature;
     }
     ## TOPICS
-    my $topics;
-    if ($topics = $hdr->get('X-Sympa-Topic')){
-	$message->{'topic'} = $topics;
-    }
 
+    $message->set_topic;
     return $message;
 }
 
@@ -450,6 +417,51 @@ sub get_receipient {
     return $self->{'rcpt'};
 }
 
+sub check_x_sympa_checksum {
+    my $self = shift;
+    my $hdr = $self->{'msg'}->head;
+    ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
+    if ( $hdr->get('X-Sympa-Checksum')) {
+	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
+	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
+
+	if ($chksum eq &tools::sympa_checksum($rcpt)) {
+	    $self->{'md5_check'} = 1 ;
+	}else{
+	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
+	}
+    }
+}
+
+sub decrypt {
+    my $self = shift;
+    ## Decrypt messages
+    my $hdr = $self->{'msg'}->head;
+    if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
+	($hdr->get('Content-Type') !~ /signed-data/i)){
+	unless (defined $self->smime_decrypt()) {
+	    Log::do_log('err', "Message %s could not be decrypted", $self->{'msg_id'});
+	    return undef;
+	    ## We should warn the sender and/or the listmaster
+	}
+	Log::do_log('notice', "message %s has been decrypted", $self->{'msg_id'});
+    }
+    return 1;
+}
+
+sub check_smime_signature {
+    my $self = shift;
+    my $hdr = $self->get_mime_message->head;
+    ## Check S/MIME signatures
+    if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
+	$self->{'protected'} = 1; ## Messages that should not be altered (no footer)
+	$self->smime_sign_check();
+	if($self->{'smime_signed'}) {
+	    Log::do_log('notice', "message %s is signed, signature is checked", $self->{'msg_id'});
+	}
+	## TODO: Handle errors (0 different from undef)
+    }
+}
 =pod 
 
 =head2 sub dump
@@ -551,6 +563,13 @@ sub add_topic {
     return 1;
 }
 
+sub set_topic {
+    my $self = shift;
+    my $topics;
+    if ($topics = $self->get_mime_message->head->get('X-Sympa-Topic')){
+	$self->{'topic'} = $topics;
+    }
+}
 
 =pod 
 
