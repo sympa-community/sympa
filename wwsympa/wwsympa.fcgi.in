@@ -1670,7 +1670,7 @@ my $birthday = time ;
      my $saved_lang = &Language::GetLang();
 
 
-     foreach my $l (@{&Language::GetSupportedLanguages($robot_id)}) {
+     foreach my $l ($robot->supported_languages) {
 	 &Language::SetLang($l) || next;
 
 	 if (gettext("_language_")) {

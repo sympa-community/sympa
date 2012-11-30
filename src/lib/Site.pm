@@ -1447,6 +1447,33 @@ sub listmasters {
     }
 }
 
+=over 4
+
+=item supported_languages
+
+I<Getter>.
+Gets supported languages, canonicalized.
+In array context, returns array of globally supported languages.
+In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+sub supported_languages {
+    my $self = shift;
+    my $supported_lang = $self->supported_lang;
+    unless ($supported_lang) {
+	return () if wantarray;
+	return undef;
+    }
+
+    my @lang_list = map { $Language::lang2locale{$_} || $_ }
+	split /\s*,\s*/, $supported_lang;
+    return @lang_list if wantarray;
+    return \@lang_list;
+}
+
 =head3 Miscelaneous
 
 =over 4

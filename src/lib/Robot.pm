@@ -459,6 +459,20 @@ In array context, returns array of them.
 
 ## Inherited from Site class
 
+=over 4
+
+=item supported_languages
+
+I<Getter>.
+In array context, returns array of supported languages by robot.
+In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+## Inherited from Site class
+
 =head2 FUNCTIONS
 
 =over 4

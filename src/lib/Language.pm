@@ -24,7 +24,7 @@ package Language;
 use strict;
 
 use Exporter;
-use Carp;
+#use Carp; #currently not used
 use POSIX qw(setlocale strftime);
 use Locale::Messages qw (:locale_h :libintl_h !gettext);
 
@@ -108,15 +108,8 @@ my %template2textdomain = ('help_admin.tt2' => 'web_help',
 			   'help_user.tt2' => 'web_help',
 			   );			   
 
-sub GetSupportedLanguages {
-    my $robot = shift;
-    my @lang_list;
-    
-    foreach my $l (split /,/,&Conf::get_robot_conf($robot, 'supported_lang')) {
-	push @lang_list, $lang2locale{$l}||$l;
-    }
-    return \@lang_list;
-}
+##sub GetSupportedLanguages {
+##DEPRECATED: use Site->supported_langauges or $robot->supported_languages.
 
 ## Keep the previous lang ; can be restored with PopLang
 sub PushLang {
