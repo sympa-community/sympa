@@ -1564,6 +1564,14 @@ sub _infer_robot_parameter_values {
         $param->{'config_hash'}{'automatic_list_families'} = \%families_description;
     }
 
+    ## db_list_cache is obsoleted by Sympa 6.2.  Use cache_list_config
+    if ($param->{'config_hash'}{'db_list_cache'} and 
+	$param->{'config_hash'}{'db_list_cache'} eq 'on') {
+	Log::do_log('notice',
+	    'db_list_cache is "on" but it is obsoleted.  Setting cache_list_config as "database".');
+	$param->{'config_hash'}{'cache_list_config'} = 'database';
+    }
+
     &_parse_custom_robot_parameters({'config_hash' => $param->{'config_hash'}});
 }
 
