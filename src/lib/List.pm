@@ -4556,7 +4556,7 @@ sub send_to_editor {
 	    Site->viewmail_dir . '/mod/' . $self->get_list_id() .
 	    '/' . $modkey;
 	&Archive::convert_single_msg_2_html(
-	    {   'msg_as_string'   => $message->{'msg_as_string'},
+	    {   'msg_as_string'   => $message->get_message_as_string,
 		'destination_dir' => $destination_dir,
 		'attachement_url' => "viewmod/$name/$modkey",
 		'list'            => $self,

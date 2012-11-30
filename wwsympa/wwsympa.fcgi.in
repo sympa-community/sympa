@@ -7157,7 +7157,7 @@ sub do_distribute {
     
      if (!$list_topics && $list->is_msg_topic_tagging_required()) {
 	 &report::reject_report_web('user','msg_topic_missing',{},$param->{'action'});
-	 &wwslog('info','do_distribute: message(s) without topic but in a required list');
+	 &wwslog('info','do_distribute: message(s) without topic but in a list requiring topics.');
 	 &web_db_log({'parameters' => $in{'id'},
 		      'status' => 'error',
 		      'error_type' => 'no_topic'});

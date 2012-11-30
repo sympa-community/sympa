@@ -146,7 +146,6 @@ sub mail_file {
 	my $output;
 	my @path = split /\//, $filename;	   
 	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
-	my $dump = &Dumper($data); open (DUMP,">>/tmp/dumper2"); printf DUMP 'avant tt2 \n%s',$dump ; close DUMP;
 	&tt2::parse_tt2($data, $path[$#path], \$output);
 	&Language::PopLang() if (defined $data->{'lang'});
 	$message_as_string .= join('',$output);
@@ -475,7 +474,7 @@ sub mail_forward {
     &Log::do_log('debug2', "mail::mail_forward($from,$rcpt)");
     
     unless (ref($message) eq 'Message') {
-	&Log::do_log('err',"Unespected parameter type: %s.",ref($message));
+	&Log::do_log('err',"Unexpected parameter type: %s.",ref($message));
 	return undef;
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
@@ -532,8 +531,7 @@ sub reaper {
 # send messages, S/MIME encryption if needed, 
 # grouped sending (or not if encryption)
 #  
-# IN: $msg_header (+): message header : MIME::Head object 
-#     $msg_body (+): message body
+# IN: $message (+): Message object 
 #     $from (+): message from
 #     $rcpt(+) : ref(SCALAR) | ref(ARRAY) - message recepients
 #     $listname : use only to format return_path if VERP on
