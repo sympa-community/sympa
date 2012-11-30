@@ -169,61 +169,21 @@ sub new {
 
     ## Bless Message object
     bless $message, $pkg;
-
+    $message->{'noxsympato'} = $noxsympato;
     $message->{'size'} = length($message->{'msg_as_string'});
+    $message->{'msg_id'} = $message->{'msg'}->head->get('Message-Id');
 
     return undef unless($message->get_sender_email);
 
     $message->get_subject;
 
     my $hdr = $message->{'msg'}->head;
-    
-    ## Extract recepient address (X-Sympa-To)
-    $message->{'rcpt'} = $hdr->get('X-Sympa-To');
-    chomp $message->{'rcpt'};
-    unless (defined $noxsympato) { # message.pm can be used not only for message coming from queue
-	unless ($message->{'rcpt'}) {
-	    Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
-	    return undef;
-	}
-	    
-	## get listname & robot
-	my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
-	
-	$robot = lc($robot);
-	$listname = lc($listname);
-	$robot ||= Site->domain;
-	my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
-	$message->{'spam_status'} = 'unkown';
-	if(defined $spam_status) {
-	    if (ref($spam_status ) eq 'HASH') {
-		$message->{'spam_status'} =  $spam_status ->{'action'};
-	    }else{
-		$message->{'spam_status'} = $spam_status ;
-	    }
-	}
-	
-	my $conf_email = &Conf::get_robot_conf($robot, 'email');
-	my $conf_host = &Conf::get_robot_conf($robot, 'host');
-	my $site_email = Site->listmaster_email;
-	my $site_host = Site->host;
-	unless ($listname =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
-	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-		$listname = $1;
-	    }
-	    
-	    my $list = new List ($listname, $robot, {'just_try' => 1});
-	    if ($list) {
-		$message->{'list'} = $list;
-	    }	
-	}
-	# verify DKIM signature
-	if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
-	    $message->{'dkim_pass'} = &tools::dkim_verifier($message->{'msg_as_string'});
-	}
+
+    unless (defined $message->get_receipient) {
+	Log::do_log('err','Unable to get message receipient');
+	return undef;
     }
-        
+    
     ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
     if ( $hdr->get('X-Sympa-Checksum')) {
 	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
@@ -434,6 +394,62 @@ sub get_subject {
     }
     return $self->{'decoded_subject'};
 }
+
+sub get_receipient {
+    my $self = shift;
+    unless ($self->{'rcpt'}) {
+	my $hdr = $self->{'msg'}->head;
+	## Extract recepient address (X-Sympa-To)
+	$self->{'rcpt'} = $hdr->get('X-Sympa-To');
+	chomp $self->{'rcpt'};
+	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
+	    unless ($self->{'rcpt'}) {
+		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
+		return undef;
+	    }
+		
+	    ## get listname & robot
+	    my ($listname, $robot) = split(/\@/,$self->{'rcpt'});
+	    
+	    $robot = lc($robot);
+	    $listname = lc($listname);
+	    $robot ||= Site->domain;
+	    my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $self});
+	    $self->{'spam_status'} = 'unkown';
+	    if(defined $spam_status) {
+		if (ref($spam_status ) eq 'HASH') {
+		    $self->{'spam_status'} =  $spam_status ->{'action'};
+		}else{
+		    $self->{'spam_status'} = $spam_status ;
+		}
+	    }
+	    
+	    my $conf_email = &Conf::get_robot_conf($robot, 'email');
+	    my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	    my $site_email = Site->listmaster_email;
+	    my $site_host = Site->host;
+	    unless ($listname =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
+		my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+		if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
+		    $listname = $1;
+		}
+		
+		my $list = new List ($listname, $robot, {'just_try' => 1});
+		if ($list) {
+		    $self->{'list'} = $list;
+		}	
+	    }
+	    # verify DKIM signature
+	    if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
+		$self->{'dkim_pass'} = &tools::dkim_verifier($self->{'msg_as_string'});
+	    }
+	}
+    }
+    $self->{'rcpt'} = "Dummy" unless (defined $self->{'rcpt'});
+    Log::do_log('trace','Will return receipient "%s"',$self->{'rcpt'});
+    return $self->{'rcpt'};
+}
+
 =pod 
 
 =head2 sub dump
