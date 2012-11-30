@@ -150,82 +150,27 @@ sub new {
     Log::do_log('debug2', 'Message::new(input= %s, noxsympato= %s)',$input,$noxsympato);
     
     if ($mimeentity) {
-	$message->{'msg'} = $mimeentity;
-	$message->{'altered'} = '_ALTERED';
-
-	## Bless Message object
-	bless $message, $pkg;
-	
-	return $message;
+	return create_message_from_mime_entity($pkg,$message,$mimeentity);
     }
-
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-    
-    my $msg;
-
     if ($message_in_spool){
-	$messageasstring = $message_in_spool->{'messageasstring'};
-	$message->{'messagekey'}= $message_in_spool->{'messagekey'};
-	$message->{'spoolname'}= $message_in_spool->{'spoolname'};
-	$message->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
-	$message->{'list'} = $message_in_spool->{'list_object'}
+	$message = create_message_from_spool($message_in_spool);
     }
     if ($file) {
-	## Parse message as a MIME::Entity
-	$message->{'filename'} = $file;
-	unless (open FILE, "$file") {
-	    Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
-	    return undef;
-	}
-	while (<FILE>){
-	    $messageasstring = $messageasstring.$_;
-	}
-	close(FILE);
-	# my $dump = &Dumper($messageasstring); open (DUMP,">>/tmp/dumper"); printf DUMP 'lecture du fichier \n%s',$dump ; close DUMP; 
+	$message = create_message_from_file($file);
     }
     if($messageasstring){
-	if (ref ($messageasstring)){
-	    $msg = $parser->parse_data($messageasstring);
-	}else{
-	    $msg = $parser->parse_data(\$messageasstring);
-	}
-
-	# get envelope sender
-	##FIXME: currently won't work as expected.
-	my $from_ = undef;
-	if (ref $messageasstring) {
-	    if (ref $messageasstring eq 'ARRAY' and
-		$messageasstring->[0] =~ /^From (\S+)/) {
-		$from_ = $1;
-	    } elsif ($$messageasstring =~ /^From (\S+)/) {
-		$from_ = $1;
-	    }
-	} elsif ($messageasstring =~ /^From (\S+)/) {
-	    $from_ = $1;
-	}
-	if (defined $from_) {
-	    if ($from_ =~ /<>/) {
-		$from_ = '<>';
-	    } else {
-		$from_ = tools::clean_email($from_);
-	    }
-	    $message->{'envsender'} = $from_ if $from_;
-	}
+	$message = create_message_from_string($messageasstring);
     }  
 
-    unless ($msg){
-	Log::do_log('err',"could not parse message"); 
+    unless ($message){
+	Log::do_log('err',"could not parse message");
 	return undef;
     }
-    $message->{'msg'} = $msg;
-#    $message->{'msg_as_string'} = $msg->as_string; 
-    $message->{'msg_as_string'} = $messageasstring; 
-    $message->{'size'} = length($msg->as_string);
 
     ## Bless Message object
     bless $message, $pkg;
 
+    $message->{'size'} = length($message->{'msg_as_string'});
     my $hdr = $message->{'msg'}->head;
 
     ## Extract sender address
@@ -373,6 +318,96 @@ sub new {
     return $message;
 }
 
+sub create_message_from_mime_entity {
+    my $pkg = shift;
+    my $self = shift;
+    my $mimeentity = shift;
+    
+    $self->{'msg'} = $mimeentity;
+    $self->{'altered'} = '_ALTERED';
+    $self->{'msg_as_string'} = $self->{'msg'}->as_string;
+
+    ## Bless Message object
+    bless $self, $pkg;
+    
+    return $self;
+}
+
+sub create_message_from_spool {
+    my $message_in_spool = shift;
+    my $self;
+    
+    $self = create_message_from_string($message_in_spool->{'messageasstring'});
+    $self->{'messagekey'}= $message_in_spool->{'messagekey'};
+    $self->{'spoolname'}= $message_in_spool->{'spoolname'};
+    $self->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
+    $self->{'list'} = $message_in_spool->{'list_object'};
+
+    return $self;
+}
+
+sub create_message_from_file {
+    my $file = shift;
+    my $self;
+    my $messageasstring;
+    
+    unless (open FILE, "$file") {
+	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
+	return undef;
+    }
+    while (<FILE>){
+	$messageasstring = $messageasstring.$_;
+    }
+    close(FILE);
+
+    $self = create_message_from_string($messageasstring);
+    $self->{'filename'} = $file;
+
+    return $self;
+}
+
+sub create_message_from_string {
+    my $messageasstring = shift;
+    my $self;
+    
+    my $parser = new MIME::Parser;
+    $parser->output_to_core(1);
+    
+    my $msg;
+
+    if (ref ($messageasstring)){
+	$msg = $parser->parse_data($messageasstring);
+    }else{
+	$msg = $parser->parse_data(\$messageasstring);
+    }
+
+    # get envelope sender
+    ##FIXME: currently won't work as expected.
+    my $from_ = undef;
+    if (ref $messageasstring) {
+	if (ref $messageasstring eq 'ARRAY' and
+	    $messageasstring->[0] =~ /^From (\S+)/) {
+	    $from_ = $1;
+	} elsif ($$messageasstring =~ /^From (\S+)/) {
+	    $from_ = $1;
+	}
+    } elsif ($messageasstring =~ /^From (\S+)/) {
+	$from_ = $1;
+    }
+    if (defined $from_) {
+	if ($from_ =~ /<>/) {
+	    $from_ = '<>';
+	} else {
+	    $from_ = tools::clean_email($from_);
+	}
+	$self->{'envsender'} = $from_ if $from_;
+    }
+    
+    $self->{'msg'} = $msg;
+    $self->{'msg_as_string'} = $messageasstring;
+
+    return $self;
+}
 
 =pod 
 
