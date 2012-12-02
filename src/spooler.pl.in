@@ -318,17 +318,20 @@ if ($signal ne 'hup') {
 	    &Log::do_log('info','Processing file %s',$filename);
 	    my $type;
 	    my $list;
-	    my ($listname, $robot_id);
+	    my ($recipient, $listname, $robot_id, $robot);
 	    my %meta ;
 	    my $spool;
 
-	    ## z and Z are a null priority, so file stay in queue and are processed
-	    ## only if renamed by administrator
-	    next unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/);
 	    next if ($filename =~ /\.lock$/);
 
 	    ## Don't process temporary files created by queue (T.xxx)
 	    next if ($filename =~ /^T\./);
+
+	    ## z and Z are a null priority, so file stay in queue and are processed
+	    ## only if renamed by administrator
+	    next unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/);
+	    $recipient = $1;
+	    $meta{'date'} = $2;
 
 	    ## Lock file
 	    my $lock = new Lock ($spooldir.'/'.$filename);
@@ -341,8 +344,7 @@ if ($signal ne 'hup') {
 		next;
 	    }   
 
-	    ($listname, $robot_id) = split(/\@/,$1);
-	    $meta{'date'} = $2;
+	    ($listname, $robot_id) = split(/\@/, $recipient);
 
 	    # spooler is able to recognize if message is bounce or automatic family list creation.'
 	    if ($listname =~ /Sympa_Bounce\./) {
@@ -365,7 +367,21 @@ if ($signal ne 'hup') {
 		$robot_id = Site->host; #FIXME: is "domain" better?
 	    }
 
-	    my $robot = Robot->new($robot_id);
+	    ## check if robot exists
+	    unless ($robot = Robot->new($robot_id)) {
+		my $message = new Message({'file' => $spooldir.'/'.$filename});
+		$lock->unlock();
+		unless (unlink $spooldir.'/'.$filename) {
+		    Log::do_log('err',
+			'Could not unlink message %s/%s . Exiting',
+			$spooldir, $filename);
+		    exit;
+		}
+		Log::do_log('err', 'robot %s does not exist', $robot_id);
+		Site->send_dsn($message, {'recipient' => $recipient},
+		    '5.1.2');
+		next;
+	    }
 
 	    my $list_check_regexp = $robot->list_check_regexp;
 
