@@ -37,23 +37,25 @@ While processing a message in Sympa, we need to link informations to rhe message
 package Message;
 
 use strict;
-use Data::Dumper;
-use Carp;
-use Mail::Header;
+#use Carp; # currently not used
+#use Mail::Header; #not used
 use Mail::Address;
-use MIME::Entity;
+#use MIME::Entity; #not used
+#use MIME::Charset; #used by MIME::EncWords
 use MIME::EncWords;
 use MIME::Parser;
 use POSIX qw(mkfifo);
-
-use Site;
+# tentative
+use Data::Dumper;
 
 #use List;
 ##The line above was removed to avoid dependency loop.
 ##"use List" MUST precede to "use Message".
+
+#use Site; # loaded in List - Robot
 #use tools; # loaded in Conf
 #use tt2; # loaded by List
-#use Conf; # loaded in List - Site
+#use Conf; # loaded in Site
 #use Log; # loaded in Conf
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
@@ -103,8 +105,6 @@ Creates a new Message object.
 =over 
 
 =item * Log::do_log
-
-=item * Conf::get_robot_conf
 
 =item * List::new
 
@@ -376,12 +376,18 @@ sub get_receipient {
 	    }
 		
 	    ## get listname & robot
-	    my ($listname, $robot) = split(/\@/,$self->{'rcpt'});
-	    
-	    $robot = lc($robot);
+	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
+	    $robot_id = lc($robot_id || '');
 	    $listname = lc($listname);
-	    $robot ||= Site->domain;
-	    my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $self});
+	    $robot_id ||= Site->domain;
+	    my $robot;
+	    unless ($robot = Robot->new($robot_id)) {
+		Log::do_log('err', 'unknown robot %s', $robot_id);
+		return undef;
+	    }
+
+	    my $spam_status = Scenario::request_action(
+		'spam_status', 'smtp', $robot, {'message' => $self});
 	    $self->{'spam_status'} = 'unkown';
 	    if(defined $spam_status) {
 		if (ref($spam_status ) eq 'HASH') {
@@ -391,23 +397,23 @@ sub get_receipient {
 		}
 	    }
 	    
-	    my $conf_email = &Conf::get_robot_conf($robot, 'email');
-	    my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	    my $conf_email = $robot->email;
+	    my $conf_host = $robot->host;
 	    my $site_email = Site->listmaster_email;
 	    my $site_host = Site->host;
 	    unless ($listname =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-		my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+		my $list_check_regexp = $robot->list_check_regexp;
 		if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		    $listname = $1;
 		}
 		
-		my $list = new List ($listname, $robot, {'just_try' => 1});
+		my $list = List->new($listname, $robot, {'just_try' => 1});
 		if ($list) {
 		    $self->{'list'} = $list;
 		}	
 	    }
 	    # verify DKIM signature
-	    if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
+	    if ($robot->dkim_feature eq 'on'){
 		$self->{'dkim_pass'} = &tools::dkim_verifier($self->{'msg_as_string'});
 	    }
 	}
@@ -619,12 +625,13 @@ sub get_topic {
 
 sub clean_html {
     my $self = shift;
-    my ($listname, $robot) = split(/\@/,$self->{'rcpt'});
-    $robot = lc($robot);
+    ##FIXME: rcpt may be undef so robot is unknown
+    my ($listname, $robot_id) = split(/\@/,$self->{'rcpt'});
+    $robot_id = lc($robot_id);
     $listname = lc($listname);
-    $robot ||= Site->host;
+    $robot_id ||= Site->host;
     my $new_msg;
-    if($new_msg = &fix_html_part($self->get_encrypted_mime_message,$robot)) {
+    if($new_msg = &fix_html_part($self->get_encrypted_mime_message,$robot_id)) {
 	$self->{'msg'} = $new_msg;
 	return 1;
     }
@@ -633,13 +640,13 @@ sub clean_html {
 
 sub fix_html_part {
     my $part = shift;
-    my $robot = shift;
+    my $robot_id = shift;
     return $part unless $part;
     my $eff_type = $part->head->mime_attr("Content-Type");
     if ($part->parts) {
 	my @newparts = ();
 	foreach ($part->parts) {
-	    push @newparts, &fix_html_part($_,$robot);
+	    push @newparts, &fix_html_part($_,$robot_id);
 	}
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ /^text\/html/i) {
@@ -663,7 +670,7 @@ sub fix_html_part {
 	    $body = $cset->encode($body);
 	}
 
-	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot);
+	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot_id);
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
@@ -693,11 +700,13 @@ sub smime_decrypt {
     my $list = $self->{'list'};
 
     use Data::Dumper;
-    Log::do_log('debug2', 'Decrypting message from %s,%s', $from, $list->{'name'});
+    Log::do_log('debug2', 'Decrypting message from %s, %s', $from, $list);
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
-    my $dir = $list->{'dir'};
-    unless ($dir) {
+    my $dir;
+    if ($list) {
+	$dir = $list->dir;
+    } else {
 	$dir = Site->home . '/sympa';
     }
     my ($certs,$keys) = tools::smime_find_keys($dir, 'decrypt');

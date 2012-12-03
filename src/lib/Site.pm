@@ -1468,8 +1468,8 @@ sub supported_languages {
 	return undef;
     }
 
-    my @lang_list = map { $Language::lang2locale{$_} || $_ }
-	split /\s*,\s*/, $supported_lang;
+    my @lang_list =
+	map { Language::Lang2Locale($_) } split /\s*,\s*/, $supported_lang;
     return @lang_list if wantarray;
     return \@lang_list;
 }
