@@ -96,7 +96,7 @@ sub do_log {
 	$level = 'info';
     }
 
-    # do not log if log level if too high regarding the log requested by user 
+    # do not log if log level is too high regarding the log requested by user 
     return if defined $log_level and $levels{$level} > $log_level;
     return if ! defined $log_level and $levels{$level} > 0;
 
@@ -121,10 +121,12 @@ sub do_log {
 		push @param, sprintf('%s <%s>', ref $p, $p->get_id);
 	    } else {
 		push @param, ref $p;
-	}
+	    }
+	} elsif (length $p > 100) {
+	    push @param, substr($p, 0, 86) . '...(truncated)';
 	} else {
 	    push @param, $p;
-    }
+	}
     }
 
     ## Determine calling function
