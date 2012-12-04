@@ -122,8 +122,6 @@ sub do_log {
 	    } else {
 		push @param, ref $p;
 	    }
-	} elsif (length $p > 100) {
-	    push @param, substr($p, 0, 86) . '...(truncated)';
 	} else {
 	    push @param, $p;
 	}
