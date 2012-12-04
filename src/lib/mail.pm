@@ -31,11 +31,12 @@ use MIME::Tools;
 # tentative
 use Data::Dumper;
 
-use Conf;
+use Site;
+#use Conf; # used in Site
 #use Log; # load in Conf
 use Language qw(gettext);
 #use List; # no longer used
-use Bulk;
+use Bulk; #FIXME: dependency loop between Bulk & mail
 #use tools; # load in Conf
 #use Sympa::Constants; # load in confdef - Conf
 
@@ -311,7 +312,7 @@ sub mail_file {
 					  'from' => $data->{'return_path'},
 					  'robot' => $self,
 					  'listname' => $listname,
-					  'priority' => $self->sympa_priority,
+					  'priority' => Site->sympa_priority,
 					  'sign_mode' => $sign_mode,
 					  'use_bulk' => $data->{'use_bulk'},
 					  'dkim' => $data->{'dkim'},
@@ -484,7 +485,7 @@ sub mail_forward {
 			     'rcpt' => $rcpt,
 			     'from' => $from,
 			     'robot' => $robot,
-			     'priority'=> $robot->request_priority,
+			     'priority'=> Site->request_priority,
 			     )) {
 	&Log::do_log('err','mail::mail_forward from %s impossible to send',$from);
 	return undef;

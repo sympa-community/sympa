@@ -26,15 +26,14 @@ use strict;
 
 #use Carp; # currently not used
 use POSIX qw(strftime);
+# tentative
+use Data::Dumper;
 
 use Site;
 #use Conf; # used in Site
 #use Log; # used in Conf
 #use Sympa::Constants; # used in Conf - confdef
 #use SDM; # used in Conf
-
-# tentative
-use Data::Dumper;
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
@@ -842,11 +841,11 @@ sub upgrade {
 			    if ($listname eq Site->listmaster_email) {
 				$priority = 0;
 			    }elsif ($type eq 'request') {
-				$priority = &Conf::get_robot_conf($robot, 'request_priority');
+				$priority = Site->request_priority;
 			    }elsif ($type eq 'owner') {
-				$priority = &Conf::get_robot_conf($robot, 'owner_priority');
+				$priority = Site->owner_priority;
 			    }elsif ($listname =~ /^(sympa|$email)(\@$host)?$/i) {	
-				$priority = &Conf::get_robot_conf($robot,'sympa_priority');
+				$priority = Site->sympa_priority;
 				$listname ='';
 			    }
 			    $meta{'priority'} = $priority;

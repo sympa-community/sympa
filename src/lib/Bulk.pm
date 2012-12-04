@@ -22,38 +22,38 @@ package Bulk;
 use strict;
 
 use Encode;
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
-use Carp;
-use IO::Scalar;
-use Storable;
-use Data::Dumper;
-use Mail::Header;
+#use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN); # no longer used
+#use Carp; # currently not used
+#use IO::Scalar; # not used
+#use Storable; # no longer used
+#use Mail::Header; # not used
 use Mail::Address;
-use Time::HiRes qw(time);
-use Time::Local;
-use MIME::Entity;
-use MIME::EncWords;
+#use Time::HiRes qw(time); #currently not used
+#use Time::Local; # not used
+#use MIME::Entity; # not used
+#use MIME::EncWords; # not used
 use MIME::WordDecoder;
 use MIME::Parser;
 use MIME::Base64;
-use Term::ProgressBar;
+#use Term::ProgressBar; # not used
 use URI::Escape;
 use constant MAX => 100_000;
 use Sys::Hostname;
+# tentative
+use Data::Dumper;
 
-#use Lock;
-use Fetch;
-use WebAgent;
-#use tools;
-#use tt2;
+#use Lock; # not used
+#use Fetch; # not used
+#use WebAgent; # not used
+#use tools; # used in List - Site - Conf
+#use tt2; # used in List
 use Language qw(gettext_strftime);
-#use Log;
-#use Conf;
-#use mail;
-use Ldap;
+#use Log; # used in Conf
+#use mail; # not used
+#use Ldap; # not used
 use List;
-use Message;
-#use SDM;
+#use Message; # not used
+#use SDM; # used in Conf
 
 ## Database and SQL statement handlers
 my $sth;
@@ -385,8 +385,8 @@ sub store {
     &Log::do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
 
 
-    $priority_message = &Conf::get_robot_conf($robot,'sympa_priority') unless ($priority_message);
-    $priority_packet = &Conf::get_robot_conf($robot,'sympa_packet_priority') unless ($priority_packet);
+    $priority_message = Site->sympa_priority unless $priority_message;
+    $priority_packet = Site->sympa_packet_priority unless $priority_packet;
     
     #creation of a MIME entity to extract the real sender of a message
     my $parser = MIME::Parser->new();
@@ -471,8 +471,8 @@ sub store {
 	}
 	my $packetid =  &tools::md5_fingerprint($rcptasstring);
 	my $packet_already_exist;
-	if (ref($listname) =~ /List/i) {
-	    $listname = $listname->{'name'};
+	if (ref $listname eq 'List') {
+	    $listname = $listname->name;
 	}
 	if ($message_already_on_spool) {
 	    ## search if this packet is already in spool database : mailfile may perform multiple submission of exactly the same message 
