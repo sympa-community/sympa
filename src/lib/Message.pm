@@ -178,13 +178,14 @@ sub new {
 
     $message->get_subject;
 
-    my $hdr = $message->{'msg'}->head;
-
     unless (defined $message->get_receipient) {
 	Log::do_log('err','Unable to get message receipient');
 	return undef;
     }
 
+    $message->extract_data_from_receipient;
+    $message->check_spam_status;
+    $message->check_dkim_signature;
     $message->check_x_sympa_checksum;
     
     ## S/MIME
@@ -193,8 +194,8 @@ sub new {
 	$message->check_smime_signature;
     }
     ## TOPICS
-
     $message->set_topic;
+    
     return $message;
 }
 
@@ -366,61 +367,73 @@ sub get_receipient {
     my $self = shift;
     unless ($self->{'rcpt'}) {
 	my $hdr = $self->{'msg'}->head;
-	## Extract recepient address (X-Sympa-To)
-	$self->{'rcpt'} = $hdr->get('X-Sympa-To');
-	chomp $self->{'rcpt'};
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
-	    unless ($self->{'rcpt'}) {
+	    unless ($hdr->get('X-Sympa-To')) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
-		
-	    ## get listname & robot
-	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
-	    $robot_id = lc($robot_id || '');
-	    $listname = lc($listname);
-	    $robot_id ||= Site->domain;
-	    my $robot;
-	    unless ($robot = Robot->new($robot_id)) {
-		Log::do_log('err', 'unknown robot %s', $robot_id);
-		return undef;
-	    }
-
-	    my $spam_status = Scenario::request_action(
-		'spam_status', 'smtp', $robot, {'message' => $self});
-	    $self->{'spam_status'} = 'unkown';
-	    if(defined $spam_status) {
-		if (ref($spam_status ) eq 'HASH') {
-		    $self->{'spam_status'} =  $spam_status ->{'action'};
-		}else{
-		    $self->{'spam_status'} = $spam_status ;
-		}
-	    }
-	    
-	    my $conf_email = $robot->email;
-	    my $conf_host = $robot->host;
-	    my $site_email = Site->listmaster_email;
-	    my $site_host = Site->host;
-	    unless ($listname =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-		my $list_check_regexp = $robot->list_check_regexp;
-		if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-		    $listname = $1;
-		}
-		
-		my $list = List->new($listname, $robot, {'just_try' => 1});
-		if ($list) {
-		    $self->{'list'} = $list;
-		}	
-	    }
-	    # verify DKIM signature
-	    if ($robot->dkim_feature eq 'on'){
-		$self->{'dkim_pass'} = &tools::dkim_verifier($self->{'msg_as_string'});
-	    }
+	    ## Extract recepient address (X-Sympa-To)
+	    $self->{'rcpt'} = $hdr->get('X-Sympa-To');
+	    chomp $self->{'rcpt'};
 	}
     }
     $self->{'rcpt'} = "Dummy" unless (defined $self->{'rcpt'});
     Log::do_log('trace','Will return receipient "%s"',$self->{'rcpt'});
     return $self->{'rcpt'};
+}
+
+sub extract_data_from_receipient {
+    my $self = shift;
+    ## get listname & robot
+    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
+    $self->{'robot_id'} = lc($robot_id || '');
+    $self->{'listname'} = lc($listname);
+    $self->{'robot_id'} ||= Site->domain;
+    unless ($self->{'robot'} = Robot->new($self->{'robot_id'})) {
+	Log::do_log('err', 'unknown robot %s', $self->{'robot_id'});
+	##return undef;
+    }
+
+    my $conf_email = $self->{'robot'}->email;
+    my $conf_host = $self->{'robot'}->host;
+    my $site_email = Site->listmaster_email;
+    my $site_host = Site->host;
+    unless ($self->{'listname'} =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
+	my $list_check_regexp = $self->{'robot'}->list_check_regexp;
+	if ($self->{'listname'} =~ /^(\S+)-($list_check_regexp)$/) {
+	    $self->{'listname'} = $1;
+	}
+	
+	my $list = List->new($self->{'listname'}, $self->{'robot'}, {'just_try' => 1});
+	if ($list) {
+	    $self->{'list'} = $list;
+	}	
+    }
+    return 1;
+}
+
+sub check_spam_status {
+    my $self = shift;
+    my $spam_status = Scenario::request_action(
+	'spam_status', 'smtp', $self->{'robot'}, {'message' => $self});
+    $self->{'spam_status'} = 'unkown';
+    if(defined $spam_status) {
+	if (ref($spam_status ) eq 'HASH') {
+	    $self->{'spam_status'} =  $spam_status ->{'action'};
+	}else{
+	    $self->{'spam_status'} = $spam_status ;
+	}
+    }
+    return 1;    
+}
+
+sub check_dkim_signature {
+    my $self = shift;
+    # verify DKIM signature
+    if ($self->{'robot'}->dkim_feature eq 'on'){
+	$self->{'dkim_pass'} = &tools::dkim_verifier($self->{'msg_as_string'});
+    }
+    return 1;
 }
 
 sub check_x_sympa_checksum {
