@@ -41,7 +41,7 @@ use strict;
 #use Mail::Header; #not used
 use Mail::Address;
 #use MIME::Entity; #not used
-#use MIME::Charset; #used by MIME::EncWords
+use MIME::Charset;
 use MIME::EncWords;
 use MIME::Parser;
 use POSIX qw(mkfifo);
@@ -625,28 +625,25 @@ sub get_topic {
 
 sub clean_html {
     my $self = shift;
-    ##FIXME: rcpt may be undef so robot is unknown
-    my ($listname, $robot_id) = split(/\@/,$self->{'rcpt'});
-    $robot_id = lc($robot_id);
-    $listname = lc($listname);
-    $robot_id ||= Site->host;
+    my $robot = shift;
     my $new_msg;
-    if($new_msg = &fix_html_part($self->get_encrypted_mime_message,$robot_id)) {
+    if($new_msg = _fix_html_part($self->get_encrypted_mime_message, $robot)) {
 	$self->{'msg'} = $new_msg;
 	return 1;
     }
     return 0;
 }
 
-sub fix_html_part {
+sub _fix_html_part {
     my $part = shift;
-    my $robot_id = shift;
+    my $robot = shift;
     return $part unless $part;
+
     my $eff_type = $part->head->mime_attr("Content-Type");
     if ($part->parts) {
 	my @newparts = ();
 	foreach ($part->parts) {
-	    push @newparts, &fix_html_part($_,$robot_id);
+	    push @newparts, _fix_html_part($_, $robot);
 	}
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ /^text\/html/i) {
@@ -670,7 +667,8 @@ sub fix_html_part {
 	    $body = $cset->encode($body);
 	}
 
-	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot_id);
+	my $filtered_body = tools::sanitize_html(
+	    'string' => $body, 'robot'=> $robot);
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {

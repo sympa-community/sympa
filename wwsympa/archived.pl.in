@@ -499,9 +499,9 @@ sub rebuild {
     my $tag = &get_tag($listname);
 
     my $list = new List($listname, $hostname);
-    my $robot = $list->{'domain'};
-    my $arcpath = &Conf::get_robot_conf($robot,'arc_path');
-    &Log::do_log('debug',"Rebuilding $adrlist archive ($2)");
+    my $robot = $list->robot;
+    my $arcpath = $robot->arc_path;
+    Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
 
     my $mhonarc_ressources = $list->get_etc_filename('mhonarc-ressources.tt2');
 
@@ -512,10 +512,11 @@ sub rebuild {
 	&unset_hidden_mode();
     }
 
-    &Log::do_log('notice',"Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s",$ENV{'M2H_ADDRESSMODIFYCODE'});
+    &Log::do_log('notice', "Rebuilding %s with M2H_ADDRESSMODIFYCODE : %s",
+	$arc, $ENV{'M2H_ADDRESSMODIFYCODE'});
 
     if ($arc) {
-        &Log::do_log('notice',"Rebuilding  $arc of $adrlist archive");
+        &Log::do_log('notice',"Rebuilding %s of %s archive", $arc, $adrlist);
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
@@ -527,7 +528,7 @@ sub rebuild {
 	    my @files = (grep(/^\d+$/,(readdir DIR )));
 	    close (DIR);
 	    if ($#files == -1) { 
-		&Log::do_log('notice', "Removing empty directory $arcdir");
+		&Log::do_log('notice', "Removing empty directory %s", $arcdir);
 		&tools::remove_dir ($arcdir);
 		next ;	 
 	    } 
@@ -554,14 +555,15 @@ sub rebuild {
 	}	
 	closedir HTML;
 
-	my $arcs_dir = &Archive::clean_archive_directory({'arc_root' => Site->arc_path, 'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	my $arcs_dir = Archive::clean_archive_directory(
+	    $robot, "/$adrlist/$arc/arctxt");
 	my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if($arcs_dir);
 
 	my $cmd = sprintf '%s -modifybodyaddresses -addressmodifycode \'%s\' -rcfile %s -outdir %s/%s/%s-%s  -definevars \"listname=\'%s\' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s\" -umask %s %s',
 	    Site->mhonarc, $ENV{'M2H_ADDRESSMODIFYCODE'},
 	    $mhonarc_ressources, $arcpath, $adrlist, $yyyy, $mm,
 	    $listname, $hostname, $yyyy, $mm, $yyyy, $mm, $arcpath,
-	    Site->wwsympa_url, $tag, Site->umask, $dir_to_rebuild;
+	    $robot->wwsympa_url, $tag, Site->umask, $dir_to_rebuild;
 
 	&Log::do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
@@ -616,8 +618,9 @@ sub rebuild {
 		unlink $arcdir.'/'.$html_file;
 	    }	
 	    closedir HTML;
-	    my $dir_to_rebuild = Site->arc_path . "/$adrlist/$arc/arctxt";
-	    my $arcs_dir = &Archive::clean_archive_directory({'arc_root' => Site->arc_path, 'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	    my $dir_to_rebuild = $robot->arc_path . "/$adrlist/$arc/arctxt";
+	    my $arcs_dir = Archive::clean_archive_directory(
+		$robot, "/$adrlist/$arc/arctxt");
 	    if($arcs_dir) {
 		$dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
 	    }
@@ -629,7 +632,7 @@ sub rebuild {
 	    my $cmd = sprintf '%s -modifybodyaddresses -addressmodifycode \'%s\' -rcfile %s -outdir %s -definevars \"listname=%s hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s\" -umask %s %s',
 		Site->mhonarc, $ENV{'M2H_ADDRESSMODIFYCODE'},
 		$mhonarc_ressources, $arcdir, $listname, $hostname,
-		$yyyy, $mm, $yyyy, $mm, $arcpath, Site->wwsympa_url,
+		$yyyy, $mm, $yyyy, $mm, $arcpath, $robot->wwsympa_url,
 		$tag, Site->umask, $dir_to_rebuild;
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode >> 8;
@@ -871,7 +874,9 @@ sub mail2arc {
 
 	
 	# prepare a temporary file with clean message content (htlm parts are cleaned) 
-	my $safe = &Archive::clean_archived_message({'input'=>$message_in_spool,'output' => $output });
+	my $safe = Archive::clean_archived_message(
+	    $robot, $message_in_spool, $output
+	);
 	unless ($safe) {
 	   &Log::do_log('err',"Could not clean message, ignoring message");
 	    next;
@@ -886,7 +891,7 @@ sub mail2arc {
 	    '%s -add -modifybodyaddresses -addressmodifycode \'%s\' -rcfile %s -outdir %s -definevars "listname=\'%s\' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s" -umask %s < %s',
 	    Site->mhonarc, $ENV{'M2H_ADDRESSMODIFYCODE'},
 	    $mhonarc_ressources, $monthdir, $list->name, $robot->domain,
-	    $yyyy, $mm, $yyyy, $mm, Site->arc_path, Site->wwsympa_url,
+	    $yyyy, $mm, $yyyy, $mm, $robot->arc_path, $robot->wwsympa_url,
 	    $tag, Site->umask, $output;
 	
 	&Log::do_log('debug',"System call : %s",$cmd);

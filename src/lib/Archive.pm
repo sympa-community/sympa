@@ -22,8 +22,8 @@
 package Archive;
 
 use strict;
-use Carp qw(carp);
-use Cwd;
+#use Carp qw(carp); #currently not used
+use Cwd qw(getcwd);
 use Encode qw(decode_utf8 encode_utf8);
 use HTML::Entities qw(decode_entities);
 
@@ -245,12 +245,15 @@ sub load_html_message {
 }
 
 
-sub clean_archive_directory{
-    my $params = shift;
-    &Log::do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
+sub clean_archive_directory {
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $robot = shift;
+    my $dir_to_rebuild = shift;
+
+    my $arc_root = $robot->arc_path;
     my $answer;
-    $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
-    $answer->{'cleaned_dir'} = Site->tmpdir.'/'.$params->{'dir_to_rebuild'};
+    $answer->{'dir_to_rebuild'} = $arc_root . '/' . $dir_to_rebuild;
+    $answer->{'cleaned_dir'} = Site->tmpdir . '/' . $dir_to_rebuild;
     unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
 	&Log::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
 	return undef;
@@ -260,7 +263,8 @@ sub clean_archive_directory{
 	foreach my $file (readdir(ARCDIR)){
 	    next if($file =~ /^\./);	    
 	    $file = $answer->{'cleaned_dir'}.'/'.$file;
-	    $files_left_uncleaned++ unless(&clean_archived_message({'input'=>$file ,'output'=>$file})); 
+	    $files_left_uncleaned++
+		unless(clean_archived_message($robot, $file, $file)); 
 	}
 	closedir DIR;
 	if ($files_left_uncleaned) {
@@ -275,23 +279,25 @@ sub clean_archive_directory{
     return $answer;
 }
 
-sub clean_archived_message{
-    my $params = shift;
-    &Log::do_log('debug',"Cleaning HTML parts of a message input %s , output  %s ",$params->{'input'},$params->{'output'});
+sub clean_archived_message {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $robot = shift;
+    my $input = shift;
+    my $output = shift;
+    my $msg = Message->new({'message_in_spool' => $input, 'noxsympato' => 1});
 
-    my $msg = new Message({'message_in_spool' => $params->{'input'},'noxsympato' => 1});
-    my $output = $params->{'output'};
-
-    if($msg->clean_html()){
-	if(open TMP, ">$output") {
+    if ($msg->clean_html($robot)) {
+	if (open TMP, '>', $output) {
 	    print TMP $msg->get_encrypted_message_as_string;
 	    close TMP;
 	}else{
-	    &Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$output);
+	    &Log::do_log('err',
+		'Unable to create a tmp file to write clean HTML to file %s',
+		$output);
 	    return undef;
 	}
     }else{
-	&Log::do_log('err','HTML cleaning in file %s failed.',$output);
+	Log::do_log('err','HTML cleaning in file %s failed.', $output);
 	return undef;
     }
 }
