@@ -722,7 +722,7 @@ sub upgrade {
 	unless ($sth = &SDM::do_query("SELECT * FROM exclusion_table")) {
 	    &Log::do_log('err','Unable to gather informations from the exclusions table.');
 	}
-	my @robots = &List::get_robots();
+	my @robots = @{Robot::get_robots() || []};
 	while (my $data = $sth->fetchrow_hashref){
 	    next if (defined $data->{'robot_exclusion'} && $data->{'robot_exclusion'} ne '');
 	    ## Guessing right robot for each exclusion.
@@ -738,11 +738,23 @@ sub upgrade {
 	    if ($#valid_robot_candidates == 0) {
 		$valid_robot = $valid_robot_candidates[0];
 		my $sth;
-		unless ($sth = &SDM::do_query("UPDATE exclusion_table SET robot_exclusion = %s WHERE list_exclusion=%s AND user_exclusion=%s", &SDM::quote($valid_robot),&SDM::quote($data->{'list_exclusion'}),&SDM::quote($data->{'user_exclusion'}))) {
+		unless ($sth = SDM::do_query(
+		    q{UPDATE exclusion_table
+		      SET robot_exclusion = %s
+		      WHERE list_exclusion = %s AND user_exclusion = %s},
+		    SDM::quote($valid_robot->domain),
+		    SDM::quote($data->{'list_exclusion'}),
+		    SDM::quote($data->{'user_exclusion'})
+		)) {
 		    &Log::do_log('err','Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',$data->{'list_exclusion'},$data->{'user_exclusion'},$valid_robot);
 		}
 	    }else {
-		&Log::do_log('err',"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",$data->{'user_exclusion'},$data->{'list_exclusion'},@valid_robot_candidates);
+		Log::do_log('err',
+		    "Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",
+		    $data->{'user_exclusion'},
+		    $data->{'list_exclusion'},
+		    join(', ', map { $_->domain } @valid_robot_candidates)
+		);
 	    }
 	}
 	## Caching all list config
@@ -770,7 +782,7 @@ sub upgrade {
 	    closedir(DIR);
 	    my $filename;
 	    my $listname;
-	    my $robot;
+	    my $robot_id;
 
 	    my $ignored = '';
 	    my $performed = '';
@@ -779,7 +791,7 @@ sub upgrade {
 	    foreach my $filename (sort @qfile) {
 		my $type;
 		my $list;
-		my ($listname, $robot);	
+		my ($listname, $robot_id, $robot);	
 		my %meta ;
 
 		&Log::do_log('notice'," spool : $spooldir, fichier $filename");
@@ -791,27 +803,27 @@ sub upgrade {
 		if (($spoolparameter eq 'queuedigest')){
 		    unless ($filename =~ /^([^@]*)\@([^@]*)$/){$ignored .= ','.$filename; next;}
 		    $listname = $1;
-		    $robot = $2;
+		    $robot_id = $2;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif (($spoolparameter eq 'queueauth')||($spoolparameter eq 'queuemod')){
 		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
 		    $listname = $1;
-		    $robot = $2;
+		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif ($spoolparameter eq 'queuetopic'){
 		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
 		    $listname = $1;
-		    $robot = $2;
+		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif ($spoolparameter eq 'queuesubscribe'){
 		    my $match = 0;		    
-		    foreach my $robot (keys %{Site->robots_config}) {
-			&Log::do_log('notice',"robot : $robot");
-			if ($filename =~ /^([^@]*)\@$robot\.(.*)$/){
+		    foreach my $robot_id (keys %{Site->robots_config}) {
+			&Log::do_log('notice',"robot : $robot_id");
+			if ($filename =~ /^([^@]*)\@$robot_id\.(.*)$/){
 			    $listname = $1;
-			    $robot = $2;
+			    $robot_id = $2;
 			    $meta{'authkey'} = $3;
 			    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 			    $match = 1;
@@ -824,28 +836,35 @@ sub upgrade {
 		    next if ($filename =~ /^T\./);
 
 		    unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/){$ignored .= ','.$filename;next;}
-		    ($listname, $robot) = split(/\@/,$1);
+		    my $recipient = $1;
+		    ($listname, $robot_id) = split /\@/, $recipient;
 		    $meta{'date'} = $2;
+		    $robot_id = lc($robot_id || Site->domain);
+		    ## check if robot exists
+		    unless ($robot = Robot->new($robot_id)) {
+			$ignored .= ',' . $filename;
+			next;
+		    }
 		    
 		    if ($spoolparameter eq 'queue') {
-			my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+			my $list_check_regexp = $robot->list_check_regexp;
 			if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 			    ($listname, $type) = ($1, $2);
 			    $meta{'type'} = $type if $type;
 
-			    my $email = &Conf::get_robot_conf($robot, 'email');	
+			    my $email = $robot->email;
 			    my $host = Site->host;
 
 			    my $priority;
 			    
-			    if ($listname eq Site->listmaster_email) {
+			    if ($listname eq $robot->listmaster_email) {
 				$priority = 0;
 			    }elsif ($type eq 'request') {
-				$priority = Site->request_priority;
+				$priority = $robot->request_priority;
 			    }elsif ($type eq 'owner') {
-				$priority = Site->owner_priority;
+				$priority = $robot->owner_priority;
 			    }elsif ($listname =~ /^(sympa|$email)(\@$host)?$/i) {	
-				$priority = Site->sympa_priority;
+				$priority = $robot->sympa_priority;
 				$listname ='';
 			    }
 			    $meta{'priority'} = $priority;
@@ -855,13 +874,14 @@ sub upgrade {
 		}
 		
 		$listname = lc($listname);
-		if ($robot) {
-		    $robot=lc($robot);
-		}else{
-		    $robot = lc(&Conf::get_robot_conf($robot, 'host'));
+		$robot_id = lc($robot_id || Site->domain);
+		## check if robot exists
+		unless ($robot = Robot->new($robot_id)) {
+		    $ignored .= ',' . $filename;
+		    next;
 		}
 
-		$meta{'robot'} = $robot if $robot;
+		$meta{'robot'} = $robot_id if $robot_id;
 		$meta{'list'} = $listname if $listname;
 		$meta{'priority'} = 1 unless $meta{'priority'};
 		

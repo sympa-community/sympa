@@ -28,7 +28,7 @@ use Encode;
 #use Storable; # no longer used
 #use Mail::Header; # not used
 use Mail::Address;
-#use Time::HiRes qw(time); #currently not used
+#use Time::HiRes qw(time); # For more precise date; currently not used
 #use Time::Local; # not used
 #use MIME::Entity; # not used
 #use MIME::EncWords; # not used
@@ -368,7 +368,7 @@ sub store {
     my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
     my $rcpts = $data{'rcpts'};
     my $from = $data{'from'};
-    my $robot = $data{'robot'};
+    my $robot = Robot::clean_robot($data{'robot'}, 1); # maybe Site
     my $listname = $data{'listname'};
     my $priority_message = $data{'priority_message'};
     my $priority_packet = $data{'priority_packet'};
@@ -385,8 +385,8 @@ sub store {
     &Log::do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
 
 
-    $priority_message = Site->sympa_priority unless $priority_message;
-    $priority_packet = Site->sympa_packet_priority unless $priority_packet;
+    $priority_message = $robot->sympa_priority unless $priority_message;
+    $priority_packet = $robot->sympa_packet_priority unless $priority_packet;
     
     #creation of a MIME entity to extract the real sender of a message
     my $parser = MIME::Parser->new();
@@ -431,11 +431,12 @@ sub store {
 	$last_stored_message_key = $message->{'messagekey'};
 	
 	#log in stat_table to make statistics...
-	#FIXME: use OO instead of robot name.
-	my $robot_domain = ($robot eq '*') ? Site->domain : $robot;
-	unless($message_sender =~ /($robot_domain)\@/) { #ignore messages sent by robot
-	    unless ($message_sender =~ /($listname)-request/) { #ignore messages of requests			
-		&Log::db_stat_log({'robot' => $robot, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
+	my $robot_domain = $robot->domain;
+	unless (index($message_sender, "$robot_domain\@") >= 0) {
+	    #ignore messages sent by robot
+	    unless (index($message_sender, "$listname-request") >= 0) {
+		#ignore messages of requests			
+		Log::db_stat_log({'robot' => $robot->name, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
 				   'mail' => $message_sender, 'client' => '', 'daemon' => 'sympa.pl'});
 	    }
 	}
@@ -488,7 +489,7 @@ sub store {
 	    &Log::do_log('err','Duplicate message not stored in bulmailer_table');
 	    
 	}else {
-	    unless (&SDM::do_query( "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", &SDM::quote($message->{'messagekey'}),&SDM::quote($msg_id),&SDM::quote($packetid),&SDM::quote($rcptasstring),&SDM::quote($from),&SDM::quote($robot),&SDM::quote($listname),$verp,&SDM::quote($tracking),$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date)) {
+	    unless (&SDM::do_query( "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", &SDM::quote($message->{'messagekey'}),&SDM::quote($msg_id),&SDM::quote($packetid),&SDM::quote($rcptasstring),&SDM::quote($from),&SDM::quote($robot->name),&SDM::quote($listname),$verp,&SDM::quote($tracking),$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date)) {
 		&Log::do_log('err','Unable to add packet %s of message %s to database spool',$packetid,$msg_id);
 		return undef;
 	    }

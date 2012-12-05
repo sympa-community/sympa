@@ -353,7 +353,7 @@ our @params = (
     },
     {
         'name'     => 'pictures_max_size',
-        'default'  => 102400, ## 100Kb,
+        'default'  => 102400, ## 100 kiB,
         'vhost'    => '1',
     },
     {
@@ -538,7 +538,7 @@ our @params = (
     {
         'name'     => 'max_size',
         'query'    => gettext('Default maximum size (in bytes) for messages (can be re-defined for each list)'),
-        'default'  => '5242880',
+        'default'  => '5242880', ## 5 MiB
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -627,7 +627,7 @@ our @params = (
     },
     {
         'name'     => 'urlize_min_size',
-        'default'  => 10240, ## 10Kb,
+        'default'  => 10240, ## 10 kiB,
     },
 
     { 'title' => gettext('Bulk mailer') },
@@ -642,6 +642,7 @@ our @params = (
         'query'    => gettext('Default priority for a packet to be sent by bulk.'),
         'file'     => 'sympa.conf',
         'default'  => '5',
+        'vhost'    => '1',
     },
     {
         'name'     => 'bulk_fork_threshold',
@@ -1007,22 +1008,26 @@ our @params = (
         'query'    => gettext('Sympa commands priority'),
         'file'     => 'sympa.conf',
         'default'  => '1',
+        'vhost'    => '1',
     },
     {
         'name'     => 'request_priority',
         'default'  => '0',
         'file'     => 'sympa.conf',
+        'vhost'    => '1',
     },
     {
         'name'     => 'owner_priority',
         'default'  => '9',
         'file'     => 'sympa.conf',
+        'vhost'    => '1',
     },
     {
         'name'     => 'default_list_priority',
         'query'    => gettext('Default priority for list messages'),
         'file'     => 'sympa.conf',
         'default'  => '5',
+        'vhost'    => '1',
     },
 
     { 'title' => gettext('Database related') },

@@ -25,14 +25,13 @@ use strict;
 require Exporter;
 #use Carp; # currently not used.
 use POSIX;
-use Time::Local;
-use MIME::Charset;
+#use Time::Local; # no longer used
+use MIME::EncWords;
 use MIME::Tools;
 # tentative
 use Data::Dumper;
 
-use Site;
-#use Conf; # used in Site
+#use Conf; # used in Bulk - List - Site
 #use Log; # load in Conf
 use Language qw(gettext);
 #use List; # no longer used
@@ -312,7 +311,7 @@ sub mail_file {
 					  'from' => $data->{'return_path'},
 					  'robot' => $self,
 					  'listname' => $listname,
-					  'priority' => Site->sympa_priority,
+					  'priority' => $self->sympa_priority,
 					  'sign_mode' => $sign_mode,
 					  'use_bulk' => $data->{'use_bulk'},
 					  'dkim' => $data->{'dkim'},
@@ -485,7 +484,7 @@ sub mail_forward {
 			     'rcpt' => $rcpt,
 			     'from' => $from,
 			     'robot' => $robot,
-			     'priority'=> Site->request_priority,
+			     'priority'=> $robot->request_priority,
 			     )) {
 	&Log::do_log('err','mail::mail_forward from %s impossible to send',$from);
 	return undef;
@@ -652,7 +651,7 @@ sub sending {
     my $sign_mode = $params{'sign_mode'};
     my $sympa_email =  $params{'sympa_email'};
     my $priority_message =  $params{'priority'};
-    my $priority_packet = Site->sympa_packet_priority;
+    my $priority_packet = $robot->sympa_packet_priority;
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date); 
     my $verp  =  $params{'verp'};

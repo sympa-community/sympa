@@ -387,28 +387,29 @@ if ($signal ne 'hup') {
 
 	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		($listname, $type) = ($1, $2);
+	    } else {
+		$type = undef;
 	    }
 	    my $email = $robot->email;	
 	    my $site_host = Site->host;
 
 	    my $priority;
 
-	    #FIXME: robot addresses should be checked too.
-	    if ($listname eq Site->listmaster_email) {
+	    if ($listname eq $robot->listmaster_email) {
 		$priority = 0;
-	    }elsif ($type eq 'request') {
-		$priority = Site->request_priority;
-	    }elsif ($type eq 'owner') {
-		$priority = Site->owner_priority;
+	    } elsif ($type and $type eq 'request') {
+		$priority = $robot->request_priority;
+	    } elsif ($type and $type eq 'owner') {#FIXME:use return_path_suffix
+		$priority = $robot->owner_priority;
 	    }elsif ($listname =~ /^(sympa|$email)(\@$site_host)?$/i) {	
-		$priority = Site->sympa_priority;
+		$priority = $robot->sympa_priority;
 		$listname ='';
 	    }
-	    my $list =  new List ($listname, $robot, {'just_try' => 1});
+	    $list = List->new($listname, $robot, {'just_try' => 1});
 	    if ($list) {
 		$priority = $list->priority;
 	    }else {
-		$priority = Site->default_list_priority;
+		$priority = $robot->default_list_priority;
 	    }
 
 	    $meta{'robot'} = $robot_id if $robot_id;
