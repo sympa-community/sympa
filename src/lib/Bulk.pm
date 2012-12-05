@@ -102,22 +102,35 @@ sub next {
 
     my $packet;
     unless($packet = $sth->fetchrow_hashref('NAME_lc')){	
+	$sth->finish;
 	return undef;
     }
+    $sth->finish;
 
-    my $rv;
     # Lock the packet previously selected.
-    unless ($rv = &SDM::do_query( "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", &SDM::quote($lock), $packet->{'messagekey'}, $packet->{'packetid'})) {
-	&Log::do_log('err','Unable to lock packet %s for message %s',$packet->{'packetid'}, $packet->{'messagekey'});
+    unless ($sth = SDM::do_prepared_query(
+	q{UPDATE bulkmailer_table
+	  SET lock_bulkmailer = ?
+	  WHERE messagekey_bulkmailer = ? AND packetid_bulkmailer = ? AND
+		lock_bulkmailer IS NULL},
+	$lock, $packet->{'messagekey'}, $packet->{'packetid'}
+    )) {
+	Log::do_log('err',
+	    'Unable to lock packet %s for message %s',
+	    $packet->{'packetid'}, $packet->{'messagekey'}
+	);
 	return undef;
     }
     
-    if ($rv < 0) {
-	&Log::do_log('err','Unable to lock packet %s for message %s, though the query succeeded',$packet->{'packetid'}, $packet->{'messagekey'});
+    if ($sth->rows < 0) {
+	Log::do_log('err',
+	    'Unable to lock packet %s for message %s, though the query succeeded',
+	    $packet->{'packetid'}, $packet->{'messagekey'}
+	);
 	return undef;
     }
-    unless ($rv) {
-	&Log::do_log('info','Bulk packet is already locked');
+    unless ($sth->rows) {
+	Log::do_log('info','Bulk packet is already locked');
 	return undef;
     }
 
@@ -489,8 +502,30 @@ sub store {
 	    &Log::do_log('err','Duplicate message not stored in bulmailer_table');
 	    
 	}else {
-	    unless (&SDM::do_query( "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", &SDM::quote($message->{'messagekey'}),&SDM::quote($msg_id),&SDM::quote($packetid),&SDM::quote($rcptasstring),&SDM::quote($from),&SDM::quote($robot->name),&SDM::quote($listname),$verp,&SDM::quote($tracking),$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date)) {
-		&Log::do_log('err','Unable to add packet %s of message %s to database spool',$packetid,$msg_id);
+	    unless (SDM::do_prepared_query(
+		q{INSERT INTO bulkmailer_table
+		  (messagekey_bulkmailer, messageid_bulkmailer,
+		   packetid_bulkmailer,
+		   receipients_bulkmailer, returnpath_bulkmailer,
+		   robot_bulkmailer,
+		   listname_bulkmailer,
+		   verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer,
+		   priority_message_bulkmailer, priority_packet_bulkmailer,
+		   reception_date_bulkmailer, delivery_date_bulkmailer)
+		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+		$message->{'messagekey'}, $msg_id,
+		$packetid,
+		$rcptasstring, $from,
+		$robot->name, ## '*' for Site
+		$listname,
+		$verp, $tracking, $merge,
+		$priority_message, $priority_for_packet,
+		$current_date, $delivery_date
+	    )) {
+		Log::do_log('err',
+		    'Unable to add packet %s of message %s to database spool',
+		    $packetid, $msg_id
+		);
 		return undef;
 	    }
 	}
