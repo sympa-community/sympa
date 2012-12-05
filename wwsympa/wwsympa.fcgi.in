@@ -2101,7 +2101,7 @@ sub get_parameters {
  	 next if ($in{$p} =~ /^$/);
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{$p} =~ s/\015//g;	 
+	 $in{$p} =~ s/\r\n|\r/\n/g;	 
 
 	 #XXX## Convert from the web encoding to unicode string
 	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
@@ -2352,7 +2352,7 @@ sub get_parameters_old {
  	 next if ($in{$p} =~ /^$/);
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{$p} =~ s/\015//g;	 
+	 $in{$p} =~ s/\r\n|\r/\n/g;	 
 
 	 #XXX## Convert from the web encoding to unicode string
 	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
@@ -7503,7 +7503,7 @@ sub do_savefile {
      if ($in{'content'} && ($in{'content'} !~ /^\s*$/)) {			
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{'content'} =~ s/\015//g;
+	 $in{'content'} =~ s/\r\n|\r/\n/g;
 
 	 ## Create directory if required
 	 my $dir = $param->{'filepath'};
@@ -16693,12 +16693,12 @@ sub do_blacklist {
 	    &wwslog('info','do_blacklist : unable to create file %s',$file);
 	    &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	}
+
+	$in{'blacklist'} =~ s/\r\n|\r/\n/g;
 	my @lines = split(/\n/, $in{'blacklist'});
 	$param->{'ignored'} = 0;
 	my $count = 0; # count utils lines in order to remove empty blacklist file
 	foreach my $line (@lines) {
-	    $line =~ s/\015//;
-
 	    if ($line =~ /\*.*\*/) {
 		$param->{'ignored_linest'} .=  $line."\n";
 		$param->{'ignored'} += 1;
