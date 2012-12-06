@@ -360,6 +360,8 @@ if ($signal ne 'hup') {
 		}
 	    }
 	    
+	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
+	    
 	    $listname = lc($listname);
 	    if ($robot_id) {
 		$robot_id = lc($robot_id);
@@ -420,8 +422,6 @@ if ($signal ne 'hup') {
 		$meta{'priority'} = 1;
 	    }
 	    $meta{'type'} = $type if $type;
-	    
-	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
 	    
 	    my $messagekey = $spool->store($message->{'msg_as_string'},\%meta);
 	    unless($messagekey) {

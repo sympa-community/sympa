@@ -8003,7 +8003,7 @@ sub do_send_me {
      my $message;
      if ($msgfile) {
 
-	 unless ($message = new Message({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato'}) ) {
+	 unless ($message = new Message({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato', 'list' => $list}) ) {
 	     $param->{'status'} = 'message_err';
 	     &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
 	     return undef;
@@ -16084,7 +16084,7 @@ sub do_compose_mail {
 ####################################################
 sub do_send_mail {
     
-    &wwslog('info', 'do_send_mail');
+    &wwslog('info', 'do_send_mail(%s)',$robot_id);
     
     my $to;
     my $message = $param->{'message'};

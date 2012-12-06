@@ -173,17 +173,17 @@ sub new {
     $message->{'size'} = length($message->{'msg_as_string'});
     $message->{'msg_id'} = $message->{'msg'}->head->get('Message-Id');
     chomp $message->{'msg_id'};
+    $message->{'list'} ||= $datas->{'list'}; # Some messages without X-Sympa-To still need a list context.
 
     return undef unless($message->get_sender_email);
 
     $message->get_subject;
-
-    unless (defined $message->get_receipient) {
-	Log::do_log('err','Unable to get message receipient');
-	return undef;
-    }
-
-    $message->extract_data_from_receipient;
+    $message->get_receipient;
+    Log::do_log('trace', 'après get_recipient: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
+    $message->get_robot;
+    Log::do_log('trace', 'après get_robot: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
+    $message->get_sympa_local_part;
+    Log::do_log('trace', 'après get_sympa_local_part: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->check_spam_status;
     $message->check_dkim_signature;
     $message->check_x_sympa_checksum;
@@ -203,7 +203,7 @@ sub create_message_from_mime_entity {
     my $pkg = shift;
     my $self = shift;
     my $mimeentity = shift;
-    Log::do_log('debug','Creating message object from MIME entity %s',$mimeentity);
+    Log::do_log('trace','Creating message object from MIME entity %s',$mimeentity);
     
     $self->{'msg'} = $mimeentity;
     $self->{'altered'} = '_ALTERED';
@@ -218,13 +218,15 @@ sub create_message_from_mime_entity {
 sub create_message_from_spool {
     my $message_in_spool = shift;
     my $self;
-    Log::do_log('debug','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
+    Log::do_log('trace','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
     
     $self = create_message_from_string($message_in_spool->{'messageasstring'});
     $self->{'messagekey'}= $message_in_spool->{'messagekey'};
     $self->{'spoolname'}= $message_in_spool->{'spoolname'};
     $self->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
     $self->{'list'} = $message_in_spool->{'list_object'};
+    $self->{'robot_id'} = $message_in_spool->{'robot'};
+    Log::do_log('trace', 'list "%s", robot "%s"', $self->{'list'} , $self->{'robot_id'});
 
     return $self;
 }
@@ -233,7 +235,7 @@ sub create_message_from_file {
     my $file = shift;
     my $self;
     my $messageasstring;
-    Log::do_log('debug','Creating message object from file %s',$file);
+    Log::do_log('trace','Creating message object from file %s',$file);
     
     unless (open FILE, "$file") {
 	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
@@ -246,14 +248,27 @@ sub create_message_from_file {
 
     $self = create_message_from_string($messageasstring);
     $self->{'filename'} = $file;
+    $file =~ s/^.*\/([^\/]+)$/$1/;
+    Log::do_log('trace','Will analyze file name %s',$file);
+    unless ($file =~ /^(\S+)\.(\d+)\.\w+$/) {
+	Log::do_log('err','Unable to extract data from filename %s',$file);
+    }else{
+	$self->{'rcpt'} = $1;
+	$self->{'date'} = $2;
 
+	($self->{'listname'}, $self->{'robot_id'}) = split(/\@/, $self->{'rcpt'});
+    }
+    
     return $self;
 }
 
 sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
-    Log::do_log('debug','Creating message object from character string');
+    Log::do_log('trace','Creating message object from character string');
+    foreach my $line (split '\n',$messageasstring) {
+	Log::do_log('trace','%s',$line);
+    }
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
@@ -365,51 +380,81 @@ sub get_subject {
 
 sub get_receipient {
     my $self = shift;
+    my $hdr = $self->{'msg'}->head;
     unless ($self->{'rcpt'}) {
-	my $hdr = $self->{'msg'}->head;
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
 	    unless ($hdr->get('X-Sympa-To')) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
-	    ## Extract recepient address (X-Sympa-To)
-	    $self->{'rcpt'} = $hdr->get('X-Sympa-To');
-	    chomp $self->{'rcpt'};
+	}else {
+	    unless ($hdr->get('To')) {
+		Log::do_log('err', 'no To: header found, ignoring message.');
+		return undef;
+	    }
 	}
+	## Extract recepient address (X-Sympa-To)
+	$self->{'rcpt'} = $hdr->get('X-Sympa-To');
+	chomp $self->{'rcpt'};
     }
-    $self->{'rcpt'} = "Dummy" unless (defined $self->{'rcpt'});
     Log::do_log('trace','Will return receipient "%s"',$self->{'rcpt'});
     return $self->{'rcpt'};
 }
 
-sub extract_data_from_receipient {
+sub get_sympa_local_part {
     my $self = shift;
-    ## get listname & robot
-    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
-    $self->{'robot_id'} = lc($robot_id || '');
-    $self->{'listname'} = lc($listname);
-    $self->{'robot_id'} ||= Site->domain;
-    unless ($self->{'robot'} = Robot->new($self->{'robot_id'})) {
-	Log::do_log('err', 'unknown robot %s', $self->{'robot_id'});
-	##return undef;
-    }
-
-    my $conf_email = $self->{'robot'}->email;
-    my $conf_host = $self->{'robot'}->host;
-    my $site_email = Site->listmaster_email;
-    my $site_host = Site->host;
-    unless ($self->{'listname'} =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-	my $list_check_regexp = $self->{'robot'}->list_check_regexp;
-	if ($self->{'listname'} =~ /^(\S+)-($list_check_regexp)$/) {
-	    $self->{'listname'} = $1;
+    unless ($self->{'list'}) {
+	if ($self->{'robot'}) {
+	    Log::do_log('trace','Looking for known local part "%s" in robot "%s"',$self->{'listname'},$self->{'robot'});
+	    my $conf_email = $self->{'robot'}->email;
+	    my $conf_host = $self->{'robot'}->host;
+	    my $site_email = Site->listmaster_email;
+	    my $site_host = Site->host;
+	    unless ($self->{'listname'} =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
+		my $list_check_regexp = $self->{'robot'}->list_check_regexp;
+		if ($self->{'listname'} =~ /^(\S+)-($list_check_regexp)$/) {
+		    $self->{'listname'} = $1;
+		}
+		
+		my $list = List->new($self->{'listname'}, $self->{'robot'}, {'just_try' => 1});
+		if ($list) {
+		    $self->{'list'} = $list;
+		}	
+	    }
+	}else{
+	    Log::do_log('trace','No robot: will not find list');
 	}
-	
-	my $list = List->new($self->{'listname'}, $self->{'robot'}, {'just_try' => 1});
-	if ($list) {
-	    $self->{'list'} = $list;
-	}	
+    }else{
+	Log::do_log('trace','List "%s" already identified',$self->{'list'});
     }
     return 1;
+}
+
+sub get_robot {
+    my $self = shift;
+    unless ($self->{'robot'}) {
+	unless ($self->{'robot_id'}) {
+	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
+	    $self->{'robot_id'} = lc($robot_id || '');
+	    $self->{'listname'} = lc($listname);
+	    $self->{'robot_id'} ||= Site->domain;
+	}
+	unless ($self->{'robot'} = Robot->new($self->{'robot_id'})) {
+	    # If no robot can be found in rcpt, we can try with X-Sympa-From
+	    Log::do_log('err', 'unknown robot %s', $self->{'robot_id'});
+	    if (my $from = $self->get_mime_message->head->get('X-Sympa-From')) {
+		chomp $from;
+		my ($listname, $robot_id) = split /\@/, $from;
+		$self->{'robot_id'} = lc($robot_id || '');
+		$self->{'robot'} = Robot->new($self->{'robot_id'});
+	    }
+	}
+	unless ($self->{'robot'}) {
+	    Log::do_log('err', 'Unable to define a robot context. Aborting.');
+	    return undef;
+	}
+    }
+    return $self->{'robot'};
 }
 
 sub check_spam_status {
@@ -708,10 +753,11 @@ sub get_body_from_msg_as_string {
 sub smime_decrypt {
     my $self = shift;
     my $from = $self->{'msg'}->head->get('from');
+    chomp $from;
     my $list = $self->{'list'};
 
     use Data::Dumper;
-    Log::do_log('debug2', 'Decrypting message from %s, %s', $from, $list);
+    Log::do_log('trace', 'Decrypting message from %s, %s', $from, $list);
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir;

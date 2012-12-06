@@ -25,7 +25,7 @@ use strict;
 require Exporter;
 #use Carp; # currently not used.
 use POSIX;
-#use Time::Local; # no longer used
+use Time::Local;
 use MIME::EncWords;
 use MIME::Tools;
 # tentative
@@ -114,7 +114,7 @@ sub mail_file {
     my $filename = shift;
     my $rcpt = shift;
     my $data = shift;
-    my $self = Robot::clean_robot(shift, 1); # May be Site
+    my $robot = Robot::clean_robot(shift, 1); # May be Site
     my $return_message_as_string = shift;
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
@@ -299,19 +299,20 @@ sub mail_file {
     my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP 'avant \n%s',$dump ; close DUMP;
 
     ## Set it in case it was not set
-    $data->{'return_path'} ||= $self->request;
+    $data->{'return_path'} ||= $robot->request;
+    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->request}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
 
-    my $message = new Message ({'messageasstring'=>$message_as_string,'noxsympato'=>'noxsympato'});
+    my $message = new Message ({'messageasstring'=>$message_as_string});
 
     ## SENDING
     return undef unless (defined &sending('message' => $message,
 					  'rcpt' => $rcpt,
 					  'from' => $data->{'return_path'},
-					  'robot' => $self,
+					  'robot' => $robot,
 					  'listname' => $listname,
-					  'priority' => $self->sympa_priority,
+					  'priority' => $robot->sympa_priority,
 					  'sign_mode' => $sign_mode,
 					  'use_bulk' => $data->{'use_bulk'},
 					  'dkim' => $data->{'dkim'},
@@ -483,8 +484,8 @@ sub mail_forward {
     unless (defined &sending('message' => $message, 
 			     'rcpt' => $rcpt,
 			     'from' => $from,
-			     'robot' => $robot,
-			     'priority'=> $robot->request_priority,
+			     'robot' => $message->{'robot'},
+			     'priority'=> $message->{'robot'}->request_priority,
 			     )) {
 	&Log::do_log('err','mail::mail_forward from %s impossible to send',$from);
 	return undef;
@@ -713,36 +714,60 @@ sub sending {
 	    return undef;
 	}
     }elsif(defined $send_spool) { # in context wwsympa.fcgi do not send message to reciepients but copy it to standard spool 
-	&Log::do_log('debug',"NOT USING BULK");
+	&Log::do_log('trace',"NOT USING SPOOLER");
 
-	$sympa_email = $robot->sympa;
-	$sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
-	unless (open TMP, ">$sympa_file") {
-	    &Log::do_log('notice', 'mail::sending Cannot create %s : %s', $sympa_file, $!);
+	my $message_as_string = $message->get_message_as_string;
+	unless($message->get_mime_message->head->get('X-Sympa-To')) {
+	    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $from}).$message_as_string;
+	}
+	my $message = new Message ({'messageasstring' => $message_as_string});
+	my %meta;
+	$meta{'date'} = time;
+	$meta{'robot'} = $message->{'robot_id'} if $message->{'robot_id'};
+	$meta{'list'} = $message->{'list'}{'name'} if $message->{'list'};
+	if ($message->{'priority'}) {
+	    $meta{'priority'} = $message->{'priority'} ;
+	}else{ 
+	    $meta{'priority'} = 1;
+	}
+	$meta{'type'} = $message->{'type'} if $message->{'type'};
+	
+	my $msgspool = new Sympaspool('msg');
+	
+	my $messagekey = $msgspool->store($message_as_string,\%meta);
+	unless($messagekey) {
+	    Log::do_log('err',"Could not store message from %s to %s in db spool",$rcpt, $from);
 	    return undef;
 	}
-	
-	my $all_rcpt;
-	if (ref($rcpt) eq 'SCALAR') {
-	    $all_rcpt = $$rcpt;
-	}elsif (ref($rcpt) eq 'ARRAY') {
-	    $all_rcpt = join(',', @{$rcpt});
-	}else {
-	    $all_rcpt = $rcpt;
-	}
-	printf TMP "X-Sympa-To: %s\n", $all_rcpt;
-	printf TMP "X-Sympa-From: %s\n", $from;
-	printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
 
-	print TMP $message->{'msg_as_string'} ;
-	close TMP;
-	my $new_file = $sympa_file;
-	$new_file =~ s/T\.//g;
-	
-	unless (rename $sympa_file, $new_file) {
-	    &Log::do_log('notice', 'Cannot rename %s to %s : %s', $sympa_file, $new_file, $!);
-	    return undef;
-	}
+	##$sympa_email = $robot->sympa;
+	##$sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
+	##unless (open TMP, ">$sympa_file") {
+	    ##&Log::do_log('notice', 'mail::sending Cannot create %s : %s', $sympa_file, $!);
+	    ##return undef;
+	##}
+	##
+	##my $all_rcpt;
+	##if (ref($rcpt) eq 'SCALAR') {
+	    ##$all_rcpt = $$rcpt;
+	##}elsif (ref($rcpt) eq 'ARRAY') {
+	    ##$all_rcpt = join(',', @{$rcpt});
+	##}else {
+	    ##$all_rcpt = $rcpt;
+	##}
+	##printf TMP "X-Sympa-To: %s\n", $all_rcpt;
+	##printf TMP "X-Sympa-From: %s\n", $from;
+	##printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
+##
+	##print TMP $message->{'msg_as_string'} ;
+	##close TMP;
+	##my $new_file = $sympa_file;
+	##$new_file =~ s/T\.//g;
+	##
+	##unless (rename $sympa_file, $new_file) {
+	    ##&Log::do_log('notice', 'Cannot rename %s to %s : %s', $sympa_file, $new_file, $!);
+	    ##return undef;
+	##}
     }else{ # send it now
 	&Log::do_log('debug',"NOT USING BULK");
 	*SMTP = &smtpto($from, $rcpt, $robot);	
@@ -861,9 +886,24 @@ sub smtpto {
    return("mail::$fh"); ## Symbol for the write descriptor.
 }
 
+sub get_sympa_headers {
+    my $data = shift;
+    
+    my $all_rcpt;
+    if (ref($data->{'rcpt'}) eq 'SCALAR') {
+	$all_rcpt = ${$data->{'rcpt'}};
+    }elsif (ref($data->{'rcpt'}) eq 'ARRAY') {
+	$all_rcpt = join(',', @{$data->{'rcpt'}});
+    }else {
+	$all_rcpt = $data->{'rcpt'};
+    }
 
+    my $sympa_headers = sprintf "X-Sympa-To: %s\n", $all_rcpt;
+    $sympa_headers .= sprintf "X-Sympa-From: %s\n", $data->{'from'};
+    $sympa_headers .= sprintf "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
 
-
+    return $sympa_headers;
+}
 
 ####################################################
 # send_in_spool      : not used but if needed ...
