@@ -162,9 +162,17 @@ webtemplate_DATA = active_lists.tt2 \
 		   view_template.tt2 \
 		   your_lists.tt2
 
-EXTRA_DIST = $(webtemplate_DATA)
+localetemplates = ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2
+
+EXTRA_DIST = $(webtemplate_DATA) $(localetemplates)
 
 install-data-hook:
+	for t in $(localetemplates); do \
+	    dir=`dirname $$t`; \
+	    [ -n "$$dir" ] && \
+	    install -d -m 755 $(DESTDIR)$(webtemplatedir)/$$dir; \
+	    $(INSTALL_DATA) $$t $(DESTDIR)$(webtemplatedir)/$$dir; \
+	done
 	cd $(DESTDIR)$(webtemplatedir); \
 	$(LN_S) -f review.tt2 search.tt2; \
 	$(LN_S) -f lists.tt2 which.tt2; \

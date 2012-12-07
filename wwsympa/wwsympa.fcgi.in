@@ -6298,11 +6298,14 @@ sub do_skinsedit {
 
     if(($in{'editcolors'})&&($in{'subaction'} eq 'test')){
 
+	## Do not include language subdirectories.
+	## The css.tt2 by each languages will override styles in main CSS.
+	my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
+
 	return unless ($in{'custom_color_number'} =~ /color_/);
 	$param->{'custom_color_number'} = $in{'custom_color_number'};
 	$param->{'custom_color_value'} = $in{'custom_color_value'};
-	$param->{'custom_css'} = $css_url.'/'.$param->{'user'}{'email'}.'.style.css';
-	$session->{'custom_css'} = $param->{'custom_css'} ;
+	$session->{'custom_css'} = $css_url.'/'.$param->{'user'}{'email'}.'.style.css';
 
 	$session->{$in{'custom_color_number'}} =  $in{'custom_color_value'};
 	
@@ -6314,12 +6317,24 @@ sub do_skinsedit {
 	    }
 	}
 
+	$param->{'session'}{'custom_css'} = $session->{'custom_css'};
+	## generate custom CSS
+	my $custom_css;
+	unless (tt2::parse_tt2($param, 'css.tt2', \$custom_css,
+	    $tt2_include_path
+	)) {
+	    my $error = &tt2::get_error();
+	    $param->{'tt2_error'} = $error;
+	    &wwslog('info', "do_skinsedit : error while parsing custom CSS");
+	    undef $custom_css;
+	}
+	$param->{'custom_css'} = $custom_css;
     }
     if (($in{'subaction'} eq 'install')||($in{'installcss'})) {
 
-	my $lang = &Language::Lang2Locale($param->{'lang'});
-	my $tt2_include_path =
-	    $robot->make_tt2_include_path('web_tt2', $lang);
+	## Do not include language subdirectories.
+	## The css.tt2 by each languages will override styles in main CSS.
+	my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
 
 	my $date= time;
 	my $style_file;
@@ -17496,9 +17511,9 @@ sub do_css {
     printf "Content-type: text/css\n\n";
     $param->{'css'} = $in{'file'}; 
 
-    my $lang = &Language::Lang2Locale($param->{'lang'});
-    my $tt2_include_path =
-	$robot->make_tt2_include_path('web_tt2', $lang);
+    ## Do not include language subdirectories.
+    ## The css.tt2 by each languages will override styles in main CSS.
+    my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
 
     unless (&tt2::parse_tt2($param,'css.tt2' ,\*STDOUT, $tt2_include_path)) {
 	my $error = &tt2::get_error();

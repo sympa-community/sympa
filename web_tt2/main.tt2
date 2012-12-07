@@ -8,19 +8,20 @@
 
 <title> [% main_title %] - [% action %] </title>
 
-[% IF custom_css || session.custom_css %]
+[% IF custom_css %]
 <style type="text/css">
-[% PROCESS css.tt2 %]
+[% custom_css %]
 </style>
-
 [% ELSE %]
 <link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Sympa CSS" />
 [% END %]
 
-
 [% PROCESS css_ie.tt2 %]
 
-
+[% TRY %]
+[% PROCESS "$locale/css.tt2" %]
+[% CATCH %]
+[% END %]
 
 <!-- RSS chanel -->
    [% IF list -%] 
