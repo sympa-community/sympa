@@ -119,7 +119,7 @@ sub mail_file {
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
 
-    &Log::do_log('debug2', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
+    &Log::do_log('debug', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
 
     my ($to,$message_as_string);
 
@@ -296,14 +296,15 @@ sub mail_file {
     unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
     	&Log::do_log('err', "mail::mail_file: Failed to reformat message");
     }
-    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP 'avant \n%s',$dump ; close DUMP;
+    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "avant \n%s",$dump ; close DUMP;
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= $robot->request;
-    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->request}).$message_as_string;
+    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
 
+    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "\n\naprès \n%s",$dump ; close DUMP;
     my $message = new Message ({'messageasstring'=>$message_as_string});
 
     ## SENDING
@@ -888,11 +889,9 @@ sub smtpto {
 
 sub get_sympa_headers {
     my $data = shift;
-    
+
     my $all_rcpt;
-    if (ref($data->{'rcpt'}) eq 'SCALAR') {
-	$all_rcpt = ${$data->{'rcpt'}};
-    }elsif (ref($data->{'rcpt'}) eq 'ARRAY') {
+    if (ref($data->{'rcpt'}) eq 'ARRAY') {
 	$all_rcpt = join(',', @{$data->{'rcpt'}});
     }else {
 	$all_rcpt = $data->{'rcpt'};

@@ -179,11 +179,11 @@ sub new {
 
     $message->get_subject;
     $message->get_receipient;
-    Log::do_log('trace', 'après get_recipient: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
+    Log::do_log('trace', 'after get_recipient: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->get_robot;
-    Log::do_log('trace', 'après get_robot: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
+    Log::do_log('trace', 'after get_robot: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->get_sympa_local_part;
-    Log::do_log('trace', 'après get_sympa_local_part: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
+    Log::do_log('trace', 'after get_sympa_local_part: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->check_spam_status;
     $message->check_dkim_signature;
     $message->check_x_sympa_checksum;
@@ -203,7 +203,7 @@ sub create_message_from_mime_entity {
     my $pkg = shift;
     my $self = shift;
     my $mimeentity = shift;
-    Log::do_log('trace','Creating message object from MIME entity %s',$mimeentity);
+    Log::do_log('debug2','Creating message object from MIME entity %s',$mimeentity);
     
     $self->{'msg'} = $mimeentity;
     $self->{'altered'} = '_ALTERED';
@@ -218,7 +218,7 @@ sub create_message_from_mime_entity {
 sub create_message_from_spool {
     my $message_in_spool = shift;
     my $self;
-    Log::do_log('trace','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
+    Log::do_log('debug2','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
     
     $self = create_message_from_string($message_in_spool->{'messageasstring'});
     $self->{'messagekey'}= $message_in_spool->{'messagekey'};
@@ -226,7 +226,6 @@ sub create_message_from_spool {
     $self->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
     $self->{'list'} = $message_in_spool->{'list_object'};
     $self->{'robot_id'} = $message_in_spool->{'robot'};
-    Log::do_log('trace', 'list "%s", robot "%s"', $self->{'list'} , $self->{'robot_id'});
 
     return $self;
 }
@@ -235,7 +234,7 @@ sub create_message_from_file {
     my $file = shift;
     my $self;
     my $messageasstring;
-    Log::do_log('trace','Creating message object from file %s',$file);
+    Log::do_log('debug2','Creating message object from file %s',$file);
     
     unless (open FILE, "$file") {
 	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
@@ -249,7 +248,6 @@ sub create_message_from_file {
     $self = create_message_from_string($messageasstring);
     $self->{'filename'} = $file;
     $file =~ s/^.*\/([^\/]+)$/$1/;
-    Log::do_log('trace','Will analyze file name %s',$file);
     unless ($file =~ /^(\S+)\.(\d+)\.\w+$/) {
 	Log::do_log('err','Unable to extract data from filename %s',$file);
     }else{
@@ -265,7 +263,7 @@ sub create_message_from_file {
 sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
-    Log::do_log('trace','Creating message object from character string');
+    Log::do_log('debug2','Creating message object from character string');
     foreach my $line (split '\n',$messageasstring) {
 	Log::do_log('trace','%s',$line);
     }
@@ -397,7 +395,6 @@ sub get_receipient {
 	$self->{'rcpt'} = $hdr->get('X-Sympa-To');
 	chomp $self->{'rcpt'};
     }
-    Log::do_log('trace','Will return receipient "%s"',$self->{'rcpt'});
     return $self->{'rcpt'};
 }
 
@@ -405,7 +402,6 @@ sub get_sympa_local_part {
     my $self = shift;
     unless ($self->{'list'}) {
 	if ($self->{'robot'}) {
-	    Log::do_log('trace','Looking for known local part "%s" in robot "%s"',$self->{'listname'},$self->{'robot'});
 	    my $conf_email = $self->{'robot'}->email;
 	    my $conf_host = $self->{'robot'}->host;
 	    my $site_email = Site->listmaster_email;
@@ -422,10 +418,10 @@ sub get_sympa_local_part {
 		}	
 	    }
 	}else{
-	    Log::do_log('trace','No robot: will not find list');
+	    Log::do_log('debug2','No robot: will not find list');
 	}
     }else{
-	Log::do_log('trace','List "%s" already identified',$self->{'list'});
+	Log::do_log('debug2','List "%s" already identified',$self->{'list'});
     }
     return 1;
 }
@@ -757,7 +753,7 @@ sub smime_decrypt {
     my $list = $self->{'list'};
 
     use Data::Dumper;
-    Log::do_log('trace', 'Decrypting message from %s, %s', $from, $list);
+    Log::do_log('debug2', 'Decrypting message from %s, %s', $from, $list);
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir;

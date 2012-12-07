@@ -709,7 +709,7 @@ sub send_file {
     my $context = shift || {};
     my $options = shift || {};
 
-    my ($robot, $list, $robot_id);
+   my ($robot, $list, $robot_id);
     if (ref $self and ref $self eq 'List') {
 	$robot    = $self->robot;
 	$list     = $self;
@@ -786,10 +786,8 @@ sub send_file {
 		$data->{'return_path'} = $self->get_bounce_address($who, 'r');
 	    }
 	}
-    } else {
-	$who = User::clean_users($who);
     }
-
+ 
     ## Lang
     undef $data->{'lang'};
     $data->{'lang'} = $data->{'user'}->lang if ref $data->{'user'};

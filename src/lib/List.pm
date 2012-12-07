@@ -4893,6 +4893,10 @@ sub send_notify_to_owner {
 	);
 	@to = split /,/, $self->robot->listmaster;
     }
+	    foreach my $r (@to) {
+		Log::do_log('trace','to %s',$r);
+	    }
+
     unless (defined $operation) {
 	&Log::do_log(
 	    'err',
@@ -10544,16 +10548,19 @@ sub _save_stats_file {
     croak "Invalid parameter: $self"
 	unless ref $self;    #prototype changed (6.2)
 
+    unless (defined $self->stats and ref $self->stats eq 'ARRAY') {
+	unless ($self->_create_stats_file) {
+	    &Log::do_log('err', 'Stats file creation imposible for list %s', $self);
+	    return undef;
+	}
+	$self->_load_stats_file;
+    }
+
     my $file                 = $self->dir . '/stats';
     my $stats                = $self->stats;
     my $total                = $self->total;
     my $last_sync            = $self->{'last_sync'};
     my $last_sync_admin_user = $self->{'last_sync_admin_user'};
-
-    unless (defined $stats and ref $stats eq 'ARRAY') {
-	&Log::do_log('err', 'incorrect parameter: %s', $self);
-	return undef;
-    }
 
     &Log::do_log('debug3',
 	'(file=%s, total=%s, last_sync=%s, last_sync_admin_user=%s)',
@@ -10565,6 +10572,24 @@ sub _save_stats_file {
     close(L);
 }
 
+sub _create_stats_file {
+    my $self = shift;
+
+    my $file = $self->dir . '/stats';
+    &Log::do_log('debug3', 'Creating stats file(%s, file=%s)', $self, $file);
+
+    if (-f $file) {
+	Log::do_log('debug2', 'File %s already exists. No need to create it.',$file);
+	return 1;
+    }
+    unless (open STATS, ">$file") {
+	Log::do_log('err','Unable to create file %s.',$file);
+	return undef;
+    }
+    print STATS "0 0 0 0 0 0 0\n";
+    close STATS;
+    return 1;
+}
 ## Writes the user list to disk
 sub _save_list_members_file {
     my ($self, $file) = @_;

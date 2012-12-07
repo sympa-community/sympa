@@ -610,7 +610,7 @@ sub clean_users {
 	    }
 	}
     }
-    $users;
+    return $users;
 }
 
 ###### END of the User package ######
