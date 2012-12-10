@@ -710,38 +710,31 @@ sub get_template_path {
     my $lang = shift || 'default';
     my $list = shift;
 
-    my $listdir;
-    if (defined $list) {
-	$listdir = $list->dir;
+    unless ($type eq 'web' or $type eq 'mail') {
+	Log::do_log('info', 'internal error incorrect parameter');
+	return undef;
     }
 
-    unless (($type == 'web')||($type == 'mail')) {
-	&Log::do_log('info', 'get_templates_path () : internal error incorrect parameter');
-    }
-
-    my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
-    my $site_dir = Site->etc.'/'.$type.'_tt2';
-    $site_dir .= '/'.$lang unless ($lang eq 'default');
-    my $robot_dir = Site->etc.'/'.$robot.'/'.$type.'_tt2';
-    $robot_dir .= '/'.$lang unless ($lang eq 'default');    
-
+    my $dir;
     if ($scope eq 'list')  {
-	my $dir = $listdir.'/'.$type.'_tt2';
-	$dir .= '/'.$lang unless ($lang eq 'default');
-	return $dir.'/'.$tpl ;
-
-    }elsif ($scope eq 'robot')  {
-	return $robot_dir.'/'.$tpl;
-
-    }elsif ($scope eq 'site') {
-	return $site_dir.'/'.$tpl;
-
-    }elsif ($scope eq 'distrib') {
-	return $distrib_dir.'/'.$tpl;
-
+	unless (ref $list) {
+	    Log::do_log('err', 'missing parameter "list"');
+	    return undef;
+	}
+	$dir = $list->dir;
+    } elsif ($scope eq 'robot' and $robot->etc ne Site->etc)  {
+	$dir = $robot->etc;
+    } elsif ($scope eq 'site') {
+	$dir = Site->etc;
+    } elsif ($scope eq 'distrib') {
+	$dir = Sympa::Constants::DEFAULTDIR;
+    } else {
+	return undef;
     }
 
-    return undef;
+    $dir .= '/'.$type.'_tt2';
+    $dir .= '/'.$lang unless $lang eq 'default';
+    return $dir.'/'.$tpl;
 }
 
 ##NOTE: This might be moved to Site module as mutative method.

@@ -5868,7 +5868,8 @@ sub do_ls_templates  {
     foreach my $file (keys %{$param->{'templates'}}) {
 	foreach my $level (keys %{$param->{'templates'}{$file}}) {
 	    foreach my $lang (keys %{$param->{'templates'}{$file}{$level}}) {
-		$param->{'lang_per_level'}{$level}{$lang} = 1;
+		$param->{'lang_per_level'}{$level}{$lang} =
+		    Language::GetLangName($lang) || $lang;
 	    }
 	}	
     }
@@ -5891,17 +5892,21 @@ sub do_ls_templates  {
 
 # show a template, used by copy_template and edit_emplate
 sub do_remove_template {
-    
     &wwslog('info', 'do_remove_template');
 
-    my $template_path ;
+    my $template_path;
 
-    if ($in{'scope'} eq 'list') { 
-	$template_path = &tools::get_template_path($in{'webormail'},$robot_id,'list',$in{'template_name'},$in{'tpl_lang'},$list);
-    }else{
-	$template_path = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') { 
+	report::reject_report_web('user', 'missing_arg',
+	    {'argument' => 'list'}, $param->{'action'});
+	wwslog('err', 'do_remove_template: missing parameter webormail');
+	web_db_log({'parameters' => $in{'webormail'}, 'status' => 'error',
+	    'error_type' => 'missing_parameter'});
+	return 1;
     }
-        
+    $template_path = tools::get_template_path($in{'webormail'}, $robot,
+	$in{'scope'}, $in{'template_name'}, $in{'tpl_lang'}, $list);
+
     my $template_old_path = &tools::shift_file($template_path,10);
     unless ($template_old_path) {
 	&report::reject_report_web('intern','remove_failed',{'path'=>$template_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
@@ -5925,16 +5930,20 @@ sub do_remove_template {
 
 # show a template, used by copy_template and edit_emplate
 sub do_view_template {
-    
     &wwslog('info', "do_view_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
 
-    my $template_path ;
- 
-    if ($in{'scope'} eq 'list') { 
-	$template_path = &tools::get_template_path($in{'webormail'},$robot_id,'list',$in{'template_name'},$in{'tpl_lang'},$list);
-    }else{
-	$template_path = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    my $template_path;
+
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') {
+	report::reject_report_web('user', 'missing_arg',
+	    {'argument' => 'list'}, $param->{'action'});
+	wwslog('err', 'do_view_template: missing parameter webormail');
+	web_db_log({'parameters' => $in{'webormail'}, 'status' => 'error',
+	    'error_type' => 'missing_parameter'});
+	return 1;
     }
+    $template_path = tools::get_template_path($in{'webormail'}, $robot,
+	$in{'scope'}, $in{'template_name'}, $in{'tpl_lang'}, $list);
 
     unless (open (TPL,$template_path)) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $in{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
@@ -5983,8 +5992,10 @@ sub do_copy_template {
 			     'error_type' => 'unknown_list'});
 		return undef;
 	    }
-	    
-	    $param->{'template_path_out'} = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope_out'},$in{'template_name_out'},$in{'tpl_lang_out'},$list_out);
+	    $param->{'template_path_out'} =
+		tools::get_template_path($in{'webormail'}, $robot,
+		'list', $in{'template_name_out'}, $in{'tpl_lang_out'},
+		$list_out);
 	}else{
 	    &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	    &wwslog('err','do_copy_template: missing parameter webormail');
@@ -5994,7 +6005,9 @@ sub do_copy_template {
 	    return 1;
 	}
     }else{
-	$param->{'template_path_out'} = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope_out'},$in{'template_name_out'},$in{'tpl_lang_out'});
+	$param->{'template_path_out'} =
+	    tools::get_template_path($in{'webormail'}, $robot,
+	    $in{'scope_out'}, $in{'template_name_out'}, $in{'tpl_lang_out'});
     }
     
     unless (&tools::mk_parent_dir($param->{'template_path_out'})) {
@@ -6041,12 +6054,11 @@ sub do_manage_template {
     if  ($in{'message_template'}) {		
 	my $escaped_template_path = $in{'message_template'};
 	$escaped_template_path =~ s/\s/_/g ;
-	$param->{'template_path'} = &tools::get_template_path('mail',$robot_id,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
+	$param->{'template_path'} = tools::get_template_path('mail', $robot,
+	    'list', 'reject_'.$escaped_template_path.'.tt2', '', $list);
     }
-    my $tt2_include_path =
-	($list || $robot)->make_tt2_include_path('mail_tt2');
-    my $default_file = &tools::find_file('reject.tt2',@{$tt2_include_path});
-
+    my $default_file =
+	($list || $robot)->get_etc_filename('mail_tt2/reject.tt2');
 
     if ($in{'subaction'} eq 'save') {
 	## create the parent directory if it doesn't already exist
@@ -6081,7 +6093,8 @@ sub do_manage_template {
 	    return undef;  
 	}
 	my $escaped_template_path = $in{'new_template_name'};$escaped_template_path =~ s/\s/_/g ;
-	my $new_template_path = &tools::get_template_path('mail',$robot_id,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
+	my $new_template_path = tools::get_template_path('mail', $robot,
+	    'list', 'reject_'.$escaped_template_path.'.tt2', '', $list);
 
 	if (-f $new_template_path) {
 	    &report::reject_report_web('intern','template already exist',{'path' => $new_template_path},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
@@ -6098,9 +6111,8 @@ sub do_manage_template {
 	    return undef;
 	}	
 
-	my $default_file =  &tools::get_template_path('mail',$robot_id,'robot', ,'reject.tt2','',$list);
-	$default_file = &tools::get_template_path('mail',$robot_id,'site', ,'reject.tt2','',$list) unless (-f $default_file);
-	$default_file = &tools::get_template_path('mail',$robot_id,'distrib', ,'reject.tt2','',$list)unless (-f $default_file);
+	my $default_file =
+	    ($list || $robot)->get_etc_filename('mail_tt2/reject.tt2');
 
 	unless(open (DEFAULT, $default_file)){
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
@@ -6226,21 +6238,19 @@ sub do_edit_template  {
     unless ($in{'content'}) {
 	return 1;
     }
-    if ($in{'scope'} eq 'list') { 
-	if ($in{'list'}) {
-	    $param->{'template_path'} = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope'},$in{'template_name'},$in{'tpl_lang'},$list);
-	}else{
-	    &report::reject_report_web('user','listname_needed',{},$param->{'action'});
-	    &wwslog('info',"edit_template : no output lisname while output scope is list");
-	    &web_db_log({'parameters' => $in{'template_name'},
-			 'status' => 'error',
-			 'error_type' => 'no_list'});
-	    return undef;
-	}
-    }else {
-	$param->{'template_path'} = &tools::get_template_path($in{'webormail'},$robot_id,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') { 
+	report::reject_report_web('user', 'listname_needed',
+	    {}, $param->{'action'});
+	wwslog('info',
+	    "edit_template : no output lisname while output scope is list");
+	web_db_log({'parameters' => $in{'template_name'}, 'status' => 'error',
+	    'error_type' => 'no_list'});
+	return undef;
     }
-    
+    $param->{'template_path'} =
+	tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
+	$in{'template_name'}, $in{'tpl_lang'}, $list);
+
     unless (open (TPLOUT,'>'.$param->{'template_path'})) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
 	&wwslog('err',"edit_template: can't open file %s", $param->{'template_path'});

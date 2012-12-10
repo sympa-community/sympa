@@ -48,19 +48,19 @@
 
 <!-- print list of languages -->
 [% FOREACH lang = lang_per_level.distrib %]
-    <th>[%|loc%][% lang.key %][%END%]</th>
+    <th>[%IF lang.key == 'default' %]&nbsp;[%ELSE%][% lang.value %][%END%]</th>
 [% END %]
 
 [% FOREACH lang = lang_per_level.site %]
-    <th>[%|loc%][% lang.key %][%END%]</th>
+    <th>[%IF lang.key == 'default' %][%|loc%]default[%END%][%ELSE%][% lang.value %][%END%]</th>
 [% END %]
 
  [% FOREACH lang = lang_per_level.robot %]
-    <th>[%|loc%][% lang.key %][%END%]</th>
+    <th>[%IF lang.key == 'default' %][%|loc%]default[%END%][%ELSE%][% lang.value %][%END%]</th>
  [% END %]
 
  [% FOREACH lang = lang_per_level.list %]
-    <th>[%|loc%][% lang.key %][%END%]</th>
+    <th>[%IF lang.key == 'default' %][%|loc%]default[%END%][%ELSE%][% lang.value %][%END%]</th>
  [% END %]
 
 [% FOREACH file = templates %]
@@ -79,7 +79,7 @@
       <input type="hidden" name="template_path" value="[% lang.value %]" />
       <input type="hidden" name="template_name" value="[% file.key %]" />
       <input type="hidden" name="scope" value="distrib" />
-      <input type="hidden" name="tpl_lang" value="default" />
+      <input type="hidden" name="tpl_lang" value="[% lang.key %]" />
       <input type="hidden" name="webormail" value="[% webormail %]" />
       <input class="MainMenuLinks" type="submit" name="action_view_template" value="[%|loc%]view[% END %]" />
       <input class="MainMenuLinks" type="submit" name="action_copy_template" value="[%|loc%]cp[% END %]" />

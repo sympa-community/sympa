@@ -4,9 +4,18 @@
 <p>
 <ul>
 <li>[%|loc%]Template name:[%END%]  <strong> [% template_name %] </strong></li>
-<li>[%|loc%]Type:[%END%] <strong> [% webormail %] </strong></li>
+<li>[%|loc%]Type:[%END%] <strong> [% SWITCH webormail -%]
+[% CASE 'web' %][%|loc%]web[%END -%]
+[% CASE 'mail' %][%|loc%]mail[%END -%]
+[% CASE %][% webormail -%]
+[% END %] </strong></li>
 <li>[%|loc%]Path:[%END%] <strong> [% template_path %] </strong></li>
-<li>[%|loc%]Scope:[%END%] <strong> [% scope %] </strong>.[% IF scope == 'list' %]
+<li>[%|loc%]Scope:[%END%] <strong> [% SWITCH scope -%]
+[% CASE 'site' %][%|loc%]site[%END -%]
+[% CASE 'robot' %][%|loc%]robot[%END -%]
+[% CASE 'list' %][%|loc%]list[%END -%]
+[% CASE %][% scope -%]
+[% END %] </strong>.[% IF scope == 'list' %]
   ( [%|loc(list,robot)%]This template is defined for list %1@%2[%END%] )
 [% ELSE %]
   [% IF scope == 'robot' %]
