@@ -5568,7 +5568,9 @@ sub unsubscribe {
 	 $param->{'get_which'} = [&List::get_which($authenticated_email_address, $robot, 'member')];
 
 	 unless ($list->send_file('bye', $authenticated_email_address)) {
-	     &wwslog('notice',"Unable to send template 'bye' to $authenticated_email_address");
+	    wwslog('notice',
+		'Unable to send template "bye" to %s',
+		$authenticated_email_address);
 	 }
      }
      &web_db_log({'status' => 'success'});
@@ -6678,7 +6680,8 @@ sub do_del {
 
 	 unless ($in{'quiet'}) {
 	     unless ($list->send_file('removed', $email)) {
-		 &wwslog('notice',"Unable to send template 'removed' to $email");
+		wwslog('notice',
+		    'Unable to send template "removed" to %s', $email);
 	     }
 	 }
      }

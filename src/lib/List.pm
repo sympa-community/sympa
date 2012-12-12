@@ -9984,15 +9984,15 @@ sub sync_include {
 					$users_removed++;
 					## Send notification if the list config authorizes it only.
 		    if ($self->inclusion_notification_feature eq 'on') {
-			unless ($self->send_file('removed', $email)) {
-			    &Log::do_log('err',
-				"Unable to send template 'removed' to $email"
+			unless ($self->send_file('bye', $email)) {
+			    Log::do_log('err',
+				'Unable to send template "bye" to %s', $email
 			    );
-						}
-					}
-				}
 			}
+		    }
 		}
+	    }
+	}
     }
     if ($users_removed > 0) {
 	&Log::do_log('notice', 'List:sync_include(%s): %d users removed',

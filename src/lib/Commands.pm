@@ -1488,7 +1488,7 @@ sub signoff {
 	    ## Send bye file to subscriber
 	    unless ($list->send_file('bye', $email)) {
 		&Log::do_log('notice',
-		    "Unable to send template 'bye' to $email");
+		    'Unable to send template "bye" to %s', $email);
 	    }
 	}
 
@@ -2381,7 +2381,7 @@ sub del {
 	unless ($quiet || $action =~ /quiet/i) {
 	    unless ($list->send_file('removed', $who)) {
 		&Log::do_log('notice',
-		    "Unable to send template 'removed' to $who");
+		    'Unable to send template "removed" to %s', $who);
 	    }
 	}
 	&report::notice_report_cmd('removed',
