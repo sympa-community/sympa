@@ -197,32 +197,38 @@ while (!$end) {
     # Process grouped notifications
     Site->send_notify_to_listmaster(undef, undef, 1, undef);
 
-    my $bounce;
-    while ($bounce = $spool->next) {
-
-	my $listname = $bounce->{'list'};
-	my $robot_id = $bounce->{'robot'};
-	my $list = $bounce->{'list_object'};
-	my $robot = $bounce->{'robot_object'};
-
-	unless ($robot_id and $robot_id ne '*') {
-	    $robot_id = List::search_list_among_robots($listname);
-	    if ($robot_id) {
-		$robot = Robot->new($robot_id);
-		if ($robot) {
-		    $list = List->new($listname, $robot);
-		}
-	    }
+    my $spooled_bounce;
+    while ($spooled_bounce = $spool->next){
+	Log::do_log('trace','Processing spool %s',$spooled_bounce->{'messagekey'});
+	my $bounce;
+	unless ($bounce = new Message({'message_in_spool' => $spooled_bounce})) {
+	    Log::do_log('err','Message %s: badly formatted bounce. Ignoring.',$spooled_bounce->{'messagekey'});
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+	    next;
 	}
+	Log::do_log('trace','Handling spool for list %s@%s',$bounce->{'list'}->get_id,$bounce->{'robot'}->get_id);
+	my $listname = $bounce->{'list'}{'name'};
+	my $robot_id = $bounce->{'robot'}->get_id;
+	my $list = $bounce->{'list'};
+	my $robot = $bounce->{'robot'};
 
-	unless ($bounce->{'messageasstring'}) {
+	##unless ($robot_id and $robot_id ne '*') {
+	    ##$robot_id = List::search_list_among_robots($listname);
+	    ##if ($robot_id) {
+		##$robot = Robot->new($robot_id);
+		##if ($robot) {
+		    ##$list = List->new($listname, $robot);
+		##}
+	    ##}
+	##}
+
+	unless ($bounce->get_message_as_string) {
 	   &Log::do_log ('notice',"Ignoring bounce where messagekey = %s  because empty",$bounce->{'messagekey'});
 	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+	    next;
 	}
 	
-	my $message = new Message({'message_in_spool' => $bounce});
-	
-	my $entity = $message->{'msg'};
+	my $entity = $bounce->{'msg'};
 	my $head = $entity->head;
 	my $to = $head->get('to', 0);
 	my $notification_as_string = $entity->as_string;
@@ -647,11 +653,11 @@ while (!$end) {
 	    my $bounce_dir = $list->get_bounce_dir();
 	    
 	    ## RFC1891 compliance check
-	    my $bounce_count = &rfc1891($message, \%hash, \$from);
+	    my $bounce_count = &rfc1891($bounce, \%hash, \$from);
 	    
 	    unless ($bounce_count) {
 		## Analysis of bounced message
-		&anabounce($message, \%hash, \$from);
+		&anabounce($bounce, \%hash, \$from);
 		# Voir pour appeler une methode de parsing des dsn qui maj la bdd
 		# &updatedatabase(%hash);
 	    }
@@ -675,7 +681,7 @@ while (!$end) {
 		my $bouncefor = $who;
 		$bouncefor ||= $rcpt;
 	    
-		next unless (&store_bounce ($bounce_dir,$bounce->{'messageasstring'},$bouncefor));
+		next unless (&store_bounce ($bounce_dir,$bounce,$bouncefor));
 		next unless (&update_subscriber_bounce_history($list, $rcpt, $bouncefor, &canonicalize_status ($status)));
 	    }
 	    
@@ -683,7 +689,7 @@ while (!$end) {
 	    unless ($adr_count) {
 		
 		if ( $who ) {	# rcpt not recognized in the bounce but VERP was used
-		    &store_bounce ($bounce_dir,$bounce->{'messageasstring'},$who);
+		    &store_bounce ($bounce_dir,$bounce,$who);
 		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
@@ -726,7 +732,7 @@ sub store_bounce {
     my $bounce= shift;
     my $rcpt=shift;
     
-    &Log::do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir,$rcpt);
+    &Log::do_log('trace', 'store_bounce(%s,%s,%s)', $bounce, $bounce_dir,$rcpt);
 
     my $queue = Site->queuebounce;
 
@@ -737,7 +743,7 @@ sub store_bounce {
 	$spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
 	return undef;
     }
-    print ARC $bounce->{'msg'}->as_string;
+    print ARC $bounce->get_message_as_string;
     close ARC;
     close BOUNCE; 
 }

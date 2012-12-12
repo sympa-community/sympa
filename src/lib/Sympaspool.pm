@@ -293,6 +293,31 @@ sub next {
     return $message;
 }
 
+sub move_to_bad {
+    my $self = shift;
+    my $key = shift;
+    Log::do_log('trace', 'Moving spooled entity with key %s to bad',$key);
+    unless ($self->update({'messagekey' => $key},
+			  {'message_status' => 'bad','messagelock'=> 'NULL'})) {
+	Log::do_log('err', 'Unable to  to set status bad to spooled entity with key %s',$key);
+	return undef;
+    }
+}
+
+sub move_to_spool {
+    my $self = shift;
+    my $key = shift;
+    my $new_spool = shift;
+    Log::do_log('trace', 'Moving spooled entity with key %s to spool %s',$key,$new_spool);
+
+    unless ($self->update({'messagekey' => $key},
+			   {'spoolname' => $new_spool})) {
+	Log::do_log('err', 'Unable to move entity with key %s to spool %s',$key,$new_spool);
+	return undef;
+    }
+    return 1;
+}
+
 #################"
 # return one message from related spool using a specified selector
 #  
@@ -360,7 +385,7 @@ sub update {
     my $selector = shift;
     my $values = shift;
 
-    &Log::do_log('debug', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
+    &Log::do_log('trace', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
 
     my $where = _sqlselector($selector);
 
@@ -371,7 +396,7 @@ sub update {
 	$values->{'size'} =  length($values->{'message'});
 	$values->{'message'} =  MIME::Base64::encode($values->{'message'})  ;
     }
-    # update can used in order to move a message from a spool to another one
+    # update can be used in order to move a message from a spool to another one
     $values->{'spoolname'} = $self->{'spoolname'} unless($values->{'spoolname'});
 
     foreach my $meta (keys %$values) {
