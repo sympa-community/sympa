@@ -179,11 +179,8 @@ sub new {
 
     $message->get_subject;
     $message->get_receipient;
-    Log::do_log('trace', 'after get_recipient: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->get_robot;
-    Log::do_log('trace', 'after get_robot: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->get_sympa_local_part;
-    Log::do_log('trace', 'after get_sympa_local_part: robot: "%s", list "%s"',$message->{'robot'},$message->{'list'});
     $message->check_spam_status;
     $message->check_dkim_signature;
     $message->check_x_sympa_checksum;
@@ -263,10 +260,10 @@ sub create_message_from_file {
 sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
-    Log::do_log('debug2','Creating message object from character string');
-    foreach my $line (split '\n',$messageasstring) {
-	Log::do_log('trace','%s',$line);
-    }
+    Log::do_log('trace','Creating message object from character string');
+    ##foreach my $line (split '\n',$messageasstring) {
+	##Log::do_log('trace','%s',$line);
+    ##}
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
@@ -312,7 +309,6 @@ sub get_sender_email {
 
     unless ($self->{'sender'}) {
 	my $hdr = $self->{'msg'}->head;
-
 	## Extract sender address
 	unless ($hdr->get('From')) {
 	    Log::do_log('err', 'No From found in message, skipping.');
@@ -435,9 +431,7 @@ sub get_robot {
 	    $self->{'listname'} = lc($listname);
 	    $self->{'robot_id'} ||= Site->domain;
 	}
-	unless ($self->{'robot'} = Robot->new($self->{'robot_id'})) {
-	    # If no robot can be found in rcpt, we can try with X-Sympa-From
-	    Log::do_log('err', 'unknown robot %s', $self->{'robot_id'});
+	unless ($self->{'robot'} = Robot->new($self->{'robot_id'},('just_try' => 1))) {
 	    if (my $from = $self->get_mime_message->head->get('X-Sympa-From')) {
 		chomp $from;
 		my ($listname, $robot_id) = split /\@/, $from;
@@ -512,6 +506,7 @@ sub decrypt {
 sub check_smime_signature {
     my $self = shift;
     my $hdr = $self->get_mime_message->head;
+    Log::do_log('debug','Checking S/MIME signature for message %s, from user %s',$self->get_msg_id,$self->get_sender_email);
     ## Check S/MIME signatures
     if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
 	$self->{'protected'} = 1; ## Messages that should not be altered (no footer)
@@ -975,7 +970,7 @@ sub smime_encrypt {
 sub smime_sign_check {
     my $message = shift;
 
-    Log::do_log('debug', 'tools::smime_sign_check (message, %s, %s)', $message->{'sender'}, $message->{'filename'});
+    Log::do_log('debug2', 'tools::smime_sign_check (message, %s, %s)', $message->{'sender'}, $message->{'filename'});
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -1172,6 +1167,14 @@ sub get_message_as_string {
 sub get_encrypted_message_as_string {
     my $self = shift;
     return $self->{'msg_as_string'};
+}
+
+sub get_msg_id {
+    my $self = shift;
+    unless ($self->{'id'}) {
+	$self->{'id'} = $self->get_mime_message->head->get('Message-Id');
+    }
+    return $self->{'id'}
 }
 
 ## Packages must return true.

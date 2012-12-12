@@ -714,8 +714,8 @@ sub sending {
 		'bulk_error',  {'listname' => $listname});
 	    return undef;
 	}
-    }elsif(defined $send_spool) { # in context wwsympa.fcgi do not send message to reciepients but copy it to standard spool 
-	&Log::do_log('trace',"NOT USING SPOOLER");
+    }elsif(defined $send_spool) { # in context wwsympa.fcgi store directly to database.
+	&Log::do_log('debug2',"NOT USING SPOOLER");
 
 	my $message_as_string = $message->get_message_as_string;
 	unless($message->get_mime_message->head->get('X-Sympa-To')) {
@@ -741,35 +741,7 @@ sub sending {
 	    return undef;
 	}
 
-	##$sympa_email = $robot->sympa;
-	##$sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
-	##unless (open TMP, ">$sympa_file") {
-	    ##&Log::do_log('notice', 'mail::sending Cannot create %s : %s', $sympa_file, $!);
-	    ##return undef;
-	##}
-	##
-	##my $all_rcpt;
-	##if (ref($rcpt) eq 'SCALAR') {
-	    ##$all_rcpt = $$rcpt;
-	##}elsif (ref($rcpt) eq 'ARRAY') {
-	    ##$all_rcpt = join(',', @{$rcpt});
-	##}else {
-	    ##$all_rcpt = $rcpt;
-	##}
-	##printf TMP "X-Sympa-To: %s\n", $all_rcpt;
-	##printf TMP "X-Sympa-From: %s\n", $from;
-	##printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
-##
-	##print TMP $message->{'msg_as_string'} ;
-	##close TMP;
-	##my $new_file = $sympa_file;
-	##$new_file =~ s/T\.//g;
-	##
-	##unless (rename $sympa_file, $new_file) {
-	    ##&Log::do_log('notice', 'Cannot rename %s to %s : %s', $sympa_file, $new_file, $!);
-	    ##return undef;
-	##}
-    }else{ # send it now
+   }else{ # send it now
 	&Log::do_log('debug',"NOT USING BULK");
 	*SMTP = &smtpto($from, $rcpt, $robot);	
 	print SMTP $message->get_mime_message->as_string ;	

@@ -45,6 +45,7 @@ sub new {
     &Log::do_log('debug2', '(%s, %s, ...)', @_);
     my $pkg     = shift;
     my $name    = shift;
+    
     my %options = @_;
 
     ##XXX$name = '*' unless defined $name and length $name;
@@ -128,7 +129,7 @@ sub load {
 	    $self->{'etc'} = Site->etc;
 	} else {
 	    &Log::do_log('err',
-		'Unknown robot "%s": config directory was not found', $name);
+		'Unknown robot "%s": config directory was not found', $name) unless ($options{'just_try'});
 	    return undef;
 	}
 
