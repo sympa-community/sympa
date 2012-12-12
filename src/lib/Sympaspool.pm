@@ -296,26 +296,12 @@ sub next {
 sub move_to_bad {
     my $self = shift;
     my $key = shift;
-    Log::do_log('trace', 'Moving spooled entity with key %s to bad',$key);
+    Log::do_log('debug', 'Moving spooled entity with key %s to bad',$key);
     unless ($self->update({'messagekey' => $key},
 			  {'message_status' => 'bad','messagelock'=> 'NULL'})) {
 	Log::do_log('err', 'Unable to  to set status bad to spooled entity with key %s',$key);
 	return undef;
     }
-}
-
-sub move_to_spool {
-    my $self = shift;
-    my $key = shift;
-    my $new_spool = shift;
-    Log::do_log('trace', 'Moving spooled entity with key %s to spool %s',$key,$new_spool);
-
-    unless ($self->update({'messagekey' => $key},
-			   {'spoolname' => $new_spool})) {
-	Log::do_log('err', 'Unable to move entity with key %s to spool %s',$key,$new_spool);
-	return undef;
-    }
-    return 1;
 }
 
 #################"
