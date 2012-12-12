@@ -1909,7 +1909,7 @@ sub crash_handler {
     print STDERR "DIED: $msg";
     &wwslog('err', 'DIED: %s', $msg);
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
-    eval { &SDM::db_disconnect; }; # unlock database
+    eval { SDM::db_disconnect(); }; # unlock database
     Sys::Syslog::closelog(); # flush log
     &Log::set_log_level(-1); # disable log
 

@@ -1496,13 +1496,11 @@ sub import {
 sub _crash_handler {
     return if $^S;    # invoked from inside eval.
 
-    #exit 255 unless ${^GLOBAL_PHASE} eq 'RUN';
-
     my $msg = $_[0];
     chomp $msg;
     &Log::do_log('err', 'DIED: %s', $msg);
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
-    eval { &SDM::db_disconnect; };    # unlock database
+    eval { SDM::db_disconnect(); };   # unlock database
     Sys::Syslog::closelog();          # flush log
 
     ## gather traceback information

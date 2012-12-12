@@ -30,6 +30,7 @@ use Sys::Syslog;
 use Time::HiRes;
 
 #XXXuse List; # no longer used
+#use SDM; #FIXME: dependency loop between Log & SDM
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw($log_level %levels);
@@ -83,6 +84,9 @@ sub fatal_err {
 	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
     }
 
+    eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
+    eval { SDM::db_disconnect(); };   # unlock database
+    Sys::Syslog::closelog();          # flush log
 
     printf STDERR "$m\n", @_;
     exit(1);   
