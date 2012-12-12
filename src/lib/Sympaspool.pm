@@ -371,7 +371,7 @@ sub update {
     my $selector = shift;
     my $values = shift;
 
-    &Log::do_log('trace', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
+    &Log::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
 
     my $where = _sqlselector($selector);
 

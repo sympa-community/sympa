@@ -260,7 +260,7 @@ sub create_message_from_file {
 sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
-    Log::do_log('trace','Creating message object from character string');
+    Log::do_log('debug2','Creating message object from character string');
     ##foreach my $line (split '\n',$messageasstring) {
 	##Log::do_log('trace','%s',$line);
     ##}
@@ -1173,6 +1173,7 @@ sub get_msg_id {
     my $self = shift;
     unless ($self->{'id'}) {
 	$self->{'id'} = $self->get_mime_message->head->get('Message-Id');
+	chomp $self->{'id'};
     }
     return $self->{'id'}
 }
