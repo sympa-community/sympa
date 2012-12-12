@@ -12,7 +12,7 @@ nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
 		      DBManipulatorPostgres.pm DBManipulatorDefault.pm \
 		      OAuthConsumer.pm VOOTConsumer.pm OAuthProvider.pm \
 		      VOOTProvider.pm \
-		      Site.pm User.pm
+		      Site.pm User.pm BounceMessage.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm

@@ -74,6 +74,7 @@ my %equiv = ( "user unknown" => '5.1.1',
 
 
 use Bounce;
+use BounceMessage;
 #use wwslib; # no longer used
 
 #getopts('dF');
@@ -685,7 +686,7 @@ sub get_next_bounce {
     my $spooled_bounce = shift;
     Log::do_log('debug','Processing bounce %s',$spooled_bounce->{'messagekey'});
     my $bounce;
-    unless ($bounce = new Message({'message_in_spool' => $spooled_bounce})) {
+    unless ($bounce = new BounceMessage({'message_in_spool' => $spooled_bounce})) {
 	Log::do_log('err','Message %s: badly formatted bounce. Ignoring.',$spooled_bounce->{'messagekey'});
 	$spool->move_to_bad($spooled_bounce->{'messagekey'});
 	return undef;
