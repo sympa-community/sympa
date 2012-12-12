@@ -199,43 +199,20 @@ while (!$end) {
 
     my $spooled_bounce;
     while ($spooled_bounce = $spool->next){
-	Log::do_log('trace','Processing spool %s',$spooled_bounce->{'messagekey'});
-	my $bounce;
-	unless ($bounce = new Message({'message_in_spool' => $spooled_bounce})) {
-	    Log::do_log('err','Message %s: badly formatted bounce. Ignoring.',$spooled_bounce->{'messagekey'});
-	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
-	    next;
-	}
-	Log::do_log('trace','Handling spool for list %s@%s',$bounce->{'list'}->get_id,$bounce->{'robot'}->get_id);
+	next unless(my $bounce = get_next_bounce($spooled_bounce));
+	Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$bounce->get_msg_id,$spooled_bounce->{'messagekey'},$spooled_bounce->{'list'},$spooled_bounce->{'robot'});
+	
 	my $listname = $bounce->{'list'}{'name'};
 	my $robot_id = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
 	my $robot = $bounce->{'robot'};
-
-	##unless ($robot_id and $robot_id ne '*') {
-	    ##$robot_id = List::search_list_among_robots($listname);
-	    ##if ($robot_id) {
-		##$robot = Robot->new($robot_id);
-		##if ($robot) {
-		    ##$list = List->new($listname, $robot);
-		##}
-	    ##}
-	##}
-
-	unless ($bounce->get_message_as_string) {
-	   &Log::do_log ('notice',"Ignoring bounce where messagekey = %s  because empty",$bounce->{'messagekey'});
-	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
-	    next;
-	}
-	
 	my $entity = $bounce->{'msg'};
 	my $head = $entity->head;
 	my $to = $head->get('to', 0);
+	chomp $to;	
 	my $notification_as_string = $entity->as_string;
-	
 	my $who;
 	my $distribution_id;
-	chomp $to;	
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $to, Site->bounce_email_prefix);
 		
@@ -271,7 +248,7 @@ while (!$end) {
 		my $list = new List ($listname, $robot);
 		unless($list) {
 		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
-		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		    next;
 		}
 		my $result =$list->check_list_authz('del','smtp',
@@ -302,7 +279,7 @@ while (!$end) {
 		    }
 		}else{
 		    &Log::do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
-		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		next;
@@ -312,7 +289,7 @@ while (!$end) {
 	my $list = new List ($listname, $robot_id);
 	unless($list) {
 	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
-	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}
 	
@@ -592,7 +569,7 @@ while (!$end) {
 			&Log::do_log('err',
 			    'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
 			    $bounce->{'messagekey'}, $listname, $robot_id);
-			$spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+			$spool->move_to_bad($spooled_bounce->{'messagekey'});
 			next;
 		    }
 		    push @lists, $list;
@@ -600,7 +577,7 @@ while (!$end) {
 		    @lists = &List::get_which($original_rcpt, $robot_id, 'member');
 		}else {
 		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $listname );		
-		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 		    foreach my $list (@lists){
 			my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $original_rcpt});
@@ -629,11 +606,11 @@ while (!$end) {
 		    }
 		}else{
 		    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $listname );		
-		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 	    }else{
 		&Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $listname );		
-		$spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		$spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    }
 	    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});	
 	    next;		
@@ -644,7 +621,7 @@ while (!$end) {
 	my $list = new List ($listname, $robot_id);
 	if (! $list) {
 	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
-	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}else{
 	    &Log::do_log('debug',"Processing bounce messagekey=%s for list $listname",$bounce->{'messagekey'});      
@@ -694,7 +671,7 @@ while (!$end) {
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
 		    &Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $list);
-		    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		    next;
 		}
 	    }
@@ -702,7 +679,7 @@ while (!$end) {
 	
 	unless ($spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})) {
 	    &Log::do_log ('err',"Could not remove messafe from spool bounce (messaegkey = %s)",$bounce->{'messagekey'});
-	    $spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    last;
 	}
 	## Free zombie sendmail processes
@@ -725,6 +702,23 @@ sub sigterm {
     $end = 1;
 }
 
+sub get_next_bounce {
+    my $spooled_bounce = shift;
+    Log::do_log('debug','Processing bounce %s',$spooled_bounce->{'messagekey'});
+    my $bounce;
+    unless ($bounce = new Message({'message_in_spool' => $spooled_bounce})) {
+	Log::do_log('err','Message %s: badly formatted bounce. Ignoring.',$spooled_bounce->{'messagekey'});
+	$spool->move_to_bad($spooled_bounce->{'messagekey'});
+	return undef;
+    }
+    unless ($bounce->get_message_as_string) {
+       &Log::do_log ('notice',"Ignoring bounce where messagekey = %s  because empty",$bounce->{'messagekey'});
+	$spool->move_to_bad($spooled_bounce->{'messagekey'});
+	return undef;
+    }
+    return $bounce;
+}
+
 ## copy the bounce to the appropriate filename
 sub store_bounce {
 
@@ -740,7 +734,7 @@ sub store_bounce {
     
     unless (open ARC, ">$bounce_dir/$filename") {
 	&Log::do_log('notice', "Unable to write $bounce_dir/$filename");
-	$spool->update({'messagekey' => $bounce->{'messagekey'}},{"message_status" => 'bad','messagelock'=> 'NULL'});
+	$spool->move_to_bad($bounce->{'messagekey'});
 	return undef;
     }
     print ARC $bounce->get_message_as_string;
@@ -776,7 +770,7 @@ sub update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status = shift;
     
-    &Log::do_log ('debug','&update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
+    &Log::do_log ('trace','&update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
 
     my $first = my $last = time;
     my $count = 0;
