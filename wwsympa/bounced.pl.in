@@ -220,29 +220,8 @@ while (!$end) {
 	$to =~ s/>//;
 	my $bounce_email_prefix = Site->bounce_email_prefix;
 	if ($to =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
-	    my $local_part = $1;
-	    my $robot_id = $2;
 	    my $unique;
-	    if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
-		$local_part = $1;
-		$unique = $2;
-	    }elsif ($local_part =~  /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/ ) {# tracking in use
-		
-		$distribution_id = $4;
-		$local_part =~ /^(.*)\=\=(.*)$/ ;
-		$local_part = $1;
-	    }else{
-		undef $distribution_id ;
-		&Log::do_log('err', 'NOT ID PART in the bounce for :%s', $to);
-	    }
-	
-	    $local_part =~ s/\=\=a\=\=/\@/ ;
-	    $local_part =~ /^(.*)\=\=(.*)$/ ; 	    
-	    $who = $1;
-	    $listname = $2;
-	    
-	    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot_id);
-	    
+	    ($unique,$who,$listname,$distribution_id) = analyze_verp_header($1,$2,$to);
 	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
 		my $list = new List ($listname, $robot);
@@ -717,6 +696,35 @@ sub get_next_bounce {
 	return undef;
     }
     return $bounce;
+}
+
+sub analyze_verp_header {
+    my $local_part = shift;
+    my $robot_id = shift;
+    my $to = shift;
+    my $distribution_id;
+    my $unique;
+    if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
+	$local_part = $1;
+	$unique = $2;
+    }elsif ($local_part =~  /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/ ) {# tracking in use
+	
+	$distribution_id = $4;
+	$local_part =~ /^(.*)\=\=(.*)$/ ;
+	$local_part = $1;
+    }else{
+	undef $distribution_id ;
+	Log::do_log('err', 'NOT ID PART in the bounce for :%s', $to);
+    }
+
+    $local_part =~ s/\=\=a\=\=/\@/ ;
+    $local_part =~ /^(.*)\=\=(.*)$/ ; 	    
+    my $who = $1;
+    my $listname = $2;
+    
+    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot_id);
+
+    return ($unique,$who,$listname,$distribution_id);
 }
 
 ## copy the bounce to the appropriate filename
