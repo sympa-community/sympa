@@ -200,7 +200,12 @@ while (!$end) {
 
     my $spooled_bounce;
     while ($spooled_bounce = $spool->next){
-	next unless(my $bounce = get_next_bounce($spooled_bounce));
+	my $bounce;
+	unless ($bounce = new BounceMessage({'message_in_spool' => $spooled_bounce})) {
+	    Log::do_log('err','Message %s: badly formatted bounce message. Ignoring.',$spooled_bounce->{'messagekey'});
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+	    next;
+	}
 	Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$bounce->get_msg_id,$spooled_bounce->{'messagekey'},$spooled_bounce->{'list'},$spooled_bounce->{'robot'});
 	
 	my $listname = $bounce->{'list'}{'name'};
@@ -680,23 +685,6 @@ exit(0);
 ## variable.
 sub sigterm {
     $end = 1;
-}
-
-sub get_next_bounce {
-    my $spooled_bounce = shift;
-    Log::do_log('debug','Processing bounce %s',$spooled_bounce->{'messagekey'});
-    my $bounce;
-    unless ($bounce = new BounceMessage({'message_in_spool' => $spooled_bounce})) {
-	Log::do_log('err','Message %s: badly formatted bounce. Ignoring.',$spooled_bounce->{'messagekey'});
-	$spool->move_to_bad($spooled_bounce->{'messagekey'});
-	return undef;
-    }
-    unless ($bounce->get_message_as_string) {
-       &Log::do_log ('notice',"Ignoring bounce where messagekey = %s  because empty",$bounce->{'messagekey'});
-	$spool->move_to_bad($spooled_bounce->{'messagekey'});
-	return undef;
-    }
-    return $bounce;
 }
 
 sub analyze_verp_header {
