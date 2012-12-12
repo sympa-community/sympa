@@ -879,7 +879,8 @@ sub del {
 	    ->faultstring('Unable to remove subscriber informations')
 	    ->faultdetail('Database access failed');	  
     }
-    
+
+    $list->delete_signoff_request($sender);
     
     ## Send a notice to the removed user, unless the owner indicated
     ## quiet del.
@@ -1165,6 +1166,22 @@ sub signoff {
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Not allowed.')
 	    ->faultdetail($reason_string);
+    }
+    if ($action =~ /owner/i) {
+	## Send a notice to the owners.
+	my $keyauth = $list->compute_auth($sender,'add');
+	unless ($list->send_notify_to_owner('sigrequest',
+	    {   'who' => $sender,
+		'keyauth' => $list->compute_auth($sender,'add'),
+		'replyto' => $list->robot->sympa,
+	    }
+	)) {
+	    Log::do_log('err', 'Unable to send notify "subrequest" to %s listowner', $list);
+	}
+
+	$list->store_signoff_request($sender);
+	Log::do_log('info', '%s from %s forwarded to the owners of the list', $list, $sender);
+	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
     if ($action =~ /do_it/i) {
 	## Now check if we know this email on the list and

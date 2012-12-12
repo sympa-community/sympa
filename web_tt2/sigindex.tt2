@@ -1,0 +1,64 @@
+<!-- $Id$ -->
+<div class="block">
+
+<h2>[%|loc%]Listing unsubscription to moderate[%END%]</h2>
+<form class="noborder" action="[% path_cgi %]" method="post" name="myform"> 
+<fieldset>
+<input type="hidden" name="list" value="[% list %]" />
+    <table summary="[%|loc%]Listing unsubscription to moderate[%END%]" class="listOfItems">
+      <tr>
+          <th><a href="#" onclick="toggle_selection(document.myform.email);return false;" title="[%|loc%]Toggle Selection[%END%]">&laquo;&raquo;</a></strong></th>
+          <th colspan="2">[%|loc%]Email[%END%]</th>
+          <th>[%|loc%]Name[%END%]</th>
+          <th>[%|loc%]Date[%END%]</th>
+          <th>[%|loc%]Additional information[%END%]</th>
+      </tr>
+      
+      [% IF signoffs %]
+
+      [% FOREACH sig = signoffs %]
+
+	[% IF dark == '1' %]
+	  <tr>
+	[% ELSE %]
+          <tr class="color0">
+	[% END %]
+	    <td>
+           <input type="checkbox" name="email" value="[% sig.key %]" />
+	    </td>
+	  <td colspan="2">
+	        [% sig.key %]
+	  </td>
+	  <td>
+	        [% sig.value.gecos %]&nbsp;
+          </td>
+	  <td class="text_center">
+	      [% sig.value.date %]
+	  </td>
+          <td class="text_left">
+              [% FOREACH ca_k IN list_conf.custom_attribute %]<b>[% ca_k.name %][%|loc%]:[%END%] </b>[% IF sig.value.custom_attribute.item(ca_k.id).value %][% sig.value.custom_attribute.item(ca_k.id).value %][% ELSE %]-[% END %]<br>[% END %]
+          </td>
+        </tr>
+
+        [% IF dark == '1' %]
+	  [% SET dark = 0 %]
+	[% ELSE %]
+	  [% SET dark = 1 %]
+	[% END %]
+
+        [% END %]
+
+        [% ELSE %]
+         <tr colspan="4"><th>[%|loc%]No unsubscription requests[%END%]</th></TR>
+        [% END %]
+      </table>
+<input type="hidden" name="previous_action" value="sigindex" />
+<input type="hidden" name="previous_list" value="[% list %]" />
+<input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.myform.email)" />
+<input class="MainMenuLinks" type="submit" name="action_del" value="[%|loc%]Delete selected addresses[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_ignoresig" value="[%|loc%]Reject selected addresses[%END%]" />
+</fieldset>
+</form>
+
+</div>
+<!-- end sigindex.tt2 -->

@@ -838,6 +838,10 @@ our @params = (
         'default'  => '30',
     },
     {
+        'name'     => 'clean_delay_queuesignoff',
+        'default'  => '30',
+    },
+    {
         'name'     => 'clean_delay_queuetopic',
         'default'  => '30',
     },

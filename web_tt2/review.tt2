@@ -8,7 +8,8 @@
 [% IF is_owner %]
 	<div class="form">
 		<a class="actionMenuLinks" href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Pending subscriptions[%END%]</a>
-		
+		<a class="actionMenuLinks" href="[% path_cgi %]/sigindex/[% list %]">[%|loc%]Pending unsubscriptions[%END%]</a>
+
 		[% IF may_sync %]
 		<form class="inline" name="synchronize_list_members" action="[% path_cgi %]" method="post">
 			<input class="MainMenuLinks" type="submit" name="action_sync_include" value="[%|loc%]Synchronize members with data sources[%END%]" />

@@ -1007,6 +1007,8 @@ while (!$signal) {
 	$queuetopic->clean({'delay'=> Site->clean_delay_queuetopic});
 	my $queuesubscribe = new Sympaspool('subscribe');
 	$queuesubscribe->clean({'delay'=> Site->clean_delay_queuesubscribe});
+	my $queuesignoff = new Sympaspool('signoff');
+	$queuesignoff->clean({'delay'=> Site->clean_delay_queuesignoff});
 	my $queueautomatic = new Sympaspool('automatic');
 	$queueautomatic->clean({'delay'=> Site->clean_delay_queueautomatic});
 	# this is not a message spool

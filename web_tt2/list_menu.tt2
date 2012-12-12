@@ -61,6 +61,10 @@
 
 	<li class="[% class %]">&#187; &nbsp;<a href="[% path_cgi %]/subindex/[% list %]">[%|loc%]Subscriptions[%END%] ([% mod_subscription %])</a></li>
  
+     [% IF action == 'sigindex' %][% SET class = 'menuLinksCurrentPage' %][% ELSE %][% SET class = 'menuLinks' %][% END %]
+
+	<li class="[% class %]">&#187; &nbsp;<a href="[% path_cgi %]/sigindex/[% list %]">[%|loc%]Unsubscriptions[%END%] ([% mod_signoff %])</a></li>
+ 
   [% END %]
   </ul>
 </li>

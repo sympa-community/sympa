@@ -1408,13 +1408,15 @@ sub signoff {
 		$cmd_line, $sender, $robot
 	    );
 	}
-	&Log::do_log(
-	    'info',
-	    'SIG %s from %s forwarded to the owners of the list (%d seconds)',
-	    $which,
-	    $sender,
-	    time - $time_command
-	);
+	if ($list->store_signoff_request($sender)) {
+	    Log::do_log(
+		'info',
+		'SIG %s from %s forwarded to the owners of the list (%d seconds)',
+		$which,
+		$sender,
+		time - $time_command
+	    );
+	}
 	return 1;
     }
     if ($action =~ /do_it/i) {
@@ -2539,9 +2541,8 @@ sub set {
 	    &report::reject_report_cmd(
 		'user',
 		'available_reception_mode',
-		{   'listname'        => $which,
-		    'modes'           =>
-			join(' ', $list->available_reception_mode()),
+		{   'listname' => $which,
+		    'modes' => join(' ', $list->available_reception_mode()),
 		    'reception_modes' => [$list->available_reception_mode()]
 		},
 		$cmd_line

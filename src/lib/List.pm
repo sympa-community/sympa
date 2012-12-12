@@ -4894,7 +4894,7 @@ sub send_notify_to_owner {
 	@to = split /,/, $self->robot->listmaster;
     }
 	    foreach my $r (@to) {
-		Log::do_log('trace','to %s',$r);
+		Log::do_log('debug3','to %s',$r);
 	    }
 
     unless (defined $operation) {
@@ -4953,13 +4953,27 @@ sub send_notify_to_owner {
 		    );
 		}
 	    }
+	} elsif ($operation eq 'sigrequest') {
+	    $param->{'escaped_who'} = $param->{'who'};
+	    $param->{'escaped_who'} =~ s/\s/\%20/g;
+	    $param->{'sympa'} = $self->robot->sympa;
+	    foreach my $owner (@to) {
+		$param->{'one_time_ticket'} =
+		    Auth::create_one_time_ticket($owner, $robot,
+		    'sigindex/' . $self->name,
+		    $param->{'ip'});
+		unless (
+		    $self->send_file(
+			'listowner_notification', [$owner], $param
+		    )
+		    ) {
+		    Log::do_log('notice',
+			'Unable to send template "listowner_notification" to %s list owner %s', $self, $owner
+		    );
+		}
+	    }
 	} else {
-	    if ($operation eq 'sigrequest') {
-		$param->{'escaped_who'} = $param->{'who'};
-		$param->{'escaped_who'} =~ s/\s/\%20/g;
-		$param->{'sympa'} = $self->robot->sympa;
-
-	    } elsif ($operation eq 'bounce_rate') {
+	    if ($operation eq 'bounce_rate') {
 		$param->{'rate'} = int($param->{'rate'} * 10) / 10;
 	    }
 	    unless ($self->send_file('listowner_notification', \@to, $param))
@@ -7598,10 +7612,10 @@ sub archive_msg {
 	my $msgtostore = $message->get_message_as_string;
 	if (($message->{'smime_crypted'} eq 'smime_crypted') &&
 	    ($self->{admin}{archive_crypted_msg} eq 'original')) {
-		Log::do_log('trace','Will store encrypted message');
+		Log::do_log('debug3', 'Will store encrypted message');
 		$msgtostore = $message->get_encrypted_message_as_string;
 	}else {
-	    Log::do_log('trace','Will store UNencrypted message');
+	    Log::do_log('debug3', 'Will store UNencrypted message');
 	}
 
 	if ((Site->ignore_x_no_archive_header_feature ne 'on') &&
@@ -13289,6 +13303,140 @@ sub delete_subscription_request {
 	&Log::do_log(
 	    'debug2',
 	    'No pending subscription was found for users %s',
+	    join(',', @list_of_email)
+	);
+	return undef;
+    }
+    return 1;
+}
+
+sub store_signoff_request {
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my ($self, $email) = @_;
+
+    my $signoff_request_spool = new Sympaspool('signoff');
+
+    if ($signoff_request_spool->get_content(
+	    {   'selector' => {
+		    'list'   => $self->name,
+		    'robot'  => $self->domain,
+		    'sender' => $email
+		},
+		'selection' => 'count'
+	    }
+	) != 0
+	) {
+	Log::do_log('notice', 'Signoff already requested by %s',
+	    $email);
+	return undef;
+    } else {
+	#my $subrequest = sprintf "$gecos||$custom_attr\n";
+	$signoff_request_spool->store(
+	    '',
+	    {   'list'   => $self->name,
+		'robot'  => $self->domain,
+		'sender' => $email
+	    }
+	);
+    }
+    return 1;
+}
+
+sub get_signoff_requests {
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
+
+    my %signoffs;
+
+    my $signoff_request_spool = new Sympaspool('signoff');
+    my @sigrequests           = $signoff_request_spool->get_content(
+	{   'selector'  => {'list' => $self->name, 'robot' => $self->domain},
+	    'selection' => '*'
+	}
+    );
+
+    foreach my $sigrequest (
+	$signoff_request_spool->get_content(
+	    {   'selector' =>
+		    {'list' => $self->name, 'robot' => $self->domain},
+		'selection' => '*'
+	    }
+	)
+	) {
+
+	my $email = $sigrequest->{'sender'};
+	my $user_entry = $self->get_list_member($email, probe => 1);
+
+	unless (defined $user_entry and $user_entry->{'subscribed'} == 1) {
+	    &Log::do_log(
+		'err',
+		'User %s is unsubscribed from %s already. Deleting signoff request.',
+		$email,
+		$self
+	    );
+	    unless (
+		$signoff_request_spool->remove_message(
+		    {   'list'   => $self->name,
+			'robot'  => $self->domain,
+			'sender' => $email
+	    }
+		)
+		) {
+		&Log::do_log(
+		    'err',
+		    'Could not delete sigrequest %s for list %s from %s',
+		    $sigrequest->{'messagekey'},
+		    $self,
+		    $sigrequest->{'sender'}
+		);
+	    }
+	    next;
+	}
+
+	$signoffs{$email} = {};
+	my $user = User->new($email);
+	if ($user->gecos) {
+	    $signoffs{$email}{'gecos'} = $user->gecos;
+	}
+	#}
+	$signoffs{$email}{'date'} = $sigrequest->{'date'};
+    }
+
+    return \%signoffs;
+}
+
+sub get_signoff_request_count {
+    my $self = shift;
+
+    my $signoff_request_spool = new Sympaspool('signoff');
+    return $signoff_request_spool->get_content(
+	{   'selector'  => {'list' => $self->name, 'robot' => $self->domain},
+	    'selection' => 'count'
+	}
+    );
+}
+
+sub delete_signoff_request {
+    my ($self, @list_of_email) = @_;
+    Log::do_log('debug2', '(%s, %s)', $self, join(',', @list_of_email));
+
+    my $signoff_request_spool = new Sympaspool('signoff');
+
+    my $removed = 0;
+    foreach my $email (@list_of_email) {
+	$removed++
+	    if $signoff_request_spool->remove_message(
+		    {   'list'   => $self->name,
+			'robot'  => $self->domain,
+			'sender' => $email
+    		    }
+	    );
+    }
+
+    unless ($removed > 0) {
+	Log::do_log(
+	    'debug2',
+	    'No pending signoff was found for users %s',
 	    join(',', @list_of_email)
 	);
 	return undef;

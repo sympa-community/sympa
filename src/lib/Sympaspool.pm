@@ -75,7 +75,7 @@ sub new {
     my $spool={};
    &Log::do_log('debug2', 'Spool::new(%s,%s)', $spoolname, $selection_status);
     
-    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(topic)|(validated)|(task)$/){
+    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
 &Log::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }

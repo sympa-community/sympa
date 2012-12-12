@@ -198,6 +198,7 @@ my %comm = ('home' => 'do_home',
 	 'multiple_subscribe' => 'do_multiple_subscribe',
 	 'subrequest' => 'do_subrequest',
 	 'subindex' => 'do_subindex',
+	 'ignoresub' => 'do_ignoresub',
 	 'suboptions' => 'do_suboptions',
 	 'signoff' => 'do_signoff',
 	 'auto_signoff' => 'do_auto_signoff',
@@ -205,7 +206,8 @@ my %comm = ('home' => 'do_home',
 	 'family_signoff_request' => 'do_family_signoff_request',
 	 'multiple_signoff' => 'do_multiple_sigoff',
 	 'sigrequest' => 'do_sigrequest',
-	 'ignoresub' => 'do_ignoresub',
+	 'sigindex' => 'do_sigindex',
+	 'ignoresig' => 'do_ignoresig',
 	 'which' => 'do_which',
 	 'lists' => 'do_lists',
 	 'latest_lists' => 'do_latest_lists',   
@@ -568,7 +570,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'd_set_owner' => ['param.list','param.user.email'],
 		     'd_unzip' => ['param.list','param.user.email'],
 		     'd_upload' => ['param.list','param.user.email'],
-		     'del' => ['param.list','param.user.email','email'],
+		     'del' => ['param.list','param.user.email'],
 		     'delete_pictures' => ['param.list','param.user.email'],
 		     'distribute' => ['param.list','param.user.email','id|idspam'],
 		     'dump' => ['param.list'],
@@ -2793,7 +2795,8 @@ sub check_param_in {
 	    $param->{'mod_message'} = $list->get_mod_spool_size();
 	    
             $param->{'mod_subscription'} = $list->get_subscription_request_count();
-	   
+	    $param->{'mod_signoff'} = $list->get_signoff_request_count();
+
 	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
 	    $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
 
@@ -5534,6 +5537,9 @@ sub unsubscribe {
 							   'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'del')})) {
 	     &wwslog('notice', 'Unable to send notify "sigrequest" to %s list owner', $list);
 	 }
+
+	$list->store_signoff_request($param->{'user'}{'email'});
+
 	 &wwslog('info', 'do_signoff: signoff sent to owner');
 	$report{'success'} = 1;
 	$report{'details'} = 'sent_to_owner';
@@ -6687,6 +6693,9 @@ sub do_del {
 		      'error_type' => 'internal'});
 	 return undef;
      }
+
+    ## Delete signoff request if any
+    $list->delete_signoff_request(@removed_users);
 
      &report::notice_report_web('del_performed',{'total' => $total},$param->{'action'});
      &web_db_log({'target_email' => $in{'email'},
@@ -8994,7 +9003,12 @@ sub do_home {
 	    
 	    my $mod_subscription = $one_list->get_subscription_request_count();
 	    $param->{'admin_summary'}{$one_list->name}{'mod_subscription'} = $mod_subscription if ($mod_subscription > 0);
-	    
+
+	    my $mod_signoff = $one_list->get_signoff_request_count();
+            $param->{'admin_summary'}{$one_list->name}{'mod_signoff'} =
+		$mod_signoff
+		if $mod_signoff > 0;
+
 	    my $doc_mod_list = $one_list->get_shared_moderated();
 	    my $mod_shared_total = $#{$doc_mod_list} + 1;
 	    $param->{'admin_summary'}{$one_list->name}{'mod_shared_total'} = $mod_shared_total if ($mod_shared_total > 0);
@@ -16584,6 +16598,38 @@ sub do_ignoresub {
      &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
      return 'subindex';
  }
+
+sub do_sigindex {
+    &wwslog('info', 'do_sigindex');
+
+    my $signoffs = $list->get_signoff_requests();
+    foreach my $sig (keys %{$signoffs}) {
+	$signoffs->{$sig}{'date'} = gettext_strftime "%d %b %Y", localtime($signoffs->{$sig}{'date'});
+	my $gecos = ($list->user('member', $sig) || {})->{'gecos'};
+	$signoffs->{$sig}{'gecos'} = $gecos if $gecos;
+    }
+
+    $param->{'signoffs'} = $signoffs;
+    &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+    return 1;
+}
+
+sub do_ignoresig {
+    &wwslog('info', 'do_ignoresig');
+
+    my @users = split /\0/, $in{'email'};
+
+    foreach my $u (@users) {
+	unless ($list->delete_signoff_request($u)) {
+	    &report::reject_report_web('intern','del_sig_request',{'sig'=>$u},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
+	    &wwslog('info','do_ignoresig: delete_signoff_request(%s) failed', $u);
+	    &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+	    return 'sigindex';
+	}
+    }
+    &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
+    return 'sigindex';
+}
 
 sub do_stats {
      &wwslog('info', 'do_stats');
