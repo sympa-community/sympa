@@ -709,7 +709,7 @@ sub send_file {
     my $context = shift || {};
     my $options = shift || {};
 
-   my ($robot, $list, $robot_id);
+    my ($robot, $list, $robot_id);
     if (ref $self and ref $self eq 'List') {
 	$robot    = $self->robot;
 	$list     = $self;
@@ -787,7 +787,7 @@ sub send_file {
 	    }
 	}
     }
- 
+
     ## Lang
     undef $data->{'lang'};
     $data->{'lang'} = $data->{'user'}->lang if ref $data->{'user'};
@@ -1459,7 +1459,7 @@ In scalar context, returns arrayref to them.
 =cut
 
 sub supported_languages {
-    my $self = shift;
+    my $self           = shift;
     my $supported_lang = $self->supported_lang;
     unless ($supported_lang) {
 	return () if wantarray;
@@ -1500,8 +1500,8 @@ sub _crash_handler {
     chomp $msg;
     &Log::do_log('err', 'DIED: %s', $msg);
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
-    eval { SDM::db_disconnect(); };   # unlock database
-    Sys::Syslog::closelog();          # flush log
+    eval { SDM::db_disconnect(); };    # unlock database
+    Sys::Syslog::closelog();           # flush log
 
     ## gather traceback information
     my @calls;

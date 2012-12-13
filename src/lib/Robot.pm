@@ -43,9 +43,9 @@ Returns a Robot object, or undef on errors.
 ## Constructor of a Robot instance
 sub new {
     &Log::do_log('debug2', '(%s, %s, ...)', @_);
-    my $pkg     = shift;
-    my $name    = shift;
-    
+    my $pkg  = shift;
+    my $name = shift;
+
     my %options = @_;
 
     ##XXX$name = '*' unless defined $name and length $name;
@@ -129,7 +129,8 @@ sub load {
 	    $self->{'etc'} = Site->etc;
 	} else {
 	    &Log::do_log('err',
-		'Unknown robot "%s": config directory was not found', $name) unless ($options{'just_try'});
+		'Unknown robot "%s": config directory was not found', $name)
+		unless ($options{'just_try'});
 	    return undef;
 	}
 
@@ -495,7 +496,7 @@ styles.  At last modifications have been done, this shall be removed.
 sub clean_robot {
     my $robot      = shift;
     my $maybe_site = shift;
-    Log::do_log('debug3','robot "%s", maybe_site "%s"',$robot, $maybe_site);
+    Log::do_log('debug3', 'robot "%s", maybe_site "%s"', $robot, $maybe_site);
     unless (ref $robot or
 	($maybe_site and !ref $robot and $robot eq 'Site')) {
 	my $level = $Carp::CarpLevel;

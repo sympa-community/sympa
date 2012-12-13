@@ -1487,8 +1487,8 @@ sub signoff {
 	unless ($quiet || ($action =~ /quiet/i)) {
 	    ## Send bye file to subscriber
 	    unless ($list->send_file('bye', $email)) {
-		&Log::do_log('notice',
-		    'Unable to send template "bye" to %s', $email);
+		Log::do_log('notice', 'Unable to send template "bye" to %s',
+		    $email);
 	    }
 	}
 
