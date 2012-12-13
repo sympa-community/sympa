@@ -208,48 +208,46 @@ while (!$end) {
 	}
 	Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$bounce->get_msg_id,$spooled_bounce->{'messagekey'},$spooled_bounce->{'list'},$spooled_bounce->{'robot'});
 	
-	$bounce->{'listname'} = $bounce->{'list'}{'name'};
-	$bounce->{'domain_part'} = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $bounce->{'to'}, Site->bounce_email_prefix);
 		
 	$bounce->{'to'} =~ s/<//;
 	$bounce->{'to'} =~ s/>//;
-	my $bounce_email_prefix = Site->bounce_email_prefix;
-	if ($bounce->{'to'} =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
+	if ($bounce->is_verp_in_use) { #VERP in use
+	    $bounce->{'local_part'} = $1;
+	    $bounce->{'robotname'} = $2;
 	    $bounce->analyze_verp_header();
-	    if ($bounce->{'unique'} =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
-		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
-		my $list = new List ($bounce->{'listname'}, $bounce->{'robot'});
-		unless($list) {
-		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'domain_part'});
+	    if ($bounce->failed_on_first_try) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
+		Log::do_log('trace', "VERP for a service message, try to remove the subscriber");
+		unless($bounce->update_list($bounce->{'listname'},$bounce->{'robotname'})) {
+		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		    next;
 		}
-		my $result =$list->check_list_authz('del','smtp',
+		my $result = $bounce->{'list'}->check_list_authz('del','smtp',
 						    {'sender' => [Site->listmasters]->[0],
 						     'email' => $bounce->{'who'}});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
-	    
+
 		if ($action =~ /do_it/i) {
-		    if ($list->is_list_member($bounce->{'who'})) {
-			my $u = $list->delete_list_member('users' => [$bounce->{'who'}], 'exclude' =>' 1');
+		    if ($bounce->{'list'}->is_list_member($bounce->{'who'})) {
+			my $u = $bounce->{'list'}->delete_list_member('users' => [$bounce->{'who'}], 'exclude' =>' 1');
 			&Log::do_log ('notice',"$bounce->{'who'} has been removed from $bounce->{'listname'} because welcome message bounced");
-			&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'del',
+			&Log::db_log({'robot' => $bounce->{'list'}->domain, 'list' => $bounce->{'list'}->name, 'action' => 'del',
 				      'target_email' => $bounce->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
 				      'daemon' => 'bounced'});
 			
-			&Log::db_stat_log({'robot' => $list->domain, 'list' => $list->name, 'operation' => 'auto_del', 'parameter' => "",
+			&Log::db_stat_log({'robot' => $bounce->{'list'}->domain, 'list' => $bounce->{'list'}->name, 'operation' => 'auto_del', 'parameter' => "",
 					   'mail' => $bounce->{'who'}, 'client' => "", 'daemon' => 'bounced.pl'});
 			
 			if ($action =~ /notify/) {
-			    unless ($list->send_notify_to_owner('automatic_del',
+			    unless ($bounce->{'list'}->send_notify_to_owner('automatic_del',
 								{'who' => $bounce->{'who'},
 								 'by' => 'bounce manager',
 								 'reason' => 'welcome'})) {
-				&wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $list);
+				&wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $bounce->{'list'});
 			    } 
 			}
 		    }
@@ -262,9 +260,9 @@ while (!$end) {
 	    }# close VERP + remind or welcome block
 	}# close VERP in use block
 
-	my $list = new List ($bounce->{'listname'}, $bounce->{'domain_part'});
+	my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
 	unless($list) {
-	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'domain_part'});
+	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}
@@ -486,7 +484,6 @@ while (!$end) {
 	    my $user_agent;
 	    my $version;
 	    my $feedback_type = '';
-	    my $bounce->{'domain_part'};
 	    foreach my $p (@parts) {
 		my $h = $p->head();
 		my $content = $h->get('Content-type');
@@ -538,18 +535,18 @@ while (!$end) {
 		    chomp $bounce->{'listname'} ;
 		    $bounce->{'listname'} =~ /(.*)\@(.*)/;
 		    $bounce->{'listname'} = $1;
-		    $bounce->{'domain_part'} = $2;
-		    my $list = new List ($bounce->{'listname'}, $bounce->{'domain_part'});
+		    $bounce->{'robotname'} = $2;
+		    my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
 		    unless($list) {
 			&Log::do_log('err',
 			    'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
-			    $bounce->{'messagekey'}, $bounce->{'listname'}, $bounce->{'domain_part'});
+			    $bounce->{'messagekey'}, $bounce->{'listname'}, $bounce->{'robotname'});
 			$spool->move_to_bad($spooled_bounce->{'messagekey'});
 			next;
 		    }
 		    push @lists, $list;
 		}elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
-		    @lists = &List::get_which($original_rcpt, $bounce->{'domain_part'}, 'member');
+		    @lists = &List::get_which($original_rcpt, $bounce->{'robotname'}, 'member');
 		}else {
 		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $bounce->{'listname'} );		
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
@@ -567,7 +564,7 @@ while (!$end) {
 				    &Log::do_log('notice', 'Unable to send notify "automatic_del" to %s list owner', $list);
 				}
 			    }else{
-				&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$bounce->{'messagekey'},$list->name,$bounce->{'domain_part'},$original_rcpt);
+				&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$bounce->{'messagekey'},$list->name,$bounce->{'robotname'},$original_rcpt);
 				unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
 				    &Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
 				}
@@ -593,9 +590,9 @@ while (!$end) {
     
 	# Fin section feedback report
 	# else (not welcome or remind) 
-	my $list = new List ($bounce->{'listname'}, $bounce->{'domain_part'});
+	my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
 	if (! $list) {
-	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'domain_part'});
+	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}else{
