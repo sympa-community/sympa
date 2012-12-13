@@ -313,27 +313,44 @@ sub get_envelope_sender {
     return $self->{'envelope_sender'};
 }
 
+## Get sender of the message according to header fields specified by
+## sender_header parameter.
+## FIXME: S/MIME signer may not be same as sender given by this method.
 sub get_sender_email {
     my $self = shift;
 
     unless ($self->{'sender'}) {
 	my $hdr = $self->{'msg'}->head;
-	## Extract sender address
-	unless ($hdr->get('From')) {
-	    Log::do_log('err', 'No From found in message, skipping.');
-	    return undef;
-	}   
-	my @sender_hdr = Mail::Address->parse($hdr->get('From'));
-	if ($#sender_hdr == -1) {
-	    Log::do_log('err', 'No valid address in From: field. skipping');
+	my $sender = undef;
+	foreach my $field (split /[\s,]+/, Site->sender_headers) {
+	    if (lc $field eq 'from_') {
+		## Try to get envelope sender
+		if (defined $self->get_envelope_sender and
+		    $self->get_envelope_sender ne '<>') {
+		    $sender = $self->get_envelope_sender;
+		    last;
+		}
+	    } elsif ($hdr->get($field)) {
+		## Try to get message header
+		## On "Resent-*:" headers, the first occurrance must be used.
+		## Though "From:" can occur multiple times, only the first
+		## one is detected.
+		my @sender_hdr = Mail::Address->parse($hdr->get($field));
+		if (scalar @sender_hdr) {
+		    $sender = lc($sender_hdr[0]->address);
+		    last;
+		}
+	    }
+	}
+	unless (defined $sender) {
+	    Log::do_log('err', 'No valid sender address');
 	    return undef;
 	}
-	$self->{'sender'} = lc($sender_hdr[0]->address);
-
-	unless (&tools::valid_email($self->{'sender'})) {
-	    Log::do_log('err', "Invalid From: field '%s'", $self->{'sender'});
+	unless (tools::valid_email($sender)) {
+	    Log::do_log('err', 'Invalid sender address "%s"', $sender);
 	    return undef;
 	}
+	$self->{'sender'} = $sender;
     }
     return $self->{'sender'};
 }

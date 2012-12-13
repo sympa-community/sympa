@@ -629,6 +629,11 @@ our @params = (
         'name'     => 'urlize_min_size',
         'default'  => 10240, ## 10 kiB,
     },
+    {
+	'name'     => 'sender_headers',
+	'default'  => 'Resent-From,From,From_,Resent-Sender,Sender',
+	'query'    => gettext('Header field names used to determine sender of the messages.  "From_" means envelope sender (a.k.a. "UNIX From")'),
+    },
 
     { 'title' => gettext('Bulk mailer') },
 
