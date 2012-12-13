@@ -214,7 +214,6 @@ while (!$end) {
 	my $head = $bounce->get_mime_message->head;
 	my $to = $head->get('to', 0);
 	chomp $to;	
-	my $notification_as_string = $bounce->get_message_as_string;
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $to, Site->bounce_email_prefix);
 		
@@ -369,7 +368,7 @@ while (!$end) {
 		}
 	    }
 	    
-	    if (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'DSN', $dsn_status, $arrival_date,$notification_as_string )) {
+	    if (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'DSN', $dsn_status, $arrival_date,$bounce->get_mime_message )) {
 		&Log::do_log('notice', "DSN Correctly treated...");
 	    }else{
 		&Log::do_log('err','Not able to fill database with notification data');
@@ -472,7 +471,7 @@ while (!$end) {
 	    }
 	    
 	    &Log::do_log('debug2', "Save in database...");
-	    unless (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'MDN',$mdn_status, $date,$notification_as_string )) {
+	    unless (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'MDN',$mdn_status, $date,$bounce->get_mime_message )) {
 		&Log::do_log('err','Not able to fill database with notification data');
 	    }
 	    &Log::do_log('notice', "MDN Correctly treated...");
