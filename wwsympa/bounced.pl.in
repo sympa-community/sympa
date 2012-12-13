@@ -211,7 +211,6 @@ while (!$end) {
 	$bounce->{'listname'} = $bounce->{'list'}{'name'};
 	$bounce->{'domain_part'} = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
-	my $robot = $bounce->{'robot'};
 	my $entity = $bounce->{'msg'};
 	my $head = $entity->head;
 	my $to = $head->get('to', 0);
@@ -227,7 +226,7 @@ while (!$end) {
 	    $bounce->analyze_verp_header();
 	    if ($bounce->{'unique'} =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
-		my $list = new List ($bounce->{'listname'}, $robot);
+		my $list = new List ($bounce->{'listname'}, $bounce->{'robot'});
 		unless($list) {
 		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'domain_part'});
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
