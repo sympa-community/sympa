@@ -175,6 +175,8 @@ sub new {
     chomp $message->{'msg_id'};
     $message->{'list'} ||= $datas->{'list'}; # Some messages without X-Sympa-To still need a list context.
 
+    $message->get_envelope_sender;
+
     return undef unless($message->get_sender_email);
 
     $message->get_subject;
@@ -276,32 +278,39 @@ sub create_message_from_string {
 	$msg = $parser->parse_data(\$messageasstring);
     }
 
-    # get envelope sender
-    ##FIXME: currently won't work as expected.
-    my $from_ = undef;
-    if (ref $messageasstring) {
-	if (ref $messageasstring eq 'ARRAY' and
-	    $messageasstring->[0] =~ /^From (\S+)/) {
-	    $from_ = $1;
-	} elsif ($$messageasstring =~ /^From (\S+)/) {
-	    $from_ = $1;
-	}
-    } elsif ($messageasstring =~ /^From (\S+)/) {
-	$from_ = $1;
-    }
-    if (defined $from_) {
-	if ($from_ =~ /<>/) {
-	    $from_ = '<>';
-	} else {
-	    $from_ = tools::clean_email($from_);
-	}
-	$self->{'envsender'} = $from_ if $from_;
-    }
-    
     $self->{'msg'} = $msg;
     $self->{'msg_as_string'} = $messageasstring;
 
     return $self;
+}
+
+sub get_envelope_sender {
+    my $self = shift;
+
+    unless (exists $self->{'envelope_sender'}) {
+	## We trust in Return-Path: header field at the top of message.
+	## To add it to messages by MDA:
+	## - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
+	##               as 'Mlocal').
+	## - Postfix:
+	##   - local(8): Available by default.
+	##   - pipe(8):  Add 'R' in the 'flags=' attributes of master.cf.
+	## - Exim:       Set 'return_path_add' to true with pipe_transport.
+	## - qmail:      Use preline(1).
+	my $headers = $self->{'msg'}->head->header();
+	my $i = 0;
+	$i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
+	if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
+	    my $addr = $1;
+	    if ($addr =~ /<>/) {
+		$self->{'envelope_sender'} = '<>';
+	    } else {
+		my @addrs = Mail::Address->parse($addr);
+		$self->{'envelope_sender'} = $addrs[0]->address if $addrs[0];
+	    }
+	}
+    }
+    return $self->{'envelope_sender'};
 }
 
 sub get_sender_email {
