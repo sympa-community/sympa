@@ -208,7 +208,7 @@ while (!$end) {
 	}
 	Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$bounce->get_msg_id,$spooled_bounce->{'messagekey'},$spooled_bounce->{'list'},$spooled_bounce->{'robot'});
 	
-	my $listname = $bounce->{'list'}{'name'};
+	$bounce->{'listname'} = $bounce->{'list'}{'name'};
 	my $robot_id = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
 	my $robot = $bounce->{'robot'};
@@ -217,8 +217,6 @@ while (!$end) {
 	my $to = $head->get('to', 0);
 	chomp $to;	
 	my $notification_as_string = $entity->as_string;
-	my $who;
-	my $distribution_id;
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $to, Site->bounce_email_prefix);
 		
@@ -226,36 +224,35 @@ while (!$end) {
 	$to =~ s/>//;
 	my $bounce_email_prefix = Site->bounce_email_prefix;
 	if ($to =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
-	    my $unique;
-	    ($unique,$who,$listname,$distribution_id) = analyze_verp_header($1,$2,$to);
-	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
+	    $bounce->analyze_verp_header();
+	    if ($bounce->{'unique'} =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
-		my $list = new List ($listname, $robot);
+		my $list = new List ($bounce->{'listname'}, $robot);
 		unless($list) {
-		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
+		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$robot_id);
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		    next;
 		}
 		my $result =$list->check_list_authz('del','smtp',
 						    {'sender' => [Site->listmasters]->[0],
-						     'email' => $who});
+						     'email' => $bounce->{'who'}});
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
 	    
 		if ($action =~ /do_it/i) {
-		    if ($list->is_list_member($who)) {
-			my $u = $list->delete_list_member('users' => [$who], 'exclude' =>' 1');
-			&Log::do_log ('notice',"$who has been removed from $listname because welcome message bounced");
+		    if ($list->is_list_member($bounce->{'who'})) {
+			my $u = $list->delete_list_member('users' => [$bounce->{'who'}], 'exclude' =>' 1');
+			&Log::do_log ('notice',"$bounce->{'who'} has been removed from $bounce->{'listname'} because welcome message bounced");
 			&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'del',
-				      'target_email' => $who,'status' => 'error','error_type' => 'welcome_bounced',
+				      'target_email' => $bounce->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
 				      'daemon' => 'bounced'});
 			
 			&Log::db_stat_log({'robot' => $list->domain, 'list' => $list->name, 'operation' => 'auto_del', 'parameter' => "",
-					   'mail' => $who, 'client' => "", 'daemon' => 'bounced.pl'});
+					   'mail' => $bounce->{'who'}, 'client' => "", 'daemon' => 'bounced.pl'});
 			
 			if ($action =~ /notify/) {
 			    unless ($list->send_notify_to_owner('automatic_del',
-								{'who' => $who,
+								{'who' => $bounce->{'who'},
 								 'by' => 'bounce manager',
 								 'reason' => 'welcome'})) {
 				&wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $list);
@@ -263,7 +260,7 @@ while (!$end) {
 			}
 		    }
 		}else{
-		    &Log::do_log ('notice',"Unable to remove $who from $listname (welcome message bounced but del is closed)");
+		    &Log::do_log ('notice',"Unable to remove $bounce->{'who'} from $bounce->{'listname'} (welcome message bounced but del is closed)");
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
@@ -271,9 +268,9 @@ while (!$end) {
 	    }# close VERP + remind or welcome block
 	}# close VERP in use block
 
-	my $list = new List ($listname, $robot_id);
+	my $list = new List ($bounce->{'listname'}, $robot_id);
 	unless($list) {
-	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
+	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$robot_id);
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}
@@ -326,11 +323,11 @@ while (!$end) {
 				($final_rcpt)= $final_rcpt =~ /(\S+\@\S+)/;
 			    }	
 			}
-			#  $distribution_id is set using VERP nothing else.
-			#if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i) && (!$distribution_id) ) {
-			#    $distribution_id = $1;
-			#    chomp $distribution_id;
-			#   &Log::do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $distribution_id);
+			#  $bounce->{'distribution_id'} is set using VERP nothing else.
+			#if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i) && (!$bounce->{'distribution_id'}) ) {
+			#    $bounce->{'distribution_id'} = $1;
+			#    chomp $bounce->{'distribution_id'};
+			#   &Log::do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $bounce->{'distribution_id'});
 			#}
 			if ($line =~ /arrival\-date\:\s*(.+)/i) {
 			    $arrival_date = $1;
@@ -340,7 +337,7 @@ while (!$end) {
 		}
 	    }
 	    
-	    $original_rcpt = $who;
+	    $original_rcpt = $bounce->{'who'};
 	    
 	    if($final_rcpt =~ /<(\S+\@\S+)>/){
 		($final_rcpt)= $final_rcpt =~ /<(\S+\@\S+)>/;
@@ -357,7 +354,7 @@ while (!$end) {
 	    
 	    unless  ($dsn_status =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
 		&Log::do_log('err', "Non failed dsn status $dsn_status");
-		unless ($distribution_id) {
+		unless ($bounce->{'distribution_id'}) {
 		    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
 		    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		    next;
@@ -374,7 +371,7 @@ while (!$end) {
 		}
 	    }
 	    
-	    if (&tracking::db_insert_notification($distribution_id, 'DSN', $dsn_status, $arrival_date,$notification_as_string )) {
+	    if (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'DSN', $dsn_status, $arrival_date,$notification_as_string )) {
 		&Log::do_log('notice', "DSN Correctly treated...");
 	    }else{
 		&Log::do_log('err','Not able to fill database with notification data');
@@ -448,14 +445,14 @@ while (!$end) {
 		($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
 	    }
 	    # let's use VERP 
-	    $original_rcpt = $who;
+	    $original_rcpt = $bounce->{'who'};
 	    
 	    &Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $mdn_status);
 	    &Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $original_rcpt);
 	    &Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $msg_id);
 	    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $date);
 	    
-	    unless ($distribution_id) {
+	    unless ($bounce->{'distribution_id'}) {
 		&Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		next;
@@ -477,7 +474,7 @@ while (!$end) {
 	    }
 	    
 	    &Log::do_log('debug2', "Save in database...");
-	    unless (&tracking::db_insert_notification($distribution_id, 'MDN',$mdn_status, $date,$notification_as_string )) {
+	    unless (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'MDN',$mdn_status, $date,$notification_as_string )) {
 		&Log::do_log('err','Not able to fill database with notification data');
 	    }
 	    &Log::do_log('notice', "MDN Correctly treated...");
@@ -495,7 +492,6 @@ while (!$end) {
 	    my $user_agent;
 	    my $version;
 	    my $feedback_type = '';
-	    my $listname;
 	    my $robot_id;
 	    foreach my $p (@parts) {
 		my $h = $p->head();
@@ -527,9 +523,9 @@ while (!$end) {
 		    foreach my $subp (@subparts) {
 			# &Log::do_log ('notice',"xxx subparts : subps");
 			my $subph =  $subp->head;
-			$listname = $subph->get('X-Loop');
+			$bounce->{'listname'} = $subph->get('X-Loop');
 		    }
-		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : extract listname $listname");
+		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : extract listname $bounce->{'listname'}");
 		}
 	    }
 	    my $forward ;
@@ -538,22 +534,22 @@ while (!$end) {
 	    ## but we don't take action if we meet them yet. This is to be done, if relevant.
 	    if (($feedback_type =~ /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i) && (defined $version) && (defined $user_agent)) {
 		
-		&Log::do_log ('debug',"Email Feedback Report: $listname feedback-type: $feedback_type");
+		&Log::do_log ('debug',"Email Feedback Report: $bounce->{'listname'} feedback-type: $feedback_type");
 		if (defined $original_rcpt) {
 		    &Log::do_log ('debug',"Recognized user : $original_rcpt list");		
 		    my @lists;
 		    
-		if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $listname)) {
-		    $listname = lc($listname);
-		    chomp $listname ;
-		    $listname =~ /(.*)\@(.*)/;
-		    $listname = $1;
+		if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $bounce->{'listname'})) {
+		    $bounce->{'listname'} = lc($bounce->{'listname'});
+		    chomp $bounce->{'listname'} ;
+		    $bounce->{'listname'} =~ /(.*)\@(.*)/;
+		    $bounce->{'listname'} = $1;
 		    $robot_id = $2;
-		    my $list = new List ($listname, $robot_id);
+		    my $list = new List ($bounce->{'listname'}, $robot_id);
 		    unless($list) {
 			&Log::do_log('err',
 			    'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
-			    $bounce->{'messagekey'}, $listname, $robot_id);
+			    $bounce->{'messagekey'}, $bounce->{'listname'}, $robot_id);
 			$spool->move_to_bad($spooled_bounce->{'messagekey'});
 			next;
 		    }
@@ -561,7 +557,7 @@ while (!$end) {
 		}elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
 		    @lists = &List::get_which($original_rcpt, $robot_id, 'member');
 		}else {
-		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $listname );		
+		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $bounce->{'listname'} );		
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 		    foreach my $list (@lists){
@@ -590,11 +586,11 @@ while (!$end) {
 			}
 		    }
 		}else{
-		    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $listname );		
+		    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $bounce->{'listname'} );		
 		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 		}
 	    }else{
-		&Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $listname );		
+		&Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $bounce->{'listname'} );		
 		$spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    }
 	    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});	
@@ -603,13 +599,13 @@ while (!$end) {
     
 	# Fin section feedback report
 	# else (not welcome or remind) 
-	my $list = new List ($listname, $robot_id);
+	my $list = new List ($bounce->{'listname'}, $robot_id);
 	if (! $list) {
-	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$listname,$robot_id);
+	    &Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$robot_id);
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}else{
-	    &Log::do_log('debug',"Processing bounce messagekey=%s for list $listname",$bounce->{'messagekey'});      
+	    &Log::do_log('debug',"Processing bounce messagekey=%s for list $bounce->{'listname'}",$bounce->{'messagekey'});      
 	    
 	    my (%hash, $from);
 	    my $bounce_dir = $list->get_bounce_dir();
@@ -640,7 +636,7 @@ while (!$end) {
 	    # Peut être possibilité de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
 	    while (my ($rcpt, $status) = each %hash) {
 		$adr_count++;
-		my $bouncefor = $who;
+		my $bouncefor = $bounce->{'who'};
 		$bouncefor ||= $rcpt;
 	    
 		next unless (&store_bounce ($bounce_dir,$bounce,$bouncefor));
@@ -650,9 +646,9 @@ while (!$end) {
 	    ## No address found in the bounce itself
 	    unless ($adr_count) {
 		
-		if ( $who ) {	# rcpt not recognized in the bounce but VERP was used
-		    &store_bounce ($bounce_dir,$bounce,$who);
-		    &update_subscriber_bounce_history($list, 'unknown', $who); # status is undefined 
+		if ( $bounce->{'who'} ) {	# rcpt not recognized in the bounce but VERP was used
+		    &store_bounce ($bounce_dir,$bounce,$bounce->{'who'});
+		    &update_subscriber_bounce_history($list, 'unknown', $bounce->{'who'}); # status is undefined 
 		}else{          # no VERP and no rcpt recognized		
 		    my $escaped_from = &tools::escape_chars($from);
 		    &Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $list);
@@ -685,35 +681,6 @@ exit(0);
 ## variable.
 sub sigterm {
     $end = 1;
-}
-
-sub analyze_verp_header {
-    my $local_part = shift;
-    my $robot_id = shift;
-    my $to = shift;
-    my $distribution_id;
-    my $unique;
-    if ($local_part =~ /^(.*)(\=\=([wr]))$/) {
-	$local_part = $1;
-	$unique = $2;
-    }elsif ($local_part =~  /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/ ) {# tracking in use
-	
-	$distribution_id = $4;
-	$local_part =~ /^(.*)\=\=(.*)$/ ;
-	$local_part = $1;
-    }else{
-	undef $distribution_id ;
-	Log::do_log('err', 'NOT ID PART in the bounce for :%s', $to);
-    }
-
-    $local_part =~ s/\=\=a\=\=/\@/ ;
-    $local_part =~ /^(.*)\=\=(.*)$/ ; 	    
-    my $who = $1;
-    my $listname = $2;
-    
-    &Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$who,$listname,$robot_id);
-
-    return ($unique,$who,$listname,$distribution_id);
 }
 
 ## copy the bounce to the appropriate filename
