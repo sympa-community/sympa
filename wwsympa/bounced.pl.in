@@ -211,11 +211,10 @@ while (!$end) {
 	$bounce->{'listname'} = $bounce->{'list'}{'name'};
 	$bounce->{'domain_part'} = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
-	my $entity = $bounce->{'msg'};
-	my $head = $entity->head;
+	my $head = $bounce->get_mime_message->head;
 	my $to = $head->get('to', 0);
 	chomp $to;	
-	my $notification_as_string = $entity->as_string;
+	my $notification_as_string = $bounce->get_message_as_string;
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $to, Site->bounce_email_prefix);
 		
@@ -282,7 +281,7 @@ while (!$end) {
 	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on_demand");
 	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($tracking_in_use)) {
 	    
-	    my @parts = $entity->parts();
+	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
 	    my $arrival_date;
 	    
@@ -386,7 +385,7 @@ while (!$end) {
 	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
 	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {
 	    
-	    my @parts = $entity->parts();
+	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
 	    my $date;
 	    my $mdn_status;
@@ -486,7 +485,7 @@ while (!$end) {
 	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=feedback-report/)) {
 	    # this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
 	    &Log::do_log ('notice',"processing  Email Feedback Report");
-	    my @parts = $entity->parts();
+	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt;
 	    my $user_agent;
 	    my $version;
