@@ -306,7 +306,9 @@ sub get_envelope_sender {
 		$self->{'envelope_sender'} = '<>';
 	    } else {
 		my @addrs = Mail::Address->parse($addr);
-		$self->{'envelope_sender'} = $addrs[0]->address if $addrs[0];
+		if (scalar @addrs and $addrs[0]->address) {
+		    $self->{'envelope_sender'} = $addrs[0]->address;
+		}
 	    }
 	}
     }
@@ -314,7 +316,7 @@ sub get_envelope_sender {
 }
 
 ## Get sender of the message according to header fields specified by
-## sender_header parameter.
+## 'sender_headers' parameter.
 ## FIXME: S/MIME signer may not be same as sender given by this method.
 sub get_sender_email {
     my $self = shift;
@@ -325,7 +327,7 @@ sub get_sender_email {
 	foreach my $field (split /[\s,]+/, Site->sender_headers) {
 	    if (lc $field eq 'from_') {
 		## Try to get envelope sender
-		if (defined $self->get_envelope_sender and
+		if ($self->get_envelope_sender and
 		    $self->get_envelope_sender ne '<>') {
 		    $sender = $self->get_envelope_sender;
 		    last;
@@ -336,7 +338,7 @@ sub get_sender_email {
 		## Though "From:" can occur multiple times, only the first
 		## one is detected.
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
-		if (scalar @sender_hdr) {
+		if (scalar @sender_hdr and $sender_hdr[0]->address) {
 		    $sender = lc($sender_hdr[0]->address);
 		    last;
 		}
