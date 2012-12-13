@@ -3125,7 +3125,7 @@ sub reject {
     &tools::remove_dir(
 	Site->viewmail_dir . '/mod/' . $list->get_list_id() . '/' . $key);
 
-    $modspool->remove(
+    $modspool->remove_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
 
