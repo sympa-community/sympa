@@ -211,15 +211,13 @@ while (!$end) {
 	$bounce->{'listname'} = $bounce->{'list'}{'name'};
 	$bounce->{'domain_part'} = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
-	my $to = $bounce->get_mime_message->head->get('to', 0);
-	chomp $to;	
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
-	    $to, Site->bounce_email_prefix);
+	    $bounce->{'to'}, Site->bounce_email_prefix);
 		
-	$to =~ s/<//;
-	$to =~ s/>//;
+	$bounce->{'to'} =~ s/<//;
+	$bounce->{'to'} =~ s/>//;
 	my $bounce_email_prefix = Site->bounce_email_prefix;
-	if ($to =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
+	if ($bounce->{'to'} =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) { #VERP in use
 	    $bounce->analyze_verp_header();
 	    if ($bounce->{'unique'} =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		&Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
@@ -351,7 +349,7 @@ while (!$end) {
 	    unless  ($dsn_status =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
 		&Log::do_log('err', "Non failed dsn status $dsn_status");
 		unless ($bounce->{'distribution_id'}) {
-		    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
+		    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$bounce->{'to'});
 		    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		    next;
 		}
@@ -449,7 +447,7 @@ while (!$end) {
 	    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $date);
 	    
 	    unless ($bounce->{'distribution_id'}) {
-		&Log::do_log('err', "error: Id not found in to address %s, will ignore",$to);
+		&Log::do_log('err', "error: Id not found in to address %s, will ignore",$bounce->{'to'});
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		next;
 	    }
