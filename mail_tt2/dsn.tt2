@@ -6,7 +6,7 @@ Subject: [% FILTER qencode %][%|loc%]Message was successfully delivered[%END%][%
 Subject: [% FILTER qencode %][%|loc%]List could not be created[%END%][%END%]
 [% ELSIF status == '4.2.4' || status == '5.3.5' -%]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
-[% ELSIF status == '5.1.2' -%]
+[% ELSIF status == '5.1.1' || status == '5.1.2' -%]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 [%   ELSIF status == '5.2.3' -%]
 Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
