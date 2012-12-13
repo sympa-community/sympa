@@ -211,8 +211,7 @@ while (!$end) {
 	$bounce->{'listname'} = $bounce->{'list'}{'name'};
 	$bounce->{'domain_part'} = $bounce->{'robot'}->get_id;
 	my $list = $bounce->{'list'};
-	my $head = $bounce->get_mime_message->head;
-	my $to = $head->get('to', 0);
+	my $to = $bounce->get_mime_message->head->get('to', 0);
 	chomp $to;	
 	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $to, Site->bounce_email_prefix);
@@ -278,16 +277,16 @@ while (!$end) {
 	$tracking_in_use = 1 if ($list->tracking->{'delivery_status_notification'} eq "on");
 	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on");
 	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on_demand");
-	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($tracking_in_use)) {
+	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($tracking_in_use)) {
 	    
 	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
 	    my $arrival_date;
 	    
-	    my $msg_id = $head->get('Message-Id');
+	    my $msg_id = $bounce->get_mime_message->head->get('Message-Id');
 	    chomp $msg_id;
 	    
-	    my $date = $head->get('Date');
+	    my $date = $bounce->get_mime_message->head->get('Date');
 	    
 	    foreach my $p (@parts) {
 		my $h = $p->head();
@@ -382,17 +381,17 @@ while (!$end) {
 	} 
 	#-----------------------------------------------------------------------------------------------------------------------------------
 	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
-	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {
+	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {
 	    
 	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
 	    my $date;
 	    my $mdn_status;
 	    
-	    my $msg_id = $head->get('Message-Id');
+	    my $msg_id = $bounce->get_mime_message->head->get('Message-Id');
 	    chomp $msg_id;
 	    
-	    my $date = $head->get('Date');
+	    my $date = $bounce->get_mime_message->head->get('Date');
 	    
 	    foreach my $p (@parts) {
 		my $h = $p->head();
@@ -481,7 +480,7 @@ while (!$end) {
 	    next;
 	}
 	
-	if(($head->get('Content-type') =~ /multipart\/report/) && ($head->get('Content-type') =~ /report\-type\=feedback-report/)) {
+	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=feedback-report/)) {
 	    # this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
 	    &Log::do_log ('notice',"processing  Email Feedback Report");
 	    my @parts = $bounce->get_mime_message->parts();
