@@ -139,4 +139,41 @@ sub update_robot {
     return 1;
 }
 
+sub delete_bouncer {
+    my $self = shift;
+
+    Log::do_log('debug','Deleting bouncing user %s',$self->{'who'});
+    my $result = $self->{'list'}->check_list_authz('del','smtp',
+					{'sender' => [Site->listmasters]->[0],
+					 'email' => $self->{'who'}});
+    my $action;
+    $action = $result->{'action'} if (ref($result) eq 'HASH');
+
+    if ($action =~ /do_it/i) {
+	if ($self->{'list'}->is_list_member($self->{'who'})) {
+	    my $u = $self->{'list'}->delete_list_member('users' => [$self->{'who'}], 'exclude' =>' 1');
+	    &Log::do_log ('notice',"$self->{'who'} has been removed from $self->{'listname'} because welcome message bounced");
+	    &Log::db_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'action' => 'del',
+			  'target_email' => $self->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
+			  'daemon' => 'bounced'});
+	    
+	    &Log::db_stat_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'operation' => 'auto_del', 'parameter' => "",
+			       'mail' => $self->{'who'}, 'client' => "", 'daemon' => 'bounced.pl'});
+	    
+	    if ($action =~ /notify/) {
+		unless ($self->{'list'}->send_notify_to_owner('automatic_del',
+						    {'who' => $self->{'who'},
+						     'by' => 'bounce manager',
+						     'reason' => 'welcome'})) {
+		    &wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $self->{'list'});
+		} 
+	    }
+	}
+    }else{
+	Log::do_log('err','Authorization do delete user %s from liste %s denied',$self->{'who'},$self->{'list'}->get_id);
+	return undef;
+    }
+    return 1;
+}
+
 1;

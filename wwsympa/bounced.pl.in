@@ -215,45 +215,17 @@ while (!$end) {
 	$bounce->{'to'} =~ s/<//;
 	$bounce->{'to'} =~ s/>//;
 	if ($bounce->is_verp_in_use) { #VERP in use
-	    $bounce->{'local_part'} = $1;
-	    $bounce->{'robotname'} = $2;
 	    $bounce->analyze_verp_header();
 	    if ($bounce->failed_on_first_try) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
-		Log::do_log('trace', "VERP for a service message, try to remove the subscriber");
+		Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
 		unless($bounce->update_list($bounce->{'listname'},$bounce->{'robotname'})) {
 		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
-		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+		    $spool->move_to_bad($bounce->{'messagekey'});
 		    next;
 		}
-		my $result = $bounce->{'list'}->check_list_authz('del','smtp',
-						    {'sender' => [Site->listmasters]->[0],
-						     'email' => $bounce->{'who'}});
-		my $action;
-		$action = $result->{'action'} if (ref($result) eq 'HASH');
-
-		if ($action =~ /do_it/i) {
-		    if ($bounce->{'list'}->is_list_member($bounce->{'who'})) {
-			my $u = $bounce->{'list'}->delete_list_member('users' => [$bounce->{'who'}], 'exclude' =>' 1');
-			&Log::do_log ('notice',"$bounce->{'who'} has been removed from $bounce->{'listname'} because welcome message bounced");
-			&Log::db_log({'robot' => $bounce->{'list'}->domain, 'list' => $bounce->{'list'}->name, 'action' => 'del',
-				      'target_email' => $bounce->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
-				      'daemon' => 'bounced'});
-			
-			&Log::db_stat_log({'robot' => $bounce->{'list'}->domain, 'list' => $bounce->{'list'}->name, 'operation' => 'auto_del', 'parameter' => "",
-					   'mail' => $bounce->{'who'}, 'client' => "", 'daemon' => 'bounced.pl'});
-			
-			if ($action =~ /notify/) {
-			    unless ($bounce->{'list'}->send_notify_to_owner('automatic_del',
-								{'who' => $bounce->{'who'},
-								 'by' => 'bounce manager',
-								 'reason' => 'welcome'})) {
-				&wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $bounce->{'list'});
-			    } 
-			}
-		    }
-		}else{
+		unless ($bounce->delete_bouncer) {
 		    &Log::do_log ('notice',"Unable to remove $bounce->{'who'} from $bounce->{'listname'} (welcome message bounced but del is closed)");
-		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+		    $spool->move_to_bad($bounce->{'messagekey'});
 		}
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 		next;
