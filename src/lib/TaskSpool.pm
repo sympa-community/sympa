@@ -24,9 +24,13 @@ package TaskSpool;
 
 use strict;
 
-use Data::Dumper;
 use Exporter;
-use Time::Local;
+#use Time::Local; # no longer used
+# tentative
+use Data::Dumper;
+
+#use Task; # this module is used by Task
+#use List; # used by Task
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%global_models %months);
@@ -173,41 +177,44 @@ sub create_required_lists_tasks {
     &Log::do_log('debug','Creating required tasks from list models');
 
     my $task;
-    foreach my $robot (keys %{Site->robots_config}) {
-	&Log::do_log('debug3',"creating list task : current bot  is $robot");
-	my $all_lists = &List::get_lists($robot);
+    foreach my $robot (@{Robot::get_robots()}) {
+	Log::do_log('debug3', 'creating list task : current bot is %s',
+	    $robot);
+	my $all_lists = List::get_lists($robot);
 	foreach my $list ( @$all_lists ) {
-	    &Log::do_log('debug3',"creating list task : current list  is $list->{'name'}");
+	    Log::do_log('debug3', 'creating list task : current list is %s',
+		$list);
 	    my %data = %{$param->{'data'}};
-	    $data{'list'} = {'name' => $list->{'name'},
-			     'robot' => $list->{'domain'}};
+	    $data{'list'} = {'name' => $list->name, 'robot' => $list->domain};
 	    
 	    my %used_list_models; # stores which models already have a task 
-	    foreach (@list_models) { 
-		$used_list_models{$_} = undef;
-	    }	    
-	    foreach my $model (get_used_models($list->get_list_id())) {		
+	    foreach my $model (@list_models) { 
+		$used_list_models{$model} = undef;
+	    }
+	    foreach my $model (get_used_models($list->get_id())) {		
 		$used_list_models{$model} = 1; 
 	    }
-	    &Log::do_log('debug3',"creating list task using models");my $tt= 0;
+	    Log::do_log('debug3', 'creating list task using models');
+	    my $tt= 0;
 
 	    foreach my $model (@list_models) {
 		unless ($used_list_models{$model}) {
 		    my $model_task_parameter = "$model".'_task';
-		    
+
 		    if ( $model eq 'sync_include') {
-			next unless ($list->has_include_data_sources() &&
-				     ($list->{'admin'}{'status'} eq 'open'));
+			next unless $list->has_include_data_sources() and
+			    $list->status eq 'open';
 			unless ($task = Task::create ({'creation_date' => $param->{'current_date'}, 'label' => 'INIT', 'model' => $model, 'flavour' => 'ttl', 'data' => \%data})) {
 			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", label = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},'INIT',$model,'ttl',\%data);
 			}
-			&Log::do_log('debug3',"sync_include task creation done");$tt++;
+			Log::do_log('debug3', 'sync_include task creation done');
+			$tt++;
 			
-		    }elsif (defined $list->{'admin'}{$model_task_parameter} && 
-			    defined $list->{'admin'}{$model_task_parameter}{'name'} &&
-			    ($list->{'admin'}{'status'} eq 'open')) {
-			unless ($task = Task::create ({'creation_date' => $param->{'current_date'}, 'model' => $model, 'flavour' => $list->{'admin'}{$model_task_parameter}{'name'}, 'data' => \%data})) {
-			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},$model,$list->{'admin'}{$model_task_parameter}{'name'},\%data);
+		    } elsif (%{$list->$model_task_parameter} and
+			defined $list->$model_task_parameter->{'name'} and
+			$list->status eq 'open') {
+			unless ($task = Task::create({'creation_date' => $param->{'current_date'}, 'model' => $model, 'flavour' => $list->$model_task_parameter->{'name'}, 'data' => \%data})) {
+			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", model = "%s", flavour = "%s", data = "%s"', $list->get_id, $param->{'current_date'}, $model, $list->$model_task_parameter->{'name'}, \%data);
 			}
 			$tt++;
 		    }

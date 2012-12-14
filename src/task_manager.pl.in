@@ -31,14 +31,14 @@ use Data::Dumper;
 use Getopt::Long;
 
 #use Conf;
-#use List;
+use List;
 #use Log;
 #use SDM;
 #use Sympa::Constants;
-use Task;
-#use TaskSpool;
+#use Task; # used by List
+#use TaskSpool; # used by Task
 #use tools;
-##XXXuse wwslib;
+##XXXuse wwslib; # no longer used
 
 my $opt_d;
 my $opt_F;

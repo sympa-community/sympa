@@ -42,6 +42,10 @@ use Sys::Hostname;
 # tentative
 use Data::Dumper;
 
+#use List;
+##The line above was removed to avoid dependency loop.
+##"use List" MUST precede to "use Bulk".
+
 #use Lock; # not used
 #use Fetch; # not used
 #use WebAgent; # not used
@@ -51,7 +55,6 @@ use Language qw(gettext_strftime);
 #use Log; # used in Conf
 #use mail; # not used
 #use Ldap; # not used
-use List;
 #use Message; # not used
 #use SDM; # used in Conf
 

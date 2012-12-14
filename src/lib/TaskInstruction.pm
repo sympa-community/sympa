@@ -25,15 +25,16 @@ package TaskInstruction;
 
 use strict;
 
-use Carp;
+#use Carp; # not yet used
+#use Digest::MD5; # no longer used
+#use Exporter; # not used
+use Time::Local qw(timegm timelocal);
+# tentative
 use Data::Dumper;
-use Digest::MD5;
-use Exporter;
-use Time::Local;
 
+#use List; # this package is used by Task which is used by List.
 #use tools; # load in Conf - Site - List
-use Task;
-use List;
+#use Task; # this package is used by Task
 
 ###### DEFINITION OF AVAILABLE COMMANDS FOR TASKS ######
 
@@ -397,22 +398,23 @@ sub next_cmd {
     }else {
 		$type = 'list';
 		my $list = $task->{'list_object'};
-		$data{'list'}{'name'} = $list->{'name'};
-		$data{'list'}{'robot'} = $list->{'domain'};
+		$data{'list'}{'name'} = $list->name;
+		$data{'list'}{'robot'} = $list->domain;
 		
 		if ( $model eq 'sync_include') {
-			unless ($list->{'admin'}{'user_data_source'} eq 'include2') {
-				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require sync_include task"});
+			unless ($list->user_data_source eq 'include2') {
+				$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('List %s no more require sync_include task', $list->name)});
 				return undef;
 			}
-			$data{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
+			$data{'list'}{'ttl'} = $list->ttl;
 			$flavour = 'ttl';
 		}else {
-			unless (defined $list->{'admin'}{"$model\_task"}) {
-				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "List $list->{'name'} no more require $model task"});
+			my $model_task_parameter = $model . '_task';
+			unless (%{$list->$model_task_parameter}) {
+				$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('List %s no more require %s task', $list->name, $model)});
 				return undef;
 			}
-			$flavour = $list->{'admin'}{"$model\_task"}{'name'};
+			$flavour = $list->$model_task_parameter->{'name'};
 		}
     }
     &Log::do_log('debug2','Will create next task');
@@ -532,7 +534,7 @@ sub create_cmd {
 
     if ($type eq 'list') {
 		my $list = new List ($object);
-		$data{'list'}{'name'} = $list->{'name'};
+		$data{'list'}{'name'} = $list->name;
     }
     $type = '_global';
     unless (Task::create ($task->{'date'}, '', $model, $flavour, \%data)) {
@@ -631,22 +633,25 @@ sub purge_session_table {
 
 ## remove messages from bulkspool table when no more packet have any pointer to this message
 sub purge_tables {    
-
     my ($self,$task) = @_;
     &Log::do_log('info','task_manager::purge_tables()');
+
+    my $removed;
+
     require SympaSession;
-    my $removed = &Bulk::purge_bulkspool();
+
+    $removed = Bulk::purge_bulkspool();
     unless(defined $removed) {
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to purge tables'});
     }
     &Log::do_log('notice','%s rows removed in bulkspool_table',$removed);    
     #
-    my $removed = 0;
-    foreach my $robot (keys %{Site->robots_config}) {
-		my $all_lists = &List::get_lists($robot);
-		foreach my $list ( @$all_lists ) {
-			$removed += &tracking::remove_message_by_period($list->{'admin'}{'tracking'}{'retention_period'},$list->{'name'},$robot);   
-		}
+    $removed = 0;
+    foreach my $robot (@{Robot::get_robots()}) {
+	my $all_lists = List::get_lists($robot);
+	foreach my $list (@$all_lists) {
+	    $removed += tracking::remove_message_by_period($list, $list->tracking->{'retention_period'});
+	}
     }
     &Log::do_log('notice', "%s rows removed in tracking table",$removed);
 
@@ -684,9 +689,9 @@ sub purge_user_table {
 	$known_people{$l} = 1;
     }
 
-    foreach my $r (keys %{Site->robots_config}) {
+    foreach my $robot (@{Robot::get_robots()}) {
 
-		my $all_lists = &List::get_lists($r);
+		my $all_lists = List::get_lists($robot);
 		foreach my $list (@$all_lists){
 
 			## Owners
@@ -749,7 +754,7 @@ sub purge_orphan_bounces {
     }
     
     foreach my $list (@$all_lists) {
-		my $listname = $list->{'name'};
+		my $listname = $list->name;
 		## first time: loading DB entries into %bounced_users
 		for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()){
 			my $user_id = $user_ref->{'email'};
@@ -797,7 +802,7 @@ sub purge_orphan_bounces {
      &Log::do_log('debug2','expire_bounce(%d)',$delay);
      my $all_lists = &List::get_lists('*');
      foreach my $list (@$all_lists ) {
-		 my $listname = $list->{'name'};
+		 my $listname = $list->name;
 		 # the reference date is the date until which we expire bounces in second
 		 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
 		 unless ($list->get_latest_distribution_date()) {
@@ -1031,14 +1036,14 @@ sub eval_bouncers {
     
     my $all_lists = &List::get_lists('*');
     foreach my $list (@$all_lists) {
-		my $listname = $list->{'name'};
+		my $listname = $list->name;
 		my $list_traffic = {};
 		
 		&Log::do_log('info','eval_bouncers(%s)',$listname);
 		
 		## Analizing file Msg-count and fill %$list_traffic
-		unless (open(COUNT,$list->{'dir'}.'/msg_count')){
-			if (-f $list->{'dir'}.'/msg_count') {
+		unless (open(COUNT, $list->dir . '/msg_count')){
+			if (-f $list->dir . '/msg_count') {
 				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Could not open 'msg_count' file for list $listname"});
 				next;
 			}else{
@@ -1102,20 +1107,17 @@ sub process_bouncers {
 
     my $all_lists = &List::get_lists();
     foreach my $list (@$all_lists) {
-		my $listname = $list->{'name'};
+		my $listname = $list->name;
 		
 		my @bouncers;
 		# @bouncers = ( ['email1', 'email2', 'email3',....,],    There is one line 
 		#               ['email1', 'email2', 'email3',....,],    foreach bounce 
 		#               ['email1', 'email2', 'email3',....,],)   level.
-	   
+
 		next unless ($list);
 
-		my $max_level;    
-		for (my $level = 1;defined ($list->{'admin'}{'bouncers_level'.$level});$level++) {
-			$max_level = $level;
-		}
-		
+		my $max_level = $list->get_max_bouncers_level();
+
 		##  first, bouncing email are sorted in @bouncer 
 		for (my $user_ref = $list->get_first_bouncing_list_member(); $user_ref; $user_ref = $list->get_next_bouncing_list_member()) {	   
 
@@ -1123,7 +1125,8 @@ sub process_bouncers {
 			next if ($user_ref->{'is_included'});
 	 
 			for ( my $level = $max_level;($level >= 1) ;$level--) {
-				if ($user_ref->{'bounce_score'} >= $list->{'admin'}{'bouncers_level'.$level}{'rate'}){
+				my $bouncers_level_parameter = 'bouncers_level'.$level;
+				if ($user_ref->{'bounce_score'} >= $list->bouncers_level_parameter->{'rate'}){
 					push(@{$bouncers[$level]}, $user_ref->{'email'});
 					$level = ($level-$max_level);		   
 				}
@@ -1132,9 +1135,9 @@ sub process_bouncers {
 		
 		## then, calling action foreach level
 		for ( my $level = $max_level;($level >= 1) ;$level--) {
-
-			my $action = $list->{'admin'}{'bouncers_level'.$level}{'action'};
-			my $notification = $list->{'admin'}{'bouncers_level'.$level}{'notification'};
+			my $bouncers_level_parameter = 'bouncers_level'.$level;
+			my $action = $list->bouncers_level_parameter->{'action'};
+			my $notification = $list->bouncers_level_parameter->{'notification'};
 		  
 			if (defined $bouncers[$level] && @{$bouncers[$level]}){
 				## calling action subroutine with (list,email list) in parameter 
@@ -1242,11 +1245,11 @@ sub sync_include {
     my $list = $task->{'list_object'};
 
     unless ($list->sync_include()) {
-		$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while synchronizing list members for list $list->get_list_id"});
+		$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('Error while synchronizing list members for list %s', $list->get_id)});
 	}
-    if ((defined $list->{'admin'}{'editor_include'} && $#{$list->{'admin'}{'editor_include'}}>-1) || (defined $list->{'admin'}{'owner_include'} && $#{$list->{'admin'}{'owner_include'}}>-1)) {
+    if (scalar @{$list->editor_include} or scalar @{$list->owner_include}) {
 		unless($list->sync_include_admin()) {
-			$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Error while synchronizing list admins for list $list->get_list_id"});
+			$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('Error while synchronizing list admins for list %s', $list->get_id)});
 		}
 	}
 	return undef if ($self->{'errors'});

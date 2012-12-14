@@ -24,24 +24,25 @@ package Task;
 
 use strict;
 
-use Carp;
+#use Carp; # not yet used
+#use Digest::MD5; # not used
+#use Exporter; # not used
+#use Time::Local; # no longer used
+# tentative
 use Data::Dumper;
-use Digest::MD5;
-use Exporter;
-use Time::Local;
 
 use Bulk;
-#use Conf;
-use List;
-#use Log;
-#use mail;
-use Scenario;
+#use Conf; # used in List - Robot - Site
+#use List; # this package is used by List
+#use Log; # used by Conf
+#use mail; # used by List
+#use Scenario; # not used
 use Sympaspool;
 use TaskSpool;
 use TaskInstruction;
-#use tools;
-use tracking;
-#use tt2;
+#use tools; # used by Conf
+#use tracking; # not used
+#use tt2; # used by List
 
 #### Task level subs ####
 ##########################
@@ -101,12 +102,12 @@ sub create {
 	    $task_in_spool->{'list'} = $list->name;
 	    $task_in_spool->{'domain'} = $list->domain;
 	} else {
+	    ## Compat: $list is not blessed.
 	    $task_in_spool->{'list'} = $list->{'name'};
 	    $task_in_spool->{'domain'} = $list->{'robot'};
-    }
+	}
 	$task_in_spool->{'task_object'} = 'list';
-    }
-    else {
+    } else {
 	$task_in_spool->{'task_object'} = '_global';
     }
     my $self = new Task($task_in_spool);
@@ -183,7 +184,7 @@ sub generate_from_template {
     my $tt2 = Template->new({'START_TAG' => quotemeta('['),'END_TAG' => quotemeta(']'), 'ABSOLUTE' => 1});
     my $taskasstring = '';
     if ($self->{'model'} eq 'sync_include') {
-	$self->{'Rdata'}{'list'}{'ttl'} = $self->{'list_object'}{'admin'}{'ttl'};
+	$self->{'Rdata'}{'list'}{'ttl'} = $self->{'list_object'}->ttl;
     }
     unless (defined $tt2 && $tt2->process($self->{'template'}, $self->{'Rdata'}, \$taskasstring)) {
 	&Log::do_log('err', "Failed to parse task template '%s' : %s", $self->{'template'}, $tt2->error());
@@ -466,31 +467,38 @@ sub change_label {
 
 ## Check that a task in list context is still legitimate. for example, a list whose all datasource inclusions parameters would have been removed should not keep a sync_include task.
 sub check_list_task_is_valid {
+    Log::do_log('debug3', '(%s)', @_);
     my $self = shift;
     my $list = $self->{'list_object'};
-    &Log::do_log('debug','Checking %s task validity for list %s@%s',$self->{'model'},$list->{'name'},$list->{'domain'});
-    ### Check list object validity; recreate it if needed.
+    my $model = $self->{'model'};
 
     ## Skip closed lists
-    unless (defined $list && ($list->{'admin'}{'status'} eq 'open')) {
-	&Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list %s is closed', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+    unless (defined $list and $list->status eq 'open') {
+	Log::do_log('notice',
+	    'Removing task %s, label %s (messageid = %s) because list %s is closed',
+	    $model, $self->{'label'}, $self->{'messagekey'}, $self->{'id'});
 	$self->remove;
 	return 0;
     }
 
     ## Skip if parameter is not defined
-    if ( $self->{'model'} eq 'sync_include') {
+    if ($model eq 'sync_include') {
 	if ($list->has_include_data_sources()) {
 	    return 1;
 	}else{
-	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because list does not use any inclusion', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	    Log::do_log('notice',
+		'Removing task %s, label %s (messageid = %s) because list does not use any inclusion',
+		$model, $self->{'label'}, $self->{'messagekey'},
+		$self->{'id'});
 	    $self->remove;
 	    return 0;
 	}
     }else {
-	unless (defined $list->{'admin'}{$self->{'model'}} && 
-		defined $list->{'admin'}{$self->{'model'}}{'name'}) {
-	    &Log::do_log('notice','Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration', $self->{'model'}, $self->{'label'}, $self->{'messagekey'},$self->{'id'});
+	unless (%{$list->$model} and defined $list->$model->{'name'}) {
+	    Log::do_log('notice',
+		'Removing task %s, label %s (messageid = %s) because it is not defined in list %s configuration',
+		$model, $self->{'label'}, $self->{'messagekey'},
+		$self->{'id'});
 	    $self->remove;
 	    return 0;
 	}
@@ -552,6 +560,11 @@ sub process_line {
 	$status->{'output'} = 'Nothing to compute';
     }
     return $status;
+}
+
+## Get unique ID.
+sub get_id {
+    return shift->get_description() || '';
 }
 
 ## Packages must return true.

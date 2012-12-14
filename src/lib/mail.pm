@@ -31,11 +31,11 @@ use MIME::Tools;
 # tentative
 use Data::Dumper;
 
-#use Conf; # used in Bulk - List - Site
+#use Conf; # used in List - Site
 #use Log; # load in Conf
 use Language qw(gettext);
-#use List; # no longer used
-use Bulk; #FIXME: dependency loop between Bulk & mail
+#use List; # this package is loaded via List
+use Bulk;
 #use tools; # load in Conf
 #use Sympa::Constants; # load in confdef - Conf
 
@@ -296,7 +296,7 @@ sub mail_file {
     unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
     	&Log::do_log('err', "mail::mail_file: Failed to reformat message");
     }
-    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "avant \n%s",$dump ; close DUMP;
+    ##my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "avant \n%s",$dump ; close DUMP;
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= $robot->request;
@@ -304,7 +304,7 @@ sub mail_file {
     
     return $message_as_string if($return_message_as_string);
 
-    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "\n\naprès \n%s",$dump ; close DUMP;
+    ##my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "\n\naprès \n%s",$dump ; close DUMP;
     my $message = new Message ({'messageasstring'=>$message_as_string});
 
     ## SENDING

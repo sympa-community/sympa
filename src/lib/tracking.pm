@@ -213,25 +213,33 @@ sub remove_message_by_id{
 ##############################################
 # Function use to remove notifications older than number of days
 # 
-# IN : $period
-#    : $listname
-#    : $robot
+# IN : $list : ref(List)
+#    : $period
 #
 # OUT : $sth | undef
 #      
 ##############################################
 sub remove_message_by_period{
-    my $period =shift;
-    my $listname =shift;
-    my $robot =shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $list = shift;
+    my $period = shift;
 
-    &Log::do_log('debug2', 'Remove message by period=  %s, listname = %s, robot = %s', $period,$listname,$robot );
+    my $listname = $list->name;
+    my $robot_id = $list->domain;
+
     my $sth;
 
     my $limit = time - ($period * 24 * 60 * 60);
 
-    unless($sth = &SDM::do_query("DELETE FROM notification_table WHERE `date_notification` < %s AND list_notification = %s AND robot_notification = %s", $limit,&SDM::quote($listname),&SDM::quote($robot))) {
-	&Log::do_log('err','Unable to remove the tracking informations older than %s days for list %s@%s', $limit, $listname, $robot);
+    unless($sth = SDM::do_prepared_query(
+	q{DELETE FROM notification_table
+	  WHERE "date_notification" < ? AND
+	  list_notification = ? AND robot_notification = ?},
+	$limit, $listname, $robot_id
+    )) {
+	Log::do_log('err',
+	    'Unable to remove the tracking informations older than %s days for list %s',
+	    $limit, $list);
 	return undef;
     }
 

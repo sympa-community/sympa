@@ -40,19 +40,20 @@ This script must be run along with sympa. It regularly checks the bulkmailer_tab
 use lib '--modulesdir--';
 
 use strict;
+use Getopt::Long;
+# tentative
+use Data::Dumper;
 
 #use Conf; # used in List
 #use Log; # used in Conf
-use Commands;
-use Getopt::Long;
-use Data::Dumper;
-use mail;
-use Bulk;
+#use Commands; # no longer used
+#use mail; # used in List
 use List;
+use Bulk;
 #use tools; # used in Conf
-use tracking;
+#use tracking; # used in List
 #use Sympa::Constants; # used in confdef, in Conf
-use Sympaspool;
+#use Sympaspool; # used in List - Task
 
 my $daemon_name = &Log::set_daemon($0);
 my $date_of_last_activity = time();

@@ -2340,7 +2340,7 @@ my %list_option = (
 
     # bouncers_level2.action, bouncers_level1.action
     'remove_bouncers' => {'gettext_id' => 'remove bouncing users'},
-    'notify_bouncers' => {'gettext_id' => 'send notify to bouncing users'},
+    'notify_bouncers' => {'gettext_id' => 'notify bouncing users'},
 
     # pictures_feature, dkim_feature, merge_feature,
     # inclusion_notification_feature
@@ -13743,6 +13743,20 @@ sub remove_aliases {
 ##
 ## bounce management actions
 ##
+
+# Get max bouncers level
+sub get_max_bouncers_level {
+    my $self = shift;
+
+    my $max_level;
+    for (my $level = 1; $::pinfo{'bouncers_level' . $level}; $level++) {
+	my $bouncers_level_parameter = 'bouncers_level' . $level;
+	last unless %{$self->$bouncers_level_parameter};
+	$max_level = $level;
+    }
+
+    return $max_level;
+}
 
 # Sub for removing user
 #
