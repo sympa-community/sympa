@@ -4455,15 +4455,14 @@ sub send_msg {
 
 	if (($apply_tracking eq 'dsn') || ($apply_tracking eq 'mdn')) {
 	    $verp = $apply_tracking;
-	    &tracking::db_init_notification_table(
-		'listname' => $self->name,
-		'robot'    => $robot,
-		'msgid'    => $original_message_id
-		, # what ever the message is transformed because of the reception option, tracking use the original message id
+	    tracking::db_init_notification_table(
+		$self,
+		'msgid' => $original_message_id,
+		# what ever the message is transformed because of the
+		# reception option, tracking use the original message id
 		'rcpt'             => \@verp_selected_tabrcpt,
-						  'reception_option' => $reception_option,
-						  );
-
+		'reception_option' => $reception_option
+	    );
 	}
 
 #  ignore those reception option where mail must not ne sent
@@ -4477,7 +4476,7 @@ sub send_msg {
 	    'message'         => $new_message,
 	    'rcpt'            => \@verp_selected_tabrcpt,
 	    'list'            => $self,
-				      'verp' => $verp,
+	    'verp'            => $verp,
 	    'dkim_parameters' => $dkim_parameters,
 	    'tag_as_last'     => $tags_to_use->{'tag_verp'}
 	);

@@ -23,10 +23,11 @@ package tracking;
 
 use strict;
 
-use CGI;
-use Email::Simple;
-use Log;
+#use CGI; # no longer used
+#use Email::Simple; # no longer used
 use MIME::Base64;
+
+use Log;
 use SDM;
 
 ##############################################
@@ -42,30 +43,48 @@ use SDM;
 #      
 ##############################################
 sub get_recipients_status {
-        my $msgid  = shift;
-	my $listname = shift;
-        my $robot =shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $list = shift;
+    my $msgid  = shift;
+    my $listname = $list->name;
+    my $robot_id = $list->domain;
 
-        &Log::do_log('debug2', 'get_recipients_status(%s,%s,%s)', $msgid,$listname,$robot);
+    my $sth;
+    my $pk;
 
-        my $sth;
-        my $pk;
+    # the message->head method return message-id including <blabla@dom>
+    # where mhonarc return blabla@dom that's why we test both of them
+    unless($sth = SDM::do_query(
+	q{SELECT recipient_notification AS recipient,
+	  reception_option_notification AS reception_option,
+	  status_notification AS status,
+	  arrival_date_notification AS arrival_date,
+	  type_notification as type,
+	  message_notification as notification_message
+	 FROM notification_table
+	 WHERE list_notification = %s AND robot_notification = %s AND
+	       (message_id_notification = %s OR
+		CONCAT('<',message_id_notification,'>') = %s OR
+		message_id_notification = %s)},
+	SDM::quote($listname), SDM::quote($robot_id),
+	SDM::quote($msgid), SDM::quote($msgid), SDM::quote('<'.$msgid.'>')
+    )) {
+	Log::do_log('err',
+	    'Unable to retrieve tracking informations for message %s, list %s',
+	    $msgid, $list);
+	return undef;
+    }
 
-	# the message->head method return message-id including <blabla@dom> where mhonarc return blabla@dom that's why we test both of them
-        unless($sth = &SDM::do_query("SELECT recipient_notification AS recipient,  reception_option_notification AS reception_option, status_notification AS status, arrival_date_notification AS arrival_date, type_notification as type, message_notification as notification_message FROM notification_table WHERE (list_notification = %s AND robot_notification = %s AND (message_id_notification = %s OR CONCAT('<',message_id_notification,'>') = %s OR message_id_notification = %s ))",&SDM::quote($listname),&SDM::quote($robot),&SDM::quote($msgid),&SDM::quote($msgid),&SDM::quote('<'.$msgid.'>'))) {
-	    &Log::do_log('err','Unable to retrieve tracking informations for message %s, list %s@%s', $msgid, $listname, $robot);
-            return undef;
-        }
-        my @pk_notifs;
-        while (my $pk_notif = $sth->fetchrow_hashref){
-	    if ($pk_notif->{'notification_message'}) { 
-		$pk_notif->{'notification_message'} = MIME::Base64::decode($pk_notif->{'notification_message'});
-	    }else{
-		$pk_notif->{'notification_message'} = '';
-	    }	    
-	    push @pk_notifs, $pk_notif;
-        }
-        return \@pk_notifs;	
+    my @pk_notifs;
+    while (my $pk_notif = $sth->fetchrow_hashref) {
+	if ($pk_notif->{'notification_message'}) { 
+	    $pk_notif->{'notification_message'} = MIME::Base64::decode($pk_notif->{'notification_message'});
+	} else {
+	    $pk_notif->{'notification_message'} = '';
+	}	    
+	push @pk_notifs, $pk_notif;
+    }
+    return \@pk_notifs;	
 }
 
 ##############################################
@@ -82,23 +101,35 @@ sub get_recipients_status {
 #      
 ##############################################
 sub db_init_notification_table{
-
+    my $list = shift;
     my %params = @_;
+
     my $msgid =  $params{'msgid'}; chomp $msgid;
-    my $listname =  $params{'listname'};
-    my $robot =  $params{'robot'};
+    my $listname = $list->name;
+    my $robot_id = $list->domain;
     my $reception_option =  $params{'reception_option'};
     my @rcpt =  @{$params{'rcpt'}};
-    
-    &Log::do_log('debug2', "db_init_notification_table (msgid = %s, listname = %s, reception_option = %s",$msgid,$listname,$reception_option);
+
+    Log::do_log('debug2', '(%s, msgid=%s, reception_option=%s)',
+	$list, $msgid, $reception_option);
 
     my $time = time ;
 
     foreach my $email (@rcpt){
 	my $email= lc($email);
 	
-	unless(&SDM::do_query("INSERT INTO notification_table (message_id_notification,recipient_notification,reception_option_notification,list_notification,robot_notification,date_notification) VALUES (%s,%s,%s,%s,%s,%s)",&SDM::quote($msgid),&SDM::quote($email),&SDM::quote($reception_option),&SDM::quote($listname),&SDM::quote($robot),$time)) {
-	    &Log::do_log('err','Unable to prepare notification table for user %s, message %s, list %s@%s', $email, $msgid, $listname, $robot);
+	unless(SDM::do_prepared_query(
+	    q{INSERT INTO notification_table
+	      (message_id_notification, recipient_notification,
+	       reception_option_notification,
+	       list_notification, robot_notification, date_notification)
+	      VALUES (?, ?, ?, ?, ?, ?)},
+	    $msgid, $email, $reception_option,
+	    $listname, $robot_id, $time
+	)) {
+	    Log::do_log('err',
+		'Unable to prepare notification table for user %s, message %s, list %s',
+		$email, $msgid, $list);
 	    return undef;
 	}
     } 
@@ -129,16 +160,22 @@ sub db_init_notification_table{
 #      
 ##############################################
 sub db_insert_notification {
-    my ($notification_id, $type, $status, $arrival_date ,$notification_as_string  ) = @_;
-    
-    &Log::do_log('debug2', "db_insert_notification  :notification_id : %s, type : %s, recipient : %s, msgid : %s, status :%s",$notification_id, $type, $status); 
-    
+    Log::do_log('debug2', '(%s, %s, %s, %s, ...)', @_);
+    my ($notification_id, $type, $status, $arrival_date,
+	$notification_as_string) = @_;
     chomp $arrival_date;
-    
+
     $notification_as_string = MIME::Base64::encode($notification_as_string);
-    
-    unless(&SDM::do_query("UPDATE notification_table SET  `status_notification` = %s, `arrival_date_notification` = %s, `message_notification` = %s WHERE (pk_notification = %s)",&SDM::quote($status),&SDM::quote($arrival_date),&SDM::quote($notification_as_string),&SDM::quote($notification_id))) {
-	&Log::do_log('err','Unable to update notification %s in database', $notification_id);
+
+    unless(SDM::do_prepared_query(
+	q{UPDATE notification_table
+	  SET status_notification = ?, arrival_date_notification = ?,
+	      message_notification = ?
+	  WHERE pk_notification = ?},
+	$status, $arrival_date, $notification_as_string, $notification_id
+    )) {
+	Log::do_log('err', 'Unable to update notification %s in database',
+	    $notification_id);
 	return undef;
     }
 
@@ -159,22 +196,22 @@ sub find_notification_id_by_message{
     my $recipient = shift;	
     my $msgid = shift;	chomp $msgid;
     my $listname = shift;	
-    my $robot = shift;
+    my $robot_id = shift;
 
-    &Log::do_log('debug2','find_notification_id_by_message(%s,%s,%s,%s)',$recipient,$msgid ,$listname,$robot );
+    &Log::do_log('debug2','find_notification_id_by_message(%s,%s,%s,%s)',$recipient,$msgid ,$listname,$robot_id);
     my $pk;
     
     my $sth;
 
     # the message->head method return message-id including <blabla@dom> where mhonarc return blabla@dom that's why we test both of them
-    unless($sth = &SDM::do_query("SELECT pk_notification FROM notification_table WHERE ( recipient_notification = %s AND list_notification = %s AND robot_notification = %s AND (message_id_notification = %s OR CONCAT('<',message_id_notification,'>') = %s OR message_id_notification = %s ))", &SDM::quote($recipient),&SDM::quote($listname),&SDM::quote($robot),&SDM::quote($msgid),&SDM::quote($msgid),&SDM::quote('<'.$msgid.'>'))) {
-	&Log::do_log('err','Unable to retrieve the tracking informations for user %s, message %s, list %s@%s', $recipient, $msgid, $listname, $robot);
+    unless($sth = &SDM::do_query("SELECT pk_notification FROM notification_table WHERE ( recipient_notification = %s AND list_notification = %s AND robot_notification = %s AND (message_id_notification = %s OR CONCAT('<',message_id_notification,'>') = %s OR message_id_notification = %s ))", &SDM::quote($recipient),&SDM::quote($listname),&SDM::quote($robot_id),&SDM::quote($msgid),&SDM::quote($msgid),&SDM::quote('<'.$msgid.'>'))) {
+	&Log::do_log('err','Unable to retrieve the tracking informations for user %s, message %s, list %s@%s', $recipient, $msgid, $listname, $robot_id);
 	return undef;
     }
     
     my @pk_notifications = $sth->fetchrow_array;
     if ($#pk_notifications > 0){
-	&Log::do_log('err','Found more then one pk_notification maching  (recipient=%s,msgis=%s,listname=%s,robot%s)',$recipient,$msgid ,$listname,$robot );	
+	&Log::do_log('err','Found more then one pk_notification maching  (recipient=%s,msgis=%s,listname=%s,robot%s)',$recipient,$msgid ,$listname,$robot_id);	
 	# we should return undef...
     }
     return $pk_notifications[0];
@@ -194,14 +231,23 @@ sub find_notification_id_by_message{
 #      
 ##############################################
 sub remove_message_by_id{
-    my $msgid =shift;
-    my $listname =shift;
-    my $robot =shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $list = shift;
+    my $msgid = shift;
 
-    &Log::do_log('debug2', 'Remove message id =  %s, listname = %s, robot = %s', $msgid,$listname,$robot );
+    my $listname = $list->name;
+    my $robot_id = $list->domain;
+
     my $sth;
-    unless($sth = &SDM::do_query("DELETE FROM notification_table WHERE `message_id_notification` = %s AND list_notification = %s AND robot_notification = %s", &SDM::quote($msgid),&SDM::quote($listname),&SDM::quote($robot))) {
-	&Log::do_log('err','Unable to remove the tracking informations for message %s, list %s@%s', $msgid, $listname, $robot);
+    unless ($sth = SDM::do_prepared_query(
+	q{DELETE FROM notification_table
+	  WHERE message_id_notification = ? AND
+	  list_notification = ? AND robot_notification = ?},
+	$msgid, $listname, $robot_id
+    )) {
+	Log::do_log('err',
+	    'Unable to remove the tracking informations for message %s, list %s',
+	    $msgid, $listname, $robot_id);
 	return undef;
     }
     
