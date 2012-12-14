@@ -306,7 +306,7 @@ sub get_envelope_sender {
 		$self->{'envelope_sender'} = '<>';
 	    } else {
 		my @addrs = Mail::Address->parse($addr);
-		if (scalar @addrs and $addrs[0]->address) {
+		if (@addrs and tools::valid_email($addrs[0]->address)) {
 		    $self->{'envelope_sender'} = $addrs[0]->address;
 		}
 	    }

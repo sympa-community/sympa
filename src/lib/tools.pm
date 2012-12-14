@@ -2221,7 +2221,7 @@ sub get_dir_size {
 sub valid_email {
     my $email = shift;
     
-    unless ($email =~ /^$regexp{'email'}$/) {
+    unless (defined $email and $email =~ /^$regexp{'email'}$/) {
 	&Log::do_log('err', "Invalid email address '%s'", $email);
 	return undef;
     }
