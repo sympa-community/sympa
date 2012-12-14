@@ -639,6 +639,7 @@ sub purge_tables {
     my $removed;
 
     require SympaSession;
+    require tracking;
 
     $removed = Bulk::purge_bulkspool();
     unless(defined $removed) {
