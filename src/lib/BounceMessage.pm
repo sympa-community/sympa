@@ -5,6 +5,7 @@ package BounceMessage;
 use strict;
 use Message;
 use Log;
+use tracking;
 
 our @ISA = qw(Message);
 
@@ -52,7 +53,7 @@ sub analyze_verp_header {
 	$self->{'who'} = $1;
 	$self->update_list($2,$self->{'robotname'});
 
-	&Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$self->{'who'},$self->{'listname'},$self->{'robotname'});
+	Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$self->{'who'},$self->{'listname'},$self->{'robotname'});
 	return 1;
     }
     return 0;
@@ -152,12 +153,12 @@ sub delete_bouncer {
     if ($action =~ /do_it/i) {
 	if ($self->{'list'}->is_list_member($self->{'who'})) {
 	    my $u = $self->{'list'}->delete_list_member('users' => [$self->{'who'}], 'exclude' =>' 1');
-	    &Log::do_log ('notice',"$self->{'who'} has been removed from $self->{'listname'} because welcome message bounced");
-	    &Log::db_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'action' => 'del',
+	    Log::do_log ('notice',"$self->{'who'} has been removed from $self->{'listname'} because welcome message bounced");
+	    Log::db_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'action' => 'del',
 			  'target_email' => $self->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
 			  'daemon' => 'bounced'});
 	    
-	    &Log::db_stat_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'operation' => 'auto_del', 'parameter' => "",
+	    Log::db_stat_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'operation' => 'auto_del', 'parameter' => "",
 			       'mail' => $self->{'who'}, 'client' => "", 'daemon' => 'bounced.pl'});
 	    
 	    if ($action =~ /notify/) {
@@ -190,6 +191,102 @@ sub is_dsn {
 
     return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used));
     return 0;
+}
+
+sub process_dsn {
+    my $self = shift;
+
+    my @parts = $self->get_mime_message->parts();
+    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $msg_id; my $orig_msg_id;
+    my $arrival_date;
+    
+    my $msg_id = $self->get_mime_message->head->get('Message-Id');
+    chomp $msg_id;
+    
+    my $date = $self->get_mime_message->head->get('Date');
+    
+    foreach my $p (@parts) {
+	my $h = $p->head();
+	my $content = $h->get('Content-type');
+	
+	if ($content =~ /message\/delivery-status/) {
+	    my @report = split(/\n/, $p->bodyhandle->as_string());
+	    foreach my $line (@report) {
+		$line = lc($line);
+		# Action Field MUST be present in a DSN report, possible values : failed, delayed, delivered, relayed, expanded(rfc3464)
+		if ($line =~ /action\:\s*(.+)/i) {
+		    $self->{'dsn_status'} = $1;
+		    chomp $self->{'dsn_status'};
+		}			
+		
+		if ( ($line =~ /final\-recipient\:\s*(.+)\s*$/i) && (not $final_rcpt) ) {
+		    $final_rcpt = $1;
+		    chomp $final_rcpt;
+		    my @rcpt;
+		    if($final_rcpt =~ /.*;.*/){
+			@rcpt = split /;\s*/,$final_rcpt;
+			foreach my $rcpt (@rcpt){
+			    if($rcpt =~ /(\S+\@\S+)/){
+				($rcpt)= $rcpt=~ /(\S+\@\S+)/;			
+				$final_rcpt = $rcpt;
+			    }
+			}
+		    }
+		    else{
+			($final_rcpt)= $final_rcpt =~ /(\S+\@\S+)/;
+		    }	
+		}
+		#  $self->{'distribution_id'} is set using VERP nothing else.
+		#if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i) && (!$self->{'distribution_id'}) ) {
+		#    $self->{'distribution_id'} = $1;
+		#    chomp $self->{'distribution_id'};
+		#   Log::do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $self->{'distribution_id'});
+		#}
+		if ($line =~ /arrival\-date\:\s*(.+)/i) {
+		    $arrival_date = $1;
+		    chomp $arrival_date;
+		}
+	    }
+	}
+    }
+    
+    $original_rcpt = $self->{'who'};
+    
+    if($final_rcpt =~ /<(\S+\@\S+)>/){
+	($final_rcpt)= $final_rcpt =~ /<(\S+\@\S+)>/;
+    }
+    if($msg_id =~ /<(\S+\@\S+)>/){
+	($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
+    }
+    
+    Log::do_log ('debug2',"FINAL DSN Action Detected, value : %s", $self->{'dsn_status'});
+    Log::do_log ('debug2',"FINAL DSN Recipient Detected, value : %s", $original_rcpt);
+    Log::do_log ('debug2',"FINAL DSN final Recipient Detected, value : %s", $final_rcpt);
+    Log::do_log ('debug2',"FINAL DSN Message-Id Detected, value : %s", $msg_id);
+    Log::do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
+    
+    unless  ($self->{'dsn_status'} =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
+	Log::do_log('err', "Non failed dsn status $self->{'dsn_status'}");
+	unless ($self->{'distribution_id'}) {
+	    Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
+	    return undef;
+	}
+	unless ($original_rcpt) {
+	    Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
+	    return undef;
+	}
+	unless ($msg_id) {
+	    Log::do_log('err', "error: message_id not found in dsn will ignore");
+	    return undef;
+	}
+    }
+    
+    if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn_status'}, $arrival_date,$self->get_mime_message )) {
+	Log::do_log('notice', "DSN Correctly treated...");
+    }else{
+	Log::do_log('err','Not able to fill database with notification data');
+    }
+    return 1;
 }
 
 1;

@@ -243,103 +243,14 @@ while (!$end) {
 	# If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
 	my $tracking_in_use = $bounce->tracking_is_used;
 	if($bounce->is_dsn) {
-	    
-	    my @parts = $bounce->get_mime_message->parts();
-	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $arrival_date;
-	    
-	    my $msg_id = $bounce->get_mime_message->head->get('Message-Id');
-	    chomp $msg_id;
-	    
-	    my $date = $bounce->get_mime_message->head->get('Date');
-	    
-	    foreach my $p (@parts) {
-		my $h = $p->head();
-		my $content = $h->get('Content-type');
-		
-		if ($content =~ /message\/delivery-status/) {
-		    my @report = split(/\n/, $p->bodyhandle->as_string());
-		    foreach my $line (@report) {
-			$line = lc($line);
-			# Action Field MUST be present in a DSN report, possible values : failed, delayed, delivered, relayed, expanded(rfc3464)
-			if ($line =~ /action\:\s*(.+)/i) {
-			    $dsn_status = $1;
-			    chomp $dsn_status;
-			}			
-			
-			if ( ($line =~ /final\-recipient\:\s*(.+)\s*$/i) && (not $final_rcpt) ) {
-			    $final_rcpt = $1;
-			    chomp $final_rcpt;
-			    my @rcpt;
-			    if($final_rcpt =~ /.*;.*/){
-				@rcpt = split /;\s*/,$final_rcpt;
-				foreach my $rcpt (@rcpt){
-				    if($rcpt =~ /(\S+\@\S+)/){
-					($rcpt)= $rcpt=~ /(\S+\@\S+)/;			
-					$final_rcpt = $rcpt;
-				    }
-				}
-			    }
-			    else{
-				($final_rcpt)= $final_rcpt =~ /(\S+\@\S+)/;
-			    }	
-			}
-			#  $bounce->{'distribution_id'} is set using VERP nothing else.
-			#if ( ($line =~ /original\-envelope\-id\:\s*(.+)/i) && (!$bounce->{'distribution_id'}) ) {
-			#    $bounce->{'distribution_id'} = $1;
-			#    chomp $bounce->{'distribution_id'};
-			#   &Log::do_log ('debug2',"1 - Original Envelope-id Detected, value : %s", $bounce->{'distribution_id'});
-			#}
-			if ($line =~ /arrival\-date\:\s*(.+)/i) {
-			    $arrival_date = $1;
-			    chomp $arrival_date;
-			}
-		    }
-		}
+	    unless ($bounce->process_dsn) {
+		Log::do_log('err','Delivery status notification processing for bounce %s (key %s) failed. Stopping here.',$bounce->get_msg_id,$bounce->{'messagekey'});
+		$spool->move_to_bad($bounce->{'messagekey'});
+		next;
 	    }
-	    
-	    $original_rcpt = $bounce->{'who'};
-	    
-	    if($final_rcpt =~ /<(\S+\@\S+)>/){
-		($final_rcpt)= $final_rcpt =~ /<(\S+\@\S+)>/;
-	    }
-	    if($msg_id =~ /<(\S+\@\S+)>/){
-		($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
-	    }
-	    
-	    &Log::do_log ('debug2',"FINAL DSN Action Detected, value : %s", $dsn_status);
-	    &Log::do_log ('debug2',"FINAL DSN Recipient Detected, value : %s", $original_rcpt);
-	    &Log::do_log ('debug2',"FINAL DSN final Recipient Detected, value : %s", $final_rcpt);
-	    &Log::do_log ('debug2',"FINAL DSN Message-Id Detected, value : %s", $msg_id);
-	    &Log::do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
-	    
-	    unless  ($dsn_status =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
-		&Log::do_log('err', "Non failed dsn status $dsn_status");
-		unless ($bounce->{'distribution_id'}) {
-		    &Log::do_log('err', "error: Id not found in to address %s, will ignore",$bounce->{'to'});
-		    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		    next;
-		}
-		unless ($original_rcpt) {
-		    &Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
-		    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		    next;
-		}
-		unless ($msg_id) {
-		    &Log::do_log('err', "error: message_id not found in dsn will ignore");
-		    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		    next;
-		}
-	    }
-	    
-	    if (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'DSN', $dsn_status, $arrival_date,$bounce->get_mime_message )) {
-		&Log::do_log('notice', "DSN Correctly treated...");
-	    }else{
-		&Log::do_log('err','Not able to fill database with notification data');
-	    }
-	    unless($dsn_status =~ /failed/) { 
+	    unless($bounce->{'dsn_status'} =~ /failed/) { 
 		if ($spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})){
-		    &Log::do_log('debug2', "DSN Correctly removed...");
+		    Log::do_log('debug2', "DSN Correctly removed...");
 		}
 		next;
 	    }
