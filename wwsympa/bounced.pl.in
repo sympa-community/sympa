@@ -217,7 +217,7 @@ while (!$end) {
 	if ($bounce->is_verp_in_use) { #VERP in use
 	    $bounce->analyze_verp_header();
 	    if ($bounce->failed_on_first_try) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
-		Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
+		Log::do_log('debug', "VERP for a service message, trying to remove the subscriber");
 		unless($bounce->update_list($bounce->{'listname'},$bounce->{'robotname'})) {
 		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 		    $spool->move_to_bad($bounce->{'messagekey'});
@@ -241,11 +241,8 @@ while (!$end) {
 	
 	#----------------------------------------------------------------------------------------------------------------------
 	# If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
-	my $tracking_in_use;
-	$tracking_in_use = 1 if ($list->tracking->{'delivery_status_notification'} eq "on");
-	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on");
-	$tracking_in_use = 1 if ($list->tracking->{'message_delivery_notification'} eq "on_demand");
-	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($tracking_in_use)) {
+	my $tracking_in_use = $bounce->tracking_is_used;
+	if($bounce->is_dsn) {
 	    
 	    my @parts = $bounce->get_mime_message->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
@@ -346,7 +343,7 @@ while (!$end) {
 		}
 		next;
 	    }
-	} 
+	}
 	#-----------------------------------------------------------------------------------------------------------------------------------
 	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
 	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {

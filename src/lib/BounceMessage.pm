@@ -176,4 +176,20 @@ sub delete_bouncer {
     return 1;
 }
 
+sub tracking_is_used {
+    my $self = shift ;
+
+    return 1 if ($self->{'list'}->tracking->{'delivery_status_notification'} eq "on");
+    return 1 if ($self->{'list'}->tracking->{'message_delivery_notification'} eq "on");
+    return 1 if ($self->{'list'}->tracking->{'message_delivery_notification'} eq "on_demand");
+    return 0;
+}
+
+sub is_dsn {
+    my $self = shift;
+
+    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used));
+    return 0;
+}
+
 1;
