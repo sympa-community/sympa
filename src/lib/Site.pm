@@ -1242,6 +1242,35 @@ sub robots_ok {
     $robots_ok;
 }
 
+=head3 Others
+
+=over 4
+
+=item supported_languages
+
+I<Getter>.
+Gets supported languages, canonicalized.
+In array context, returns array of globally supported languages.
+In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+sub supported_languages {
+    my $self           = shift;
+    my $supported_lang = $self->supported_lang;
+    unless ($supported_lang) {
+	return () if wantarray;
+	return undef;
+    }
+
+    my @lang_list =
+	map { Language::Lang2Locale($_) } split /\s*,\s*/, $supported_lang;
+    return @lang_list if wantarray;
+    return \@lang_list;
+}
+
 ###### END of the Site_r package ######
 
 ####
@@ -1334,76 +1363,25 @@ sub AUTOLOAD {
     );
 
     unless (scalar keys %$type) {
-	## getter for unknwon list attributes.
-	## XXX This code would be removed later.
-	if (index($attr, '_') != 0 and
-	    ((ref $_[0] and exists $_[0]->{$attr}) or
-		exists $Conf::Conf{$attr})
-	    ) {
-	    &Log::do_log(
-		'err',
-		'Unconcerned object method "%s" via package "%s".  Though it may not be fatal, you might want to report it developer',
-		$attr,
-		$pkg
-	    );
-	    no strict "refs";
-	    *{$AUTOLOAD} = sub {
-		croak "Can't modify \"$attr\" attribute" if scalar @_ > 1;
-		shift->{$attr};
-	    };
-	    goto &$AUTOLOAD;
-	}
-	## XXX Code above would be removed later.
-
 	croak "Can't locate object method \"$2\" via package \"$1\"";
     }
 
     no strict "refs";
     *{$AUTOLOAD} = sub {
 	my $self = shift;
+	## getter for internal config parameters.
+	croak "Can't call method \"$attr\" on uninitialized $self class"
+	    unless $Site::is_initialized;
+	croak "Can't modify \"$attr\" attribute"
+	    if scalar @_ > 1;
 
-	if (ref $self and ref $self eq 'Robot') {
-	    if ($type->{'RobotAttribute'}) {
-		## getter for list attributes.
-		croak "Can't modify \"$attr\" attribute" if scalar @_ > 1;
-		return $self->{$attr};
-	    } elsif ($type->{'RobotParameter'}) {
-		## getters for robot parameters.
-		unless ($self->{'etc'} eq Site->etc or
-		    defined Site->robots_config->{$self->{'name'}}) {
-		    croak "Can't call method \"$attr\" on uninitialized " .
-			(ref $self) . " object";
-		}
-		croak "Can't modify \"$attr\" attribute" if scalar @_;
+	my $ret = $Conf::Conf{$attr};
 
-		if ($self->{'etc'} ne Site->etc and
-		    defined Site->robots_config->{$self->{'name'}}{$attr}) {
-		    ##FIXME: Might "exists" be used?
-		    Site->robots_config->{$self->{'name'}}{$attr};
-		} else {
-		    Site->$attr;
-		}
-	    } else {
-		croak "Can't call method \"$attr\" on " . (ref $self) .
-		    " object";
-	    }
-	} elsif ($self eq 'Site') {
-	    ## getter for internal config parameters.
-	    croak "Can't call method \"$attr\" on uninitialized $self class"
-		unless $Site::is_initialized;
-	    croak "Can't modify \"$attr\" attribute"
-		if scalar @_ > 1;
-
-	    my $ret = $Conf::Conf{$attr};
-
-	    # To avoid "Can't use an undefined value as a HASH reference"
-	    if (!defined $ret and $type->{'SiteAttribute'}) {
-		return {};
-	    }
-	    $ret;
-	} else {
-	    croak 'bug in logic.  Ask developer';
+	# To avoid "Can't use an undefined value as a HASH reference"
+	if (!defined $ret and $type->{'SiteAttribute'}) {
+	    return {};
 	}
+	$ret;
     };
     goto &$AUTOLOAD;
 }
@@ -1425,51 +1403,14 @@ sub listmasters {
     my $self = shift;
 
     croak "Can't modify \"listmasters\" attribute" if scalar @_ > 1;
-    if (ref $self and ref $self eq 'Robot') {
-	if (wantarray) {
-	    @{Site->robots_config->{$self->domain}{'listmasters'} || []};
-	} else {
-	    Site->robots_config->{$self->domain}{'listmasters'};
-	}
-    } elsif ($self eq 'Site') {
-	croak "Can't call method \"listmasters\" on uninitialized $self class"
-	    unless $Site::is_initialized;
+    croak "Can't call method \"listmasters\" on uninitialized $self class"
+	unless $Site::is_initialized;
 
-	if (wantarray) {
-	    @{$Conf::Conf{'listmasters'} || []};
-	} else {
-	    $Conf::Conf{'listmasters'};
-	}
+    if (wantarray) {
+	@{$Conf::Conf{'listmasters'} || []};
     } else {
-	croak 'bug in loginc.  Ask developer';
+	$Conf::Conf{'listmasters'};
     }
-}
-
-=over 4
-
-=item supported_languages
-
-I<Getter>.
-Gets supported languages, canonicalized.
-In array context, returns array of globally supported languages.
-In scalar context, returns arrayref to them.
-
-=back
-
-=cut
-
-sub supported_languages {
-    my $self           = shift;
-    my $supported_lang = $self->supported_lang;
-    unless ($supported_lang) {
-	return () if wantarray;
-	return undef;
-    }
-
-    my @lang_list =
-	map { Language::Lang2Locale($_) } split /\s*,\s*/, $supported_lang;
-    return @lang_list if wantarray;
-    return \@lang_list;
 }
 
 =head3 Miscelaneous

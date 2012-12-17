@@ -11,7 +11,7 @@ use Carp qw(carp croak);
 
 use Site;
 
-our @ISA = qw(Site);
+our @ISA = qw(Site_r);
 
 ## Croak if Robot object is used where robot name shall be used.
 ## It may be removed when refactoring has finished.
@@ -408,6 +408,22 @@ sub lists_ok {
     $self->{'lists_ok'};
 }
 
+=head3 Others
+
+=over 4
+
+=item supported_languages
+
+I<Getter>.
+In array context, returns array of supported languages by robot.
+In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+## Inherited from Site class
+
 =head3 ACCESSORS
 
 =over 4
@@ -443,9 +459,63 @@ Gets derived config parameters.
 
 =cut
 
-## AUTOLOAD method will be inherited from Site class
+our $AUTOLOAD;
 
 sub DESTROY;
+
+sub AUTOLOAD {
+    Log::do_log('debug3', 'Autoloading %s', $AUTOLOAD);
+    $AUTOLOAD =~ m/^(.*)::(.*)/;
+    my $pkg  = $1;
+    my $attr = $2;
+
+    my $type = {};
+    ## getters for site/robot attributes.
+    $type->{'RobotAttribute'} =
+	scalar(grep { $_ eq $attr } qw(etc home name));
+    ## getters for site/robot parameters.
+    $type->{'RobotParameter'} = scalar(
+	grep { $_ eq $attr }
+	    qw(blacklist list_check_regexp loging_condition loging_for_module
+	    pictures_path request sympa)
+	) ||
+	scalar(grep { !defined $_->{'title'} and $_->{'name'} eq $attr }
+	    @confdef::params);
+
+    if ($type->{'RobotAttribute'}) {
+	## getters for robot attributes.
+	no strict "refs";
+	*{$AUTOLOAD} = sub {
+	    my $self = shift;
+	    croak "Can't modify \"$attr\" attribute" if scalar @_ > 1;
+	    return $self->{$attr};
+	};
+    } elsif ($type->{'RobotParameter'}) {
+	## getters for robot parameters.
+	no strict "refs";
+	*{$AUTOLOAD} = sub {
+	    my $self = shift;
+
+	    unless ($self->{'etc'} eq Site->etc or
+		defined Site->robots_config->{$self->{'name'}}) {
+		croak "Can't call method \"$attr\" on uninitialized " .
+		    (ref $self) . " object";
+	    }
+	    croak "Can't modify \"$attr\" attribute" if scalar @_;
+
+	    if ($self->{'etc'} ne Site->etc and
+		defined Site->robots_config->{$self->{'name'}}{$attr}) {
+		##FIXME: Might "exists" be used?
+		Site->robots_config->{$self->{'name'}}{$attr};
+	    } else {
+		Site->$attr;
+	    }
+	};
+    } else {
+	croak "Can't locate object method \"$attr\" via package \"$pkg\"";
+    }
+    goto &$AUTOLOAD;
+}
 
 =over 4
 
@@ -459,21 +529,16 @@ In array context, returns array of them.
 
 =cut
 
-## Inherited from Site class
+sub listmasters {
+    my $self = shift;
 
-=over 4
-
-=item supported_languages
-
-I<Getter>.
-In array context, returns array of supported languages by robot.
-In scalar context, returns arrayref to them.
-
-=back
-
-=cut
-
-## Inherited from Site class
+    croak "Can't modify \"listmasters\" attribute" if scalar @_ > 1;
+    if (wantarray) {
+	@{Site->robots_config->{$self->domain}{'listmasters'} || []};
+    } else {
+	Site->robots_config->{$self->domain}{'listmasters'};
+    }
+}
 
 =head2 FUNCTIONS
 
