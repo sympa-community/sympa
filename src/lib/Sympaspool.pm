@@ -71,16 +71,17 @@ my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 
 ## Creates an object.
 sub new {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my($pkg, $spoolname, $selection_status) = @_;
-    my $spool={};
-   &Log::do_log('debug2', 'Spool::new(%s,%s)', $spoolname, $selection_status);
-    
+    my $spool = {};
+
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
 &Log::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
     $spool->{'spoolname'} = $spoolname;
-    if (($selection_status eq 'bad')||($selection_status eq 'ok')) {
+    if ($selection_status and
+	($selection_status eq 'bad' or $selection_status eq 'ok')) {
 	$spool->{'selection_status'} = $selection_status;
     }else{
 	$spool->{'selection_status'} =  'ok';
@@ -308,13 +309,11 @@ sub move_to_bad {
 # return one message from related spool using a specified selector
 #  
 sub get_message {
-
     my $self = shift;
     my $selector = shift;
-
-
-    &Log::do_log('debug', "Spool::get_message($self->{'spoolname'},messagekey = $selector->{'messagekey'}, listname = $selector->{'listname'},robot = $selector->{'robot'})");
-    
+    Log::do_log('debug2', '(%s, messagekey=%s, listname=%s, robot=%s)',
+	$self, $selector->{'messagekey'},
+	$selector->{'listname'}, $selector->{'robot'});
 
     my $sqlselector = '';
     my %db_struct  = &Sympa::DatabaseDescription::db_struct();
@@ -441,7 +440,7 @@ sub store {
     my $b64msg = MIME::Base64::encode($message_asstring);
     my $message;
     if ($self->{'spoolname'} ne 'task' && $message_asstring ne 'rebuild' ) {
-	$message = new Message({'messageasstring'=>$message_asstring});
+	$message = Message->new({'messageasstring' => $message_asstring});
     }
     
     if($message) {
@@ -563,6 +562,7 @@ sub clean {
 
 # test the maximal message size the database will accept
 sub store_test { 
+    Log::do_log('debug2', '(%s)', @_);
     my $value_test = shift;
     my $divider = 100;
     my $steps = 50;
@@ -570,8 +570,6 @@ sub store_test {
     my $size_increment = $divider*$maxtest/$steps;
     my $barmax = $size_increment*$steps*($steps+1)/2;
     my $even_part = $barmax/$steps;
-    
-    &Log::do_log('debug', 'Spool::store_test()');
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";
@@ -579,9 +577,14 @@ sub store_test {
                                          count => $barmax,
                                          ETA   => 'linear', });
 
-    my $testing = new Spool('bad');
-    
-    my $msg = sprintf "From: justeatester\@notadomain\nMessage-Id:yep\@notadomain\nSubject: this a test\n\n";
+    my $testing = __PACKAGE__->new('msg', 'bad');
+
+    my $msg = <<'EOF';
+From: justeatester@host.notadomain
+Message-Id:yep@host.notadomain
+Subject: this a test
+
+EOF
     $progress->max_update_rate(1);
     my $next_update = 0;
     my $total = 0;
@@ -595,12 +598,15 @@ sub store_test {
 	my $time = time();
         $progress->message(sprintf "Test storing and removing of a %5d kB message (step %s out of %s)", $z*$size_increment, $z, $steps);
 	# 
-	unless ($testing->store($msg,{list=>'notalist',robot=>'notaboot'})) {
+	my $messagekey;
+	unless ($messagekey = $testing->store($msg,
+	    {'list' => 'notalist', 'robot' => 'notaboot'})) {
 	    return (($z-1)*$size_increment);
 	}
-	my $messagekey = &Spool::_get_messagekey($msg);
-	unless ( $testing->remove_message({'messagekey'=>$messagekey,'listname'=>'notalist','robot'=>'notarobot'}) ) {
-	    &Log::do_log('err','Unable to remove test message (key = %s) from spool_table',$messagekey);	    
+	unless ($testing->remove_message({'messagekey' => $messagekey})) {
+	    Log::do_log('err',
+		'Unable to remove test message (key = %s) from spool_table',
+		$messagekey);	    
 	}
 	$total += $z*$size_increment;
         $progress->message(sprintf ".........[OK. Done in %.2f sec]", time() - $time);
@@ -674,6 +680,11 @@ sub _sqlselector {
     return $sqlselector;
 }
 
+## Get unique ID
+sub get_id {
+    my $self = shift;
+    return sprintf '%s/%s', $self->{'spoolname'}, $self->{'selection_status'};
+}
 
 ###### END of the Sympapool package ######
 

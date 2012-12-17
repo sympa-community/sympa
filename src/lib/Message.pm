@@ -406,7 +406,7 @@ sub get_receipient {
     unless ($self->{'rcpt'}) {
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
 	    unless ($hdr->get('X-Sympa-To')) {
-		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
+		Log::do_log('debug3', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
 	}else {
