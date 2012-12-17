@@ -461,7 +461,7 @@ Gets derived config parameters.
 
 our $AUTOLOAD;
 
-sub DESTROY;
+sub DESTROY { }
 
 sub AUTOLOAD {
     Log::do_log('debug3', 'Autoloading %s', $AUTOLOAD);

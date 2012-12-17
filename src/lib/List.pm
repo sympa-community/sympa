@@ -14082,7 +14082,7 @@ C<[]> or C<{}> will be returned instead of C<undef>.
 
 our $AUTOLOAD;
 
-sub DESTROY;
+sub DESTROY { }
 
 sub AUTOLOAD {
     Log::do_log('debug3', 'Autoloading %s', $AUTOLOAD);
