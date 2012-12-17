@@ -5109,7 +5109,7 @@ sub do_subscribe {
 		    return undef;
 		}
 	    }else {
-		my $defaults = $list->get_default_user_options();
+		my $defaults = $list->default_user_options;
 		my $u;
 		%{$u} = %{$defaults};
 		$u->{'email'} = $param->{'user'}{'email'};
@@ -6544,7 +6544,7 @@ sub do_add {
 	 }
 	 
 	 my $u2 = User::get_global_user($email);
-	 my $defaults = $list->get_default_user_options();
+	 my $defaults = $list->default_user_options;
 	 my $u;
 	 %{$u} = %{$defaults};
 	 $u->{'email'} = $email;

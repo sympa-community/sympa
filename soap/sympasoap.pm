@@ -753,7 +753,7 @@ sub add {
 
     }else {
 	my $u;
-	my $defaults = $list->get_default_user_options();
+	my $defaults = $list->default_user_options;
 	my $u2 = User->new($email);
 	%{$u} = %{$defaults};
 	$u->{'email'} = $email;

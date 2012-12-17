@@ -195,10 +195,6 @@ Returns the maximum allowed size for a message.
 
 Returns an array with the Reply-To values.
 
-=item get_default_user_options ()
-
-Returns a default option of the list for subscription.
-
 =item get_real_total ()
 
 Returns the number of subscribers to the list.
@@ -3746,9 +3742,9 @@ sub distribute_msg {
 #       | undef
 ####################################################
 sub send_msg_digest {
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $messagekey = shift;
-    &Log::do_log('debug2', 'Sending digest with key %s for list %s',$messagekey,$self->{'name'});
 
     ## Create the list of subscribers in various digest modes
     return 0 unless ($self->get_lists_of_digest_receipients());
@@ -3803,7 +3799,8 @@ sub get_lists_of_digest_receipients {
 	}
     }
     if (($#{$self->{'digest'}{'tabrcpt'}} == -1) and ($#{$self->{'digest'}{'tabrcptsummary'}} == -1) and ($#{$self->{'digest'}{'tabrcptplain'}} == -1)) {
-	&Log::do_log('info', 'No subscriber for sending digest in list %s', $self->{'name'});
+	Log::do_log('info', 'No subscriber for sending digest in list %s',
+	    $self);
 	return 0;
     }
     return 1;
@@ -3865,7 +3862,8 @@ sub prepare_messages_for_digest {
     $self->{'digest'}{'group_of_msg'} = [];
     ## Split messages into groups of digest_max_size size
     while (@{$self->{'digest'}{'all_msg'}}) {
-	my @group = splice @{$self->{'digest'}{'all_msg'}}, 0, $self->{'admin'}{'digest_max_size'};
+	my @group =
+	    splice @{$self->{'digest'}{'all_msg'}}, 0, $self->digest_max_size;
 	push @{$self->{'digest'}{'group_of_msg'}}, \@group;
     }
     return 1;
@@ -4793,9 +4791,8 @@ sub archive_send {
 #
 ######################################################
 sub archive_send_last {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my ($self, $who) = @_;
-    &Log::do_log('debug', 'List::archive_send_last(%s, %s)',
-	$self->{'listname'}, $who);
 
    return unless ($self->is_archived());
     my $dir = $self->dir . '/archives';
@@ -5581,16 +5578,8 @@ sub get_reply_to {
 }
 
 ## Returns a default user option
-sub get_default_user_options {
-    my $self = shift->{'admin'};
-    my $what = shift;
-    &Log::do_log('debug3', 'List::get_default_user_options(%s)', $what);
-
-    if ($self) {
-	return $self->{'default_user_options'};
-    }
-    return undef;
-}
+## DEPRECATED: use $list->deefault_user_options.
+##sub get_default_user_options {
 
 ## Returns the number of subscribers to the list
 ## not using cache.
@@ -7610,7 +7599,7 @@ sub archive_msg {
 
 	my $msgtostore = $message->get_message_as_string;
 	if (($message->{'smime_crypted'} eq 'smime_crypted') &&
-	    ($self->{admin}{archive_crypted_msg} eq 'original')) {
+	    ($self->archive_crypted_msg eq 'original')) {
 		Log::do_log('debug3', 'Will store encrypted message');
 		$msgtostore = $message->get_encrypted_message_as_string;
 	}else {

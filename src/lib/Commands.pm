@@ -1009,7 +1009,7 @@ sub subscribe {
 	} else {
 
 	    my $u;
-	    my $defaults = $list->get_default_user_options();
+	    my $defaults = $list->default_user_options;
 	    %{$u} = %{$defaults};
 	    $u->{'email'} = $sender;
 	    $u->{'gecos'} = $comment;
@@ -1626,7 +1626,7 @@ sub add {
 
 	} else {
 	    my $u;
-	    my $defaults = $list->get_default_user_options();
+	    my $defaults = $list->default_user_options;
 	    %{$u} = %{$defaults};
 	    $u->{'email'} = $email;
 	    $u->{'gecos'} = $comment;
