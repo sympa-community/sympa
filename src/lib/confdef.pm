@@ -1524,6 +1524,12 @@ our @params = (
         'file'     => 'wwsympa.conf',
     },
     {
+        'name'     => 'htmlarea_url',
+        'optional' => '1',
+        'vhost'    => '1',
+        'file'     => 'wwsympa.conf',
+    },
+    {
         'name'     => 'use_fast_cgi',
         'default'  => '1',
         'query'    => gettext('Is fast_cgi module for Apache (or Roxen) installed (0 | 1)'),
