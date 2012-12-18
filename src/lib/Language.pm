@@ -109,7 +109,7 @@ my %template2textdomain = ('help_admin.tt2' => 'web_help',
 			   );			   
 
 ##sub GetSupportedLanguages {
-##DEPRECATED: use Site->supported_langauges or $robot->supported_languages.
+##DEPRECATED: use Site->supported_languages or $robot->supported_languages.
 
 ## Keep the previous lang ; can be restored with PopLang
 sub PushLang {

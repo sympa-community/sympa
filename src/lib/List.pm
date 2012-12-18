@@ -11786,7 +11786,7 @@ sub _apply_defaults {
 
     ## List of available languages
     ##FIXME: robot level config would be used instead of site-global.
-    $::pinfo{'lang'}{'format'} = [Site->supported_langauges];
+    $::pinfo{'lang'}{'format'} = [Site->supported_languages];
 
     ## Parameter order
     foreach my $index (0 .. $#param_order) {

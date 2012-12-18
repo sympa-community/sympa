@@ -1311,27 +1311,25 @@ sub AUTOLOAD {
 
     my $type = {};
     ## getters for site/robot attributes.
-    $type->{'RobotAttribute'} =
-	scalar(grep { $_ eq $attr } qw(etc home name));
+    $type->{'RobotAttribute'} = 1
+	if grep { $_ eq $attr } qw(etc home name);
     ## getters for site/robot parameters.
-    $type->{'RobotParameter'} = scalar(
-	grep { $_ eq $attr }
+    $type->{'RobotParameter'} = 1
+	if grep { $_ eq $attr }
 	    qw(blacklist list_check_regexp loging_condition loging_for_module
-	    pictures_path request sympa)
-	) ||
-	scalar(grep { !defined $_->{'title'} and $_->{'name'} eq $attr }
-	    @confdef::params);
+	    pictures_path request sympa) or
+	    grep { !defined $_->{'title'} and $_->{'name'} eq $attr }
+	    @confdef::params;
     ## getters for attributes specific to global config.
-    $type->{'SiteAttribute'} = scalar(
-	grep { $_ eq $attr }
+    $type->{'SiteAttribute'} = 1
+	if grep { $_ eq $attr }
 	    qw(auth_services authentication_info_url
 	    cas_id cas_number crawlers_detection
 	    generic_sso_id generic_sso_number
 	    ldap ldap_export ldap_number
 	    locale2charset nrcpt_by_domain
 	    robot_by_http_host robot_by_soap_url
-	    use_passwd)
-    );
+	    use_passwd);
 
     unless (scalar keys %$type) {
 	## getter for unknwon list attributes.

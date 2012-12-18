@@ -45,12 +45,13 @@ use admin;
 use Config_XML;
 use Family;
 #use report; # load in Auth
-#use tools;
+#use tools; # load in Conf
 #use tt2; # load in List
 #use Sympa::Constants;
-use tracking;
+#use tracking; # not used
 #use Sympaspool; # load in List
-#use SDM;
+#use SDM; # load in Conf
+use Upgrade;
 
 # dirty global variables
 my $is_signed = {}; 
