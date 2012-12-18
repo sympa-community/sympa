@@ -289,4 +289,99 @@ sub process_dsn {
     return 1;
 }
 
+sub is_mdn {
+    my $self = shift;
+
+    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand")));
+    return 0;
+}
+
+sub process_mdn {
+    my $self = shift;
+    my @parts = $self->get_mime_message->parts();
+    
+    $self->{'mdn'}{'msg_id'} = $self->get_mime_message->head->get('Message-Id');
+    chomp $self->{'mdn'}{'msg_id'};
+    
+    $self->{'mdn'}{'date'} = $self->get_mime_message->head->get('Date');
+    
+    foreach my $p (@parts) {
+	my $h = $p->head();
+	my $content = $h->get('Content-type');
+	
+	if ($content =~ /message\/disposition-notification/) {
+	    my @report = split(/\n/, $p->bodyhandle->as_string());
+	    foreach my $line (@report) {
+		$line = lc($line);
+		# Disposition Field MUST be present in a MDN report, possible values : displayed, deleted(rfc3798)
+		if ($line =~ /disposition\:\s*(.+)\s*\;\s*(.+)/i) {
+		    $self->{'mdn'}{'status'} = $2;
+		    if($self->{'mdn'}{'status'}  =~ /.*\/.*/){
+			my @results = split /\/\s*/,$self->{'mdn'}{'status'};
+			$self->{'mdn'}{'status'} = $results[$0];
+			chomp $self->{'mdn'}{'status'};
+		    }
+		}
+		if ( ($line =~ /final\-recipient\:\s*(.+)\s*$/i) && (not $self->{'mdn'}{'final_rcpt'}) ) {
+		    $self->{'mdn'}{'final_rcpt'} = $1;
+		    chomp $self->{'mdn'}{'final_rcpt'};
+		    my @rcpt;
+		    if($self->{'mdn'}{'final_rcpt'} =~ /.*;.*/){
+			@rcpt = split /;\s*/,$self->{'mdn'}{'final_rcpt'};
+			foreach my $rcpt (@rcpt){
+			    if($rcpt =~ /(\S+\@\S+)/){
+				($rcpt)= $rcpt=~ /(\S+\@\S+)/;			
+				$self->{'mdn'}{'final_rcpt'} = $rcpt;
+			    }
+			}
+		    }
+		    else{
+			($self->{'mdn'}{'final_rcpt'})= $self->{'mdn'}{'final_rcpt'} =~ /(\S+\@\S+)/;
+		    }	
+		}
+	    }
+	}
+    }
+    
+    if($self->{'mdn'}{'original_rcpt'} =~ /<(\S+\@\S+)>/){
+	($self->{'mdn'}{'original_rcpt'})= $self->{'mdn'}{'original_rcpt'} =~ /<(\S+\@\S+)>/;
+    }
+    if($self->{'mdn'}{'final_rcpt'} =~ /<(\S+\@\S+)>/){
+	($self->{'mdn'}{'final_rcpt'})= $self->{'mdn'}{'final_rcpt'} =~ /<(\S+\@\S+)>/;
+    }
+    if($self->{'mdn'}{'msg_id'} =~ /<(\S+\@\S+)>/){
+	($self->{'mdn'}{'msg_id'})= $self->{'mdn'}{'msg_id'} =~ /<(\S+\@\S+)>/;
+    }
+    # let's use VERP 
+    $self->{'mdn'}{'original_rcpt'} = $self->{'who'};
+    
+    &Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $self->{'mdn'}{'status'});
+    &Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $self->{'mdn'}{'original_rcpt'});
+    &Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $self->{'mdn'}{'msg_id'});
+    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $self->{'mdn'}{'date'});
+    
+    unless ($self->{'distribution_id'}) {
+	&Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
+	return undef;
+    }
+    unless ($self->{'mdn'}{'original_rcpt'}) {
+	&Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
+	return undef;
+    }
+    unless ($self->{'mdn'}{'msg_id'}) {
+	&Log::do_log('err', "error: message_id not found in dsn will ignore");
+	return undef;
+    }
+    unless ($self->{'mdn'}{'status'}) {
+	&Log::do_log('err', "error: dsn status not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
+	return undef;
+    }
+    
+    &Log::do_log('debug2', "Save in database...");
+    unless (&tracking::db_insert_notification($self->{'distribution_id'}, 'MDN',$self->{'mdn'}{'status'}, $self->{'mdn'}{'date'},$self->get_mime_message )) {
+	&Log::do_log('err','Not able to fill database with notification data');
+	return undef;
+    }
+    return 1
+}
 1;

@@ -257,99 +257,12 @@ while (!$end) {
 	}
 	#-----------------------------------------------------------------------------------------------------------------------------------
 	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
-	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($list->tracking->{'message_delivery_notification'} eq "on")||($list->tracking->{'message_delivery_notification'} eq "on_demand"))) {
-	    
-	    my @parts = $bounce->get_mime_message->parts();
-	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $date;
-	    my $mdn_status;
-	    
-	    my $msg_id = $bounce->get_mime_message->head->get('Message-Id');
-	    chomp $msg_id;
-	    
-	    my $date = $bounce->get_mime_message->head->get('Date');
-	    
-	    foreach my $p (@parts) {
-		my $h = $p->head();
-		my $content = $h->get('Content-type');
-		
-		if ($content =~ /message\/disposition-notification/) {
-		    my @report = split(/\n/, $p->bodyhandle->as_string());
-		    foreach my $line (@report) {
-			$line = lc($line);
-# Disposition Field MUST be present in a MDN report, possible values : displayed, deleted(rfc3798)
-			if ($line =~ /disposition\:\s*(.+)\s*\;\s*(.+)/i) {
-			    $mdn_status = $2;
-			    if($mdn_status  =~ /.*\/.*/){
-				my @results = split /\/\s*/,$mdn_status;
-				$mdn_status = $results[$0];
-				chomp $mdn_status;
-			    }
-			}
-			if ( ($line =~ /final\-recipient\:\s*(.+)\s*$/i) && (not $final_rcpt) ) {
-			    $final_rcpt = $1;
-			    chomp $final_rcpt;
-			    my @rcpt;
-			    if($final_rcpt =~ /.*;.*/){
-				@rcpt = split /;\s*/,$final_rcpt;
-				foreach my $rcpt (@rcpt){
-				    if($rcpt =~ /(\S+\@\S+)/){
-					($rcpt)= $rcpt=~ /(\S+\@\S+)/;			
-					$final_rcpt = $rcpt;
-				    }
-				}
-			    }
-			    else{
-				($final_rcpt)= $final_rcpt =~ /(\S+\@\S+)/;
-			    }	
-			}
-		    }
-		}
+	if($bounce->is_mdn) {
+	    if($bounce->process_mdn) {
+		&Log::do_log('notice', "MDN Correctly treated...");
+	    }else{
+		&Log::do_log('err', "Failed to treat MDN");
 	    }
-	    
-	    if($original_rcpt =~ /<(\S+\@\S+)>/){
-		($original_rcpt)= $original_rcpt =~ /<(\S+\@\S+)>/;
-	    }
-	    if($final_rcpt =~ /<(\S+\@\S+)>/){
-		($final_rcpt)= $final_rcpt =~ /<(\S+\@\S+)>/;
-	    }
-	    if($msg_id =~ /<(\S+\@\S+)>/){
-		($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
-	    }
-	    # let's use VERP 
-	    $original_rcpt = $bounce->{'who'};
-	    
-	    &Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $mdn_status);
-	    &Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $original_rcpt);
-	    &Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $msg_id);
-	    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $date);
-	    
-	    unless ($bounce->{'distribution_id'}) {
-		&Log::do_log('err', "error: Id not found in to address %s, will ignore",$bounce->{'to'});
-		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		next;
-	    }
-	    unless ($original_rcpt) {
-		&Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
-		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		next;
-	    }
-	    unless ($msg_id) {
-		&Log::do_log('err', "error: message_id not found in dsn will ignore");
-		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		next;
-	    }
-	    unless ($mdn_status) {
-		&Log::do_log('err', "error: dsn status not found in dsn: %s, will ignore",$msg_id);
-		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
-		next;
-	    }
-	    
-	    &Log::do_log('debug2', "Save in database...");
-	    unless (&tracking::db_insert_notification($bounce->{'distribution_id'}, 'MDN',$mdn_status, $date,$bounce->get_mime_message )) {
-		&Log::do_log('err','Not able to fill database with notification data');
-	    }
-	    &Log::do_log('notice', "MDN Correctly treated...");
 	    if( $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})){
 		&Log::do_log('debug2', "MDN Correctly removed...");
 	    }
