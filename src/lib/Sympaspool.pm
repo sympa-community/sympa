@@ -22,48 +22,51 @@
 package Sympaspool;
 
 use strict;
-use POSIX;
-use Sys::Hostname;
-use Datasource;
-use SQLSource qw(create_db %date_format);
-use Upgrade;
-use Lock;
-use Scenario;
-use Fetch;
-use WebAgent;
+#use Carp; # not yet used
+#require Encode; # not used
 use Exporter;
-require Encode;
+#use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN); # no longer used
+use Mail::Address;
+use MIME::Base64;
+#use POSIX; # not used
+use Sys::Hostname qw(hostname);
+# tentative
+use Data::Dumper;
 
-use tt2;
-use Sympa::Constants;
-use Sympa::DatabaseDescription;
+use Message;
+use SDM;
+
+#use Datasource; # not used
+#use SQLSource qw(create_db %date_format); # not used
+#use Upgrade; # not used
+#use Lock; # not used
+#use Scenario; # not used
+#use Fetch; # not used
+#use WebAgent; # not used
+#use tt2; # not used
+#use Sympa::Constants; # used by SDM
+#use Sympa::DatabaseDescription; # used by SDM
+
+#use IO::Scalar; # not used
+#use Storable; # no longer used
+#use Mail::Header; # not used
+
+#use Archive; # not used
+#use Language; # not used
+#use Log; # used by SDM
+#use Conf; # no longer used
+#use mail; # not used
+#use Ldap; # not used
+
+#use Time::Local; # not used
+#use MIME::Entity; # no longer used
+#use MIME::EncWords; # no longer used
+#use MIME::Parser; # no longer used
+
+#use Family; # not used
+#use PlainDigest; # not used
 
 our @ISA = qw(Exporter);
-
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
-
-
-use Carp;
-
-use IO::Scalar;
-use Storable;
-use Mail::Header;
-use Archive;
-use Language;
-use SDM;
-use Log;
-use Conf;
-use mail;
-use Ldap;
-use Time::Local;
-use MIME::Entity;
-use MIME::EncWords;
-use MIME::Parser;
-use Data::Dumper;
-use Message;
-use Family;
-use PlainDigest;
-
 
 ## Database and SQL statement handlers
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
@@ -311,31 +314,28 @@ sub move_to_bad {
 sub get_message {
     my $self = shift;
     my $selector = shift;
-    Log::do_log('debug2', '(%s, messagekey=%s, listname=%s, robot=%s)',
+    Log::do_log('debug2', '(%s, messagekey=%s, list=%s, robot=%s)',
 	$self, $selector->{'messagekey'},
-	$selector->{'listname'}, $selector->{'robot'});
+	$selector->{'list'}, $selector->{'robot'});
 
-    my $sqlselector = '';
-    my %db_struct  = &Sympa::DatabaseDescription::db_struct();
-
-    foreach my $field (keys %$selector){
-#	unless (defined %{$db_struct{'mysql'}{'spool_table'}{$field.'_spool'}}) {
-#	   &Log::do_log ('err',"internal error : invalid selector field $field locking for message in spool_table");
-#	    return undef;
-#	} 
-
-	$sqlselector = $sqlselector.' AND ' unless ($sqlselector eq '');
-
-	if ($field eq 'messageid') {
-	    $selector->{'messageid'} = substr $selector->{'messageid'}, 0, 95;
-	}
-	$sqlselector = $sqlselector.' '.$field.'_spool = '.&SDM::quote($selector->{$field}); 
-    }
-    my $all = &_selectfields();
-    my $statement = sprintf "SELECT %s FROM spool_table WHERE spoolname_spool = %s AND ".$sqlselector.' LIMIT 1',$all,&SDM::quote($self->{'spoolname'});
+    my $sqlselector = _sqlselector($selector);
+    my $all = _selectfields();
 
     push @sth_stack, $sth;
-    $sth = &SDM::do_query($statement);
+
+    unless ($sth = SDM::do_query(
+	q{SELECT %s
+	  FROM spool_table
+	  WHERE spoolname_spool = %s%s
+	  LIMIT 1},
+	$all, SDM::quote($self->{'spoolname'}),
+	($sqlselector ? " AND $sqlselector" : '')
+    )) {
+	Log::do_log('err',
+	    'Could not get message from spool %s', $self);
+	$sth = pop @sth_stack;
+	return undef;
+    }
 
     my $message = $sth->fetchrow_hashref('NAME_lc');
     if ($message) {
@@ -343,7 +343,7 @@ sub get_message {
 	$message->{'messageasstring'} = MIME::Base64::decode($message->{'message'});
     }
 
-    $sth-> finish;
+    $sth->finish;
     $sth = pop @sth_stack;
     return $message;
 }
@@ -427,7 +427,6 @@ sub update {
 # store a message in database spool 
 #
 sub store {  
-
     my $self = shift;
     my $message_asstring = shift;  
     my $metadata = shift; # a set of attributes related to the spool
@@ -435,7 +434,10 @@ sub store {
     my $sender = $metadata->{'sender'};
     $sender |= '';
 
-   &Log::do_log('debug',"Spool::store ($self->{'spoolname'},$self->{'selection_status'}, <message_asstring> ,list : $metadata->{'list'},robot : $metadata->{'robot'} , date: $metadata->{'date'}), lock : $locked");
+    Log::do_log('debug2',
+	'(%s, <message_asstring>, list=%s, robot=%s, date=%s, %s)',
+	$self, $metadata->{'list'}, $metadata->{'robot'}, $metadata->{'date'},
+	$locked);
 
     my $b64msg = MIME::Base64::encode($message_asstring);
     my $message;
@@ -497,28 +499,38 @@ sub store {
 # remove a message in database spool using (messagekey,list,robot) which are a unique id in the spool
 #
 sub remove_message {  
-
     my $self = shift;
     my $selector = shift;
     my $robot = $selector->{'robot'};
     my $messagekey = $selector->{'messagekey'};
-    my $listname = $selector->{'listname'};
-   &Log::do_log('debug',"remove_message ($self->{'spoolname'},$listname,$robot,$messagekey)");
-    
-    ## search if this message is already in spool database : mailfile may perform multiple submission of exactly the same message 
+    my $listname = $selector->{'list'};
+    Log::do_log('debug2', '(%s, list=%s, robot=%s, messagekey=%s)',
+	$self, $listname, $robot, $messagekey);
+
+    ## search if this message is already in spool database : mailfile may
+    ## perform multiple submission of exactly the same message 
     unless ($self->get_message($selector)){
-	&Log::do_log('err',"message %s not in spool",$selector->{'messagekey'}); 
-		return undef;
+	Log::do_log('err', 'message %s not in spool', $messagekey); 
+	return undef;
     }
-    
-    my $sqlselector = &_sqlselector($selector);
-    #my $statement  = sprintf "DELETE FROM spool_table WHERE spoolname_spool = %s AND messagekey_spool = %s AND list_spool = %s AND robot_spool = %s AND bad_spool IS NULL",&SDM::quote($self->{'spoolname'}),&SDM::quote($messagekey),&SDM::quote($listname),&SDM::quote($robot);
-    my $statement  = sprintf "DELETE FROM spool_table WHERE spoolname_spool = %s AND %s",&SDM::quote($self->{'spoolname'}),$sqlselector;
-    
+
+    my $sqlselector = _sqlselector($selector);
+
     push @sth_stack, $sth;
-    $sth = &SDM::do_query ($statement);
-    
-    $sth-> finish;
+
+    unless ($sth = SDM::do_query(
+	q{DELETE FROM spool_table
+	  WHERE spoolname_spool = %s%s},
+	SDM::quote($self->{'spoolname'}),
+	($sqlselector ? " AND $sqlselector" : '')
+    )) {
+	Log::do_log('err',
+            'Could not remove message from spool %s', $self);
+	$sth = pop @sth_stack;
+	return undef;
+    }
+
+    $sth->finish;
     $sth = pop @sth_stack;
     return 1;
 }
