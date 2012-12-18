@@ -14071,7 +14071,7 @@ C<[]> or C<{}> will be returned instead of C<undef>.
 
 our $AUTOLOAD;
 
-sub DESTROY { }
+sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
 
 sub AUTOLOAD {
     Log::do_log('debug3', 'Autoloading %s', $AUTOLOAD);

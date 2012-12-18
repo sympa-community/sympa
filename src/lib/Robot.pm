@@ -445,7 +445,7 @@ Gets derived config parameters.
 
 ## AUTOLOAD method will be inherited from Site class
 
-sub DESTROY { }
+sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
 
 =over 4
 
