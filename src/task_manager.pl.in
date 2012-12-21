@@ -26,18 +26,18 @@
 
 use lib '--modulesdir--';
 use strict "vars";
-
-use Data::Dumper;
 use Getopt::Long;
+# tentative
+use Data::Dumper;
 
-#use Conf;
+#use Conf; # used in List - Robot- Site
 use List;
-#use Log;
-#use SDM;
-#use Sympa::Constants;
+#use Log; # used by Conf
+#use SDM; # used by Conf
+#use Sympa::Constants; # used by Conf
 #use Task; # used by List
 #use TaskSpool; # used by Task
-#use tools;
+#use tools; # used by Conf
 ##XXXuse wwslib; # no longer used
 
 my $opt_d;
@@ -92,7 +92,7 @@ unless (&SDM::check_db_connect()) {
 }
 
 ## Check that the data structure is uptodate
-unless (&Upgrade::data_structure_uptodate()) {
+unless (SDM::data_structure_uptodate()) {
     &Log::fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
 }
 

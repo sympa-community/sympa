@@ -1137,13 +1137,15 @@ sub upgrade {
     return 1;
 }
 
-sub probe_db {
-    &SDM::probe_db();
-}
+##DEPRECATED: Use SDM::probe_db().
+##sub probe_db {
+##    &SDM::probe_db();
+##}
 
-sub data_structure_uptodate {
-    &SDM::data_structure_uptodate();
-}
+##DEPRECATED: Use SDM::data_structure_uptodate().
+##sub data_structure_uptodate {
+##    &SDM::data_structure_uptodate();
+##}
 
 ## used to encode files to UTF-8
 ## also add X-Attach header field if template requires it

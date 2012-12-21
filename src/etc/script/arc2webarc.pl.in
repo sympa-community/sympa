@@ -23,15 +23,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use lib '--modulesdir--';
+use Getopt::Long;
+
 use wwslib;
-use Sympa::Constants;
+#use Sympa::Constants; # used by Conf
+use List;
+#use Log; # used in List - Robot - Site - Conf
+#use SDM; # used by Conf
 
 $wwsympa_conf_file = Sympa::Constants::WWSCONFIG;
 $sympa_conf_file = Sympa::Constants::CONFIG;
-
-use List;
-use Log;
-use Getopt::Long;
 
 my %month_idx = qw(jan 1 
 		   fev 2
@@ -93,7 +94,7 @@ unless (&Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
 
-&Upgrade::probe_db();
+SDM::probe_db();
 
 chdir $Conf::Conf{'home'};
 

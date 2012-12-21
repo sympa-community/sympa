@@ -580,7 +580,7 @@ sub rebuild {
 	    rmdir $arcpath.'/'.$adrlist.'/'.$arc.'/.mhonarc.lck';
 
 	    $exitcode= system($cmd);
-	    $exitcode = $exitcode / 256;	    
+	    $exitcode = $exitcode >> 8;	    
 	}
 
 	if ($exitcode) {
@@ -648,7 +648,7 @@ sub rebuild {
 		rmdir $arcdir.'/.mhonarc.lck';
 		
 		$exitcode = system($cmd);
-		$exitcode = $exitcode / 256;	    
+		$exitcode = $exitcode >> 8;
 	    }
 	    if ($exitcode) {
 		&Log::do_log('err',"Command $cmd failed with exit code $exitcode");
@@ -905,7 +905,7 @@ sub mail2arc {
 	    rmdir $monthdir.'/.mhonarc.lck';
 	    
 	    $exitcode = system($cmd);
-	    $exitcode = $exitcode / 256;	    
+	    $exitcode = $exitcode >> 8;	    
 	}
 	if ($exitcode) {
 	    &Log::do_log('err',"Command $cmd failed with exit code $exitcode");

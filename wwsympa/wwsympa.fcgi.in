@@ -51,9 +51,9 @@ use Data::Dumper;
 
 ## Sympa API
 use List;
-#use mail;
-#use Conf;
-#use confdef;
+#use mail; # used by List
+#use Conf; # used in List - Robot - Site
+#use confdef; # used by Conf
 use Commands;
 use Language qw(gettext gettext_strftime);
 #use Log; # used by Conf
@@ -72,6 +72,7 @@ use cookielib;
 #use DateTime;
 use tracking;
 #use Sympaspool; # used in List - Task
+#use SDM; # used by Conf
 
 #use open ':utf8'; ## Default is to consider files utf8 
 
@@ -1046,7 +1047,7 @@ my $pinfo = &List::_apply_defaults();
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
-unless (&Upgrade::data_structure_uptodate()) {
+unless (SDM::data_structure_uptodate()) {
     $maintenance_mode = 1;
     &Log::do_log('err',"Web interface set to maintenance mode ; you should run sympa.pl --upgrade");
 }
@@ -1111,7 +1112,7 @@ my $birthday = time ;
      }
 
      ## If in maintenance mode, check if the data structure is now uptodate
-     if ($maintenance_mode && (&Upgrade::data_structure_uptodate() && ($> eq (getpwnam(Sympa::Constants::USER))[2]))) {
+     if ($maintenance_mode && (SDM::data_structure_uptodate() && ($> eq (getpwnam(Sympa::Constants::USER))[2]))) {
 	 $maintenance_mode = undef;
 	 &Log::do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
      }
