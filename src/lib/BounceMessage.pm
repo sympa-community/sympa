@@ -52,6 +52,76 @@ sub new {
     return $self;
 }
 
+sub process {
+    my $self = shift;
+    
+    Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$self->get_msg_id,$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
+    
+    Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
+	$self->{'to'}, Site->bounce_email_prefix);
+	    
+    $self->{'to'} =~ s/<//;
+    $self->{'to'} =~ s/>//;
+    if ($self->is_verp_in_use) { #VERP in use
+	$self->analyze_verp_header();
+	if ($self->failed_on_first_try) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
+	    Log::do_log('debug', "VERP for a service message, trying to remove the subscriber");
+	    unless($self->update_list($self->{'listname'},$self->{'robotname'})) {
+		Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
+		return undef;
+	    }
+	    unless ($self->delete_bouncer) {
+		Log::do_log ('notice',"Unable to remove $self->{'who'} from $self->{'listname'} (welcome message bounced but del is closed)");
+		return 0;
+	    }
+	    return 1;
+	}# close VERP + remind or welcome block
+    }# close VERP in use block
+
+    #----------------------------------------------------------------------------------------------------------------------
+    # If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
+    my $tracking_in_use = $self->tracking_is_used;
+    if($self->is_dsn) {
+	unless ($self->process_dsn) {
+	    Log::do_log('err','Delivery status notification processing for bounce %s (key %s) failed. Stopping here.',$self->get_msg_id,$self->{'messagekey'});
+	    return undef;
+	}
+	unless($self->{'dsn_status'} =~ /failed/) { 
+	    return 1;
+	}
+    }
+    #-----------------------------------------------------------------------------------------------------------------------------------
+    # If the MDN notification is correct and the tracking mode is enabled, it will be inserted in the database
+    if($self->is_mdn) {
+	if($self->process_mdn) {
+	    Log::do_log('notice', "MDN Correctly treated...");
+	}else{
+	    Log::do_log('err', "Failed to treat MDN");
+	}
+	return 1;
+    }
+    
+    if($self->is_email_feedback_report) {
+	# this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
+	if($self->process_email_feedback_report) {
+	    Log::do_log ('notice','Feedback Report %s correctly treated. original_rcpt:%s, listname:%s)',$self->{'feedback_type'}, $self->{'original_rcpt'}, $self->{'listname'} );
+	    return 1;
+	}else{
+	    Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$self->{'messagekey'}, $self->{'feedback_type'}, $self->{'original_rcpt'}, $self->{'listname'} );		
+	    return undef;
+	}
+    }
+    # else (not welcome or remind) 
+    if ($self->process_ndn) {
+	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_list_id );
+	return 1;
+    }else{
+	Log::do_log ('err','Could not correctly process bounce from %s to list %s@%s. Ignoring.',$self->{'who'}, $self->{'listname'}, $self->{'robotname'});		
+	return undef;
+    }
+    return 1;
+}
+
 sub analyze_verp_header {
     my $self = shift;
 
