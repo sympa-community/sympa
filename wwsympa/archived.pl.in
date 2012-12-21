@@ -163,8 +163,6 @@ unless (chdir(Site->home)) {
     exit (-1);
 }
 
-my $pinfo = &List::_apply_defaults();
-
 $Language::default_lang = Site->lang || 'en';
 
 &Log::do_log('notice', "archived %s Started", Sympa::Constants::VERSION);

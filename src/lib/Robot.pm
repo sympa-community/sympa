@@ -9,6 +9,7 @@ use strict;
 use warnings;
 use Carp qw(carp croak);
 
+use listdef;
 use Site;
 
 our @ISA = qw(Site);
@@ -460,6 +461,29 @@ In array context, returns array of them.
 =cut
 
 ## Inherited from Site class
+
+=over 4
+
+=item list_params
+
+I<Getter>.
+Returns hashref to list parameter information.
+
+=back
+
+=cut
+
+sub list_params {
+    croak "Can't modify \"list_params\" attribute" if scalar @_ > 1;
+    my $self = shift;
+
+    return $self->{'list_params'} if $self->{'list_params'};
+
+    my $pinfo = tools::dup_var(\%listdef::pinfo);
+    $pinfo->{'lang'}{'format'} = [$self->supported_languages];
+
+    return $self->{'list_params'} = $pinfo;
+}
 
 =over 4
 

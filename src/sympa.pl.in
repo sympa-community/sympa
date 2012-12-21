@@ -228,9 +228,6 @@ unless (defined Robot::get_robots()) {
    
 }
 
-## Apply defaults to %List::pinfo
-&List::_apply_defaults();
-
 &tools::ciphersaber_installed();
 
 if (&tools::cookie_changed(Site->cookie)) {
@@ -1783,7 +1780,7 @@ sub DoMessage{
     ## list msg topic	
     if ($list->is_there_msg_topic()) {
 
-	my $info_msg_topic = $list->load_msg_topic($messageid,$robot);
+	my $info_msg_topic = $list->load_msg_topic($messageid);
 
 	# is msg already tagged ?	
 	if (ref($info_msg_topic) eq "HASH") { 

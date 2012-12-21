@@ -150,10 +150,6 @@ unless (defined Robot::get_robots()) {
     );
 }
 
-## Apply defaults to %List::pinfo
-&List::_apply_defaults();
-
-
 ## Main program
 if (!chdir(Site->home)) {
    &Log::fatal_err("Can't chdir to %s: %m", Site->home);

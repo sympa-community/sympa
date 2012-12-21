@@ -140,8 +140,6 @@ unless (chdir(Site->home)) {
     exit (-1);
 }
 
-my $pinfo = List::_apply_defaults();
-
 Log::do_log('notice', "bounced Started");
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.

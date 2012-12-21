@@ -8,7 +8,7 @@ use strict;
 use tools;
 
 ## List parameters defaults
-my %default = (
+our %default = (
     'occurrence' => '0-1',
     'length'     => 25
 );
@@ -67,7 +67,7 @@ my %alias = (
 ##               that should always be saved in the config file
 ## field_type :  used to select passwords web input type
 ###############################################################
-%::pinfo = (
+our %pinfo = (
 
     ### Global definition page ###
 
@@ -96,7 +96,7 @@ my %alias = (
 	    'email' => {
 		'order'      => 1,
 		'gettext_id' => "email address",
-		'format'     => &tools::get_regexp('email'),
+		'format'     => tools::get_regexp('email'),
 		'occurrence' => '1',
 		'length'     => 30
 	    },
@@ -180,7 +180,7 @@ my %alias = (
 	    'email' => {
 		'order'      => 1,
 		'gettext_id' => "email address",
-		'format'     => &tools::get_regexp('email'),
+		'format'     => tools::get_regexp('email'),
 		'occurrence' => '1',
 		'length'     => 30
 	    },
@@ -255,7 +255,7 @@ my %alias = (
     'host' => {
 	'group'      => 'description',
 	'gettext_id' => "Internet domain",
-	'format'     => &tools::get_regexp('host'),
+	'format'     => tools::get_regexp('host'),
 	'default'    => {'conf' => 'host'},
 	'length'     => 20
     },
@@ -271,7 +271,7 @@ my %alias = (
     'family_name' => {
 	'group'      => 'description',
 	'gettext_id' => 'Family name',
-	'format'     => &tools::get_regexp('family_name'),
+	'format'     => tools::get_regexp('family_name'),
 	'occurrence' => '0-1',
 	'internal'   => 1
     },
@@ -463,7 +463,7 @@ my %alias = (
 	    'other_email' => {
 		'order'      => 2,
 		'gettext_id' => "other email address",
-		'format'     => &tools::get_regexp('email')
+		'format'     => tools::get_regexp('email')
 	    },
 	    'apply' => {
 		'order'      => 3,
@@ -904,8 +904,8 @@ my %alias = (
     'include_list' => {
 	'group'      => 'data_source',
 	'gettext_id' => "List inclusion",
-	'format'     => &tools::get_regexp('listname') . '(\@' .
-	    &tools::get_regexp('host') . ')?',
+	'format'     => tools::get_regexp('listname') . '(\@' .
+	    tools::get_regexp('host') . ')?',
 	'occurrence' => '0-n'
     },
 
@@ -922,7 +922,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 1.5,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('host'),
+		'format'     => tools::get_regexp('host'),
 		'occurrence' => '1'
 	    },
 	    'port' => {
@@ -963,7 +963,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 2,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('multiple_host_with_port'),
+		'format'     => tools::get_regexp('multiple_host_with_port'),
 		'occurrence' => '1'
 	    },
 	    'port' => {
@@ -1044,7 +1044,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 10,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1064,7 +1064,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 2,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('multiple_host_with_port'),
+		'format'     => tools::get_regexp('multiple_host_with_port'),
 		'occurrence' => '1'
 	    },
 	    'port' => {
@@ -1196,7 +1196,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 18,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1222,7 +1222,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 2,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('host'),
+		'format'     => tools::get_regexp('host'),
 		'occurrence' => '1'
 	    },
 	    'db_port' => {
@@ -1262,7 +1262,7 @@ my %alias = (
 	    'sql_query' => {
 		'order'      => 8,
 		'gettext_id' => "SQL query",
-		'format'     => &tools::get_regexp('sql_query'),
+		'format'     => tools::get_regexp('sql_query'),
 		'occurrence' => '1',
 		'length'     => 50
 	    },
@@ -1275,7 +1275,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 10,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1344,7 +1344,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 2,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('multiple_host_with_port'),
+		'format'     => tools::get_regexp('multiple_host_with_port'),
 		'occurrence' => '1'
 	    },
 	    'port' => {
@@ -1431,7 +1431,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 11,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1451,7 +1451,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 1,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('multiple_host_with_port'),
+		'format'     => tools::get_regexp('multiple_host_with_port'),
 		'occurrence' => '1'
 	    },
 	    'port' => {
@@ -1589,7 +1589,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 19,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1615,7 +1615,7 @@ my %alias = (
 	    'host' => {
 		'order'      => 2,
 		'gettext_id' => "remote host",
-		'format'     => &tools::get_regexp('host'),
+		'format'     => tools::get_regexp('host'),
 		'occurrence' => '1'
 	    },
 	    'db_port' => {
@@ -1655,7 +1655,7 @@ my %alias = (
 	    'sql_query' => {
 		'order'      => 8,
 		'gettext_id' => "SQL query",
-		'format'     => &tools::get_regexp('sql_query'),
+		'format'     => tools::get_regexp('sql_query'),
 		'occurrence' => '1',
 		'length'     => 50
 	    },
@@ -1674,7 +1674,7 @@ my %alias = (
 	    'nosync_time_ranges' => {
 		'order'      => 11,
 		'gettext_id' => "Time ranges when inclusion is not allowed",
-		'format'     => &tools::get_regexp('time_ranges'),
+		'format'     => tools::get_regexp('time_ranges'),
 		'occurrence' => '0-1'
 	    }
 	},
@@ -1825,7 +1825,7 @@ my %alias = (
 	    'email' => {
 		'order'      => 1,
 		'gettext_id' => 'who ran the instantiation',
-		'format'     => 'listmaster|' . &tools::get_regexp('email'),
+		'format'     => 'listmaster|' . tools::get_regexp('email'),
 		'occurrence' => '0-1'
 	    },
 	    'date' => {
@@ -1893,7 +1893,7 @@ my %alias = (
 	    'email' => {
 		'order'      => 1,
 		'gettext_id' => "who created the list",
-		'format'     => 'listmaster|' . &tools::get_regexp('email'),
+		'format'     => 'listmaster|' . tools::get_regexp('email'),
 		'occurrence' => '1'
 	    }
 	},
@@ -1909,7 +1909,7 @@ my %alias = (
 		'order'      => 1,
 		'gettext_id' => 'who updated the config',
 		'format'     => '(listmaster|automatic|' .
-		    &tools::get_regexp('email') . ')',
+		    tools::get_regexp('email') . ')',
 		'occurrence' => '0-1',
 		'length'     => 30
 	    },
@@ -1995,120 +1995,120 @@ my %alias = (
     }
 );
 
-## Apply defaults to parameters definition (%::pinfo)
+## Apply defaults to parameters definition (%pinfo)
 sub import {
-    return if exists $default{'order'}; # already loaded
+    return if exists $default{'order'};    # already loaded
 
     ## Parameter order
     foreach my $index (0 .. $#param_order) {
 	if ($param_order[$index] eq '*') {
 	    $default{'order'} = $index;
 	} else {
-	    $::pinfo{$param_order[$index]}{'order'} = $index;
+	    $pinfo{$param_order[$index]}->{'order'} = $index;
 	}
     }
 
     ## Parameters
-    foreach my $p (keys %::pinfo) {
-
+    foreach my $p (keys %pinfo) {
 	## Apply defaults to %pinfo
 	foreach my $d (keys %default) {
-	    unless (defined $::pinfo{$p}{$d}) {
-		$::pinfo{$p}{$d} = $default{$d};
+	    unless (defined $pinfo{$p}->{$d}) {
+		$pinfo{$p}->{$d} = $default{$d};
 	    }
 	}
 
 	## Scenario format
-	if ($::pinfo{$p}{'scenario'}) {
-	    $::pinfo{$p}{'format'}  = &tools::get_regexp('scenario');
-	    $::pinfo{$p}{'default'} = 'default';
+	if ($pinfo{$p}->{'scenario'}) {
+	    $pinfo{$p}->{'format'}  = tools::get_regexp('scenario');
+	    $pinfo{$p}->{'default'} = 'default';
 	}
 
 	## Task format
-	if ($::pinfo{$p}{'task'}) {
-	    $::pinfo{$p}{'format'} = &tools::get_regexp('task');
+	if ($pinfo{$p}->{'task'}) {
+	    $pinfo{$p}->{'format'} = tools::get_regexp('task');
 	}
 
 	## Datasource format
-	if ($::pinfo{$p}{'datasource'}) {
-	    $::pinfo{$p}{'format'} = &tools::get_regexp('datasource');
+	if ($pinfo{$p}->{'datasource'}) {
+	    $pinfo{$p}->{'format'} = tools::get_regexp('datasource');
 	}
 
 	## Enumeration
-	if (ref($::pinfo{$p}{'format'}) eq 'ARRAY') {
-	    $::pinfo{$p}{'file_format'} ||= join '|',
-		@{$::pinfo{$p}{'format'}};
+	if (ref($pinfo{$p}->{'format'}) eq 'ARRAY') {
+	    $pinfo{$p}->{'file_format'} ||= join '|',
+		@{$pinfo{$p}->{'format'}};
 	}
 
 	## Set 'format' as default for 'file_format'
-	$::pinfo{$p}{'file_format'} ||= $::pinfo{$p}{'format'};
+	$pinfo{$p}->{'file_format'} ||= $pinfo{$p}->{'format'};
 
-	if (($::pinfo{$p}{'occurrence'} =~ /n$/) &&
-	    $::pinfo{$p}{'split_char'}) {
-	    my $format = $::pinfo{$p}{'file_format'};
-	    my $char   = $::pinfo{$p}{'split_char'};
-	    $::pinfo{$p}{'file_format'} =
+	if ($pinfo{$p}->{'occurrence'} =~ /n$/ and
+	    $pinfo{$p}->{'split_char'}) {
+	    my $format = $pinfo{$p}->{'file_format'};
+	    my $char   = $pinfo{$p}->{'split_char'};
+	    $pinfo{$p}->{'file_format'} =
 		"($format)*(\\s*$char\\s*($format))*";
 	}
 
 	next
-	    unless ((ref $::pinfo{$p}{'format'} eq 'HASH') &&
-	    (ref $::pinfo{$p}{'file_format'} eq 'HASH'));
+	    unless ref($pinfo{$p}->{'format'}) eq 'HASH' and
+		ref($pinfo{$p}->{'file_format'}) eq 'HASH';
 
 	## Parameter is a Paragraph)
-	foreach my $k (keys %{$::pinfo{$p}{'format'}}) {
+	foreach my $k (keys %{$pinfo{$p}->{'format'}}) {
 	    ## Defaults
 	    foreach my $d (keys %default) {
-		unless (defined $::pinfo{$p}{'format'}{$k}{$d}) {
-		    $::pinfo{$p}{'format'}{$k}{$d} = $default{$d};
+		unless (defined $pinfo{$p}->{'format'}{$k}{$d}) {
+		    $pinfo{$p}->{'format'}{$k}{$d} = $default{$d};
 		}
 	    }
 
 	    ## Scenario format
-	    if (ref($::pinfo{$p}{'format'}{$k}) &&
-		$::pinfo{$p}{'format'}{$k}{'scenario'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} =
-		    &tools::get_regexp('scenario');
-		$::pinfo{$p}{'format'}{$k}{'default'} = 'default'
-		    unless (($p eq 'web_archive') && ($k eq 'access'));
+	    if (ref($pinfo{$p}->{'format'}{$k}) and
+		$pinfo{$p}->{'format'}{$k}{'scenario'}) {
+		$pinfo{$p}->{'format'}{$k}{'format'} =
+		    tools::get_regexp('scenario');
+		$pinfo{$p}->{'format'}{$k}{'default'} = 'default'
+		    unless $p eq 'web_archive' and
+			$k eq 'access';
 	    }
 
 	    ## Task format
-	    if (ref($::pinfo{$p}{'format'}{$k}) &&
-		$::pinfo{$p}{'format'}{$k}{'task'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} =
-		    &tools::get_regexp('task');
+	    if (ref($pinfo{$p}->{'format'}{$k}) and
+		$pinfo{$p}->{'format'}{$k}{'task'}) {
+		$pinfo{$p}->{'format'}{$k}{'format'} =
+		    tools::get_regexp('task');
 	    }
 
 	    ## Datasource format
-	    if (ref($::pinfo{$p}{'format'}{$k}) &&
-		$::pinfo{$p}{'format'}{$k}{'datasource'}) {
-		$::pinfo{$p}{'format'}{$k}{'format'} =
-		    &tools::get_regexp('datasource');
+	    if (ref($pinfo{$p}->{'format'}{$k}) and
+		$pinfo{$p}->{'format'}{$k}{'datasource'}) {
+		$pinfo{$p}->{'format'}{$k}{'format'} =
+		    tools::get_regexp('datasource');
 	    }
 
 	    ## Enumeration
-	    if (ref($::pinfo{$p}{'format'}{$k}{'format'}) eq 'ARRAY') {
-		$::pinfo{$p}{'file_format'}{$k}{'file_format'} ||= join '|',
-		    @{$::pinfo{$p}{'format'}{$k}{'format'}};
+	    if (ref($pinfo{$p}->{'format'}{$k}{'format'}) eq 'ARRAY') {
+		$pinfo{$p}->{'file_format'}{$k}{'file_format'} ||= join '|',
+		    @{$pinfo{$p}->{'format'}{$k}{'format'}};
 	    }
 
-	    if (($::pinfo{$p}{'file_format'}{$k}{'occurrence'} =~ /n$/) &&
-		$::pinfo{$p}{'file_format'}{$k}{'split_char'}) {
-		my $format = $::pinfo{$p}{'file_format'}{$k}{'file_format'};
-		my $char   = $::pinfo{$p}{'file_format'}{$k}{'split_char'};
-		$::pinfo{$p}{'file_format'}{$k}{'file_format'} =
+	    if ($pinfo{$p}->{'file_format'}{$k}{'occurrence'} =~ /n$/ and
+		$pinfo{$p}->{'file_format'}{$k}{'split_char'}) {
+		my $format = $pinfo{$p}->{'file_format'}{$k}{'file_format'};
+		my $char   = $pinfo{$p}->{'file_format'}{$k}{'split_char'};
+		$pinfo{$p}->{'file_format'}{$k}{'file_format'} =
 		    "($format)*(\\s*$char\\s*($format))*";
 	    }
 
 	}
 
-	next unless (ref $::pinfo{$p}{'file_format'} eq 'HASH');
+	next unless ref($pinfo{$p}->{'file_format'}) eq 'HASH';
 
-	foreach my $k (keys %{$::pinfo{$p}{'file_format'}}) {
+	foreach my $k (keys %{$pinfo{$p}->{'file_format'}}) {
 	    ## Set 'format' as default for 'file_format'
-	    $::pinfo{$p}{'file_format'}{$k}{'file_format'} ||=
-		$::pinfo{$p}{'file_format'}{$k}{'format'};
+	    $pinfo{$p}->{'file_format'}{$k}{'file_format'} ||=
+		$pinfo{$p}->{'file_format'}{$k}{'format'};
 	}
     }
 }

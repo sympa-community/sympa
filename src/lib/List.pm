@@ -65,7 +65,7 @@ use Message;
 use Family; #FIXME: dependency loop between List and Family
 use PlainDigest;
 
-use listdef;
+#use listdef; used in Robot
 
 our @ISA    = qw(Site_r);           # not fully inherit Robot
 
@@ -919,6 +919,7 @@ sub save_config {
 
     return undef unless $self;
 
+    my $robot = $self->robot;
     my $config_file_name = $self->dir . '/config';
 
     ## Lock file
@@ -944,12 +945,9 @@ sub save_config {
 	'date'       => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime time),
     });
 
-    unless (
-	&_save_list_config_file(
-	    $config_file_name, $old_config_file_name, $self->admin
-	)
-	) {
-	&Log::do_log('info', 'unable to save config file %s',
+    unless (_save_list_config_file($robot,
+	$config_file_name, $old_config_file_name, $self->admin)) {
+	Log::do_log('info', 'unable to save config file %s',
 	    $config_file_name);
 	$lock->unlock();
 	return undef;
@@ -1038,8 +1036,7 @@ sub load {
 	&Log::do_log('debug3', 'got config for %s from serialized data',
 	    $self);
     } elsif ($options->{'reload_config'} or $time_config > $m1) {
-	$admin =
-	    &_load_list_config_file($self->{'dir'}, $robot->domain, 'config');
+	$admin = _load_list_config_file($robot, $self->{'dir'}, 'config');
 	unless (defined $admin) {
 	    $self->set_status_error_config('load_admin_file_error');
 	    $self->list_cache_purge;
@@ -1365,39 +1362,6 @@ sub _save_config_changes_file {
     return 1;
 }
 
-sub _get_param_value_anywhere {
-    Log::do_log('debug3', '(%s, %s)', @_);
-    my $new_admin = shift;
-    my $param     = shift;
-    my $minor_p;
-    my @values;
-
-   if ($param =~ /^([\w-]+)\.([\w-]+)$/) {
-	$param = $1;
-	$minor_p = $2;
-    }
-
-    ## Multiple parameter (owner, custom_header, ...)
-    if ((ref($new_admin->{$param}) eq 'ARRAY') &&
-	!($::pinfo{$param}{'split_char'})) {
-	foreach my $elt (@{$new_admin->{$param}}) {
-	    my $val = &List::_get_single_param_value($elt, $param, $minor_p);
-	    if (defined $val) {
-		push @values, $val;
-	    }
-	}
-
-    } else {
-	my $val =
-	    &List::_get_single_param_value($new_admin->{$param}, $param,
-	    $minor_p);
-	if (defined $val) {
-	    push @values, $val;
-	}
-    }
-    return \@values;
-}
-
 ## Returns the list parameter value from $list
 #  the parameter is simple ($param) or composed ($param & $minor_param)
 #  the value is a scalar or a ref on an array of scalar
@@ -1406,6 +1370,8 @@ sub get_param_value {
     Log::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
     my $param = shift;
+    my $as_arrayref = shift || 0;
+    my $pinfo = $self->robot->list_params;
     my $minor_param;
     my $value;
 
@@ -1415,17 +1381,21 @@ sub get_param_value {
     }
 
     ## Multiple parameter (owner, custom_header, ...)
-    if ((ref($self->$param) eq 'ARRAY') &&
-	!$::pinfo{$param}{'split_char'}) {
+    if (ref($self->$param) eq 'ARRAY' and !$pinfo->{$param}{'split_char'}) {
 	my @values;
 	foreach my $elt (@{$self->$param}) {
-	    push @values,
-		&_get_single_param_value($elt, $param, $minor_param);
+	    my $val = _get_single_param_value($pinfo, $elt,
+		$param, $minor_param);
+	    push @values, $val if defined $val;
 	}
 	$value = \@values;
     } else {
-	$value = &_get_single_param_value($self->$param,
+	$value = _get_single_param_value($pinfo, $self->$param,
 	    $param, $minor_param);
+	if ($as_arrayref) {
+	    return [$value] if defined $value;
+	    return [];
+	}
     }
     return $value;
 }
@@ -1434,28 +1404,26 @@ sub get_param_value {
 #  $k is optionnal
 #  the single value can be a ref on a list when the parameter value is a list
 sub _get_single_param_value {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
-    my ($p, $key, $k) = @_;
+    my $pinfo = shift;
+    my $p = shift;
+    my $key = shift;
+    my $k = shift;
 
-    if (defined($::pinfo{$key}{'scenario'}) ||
-	defined($::pinfo{$key}{'task'})) {
+    if (defined($pinfo->{$key}{'scenario'}) or
+	defined($pinfo->{$key}{'task'})) {
 	return $p->{'name'};
-
-    } elsif (ref($::pinfo{$key}{'file_format'})) {
-
-	if (defined($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
+    } elsif (ref($pinfo->{$key}{'file_format'})) {
+	if (defined $pinfo->{$key}{'file_format'}{$k}{'scenario'}) {
 	    return $p->{$k}{'name'};
-
-	} elsif (($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/) &&
-	    $::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
+	} elsif ($pinfo->{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/ and
+	    $pinfo->{$key}{'file_format'}{$k}{'split_char'}) {
 	    return $p->{$k}; # ref on an array
 	} else {
 	    return $p->{$k};
 	}
-
     } else {
-	if (($::pinfo{$key}{'occurrence'} =~ /n$/) &&
-	    $::pinfo{$key}{'split_char'}) {
+	if ($pinfo->{$key}{'occurrence'} =~ /n$/ and
+	    $pinfo->{$key}{'split_char'}) {
 	    return $p; # ref on an array
 	} elsif ($key eq 'digest') {
 	    return $p->{'days'};    # ref on an array
@@ -1512,7 +1480,6 @@ sub distribute_msg {
 
     my $hdr = $message->{'msg'}->head;
     my ($name, $host) = ($self->name, $self->host);
-    my $robot = $self->domain;
 
     ## Update the stats, and returns the new X-Sequence, if any.
     my $sequence = $self->update_stats($message->{'size'});
@@ -1522,7 +1489,7 @@ sub distribute_msg {
     if ($self->is_there_msg_topic()) {
 	my $msg_id = $hdr->get('Message-ID');
 	chomp($msg_id);
-	$info_msg_topic = $self->load_msg_topic($msg_id, $robot);
+	$info_msg_topic = $self->load_msg_topic($msg_id);
 
 	# add X-Sympa-Topic header
 	if (ref($info_msg_topic) eq "HASH") {
@@ -1543,8 +1510,7 @@ sub distribute_msg {
 	if ($info_msg_topic) {
 	    my $topicspool = new Sympaspool('topic');
 	    $topicspool->update(
-		{'list' => $self->name, 'robot' => $robot},
-		'messagekey' => $info_msg_topic->{'messagekey'},
+		{'messagekey' => $info_msg_topic->{'messagekey'}},
 		{'messageid' => $new_id}
 	    );
 	}
@@ -1716,7 +1682,7 @@ sub distribute_msg {
     $self->add_list_header($hdr, 'id');
 
     ## Add RFC 2369 header fields
-    foreach my $field (@{$::pinfo{'rfc2369_header_fields'}->{'format'}}) {
+    foreach my $field (@{$self->robot->list_params->{'rfc2369_header_fields'}->{'format'}}) {
 	if (scalar grep { $_ eq $field } @{$self->rfc2369_header_fields}) {
 	    $self->add_list_header($hdr, $field);
 	    }
@@ -5810,27 +5776,27 @@ sub get_scenario {
     my @op = split /\./, $op;
 
     my $scenario_path;
+    my $pinfo = $self->robot->list_params;
 
     if (scalar @op > 1) {
 	## Structured parameter
 	$op = $op[0];
 	return undef
-	    unless $::pinfo{$op} and
-	    ref $::pinfo{$op}->{'format'} eq 'HASH' and
-	    $::pinfo{$op}->{'format'}->{$op[1]} and
-	    $::pinfo{$op}->{'format'}->{$op[1]}->{'scenario'};
+	    unless $pinfo->{$op} and
+	    ref $pinfo->{$op}->{'format'} eq 'HASH' and
+	    $pinfo->{$op}->{'format'}->{$op[1]} and
+	    $pinfo->{$op}->{'format'}->{$op[1]}->{'scenario'};
 	$scenario_path = $self->$op->{$op[1]}->{'file_path'};
     } else {
 	## Simple parameter
 	return undef
-	    unless $::pinfo{$op} and
-	    $::pinfo{$op}->{'scenario'};
+	    unless $pinfo->{$op} and $pinfo->{$op}->{'scenario'};
 	$scenario_path = $self->$op->{'file_path'};
     }
     return undef unless $scenario_path;
 
     ## Create Scenario object
-    return new Scenario ('robot' => $self->robot,
+    return Scenario->new('robot' => $self->robot,
 	'directory' => $self->dir,
 	'file_path' => $scenario_path,
 	'options' => $options);
@@ -7267,6 +7233,7 @@ sub _load_list_admin_from_include {
     my $self = shift;
     my $role = shift;
     my $name = $self->name;
+    my $robot = $self->robot;
 
     my (%admin_users, $depend_on, $ref);
     my $total = 0;
@@ -7308,18 +7275,17 @@ sub _load_list_admin_from_include {
 	    if ($include_path =~ s/$name$//) {
 		$parsing{'include_path'} = $include_path;
 		$include_admin_user =
-		    &_load_include_admin_user_file($self->domain,
-		    $include_path, \%parsing);
+		    _load_include_admin_user_file($robot, $include_path,
+			\%parsing);
 	    } else {
 		&Log::do_log('err',
 		    'errors to get path of the the file %s.incl',
 		    $entry->{'source'});
 		return undef;
 	    }
-
 	} else {
 	    $include_admin_user =
-		&_load_include_admin_user_file($self->domain, $include_file);
+		_load_include_admin_user_file($robot, $include_file);
 	}
 	foreach my $type (
 	    'include_list',              'include_remote_sympa_list',
@@ -7413,10 +7379,12 @@ sub _load_list_admin_from_include {
 
 # Load an include admin user file (xx.incl)
 sub _load_include_admin_user_file {
-    &Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $robot = shift;
+    my $file = shift;
+    my $parsing = shift;
 
-    my ($robot, $file, $parsing) = @_;
-
+    my $pinfo = $robot->list_params;
     my %include;
     my (@paragraphs);
 
@@ -7516,16 +7484,14 @@ sub _load_include_admin_user_file {
 	}
 
 	## Uniqueness
-	if (defined $include{$pname}) {
-	    unless (($::pinfo{$pname}{'occurrence'} eq '0-n') or
-		    ($::pinfo{$pname}{'occurrence'} eq '1-n')) {
-		&Log::do_log('info', 'Multiple parameter "%s" in %s',
-		    $pname, $file);
-	    }
+	if (defined $include{$pname} and
+	    $pinfo->{$pname}{'occurrence'} !~ /n$/) {
+	    Log::do_log('info', 'Multiple parameter "%s" in %s',
+		$pname, $file);
 	}
 
 	## Line or Paragraph
-	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
+	if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
 		&Log::do_log(
@@ -7551,7 +7517,7 @@ sub _load_include_admin_user_file {
 
 		my $key = $1;
 
-		unless (defined $::pinfo{$pname}{'file_format'}{$key}) {
+		unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
 		    &Log::do_log('info',
 			'Unknown key "%s" in paragraph "%s" in %s',
 			$key, $pname, $file);
@@ -7559,7 +7525,7 @@ sub _load_include_admin_user_file {
 		}
 
 		unless ($paragraph[$i] =~
-		    /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+		    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
 		    ) {
 		    chomp($paragraph[$i]);
 		    &Log::do_log('info',
@@ -7569,26 +7535,21 @@ sub _load_include_admin_user_file {
 		}
 
 		$hash{$key} =
-		    &_load_list_param($robot, $key, $1,
-		    $::pinfo{$pname}{'file_format'}{$key});
+		    _load_list_param($robot, $key, $1,
+			$pinfo->{$pname}{'file_format'}{$key});
 	    }
 
 	    ## Apply defaults & Check required keys
 	    my $missing_required_field;
-	    foreach my $k (keys %{$::pinfo{$pname}{'file_format'}}) {
-
+	    foreach my $k (keys %{$pinfo->{$pname}{'file_format'}}) {
 		## Default value
-		unless (defined $hash{$k}) {
-		    if (defined $::pinfo{$pname}{'file_format'}{$k}
-			{'default'}) {
-			$hash{$k} =
-			    &_load_list_param($robot, $k, 'default',
-			    $::pinfo{$pname}{'file_format'}{$k});
-		    }
+		if (! defined $hash{$k} and
+		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
+		    $hash{$k} = _load_list_param($robot, $k, 'default',
+			$pinfo->{$pname}{'file_format'}{$k});
 		}
 		## Required fields
-		if ($::pinfo{$pname}{'file_format'}{$k}{'occurrence'} eq '1')
-		{
+		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
 			&Log::do_log('info',
 			    'Missing key "%s" in param "%s" in %s',
@@ -7601,7 +7562,7 @@ sub _load_include_admin_user_file {
 	    next if $missing_required_field;
 
 	    ## Should we store it in an array
-	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)) {
+	    if (($pinfo->{$pname}{'occurrence'} =~ /n$/)) {
 		push @{$include{$pname}}, \%hash;
 	    } else {
 		$include{$pname} = \%hash;
@@ -7615,7 +7576,7 @@ sub _load_include_admin_user_file {
 	    }
 
 	    unless ($paragraph[0] =~
-		/^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
+		/^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
 		chomp($paragraph[0]);
 		&Log::do_log('info', 'Bad entry "%s" in %s',
 		    $paragraph[0], $file);
@@ -7623,10 +7584,10 @@ sub _load_include_admin_user_file {
 	    }
 
 	    my $value =
-		&_load_list_param($robot, $pname, $1, $::pinfo{$pname});
+		_load_list_param($robot, $pname, $1, $pinfo->{$pname});
 
-	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/) &&
-		!(ref($value) =~ /^ARRAY/)) {
+	    if ($pinfo->{$pname}{'occurrence'} =~ /n$/ and
+		ref $value ne 'ARRAY') {
 		push @{$include{$pname}}, $value;
 	    } else {
 		$include{$pname} = $value;
@@ -9797,62 +9758,48 @@ sub _add_topic {
 
 ## Sort function for writing config files
 sub by_order {
-    ($::pinfo{$main::a}{'order'} <=> $::pinfo{$main::b}{'order'}) ||
-	($main::a cmp $main::b);
+    ($listdef::pinfo{$main::a}{'order'} <=> $listdef::pinfo{$main::b}{'order'})
+    ||
+    ($main::a cmp $main::b);
 }
 
-## Apply defaults to parameters definition (%::pinfo)
-## OBSOLETED: use $robot->list_params().
-sub _apply_defaults {
-    Log::do_log('debug3', '()');
-
-    ## List of available languages
-    ##FIXME: robot level config would be used instead of site-global.
-    $::pinfo{'lang'}{'format'} = [Site->supported_languages];
-
-    return \%::pinfo;
-}
+## Apply defaults to parameters definition (%listdef::pinfo)
+## DEPRECATED: use $robot->list_params().
+##sub _apply_defaults {
 
 ## Save a parameter
 sub _save_list_param {
-    my ($key, $p, $defaults, $fd) = @_;
-    ##&Log::do_log('debug3', '_save_list_param(%s)', $key);
+    ##Log::do_log('debug3', '(%s, %s, %s, %s, <filehandle>)', @_);
+    my ($robot, $key, $p, $defaults, $fd) = @_;
 
     ## Ignore default value
     return 1 if ($defaults == 1);
-
-    #    next if ($defaults == 1);
-
     return 1 unless (defined($p));
 
-    #    next  unless (defined ($p));
+    my $pinfo = $robot->list_params;
 
-    if (defined($::pinfo{$key}{'scenario'}) ||
-	defined($::pinfo{$key}{'task'})) {
+    if (defined $pinfo->{$key}{'scenario'} or
+	defined $pinfo->{$key}{'task'}) {
 	return 1 if ($p->{'name'} eq 'default');
 
 	$fd->print(sprintf "%s %s\n", $key, $p->{'name'});
 	$fd->print("\n");
-
-    } elsif (ref($::pinfo{$key}{'file_format'})) {
+    } elsif (ref($pinfo->{$key}{'file_format'})) {
 	$fd->print(sprintf "%s\n", $key);
 	foreach my $k (keys %{$p}) {
-
-	    if (defined($::pinfo{$key}{'file_format'}{$k}{'scenario'})) {
+	    if (defined $pinfo->{$key}{'file_format'}{$k}{'scenario'}) {
 		## Skip if empty value
 		next if ($p->{$k}{'name'} =~ /^\s*$/);
 
 		$fd->print(sprintf "%s %s\n", $k, $p->{$k}{'name'});
-
-	    } elsif (
-		($::pinfo{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/) &&
-		$::pinfo{$key}{'file_format'}{$k}{'split_char'}) {
-
+	    } elsif ($pinfo->{$key}{'file_format'}{$k}{'occurrence'} =~ /n$/
+		and
+		$pinfo->{$key}{'file_format'}{$k}{'split_char'}) {
 		$fd->print(
 		    sprintf "%s %s\n",
 		    $k,
 		    join(
-			$::pinfo{$key}{'file_format'}{$k}{'split_char'},
+			$pinfo->{$key}{'file_format'}{$k}{'split_char'},
 			@{$p->{$k}}
 		    )
 		);
@@ -9864,12 +9811,11 @@ sub _save_list_param {
 	    }
 	}
 	$fd->print("\n");
-
     } else {
-	if (($::pinfo{$key}{'occurrence'} =~ /n$/) &&
-	    $::pinfo{$key}{'split_char'}) {
+	if ($pinfo->{$key}{'occurrence'} =~ /n$/ and
+	    $pinfo->{$key}{'split_char'}) {
 	    ################" avant de debugger do_edit_list qui crée des nouvelles entrées vides
- 	    my $string = join($::pinfo{$key}{'split_char'}, @{$p});
+ 	    my $string = join($pinfo->{$key}{'split_char'}, @{$p});
  	    $string =~ s/\,\s*$//;
 
  	    $fd->print(sprintf "%s %s\n\n", $key, $string);
@@ -9888,7 +9834,6 @@ sub _save_list_param {
 ## Load a single line
 sub _load_list_param {
     my ($robot, $key, $value, $p, $directory) = @_;
-    ##&Log::do_log('debug3','_load_list_param(%s,\'%s\',\'%s\')', $robot,$key, $value);
 
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -9901,8 +9846,11 @@ sub _load_list_param {
     }
 
     ## Search configuration file
-    if (ref($value) && defined $value->{'conf'}) {
-	$value = &Conf::get_robot_conf($robot, $value->{'conf'});
+    if (ref $value and $value->{'conf'} and
+	grep { $_->{'name'} and $_->{'name'} eq $value->{'conf'} }
+	    @confdef::params) {
+	my $param = $value->{'conf'};
+	$value = $robot->$param;
     }
 
     ## Synonyms
@@ -10011,8 +9959,11 @@ sub get_cert {
 ## Load a config file of a list
 sub _load_list_config_file {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
-    my ($directory, $robot, $file) = @_;
+    my $robot = shift;
+    my $directory = shift;
+    my $file = shift;
 
+    my $pinfo = $robot->list_params;
     my $config_file = $directory . '/' . $file;
 
     my %admin;
@@ -10022,8 +9973,8 @@ sub _load_list_config_file {
     local $/ = "\n";
 
     ## Set defaults to 1
-    foreach my $pname (keys %::pinfo) {
-	$admin{'defaults'}{$pname} = 1 unless ($::pinfo{$pname}{'internal'});
+    foreach my $pname (keys %$pinfo) {
+	$admin{'defaults'}{$pname} = 1 unless $pinfo->{$pname}{'internal'};
     }
 
     ## Lock file
@@ -10096,24 +10047,22 @@ sub _load_list_config_file {
 	    $pname = $listdef::alias{$pname};
 	}
 
-	unless (defined $::pinfo{$pname}) {
+	unless (defined $pinfo->{$pname}) {
 	    &Log::do_log('err', 'Unknown parameter "%s" in %s, ignore it',
 		$pname, $config_file);
 	    next;
 	}
 
 	## Uniqueness
-	if (defined $admin{$pname}) {
-	    unless (($::pinfo{$pname}{'occurrence'} eq '0-n') or
-		    ($::pinfo{$pname}{'occurrence'} eq '1-n')) {
-		&Log::do_log('err',
-		    'Multiple occurences of a unique parameter "%s" in %s',
-		    $pname, $config_file);
-	    }
+	if (defined $admin{$pname} and
+	    $pinfo->{$pname}{'occurrence'} !~ /n$/) {
+	    Log::do_log('err',
+		'Multiple occurences of a unique parameter "%s" in %s',
+		$pname, $config_file);
 	}
 
 	## Line or Paragraph
-	if (ref $::pinfo{$pname}{'file_format'} eq 'HASH') {
+	if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
 		&Log::do_log(
@@ -10139,7 +10088,7 @@ sub _load_list_config_file {
 
 		my $key = $1;
 
-		unless (defined $::pinfo{$pname}{'file_format'}{$key}) {
+		unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
 		    &Log::do_log('err',
 			'Unknown key "%s" in paragraph "%s" in %s',
 			$key, $pname, $config_file);
@@ -10147,7 +10096,7 @@ sub _load_list_config_file {
 		}
 
 		unless ($paragraph[$i] =~
-		    /^\s*$key\s+($::pinfo{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
+		    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
 		    ) {
 		    chomp($paragraph[$i]);
 		    &Log::do_log(
@@ -10162,27 +10111,22 @@ sub _load_list_config_file {
 		}
 
 		$hash{$key} =
-		    &_load_list_param($robot, $key, $1,
-		    $::pinfo{$pname}{'file_format'}{$key}, $directory);
+		    _load_list_param($robot, $key, $1,
+		    $pinfo->{$pname}{'file_format'}{$key}, $directory);
 	    }
 
 	    ## Apply defaults & Check required keys
 	    my $missing_required_field;
-	    foreach my $k (keys %{$::pinfo{$pname}{'file_format'}}) {
-
+	    foreach my $k (keys %{$pinfo->{$pname}{'file_format'}}) {
 		## Default value
-		unless (defined $hash{$k}) {
-		    if (defined $::pinfo{$pname}{'file_format'}{$k}
-			{'default'}) {
-			$hash{$k} =
-			    &_load_list_param($robot, $k, 'default',
-			    $::pinfo{$pname}{'file_format'}{$k}, $directory);
-		    }
+		if (!defined $hash{$k} and
+		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
+		    $hash{$k} = _load_list_param($robot, $k, 'default',
+			$pinfo->{$pname}{'file_format'}{$k}, $directory);
 		}
 
 		## Required fields
-		if ($::pinfo{$pname}{'file_format'}{$k}{'occurrence'} eq '1')
-		{
+		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
 			&Log::do_log('info',
 			    'Missing key "%s" in param "%s" in %s',
@@ -10197,7 +10141,7 @@ sub _load_list_config_file {
 	    delete $admin{'defaults'}{$pname};
 
 	    ## Should we store it in an array
-	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/)) {
+	    if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
 		push @{$admin{$pname}}, \%hash;
 	    } else {
 		$admin{$pname} = \%hash;
@@ -10211,21 +10155,20 @@ sub _load_list_config_file {
 	    }
 
 	    unless ($paragraph[0] =~
-		/^\s*$pname\s+($::pinfo{$pname}{'file_format'})\s*$/i) {
+		/^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
 		chomp($paragraph[0]);
 		&Log::do_log('info', 'Bad entry "%s" in %s',
 		    $paragraph[0], $config_file);
 		next;
 	    }
 
-	    my $value =
-		&_load_list_param($robot, $pname, $1, $::pinfo{$pname},
-		$directory);
+	    my $value = _load_list_param($robot, $pname, $1,
+		$pinfo->{$pname}, $directory);
 
 	    delete $admin{'defaults'}{$pname};
 
-	    if (($::pinfo{$pname}{'occurrence'} =~ /n$/) &&
-		!(ref($value) =~ /^ARRAY/)) {
+	    if ($pinfo->{$pname}{'occurrence'} =~ /n$/ and
+		ref $value ne 'ARRAY') {
 		push @{$admin{$pname}}, $value;
 	    } else {
 		$admin{$pname} = $value;
@@ -10243,46 +10186,39 @@ sub _load_list_config_file {
     }
 
     ## Apply defaults & check required parameters
-    foreach my $p (keys %::pinfo) {
-
+    foreach my $p (keys %$pinfo) {
 	## Defaults
 	unless (defined $admin{$p}) {
-
 	    ## Simple (versus structured) parameter case
-	    if (defined $::pinfo{$p}{'default'}) {
-		$admin{$p} =
-		    &_load_list_param($robot, $p, $::pinfo{$p}{'default'},
-		    $::pinfo{$p}, $directory);
+	    if (defined $pinfo->{$p}{'default'}) {
+		$admin{$p} = _load_list_param($robot, $p,
+		    $pinfo->{$p}{'default'}, $pinfo->{$p}, $directory);
 
 	    ## Sructured parameters case : the default values are defined at the next level
-	    } elsif ((ref $::pinfo{$p}{'format'} eq 'HASH') &&
-		($::pinfo{$p}{'occurrence'} =~ /1$/)) {
+	    } elsif (ref($pinfo->{$p}{'format'}) eq 'HASH' and
+		$pinfo->{$p}{'occurrence'} =~ /1$/) {
 		## If the paragraph is not defined, try to apply defaults
 		my $hash;
 
-		foreach my $key (keys %{$::pinfo{$p}{'format'}}) {
-
+		foreach my $key (keys %{$pinfo->{$p}{'format'}}) {
 		    ## Skip keys without default value.
-		    unless (defined $::pinfo{$p}{'format'}{$key}{'default'}) {
+		    unless (defined $pinfo->{$p}{'format'}{$key}{'default'}) {
 			next;
 		    }
 
-		    $hash->{$key} = &_load_list_param(
-			$robot, $key,
-			$::pinfo{$p}{'format'}{$key}{'default'},
-			$::pinfo{$p}{'format'}{$key}, $directory
-		    );
+		    $hash->{$key} = _load_list_param($robot, $key,
+			$pinfo->{$p}{'format'}{$key}{'default'},
+			$pinfo->{$p}{'format'}{$key}, $directory);
 		}
 
-		$admin{$p} = $hash if (defined $hash);
-
+		$admin{$p} = $hash if defined $hash;
 	    }
 
 	    #	    $admin{'defaults'}{$p} = 1;
 	}
 
 	## Required fields
-	if ($::pinfo{$p}{'occurrence'} =~ /^1(-n)?$/) {
+	if ($pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
 	    unless (defined $admin{$p}) {
 		&Log::do_log('info', 'Missing parameter "%s" in %s',
 		    $p, $config_file);
@@ -10317,14 +10253,12 @@ sub _load_list_config_file {
 
     ## Format changed for reply_to parameter
     ## New reply_to_header parameter
-    if ((   $admin{'forced_reply_to'} &&
-	    !$admin{'defaults'}{'forced_reply_to'}
-	) ||
-	($admin{'reply_to'} && !$admin{'defaults'}{'reply_to'})
-	) {
+    if (($admin{'forced_reply_to'} and
+	!$admin{'defaults'}{'forced_reply_to'}) or
+	($admin{'reply_to'} and !$admin{'defaults'}{'reply_to'})) {
 	my ($value, $apply, $other_email);
 	$value = $admin{'forced_reply_to'} || $admin{'reply_to'};
-	$apply = 'forced' if ($admin{'forced_reply_to'});
+	$apply = 'forced' if $admin{'forced_reply_to'};
 	if ($value =~ /\@/) {
 	    $other_email = $value;
 	    $value = 'other_email';
@@ -10332,7 +10266,7 @@ sub _load_list_config_file {
 
 	$admin{'reply_to_header'} = {
 	    'value'       => $value,
-				     'other_email' => $other_email,
+	    'other_email' => $other_email,
 	    'apply'       => $apply
 	};
 
@@ -10357,8 +10291,8 @@ sub _load_list_config_file {
 #    if ($admin{'status'} ne 'open') {
 #	## requested and closed list are just list hidden using visibility parameter
 #	## and with send parameter set to closed.
-#	$admin{'send'} = &_load_list_param('.','send', 'closed', $::pinfo{'send'}, $directory);
-#	$admin{'visibility'} = &_load_list_param('.','visibility', 'conceal', $::pinfo{'visibility'}, $directory);
+#	$admin{'send'} = _load_list_param('.','send', 'closed', $pinfo->{'send'}, $directory);
+#	$admin{'visibility'} = _load_list_param('.','visibility', 'conceal', $pinfo->{'visibility'}, $directory);
 #    }
 
     ## reception of default_user_options must be one of reception of
@@ -10381,9 +10315,12 @@ sub _load_list_config_file {
 
 ## Save a config file
 sub _save_list_config_file {
-    my ($config_file, $old_config_file, $admin) = @_;
-    &Log::do_log('debug3', '(%s, %s, %s)', $config_file, $old_config_file,
-	$admin);
+    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    my $robot = shift;
+    my $config_file = shift;
+    my $old_config_file = shift;
+    my $admin = shift;
+    my $pinfo = $robot->list_params;
 
     unless (rename $config_file, $old_config_file) {
 	&Log::do_log(
@@ -10411,17 +10348,16 @@ sub _save_list_config_file {
 	next unless (defined $admin->{$key});
 
 	## Multiple parameter (owner, custom_header,...)
-	if ((ref($admin->{$key}) eq 'ARRAY') &&
-	    !$::pinfo{$key}{'split_char'}) {
+	if (ref($admin->{$key}) eq 'ARRAY' and
+	    !$pinfo->{$key}{'split_char'}) {
 	    foreach my $elt (@{$admin->{$key}}) {
-		&_save_list_param($key, $elt, $admin->{'defaults'}{$key},
-		    $fd);
+		_save_list_param($robot, $key, $elt,
+		    $admin->{'defaults'}{$key}, $fd);
 	    }
 	} else {
-	    &_save_list_param($key, $admin->{$key},
+	    _save_list_param($robot, $key, $admin->{$key},
 		$admin->{'defaults'}{$key}, $fd);
 	}
-
     }
     print CONFIG $config;
     close CONFIG;
@@ -10432,20 +10368,20 @@ sub _save_list_config_file {
 # Is a reception mode in the parameter reception of the available_user_options
 # section?
 sub is_available_reception_mode {
-    my ($self, $mode) = @_;
-  $mode =~ y/[A-Z]/[a-z]/;
+    my $self = shift;
+    my $mode = lc(shift || '');
 
-  return undef unless ($self && $mode);
+    return undef unless $self and $mode;
 
     my @available_mode = @{$self->available_user_options->{'reception'}};
 
-  foreach my $m (@available_mode) {
-    if ($m eq $mode) {
-      return $mode;
+    foreach my $m (@available_mode) {
+	if ($m eq $mode) {
+	    return $mode;
+	}
     }
-  }
 
-  return undef;
+    return undef;
 }
 
 # List the parameter reception of the available_user_options section
@@ -10604,7 +10540,7 @@ sub compute_topic {
     ## TAGGING INHERITED BY THREAD
     # getting reply-to
     my $reply_to = $msg->head->get('In-Reply-To');
-    my $info_msg_reply_to = $self->load_msg_topic($reply_to, $robot);
+    my $info_msg_reply_to = $self->load_msg_topic($reply_to);
 
     # is msg reply to already tagged?
     if (ref($info_msg_reply_to) eq "HASH") {
@@ -11644,9 +11580,10 @@ sub remove_aliases {
 # Get max bouncers level
 sub get_max_bouncers_level {
     my $self = shift;
+    my $pinfo = $self->robot->list_params;
 
     my $max_level;
-    for (my $level = 1; $::pinfo{'bouncers_level' . $level}; $level++) {
+    for (my $level = 1; $pinfo->{'bouncers_level' . $level}; $level++) {
 	my $bouncers_level_parameter = 'bouncers_level' . $level;
 	last unless %{$self->$bouncers_level_parameter};
 	$max_level = $level;
@@ -11987,16 +11924,18 @@ sub AUTOLOAD {
     $AUTOLOAD =~ m/^(.*)::(.*)/;
     my $attr = $2;
 
+    croak "Can't locate class method \"$2\" via package \"$1\""
+	unless ref $_[0];
+
     my $p;
-    if (ref $_[0] and
-	grep { $_ eq $attr } qw(name robot dir admin stats as_x509_cert)) {
+    if (grep { $_ eq $attr } qw(name robot dir admin stats as_x509_cert)) {
 	## getter for list attributes.
 	no strict "refs";
 	*{$AUTOLOAD} = sub {
 	    croak "Can't modify \"$attr\" attribute" if scalar @_ > 1;
 	    shift->{$attr};
 	};
-    } elsif (ref $_[0] and $p = $::pinfo{$attr}) {
+    } elsif ($p = $_[0]->{'robot'}->list_params->{$attr}) {
 	my ($defaultconf, $default) = ();
 	if (ref $p->{'default'} eq 'HASH') {
 	    $defaultconf = $p->{'default'}->{'conf'};
@@ -12036,8 +11975,7 @@ sub AUTOLOAD {
 	    }
 	    $ret;
 	};
-    } elsif (ref $_[0] and index($attr, '_') != 0 and
-	defined $_[0]->{$attr}) {
+    } elsif (index($attr, '_') != 0 and defined $_[0]->{$attr}) {
 	## getter for unknwon list attributes.
 	## XXX This code would be removed later.
 	&Log::do_log(

@@ -153,8 +153,6 @@ unless (chdir(Site->home)) {
 
 &TaskSpool::set_spool(); # force initialisation of $taskspool in module Task 
 
-my $pinfo = &List::_apply_defaults();
-
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 my $end = 0;

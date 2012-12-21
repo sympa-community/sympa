@@ -63,8 +63,6 @@ if ($Conf{'db_name'} and $Conf{'db_type'}) {
     }
 }
 
-&List::_apply_defaults();
-
 ## We have a parameter that should be a template to convert
 ## Output is sent to stdout
 if ($#ARGV >=0) {

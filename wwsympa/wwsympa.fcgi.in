@@ -100,7 +100,9 @@ my %options;
 my $loop = 0;
 my $list;
 my $param = {};
-my ($robot_id, $robot);
+my $robot_id;
+my $robot;
+my $pinfo;
 my $ip ; 
 my $rss ;
 my $ajax;
@@ -1042,8 +1044,6 @@ $Language::default_lang = Site->lang;
 ## Important to leave this there because it defined defaults for user_data_source
 &SDM::check_db_connect();
 
-my $pinfo = &List::_apply_defaults();
-
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
 my $maintenance_mode;
@@ -1079,6 +1079,7 @@ my $birthday = time ;
      undef $list;
      undef $robot_id;
      undef $robot;
+     undef $pinfo;
      undef $ip;
      undef $rss;
      undef $ajax;
@@ -1151,6 +1152,7 @@ my $birthday = time ;
 
      ## Create Robot object
      $robot = Robot->new($robot_id);
+     $pinfo = $robot->list_params;
 
      ## Default robot
      if ($robot_id eq Site->host) { #FIXME
@@ -9846,7 +9848,7 @@ sub do_edit_list {
 	## If the list belongs to a family, gather all the constraints for each edited parameter.
 	if (ref($family) eq 'Family') {
 	    
-	    if ((ref($::pinfo{$pname}{'format'}) ne 'HASH') && (!ref($pname))) {
+	    if (!ref $pname and ref($pinfo->{$pname}{'format'}) ne 'HASH') {
 		# simple parameter
 		my $constraint = $family->get_param_constraint($pname);
 		
@@ -10393,15 +10395,15 @@ sub _check_new_values {
     my $pname = shift;
     my $new_admin = shift;
     &wwslog('debug3', '_check_new_values(%s)',$pname);
-    
+
+    my $fake_list =
+	bless { 'robot' => $robot, 'admin' => $new_admin } => 'List';
     my $uncompellable_param = &Family::get_uncompellable_param();
 
-    if (ref($::pinfo{$pname}{'format'}) eq 'HASH') { #composed parameter
-
+    if (ref($pinfo->{$pname}{'format'}) eq 'HASH') { #composed parameter
 	foreach my $key (keys %{$check_family->{$pname}}) {
-		    
 	    my $constraint = $check_family->{$pname}{$key};
-	    my $values = &List::_get_param_value_anywhere($new_admin,"$pname.$key");
+	    my $values = $fake_list->get_param_value("$pname.$key", 1);
 	    my $nb_for = 0;
 	    
 	    # exception for uncompellable param
@@ -10433,8 +10435,7 @@ sub _check_new_values {
 		}
 	    }
 	}
-    } else { #simple parameter
-
+    } elsif (exists $pinfo->{$pname}) { #simple parameter
 	    # exception for uncompellable param
 	    foreach my $p (keys %{$uncompellable_param}) {
 		if ($pname eq $p) {
@@ -10442,11 +10443,9 @@ sub _check_new_values {
 		}
 	    }
 
-
 	my $constraint = $check_family->{$pname};
-	my $values = &List::_get_param_value_anywhere($new_admin,$pname);
+	my $values = $fake_list->get_param_value($pname, 1);
 	my $nb_for = 0;
-
 
 	foreach my $p_val (@{$values}) { #each element value
 	    $nb_for++;
@@ -10466,6 +10465,8 @@ sub _check_new_values {
 		}
 	    }
 	}
+    } else {
+	return undef;
     }
 }
 
@@ -10674,7 +10675,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 =item * I<$name> (STRING), the name of the parameter processed
 
-=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %List::pinfo
+=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %listdef::pinfo
 
 =item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
 
@@ -10733,12 +10734,12 @@ sub _prepare_data {
     my $constraint;
     if ((ref($family) eq 'Family') && ($may_edit eq 'write')) {
 	
- 	if ($main_p && defined $::pinfo{$main_p}) { 
- 	    if (ref($::pinfo{$main_p}{'format'}) eq 'HASH') { # composed parameter
+ 	if ($main_p and defined $pinfo->{$main_p}) { 
+ 	    if (ref($pinfo->{$main_p}{'format'}) eq 'HASH') { # composed parameter
  		$constraint = $family->get_param_constraint("$main_p.$p_glob->{'name'}");
  	    }	
  	} else {       # simple parameter
- 	    if (ref($::pinfo{$p_glob->{'name'}}{'format'}) ne 'HASH') { # simple parameter
+ 	    if (ref($pinfo->{$p_glob->{'name'}}{'format'}) ne 'HASH') { # simple parameter
  		$constraint = $family->get_param_constraint($p_glob->{'name'});
  	    }
  	}
