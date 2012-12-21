@@ -258,7 +258,7 @@ sub delete_bouncer {
 						    {'who' => $self->{'who'},
 						     'by' => 'bounce manager',
 						     'reason' => 'welcome'})) {
-		    &wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $self->{'list'});
+		    wwslog('err', 'Unable to send notify "automatic_del" to %s list owner', $self->{'list'});
 		} 
 	    }
 	}
@@ -447,31 +447,31 @@ sub process_mdn {
     # let's use VERP 
     $self->{'mdn'}{'original_rcpt'} = $self->{'who'};
     
-    &Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $self->{'mdn'}{'status'});
-    &Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $self->{'mdn'}{'original_rcpt'});
-    &Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $self->{'mdn'}{'msg_id'});
-    &Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $self->{'mdn'}{'date'});
+    Log::do_log ('debug2',"FINAL MDN Disposition Detected, value : %s", $self->{'mdn'}{'status'});
+    Log::do_log ('debug2',"FINAL MDN Recipient Detected, value : %s", $self->{'mdn'}{'original_rcpt'});
+    Log::do_log ('debug2',"FINAL MDN Message-Id Detected, value : %s", $self->{'mdn'}{'msg_id'});
+    Log::do_log ('debug2',"FINAL MDN Date Detected, value : %s", $self->{'mdn'}{'date'});
     
     unless ($self->{'distribution_id'}) {
-	&Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
+	Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
 	return undef;
     }
     unless ($self->{'mdn'}{'original_rcpt'}) {
-	&Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
+	Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
 	return undef;
     }
     unless ($self->{'mdn'}{'msg_id'}) {
-	&Log::do_log('err', "error: message_id not found in dsn will ignore");
+	Log::do_log('err', "error: message_id not found in dsn will ignore");
 	return undef;
     }
     unless ($self->{'mdn'}{'status'}) {
-	&Log::do_log('err', "error: dsn status not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
+	Log::do_log('err', "error: dsn status not found in dsn: %s, will ignore",$self->{'mdn'}{'msg_id'});
 	return undef;
     }
     
-    &Log::do_log('debug2', "Save in database...");
-    unless (&tracking::db_insert_notification($self->{'distribution_id'}, 'MDN',$self->{'mdn'}{'status'}, $self->{'mdn'}{'date'},$self->get_mime_message )) {
-	&Log::do_log('err','Not able to fill database with notification data');
+    Log::do_log('debug2', "Save in database...");
+    unless (tracking::db_insert_notification($self->{'distribution_id'}, 'MDN',$self->{'mdn'}{'status'}, $self->{'mdn'}{'date'},$self->get_mime_message )) {
+	Log::do_log('err','Not able to fill database with notification data');
 	return undef;
     }
     return 1
@@ -507,7 +507,7 @@ sub process_email_feedback_report {
 		if ($line =~ /Version\:\s*(.*)/i) {
 		    $self->{'efr'}{'version'} = $1;
 		}
-	    my $email_regexp = &tools::get_regexp('email');
+	    my $email_regexp = tools::get_regexp('email');
 		if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
 		    $self->{'efr'}{'original_rcpt'} = $1;
 		    chomp $self->{'efr'}{'original_rcpt'};
@@ -565,9 +565,9 @@ sub process_email_feedback_report {
 			    Log::do_log('notice', 'Unable to send notify "automatic_del" to %s list owner', $list->name);
 			}
 		    }else{
-			&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$self->{'messagekey'},$list->name,$self->{'robotname'},$self->{'efr'}{'original_rcpt'});
+			Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$self->{'messagekey'},$list->name,$self->{'robotname'},$self->{'efr'}{'original_rcpt'});
 			unless ($list->send_notify_to_owner('warn-signoff',{'who' => $self->{'efr'}{'original_rcpt'}})) {
-			    &Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
+			    Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
 			}
 		    }
 		}else{
@@ -578,7 +578,7 @@ sub process_email_feedback_report {
 		}
 	    }
 	}else{
-	    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$self->{'messagekey'}, $self->{'efr'}{'feedback_type'}, $self->{'listname'} );		
+	    Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$self->{'messagekey'}, $self->{'efr'}{'feedback_type'}, $self->{'listname'} );		
 	    return undef;;
 	}
     }else {
@@ -600,13 +600,13 @@ sub process_ndn {
 	my $bounce_dir = $self->{'list'}->get_bounce_dir();
 	
 	## RFC1891 compliance check
-	my $bounce_count = &rfc1891($self, \%hash, \$from);
+	my $bounce_count = rfc1891($self, \%hash, \$from);
 	
 	unless ($bounce_count) {
 	    ## Analysis of bounced message
-	    &anabounce($self, \%hash, \$from);
+	    anabounce($self, \%hash, \$from);
 	    # Voir pour appeler une methode de parsing des dsn qui maj la bdd
-	    # &updatedatabase(%hash);
+	    # updatedatabase(%hash);
 	}
 	
 	## Bounce directory
@@ -614,7 +614,7 @@ sub process_ndn {
 	    unless (mkdir $bounce_dir, 0777) {
 		Site->send_notify_to_listmaster('bounce_intern_error',
 		    {'error' => "Failed to list create bounce directory $bounce_dir"});
-		&Log::do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
+		Log::do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
 	    exit;
 	    } 
 	}
@@ -629,7 +629,7 @@ sub process_ndn {
 	    $bouncefor ||= $rcpt;
 	
 	    return undef unless store_bounce ($bounce_dir,$self,$bouncefor);
-	    return undef unless update_subscriber_bounce_history($self->{'list'}, $rcpt, $bouncefor, &canonicalize_status ($status));
+	    return undef unless update_subscriber_bounce_history($self->{'list'}, $rcpt, $bouncefor, canonicalize_status ($status));
 	}
 	
 	## No address found in the bounce itself
@@ -639,8 +639,8 @@ sub process_ndn {
 		return undef store_bounce ($bounce_dir,$self,$self->{'who'});
 		return undef update_subscriber_bounce_history($self->{'list'}, 'unknown', $self->{'who'}); # status is undefined 
 	    }else{          # no VERP and no rcpt recognized		
-		my $escaped_from = &tools::escape_chars($from);
-		&Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $self->{'list'});
+		my $escaped_from = tools::escape_chars($from);
+		Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $self->{'list'});
 		return undef;
 	    }
 	}
@@ -655,14 +655,14 @@ sub store_bounce {
     my $bounce= shift;
     my $rcpt=shift;
     
-    &Log::do_log('trace', 'store_bounce(%s,%s,%s)', $bounce, $bounce_dir,$rcpt);
+    Log::do_log('trace', 'store_bounce(%s,%s,%s)', $bounce, $bounce_dir,$rcpt);
 
     my $queue = Site->queuebounce;
 
-    my $filename = &tools::escape_chars($rcpt);    
+    my $filename = tools::escape_chars($rcpt);    
     
     unless (open ARC, ">$bounce_dir/$filename") {
-	&Log::do_log('notice', "Unable to write $bounce_dir/$filename");
+	Log::do_log('notice', "Unable to write $bounce_dir/$filename");
 	return undef;
     }
     print ARC $bounce->get_message_as_string;
@@ -698,7 +698,7 @@ sub update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status = shift;
     
-    &Log::do_log ('trace','&update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
+    Log::do_log ('trace','update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
 
     my $first = my $last = time;
     my $count = 0;
@@ -706,7 +706,7 @@ sub update_subscriber_bounce_history {
     my $user = $list->get_list_member($bouncefor);
     
     unless ($user) {
-	&Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list, $bouncefor); 		    
+	Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list, $bouncefor); 		    
 	return undef;
     }
     
@@ -715,17 +715,17 @@ sub update_subscriber_bounce_history {
     }
     $count++;
     if ($rcpt ne $bouncefor) {
-	&Log::do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
-	&Log::do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
+	Log::do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
+	Log::do_log ('debug','update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status",
 				       'bounce_address' => $rcpt});
-	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce','parameters' => "address=$rcpt",
+	Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce','parameters' => "address=$rcpt",
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
     }else{
 	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status"});
-	&Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list);
-	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce',
+	Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list);
+	Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce',
 		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
 		      'daemon' => 'bounced'});
     }
@@ -860,13 +860,13 @@ sub anabounce {
     # a temporary file is used when introducing database spool. It should be rewrited! It should be rewrited! It should be rewrited! Yes, tt should be rewrited !
     my $tmpfile = Site->tmpdir.'/bounce.'.$$ ;
     unless (open (BOUNCE,"> $tmpfile")){
-&Log::do_log('err',"could not create $tmpfile");
+Log::do_log('err',"could not create $tmpfile");
 	return undef;
     }
     print BOUNCE     $message->{'msg'}->as_string;
     close BOUNCE;
     unless (open (BOUNCE,"$tmpfile")){
-&Log::do_log('err',"could not read $tmpfile");
+Log::do_log('err',"could not read $tmpfile");
 	return undef;
     }
 
@@ -1603,7 +1603,7 @@ sub anabounce {
 
 	}
 
-	$a3 = &corrige($a2, $$from);
+	$a3 = corrige($a2, $$from);
 #        print "CORRECTION : $a2 --> $a3\n" if $a2 ne $a3;
 
         $a3 =~ y/[A-Z]/[a-z]/;
