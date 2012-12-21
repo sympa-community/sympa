@@ -1329,7 +1329,7 @@ sub AUTOLOAD {
 	    ldap ldap_export ldap_number
 	    locale2charset nrcpt_by_domain
 	    robot_by_http_host robot_by_soap_url
-	    use_passwd);
+	    use_passwd queue queueautomatic);
 
     unless (scalar keys %$type) {
 	## getter for unknwon list attributes.
