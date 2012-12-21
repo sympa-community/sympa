@@ -3506,7 +3506,7 @@ sub delete_list_member {
 	## Delete record in SUBSCRIBER
 	unless (
 	    &SDM::do_prepared_query(
-		'DELETE FROM subscriber_table WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?',
+		q{DELETE FROM subscriber_table WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?},
 		$who, $name, $self->domain
 	    )
 	    ) {
@@ -3554,7 +3554,7 @@ sub delete_list_admin {
 	## Delete record in ADMIN
 	unless (
 	    &SDM::do_prepared_query(
-		'DELETE FROM admin_table WHERE user_admin = ? AND list_admin = ? AND robot_admin = ? AND role_admin = ?',
+		q{DELETE FROM admin_table WHERE user_admin = ? AND list_admin = ? AND robot_admin = ? AND role_admin = ?},
 		$who, $name, $self->domain, $role
 	    )
 	    ) {
@@ -3576,7 +3576,7 @@ sub delete_all_list_admin {
     my $total = 0;
 
     ## Delete record in ADMIN
-    unless ($sth = &SDM::do_prepared_query('DELETE FROM admin_table')) {
+    unless ($sth = &SDM::do_prepared_query(q{DELETE FROM admin_table})) {
 	&Log::do_log('err', 'Unable to remove all admin from database');
 	return undef;
     }
@@ -3618,7 +3618,7 @@ sub get_real_total {
     ## Query the Database
     unless (
 	$sth = &SDM::do_prepared_query(
-	    'SELECT count(*) FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ?',
+	    q{SELECT count(*) FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ?},
 	    $self->name,
 	    $self->domain
 	)
@@ -3666,7 +3666,7 @@ sub suspend_subscription {
 
     unless (
 	&SDM::do_prepared_query(
-	    'UPDATE subscriber_table SET suspend_subscriber = 1, suspend_start_date_subscriber = ?, suspend_end_date_subscriber = ? WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?',
+	    q{UPDATE subscriber_table SET suspend_subscriber = 1, suspend_start_date_subscriber = ?, suspend_end_date_subscriber = ? WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?},
 	    $data->{'startdate'}, $data->{'enddate'}, $email,
 	    $self->name,          $self->domain
 	)
@@ -3700,7 +3700,7 @@ sub restore_suspended_subscription {
 
     unless (
 	&SDM::do_prepared_query(
-	    'UPDATE subscriber_table SET suspend_subscriber = 0, suspend_start_date_subscriber = NULL, suspend_end_date_subscriber = NULL WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?',
+	    q{UPDATE subscriber_table SET suspend_subscriber = 0, suspend_start_date_subscriber = NULL, suspend_end_date_subscriber = NULL WHERE user_subscriber = ? AND list_subscriber = ? AND robot_subscriber = ?},
 	    $email, $self->name, $self->domain
 	)
 	) {
@@ -3746,8 +3746,8 @@ sub insert_delete_exclusion {
 	if ($user->{'included'} eq '1') {
 	    ## Insert : list, user and date
 	    unless (
-		&SDM::do_query(
-		    'INSERT INTO exclusion_table (list_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s)',
+		&SDM::do_prepared_query(
+		    q{INSERT INTO exclusion_table (list_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (?,?,?,?)},
 		    &SDM::quote($name),
 		    &SDM::quote($robot),
 		    &SDM::quote($email),
@@ -3776,8 +3776,8 @@ sub insert_delete_exclusion {
 	    if ($email eq $users) {
 		## Delete : list, user and date
 		unless (
-		    $sth = &SDM::do_query(
-			'DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)',
+		    $sth = &SDM::do_prepared_query(
+			q{DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)},
 			&SDM::quote($name),
 			&SDM::quote($robot),
 			&SDM::quote($email)
@@ -3823,8 +3823,8 @@ sub get_exclusion {
 
     if (defined $self->family_name and $self->family_name ne '') {
 	unless (
-	    $sth = &SDM::do_query(
-		"SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE (list_exclusion = %s OR family_exclusion = %s) AND robot_exclusion=%s",
+	    $sth = &SDM::do_prepared_query(
+		q{SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE (list_exclusion = ? OR family_exclusion = ?) AND robot_exclusion=?},
 		&SDM::quote($name),
 		&SDM::quote($self->family_name),
 		&SDM::quote($robot)
@@ -3838,8 +3838,8 @@ sub get_exclusion {
 	}
     } else {
 	unless (
-	    $sth = &SDM::do_query(
-		"SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s AND robot_exclusion=%s",
+	    $sth = &SDM::do_prepared_query(
+		q{SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = ? AND robot_exclusion=?},
 		&SDM::quote($name),
 		&SDM::quote($robot)
 	    )
@@ -4076,13 +4076,11 @@ sub find_list_member_by_pattern_no_object {
     my @ressembling_users;
 
     push @sth_stack, $sth;
-
     unless (
-	$sth = SDM::do_query(
-	    'SELECT %s FROM subscriber_table WHERE user_subscriber LIKE %s AND list_subscriber = %s AND robot_subscriber = %s',
-	    &_list_member_cols,
+	$sth = SDM::do_prepared_query(
+	    sprintf ("SELECT %s FROM subscriber_table WHERE user_subscriber LIKE ? AND list_subscriber = ? AND robot_subscriber = ?",_list_member_cols()),
 	    &SDM::quote($email_pattern),
-    &SDM::quote($name),
+	    &SDM::quote($name),
 	    &SDM::quote($options->domain)
 	)
 	) {
@@ -4190,7 +4188,7 @@ sub get_first_list_member {
     $statement =
 	sprintf
 	'SELECT %s FROM subscriber_table WHERE list_subscriber = %s AND robot_subscriber = %s %s',
-	&_list_member_cols,
+	_list_member_cols(),
 	&SDM::quote($name),
 	&SDM::quote($self->domain),
     $selection;
@@ -4201,7 +4199,7 @@ sub get_first_list_member {
 	$statement =
 	    sprintf
 	    'SELECT %s, %s AS dom FROM subscriber_table WHERE list_subscriber = %s AND robot_subscriber = %s ORDER BY dom',
-	    &_list_member_cols,
+	    _list_member_cols(),
 	    &SDM::get_substring_clause(
 	    {   'source_field'     => 'user_subscriber',
 		'separator'        => '\@',
@@ -4566,12 +4564,10 @@ sub get_first_bouncing_list_member {
     my $name = $self->name;
 
     push @sth_stack, $sth;
-
     unless (
-	$sth = SDM::do_query(
-	    'SELECT %s FROM subscriber_table WHERE list_subscriber = %s AND robot_subscriber = %s AND bounce_subscriber is not NULL',
-	    &_list_member_cols,
-	&SDM::quote($name),
+	$sth = SDM::do_prepared_query(
+	    sprintf ('SELECT %s FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ? AND bounce_subscriber is not NULL',_list_member_cols()),
+	    &SDM::quote($name),
 	    &SDM::quote($self->domain)
 	)
 	) {
@@ -4677,8 +4673,8 @@ sub get_total_bouncing {
 
     ## Query the Database
     unless (
-	$sth = &SDM::do_query(
-	    "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s  AND robot_subscriber = %s AND bounce_subscriber is not NULL)",
+	$sth = &SDM::do_prepared_query(
+	    q{SELECT count(*) FROM subscriber_table WHERE (list_subscriber = ?  AND robot_subscriber = ? AND bounce_subscriber is not NULL)},
 	    &SDM::quote($name),
 	    &SDM::quote($self->domain)
 	)
@@ -4867,7 +4863,7 @@ sub update_list_member {
 			$table,
 			join(',', @set_list),
 			&SDM::quote($who),
-		&SDM::quote($name),
+			&SDM::quote($name),
 			&SDM::quote($self->domain)
 		    )
 		    ) {
@@ -5184,8 +5180,8 @@ sub add_list_member {
 
 	## Update Subscriber Table
 	unless (
-	    &SDM::do_query(
-		"INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber,suspend_subscriber,suspend_start_date_subscriber,suspend_end_date_subscriber) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	    &SDM::do_prepared_query(
+		q{INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber,suspend_subscriber,suspend_start_date_subscriber,suspend_end_date_subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
 		&SDM::quote($who),
 		&SDM::quote($new_user->{'gecos'}),
 		&SDM::quote($name),
@@ -5197,10 +5193,10 @@ sub add_list_member {
 		&SDM::quote($new_user->{'visibility'}),
 		$new_user->{'subscribed'},
 		$new_user->{'included'},
-	&SDM::quote($new_user->{'id'}),
-	&SDM::quote($new_user->{'custom_attribute'}),
-	&SDM::quote($new_user->{'suspend'}),
-	&SDM::quote($new_user->{'startdate'}),
+		&SDM::quote($new_user->{'id'}),
+		&SDM::quote($new_user->{'custom_attribute'}),
+		&SDM::quote($new_user->{'suspend'}),
+		&SDM::quote($new_user->{'startdate'}),
 		&SDM::quote($new_user->{'enddate'})
 	    )
 	    ) {
@@ -5286,8 +5282,8 @@ sub add_list_admin {
 
 	## Update Admin Table
 	unless (
-	    &SDM::do_query(
-		"INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin, visibility_admin, subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	    &SDM::do_prepared_query(
+		q{INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin, visibility_admin, subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
 		&SDM::quote($who),
 		&SDM::quote($new_admin_user->{'gecos'}),
 		&SDM::quote($name),
@@ -9150,12 +9146,12 @@ sub get_lists {
 
 		if ($which_role eq 'member') {
 		    $sth = &SDM::do_prepared_query(
-			'SELECT list_subscriber FROM subscriber_table WHERE robot_subscriber = ? AND user_subscriber = ?',
+			q{SELECT list_subscriber FROM subscriber_table WHERE robot_subscriber = ? AND user_subscriber = ?},
 			$robot->domain, $which_user
 		    );
 		} else {
 		    $sth = &SDM::do_prepared_query(
-			'SELECT list_admin FROM admin_table WHERE robot_admin = ? AND user_admin = ? AND role_admin = ?',
+			q{SELECT list_admin FROM admin_table WHERE robot_admin = ? AND user_admin = ? AND role_admin = ?},
 			$robot->domain, $which_user, $which_role);
 		}
 		unless ($sth) {
@@ -9191,7 +9187,7 @@ sub get_lists {
 
 		unless (
 		    $sth = &SDM::do_prepared_query(
-			'SELECT name_list FROM list_table WHERE robot_list = ?',
+			q{SELECT name_list FROM list_table WHERE robot_list = ?},
 			$robot->domain
 		    )
 		    ) {
@@ -9257,7 +9253,7 @@ sub get_lists {
 			'Clearing orphan list cache on list_table: %s@%s',
 			$name, $robot);
 		    &SDM::do_prepared_query(
-			'DELETE from list_table WHERE name_list = ? AND robot_list = ?',
+			q{DELETE from list_table WHERE name_list = ? AND robot_list = ?},
 			$name, $robot->domain
 		    );
 		}
@@ -9279,7 +9275,7 @@ sub get_lists {
 	    $table = 'list_table, subscriber_table';
 	    $cond =
 		'robot_list = robot_subscriber AND name_list = list_subscriber AND ';
-	    $cols = ', ' . &_list_member_cols;
+	    $cols = ', ' . _list_member_cols();
 	} else {
 	    $table = 'list_table, admin_table';
 	    $cond =
@@ -9368,8 +9364,8 @@ sub get_netidtoemail_db {
     push @sth_stack, $sth;
 
     unless (
-	$sth = &SDM::do_query(
-	    "SELECT email_netidmap FROM netidmap_table WHERE netid_netidmap = %s and serviceid_netidmap = %s and robot_netidmap = %s",
+	$sth = &SDM::do_prepared_query(
+	    q{SELECT email_netidmap FROM netidmap_table WHERE netid_netidmap = ? and serviceid_netidmap = ? and robot_netidmap = ?},
 	    &SDM::quote($netid),
 	    &SDM::quote($idpname),
 	    &SDM::quote($robot)
@@ -9407,8 +9403,8 @@ sub set_netidtoemail_db {
     my ($l, %which);
 
     unless (
-	&SDM::do_query(
-	    "INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (%s, %s, %s, %s)",
+	&SDM::do_prepared_query(
+	    q{INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (?, ?, ?, ?)},
 	    &SDM::quote($netid),
 	    &SDM::quote($idpname),
 	    &SDM::quote($email),
@@ -9442,8 +9438,8 @@ sub update_email_netidmap_db {
     }
 
     unless (
-	&SDM::do_query(
-	    "UPDATE netidmap_table SET email_netidmap = %s WHERE (email_netidmap = %s AND robot_netidmap = %s)",
+	&SDM::do_prepared_query(
+	    q{UPDATE netidmap_table SET email_netidmap = ? WHERE (email_netidmap = ? AND robot_netidmap = ?)},
 	    &SDM::quote($new_email),
 	    &SDM::quote($old_email),
 	    &SDM::quote($robot)
@@ -9594,7 +9590,7 @@ sub sort_dir_to_get_mod {
 ## Get the type of a DB field
 sub get_db_field_type {
     my ($table, $field) = @_;
-
+## TODO: Won't work with anything apart from MySQL. should use SDM framework subs.
     unless ($sth = &SDM::do_query("SHOW FIELDS FROM $table")) {
 	&Log::do_log('err', 'get the list of fields for table %s', $table);
 	return undef;
@@ -9615,7 +9611,7 @@ sub lowercase_field {
 
     my $total = 0;
 
-    unless ($sth = &SDM::do_query("SELECT $field from $table")) {
+    unless ($sth = &SDM::do_prepared_query("SELECT $field from $table")) {
 	&Log::do_log('err', 'Unable to get values of field %s for table %s',
 	    $field, $table);
 	return undef;
@@ -9629,11 +9625,10 @@ sub lowercase_field {
 
 	## Updating Db
 	unless (
-	    $sth = &SDM::do_query(
-		"UPDATE $table SET $field=%s WHERE ($field=%s)",
-		&SDM::quote($lower_cased),
+	    $sth = &SDM::do_prepared_query(
+		sprintf ('UPDATE %s SET %s=? WHERE (%s=?)',$table,$field,$field),
+		&SDM::quote($lower_cased)),
 		&SDM::quote($user->{$field})
-	    )
 	    ) {
 	    &Log::do_log('err',
 		'Unable to set field % from table %s to value %s',
@@ -11941,8 +11936,8 @@ sub get_data {
     my ($data, $robotname, $listname) = @_;
 
     unless (
-	$sth = &SDM::do_query(
-	    "SELECT * FROM stat_counter_table WHERE data_counter = '%s' AND robot_counter = '%s' AND list_counter = '%s'",
+	$sth = &SDM::do_prepared_query(
+	    q{SELECT * FROM stat_counter_table WHERE data_counter = '?' AND robot_counter = '?' AND list_counter = '?'},
 	    $data, $robotname, $listname
 	)
 	) {
@@ -12224,7 +12219,7 @@ sub user {
 	    $sth = &SDM::do_prepared_query(
 		sprintf(
 		    'SELECT %s FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ? AND user_subscriber = ?',
-		    &_list_member_cols()),
+		    _list_member_cols()),
 		$self->name,
 		$self->domain,
 		$who
@@ -12265,7 +12260,7 @@ sub user {
 	    $sth = &SDM::do_prepared_query(
 		sprintf(
 		    'SELECT %s FROM admin_table WHERE user_admin = ? AND list_admin = ? AND robot_admin = ? AND role_admin = ?',
-		    &_list_admin_cols()),
+		    _list_admin_cols()),
 		$who,
 		$self->name,
 		$self->domain,
@@ -12586,7 +12581,7 @@ sub list_cache_purge {
 
     return
 	defined &SDM::do_prepared_query(
-	'DELETE from list_table WHERE name_list = ? AND robot_list = ?',
+	q{DELETE from list_table WHERE name_list = ? AND robot_list = ?},
 	$self->name, $self->domain);
 }
 
