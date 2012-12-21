@@ -36,31 +36,18 @@ use lib '--modulesdir--';
 use strict;
 
 use FileHandle;
-#use Getopt::Std;
 use Getopt::Long;
 use POSIX;
 
 use List;
-#use Conf; # used in List - Site
-#use Log; # used in Conf
-#use mail; # used in List
-
-#use tt2; # used in List
-#use tools; # used in Conf
-#use Sympa::Constants; # used in Conf - confdef
 use tracking;
-
 use BounceMessage;
-#use wwslib; # no longer used
 
-#getopts('dF');
 ## Check options
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F')) {
     &Log::fatal_err("Unknown options.");
 }
-
-# $main::options{'debug2'} = 1 if ($main::options{'debug'});
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
@@ -83,8 +70,8 @@ unless (defined Robot::get_robots()) {
 ##unshift @INC, Site->wws_path;
 
 ## Check databse connectivity
-unless (&SDM::check_db_connect()) {
-    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
+unless (SDM::check_db_connect()) {
+    Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -110,9 +97,9 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
-&tools::write_pid(Site->bounced_pidfile, $$, $options);
+tools::write_pid(Site->bounced_pidfile, $$, $options);
 unless ($options->{'stderr_to_tty'}) {
-    &tools::direct_stderr_to_file(('pid' => $$));
+    tools::direct_stderr_to_file(('pid' => $$));
 }
 
 if ($main::options{'log_level'}) {
@@ -141,7 +128,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -149,13 +136,13 @@ umask(oct(Site->umask));
 
 ## Change to list root
 unless (chdir(Site->home)) {
-    &Log::do_log('info', 'Unable to change directory');
+    Log::do_log('info', 'Unable to change directory');
     exit (-1);
 }
 
-my $pinfo = &List::_apply_defaults();
+my $pinfo = List::_apply_defaults();
 
-&Log::do_log('notice', "bounced Started");
+Log::do_log('notice', "bounced Started");
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -164,13 +151,13 @@ my $end = 0;
 my $spool = new Sympaspool('bounce');
 
 
-&Log::do_log('debug','starting infinite loop');
+Log::do_log('debug','starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     
     sleep Site->sleep;
     
-    &List::init_list_cache();
+    List::init_list_cache();
     # Process grouped notifications
     Site->send_notify_to_listmaster(undef, undef, 1, undef);
 
@@ -185,7 +172,7 @@ while (!$end) {
 	Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$bounce->get_msg_id,$spooled_bounce->{'messagekey'},$spooled_bounce->{'list'},$spooled_bounce->{'robot'});
 	
 	my $list = $bounce->{'list'};
-	&Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
+	Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	    $bounce->{'to'}, Site->bounce_email_prefix);
 		
 	$bounce->{'to'} =~ s/<//;
@@ -195,12 +182,12 @@ while (!$end) {
 	    if ($bounce->failed_on_first_try) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		Log::do_log('debug', "VERP for a service message, trying to remove the subscriber");
 		unless($bounce->update_list($bounce->{'listname'},$bounce->{'robotname'})) {
-		    &Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
+		    Log::do_log('notice','Skipping bounce where messagekey = %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 		    $spool->move_to_bad($bounce->{'messagekey'});
 		    next;
 		}
 		unless ($bounce->delete_bouncer) {
-		    &Log::do_log ('notice',"Unable to remove $bounce->{'who'} from $bounce->{'listname'} (welcome message bounced but del is closed)");
+		    Log::do_log ('notice',"Unable to remove $bounce->{'who'} from $bounce->{'listname'} (welcome message bounced but del is closed)");
 		    $spool->move_to_bad($bounce->{'messagekey'});
 		}
 		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
@@ -210,7 +197,7 @@ while (!$end) {
 
 	my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
 	unless($list) {
-	    &Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
+	    Log::do_log('err','Skipping bounce where messagekey= %s for unknown list %s@%s',$bounce->{'messagekey'},$bounce->{'listname'},$bounce->{'robotname'});
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}
@@ -235,12 +222,12 @@ while (!$end) {
 	# If the MDN notification is correct and the tracking mode is enabled, it will be inserted in the database
 	if($bounce->is_mdn) {
 	    if($bounce->process_mdn) {
-		&Log::do_log('notice', "MDN Correctly treated...");
+		Log::do_log('notice', "MDN Correctly treated...");
 	    }else{
-		&Log::do_log('err', "Failed to treat MDN");
+		Log::do_log('err', "Failed to treat MDN");
 	    }
 	    if( $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})){
-		&Log::do_log('debug2', "MDN Correctly removed...");
+		Log::do_log('debug2', "MDN Correctly removed...");
 	    }
 	    next;
 	}
@@ -267,20 +254,20 @@ while (!$end) {
 	    $spool->move_to_bad($bounce->{'messagekey'});
 	}
 	unless ($spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})) {
-	    &Log::do_log ('err',"Could not remove messafe from spool bounce (messaegkey = %s)",$bounce->{'messagekey'});
+	    Log::do_log ('err',"Could not remove messafe from spool bounce (messaegkey = %s)",$bounce->{'messagekey'});
 	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    last;
 	}
 	## Free zombie sendmail processes
-	#    &mail::reaper;
+	mail::reaper;
     }
 }
 
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
-&Log::do_log('notice', 'bounced exited normally due to signal');
-&tools::remove_pid(Site->bounced_pidfile, $$);
+Log::do_log('notice', 'bounced exited normally due to signal');
+tools::remove_pid(Site->bounced_pidfile, $$);
 
 exit(0);
 
