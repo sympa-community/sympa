@@ -6,8 +6,31 @@ use strict;
 use Message;
 use Log;
 use tracking;
+use Bounce;
 
 our @ISA = qw(Message);
+
+## Equivalents relative to RFC 1893
+our %equiv = ( "user unknown" => '5.1.1',
+	      "receiver not found" => '5.1.1',
+	      "the recipient name is not recognized" => '5.1.1',
+	      "sorry, no mailbox here by that name" => '5.1.1',
+	      "utilisateur non recens\xE9 dans le carnet d'adresses public" => '5.1.1',
+	      "unknown address" => '5.1.1',
+	      "unknown user" => '5.1.1',
+	      "550" => '5.1.1',
+	      "le nom du destinataire n'est pas reconnu" => '5.1.1',
+	      "user not listed in public name & address book" => '5.1.1',
+	      "no such address" => '5.1.1',
+	      "not known at this site." => '5.1.1',
+	      "user not known" => '5.1.1',
+	      
+	      "user is over the quota. you can try again later." => '4.2.2',
+	      "quota exceeded" => '4.2.2',
+	      "write error to mailbox, disk quota exceeded" => '4.2.2',
+	      "user mailbox exceeds allowed size" => '4.2.2',
+	      "insufficient system storage" => '4.2.2',
+	      "User's Disk Quota Exceeded:" => '4.2.2');
 
 ## Creates a new object
 sub new {
@@ -493,6 +516,150 @@ sub process_email_feedback_report {
 	return undef;
     }
     return 1;
+}
+
+sub process_ndn {
+    my $self = shift;
+    
+    if (! $self->{'list'}) {
+	Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
+	return undef;
+    }else{
+	Log::do_log('debug',"Processing bounce messagekey=%s for list $self->{'listname'}",$self->{'messagekey'});      
+	
+	my (%hash, $from);
+	my $bounce_dir = $self->{'list'}->get_bounce_dir();
+	
+	## RFC1891 compliance check
+	my $bounce_count = &rfc1891($self, \%hash, \$from);
+	
+	unless ($bounce_count) {
+	    ## Analysis of bounced message
+	    &anabounce($self, \%hash, \$from);
+	    # Voir pour appeler une methode de parsing des dsn qui maj la bdd
+	    # &updatedatabase(%hash);
+	}
+	
+	## Bounce directory
+	if (! -d $bounce_dir) {
+	    unless (mkdir $bounce_dir, 0777) {
+		Site->send_notify_to_listmaster('bounce_intern_error',
+		    {'error' => "Failed to list create bounce directory $bounce_dir"});
+		&Log::do_log('err', 'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf', $bounce_dir, $!);
+	    exit;
+	    } 
+	}
+	
+	my $adr_count;
+	## Bouncing addresses
+	# Voir si pas mettre un test conditionnel sur le status code pour detecter les dsn positifs et ne pas fausser les statistiques de l'abonné.
+	# Peut être possibilité de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
+	while (my ($rcpt, $status) = each %hash) {
+	    $adr_count++;
+	    my $bouncefor = $self->{'who'};
+	    $bouncefor ||= $rcpt;
+	
+	    return undef unless store_bounce ($bounce_dir,$self,$bouncefor);
+	    return undef unless update_subscriber_bounce_history($self->{'list'}, $rcpt, $bouncefor, &canonicalize_status ($status));
+	}
+	
+	## No address found in the bounce itself
+	unless ($adr_count) {
+	    
+	    if ( $self->{'who'} ) {	# rcpt not recognized in the bounce but VERP was used
+		return undef store_bounce ($bounce_dir,$self,$self->{'who'});
+		return undef update_subscriber_bounce_history($self->{'list'}, 'unknown', $self->{'who'}); # status is undefined 
+	    }else{          # no VERP and no rcpt recognized		
+		my $escaped_from = &tools::escape_chars($from);
+		&Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $self->{'list'});
+		return undef;
+	    }
+	}
+    }
+    return 1;
+}
+
+## copy the bounce to the appropriate filename
+sub store_bounce {
+
+    my $bounce_dir = shift; 
+    my $bounce= shift;
+    my $rcpt=shift;
+    
+    &Log::do_log('trace', 'store_bounce(%s,%s,%s)', $bounce, $bounce_dir,$rcpt);
+
+    my $queue = Site->queuebounce;
+
+    my $filename = &tools::escape_chars($rcpt);    
+    
+    unless (open ARC, ">$bounce_dir/$filename") {
+	&Log::do_log('notice', "Unable to write $bounce_dir/$filename");
+	return undef;
+    }
+    print ARC $bounce->get_message_as_string;
+    close ARC;
+    close BOUNCE; 
+}
+
+
+## Set error message to a status RFC1893 compliant
+sub canonicalize_status {
+
+    my $status =shift;
+    
+    if ($status !~ /^\d+\.\d+\.\d+$/) {
+	if ($equiv{$status}) {
+	    $status = $equiv{$status};
+	}else {
+	    return undef;
+	}
+    }
+    return $status;
+}
+
+
+## update subscriber information
+# $bouncefor : the email address the bounce is related for (may be extracted using verp)
+# $rcpt : the email address recognized in the bounce itself. In most case $rcpt eq $bouncefor
+
+sub update_subscriber_bounce_history {
+
+    my $list = shift;
+    my $rcpt = shift;
+    my $bouncefor = shift;
+    my $status = shift;
+    
+    &Log::do_log ('trace','&update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
+
+    my $first = my $last = time;
+    my $count = 0;
+    
+    my $user = $list->get_list_member($bouncefor);
+    
+    unless ($user) {
+	&Log::do_log ('notice', 'Subscriber not found in list %s : %s', $list, $bouncefor); 		    
+	return undef;
+    }
+    
+    if ($user->{'bounce'} =~ /^(\d+)\s\d+\s+(\d+)/) {
+	($first, $count) = ($1, $2);
+    }
+    $count++;
+    if ($rcpt ne $bouncefor) {
+	&Log::do_log('notice','Bouncing address identified with VERP : %s / %s', $rcpt, $bouncefor);
+	&Log::do_log ('debug','&update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',$bouncefor,$first,$last,$count,$status,$rcpt); 
+	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status",
+				       'bounce_address' => $rcpt});
+	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce','parameters' => "address=$rcpt",
+		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
+		      'daemon' => 'bounced'});
+    }else{
+	$list->update_list_member($bouncefor,{'bounce' => "$first $last $count $status"});
+	&Log::do_log('notice','Received bounce for email address %s, list %s', $bouncefor, $list);
+	&Log::db_log({'robot' => $list->domain, 'list' => $list->name, 'action' => 'get_bounce',
+		      'target_email' => $bouncefor,'msg_id' => '','status' => 'error','error_type' => $status,
+		      'daemon' => 'bounced'});
+    }
 }
 
 1;
