@@ -1127,7 +1127,7 @@ sub process_bouncers {
 	 
 			for ( my $level = $max_level;($level >= 1) ;$level--) {
 				my $bouncers_level_parameter = 'bouncers_level'.$level;
-				if ($user_ref->{'bounce_score'} >= $list->bouncers_level_parameter->{'rate'}){
+				if ($user_ref->{'bounce_score'} >= $list->$bouncers_level_parameter->{'rate'}){
 					push(@{$bouncers[$level]}, $user_ref->{'email'});
 					$level = ($level-$max_level);		   
 				}
@@ -1137,8 +1137,8 @@ sub process_bouncers {
 		## then, calling action foreach level
 		for ( my $level = $max_level;($level >= 1) ;$level--) {
 			my $bouncers_level_parameter = 'bouncers_level'.$level;
-			my $action = $list->bouncers_level_parameter->{'action'};
-			my $notification = $list->bouncers_level_parameter->{'notification'};
+			my $action = $list->$bouncers_level_parameter->{'action'};
+			my $notification = $list->$bouncers_level_parameter->{'notification'};
 		  
 			if (defined $bouncers[$level] && @{$bouncers[$level]}){
 				## calling action subroutine with (list,email list) in parameter 
