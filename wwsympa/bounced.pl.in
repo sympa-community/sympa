@@ -256,7 +256,7 @@ while (!$end) {
 	    }
 	}
 	#-----------------------------------------------------------------------------------------------------------------------------------
-	# If the MDN notification is correct and the tracking mode is enable, it will be inserted in the database
+	# If the MDN notification is correct and the tracking mode is enabled, it will be inserted in the database
 	if($bounce->is_mdn) {
 	    if($bounce->process_mdn) {
 		&Log::do_log('notice', "MDN Correctly treated...");
@@ -269,119 +269,17 @@ while (!$end) {
 	    next;
 	}
 	
-	if(($bounce->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($bounce->get_mime_message->head->get('Content-type') =~ /report\-type\=feedback-report/)) {
+	if($bounce->is_email_feedback_report) {
 	    # this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
-	    &Log::do_log ('notice',"processing  Email Feedback Report");
-	    my @parts = $bounce->get_mime_message->parts();
-	    my $original_rcpt;
-	    my $user_agent;
-	    my $version;
-	    my $feedback_type = '';
-	    foreach my $p (@parts) {
-		my $h = $p->head();
-		my $content = $h->get('Content-type');
-		next if ($content =~ /text\/plain/i);		 
-		if ($content =~ /message\/feedback-report/) {
-		    my @report = split(/\n/, $p->bodyhandle->as_string());
-		    foreach my $line (@report) {
-			$feedback_type = 'abuse' if ($line =~ /Feedback\-Type\:\s*abuse/i);
-			if ($line =~ /Feedback\-Type\:\s*(.*)/i) {
-			    $feedback_type = $1;
-			}
-			
-			if ($line =~ /User\-Agent\:\s*(.*)/i) {
-			    $user_agent = $1;
-			}
-			if ($line =~ /Version\:\s*(.*)/i) {
-			    $version = $1;
-			}
-		    my $email_regexp = &tools::get_regexp('email');
-			if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
-			    $original_rcpt = $1;
-			    chomp $original_rcpt;
-			}
-		    }
-		}elsif ($content =~ /message\/rfc822/) {
-		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : message/rfc822 part");
-		    my @subparts = $p->parts();
-		    foreach my $subp (@subparts) {
-			# &Log::do_log ('notice',"xxx subparts : subps");
-			my $subph =  $subp->head;
-			$bounce->{'listname'} = $subph->get('X-Loop');
-		    }
-		    # &Log::do_log ('notice',"xxx processing  Email Feedback Report : extract listname $bounce->{'listname'}");
-		}
-	    }
-	    my $forward ;
-	    ## RFC compliance remark: We do something if there is an abuse or an unsubscribe request.
-	    ## We don't throw an error if we find another kind of feedback (fraud, miscategorized, not-spam, virus or other)
-	    ## but we don't take action if we meet them yet. This is to be done, if relevant.
-	    if (($feedback_type =~ /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i) && (defined $version) && (defined $user_agent)) {
-		
-		&Log::do_log ('debug',"Email Feedback Report: $bounce->{'listname'} feedback-type: $feedback_type");
-		if (defined $original_rcpt) {
-		    &Log::do_log ('debug',"Recognized user : $original_rcpt list");		
-		    my @lists;
-		    
-		if (( $feedback_type =~ /(opt-out-list|abuse)/i ) && (defined $bounce->{'listname'})) {
-		    $bounce->{'listname'} = lc($bounce->{'listname'});
-		    chomp $bounce->{'listname'} ;
-		    $bounce->{'listname'} =~ /(.*)\@(.*)/;
-		    $bounce->{'listname'} = $1;
-		    $bounce->{'robotname'} = $2;
-		    my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
-		    unless($list) {
-			&Log::do_log('err',
-			    'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
-			    $bounce->{'messagekey'}, $bounce->{'listname'}, $bounce->{'robotname'});
-			$spool->move_to_bad($spooled_bounce->{'messagekey'});
-			next;
-		    }
-		    push @lists, $list;
-		}elsif( $feedback_type =~ /opt-out/ && (defined $original_rcpt)){
-		    @lists = &List::get_which($original_rcpt, $bounce->{'robotname'}, 'member');
-		}else {
-		    &Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $bounce->{'listname'} );		
-		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
-		}
-		    foreach my $list (@lists){
-			my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $original_rcpt});
-			my $action;
-			$action = $result->{'action'} if (ref($result) eq 'HASH');		    
-			if ($action =~ /do_it/i) {
-			    if ($list->is_list_member($original_rcpt)) {
-				my $u = $list->delete_list_member('users' => [$original_rcpt], 'exclude' =>' 1');
-			    
-				&Log::do_log ('notice',"$original_rcpt has been removed from %s because abuse feedback report",$list->name);	
-				unless ($list->send_notify_to_owner('automatic_del',{'who' => $original_rcpt, 'by' => 'listmaster'})) {
-				    &Log::do_log('notice', 'Unable to send notify "automatic_del" to %s list owner', $list);
-				}
-			    }else{
-				&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$bounce->{'messagekey'},$list->name,$bounce->{'robotname'},$original_rcpt);
-				unless ($list->send_notify_to_owner('warn-signoff',{'who' => $original_rcpt})) {
-				    &Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
-				}
-			    }
-			}else{
-			    $forward = 'request';
-			    &Log::do_log('err',
-				'Ignore Feedback Report (bounce where messagekey=%s) for list %s : user %s is not allowed to unsubscribe',
-				$bounce->{'messagekey'}, $list, $original_rcpt);
-			}
-		    }
-		}else{
-		    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $bounce->{'listname'} );		
-		    $spool->move_to_bad($spooled_bounce->{'messagekey'});
-		}
+	    if($bounce->process_email_feedback_report) {
+		Log::do_log ('notice','Feedback Report %s correctly treated. original_rcpt:%s, listname:%s)',$bounce->{'feedback_type'}, $bounce->{'original_rcpt'}, $bounce->{'listname'} );
+		$spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});
 	    }else{
-		&Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $feedback_type, $original_rcpt, $bounce->{'listname'} );		
-		$spool->move_to_bad($spooled_bounce->{'messagekey'});
+		Log::do_log ('err','Ignoring Feedback Report %s : Unknown format (bounce where messagekey=%s), original_rcpt:%s, listname:%s)',$bounce->{'messagekey'}, $bounce->{'feedback_type'}, $bounce->{'original_rcpt'}, $bounce->{'listname'} );		
+		$spool->move_to_bad($bounce->{'messagekey'});
 	    }
-	    $spool->remove_message({'messagekey'=>$bounce->{'messagekey'}});	
 	    next;		
 	}
-    
-	# Fin section feedback report
 	# else (not welcome or remind) 
 	my $list = new List ($bounce->{'listname'}, $bounce->{'robotname'});
 	if (! $list) {

@@ -384,4 +384,115 @@ sub process_mdn {
     }
     return 1
 }
+
+sub is_email_feedback_report {
+    my $self = shift;
+    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=feedback-report/));
+    return 0;
+}
+
+sub process_email_feedback_report {
+    my $self = shift;
+    
+    Log::do_log ('notice',"processing  Email Feedback Report");
+    my @parts = $self->get_mime_message->parts();
+    $self->{'efr'}{'feedback_type'} = '';
+    foreach my $p (@parts) {
+	my $h = $p->head();
+	my $content = $h->get('Content-type');
+	next if ($content =~ /text\/plain/i);		 
+	if ($content =~ /message\/feedback-report/) {
+	    my @report = split(/\n/, $p->bodyhandle->as_string());
+	    foreach my $line (@report) {
+		$self->{'efr'}{'feedback_type'} = 'abuse' if ($line =~ /Feedback\-Type\:\s*abuse/i);
+		if ($line =~ /Feedback\-Type\:\s*(.*)/i) {
+		    $self->{'efr'}{'feedback_type'} = $1;
+		}
+		
+		if ($line =~ /User\-Agent\:\s*(.*)/i) {
+		    $self->{'efr'}{'user_agent'} = $1;
+		}
+		if ($line =~ /Version\:\s*(.*)/i) {
+		    $self->{'efr'}{'version'} = $1;
+		}
+	    my $email_regexp = &tools::get_regexp('email');
+		if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
+		    $self->{'efr'}{'original_rcpt'} = $1;
+		    chomp $self->{'efr'}{'original_rcpt'};
+		}
+	    }
+	}elsif ($content =~ /message\/rfc822/) {
+	    my @subparts = $p->parts();
+	    foreach my $subp (@subparts) {
+		my $subph =  $subp->head;
+		$self->{'listname'} = $subph->get('X-Loop');
+	    }
+	}
+    }
+    my $forward ;
+    ## RFC compliance remark: We do something if there is an abuse or an unsubscribe request.
+    ## We don't throw an error if we find another kind of feedback (fraud, miscategorized, not-spam, virus or other)
+    ## but we don't take action if we meet them yet. This is to be done, if relevant.
+    if (($self->{'efr'}{'feedback_type'} =~ /(abuse|opt-out|opt-out-list|fraud|miscategorized|not-spam|virus|other)/i) && (defined $self->{'efr'}{'version'}) && (defined $self->{'efr'}{'user_agent'})) {
+	
+	Log::do_log ('debug','Email Feedback Report: %s feedback-type: %s',$self->{'listname'},$self->{'efr'}{'feedback_type'});
+	if (defined $self->{'efr'}{'original_rcpt'}) {
+	    Log::do_log ('debug','Recognized user : %s list',$self->{'efr'}{'original_rcpt'});		
+	    my @lists;
+	    
+	    if (( $self->{'efr'}{'feedback_type'} =~ /(opt-out-list|abuse)/i ) && (defined $self->{'listname'})) {
+		$self->{'listname'} = lc($self->{'listname'});
+		chomp $self->{'listname'} ;
+		$self->{'listname'} =~ /(.*)\@(.*)/;
+		$self->{'listname'} = $1;
+		$self->{'robotname'} = $2;
+		my $list = new List ($self->{'listname'}, $self->{'robotname'});
+		unless($list) {
+		    Log::do_log('err',
+			'Skipping Feedback Report (spool bounce, messagekey =%s) for unknown list %s@%s',
+			$self->{'messagekey'}, $self->{'listname'}, $self->{'robotname'});
+		    return undef;
+		}
+		push @lists, $list;
+	    }elsif( $self->{'efr'}{'feedback_type'} =~ /opt-out/ && (defined $self->{'efr'}{'original_rcpt'})){
+		@lists = List::get_which($self->{'efr'}{'original_rcpt'}, $self->{'robotname'}, 'member');
+	    }else {
+		Log::do_log('notice','Ignoring Feedback Report (bounce where messagekey=%s) : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',$self->{'messagekey'}, $self->{'efr'}{'feedback_type'}, $self->{'efr'}{'original_rcpt'}, $self->{'listname'} );		
+		return 0;
+	    }
+	    foreach my $list (@lists){
+		my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $self->{'efr'}{'original_rcpt'}});
+		my $action;
+		$action = $result->{'action'} if (ref($result) eq 'HASH');		    
+		if ($action =~ /do_it/i) {
+		    if ($list->is_list_member($self->{'efr'}{'original_rcpt'})) {
+			my $u = $list->delete_list_member('users' => [$self->{'efr'}{'original_rcpt'}], 'exclude' =>' 1');
+		    
+			Log::do_log ('notice','%s has been removed from %s because abuse feedback report',$self->{'efr'}{'original_rcpt'},$list->name);	
+			unless ($list->send_notify_to_owner('automatic_del',{'who' => $self->{'efr'}{'original_rcpt'}, 'by' => 'listmaster'})) {
+			    Log::do_log('notice', 'Unable to send notify "automatic_del" to %s list owner', $list->name);
+			}
+		    }else{
+			&Log::do_log('err','Ignore Feedback Report (bounce where messagekey =%s) for list %s@%s : user %s not subscribed',$self->{'messagekey'},$list->name,$self->{'robotname'},$self->{'efr'}{'original_rcpt'});
+			unless ($list->send_notify_to_owner('warn-signoff',{'who' => $self->{'efr'}{'original_rcpt'}})) {
+			    &Log::do_log('notice', 'Unable to send notify "warn-signoff" to %s list owner', $list);
+			}
+		    }
+		}else{
+		    $forward = 'request';
+		    Log::do_log('err',
+			'Ignore Feedback Report (bounce where messagekey=%s) for list %s : user %s is not allowed to unsubscribe',
+			$self->{'messagekey'}, $list, $self->{'efr'}{'original_rcpt'});
+		}
+	    }
+	}else{
+	    &Log::do_log ('err','Ignoring Feedback Report (bounce where messagekey=%s) : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',$self->{'messagekey'}, $self->{'efr'}{'feedback_type'}, $self->{'listname'} );		
+	    return undef;;
+	}
+    }else {
+	return undef;
+    }
+    return 1;
+}
+
 1;
