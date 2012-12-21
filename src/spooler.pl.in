@@ -194,7 +194,7 @@ if ($signal ne 'hup') {
 	    &Log::do_log('debug','Using spool %s only',$main::options{'queue'});
 	    $distinct_spools{$main::options{'queue'}}= 1;
 	}else{
-	    foreach my $possible_spool ('queue', 'bouncequeue', 'queueautomatic'){
+	    foreach my $possible_spool ('queue', 'queueautomatic'){
 		&Log::do_log('debug','Checking usage of spool %s',$possible_spool);
 		if (Site->$possible_spool) {
 		    &Log::do_log('debug','Spool %s is used and the dir is "%s"',$possible_spool, Site->$possible_spool);
