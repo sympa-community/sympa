@@ -622,7 +622,7 @@ sub purge_session_table {
     &Log::do_log('info','task_manager::purge_session_table()');
     require SympaSession;
 
-    my $removed = &SympaSession::purge_old_sessions('*');
+    my $removed = SympaSession::purge_old_sessions('Site');
     unless(defined $removed) {
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to remove old sessions'});
 		return undef;
@@ -638,7 +638,6 @@ sub purge_tables {
 
     my $removed;
 
-    require SympaSession;
     require tracking;
 
     $removed = Bulk::purge_bulkspool();
@@ -666,7 +665,7 @@ sub purge_one_time_ticket_table {
     &Log::do_log('info','task_manager::purge_one_time_ticket_table()');
     require SympaSession;
 
-    my $removed = &SympaSession::purge_old_tickets('*');
+    my $removed = SympaSession::purge_old_tickets('Site');
     unless(defined $removed) {
 		$self->error ({'task' => $task, 'type' => 'execution', 'message' => 'Failed to remove old tickets'});
 		return undef;
