@@ -1273,14 +1273,17 @@ my $birthday = time ;
 					  'action'=>$in{'action'},
 					  'rss'=>$rss, 'ajax' => $ajax});
 
-     undef $ENV{'HTTP_COOKIE'}; # Getting rid of the environment variable to make sure it won't be affected to another anonymous session.
+    # Getting rid of the environment variable to make sure it won't be
+    # affected to another anonymous session.
+    undef $ENV{'HTTP_COOKIE'};
      unless (defined $session) {
 	$robot->send_notify_to_listmaster('failed_to_create_web_session');
 	&wwslog('info','Failed to create session');
 	$session = SympaSession->new($robot);
      }
      
-     # Retreive oauth_token from session if it exists and if we have a (newly) identified user
+    # Retreive oauth_token from session if it exists and if we have a (newly)
+    # identified user
      if(defined($session->{'oauth_token'}) && $session->{'oauth_token'} ne '' && $session->{'email'} ne 'nobody') {
 		 $in{'oauth_token'} = $session->{'oauth_token'};
 		 delete $session->{'oauth_token'};
@@ -1588,31 +1591,32 @@ my $birthday = time ;
      $session->{'oauth_token'} = $in{'oauth_token'} if(defined($in{'oauth_token'}) && $in{'oauth_token'} ne '' && $session->{'email'} eq 'nobody');
 
      ## store in session table this session contexte
-     $session->store();
-
+    my $session_stored = $session->store();
      ## Do not manage cookies at this level if content was already sent
-     unless ($param->{'bypass'} eq 'extreme' || 
-	     $param->{'action'} eq 'css' || 
-	     $maintenance_mode ||
-	     $rss||$ajax) {
+    if ($session_stored and
+	! ($param->{'bypass'} eq 'extreme' or $param->{'action'} eq 'css' or
+	$maintenance_mode or $rss or $ajax)) {
 
 	 my $delay = $param->{'user'}{'cookie_delay'};
 	 unless (defined $delay) {
 	     $delay = Site->cookie_expire;
 	 }
-		 
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
-	 $session->renew() unless($param->{'use_ssl'});
-	 
-	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
-	     &wwslog('notice', 'Could not set HTTP cookie');
-	 }
-	
+
+	##if ($param->{'use_ssl'} || $session->renew()) {
+	if ($session->renew()) {
+	    unless ($session->set_cookie($param->{'cookie_domain'},
+		$delay, $param->{'use_ssl'})) {
+		wwslog('notice', 'Could not set HTTP cookie');
+	    }
+	}
+    }
+
+    if (defined $session_stored) {
 	 ## Set cookies "your_subscribtions" unless in one list page
 	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
-
 	     ## In case get_which was not set
 	     $param->{'get_which'} = [&List::get_which($param->{'user'}{'email'}, $robot, 'member')] unless defined $param->{'get_which'};
 	     $param->{'get_which_owner'} = [&List::get_which($param->{'user'}{'email'}, $robot, 'owner')] unless defined $param->{'get_which_owner'}; 

@@ -29,14 +29,23 @@ sub gettext { shift } # to mark i18n'ed messages.
 ## This defines the parameters to be edited :
 ##   title  : Title for the group of parameters following
 ##   name   : Name of the parameter
-##   default: Default value
-##   file   : Conf file where the param. is defined. If omitted, the parameter won't be added automatically to the config file, even if a default is set.
-##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless and can lead to errors on fresh install.
+##   file   : Conf file where the parameter is defined.  If omitted, the
+##            parameter won't be added automatically to the config file, even
+##            if a default is set.
+##            "wwsympa.conf" is a synonym of "sympa.conf".  It remains there
+##            in order to migrating older versions of config.
+##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless
+##            and can lead to errors on fresh install.
 ##   query  : Description of the parameter
-##   file   : Conf file where the param. is defined
-##   vhost   : 1|0 : if 1, the parameter can have a specific value in a virtual host
-##   db   : 'db_first','file_first','no'
-##   multiple   : 1|0: If 1, the parameter can have mutiple values. Default i 0.
+##   advice : FIXME FIXME
+##   sample : FIXME FIXME
+##   edit   : 1|0: FIXME FIXME
+##   optional: 1|0: FIXME FIXME
+##   vhost  : 1|0 : if 1, the parameter can have a specific value in a
+##            virtual host
+##   db     : 'db_first', 'file_first', 'no'
+##   multiple: 1|0: If 1, the parameter can have mutiple values. Default is 0.
+##   scenario: 1|0: If 1, the parameter is the name of scenario
 
 our @params = (
 
@@ -1429,6 +1438,11 @@ our @params = (
         'query'    => gettext('HTTP cookies validity domain'),
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
+    },
+    {
+        'name'     => 'cookie_refresh',
+        'default'  => '60',
+        'query'    => gettext('Average interval to refresh HTTP coookie.  0 forces refreshing everytime.'),
     },
     {
         'name'     => 'custom_archiver',
