@@ -381,7 +381,7 @@ sub purge_old_tickets {
     $condition .= sprintf '%srobot_one_time_ticket = %s',
 	($condition ? ' AND ' : ''), SDM::quote($robot->name)
         if ref $robot eq 'Robot';
-    $condition = ' WHERE $condition'
+    $condition = " WHERE $condition"
 	if $condition;
 
     unless ($sth = SDM::do_query(
