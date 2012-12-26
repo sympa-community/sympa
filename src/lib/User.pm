@@ -187,7 +187,7 @@ so it is read-only.
 
 our $AUTOLOAD;
 
-sub DESTROY;
+sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
 
 sub AUTOLOAD {
     $AUTOLOAD =~ m/^(.*)::(.*)/;
