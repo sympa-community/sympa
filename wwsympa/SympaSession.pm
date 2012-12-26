@@ -39,6 +39,7 @@ my %session_hard_attributes = ('id_session' => 1,
 			       'robot'  => 1,
 			       'email' => 1, 
 			       'start_date' => 1, 
+			       'refresh_date' => 1,
 			       'hit' => 1,
 			       'new_session' => 1,
 			      );
@@ -219,6 +220,7 @@ sub store {
 }
 
 ## This method will renew the session ID 
+## Returns 1 if renewal occurred and 0 otherwise.  Returns undef on error.
 sub renew {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
@@ -252,7 +254,11 @@ sub renew {
     }
 
     ## Do refresh the cookie when remote address was changed or refresh
-    ## interval is past.
+    ## interval is past.  Conditions also are checked by SQL so that
+    ## simultaneous processes will be prevented renewing cookie.
+    return 0
+	unless $self->{'remote_addr'} != $remote_addr or
+	    $self->{'refresh_date'} <= $refresh_term;
     my $sth = SDM::do_prepared_query(
 	q{UPDATE session_table
 	  SET id_session = ?, refresh_date_session = ?, remote_addr_session = ?
@@ -271,6 +277,8 @@ sub renew {
     }
 
     ## Renew the session ID in order to prevent session hijacking
+    Log::do_log('debug3',
+	'renewed session ID for session %s to %s', $self, $new_id);
     $self->{'id_session'} = $new_id;
     $self->{'refresh_date'} = $time;
     $self->{'remote_addr'} = $remote_addr;
