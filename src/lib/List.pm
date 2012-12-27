@@ -12051,17 +12051,42 @@ Returns Family object or undef.
 
 sub family {
     my $self = shift;
-    $self->{'family'} = shift if scalar @_;
+    if (scalar @_) {
+	my $family = shift;
+	if ($family) {
+	    $self->{'family'} = $family;
+	    $self->{'admin'}{'family_name'} = $family->name;
+	} else {
+	    delete $self->{'family'};
+	    delete $self->{'admin'}{'family_name'};
+	}
+    }
 
     if (ref $self->{'family'} eq 'Family') {
 	return $self->{'family'};
-    } elsif (defined $self->{'family_name'}) {
+    } elsif ($self->{'admin'}{'family_name'}) {
 	return $self->{'family'} =
-	    Family->new($self->{'family_name'}, $self->{'robot'});
+	    Family->new($self->{'admin'}{'family_name'}, $self->{'robot'});
     } else {
        return undef;
     }
 }
+
+=over 4
+
+=item family_name
+
+I<Getter>.
+Gets name of family the list is belonging to, or C<undef>.
+
+=back
+
+=cut
+
+sub family_name {
+    croak "Can't modify \"family_name\" attribute" if scalar @_ > 1;
+    shift->{'admin'}{'family_name'};
+};
 
 =over 4
 

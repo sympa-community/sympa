@@ -551,7 +551,7 @@ sub create_list{
 	'email' => ($param->{'creation_email'} || $robot->get_address('listmaster'))
     });
     $list->status($param->{'status'} || 'open');
-    $list->family_name($family->name);
+    $list->family($family);
 
     my $return = {};
     $return->{'list'} = $list;
@@ -654,7 +654,7 @@ sub update_list{
 	'email' => ($param->{'creation_email'} || $list->robot->get_address('listmaster'))
     });
     $list->status($param->{'status'} || 'open');
-    $list->family_name($family->name);
+    $list->family($family);
 
     ## Synchronize list members if required
     if ($list->has_include_data_sources()) {
@@ -835,7 +835,7 @@ sub rename_list{
 	}
 
 	# clear old list cache on database if any
-	$list->_purge_list_cache;
+	$list->list_cache_purge;
     }
      ## Move stats
     unless (&SDM::do_query("UPDATE stat_table SET list_stat=%s, robot_stat=%s WHERE (list_stat = %s AND robot_stat = %s )", 
