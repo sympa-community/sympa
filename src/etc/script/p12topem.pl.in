@@ -25,7 +25,6 @@
 
 
 use strict;
-
 use lib '--modulesdir--';
 use Getopt::Long;
 
@@ -34,24 +33,21 @@ use Getopt::Long;
 use List;
 #use SDM; # used by Conf
 
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
 ## Load sympa config
-unless (&Conf::load($sympa_conf_file)) {
-    die 'config_error';
-}
+Site->load or die 'config_error';
 
 ## Probe Db if defined
-if ($Conf{'db_name'} and $Conf{'db_type'}) {
+if (Site->db_name and Site->db_type) {
     unless (SDM::probe_db()) {
-	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+	die sprintf 'Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', Site->db_name;
     }
 }
 
-my $openssl = $Conf{'openssl'};
-my $home_sympa = $Conf{'home'};
-my $outpass = $Conf{'key_passwd'};
-my $etc_dir = $Conf{'etc'};
+my $openssl = Site->openssl;
+my $etc_sympa = Site->etc;
+my $home_sympa = Site->home;
+my $outpass = Site->key_passwd;
+my $etc_dir = Site->etc;
 
 ## Check option
 my %options;
@@ -59,35 +55,31 @@ my %options;
 
 $main::options{'foreground'} = 1;
 my $listname = $main::options{'listname'};
-my $robot = $main::options{'robot'};
+my $robot_id = $main::options{'robot'};
 my $p12input = $main::options{'pkcs12'};
 
 
 my ($cert,$privatekey,$inpass,$key);
 
-if (($main::options{'help'} ne '') || 
-    !(-r $main::options{'pkcs12'}) || 
-    (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
-   ){
-    &print_usage(); 
+if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
+    print_usage();
 }else{
-
     if ($listname) {
-	my $self = new List($listname, $robot);
-	$cert = $self->{'dir'}.'/cert.pem';
-	$privatekey = $self->{'dir'}.'/private_key';
-	unless (-d $self->{'dir'}) {
-	    printf "unknown list $listname (directory $self->{'dir'} not found)\n";
+	my $list = List->new($listname);
+	unless ($list) {
+	    printf "unknown list %s\n", $listname;
 	    die;
 	}
-    }elsif($robot) {
-	if (-d $Conf{'etc'}.'/'.$robot) {
-	    $cert = $Conf{'etc'}.'/'.$robot.'/cert.pem';
-	    $privatekey = $Conf{'etc'}.'/'.$robot.'/private_key';
-	}else{
-	    $cert = $Conf{'etc'}.'/cert.pem';
-	    $privatekey = $Conf{'etc'}.'/private_key';	    
+	$cert = $list->dir . '/cert.pem';
+	$privatekey = $list->dir . '/private_key';
+    } elsif ($robot_id) {
+	my $robot = Robot->new($robot_id);
+	unless ($robot) {
+	    printf "unknown robot %s\n", $robot_id;
+	    die;
 	}
+	$cert = $robot->etc . '/cert.pem';
+	$privatekey = $robot->etc . '/private_key';
     }
 
     if (-r "$cert") {
@@ -111,7 +103,7 @@ if (($main::options{'help'} ne '') ||
     system 'stty', 'echo';
     open  PASS, "| $openssl pkcs12 -in $p12input -out $cert -nokeys -clcerts -passin stdin";
     print PASS "$inpass\n";
-    close PASS ;
+    close PASS;
     
     unless ($outpass) {
 	system 'stty', '-echo';
@@ -122,16 +114,14 @@ if (($main::options{'help'} ne '') ||
     }
     open  PASS, "| $openssl pkcs12 -in $p12input -out $privatekey -nocerts -passin stdin -des3 -passout stdin";
     print PASS "$inpass\n$outpass\n";
-    close PASS ;
+    close PASS;
     
     printf "$privatekey and  $cert created.\n";
     exit;
 }
 
-
-
 sub print_usage {
-printf "
+print <<"EOF";
 
 Usage p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname> or
       p12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot>
@@ -148,15 +138,19 @@ For a list certificat, the file will be installed in
 $home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key
 
 For Sympa itself a certificate will be installed in 
-$Conf{'etc'}/<robot>/cert.pem and  $Conf{'etc'}/<robot>/private_key or
-$Conf{'etc'}/cert.pem and Conf{'etc'}/private_key
+$etc_sympa/<robot>/cert.pem and  $etc_sympa/<robot>/private_key or
+$etc_sympa/cert.pem and $etc_sympa/private_key
 
 
 You are then prompted for inpassword (the password used to encrypt the
-pkc#12 file).\n";
-unless ($outpass) {
-printf "Because you did not configure Sympa's password \"key_passwd\"  in
+pkc#12 file).
+EOF
+
+    unless ($outpass) {
+	printf <<"EOF";
+Because you did not configure Sympa's password \"key_passwd\" in
 sympa.conf you will also be prompted for the password used by sympa to access
-to the list private key)\n";
-} 
+to the list private key)
+EOF
+    } 
 }

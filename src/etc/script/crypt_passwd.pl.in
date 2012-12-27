@@ -21,34 +21,36 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+use strict;
 use lib '--modulesdir--';
-use wwslib;
-use Sympa::Constants;
 
 unless (require Crypt::CipherSaber) {
     die "Crypt::CipherSaber not installed ; cannot crypt passwords";
 }
 
-require tools;
-
+#use wwslib; # not used
+#use Sympa::Constants; # used in List - Robot - Site - Conf - confdef
+#require tools; # used by Conf
 use List;
-use SDM;
-use Log;
+#use SDM; # used by conf
+#use Log; # used by conf
 
 ## Load sympa config
-&Conf::load(Sympa::Constants::CONFIG) || die 'config_error';
+Site->load or die 'config_error';
 
-chdir $Conf::Conf{'home'};
+Site->home;
 
-&SDM::db_connect() || die "Can't connect to database";
+SDM::db_connect() or die "Can't connect to database";
 
-my $dbh = &SDM::db_get_handler();
+my $dbh = SDM::db_get_handler();
 
 print "Searching uncrypted passwords\n";
 
-my $sth =  $dbh->prepare("SELECT email_user, password_user FROM user_table WHERE (password_user not like 'crypt.%')") || die "Can't prepare SQL statement";
-
-$sth->execute || die "Unable to execute SQL statement";
+my $sth = SDM::do_query(
+    q{SELECT email_user, password_user
+      FROM user_table
+      WHERE password_user NOT LIKE 'crypt.%'}
+) or die 'Unable to execute SQL statement';
 
 my $user;
 
@@ -59,13 +61,16 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
     printf "\n%s", $user->{'email_user'};
 
-    my $crypted_password = &tools::crypt_password($user->{'password_user'});
+    my $crypted_password = tools::crypt_password($user->{'password_user'});
 
     printf " => %s", $crypted_password;
 
-    my $statement = sprintf "UPDATE user_table SET password_user=%s WHERE (email_user=%s)", $dbh->quote($crypted_password), $dbh->quote($user->{'email_user'});
-    my $sth2 =  $dbh->prepare($statement) || die "Can't prepare SQL statement";
-    $sth2->execute || die "Unable to execute SQL statement";
+    my $sth2 = SDM::do_prepared_query(
+	q{UPDATE user_table
+	  SET password_user = ?
+	  WHERE email_user = ?},
+	$crypted_password, $user->{'email_user'}
+    ) or die "Unable to execute SQL statement";
     $sth2->finish();
 
     $count++;
@@ -74,6 +79,6 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 $sth->finish();
 
 ## Disconnect from Database
-SDM::db_disconnect if ($SDM::dbh);
+SDM::db_disconnect if $dbh;
 
 printf "Crypted %d passwords\n", $count;

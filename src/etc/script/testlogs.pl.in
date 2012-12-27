@@ -1,35 +1,35 @@
 #!--PERL--
 
 use strict;
-
 use lib '--modulesdir--';
 use Getopt::Long;
-use Conf;
-use Log;
 
+#use Conf; # used by Site
+#use Log; # used by Conf
+use Site;
 
 my %options;
 &GetOptions(\%main::options, 'debug|d', 'log_level=s', 'config|f=s');
 
-my $config_file = $main::options{'config'} || '/etc/sympa.conf';
+my $config_file = $main::options{'config'} || Sympa::Constants::CONFIG;
 ## Load configuration file
-unless (Conf::load($config_file)) {
-   &Log::fatal_err("Configuration file $config_file has errors.");
+unless (Site->load('config_file' => $config_file)) {
+   Log::fatal_err('Configuration file %s has errors.', $config_file);
 }
 
 
 ## Open the syslog and say we're read out stuff.
-&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+Log::do_openlog(Site->syslog, Site->log_socket_type, 'sympa');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    do_log('info', "Logs seems OK, log level set using options : $main::options{'log_level'}"); 
+    Log::do_log('info', 'Logs seems OK, log level set using options : %s',
+	$main::options{'log_level'});
 }else{
-    &Log::set_log_level($Conf{'log_level'});
-    do_log('info', "Logs seems OK, default log level $Conf{'log_level'}"); 
+    Log::set_log_level(Site->log_level);
+    Log::do_log('info', 'Logs seems OK, default log level %s',
+	Site->log_level);
 }
-printf "Ok, now check logs \n";
+print "Ok, now check logs \n";
 
 1;
-
-
