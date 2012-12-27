@@ -20,21 +20,27 @@ $ENV{'PATH'} = '';
 ## Load Sympa.conf
 use strict;
 use lib '--modulesdir--';
-use Conf;
-use POSIX;
-require tools;
-require tt2;
-use Sympa::Constants;
-
 use Net::LDAP;
 use Net::LDAPS;
+use POSIX;
 
-unless (Conf::load(Sympa::Constants::CONFIG)) {
-   print gettext("The configuration file contains errors.\n");
-   exit(1);
+#use Conf; # load in Site - Robot
+#use tools; # load in Conf - Robot
+use tt2;
+#use Sympa::Constants; # load in confdef - Conf
+use Robot;
+
+unless (defined Site->load) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );
 }
 
-my $manager_conf_file = $Conf{etc}.'/ldap_alias_manager.conf';
+Log::set_log_level(Site->log_level);
+Log::do_openlog(Site->syslog, Site->log_socket_type, 'alias_manager');
+
+my $manager_conf_file = Site->etc . '/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
@@ -62,6 +68,8 @@ if (grep(/^-s$/, @ARGV)) {
 }
 my ($operation, $listname, $domain, $file) = @ARGV;
 
+my $robot;
+
 if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     printf "\n";
@@ -70,7 +78,12 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     exit(2);
 }
 
-$default_domain = $Conf{'domain'};
+unless ($robot = Robot->new($domain)) {
+    printf STDERR "Unknown robot $domain";
+    exit(16);
+}
+
+$default_domain = Site->domain;
 
 my %data;
 $data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
@@ -79,97 +92,95 @@ $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'ldap_base_dn'} = $ldap_base_dn;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
-my @aliases ;
+$data{'return_path_suffix'} = $robot->return_path_suffix;
 
-my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
-                        $Conf{'etc'},
-                        Sympa::Constants::DEFAULTDIR];
+my @aliases;
+
+my $tt2_include_path = $robot->make_tt2_include_path();
 
 my $aliases_dump;
-&tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
+&tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
 
 @aliases = split /\n/, $aliases_dump;
 
 unless (@aliases) {
-	print STDERR "No aliases defined\n";
-	exit(15);
+    print STDERR "No aliases defined\n";
+    exit(15);
 }
 
 if ($operation eq 'add') {
-
-## Check existing aliases
-if (&already_defined(@aliases)) {
-print STDERR "some alias already exist\n";
-exit(13);
-}
-
-if (!&initialize_ldap) {
-print STDERR "Can't bind to LDAP server\n";
-exit(14);
-}
-
-foreach my $alias (@aliases) {
-    next if ($alias =~ /^\#/);
-    next if ($alias =~ /^\s*$/);
-
-    $alias =~ /^([^:]+):\s*\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
-    my $alias_value = $1;
-    my $command_value = $2;
-    my $maildrop = $3;
-
-    if ($command_value =~ m/bouncequeue/) {
-	$command_value = $bouncequeue_transport;
-    } else{
-	$command_value = $queue_transport;
+    ## Check existing aliases
+    if (&already_defined(@aliases)) {
+	print STDERR "some alias already exist\n";
+	exit(13);
     }
 
-    # We substitute all occurences of + by - for the rest of the attributes, including the dn.
-    # The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
-    $alias_value =~ s/\+/\-/g;
+    if (!&initialize_ldap) {
+	print STDERR "Can't bind to LDAP server\n";
+	exit(14);
+    }
 
-    my $ldif_dump;
-    $data{'list'}{'alias'} = $alias_value;
-    $data{'list'}{'command'} = $command_value;
-    $data{'list'}{'maildrop'} = $maildrop;
-    &tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
-    my @attribute_lines = split /\n/, $ldif_dump;
+    foreach my $alias (@aliases) {
+	next if ($alias =~ /^\#/);
+	next if ($alias =~ /^\s*$/);
 
-    # We create the new LDAP entry.
-    my %ldap_attributes = ();
-    my $entry = Net::LDAP::Entry->new;
-    foreach my $line (@attribute_lines) {
-	next if ($line =~ /^\s*$/);
-	next if ($line =~ /^\s*\#/);
-	$line =~ /^([^:]+):\s*(.+)\s*$/;
-	if ($1 eq 'dn') {
-		$entry->dn($2);
-	} else {
-		push @{$ldap_attributes{$1}}, $2;
+	$alias =~ /^([^:]+):\s*\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
+	my $alias_value = $1;
+	my $command_value = $2;
+	my $maildrop = $3;
+
+	if ($command_value =~ m/bouncequeue/) {
+	    $command_value = $bouncequeue_transport;
+	} else{
+	    $command_value = $queue_transport;
 	}
-    }
+
+	# We substitute all occurences of + by - for the rest of the attributes, including the dn.
+	# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
+	$alias_value =~ s/\+/\-/g;
+
+	my $ldif_dump;
+	$data{'list'}{'alias'} = $alias_value;
+	$data{'list'}{'command'} = $command_value;
+	$data{'list'}{'maildrop'} = $maildrop;
+	&tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
+	my @attribute_lines = split /\n/, $ldif_dump;
+
+	# We create the new LDAP entry.
+	my %ldap_attributes = ();
+	my $entry = Net::LDAP::Entry->new;
+	foreach my $line (@attribute_lines) {
+	    next if $line =~ /^\s*$/;
+	    next if $line =~ /^\s*\#/;
+	    $line =~ /^([^:]+):\s*(.+)\s*$/;
+	    if ($1 eq 'dn') {
+		$entry->dn($2);
+	    } else {
+		push @{$ldap_attributes{$1}}, $2;
+	    }
+	}
 
 	# We add the the attributes
 	foreach my $hash_key (keys %ldap_attributes) {
 	    foreach my $hash_value (@{$ldap_attributes{$hash_key}}) {
-			$entry->add($hash_key, $hash_value);
+		$entry->add($hash_key, $hash_value);
 	    }
 	}
-	
+
 	if ($simulation_mode) {
-		$entry->dump;
+	    $entry->dump;
 	} else {
-		# We finally add the entry
-		my $msg = $ldap_connection->add($entry);
-		if ($msg->is_error()) {
-			print STDERR "Can't add entry for $alias_value\@$domain: ",$msg->error(),"\n";
-			exit(15);
-		}
+	    # We finally add the entry
+	    my $msg = $ldap_connection->add($entry);
+	    if ($msg->is_error()) {
+		print STDERR "Can't add entry for $alias_value\@$domain: ",$msg->error(),"\n";
+		exit(15);
+	    }
 	}
 	$entry = undef;
-} # end foreach aliases
+    } # end foreach aliases
 
-&finalize_ldap;
+    &finalize_ldap;
 
 } # end if add
 elsif ($operation eq 'del') {
@@ -183,7 +194,7 @@ elsif ($operation eq 'del') {
 	if ($alias =~ /^\#/) {
 	    next;
 	}
-	
+
 	$alias =~ /^([^:]+):/; 
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;
@@ -199,7 +210,7 @@ elsif ($operation eq 'del') {
 	} else {
 		$ldap_connection->delete($value);
 	}
-	} # end foreach aliases
+    } # end foreach aliases
 
     &finalize_ldap;
 } # end if del
@@ -224,7 +235,7 @@ sub already_defined {
 	my $source_result = $ldap_connection->search(filter => "(".$ldap_mail_attribute."=".$1."\@".$domain.")",
 						     base => $ldap_base_dn);
 	if ($source_result->count != 0) {
-	    print STRERR "Alias already defined : $1\n";
+	    print STDERR "Alias already defined : $1\n";
 	    &finalize_ldap;
 	    return 1;
 	}
@@ -271,35 +282,28 @@ sub GetLdapParameter {
 
 ## Initialize the LDAP connection
 sub initialize_ldap {
-    
-    
-    if ($ldap_ssl eq '1')
-    {
-    	if ($ldap_cachain)
-    	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'require', sslversion=> 'sslv3',
-        		                  cafile => $ldap_cachain) {
-			print STDERR "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
-			return 0;
-    		}
-    	}
-    	else
-    	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'none', sslversion=> 'sslv3') {
-			print STDERR "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
-			return 0;
-    		}
-    	}
-    }        
-    else 
-    {
-    	unless ($ldap_connection = Net::LDAP->new($ldap_host), version => 3) {
-		print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
+    if ($ldap_ssl eq '1') {
+	if ($ldap_cachain) {
+	    unless ($ldap_connection = Net::LDAPS->new($ldap_host,
+		version => 3, verify => 'require', sslversion => 'sslv3',
+		cafile => $ldap_cachain)) {
+		print STDERR "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
 		return 0;
-    	}
+	    }
+	} else {
+	    unless ($ldap_connection = Net::LDAPS->new($ldap_host,
+		version => 3, verify => 'none', sslversion=> 'sslv3')) {
+		print STDERR "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
+		return 0;
+	    }
+	}
+    } else {
+	unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {
+	    print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
+	    return 0;
+	}
     }
-    
-    
+
     my $msg = $ldap_connection->bind($ldap_bind_dn, password => $ldap_bind_pwd);
     if ($msg->is_error()) {
 	print STDERR "Can't bind to server $ldap_host: ",$msg->error(),"\n";

@@ -10,11 +10,11 @@ $ENV{'PATH'} = '';
 ## Load Sympa.conf
 use strict;
 use lib '--modulesdir--';
-#use Conf; # load in Site - Robot
 use DBI;
 use POSIX;
 
-#require tools; # load in Conf - Robot
+#use Conf; # load in Site - Robot
+#use tools; # load in Conf - Robot
 use tt2;
 #use Sympa::Constants; # load in confdef - Conf
 use Robot;
@@ -65,7 +65,7 @@ $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 $data{'return_path_suffix'} = $robot->return_path_suffix;
 
-my @aliases ;
+my @aliases;
 
 my $tt2_include_path = $robot->make_tt2_include_path();
 
@@ -80,7 +80,6 @@ unless (@aliases) {
 }
 
 if ($operation eq 'add') {
-
     ## Check existing aliases
     if (&already_defined(@aliases)) {
 	print STDERR "some alias already exist\n";
@@ -126,7 +125,7 @@ if ($operation eq 'add') {
 	if ($alias =~ /^\#/) {
 	    next;
 	}
-	
+
 	$alias =~ /^([^:]+):/; 
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;
