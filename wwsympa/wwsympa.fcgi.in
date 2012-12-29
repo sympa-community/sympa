@@ -17677,7 +17677,7 @@ sub do_review_family {
 
     my $all_lists = List::get_lists($family);
     foreach my $flist (@{$all_lists}) {
-	my $l = $list->name;
+	my $l = $flist->name;
 	
 	unless (defined $flist) {
 	    &wwslog('err', 'do_review_family: incorrect list %s', $l);
