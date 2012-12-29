@@ -312,8 +312,8 @@ sub _list_to_group {
 	my $role = shift;
 	
 	return {
-		id => $list->{'name'},
-		title => $list->{'admin'}{'subject'},
+		id => $list->name,
+		title => $list->subject,
 		description => $list->get_info(),
 		voot_membership_role => $role
 	};

@@ -70,7 +70,9 @@
 </li>
   [% IF is_owner %]
 	<li class="[% class %]"><a href="[% path_cgi %]/stats/[% list %]">[%|loc%]Statistics[%END%]</a></li>	
+	[% IF conf.voot_feature == 'on' %]
 	<li class="[% class %]"><a href="[% path_cgi %]/opensocial/[% list %]">[%|loc%]OpenSocial[%END%]</a></li>	
+	[% END %]
   [% END %]
 [% END %]
 
