@@ -907,7 +907,7 @@ my %in_regexp = (
 		 'new_password' => '.+',
 		 
 		 ## Topics
-		 'topic' => '[\-\w\/]+',
+		 'topic' => '\@?[\-\w\/]+',
 		 'topics' => '[\-\w\/]+',
 		 'subtopic' => '[\-\w\/]+',
 		 
@@ -1183,7 +1183,7 @@ my $birthday = time ;
 		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature','custom_robot_parameter',
                     'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15',
 		    'reporting_spam_script_path','automatic_list_families',
-		    'voot_feature',
+		    'voot_feature', 'your_lists_size',
 		    ) {
 
 	 $param->{'conf'}{$p} = $robot->$p;
@@ -4156,33 +4156,50 @@ sub do_lists {
      my @lists;
      &wwslog('info', 'do_lists(%s,%s)', $in{'topic'}, $in{'subtopic'});
 
-     my %topics = &List::load_topics($robot_id);
-
-     if ($in{'topic'}) {
- 	 $param->{'topic'} = $in{'topic'};
-	 if ($in{'subtopic'}) {
-	     $param->{'subtopic'} = $in{'subtopic'};
-	     $param->{'subtitle'} = sprintf "%s / %s", $topics{$in{'topic'}}{'current_title'}, $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'};
-	     $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
-	 }else {
-	     $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'} || $in{'topic'};
-	 }
-     }
-
-    ## Filter lists by topic.
-    ## topic argument 'topicsless' or 'other' means 'lists with topic
-    ## "other" or without topics'.
-    ## no topic argument; List all lists
-    my $options = {};
-    if ($in{'topic'}) {
-	if ($in{'subtopic'}) {
-	    $options->{'filter_query'} =
-		[ 'topics' => "$in{'topic'}/$in{'subtopic'}" ];
-	} else {
-	    $options->{'filter_query'} = [ 'topics' => $in{'topic'} ];
+    my $all_lists = [];
+    if ($in{'topic'} and $in{'topic'} eq '@which') {
+	my %lists = ();
+	foreach my $role ('member', 'owner', 'editor') {
+	    foreach my $l (List::get_which($param->{'user'}{'email'},
+		$robot, $role)) {
+		$lists{$l->name} = $l;
+	    }
 	}
+	foreach my $l (sort keys %lists) {
+	    push $all_lists, $lists{$l};
+	}
+    } elsif ($in{'topic'}) {
+	my %topics = List::load_topics($robot);
+
+ 	$param->{'topic'} = $in{'topic'};
+	if ($in{'subtopic'}) {
+	    $param->{'subtopic'} = $in{'subtopic'};
+	    $param->{'subtitle'} = sprintf "%s / %s",
+		$topics{$in{'topic'}}{'current_title'},
+		$topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'};
+	    $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
+	} else {
+	    $param->{'subtitle'} =
+		$topics{$in{'topic'}}{'current_title'} || $in{'topic'};
+	}
+
+	## Filter lists by topic.
+	## topic argument 'topicsless' or 'other' means 'lists with topic
+	## "other" or without topics'.
+	## no topic argument; List all lists
+	my $options = {};
+	if ($in{'topic'}) {
+	    if ($in{'subtopic'}) {
+		$options->{'filter_query'} =
+		    [ 'topics' => "$in{'topic'}/$in{'subtopic'}" ];
+	    } else {
+		$options->{'filter_query'} = [ 'topics' => $in{'topic'} ];
+	    }
+	}
+	$all_lists = List::get_lists($robot, $options);
+    } else {
+	$all_lists = List::get_lists($robot);
     }
-    my $all_lists = &List::get_lists($robot_id, $options);
 
      foreach my $list ( @$all_lists ) {
 

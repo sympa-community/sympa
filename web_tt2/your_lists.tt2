@@ -8,7 +8,17 @@
   <li>
     <a class="input" href="[% path_cgi %]/suspend_request" >[%|loc%]Manage your subscriptions[%END%]</a><br />
   </li>
+ [% SET n = 0 %]
  [% FOREACH l = which_info %]
+  [% IF conf.your_lists_size %]
+    [% IF n == conf.your_lists_size %]
+      <li><a class="list_menu_links" href="[% path_cgi %]/lists/&#64;which">[%|loc%]More...[%END%]</a></li>
+      [% LAST %]
+    [% END %]
+  [% ELSE %]
+    <li><a class="input" href="[% path_cgi %]/lists/&#64;which">[%|loc%]Your lists[%END%]</a></li>
+    [% LAST %]
+  [% END %]
 <li>
   [% IF l.value.admin %]<a class="actionMenuLinks" href="[% path_cgi %]/admin/[% l.key %]" >
 [%|loc%]admin[%END%]</a>[% END %]
@@ -16,6 +26,7 @@
 [% hidden_head %][% l.key %][% hidden_end %]</a><br />
   <span>[% l.value.subject %]</span><br />
   </li>
+  [% SET n = n + 1 %]
  [% END %]
  </ul>
 
