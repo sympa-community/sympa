@@ -512,7 +512,7 @@ my %visibility_mode = (
 ## Values for list status.
 my %list_status = (
     'open'          => {'gettext_id' => 'in operation'},
-    'pending'       => {'gettext_id' => 'pending'},
+    'pending'       => {'gettext_id' => 'list not yet activated'},
     'error_config'  => {'gettext_id' => 'erroneous configuration'},
     'family_closed' => {'gettext_id' => 'closed family instance'},
     'closed'        => {'gettext_id' => 'closed list'},
@@ -8179,9 +8179,9 @@ sub sync_include_admin {
 	    ## If include sources were not available, do not update admin users
 	    ## Use DB cache instead
 	    unless (defined $new_admin_users_include) {
-		&Log::do_log('err',
+		Log::do_log('err',
 		    'Could not get %ss from an include source for list %s',
-		    $role, $name);
+		    $role, $self);
 		unless (
 		    $self->robot->send_notify_to_listmaster(
 			'sync_include_admin_failed', [$name]
@@ -8198,9 +8198,9 @@ sub sync_include_admin {
 		$self->_load_list_admin_from_config($role);
 
 	    unless (defined $new_admin_users_config) {
-		&Log::do_log('err',
+		Log::do_log('err',
 		    'Could not get %ss from config for list %s',
-		    $role, $name);
+		    $role, $self);
 		return undef;
 	    }
 	}
@@ -8417,9 +8417,9 @@ sub sync_include_admin {
 	if ($#add_tab >= 0) {
 	    unless ($admin_users_added =
 		$self->add_list_admin($role, @add_tab)) {
-		&Log::do_log('err',
-		    'List:sync_include_admin(%s): Failed to add new %ss',
-		    $role, $name);
+		Log::do_log('err',
+		    'Failed to add new %ss to list %s',
+		    $role, $self);
 		return undef;
 	    }
 	}

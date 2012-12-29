@@ -17668,7 +17668,7 @@ sub do_sync_include {
 sub do_review_family {
     &wwslog('info', 'do_review_family');
 
-    my $family = new Family ($in{'family_name'}, $robot_id);
+    my $family = Family->new($in{'family_name'}, $robot);
     unless (defined $family) {
 	&report::reject_report_web('user','unknown_family',{'family'=>$in{'family_name'}},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
 	&wwslog('err', 'do_review_family: incorrect family %s', $in{'family_name'});
@@ -17677,17 +17677,18 @@ sub do_review_family {
 
     my $all_lists = List::get_lists($family);
     foreach my $flist (@{$all_lists}) {
-	my $l = $flist->name;
-	
 	unless (defined $flist) {
-	    &wwslog('err', 'do_review_family: incorrect list %s', $l);
-	    next;	    
+	    wwslog('err', 'incorrect list');
+	    next;
 	}
-	push @{$param->{'family_lists'}}, {'name' => $flist->name,
-					   'status' => $flist->status,
-					   'instantiation_date' => $flist->latest_instantiation->{'date'},
-					   'subject' => $flist->subject,
-				       };
+
+	push @{$param->{'family_lists'}},
+	    {   'name' => $flist->name,
+		'status' => $flist->status,
+		'instantiation_date' =>
+		    (gettext_strftime "%d %b %Y at %H:%M:%S", localtime $flist->latest_instantiation->{'date_epoch'}),
+		'subject' => $flist->subject,
+	    };
     }
 
     return 1;

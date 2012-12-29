@@ -40,10 +40,10 @@ use File::Copy;
 use Term::ProgressBar;
 
 #use List; # load in admin
-#use Conf; # load in List - Site
+#use Conf; # no longer used
 use Language qw(gettext_strftime);
 
-#use Log; # load in Conf
+#use Log; # load in dmin - List - Robot - Site - Conf
 use admin;
 use Config_XML;
 
@@ -161,7 +161,7 @@ sub get_available_families {
 
 =pod 
 
-=head2 sub new(STRING $name, STRING $robot)
+=head2 sub new(STRING $name, Robot $robot)
 
 Creates a new Family object of name $name, belonging to the robot $robot.
 
@@ -173,7 +173,7 @@ Creates a new Family object of name $name, belonging to the robot $robot.
 
 =item * I<$name>, a character string containing the family name,
 
-=item * I<$robot>, a character string containing the name of the robot which the family is/will be installed in.
+=item * I<$robot>, a Robot object representing robot which the family is/will be installed in.
 
 =back 
 
@@ -321,8 +321,6 @@ Adds a list to the family. List description can be passed either through a hash 
 =over 
 
 =item * admin::create_list
-
-=item * Conf::get_robot_conf
 
 =item * Family::_copy_files
 
@@ -516,8 +514,6 @@ Adds a list to the family.
 =over 
 
 =item * admin::update_list
-
-=item * Conf::get_robot_conf
 
 =item * Config_XML::new
 
@@ -2790,8 +2786,6 @@ Finishes to generate a list in a family context (for a new or an already existin
 =head3 Calls
 
 =over 
-
-=item * Conf::get_robot_conf
 
 =item * Family::_copy_files
 
