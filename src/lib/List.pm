@@ -3700,7 +3700,7 @@ sub insert_delete_exclusion {
 	unless ref $self;    #prototype changed (6.2)
 
     my $name  = $self->name;
-    my $robot = $self->domain;
+    my $robot_id = $self->domain;
 
     my $r = 1;
 
@@ -3712,12 +3712,12 @@ sub insert_delete_exclusion {
 	if ($user->{'included'} eq '1') {
 	    ## Insert : list, user and date
 	    unless (
-		&SDM::do_prepared_query(
-		    q{INSERT INTO exclusion_table (list_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (?,?,?,?)},
-		    &SDM::quote($name),
-		    &SDM::quote($robot),
-		    &SDM::quote($email),
-		    &SDM::quote($date)
+		SDM::do_prepared_query(
+		    q{INSERT INTO exclusion_table
+		      (list_exclusion, robot_exclusion, user_exclusion,
+		       date_exclusion)
+		     VALUES (?, ?, ?, ?)},
+		    $name, $robot_id, $email, $date
 		)
 		) {
 		&Log::do_log('err', 'Unable to exclude user %s from list %s',
@@ -3742,11 +3742,11 @@ sub insert_delete_exclusion {
 	    if ($email eq $users) {
 		## Delete : list, user and date
 		unless (
-		    $sth = &SDM::do_prepared_query(
-			q{DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)},
-			&SDM::quote($name),
-			&SDM::quote($robot),
-			&SDM::quote($email)
+		    $sth = SDM::do_prepared_query(
+			q{DELETE FROM exclusion_table
+			  WHERE list_exclusion = ? AND robot_exclusion = ? AND
+				user_exclusion = ?},
+			$name, $robot_id, $email
 		    )
 		    ) {
 		    &Log::do_log(
@@ -3783,36 +3783,38 @@ sub get_exclusion {
 	unless ref $self;    #prototype changed (6.2)
 
     my $name  = $self->name;
-    my $robot = $self->domain;
+    my $robot_id = $self->domain;
 
     push @sth_stack, $sth;
 
     if (defined $self->family_name and $self->family_name ne '') {
 	unless (
-	    $sth = &SDM::do_prepared_query(
-		q{SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE (list_exclusion = ? OR family_exclusion = ?) AND robot_exclusion=?},
-		&SDM::quote($name),
-		&SDM::quote($self->family_name),
-		&SDM::quote($robot)
+	    $sth = SDM::do_prepared_query(
+		q{SELECT user_exclusion AS email, date_exclusion AS "date"
+		  FROM exclusion_table
+		  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
+			robot_exclusion = ?},
+		$name, $self->family_name, $robot_id
 	    )
 	    ) {
-	    &Log::do_log('err',
-		'Unable to retrieve excluded users for list %s@%s',
-		$name, $robot);
+	    Log::do_log('err',
+		'Unable to retrieve excluded users for list %s',
+		$self);
 	    $sth = pop @sth_stack;
 	    return undef;
 	}
     } else {
 	unless (
 	    $sth = &SDM::do_prepared_query(
-		q{SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = ? AND robot_exclusion=?},
-		&SDM::quote($name),
-		&SDM::quote($robot)
+		q{SELECT user_exclusion AS email, date_exclusion AS "date"
+		  FROM exclusion_table
+		  WHERE list_exclusion = ? AND robot_exclusion=?},
+		$name, $robot_id
 	    )
 	    ) {
-	    &Log::do_log('err',
-		'Unable to retrieve excluded users for list %s@%s',
-		$name, $robot);
+	    Log::do_log('err',
+		'Unable to retrieve excluded users for list %s',
+		$self);
 	    $sth = pop @sth_stack;
 	    return undef;
 	}
@@ -4044,10 +4046,12 @@ sub find_list_member_by_pattern_no_object {
     push @sth_stack, $sth;
     unless (
 	$sth = SDM::do_prepared_query(
-	    sprintf ("SELECT %s FROM subscriber_table WHERE user_subscriber LIKE ? AND list_subscriber = ? AND robot_subscriber = ?",_list_member_cols()),
-	    &SDM::quote($email_pattern),
-	    &SDM::quote($name),
-	    &SDM::quote($options->domain)
+	    sprintf(q{SELECT %s
+		FROM subscriber_table
+		WHERE user_subscriber LIKE ? AND
+		      list_subscriber = ? AND robot_subscriber = ?},
+		_list_member_cols()),
+	    $email_pattern, $name, $options->{'domain'}
 	)
 	) {
 	&Log::do_log(
@@ -4532,17 +4536,23 @@ sub get_first_bouncing_list_member {
     push @sth_stack, $sth;
     unless (
 	$sth = SDM::do_prepared_query(
-	    sprintf ('SELECT %s FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ? AND bounce_subscriber is not NULL',_list_member_cols()),
-	    &SDM::quote($name),
-	    &SDM::quote($self->domain)
+	    sprintf(q{SELECT %s
+		FROM subscriber_table
+		WHERE list_subscriber = ? AND robot_subscriber = ? AND
+		      bounce_subscriber is not NULL},
+		_list_member_cols()),
+	    $name, $self->domain
 	)
 	) {
-	&Log::do_log('err', 'Unable to get bouncing users %s', $self);
+	Log::do_log('err', 'Unable to get bouncing users %s', $self);
 	$sth = pop @sth_stack;
-	    return undef;
-	}
+	return undef;
+    }
 
     my $user = $sth->fetchrow_hashref('NAME_lc');
+
+    $sth->finish;
+    $sth = pop @sth_stack;
 
     if (defined $user) {
 	&Log::do_log('err',
@@ -4550,9 +4560,6 @@ sub get_first_bouncing_list_member {
 	    $self
 	) unless $user->{'email'};
     } else {
-		$sth->finish;
-		$sth = pop @sth_stack;
-
 		## Release the Shared lock
 		unless ($lock->unlock()) {
 			return undef;
@@ -4639,10 +4646,12 @@ sub get_total_bouncing {
 
     ## Query the Database
     unless (
-	$sth = &SDM::do_prepared_query(
-	    q{SELECT count(*) FROM subscriber_table WHERE (list_subscriber = ?  AND robot_subscriber = ? AND bounce_subscriber is not NULL)},
-	    &SDM::quote($name),
-	    &SDM::quote($self->domain)
+	$sth = SDM::do_prepared_query(
+	    q{SELECT count(*)
+	      FROM subscriber_table
+	      WHERE list_subscriber = ? AND robot_subscriber = ? AND
+		    bounce_subscriber is not NULL},
+	    $name, $self->domain
 	)
 	) {
 	&Log::do_log('err',
@@ -5147,23 +5156,31 @@ sub add_list_member {
 	## Update Subscriber Table
 	unless (
 	    &SDM::do_prepared_query(
-		q{INSERT INTO subscriber_table (user_subscriber, comment_subscriber, list_subscriber, robot_subscriber, date_subscriber, update_subscriber, reception_subscriber, topics_subscriber, visibility_subscriber,subscribed_subscriber,included_subscriber,include_sources_subscriber,custom_attribute_subscriber,suspend_subscriber,suspend_start_date_subscriber,suspend_end_date_subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-		&SDM::quote($who),
-		&SDM::quote($new_user->{'gecos'}),
-		&SDM::quote($name),
-		&SDM::quote($self->domain),
-		&SDM::get_canonical_write_date($new_user->{'date'}),
-		&SDM::get_canonical_write_date($new_user->{'update_date'}),
-		&SDM::quote($new_user->{'reception'}),
-		&SDM::quote($new_user->{'topics'}),
-		&SDM::quote($new_user->{'visibility'}),
+		q{INSERT INTO subscriber_table
+		  (user_subscriber, comment_subscriber,
+		   list_subscriber, robot_subscriber,
+		   date_subscriber, update_subscriber,
+		   reception_subscriber,
+		   topics_subscriber,
+		   visibility_subscriber,
+		   subscribed_subscriber,
+		   included_subscriber, include_sources_subscriber,
+		   custom_attribute_subscriber,
+		   suspend_subscriber,
+		   suspend_start_date_subscriber, suspend_end_date_subscriber)
+		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+		$who, $new_user->{'gecos'},
+		$name, $self->domain,
+		SDM::get_canonical_write_date($new_user->{'date'}),
+		SDM::get_canonical_write_date($new_user->{'update_date'}),
+		$new_user->{'reception'},
+		$new_user->{'topics'},
+		$new_user->{'visibility'},
 		$new_user->{'subscribed'},
-		$new_user->{'included'},
-		&SDM::quote($new_user->{'id'}),
-		&SDM::quote($new_user->{'custom_attribute'}),
-		&SDM::quote($new_user->{'suspend'}),
-		&SDM::quote($new_user->{'startdate'}),
-		&SDM::quote($new_user->{'enddate'})
+		$new_user->{'included'}, $new_user->{'id'},
+		$new_user->{'custom_attribute'},
+		$new_user->{'suspend'},
+		$new_user->{'startdate'}, $new_user->{'enddate'}
 	    )
 	    ) {
 	    &Log::do_log(
@@ -5248,26 +5265,26 @@ sub add_list_admin {
 
 	## Update Admin Table
 	unless (
-	    &SDM::do_prepared_query(
-		q{INSERT INTO admin_table (user_admin, comment_admin, list_admin, robot_admin, date_admin, update_admin, reception_admin, visibility_admin, subscribed_admin,included_admin,include_sources_admin, role_admin, info_admin, profile_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-		&SDM::quote($who),
-		&SDM::quote($new_admin_user->{'gecos'}),
-		&SDM::quote($name),
-		&SDM::quote($self->domain),
-		&SDM::get_canonical_write_date($new_admin_user->{'date'}),
-		&SDM::get_canonical_write_date(
+	    SDM::do_prepared_query(
+		q{INSERT INTO admin_table
+		  (user_admin, comment_admin, list_admin, robot_admin,
+		   date_admin, update_admin,
+		   reception_admin, visibility_admin,
+		   subscribed_admin, included_admin, include_sources_admin,
+		   role_admin, info_admin, profile_admin)
+		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+		$who, $new_admin_user->{'gecos'}, $name, $self->domain,
+		SDM::get_canonical_write_date($new_admin_user->{'date'}),
+		SDM::get_canonical_write_date(
 		    $new_admin_user->{'update_date'}
 		),
-		&SDM::quote($new_admin_user->{'reception'}),
-		&SDM::quote($new_admin_user->{'visibility'}),
+		$new_admin_user->{'reception'},
+		$new_admin_user->{'visibility'},
 		$new_admin_user->{'subscribed'},
-		$new_admin_user->{'included'},
-		&SDM::quote($new_admin_user->{'id'}),
-		&SDM::quote($role),
-		&SDM::quote($new_admin_user->{'info'}),
-		&SDM::quote($new_admin_user->{'profile'})
+		$new_admin_user->{'included'}, $new_admin_user->{'id'},
+		$role, $new_admin_user->{'info'}, $new_admin_user->{'profile'}
 	    )
-	    ) {
+	) {
 	    &Log::do_log(
 		'err',
 		'Unable to add admin %s to table admin_table for list %s',
@@ -9314,7 +9331,7 @@ sub get_robots {
 ## get idp xref to locally validated email address
 ## OBSOLETING: Use $robot->get_netidtoemail_db();
 sub get_netidtoemail_db {
-    my $robot = shift;
+    my $robot_id = shift;
     my $netid = shift;
     my $idpname = shift;
     &Log::do_log('debug', 'List::get_netidtoemail_db(%s, %s)',
@@ -9325,11 +9342,12 @@ sub get_netidtoemail_db {
     push @sth_stack, $sth;
 
     unless (
-	$sth = &SDM::do_prepared_query(
-	    q{SELECT email_netidmap FROM netidmap_table WHERE netid_netidmap = ? and serviceid_netidmap = ? and robot_netidmap = ?},
-	    &SDM::quote($netid),
-	    &SDM::quote($idpname),
-	    &SDM::quote($robot)
+	$sth = SDM::do_prepared_query(
+	    q{SELECT email_netidmap
+	      FROM netidmap_table
+	      WHERE netid_netidmap = ? AND serviceid_netidmap = ? AND
+		    robot_netidmap = ?},
+	    $netid, $idpname, $robot_id
 	)
 	) {
 	&Log::do_log(
@@ -9337,7 +9355,7 @@ sub get_netidtoemail_db {
 	    'Unable to get email address from netidmap_table for id %s, service %s, robot %s',
 	    $netid,
 	    $idpname,
-	    $robot
+	    $robot_id
 	);
 	$sth = pop @sth_stack;
 	return undef;
@@ -9354,22 +9372,21 @@ sub get_netidtoemail_db {
 ## set idp xref to locally validated email address
 ## OBSOLETING: Use $robot->set_netidtoemail_db().
 sub set_netidtoemail_db {
-    my $robot = shift;
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    my $robot_id = shift;
     my $netid = shift;
     my $idpname = shift;
     my $email   = shift;
-    &Log::do_log('debug', 'List::set_netidtoemail_db(%s, %s, %s)',
-	$netid, $idpname, $email);
 
     my ($l, %which);
 
     unless (
 	&SDM::do_prepared_query(
-	    q{INSERT INTO netidmap_table (netid_netidmap,serviceid_netidmap,email_netidmap,robot_netidmap) VALUES (?, ?, ?, ?)},
-	    &SDM::quote($netid),
-	    &SDM::quote($idpname),
-	    &SDM::quote($email),
-	    &SDM::quote($robot)
+	    q{INSERT INTO netidmap_table
+	      (netid_netidmap, serviceid_netidmap, email_netidmap,
+	       robot_netidmap)
+	      VALUES (?, ?, ?, ?)},
+	    $netid, $idpname, $email, $robot_id
 	)
 	) {
 	&Log::do_log(
@@ -9378,7 +9395,7 @@ sub set_netidtoemail_db {
 	    $email,
 	    $netid,
 	    $idpname,
-	    $robot
+	    $robot_id
 	);
 	return undef;
     }
@@ -9389,9 +9406,9 @@ sub set_netidtoemail_db {
 ## Update netidmap table when user email address changes
 #OBSOLETING: Use $robot->update_email_netidmap_db().
 sub update_email_netidmap_db {
-    my ($robot, $old_email, $new_email) = @_;
+    my ($robot_id, $old_email, $new_email) = @_;
 
-    unless (defined $robot &&
+    unless (defined $robot_id &&
 	    defined $old_email &&
 	    defined $new_email) {
 	&Log::do_log('err', 'Missing parameter');
@@ -9399,11 +9416,11 @@ sub update_email_netidmap_db {
     }
 
     unless (
-	&SDM::do_prepared_query(
-	    q{UPDATE netidmap_table SET email_netidmap = ? WHERE (email_netidmap = ? AND robot_netidmap = ?)},
-	    &SDM::quote($new_email),
-	    &SDM::quote($old_email),
-	    &SDM::quote($robot)
+	SDM::do_prepared_query(
+	    q{UPDATE netidmap_table
+	      SET email_netidmap = ?
+	      WHERE email_netidmap = ? AND robot_netidmap = ?},
+	    $new_email, $old_email, $robot_id
 	)
 	) {
 	&Log::do_log(
@@ -9411,7 +9428,7 @@ sub update_email_netidmap_db {
 	    'Unable to set new email address %s in netidmap_table to replace old address %s for robot %s',
 	    $new_email,
 	    $old_email,
-	    $robot
+	    $robot_id
 	);
 	return undef;
     }
@@ -9587,10 +9604,10 @@ sub lowercase_field {
 	## Updating Db
 	unless (
 	    $sth = &SDM::do_prepared_query(
-		sprintf ('UPDATE %s SET %s=? WHERE (%s=?)',$table,$field,$field),
-		&SDM::quote($lower_cased)),
-		&SDM::quote($user->{$field})
-	    ) {
+		sprintf(q{UPDATE %s SET %s = ? WHERE %s = ?},
+		    $table, $field, $field),
+		$lower_cased, $user->{$field}
+	    )) {
 	    &Log::do_log('err',
 		'Unable to set field % from table %s to value %s',
 		$field, $lower_cased, $table);
@@ -11873,8 +11890,11 @@ sub get_data {
     my ($data, $robotname, $listname) = @_;
 
     unless (
-	$sth = &SDM::do_prepared_query(
-	    q{SELECT * FROM stat_counter_table WHERE data_counter = '?' AND robot_counter = '?' AND list_counter = '?'},
+	$sth = SDM::do_prepared_query(
+	    q{SELECT *
+	      FROM stat_counter_table
+	      WHERE data_counter = ? AND
+		    robot_counter = ? AND list_counter = ?},
 	    $data, $robotname, $listname
 	)
 	) {
@@ -12179,13 +12199,13 @@ sub user {
     if ($role eq 'member') {
 	## Query the Database
 	unless (
-	    $sth = &SDM::do_prepared_query(
-		sprintf(
-		    'SELECT %s FROM subscriber_table WHERE list_subscriber = ? AND robot_subscriber = ? AND user_subscriber = ?',
+	    $sth = SDM::do_prepared_query(
+		sprintf(q{SELECT %s
+		    FROM subscriber_table
+		    WHERE list_subscriber = ? AND robot_subscriber = ? AND
+			  user_subscriber = ?},
 		    _list_member_cols()),
-		$self->name,
-		$self->domain,
-		$who
+		$self->name, $self->domain, $who
 	    )
 	    ) {
 	    &Log::do_log('err',
