@@ -324,6 +324,7 @@ sub get_sender_email {
     unless ($self->{'sender'}) {
 	my $hdr = $self->{'msg'}->head;
 	my $sender = undef;
+	my $gecos = undef;
 	foreach my $field (split /[\s,]+/, Site->sender_headers) {
 	    if (lc $field eq 'from_') {
 		## Try to get envelope sender
@@ -340,6 +341,8 @@ sub get_sender_email {
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
 		if (scalar @sender_hdr and $sender_hdr[0]->address) {
 		    $sender = lc($sender_hdr[0]->address);
+		    $gecos = MIME::EncWords::decode_mimewords(
+			$sender_hdr[0]->phrase || '');
 		    last;
 		}
 	    }
@@ -353,8 +356,15 @@ sub get_sender_email {
 	    return undef;
 	}
 	$self->{'sender'} = $sender;
+	$self->{'gecos'} = $gecos;
     }
     return $self->{'sender'};
+}
+
+sub get_sender_gecos {
+    my $self = shift;
+    $self->get_sender_email unless exists $self->{'gecos'};
+    return $self->{'gecos'};
 }
 
 sub get_subject {
