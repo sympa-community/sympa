@@ -1488,6 +1488,18 @@ our @params = (
         'advice'   => gettext('This is required for HTML mail archiving'),
     },
     {
+        'name'     => 'one_time_ticket_lifetime',
+        'default'  => '2d',
+        'query'    => 'duration before the one time tickets are expired',
+    },
+    {
+        'name'     => 'one_time_ticket_lockout',
+        'default'  => 'one_time',
+        'query'    => gettext('Is access to the one time ticket restricted, if any users previously accessed? (one_time | remote_addr | open)'),
+        'edit'     => '1',
+        'vhost'    => '1',
+    },
+    {
         'name'     => 'password_case',
         'default'  => 'insensitive',
         'query'    => gettext('Password case (insensitive | sensitive)'),

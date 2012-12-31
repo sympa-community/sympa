@@ -3161,7 +3161,8 @@ sub check_param_out {
 sub do_ticket {
     &wwslog('info', 'do_ticket(%s)', $in{'ticket'});
 
-    $param->{'ticket_context'} = &Auth::get_one_time_ticket($in{'ticket'}, $ip );
+    $param->{'ticket_context'} =
+	Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
     $param->{'ticket_context'}{'printable_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($param->{'ticket_context'}{'date'});
     
     return 1 unless ($param->{'ticket_context'}{'result'} eq 'success' or $param->{'ticket_context'}{'result'} eq 'closed');
@@ -3553,7 +3554,8 @@ sub do_sso_login {
 		}
 		
 		## Validate the ticket
-		my $ticket_output = &Auth::get_one_time_ticket($in{'ticket'}, $ip );
+		my $ticket_output =
+		    Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
 		unless ($ticket_output->{'result'} eq 'success'){
 		    &report::reject_report_web('user','auth_failed',{},$param->{'action'});
 		    &web_db_log({'parameters' => $in{'auth_service_name'},
