@@ -237,6 +237,7 @@ my %comm = ('home' => 'do_home',
 	 'reject_notify' => 'do_reject_notify',
          'reject_notify_shared' =>'admin',
 	 'distribute' => 'do_distribute',
+	 'add_frommod' => 'do_add_frommod',
 	 'viewmod' => 'do_viewmod',
 	 'd_reject_shared' => 'do_d_reject_shared',
 	 'reject_notify_shared' => 'do_reject_notify_shared',
@@ -407,6 +408,7 @@ my %action_args = ('default' => ['list'],
 		'pref' => ['previous_action','previous_list'],
 		'reject' => ['list','id'],
 		'distribute' => ['list','id'],
+		'add_frommod' => ['list', 'id'],
 		'dump_scenario' => ['list','pname'],
 		'd_reject_shared' => ['list','id'],
 		'd_install_shared' => ['list','id'],
@@ -576,6 +578,7 @@ my %required_args = ('active_lists' => ['for|count'],
 		     'del' => ['param.list','param.user.email'],
 		     'delete_pictures' => ['param.list','param.user.email'],
 		     'distribute' => ['param.list','param.user.email','id|idspam'],
+		     'add_frommod' => ['param.list','param.user.email','id'],
 		     'dump' => ['param.list'],
 		     'dump_scenario' => ['param.list','pname'],
 		     'edit_list' => ['param.user.email','param.list'],
@@ -686,6 +689,7 @@ my %required_privileges = ('admin' => ['owner','editor'],
 			   'd_install_shared' => ['editor'],
 			   'd_reject_shared' => ['editor'],
 			   'distribute' => ['editor'],
+			   'add_frommod' => ['editor'],
 			   'dump_scenario' => ['listmaster'],
 			   'edit_list' => ['owner'],
 			   'edit_list_request' => ['owner'],
@@ -758,6 +762,7 @@ my %action_type = ('editfile' => 'admin',
 		'reject_notify' =>'admin',
 		'add_request' =>'admin',
 		'distribute' =>'admin',
+		'add_frommod' => 'admin',
 		'viewmod' =>'admin',
 		'savefile' =>'admin',
 		'rebuildarc' =>'admin',
@@ -6763,17 +6768,27 @@ sub do_modindex {
      my $modspool = new Sympaspool('mod');
      my @messages  = $modspool->get_content({'selector'=>{'list'=>$list_name,'robot'=>$robot_id}});
      foreach $msg ( @messages ) {
+	my $message =
+	    Message->new({'messageasstring' => $msg->{'messageasstring'}});
+	next unless $message;
+	my $id = $msg->{'authkey'};
 
-	 $param->{'spool'}{$msg->{'authkey'}}{'size'} = int( $msg->{'size'} / 1024 + 0.5);
-	 $param->{'spool'}{$msg->{'authkey'}}{'subject'} =  &MIME::EncWords::decode_mimewords($msg->{'subject'}, Charset=>'utf8');
-	 $param->{'spool'}{$msg->{'authkey'}}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$msg->{'authkey'}}{'date'} = &MIME::EncWords::decode_mimewords($msg->{'headerdate'}, Charset=>'utf8');
-	 $param->{'spool'}{$msg->{'authkey'}}{'from'} = &MIME::EncWords::decode_mimewords($msg->{'sender'}, Charset=>'utf8');
-	 $param->{'spool'}{$msg->{'authkey'}}{'spam_status'} = $msg->{'spam_status'};
+	$param->{'spool'}{$id}{'size'} = int($msg->{'size'} / 1024 + 0.5);
+	$param->{'spool'}{$id}{'subject'} =
+	    tools::decode_header($message, 'Subject') || 'no_subject';
+	$param->{'spool'}{$id}{'date'} =
+	    tools::decode_header($message, 'Date');
+	$param->{'spool'}{$id}{'from'} = $message->get_sender_email;
+	$param->{'spool'}{$id}{'gecos'} = $message->get_sender_gecos
+	    if defined $message->get_sender_gecos;
+	$param->{'spool'}{$id}{'spam_status'} = $msg->{'spam_status'};
+	$param->{'spool'}{$id}{'is_subscriber'} =
+	    $list->is_list_member($message->get_sender_email);
+
 	 foreach my $field ('subject','date','from') {
-	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/&/&amp;/g;
-	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/</&lt;/g;
-	     $param->{'spool'}{$msg->{'authkey'}}{$field} =~ s/>/&gt;/g;
+	    $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
+	    $param->{'spool'}{$id}{$field} =~ s/</&lt;/g;
+	    $param->{'spool'}{$id}{$field} =~ s/>/&gt;/g;
 	 }
      }
 
@@ -7285,6 +7300,64 @@ sub do_distribute {
      &report::notice_report_web('performed_soon',{},$param->{'action'});
 
      return 'modindex';
+}
+
+####################################################
+#  do_add_frommod
+####################################################
+#  add user from moderation index
+#
+####################################################
+sub do_add_frommod {
+    $in{'id'} =~ s/^,//;
+    $in{'id'} =~ s/\0/,/g;
+
+    wwslog('info', 'do_add_frommod(%s)', $in{'id'});
+
+    ## messages
+    $in{'dump'} = '';
+    my $modspool = Sympaspool->new('mod');
+    foreach my $id (split /,/, $in{'id'}) {
+	my $message_in_spool = $modspool->get_message(
+	    {'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id}
+	);
+	unless ($message_in_spool) {
+	    ## if the message has been accepted via WWSympa, it's in spool
+	    ## 'validated'
+	    my $validatedspool = Sympaspool->new('validated');
+	    $message_in_spool = $validatedspool->get_message(
+		{   'list' => $list->name, 'robot' => $robot_id,
+		    'authkey' => $id }
+	    );
+	}
+	unless ($message_in_spool) {
+	    report::reject_report_web('user', 'already_moderated', {},
+		$param->{'action'});
+	    wwslog('err',
+		'No message with authkey %s.  It may be already moderated',
+		$id);
+	    web_db_log(
+		{   'parameters' => $id,
+		    'status' => 'error',
+		    'error_type' => 'internal' });
+	    next;
+	}
+	my $message = Message->new({'message_in_spool' => $message_in_spool});
+	next unless $message;
+	my $email = $message->get_sender_email;
+	next unless $email =~ /\S/;
+	my $fullname = $message->get_sender_gecos;
+	$in{'dump'} .= "$email $fullname\n";
+    }
+
+    if ($in{'dump'}) {
+	delete $in{'email'};
+	delete $in{'pending_email'};
+	$in{'previous_list'} = $list->name;
+	do_add();
+    }
+
+    return 'modindex';
 }
 
 ####################################################
