@@ -561,6 +561,12 @@ sub verify {
 	$robot = Robot::clean_robot($context->{'robot_domain'});
     }
 
+    my $pinfo;
+    if ($robot) {
+	$pinfo = $robot->list_params;
+    } else {
+	$pinfo = {};
+    }
 #    while (my($k,$v) = each %{$context}) {
 #	&Log::do_log('debug3',"verify: context->{$k} = $v");
 #    }
@@ -663,13 +669,14 @@ sub verify {
 	    my $param = $1;
 
 	    if ($param =~ /^(name|total)$/) {
-		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{$param}/;
+		my $val = $list->$param;
+		$value =~ s/\[list\-\>([\w\-]+)\]/$val/;
 	    }elsif ($param eq 'address') {
 		my $list_address = $list->get_list_address();
 		$value =~ s/\[list\-\>([\w\-]+)\]/$list_address/;
-	    
-	    }elsif ($list->{'admin'}{$param} and (!ref($list->{'admin'}{$param})) ) {
-		$value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
+	    } elsif (exists $pinfo->{$param} and !ref($list->$param)) {
+		my $val = $list->$param;
+		$value =~ s/\[list\-\>([\w\-]+)\]/$val/;
 	    }else{
 		&Log::do_log('err','Unknown list parameter %s in rule %s', $value, $condition);
 		if ($log_it == 1) {
