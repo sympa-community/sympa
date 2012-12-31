@@ -27,7 +27,7 @@ use Digest::MD5;
 use Language qw(gettext_strftime);
 #use Log;
 #use Conf;
-use List;
+#use List; # not used
 use report;
 #use SDM;
 
@@ -46,23 +46,24 @@ sub password_fingerprint{
 
 
 ## authentication : via email or uid
- sub check_auth{
-     my $robot = shift;
+sub check_auth{
+    Log::do_log('debug2', '(%s, %s, ...)', @_);
+    my $robot = Robot::clean_robot(shift);
      my $auth = shift; ## User email or UID
      my $pwd = shift; ## Password
-     &Log::do_log('debug', 'Auth::check_auth(%s)', $auth);
 
      my ($canonic, $user);
 
      if( &tools::valid_email($auth)) {
-	 return &authentication($robot, $auth,$pwd);
+	 return authentication($robot, $auth, $pwd);
      }else{
 	 ## This is an UID
-	 foreach my $ldap (@{Site->auth_services->{$robot}}){
+	 foreach my $ldap (@{Site->auth_services->{$robot->domain}}){
 	     # only ldap service are to be applied here
 	     next unless ($ldap->{'auth_type'} eq 'ldap');
 	     
-	     $canonic = &ldap_authentication($robot, $ldap, $auth,$pwd,'uid_filter');
+	     $canonic = ldap_authentication($robot, $ldap, $auth, $pwd,
+		'uid_filter');
 	     last if ($canonic); ## Stop at first match
 	 }
 	 if ($canonic){
@@ -89,11 +90,12 @@ sub password_fingerprint{
 ## IN : robot, user email
 ## OUT : boolean
 sub may_use_sympa_native_auth {
-    my ($robot, $user_email) = @_;
+    my $robot = Robot::clean_robot(shift);
+    my $user_email = shift;
 
     my $ok = 0;
     ## check each auth.conf paragrpah
-    foreach my $auth_service (@{Site->auth_services->{$robot}}){
+    foreach my $auth_service (@{Site->auth_services->{$robot->domain}}){
 	next unless ($auth_service->{'auth_type'} eq 'user_table');
 
 	next if ($auth_service->{'regexp'} && ($user_email !~ /$auth_service->{'regexp'}/i));
@@ -106,10 +108,11 @@ sub may_use_sympa_native_auth {
 }
 
 sub authentication {
-    my ($robot, $email,$pwd) = @_;
+    Log::do_log('debug2', '(%s, %s, ...)', @_);
+    my $robot = Robot::clean_robot(shift);
+    my $email = shift;
+    my $pwd = shift;
     my ($user,$canonic);
-    &Log::do_log('debug', 'Auth::authentication(%s)', $email);
-
 
     unless ($user = User::get_global_user($email)) {
 	$user = {'email' => $email };
@@ -118,14 +121,14 @@ sub authentication {
 	$user->{'password'} = '';
     }
     
-    if ($user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
+    if ($user->{'wrong_login_count'} > $robot->max_wrong_password) {
 	# too many wrong login attemp
 	User::update_global_user($email,{wrong_login_count => $user->{'wrong_login_count'}+1}) ;
 	&report::reject_report_web('user','too_many_wrong_login',{}) unless ($ENV{'SYMPA_SOAP'});
 	&Log::do_log('err','login is blocked : too many wrong password submission for %s', $email);
 	return undef;
     }
-    foreach my $auth_service (@{Site->auth_services->{$robot}}){
+    foreach my $auth_service (@{Site->auth_services->{$robot->domain}}) {
 	next if ($auth_service->{'auth_type'} eq 'authentication_info_url');
 	next if ($email !~ /$auth_service->{'regexp'}/i);
 	next if (($email =~ /$auth_service->{'negative_regexp'}/i)&&($auth_service->{'negative_regexp'}));
@@ -143,7 +146,8 @@ sub authentication {
 			};
 	    }
 	}elsif($auth_service->{'auth_type'} eq 'ldap') {
-	    if ($canonic = &ldap_authentication($robot, $auth_service, $email,$pwd,'email_filter')){
+	    if ($canonic = ldap_authentication($robot, $auth_service, $email,
+		$pwd, 'email_filter')) {
 		unless($user = User::get_global_user($canonic)){
 		    $user = {'email' => $canonic};
 		}
@@ -169,13 +173,13 @@ sub authentication {
 
 
 sub ldap_authentication {
-     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
-     my ($mesg, $host,$ldap_passwd,$ldap_anonymous);
-     &Log::do_log('debug2','Auth::ldap_authentication(%s,%s,%s)', $auth,'****',$whichfilter);
-     &Log::do_log('debug3','Password used: %s',$pwd);
-
-    ## Compatibility: $robot may be a string
-    $robot = Robot->new($robot) unless ref $robot;
+    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
+    my $robot = Robot::clean_robot(shift);
+    my $ldap = shift;
+    my $auth = shift;
+    my $pwd = shift;
+    my $whichfilter = shift;
+    my ($mesg, $host, $ldap_passwd, $ldap_anonymous);
 
      unless ($robot->get_etc_filename('auth.conf')) {
 	 return undef;
@@ -296,25 +300,25 @@ sub ldap_authentication {
 
 # fetch user email using his cas net_id and the paragrapah number in auth.conf
 sub get_email_by_net_id {
-    
-    my $robot = shift;
+    my $robot = Robot::clean_robot(shift);
     my $auth_id = shift;
     my $attributes = shift;
+    Log::do_log('debug2', '(%s, %s, uid=%s)', $robot, $auth_id,
+	$attributes->{'uid'});
     
-    &Log::do_log ('debug',"Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
-    
-    if (defined Site->auth_services->{$robot}[$auth_id]{'internal_email_by_netid'}) {
-	my $sso_config = @{Site->auth_services->{$robot}}[$auth_id];
+    if (defined Site->auth_services->{$robot->domain}[$auth_id]{'internal_email_by_netid'}) {
+	my $sso_config = @{Site->auth_services->{$robot->domain}}[$auth_id];
 	my $netid_cookie = $sso_config->{'netid_http_header'} ;
 	
 	$netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 	
-	$email = &List::get_netidtoemail_db($robot, $netid_cookie, Site->auth_services->{$robot}[$auth_id]{'service_id'});
+	$email = $robot->get_netidtoemail_db($netid_cookie,
+	    Site->auth_services->{$robot->domain}[$auth_id]{'service_id'});
 	
 	return $email;
     }
  
-    my $ldap = @{Site->auth_services->{$robot}}[$auth_id];
+    my $ldap = @{Site->auth_services->{$robot->domain}}[$auth_id];
 
     my $param = &tools::dup_var($ldap);
     my $ds = new LDAPSource($param);
@@ -356,9 +360,10 @@ sub get_email_by_net_id {
 
 # check trusted_application_name et trusted_application_password : return 1 or undef;
 sub remote_app_check_password {
-    
-    my ($trusted_application_name,$password,$robot) = @_;
-    &Log::do_log('debug','Auth::remote_app_check_password (%s,%s)',$trusted_application_name,$robot);
+    my $trusted_application_name = shift;
+    my $password = shift;
+    my $robot = Robot::clean_robot(shift);
+    Log::do_log('debug2', '(%s, ..., %s)', $trusted_application_name, $robot);
     
     my $md5 = &tools::md5_fingerprint($password);
     
@@ -367,7 +372,7 @@ sub remote_app_check_password {
     my @trusted_apps ;
     
     # select trusted_apps from robot context or sympa context
-    @trusted_apps = @{&Conf::get_robot_conf($robot,'trusted_applications')};
+    @trusted_apps = @{$robot->trusted_applications};
     
     foreach my $application (@trusted_apps){
 	
@@ -394,18 +399,19 @@ sub remote_app_check_password {
 #
 
 sub create_one_time_ticket {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $email = shift;
-    my $robot = shift;
+    my $robot = Robot::clean_robot(shift);
     my $data_string = shift;
-    my $remote_addr = shift; ## Value may be 'mail' if the IP address is not known
+    my $remote_addr = shift;
+    ## Value may be 'mail' if the IP address is not known
 
     my $ticket = &SympaSession::get_random();
-    &Log::do_log('info', 'Auth::create_one_time_ticket(%s,%s,%s,%s) value = %s',$email,$robot,$data_string,$remote_addr,$ticket);
 
     my $date = time;
     my $sth;
     
-    unless (&SDM::do_query("INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES (%s, %s, %s, %d, %s, %s, %s)",&SDM::quote($ticket),&SDM::quote($robot),&SDM::quote($email),time,&SDM::quote($data_string),&SDM::quote($remote_addr),&SDM::quote('open'))) {
+    unless (&SDM::do_query("INSERT INTO one_time_ticket_table (ticket_one_time_ticket, robot_one_time_ticket, email_one_time_ticket, date_one_time_ticket, data_one_time_ticket, remote_addr_one_time_ticket, status_one_time_ticket) VALUES (%s, %s, %s, %d, %s, %s, %s)",&SDM::quote($ticket),&SDM::quote($robot->domain),&SDM::quote($email),time,&SDM::quote($data_string),&SDM::quote($remote_addr),&SDM::quote('open'))) {
 	&Log::do_log('err','Unable to insert new one time ticket for user %s, robot %s in the database',$email,$robot);
 	return undef;
     }   
