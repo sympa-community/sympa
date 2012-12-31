@@ -365,7 +365,8 @@ my %list_option = (
     'notify_bouncers' => {'gettext_id' => 'notify bouncing users'},
 
     # pictures_feature, dkim_feature, merge_feature,
-    # inclusion_notification_feature
+    # inclusion_notification_feature, tracking.delivery_status_notification,
+    # tracking.message_delivery_notification
     'on'  => {'gettext_id' => 'enabled'},
     'off' => {'gettext_id' => 'disabled'},
 
@@ -487,6 +488,9 @@ my %list_option = (
     # archive_crypted_msg
     'original'  => {'gettext_id' => 'original messages'},
     'decrypted' => {'gettext_id' => 'decrypted messages'},
+
+    # tracking.message_delivery_notification
+    'on_demand' => {'gettext_id' => 'on demand'},
 );
 
 ## Values for subscriber reception mode.

@@ -667,7 +667,8 @@ our %pinfo = (
 		'order'      => 1,
 		'gettext_id' => "frequency",
 		'format'     => ['day', 'week', 'month', 'quarter', 'year'],
-		'synonym' => {'weekly' => 'week'}
+		'synonym'    => {'weekly' => 'week'},
+		'obsolete'   => 1,
 	    },
 	    'access' => {
 		'order'      => 2,
@@ -712,7 +713,8 @@ our %pinfo = (
 		'gettext_unit' => '%',
 		'format'       => '\d+',
 		'length'       => 3,
-		'default'      => {'conf' => 'bounce_halt_rate'}
+		'default'      => {'conf' => 'bounce_halt_rate'},
+		'obsolete'     => 1,
 	    }
 	}
     },
@@ -1725,7 +1727,8 @@ our %pinfo = (
 		    'You should probably use teh default value which is the value recommended by RFC4871',
 		'format'    => '\S+',
 		'occurence' => '0-1',
-		'default'   => {'conf' => 'dkim_header_list'}
+		'default'   => {'conf' => 'dkim_header_list'},
+		'obsolete'  => 1,
 	    },
 	    'signer_domain' => {
 		'order' => 5,
@@ -1772,7 +1775,8 @@ our %pinfo = (
 	'group'      => 'other',
 	'gettext_id' => "Account",
 	'format'     => '\S+',
-	'length'     => 10
+	'length'     => 10,
+	'obsolete'   => 1
     },
 
     'clean_delay_queuemod' => {
