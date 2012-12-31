@@ -2843,7 +2843,8 @@ sub confirm {
 	return undef;
     }
 
-    if ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
+    if ($action =~ /^editorkey((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('md5', $message);
 
 	unless (defined $key) {
@@ -2869,7 +2870,7 @@ sub confirm {
 	    'Message with key %s for list %s from %s sent to editors',
 	    $key, $name, $sender);
 
-	unless ($2 eq 'quiet') {
+	unless ($is_quiet) {
 	    unless (
 		&report::notice_report_msg(
 		    'moderating_message', $sender,
@@ -2884,7 +2885,8 @@ sub confirm {
 	}
 	return 1;
 
-    } elsif ($action =~ /editor(\s?,\s?(quiet))?/) {
+    } elsif ($action =~ /editor((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('smtp', $message);
 
 	unless (defined $key) {
@@ -2910,7 +2912,7 @@ sub confirm {
 	    'Message with key %s for list %s from %s sent to editors',
 	    $name, $sender);
 
-	unless ($2 eq 'quiet') {
+	unless ($is_quiet) {
 	    unless (
 		&report::notice_report_msg(
 		    'moderating_message', $sender,
@@ -2925,11 +2927,12 @@ sub confirm {
 	}
 	return 1;
 
-    } elsif ($action =~ /^reject(,(quiet))?/) {
+    } elsif ($action =~ /^reject((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	&Log::do_log('notice',
 	    'Message for %s from %s rejected, sender not allowed',
 	    $name, $sender);
-	unless ($2 eq 'quiet') {
+	unless ($is_quiet) {
 	    if (defined $result->{'tt2'}) {
 		unless ($list->send_file($result->{'tt2'}, $sender)) {
 		    &Log::do_log('notice',

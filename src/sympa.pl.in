@@ -1881,8 +1881,8 @@ sub DoMessage{
 	&Log::do_log('notice', 'Message for %s from %s kept for authentication with key %s', $list, $sender, $key);
 	&Log::db_log({'robot' => $robot, 'list' => $list->name, 'action' => 'DoMessage', 'parameters' => "$which, $messageid, $robot", 'target_email' => '', 'msg_id' => $messageid, 'status' => 'success', 'error_type' => 'kept_for_auth', 'user_email' => $sender, 'client' => $ip, 'daemon' => $daemon_name});
 	return 1;
-    }elsif($action =~ /^editorkey(\s?,\s?(quiet))?/){
-	
+    } elsif ($action =~ /^editorkey((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('md5',$message);
 
 	unless (defined $key) {
@@ -1895,13 +1895,14 @@ sub DoMessage{
 	&Log::do_log('info', 'Key %s for list %s from %s sent to editors, %s', $key, $list, $sender, $message->{'filename'});
 	
 	# do not report to the sender if the message was tagged as a spam
-	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
+	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
 	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&Log::do_log('notice', 'Unable to send template "message_report", entry "moderating_message" to %s', $sender);
 	    }
 	}
 	return 1;
-    }elsif($action =~ /^editor(\s?,\s?(quiet))?/){
+    } elsif ($action =~ /^editor((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('smtp', $message);
 
 	unless (defined $key) {
@@ -1914,18 +1915,18 @@ sub DoMessage{
 	&Log::do_log('info', 'Message for %s from %s sent to editors', $list, $sender);
 	
 	# do not report to the sender if the message was tagged as a spam
-	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
+	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
 	    unless (&report::notice_report_msg('moderating_message',$sender,{'message' => $message},$robot,$list)) {
 		&Log::do_log('notice', 'Unable to send template "message_report", type "success", entry "moderating_message" to %s', $sender);
 	    }
 	}
 	return 1;
-    }elsif($action =~ /^reject(,(quiet))?/) {
-
+    } elsif ($action =~ /^reject((?:\s*,\s*quiet)?)/) {
+	my $is_quiet = $1 || undef;
 	&Log::do_log('notice', 'Message for %s from %s rejected(%s) because sender not allowed', $list, $sender, $result->{'tt2'});
 
 	# do not report to the sender if the message was tagued as a spam
-	unless (($2 eq 'quiet')||($message->{'spam_status'} eq 'spam')) {
+	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
 	    if (defined $result->{'tt2'}) {
 		unless ($list->send_file($result->{'tt2'}, $sender, {'auto_submitted' => 'auto-replied'})) {
 		    &Log::do_log('notice',"sympa::DoMessage(): Unable to send template '$result->{'tt2'}' to $sender");
