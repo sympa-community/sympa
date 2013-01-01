@@ -136,7 +136,6 @@ our %pinfo = (
 
     'owner_include' => {
 	'group' => 'description',
-	,
 	'gettext_id' => 'Owners defined in an external data source',
 	'format'     => {
 	    'source' => {

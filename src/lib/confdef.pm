@@ -1490,7 +1490,7 @@ our @params = (
     {
         'name'     => 'one_time_ticket_lifetime',
         'default'  => '2d',
-        'query'    => 'duration before the one time tickets are expired',
+        'query'    => gettext('Duration before the one time tickets are expired'),
     },
     {
         'name'     => 'one_time_ticket_lockout',

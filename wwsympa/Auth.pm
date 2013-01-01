@@ -299,6 +299,7 @@ sub ldap_authentication {
 
 
 # fetch user email using his cas net_id and the paragrapah number in auth.conf
+## NOTE: This might be moved to Robot package.
 sub get_email_by_net_id {
     my $robot = Robot::clean_robot(shift);
     my $auth_id = shift;
