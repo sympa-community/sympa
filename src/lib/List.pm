@@ -3237,7 +3237,7 @@ sub add_parts {
     my ($header, $headermime);
     foreach my $file (
 	"$listdir/message.header",
-		      "$listdir/message.header.mime",
+	"$listdir/message.header.mime",
 	Site->etc . '/mail_tt2/message.header',
 	Site->etc . '/mail_tt2/message.header.mime'
 	) {
@@ -3248,13 +3248,13 @@ sub add_parts {
 	    }
 	    $header = $file;
 	    last;
-    }
+	}
     }
 
     my ($footer, $footermime);
     foreach my $file (
 	"$listdir/message.footer",
-		      "$listdir/message.footer.mime",
+	"$listdir/message.footer.mime",
 	Site->etc . '/mail_tt2/message.footer',
 	Site->etc . '/mail_tt2/message.footer.mime'
 	) {
@@ -3265,7 +3265,7 @@ sub add_parts {
 	    }
 	    $footer = $file;
 	    last;
-    }
+	}
     }
 
     ## No footer/header
@@ -5747,8 +5747,8 @@ sub load_scenario_list {
 
 	    my $scenario = new Scenario(
 		'robot'     => $robot,
-					 'directory' => $directory,
-					 'function' => $action,
+		'directory' => $directory,
+		'function' => $action,
 		'name'      => $name
 	    );
 	    $list_of_scenario{$name} = $scenario;
@@ -7753,10 +7753,11 @@ sub purge_ca {
 }
 
 sub sync_include {
-    my $self = shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self   = shift;
     my $option = shift;
     my $name   = $self->name;
-    &Log::do_log('notice', 'List:sync_include(%s)', $name);
+
     my %old_subscribers;
     my $total           = 0;
     my $errors_occurred = 0;
@@ -7772,7 +7773,7 @@ sub sync_include {
 	## User neither included nor subscribed = > set subscribed to 1
 	unless ($old_subscribers{lc($user->{'email'})}{'included'} ||
 	    $old_subscribers{lc($user->{'email'})}{'subscribed'}) {
-	    &Log::do_log('notice',
+	    Log::do_log('notice',
 		'Update user %s neither included nor subscribed',
 		$user->{'email'});
 	    unless (
@@ -7783,10 +7784,8 @@ sub sync_include {
 		    }
 		)
 		) {
-		&Log::do_log('err',
-		    'List:sync_include(%s): Failed to update %s',
-		    $name, lc($user->{'email'}));
-			next;
+		Log::do_log('err', 'Failed to update %s', $user->{'email'});
+		next;
 	    }
 	    $old_subscribers{lc($user->{'email'})}{'subscribed'} = 1;
 	}
@@ -7800,68 +7799,68 @@ sub sync_include {
 	my $result =
 	    $self->_load_list_members_from_include(
 	    $self->get_list_of_sources_id(\%old_subscribers));
-		$new_subscribers = $result->{'users'};
-		my @errors = @{$result->{'errors'}};
-		my @exclusions = @{$result->{'exclusions'}};
+	$new_subscribers = $result->{'users'};
+	my @errors     = @{$result->{'errors'}};
+	my @exclusions = @{$result->{'exclusions'}};
 
-		## If include sources were not available, do not update subscribers
-		## Use DB cache instead and warn the listmaster.
+	## If include sources were not available, do not update subscribers
+	## Use DB cache instead and warn the listmaster.
 	if ($#errors > -1) {
-	    &Log::do_log(
+	    Log::do_log(
 		'err',
 		'Errors occurred while synchronizing datasources for list %s',
-		$name
+		$self
 	    );
-			$errors_occurred = 1;
+	    $errors_occurred = 1;
 	    unless (
 		$self->robot->send_notify_to_listmaster(
 		    'sync_include_failed',
 		    {'errors' => \@errors, 'listname' => $self->name}
 		)
 		) {
-		&Log::do_log('notice',
-		    "Unable to send notify 'sync_include_failed' to listmaster"
+		Log::do_log('notice',
+		    'Unable to send notify "sync_include_failed" to listmaster'
 		);
-			}
-			foreach my $e (@errors) {
+	    }
+	    foreach my $e (@errors) {
 		next unless ($e->{'type'} eq 'include_voot_group');
-				my $cfg = undef;
+		my $cfg = undef;
 		foreach my $p (@{$self->include_voot_group}) {
 		    $cfg = $p if ($p->{'name'} eq $e->{'name'});
-				}
+		}
 		next unless (defined $cfg);
-				&report::reject_report_web(
-					'user',
-					'sync_include_voot_failed',
+		&report::reject_report_web(
+		    'user',
+		    'sync_include_voot_failed',
 		    {'oauth_provider' => 'voot:' . $cfg->{'provider'}},
-					'sync_include',
+		    'sync_include',
 		    $self->domain,
-					$cfg->{'user'},
+		    $cfg->{'user'},
 		    $self->name
-				);
-				&report::reject_report_msg(
-					'oauth',
-					'sync_include_voot_failed',
-					$cfg->{'user'},
+		);
+		&report::reject_report_msg(
+		    'oauth',
+		    'sync_include_voot_failed',
+		    $cfg->{'user'},
 		    {   'consumer_name'  => 'VOOT',
 			'oauth_provider' => 'voot:' . $cfg->{'provider'}
-					},
+		    },
 		    $self->robot,
-					'',
+		    '',
 		    $self->name
-				);
-			}
-			return undef;
-		}
+		);
+	    }
+	    return undef;
+	}
 
-		# Feed the new_subscribers hash with users previously subscribed
-		# with data sources not used because we were not in the period of
-		# time during which synchronization is allowed. This will prevent
-		# these users from being unsubscribed.
+	# Feed the new_subscribers hash with users previously subscribed
+	# with data sources not used because we were not in the period of
+	# time during which synchronization is allowed. This will prevent
+	# these users from being unsubscribed.
 	if ($#exclusions > -1) {
-			foreach my $ex_sources (@exclusions) {
-				my $id = $ex_sources->{'id'};
-				foreach my $email (keys %old_subscribers) {
+	    foreach my $ex_sources (@exclusions) {
+		my $id = $ex_sources->{'id'};
+		foreach my $email (keys %old_subscribers) {
 		    if ($old_subscribers{$email}{'id'} =~ /$id/g) {
 			$new_subscribers->{$email}{'date'} =
 			    $old_subscribers{$email}{'date'};
@@ -7894,32 +7893,32 @@ sub sync_include {
 			} else {
 			    $new_subscribers->{$email}{'id'} =
 				$old_subscribers{$email}{'id'};
-						}
-					}
-				}
 			}
+		    }
 		}
+	    }
 	}
+    }
 
-	my $data_exclu;
-	my @subscriber_exclusion;
+    my $data_exclu;
+    my @subscriber_exclusion;
 
-	## Gathering a list of emails for a the list in 'exclusion_table'
+    ## Gathering a list of emails for a the list in 'exclusion_table'
     $data_exclu = $self->get_exclusion();
 
     my $key = 0;
     while ($data_exclu->{'emails'}->[$key]) {
-		push @subscriber_exclusion, $data_exclu->{'emails'}->[$key];
-		$key = $key + 1;
-	}
+	push @subscriber_exclusion, $data_exclu->{'emails'}->[$key];
+	$key = $key + 1;
+    }
 
-    my $users_added = 0;
+    my $users_added   = 0;
     my $users_updated = 0;
 
     ## Get an Exclusive lock
     my $lock = new Lock($self->dir . '/include');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(10 * 60);
@@ -7933,49 +7932,42 @@ sub sync_include {
     my @deltab;
     foreach my $email (keys %old_subscribers) {
 	unless (defined($new_subscribers->{$email})) {
-			## User is also subscribed, update DB entry
-			if ($old_subscribers{$email}{'subscribed'}) {
-		&Log::do_log('debug',
-		    'List:sync_include: updating %s to list %s',
-		    $email, $name);
+	    ## User is also subscribed, update DB entry
+	    if ($old_subscribers{$email}{'subscribed'}) {
+		Log::do_log('debug', 'updating %s to list %s', $email, $self);
 		unless (
 		    $self->update_list_member(
 			$email,
 			{   'update_date' => time,
-								'included' => 0,
+			    'included'    => 0,
 			    'id'          => ''
 			}
 		    )
 		    ) {
-		    &Log::do_log('err',
-			'List:sync_include(%s): Failed to update %s',
-			$name, $email);
-					next;
-				}
+		    Log::do_log('err', 'Failed to update %s', $email);
+		    next;
+		}
 
-				$users_updated++;
+		$users_updated++;
 
-				## Tag user for deletion
+		## Tag user for deletion
 	    } else {
-		&Log::do_log('debug3',
-		    'List:sync_include: removing %s from list %s',
-		    $email, $name);
-				@deltab = ($email);
+		Log::do_log('debug3', 'removing %s from list %s',
+		    $email, $self);
+		@deltab = ($email);
 		unless ($user_removed =
 		    $self->delete_list_member('users' => \@deltab)) {
-		    &Log::do_log('err',
-			'List:sync_include(%s): Failed to delete %s',
-			$name, $user_removed);
-					return undef;
-				}
-				if ($user_removed) {
-					$users_removed++;
-					## Send notification if the list config authorizes it only.
+		    Log::do_log('err', 'Failed to delete %s', $user_removed);
+		    return undef;
+		}
+		if ($user_removed) {
+		    $users_removed++;
+		    ## Send notification if the list config authorizes it only.
 		    if ($self->inclusion_notification_feature eq 'on') {
 			unless ($self->send_file('bye', $email)) {
 			    Log::do_log('err',
-				'Unable to send template "bye" to %s', $email
-			    );
+				'Unable to send template "bye" to %s',
+				$email);
 			}
 		    }
 		}
@@ -7983,8 +7975,7 @@ sub sync_include {
 	}
     }
     if ($users_removed > 0) {
-	&Log::do_log('notice', 'List:sync_include(%s): %d users removed',
-	    $name, $users_removed);
+	Log::do_log('notice', '%d users removed', $users_removed);
     }
 
     ## Go through new users
@@ -8003,110 +7994,95 @@ sub sync_include {
 	    next;
 	}
 	if (defined($old_subscribers{$email})) {
-			if ($old_subscribers{$email}{'included'}) {
-				## If one user attribute has changed, then we should update the user entry
-				my $succesful_update = 0;
+	    if ($old_subscribers{$email}{'included'}) {
+		## If one user attribute has changed, then we should update the user entry
+		my $succesful_update = 0;
 		foreach my $attribute ('id', 'gecos') {
 		    if ($old_subscribers{$email}{$attribute} ne
 			$new_subscribers->{$email}{$attribute}) {
-			&Log::do_log('debug',
-			    'List:sync_include: updating %s to list %s',
-			    $email, $name);
+			Log::do_log('debug', 'updating %s to list %s',
+			    $email, $self);
 			my $update_time =
 			    $new_subscribers->{$email}{'update_date'} || time;
 			unless (
 			    $self->update_list_member(
-															$email,
+				$email,
 				{   'update_date' => $update_time,
 				    $attribute =>
 					$new_subscribers->{$email}{$attribute}
 				}
 			    )
 			    ) {
-
-			    &Log::do_log(
-				'err',
-				'List:sync_include(%s): Failed to update %s',
-				$name,
-				$email
-			    );
-							next;
+			    Log::do_log('err', 'Failed to update %s', $email);
+			    next;
 			} else {
-							$succesful_update = 1;
-						}
-					}
-				}
+			    $succesful_update = 1;
+			}
+		    }
+		}
 		$users_updated++ if ($succesful_update);
-				## User was already subscribed, update include_sources_subscriber in DB
+		## User was already subscribed, update include_sources_subscriber in DB
 	    } else {
-		&Log::do_log('debug',
-		    'List:sync_include: updating %s to list %s',
-		    $email, $name);
+		Log::do_log('debug', 'updating %s to list %s', $email, $self);
 		unless (
 		    $self->update_list_member(
 			$email,
 			{   'update_date' => time,
-						     'included' => 1,
+			    'included'    => 1,
 			    'id'          => $new_subscribers->{$email}{'id'}
 			}
 		    )
 		    ) {
-		    &Log::do_log('err',
-			'List:sync_include(%s): Failed to update %s',
-					$name, $email);
-					next;
-				}
-				$users_updated++;
-			}
+		    Log::do_log('err', 'Failed to update %s', $email);
+		    next;
+		}
+		$users_updated++;
+	    }
 
 	    ## Add new included user
 	} else {
-			my $compare = 0;
+	    my $compare = 0;
 	    foreach my $sub_exclu (@subscriber_exclusion) {
 		unless ($compare eq '1') {
 		    if ($email eq $sub_exclu) {
-						$compare = 1;
+			$compare = 1;
 		    } else {
-						next;
-					}
-				}
-			}
+			next;
+		    }
+		}
+	    }
 	    if ($compare eq '1') {
-				next;
-			}
-	    &Log::do_log('debug3', 'List:sync_include: adding %s to list %s',
-		$email, $name);
-			my $u = $new_subscribers->{$email};
-			$u->{'included'} = 1;
-			$u->{'date'} = time;
-			@add_tab = ($u);
-			my $user_added = 0;
+		next;
+	    }
+	    Log::do_log('debug3', 'adding %s to list %s', $email, $self);
+	    my $u = $new_subscribers->{$email};
+	    $u->{'included'} = 1;
+	    $u->{'date'}     = time;
+	    @add_tab         = ($u);
+	    my $user_added = 0;
 	    unless ($user_added = $self->add_list_member(@add_tab)) {
-		&Log::do_log('err',
-		    'List:sync_include(%s): Failed to add new users', $name);
-				return undef;
-			}
-			if ($user_added) {
-				$users_added++;
-				## Send notification if the list config authorizes it only.
+		Log::do_log('err', 'Failed to add new users');
+		return undef;
+	    }
+	    if ($user_added) {
+		$users_added++;
+		## Send notification if the list config authorizes it only.
 		if ($self->inclusion_notification_feature eq 'on') {
 		    unless ($self->send_file('welcome', $u->{'email'})) {
-			&Log::do_log('err',
-			    "Unable to send template 'welcome' to $u->{'email'}"
-			);
-					}
-				}
-			}
+			Log::do_log('err',
+			    'Unable to send template "welcome" to %s',
+			    $u->{'email'});
+		    }
 		}
+	    }
+	}
     }
 
     if ($users_added) {
-	&Log::do_log('notice', 'List:sync_include(%s): %d users added',
-	    $name, $users_added);
+	Log::do_log('notice', '%d users added', $users_added);
     }
 
-    &Log::do_log('notice', 'List:sync_include(%s): %d users updated',
-	$name, $users_updated);
+    Log::do_log('notice', '%d users updated', $users_updated);
 
     ## Release lock
     unless ($lock->unlock()) {
