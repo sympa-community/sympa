@@ -135,7 +135,7 @@ our %pinfo = (
     },
 
     'owner_include' => {
-	'group' => 'description',
+	'group'      => 'description',
 	'gettext_id' => 'Owners defined in an external data source',
 	'format'     => {
 	    'source' => {
@@ -666,8 +666,8 @@ our %pinfo = (
 		'order'      => 1,
 		'gettext_id' => "frequency",
 		'format'     => ['day', 'week', 'month', 'quarter', 'year'],
-		'synonym'    => {'weekly' => 'week'},
-		'obsolete'   => 1,
+		'synonym'  => {'weekly' => 'week'},
+		'obsolete' => 1,
 	    },
 	    'access' => {
 		'order'      => 2,
