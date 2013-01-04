@@ -92,8 +92,9 @@ sub upgrade {
 
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
-    &Log::do_log('notice','Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = &List::get_lists('*',{'reload_config' => 1});
+    Log::do_log('notice',
+	'Rebuilding config.bin files for ALL lists...it may take a while...');
+    my $all_lists = List::get_lists('Site', {'reload_config' => 1});
 
     ## Empty the admin_table entries and recreate them
     &Log::do_log('notice','Rebuilding the admin_table...');
@@ -114,13 +115,12 @@ sub upgrade {
 	}
 	close EXEC;
 	
-	&Log::do_log('notice','Rebuilding web archives...');
-	my $all_lists = &List::get_lists('*');
+	Log::do_log('notice', 'Rebuilding web archives...');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
+	    next unless %{$list->web_archive}; #FIXME: always success
+	    my $file = Site->queueoutgoing.'/.rebuild.'.$list->get_id();
 
-	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = Site->queueoutgoing.'/.rebuild.'.$list->get_list_id();
-	    
 	    unless (open REBUILD, ">$file") {
 		&Log::do_log('err','Cannot create %s', $file);
 		next;
@@ -132,8 +132,8 @@ sub upgrade {
     
     ## Initializing the new admin_table
     if (&tools::lower_version($previous_version, '4.2b.4')) {
-	&Log::do_log('notice','Initializing the new admin_table...');
-	my $all_lists = &List::get_lists('*');
+	Log::do_log('notice', 'Initializing the new admin_table...');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
 	    $list->sync_include_admin();
 	}
@@ -159,10 +159,10 @@ sub upgrade {
 	}
 
 	## Search in V. Robot Lists
-	my $all_lists = &List::get_lists('*');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-	    if (-d "$list->{'dir'}/web_tt2") {
-		push @directories, "$list->{'dir'}/web_tt2";
+	    if (-d $list->dir . '/web_tt2') {
+		push @directories, $list->dir . '/web_tt2';
 	    }	    
 	}
 
@@ -194,21 +194,22 @@ sub upgrade {
 
     ## Clean buggy list config files
     if (&tools::lower_version($previous_version, '5.1b')) {
-	&Log::do_log('notice','Cleaning buggy list config files...');
-	my $all_lists = &List::get_lists('*');
+	Log::do_log('notice', 'Cleaning buggy list config files...');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-	    $list->save_config('listmaster@'.$list->{'domain'});
+	    $list->save_config($list->robot->get_address('listmaster'));
 	}
     }
 
     ## Fix a bug in Sympa 5.1
     if (&tools::lower_version($previous_version, '5.1.2')) {
-	&Log::do_log('notice','Rename archives/log. files...');
-	my $all_lists = &List::get_lists('*');
+	Log::do_log('notice', 'Rename archives/log. files...');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-	    my $l = $list->{'name'}; 
-	    if (-f $list->{'dir'}.'/archives/log.') {
-		rename $list->{'dir'}.'/archives/log.', $list->{'dir'}.'/archives/log.00';
+	    my $l = $list->name; 
+	    if (-f $list->dir . '/archives/log.') {
+		rename $list->dir . '/archives/log.',
+		    $list->dir . '/archives/log.00';
 	    }
 	}
     }
@@ -218,18 +219,23 @@ sub upgrade {
 	## Fill the robot_subscriber and robot_admin fields in DB
 	&Log::do_log('notice','Updating the new robot_subscriber and robot_admin  Db fields...');
 
-	foreach my $r (keys %{Site->robots_config}) {
-	    my $all_lists = &List::get_lists($r, {'skip_sync_admin' => 1});
+	foreach my $r (@{Robot::get_robots}) {
+	    my $all_lists = List::get_lists($r, {'skip_sync_admin' => 1});
 	    foreach my $list ( @$all_lists ) {
-		
 		foreach my $table ('subscriber','admin') {
-		    unless (&SDM::do_query("UPDATE %s_table SET robot_%s=%s WHERE (list_%s=%s)",
-		    $table,
-		    $table,
-		    &SDM::quote($r),
-		    $table,
-		    &SDM::quote($list->{'name'}))) {
-			&Log::do_log('err','Unable to fille the robot_admin and robot_subscriber fields in database for robot %s.',$r);
+		    unless (SDM::do_query(
+			q{UPDATE %s_table
+			  SET robot_%s = %s
+			  WHERE list_%s = %s},
+			$table,
+			$table,
+			SDM::quote($list->domain),
+			$table,
+			SDM::quote($list->name)
+		    )) {
+			Log::do_log('err',
+			    'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s.',
+			    $r);
 			Site->send_notify_to_listmaster(
 			    'upgrade_failed',
 			    {'error' => $SDM::db_source->{'db_handler'}->errstr});
@@ -238,7 +244,7 @@ sub upgrade {
 		}
 		
 		## Force Sync_admin
-		$list = new List ($list->{'name'}, $list->{'domain'}, {'force_sync_admin' => 1});
+		$list = List->new($list->name, $list->robot, {'force_sync_admin' => 1});
 	    }
 	}
 
@@ -256,7 +262,7 @@ sub upgrade {
 		     
 	    my ($listname, $listdomain) = split /\@/, $dir;
 
-	    next unless ($listname && $listdomain);
+	    next unless $listname and $listdomain;
 
 	    my $list = new List $listname;
 	    unless (defined $list) {
@@ -264,9 +270,9 @@ sub upgrade {
 		next;
 	    }
 	    
-	    if ($listdomain ne $list->{'domain'}) {
+	    if ($listdomain ne $list->domain) {
 		my $old_path = $root_dir.'/'.$listname.'@'.$listdomain;		
-		my $new_path = $root_dir.'/'.$listname.'@'.$list->{'domain'};
+		my $new_path = $root_dir.'/'.$listname.'@'.$list->domain;
 
 		if (-d $new_path) {
 		    &Log::do_log('err',"Could not rename %s to %s ; directory already exists", $old_path, $new_path);
@@ -292,28 +298,18 @@ sub upgrade {
 			 'included_subscriber' => 'subscriber_table',
 			 'subscribed_admin' => 'admin_table',
 			 'included_admin' => 'admin_table');
-	    
-    my $dbh = &SDM::db_get_handler();
 
 	    foreach my $field (keys %check) {
-
 		my $statement;
-				
-		## Query the Database
-		$statement = sprintf "SELECT max(%s) FROM %s", $field, $check{$field};
-		
 		my $sth;
-		
-		unless ($sth = $dbh->prepare($statement)) {
-		    &Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+
+		$sth = SDM::do_query(q{SELECT max(%s) FROM %s},
+		    $field, $check{$field});
+		unless ($sth) {
+		    Log::do_log('err', 'Unable to execute SQL statement');
 		    return undef;
 		}
-		
-		unless ($sth->execute) {
-		    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-		    return undef;
-		}
-		
+
 		my $max = $sth->fetchrow();
 		$sth->finish();		
 
@@ -321,41 +317,57 @@ sub upgrade {
 		## Restore correct field value
 		if ($max > 1) {
 		    ## 1 to 0
-		    &Log::do_log('notice', 'Fixing DB field %s ; turning 1 to 0...', $field);
-		    
-		    my $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 0, $field, 1;
+		    Log::do_log('notice',
+			'Fixing DB field %s ; turning 1 to 0...', $field);
 		    my $rows;
-		    unless ($rows = $dbh->do($statement)) {
-			&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    $sth = SDM::do_query(
+			q{UPDATE %s SET %s = %d WHERE %s = %d},
+			$check{$field}, $field, 0, $field, 1
+		    );
+		    unless ($sth) {
+			Log::do_log('err',
+			    'Unable to execute SQL statement');
 			return undef;
 		    }
-		    
-		    &Log::do_log('notice', 'Updated %d rows', $rows);
+		    $rows = $sth->rows;
+		    Log::do_log('notice', 'Updated %d rows', $rows);
 
 		    ## 2 to 1
-		    &Log::do_log('notice', 'Fixing DB field %s ; turning 2 to 1...', $field);
+		    Log::do_log('notice',
+			'Fixing DB field %s ; turning 2 to 1...', $field);
 		    
 		    $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 1, $field, 2;
 
-		    unless ($rows = $dbh->do($statement)) {
-			&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    $sth = SDM::do_query(
+			q{UPDATE %s SET %s = %d WHERE %s = %d},
+			$check{$field}, $field, 1, $field, 2
+		    );
+		    unless ($sth) {
+			Log::do_log('err',
+			    'Unable to execute SQL statement');
 			return undef;
 		    }
-		    
-		    &Log::do_log('notice', 'Updated %d rows', $rows);		    
-
+		    $rows = $sth->rows;
+		    Log::do_log('notice', 'Updated %d rows', $rows);
 		}
 
-		## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set		
-		$statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
-		
-		&Log::do_log('notice','Updating subscribed field of the subscriber table...');
-		my $rows = $dbh->do($statement);
-		unless (defined $rows) {
-		    &Log::fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
+		## Set 'subscribed' data field to '1' is none of 'subscribed'
+		## and 'included' is set		
+		Log::do_log('notice',
+		    'Updating subscribed field of the subscriber table...');
+		my $rows;
+		$sth = SDM::do_query(
+		    q{UPDATE subscriber_table
+		      SET subscribed_subscriber = 1
+		      WHERE (included_subscriber IS NULL OR
+			     included_subscriber <> 1) AND
+			    (subscribed_subscriber IS NULL OR
+			     subscribed_subscriber <> 1)});
+		unless ($sth) {
+		    Log::fatal_err("Unable to execute SQL statement");
 		}
-		&Log::do_log('notice','%d rows have been updated', $rows);
-				
+		$rows = $sth->rows;
+		Log::do_log('notice','%d rows have been updated', $rows);
 	    }
 	}
     }
@@ -372,19 +384,20 @@ sub upgrade {
 	}
 	
 	foreach my $dir (sort readdir(BOUNCEDIR)) {
-	    next if (($dir =~ /^\./o) || (! -d $root_dir.'/'.$dir)); ## Skip files and entries starting with '.'
-		     
-	    next if ($dir =~ /\@/); ## Directory already include the list domain
+	    ## Skip files and entries starting with '.'
+	    next if (($dir =~ /^\./o) || (! -d $root_dir.'/'.$dir));
+	    ## Directory already include the list domain
+	    next if ($dir =~ /\@/);
 
 	    my $listname = $dir;
 	    my $list = new List $listname;
 	    unless (defined $list) {
-		&Log::do_log('notice',"Skipping unknown list $listname");
+		Log::do_log('notice', 'Skipping unknown list %s', $listname);
 		next;
 	    }
 	    
-	    my $old_path = $root_dir.'/'.$listname;		
-	    my $new_path = $root_dir.'/'.$listname.'@'.$list->{'domain'};
+	    my $old_path = $root_dir . '/' . $listname;		
+	    my $new_path = $root_dir . '/' . $list->get_id;
 	    
 	    if (-d $new_path) {
 		&Log::do_log('err',"Could not rename %s to %s ; directory already exists", $old_path, $new_path);
@@ -405,23 +418,27 @@ sub upgrade {
 	
 	&Log::do_log('notice','Update lists config using include_list parameter...');
 
-	my $all_lists = &List::get_lists('*');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-
-	    if (defined $list->{'admin'}{'include_list'}) {
-	    
-		foreach my $index (0..$#{$list->{'admin'}{'include_list'}}) {
-		    my $incl = $list->{'admin'}{'include_list'}[$index];
+	    if (@{$list->include_list}) {
+		my $include_lists = $list->include_list;
+		my $changed = 0;
+		foreach my $index (0..$#{$include_lists}) {
+		    my $incl = $include_lists->[$index];
 		    my $incl_list = new List ($incl);
 		    
-		    if (defined $incl_list &
-			$incl_list->{'domain'} ne $list->{'domain'}) {
-			&Log::do_log('notice','Update config file of list %s, including list %s', $list->get_list_id(), $incl_list->get_list_id());
-			
-			$list->{'admin'}{'include_list'}[$index] = $incl_list->get_list_id();
-
-			$list->save_config('listmaster@'.$list->{'domain'});
+		    if (defined $incl_list and
+			$incl_list->domain ne $list->domain) {
+			Log::do_log('notice',
+			    'Update config file of list %s, including list %s',
+			    $list, $incl_list);
+			$include_lists->[$index] = $incl_list->get_id();
+			$changed = 1;
 		    }
+		}
+		if ($changed) {
+		    $list->include_list($include_lists);
+		    $list->save_config($list->robot->get_address('listmaster'));
 		}
 	    }
 	}	
@@ -449,12 +466,11 @@ sub upgrade {
 	}
 
 
-	&Log::do_log('notice','Rebuilding web archives...');
-	my $all_lists = &List::get_lists('*');
+	&Log::do_log('notice', 'Rebuilding web archives...');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-
-	    next unless (defined $list->{'admin'}{'web_archive'});
-	    my $file = Site->queueoutgoing.'/.rebuild.'.$list->get_list_id();
+	    next unless %{$list->web_archive}; #FIXME: always true
+	    my $file = Site->queueoutgoing . '/.rebuild.' . $list->get_id();
 	    
 	    unless (open REBUILD, ">$file") {
 		&Log::do_log('err','Cannot create %s', $file);
@@ -472,20 +488,22 @@ sub upgrade {
 	&Log::do_log('notice','Q-Encoding web documents filenames...');
 
 	Language::PushLang(Site->lang);
-	my $all_lists = &List::get_lists('*');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
-	    if (-d $list->{'dir'}.'/shared') {
+	    if (-d $list->dir . '/shared') {
 		&Log::do_log('notice','  Processing list %s...', $list);
 
 		## Determine default lang for this list
 		## It should tell us what character encoding was used for filenames
-		&Language::SetLang($list->{'admin'}{'lang'});
+		&Language::SetLang($list->lang);
 		my $list_encoding = &Language::GetCharset();
 
-		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
+		my $count = tools::qencode_hierarchy($list->dir . '/shared', $list_encoding);
 
 		if ($count) {
-		    &Log::do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);
+		    Log::do_log('notice',
+			'List %s : %d filenames has been changed',
+			$list, $count);
 		}
 	    }
 	}
@@ -518,33 +536,33 @@ sub upgrade {
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{Site->robots_config}) {
+	foreach my $vr (@{Robot::get_robots}) {
 	    foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
-		if (-d Site->etc.'/'.$vr.'/'.$type) {
-		    push @directories, [Site->etc.'/'.$vr.'/'.$type, &Conf::get_robot_conf($vr, 'lang')];
+		if (-d $vr->etc . '/' . $type) {
+		    push @directories, [$vr->etc . '/' . $type, $vr->lang];
 		}
 	    }
 
 	    foreach my $f ('robot.conf','topics.conf','auth.conf') {
-		if (-f Site->etc.'/'.$vr.'/'.$f) {
-		    push @files, [Site->etc.'/'.$vr.'/'.$f, Site->lang];
+		if (-f $vr->etc . '/' . $f) {
+		    push @files, [$vr->etc . '/' . $f, $vr->lang];
 		}
 	    }
 	}
 
 	## Search in Lists
-	my $all_lists = &List::get_lists('*');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
 	    foreach my $f ('config','info','homepage','message.header','message.footer') {
-		if (-f $list->{'dir'}.'/'.$f){
-		    push @files, [$list->{'dir'}.'/'.$f, $list->{'admin'}{'lang'}];
+		if (-f $list->dir . '/' . $f){
+		    push @files, [$list->dir . '/' . $f, $list->lang];
 		}
 	    }
 
 	    foreach my $type ('mail_tt2','web_tt2','scenari') {
-		my $directory = $list->{'dir'}.'/'.$type;
+		my $directory = $list->dir . '/' . $type;
 		if (-d $directory) {
-		    push @directories, [$directory, $list->{'admin'}{'lang'}];
+		    push @directories, [$directory, $list->lang];
 		}	    
 	    }
 	}
@@ -599,17 +617,17 @@ sub upgrade {
 	
 	&Log::do_log('notice','Looking for lists with user_data_source parameter set to file or database...');
 
-	my $all_lists = &List::get_lists('*');
+	my $all_lists = List::get_lists('Site');
 	foreach my $list ( @$all_lists ) {
+	    if ($list->user_data_source eq 'file') {
+		&Log::do_log('notice',
+		    'List %s ; changing user_data_source from file to include2...',
+		    $list);
 
-	    if ($list->{'admin'}{'user_data_source'} eq 'file') {
-
-		&Log::do_log('notice','List %s ; changing user_data_source from file to include2...', $list->{'name'});
+		my @users = List::_load_list_members_file($list->dir . '/subscribers');
 		
-		my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers");
-		
-		$list->{'admin'}{'user_data_source'} = 'include2';
-		$list->{'total'} = 0;
+		$list->user_data_source = 'include2';
+		$list->total(0);
 		
 		## Add users to the DB
 		$list->add_list_member(@users);
@@ -621,25 +639,29 @@ sub upgrade {
 		&Log::do_log('notice','%d subscribers have been loaded into the database', $total);
 		
 		unless ($list->save_config('automatic')) {
-		    &Log::do_log('err', 'Failed to save config file for list %s', $list->{'name'});
+		    Log::do_log('err',
+			'Failed to save config file for list %s', $list);
 		}
-	    }elsif ($list->{'admin'}{'user_data_source'} eq 'database') {
+	    }elsif ($list->user_data_source eq 'database') {
 
-		&Log::do_log('notice','List %s ; changing user_data_source from database to include2...', $list->{'name'});
+		Log::do_log('notice',
+		    'List %s ; changing user_data_source from database to include2...',
+		    $list);
 
 		unless ($list->update_list_member('*', {'subscribed' => 1})) {
 		    &Log::do_log('err', 'Failed to update subscribed DB field');
 		}
 
-		$list->{'admin'}{'user_data_source'} = 'include2';
+		$list->user_data_source = 'include2';
 
 		unless ($list->save_config('automatic')) {
-		    &Log::do_log('err', 'Failed to save config file for list %s', $list->{'name'});
+		    Log::do_log('err',
+			'Failed to save config file for list %s', $list);
 		}
 	    }
 	}
     }
-    
+
     if (&tools::lower_version($previous_version, '5.5a.1')) {
 
       ## Remove OTHER/ subdirectories in bounces
@@ -668,13 +690,13 @@ sub upgrade {
 		## Now these characters are preserved, according to RFC 2047 section 5 
 		## We change encoding of shared documents according to new algorithm
 		&Log::do_log('notice','Fixing Q-encoding of web document filenames...');
-		my $all_lists = &List::get_lists('*');
+		my $all_lists = List::get_lists('Site');
 		foreach my $list ( @$all_lists ) {
-			if (-d $list->{'dir'}.'/shared') {
+			if (-d $list->dir . '/shared') {
 				&Log::do_log('notice','  Processing list %s...', $list);
 
 				my @all_files;
-				&tools::list_dir($list->{'dir'}, \@all_files, 'utf-8');
+				&tools::list_dir($list->dir, \@all_files, 'utf-8');
 				
 				my $count;
 				foreach my $f_struct (reverse @all_files) {
@@ -696,7 +718,9 @@ sub upgrade {
 					}
 				}
 				if ($count) {
-				&Log::do_log('notice', 'List %s : %d filenames has been changed', $list->{'name'}, $count);
+					Log::do_log('notice',
+					    'List %s : %d filenames has been changed',
+					    $list->name, $count);
 				}
 			}
 		}
@@ -716,15 +740,18 @@ sub upgrade {
 			  'queueoutgoing' => 'archive',
 			  'queuetask' => 'task');
    if (&tools::lower_version($previous_version, '6.1.11')) {
-       ## Exclusion table was not robot-enabled.
-       &Log::do_log('notice','fixing robot column of exclusion table.');
-       my $sth;
-	unless ($sth = &SDM::do_query("SELECT * FROM exclusion_table")) {
-	    &Log::do_log('err','Unable to gather informations from the exclusions table.');
+	## Exclusion table was not robot-enabled.
+	Log::do_log('notice','fixing robot column of exclusion table.');
+	my $sth = SDM::do_query(q{SELECT * FROM exclusion_table});
+	unless ($sth) {
+	    Log::do_log('err',
+		'Unable to gather informations from the exclusions table.');
 	}
 	my @robots = @{Robot::get_robots() || []};
 	while (my $data = $sth->fetchrow_hashref){
-	    next if (defined $data->{'robot_exclusion'} && $data->{'robot_exclusion'} ne '');
+	    next
+		if defined $data->{'robot_exclusion'} and
+		$data->{'robot_exclusion'} ne '';
 	    ## Guessing right robot for each exclusion.
 	    my $valid_robot = '';
 	    my @valid_robot_candidates;
@@ -737,15 +764,15 @@ sub upgrade {
 	    }
 	    if ($#valid_robot_candidates == 0) {
 		$valid_robot = $valid_robot_candidates[0];
-		my $sth;
-		unless ($sth = SDM::do_query(
+		my $sth = SDM::do_query(
 		    q{UPDATE exclusion_table
 		      SET robot_exclusion = %s
 		      WHERE list_exclusion = %s AND user_exclusion = %s},
 		    SDM::quote($valid_robot->domain),
 		    SDM::quote($data->{'list_exclusion'}),
 		    SDM::quote($data->{'user_exclusion'})
-		)) {
+		);
+		unless ($sth) {
 		    &Log::do_log('err','Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',$data->{'list_exclusion'},$data->{'user_exclusion'},$valid_robot);
 		}
 	    }else {
@@ -759,15 +786,16 @@ sub upgrade {
 	}
 	## Caching all list config
 	&Log::do_log('notice', 'Caching all list config to database...');
-	&List::get_lists('*', { 'reload_config' => 1 });
+	List::get_lists('Site', { 'reload_config' => 1 });
 	&Log::do_log('notice', '...done');
 	}
 
 	foreach my $spoolparameter (keys %spools_def ){
-	    next if ($spoolparameter eq 'queuetask'); # task is to be done later
-	    
+	    # task is to be done later
+	    next if ($spoolparameter eq 'queuetask');
+
 	    my $spooldir = Site->$spoolparameter;
-	    
+
 	    unless (-d $spooldir){
 		&Log::do_log('info',"Could not perform migration of spool %s because it is not a directory", $spoolparameter);
 		next;
@@ -1265,16 +1293,11 @@ sub md5_encode_password {
 	return undef;
     }
 
-    my $dbh = &SDM::db_get_handler();
-
-    my $sth;
-    unless ($sth = $dbh->prepare("SELECT email_user,password_user from user_table")) {
-	&Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-
-    unless ($sth->execute) {
-	&Log::do_log('err','Unable to execute SQL statement : %s', $dbh->errstr);
+    my $sth = SDM::do_query(
+	q{SELECT email_user, password_user FROM user_table}
+    );
+    unless ($sth) {
+	Log::do_log('err', 'Unable to execute SQL statement');
 	return undef;
     }
 
@@ -1282,10 +1305,11 @@ sub md5_encode_password {
     my $total_md5 = 0 ;
 
     while (my $user = $sth->fetchrow_hashref('NAME_lc')) {
-
 	my $clear_password ;
 	if ($user->{'password_user'} =~ /^[0-9a-f]{32}/){
-	    &Log::do_log('info','password from %s already encoded as md5 fingerprint',$user->{'email_user'});
+	    Log::do_log('info',
+		'password from %s already encoded as md5 fingerprint',
+		$user->{'email_user'});
 	    $total_md5++ ;
 	    next;
 	}	
@@ -1302,17 +1326,19 @@ sub md5_encode_password {
 	$total++;
 
 	## Updating Db
-	my $escaped_email =  $user->{'email_user'};
-	$escaped_email =~ s/\'/''/g;
-	my $statement = sprintf "UPDATE user_table SET password_user='%s' WHERE (email_user='%s')", &Auth::password_fingerprint($clear_password), $escaped_email ;
-	
-	unless ($dbh->do($statement)) {
-	    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	unless (SDM::do_query(
+	    q{UPDATE user_table
+	      SET password_user = %s
+	      WHERE email_user = %s},
+	    SDM::quote(Auth::password_fingerprint($clear_password)),
+	    SDM::quote($user->{'email_user'})
+	)) {
+	    Log::do_log('err', 'Unable to execute SQL statement');
 	    return undef;
 	}
     }
     $sth->finish();
-    
+
     &Log::do_log('info',"Updating password storage in table user_table using md5 for %d users",$total) ;
     if ($total_md5) {
 	&Log::do_log('info',"Found in table user %d password stored using md5, did you run Sympa before upgrading ?", $total_md5 );
