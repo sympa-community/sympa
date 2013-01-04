@@ -219,7 +219,7 @@ sub upgrade {
 	## Fill the robot_subscriber and robot_admin fields in DB
 	&Log::do_log('notice','Updating the new robot_subscriber and robot_admin  Db fields...');
 
-	foreach my $r (@{Robot::get_robots}) {
+	foreach my $r (@{Robot::get_robots()}) {
 	    my $all_lists = List::get_lists($r, {'skip_sync_admin' => 1});
 	    foreach my $list ( @$all_lists ) {
 		foreach my $table ('subscriber','admin') {
@@ -536,7 +536,7 @@ sub upgrade {
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (@{Robot::get_robots}) {
+	foreach my $vr (@{Robot::get_robots()}) {
 	    foreach my $type ('mail_tt2','web_tt2','scenari','create_list_templates','families') {
 		if (-d $vr->etc . '/' . $type) {
 		    push @directories, [$vr->etc . '/' . $type, $vr->lang];

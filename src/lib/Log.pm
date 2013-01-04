@@ -158,11 +158,11 @@ sub do_log {
 	my @call = caller(1);
 	
 	## If called via wwslog, go one step ahead
-	if ($call[3] =~ /wwslog$/) {
-		my @call = caller(2);
+	if ($call[3] and $call[3] =~ /wwslog$/) {
+	    @call = caller(2);
 	}
 	
-	$caller_string = $call[3].'()';
+	$caller_string = ($call[3] || '').'()';
     }
     
     $message = $caller_string. ' ' . $message if ($caller_string);
