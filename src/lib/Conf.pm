@@ -1423,7 +1423,7 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'cafile'} = Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
     } 
     
-    unless ($param->{'config_hash'}{'DKIM_feature'} eq 'on'){
+    unless ($param->{'config_hash'}{'dkim_feature'} eq 'on'){
         # dkim_signature_apply_ on nothing if DKIM_feature is off
         $param->{'config_hash'}{'dkim_signature_apply_on'} = ['']; # empty array
     }
@@ -1647,7 +1647,7 @@ sub _check_cpan_modules_required_by_config {
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
         eval "require Mail::DKIM";
         if ($@) {
-            &Log::do_log('notice', 'Failed to load Mail::DKIM perl module ; setting "DKIM_feature" to "off"');
+            &Log::do_log('notice', 'Failed to load Mail::DKIM perl module ; setting "dkim_feature" to "off"');
             $param->{'config_hash'}{'dkim_feature'} = 'off';
             $number_of_missing_modules++;
         }
