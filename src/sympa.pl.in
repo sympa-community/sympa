@@ -359,7 +359,7 @@ if ($main::options{'dump'}) {
     
     my ($all_lists, $list);
     if ($main::options{'dump'} eq 'ALL') {
-	$all_lists = &List::get_lists('*');
+	$all_lists = List::get_lists();
     }else {	
 	
 	## The parameter can be a list address
@@ -389,7 +389,7 @@ if ($main::options{'dump'}) {
     print $usage_string;
     exit 0;
 }elsif ($main::options{'make_alias_file'}) {
-    my $all_lists = &List::get_lists('*');
+    my $all_lists = List::get_lists();
     unless (open TMP, '>', Site->tmpdir . "/sympa_aliases.$$") {
 	printf STDERR "Unable to create " . Site->tmpdir . "/sympa_aliases.$$, exiting\n";
 	exit;
@@ -842,17 +842,32 @@ if ($main::options{'dump'}) {
     }
 
     if (length $listname) {
-	&Log::do_log('notice', "Loading list $listname...");
-	my $list = new List($listname, $robot, { 'reload_config' => 1 });
-	unless (defined $list) {
+	Log::do_log('notice', 'Loading list %s...', $listname);
+	my $robot_object = Robot->new($robot || Site->domain);
+	unless (defined $robot_object) {
+	    print STDERR "Error : incorrect robot name '$robot'\n";
+	    exit 1;
+	}
+	unless (List->new($listname, $robot_object, {'reload_config' => 1})) {
 	    print STDERR "Error : incorrect list name '$listname'\n";
 	    exit 1;
 	}
     } else {
-	&Log::do_log('notice', 'Loading ALL lists...');
-	&List::get_lists($robot, { 'reload_config' => 1 });
+	my $that;
+	if ($robot) {
+	    Log::do_log('notice', 'Loading all lists in %s...', $robot);
+	    $that = Robot->new($robot);
+	    unless (defined $that) {
+		print STDERR "Error : incorrect robot name '$robot'\n";
+		exit 1;
+	    }
+	} else {
+	    Log::do_log('notice', 'Loading ALL lists...');
+	    $that = 'Site';
+	}
+	List::get_lists($that, { 'reload_config' => 1 });
     }
-    &Log::do_log('notice', '...Done.');
+    Log::do_log('notice', '...Done.');
 
     exit 0;
 }
@@ -1745,14 +1760,6 @@ sub DoMessage{
 	}
     }
 	
-    unless ($list->admin) {
-	&Log::do_log('err', 'sympa::DoMessage(): list config is undefined');
-	&report::reject_report_msg('intern','',$sender,{'message' => $message},$robot,$msg_string,$list);
-	&Log::db_log({'robot' => $robot,'list' => $list->name,'action' => 'DoMessage','parameters' => "$which,$messageid,$robot",'target_email' => '','msg_id' => $messageid,'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
-    
-
     ## Check if the message is too large
     # my $max_size = $list->get_max_size() || $robot_object->max_size;
     my $max_size = $list->get_max_size();

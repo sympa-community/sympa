@@ -748,9 +748,9 @@ sub purge_orphan_bounces {
     my %bounced_users;
     my $all_lists;
     
-    unless ($all_lists = &List::get_lists('*')) {
-		&Log::do_log('notice','No list available');
-		return 1;
+    unless ($all_lists = List::get_lists()) {
+	Log::do_log('notice','No list available');
+	return 1;
     }
     
     foreach my $list (@$all_lists) {
@@ -800,8 +800,8 @@ sub purge_orphan_bounces {
      my $delay = $tab[0];
 
      &Log::do_log('debug2','expire_bounce(%d)',$delay);
-     my $all_lists = &List::get_lists('*');
-     foreach my $list (@$all_lists ) {
+     my $all_lists = List::get_lists();
+     foreach my $list (@$all_lists) {
 		 my $listname = $list->name;
 		 # the reference date is the date until which we expire bounces in second
 		 # the latest_distribution_date is the date of last distribution #days from 01 01 1970
@@ -1034,7 +1034,7 @@ sub eval_bouncers {
     #################       
     my ($self,$task) = @_;
     
-    my $all_lists = &List::get_lists('*');
+    my $all_lists = List::get_lists();
     foreach my $list (@$all_lists) {
 		my $listname = $list->name;
 		my $list_traffic = {};
@@ -1105,7 +1105,7 @@ sub process_bouncers {
 		   'none'            => \&none
 		   );
 
-    my $all_lists = &List::get_lists();
+    my $all_lists = List::get_lists();
     foreach my $list (@$all_lists) {
 		my $listname = $list->name;
 		

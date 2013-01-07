@@ -240,7 +240,7 @@ sub lists {
     my $data  = {};
     my $lists = {};
 
-    my $all_lists = &List::get_lists($robot->domain);
+    my $all_lists = List::get_lists($robot);
 
     foreach my $list (@$all_lists) {
 	my $l      = $list->name;
@@ -1168,10 +1168,7 @@ sub info {
     }
     if ($action =~ /do_it/i) {
 
-	my $data;
-	foreach my $key (%{$list->admin}) {
-	    $data->{$key} = $list->admin->{$key};
-	}
+	my $data = $list->admin;
 
 	foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
 	    my $scenario = new Scenario(
@@ -1179,6 +1176,7 @@ sub info {
 		'directory' => $list->dir,
 		'file_path' => $list->$p->{'file_path'}
 	    );
+	    ##FIXME: non-gettext titles (title.ja_JP etc.) cannot be used.
 	    my $title = $scenario->{'title'}{'gettext'};
 	    $data->{$p} = gettext($title);
 	}
@@ -2146,7 +2144,7 @@ sub remind {
 
 	    # this remind is a global remind.
 
-	    my $all_lists = &List::get_lists($robot->domain);
+	    my $all_lists = List::get_lists($robot);
 	    foreach my $list (@$all_lists) {
 		my $listname = $list->name;
 		my $user;
