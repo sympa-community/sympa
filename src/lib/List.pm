@@ -125,11 +125,15 @@ Optional hashref.
 
 =item C<'just_try' =E<gt> TRUE>
 
-Won't really load list to object.
+Won't log errors.
 
 =item C<'reload_config' =E<gt> TRUE>
 
 Force reload config.  Cache won't be used anyway.
+
+=item C<'skip_name_check' =E<gt> TRUE>
+
+Won't check correctness of list name.
 
 =item C<'skip_sync_admin' =E<gt> TRUE>
 
@@ -536,7 +540,7 @@ $DB_BTREE->{compare} = \&_compare_addresses;
 
 ## Creates an object.
 sub new {
-    &Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -548,22 +552,22 @@ sub new {
     my $list;
 
     unless ($options->{'skip_name_check'}) {
-	## Allow robot in the name
 	if ($name =~ /\@/) {
+	    ## Allow robot in the name
 	    my @parts = split /\@/, $name;
 	    $robot ||= $parts[1];
 	    $name = $parts[0];
 	}
-
 	unless ($robot) {
 	    ## Look for the list if no robot was provided
-	    $robot = &search_list_among_robots($name);
+	    $robot = search_list_among_robots($name);
+	}
+	if ($robot) {
+	    $robot = Robot::clean_robot($robot);
 	}
 
-	$robot = Robot::clean_robot($robot);
-
 	unless ($robot) {
-	    &Log::do_log('err',
+	    Log::do_log('err',
 		'Missing robot parameter, cannot create list object for %s',
 		$name)
 		unless ($options->{'just_try'});
@@ -643,7 +647,7 @@ sub search_list_among_robots {
 
     foreach my $robot (@{Robot::get_robots() || []}) {
 	if (-d $robot->home . '/' . $listname) {
-	    return $robot->domain;
+	    return $robot;
 	}
     }
 
@@ -656,7 +660,7 @@ sub set_status_error_config {
 
     my ($self, $message, @param) = @_;
 
-    unless ($self->admin and $self->status eq 'error_config') {
+    unless ($self->config and $self->status eq 'error_config') {
 	$self->status('error_config');
 
 	## No more save config in error...
@@ -918,18 +922,15 @@ sub dump {
 
 ## Saves the configuration file to disk
 sub save_config {
-    &Log::do_log('debug3', '(%s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s)', @_);
     my ($self, $email) = @_;
 
     return undef unless $self;
 
-    my $robot = $self->robot;
-    my $config_file_name = $self->dir . '/config';
-
     ## Lock file
     my $lock = new Lock($self->dir . '/config');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(5);
@@ -937,22 +938,9 @@ sub save_config {
 	return undef;
     }
 
-    my $name                 = $self->name;
-    my $old_serial           = $self->serial;
-    my $old_config_file_name = $self->dir . "/config.$old_serial";
-
-    ## Update management info
-    $self->serial($self->serial + 1);
-    $self->update({
-	'email'      => $email,
-	'date_epoch' => time,
-	'date'       => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime time),
-    });
-
-    unless (_save_list_config_file($robot,
-	$config_file_name, $old_config_file_name, $self->admin)) {
-	Log::do_log('info', 'unable to save config file %s',
-	    $config_file_name);
+    unless ($self->_save_list_config_file($email)) {
+	Log::do_log('info', 'unable to save config file %s/config',
+	    $self->dir);
 	$lock->unlock();
 	return undef;
     }
@@ -960,30 +948,30 @@ sub save_config {
     $lock->unlock();
 
     ## Also update the binary version of the data structure
-    $self->list_cache_update_admin;
+    $self->list_cache_update_config;
 
     return 1;
 }
 
 ## Loads the administrative data for a list
 sub load {
-    &Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
 
     my ($self, $name, $robot, $options) = @_;
 
-	unless ($robot) {
+    unless ($robot) {
 	## Look for the list if no robot was provided
-	$robot = &search_list_among_robots($name);
-		}
+	$robot = search_list_among_robots($name);
+    }
 
     $robot = Robot::clean_robot($robot);
     unless (ref $robot) {
-	&Log::do_log('err', 'Unknown robot');
+	Log::do_log('err', 'Unknown robot');
 	return undef;
-	    }
+    }
 
     ## Set of initializations ; only performed when the config is first loaded
     unless ($self->{'name'} and $self->{'robot'} and $self->{'dir'}) {
@@ -992,8 +980,8 @@ sub load {
 	} elsif ($robot and $robot->domain eq Site->domain) {
 	    $self->{'dir'} = Site->home . '/' . $name;
 	} else {
-	    &Log::do_log('err', 'No such robot (virtual domain) %s', $robot)
-		unless ($options->{'just_try'});
+	    Log::do_log('err', 'No such robot (virtual domain) %s', $robot)
+		unless $options->{'just_try'};
 	    return undef;
 	}
 
@@ -1004,12 +992,12 @@ sub load {
 
     unless ($self->{'name'} eq $name and
 	$self->{'domain'} eq $robot->domain) {
-	&Log::do_log('err', 'Bug in logic.  Ask developer');
+	Log::do_log('err', 'Bug in logic.  Ask developer');
 	return undef;
     }
 
     unless (-d $self->{'dir'} and -f $self->{'dir'} . '/config') {
-	&Log::do_log('debug3', 'Missing directory (%s) or config file for %s',
+	Log::do_log('debug3', 'Missing directory (%s) or config file for %s',
 	    $self->{'dir'}, $self)
 	    unless $options->{'just_try'};
 	return undef;
@@ -1021,8 +1009,8 @@ sub load {
     ($m1, $m2, $m3) = @{$self->{'mtime'}} if defined $self->{'mtime'};
 
     my $time_config = (stat("$self->{'dir'}/config"))[9];
-    my $time_stats = (stat("$self->{'dir'}/stats"))[9];
-    my $admin       = undef;
+    my $time_stats  = (stat("$self->{'dir'}/stats"))[9];
+    my $config      = undef;
     my $cached;
 
     ## Load list config
@@ -1030,25 +1018,26 @@ sub load {
 	$m1          and
 	$time_config and
 	$time_config <= $m1) {
-	&Log::do_log('debug3', 'config for %s on memory is up-to-date',
+	Log::do_log('debug3', 'config for %s on memory is up-to-date',
 	    $self);
     } elsif (!$options->{'reload_config'} and
 	defined($cached = $self->list_cache_fetch($m1, $time_config))) {
 	$m1 = $cached->{'epoch'};
-	$self->{'admin'} = $admin = $cached->{'admin'};
+	$config = $cached->{'config'};
+	$self->config($config);
 	$self->{'total'} = $cached->{'total'} if defined $cached->{'total'};
-	&Log::do_log('debug3', 'got config for %s from serialized data',
+	Log::do_log('debug3', 'got config for %s from serialized data',
 	    $self);
     } elsif ($options->{'reload_config'} or $time_config > $m1) {
-	$admin = _load_list_config_file($robot, $self->{'dir'}, 'config');
-	unless (defined $admin) {
+	$config = _load_list_config_file($robot, $self->{'dir'}, 'config');
+	unless (defined $config) {
 	    $self->set_status_error_config('load_admin_file_error');
 	    $self->list_cache_purge;
 	    return undef;
 	}
 	$m1 = $time_config;
-	$self->{'admin'} = $admin;
-	&Log::do_log('debug3', 'got config for %s from file', $self);
+	$self->config($config);
+	Log::do_log('debug3', 'got config for %s from file', $self);
 
 	## check param_constraint.conf if belongs to a family and
 	## the config has been loaded
@@ -1072,7 +1061,7 @@ sub load {
 	}
 
 	# config was reloaded.  Update cache too.
-	$self->list_cache_update_admin;
+	$self->list_cache_update_config;
     }
 
     ## Check if the current list has a public key X.509 certificate.
@@ -1088,7 +1077,7 @@ sub load {
 
     $self->{'mtime'} = [$m1, $m2, $m3];
     $robot->lists($name, $self);
-    return $admin ? 1 : 0;
+    return $config ? 1 : 0;
 }
 
 ## Return a list of hash's owners and their param
@@ -1438,14 +1427,14 @@ sub _get_single_param_value {
 }
 
 ###########################################################################
-#                       FUNCTIONS FOR MESSAGE SENDING                                  #
+#                       FUNCTIONS FOR MESSAGE SENDING                     #
 ###########################################################################
-#                                                                                      #
+#                                                                         #
 #  -list distribution
-#  -template sending                                                                   #
+#  -template sending                                                      #
 #  -service messages
-#  -notification sending(listmaster, owner, editor, user)                              #
-#                                                                 #
+#  -notification sending(listmaster, owner, editor, user)                 #
+#                                                                         #
 
 ###################   LIST DISTRIBUTION  ##################################
 
@@ -2023,7 +2012,6 @@ sub send_msg {
     my $name                = $self->name;
     my $robot               = $self->domain;
 
-    #my $admin = $self->admin;
     my $total       = $self->get_real_total;
     my $sender_line = $hdr->get('From');
     my @sender_hdr = Mail::Address->parse($sender_line);
@@ -2511,12 +2499,11 @@ sub send_to_editor {
     );
 
     my ($i, @rcpt);
-    my $admin = $self->admin;
     my $name  = $self->name;
     my $host  = $self->host;
     my $robot = $self->domain;
 
-    return unless $name and $admin;
+    return unless $name and $self->config;
 
    my @now = localtime(time);
     my $messageid =
@@ -2667,12 +2654,11 @@ sub send_auth {
     sleep(1);
 
     my ($i, @rcpt);
-    my $admin     = $self->admin;
     my $name      = $self->name;
     my $host      = $self->host;
     my $robot     = $self->domain;
     my $authqueue = Site->queueauth;
-    return undef unless $name and $admin;
+    return undef unless $name and $self->config;
 
    my @now = localtime(time);
     my $messageid =
@@ -5383,17 +5369,17 @@ sub init_list_cache {
 
 ## May the indicated user edit the indicated list parameter or not?
 sub may_edit {
-
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my ($self, $parameter, $who) = @_;
-    &Log::do_log('debug3', 'List::may_edit(%s, %s)', $parameter, $who);
 
     my $role;
 
-    return undef unless ($self);
+    return undef unless $self;
 
     my $edit_conf;
 
-# Load edit_list.conf: track by file, not domain (file may come from server, robot, family or list context)
+    # Load edit_list.conf: track by file, not domain (file may come from
+    # server, robot, family or list context)
     my $edit_conf_file = $self->get_etc_filename('edit_list.conf');
     if (!$edit_list_conf{$edit_conf_file} ||
 	((stat($edit_conf_file))[9] >
@@ -5412,16 +5398,12 @@ sub may_edit {
 	$role = 'listmaster';
     } elsif ($self->am_i('privileged_owner', $who)) {
 	$role = 'privileged_owner';
-
     } elsif ($self->am_i('owner', $who)) {
 	$role = 'owner';
-
     } elsif ($self->am_i('editor', $who)) {
 	$role = 'editor';
-
-	#    }elsif ( $self->am_i('subscriber',$who) ) {
-	#	$role = 'subscriber';
-	#
+#    } elsif ($self->am_i('subscriber',$who)) {
+#	$role = 'subscriber';
     } else {
 	return ('user', 'hidden');
     }
@@ -5486,21 +5468,18 @@ sub may_create_parameter {
 ## Action can be : send, review, index, get
 ##                 add, del, reconfirm, purge
 sub may_do {
-    my ($self, $action, $who) = @_;
-   &Log::do_log('debug3', 'List::may_do(%s, %s)', $action, $who);
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $self = shift;
+    my $action = lc(shift || '');
+    my $who = lc(shift || '');
 
-   my $i;
+    my $i;
 
-   ## Just in case.
-   return undef unless ($self && $action);
-    my $admin = $self->admin;
-    return undef unless $admin;
-
-   $action =~ y/A-Z/a-z/;
-   $who =~ y/A-Z/a-z/;
+    ## Just in case.
+    return undef unless $self and $action;
 
    if ($action =~ /^(index|get)$/io) {
-       my $arc_access = $admin->{'archive'}{'access'};
+       my $arc_access = $self->archive->{'access'};
        if ($arc_access =~ /^public$/io)  {
 	   return 1;
 	} elsif ($arc_access =~ /^private$/io) {
@@ -5512,8 +5491,9 @@ sub may_do {
        return undef;
    }
 
+    ##XXX Won't work.  Use scenario.
    if ($action =~ /^(review)$/io) {
-       foreach $i (@{$admin->{'review'}}) {
+	foreach $i (@{$self->review}) {
 	   if ($i =~ /^public$/io) {
 	       return 1;
 	    } elsif ($i =~ /^private$/io) {
@@ -5526,23 +5506,25 @@ sub may_do {
        }
    }
 
+    ##XXX Won't work.  Use scenario.
    if ($action =~ /^send$/io) {
-	if ($admin->{'send'} =~
+	if ($self->send =~
 	    /^(private|privateorpublickey|privateoreditorkey)$/i) {
 
 	    return undef
 		unless ($self->is_list_member($who) ||
 		$self->am_i('owner', $who));
 	} elsif (
-	    $admin->{'send'} =~ /^(editor|editorkey|privateoreditorkey)$/i) {
+	    $self->send =~ /^(editor|editorkey|privateoreditorkey)$/i) {
          return undef unless ($self->am_i('editor', $who));
 	} elsif (
-	    $admin->{'send'} =~ /^(editorkeyonly|publickey|privatekey)$/io) {
+	    $self->send =~ /^(editorkeyonly|publickey|privatekey)$/io) {
          return undef;
       }
       return 1;
    }
 
+    ##XXX Won't work.  Use scenario.
    if ($action =~ /^(add|del|remind|reconfirm|purge)$/io) {
       return $self->am_i('owner', $who);
    }
@@ -5552,16 +5534,17 @@ sub may_do {
        return 1;
    }
 
+    ##XXX Won't work.  Use scenario.
    if ($action =~ /^auth$/io) {
-       if ($admin->{'send'} =~ /^(privatekey)$/io) {
+       if ($self->send =~ /^(privatekey)$/io) {
 	    return 1
 		if ($self->is_list_member($who) ||
 		$self->am_i('owner', $who));
-       } elsif ($admin->{'send'} =~ /^(privateorpublickey)$/io) {
+       } elsif ($self->send =~ /^(privateorpublickey)$/io) {
 	    return 1
 		unless ($self->is_list_member($who) ||
 		$self->am_i('owner', $who));
-	} elsif ($admin->{'send'} =~ /^(publickey)$/io) {
+	} elsif ($self->send =~ /^(publickey)$/io) {
 	   return 1;
        }
        return undef; #authent
@@ -7071,7 +7054,6 @@ sub _load_list_members_from_include {
     my $self = shift;
     my $old_subs = shift;
     my $name     = $self->name;
-    my $admin    = $self->admin;
     my $dir      = $self->dir;
     &Log::do_log('debug2', 'Loading included users for list %s', $self);
     my (%users, $depend_on, $ref);
@@ -7088,7 +7070,7 @@ sub _load_list_members_from_include {
 	) {
 	last unless (defined $total);
 
-	foreach my $tmp_incl (@{$self->admin->{$type}}) {
+	foreach my $tmp_incl (@{$self->$type}) {
 	    my $included;
 	    my $source_is_new = 1;
         ## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
@@ -7254,10 +7236,11 @@ sub _load_list_admin_from_include {
 
     my (%admin_users, $depend_on, $ref);
     my $total = 0;
-    my $list_admin = $self->admin;
     my $dir        = $self->dir;
 
-    foreach my $entry (@{$self->admin->{$role . '_include'}}) {
+    #FIXME:check value of $role.
+    my $role_include = $role . '_include';
+    foreach my $entry (@{$self->$role_include}) {
 
 	next unless (defined $entry);
 
@@ -7560,11 +7543,11 @@ sub _load_include_admin_user_file {
 	    my $missing_required_field;
 	    foreach my $k (keys %{$pinfo->{$pname}{'file_format'}}) {
 		## Default value
-		if (! defined $hash{$k} and
-		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
-		    $hash{$k} = _load_list_param($robot, $k, 'default',
-			$pinfo->{$pname}{'file_format'}{$k});
-		}
+##		if (! defined $hash{$k} and
+##		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
+##		    $hash{$k} = _load_list_param($robot, $k, 'default',
+##			$pinfo->{$pname}{'file_format'}{$k});
+##		}
 		## Required fields
 		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
@@ -7632,37 +7615,33 @@ sub get_list_of_sources_id {
 }
 
 sub sync_include_ca {
-	my $self = shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self = shift;
+    my $purge = shift;
 
-    #my $admin = $self->admin;
-	my $purge = shift;
-	my %users;
-	my %changed;
+    my %users;
+    my %changed;
 
-    $self->purge_ca() if ($purge);
+    $self->purge_ca() if $purge;
 
-	&Log::do_log('debug', 'syncing CA');
+    for (my $user = $self->get_first_list_member();
+	$user; $user = $self->get_next_list_member()) {
+	$users{$user->{'email'}} = $user->{'custom_attribute'};
+    }
 
-    for (
-	my $user = $self->get_first_list_member();
-	$user;
-	$user = $self->get_next_list_member()
-	) {
-		$users{$user->{'email'}} = $user->{'custom_attribute'};
-	}
-
-	foreach my $type ('include_sql_ca') {
-	foreach my $tmp_incl (@{$self->admin->{$type}}) {
-			## Work with a copy of admin hash branch to avoid including temporary variables into the actual admin hash.[bug #3182]
-			my $incl = &tools::dup_var($tmp_incl);
-			my $source = undef;
-			my $srcca = undef;
-			if ($type eq 'include_sql_ca') {
-				$source = new SQLSource($incl);
+    foreach my $type ('include_sql_ca') {
+	foreach my $tmp_incl (@{$self->$type}) {
+	    ## Work with a copy of admin hash branch to avoid including
+	    ## temporary variables into the actual admin hash.[bug #3182]
+	    my $incl = &tools::dup_var($tmp_incl);
+	    my $source = undef;
+	    my $srcca = undef;
+	    if ($type eq 'include_sql_ca') {
+		$source = new SQLSource($incl);
 	    } elsif (($type eq 'include_ldap_ca') or
 		($type eq 'include_ldap_2level_ca')) {
-				$source = new LDAPSource($incl);
-			}
+		$source = new LDAPSource($incl);
+	    }
 	    next unless (defined($source));
 	    if ($source->is_allowed_to_sync()) {
 		my $getter = '_' . $type;
@@ -7709,17 +7688,15 @@ sub sync_include_ca {
 
 ### Purge synced custom attributes from user records, only keep user writable ones
 sub purge_ca {
-	my $self = shift;
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
 
-    #my $admin = $self->admin;
-	my %userattributes;
-	my %users;
-
-	&Log::do_log('debug', 'purge CA');
+    my %userattributes;
+    my %users;
 
     foreach my $attr (@{$self->custom_attribute}) {
-		$userattributes{$attr->{'id'}} = 1;
-	}
+	$userattributes{$attr->{'id'}} = 1;
+    }
 
     for (
 	my $user = $self->get_first_list_member();
@@ -9073,9 +9050,9 @@ sub get_lists {
 
 	    ## sort
 	    if ($order_perl) {
-		use sort "stable";
+		eval 'use sort "stable"';
 		push @lists, sort { eval $order_perl } @l;
-		use sort "defaults";
+		eval 'use sort "defaults"';
 	    } else {
 		push @lists, @l;
 	    }
@@ -9203,11 +9180,12 @@ sub get_lists {
 	    ## clear orphan cache entries in list_table.
 	    if ($options->{'reload_config'} and %orphan) {
 		foreach my $name (keys %orphan) {
-		    &Log::do_log('notice',
+		    Log::do_log('notice',
 			'Clearing orphan list cache on list_table: %s@%s',
-			$name, $robot);
-		    &SDM::do_prepared_query(
-			q{DELETE from list_table WHERE name_list = ? AND robot_list = ?},
+			$name, $robot->domain);
+		    SDM::do_prepared_query(
+			q{DELETE from list_table
+			  WHERE name_list = ? AND robot_list = ?},
 			$name, $robot->domain
 		    );
 		}
@@ -9436,8 +9414,7 @@ sub get_which {
 	return undef;
     }
 
-    my $all_lists = &get_lists(
-	$robot->domain,
+    my $all_lists = get_lists($robot,
 	{   'filter_query' => [
 		$role      => $email,
 		'! status' => 'closed|family_closed'
@@ -9762,18 +9739,20 @@ sub by_order {
 
 ## Save a parameter
 sub _save_list_param {
-    ##Log::do_log('debug3', '(%s, %s, %s, %s, <filehandle>)', @_);
-    my ($robot, $key, $p, $defaults, $fd) = @_;
+    my $robot = shift;
+    my $key = shift;
+    my $p = shift;
+    my $fd = shift;
 
     ## Ignore default value
-    return 1 if ($defaults == 1);
-    return 1 unless (defined($p));
+##    return 1 if ! ref $defaults and $defaults == 1;
+    return 1 unless defined $p;
 
     my $pinfo = $robot->list_params;
 
     if (defined $pinfo->{$key}{'scenario'} or
 	defined $pinfo->{$key}{'task'}) {
-	return 1 if ($p->{'name'} eq 'default');
+	return 1 if $p->{'name'} eq 'default';
 
 	$fd->print(sprintf "%s %s\n", $key, $p->{'name'});
 	$fd->print("\n");
@@ -9965,26 +9944,26 @@ sub _load_list_config_file {
     ## Just in case...
     local $/ = "\n";
 
-    ## Set defaults to 1
-    foreach my $pname (keys %$pinfo) {
-	$admin{'defaults'}{$pname} = 1 unless $pinfo->{$pname}{'internal'};
-    }
+##    ## Set defaults to 1
+##    foreach my $pname (keys %$pinfo) {
+##	$admin{'defaults'}{$pname} = 1 unless $pinfo->{$pname}{'internal'};
+##    }
 
     ## Lock file
     my $lock = new Lock($config_file);
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock on %s', $config_file);
+	Log::do_log('err', 'Could not create new lock on %s', $config_file);
 	return undef;
     }
     $lock->set_timeout(5);
     unless ($lock->lock('read')) {
-	&Log::do_log('err', 'Could not put a read lock on the config file %s',
+	Log::do_log('err', 'Could not put a read lock on the config file %s',
 	    $config_file);
 	return undef;
     }
 
     unless (open CONFIG, "<", $config_file) {
-	&Log::do_log('info', 'Cannot open %s', $config_file);
+	Log::do_log('info', 'Cannot open %s', $config_file);
     }
 
     ## Split in paragraphs
@@ -10027,7 +10006,7 @@ sub _load_list_config_file {
 
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    &Log::do_log('err', 'Bad paragraph "%s" in %s, ignore it',
+	    Log::do_log('err', 'Bad paragraph "%s" in %s, ignore it',
 		@paragraph, $config_file);
 	    next;
 	}
@@ -10041,7 +10020,7 @@ sub _load_list_config_file {
 	}
 
 	unless (defined $pinfo->{$pname}) {
-	    &Log::do_log('err', 'Unknown parameter "%s" in %s, ignore it',
+	    Log::do_log('err', 'Unknown parameter "%s" in %s, ignore it',
 		$pname, $config_file);
 	    next;
 	}
@@ -10058,7 +10037,7 @@ sub _load_list_config_file {
 	if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&Log::do_log(
+		Log::do_log(
 		    'err',
 		    'Expecting a paragraph for "%s" parameter in %s, ignore it',
 		    $pname,
@@ -10075,14 +10054,14 @@ sub _load_list_config_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);
 
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-		    &Log::do_log('err', 'Bad line "%s" in %s',
+		    Log::do_log('err', 'Bad line "%s" in %s',
 			$paragraph[$i], $config_file);
 		}
 
 		my $key = $1;
 
 		unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
-		    &Log::do_log('err',
+		    Log::do_log('err',
 			'Unknown key "%s" in paragraph "%s" in %s',
 			$key, $pname, $config_file);
 		    next;
@@ -10092,7 +10071,7 @@ sub _load_list_config_file {
 		    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
 		    ) {
 		    chomp($paragraph[$i]);
-		    &Log::do_log(
+		    Log::do_log(
 			'err',
 			'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
 			$paragraph[$i],
@@ -10112,16 +10091,16 @@ sub _load_list_config_file {
 	    my $missing_required_field;
 	    foreach my $k (keys %{$pinfo->{$pname}{'file_format'}}) {
 		## Default value
-		if (!defined $hash{$k} and
-		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
-		    $hash{$k} = _load_list_param($robot, $k, 'default',
-			$pinfo->{$pname}{'file_format'}{$k}, $directory);
-		}
+##		if (!defined $hash{$k} and
+##		    defined $pinfo->{$pname}{'file_format'}{$k}{'default'}) {
+##		    $hash{$k} = _load_list_param($robot, $k, 'default',
+##			$pinfo->{$pname}{'file_format'}{$k}, $directory);
+##		}
 
 		## Required fields
 		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
-			&Log::do_log('info',
+			Log::do_log('info',
 			    'Missing key "%s" in param "%s" in %s',
 			    $k, $pname, $config_file);
 			$missing_required_field++;
@@ -10131,7 +10110,7 @@ sub _load_list_config_file {
 
 	    next if $missing_required_field;
 
-	    delete $admin{'defaults'}{$pname};
+##	    delete $admin{'defaults'}{$pname};
 
 	    ## Should we store it in an array
 	    if ($pinfo->{$pname}{'occurrence'} =~ /n$/) {
@@ -10142,7 +10121,7 @@ sub _load_list_config_file {
 	} else {
 	    ## This should be a single line
 	    unless ($#paragraph == 0) {
-		&Log::do_log('info',
+		Log::do_log('info',
 		    'Expecting a single line for "%s" parameter in %s',
 		    $pname, $config_file);
 	    }
@@ -10150,7 +10129,7 @@ sub _load_list_config_file {
 	    unless ($paragraph[0] =~
 		/^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
 		chomp($paragraph[0]);
-		&Log::do_log('info', 'Bad entry "%s" in %s',
+		Log::do_log('info', 'Bad entry "%s" in %s',
 		    $paragraph[0], $config_file);
 		next;
 	    }
@@ -10158,7 +10137,7 @@ sub _load_list_config_file {
 	    my $value = _load_list_param($robot, $pname, $1,
 		$pinfo->{$pname}, $directory);
 
-	    delete $admin{'defaults'}{$pname};
+##	    delete $admin{'defaults'}{$pname};
 
 	    if ($pinfo->{$pname}{'occurrence'} =~ /n$/ and
 		ref $value ne 'ARRAY') {
@@ -10173,7 +10152,7 @@ sub _load_list_config_file {
 
     ## Release the lock
     unless ($lock->unlock()) {
-	&Log::do_log('err', 'Could not remove the read lock on file %s',
+	Log::do_log('err', 'Could not remove the read lock on file %s',
 	    $config_file);
 	return undef;
     }
@@ -10181,39 +10160,40 @@ sub _load_list_config_file {
     ## Apply defaults & check required parameters
     foreach my $p (keys %$pinfo) {
 	## Defaults
-	unless (defined $admin{$p}) {
-	    ## Simple (versus structured) parameter case
-	    if (defined $pinfo->{$p}{'default'}) {
-		$admin{$p} = _load_list_param($robot, $p,
-		    $pinfo->{$p}{'default'}, $pinfo->{$p}, $directory);
 
-	    ## Sructured parameters case : the default values are defined at the next level
-	    } elsif (ref($pinfo->{$p}{'format'}) eq 'HASH' and
-		$pinfo->{$p}{'occurrence'} =~ /1$/) {
-		## If the paragraph is not defined, try to apply defaults
-		my $hash;
-
-		foreach my $key (keys %{$pinfo->{$p}{'format'}}) {
-		    ## Skip keys without default value.
-		    unless (defined $pinfo->{$p}{'format'}{$key}{'default'}) {
-			next;
-		    }
-
-		    $hash->{$key} = _load_list_param($robot, $key,
-			$pinfo->{$p}{'format'}{$key}{'default'},
-			$pinfo->{$p}{'format'}{$key}, $directory);
-		}
-
-		$admin{$p} = $hash if defined $hash;
-	    }
-
-	    #	    $admin{'defaults'}{$p} = 1;
-	}
+##	unless (defined $admin{$p}) {
+##	    ## Simple (versus structured) parameter case
+##	    if (defined $pinfo->{$p}{'default'}) {
+####		$admin{$p} = _load_list_param($robot, $p,
+####		    $pinfo->{$p}{'default'}, $pinfo->{$p}, $directory);
+##
+##	    ## Sructured parameters case : the default values are defined at the next level
+##	    } elsif (ref($pinfo->{$p}{'format'}) eq 'HASH' and
+##		$pinfo->{$p}{'occurrence'} =~ /1$/) {
+##		## If the paragraph is not defined, try to apply defaults
+##		my $hash;
+##
+##		foreach my $key (keys %{$pinfo->{$p}{'format'}}) {
+##		    ## Skip keys without default value.
+##		    unless (defined $pinfo->{$p}{'format'}{$key}{'default'}) {
+##			next;
+##		    }
+##
+####		    $hash->{$key} = _load_list_param($robot, $key,
+####			$pinfo->{$p}{'format'}{$key}{'default'},
+####			$pinfo->{$p}{'format'}{$key}, $directory);
+##		}
+##
+##		$admin{$p} = $hash if defined $hash;
+##	    }
+##
+##	    #	    $admin{'defaults'}{$p} = 1;
+##	}
 
 	## Required fields
 	if ($pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
 	    unless (defined $admin{$p}) {
-		&Log::do_log('info', 'Missing parameter "%s" in %s',
+		Log::do_log('info', 'Missing parameter "%s" in %s',
 		    $p, $config_file);
 	    }
 	}
@@ -10246,9 +10226,7 @@ sub _load_list_config_file {
 
     ## Format changed for reply_to parameter
     ## New reply_to_header parameter
-    if (($admin{'forced_reply_to'} and
-	!$admin{'defaults'}{'forced_reply_to'}) or
-	($admin{'reply_to'} and !$admin{'defaults'}{'reply_to'})) {
+    if ($admin{'forced_reply_to'} or $admin{'reply_to'}) {
 	my ($value, $apply, $other_email);
 	$value = $admin{'forced_reply_to'} || $admin{'reply_to'};
 	$apply = 'forced' if $admin{'forced_reply_to'};
@@ -10264,8 +10242,8 @@ sub _load_list_config_file {
 	};
 
 	## delete old entries
-	$admin{'reply_to'} = undef;
-	$admin{'forced_reply_to'} = undef;
+	delete $admin{'reply_to'};
+	delete $admin{'forced_reply_to'};
     }
 
     ############################################
@@ -10274,33 +10252,10 @@ sub _load_list_config_file {
 
     ## Do we have a database config/access
     unless ($SDM::use_db) {
-	&Log::do_log('info',
+	Log::do_log('info',
 	    'Sympa not setup to use DBI or no database access');
-		## We should notify the listmaster here...
-		#return undef;
-    }
-
-    ## This default setting MUST BE THE LAST ONE PERFORMED
-#    if ($admin{'status'} ne 'open') {
-#	## requested and closed list are just list hidden using visibility parameter
-#	## and with send parameter set to closed.
-#	$admin{'send'} = _load_list_param('.','send', 'closed', $pinfo->{'send'}, $directory);
-#	$admin{'visibility'} = _load_list_param('.','visibility', 'conceal', $pinfo->{'visibility'}, $directory);
-#    }
-
-    ## reception of default_user_options must be one of reception of
-    ## available_user_options. If none, warning and put reception of
-    ## default_user_options in reception of available_user_options
-    if (!grep (/^$admin{'default_user_options'}{'reception'}$/,
-	    @{$admin{'available_user_options'}{'reception'}})
-	) {
-	push @{$admin{'available_user_options'}{'reception'}},
-	    $admin{'default_user_options'}{'reception'};
-	&Log::do_log(
-	    'info',
-	    'reception is not compatible between default_user_options and available_user_options in %s',
-	    $directory
-	);
+	## We should notify the listmaster here...
+	#return undef;
     }
 
     return \%admin;
@@ -10308,51 +10263,64 @@ sub _load_list_config_file {
 
 ## Save a config file
 sub _save_list_config_file {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
-    my $robot = shift;
-    my $config_file = shift;
-    my $old_config_file = shift;
-    my $admin = shift;
-    my $pinfo = $robot->list_params;
+    Log::do_log('debug3', '(%s, %s)', @_);
+    my $self = shift;
+    my $email = shift;
 
+    my $robot           = $self->robot;
+    my $pinfo           = $robot->list_params;
+
+    ## New and old config file names
+    my $config_file     = $self->dir . '/config';
+    my $old_config_file = $config_file . '.' . $self->serial;
+    ## Update management info
+    $self->serial($self->serial + 1);
+    my $time = time;
+    $self->update({
+	'email'      => $email,
+	'date_epoch' => $time,
+	'date'       => (gettext_strftime "%d %b %Y at %H:%M:%S", localtime $time),
+    });
+    ## Get updated config
+    my $config = $self->config;
+
+    ## Now build textized configuration
+    my $config_text = '';
+    my $fd = new IO::Scalar \$config_text;
+
+    foreach my $c (@{$config->{'comment'} || []}) {
+	$fd->print(sprintf "%s\n", $c);
+    }
+    $fd->print("\n");
+
+    foreach my $key (sort by_order keys %$pinfo) {
+	next if $key eq 'comment';
+	next unless exists $config->{$key};
+
+	if (ref($config->{$key}) eq 'ARRAY' and
+	    !$pinfo->{$key}{'split_char'}) {
+	    ## Multiple parameter (owner, custom_header,...)
+	    foreach my $elt (@{$config->{$key}}) {
+		_save_list_param($robot, $key, $elt, $fd);
+	    }
+	} else {
+	    _save_list_param($robot, $key, $config->{$key}, $fd);
+	}
+    }
+
+    ## Write to file at last.
     unless (rename $config_file, $old_config_file) {
-	&Log::do_log(
+	Log::do_log(
 	    'notice',     'Cannot rename %s to %s',
 	    $config_file, $old_config_file
 	);
 	return undef;
     }
-
     unless (open CONFIG, ">", $config_file) {
-	&Log::do_log('info', 'Cannot open %s', $config_file);
+	Log::do_log('info', 'Cannot open %s', $config_file);
 	return undef;
     }
-    my $config = '';
-    my $fd = new IO::Scalar \$config;
-
-    foreach my $c (@{$admin->{'comment'}}) {
-	$fd->print(sprintf "%s\n", $c);
-    }
-    $fd->print("\n");
-
-    foreach my $key (sort by_order keys %{$admin}) {
-
-	next if ($key =~ /^(comment|defaults)$/);
-	next unless (defined $admin->{$key});
-
-	## Multiple parameter (owner, custom_header,...)
-	if (ref($admin->{$key}) eq 'ARRAY' and
-	    !$pinfo->{$key}{'split_char'}) {
-	    foreach my $elt (@{$admin->{$key}}) {
-		_save_list_param($robot, $key, $elt,
-		    $admin->{'defaults'}{$key}, $fd);
-	    }
-	} else {
-	    _save_list_param($robot, $key, $admin->{$key},
-		$admin->{'defaults'}{$key}, $fd);
-	}
-    }
-    print CONFIG $config;
+    print CONFIG $config_text;
     close CONFIG;
 
     return 1;
@@ -10386,11 +10354,11 @@ sub available_reception_mode {
     return join(' ', @{$self->available_user_options->{'reception'}});
 }
 
-########################################################################################
-#                       FUNCTIONS FOR MESSAGE TOPICS                                   #
-########################################################################################
-#                                                                                      #
-#                                                                                      #
+##############################################################################
+#                       FUNCTIONS FOR MESSAGE TOPICS                         #
+##############################################################################
+#                                                                            #
+#                                                                            #
 
 ####################################################
 # is_there_msg_topic
@@ -11326,9 +11294,10 @@ sub  get_next_delivery_date {
 sub search_datasource {
     Log::do_log('debug2', '(%s, %s)', @_);
     my ($self, $id) = @_;
+    my $pinfo = $self->robot->list_params;
 
     ## Go through list parameters
-    foreach my $p (keys %{$self->admin}) {
+    foreach my $p (keys %$pinfo) {
 	next unless ($p =~ /^include/);
 
 	## Go through sources
@@ -11411,10 +11380,10 @@ sub close_list {
 
     ## If list is included by another list, then it cannot be removed
     ## TODO : we should also check owner_include and editor_include, but a bit more tricky
-    my $all_lists = get_lists('*');
+    my $all_lists = get_lists();
     foreach my $list (@{$all_lists}) {
 	my $included_lists = $list->include_list;
-	next unless defined $included_lists;
+	next unless @{$included_lists};
 
 	    foreach my $included_list_name (@{$included_lists}) {
 	    if ($included_list_name eq $self->get_list_id() or
@@ -11907,6 +11876,19 @@ B<NOTE>:
 If structured parameters (such as topics, web_archive) were not defined,
 C<[]> or C<{}> will be returned instead of C<undef>.
 
+=item dir
+
+=item name
+
+=item robot
+
+=item stats
+
+=item as_x509_cert
+
+I<Getters>.
+Gets attributes of the list.
+
 =back
 
 =cut
@@ -11924,7 +11906,7 @@ sub AUTOLOAD {
 	unless ref $_[0];
 
     my $p;
-    if (grep { $_ eq $attr } qw(name robot dir admin stats as_x509_cert)) {
+    if (grep { $_ eq $attr } qw(name robot dir stats as_x509_cert)) {
 	## getter for list attributes.
 	no strict "refs";
 	*{$AUTOLOAD} = sub {
@@ -11932,45 +11914,142 @@ sub AUTOLOAD {
 	    shift->{$attr};
 	};
     } elsif ($p = $_[0]->{'robot'}->list_params->{$attr}) {
-	my ($defaultconf, $default) = ();
-	if (ref $p->{'default'} eq 'HASH') {
-	    $defaultconf = $p->{'default'}->{'conf'};
-	} elsif (exists $p->{'default'}) {
-	    $default = $p->{'default'};
-	} else {
-	    ##FIXME: defaults of suboptions
-	}
-	## getter/setter for list parameters.
-	no strict "refs";
-	*{$AUTOLOAD} = sub {
-	    my $self = shift;
+	my $default;
 
-	    croak "Can't call method \"$attr\" on uninitialized " .
-		(ref $self) . " object"
-		unless defined $self->{'admin'};
-	    $self->{'admin'}{$attr} = shift
-		if scalar @_;
+	if (ref $p->{'format'} eq 'HASH' and
+	    $p->{'occurrence'} and $p->{'occurrence'} =~ /n/) {
+	    ## getter/setter for structured list parameters.
+	    no strict "refs";
+	    *{$AUTOLOAD} = sub {
+		my $self = shift;
 
-	    my $ret;
-	    if (exists $self->{'admin'}{$attr}) {
-		$ret = $self->{'admin'}{$attr};
-	    } elsif ($defaultconf) {
-		$ret = $self->{'robot'}->$defaultconf;
-	    } else {
-		$ret = $default;
-	    }
-	    # To avoid "Can't use an undefined value as a XXX reference"
-	    unless (defined $ret) {
-		if ($p->{'split_char'} or
-		    ($p->{'occurrence'} and $p->{'occurrence'} =~ /n/)) {
-		    return [];
-		} elsif (ref $p->{'format'} and
-		    ref $p->{'format'} eq 'HASH') {
-		    return {};
+		croak "Can't call method \"$attr\" on uninitialized " .
+		    (ref $self) . " object"
+		    unless defined $self->{'config'};
+		if (scalar @_) {
+		    $self->{'config'}{$attr} = shift || [];
+		    delete $self->{'admin'}{$attr};
 		}
-	    }
-	    $ret;
-	};
+
+		unless (exists $self->{'admin'}{$attr}) {
+		    my $value = $self->{'config'}{$attr} || [];
+##		    ## sort by keys
+##		    if (ref $value eq 'ARRAY' and $p->{'sort'}) {
+##			eval 'use sort "stable"';
+##			$value = [sort
+##			    { $a->{$p->{'sort'}} cmp $b->{$p->{'sort'}} }
+##			    @$value];
+##			eval 'use sort "defaults"';
+##		    }
+
+		    ## Apply default
+		    my $deflist = [];
+		    $self->{'config'}{$attr} = [];
+		    $self->{'admin'}{$attr} = [];
+		    foreach my $val (@{$value || []}) {
+			next unless defined $val and ref $val eq 'HASH';
+
+			my $config_hash = {};
+			my $admin_hash = {};
+			my $defs = $self->_set_list_param_compound(
+			    $attr, $val, $p->{'format'},
+			    $config_hash, $admin_hash
+			);
+
+			push @{$self->{'config'}{$attr}}, $config_hash;
+			push @{$self->{'admin'}{$attr}}, $admin_hash;
+			push @$deflist, $defs;
+		    }
+
+		    delete $self->{'config'}{$attr}
+			unless @{$self->{'config'}{$attr}};
+
+		    $self->defaults($attr, $deflist);
+		}
+
+		# To avoid "Can't use an undefined value as a XXX reference"
+		unless (exists $self->{'admin'}{$attr}) {
+		    $self->{'admin'}{$attr} = [];
+		}
+		$self->{'admin'}{$attr};
+	    };
+	} elsif (ref $p->{'format'} eq 'HASH') {
+	    ## getter/setter for structured list parameters.
+	    no strict "refs";
+	    *{$AUTOLOAD} = sub {
+		my $self = shift;
+
+		croak "Can't call method \"$attr\" on uninitialized " .
+		    (ref $self) . " object"
+		    unless defined $self->{'config'};
+		if (scalar @_) {
+		    $self->{'config'}{$attr} = shift || [];
+		    delete $self->{'admin'}{$attr};
+		}
+
+		unless (exists $self->{'admin'}{$attr}) {
+		    my $value = $self->{'config'}{$attr} || {};
+		    ## Apply default
+		    $self->{'config'}{$attr} = {};
+		    $self->{'admin'}{$attr} = {};
+		    my $defs = $self->_set_list_param_compound(
+			$attr, $value, $p->{'format'},
+			$self->{'config'}{$attr}, $self->{'admin'}{$attr}
+		    );
+
+		    delete $self->{'config'}{$attr}
+			unless %{$self->{'config'}{$attr}};
+
+		    $self->defaults($attr, $defs);
+		}
+
+		# To avoid "Can't use an undefined value as a XXX reference"
+		unless (exists $self->{'admin'}{$attr}) {
+		    $self->{'admin'}{$attr} = {};
+		}
+		$self->{'admin'}{$attr};
+	    };
+	} else {
+	    ## getter/setter for simple list parameters.
+	    no strict "refs";
+	    *{$AUTOLOAD} = sub {
+		my $self = shift;
+
+		croak "Can't call method \"$attr\" on uninitialized " .
+		    (ref $self) . " object"
+		    unless defined $self->{'config'};
+
+		if (scalar @_) {
+		    $self->{'config'}{$attr} = shift;
+		    delete $self->{'admin'}{$attr};
+		}
+
+		unless (exists $self->{'admin'}{$attr}) {
+		    my $value = $self->{'config'}{$attr};
+##		    ## sort by values
+##		    if (ref $value eq 'ARRAY' and $p->{'sort'}) {
+##			$value = [sort @$value];
+##		    }
+
+		    ## Apply default
+		    my $def = $self->_set_list_param($attr, $value, $p,
+			$self->{'config'}, $self->{'admin'}, $attr
+		    );
+		    $self->defaults($attr, $def);
+		}
+
+		# To avoid "Can't use an undefined value as a XXX reference"
+		unless (exists $self->{'admin'}{$attr}) {
+		    if ($p->{'split_char'} or
+			($p->{'occurrence'} and $p->{'occurrence'} =~ /n/)) {
+			$self->{'admin'}{$attr} = [];
+		    } else {
+			$self->{'admin'}{$attr} = undef;
+		    }
+		}
+		$self->{'admin'}{$attr};
+	    };
+	}
     } elsif (index($attr, '_') != 0 and defined $_[0]->{$attr}) {
 	## getter for unknwon list attributes.
 	## XXX This code would be removed later.
@@ -11985,20 +12064,185 @@ sub AUTOLOAD {
 	    croak "Can't modify \"$attr\" attribute" if scalar @_ > 1;
 	    shift->{$attr};
 	};
+	## XXX The code above would be removed later.
     } else {
 	croak "Can't locate object method \"$2\" via package \"$1\"";
     }
     goto &$AUTOLOAD;
 }
 
+sub _set_list_param_compound {
+    my $self = shift;
+    my $attr = shift;
+    my $val = shift;
+    my $p = shift;
+    my $config_hash = shift;
+    my $admin_hash = shift;
+
+    my $defs = {};
+    foreach my $subattr (keys %$p) {
+	my $def = $self->_set_list_param(
+	    $attr, $val->{$subattr}, $p->{$subattr},
+	    $config_hash, $admin_hash, $subattr
+	);
+	$defs->{$subattr} = 1
+	    if $def and defined $admin_hash->{$subattr};
+    }
+
+    ## reception of default_user_options must be one of reception of
+    ## available_user_options. If none, warning and put reception of
+    ## default_user_options in reception of available_user_options
+    if ($attr eq 'available_user_options') {
+	$self->{'admin'}{$attr}{'reception'} ||= [];
+	unless (grep
+	    {$_ eq $self->default_user_options->{'reception'}}
+	    @{$self->{'admin'}{$attr}{'reception'}}) {
+	    Log::do_log('info',
+		'reception is not compatible between default_user_options and available_user_options of list %s',
+		$self
+	    );
+	    push @{$self->{'admin'}{$attr}{'reception'}},
+		$self->default_user_options->{'reception'};
+	    delete $defs->{'reception'};
+	}
+    }
+
+    if (scalar keys %$defs == scalar keys %$admin_hash) {
+	## All components are defaults.
+	$defs = 1;
+    } elsif (! %$defs) {
+	## No defaults
+	undef $defs;
+    }
+
+    ## Fill undefined values
+    foreach my $subattr (keys %$p) {
+	next if exists $admin_hash->{$subattr};
+	if ($p->{$subattr}->{'occurrence'} and
+	    $p->{$subattr}->{'occurrence'} =~ /n/) {
+	    $admin_hash->{$subattr} = [];
+	} else {
+	    $admin_hash->{$subattr} = undef;
+	}
+    }
+
+    return $defs;
+}
+
+sub _set_list_param {
+    my $self = shift;
+    my $attr = shift;
+    my $val = shift;
+    my $p = shift;
+    my $config_hash = shift;
+    my $admin_hash = shift;
+    my $config_attr = shift;
+
+    my $default;
+    if (exists $p->{'default'}) {
+	$default = _load_list_param(
+	    $self->{'robot'}, $attr, $p->{'default'}, $p, $self->{'dir'}
+	);
+    }
+
+    my $def = undef;
+    if (defined $val and exists $p->{'default'}) {
+	if (($p->{'scenario'} or $p->{'task'}) and
+	    $val->{'name'} eq $default->{'name'}) {
+	    $def = 1;
+	} elsif (($p->{'split_char'} or
+	    $p->{'occurrence'} and $p->{'occurrence'} =~ /n/) and
+	    join("\0", sort @$val) eq join("\0", sort @$default)) {
+	    $def = 1;
+	} elsif ($val eq $default) {
+	    $def = 1;
+	}
+    } elsif (exists $p->{'default'}) {
+	$val = $default;
+	$def = 1;
+    } else {
+	$def = 1 unless defined $val;
+    }
+
+
+    if (defined $val) {
+	if ($def) {
+	    delete $config_hash->{$config_attr};
+	} else {
+	    $config_hash->{$config_attr} = $val;
+	}
+	$admin_hash->{$config_attr} = tools::dup_var($val);
+    } else {
+	delete $config_hash->{$config_attr};
+	delete $admin_hash->{$config_attr};
+    }
+
+    return $def;
+}
+
+=over 4
+
+=item admin
+
+I<Getter>.
+Configuration information of the list, with defaults applied.
+
+B<Note>:
+Use L</config> accessor to get information without defaults.
+
+=back
+
+=cut
+
+sub admin {
+    my $self = shift;
+    croak 'Can\'t modify "admin" attribute' if scalar @_;
+
+    my $pinfo = $self->robot->list_params;
+    ## apply defaults of all parameters.
+    foreach my $p (keys %$pinfo) {
+	$self->$p;
+    }
+    return tools::dup_var($self->{'admin'});
+}
+
+=over 4
+
+=item config
+
+I<Getter/Setter>, I<internal use>.
+Gets or sets configuration information, eliminating defaults.
+
+B<Note>:
+Use L</admin> accessor to get full configuration informaton.
+
+=back
+
+=cut
+
+sub config {
+    my $self = shift;
+
+    if (scalar @_) {
+	$self->{'config'} = shift;
+	$self->{'admin'} = {};
+    }
+
+    my $pinfo = $self->robot->list_params;
+    ## remove defaults of all parameters.
+    foreach my $p (keys %$pinfo) {
+	$self->$p;
+    }
+    return tools::dup_var($self->{'config'});
+}
 
 =over 4
 
 =item defaults ( PARAMETER, VALUE )
 
-I<Setter>.
-Set values to determine default values of list parameters.
-If undef is specified as VALUE, that default value will be removed.
+I<Setter>, I<internal use>.
+Set flags to determine default values of list parameters.
+If undef is specified as VALUE, that defaut flag will be removed.
 
 =back
 
@@ -12007,8 +12251,11 @@ If undef is specified as VALUE, that default value will be removed.
 sub defaults {
     my $self = shift;
     my $p = shift;
+
+    $self->{'admin'}{'defaults'} ||= {};
+
     if (scalar @_) {
-	my $v = $_[0];
+	my $v = shift;
 	unless (defined $v) {
 	    delete $self->{'admin'}{'defaults'}{$p};
 	} else {
@@ -12024,6 +12271,9 @@ sub defaults {
 
 I<Getter>.
 Gets domain (robot name) of the list.
+
+B<Note>:
+Use L<robot> accessor to get robot object the list belong to.
 
 =back
 
@@ -12052,17 +12302,19 @@ sub family {
 	if ($family) {
 	    $self->{'family'} = $family;
 	    $self->{'admin'}{'family_name'} = $family->name;
+	    $self->{'config'}{'family_name'} = $family->name;
 	} else {
 	    delete $self->{'family'};
 	    delete $self->{'admin'}{'family_name'};
+	    delete $self->{'config'}{'family_name'};
 	}
     }
 
     if (ref $self->{'family'} eq 'Family') {
 	return $self->{'family'};
-    } elsif ($self->{'admin'}{'family_name'}) {
+    } elsif ($self->family_name) {
 	return $self->{'family'} =
-	    Family->new($self->{'admin'}{'family_name'}, $self->{'robot'});
+	    Family->new($self->family_name, $self->{'robot'});
     } else {
        return undef;
     }
@@ -12291,7 +12543,7 @@ sub list_cache_fetch {
     my $robot       = $self->domain;
 
     my $cache_list_config = $self->robot->cache_list_config;
-    my $admin;
+    my $config;
     my $time_config_bin;
 
     if ($cache_list_config eq 'database') {
@@ -12301,7 +12553,7 @@ sub list_cache_fetch {
 	unless (
 	    $sth = &SDM::do_prepared_query(
 		q{SELECT cache_epoch_list AS epoch, total_list AS total,
-			 config_list AS admin
+			 config_list AS "config"
 		  FROM list_table
 		  WHERE name_list = ? AND robot_list = ? AND
 			cache_epoch_list > ? AND ? <= cache_epoch_list},
@@ -12319,8 +12571,8 @@ sub list_cache_fetch {
 
 	return undef unless $l;
 
-	eval { $admin = &Storable::thaw($l->{'admin'}) };
-	if ($@ or !defined $admin) {
+	eval { $config = Storable::thaw($l->{'config'}) };
+	if ($@ or !defined $config) {
 	    &Log::do_log('err',
 		'Unable to deserialize binary config of %s: %s',
 		$self, $@ || 'possible format error');
@@ -12330,7 +12582,7 @@ sub list_cache_fetch {
 	return {
 	    'epoch' => $l->{'epoch'},
 	    'total' => $l->{'total'},
-	    'admin' => $admin
+	    'config' => $config
 	};
     } elsif ($cache_list_config eq 'binary_file' and
 	($time_config_bin = (stat($self->dir . '/config.bin'))[9]) > $m1 and
@@ -12349,8 +12601,8 @@ sub list_cache_fetch {
 
 	## Load a binary version of the data structure
 	## unless config is more recent than config.bin
-	eval { $admin = &Storable::retrieve($self->dir . '/config.bin') };
-	if ($@ or !defined $admin) {
+	eval { $config = Storable::retrieve($self->dir . '/config.bin') };
+	if ($@ or !defined $config) {
 	    &Log::do_log(
 		'err', 'Unable to deserialize config.bin of %s: $@',
 		$self, $@ || 'possible format error'
@@ -12365,16 +12617,20 @@ sub list_cache_fetch {
 	return {
 	    'epoch' => $time_config_bin,
 	    'total' => $self->total,
-	    'admin' => $admin
+	    'config' => $config
 	};
     }
-			return undef;
+    return undef;
 }
 
 ## Update list cache.
-sub list_cache_update_admin {
+sub list_cache_update_config {
     my ($self) = shift;
     my $cache_list_config = $self->robot->cache_list_config;
+
+local $Data::Dumper::Sortkeys = 1;
+open CCC, '>', $self->dir . '/admin.dump'; print CCC Dumper($self->admin); close CCC;
+open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); close CCC;
 
     if ($cache_list_config eq 'binary_file') {
 	## Get a shared lock on config file first
@@ -12385,10 +12641,10 @@ sub list_cache_update_admin {
 	}
 	$lock->set_timeout(5);
 	unless ($lock->lock('write')) {
-			return undef;
+	    return undef;
 	}
 
-	eval { &Storable::store($self->admin, $self->dir . '/config.bin') };
+	eval { Storable::store($self->config, $self->dir . '/config.bin') };
 	if ($@) {
 	    &Log::do_log(
 		'err',
@@ -12434,7 +12690,7 @@ sub list_cache_update_admin {
 ##    my $latest_instantiation_email =
 ##	$self->latest_instantiation->{'email'};
 
-    eval { $config = Storable::nfreeze($self->admin); };
+    eval { $config = Storable::nfreeze($self->config); };
     if ($@) {
 	&Log::do_log('err',
 	    'Failed to save the config to database. error: %s', $@);

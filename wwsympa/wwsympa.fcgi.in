@@ -8719,10 +8719,6 @@ sub do_install_pending_list {
 
      $list->status($in{'status'});
 
- #    open TMP, ">/tmp/dump1";
- #    &tools::dump_var ($list->admin, 0, \*TMP);
- #    close TMP;
-
      unless ($list->save_config($param->{'user'}{'email'})) {
 	 &report::reject_report_web('intern','cannot_save_config',{'listname'=> $list->name},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	 &wwslog('info','_create_list: Cannot save config file');
@@ -8731,10 +8727,6 @@ sub do_install_pending_list {
 		      'error_type' => 'internal'});
 	 return undef;
      }
-
- #    open TMP, ">/tmp/dump2";
- #    &tools::dump_var ($list->admin, 0, \*TMP);
- #    close TMP;
 
      ## create the aliases
      if ($in{'status'} eq 'open') {
@@ -9771,7 +9763,8 @@ sub do_select_voot_groups {
 			provider => $param->{'voot_provider'},
 			group => $gid
 		});
-		$list->defaults('include_voot_group', undef); # No save otherwise ...
+		# No save otherwise ...
+		$list->defaults('include_voot_group', undef);
 	}
 	$list->include_voot_group(\@include_voot_group);
 
@@ -10488,11 +10481,6 @@ sub do_edit_list_request {
 	 &_prepare_edit_form ($list);
      }
 
- #    print "Content-type: text/plain\n\n";
- #    &tools::dump_var(\%pinfo,0);
- #    &tools::dump_var($list->admin,0);
- #    &tools::dump_var($param->{'param'},0);
-
      $param->{'serial'} = $list->serial;
      
      return 1;
@@ -10505,7 +10493,7 @@ sub _check_new_values {
     &wwslog('debug3', '_check_new_values(%s)',$pname);
 
     my $fake_list =
-	bless { 'robot' => $robot, 'admin' => $new_admin } => 'List';
+	bless { 'robot' => $robot, 'config' => $new_admin } => 'List';
     my $uncompellable_param = &Family::get_uncompellable_param();
 
     if (ref($pinfo->{$pname}{'format'}) eq 'HASH') { #composed parameter
@@ -10636,7 +10624,7 @@ Prepares config data to be sent in the edition form. Adds to the parameters arra
 ## edition form
 sub _prepare_edit_form {
     my $list = shift;
-    my $list_config = &tools::dup_var($list->admin);
+    my $list_config = $list->admin;
     my $family;
     my $is_form_editable = '0';
 
@@ -10670,11 +10658,12 @@ sub _prepare_edit_form {
 	 }
 
 	 ## Store in $p a reference to the hash containing the informations relative to the parameter editing.
-	 my $p = &_prepare_data($pname, $pinfo->{$pname}, $list_config->{$pname},$may_edit,$family);
+	 my $p = &_prepare_data($pname, $pinfo->{$pname}, $list->$pname, $may_edit, $family);
 	next unless defined $p;
 
 	 ## Store if the parameter is still at its default value or not.
-	 $p->{'default'} = $list_config->{'defaults'}{$pname};
+##	 $p->{'default'} = 1 if $list->defaults($pname);
+	$p->{'default'} = $list->defaults($pname);
 
 	 ## Store the change state of this parameter, taken from the global variable %changed_params.
 	 $p->{'changed'} = $::changed_params{$pname};
