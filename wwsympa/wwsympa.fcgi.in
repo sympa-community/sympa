@@ -1181,7 +1181,7 @@ my $birthday = time ;
 
      ## Sympa parameters in $param->{'conf'}
      $param->{'conf'} = {};
-     foreach my $p ('email','host','sympa','request','soap_url','wwsympa_url','listmaster_email','logo_html_definition','favicon_url',
+     foreach my $p ('email','host', 'soap_url','wwsympa_url','listmaster_email','logo_html_definition','favicon_url',
 	            'main_menu_custom_button_1_url','main_menu_custom_button_1_title','main_menu_custom_button_1_target',
 	            'main_menu_custom_button_2_url','main_menu_custom_button_2_title','main_menu_custom_button_2_target',
 	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
@@ -1194,7 +1194,9 @@ my $birthday = time ;
 	 $param->{'conf'}{$p} = $robot->$p;
 	 $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
      }
-     
+    ## compatibility concern
+    $param->{'conf'}{'sympa'} = $robot->get_address();
+    $param->{'conf'}{'request'} = $robot->get_address('owner');
 
      foreach my $auth (keys  %{Site->cas_id->{$robot_id}}) {
 	 &Log::do_log('debug2', "cas authentication service $auth");
@@ -5117,7 +5119,7 @@ sub do_subscribe {
 
 	    unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
 							      'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
-							      'replyto' => $robot->sympa,
+							      'replyto' => $robot->get_address(),
 							      'custom_attribute' => $in{custom_attribute},
 							      'gecos' => $param->{'user'}{'gecos'},
 							      'ip'=>$ip})) {
@@ -7286,7 +7288,7 @@ sub do_distribute {
      }
 
      $data->{'not_auto_submitted'} = 1;
-     unless (&mail::mail_file('',$robot->sympa, $data, $robot_id)) {
+     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	 &wwslog('err','do_distribute: failed to send message for list %s, id %s', $list->name,$in{'id'});
@@ -8147,7 +8149,9 @@ sub do_send_me {
 	     &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
 	     return undef;
 	 }
-	 unless (&mail::mail_forward($message,$robot->sympa,\$param->{'user'}{'email'},$robot_id)) {
+	unless (mail::mail_forward($message, $robot->get_address(),
+	    \$param->{'user'}{'email'}, $robot
+	)) {
 	     $param->{'status'} = 'message_err';
 	     &wwslog('err',"do_send_me : impossible to send archive file to %s",$param->{'user'}{'email'});
 	     return undef;
@@ -10494,6 +10498,7 @@ sub _check_new_values {
 
     my $fake_list =
 	bless { 'robot' => $robot, 'config' => $new_admin } => 'List';
+    $fake_list->config; # update parameter cache
     my $uncompellable_param = &Family::get_uncompellable_param();
 
     if (ref($pinfo->{$pname}{'format'}) eq 'HASH') { #composed parameter
@@ -15634,7 +15639,7 @@ sub do_remind {
 		 'body' => $mail_command};
 
      $data->{'not_auto_submitted'} = 1;
-     unless (&mail::mail_file('',$robot->sympa,$data,$robot_id)) {
+     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_remind',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	 &wwslog('err','do_remind: failed to send message for command REMIND');
@@ -16334,7 +16339,7 @@ sub do_send_mail {
 	my $html_part_body = &tools::create_html_part_from_web_page({'From' => $from,
 								     'To' => $to,
 								     'Headers' => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
-								     'return_path' => $robot->sympa,
+								     'return_path' => $robot->get_address(),
 								     'Subject' => $in{'subject'},
 								     'source' => $page_source,
 								 });
@@ -16360,7 +16365,7 @@ sub do_send_mail {
     
     my $data = {'headers' => {'Message-ID' => $in{'message_id'}}, 
 		'subject' => $in{'subject'},
-		'return_path' => $robot->sympa,
+		'return_path' => $robot->get_address(),
 		'to' => $to,
 		'body' => "From: $from\n" . $in{'body'},
 		'sign_mode' => '',
@@ -16522,7 +16527,7 @@ sub do_tag_topic_by_sender {
      $data->{'not_auto_submitted'} = 1;
 
 
-     unless (&mail::mail_file('',$robot->sympa,$data,$robot_id)) {
+     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
 	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
 				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	 &wwslog('err','do_tag_topic_by_sender: failed to send message for list %s@%s authenticated by key %s',$listname,$robot_id,$in{'authkey'} );

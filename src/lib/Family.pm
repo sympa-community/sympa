@@ -2586,7 +2586,9 @@ sub _get_customizing {
     }
 
     my $fake_list =
-	bless {'robot' => $list->robot, 'config' => $changed_values} => 'List';
+	bless {'robot' => $list->robot, 'config' => $changed_values} =>
+	'List';
+    $fake_list->config; # update parameter cache
 
     foreach my $param (keys %{$constraint}) {
 	my $constraint_value = $constraint->{$param};

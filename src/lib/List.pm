@@ -2746,7 +2746,7 @@ sub archive_send {
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
     $param->{'boundary2'} = &tools::get_message_id($self->robot);
-    $param->{'from'}      = $self->robot->sympa;
+    $param->{'from'}      = $self->robot->get_address();
 
 #    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
@@ -2805,7 +2805,7 @@ sub archive_send_last {
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
     $param->{'boundary2'} = &tools::get_message_id($self->robot);
-    $param->{'from'}      = $self->robot->sympa;
+    $param->{'from'}      = $self->robot->get_address();
     $param->{'auto_submitted'} = 'auto-replied';
 
 #    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
@@ -2930,7 +2930,7 @@ sub send_notify_to_owner {
 	} elsif ($operation eq 'sigrequest') {
 	    $param->{'escaped_who'} = $param->{'who'};
 	    $param->{'escaped_who'} =~ s/\s/\%20/g;
-	    $param->{'sympa'} = $self->robot->sympa;
+	    $param->{'sympa'} = $self->robot->get_address();
 	    foreach my $owner (@to) {
 		$param->{'one_time_ticket'} =
 		    Auth::create_one_time_ticket($owner, $robot,

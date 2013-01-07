@@ -396,7 +396,7 @@ sub lists {
 
 =item lists_ok
 
-I<Setter>.
+I<Setter>, I<internal use>.
 XXX @todo doc
 
 =back
@@ -433,12 +433,18 @@ Get profile of robot.
 
 =item pictures_path
 
+I<Getters>.
+Gets derived config parameters.
+
 =item request
 
 =item sympa
 
 I<Getters>.
 Gets derived config parameters.
+
+B<Obsoleted>.
+See L<Site/request> and L<Site/sympa>.
 
 =back
 

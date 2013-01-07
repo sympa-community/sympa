@@ -101,14 +101,20 @@ sub load {
 
     # To get super listmaster address
     $addr = Site->get_address('listmaster');
-    # To get normal (per-robot) listmaster address
+    # To get robot addresses
+    $addr = $robot->get_address();              # sympa
     $addr = $robot->get_address('listmaster');
+    $addr = $robot->get_address('owner');       # sympa-request
+    $addr = $robot->get_address('return_path'); # sympa-owner
     # To get list addresses
     $addr = $list->get_address();
-    $addr = $list->get_address('owner');
+    $addr = $list->get_address('owner');        # LIST-request
+    $addr = $list->get_address('editor');       # LIST-editor
+    $addr = $list->get_address('return_path');  # LIST-owner
 
 On Site class or Robot object,
-returns the site or robot email address of type TYPE: "listmaster".
+returns the site or robot email address of type TYPE: email command address
+(default), "owner" (<sympa-request> address) or "listmaster".
 
 On List object,
 returns the list email address of type TYPE: posting address (default),
@@ -134,8 +140,17 @@ sub get_address {
 		$self->host;
 	}
     } elsif (ref $self and ref $self eq 'Robot' or $self eq 'Site') {
-	if ($type eq 'listmaster') {
+	unless ($type) {
+	    return $self->email . '@' . $self->host;
+	} elsif ($type eq 'sympa') {    # same as above, for convenience
+	    return $self->email . '@' . $self->host;
+	} elsif ($type eq 'owner' or $type eq 'request') {
+	    return $self->email . '-request' . '@' . $self->host;
+	} elsif ($type eq 'listmaster') {
 	    return $self->listmaster_email . '@' . $self->host;
+	} elsif ($type eq 'return_path') {
+	    return $self->email . $self->return_path_suffix . '@' .
+		$self->host;
 	}
     } else {
 	croak 'bug in logic.  Ask developer';
@@ -830,13 +845,15 @@ sub send_file {
     $data->{'conf'} ||= {};
     foreach my $p (
 	'email',       'email_gecos',
-	'host',        'sympa',
-	'request',     'listmaster',
+	'host',        'listmaster',
 	'wwsympa_url', 'title',
 	'listmaster_email'
 	) {
 	$data->{'conf'}{$p} = $robot->$p;
     }
+    ## compatibility concern
+    $data->{'conf'}{'sympa'}   = $robot->get_address();
+    $data->{'conf'}{'request'} = $robot->get_address('owner');
 
     $data->{'sender'} ||= $who;
 
@@ -870,9 +887,9 @@ sub send_file {
 	$data->{'from'} = $data->{'fromlist'} unless $data->{'from'};
 	$data->{'return_path'} ||= $self->get_address('return_path');
     } else {
-	$data->{'from'} ||= $self->sympa;
+	$data->{'from'} ||= $self->get_address();
 	unless ($data->{'return_path'} and $data->{'return_path'} eq '<>') {
-	    $data->{'return_path'} = $self->request;
+	    $data->{'return_path'} = $self->get_address('owner');
 	}
     }
 
@@ -1194,7 +1211,7 @@ sub init_robot_cache {
 
 Handles cached information of robots on memory.
 
-I<Getter>.
+I<Getter>, I<internal use>.
 Gets cached robot(s) on memory.  If memory cache is missed, returns C<undef>.
 Note: To ensure that all robots are cached, check L<robots_ok>.
 
@@ -1229,7 +1246,7 @@ sub robots {
 
 =item robots_ok
 
-I<Setter>.
+I<Setter>, I<internal use>.
 XXX @todo doc
 
 =back
@@ -1253,7 +1270,7 @@ package Site;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use Carp qw(croak carp);
 
 our @ISA = qw(Site_r);
 
@@ -1284,11 +1301,7 @@ See L<Robot/ACCESSORS>.
 
 =item pictures_path
 
-=item request
-
 =item robot_by_http_host
-
-=item sympa
 
 =item ... etc.
 
@@ -1317,7 +1330,7 @@ sub AUTOLOAD {
     $type->{'RobotParameter'} = 1
 	if grep { $_ eq $attr }
 	    qw(blacklist list_check_regexp loging_condition loging_for_module
-	    pictures_path request sympa) or
+	    pictures_path) or
 	    grep { !defined $_->{'title'} and $_->{'name'} eq $attr }
 	    @confdef::params;
     ## getters for attributes specific to global config.
@@ -1445,6 +1458,32 @@ sub listmasters {
 
 =over 4
 
+=item request
+
+I<Getter>.
+Get E<lt>sympa-requestE<gt> address of robot.
+
+B<Obsoleted>.
+This method will be removed in near future.
+Use C<get_address('owner')> method intead.
+
+=back
+
+=cut
+
+sub request {
+    my $self = shift;
+
+    my $level = $Carp::CarpLevel;
+    $Carp::CarpLevel = 1;
+    carp "Deprecated: Use get_address('owner') method instead";
+    $Carp::CarpLevel = $level;
+
+    return $self->get_address('owner');
+}
+
+=over 4
+
 =item supported_languages
 
 I<Getter>.
@@ -1468,6 +1507,32 @@ sub supported_languages {
 	map { Language::Lang2Locale($_) } split /\s*,\s*/, $supported_lang;
     return @lang_list if wantarray;
     return \@lang_list;
+}
+
+=over 4
+
+=item sympa
+
+I<Getter>.
+Get E<lt>sympaE<gt> address of robot.
+
+B<Obsoleted>.
+This method will be removed in near future.
+Use C<get_address()> method intead.
+
+=back
+
+=cut
+
+sub sympa {
+    my $self = shift;
+
+    my $level = $Carp::CarpLevel;
+    $Carp::CarpLevel = 1;
+    carp "Deprecated: Use get_address() method instead";
+    $Carp::CarpLevel = $level;
+
+    return $self->get_address();
 }
 
 =head3 Miscelaneous

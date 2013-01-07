@@ -445,7 +445,7 @@ sub info {
 	    ->faultdetail("List $listname unknown");
     }
 
-    my $sympa = $list->robot->sympa;
+    my $sympa = $list->robot->get_address();
 
     my $result = $list->check_list_authz('info','md5',
 					 {'sender' => $sender,
@@ -935,7 +935,7 @@ sub review {
 	    ->faultdetail("List $listname unknown");
     }
 
-    my $sympa = $list->robot->sympa;
+    my $sympa = $list->robot->get_address();
 
     my $user;
 
@@ -1025,7 +1025,7 @@ sub fullReview {
 			->faultdetail('Listmaster or listowner required');
 	}
 	
-	my $sympa = $list->robot->sympa;
+	my $sympa = $list->robot->get_address();
 	
 	my $is_owner = $list->am_i('owner', $sender);
 	
@@ -1173,7 +1173,7 @@ sub signoff {
 	unless ($list->send_notify_to_owner('sigrequest',
 	    {   'who' => $sender,
 		'keyauth' => $list->compute_auth($sender,'add'),
-		'replyto' => $list->robot->sympa,
+		'replyto' => $list->robot->get_address(),
 	    }
 	)) {
 	    Log::do_log('err', 'Unable to send notify "subrequest" to %s listowner', $list);
@@ -1293,12 +1293,12 @@ sub subscribe {
       my $keyauth = $list->compute_auth($sender,'add');
       unless ($list->send_notify_to_owner('subrequest',{'who' => $sender,
 				   'keyauth' => $list->compute_auth($sender,'add'),
-				   'replyto' => $list->robot->sympa,
+				   'replyto' => $list->robot->get_address(),
 							'gecos' => $gecos})) {
 	  &Log::do_log('err', 'Unable to send notify "subrequest" to %s listowner', $list);
       }
 
-#      $list->send_sub_to_owner($sender, $keyauth, $list->robot->sympa, $gecos);
+#      $list->send_sub_to_owner($sender, $keyauth, $list->robot->get_address(), $gecos);
       $list->store_subscription_request($sender, $gecos);
       &Log::do_log('info', '%s from %s forwarded to the owners of the list',$listname,$sender);
       return SOAP::Data->name('result')->type('boolean')->value(1);

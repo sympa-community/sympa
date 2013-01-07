@@ -187,7 +187,7 @@ sub help {
     shift;
     my $robot = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
     my $etc   = $robot->etc;
 
     my $data = {};
@@ -234,7 +234,7 @@ sub lists {
     my $sign_mod = shift;
     my $message  = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
     my $host  = $robot->host;
 
     my $data  = {};
@@ -493,7 +493,7 @@ sub last {
     my $which = shift;
     my $robot = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
 
     my $list = new List($which, $robot);
     unless ($list) {
@@ -631,7 +631,7 @@ sub review {
     my $sign_mod = shift;
     my $message  = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
 
     my $user;
     my $list = new List($listname, $robot);
@@ -943,7 +943,7 @@ sub subscribe {
 		'subrequest',
 		{   'who'     => $sender,
 		    'keyauth' => $list->compute_auth($sender, 'add'),
-		    'replyto' => $robot->sympa,
+		    'replyto' => $robot->get_address(),
 		    'gecos'   => $comment
 		}
 	    )
@@ -1104,7 +1104,7 @@ sub info {
     my $sign_mod = shift;
     my $message  = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
 
     my $list = new List($listname, $robot);
     unless ($list) {
@@ -1721,7 +1721,7 @@ sub invite {
     my $sign_mod = shift;
     my $message  = shift;
 
-    my $sympa = $robot->sympa;
+    my $sympa = $robot->get_address();
 
     $what =~ /^(\S+)\s+(\S+)(\s+(.+))?\s*$/;
     my ($which, $email, $comment) = ($1, $2, $4);

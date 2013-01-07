@@ -1672,7 +1672,9 @@ sub DoForward {
     
     # my $msg_copy = $msg->dup;
     $message->{'msg'} = $msg;    
-    unless (&mail::mail_forward($message, $robot_object->request, \@rcpt, $robot)) {
+    unless (mail::mail_forward($message,
+	$robot_object->get_address('owner'), \@rcpt, $robot_object
+    )) {
 	&Log::do_log('err',"Impossible to forward mail for $name-$function  ");
 	my $string = sprintf 'Impossible to forward a message for %s-%s',$name,$function;
 	&report::reject_report_msg('intern',$string,$sender,

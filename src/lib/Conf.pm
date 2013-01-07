@@ -1531,8 +1531,9 @@ sub _infer_robot_parameter_values {
     unless ($param->{'config_hash'}{'email'}) {
         $param->{'config_hash'}{'email'} = $Conf{'email'};
     } 
-    $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
-    $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
+##OBSOLETED by Sympa 6.2: Use $robot->get_address().
+##    $param->{'config_hash'}{'sympa'} = $param->{'config_hash'}{'email'}.'@'.$param->{'config_hash'}{'host'};
+##    $param->{'config_hash'}{'request'} = $param->{'config_hash'}{'email'}.'-request@'.$param->{'config_hash'}{'host'};
     # split action list for blacklist usage
     foreach my $action (split(/,/, $Conf{'use_blacklist'})) {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
@@ -1570,6 +1571,7 @@ sub _infer_robot_parameter_values {
 	Log::do_log('notice',
 	    'db_list_cache is "on" but it is obsoleted.  Setting cache_list_config as "database".');
 	$param->{'config_hash'}{'cache_list_config'} = 'database';
+	delete $param->{'config_hash'}{'db_list_cache'};
     }
 
     &_parse_custom_robot_parameters({'config_hash' => $param->{'config_hash'}});

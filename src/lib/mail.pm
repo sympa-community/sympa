@@ -299,7 +299,7 @@ sub mail_file {
     ##my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "avant \n%s",$dump ; close DUMP;
 
     ## Set it in case it was not set
-    $data->{'return_path'} ||= $robot->request;
+    $data->{'return_path'} ||= $robot->get_address('owner');
     $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
@@ -895,8 +895,8 @@ sub send_in_spool {
     my ($rcpt,$robot,$sympa_email,$XSympaFrom) = @_;
     &Log::do_log('debug3', 'mail::send_in_spool(%s,%s, %s)',$XSympaFrom,$rcpt);
     
-    $sympa_email ||= $robot->sympa;
-    $XSympaFrom ||= $robot->sympa;
+    $sympa_email ||= $robot->get_address();
+    $XSympaFrom ||= $robot->get_address();
 
     my $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
     
