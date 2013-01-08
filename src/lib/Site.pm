@@ -155,8 +155,8 @@ sub get_address {
     } else {
 	croak 'bug in logic.  Ask developer';
     }
-    &Log::do_log('err', 'Unknown type of address "%s".  Ask developer',
-	$type);
+    Log::do_log('err', 'Unknown type of address "%s" for %s.  Ask developer',
+	$type, $self);
     return undef;
 }
 
@@ -1518,7 +1518,7 @@ Get E<lt>sympaE<gt> address of robot.
 
 B<Obsoleted>.
 This method will be removed in near future.
-Use C<get_address()> method intead.
+Use C<get_address()> method instead.
 
 =back
 

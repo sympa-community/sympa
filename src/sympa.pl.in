@@ -520,14 +520,17 @@ if ($main::options{'dump'}) {
 	exit 1;
     }
 
-    foreach my $robot (keys %{Site->robots_config}) {
-	
-	printf STDOUT "Doing processing for virtual robot %s...\n", $robot;
-	my ($status, $failed_for) = &admin::change_user_email(current_email => $main::options{'current_email'}, 
-							      new_email => $main::options{'new_email'},
-							      robot => $robot);
+    foreach my $robot_object (@{Robot::get_robots()}) {
+	printf STDOUT "Doing processing for virtual robot %s...\n",
+	    $robot_object->name;
+	my ($status, $failed_for) = admin::change_user_email(
+	    'current_email' => $main::options{'current_email'}, 
+	    'new_email' => $main::options{'new_email'},
+	    'robot' => $robot_object
+	);
 	unless (defined $status) {
-	    printf STDERR "Failed to change user email address in virtual robot %s'}\n", $robot;
+	    printf STDERR "Failed to change user email address in virtual robot %s'}\n",
+		$robot_object->name;
 	    exit 1;
 	}
 	

@@ -151,10 +151,9 @@ sub upgrade {
 	}
 
 	## Go through Virtual Robots
-	foreach my $vr (keys %{Site->robots_config}) {
-
-	    if (-d Site->etc . "/$vr/web_tt2") {
-		push @directories, Site->etc . "/$vr/web_tt2";
+	foreach my $vr (@{Robot::get_robots()}) {
+	    if (-d $vr->etc . '/web_tt2') {
+		push @directories, $vr->etc . '/web_tt2';
 	    }
 	}
 
@@ -448,12 +447,8 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.6')) {
 	
 	&Log::do_log('notice','Looking for customized mhonarc-ressources.tt2 files...');
-	foreach my $vr (keys %{Site->robots_config}) {
-	    my $etc_dir = Site->etc;
-
-	    if ($vr ne Site->domain) {
-		$etc_dir .= '/'.$vr;
-	    }
+	foreach my $vr (@{Robot::get_robots()}) {
+	    my $etc_dir = $vr->etc;
 
 	    if (-f $etc_dir.'/mhonarc-ressources.tt2') {
 		my $new_filename = $etc_dir.'/mhonarc-ressources.tt2'.'.'.time;
@@ -847,12 +842,12 @@ sub upgrade {
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif ($spoolparameter eq 'queuesubscribe'){
 		    my $match = 0;		    
-		    foreach my $robot_id (keys %{Site->robots_config}) {
-			&Log::do_log('notice',"robot : $robot_id");
+		    foreach my $robot (@{Robot::get_robots()}) {
+			my $robot_id = $robot->domain;
+			Log::do_log('notice', 'robot : %s', $robot_id);
 			if ($filename =~ /^([^@]*)\@$robot_id\.(.*)$/){
 			    $listname = $1;
-			    $robot_id = $2;
-			    $meta{'authkey'} = $3;
+			    $meta{'authkey'} = $2;
 			    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 			    $match = 1;
 			}

@@ -429,23 +429,6 @@ robot.
 I<Getters>.
 Get profile of robot.
 
-=item list_check_regexp
-
-=item pictures_path
-
-I<Getters>.
-Gets derived config parameters.
-
-=item request
-
-=item sympa
-
-I<Getters>.
-Gets derived config parameters.
-
-B<Obsoleted>.
-See L<Site/request> and L<Site/sympa>.
-
 =back
 
 =cut
@@ -453,20 +436,6 @@ See L<Site/request> and L<Site/sympa>.
 ## AUTOLOAD method will be inherited from Site class
 
 sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
-
-=over 4
-
-=item listmasters
-
-I<Getter>.
-In scalar context, returns arrayref of listmasters of robot.
-In array context, returns array of them.
-
-=back
-
-=cut
-
-## Inherited from Site class
 
 =over 4
 
@@ -490,6 +459,50 @@ sub list_params {
 
     return $self->{'list_params'} = $pinfo;
 }
+
+=head3 Derived parameters
+
+These are accessors derived from robot/default parameters.
+Some of them are obsoleted.
+
+=over 4
+
+=item list_check_regexp
+
+=item pictures_path
+
+I<Getters>.
+Gets derived config parameters.
+
+=item request
+
+=item sympa
+
+I<Getters>.
+Gets derived config parameters.
+
+B<Obsoleted>.
+See L<Site/request> and L<Site/sympa>.
+
+=back
+
+=cut
+
+## Inherited from Site class
+
+=over 4
+
+=item listmasters
+
+I<Getter>.
+In scalar context, returns arrayref of listmasters of robot.
+In array context, returns array of them.
+
+=back
+
+=cut
+
+## Inherited from Site class
 
 =over 4
 
@@ -581,7 +594,7 @@ sub get_robots {
     }
 
     ## get all robots
-    %orphan = map { $_ => 1 } keys %{Site->robots_config};
+    %orphan = map { $_->domain => 1 } @{Robot::get_robots()};
 
     unless (opendir $dir, Site->etc) {
 	&Log::do_log('err',

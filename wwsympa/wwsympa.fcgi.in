@@ -11104,11 +11104,11 @@ sub do_rename_list_request {
 
      ## Super listmaster can move a list to another robot
      if ($robot->is_listmaster($param->{'user'}{'email'})) {
-	 foreach (keys %{Site->robots_config}) {
-	     if ($_ eq $robot_id) {
-		 $param->{'robots'}{$_} = 'selected="selected"';
+	 foreach my $r (@{Robot::get_robots()}) {
+	     if ($r->domain eq $robot->domain) {
+		 $param->{'robots'}{$r->domain} = 'selected="selected"';
 	     }else {
-		 $param->{'robots'}{$_} = '';
+		 $param->{'robots'}{$r->domain} = '';
 	     }	  
 	 }
      }
