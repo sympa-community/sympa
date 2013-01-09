@@ -593,8 +593,8 @@ sub get_robots {
 	return \@robots;
     }
 
-    ## get all robots
-    %orphan = map { $_->domain => 1 } @{Robot::get_robots()};
+    ## get all cached robots
+    %orphan = map { $_->domain => 1 } Site->robots;
 
     unless (opendir $dir, Site->etc) {
 	&Log::do_log('err',
