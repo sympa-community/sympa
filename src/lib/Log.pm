@@ -121,7 +121,8 @@ sub do_log {
 		push @param, '[...]';
 	    } elsif (ref $p eq 'HASH') {
 		push @param, sprintf('{%s}', join('/', keys %{$p}));
-	    } elsif (ref $p =~ /^[A-Z]+$/) { # other unblessed references
+	    } elsif (ref $p eq 'Regexp' or ref $p eq uc ref $p) {
+		# other unblessed references
 		push @param, ref $p;
 	    } elsif ($p->can('get_id')) {
 		push @param, sprintf('%s <%s>', ref $p, $p->get_id);
