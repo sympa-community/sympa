@@ -68,7 +68,7 @@
 [% IF action == 'review' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a  href="[% path_cgi %]/review/[% list %]">[%|loc%]Manage Subscribers[%END%]</a></li>
 [% END %]
-[% IF conf.use_blacklist != 'none' %]
+[% IF list_blacklist.keys.size %]
 [% IF action == 'blacklist' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a  href="[% path_cgi %]/blacklist/[% list %]" >[%|loc%]Blacklist[%END%]</a></li>
 [% END %]

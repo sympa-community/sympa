@@ -39,7 +39,7 @@
   <div class="admin_cmd"><a  href="[% path_cgi %]/edit_list_request/[% listname %]">[%|loc%]Edit List Config[%END%]</a></div>
   <div class="admin_cmd"><a  href="[% path_cgi %]/editfile/[% listname %]">[%|loc%]Customizing[%END%]</a></div>
   <div class="admin_cmd"><a  href="[% path_cgi %]/review/[% listname %]">[%|loc%]Manage Subscribers[%END%]</a></div>
-  [% IF conf.use_blacklist != 'none' %]
+  [% IF list_blacklist.keys.size %]
   <div class="admin_cmd"><a  href="[% path_cgi %]/blacklist/[% listname %]" >[%|loc%]Blacklist[%END%]</a></div>
   [% END %]
   <div class="admin_cmd"><a  href="[% path_cgi %]/reviewbouncing/[% listname %]">[%|loc%]Bounces[%END%]</a></div>

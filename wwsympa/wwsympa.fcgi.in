@@ -1194,10 +1194,11 @@ my $birthday = time ;
 	 $param->{'conf'}{$p} = $robot->$p;
 	 $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
      }
-    ## compatibility concern
+    ## compatibility concern: deprecated attributes of Robot.
     $param->{'conf'}{'sympa'} = $robot->get_address();
     $param->{'conf'}{'request'} = $robot->get_address('owner');
 
+    ## SSO
      foreach my $auth (keys  %{Site->cas_id->{$robot_id}}) {
 	 &Log::do_log('debug2', "cas authentication service $auth");
 	 $param->{'sso'}{$auth} = Site->cas_id->{$robot_id}{$auth}{'auth_service_friendly_name'};
@@ -1241,7 +1242,7 @@ my $birthday = time ;
 				 'info_content' => 1,
 				 };
      
-     ## Change to list root
+     ## Change to site root
      unless (chdir(Site->home)) {
 	 &report::reject_report_web('intern','chdir_error',{},'','','',$robot_id);
          &wwslog('info','unable to change directory');
@@ -1498,20 +1499,57 @@ my $birthday = time ;
 		 &wwslog('info','Wrong parameters');
 		 last;
 	     }
-	     
+
+	    ## list name and mail hostname
 	     $param->{'host'} = $list->host if (ref($list) eq 'List');
 	     $param->{'host'} ||= $robot_id;
 	     $param->{'domain'} = $list->domain if (ref($list) eq 'List');
 	     
-	     ## language ( $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !)
+	    ## language FIXME: $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !
 	     $param->{'list_lang'} = $list->lang if ref $list eq 'List';
 	     $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});	     
 	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || $robot->lang;	     
 
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
-	     
-	     &export_topics ($robot_id);
-	     
+
+	    ## list topics	     
+	    export_topics($robot);
+
+	    ## blacklists
+	    my $blacklist = {};
+	    if (ref $list eq 'List') {
+		foreach my $action (split /\s*,\s*/, $robot->use_blacklist) {
+		    next unless $action;
+		    next if $action eq 'none';
+
+		    my @op = split /\./, $action;
+		    if (scalar @op > 1) {
+			next unless
+			    exists $pinfo->{$op[0]} and
+			    ref $pinfo->{$op[0]}{'format'} eq 'HASH' and
+			    exists $pinfo->{$op[0]}{'format'}{$op[1]} and
+			    $pinfo->{$op[0]}{'format'}{$op[1]}{'scenario'};
+
+			$blacklist->{$action} = {
+			    'title' =>
+			    sprintf(gettext("%s - %s"),
+				gettext($pinfo->{$op[0]}{'gettext_id'}),
+				gettext($pinfo->{$op[0]}{'format'}{$op[1]}{'gettext_id'}))
+			    };
+		    } else {
+			next unless
+			    exists $pinfo->{$action} and
+			    $pinfo->{$action}{'scenario'};
+
+			$blacklist->{$action} = {
+			    'title' =>
+			    gettext($pinfo->{$action}{'gettext_id'})
+			};
+		    }
+		}
+	    }
+	    $param->{'list_blacklist'} = $blacklist;
+
 	     unless ($comm{$action}) {
 		 if (new List ($action, $robot)){
 		      &do_redirect ($param->{'base_url'}.$param->{'path_cgi'}.'/info/'.$action);   
@@ -2705,7 +2743,7 @@ Use it to create a List object and initialize output parameters.
 
 =item * List::new
 
-=item * List::request_action
+=item * Scenario::request_action
 
 =item * report::reject_report_web
 
@@ -2861,11 +2899,14 @@ sub check_param_in {
 	$param->{'shared'} = $list->get_shared_status();
     }
      
-     ## Check if the current user can create a list.
-     my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot_id,
-					     {'sender' => $param->{'user'}{'email'},
-					      'remote_host' => $param->{'remote_host'},
-					      'remote_addr' => $param->{'remote_addr'}}); 
+    ## Check if the current user can create a list.
+    my $result = Scenario::request_action (
+	'create_list', $param->{'auth_method'}, $robot,
+	{   'sender' => $param->{'user'}{'email'},
+	    'remote_host' => $param->{'remote_host'},
+	    'remote_addr' => $param->{'remote_addr'}
+	}
+    ); 
      my $r_action;
      my $reason;
      if (ref($result) eq 'HASH') {
@@ -3276,7 +3317,7 @@ sub do_login {
      }
 
 
-     unless($data = &Auth::check_auth($robot_id, $in{'email'},$in{'passwd'})){
+     unless($data = Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
 	 &Log::do_log('notice', "Authentication failed\n");
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
@@ -8558,8 +8599,8 @@ sub do_get_pending_lists {
      ## Checking families and other virtual hosts.
      &get_server_details();
 
-    my $all_lists = &List::get_lists($robot_id,
-				     { 'filter_query' => [ 'status' => 'pending' ] });
+    my $all_lists = List::get_lists($robot,
+	{ 'filter_query' => [ 'status' => 'pending' ] });
     foreach my $list ( @$all_lists ) {
 	$param->{'pending'}{$list->name}{'subject'} = $list->subject;
 	$param->{'pending'}{$list->name}{'by'} = $list->creation->{'email'};
@@ -8577,8 +8618,8 @@ sub do_get_closed_lists {
      ## Checking families and other virtual hosts.
      &get_server_details();
 
-    my $all_lists = &List::get_lists($robot_id,
-				     { 'filter_query' => [ 'status' => 'closed|family_closed' ] });
+    my $all_lists = List::get_lists($robot,
+	{ 'filter_query' => [ 'status' => 'closed|family_closed' ] });
     foreach my $list ( @$all_lists ) {
 	$param->{'closed'}{$list->name}{'subject'} = $list->subject;
 	$param->{'closed'}{$list->name}{'by'} = $list->creation->{'email'};
@@ -8595,7 +8636,7 @@ sub do_get_latest_lists {
      ## Checking families and other virtual hosts.
      &get_server_details();
 
-    my $all_lists = &List::get_lists($robot_id, { 'order' => [ '-creation' ] });
+    my $all_lists = List::get_lists($robot, { 'order' => [ '-creation' ] });
     foreach my $list (@{$all_lists}) {
 	my $epoch = $list->creation->{'date_epoch'};
 	push @{$param->{'latest_lists'}},
@@ -8618,7 +8659,7 @@ sub do_get_inactive_lists {
      &get_server_details();
 
      my @unordered_lists;
-     my $all_lists = &List::get_lists($robot_id,
+     my $all_lists = List::get_lists($robot,
 	{ 'filter_query' => [ '!status' => 'closed|family_closed' ] });
      foreach my $list ( @$all_lists ) {
 	 my $last_message = 0;
@@ -8664,7 +8705,7 @@ sub do_get_biggest_lists {
 	## Checking families and other virtual hosts.
 	&get_server_details();
 	
-	my $all_lists = &List::get_lists($robot_id, { 'order' => [ '-total' ] });
+	my $all_lists = List::get_lists($robot, { 'order' => [ '-total' ] });
 	$param->{'biggest_lists'} = [
 	    map { {
 		'name' => $_->name,
@@ -9010,7 +9051,7 @@ Sends back the list creation edition form.
 
 =item * _prepare_edit_form
 
-=item * List::request_action
+=item * Scenario::request_action
 
 =item * List::load_topics
 
@@ -9028,10 +9069,13 @@ Sends back the list creation edition form.
 sub do_create_list_request {
      &wwslog('info', 'do_create_list_request()');
 
-     my $result = &Scenario::request_action('create_list',$param->{'auth_method'},$robot_id,
-						       {'sender' => $param->{'user'}{'email'},
-							'remote_host' => $param->{'remote_host'},
-							'remote_addr' => $param->{'remote_addr'}});
+     my $result = Scenario::request_action(
+	'create_list', $param->{'auth_method'}, $robot,
+	{   'sender' => $param->{'user'}{'email'},
+	    'remote_host' => $param->{'remote_host'},
+	    'remote_addr' => $param->{'remote_addr'}
+	}
+    );
  
      my $r_action;
      my $reason;
@@ -9052,11 +9096,11 @@ sub do_create_list_request {
 	 &wwslog('info','do_create_list: not allowed');
 	 return undef;
      }
-     $param->{'all_lists'} = &List::get_lists($robot_id);
+     $param->{'all_lists'} = List::get_lists($robot);
 
 
      my %topics;
-     unless (%topics = &List::load_topics($robot_id)) {
+     unless (%topics = List::load_topics($robot)) {
 	 &report::reject_report_web('intern','unable_to_load_list_of_topics',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
      }
      $param->{'list_of_topics'} = \%topics;
@@ -9270,7 +9314,7 @@ sub do_scenario_test {
 	 }
      }
      closedir SCENARI;
-     my $all_lists = &List::get_lists('*');
+     my $all_lists = List::get_lists();
      foreach my $list ( @$all_lists ) {
 	 $param->{'listname'}{$list->name}{'defined'}=1 ;
      }
@@ -9288,15 +9332,17 @@ sub do_scenario_test {
      $param->{'email'} = $in{'email'};
 
      if ($in{'scenario'}) {
-	 my $operation = $in{'scenario'};
-	 &wwslog('debug3', 'do_scenario_test: perform scenario_test');
+	my $operation = $in{'scenario'};
+	wwslog('debug3', 'do_scenario_test: perform scenario_test');
 
-	 my $result = &Scenario::request_action ($operation,$in{'auth_method'},$robot_id,
-					     {'listname' => $in{'listname'},
-					      'sender' => $in{'sender'},
-					      'email' => $in{'email'},
-					      'remote_host' => $in{'remote_host'},
-					      'remote_addr' => $in{'remote_addr'}},'debug');
+	my $result = Scenario::request_action(
+	    $operation, $in{'auth_method'}, $robot,
+	    {   'listname' => $in{'listname'},
+		'sender' => $in{'sender'},
+		'email' => $in{'email'},
+		'remote_host' => $in{'remote_host'},
+		'remote_addr' => $in{'remote_addr'}
+	    }, 'debug');
 	 if (ref($result) eq 'HASH'){
 	    $param->{'scenario_action'} = $result->{'action'};
 	    $param->{'scenario_condition'} = $result->{'condition'};
@@ -9459,7 +9505,7 @@ sub do_rebuildallarc {
 	&report::reject_report_web('intern','cannot fetch archive spool',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	&wwslog('err','error in  new Sympaspool(archive) ');
     }
-    my $all_lists = &List::get_lists($robot_id);
+    my $all_lists = List::get_lists($robot);
     foreach my $list ( @$all_lists ) {
 	next unless (defined $list->web_archive);
 
@@ -9809,7 +9855,7 @@ sub do_search_list {
 
      ## Members list
      my $record = 0;
-    my $all_lists = &List::get_lists($robot_id,
+    my $all_lists = List::get_lists($robot,
 	{ 'filter_query' => [ '%name%|%subject%' => $param->{'filter'} ] });
      foreach my $list ( @$all_lists ) {
 	my $is_admin = 0;
@@ -10682,7 +10728,7 @@ sub _prepare_edit_form {
 		 push @topics, $topic->{'value'};
 	     }
 	     undef $p->{'value'};
-	     my %list_of_topics = &List::load_topics($robot_id);
+	     my %list_of_topics = List::load_topics($robot);
 	     
 	     if (defined $p->{'constraint'}) {
 		 &_restrict_values(\%list_of_topics,$p->{'constraint'});
@@ -11085,10 +11131,13 @@ sub do_close_list_request {
 sub do_rename_list_request {
      &wwslog('info', 'do_rename_list_request()');
 
-     my $result = &Scenario::request_action ('create_list',$param->{'auth_method'},$robot_id,
-					 {'sender' => $param->{'user'}{'email'},
-					  'remote_host' => $param->{'remote_host'},
-					  'remote_addr' => $param->{'remote_addr'}});
+    my $result = Scenario::request_action(
+	'create_list', $param->{'auth_method'}, $robot,
+	{   'sender' => $param->{'user'}{'email'},
+	    'remote_host' => $param->{'remote_host'},
+	    'remote_addr' => $param->{'remote_addr'}
+	}
+    );
      my $r_action;
      my $reason;
      if (ref($result) eq 'HASH') {
@@ -16798,10 +16847,9 @@ sub do_stats {
 
 ## setting the topics list for templates
 sub export_topics {
-
-     my $robot_id = shift; 
-     wwslog ('debug2',"export_topics($robot_id)");
-     my %topics = &List::load_topics($robot_id);
+    wwslog('debug2', '(%s)', @_);
+    my $robot = shift; 
+    my %topics = List::load_topics($robot);
 
      unless (%topics) {
 	 &wwslog('err','No topics defined');
@@ -16813,11 +16861,14 @@ sub export_topics {
 
      my $total = 0;
      foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
-	 my $result = &Scenario::request_action ('topics_visibility', $param->{'auth_method'},$robot_id,
-					     {'topicname' => $t, 
-					      'sender' => $param->{'user'}{'email'},
-					      'remote_host' => $param->{'remote_host'},
-					      'remote_addr' => $param->{'remote_addr'}});
+	my $result = Scenario::request_action (
+	    'topics_visibility', $param->{'auth_method'}, $robot,
+	    {   'topicname' => $t, 
+		'sender' => $param->{'user'}{'email'},
+		'remote_host' => $param->{'remote_host'},
+		'remote_addr' => $param->{'remote_addr'}
+	    }
+	);
 	 my $action;
 	 $action = $result->{'action'} if (ref($result) eq 'HASH');  
 	 next unless ($action =~ /do_it/);

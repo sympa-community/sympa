@@ -26,7 +26,7 @@
 		
 		<a class="actionMenuLinks" href="[% path_cgi %]/dump/[% list %]/[% IF action == 'search' %][% filter %][% ELSE %]light[% END %]">[%|loc%]Dump[%END%]</a> 
 		
-		[% IF conf.use_blacklist != 'none' %]
+		[% IF list_blacklist.keys.size %]
 		<a class="actionMenuLinks" href="[% path_cgi %]/blacklist/[% list %]">[%|loc%]Blacklist[%END%]</a>
 		[% END %]
 		

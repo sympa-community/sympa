@@ -155,7 +155,7 @@
     </table>
 
 <br />
-[% IF conf.use_blacklist != 'none' %]
+[% IF list_blacklist.keys.size %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [%- END- %]
   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" /><br />
@@ -174,7 +174,7 @@
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
-[% IF conf.use_blacklist != 'none' %]
+[% IF list_blacklist.keys.size %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [% END %]
  <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />
