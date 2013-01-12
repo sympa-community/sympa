@@ -138,11 +138,11 @@ sub get_content {
 
     my $sql_where = _sqlselector($selector);
     if ($self->{'selection_status'} eq 'bad') {
-	$sql_where = $sql_where."AND message_status_spool = 'bad' " ;
+	$sql_where = $sql_where." AND message_status_spool = 'bad' " ;
     }else{
-	$sql_where = $sql_where."AND message_status_spool <> 'bad' " ;
+	$sql_where = $sql_where." AND message_status_spool <> 'bad' " ;
     }
-    $sql_where =~s/^AND//;
+    $sql_where =~s/^\s*AND//;
 
     my $statement ;
     if ($selection eq 'count'){
@@ -201,9 +201,9 @@ sub next {
     my $sql_where = _sqlselector($selector);
 
     if ($self->{'selection_status'} eq 'bad') {
-	$sql_where = $sql_where."AND message_status_spool = 'bad' " ;
+	$sql_where = $sql_where." AND message_status_spool = 'bad' " ;
     }else{
-	$sql_where = $sql_where."AND message_status_spool <> 'bad' " ;
+	$sql_where = $sql_where." AND message_status_spool <> 'bad' " ;
     }
     $sql_where =~ s/^\s*AND//;
 
