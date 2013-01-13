@@ -9208,14 +9208,16 @@ sub get_lists {
 	} elsif ($which_role eq 'member') {
 	    $table = 'list_table, subscriber_table';
 	    $cond =
-		'robot_list = robot_subscriber AND name_list = list_subscriber AND ';
+		sprintf
+		'robot_list = robot_subscriber AND name_list = list_subscriber AND user_subscriber = %s AND ',
+		SDM::quote($which_user);
 	    $cols = ', ' . _list_member_cols();
 	} else {
 	    $table = 'list_table, admin_table';
 	    $cond =
 		sprintf
-		'robot_list = robot_admin AND name_list = list_admin AND role_admin = %s AND ',
-		&SDM::quote($which_role);
+		'robot_list = robot_admin AND name_list = list_admin AND role_admin = %s AND user_admin = %s AND ',
+		SDM::quote($which_role), SDM::quote($which_user);
 	    $cols = ', ' . &_list_admin_cols;
 	}
 
