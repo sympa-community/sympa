@@ -74,8 +74,8 @@ sub new {
 	}
     }
 
-    ## Initialize internal list cache
-    $robot->init_list_cache();
+##    ## Initialize internal list cache
+##    $robot->init_list_cache();
 
     return $robot;
 }
@@ -539,7 +539,7 @@ styles.  At last modifications have been done, this shall be removed.
 sub clean_robot {
     my $robot      = shift;
     my $maybe_site = shift;
-    Log::do_log('debug3', 'robot "%s", maybe_site "%s"', $robot, $maybe_site);
+    #Log::do_log('debug3', 'robot "%s", maybe_site "%s"', $robot, $maybe_site);
     unless (ref $robot or
 	($maybe_site and !ref $robot and $robot eq 'Site')) {
 	my $level = $Carp::CarpLevel;

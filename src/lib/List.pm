@@ -1024,7 +1024,8 @@ sub load {
 	defined($cached = $self->list_cache_fetch($m1, $time_config))) {
 	$m1 = $cached->{'epoch'};
 	$config = $cached->{'config'};
-	$self->config($config);
+	$self->{'config'} = $config;
+	$self->{'admin'} = {}; # clear cached parameter values
 	$self->{'total'} = $cached->{'total'} if defined $cached->{'total'};
 	Log::do_log('debug3', 'got config for %s from serialized data',
 	    $self);
@@ -1036,7 +1037,8 @@ sub load {
 	    return undef;
 	}
 	$m1 = $time_config;
-	$self->config($config);
+	$self->{'config'} = $config;
+	$self->{'admin'} = {}; # clear cached parameter values
 	Log::do_log('debug3', 'got config for %s from file', $self);
 
 	## check param_constraint.conf if belongs to a family and
