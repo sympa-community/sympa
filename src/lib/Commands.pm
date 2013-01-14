@@ -1171,11 +1171,7 @@ sub info {
 	my $data = $list->admin;
 
 	foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
-	    my $scenario = new Scenario(
-		'robot'     => $robot,
-		'directory' => $list->dir,
-		'file_path' => $list->$p->{'file_path'}
-	    );
+	    my $scenario = $list->$p;
 	    ##FIXME: non-gettext titles (title.ja_JP etc.) cannot be used.
 	    my $title = $scenario->{'title'}{'gettext'};
 	    $data->{$p} = gettext($title);
@@ -2014,10 +2010,9 @@ sub remind {
     my $result;
 
     if ($listname eq '*') {
-
-	$result =
-	    &Scenario::request_action('global_remind', $auth_method, $robot,
-	    {'sender' => $sender});
+	$result = Scenario::request_action(
+	    $robot, 'global_remind', $auth_method, {'sender' => $sender}
+	);
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 
     } else {

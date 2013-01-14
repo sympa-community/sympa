@@ -1268,11 +1268,13 @@ sub process_message {
 	    $auth_level = 'dkim' if $message->{'dkim_pass'};
 	    $auth_level = 'md5' if $message->{'md5_check'};
 	    $auth_level = 'smime' if $message->{'smime_signed'};
-	    my $result = &Scenario::request_action('automatic_list_creation',$auth_level,$robot,
-						   {'sender' => $sender, 
-						    'message' => $message, 
-						    'family'=>$dyn_list_family, 
-						    'automatic_listname'=>$listname });
+	    my $result = Scenario::request_action($robot_object,
+		'automatic_list_creation', $auth_level,
+		{   'sender' => $sender, 'message' => $message, 
+		    'family' => $dyn_list_family,
+		    'automatic_listname' => $listname
+		}
+	    );
 	    my $r_action;
 	    unless (defined $result) {
 		&Log::do_log(

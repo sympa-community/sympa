@@ -2931,9 +2931,9 @@ sub check_param_in {
     }
      
     ## Check if the current user can create a list.
-    my $result = Scenario::request_action (
-	'create_list', $param->{'auth_method'}, $robot,
-	{   'sender' => $param->{'user'}{'email'},
+    my $result = Scenario::request_action($robot,
+	'create_list', $param->{'auth_method'},
+	{   'sender'      => $param->{'user'}{'email'},
 	    'remote_host' => $param->{'remote_host'},
 	    'remote_addr' => $param->{'remote_addr'}
 	}
@@ -9100,9 +9100,9 @@ Sends back the list creation edition form.
 sub do_create_list_request {
      &wwslog('info', 'do_create_list_request()');
 
-     my $result = Scenario::request_action(
-	'create_list', $param->{'auth_method'}, $robot,
-	{   'sender' => $param->{'user'}{'email'},
+     my $result = Scenario::request_action($robot,
+	'create_list', $param->{'auth_method'},
+	{   'sender'      => $param->{'user'}{'email'},
 	    'remote_host' => $param->{'remote_host'},
 	    'remote_addr' => $param->{'remote_addr'}
 	}
@@ -9372,11 +9372,11 @@ sub do_scenario_test {
 	my $operation = $in{'scenario'};
 	wwslog('debug3', 'do_scenario_test: perform scenario_test');
 
-	my $result = Scenario::request_action(
-	    $operation, $in{'auth_method'}, $robot,
-	    {   'listname' => $in{'listname'},
-		'sender' => $in{'sender'},
-		'email' => $in{'email'},
+	my $result = Scenario::request_action($robot,
+	    $operation, $in{'auth_method'},
+	    {   'listname'    => $in{'listname'},
+		'sender'      => $in{'sender'},
+		'email'       => $in{'email'},
 		'remote_host' => $in{'remote_host'},
 		'remote_addr' => $in{'remote_addr'}
 	    }, 'debug');
@@ -11011,7 +11011,8 @@ sub _prepare_data {
 	     $p_glob->{'type'} = 'scenario';
 	     my $list_of_scenario;
 
-	     my $tmp_list_of_scenario = $list->load_scenario_list($struct->{'scenario'},$robot_id);
+	    my $tmp_list_of_scenario = $list->load_scenario_list(
+		$struct->{'scenario'});
 	     
 	     ## Only get required scenario attributes
 	     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
@@ -11168,9 +11169,9 @@ sub do_close_list_request {
 sub do_rename_list_request {
      &wwslog('info', 'do_rename_list_request()');
 
-    my $result = Scenario::request_action(
-	'create_list', $param->{'auth_method'}, $robot,
-	{   'sender' => $param->{'user'}{'email'},
+    my $result = Scenario::request_action($robot,
+	'create_list', $param->{'auth_method'},
+	{   'sender'      => $param->{'user'}{'email'},
 	    'remote_host' => $param->{'remote_host'},
 	    'remote_addr' => $param->{'remote_addr'}
 	}
@@ -15370,10 +15371,9 @@ sub do_d_control {
 
      my $lang = $param->{'lang'};
 
-     ## Scenario list for READ
+    ## Scenario list for READ
+    my $tmp_list_of_scenario = $list->load_scenario_list('d_read');
 
-     my $tmp_list_of_scenario = $list->load_scenario_list('d_read',$robot_id);
-	     
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
 	 $param->{'scenari_read'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
@@ -15382,9 +15382,9 @@ sub do_d_control {
 
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
 
-     ## Scenario list for EDIT
-     $tmp_list_of_scenario = $list->load_scenario_list('d_edit',$robot_id);
-	     
+    ## Scenario list for EDIT
+    $tmp_list_of_scenario = $list->load_scenario_list('d_edit');
+
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
 	 $param->{'scenari_edit'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
@@ -16898,17 +16898,17 @@ sub export_topics {
 
      my $total = 0;
      foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
-	my $result = Scenario::request_action (
-	    'topics_visibility', $param->{'auth_method'}, $robot,
-	    {   'topicname' => $t, 
-		'sender' => $param->{'user'}{'email'},
+	my $result = Scenario::request_action($robot,
+	    'topics_visibility', $param->{'auth_method'},
+	    {   'topicname'   => $t, 
+		'sender'      => $param->{'user'}{'email'},
 		'remote_host' => $param->{'remote_host'},
 		'remote_addr' => $param->{'remote_addr'}
 	    }
 	);
-	 my $action;
-	 $action = $result->{'action'} if (ref($result) eq 'HASH');  
-	 next unless ($action =~ /do_it/);
+	my $action;
+	$action = $result->{'action'} if ref $result eq 'HASH';
+	next unless $action =~ /do_it/;
 
 	 my $current = $topics{$t};
 	 $current->{'id'} = $t;

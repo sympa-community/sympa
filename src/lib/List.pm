@@ -5347,18 +5347,15 @@ sub am_i {
 ## Check list authorizations
 ## Higher level sub for request_action
 sub check_list_authz {
+    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
     my $self = shift;
     my $operation = shift;
     my $auth_method = shift;
     my $context = shift;
     my $debug = shift;
-    &Log::do_log('debug', 'List::check_list_authz %s,%s',
-	$operation, $auth_method);
 
-    $context->{'list_object'} = $self;
-
-    return &Scenario::request_action($operation, $auth_method,
-	$self->robot, $context, $debug);
+    return Scenario::request_action($self, $operation, $auth_method,
+	$context, $debug);
 }
 
 ## Initialize internal list cache
@@ -5698,23 +5695,17 @@ sub get_nextdigest {
 
 ## Loads all scenari for an action
 sub load_scenario_list {
-    my ($self, $action, $robot) = @_;
-    &Log::do_log('debug3', 'List::load_scenario_list(%s,%s)', $action,
-	$robot);
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self = shift;
+    my $action = shift;
 
-    my $directory = $self->dir;
     my %list_of_scenario;
     my %skip_scenario;
 
-    foreach my $dir (
-        "$directory/scenari",
-	Site->etc . "/$robot/scenari",
-	Site->etc . "/scenari",
-        Sympa::Constants::DEFAULTDIR . '/scenari'
-    ) {
-	next unless (-d $dir);
+    foreach my $dir (@{$self->make_tt2_include_path('scenari')}) {
+	next unless -d $dir;
 
-	my $scenario_regexp = &tools::get_regexp('scenario');
+	my $scenario_regexp = tools::get_regexp('scenario');
 
 	while (<$dir/$action.*:ignore>) {
 	    if (/$action\.($scenario_regexp):ignore$/) {
@@ -5727,21 +5718,19 @@ sub load_scenario_list {
 	    next unless (/$action\.($scenario_regexp)$/);
 	    my $name = $1;
 
-	    next if (defined $list_of_scenario{$name});
-	    next if (defined $skip_scenario{$name});
+	    next if defined $list_of_scenario{$name};
+	    next if defined $skip_scenario{$name};
 
-	    my $scenario = new Scenario(
-		'robot'     => $robot,
-		'directory' => $directory,
+	    my $scenario = Scenario->new($self,
 		'function' => $action,
 		'name'      => $name
 	    );
 	    $list_of_scenario{$name} = $scenario;
 
 	    ## Set the title in the current language
-	    if (defined  $scenario->{'title'}{&Language::GetLang()}) {
+	    if (defined  $scenario->{'title'}{Language::GetLang()}) {
 		$list_of_scenario{$name}{'web_title'} =
-		    $scenario->{'title'}{&Language::GetLang()};
+		    $scenario->{'title'}{Language::GetLang()};
 	    } elsif (defined $scenario->{'title'}{'gettext'}) {
 		$list_of_scenario{$name}{'web_title'} =
 		    gettext($scenario->{'title'}{'gettext'});
@@ -5755,8 +5744,9 @@ sub load_scenario_list {
 	}
     }
 
-    ## Return a copy of the data to prevent unwanted changes in the central scenario data structure
-    return &tools::dup_var(\%list_of_scenario);
+    ## Return a copy of the data to prevent unwanted changes in the central
+    ## scenario data structure
+    return tools::dup_var(\%list_of_scenario);
 }
 
 =over 4
@@ -8814,8 +8804,6 @@ sub get_lists {
 	    croak 'bug in logic.  Ask developer';
 	}
     }
-
-    $options->{'reload_config'} = 1 if $options->{'use_files'};  # For compat.
 
     # Build query: Perl expression for files and SQL expression for list_table.
     my $cond_perl   = undef;
@@ -12210,11 +12198,9 @@ sub _set_list_param {
 	    $config_hash->{$config_attr} = $val;
 	}
 	if ($p->{'scenario'}) {
-	    $admin_hash->{$config_attr} = Scenario->new(
+	    $admin_hash->{$config_attr} = Scenario->new($self,
 		'function' => $p->{'scenario'},
-		'robot'    => $self->{'robot'},
-		'name'     => $val->{'name'},
-		'directory' => $self->{'dir'}
+		'name'     => $val->{'name'}
 	    );
 	} else {
 	    $admin_hash->{$config_attr} = tools::dup_var($val);

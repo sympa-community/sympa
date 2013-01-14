@@ -35,26 +35,40 @@ my %all_scenarios;
 my %persistent_cache;
 
 ## Creates a new object
-## Supported parameters : function, robot, name, directory, file_path, options
-## Output object has the following entries : name, file_path, rules, date, title, struct, data
+##
+## IN : -$pkg (+): class name
+##      -$that (+) : ref(List) | ref(Robot) | "Site"
+##      -%parameters : hash
+## OUT : Scenario object or undef
+##
+## Supported parameters : function, name, directory, file_path, options
+## Output object has the following entries : name, file_path, rules, date,
+## title, struct, data
 sub new {
-    &Log::do_log('debug2', '(%s, ...)', @_);
-   my($pkg, @args) = @_;
-    my %parameters = @args;
- 
+    my $pkg = shift;
+    my $that = shift;
+    my %parameters = @_;
+    Log::do_log('debug2', '(%s, %s, function=%s, name=%s, file_path=%s, options=%s)',
+	$pkg, $that, $parameters{'function'}, $parameters{'name'},
+	$parameters{'file_path'}, $parameters{'options'}
+    );
+
+    unless (ref $that and ref $that eq 'List' or
+	ref $that and ref $that eq 'Robot' or
+	$that eq 'Site') { # FIXME: really maybe a Site?
+	croak 'bug in logic.  Ask developer';
+    }
+
     my $scenario = {};
 
     ## Check parameters
     ## Need either file_path or function+name
     ## Parameter 'directory' is optional, used in List context only
-    unless ($parameters{'robot'} && 
-	    ($parameters{'file_path'} || ($parameters{'function'} && $parameters{'name'}))) {
+    unless ($parameters{'file_path'} or
+	$parameters{'function'} and $parameters{'name'}) {
 	&Log::do_log('err', 'Missing parameter');
 	return undef;
     }
-
-    ##FIXME: really may be Site?
-    my $robot = Robot::clean_robot($parameters{'robot'}, 'maybe_site');
 
     my $directory = $parameters{'directory'};
     my $file_path = $parameters{'file_path'};
@@ -80,10 +94,10 @@ sub new {
 
     }else {
 	## We can't use get_etc_filename() because we don't have a List object yet ; it's being constructed
-	my @dirs = (Site->etc . '/' . $robot->domain, Site->etc, Sympa::Constants::DEFAULTDIR);
-	unshift @dirs, $directory if defined $directory;
+	my @dirs = @{$that->make_tt2_include_path('scenari')};
+	unshift @dirs, $directory . '/scenari' if defined $directory;
 	foreach my $dir (@dirs) {
-	    my $tmp_path = $dir.'/scenari/'.$function.'.'.$name;
+	    my $tmp_path = $dir . '/' . $function . '.' . $name;
 	    if (-r $tmp_path) {
 		$scenario->{'file_path'} = $tmp_path;
 		last;
@@ -122,7 +136,7 @@ sub new {
 	## Keep rough scenario
 	$scenario->{'data'} = $data;
 
-	$scenario_struct = &_parse_scenario($function, $robot, $name, $data, $directory);
+	$scenario_struct = _parse_scenario($function, $name, $data);
     }elsif ($function eq 'include') {
 	## include.xx not found will not raise an error message
 	return undef;
@@ -130,7 +144,8 @@ sub new {
     }else {
 	## Default rule is 'true() smtp -> reject'
 	&Log::do_log('err',"Unable to find scenario file '$function.$name', please report to listmaster"); 
-	$scenario_struct = &_parse_scenario($function, $robot, $name, 'true() smtp -> reject', $directory);
+	$scenario_struct =
+	    _parse_scenario($function, $name, 'true() smtp -> reject');
 	$scenario->{'file_path'} = 'ERROR'; ## special value
 	$scenario->{'data'} = 'true() smtp -> reject';
     }
@@ -159,8 +174,8 @@ sub new {
 
 ## Parse scenario rules
 sub _parse_scenario {
-    &Log::do_log('debug3', '(%s, %s, %s, ...)', @_);
-    my ($function, $robot, $scenario_name, $paragraph, $directory ) = @_;
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my ($function, $scenario_name, $paragraph) = @_;
 
     my $structure = {};
     $structure->{'name'} = $scenario_name ;
@@ -216,9 +231,9 @@ sub _parse_scenario {
 # Return the action to perform for 1 sender 
 # using 1 auth method to perform 1 operation
 #
-# IN : -$operation (+) : scalar
+# IN : -$that (+) : ref(List) | ref(Robot) | "Site"
+#      -$operation (+) : scalar
 #      -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'|'dkim'
-#      -$robot (+) : scalar
 #      -$context (+) : ref(HASH) containing information
 #        to evaluate scenario (scenario var)
 #      -$debug : adds keys in the returned HASH 
@@ -238,12 +253,21 @@ sub _parse_scenario {
 #           (defined if $debug)
 ###################################################### 
 sub request_action {
-    &Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $that = shift;
     my $operation = shift;
     my $auth_method = shift;
-    my $robot = Robot::clean_robot(shift, 1); #FIXME: really may be Site?
     my $context = shift;
     my $debug = shift;
+
+    my $robot;
+    my $list;
+    if (ref $that and ref $that eq 'List') {
+	$list = $that;
+	$robot = $that->robot;
+    } else {
+	$robot = Robot::clean_robot($that, 1); #FIXME: really maybe Site?
+    }
 
     my $trace_scenario ;
     ## Defining default values for parameters.
@@ -278,11 +302,11 @@ sub request_action {
     }
 
     if ($log_it) {
-	if ($context->{'list_object'}) {
+	if ($list) {
 	    $trace_scenario = 'scenario request ' . $operation .
-		' for list ' . ($context->{'list_object'}->get_id) . ' :';
+		' for list ' . ($list->get_id) . ' :';
 	    &Log::do_log('info', 'Will evaluate scenario %s for list %s',
-		$operation, $context->{'list_object'});
+		$operation, $list);
 	}else{
 	    $trace_scenario = 'scenario request ' . $operation .
 		' for robot ' . ($robot->domain) . ' :';
@@ -292,9 +316,7 @@ sub request_action {
     }
     
     ## The current action relates to a list
-    if (defined $context->{'list_object'}) {
-	my $list = $context->{'list_object'};
-
+    if ($list) {
 	## The $operation refers to a list parameter of the same name
 	## The list parameter might be structured ('.' is a separator)
 	$scenario = $list->get_scenario($operation, $context->{'options'});
@@ -342,20 +364,21 @@ sub request_action {
 	    my @operations = split /\./, $operation;
 
 	    # loading of the structure
-	    $scenario = new Scenario ('robot' => $robot, 
-				      'directory' => $list->dir,
-				      'function' => $operations[$#operations],
-				      'name' => $context->{'scenario'},
-				      'options' => $context->{'options'});
+	    $scenario = Scenario->new($list,
+		'function' => $operations[$#operations],
+		'name' => $context->{'scenario'},
+		'options' => $context->{'options'}
+	    );
 	}
 
     }elsif ($context->{'topicname'}) {
 	## Topics
 
-	$scenario = new Scenario ('robot' => $robot, 
-				  'function' => 'topics_visibility',
-				  'name' => $List::list_of_topics{$robot->domain}{$context->{'topicname'}}{'visibility'},
-				  'options' => $context->{'options'});
+	$scenario = Scenario->new($robot, 
+	    'function' => 'topics_visibility',
+	    'name'     => $List::list_of_topics{$robot->domain}{$context->{'topicname'}}{'visibility'},
+	    'options'  => $context->{'options'}
+	);
 
     }else{	
 	## Global scenario (ie not related to a list) ; example : create_list
@@ -364,13 +387,12 @@ sub request_action {
 		grep { $_->{'name'} and $_->{'name'} eq $operation }
 		@confdef::params
 	    ) and $p[0]->{'scenario'}) {
-	    $scenario = new Scenario(
-		'robot'    => $robot,
-				  'function' => $operation,
+	    $scenario = Scenario->new($robot,
+		'function' => $operation,
 		'name'     => $robot->$operation,
 		'options'  => $context->{'options'}
-		);
-    }
+	    );
+	}
     }
 
     unless (defined $scenario and defined $scenario->{'rules'}) {
@@ -388,12 +410,10 @@ sub request_action {
 
     ## Include include.<action>.header if found
     my %param = ('function' => 'include',
-		 'robot' => $robot, 
 		 'name' => $operation.'.header',
 		 'options' => $context->{'options'});
-    $param{'directory'} = $context->{'list_object'}->dir
-	if defined $context->{'list_object'};
-    my $include_scenario = new Scenario %param;
+    my $include_scenario =
+	Scenario->new(($list || $robot), %param);
     if (defined $include_scenario) {
 	## Add rules at the beginning of the array
 	unshift @rules, @{$include_scenario->{'rules'}};
@@ -403,12 +423,10 @@ sub request_action {
 	if ($rules[$idx]->{'condition'} =~ /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
 	    my $include_file = $1;
 	    my %param = ('function' => 'include',
-			 'robot' => $robot, 
 			 'name' => $include_file,
 			 'options' => $context->{'options'});
-	    $param{'directory'} = $context->{'list_object'}->dir
-		if defined $context->{'list_object'};
-	    my $include_scenario = new Scenario %param;
+	    my $include_scenario =
+		Scenario->new(($list || $robot), %param);
 	    if (defined $include_scenario) {
 		## Removes the include directive and replace it with
 		## included rules
@@ -454,8 +472,7 @@ sub request_action {
 			   };
 		    return $return;
 		}
-		my $list = $context->{'list_object'};
-		unless ($list->robot->send_notify_to_listmaster(
+		unless ($robot->send_notify_to_listmaster(
 		    'error-performing-condition',
 		    [$context->{'listname'}."  ".$rule->{'condition'}] )) {
 		    &Log::do_log('notice',"Unable to send notify 'error-performing-condition' to listmaster");
@@ -549,9 +566,9 @@ sub request_action {
 
 ## check if email respect some condition
 sub verify {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($context, $condition, $log_it) = @_;
-    &Log::do_log('debug2', 'condition %s, log %s', $condition, $log_it);
-    
+
     my $robot;
     if ($context->{'list_object'}) {
 	$robot = $context->{'list_object'}->robot;
@@ -567,10 +584,7 @@ sub verify {
     } else {
 	$pinfo = {};
     }
-#    while (my($k,$v) = each %{$context}) {
-#	&Log::do_log('debug3',"verify: context->{$k} = $v");
-#    }
-    
+
     unless (defined($context->{'sender'} )) {
 	&Log::do_log('info',"internal error, no sender find in List::verify, report authors");
 	return undef;
@@ -1048,11 +1062,7 @@ sub verify {
     if ($condition_key eq 'search') {
 	my $val_search;
  	# we could search in the family if we got ref on Family object
- 	if (defined $list){
- 	    $val_search = &search($args[0],$context,$robot,$list);
- 	}else {
- 	    $val_search = &search($args[0],$context,$robot);
- 	}
+ 	$val_search = search(($list || $robot), $args[0], $context);
 	return undef unless defined $val_search;
 	if($val_search == 1) {
 	    if ($log_it == 1) {
@@ -1097,7 +1107,7 @@ sub verify {
     if ($condition_key =~ /^customcondition::(\w+)/o ) {
     	my $condition = $1;
     	
-    	my $res = &verify_custom($condition, \@args, $robot, $list);
+    	my $res = verify_custom(($list || $robot), $condition, \@args);
 	unless (defined $res) {
 	    if ($log_it == 1) {
 		my $args_as_string = '';
@@ -1153,24 +1163,18 @@ sub verify {
 
 ## Verify if a given user is part of an LDAP, SQL or TXT search filter
 sub search{
+    my $that = shift || 'Site';
     my $filter_file = shift;
     my $context = shift;
-    my $robot = shift;
-    my $list = shift;
 
-    my $that;
-    if (ref $list) {
-	$that = $list;
-    } elsif (ref $robot) {
-	$that = $robot;
-    } elsif ($robot) {
-	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
+    unless (ref $that and ref $that eq 'List') {
+	$that = Robot::clean_robot($that, 1); #FIXME: really may be Site?
     }
 
     my $sender = $context->{'sender'};
 
-    &Log::do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
-    
+    Log::do_log('debug2', '(%s, %s, sender=%s)', $that, $filter_file, $sender);
+
     if ($filter_file =~ /\.sql$/) {
  
 	my $file = $that->get_etc_filename("search_filters/$filter_file");
@@ -1383,23 +1387,32 @@ sub search{
 
 # eval a custom perl module to verify a scenario condition
 sub verify_custom {
-	my ($condition, $args_ref, $robot, $list) = @_;
-        my $timeout = 3600;
+    my $that = shift || 'Site';
+    my $condition = shift;
+    my $args_ref = shift;
 
-    if ($robot) {
-	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
+    my $robot;
+    if (ref $that and ref $that eq 'List') {
+	$robot = $that->robot;
+    } else {
+	$that = Robot::clean_robot($that, 1); #FIXME: really may be Site?
+	$robot = $that;
     }
 
-	my $filter = join ('*', @{$args_ref});
-	&Log::do_log('debug2', 'List::verify_custom(%s,%s,%s,%s)', $condition, $filter, $robot, $list);
+    my $timeout = 3600;
+
+    my $filter = join ('*', @{$args_ref});
+    Log::do_log('debug2', '(%s, %s, filter=%s)', $that, $condition, $filter);
+
         if (defined ($persistent_cache{'named_filter'}{$condition}{$filter}) &&
             (time <= $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} + $timeout)){ ## Cache has 1hour lifetime
             &Log::do_log('notice', 'Using previous custom condition cache %s', $filter);
             return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
         }
 
-    	# use this if your want per list customization (be sure you know what you are doing)
-	#my $file = $list->get_etc_filename("custom_conditions/${condition}.pm");
+    	# use this if you want per list customization (be sure you know what
+    	# you are doing)
+	#my $file = $that->get_etc_filename("custom_conditions/${condition}.pm");
 	my $file = $robot->get_etc_filename("custom_conditions/${condition}.pm");
 	unless ($file) {
 	    &Log::do_log('err', 'No module found for %s custom condition', $condition);
@@ -1429,6 +1442,11 @@ sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
     &tools::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
+}
+
+## Get unique ID
+sub get_id {
+    return shift->{'file_path'} || '';
 }
 
 1;

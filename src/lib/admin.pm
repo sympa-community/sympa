@@ -709,10 +709,13 @@ sub rename_list{
     ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
     my ($result, $r_action, $reason); 
     unless ($param{'options'}{'skip_authz'}) {
-      $result = &Scenario::request_action ('create_list',$param{'auth_method'},$param{'new_robot'},
-					   {'sender' => $param{'user_email'},
-					    'remote_host' => $param{'remote_host'},
-					    'remote_addr' => $param{'remote_addr'}});
+	$result = Scenario::request_action($param{'new_robot'},
+	    'create_list', $param{'auth_method'},
+	    {   'sender'      => $param{'user_email'},
+		'remote_host' => $param{'remote_host'},
+		'remote_addr' => $param{'remote_addr'}
+	    }
+	);
       
       if (ref($result) eq 'HASH') {
 	$r_action = $result->{'action'};

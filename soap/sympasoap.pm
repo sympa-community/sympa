@@ -550,12 +550,13 @@ sub createList {
 	    ->faultdetail("Missing required parameter(s) : $reject");	
     }
     # check authorization
-    my $result = &Scenario::request_action('create_list','md5',$robot,
-					 {'sender' => $sender,
-					  'remote_host' => $ENV{'REMOTE_HOST'},
-					  'remote_addr' =>  $ENV{'REMOTE_ADDR'},
-					  'remote_application_name' =>  $ENV{'remote_application_name'} }
-					 );
+    my $result = Scenario::request_action($robot, 'create_list', 'md5',
+	{   'sender'      => $sender,
+	    'remote_host' => $ENV{'REMOTE_HOST'},
+	    'remote_addr' => $ENV{'REMOTE_ADDR'},
+	    'remote_application_name' =>  $ENV{'remote_application_name'}
+	}
+    );
     my $r_action;
     my $reason;
     if (ref($result) eq 'HASH') {
