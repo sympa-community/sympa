@@ -8746,6 +8746,12 @@ Whether Web archive of the list is available.  1 or 0.
 
 =back
 
+=item C<'limit' =E<gt> NUMBER >
+
+Limit the number of results.
+C<0> means no limit (default).
+Note that this option may be applied prior to C<'order'> option.
+
 =item C<'order' =E<gt> [ KEY, ... ]>
 
 Subordinate sort key(s).  The results are sorted primarily by robot names
@@ -9033,7 +9039,11 @@ sub get_lists {
     push @keys_sql, 'name_list'
 	unless scalar grep { $_ =~ /name_list/ } @keys_sql;
     $order_sql = join(', ', @keys_sql);
-    &Log::do_log('debug3', 'order %s; %s', $order_perl, $order_sql);
+    Log::do_log('debug3', 'order %s; %s', $order_perl, $order_sql);
+
+    ## limit number of result
+    my $limit = $options->{'limit'} || undef;
+    my $count = 0;
 
     foreach my $robot (@robots) {
 	## Check on-memory cache first
@@ -9045,6 +9055,12 @@ sub get_lists {
 		foreach my $list (@all_lists) {
 		    next unless eval $cond_perl;
 		    push @l, $list;
+		    last if $limit and $limit <= ++$count;
+		}
+	    } elsif ($limit) {
+		foreach my $list (@all_lists) {
+		    push @l, $list;
+		    last if $limit <= ++$count;
 		}
 	    } else {
 		push @l, @all_lists;
@@ -9059,6 +9075,7 @@ sub get_lists {
 		push @lists, @l;
 	    }
 
+	    last if $limit and $limit <= $count;
 	    next;    # foreach my $robot
 	}
 
@@ -9079,12 +9096,17 @@ sub get_lists {
 
 		if ($which_role eq 'member') {
 		    $sth = &SDM::do_prepared_query(
-			q{SELECT list_subscriber FROM subscriber_table WHERE robot_subscriber = ? AND user_subscriber = ?},
+			q{SELECT list_subscriber
+			  FROM subscriber_table
+			  WHERE robot_subscriber = ? AND user_subscriber = ?},
 			$robot->domain, $which_user
 		    );
 		} else {
 		    $sth = &SDM::do_prepared_query(
-			q{SELECT list_admin FROM admin_table WHERE robot_admin = ? AND user_admin = ? AND role_admin = ?},
+			q{SELECT list_admin
+			  FROM admin_table
+			  WHERE robot_admin = ? AND user_admin = ? AND
+				role_admin = ?},
 			$robot->domain, $which_user, $which_role);
 		}
 		unless ($sth) {
@@ -9120,7 +9142,9 @@ sub get_lists {
 
 		unless (
 		    $sth = &SDM::do_prepared_query(
-			q{SELECT name_list FROM list_table WHERE robot_list = ?},
+			q{SELECT name_list
+			  FROM list_table
+			  WHERE robot_list = ?},
 			$robot->domain
 		    )
 		    ) {
@@ -9164,11 +9188,13 @@ sub get_lists {
 		}
 
 		push @l, $list;
+		last if $limit and $limit <= ++$count;
 	    }
 	    closedir DIR;
 
 	    ## All lists are in memory cache
-	    $robot->lists_ok(1) unless %requested_lists;
+	    $robot->lists_ok(1)
+		unless ($limit and $limit <= $count) or %requested_lists;
 
 	    ## sort
 	    if ($order_perl) {
@@ -9180,7 +9206,8 @@ sub get_lists {
 	    }
 
 	    ## clear orphan cache entries in list_table.
-	    if ($options->{'reload_config'} and %orphan) {
+	    if (!($limit and $limit <= $count) and
+		$options->{'reload_config'} and %orphan) {
 		foreach my $name (keys %orphan) {
 		    Log::do_log('notice',
 			'Clearing orphan list cache on list_table: %s@%s',
@@ -9193,6 +9220,7 @@ sub get_lists {
 		}
 	    }
 
+	    last if $limit and $limit <= $count;
 	    next;    # foreach my $robot
 	}
 
@@ -9209,14 +9237,19 @@ sub get_lists {
 	    $table = 'list_table, subscriber_table';
 	    $cond =
 		sprintf
-		'robot_list = robot_subscriber AND name_list = list_subscriber AND user_subscriber = %s AND ',
+		q{robot_list = robot_subscriber AND
+		  name_list = list_subscriber AND
+		  user_subscriber = %s AND },
 		SDM::quote($which_user);
 	    $cols = ', ' . _list_member_cols();
 	} else {
 	    $table = 'list_table, admin_table';
 	    $cond =
 		sprintf
-		'robot_list = robot_admin AND name_list = list_admin AND role_admin = %s AND user_admin = %s AND ',
+		q{robot_list = robot_admin AND
+		  name_list = list_admin AND
+		  role_admin = %s AND
+		  user_admin = %s AND },
 		SDM::quote($which_role), SDM::quote($which_user);
 	    $cols = ', ' . &_list_admin_cols;
 	}
@@ -9224,20 +9257,27 @@ sub get_lists {
 	push @sth_stack, $sth;
 
 	if (defined $cond_sql) {
-	    $sth = &SDM::do_query(
-		'SELECT name_list AS name%s FROM %s WHERE %s robot_list = %s AND %s ORDER BY %s',
+	    $sth = SDM::do_query(
+		q{SELECT name_list AS name%s
+		  FROM %s
+		  WHERE %s robot_list = %s AND %s
+		  ORDER BY %s},
 		$cols,
 		$table,
-		$cond,
-		&SDM::quote($robot->domain),
-		$cond_sql,
+		$cond, SDM::quote($robot->domain), $cond_sql,
 		$order_sql
 	    );
 	} else {
-	    $sth = &SDM::do_prepared_query(
+	    $sth = SDM::do_prepared_query(
 		sprintf(
-		    'SELECT name_list AS name%s FROM %s WHERE %s robot_list = ? ORDER BY %s',
-		    $cols, $table, $cond, $order_sql
+		    q{SELECT name_list AS name%s
+		      FROM %s
+		      WHERE %s robot_list = ?
+		      ORDER BY %s},
+		    $cols,
+		    $table,
+		    $cond,
+		    $order_sql
 		),
 		$robot->domain
 	    );
@@ -9271,11 +9311,16 @@ sub get_lists {
 	    }
 
 	    push @lists, $list;
+	    last if $limit and $limit <= ++$count;
 	}
 
 	$robot->lists_ok(1)
-	    unless defined $which_role or defined $cond_sql;
+	    unless ($limit and $limit <= $count) or
+	    defined $which_role or defined $cond_sql;
+
+	last if $limit and $limit <= $count;
     }
+
     return \@lists;
 }
 
