@@ -5772,36 +5772,34 @@ Get Scenario object about requested operation.
 sub get_scenario {
     my $self = shift;
     my $op = shift;
-    my $options = shift;
+    my $options = shift || {};
 
     return undef unless $op;
     my @op = split /\./, $op;
 
-    my $scenario_path;
     my $pinfo = $self->robot->list_params;
 
     if (scalar @op > 1) {
 	## Structured parameter
 	$op = $op[0];
 	return undef
-	    unless $pinfo->{$op} and
-	    ref $pinfo->{$op}->{'format'} eq 'HASH' and
-	    $pinfo->{$op}->{'format'}->{$op[1]} and
-	    $pinfo->{$op}->{'format'}->{$op[1]}->{'scenario'};
-	$scenario_path = $self->$op->{$op[1]}->{'file_path'};
+	    unless exists $pinfo->{$op} and
+	    ref $pinfo->{$op}{'format'} eq 'HASH' and
+	    exists $pinfo->{$op}{'format'}{$op[1]} and
+	    $pinfo->{$op}{'format'}{$op[1]}{'scenario'};
+	## reload cached value if needed
+	return $self->$op($self->$op)->{$op[1]}
+	    unless $options->{'dont_reload_scenario'};
+	return $self->$op->{$op[1]};
     } else {
 	## Simple parameter
 	return undef
-	    unless $pinfo->{$op} and $pinfo->{$op}->{'scenario'};
-	$scenario_path = $self->$op->{'file_path'};
+	    unless exists $pinfo->{$op} and $pinfo->{$op}{'scenario'};
+	## reload cached value if needed
+	return $self->$op($self->$op)
+	    unless $options->{'dont_reload_scenario'};
+	return $self->$op;
     }
-    return undef unless $scenario_path;
-
-    ## Create Scenario object
-    return Scenario->new('robot' => $self->robot,
-	'directory' => $self->dir,
-	'file_path' => $scenario_path,
-	'options' => $options);
 }
 
 sub load_task_list {
@@ -9882,19 +9880,7 @@ sub _load_list_param {
     ## Scenario
     if ($p->{'scenario'}) {
 	$value =~ y/,/_/;
-	my $scenario = new Scenario(
-	    'function'  => $p->{'scenario'},
-	    'robot'     => $robot,
-	    'name'      => $value,
-	    'directory' => $directory
-	);
-
-	## We store the path of the scenario in the sstructure
-	## Later &Scenario::request_action() will look for the scenario in %Scenario::all_scenarios through Scenario::new()
-	$value = {
-	    'file_path' => $scenario->{'file_path'},
-	    'name'      => $scenario->{'name'}
-	};
+	$value = {'name' => $value};
     } elsif ($p->{'task'}) {
 	$value = {'name' => $value};
     }
@@ -12218,9 +12204,21 @@ sub _set_list_param {
 	if ($def) {
 	    delete $config_hash->{$config_attr};
 	} else {
+	    if ($p->{'scenario'} and ref $val eq 'Scenario') {
+		$val = {'name' => $val->{'name'}};
+	    }
 	    $config_hash->{$config_attr} = $val;
 	}
-	$admin_hash->{$config_attr} = tools::dup_var($val);
+	if ($p->{'scenario'}) {
+	    $admin_hash->{$config_attr} = Scenario->new(
+		'function' => $p->{'scenario'},
+		'robot'    => $self->{'robot'},
+		'name'     => $val->{'name'},
+		'directory' => $self->{'dir'}
+	    );
+	} else {
+	    $admin_hash->{$config_attr} = tools::dup_var($val);
+	}
     } else {
 	delete $config_hash->{$config_attr};
 	delete $admin_hash->{$config_attr};
