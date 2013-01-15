@@ -6,6 +6,7 @@ use strict;
 use Message;
 use Log;
 use tracking;
+use Data::Dumper;
 
 our @ISA = qw(Message);
 
@@ -194,14 +195,14 @@ sub is_mdn {
     my $self = shift;
 
     return $self->{'mdn'}{'is_mdn'} if (defined $self->{'mdn'}{'is_mdn'});
-    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand"))) {
+    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i)) {
 	Log::do_log('trace','Message %s is an MDN',$self->get_msg_id);
 	$self->{'mdn'}{'is_mdn'} = 1;
     }else{
 	Log::do_log('trace','Message %s is not an MDN',$self->get_msg_id);
 	$self->{'mdn'}{'is_mdn'} = 0;
     }
-    return $self->{'mdn'}{'is_mdn'}
+    return $self->{'mdn'}{'is_mdn'};
 }
 
 sub is_email_feedback_report {
@@ -217,7 +218,7 @@ sub tracking_is_used {
     my $self = shift ;
 
     return $self->{'tracking'}{'is_used'} if (defined $self->{'tracking'}{'is_used'});
-    if ($self->{'list'}{'tracking'}{'delivery_status_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on_demand") {
+    if ($self->{'list'}{'config'}{'tracking'}{'delivery_status_notification'} eq "on" || $self->{'list'}{'config'}{'tracking'}{'message_delivery_notification'} eq "on" || $self->{'list'}{'config'}{'tracking'}{'message_delivery_notification'} eq "on_demand") {
 	Log::do_log('trace','List %s for Message %s uses tracking',$self->{'list'}->get_list_id,$self->get_msg_id);
 	$self->{'tracking'}{'is_used'} = 1;
     }else{
