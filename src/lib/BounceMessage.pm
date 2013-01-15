@@ -81,11 +81,13 @@ sub process {
     #----------------------------------------------------------------------------------------------------------------------
     # If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
     if($self->is_dsn and $self->tracking_is_used) {
-	unless ($self->process_dsn) {
+	if ($self->process_dsn) {
+	    Log::do_log('notice', "DSN Correctly treated...");
+	}else{
 	    Log::do_log('err','Delivery status notification processing for bounce %s (key %s) failed. Stopping here.',$self->get_msg_id,$self->{'messagekey'});
 	    return undef;
 	}
-	unless($self->{'dsn_status'} =~ /failed/) { 
+	unless($self->{'dsn'}{'status'} =~ /failed/) { 
 	    return 1;
 	}
     }
@@ -129,14 +131,20 @@ sub analyze_verp_header {
 	if ($self->{'local_part'} =~ /^(.*)(\=\=([wr]))$/) {
 	    $self->{'local_part'} = $1;
 	    $self->{'unique'} = $2;
-	}elsif ($self->{'local_part'} =~  /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/ ) {# tracking in use
-	    
+	}elsif ($self->{'local_part'} =~  /^(.*)\=\=a\=\=([^\=]*)\=\=([^\=]*)(\=\=([^\=]*))?$/ ) {# tracking in use
+	    Log::do_log('trace',"1: $1");
+	    Log::do_log('trace',"2: $2");
+	    Log::do_log('trace',"3: $3");
+	    Log::do_log('trace',"4: $4");
+	    Log::do_log('trace',"5: $5");
+	    Log::do_log('trace',"6: $6");
+	    Log::do_log('trace','local: %s',$self->{'local_part'});
 	    $self->{'distribution_id'} = $4;
 	    $self->{'local_part'} =~ /^(.*)\=\=(.*)$/ ;
 	    $self->{'local_part'} = $1;
 	}else{
 	    undef $self->{'distribution_id'} ;
-	    Log::do_log('err', 'NO ID PART in the bounce for :%s', $self->{'to'});
+	    Log::do_log('err', 'NO ID PART in the bounce for: %s', $self->{'to'});
 	}
 
 	$self->{'local_part'} =~ s/\=\=a\=\=/\@/ ;
@@ -159,9 +167,12 @@ sub is_verp_in_use {
     if ($self->{'to'} =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) {
 	$self->{'local_part'} = $1;
 	$self->{'robotname'} = $2;
+	Log::do_log('trace','Message %s uses VERP',$self->get_msg_id);
 	$self->{'verp'}{'is_used'} = 1;
+    }else{
+	Log::do_log('trace','Message %s does not use VERP',$self->get_msg_id);
+	$self->{'verp'}{'is_used'} = 0;
     }
-    $self->{'verp'}{'is_used'} = 0;
     return $self->{'verp'}{'is_used'};
 }
 
@@ -169,8 +180,13 @@ sub is_dsn {
     my $self = shift;
 
     return $self->{'dsn'}{'is_dsn'} if (defined $self->{'dsn'}{'is_dsn'});
-    $self->{'dsn'}{'is_dsn'} = 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used));
-    $self->{'dsn'}{'is_dsn'} = 0;
+    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used)) {
+	Log::do_log('trace','Message %s is a DSN',$self->get_msg_id);
+	$self->{'dsn'}{'is_dsn'} = 1;
+    }else{
+	Log::do_log('trace','Message %s is not a DSN',$self->get_msg_id);
+	$self->{'dsn'}{'is_dsn'} = 0;
+    }
     return $self->{'dsn'}{'is_dsn'};
 }
 
@@ -178,8 +194,13 @@ sub is_mdn {
     my $self = shift;
 
     return $self->{'mdn'}{'is_mdn'} if (defined $self->{'mdn'}{'is_mdn'});
-    $self->{'mdn'}{'is_mdn'} = 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand")));
-    $self->{'mdn'}{'is_mdn'} = 0;
+    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand"))) {
+	Log::do_log('trace','Message %s is an MDN',$self->get_msg_id);
+	$self->{'mdn'}{'is_mdn'} = 1;
+    }else{
+	Log::do_log('trace','Message %s is not an MDN',$self->get_msg_id);
+	$self->{'mdn'}{'is_mdn'} = 0;
+    }
     return $self->{'mdn'}{'is_mdn'}
 }
 
@@ -197,8 +218,10 @@ sub tracking_is_used {
 
     return $self->{'tracking'}{'is_used'} if (defined $self->{'tracking'}{'is_used'});
     if ($self->{'list'}{'tracking'}{'delivery_status_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on_demand") {
+	Log::do_log('trace','List %s for Message %s uses tracking',$self->{'list'}->get_list_id,$self->get_msg_id);
 	$self->{'tracking'}{'is_used'} = 1;
     }else{
+	Log::do_log('trace','List %s for Message %s does not use tracking',$self->{'list'}->get_list_id,$self->get_msg_id);
 	$self->{'tracking'}{'is_used'} = 0;
     }
     return $self->{'tracking'}{'is_used'};
@@ -241,7 +264,7 @@ sub update_list {
     $self->update_robot($new_robotname);
     $self->change_listname($new_listname);
 
-    if ($self->{'old_listname'} ne $self->{'listname'} || $self->{'old_robotname'} ne $self->{'robotname'}) {
+    if ($self->{'old_listname'} ne $self->{'listname'} || $self->{'old_robotname'} ne $self->{'robotname'} || ref $self->{'list'} !~ /List/) {
 	my $list = new List ($self->{'listname'}, $self->{'robot'});
 	unless($list) {
 	    Log::do_log('notice','Unable to set list object for unknown list %s@%s (bounce %s)',$self->{'listname'},$self->{'robotname'},$self->{'messagekey'});
@@ -261,7 +284,7 @@ sub update_robot {
     $self->change_robotname($new_robotname);
 
     if ($self->{'old_robotname'} ne $self->{'robotname'}) {
-	my $robot = new Robot($self->{'robot'});
+	my $robot = new Robot($self->{'robotname'});
 	unless($robot) {
 	    Log::do_log('notice','Unable to set robot object for unknown robot %s (bounce %s)',$self->{'robotname'},$self->{'messagekey'});
 	    return undef;
@@ -338,8 +361,8 @@ sub process_dsn {
 		$line = lc($line);
 		# Action Field MUST be present in a DSN report, possible values : failed, delayed, delivered, relayed, expanded(rfc3464)
 		if ($line =~ /action\:\s*(.+)/i) {
-		    $self->{'dsn_status'} = $1;
-		    chomp $self->{'dsn_status'};
+		    $self->{'dsn'}{'status'} = $1;
+		    chomp $self->{'dsn'}{'status'};
 		}			
 		
 		if ( ($line =~ /final\-recipient\:\s*(.+)\s*$/i) && (not $final_rcpt) ) {
@@ -382,14 +405,14 @@ sub process_dsn {
 	($msg_id)= $msg_id =~ /<(\S+\@\S+)>/;
     }
     
-    Log::do_log ('debug2',"FINAL DSN Action Detected, value : %s", $self->{'dsn_status'});
+    Log::do_log ('debug2',"FINAL DSN Action Detected, value : %s", $self->{'dsn'}{'status'});
     Log::do_log ('debug2',"FINAL DSN Recipient Detected, value : %s", $original_rcpt);
     Log::do_log ('debug2',"FINAL DSN final Recipient Detected, value : %s", $final_rcpt);
     Log::do_log ('debug2',"FINAL DSN Message-Id Detected, value : %s", $msg_id);
     Log::do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
     
-    unless  ($self->{'dsn_status'} =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
-	Log::do_log('err', "Non failed dsn status $self->{'dsn_status'}");
+    unless  ($self->{'dsn'}{'status'} =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
+	Log::do_log('err', "Non failed dsn status $self->{'dsn'}{'status'}");
 	unless ($self->{'distribution_id'}) {
 	    Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
 	    return undef;
@@ -404,7 +427,7 @@ sub process_dsn {
 	}
     }
     
-    if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn_status'}, $arrival_date,$self->get_mime_message )) {
+    if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn'}{'status'}, $arrival_date,$self->get_mime_message )) {
 	Log::do_log('notice', "DSN Correctly treated...");
     }else{
 	Log::do_log('err','Not able to fill database with notification data');
@@ -611,11 +634,12 @@ sub process_email_feedback_report {
 sub process_ndn {
     my $self = shift;
     
-    if (! $self->{'list'} || ref $self->{'list'} !~ /LIST/) {
+    if (! $self->{'list'} || ref $self->{'list'} !~ /List/) {
 	Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
 	return undef;
     }else{
 	Log::do_log('debug',"Processing bounce messagekey=%s for list $self->{'listname'}",$self->{'messagekey'});      
+	Log::do_log('trace',"Processing bounce messagekey=%s for list $self->{'list'}",$self->{'messagekey'});      
 	
 	my (%hash, $from);
 	my $bounce_dir = $self->{'list'}->get_bounce_dir();
