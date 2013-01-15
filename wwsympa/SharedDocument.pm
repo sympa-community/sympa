@@ -320,10 +320,13 @@ sub check_access_control {
     
     # if not privileged owner
     if (1) {
-	my $result = $list->check_list_authz('shared_doc.d_read',$param->{'auth_method'},
-					     {'sender' => $param->{'user'}{'email'},
-					      'remote_host' => $param->{'remote_host'},
-					      'remote_addr' => $param->{'remote_addr'}});    
+	my $result = Scenario::request_action($list,
+	    'shared_doc.d_read', $param->{'auth_method'},
+	    {   'sender' => $param->{'user'}{'email'},
+		'remote_host' => $param->{'remote_host'},
+		'remote_addr' => $param->{'remote_addr'}
+	    }
+	);    
 	my $action;
 	if (ref($result) eq 'HASH') {
 	    $action = $result->{'action'};   
@@ -334,10 +337,13 @@ sub check_access_control {
     }
     
     if (1) {
-	my $result = $list->check_list_authz('shared_doc.d_edit',$param->{'auth_method'},
-					     {'sender' => $param->{'user'}{'email'},
-					      'remote_host' => $param->{'remote_host'},
-					      'remote_addr' => $param->{'remote_addr'}});
+	my $result = Scenario::request_action($list,
+	    'shared_doc.d_edit', $param->{'auth_method'},
+	    {   'sender' => $param->{'user'}{'email'},
+		'remote_host' => $param->{'remote_host'},
+		'remote_addr' => $param->{'remote_addr'}
+	    }
+	);
 	my $action;
 	if (ref($result) eq 'HASH') {
 	    $action = $result->{'action'};   
@@ -408,11 +414,14 @@ sub check_access_control {
 	    
 	    if (1) {
 		
-		my $result = $list->check_list_authz('shared_doc.d_read',$param->{'auth_method'},
-						     {'sender' => $param->{'user'}{'email'},
-						      'remote_host' => $param->{'remote_host'},
-						      'remote_addr' => $param->{'remote_addr'},
-						      'scenario'=> $desc_hash{'read'}});
+		my $result = Scenario::request_action($list,
+		    'shared_doc.d_read', $param->{'auth_method'},
+		    {   'sender' => $param->{'user'}{'email'},
+			'remote_host' => $param->{'remote_host'},
+			'remote_addr' => $param->{'remote_addr'},
+			'scenario'=> $desc_hash{'read'}
+		    }
+		);
 		my $action;
 		if (ref($result) eq 'HASH') {
 		    $action = $result->{'action'};   
@@ -424,11 +433,14 @@ sub check_access_control {
 	    }
 	    
 	    if (1) {
-		my $result = $list->check_list_authz('shared_doc.d_edit',$param->{'auth_method'},
-						     {'sender' => $param->{'user'}{'email'},
-						      'remote_host' => $param->{'remote_host'},
-						      'remote_addr' => $param->{'remote_addr'},
-						      'scenario'=> $desc_hash{'edit'}});
+		my $result = Scenario::request_action($list,
+		    'shared_doc.d_edit', $param->{'auth_method'},
+		    {   'sender' => $param->{'user'}{'email'},
+			'remote_host' => $param->{'remote_host'},
+			'remote_addr' => $param->{'remote_addr'},
+			'scenario'=> $desc_hash{'edit'}
+		    }
+		);
 		my $action_edit;
 		if (ref($result) eq 'HASH') {
 		    $action_edit = $result->{'action'};   

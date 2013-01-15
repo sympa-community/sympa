@@ -5346,17 +5346,9 @@ sub am_i {
 }
 
 ## Check list authorizations
-## Higher level sub for request_action
+## OBSOLETED; Use Scenario::request_action();
 sub check_list_authz {
-    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
-    my $self = shift;
-    my $operation = shift;
-    my $auth_method = shift;
-    my $context = shift;
-    my $debug = shift;
-
-    return Scenario::request_action($self, $operation, $auth_method,
-	$context, $debug);
+    return Scenario::request_action(@_);
 }
 
 ## Initialize internal list cache

@@ -92,10 +92,11 @@ sub lists {
 	my $listname = $list->name;
 
 	my $result_item = {};
-	my $result = $list->check_list_authz('visibility','md5',
-					     {'sender' => $sender,
-					      'remote_application_name' =>  $ENV{'remote_application_name'} }
-					    );
+	my $result = Scenario::request_action($list, 'visibility', 'md5',
+	    {   'sender' => $sender,
+		'remote_application_name' => $ENV{'remote_application_name'}
+	    }
+	);
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action eq 'do_it');
@@ -447,10 +448,11 @@ sub info {
 
     my $sympa = $list->robot->get_address();
 
-    my $result = $list->check_list_authz('info','md5',
-					 {'sender' => $sender,
-  					  'remote_application_name' =>  $ENV{'remote_application_name'} }
-					 );
+    my $result = Scenario::request_action($list, 'info', 'md5',
+	{   'sender' => $sender,
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+    );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -714,14 +716,15 @@ sub add {
 
     # check authorization
 
-    my $result = $list->check_list_authz('add','md5',
-					 {'sender' => $sender, 
-					  'email' => $email,
-					  'remote_host' => $ENV{'REMOTE_HOST'},
-					  'remote_addr' => $ENV{'REMOTE_ADDR'},
-					  'remote_application_name' => $ENV{'remote_application_name'}} );
+    my $result = Scenario::request_action($list, 'add', 'md5',
+	{   'sender' => $sender, 
+	    'email' => $email,
+	    'remote_host' => $ENV{'REMOTE_HOST'},
+	    'remote_addr' => $ENV{'REMOTE_ADDR'},
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+    );
 
-    
     my $action;
     my $reason;
     if (ref($result) eq 'HASH') {
@@ -830,14 +833,15 @@ sub del {
 
     # check authorization
 
-    my $result = $list->check_list_authz('del','md5',
-					 {'sender' => $sender, 
-					  'email' => $email,
-					  'remote_host' => $ENV{'REMOTE_HOST'},
-					  'remote_addr' => $ENV{'REMOTE_ADDR'},
-					  'remote_application_name' => $ENV{'remote_application_name'}} );
+    my $result = Scenario::request_action($list, 'del', 'md5',
+	{   'sender' => $sender, 
+	    'email' => $email,
+	    'remote_host' => $ENV{'REMOTE_HOST'},
+	    'remote_addr' => $ENV{'REMOTE_ADDR'},
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+    );
 
-    
     my $action;
     my $reason;
     if (ref($result) eq 'HASH') {
@@ -940,10 +944,11 @@ sub review {
 
     my $user;
 
-    my $result = $list->check_list_authz('review','md5',
-					 {'sender' => $sender,
-					  'remote_application_name' =>  $ENV{'remote_application_name'} }
-					 );
+    my $result = Scenario::request_action($list, 'review', 'md5',
+	{   'sender' => $sender,
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+    );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1148,11 +1153,12 @@ sub signoff {
     
     $list = new List ($listname, $robot);
     
-    my $result = $list->check_list_authz('unsubscribe','md5',
-					 {'email' => $sender,
-					  'sender' => $sender,
-					  'remote_application_name' =>  $ENV{'remote_application_name'} }
-					 );
+    my $result = Scenario::request_action($list, 'unsubscribe', 'md5',
+	{   'email' => $sender,
+	    'sender' => $sender,
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+    );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1267,11 +1273,12 @@ sub subscribe {
   $gecos =~ s/"/\\"/g;
   $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
   
-  ## query what to do with this subscribtion request
-  my $result = $list->check_list_authz('subscribe','md5',
-				       {'sender' => $sender,
-					'remote_application_name' =>  $ENV{'remote_application_name'} }
-				       );
+    ## query what to do with this subscribtion request
+    my $result = Scenario::request_action($list, 'subscribe', 'md5',
+	{   'sender' => $sender,
+	    'remote_application_name' => $ENV{'remote_application_name'}
+	}
+   );
   my $action;
   $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -1443,10 +1450,11 @@ sub which {
 	my $list_address;
 	my $result_item;
 
-	my $result = $list->check_list_authz('visibility', 'md5',
-					     {'sender' =>$sender,
-					      'remote_application_name' =>  $ENV{'remote_application_name'} }
-					     );
+	my $result = Scenario::request_action($list, 'visibility', 'md5',
+	    {   'sender' => $sender,
+		'remote_application_name' => $ENV{'remote_application_name'}
+	    }
+	);
 	my $action;
 	$action = $result->{'action'} if (ref($result) eq 'HASH');
 	next unless ($action =~ /do_it/i);

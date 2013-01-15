@@ -1829,7 +1829,7 @@ sub DoMessage{
     $auth_method = 'md5' if ($message->{'md5_check'});
     $auth_method = 'smime' if ($is_signed->{'body'}) ;
     
-    $result = $list->check_list_authz('send',$auth_method,$context);
+    $result = Scenario::request_action($list, 'send', $auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {

@@ -46,7 +46,7 @@ sub new {
     bless $self,$pkg;
     $self->{'to'} = $self->get_mime_message->head->get('to', 0);
     chomp $self->{'to'};	
-    $self->{'listname'} = $self->{'list'}{'name'};
+    $self->{'listname'} = $self->{'list'}->name;
     $self->{'robotname'} = $self->{'robot'}->get_id;
 
     return $self;
@@ -112,7 +112,7 @@ sub process {
     }
     # else (not welcome or remind) 
     if ($self->process_ndn) {
-	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_list_id );
+	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_id );
 	return 1;
     }else{
 	Log::do_log ('err','Could not correctly process bounce from %s to list %s@%s. Ignoring.',$self->{'who'}, $self->{'listname'}, $self->{'robotname'});		
@@ -276,9 +276,11 @@ sub delete_bouncer {
     my $self = shift;
 
     Log::do_log('debug','Deleting bouncing user %s',$self->{'who'});
-    my $result = $self->{'list'}->check_list_authz('del','smtp',
-					{'sender' => [Site->listmasters]->[0],
-					 'email' => $self->{'who'}});
+    my $result = Scenario::request_action($self->{'list'}, 'del','smtp',
+	{   'sender' => [Site->listmasters]->[0],
+	    'email' => $self->{'who'}
+	}
+    );
     my $action;
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -313,10 +315,15 @@ sub process_dsn {
     my $self = shift;
 
     my @parts = $self->get_mime_message->parts();
-    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $msg_id; my $orig_msg_id;
+    my $original_rcpt;
+    my $final_rcpt;
+    my $user_agent;
+    my $version;
+    my $msg_id;
+    my $orig_msg_id;
     my $arrival_date;
     
-    my $msg_id = $self->get_mime_message->head->get('Message-Id');
+    $msg_id = $self->get_mime_message->head->get('Message-Id');
     chomp $msg_id;
     
     my $date = $self->get_mime_message->head->get('Date');
@@ -564,7 +571,10 @@ sub process_email_feedback_report {
 		return 0;
 	    }
 	    foreach my $list (@lists){
-		my $result =$list->check_list_authz('unsubscribe','smtp',{'sender' => $self->{'efr'}{'original_rcpt'}});
+		my $result = Scenario::request_action($list,
+		    'unsubscribe', 'smtp',
+		    {'sender' => $self->{'efr'}{'original_rcpt'}}
+		);
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');		    
 		if ($action =~ /do_it/i) {

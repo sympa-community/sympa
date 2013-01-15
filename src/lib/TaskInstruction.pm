@@ -484,10 +484,11 @@ sub delete_subs_cmd {
 
     foreach my $email (keys %{$self->{'variables'}{$var}}) {
 		&Log::do_log ('notice', "email : $email");
-		my $result = $list->check_list_authz('del', 'smime',
-							 {'sender'   => Site->listmaster,
-							  'email'    => $email,
-						  });
+		my $result = Scenario::request_action($list, 'del', 'smime',
+			{   'sender' => Site->listmaster,
+			    'email'  => $email,
+			}
+		);
 		my $action;
 		$action = $result->{'action'} if (ref($result) eq 'HASH');
 		if ($action =~ /reject/i) {
