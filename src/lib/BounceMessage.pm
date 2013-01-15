@@ -744,9 +744,6 @@ sub rfc1891 {
     }
 
     my $head = $entity->head;
-    $$from = $head->get('From', 0);
-
-    $$from =~ s/^.*<(.*)>.*$/$1/;
 
     my @parts = $entity->parts();
 
