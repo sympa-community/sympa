@@ -600,11 +600,11 @@ sub process_ndn {
 	my $bounce_dir = $self->{'list'}->get_bounce_dir();
 	
 	## RFC1891 compliance check
-	my $bounce_count = rfc1891($self, \%hash, \$from);
+	$self->rfc1891(\%hash, \$from);
 	
-	unless ($bounce_count) {
+	unless ($self->{'ndn'}{'nbrcpt'}) {
 	    ## Analysis of bounced message
-	    anabounce($self, \%hash, \$from);
+	    $self->anabounce(\%hash, \$from);
 	    # Voir pour appeler une methode de parsing des dsn qui maj la bdd
 	    # updatedatabase(%hash);
 	}
@@ -797,7 +797,8 @@ sub rfc1891 {
 	    close BODY;
 	}
     }
-    return $nbrcpt;
+    $message->{'ndn'}{'nbrcpt'} = $nbrcpt;
+    return 1;
 }
 
 
