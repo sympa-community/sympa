@@ -80,8 +80,7 @@ sub process {
 
     #----------------------------------------------------------------------------------------------------------------------
     # If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
-    my $tracking_in_use = $self->tracking_is_used;
-    if($self->is_dsn) {
+    if($self->is_dsn and $self->tracking_is_used) {
 	unless ($self->process_dsn) {
 	    Log::do_log('err','Delivery status notification processing for bounce %s (key %s) failed. Stopping here.',$self->get_msg_id,$self->{'messagekey'});
 	    return undef;
@@ -92,7 +91,7 @@ sub process {
     }
     #-----------------------------------------------------------------------------------------------------------------------------------
     # If the MDN notification is correct and the tracking mode is enabled, it will be inserted in the database
-    if($self->is_mdn) {
+    if($self->is_mdn and $self->tracking_is_used) {
 	if($self->process_mdn) {
 	    Log::do_log('notice', "MDN Correctly treated...");
 	}else{
@@ -733,12 +732,12 @@ sub update_subscriber_bounce_history {
 
 ## RFC1891 compliance check
 sub rfc1891 {
-    my ($message, $result, $from) = @_;
+    my ($self, $result, $from) = @_;
     local $/ = "\n";
 
     my $nbrcpt;
  
-    my $entity = $message->{'msg'};
+    my $entity = $self->{'msg'};
     return undef    unless ($entity) ;
 
     my $head = $entity->head;
@@ -797,7 +796,7 @@ sub rfc1891 {
 	    close BODY;
 	}
     }
-    $message->{'ndn'}{'nbrcpt'} = $nbrcpt;
+    $self->{'ndn'}{'nbrcpt'} = $nbrcpt;
     return 1;
 }
 
@@ -854,7 +853,7 @@ sub corrige {
 ## //    4 : reference d'un tableau pour renvoyer le bounce
 sub anabounce {
 
-    my ($message, $result, $from) = @_;
+    my ($self, $result, $from) = @_;
 
 
     # this old subroutine do not use message object but parse the message itself !!! It should be rewrited
@@ -864,7 +863,7 @@ sub anabounce {
 Log::do_log('err',"could not create $tmpfile");
 	return undef;
     }
-    print BOUNCE     $message->{'msg'}->as_string;
+    print BOUNCE     $self->{'msg'}->as_string;
     close BOUNCE;
     unless (open (BOUNCE,"$tmpfile")){
 Log::do_log('err',"could not read $tmpfile");
