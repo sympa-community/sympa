@@ -154,13 +154,54 @@ sub is_verp_in_use {
     my $self = shift;
 
     Log::do_log('debug', "Checking if VERP is used for bounce %s. to is %s, prefix: %s",$self->get_msg_id,$self->{'to'},Site->bounce_email_prefix);
+    return $self->{'verp'}{'is_used'} if (defined $self->{'verp'}{'is_used'});
     my $bounce_email_prefix = Site->bounce_email_prefix;
     if ($self->{'to'} =~ /^$bounce_email_prefix\+(.*)\@(.*)$/) {
 	$self->{'local_part'} = $1;
 	$self->{'robotname'} = $2;
-	return 1;
+	$self->{'verp'}{'is_used'} = 1;
     }
-    return 0;
+    $self->{'verp'}{'is_used'} = 0;
+    return $self->{'verp'}{'is_used'};
+}
+
+sub is_dsn {
+    my $self = shift;
+
+    return $self->{'dsn'}{'is_dsn'} if (defined $self->{'dsn'}{'is_dsn'});
+    $self->{'dsn'}{'is_dsn'} = 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used));
+    $self->{'dsn'}{'is_dsn'} = 0;
+    return $self->{'dsn'}{'is_dsn'};
+}
+
+sub is_mdn {
+    my $self = shift;
+
+    return $self->{'mdn'}{'is_mdn'} if (defined $self->{'mdn'}{'is_mdn'});
+    $self->{'mdn'}{'is_mdn'} = 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand")));
+    $self->{'mdn'}{'is_mdn'} = 0;
+    return $self->{'mdn'}{'is_mdn'}
+}
+
+sub is_email_feedback_report {
+    my $self = shift;
+
+    return $self->{'efr'}{'is_efr'} if (defined $self->{'efr'}{'is_efr'});
+    $self->{'efr'}{'is_efr'} = 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=feedback-report/));
+    $self->{'efr'}{'is_efr'} = 0;
+    return $self->{'efr'}{'is_efr'};
+}
+
+sub tracking_is_used {
+    my $self = shift ;
+
+    return $self->{'tracking'}{'is_used'} if (defined $self->{'tracking'}{'is_used'});
+    if ($self->{'list'}{'tracking'}{'delivery_status_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on" || $self->{'list'}{'tracking'}{'message_delivery_notification'} eq "on_demand") {
+	$self->{'tracking'}{'is_used'} = 1;
+    }else{
+	$self->{'tracking'}{'is_used'} = 0;
+    }
+    return $self->{'tracking'}{'is_used'};
 }
 
 sub failed_on_first_try {
@@ -268,22 +309,6 @@ sub delete_bouncer {
     return 1;
 }
 
-sub tracking_is_used {
-    my $self = shift ;
-
-    return 1 if ($self->{'list'}->tracking->{'delivery_status_notification'} eq "on");
-    return 1 if ($self->{'list'}->tracking->{'message_delivery_notification'} eq "on");
-    return 1 if ($self->{'list'}->tracking->{'message_delivery_notification'} eq "on_demand");
-    return 0;
-}
-
-sub is_dsn {
-    my $self = shift;
-
-    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used));
-    return 0;
-}
-
 sub process_dsn {
     my $self = shift;
 
@@ -380,13 +405,6 @@ sub process_dsn {
     return 1;
 }
 
-sub is_mdn {
-    my $self = shift;
-
-    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=disposition-notification/i) && (($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on")||($self->get_mime_message->tracking->{'message_delivery_notification'} eq "on_demand")));
-    return 0;
-}
-
 sub process_mdn {
     my $self = shift;
     my @parts = $self->get_mime_message->parts();
@@ -474,12 +492,6 @@ sub process_mdn {
 	return undef;
     }
     return 1
-}
-
-sub is_email_feedback_report {
-    my $self = shift;
-    return 1 if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=feedback-report/));
-    return 0;
 }
 
 sub process_email_feedback_report {
@@ -589,7 +601,7 @@ sub process_email_feedback_report {
 sub process_ndn {
     my $self = shift;
     
-    if (! $self->{'list'}) {
+    if (! $self->{'list'} || ref $self->{'list'} !~ /LIST/) {
 	Log::do_log('err','Skipping bounce messagekey=%s for unknown list %s@%s',$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
 	return undef;
     }else{
@@ -631,7 +643,10 @@ sub process_ndn {
 		Log::do_log('err', 'Unable to store bounce %s. Aborting.',$self->get_msg_id);
 		return undef;
 	    }
-	    return undef unless update_subscriber_bounce_history($self->{'list'}, $rcpt, $bouncefor, canonicalize_status ($status));
+	    unless ($self->update_subscriber_bounce_history($rcpt, $bouncefor, canonicalize_status ($status))) {
+		Log::do_log('err', 'Unable to update bounce history for user %s, bounce %s. Aborting.',$bouncefor,$self->get_msg_id);
+		return undef;
+	    }
 	}
 	
 	## No address found in the bounce itself
@@ -642,7 +657,10 @@ sub process_ndn {
 		    Log::do_log('err', 'Unable to store bounce %s. Aborting.',$self->get_msg_id);
 		    return undef;
 		}
-		return undef update_subscriber_bounce_history($self->{'list'}, 'unknown', $self->{'who'}); # status is undefined 
+		unless ($self->update_subscriber_bounce_history('unknown', $self->{'who'})) {
+		    Log::do_log('err', 'Unable to update bounce history for user %s, bounce %s. Aborting.',$self->{'who'},$self->get_msg_id);
+		    return undef;
+		}
 	    }else{          # no VERP and no rcpt recognized		
 		my $escaped_from = tools::escape_chars($from);
 		Log::do_log('info', 'error: no address found in message from %s for list %s',$from, $self->{'list'});
@@ -699,12 +717,13 @@ sub canonicalize_status {
 
 sub update_subscriber_bounce_history {
 
-    my $list = shift;
+    my $self = shift;
+    my $list = $self->{'list'};
     my $rcpt = shift;
     my $bouncefor = shift;
     my $status = shift;
     
-    Log::do_log ('trace','update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
+    Log::do_log ('debug','update_subscriber_bounce_history (%s,%s,%s,%s)', $list, $rcpt, $bouncefor, $status); 
 
     my $first = my $last = time;
     my $count = 0;
