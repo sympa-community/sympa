@@ -12162,6 +12162,13 @@ sub _set_list_param {
     my $admin_hash = shift;
     my $config_attr = shift;
 
+    ## Downgrade Scenario object to unblessed hashref.
+    if ($p->{'scenario'} and ref $val eq 'Scenario') {
+	$val = {'name' => $val->{'name'}};
+    }
+
+    ## Apply defaults.
+
     my $default;
     if (exists $p->{'default'}) {
 	$default = _load_list_param(
@@ -12188,17 +12195,16 @@ sub _set_list_param {
 	$def = 1 unless defined $val;
     }
 
+    ## Cache non-default and completed values into config and admin hashes.
 
     if (defined $val) {
 	if ($def) {
 	    delete $config_hash->{$config_attr};
 	} else {
-	    if ($p->{'scenario'} and ref $val eq 'Scenario') {
-		$val = {'name' => $val->{'name'}};
-	    }
 	    $config_hash->{$config_attr} = $val;
 	}
-	if ($p->{'scenario'}) {
+	## Upgrade unblessed hashref to Scenario object
+	if ($p->{'scenario'} and ref $val eq 'HASH') {
 	    $admin_hash->{$config_attr} = Scenario->new($self,
 		'function' => $p->{'scenario'},
 		'name'     => $val->{'name'}

@@ -41,7 +41,7 @@ my %persistent_cache;
 ##      -%parameters : hash
 ## OUT : Scenario object or undef
 ##
-## Supported parameters : function, name, directory, file_path, options
+## Supported parameters : function, name, file_path, options
 ## Output object has the following entries : name, file_path, rules, date,
 ## title, struct, data
 sub new {
@@ -63,14 +63,13 @@ sub new {
 
     ## Check parameters
     ## Need either file_path or function+name
-    ## Parameter 'directory' is optional, used in List context only
+    ## Note: parameter 'directory' was deprecated
     unless ($parameters{'file_path'} or
 	$parameters{'function'} and $parameters{'name'}) {
 	&Log::do_log('err', 'Missing parameter');
 	return undef;
     }
 
-    my $directory = $parameters{'directory'};
     my $file_path = $parameters{'file_path'};
     my $function = $parameters{'function'};
     my $name = $parameters{'name'};
@@ -93,18 +92,8 @@ sub new {
 	($function, $name) = ($1, $2);
 
     }else {
-	## We can't use get_etc_filename() because we don't have a List object yet ; it's being constructed
-	my @dirs = @{$that->make_tt2_include_path('scenari')};
-	unshift @dirs, $directory . '/scenari' if defined $directory;
-	foreach my $dir (@dirs) {
-	    my $tmp_path = $dir . '/' . $function . '.' . $name;
-	    if (-r $tmp_path) {
-		$scenario->{'file_path'} = $tmp_path;
-		last;
-	    }else {
-		##&Log::do_log('debug','Unable to read file %s',$tmp_path);
-	    }
-	}
+	$scenario->{'file_path'} =
+	    $that->get_etc_filename('scenari/' . $function . '.' . $name);
     }
 
     ## Load the scenario if previously loaded in memory
@@ -163,8 +152,8 @@ sub new {
     $scenario->{'title'} = $scenario_struct->{'title'};
     $scenario->{'struct'} = $scenario_struct;
 
-    ## Bless Message object
-    bless $scenario, $pkg;
+    ## Bless Scenario object
+    bless $scenario => $pkg;
 
     ## Keep the scenario in memory
     $all_scenarios{$scenario->{'file_path'}} = $scenario;
@@ -302,16 +291,21 @@ sub request_action {
     }
 
     if ($log_it) {
-	if ($list) {
+	if (ref $that and ref $that eq 'List') {
 	    $trace_scenario = 'scenario request ' . $operation .
-		' for list ' . ($list->get_id) . ' :';
-	    &Log::do_log('info', 'Will evaluate scenario %s for list %s',
-		$operation, $list);
-	}else{
+		' for list ' . ($that->get_id) . ' :';
+	    Log::do_log('info', 'Will evaluate scenario %s for list %s',
+		$operation, $that);
+	} elsif (ref $that and ref $that eq 'Robot') {
 	    $trace_scenario = 'scenario request ' . $operation .
-		' for robot ' . ($robot->domain) . ' :';
-	    &Log::do_log('info', 'Will evaluate scenario %s for robot %s',
-		$operation, $robot);
+		' for robot ' . ($that->get_id) . ' :';
+	    Log::do_log('info', 'Will evaluate scenario %s for robot %s',
+		$operation, $that);
+	} else {
+	    $trace_scenario = 'scenario request ' . $operation .
+		' for site :';
+	    Log::do_log('info', 'Will evaluate scenario %s for site',
+		$operation);
 	}
     }
     
@@ -409,11 +403,12 @@ sub request_action {
     }
 
     ## Include include.<action>.header if found
-    my %param = ('function' => 'include',
-		 'name' => $operation.'.header',
-		 'options' => $context->{'options'});
     my $include_scenario =
-	Scenario->new(($list || $robot), %param);
+	Scenario->new($that,
+	    'function' => 'include',
+	    'name'     => $operation . '.header',
+	    'options'  => $context->{'options'}
+	);
     if (defined $include_scenario) {
 	## Add rules at the beginning of the array
 	unshift @rules, @{$include_scenario->{'rules'}};
@@ -422,18 +417,19 @@ sub request_action {
     for (my $idx = 0; $idx < scalar @rules; $idx++) {
 	if ($rules[$idx]->{'condition'} =~ /^\s*include\s*\(?\'?([\w\.]+)\'?\)?\s*$/i) {
 	    my $include_file = $1;
-	    my %param = ('function' => 'include',
-			 'name' => $include_file,
-			 'options' => $context->{'options'});
 	    my $include_scenario =
-		Scenario->new(($list || $robot), %param);
+		Scenario->new($that,
+		    'function' => 'include',
+		    'name'     => $include_file,
+		    'options'  => $context->{'options'}
+		);
 	    if (defined $include_scenario) {
 		## Removes the include directive and replace it with
 		## included rules
 		##FIXME: possibie recursive include
 		splice @rules, $idx, 1, @{$include_scenario->{'rules'}};
+	    }
 	}
-    }
     }
     
     ## Include a Blacklist rules if configured for this action
