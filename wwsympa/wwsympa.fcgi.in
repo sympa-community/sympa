@@ -4247,7 +4247,7 @@ sub do_lists {
 	    }
 	}
 	foreach my $l (sort keys %lists) {
-	    push $all_lists, $lists{$l};
+	    push @$all_lists, $lists{$l};
 	}
 	$param->{'subtitle'} = gettext('Your lists');
     } elsif ($in{'topic'}) {
