@@ -638,7 +638,10 @@ sub process_ndn {
 	unless ($adr_count) {
 	    
 	    if ( $self->{'who'} ) {	# rcpt not recognized in the bounce but VERP was used
-		return undef store_bounce ($bounce_dir,$self,$self->{'who'});
+		unless($self->store_bounce ($bounce_dir,$self->{'who'})) {
+		    Log::do_log('err', 'Unable to store bounce %s. Aborting.',$self->get_msg_id);
+		    return undef;
+		}
 		return undef update_subscriber_bounce_history($self->{'list'}, 'unknown', $self->{'who'}); # status is undefined 
 	    }else{          # no VERP and no rcpt recognized		
 		my $escaped_from = tools::escape_chars($from);
@@ -657,7 +660,7 @@ sub store_bounce {
     my $bounce_dir = shift; 
     my $rcpt=shift;
     
-    Log::do_log('trace', 'store_bounce(%s,%s,%s)', $self, $bounce_dir,$rcpt);
+    Log::do_log('debug', 'store_bounce(%s,%s,%s)', $self, $bounce_dir,$rcpt);
 
     my $queue = Site->queuebounce;
 
@@ -669,7 +672,8 @@ sub store_bounce {
     }
     print ARC $self->get_message_as_string;
     close ARC;
-    close BOUNCE; 
+    close BOUNCE;
+    return 1;
 }
 
 
