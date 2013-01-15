@@ -46,8 +46,6 @@ sub new {
     bless $self,$pkg;
     $self->{'to'} = $self->get_mime_message->head->get('to', 0);
     chomp $self->{'to'};	
-    $self->{'listname'} = $self->{'list'}->name;
-    $self->{'robotname'} = $self->{'robot'}->get_id;
 
     return $self;
 }
@@ -55,7 +53,7 @@ sub new {
 sub process {
     my $self = shift;
     
-    Log::do_log('info','Processing bounce %s (key %s) for list %s@%s',$self->get_msg_id,$self->{'messagekey'},$self->{'listname'},$self->{'robotname'});
+    Log::do_log('info','Processing bounce %s (key %s)',$self->get_msg_id,$self->{'messagekey'});
     
     Log::do_log('debug', 'bounce for :%s:  Site->bounce_email_prefix=%s',
 	$self->{'to'}, Site->bounce_email_prefix);
@@ -112,6 +110,10 @@ sub process {
 	    return undef;
 	}
     }
+    ##if(($self->is_dsn or $self->is_mdn or $self->is_email_feedback_report) {
+	##Log::do_log('trace', 'Stopping treatment of bounce message %s which is not an error.',$self->get_msg_id);
+	##return 1;
+    ##}
     # else (not welcome or remind) 
     if ($self->process_ndn) {
 	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_id );
@@ -128,31 +130,29 @@ sub analyze_verp_header {
 
     Log::do_log('debug2', "analysing VERP headers for bounce %s",$self->get_msg_id);
     if($self->is_verp_in_use) {
-	if ($self->{'local_part'} =~ /^(.*)(\=\=([wr]))$/) {
-	    $self->{'local_part'} = $1;
-	    $self->{'unique'} = $2;
-	}elsif ($self->{'local_part'} =~  /^(.*)\=\=a\=\=([^\=]*)\=\=([^\=]*)(\=\=([^\=]*))?$/ ) {# tracking in use
-	    Log::do_log('trace',"1: $1");
-	    Log::do_log('trace',"2: $2");
-	    Log::do_log('trace',"3: $3");
-	    Log::do_log('trace',"4: $4");
-	    Log::do_log('trace',"5: $5");
-	    Log::do_log('trace',"6: $6");
-	    Log::do_log('trace','local: %s',$self->{'local_part'});
-	    $self->{'distribution_id'} = $4;
-	    $self->{'local_part'} =~ /^(.*)\=\=(.*)$/ ;
-	    $self->{'local_part'} = $1;
+	##if ($self->{'local_part'} =~ /^(.*)(\=\=([wr]))$/) {
+	    ##$self->{'local_part'} = $1;
+	    ##$self->{'unique'} = $2;
+	if ($self->{'local_part'} =~  /^(.*)\=\=a\=\=([^\=]*)\=\=([^\=]*)(\=\=([^\=]*))?$/ ) {
+	    $self->{'who'} = $1.'@'.$2;
+	    $self->{'listname'} = $3;
+	    $self->{'distribution_id'} = $5;
 	}else{
-	    undef $self->{'distribution_id'} ;
-	    Log::do_log('err', 'NO ID PART in the bounce for: %s', $self->{'to'});
+	    Log::do_log('err', 'Unable to analyze VERP address %s', $self->{'to'});
+	    return undef;
 	}
-
-	$self->{'local_part'} =~ s/\=\=a\=\=/\@/ ;
-	$self->{'local_part'} =~ /^(.*)\=\=(.*)$/ ; 	    
-	$self->{'who'} = $1;
-	$self->update_list($2,$self->{'robotname'});
-
-	Log::do_log('notice', 'VERP in use : bounce related to %s for list %s@%s',$self->{'who'},$self->{'listname'},$self->{'robotname'});
+	$self->update_list($self->{'listname'},$self->{'robotname'});
+	if ($self->{'distribution_id'} eq 'r' || $self->{'distribution_id'} eq 'w') {
+	    $self->{'unique'} = $self->{'distribution_id'};
+	}
+	undef $self->{'distribution_id'} unless ($self->{'distribution_id'} =~ /^[0-9]+$/);
+	
+	Log::do_log('trace','who: %s',$self->{'who'} );
+	Log::do_log('trace','listname: %s',$self->{'listname'} );
+	Log::do_log('trace','robotname: %s',$self->{'robotname'} );
+	Log::do_log('trace','distribution_id: %s',$self->{'distribution_id'} );
+	Log::do_log('trace','unique: %s',$self->{'unique'} );
+	Log::do_log('notice', 'VERP in use : bounce related to %s for list %s',$self->{'who'},$self->{'list'}->get_list_id);
 	return 1;
     }
     return 0;
@@ -180,7 +180,7 @@ sub is_dsn {
     my $self = shift;
 
     return $self->{'dsn'}{'is_dsn'} if (defined $self->{'dsn'}{'is_dsn'});
-    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i) && ($self->tracking_is_used)) {
+    if (($self->get_mime_message->head->get('Content-type') =~ /multipart\/report/) && ($self->get_mime_message->head->get('Content-type') =~ /report\-type\=delivery-status/i)) {
 	Log::do_log('trace','Message %s is a DSN',$self->get_msg_id);
 	$self->{'dsn'}{'is_dsn'} = 1;
     }else{
@@ -260,19 +260,17 @@ sub update_list {
     my $new_listname = shift;
     my $new_robotname = shift;
 
-    Log::do_log('debug3', "Updating list for bounce %s",$self->get_msg_id);
+    Log::do_log('trace', "Updating list for bounce %s",$self->get_msg_id);
     $self->update_robot($new_robotname);
     $self->change_listname($new_listname);
 
-    if ($self->{'old_listname'} ne $self->{'listname'} || $self->{'old_robotname'} ne $self->{'robotname'} || ref $self->{'list'} !~ /List/) {
-	my $list = new List ($self->{'listname'}, $self->{'robot'});
-	unless($list) {
-	    Log::do_log('notice','Unable to set list object for unknown list %s@%s (bounce %s)',$self->{'listname'},$self->{'robotname'},$self->{'messagekey'});
-	    return undef;
-	}
-	$self->{'list'} = $list;
+    my $list = new List ($self->{'listname'}, $self->{'robot'});
+    unless($list) {
+	Log::do_log('notice','Unable to set list object for unknown list %s@%s (bounce %s)',$self->{'listname'},$self->{'robotname'},$self->{'messagekey'});
+	return undef;
     }
-    
+    $self->{'list'} = $list;
+
     return 1;
 }
 
@@ -283,14 +281,12 @@ sub update_robot {
     Log::do_log('debug3', "Updating robot for bounce %s",$self->get_msg_id);
     $self->change_robotname($new_robotname);
 
-    if ($self->{'old_robotname'} ne $self->{'robotname'}) {
-	my $robot = new Robot($self->{'robotname'});
-	unless($robot) {
-	    Log::do_log('notice','Unable to set robot object for unknown robot %s (bounce %s)',$self->{'robotname'},$self->{'messagekey'});
-	    return undef;
-	}
-	$self->{'robot'} = $robot;
+    my $robot = new Robot($self->{'robotname'});
+    unless($robot) {
+	Log::do_log('notice','Unable to set robot object for unknown robot %s (bounce %s)',$self->{'robotname'},$self->{'messagekey'});
+	return undef;
     }
+    $self->{'robot'} = $robot;
 
     return 1;
 }
@@ -310,7 +306,7 @@ sub delete_bouncer {
     if ($action =~ /do_it/i) {
 	if ($self->{'list'}->is_list_member($self->{'who'})) {
 	    my $u = $self->{'list'}->delete_list_member('users' => [$self->{'who'}], 'exclude' =>' 1');
-	    Log::do_log ('notice',"$self->{'who'} has been removed from $self->{'listname'} because welcome message bounced");
+	    Log::do_log ('notice','%s has been removed from %s because welcome message bounced',$self->{'who'},$self->{'list'}->get_list_id);
 	    Log::db_log({'robot' => $self->{'list'}->domain, 'list' => $self->{'list'}->name, 'action' => 'del',
 			  'target_email' => $self->{'who'},'status' => 'error','error_type' => 'welcome_bounced',
 			  'daemon' => 'bounced'});
@@ -328,7 +324,7 @@ sub delete_bouncer {
 	    }
 	}
     }else{
-	Log::do_log('err','Authorization do delete user %s from liste %s denied',$self->{'who'},$self->{'list'}->get_id);
+	Log::do_log('err','Authorization to delete user %s from liste %s denied',$self->{'who'},$self->{'list'}->get_id);
 	return undef;
     }
     return 1;
