@@ -737,8 +737,11 @@ sub rfc1891 {
 
     my $nbrcpt;
  
-    my $entity = $self->{'msg'};
-    return undef    unless ($entity) ;
+    my $entity = $self->get_mime_message;
+    unless ($entity) {
+	Log::do_log('err','No message object to process. Aborting.');
+	return undef;
+    }
 
     my $head = $entity->head;
     $$from = $head->get('From', 0);
