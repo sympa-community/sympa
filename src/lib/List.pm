@@ -22,10 +22,12 @@
 package List;
 
 use strict;
+use warnings;
+
 use POSIX;
 use Exporter;
 ## xxxxxxx faut-il virer encode ? Faut en faire un use ?
-#require Encode; # load in Log
+#use Encode; # load in Log
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use Carp qw(croak);
 
@@ -5716,24 +5718,9 @@ sub load_scenario_list {
 
 	    my $scenario = Scenario->new($self,
 		'function' => $action,
-		'name'      => $name
+		'name'     => $name
 	    );
 	    $list_of_scenario{$name} = $scenario;
-
-	    ## Set the title in the current language
-	    if (defined  $scenario->{'title'}{Language::GetLang()}) {
-		$list_of_scenario{$name}{'web_title'} =
-		    $scenario->{'title'}{Language::GetLang()};
-	    } elsif (defined $scenario->{'title'}{'gettext'}) {
-		$list_of_scenario{$name}{'web_title'} =
-		    gettext($scenario->{'title'}{'gettext'});
-	    } elsif (defined $scenario->{'title'}{'us'}) {
-		$list_of_scenario{$name}{'web_title'} =
-		    gettext($scenario->{'title'}{'us'});
-	    } else {
-		$list_of_scenario{$name}{'web_title'} = $name;
-	    }
-	    $list_of_scenario{$name}{'name'} = $name;
 	}
     }
 
@@ -12235,6 +12222,7 @@ sub admin {
     foreach my $p (keys %$pinfo) {
 	$self->$p;
     }
+    ## get copy to prevent breaking cache
     return tools::dup_var($self->{'admin'});
 }
 
@@ -12265,6 +12253,7 @@ sub config {
     foreach my $p (keys %$pinfo) {
 	$self->$p;
     }
+    ## Get copy to prevent breaking config
     return tools::dup_var($self->{'config'});
 }
 

@@ -22,14 +22,17 @@
 package Scenario;
 
 use strict;
+use warnings;
+
 use Carp qw(croak);
 use Net::Netmask;
 
-#use tools; # used in Conf
+#use Conf; # used in List - Site
+#use Language; # used in List
 use List;
 #use Log; # used in Conf
-#use Conf; # used in List - Site
 #use Sympa::Constants; # used in Conf - confdef
+#use tools; # used in Conf
 
 my %all_scenarios;
 my %persistent_cache;
@@ -1438,6 +1441,21 @@ sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
     &tools::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
+}
+
+## Get the title in the current language
+sub get_current_title {
+    my $self = shift;
+
+    if (defined $self->{'title'}{Language::GetLang()}) {
+	return $self->{'title'}{Language::GetLang()};
+    } elsif (defined $self->{'title'}{'gettext'}) {
+	return Language::gettext($self->{'title'}{'gettext'});
+    } elsif (defined $self->{'title'}{'us'}) {
+	return Language::gettext($self->{'title'}{'us'});
+    } else {
+	return $self->{'name'};
+    }
 }
 
 ## Get unique ID

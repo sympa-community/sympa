@@ -11077,8 +11077,11 @@ sub _prepare_data {
 	     
 	     ## Only get required scenario attributes
 	     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-		 $list_of_scenario->{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						   'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+		$list_of_scenario->{$scenario} = {
+		    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+		    'web_title' =>
+			$tmp_list_of_scenario->{$scenario}->get_current_title()
+		};
 	     }
 
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
@@ -15465,8 +15468,11 @@ sub do_d_control {
 
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-	 $param->{'scenari_read'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+	$param->{'scenari_read'}{$scenario} = {
+	    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+	    'web_title' =>
+		$tmp_list_of_scenario->{$scenario}->get_current_title()
+	};
      }
 
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
@@ -15476,8 +15482,11 @@ sub do_d_control {
 
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-	 $param->{'scenari_edit'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+	$param->{'scenari_edit'}{$scenario} = {
+	    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+	    'web_title' =>
+		$tmp_list_of_scenario->{$scenario}->get_current_title()
+	};
      }
      $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 

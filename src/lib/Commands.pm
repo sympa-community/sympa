@@ -1172,11 +1172,10 @@ sub info {
 
 	my $data = $list->admin;
 
+	## Set title in the current language
 	foreach my $p ('subscribe', 'unsubscribe', 'send', 'review') {
 	    my $scenario = $list->$p;
-	    ##FIXME: non-gettext titles (title.ja_JP etc.) cannot be used.
-	    my $title = $scenario->{'title'}{'gettext'};
-	    $data->{$p} = gettext($title);
+	    $data->{$p} = $scenario->get_current_title();
 	}
 
 	## Digest
