@@ -627,7 +627,10 @@ sub process_ndn {
 	    my $bouncefor = $self->{'who'};
 	    $bouncefor ||= $rcpt;
 	
-	    return undef unless store_bounce ($bounce_dir,$self,$bouncefor);
+	    unless ($self->store_bounce ($bounce_dir,$bouncefor)) {
+		Log::do_log('err', 'Unable to store bounce %s. Aborting.',$self->get_msg_id);
+		return undef;
+	    }
 	    return undef unless update_subscriber_bounce_history($self->{'list'}, $rcpt, $bouncefor, canonicalize_status ($status));
 	}
 	
@@ -650,11 +653,11 @@ sub process_ndn {
 ## copy the bounce to the appropriate filename
 sub store_bounce {
 
+    my $self= shift;
     my $bounce_dir = shift; 
-    my $bounce= shift;
     my $rcpt=shift;
     
-    Log::do_log('trace', 'store_bounce(%s,%s,%s)', $bounce, $bounce_dir,$rcpt);
+    Log::do_log('trace', 'store_bounce(%s,%s,%s)', $self, $bounce_dir,$rcpt);
 
     my $queue = Site->queuebounce;
 
@@ -664,7 +667,7 @@ sub store_bounce {
 	Log::do_log('notice', "Unable to write $bounce_dir/$filename");
 	return undef;
     }
-    print ARC $bounce->get_message_as_string;
+    print ARC $self->get_message_as_string;
     close ARC;
     close BOUNCE; 
 }
@@ -743,10 +746,8 @@ sub rfc1891 {
 	return undef;
     }
 
-    my $head = $entity->head;
-
     my @parts = $entity->parts();
-
+    
     foreach my $p (@parts) {
 	my $h = $p->head();
 	my $content = $h->get('Content-type');
