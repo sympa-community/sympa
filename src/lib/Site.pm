@@ -13,6 +13,7 @@ package Site_r;
 use strict;
 use warnings;
 use Carp qw(croak);
+use Cwd;
 
 use Conf;
 use Language qw(gettext gettext_strftime);
@@ -362,20 +363,15 @@ Possible values for $options : order=all
 =cut
 
 sub get_etc_filename {
-    &Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self    = shift;
     my $name    = shift;
     my $options = shift || {};
 
-    if (ref $self eq 'List') {
-	;
-    } elsif (ref $self eq 'Family') {
-	;
-    } elsif (ref $self eq 'Robot') {
-	;
-    } elsif ($self eq 'Site') {
-	;
-    } else {
+    unless (ref $self eq 'List' or
+	ref $self eq 'Family' or
+	ref $self eq 'Robot'  or
+	$self     eq 'Site') {
 	croak 'bug in logic.  Ask developer';
     }
 
@@ -396,13 +392,18 @@ sub get_etc_filename {
 
     my @result;
     foreach my $f (@try) {
-	if (-r $f) {
-	    &Log::do_log('debug3', 'name: %s ; dir %s', $name, $f);
-	    if ($options->{'order'} and $options->{'order'} eq 'all') {
-		push @result, $f;
-	    } else {
-		return $f;
-	    }
+	if (-l $f) {
+	    my $realpath = Cwd::abs_path($f);    # follow symlink
+	    next unless $realpath and -r $realpath;
+	} elsif (!-r $f) {
+	    next;
+	}
+	Log::do_log('debug3', 'name: %s ; file %s', $name, $f);
+
+	if ($options->{'order'} and $options->{'order'} eq 'all') {
+	    push @result, $f;
+	} else {
+	    return $f;
 	}
     }
     if ($options->{'order'} and $options->{'order'} eq 'all') {
@@ -438,7 +439,14 @@ OUT : ref(ARRAY) of tt2 include path
 
 =cut
 
-sub _make_tt2_include_path {
+sub get_etc_include_path {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $self = shift;
+    return [$self->_get_etc_include_path(@_)];
+}
+
+sub _get_etc_include_path {
+
     #Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
     my ($dir, $lang) = @_;
@@ -448,7 +456,7 @@ sub _make_tt2_include_path {
     if (ref $self and ref $self eq 'List') {
 	my $path_list;
 	my $path_family;
-	@include_path = $self->robot->_make_tt2_include_path(@_);
+	@include_path = $self->robot->_get_etc_include_path(@_);
 
 	if ($dir) {
 	    $path_list = $self->dir . '/' . $dir;
@@ -477,7 +485,7 @@ sub _make_tt2_include_path {
 	}
     } elsif (ref $self and ref $self eq 'Family') {
 	my $path_family;
-	@include_path = $self->robot->_make_tt2_include_path(@_);
+	@include_path = $self->robot->_get_etc_include_path(@_);
 
 	if ($dir) {
 	    $path_family = $self->dir . '/' . $dir;
@@ -491,7 +499,7 @@ sub _make_tt2_include_path {
 	}
     } elsif (ref $self and ref $self eq 'Robot') {
 	my $path_robot;
-	@include_path = Site->_make_tt2_include_path(@_);
+	@include_path = Site->_get_etc_include_path(@_);
 
 	if ($self->etc ne Site->etc) {
 	    if ($dir) {
@@ -529,14 +537,6 @@ sub _make_tt2_include_path {
     }
 
     return @include_path;
-}
-
-sub get_etc_include_path {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
-    my $self = shift;
-    ## Not always expose viewmail directory.
-    ##return [Site->viewmail_dir, $self->_make_tt2_include_path(@_)];
-    return [$self->_make_tt2_include_path(@_)];
 }
 
 =head3 Sending Notifications
