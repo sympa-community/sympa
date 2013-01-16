@@ -3,11 +3,11 @@
 
 <h4>[%|loc %]Message tracking[%END%]</h4>
 
-[%|loc(fromname,fromaddr,listname)%]Message from %1 %2 for list %3 [%END%]
+[%|loc(fromname,fromaddr,listname)%]Message from %1 %2 to list %3[%END%]
 <ul>
-    <li>Subject : [% subject %]</li>
+    <li>[%|loc%]Subject:[%END%] [% subject %]</li>
     <li>Message-Id :  [% msgid %]</li>
-    <li>[%|loc%]Distribution ended at[%END%] : [% distribution_date %]</li>
+    <!--<li>[%|loc%]Distribution ended at:[%END%] [% distribution_date %]</li>-->
 </ul>
 
 <table summary="[%|loc%]Message tracking[%END%]" class="listOfItems text_center">

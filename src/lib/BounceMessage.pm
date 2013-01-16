@@ -419,7 +419,7 @@ sub process_dsn {
 	}
     }
     
-    if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn'}{'status'}, $arrival_date,$self->get_mime_message )) {
+    if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn'}{'status'}, $arrival_date,$self->get_message_as_string )) {
 	Log::do_log('debug', 'DSN for "%s" inserted into database for further consultation.',$self->{'who'});
     }else{
 	Log::do_log('err','Not able to fill database with notification data for DSN to "%s"',$self->{'who'});
@@ -511,7 +511,7 @@ sub process_mdn {
     }
     
     Log::do_log('debug2', 'Save in database...');
-    unless (tracking::db_insert_notification($self->{'distribution_id'}, 'MDN',$self->{'mdn'}{'status'}, $self->{'mdn'}{'date'},$self->get_mime_message )) {
+    unless (tracking::db_insert_notification($self->{'distribution_id'}, 'MDN',$self->{'mdn'}{'status'}, $self->{'mdn'}{'date'},$self->get_message_as_string )) {
 	Log::do_log('err','Not able to fill database with notification data for MDN %s',$self->get_msg_id);
 	return undef;
     }
