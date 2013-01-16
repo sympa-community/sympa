@@ -81,26 +81,25 @@ sub process {
     # If the DSN notification is correct and the tracking mode is enable, it will be inserted in the database
     if($self->is_dsn and $self->tracking_is_used) {
 	if ($self->process_dsn) {
-	    Log::do_log('notice', "DSN Correctly treated...");
+	    Log::do_log('notice', "DSN Correctly treated. DSN status is %s",$self->{'dsn'}{'status'});
 	}else{
 	    Log::do_log('err','Delivery status notification processing for bounce %s (key %s) failed. Stopping here.',$self->get_msg_id,$self->{'messagekey'});
 	    return undef;
 	}
-	unless($self->{'dsn'}{'status'} =~ /failed/) { 
+	unless($self->{'dsn'}{'status'} =~ /failed/) { # DSN for failure to deliver need to be processed as bounces.
 	    return 1;
-	##}else {
-	    ##$self->{'ndn'}{'is_ndn'} = 1;
 	}
     }
     #-----------------------------------------------------------------------------------------------------------------------------------
     # If the MDN notification is correct and the tracking mode is enabled, it will be inserted in the database
     if($self->is_mdn and $self->tracking_is_used) {
 	if($self->process_mdn) {
-	    Log::do_log('notice', "MDN Correctly treated...");
+	    Log::do_log('notice', "MDN Correctly treated.");
+	    return 1;
 	}else{
 	    Log::do_log('err', "Failed to treat MDN");
+	    return undef;
 	}
-	return 1;
     }
     
     if($self->is_email_feedback_report) {
@@ -113,10 +112,7 @@ sub process {
 	    return undef;
 	}
     }
-    ##if(($self->is_dsn and !$self->{'ndn'}{'is_ndn'}) or $self->is_mdn or $self->is_email_feedback_report) {
-	##Log::do_log('trace', 'Stopping treatment of bounce message %s which is not an error.',$self->get_msg_id);
-	##return 1;
-    ##}
+    
     if ($self->process_ndn) {
 	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_id );
 	return 1;
@@ -410,25 +406,26 @@ sub process_dsn {
     Log::do_log ('debug2',"FINAL DSN Arrival Date Detected, value : %s", $arrival_date);
     
     unless  ($self->{'dsn'}{'status'} =~ /failed/) { # DSN with status "failed" should not be removed because they must be processed for classical bounce managment (not only for tracking feature)
-	Log::do_log('err', "Non failed dsn status $self->{'dsn'}{'status'}");
+	Log::do_log('trace', 'Non failed dsn status "%s"',$self->{'dsn'}{'status'});
 	unless ($self->{'distribution_id'}) {
-	    Log::do_log('err', "error: Id not found in to address %s, will ignore",$self->{'to'});
+	    Log::do_log('err', 'error: Id not found in destination address "%s". Will ignore',$self->{'to'});
 	    return undef;
 	}
 	unless ($original_rcpt) {
-	    Log::do_log('err', "error: original recipient not found in dsn: %s, will ignore",$msg_id);
+	    Log::do_log('err', 'error: original recipient not found in DSN: "%s". Will ignore',$msg_id);
 	    return undef;
 	}
 	unless ($msg_id) {
-	    Log::do_log('err', "error: message_id not found in dsn will ignore");
+	    Log::do_log('err', 'error: message_id not found in DSN. Will ignore');
 	    return undef;
 	}
     }
     
     if (tracking::db_insert_notification($self->{'distribution_id'}, 'DSN', $self->{'dsn'}{'status'}, $arrival_date,$self->get_mime_message )) {
-	Log::do_log('notice', "DSN Correctly treated...");
+	Log::do_log('notice', "DSN inserted into database for further consultation.");
     }else{
 	Log::do_log('err','Not able to fill database with notification data');
+	return undef;
     }
     return 1;
 }
