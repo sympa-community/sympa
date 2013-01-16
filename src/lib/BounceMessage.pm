@@ -88,6 +88,8 @@ sub process {
 	}
 	unless($self->{'dsn'}{'status'} =~ /failed/) { 
 	    return 1;
+	##}else {
+	    ##$self->{'ndn'}{'is_ndn'} = 1;
 	}
     }
     #-----------------------------------------------------------------------------------------------------------------------------------
@@ -102,7 +104,7 @@ sub process {
     }
     
     if($self->is_email_feedback_report) {
-	# this case a report Email Feedback Reports http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt mainly use by AOL
+	# this case a report Email Feedback Reports http://tools.ietf.org/html/rfc6650 mainly used by AOL
 	if($self->process_email_feedback_report) {
 	    Log::do_log ('notice','Feedback Report %s correctly treated. original_rcpt:%s, listname:%s)',$self->{'feedback_type'}, $self->{'original_rcpt'}, $self->{'listname'} );
 	    return 1;
@@ -111,11 +113,10 @@ sub process {
 	    return undef;
 	}
     }
-    ##if(($self->is_dsn or $self->is_mdn or $self->is_email_feedback_report) {
+    ##if(($self->is_dsn and !$self->{'ndn'}{'is_ndn'}) or $self->is_mdn or $self->is_email_feedback_report) {
 	##Log::do_log('trace', 'Stopping treatment of bounce message %s which is not an error.',$self->get_msg_id);
 	##return 1;
     ##}
-    # else (not welcome or remind) 
     if ($self->process_ndn) {
 	Log::do_log ('notice','Bounce from %s to list %s correctly treated.',$self->{'who'}, $self->{'list'}->get_id );
 	return 1;
