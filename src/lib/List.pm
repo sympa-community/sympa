@@ -3205,10 +3205,10 @@ See L<Site/compute_auth>.
 Look for a file in the list > robot > server > default locations.
 See L<Site/get_etc_filename>.
 
-=item make_tt2_include_path
+=item get_etc_include_path
 
 make an array of include path for tt2 parsing.
-See L<Site/make_tt2_include_path>.
+See L<Site/get_etc_include_path>.
 
 =back
 
@@ -5697,7 +5697,7 @@ sub load_scenario_list {
     my %list_of_scenario;
     my %skip_scenario;
 
-    foreach my $dir (@{$self->make_tt2_include_path('scenari')}) {
+    foreach my $dir (@{$self->get_etc_include_path('scenari')}) {
 	next unless -d $dir;
 
 	my $scenario_regexp = tools::get_regexp('scenario');
@@ -5848,7 +5848,7 @@ sub load_data_sources_list {
     my $directory = $self->dir;
     my %list_of_data_sources;
 
-    foreach my $dir (@{$self->make_tt2_include_path('data_sources')}) {
+    foreach my $dir (@{$self->get_etc_include_path('data_sources')}) {
 	next unless (-d $dir);
 
 	while  (my $f = <$dir/*.incl>) {
@@ -10933,7 +10933,7 @@ sub _urlize_part {
     my $lang = &Language::GetLang();
     my $charset = &Language::GetCharset();
 
-    my $tt2_include_path = $list->make_tt2_include_path('mail_tt2', $lang);
+    my $tt2_include_path = $list->get_etc_include_path('mail_tt2', $lang);
 
     &tt2::parse_tt2(
 	{   'file_name' => $file_name,

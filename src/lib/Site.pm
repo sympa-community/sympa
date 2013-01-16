@@ -389,9 +389,9 @@ sub get_etc_filename {
 	$default_name = $1 . '.tt2';
 	@try =
 	    map { ($_ . '/' . $name, $_ . '/' . $default_name) }
-	    @{$self->make_tt2_include_path};
+	    @{$self->get_etc_include_path};
     } else {
-	@try = map { $_ . '/' . $name } @{$self->make_tt2_include_path};
+	@try = map { $_ . '/' . $name } @{$self->get_etc_include_path};
     }
 
     my @result;
@@ -414,16 +414,16 @@ sub get_etc_filename {
 
 =over 4
 
-=item make_tt2_include_path
+=item get_etc_include_path
 
     # To make include path for global site
-    @path = @{Site->make_tt2_include_path};
+    @path = @{Site->get_etc_include_path};
     # To make include path for a robot
-    @path = @{$robot->make_tt2_include_path};
+    @path = @{$robot->get_etc_include_path};
     # To make include path for a family
-    @path = @{$family->make_tt2_include_path};
+    @path = @{$family->get_etc_include_path};
     # To make include path for a list
-    @path = @{$list->make_tt2_include_path};
+    @path = @{$list->get_etc_include_path};
 
 make an array of include path for tt2 parsing
 
@@ -439,7 +439,7 @@ OUT : ref(ARRAY) of tt2 include path
 =cut
 
 sub _make_tt2_include_path {
-    &Log::do_log('debug3', '(%s, %s, %s)', @_);
+    #Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
     my ($dir, $lang) = @_;
 
@@ -531,8 +531,8 @@ sub _make_tt2_include_path {
     return @include_path;
 }
 
-sub make_tt2_include_path {
-    &Log::do_log('debug3', '(%s, %s, %s)', @_);
+sub get_etc_include_path {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
     ## Not always expose viewmail directory.
     ##return [Site->viewmail_dir, $self->_make_tt2_include_path(@_)];
@@ -821,7 +821,7 @@ sub send_file {
 
     ## What file
     my $lang = &Language::Lang2Locale($data->{'lang'});
-    my $tt2_include_path = $self->make_tt2_include_path('mail_tt2', $lang);
+    my $tt2_include_path = $self->get_etc_include_path('mail_tt2', $lang);
     if (ref $self eq 'List') {
 	## list directory to get the 'info' file
 	push @{$tt2_include_path}, $self->dir;

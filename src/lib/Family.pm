@@ -113,7 +113,7 @@ sub get_families {
 
     my @families;
 
-    foreach my $dir (reverse @{$robot->make_tt2_include_path('families')}) {
+    foreach my $dir (reverse @{$robot->get_etc_include_path('families')}) {
 	next unless -d $dir;
 
 	unless (opendir FAMILIES, $dir) {
@@ -3207,11 +3207,11 @@ See L<Site/get_etc_filename>.
 
 =back
 
-=head2 make_tt2_include_path
+=head2 get_etc_include_path
 
 =over
 
-See L<Site/make_tt2_include_path>.
+See L<Site/get_etc_include_path>.
 
 =back
 

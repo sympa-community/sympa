@@ -94,7 +94,7 @@ $data{'return_path_suffix'} = $robot->return_path_suffix;
 
 my @aliases;
 
-my $tt2_include_path = $robot->make_tt2_include_path();
+my $tt2_include_path = $robot->get_etc_include_path();
 
 my $aliases_dump;
 &tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);

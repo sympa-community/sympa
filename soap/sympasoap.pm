@@ -1786,7 +1786,7 @@ sub get_reason_string {
 
     my $data = {'reason' => $reason};
     my $string;
-    my $tt2_include_path = $robot->make_tt2_include_path('mail_tt2');
+    my $tt2_include_path = $robot->get_etc_include_path('mail_tt2');
 
     unless (
 	&tt2::parse_tt2(

@@ -483,7 +483,7 @@ sub get_list_list_tpl {
 	return undef;
     }
     
-    ##FIXME: use $robot->make_tt2_include_path().
+    ##FIXME: use $robot->get_etc_include_path().
     foreach my $dir (
         Sympa::Constants::DEFAULTDIR . '/create_list_templates',
         Site->etc . "/create_list_templates",
@@ -1886,8 +1886,8 @@ sub get_filename {
 }
 
 ## sub make_tt2_include_path
-## OBSOLETED: use $list->make_tt2_include_path(),
-##    $robot->make_tt2_include_path() or Site->make_tt2_include_path().
+## DEPRECATED: use $list->get_etc_include_path(),
+##    $robot->get_etc_include_path() or Site->get_etc_include_path().
 
 ## Find a file in an ordered list of directories
 sub find_file {

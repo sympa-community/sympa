@@ -231,10 +231,10 @@ sub get_id {
 
 See L<Site/is_listmaster>.
 
-=item make_tt2_include_path
+=item get_etc_include_path
 
 make an array of include path for tt2 parsing.
-See L<Site/make_tt2_include_path>.
+See L<Site/get_etc_include_path>.
 
 =item send_dsn
 

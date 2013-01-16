@@ -571,7 +571,7 @@ sub checkfiles {
     }
 
     ## Set TT2 path
-    my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
+    my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
     ## Create directory if required
     unless (-d $dir) {

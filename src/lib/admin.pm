@@ -121,13 +121,13 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =item * List::sync_include
 
-=item * tools::get_filename
+=item * Site::get_etc_filename
 
 =item * Log::do_log
 
 =item * tools::get_regexp
 
-=item * tools::make_tt2_include_path
+=item * Site::get_etc_include_path
 
 =item * tt2::parse_tt2 
 
@@ -266,7 +266,7 @@ sub create_list_old{
     $param->{'status'} ||= 'open';
        
     my $tt2_include_path =
-	$robot->make_tt2_include_path('create_list_templates/' . $template);
+	$robot->get_etc_include_path('create_list_templates/' . $template);
 
     ## Lock config before openning the config file
     my $lock = new Lock ($list_dir.'/config');

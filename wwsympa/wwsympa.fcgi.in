@@ -1843,7 +1843,7 @@ my $birthday = time ;
 
 	 my $lang = &Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->make_tt2_include_path('web_tt2', $lang);
+	    ($list || $robot)->get_etc_include_path('web_tt2', $lang);
 
  	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path, {})) {
  	     my $error = &tt2::get_error();
@@ -1870,7 +1870,7 @@ my $birthday = time ;
 
 	 my $lang = &Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->make_tt2_include_path('web_tt2', $lang);
+	    ($list || $robot)->get_etc_include_path('web_tt2', $lang);
 
  	 unless (&tt2::parse_tt2($param,'ajax.tt2' ,\*STDOUT, $tt2_include_path, {})) {
  	     my $error = &tt2::get_error();
@@ -2663,7 +2663,7 @@ sub send_html {
 
     my $lang = &Language::Lang2Locale($param->{'lang'});
     my $tt2_include_path =
-	($list || $robot)->make_tt2_include_path('web_tt2', $lang);
+	($list || $robot)->get_etc_include_path('web_tt2', $lang);
     
     # XSS escaping applied to all outgoing parameters.
     my $param_copy = &tools::dup_var($param); ## Escape parameters on a copy to avoid altering usefull data.
@@ -6472,7 +6472,7 @@ sub do_skinsedit {
 
 	## Do not include language subdirectories.
 	## The css.tt2 by each languages will override styles in main CSS.
-	my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
+	my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
 	return unless ($in{'custom_color_number'} =~ /color_/);
 	$param->{'custom_color_number'} = $in{'custom_color_number'};
@@ -6506,7 +6506,7 @@ sub do_skinsedit {
 
 	## Do not include language subdirectories.
 	## The css.tt2 by each languages will override styles in main CSS.
-	my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
+	my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
 	my $date= time;
 	my $style_file;
@@ -17867,7 +17867,7 @@ sub do_css {
 
     ## Do not include language subdirectories.
     ## The css.tt2 by each languages will override styles in main CSS.
-    my $tt2_include_path = $robot->make_tt2_include_path('web_tt2');
+    my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
     unless (&tt2::parse_tt2($param,'css.tt2' ,\*STDOUT, $tt2_include_path)) {
 	my $error = &tt2::get_error();
