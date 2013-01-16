@@ -54,6 +54,7 @@ Scenario - Sympa scenarios
 
 =item new ( THAT, [ KEY => VAL, ... ] )
 
+I<Constructor>.
 Creates a new object
 
 IN : -$pkg (+): class name
@@ -290,35 +291,39 @@ sub _parse_scenario {
 
 =head2 Functions
 
+=over 4
+
+=item request_action ( THAT, OPERATION, AUTH_METHOD, CONTEXT, [ DEBUG ] )
+
+I<Function>.
+Return the action to perform for 1 sender
+using 1 auth method to perform 1 operation
+
+IN : -$that (+) : ref(List) | ref(Robot) | "Site"
+     -$operation (+) : scalar
+     -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'|'dkim'
+     -$context (+) : ref(HASH) containing information
+       to evaluate scenario (scenario var)
+     -$debug : adds keys in the returned HASH
+
+OUT : undef | ref(HASH) containing keys :
+       -action : 'do_it'|'reject'|'request_auth'
+          |'owner'|'editor'|'editorkey'|'listmaster'
+       -reason : defined if action == 'reject'
+          and in scenario : reject(reason='...')
+          key for template authorization_reject.tt2
+       -tt2 : defined if action == 'reject'
+          and in scenario : reject(tt2='...') or reject('...tt2')
+          match a key in authorization_reject.tt2
+       -condition : the checked condition
+          (defined if $debug)
+       -auth_method : the checked auth_method
+          (defined if $debug)
+
+=back
+
 =cut
 
-####################################################
-# request_action
-####################################################
-# Return the action to perform for 1 sender
-# using 1 auth method to perform 1 operation
-#
-# IN : -$that (+) : ref(List) | ref(Robot) | "Site"
-#      -$operation (+) : scalar
-#      -$auth_method (+) : 'smtp'|'md5'|'pgp'|'smime'|'dkim'
-#      -$context (+) : ref(HASH) containing information
-#        to evaluate scenario (scenario var)
-#      -$debug : adds keys in the returned HASH
-#
-# OUT : undef | ref(HASH) containing keys :
-#        -action : 'do_it'|'reject'|'request_auth'
-#           |'owner'|'editor'|'editorkey'|'listmaster'
-#        -reason : defined if action == 'reject'
-#           and in scenario : reject(reason='...')
-#           key for template authorization_reject.tt2
-#        -tt2 : defined if action == 'reject'
-#           and in scenario : reject(tt2='...') or reject('...tt2')
-#           match a key in authorization_reject.tt2
-#        -condition : the checked condition
-#           (defined if $debug)
-#        -auth_method : the checked auth_method
-#           (defined if $debug)
-######################################################
 sub request_action {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $that        = shift;
@@ -708,7 +713,17 @@ sub request_action {
     return $return;
 }
 
-## check if email respect some condition
+=over 4
+
+=item verify ( CONTEXT, CONDITION, LOG_IT )
+
+I<Function>.
+check if email respect some condition
+
+=back
+
+=cut
+
 sub verify {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($context, $condition, $log_it) = @_;
@@ -1415,7 +1430,17 @@ sub verify {
     return undef;
 }
 
-## Verify if a given user is part of an LDAP, SQL or TXT search filter
+=over 4
+
+=item search ( THAT, FILTER_FILE, CONTEXT )
+
+I<Function>.
+Verify if a given user is part of an LDAP, SQL or TXT search filter
+
+=back
+
+=cut
+
 sub search {
     my $that        = shift || 'Site';
     my $filter_file = shift;
