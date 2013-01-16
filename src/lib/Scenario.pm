@@ -25,6 +25,8 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use Cwd;
+use File::Spec;
 use Net::Netmask;
 
 #use Conf; # used in List - Site
@@ -38,16 +40,37 @@ use List;
 my %all_scenarios;
 my %persistent_cache;
 
-## Creates a new object
-##
-## IN : -$pkg (+): class name
-##      -$that (+) : ref(List) | ref(Robot) | "Site"
-##      -%parameters : hash
-## OUT : Scenario object or undef
-##
-## Supported parameters : function, name, file_path, options
-## Output object has the following entries : name, file_path, rules, date,
-## title, struct, data
+=encoding utf-8
+
+=head1 NAME
+
+Scenario - Sympa scenarios
+
+=head1 DESCRIPTION
+
+=head2 Constructor
+
+=over 4
+
+=item new ( THAT, [ KEY => VAL, ... ] )
+
+Creates a new object
+
+IN : -$pkg (+): class name
+     -$that (+) : ref(List) | ref(Robot) | "Site"
+     -%parameters : hash
+
+OUT : Scenario object or undef
+
+Supported parameters : function, name, file_path, options
+
+Output object has the following entries : name, file_path, rules, date,
+title, struct, data
+
+=back
+
+=cut
+
 sub new {
     my $pkg        = shift;
     my $that       = shift;
@@ -94,21 +117,36 @@ sub new {
 	return $all_scenarios{$scenario->{'file_path'}};
     }
 
-    if (defined $file_path) {
-	$scenario->{'file_path'} = $file_path;
-	my @tokens = split /\//, $file_path;
-	my $filename = $tokens[$#tokens];
-	unless ($filename =~ /^([^\.]+)\.(.+)$/) {
-	    &Log::do_log('err',
+    unless ($file_path) {
+	$file_path =
+	    $that->get_etc_filename('scenari/' . $function . '.' . $name);
+    }
+    $scenario->{'file_path'} = $file_path;
+
+    ## Try to follow symlink.  If it succeed, try to get function and name
+    ## from real path name.
+    my $filename;
+    if (-l $file_path) {
+	my $realpath = Cwd::abs_path($file_path);
+	if ($realpath and
+	    -r $realpath and
+	    ($filename = [File::Spec->splitpath($realpath)]->[2]) and
+	    $filename =~ /^([^\.]+)\.(.+)$/ and
+	    (!$function or $function eq $1)    # only for same function
+	    ) {
+	    ($function, $name) = ($1, $2);
+	}
+    }
+    ## Otherwise, get function and name from original path name
+    if (!($function and $name) and -r $file_path) {
+	$filename = [File::Spec->splitpath($file_path)]->[2];
+	unless ($filename and $filename =~ /^([^\.]+)\.(.+)$/) {
+	    Log::do_log('err',
 		'Failed to determine scenario type and name from "%s"',
 		$file_path);
 	    return undef;
 	}
 	($function, $name) = ($1, $2);
-
-    } else {
-	$scenario->{'file_path'} =
-	    $that->get_etc_filename('scenari/' . $function . '.' . $name);
     }
 
     ## Load the scenario if previously loaded in memory
@@ -132,8 +170,11 @@ sub new {
     if (defined $scenario->{'file_path'}) {
 	## Get the data from file
 	unless (open SCENARIO, $scenario->{'file_path'}) {
-	    &Log::do_log('err',
-		"Failed to open scenario '$scenario->{'file_path'}'");
+	    Log::do_log(
+		'err',
+		'Failed to open scenario "%s"',
+		$scenario->{'file_path'}
+	    );
 	    return undef;
 	}
 	my $data = join '', <SCENARIO>;
@@ -149,8 +190,11 @@ sub new {
 
     } else {
 	## Default rule is 'true() smtp -> reject'
-	&Log::do_log('err',
-	    "Unable to find scenario file '$function.$name', please report to listmaster"
+	Log::do_log(
+	    'err',
+	    'Unable to find scenario file "%s.%s", please report to listmaster',
+	    $function,
+	    $name
 	);
 	$scenario_struct =
 	    _parse_scenario($function, $name, 'true() smtp -> reject');
@@ -162,7 +206,8 @@ sub new {
     $scenario->{'date'} = time;
 
     unless (ref($scenario_struct) eq 'HASH') {
-	&Log::do_log('err', "Failed to load scenario '$function.$name'");
+	Log::do_log('err', 'Failed to load scenario "%s.%s"',
+	    $function, $name);
 	return undef;
     }
 
@@ -216,10 +261,13 @@ sub _parse_scenario {
 	    $auth_methods =~ s/\s//g;
 	    @auth_methods_list = split ',', $auth_methods;
 	} else {
-	    &Log::do_log('err',
-		"error rule syntaxe in scenario $function rule line $. expected : <condition> <auth_mod> -> <action>"
+	    Log::do_log(
+		'err',
+		'error rule syntaxe in scenario %s rule line %d expected : <condition> <auth_mod> -> <action>',
+		$function,
+		$.
 	    );
-	    &Log::do_log('err', "error parsing $current_rule");
+	    Log::do_log('err', 'error parsing "%s"', $current_rule);
 	    return undef;
 	}
 
@@ -239,6 +287,10 @@ sub _parse_scenario {
 
     return $structure;
 }
+
+=head2 Functions
+
+=cut
 
 ####################################################
 # request_action
@@ -1692,11 +1744,25 @@ sub verify_custom {
     return $persistent_cache{'named_filter'}{$condition}{$filter}{'value'};
 }
 
+=head2 Miscelaneous
+
+=cut
+
 sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
     &tools::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
 }
+
+=over 4
+
+=item get_current_title ()
+
+Get intrnationalized title of the scenario, under current language context.
+
+=back
+
+=cut
 
 ## Get the title in the current language
 sub get_current_title {
@@ -1712,6 +1778,16 @@ sub get_current_title {
 	return $self->{'name'};
     }
 }
+
+=over 4
+
+=item get_id ()
+
+Get unique ID of object.
+
+=back
+
+=cut
 
 ## Get unique ID
 sub get_id {

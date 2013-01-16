@@ -5696,6 +5696,7 @@ sub load_scenario_list {
 
     my %list_of_scenario;
     my %skip_scenario;
+    my %scenario_alias;
 
     foreach my $dir (@{$self->get_etc_include_path('scenari')}) {
 	next unless -d $dir;
@@ -5720,8 +5721,20 @@ sub load_scenario_list {
 		'function' => $action,
 		'name'     => $name
 	    );
-	    $list_of_scenario{$name} = $scenario;
+	    next unless $scenario;
+
+	    ## withhold adding aliased scenarios (they may be symlink).
+	    if ($scenario->{'name'} ne $name) {
+		$scenario_alias{$scenario->{'name'}} = $scenario;
+	    } else {
+		$list_of_scenario{$name} = $scenario;
+	    }
 	}
+    }
+
+    ## add aliased scenarios if real path was not found.
+    foreach my $name (keys %scenario_alias) {
+	$list_of_scenario{$name} ||= $scenario_alias{$name};
     }
 
     ## Return a copy of the data to prevent unwanted changes in the central
@@ -9759,7 +9772,7 @@ sub _save_list_param {
     my $p = shift;
     my $fd = shift;
 
-    ## Ignore default value
+##    ## Ignore default value
 ##    return 1 if ! ref $defaults and $defaults == 1;
     return 1 unless defined $p;
 
@@ -12141,9 +12154,19 @@ sub _set_list_param {
     my $admin_hash = shift;
     my $config_attr = shift;
 
-    ## Downgrade Scenario object to unblessed hashref.
-    if ($p->{'scenario'} and ref $val eq 'Scenario') {
-	$val = {'name' => $val->{'name'}};
+    ## Reload scenario to get real value
+    if ($p->{'scenario'}) {
+	if (ref $val eq 'Scenario') {
+	    $val = Scenario->new($self,
+		'function' => $p->{'scenario'},
+		'name'     => $val->{'name'}
+	    );
+	} elsif (ref $val eq 'HASH') {
+	    $val = Scenario->new($self,
+		'function' => $p->{'scenario'},
+		'name'     => $val->{'name'}
+	    );
+	}
     }
 
     ## Apply defaults.
@@ -12153,12 +12176,21 @@ sub _set_list_param {
 	$default = _load_list_param(
 	    $self->{'robot'}, $attr, $p->{'default'}, $p, $self->{'dir'}
 	);
+	## Load scenario to get real default
+	if ($p->{'scenario'} and ref $default eq 'HASH') {
+	    $default = Scenario->new($self,
+		'function' => $p->{'scenario'},
+		'name'     => $default->{'name'}
+	    );
+	}
     }
 
     my $def = undef;
     if (defined $val and exists $p->{'default'}) {
-	if (($p->{'scenario'} or $p->{'task'}) and
+	if ($p->{'scenario'} and $default and
 	    $val->{'name'} eq $default->{'name'}) {
+	    $def = 1;
+	} elsif ($p->{'task'} and $val->{'name'} eq $default->{'name'}) {
 	    $def = 1;
 	} elsif (($p->{'split_char'} or
 	    $p->{'occurrence'} and $p->{'occurrence'} =~ /n/) and
@@ -12179,18 +12211,12 @@ sub _set_list_param {
     if (defined $val) {
 	if ($def) {
 	    delete $config_hash->{$config_attr};
+	} elsif ($p->{'scenario'}) {
+	    $config_hash->{$config_attr} = {'name' => $val->{'name'}};
 	} else {
 	    $config_hash->{$config_attr} = $val;
 	}
-	## Upgrade unblessed hashref to Scenario object
-	if ($p->{'scenario'} and ref $val eq 'HASH') {
-	    $admin_hash->{$config_attr} = Scenario->new($self,
-		'function' => $p->{'scenario'},
-		'name'     => $val->{'name'}
-	    );
-	} else {
-	    $admin_hash->{$config_attr} = tools::dup_var($val);
-	}
+	$admin_hash->{$config_attr} = tools::dup_var($val);
     } else {
 	delete $config_hash->{$config_attr};
 	delete $admin_hash->{$config_attr};
