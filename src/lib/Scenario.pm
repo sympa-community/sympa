@@ -474,16 +474,12 @@ sub request_action {
 
     } elsif ($context->{'topicname'}) {
 	## Topics
-
 	$scenario = Scenario->new(
 	    $robot,
 	    'function' => 'topics_visibility',
-	    'name' =>
-		$List::list_of_topics{$robot->domain}{$context->{'topicname'}}
-		{'visibility'},
+	    'name' => $robot->topics->{$context->{'topicname'}}{'visibility'},
 	    'options' => $context->{'options'}
 	);
-
     } else {
 	## Global scenario (ie not related to a list) ; example : create_list
 	my @p;

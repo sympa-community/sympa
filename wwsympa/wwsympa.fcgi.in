@@ -4286,18 +4286,17 @@ sub do_lists {
 	}
 	$param->{'subtitle'} = gettext('Your lists');
     } elsif ($in{'topic'}) {
-	my %topics = List::load_topics($robot);
+	my $topics = $robot->topics;
 
  	$param->{'topic'} = $in{'topic'};
 	if ($in{'subtopic'}) {
 	    $param->{'subtopic'} = $in{'subtopic'};
-	    $param->{'subtitle'} = sprintf "%s / %s",
-		$topics{$in{'topic'}}{'current_title'},
-		$topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'};
-	    $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
+	    $param->{'subtitle'} = sprintf gettext("%s / %s"),
+		($topics->{$in{'topic'}}{'current_title'} || $in{'topic'}),
+		($topics->{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'} || $in{'subtopic'});
 	} else {
 	    $param->{'subtitle'} =
-		$topics{$in{'topic'}}{'current_title'} || $in{'topic'};
+		$topics->{$in{'topic'}}{'current_title'} || $in{'topic'};
 	}
 
 	## Filter lists by topic.
@@ -9142,8 +9141,6 @@ Sends back the list creation edition form.
 
 =item * Scenario::request_action
 
-=item * List::load_topics
-
 =item * tools::get_list_list_tpl
 
 =item * tt2::allow_absolute_path
@@ -9194,11 +9191,11 @@ sub do_create_list_request {
 	    [List::get_which($param->{'user'}{'email'}, $robot, 'owner')];
     }
 
-     my %topics;
-     unless (%topics = List::load_topics($robot)) {
+    my $topics;
+    unless ($topics = $robot->topics) {
 	 &report::reject_report_web('intern','unable_to_load_list_of_topics',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
-     }
-     $param->{'list_of_topics'} = \%topics;
+    }
+    $param->{'list_of_topics'} = $topics;
 	
 	if ($in{'topics'}) {
 		my ($topic, $subtopic) = split('/', $in{'topics'});
@@ -10753,8 +10750,6 @@ Prepares config data to be sent in the edition form. Adds to the parameters arra
 
 =item * List::family
 
-=item * List::load_topics
-
 =item * List::may_edit
 
 =item * Language::GetLang
@@ -10826,23 +10821,27 @@ sub _prepare_edit_form {
 		 push @topics, $topic->{'value'};
 	     }
 	     undef $p->{'value'};
-	     my %list_of_topics = List::load_topics($robot);
+	    my $list_of_topics = $robot->topics || {};
 	     
 	     if (defined $p->{'constraint'}) {
-		 &_restrict_values(\%list_of_topics,$p->{'constraint'});
+		_restrict_values($list_of_topics, $p->{'constraint'});
 	     }
 
-	     foreach my $topic (keys %list_of_topics) {
-		 $p->{'value'}{$topic}{'selected'} = 0;
-		 $p->{'value'}{$topic}{'title'} = $list_of_topics{$topic}{'current_title'};
+	    foreach my $topic (keys %$list_of_topics) {
+		$p->{'value'}{$topic}{'selected'} = 0;
+		$p->{'value'}{$topic}{'title'} =
+		    $list_of_topics->{$topic}{'current_title'};
 		 
-		 if ($list_of_topics{$topic}{'sub'}) {
-		     foreach my $subtopic (keys %{$list_of_topics{$topic}{'sub'}}) {
-			 $p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
-			 $p->{'value'}{"$topic/$subtopic"}{'title'} = "$list_of_topics{$topic}{'current_title'}/$list_of_topics{$topic}{'sub'}{$subtopic}{'current_title'}";
-		     }
-		 }
-	     }
+		if ($list_of_topics->{$topic}{'sub'}) {
+		    foreach my $subtopic (keys %{$list_of_topics->{$topic}{'sub'}}) {
+			$p->{'value'}{"$topic/$subtopic"}{'selected'} = 0;
+			$p->{'value'}{"$topic/$subtopic"}{'title'} =
+			    sprintf gettext("%s / %s"),
+			    $list_of_topics->{$topic}{'current_title'},
+			    $list_of_topics->{$topic}{'sub'}{$subtopic}{'current_title'};
+		    }
+		}
+	    }
 	     foreach my $selected_topic (@topics) {
 		 next unless (defined $selected_topic);
 		 $p->{'value'}{$selected_topic}{'selected'} = 1;
@@ -16986,18 +16985,18 @@ sub do_stats {
 sub export_topics {
     wwslog('debug2', '(%s)', @_);
     my $robot = shift; 
-    my %topics = List::load_topics($robot);
+    my $topics = $robot->topics;
 
-     unless (%topics) {
-	 &wwslog('err','No topics defined');
-	 return undef;
-     }
+    unless ($topics and %$topics) {
+	wwslog('err', 'No topics defined');
+	return undef;
+    }
 
      ## Remove existing topics
      $param->{'topics'} = undef;
 
      my $total = 0;
-     foreach my $t (sort {$topics{$a}{'order'} <=> $topics{$b}{'order'}} keys %topics) {
+     foreach my $t (sort {$topics->{$a}{'order'} <=> $topics->{$b}{'order'}} keys %$topics) {
 	my $result = Scenario::request_action($robot,
 	    'topics_visibility', $param->{'auth_method'},
 	    {   'topicname'   => $t, 
@@ -17010,8 +17009,8 @@ sub export_topics {
 	$action = $result->{'action'} if ref $result eq 'HASH';
 	next unless $action =~ /do_it/;
 
-	 my $current = $topics{$t};
-	 $current->{'id'} = $t;
+	my $current = $topics->{$t};
+	$current->{'id'} = $t;
 
 	 ## For compatibility reasons
 	 $current->{'mod'} = $total % 3;

@@ -263,6 +263,45 @@ Note: List::send_notify_to_listmaster() was deprecated.
 
 ## Inherited from Site class.
 
+=head3 List topics
+
+=over 4
+
+=item is_available_topic ( TOPIC )
+
+Check $topic in the $self conf
+
+IN  : - $topic : id of the topic
+
+OUT : - 1 if the topic is in the robot conf or undef
+
+=back
+
+=cut
+
+sub is_available_topic {
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $topic = shift;
+
+    my ($top, $subtop) = split /\//, $topic;
+
+    my %topics;
+    unless (%topics = %{$self->topics || {}}) {
+	Log::do_log('err', 'unable to load list of topics');
+    }
+
+    if ($subtop) {
+	return 1
+	    if defined $topics{$top} and
+		defined $topics{$top}{'sub'}{$subtop};
+    } else {
+	return 1 if defined $topics{$top};
+    }
+
+    return undef;
+}
+
 =head3 Handling netidmap table
 
 =over 4
@@ -458,6 +497,172 @@ sub list_params {
     $pinfo->{'lang'}{'format'} = [$self->supported_languages];
 
     return $self->{'list_params'} = $pinfo;
+}
+
+=over 4
+
+=item topics
+
+I<Getter>.
+Get a hashref including information of list topics available on the robot.
+
+=back
+
+=cut
+
+sub topics {
+    my $self = shift;
+
+    my $conf_file = $self->get_etc_filename('topics.conf');
+    unless ($conf_file) {
+	Log::do_log('err', 'No topics.conf defined');
+	return undef;
+    }
+
+    my $list_of_topics;
+
+    ## Load if not loaded or changed on disk
+    if (!$self->{'topics'} or
+	!$self->{'mtime'}{'topics.conf'} or
+	(stat($conf_file))[9] > $self->{'mtime'}{'topics.conf'}) {
+
+	## delete previous list of topics
+	$list_of_topics = {};
+
+	unless (-r $conf_file) {
+	    Log::do_log('err', 'Unable to read %s', $conf_file);
+	    return undef;
+	}
+
+	unless (open(FILE, '<', $conf_file)) {
+	    Log::do_log('err', 'Unable to open config file %s', $conf_file);
+	    return undef;
+	}
+
+	## Rough parsing
+	my $index = 0;
+	my (@rough_data, $topic);
+	while (<FILE>) {
+	    Encode::from_to($_, Site->filesystem_encoding, 'utf8');
+	    if (/^([\-\w\/]+)\s*$/) {
+		$index++;
+		$topic = {
+		    'name'  => $1,
+		    'order' => $index
+		};
+	    } elsif (/^([\w\.]+)\s+(.+)\s*$/) {
+		next unless defined $topic->{'name'};
+
+		$topic->{$1} = $2;
+	    } elsif (/^\s*$/) {
+		if (defined $topic->{'name'}) {
+		    push @rough_data, $topic;
+		    $topic = {};
+		}
+	    }
+	}
+	close FILE;
+
+	## Last topic
+	if (defined $topic->{'name'}) {
+	    push @rough_data, $topic;
+	    $topic = {};
+	}
+
+	$self->{'mtime'}{'topics.conf'} = (stat($conf_file))[9];
+
+	unless ($#rough_data > -1) {
+	    Log::do_log('notice', 'No topic defined in %s', $conf_file);
+	    return undef;
+	}
+
+	## Analysis
+	foreach my $topic (@rough_data) {
+	    my @tree = split '/', $topic->{'name'};
+
+	    if ($#tree == 0) {
+		my $title = _get_topic_titles($topic);
+		$list_of_topics->{$tree[0]}{'title'} = $title;
+		$list_of_topics->{$tree[0]}{'visibility'} =
+		    $topic->{'visibility'} || 'default';
+
+		#$list_of_topics->{$tree[0]}{'visibility'} =
+		#    _load_scenario_file('topics_visibility', $self,
+		#    $topic->{'visibility'} || 'default');
+		$list_of_topics->{$tree[0]}{'order'} = $topic->{'order'};
+	    } else {
+		my $subtopic = join('/', @tree[1 .. $#tree]);
+		my $title = _get_topic_titles($topic);
+		$list_of_topics->{$tree[0]}{'sub'}{$subtopic} =
+		    _add_topic($subtopic, $title);
+	    }
+	}
+
+	## Set undefined Topic (defined via subtopic)
+	foreach my $t (keys %{$list_of_topics}) {
+	    unless (defined $list_of_topics->{$t}{'visibility'}) {
+
+		#$list_of_topics->{$t}{'visibility'} =
+		#    _load_scenario_file('topics_visibility', $self,
+		#    'default');
+	    }
+
+	    unless (defined $list_of_topics->{$t}{'title'}) {
+		$list_of_topics->{$t}{'title'} = {'default' => $t};
+	    }
+	}
+
+	$self->{'topics'} = $list_of_topics;
+    }
+
+    $list_of_topics = tools::dup_var($self->{'topics'});
+
+    ## Set the title in the current language
+    my $lang = Language::GetLang();
+    foreach my $top (keys %{$list_of_topics}) {
+	my $topic = $list_of_topics->{$top};
+	$topic->{'current_title'} = $topic->{'title'}{$lang} ||
+	    $topic->{'title'}{'default'} ||
+	    $top;
+
+	foreach my $subtop (keys %{$topic->{'sub'}}) {
+	    $topic->{'sub'}{$subtop}{'current_title'} =
+		$topic->{'sub'}{$subtop}{'title'}{$lang} ||
+		$topic->{'sub'}{$subtop}{'title'}{'default'} ||
+		$subtop;
+	}
+    }
+
+    return $list_of_topics;
+}
+
+sub _get_topic_titles {
+    my $topic = shift;
+
+    my $title;
+    foreach my $key (%{$topic}) {
+	if ($key =~ /^title(.(\w+))?$/) {
+	    my $lang = $2 || 'default';
+	    $title->{$lang} = $topic->{$key};
+	}
+    }
+
+    return $title;
+}
+
+## Inner sub used by load_topics()
+sub _add_topic {
+    my ($name, $title) = @_;
+    my $topic = {};
+
+    my @tree = split '/', $name;
+    if ($#tree == 0) {
+	return {'title' => $title};
+    } else {
+	$topic->{'sub'}{$name} =
+	    _add_topic(join('/', @tree[1 .. $#tree]), $title);
+	return $topic;
+    }
 }
 
 =head3 Derived parameters

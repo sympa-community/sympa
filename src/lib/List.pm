@@ -530,7 +530,6 @@ my %list_status = (
 );
 
 ## This is the generic hash which keeps all lists in memory.
-our %list_of_topics = ();
 my %edit_list_conf = ();
 
 ## Last modification times
@@ -9601,155 +9600,10 @@ sub lowercase_field {
 }
 
 ## Loads the list of topics if updated
-## NOTE: this might be moved to Site package.
+## OBSOLETED: Use $robot->topics().
 sub load_topics {
-    &Log::do_log('debug2', '(%s)', @_);
     my $robot = Robot::clean_robot(shift);
-
-    my $conf_file = $robot->get_etc_filename('topics.conf');
-
-    unless ($conf_file) {
-	&Log::do_log('err', 'No topics.conf defined');
-	return undef;
-    }
-
-    my $topics = {};
-
-    ## Load if not loaded or changed on disk
-    if (!$list_of_topics{$robot->domain} ||
-	((stat($conf_file))[9] > $mtime{'topics'}{$robot->domain})) {
-
-	## delete previous list of topics
-	%list_of_topics = undef;
-
-	unless (-r $conf_file) {
-	    &Log::do_log('err', "Unable to read $conf_file");
-	    return undef;
-	}
-
-	unless (open(FILE, "<", $conf_file)) {
-	    &Log::do_log('err', "Unable to open config file $conf_file");
-	    return undef;
-	}
-
-	## Raugh parsing
-	my $index = 0;
-	my (@raugh_data, $topic);
-	while (<FILE>) {
-	    Encode::from_to($_, Site->filesystem_encoding, 'utf8');
-	    if (/^([\-\w\/]+)\s*$/) {
-		$index++;
-		$topic = {
-		    'name'  => $1,
-			  'order' => $index
-			  };
-	    } elsif (/^([\w\.]+)\s+(.+)\s*$/) {
-		next unless (defined $topic->{'name'});
-
-		$topic->{$1} = $2;
-	    } elsif (/^\s*$/) {
-		if (defined $topic->{'name'}) {
-		    push @raugh_data, $topic;
-		    $topic = {};
-		}
-	}
-	}
-	close FILE;
-
-	## Last topic
-	if (defined $topic->{'name'}) {
-	    push @raugh_data, $topic;
-	    $topic = {};
-	}
-
-	$mtime{'topics'}{$robot->domain} = (stat($conf_file))[9];
-
-	unless ($#raugh_data > -1) {
-	    &Log::do_log('notice', 'No topic defined in %s/topics.conf',
-		Site->etc);
-	    return undef;
-	}
-
-	## Analysis
-	foreach my $topic (@raugh_data) {
-	    my @tree = split '/', $topic->{'name'};
-
-	    if ($#tree == 0) {
-		my $title = _get_topic_titles($topic);
-		$list_of_topics{$robot->domain}{$tree[0]}{'title'} = $title;
-		$list_of_topics{$robot->domain}{$tree[0]}{'visibility'} =
-		    $topic->{'visibility'} || 'default';
-
-#$list_of_topics{$robot->domain}{$tree[0]}{'visibility'} = &_load_scenario_file('topics_visibility', $robot, $topic->{'visibility'}||'default');
-		$list_of_topics{$robot->domain}{$tree[0]}{'order'} =
-		    $topic->{'order'};
-	    } else {
-		my $subtopic = join('/', @tree[1 .. $#tree]);
-		my $title = _get_topic_titles($topic);
-		$list_of_topics{$robot->domain}{$tree[0]}{'sub'}{$subtopic} =
-		    &_add_topic($subtopic, $title);
-	    }
-	}
-
-	## Set undefined Topic (defined via subtopic)
-	foreach my $t (keys %{$list_of_topics{$robot->domain}}) {
-	    unless (defined $list_of_topics{$robot->domain}{$t}{'visibility'}) {
-
-#$list_of_topics{$robot->domain}{$t}{'visibility'} = &_load_scenario_file('topics_visibility', $robot,'default');
-	    }
-
-	    unless (defined $list_of_topics{$robot->domain}{$t}{'title'}) {
-		$list_of_topics{$robot->domain}{$t}{'title'} = {'default' => $t};
-	}
-    }
-    }
-
-    ## Set the title in the current language
-    my $lang = &Language::GetLang();
-    foreach my $top (keys %{$list_of_topics{$robot->domain}}) {
-	my $topic = $list_of_topics{$robot->domain}{$top};
-	$topic->{'current_title'} = $topic->{'title'}{$lang} ||
-	    $topic->{'title'}{'default'} ||
-	    $top;
-
-	foreach my $subtop (keys %{$topic->{'sub'}}) {
-	    $topic->{'sub'}{$subtop}{'current_title'} =
-		$topic->{'sub'}{$subtop}{'title'}{$lang} ||
-		$topic->{'sub'}{$subtop}{'title'}{'default'} ||
-		$subtop;
-	}
-    }
-
-    return %{$list_of_topics{$robot->domain}};
-}
-
-sub _get_topic_titles {
-    my $topic = shift;
-
-    my $title;
-    foreach my $key (%{$topic}) {
-	if ($key =~ /^title(.(\w+))?$/) {
-	    my $lang = $2 || 'default';
-	    $title->{$lang} = $topic->{$key};
-	}
-    }
-
-    return $title;
-}
-
-## Inner sub used by load_topics()
-sub _add_topic {
-    my ($name, $title) = @_;
-    my $topic = {};
-
-    my @tree = split '/', $name;
-    if ($#tree == 0) {
-	return {'title' => $title};
-    } else {
-	$topic->{'sub'}{$name} =
-	    &_add_topic(join('/', @tree[1 .. $#tree]), $title);
-	return $topic;
-    }
+    return %{$robot->topics || {}};
 }
 
 ############ THIS IS RELATED TO NEW LOAD_ADMIN_FILE #############

@@ -105,8 +105,6 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =item * check_owner_defined
 
-=item * check_topics
-
 =item * install_aliases
 
 =item * list_check_smtp
@@ -253,8 +251,9 @@ sub create_list_old{
     
     ## Check topics
     if ($param->{'topics'}){
-	unless (&check_topics($param->{'topics'},$robot_id)){
-	    &Log::do_log('err', 'admin::create_list_old : topics param %s not defined in topics.conf',$param->{'topics'});
+	unless ($robot->is_available_topic($param->{'topics'})) {
+	    Log::do_log('err', 'topics param %s not defined in topics.conf',
+		$param->{'topics'});
 	}
     }
       
@@ -468,8 +467,8 @@ sub create_list{
     
     ## Check topics
     if (defined $param->{'topics'}){
-	unless (&check_topics($param->{'topics'},$robot)){
-	    &Log::do_log('err', 'topics param %s not defined in topics.conf',
+	unless ($robot->is_available_topic($param->{'topics'})) {
+	    Log::do_log('err', 'topics param %s not defined in topics.conf',
 		$param->{'topics'});
 	}
     }
@@ -613,8 +612,9 @@ sub update_list{
 
     ## Check topics
     if (defined $param->{'topics'}){
-	unless (&check_topics($param->{'topics'},$robot)){
-	    &Log::do_log('err', 'admin::update_list : topics param %s not defined in topics.conf',$param->{'topics'});
+	unless ($robot->is_available_topic($param->{'topics'})) {
+	    Log::do_log('err', 'topics param %s not defined in topics.conf',
+		$param->{'topics'});
 	}
     }
 
@@ -1341,25 +1341,11 @@ EOF
 #       - $robot : the list's robot
 # OUT : - 1 if the topic is in the robot conf or undef
 #####################################################
+##OBSOLETED: Use $robot->is_available_topic().
 sub check_topics {
     my $topic = shift;
-    my $robot = shift;
-    &Log::do_log('info', "admin::check_topics($topic,$robot)");
-
-    my ($top, $subtop) = split /\//, $topic;
-
-    my %topics;
-    unless (%topics = &List::load_topics($robot)) {
-	&Log::do_log('err','admin::check_topics : unable to load list of topics');
-    }
-
-    if ($subtop) {
-	return 1 if (defined $topics{$top} && defined $topics{$top}{'sub'}{$subtop});
-    }else {
-	return 1 if (defined $topics{$top});
-    }
-
-    return undef;
+    my $robot = Robot::clean_robot(shift);
+    return $robot->is_available_topic($topic);
 }
 
 # change a user email address for both his memberships and ownerships
