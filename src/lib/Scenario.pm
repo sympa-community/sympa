@@ -31,7 +31,7 @@ use Net::Netmask;
 
 #use Conf; # used in List - Site
 #use Language; # used in List
-use List;
+#use List; # this package is used by List
 
 #use Log; # used in Conf
 #use Sympa::Constants; # used in Conf - confdef
@@ -103,7 +103,7 @@ sub new {
     unless ($parameters{'file_path'} or
 	$parameters{'function'} and
 	$parameters{'name'}) {
-	&Log::do_log('err', 'Missing parameter');
+	Log::do_log('err', 'Missing parameter');
 	return undef;
     }
 
@@ -111,71 +111,68 @@ sub new {
     my $function  = $parameters{'function'};
     my $name      = $parameters{'name'};
     my $options   = $parameters{'options'} || {};
+    my $scenario_struct;
 
     ## Determine the file path of the scenario
 
-    if ($file_path eq 'ERROR') {
-	return $all_scenarios{$scenario->{'file_path'}};
+    if ($file_path and $file_path eq 'ERROR') {
+	return $all_scenarios{$file_path};
     }
 
     unless ($file_path) {
 	$file_path =
 	    $that->get_etc_filename('scenari/' . $function . '.' . $name);
     }
-    $scenario->{'file_path'} = $file_path;
 
-    ## Try to follow symlink.  If it succeed, try to get function and name
-    ## from real path name.
-    my $filename;
-    if (-l $file_path) {
-	my $realpath = Cwd::abs_path($file_path);
-	if ($realpath and
-	    -r $realpath and
-	    ($filename = [File::Spec->splitpath($realpath)]->[2]) and
-	    $filename =~ /^([^\.]+)\.(.+)$/ and
-	    (!$function or $function eq $1)    # only for same function
-	    ) {
+    if ($file_path) {
+	$scenario->{'file_path'} = $file_path;
+
+	## Try to follow symlink.  If it succeed, try to get function and name
+	## from real path name.
+	my $filename;
+	if (-l $file_path) {
+	    my $realpath = Cwd::abs_path($file_path);
+	    if ($realpath and
+		-r $realpath and
+		($filename = [File::Spec->splitpath($realpath)]->[2]) and
+		$filename =~ /^([^\.]+)\.(.+)$/ and
+		(!$function or $function eq $1)    # only for same function
+		) {
+		($function, $name) = ($1, $2);
+	    }
+	}
+	## Otherwise, get function and name from original path name
+	if (!($function and $name) and -r $file_path) {
+	    $filename = [File::Spec->splitpath($file_path)]->[2];
+	    unless ($filename and $filename =~ /^([^\.]+)\.(.+)$/) {
+		Log::do_log('err',
+		    'Failed to determine scenario type and name from "%s"',
+		    $file_path);
+		return undef;
+	    }
 	    ($function, $name) = ($1, $2);
 	}
-    }
-    ## Otherwise, get function and name from original path name
-    if (!($function and $name) and -r $file_path) {
-	$filename = [File::Spec->splitpath($file_path)]->[2];
-	unless ($filename and $filename =~ /^([^\.]+)\.(.+)$/) {
-	    Log::do_log('err',
-		'Failed to determine scenario type and name from "%s"',
-		$file_path);
-	    return undef;
-	}
-	($function, $name) = ($1, $2);
-    }
 
-    ## Load the scenario if previously loaded in memory
-    if (defined $all_scenarios{$scenario->{'file_path'}}) {
+	## Load the scenario if previously loaded in memory
+	if (defined $all_scenarios{$file_path}) {
 
-	## Option 'dont_reload_scenario' prevents scenario reloading
-	## Usefull for performances reasons
-	if ($options->{'dont_reload_scenario'}) {
-	    return $all_scenarios{$scenario->{'file_path'}};
+	    ## Option 'dont_reload_scenario' prevents scenario reloading
+	    ## Usefull for performances reasons
+	    if ($options->{'dont_reload_scenario'}) {
+		return $all_scenarios{$file_path};
+	    }
+
+	    ## Use cache unless file has changed on disk
+	    if ($all_scenarios{$file_path}{'date'} >= (stat($file_path))[9]) {
+		return $all_scenarios{$file_path};
+	    }
 	}
 
-	## Use cache unless file has changed on disk
-	if ($all_scenarios{$scenario->{'file_path'}}{'date'} >=
-	    (stat($scenario->{'file_path'}))[9]) {
-	    return $all_scenarios{$scenario->{'file_path'}};
-	}
-    }
+	## Load the scenario
 
-    ## Load the scenario
-    my $scenario_struct;
-    if (defined $scenario->{'file_path'}) {
 	## Get the data from file
-	unless (open SCENARIO, $scenario->{'file_path'}) {
-	    Log::do_log(
-		'err',
-		'Failed to open scenario "%s"',
-		$scenario->{'file_path'}
-	    );
+	unless (open SCENARIO, '<', $file_path) {
+	    Log::do_log('err', 'Failed to open scenario "%s"', $file_path);
 	    return undef;
 	}
 	my $data = join '', <SCENARIO>;
@@ -188,7 +185,6 @@ sub new {
     } elsif ($function eq 'include') {
 	## include.xx not found will not raise an error message
 	return undef;
-
     } else {
 	## Default rule is 'true() smtp -> reject'
 	Log::do_log(
@@ -203,7 +199,8 @@ sub new {
 	$scenario->{'data'}      = 'true() smtp -> reject';
     }
 
-    ## Keep track of the current time ; used later to reload scenario files when they changed on disk
+    ## Keep track of the current time ; used later to reload scenario files
+    ## when they changed on disk
     $scenario->{'date'} = time;
 
     unless (ref($scenario_struct) eq 'HASH') {
@@ -245,8 +242,17 @@ sub _parse_scenario {
 	if ($current_rule =~ /^\s*title\.gettext\s+(.*)\s*$/i) {
 	    $structure->{'title'}{'gettext'} = $1;
 	    next;
-	} elsif ($current_rule =~ /^\s*title\.(\w+)\s+(.*)\s*$/i) {
-	    $structure->{'title'}{$1} = $2;
+	} elsif ($current_rule =~ /^\s*title\.us\s+(.*)\s*$/i) {
+	    $structure->{'title'}{'us'} = $1;
+	    next;
+	} elsif ($current_rule =~ /^\s*title\.([-.\w]+)\s+(.*)\s*$/i) {
+	    my ($lang, $title) = ($1, $2);
+	    Language::PushLang($lang);
+	    $structure->{'title'}{Language::GetLang()} = $title;
+	    Language::PopLang();
+	    next;
+	} elsif ($current_rule =~ /^\s*title\s+(.*)\s*$/i) {
+	    $structure->{'title'}{'us'} = $1;
 	    next;
 	}
 
