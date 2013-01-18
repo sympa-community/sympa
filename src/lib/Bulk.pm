@@ -78,7 +78,7 @@ my $last_stored_message_key;
 # Next lock the packetb to prevent multiple proccessing of a single packet 
 
 sub next {
-    &Log::do_log('debug', 'Bulk::next');
+    Log::do_log('debug2', '()');
 
     # lock next packet
     my $lock = &tools::get_lockname();
@@ -144,9 +144,23 @@ sub next {
     }
     
     my $result = $sth->fetchrow_hashref('NAME_lc');
+
+    ## add objects
+    my $robot_id = $result->{'robot'};
+    my $listname = $result->{'listname'};
+    my $robot;
+
+    if ($robot_id and $robot_id ne '*') {
+	$robot = Robot->new($robot_id);
+    }
+    if ($robot) {
+	if ($listname and length $listname) {
+	    $result->{'list_object'} = List->new($listname, $robot);
+	}
+	$result->{'robot_object'} = $robot;
+    }
    
     return $result;
-
 }
 
 
@@ -327,7 +341,7 @@ sub merge_msg {
 #                                                          #
 # IN : - rcpt : the receipient email                       #
 #      - listname : the name of the list                   #
-#      - robot : the host                                  #
+#      - robot_id : the host                               #
 #      - data : HASH with many data                        #
 #      - body : message with the TT2                       #
 #      - message_output : object, IO::Scalar               #
@@ -341,7 +355,7 @@ sub merge_data {
     my %params = @_;
     my $rcpt = $params{'rcpt'},
     my $listname = $params{'listname'},
-    my $robot = $params{'robot'},
+    my $robot_id = $params{'robot'},
     my $data = $params{'data'},
     my $body = $params{'body'},
     my $message_output = $params{'message_output'},
@@ -352,7 +366,7 @@ sub merge_data {
     my $user_details;
     $user_details->{'email'} = $rcpt;
     $user_details->{'name'} = $listname;
-    $user_details->{'domain'} = $robot;
+    $user_details->{'domain'} = $robot_id;
     
     # get_list_member_no_object() return the user's details with the custom attributes
     my $user = &List::get_list_member_no_object($user_details);
@@ -364,7 +378,7 @@ sub merge_data {
     # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
 
     $data->{'user'} = $user;
-    $data->{'robot'} = $robot;
+    $data->{'robot'} = $robot_id;
     $data->{'listname'} = $listname;
 
     # Parse the TT2 in the message : replace the tags and the parameters by the corresponding values

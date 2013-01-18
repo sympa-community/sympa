@@ -304,7 +304,7 @@ while (!$end) {
 	$data->{'listname'} = $bulk->{'listname'};
 	$data->{'robot'} = $bulk->{'robot'};
 	$data->{'to'} = $bulk->{'receipients'};
-	$data->{'wwsympa_url'} = &Conf::get_robot_conf($bulk->{'robot'},'wwsympa_url');
+	$data->{'wwsympa_url'} = $bulk->{'robot_object'}->wwsympa_url;
 	
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
 	my @rcpts = split /,/,$bulk->{'receipients'}; # / Contain all the subscribers 
@@ -322,7 +322,10 @@ while (!$end) {
  
 
 	#my $list = new List($bulk->{'listname'}, $bulk->{'robot'});
-	my $listname= $bulk->{'listname'}; my $robot =  $bulk->{'robot'};
+	my $listname = $bulk->{'listname'};
+	my $robot_id =  $bulk->{'robot'};
+	my $list = $bulk->{'list_object'};
+	my $robot = $bulk->{'robot_object'};
 
 	if (($bulk->{'verp'})||($bulk->{'merge'})||($bulk->{'tracking'}eq 'dsn')||($bulk->{'tracking'}eq 'mdn')){ # message needs personalization
 	    my $key ;
@@ -332,13 +335,16 @@ while (!$end) {
 		my $entity = $message->{'msg'};
 		my $notification_id;
 		my $return_path;
-		my $escaped_rcpt = $rcpt;
-		$escaped_rcpt  =~ s/\@/\=\=a\=\=/; 
-		
+
 		if(($bulk->{'tracking'} eq 'dsn')||($bulk->{'tracking'} eq 'mdn')){ # tracking by MDN required tracking by DSN to
 		    my $msgid = $entity->head->get('Message-Id'); chomp $msgid;		    
-		    $notification_id = &tracking::find_notification_id_by_message($rcpt, $msgid, $listname,$robot);
-		    $return_path = Site->bounce_email_prefix.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
+		    $notification_id =
+			tracking::find_notification_id_by_message(
+			    $rcpt, $msgid, $listname, $robot_id
+		    );
+		    $return_path = $list->get_bounce_address(
+			$rcpt, $notification_id
+		    );
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
 		    if (($message->{'protected'})||($message->{'smime_crypted'})){
 			my $msg_body = &Message::get_body_from_msg_as_string($messageasstring_init);
@@ -348,7 +354,7 @@ while (!$end) {
 		    }
 		    # &trace_smime($messageasstring,'tracking');
 		}else{  # VERP
-		    $return_path = Site->bounce_email_prefix.'+'.$escaped_rcpt.'=='.$listname.'@'.$robot; 
+		    $return_path = $list->get_bounce_address($rcpt);
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
@@ -359,38 +365,53 @@ while (!$end) {
 		    $messageasstring = $messageasstring_init;
 		}
 
-		if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
+		if ($robot->dkim_feature eq 'on') {
 		    $messageasstring = &tools::remove_invalid_dkim_signature($messageasstring );
 		}
-		if ($message_from_spool->{'dkim_d'}){ # apply dkim signature AFTER any other message transformation.
-		    $messageasstring = &tools::dkim_sign($messageasstring,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
-									   'dkim_i'=>           $message_from_spool->{'dkim_i'},
-									   'dkim_selector'=>    $message_from_spool->{'dkim_selector'},
-									   'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'}, } );
+		if ($message_from_spool->{'dkim_d'}) {
+		    # apply dkim signature AFTER any other message transformation.
+		    $messageasstring = tools::dkim_sign($messageasstring,
+			{   'dkim_d' =>
+				$message_from_spool->{'dkim_d'},
+			    'dkim_i' =>
+				$message_from_spool->{'dkim_i'},
+			    'dkim_selector' =>
+				$message_from_spool->{'dkim_selector'},
+			    'dkim_privatekey' =>
+				$message_from_spool->{'dkim_privatekey'},
+			}
+		    );
 		}
 
 		# &trace_smime($messageasstring,'dkim');
 
-		*SMTP = &mail::smtpto($return_path, \$rcpt, $bulk->{'robot'},$notification_id);
+		*SMTP = mail::smtpto(
+		    $return_path, \$rcpt, $robot, $notification_id);
 		# Message with customized data
 		print SMTP $messageasstring;
 		close SMTP;
 	    }
 	}else{ # message dont needs personalization, they can be sent by packet
-            if (&Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq 'on'){
+            if ($robot->dkim_feature eq 'on') {
 		$messageasstring_init = &tools::remove_invalid_dkim_signature($messageasstring_init );
 	    }
 	    # Initial message
 	    if ($message_from_spool->{'dkim_d'}){
-		$messageasstring_init = &tools::dkim_sign($messageasstring_init,{'dkim_d'=>           $message_from_spool->{'dkim_d'},
-										 'dkim_i'=>           $message_from_spool->{'dkim_i'},
-										 'dkim_selector'=>    $message_from_spool->{'dkim_selector'},
-										 'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'}, } );
+		$messageasstring_init = tools::dkim_sign(
+		    $messageasstring_init,
+		    {   'dkim_d'=>           $message_from_spool->{'dkim_d'},
+			'dkim_i'=>           $message_from_spool->{'dkim_i'},
+			'dkim_selector'=>
+			    $message_from_spool->{'dkim_selector'},
+			'dkim_privatekey' =>
+			    $message_from_spool->{'dkim_privatekey'},
+		    }
+		);
 	    }
 
 	    # &trace_smime($messageasstring_init,'dkim 2');
-	    
-	    *SMTP = &mail::smtpto($bulk->{'returnpath'}, \@rcpts, $bulk->{'robot'});		
+
+	    *SMTP = mail::smtpto($bulk->{'returnpath'}, \@rcpts, $robot);
 	    print SMTP $messageasstring_init;
 	    close SMTP;
 	}
@@ -405,8 +426,8 @@ while (!$end) {
 	    &Log::do_log('notice','Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.', 
 		    $bulk->{'messageid'}, 
 		    $bulk->{'messagekey'}, 
-		    $bulk->{'listname'}, 
-		    $bulk->{'robot'}, 
+		    $listname, 
+		    $robot_id, 
 		    $bulk->{'priority_message'}, 
 		    time() - $bulk->{'delivery_date'});
 	}
