@@ -1299,8 +1299,6 @@ See L<Robot/ACCESSORS>.
 
 =item locale2charset
 
-=item pictures_path
-
 =item robot_by_http_host
 
 =item ... etc.
@@ -1329,8 +1327,8 @@ sub AUTOLOAD {
     ## getters for site/robot parameters.
     $type->{'RobotParameter'} = 1
 	if grep { $_ eq $attr }
-	    qw(blacklist list_check_regexp loging_condition loging_for_module
-	    pictures_path) or
+	    qw(blacklist list_check_regexp
+	    loging_condition loging_for_module) or
 	    grep { !defined $_->{'title'} and $_->{'name'} eq $attr }
 	    @confdef::params;
     ## getters for attributes specific to global config.

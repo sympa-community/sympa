@@ -674,8 +674,6 @@ Some of them are obsoleted.
 
 =item list_check_regexp
 
-=item pictures_path
-
 I<Getters>.
 Gets derived config parameters.
 

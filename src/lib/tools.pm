@@ -138,39 +138,26 @@ sub _create_xss_parser {
 #               according to the user
 ## IN : email, list
 #*******************************************
+# OBSOLETED: use $list->find_picture_filenames().
 sub pictures_filename {
     my %parameters = @_;
-    
-    my $login = &md5_fingerprint($parameters{'email'});
+    my $email = $parameters{'email'};
     my $list = $parameters{'list'};
-    
-    my $filetype;
-    my $filename = undef;
-    foreach my $ext ('.gif','.jpg','.jpeg','.png') {
- 	if (-f $list->robot->pictures_path . '/' . $list->get_id() . '/' . $login . $ext) {
- 	    my $file = $login.$ext;
- 	    $filename = $file;
- 	    last;
- 	}
-    }
-    return $filename;
+
+    my $ret = $list->find_picture_filenames($email);
+    return $ret;
 }
 
 ## Creation of pictures url
 ## IN : email, list
+# OBSOLETED: Use $list->find_picture_url().
 sub make_pictures_url {
     my %parameters = @_;
-
+    my $email = $parameters{'email'};
     my $list = $parameters{'list'};
 
-    my $url;
-    if(&pictures_filename('email' => $parameters{'email'}, 'list' => $list)) {
- 	$url =  $list->robot->pictures_url . $list->get_id() . '/' . &pictures_filename('email' => $parameters{'email'}, 'list' => $list);
-    }
-    else {
- 	$url = undef;
-    }
-    return $url;
+    my $ret = $list->find_picture_url($email);
+    return $ret;
 }
 
 ## Returns sanitized version (using StripScripts) of the string provided as argument.

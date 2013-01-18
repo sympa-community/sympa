@@ -2992,37 +2992,79 @@ sub send_notify_to_owner {
     return 1;
 }
 
+sub get_picture_path {
+    my $self = shift;
+    return join '/',
+	$self->robot->static_content_path, 'pictures', $self->get_id, @_;
+}
+
+sub get_picture_url {
+    my $self = shift;
+    return join '/',
+	$self->robot->static_content_url, 'pictures', $self->get_id, @_;
+}
+
+#*******************************************
+## Function : find_picture_filenames
+## Description : return the type of a pictures
+##               according to the user
+## IN : list, email
+##*******************************************
+sub find_picture_filenames {
+    my $self = shift;
+    my $email = shift;
+
+    my $login = tools::md5_fingerprint($email);
+    my @ret = ();
+
+    foreach my $ext (qw{gif jpg jpeg png}) {
+	if (-f $self->get_picture_path($login . '.' . $ext)) {
+	    push @ret, $login . '.' . $ext;
+	}
+    }
+    return @ret;
+}
+
+sub find_picture_paths {
+    my $self = shift;
+    my $email = shift;
+
+    return map { $self->get_picture_path($_) }
+	$self->find_picture_filenames($email);
+}
+
+## Find pictures url
+### IN : list, email
+sub find_picture_url {
+    my $self = shift;
+    my $email = shift;
+
+    my ($filename) = $self->find_picture_filenames($email);
+    return undef unless $filename;
+    return $self->get_picture_url($filename);
+}
+
 #########################
 ## Delete a member's picture file
 #########################
 # remove picture from user $2 in list $1
 #########################
 sub delete_list_member_picture {
-    &Log::do_log('debug2', '(%s, %s)', @_);
-    my ($self, $email) = @_;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self = shift;
+    my $email = shift;
 
-    my $fullfilename = undef;
-    my $filename = &tools::md5_fingerprint($email);
-
-    my $file = $self->robot->pictures_path . '/' .
-	$self->get_id . '/' . $filename;
-    foreach my $ext ('.gif', '.jpg', '.jpeg', '.png') {
-	if (-f $file . $ext) {
-	    $fullfilename = $file . $ext;
-  	    last;
-    }
-    }
-
-    if (defined $fullfilename) {
-	unless (unlink($fullfilename)) {
-	    &Log::do_log('err', 'Failed to delete %s', $fullfilename);
-	    return undef;
+    my $ret = 1;
+    foreach my $path ($self->find_picture_paths($email)) {
+	unless (unlink $path) {
+	    Log::do_log('err', 'Failed to delete %s', $path);
+	    $ret = undef;
+	} else {
+	    Log::do_log('debug3', 'File deleted successfull: %s', $path);
 	}
-
-	&Log::do_log('debug3', 'File deleted successfull: %s', $fullfilename);
     }
 
-    return 1;
+    return $ret;
 }
 
 ####################################################
@@ -4847,30 +4889,16 @@ sub update_list_member {
 
     ## Rename picture on disk if user email changed
     if ($values->{'email'}) {
-	my $file_name = &tools::md5_fingerprint($who);
-	my $picture_file_path =
-	    $self->robot->pictures_path . '/' . $self->get_id;
-
-	foreach my $extension ('gif', 'png', 'jpg', 'jpeg') {
-	    if (-f $picture_file_path . '/' . $file_name . '.' . $extension) {
-		my $new_file_name =
-		    &tools::md5_fingerprint($values->{'email'});
-		unless (
-		    rename $picture_file_path . '/' . $file_name . '.' .
-		    $extension,
-		    $picture_file_path . '/' . $new_file_name . '.' .
-		    $extension
-		    ) {
-		    &Log::do_log(
-			'err',
-			"Failed to rename %s to %s : %s",
-			$picture_file_path . '/' . $file_name . '.' .
-			    $extension,
-			$picture_file_path . '/' . $new_file_name . '.' .
-			    $extension,
-			$!
-		    );
-		}
+	foreach my $path ($self->find_picture_paths($who)) {
+	    my $extension = [reverse split /\./, $path]->[0];
+	    my $new_path = $self->get_picture_path(
+		tools::md5_fingerprint($values->{'email'}) . '.' . $extension
+	    );
+	    unless (rename $path, $new_path) {
+		Log::do_log('err', 'Failed to rename %s to %s : %s',
+		    $path, $new_path, $!
+		);
+		last;
 	    }
 	}
     }
@@ -10736,9 +10764,9 @@ sub _urlize_part {
           my @parts = $message->parts();
 	    foreach my $i (0 .. $#parts) {
 		my $entity =
-		    &_urlize_part($message->parts($i), $list, $dir, $i,
-		    $mime_types,
-		    $list->robot->wwsympa_url);
+		    _urlize_part(
+			$message->parts($i), $list, $dir, $i, $mime_types,
+			$list->robot->wwsympa_url);
               if (defined $entity) {
                 $parts[$i] = $entity;
               }
@@ -11670,9 +11698,7 @@ sub add_list_header {
 	    $self->is_web_archived()) {
 	    $hdr->add(
 		'List-Archive',
-		sprintf('<%s/arc/%s>',
-		    $self->robot->wwsympa_url,
-		    $self->name)
+		sprintf('<%s/arc/%s>', $self->robot->wwsympa_url, $self->name)
 	    );
 	} else {
 	    return 0;
