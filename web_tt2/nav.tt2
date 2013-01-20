@@ -20,7 +20,7 @@
 [% IF subaction == 'viewspools' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/viewspools">[%|loc%]Spools[%END%]</a></li>
 [% IF subaction == 'logs' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
-    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/logs">[%|loc%]Logs[%END%]</a></li>
+    <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/logs">[%|loc%]System log[%END%]</a></li>
 [% IF subaction == 'templates' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
     <li class="[% class %]"><a href="[% path_cgi %]/serveradmin/templates">[%|loc%]Templates[%END%]</a></li>
 [% IF action == 'skinsedit' %][% SET class = 'MainMenuLinksCurrentPage' %][% ELSE %][% SET class = 'MainMenuLinks' %][% END %]
