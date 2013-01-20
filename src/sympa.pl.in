@@ -22,6 +22,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use strict;
+use warnings;
 use lib '--modulesdir--';
 #use Getopt::Std;
 use Getopt::Long;
@@ -1146,34 +1147,52 @@ sub process_message {
     my $message_in_spool = shift;
     &Log::do_log('debug', 'process_message()');
 
-    my ($listname, $robot);    my $status;
-    
+    my $listname;
+    my $robot;
+    my $status;
+
     my $message = new Message({'message_in_spool' => $message_in_spool});
     
     unless (defined $message) {
-	&Log::do_log('err', 'Unable to create Message object message : %s', $message_in_spool->{'messagekey'});
+	Log::do_log('err',
+	    'Unable to create Message object message : %s',
+	    $message_in_spool->{'messagekey'});
 	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'process_message','target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'unable_create_message','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	return undef;
     }
-    
+
     my $msg = $message->{'msg'};
     my $hdr = $msg->head;
     my $rcpt = $message->{'rcpt'};
-    
-    &Log::do_log('notice', 'Processing: sender: %s ; message-id: %s', $hdr->get('From'), $hdr->get('Message-ID'));
 
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
-    
     $robot = lc($robot);
     $listname = lc($listname);
     $robot ||= Site->host; #FIXME: is "domain" better?
 
-    my $type;
-    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
-    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-	($listname, $type) = ($1, $2);
+    ## Ignoring messages with no sender
+    my $sender = $message->{'sender'};
+    unless ($sender) {
+	Log::do_log('err', 'No From found in message, skipping.');
+	Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'process_message','target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'no_sender','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	return undef;
     }
+
+    Log::do_log('notice', 'Processing: sender: %s ; message-id: %s',
+	$sender, $hdr->get('Message-ID'));
+
+    my $robot_object;
+    ## Unknown robot
+    unless ($robot_object = Robot->new($robot)) {
+	Log::do_log('err', 'robot %s does not exist', $robot);
+	Site->send_dsn($message, {'recipient' => $rcpt}, '5.1.2');
+	Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'process_message','target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_robot','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
+	return undef;
+    }
+
+    my $type;
+    ($listname, $type) = $robot_object->split_listname($listname);
 	
     if ( $message->{'md5_check'} ) { 
 	# message contain a valid checksum, it comes from wwsympa, so
@@ -1184,16 +1203,11 @@ sub process_message {
 
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
-	&Log::set_log_level(&Conf::get_robot_conf($robot,'log_level'));
-	&Log::do_log('debug', "Setting log level with $robot configuration (or sympa.conf) : %d", &Conf::get_robot_conf($robot,'log_level')); 
-    }
-    
-    ## Ignoring messages with no sender
-    my $sender = $message->{'sender'};
-    unless ($sender) {
-	&Log::do_log('err', 'No From found in message, skipping.');
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'process_message','target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'no_sender','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	return undef;
+	Log::set_log_level($robot_object->log_level);
+	Log::do_log('debug',
+	    'Setting log level with robot %s configuration (or sympa.conf) : %d',
+	    $robot_object->log_level
+	);
     }
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
@@ -1215,15 +1229,6 @@ sub process_message {
     $hdr->delete('X-Sympa-Family');
 
     my $list_address;
-
-    my $robot_object;
-        ## Unknown robot
-    unless ($robot_object = Robot->new($robot)) {
-	&Log::do_log('err', 'robot %s does not exist', $robot);
-	Site->send_dsn($message, {'recipient' => $rcpt}, '5.1.2');
-	&Log::db_log({'robot' => $robot,'list' => $listname,'action' => 'process_message','target_email' => "",'msg_id' => $hdr->get('Message-ID'),'status' => 'error','error_type' => 'unknown_robot','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
-	return undef;
-    }
 
     my ($list, $host, $name);   
 

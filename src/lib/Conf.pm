@@ -1428,11 +1428,11 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'dkim_signature_apply_on'} = ['']; # empty array
     }
 
-    ## Set Regexp for accepted list suffixes
-    if (defined ($param->{'config_hash'}{'list_check_suffixes'})) {
-        $param->{'config_hash'}{'list_check_regexp'} = $param->{'config_hash'}{'list_check_suffixes'};
-        $param->{'config_hash'}{'list_check_regexp'} =~ s/[,\s]+/\|/g;
-    }
+##    ## Set Regexp for accepted list suffixes
+##    if (defined ($param->{'config_hash'}{'list_check_suffixes'})) {
+##        $param->{'config_hash'}{'list_check_regexp'} = $param->{'config_hash'}{'list_check_suffixes'};
+##        $param->{'config_hash'}{'list_check_regexp'} =~ s/[,\s]+/\|/g;
+##    }
     
     my $p = 1;
     foreach (split(/,/, $param->{'config_hash'}{'sort'})) {

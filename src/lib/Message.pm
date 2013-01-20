@@ -440,13 +440,16 @@ sub get_sympa_local_part {
 	    my $conf_host = $self->{'robot'}->host;
 	    my $site_email = Site->listmaster_email;
 	    my $site_host = Site->host;
-	    unless ($self->{'listname'} =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-		my $list_check_regexp = $self->{'robot'}->list_check_regexp;
-		if ($self->{'listname'} =~ /^(\S+)-($list_check_regexp)$/) {
-		    $self->{'listname'} = $1;
+	    unless ($self->{'listname'} =~
+		/^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
+		my ($listname, $type) =
+		    $self->{'robot'}->split_listname($self->{'listname'});
+		if ($listname) {
+		    $self->{'listname'} = $listname;
 		}
-		
-		my $list = List->new($self->{'listname'}, $self->{'robot'}, {'just_try' => 1});
+
+		my $list = List->new($self->{'listname'}, $self->{'robot'},
+		    {'just_try' => 1});
 		if ($list) {
 		    $self->{'list'} = $list;
 		}	

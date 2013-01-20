@@ -381,13 +381,7 @@ if ($signal ne 'hup') {
 		next;
 	    }
 
-	    my $list_check_regexp = $robot->list_check_regexp;
-
-	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-		($listname, $type) = ($1, $2);
-	    } else {
-		$type = undef;
-	    }
+	    ($listname, $type) = $robot->split_listname($listname);
 	    my $email = $robot->email;	
 	    my $site_host = Site->host;
 

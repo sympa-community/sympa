@@ -263,7 +263,7 @@ Note: List::send_notify_to_listmaster() was deprecated.
 
 ## Inherited from Site class.
 
-=head3 List topics
+=head3 Lists
 
 =over 4
 
@@ -300,6 +300,35 @@ sub is_available_topic {
     }
 
     return undef;
+}
+
+=over 4
+
+=item split_listname ( MAILBOX )
+
+XXX @todo doc
+
+=back
+
+=cut
+
+sub split_listname {
+    my $self = shift;
+    my $mailbox = shift;
+    return undef unless $mailbox;
+
+    my $regexp = join('|',
+	map { s/(\W)/\\$1/g; $_ }
+	grep { $_ and length $_ }
+	split(/[\s,]+/, $self->list_check_suffixes));
+
+    return ($mailbox) unless $regexp;
+
+    if ($mailbox =~ /^(\S+)-($regexp)$/) {
+	return ($1, $2);
+    } else {
+	return ($mailbox);
+    }
 }
 
 =head3 Handling netidmap table
@@ -676,6 +705,10 @@ Some of them are obsoleted.
 
 I<Getters>.
 Gets derived config parameters.
+See L<Site/list_check_regexp>.
+
+B<Obsoleted>.
+Use L<split_listname> method.
 
 =item request
 

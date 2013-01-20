@@ -587,20 +587,13 @@ sub new {
 	$name = lc $1;
 
 	## Reject listnames with reserved list suffixes
-	my $regx = $robot->list_check_regexp;
-	if ($regx) {
-	    my $result = eval { $name =~ /^(\S+)-($regx)$/; };
-	    if ($@) {
-		&Log::do_log('err', 'Incorrect list_check_regexp: %s', $@);
-		return undef;
-	    } elsif ($result) {
-		&Log::do_log(
-		    'err',
-		    'Incorrect name: listname "%s" matches one of service aliases',
-		     $name
-		) unless ($options->{'just_try'});
-		return undef;
-	    }
+	my ($listname, $type) = $robot->split_listname($name);
+	if ($type) {
+	    Log::do_log('err',
+		'Incorrect name: listname "%s" matches one of service aliases',
+		$name)
+	    unless $options->{'just_try'};
+	    return undef;
 	}
     } else {
 	$robot = Robot::clean_robot($robot);
@@ -12114,6 +12107,12 @@ Configuration information of the list, with defaults applied.
 
 B<Note>:
 Use L</config> accessor to get information without defaults.
+
+B<Note>:
+L<admin> and L<config> accessors will return the copy of configuration
+information.  Modification of them will never affect to actual list
+parameters.
+Use C<E<lt>config parameterE<gt>> accessors to get or set each list parameter.
 
 =back
 

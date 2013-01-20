@@ -854,11 +854,13 @@ sub upgrade {
 		    }
 		    unless ($match){$ignored .= ','.$filename;next;}
 		}elsif (($spoolparameter eq 'queue')||($spoolparameter eq 'bouncequeue')||($spoolparameter eq 'queueoutgoing')){
-
 		    ## Don't process temporary files created by queue bouncequeue queueautomatic (T.xxx)
 		    next if ($filename =~ /^T\./);
 
-		    unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/){$ignored .= ','.$filename;next;}
+		    unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/) {
+			$ignored .= ',' . $filename;
+			next;
+		    }
 		    my $recipient = $1;
 		    ($listname, $robot_id) = split /\@/, $recipient;
 		    $meta{'date'} = $2;
@@ -868,34 +870,34 @@ sub upgrade {
 			$ignored .= ',' . $filename;
 			next;
 		    }
-		    
+
 		    if ($spoolparameter eq 'queue') {
-			my $list_check_regexp = $robot->list_check_regexp;
-			if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-			    ($listname, $type) = ($1, $2);
+			my ($name, $type) = $robot->split_listname($listname);
+			if ($name) {
+			    $listname = $name;
 			    $meta{'type'} = $type if $type;
 
 			    my $email = $robot->email;
 			    my $host = Site->host;
 
 			    my $priority;
-			    
+
 			    if ($listname eq $robot->listmaster_email) {
 				$priority = 0;
 			    }elsif ($type eq 'request') {
 				$priority = $robot->request_priority;
 			    }elsif ($type eq 'owner') {
 				$priority = $robot->owner_priority;
-			    }elsif ($listname =~ /^(sympa|$email)(\@$host)?$/i) {	
+			    } elsif ($listname =~
+				/^(sympa|$email)(\@$host)?$/i) {	
 				$priority = $robot->sympa_priority;
 				$listname ='';
 			    }
 			    $meta{'priority'} = $priority;
-			    
 			}
 		    }
 		}
-		
+
 		$listname = lc($listname);
 		$robot_id = lc($robot_id || Site->domain);
 		## check if robot exists

@@ -199,12 +199,13 @@ sub create_list_old{
 	return undef;
     }
 
-    my $regx = $robot->list_check_regexp;
-    if( $regx ) {
-	if ($param->{'listname'} =~ /^(\S+)-($regx)$/) {
-	    &Log::do_log('err','admin::create_list_old : incorrect listname %s matches one of service aliases', $param->{'listname'});
-	    return undef;
-	}
+    my ($name, $type) = $robot->split_listname($param->{'listname'});
+    if ($type) {
+	Log::do_log('err',
+	    'incorrect listname %s matches one of service aliases',
+	    $param->{'listname'}
+	);
+	return undef;
     }    
 
     if ($param->{'listname'} eq $robot->email) {
@@ -408,18 +409,19 @@ sub create_list{
 	return undef;
     }
 
-    my $regx = $robot->list_check_regexp;
-    if($regx) {
-	if ($param->{'listname'} =~ /^(\S+)-($regx)$/) {
-	    &Log::do_log('err',
-		'incorrect listname %s matches one of service aliases',
-		$param->{'listname'});
-	    return undef;
-	}
+    my ($name, $type) = $robot->split_listname($param->{'listname'});
+    if ($type) {
+	Log::do_log('err',
+	    'incorrect listname %s matches one of service aliases',
+	    $param->{'listname'}
+	);
+	return undef;
     }    
     if ($param->{'listname'} eq $robot->email) {
-	Log::do_log('err', 'incorrect listname %s matches one of service aliases',
-	    $param->{'listname'});
+	Log::do_log('err',
+	    'incorrect listname %s matches one of service aliases',
+	    $param->{'listname'}
+	);
 	return undef;
     }
 
@@ -705,11 +707,19 @@ sub rename_list{
       &Log::do_log('err','incorrect listname %s', $new_listname);
       return 'incorrect_listname';
     }
-    
+
+    my $new_robot = $param{'new_robot'};
+    my $new_robot_object = Robot->new($new_robot);
+
+    unless ($new_robot_object) {
+	Log::do_log('err', 'incorrect robot %s', $new_robot);
+	return 'unknown_robot';
+    }
+
     ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
     my ($result, $r_action, $reason); 
     unless ($param{'options'}{'skip_authz'}) {
-	$result = Scenario::request_action($param{'new_robot'},
+	$result = Scenario::request_action($new_robot_object,
 	    'create_list', $param{'auth_method'},
 	    {   'sender'      => $param{'user_email'},
 		'remote_host' => $param{'remote_host'},
@@ -729,26 +739,30 @@ sub rename_list{
     }
 
     ## Check listname on SMTP server
-    my $res = list_check_smtp($param{'new_listname'}, $param{'new_robot'});
+    my $res = list_check_smtp($param{'new_listname'},
+	$new_robot_object);
     unless ( defined($res) ) {
-      &Log::do_log('err', "can't check list %.128s on %.128s",
-	      $param{'new_listname'}, $param{'new_robot'});
+      Log::do_log('err', "can't check list %.128s on %s",
+	      $param{'new_listname'}, $new_robot_object);
       return 'internal';
     }
 
-    if( $res || 
+    if ($res || 
 	($list->name ne $param{'new_listname'}) && ## Do not test if listname did not change
-	(new List ($param{'new_listname'}, $param{'new_robot'}, {'just_try' => 1}))) {
-      &Log::do_log('err', 'Could not rename list %s on %s: new list %s on %s already existing list', $list->name, $robot, $param{'new_listname'}, 	$param{'new_robot'});
+	(List->new($param{'new_listname'}, $new_robot_object, {'just_try' => 1}))) {
+	Log::do_log('err',
+	    'Could not rename list %s: new list %s on %s already existing list',
+	    $list, $param{'new_listname'}, $new_robot_object);
       return 'list_already_exists';
     }
     
-    my $regx = &Conf::get_robot_conf($param{'new_robot'},'list_check_regexp');
-    if( $regx ) {
-      if ($param{'new_listname'} =~ /^(\S+)-($regx)$/) {
-	&Log::do_log('err','Incorrect listname %s matches one of service aliases', $param{'new_listname'});
+    my ($name, $type) = $new_robot_object->split_listname($param{'new_listname'});
+    if ($type) {
+	Log::do_log('err',
+	    'Incorrect listname %s matches one of service aliases',
+	    $param{'new_listname'}
+	);
 	return 'incorrect_listname';
-      }
     }
 
      unless ($param{'mode'} eq 'copy') {
@@ -760,14 +774,8 @@ sub rename_list{
 	 $param{'aliases'} = &remove_aliases($list);
      }
 
-     ## Rename or create this list directory itself
-     my $new_dir;
-    my $new_robot_object = Robot->new($param{'new_robot'});
-    unless ($new_robot_object) {
-	&Log::do_log('err', 'Unknown robot %s', $param{'new_robot'});
-	 return 'unknown_robot';
-     }
-    $new_dir = $new_robot_object->home . '/' . $param{'new_listname'};
+    ## Rename or create this list directory itself
+    my $new_dir = $new_robot_object->home . '/' . $param{'new_listname'};
 
     ## If we are in 'copy' mode, create en new list
     if ($param{'mode'} eq 'copy') {	 
@@ -803,7 +811,7 @@ sub rename_list{
      
 	 ## Rename archive
 	 my $arc_dir = $list->robot->arc_path . '/' . $list->get_id();
-	 my $new_arc_dir = &Conf::get_robot_conf($param{'new_robot'}, 'arc_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
+	 my $new_arc_dir = $new_robot_object->arc_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
 	 if (-d $arc_dir && $arc_dir ne $new_arc_dir) {
 	     unless (move ($arc_dir,$new_arc_dir)) {
 		 &Log::do_log('err',"Unable to rename archive $arc_dir");
@@ -814,7 +822,7 @@ sub rename_list{
 
 	 ## Rename bounces
 	 my $bounce_dir = $list->get_bounce_dir();
-	 my $new_bounce_dir = &Conf::get_robot_conf($param{'new_robot'}, 'bounce_path').'/'.$param{'new_listname'}.'@'.$param{'new_robot'};
+	 my $new_bounce_dir = $new_robot_object->bounce_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
 	 if (-d $bounce_dir && $bounce_dir ne $new_bounce_dir) {
 	     unless (move ($bounce_dir,$new_bounce_dir)) {
 		 &Log::do_log('err',"Unable to rename bounces from $bounce_dir to $new_bounce_dir");
