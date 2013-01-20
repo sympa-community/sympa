@@ -9207,7 +9207,7 @@ sub do_create_list_request {
 		}
 	}
 
-     unless ($param->{'list_list_tpl'} = &tools::get_list_list_tpl($robot_id)) {
+     unless ($param->{'list_list_tpl'} = &tools::get_list_list_tpl($robot)) {
 	 &report::reject_report_web('intern','unable_to_load_create_list_templates',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
      }	
 
@@ -18493,8 +18493,7 @@ sub get_server_details {
      }
 
      ## Families
-     my %families = Family::get_available_families($robot_id);
-     my @families = keys %families;
+     my @families = sort map { $_->name } @{Family::get_families($robot)};
      if (@families) {
 	 $param->{'families'} = \@families;
      }    

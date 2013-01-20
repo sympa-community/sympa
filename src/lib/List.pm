@@ -4354,21 +4354,23 @@ sub get_first_list_admin {
     my $statement;
 
     ## SQL regexp
-    my $selection;
+    my $selection = '';
     if ($sql_regexp) {
 	$selection =
 	    sprintf " AND (user_admin LIKE %s OR comment_admin LIKE %s)",
 	    &SDM::quote($sql_regexp), &SDM::quote($sql_regexp);
     }
 
-    $statement =
-	sprintf
-	'SELECT %s FROM admin_table WHERE list_admin = %s AND robot_admin = %s %s AND role_admin = %s',
-	&_list_admin_cols,
-	&SDM::quote($name),
-	&SDM::quote($self->domain),
+    $statement = sprintf
+	q{SELECT %s
+	  FROM admin_table
+	  WHERE list_admin = %s AND robot_admin = %s %s AND
+		role_admin = %s},
+	_list_admin_cols(),
+	SDM::quote($name),
+	SDM::quote($self->domain),
 	$selection,
-    &SDM::quote($role);
+	SDM::quote($role);
 
     ## SORT BY
     if ($sortby eq 'domain') {
@@ -8127,8 +8129,7 @@ sub sync_include_admin {
 	my $new_admin_users_include;
 	## Load a hash with the new admin user users from the list config
 	my $new_admin_users_config;
-	unless ($option eq 'purge') {
-
+	unless ($option and $option eq 'purge') {
 	    $new_admin_users_include =
 		$self->_load_list_admin_from_include($role);
 
@@ -8475,7 +8476,7 @@ sub is_update_param {
 		$update = 1;
 	    }
 	} else {
-	    if (defined $old_param->{$p} && ($old_param->{$p} ne '')) {
+	    if (defined $old_param->{$p} and $old_param->{$p} ne '') {
 		$resul->{$p} = '';
 		$update = 1;
 	    }
@@ -9742,15 +9743,11 @@ sub _load_list_param {
     }
 
     ## Do we need to split param if it is not already an array
-    if (($p->{'occurrence'} =~ /n$/) &&
-	$p->{'split_char'} &&
-	!(ref($value) eq 'ARRAY')) {
-	my @array = split /$p->{'split_char'}/, $value;
-	foreach my $v (@array) {
-	    $v =~ s/^\s*(.+)\s*$/$1/g;
-	}
-
-	return \@array;
+    if (exists $p->{'occurrence'} and $p->{'occurrence'} =~ /n$/ and
+	$p->{'split_char'} and
+	defined $value and ref $value ne 'ARRAY') {
+	$value =~ s/^\s*(.+)\s*$/$1/;
+	return [split /\s*$p->{'split_char'}\s*/, $value];
     } else {
 	return $value;
     }

@@ -313,14 +313,14 @@ XXX @todo doc
 =cut
 
 sub split_listname {
-    my $self = shift;
+    my $self    = shift;
     my $mailbox = shift;
     return undef unless $mailbox;
 
     my $regexp = join('|',
 	map { s/(\W)/\\$1/g; $_ }
-	grep { $_ and length $_ }
-	split(/[\s,]+/, $self->list_check_suffixes));
+	    grep { $_ and length $_ }
+	    split(/[\s,]+/, $self->list_check_suffixes));
 
     return ($mailbox) unless $regexp;
 

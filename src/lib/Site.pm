@@ -1438,8 +1438,8 @@ sub list_check_regexp {
     croak "Can't modify \"list_check_regexp\" attribute" if scalar @_ > 1;
     return join('|',
 	map { s/(\W)/\\$1/g; $_ }
-	grep { $_ and length $_ }
-	split(/[\s,]+/, $self->list_check_suffixes));
+	    grep { $_ and length $_ }
+	    split(/[\s,]+/, $self->list_check_suffixes));
 }
 
 =over 4
