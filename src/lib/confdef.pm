@@ -871,12 +871,6 @@ our @params = (
     { 'title' => gettext('Internationalization related') },
 
     {
-        'name'     => 'localedir',
-        'default'  => Sympa::Constants::LOCALEDIR,
-        'query'    => gettext('Directory containing available NLS catalogues (Message internationalization)'),
-        'file'     => 'sympa.conf',
-    },
-    {
         'name'     => 'supported_lang',
         'default'  => 'ca,cs,de,el,es,et_EE,en_US,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
         'query'    => gettext('Supported languages'),

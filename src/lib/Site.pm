@@ -94,7 +94,7 @@ sub load {
 
 =head2 METHODS
 
-=head3 Users
+=head3 Addresses
 
 =over 4
 
