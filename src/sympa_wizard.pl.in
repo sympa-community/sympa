@@ -144,8 +144,9 @@ sub create_configuration {
 
     my $title;
     foreach my $param (@confdef::params) {
-        if ($param->{'title'}) {
-            $title = Language::gettext($param->{'title'});
+	unless ($param->{'name'}) {
+            $title = Language::gettext($param->{'gettext_id'})
+		if $param->{'gettext_id'};
             next;
         }
 
@@ -157,13 +158,13 @@ sub create_configuration {
             undef $title;
         }
 
-        print NEWF tools::wrap_text(Language::gettext($param->{'query'}),
+        print NEWF tools::wrap_text(Language::gettext($param->{'gettext_id'}),
                                     '## ', '## ')
-            if (defined $param->{'query'});
+            if (defined $param->{'gettext_id'});
 
-        print NEWF tools::wrap_text(Language::gettext($param->{'advice'}),
+        print NEWF tools::wrap_text(Language::gettext($param->{'gettext_comment'}),
                                     '## ', '## ')
-            if (defined $param->{'advice'});
+            if (defined $param->{'gettext_comment'});
 
         if (defined $param->{'sample'}) {
             printf NEWF "#%s\t%s\n\n", $param->{'name'}, $param->{'sample'};
@@ -225,16 +226,17 @@ sub edit_configuration {
 
     ## Edition mode
     foreach my $param (@confdef::params) {
-        if ($param->{'title'}) {
-            $title = Language::gettext($param->{'title'});
+        unless ($param->{'name'}) {
+            $title = Language::gettext($param->{'gettext_id'})
+		if $param->{'gettext_id'};
             next;
         }    
 
         my $file = $param->{'file'} ;
         my $name = $param->{'name'} ; 
-        my $query = $param->{'query'} || '';
+        my $query = $param->{'gettext_id'} || '';
         $query = Language::gettext($query) if $query;
-        my $advice = $param->{'advice'} ;
+        my $advice = $param->{'gettext_comment'} ;
         $advice = Language::gettext($advice) if $advice;
         my $sample = $param->{'sample'} ;
         my $current_value ;

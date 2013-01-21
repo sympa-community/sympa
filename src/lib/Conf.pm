@@ -1996,8 +1996,8 @@ sub _get_parameters_names_by_category {
     my $param_by_categories;
     my $current_category;
     foreach my $entry (@confdef::params) {
-        if ($entry->{'title'}) {
-            $current_category = $entry->{'title'};
+        unless ($entry->{'name'}) {
+            $current_category = $entry->{'gettext_id'};
         }else{
             $param_by_categories->{$current_category}{$entry->{'name'}} = 1;
         }
