@@ -1067,7 +1067,7 @@ sub upgrade {
 		    $migrated{'unknown'} ||= {};
 		    $migrated{'unknown'}->{$name} =
 			[{'name' => $name,
-			  'gettext_id' => "Unknown parameter"),
+			  'gettext_id' => "Unknown parameter"},
 			 $infile{$name}];
 		}
 	    }
