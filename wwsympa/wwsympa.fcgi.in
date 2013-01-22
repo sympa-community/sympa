@@ -1570,9 +1570,11 @@ my $birthday = time ;
 		      &do_redirect ($param->{'base_url'}.$param->{'path_cgi'}.'/info/'.$action);   
 		      last;
 		 }
-		 &report::reject_report_web('user','unknown_action',{},$action,$list);
-		 &wwslog('info','unknown action %s', $action);
-		 last;
+		&report::reject_report_web('user','unknown_action',{},$action,$list);
+		&wwslog('info','unknown action %s', $action);
+		unless ($action = prevent_visibility_bypass()) {
+		    last;
+		}
 	     }
 	     
 	     $param->{'action'} = $action;
@@ -1591,7 +1593,7 @@ my $birthday = time ;
 	     }elsif ($check_output != 1) {
 	       ## The output of the check may indicate another action to run first
 	       ## Example : running loginrequest if user is not authenticated
-	       $action = $param->{'action'} = $check_output;
+		$action = $param->{'action'} = $check_output;
 	     }
 
 	     ## Execute the action ## 
@@ -1602,8 +1604,12 @@ my $birthday = time ;
 	     }
 	     
 	     unless (defined $action) {
-	       delete($param->{'action'});
-	       last;
+		unless($action = prevent_visibility_bypass()) {
+		    delete($param->{'action'});
+		    last;
+		}else{
+		    &report::reject_report_web('user','authorization_reject',{},$param->{'action'},'');
+		}
 	     }
 	 
 	     last if ($action =~ /redirect/) ; # after redirect do not send anything, it will crash fcgi lib
@@ -2555,6 +2561,9 @@ sub check_action_parameters {
 	## User is not authenticated
       }elsif ($arg_name eq 'param.user.email') {
 	unless (defined $param->{'user'} && $param->{'user'}{'email'}) {
+	    if(prevent_visibility_bypass()) {
+		&report::reject_report_web('user','authorization_reject',{},$param->{'action'},'');
+	    }
 	  &report::reject_report_web('user','no_user',{},$action);
 	  &wwslog('err','user not logged in');
 	  &web_db_log({'status' => 'error',
@@ -2580,6 +2589,9 @@ sub check_action_parameters {
 	  $in{$arg_name} =~ s/\0/,/g;
 	  $in{$arg_name} =~ s/\|/,/g;
 	  
+	    if(prevent_visibility_bypass()) {
+		&report::reject_report_web('user','authorization_reject',{'list' => $in{'list'}},$param->{'action'},'');
+	    }
 	  &report::reject_report_web('user','missing_arg',{'argument' => $arg_name},$action);
 	  &wwslog('info',"missing parameter '$arg_name'");
 	  &web_db_log({'status' => 'error',
@@ -5174,7 +5186,29 @@ sub do_viewfile {
 ## TOTO: accepter nouveaux users
 sub do_subscribe {
     &wwslog('info', 'do_subscribe(%s)', $in{'email'});
-    
+
+    return undef if (purely_closed('subscribe'));
+    my $result = Scenario::request_action($list,
+	'subscribe', $param->{'auth_method'},
+	{   'sender' => $param->{'user'}{'email'}, 
+	    'remote_host' => $param->{'remote_host'},
+	    'remote_addr' => $param->{'remote_addr'}
+	}
+    );	     
+    my $sub_is;
+    my $reason;
+    if (ref($result) eq 'HASH') {
+	$sub_is = $result->{'action'};
+	$reason = $result->{'reason'};
+    }
+    if ($sub_is =~ /reject/) {
+	&report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
+	&wwslog('info', 'do_subscribe: subscribe closed');
+	&web_db_log({'parameters' => $in{'email'},
+		     'status' => 'error',
+		     'error_type' => 'authorization'});		      
+	return 'home';
+    }
     if (defined $param->{'user'} && $param->{'user'}{'email'}) {
 	my $xml_custom_attribute;
 	
@@ -5201,27 +5235,6 @@ sub do_subscribe {
 	    &web_db_log({'parameters' => $in{'email'},
 			 'status' => 'error',
 			 'error_type' => 'already_subscriber'});		      
-	    return undef;
-	}
-	my $result = Scenario::request_action($list,
-	    'subscribe', $param->{'auth_method'},
-	    {   'sender' => $param->{'user'}{'email'}, 
-		'remote_host' => $param->{'remote_host'},
-		'remote_addr' => $param->{'remote_addr'}
-	    }
-	);	     
-	my $sub_is;
-	my $reason;
-	if (ref($result) eq 'HASH') {
-	    $sub_is = $result->{'action'};
-	    $reason = $result->{'reason'};
-	}
-	if ($sub_is =~ /reject/) {
-	    &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
-	    &wwslog('info', 'do_subscribe: subscribe closed');
-	    &web_db_log({'parameters' => $in{'email'},
-			 'status' => 'error',
-			 'error_type' => 'authorization'});		      
 	    return undef;
 	}
 	
@@ -5425,6 +5438,7 @@ sub do_suboptions {
 sub do_subrequest {
     &wwslog('info', 'do_subrequest(%s,%s)', $in{'email'},$in{'custom_attribute'});
     
+    return undef if (purely_closed('subscribe'));
     if (defined $in{'custom_attribute'}) {
      	$param->{'custom_attribute'} = $in{'custom_attribute'};
     }
@@ -5602,7 +5616,7 @@ sub do_family_signoff {
 sub do_signoff {
      &wwslog('info', 'do_signoff');
 
-
+    return undef if (purely_closed('unsubscribe'));
      my $authenticated_email_address = $param->{'user'}{'email'};
      unless ($authenticated_email_address) {
 	 unless ($in{'email'}) {
@@ -5736,6 +5750,7 @@ sub unsubscribe {
 sub do_sigrequest {
      &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
 
+    return undef if (purely_closed('unsubscribe'));
      ## If user is authenticated then redirect him to the signoff action but 
      ## get a confirmation (via the sigrequest web page) first
      if ($param->{'user'}{'email'}) {
@@ -17914,6 +17929,24 @@ sub do_css {
 sub do_rss_request {
 	&wwslog('info', "do_rss_request");
 
+	my $result = $list->check_list_authz('visibility',$param->{'auth_method'},
+					     {'sender' => $param->{'user'}{'email'}, 
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});	     
+	my $sub_is;
+	my $reason;
+	if (ref($result) eq 'HASH') {
+	    $sub_is = $result->{'action'};
+	    $reason = $result->{'reason'};
+	}
+	if ($sub_is =~ /reject/) {
+	    &wwslog('info', 'RSS not accessible because list %s is not visible to user %s',$list->get_list_id,$param->{'user'}{'email'});
+	    &web_db_log({'parameters' => $param->{'user'}{'email'},
+			 'status' => 'error',
+			 'error_type' => 'authorization'});		      
+	    return undef;
+	}
+
 	my $args ;
 
 	$in{'count'} ||= 20; 
@@ -18497,7 +18530,9 @@ sub check_authz {
     }
     
     unless ($r_action =~ /do_it/i) {
-	&report::reject_report_web('auth',$reason,{'login'=> $param->{'need_login'}},$param->{'action'});
+	unless(prevent_visibility_bypass) {
+	    &report::reject_report_web('auth',$reason,{'login'=> $param->{'need_login'}},$param->{'action'});
+	}
 	&wwslog('info','check_authz: access denied in %s for %s', $subname, $param->{'user'}{'email'});
 	return undef;
     }
@@ -18609,6 +18644,41 @@ sub do_automatic_lists {
     $in{'list'} = $listname;
     return 'compose_mail';
 }
+
+sub prevent_visibility_bypass {
+    &wwslog('debug2', 'Starting');
+    if (defined $list) {
+	my $result = $list->check_list_authz('visibility',$param->{'auth_method'},
+					     {'sender' => $param->{'user'}{'email'}, 
+					      'remote_host' => $param->{'remote_host'},
+					      'remote_addr' => $param->{'remote_addr'}});
+						       
+	my $sub_is;
+	my $reason;
+	if (ref($result) eq 'HASH') {
+	    $sub_is = $result->{'action'};
+	    $reason = $result->{'reason'};
+	}
+	if ($sub_is =~ /reject/) {
+	    &wwslog('info', 'visibility: List must remain hidden. Returning "home" to prevent visibility bypass');
+	    return "home";
+	}else {
+	    return undef;
+	}
+    }
+    return undef;
+}
+
+sub purely_closed {
+    my $action = shift;
+    my $scenario = new Scenario ('robot' => $robot, 
+			      'directory' => $list->{'dir'},
+			      'file_path' => $list->{'admin'}{$action}{'file_path'},
+			      'options' => undef);
+			      
+    return $scenario->is_purely_closed;
+}
+
 =pod 
 
 =head1 AUTHORS 

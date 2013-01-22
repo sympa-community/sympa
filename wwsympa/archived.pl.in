@@ -311,6 +311,9 @@ while (!$end) {
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
+## Free zombie sendmail processes
+&mail::reaper;
+
 &Log::do_log('notice', 'archived exited normally due to signal');
 &tools::remove_pid(Site->archived_pidfile, $$);
 

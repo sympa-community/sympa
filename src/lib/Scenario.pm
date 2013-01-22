@@ -32,6 +32,7 @@ use Net::Netmask;
 #use Conf; # used in List - Site
 #use Language; # used in List
 #use List; # this package is used by List
+use Data::Dumper;
 
 #use Log; # used in Conf
 #use Sympa::Constants; # used in Conf - confdef
@@ -1787,7 +1788,7 @@ sub dump_all_scenarios {
 
 =item get_current_title ()
 
-Get intrnationalized title of the scenario, under current language context.
+Get internationalized title of the scenario, under current language context.
 
 =back
 
@@ -1821,6 +1822,28 @@ Get unique ID of object.
 ## Get unique ID
 sub get_id {
     return shift->{'file_path'} || '';
+}
+
+=over 4
+
+=item is_purely_closed ()
+
+Returns 1 if all conditions in scenario are "true()   [an_auth_method]    ->  reject"
+
+=back
+
+=cut
+
+sub is_purely_closed {
+    my $self = shift;
+    foreach my $rule (@{$self->{'rules'}}) {
+	if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
+	    Log::do_log('debug2','Scenario %s is not purely closed.',$self->{'title'});
+	    return 0;
+	}
+    }
+    Log::do_log('notice','Scenario %s is purely closed.',$self->{'file_path'});
+    return 1;
 }
 
 1;
