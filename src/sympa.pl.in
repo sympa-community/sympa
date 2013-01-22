@@ -180,8 +180,6 @@ my $latest_msgid_table_cleanup = time;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-local $main::daemon_usage; 
-
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
