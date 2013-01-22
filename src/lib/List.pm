@@ -8471,7 +8471,7 @@ sub is_update_param {
 	'profile',   'id',         'included', 'subscribed'
 	) {
 	if (defined $new_param->{$p}) {
-	    if ($new_param->{$p} ne $old_param->{$p}) {
+	    if (defined $old_param->{$p} && $new_param->{$p} ne $old_param->{$p}) {
 		$resul->{$p} = $new_param->{$p};
 		$update = 1;
 	    }
