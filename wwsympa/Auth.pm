@@ -544,7 +544,7 @@ sub get_one_time_ticket {
 	unless (
 	    $sth = SDM::do_prepared_query(
 		q{UPDATE one_time_ticket_table
-	      SET status_one_time_ticket = ?,
+	      SET status_one_time_ticket = ?
 	      WHERE ticket_one_time_ticket = ? AND robot_one_time_ticket = ?},
 		$addr, $ticket_number, $robot->domain
 	    )
@@ -561,7 +561,7 @@ sub get_one_time_ticket {
 	}
     }
 
-    Log::do_log('info', 'ticket : %s; result : %s', $ticket_number, $result);
+    Log::do_log('debug', 'ticket : %s; result : %s', $ticket_number, $result);
     return {
 	'result'      => $result,
 	'date'        => $ticket->{'date'},
