@@ -358,7 +358,7 @@ sub request_action {
     $context->{'msg'}          = $context->{'message'}->{'msg'}
 	if (defined $context->{'message'});
     $context->{'msg_encrypted'} = 'smime'
-	if (defined $context->{'message'} &&
+	if (defined $context->{'message'} && defined $context->{'message'}->{'smime_crypted'} &&
 	$context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
@@ -380,8 +380,8 @@ sub request_action {
 
 	    #activate log if ip or email match
 	    my $loging_conditions = $robot->loging_condition || {};
-	    if ($loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/ ||
-		$loging_conditions->{'email'} =~ /$context->{'email'}/i) {
+	    if (defined $loging_conditions->{'ip'} && ($loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/ ||
+		$loging_conditions->{'email'} =~ /$context->{'email'}/i)) {
 		&Log::do_log(
 		    'info',
 		    'Will log scenario process for user with email: "%s", IP: "%s"',
@@ -778,13 +778,13 @@ sub verify {
 
     if (defined($context->{'msg'})) {
 	my $header = $context->{'msg'}->head;
-	unless (
+	unless (defined $context->{'listname'} && (
 	    (   $header->get('to') &&
 		(join(', ', $header->get('to')) =~ /$context->{'listname'}/i)
 	    ) ||
 	    ($header->get('cc') &&
 		(join(', ', $header->get('cc')) =~ /$context->{'listname'}/i))
-	    ) {
+	    )) {
 	    $context->{'is_bcc'} = 1;
 	} else {
 	    $context->{'is_bcc'} = 0;
