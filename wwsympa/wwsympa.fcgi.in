@@ -1303,7 +1303,7 @@ my $birthday = time ;
     if (defined $automatic_list_families) {
 	foreach my $key (keys %{$automatic_list_families}){
 	    my $family;
-	    if ($family = new Family($key,$robot_id)) {
+	    if ($family = new Family($key,$robot)) {
 		if ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
 		    $session->{'is_family_owner'}{$key} = 1;
 		}else{
