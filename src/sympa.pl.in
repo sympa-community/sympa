@@ -236,7 +236,7 @@ if (&tools::cookie_changed(Site->cookie)) {
 }
 
 ## Set locale configuration
-$main::options{'lang'} =~ s/\.cat$//; ## Compatibility with version < 2.3.3
+$main::options{'lang'} =~ s/\.cat$// if defined ($main::options{'lang'}); ## Compatibility with version < 2.3.3
 $Language::default_lang = $main::options{'lang'} || Site->lang;
 
 ## Main program
