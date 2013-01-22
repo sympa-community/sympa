@@ -18530,7 +18530,7 @@ sub check_authz {
     }
     
     unless ($r_action =~ /do_it/i) {
-	unless(prevent_visibility_bypass) {
+	unless(prevent_visibility_bypass()) {
 	    &report::reject_report_web('auth',$reason,{'login'=> $param->{'need_login'}},$param->{'action'});
 	}
 	&wwslog('info','check_authz: access denied in %s for %s', $subname, $param->{'user'}{'email'});
