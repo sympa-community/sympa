@@ -18,9 +18,10 @@
 
 [% PROCESS css_ie.tt2 %]
 
-[% TRY %]
-[% PROCESS "$locale/css.tt2" %]
-[% CATCH %]
+[% IF locale_css %]
+<style type="text/css">
+[% locale_css %]
+</style>
 [% END %]
 
 <!-- RSS chanel -->

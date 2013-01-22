@@ -2650,8 +2650,7 @@ sub send_html {
 
     ## Icons
     $param->{'icons_url'} = $robot->static_content_url . '/icons';
-    
-    
+
     ## Retro compatibility concerns
     $param->{'active'} = 1;
 
@@ -2696,6 +2695,15 @@ sub send_html {
 	print "Retry-After: 300\n";
     }
 
+    ## per-language CSS.
+    my $loc_css;
+    unless (tt2::parse_tt2($param_copy, $param->{'locale'} . '/css.tt2',
+	\$loc_css, $tt2_include_path)) {
+	$loc_css = '';
+    }
+    $param_copy->{'locale_css'} = $loc_css;
+
+    ## Output the content.
     unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT,
 	    $tt2_include_path, { 'has_header' => 1 })) {
 	my $error = &tt2::get_error();
