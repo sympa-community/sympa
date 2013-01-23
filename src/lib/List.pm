@@ -12056,7 +12056,7 @@ sub _set_list_param {
     }
 
     my $def = undef;
-    if (defined $val and exists $p->{'default'}) {
+    if (defined $val and defined $default and exists $p->{'default'}) {
 	if ($p->{'scenario'} and $default and
 	    $val->{'name'} eq $default->{'name'}) {
 	    $def = 1;
