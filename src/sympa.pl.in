@@ -2056,7 +2056,7 @@ sub DoCommand {
 	}
 
 	if ($status) {
-	    &Log::do_log('notice', 'Multipart message changed to singlepart');
+	    &Log::do_log('debug', 'Multipart message changed to singlepart');
 	}
     }
 
