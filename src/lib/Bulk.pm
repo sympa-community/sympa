@@ -336,7 +336,6 @@ sub merge_msg {
 #  users then parse the message. It returns the message    #
 #  personalized to bulk.pl                                 #
 #  It uses the method &tt2::parse_tt2                      #
-#  It uses the method &List::get_list_member_no_object     #
 #  It uses the method &tools::get_fingerprint              #
 #                                                          #
 # IN : - rcpt : the receipient email                       #
@@ -362,14 +361,9 @@ sub merge_data {
     
     my $options;
     $options->{'is_not_template'} = 1;
-    
-    my $user_details;
-    $user_details->{'email'} = $rcpt;
-    $user_details->{'name'} = $listname;
-    $user_details->{'domain'} = $robot_id;
-    
-    # get_list_member_no_object() return the user's details with the custom attributes
-    my $user = &List::get_list_member_no_object($user_details);
+
+    my $list = new List($listname,$robot_id);
+    my $user = $list->user('member',$rcpt);
 
     $user->{'escaped_email'} = &URI::Escape::uri_escape($rcpt);
     $user->{'friendly_date'} = gettext_strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
