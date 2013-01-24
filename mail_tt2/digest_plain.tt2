@@ -15,7 +15,7 @@ X-Sympa-NoWrap: yes
 
 [%|wrap(0,2)%][% FOREACH m = msg_list -%]
 * [% m.id %] - [% m.subject %] - [% m.from %]
-[% END %]%END#wrap%]
+[% END %][%END#wrap%]
 ----------------------------------------------------------------------
 
 [% FOREACH m = msg_list -%]
