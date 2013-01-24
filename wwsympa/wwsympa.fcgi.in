@@ -2696,10 +2696,12 @@ sub send_html {
     }
 
     ## per-language CSS.
-    my $loc_css;
-    unless (tt2::parse_tt2($param_copy, $param->{'locale'} . '/css.tt2',
-	\$loc_css, $tt2_include_path)) {
-	$loc_css = '';
+    my $loc_css = '';
+    foreach my $web_tt2_dir (@{$tt2_include_path}) {
+	if(-f $web_tt2_dir.'/'.$param->{'locale'} . '/css.tt2') {
+	    last if (tt2::parse_tt2($param_copy, $param->{'locale'} . '/css.tt2',
+		\$loc_css, $tt2_include_path));
+	}
     }
     $param_copy->{'locale_css'} = $loc_css;
 
