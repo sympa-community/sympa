@@ -848,7 +848,7 @@ sub smtpto {
        }else {
 	   $str .= join(' ', @$rcpt);
        }
-       &Log::do_log('notice', '%s', $str);
+       &Log::do_log('debug2', '%s', $str);
    }
    unless (close(IN)){
        &Log::do_log('err',"mail::smtpto: could not close safefork" );

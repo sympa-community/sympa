@@ -113,7 +113,7 @@ sub parse {
 
     $cmd_line = '';
 
-    &Log::do_log('notice', "Parsing: %s", $i);
+    &Log::do_log('debug2', "Parsing: %s", $i);
 
     ## allow reply usage for auth process based on user mail replies
     if ($i =~ /auth\s+(\S+)\s+(.+)$/io) {
@@ -2722,8 +2722,8 @@ sub distribute {
     }
     &Log::do_log(
 	'info',
-	'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d',
-	$which,
+	'Message for list %s accepted by %s (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d',
+	$list->get_list_id(),
 	$sender,
 	time - $start_time,
 	$numsmtp,
@@ -2746,7 +2746,7 @@ sub distribute {
 	}
     }
 
-    &Log::do_log('info', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
+    &Log::do_log('debug2', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
 	$name, $key, $sender, time - $time_command);
 
     return 1;

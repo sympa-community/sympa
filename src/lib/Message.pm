@@ -553,7 +553,7 @@ sub check_smime_signature {
 	$self->{'protected'} = 1; ## Messages that should not be altered (no footer)
 	$self->smime_sign_check();
 	if($self->{'smime_signed'}) {
-	    Log::do_log('notice', "message %s is signed, signature is checked", $self->{'msg_id'});
+	    Log::do_log('debug2', "message %s is signed, signature is checked", $self->{'msg_id'});
 	}
 	## TODO: Handle errors (0 different from undef)
     }
