@@ -412,17 +412,13 @@ sub store {
     $priority_message = $robot->sympa_priority unless $priority_message;
     $priority_packet = $robot->sympa_packet_priority unless $priority_packet;
     
-    #creation of a MIME entity to extract the real sender of a message
-    my $parser = MIME::Parser->new();
-    $parser->output_to_core(1);
-
-    my $msg = $message->{'msg'}->as_string;
+    my $msg;
     if ($message->{'protected'}) {
-	$msg = $message->{'msg_as_string'};
+	$msg = $message->get_message_as_string;
+    }else{
+	$msg = $message->get_mime_message->as_string;
     }
-
-    my @sender_hdr = Mail::Address->parse($message->{'msg'}->head->get('From'));
-    my $message_sender = $sender_hdr[0]->address;
+    my $message_sender = $message->get_sender_email();
 
 
     # first store the message in spool_table 
@@ -440,6 +436,9 @@ sub store {
 	    $bulkspool->update({'messagekey'=>$message->{'messagekey'}},{'messagelock'=>$lock,'spoolname'=>'bulk','message' => $msg});
 	   &Log::do_log('debug',"moved message to spool bulk");
 	}else{
+	    ##foreach my $line (split '\n',$msg) {
+		##Log::do_log('trace','%s',$line);
+	    ##}
 	    $message->{'messagekey'} = $bulkspool->store($msg,
 							 {'dkim_d'=>$dkim->{d},
 							  'dkim_i'=>$dkim->{i},

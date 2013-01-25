@@ -1008,6 +1008,98 @@ sub smime_encrypt {
     return 1;
 }
 
+# input object msg and listname, output signed message object
+sub smime_sign {
+    my $self = shift;
+    my $list = $self->{'list'};
+
+    Log::do_log('debug2', 'tools::smime_sign (%s,%s)',$self,$list);
+
+    my($cert, $key) = tools::smime_find_keys($list->dir, 'sign');
+    my $temporary_file = Site->tmpdir .'/'. $list->get_id . "." . $$;
+    my $temporary_pwd = Site->tmpdir . '/pass.' . $$;
+
+    my ($signed_msg,$pass_option );
+    $pass_option = "-passin file:$temporary_pwd" if (Site->key_passwd ne '') ;
+
+    ## Keep a set of header fields ONLY
+    ## OpenSSL only needs content type & encoding to generate a multipart/signed msg
+    my $dup_msg = $self->get_mime_message->dup;
+    foreach my $field ($dup_msg->head->tags) {
+         next if ($field =~ /^(content-type|content-transfer-encoding)$/i);
+         $dup_msg->head->delete($field);
+    }
+
+    ## dump the incomming message.
+    if (!open(MSGDUMP,"> $temporary_file")) {
+	Log::do_log('info', 'Can\'t store message in file %s', $temporary_file);
+	return undef;
+    }
+    $dup_msg->print(\*MSGDUMP);
+    close(MSGDUMP);
+
+    if (Site->key_passwd ne '') {
+	unless ( mkfifo($temporary_pwd,0600)) {
+	    Log::do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
+	}
+    }
+    my $cmd = sprintf
+	'%s smime -sign -rand %s/rand -signer %s %s -inkey %s -in %s',
+	Site->openssl, Site->tmpdir, $cert, $pass_option, $key,
+	$temporary_file;
+    Log::do_log('debug2', '%s', $cmd);
+    unless (open NEWMSG, "$cmd |") {
+    	Log::do_log('notice', 'Cannot sign message (open pipe)');
+	return undef;
+    }
+
+    if (Site->key_passwd ne '') {
+	unless (open (FIFO,"> $temporary_pwd")) {
+	    Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+	}
+
+	print FIFO Site->key_passwd;
+	close FIFO;
+	unlink ($temporary_pwd);
+    }
+
+    my $new_message_as_string = '';
+    while (<NEWMSG>) {
+	$new_message_as_string .= $_;
+    }
+
+    my $parser = new MIME::Parser;
+
+    $parser->output_to_core(1);
+    unless ($signed_msg = $parser->parse_data($new_message_as_string)) {
+	Log::do_log('notice', 'Unable to parse message');
+	return undef;
+    }
+    unlink ($temporary_file) unless ($main::options{'debug'}) ;
+    
+    ## foreach header defined in  the incoming message but undefined in the
+    ## crypted message, add this header in the crypted form.
+    my $predefined_headers ;
+    foreach my $header ($signed_msg->head->tags) {
+	$predefined_headers->{lc $header} = 1
+	    if ($signed_msg->head->get($header));
+    }
+    foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string) {
+	next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+	my ($tag, $val) = ($1, $2);
+	$signed_msg->head->add($tag, $val)
+	    unless $predefined_headers->{lc $tag};
+    }
+    ## Keeping original message string in addition to updated headers.
+    my @new_message = split('\n\n',$new_message_as_string,2);
+    $new_message_as_string = $signed_msg->head->as_string.'\n\n'.$new_message[1];
+	
+    $self->{'msg'} = $signed_msg;
+    $self->{'msg_as_string'} = $new_message_as_string;
+    $self->check_smime_signature;
+    return 1;
+}
+
 sub smime_sign_check {
     my $message = shift;
 
@@ -1028,7 +1120,7 @@ sub smime_sign_check {
     $trusted_ca_options .= "-CApath " . Site->capath . " " if Site->capath;
     my $cmd = sprintf '%s smime -verify %s -signer %s',
 	Site->openssl, $trusted_ca_options, $temporary_file;
-    &Log::do_log('debug3', '%s', $cmd);
+    &Log::do_log('debug2', '%s', $cmd);
 
     unless (open MSGDUMP, "| $cmd > /dev/null") {
 	&Log::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
@@ -1042,7 +1134,7 @@ sub smime_sign_check {
 
     my $status = $?/256 ;
     unless ($status == 0) {
-	&Log::do_log('err', 'Unable to check S/MIME signature : %s', $openssl_errors{$status});
+	&Log::do_log('err', 'Unable to check S/MIME signature: %s', $openssl_errors{$status});
 	return undef ;
     }
     ## second step is the message signer match the sender
@@ -1173,7 +1265,7 @@ sub smime_sign_check {
 
     $is_signed->{'body'} = 'smime';
     
-    # futur version should check if the subject was part of the SMIME signature.
+    # future version should check if the subject was part of the SMIME signature.
     $is_signed->{'subject'} = $signer;
 
     if ($is_signed->{'body'}) {
@@ -1203,6 +1295,20 @@ sub get_message_as_string {
 	return $self->{'decrypted_msg_as_string'};
     }
     return $self->{'msg_as_string'};
+}
+
+sub set_message_as_string {
+    my $self = shift;
+    my $param = shift;
+    
+    $self->{'msg_as_string'} = $param->{'new_message_as_string'};
+}
+
+sub set_decrypted_message_as_string {
+    my $self = shift;
+    my $param = shift;
+    
+    $self->{'decrypted_msg_as_string'} = $param->{'new_message_as_string'};
 }
 
 sub get_encrypted_message_as_string {

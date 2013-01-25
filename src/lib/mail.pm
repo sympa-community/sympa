@@ -296,16 +296,14 @@ sub mail_file {
     unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
     	&Log::do_log('err', "mail::mail_file: Failed to reformat message");
     }
-    ##my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "avant \n%s",$dump ; close DUMP;
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= $robot->get_address('owner');
     $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
-
-    ##my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP "\n\naprès \n%s",$dump ; close DUMP;
-    my $message = new Message ({'messageasstring'=>$message_as_string});
+    my $list = new List($listname,$robot);
+    my $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
 
     ## SENDING
     return undef unless (defined &sending('message' => $message,
@@ -481,7 +479,6 @@ sub mail_forward {
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
     $message->get_mime_message->head->add('Auto-Submitted', 'auto-forwarded');
-    
     unless (defined &sending('message' => $message, 
 			     'rcpt' => $rcpt,
 			     'from' => $from,
@@ -666,15 +663,12 @@ sub sending {
     my $signed_msg; # if signing
 
     if ($sign_mode eq 'smime') {
-	if ($signed_msg = &tools::smime_sign($message->get_mime_message, $listname, $robot)) {
-	    $message->{'msg'} = $signed_msg->dup;
-	}else{
-	    &Log::do_log('notice', 'mail::sending : unable to sign message from %s', $listname);
+	Log::do_log('debug2','Will sign message');
+	unless ($message->smime_sign()) {
+	    &Log::do_log('err', 'Unable to sign message from %s', $listname);
 	    return undef;
 	}
     }
-    # my $msg_id = $message->get_mime_message->head->get('Message-ID'); chomp $msg_id;
-
     my $verpfeature = (($verp eq 'on')||($verp eq 'mdn')||($verp eq 'dsn'));
     my $trackingfeature ;
     if (($verp eq 'mdn')||($verp eq 'dsn')) {
@@ -743,8 +737,14 @@ sub sending {
 
    }else{ # send it now
 	&Log::do_log('debug',"NOT USING BULK");
+	my $string_to_send;
+	if ($message->{'protected'}) {
+	    $string_to_send = $message->get_encrypted_message_as_string;
+	}else{
+	    $string_to_send = $message->get_mime_message->as_string;
+	}
 	*SMTP = &smtpto($from, $rcpt, $robot);	
-	print SMTP $message->get_mime_message->as_string ;	
+	print SMTP $string_to_send ;	
 	unless (close SMTP) {
 	    &Log::do_log('err', 'could not close safefork to sendmail');
 	    return undef;
