@@ -16612,7 +16612,8 @@ sub do_send_mail {
 		'to' => $to,
 		'body' => "From: $from\n" . $in{'body'},
 		'sign_mode' => '',
-		'header_possible' => '1'};
+		'header_possible' => '1',
+		'list' => $list,};
     
     $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'} if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
     $data->{'not_auto_submitted'} = 1;
