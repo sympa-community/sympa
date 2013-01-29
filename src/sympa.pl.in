@@ -1039,7 +1039,7 @@ while (!$signal) {
     
     my $message_in_spool = $spool->next;
     
-    unless (($message_in_spool)||($message_in_spool->{'priority'} eq 'z')) {
+    unless (($message_in_spool)||(defined $message_in_spool && defined $message_in_spool->{'priority'} && $message_in_spool->{'priority'} eq 'z')) {
 	sleep(Site->sleep);
 	next;
     }
