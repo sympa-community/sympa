@@ -406,7 +406,7 @@ sub store {
     my $dkim = $data{'dkim'};
     my $tag_as_last = $data{'tag_as_last'};
 
-    &Log::do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
+    &Log::do_log('debug2', 'Bulk::store(<msg>,rcpts: %s,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$rcpts,$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
 
 
     $priority_message = $robot->sympa_priority unless $priority_message;
@@ -436,9 +436,6 @@ sub store {
 	    $bulkspool->update({'messagekey'=>$message->{'messagekey'}},{'messagelock'=>$lock,'spoolname'=>'bulk','message' => $msg});
 	   &Log::do_log('debug',"moved message to spool bulk");
 	}else{
-	    ##foreach my $line (split '\n',$msg) {
-		##Log::do_log('trace','%s',$line);
-	    ##}
 	    $message->{'messagekey'} = $bulkspool->store($msg,
 							 {'dkim_d'=>$dkim->{d},
 							  'dkim_i'=>$dkim->{i},

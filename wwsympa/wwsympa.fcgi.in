@@ -8315,14 +8315,14 @@ sub do_send_me {
 
      my $message;
      if ($msgfile) {
-
 	 unless ($message = new Message({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato', 'list' => $list}) ) {
 	     $param->{'status'} = 'message_err';
 	     &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
 	     return undef;
 	 }
+	$message->set_sympa_headers({'from'=>$robot->get_address(),'rcpt'=>$param->{'user'}{'email'}});
 	unless (mail::mail_forward($message, $robot->get_address(),
-	    \$param->{'user'}{'email'}, $robot
+	    $param->{'user'}{'email'}, $robot
 	)) {
 	     $param->{'status'} = 'message_err';
 	     &wwslog('err',"do_send_me : impossible to send archive file to %s",$param->{'user'}{'email'});

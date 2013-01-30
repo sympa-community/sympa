@@ -1178,7 +1178,8 @@ sub tmp_passwd {
 # Check sum used to authenticate communication from wwsympa to sympa
 sub sympa_checksum {
     my $rcpt = shift;
-    return (substr(Digest::MD5::md5_hex(join('/', Site->cookie, $rcpt)), -10)) ;
+    my $checksum = (substr(Digest::MD5::md5_hex(join('/', Site->cookie, $rcpt)), -10)) ;
+    return $checksum;
 }
 
 # create a cipher

@@ -262,9 +262,6 @@ sub create_message_from_string {
     my $messageasstring = shift;
     my $self;
     Log::do_log('debug2','Creating message object from character string');
-    ##foreach my $line (split '\n',$messageasstring) {
-	##Log::do_log('trace','%s',$line);
-    ##}
     
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
@@ -416,7 +413,7 @@ sub get_receipient {
     unless ($self->{'rcpt'}) {
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
 	    unless ($rcpt = $hdr->get('X-Sympa-To')) {
-		Log::do_log('debug2', 'no X-Sympa-To found, ignoring message.');
+		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
 	}else {
@@ -430,6 +427,45 @@ sub get_receipient {
 	chomp $self->{'rcpt'};
     }
     return $self->{'rcpt'};
+}
+
+sub set_receipient {
+    my $self = shift;
+    my $new_rcpt = shift;
+
+    $self->{'rcpt'} = $new_rcpt;
+}
+
+sub set_sympa_headers {
+    my $self = shift;
+    my $param = shift;
+    my $rcpt = $param->{'rcpt'};
+    my $from = $param->{'from'};
+    $rcpt ||= $self->get_receipient;
+    $from ||= $self->get_sender_email;
+    my $all_rcpt;
+    if (ref($rcpt) eq 'ARRAY') {
+	$all_rcpt = join(',', @{$rcpt});
+    }else {
+	$all_rcpt = $rcpt;
+    }
+    if ($self->get_mime_message->head->get('X-Sympa-To')) {
+	$self->get_mime_message->head->replace('X-Sympa-To', $all_rcpt);
+    }else {
+	$self->get_mime_message->head->add('X-Sympa-To', $all_rcpt);
+    }
+    if ($self->get_mime_message->head->get('X-Sympa-From')) {
+	$self->get_mime_message->head->replace('X-Sympa-From', $from);
+    }else{
+	$self->get_mime_message->head->add('X-Sympa-From', $from);
+    }
+    if ($self->get_mime_message->head->get('X-Sympa-Checksum')) {
+	$self->get_mime_message->head->replace('X-Sympa-Checksum', tools::sympa_checksum($all_rcpt));
+    }else{
+	$self->get_mime_message->head->add('X-Sympa-Checksum', tools::sympa_checksum($all_rcpt));
+    }
+    
+    $self->set_message_as_string($self->get_mime_message->as_string);
 }
 
 sub get_sympa_local_part {
@@ -515,15 +551,17 @@ sub check_dkim_signature {
 sub check_x_sympa_checksum {
     my $self = shift;
     my $hdr = $self->{'msg'}->head;
-    ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
-    if ( $hdr->get('X-Sympa-Checksum')) {
-	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
-	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
+    unless ($self->{'noxsympato'}) {
+	## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
+	if ( $hdr->get('X-Sympa-Checksum')) {
+	    my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
+	    my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
 
-	if ($chksum eq &tools::sympa_checksum($rcpt)) {
-	    $self->{'md5_check'} = 1 ;
-	}else{
-	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
+	    if ($chksum eq &tools::sympa_checksum($rcpt)) {
+		$self->{'md5_check'} = 1 ;
+	    }else{
+		Log::do_log('err',"incorrect X-Sympa-Checksum header");	
+	    }
 	}
     }
 }
@@ -1299,9 +1337,8 @@ sub get_message_as_string {
 
 sub set_message_as_string {
     my $self = shift;
-    my $param = shift;
     
-    $self->{'msg_as_string'} = $param->{'new_message_as_string'};
+    $self->{'msg_as_string'} = shift;
 }
 
 sub set_decrypted_message_as_string {

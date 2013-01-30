@@ -257,7 +257,7 @@ sub mail_file {
     }
     ## Determine what value the Auto-Submitted header field should take
     ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
-    ## the header filed can have one of the following values : auto-generated, auto-replied, auto-forwarded
+    ## the header field can have one of the following values : auto-generated, auto-replied, auto-forwarded
     ## The header should not be set when wwsympa sends a command/mail to sympa.pl through its spool
     unless ($data->{'not_auto_submitted'} ||  $header_ok{'auto_submitted'}) {
       ## Default value is 'auto-generated'
@@ -307,16 +307,7 @@ sub mail_file {
     $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
-    my $message;
-    if(Conf::valid_robot($robot->host, {'just_try' => 1})) {
-	if(my $list = new List ($listname, $robot, {'just_try' => 1})) {
-	    $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
-	}else{
-	    $message = new Message ({'messageasstring'=>$message_as_string});
-	}
-    }else{
-	$message = new Message ({'messageasstring'=>$message_as_string});
-    }
+    my $message = build_message_object($robot,$listname,$message_as_string);
 
     ## SENDING
     return undef unless (defined &sending('message' => $message,
@@ -492,6 +483,8 @@ sub mail_forward {
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
     $message->get_mime_message->head->add('Auto-Submitted', 'auto-forwarded');
+    $message->get_mime_message->head->replace('X-Sympa-To', $rcpt);
+    $message->set_message_as_string($message->get_mime_message->as_string);
     unless (defined &sending('message' => $message, 
 			     'rcpt' => $rcpt,
 			     'from' => $from,
@@ -722,13 +715,10 @@ sub sending {
 	    return undef;
 	}
     }elsif(defined $send_spool) { # in context wwsympa.fcgi store directly to database.
-	&Log::do_log('debug2',"NOT USING SPOOLER");
-
-	my $message_as_string = $message->get_message_as_string;
+	&Log::do_log('debug',"NOT USING SPOOLER: rcpt: %s, from: %s, message: %s",$rcpt, $from, $message);
 	unless($message->get_mime_message->head->get('X-Sympa-To')) {
-	    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $from}).$message_as_string;
+	    $message->set_sympa_headers;
 	}
-	my $message = new Message ({'messageasstring' => $message_as_string});
 	my %meta;
 	$meta{'date'} = time;
 	$meta{'robot'} = $message->{'robot_id'} if $message->{'robot_id'};
@@ -741,8 +731,7 @@ sub sending {
 	$meta{'type'} = $message->{'type'} if $message->{'type'};
 	
 	my $msgspool = new Sympaspool('msg');
-	
-	my $messagekey = $msgspool->store($message_as_string,\%meta);
+	my $messagekey = $msgspool->store($message->get_mime_message->as_string,\%meta);
 	unless($messagekey) {
 	    Log::do_log('err',"Could not store message from %s to %s in db spool",$rcpt, $from);
 	    return undef;
@@ -1101,6 +1090,23 @@ sub fix_part($$$$) {
 	$part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
+}
+
+sub build_message_object {
+    my ($robot,$listname,$message_as_string) = @_;
+    
+    my $message;
+    if(Conf::valid_robot($robot->host, {'just_try' => 1})) {
+	if(my $list = new List ($listname, $robot, {'just_try' => 1})) {
+	    $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
+	}else{
+	    $message = new Message ({'messageasstring'=>$message_as_string});
+	}
+    }else{
+	$message = new Message ({'messageasstring'=>$message_as_string});
+    }
+
+    return $message;
 }
 
 1;
