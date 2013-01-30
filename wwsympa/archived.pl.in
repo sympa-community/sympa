@@ -769,8 +769,8 @@ sub mail2arc {
     if (Site->custom_archiver) {
 	my $file = Site->tmpdir . "/arc." . $list->get_id .
 	    $message_in_spool->{'messagekey'} ;
-	open (DUMP, "> $file");
-	printf DUMP $message_in_spool->{'messageasstring'};	
+	open DUMP, '>', $file;
+	print DUMP $message_in_spool->{'messageasstring'};	
 	my $cmd = sprintf '%s --list=%s --file=%s', Site->custom_archiver,
 	    $list->get_id, $file;
 	`$cmd`;
@@ -869,8 +869,8 @@ sub mail2arc {
 	# savee arctxt dump of original message.
 	my $file = $monthdir.'/arctxt/'.$newfile ;
 	my $output = Site->tmpdir.'/arc'.$newfile;
-	open (DUMP, "> $file");
-	printf DUMP $message_in_spool->{'messageasstring'};
+	open DUMP, '>', $file;
+	print DUMP $message_in_spool->{'messageasstring'};
 	close DUMP;
 
 	

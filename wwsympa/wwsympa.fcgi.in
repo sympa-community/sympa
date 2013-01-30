@@ -1810,25 +1810,25 @@ my $birthday = time ;
 		 my $auth = &report::get_auth_reject_web();
 		
 		 if (ref($intern) eq 'ARRAY'){
-		     printf "INTERNAL SERVER ERROR\n";
+		     print "INTERNAL SERVER ERROR\n";
 		 };
 		 if (ref($system) eq 'ARRAY'){
-		     printf "SYSTEM ERROR\n";
+		     print "SYSTEM ERROR\n";
 		 };
 		 if (ref($user) eq 'ARRAY'){
 		     foreach my $err (@$user){
-			 printf "ERROR : $err\n";
+			 printf "ERROR : %s\n", $err;
 		     }
 		 };
 		 if (ref($auth) eq 'ARRAY'){
 		     foreach my $err (@$auth){
-			 printf "AUTHORISATION FAILED : $err\n";
+			 printf "AUTHORISATION FAILED : %s\n", $err;
 		     }
 		 };
 
 	     }else{
-		 printf "Internal error content-type nor file defined\n";
-		 &Log::do_log('err', 'Internal error content-type nor file defined');
+		 print "Internal error content-type nor file defined\n";
+		 Log::do_log('err', 'Internal error content-type nor file defined');
 	     }
 	 }
 
@@ -4852,7 +4852,7 @@ sub do_pref {
 	 my $entry = {'value' => $p};
 
 	 ## Set description from NLS
-	 $entry->{'desc'} = sprintf gettext($wwslib::cookie_period{$p}{'gettext_id'});
+	 $entry->{'desc'} = gettext($wwslib::cookie_period{$p}{'gettext_id'});
 
 	 ## Choose nearest delay
 	 if ((! $selected) && $param->{'user'}{'cookie_delay'} >= $p) {
@@ -17908,7 +17908,7 @@ sub do_arc_delete {
 sub do_css {
     &wwslog('debug', "do_css ($in{'file'})");		
     $param->{'bypass'} = 'extreme';
-    printf "Content-type: text/css\n\n";
+    print "Content-type: text/css\n\n";
     $param->{'css'} = $in{'file'}; 
 
     ## Do not include language subdirectories.
@@ -17983,7 +17983,7 @@ sub do_wsdl {
     }
 
     $param->{'bypass'} = 'extreme';
-    printf "Content-type: text/xml\n\n";
+    print "Content-type: text/xml\n\n";
     
    $param->{'conf'}{'soap_url'}  = $soap_url;
     
