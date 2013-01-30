@@ -17654,7 +17654,7 @@ sub do_viewspool_message_dump {
 	&Log::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
 	return undef;
     }
-    printf OUT  $messages[0]->{'messageasstring'};
+    print OUT $messages[0]->{'messageasstring'};
     if (close(OUT)) {
 	&Log::do_log('info',"message (messagekey = %s) flushed in file %s",$messagekey,$param->{'msg_file'});
     }

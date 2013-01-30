@@ -338,7 +338,7 @@ sub convert_single_msg_2_html {
 &Log::do_log('notice', 'Could Not open %s', $msg_file);
 	return undef;
     }
-    printf OUT $msg_as_string ;
+    print OUT $msg_as_string ;
     close(OUT);
 
     unless (-d $destination_dir) {
