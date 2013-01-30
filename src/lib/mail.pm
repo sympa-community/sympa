@@ -23,7 +23,7 @@ package mail;
 
 use strict;
 require Exporter;
-#use Carp; # currently not used.
+use Carp qw(carp);
 use POSIX;
 use Time::Local;
 use MIME::EncWords;
@@ -288,6 +288,12 @@ sub mail_file {
 
     my $listname = ''; 
     if (ref($data->{'list'}) eq 'List') {
+	$listname = $data->{'list'}->name;
+    } elsif (ref($data->{'list'}) eq 'HASH') {
+        my $level = $Carp::CarpLevel;
+        $Carp::CarpLevel = 1;
+        carp 'Deprecated: $data->{\'list\'} should be a List object, not a hashref';
+        $Carp::CarpLevel = $level;
 	$listname = $data->{'list'}{'name'};
     } elsif ($data->{'list'}) {
 	$listname = $data->{'list'};
