@@ -17541,7 +17541,6 @@ sub do_viewspools {
 
  ## deliver a view of a message identified by the spoolname and the messagekey
 sub do_viewspool_message {
-    
     my $messagekey = $in{'messagekey'};
     my $spoolname = $in{'spoolname'};
     $param->{'spoolname'} = $spoolname;
@@ -17581,35 +17580,20 @@ sub do_viewspool_message {
     }
 
     $param->{'spool_message_asstring'} = $messages[0]->{'messageasstring'};
-    return 1;
 
-    # the following code is not executed because of a bug. It should be able to disply message as html....
-
-
-    my $destination_dir = Site->viewmail_dir.'/spool/viewmail/'.$messagekey;
-
+    my $destination_dir = Site->viewmail_dir . '/spool/viewmail/' . $messagekey;
     unless (-d $destination_dir) {
-	&Archive::convert_single_msg_2_html ({'msg_as_string'=>$param->{'spool_message_asstring'},
-					      'destination_dir'=>$destination_dir,
-					      'attachement_url'=>"viewspool_message/$messagekey",
-					      'list'=>$list,
-					      'robot'=>$robot_id,
-					      'messagekey'=>$messagekey,} );
-	
-	
+	Archive::convert_single_msg_2_html(
+	    {   'msg_as_string' => $param->{'spool_message_asstring'},
+		'destination_dir' => $destination_dir,
+		'attachement_url' => "viewspool_message/$messagekey",
+		'list' => $list,
+		'robot' => $robot,
+		'messagekey' => $messagekey,
+	    }
+	);
     }
-
-    unless (open (HTMLMAIL ,$destination_dir.'/msg00000.html')){
-	&report::reject_report_web('intern','could not show message as html');
-	&wwslog('info','do_viewspool_message : could not show message as html');
-	return;
-    }
-    
-    while (<HTMLMAIL>){
-	$param->{'spool_message_ashtml'} .= $_;
-
-    }
-    close HTMLMAIL;
+    tt2::add_include_path($destination_dir);
 
     return 1;
 }
@@ -17664,7 +17648,6 @@ sub do_viewspool_message_dump {
 
  ## remove a message identified by the spoolname and the messagekey
 sub do_viewspool_message_remove {
-    
     my $messagekey = $in{'messagekey'};
     $param->{'messagekey'} = $messagekey;
     my $spoolname = $in{'spoolname'};
@@ -17672,7 +17655,7 @@ sub do_viewspool_message_remove {
     my $status = 'ok';
     $status = $in{'spool_status'} if ($in{'spool_status'});
     $param->{'spool_status'} = $status;
-			       
+
     &wwslog('info', 'do_viewspool_message_remove(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
 
     unless  ( $param->{'is_listmaster'}){
@@ -17692,7 +17675,12 @@ sub do_viewspool_message_remove {
 	return;	
 	
     }
-    
+
+    # clean html view of the message
+    #FIXME: inconsistent removal.
+    my $dir = Site->viewmail_dir . '/spool/viewmail/' . $messagekey;
+    tools::remove_dir($dir) if -d $dir;
+
     $param->{'removed'} = 1;
     return 1;
 }
