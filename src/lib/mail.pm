@@ -584,10 +584,9 @@ sub sendto {
 		    return undef;
 		}
 		unless ($message->smime_encrypt ($email)){
-    		    &Log::do_log('err',"Failed to encrypt message"); 
+    		    Log::do_log('err',"Failed to encrypt message"); 
 		    return undef;
-                }	
-
+                }
 		unless (&sending('message' => $message,
 				 'rcpt' => $email,
 				 'from' => $from,

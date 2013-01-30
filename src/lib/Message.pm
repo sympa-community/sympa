@@ -591,7 +591,7 @@ sub check_smime_signature {
 	$self->{'protected'} = 1; ## Messages that should not be altered (no footer)
 	$self->smime_sign_check();
 	if($self->{'smime_signed'}) {
-	    Log::do_log('debug2', "message %s is signed, signature is checked", $self->{'msg_id'});
+	    Log::do_log('notice', "message %s is signed, signature is checked", $self->{'msg_id'});
 	}
 	## TODO: Handle errors (0 different from undef)
     }
@@ -957,7 +957,7 @@ sub smime_encrypt {
     my $usercert;
     my $dummy;
 
-    Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
+    Log::do_log('debug2', 'tools::smime_encrypt( %s, %s)', $email, $list);
     if ($list eq 'list') {
 	my $self = new List($email);
 	($usercert, $dummy) = tools::smime_find_keys($self->{dir}, 'encrypt');
@@ -1037,7 +1037,9 @@ sub smime_encrypt {
 	    $self->{'crypted_message'}->head->add($tag, $val) 
 	        unless $predefined_headers->{lc $tag};
 	}
-
+	$self->{'msg'} = $self->{'crypted_message'};
+	$self->set_message_as_string($self->{'crypted_message'}->as_string);
+	$self->{'smime_crypted'} = 1;
     }else{
 	&Log::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
 	return undef;

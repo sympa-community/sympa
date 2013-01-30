@@ -413,13 +413,14 @@ sub store {
     $priority_packet = $robot->sympa_packet_priority unless $priority_packet;
     
     my $msg;
-    if ($message->{'protected'}) {
+    if ($message->{'smime_crypted'}) {
+	$msg = $message->get_encrypted_message_as_string;
+    }elsif ($message->{'protected'}) {
 	$msg = $message->get_message_as_string;
     }else{
 	$msg = $message->get_mime_message->as_string;
     }
     my $message_sender = $message->get_sender_email();
-
 
     # first store the message in spool_table 
     # because as soon as packet are created bulk.pl may distribute the
