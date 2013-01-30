@@ -120,7 +120,6 @@ sub mail_file {
     my $sign_mode = $data->{'sign_mode'};
 
     &Log::do_log('debug', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
-
     my ($to,$message_as_string);
 
     ## boolean
@@ -308,8 +307,16 @@ sub mail_file {
     $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
     
     return $message_as_string if($return_message_as_string);
-    my $list = new List($listname,$robot);
-    my $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
+    my $message;
+    if(Conf::valid_robot($robot->host, {'just_try' => 1})) {
+	if(my $list = new List ($listname, $robot, {'just_try' => 1})) {
+	    $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
+	}else{
+	    $message = new Message ({'messageasstring'=>$message_as_string});
+	}
+    }else{
+	$message = new Message ({'messageasstring'=>$message_as_string});
+    }
 
     ## SENDING
     return undef unless (defined &sending('message' => $message,

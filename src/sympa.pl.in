@@ -1047,7 +1047,7 @@ while (!$signal) {
     my $robot = $message_in_spool->{'robot'};
     &Log::do_log('debug', "Processing message # %s for list = %s robot = %s reception_date = %s", $message_in_spool->{'messagekey'},$listname,$robot,$message_in_spool->{'date'}) ;
 
-    if ($main::options{'mail'} != 1) {
+    if (!defined $main::options{'mail'} || $main::options{'mail'} != 1) {
 	$main::options{'mail'} = $robot if (&Conf::get_robot_conf($robot, 'log_smtp'));
     }
 
@@ -1159,15 +1159,32 @@ sub process_message {
 	return undef;
     }
 
-    my $msg = $message->{'msg'};
+    my $msg = $message->get_mime_message;
     my $hdr = $msg->head;
-    my $rcpt = $message->{'rcpt'};
+    my $rcpt = $message->get_receipient;
 
     ## get listname & robot
     ($listname, $robot) = split(/\@/,$rcpt);
     $robot = lc($robot);
     $listname = lc($listname);
     $robot ||= Site->host; #FIXME: is "domain" better?
+
+    if ( $message->{'md5_check'} ) {
+	# message contain a valid checksum, it comes from wwsympa, so
+        #  mail it without other proceding unless it is for a valid list
+	unless(&Conf::valid_robot($robot, {'just_try' => 1})) {
+	    my $from = $hdr->get('X-Sympa-From');
+	    chomp $from;
+	    my ($local_part, $robot_part) = split(/\@/,$from);
+	    $robot_part = lc($robot_part);
+	    $robot = new Robot($robot_part);
+	    $robot ||= Site->host; #FIXME: is "domain" better?
+	    return (&DoSendMessage ($message,$robot));
+	}
+	unless( new List ($listname, $robot, {'just_try' => 1})) {
+	    return (&DoSendMessage ($message,$robot));
+	}
+    }
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
@@ -1192,13 +1209,6 @@ sub process_message {
     my $type;
     ($listname, $type) = $robot_object->split_listname($listname);
 	
-    if ( $message->{'md5_check'} ) { 
-	# message contain a valid checksum, it comes from wwsympa, so
-        #  mail it without other proceding unless it is for a valid list
-	return (&DoSendMessage ($message,$robot)) unless(&Conf::valid_robot($robot, {'just_try' => 1})) ;
-	return (&DoSendMessage ($message,$robot)) unless( new List ($listname, $robot, {'just_try' => 1}));	    	    
-    }
-
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
 	Log::set_log_level($robot_object->log_level);

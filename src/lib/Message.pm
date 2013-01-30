@@ -194,7 +194,6 @@ sub new {
     }
     ## TOPICS
     $message->set_topic;
-    
     return $message;
 }
 
@@ -413,20 +412,21 @@ sub get_subject {
 sub get_receipient {
     my $self = shift;
     my $hdr = $self->{'msg'}->head;
+    my $rcpt;
     unless ($self->{'rcpt'}) {
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
-	    unless ($hdr->get('X-Sympa-To')) {
-		Log::do_log('debug3', 'no X-Sympa-To found, ignoring message.');
+	    unless ($rcpt = $hdr->get('X-Sympa-To')) {
+		Log::do_log('debug2', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
 	}else {
-	    unless ($hdr->get('To')) {
+	    unless ($rcpt = $hdr->get('To')) {
 		Log::do_log('err', 'no To: header found, ignoring message.');
 		return undef;
 	    }
 	}
 	## Extract recepient address (X-Sympa-To)
-	$self->{'rcpt'} = $hdr->get('X-Sympa-To');
+	$self->{'rcpt'} = $rcpt;
 	chomp $self->{'rcpt'};
     }
     return $self->{'rcpt'};

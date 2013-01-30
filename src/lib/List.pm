@@ -542,7 +542,7 @@ $DB_BTREE->{compare} = \&_compare_addresses;
 
 ## Creates an object.
 sub new {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -554,7 +554,7 @@ sub new {
     my $list;
 
     unless ($options->{'skip_name_check'}) {
-	if ($name =~ /\@/) {
+	if ($name && $name =~ /\@/) {
 	    ## Allow robot in the name
 	    my @parts = split /\@/, $name;
 	    $robot ||= $parts[1];
@@ -565,7 +565,7 @@ sub new {
 	    $robot = search_list_among_robots($name);
 	}
 	if ($robot) {
-	    $robot = Robot::clean_robot($robot);
+	    $robot = Robot::clean_robot($robot,1);# May be Site
 	}
 
 	unless ($robot) {
@@ -589,11 +589,12 @@ sub new {
 	## Reject listnames with reserved list suffixes
 	my ($listname, $type) = $robot->split_listname($name);
 	if ($type) {
-	    Log::do_log('err',
+	    unless ($options->{'just_try'}) {
+		Log::do_log('err',
 		'Incorrect name: listname "%s" matches one of service aliases',
-		$name)
-	    unless $options->{'just_try'};
-	    return undef;
+		$name);	    
+		return undef;
+	    }
 	}
     } else {
 	$robot = Robot::clean_robot($robot);
