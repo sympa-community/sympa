@@ -413,6 +413,7 @@ sub request_action {
 
     ## The current action relates to a list
     if ($list) {
+	$context->{'list_object'} = $list;
 	## The $operation refers to a list parameter of the same name
 	## The list parameter might be structured ('.' is a separator)
 	$scenario = $list->get_scenario($operation, $context->{'options'});
@@ -759,8 +760,8 @@ sub verify {
     if ($context->{'listname'} && !defined $context->{'list_object'}) {
 	unless ($context->{'list_object'} =
 	    new List($context->{'listname'}, $robot)) {
-	    &Log::do_log('info',
-		"Unable to create List object for list $context->{'listname'}"
+	    &Log::do_log('err',
+		'Unable to create List object for list %s',$context->{'listname'}
 	    );
 	    return undef;
 	}
@@ -847,11 +848,11 @@ sub verify {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    } else {
 		&Log::do_log('debug',
-		    'undefine variable context %s in rule %s',
+		    'undefined variable context %s in rule %s',
 		    $value, $condition);
 		if ($log_it) {
 		    &Log::do_log('info',
-			'undefine variable context %s in rule %s',
+			'undefined variable context %s in rule %s',
 			$value, $condition);
 		}
 
@@ -994,10 +995,10 @@ sub verify {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    } else {
 		&Log::do_log('debug',
-		    "undefine variable context $value in rule $condition");
+		    "undefined variable context $value in rule $condition");
 		if ($log_it) {
 		    &Log::do_log('info',
-			"undefine variable context $value in rule $condition"
+			"undefined variable context $value in rule $condition"
 		    );
 		}
 
