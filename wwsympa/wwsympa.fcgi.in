@@ -5197,7 +5197,7 @@ sub do_viewfile {
 sub do_subscribe {
     &wwslog('info', 'do_subscribe(%s)', $in{'email'});
 
-    return undef if (purely_closed('subscribe'));
+    return undef if ($list->is_scenario_purely_closed('subscribe'));
     my $result = Scenario::request_action($list,
 	'subscribe', $param->{'auth_method'},
 	{   'sender' => $param->{'user'}{'email'}, 
@@ -5448,7 +5448,7 @@ sub do_suboptions {
 sub do_subrequest {
     &wwslog('info', 'do_subrequest(%s,%s)', $in{'email'},$in{'custom_attribute'});
     
-    return undef if (purely_closed('subscribe'));
+    return undef if ($list->is_scenario_purely_closed('subscribe'));
     if (defined $in{'custom_attribute'}) {
      	$param->{'custom_attribute'} = $in{'custom_attribute'};
     }
@@ -5626,7 +5626,7 @@ sub do_family_signoff {
 sub do_signoff {
      &wwslog('info', 'do_signoff');
 
-    return undef if (purely_closed('unsubscribe'));
+    return undef if ($list->is_scenario_purely_closed('unsubscribe'));
      my $authenticated_email_address = $param->{'user'}{'email'};
      unless ($authenticated_email_address) {
 	 unless ($in{'email'}) {
@@ -5760,7 +5760,7 @@ sub unsubscribe {
 sub do_sigrequest {
      &wwslog('info', 'do_sigrequest(%s)', $in{'email'});
 
-    return undef if (purely_closed('unsubscribe'));
+    return undef if ($list->is_scenario_purely_closed('unsubscribe'));
      ## If user is authenticated then redirect him to the signoff action but 
      ## get a confirmation (via the sigrequest web page) first
      if ($param->{'user'}{'email'}) {
@@ -18666,16 +18666,6 @@ sub prevent_visibility_bypass {
 	}
     }
     return undef;
-}
-
-sub purely_closed {
-    my $action = shift;
-    my $scenario = new Scenario ('robot' => $robot, 
-			      'directory' => $list->{'dir'},
-			      'file_path' => $list->{'admin'}{$action}{'file_path'},
-			      'options' => undef);
-			      
-    return $scenario->is_purely_closed;
 }
 
 =pod 

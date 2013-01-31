@@ -12724,6 +12724,13 @@ sub list_cache_purge {
 	$self->name, $self->domain);
 }
 
+sub is_scenario_purely_closed {
+    my $self = shift;
+    my $action = shift;
+    return $self->$action->is_purely_closed;
+}
+
+
 ###### END of the ListCache package ######
 
 ## Packages must return true.
