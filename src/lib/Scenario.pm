@@ -372,16 +372,14 @@ sub request_action {
     my $log_it
 	; # this var is defined to control if log scenario is activated or not
     if (${$robot->loging_for_module || {}}{'scenario'}) {
-
 	#activate log if no condition is defined
 	unless (scalar keys %{$robot->loging_condition || {}}) {
 	    $log_it = 1;
 	} else {
-
 	    #activate log if ip or email match
 	    my $loging_conditions = $robot->loging_condition || {};
-	    if (defined $loging_conditions->{'ip'} && ($loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/ ||
-		$loging_conditions->{'email'} =~ /$context->{'email'}/i)) {
+	    if ((defined $loging_conditions->{'ip'} && $loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/) ||
+		(defined $loging_conditions->{'email'} && $loging_conditions->{'email'} =~ /$context->{'email'}/i)) {
 		&Log::do_log(
 		    'info',
 		    'Will log scenario process for user with email: "%s", IP: "%s"',
@@ -392,7 +390,6 @@ sub request_action {
 	    }
 	}
     }
-
     if ($log_it) {
 	if (ref $that and ref $that eq 'List') {
 	    $trace_scenario =

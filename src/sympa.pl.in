@@ -1841,7 +1841,7 @@ sub DoMessage{
     $auth_method = 'dkim' if ($message->{'dkim_pass'});
     $auth_method = 'md5' if ($message->{'md5_check'});
     $auth_method = 'smime' if ($is_signed->{'body'}) ;
-    
+
     $result = Scenario::request_action($list, 'send', $auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
