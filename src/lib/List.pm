@@ -10738,7 +10738,9 @@ sub _urlize_part {
 
     my $head     = $message->head;
     my $encoding = $head->mime_encoding;
-
+    my $content_type = $head->get('Content-Type');
+    chomp $content_type;
+    return undef if ($content_type =~ /multipart\/alternative/gi || $content_type =~ /text\//gi);
     ##  name of the linked file
     my $fileExt = $mime_types->{$head->mime_type};
     if ($fileExt) {
