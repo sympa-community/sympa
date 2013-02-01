@@ -307,7 +307,7 @@ sub lists {
 #
 #######################################################
 sub stats {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $listname = shift;
     my $robot    = shift;
     my $sign_mod = shift;
@@ -317,7 +317,7 @@ sub stats {
     unless ($list) {
 	&report::reject_report_cmd('user', 'no_existing_list',
 	    {'listname' => $listname}, $cmd_line);
-	&Log::do_log('info',
+	Log::do_log('info',
 	    'STATS %s from %s refused, unknown list for robot %s',
 	    $listname, $sender, $robot);
 	return 'unknown_list';
@@ -361,7 +361,7 @@ sub stats {
 		    {'auto_submitted' => 'auto-replied'}
 		)
 		) {
-		&Log::do_log('notice', 'Unable to send template "%s" to %s',
+		Log::do_log('notice', 'Unable to send template "%s" to %s',
 		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth', $result->{'reason'}, {},
 		    $cmd_line);
@@ -370,10 +370,11 @@ sub stats {
 	    &report::reject_report_cmd('auth', $result->{'reason'}, {},
 		$cmd_line);
 	}
-	&Log::do_log('info', 'stats %s from %s refused (not allowed)',
+	Log::do_log('info', 'stats %s from %s refused (not allowed)',
 	    $listname, $sender);
 	return 'not_allowed';
     } else {
+	## numeric format depends on locale, e.g. "1,50" in fr_FR.
 	my %stats = (
 	    'msg_rcv'  => $list->stats->[0],
 	    'msg_sent' => $list->stats->[1],
@@ -386,19 +387,19 @@ sub stats {
 		'stats_report',
 		$sender,
 		{   'stats'          => \%stats,
-		    'subject'        => 'STATS ' . $list->name,
+		    'subject'        => 'STATS ' . $list->name,  #compat <=6.1
 		    'auto_submitted' => 'auto-replied'
 		}
 	    )
 	    ) {
-	    &Log::do_log('notice',
-		"Unable to send template 'stats_reports' to $sender");
+	    Log::do_log('notice',
+		'Unable to send template "stats_reports" to %s', $sender);
 	    &report::reject_report_cmd('intern_quiet', '',
 		{'listname' => $listname, 'list' => $list},
 		$cmd_line, $sender, $robot);
 	}
 
-	&Log::do_log('info', 'STATS %s from %s accepted (%d seconds)',
+	Log::do_log('info', 'STATS %s from %s accepted (%d seconds)',
 	    $listname, $sender, time - $time_command);
     }
 
@@ -640,7 +641,7 @@ sub review {
     unless ($list) {
 	&report::reject_report_cmd('user', 'no_existing_list',
 	    {'listname' => $listname}, $cmd_line);
-	&Log::do_log('info',
+	Log::do_log('info',
 	    'REVIEW %s from %s refused, list unknown to robot %s',
 	    $listname, $sender, $robot);
 	return 'unknown_list';
@@ -681,7 +682,7 @@ sub review {
     }
 
     if ($action =~ /request_auth/i) {
-	&Log::do_log('debug2', "auth requested from $sender");
+	Log::do_log('debug3', 'auth requested from %s', $sender);
 	unless ($list->request_auth($sender, 'review')) {
 	    my $error =
 		"Unable to request authentification for command 'review'";
@@ -690,7 +691,7 @@ sub review {
 		$cmd_line, $sender, $robot);
 	    return undef;
 	}
-	&Log::do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)',
+	Log::do_log('info', 'REVIEW %s from %s, auth requested (%d seconds)',
 	    $listname, $sender, time - $time_command);
 	return 1;
     }
@@ -702,7 +703,7 @@ sub review {
 		    {'auto_submitted' => 'auto-replied'}
 		)
 		) {
-		&Log::do_log('notice', 'Unable to send template "%s" to %s',
+		Log::do_log('notice', 'Unable to send template "%s" to %s',
 		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth', $result->{'reason'}, {},
 		    $cmd_line);
@@ -711,7 +712,7 @@ sub review {
 	    &report::reject_report_cmd('auth', $result->{'reason'}, {},
 		$cmd_line);
 	}
-	&Log::do_log('info', 'review %s from %s refused (not allowed)',
+	Log::do_log('info', 'review %s from %s refused (not allowed)',
 	    $listname, $sender);
 	return 'not_allowed';
     }
@@ -723,7 +724,7 @@ sub review {
 	unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
 	    &report::reject_report_cmd('user', 'no_subscriber',
 		{'listname' => $listname}, $cmd_line);
-	    &Log::do_log('err', 'No subscribers in list %s', $list);
+	    Log::do_log('err', 'No subscribers in list %s', $list);
 	    return 'no_subscribers';
 	}
 	do {
@@ -741,23 +742,23 @@ sub review {
 		'review', $sender,
 		{   'users'          => \@users,
 		    'total'          => $list->total,
-		    'subject'        => "REVIEW $listname",
+		    'subject'        => "REVIEW $listname",    #compat <=6.1
 		    'auto_submitted' => 'auto-replied'
 		}
 	    )
 	    ) {
-	    &Log::do_log('notice',
-		"Unable to send template 'review' to $sender");
+	    Log::do_log('notice', 'Unable to send template "review" to %s',
+		$sender);
 	    &report::reject_report_cmd('intern_quiet', '',
 		{'listname' => $listname, 'list' => $list},
 		$cmd_line, $sender, $robot);
 	}
 
-	&Log::do_log('info', 'REVIEW %s from %s accepted (%d seconds)',
+	Log::do_log('info', 'REVIEW %s from %s accepted (%d seconds)',
 	    $listname, $sender, time - $time_command);
 	return 1;
     }
-    &Log::do_log('info',
+    Log::do_log('info',
 	'REVIEW %s from %s aborted, unknown requested action in scenario',
 	$listname, $sender);
     my $error = "Unknown requested action in scenario: $action.";
