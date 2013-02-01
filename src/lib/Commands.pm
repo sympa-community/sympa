@@ -38,6 +38,7 @@ use Language qw(gettext gettext_strftime);
 use List;
 use Message;
 use report;
+use Data::Dumper;
 
 #use tools; # used in List - Site - Conf
 #use Sympa::Constants; # used in confdef - Conf
@@ -2780,7 +2781,7 @@ sub confirm {
     my $spool = new Sympaspool('auth');
 
     my $messageinspool = $spool->get_message({'authkey' => $key});
-
+    
     unless ($messageinspool) {
 	&Log::do_log('info', 'CONFIRM %s from %s refused, auth failed',
 	    $key, $sender);
@@ -2790,7 +2791,6 @@ sub confirm {
 	return 'wrong_auth';
     }
     my $message = new Message({'message_in_spool' => $messageinspool});
-
     unless (defined $message) {
 	&Log::do_log(
 	    'err',

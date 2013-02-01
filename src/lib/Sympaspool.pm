@@ -345,6 +345,9 @@ sub get_message {
 
     $sth->finish;
     $sth = pop @sth_stack;
+    if ($message->{'list'} && $message->{'robot'}) {
+	$message->{'list_object'} = new List($message->{'list'},$message->{'robot'});
+    }
     return $message;
 }
 
