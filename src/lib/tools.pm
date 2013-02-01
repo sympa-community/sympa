@@ -303,11 +303,11 @@ sub safefork {
    for ($i = 1; $i < 4; $i++) {
       my($pid) = fork;
       return $pid if (defined($pid));
-      &Log::do_log ('warning', "Can't create new process in safefork: %m");
+      &Log::do_log ('warn', 'Cannot create new process in safefork: %s',$@);
       ## should send a mail to the listmaster
       sleep(10 * $i);
    }
-   &Log::fatal_err("Can't create new process in safefork: %m");
+   &Log::fatal_err('Exiting because cannot create new process in safefork: %s',$@);
    ## No return.
 }
 
