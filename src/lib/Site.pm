@@ -1325,8 +1325,7 @@ sub AUTOLOAD {
     $type->{'RobotParameter'} = 1
 	if grep { $_ eq $attr }
 	    qw(blacklist loging_condition loging_for_module) or
-	    grep { $_->{'name'} and $_->{'name'} eq $attr }
-	    @confdef::params;
+	    grep { $_->{'name'} and $_->{'name'} eq $attr } @confdef::params;
     ## getters for attributes specific to global config.
     $type->{'SiteAttribute'} = 1
 	if grep { $_ eq $attr }

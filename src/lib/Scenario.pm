@@ -358,7 +358,8 @@ sub request_action {
     $context->{'msg'}          = $context->{'message'}->{'msg'}
 	if (defined $context->{'message'});
     $context->{'msg_encrypted'} = 'smime'
-	if (defined $context->{'message'} && defined $context->{'message'}->{'smime_crypted'} &&
+	if (defined $context->{'message'} &&
+	defined $context->{'message'}->{'smime_crypted'} &&
 	$context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
@@ -372,14 +373,20 @@ sub request_action {
     my $log_it
 	; # this var is defined to control if log scenario is activated or not
     if (${$robot->loging_for_module || {}}{'scenario'}) {
+
 	#activate log if no condition is defined
 	unless (scalar keys %{$robot->loging_condition || {}}) {
 	    $log_it = 1;
 	} else {
+
 	    #activate log if ip or email match
 	    my $loging_conditions = $robot->loging_condition || {};
-	    if ((defined $loging_conditions->{'ip'} && $loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/) ||
-		(defined $loging_conditions->{'email'} && $loging_conditions->{'email'} =~ /$context->{'email'}/i)) {
+	    if ((   defined $loging_conditions->{'ip'} &&
+		    $loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/
+		) ||
+		(defined $loging_conditions->{'email'} &&
+		    $loging_conditions->{'email'} =~ /$context->{'email'}/i)
+		) {
 		&Log::do_log(
 		    'info',
 		    'Will log scenario process for user with email: "%s", IP: "%s"',
@@ -760,8 +767,10 @@ sub verify {
     if ($context->{'listname'} && !defined $context->{'list_object'}) {
 	unless ($context->{'list_object'} =
 	    new List($context->{'listname'}, $robot)) {
-	    &Log::do_log('err',
-		'Unable to create List object for list %s',$context->{'listname'}
+	    &Log::do_log(
+		'err',
+		'Unable to create List object for list %s',
+		$context->{'listname'}
 	    );
 	    return undef;
 	}
@@ -776,13 +785,18 @@ sub verify {
 
     if (defined($context->{'msg'})) {
 	my $header = $context->{'msg'}->head;
-	unless (defined $context->{'listname'} && (
-	    (   $header->get('to') &&
-		(join(', ', $header->get('to')) =~ /$context->{'listname'}/i)
-	    ) ||
-	    ($header->get('cc') &&
-		(join(', ', $header->get('cc')) =~ /$context->{'listname'}/i))
-	    )) {
+	unless (
+	    defined $context->{'listname'} &&
+	    (   (   $header->get('to') &&
+		    (   join(', ', $header->get('to')) =~
+			/$context->{'listname'}/i)
+		) ||
+		(   $header->get('cc') &&
+		    (   join(', ', $header->get('cc')) =~
+			/$context->{'listname'}/i)
+		)
+	    )
+	    ) {
 	    $context->{'is_bcc'} = 1;
 	} else {
 	    $context->{'is_bcc'} = 0;
@@ -1836,11 +1850,13 @@ sub is_purely_closed {
     my $self = shift;
     foreach my $rule (@{$self->{'rules'}}) {
 	if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
-	    Log::do_log('debug2','Scenario %s is not purely closed.',$self->{'title'});
+	    Log::do_log('debug2', 'Scenario %s is not purely closed.',
+		$self->{'title'});
 	    return 0;
 	}
     }
-    Log::do_log('notice','Scenario %s is purely closed.',$self->{'file_path'});
+    Log::do_log('notice', 'Scenario %s is purely closed.',
+	$self->{'file_path'});
     return 1;
 }
 
