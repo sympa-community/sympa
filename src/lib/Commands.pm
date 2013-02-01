@@ -3004,7 +3004,7 @@ sub confirm {
 	    'CONFIRM %s from %s for list %s accepted (%d seconds)',
 	    $key, $sender, $list->name, time - $time_command);
 
-	$spool->remove({'authkey' => $key});
+	$spool->remove_message({'authkey' => $key});
 
 	return 1;
     }
