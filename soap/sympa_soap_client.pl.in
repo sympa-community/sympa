@@ -78,14 +78,14 @@ $0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr
 
 my %options;
 unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s','session_id=s')) {
-    printf "";
+    print "";
 }
 
 
 my $soap_url = $main::options{'soap_url'};
 unless (defined $soap_url){
-    printf "error : missing soap_url parameter\n";
-    printf $usage;
+    print "error : missing soap_url parameter\n";
+    print $usage;
     exit;
 }
 
@@ -101,18 +101,18 @@ my $cookie=$main::options{'cookie'};
 
 if (defined $trusted_application) {
     unless (defined $trusted_application_password) {
-	printf "error : missing trusted_application_password parameter\n";
-	printf $usage;
+	print "error : missing trusted_application_password parameter\n";
+	print $usage;
 	exit;
     }
     unless (defined $service) {
-	printf "error : missing service parameter\n";
-	printf $usage;
+	print "error : missing service parameter\n";
+	print $usage;
 	exit;
     }
     unless (defined $proxy_vars) {
-	printf "error : missing proxy_vars parameter\n";
-	printf $usage;
+	print "error : missing proxy_vars parameter\n";
+	print $usage;
 	exit;
     }
 
@@ -123,13 +123,13 @@ if (defined $trusted_application) {
 	     service => $service);
 
 }elsif(defined $cookie){
-    printf "error : get_email_cookie\n";
+    print "error : get_email_cookie\n";
      &get_email($soap_url, $cookie);
      exit;
 }else{
     unless (defined $session_id || (defined $user_email && defined  $user_password)){
-	printf "error : missing session_id OR user_email+user_passwors  parameters\n";
-	printf $usage;
+	print "error : missing session_id OR user_email+user_passwors  parameters\n";
+	print $usage;
 	exit;
     }
 
@@ -156,7 +156,7 @@ sub play_soap_as_trusted{
     my @parameters; 
     @parameters= split(/,/,$service_parameters) if (defined $service_parameters);
     my $p= join(',',@parameters);
-    printf "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
+    print "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
 
     my $reponse = $soap->authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,\@parameters);
     &print_result($reponse);
@@ -245,30 +245,30 @@ sub play_soap{
   ## Don't use authenticateAndRun for lists command
 
   ## Split parameters
-  my @parameters=split /,/,$service_parameters;
+  @parameters = split /,/, $service_parameters;
 
     if ($service eq 'lists') {
-      printf "\n\nlists....\n";
+      print "\n\nlists....\n";
       $reponse = $soap->lists();
 
     }elsif ($service eq 'subscribe') {
-      printf "\n\n$service....\n";      
+      print "\n\n$service....\n";      
       $reponse = $soap->subscribe(@parameters);
 
     }elsif ($service eq 'signoff') {
-      printf "\n\n$service....\n";      
+      print "\n\n$service....\n";      
       $reponse = $soap->signoff(@parameters);
 
     }elsif ($service eq 'add') {
-      printf "\n\n$service....\n";      
+      print "\n\n$service....\n";      
       $reponse = $soap->add(@parameters);
 
     }elsif ($service eq 'del') {
-      printf "\n\n$service....\n";      
+      print "\n\n$service....\n";      
       $reponse = $soap->del(@parameters);
 
     }elsif ($service eq 'getUserEmailByCookie') {
-      printf "\n\n$service....\n";
+      print "\n\n$service....\n";
       $reponse = $soap->getUserEmailByCookie($session_id);
 
     }else {
@@ -292,7 +292,7 @@ sub print_result {
 	}
     }else {
 	if (ref( $r->result) =~ /^ARRAY/) {
-	    #printf "R: $r->result\n";
+	    #printf "R: %s\n", $r->result;
 	    @ret = @{$r->result};
 	}elsif (ref $r->result) {
 	    print "Pb ".($r->result)."\n";

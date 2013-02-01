@@ -1,6 +1,5 @@
 #!--PERL--
-# sympa.pl - This script is the main one ; it runs as a daemon and does
-# the messages/commands processing
+# spooler.pl - This script fetches messages and push them into spools
 # RCS Identication ; $Revision: 6671 $ ; $Date: 2010-09-07 11:03:18 +0200 (mar 07 sep 2010) $ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -308,7 +307,7 @@ if ($signal ne 'hup') {
 	my $robot;
 
 	my $t_spool = $spooldir; ## in single mode we may have to supervise automatic spool
-	
+
 	## Scans files in queue
 	foreach my $filename (sort @qfile) {
 	    &Log::do_log('info','Processing file %s',$filename);
@@ -355,9 +354,9 @@ if ($signal ne 'hup') {
 		    $meta{'create_list_if_needed'} = 0;		
 		}
 	    }
-	    
+
 	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
-	    
+
 	    $listname = lc($listname);
 	    if ($robot_id) {
 		$robot_id = lc($robot_id);
@@ -412,7 +411,7 @@ if ($signal ne 'hup') {
 		$meta{'priority'} = 1;
 	    }
 	    $meta{'type'} = $type if $type;
-	    
+
 	    my $messagekey = $spool->store($message->{'msg_as_string'},\%meta);
 	    unless($messagekey) {
 	       &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
@@ -424,7 +423,7 @@ if ($signal ne 'hup') {
 		    &Log::do_log('notice', 'Could not rename %s to %s: %s', "$t_spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
 		}
 	    }
-	    
+
 	    ## Release the lock
 	    $lock->unlock();
 	    unless (unlink ($spooldir.'/'.$filename)) {

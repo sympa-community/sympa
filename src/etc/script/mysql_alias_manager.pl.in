@@ -46,12 +46,12 @@ my $sql;
 my $enr;
 
 if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
-    printf STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
+    print STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
     exit(2);
 }
 
 unless ($robot = Robot->new($domain)) {
-    printf STDERR "Unknown robot $domain";
+    printf STDERR "Unknown robot %s\n", $domain;
     exit(16);
 }
 

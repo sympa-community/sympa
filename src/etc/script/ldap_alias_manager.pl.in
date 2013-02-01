@@ -71,15 +71,15 @@ my ($operation, $listname, $domain, $file) = @ARGV;
 my $robot;
 
 if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
-    printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
-    printf "\n";
-    printf "  Options:\n";
-    printf "    -s\tSimulation mode. Dump the entries but don't add it to the directory.\n";
+    print "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
+    print "\n";
+    print "  Options:\n";
+    print "    -s\tSimulation mode. Dump the entries but don't add it to the directory.\n";
     exit(2);
 }
 
 unless ($robot = Robot->new($domain)) {
-    printf STDERR "Unknown robot $domain";
+    printf STDERR "Unknown robot %s\n", $domain;
     exit(16);
 }
 
@@ -206,7 +206,7 @@ elsif ($operation eq 'del') {
 	$value =~ s/^dn:\s*//;
 
 	if ($simulation_mode) {
-		printf "Would delete dn $value\n";
+		printf "Would delete dn %s\n", $value;
 	} else {
 		$ldap_connection->delete($value);
 	}

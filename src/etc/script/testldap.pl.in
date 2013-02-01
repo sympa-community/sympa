@@ -34,7 +34,7 @@ unless (defined $opt{'host'} &&
     die "Usage $ARGV[-1] --host=<host> --ssl=on|off --suffix=<suffix> --scope=base|one|sub --filter=<filter> --attrs=<attrs>";
 }
 
-printf "host : $opt{'host'}\nsuffix : $opt{'suffix'}\nfilter: $opt{'filter'}\n";
+print "host : $opt{'host'}\nsuffix : $opt{'suffix'}\nfilter: $opt{'filter'}\n";
 
 my %arg;
 $arg{'scope'} = $opt{'scope'};

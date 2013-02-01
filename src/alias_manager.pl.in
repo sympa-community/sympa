@@ -64,12 +64,12 @@ my ($operation, $listname, $domain, $file) = @ARGV;
 my $robot;
 
 if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
-    printf STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
+    print STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
     exit(2);
 }
 
 unless ($robot = Robot->new($domain)) {
-    printf STDERR "Unknown robot $domain";
+    printf STDERR "Unknown robot %s\n", $domain;
     exit(16);
 }
 
@@ -154,7 +154,7 @@ if ($operation eq 'add') {
     }
 
     unless (open NEWALIAS, ">$tmp_alias_file") {
-	printf STDERR "Could not create $tmp_alias_file\n";
+	printf STDERR "Could not create %s\n", $tmp_alias_file;
 	exit (8);
     }
 
@@ -224,7 +224,7 @@ sub already_defined {
     my @aliases = @_;
     
     unless (open  ALIAS, "$alias_file") {
-	printf STDERR "Could not read $alias_file\n";
+	printf STDERR "Could not read %s\n", $alias_file;
 	exit (7);
     }
 

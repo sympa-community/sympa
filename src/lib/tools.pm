@@ -1226,7 +1226,7 @@ sub cookie_changed {
 #		&Log::do_log('err', "Unable to create %s/cookies.history", Site->etc);
 #		return undef ; 
 #	    }
-#	    printf COOK "%s",join(" ",@cookies) ;
+#	    print COOK join(" ", @cookies);
 #	    
 #	    close COOK;
 	}
@@ -2371,13 +2371,13 @@ sub dump_var {
 		&dump_var($var->{$key}, $level+1, $fd);
 	    }    
 	}else {
-	    printf $fd "\t"x$level."'%s'"."\n", ref($var);
+	    printf $fd "%s'%s'\n", ("\t" x $level), ref($var);
 	}
     }else {
 	if (defined $var) {
-	    print $fd "\t"x$level."'$var'"."\n";
+	    printf $fd "%s'%s'\n", ("\t" x $level), $var;
 	}else {
-	    print $fd "\t"x$level."UNDEF\n";
+	    printf $fd "%sUNDEF\n", ("\t" x $level);
 	}
     }
 }

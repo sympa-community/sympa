@@ -284,11 +284,8 @@ while (!$end) {
 			$bulk->{'robot'}, 
 			$bulk->{'priority_message'}, 
 			time() - $bulk->{'delivery_date'});
-			
+
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
-	    
-	    #my $dump = &Dumper($messageasstring_init); open (DUMP,">>/tmp/dumper"); printf DUMP 'messageasstring recup par bulk \n%s',$dump ; close DUMP; 
-	    # &trace_smime($messageasstring_init,'initial');
 
 	    unless ( $messageasstring_init ) {
 		&Log::do_log('err',"internal error : current packet (messagekey= %s) contains a ref to a null message",$bulk->{'messagekey'});
@@ -299,7 +296,7 @@ while (!$end) {
 	    $messagekey = $bulk->{'messagekey'};
 	}
 	my $data; #HASH which will contain the attributes of the subscriber
-	
+
 	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
 	$data->{'listname'} = $bulk->{'listname'};
 	$data->{'robot'} = $bulk->{'robot'};

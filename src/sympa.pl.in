@@ -379,7 +379,7 @@ if ($main::options{'dump'}) {
 
     foreach my $list (@$all_lists) {
 	unless ($list->dump()) {
-	    printf STDERR "Could not dump list(s)\n";
+	    print STDERR "Could not dump list(s)\n";
 	}
     }
 
@@ -389,29 +389,31 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'make_alias_file'}) {
     my $all_lists = List::get_lists();
-    unless (open TMP, '>', Site->tmpdir . "/sympa_aliases.$$") {
-	printf STDERR "Unable to create " . Site->tmpdir . "/sympa_aliases.$$, exiting\n";
+
+    my $aliases_file = Site->tmpdir . '/sympa_aliases' . $$;
+    unless (open TMP, '>', $aliases_file) {
+	printf STDERR "Unable to create %s, exiting\n", $aliases_file;
 	exit;
     }
-    printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
+    printf TMP "#\n#\tAliases for all Sympa lists open\n#\n";
     close TMP;
+
     foreach my $list (@$all_lists) {
-	my $cmd = sprintf '%s add %s %s %s/sympa_aliases.%s',
-	    Site->alias_manager, $list->name, $list->domain,
-	    Site->tmpdir, $$;
+	my $cmd = sprintf '%s add %s %s %s',
+	    Site->alias_manager, $list->name, $list->domain, $aliases_file;
 	system($cmd) if $list->status eq 'open';
     }
-    printf "Sympa aliases file is %s/sympa_aliases.%s file made, you probably need to installed it in your SMTP engine\n", Site->tmpdir, $$;
-    
+    printf "Sympa aliases file %s was made.  You probably need to install it in your SMTP engine\n", $aliases_file;
+
     exit 0;
 }elsif ($main::options{'version'}) {
     print $version_string;
-    
+
     exit 0;
 }elsif ($main::options{'md5_digest'}) {
     my $md5 = &tools::md5_fingerprint($main::options{'md5_digest'});
-    printf "md5 digest : $md5 \n";
-    
+    printf "md5 digest : %s \n", $md5;
+
     exit 0;
 }elsif ($main::options{'import'}) {
     my ($list, $total);
@@ -509,7 +511,7 @@ if ($main::options{'dump'}) {
 	}
     }
 
-    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->name;
+    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->get_id;
     
     exit 0;
 }elsif ($main::options{'change_user_email'}) {
@@ -534,7 +536,7 @@ if ($main::options{'dump'}) {
 	}
 	
 	foreach my $failed_list (@$failed_for) {
-	    printf STDERR "Failed to change user email address for list %s'}\n", $failed_list->{'name'};
+	    printf STDERR "Failed to change user email address for list %s\n", $failed_list->{'name'};
 	}
     }
 
@@ -563,7 +565,7 @@ if ($main::options{'dump'}) {
 	}
     }
 
-    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->name;
+    printf STDOUT "List %s has been closed, aliases have been removed\n", $list->get_id;
     
     exit 0;
 }elsif ($main::options{'rename_list'}) {
@@ -598,7 +600,7 @@ if ($main::options{'dump'}) {
 				    );
 
     unless($result == 1) {
-      printf STDERR "Could not rename list %s to %s: %s\@%s\n", $main::options{'rename_list'}, $main::options{'new_listname'}, $main::options{'new_listrobot'}, $result;
+      printf STDERR "Could not rename list %s to %s\@%s: %s\n", $main::options{'rename_list'}, $main::options{'new_listname'}, $main::options{'new_listrobot'}, $result;
       exit 1;	
     }
 
@@ -608,12 +610,12 @@ if ($main::options{'dump'}) {
 
 }elsif ($main::options{'test_database_message_buffer'}) {
     my $size = 0;   
-    printf "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";
+    print "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";
     $size = &Sympaspool::store_test(21000); ## will test message until a 21 Mo message.
     if ($size == 21000) {
-	printf "The maximum message size ($size Ko) testing was successful \n";
+	printf "The maximum message size (%d Ko) testing was successful \n", $size;
     }else{
-	printf "maximun message size that can be stored in database : $size Ko\n";
+	printf "maximun message size that can be stored in database : %d Ko\n", $size;
     }
     exit 1;
     
@@ -627,7 +629,7 @@ if ($main::options{'dump'}) {
     exit 1;
     
 }elsif ($main::options{'create_list'}) {    
-    my $robot = $main::options{'robot'} || Site->host;
+    my $robot = $main::options{'robot'} || Site->host; #FIXME: is domain better?
     
     unless ($main::options{'input_file'}) {
  	print STDERR "Error : missing 'input_file' parameter\n";
@@ -656,10 +658,10 @@ if ($main::options{'dump'}) {
     }
     
     if (! defined($resul->{'aliases'}) || $resul->{'aliases'} == 1) {
- 	printf STDOUT "List has been created \n";
+ 	print STDOUT "List has been created \n";
  	exit 0;
     }else {
- 	printf STDOUT "List has been created, required aliases :\n $resul->{'aliases'} \n";
+ 	printf STDOUT "List has been created, required aliases :\n %s \n", $resul->{'aliases'};
  	exit 0;
     }
 }elsif ($main::options{'instantiate_family'}) {
@@ -766,7 +768,7 @@ if ($main::options{'dump'}) {
 	exit 1;
     }
 
-    printf "Members of list %s have been successfully update.\n", $list->get_list_address();
+    printf "Members of list %s have been successfully updated.\n", $list->get_id;
     exit 0;
 ## Migration from one version to another
 }elsif ($main::options{'upgrade'}) {

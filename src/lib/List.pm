@@ -1854,7 +1854,7 @@ sub prepare_digest_parameters {
     &Log::do_log('debug2','Preparing digest parameters for list %s',$self->get_list_id);
     $self->{'digest'}{'template_params'} = {'replyto' => $self->get_list_address('owner'),
 		 'to' => $self->get_list_address(),
-		 'table_of_content' => sprintf(gettext("Table of contents:")),
+		 'table_of_content' => gettext("Table of contents:"),
 		 'boundary1' => '----------=_'.&tools::get_message_id($self->domain),
 		 'boundary2' => '----------=_'.&tools::get_message_id($self->domain),
 		 };
@@ -2339,9 +2339,10 @@ sub send_msg {
 	    $dir1 = '/' . $dir1;
 
 	    unless (mkdir("$expl/$dir1", 0775)) {
-		&Log::do_log('err',
-		    "Unable to create urlize directory $expl/$dir1");
-		printf "Unable to create urlized directory $expl/$dir1";
+		Log::do_log('err',
+		    'Unable to create urlize directory %s/%s', $expl, $dir1);
+		printf "Unable to create urlized directory %s/%s\n",
+		    $expl, $dir1;
 		return 0;
 	    }
 	    my $mime_types = &tools::load_mime_types();
@@ -10483,8 +10484,8 @@ sub tag_topic {
     Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my ($self, $msg_id, $topic_list, $method) = @_;
 
-    my $topic_item = sprintf "TOPIC   $topic_list\n";
-    $topic_item .= sprintf "METHOD  $method\n";
+    my $topic_item = sprintf "TOPIC   %s\n", $topic_list;
+    $topic_item .= sprintf "METHOD  %s\n", $method;
     my $topicspool = new Sympaspool('topic');
 
     return (
@@ -10857,7 +10858,7 @@ sub store_subscription_request {
 	    $email);
 	return undef;
     } else {
-	my $subrequest = sprintf "$gecos||$custom_attr\n";
+	my $subrequest = sprintf "%s||%s\n", $gecos, $custom_attr;
 	$subscription_request_spool->store(
 	    $subrequest,
 	    {   'list'   => $self->name,
@@ -11013,7 +11014,7 @@ sub store_signoff_request {
 	    $email);
 	return undef;
     } else {
-	#my $subrequest = sprintf "$gecos||$custom_attr\n";
+	#my $subrequest = sprintf "%s||%s\n", $gecos, $custom_attr;
 	$signoff_request_spool->store(
 	    '',
 	    {   'list'   => $self->name,

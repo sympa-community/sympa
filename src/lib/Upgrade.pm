@@ -68,7 +68,7 @@ sub update_version {
 	&Log::do_log('err', "Unable to write %s ; sympa.pl needs write access on %s directory : %s", $version_file, Site->etc, $!);
 	return undef;
     }
-    printf VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
+    print VFILE "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
     printf VFILE "%s\n", Sympa::Constants::VERSION;
     close VFILE;
     
@@ -182,7 +182,9 @@ sub upgrade {
 
 	foreach my $tpl (@templates) {
 	    unless (rename $tpl, "$tpl.oldtemplate") {
-		printf STDERR "Error : failed to rename $tpl to $tpl.oldtemplate : $!\n";
+		printf STDERR
+		    "Error : failed to rename %s to %s.oldtemplate : %s\n",
+		    $tpl, $tpl, $!;
 		next;
 	    }
 

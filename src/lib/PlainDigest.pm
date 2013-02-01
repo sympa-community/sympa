@@ -177,7 +177,7 @@
   my $msgent = $topent->parts(0);
 
   unless ($msgent) {
-      $outstring .= sprintf(gettext("----- Malformed message ignored -----\n\n"));
+      $outstring .= gettext("----- Malformed message ignored -----\n\n");
       return undef;
   }
   
@@ -264,9 +264,9 @@
  
  sub _do_dsn {
    my $entity = shift;
-   $outstring .= sprintf (gettext("\n-----Delivery Status Report-----\n"));
+   $outstring .= gettext("\n-----Delivery Status Report-----\n");
    _do_text_plain ($entity);
-   $outstring .= sprintf (gettext("\n-----End of Delivery Status Report-----\n"));
+   $outstring .= gettext("\n-----End of Delivery Status Report-----\n");
  }
 
  sub _do_text_html {
@@ -309,7 +309,7 @@
       return 1;
   }      
 
-  $outstring .= sprintf(gettext ("[ Text converted from HTML ]\n"));
+  $outstring .= gettext("[ Text converted from HTML ]\n");
   
   # deal with 30 hyphens (RFC 1153)
   $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;

@@ -83,21 +83,21 @@ if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
     }
 
     if (-r "$cert") {
-	printf "$cert certificat already exist\n";
+	printf "certificate %s already exists\n", $cert;
 	die;
     }
     if (-r "$privatekey") {
-	printf "$privatekey already exist\n";
+	printf "private key %s already exists\n", $privatekey;
 	die;
     }
     
     unless ($openssl) {
-	printf "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
+	print "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
 	die;
     }
     
     system 'stty', '-echo';
-    printf "password to access to $p12input :";
+    printf "password to access to %s :", $p12input;
     chop($inpass = <STDIN>);
     print "\n";
     system 'stty', 'echo';
@@ -107,7 +107,7 @@ if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
     
     unless ($outpass) {
 	system 'stty', '-echo';
-	printf "sympa password to protect list private_key $key:";
+	printf "sympa password to protect list private key %s:", $key;
 	chop($outpass = <STDIN>);
 	print "\n";
 	system 'stty', 'echo';
@@ -116,7 +116,7 @@ if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
     print PASS "$inpass\n$outpass\n";
     close PASS;
     
-    printf "$privatekey and  $cert created.\n";
+    printf "private key %s and certificate %s were created.\n", $privatekey, $cert;
     exit;
 }
 
@@ -147,7 +147,7 @@ pkc#12 file).
 EOF
 
     unless ($outpass) {
-	printf <<"EOF";
+	print <<"EOF";
 Because you did not configure Sympa's password \"key_passwd\" in
 sympa.conf you will also be prompted for the password used by sympa to access
 to the list private key)
