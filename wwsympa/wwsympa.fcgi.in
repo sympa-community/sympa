@@ -8315,11 +8315,20 @@ sub do_send_me {
 
      my $message;
      if ($msgfile) {
-	 unless ($message = new Message({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato', 'list' => $list}) ) {
-	     $param->{'status'} = 'message_err';
-	     &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
-	     return undef;
-	 }
+	unless (open MSG, "$arcpath/arctxt/$msgfile") {
+	    $param->{'status'} = 'message_err';
+	    &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
+	}
+	my $msg_string;
+	while (<MSG>){
+	    $msg_string .= $_ ;
+	}
+	close MSG;
+	unless ($message = new Message({'messageasstring'=> $msg_string,'noxsympato'=>'noxsympato', 'list' => $list}) ) {
+	$param->{'status'} = 'message_err';
+	&wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
+	return undef;
+    }
 	$message->set_sympa_headers({'from'=>$robot->get_address(),'rcpt'=>$param->{'user'}{'email'}});
 	unless (mail::mail_forward($message, $robot->get_address(),
 	    $param->{'user'}{'email'}, $robot
