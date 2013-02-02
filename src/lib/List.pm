@@ -2500,7 +2500,7 @@ sub send_to_editor {
     my ($i, @rcpt);
     my $name  = $self->name;
     my $host  = $self->host;
-    my $robot = $self->domain;
+    my $robot = $self->robot;
 
     return unless $name and $self->config;
 
@@ -2528,15 +2528,11 @@ sub send_to_editor {
 
 	# prepare html view of this message
 	my $destination_dir =
-	    Site->viewmail_dir . '/mod/' . $self->get_list_id() .
-	    '/' . $modkey;
-	&Archive::convert_single_msg_2_html(
-	    {   'msg_as_string'   => $message->get_message_as_string,
-		'destination_dir' => $destination_dir,
-		'attachement_url' => "viewmod/$name/$modkey",
-		'list'            => $self,
-		'robot'	          => $robot,
-	    }
+	    Site->viewmail_dir . '/mod/' . $self->get_id() . '/' . $modkey;
+	Archive::convert_single_message(
+	    $self, $message,
+	    'destination_dir' => $destination_dir,
+	    'attachement_url' => join('/', '..', 'viewmod', $name, $modkey),
 	);
     }
     @rcpt = $self->get_editors_email();

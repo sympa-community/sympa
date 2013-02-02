@@ -22,8 +22,9 @@
 package Archive;
 
 use strict;
-#use Carp qw(carp); #currently not used
+use Carp qw(croak);
 use Cwd qw(getcwd);
+use Digest::MD5;
 use Encode qw(decode_utf8 encode_utf8);
 use HTML::Entities qw(decode_entities);
 
@@ -308,73 +309,145 @@ sub clean_archived_message {
 #    attachement_url is used to link attachement
 #    
 # NOTE: This might be moved to Site package as a mutative method.
-sub convert_single_msg_2_html {
-    
-    my $data =shift;
-    my $msg_as_string = $data->{'msg_as_string'};
-    my $destination_dir = $data->{'destination_dir'};
-    my $attachement_url = $data->{'attachement_url'};
-    my $list = $data->{'list'};
-    my $robot = Robot::clean_robot($data->{'robot'});
-    my $messagekey = $data->{'messagekey'};
+# NOTE: convert_single_msg_2_html() was deprecated.
+sub convert_single_message {
+    my $that = shift; # List or Robot object
+    my $message = shift; # Message object or hashref
+    my %opts = @_;
 
-    my $listname ='';
-    my $msg_file;
-    #XXXmy $host = $robot;
-    my $host;
-    if ($list) {
-	$host = $list->host;
-	$robot = $list->robot;
-	$listname = $list->name;
-	$msg_file = $robot->tmpdir . '/' . $list->get_id() . '_' . $$;
-    } else {
-	$host = $robot->host;
+    my $robot;
+    my $listname;
+    my $hostname;
+    if (ref $that and ref $that eq 'List') {
+	$robot = $that->robot;
+	$listname = $that->name;
+    } elsif (ref $that and ref $that eq 'Robot') {
+	$robot = $that;
 	$listname = '';
-	$msg_file = $robot->tmpdir . '/' . $messagekey . '_' . $$;
+    } else {
+	croak 'bug in logic.  Ask developer';
+    }
+    $hostname = $that->host;
+
+    my $msg_as_string;
+    my $messagekey;
+    if (ref $message eq 'Message') {
+	$msg_as_string = $message->get_message_as_string;
+	$messagekey = $message->{'messagekey'};
+    } elsif (ref $message eq 'HASH') {
+	$msg_as_string = $message->{'messageasstring'};
+	$messagekey = $message->{'messagekey'};
+    } else {
+        croak 'bug in logic.  Ask developer';
     }
 
-    my $pwd = getcwd;  #  mhonarc require du change workdir so this proc must retore it    
-    unless (open(OUT, ">$msg_file")) {
-&Log::do_log('notice', 'Could Not open %s', $msg_file);
+    my $destination_dir = $opts{'destination_dir'};
+    my $attachement_url = $opts{'attachement_url'};
+
+    my $mhonarc_ressources = $that->get_etc_filename(
+	'mhonarc-ressources.tt2'
+    );
+    unless ($mhonarc_ressources) {
+	Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
 	return undef;
     }
-    print OUT $msg_as_string ;
-    close(OUT);
 
     unless (-d $destination_dir) {
-	unless (&tools::mkdir_all($destination_dir, 0777)) {
-	    &Log::do_log('err','Unable to create %s', $destination_dir);
+	unless (tools::mkdir_all($destination_dir, 0755)) {
+	    Log::do_log('err', 'Unable to create %s', $destination_dir);
 	    return undef;
 	}
     }
-    my $mhonarc_ressources = ($list || $robot)->get_etc_filename(
-	'mhonarc-ressources.tt2');
-    
-    unless ($mhonarc_ressources) {
-&Log::do_log('notice',"Cannot find any MhOnArc ressource file");
+
+    my $msg_file = $destination_dir . '/msg00000.txt';
+    unless (open OUT, '>', $msg_file) {
+	Log::do_log('notice', 'Could Not open %s', $msg_file);
 	return undef;
     }
+    print OUT $msg_as_string;
+    close OUT;
+
+    # mhonarc require du change workdir so this proc must retore it    
+    my $pwd = getcwd;
+
     ## generate HTML
     unless (chdir $destination_dir) {
-&Log::do_log('err',"Could not change working directory to %s",$destination_dir);
+	Log::do_log('err', 'Could not change working directory to %s',
+	    $destination_dir);
+	return undef;
     }
-    my $tracepwd = getcwd ;
 
-
-    my $mhonarc = $robot->mhonarc;
-    my $base_url = $robot->wwsympa_url;
-    #open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file |";
-    #open MSG, ">msg00000.html";
-    #&Log::do_log('debug', "$mhonarc  --outdir .. -single -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host $msg_file");
-    #print MSG <ARCMOD>;
-    #close MSG;
-    #close ARCMOD;
-    `$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file > msg00000.html`;
+    my $tag = get_tag($that);
+    my $exitcode = system(
+	$robot->mhonarc, '-single',
+	'-rcfile' => $mhonarc_ressources,
+	'-definevars' => "listname='$listname' hostname=$hostname tag=$tag",
+	'-outdir' => $destination_dir,
+	'-attachmentdir' => $destination_dir,
+	'-attachmenturl' => $attachement_url,
+	'-umask' => Site->umask,
+	'-stdout' => "$destination_dir/msg00000.html",
+	'--', $msg_file
+    ) >> 8;
 
     # restore current wd 
     chdir $pwd;		
 
+    if ($exitcode) {
+	Log::do_log('err', 'Command %s failed with exit code %d',
+	    $robot->mhonarc, $exitcode
+	);
+    }
+
     return 1;
+}
+
+=head2 sub get_tag(OBJECT $that)
+
+Returns a tag derived from the listname.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$that>, a List or Robot object.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<a character string>, corresponding to the 10 last characters of a 32 bytes string containing the MD5 digest of the concatenation of the following strings (in this order):
+
+=over 4
+
+=item - the cookie config parameter
+
+=item - a slash: "/"
+
+=item - name attribute of the I<$that> argument
+
+=back 
+
+=back
+
+=head3 Calls 
+
+=over 
+
+=item * Digest::MD5::md5_hex
+
+=back 
+
+=cut 
+
+sub get_tag {
+    my $that = shift;
+
+    return substr(
+	Digest::MD5::md5_hex(join '/', Site->cookie, $that->name), -10
+    );
 }
 
 1;

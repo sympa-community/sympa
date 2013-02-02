@@ -43,6 +43,7 @@ use strict;
 use Getopt::Long;
 use Digest::MD5;
 
+#use Archive; # used in List
 use List;
 use Message;
 #use Conf; # used in List - Site
@@ -458,7 +459,7 @@ Rebuilds archives for the list the name of which is given in the argument $adrli
 
 =over 
 
-=item * get_tag
+=item * Archive::get_tag
 
 =item * set_hidden_mode
 
@@ -497,11 +498,10 @@ sub rebuild {
 	       return undef;
     }
 
-    my $tag = &get_tag($listname);
-
     my $list = new List($listname, $hostname);
     my $robot = $list->robot;
     my $arcpath = $robot->arc_path;
+    my $tag = Archive::get_tag($list);
     Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
 
     my $mhonarc_ressources = $list->get_etc_filename('mhonarc-ressources.tt2');
@@ -702,7 +702,7 @@ Archives one message into one list archives directory.
 
 =over 
 
-=item * get_tag
+=item * Archive::get_tag
 
 =item * save_idx
 
@@ -753,7 +753,7 @@ sub mail2arc {
 	return undef;
     }
 
-    my $tag = &get_tag($list->name);
+    my $tag = Archive::get_tag($list);
 
     if ($list->web_archive_spam_protection ne 'none' and
 	$list->web_archive_spam_protection ne 'cookie') {
@@ -927,7 +927,7 @@ Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and $ENV{'M2H_MODIFYBODYADDRESSE
 
 =over 
 
-=item * I<$tag> a character string (containing the result of get_tag($listname))
+=item * I<$tag> a character string (containing the result of get_tag($list))
 
 =back 
 
@@ -1063,39 +1063,8 @@ sub create_idx {
 
 =head2 sub get_tag(STRING $listname)
 
-Returns a tag derived from the listname.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$listname>, a character string correspondiong to the list name.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<a character string>, corresponding to the 10 last characters of a 32 bytes string containing the MD5 digest of the concatenation of the following strings (in this order):
-
-=over 4
-
-=item - the cookie config parameter
-
-=item - a slash: "/"
-
-=item - the I<$listname> argument
-
-=back 
-
-=head3 Calls 
-
-=over 
-
-=item * Digest::MD5::md5_hex
-
-=back 
+I<OBSOLETED>.
+Use L<Archive/get_tag>.
 
 =cut 
 
