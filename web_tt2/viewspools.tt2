@@ -22,8 +22,8 @@
 <ul>
 [% |loc %]Select messages by status:[% END %]
   <select id="spool_status" name="spool_status" onchange="this.form.submit();">
-          <option value="ok" [% IF spool_status == 'ok' %] selected="selected" [%END%]>ok</option>
-          <option value="bad" [% IF spool_status == 'bad' %] selected="selected" [%END%]>bad</option>
+          <option value="ok" [% IF spool_status == 'ok' %] selected="selected" [%END%]>[%|loc%]ok[%END%]</option>
+          <option value="bad" [% IF spool_status == 'bad' %] selected="selected" [%END%]>[%|loc%]bad[%END%]</option>
   </select>
 
 [% IF total == 0 %] 
@@ -77,7 +77,7 @@
  <table summary="[%|loc%]Spool content[%END%] :" class="listOfItems">
    <tr>
    <th>
-   <input type="button" name="action_viewspools" value="Index"  onclick="this.form.elements['sortby'].value='index' ; this.form.elements['nav'].value='first';
+   <input type="button" name="action_viewspools" value="[%|loc%]Index[%END%]"  onclick="this.form.elements['sortby'].value='index' ; this.form.elements['nav'].value='first';
       [% IF sortby == 'index' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
@@ -85,21 +85,21 @@
    </th>
    <th>[%|loc%]Message[%END%]</th>
    <th>
-    <input  type="button" name="action_viewspools" value="Date"  onclick="this.form.elements['sortby'].value='date' ; this.form.elements['nav'].value='first'; 
+    <input  type="button" name="action_viewspools" value="[%|loc%]Date[%END%]"  onclick="this.form.elements['sortby'].value='date' ; this.form.elements['nav'].value='first'; 
       [% IF sortby == 'date' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
       this.form.submit()">
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="List"  onclick="this.form.elements['sortby'].value='list' ; this.form.elements['nav'].value='first'; 
+    <input  type="button" name="action_viewspools" value="[%|loc%]List[%END%]"  onclick="this.form.elements['sortby'].value='list' ; this.form.elements['nav'].value='first'; 
       [% IF sortby == 'list' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
       this.form.submit()">
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="Robot"  onclick="this.form.elements['sortby'].value='robot' ; this.form.elements['nav'].value='first'; 
+    <input  type="button" name="action_viewspools" value="[%|loc%]Robot[%END%]"  onclick="this.form.elements['sortby'].value='robot' ; this.form.elements['nav'].value='first'; 
       [% IF sortby == 'robot' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
@@ -107,14 +107,14 @@
    </th>
 [%- IF spoolname == 'task' -%]
    <th>
-    <input  type="button" name="action_viewspools" value="Task"  onclick="this.form.elements['sortby'].value='task' ; this.form.elements['nav'].value='first'; 
+    <input  type="button" name="action_viewspools" value="[%|loc%]Task[%END%]"  onclick="this.form.elements['sortby'].value='task' ; this.form.elements['nav'].value='first'; 
       [% IF sortby == 'task' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
       this.form.submit()">
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="Task_flavour"  onclick="this.form.elements['sortby'].value='task_flavour' ; this.form.elements['nav'].value='first'; 
+    <input  type="button" name="action_viewspools" value="[%|loc%]Task flavour[%END%]"  onclick="this.form.elements['sortby'].value='task_flavour' ; this.form.elements['nav'].value='first'; 
       [% IF sortby == 'task' %]
           [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
       [% END %] 
@@ -123,29 +123,29 @@
 [% ELSE -%]
 [%- IF conf.antispam_feature == 'on' -%]
    <th>
-   <input  type="button" name="action_viewspools" value="Spam"  onclick="this.form.elements['sortby'].value='spam_status' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  type="button" name="action_viewspools" value="[%|loc%]Spam[%END%]"  onclick="this.form.elements['sortby'].value='spam_status' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
 [% END %]
    <th>
-   <input  type="button" name="action_viewspools" value="Sender"  onclick="this.form.elements['sortby'].value='sender' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  type="button" name="action_viewspools" value="[%|loc%]Sender[%END%]"  onclick="this.form.elements['sortby'].value='sender' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="Subject"  onclick="this.form.elements['sortby'].value='subject' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %]  this.form.submit()">
+   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Subject[%END%]"  onclick="this.form.elements['sortby'].value='subject' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %]  this.form.submit()">
    </th>
 
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="Lock"  onclick="this.form.elements['sortby'].value='lock' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Lock[%END%]"  onclick="this.form.elements['sortby'].value='lock' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="Priority"  onclick="this.form.elements['sortby'].value='priority' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Priority[%END%]"  onclick="this.form.elements['sortby'].value='priority' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
    [%- IF spool_status == 'bad' -%]
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="Diag"  onclick="this.form.elements['sortby'].value='diag' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Diag[%END%]"  onclick="this.form.elements['sortby'].value='diag' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
    </th>
    [%- END -%]
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="Size"  onclick="this.form.elements['sortby'].value='size' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Size[%END%]"  onclick="this.form.elements['sortby'].value='size' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
 [% END %]
 </tr>
 
@@ -164,10 +164,10 @@
 	<td style="align:right">[% msg.messagekey %]</td>
 
 	<td>
-		<input type="button" class="MainMenuLinks" name="action_viewspool_message" value="view" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this)" />
-		<input type="button" class="MainMenuLinks" name="action_viewspool_message_dump" value="dump" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_dump/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this)" />
-		<input type="button" class="MainMenuLinks" name="action_viewspool_message_remove" value="remove" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_remove/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this, 'removed_ok')" />
-		<input type="button" class="MainMenuLinks" name="action_viewspool_message_mv" [% IF spool_status == 'bad' -%]value="set status OK"[% ELSE -%]value="set status bad"[% END -%] onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_mv/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]/[% spoolname %]/[% IF spool_status == 'bad' -%]ok[% ELSE -%]bad[% END -%] ', this, 'removed_ok')" />
+		<input type="button" class="MainMenuLinks" name="action_viewspool_message" value="[%|loc%]view[%END%]" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this)" />
+		<input type="button" class="MainMenuLinks" name="action_viewspool_message_dump" value="[%|loc%]dump[%END%]" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_dump/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this)" />
+		<input type="button" class="MainMenuLinks" name="action_viewspool_message_remove" value="[%|loc%]remove[%END%]" onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_remove/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]', this, 'removed_ok')" />
+		<input type="button" class="MainMenuLinks" name="action_viewspool_message_mv" [% IF spool_status == 'bad' -%]value="[%|loc%]set status OK[%END%]"[% ELSE -%]value="[%|loc%]set status bad[%END%]"[% END -%] onclick="spoolPopup('[% msg.messagekey %]', '[% path_cgi %]/ajax/viewspool_message_mv/[% spoolname %]/[% msg.messagekey %]/[% msg.status %]/[% spoolname %]/[% IF spool_status == 'bad' -%][%|loc%]ok[%END%][% ELSE -%][%|loc%]bad[%END%][% END -%] ', this, 'removed_ok')" />
 
 		<div id="mainviewspool[% msg.messagekey %]" class="block viewspool" style="display:none ; background-color:[% color_5 %]; position:absolute; width:80%">
 			<input style="float:right" type="button" name="action_viewspool_message" value="X"  onclick="jQuery(this).parent().hide()"/>	
@@ -205,10 +205,10 @@
 	</td>
 	[%- END -%]
 
-	<td>[% msg.sender %]</td><td>[% msg.subject %]</td>
+	<td>[% msg.gecos %] &lt;[% msg.sender %]&gt;</td><td>[% msg.subject %]</td>
 	<td>
 	[% IF msg.lock %]
-	  locked by [% msg.lock %] at[% msg.lockdate_asstring %]
+	  [%|loc(msg.lock,msg.lockdate_asstring)%]locked by %1 at %2[%END%]
 	[% ELSE %]
 	  &nbsp;
 	[% END %]
