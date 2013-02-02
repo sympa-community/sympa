@@ -337,8 +337,12 @@ sub get_sender_email {
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
 		if (scalar @sender_hdr and $sender_hdr[0]->address) {
 		    $sender = lc($sender_hdr[0]->address);
-		    $gecos = MIME::EncWords::decode_mimewords(
-			$sender_hdr[0]->phrase || '');
+		    my $phrase = $sender_hdr[0]->phrase;
+		    if (defined $phrase and length $phrase) {
+			$gecos = MIME::EncWords::decode_mimewords(
+			    $phrase, Charset => 'UTF-8'
+			);
+		    }
 		    last;
 		}
 	    }
