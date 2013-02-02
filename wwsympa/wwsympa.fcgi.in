@@ -493,7 +493,7 @@ my %action_args = ('default' => ['list'],
 		'redirect' => [],
 		'viewlogs' => ['list','page','size','sortby'],
 		'viewspools' => ['spoolname','spool_status'],
-		'viewspool_message' => ['spoolname','messagekey','spool_status'],
+		'viewspool_message' => ['spoolname','messagekey','spool_status','@file'],
 		'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
 		'viewspool_message_remove' => ['spoolname','messagekey','spool_status'],
 		'viewspool_message_mv' => ['spoolname','messagekey','spool_status','new_spoolname','new_status'],
@@ -17455,7 +17455,6 @@ sub do_viewlogs {
  ## of there robot or there is real problems with privacy policy and law in such services.
  ## 
 sub do_viewspools {
-
     my $spoolname = 'msg';
     $spoolname = $in{'spoolname'} if ($in{'spoolname'});
     $param->{'spoolname'} = $spoolname;
@@ -17485,7 +17484,6 @@ sub do_viewspools {
 	$spool_page_size = $session->{'review_page_spool_page_size'} || 25 ;
     }
     $param->{'spool_page_size'} = $spool_page_size;
-    
 
     my $spool = new Sympaspool($spoolname,$spool_status);
     unless ($spool) {
@@ -17544,6 +17542,12 @@ sub do_viewspools {
 	$selector{'list'}=$in{'list'};
     }
     my @messages = $spool->get_content({'selector'=> \%selector ,'selection'=>'*_but_message','offset'=>$offset,'page_size' => $spool_page_size,'sortby' => $in{'sortby'},'way' => $in{'way'}});
+    foreach my $message (@messages) {
+	next unless defined $message->{'subject'};
+	$message->{'subject'} = MIME::EncWords::decode_mimewords(
+	    $message->{'subject'}, Charset => 'utf-8'
+	);
+    }
     $param->{'spool_content'} = \@messages;
     return 1;
 }
@@ -17552,11 +17556,13 @@ sub do_viewspools {
 sub do_viewspool_message {
     my $messagekey = $in{'messagekey'};
     my $spoolname = $in{'spoolname'};
+    $param->{'messagekey'} = $messagekey;
     $param->{'spoolname'} = $spoolname;
     my $status = 'ok';
-    $status = $in{'spool_status'} if ($in{'spool_status'});
+    $status = $in{'spool_status'}
+	if $in{'spool_status'} and $in{'spool_status'} =~ /^(ok|bad)$/;;
     $param->{'spool_status'} = $status;
-			       
+
     &wwslog('info', 'do_viewspool_message(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
 
     my $spool = new Sympaspool($spoolname,$status);
@@ -17592,24 +17598,29 @@ sub do_viewspool_message {
 
     my $destination_dir = Site->viewmail_dir . '/spool/viewmail/' . $messagekey;
     unless (-d $destination_dir) {
-	Archive::convert_single_msg_2_html(
-	    {   'msg_as_string' => $param->{'spool_message_asstring'},
-		'destination_dir' => $destination_dir,
-		'attachement_url' => "viewspool_message/$messagekey",
-		'list' => $list,
-		'robot' => $robot,
-		'messagekey' => $messagekey,
-	    }
+	Archive::convert_single_message(
+	    ($list || $robot), $messages[0],
+	    'destination_dir' => $destination_dir,
+	    'attachement_url' => join('/',
+		'..', 'viewspool_message', $spoolname, $messagekey, '_'
+	    ),
 	);
     }
-    tt2::add_include_path($destination_dir);
+
+    if ($in{'file'}) {
+	$in{'file'} =~ /\.(\w+)$/;
+	$param->{'file_extension'} = $1;
+	$param->{'file'} = $destination_dir.'/'.$in{'file'};
+	$param->{'bypass'} = 1;
+    } else {
+	tt2::add_include_path($destination_dir);
+    }
 
     return 1;
 }
 
  ## deliver a view of an message identified by the spoolname and the messagekey
 sub do_viewspool_message_dump {
-    
     my $messagekey = $in{'messagekey'};
     my $spoolname = $in{'spoolname'};
     $param->{'spoolname'} = $spoolname;
@@ -17618,7 +17629,6 @@ sub do_viewspool_message_dump {
     $param->{'spool_status'} = $status;
 			       
     &wwslog('info', 'do_viewspool_message_dump(spoolname = %s,messagekey = %s, status =%s)',$spoolname,$messagekey,$status);
-
 
     unless  ( $param->{'is_listmaster'}){
 	&report::reject_report_web('auth','action_listmaster',{},$param->{'action'});
@@ -17631,25 +17641,27 @@ sub do_viewspool_message_dump {
 	&wwslog('info','do_viewspools: unkown spool');
 	return undef;
     }
-    my @messages = $spool->get_content({'selector'=> {'messagekey'=>$messagekey},'selection'=>'*'});
-    
+    my @messages = $spool->get_content(
+	{'selector'=> {'messagekey'=>$messagekey}, 'selection'=>'*'}
+    );
+
     unless ($#messages == 0){
 	&report::reject_report_web('intern','could not find message');
 	&wwslog('info','do_viewspool_message_dump : could not find message %s',$#messages);
-	    return;
+	return undef;
     }
 
+    $param->{'msg_file'} = $robot->tmpdir . '/' . $messagekey . '_' . $$;
 
-    $param->{'msg_file'} = $robot->tmpdir.'/'.$messagekey.'_'.$$;
-    
-
-    unless (open(OUT, ">$param->{'msg_file'}")) {
-	&Log::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
+    unless (open OUT, '>', $param->{'msg_file'}) {
+	Log::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
 	return undef;
     }
     print OUT $messages[0]->{'messageasstring'};
     if (close(OUT)) {
-	&Log::do_log('info',"message (messagekey = %s) flushed in file %s",$messagekey,$param->{'msg_file'});
+	Log::do_log('info', 'message (messagekey = %s) flushed in file %s',
+	    $messagekey, $param->{'msg_file'}
+	);
     }
     return 1;
 }
