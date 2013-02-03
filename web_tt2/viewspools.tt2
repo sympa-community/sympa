@@ -8,7 +8,7 @@
    [% IF existingspool == spoolname %]
      <b>[% existingspool %]</b>
    [% ELSE %]
-    <a class="MainMenuLinks" href="[% path_cgi %]/viewspools/[% existingspool %]">[% existingspool %]</a>
+    <a class="MainMenuLinks" href="[% path_cgi %]/viewspools/[% existingspool %]/[% spool_status %]/[% spool_page_size %]/[% sortby %]/[% way %]">[% existingspool %]</a>
    [% END %]
    &nbsp;
 [% END %]
@@ -16,11 +16,11 @@
 </p>
 <p>
 
-<form class="noborder" action="[% path_cgi %]/viewspools/[% spoolname %]" method="POST">
+<form id="viewspools_form" class="noborder" action="[% path_cgi %]/viewspools/[% spoolname %]" method="POST">
  <fieldset>
 
 <ul>
-[% |loc %]Select messages by status:[% END %]
+<label for="spool_status">[% |loc %]Select messages by status:[% END %]</label>
   <select id="spool_status" name="spool_status" onchange="this.form.submit();">
           <option value="ok" [% IF spool_status == 'ok' %] selected="selected" [%END%]>[%|loc%]ok[%END%]</option>
           <option value="bad" [% IF spool_status == 'bad' %] selected="selected" [%END%]>[%|loc%]bad[%END%]</option>
@@ -28,6 +28,12 @@
 
 [% IF total == 0 %] 
 <li>[% |loc %]This spool is empty.[% END %]</li></ul>
+
+  <input type="hidden" name="sortby" value="[% sortby %]" />
+  <input type="hidden" name="way" value="[% way %]" />
+  <input type="hidden" name="spoolname" value="[% spoolname %]" />
+  <input type="hidden" name="spool_page_size" value="[% spool_page_size %]" />
+
 [% ELSE %]
 [% global_count = global_count_ok  + global_count_bad %]
 <li>[% |loc(global_count,global_count_ok,global_count_bad) %]All spools count: %1  (%2 entries with status ok, %3 entries with status bad) [% END %]</li>
@@ -39,13 +45,14 @@
 
 <div class="search_form">
 
-  <label for="size">[%|loc%]Page size[%END%]</label>
-  <input type="hidden" name="sortby" value="" />
-  <input type="hidden" name="way" value="" />
+  <input type="hidden" name="sortby" value="[% sortby %]" />
+  <input type="hidden" name="way" value="[% way %]" />
   <input type="hidden" name="action" value="viewspools" />
   <input type="hidden" name="nav" value="current" />
   <input type="hidden" name="spoolname" value="[% spoolname %]" />
   <input type="hidden" name="current_page" value="[% current_page %]" />
+
+  <label for="spool_page_size">[%|loc%]Page size[%END%]</label>
   <select id="spool_page_size" name="spool_page_size" onchange="this.form.submit();">
           <option value="[% spool_page_size %]" selected="selected">[% spool_page_size %]</option>
 	  <option value="25">25</option>
@@ -57,14 +64,14 @@
 [% IF current_page == 1 %]
 &nbsp;&nbsp;&lt;&lt;&nbsp;&nbsp;&lt;&nbsp;&nbsp;
 [% ELSE %]
-  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="<<" onclick="this.form.elements['nav'].value='first'; this.form.submit()" />
-  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="<" onclick="this.form.elements['nav'].value='previous'; this.form.submit()"/>
+  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="&lt;&lt;" onclick="this.form.elements['nav'].value='first'; this.form.submit()" />
+  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="&lt;" onclick="this.form.elements['nav'].value='previous'; this.form.submit()"/>
  [% END %]
 [% IF current_page == total_page %]
 &nbsp;&nbsp;&gt;&nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp;
 [% ELSE %]
-  <input  type="button" class="MainMenuLinks" name="action_viewspools" value=">" onclick="this.form.elements['nav'].value='next'; this.form.submit()"/>
-  <input  type="button" class="MainMenuLinks" name="action_viewspools" value=">>" onclick="this.form.elements['nav'].value='last'; this.form.submit()"/>
+  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="&gt;" onclick="this.form.elements['nav'].value='next'; this.form.submit()"/>
+  <input  type="button" class="MainMenuLinks" name="action_viewspools" value="&gt;&gt;" onclick="this.form.elements['nav'].value='last'; this.form.submit()"/>
 [% END %]
 </div>
 
@@ -77,75 +84,78 @@
  <table summary="[%|loc%]Spool content[%END%] :" class="listOfItems">
    <tr>
    <th>
-   <input type="button" name="action_viewspools" value="[%|loc%]Index[%END%]"  onclick="this.form.elements['sortby'].value='index' ; this.form.elements['nav'].value='first';
-      [% IF sortby == 'index' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/index/[% IF sortby == 'index' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Index[%END%][%IF sortby == 'index'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>[%|loc%]Message[%END%]</th>
    <th>
-    <input  type="button" name="action_viewspools" value="[%|loc%]Date[%END%]"  onclick="this.form.elements['sortby'].value='date' ; this.form.elements['nav'].value='first'; 
-      [% IF sortby == 'date' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/date/[% IF sortby == 'date' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Date[%END%][%IF sortby == 'date'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="[%|loc%]List[%END%]"  onclick="this.form.elements['sortby'].value='list' ; this.form.elements['nav'].value='first'; 
-      [% IF sortby == 'list' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/list/[% IF sortby == 'list' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]List[%END%][%IF sortby == 'list'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="[%|loc%]Robot[%END%]"  onclick="this.form.elements['sortby'].value='robot' ; this.form.elements['nav'].value='first'; 
-      [% IF sortby == 'robot' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/robot/[% IF sortby == 'robot' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Robot[%END%][%IF sortby == 'robot'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
 [%- IF spoolname == 'task' -%]
    <th>
-    <input  type="button" name="action_viewspools" value="[%|loc%]Task[%END%]"  onclick="this.form.elements['sortby'].value='task' ; this.form.elements['nav'].value='first'; 
-      [% IF sortby == 'task' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/task/[% IF sortby == 'task' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Task[%END%][%IF sortby == 'task'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>
-    <input  type="button" name="action_viewspools" value="[%|loc%]Task flavour[%END%]"  onclick="this.form.elements['sortby'].value='task_flavour' ; this.form.elements['nav'].value='first'; 
-      [% IF sortby == 'task' %]
-          [% IF way == 'asc' %] this.form.elements['way'].value='desc';[% ELSE %]this.form.elements['way'].value='asc';[% END %]
-      [% END %] 
-      this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/task_flavour/[% IF sortby == 'task_flavour' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Task flavor[%END%][%IF sortby == 'task_flavour'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
 [% ELSE -%]
 [%- IF conf.antispam_feature == 'on' -%]
    <th>
-   <input  type="button" name="action_viewspools" value="[%|loc%]Spam[%END%]"  onclick="this.form.elements['sortby'].value='spam_status' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/spam_status/[% IF sortby == 'spam_status' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Spam[%END%][%IF sortby == 'spam_status'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
 [% END %]
    <th>
-   <input  type="button" name="action_viewspools" value="[%|loc%]Sender[%END%]"  onclick="this.form.elements['sortby'].value='sender' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/sender/[% IF sortby == 'sender' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Sender[%END%][%IF sortby == 'sender'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Subject[%END%]"  onclick="this.form.elements['sortby'].value='subject' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %]  this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/subject/[% IF sortby == 'subject' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Subject[%END%][%IF sortby == 'subject'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
 
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Lock[%END%]"  onclick="this.form.elements['sortby'].value='lock' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/lock/[% IF sortby == 'lock' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Lock[%END%][%IF sortby == 'lock'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Priority[%END%]"  onclick="this.form.elements['sortby'].value='priority' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/priority/[% IF sortby == 'priority' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Priority[%END%][%IF sortby == 'priority'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    [%- IF spool_status == 'bad' -%]
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Diag[%END%]"  onclick="this.form.elements['sortby'].value='diag' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/diag/[% IF sortby == 'diag' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Diag[%END%][%IF sortby == 'diag'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
    </th>
    [%- END -%]
    <th>
-   <input  class="sortby" type="button" name="action_viewspools" value="[%|loc%]Size[%END%]"  onclick="this.form.elements['sortby'].value='size' ; this.form.elements['nav'].value='first'; [% IF way == 'asc' %] this.form.elements['way'].value='desc' ;[% END %] this.form.submit()">
+   <a href="[%path_cgi%]/viewspools/[%spoolname%]/[%spool_status%]/[%spool_page_size%]/size/[% IF sortby == 'size' && way == 'asc'%]desc[%ELSE%]asc[%END%]">
+       [%|loc%]Size[%END%][%IF sortby == 'size'%][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]
+   </a>
+   </th>
 [% END %]
 </tr>
 

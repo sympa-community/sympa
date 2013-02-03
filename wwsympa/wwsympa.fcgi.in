@@ -492,7 +492,7 @@ my %action_args = ('default' => ['list'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
 		'viewlogs' => ['list','page','size','sortby'],
-		'viewspools' => ['spoolname','spool_status'],
+		'viewspools' => ['spoolname','spool_status','spool_page_size','sortby','way'],
 		'viewspool_message' => ['spoolname','messagekey','spool_status','@file'],
 		'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
 		'viewspool_message_remove' => ['spoolname','messagekey','spool_status'],
@@ -17525,10 +17525,12 @@ sub do_viewspools {
     my $offset = ($param->{'current_page'} -  1) * $spool_page_size;
 
     # force sortby to a correct value
-    $in{'sortby'} = 'index' unless ($in{'sortby'} =~ /(index)|(list)|(robot)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/);
+    $in{'sortby'} = 'index'
+	unless $in{'sortby'} and
+	$in{'sortby'} =~ /(index)|(list)|(robot)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/;
     $param->{'sortby'} = $in{'sortby'};
 
-    $in{'way'} = 'asc' unless ($in{'way'} eq 'desc');
+    $in{'way'} = 'asc' unless $in{'way'} and $in{'way'} eq 'desc';
     $param->{'way'} = $in{'way'};
 
     # 'index' in user interface is mapped to 'messagekey' table field
