@@ -10,7 +10,7 @@
       <input type="hidden" name="previous_action" value="reviewbouncing" />
       <input type="hidden" name="list" value="[% list %]" />
       <input type="hidden" name="action" value="search" />
-  <input size="25" name="filter" value="[% filter %]" />&nbsp;<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+  <input size="25" id="filter_reviewbouncing" name="filter" value="[% filter %]" />&nbsp;<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" onclick="return isNotEmpty('filter_reviewbouncing')" />
 </fieldset>
 </form>
 

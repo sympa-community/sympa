@@ -52,9 +52,9 @@
 			<input type="hidden" name="action" value="add" />
 			<label for="email_search">[%|loc%]Add an user: [%END%]</label>
 			<input id="email_search" type="text" name="email" size="35" />
-			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" />
+			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add[%END%]" onclick="return isNotEmpty('email_search')" />
 			<input id="quietly" type="hidden" name="quiet" value="0"/>
-			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add quietly[%END%]" onclick="setnsubmit('quietly','value','1','myform');return false;" />
+			<input class="MainMenuLinks" type="submit" name="action_add" value="[%|loc%]Add quietly[%END%]" onclick="if (isNotEmpty('email_search')) setnsubmit('quietly', 'value', '1', 'myform'); else return false;" />
 			&nbsp;&nbsp;<a class="actionMenuLinks" href="[% path_cgi %]/add_request/[% list %]">[%|loc%]Multiple add[%END%]</a>
 		</fieldset>
 	</form>
@@ -65,9 +65,9 @@
 		<input type="hidden" name="previous_action" value="review" />
 		<input type="hidden" name="list" value="[% list %]" />
 		<input type="hidden" name="action" value="search" />
-		<label for="filter">[%|loc%]Search user by e-mail: [%END%]</label>
-		<input alt="[%|loc%]Search user by email[%END%]" type="text" size="18" id="filter" name="filter" value="[% filter %]" />
-		<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" />
+		<label for="filter_review">[%|loc%]Search user by e-mail or name: [%END%]</label>
+		<input title="[%|loc%]Search user by email or name[%END%]" type="text" size="18" id="filter_review" name="filter" value="[% filter %]" />
+		<input class="MainMenuLinks" type="submit" name="action_search" value="[%|loc%]Search[%END%]" onclick="return isNotEmpty('filter_review')" />
 		<br />
 		[%|loc%]Searches are limited to 50 results, except when using a @domain mask.[%END%]
 		<br />

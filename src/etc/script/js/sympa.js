@@ -1118,3 +1118,13 @@ function spoolPopup(msgkey, url, trigger, remove_if_divclass_present) {
 		p.detach().appendTo(jQuery('body')).css({'top': pos.top, 'left': pos.left, 'width': (jQuery('body').innerWidth() - pos.left - 100) + 'px', 'z-index': 10000});
 	}
 }
+
+/* check if the value of element is not empty */
+function isNotEmpty(id) {
+  if (document.getElementById(id)) {
+    var value = document.getElementById(id).value;
+    if (value.replace(/\s+/g, ''))
+      return true;
+  }
+  return false;
+}
