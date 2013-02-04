@@ -462,7 +462,7 @@ sub load_create_list_conf {
 
 ## NOTE: This might be moved to wwslib.
 sub get_list_list_tpl {
-    my $robot = shift;
+    my $robot = Robot::clean_robot(shift);
 
     my $list_conf;
     my $list_templates ;
@@ -470,11 +470,8 @@ sub get_list_list_tpl {
 	return undef;
     }
     
-    ##FIXME: use $robot->get_etc_include_path().
     foreach my $dir (
-        Sympa::Constants::DEFAULTDIR . '/create_list_templates',
-        Site->etc . "/create_list_templates",
-        Site->etc . "/$robot/create_list_templates"
+	@{$robot->get_etc_include_path('create_list_templates')}
     ) {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
