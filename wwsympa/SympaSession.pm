@@ -403,7 +403,7 @@ sub purge_old_tickets {
     
     my $total =  $sth->fetchrow;
     if ($total == 0) {
-	Log::do_log('no tickets to expire');
+	Log::do_log('debug3', 'no tickets to expire');
     }else{
 	unless ($sth = SDM::do_query(
 	    q{DELETE FROM one_time_ticket_table%s},
