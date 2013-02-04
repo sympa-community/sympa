@@ -9265,7 +9265,11 @@ sub do_create_list_request {
 	 &report::reject_report_web('intern','unable_to_load_create_list_templates',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
      }	
 
-     &tt2::allow_absolute_path();
+    foreach my $dir (
+	@{$robot->get_etc_include_path('create_list_templates')}
+    ) {
+	tt2::add_include_path($dir);
+    }
 
      foreach my $template (keys %{$param->{'list_list_tpl'}}){
 	 $param->{'tpl_count'} ++ ;

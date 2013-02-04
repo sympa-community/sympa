@@ -471,7 +471,7 @@ sub get_list_list_tpl {
     }
     
     foreach my $dir (
-	@{$robot->get_etc_include_path('create_list_templates')}
+	reverse @{$robot->get_etc_include_path('create_list_templates')}
     ) {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
@@ -485,9 +485,11 @@ sub get_list_list_tpl {
 		my $locale = &Language::Lang2Locale( &Language::GetLang());
 		## Look for a comment.tt2 in the appropriate locale first
 		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
-		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/'.$locale.'/comment.tt2';
+		    $list_templates->{$template}{'comment'} =
+			$template.'/'.$locale.'/comment.tt2';
 		}elsif (-r $dir.'/'.$template.'/comment.tt2') {
-		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment.tt2';
+		    $list_templates->{$template}{'comment'} =
+			$template.'/comment.tt2';
 		}
 	    }
 	    closedir(DIR);
