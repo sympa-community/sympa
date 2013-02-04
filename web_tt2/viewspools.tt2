@@ -14,34 +14,32 @@
 [% END %]
 
 </p>
-<p>
 
-<form id="viewspools_form" class="noborder" action="[% path_cgi %]/viewspools/[% spoolname %]" method="POST">
+<form id="viewspools_form" class="noborder" action="[% path_cgi %]/viewspools" method="POST">
  <fieldset>
 
-<ul>
 <label for="spool_status">[% |loc %]Select messages by status:[% END %]</label>
   <select id="spool_status" name="spool_status" onchange="this.form.submit();">
           <option value="ok" [% IF spool_status == 'ok' %] selected="selected" [%END%]>[%|loc%]ok[%END%]</option>
           <option value="bad" [% IF spool_status == 'bad' %] selected="selected" [%END%]>[%|loc%]bad[%END%]</option>
   </select>
 
+<ul>
+
+[% global_count = global_count_ok  + global_count_bad %]
+<li>[% |loc(global_count,global_count_ok,global_count_bad) %]All spools count: %1  (%2 entries with status ok, %3 entries with status bad) [% END %]</li>
+
 [% IF total == 0 %] 
 <li>[% |loc %]This spool is empty.[% END %]</li></ul>
 
   <input type="hidden" name="sortby" value="[% sortby %]" />
   <input type="hidden" name="way" value="[% way %]" />
+  <input type="hidden" name="action" value="viewspools" />
   <input type="hidden" name="spoolname" value="[% spoolname %]" />
   <input type="hidden" name="spool_page_size" value="[% spool_page_size %]" />
 
 [% ELSE %]
-[% global_count = global_count_ok  + global_count_bad %]
-<li>[% |loc(global_count,global_count_ok,global_count_bad) %]All spools count: %1  (%2 entries with status ok, %3 entries with status bad) [% END %]</li>
-<li>[% |loc(total,spool_status) %]This spool contains: %1 entries with status %2 [% END %]</li>
-
-
-
-</ul>
+<li>[% |loc(total,spool_status) %]This spool contains: %1 entries with status %2 [% END %]</li></ul>
 
 <div class="search_form">
 
@@ -76,7 +74,6 @@
 </div>
 
 </div>
-</p>
 
 [% line_count = 0 %]
 

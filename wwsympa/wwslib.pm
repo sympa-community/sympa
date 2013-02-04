@@ -74,6 +74,12 @@ use Sympa::Constants;
 	      'list_aliases.tt2'        => {'gettext_id' => "list aliases template"}
 	      );
 
+%task_flavours = (
+		  'daily'   => {'gettext_id' => 'daily' },
+		  'monthly' => {'gettext_id' => 'monthly' },
+		  'weekly'  => {'gettext_id' => 'weekly' },
+		  );
+
 ## Defined in RFC 1893
 %bounce_status = ('1.0' => 'Other address status',
 		  '1.1' => 'Bad destination mailbox address',

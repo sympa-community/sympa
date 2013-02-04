@@ -17463,6 +17463,15 @@ sub do_viewspools {
     $spool_status = $in{'spool_status'} if ($in{'spool_status'});
     $param->{'spool_status'} = $spool_status;
 
+    # force sortby to a correct value
+    $in{'sortby'} = 'index'
+	unless $in{'sortby'} and
+	$in{'sortby'} =~ /(index)|(list)|(robot)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/;
+    $param->{'sortby'} = $in{'sortby'};
+
+    $in{'way'} = 'asc' unless $in{'way'} and $in{'way'} eq 'desc';
+    $param->{'way'} = $in{'way'};
+
     &wwslog('info', 'do_viewspools(%s,%s)',$spoolname,$spool_status);
 
     unless ($robot->is_listmaster($param->{'user'}{'email'})) {
@@ -17524,20 +17533,15 @@ sub do_viewspools {
 
     my $offset = ($param->{'current_page'} -  1) * $spool_page_size;
 
-    # force sortby to a correct value
-    $in{'sortby'} = 'index'
-	unless $in{'sortby'} and
-	$in{'sortby'} =~ /(index)|(list)|(robot)|(task)|(task_flavour)|(lock)|(date)|(subject)|(sender)|(messageid)|(priority)|(authkey)|(spam)|(size)/;
-    $param->{'sortby'} = $in{'sortby'};
-
-    $in{'way'} = 'asc' unless $in{'way'} and $in{'way'} eq 'desc';
-    $param->{'way'} = $in{'way'};
 
     # 'index' in user interface is mapped to 'messagekey' table field
-    $in{'sortby'} = 'messagekey' if ($in{'sortby'} eq 'index') ;
+    $in{'sortby'} = 'messagekey' if $in{'sortby'} eq 'index';
 
-    # 'index' in user interface is mapped to 'messagekey' table field
-    $in{'sortby'} = 'task_model' if ($in{'sortby'} eq 'task') ;
+    # 'task' in user interface is mapped to 'task_model' table field
+    $in{'sortby'} = 'task_model' if $in{'sortby'} eq 'task';
+
+    # 'lock' in user interface is mapped to 'messagelock' table field
+    $in{'sortby'} = 'messagelock' if $in{'sortby'} eq 'lock';
 
     my %selector = ();
     if ($in{'list'}) {
@@ -17545,10 +17549,20 @@ sub do_viewspools {
     }
     my @messages = $spool->get_content({'selector'=> \%selector ,'selection'=>'*_but_message','offset'=>$offset,'page_size' => $spool_page_size,'sortby' => $in{'sortby'},'way' => $in{'way'}});
     foreach my $message (@messages) {
-	next unless defined $message->{'subject'};
+	unless (defined $message) {
+	    &report::reject_report_web('intern', 'db_error');
+	    return undef;
+	}
+
 	$message->{'subject'} = MIME::EncWords::decode_mimewords(
 	    $message->{'subject'}, Charset => 'utf-8'
-	);
+	) if defined $message->{'subject'};
+
+	my $flavour;
+	if (defined $message->{'task_flavour'} and
+	    $flavour = $wwslib::task_flavours{$message->{'task_flavour'}}) {
+	    $message->{'task_flavour'} = gettext($flavour->{'gettext_id'});
+	}
     }
     $param->{'spool_content'} = \@messages;
     return 1;
