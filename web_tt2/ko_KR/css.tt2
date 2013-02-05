@@ -1,8 +1,22 @@
-[%# $Id: $ %]
+[%# $Id: $ -%]
+[%#
+This stylesheet will override any portion of main css, not fully replacing it.
+So this may be used for locale-specific customization.
+-%]
 /* begin ko_KR/css.tt2 */
 @media screen {  }
+[%# Overriding default font family. %]
 * {
-    font-family:AppleGothic, "맑은 고딕", "Malgun Gothic", "굴림 Regular", Gulim, "백묵 굴림", "Baekmuk Gulim", sans-serif;
+    font-family:"Apple SD Gothic Neo Medium", AppleGothic, "맑은 고딕", "Malgun Gothic", "굴림 Regular", Gulim, "백묵 굴림", "Baekmuk Gulim", sans-serif;
 }
-</style>
+[%# Overriding "serif!important". %]
+#bandeau_top #Identity,
+#bandeau_top #Identity_not_connect,
+#bandeau_top #Identity_not_connect label,
+#bandeau_top .prefs,
+#bandeau_top a,
+#bandeau_top .login,
+.remember {
+    font-family:"나눔명조", "Nanum Myeongjo", AppleMyungjo, Batang, serif !important;
+}
 /* end ko_KR/css.tt2 */

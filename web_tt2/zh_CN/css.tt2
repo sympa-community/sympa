@@ -1,7 +1,26 @@
-[%# $Id: $ %]
+[%# $Id: $ -%]
+[%#
+This stylesheet will override any portion of main css, not fully replacing it.
+So this may be used for locale-specific customization.
+-%]
 /* begin zh_CN/css.tt2 */
 @media screen {  }
+[%# Enlarge fonts. %]
+body {
+    font-size: 75%;
+}
+[%# Overriding default font family. %]
 * {
-    font-family:"儷黑 Pro", "LiHei Pro", "华文黑体", STHeiti, Hei, "微软雅黑", "Microsoft YaHei", "MS Hei", "黑体", SimHei, sans-serif;
+    font-family:"儷黑 Pro", "LiHei Pro Medium", "华文黑体", STHeiti, Hei, "微软雅黑", "Microsoft YaHei", "MS Hei", "黑体", SimHei, sans-serif;
+}
+[%# Overriding serif !important. %]
+#bandeau_top #Identity,
+#bandeau_top #Identity_not_connect,
+#bandeau_top #Identity_not_connect label,
+#bandeau_top .prefs,
+#bandeau_top a,
+#bandeau_top .login,
+#bandeau_top .remember {
+    font-family:"儷宋 Pro", "LiSong Pro Light", "华文仿宋", STFangsong, Song, "仿宋_GB2312", FangSong, "宋体", SimSun, serif !important;
 }
 /* end zh_CN/css.tt2 */
