@@ -2646,7 +2646,7 @@ sub send_html {
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html\n";
     ## Workaround for Internet Explorer 8.
-    print "X-UA-Compatible: IE=7\n";
+    print "X-UA-Compatible: IE=100\n";
 
     ## Icons
     $param->{'icons_url'} = $robot->static_content_url . '/icons';
