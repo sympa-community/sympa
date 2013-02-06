@@ -1893,6 +1893,7 @@ clear:none;
 #bandeau_top #Identity_not_connect label {
                                            color:[% color_5 %]!important;
                                            font-family:serif!important;
+                                           line-height: 2.6em;
                                            }
 
 #bandeau_top #Identity span {
@@ -1932,9 +1933,16 @@ clear:none;
                       width:33%;
                       }
 
+[%#
+ * Two lines, 1.4em in their height, will be shifted up.
+ * The height of form on right side will be solved by the height of label
+ * defined above, which is <shift> (2.8em) minus <half-leading of remember
+ * line> (approx. 0.25em), approximately 2.6em.
+-%]
 #bandeau_top .remember { 
                          float:left;
                          font-size: 0.9em;
+                         line-height: 1.4em;
                          font-family:serif!important;
                          text-align:left;
                          font-weight: bold;
@@ -1944,8 +1952,8 @@ clear:none;
                          }
 
 #bandeau_top  #Identity_not_connect .remember {
-		  			        margin-top:-2.4em
-						}
+                                                margin-top:-2.8em;
+                                                }
 
 #bandeau_top .remember a { 
                            margin-right:1em;
