@@ -310,6 +310,7 @@ sub move_to_bad {
 
 #################"
 # return one message from related spool using a specified selector
+# returns undef if message was not found.
 #  
 sub get_message {
     my $self = shift;
@@ -338,15 +339,24 @@ sub get_message {
     }
 
     my $message = $sth->fetchrow_hashref('NAME_lc');
-    if ($message) {
-	$message->{'lock'} =  $message->{'messagelock'}; 
-	$message->{'messageasstring'} = MIME::Base64::decode($message->{'message'});
-    }
 
     $sth->finish;
     $sth = pop @sth_stack;
+
+    return undef unless $message and %$message;
+
+    $message->{'lock'} =  $message->{'messagelock'}; 
+    $message->{'messageasstring'} =
+	MIME::Base64::decode($message->{'message'});
+
     if ($message->{'list'} && $message->{'robot'}) {
-	$message->{'list_object'} = new List($message->{'list'},$message->{'robot'});
+	my $robot = Robot->new($message->{'robot'});
+	if ($robot) {
+	    my $list = List->new($message->{'list'}, $robot);
+	    if ($list) {
+		$message->{'list_object'} = $list;
+	    }
+	}
     }
     return $message;
 }
