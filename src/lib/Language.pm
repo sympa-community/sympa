@@ -244,7 +244,11 @@ sub Lang2Locale {
 sub Lang2ISO639 {
     my $lang = shift;
     my @parts = split /[\W_]/, $lang;
-    if (scalar @parts > 1 and length $parts[1]) {
+
+    if ({reverse %lang2locale}->{$lang} and
+	{reverse %lang2locale}->{$lang} eq $parts[0]) {
+	return $parts[0];
+    } elsif (scalar @parts > 1 and length $parts[1]) {
 	return lc "$parts[0]-$parts[1]";
     } else {
 	return lc $parts[0];
