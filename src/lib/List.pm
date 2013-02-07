@@ -11357,8 +11357,8 @@ sub purge {
     return undef unless $self->robot->lists($self->name);
 
     ## Remove tasks for this list
-    &Task::list_tasks(Site->queuetask);
-    foreach my $task (&Task::get_tasks_by_list($self->get_list_id())) {
+    &TaskSpool::list_tasks(Site->queuetask);
+    foreach my $task (&TaskSpool::get_tasks_by_list($self->get_list_id())) {
 	unlink $task->{'filepath'};
     }
 
