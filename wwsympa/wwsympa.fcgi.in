@@ -1526,7 +1526,7 @@ my $birthday = time ;
 	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || $robot->lang;	     
 
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
-	    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
+	    $param->{'iso639'} = &Language::Lang2ISO639($param->{'lang'});
 
 	    ## list topics	     
 	    export_topics($robot);
