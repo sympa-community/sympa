@@ -1526,6 +1526,7 @@ my $birthday = time ;
 	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || $robot->lang;	     
 
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
+	    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
 
 	    ## list topics	     
 	    export_topics($robot);
@@ -1638,6 +1639,7 @@ my $birthday = time ;
      $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} eq 'serveradmin'));
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= $robot->lang;
+    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
 
      if ($param->{'list'}) {
 	 $param->{'list_title'} = $list->subject;
@@ -3471,6 +3473,7 @@ sub do_login {
 	 $param->{'lang'} = $user->{'lang'} || ($list || $robot)->lang;
 	 $session->{'lang'} = $param->{'lang'} ;
      }
+    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
 	 User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
@@ -5121,6 +5124,7 @@ sub do_setpref {
      ## Set session language and user language to new value
      $session->{'lang'} = $in{'lang'} ;
      $param->{'lang'} = $in{'lang'};
+    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
 
      if (User::is_global_user($param->{'user'}{'email'})) {
 
@@ -16852,6 +16856,7 @@ sub do_set_lang {
 
      $session->{'lang'} = $in{'lang'} ;
      $param->{'lang'} = $in{'lang'};
+    $param->{'iso639'} = Language::Lang2ISO639($param->{'lang'});
 
      if ($param->{'user'}{'email'}) {
 	 if (User::is_global_user($param->{'user'}{'email'})) {

@@ -241,6 +241,16 @@ sub Lang2Locale {
     return $lang2locale{$lang} || $lang;
 }
 
+sub Lang2ISO639 {
+    my $lang = shift;
+    my @parts = split /[\W_]/, $lang;
+    if (scalar @parts > 1 and length $parts[1]) {
+	return lc "$parts[0]-$parts[1]";
+    } else {
+	return lc $parts[0];
+    }
+}
+
 sub maketext {
     my $template_file = shift;
     my $msg = shift;
