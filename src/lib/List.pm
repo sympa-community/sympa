@@ -11187,11 +11187,12 @@ sub search_datasource {
     ## Go through list parameters
     foreach my $p (keys %$pinfo) {
 	next unless ($p =~ /^include/);
-
-	## Go through sources
-	foreach my $s (@{$self->$p}) {
-	    if (&Datasource::_get_datasource_id($s) eq $id) {
-		return {'type' => $p, 'def' => $s};
+	if (defined ($self->$p)) {
+	    ## Go through sources
+	    foreach my $s (@{$self->$p}) {
+		if (&Datasource::_get_datasource_id($s) eq $id) {
+		    return {'type' => $p, 'def' => $s};
+		}
 	    }
 	}
     }
