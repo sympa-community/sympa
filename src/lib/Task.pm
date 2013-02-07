@@ -473,7 +473,7 @@ sub check_list_task_is_valid {
     my $model = $self->{'model'};
 
     ## Skip closed lists
-    unless (defined $list and $list->status eq 'open') {
+    unless (defined $list and ref $list eq 'List' and $list->status eq 'open') {
 	Log::do_log('notice',
 	    'Removing task %s, label %s (messageid = %s) because list %s is closed',
 	    $model, $self->{'label'}, $self->{'messagekey'}, $self->{'id'});

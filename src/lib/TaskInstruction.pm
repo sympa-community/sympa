@@ -1253,10 +1253,12 @@ sub sync_include {
     &Log::do_log('debug2', 'sync_include(%s)', $task->{'id'});
 
     my $list = $task->{'list_object'};
-
+    unless (defined $list and ref $list eq 'List') {
+	return undef;
+    }
     unless ($list->sync_include()) {
-		$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('Error while synchronizing list members for list %s', $list->get_id)});
-	}
+	$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('Error while synchronizing list members for list %s', $list)});
+    }
     if (scalar @{$list->editor_include} or scalar @{$list->owner_include}) {
 		unless($list->sync_include_admin()) {
 			$self->error({'task' => $task, 'type' => 'execution', 'message' => sprintf('Error while synchronizing list admins for list %s', $list->get_id)});
