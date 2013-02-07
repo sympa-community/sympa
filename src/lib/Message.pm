@@ -182,6 +182,7 @@ sub new {
     $message->get_subject;
     $message->get_receipient;
     $message->get_robot;
+    $message->get_list;
     $message->get_sympa_local_part;
     $message->check_spam_status;
     $message->check_dkim_signature;
@@ -251,8 +252,6 @@ sub create_message_from_file {
     }else{
 	$self->{'rcpt'} = $1;
 	$self->{'date'} = $2;
-
-	($self->{'listname'}, $self->{'robot_id'}) = split(/\@/, $self->{'rcpt'});
     }
     
     return $self;
@@ -410,11 +409,23 @@ sub get_subject {
     return $self->{'decoded_subject'};
 }
 
+sub get_family {
+    my $self = shift;
+    unless ($self->{'family'}) {
+	$self->{'family'} = $self->{'msg'}->head->get('X-Sympa-Family');
+	chomp $self->{'family'};
+	$self->{'family'} =~ s/^\s+//;
+	$self->{'family'} =~ s/\s+$//;
+    }
+    return $self->{'family'};
+}
+
 sub get_receipient {
     my $self = shift;
+    my $force = shift;
     my $hdr = $self->{'msg'}->head;
     my $rcpt;
-    unless ($self->{'rcpt'}) {
+    if (!$self->{'rcpt'} || $self->get_family) {
 	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
 	    unless ($rcpt = $hdr->get('X-Sympa-To')) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
@@ -438,6 +449,20 @@ sub set_receipient {
     my $new_rcpt = shift;
 
     $self->{'rcpt'} = $new_rcpt;
+}
+
+sub get_list {
+    my $self = shift;
+    unless ($self->{'list'}) {
+	unless ($self->{'listname'}) {
+	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
+	    $self->{'listname'} = lc($robot_id || '');
+	}
+	unless ($self->{'list'} = List->new($self->{'listname'},$self->get_robot,{'just_try' => 1})) {
+	    return undef;
+	}
+    }
+    return $self->{'list'};    
 }
 
 sub set_sympa_headers {

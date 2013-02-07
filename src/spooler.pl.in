@@ -356,7 +356,10 @@ if ($signal ne 'hup') {
 	    }
 
 	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
-
+	    if ($message->get_family){
+		$meta{'create_list_if_needed'} = 1;
+		Log::do_log('notice','Message for list %s, family %s',$message->get_receipient,$message->get_family);
+	    }
 	    $listname = lc($listname);
 	    if ($robot_id) {
 		$robot_id = lc($robot_id);
