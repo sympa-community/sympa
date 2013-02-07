@@ -21,7 +21,7 @@
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
   <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
-    <select is="tpl_lang_out" name="tpl_lang_out">
+    <select id="tpl_lang_out" name="tpl_lang_out" class="LanguageNeutral">
 	<option value="default">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
         <option value="[%lg.key%]" [% IF tpl_lang == lg.key %]selected[% END %]>[%lg.value.complete%]</option>

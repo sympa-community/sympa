@@ -8,7 +8,7 @@
   <fieldset>
     <label>[%|loc%]Email:[%END%]  </label>[% user.email %]<br />
     <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" /><br />
-    <label for="lang">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang">
+    <label for="lang">[%|loc%]Language:[%END%]  </label><select id="lang" name="lang" class="LanguageNeutral">
               [% FOREACH l = languages %]
 		<option value='[% l.key %]' [% l.value.selected %]>[% l.value.complete %]</option>
               [% END %]
