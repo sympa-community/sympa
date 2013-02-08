@@ -20,13 +20,13 @@ Overriding font families.  Problems such as below will be solved:
   specified explicitly.
 - Windows 7 bug: "Batang", a Korean font, is used for generic family "serif".
 
-Family names are ordered by platforms: Mac OS X and iOS, MacOS classic (if
-any), Windows (Vista or later, then XP/2000 or earlier), Red Hat/Fedora,
-Debian/Ubuntu, and others if any.
+Family names are ordered by platforms: Mac OS X and iOS (localized names are
+ignored by Safari), MacOS classic (if any), Windows (Vista or later, then
+XP/2000 or earlier), Red Hat/Fedora, Debian/Ubuntu, and others if any.
 -%]
 [%# Overriding default font family. %]
 * {
-    font-family:"ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "VL Pゴシック", "VL PGothic", "TakaoExゴシック", TakaoExGothic, "IPAexゴシック", IPAexGothic, "IPA Pゴシック", IPAPGothic, sans-serif;
+    font-family:"ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "VL Pゴシック", "VL PGothic", "TakaoExゴシック", TakaoExGothic, "IPAexゴシック", IPAexGothic, "IPA Pゴシック", IPAPGothic, sans-serif;
 }
 [%# Overriding "serif!important" %]
 #bandeau_top #Identity,
