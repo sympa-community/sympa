@@ -241,7 +241,10 @@ sub Lang2Locale {
     return $lang2locale{$lang} || $lang;
 }
 
-sub Lang2ISO639 {
+# Convert language code or locale name to IETF language tag (RFC 5646).
+# Note: Format of result is "xx" or "xx-XX".  Vague region subtag will be
+# omitted.
+sub LanguageTag {
     my $lang = shift;
     my @parts = split /[\W_]/, $lang;
 
@@ -249,9 +252,9 @@ sub Lang2ISO639 {
 	{reverse %lang2locale}->{$lang} eq $parts[0]) {
 	return $parts[0];
     } elsif (scalar @parts > 1 and length $parts[1]) {
-	return lc "$parts[0]-$parts[1]";
+	return join '-', $parts[0], $parts[1];
     } else {
-	return lc $parts[0];
+	return $parts[0];
     }
 }
 
