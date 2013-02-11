@@ -2348,4 +2348,25 @@ span.bottom_page {
     				background:[% color_6 %];
 				} /*pour firefox */
 
+/* Line height not to be overridden by locale-specific styles. */
+table,
+#MainMenuLinks,
+#nav,
+#subnav,
+.input,
+.listTitle,
+.listTitle.description,
+.MainMenuLinks,
+.MainMenuLinksCurrentPage,
+.actionMenuLinks,
+.actionMenuLinksCurrentPage,
+.actionMenuLinksInactive,
+.ArcMenuLinks,
+.ArcMenuLinksCurrentPage,
+.ArcMenuLinksInactive,
+.ArcMenuLinksSortActive,
+.ArcMenuLinksSortInactive {
+                           line-height: normal;
+                           }
+
 [% END %]
