@@ -175,8 +175,9 @@ select {
 
 ul#MainMenuLinks {
                    border-bottom:1px solid [% color_8 %];
-                   float:right; width:100% ;
+                   float:right; width:100%;
                    margin-top:1em;
+                   margin-left: 0;
                    }
 
 ul#MainMenuLinks li {
@@ -616,6 +617,7 @@ pre.code {
 #Footer {
           width:98%;
           height:1.5em;
+          line-height: 1.5em;
 	  position:relative;
           margin: 0 0.8em;
           background: [% color_12 %];
@@ -834,7 +836,8 @@ a:hover img.Pictures {
           }
 
 .navBar .MainMenuLinks {
-                         padding:3px 5px 0px 5px!important;
+                         padding:2px 5px 1px 5px!important;
+                         position: relative; top: -1px;
                          -moz-border-radius:10px 10px 0 0;
                          -webkit-border-top-left-radius: 10px;
                          -webkit-border-top-right-radius: 10px;
@@ -957,7 +960,8 @@ a.MainMenuLinksCurrentPage {
                              border-bottom: 1px solid [% color_9 %];
                              color: [% color_8 %];
                              text-decoration: none;
-                             padding: 3px 5px 0px 5px;
+                             padding: 3px 5px 1px 5px;
+                             position: relative; top: -1px;
                              -moz-border-radius:10px 10px 0 0;
                              -webkit-border-top-left-radius: 10px;
                              -webkit-border-top-right-radius: 10px;
@@ -1001,6 +1005,7 @@ a.actionMenuLinks {
                     -webkit-border-radius:8px;
                     -icab-border-radius:10px;
                     border-radius:10px;
+                    white-space: nowrap;
                     }
 
 a.actionMenuLinks:hover {
@@ -1015,6 +1020,7 @@ a.actionMenuLinksCurrentPage {
                                color: [% color_8 %];
                                text-decoration: none;
                                padding: 0px 10px 0px 10px;
+                               white-space: nowrap;
                                }
 
 a.actionMenuLinksCurrentPage:hover{
@@ -1032,6 +1038,7 @@ a.actionMenuLinksInactive {
                             color: [% color_10 %];
                             text-decoration: none;
                             padding: 0px 10px 0px 10px;
+                            white-space: nowrap;
                             }
 
 a.actionMenuLinksInactive:hover {
@@ -1891,6 +1898,7 @@ table.preferences th {
                          color:[% color_5 %]!important;
                          overflow: hidden;
                          margin-left:1em;
+                         line-height: 1.3em;
                          }
 
 #bandeau_top #Identity_not_connect {
@@ -1925,7 +1933,8 @@ clear:none;
                       text-align:center;
                       font-weight: bold;
                       width:33%;
-                      margin-top:0.3em
+                      /* margin-top:0.3em; */
+                      line-height: 2.6em;
                       }
 
 #bandeau_top a { 
