@@ -600,7 +600,6 @@ sub aggregate_data {
 
     
     my $res = $sth->fetchall_hashref('id_stat');
-
     
     $aggregated_data = &deal_data($res);
     
@@ -893,7 +892,7 @@ sub deal_data {
 	if($result_request->{$id}->{'operation_stat'} eq 'purge list'){
 	    
 	    unless(exists ($data{'purge_list'})){
-		$data{'purge_list'} = 0;
+		$data{'purge_list'} = undef;
 	    }
 	    
 	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
