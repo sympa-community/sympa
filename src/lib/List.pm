@@ -10520,7 +10520,7 @@ sub load_msg_topic {
     my $topicspool = new Sympaspool('topic');
 
     my $topics_from_spool = $topicspool->get_message(
-	{   'listname'  => $self->name,
+	{   'list'  => $self->name,
 	    'robot'     => $self->domain,
 	    'messageid' => $msg_id
 	}
@@ -10528,7 +10528,7 @@ sub load_msg_topic {
     unless ($topics_from_spool) {
 	&Log::do_log(
 	    'debug',
-	    'No topic define ; unable to find topic for message %s / list  %s',
+	    'No topic defined ; unable to find topic for message %s / list  %s',
 	    $msg_id,
 	    $self
 	);
