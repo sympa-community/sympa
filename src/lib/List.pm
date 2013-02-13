@@ -2682,7 +2682,7 @@ sub send_auth {
 	'file'     => $file
     };
 
-   if ($self->is_there_msg_topic()) {
+   if ($self->is_there_msg_topic() && $self->is_msg_topic_tagging_required()) {
        $param->{'request_topic'} = 1;
    }
 
