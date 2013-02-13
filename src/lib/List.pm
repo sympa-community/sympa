@@ -2581,7 +2581,7 @@ sub send_to_editor {
 	'method'         => $method
     };
 
-   if ($self->is_there_msg_topic()) {
+   if ($self->is_there_msg_topic() && $self->is_msg_topic_tagging_required()) {
        $param->{'request_topic'} = 1;
    }
 
@@ -2641,14 +2641,14 @@ sub send_to_editor {
 ####################################################
 sub send_auth {
     my ($self, $message) = @_;
-    my ($sender, $msg, $file) =
-	($message->{'sender'}, $message->{'msg'}, $message->{'filename'});
+    my ($sender, $file) =
+	($message->{'sender'}, $message->{'filename'});
    &Log::do_log('debug3', 'List::send_auth(%s, %s)', $sender, $file);
 
    ## Ensure 1 second elapsed since last message
+   ## DV: What kind of lame hack is this???
     sleep(1);
 
-    my ($i, @rcpt);
     my $name      = $self->name;
     my $host      = $self->host;
     my $robot     = $self->domain;
@@ -2686,14 +2686,24 @@ sub send_auth {
        $param->{'request_topic'} = 1;
    }
 
+    if ($message->{'smime_crypted'}) {
+	$message->smime_encrypt($sender);
+	unless($message->{'smime_crypted'} eq 'smime_crypted') {
+	    Log::do_log('err','Could not encrypt message for moderator %s',$sender);
+	}
+	$param->{'msg'} = $message->get_encrypted_mime_message;
+    } else {
+	$param->{'msg'} = $message->get_mime_message;
+    }
+
    &tt2::allow_absolute_path();
-   $param->{'auto_submitted'} = 'auto-replied';
+   $param->{'auto_submitted'} = 'auto-forwarded';
+
     unless ($self->send_file('send_auth', $sender, $param)) {
 	&Log::do_log('notice',
 	    "Unable to send template 'send_auth' to $sender");
        return undef;
    }
-
    return $authkey;
 }
 
