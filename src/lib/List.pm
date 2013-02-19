@@ -5112,7 +5112,6 @@ sub add_list_member {
 		$self->sync_include();
 	    next if ($self->is_list_member($who));
 	}
-
 	$new_user->{'date'} ||= time;
 	$new_user->{'update_date'} ||= $new_user->{'date'};
 
@@ -5177,7 +5176,7 @@ sub add_list_member {
 	## Update Subscriber Table
 	unless (
 	    &SDM::do_prepared_query(
-		q{INSERT INTO subscriber_table
+		'INSERT INTO subscriber_table
 		  (user_subscriber, comment_subscriber,
 		   list_subscriber, robot_subscriber,
 		   date_subscriber, update_subscriber,
@@ -5189,19 +5188,19 @@ sub add_list_member {
 		   custom_attribute_subscriber,
 		   suspend_subscriber,
 		   suspend_start_date_subscriber, suspend_end_date_subscriber)
-		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-		$who, $new_user->{'gecos'},
-		$name, $self->domain,
+		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+		SDM::quote($who), SDM::quote($new_user->{'gecos'}),
+		SDM::quote($name), SDM::quote($self->domain),
 		SDM::get_canonical_write_date($new_user->{'date'}),
 		SDM::get_canonical_write_date($new_user->{'update_date'}),
-		$new_user->{'reception'},
-		$new_user->{'topics'},
-		$new_user->{'visibility'},
-		$new_user->{'subscribed'},
-		$new_user->{'included'}, $new_user->{'id'},
-		$new_user->{'custom_attribute'},
-		$new_user->{'suspend'},
-		$new_user->{'startdate'}, $new_user->{'enddate'}
+		SDM::quote($new_user->{'reception'}),
+		SDM::quote($new_user->{'topics'}),
+		SDM::quote($new_user->{'visibility'}),
+		SDM::quote($new_user->{'subscribed'}),
+		SDM::quote($new_user->{'included'}), SDM::quote($new_user->{'id'}),
+		SDM::quote($new_user->{'custom_attribute'}),
+		SDM::quote($new_user->{'suspend'}),
+		SDM::quote($new_user->{'startdate'}), SDM::quote($new_user->{'enddate'})
 	    )
 	    ) {
 	    &Log::do_log(
