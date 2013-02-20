@@ -2284,6 +2284,10 @@ sub send_msg {
 	    my $notice_msg = $saved_msg->dup;
 	    $notice_msg->bodyhandle(undef);
 	    $notice_msg->parts([]);
+	    if(($notice_msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
+	    ($notice_msg->head->get('Content-Type') !~ /signed-data/i)) {
+		$notice_msg->head->replace('Content-Type','text/plain');
+	    }
 	    $new_message = new Message({'mimeentity' => $notice_msg});
 
 	##Prepare message for txt reception mode

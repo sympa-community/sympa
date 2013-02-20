@@ -907,7 +907,7 @@ sub smime_decrypt {
 
 	if (defined Site->key_passwd and Site->key_passwd ne '') {
 	    unless (open (FIFO,"> $temporary_pwd")) {
-		Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+		Log::do_log('err', 'Unable to open fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	    print FIFO Site->key_passwd;
@@ -922,7 +922,7 @@ sub smime_decrypt {
 	my $status = $?/256;
 	
 	unless ($status == 0) {
-	    Log::do_log('notice', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
+	    Log::do_log('err', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
 	    next;
 	}
 	
@@ -931,7 +931,7 @@ sub smime_decrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($self->{'decrypted_msg'} = $parser->parse_data($self->{'decrypted_msg_as_string'})) {
-	    Log::do_log('notice', 'Unable to parse message');
+	    Log::do_log('err', 'Unable to parse message');
 	    last;
 	}
     }
