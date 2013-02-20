@@ -1393,6 +1393,74 @@ sub get_msg_id {
     return $self->{'id'}
 }
 
+sub is_signed {
+    my $self = shift;
+    return $self->{'protected'};
+}
+
+sub has_html_part {
+    my $self = shift;
+    $self->check_message_structure unless ($self->{'structure_already_checked'});
+    return $self->{'has_html_part'};
+}
+
+sub has_text_part {
+    my $self = shift;
+    $self->check_message_structure unless ($self->{'structure_already_checked'});
+    return $self->{'has_text_part'};
+}
+
+sub has_attachments {
+    my $self = shift;
+    $self->check_message_structure unless ($self->{'structure_already_checked'});
+    return $self->{'has_attachments'};
+}
+
+## Make a multipart/alternative, a singlepart
+sub check_message_structure {
+    my $self = shift;
+    my $msg = shift;
+    $msg ||= $self->get_mime_message->dup;
+    Log::do_log('debug2', 'Message: %s, part: %s',$self,$msg);
+    $self->{'structure_already_checked'} = 1;
+    if ($msg->effective_type() =~ /^multipart\/alternative/) {
+	foreach my $part ($msg->parts) {
+	    if (($part->effective_type() =~ /^text\/html$/) ||
+	    (
+	    ($part->effective_type() =~ /^multipart\/related$/) &&
+	    $part->parts &&
+	    ($part->parts(0)->effective_type() =~ /^text\/html$/))) {
+		Log::do_log('debug3', 'Found html part');
+		$self->{'has_html_part'} = 1;
+	    }elsif($part->effective_type() =~ /^text\/plain$/) {
+		Log::do_log('debug3', 'Found text part');
+		$self->{'has_text_part'} = 1;
+	    }else{
+		Log::do_log('debug3', 'Found attachment: %s',$part->effective_type());
+		$self->{'has_attachments'} = 1;
+	    }
+	}
+    }elsif ($msg->effective_type() =~ /multipart\/signed/) {
+	my @parts = $msg->parts();
+	## Only keep the first part
+	$msg->parts([$parts[0]]);
+	$msg->make_singlepart();       
+	$self->check_message_structure($msg);
+
+    }elsif ($msg->effective_type() =~ /^multipart/) {
+	Log::do_log('debug3', 'Found multipart: %s',$msg->effective_type());
+	foreach my $part ($msg->parts) {
+            next unless (defined $part); ## Skip empty parts
+	    if ($part->effective_type() =~ /^multipart\/alternative/) {
+		$self->check_message_structure($part);
+	    }else{
+		Log::do_log('debug3', 'Found attachment: %s',$part->effective_type());
+		$self->{'has_attachments'} = 1;
+	    }
+	}
+    }    
+}
+
 ## Packages must return true.
 1;
 =pod 

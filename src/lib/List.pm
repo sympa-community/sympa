@@ -1995,6 +1995,7 @@ sub send_msg {
     my %param = @_;
 
     my $message = $param{'message'};
+    $message->check_message_structure;
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
     my $apply_tracking = $param{'apply_tracking'};
 
@@ -2053,11 +2054,6 @@ sub send_msg {
 	@tabrcpt_digestplain_verp, @tabrcpt_digest_verp,
 	@tabrcpt_summary_verp,     @tabrcpt_nomail_verp
     );
-    my $mixed =
-	($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
-    my $alternative =
-	($message->{'msg'}->head->get('Content-Type') =~
-	    /multipart\/alternative/i);
     my $recip = $message->{'msg'}->head->get('X-Sympa-Receipient');
 
     if ($recip) {
@@ -2111,13 +2107,13 @@ sub send_msg {
 		} else {
 		    push @tabrcpt_notice, $user->{'email'};
 	    }
-	    } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
+	    } elsif (!$message->is_signed && $message->has_text_part && $user->{'reception'} eq 'txt') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_txt_verp, $user->{'email'};
 		} else {
 		push @tabrcpt_txt, $user->{'email'};
 	    }
-	    } elsif ($alternative and ($user->{'reception'} eq 'html')) {
+	    } elsif (!$message->{'protected'} && $message->has_html_part && $user->{'reception'} eq 'html') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_html_verp, $user->{'email'};
 		} else {
@@ -2127,7 +2123,7 @@ sub send_msg {
 		    push @tabrcpt_html, $user->{'email'};
 		}
 	    }
-	} elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+	} elsif (!$message->{'protected'} && $message->has_attachments && $user->{'reception'} eq 'urlize') {
 	    if ($user->{'bounce_address'}) {
 	        push @tabrcpt_url_verp, $user->{'email'};
 		} else {
