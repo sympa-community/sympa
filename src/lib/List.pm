@@ -5175,20 +5175,23 @@ sub add_list_member {
 
 	## Update Subscriber Table
 	unless (
-	    &SDM::do_prepared_query(
-		'INSERT INTO subscriber_table
+	    SDM::do_query(
+		q{INSERT INTO subscriber_table
 		  (user_subscriber, comment_subscriber,
 		   list_subscriber, robot_subscriber,
-		   date_subscriber, update_subscriber,
+		   date_subscriber,
+		   update_subscriber,
 		   reception_subscriber,
 		   topics_subscriber,
 		   visibility_subscriber,
 		   subscribed_subscriber,
-		   included_subscriber, include_sources_subscriber,
+		   included_subscriber,
+		   include_sources_subscriber,
 		   custom_attribute_subscriber,
 		   suspend_subscriber,
 		   suspend_start_date_subscriber, suspend_end_date_subscriber)
-		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+		  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %d,
+			  %d, %s, %s, %d, %d, %d)},
 		SDM::quote($who), SDM::quote($new_user->{'gecos'}),
 		SDM::quote($name), SDM::quote($self->domain),
 		SDM::get_canonical_write_date($new_user->{'date'}),
@@ -5196,11 +5199,12 @@ sub add_list_member {
 		SDM::quote($new_user->{'reception'}),
 		SDM::quote($new_user->{'topics'}),
 		SDM::quote($new_user->{'visibility'}),
-		SDM::quote($new_user->{'subscribed'}),
-		SDM::quote($new_user->{'included'}), SDM::quote($new_user->{'id'}),
+		($new_user->{'subscribed'} ? 1 : 0),
+		($new_user->{'included'} ? 1 : 0),
+		SDM::quote($new_user->{'id'}),
 		SDM::quote($new_user->{'custom_attribute'}),
-		SDM::quote($new_user->{'suspend'}),
-		SDM::quote($new_user->{'startdate'}), SDM::quote($new_user->{'enddate'})
+		($new_user->{'suspend'} ? 1 : 0),
+		$new_user->{'startdate'}, $new_user->{'enddate'}
 	    )
 	    ) {
 	    &Log::do_log(
@@ -5285,24 +5289,28 @@ sub add_list_admin {
 
 	## Update Admin Table
 	unless (
-	    SDM::do_prepared_query(
+	    SDM::do_query(
 		q{INSERT INTO admin_table
 		  (user_admin, comment_admin, list_admin, robot_admin,
 		   date_admin, update_admin,
 		   reception_admin, visibility_admin,
 		   subscribed_admin, included_admin, include_sources_admin,
 		   role_admin, info_admin, profile_admin)
-		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-		$who, $new_admin_user->{'gecos'}, $name, $self->domain,
+		  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %d, %d,
+			  %s, %s, %s, %s)},
+		SDM::quote($who), SDM::quote($new_admin_user->{'gecos'}),
+		SDM::quote($name), SDM::quote($self->domain),
 		SDM::get_canonical_write_date($new_admin_user->{'date'}),
 		SDM::get_canonical_write_date(
 		    $new_admin_user->{'update_date'}
 		),
-		$new_admin_user->{'reception'},
-		$new_admin_user->{'visibility'},
-		$new_admin_user->{'subscribed'},
-		$new_admin_user->{'included'}, $new_admin_user->{'id'},
-		$role, $new_admin_user->{'info'}, $new_admin_user->{'profile'}
+		SDM::quote($new_admin_user->{'reception'}),
+		SDM::quote($new_admin_user->{'visibility'}),
+		($new_admin_user->{'subscribed'} ? 1 : 0),
+		($new_admin_user->{'included'} ? 1 : 0),
+		SDM::quote($new_admin_user->{'id'}),
+		SDM::quote($role), SDM::quote($new_admin_user->{'info'}),
+		SDM::quote($new_admin_user->{'profile'})
 	    )
 	) {
 	    &Log::do_log(
