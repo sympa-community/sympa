@@ -2286,7 +2286,10 @@ sub send_msg {
 	    $notice_msg->parts([]);
 	    if(($notice_msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($notice_msg->head->get('Content-Type') !~ /signed-data/i)) {
-		$notice_msg->head->replace('Content-Type','text/plain');
+		$notice_msg->head->delete('Content-Disposition');
+		$notice_msg->head->delete('Content-Description');
+		$notice_msg->head->replace('Content-Type','text/plain; charset="US-ASCII"');
+		$notice_msg->head->replace('Content-Transfer-Encoding','7BIT');
 	    }
 	    $new_message = new Message({'mimeentity' => $notice_msg});
 
