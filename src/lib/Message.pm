@@ -1020,9 +1020,10 @@ sub smime_encrypt {
 	}
 	$mime_hdr->print(\*MSGDUMP);
 
-	printf MSGDUMP "\n%s", $self->get_mime_message->body;
+	printf MSGDUMP "\n";
+	foreach (@{$self->get_mime_message->body}) { printf MSGDUMP '%s',$_;}
+	##$self->get_mime_message->bodyhandle->print(\*MSGDUMP);
 	close(MSGDUMP);
-
 	my $status = $?/256 ;
 	unless ($status == 0) {
 	    &Log::do_log('err', 'Unable to S/MIME encrypt message (error %s) : %s', $status, $openssl_errors{$status});
@@ -1396,6 +1397,14 @@ sub get_msg_id {
 sub is_signed {
     my $self = shift;
     return $self->{'protected'};
+}
+
+sub is_crypted {
+    my $self = shift;
+    unless(defined $self->{'smime_crypted'}) {
+	$self->decrypt;
+    }
+    return $self->{'smime_crypted'};
 }
 
 sub has_html_part {

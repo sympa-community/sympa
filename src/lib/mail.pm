@@ -444,7 +444,6 @@ sub mail_message {
 		    'priority' => $list->priority,
 		    'delivery_date' => $list->get_next_delivery_date,
 		    'robot' => $robot,
-		    'encrypt' => $message->{'smime_crypted'},
 		    'use_bulk' => 1,
 		    'verp' => $verp,
 		    'dkim' => $dkim,
@@ -559,21 +558,21 @@ sub sendto {
     my $listname = $params{'listname'};    
     my $robot = Robot::clean_robot($params{'robot'}); # may not be Site
     my $priority =  $params{'priority'}; 
-    my $encrypt = $params{'encrypt'};
     my $verp = $params{'verp'};
     my $merge = $params{'merge'};
     my $dkim = $params{'dkim'};
     my $use_bulk = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
 
-    &Log::do_log('debug', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s, last: %s, use_bulk: %s', $from, $listname, $encrypt, $verp, $priority, $tag_as_last, $use_bulk);
+    &Log::do_log('debug2', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s, last: %s, use_bulk: %s', $from, $listname, $message->is_crypted, $verp, $priority, $tag_as_last, $use_bulk);
 
     my $delivery_date =  $params{'delivery_date'};
     $delivery_date = time() unless $delivery_date; # if not specified, delivery tile is right now (used for sympa messages etc)
 
     my $msg;
 
-    if ($encrypt eq 'smime_crypted') {
+    if ($message->is_crypted) {
+	
         # encrypt message for each rcpt and send the message
 	# this MUST be moved to the bulk mailer. This way, merge will be applied after the SMIME encryption is applied ! This is a bug !
 	foreach my $bulk_of_rcpt (@{$rcpt}) {

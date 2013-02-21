@@ -951,7 +951,6 @@ sub dkim_sign {
 
 ## Make a multipart/alternative, a singlepart
 sub as_singlepart {
-    &Log::do_log('debug2', 'tools::as_singlepart()');
     my ($msg, $preferred_type, $loops) = @_;
     my $done = 0;
     $loops++;
