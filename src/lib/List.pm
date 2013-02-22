@@ -2323,18 +2323,7 @@ sub prepare_message_according_to_mode {
 	($mode eq 'digestplain')) {
     }	##Prepare message for notice reception mode
     elsif ($mode eq 'notice') {
-	Log::do_log('debug3','preparing: %s',$mode);
-	my $notice_msg = $message->get_mime_message->dup;
-	$notice_msg->bodyhandle(undef);
-	$notice_msg->parts([]);
-	if(($notice_msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
-	($notice_msg->head->get('Content-Type') !~ /signed-data/i)) {
-	    $notice_msg->head->delete('Content-Disposition');
-	    $notice_msg->head->delete('Content-Description');
-	    $notice_msg->head->replace('Content-Type','text/plain; charset="US-ASCII"');
-	    $notice_msg->head->replace('Content-Transfer-Encoding','7BIT');
-	}
-	$message = new Message({'mimeentity' =>$notice_msg});
+	$message = new Message({'mimeentity' =>$message->prepare_reception_notice});
     ##Prepare message for txt reception mode
     } elsif ($mode eq 'txt') {
 	Log::do_log('debug3','preparing: %s',$mode);

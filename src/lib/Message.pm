@@ -1686,7 +1686,7 @@ sub _append_parts {
 
 sub prepare_reception_mail {
     my $self = shift;
-    Log::do_log('debug3','preparing message for mail reception');
+    Log::do_log('debug3','preparing message for mail reception mode');
     ## Add footer and header
     unless ($self->{'protected'}) {
 	my $new_msg = $self->add_parts;
@@ -1700,6 +1700,23 @@ sub prepare_reception_mail {
     }
     return 1;
 }
+
+sub prepare_reception_notice {
+    my $self = shift;
+    Log::do_log('trace','preparing message for notice reception mode');
+    my $notice_msg = $self->get_mime_message->dup;
+    $notice_msg->bodyhandle(undef);
+    $notice_msg->parts([]);
+    if(($notice_msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
+    ($notice_msg->head->get('Content-Type') !~ /signed-data/i)) {
+	$notice_msg->head->delete('Content-Disposition');
+	$notice_msg->head->delete('Content-Description');
+	$notice_msg->head->replace('Content-Type','text/plain; charset="US-ASCII"');
+	$notice_msg->head->replace('Content-Transfer-Encoding','7BIT');
+    }
+    return $notice_msg;
+}
+
 ## Packages must return true.
 1;
 =pod 
