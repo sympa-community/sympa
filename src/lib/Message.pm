@@ -1380,6 +1380,23 @@ sub set_decrypted_message_as_string {
     $self->{'decrypted_msg_as_string'} = $param->{'new_message_as_string'};
 }
 
+sub reset_message_from_entity {
+    my $self = shift;
+    my $entity = shift;
+    
+    unless (ref ($entity) =~ /^MIME/) {
+	Log::do_log('trace','Can not reset a message by starting from object %s', ref $entity);
+	return undef;
+    }
+    $self->{'msg'} = $entity;
+    $self->{'msg_as_string'} = $entity->as_string;
+    if ($self->is_crypted) {
+	$self->{'decrypted_msg'} = $entity;
+	$self->{'decrypted_msg_as_string'} = $entity->as_string;
+    }
+    return 1;
+}
+
 sub get_encrypted_message_as_string {
     my $self = shift;
     return $self->{'msg_as_string'};
@@ -1687,68 +1704,58 @@ sub _append_parts {
 sub prepare_message_according_to_mode {
     my $self = shift;
     my $mode = shift;
-    my $message;
     Log::do_log('debug3','msg %s, mode: %s',$self->get_msg_id,$mode);
     ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
 	$self->prepare_reception_mail;
-	$message = $self;
     } elsif (($mode eq 'nomail') ||
 	($mode eq 'summary') ||
 	($mode eq 'digest') ||
 	($mode eq 'digestplain')) {
-	$message = $self;
-    }	##Prepare message for notice reception mode
-    elsif ($mode eq 'notice') {
-	$message = new Message({'mimeentity' =>$self->prepare_reception_notice});
+    ##Prepare message for notice reception mode
+    }elsif ($mode eq 'notice') {
+	$self->prepare_reception_notice;
     ##Prepare message for txt reception mode
     } elsif ($mode eq 'txt') {
-	$message = new Message({'mimeentity' =>$self->prepare_reception_txt});
-	$message->{'smime_crypted'} = $self->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $self->{'msg'};
+	$self->prepare_reception_txt;
     ##Prepare message for html reception mode
     } elsif ($mode eq 'html') {
-	$message = new Message({'mimeentity' =>$self->prepare_reception_html});
-	$message->{'smime_crypted'} = $self->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $self->{'msg'};
+	$self->prepare_reception_html;
     ##Prepare message for urlize reception mode
     } elsif ($mode eq 'url') {
-	$message = new Message({'mimeentity' =>$self->prepare_reception_urlize});
-	$message->{'smime_crypted'} = $self->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $self->{'msg'};
+	$self->prepare_reception_urlize;
     } else {
 	&Log::do_log('err',
 	    "Unknown variable/reception mode $mode");
 	return undef;
     }
 
-    unless (defined $message) {
+    unless (defined $self) {
 	    &Log::do_log('err', "Failed to create Message object");
 	return undef;
     }
-    return $message;
+    return 1;
 
 }
 sub prepare_reception_mail {
     my $self = shift;
     Log::do_log('debug3','preparing message for mail reception mode');
     ## Add footer and header
-    unless ($self->{'protected'}) {
-	my $new_msg = $self->add_parts;
-	if (defined $new_msg) {
-	    $self->{'msg'} = $new_msg;
-	    $self->{'altered'} = '_ALTERED_';
-	}else{
-	    Log::do_log('err','Part addition failed');
-	    return undef;
-	}
+    return 0 if ($self->is_signed);
+    my $new_msg = $self->add_parts;
+    if (defined $new_msg) {
+	$self->{'msg'} = $new_msg;
+	$self->{'altered'} = '_ALTERED_';
+    }else{
+	Log::do_log('err','Part addition failed');
+	return undef;
     }
     return 1;
 }
 
 sub prepare_reception_notice {
     my $self = shift;
-    Log::do_log('trace','preparing message for notice reception mode');
+    Log::do_log('debug3','preparing message for notice reception mode');
     my $notice_msg = $self->get_mime_message->dup;
     $notice_msg->bodyhandle(undef);
     $notice_msg->parts([]);
@@ -1759,34 +1766,41 @@ sub prepare_reception_notice {
 	$notice_msg->head->replace('Content-Type','text/plain; charset="US-ASCII"');
 	$notice_msg->head->replace('Content-Transfer-Encoding','7BIT');
     }
-    return $notice_msg;
+    $self->reset_message_from_entity($notice_msg);
+    undef $self->{'smime_crypted'};
+    return 1;
 }
 
 sub prepare_reception_txt {
     my $self = shift;
-    Log::do_log('trace','preparing message for txt reception mode');
+    Log::do_log('debug3','preparing message for txt reception mode');
+    return 0 if ($self->is_signed);
     if (tools::as_singlepart($self->get_mime_message, 'text/plain')) {
 	Log::do_log('notice',
 	    'Multipart message changed to text singlepart');
     }
     ## Add a footer
-    return $self->add_parts;
+    $self->reset_message_from_entity($self->add_parts);
+    return 1;
 }
 
 sub prepare_reception_html {
     my $self = shift;
-    Log::do_log('trace','preparing message for html reception mode');
+    Log::do_log('debug3','preparing message for html reception mode');
+    return 0 if ($self->is_signed);
     if (tools::as_singlepart($self->get_mime_message, 'text/html')) {
 	Log::do_log('notice',
 	    'Multipart message changed to html singlepart');
     }
     ## Add a footer
-    return $self->add_parts;
+    $self->reset_message_from_entity($self->add_parts);
+    return 1;
 }
 
 sub prepare_reception_urlize {
     my $self = shift;
-    Log::do_log('trace','preparing message for urlize reception mode');
+    Log::do_log('debug3','preparing message for urlize reception mode');
+    return 0 if ($self->is_signed);
     unless ($self->{'list'}) {
 	Log::do_log('err','The message has no list context; Nowhere to place urlized attachments.');
 	return undef;
@@ -1833,7 +1847,8 @@ sub prepare_reception_urlize {
     $self->get_mime_message->parts(\@parts);
 
     ## Add a footer
-    return $self->add_parts;
+    $self->reset_message_from_entity($self->add_parts);
+    return 1;
 }
 
 sub _urlize_part {

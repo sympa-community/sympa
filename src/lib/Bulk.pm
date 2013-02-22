@@ -413,11 +413,14 @@ sub store {
     $priority_packet = $robot->sympa_packet_priority unless $priority_packet;
     
     my $msg;
-    if ($message->{'smime_crypted'}) {
+    if ($message->is_crypted) {
+	Log::do_log('trace','smime crypted: %s',length $message->get_encrypted_mime_message->as_string);
 	$msg = $message->get_encrypted_mime_message->as_string;
-    }elsif ($message->{'protected'}) {
+    }elsif ($message->is_signed) {
+	Log::do_log('trace','smime signed: %s',length $message->get_message_as_string);
 	$msg = $message->get_message_as_string;
     }else{
+	Log::do_log('trace','normal message: %s, %s',length $message->get_mime_message->as_string,$message->{'messagekey'});
 	$msg = $message->get_mime_message->as_string;
     }
     my $message_sender = $message->get_sender_email();
@@ -435,7 +438,6 @@ sub store {
 	if ($message->{'messagekey'}) {
 	    # move message to spool bulk and keep it locked
 	    $bulkspool->update({'messagekey'=>$message->{'messagekey'}},{'messagelock'=>$lock,'spoolname'=>'bulk','message' => $msg});
-	   &Log::do_log('debug',"moved message to spool bulk");
 	}else{
 	    $message->{'messagekey'} = $bulkspool->store($msg,
 							 {'dkim_d'=>$dkim->{d},
@@ -445,7 +447,7 @@ sub store {
 							  'dkim_header_list'=>$dkim->{header_list}},
 							 $lock);
 	    unless($message->{'messagekey'}) {
-	&Log::do_log('err',"could not store message in spool distribute, message lost ?");
+		Log::do_log('err',"could not store message in spool distribute, message lost ?");
 		return undef;
 	    }
 	}

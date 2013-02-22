@@ -859,7 +859,7 @@ sub update_stats {
 ##           @rcpt   : a tab of emails
 ## return :  a tab of rcpt for which rcpt must be use depending on the message sequence number, this way every subscriber is "verped" from time to time
 ##           input table @rcpt is spliced : rcpt for which verp must be used are extracted from this table
-sub extract_verp_rcpt() {
+sub extract_verp_rcpt {
     Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my $percent = shift;
     my $xseq = shift;
@@ -2076,9 +2076,10 @@ sub send_msg {
     if ($apply_dkim_signature eq 'on') {
 	$dkim_parameters = &tools::get_dkim_parameters($self);
     }
+    $message->{'messagekey'} = undef;
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
-	my $msg_copy = dclone $message;
-	my $new_message = $msg_copy->prepare_message_according_to_mode($mode);
+	my $new_message = dclone $message;
+	$new_message->prepare_message_according_to_mode($mode);
 	## TOPICS
 	my @selected_tabrcpt;
 	my @possible_verptabrcpt;
@@ -2098,11 +2099,11 @@ sub send_msg {
 
 	## Preparing VERP receipients.
 	my @verp_selected_tabrcpt =
-	    &extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
+	    extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
 	    \@possible_verptabrcpt);
 	my $verp = 'off';
 
-	my $result = &mail::mail_message(
+	my $result = mail::mail_message(
 	    'message'         => $new_message,
 	    'rcpt'            => \@selected_tabrcpt,
 	    'list'            => $self,
@@ -2111,7 +2112,7 @@ sub send_msg {
 	    'tag_as_last'     => $tags_to_use->{'tag_noverp'}
 	);
 	unless (defined $result) {
-	    &Log::do_log('err',
+	    Log::do_log('err',
 		"List::send_msg, could not send message to distribute from $from (verp disabled)"
 	    );
 	    return undef;
@@ -2137,7 +2138,7 @@ sub send_msg {
 	next if ($mode =~ /nomail|summary|digest|digestplain/);
 
 	## prepare VERP sending.
-	$result = &mail::mail_message(
+	$result = mail::mail_message(
 	    'message'         => $new_message,
 	    'rcpt'            => \@verp_selected_tabrcpt,
 	    'list'            => $self,
@@ -2146,7 +2147,7 @@ sub send_msg {
 	    'tag_as_last'     => $tags_to_use->{'tag_verp'}
 	);
 	unless (defined $result) {
-	    &Log::do_log('err',
+	    Log::do_log('err',
 		"List::send_msg, could not send message to distribute from $from (verp enabled)"
 	    );
 	    return undef;
