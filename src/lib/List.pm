@@ -2331,18 +2331,7 @@ sub prepare_message_according_to_mode {
 	$message->{'decrypted_msg'} = $message->{'msg'};
     ##Prepare message for html reception mode
     } elsif ($mode eq 'html') {
-	Log::do_log('debug3','preparing: %s',$mode);
-	my $html_msg = $message->get_mime_message->dup;
-	if (&tools::as_singlepart($html_msg, 'text/html')) {
-	    &Log::do_log('notice',
-		'Multipart message changed to html singlepart');
-	}
-	## Add a footer
-	my $new_msg = $message->add_parts;
-	if (defined $new_msg) {
-	    $html_msg = $new_msg;
-	}
-	$message = new Message({'mimeentity' =>$html_msg});
+	$message = new Message({'mimeentity' =>$message->prepare_reception_html});
 	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
 	$message->{'decrypted_msg'} = $message->{'msg'};
     ##Prepare message for urlize reception mode

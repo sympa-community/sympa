@@ -1554,7 +1554,7 @@ sub add_parts {
 	if ($content_type =~ /^multipart\/alternative/i ||
 	    $content_type =~ /^multipart\/related/i) {
 
-	    &Log::do_log('notice', 'Making $1 into multipart/mixed');
+	    &Log::do_log('notice', 'Making message into multipart/mixed');
 	    $msg->make_multipart("mixed", Force => 1);
 	}
 
@@ -1727,6 +1727,18 @@ sub prepare_reception_txt {
     ## Add a footer
     return $self->add_parts;
 }
+
+sub prepare_reception_html {
+    my $self = shift;
+    Log::do_log('trace','preparing message for html reception mode');
+    if (tools::as_singlepart($self->get_mime_message, 'text/html')) {
+	Log::do_log('notice',
+	    'Multipart message changed to html singlepart');
+    }
+    ## Add a footer
+    return $self->add_parts;
+}
+
 ## Packages must return true.
 1;
 =pod 
