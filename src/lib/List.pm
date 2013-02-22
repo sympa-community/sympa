@@ -2042,11 +2042,6 @@ sub send_msg {
     ## Who is the enveloppe sender?
     my $host = $self->host;
     my $from = $self->get_list_address('return_path');
-
-    # separate subscribers depending on user reception option and also if verp a dicovered some bounce for them.
-    return 0 unless ($self->get_list_members_per_mode($message));
-    #save the message before modifying it
-    my $original_msg = $message->{'msg'}->dup;
     my $nbr_smtp = 0;
     my $nbr_verp = 0;
 
@@ -2057,18 +2052,6 @@ sub send_msg {
 	;    # force verp if tracking is requested.
 
     my $xsequence = $self->stats->[0];
-    my $tags_to_use;
-
-# Define messages which can be tagged as first or last according to the verp rate.
-# If the VERP is 100%, then all the messages are VERP. Don't try to tag not VERP
-# messages as they won't even exist.
-    if ($verp_rate eq '0%') {
-	$tags_to_use->{'tag_verp'} = 0;
-	$tags_to_use->{'tag_noverp'} = 1;
-    } else {
-	$tags_to_use->{'tag_verp'} = 1;
-	$tags_to_use->{'tag_noverp'} = 0;
-    }
 
     my $dkim_parameters;
 
@@ -2076,49 +2059,37 @@ sub send_msg {
     if ($apply_dkim_signature eq 'on') {
 	$dkim_parameters = &tools::get_dkim_parameters($self);
     }
+    # separate subscribers depending on user reception option and also if verp a dicovered some bounce for them.
+    return 0 unless ($self->get_list_members_per_mode($message));
+    my $topics_updated_total = 0;
+    foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
+	$topics_updated_total += $self->filter_receipients_by_topics($message,$mode,$verp_rate,$xsequence);
+    }
+    return 0 unless ($topics_updated_total);
+    my ($tag_verp,$tag_mode) = find_packet_to_tag_as_last($message);
+    
     $message->{'messagekey'} = undef;
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
 	my $new_message = dclone $message;
 	$new_message->prepare_message_according_to_mode($mode);
-	## TOPICS
-	my @selected_tabrcpt;
-	my @possible_verptabrcpt;
-	if ($self->is_there_msg_topic()) {
-	    @selected_tabrcpt =
-		$self->select_list_members_for_topic(
-		$new_message->get_topic(),
-		$message->{'rcpts_by_mode'}{$mode}{'noverp'});
-	    @possible_verptabrcpt =
-		$self->select_list_members_for_topic(
-		$new_message->get_topic(),
-		$message->{'rcpts_by_mode'}{$mode}{'verp'});
-	} else {
-	    @selected_tabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'noverp'}};
-	    @possible_verptabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'verp'}};
-	}
-
-	## Preparing VERP receipients.
-	my @verp_selected_tabrcpt =
-	    extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
-	    \@possible_verptabrcpt);
 	my $verp = 'off';
-
-	my $result = mail::mail_message(
-	    'message'         => $new_message,
-	    'rcpt'            => \@selected_tabrcpt,
-	    'list'            => $self,
-	    'verp'            => $verp,
-	    'dkim_parameters' => $dkim_parameters,
-	    'tag_as_last'     => $tags_to_use->{'tag_noverp'}
-	);
-	unless (defined $result) {
-	    Log::do_log('err',
-		"List::send_msg, could not send message to distribute from $from (verp disabled)"
+	if ($message->{'rcpts_by_mode'}{$mode}{'noverp'}) {
+	    my $result = mail::mail_message(
+		'message'         => $new_message,
+		'rcpt'            => $message->{'rcpts_by_mode'}{$mode}{'noverp'},
+		'list'            => $self,
+		'verp'            => $verp,
+		'dkim_parameters' => $dkim_parameters,
+		'tag_as_last'     => (($mode eq $tag_mode)&&($tag_verp eq 'noverp'))
 	    );
-	    return undef;
+	    unless (defined $result) {
+		Log::do_log('err',
+		    "List::send_msg, could not send message to distribute from $from (verp disabled)"
+		);
+		return undef;
+	    }
+	    $nbr_smtp += $result;
 	}
-	$tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
-	$nbr_smtp += $result;
 
 	$verp = 'on';
 
@@ -2129,7 +2100,7 @@ sub send_msg {
 		'msgid' => $original_message_id,
 		# what ever the message is transformed because of the
 		# reception option, tracking use the original message id
-		'rcpt'             => \@verp_selected_tabrcpt,
+		'rcpt'             => $message->{'rcpts_by_mode'}{$mode}{'verp'},
 		'reception_option' => $mode
 	    );
 	}
@@ -2137,24 +2108,25 @@ sub send_msg {
 	#  ignore those reception option where mail must not ne sent
 	next if ($mode =~ /nomail|summary|digest|digestplain/);
 
-	## prepare VERP sending.
-	$result = mail::mail_message(
-	    'message'         => $new_message,
-	    'rcpt'            => \@verp_selected_tabrcpt,
-	    'list'            => $self,
-	    'verp'            => $verp,
-	    'dkim_parameters' => $dkim_parameters,
-	    'tag_as_last'     => $tags_to_use->{'tag_verp'}
-	);
-	unless (defined $result) {
-	    Log::do_log('err',
-		"List::send_msg, could not send message to distribute from $from (verp enabled)"
+	if ($message->{'rcpts_by_mode'}{$mode}{'verp'}) {
+	    ## prepare VERP sending.
+	    my $result = mail::mail_message(
+		'message'         => $new_message,
+		'rcpt'            => $message->{'rcpts_by_mode'}{$mode}{'verp'},
+		'list'            => $self,
+		'verp'            => $verp,
+		'dkim_parameters' => $dkim_parameters,
+		'tag_as_last'     => (($mode eq $tag_mode)&&($tag_verp eq 'verp'))
 	    );
-	    return undef;
+	    unless (defined $result) {
+		Log::do_log('err',
+		    "List::send_msg, could not send message to distribute from $from (verp enabled)"
+		);
+		return undef;
+	    }
+	    $nbr_smtp += $result;
+	    $nbr_verp += $result;
 	}
-	$tags_to_use->{'tag_verp'} = 0 if ($result > 0);
-	$nbr_smtp += $result;
-	$nbr_verp += $result;
     }
     return $nbr_smtp;
 }
@@ -2307,6 +2279,67 @@ sub get_list_members_per_mode {
     $message->{'rcpts_by_mode'}{'digest'}{'verp'} = \@tabrcpt_digest_verp if ($#tabrcpt_digest_verp > -1);
     $message->{'rcpts_by_mode'}{'digestplain'}{'verp'} = \@tabrcpt_digestplain_verp if ($#tabrcpt_digestplain_verp > -1);
     return 1;
+}
+
+sub filter_receipients_by_topics {
+    my $self = shift;
+    my $message = shift;
+    my $mode = shift;
+    my $verp_rate = shift;
+    my $xsequence = shift;
+    ## TOPICS
+    my @selected_tabrcpt;
+    my @possible_verptabrcpt;
+    if ($self->is_there_msg_topic()) {
+	@selected_tabrcpt =
+	    $self->select_list_members_for_topic(
+	    $message->get_topic(),
+	    $message->{'rcpts_by_mode'}{$mode}{'noverp'});
+	@possible_verptabrcpt =
+	    $self->select_list_members_for_topic(
+	    $message->get_topic(),
+	    $message->{'rcpts_by_mode'}{$mode}{'verp'});
+    } else {
+	@selected_tabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'noverp'}};
+	@possible_verptabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'verp'}};
+    }
+
+    ## Preparing VERP receipients.
+    my @verp_selected_tabrcpt =
+	extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
+	\@possible_verptabrcpt);
+    
+    if ($#selected_tabrcpt > -1) {
+	$message->{'rcpts_by_mode'}{$mode}{'noverp'} = \@selected_tabrcpt;
+    }else{
+	delete $message->{'rcpts_by_mode'}{$mode}{'noverp'};
+    }
+    if ($#verp_selected_tabrcpt > -1) {
+	$message->{'rcpts_by_mode'}{$mode}{'verp'} = \@verp_selected_tabrcpt;
+    }else{
+	delete $message->{'rcpts_by_mode'}{$mode}{'verp'};
+    }
+    return $#verp_selected_tabrcpt + $#selected_tabrcpt +2;
+}
+
+sub find_packet_to_tag_as_last {
+    my $message = shift;
+    my %not_sent_modes = ('nomail',1,'digestplain',1,'digest',1,'summary',1);
+    my $tag_verp = 0;
+    my $tag_noverp = 0;
+    foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
+	if ($message->{'rcpts_by_mode'}{$mode}{'verp'}) {
+	    $tag_verp = $mode;
+	}
+	if ($message->{'rcpts_by_mode'}{$mode}{'noverp'}) {
+	    $tag_noverp = $mode;
+	}
+    }
+    if ($tag_verp) {
+	return ('verp',$tag_verp);
+    }else{
+	return ('noverp',$tag_noverp);
+    }
 }
 
 ###################   SERVICE MESSAGES   ##################################
