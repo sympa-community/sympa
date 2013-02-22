@@ -414,7 +414,7 @@ sub store {
     
     my $msg;
     if ($message->{'smime_crypted'}) {
-	$msg = $message->get_encrypted_message_as_string;
+	$msg = $message->get_encrypted_mime_message->as_string;
     }elsif ($message->{'protected'}) {
 	$msg = $message->get_message_as_string;
     }else{

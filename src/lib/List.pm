@@ -2316,17 +2316,7 @@ sub prepare_message_according_to_mode {
     Log::do_log('debug3','msg %s, mode: %s',$message->get_msg_id,$mode);
     ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
-	Log::do_log('debug3','preparing: %s',$mode);
-	## Add a footer
-	unless ($message->{'protected'}) {
-	    my $new_msg = $message->add_parts;
-	    if (defined $new_msg) {
-		$message->{'msg'} = $new_msg;
-		$message->{'altered'} = '_ALTERED_';
-	    }else{
-		Log::do_log('err','Part addition failed');
-	    }
-	}
+	$message->prepare_reception_mail;
     } elsif (($mode eq 'nomail') ||
 	($mode eq 'summary') ||
 	($mode eq 'digest') ||

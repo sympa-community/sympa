@@ -1684,7 +1684,22 @@ sub _append_parts {
     return undef;
 }
 
-
+sub prepare_reception_mail {
+    my $self = shift;
+    Log::do_log('debug3','preparing message for mail reception');
+    ## Add footer and header
+    unless ($self->{'protected'}) {
+	my $new_msg = $self->add_parts;
+	if (defined $new_msg) {
+	    $self->{'msg'} = $new_msg;
+	    $self->{'altered'} = '_ALTERED_';
+	}else{
+	    Log::do_log('err','Part addition failed');
+	    return undef;
+	}
+    }
+    return 1;
+}
 ## Packages must return true.
 1;
 =pod 
