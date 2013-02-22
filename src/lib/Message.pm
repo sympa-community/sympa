@@ -598,7 +598,7 @@ sub check_x_sympa_checksum {
 sub decrypt {
     my $self = shift;
     ## Decrypt messages
-    my $hdr = $self->{'msg'}->head;
+    my $hdr = $self->get_mime_message->head;
     if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	($hdr->get('Content-Type') !~ /signed-data/i)){
 	unless (defined $self->smime_decrypt()) {
@@ -1469,6 +1469,221 @@ sub check_message_structure {
 	}
     }    
 }
+
+## Add footer/header to a message
+sub add_parts {
+    my $self = shift;
+    unless ($self->{'list'}) {
+	Log::do_log('err','The message has no list context; No header/footer to add');
+	return undef;
+    }
+    my $msg = $self->get_mime_message;
+    my ($listname, $type) =
+	($self->{'list'}->name, $self->{'list'}->footer_type);
+    my $listdir = $self->{'list'}->dir;
+    &Log::do_log('debug3', '%s, %s, %s',
+	$msg, $listname, $type);
+    
+    my ($header, $headermime);
+    foreach my $file (
+	"$listdir/message.header",
+	"$listdir/message.header.mime",
+	Site->etc . '/mail_tt2/message.header',
+	Site->etc . '/mail_tt2/message.header.mime'
+	) {
+	if (-f $file) {
+	    unless (-r $file) {
+		&Log::do_log('notice', 'Cannot read %s', $file);
+		next;
+	    }
+	    $header = $file;
+	    last;
+	}
+    }
+
+    my ($footer, $footermime);
+    foreach my $file (
+	"$listdir/message.footer",
+	"$listdir/message.footer.mime",
+	Site->etc . '/mail_tt2/message.footer',
+	Site->etc . '/mail_tt2/message.footer.mime'
+	) {
+	if (-f $file) {
+	    unless (-r $file) {
+		&Log::do_log('notice', 'Cannot read %s', $file);
+		next;
+	    }
+	    $footer = $file;
+	    last;
+	}
+    }
+
+    ## No footer/header
+    unless (($footer and -s $footer) or ($header and -s $header)) {
+ 	return undef;
+    }
+
+    if ($type eq 'append') {
+	## append footer/header
+	my ($footer_msg, $header_msg);
+	if ($header and -s $header) {
+	    open HEADER, $header;
+	    $header_msg = join '', <HEADER>;
+	    close HEADER;
+	    $header_msg = '' unless $header_msg =~ /\S/;
+	}
+	if ($footer and -s $footer) {
+	    open FOOTER, $footer;
+	    $footer_msg = join '', <FOOTER>;
+	    close FOOTER;
+	    $footer_msg = '' unless $footer_msg =~ /\S/;
+	}
+	if (length $header_msg or length $footer_msg) {
+	    if (&_append_parts($msg, $header_msg, $footer_msg)) {
+		$msg->sync_headers(Length => 'COMPUTE')
+		    if $msg->head->get('Content-Length');
+	    }
+	}
+    } else {
+	## MIME footer/header
+	my $parser = new MIME::Parser;
+	$parser->output_to_core(1);
+
+	my $content_type = $msg->effective_type || 'text/plain';
+
+	if ($content_type =~ /^multipart\/alternative/i ||
+	    $content_type =~ /^multipart\/related/i) {
+
+	    &Log::do_log('notice', 'Making $1 into multipart/mixed');
+	    $msg->make_multipart("mixed", Force => 1);
+	}
+
+	if ($header and -s $header) {
+	    if ($header =~ /\.mime$/) {
+		my $header_part;
+		eval { $header_part = $parser->parse_in($header); };
+		if ($@) {
+		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+				 $header, $parser->last_error);
+		} else {
+		    $msg->make_multipart unless $msg->is_multipart;
+		    $msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
+		}
+	    ## text/plain header
+	    } else {
+
+		$msg->make_multipart unless $msg->is_multipart;
+		my $header_part = build MIME::Entity
+		    Path       => $header,
+		Type        => "text/plain",
+		Filename    => undef,
+		'X-Mailer'  => undef,
+		Encoding    => "8bit",
+		Charset     => "UTF-8";
+		$msg->add_part($header_part, 0);
+	    }
+	}
+	if ($footer and -s $footer) {
+	    if ($footer =~ /\.mime$/) {
+		my $footer_part;
+		eval { $footer_part = $parser->parse_in($footer); };
+		if ($@) {
+		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+				 $footer, $parser->last_error);
+		} else {
+		    $msg->make_multipart unless $msg->is_multipart;
+		    $msg->add_part($footer_part);
+		}
+	    ## text/plain footer
+	    } else {
+
+		$msg->make_multipart unless $msg->is_multipart;
+		$msg->attach(
+		    Path       => $footer,
+			     Type        => "text/plain",
+			     Filename    => undef,
+			     'X-Mailer'  => undef,
+			     Encoding    => "8bit",
+			     Charset     => "UTF-8"
+			     );
+	    }
+	}
+    }
+
+    return $msg;
+}
+
+sub _append_parts {
+    my $part = shift;
+    my $header_msg = shift || '';
+    my $footer_msg = shift || '';
+
+    my $eff_type = $part->effective_type || 'text/plain';
+
+    if ($eff_type eq 'text/plain') {
+	my $cset = MIME::Charset->new('UTF-8');
+	$cset->encoder($part->head->mime_attr('Content-Type.Charset') ||
+		'NONE');
+
+	my $body;
+	if (defined $part->bodyhandle) {
+	    $body = $part->bodyhandle->as_string;
+	} else {
+	    $body = '';
+	}
+
+	## Only encodable footer/header are allowed.
+	if ($cset->encoder) {
+	    eval { $header_msg = $cset->encode($header_msg, 1); };
+	    $header_msg = '' if $@;
+	    eval { $footer_msg = $cset->encode($footer_msg, 1); };
+	    $footer_msg = '' if $@;
+	} else {
+	    $header_msg = '' if $header_msg =~ /[^\x01-\x7F]/;
+	    $footer_msg = '' if $footer_msg =~ /[^\x01-\x7F]/;
+	}
+
+	if (length $header_msg or length $footer_msg) {
+	    $header_msg .= "\n"
+		if length $header_msg and
+		    $header_msg !~ /\n$/;
+	    $body .= "\n"
+		if length $footer_msg and
+		    length $body and
+		    $body !~ /\n$/;
+
+	    my $io = $part->bodyhandle->open('w');
+	    unless (defined $io) {
+		&Log::do_log('err',
+		    "Failed to save message : $!");
+		return undef;
+	    }
+	    $io->print($header_msg);
+	    $io->print($body);
+	    $io->print($footer_msg);
+	    $io->close;
+	    $part->sync_headers(Length => 'COMPUTE')
+		if $part->head->get('Content-Length');
+	}
+	return 1;
+    } elsif ($eff_type eq 'multipart/mixed') {
+	## Append to first part if text/plain
+	if ($part->parts and
+	    &_append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    return 1;
+	}
+    } elsif ($eff_type eq 'multipart/alternative') {
+	## Append to first text/plain part
+	foreach my $p ($part->parts) {
+	    if (&_append_parts($p, $header_msg, $footer_msg)) {
+		return 1;
+	    }
+	}
+    }
+
+    return undef;
+}
+
 
 ## Packages must return true.
 1;

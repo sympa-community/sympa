@@ -32,6 +32,7 @@ use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use Carp qw(croak);
 
 use IO::Scalar;
+use Scalar::Util qw(refaddr);
 use Storable;
 use Mail::Header;
 
@@ -67,6 +68,7 @@ use Message;
 use Family; #FIXME: dependency loop between List and Family
 use PlainDigest;
 use tracking;
+use Storable qw(dclone);
 
 #use listdef; used in Robot
 
@@ -2042,9 +2044,9 @@ sub send_msg {
     my $from = $self->get_list_address('return_path');
 
     # separate subscribers depending on user reception option and also if verp a dicovered some bounce for them.
-    return 0 unless ($self->get_subscribers_per_mode($message));
+    return 0 unless ($self->get_list_members_per_mode($message));
     #save the message before modifying it
-    my $saved_msg = $message->{'msg'}->dup;
+    my $original_msg = $message->{'msg'}->dup;
     my $nbr_smtp = 0;
     my $nbr_verp = 0;
 
@@ -2076,7 +2078,6 @@ sub send_msg {
     }
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
 	my $new_message = $self->prepare_message_according_to_mode($message,$mode);
-	
 	## TOPICS
 	my @selected_tabrcpt;
 	my @possible_verptabrcpt;
@@ -2156,7 +2157,7 @@ sub send_msg {
     return $nbr_smtp;
 }
 
-sub get_subscribers_per_mode {
+sub get_list_members_per_mode {
     my $self= shift;
     my $message = shift;
     my (@tabrcpt,                  @tabrcpt_verp,
@@ -2213,6 +2214,30 @@ sub get_subscribers_per_mode {
 		push @tabrcpt_notice, $user->{'email'};
 		Log::do_log('debug3','user %s notice',$user->{'email'});
 	    }
+	} elsif ($message->{'smime_crypted'} &&
+	    (!-r Site->ssl_cert_dir . '/' .
+	    &tools::escape_chars($user->{'email'}) &&
+	    !-r Site->ssl_cert_dir . '/' .
+	    &tools::escape_chars($user->{'email'} . '@enc'))
+	) {
+	    Log::do_log('debug3','No certificate for user %s',$user->{'email'});
+	    ## Missing User certificate
+	    my $subject = $message->{'msg'}->head->get('Subject');
+	    my $sender = $message->{'msg'}->head->get('From');
+	    unless (
+	    $self->send_file(
+		'x509-user-cert-missing',
+		$user->{'email'},
+		{   'mail' =>
+		    {'subject' => $subject, 'sender' => $sender},
+		    'auto_submitted' => 'auto-generated'
+		    }
+		)
+	    ) {
+		&Log::do_log('notice',
+		"Unable to send template 'x509-user-cert-missing' to $user->{'email'}"
+		);
+	    }
 	} elsif (!$message->is_signed && $message->has_text_part && $user->{'reception'} eq 'txt') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_txt_verp, $user->{'email'};
@@ -2236,29 +2261,6 @@ sub get_subscribers_per_mode {
 	    } else {
 		push @tabrcpt_url, $user->{'email'};
 		Log::do_log('debug3','user %s urlize',$user->{'email'});
-	    }
-	} elsif ($message->{'smime_crypted'} &&
-	    (!-r Site->ssl_cert_dir . '/' .
-	    &tools::escape_chars($user->{'email'}) &&
-	    !-r Site->ssl_cert_dir . '/' .
-	    &tools::escape_chars($user->{'email'} . '@enc'))
-	) {
-	    ## Missing User certificate
-	    my $subject = $message->{'msg'}->head->get('Subject');
-	    my $sender = $message->{'msg'}->head->get('From');
-	    unless (
-	    $self->send_file(
-		'x509-user-cert-missing',
-		$user->{'email'},
-		{   'mail' =>
-		    {'subject' => $subject, 'sender' => $sender},
-		    'auto_submitted' => 'auto-generated'
-		    }
-		)
-	    ) {
-		&Log::do_log('notice',
-		"Unable to send template 'x509-user-cert-missing' to $user->{'email'}"
-		);
 	    }
 	} else {
 	    if ($user->{'bounce_score'}) {
@@ -2307,15 +2309,17 @@ sub get_subscribers_per_mode {
 
 sub prepare_message_according_to_mode {
     my $self = shift;
-    my $message = shift;
-    my $saved_msg = $message->get_mime_message->dup;
+    my $original_msg = shift;
     my $mode = shift;
-    my $new_message;
+    
+    my $message = dclone($original_msg);
+    Log::do_log('debug3','msg %s, mode: %s',$message->get_msg_id,$mode);
     ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
+	Log::do_log('debug3','preparing: %s',$mode);
 	## Add a footer
 	unless ($message->{'protected'}) {
-	    my $new_msg = $self->add_parts($message->{'msg'});
+	    my $new_msg = $message->add_parts;
 	    if (defined $new_msg) {
 		$message->{'msg'} = $new_msg;
 		$message->{'altered'} = '_ALTERED_';
@@ -2323,15 +2327,14 @@ sub prepare_message_according_to_mode {
 		Log::do_log('err','Part addition failed');
 	    }
 	}
-	$new_message = $message;
     } elsif (($mode eq 'nomail') ||
 	($mode eq 'summary') ||
 	($mode eq 'digest') ||
 	($mode eq 'digestplain')) {
-	$new_message = $message;
     }	##Prepare message for notice reception mode
     elsif ($mode eq 'notice') {
-	my $notice_msg = $saved_msg->dup;
+	Log::do_log('debug3','preparing: %s',$mode);
+	my $notice_msg = $message->get_mime_message->dup;
 	$notice_msg->bodyhandle(undef);
 	$notice_msg->parts([]);
 	if(($notice_msg->head->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
@@ -2341,40 +2344,44 @@ sub prepare_message_according_to_mode {
 	    $notice_msg->head->replace('Content-Type','text/plain; charset="US-ASCII"');
 	    $notice_msg->head->replace('Content-Transfer-Encoding','7BIT');
 	}
-	$new_message = new Message({'mimeentity' => $notice_msg});
-
+	$message = new Message({'mimeentity' =>$notice_msg});
     ##Prepare message for txt reception mode
     } elsif ($mode eq 'txt') {
-	my $txt_msg = $saved_msg->dup;
+	Log::do_log('debug3','preparing: %s',$mode);
+	my $txt_msg = $message->get_mime_message->dup;
 	if (&tools::as_singlepart($txt_msg, 'text/plain')) {
 	    &Log::do_log('notice',
-		'Multipart message changed to singlepart');
+		'Multipart message changed to text singlepart');
 	}
 
 	## Add a footer
-	my $new_msg = $self->add_parts($txt_msg);
+	my $new_msg = $message->add_parts;
 	if (defined $new_msg) {
 	    $txt_msg = $new_msg;
 	}
-	$new_message = new Message({'mimeentity' => $txt_msg});
-
+	$message = new Message({'mimeentity' =>$txt_msg});
+	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $message->{'msg'};
     ##Prepare message for html reception mode
     } elsif ($mode eq 'html') {
-	my $html_msg = $saved_msg->dup;
+	Log::do_log('debug3','preparing: %s',$mode);
+	my $html_msg = $message->get_mime_message->dup;
 	if (&tools::as_singlepart($html_msg, 'text/html')) {
 	    &Log::do_log('notice',
-		'Multipart message changed to singlepart');
+		'Multipart message changed to html singlepart');
 	}
 	## Add a footer
-	my $new_msg = $self->add_parts($html_msg);
+	my $new_msg = $message->add_parts;
 	if (defined $new_msg) {
 	    $html_msg = $new_msg;
 	}
-	$new_message = new Message({'mimeentity' => $html_msg});
-
+	$message = new Message({'mimeentity' =>$html_msg});
+	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $message->{'msg'};
     ##Prepare message for urlize reception mode
     } elsif ($mode eq 'url') {
-	my $url_msg = $saved_msg->dup;
+	Log::do_log('debug3','preparing: %s',$mode);
+	my $url_msg = $message->get_mime_message->dup;
 
 	my $expl = $self->dir . '/urlized';
 
@@ -2417,22 +2424,24 @@ sub prepare_message_according_to_mode {
 	$url_msg->parts(\@parts);
 
 	## Add a footer
-	my $new_msg = $self->add_parts($url_msg);
+	my $new_msg = $message->add_parts;
 	if (defined $new_msg) {
 	    $url_msg = $new_msg;
 	}
-	$new_message = new Message({'mimeentity' => $url_msg});
+	$message = new Message({'mimeentity' =>$url_msg});
+	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $message->{'msg'};
     } else {
 	&Log::do_log('err',
 	    "Unknown variable/reception mode $mode");
 	return undef;
     }
 
-    unless (defined $new_message) {
+    unless (defined $message) {
 	    &Log::do_log('err', "Failed to create Message object");
 	return undef;
     }
-    return $new_message;
+    return $message;
 
 }
 ###################   SERVICE MESSAGES   ##################################
@@ -3222,215 +3231,6 @@ See L<Site/get_etc_include_path>.
 =cut
 
 ## Inherited from Site_r
-
-## Add footer/header to a message
-sub add_parts {
-    my ($self, $msg) = @_;
-    my ($listname, $type) =
-	($self->name, $self->footer_type);
-    my $listdir = $self->dir;
-    &Log::do_log('debug3', 'List:add_parts(%s, %s, %s)',
-	$msg, $listname, $type);
-
-    my ($header, $headermime);
-    foreach my $file (
-	"$listdir/message.header",
-	"$listdir/message.header.mime",
-	Site->etc . '/mail_tt2/message.header',
-	Site->etc . '/mail_tt2/message.header.mime'
-	) {
-	if (-f $file) {
-	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
-		next;
-	    }
-	    $header = $file;
-	    last;
-	}
-    }
-
-    my ($footer, $footermime);
-    foreach my $file (
-	"$listdir/message.footer",
-	"$listdir/message.footer.mime",
-	Site->etc . '/mail_tt2/message.footer',
-	Site->etc . '/mail_tt2/message.footer.mime'
-	) {
-	if (-f $file) {
-	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
-		next;
-	    }
-	    $footer = $file;
-	    last;
-	}
-    }
-
-    ## No footer/header
-    unless (($footer and -s $footer) or ($header and -s $header)) {
- 	return undef;
-    }
-
-    if ($type eq 'append') {
-	## append footer/header
-	my ($footer_msg, $header_msg);
-	if ($header and -s $header) {
-	    open HEADER, $header;
-	    $header_msg = join '', <HEADER>;
-	    close HEADER;
-	    $header_msg = '' unless $header_msg =~ /\S/;
-	}
-	if ($footer and -s $footer) {
-	    open FOOTER, $footer;
-	    $footer_msg = join '', <FOOTER>;
-	    close FOOTER;
-	    $footer_msg = '' unless $footer_msg =~ /\S/;
-	}
-	if (length $header_msg or length $footer_msg) {
-	    if (&_append_parts($msg, $header_msg, $footer_msg)) {
-		$msg->sync_headers(Length => 'COMPUTE')
-		    if $msg->head->get('Content-Length');
-	    }
-	}
-    } else {
-	## MIME footer/header
-	my $parser = new MIME::Parser;
-	$parser->output_to_core(1);
-
-	my $content_type = $msg->effective_type || 'text/plain';
-
-	if ($content_type =~ /^multipart\/alternative/i ||
-	    $content_type =~ /^multipart\/related/i) {
-
-	    &Log::do_log('notice', 'Making $1 into multipart/mixed');
-	    $msg->make_multipart("mixed", Force => 1);
-	}
-
-	if ($header and -s $header) {
-	    if ($header =~ /\.mime$/) {
-		my $header_part;
-		eval { $header_part = $parser->parse_in($header); };
-		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
-				 $header, $parser->last_error);
-		} else {
-		    $msg->make_multipart unless $msg->is_multipart;
-		    $msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
-		}
-	    ## text/plain header
-	    } else {
-
-		$msg->make_multipart unless $msg->is_multipart;
-		my $header_part = build MIME::Entity
-		    Path       => $header,
-		Type        => "text/plain",
-		Filename    => undef,
-		'X-Mailer'  => undef,
-		Encoding    => "8bit",
-		Charset     => "UTF-8";
-		$msg->add_part($header_part, 0);
-	    }
-	}
-	if ($footer and -s $footer) {
-	    if ($footer =~ /\.mime$/) {
-		my $footer_part;
-		eval { $footer_part = $parser->parse_in($footer); };
-		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
-				 $footer, $parser->last_error);
-		} else {
-		    $msg->make_multipart unless $msg->is_multipart;
-		    $msg->add_part($footer_part);
-		}
-	    ## text/plain footer
-	    } else {
-
-		$msg->make_multipart unless $msg->is_multipart;
-		$msg->attach(
-		    Path       => $footer,
-			     Type        => "text/plain",
-			     Filename    => undef,
-			     'X-Mailer'  => undef,
-			     Encoding    => "8bit",
-			     Charset     => "UTF-8"
-			     );
-	    }
-	}
-    }
-
-    return $msg;
-}
-
-sub _append_parts {
-    my $part = shift;
-    my $header_msg = shift || '';
-    my $footer_msg = shift || '';
-
-    my $eff_type = $part->effective_type || 'text/plain';
-
-    if ($eff_type eq 'text/plain') {
-	my $cset = MIME::Charset->new('UTF-8');
-	$cset->encoder($part->head->mime_attr('Content-Type.Charset') ||
-		'NONE');
-
-	my $body;
-	if (defined $part->bodyhandle) {
-	    $body = $part->bodyhandle->as_string;
-	} else {
-	    $body = '';
-	}
-
-	## Only encodable footer/header are allowed.
-	if ($cset->encoder) {
-	    eval { $header_msg = $cset->encode($header_msg, 1); };
-	    $header_msg = '' if $@;
-	    eval { $footer_msg = $cset->encode($footer_msg, 1); };
-	    $footer_msg = '' if $@;
-	} else {
-	    $header_msg = '' if $header_msg =~ /[^\x01-\x7F]/;
-	    $footer_msg = '' if $footer_msg =~ /[^\x01-\x7F]/;
-	}
-
-	if (length $header_msg or length $footer_msg) {
-	    $header_msg .= "\n"
-		if length $header_msg and
-		    $header_msg !~ /\n$/;
-	    $body .= "\n"
-		if length $footer_msg and
-		    length $body and
-		    $body !~ /\n$/;
-
-	    my $io = $part->bodyhandle->open('w');
-	    unless (defined $io) {
-		&Log::do_log('err',
-		    "List::add_parts: Failed to save message : $!");
-		return undef;
-	    }
-	    $io->print($header_msg);
-	    $io->print($body);
-	    $io->print($footer_msg);
-	    $io->close;
-	    $part->sync_headers(Length => 'COMPUTE')
-		if $part->head->get('Content-Length');
-	}
-	return 1;
-    } elsif ($eff_type eq 'multipart/mixed') {
-	## Append to first part if text/plain
-	if ($part->parts and
-	    &_append_parts($part->parts(0), $header_msg, $footer_msg)) {
-	    return 1;
-	}
-    } elsif ($eff_type eq 'multipart/alternative') {
-	## Append to first text/plain part
-	foreach my $p ($part->parts) {
-	    if (&_append_parts($p, $header_msg, $footer_msg)) {
-		return 1;
-	    }
-	}
-    }
-
-    return undef;
-}
 
 ## Delete a user in the user_table
 ##sub delete_global_user
