@@ -1684,6 +1684,51 @@ sub _append_parts {
     return undef;
 }
 
+sub prepare_message_according_to_mode {
+    my $self = shift;
+    my $mode = shift;
+    my $message;
+    Log::do_log('debug3','msg %s, mode: %s',$self->get_msg_id,$mode);
+    ##Prepare message for normal reception mode
+    if ($mode eq 'mail') {
+	$self->prepare_reception_mail;
+	$message = $self;
+    } elsif (($mode eq 'nomail') ||
+	($mode eq 'summary') ||
+	($mode eq 'digest') ||
+	($mode eq 'digestplain')) {
+	$message = $self;
+    }	##Prepare message for notice reception mode
+    elsif ($mode eq 'notice') {
+	$message = new Message({'mimeentity' =>$self->prepare_reception_notice});
+    ##Prepare message for txt reception mode
+    } elsif ($mode eq 'txt') {
+	$message = new Message({'mimeentity' =>$self->prepare_reception_txt});
+	$message->{'smime_crypted'} = $self->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $self->{'msg'};
+    ##Prepare message for html reception mode
+    } elsif ($mode eq 'html') {
+	$message = new Message({'mimeentity' =>$self->prepare_reception_html});
+	$message->{'smime_crypted'} = $self->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $self->{'msg'};
+    ##Prepare message for urlize reception mode
+    } elsif ($mode eq 'url') {
+	$message = new Message({'mimeentity' =>$self->prepare_reception_urlize});
+	$message->{'smime_crypted'} = $self->{'smime_crypted'};
+	$message->{'decrypted_msg'} = $self->{'msg'};
+    } else {
+	&Log::do_log('err',
+	    "Unknown variable/reception mode $mode");
+	return undef;
+    }
+
+    unless (defined $message) {
+	    &Log::do_log('err', "Failed to create Message object");
+	return undef;
+    }
+    return $message;
+
+}
 sub prepare_reception_mail {
     my $self = shift;
     Log::do_log('debug3','preparing message for mail reception mode');

@@ -2077,7 +2077,8 @@ sub send_msg {
 	$dkim_parameters = &tools::get_dkim_parameters($self);
     }
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
-	my $new_message = $self->prepare_message_according_to_mode($message,$mode);
+	my $msg_copy = dclone $message;
+	my $new_message = $msg_copy->prepare_message_according_to_mode($mode);
 	## TOPICS
 	my @selected_tabrcpt;
 	my @possible_verptabrcpt;
@@ -2307,51 +2308,6 @@ sub get_list_members_per_mode {
     return 1;
 }
 
-sub prepare_message_according_to_mode {
-    my $self = shift;
-    my $original_msg = shift;
-    my $mode = shift;
-    
-    my $message = dclone($original_msg);
-    Log::do_log('debug3','msg %s, mode: %s',$message->get_msg_id,$mode);
-    ##Prepare message for normal reception mode
-    if ($mode eq 'mail') {
-	$message->prepare_reception_mail;
-    } elsif (($mode eq 'nomail') ||
-	($mode eq 'summary') ||
-	($mode eq 'digest') ||
-	($mode eq 'digestplain')) {
-    }	##Prepare message for notice reception mode
-    elsif ($mode eq 'notice') {
-	$message = new Message({'mimeentity' =>$message->prepare_reception_notice});
-    ##Prepare message for txt reception mode
-    } elsif ($mode eq 'txt') {
-	$message = new Message({'mimeentity' =>$message->prepare_reception_txt});
-	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $message->{'msg'};
-    ##Prepare message for html reception mode
-    } elsif ($mode eq 'html') {
-	$message = new Message({'mimeentity' =>$message->prepare_reception_html});
-	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $message->{'msg'};
-    ##Prepare message for urlize reception mode
-    } elsif ($mode eq 'url') {
-	$message = new Message({'mimeentity' =>$message->prepare_reception_urlize});
-	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
-	$message->{'decrypted_msg'} = $message->{'msg'};
-    } else {
-	&Log::do_log('err',
-	    "Unknown variable/reception mode $mode");
-	return undef;
-    }
-
-    unless (defined $message) {
-	    &Log::do_log('err', "Failed to create Message object");
-	return undef;
-    }
-    return $message;
-
-}
 ###################   SERVICE MESSAGES   ##################################
 
 ###############################################################
