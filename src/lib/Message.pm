@@ -1717,6 +1717,16 @@ sub prepare_reception_notice {
     return $notice_msg;
 }
 
+sub prepare_reception_txt {
+    my $self = shift;
+    Log::do_log('trace','preparing message for txt reception mode');
+    if (tools::as_singlepart($self->get_mime_message, 'text/plain')) {
+	Log::do_log('notice',
+	    'Multipart message changed to text singlepart');
+    }
+    ## Add a footer
+    return $self->add_parts;
+}
 ## Packages must return true.
 1;
 =pod 

@@ -2326,19 +2326,7 @@ sub prepare_message_according_to_mode {
 	$message = new Message({'mimeentity' =>$message->prepare_reception_notice});
     ##Prepare message for txt reception mode
     } elsif ($mode eq 'txt') {
-	Log::do_log('debug3','preparing: %s',$mode);
-	my $txt_msg = $message->get_mime_message->dup;
-	if (&tools::as_singlepart($txt_msg, 'text/plain')) {
-	    &Log::do_log('notice',
-		'Multipart message changed to text singlepart');
-	}
-
-	## Add a footer
-	my $new_msg = $message->add_parts;
-	if (defined $new_msg) {
-	    $txt_msg = $new_msg;
-	}
-	$message = new Message({'mimeentity' =>$txt_msg});
+	$message = new Message({'mimeentity' =>$message->prepare_reception_txt});
 	$message->{'smime_crypted'} = $original_msg->{'smime_crypted'};
 	$message->{'decrypted_msg'} = $message->{'msg'};
     ##Prepare message for html reception mode
