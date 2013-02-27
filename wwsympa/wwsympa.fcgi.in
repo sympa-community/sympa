@@ -1906,71 +1906,71 @@ my $birthday = time ;
 
  }
 
-Site->send_notify_to_listmaster(undef, undef, undef, 1); # Purge grouped notifications
+# Purge grouped notifications
+Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 ##############################################################
- #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
- ##############################################################
+#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
+##############################################################
 
-
- ## Write to log
+## Write to log
 sub wwslog {
-     my $facility = shift;
+    my $facility = shift;
 
-     # do not log if log level if too high regarding the log requested by user 
-     return if ($Log::levels{$facility} > $Log::log_level);
+    # do not log if log level if too high regarding the log requested by user 
+    return if ($Log::levels{$facility} > $Log::log_level);
 
-     my $msg = shift;
+    my $msg = shift;
 
-     my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
+    my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
 
-     $msg = "[list $param->{'list'}] " . $msg
-	 if $param->{'list'};
+    $msg = "[list $param->{'list'}] " . $msg
+	if $param->{'list'};
 
-	
-     if ($param->{'alt_emails'}) {
-	 my @alts;
-	 foreach my $alt (keys %{$param->{'alt_emails'}}) {
-	     push @alts, $alt
-		 unless ($alt eq $param->{'user'}{'email'});
-	 }
+    if ($param->{'alt_emails'}) {
+	my @alts;
+	foreach my $alt (keys %{$param->{'alt_emails'}}) {
+	    push @alts, $alt
+		unless ($alt eq $param->{'user'}{'email'});
+	}
 
-	 if ($#alts >= 0) {
-	     my $alt_list = join ',', @alts;
-	     $msg = "[alt $alt_list] " . $msg;
-	 }
-     }
+	if ($#alts >= 0) {
+	    my $alt_list = join ',', @alts;
+	    $msg = "[alt $alt_list] " . $msg;
+	}
+    }
 
-     $msg = "[user $param->{'user'}{'email'}] " . $msg
-	 if $param->{'user'}{'email'};
+    $msg = "[user $param->{'user'}{'email'}] " . $msg
+	if $param->{'user'}{'email'};
 
-     $msg = "[rss] ".$msg
-	 if $rss;
+    $msg = "[rss] ".$msg
+	if $rss;
 
-     $msg = "[client $remote] ".$msg
-	 if $remote;
+    $msg = "[client $remote] ".$msg
+	if $remote;
 
-     $msg = "[session $session->{'id_session'}] ".$msg
-	 if $session;
+    $msg = "[session $session->{'id_session'}] ".$msg
+	if $session;
 
-     $msg = "[robot $robot_id] ".$msg;
+    $msg = "[robot $robot_id] ".$msg;
 
-     return &Log::do_log($facility, $msg, @_);
- }
-
+    return &Log::do_log($facility, $msg, @_);
+}
 
 sub web_db_log {
     my $data = shift;
 
     $data->{'client'} = $param->{'remote_addr'};
     $data->{'daemon'} = 'wwsympa';
-    $data->{'robot'} ||= $robot_id;
-    $data->{'list'} ||= $list->name if (defined $list);
+    $data->{'robot'} ||= $robot;
+    $data->{'list'} ||= $list;
     $data->{'action'} ||= $param->{'action'};
-    $data->{'user_email'} ||= $param->{'user'}{'email'} if (defined $param->{'user'});    
-    $data->{'target_email'} ||= $data->{'user_email'}; ## Default email is the user email
+    $data->{'user_email'} ||= $param->{'user'}{'email'}
+	if defined $param->{'user'};
+    ## Default email is the user email
+    $data->{'target_email'} ||= $data->{'user_email'};
 
-    unless (&Log::db_log($data)) {
+    unless (Log::db_log($data)) {
 	&wwslog('err','web_db_log: failed to log in database');
 	return undef;
     }
@@ -1981,20 +1981,20 @@ sub web_db_log {
 ###################################
 # log in stat_table via web interface
 sub web_db_stat_log {
+    my $data = shift;
+    $data->{'mail'} ||= $param->{'user'}{'email'}
+	if defined $param->{'user'};
+    $data->{'operation'} ||= $param->{'action'};
+    $data->{'list'} ||= $list->name if defined $list;
+    $data->{'daemon'} = 'wwsympa';
+    $data->{'client'} = $param->{'remote_addr'};
+    $data->{'robot'} ||= $robot_id;
 
- 	my $data = shift;
-	$data->{'mail'} ||= $param->{'user'}{'email'} if (defined $param->{'user'});
-	$data->{'operation'} ||= $param->{'action'};
-	$data->{'list'} ||= $list->name if (defined $list);
-	$data->{'daemon'} = 'wwsympa';
-	$data->{'client'} = $param->{'remote_addr'};
-	$data->{'robot'} ||= $robot_id;
-	
-	unless (&Log::db_stat_log($data)) {
-		&wwslog('err', 'web_db_stat_log: failed to log in database');
-		return undef;
-	}
-	return 1;
+    unless (Log::db_stat_log($data)) {
+	&wwslog('err', 'web_db_stat_log: failed to log in database');
+	return undef;
+    }
+    return 1;
 }
 
 ####################################	
