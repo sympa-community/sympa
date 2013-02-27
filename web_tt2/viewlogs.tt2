@@ -9,6 +9,7 @@
   <form action="[% path_cgi %]">
   <fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
+  <input type="hidden" name="way" value="[% way %]" />
   <input type="hidden" name="action" value="viewlogs" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="target_type" value="[% target_type %]" />
@@ -28,13 +29,13 @@
   </form>
 <br />
    [% IF prev_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]/[% way %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
      [%|loc%]page[%END%] [% page %] / [% total_page %]
    [% END %]
    [% IF next_page %]
-     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]/[% way %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
 
 
@@ -100,33 +101,18 @@
 <div id="table_container">
 <table class="listOfItems" summary="logs table">
       <tr>
-	[% IF sortby == 'date' %]
-  	    <th class="sortby">
-	    [%|loc%]Date[%END%]
-	[% ELSE %]
-	    <th>
-            <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date" >[%|loc%]Date[%END%]</a>
-	[% END %]
+        <th>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date/[%IF sortby == 'date' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Date[%END%][% IF sortby == 'date' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
         </th>
 
 	[% UNLESS "$list" %]
-	[% IF sortby == 'list' %]
-	    <th class="sortby">
-	    [%|loc%]List[%END%]
-	[% ELSE %]
-	    <th>
-               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list">[%|loc%]List[%END%]</a>
-	[% END %]
+	<th>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list/[%IF sortby == 'list' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]List[%END%][% IF sortby == 'list' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 	[% END %]
 
-	[% IF sortby == 'action' %]
-  	    <th class="sortby">
-	    [%|loc%]Action[%END%]
-	[% ELSE %]
-	    <th>
-               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action">[%|loc%]Action[%END%]</a>
-	[% END %]
+  	<th>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action/[%IF sortby == 'action' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Action[%END%][% IF sortby == 'action' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 
 	<th>
@@ -149,13 +135,9 @@
 	  [%|loc%]Error type[%END%]
 	</th>
 
-	[% IF sortby == 'email' || sortby == 'user_email' %]
-  	    <th class="sortby">
-	    [%|loc%]User Email[%END%]
-	[% ELSE %]
-	    <th>	    
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email">[%|loc%]User Email[%END%]</a>
-	[% END %]
+	[% IF sortby == 'email' %][% SET sortby = 'user_email' %][% END %]
+  	<th>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email/[%IF sortby == 'user_email' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]User Email[%END%][% IF sortby == 'user_email' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 
 	[% IF is_listmaster || is_owner %]
@@ -164,13 +146,8 @@
 	</th>
 	[% END %]
 
-	[% IF sortby == 'daemon' %]
-	  <th class="sortby">
-	  [%|loc%]Service[%END%]
-	[% ELSE %]
-	  <th>
-	  <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/daemon">[%|loc%]Service[%END%]</a>
-	[% END %]
+	<th>
+	  <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/daemon/[%IF sortby == 'daemon' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Service[%END%][% IF sortby == 'daemon' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
         
       </tr>

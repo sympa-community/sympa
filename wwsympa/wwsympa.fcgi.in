@@ -491,7 +491,7 @@ my %action_args = ('default' => ['list'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
-		'viewlogs' => ['list','page','size','sortby'],
+		'viewlogs' => ['list','page','size','sortby','way'],
 		'viewspools' => ['spoolname','spool_status','spool_page_size','sortby','way'],
 		'viewspool_message' => ['spoolname','messagekey','spool_status','@file'],
 		'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
@@ -17384,79 +17384,90 @@ sub get_protected_email_address {
  ## of there robot or there is real problems with privacy policy and law in such services.
  ## 
 sub do_viewlogs {
-	&wwslog('info', 'do_viewlogs(%s)', $in{'page'});
+    &wwslog('info', 'do_viewlogs(%s)', $in{'page'});
 
-	$param->{'page'} = int($in{'page'}) || 1;
-	$param->{'size'} = int($in{'size'}) || Site->viewlogs_page_size;
+    $param->{'page'} = int($in{'page'}) || 1;
+    $param->{'size'} = int($in{'size'}) || Site->viewlogs_page_size;
 
-	my @date = &Log::get_log_date();
-	$param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[0]);
-	$param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S", localtime($date[1]);
+    my @date = Log::get_log_date();
+    $param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S",
+	localtime($date[0]);
+    $param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S",
+	localtime($date[1]);
 
-	#display and search parameters preparation
-	my $select = {};
+    #display and search parameters preparation
+    my $select = {};
 
-	$select->{'robot'} = $robot_id;
-	$select->{'list'} = $param->{'list'};
+    $select->{'robot'} = $robot_id;
+    $select->{'list'}  = $param->{'list'};
 
-	foreach my $p ('target_type','target','date_from','date_to','type','ip') {
-		$param->{$p} = $in{$p};
-		$select->{$p} = $in{$p};
+    foreach
+	my $p ('target_type', 'target', 'date_from', 'date_to', 'type', 'ip')
+    {
+	$param->{$p}  = $in{$p};
+	$select->{$p} = $in{$p};
+    }
+
+    my $sortby = $in{'sortby'} || 'date';
+    $sortby = 'user_email' if $sortby eq 'email';    ## compat.
+    $param->{'sortby'} = $sortby;
+
+    $in{'way'} = 'asc' unless $in{'way'} and $in{'way'} eq 'desc';
+    $param->{'way'} = $in{'way'};
+
+    if ($in{'target_type'} or $in{'page'} or $in{'size'}) {
+
+	#sending of search parameters for the query
+	my $line = Log::get_first_db_log($select, $sortby, $in{'way'});
+
+	#display the number of rows of the query.
+	$param->{'total_results'} = Log::return_rows_nb();
+
+	unless ($line and $param->{'total_results'}) {
+	    ##&report::reject_report_web('user','no_logs',{},$param->{'action'});
+	    &wwslog('info', 'do_viewlogs: no results');
+	    return 1;
 	}
 
-	my $sortby = $in{'sortby'} || 'date';
-	$sortby = 'user_email' if $sortby eq 'email'; ## compat.
-	$param->{'sortby'} = $sortby;
+	$param->{'total_page'} =
+	    int($param->{'total_results'} / $param->{'size'});
+	$param->{'total_page'}++
+	    if ($param->{'total_results'} % $param->{'size'});
 
-	if ($in{'target_type'} or $in{'page'} or $in{'size'}) {
-		#sending of search parameters for the query
-		my $line = Log::get_first_db_log($select, $sortby); 
-		#display the number of rows of the query.
-		##$param->{'total_results'} = $#{$param->{'log_entries'}} + 1;
-		##$param->{'total_results'} = &Log::return_rows_nb() if(&Log::return_rows_nb() != 0);
-		$param->{'total_results'} = Log::return_rows_nb();
-
-		unless($line and $param->{'total_results'}) {
-			##&report::reject_report_web('user','no_logs',{},$param->{'action'});
-			&wwslog('info','do_viewlogs: no results');
-			return 1;
-		}
-
-		$param->{'total_page'} = int($param->{'total_results'} / $param->{'size'});
-		$param->{'total_page'}++ if($param->{'total_results'} % $param->{'size'});
-
-		if($param->{'page'} > $param->{'total_page'}) {
-			&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-			&wwslog('info','do_viewlogs: no page %d', $param->{'page'});
-			return undef;
-		}
-
-		my $offset = 0;
-		if($param->{'page'} > 1) {
-			$offset = (($param->{'page'} - 1) * $param->{'size'});
-			$param->{'prev_page'} = $param->{'page'} - 1;
-		}
-
-		unless(($offset + $param->{'size'}) >= $param->{'total_results'}) {
-			$param->{'next_page'} = $param->{'page'} + 1;
-		}
-
-		my $last = $offset + $param->{'size'};
-		$last = $param->{'total_results'} - 1
-		    if $last >= $param->{'total_results'};
-
-		my $i;
-		for ($i = 0; $i <= $last; $i++) {
-		    if ($offset <= $i) {
-			$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S",
-			    localtime $line->{'date'};
-			push @{$param->{'log_entries'}}, $line;
-		    }
-		    $line = Log::get_next_db_log();
-		}
+	if ($param->{'page'} > $param->{'total_page'}) {
+	    &report::reject_report_web('user', 'no_page',
+		{'page' => $param->{'page'}},
+		$param->{'action'});
+	    &wwslog('info', 'do_viewlogs: no page %d', $param->{'page'});
+	    return undef;
 	}
 
-	return 1;
+	my $offset = 0;
+	if ($param->{'page'} > 1) {
+	    $offset = (($param->{'page'} - 1) * $param->{'size'});
+	    $param->{'prev_page'} = $param->{'page'} - 1;
+	}
+
+	unless (($offset + $param->{'size'}) >= $param->{'total_results'}) {
+	    $param->{'next_page'} = $param->{'page'} + 1;
+	}
+
+	my $last = $offset + $param->{'size'};
+	$last = $param->{'total_results'} - 1
+	    if $last >= $param->{'total_results'};
+
+	my $i;
+	for ($i = 0; $i <= $last; $i++) {
+	    if ($offset <= $i) {
+		$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S",
+		    localtime $line->{'date'};
+		push @{$param->{'log_entries'}}, $line;
+	    }
+	    $line = Log::get_next_db_log();
+	}
+    }
+
+    return 1;
 }
 
  ## view logs stored in RDBMS

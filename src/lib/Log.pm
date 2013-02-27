@@ -431,8 +431,11 @@ sub db_log_del {
 sub get_first_db_log {
     my $select = shift;
     my $sortby = shift || 'date';
+    my $way = shift || 'asc';
     $sortby = 'date'
 	unless $sortby =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
+    $way = 'asc'
+	unless $way =~ /^(asc|desc)$/;
     $select->{'target_type'} = 'none'
 	unless $select->{'target_type'} =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
 
@@ -527,13 +530,13 @@ sub get_first_db_log {
     }
 
     if ($sortby eq 'date') {
-	$statement .= 'ORDER BY date_logs ';
+	$statement .= sprintf 'ORDER BY date_logs %s ', $way;
     } elsif (Site->db_type =~ /^(mysql|Sybase)$/) {
 	# On MySQL, collation is case-insensitive by default.
 	# On Sybase, collation is defined at the time of database creation.
-	$statement .= sprintf 'ORDER BY %s_logs, date_logs ', $sortby;
+	$statement .= sprintf 'ORDER BY %s_logs %s, date_logs ', $sortby, $way;
     } else {
-	$statement .= sprintf 'ORDER BY lower(%s_logs), date_logs ', $sortby;
+	$statement .= sprintf 'ORDER BY lower(%s_logs) %s, date_logs ', $sortby, $way;
     }
 
     push @sth_stack, $sth;
