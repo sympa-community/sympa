@@ -29,13 +29,13 @@
   </form>
 <br />
    [% IF prev_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]/[% way %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
      [%|loc%]page[%END%] [% page %] / [% total_page %]
    [% END %]
    [% IF next_page %]
-     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]/[% way %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
 
 
@@ -95,24 +95,24 @@
 
 <em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
 [% IF total_results %]
-<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
-<br />
+[% IF list %]<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
+<br />[% END %]
 <em>[%|loc(total_results)%]%1 results[%END%].</em>
 <div id="table_container">
 <table class="listOfItems" summary="logs table">
       <tr>
         <th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date/[%IF sortby == 'date' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Date[%END%][% IF sortby == 'date' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date/[%IF sortby == 'date' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Date[%END%][% IF sortby == 'date' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
         </th>
 
 	[% UNLESS "$list" %]
 	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list/[%IF sortby == 'list' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]List[%END%][% IF sortby == 'list' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list/[%IF sortby == 'list' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]List[%END%][% IF sortby == 'list' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 	[% END %]
 
   	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action/[%IF sortby == 'action' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Action[%END%][% IF sortby == 'action' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action/[%IF sortby == 'action' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Action[%END%][% IF sortby == 'action' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 
 	<th>
@@ -137,7 +137,7 @@
 
 	[% IF sortby == 'email' %][% SET sortby = 'user_email' %][% END %]
   	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email/[%IF sortby == 'user_email' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]User Email[%END%][% IF sortby == 'user_email' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email/[%IF sortby == 'user_email' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]User Email[%END%][% IF sortby == 'user_email' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
 
 	[% IF is_listmaster || is_owner %]
@@ -147,7 +147,7 @@
 	[% END %]
 
 	<th>
-	  <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/daemon/[%IF sortby == 'daemon' && way == 'asc'%]desc[%ELSE%]asc[%END%]" >[%|loc%]Service[%END%][% IF sortby == 'daemon' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	  <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/daemon/[%IF sortby == 'daemon' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Service[%END%][% IF sortby == 'daemon' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
 	</th>
         
       </tr>

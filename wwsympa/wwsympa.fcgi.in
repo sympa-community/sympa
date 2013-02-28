@@ -491,7 +491,7 @@ my %action_args = ('default' => ['list'],
 		'rename_list' => ['list','new_list','new_robot'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
-		'viewlogs' => ['list','page','size','sortby','way'],
+		'viewlogs' => ['list','page','size','sortby','way','date_from','date_to'],
 		'viewspools' => ['spoolname','spool_status','spool_page_size','sortby','way'],
 		'viewspool_message' => ['spoolname','messagekey','spool_status','@file'],
 		'viewspool_message_dump' => ['spoolname','messagekey','spool_status'],
@@ -958,8 +958,8 @@ my %in_regexp = (
 		 ##Logs
 		 'target_type' => '[\w\-\.\:]*', 
 		 'target' => '.*', ##&tools::get_regexp('email'),
-		 'date_from' => '[\d\/]+',
-		 'date_to' => '[\d\/]+',
+		 'date_from' => '[-\/.\d]+',
+		 'date_to' => '[-\/.\d]+',
 		 'ip' => &tools::get_regexp('host'),
          
 		 ## colors
@@ -9525,8 +9525,9 @@ sub do_reviewbouncing {
      }
 
      if ($param->{'total_page'} > 0 and ($param->{'page'} > $param->{'total_page'})) {
-	 &report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
-	 &wwslog('info','do_reviewbouncing: no page %d', $param->{'page'});
+	&report::reject_report_web('user','no_page',{'page' => $param->{'page'}},$param->{'action'});
+	&web_db_log({'status' => 'error', 'error_type' => 'out of pages'});
+	&wwslog('info','do_reviewbouncing: no page %d', $param->{'page'});
 	 return 'admin';
      }
 
@@ -16196,13 +16197,13 @@ sub do_suspend_request {
     my $data;
 
     ## Sets the date of the field "start date" to "today"
-    my @d_day = localtime(time);
-    $param->{'d_day'} = ($d_day[3])."-".($d_day[4]+1)."-".($d_day[5]+1900);
+    ## FIXME: date format assumed European custom.
+    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
     my $display_resume = 0;
 
     ## We display in the table the lists of the subscriber and the state in which they are.
     ## reception : - nomail/digest/mail ||
-    ##             - . suspended  From XX/XX/XXXX To XX/XX/XXXX
+    ##             - . suspended  From XX-XX-XXXX To XX-XX-XXXX
     my @lists = &List::get_which($email, $robot, 'member');
 
     foreach my $list (@lists) {
@@ -16293,38 +16294,36 @@ sub do_suspend_request_action {
 	}
 	
 	if ($in{'date_deb'}){
-	    ($day1, $month1, $year1) = split(/\-/, $in{'date_deb'});
-	    $month1 = $month1-1;
+	    # separators may be "-", "/" or ".".
+	    # assume "2013-12-26" order and optionally "26-12-2013".
+	    ($year1, $month1, $day1) = split /[-.\/]/, $in{'date_deb'};
+	    ($year1, $day1) = ($day1, $year1) if 1900 <= $day1;
 
-	    if (($day1 =~ /([0-9]*)/) && ($month1 =~ /([0-9]*)/) && ($year1 =~ /([0-9]*)/)){
-		if (((1<=$day1) && ($day1<=31)) && ((0<=$month1) && ($month1<=11)) && (1900<=$year1)){
-		    ## Return an epoch date
-		    $data->{'startdate'} = timelocal(0, 0, 0, $day1,$month1,$year1);
-		}else{
-		    &report::reject_report_web('user','missing_arg',{'argument' => 'Start Date doesn\'t exist.'}, $param->{'action'});
-		    &wwslog('info','suspend_request: Date doesn\'t exist.');
-		    return 'suspend_request';
-		}
-	    }else{
+	    if ($day1 !~ /\D/ and $month1 !~ /\D/ and $year1 !~ /\D/ and
+		1 <= $day1 and $day1 <= 31 and
+		1 <= $month1 and $month1 <= 12 and 1900 <= $year1) {
+		## Return an epoch date
+		$data->{'startdate'} =
+		    timelocal(0, 0, 0, $day1, $month1 - 1, $year1);
+	    } else {
 		&report::reject_report_web('user','missing_arg',{'argument' => 'Start Date doesn\'t exist.'}, $param->{'action'});
 		&wwslog('info','suspend_request: Date doesn\'t exist.');
 		return 'suspend_request';
 	    }
 	    ## Case 1 : Start date & End date (without indefinite)	    
-	    if (($in{'date_fin'}) && (!$in{'indefinite'})){
-		($day2, $month2, $year2) = split(/\-/, $in{'date_fin'});
-		$month2 = $month2-1;
-		
-		if (($day2 =~ /([0-9]*)/) && ($month2 =~ /([0-9]*)/) && ($year2 =~ /([0-9]*)/)){
-		    if (((1<=$day2) && ($day2<=31)) && ((0<=$month2) && ($month2<=11)) && (1900<=$year2)){
-			## Return an epoch date
-			$data->{'enddate'} = timelocal(0, 0, 0, $day2,$month2,$year2);
-		    }else{
-			&report::reject_report_web('user','missing_arg',{'argument' => 'End Date doesn\'t exist.'}, $param->{'action'});
-			&wwslog('info','suspend_request: Date doesn\'t exist.');
-			return 'suspend_request';
-		    }
-		}else{
+	    if ($in{'date_fin'} and !$in{'indefinite'}) {
+		# separators may be "-", "/" or ".".
+		# assume "2013-12-26" order and optionally "26-12-2013".
+		($year2, $month2, $day2) = split /[-.\/]/, $in{'date_fin'};
+		($year2, $day2) = ($day2, $year2) if 1900 <= $day2;
+
+		if ($day2 !~ /\D/ and $month2 !~ /\D/ and $year2 !~ /\D/ and
+		    1 <= $day2 and $day2 <= 31 and
+		    1 <= $month2 and $month2 <= 12 and 1900 <= $year2) {
+		    ## Return an epoch date
+		    $data->{'enddate'} =
+			timelocal(0, 0, 0, $day2, $month2 - 1, $year2);
+		} else {
 		    &report::reject_report_web('user','missing_arg',{'argument' => 'End Date doesn\'t exist.'}, $param->{'action'});
 		    &wwslog('info','suspend_request: Date doesn\'t exist.');
 		    return 'suspend_request';
@@ -16336,16 +16335,16 @@ sub do_suspend_request_action {
 		    return 'suspend_request';
 		} 
 		## Case 2 : Start date & without indefinite (without end date)	
-	    }elsif((!$in{'date_fin'}) && ($in{'indefinite'})){
+	    } elsif (!$in{'date_fin'} and $in{'indefinite'}) {
 		$data->{'enddate'} = undef;
-	    }else{
-		&report::reject_report_web('user','missing_arg',{'argument' => 'Choose end date (dd/mm/yyyy) or indefinite end date'}, $param->{'action'});
-		&wwslog('info','suspend_request: missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date');
+	    } else {
+		&report::reject_report_web('user','missing_arg',{'argument' => 'Choose end date (dd-mm-yyyy) or indefinite end date'}, $param->{'action'});
+		&wwslog('info','suspend_request: missing argument for the end date or syntax error : dd-mm-yyyy or must choose a end date or indefinite end date');
 		return 'suspend_request';
 	    }
-	}else{
-	    &report::reject_report_web('user','missing_arg',{'argument' => 'Miss start date (dd/mm/yyyy)'}, $param->{'action'});
-	    &wwslog('info','suspend_request: missing argument for the start date or syntax error : dd/mm/yyyy');
+	} else {
+	    &report::reject_report_web('user','missing_arg',{'argument' => 'Miss start date (dd-mm-yyyy)'}, $param->{'action'});
+	    &wwslog('info','suspend_request: missing argument for the start date or syntax error : dd-mm-yyyy');
 	    return 'suspend_request';
 	}
 	
@@ -17401,6 +17400,22 @@ sub do_viewlogs {
     $select->{'robot'} = $robot_id;
     $select->{'list'}  = $param->{'list'};
 
+    foreach my $p ('date_from', 'date_to') {
+	next unless $in{$p};
+	# separators may be "-", "/" or ".".
+	# assume "2013-12-26" order and optionally "26-12-2013".
+	my ($year, $month, $day) = split /[-\/.]/, $in{$p};
+	($year, $day) = ($day, $year) if 1900 <= $day;
+	if ($year !~ /\D/ and $month !~ /\D/ and $day !~ /\D/ and
+	    1900 <= $year and 1 <= $month and $month <= 12 and
+	    1 <= $day and $day <= 31) {
+	    ## FIXME: date format assumed European custom.
+	    $in{$p} = "$day-$month-$year";
+	} else {
+	    delete $in{$p};
+	}
+    }
+
     foreach
 	my $p ('target_type', 'target', 'date_from', 'date_to', 'type', 'ip')
     {
@@ -17438,6 +17453,7 @@ sub do_viewlogs {
 	    &report::reject_report_web('user', 'no_page',
 		{'page' => $param->{'page'}},
 		$param->{'action'});
+	    &web_db_log({'status' => 'error', 'error_type' => 'out of pages'});
 	    &wwslog('info', 'do_viewlogs: no page %d', $param->{'page'});
 	    return undef;
 	}
