@@ -1723,7 +1723,7 @@ our %pinfo = (
 		'gettext_id' =>
 		    'List of headers to be included ito the message for signature',
 		'gettext_comment' =>
-		    'You should probably use teh default value which is the value recommended by RFC4871',
+		    'You should probably use the default value which is the value recommended by RFC4871',
 		'format'    => '\S+',
 		'occurence' => '0-1',
 		'default'   => {'conf' => 'dkim_header_list'},
@@ -1744,7 +1744,7 @@ our %pinfo = (
 		'gettext_id' =>
 		    'DKIM "i=" tag, you should probably leave this parameter empty',
 		'gettext_comment' =>
-		    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+		    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcast messages is i=<listname>-request@<domain>',
 		'format'    => '\S+',
 		'occurence' => '0-1'
 	    },

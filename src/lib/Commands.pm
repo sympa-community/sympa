@@ -2781,7 +2781,7 @@ sub confirm {
     my $spool = new Sympaspool('auth');
 
     my $messageinspool = $spool->get_message({'authkey' => $key});
-    
+
     unless ($messageinspool) {
 	&Log::do_log('info', 'CONFIRM %s from %s refused, auth failed',
 	    $key, $sender);

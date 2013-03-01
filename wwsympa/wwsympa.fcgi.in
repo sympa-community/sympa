@@ -17498,6 +17498,7 @@ sub do_viewspools {
     my $spool_status = 'ok';
     $spool_status = $in{'spool_status'} if ($in{'spool_status'});
     $param->{'spool_status'} = $spool_status;
+    $param->{'spool_status_title'} = gettext($spool_status);
 
     # force sortby to a correct value
     $in{'sortby'} = 'index'
