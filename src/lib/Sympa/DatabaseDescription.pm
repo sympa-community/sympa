@@ -332,7 +332,7 @@ my %full_db_struct = (
 		'order'=>25,
 	    },
 	    'dkim_privatekey_spool' => {
-		'struct'=> 'varchar(1000)',
+		'struct'=> 'varchar(2000)',
 		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
 		'order'=>35,
 	    },
