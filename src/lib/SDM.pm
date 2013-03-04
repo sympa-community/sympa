@@ -87,30 +87,35 @@ sub do_prepared_query {
 }
 
 ## Get database handler
+## Note: if database connection is not available, this function returns
+## immediately.
 sub db_get_handler {
-    &Log::do_log('debug3', 'Returning handle to sympa database');
+    Log::do_log('debug3', '()');
 
-    if(&check_db_connect()) {
+    if (check_db_connect('just_try')) {
 	return $db_source->{'dbh'};
-    }else {
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+    } else {
+	Log::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
 }
 
 ## Just check if DB connection is ok
+## Possible option is 'just_try', won't try to reconnect if database
+## connection is not available.
 sub check_db_connect {
-    
-    #&Log::do_log('debug2', 'Checking connection to the Sympa database');
+    #Log::do_log('debug3', '(%s)', @_);
+    my @options = @_;
+
     ## Is the Database defined
     unless (Site->db_name) {
-	&Log::do_log('err', 'No db_name defined in configuration file');
+	Log::do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
     
     unless ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
-	unless (&connect_sympa_database('just_try')) {
-	    &Log::do_log('err', 'Failed to connect to database');	   
+	unless (connect_sympa_database(@options)) {
+	    Log::do_log('err', 'Failed to connect to database');
 	    return undef;
 	}
     }
@@ -120,8 +125,8 @@ sub check_db_connect {
 
 ## Connect to Database
 sub connect_sympa_database {
-    &Log::do_log('debug2', '(%s)', @_);
-    my $option = shift;
+    Log::do_log('debug2', '(%s)', @_);
+    my $option = shift || '';
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
@@ -159,10 +164,15 @@ sub db_disconnect {
 }
 
 sub probe_db {
-    &Log::do_log('debug3', 'Checking database structure');    
+    Log::do_log('debug3', 'Checking database structure');    
     my (%checked, $table);
     
-    my $dbh = &db_get_handler();
+    unless (check_db_connect()) {
+	Log::do_log('err',
+	    'Could not check the database structure.  Make sure that database connection is available'
+	);
+	return undef;
+    }
 
     ## Database structure
     ## Report changes to listmaster
