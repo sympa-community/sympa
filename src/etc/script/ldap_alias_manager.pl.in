@@ -30,11 +30,11 @@ use tt2;
 #use Sympa::Constants; # load in confdef - Conf
 use Robot;
 
-unless (defined Site->load) {
-    Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );
+unless (Site->load('no_db' => 1)) {
+    printf STDERR
+	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 Log::set_log_level(Site->log_level);
@@ -78,7 +78,7 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     exit(2);
 }
 
-unless ($robot = Robot->new($domain)) {
+unless ($robot = Robot->new($domain, 'no_db' => 1)) {
     printf STDERR "Unknown robot %s\n", $domain;
     exit(16);
 }
