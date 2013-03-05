@@ -23,36 +23,32 @@
 use strict;
 
 use lib '--modulesdir--';
-#use Getopt::Std;
+use File::Copy;
 use Getopt::Long;
-
+# tentative
 use Data::Dumper;
-use Mail::Address;
-use File::Path;
 
 use Commands;
-use Conf;
+#use Conf;
 use Auth;
 use SympaSession;
-use Language;
-use Log;
-use Lock;
-use mail;
-use MIME::QuotedPrint;
+#use Language;
+#use Log;
+#use Lock;
+#use mail;
 use List;
-use Message;
-use admin;
-use Config_XML;
-use Family;
-use report;
-use File::Copy;
-use tools;
-use tt2;
-use Sympa::Constants;
-use tracking;
+#use Message;
+#use admin;
+#use Config_XML;
+#use Family;
+#use report;
+#use tools;
+#use tt2;
+#use Sympa::Constants;
+#use tracking;
 use Sympaspool;
-use SDM;
-use SQLSource;
+#use SDM;
+#use SQLSource;
 
 ## Internal tuning
 # delay between each read of the digestqueue
@@ -108,9 +104,12 @@ local $main::daemon_usage;
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
-## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
-unless (defined Robot::get_robots('no_db' => 1, 'force_reload' => 1)) {
-    &fatal_err('Configuration file %s has errors.', Conf::get_sympa_conf());  
+## Load configuration file
+unless (Robot::get_robots()) {
+    printf STDERR
+	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -131,24 +130,6 @@ if ($main::options{'log_level'}) {
     ); 
 }
 
-## Probe Db if defined
-if (Site->db_name and Site->db_type) {
-    unless (SDM::probe_db()) {
-	&Log::fatal_err(
-	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
-	    Site->db_name
-	);
-    }
-}
-
-## Now trying to load full config (including database)
-unless (defined Robot::get_robots()) {
-    &Log::fatal_err(
-	'Configuration file %s has errors.',
-	Conf::get_sympa_conf()
-    );
-}
-
 ## Main program
 if (!chdir(Site->home)) {
    &Log::fatal_err("Can't chdir to %s: %m", Site->home);
@@ -161,12 +142,6 @@ unless (&Conf::checkfiles_as_root()) {
    ## No return.
 }
 
-## Check that the data structure is uptodate
-unless ($main::options{'upgrade'} || $main::options{'help'}) {
-    unless (SDM::data_structure_uptodate()) {
-	&Log::fatal_err("error : data structure was not updated ; you should run sympa.pl --upgrade to run the upgrade process.");
-    }
-}
 my $spooldir;
 my %distinct_spools;
 if ($signal ne 'hup') {

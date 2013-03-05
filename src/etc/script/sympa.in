@@ -105,6 +105,24 @@ sympa_status() {
     fi
 }
 
+# Health check
+sympa_check() {
+	echo $echo_opt "Checking environment: "
+	if [ ${use_functions} ]; then
+		$sympadir/sympa.pl --health_check && success || failure
+		return $?
+	else
+		if $sympadir/sympa.pl --health_check; then
+			echo "success"
+			return 0
+		else
+			echo "failure"
+			return 1
+		fi
+	fi
+        echo
+}
+
 # Start a module
 sympa_module_start() {
     if [ $# = 0 ] ; then
@@ -225,6 +243,7 @@ case "$1" in
   start)
 	if [ ! -f ${sympalockdir}/sympa ]; then
 		echo "Starting Sympa subsystem: "
+		sympa_check || exit 1
 		sympa_start sympa
 		sympa_start spooler
 		sympa_start bulk

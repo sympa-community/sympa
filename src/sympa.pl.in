@@ -133,7 +133,8 @@ unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foregr
             'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','sync_list_db','md5_encode_password',
 		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s',
 		    'robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s','change_user_email','current_email=s','new_email=s',
-		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db','export_list')) {
+		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db','export_list',
+    'health_check')) {
     &Log::fatal_err("Unknown options.");
 }
 
@@ -173,6 +174,78 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'upgrade'} || $main::options{'reload_list_config'} || $main::options{'test_database_message_buffer'} || $main::options{'conf_2_db'});
 
+
+## Health check: --health_check option
+
+if (!$main::options{'help'} and $main::options{'health_check'}) {
+    ## Load configuration file. Ignoring database config for now: it avoids
+    ## trying to load a database that could not exist yet.
+    unless (Site->load('no_db' => 1, 'force_reload' => 1)) {
+	printf STDERR
+	    "Configuration file %s has errors.\n",
+	    Conf::get_sympa_conf();
+	exit 1;
+    }
+
+    ## Open the syslog and say we're read out stuff.
+    Log::do_openlog(Site->syslog, Site->log_socket_type, 'health_check');
+
+    ## Setting log_level using conf unless it is set by calling option
+    if ($main::options{'log_level'}) {
+	Log::set_log_level($main::options{'log_level'});
+	Log::do_log(
+	    'info',
+	    'Configuration file read, log level set using options : %s',
+	    $main::options{'log_level'}
+	);
+    } else {
+	Log::set_log_level(Site->log_level);
+	Log::do_log(
+	    'info', 'Configuration file read, default log level %s',
+	    Site->log_level
+	);
+    }
+
+    ## Check database connectivity and probe database
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+	printf STDERR
+	    "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+	    Site->db_name;
+	exit 1;
+    }
+
+    ## Now trying to load full config (including database)
+    unless (Site->load() and Robot::get_robots()) {
+	printf STDERR
+	    "Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	    Conf::get_sympa_conf();
+	exit 1;
+    }
+
+    ## Change working directory.
+    if (!chdir(Site->home)) {
+	printf STDERR "Can't chdir to %s: %s\n", Site->home, $!;
+	exit 1;
+    }
+
+    ## Check for several files.
+    unless (Conf::checkfiles_as_root()) {
+	printf STDERR "Missing files.\n";
+	exit 1;
+    }
+
+    ## Check that the data structure is uptodate
+    unless (SDM::data_structure_uptodate()) {
+	printf STDERR
+	    "Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process.\n";
+	exit 1;
+    }
+
+    exit 0;
+}
+
+## Main loop
+
 my %loop_info;
 my %msgid_table;
 my $latest_msgid_table_cleanup = time;
@@ -182,12 +255,12 @@ my $signal = 0;
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
-## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
-unless (defined Robot::get_robots('force_reload' => 1, 'no_db' => 1)) {
-    &Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );  
+## Load sympa.conf.
+unless (Robot::get_robots()) {
+    print STDERR
+	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -206,25 +279,6 @@ if ($main::options{'log_level'}) {
 	'info', 'Configuration file read, default log level %s',
 	Site->log_level
     ); 
-}
-
-## Probe Db if defined
-if (Site->db_name and Site->db_type) {
-    unless (SDM::probe_db()) {
-	&Log::fatal_err(
-	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
-	    Site->db_name
-	);
-    }
-}
-
-## Now trying to load full config (including database)
-unless (defined Robot::get_robots()) {
-    Log::fatal_err(
-	'Configuration file %s has errors.',
-	Conf::get_sympa_conf()
-    );
-   
 }
 
 &tools::ciphersaber_installed();
@@ -248,14 +302,6 @@ unless (&Conf::checkfiles_as_root()) {
    &Log::fatal_err("output checkfiles_as_root : Missing files. Aborting.");
    ## No return.
 }
-
-## Check that the data structure is uptodate
-unless ($main::options{'upgrade'} || $main::options{'help'}) {
-    unless (SDM::data_structure_uptodate()) {
-	&Log::fatal_err("error : data structure was not updated ; you should run sympa.pl --upgrade to run the upgrade process.");
-    }
-}
-
 
 if (Site->voot_feature eq 'on') {
     unless ( eval "require OAuthProvider" ){

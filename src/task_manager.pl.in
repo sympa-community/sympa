@@ -62,14 +62,14 @@ my $Version = '0.1';
 my $adrlist = {};
 
 # Load sympa.conf
-unless (defined Robot::get_robots()) {
-    Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );
+unless (Robot::get_robots()) {
+    printf STDERR
+	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
-&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'task_manager');
+Log::do_openlog(Site->log_facility, Site->log_socket_type, 'task_manager');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
@@ -84,16 +84,6 @@ if ($main::options{'log_level'}) {
 	'info', 'Configuration file read, default log level %s',
 	Site->log_level
     );
-}
-
-## Check databse connectivity
-unless (&SDM::check_db_connect()) {
-    &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
-}
-
-## Check that the data structure is uptodate
-unless (SDM::data_structure_uptodate()) {
-    &Log::fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
 }
 
 ## Put ourselves in background if not in debug mode. 

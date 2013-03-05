@@ -69,19 +69,19 @@ sub fatal_err {
 	syslog('err', $m, @_);
 	syslog('err', "Exiting.");
     };
-    if($@ && ($warning_date < time - $warning_timeout)) {
+    if ($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
 	unless(Site->send_notify_to_listmaster('logs_failed', [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
-    };
+    }
     $m =~ s/%m/$errno/g;
 
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
     unless (Site->send_notify_to_listmaster('sympa_died', [$full_msg])) {
-	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
+	do_log('err',"Unable to send notify 'sympa died' to listmaster");
     }
 
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
@@ -197,9 +197,9 @@ sub do_log {
     };
 
     if ($@ && ($warning_date < time - $warning_timeout)) {
-        $warning_date = time + $warning_timeout;
-        Site->send_notify_to_listmaster('logs_failed', [$@]);
-        }
+	$warning_date = time + $warning_timeout;
+	Site->send_notify_to_listmaster('logs_failed', [$@]);
+    }
 }
 
 
