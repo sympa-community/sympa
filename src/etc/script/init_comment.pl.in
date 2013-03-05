@@ -35,9 +35,7 @@ Site->load or die 'config_error';
 
 chdir Site->home;
 
-SDM::db_connect() or die "Can't connect to database";
-
-my $dbh = SDM::db_get_handler();
+SDM::check_db_connect('just_try') or die "Can't connect to database";
 
 my $sth = SDM::do_query(
     q{SELECT user_subscriber, comment_subscriber
@@ -76,4 +74,4 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 $sth->finish();
 
 ## Disconnect from Database
-SDM::db_disconnect if $dbh;
+SDM::db_disconnect();
