@@ -1288,7 +1288,7 @@ sub md5_encode_password {
 
     &Log::do_log('notice', 'Upgrade::md5_encode_password() recoding password using md5 fingerprint');
     
-    unless (&List::check_db_connect()) {
+    unless (SDM::check_db_connect('just_try')) {
 	return undef;
     }
 
