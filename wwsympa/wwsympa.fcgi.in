@@ -16439,10 +16439,17 @@ sub do_compose_mail {
 	return undef;
     }
 
-    $param->{'use_html_editor'} = $robot->use_html_editor;
-    $param->{'html_editor_file'} = $robot->html_editor_file;
-    $param->{'html_editor_init'} = $robot->html_editor_init;
-    
+    if ($robot->use_html_editor) {
+	$param->{'use_html_editor'} = $robot->use_html_editor;
+	if ($robot->html_editor_url =~ /^([-.\w]+:\/\/|\/)/i) {
+	    $param->{'html_editor_url'} = $robot->html_editor_url;
+	} elsif ($robot->html_editor_url) {
+	    $param->{'html_editor_url'} = $robot->static_content_url . '/' .
+		$robot->html_editor_url;
+	}
+	$param->{'html_editor_init'} = $robot->html_editor_init;
+    }
+
     # Set the subaction to html_news_letter or undef
     $param->{'subaction'} = $in{'subaction'};
     if ($in{'to'}) {

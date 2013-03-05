@@ -1531,11 +1531,12 @@ our @params = (
         'file'     => 'wwsympa.conf',
     },
     {
-        'name'     => 'html_editor_file',
-        'gettext_id'    => 'Path to the javascript file making the WYSIWYG HTML editor available',
+        'name'     => 'html_editor_url',
+        'gettext_id'    => 'URL path to the javascript file making the WYSIWYG HTML editor available.  Relative path under <static_content_url> or absolute path',
+        'gettext_comment' => 'Default value is an example of TinyMCE installed under <static_content_path>/js/tinymce/.',
         'vhost'    => '1',
-        'default'  => 'tinymce/jscripts/tiny_mce/tiny_mce.js',
-        'file'     => 'wwsympa.conf',
+        'default'  => 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
+        'file'     => 'sympa.conf', # added after migration of wwsympa.conf
     },
     {
         'name'     => 'html_editor_init',

@@ -78,10 +78,9 @@ sub update_version {
 
 ## Upgrade data structure from one version to another
 sub upgrade {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my ($previous_version, $new_version) = @_;
 
-    &Log::do_log('notice', 'Upgrade::upgrade(%s, %s)', $previous_version, $new_version);
-    
     if (&tools::lower_version($new_version, $previous_version)) {
 	&Log::do_log('notice', 'Installing  older version of Sympa ; no upgrade operation is required');
 	return 1;
@@ -973,7 +972,7 @@ sub upgrade {
 	    'default_home'               => 'NO',
 	    'export_topics'              => 'yes',
 	    'htmlarea_url'               => 'yes',
-	    'html_editor_file'           => 'NO',
+	    'html_editor_file'           => 'NO', # 6.2a
 	    'html_editor_init'           => 'NO',
 	    'ldap_force_canonical_email' => 'NO',
 	    'log_facility'               => 'yes',

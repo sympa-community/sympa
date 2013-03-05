@@ -90,6 +90,7 @@ my %old_params = (
     'dkim_header_list'     => '',
     web_recode_to          => 'filesystem_encoding',
     'localedir'            => '',
+    'html_editor_file'     => 'html_editor_url',
 );
 
 ## These parameters now have a hard-coded value
