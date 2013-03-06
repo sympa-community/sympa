@@ -43,7 +43,7 @@ use tools;
 use Lock;
 
 our @ISA = qw(Exporter);
-our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
+our @EXPORT = qw(%params %Conf);
 
 =head1 NAME
 
@@ -54,11 +54,6 @@ Conf - Sympa configuration
 =head2 CONSTANTS AND EXPORTED VARIABLES
 
 =cut
-
-sub DAEMON_MESSAGE {1};
-sub DAEMON_COMMAND {2};
-sub DAEMON_CREATION {4};
-sub DAEMON_ALL {7};
 
 ## Database and SQL statement handlers
 my $sth;

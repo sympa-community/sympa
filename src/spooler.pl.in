@@ -100,7 +100,7 @@ my %loop_info;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-local $main::daemon_usage; 
+local $main::daemon_usage = 'DAEMON_MASTER'; # Start daemon as all by default 
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
@@ -159,6 +159,14 @@ if ($signal ne 'hup') {
 	open(STDERR, ">> /dev/null");
 
 	setpgrp(0, 0);
+	if ($main::daemon_usage eq 'DAEMON_MASTER') {
+	    unless (&Conf::checkfiles()) {
+		&Log::fatal_err("Missing files. Aborting.");
+		## No return.
+	    }
+	}else {
+	    sleep 1; ## wait until main process has created required directories
+	}
 	# start a spooler.pl daemon for the spool location specified by option --queue= or for each distinct spool find in sympa.conf
 	if ($main::options{'queue'}){
 	    &Log::do_log('debug','Using spool %s only',$main::options{'queue'});
@@ -172,21 +180,20 @@ if ($signal ne 'hup') {
 		}
 	    }
 	}
-	my $master = 1;
 	foreach my $distinct_spool (keys %distinct_spools) {
 	    &Log::do_log('debug','Creating a daemon for spool %s',$distinct_spool);
 	    $spooldir = $distinct_spool;
-	    if ($master) { # only master process fork child process
+	    if ($main::daemon_usage eq 'DAEMON_MASTER') { # only master process fork child process
 		if ((my $child_pid = fork) != 0) {
 		    &Log::do_log('debug', "Master daemon fork child %s",$child_pid);		
 		}else{
 		    &Log::do_log('info', "Child process PID %s spooler for spool %s",$$,$spooldir);
-		    $master = 0;
+		    $main::daemon_usage = 'DAEMON_SLAVE';
 		    last;
 		}
 	    }
 	}
-	if ($master) {
+	if ($main::daemon_usage eq 'DAEMON_MASTER') {
 	   &Log::do_log('debug', "Fork, exiting from initial process");
 	    exit (0);
 	}
@@ -232,14 +239,6 @@ if ($signal ne 'hup') {
     &Log::do_log('notice', "Sympa spooler %s started", Sympa::Constants::VERSION);
     ## Check for several files.
     ## Prevent that 2 processes perform checks at the same time...
-    if ($main::daemon_usage == DAEMON_ALL) {
-	unless (&Conf::checkfiles()) {
-	    &Log::fatal_err("Missing files. Aborting.");
-	    ## No return.
-	}
-    }else {
-	sleep 1; ## wait until main process has created required directories
-    }
     if ($main::options{'help'}) {
 	print $usage_string;
 	exit 0;
