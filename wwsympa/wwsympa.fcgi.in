@@ -18735,7 +18735,7 @@ sub do_automatic_lists {
 
 sub prevent_visibility_bypass {
     &wwslog('debug2', 'Starting');
-    if (defined $list) {
+    if (defined $list && ref $list eq 'List') {
 	my $result = $list->check_list_authz('visibility',$param->{'auth_method'},
 					     {'sender' => $param->{'user'}{'email'}, 
 					      'remote_host' => $param->{'remote_host'},
