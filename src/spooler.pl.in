@@ -21,7 +21,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use strict;
-
+use warnings;
 use lib '--modulesdir--';
 use File::Copy;
 use Getopt::Long;
@@ -60,7 +60,7 @@ srand (time());
 my $version_string =
     sprintf("Sympa version is %s\n", Sympa::Constants::VERSION);
 
-my $daemon_name = &Log::set_daemon($0);
+my $daemon_name = Log::set_daemon($0);
 
 my $usage_string = "Usage:
    $0 [OPTIONS]
@@ -81,7 +81,7 @@ This demon is the Sympa spooler that load into database (table spool_table) mess
 ## Check --dump option
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d', ,'log_level=s','foreground','keepcopy|k=s', 'queue=s', 'help', 'version')) {
-    &fatal_err("Unknown options.");
+    Log::fatal_err("Unknown options.");
 }
 
 if ($main::options{'debug'}) {
@@ -132,14 +132,14 @@ if ($main::options{'log_level'}) {
 
 ## Main program
 if (!chdir(Site->home)) {
-   &Log::fatal_err("Can't chdir to %s: %m", Site->home);
-   ## Function never returns.
+    Log::fatal_err("Can't chdir to %s: %m", Site->home);
+    ## Function never returns.
 }
 
 ## Check for several files.
 unless (&Conf::checkfiles_as_root()) {
-   &Log::fatal_err("output checkfiles_as_root : Missing files. Aborting.");
-   ## No return.
+    Log::fatal_err("output checkfiles_as_root : Missing files. Aborting.");
+    ## No return.
 }
 
 my $spooldir;
@@ -161,7 +161,7 @@ if ($signal ne 'hup') {
 	setpgrp(0, 0);
 	if ($main::daemon_usage eq 'DAEMON_MASTER') {
 	    unless (&Conf::checkfiles()) {
-		&Log::fatal_err("Missing files. Aborting.");
+		Log::fatal_err("Missing files. Aborting.");
 		## No return.
 	    }
 	}else {
@@ -169,32 +169,41 @@ if ($signal ne 'hup') {
 	}
 	# start a spooler.pl daemon for the spool location specified by option --queue= or for each distinct spool find in sympa.conf
 	if ($main::options{'queue'}){
-	    &Log::do_log('debug','Using spool %s only',$main::options{'queue'});
+	    Log::do_log('debug',
+		'Using spool %s only', $main::options{'queue'});
 	    $distinct_spools{$main::options{'queue'}}= 1;
 	}else{
 	    foreach my $possible_spool ('queue', 'queueautomatic'){
-		&Log::do_log('debug','Checking usage of spool %s',$possible_spool);
+		Log::do_log('debug',
+		    'Checking usage of spool %s', $possible_spool);
 		if (Site->$possible_spool) {
-		    &Log::do_log('debug','Spool %s is used and the dir is "%s"',$possible_spool, Site->$possible_spool);
+		    Log::do_log('debug',
+			'Spool %s is used and the dir is "%s"',
+			$possible_spool, Site->$possible_spool);
 		    $distinct_spools{Site->$possible_spool} = 1;
 		}
 	    }
 	}
 	foreach my $distinct_spool (keys %distinct_spools) {
-	    &Log::do_log('debug','Creating a daemon for spool %s',$distinct_spool);
+	    Log::do_log('debug',
+		'Creating a daemon for spool %s', $distinct_spool);
 	    $spooldir = $distinct_spool;
 	    if ($main::daemon_usage eq 'DAEMON_MASTER') { # only master process fork child process
 		if ((my $child_pid = fork) != 0) {
-		    &Log::do_log('debug', "Master daemon fork child %s",$child_pid);		
+		    Log::do_log('debug',
+			"Master daemon fork child %s", $child_pid);		
 		}else{
-		    &Log::do_log('info', "Child process PID %s spooler for spool %s",$$,$spooldir);
+		    Log::do_log('info',
+			"Child process PID %s spooler for spool %s",
+			$$, $spooldir
+		    );
 		    $main::daemon_usage = 'DAEMON_SLAVE';
 		    last;
 		}
 	    }
 	}
 	if ($main::daemon_usage eq 'DAEMON_MASTER') {
-	   &Log::do_log('debug', "Fork, exiting from initial process");
+	    Log::do_log('debug', "Fork, exiting from initial process");
 	    exit (0);
 	}
     }else{
@@ -203,11 +212,11 @@ if ($signal ne 'hup') {
 	}else{
 	    $spooldir = Site->queue;
 	}
-	&Log::do_log('debug','Using spool %s',$spooldir);
+	Log::do_log('debug', 'Using spool %s', $spooldir);
 	$signal = '0';
     }
-    &Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
-    &Log::do_log('debug', "Running server $$ for spooler purpose ");
+    Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
+    Log::do_log('debug', 'Running server %s for spooler purpose', $$);
 
     unless ($main::options{'batch'} ) {
 	## Create and write the pidfile
@@ -229,14 +238,15 @@ if ($signal ne 'hup') {
 
     ## Check if the UID has correctly been set (usefull on OS X)
     unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-	&fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+	Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
     }
 
     # Sets the UMASK
     umask(oct(Site->umask));
 
     ## Most initializations have now been done.
-    &Log::do_log('notice', "Sympa spooler %s started", Sympa::Constants::VERSION);
+    Log::do_log('notice',
+	"Sympa spooler %s started", Sympa::Constants::VERSION);
     ## Check for several files.
     ## Prevent that 2 processes perform checks at the same time...
     if ($main::options{'help'}) {
@@ -249,10 +259,16 @@ if ($signal ne 'hup') {
     ## Do we have right access in the directory
     if ($main::options{'keepcopy'}) {
 	if (! -d $main::options{'keepcopy'}) {
-	    &Log::do_log('notice', 'Cannot keep a copy of incoming messages : %s is not a directory', $main::options{'keepcopy'});
+	    Log::do_log('notice',
+		'Cannot keep a copy of incoming messages : %s is not a directory',
+		$main::options{'keepcopy'}
+	    );
 	    delete $main::options{'keepcopy'};
 	}elsif (! -w $main::options{'keepcopy'}) {
-	    &Log::do_log('notice','Cannot keep a copy of incoming messages : no write access to %s', $main::options{'keepcopy'});
+	    Log::do_log('notice',
+		'Cannot keep a copy of incoming messages : no write access to %s',
+		$main::options{'keepcopy'}
+	    );
 	    delete $main::options{'keepcopy'};
 	}
     }
@@ -270,9 +286,9 @@ if ($signal ne 'hup') {
     ## This is the main loop : look for files in the directory, handles
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
-	&Log::do_log('debug','Scanning spool %s',$spooldir);
+	Log::do_log('debug', 'Scanning spool %s', $spooldir);
 	if (!opendir(DIR, $spooldir)) {
-	    &Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
+	    Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
 	}
 	@qfile = sort tools::by_date grep (!/^\.|^bad$/,readdir(DIR));
 	closedir(DIR);
@@ -284,7 +300,7 @@ if ($signal ne 'hup') {
 
 	## Scans files in queue
 	foreach my $filename (sort @qfile) {
-	    &Log::do_log('info','Processing file %s',$filename);
+	    Log::do_log('info','Processing file %s', $filename);
 	    my $type;
 	    my $list;
 	    my ($recipient, $listname, $robot_id, $robot);
@@ -305,7 +321,7 @@ if ($signal ne 'hup') {
 	    ## Lock file
 	    my $lock = new Lock ($spooldir.'/'.$filename);
 	    unless (defined $lock) {
-		&Log::do_log('err','Could not create new lock');
+		Log::do_log('err', 'Could not create new lock');
 		next;
 	    }
 	    $lock->set_timeout(2); 
@@ -332,7 +348,10 @@ if ($signal ne 'hup') {
 	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
 	    if ($message->get_family){
 		$meta{'create_list_if_needed'} = 1;
-		Log::do_log('notice','Message for list %s, family %s',$message->get_receipient,$message->get_family);
+		Log::do_log('notice',
+		    'Message for list %s, family %s',
+		    $message->get_receipient, $message->get_family
+		);
 	    }
 	    $listname = lc($listname);
 	    if ($robot_id) {
@@ -367,7 +386,8 @@ if ($signal ne 'hup') {
 		$priority = 0;
 	    } elsif ($type and $type eq 'request') {
 		$priority = $robot->request_priority;
-	    } elsif ($type and $type eq 'owner') {#FIXME:use return_path_suffix
+	    } elsif ($type and $type eq 'owner') {
+		#FIXME:use return_path_suffix
 		$priority = $robot->owner_priority;
 	    }elsif ($listname =~ /^(sympa|$email)(\@$site_host)?$/i) {	
 		$priority = $robot->sympa_priority;
@@ -391,20 +411,31 @@ if ($signal ne 'hup') {
 
 	    my $messagekey = $spool->store($message->{'msg_as_string'},\%meta);
 	    unless($messagekey) {
-	       &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
+		Log::do_log('err',
+		    "Could not load message %s/%s in db spool",
+		    $spooldir, $filename
+		);
 		next;
 	    }
 
 	    if ($main::options{'keepcopy'}) {
 		unless (&File::Copy::copy($t_spool.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
-		    &Log::do_log('notice', 'Could not rename %s to %s: %s', "$t_spool/$filename", $main::options{'keepcopy'}."/$filename", $!);
+		    Log::do_log('notice',
+			'Could not rename %s to %s: %s',
+			"$t_spool/$filename",
+			$main::options{'keepcopy'}."/$filename",
+			$!
+		    );
 		}
 	    }
 
 	    ## Release the lock
 	    $lock->unlock();
 	    unless (unlink ($spooldir.'/'.$filename)) {
-	       &Log::do_log('err',"Could not unlink message %s/%s . Exiting",$spooldir, $filename);
+		Log::do_log('err',
+		    "Could not unlink message %s/%s . Exiting",
+		    $spooldir, $filename
+		);
 		exit;
 	    }	
 	} 
@@ -417,7 +448,7 @@ if ($signal ne 'hup') {
     ## Disconnect from Database
     SDM::db_disconnect;
 }
-&Log::do_log('notice', 'spooler exited normally due to signal');
+Log::do_log('notice', 'spooler exited normally due to signal');
 my $file = Site->pidfile_spooler;
 &tools::remove_pid($file, $$);
 
@@ -436,7 +467,8 @@ exit(0);
 #
 ############################################################
 sub sigterm {
-    &Log::do_log('notice', 'signal TERM received, still processing current task');
+    Log::do_log('notice',
+	'signal TERM received, still processing current task');
     $signal = 'term';
 }
 
@@ -454,13 +486,14 @@ sub sigterm {
 ###########################################################
 sub sighup {
     if ($main::options{'mail'}) {
-	&Log::do_log('notice', 'signal HUP received, switch of the "-mail" logging option and continue current task');
+	Log::do_log('notice',
+	    'signal HUP received, switch of the "-mail" logging option and continue current task');
 	undef $main::options{'mail'};
     }else{
-	&Log::do_log('notice', 'signal HUP received, switch on the "-mail" logging option and continue current task');
+	Log::do_log('notice',
+	    'signal HUP received, switch on the "-mail" logging option and continue current task');
 	$main::options{'mail'} = 1;
     }
     $signal = 'hup';
 }
 
-1;
