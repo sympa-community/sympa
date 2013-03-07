@@ -86,6 +86,12 @@ Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
   [% report_item %]
 [% END %]
 
+[% ELSIF type == 'css_updated' -%]
+Subject: [% FILTER qencode %][%|loc%]CSS files have been updated[%END%][%END%]
+
+[%|loc%]Static CSS files have been updated.  Check log file for details.[%END%]
+
+
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 
