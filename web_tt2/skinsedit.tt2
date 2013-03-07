@@ -48,13 +48,14 @@ Be careful: the CSS file is overwritten using css.tt2 template, usually this fil
 <form action="[% path_cgi %]" method="post">
 <fieldset>
 <ol><li>[%|loc%] pick the color you want to test. [%END%]
-<input type="text" name="custom_color_value" class="color" value="[% custom_color_value %]">
+<input type="text" name="custom_color_value" id="custom_color_value" class="color" value="[% custom_color_value %]">
 <input type="hidden" name="editcolors" value="1">
 <input type="hidden" name="action" value="skinsedit">
 </li>
 
 <li>[%|loc%]Select the parameter you want to change: [%END%]
 <select id="custom_color_number" name="custom_color_number">
+<option value=""></option>
 [% FOREACH col IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] %]
 <option value="[%col%]" [% IF col == custom_color_number %]selected="selected"[% END %]>[%col%]</option>
 [% END %]
@@ -80,138 +81,174 @@ Be careful: the CSS file is overwritten using css.tt2 template, usually this fil
 <th>[%|loc%]parameter[%END%]</th>
 <th>[%|loc%]parameter value[%END%]</th>
 <th>[%|loc%]color lookup[%END%]</th>
+[% IF custom_css -%]
+<th>[%|loc%]default[%END%]</th>
+<th>[%|loc%]color lookup[%END%]</th>
+[%END%]
 <th>[%|loc%]parameter usage[%END%]</th>
 </tr>
 <tr>
      <td>color_0</td>
      <td>[% color_0 %]</td>
-     <td style="background-color: [% color_0 %];cursor: pointer ;" onclick="chooseColorNumber('color_0')" align="center">&nbsp;</td>
+     <td style="background-color:[% color_0 %];cursor:pointer;" onclick="chooseColorNumber('color_0','[% color_0 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_0 %]</td>
+     <td style="background-color:[% conf.color_0 %];cursor:pointer;" onclick="chooseColorNumber('color_0','[% conf.color_0 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]one out of two lines in tables, alternated with color_14.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_1</td>
      <td>[% color_1 %]</td>
-     <td style="background-color: [% color_1 %];cursor: pointer ;" onclick="chooseColorNumber('color_1');" align="center" >&nbsp;</td>
+     <td style="background-color:[% color_1 %];cursor:pointer;" onclick="chooseColorNumber('color_1','[% color_1 %]');" align="center" >&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_1 %]</td>
+     <td style="background-color:[% conf.color_1 %];cursor:pointer;" onclick="chooseColorNumber('color_1','[% conf.color_1 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]main navigation tabs;[%END%]</LI><LI>[%|loc%]most of the buttons;[%END%]</LI><LI>[%|loc%]border colors in the online help.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_2</td>
      <td>[% color_2 %]</td>
-     <td style="background-color: [% color_2 %];cursor: pointer ;" onclick="chooseColorNumber('color_2');"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_2 %];cursor:pointer;" onclick="chooseColorNumber('color_2','[% color_2 %]');" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_2 %]</td>
+     <td style="background-color:[% conf.color_2 %];cursor:pointer;" onclick="chooseColorNumber('color_2','[% conf.color_2 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]font and border color of:[%END%]<UL><LI>[%|loc%]almost everything. Exceptions for borders are &lt;TD/&gt; borders; exceptions for fonts are links, buttons and some titles.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_3</td>
      <td>[% color_3 %]</td>
-     <td style="background-color: [% color_3 %];cursor: pointer ;" onclick="chooseColorNumber('color_3')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_3 %];cursor:pointer;" onclick="chooseColorNumber('color_3','[% color_3 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_3 %]</td>
+     <td style="background-color:[% conf.color_3 %];cursor:pointer;" onclick="chooseColorNumber('color_3','[% conf.color_3 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]Background color for the news area of the home page.[%END%]</td>
 </tr>
 <tr>
      <td>color_4</td>
      <td>[% color_4 %]</td>
-     <td style="background-color: [% color_4 %];cursor: pointer ;" onclick="chooseColorNumber('color_4')" align="center" >&nbsp;</td>
+     <td style="background-color:[% color_4 %];cursor:pointer;" onclick="chooseColorNumber('color_4','[% color_4 %]')" align="center" >&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_4 %]</td>
+     <td style="background-color:[% conf.color_4 %];cursor:pointer;" onclick="chooseColorNumber('color_4','[% conf.color_4 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]font color of:[%END%]<UL><LI>[%|loc%]titles;[%END%]</LI><LI>[%|loc%]hovered links.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_5</td>
      <td>[% color_5 %]</td>
-     <td style="background-color: [% color_5 %];cursor: pointer ;" onclick="chooseColorNumber('color_5')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_5 %];cursor:pointer;" onclick="chooseColorNumber('color_5','[% color_5 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_5 %]</td>
+     <td style="background-color:[% conf.color_5 %];cursor:pointer;" onclick="chooseColorNumber('color_5','[% conf.color_5 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]all the main interface boxes.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_6</td>
      <td>[% color_6 %]</td>
-     <td style="background-color: [% color_6 %];cursor: pointer ;" onclick="chooseColorNumber('color_6')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_6 %];cursor:pointer;" onclick="chooseColorNumber('color_6','[% color_6 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_6 %]</td>
+     <td style="background-color:[% conf.color_6 %];cursor:pointer;" onclick="chooseColorNumber('color_6','[% conf.color_6 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]buttons;[%END%]</LI><LI>[%|loc%]navigation tabs;[%END%]</LI><LI>[%|loc%]active option, if you have several buttons representing an alternative.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_7</td>
      <td>[% color_7 %]</td>
-     <td style="background-color: [% color_7 %];cursor: pointer ;" onclick="chooseColorNumber('color_7')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_7 %];cursor:pointer;" onclick="chooseColorNumber('color_7','[% color_7 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_7 %]</td>
+     <td style="background-color:[% conf.color_7 %];cursor:pointer;" onclick="chooseColorNumber('color_7','[% conf.color_7 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]error messages.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_8</td>
      <td>[% color_8 %]</td>
-     <td style="background-color: [% color_8 %];cursor: pointer ;" onclick="chooseColorNumber('color_8')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_8 %];cursor:pointer;" onclick="chooseColorNumber('color_8','[% color_8 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_8 %]</td>
+     <td style="background-color:[% conf.color_8 %];cursor:pointer;" onclick="chooseColorNumber('color_8','[% conf.color_8 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]font and border color of:[%END%]<UL><LI>[%|loc%]hovered links;[%END%]</LI><LI>[%|loc%]navigation tabs;[%END%]</LI><LI>[%|loc%]buttons;[%END%]</LI></UL>[%|loc%]background color of hovered buttons.[%END%]</td>
 </tr>
 <tr>
      <td>color_9</td>
      <td>[% color_9 %]</td>
-     <td style="background-color: [% color_9 %];cursor: pointer ;" onclick="chooseColorNumber('color_9')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_9 %];cursor:pointer;" onclick="chooseColorNumber('color_9','[% color_9 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_9 %]</td>
+     <td style="background-color:[% conf.color_9 %];cursor:pointer;" onclick="chooseColorNumber('color_9','[% conf.color_9 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]main page;[%END%]</LI><LI>[%|loc%]table headers;[%END%]</LI><LI>[%|loc%]buttons.[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_10</td>
      <td>[% color_10 %]</td>
-     <td style="background-color: [% color_10 %];cursor: pointer ;" onclick="chooseColorNumber('color_10')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_10 %];cursor:pointer;" onclick="chooseColorNumber('color_10','[% color_10 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_10 %]</td>
+     <td style="background-color:[% conf.color_10 %];cursor:pointer;" onclick="chooseColorNumber('color_10','[% conf.color_10 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]border color for forms.[%END%]</td>
 </tr>
 <tr>
      <td>color_11</td>
      <td>[% color_11 %]</td>
-     <td style="background-color: [% color_11 %];cursor: pointer ;" onclick="chooseColorNumber('color_11')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_11 %];cursor:pointer;" onclick="chooseColorNumber('color_11','[% color_11 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_11 %]</td>
+     <td style="background-color:[% conf.color_11 %];cursor:pointer;" onclick="chooseColorNumber('color_11','[% conf.color_11 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]border color that can be used to isolate some forms.[%END%]</td>
 </tr>
 <tr>
      <td>color_12</td>
      <td>[% color_12 %]</td>
-     <td style="background-color: [% color_12 %];cursor: pointer ;" onclick="chooseColorNumber('color_12');" align="center" >&nbsp;</td>
+     <td style="background-color:[% color_12 %];cursor:pointer;" onclick="chooseColorNumber('color_12','[% conf.color_12 %]');" align="center" >&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_12 %]</td>
+     <td style="background-color:[% conf.color_12 %];cursor:pointer;" onclick="chooseColorNumber('color_12','[% color_12 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]top box;[%END%]</LI><LI>[%|loc%]footer box;[%END%]</LI><LI>[%|loc%]online help buttons;[%END%]</LI></UL>[%|loc%]border color of:[%END%]<UL><LI>[%|loc%]tables;[%END%]</LI><LI>[%|loc%]side menu areas.[%END%]</LI></td>
 </tr>
 <tr>
      <td>color_13</td>
      <td>[% color_13 %]</td>
-     <td style="background-color: [% color_13 %];cursor: pointer ;" onclick="chooseColorNumber('color_13')" align="center" >&nbsp;</td>
+     <td style="background-color:[% color_13 %];cursor:pointer;" onclick="chooseColorNumber('color_13','[% color_13 %]')" align="center" >&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_13 %]</td>
+     <td style="background-color:[% conf.color_13 %];cursor:pointer;" onclick="chooseColorNumber('color_13','[% conf.color_13 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]editable form areas (text areas, selection lists, etc.).[%END%]</LI></UL></td>
 </tr>
 <tr>
      <td>color_14</td>
      <td>[% color_14 %]</td>
-     <td style="background-color: [% color_14 %];cursor: pointer ;" onclick="chooseColorNumber('color_14')"  align="center">&nbsp;</td>
+     <td style="background-color:[% color_14 %];cursor:pointer;" onclick="chooseColorNumber('color_14','[% color_14 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_14 %]</td>
+     <td style="background-color:[% conf.color_14 %];cursor:pointer;" onclick="chooseColorNumber('color_14','[% conf.color_14 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]Default background color of the tables.[%END%]</td>
 </tr>
 <tr>
      <td>color_15</td>
      <td>[% color_15 %]</td>
-     <td style="background-color: [% color_15 %];cursor: pointer ;" onclick="chooseColorNumber('color_15')" align="center">&nbsp;</td>
+     <td style="background-color:[% color_15 %];cursor:pointer;" onclick="chooseColorNumber('color_15','[% conf.color_15 %]')" align="center">&nbsp;</td>
+     [% IF custom_css %]<td>[% conf.color_15 %]</td>
+     <td style="background-color:[% conf.color_15 %];cursor:pointer;" onclick="chooseColorNumber('color_15','[% conf.color_15 %]')" align="center">&nbsp;</td>[%END%]
      <td>[%|loc%]unused[%END%]</td>
 </tr>
 <tr>
      <td>dark_color</td>
      <td>[% dark_color %]</td>
-     <td style="background-color: [% dark_color %];" >&nbsp;</td>
+     <td style="background-color:[% dark_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 <tr>
      <td>light_color</td>
      <td>[% light_color %]</td>
-     <td style="background-color: [% light_color %];" >&nbsp;</td>
+     <td style="background-color:[% light_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 <tr>
      <td>text_color</td>
      <td>[% text_color %]</td>
-     <td style="background-color: [% text_color %];" >&nbsp;</td>
+     <td style="background-color:[% text_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 <tr>
      <td>bg_color</td>
      <td>[% bg_color %]</td>
-     <td style="background-color: [% bg_color %];" >&nbsp;</td>
+     <td style="background-color:[% bg_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 <tr>
      <td>selected_color</td>
      <td>[% selected_color %]</td>
-     <td style="background-color: [% selected_color %];" >&nbsp;</td>
+     <td style="background-color:[% selected_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 <tr>
      <td>shaded_color</td>
      <td>[% shaded_color %]</td>
-     <td style="background-color: [% shaded_color %];" >&nbsp;</td>
+     <td style="background-color:[% shaded_color %];" [% IF custom_css %]colspan="3"[%END%]>&nbsp;</td>
      <td>[%|loc%]deprecated[%END%]</td>
 </tr>
 

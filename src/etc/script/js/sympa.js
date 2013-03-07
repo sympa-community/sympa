@@ -156,11 +156,27 @@ function toggle_selection(myfield) {
   }
 }
 
-function chooseColorNumber(cn) {
+function chooseColorNumber(cn, cv) {
     var select = document.getElementById('custom_color_number');
+    var text = document.getElementById('custom_color_value');
 
-    if(select) for(var i=0; i<select.options.length; i++) if(select.options[i].value == cn) select.options.selectedIndex = i;
- }
+    if (select)
+        for (var i=0; i<select.options.length; i++)
+            if (select.options[i].value == cn) {
+                select.options.selectedIndex = i;
+                if (text && cv) {
+                    text.value = cv; 
+                    // FIXME: use jQuery trigger()
+                    if (document.all)
+                        text.fireEvent('onchange');
+                    else {
+                        var evt = document.createEvent('HTMLEvents');
+                        evt.initEvent('change', false, true);
+                        text.dispatchEvent(evt);
+                    }
+                }
+            }
+}
 
 // check if rejecting quietly spams
  function check_reject_spam(form,warningId) {

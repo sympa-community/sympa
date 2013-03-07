@@ -966,23 +966,8 @@ my %in_regexp = (
 		 'subaction_test' => '.*',
 		 'subaction_reset' => '.*',
 		 'subaction_install' => '.*',
-		 'custom_color_value' => '\#.*',
-		 'custom_color_0' => '.*',
-		 'custom_color_1' => '.*',
-		 'custom_color_2' => '.*',
-		 'custom_color_3' => '.*',
-		 'custom_color_4' => '.*',
-		 'custom_color_5' => '.*',
-		 'custom_color_6' => '.*',
-		 'custom_color_7' => '.*',
-		 'custom_color_8' => '.*',
-		 'custom_color_9' => '.*',
-		 'custom_color_10' => '.*',
-		 'custom_color_11' => '.*',
-		 'custom_color_12' => '.*',
-		 'custom_color_13' => '.*',
-		 'custom_color_14' => '.*',
-		 'custom_color_15' => '.*',
+		 'custom_color_value' => '\#[0-9a-fA-F]+',
+		'custom_color_number' => 'color_\w+',
 
                  ## Custom attribute
                  'custom_attribute' => '.*',
@@ -1320,11 +1305,13 @@ my $birthday = time ;
      $param->{'dumpvars'} = $session->{'dumpvars'};
      $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
 
-     if ($session->{'custom_color'} == 1) {	 
-	 foreach my $i (0 .. 15){
-	     $param->{'color_'.$i} = $session->{'color_'.$i} if ($session->{'color_'.$i});
-	 }
-     }
+    ## testing custom CSS
+    if ($session->{'custom_css'}) {	 
+	foreach my $i (0 .. 15) {
+	    $param->{'color_' . $i} = $session->{'color_' . $i}
+		if $session->{'color_' . $i};
+	}
+    }
 
      ## RSS does not require user authentication
      unless ($rss) {
