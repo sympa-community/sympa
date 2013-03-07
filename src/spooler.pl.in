@@ -1,6 +1,6 @@
 #!--PERL--
 # spooler.pl - This script fetches messages and push them into spools
-# RCS Identication ; $Revision: 6671 $ ; $Date: 2010-09-07 11:03:18 +0200 (mar 07 sep 2010) $ 
+# RCS Identication ; $Revision: 6671 $ ; $Date: 2010-09-07 11:03:18 +0200 (mar 07 sep 2010) $
 #
 # Sympa - SYsteme de Multi-Postage Automatique
 # Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
@@ -52,10 +52,10 @@ use Sympaspool;
 
 ## Internal tuning
 # delay between each read of the digestqueue
-my $digestsleep = 5; 
+my $digestsleep = 5;
 
 ## Init random engine
-srand (time());
+srand(time());
 
 my $version_string =
     sprintf("Sympa version is %s\n", Sympa::Constants::VERSION);
@@ -80,7 +80,13 @@ This demon is the Sympa spooler that load into database (table spool_table) mess
 
 ## Check --dump option
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d', ,'log_level=s','foreground','keepcopy|k=s', 'queue=s', 'help', 'version')) {
+unless (
+    &GetOptions(
+	\%main::options, 'debug|d',, 'log_level=s',
+	'foreground', 'keepcopy|k=s', 'queue=s', 'help',
+	'version'
+    )
+    ) {
     Log::fatal_err("Unknown options.");
 }
 
@@ -88,10 +94,12 @@ if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
 }
 ## Batch mode, ie NOT daemon
-$main::options{'batch'} = 1 if ($main::options{'help'}||$main::options{'version'});
+$main::options{'batch'} = 1
+    if ($main::options{'help'} || $main::options{'version'});
 
 # Some option force foreground mode
-$main::options{'foreground'} = 1 if ($main::options{'debug'} || $main::options{'batch'});
+$main::options{'foreground'} = 1
+    if ($main::options{'debug'} || $main::options{'batch'});
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
 
@@ -100,369 +108,389 @@ my %loop_info;
 # this loop is run foreach HUP signal received
 my $signal = 0;
 
-local $main::daemon_usage = 'DAEMON_MASTER'; # Start daemon as all by default 
+local $main::daemon_usage = 'DAEMON_MASTER';  # Start daemon as all by default
 
-while ($signal ne 'term') { #as long as a SIGTERM is not received }
+while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
-## Load configuration file
-unless (Robot::get_robots()) {
-    printf STDERR
-	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-	Conf::get_sympa_conf();
-    exit 1;
-}
+    ## Load configuration file
+    unless (Robot::get_robots()) {
+	printf STDERR
+	    "Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	    Conf::get_sympa_conf();
+	exit 1;
+    }
 
-## Open the syslog and say we're read out stuff.
-Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
+    ## Open the syslog and say we're read out stuff.
+    Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
 
-# setting log_level using conf unless it is set by calling option
-if ($main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
-    Log::do_log(
-	'info', 'Configuration file read, log level set using options : %s',
-	$main::options{'log_level'}
-    ); 
-}else{
-    Log::set_log_level(Site->log_level);
-    Log::do_log(
-	'info', 'Configuration file read, default log level %s',
-	Site->log_level
-    ); 
-}
+    # setting log_level using conf unless it is set by calling option
+    if ($main::options{'log_level'}) {
+	Log::set_log_level($main::options{'log_level'});
+	Log::do_log(
+	    'info',
+	    'Configuration file read, log level set using options : %s',
+	    $main::options{'log_level'}
+	);
+    } else {
+	Log::set_log_level(Site->log_level);
+	Log::do_log('info', 'Configuration file read, default log level %s',
+	    Site->log_level);
+    }
 
-## Main program
-if (!chdir(Site->home)) {
-    Log::fatal_err("Can't chdir to %s: %m", Site->home);
-    ## Function never returns.
-}
+    ## Main program
+    if (!chdir(Site->home)) {
+	Log::fatal_err("Can't chdir to %s: %m", Site->home);
+	## Function never returns.
+    }
 
-## Check for several files.
-unless (&Conf::checkfiles_as_root()) {
-    Log::fatal_err("output checkfiles_as_root : Missing files. Aborting.");
-    ## No return.
-}
+    ## Check for several files.
+    unless (&Conf::checkfiles_as_root()) {
+	Log::fatal_err(
+	    "output checkfiles_as_root : Missing files. Aborting.");
+	## No return.
+    }
 
-my $spooldir;
-my %distinct_spools;
-if ($signal ne 'hup') {
-    ## Put ourselves in background if we're not in debug mode. That method
-    ## works on many systems, although, it seems that Unix conceptors have
-    ## decided that there won't be a single and easy way to detach a process
-    ## from its controlling tty.
-    unless ($main::options{'foreground'}) {
-	if (open(TTY, "/dev/tty")) {
-	    ioctl(TTY, 0x20007471, 0);         # XXX s/b &TIOCNOTTY
-	    close(TTY);
+    my $spooldir;
+    my %distinct_spools;
+    if ($signal ne 'hup') {
+	## Put ourselves in background if we're not in debug mode. That method
+	## works on many systems, although, it seems that Unix conceptors have
+	## decided that there won't be a single and easy way to detach a
+	## process from its controlling tty.
+	unless ($main::options{'foreground'}) {
+	    if (open(TTY, "/dev/tty")) {
+		ioctl(TTY, 0x20007471, 0);    # XXX s/b &TIOCNOTTY
+		close(TTY);
+	    }
+	    open(STDIN,  ">> /dev/null");
+	    open(STDOUT, ">> /dev/null");
+	    open(STDERR, ">> /dev/null");
+
+	    setpgrp(0, 0);
+	    if ($main::daemon_usage eq 'DAEMON_MASTER') {
+		unless (&Conf::checkfiles()) {
+		    Log::fatal_err("Missing files. Aborting.");
+		    ## No return.
+		}
+	    } else {
+		sleep 1;
+		## wait until main process has created required directories
+	    }
+
+	    # start a spooler.pl daemon for the spool location specified by
+	    # option --queue= or for each distinct spool find in sympa.conf
+	    if ($main::options{'queue'}) {
+		Log::do_log('debug', 'Using spool %s only',
+		    $main::options{'queue'});
+		$distinct_spools{$main::options{'queue'}} = 1;
+	    } else {
+		foreach my $possible_spool ('queue', 'queueautomatic') {
+		    Log::do_log('debug', 'Checking usage of spool %s',
+			$possible_spool);
+		    if (Site->$possible_spool) {
+			Log::do_log('debug',
+			    'Spool %s is used and the dir is "%s"',
+			    $possible_spool, Site->$possible_spool);
+			$distinct_spools{Site->$possible_spool} = 1;
+		    }
+		}
+	    }
+	    foreach my $distinct_spool (keys %distinct_spools) {
+		Log::do_log('debug', 'Creating a daemon for spool %s',
+		    $distinct_spool);
+		$spooldir = $distinct_spool;
+		if ($main::daemon_usage eq 'DAEMON_MASTER') {
+		    # only master process fork child process
+		    if ((my $child_pid = fork) != 0) {
+			Log::do_log('debug', "Master daemon fork child %s",
+			    $child_pid);
+		    } else {
+			Log::do_log('info',
+			    "Child process PID %s spooler for spool %s",
+			    $$, $spooldir);
+			$main::daemon_usage = 'DAEMON_SLAVE';
+			last;
+		    }
+		}
+	    }
+	    if ($main::daemon_usage eq 'DAEMON_MASTER') {
+		Log::do_log('debug', "Fork, exiting from initial process");
+		exit(0);
+	    }
+	} else {
+	    if ($main::options{'queue'}) {
+		$spooldir = $main::options{'queue'};
+	    } else {
+		$spooldir = Site->queue;
+	    }
+	    Log::do_log('debug', 'Using spool %s', $spooldir);
+	    $signal = '0';
 	}
-	open(STDIN, ">> /dev/null");
-	open(STDOUT, ">> /dev/null");
-	open(STDERR, ">> /dev/null");
+	Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
+	Log::do_log('debug', 'Running server %s for spooler purpose', $$);
 
-	setpgrp(0, 0);
-	if ($main::daemon_usage eq 'DAEMON_MASTER') {
-	    unless (&Conf::checkfiles()) {
-		Log::fatal_err("Missing files. Aborting.");
+	unless ($main::options{'batch'}) {
+	    ## Create and write the pidfile
+	    my $file = Site->pidfile_spooler;
+	    ## If process is running in foreground, don't write STDERR to a
+	    ## dedicated file
+	    my $options;
+	    $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
+	    $options->{'multiple_process'} = 1;
+	    &tools::write_pid($file, $$, $options);
+	}
+
+	# Set the UserID & GroupID for the process
+	$( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
+	$< = $> = (getpwnam(Sympa::Constants::USER))[2];
+
+	## Required on FreeBSD to change ALL IDs
+	## (effective UID + real UID + saved UID)
+	&POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
+	&POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
+
+	## Check if the UID has correctly been set (usefull on OS X)
+	unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) &&
+	    ($< == (getpwnam(Sympa::Constants::USER))[2])) {
+	    Log::fatal_err(
+		"Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+	    );
+	}
+
+	# Sets the UMASK
+	umask(oct(Site->umask));
+
+	## Most initializations have now been done.
+	Log::do_log('notice', "Sympa spooler %s started",
+	    Sympa::Constants::VERSION);
+	## Check for several files.
+	## Prevent that 2 processes perform checks at the same time...
+	if ($main::options{'help'}) {
+	    print $usage_string;
+	    exit 0;
+	} elsif ($main::options{'version'}) {
+	    print $version_string;
+	    exit 0;
+	}
+	## Do we have right access in the directory
+	if ($main::options{'keepcopy'}) {
+	    if (!-d $main::options{'keepcopy'}) {
+		Log::do_log(
+		    'notice',
+		    'Cannot keep a copy of incoming messages : %s is not a directory',
+		    $main::options{'keepcopy'}
+		);
+		delete $main::options{'keepcopy'};
+	    } elsif (!-w $main::options{'keepcopy'}) {
+		Log::do_log(
+		    'notice',
+		    'Cannot keep a copy of incoming messages : no write access to %s',
+		    $main::options{'keepcopy'}
+		);
+		delete $main::options{'keepcopy'};
+	    }
+	}
+
+	## Catch SIGTERM, in order to exit cleanly, whenever possible.
+	$SIG{'TERM'} = 'sigterm';
+	$SIG{'HUP'}  = 'sighup';
+	$SIG{'PIPE'} =
+	    'IGNORE';    ## Ignore SIGPIPE ; prevents sympa.pl from dying
+
+	my @qfile;
+
+	my $msgspool    = new Sympaspool('msg');
+	my $bouncespool = new Sympaspool('bounce');
+
+	## This is the main loop : look for files in the directory, handles
+	## them, sleeps a while and continues the good job.
+	while (!$signal) {
+	    Log::do_log('debug', 'Scanning spool %s', $spooldir);
+	    if (!opendir(DIR, $spooldir)) {
+		Log::fatal_err("Can't open dir %s: %m", $spooldir);
 		## No return.
 	    }
-	}else {
-	    sleep 1; ## wait until main process has created required directories
-	}
-	# start a spooler.pl daemon for the spool location specified by option --queue= or for each distinct spool find in sympa.conf
-	if ($main::options{'queue'}){
-	    Log::do_log('debug',
-		'Using spool %s only', $main::options{'queue'});
-	    $distinct_spools{$main::options{'queue'}}= 1;
-	}else{
-	    foreach my $possible_spool ('queue', 'queueautomatic'){
-		Log::do_log('debug',
-		    'Checking usage of spool %s', $possible_spool);
-		if (Site->$possible_spool) {
-		    Log::do_log('debug',
-			'Spool %s is used and the dir is "%s"',
-			$possible_spool, Site->$possible_spool);
-		    $distinct_spools{Site->$possible_spool} = 1;
+	    @qfile = sort tools::by_date grep (!/^\.|^bad$/, readdir(DIR));
+	    closedir(DIR);
+	    my $filename;
+	    my $listname;
+	    my $robot;
+
+	    my $t_spool = $spooldir;
+	    ## in single mode we may have to supervise automatic spool
+
+	    ## Scans files in queue
+	    foreach my $filename (sort @qfile) {
+		Log::do_log('info', 'Processing file %s', $filename);
+		my $type;
+		my $list;
+		my ($recipient, $listname, $robot_id, $robot);
+		my %meta;
+		my $spool;
+
+		next if ($filename =~ /\.lock$/);
+
+		## Don't process temporary files created by queue (T.xxx)
+		next if ($filename =~ /^T\./);
+
+		## z and Z are a null priority, so file stay in queue and are
+		## processed only if renamed by administrator
+		next unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/);
+		$recipient = $1;
+		$meta{'date'} = $2;
+
+		## Lock file
+		my $lock = new Lock($spooldir . '/' . $filename);
+		unless (defined $lock) {
+		    Log::do_log('err', 'Could not create new lock');
+		    next;
 		}
-	    }
-	}
-	foreach my $distinct_spool (keys %distinct_spools) {
-	    Log::do_log('debug',
-		'Creating a daemon for spool %s', $distinct_spool);
-	    $spooldir = $distinct_spool;
-	    if ($main::daemon_usage eq 'DAEMON_MASTER') { # only master process fork child process
-		if ((my $child_pid = fork) != 0) {
-		    Log::do_log('debug',
-			"Master daemon fork child %s", $child_pid);		
-		}else{
-		    Log::do_log('info',
-			"Child process PID %s spooler for spool %s",
-			$$, $spooldir
-		    );
-		    $main::daemon_usage = 'DAEMON_SLAVE';
-		    last;
+		$lock->set_timeout(2);
+		unless ($lock->lock('write')) {
+		    next;
 		}
-	    }
-	}
-	if ($main::daemon_usage eq 'DAEMON_MASTER') {
-	    Log::do_log('debug', "Fork, exiting from initial process");
-	    exit (0);
-	}
-    }else{
-	if ($main::options{'queue'}){
-	    $spooldir = $main::options{'queue'};
-	}else{
-	    $spooldir = Site->queue;
-	}
-	Log::do_log('debug', 'Using spool %s', $spooldir);
-	$signal = '0';
-    }
-    Log::do_openlog(Site->syslog, Site->log_socket_type, 'spooler');
-    Log::do_log('debug', 'Running server %s for spooler purpose', $$);
 
-    unless ($main::options{'batch'} ) {
-	## Create and write the pidfile
-	my $file = Site->pidfile_spooler;
-	## If process is running in foreground, don't write STDERR to a dedicated file
-	my $options;
-	$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-	$options->{'multiple_process'} = 1 ;
-	&tools::write_pid($file, $$, $options);
-    }	
+		($listname, $robot_id) = split(/\@/, $recipient);
 
-    # Set the UserID & GroupID for the process
-    $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
-    $< = $> = (getpwnam(Sympa::Constants::USER))[2];
-
-    ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
-    &POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
-    &POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
-
-    ## Check if the UID has correctly been set (usefull on OS X)
-    unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-	Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
-    }
-
-    # Sets the UMASK
-    umask(oct(Site->umask));
-
-    ## Most initializations have now been done.
-    Log::do_log('notice',
-	"Sympa spooler %s started", Sympa::Constants::VERSION);
-    ## Check for several files.
-    ## Prevent that 2 processes perform checks at the same time...
-    if ($main::options{'help'}) {
-	print $usage_string;
-	exit 0;
-    }elsif ($main::options{'version'}) {
-	print $version_string;    
-	exit 0;
-    }
-    ## Do we have right access in the directory
-    if ($main::options{'keepcopy'}) {
-	if (! -d $main::options{'keepcopy'}) {
-	    Log::do_log('notice',
-		'Cannot keep a copy of incoming messages : %s is not a directory',
-		$main::options{'keepcopy'}
-	    );
-	    delete $main::options{'keepcopy'};
-	}elsif (! -w $main::options{'keepcopy'}) {
-	    Log::do_log('notice',
-		'Cannot keep a copy of incoming messages : no write access to %s',
-		$main::options{'keepcopy'}
-	    );
-	    delete $main::options{'keepcopy'};
-	}
-    }
-
-    ## Catch SIGTERM, in order to exit cleanly, whenever possible.
-    $SIG{'TERM'} = 'sigterm';
-    $SIG{'HUP'} = 'sighup';
-    $SIG{'PIPE'} = 'IGNORE'; ## Ignore SIGPIPE ; prevents sympa.pl from dying
-
-    my @qfile;
-
-    my $msgspool = new Sympaspool('msg');
-    my $bouncespool = new Sympaspool('bounce');
-
-    ## This is the main loop : look for files in the directory, handles
-    ## them, sleeps a while and continues the good job.
-    while (!$signal) {
-	Log::do_log('debug', 'Scanning spool %s', $spooldir);
-	if (!opendir(DIR, $spooldir)) {
-	    Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
-	}
-	@qfile = sort tools::by_date grep (!/^\.|^bad$/,readdir(DIR));
-	closedir(DIR);
-	my $filename;
-	my $listname;
-	my $robot;
-
-	my $t_spool = $spooldir; ## in single mode we may have to supervise automatic spool
-
-	## Scans files in queue
-	foreach my $filename (sort @qfile) {
-	    Log::do_log('info','Processing file %s', $filename);
-	    my $type;
-	    my $list;
-	    my ($recipient, $listname, $robot_id, $robot);
-	    my %meta ;
-	    my $spool;
-
-	    next if ($filename =~ /\.lock$/);
-
-	    ## Don't process temporary files created by queue (T.xxx)
-	    next if ($filename =~ /^T\./);
-
-	    ## z and Z are a null priority, so file stay in queue and are processed
-	    ## only if renamed by administrator
-	    next unless ($filename =~ /^(\S+)\.(\d+)\.\w+$/);
-	    $recipient = $1;
-	    $meta{'date'} = $2;
-
-	    ## Lock file
-	    my $lock = new Lock ($spooldir.'/'.$filename);
-	    unless (defined $lock) {
-		Log::do_log('err', 'Could not create new lock');
-		next;
-	    }
-	    $lock->set_timeout(2); 
-	    unless ($lock->lock('write')) {
-		next;
-	    }   
-
-	    ($listname, $robot_id) = split(/\@/, $recipient);
-
-	    # spooler is able to recognize if message is bounce or automatic family list creation.'
-	    if ($listname =~ /Sympa_Bounce\./) {
-		$listname =~ s/Sympa_Bounce\.// ;
-		$spool = $bouncespool;
-	    }else{
-		$spool = $msgspool;
-		if ($listname =~ /Sympa_Automatic\./) {
-		    $listname =~ s/Sympa_Automatic\.// ;
-		    $meta{'create_list_if_needed'} = 1;		
-		}else{
-		    $meta{'create_list_if_needed'} = 0;		
+		# spooler is able to recognize if message is bounce or
+		# automatic family list creation.'
+		if ($listname =~ /Sympa_Bounce\./) {
+		    $listname =~ s/Sympa_Bounce\.//;
+		    $spool = $bouncespool;
+		} else {
+		    $spool = $msgspool;
+		    if ($listname =~ /Sympa_Automatic\./) {
+			$listname =~ s/Sympa_Automatic\.//;
+			$meta{'create_list_if_needed'} = 1;
+		    } else {
+			$meta{'create_list_if_needed'} = 0;
+		    }
 		}
-	    }
 
-	    my $message = new Message({'file'=>$spooldir.'/'.$filename});
-	    if ($message->get_family){
-		$meta{'create_list_if_needed'} = 1;
-		Log::do_log('notice',
-		    'Message for list %s, family %s',
-		    $message->get_receipient, $message->get_family
-		);
-	    }
-	    $listname = lc($listname);
-	    if ($robot_id) {
-		$robot_id = lc($robot_id);
-	    }else{
-		$robot_id = Site->host; #FIXME: is "domain" better?
-	    }
+		my $message =
+		    new Message({'file' => $spooldir . '/' . $filename});
+		if ($message->get_family) {
+		    $meta{'create_list_if_needed'} = 1;
+		    Log::do_log('notice', 'Message for list %s, family %s',
+			$message->get_receipient, $message->get_family);
+		}
+		$listname = lc($listname);
+		if ($robot_id) {
+		    $robot_id = lc($robot_id);
+		} else {
+		    $robot_id = Site->host;    #FIXME: is "domain" better?
+		}
 
-	    ## check if robot exists
-	    unless ($robot = Robot->new($robot_id)) {
-		my $message = new Message({'file' => $spooldir.'/'.$filename});
-		$lock->unlock();
-		unless (unlink $spooldir.'/'.$filename) {
+		## check if robot exists
+		unless ($robot = Robot->new($robot_id)) {
+		    my $message =
+			new Message({'file' => $spooldir . '/' . $filename});
+		    $lock->unlock();
+		    unless (unlink $spooldir . '/' . $filename) {
+			Log::do_log('err',
+			    'Could not unlink message %s/%s . Exiting',
+			    $spooldir, $filename);
+			exit;
+		    }
+		    Log::do_log('err', 'robot %s does not exist', $robot_id);
+		    Site->send_dsn($message, {'recipient' => $recipient},
+			'5.1.2');
+		    next;
+		}
+
+		($listname, $type) = $robot->split_listname($listname);
+		my $email     = $robot->email;
+		my $site_host = Site->host;
+
+		my $priority;
+
+		if ($listname eq $robot->listmaster_email) {
+		    $priority = 0;
+		} elsif ($type and $type eq 'request') {
+		    $priority = $robot->request_priority;
+		} elsif ($type and $type eq 'owner') {
+
+		    #FIXME:use return_path_suffix
+		    $priority = $robot->owner_priority;
+		} elsif ($listname =~ /^(sympa|$email)(\@$site_host)?$/i) {
+		    $priority = $robot->sympa_priority;
+		    $listname = '';
+		}
+		$list = List->new($listname, $robot, {'just_try' => 1});
+		if ($list) {
+		    $priority = $list->priority;
+		} else {
+		    $priority = $robot->default_list_priority;
+		}
+
+		$meta{'robot'} = $robot_id if $robot_id;
+		$meta{'list'}  = $listname if $listname;
+		if ($priority) {
+		    $meta{'priority'} = $priority;
+		} else {
+		    $meta{'priority'} = 1;
+		}
+		$meta{'type'} = $type if $type;
+
+		my $messagekey =
+		    $spool->store($message->{'msg_as_string'}, \%meta);
+		unless ($messagekey) {
 		    Log::do_log('err',
-			'Could not unlink message %s/%s . Exiting',
+			"Could not load message %s/%s in db spool",
+			$spooldir, $filename);
+		    next;
+		}
+
+		if ($main::options{'keepcopy'}) {
+		    unless (
+			&File::Copy::copy(
+			    $t_spool . '/' . $filename,
+			    $main::options{'keepcopy'} . '/' . $filename
+			)
+			) {
+			Log::do_log(
+			    'notice',
+			    'Could not rename %s to %s: %s',
+			    "$t_spool/$filename",
+			    $main::options{'keepcopy'} . "/$filename",
+			    $!
+			);
+		    }
+		}
+
+		## Release the lock
+		$lock->unlock();
+		unless (unlink($spooldir . '/' . $filename)) {
+		    Log::do_log('err',
+			"Could not unlink message %s/%s . Exiting",
 			$spooldir, $filename);
 		    exit;
 		}
-		Log::do_log('err', 'robot %s does not exist', $robot_id);
-		Site->send_dsn($message, {'recipient' => $recipient},
-		    '5.1.2');
+	    }
+
+	    unless ($filename) {
+		sleep(Site->sleep);
 		next;
 	    }
-
-	    ($listname, $type) = $robot->split_listname($listname);
-	    my $email = $robot->email;	
-	    my $site_host = Site->host;
-
-	    my $priority;
-
-	    if ($listname eq $robot->listmaster_email) {
-		$priority = 0;
-	    } elsif ($type and $type eq 'request') {
-		$priority = $robot->request_priority;
-	    } elsif ($type and $type eq 'owner') {
-		#FIXME:use return_path_suffix
-		$priority = $robot->owner_priority;
-	    }elsif ($listname =~ /^(sympa|$email)(\@$site_host)?$/i) {	
-		$priority = $robot->sympa_priority;
-		$listname ='';
-	    }
-	    $list = List->new($listname, $robot, {'just_try' => 1});
-	    if ($list) {
-		$priority = $list->priority;
-	    }else {
-		$priority = $robot->default_list_priority;
-	    }
-
-	    $meta{'robot'} = $robot_id if $robot_id;
-	    $meta{'list'} = $listname if $listname;
-	    if ($priority) {
-		$meta{'priority'} = $priority ;
-	    }else{ 
-		$meta{'priority'} = 1;
-	    }
-	    $meta{'type'} = $type if $type;
-
-	    my $messagekey = $spool->store($message->{'msg_as_string'},\%meta);
-	    unless($messagekey) {
-		Log::do_log('err',
-		    "Could not load message %s/%s in db spool",
-		    $spooldir, $filename
-		);
-		next;
-	    }
-
-	    if ($main::options{'keepcopy'}) {
-		unless (&File::Copy::copy($t_spool.'/'.$filename, $main::options{'keepcopy'}.'/'.$filename) ) {
-		    Log::do_log('notice',
-			'Could not rename %s to %s: %s',
-			"$t_spool/$filename",
-			$main::options{'keepcopy'}."/$filename",
-			$!
-		    );
-		}
-	    }
-
-	    ## Release the lock
-	    $lock->unlock();
-	    unless (unlink ($spooldir.'/'.$filename)) {
-		Log::do_log('err',
-		    "Could not unlink message %s/%s . Exiting",
-		    $spooldir, $filename
-		);
-		exit;
-	    }	
-	} 
-
-	unless ($filename) {
-	    sleep(Site->sleep);
-	    next;
 	}
+	## Disconnect from Database
+	SDM::db_disconnect;
     }
-    ## Disconnect from Database
-    SDM::db_disconnect;
-}
-Log::do_log('notice', 'spooler exited normally due to signal');
-my $file = Site->pidfile_spooler;
-&tools::remove_pid($file, $$);
+    Log::do_log('notice', 'spooler exited normally due to signal');
+    my $file = Site->pidfile_spooler;
+    &tools::remove_pid($file, $$);
 
-exit(0);
+    exit(0);
 }
 
 ############################################################
 # sigterm
 ############################################################
-#  When we catch SIGTERM, just changes the value of the $signal 
+#  When we catch SIGTERM, just changes the value of the $signal
 #  loop variable.
-#  
+#
 # IN : -
-#      
+#
 # OUT : -
 #
 ############################################################
@@ -472,26 +500,27 @@ sub sigterm {
     $signal = 'term';
 }
 
-
 ############################################################
 # sighup
 ############################################################
-#  When we catch SIGHUP, changes the value of the $signal 
+#  When we catch SIGHUP, changes the value of the $signal
 #  loop variable and puts the "-mail" logging option
-#  
+#
 # IN : -
-#      
+#
 # OUT : -
 #
 ###########################################################
 sub sighup {
     if ($main::options{'mail'}) {
 	Log::do_log('notice',
-	    'signal HUP received, switch of the "-mail" logging option and continue current task');
+	    'signal HUP received, switch of the "-mail" logging option and continue current task'
+	);
 	undef $main::options{'mail'};
-    }else{
+    } else {
 	Log::do_log('notice',
-	    'signal HUP received, switch on the "-mail" logging option and continue current task');
+	    'signal HUP received, switch on the "-mail" logging option and continue current task'
+	);
 	$main::options{'mail'} = 1;
     }
     $signal = 'hup';
