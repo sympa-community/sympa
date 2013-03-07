@@ -209,6 +209,11 @@ sub get_include_path {
     return @other_include_path;
 }
 
+## Clear current INCLUDE_PATH
+sub clear_include_path {
+    @other_include_path = ();
+}
+
 ## Allow inclusion/insertion of file with absolute path
 sub allow_absolute_path {
     $allow_absolute = 1;
@@ -233,7 +238,7 @@ sub parse_tt2 {
 
     ## Add directories that may have been added
     push @{$include_path}, @other_include_path;
-    @other_include_path = (); ## Reset it
+    clear_include_path(); ## Reset it
 
     my $wantarray;
 

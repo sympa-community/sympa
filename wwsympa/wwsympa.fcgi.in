@@ -2632,7 +2632,7 @@ sub send_html {
 	Language::PopLang();
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
-    print "Content-Type: text/html\n";
+    print "Content-Type: text/html; charset=utf-8\n";
     ## Workaround for Internet Explorer 8 or later.
     print "X-UA-Compatible: IE=100\n";
 
@@ -2682,6 +2682,7 @@ sub send_html {
 
     ## Save special paths.
     my @added_include_path = tt2::get_include_path();
+    tt2::clear_include_path();
 
     ## Custom CSS.  They are stored to $param_copy so that they won't be
     ## escaped.
@@ -17994,16 +17995,16 @@ sub do_arc_delete {
 
 
 sub do_css {
-    &wwslog('debug', "do_css ($in{'file'})");		
+    &wwslog('debug', 'do_css(%s)', $in{'file'});
     $param->{'bypass'} = 'extreme';
-    print "Content-type: text/css\n\n";
+    print "Content-Type: text/css; charset=utf-8\n\n";
     $param->{'css'} = $in{'file'}; 
 
     ## Do not include language subdirectories.
     ## The css.tt2 by each languages will override styles in main CSS.
     my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
-    unless (&tt2::parse_tt2($param,'css.tt2' ,\*STDOUT, $tt2_include_path)) {
+    unless (&tt2::parse_tt2($param, 'css.tt2', \*STDOUT, $tt2_include_path)) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	$robot->send_notify_to_listmaster('web_tt2_error', [$error]);
