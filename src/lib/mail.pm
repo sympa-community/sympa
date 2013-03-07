@@ -482,6 +482,9 @@ sub mail_forward {
     }
     ## Add an Auto-Submitted header field according to  http://www.tools.ietf.org/html/draft-palme-autosub-01
     $message->get_mime_message->head->add('Auto-Submitted', 'auto-forwarded');
+    if (ref $rcpt && ref $rcpt eq 'ARRAY') {
+	$rcpt = join (',',@$rcpt);
+    }
     $message->get_mime_message->head->replace('X-Sympa-To', $rcpt);
     $message->set_message_as_string($message->get_mime_message->as_string);
     unless (defined &sending('message' => $message, 
@@ -681,7 +684,6 @@ sub sending {
 	$trackingfeature ='';
     }
     my $mergefeature = ($merge eq 'on');
-    
     if ($use_bulk){ # in that case use bulk tables to prepare message distribution 
 	##Bulk package determine robots or site by its name.
 	##FIXME: Would '*' be correct?

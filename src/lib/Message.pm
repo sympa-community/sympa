@@ -1369,8 +1369,17 @@ sub get_message_as_string {
 
 sub set_message_as_string {
     my $self = shift;
-    
-    $self->{'msg_as_string'} = shift;
+    my $new_msgasstring = shift;
+    if ($self->is_signed) {# If signed, update headers only.
+	my @new_paragraphs = split '\n\n', $new_msgasstring;
+	my $headers = shift @new_paragraphs;
+	my @old_paragraphs = split '\n\n', $self->get_message_as_string;
+	shift @old_paragraphs;
+	my $old_body = join "\n\n", @old_paragraphs;
+	$self->{'msg_as_string'} = $headers."\n\n".$old_body;
+    }else{
+	$self->{'msg_as_string'} = $new_msgasstring;
+    }
 }
 
 sub set_decrypted_message_as_string {
