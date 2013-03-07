@@ -2680,10 +2680,13 @@ sub send_html {
 	}
     }
 
+    ## Save special paths.
+    my @added_include_path = tt2::get_include_path();
+
     ## Custom CSS.  They are stored to $param_copy so that they won't be
     ## escaped.
 
-    # Do not include language subdirectories.
+    # Do not include language paths.
     # The css.tt2 by each languages will override styles in main CSS.
     my $tt2_include_path =
 	($list || $robot)->get_etc_include_path('web_tt2');
@@ -2716,15 +2719,22 @@ sub send_html {
 	}
     }
 
-    ## Include language subdirectories.
+    ## Now include language paths.
     my $locale = &Language::Lang2Locale($param->{'lang'});
     $tt2_include_path =
 	($list || $robot)->get_etc_include_path('web_tt2', $locale);
 
+    ## Restore special paths.
+    foreach my $dir (@added_include_path) {
+	tt2::add_include_path($dir);
+    }
+
     ## Output the content.
-    unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT,
-	    $tt2_include_path, { 'has_header' => 1 })) {
-	my $error = &tt2::get_error();
+    unless (tt2::parse_tt2(
+	$param_copy, $tt2_file, \*STDOUT, $tt2_include_path,
+	{'has_header' => 1}
+    )) {
+	my $error = tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	$param_copy->{'tt2_error'} = $error;
 
