@@ -507,6 +507,46 @@ sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
 
 =over 4
 
+=item config
+
+XXX I<Not yet implemented>.
+
+I<Getter/Setter>, I<internal use>.
+Gets or sets configuration information, eliminating defaults.
+
+B<Note>:
+Use L</fullconfig> accessor to get full configuration informaton.
+
+=back
+
+=cut
+
+## Derived from Site class.
+
+=over 4
+
+=item fullconfig
+
+I<Getter>.
+Configuration information of the robot, with defaults applied.
+
+B<Note>:
+Use L</config> accessor to get information without defaults.
+
+B<Note>:
+L<fullconfig> and L<config> accessors will return the copy of configuration
+information.  Modification of them will never affect to actual robot
+parameters.
+Use C<E<lt>config parameterE<gt>> accessors to get or set each robot parameter.
+
+=back
+
+=cut
+
+## Derived from Site class.
+
+=over 4
+
 =item list_params
 
 I<Getter>.

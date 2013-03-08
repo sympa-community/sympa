@@ -11681,6 +11681,7 @@ Use C<E<lt>config parameterE<gt>> accessors to get or set each list parameter.
 
 =cut
 
+## TODO: Would like to be renamed, such as "fullconfig()".  cf. Site.
 sub admin {
     my $self = shift;
     croak 'Can\'t modify "admin" attribute' if scalar @_;

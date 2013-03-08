@@ -18629,11 +18629,15 @@ sub check_authz {
 }
 
 sub get_server_details {
-     ## All Robots are shown to super listmaster
-     if (Site->is_listmaster($param->{'user'}{'email'})) {
-	 $param->{'main_robot'} = 1;
-	 $param->{'robots'} = Site->robots_config;
-     }
+    ## All Robots are shown to super listmaster
+    if (Site->is_listmaster($param->{'user'}{'email'})) {
+	$param->{'main_robot'} = 1;
+	## n.b. Site (default) config is not included.
+	$param->{'robots'} =
+	    {   map { $_->domain => $_->fullconfig }
+		grep { $_->etc ne Site->etc } @{Robot::get_robots()}
+	    };
+    }
 
      ## Families
      my @families = sort map { $_->name } @{Family::get_families($robot)};
