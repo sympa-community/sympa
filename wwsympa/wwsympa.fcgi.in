@@ -1164,24 +1164,8 @@ my $birthday = time ;
      }
      &Log::set_log_level($robot->log_level);
 
-     ## Sympa parameters in $param->{'conf'}
-     $param->{'conf'} = {};
-     foreach my $p ('email','host', 'soap_url','wwsympa_url','listmaster_email','logo_html_definition','favicon_url',
-	            'main_menu_custom_button_1_url','main_menu_custom_button_1_title','main_menu_custom_button_1_target',
-	            'main_menu_custom_button_2_url','main_menu_custom_button_2_title','main_menu_custom_button_2_target',
-	            'main_menu_custom_button_3_url','main_menu_custom_button_3_title','main_menu_custom_button_3_target',
-		    'dark_color','light_color','text_color','bg_color','error_color','use_blacklist','antispam_feature','custom_robot_parameter',
-                    'selected_color','shaded_color','color_0','color_1','color_2','color_3','color_4','color_5','color_6','color_7','color_8','color_9','color_10','color_11','color_12','color_13','color_14','color_15',
-		    'reporting_spam_script_path','automatic_list_families',
-		    'voot_feature', 'your_lists_size',
-		    ) {
-
-	 $param->{'conf'}{$p} = $robot->$p;
-	 $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
-     }
-    ## compatibility concern: deprecated attributes of Robot.
-    $param->{'conf'}{'sympa'} = $robot->get_address();
-    $param->{'conf'}{'request'} = $robot->get_address('owner');
+    ## Set $param->{'conf'}
+    get_safe_robot_conf();
 
     ## SSO
      foreach my $auth (keys  %{Site->cas_id->{$robot_id}}) {
@@ -6572,7 +6556,8 @@ sub do_skinsedit {
 	foreach my $colornumber (0..15){
 	    &Conf::set_robot_conf($robot_id, 'color_'.$colornumber, $session->{'color_'.$colornumber}) if ($session->{'color_'.$colornumber});
 	}
-	$param->{'conf'} = $Conf::Conf; #FIXME
+	# reload $param->{'conf'}.
+	get_safe_robot_conf();
 
 	foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 	    $param->{'css'} = $css;
@@ -18644,6 +18629,35 @@ sub get_server_details {
      if (@families) {
 	 $param->{'families'} = \@families;
      }    
+}
+
+## Set Sympa parameters in $param->{'conf'}
+
+sub get_safe_robot_conf {
+    $param->{'conf'} = {};
+    foreach my $p (
+	qw(email host soap_url wwsympa_url listmaster_email
+	   logo_html_definition favicon_url
+	   main_menu_custom_button_1_url main_menu_custom_button_1_title
+	   main_menu_custom_button_1_target main_menu_custom_button_2_url
+	   main_menu_custom_button_2_title main_menu_custom_button_2_target
+	   main_menu_custom_button_3_url main_menu_custom_button_3_title
+	   main_menu_custom_button_3_target
+	   dark_color light_color text_color bg_color error_color
+	   use_blacklist antispam_feature custom_robot_parameter
+	   selected_color shaded_color color_0 color_1 color_2 color_3
+	   color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11
+	   color_12 color_13 color_14 color_15
+	   reporting_spam_script_path automatic_list_families
+	   voot_feature your_lists_size
+    )) {
+	 $param->{'conf'}{$p} = $robot->$p;
+	 $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
+    }
+
+    ## compatibility concern: deprecated attributes of Robot.
+    $param->{'conf'}{'sympa'} = $robot->get_address();          # <=6.1
+    $param->{'conf'}{'request'} = $robot->get_address('owner'); # <=6.1
 }
 
 sub get_icon {
