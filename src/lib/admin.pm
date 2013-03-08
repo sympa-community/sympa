@@ -708,18 +708,18 @@ sub rename_list{
       return 'incorrect_listname';
     }
 
-    my $new_robot = $param{'new_robot'};
-    my $new_robot_object = Robot->new($new_robot);
+    my $new_robot_id = $param{'new_robot'};
+    my $new_robot = Robot->new($new_robot_id);
 
-    unless ($new_robot_object) {
-	Log::do_log('err', 'incorrect robot %s', $new_robot);
+    unless ($new_robot) {
+	Log::do_log('err', 'incorrect robot %s', $new_robot_id);
 	return 'unknown_robot';
     }
 
     ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
     my ($result, $r_action, $reason); 
     unless ($param{'options'}{'skip_authz'}) {
-	$result = Scenario::request_action($new_robot_object,
+	$result = Scenario::request_action($new_robot,
 	    'create_list', $param{'auth_method'},
 	    {   'sender'      => $param{'user_email'},
 		'remote_host' => $param{'remote_host'},
@@ -740,23 +740,23 @@ sub rename_list{
 
     ## Check listname on SMTP server
     my $res = list_check_smtp($param{'new_listname'},
-	$new_robot_object);
+	$new_robot);
     unless ( defined($res) ) {
       Log::do_log('err', "can't check list %.128s on %s",
-	      $param{'new_listname'}, $new_robot_object);
+	      $param{'new_listname'}, $new_robot);
       return 'internal';
     }
 
     if ($res || 
 	($list->name ne $param{'new_listname'}) && ## Do not test if listname did not change
-	(List->new($param{'new_listname'}, $new_robot_object, {'just_try' => 1}))) {
+	(List->new($param{'new_listname'}, $new_robot, {'just_try' => 1}))) {
 	Log::do_log('err',
 	    'Could not rename list %s: new list %s on %s already existing list',
-	    $list, $param{'new_listname'}, $new_robot_object);
+	    $list, $param{'new_listname'}, $new_robot);
       return 'list_already_exists';
     }
     
-    my ($name, $type) = $new_robot_object->split_listname($param{'new_listname'});
+    my ($name, $type) = $new_robot->split_listname($param{'new_listname'});
     if ($type) {
 	Log::do_log('err',
 	    'Incorrect listname %s matches one of service aliases',
@@ -775,7 +775,7 @@ sub rename_list{
      }
 
     ## Rename or create this list directory itself
-    my $new_dir = $new_robot_object->home . '/' . $param{'new_listname'};
+    my $new_dir = $new_robot->home . '/' . $param{'new_listname'};
 
     ## If we are in 'copy' mode, create en new list
     if ($param{'mode'} eq 'copy') {	 
@@ -811,7 +811,7 @@ sub rename_list{
      
 	 ## Rename archive
 	 my $arc_dir = $list->robot->arc_path . '/' . $list->get_id();
-	 my $new_arc_dir = $new_robot_object->arc_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
+	 my $new_arc_dir = $new_robot->arc_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
 	 if (-d $arc_dir && $arc_dir ne $new_arc_dir) {
 	     unless (move ($arc_dir,$new_arc_dir)) {
 		 &Log::do_log('err',"Unable to rename archive $arc_dir");
@@ -822,7 +822,7 @@ sub rename_list{
 
 	 ## Rename bounces
 	 my $bounce_dir = $list->get_bounce_dir();
-	 my $new_bounce_dir = $new_robot_object->bounce_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
+	 my $new_bounce_dir = $new_robot->bounce_path . '/' . $param{'new_listname'}.'@'.$param{'new_robot'};
 	 if (-d $bounce_dir && $bounce_dir ne $new_bounce_dir) {
 	     unless (move ($bounce_dir,$new_bounce_dir)) {
 		 &Log::do_log('err',"Unable to rename bounces from $bounce_dir to $new_bounce_dir");
@@ -966,7 +966,7 @@ sub rename_list{
 # IN  : - $source_list_name : the list to clone
 #       - $source_robot : robot of the list to clone
 #       - $new_listname : the target listname         
-#       - $new_robot : the target list's robot
+#       - $new_robot_id : the target list's robot
 #       - $email : the email of the requestor : used in config as admin->last_update->email         
 #
 # OUT : - $list : the updated list or undef
@@ -976,7 +976,7 @@ sub clone_list_as_empty {
     my $source_list_name =shift;
     my $source_robot =shift;
     my $new_listname = shift;
-    my $new_robot = shift;
+    my $new_robot_id = shift;
     my $email = shift;
 
     my $list;
@@ -985,15 +985,15 @@ sub clone_list_as_empty {
 	return undef;;
     }    
     
-    &Log::do_log('info',"Admin::clone_list_as_empty ($source_list_name, $source_robot,$new_listname,$new_robot,$email)");
+    &Log::do_log('info',"Admin::clone_list_as_empty ($source_list_name, $source_robot,$new_listname,$new_robot_id,$email)");
     
     my $new_dir;
-    if (-d Site->home.'/'.$new_robot) {
-	$new_dir = Site->home.'/'.$new_robot.'/'.$new_listname;
-    }elsif ($new_robot eq Site->domain) {
+    if (-d Site->home.'/'.$new_robot_id) {
+	$new_dir = Site->home.'/'.$new_robot_id.'/'.$new_listname;
+    }elsif ($new_robot_id eq Site->domain) {
 	$new_dir = Site->home.'/'.$new_listname;
     }else {
-	&Log::do_log('err',"Admin::clone_list_as_empty : unknown robot $new_robot");
+	&Log::do_log('err',"Admin::clone_list_as_empty : unknown robot $new_robot_id");
 	return undef;
     }
     
@@ -1029,7 +1029,7 @@ sub clone_list_as_empty {
 
     my $new_list;
     # now switch List object to new list, update some values
-    unless ($new_list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
+    unless ($new_list = new List ($new_listname, $new_robot_id,{'reload_config' => 1})) {
 	&Log::do_log('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
 	return undef;
     }
