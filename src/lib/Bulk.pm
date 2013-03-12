@@ -414,13 +414,10 @@ sub store {
     
     my $msg;
     if ($message->is_crypted) {
-	Log::do_log('trace','smime crypted: %s',length $message->get_encrypted_mime_message->as_string);
 	$msg = $message->get_encrypted_mime_message->as_string;
     }elsif ($message->is_signed) {
-	Log::do_log('trace','smime signed: %s',length $message->get_message_as_string);
 	$msg = $message->get_message_as_string;
     }else{
-	Log::do_log('trace','normal message: %s, %s',length $message->get_mime_message->as_string,$message->{'messagekey'});
 	$msg = $message->get_mime_message->as_string;
     }
     my $message_sender = $message->get_sender_email();
