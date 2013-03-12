@@ -2185,7 +2185,7 @@ sub get_parameters {
 	 }elsif ($pname =~ /^custom_attribute(.*)$/) {
 	     my $key = $tokens[1] ;
 	     $regexp = $in_regexp{'custom_attribute'};
-	     &Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
+	     ##&Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
 	     $custom_attribute->{$key} = {value=>$in{$p}} ;
 	     undef $in{$p} ;
 	 }elsif ($pname =~ /^custom_input(.*)$/) {
