@@ -12023,6 +12023,11 @@ sub get_option_title {
     return $option;
 }
 
+sub is_scenario_purely_closed {
+    my $self = shift;
+    my $action = shift;
+    return $self->$action->is_purely_closed;
+}
 
 ###### END of the List package ######
 
@@ -12125,10 +12130,6 @@ sub list_cache_fetch {
 sub list_cache_update_config {
     my ($self) = shift;
     my $cache_list_config = $self->robot->cache_list_config;
-
-local $Data::Dumper::Sortkeys = 1;
-open CCC, '>', $self->dir . '/admin.dump'; print CCC Dumper($self->admin); close CCC;
-open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); close CCC;
 
     if ($cache_list_config eq 'binary_file') {
 	## Get a shared lock on config file first
@@ -12297,13 +12298,6 @@ sub list_cache_purge {
 	q{DELETE from list_table WHERE name_list = ? AND robot_list = ?},
 	$self->name, $self->domain);
 }
-
-sub is_scenario_purely_closed {
-    my $self = shift;
-    my $action = shift;
-    return $self->$action->is_purely_closed;
-}
-
 
 ###### END of the ListCache package ######
 
