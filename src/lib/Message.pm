@@ -330,7 +330,7 @@ sub get_sender_email {
 		}
 	    } elsif ($hdr->get($field)) {
 		## Try to get message header
-		## On "Resent-*:" headers, the first occurrance must be used.
+		## On "Resent-*:" headers, the first occurrence must be used.
 		## Though "From:" can occur multiple times, only the first
 		## one is detected.
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
@@ -1394,7 +1394,8 @@ sub reset_message_from_entity {
     my $entity = shift;
     
     unless (ref ($entity) =~ /^MIME/) {
-	Log::do_log('trace','Can not reset a message by starting from object %s', ref $entity);
+	Log::do_log('err',
+	    'Can not reset a message by starting from object %s', ref $entity);
 	return undef;
     }
     $self->{'msg'} = $entity;

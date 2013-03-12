@@ -222,7 +222,7 @@ If you are able to do so, you should probably update these data sources with thi
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 
-[%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
+[%|loc(param0,param1)%]Errors occurred while copying family %2 file in list %1 directory.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 

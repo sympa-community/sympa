@@ -52,7 +52,7 @@ my %alias = (
 ## synonym :     Defines synonyms for parameter values (for compatibility reasons)
 ## gettext_unit :Unit of the parameter ; this is used in web forms and refers to translated
 ##               strings in PO catalogs
-## occurrence :  Occurerence of the parameter in the config file
+## occurrence :  Occurrence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
 ##               example : a list may have multiple owner
 ## gettext_id :    Title reference in NLS catalogues
@@ -514,7 +514,7 @@ our %pinfo = (
 	'group'      => 'sending',
 	'gettext_id' => "Allow message personnalization",
 	'format'     => ['on', 'off'],
-	'occurence'  => '0-1',
+	'occurrence' => '0-1',
 	'default'    => {'conf' => 'merge_feature'}
     },
 
@@ -522,7 +522,7 @@ our %pinfo = (
 	'group'      => 'sending',
 	'gettext_id' => "Reject mail from automates (crontab, etc)?",
 	'format'     => ['on', 'off'],
-	'occurence'  => '0-1',
+	'occurrence' => '0-1',
 	'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
@@ -838,7 +838,7 @@ our %pinfo = (
 	'gettext_id' =>
 	    "Notify subscribers when they are included from a data source?",
 	'format'    => ['on', 'off'],
-	'occurence' => '0-1',
+	'occurrence'=> '0-1',
 	'default'   => 'off',
     },
 
@@ -1421,7 +1421,7 @@ our %pinfo = (
 		'order'      => 9,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurence'  => '1'
+		'occurrence' => '1'
 	    },
 	    'select' => {
 		'order'      => 10,
@@ -1585,7 +1585,7 @@ our %pinfo = (
 		'order'      => 18,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurence'  => '1'
+		'occurrence' => '1'
 	    },
 	    'nosync_time_ranges' => {
 		'order'      => 19,
@@ -1670,7 +1670,7 @@ our %pinfo = (
 		'order'      => 10,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurence'  => '1'
+		'occurrence' => '1'
 	    },
 	    'nosync_time_ranges' => {
 		'order'      => 11,
@@ -1690,7 +1690,7 @@ our %pinfo = (
 	'gettext_comment' =>
 	    "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
 	'format'    => ['on', 'off'],
-	'occurence' => '0-1',
+	'occurrence'=> '0-1',
 	'default' => {'conf' => 'dkim_feature'}
     },
 
@@ -1706,7 +1706,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    "The file must contain a RSA pem encoded private key",
 		'format'    => '\S+',
-		'occurence' => '0-1',
+		'occurrence'=> '0-1',
 		'default'   => {'conf' => 'dkim_private_key_path'}
 	    },
 	    'selector' => {
@@ -1715,7 +1715,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
 		'format'    => '\S+',
-		'occurence' => '0-1',
+		'occurrence'=> '0-1',
 		'default'   => {'conf' => 'dkim_selector'}
 	    },
 	    'header_list' => {
@@ -1725,7 +1725,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'You should probably use the default value which is the value recommended by RFC4871',
 		'format'    => '\S+',
-		'occurence' => '0-1',
+		'occurrence'=> '0-1',
 		'default'   => {'conf' => 'dkim_header_list'},
 		'obsolete'  => 1,
 	    },
@@ -1736,7 +1736,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
 		'format'    => '\S+',
-		'occurence' => '0-1',
+		'occurrence'=> '0-1',
 		'default'   => {'conf' => 'dkim_signer_domain'}
 	    },
 	    'signer_identity' => {
@@ -1746,7 +1746,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcast messages is i=<listname>-request@<domain>',
 		'format'    => '\S+',
-		'occurence' => '0-1'
+		'occurrence'=> '0-1'
 	    },
 	},
 	'occurrence' => '0-1'
@@ -1860,7 +1860,7 @@ our %pinfo = (
 	'gettext_id' =>
 	    "Allow picture display? (must be enabled for the current robot)",
 	'format'    => ['on', 'off'],
-	'occurence' => '0-1',
+	'occurrence'=> '0-1',
 	'default' => {'conf' => 'pictures_feature'}
     },
 
@@ -1980,7 +1980,7 @@ our %pinfo = (
 		'gettext_id' => "type",
 		'format'     => ['string', 'text', 'integer', 'enum'],
 		'default'    => 'string',
-		'occurence'  => 1
+		'occurrence' => 1
 	    },
 	    'enum_values' => {
 		'order'      => 5,

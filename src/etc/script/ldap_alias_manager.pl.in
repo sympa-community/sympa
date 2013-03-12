@@ -135,7 +135,7 @@ if ($operation eq 'add') {
 	    $command_value = $queue_transport;
 	}
 
-	# We substitute all occurences of + by - for the rest of the attributes, including the dn.
+	# We substitute all occurrences of + by - for the rest of the attributes, including the dn.
 	# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
 	$alias_value =~ s/\+/\-/g;
 

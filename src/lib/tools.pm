@@ -3391,7 +3391,7 @@ sub get_children_processes_list {
 # Function : decode_header
 # Description : return header value decoded to UTF-8 or undef.
 #               trailing newline will be removed.
-#               If sep is given, return all occurrances joined by it.
+#               If sep is given, return all occurrences joined by it.
 ## IN : msg, tag, [sep]
 #*******************************************
 sub decode_header {

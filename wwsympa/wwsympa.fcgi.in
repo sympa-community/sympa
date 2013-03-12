@@ -3622,7 +3622,7 @@ sub do_sso_login {
 		    Site->auth_services->{$robot_id}[$sso_id]{'http_header_value_separator'};
 	      my @email_list = split(/$http_header_value_separator/, 
 				     lc($ENV{Site->auth_services->{$robot_id}[$sso_id]{'email_http_header'}}));
-	      $email = $email_list[0]; ## Only get the first occurence if multi-valued
+	      $email = $email_list[0]; ## Only get the first occurrence if multi-valued
 	    }
 	    
 	    ## Start the email validation process
@@ -3744,7 +3744,7 @@ sub do_sso_login {
 	    if (defined Site->auth_services->{$robot_id}[$sso_id]{'email_http_header'}) {
 	      my @email_list = split(Site->auth_services->{$robot_id}[$sso_id]{'http_header_value_separator'}, 
 				     lc($ENV{Site->auth_services->{$robot_id}[$sso_id]{'email_http_header'}}));
-	      $email = $email_list[0]; ## Only get the first occurence if multi-valued
+	      $email = $email_list[0]; ## Only get the first occurrence if multi-valued
 
 	    }else {
 		unless (defined Site->auth_services->{$robot_id}[$sso_id]{'ldap_host'} &&
@@ -4840,15 +4840,18 @@ sub do_search {
 	$param->{'too_many_select'} = 1;
     }
 
-    $param->{'similar_subscribers_occurence'} = 0;
+    $param->{'similar_subscribers_occurrence'} = 0;
     if($param->{'filter'} !~ /^\@[\w-]+\./) {
-		foreach my $user (@{&List::get_ressembling_list_members_no_object({'name'=>$list->name,'domain'=>$robot_id,'email'=>$in{'filter'}})}) {
-			next if($emails{$user->{'email'}});
-			push @{$param->{'similar_subscribers'}}, $user;
-			last if($#{$param->{'similar_subscribers'}} + 1 > $max_select);
-		}
-		$param->{'similar_subscribers_occurence'} = $#{$param->{'similar_subscribers'}} + 1;
+	foreach my $user (@{&List::get_ressembling_list_members_no_object({'name'=>$list->name,'domain'=>$robot_id,'email'=>$in{'filter'}})}) {
+	    next if($emails{$user->{'email'}});
+	    push @{$param->{'similar_subscribers'}}, $user;
+	    last if($#{$param->{'similar_subscribers'}} + 1 > $max_select);
 	}
+	$param->{'similar_subscribers_occurrence'} = $#{$param->{'similar_subscribers'}} + 1;
+    }
+    # for misspelling in 6.2a or earlier.
+    $param->{'similar_subscribers_occurence'} =
+	$param->{'similar_subscribers_occurrence'};
 
     $param->{'occurrence'} = $record;
     return 1;
@@ -10123,7 +10126,7 @@ sub do_edit_list {
     
     
     ## Getting changes about owners or editors
-    ## If changes occured in the owner or editor definition, these scalars are set to 1.
+    ## If changes occurred in the owner or editor definition, these scalars are set to 1.
     my $owner_update = 0;
     my $editor_update = 0;	
     
@@ -10308,7 +10311,7 @@ sub do_edit_list {
 			}
 		    ## If the parameter component doesn't correspond to a task or a scenario, we must check its content.
 		    }else{
-			## Parameter component check, case 1: this parameter component can have multiple occurence.
+			## Parameter component check, case 1: this parameter component can have multiple occurrence.
 			## Example: 'digest->days'
 			if ($pinfo->{$pname}{'format'}{$key}{'occurrence'} =~ /n$/) {
 			    ## If the new value differs from the previous value, mark as changed and go to the next parameter component.
@@ -10336,7 +10339,7 @@ sub do_edit_list {
 				}
 			    }
 			    
-			## Parameter component check, case 2: this component is limited to one occurence.
+			## Parameter component check, case 2: this component is limited to one occurrence.
 			## Example: 'owner->email'
 			}else {
 			    ## If the parameter component value differs from the corresponding one in the config, go on.
@@ -11073,10 +11076,10 @@ sub _prepare_data {
 	$p_glob->{'comment'} = gettext($struct->{'gettext_comment'});
     }
 
-    ## Occurrences : if the parameter can have multiple occurences,
+    ## Occurrences : if the parameter can have multiple occurrences,
     ## its values are transfered into the array pointed by $data2
     ## if they were given in arguments (if not, an empty array is created).
-    ## if it is a single occurence parameter, an array is created with
+    ## if it is a single occurrence parameter, an array is created with
     ## its single value.
 
      my $data2;
