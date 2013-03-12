@@ -1573,18 +1573,18 @@ sub process_message {
 	    } else {
 		Log::do_log('err',
 		    'Unable to create list %s. Message %s ignored.',
-		    $listname, 'msg_id' => $hdr->get('Message-Id'));
+		    $listname, $message->get_mime_message->head->get('Message-Id'));
 		&report::reject_report_msg(
 		    'intern',
 		    "Message ignored because automatic list '$listname' creation could not be performed.",
 		    $sender,
-		    {   'msg_id'  => $hdr->get('Message-Id'),
+		    {   'msg_id'  => $message->get_mime_message->head->get('Message-Id'),
 			'message' => $message
 		    },
 		    $dyn_family->{'robot'},
 		    $message->{'msg_as_string'}
 		);
-		&List::send_notify_to_listmaster(
+		$robot->send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
 		    $dyn_family->{'robot'},
 		    ["Failed to process $file"]
@@ -1593,10 +1593,10 @@ sub process_message {
 		    {   'robot'      => $dyn_family->{'robot'},
 			'list'       => $listname,
 			'action'     => 'DoFile',
-			'parameters' => $hdr->get('Message-Id') .
+			'parameters' => $message->get_mime_message->head->get('Message-Id') .
 			    ",$dyn_family->{'robot'}",
 			'target_email' => '',
-			'msg_id'       => hdr->get('Message-Id'),
+			'msg_id'       => $message->get_mime_message->head->get('Message-Id'),
 			'status'       => 'error',
 			'error_type'   => 'internal',
 			'user_email'   => $sender,
