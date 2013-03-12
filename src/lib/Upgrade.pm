@@ -88,7 +88,7 @@ sub upgrade {
 
     ## Always update config.bin files while upgrading
     &Conf::delete_binaries();
-
+    SDM::connect_sympa_database;
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     Log::do_log('notice',
@@ -725,7 +725,7 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '6.3a')) {
 	# move spools from file to database.
 	my %spools_def = ('queue' =>  'msg',
-			  'bouncequeue' => 'bounce',
+			  'queuebounce' => 'bounce',
 			  'queuedistribute' => 'msg',
 			  'queuedigest' => 'digest',
 			  'queuemod' => 'mod',
@@ -841,6 +841,20 @@ sub upgrade {
 		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
+		}elsif ($spoolparameter eq 'queueoutgoing'){
+		    unless ($filename =~ /^(\S+)\.(\d+)\.\d+\.\d+$/) {
+			$ignored .= ',' . $filename;
+			next;
+		    }
+		    my $recipient = $1;
+		    ($listname, $robot_id) = split /\@/, $recipient;
+		    $meta{'date'} = $2;
+		    $robot_id = lc($robot_id || Site->domain);
+		    ## check if robot exists
+		    unless ($robot = Robot->new($robot_id)) {
+			$ignored .= ',' . $filename;
+			next;
+		    }
 		}elsif ($spoolparameter eq 'queuesubscribe'){
 		    my $match = 0;		    
 		    foreach my $robot (@{Robot::get_robots()}) {
@@ -854,7 +868,7 @@ sub upgrade {
 			}
 		    }
 		    unless ($match){$ignored .= ','.$filename;next;}
-		}elsif (($spoolparameter eq 'queue')||($spoolparameter eq 'bouncequeue')||($spoolparameter eq 'queueoutgoing')){
+		}elsif (($spoolparameter eq 'queue')||($spoolparameter eq 'queuebounce')){
 		    ## Don't process temporary files created by queue bouncequeue queueautomatic (T.xxx)
 		    next if ($filename =~ /^T\./);
 
@@ -920,7 +934,24 @@ sub upgrade {
 		    $messageasstring = $messageasstring.$_;
 		}
 		close(FILE);
-		
+
+		if ($spoolparameter eq 'queuesubscribe') {
+		    my @lines = split '\n', $messageasstring;
+		    $meta{'sender'} = shift @lines;
+		    $messageasstring = join '\n', @lines;
+		    my @subparts = split '\|\|',$messageasstring;
+		    if ($#subparts > 0) {
+			$messageasstring = join '||',@subparts;
+		    }else {
+			$messageasstring = $subparts[0];
+			if ($messageasstring =~ /<custom_attributes>/) {
+			    $messageasstring = '||'.$messageasstring;
+			}else {
+			    $messageasstring = $messageasstring.'||';
+			}
+		    }
+		    $messageasstring .= "\n";
+		}
 		my $messagekey = $spool->store($messageasstring,\%meta);
 		unless($messagekey) {
 		    &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
