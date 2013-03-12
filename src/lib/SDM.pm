@@ -78,6 +78,7 @@ sub do_prepared_query {
     my @params = @_;
     my $sth;
 
+    connect_sympa_database() unless $db_source;
     unless ($sth = $db_source->do_prepared_query($query,@params)) {
 	&Log::do_log('err','SQL query failed to execute in the Sympa database');
 	return undef;
