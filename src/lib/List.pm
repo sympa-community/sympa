@@ -2300,8 +2300,16 @@ sub filter_receipients_by_topics {
 	    $message->get_topic(),
 	    $message->{'rcpts_by_mode'}{$mode}{'verp'});
     } else {
-	@selected_tabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'noverp'}};
-	@possible_verptabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'verp'}};
+	if (defined $message->{'rcpts_by_mode'}{$mode}{'noverp'}) {
+	    @selected_tabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'noverp'}};
+	}else {
+	    @selected_tabrcpt = ();
+	}
+	if (defined $message->{'rcpts_by_mode'}{$mode}{'verp'}) {
+	    @possible_verptabrcpt = @{$message->{'rcpts_by_mode'}{$mode}{'verp'}};
+	}else{
+	    @possible_verptabrcpt = ();
+	}
     }
 
     ## Preparing VERP receipients.
