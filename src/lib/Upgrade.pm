@@ -28,6 +28,7 @@ use strict;
 use POSIX qw(strftime);
 # tentative
 use Data::Dumper;
+use File::Copy::Recursive;
 
 use Site;
 #use Conf; # used in Site
@@ -952,12 +953,26 @@ sub upgrade {
 		    }
 		    $messageasstring .= "\n";
 		}
+		
 		my $messagekey = $spool->store($messageasstring,\%meta);
 		unless($messagekey) {
 		    &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
 		    next;
 		}
 
+		if ($spoolparameter eq 'queuemod') {
+		    my $html_view_dir = $spooldir.'/.'.$filename;
+		    my $list_html_view_dir = Site->viewmail_dir.'/mod/'.$listname.'@'.$robot_id;
+		    my $new_html_view_dir = $list_html_view_dir.'/'.$meta{'authkey'};
+		    unless (tools::mkdir_all($list_html_view_dir, 0755)) {
+			&Log::do_log('err', 'Could not create list html view directory %s: %s', $list_html_view_dir, $!);
+			exit 1;
+		    }
+		    unless (File::Copy::Recursive::dircopy($html_view_dir, $new_html_view_dir)) {
+			&Log::do_log('err', 'Could not rename %s to %s: %s', $html_view_dir,$new_html_view_dir, $!);
+			exit 1;
+		    }
+		}
 		mkdir $spooldir.'/copy_by_upgrade_process/'  unless (-d $spooldir.'/copy_by_upgrade_process/');		
 		
 		my $source = $spooldir.'/'.$filename;
@@ -967,7 +982,7 @@ sub upgrade {
 		# unless (&File::Copy::copy($spooldir.'/'.$filename, $spooldir.'/copy_by_upgrade_process/'.$filename)) {
 		unless (&File::Copy::copy($source, $goal)) {
 		    &Log::do_log('err', 'Could not rename %s to %s: %s', $source,$goal, $!);
-		    exit;
+		    exit 1;
 		}
 		
 		unless (unlink ($spooldir.'/'.$filename)) {
