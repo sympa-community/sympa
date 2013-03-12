@@ -942,13 +942,13 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 		$main::options{'from'}, $main::options{'to'});
 	}
 
+	SDM::probe_db;
 	unless (
 	    &Upgrade::upgrade($main::options{'from'}, $main::options{'to'})) {
 	    Log::do_log('err', "Migration from %s to %s failed",
 		$main::options{'from'}, $main::options{'to'});
 	    exit 1;
 	}
-
 	Log::do_log('notice', "Upgrade process finished.");
 	&Upgrade::update_version();
 
