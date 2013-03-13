@@ -87,9 +87,17 @@ sub upgrade {
 	return 1;
     }
 
+    ## Check database connectivity and probe database
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+	Log::do_log('err',
+	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
+	    Site->db_name
+	);
+	return undef;
+    }
+
     ## Always update config.bin files while upgrading
     &Conf::delete_binaries();
-    SDM::connect_sympa_database;
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     Log::do_log('notice',
