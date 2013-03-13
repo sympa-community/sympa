@@ -298,7 +298,7 @@ sub authenticateAndRun {
 
     my $session_id = $cookie;
     &Log::do_log('notice', 'authenticateAndRun(%s,%s,%s,%s)',
-	$email, $session_id, $service, join(',', @$parameters));
+	$email, $session_id, $service, defined $parameters ? join(',', @$parameters) : '');
 
     unless ($session_id and $service) {
 	&Log::do_log('err', "Missing parameter");
@@ -363,7 +363,7 @@ sub authenticateRemoteAppAndRun {
     my $robot = $ENV{'SYMPA_ROBOT'};
 
     &Log::do_log('notice', 'authenticateRemoteAppAndRun(%s,%s,%s,%s)',
-	$appname, $vars, $service, join(',', @$parameters));
+	$appname, $vars, $service, defined $parameters ? join(',', @$parameters) : '');
 
     unless ($appname and $apppassword and $service) {
 	die SOAP::Fault->faultcode('Client')
