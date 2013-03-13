@@ -1704,6 +1704,11 @@ sub load_robot_conf {
 	! $force_reload and ! $return_result and
 	$cached = _load_binary_cache({ 'config_file' => $config_file })) {
 	%$conf = %$cached;
+    if ($conf->{'soap_url'}) {
+        my $url = $conf->{'soap_url'};
+        $url =~ s/^http(s)?:\/\/(.+)$/$2/;
+        $Conf{'robot_by_soap_url'}{$url} = $conf->{'robot_name'};
+    }
 	&Log::do_log('debug3', 'got %s from serialized data',
 		     ($robot ne '*') ? "config for robot $robot" : 'main conf');
     } elsif (
