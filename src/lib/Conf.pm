@@ -1055,7 +1055,7 @@ sub load_trusted_application {
     my $robot = shift;
     
     # find appropriate trusted-application.conf file
-    my $config_file = &_get_config_file_name({'robot' => $robot, 'file' => "trusted_applications.conf"});
+    my $config_file = &_get_config_file_name({'file' => "trusted_applications.conf"});
     return undef unless -r $config_file;
     return &load_generic_conf_file($config_file, \%trusted_applications);
 }
@@ -1479,7 +1479,7 @@ sub _infer_server_specific_parameter_values {
         $url =~ s/^http(s)?:\/\/(.+)$/$2/;
         $param->{'config_hash'}{'robot_by_soap_url'}{$url} = $param->{'config_hash'}{'domain'};
     }
-        
+    
     return 1;
 }
 
