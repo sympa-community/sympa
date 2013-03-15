@@ -110,7 +110,7 @@
 			[% END %]
 			
 			[% IF page %]
-				[%|loc%]page[%END%] [% page %] / [% total_page %]
+				[%|loc(page,total_page)%]page %1 / %2[%END%]
 			[% END %]
 			
 			[% IF next_page %]
@@ -150,7 +150,7 @@
 			[% END %]
 			
 			[% IF page %]
-				[%|loc%]page[%END%] [% page %] / [% total_page %]
+				[%|loc(page,total_page)%]page %1 / %2[%END%]
 			[% END %]
 			
 			[% IF next_page %]
