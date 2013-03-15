@@ -50,7 +50,7 @@ installconfig: installdir
 		if [ ! -d $(DESTDIR)$(confdir) ]; then \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
 		fi; \
-		$(AM_V_GEN)$(SED) \
+		$(SED) \
 			-e 's|--PERL--|$(PERL)|' \
 			-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
 			< $(top_srcdir)/src/sympa_wizard.pl.in > \
