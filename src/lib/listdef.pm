@@ -842,15 +842,6 @@ our %pinfo = (
 	'default'   => 'off',
     },
 
-    'sql_fetch_timeout' => {
-	'group'        => 'data_source',
-	'gettext_id'   => "Timeout for fetch of include_sql_query",
-	'gettext_unit' => 'seconds',
-	'format'       => '\d+',
-	'length'       => 6,
-	'default'      => {'conf' => 'default_sql_fetch_timeout'},
-    },
-
     'user_data_source' => {
 	'group'      => 'data_source',
 	'gettext_id' => "User data source",
@@ -1281,6 +1272,15 @@ our %pinfo = (
 	    }
 	},
 	'occurrence' => '0-n'
+    },
+
+    'sql_fetch_timeout' => {
+	'group'        => 'data_source',
+	'gettext_id'   => "Timeout for fetch of SQL query inclusion",
+	'gettext_unit' => 'seconds',
+	'format'       => '\d+',
+	'length'       => 6,
+	'default'      => {'conf' => 'default_sql_fetch_timeout'},
     },
 
     'include_voot_group' => {

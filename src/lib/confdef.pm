@@ -70,7 +70,7 @@ our @params = (
     },
     {   'name'       => 'email_gecos',
 	'default'    => 'SYMPA',
-	'gettext_id' => 'Gecos for service mail sent by Sympa itself',
+	'gettext_id' => 'Display name for service mail sent by Sympa itself',
 	'vhost'      => '1',
 	'edit'       => '1',
 	'file'       => 'sympa.conf',
