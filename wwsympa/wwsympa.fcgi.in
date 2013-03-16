@@ -1820,11 +1820,13 @@ my $birthday = time ;
  	     $param->{'list_conf'} = $list->admin;
  	 }
 
-	 my $lang = &Language::Lang2Locale($param->{'lang'});
+	my $locale = Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->get_etc_include_path('web_tt2', $lang);
+	    ($list || $robot)->get_etc_include_path('web_tt2', $locale);
 
- 	 unless (&tt2::parse_tt2($param,'rss.tt2' ,\*STDOUT, $tt2_include_path, {})) {
+ 	unless (&tt2::parse_tt2(
+	    $param, 'rss.tt2', \*STDOUT, $tt2_include_path, {}
+	)) {
  	     my $error = &tt2::get_error();
  	     $param->{'tt2_error'} = $error;
  	     unless ($robot->send_notify_to_listmaster(
@@ -1847,11 +1849,13 @@ my $birthday = time ;
  	     $param->{'list_conf'} = $list->admin;
  	 }
 
-	 my $lang = &Language::Lang2Locale($param->{'lang'});
+	my $locale = Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->get_etc_include_path('web_tt2', $lang);
+	    ($list || $robot)->get_etc_include_path('web_tt2', $locale);
 
- 	 unless (&tt2::parse_tt2($param,'ajax.tt2' ,\*STDOUT, $tt2_include_path, {})) {
+ 	unless (&tt2::parse_tt2(
+	    $param, 'ajax.tt2', \*STDOUT, $tt2_include_path, {}
+	)) {
  	     my $error = &tt2::get_error();
  	     $param->{'tt2_error'} = $error;
 	    unless ($robot->send_notify_to_listmaster(
@@ -2668,11 +2672,11 @@ sub send_html {
     my @added_include_path = tt2::get_include_path();
     tt2::clear_include_path();
 
-    ## Custom CSS.  They are stored to $param_copy so that they won't be
+    ## Custom CSSes.  They are stored to $param_copy so that they won't be
     ## escaped.
 
-    # Do not include language paths.
-    # The css.tt2 by each languages will override styles in main CSS.
+    # Do not include lcale paths.
+    # The css.tt2 by each locales will override styles in main CSS.
     my $tt2_include_path =
 	($list || $robot)->get_etc_include_path('web_tt2');
 
@@ -2689,23 +2693,24 @@ sub send_html {
 	}
     }
 
+    my $locale = Language::Lang2Locale($param->{'lang'});
+
     # per-locale CSS.
     my $locale_css;
     if (($list || $robot)->get_etc_filename(
-	'web_tt2/' . $param->{'locale'} . '/css.tt2'
+	'web_tt2/' . $locale . '/css.tt2'
     )) {
-	unless (tt2::parse_tt2($param, $param->{'locale'} . '/css.tt2',
+	unless (tt2::parse_tt2($param, $locale . '/css.tt2',
 	    \$locale_css, $tt2_include_path
 	)) {
 	    wwslog('info', 'error while parsing locale CSS %s',
-		$param->{'locale'} . '/css.tt2');
+		$locale . '/css.tt2');
 	} else {
 	    $param_copy->{'locale_css'} = $locale_css;
 	}
     }
 
-    ## Now include language paths.
-    my $locale = &Language::Lang2Locale($param->{'lang'});
+    ## Now include locale paths.
     $tt2_include_path =
 	($list || $robot)->get_etc_include_path('web_tt2', $locale);
 
@@ -6548,8 +6553,8 @@ sub do_skinsedit {
     }
 
     if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
-	## Do not include language subdirectories.
-	## The css.tt2 by each languages will override styles in main CSS.
+	## Do not include locale subdirectories.
+	## The css.tt2 by each locales will override styles in main CSS.
 	my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
 	my $date= time;
@@ -17988,8 +17993,8 @@ sub do_css {
     print "Content-Type: text/css; charset=utf-8\n\n";
     $param->{'css'} = $in{'file'}; 
 
-    ## Do not include language subdirectories.
-    ## The css.tt2 by each languages will override styles in main CSS.
+    ## Do not include locale subdirectories.
+    ## The css.tt2 by each locales will override styles in main CSS.
     my $tt2_include_path = $robot->get_etc_include_path('web_tt2');
 
     unless (&tt2::parse_tt2($param, 'css.tt2', \*STDOUT, $tt2_include_path)) {
