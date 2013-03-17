@@ -82,7 +82,12 @@ unless (Site->load) {
     die 'config_error';
 }
 
-SDM::probe_db();
+unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+    printf STDERR
+	"Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+	Site->db_name;
+    exit 1;
+}
 
 chdir Site->home;
 

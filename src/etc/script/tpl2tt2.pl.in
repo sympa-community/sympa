@@ -47,7 +47,7 @@ $| = 1;
 Site->load or die 'config_error';
 
 if (Site->db_name and Site->db_type) {
-    unless (SDM::probe_db()) {
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
  	die sprintf 'Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', Site->db_name;
     }
 }
