@@ -1,12 +1,12 @@
 <!-- $Id: viewspool_message_mv.tt2 6796 2010-11-25 15:40:21Z serge.aumont $ -->
 
 [% IF moved %]
- Message [% messagekey %]  moved to spool [% newspool %] with status [% newstatus %].
+[%|loc(messagekey,newspool,newstatus)%]Message %1 was moved to spool %2 with status %3.[%END%]
 
 <div class="removed_ok" style="display:none">div used to hide a line</div>
 
 [% ELSE %]
-Could not move message.
+[%|loc%]Could not move message![%END%]
 [% END %]
 
 <!-- end viewspool_message_mv.tt2 -->
