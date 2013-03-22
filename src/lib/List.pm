@@ -11612,6 +11612,10 @@ sub _set_list_param {
 	    );
 	}
     }
+    ## Canonicalize lang.
+    if ($config_attr eq 'lang' and $val) {
+	$val = $self->robot->best_language($val);
+    }
 
     ## Apply defaults.
 

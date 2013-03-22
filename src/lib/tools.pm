@@ -482,7 +482,8 @@ sub get_list_list_tpl {
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		my $locale = &Language::Lang2Locale( &Language::GetLang());
+		my $locale = Language::Lang2Locale_old(Language::GetLang());
+		## FIXME: lang should be used instead of "locale".
 		## Look for a comment.tt2 in the appropriate locale first
 		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
 		    $list_templates->{$template}{'comment'} =
@@ -641,14 +642,14 @@ sub get_templates_list {
 
     ## The 'ignore_global' option allows to look for files at list level only
     unless ($options->{'ignore_global'}) {
-	push @try, $distrib_dir ;
-	push @try, $site_dir ;
+	push @try, $distrib_dir;
+	push @try, $site_dir;
 	push @try, $robot_dir;
     }    
 
     if (defined $list) {
 	$listdir = $list->dir.'/'.$type.'_tt2';	
-	push @try, $listdir ;
+	push @try, $listdir;
     }
 
     my $i = 0 ;
@@ -656,26 +657,49 @@ sub get_templates_list {
 
     foreach my $dir (@try) {
 	next unless opendir (DIR, $dir);
-	foreach my $file ( grep (!/^\./,readdir(DIR))) {	    
+	foreach my $file (grep (!/^\./, readdir(DIR))) {
 	    ## Subdirectory for a lang
 	    if (-d $dir.'/'.$file) {
-		my $lang = $file;
-		next unless opendir (LANGDIR, $dir.'/'.$lang);
-		foreach my $file (grep (!/^\./,readdir(LANGDIR))) {
-		    next unless ($file =~ /\.tt2$/);
-		    if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{$lang} = $dir.'/'.$lang.'/'.$file;}
-		    if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{$lang} =  $dir.'/'.$lang.'/'.$file;}
-		    if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{$lang} = $dir.'/'.$lang.'/'.$file;}
-		    if ($dir eq $listdir)    {$tpl->{$file}{'list'}{$lang} = $dir.'/'.$lang.'/'.$file;}
+		my $lang_dir = $file;
+		my $lang = Language::CanonicLang($lang_dir);
+		next unless $lang;
+		next unless opendir (LANGDIR, $dir . '/' . $lang_dir);
+
+		foreach my $file (grep (!/^\./, readdir(LANGDIR))) {
+		    next unless $file =~ /\.tt2$/;
+		    if ($dir eq $distrib_dir) {
+			$tpl->{$file}{'distrib'}{$lang} =
+			    $dir . '/' . $lang_dir . '/' . $file;
+		    }
+		    if ($dir eq $site_dir) {
+			$tpl->{$file}{'site'}{$lang} =
+			    $dir . '/' . $lang_dir . '/' . $file;
+		    }
+		    if ($dir eq $robot_dir) {
+			$tpl->{$file}{'robot'}{$lang} =
+			    $dir . '/' . $lang_dir . '/' . $file;
+		    }
+		    if ($dir eq $listdir) {
+			$tpl->{$file}{'list'}{$lang} =
+			    $dir . '/' . $lang_dir . '/' . $file;
+		    }
 		}
 		closedir LANGDIR;
 
 	    }else {
 		next unless ($file =~ /\.tt2$/);
-		if ($dir eq $distrib_dir){$tpl->{$file}{'distrib'}{'default'} = $dir.'/'.$file;}
-		if ($dir eq $site_dir)   {$tpl->{$file}{'site'}{'default'} =  $dir.'/'.$file;}
-		if ($dir eq $robot_dir)  {$tpl->{$file}{'robot'}{'default'} = $dir.'/'.$file;}
-		if ($dir eq $listdir)    {$tpl->{$file}{'list'}{'default'}= $dir.'/'.$file;}
+		if ($dir eq $distrib_dir) {
+		    $tpl->{$file}{'distrib'}{'default'} = $dir . '/' . $file;
+		}
+		if ($dir eq $site_dir) {
+		    $tpl->{$file}{'site'}{'default'} = $dir . '/' . $file;
+		}
+		if ($dir eq $robot_dir) {
+		    $tpl->{$file}{'robot'}{'default'} = $dir . '/' . $file;
+		}
+		if ($dir eq $listdir) {
+		    $tpl->{$file}{'list'}{'default'} = $dir . '/' . $file;
+		}
 	    }
 	}
 	closedir DIR;
@@ -695,6 +719,10 @@ sub get_template_path {
     my $tpl = shift;
     my $lang = shift || 'default';
     my $list = shift;
+
+    ##FIXME: path is fixed to older "locale".
+    my $locale;
+    $locale = Language::Lang2Locale_old($lang) unless $lang eq 'default';
 
     unless ($type eq 'web' or $type eq 'mail') {
 	Log::do_log('info', 'internal error incorrect parameter');
@@ -719,7 +747,7 @@ sub get_template_path {
     }
 
     $dir .= '/'.$type.'_tt2';
-    $dir .= '/'.$lang unless $lang eq 'default';
+    $dir .= '/' . $locale unless $lang eq 'default';
     return $dir.'/'.$tpl;
 }
 
@@ -3312,7 +3340,7 @@ sub wrap_text {
     return $text unless $cols;
 
     $text = Text::LineFold->new(
-	    Language => &Language::GetLang(),
+	    Language => Language::GetLang(),
 	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
 	    Prep => 'NONBREAKURI',
 	    ColumnsMax => $cols

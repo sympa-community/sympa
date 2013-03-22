@@ -902,16 +902,18 @@ sub load_charset {
         s/\s*#.*//;
         s/^\s+//;
         next unless /\S/;
-        my ($locale, $cset) = split(/\s+/, $_);
+        my ($lang, $cset) = split(/\s+/, $_);
         unless ($cset) {
         &Log::do_log('err', 'Charset name is missing in configuration file %s line %d', $config_file, $.);
         next;
         }
-        unless ($locale =~ s/^([a-z]+)_([a-z]+)/lc($1).'_'.uc($2).$'/ei) { #'
-        &Log::do_log('err', 'Illegal locale name in configuration file %s line %d', $config_file, $.);
-        next;
+        unless ($lang and $lang = Language::CanonicLang($lang)) {
+	    Log::do_log('err',
+		'Illegal lang name in configuration file %s line %d',
+		$config_file, $.);
+	    next;
         }
-        $charset->{$locale} = $cset;
+        $charset->{$lang} = $cset;
     
     }
     close CONFIG;

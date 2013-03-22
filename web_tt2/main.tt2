@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="[% lang_tag %]" xml:lang="[% lang_tag %]" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="[% lang %]" xml:lang="[% lang %]" xmlns="http://www.w3.org/1999/xhtml">
 
 <!-- $Id$ -->
 <head>
@@ -110,7 +110,7 @@
 	 [% IF action == 'edit_list_request' || action == 'editfile' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
-      <div class="top"><a href="#top" title="[%|loc%]Top of Page[%END%]"><img src="[% icons_url %]/top.png" alt="[%|loc%]Top of page[%END%]" /></a></div>
+      <div class="top"><a href="#top" title="[%|loc%]Top of Page[%END%]"><img src="[% icons_url %]/top.png" alt="[%|loc%]Top of Page[%END%]" /></a></div>
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
 

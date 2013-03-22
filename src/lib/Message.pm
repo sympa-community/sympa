@@ -1955,19 +1955,19 @@ sub _urlize_part {
     $parser->output_to_core(1);
     my $new_part;
 
-    my $lang = &Language::GetLang();
-    my $charset = &Language::GetCharset();
+    my $lang = Language::GetLang();
+    my $charset = Language::GetCharset();
 
     my $tt2_include_path = $list->get_etc_include_path('mail_tt2', $lang);
 
     &tt2::parse_tt2(
 	{   'file_name' => $file_name,
-		     'file_url'  => $file_url,
+	    'file_url'  => $file_url,
 	    'file_size' => $size,
 	    'charset'   => $charset
 	},
-		    'urlized_part.tt2',
-		    \$new_part,
+	'urlized_part.tt2',
+	\$new_part,
 	$tt2_include_path
     );
 
