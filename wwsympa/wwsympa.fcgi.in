@@ -1075,8 +1075,9 @@ my $birthday = time ;
      undef $ajax;
      undef $session;
 
-     &Log::set_log_level(Site->log_level);
-     &Language::SetLang($Language::default_lang);
+    Log::set_log_level(Site->log_level);
+    # auto-detect browsers' lang.
+    Language::SetLang(Site->best_language($ENV{'HTTP_ACCEPT_LANGUAGE'}));
 
      ## Empty cache of the List.pm module
      &List::init_list_cache();
@@ -1491,13 +1492,16 @@ my $birthday = time ;
 	     $param->{'host'} ||= $robot_id;
 	     $param->{'domain'} = $list->domain if (ref($list) eq 'List');
 	     
-	    ## language FIXME: $ENV{'HTTP_ACCEPT_LANGUAGE'} not used !
-	     $param->{'list_lang'} = $list->lang if ref $list eq 'List';
-	     $param->{'user_lang'} = $param->{'user'}{'lang'} if (defined $param->{'user'});	     
-	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || $robot->lang;	     
-
-	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
-	    $param->{'lang_tag'} = &Language::LanguageTag($param->{'lang'});
+	    ## Get best language
+	    $param->{'list_lang'} = $list->lang
+		if ref $list eq 'List';
+	    $param->{'user_lang'} = $param->{'user'}{'lang'}
+		if defined $param->{'user'};
+	    $param->{'lang'} = ($list || $robot)->best_language(
+		$session->{'lang'}, $param->{'user_lang'},
+		$ENV{'HTTP_ACCEPT_LANGUAGE'}
+	    );
+	    Language::SetLang($param->{'lang'});
 
 	    ## list topics	     
 	    export_topics($robot);
@@ -1610,7 +1614,6 @@ my $birthday = time ;
      $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} eq 'serveradmin'));
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= $robot->lang;
-    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($param->{'list'}) {
 	 $param->{'list_title'} = $list->subject;
@@ -1734,27 +1737,23 @@ my $birthday = time ;
 	  #}
      }
 	 
-     ## Available languages
-     my $saved_lang = &Language::GetLang();
+    ## Available languages
+    my $saved_lang = Language::GetLang();
 
+    foreach my $l ($robot->supported_languages) {
+	Language::SetLang($l) || next;
 
-     foreach my $l ($robot->supported_languages) {
-	 &Language::SetLang($l) || next;
+	$param->{'languages'}{$l}{'complete'} =
+	    Language::GetLangName($l) || $l;
 
-	 if (gettext("_language_")) {
-	     $param->{'languages'}{$l}{'complete'} = gettext("_language_");
-	 }else {
-	     $param->{'languages'}{$l}{'complete'} = $l;
-	 }
+	if ($param->{'lang'} eq $l) {
+	    $param->{'languages'}{$l}{'selected'} = 'selected="selected"';
+	} else {
+	    $param->{'languages'}{$l}{'selected'} = '';
+	}
+    }
 
-	 if ($param->{'locale'} eq $l) {
-	     $param->{'languages'}{$l}{'selected'} = 'selected="selected"';
-	 }else {
-	     $param->{'languages'}{$l}{'selected'} = '';
-	 }
-     }
-
-     &Language::SetLang($saved_lang);
+    Language::SetLang($saved_lang);
 
      $param->{'html_dumpvars'} = &tools::dump_html_var($param) if ($session->{'dumpvars'});
 
@@ -1820,9 +1819,9 @@ my $birthday = time ;
  	     $param->{'list_conf'} = $list->admin;
  	 }
 
-	my $locale = Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->get_etc_include_path('web_tt2', $locale);
+	    ($list || $robot)->get_etc_include_path('web_tt2',
+		$param->{'lang'});
 
  	unless (&tt2::parse_tt2(
 	    $param, 'rss.tt2', \*STDOUT, $tt2_include_path, {}
@@ -1849,9 +1848,9 @@ my $birthday = time ;
  	     $param->{'list_conf'} = $list->admin;
  	 }
 
-	my $locale = Language::Lang2Locale($param->{'lang'});
 	my $tt2_include_path =
-	    ($list || $robot)->get_etc_include_path('web_tt2', $locale);
+	    ($list || $robot)->get_etc_include_path('web_tt2',
+		$param->{'lang'});
 
  	unless (&tt2::parse_tt2(
 	    $param, 'ajax.tt2', \*STDOUT, $tt2_include_path, {}
@@ -2693,9 +2692,9 @@ sub send_html {
 	}
     }
 
-    my $locale = Language::Lang2Locale($param->{'lang'});
-
     # per-locale CSS.
+    # FIXME: include language paths, not only old locale paths.
+    my $locale = Language::Lang2Locale_old($param->{'lang'});
     my $locale_css;
     if (($list || $robot)->get_etc_filename(
 	'web_tt2/' . $locale . '/css.tt2'
@@ -2712,7 +2711,7 @@ sub send_html {
 
     ## Now include locale paths.
     $tt2_include_path =
-	($list || $robot)->get_etc_include_path('web_tt2', $locale);
+	($list || $robot)->get_etc_include_path('web_tt2', $param->{'lang'});
 
     ## Restore special paths.
     foreach my $dir (@added_include_path) {
@@ -2750,9 +2749,6 @@ sub prepare_report_user {
     $param->{'notices'} = &report::get_notice_web();
     $param->{'errors'} = &report::is_there_any_reject_report_web();
 }
-    
-    
-
 
 =pod 
 
@@ -3487,7 +3483,6 @@ sub do_login {
 	 $param->{'lang'} = $user->{'lang'} || ($list || $robot)->lang;
 	 $session->{'lang'} = $param->{'lang'} ;
      }
-    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
 	 User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
@@ -5138,10 +5133,11 @@ sub do_setpref {
 	 $changes->{$p} = $in{$p} if (defined($in{$p}));
      }
 
-     ## Set session language and user language to new value
-     $session->{'lang'} = $in{'lang'} ;
-     $param->{'lang'} = $in{'lang'};
-    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
+    ## Set session language and user language to new value
+    if ($in{'lang'}) {
+	$session->{'lang'} = $robot->best_language($in{'lang'});
+    }
+    $param->{'lang'} = $session->{'lang'};
 
      if (User::is_global_user($param->{'user'}{'email'})) {
 
@@ -6096,6 +6092,10 @@ sub do_ls_templates  {
     foreach my $file (keys %{$param->{'templates'}}) {
 	foreach my $level (keys %{$param->{'templates'}{$file}}) {
 	    foreach my $lang (keys %{$param->{'templates'}{$file}{$level}}) {
+		if ($lang eq 'default') {
+		    $param->{'lang_per_level'}{$level}{$lang} = $lang;
+		    next;
+		}
 		$param->{'lang_per_level'}{$level}{$lang} =
 		    Language::GetLangName($lang) || $lang;
 	    }
@@ -16861,9 +16861,10 @@ sub do_search_user {
 sub do_set_lang {
      &wwslog('info', 'do_set_lang(%s)', $in{'lang'});
 
-     $session->{'lang'} = $in{'lang'} ;
-     $param->{'lang'} = $in{'lang'};
-    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
+    if ($in{'lang'}) {
+	$session->{'lang'} = $robot->best_language($in{'lang'});
+    }
+    $param->{'lang'} = $session->{'lang'};
 
      if ($param->{'user'}{'email'}) {
 	 if (User::is_global_user($param->{'user'}{'email'})) {
