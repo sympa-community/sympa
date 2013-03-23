@@ -111,7 +111,7 @@ sub create_configuration {
 		sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
 	}
     } else {
-	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || '';
+	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || 'C';
 	$lang =~ s/\..*//;
 	Language::SetLang($lang);
     }
@@ -211,11 +211,11 @@ sub edit_configuration {
     $rep = <STDIN>;
     chomp $rep;
     if (lc $rep eq 'y') {
-        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || '';
+        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || 'C';
         $lang =~ s/\..*//;
         Language::SetLang($lang);
     } else {
-	Language::SetLang('en_US');
+	Language::SetLang('C');
     }
 
     my @new_sympa_conf;
