@@ -24,7 +24,6 @@ package Language;
 use strict;
 use warnings;
 use Exporter;
-#use Carp; #currently not used 
 use POSIX qw(setlocale strftime);
 use Locale::Messages qw (:locale_h :libintl_h !gettext);
 
@@ -97,6 +96,7 @@ my %set_comment; #sets-of-messages comment
 ## The locale is the NLS catalogue name ; lang is the IETF language tag.
 ## Ex: locale = pt_BR ; lang = pt-BR
 my ($current_lang, $current_locale, $current_charset, @previous_lang);
+my %warned_locale;
 my $default_lang = 'en';
 
 ## The map to get from older non-POSIX locale naming to language tag.
@@ -171,7 +171,7 @@ my %template2textdomain = ('help_admin.tt2' => 'web_help',
 ## Regexp for old style canonical locale used by Sympa-6.2a.33 or earlier.
 my $old_lang_re = qr/^([a-z]{2})_([A-Z]{2})(?![A-Z])/i;
 
-## Regexp for IETF language tag according to RFC 5646.
+## Regexp for IETF language tag described in RFC 5646.
 ## We made some modifications: variant subtags may be longer than eight chars;
 ## restricted features (see CanonicLang() function).
 my $language_tag_re = qr/^
@@ -184,18 +184,18 @@ my $language_tag_re = qr/^
     ))?
 $/ix;
 
-## A tiny subset of script codes and gettext variant names.
-## Keys are ISO 15924 script codes (titlecased).  Values are property value
-## aliases by Unicode Consortium (lowercased).
-## See <http://www.unicode.org/iso15924/iso15924-codes.html>.
-my %script2name = (
+## A tiny subset of script codes and gettext modifier names.
+## Keys are ISO 15924 script codes (titlecased).
+## Values are property value aliases by Unicode Consortium (lowercased).
+## cf. <http://www.unicode.org/iso15924/iso15924-codes.html>.
+my %script2modifier = (
     'Arab' => 'arabic',
     'Cyrl' => 'cyrillic',
     'Deva' => 'devanagari',
     'Glag' => 'glagolitic',
     'Guru' => 'gurmukhi',
     'Latn' => 'latin',
-    'Shaw' => 'shaw',          # found in Debian "en@shaw" locale.
+    'Shaw' => 'shaw',         # found in Debian "en@shaw" locale.
     'Tfng' => 'tifinagh',
 );
 
@@ -481,8 +481,7 @@ sub SetLang {
     }
 
     unless (SetLocale($locale)) {
-	Log::do_log('err',
-	    'Failed to setlocale(%s) ; you either have a problem with the catalogue .mo files or you should extend available locales in  your /etc/locale.gen (or /etc/sysconfig/i18n) file', $locale);
+	SetLocale($current_locale || 'C'); # restore POSIX locale
 	return undef;
     }
 
@@ -497,6 +496,7 @@ sub SetLang {
 # Sets locale for host.  LOCALE is gettext locale name.
 # Note: Use SetLang().
 sub SetLocale {
+    Log::do_log('debug3', '(%s)', @_);
     my $locale = shift;
 
     ## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
@@ -506,25 +506,33 @@ sub SetLocale {
     $mod ||= '';
 
     ## Set POSIX locale
-    foreach my $type (&POSIX::LC_ALL, &POSIX::LC_TIME) {
-	my $success;
-	## Trancate locale in gettext way: full locale, and omit encoding,
-	## region then modifier.
-	foreach my $try (
-	    $machloc . '.utf-8' . $mod,
-	    $machloc . '.UTF-8' . $mod, ## UpperCase required for FreeBSD
-	    $machloc . '.utf8' . $mod,  ## Required on HP-UX
-	    $machloc . $mod,
-	    $loc . $mod,
-	    $loc,
-	) {
+    foreach my $type (POSIX::LC_ALL(), POSIX::LC_TIME()) {
+	my $success = 0;
+	my @try;
+	## Add codeset.
+	## UpperCase required for FreeBSD; dashless required on HP-UX;
+	## null codeset is last resort.
+	foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
+	    ## Trancate locale similarly in gettext: full locale, and omit
+	    ## region then modifier.
+	    push @try, map { sprintf $_, $cs } (
+		"$machloc%s$mod", "$loc%s$mod", "$loc%s"
+	    );
+	}
+	foreach my $try (@try) {
 	    if (POSIX::setlocale($type, $try)) {
 		$success = 1;
 		last;
 	    }
 	}
 	unless ($success) {
-	    return undef;
+	    POSIX::setlocale($type, 'C'); # reset POSIX locale
+	    ##FIXME: 'warn' is better.
+	    Log::do_log('notice',
+		'Failed to set locale "%s". You might want to extend available locales',
+		$locale
+	    ) unless $warned_locale{$locale};
+	    $warned_locale{$locale} = 1;
 	}
     }
 
@@ -536,14 +544,25 @@ sub SetLocale {
     ## Set Locale::Messages context (gettext locale).
     $ENV{'LANGUAGE'} = $locale;
     ## Define what catalogs are used
-    &Locale::Messages::textdomain("sympa");
-    &Locale::Messages::bindtextdomain('sympa',Sympa::Constants::LOCALEDIR);
-    &Locale::Messages::bindtextdomain('web_help',Sympa::Constants::LOCALEDIR);
+    Locale::Messages::textdomain("sympa");
+    Locale::Messages::bindtextdomain('sympa', Sympa::Constants::LOCALEDIR);
+    Locale::Messages::bindtextdomain('web_help', Sympa::Constants::LOCALEDIR);
     # Get translations by internal encoding.
     bind_textdomain_codeset sympa => 'utf-8';
     bind_textdomain_codeset web_help => 'utf-8';
 
-    return $locale;
+    ## Check if catalogue is loaded.
+    if ($locale and $locale ne 'C' and $locale ne 'POSIX') {
+	unless (Locale::Messages::gettext('')) {
+	    Log::do_log('err',
+		'Failed to bind NLS catalogue for locale "%s"',
+		$locale
+	    );
+	    return undef;
+	}
+    }
+
+    return 1;
 }
 
 =over 4
@@ -611,6 +630,7 @@ sub GetCharset {
 	    my $locale2charset = Site->locale2charset;
 
 	    ## get charset of lang with fallback.
+	    $current_charset = 'utf-8'; # the default
 	    foreach my $lang (ImplicatedLangs($current_lang)) {
 		if ($locale2charset->{$lang}) {
 		    $current_charset = $locale2charset->{$lang};
@@ -643,7 +663,7 @@ sub Lang2Locale {
 	$locale .= '_' . $subtags[2];
     }
     if ($subtags[1]) {
-	$locale .= '@' . ($script2name{$subtags[1]} || $subtags[1]);
+	$locale .= '@' . ($script2modifier{$subtags[1]} || $subtags[1]);
     } elsif ($subtags[3]) {
 	$locale .= '@' . $subtags[3];
     }
@@ -790,16 +810,16 @@ XXX @todo doc
 =cut
 
 sub gettext {
+    Log::do_log('debug3', '(%s)', @_);
     my @param = @_;
 
-    &Log::do_log('debug3', 'Language::gettext(%s)', $param[0]);
-
-    ## This prevents meta information to be returned if the string to translate is empty
+    ## This prevents meta information to be returned if the string to
+    ## translate is empty
     if ($param[0] eq '') {
 	return '';
-	
-	## return meta information on the catalogue (language, charset, encoding,...)
-    }elsif ($param[0] =~ '^_(\w+)_$') {
+    } elsif ($param[0] =~ '^_(\w+)_$') {
+	## return meta information on the catalogue (language, charset,
+	## encoding,...)
 	my $var = $1;
 	foreach (split /\n/,&Locale::Messages::gettext('')) {
 	    if ($var eq 'language') {
@@ -822,7 +842,7 @@ sub gettext {
 	return '';
     }
 
-    return &Locale::Messages::gettext(@param);
+    return Locale::Messages::gettext(@param);
 
 }
 
@@ -837,14 +857,72 @@ XXX @todo doc
 
 =cut
 
+my %date_part_names = (
+    '%a' => {
+	'index' => 6,
+	'gettext_id' => 'Su:Mo:Tu:We:Th:Fr:Sa'
+    },
+    '%A' => {
+	'index' => 6,
+	'gettext_id' => 'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
+    },
+    '%b' => {
+	'index' => 4,
+	'gettext_id' => 'Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec'
+    },
+    '%B' => {
+	'index' => 4,
+	'gettext_id' => 'January:February:March:April:May:June:July:August:September:October:November:December'
+    },
+    '%p' => {
+	'index' => 2,
+	'gettext_id' => 'AM:PM'
+    },
+);
+
 sub gettext_strftime {
+    Log::do_log('debug3', '(%s, ...)', @_);
     my $format = shift;
 
-    return POSIX::strftime($format, @_) unless $current_lang;
+    my $posix_locale = POSIX::setlocale(POSIX::LC_TIME());
 
-    $format = gettext($format);
-    my $datestr = POSIX::strftime($format, @_);
-    return $datestr;
+    ## if lang has not been set, fallback to native strftime().
+    unless (
+	$current_lang and $current_lang ne 'C' and $current_lang ne 'POSIX'
+    ) {
+	POSIX::setlocale(POSIX::LC_TIME(), 'C');
+	my $datestr = POSIX::strftime($format, @_);
+	POSIX::setlocale(POSIX::LC_TIME(), $posix_locale);
+	return $datestr;
+    }
+
+    $format = Locale::Messages::gettext($format);
+
+    ## If POSIX locale was not set, emulate format strings.
+    unless (
+	$posix_locale and $posix_locale ne 'C' and $posix_locale ne 'POSIX'
+    ) {
+	my %names;
+	foreach my $k (keys %date_part_names) {
+	    $names{$k} = [
+		split /:/,
+		Locale::Messages::gettext($date_part_names{$k}->{'gettext_id'})
+	    ];
+	}
+	$format =~ s{(\%[EO]?.)}{
+	    my $index;
+	    if ($names{$1} and
+		defined($index = $_[$date_part_names{$1}->{'index'}])) {
+		$index = ($index < 12) ? 0 : 1
+		    if $1 eq '%p';
+		$names{$1}->[$index];
+	    } else {
+		$1;
+	    }
+	}eg;
+    }
+
+    return POSIX::strftime($format, @_);
 }
 
 # end of Language package
