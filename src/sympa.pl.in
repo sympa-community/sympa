@@ -272,6 +272,7 @@ if (!$main::options{'help'} and $main::options{'health_check'}) {
 my %loop_info;
 my %msgid_table;
 my $latest_msgid_table_cleanup = time;
+my $default_lang;
 
 # this loop is run foreach HUP signal received
 my $signal = 0;
@@ -315,8 +316,9 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     ## Set locale configuration
     # Compatibility with version < 2.3.3
     $main::options{'lang'} =~ s/\.cat$//
-	if defined($main::options{'lang'});
-    $Language::default_lang = $main::options{'lang'} || Site->lang;
+	if defined $main::options{'lang'};
+    $default_lang = $main::options{'lang'} || Site->lang;
+    Language::SetLang($default_lang);
 
     ## Main program
     if (!chdir(Site->home)) {
@@ -1175,7 +1177,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
 
-	&Language::SetLang($Language::default_lang);
+	Language::SetLang($default_lang);
 
 	&List::init_list_cache();
 
@@ -1256,8 +1258,9 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	}
 
 	## Set NLS default lang for current message
-	$Language::default_lang = $main::options{'lang'} ||
+	$default_lang = $main::options{'lang'} ||
 	    &Conf::get_robot_conf($robot_id, 'lang');
+	Language::SetLang($default_lang);
 
 	my $status = &process_message($message_in_spool);
 

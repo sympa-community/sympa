@@ -1029,7 +1029,7 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 &Log::do_log('info', 'WWSympa started');
 
 ## Set locale configuration	 
-$Language::default_lang = Site->lang;	 
+Language::SetLang(Site->lang);
 
 ## Important to leave this there because it defined defaults for user_data_source
 &SDM::check_db_connect();
@@ -2856,7 +2856,7 @@ sub check_param_in {
 	$param->{'list'} = $list->name;
 	$param->{'subtitle'} = $list->subject;
 	$param->{'subscribe'} = $list->subscribe->{'name'};
-	$param->{'send'} = $list->send->{'title'}{$param->{'lang'}}; #FIXME
+	$param->{'send'} = $list->send->get_current_title() if $list->send;
 
 	# Pictures are not available unless it is configured for the list and the robot
  	if ($list->pictures_feature eq 'off') {
@@ -10932,16 +10932,12 @@ sub _prepare_edit_form {
 		}
 	    }
 	 }elsif ($pname eq 'lang') {
-	     my $saved_lang = &Language::GetLang();
-	     
 	     foreach my $lang (keys %{$p->{'value'}}) {
-		&Language::SetLang($lang);
-		my $t = gettext('_language_');
+		my $t = Language::GetLangName($lang) || $lang;
 		$t = sprintf '%s (%s)', $t, $lang
 		    if $robot->is_listmaster($param->{'user'}{'email'});
 		$p->{'value'}{$lang}{'title'} = $t;
 	     }
-	     &Language::SetLang($saved_lang);
 	 } elsif ($pname eq 'available_user_options' or
 		  $pname eq 'default_user_options') {
 	    foreach my $v (@{$p->{'value'}}) {
