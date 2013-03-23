@@ -779,7 +779,7 @@ our @params = (
 
     {   'name' => 'supported_lang',
 	'default' =>
-	    'ca,cs,de,el,es,et_EE,en_US,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
+	    'ca,cs,de,el,en-US,es,et,fr,fi,hu,it,ja,ko,nb,nl,oc,pl,pt-BR,ru,sv,tr,vi,zh-CN,zh-TW',
 	'gettext_id' => 'Supported languages',
 	'vhost'      => '1',
 	'file'       => 'sympa.conf',
@@ -788,7 +788,7 @@ our @params = (
 	    "This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed.",
     },
     {   'name'            => 'lang',
-	'default'         => 'en_US',
+	'default'         => 'en-US',
 	'gettext_id'      => 'Default language (one of supported languages)',
 	'vhost'           => '1',
 	'file'            => 'sympa.conf',
