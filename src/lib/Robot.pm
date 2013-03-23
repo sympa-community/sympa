@@ -687,18 +687,13 @@ sub topics {
     $list_of_topics = tools::dup_var($self->{'topics'});
 
     ## Set the title in the current language
-    my $lang = Language::GetLang();
     foreach my $top (keys %{$list_of_topics}) {
 	my $topic = $list_of_topics->{$top};
-	$topic->{'current_title'} = $topic->{'title'}{$lang} ||
-	    $topic->{'title'}{'default'} ||
-	    $top;
+	$topic->{'current_title'} = _get_topic_current_title($topic) || $top;
 
 	foreach my $subtop (keys %{$topic->{'sub'}}) {
 	    $topic->{'sub'}{$subtop}{'current_title'} =
-		$topic->{'sub'}{$subtop}{'title'}{$lang} ||
-		$topic->{'sub'}{$subtop}{'title'}{'default'} ||
-		$subtop;
+		_get_topic_current_title($topic->{'sub'}{$subtop}) || $subtop;
 	}
     }
 
@@ -712,11 +707,34 @@ sub _get_topic_titles {
     foreach my $key (%{$topic}) {
 	if ($key =~ /^title(.(\w+))?$/) {
 	    my $lang = $2 || 'default';
+	    if ($lang eq 'gettext') {    # new in 6.2a.34
+		;
+	    } elsif ($lang eq 'default') {
+		;
+	    } else {
+		$lang = Language::CanonicLang($lang) || $lang;
+	    }
 	    $title->{$lang} = $topic->{$key};
 	}
     }
 
     return $title;
+}
+
+sub _get_topic_current_title {
+    my $topic = shift;
+    foreach my $lang (Language::ImplicatedLangs()) {
+	if ($topic->{'title'}{$lang}) {
+	    return $topic->{'title'}{$lang};
+	}
+    }
+    if ($topic->{'title'}{'gettext'}) {
+	return gettext($topic->{'title'}{'gettext'});
+    } elsif ($topic->{'title'}{'default'}) {
+	return gettext($topic->{'title'}{'default'});
+    } else {
+	return undef;
+    }
 }
 
 ## Inner sub used by load_topics()

@@ -248,9 +248,8 @@ sub _parse_scenario {
 	    next;
 	} elsif ($current_rule =~ /^\s*title\.([-.\w]+)\s+(.*)\s*$/i) {
 	    my ($lang, $title) = ($1, $2);
-	    Language::PushLang($lang);
-	    $structure->{'title'}{Language::GetLang()} = $title;
-	    Language::PopLang();
+	    $lang = Language::CanonicLang($lang) || $lang;
+	    $structure->{'title'}{$lang} = $title;
 	    next;
 	} elsif ($current_rule =~ /^\s*title\s+(.*)\s*$/i) {
 	    $structure->{'title'}{'us'} = $1;
@@ -1810,9 +1809,12 @@ Get internationalized title of the scenario, under current language context.
 sub get_current_title {
     my $self = shift;
 
-    if (defined $self->{'title'}{Language::GetLang()}) {
-	return $self->{'title'}{Language::GetLang()};
-    } elsif (defined $self->{'title'}{'gettext'}) {
+    foreach my $lang (Language::ImplicatedLangs()) {
+	if (defined $self->{'title'}{$lang}) {
+	    return $self->{'title'}{$lang};
+	}
+    }
+    if (defined $self->{'title'}{'gettext'}) {
 	return Language::gettext($self->{'title'}{'gettext'});
     } elsif (defined $self->{'title'}{'us'}) {
 	return Language::gettext($self->{'title'}{'us'});
@@ -1849,7 +1851,8 @@ Returns 1 if all conditions in scenario are "true()   [an_auth_method]    ->  re
 sub is_purely_closed {
     my $self = shift;
     foreach my $rule (@{$self->{'rules'}}) {
-	if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
+	if ($rule->{'condition'} ne 'true' &&
+	    $rule->{'action'} !~ /reject/) {
 	    Log::do_log('debug2', 'Scenario %s is not purely closed.',
 		$self->{'title'});
 	    return 0;

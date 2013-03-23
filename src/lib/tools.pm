@@ -3218,8 +3218,6 @@ Clean all messages in spool $spool_dir older than $clean_delay.
 
 =back
 
-=back 
-
 =head3 Return 
 
 =over

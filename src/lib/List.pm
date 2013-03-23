@@ -5494,19 +5494,13 @@ sub get_scenario {
 }
 
 sub load_task_list {
-    my ($self, $action, $robot) = @_;
-    &Log::do_log('debug2', 'List::load_task_list(%s,%s)', $action, $robot);
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self = shift;
+    my $action = shift;
 
-    my $directory = $self->dir;
     my %list_of_task;
 
-    foreach my $dir (
-        "$directory/list_task_models",
-	Site->etc . "/$robot/list_task_models",
-	Site->etc . "/list_task_models",
-        Sympa::Constants::DEFAULTDIR . '/list_task_models'
-    ) {
-
+    foreach my $dir (@{$self->get_etc_include_path('list_task_models')}) {
 	next unless (-d $dir);
 
 	foreach my $file (<$dir/$action.*>) {
@@ -5517,16 +5511,20 @@ sub load_task_list {
 
 	    $list_of_task{$name}{'name'} = $name;
 
-	    my $titles = &List::_load_task_title($file);
+	    my $titles = List::_load_task_title($file);
 
 	    ## Set the title in the current language
-	    if (defined  $titles->{&Language::GetLang()}) {
-		$list_of_task{$name}{'title'} =
-		    $titles->{&Language::GetLang()};
-	    } elsif (defined $titles->{'gettext'}) {
+	    foreach my $lang (Language::ImplicatedLangs()) {
+		if (defined $titles->{$lang}) {
+		    $list_of_task{$name}{'title'} = $titles->{$lang};
+		    last;
+		}
+	    }
+	    next if defined $list_of_task{$name}{'title'};
+	    if (defined $titles->{'gettext'}) {
 		$list_of_task{$name}{'title'} = gettext($titles->{'gettext'});
 	    } elsif (defined $titles->{'us'}) {
-		$list_of_task{$name}{'title'} = gettext($titles->{'us'});
+		$list_of_task{$name}{'title'} = $titles->{'us'};
 	    } else {
 		$list_of_task{$name}{'title'} = $name;
 	    }
@@ -5538,20 +5536,28 @@ sub load_task_list {
 }
 
 sub _load_task_title {
+    Log::do_log('debug3', '(%s)', @_);
     my $file = shift;
-    &Log::do_log('debug3', 'List::_load_task_title(%s)', $file);
     my $title = {};
 
     unless (open TASK, $file) {
-	&Log::do_log('err', 'Unable to open file "%s"', $file);
+	Log::do_log('err', 'Unable to open file "%s": %s', $file, $!);
 	return undef;
     }
 
     while (<TASK>) {
 	last if /^\s*$/;
 
-	if (/^title\.([\w-]+)\s+(.*)\s*$/) {
-	    $title->{$1} = $2;
+	if (/^title\.gettext\s+(.*)\s*$/) {
+	    $title->{'gettext'} = $1;
+	} elsif (/^title\.us\s+(.*)\s*$/) {
+	    $title->{'us'} = $1;
+	} elsif (/^title\.([-.\w]+)\s+(.*)\s*$/) {
+	    my ($lang, $t) = ($1, $2);
+	    $lang = Language::CanonicLang($lang) || $lang;
+	    $title->{$lang} = $t;
+	} elsif (/^title\s+(\S.*?)\s*$/) { # new on 6.2a.34.
+	    $title->{'us'} = $1;
 	}
     }
 

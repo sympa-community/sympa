@@ -103,6 +103,8 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =head3 Calls 
 
+=over 4
+
 =item * check_owner_defined
 
 =item * install_aliases
