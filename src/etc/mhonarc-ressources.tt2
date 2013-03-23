@@ -649,9 +649,9 @@ Subject:strong
 ($tag$%|loc%$tag$)Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday($tag$%END%$tag$)
 </WEEKDAYS>
 
-($tag$% IF lang == 'cz' %$tag$)
+($tag$% IF lang == 'cs' %$tag$)
 <WEEKDAYSABR>
-Ne:Po:Út:St:Èt:Pá:So
+Ne:Po:Ãšt:St:ÄŒt:PÃ¡:So
 </WEEKDAYSABR>
 ($tag$% ELSIF lang == 'hu' %$tag$)
 <WEEKDAYSABR>
@@ -661,27 +661,35 @@ V:H:K:Sz:Cs:P:Szo
 <WEEKDAYSABR>
 P:M:T:K:N:R:L
 </WEEKDAYSABR>
+($tag$% ELSE %$tag$)
+<WEEKDAYSABR>
+($tag$%|loc%$tag$)Su:Mo:Tu:We:Th:Fr:Sa($tag$%END%$tag$)
+</WEEKDAYSABR>
 ($tag$% END %$tag$)
 
 <MONTHS>
 ($tag$%|loc%$tag$)January:February:March:April:May:June:July:August:September:October:November:December($tag$%END%$tag$)
 </MONTHS>
 
-($tag$% IF lang == 'cz' %$tag$)
+($tag$% IF lang == 'cs' %$tag$)
 <MONTHSABR>
-Led:Úno:Bøe:Dub:Kvì:Èern:Èerv:Srp:Záø:Øíj:List:Pro
+Led:Ãšno:BÅ™e:Dub:KvÄ›:ÄŒern:ÄŒerv:Srp:ZÃ¡Å™:Å˜Ã­j:List:Pro
 </MONTHSABR>
 ($tag$% ELSIF lang == 'hu' %$tag$)
 <MONTHSABR>
-Jan:Feb:Már:Ápr:Máj:Jún:Júl:Aug:Szep:Okt:Nov:Dec
+Jan:Feb:MÃ¡r:Ãpr:MÃ¡j:JÃºn:JÃºl:Aug:Szep:Okt:Nov:Dec
 </MONTHSABR>
-($tag$% ELSIF lang == 'hu' %$tag$)
+($tag$% ELSIF lang == 'et' %$tag$)
 <MONTHSABR>
-Jan:Veeb:Mär:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
+Jan:Veeb:MÃ¤r:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
+</MONTHSABR>
+($tag$% ELSE %$tag$)
+<MONTHSABR>
+($tag$%|loc%$tag$)Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec($tag$%END%$tag$)
 </MONTHSABR>
 ($tag$% END %$tag$)
 
-($tag$% IF lang == 'cz' %$tag$)
+($tag$% IF lang == 'cs' %$tag$)
 <UseLocalTime>
 
 <MSGLOCALDATEFMT>
