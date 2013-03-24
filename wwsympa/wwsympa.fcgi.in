@@ -2621,14 +2621,17 @@ sub send_html {
 
     ## Send HTML headers
     if ($param->{'date'}) {
-	Language::PushLang("en");
-	printf "Date: %s\n", &POSIX::strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime(time));
+	Language::PushLang('C');
+	printf "Date: %s\n",
+	    POSIX::strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime(time));
 	Language::PopLang();
     }
     ## If we set the header indicating the last time the file to send was modified, add an HTTP header (limitate web harvesting).
     if ($param->{'header_date'}) {
-	Language::PushLang("en");
-	printf "Last-Modified: %s\n", &POSIX::strftime('%a, %d %b %Y %H:%M:%S GMT', gmtime($param->{'header_date'}));
+	Language::PushLang('C');
+	printf "Last-Modified: %s\n",
+	    POSIX::strftime('%a, %d %b %Y %H:%M:%S GMT',
+		gmtime($param->{'header_date'}));
 	Language::PopLang();
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;

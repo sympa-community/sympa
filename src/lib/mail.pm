@@ -119,7 +119,8 @@ sub mail_file {
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
 
-    &Log::do_log('debug', 'mail::mail_file(%s, %s, %s)', $filename, $rcpt, $sign_mode);
+    Log::do_log('debug', '(%s, %s, ..., sign_mode=%s)',
+	$filename, $rcpt, $sign_mode);
     my ($to,$message_as_string);
 
     ## boolean
@@ -136,20 +137,21 @@ sub mail_file {
     }
 
     ## Charset for encoding
-    &Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
-    $data->{'charset'} ||= &Language::GetCharset();
-    &Language::PopLang() if defined $data->{'lang'};
+    Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
+    $data->{'charset'} ||= Language::GetCharset();
+    Language::PopLang() if defined $data->{'lang'};
 
     ## TT2 file parsing 
     if ($filename =~ /\.tt2$/) {
 	my $output;
 	my @path = split /\//, $filename;	   
-	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
-	&tt2::parse_tt2($data, $path[$#path], \$output);
-	&Language::PopLang() if (defined $data->{'lang'});
+
+	Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
+	tt2::parse_tt2($data, $path[$#path], \$output);
+	Language::PopLang() if defined $data->{'lang'};
+
 	$message_as_string .= join('',$output);
 	$header_possible = 1;
-
     }else { # or not
 	$message_as_string .= $data->{'body'};
     }
@@ -160,14 +162,18 @@ sub mail_file {
 	    last if ($line=~/^\s*$/);  
 	    if ($line=~/^[\w-]+:\s*/) { ## A header field
 		$existing_headers=1;
-	    }elsif ($existing_headers && ($line =~ /^\s/)) { ## Following of a header field
+	    }elsif ($existing_headers && ($line =~ /^\s/)) {
+		## Following of a header field
 		next;
 	    }else{
 		last;
 	    }
 	    
-	    foreach my $header ('date', 'to','from','subject','reply-to','mime-version', 'content-type','content-transfer-encoding') {
-		if ($line=~/^$header:/i) {
+	    foreach my $header (
+		qw(date to from subject reply-to
+		mime-version content-type content-transfer-encoding)
+	    ) {
+		if ($line=~/^$header\s*:/i) {
 		    $header_ok{$header} = 1;
 		    last;
 		}
@@ -189,7 +195,7 @@ sub mail_file {
 	}
 	$tzoff = sprintf '%s%02d%02d',
 			 $sign, int($tzoff / 3600), int($tzoff / 60) % 60;
-	Language::PushLang('en');
+	Language::PushLang('C');
 	$headers .= 'Date: ' .
 		    POSIX::strftime("%a, %d %b %Y %H:%M:%S $tzoff",
 				    localtime $now) .
@@ -255,10 +261,13 @@ sub mail_file {
     unless ($header_ok{'content-transfer-encoding'}) {
 	$headers .= "Content-Transfer-Encoding: 8bit\n"; 
     }
+
     ## Determine what value the Auto-Submitted header field should take
     ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
-    ## the header field can have one of the following values : auto-generated, auto-replied, auto-forwarded
-    ## The header should not be set when wwsympa sends a command/mail to sympa.pl through its spool
+    ## the header field can have one of the following values :
+    ## auto-generated, auto-replied, auto-forwarded
+    ## The header should not be set when wwsympa sends a command/mail to
+    ## sympa.pl through its spool
     unless ($data->{'not_auto_submitted'} ||  $header_ok{'auto_submitted'}) {
       ## Default value is 'auto-generated'
       my $header_value = $data->{'auto_submitted'} || 'auto-generated';

@@ -142,6 +142,7 @@ my %lang2locale = (
     'oc' => 'oc_FR',
     'pl' => 'pl_PL',
     'pt' => 'pt_PT',
+    'rm' => 'rm_CH',    # CLDR
     'ro' => 'ro_RO',
     'ru' => 'ru_RU',
     'sv' => 'sv_SE',
