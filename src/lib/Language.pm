@@ -794,7 +794,7 @@ sub sympa_dgettext {
 	## encoding, ...).
 	## Note: currently, charset is always 'utf-8'; encoding won't be used.
 	my $var = $1;
-	foreach (split /\n/, &Locale::Messages::gettext('')) {
+	foreach (split /\n/, Locale::Messages::gettext('')) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
 		    my $language = $1;
@@ -815,7 +815,7 @@ sub sympa_dgettext {
 	return '';
     }
 
-    return &Locale::Messages::dgettext($textdomain, @param);
+    return Locale::Messages::dgettext($textdomain, $param[0]);
 
 }
 
@@ -849,7 +849,7 @@ sub gettext {
 	## encoding,...)
 	## Note: currently charset is always 'utf-8'; encoding won't be used.
 	my $var = $1;
-	foreach (split /\n/, &Locale::Messages::gettext('')) {
+	foreach (split /\n/, Locale::Messages::gettext('')) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
 		    my $language = $1;
@@ -870,7 +870,7 @@ sub gettext {
 	return '';
     }
 
-    return Locale::Messages::gettext(@param);
+    return Locale::Messages::gettext($param[0]);
 
 }
 
