@@ -1077,7 +1077,7 @@ my $birthday = time ;
 
     Log::set_log_level(Site->log_level);
     # auto-detect browsers' lang.
-    Language::SetLang(Site->best_language($ENV{'HTTP_ACCEPT_LANGUAGE'}));
+    Language::SetLang(Site->best_language());
 
      ## Empty cache of the List.pm module
      &List::init_list_cache();
@@ -1496,12 +1496,15 @@ my $birthday = time ;
 	    $param->{'list_lang'} = $list->lang
 		if ref $list eq 'List';
 	    $param->{'user_lang'} = $param->{'user'}{'lang'}
-		if defined $param->{'user'};
-	    $param->{'lang'} = ($list || $robot)->best_language(
+		if ref $param->{'user'};
+	    foreach my $lang (
 		$session->{'lang'}, $param->{'user_lang'},
-		$ENV{'HTTP_ACCEPT_LANGUAGE'}
-	    );
-	    Language::SetLang($param->{'lang'});
+		$param->{'list_lang'}, $robot->lang, $robot->best_language()
+	    ) {
+		next unless $lang;
+		last if $param->{'lang'} = Language::SetLang(
+		    $lang, 'just_try' => 1);
+	    }
 
 	    ## list topics	     
 	    export_topics($robot);
@@ -1612,8 +1615,18 @@ my $birthday = time ;
      $param->{'action_type'} = $action_type{$param->{'action'}};
 
      $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} eq 'serveradmin'));
-     $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
-     $param->{'lang'} ||= $robot->lang;
+
+    $param->{'user_lang'} = $param->{'user'}{'lang'}
+	if ref $param->{'user'};
+    $param->{'list_lang'} = $list->lang
+	if ref $list eq 'List';
+    foreach my $lang (
+	$param->{'lang'}, $param->{'user_lang'}, $param->{'list_lang'},
+	$robot->lang, $robot->best_language()
+    ) {
+	next unless $lang;
+	last if $param->{'lang'} = Language::SetLang($lang, 'just_try' => 1);
+    }
 
      if ($param->{'list'}) {
 	 $param->{'list_title'} = $list->subject;
@@ -3479,9 +3492,17 @@ sub do_login {
      if ($session->{'lang'}) {   #  user did choose a specific language before being logged. Apply it as a user pref.
 	 User::update_global_user($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
 	 $param->{'lang'} = $session->{'lang'};
-     }else{                      # user did not choose a specific language, apply user pref for this session. 
-	 $param->{'lang'} = $user->{'lang'} || ($list || $robot)->lang;
-	 $session->{'lang'} = $param->{'lang'} ;
+     }else{
+	# user did not choose a specific language, apply user pref for this
+	# session. 
+	foreach my $lang (
+	    $user->{'lang'}, ($list || $robot)->lang, $robot->best_language()
+	) {
+	    next unless $lang;
+	    last if $param->{'lang'} = Language::SetLang($lang,
+		'just_try' => 1);
+	}
+	$session->{'lang'} = $param->{'lang'} ;
      }
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
@@ -5134,8 +5155,10 @@ sub do_setpref {
      }
 
     ## Set session language and user language to new value
-    if ($in{'lang'}) {
-	$session->{'lang'} = $robot->best_language($in{'lang'});
+    my $current_lang = Language::GetLang();
+    if ($in{'lang'} and Language::SetLang($in{'lang'})) {
+	$session->{'lang'} = Language::GetLang();
+	Language::SetLang($current_lang);
     }
     $param->{'lang'} = $session->{'lang'};
 
@@ -16857,8 +16880,10 @@ sub do_search_user {
 sub do_set_lang {
      &wwslog('info', 'do_set_lang(%s)', $in{'lang'});
 
-    if ($in{'lang'}) {
-	$session->{'lang'} = $robot->best_language($in{'lang'});
+    my $current_lang = Language::GetLang();
+    if ($in{'lang'} and Language::SetLang($in{'lang'})) {
+	$session->{'lang'} = Language::GetLang();
+	Language::SetLang($current_lang);
     }
     $param->{'lang'} = $session->{'lang'};
 

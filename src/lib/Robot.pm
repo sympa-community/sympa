@@ -729,9 +729,9 @@ sub _get_topic_current_title {
 	}
     }
     if ($topic->{'title'}{'gettext'}) {
-	return gettext($topic->{'title'}{'gettext'});
+	return Language::gettext($topic->{'title'}{'gettext'});
     } elsif ($topic->{'title'}{'default'}) {
-	return gettext($topic->{'title'}{'default'});
+	return Language::gettext($topic->{'title'}{'default'});
     } else {
 	return undef;
     }

@@ -293,19 +293,6 @@ sub ImplicatedLangs {
     my @implicated_langs = ();
     my %implicated_langs = ();
 
-    ## Workaround:
-    ## - "zh-Hans-CN", "zh-Hant-TW", ... may occasionally be identified with
-    ##   "zh-CN", "zh-TW" etc.  Add them to implication list.
-    @langs = map {
-	my $l = $_;
-	if ($l =~ s/^(zh)-(Hans)-(CN|SG)\b/$1-$3/i or
-	    $l =~ s/^(zh)-(Hant)-(HK|MO|TW)\b/$1-$3/i) {
-	    ($_, $l);
-	} else {
-	    ($_);
-	}
-    } @langs;
-
     foreach my $lang (@langs) {
 	my @subtags = CanonicLang($lang);
 	while (@subtags) {
@@ -314,6 +301,19 @@ sub ImplicatedLangs {
 		push @implicated_langs, $l;
 		$implicated_langs{$l} = 1;
 	    }
+
+	    ## Workaround:
+	    ## - "zh-Hans-CN", "zh-Hant-TW", ... may occasionally be
+	    ##   identified with "zh-CN", "zh-TW" etc.  Add them to
+	    ##   implication list.
+	    if ($l =~ /^(zh)-(Hans)-(CN|SG)\b/ or
+		$l =~ /^(zh)-(Hant)-(HK|MO|TW)\b/) {
+		$l = join '-', grep {$_} @subtags[0, 2 .. $#subtags];
+		unless ($implicated_langs{$l}) {
+		    push @implicated_langs, $l;
+		    $implicated_langs{$l} = 1;
+		}
+	    }	
 
 	    1 until pop @subtags;
 	}
@@ -450,7 +450,7 @@ sub PopLang {
 
 =over 4
 
-=item SetLang ( LANG )
+=item SetLang ( LANG, [ OPT =E<gt> VAL, ... ] )
 
 I<Function>.
 Sets current language along with translation catalog and locale.
@@ -471,6 +471,7 @@ This function of Sympa 3.2a.33 or earlier returned old style "locale" names.
 sub SetLang {
     Log::do_log('debug2', '(%s)', @_);
     my $lang = shift;
+    my %opts = @_;
     my $locale;
 
     ## Use default lang if an empty parameter
@@ -486,12 +487,13 @@ sub SetLang {
 	$locale = $lang;
     } else {
 	unless ($lang = CanonicLang($lang) and $locale = Lang2Locale($lang)) {
-	    Log::do_log('err', 'unknown language');
+	    Log::do_log('err', 'unknown language')
+		unless $opts{'just_try'};
 	    return undef;
 	}
     }
 
-    unless (SetLocale($locale)) {
+    unless (SetLocale($locale, %opts)) {
 	SetLocale($current_locale || 'C');    # restore POSIX locale
 	return undef;
     }
@@ -509,6 +511,7 @@ sub SetLang {
 sub SetLocale {
     Log::do_log('debug3', '(%s)', @_);
     my $locale = shift;
+    my %opts = @_;
 
     ## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
     my ($loc, $mod) = split /(?=\@)/, $locale, 2;
@@ -570,7 +573,8 @@ sub SetLocale {
 	unless (Locale::Messages::gettext('')) {
 	    Log::do_log('err',
 		'Failed to bind translation catalog for locale "%s"',
-		$locale);
+		$locale
+	    ) unless $opts{'just_try'};
 	    return undef;
 	}
     }
@@ -871,7 +875,6 @@ sub gettext {
     }
 
     return Locale::Messages::gettext($param[0]);
-
 }
 
 =over 4
