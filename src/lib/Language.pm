@@ -897,7 +897,7 @@ months etc.) will be taken from the catalog.
 my %date_part_names = (
     '%a' => {
 	'index'      => 6,
-	'gettext_id' => 'Su:Mo:Tu:We:Th:Fr:Sa'
+	'gettext_id' => 'Sun:Mon:Tue:Wed:Thu:Fri:Sat'
     },
     '%A' => {
 	'index' => 6,
