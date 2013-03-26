@@ -1386,7 +1386,7 @@ our @params = (
 	'gettext_id' =>
 	    'Javascript excerpt that enables and configures the WYSIWYG HTML editor.',
 	'vhost'   => '1',
-	'default' => 'tinyMCE.init({mode : "exact",elements : "body"});',
+	'default' => 'tinyMCE.init({mode:"exact",elements:"body",language:lang.toLowerCase()});',
 	'file'    => 'wwsympa.conf',
     },
     {   'name'     => 'htmlarea_url',

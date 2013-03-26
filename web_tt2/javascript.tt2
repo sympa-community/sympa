@@ -1,15 +1,17 @@
 <!-- $Id$ -->
-
-<!-- DEVELOPMENT WARNING
- //Don't add javascript to this file, except if you need to initialize variables using TT2 parsing.
- //Use the src/etc/script/js/sympa.js file instead to write your scripts. -->
-
+[%#
+## DEVELOPMENT WARNING
+## Don't add javascript to this file, except if you need to initialize
+## variables using TT2 parsing.
+## Use the src/etc/script/js/sympa.js file instead to write your scripts.
+#%]
 <script type="text/javascript">
 
 // this script only contains variable initializations.
 
 // Miscellaneous vars
 var path_cgi = '[% path_cgi %]/';
+var lang = '[% lang %]';
 
 </script>
 
@@ -58,10 +60,10 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 <link rel="stylesheet" type="text/css" href="[% static_content_url %]/js/jquery.jqplot.css" />
 <script type="text/javascript" src="[% static_content_url %]/js/sympa.js"></script>
 
-[% IF use_html_editor %]
+[% IF use_html_editor -%]
 <script type="text/javascript" src="[% html_editor_url %]"></script>
 <script type="text/javascript">
 [% html_editor_init %]
 </script>
-[% END %]
+[% END -%]
 <!-- end javascript.tt2 -->
