@@ -736,7 +736,7 @@ sub send_dsn {
 
     my $header = $message->{'msg'}->head->as_string;
 
-    Language::PushLang('C');
+    Language::PushLang('en');
     my $date = POSIX::strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime time);
     Language::PopLang();
 

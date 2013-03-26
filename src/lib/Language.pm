@@ -108,10 +108,11 @@ my %language_equiv = (
 
 ## The map to get appropriate POSIX locale name from language code.
 ## Why this is required is that on many systems locales often have canonic
-## "ll_RR.ENCODING" names only.
+## "ll_RR.ENCODING" names only.  n.b. This format can not express all
+## languages in proper way, e.g. Esperanto, "eo".
 ##
 ## This map is also used to convert old-style Sympa "locales" to language
-## tags.
+## tags ('en'/'en_US' is special case).
 my %lang2locale = (
     'af' => 'af_ZA',
     'ar' => 'ar_SY',
@@ -120,8 +121,6 @@ my %lang2locale = (
     'ca' => 'ca_ES',
     'cs' => 'cs_CZ',
     'de' => 'de_DE',
-    'us' => 'en_US',
-    'en' => 'en_US',
     'el' => 'el_GR',
     'es' => 'es_ES',
     'et' => 'et_EE',
@@ -132,10 +131,10 @@ my %lang2locale = (
     'hu' => 'hu_HU',
     'id' => 'id_ID',
     'it' => 'it_IT',
+    'ja' => 'ja_JP',
     'ko' => 'ko_KR',
     'la' => 'la_VA',    # from OpenOffice.org
     'ml' => 'ml_IN',
-    'ja' => 'ja_JP',
     'nb' => 'nb_NO',
     'nn' => 'nn_NO',
     'nl' => 'nl_NL',
@@ -146,9 +145,7 @@ my %lang2locale = (
     'ro' => 'ro_RO',
     'ru' => 'ru_RU',
     'sv' => 'sv_SE',
-    'cn' => 'zh_CN',
     'tr' => 'tr_TR',
-    'tw' => 'zh_TW',
     'vi' => 'vi_VN',
 );
 
@@ -314,7 +311,7 @@ sub ImplicatedLangs {
 		    push @implicated_langs, $l;
 		    $implicated_langs{$l} = 1;
 		}
-	    }	
+	    }
 
 	    1 until pop @subtags;
 	}
@@ -460,7 +457,8 @@ Returns canonic language tag, or C<undef> if failed.
 LANG is language tag.
 Old style "locale" by Sympa (see also L</Compatibility>) will also be
 accepted.
-Additionally, special value C<"C"> to set "C" locale is allowed.
+The language tag C<'en'> is special:
+it is used to set L<'C'> locale and would success always.
 
 Note:
 This function of Sympa 3.2a.33 or earlier returned old style "locale" names.
@@ -483,8 +481,8 @@ sub SetLang {
 	return undef;
     }
 
-    ## 'C' and 'POSIX' are not correct language tags but will be allowed.
-    if ($lang eq 'C' or $lang eq 'POSIX') {
+    ## 'en' is always allowed.
+    if ($lang eq 'en') {
 	$locale = $lang;
     } else {
 	unless ($lang = CanonicLang($lang) and $locale = Lang2Locale($lang)) {
@@ -495,7 +493,7 @@ sub SetLang {
     }
 
     unless (SetLocale($locale, %opts)) {
-	SetLocale($current_locale || 'C');    # restore POSIX locale
+	SetLocale($current_locale || 'en');    # restore POSIX locale
 	return undef;
     }
 
@@ -512,43 +510,51 @@ sub SetLang {
 sub SetLocale {
     Log::do_log('debug3', '(%s)', @_);
     my $locale = shift;
-    my %opts = @_;
+    my %opts   = @_;
 
-    ## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
-    my ($loc, $mod) = split /(?=\@)/, $locale, 2;
-    my $machloc = $loc;
-    $machloc =~ s/^([a-z]{2,3})(?!_)/$lang2locale{$1} || $1/e;
-    $mod ||= '';
+    ## Special case: 'en' is an alias of 'C' locale.
+    if ($locale eq 'en') {
+	$locale = 'C';
+	POSIX::setlocale(POSIX::LC_ALL(),  'C');
+	POSIX::setlocale(POSIX::LC_TIME(), 'C');
+    } else {
+	## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
+	my ($loc, $mod) = split /(?=\@)/, $locale, 2;
+	my $machloc = $loc;
+	$machloc =~ s/^([a-z]{2,3})(?!_)/$lang2locale{$1} || $1/e;
+	$mod ||= '';
 
-    ## Set POSIX locale
-    foreach my $type (POSIX::LC_ALL(), POSIX::LC_TIME()) {
-	my $success = 0;
-	my @try;
-	## Add codeset.
-	## UpperCase required for FreeBSD; dashless required on HP-UX;
-	## null codeset is last resort.
-	foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
-	    ## Trancate locale similarly in gettext: full locale, and omit
-	    ## region then modifier.
-	    push @try,
-		map { sprintf $_, $cs }
-		("$machloc%s$mod", "$loc%s$mod", "$loc%s");
-	}
-	foreach my $try (@try) {
-	    if (POSIX::setlocale($type, $try)) {
-		$success = 1;
-		last;
+	## Set POSIX locale
+	foreach my $type (POSIX::LC_ALL(), POSIX::LC_TIME()) {
+	    my $success = 0;
+	    my @try;
+
+	    ## Add codeset.
+	    ## UpperCase required for FreeBSD; dashless required on HP-UX;
+	    ## null codeset is last resort.
+	    foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
+		## Trancate locale similarly in gettext: full locale, and omit
+		## region then modifier.
+		push @try,
+		    map { sprintf $_, $cs }
+		    ("$machloc%s$mod", "$loc%s$mod", "$loc%s");
 	    }
-	}
-	unless ($success) {
-	    POSIX::setlocale($type, 'C');    # reset POSIX locale
-	    ##FIXME: 'warn' is better.
-	    Log::do_log(
-		'notice',
-		'Failed to set locale "%s". You might want to extend available locales',
-		$locale
-	    ) unless $warned_locale{$locale};
-	    $warned_locale{$locale} = 1;
+	    foreach my $try (@try) {
+		if (POSIX::setlocale($type, $try)) {
+		    $success = 1;
+		    last;
+		}
+	    }
+	    unless ($success) {
+		POSIX::setlocale($type, 'C');    # reset POSIX locale
+		##FIXME: 'warn' is better.
+		Log::do_log(
+		    'notice',
+		    'Failed to set locale "%s". You might want to extend available locales',
+		    $locale
+		) unless $warned_locale{$locale};
+		$warned_locale{$locale} = 1;
+	    }
 	}
     }
 
@@ -558,7 +564,7 @@ sub SetLocale {
     ##   However, current Sympa provides "nb_NO" NLS catalog.
     $locale = 'nb_NO' if $locale eq 'nb';
 
-    ## Set Locale::Messages context (gettext locale).
+    ## Set gettext locale (Locale::Messages context).
     $ENV{'LANGUAGE'} = $locale;
     ## Define what catalogs are used
     Locale::Messages::textdomain("sympa");
@@ -570,12 +576,11 @@ sub SetLocale {
     bind_textdomain_codeset web_help => 'utf-8';
 
     ## Check if catalog is loaded.
-    if ($locale and $locale ne 'C' and $locale ne 'POSIX') {
+    if ($locale and $locale ne 'C') {
 	unless (Locale::Messages::gettext('')) {
 	    Log::do_log('err',
-		'Failed to bind translation catalog for locale "%s"',
-		$locale
-	    ) unless $opts{'just_try'};
+		'Failed to bind translation catalog for locale "%s"', $locale)
+		unless $opts{'just_try'};
 	    return undef;
 	}
     }
@@ -710,7 +715,7 @@ sub Locale2Lang_old {
     if ($old_lang eq 'en_US') {    # special case by historic reason.
 	return 'en';
     } elsif ($lang = {reverse %lang2locale}->{$old_lang}) {
-	return $language_equiv{$lang} || $lang;
+	return $lang;
     } elsif (scalar @parts > 1 and length $parts[1]) {
 	return join '-', lc $parts[0], uc $parts[1];
     } else {
@@ -793,17 +798,23 @@ sub sympa_dgettext {
     ## translate is empty
     if ($param[0] eq '') {
 	return '';
-
     } elsif ($param[0] =~ '^_(\w+)_$') {
 	## return meta information on the catalog (language, charset,
 	## encoding, ...).
 	## Note: currently, charset is always 'utf-8'; encoding won't be used.
 	my $var = $1;
-	foreach (split /\n/, Locale::Messages::gettext('')) {
+	my $metadata;
+	## Special case: 'en' is null locale
+	if ($current_lang eq 'en') {
+	    $metadata = 'Language-Team: English';
+	} else {
+	    $metadata = Locale::Messages::gettext('');
+	}
+	foreach (split /\n/, $metadata) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
 		    my $language = $1;
-		    $language =~ s/\<\S+\>//;
+		    $language =~ s/\s*\<\S+\>//;
 
 		    return $language;
 		}
@@ -854,7 +865,14 @@ sub gettext {
 	## encoding,...)
 	## Note: currently charset is always 'utf-8'; encoding won't be used.
 	my $var = $1;
-	foreach (split /\n/, Locale::Messages::gettext('')) {
+	my $metadata;
+	## Special case: 'en' is null locale
+	if ($current_lang eq 'en') {
+	    $metadata = 'Language-Team: English';
+	} else {
+	    $metadata = Locale::Messages::gettext('');
+	}
+	foreach (split /\n/, $metadata) {
 	    if ($var eq 'language') {
 		if (/^Language-Team:\s*(.+)$/i) {
 		    my $language = $1;
@@ -926,9 +944,7 @@ sub gettext_strftime {
     my $posix_locale = POSIX::setlocale(POSIX::LC_TIME());
 
     ## if lang has not been set, fallback to native strftime().
-    unless ($current_lang and
-	$current_lang ne 'C' and
-	$current_lang ne 'POSIX') {
+    unless ($current_lang and $current_lang ne 'en') {
 	POSIX::setlocale(POSIX::LC_TIME(), 'C');
 	my $datestr = POSIX::strftime($format, @_);
 	POSIX::setlocale(POSIX::LC_TIME(), $posix_locale);
