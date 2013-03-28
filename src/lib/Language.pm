@@ -37,6 +37,7 @@ BEGIN {
     ## Using the Pure Perl implementation of gettext
     ## This is required on Solaris : native implementation of gettext does not
     ## map ll_RR with ll
+    ## ToDo: Use 'gettext_dumb' by libintl-perl 1.23 or later.
     Locale::Messages->select_package('gettext_pp');
 }
 
@@ -109,10 +110,10 @@ my %language_equiv = (
 ## The map to get appropriate POSIX locale name from language code.
 ## Why this is required is that on many systems locales often have canonic
 ## "ll_RR.ENCODING" names only.  n.b. This format can not express all
-## languages in proper way, e.g. Esperanto, "eo".
+## languages in proper way, e.g. Common Arabic ("ar"), Esperanto ("eo").
 ##
 ## This map is also used to convert old-style Sympa "locales" to language
-## tags ('en'/'en_US' is special case).
+## tags ('en' is special case. cf. SetLang() & SetLocale()).
 my %lang2locale = (
     'af' => 'af_ZA',
     'ar' => 'ar_SY',
@@ -481,9 +482,9 @@ sub SetLang {
 	return undef;
     }
 
-    ## 'en' is always allowed.
+    ## 'en' is always allowed.  Use 'en-US' to provide NLS on English.
     if ($lang eq 'en') {
-	$locale = $lang;
+	$locale = 'en';
     } else {
 	unless ($lang = CanonicLang($lang) and $locale = Lang2Locale($lang)) {
 	    Log::do_log('err', 'unknown language')
@@ -504,15 +505,16 @@ sub SetLang {
     return $lang;
 }
 
-# Internal function.
-# Sets POSIX locale and gettext locale.  LOCALE is gettext locale name.
-# Note: Use SetLang().
+## Internal function.
+## Sets POSIX locale and gettext locale.  LOCALE is gettext locale name.
+## Note: Use SetLang().
 sub SetLocale {
     Log::do_log('debug3', '(%s)', @_);
     my $locale = shift;
     my %opts   = @_;
 
-    ## Special case: 'en' is an alias of 'C' locale.
+    ## Special case: 'en' is an alias of 'C' locale.  Use 'en_US' for real
+    ## English.
     if ($locale eq 'en') {
 	$locale = 'C';
 	POSIX::setlocale(POSIX::LC_ALL(),  'C');
@@ -712,9 +714,7 @@ sub Locale2Lang_old {
     my @parts = split /[\W_]/, $old_lang;
     my $lang;
 
-    if ($old_lang eq 'en_US') {    # special case by historic reason.
-	return 'en';
-    } elsif ($lang = {reverse %lang2locale}->{$old_lang}) {
+    if ($lang = {reverse %lang2locale}->{$old_lang}) {
 	return $lang;
     } elsif (scalar @parts > 1 and length $parts[1]) {
 	return join '-', lc $parts[0], uc $parts[1];
