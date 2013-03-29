@@ -17,9 +17,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+=encoding utf-8
+
 =head1 NAME
 
-sympa_wizard.pl - help perform Sympa initial setup
+sympa_wizard.pl - help performing Sympa initial setup
     
 =head1 SYNOPSIS
 
@@ -29,17 +31,21 @@ sympa_wizard.pl - help perform Sympa initial setup
 
 Edit current Sympa configuration
 
+=item sympa_wizard.pl --check
+
+Check CPAN modules needed for running Sympa
+
 =item sympa_wizard.pl [--target file] --create
 
 Creates a new sympa.conf configuration file
 
-=item sympa_wizard.pl --check
-
-check CPAN modules needed for running Sympa
-
 =item sympa_wizard.pl --help
 
 Display usage instructions
+
+=item sympa_wizard.pl --version
+
+Print version number.
 
 =back
 
@@ -75,17 +81,24 @@ BEGIN {
 ## sympa configuration file
 my $sympa_conf = Sympa::Constants::CONFIG;
 
+## version string.
+my $version_string =
+    sprintf "Sympa version is %s\n", Sympa::Constants::VERSION;
+
 my %options;
 GetOptions(
     \%options, 
     'target=s',
     'create:s', # parameter is optional
     'check',
-    'help'
+    'help',
+    'version'
 );
 
 if ($options{help}) {
     pod2usage();
+} elsif ($options{'version'}) {
+    print $version_string;
 } elsif (defined $options{create}) {
     create_configuration();
 } elsif ($options{check}) {

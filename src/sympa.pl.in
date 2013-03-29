@@ -309,9 +309,14 @@ $main::options{'log_to_stderr'} = 1
     $main::options{'test_database_message_buffer'} ||
     $main::options{'conf_2_db'});
 
-## Health check: --health_check option
+if ($main::options{'help'}) {
+    print pod2usage(0);
+} elsif ($main::options{'version'}) {
+    print $version_string;
+    exit 0;
+} elsif ($main::options{'health_check'}) {
+    ## Health check
 
-if (!$main::options{'help'} and $main::options{'health_check'}) {
     ## Load configuration file. Ignoring database config for now: it avoids
     ## trying to load a database that could not exist yet.
     unless (Site->load('no_db' => 1, 'force_reload' => 1)) {
@@ -590,8 +595,6 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	}
 
 	exit 0;
-    } elsif ($main::options{'help'}) {
-	print pod2usage(0);
     } elsif ($main::options{'make_alias_file'}) {
 	my $all_lists = List::get_lists();
 
@@ -612,10 +615,6 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	printf
 	    "Sympa aliases file %s was made.  You probably need to install it in your SMTP engine\n",
 	    $aliases_file;
-
-	exit 0;
-    } elsif ($main::options{'version'}) {
-	print $version_string;
 
 	exit 0;
     } elsif ($main::options{'md5_digest'}) {

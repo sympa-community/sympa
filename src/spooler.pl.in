@@ -147,6 +147,16 @@ $main::options{'foreground'} = 1
 
 $main::options{'log_to_stderr'} = 1 unless ($main::options{'batch'});
 
+
+if ($main::options{'help'}) {
+    pod2usage(0);
+} elsif ($main::options{'version'}) {
+    print $version_string;
+    exit 0;
+}
+
+## Main loop
+
 my %loop_info;
 
 # this loop is run foreach HUP signal received
@@ -307,14 +317,10 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	## Most initializations have now been done.
 	Log::do_log('notice', "Sympa spooler %s started",
 	    Sympa::Constants::VERSION);
-	## Check for several files.
+
+	## ToDo: Check for several files.
 	## Prevent that 2 processes perform checks at the same time...
-	if ($main::options{'help'}) {
-	    pod2usage(0);
-	} elsif ($main::options{'version'}) {
-	    print $version_string;
-	    exit 0;
-	}
+
 	## Do we have right access in the directory
 	if ($main::options{'keepcopy'}) {
 	    if (!-d $main::options{'keepcopy'}) {
