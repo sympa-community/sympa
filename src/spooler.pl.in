@@ -20,11 +20,71 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+=encoding utf-8
+
+=head1 NAME
+
+spooler.pl -- Sympa spooler
+
+=head1 SYNOPSIS
+
+   spooler.pl [OPTIONS]
+
+=head1 DESCRIPTION
+
+This daemon is the Sympa spooler that load into database (table spool_table)
+messages from incoming spool.
+
+=head2 Options
+
+=over 4
+
+=item C<-d, --debug>
+
+Sets Sympa in debug mode.
+
+=item C<-f, --config=FILE>
+
+Uses an alternative configuration file.
+
+=item C<--foreground>
+
+The process remains attached to the TTY.
+
+=item C<-k, --keepcopy=dir>
+
+Keep a copy of incoming message.
+
+=item C<--log_level=LEVEL>
+
+Sets Sympa log level.
+
+=item C<--queue=PATH_TO_SPOOL>
+
+Override C<queue> Sympa parameter in order to choose spool location.
+
+=item C<-h, --help>
+
+Print this help.
+
+=item C<-v, --version>
+
+Print version number.
+
+=back
+
+=head1 AUTHORS
+
+Sympa developers and contributors.
+
+=cut
+
 use strict;
 use warnings;
 use lib '--modulesdir--';
 use File::Copy;
 use Getopt::Long;
+use Pod::Usage;
 # tentative
 use Data::Dumper;
 
@@ -51,7 +111,7 @@ use Sympaspool;
 #use SQLSource;
 
 ## Internal tuning
-# delay between each read of the digestqueue
+# delay between each read of the digest queue
 my $digestsleep = 5;
 
 ## Init random engine
@@ -61,22 +121,6 @@ my $version_string =
     sprintf("Sympa version is %s\n", Sympa::Constants::VERSION);
 
 my $daemon_name = Log::set_daemon($0);
-
-my $usage_string = "Usage:
-   $0 [OPTIONS]
-
-Options:
-   -d, --debug                           : sets Sympa in debug mode 
-   -f, --config=FILE                     : uses an alternative configuration file
-   --foreground                          : the process remains attached to the TTY
-   -k, --keepcopy=dir                    : keep a copy of incoming message
-   --log_level=LEVEL                     : sets Sympa log level
-   --queue=PATH_TO_SPOOL                 : overright queue sympa parameter in order to choose spool location.
-   -h, --help                            : print this help
-   -v, --version                         : print version number
-
-This demon is the Sympa spooler that load into database (table spool_table) messages from incomming spool
-";
 
 ## Check --dump option
 my %options;
@@ -115,7 +159,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     ## Load configuration file
     unless (Robot::get_robots()) {
 	printf STDERR
-	    "Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	    "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
 	    Conf::get_sympa_conf();
 	exit 1;
     }
@@ -253,7 +297,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) &&
 	    ($< == (getpwnam(Sympa::Constants::USER))[2])) {
 	    Log::fatal_err(
-		"Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+		"Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
 	    );
 	}
 
@@ -266,8 +310,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	## Check for several files.
 	## Prevent that 2 processes perform checks at the same time...
 	if ($main::options{'help'}) {
-	    print $usage_string;
-	    exit 0;
+	    pod2usage(0);
 	} elsif ($main::options{'version'}) {
 	    print $version_string;
 	    exit 0;
@@ -526,3 +569,4 @@ sub sighup {
     $signal = 'hup';
 }
 
+## END of spooler.pl

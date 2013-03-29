@@ -21,15 +21,179 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+=encoding utf-8
+
+=head1 NAME
+
+sympa.pl - Sympa master daemon
+
+=head1 SYNOPSIS
+
+   sympa.pl [OPTIONS]
+
+=head1 DESCRIPTION
+
+Sympa is a mailing lists manager and comes with a complete (user and admin)
+Web interface.  Sympa can be linked to an LDAP directory or an RDBMS to 
+create dynamic mailing lists.
+Sympa provides S/MIME and HTTPS based authentication and encryption.
+
+=head2 Options
+
+=over 4
+
+=item C<--add_list=family_name --robot=robot_name
+    --input_file=/path/to/file.xml>
+
+Add the list described by the file.xml under robot_name, to the family
+family_name.
+
+=item C<--change_user_email --current_email=xx --new_email=xx>
+
+Changes a user email address in all Sympa  databases (subscriber_table,
+list config, etc) for all virtual robots.
+
+=item C<--close_family=family_name --robot=robot_name >
+
+Close lists of family_name family under robot_name.      
+
+=item C<--close_list=listname@robot>
+
+Close a list.
+
+=item C<--conf_2_db>
+
+Load sympa.conf and each robot.conf into database.
+
+=item C<--config=FILE, -f>
+
+Uses an alternative configuration file.
+
+=item C<--create_list --robot=robot_name --input_file=/path/to/file.xml >
+
+Create a list with the XML file under robot robot_name.
+
+=item C<--debug, -d>
+
+Sets Sympa in debug mode.
+
+=item C<--dump=list@dom|ALL>
+
+Dump subscribers.
+
+=item C<--foreground>
+
+The process remains attached to the TTY.
+
+=item C<--help, -h>
+
+Print this help.
+
+=item C<--import=list@dom>
+
+Import subscribers (read from standard input).
+
+=item C<--instantiate_family=family_name --robot=robot_name
+    --input_file=/path/to/file.xml [--close_unknown] [--quiet]>
+
+Instantiate family_name lists described in the file.xml under robot_name.
+The family directory must exist; automatically close undefined lists in a
+new instantiation if --close_unknown is specified; do not print report if
+C<--quiet> is specified.
+
+=item C<--keepcopy=dir, -k>
+
+Keep a copy of incoming message.
+
+=item C<--lang=LANG, -l>
+
+Use a language catalog for Sympa.
+
+=item C<--log_level=LEVEL>
+
+Sets Sympa log level.
+
+=item C<--lowercase>
+
+Lowercase email addresses in database.
+
+=item C<--mail, -m>
+
+Log calls to sendmail.
+
+=item C<--make_alias_file>
+
+Create file with all aliases in /tmp (useful when list_aliases.tt2 was
+changed).
+
+=item C<--md5_digest=password>
+
+Output a MD5 digest of a password (useful for SOAP client trusted
+application).
+
+=item C<--md5_encode_password>
+
+Rewrite password in C<user_table> of database using MD5 fingerprint.
+YOU CAN'T UNDO unless you save this table first.
+
+=item C<--modify_list=family_name --robot=robot_name
+    --input_file=/path/to/file.xml>
+
+Modify the existing list installed under the robot robot_name and that
+belongs to the family family_name. The new description is in the C<file.xml>.
+
+=item C<--purge_list=listname@robot>
+
+Remove a list.  No backup is possible.
+
+=item C<--reload_list_config [--list=mylist@mydom] [--robot=mydom]>
+
+Recreates all config.bin files. You should run this command if you edit
+authorization scenarios.  The list and robot parameters are optional.
+
+=item C<--rename_list=listname@robot --new_listname=newlistname
+    --new_listrobot=newrobot>
+
+Renames a list or move it to another virtual robot.
+
+=item C<--service=process_command|process_message|process_creation>
+
+Process is dedicated to messages distribution, commands or to automatic lists
+creation (default three of them).
+
+=item C<--sync_include=listname@robot>
+
+Trigger the list members update.
+
+=item C<--test_database_message_buffer>
+
+Test the database message buffer size.
+
+=item C<--upgrade [--from=X] [--to=Y]>
+
+Runs Sympa maintenance script to upgrade from version X to version Y.
+
+=item C<--upgrade_shared  --[listname=X] --[robot=Y]>
+
+Rename files in shared.
+
+=item C<--version>
+
+Print version number.
+
+=back
+
+=cut
+
 use strict;
 use warnings;
 use lib '--modulesdir--';
-#use Getopt::Std;
+use File::Copy;
+use File::Path;
 use Getopt::Long;
 use Mail::Address;
-use File::Path;
 use MIME::QuotedPrint;
-use File::Copy;
+use Pod::Usage;
 # tentative
 use Data::Dumper;
 
@@ -71,61 +235,6 @@ my $daemon_name = Log::set_daemon($0);
 my $ip;
 $ip = $ENV{'REMOTE_HOST'};
 $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
-
-my $usage_string = "Usage:
-   $0 [OPTIONS]
-
-Options:
-   --add_list=family_name --robot=robot_name --input_file=/path/to/file.xml
-                                         : add the list described by the file.xml under robot_name, to the family
-                                           family_name.
-   --change_user_email --current_email=xx --new_email=xx : changes a user email address in all Sympa 
-                                           databases (subscriber_table, list config, etc) for all virtual robots.
-   --close_family=family_name --robot=robot_name 
-                                         : close lists of family_name family under robot_name.      
-
-   --close_list=listname\@robot          : close a list
-   --conf_2_db			         : load in database, sympa;conf, wwsympa.conf and each robot.conf
-   --config=FILE, -f                     : uses an alternative configuration file
-   --create_list --robot=robot_name --input_file=/path/to/file.xml 
-                                         : create a list with the xml file under robot_name
-   --debug, -d                           : sets Sympa in debug mode 
-   --dump=list\@dom|ALL                  : dumps subscribers 
-   --foreground                          : the process remains attached to the TTY
-   --help, -h                            : print this help
-   --import=list\@dom                    : import subscribers (read from STDIN)
-   --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml [--close_unknown] [--quiet]
-                                         : instantiate family_name lists described in the file.xml under robot_name,
-                                           the family directory must exist ;
-                                           automatically close undefined lists in a new instantation if --close_unknown specified,
-                                           do not print report if --quiet specified.
-   --keepcopy=dir, -k                    : keep a copy of incoming message
-   --lang=LANG, -l                       : use a language catalog for Sympa
-   --log_level=LEVEL                     : sets Sympa log level
-   --lowercase                           : lowercase email addresses in database
-   --mail, -m                            : log calls to sendmail
-   --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
-   --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
-   --md5_encode_password                 : rewrite password in database using md5 fingerprint. YOU CAN'T UNDO unless you save this table first
-   --modify_list=family_name --robot=robot_name --input_file=/path/to/file.xml
-                                         : modify the existing list installed under the robot_name robot and that 
-                                           belongs to family_name family. The new description is in the file.xml
-   --purge_list=listname\@robot          : remove a list no backup is possible
-   --reload_list_config [--list=mylist\@mydom] [--robot=mydom]
-                                         : recreates all config.bin files. You should run this command if you edit authorization scenarios. The list and robot parameters are optional.
-   --rename_list=listname\@robot --new_listname=newlistname --new_listrobot=newrobot : renames a list or move it to another virtual robot
-   --service=process_command|process_message|process_creation  : process dedicated to messages distribution, commands or to automatic lists creation (default three of them)
-   --sync_include=listname\@robot        : trigger the list members update
-   --test_database_message_buffer        : test the database message buffer size
-   --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
-   --upgrade_shared  --[listname=X] --[robot=Y] : rename files in shared.
-   --version                         : print version number
-
-Sympa is a mailinglists manager and comes with a complete (user and admin)
-web interface. Sympa  can be linked to an LDAP directory or an RDBMS to 
-create dynamic mailing lists. Sympa provides S/MIME and HTTPS based authentication and
-encryption.
-";
 
 ## Check --dump option
 my %options;
@@ -240,7 +349,7 @@ if (!$main::options{'help'} and $main::options{'health_check'}) {
     ## Now trying to load full config (including database)
     unless (Site->load() and Robot::get_robots()) {
 	printf STDERR
-	    "Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	    "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
 	    Conf::get_sympa_conf();
 	exit 1;
     }
@@ -282,7 +391,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     ## Load sympa.conf.
     unless (Robot::get_robots()) {
 	print STDERR
-	    "Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	    "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
 	    Conf::get_sympa_conf();
 	exit 1;
     }
@@ -372,7 +481,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	## Put ourselves in background if we're not in debug mode. That method
 	## works on many systems, although, it seems that Unix conceptors have
 	## decided that there won't be a single and easy way to detach a
-	## process from its controlling tty.
+	## process from its controlling TTY.
 	unless ($main::options{'foreground'}) {
 	    if (open(TTY, "/dev/tty")) {
 		ioctl(TTY, 0x20007471, 0);  # XXX s/b &TIOCNOTTY
@@ -430,7 +539,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) &&
 	    ($< == (getpwnam(Sympa::Constants::USER))[2])) {
 	    Log::fatal_err(
-		"Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+		"Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
 	    );
 	}
 
@@ -482,8 +591,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	exit 0;
     } elsif ($main::options{'help'}) {
-	print $usage_string;
-	exit 0;
+	print pod2usage(0);
     } elsif ($main::options{'make_alias_file'}) {
 	my $all_lists = List::get_lists();
 
@@ -512,7 +620,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	exit 0;
     } elsif ($main::options{'md5_digest'}) {
 	my $md5 = &tools::md5_fingerprint($main::options{'md5_digest'});
-	printf "md5 digest : %s \n", $md5;
+	printf "MD5 digest : %s \n", $md5;
 
 	exit 0;
     } elsif ($main::options{'import'}) {
@@ -572,7 +680,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	}
 
 	my $total = &Upgrade::md5_encode_password();
-	printf STDERR "Total password re-encoded using md5: %d\n", $total;
+	printf STDERR "Total password re-encoded using MD5: %d\n", $total;
 
 	exit 0;
 
@@ -592,7 +700,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    &List::lowercase_field('subscriber_table', 'user_subscriber');
 
 	unless (defined $total) {
-	    Log::fatal_err("Could not work on dabatase");
+	    Log::fatal_err("Could not work on database");
 	}
 
 	printf STDERR "Total lowercased rows: %d\n", $total;
@@ -750,7 +858,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 		$size;
 	} else {
 	    printf
-		"maximun message size that can be stored in database : %d Ko\n",
+		"maximum message size that can be stored in database : %d Ko\n",
 		$size;
 	}
 	exit 1;
@@ -782,7 +890,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	my $config = new Config_XML(\*INFILE);
 	unless (defined $config->createHash()) {
-	    print STDERR "Error in representation data with these xml data\n";
+	    print STDERR "Error in representation data with these XML data\n";
 	    exit 1;
 	}
 
@@ -794,7 +902,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    &admin::create_list_old($hash->{'config'}, $hash->{'type'},
 	    $robot_id, "command_line");
 	unless (defined $resul) {
-	    print STDERR "Could not create list with these xml data\n";
+	    print STDERR "Could not create list with these XML data\n";
 	    exit 1;
 	}
 
@@ -1107,8 +1215,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	my $family_name;
 	unless ($family_name = $main::options{'close_family'}) {
-	    print STDERR $usage_string;
-	    exit 1;
+	    print pod2usage(-exitval => 1, -output => \*STDERR);
 	}
 	my $family;
 	unless ($family = new Family($family_name, $robot_id)) {
@@ -1497,7 +1604,7 @@ sub process_message {
     &report::init_report_cmd();
 
     my ($dyn_list_family, $dyn_just_created);
-    ## Maybe demon is handling an automatic list
+    ## Maybe daemon is handling an automatic list
     if ($message->{'create_list_if_needed'}) {
 
 	# we care of fake headers. If we put it, it's the 1st one.
@@ -1915,7 +2022,7 @@ sub DoSendMessage {
     chomp $chksum;
     chomp $from;
 
-    Log::do_log('info', "Processing web message for %s", $rcpt);
+    Log::do_log('info', "Processing Web message for %s", $rcpt);
 
     my $string = $message->{'msg'}->as_string;
     my $msg_id = $hdr->get('Message-ID');
@@ -2008,7 +2115,7 @@ sub DoForward {
     if ($message->{'spam_status'} eq 'spam') {
 	Log::do_log(
 	    'notice',
-	    "Message for %s-%s ignored, because tagued as spam (Message-id: %s)",
+	    "Message for %s-%s ignored, because tagged as spam (Message-id: %s)",
 	    $name,
 	    $function,
 	    $messageid
@@ -2387,7 +2494,7 @@ sub DoMessage {
     my $action;
     my $result;
 
-    # the order of the following 3 lines is important ! SMIME > DKIM > SMTP
+    # the order of the following 3 lines is important ! S/MIME > DKIM > SMTP
     my $auth_method = 'smtp';
     $auth_method = 'dkim'  if ($message->{'dkim_pass'});
     $auth_method = 'md5'   if ($message->{'md5_check'});
@@ -3110,3 +3217,4 @@ sub clean_msgid_table {
     return 1;
 }
 
+## END of sympa.pl
