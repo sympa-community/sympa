@@ -196,7 +196,7 @@ sub messageasstring {
     }
     my $msg = MIME::Base64::decode($messageasstring->{'message'});
     unless ($msg){
-	&Log::do_log('err',"could not decode message $messagekey extrated from spool (base64)"); 
+	&Log::do_log('err',"could not decode message $messagekey extracted from spool (base64)"); 
 	return undef;
     }
     return $msg;
@@ -232,7 +232,7 @@ sub message_from_spool {
 #                                                          #
 #                                                          #
 #  IN : - MIME:Entity                                      #
-#       - $rcpt : a receipient                             #
+#       - $rcpt : a recipient                             #
 #       - $bulk : HASH                                     #
 #       - $data : HASH with user's data                    #
 #  OUT : 1 | undef                                         #
@@ -247,7 +247,7 @@ sub merge_msg {
 
     ## Test MIME::Entity
     unless (defined $entity && ref($entity) eq 'MIME::Entity') {
-	&Log::do_log('err', 'echec entity');
+	&Log::do_log('err', 'false entity');
 	return undef;
     }
 
@@ -338,7 +338,7 @@ sub merge_msg {
 #  It uses the method &tt2::parse_tt2                      #
 #  It uses the method &tools::get_fingerprint              #
 #                                                          #
-# IN : - rcpt : the receipient email                       #
+# IN : - rcpt : the recipient email                       #
 #      - listname : the name of the list                   #
 #      - robot_id : the host                               #
 #      - data : HASH with many data                        #
@@ -424,7 +424,7 @@ sub store {
 
     # first store the message in spool_table 
     # because as soon as packet are created bulk.pl may distribute the
-    # $last_stored_message_key is a global var used in order to detcect if a message as been allready stored    
+    # $last_stored_message_key is a global var used in order to detect if a message as been already stored    
     my $message_already_on_spool ;
     my $bulkspool = new Sympaspool ('bulk');
 
@@ -464,7 +464,7 @@ sub store {
 
     my $current_date = int(time);
     
-    # second : create each receipient packet in bulkmailer_table
+    # second : create each recipient packet in bulkmailer_table
     my $type = ref $rcpts;
 
     unless (ref $rcpts) {
@@ -476,7 +476,7 @@ sub store {
 
     my $priority_for_packet;
     my $already_tagged = 0;
-    my $packet_rank = 0; # Initialize counter used to check wether we are copying the last packet.
+    my $packet_rank = 0; # Initialize counter used to check whether we are copying the last packet.
     foreach my $packet (@{$rcpts}) {
 	$priority_for_packet = $priority_packet;
 	if($tag_as_last && !$already_tagged){

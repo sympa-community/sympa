@@ -534,7 +534,7 @@ sub reaper {
       $opensmtp--;
       delete($pid{$i});
    }
-   &Log::do_log('debug2', "Reaper unwaited pids : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp);
+   &Log::do_log('debug2', "Reaper unwaited PIDs : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp);
    return $i;
 }
      

@@ -827,7 +827,7 @@ sub upgrade {
 		my ($listname, $robot_id, $robot);	
 		my %meta ;
 
-		&Log::do_log('notice'," spool : $spooldir, fichier $filename");
+		&Log::do_log('notice'," spool : $spooldir, file $filename");
 		if (-d $spooldir.'/'.$filename){
 		    &Log::do_log('notice',"%s/%s est un répertoire",$spooldir,$filename);
 		    next;
@@ -1333,13 +1333,13 @@ sub to_utf8 {
 }
 
 
-# md5_encode_password : Version later than 5.4 uses md5 fingerprint instead of symetric crypto to store password.
+# md5_encode_password : Version later than 5.4 uses MD5 fingerprint instead of symetric crypto to store password.
 #  This require to rewrite paassword in database. This upgrade IS NOT REVERSIBLE
 sub md5_encode_password {
 
     my $total = 0;
 
-    &Log::do_log('notice', 'Upgrade::md5_encode_password() recoding password using md5 fingerprint');
+    &Log::do_log('notice', 'Upgrade::md5_encode_password() recoding password using MD5 fingerprint');
     
     unless (SDM::check_db_connect('just_try')) {
 	return undef;
@@ -1360,7 +1360,7 @@ sub md5_encode_password {
 	my $clear_password ;
 	if ($user->{'password_user'} =~ /^[0-9a-f]{32}/){
 	    Log::do_log('info',
-		'password from %s already encoded as md5 fingerprint',
+		'password from %s already encoded as MD5 fingerprint',
 		$user->{'email_user'});
 	    $total_md5++ ;
 	    next;
@@ -1391,9 +1391,9 @@ sub md5_encode_password {
     }
     $sth->finish();
 
-    &Log::do_log('info',"Updating password storage in table user_table using md5 for %d users",$total) ;
+    &Log::do_log('info',"Updating password storage in table user_table using MD5 for %d users",$total) ;
     if ($total_md5) {
-	&Log::do_log('info',"Found in table user %d password stored using md5, did you run Sympa before upgrading ?", $total_md5 );
+	&Log::do_log('info',"Found in table user %d password stored using MD5, did you run Sympa before upgrading ?", $total_md5 );
     }    
     return $total;
 }

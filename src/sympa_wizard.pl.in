@@ -19,7 +19,7 @@
 
 =head1 NAME
 
-sympa_wizard.pl - help perform sympa initial setup
+sympa_wizard.pl - help perform Sympa initial setup
     
 =head1 SYNOPSIS
 
@@ -27,7 +27,7 @@ sympa_wizard.pl - help perform sympa initial setup
 
 =item sympa_wizard.pl
 
-Edit current sympa configuration
+Edit current Sympa configuration
 
 =item sympa_wizard.pl [--target file] --create
 
@@ -35,7 +35,7 @@ Creates a new sympa.conf configuration file
 
 =item sympa_wizard.pl --check
 
-check CPAN modules needed for running sympa
+check CPAN modules needed for running Sympa
 
 =item sympa_wizard.pl --help
 
@@ -629,14 +629,14 @@ EOF
     my $rep = <STDIN>;
 
     ### main:
-    print "******* Check perl for SYMPA ********\n";
+    print "******* Check Perl for Sympa ********\n";
     ### REQ perl version
-    print "\nChecking for PERL version:\n-----------------------------\n";
+    print "\nChecking for Perl version:\n-----------------------------\n";
     my $rpv = $cpan_modules{"perl"}{'required_version'};
     if ($] >= $cpan_modules{"perl"}{'required_version'}){
-        print "your version of perl is OK ($]  >= $rpv)\n";
+        print "your version of Perl is OK ($]  >= $rpv)\n";
     }else {
-        print "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
+        print "Your version of Perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
     }
 
     print "\nChecking for REQUIRED modules:\n------------------------------------------\n";
@@ -659,7 +659,7 @@ EOM
 sub check_modules {
     my($default, $cpan_modules, $type) = @_;
 
-    print "perl module          from CPAN       STATUS\n"; 
+    print "Perl module          from CPAN       STATUS\n"; 
     print "-----------          ---------       ------\n";
 
     foreach my $mod (sort keys %$cpan_modules) {

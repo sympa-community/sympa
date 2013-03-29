@@ -4866,7 +4866,7 @@ sub do_search {
 
     $param->{'similar_subscribers_occurrence'} = 0;
     if($param->{'filter'} !~ /^\@[\w-]+\./) {
-	foreach my $user (@{&List::get_ressembling_list_members_no_object({'name'=>$list->name,'domain'=>$robot_id,'email'=>$in{'filter'}})}) {
+	foreach my $user (@{List::get_resembling_list_members_no_object({'name' => $list->name, 'domain' => $robot_id, 'email' => $in{'filter'}})}) {
 	    next if($emails{$user->{'email'}});
 	    push @{$param->{'similar_subscribers'}}, $user;
 	    last if($#{$param->{'similar_subscribers'}} + 1 > $max_select);

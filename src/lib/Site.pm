@@ -968,7 +968,7 @@ sub send_file {
 	# if the list have it's private_key and cert sign the message
 	# . used only for the welcome message, could be usefull in other case?
 	# . a list should have several certificats and use if possible a
-	#   certificat issued by the same CA as the receipient CA if it exists
+	#   certificat issued by the same CA as the recipient CA if it exists
 	if ($sign_mode and $sign_mode eq 'smime') {
 	    $data->{'fromlist'} = $self->get_address();
 	    $data->{'replyto'}  = $self->get_address('owner');

@@ -496,7 +496,7 @@ sub delete_subs_cmd {
 			return undef;
 		} else {
 			unless (my $u = $list->delete_list_member ($email)) {
-				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Deletion of $email frome list $list->get_list_id failed"});
+				$self->error ({'task' => $task, 'type' => 'execution', 'message' => "Deletion of $email from list $list->get_list_id failed"});
 			}else{
 				&Log::do_log ('notice', "--> $email deleted");
 				$selection{$email} = {};
@@ -1011,7 +1011,7 @@ sub purge_orphan_bounces {
 	 chomp ($date);
 
 	 unless ($date) {
-		 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't get expiration date for $file crl file by using the crl openssl command"});
+		 $self->error ({'task' => $task, 'type' => 'execution', 'message' => "Can't get expiration date for $file CRL file by using the crl openssl command"});
 	     next;
 	 }
 
@@ -1028,7 +1028,7 @@ sub purge_orphan_bounces {
 
 	 if (&Scenario::verify ($verify_context, $condition) == 1) {
 	     unlink ($file);
-	     &Log::do_log ('notice', "--> updating of the $file crl file");
+	     &Log::do_log ('notice', "--> updating of the $file CRL file");
 	     my $cmd = "wget -O \'$file\' \'$url\'";
 	     open CMD, "| $cmd";
 	     close CMD;

@@ -454,7 +454,7 @@ sub update_global_user {
     while (($field, $value) = each %{$values}) {
 	unless ($map_field{$field}) {
 	    &Log::do_log('error',
-		"unkown field $field in map_field internal error");
+		"unknown field $field in map_field internal error");
 	    next;
 	}
 	my $set;

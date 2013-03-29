@@ -857,7 +857,7 @@ sub update_stats {
 ## Input  :  percent : the rate of subscribers that must be threaded using verp
 ##           xseq    : the message sequence number
 ##           @rcpt   : a tab of emails
-## return :  a tab of rcpt for which rcpt must be use depending on the message sequence number, this way every subscriber is "verped" from time to time
+## return :  a tab of rcpt for which rcpt must be use depending on the message sequence number, this way every subscriber is "VERPed" from time to time
 ##           input table @rcpt is spliced : rcpt for which verp must be used are extracted from this table
 sub extract_verp_rcpt {
     Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
@@ -1555,7 +1555,7 @@ sub distribute_msg {
 	## If subject is tagged, replace it with new tag
 	## Splitting the subject in two parts :
 	##   - what will be before the custom subject (probably some "Re:")
-	##   - what will be after it : the orginal subject sent to the list.
+	##   - what will be after it : the original subject sent to the list.
 	## The custom subject is not kept.
 	my $before_tag;
 	my $after_tag;
@@ -1574,7 +1574,7 @@ sub distribute_msg {
 
  	## Encode subject using initial charset
 
-	## Don't try to encode the subject if it was not originaly encoded.
+	## Don't try to encode the subject if it was not originally encoded.
 	if ($message->{'subject_charset'}) {
 	    $subject_field = MIME::EncWords::encode_mimewords(
 		Encode::decode_utf8(
@@ -1612,7 +1612,7 @@ sub distribute_msg {
 
     if ($apply_tracking ne 'off') {
 	$hdr->delete('Disposition-Notification-To')
-	    ; # remove notification request becuse a new one will be inserted if needed
+	    ; # remove notification request because a new one will be inserted if needed
     }
 
     ## Remove unwanted headers if present.
@@ -1680,7 +1680,7 @@ sub distribute_msg {
     ## Add RFC5064 Archived-At SMTP header field
     $self->add_list_header($hdr, 'archived_at');
 
-    ## Remove outgoing header fileds
+    ## Remove outgoing header fields
     ## Useful to remove some header fields that Sympa has set
     if ($self->remove_outgoing_headers) {
 	foreach my $field (@{$self->remove_outgoing_headers}) {
@@ -1728,7 +1728,7 @@ sub send_msg_digest {
     my $messagekey = shift;
 
     ## Create the list of subscribers in various digest modes
-    return 0 unless ($self->get_lists_of_digest_receipients());
+    return 0 unless ($self->get_lists_of_digest_recipients());
 
     my $digestspool = new Sympaspool ('digest');
     $self->split_spooled_digest_to_messages({'message_in_spool' => $digestspool->next({'messagekey'=>$messagekey})});
@@ -1741,10 +1741,10 @@ sub send_msg_digest {
     return 1;
 }
 
-sub get_lists_of_digest_receipients {
+sub get_lists_of_digest_recipients {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Getting list of digest receipients for list %s',$self->get_list_id);
+    &Log::do_log('debug','Getting list of digest recipients for list %s',$self->get_list_id);
     $self->{'digest'}{'tabrcpt'} = [];
     $self->{'digest'}{'tabrcptsummary'} = [];
     $self->{'digest'}{'tabrcptplain'} = [];
@@ -1764,7 +1764,7 @@ sub get_lists_of_digest_receipients {
 		next;
 	    } elsif (($user_data->{'enddate'} < time) &&
 		($user_data->{'enddate'})) {
-		## If end date is < time, update the BDD by deleting the suspending's data
+		## If end date is < time, update the BDD by deleting the suspending user's data
 		$self->restore_suspended_subscription($user->{'email'});
 	    }
 	}
@@ -2007,7 +2007,7 @@ sub send_msg {
 
     &Log::do_log(
 	'debug2',
-	'List::send_msg(filname = %s, smime_crypted = %s,apply_dkim_signature = %s )',
+	'List::send_msg(filename = %s, smime_crypted = %s,apply_dkim_signature = %s )',
 	$message->{'filename'},
 	$message->{'smime_crypted'},
 	$apply_dkim_signature
@@ -2039,17 +2039,17 @@ sub send_msg {
 	}
     }
 
-    ## Who is the enveloppe sender?
+    ## Who is the envelope sender?
     my $host = $self->host;
     my $from = $self->get_list_address('return_path');
     my $nbr_smtp = 0;
     my $nbr_verp = 0;
 
-    # prepare verp parameter
+    # prepare VERP parameter
     my $verp_rate = $self->verp_rate;
     $verp_rate = '100%'
 	if (($apply_tracking eq 'dsn') || ($apply_tracking eq 'mdn'))
-	;    # force verp if tracking is requested.
+	;    # force VERP if tracking is requested.
 
     my $xsequence = $self->stats->[0];
 
@@ -2059,11 +2059,11 @@ sub send_msg {
     if ($apply_dkim_signature eq 'on') {
 	$dkim_parameters = &tools::get_dkim_parameters($self);
     }
-    # separate subscribers depending on user reception option and also if verp a dicovered some bounce for them.
+    # separate subscribers depending on user reception option and also if VERP a dicovered some bounce for them.
     return 0 unless ($self->get_list_members_per_mode($message));
     my $topics_updated_total = 0;
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
-	$topics_updated_total += $self->filter_receipients_by_topics($message,$mode,$verp_rate,$xsequence);
+	$topics_updated_total += $self->filter_recipients_by_topics($message,$mode,$verp_rate,$xsequence);
     }
     return 0 unless ($topics_updated_total);
     my ($tag_verp,$tag_mode) = find_packet_to_tag_as_last($message);
@@ -2164,7 +2164,7 @@ sub get_list_members_per_mode {
 		next;
 	    } elsif (($user_data->{'enddate'} < time) &&
 		($user_data->{'enddate'})) {
-		## If end date is < time, update the BDD by deleting the suspending's data
+		## If end date is < time, update the BDD by deleting the suspending user's data
 		$self->restore_suspended_subscription($user->{'email'});
 	    }
 	}
@@ -2281,7 +2281,7 @@ sub get_list_members_per_mode {
     return 1;
 }
 
-sub filter_receipients_by_topics {
+sub filter_recipients_by_topics {
     my $self = shift;
     my $message = shift;
     my $mode = shift;
@@ -2312,7 +2312,7 @@ sub filter_receipients_by_topics {
 	}
     }
 
-    ## Preparing VERP receipients.
+    ## Preparing VERP recipients.
     my @verp_selected_tabrcpt =
 	extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
 	\@possible_verptabrcpt);
@@ -2364,7 +2364,7 @@ sub find_packet_to_tag_as_last {
 #
 # IN : -$self(+) : ref(List)
 #      -$method : 'md5' - for "editorkey" | 'smtp' - for "editor"
-#      -$message(+) : ref(Message) - the message to moderatte
+#      -$message(+) : ref(Message) - the message to moderate
 # OUT : $modkey : the moderation key for naming message waiting
 #         for moderation in spool queuemod
 #       | undef
@@ -2476,7 +2476,7 @@ sub send_to_editor {
 	    $param->{'msg'} = $message->get_mime_message;
 	}
 
-       # create a one time ticket that will be used as un md5 URL credential
+       # create a one time ticket that will be used as an MD5 URL credential
        
 	unless (
 	    $param->{'one_time_ticket'} = &Auth::create_one_time_ticket(
@@ -2591,7 +2591,7 @@ sub send_auth {
 
 =item request_auth
 
-Sends an authentification request for a requested command .
+Sends an authentication request for a requested command .
 See L<Site/request_auth>.
 
 =back
@@ -2604,10 +2604,10 @@ See L<Site/request_auth>.
 # archive_send
 ####################################################
 # sends an archive file to someone (text archive
-# file : independant from web archives)
+# file : independent from web archives)
 #
 # IN : -$self(+) : ref(List)
-#      -$who(+) : recepient
+#      -$who(+) : recipient
 #      -file(+) : name of the archive file to send
 # OUT : - | undef
 #
@@ -2649,7 +2649,7 @@ sub archive_send {
 # sends last archive file
 #
 # IN : -$self(+) : ref(List)
-#      -$who(+) : recepient
+#      -$who(+) : recipient
 # OUT : - | undef
 #
 ######################################################
@@ -2914,7 +2914,7 @@ sub find_picture_paths {
 	$self->find_picture_filenames($email);
 }
 
-## Find pictures url
+## Find pictures URL
 ### IN : list, email
 sub find_picture_url {
     my $self = shift;
@@ -2941,7 +2941,7 @@ sub delete_list_member_picture {
 	    Log::do_log('err', 'Failed to delete %s', $path);
 	    $ret = undef;
 	} else {
-	    Log::do_log('debug3', 'File deleted successfull: %s', $path);
+	    Log::do_log('debug3', 'File deleted successfully: %s', $path);
 	}
     }
 
@@ -3111,7 +3111,7 @@ sub send_notify_to_user {
 
 =item compute_auth
 
-Genererate a md5 checksum using private cookie and parameters
+Generate a MD5 checksum using private cookie and parameters
 See L<Site/compute_auth>.
 
 =back
@@ -3274,7 +3274,7 @@ sub get_reply_to {
 }
 
 ## Returns a default user option
-## DEPRECATED: use $list->deefault_user_options.
+## DEPRECATED: use $list->default_user_options.
 ##sub get_default_user_options {
 
 ## Returns the number of subscribers to the list
@@ -3531,7 +3531,7 @@ sub get_exclusion {
 	push @users, $data->{'email'};
 	push @date, $data->{'date'};
     }
-    ## in order to use the data, we add the emails and dates in differents array
+    ## in order to use the data, we add the emails and dates in different array
     my $data_exclu = {
 	"emails" => \@users,
 		      "date"   => \@date
@@ -3569,8 +3569,8 @@ sub get_list_member {
 #     * domain: the virtual host under which the list is installed.  #
 #
 # OUT : undef if something wrong
-#       a hash of tab of ressembling emails
-sub get_ressembling_list_members_no_object {
+#       a hash of tab of resembling emails
+sub get_resembling_list_members_no_object {
     my $options = shift;
     &Log::do_log('debug2', '(%s, %s, %s)', $options->{'name'},
 	$options->{'email'}, $options->{'domain'});
@@ -3604,7 +3604,7 @@ sub get_ressembling_list_members_no_object {
     }
     }
 
-    # is some subscriber ressembling with a plused email ?
+    # is some subscriber resembling with a plused email ?
     foreach my $subscriber (
 	&find_list_member_by_pattern_no_object(
 	    {   'email_pattern' => $local_part . '+%@' . $subscriber_domain,
@@ -3618,7 +3618,7 @@ sub get_ressembling_list_members_no_object {
 	push @output, $subscriber;
     }
 
-    # ressembling local part
+    # resembling local part
     # try to compare firstname.name@domain with name@domain
     foreach my $subscriber (
 	&find_list_member_by_pattern_no_object(
@@ -3649,7 +3649,7 @@ sub get_ressembling_list_members_no_object {
 	}
     }
 
-    #### Same local_part and ressembling domain
+    #### Same local_part and resembling domain
     #
     # compare host.domain.tld with domain.tld
     if ($subscriber_domain =~ /^[^\.]\.(.*)$/) {
@@ -3733,7 +3733,7 @@ sub get_ressembling_list_members_no_object {
 ## Get details regarding a subscriber.                               #
 # IN:                                                                #
 #   - a single reference to a hash with the following keys:          #
-#     * email pattern : the subscriber email patern looking for      #
+#     * email pattern : the subscriber email pattern looking for      #
 #     * name: the name of the list                                   #
 #     * domain: the virtual host under which the list is installed.  #
 # OUT:                                                               #
@@ -3745,7 +3745,7 @@ sub find_list_member_by_pattern_no_object {
     my $options = shift;
     my $name = $options->{'name'};
     my $email_pattern = &tools::clean_email($options->{'email_pattern'});
-    my @ressembling_users;
+    my @resembling_users;
 
     push @sth_stack, $sth;
     unless (
@@ -3760,7 +3760,7 @@ sub find_list_member_by_pattern_no_object {
 	) {
 	&Log::do_log(
 	    'err',
-	    'Unable to gather informations corresponding to pattern %s for list %s@%s',
+	    'Unable to gather information corresponding to pattern %s for list %s@%s',
 	    $email_pattern,
 	    $name,
 	    $options->{'domain'}
@@ -3779,7 +3779,7 @@ sub find_list_member_by_pattern_no_object {
 		$user->{'custom_attribute'} =
 		    &parseCustomAttribute($user->{'custom_attribute'});
 	    }
-	push @ressembling_users, $user;
+	push @resembling_users, $user;
 	}
     }
     $sth->finish();
@@ -3787,7 +3787,7 @@ sub find_list_member_by_pattern_no_object {
     $sth = pop @sth_stack;
     ## Set session cache
 
-    return @ressembling_users;
+    return @resembling_users;
 }
 
 sub _list_member_cols {
@@ -3949,7 +3949,7 @@ sub get_first_list_member {
 
 # Create a custom attribute from an XML description
 # IN : File handle or a string, XML formed data as stored in database
-# OUT : HASH data storing custome attributes.
+# OUT : HASH data storing custom attributes.
 sub parseCustomAttribute {
     my $xmldoc = shift;
     return undef if !defined $xmldoc or $xmldoc eq '';
@@ -3982,7 +3982,7 @@ sub parseCustomAttribute {
 }
 
 # Create an XML Custom attribute to be stored into data base.
-# IN : HASH data storing custome attributes
+# IN : HASH data storing custom attributes
 # OUT : string, XML formed data to be stored in database
 sub createXMLCustomAttribute {
     my $custom_attr = shift;
@@ -4344,7 +4344,7 @@ sub get_info {
 ## Total bouncing subscribers
 sub get_total_bouncing {
     my $self = shift;
-    &Log::do_log('debug2', 'List::get_total_boucing');
+    &Log::do_log('debug2', 'List::get_total_bouncing');
 
     my $name = $self->name;
 
@@ -4513,7 +4513,7 @@ sub update_list_member {
 		)
 		) {
 		&Log::do_log('err',
-		    'Could not update informations for user %s in table %s',
+		    'Could not update information for user %s in table %s',
 		    $who, $table);
 		return undef;
 	    }
@@ -4530,7 +4530,7 @@ sub update_list_member {
 		    ) {
 		    &Log::do_log(
 			'err',
-			'Could not update informations for user %s in table %s for list %s',
+			'Could not update information for user %s in table %s for list %s',
 			$who,
 			$table,
 			$self
@@ -4550,7 +4550,7 @@ sub update_list_member {
 		    ) {
 		    &Log::do_log(
 			'err',
-			'Could not update informations for user %s in table %s for list %s',
+			'Could not update information for user %s in table %s for list %s',
 			$who,
 			$table,
 			$self
@@ -4680,7 +4680,7 @@ sub update_list_admin {
 		) {
 		&Log::do_log(
 		    'err',
-		    'Could not update informations for admin %s in table %s',
+		    'Could not update information for admin %s in table %s',
 		    $who,
 		    $table
 		);
@@ -4701,7 +4701,7 @@ sub update_list_admin {
 		    ) {
 		    &Log::do_log(
 			'err',
-			'Could not update informations for admin %s in table %s for list %s',
+			'Could not update information for admin %s in table %s for list %s',
 			$who,
 			$table,
 			$self
@@ -4722,7 +4722,7 @@ sub update_list_admin {
 		    ) {
 		    &Log::do_log(
 			'err',
-			'Could not update informations for admin %s in table %s for list %s',
+			'Could not update information for admin %s in table %s for list %s',
 			$who,
 			$table,
 			$self
@@ -4796,7 +4796,7 @@ sub add_list_member {
 	    $new_user->{'custom_attribute'}
 	);
 
-	## Crypt password if it was not crypted
+	## Crypt password if it was not encrypted
 	unless ($new_user->{'password'} =~ /^crypt/) {
 	    $new_user->{'password'} =
 		&tools::crypt_password($new_user->{'password'});
@@ -4832,7 +4832,7 @@ sub add_list_member {
 	$new_user->{'subscribed'} ||= 0;
 	$new_user->{'included'} ||= 0;
 
-	#Log in stat_table to make staistics
+	#Log in stat_table to make statistics
 	&Log::db_stat_log(
 	    {   'robot'     => $self->domain,
 		'list'      => $self->name,
@@ -5139,7 +5139,7 @@ sub may_edit {
     return ('user', 'hidden');
 }
 
-## May the indicated user edit a paramter while creating a new list
+## May the indicated user edit a parameter while creating a new list
 ## Dev note: This sub is never called. Shall we remove it?
 sub may_create_parameter {
 
@@ -5396,7 +5396,7 @@ sub get_nextdigest {
     return undef;
 }
 
-## Loads all scenari for an action
+## Loads all scenarios for an action
 sub load_scenario_list {
     Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
@@ -5669,7 +5669,7 @@ sub _load_list_members_file {
     return @users;
 }
 
-## include a remote sympa list as subscribers.
+## include a remote Sympa list as subscribers.
 sub _include_users_remote_sympa_list {
     my ($self, $users, $param, $dir, $robot, $default_user_options, $tied) =
 	@_;
@@ -5738,7 +5738,7 @@ sub _include_users_remote_sympa_list {
 	) {
 	chomp $line;
 
-	if ($getting_headers) { # ignore http headers
+	if ($getting_headers) { # ignore HTTP headers
 	    next
 		unless (
 		$line =~ /^(date|update_date|email|reception|visibility)/);
@@ -5968,7 +5968,7 @@ sub _include_users_remote_file {
     my $total = 0;
     my $id = Datasource::_get_datasource_id($param);
 
-    ## WebAgent package is part of Fetch.pm and inherites from LWP::UserAgent
+    ## WebAgent package is part of Fetch.pm and inherited from LWP::UserAgent
 
     my $fetch = WebAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
 
@@ -6068,7 +6068,7 @@ sub _include_users_remote_file {
 	return undef;
     }
 
-    ## Reset http credentials
+    ## Reset HTTP credentials
     &WebAgent::set_basic_credentials('', '');
 
     &Log::do_log('info', "include %d users from remote file %s", $total,
@@ -6076,7 +6076,7 @@ sub _include_users_remote_file {
     return $total;
 }
 
-## Includes users from voot group
+## Includes users from VOOT group
 sub _include_users_voot_group {
     my ($users, $param, $default_user_options, $tied) = @_;
 
@@ -6101,7 +6101,7 @@ sub _include_users_voot_group {
     unless (defined $members) {
 		my $url = $consumer->getOAuthConsumer()->mustRedirect();
 
-		# Report error with redirect url
+		# Report error with redirect URL
 		#return &do_redirect($url) if(defined $url);
 		return undef;
 	}
@@ -6198,7 +6198,7 @@ sub _include_users_ldap {
     if ($fetch->code()) {
 	&Log::do_log(
 	    'err',
-	    'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $fetch->error(),
 	    $source->{'host'},
 	    $ldap_suffix,
@@ -6581,7 +6581,7 @@ sub _include_ldap_ca {
     if ($results->code()) {
 	&Log::do_log(
 	    'err',
-	    'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $results->error(),
 	    $source->{'host'},
 	    $source->{'suffix'},
@@ -6631,7 +6631,7 @@ sub _include_ldap_level2_ca {
     if ($results->code()) {
 	&Log::do_log(
 	    'err',
-	    'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $results->error(),
 	    $source->{'host'},
 	    $source->{'suffix'},
@@ -6777,8 +6777,8 @@ sub _load_list_members_from_include {
 			$source_is_new = 0;
 		}
 	    ## Get the list of users.
-	    ## Verify if we can syncronize sources. If it's allowed OR there are new sources, we update the list, and can add subscribers.
-		## Else if we can't syncronize sources. We make an array with excluded sources.
+	    ## Verify if we can synchronize sources. If it's allowed OR there are new sources, we update the list, and can add subscribers.
+		## Else if we can't synchronize sources. We make an array with excluded sources.
 	    if ($type eq 'include_sql_query') {
 			my $source = new SQLSource($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
@@ -7085,7 +7085,7 @@ sub _load_include_admin_user_file {
     my %include;
     my (@paragraphs);
 
-    # the file has parmeters
+    # the file has parameters
     if (defined $parsing) {
 	my @data = split(',', $parsing->{'data'});
         my $vars = {'param' => \@data};
@@ -7295,7 +7295,7 @@ sub _load_include_admin_user_file {
     return \%include;
 }
 
-## Returns a ref to an array containing the ids (as computed by Datasource::_get_datasource_id) of the list of memebers given as argument.
+## Returns a ref to an array containing the ids (as computed by Datasource::_get_datasource_id) of the list of members given as argument.
 sub get_list_of_sources_id {
 	my $self = shift;
 	my $list_of_subscribers = shift;
@@ -7670,7 +7670,7 @@ sub sync_include {
 	if (defined($old_subscribers{$email})) {
 	    if ($old_subscribers{$email}{'included'}) {
 		## If one user attribute has changed, then we should update the user entry
-		my $succesful_update = 0;
+		my $successful_update = 0;
 		foreach my $attribute ('id', 'gecos') {
 		    if ($old_subscribers{$email}{$attribute} ne
 			$new_subscribers->{$email}{$attribute}) {
@@ -7690,11 +7690,11 @@ sub sync_include {
 			    Log::do_log('err', 'Failed to update %s', $email);
 			    next;
 			} else {
-			    $succesful_update = 1;
+			    $successful_update = 1;
 			}
 		    }
 		}
-		$users_updated++ if ($succesful_update);
+		$users_updated++ if ($successful_update);
 		## User was already subscribed, update include_sources_subscriber in DB
 	    } else {
 		Log::do_log('debug', 'updating %s to list %s', $email, $self);
@@ -7775,7 +7775,7 @@ sub sync_include {
 ## The previous function (sync_include) is to be called by the task_manager.
 ## This one is to be called from anywhere else. This function deletes the scheduled
 ## sync_include task. If this deletion happened in sync_include(), it would disturb
-## the normal task_manager.pl functionning.
+## the normal task_manager.pl functioning.
 
 sub on_the_fly_sync_include {
     my $self = shift;
@@ -8201,7 +8201,7 @@ sub _save_stats_file {
 
     unless (defined $self->stats and ref $self->stats eq 'ARRAY') {
 	unless ($self->_create_stats_file) {
-	    &Log::do_log('err', 'Stats file creation imposible for list %s', $self);
+	    &Log::do_log('err', 'Stats file creation impossible for list %s', $self);
 	    return undef;
 	}
 	$self->_load_stats_file;
@@ -8285,7 +8285,7 @@ sub _compare_addresses {
    return ($ra cmp $rb);
 }
 
-## Store the message in spool digest  by creating a new enrty for it or updating an existing one for this list
+## Store the message in spool digest  by creating a new entry for it or updating an existing one for this list
 ##
 sub store_digest {
     Log::do_log('debug2', '(%s, %s)', @_);
@@ -8400,7 +8400,7 @@ Specified user is a subscriber, owner or editor of the list.
 
 =item '%name%' => STRING
 
-Exact, prefixed or subsctring match against list name,
+Exact, prefixed or substring match against list name,
 case-insensitive.
 
 =item 'status' => "STATUS|..."
@@ -8414,7 +8414,7 @@ Status of list.  One of 'open', 'closed', 'pending',
 
 =item '%subject%' => STRING
 
-Exact, prefixed or subsctring match against list subject,
+Exact, prefixed or substring match against list subject,
 case-insensitive (case folding is Unicode-aware).
 
 =item 'topics' => "TOPIC|..."
@@ -9216,7 +9216,7 @@ sub get_shared_moderated {
     return \@mod_dir;
 }
 
-# return the list of documents awaiting for moderation in a dir and its subdirs
+# return the list of documents awaiting for moderation in a dir and its subdirectories
 sub sort_dir_to_get_mod {
     Log::do_log('debug3', '(%s)', @_);
     #dir to explore
@@ -11043,7 +11043,7 @@ sub remove_bouncers {
     return 1;
 }
 
-#Sub for notifying users : "Be carefull,You're bouncing"
+#Sub for notifying users : "Be careful,You're bouncing"
 #
 sub notify_bouncers {
     Log::do_log('debug2', '(%s, %s)', @_);
