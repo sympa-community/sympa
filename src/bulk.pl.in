@@ -25,7 +25,7 @@
 ##         :  d		-> debug -d is equiv to -dF
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
-=pod 
+=encoding utf-8
 
 =head1 NAME 
 
@@ -36,6 +36,8 @@ I<bulk.pl> - Daemon for submitting to SMTP engine bulkmailer_table content.
 This script must be run along with Sympa. It regularly checks the bulkmailer_table content and submit the messages it finds in it to the sendmail engine. Several daemon should be used on deferent server for huge traffic.
 
 =head1 OPTIONS
+
+=over 4
 
 =item B<-d>, B<--debug>
 
@@ -52,6 +54,8 @@ Set log level.
 =item B<-m>, B<--mail>
 
 Logs every sendmail calls.
+
+=back
 
 =cut 
 

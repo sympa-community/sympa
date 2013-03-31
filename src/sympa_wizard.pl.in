@@ -25,23 +25,31 @@ sympa_wizard, sympa_wizard.pl - help performing Sympa initial setup
     
 =head1 SYNOPSIS
 
-=over
+S<B<sympa_wizard.pl>>
+    S<[B<--check>]>
+    S<[B<--create> [B<--target=>I<file>]]>
+    S<[B<-h, --help>]>
+    S<[B<-v, --version>]>
+
+=head1 OPTIONS
+
+=over 4
 
 =item sympa_wizard.pl
 
-Edit current Sympa configuration
+Edit current Sympa configuration.
 
 =item sympa_wizard.pl --check
 
-Check CPAN modules needed for running Sympa
+Check CPAN modules needed for running Sympa.
 
-=item sympa_wizard.pl [--target file] --create
+=item sympa_wizard.pl --create [--target file]
 
-Creates a new sympa.conf configuration file
+Creates a new F<sympa.conf> configuration file.
 
 =item sympa_wizard.pl --help
 
-Display usage instructions
+Display usage instructions.
 
 =item sympa_wizard.pl --version
 
@@ -51,7 +59,7 @@ Print version number.
 
 =head1 AUTHORS
 
-=over
+=over 4
 
 =item Serge Aumont <sa@cru.fr>
 
@@ -91,8 +99,8 @@ GetOptions(
     'target=s',
     'create:s', # parameter is optional
     'check',
-    'help',
-    'version'
+    'help|h',
+    'version|v'
 );
 
 if ($options{help}) {
