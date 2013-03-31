@@ -35,47 +35,43 @@ spooler.pl -- Sympa spooler
 This daemon is the Sympa spooler that load into database (table spool_table)
 messages from incoming spool.
 
-=head2 Options
+=head1 OPTIONS
 
 =over 4
 
-=item C<-d, --debug>
+=item B<-d>, B<--debug>
 
-Sets Sympa in debug mode.
+Sets the daemon in debug mode.
 
-=item C<-f, --config=FILE>
+=item B<-f>, B<--config=>I<FILE>
 
 Uses an alternative configuration file.
 
-=item C<--foreground>
+=item B<--foreground>
 
 The process remains attached to the TTY.
 
-=item C<-k, --keepcopy=dir>
+=item B<-k>, B<--keepcopy=>I<DIRECTORY>
 
 Keep a copy of incoming message.
 
-=item C<--log_level=LEVEL>
+=item B<--log_level=>I<LEVEL>
 
-Sets Sympa log level.
+Sets daemon log level.
 
-=item C<--queue=PATH_TO_SPOOL>
+=item B<--queue=>I<PATH_TO_SPOOL>
 
 Override C<queue> Sympa parameter in order to choose spool location.
 
-=item C<-h, --help>
+=item B<-h>, B<--help>
 
 Print this help.
 
-=item C<-v, --version>
+=item B<-v>, B<--version>
 
 Print version number.
 
 =back
-
-=head1 AUTHORS
-
-Sympa developers and contributors.
 
 =cut
 
@@ -127,8 +123,8 @@ my %options;
 unless (
     &GetOptions(
 	\%main::options, 'debug|d',, 'log_level=s',
-	'foreground', 'keepcopy|k=s', 'queue=s', 'help',
-	'version'
+	'foreground', 'keepcopy|k=s', 'queue=s', 'help|h',
+	'version|v'
     )
     ) {
     Log::fatal_err("Unknown options.");

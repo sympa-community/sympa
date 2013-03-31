@@ -77,7 +77,16 @@ alias_manager.pl bulk.pl task_manager.pl sympa.pl spooler.pl sympa_wizard.pl: Ma
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--defaultdir--|$(defaultdir)|' \
+		-e 's|--docdir--|$(docdir)|' \
+		-e 's|--libexecdir--|$(libexecdir)|' \
+		-e 's|--localedir--|$(localedir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
+		-e 's|--piddir--|$(piddir)|' \
+		-e 's|--spooldir--|$(spooldir)|' \
+		-e 's|--sysconfdir--|$(sysconfdir)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
+		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
 		< $(srcdir)/$@.in > $@
 	chmod +x $@
 

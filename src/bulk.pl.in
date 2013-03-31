@@ -29,11 +29,29 @@
 
 =head1 NAME 
 
-I<bulk.pl> - Daemon for submitting to smtp engine bulkmailer_table content.
+I<bulk.pl> - Daemon for submitting to SMTP engine bulkmailer_table content.
 
 =head1 DESCRIPTION 
 
-This script must be run along with sympa. It regularly checks the bulkmailer_table content and submit the messages it finds in it to the sendmail engine. Several deamon should be used on deferent server for hugue traffic.
+This script must be run along with Sympa. It regularly checks the bulkmailer_table content and submit the messages it finds in it to the sendmail engine. Several daemon should be used on deferent server for huge traffic.
+
+=head1 OPTIONS
+
+=item B<-d>, B<--debug>
+
+Sets the debug mode
+
+=item B<-F>, B<--foreground>
+
+Prevents the script from beeing daemonized
+
+=item B<--log_level=>I<level>
+
+Set log level.
+
+=item B<-m>, B<--mail>
+
+Logs every sendmail calls.
 
 =cut 
 
@@ -41,6 +59,7 @@ use lib '--modulesdir--';
 
 use strict;
 use Getopt::Long;
+use Pod::Uasage;
 # tentative
 use Data::Dumper;
 
@@ -64,7 +83,8 @@ local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as mas
 ##  --foreground : prevents the script from beeing daemonized
 ##  --mail : logs every sendmail calls
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F','mail|m')) {
+unless (&GetOptions(\%main::options,
+    'debug|d', 'foreground|F', 'help|h', 'log_level=s', 'mail|m')) {
     &Log::fatal_err("Unknown options.");
 }
 
@@ -74,6 +94,10 @@ if ($main::options{'debug'}) {
 
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
+
+if ($main::optins{'help'}) {
+    pod2usage(0);
+}
 
 # Load sympa.conf
 unless (Robot::get_robots()) {
@@ -113,7 +137,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-       &Log::do_log('info',"Starting bulk master daemon, pid %s",$child_pid);
+       &Log::do_log('info',"Starting bulk master daemon, PID %s",$child_pid);
        exit(0);
    }
 }

@@ -25,15 +25,110 @@
 ##         :  d		-> debug -d is equiv to -dF
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
-=pod 
+=encoding utf-8
 
-=head1 NAME 
+=head1 NAME
 
-I<archived.pl> - Daemon running the web archive building.
+archived, archived.pl - Mailing List Archiving Daemon for Sympa
 
-=head1 DESCRIPTION 
+=head1 SYNOPSIS
 
-This script must be run along with sympa. It regularly checks the 'outgoing' spool and picks the messages it finds in it. It then calls MHonArc to build the HTML version of archives and add an SMTP text version (i.e. an ASCII file including headers and body) to the appropriate directory.
+S<B<archived> [ B<-F> ] [ B<-d, -dF> ]>
+
+=head1 DESCRIPTION
+
+B<Archived> is a program which scan permanently the outgoing B<Sympa> spool
+and feeds the web archives, converting messages to the HTML format and
+linking them. Original mails are also kept (in I<arctxt/> directory> for
+later rebuilding of archives.
+
+The HTML conversion is achieved by the means of the B<MHonArc> program.
+
+Archives are accessed via B<wwsympa.fcgi> and B<sympa.pl>,
+which proposes access control;
+therefore archives should not be located in a public web directory.
+
+=head1 OPTIONS
+
+These programs follow the usual GNU command line syntax,
+with long options starting with two dashes (`-').  A summary of
+options is included below.
+
+=over 5
+
+=item B<-F>
+
+Do not detach TTY.
+
+=item B<-d>
+
+Run the program in a debug mode.
+
+=back
+
+=head1 FILES
+
+F<--spooldir--/outgoing/> outgoing Sympa directory.
+
+F<--defaultdir--/mhonarc-ressources.tt2> template of MHonArc resource file.
+
+F<--CONFIG--> Sympa configuration file.
+
+F<--piddir--/archived.pid> this file contains the process ID
+of F<archived.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in PDF format can be found in
+F<--docdir--/sympa.pdf>. 
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 AUTHORS
+
+=over 4
+
+=item Serge Aumont
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=item Olivier SalaE<252>n
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=back
+
+Contact authors at <sympa-authors@renater.fr>
+
+This manual page was initially written by
+JE<233>rE<244>me Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system.
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 ComitE<233> RE<233>seau des UniversitE<233>s
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license can be found under
+F</usr/share/common-licenses/FDL>
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>, L<bounced(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
 
 =cut 
 
@@ -99,7 +194,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-      print STDOUT "Starting archive daemon, pid $_\n";
+      print STDOUT "Starting archive daemon, PID $_\n";
 
       exit(0);
    }
@@ -138,7 +233,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    &Log::fatal_err("Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    Log::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.");
 }
 
 ## Sets the UMASK
@@ -153,7 +248,9 @@ foreach my $robot (@{Robot::get_robots()}) {
 	    exit -1;
 	}
     }else{
-	&Log::do_log('err','Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in wwsympa.conf.');
+	Log::do_log('err',
+	    'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in sympa.conf.'
+	);
 	exit -1;
     }
 }
@@ -193,7 +290,7 @@ while (!$end) {
 	    &rebuild($item->{'list'}.'@'.$item->{'robot'});
 	    $spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}});
 	}else{
-	   &Log::do_log('err',"unable to rebuild archive for unkown list/robot.Move to bad");
+	   Log::do_log('err', "unable to rebuild archive for unknown list/robot.Move to bad");
 	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to rebuild archive for unkown list','lock'=>'NULL'});
 	    next;
 	}
@@ -202,7 +299,7 @@ while (!$end) {
 	shift @orders;
 	&Log::do_log('debug',"removed found ");
 	unless($item->{'list'} && $item->{'robot'}){
-	   &Log::do_log('err',"unable to remove messages from archive for unkown list/robot.Move to bad");
+	   Log::do_log('err', "unable to remove messages from archive for unknown list/robot.Move to bad");
 	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to remove messages from archive, list name missing','lock'=>'NULL'});
 	    next;
 	}
@@ -320,16 +417,11 @@ Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 exit(0);
 
-
-=pod 
+=begin comment
 
 =head1 SUBFUNCTIONS 
 
 This is the description of the subfunctions contained by archived.pl.
-
-=cut 
-
-=pod 
 
 =head2 sub sigterm()
 
@@ -366,8 +458,6 @@ Switches the loop control variable $end value to 1 when SIGTERM signal is caught
 sub sigterm {
     $end = 1;
 }
-
-=pod 
 
 =head2 sub remove(STRING $adrlist, STRING $msgid)
 
@@ -432,8 +522,6 @@ sub remove {
     $msgid =~ s/\$/\\\$/g;
     system Site->mhonarc . "  -outdir $arcpath/$adrlist/$yyyy-$mm -rmm $msgid";
 }
-
-=pod 
 
 =head2 sub rebuild(STRING $adrlist)
 
@@ -658,9 +746,6 @@ sub rebuild {
 	}
     }
 }
-
-
-=pod 
 
 =head2 sub mail2arc(STRING $file,STRING $listname,STRING $hostname,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
 
@@ -916,9 +1001,6 @@ sub mail2arc {
     }
 }
 
-
-=pod 
-
 =head2 sub set_hidden_mode(STRING $tag)
 
 Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and $ENV{'M2H_MODIFYBODYADDRESSES'}
@@ -957,8 +1039,6 @@ sub set_hidden_mode {
     $ENV{'M2H_MODIFYBODYADDRESSES'} = 1;
 }
 
-=pod 
-
 =head2 sub unset_hidden_mode()
 
 Empties $ENV{'M2H_ADDRESSMODIFYCODE'}.
@@ -994,8 +1074,6 @@ sub unset_hidden_mode {
     ## Be carefull, the .mhonarc.db file keeps track of previous M2H_ADDRESSMODIFYCODE setup
     $ENV{'M2H_ADDRESSMODIFYCODE'} = '';
 }
-
-=pod 
 
 =head2 sub save_idx(STRING $index,STRING $lst)
 
@@ -1059,8 +1137,6 @@ sub create_idx {
     return $index;
 }
 
-=pod 
-
 =head2 sub get_tag(STRING $listname)
 
 I<OBSOLETED>.
@@ -1100,7 +1176,6 @@ sub directory_check {
     }
     return 1;
 }
-=pod 
 
 =head1 AUTHORS 
 
@@ -1108,7 +1183,7 @@ sub directory_check {
 
 =item * Serge Aumont <sa AT cru.fr> 
 
-=item * Olivier Salaun <os AT cru.fr> 
+=item * Olivier SalaE<252>n <os AT cru.fr> 
 
 =back 
 

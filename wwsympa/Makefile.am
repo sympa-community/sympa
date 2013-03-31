@@ -48,7 +48,13 @@ archived.pl bounced.pl wwsympa.fcgi: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--defaultdir--|$(defaultdir)|' \
+		-e 's|--docdir--|$(docdir)|' \
+		-e 's|--libexecdir--|$(libexecdir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
+		-e 's|--piddir--|$(piddir)|' \
+		-e 's|--spooldir--|$(spooldir)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
 		< $(srcdir)/$@.in > $@
 	chmod +x $@
 
