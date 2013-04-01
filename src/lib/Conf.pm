@@ -82,10 +82,17 @@ my %old_params = (
     clean_delay_queueother => '',
     pidfile_distribute     => '',
     pidfile_creation       => '',
-    'dkim_header_list'     => '',
-    web_recode_to          => 'filesystem_encoding',
+    'web_recode_to'        => 'filesystem_encoding', # ??? - 5.2
     'localedir'            => '',
-    'html_editor_file'     => 'html_editor_url',
+    'html_editor_file'     => 'html_editor_url',     # 6.2a.0 - 6.2a.32
+    'ldap_export_connection_timeout' => '',          # 3.3b3 - 4.1?
+    'ldap_export_dnmanager' => '',                   # ,,
+    'ldap_export_host'     => '',                    # ,,
+    'ldap_export_name'     => '',                    # ,,
+    'ldap_export_password' => '',                    # ,,
+    'ldap_export_suffix'   => '',                    # ,,
+    'tri'                  => 'sort',                # ??? - 1.3.4-1
+    'sort'                 => '',                    # 1.4.0 - ???
 );
 
 ## These parameters now have a hard-coded value
@@ -1342,9 +1349,6 @@ sub _load_config_file_to_hash {
         if (/^(\S+)\s+(.+)$/) {
             my ($keyword, $value) = ($1, $2);
             $value =~ s/\s*$//;
-            ##  'tri' is a synonym for 'sort'
-            ## (for compatibility with older versions)
-            $keyword = 'sort' if ($keyword eq 'tri');
             ##  'key_password' is a synonym for 'key_passwd'
             ## (for compatibilyty with older versions)
             $keyword = 'key_passwd' if ($keyword eq 'key_password');
@@ -2022,6 +2026,7 @@ sub _load_wwsconf {
 		     'wws_path' => 'No more used',
 		     'icons_url' => 'No more used. Using static_content/icons instead.',
 		     'robots' => 'Not used anymore. Robots are fully described in their respective robot.conf file.',
+		     'htmlarea_url' => 'No longer supported',
 		     );
 
     my %default_conf = ();

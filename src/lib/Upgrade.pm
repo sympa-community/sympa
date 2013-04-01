@@ -1025,7 +1025,6 @@ sub upgrade {
 	    'custom_archiver'            => 'yes',
 	    'default_home'               => 'NO',
 	    'export_topics'              => 'yes',
-	    'htmlarea_url'               => 'yes',
 	    'html_editor_file'           => 'NO', # 6.2a
 	    'html_editor_init'           => 'NO',
 	    'ldap_force_canonical_email' => 'NO',
@@ -1048,6 +1047,7 @@ sub upgrade {
 		'No more used. Using static_content/icons instead.',
 	    'robots' =>
 		'Not used anymore. Robots are fully described in their respective robot.conf file.',
+	    'htmlarea_url'  => 'No longer supported',
 	);
 
 	## Set language of new file content
