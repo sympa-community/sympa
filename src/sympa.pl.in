@@ -29,14 +29,16 @@ sympa, sympa.pl - A Modern Mailing List Manager
 
 =head1 SYNOPSIS
 
-S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
+S<B<sympa.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
       S<[ B<-k, --keepcopy>=I<directory> ]>
       S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
       S<[ B<-h, --help> ]> [ B<-v, --version> ]
       S<>
-      S<[ B<--import>=I<listname> ]> [ B<--close_list>=I<list[@robot]>][ B<--purge_list>=I<list[@robot]>]
+      S<[ B<--import>=I<listname> ]>
+      S<[ B<--close_list>=I<list[@robot]> ]>
+      S<[ B<--purge_list>=I<list[@robot]> ]>
       S<[ B<--lowercase> ] [ B<--make_alias_file> ]>
-      S<[ B<--dump>=I<listname> | ALL]>
+      S<[ B<--dump>=I<listname> | ALL ]>
 
 =head1 DESCRIPTION
 
@@ -98,10 +100,16 @@ Sympa will log calls to sendmail, including recipients. This option is
 useful for keeping track of each mail sent (log files may grow faster
 though).
 
+=begin comment
+
 =item B<--service=process_command>|B<process_message>|B<process_creation>
 
 Process is dedicated to messages distribution, commands or to automatic lists
 creation (default three of them).
+
+B<Not implemented>.
+
+=end comment
 
 =back
 
@@ -143,6 +151,19 @@ Create a list with the XML file under robot robot_name.
 
 Dumps subscribers of for `listname' list or all lists. Subscribers are 
 dumped in subscribers.db.dump.
+
+=begin comment
+
+=item B<--export_list> [B<--robot=>I<robot_name>]
+
+B<Not fully implemented>.
+
+=end comment
+
+=item B<--health_check>
+
+Check if F<sympa.conf>, F<robot.conf> of virtual robots and database structure
+are correct.  If any errors occur, exits with non-zero status.
 
 =item B<--import=>I<list>@I<dom>
 
@@ -193,8 +214,9 @@ Remove the list (remove archive, configuration files, users and owners in admin 
 =item B<--reload_list_config>
     [B<--list=>I<mylist>@I<mydom>] [B<--robot=>I<mydom>]
 
-Recreates all config.bin files. You should run this command if you edit
-authorization scenarios.  The list and robot parameters are optional.
+Recreates all F<config.bin> files or cache in C<list_table>.
+You should run this command if you edit authorization scenarios.
+The list and robot parameters are optional.
 
 =item B<--rename_list=>I<listname>@I<robot>
     B<--new_listname=>I<newlistname> B<--new_listrobot=>I<newrobot>
@@ -205,6 +227,14 @@ Renames a list or move it to another virtual robot.
 
 Trigger the list members update.
 
+=begin comment
+
+=item B<--sync_list_db>
+
+B<Deprecated>.  Use B<--reload_list_config>.
+
+=end comment
+
 =item B<--test_database_message_buffer>
 
 Test the database message buffer size.
@@ -213,7 +243,7 @@ Test the database message buffer size.
 
 Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
 
-=item B<--upgrade_shared> [B<--listname=>I<X>] [B<--robot=>I<Y>]>
+=item B<--upgrade_shared> [B<--list=>I<X>] [B<--robot=>I<Y>]>
 
 Rename files in shared.
 

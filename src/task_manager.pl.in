@@ -21,12 +21,73 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-## Options :  F         -> do not detach TTY
-##         :  d		-> debug -d is equiv to -dF
+=encoding utf-8
+
+=head1 NAME
+
+task_manager, task_manager.pl - Daemon to Process Periodical Sympa Tasks
+
+=head1 SYNOPSIS
+
+S<B<task_manager.pl> [ B<--foreground> ] [ B<--debug> ]>
+
+=head1 DESCRIPTION
+
+XXX @todo doc
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-d>, B<--debug>
+
+Sets the debug mode
+
+=item B<-F>, B<--foreground>
+
+Prevents the script from beeing daemonized
+
+=item B<-h>, B<--help>
+
+Prints this help message.
+
+=item B<--log_level=>I<level>
+
+Set log level.
+
+=back
+
+=head1 FILES
+
+F<--spooldir--/task> directory for task spool.
+
+F<--piddir--/task_manager.pid> this file contains the process ID
+of F<task_manager.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in PDF format can be
+found in F<--docdir--/sympa.pdf>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>, L<wwsympa(8)>
+
+=cut
 
 use lib '--modulesdir--';
 use strict "vars";
+use warnings;
 use Getopt::Long;
+use Pod::Usage;
 # tentative
 use Data::Dumper;
 
@@ -38,17 +99,17 @@ use List;
 #use Task; # used by List
 #use TaskSpool; # used by Task
 #use tools; # used by Conf
-##XXXuse wwslib; # no longer used
 
-my $opt_d;
-my $opt_F;
 my %options;
 
-unless (&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground')) {
-    &Log::fatal_err("Unknown options.");
+unless (GetOptions(\%main::options,
+    'debug|d', 'help|h', 'log_level=s', 'foreground|F')) {
+    Log::fatal_err("Unknown options.");
 }
 
-# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+if ($main::options{'help'}) {
+    pod2usage(0);
+}
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});

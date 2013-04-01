@@ -36,7 +36,7 @@ bounced, bounced.pl - Mailing List Bounce Processing Daemon for Sympa
 
 =head1 SYNOPSIS
 
-S<B<bounced> [ B<-F> ] [ B<-d, -dF> ]>
+S<B<bounced> [ B<--foreground> ] [ B<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -55,13 +55,21 @@ options is included below.
 
 =over 5
 
-=item B<-F>
+=item B<-F>, B<--foreground>
 
 Do not detach TTY.
 
-=item B<-d>, B<-dF>
+=item B<-d>, B<--debug>
 
 Run the program in a debug mode.
+
+=item B<-h>, B<--help>
+
+Print this help message.
+
+=item B<--log_level=>I<level>
+
+Sets daemon log level.
 
 =back
 
@@ -100,7 +108,8 @@ ComitE<233> RE<233>seau des UniversitE<233>s
 
 Contact authors at <sympa-authors@renater.fr>
 
-This manual page was initially written by JE<233>rE<244>me Marant <jerome.marant@IDEALX.org>
+This manual page was initially written by
+JE<233>rE<244>me Marant <jerome.marant@IDEALX.org>
 for the Debian GNU/Linux system.
 
 =head1 COPYRIGHT
@@ -117,7 +126,7 @@ under the terms of the GNU Free Documentation License, Version 1.1 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
 copy of the license can be found under
-F<--docdir--/COPYING>.
+F</usr/share/common-licenses/FDL>
 
 =head1 BUGS
 
@@ -126,7 +135,7 @@ See L<http://www.sympa.org/tracking>.
 
 =head1 SEE ALSO
 
-L<sympa(8)>, L<archived(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
+L<sympa(8)>, L<wwsympa(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
 
 =cut
 
@@ -136,9 +145,10 @@ L<sympa(8)>, L<archived(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
 
 use lib '--modulesdir--';
 use strict;
-
+use warnings;
 use FileHandle;
 use Getopt::Long;
+use Pod::Usage;
 use POSIX;
 
 use List;
@@ -147,8 +157,13 @@ use BounceMessage;
 
 ## Check options
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d','log_level=s','foreground|F')) {
-    &Log::fatal_err("Unknown options.");
+unless (&GetOptions(\%main::options,
+    'debug|d', 'help|h', 'log_level=s','foreground|F')) {
+    Log::fatal_err("Unknown options.");
+}
+
+if ($main::options{'help'}) {
+    pod2usage(0);
 }
 
 if ($main::options{'debug'}) {

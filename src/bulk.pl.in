@@ -21,19 +21,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-## Options :  F         -> do not detach TTY
-##         :  d		-> debug -d is equiv to -dF
-## Now, it is impossible to use -dF but you have to write it -d -F
-
 =encoding utf-8
 
 =head1 NAME 
 
-I<bulk.pl> - Daemon for submitting to SMTP engine bulkmailer_table content.
+bulk, bulk.pl - Daemon for Submitting Bulk Content to SMTP Engine
+
+=head1 SYNOPSIS
+
+S<B<bulk.pl> [ B<--foreground> ] [ B<--debug> ]>
 
 =head1 DESCRIPTION 
 
-This script must be run along with Sympa. It regularly checks the bulkmailer_table content and submit the messages it finds in it to the sendmail engine. Several daemon should be used on deferent server for huge traffic.
+This daemon must be run along with Sympa.  It regularly checks the
+C<bulkmailer_table> content and submit the messages it finds in it to the
+sendmail engine.  Several daemon should be used on deferent server for huge
+traffic.
 
 =head1 OPTIONS
 
@@ -47,6 +50,10 @@ Sets the debug mode
 
 Prevents the script from beeing daemonized
 
+=item B<-h>, B<--help>
+
+Prints this help message.
+
 =item B<--log_level=>I<level>
 
 Set log level.
@@ -57,13 +64,35 @@ Logs every sendmail calls.
 
 =back
 
+=head1 FILES
+
+F<--piddir--/bulk.pid> this file contains the process IDs
+of F<bulk.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in PDF format can be
+found in F<--docdir--/sympa.pdf>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>, L<sendmail(8)>
+
 =cut 
 
 use lib '--modulesdir--';
-
 use strict;
+use warnings;
 use Getopt::Long;
-use Pod::Uasage;
+use Pod::Usage;
 # tentative
 use Data::Dumper;
 
@@ -99,7 +128,7 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-if ($main::optins{'help'}) {
+if ($main::options{'help'}) {
     pod2usage(0);
 }
 

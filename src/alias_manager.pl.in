@@ -31,11 +31,11 @@
 
 =head1 NAME
 
-alias_manager, alias_manager.pl - Manage Sympa aliases
+alias_manager, alias_manager.pl - Manage Sympa Aliases
 
 =head1 SYNOPSIS
 
-S<B<alias_manager> B<add> | B<del> I<listname> I<domain>>
+S<B<alias_manager.pl> B<add> | B<del> I<listname> I<domain>>
 
 =head1 DESCRIPTION
 
@@ -129,8 +129,8 @@ L<sympa(8)>, L<sendmail(8)>.
 
 $ENV{'PATH'} = '';
 
-## Load Sympa.conf
 use strict;
+use warnings;
 use lib '--modulesdir--';
 use Getopt::Long;
 use Pod::Usage;

@@ -33,7 +33,7 @@ archived, archived.pl - Mailing List Archiving Daemon for Sympa
 
 =head1 SYNOPSIS
 
-S<B<archived> [ B<-F> ] [ B<-d, -dF> ]>
+S<B<archived.pl> [ B<--foreground> ] [ B<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -56,13 +56,17 @@ options is included below.
 
 =over 5
 
-=item B<-F>
+=item B<-F>, B<--foreground>
 
 Do not detach TTY.
 
-=item B<-d>
+=item B<-d>, B<--debug>
 
 Run the program in a debug mode.
+
+=item B<-h>, B<--help>
+
+Print this help message.
 
 =back
 
@@ -134,9 +138,10 @@ L<sympa(8)>, L<bounced(8)>, L<mhonarc(1)>, L<sympa.conf(5)>.
 
 use lib '--modulesdir--';
 use strict;
-#use Getopt::Std;
+use warnings;
 use Getopt::Long;
 use Digest::MD5;
+use Pod::Usage;
 
 #use Archive; # used in List
 use List;
@@ -156,12 +161,14 @@ use Commands;
 my $daemon_name = &Log::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
 
-#getopts('dF');
-
 ## Check options
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F')) {
+unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F', 'help|h')) {
     &Log::fatal_err("Unknown options.");
+}
+
+if ($main::options{'help'}) {
+    pod2usage(0);
 }
 
 if ($main::options{'debug'}) {

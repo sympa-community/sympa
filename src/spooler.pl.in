@@ -24,11 +24,11 @@
 
 =head1 NAME
 
-spooler.pl -- Sympa spooler
+spooler, spooler.pl -- Sympa Spooler
 
 =head1 SYNOPSIS
 
-   spooler.pl [OPTIONS]
+   B<spooler.pl> [OPTIONS]
 
 =head1 DESCRIPTION
 
@@ -72,6 +72,32 @@ Print this help.
 Print version number.
 
 =back
+
+=head1 FILES
+
+F<--spooldir--/msg/> directory for incoming spool.
+
+F<--spooldir--/bounce/> directory for bounce incoming spool.
+
+F<--piddir--/spooler.pid> this file contains the process IDs
+of F<spooler.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in PDF format can be
+found in F<--docdir--/sympa.pdf>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>
 
 =cut
 

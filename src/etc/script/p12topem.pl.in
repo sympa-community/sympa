@@ -23,10 +23,43 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+=encoding utf-8
+
+=head1 NAME
+
+p12topem.pl - Convert PKCS#12 certificates to PEM format
+
+=head1 SYNOPSIS
+
+    p12topem.pl --pkcs12 <PKCS#12_cert_file> --listname <listname> or
+    p12topem.pl --pkcs12 <PKCS#12_cert_file> --robot <robot>
+
+=head1 DESCRIPTION
+
+This script is intended to convert a PKCS#12 certificates in PEM format
+using Openssl.  This is useful because most PKI providers deliver certificates
+using a web interface so the certificate is stored in your browser.
+
+When exporting a certificate from a browser (Netscape, IE, Mozilla etc)
+the result is stored using PKCS#12 format.  Sympa requires a pair of PEM
+certificate and private key.  You must then convert your PKCS#12 into PEM. 
+
+For a list certificate, the file will be installed in
+$home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key.
+
+For Sympa itself a certificate will be installed in 
+$etc_sympa/<robot>/cert.pem and  $etc_sympa/<robot>/private_key or
+$etc_sympa/cert.pem and $etc_sympa/private_key.
+
+You are then prompted for inpassword (the password used to encrypt the
+PKCS#12 file).
+
+=cut
 
 use strict;
 use lib '--modulesdir--';
 use Getopt::Long;
+use Pod::Usage;
 
 #use Sympa::Constants; # used by Conf
 #use Conf; # used in List - Robot - Site
@@ -62,7 +95,7 @@ my $p12input = $main::options{'pkcs12'};
 my ($cert,$privatekey,$inpass,$key);
 
 if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
-    print_usage();
+    pod2usage(0);
 }else{
     if ($listname) {
 	my $list = List->new($listname);
@@ -107,7 +140,7 @@ if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
     
     unless ($outpass) {
 	system 'stty', '-echo';
-	printf "sympa password to protect list private key %s:", $key;
+	printf "Sympa password to protect list private key %s:", $key;
 	chop($outpass = <STDIN>);
 	print "\n";
 	system 'stty', 'echo';
@@ -119,32 +152,6 @@ if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
     printf "private key %s and certificate %s were created.\n", $privatekey, $cert;
     exit;
 }
-
-sub print_usage {
-print <<"EOF";
-
-Usage p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname> or
-      p12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot>
-
-This script is intended to convert a PKCS#12 certificates in PEM format
-using Openssl. This is usefull because most PKI providerd deliver certificates
-using a web interface so the certificat is stored in your browser.
-
-When exporting a certificate from a browser (Netscape, IE, Mozilla etc)
-the result is stored using PKCS#12 format.Sympa requires a pair of PEM
-certificat and private key. You must then convert your pkcs#12 into PEM. 
-
-For a list certificat, the file will be installed in
-$home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key
-
-For Sympa itself a certificate will be installed in 
-$etc_sympa/<robot>/cert.pem and  $etc_sympa/<robot>/private_key or
-$etc_sympa/cert.pem and $etc_sympa/private_key
-
-
-You are then prompted for inpassword (the password used to encrypt the
-pkc#12 file).
-EOF
 
     unless ($outpass) {
 	print <<"EOF";
