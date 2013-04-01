@@ -507,7 +507,6 @@ AC_CONFIG_FILES([
     src/lib/Makefile
     soap/Makefile
     doc/Makefile
-    doc/man8/Makefile
     doc/sample/Makefile
     web_tt2/Makefile
     wwsympa/Makefile
