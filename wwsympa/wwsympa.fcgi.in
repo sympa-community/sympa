@@ -17,7 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 ## Copyright 1999 Comité Réseaux des Universités
 ## web interface to Sympa mailing lists manager
@@ -31,20 +31,20 @@
 
 =head1 NAME
 
-I<wwsympa.fcgi> - Sympa web interface 
+wwsympa, wwsympa.fcgi - Sympa web interface 
 
 =head1 DESCRIPTION 
 
-This fcgi script completely handles all aspects of the Sympa web interface
+This FastCGI script completely handles all aspects of the Sympa web interface
 
 =cut 
 
 use lib '--modulesdir--';
 
 use strict;
+use warnings;
 use Getopt::Long;
 use Archive::Zip qw(:ERROR_CODES);
-##XXXuse strict 'vars';
 use Time::Local;
 # tentative
 use Data::Dumper;
@@ -73,12 +73,6 @@ use cookielib;
 use tracking;
 #use Sympaspool; # used in List - Task
 #use SDM; # used by Conf
-
-#use open ':utf8'; ## Default is to consider files utf8 
-
-#use Mail::Header; # no need to import
-#use Mail::Address; # no longer used
-
 use OAuthProvider;
 use OAuthConsumer;
 use VOOTProvider;
@@ -16664,7 +16658,7 @@ sub do_send_mail {
     $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'} if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
     $data->{'not_auto_submitted'} = 1;
     $data->{'not_a_list'} = 1 if($in{'sub_action'} eq 'sendmailtome');
-    unless (&mail::mail_file('', $to, $data, $robot_id)) {
+    unless (&mail::mail_file('', $to, $data, $robot)) {
 	&report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
 				   $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	&wwslog('err','do_send_mail: failed to send message for $to list');
