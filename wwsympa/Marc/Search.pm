@@ -244,7 +244,7 @@ sub _find_match
         push @{$self->{'res'}}, $res;
     }
 
-  return $match;		# 1 if match suceeds; 0 otherwise
+  return $match;		# 1 if match succeeds; 0 otherwise
 }
 
 ##------------------------------------------------------------------------##

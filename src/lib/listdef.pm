@@ -512,7 +512,7 @@ our %pinfo = (
 
     'merge_feature' => {
 	'group'      => 'sending',
-	'gettext_id' => "Allow message personnalization",
+	'gettext_id' => "Allow message personalization",
 	'format'     => ['on', 'off'],
 	'occurrence' => '0-1',
 	'default'    => {'conf' => 'merge_feature'}
@@ -1704,7 +1704,7 @@ our %pinfo = (
 		'order'      => 1,
 		'gettext_id' => "File path for list DKIM private key",
 		'gettext_comment' =>
-		    "The file must contain a RSA pem encoded private key",
+		    "The file must contain a RSA PEM encoded private key",
 		'format'    => '\S+',
 		'occurrence'=> '0-1',
 		'default'   => {'conf' => 'dkim_private_key_path'}

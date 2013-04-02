@@ -170,7 +170,7 @@ sub connect {
     }
     
     unless (defined($cnx) && ($cnx->code() == 0)){
-	&Log::do_log ('err',"Failed to bind to LDAP server : '%s', Ldap server error : '%s'", $host_entry, $cnx->error, $cnx->server_error);
+	&Log::do_log ('err',"Failed to bind to LDAP server : '%s', LDAP server error : '%s'", $host_entry, $cnx->error, $cnx->server_error);
 	$self->{'ldap_handler'}->unbind;
 	return undef;
     }

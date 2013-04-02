@@ -52,13 +52,13 @@ if ($opt{'ssl'} eq 'on') {
     $ldap=Net::LDAP->new($opt{'host'},%arg) or print "connect impossible\n";
 }
 
-$ldap->bind or print "bind impossible \n";
+$ldap->bind or print "bind impossible\n";
 
 #$mesg = $ldap->search ( base => "$opt{'suffix'}", filter => "(cn=$nom)" )
 $mesg = $ldap->search ( base => $opt{'suffix'}, 
 			filter => $opt{'filter'}, 
 			attrs => [$opt{'attrs'}] )
-or  print "Search  impossible \n";
+or  print "Search  impossible\n";
 
 # $mesg->code or  print "code chjie\n";
 
@@ -92,7 +92,7 @@ foreach $dn (keys %$res) {
 
 print "Total : $cpt\n";
 
-$ldap->unbind or print "unbind impo \n";
+$ldap->unbind or print "unbind impossible\n";
 
 
 

@@ -81,7 +81,7 @@ sub check_auth {
 	} else {
 	    &report::reject_report_web('user', 'incorrect_passwd', {})
 		unless ($ENV{'SYMPA_SOAP'});
-	    &Log::do_log('err', "Incorrect Ldap password");
+	    &Log::do_log('err', "Incorrect LDAP password");
 	    return undef;
 	}
     }
@@ -280,7 +280,7 @@ sub ldap_authentication {
     );
 
     if ($mesg->count() == 0 || $mesg->code() != 0) {
-	&Log::do_log('notice', "No entry in the Ldap Directory Tree of %s",
+	&Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
 	    $ldap->{'host'});
 	$ds->disconnect();
 	return undef;
@@ -378,7 +378,7 @@ sub get_email_by_net_id {
     my $count = $emails->count();
 
     if ($emails->count() == 0) {
-	&Log::do_log('notice', "No entry in the Ldap Directory Tree of %s",
+	&Log::do_log('notice', "No entry in the LDAP Directory Tree of %s",
 	    $host);
 	$ds->disconnect();
 	return undef;

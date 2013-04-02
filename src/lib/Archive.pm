@@ -160,7 +160,7 @@ sub search_msgid {
 	&Log::do_log('err','remove_arc: no message id found');return undef;
     } 
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-	&Log::do_log ('err',"archive::search_msgid : dir $dir look unproper");
+	&Log::do_log ('err',"archive::search_msgid : dir $dir look improper");
 	return undef;
     }
     unless (opendir (ARC, "$dir")){

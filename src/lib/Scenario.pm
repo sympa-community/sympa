@@ -270,7 +270,7 @@ sub _parse_scenario {
 	} else {
 	    Log::do_log(
 		'err',
-		'error rule syntaxe in scenario %s rule line %d expected : <condition> <auth_mod> -> <action>',
+		'syntax error in scenario %s rule line %d expected : <condition> <auth_mod> -> <action>',
 		$function,
 		$.
 	    );
@@ -806,7 +806,7 @@ sub verify {
 	/(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
 	) {
 	&Log::do_log('err',
-	    "error rule syntaxe: unknown condition $condition");
+	    "syntax error: unknown condition $condition");
 	return undef;
     }
     my $negation = 1;
@@ -1034,7 +1034,7 @@ sub verify {
     if ($condition_key =~ /^(true|all)$/i) {
 	unless ($#args == -1) {
 	    &Log::do_log('err',
-		"error rule syntaxe : incorrect number of argument or incorrect argument syntaxe $condition"
+		"syntax error: incorrect number of argument or incorrect argument syntaxe $condition"
 	    );
 	    return undef;
 	}
@@ -1043,7 +1043,7 @@ sub verify {
     } elsif ($condition_key =~ /^(is_listmaster|verify_netmask)$/) {
 	unless ($#args == 0) {
 	    &Log::do_log('err',
-		"error rule syntaxe : incorrect argument number for condition $condition_key"
+		"syntax error: incorrect argument number for condition $condition_key"
 	    );
 	    return undef;
 	}
@@ -1052,7 +1052,7 @@ sub verify {
     } elsif ($condition_key =~ /^search$/o) {
 	unless ($#args == 1 || $#args == 0) {
 	    &Log::do_log('err',
-		"error rule syntaxe : Incorrect argument number for condition $condition_key"
+		"syntax error: Incorrect argument number for condition $condition_key"
 	    );
 	    return undef;
 	}
@@ -1064,7 +1064,7 @@ sub verify {
 	unless ($#args == 1) {
 	    &Log::do_log(
 		'err',
-		"error rule syntaxe : incorrect argument number (%d instead of %d) for condition $condition_key",
+		"syntax_error: incorrect argument number (%d instead of %d) for condition $condition_key",
 		$#args + 1,
 		2
 	    );
@@ -1072,7 +1072,7 @@ sub verify {
 	}
     } elsif ($condition_key !~ /^customcondition::/o) {
 	&Log::do_log('err',
-	    "error rule syntaxe : unknown condition $condition_key");
+	    "syntax error: unknown condition $condition_key");
 	return undef;
     }
 
@@ -1128,7 +1128,7 @@ sub verify {
 	my $block;
 	unless ($block = new2 Net::Netmask($args[0])) {
 	    &Log::do_log('err',
-		"error rule syntaxe : failed to parse netmask '$args[0]'");
+		"syntax error: failed to parse netmask '$args[0]'");
 	    return undef;
 	}
 	if ($block->match($ENV{'REMOTE_ADDR'})) {

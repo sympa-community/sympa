@@ -41,7 +41,7 @@ sub get_https{
 	&Log::do_log ('debug','get_https (%s,%s,%s,%s,%s,%s,%s,%s)',$host,$port,$path,$client_cert,$client_key,$key_passwd,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
-	    &Log::do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
+	    &Log::do_log ('err',"error : incorrect access to cafile $trusted_ca_file or capath $trusted_ca_path");
 	    return undef;
 	}
 
@@ -122,7 +122,7 @@ sub get_https2{
 	&Log::do_log ('debug','Fetch::get_https2 (%s,%s,%s,%s,%s)',$host,$port,$path,$trusted_ca_file,$trusted_ca_path );
 
 	unless ( -r ($trusted_ca_file) ||  (-d $trusted_ca_path )) {
-	    &Log::do_log ('err',"error : incorrect access to cafile $trusted_ca_file bor capath $trusted_ca_path");
+	    &Log::do_log ('err',"error : incorrect access to cafile $trusted_ca_file or capath $trusted_ca_path");
 	    return undef;
 	}
 

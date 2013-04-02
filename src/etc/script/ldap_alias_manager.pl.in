@@ -32,7 +32,7 @@ use Robot;
 
 unless (Site->load('no_db' => 1)) {
     printf STDERR
-	"Unable to load sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+	"Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
 	Conf::get_sympa_conf();
     exit 1;
 }
@@ -206,7 +206,7 @@ elsif ($operation eq 'del') {
 	$value =~ s/^dn:\s*//;
 
 	if ($simulation_mode) {
-		printf "Would delete dn %s\n", $value;
+		printf "Would delete DN %s\n", $value;
 	} else {
 		$ldap_connection->delete($value);
 	}

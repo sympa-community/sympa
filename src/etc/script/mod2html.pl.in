@@ -57,7 +57,7 @@ foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
     my $robot = $self->{'domain'};
     my $modqueue = $Conf{'queuemod'};
     unless ($name && $admin) {
-	print STDERR "Unkown list $listaddress, skipping\n";
+	print STDERR "Unknown list $listaddress, skipping\n";
 	next;
     }
     
@@ -68,7 +68,7 @@ foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
 	}
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
 	unless ($mhonarc_ressources) {
-	    die "Cannot find any MhOnArc ressource file";
+	    die "Cannot find any templates of MHonArc resource file";
 	}
 	
 	## generate HTML

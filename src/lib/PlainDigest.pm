@@ -241,7 +241,7 @@
   };
   if ($@) {
     # mmm, what to do if it fails?
-    $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+    $outstring .= sprintf (gettext("** Warning: A message part using unrecognized character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
     $thispart =~ s/[^\x00-\x7F]/?/g;
   }
     
@@ -294,7 +294,7 @@
         $body =  $charset->decode($body);
       } else {
         # mmm, what to do if it fails?
-        $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+        $outstring .= sprintf (gettext("** Warning: A message part using unrecognized character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
         $body =~ s/[^\x00-\x7F]/?/g;
       }           
       my $tree = HTML::TreeBuilder->new->parse($body);

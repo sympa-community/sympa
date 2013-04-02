@@ -390,17 +390,17 @@ sub authenticateRemoteAppAndRun {
 	my ($id, $value) = split(/=/, $var);
 	if (!defined $id) {
 	    &Log::do_log('notice',
-		"authenticateRemoteAppAndRun(): incorrect syntaxe id");
+		"authenticateRemoteAppAndRun(): incorrect syntax id");
 	    die SOAP::Fault->faultcode('Server')
-		->faultstring('Incorrect syntaxe id')
-		->faultdetail("Unrecognized syntaxe  $var");
+		->faultstring('Incorrect syntax id')
+		->faultdetail("Unrecognized syntax $var");
 	}
 	if (!defined $value) {
 	    &Log::do_log('notice',
-		"authenticateRemoteAppAndRun(): incorrect syntaxe value");
+		"authenticateRemoteAppAndRun(): incorrect syntax value");
 	    die SOAP::Fault->faultcode('Server')
-		->faultstring('Incorrect syntaxe value')
-		->faultdetail("Unrecognized syntaxe  $var");
+		->faultstring('Incorrect syntax value')
+		->faultdetail("Unrecognized syntax $var");
 	}
 	$ENV{$id} = $value if ($proxy_vars->{$id});
     }
@@ -745,7 +745,7 @@ sub closeList {
 	&Log::do_log('info', 'closeList: already closed');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('list allready closed')
-	    ->faultdetail("list $listname all ready closed");
+	    ->faultdetail("list $listname already closed");
     } elsif ($list->status eq 'pending') {
 	&Log::do_log('info',
 	    'do_close_list: closing a pending list makes it purged');

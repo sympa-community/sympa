@@ -47,13 +47,13 @@ use Sympa::Constants;
 my ($reponse, @ret, $val, %fault);
 
 my $usage =
-    "$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
-code access to features of Sympa soap server. Authentication can be done via
+    "$0 is a Perl SOAP client for Sympa for TEST ONLY. Use it to illustrate how to
+code access to features of Sympa SOAP server. Authentication can be done via
 user/password or user cookie or as a trusted remote application
 
 Usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
---service=<a sympa service>
+--soap_url=<SOAP Sympa server URL>
+--service=<a Sympa service>
 --trusted_application=<app name>
 --trusted_application_password=<password>
 --proxy_vars=<id=value,id2=value2>
@@ -61,20 +61,20 @@ Usage: $0 <with the following options:>
 
 
 OR usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
+--soap_url=<SOAP Sympa server URL>
 --user_email=<email>
 --user_password=<password>
---session_id=<sessionid>
---service=<a sympa service>
+--session_id=<session ID>
+--service=<a Sympa service>
 --service_parameters=<value1,value2,value3>
 
 
 OR usage: $0 <with the following options:>
---soap_url=<soap sympa server url>
---cookie=<sympauser cookie string>
+--soap_url=<SOAP Sympa server URL>
+--cookie=<Sympa user cookie string>
 
 Example:
-$0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr
+$0 --soap_url=<SOAP Sympa server URL> --cookie=sympauser=someone\@cru.fr
 ";
 
 my %options;

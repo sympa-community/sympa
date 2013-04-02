@@ -131,7 +131,7 @@ sub load {
     my $counter = 0;
     while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
 	if ( $counter > 0){
-	    &Log::do_log('err',"The SQL statement did return more than one session. Is this a bug coming from dbi or mysql?");
+	    &Log::do_log('err',"The SQL statement did return more than one session. Is this a bug coming from DBI or MySQL?");
 	    $session->{'email'} = '';
 	    last;
 	}

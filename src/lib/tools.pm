@@ -601,7 +601,7 @@ sub shift_file {
 	my $dir = $1;
 
 	unless (opendir(DIR, $dir)) {
-	    &Log::do_log('err', "shift_file : Cannot read dir $dir" );
+	    &Log::do_log('err', "shift_file : Cannot read directory $dir" );
 	    return ($file.'.'.$file_extention);
 	}
 	my $i = 0 ;
@@ -779,7 +779,7 @@ sub get_dkim_parameters {
 	croak 'bug in logic.  Ask developer';
     }
     unless (open (KEY, $keyfile)) {
-	Log::do_log('err', "Could not read dkim private key %s", $keyfile);
+	Log::do_log('err', "Could not read DKIM private key %s", $keyfile);
 	return undef;
     }
     while (<KEY>){
@@ -795,9 +795,9 @@ sub dkim_verifier {
     my $msg_as_string = shift;
     my $dkim;
 
-    &Log::do_log('debug',"dkim verifier");
+    &Log::do_log('debug',"DKIM verifier");
     unless (eval "require Mail::DKIM::Verifier") {
-	&Log::do_log('err', "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature");
+	&Log::do_log('err', "Failed to load Mail::DKIM::Verifier Perl module, ignoring DKIM signature");
 	return undef;
     }
     
@@ -848,7 +848,7 @@ sub dkim_verifier {
 
 # input a msg as string, output idem without signature if invalid
 sub remove_invalid_dkim_signature {
-    &Log::do_log('debug',"removing invalide dkim signature");
+    &Log::do_log('debug',"removing invalid DKIM signature");
     my $msg_as_string = shift;
 
     unless (&tools::dkim_verifier($msg_as_string)){
@@ -862,7 +862,7 @@ sub remove_invalid_dkim_signature {
 	    return $msg_as_string ;
 	}
 	$entity->head->delete('DKIM-Signature');
-&Log::do_log('debug',"removing invalide dkim signature header");
+&Log::do_log('debug',"removing invalid DKIM signature header");
 	return $entity->head->as_string."\n".$body_as_string;
     }else{
 	return ($msg_as_string); # sgnature is valid.
@@ -903,11 +903,11 @@ sub dkim_sign {
     close(MSGDUMP);
 
     unless (eval "require Mail::DKIM::Signer") {
-	&Log::do_log('err', "Failed to load Mail::DKIM::Signer perl module, ignoring DKIM signature");
+	&Log::do_log('err', "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature");
 	return ($msg_as_string); 
     }
     unless (eval "require Mail::DKIM::TextWrap") {
-	&Log::do_log('err', "Failed to load Mail::DKIM::TextWrap perl module, signature will not be pretty");
+	&Log::do_log('err', "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty");
     }
     my $dkim ;
     if ($dkim_i) {
@@ -961,7 +961,7 @@ sub dkim_sign {
     }
     my $message = new Message({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
     unless ($message){
-	&Log::do_log('err',"unable to load $temporary_file as a message objet");
+	&Log::do_log('err',"unable to load $temporary_file as a message object");
 	return ($msg_as_string); 
     }
 
@@ -1063,7 +1063,7 @@ sub escape_chars {
 	my $hex_i = sprintf "%lx", $i;
 	$s =~ s/\x$hex_i/%$hex_i/g;
     }
-    $s =~ s/\//%a5/g unless ($except eq '/');  ## Special traetment for '/'
+    $s =~ s/\//%a5/g unless ($except eq '/');  ## Special treatment for '/'
 
     return $s;
 }
@@ -1080,11 +1080,11 @@ sub escape_docname {
     ## Decode from FS encoding to utf-8
     #$filename = &Encode::decode(Site->filesystem_encoding, $filename);
 
-    ## escapesome chars for use in URL
+    ## escape some chars for use in URL
     return &escape_chars($filename, $except);
 }
 
-## Convert from Perl unicode encoding to UTF8
+## Convert from Perl Unicode encoding to UTF-8
 sub unicode_to_utf8 {
     my $s = shift;
     
@@ -1165,7 +1165,7 @@ sub qdecode_filename {
 sub unescape_chars {
     my $s = shift;
 
-    $s =~ s/%a5/\//g;  ## Special traetment for '/'
+    $s =~ s/%a5/\//g;  ## Special treatment for '/'
     foreach my $i (0x20..0x2c,0x3a..0x3f,0x5b,0x5d,0x80..0x9f,0xa0..0xff) {
 	my $hex_i = sprintf "%lx", $i;
 	my $hex_s = sprintf "%c", $i;
@@ -1201,7 +1201,7 @@ sub tmp_passwd {
     return ('init'.substr(Digest::MD5::md5_hex(join('/', Site->cookie, $email)), -8)) ;
 }
 
-# Check sum used to authenticate communication from wwsympa to sympa
+# Check sum used to authenticate communication from WWSympa to Sympa
 sub sympa_checksum {
     my $rcpt = shift;
     my $checksum = (substr(Digest::MD5::md5_hex(join('/', Site->cookie, $rcpt)), -10)) ;
@@ -1296,7 +1296,7 @@ sub decrypt_password {
 	$cipher = ciphersaber_installed();
     }
     if ($cipher eq 'no_cipher') {
-	&Log::do_log('info','password seems crypted while CipherSaber is not installed !');
+	&Log::do_log('info','password seems encrypted while CipherSaber is not installed !');
 	return $inpasswd ;
     }
     return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
@@ -1326,7 +1326,7 @@ sub load_mime_types {
             
             my @extensions = split / /, $v;
         
-            ## provides file extention, given the content-type
+            ## provides file extension, given the content-type
             if ($#extensions >= 0) {
                 $types->{$k} = $extensions[0];
             }
@@ -1437,7 +1437,7 @@ sub virus_infected {
 
     #$mail->dump_skeleton;
 
-    ## Call the procedure of spliting mail
+    ## Call the procedure of splitting mail
     unless (&split_mail ($mail,'msg', $work_dir)) {
 	&Log::do_log('err', 'Could not split mail %s', $mail);
 	return undef;
@@ -1659,7 +1659,7 @@ sub virus_infected {
    
 }
 
-## subroutines for epoch and human format date processings
+## subroutines for epoch and human format date processing
 
 
 ## convert an epoch date into a readable date scalar
@@ -1855,10 +1855,10 @@ sub list_dir {
 }
 
 ## Q-encode a complete file hierarchy
-## Usefull to Q-encode subshared documents
+## Useful to Q-encode subshared documents
 sub qencode_hierarchy {
     my $dir = shift; ## Root directory
-    my $original_encoding = shift; ## Suspected original encoding of filenames
+    my $original_encoding = shift; ## Suspected original encoding of file names
 
     my $count;
     my @all_files;
@@ -1872,7 +1872,7 @@ sub qencode_hierarchy {
 	my $encoding = $f_struct->{'encoding'};
 	Encode::from_to($new_filename, $encoding, 'utf8') if $encoding;
     
-	## Q-encode filename to escape chars with accents
+	## Q-encode file name to escape chars with accents
 	$new_filename = &tools::qencode_filename($new_filename);
     
 	my $orig_f = $f_struct->{'directory'}.'/'.$f_struct->{'filename'};
@@ -1890,7 +1890,7 @@ sub qencode_hierarchy {
     return $count;
 }
 
-## Dumps the value of each character of the inuput string
+## Dumps the value of each character of the input string
 sub dump_encoding {
     my $out = shift;
 
@@ -1903,11 +1903,11 @@ sub remove_pid {
 	my ($pidfile, $pid, $options) = @_;
 	
 	## If in multi_process mode (bulk.pl for instance can have child processes)
-	## Then the pidfile contains a list of space-separated PIDs on a single line
+	## Then the PID file contains a list of space-separated PIDs on a single line
 	if($options->{'multiple_process'}) {
 		unless(open(PFILE, $pidfile)) {
 			# fatal_err('Could not open %s, exiting', $pidfile);
-			&Log::do_log('err','Could not open %s to remove pid %s', $pidfile, $pid);
+			&Log::do_log('err','Could not open %s to remove PID %s', $pidfile, $pid);
 			return undef;
 		}
 		my $l = <PFILE>;
@@ -1931,7 +1931,7 @@ sub remove_pid {
 				print PFILE join(' ', @pids)."\n";
 				close(PFILE);
 			}else{
-				&Log::do_log('notice', 'pidfile %s does not exist. Nothing to do.', $pidfile);
+				&Log::do_log('notice', 'PID file %s does not exist. Nothing to do.', $pidfile);
 			}
 		}
 	}else{
@@ -1951,7 +1951,7 @@ sub remove_pid {
 }
 
 # input user agent string and IP. return 1 if suspected to be a crawler.
-# initial version based on rawlers_dtection.conf file only
+# initial version based on crawlers_detection.conf file only
 # later : use Session table to identify those who create a lot of sessions 
 ##FIXME:per-robot config should be available.
 sub is_a_crawler {
@@ -1980,7 +1980,7 @@ sub write_pid {
 
     my @pids;
 
-    # Lock pid file
+    # Lock PID file
     my $lock = new Lock ($pidfile);
     unless (defined $lock) {
 	&Log::fatal_err('Lock could not be created. Exiting.');
@@ -1989,9 +1989,9 @@ sub write_pid {
     unless ($lock->lock('write')) {
 	&Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
     }
-    ## If pidfile exists, read the PIDs
+    ## If PID file exists, read the PIDs
     if(-f $pidfile) {
-	# Read pid file
+	# Read PID file
 	open(PFILE, $pidfile);
 	my $l = <PFILE>;
 	close PFILE;	
@@ -1999,25 +1999,25 @@ sub write_pid {
     }
 
     ## If we can have multiple instances for the process.
-    ## Print other pids + this one
+    ## Print other PIDs + this one
     if($options->{'multiple_process'}) {
 	unless(open(PIDFILE, '> '.$pidfile)) {
-	    ## Unlock pid file
+	    ## Unlock PID file
 	    $lock->unlock();
 	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
 	}
-	## Print other pids + this one
+	## Print other PIDs + this one
 	push(@pids, $pid);
 	print PIDFILE join(' ', @pids)."\n";
 	close(PIDFILE);
     }else{
-	## Create and write the pidfile
+	## Create and write the PID file
 	unless(open(PIDFILE, '+>> '.$pidfile)) {
-	    ## Unlock pid file
+	    ## Unlock PID file
 	    $lock->unlock();
 	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile);
 	}
-	## The previous process died suddenly, without pidfile cleanup
+	## The previous process died suddenly, without PID file cleanup
 	## Send a notice to listmaster with STDERR of the previous process
 	if($#pids >= 0) {
 	    my $other_pid = $pids[0];
@@ -2028,12 +2028,12 @@ sub write_pid {
 	}
 	
 	unless(open(PIDFILE, '> '.$pidfile)) {
-	    ## Unlock pid file
+	    ## Unlock PID file
 	    $lock->unlock();
 	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
 	}
 	unless(truncate(PIDFILE, 0)) {
-	    ## Unlock pid file
+	    ## Unlock PID file
 	    $lock->unlock();
 	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
 	}
@@ -2047,11 +2047,11 @@ sub write_pid {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	## Unlock pid file
+	## Unlock PID file
 	$lock->unlock();
 	&Log::fatal_err('Unable to set rights on %s', $pidfile);
     }
-    ## Unlock pid file
+    ## Unlock PID file
     $lock->unlock();
 
     return 1;
@@ -2073,7 +2073,7 @@ sub direct_stderr_to_file {
     return 1;
 }
 
-# Send content of $pid.stderr to listmaster for process whose pid is $pid.
+# Send content of $pid.stderr to listmaster for process whose PID is $pid.
 sub send_crash_report {
     my %data = @_;
     &Log::do_log('debug','Sending crash report for process %s',$data{'pid'}),
@@ -2175,9 +2175,9 @@ sub get_canonical_email {
 }
 
 ## Function for Removing a non-empty directory
-## It takes a variale number of arguments : 
+## It takes a variable number of arguments : 
 ## it can be a list of directory
-## or few direcoty paths
+## or few directory paths
 sub remove_dir {
     
     &Log::do_log('debug2','remove_dir()');
@@ -2190,7 +2190,7 @@ sub remove_dir {
 
 	if (!-l && -d _) {
 	    unless (rmdir($name)) {
-		&Log::do_log('err','Error while removing dir %s',$name);
+		&Log::do_log('err','Error while removing directory %s',$name);
 	    }
 	}else{
 	    unless (unlink($name)) {
@@ -2207,8 +2207,8 @@ sub remove_dir {
 ## 'decrypt' -> return a list of possible decryption keys/certs
 ## 'encrypt' -> return the preferred encryption key/cert
 ## returns ($certs, $keys)
-## for 'sign' and 'encrypt', these are strings containing the absolute filename
-## for 'decrypt', these are arrayrefs containing absolute filenames
+## for 'sign' and 'encrypt', these are strings containing the absolute file name
+## for 'decrypt', these are arrayrefs containing absolute file names
 sub smime_find_keys {
     my($dir, $oper) = @_;
     &Log::do_log('debug', 'tools::smime_find_keys(%s, %s)', $dir, $oper);
@@ -2509,7 +2509,7 @@ sub remove_empty_entries {
     return $not_empty;
 }
 
-## Duplictate a complex variable
+## Duplicate a complex variable
 sub dup_var {
     my ($var) = @_;    
 
@@ -2535,7 +2535,7 @@ sub dup_var {
 ####################################################
 # get_array_from_splitted_string                          
 ####################################################
-# return an array made on a string splited by ','.
+# return an array made on a string split by ','.
 # It removes spaces.
 #
 # 
@@ -2825,7 +2825,7 @@ sub add_in_blacklist {
     $entry = lc($entry);
     chomp $entry;
 
-    # robot blacklist not yet availible 
+    # robot blacklist not yet available 
     unless ($list) {
 	 &Log::do_log('info',"tools::add_in_blacklist: robot blacklist not yet availible, missing list parameter");
 	 return undef;
@@ -2840,7 +2840,7 @@ sub add_in_blacklist {
     }
     my $dir = $list->dir.'/search_filters';
     unless ((-d $dir) || mkdir ($dir, 0755)) {
-	&Log::do_log('info','do_blacklist : unable to create dir %s',$dir);
+	&Log::do_log('info','do_blacklist : unable to create directory %s',$dir);
 	return undef;
     }
     my $file = $dir.'/blacklist.txt';
@@ -2959,18 +2959,18 @@ sub unlock {
 #  get_fingerprint                                         #
 ############################################################
 #  Used in 2 cases :                                       #
-#  - check the md5 in the url                              #
-#  - create an md5 to put in a url                         #
+#  - check the MD5 in the URL                              #
+#  - create an MD5 to put in a URL                         #
 #                                                          #
 #  Use : get_db_random()                                   #
 #        init_db_random()                                  #
 #        md5_fingerprint()                                 #
 #                                                          #  
 # IN : $email : email of the subscriber                    #
-#      $fingerprint : the fingerprint in the url (1st case)#
+#      $fingerprint : the fingerprint in the URL (1st case)#
 #                                                          # 
-# OUT : $fingerprint : a md5 for create an url             #
-#     | 1 : if the md5 in the url is true                  #
+# OUT : $fingerprint : a MD5 for create an URL             #
+#     | 1 : if the MD5 in the URL is true                  #
 #     | undef                                              #
 #                                                          #
 ############################################################
@@ -3012,7 +3012,7 @@ sub get_fingerprint {
 #                                                          #
 # IN : a string                                            #
 #                                                          #
-# OUT : md5 digest                                         #
+# OUT : MD5 digest                                         #
 #     | undef                                              #
 #                                                          #
 ############################################################
@@ -3095,7 +3095,7 @@ sub get_regexp {
 
 }
 
-## convert a string formated as var1="value1";var2="value2"; into a hash.
+## convert a string formatted as var1="value1";var2="value2"; into a hash.
 ## Used when extracting from session table some session properties or when extracting users preference from user table
 ## Current encoding is NOT compatible with encoding of values with '"'
 ##
@@ -3307,7 +3307,7 @@ sub smart_lessthan {
 sub get_pids_in_pid_file {
 	my $pidfile = shift;
 	unless (open(PFILE, $pidfile)) {
-		&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
+		&Log::do_log('err', "unable to open PID file %s:%s",$pidfile,$!);
 		return undef;
 	}
 	my $l = <PFILE>;
