@@ -29,7 +29,7 @@ Subject: [% FILTER qencode %][%|loc(task.description)%]Error in task %1[%END%][%
 [% END -%]
 [% END -%]
 [% ELSE -%]
-[%|loc()%]A very unexpected error happenned while running task. Nothing to report here. Please, check the logs for more details.[%END%]
+[%|loc()%]A very unexpected error happened while running task. Nothing to report here. Please, check the logs for more details.[%END%]
 [% END -%]
 [%- ELSIF type == 'request_list_renaming' -%]
 [%- IF mode == 'copy' -%]
@@ -46,13 +46,13 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]List "%1" renaming[%END%][%END%]
 [% conf.wwsympa_url %]/ticket/[%one_time_ticket%]
 
 [% ELSIF type == 'no_db' -%]
-Subject: [% FILTER qencode %][%|loc%]No DataBase[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]No Database[%END%][%END%]
 
 [%|loc(db_name)%]Cannot connect to database %1, still trying...[%END%]
 
 
 [% ELSIF type == 'missing_dbd' -%]
-Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(db_type)%]No Database Driver for %1[%END%][%END%]
 
 [%|loc(db_type)%]No Database Driver installed for %1; you should download and install DBD::%1 from CPAN.[%END%]
 
@@ -60,7 +60,7 @@ Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%
 [% ELSIF type == 'crash' -%]
 Subject: [% FILTER qencode %][%|loc(crashed_process)%]Previous process %1 crashed[%END%][%END%]
 
-[%|loc(crashed_process,pid)%]Previous process %1 (with pid %2) has died unexpectedly.[%END%]
+[%|loc(crashed_process,pid)%]Previous process %1 (with PID %2) has died unexpectedly.[%END%]
 [%|loc(crash_date)%]Date of crash: %1[%END%]
 [%|loc%]Errors:[%END%]
 
@@ -93,7 +93,7 @@ Subject: [% FILTER qencode %][%|loc%]CSS files have been updated[%END%][%END%]
 
 
 [% ELSIF type == 'db_restored' -%]
-Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Database connection restored[%END%][%END%]
 
 [%|loc(db_name)%]Connection to database %1 restored.[%END%]
 
@@ -333,7 +333,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%IF error == 'chdir_error' %][%|loc%]Unable to change directory.[%END%]
 [%ELSIF error == 'no_authentication_service_name' %][%|loc%]The authentication server name is not defined.[%END%]
 [%ELSIF error == 'auth_conf_no_identified_user' %][%|loc%]auth.conf error: either email_http_header or ldap_host/ldap_get_email_by_uid_filter entries should be defined.[%END%]
-[%ELSIF error == 'unknown_authentication_service' %][%|loc(name)%]Unkown authentication service %1.[%END%]
+[%ELSIF error == 'unknown_authentication_service' %][%|loc(name)%]Unknown authentication service %1.[%END%]
 [%ELSIF error == 'add_user_db_failed' %][%|loc(user)%]Add user '%1' in DB failed.[%END%]
 [%ELSIF error == 'update_user_db_failed' %][%|loc(user)%]Update user '%1' in DB failed[%END%][% IF old_email %][%|loc(old_email)%] (old email: %1)[%END%][%END%]
 [%ELSIF error == 'add_subscriber_db_failed' %][%|loc(sub)%]Add subscriber '%1' in DB failed.[%END%]
@@ -368,11 +368,11 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%ELSIF error == 'unable_to_load_create_list_templates'%][%|loc%]Unable to load create_list templates.[%END%]
 [%ELSIF error == 'unable_get_family'%][%|loc(list.name)%]Unable to get family for list '%1'.[%END%]
 [%ELSIF error == 'list_reload'%][%IF new_list.name %][%|loc(new_listname)%]Unable to reload list with new listname '%1'.[%END%][%ELSE%][%|loc%]Unable to reload list[%END%][%END%]
-[%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to inlude members for list '%1'[%END%] 
+[%ELSIF error == 'sync_include_failed' %][%|loc(list.name)%]Failed to include members for list '%1'[%END%] 
 [%ELSIF error == 'sync_include_admin_failed' %][%|loc(list.name)%]Failed to include list admins for list '%1'[%END%] 
 [%ELSIF error == 'no_owner_defined' %][%|loc%]No owner is defined for the list '%1'[%END%] 
-[%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an Ldap directory failed for list '%1'[%END%] 
-[%ELSIF error == 'unable_to_check_list_smtp' %][%|loc(new_listname)%]Unable to check listname '%1' on SMTP server[%END%]
+[%ELSIF error == 'exportation_failed' %][%|loc(list.name)%]The exportation to an LDAP directory failed for list '%1'[%END%] 
+[%ELSIF error == 'unable_to_check_list_smtp' %][%|loc(new_listname)%]Unable to check list name '%1' on SMTP server[%END%]
 [%ELSIF error == 'create_shared' %][%|loc(list.name)%]Cannot create shared for list '%1'.[%END%]
 [%ELSIF error == 'restore_shared'%][%|loc(list.name)%]Cannot restore shared for list '%1'.[%END%]
 [%ELSIF error == 'delete_shared'%][%|loc(list.name)%]Cannot delete shared for list '%1'.[%END%]

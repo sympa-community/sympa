@@ -26,9 +26,9 @@ Deleted topic(s) is(are):[%END%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%END%]
 
 [% IF admin_type == 'owner' %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list owner by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,list.host)%]You have been delegated the responsibility of list owner by %1 for list %2@%3.[%END%]
 [% ELSE %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,list.host)%]You have been delegated the responsibility of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
 [%|loc%]The list homepage:[%END%] [% conf.wwsympa_url %]/info/[% list.name %]

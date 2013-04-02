@@ -99,9 +99,9 @@ Content-Transfer-Encoding: 8bit
 --[% boundary %]
 Content-Disposition: inline
 
-[%|loc(consumer_name,oauth_provider,conf.wwsympa_url)%]Sympa failed to retreive data using %1 consumer, this may be because your access token for OAuth provider %2 is out of date.
+[%|loc(consumer_name,oauth_provider,conf.wwsympa_url)%]Sympa failed to retrieve data using %1 consumer, this may be because your access token for OAuth provider %2 is out of date.
 
-Visit  %3/oauth_check/%2 to check the token state and renew it if necessary.[%END%]
+Visit %3/oauth_check/%2 to check the token state and renew it if necessary.[%END%]
 
 [%##################### %]
 [%###### SUCCESS NOTICE %]
