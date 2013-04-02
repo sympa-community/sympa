@@ -1701,14 +1701,14 @@ In scalar context, returns arrayref to them.
 sub supported_languages {
     my $self           = shift;
     my $supported_lang = $self->supported_lang;
-    unless ($supported_lang) {
-	return () if wantarray;
-	return undef;
-    }
 
+    my $saved_lang = Language::GetLang();
     my @lang_list =
-	grep { $_ and $_ = Language::CanonicLang($_) }
+	grep { $_ and $_ = Language::SetLang($_) }
 	split /\s*,\s*/, $supported_lang;
+    Language::SetLang($saved_lang);
+
+    @lang_list = ('en') unless @lang_list;
     return @lang_list if wantarray;
     return \@lang_list;
 }
