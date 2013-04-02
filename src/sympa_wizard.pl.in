@@ -122,6 +122,8 @@ sub create_configuration {
     require confdef;
 
     if ($modfail) {
+	no warnings;
+
 	*Language::gettext = sub { shift };
 
 	eval { require Text::Wrap; };
@@ -133,8 +135,9 @@ sub create_configuration {
 		sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
 	}
     } else {
-	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || 'en';
-	$lang =~ s/\..*//;
+	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+	$lang =~ s/\..*// if $lang;
+	$lang = 'en' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
 	Language::SetLang($lang);
     }
 
@@ -233,9 +236,10 @@ sub edit_configuration {
     $rep = <STDIN>;
     chomp $rep;
     if (lc $rep eq 'y') {
-        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || 'en';
-        $lang =~ s/\..*//;
-        Language::SetLang($lang);
+	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+	$lang =~ s/\..*// if $lang;
+	$lang = 'en' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
+	Language::SetLang($lang);
     } else {
 	Language::SetLang('en');
     }
