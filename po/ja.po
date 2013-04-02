@@ -7033,8 +7033,8 @@ msgstr "配送エラー管理の失敗"
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
-"Sympa が配送エラーメッセージ「%1」を処理できませんでした。このメッセージを「%"
-"2」ディレクトリへ移動しました。"
+"Sympa が配送エラーメッセージ「%1」を処理できませんでした。このメッセージを"
+"「%2」ディレクトリへ移動しました。"
 
 #: ../mail_tt2/listmaster_notification.tt2:166
 msgid "incorrect format of edit_list.conf"
@@ -8209,8 +8209,8 @@ msgstr "あなたは %1 メーリングリストからの削除を申し込み�
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "あなたは %1 メーリングリストの読者ひとりひとりに、読者登録確認を送るよう申し"
 "込んでいます"
@@ -8475,16 +8475,16 @@ msgstr "%1 メーリングリストの管理"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr "あなたは、%1 から %2@%3 メーリングリストのオーナーに指名されました"
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "あなたは、%1 から %2@%3 メーリングリストのモデレータに指名されました。"
 
 #: ../mail_tt2/user_notification.tt2:34 ../mail_tt2/welcome.tt2:12
@@ -11922,8 +11922,8 @@ msgstr "あなたは、%1 から %2@%3 メーリングリストのオーナー�
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "あなたは、%1 から %2@%3 メーリングリストのモデレータに指名されました。"
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -11933,6 +11933,172 @@ msgstr "両方に"
 #: ../web_tt2/stats.tt2:16 ../web_tt2/stats.tt2:22
 msgid "[% o.title %]"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr "削除またはダウンロード (ZIP形式) したい月を選択してください:"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "ZIP形式でダウンロード"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "選択した投稿保管庫の ZIP ファイルをダウンロードしますか。"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "# で始まる行はコメントです"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"文字 * はどんな文字列にも一致します。例えば \"*@spammer-domain.com\" は "
+"\"spammer-domain.com\" ドメインのあらゆる送信者に一致します"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "文字 * は 1 行に 1 つしか入れられません"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "メールボックスの新着メールを確認してください。"
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": リストのドメイン名。"
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"共有文書を読めるのは、ユーザ証明書で本人確認できたリストの読者だけです。"
+
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr "メッセージについていたDKIM署名は確認できました"
+
+#. (notification_messages.size,operation)
+#: ../mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "あなた宛てに「%2」のタグがついた通知が%1件届いていますので添付します。"
+
+#: ../mail_tt2/listmaster_notification.tt2:32
+msgid ""
+"A very unexpected error happened while running task. Nothing to report here. "
+"Please, check the logs for more details."
+msgstr ""
+"タスクの実行中に予想外のエラーが起きました。そのため、詳細を報告することがで"
+"きません。詳しいことはログファイルを調べてください。"
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "データベースがありません"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "%1 のデータベースドライバがありません"
+
+#. (crashed_process,pid)
+#: ../mail_tt2/listmaster_notification.tt2:63
+msgid "Previous process %1 (with PID %2) has died unexpectedly."
+msgstr "前回、プロセス %1 (プロセスID %2) が不意に終了してしまいました。"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "データベースへの接続が再開"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:196
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"%2 設定族のファイルを %1 メーリングリストのディレクトリへコピーしているときに"
+"エラーが発生しました。"
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "%1 という認証サービスは知りません。"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "リスト「%1」に読者を入れられません"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "リスト「%1」をLDAPディレクトリに書き出せません"
+
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "リスト名「%1」を SMTPサーバで調べられません"
+
+#. (consumer_name,oauth_provider,conf.wwsympa_url)
+#: ../mail_tt2/message_report.tt2:104
+msgid ""
+"Sympa failed to retrieve data using %1 consumer, this may be because your "
+"access token for OAuth provider %2 is out of date.\n"
+"\n"
+"Visit %3/oauth_check/%2 to check the token state and renew it if necessary."
+msgstr ""
+"Sympaは %1 コンシューマを使ってのデータ取得に失敗しました。おそらく、OAuth プ"
+"ロバイダ %2 でのあなたのアクセストークンが期限切れになっているためでしょ"
+"う。\n"
+"\n"
+"%3/oauth_check/%2 へ行ってトークンを確認してください。必要ならトークンを更新"
+"してください。"
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:29
+msgid ""
+"You have been delegated the responsibility of list owner by %1 for list %2@"
+"%3."
+msgstr "あなたは、%1 から %2@%3 メーリングリストのオーナーに指名されました。"
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:31
+msgid ""
+"You have been delegated the responsibility of list moderator by %1 for list "
+"%2@%3."
+msgstr "あなたは、%1 から %2@%3 メーリングリストのモデレータに指名されました。"
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "メーリングリストというものについての一般的な説明:"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"ウイルス チェッカーが、%2 宛てのメッセージ中に %1 という名前のウイルスを発見"
+"しました。あなたから送信されたのかもしれません (送信者アドレス: %3)。"
+
+#: ../src/lib/PlainDigest.pm:244 ../src/lib/PlainDigest.pm:297
+msgid ""
+"** Warning: A message part using unrecognized character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** 注意: メッセージはもともとキャラクタセット (文字コード) として %s を使って"
+"いました。一部の文字が消えたり読めなくなったりするかもしれません **\n"
+"\n"
+
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "メッセージを個別化できるようにする"
+
+#: ../src/lib/listdef.pm:1707
+msgid "The file must contain a RSA PEM encoded private key"
+msgstr "ファイルには PEM 形式の RSA 秘密鍵を入れておかなければなりません"
 
 #~ msgid "Customizing: "
 #~ msgstr "メッセージ設定:"

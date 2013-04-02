@@ -451,8 +451,8 @@ msgstr "Fermer l'espace documents"
 #: ../web_tt2/admin.tt2:62
 msgid "Are you sure you wish to delete the shared documents for list %1?"
 msgstr ""
-"Vous êtes sur le point de fermer l'espace de documents partagés de la liste %"
-"1. Confirmer ?"
+"Vous êtes sur le point de fermer l'espace de documents partagés de la liste "
+"%1. Confirmer ?"
 
 #: ../web_tt2/admin.tt2:62
 msgid ""
@@ -2217,8 +2217,8 @@ msgid ""
 "Failed creating list '%1'. The list might already exist or listname might "
 "include forbidden characters."
 msgstr ""
-"Échec de la création de la liste « %1 ». Cette liste existe peut-être déjà ou "
-"bien son nom contient des caractères interdits."
+"Échec de la création de la liste « %1 ». Cette liste existe peut-être déjà "
+"ou bien son nom contient des caractères interdits."
 
 #. (s_err.action)
 #: ../web_tt2/error.tt2:35
@@ -4760,8 +4760,9 @@ msgstr ""
 "différentes feuilles de styles sont installées dans le répertoire spécifié "
 "par le paramètre « css_path ». Par conséquent, si vous voulez préserver vos "
 "personnalisations, vous devez, dans la configuration de votre serveur "
-"Apache, déclarer que l'URL correspondant au paramètre « css_url » pointe vers "
-"un répertoire différent de celui correspondant au paramètre « css_path »."
+"Apache, déclarer que l'URL correspondant au paramètre « css_url » pointe "
+"vers un répertoire différent de celui correspondant au paramètre « css_path "
+"»."
 
 #: ../web_tt2/skinsedit.tt2:12
 msgid ""
@@ -7783,8 +7784,8 @@ msgstr "Echec lors de l'envoi du mail de '%1' à la liste '%2'"
 #: ../mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
-"Impossible d'accéder au message authentifié avec la clé %1 pour la liste '%"
-"2'."
+"Impossible d'accéder au message authentifié avec la clé %1 pour la liste "
+"'%2'."
 
 # nlsref 8,24
 #. (sub)
@@ -8447,8 +8448,8 @@ msgstr "Vous avez demandé un désabonnement de la liste %1."
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "Vous avez demandé l'envoi d'un rappel d'abonnement aux membres de la liste %1"
 
@@ -8554,8 +8555,8 @@ msgid ""
 "Someone, probably you, requested to subscribe to list %1@%2. (This request "
 "came from host %3)."
 msgstr ""
-"Quelqu'un - sans doute vous - a formulé une demande d'abonnement à la liste %"
-"1@%2. (Cette requête a été effectuée depuis l'hôte %3)."
+"Quelqu'un - sans doute vous - a formulé une demande d'abonnement à la liste "
+"%1@%2. (Cette requête a été effectuée depuis l'hôte %3)."
 
 #: ../mail_tt2/sendpasswd.tt2:13
 msgid ""
@@ -8717,16 +8718,16 @@ msgstr "Gérer la liste %1"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr "Vous avez été nommé propriétaire de la liste %2@%3 par %1. "
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "Vous avez été nommé modérateur de la liste %2@%3 par %1. "
 
 # nlsref 15,14
@@ -8790,8 +8791,8 @@ msgid ""
 "To confirm and get removed from all the lists of this family, please click "
 "the link below: "
 msgstr ""
-"Quelqu'un (probablement vous) a demandé votre désabonnement de la famille %"
-"1.\n"
+"Quelqu'un (probablement vous) a demandé votre désabonnement de la famille "
+"%1.\n"
 "Cette demande a été faite depuis la machine ayant l'adresse IP '%2'.\n"
 "Pour confirmer la demande et être désabonné, veuillez cliquer sur le lien ci-"
 "dessous :"
@@ -12431,13 +12432,183 @@ msgstr "Vous avez été nommé propriétaire de la liste %2@%3 par %1. "
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "Vous avez été nommé modérateur de la liste %2@%3 par %1. "
 
 #: ../src/etc/mhonarc-ressources.tt2:473
 msgid "to both"
 msgstr "au deux"
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr ""
+"Sélectionner ci-dessous les mois d'archives que vous désirez supprimer ou "
+"télécharger (format Zip)"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Télécharger le fichier Zip"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Voulez-vous télécharger une copie des archives au format Zip ?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "le caractère # définit un commentaire"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"le caractère * correspond à un ensemble de caractères non définis. \n"
+"Exemple : \"*@spammer-domain.com\" correspond à n'importe quelle adresse\n"
+"email de ce domaine"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "Un seul caractère * est autorisé par ligne"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Veuillez consulter votre boîte aux lettres."
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ""
+"<&#160;: le nom de l'hôte hébergeant la liste&#160;; toujours disponible."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"L'accès aux documents partagés est réservé aux abonnés authentifiés avec un "
+"certificat S/MIME."
+
+# nlsref 6,262
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr ""
+"Votre message contient une signature DKIM. Elle a été vérifiée avec succès."
+
+#. (notification_messages.size,operation)
+#: ../mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 notifications de type \"%2\" sont jointes à ce message."
+
+#: ../mail_tt2/listmaster_notification.tt2:32
+msgid ""
+"A very unexpected error happened while running task. Nothing to report here. "
+"Please, check the logs for more details."
+msgstr ""
+"Une erreur particulièrement innattendue s'est produite lors de l'exécution "
+"de la tâche. Aucun rapport à fournir ici. Veuillez vous reporter aux "
+"journaux de Sympa pour plus de détails."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Pas de base de données"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Pas de pilote pour %1"
+
+#. (crashed_process,pid)
+#: ../mail_tt2/listmaster_notification.tt2:63
+msgid "Previous process %1 (with PID %2) has died unexpectedly."
+msgstr "Le processus %1 précédent (avec le pid %2) est mort brutalement."
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "La connexion avec la base de données a été restaurée"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"Erreur lors de la copie du fichier %2 de la famille dans le répertoire de la "
+"liste %1."
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Le service d'authentification %1 est inconnu."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "Impossible de construire les membres de la liste '%1'"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "L'exportation vers un annuaire LDAP a échoué pour la liste '%1'"
+
+# nlsref 11,2
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "Impossible de vérifier l'adresse de liste '%1' sur le serveur SMTP"
+
+#. (consumer_name,oauth_provider,conf.wwsympa_url)
+#: ../mail_tt2/message_report.tt2:104
+msgid ""
+"Sympa failed to retrieve data using %1 consumer, this may be because your "
+"access token for OAuth provider %2 is out of date.\n"
+"\n"
+"Visit %3/oauth_check/%2 to check the token state and renew it if necessary."
+msgstr ""
+"Le serveur de listes n'a pas pu récupérer de données auprès du client %1. "
+"Votre jeton d'accès auprès du serveur %2 est sans doute périmé.\n"
+"^nCliquez sur %3/oauth_check/%2 pour vérifier l'état du jeton et le "
+"renouveler si nécessaire."
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:29
+msgid ""
+"You have been delegated the responsibility of list owner by %1 for list %2@"
+"%3."
+msgstr "Vous avez été nommé propriétaire de la liste %2@%3 par %1. "
+
+#. (delegator,list.name,list.host)
+#: ../mail_tt2/user_notification.tt2:31
+msgid ""
+"You have been delegated the responsibility of list moderator by %1 for list "
+"%2@%3."
+msgstr "Vous avez été nommé modérateur de la liste %2@%3 par %1. "
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Introduction aux listes de diffusion :"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Un message qui semble avoir été émis par vous (%3)\n"
+"à destination de %2 contenait le virus suivant : %1."
+
+# nlsref 16,74
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "Autoriser la personnalisation des messages."
+
+#: ../src/lib/PlainDigest.pm:244 ../src/lib/PlainDigest.pm:297
+msgid ""
+"** Warning: A message part using unrecognized character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Attention : Cette partie utilise l'encodage inconnu '%s'\n"
+"    Certains caractères ont pu être perdus ou altérés **\n"
+"\n"
 
 #~ msgid "Customizing: "
 #~ msgstr "Personnaliser :"
@@ -12646,8 +12817,8 @@ msgstr "au deux"
 #~ ">Please check your e-mail box for the message containing the confirmation "
 #~ "password needed below."
 #~ msgstr ""
-#~ "Un mot de passe de confirmation vous a été transmis à l'adresse email %"
-#~ "1<br>Relevez votre boîte aux lettres pour renseigner votre mot de passe "
+#~ "Un mot de passe de confirmation vous a été transmis à l'adresse email "
+#~ "%1<br>Relevez votre boîte aux lettres pour renseigner votre mot de passe "
 #~ "ci-dessous."
 
 #~ msgid ""

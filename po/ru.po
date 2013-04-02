@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.1.2\n"
 "X-Rosetta-Version: 0.1\n"
 
@@ -7095,8 +7095,8 @@ msgstr "Архивирование сообщения не удалось"
 #: ../mail_tt2/listmaster_notification.tt2:154
 msgid "Sympa could not archive message '%1'. Moving it into directory '%2'."
 msgstr ""
-"Sympa не может архивировать сообщение '%1' и перемещает его в директорию '%"
-"2'."
+"Sympa не может архивировать сообщение '%1' и перемещает его в директорию "
+"'%2'."
 
 #: ../mail_tt2/listmaster_notification.tt2:158
 msgid "A bounce management failed"
@@ -7252,8 +7252,8 @@ msgid ""
 "this person's new email address."
 msgstr ""
 "Администратор %1 не может изменить свой электронный адрес администратора "
-"(новый адрес — %2), поскольку он включен через следующие источники данных: %"
-"3.\n"
+"(новый адрес — %2), поскольку он включен через следующие источники данных: "
+"%3.\n"
 "\n"
 "Если возможно, обновите электронный адрес в этих источниках данных. "
 
@@ -7440,8 +7440,8 @@ msgstr "Удаление подписчка '%1' из базы данных не
 #: ../mail_tt2/listmaster_notification.tt2:342
 msgid "Delete user in DB for old email '%1' failed."
 msgstr ""
-"Удаление пользователя из базы данных по старому адресу электронной почты '%"
-"1' не удалось."
+"Удаление пользователя из базы данных по старому адресу электронной почты "
+"'%1' не удалось."
 
 #. (email,list.name)
 #: ../mail_tt2/listmaster_notification.tt2:343
@@ -7502,8 +7502,8 @@ msgstr "Невозможно удалить файл '%1'."
 #: ../mail_tt2/listmaster_notification.tt2:354
 msgid "Unable to send command DISTRIBUTE from '%1' to list '%2'."
 msgstr ""
-"Невозможно отправить команду DISTRIBUTE (распространить) с '%1' в рассылку '%"
-"2'."
+"Невозможно отправить команду DISTRIBUTE (распространить) с '%1' в рассылку "
+"'%2'."
 
 #. (dir)
 #: ../mail_tt2/listmaster_notification.tt2:355
@@ -7940,8 +7940,8 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
-"Пользователь %1 не смог изменить свой электронный адрес (его новый адрес %"
-"2), посколько он включен из следующих источников данных: %3.\n"
+"Пользователь %1 не смог изменить свой электронный адрес (его новый адрес "
+"%2), посколько он включен из следующих источников данных: %3.\n"
 "\n"
 "Если Вы можете, Вам, вероятно, следует обновить эти источники, указав новый "
 "электронный адрес этого пользователя. "
@@ -8274,11 +8274,11 @@ msgstr "Вы запрашивали отписку пользователя от
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
-"Вы запрашивали отправку напоминания о подписке каждому подписчику рассылки %"
-"1. "
+"Вы запрашивали отправку напоминания о подписке каждому подписчику рассылки "
+"%1. "
 
 #. (-)
 #: ../mail_tt2/request_auth.tt2:23
@@ -8539,16 +8539,16 @@ msgstr "Управление рассылкой %1"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr "%1 делегировал Вам ответственность владельца рассылки %2@%3."
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "%1 делегировал Вам ответственность модератора рассылки %2@%3."
 
 #: ../mail_tt2/user_notification.tt2:34 ../mail_tt2/welcome.tt2:12
@@ -12078,8 +12078,8 @@ msgstr "%1 делегировал Вам ответственность влад
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "%1 делегировал Вам ответственность модератора рассылки %2@%3."
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -12114,6 +12114,123 @@ msgstr ""
 #: ../src/lib/confdef.pm:234
 msgid "Syslog"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr ""
+"В приведенном ниже архиве сообщений выберите те месяцы, которые вы хотите "
+"удалить или загрузить (в формате ZIP):"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Скачать ZIP-файл"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Вы хотите загрузить ZIP-файл с выбранными архивами?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "символ # предваряет комментарий"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"символ * соответствует любой строке. Например, \"*@spammer-domain.com\" "
+"соотвествует любому отправителю с указанного домена"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "в строке возможен только один символ \"*\""
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Проверьте свой почтовый ящик сейчас. "
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": имя хоста, на котором работает список рассылки; всегда доступно."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"Чтение общих документов разрешено только подписчикам рассылки, "
+"аутентифицированным с помощью пользовательского сертификата."
+
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr "Ваше сообщение содержит подпись DKIM. Она была успешно проверена."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Отсутствует база данных"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Нет драйвера базы данных для %1"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "Подключение к базе данных восстановлено"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr "При копировании файла семейства %2 в директорию %1 произошли ошибки. "
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Неизвестный сервис аутентификации %1."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "Не удалось включить пользователей в рассылку '%1'"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "Экспортирование в директорию LDAP рассылки '%1' не удалось"
+
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "Невозможно проверить название рассылки '%1' на SMTP-сервере. "
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Общая информация о списках рассылки: "
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Наша антивирусная программа обнаружила вирус %1\n"
+" в сообщении, адресованном %2 и кажется,\n"
+" он Ваш (От: %3)."
+
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "Разрешить персонализацию сообщений"
+
+#: ../src/lib/PlainDigest.pm:244 ../src/lib/PlainDigest.pm:297
+msgid ""
+"** Warning: A message part using unrecognized character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Внимание: часть сообщения использует нераспознанную кодировку %s\n"
+"    Некоторые символы могут отображаться неправильно или не отображаться "
+"вовсе **\n"
+"\n"
 
 #~ msgid "Customizing: "
 #~ msgstr "Настройка: "
@@ -12742,8 +12859,8 @@ msgstr ""
 #~ "Please provide your email address for your unsubscription request from "
 #~ "list %1."
 #~ msgstr ""
-#~ "Пожалуйста, укажите электронный адрес для запроса на отписку от рассылки %"
-#~ "1."
+#~ "Пожалуйста, укажите электронный адрес для запроса на отписку от рассылки "
+#~ "%1."
 
 #~ msgid ""
 #~ "To confirm your unsubscription from list %1, please enter\n"
@@ -12784,8 +12901,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Пожалуйста, найдите в своём почтовом ящике письмо от Sympa с паролем.\n"
 #~ "   Введите этот пароль ниже. Это подтвердит ваш запрос на подписку на "

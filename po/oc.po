@@ -7631,8 +7631,8 @@ msgstr ""
 #: ../mail_tt2/listmaster_notification.tt2:385
 msgid "Unable to access the message authenticated with key '%1' for list '%2'."
 msgstr ""
-"Se pòt pas accedir al messatge autentificat amb la clau '%1' per la lista '%"
-"2'."
+"Se pòt pas accedir al messatge autentificat amb la clau '%1' per la lista "
+"'%2'."
 
 # nlsref 8,24
 #. (sub)
@@ -8276,8 +8276,8 @@ msgstr "Avètz demandat un desabonament de la lista %1."
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "Avètz demandat lo mandadís d'un rapèl d'abonament als membres de la lista %1"
 
@@ -8528,15 +8528,15 @@ msgstr "Gerir la lista %1"
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr ""
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 
 # nlsref 15,14
@@ -12144,8 +12144,8 @@ msgstr ""
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -12203,6 +12203,124 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr ""
+"Seleccionar çaijós los meses d'archius que desirats suprimir o telecargar  "
+"(format Zip)"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Telecargar lo fichièr Zip"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Volètz telecargar una còpia dels archius al format Zip ?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "lo caractèr # definís un comentari"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"lo caractèr * correspond a un ensemble de caractèrs non definits.\n"
+"Exemple : \"*@spammer-domain.com\" correspond a quina adreça de corrièr "
+"electronic que siá\n"
+"d'aqueste domeni"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "un caractèr sol * es autorizat per linha"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Consultatz vòstra bóstia de letras."
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ""
+"<&#160;: lo nom de l'òste qu'albèrga la lista&#160;; ancara disponible."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr "L'accès als documents partajats es reservat als abonats autentificats"
+
+# nlsref 6,262
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr ""
+"Vòstre messatge conten una signatura DKIM. Es estada verificada amb succès"
+
+#. (notification_messages.size,operation)
+#: ../mail_tt2/listmaster_groupednotifications.tt2:12
+msgid ""
+"%1 \"%2\" tagged notifications addressed to you are attached to this message."
+msgstr "%1 notificacions de tipe \"%2\" son juntas a aqueste messatge."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Pas cap de banca de donadas"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Pas cap de pilòt per %1"
+
+#. (crashed_process,pid)
+#: ../mail_tt2/listmaster_notification.tt2:63
+msgid "Previous process %1 (with PID %2) has died unexpectedly."
+msgstr "Lo processus %1 precedent (amb lo pè %2) es mòrt brutalament."
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "La connexion a la banca de donadas es estada restablida"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"Error al moment de la còpia del fichièr %2 de la familha dins lo repertòri "
+"de la lista %1."
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Lo servici d'autentificacion %1 es desconegut."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "Es pas possible de crear los abonats de la lista '%1'"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "L'exportacion de la lista '%1' cap al repertòri Ldap, a abocat"
+
+# nlsref 11,2
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "Impossible de verificar la lista '%1' al nivèl del servidor SMTP"
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Introduccion a las listas de difusion :"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Un messatge que sembla venir de vos (%3)\n"
+"a destinacion de %2 capiá lo virus seguent : %1."
 
 #~ msgid "Customizing: "
 #~ msgstr "Personalizar"
@@ -12879,8 +12997,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Sympa vos a mandat un messatge electronic, sasissètz çai sota lo\n"
 #~ "\t mot de santa Clara qu'avètz recebut. Aquò confirmarà\n"
@@ -14537,8 +14655,8 @@ msgstr ""
 #~ "If you do not want this action to be taken, you can safely ignore\n"
 #~ "this message"
 #~ msgstr ""
-#~ "Qualqu'un (vos, çò esperam) a demandat vòstre desabonament de la tièra '%"
-#~ "s'.\n"
+#~ "Qualqu'un (vos, çò esperam) a demandat vòstre desabonament de la tièra "
+#~ "'%s'.\n"
 #~ "Per confirmar aquel desabonament, mercés de :\n"
 #~ "- respondre e aqueste messatge\n"
 #~ "O\n"

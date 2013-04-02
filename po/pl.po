@@ -28,8 +28,8 @@ msgid ""
 "from this web page, you can perform subscription options, unsubscription, "
 "archive, list moderation, list configuration."
 msgstr ""
-"Ten serwer umożliwia Ci dostęp do Twojego środowiska list mailingowych %1@%"
-"2. Z tej strony możesz wykonywać takie operacje jak zmiana parametrów "
+"Ten serwer umożliwia Ci dostęp do Twojego środowiska list mailingowych %1@"
+"%2. Z tej strony możesz wykonywać takie operacje jak zmiana parametrów "
 "subskrypcji, wypisywać się z list, przeglądać archiwa list czy zarządzać "
 "listami."
 
@@ -8225,8 +8225,8 @@ msgstr "Zażądałeś usunięcia użytkownika z listy %1."
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "Zażądałeś wysłania przypomnienia o subskrypcji do każdego subskrybenta listy "
 "%1"
@@ -8488,8 +8488,8 @@ msgstr "Zarządzanie listami"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr ""
 "Twoje konto otrzymało uprawnienia właściciela listy od %1 dla listy %2@%3."
 
@@ -8497,8 +8497,8 @@ msgstr ""
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 "Twoje konto otrzymało uprawnienia moderatora listy od %1 dla listy %2@%3."
 
@@ -11968,8 +11968,8 @@ msgstr ""
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 "Twoje konto otrzymało uprawnienia moderatora listy od %1 dla listy %2@%3."
 
@@ -12053,6 +12053,112 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr "Wybierz które miesiące archiwum chcesz usunąć lub pobrać (format zip):"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Pobierz archiwum .zip"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Czy chcesz pobrać plik .zip zawierający zaznaczone archiwa?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "znak # rozpoczyna komentarz"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"znak * zastępuje dowolny ciąg znaków. Na przykład: \"*@spammer-domain.com\" "
+"oznacza każdego nadawcę z tej wybranej domeny"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "tylko jeden znak * jest dozwolony w linii"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Sprawdź swoją skrzynkę odbiorczą."
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": nazwa hosta, na którym lista jest zainstalowana, zawsze dostępna."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"Odczyt współdzielonych dokumentów jest ograniczony do subskrybentów listy "
+"uwierzytelnionych certyfikatem użytkownika."
+
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr ""
+"Twoja wiadomość zawiera sygnaturę DKIM. Została ona pomyślnie zweryfikowana."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Brak połączenia do bazy danych"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Brak sterownika do bazy danych dla %1"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "Odzyskano połączenie z bazą danych"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"Wystąpiły błędy podczas kopiowania pliku rodziny %2 w katalogu listy %1."
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Nieznana usługa uwierzytelniania %1."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "Nie powiodło się dołączenie subskrybentów listy '%1'"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "Eksport do katalogu Ldap dla listy '%1' nie powiódł się"
+
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "Nie można sprawdzić nazwy listy '%1' na serwerze SMTP"
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Informacje ogólne o listach mailingowych: %1/help/introduction"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Nasz wykrywacz wirusów znalazł wirusa o nazwie %1\n"
+"w wiadomości adresowanej do %2 i wydaje się ona\n"
+"być Twoja (Od: %3)."
+
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "Pozwól na dostosowanie wiadomości"
 
 #~ msgid "Customizing: "
 #~ msgstr "Dostosowanie: "
@@ -12712,13 +12818,13 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 
 #~ msgid ""
 #~ "This password, associated with your email address, willallow you to "
@@ -12998,8 +13104,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 
 #~ msgid "This message as been tagged as spam"
 #~ msgstr "This message as been tagued as a spam"

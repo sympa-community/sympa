@@ -5232,8 +5232,8 @@ msgid ""
 msgstr ""
 "우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾아"
 "내하기.\n"
-"저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스트 %"
-"1 에서."
+"저 패스워드를, 아래에 입력하기. 이 는 확인하는 등록구독 요청 메일링 리스트 "
+"%1 에서."
 
 #: ../web_tt2/subrequest.tt2:38
 msgid "Your e-mail address"
@@ -8397,8 +8397,8 @@ msgstr "%1 메일링 리스트으로 사용자 삭제 요청했습니다."
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "%1 메일링 리스트의 각 가입자에게 구독 미리 알림 보내질 것을 요청했습니다."
 
@@ -8656,15 +8656,15 @@ msgstr " 새로운 리스트들 "
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:29
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr ""
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 
 #: ../mail_tt2/user_notification.tt2:34 ../mail_tt2/welcome.tt2:12
@@ -12145,8 +12145,8 @@ msgstr ""
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -12245,6 +12245,84 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr "추려낸 아래 보관 달 삭제하고 것을 또는 다운로드하고 싶 (ZiP 형식):"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Zip 형식으로 다운로드"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "선택된 보관의 Zip를 다운로드 하시겠습니까?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "주석 앞에 # 기호를 표시합니다"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "단지 %1 의 숯 *  authorized 선에서 만"
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"공용 문서 독서에 는 확인된 가입자를 리스트으로 만들기 위해 제한됩니다.사용자 "
+"certificat."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "데이타베이스 없음"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "%1 를 위한 데이타베이스 드라이버 없음"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "데이터베이스 연결 복구되였습니다"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+" 에러들은 리스트 %1 디렉토리안에서 family %2 파일은 카피하는 동안 발생했습니"
+"다"
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "%1 인증 서비스 확인 불가."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "리스트 '%1' 위한 가입자(들)을 포함하기 실패했습니다"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "LDAP 디렉토리에 수출 리스트 가 '%1' 를 위해 실패한"
+
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "SMTP 서버 에 리스트 '%1' 를 검사할 수 없습니다"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"우리의 viruschecker 찾아냈 바이러스를 이름되어 %1\n"
+"메시지에서 %2에 연설하고 저것 보입니다\n"
+"너의 것을 위해 (보낸 사람: %3)."
 
 #, fuzzy
 #~ msgid "Customizing: "
@@ -12742,8 +12820,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "우체통을 새로운 메시지를 검사하고 테스트하기 Sympa에서 메시지패스워드를 찾"
 #~ "아내하기.\n"

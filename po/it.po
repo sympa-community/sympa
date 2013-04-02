@@ -7877,8 +7877,8 @@ msgstr "Il file di guida non è disponibile: %s\n"
 #: ../mail_tt2/listmaster_notification.tt2:390
 msgid "Unable to create a SharedDocument with path '%1' for list '%2'."
 msgstr ""
-"Impossibile creare un documento condiviso col percorso '%1' per la lista '%"
-"2'."
+"Impossibile creare un documento condiviso col percorso '%1' per la lista "
+"'%2'."
 
 #: ../mail_tt2/listmaster_notification.tt2:391
 msgid "Parameter cookie undefined, authentication failure."
@@ -8176,8 +8176,8 @@ msgid ""
 "If you are able to do so, you should probably update these data sources with "
 "this person's new email address."
 msgstr ""
-"L'utente %1 non può cambiare il suo indirizzo email (il nuovo indirizzo è %"
-"2) poiché è incluso tramite le seguenti sorgenti dati: %3.\n"
+"L'utente %1 non può cambiare il suo indirizzo email (il nuovo indirizzo è "
+"%2) poiché è incluso tramite le seguenti sorgenti dati: %3.\n"
 "\n"
 "Se puoi, dovresti aggiornare le sorgenti dati con il nuovo indirizzo email."
 
@@ -8544,8 +8544,8 @@ msgstr "Hai chiesto di disiscriverti dalla lista %1"
 #: ../mail_tt2/request_auth.tt2:18
 #, fuzzy
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr "Notifica di iscrizione spedita ai %d utenti di %s.\n"
 
 # nlsref 6,78
@@ -8815,8 +8815,8 @@ msgstr "Gestione della lista %1"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr ""
 "Ti è stato assegnato l'incarico di proprietario della lista %2@%3 da parte "
 "di %1."
@@ -8825,11 +8825,11 @@ msgstr ""
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
-"Ti è stato assegnato l'incarico di moderatore della lista %2@%3 da parte di %"
-"1."
+"Ti è stato assegnato l'incarico di moderatore della lista %2@%3 da parte di "
+"%1."
 
 # nlsref 15,14
 #: ../mail_tt2/user_notification.tt2:34 ../mail_tt2/welcome.tt2:12
@@ -12669,11 +12669,11 @@ msgstr ""
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr ""
-"Ti è stato assegnato l'incarico di moderatore della lista %2@%3 da parte di %"
-"1."
+"Ti è stato assegnato l'incarico di moderatore della lista %2@%3 da parte di "
+"%1."
 
 #: ../src/etc/mhonarc-ressources.tt2:473
 #, fuzzy
@@ -12684,6 +12684,98 @@ msgstr "From: %1"
 #: ../web_tt2/automatic_lists_management_request.tt2:4
 msgid "The automatic lists are based on the $1 family"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr ""
+"Seleziona gli archivi mensili che vuoi eliminare o scaricare  (formato ZIP)"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Scarica il file Zip"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Vuoi scaricare un file compresso degli archivi selezionati?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "il carattere # introduce un commento"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"il carattere * trova qualunque stringa. Esempio : \"*@spammer-domain.com\" "
+"trova qualunque mittente da quel dominio"
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "è permesso solo un carattere * per ciascuna riga"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Controlla la tua casella di posta."
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": il nome dell'host; sempre disponibile."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"La visualizzazione dei documenti condivisi è limitata agli iscritti alla "
+"lista autenticati con certificato utente."
+
+# nlsref 6,262
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr ""
+"Il tuo messaggio contiene una firma DKIM. È stata verificata con successo"
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Nessun database"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Nessun driver per il database %1"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "Connessione al database ripristinata"
+
+#. (consumer_name,oauth_provider,conf.wwsympa_url)
+#: ../mail_tt2/message_report.tt2:104
+msgid ""
+"Sympa failed to retrieve data using %1 consumer, this may be because your "
+"access token for OAuth provider %2 is out of date.\n"
+"\n"
+"Visit %3/oauth_check/%2 to check the token state and renew it if necessary."
+msgstr ""
+"Sympa ha fallito nel recuperare dati usando il consumer %1, ciò potrebbe "
+"essere dovuto a un token per il provider OAuth %2 scaduto.\n"
+"\n"
+"Visita %3/oauth_check/%2 per controllare lo stato del token e rinnovarlo se "
+"necessario."
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Informazioni generali sulle liste di distribuzione:"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Il nostro antivirus ha trovato li virus noto come %1\n"
+"in un messaggio indirizzato a %2 e che sembra\n"
+"provenire dal tuo indirizzo (From: %3)."
 
 #~ msgid "Customizing: "
 #~ msgstr "Personalizzazione:"
@@ -12949,8 +13041,8 @@ msgstr ""
 #~ "    Some characters may be lost or incorrect **\n"
 #~ "\n"
 #~ msgstr ""
-#~ "** Attenzione: Il messaggio usava originiariamente il set di caratteri %"
-#~ "s\n"
+#~ "** Attenzione: Il messaggio usava originiariamente il set di caratteri "
+#~ "%s\n"
 #~ "   Alcuni caratteri potrebbero esser andati persi o essere sbagliati **\n"
 #~ "\n"
 
@@ -13352,8 +13444,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Controlla i nuovi messaggi nella tua casella di posta e inserisci qui \n"
 #~ "       sotto la password indicata nel messaggio che ti ha spedito Sympa.\n"
@@ -14958,8 +15050,8 @@ msgstr ""
 #~ "If you do not want this action to be taken, you can safely ignore\n"
 #~ "this message"
 #~ msgstr ""
-#~ "Qualcuno (probabilmente tu) ha richiesto di essere tolto dalla lista '%"
-#~ "s'.\n"
+#~ "Qualcuno (probabilmente tu) ha richiesto di essere tolto dalla lista "
+#~ "'%s'.\n"
 #~ "Per confermare questa operazione:\n"
 #~ "\n"
 #~ "- rispondi con un reply a questo messaggio\n"

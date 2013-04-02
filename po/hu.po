@@ -8124,8 +8124,8 @@ msgstr ""
 "\n"
 "Ha levelét ténylegesen a listára akarta küldeni, akkor a levelezésilista-"
 "kezelő\n"
-"a parancsokat végrehajtotta. Ekkor forduljon a üzemeltetőkhöz: %1-request@%"
-"3,\n"
+"a parancsokat végrehajtotta. Ekkor forduljon a üzemeltetőkhöz: %1-request@"
+"%3,\n"
 "hogy leveléről gondoskodhassanak.\n"
 "\n"
 "Megértését köszönöm.\n"
@@ -8382,8 +8382,8 @@ msgstr "Egy felhasználó eltávolítását kérte a(z) %1 levelezési listáró
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr "%1 listán tagsági emlékeztető lett kiküldve minden tagnak."
 
 # nlsref 6,78
@@ -8646,16 +8646,16 @@ msgstr "%1 lista kezelése"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr "A %1 tulajdonos Önre delegálta a felelősséget a %2@%3 listán."
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "A %1 moderátor Önre delegálta a felelősséget a %2@%3 listán."
 
 # nlsref 15,14
@@ -12300,8 +12300,8 @@ msgstr "A %1 tulajdonos Önre delegálta a felelősséget a %2@%3 listán."
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "A %1 moderátor Önre delegálta a felelősséget a %2@%3 listán."
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -12384,6 +12384,125 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr ""
+"Válassza ki az alábbi archívumból azokat a hónapokat, amiket szeretne "
+"törölni vagy letölteni (ZIP formátumban):"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Zip állomány letöltése"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Le akarja tölteni a kijelölt archívumokat zip formátumban?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "a # karakterrel kezdődő sorok kommentek"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"a * karakter bármilyen karaktersorozatot helyettesít. Példa: \"*@spammer-"
+"domain.com\" az adott taromány minden címére igaz lesz."
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "csak egy * karakter engedélyezett soronként"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Ellenőrizze a postaládáját!"
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr ": a lista tartományneve; mindig elérhető."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr "csak felhasználói tanúsítvánnyal azonosított tagok számára elérhető"
+
+# nlsref 6,262
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr "A levele tartalmazott DKIM aláírást, ami sikeresen azonosítva lett."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Nincs adatbázis"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Nincs adatbázis-meghajtó %1-hoz/hez"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "Az adatbázis kapcsolata helyreállt"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"Hiba történt a(z) %2 család állományának a(z) %1 lista könyvtárában történő "
+"másolása közben."
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Ismeretlen autentikációs szolgáltatás: %1."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "A tagok lekérdezése nem sikerült a '%1' listánál"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "Az LDAP címtárba exportálás nem sikerült . ('%1' lista)"
+
+# nlsref 6,2
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "'%1' Lista neve nem ellenőrizhetó az SMTP szerveren"
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Általános információk a levelezési listákról:"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"A víruskeresőnk %1 nevű vírust talált\n"
+"a valószínűleg Öntől (Feladó: %3) származó\n"
+"%2-nak/nek címzett üzenetben."
+
+# nlsref 16,74
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "Üzenetek testreszabásának engedélyezése"
+
+#: ../src/lib/PlainDigest.pm:244 ../src/lib/PlainDigest.pm:297
+msgid ""
+"** Warning: A message part using unrecognized character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Vigyázat: Az üzenetrész eredetileg a %s karakterkészletet használta!\n"
+"    Lehet, hogy néhány karakter elveszett vagy hibás. **\n"
+"\n"
 
 #~ msgid "Customizing: "
 #~ msgstr "Testreszabás:"
@@ -12916,8 +13035,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Kérem ellenőrizze a postaládáját, és lent adja meg a levélben\n"
 #~ "\tfeltüntetett jelszót. Ezzel a lépéssel véglegesítheti a\n"
@@ -14594,8 +14713,8 @@ msgstr ""
 # nlsref 6,53
 #~ msgid "To stop the expiration process : EXPIREDEL %s\n"
 #~ msgstr ""
-#~ "A megerősítési felszólítást a következő paranccsal törölheti: EXPIREDEL %"
-#~ "s\n"
+#~ "A megerősítési felszólítást a következő paranccsal törölheti: EXPIREDEL "
+#~ "%s\n"
 
 # nlsref 6,41
 #~ msgid ""

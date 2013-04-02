@@ -3826,8 +3826,8 @@ msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
 "subscribers?"
 msgstr ""
-"Vill du verkligen skicka ett påminnelsemeddelande för prenumerationen till %"
-"1-prenumeranterna?"
+"Vill du verkligen skicka ett påminnelsemeddelande för prenumerationen till "
+"%1-prenumeranterna?"
 
 #: ../web_tt2/review.tt2:108 ../web_tt2/review.tt2:148
 #: ../web_tt2/reviewbouncing.tt2:115 ../web_tt2/reviewbouncing.tt2:44
@@ -7033,8 +7033,8 @@ msgstr "En studshantering har misslyckats"
 msgid ""
 "Sympa could not handle bounce message '%1'. Moving it into directory '%2'."
 msgstr ""
-"Sympa kunde inte hantera studsmeddelandet '%1'. Flyttar det till katalogen '%"
-"2'."
+"Sympa kunde inte hantera studsmeddelandet '%1'. Flyttar det till katalogen "
+"'%2'."
 
 #: ../mail_tt2/listmaster_notification.tt2:166
 msgid "incorrect format of edit_list.conf"
@@ -8190,8 +8190,8 @@ msgstr "Du bad om en användarborttagning från listan '%1'."
 #. (list.name)-)
 #: ../mail_tt2/request_auth.tt2:18
 msgid ""
-"You requested a subscription reminder to be sent to each subscriber of list %"
-"1"
+"You requested a subscription reminder to be sent to each subscriber of list "
+"%1"
 msgstr ""
 "Du bad om att en prenumerationspåmminelse skulle skickas till alla "
 "prenumeranter på listan %1"
@@ -8453,16 +8453,16 @@ msgstr "Hantera listan %1"
 #: ../mail_tt2/user_notification.tt2:29
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list owner by %1 for list %2@%"
-"3."
+"You have been delegated the responsability of list owner by %1 for list %2@"
+"%3."
 msgstr "Du har delegerats listägaransvaret för listan %2@%3 av %1."
 
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:31
 #, fuzzy
 msgid ""
-"You have been delegated the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegated the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "Du har delegerats listmoderatoransvaret för listan %2@%3 av %1."
 
 #: ../mail_tt2/user_notification.tt2:34 ../mail_tt2/welcome.tt2:12
@@ -11893,8 +11893,8 @@ msgstr "Du har delegerats listägaransvaret för listan %2@%3 av %1."
 #. (delegator,list.name,list.host)
 #: ../mail_tt2/user_notification.tt2:32
 msgid ""
-"You have been delegate the responsability of list moderator by %1 for list %"
-"2@%3."
+"You have been delegate the responsability of list moderator by %1 for list "
+"%2@%3."
 msgstr "Du har delegerats listmoderatoransvaret för listan %2@%3 av %1."
 
 #: ../src/etc/mhonarc-ressources.tt2:473
@@ -11972,6 +11972,121 @@ msgstr ""
 #: ../src/lib/confdef.pm:260
 msgid "Log intensity"
 msgstr ""
+
+#: ../web_tt2/arc_manage.tt2:6
+msgid "Select the Archive months you want to delete or download (ZIP format):"
+msgstr "Välj arkivmånaderna du vill ta bort eller ladda ner i ZIP-format:"
+
+#: ../web_tt2/arc_manage.tt2:23
+msgid "Download ZIP File"
+msgstr "Ladda ner ZIP-fil"
+
+#: ../web_tt2/arc_manage.tt2:24
+msgid "Do you want to download a ZIP file containing the selected archives?"
+msgstr "Vill du ladda ner en ZIP-fil med de valda arkiven?"
+
+#: ../web_tt2/blacklist.tt2:22
+msgid "comments start with a #"
+msgstr "tecknet # inleder en kommentar"
+
+#: ../web_tt2/blacklist.tt2:23
+msgid ""
+"character * match any string. Example: \"*@spammer-domain.com\" match any "
+"sender from that exact domain"
+msgstr ""
+"tecknet * godtar alla strängar. Exempel: \"*@skräppostsdomän.com\" fångar "
+"alla avsändare från den domänen."
+
+#: ../web_tt2/blacklist.tt2:24
+msgid "only one character * is allowed in a line"
+msgstr "bara en * får användas per rad"
+
+#: ../web_tt2/change_email_request.tt2:5
+msgid "You should check your mailbox now."
+msgstr "Du bör kontrollera din e-post nu."
+
+#: ../web_tt2/compose_mail.tt2:68
+msgid ": the name of the host the list is installed on; always available."
+msgstr "namnet på datorn listan finns på, alltid tillgängligt."
+
+#: ../mail_tt2/authorization_reject.tt2:58
+msgid ""
+"Shared document reading is restricted to list subscribers authenticated with "
+"a user certificate."
+msgstr ""
+"Att läsa delade dokument är begränsat till listprenumeranter autentiserade "
+"med användarcertifikat."
+
+#: ../mail_tt2/command_report.tt2:22
+msgid "Your message contains a DKIM signature. It was successfully verified."
+msgstr "Ditt meddelande innehåller en DKIM-signatur som verifierades korrekt."
+
+#: ../mail_tt2/listmaster_notification.tt2:49
+msgid "No Database"
+msgstr "Ingen databas"
+
+#. (db_type)
+#: ../mail_tt2/listmaster_notification.tt2:55
+msgid "No Database Driver for %1"
+msgstr "Ingen databasdrivrutin för %1"
+
+#: ../mail_tt2/listmaster_notification.tt2:96
+msgid "Database connection restored"
+msgstr "Databas-anslutningen återställd"
+
+#. (param0,param1)
+#: ../mail_tt2/listmaster_notification.tt2:225
+msgid "Errors occurred while copying family %2 file in list %1 directory."
+msgstr ""
+"Det uppstod fel när en fil tillhörande listan %1 i familj %2 skulle kopieras."
+
+#. (name)
+#: ../mail_tt2/listmaster_notification.tt2:336
+msgid "Unknown authentication service %1."
+msgstr "Okänd autentiseringstjänst %1."
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:371
+msgid "Failed to include members for list '%1'"
+msgstr "Kunde inte inkludera medlemmar för listan '%1'"
+
+#. (list.name)
+#: ../mail_tt2/listmaster_notification.tt2:374
+msgid "The exportation to an LDAP directory failed for list '%1'"
+msgstr "Exporten till en LDAP-katalog misslyckades för listan '%1'"
+
+#. (new_listname)
+#: ../mail_tt2/listmaster_notification.tt2:375
+msgid "Unable to check list name '%1' on SMTP server"
+msgstr "Kunde inte kontrollera listnamnet '%1' på SMTP-servern"
+
+#: ../mail_tt2/welcome.tt2:13
+msgid "General information about mailing lists:"
+msgstr "Allmän information om e-postlistor:"
+
+#. (virus_name,recipient,from)
+#: ../mail_tt2/your_infected_msg.tt2:7
+msgid ""
+"Our virus checker found a virus named %1 in a message addressed to %2 and "
+"that seems to be yours (From: %3)."
+msgstr ""
+"Vår viruskontroll hitta ett virus med namnet %1\n"
+"i ett meddelande adresserat till %2 som verkar komma\n"
+"från dig (From: %3)."
+
+#: ../src/lib/listdef.pm:515
+msgid "Allow message personalization"
+msgstr "Tillåt personanpassning av meddelanden"
+
+#: ../src/lib/PlainDigest.pm:244 ../src/lib/PlainDigest.pm:297
+msgid ""
+"** Warning: A message part using unrecognized character set %s\n"
+"    Some characters may be lost or incorrect **\n"
+"\n"
+msgstr ""
+"** Varning: Meddelandedelen använde den okända teckenkodningen %s\n"
+"    Vissa tecken kan ha försvunnit eller visas felaktigt **\n"
+"\n"
 
 #~ msgid "Customizing: "
 #~ msgstr "Anpassning: "
@@ -12292,8 +12407,8 @@ msgstr ""
 #~ msgid ""
 #~ "Check your mailbox for new messages and examine the message from Sympa to "
 #~ "find your password.\n"
-#~ "\tEnter that password below. This will confirm your subscription to list %"
-#~ "1."
+#~ "\tEnter that password below. This will confirm your subscription to list "
+#~ "%1."
 #~ msgstr ""
 #~ "Kontrollera din e-postlåda efter nya meddelanden och ange\n"
 #~ "\tlösenordet som angetts i meddelandet som Sympa skickades till dig. "
