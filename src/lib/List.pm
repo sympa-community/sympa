@@ -3797,7 +3797,7 @@ sub _list_member_cols {
     }
     return
 	sprintf
-	'user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate%s',
+	'user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS "date", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate%s',
 	&SDM::get_canonical_read_date('date_subscriber'),
 	&SDM::get_canonical_read_date('update_subscriber'),
 	$additional;
@@ -3814,7 +3814,7 @@ sub get_list_admin {
 sub _list_admin_cols {
     return
 	sprintf
-	'user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS date, %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id',
+	'user_admin AS email, comment_admin AS gecos, reception_admin AS reception, visibility_admin AS visibility, %s AS "date", %s AS update_date, info_admin AS info, profile_admin AS profile, subscribed_admin AS subscribed, included_admin AS included, include_sources_admin AS id',
 	&SDM::get_canonical_read_date('date_admin'),
 	&SDM::get_canonical_read_date('update_admin');
 }
@@ -3872,7 +3872,10 @@ sub get_first_list_member {
 	## Redefine query to set "dom"
 	$statement =
 	    sprintf
-	    'SELECT %s, %s AS dom FROM subscriber_table WHERE list_subscriber = %s AND robot_subscriber = %s ORDER BY dom',
+	    q{SELECT %s, %s AS "dom"
+	      FROM subscriber_table
+	      WHERE list_subscriber = %s AND robot_subscriber = %s
+	      ORDER BY dom},
 	    _list_member_cols(),
 	    &SDM::get_substring_clause(
 	    {   'source_field'     => 'user_subscriber',
@@ -4056,8 +4059,11 @@ sub get_first_list_admin {
 	## Redefine query to set "dom"
 	$statement =
 	    sprintf
-	    'SELECT %s, %s AS dom FROM admin_table WHERE list_admin = %s AND robot_admin = %s AND role_admin = %s ORDER BY dom',
-	    &_list_admin_cols,
+	    q{SELECT %s, %s AS "dom"
+	      FROM admin_table
+	      WHERE list_admin = %s AND robot_admin = %s AND role_admin = %s
+	      ORDER BY dom},
+	    _list_admin_cols(),
 	    &SDM::get_substring_clause(
 	    {   'source_field'     => 'user_admin',
 		'separator'        => '\@',
