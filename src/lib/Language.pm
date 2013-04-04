@@ -564,7 +564,7 @@ sub SetLocale {
     ## - "nb" and "nn" are recommended not to have "_NO" region suffix:
     ##   Both of them are official languages in Norway.
     ##   However, current Sympa provides "nb_NO" NLS catalog.
-    $locale = 'nb_NO' if $locale eq 'nb';
+    $locale =~ s/^(nb|nn)\b/${1}_NO/;
 
     ## Set gettext locale (Locale::Messages context).
     $ENV{'LANGUAGE'} = $locale;
