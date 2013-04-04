@@ -1378,9 +1378,28 @@ our @params = (
     {   'name' => 'html_editor_init',
 	'gettext_id' =>
 	    'Javascript excerpt that enables and configures the WYSIWYG HTML editor.',
+	'vhost' => '1',
+	'default' =>
+	    'tinyMCE.init({mode:"exact",elements:"body",language:lang.toLowerCase()});',
+	'file' => 'wwsympa.conf',
+    },
+    {   'name' => 'html_editor_hide',
+	'gettext_id' =>
+	    'Javascript excerpt that disable the WYSIWYG HTML editor.',
+	'gettext_comment' =>
+	    'If this is empty, HTML editor cannot be disabled.',
 	'vhost'   => '1',
-	'default' => 'tinyMCE.init({mode:"exact",elements:"body",language:lang.toLowerCase()});',
-	'file'    => 'wwsympa.conf',
+	'default' => 'tinyMCE.get("body").hide();',
+	'file' => 'sympa.conf',    # added after migration of wwsympa.conf
+    },
+    {   'name' => 'html_editor_show',
+	'gettext_id' =>
+	    'Javascript excerpt that re-enable the WYSIWYG HTML editor.',
+	'gettext_comment' =>
+	    'If this is empty, HTML editor cannot be disabled.',
+	'vhost'   => '1',
+	'default' => 'tinyMCE.get("body").show();',
+	'file' => 'sympa.conf',    # added after migration of wwsympa.conf
     },
     {   'name'    => 'use_fast_cgi',
 	'default' => '1',

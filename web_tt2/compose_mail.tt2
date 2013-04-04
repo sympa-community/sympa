@@ -58,8 +58,19 @@
 	[% IF !subaction %]
 		[% balise_email = '['_'%'_' user.email '_'%'_']' %]
 		[% balise_fingerprint = '['_'%'_' user.fingerprint '_'%'_']' %]
-  		<textarea name="body" cols="80" rows="25">[% body %]</textarea>
-		<br />
+		<textarea name="body" id="body"
+		  cols="80" rows="25">[% body %]</textarea>
+		[% IF use_html_editor && html_editor_url %]
+		  <input id="html_editor_enabled" name="html_editor_enabled"
+		    type="hidden" value="on" />
+		  [% IF html_editor_hide && html_editor_show %]
+		    <input id="html_editor_button" type="button"
+		    value="[%|loc%]Disable HTML Editor[%END%]"
+		    onClick="html_editor_toggle('body');" />
+		  [% END %]
+		[% ELSE %]
+		  <br />
+		[% END %]
 
 		[% IF merge_feature %]
 		<br />

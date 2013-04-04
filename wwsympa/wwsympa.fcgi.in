@@ -1199,6 +1199,8 @@ my $birthday = time ;
 				     'template_content' => 1,
 				     'html_dumpvars' => 1,
 				     'html_editor_init' => 1,
+				     'html_editor_hide' => 1,
+				     'html_editor_show' => 1,
 				     };
      ## Hash defining the parameters where HTML must be filtered.
      $param->{'htmlToFilter'} = {
@@ -16459,6 +16461,8 @@ sub do_compose_mail {
 		$robot->html_editor_url;
 	}
 	$param->{'html_editor_init'} = $robot->html_editor_init;
+	$param->{'html_editor_hide'} = $robot->html_editor_hide;
+	$param->{'html_editor_show'} = $robot->html_editor_show;
     }
 
     # Set the subaction to html_news_letter or undef
@@ -16641,7 +16645,12 @@ sub do_send_mail {
 	
 	$in{'body'} = "\n".$in{'body'};
     }
-    
+
+    ## Check if HTML editor was used.
+    if ($in{'html_editor_enabled'} and $in{'html_editor_enabled'} eq 'on') {
+	$in{'body'} = "Content-Type: text/html\n" . $in{'body'};
+    }
+
     my $data = {'headers' => {'Message-ID' => $in{'message_id'}}, 
 		'subject' => $in{'subject'},
 		'return_path' => $robot->get_address(),
@@ -16650,7 +16659,7 @@ sub do_send_mail {
 		'sign_mode' => '',
 		'header_possible' => '1',
 		'list' => $list,};
-    
+
     $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'} if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
     $data->{'not_auto_submitted'} = 1;
     $data->{'not_a_list'} = 1 if($in{'sub_action'} eq 'sendmailtome');
