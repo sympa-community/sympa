@@ -26,6 +26,10 @@
 #include <sysexits.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <time.h>
 
 static char     qfile[128];
 static char     buf[16384];
