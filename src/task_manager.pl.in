@@ -168,7 +168,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-&tools::write_pid(Site->task_manager_pidfile, $$, $options);
+tools::write_pid('task_manager', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -256,7 +256,7 @@ sub sigterm {
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 &Log::do_log ('notice', 'task_manager exited normally due to signal'); 
-&tools::remove_pid(Site->task_manager_pidfile, $$);
+tools::remove_pid('task_manager', $$);
 
 exit(0);
 

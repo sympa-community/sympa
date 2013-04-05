@@ -214,7 +214,7 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
-tools::write_pid(Site->bounced_pidfile, $$, $options);
+tools::write_pid('bounced', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -302,7 +302,7 @@ while (!$end) {
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 Log::do_log('notice', 'bounced exited normally due to signal');
-tools::remove_pid(Site->bounced_pidfile, $$);
+tools::remove_pid('bounced', $$);
 
 exit(0);
 

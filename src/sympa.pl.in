@@ -663,13 +663,12 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	Log::do_log('debug', 'Running server %d', $$);
 	unless ($main::options{'batch'}) {
 
-	    ## Create and write the pidfile
-	    my $file = Site->pidfile;
+	    ## Create and write the PID file
 	    ## If process is running in foreground, don't write STDERR to a
 	    ## dedicated file
 	    my $options;
 	    $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-	    &tools::write_pid($file, $$, $options);
+	    tools::write_pid('sympa', $$, $options);
 	    unless ($options->{'stderr_to_tty'}) {
 		&tools::direct_stderr_to_file(('pid' => $$));
 	    }
@@ -1559,8 +1558,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 }    #end of block while ($signal ne 'term'){
 
 Log::do_log('notice', 'Sympa exited normally due to signal');
-my $file = Site->pidfile;
-&tools::remove_pid($file, $$);
+tools::remove_pid('sympa', $$);
 
 exit(0);
 
@@ -1824,14 +1822,18 @@ sub process_message {
 		) {
 		$dyn_just_created = 1;
 	    } else {
+		my $msg_id =
+		    $message->get_mime_message->head->get('Message-Id');
+		chomp $msg_id;
 		Log::do_log('err',
 		    'Unable to create list %s. Message %s ignored.',
-		    $listname, $message->get_mime_message->head->get('Message-Id'));
+		    $listname, $msg_id
+		);
 		&report::reject_report_msg(
 		    'intern',
 		    "Message ignored because automatic list '$listname' creation could not be performed.",
 		    $sender,
-		    {   'msg_id'  => $message->get_mime_message->head->get('Message-Id'),
+		    {   'msg_id'  => $msg_id,
 			'message' => $message
 		    },
 		    $dyn_family->{'robot'},
@@ -1839,17 +1841,15 @@ sub process_message {
 		);
 		$robot->send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
-		    $dyn_family->{'robot'},
-		    ["Failed to process $file"]
+		    "Unable to create list $listname. Message $msg_id ignored."
 		);
 		Log::db_log(
 		    {   'robot'      => $dyn_family->{'robot'},
 			'list'       => $listname,
 			'action'     => 'DoFile',
-			'parameters' => $message->get_mime_message->head->get('Message-Id') .
-			    ",$dyn_family->{'robot'}",
+			'parameters' => "$msg_id,$dyn_family->{'robot'}",
 			'target_email' => '',
-			'msg_id'       => $message->get_mime_message->head->get('Message-Id'),
+			'msg_id'       => $msg_id,
 			'status'       => 'error',
 			'error_type'   => 'internal',
 			'user_email'   => $sender,
@@ -2089,7 +2089,7 @@ sub process_message {
 		## Notify listmaster
 		unless (
 		    $robot->send_notify_to_listmaster(
-			'loop_command', {'msg' => $file}
+			'loop_command', {'msg' => $message}
 		    )
 		    ) {
 		    Log::do_log('notice',
@@ -2123,8 +2123,8 @@ sub process_message {
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
 		'action'       => 'Process_message',
-		'parameters'   => "$file",
-		'target_email' => "",
+		'parameters'   => '',
+		'target_email' => '',
 		'msg_id'       => $hdr->get('Message-ID'),
 		'status'       => 'success',
 		'error_type'   => '',

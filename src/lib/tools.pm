@@ -1900,8 +1900,11 @@ sub dump_encoding {
 
 ## Remove PID file and STDERR output
 sub remove_pid {
-	my ($pidfile, $pid, $options) = @_;
-	
+	my ($name, $pid, $options) = @_;
+
+	my $piddir = Sympa::Constants::PIDDIR;
+	my $pidfile = $piddir . '/' . $name . '.pid';
+
 	## If in multi_process mode (bulk.pl for instance can have child processes)
 	## Then the PID file contains a list of space-separated PIDs on a single line
 	if($options->{'multiple_process'}) {
@@ -1962,10 +1965,10 @@ sub is_a_crawler {
 }
 
 sub write_pid {
-    my ($pidfile, $pid, $options) = @_;
+    my ($name, $pid, $options) = @_;
 
-    my $piddir = $pidfile;
-    $piddir =~ s/\/[^\/]+$//;
+    my $piddir = Sympa::Constants::PIDDIR;
+    my $pidfile = $piddir . '/' . $name . '.pid';
 
     ## Create piddir
     mkdir($piddir, 0755) unless(-d $piddir);
@@ -3305,7 +3308,11 @@ sub smart_lessthan {
 
 ## Returns the list of pid identifiers in the pid file.
 sub get_pids_in_pid_file {
-	my $pidfile = shift;
+	my $name = shift;
+
+	my $piddir = Sympa::Constants::PIDDIR;
+	my $pidfile = $piddir . '/' . $name . '.pid';
+
 	unless (open(PFILE, $pidfile)) {
 		&Log::do_log('err', "unable to open PID file %s:%s",$pidfile,$!);
 		return undef;

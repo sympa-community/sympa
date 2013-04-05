@@ -208,7 +208,7 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the pidfile
-&tools::write_pid(Site->archived_pidfile, $$, $options);
+tools::write_pid('archived', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -416,7 +416,7 @@ Site->send_notify_to_listmaster(undef, undef, undef, 1);
 &mail::reaper;
 
 &Log::do_log('notice', 'archived exited normally due to signal');
-&tools::remove_pid(Site->archived_pidfile, $$);
+tools::remove_pid('archived', $$);
 
 exit(0);
 

@@ -181,7 +181,7 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 $options->{'multiple_process'} = 0;
 
 # Saves the pid number
-&tools::write_pid(Site->pidfile_bulk, $$, $options);
+tools::write_pid('bulk', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -244,7 +244,7 @@ while (!$end) {
 	## Only the main bulk process (DAEMON_MASTER) can create child processes
  	## Check if we need to run new child processes every 'bulk_wait_to_fork' (sympa.conf parameter) seconds 
 	if (($main::daemon_usage eq 'DAEMON_MASTER') && (time() - $last_check_date > $timeout)){
-	    ## Clean up pid file (in case some child bulks would have died)
+	    ## Clean up PID file (in case some child bulks would have died)
 	    my @actual_children = &tools::get_children_processes_list();
 	    my @remaining_children;
 	    my %dead_children = %created_children;
@@ -258,22 +258,25 @@ while (!$end) {
 	    if ($#pids_leftover > -1) {
 		my @dc;
 		&Log::do_log('debug2','Some childs of current process disappeared. Checking whether they shut down cleanly or not.');
-		my $pids_in_pfile = &tools::get_pids_in_pid_file(Site->pidfile_bulk);
+		my $pids_in_pfile = tools::get_pids_in_pid_file('bulk');
 		foreach my $fpid (@{$pids_in_pfile}) {
 		    if (defined $dead_children{$fpid}) {
-			&Log::do_log('err','The %s child exists in the pid file but is no longer running. Removing it and notyfying listmaster.',$fpid);
+			Log::do_log('err',
+			    'The %s child exists in the PID file but is no longer running. Removing it and notyfying listmaster.',
+			    $fpid
+			);
 			my $pname = $0;
 			$pname =~ s/.*\/(\w+)/$1/;
 			&tools::send_crash_report(('pid'=>$fpid,'pname'=>$pname));
-			&tools::remove_pid(Site->pidfile_bulk, $fpid, $options);
+			tools::remove_pid('bulk', $fpid, $options);
 			delete $dead_children{$fpid};
 			push @dc, $fpid;
 		    }
 		}
 	    }
-	    my $pids_in_pfile = &tools::get_pids_in_pid_file(Site->pidfile_bulk);
+	    my $pids_in_pfile = tools::get_pids_in_pid_file('bulk');
 	    unless (defined($pids_in_pfile)){
-		&tools::write_pid(Site->pidfile_bulk, $$, $options);
+		tools::write_pid('bulk', $$, $options);
 		close STDERR;
 		&tools::direct_stderr_to_file(('pid' => $$));
 		$pids_in_pfile = [$$];
@@ -293,7 +296,7 @@ while (!$end) {
 			if ((my $child_pid = fork) != 0) {
 			    &Log::do_log('info', "Starting bulk child daemon, PID %s", $child_pid);
 			    # Saves the pid number
-			    &tools::write_pid(Site->pidfile_bulk, $child_pid, $options);
+			    tools::write_pid('bulk', $child_pid, $options);
 			    $created_children{$child_pid} = 1;
 			    sleep 1;
 			}else{
@@ -500,7 +503,7 @@ while (!$end) {
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
 &Log::do_log('notice', 'bulk.pl exited normally due to signal');
-&tools::remove_pid(Site->pidfile_bulk, $$, $options);
+tools::remove_pid('bulk', $$, $options);
 
 exit(0);
 

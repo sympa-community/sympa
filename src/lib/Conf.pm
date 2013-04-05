@@ -93,6 +93,12 @@ my %old_params = (
     'ldap_export_suffix'   => '',                    # ,,
     'tri'                  => 'sort',                # ??? - 1.3.4-1
     'sort'                 => '',                    # 1.4.0 - ???
+    'pidfile_spooler'      => '',                    # ??? - 6.2a.33
+    'pidfile'              => '',                    # ,,
+    'pidfile_bulk'         => '',                    # ,,
+    'archived_pidfile'     => '',                    # ,,
+    'bounced_pidfile'      => '',                    # ,,
+    'task_manager_pidfile' => '',                    # ,,
 );
 
 ## These parameters now have a hard-coded value

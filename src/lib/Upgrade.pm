@@ -1017,9 +1017,7 @@ sub upgrade {
 	my %wwsconf_override = (
 	    'arc_path'                   => 'yes',
 	    'archive_default_index'      => 'yes',
-	    'archived_pidfile'           => 'yes',
 	    'bounce_path'                => 'yes',
-	    'bounced_pidfile'            => 'yes',
 	    'cookie_domain'              => 'NO',
 	    'cookie_expire'              => 'yes',
 	    'custom_archiver'            => 'yes',
@@ -1032,7 +1030,6 @@ sub upgrade {
 	    'mhonarc'                    => 'yes',
 	    'password_case'              => 'NO',
 	    'review_page_size'           => 'yes',
-	    'task_manager_pidfile'       => 'yes',
 	    'title'                      => 'NO',
 	    'use_fast_cgi'               => 'yes',
 	    'use_html_editor'            => 'NO',
@@ -1048,6 +1045,9 @@ sub upgrade {
 	    'robots' =>
 		'Not used anymore. Robots are fully described in their respective robot.conf file.',
 	    'htmlarea_url'  => 'No longer supported',
+	    'archived_pidfile'           => 'No more used',
+	    'bounced_pidfile'            => 'No more used',
+	    'task_manager_pidfile'       => 'No more used',
 	);
 
 	## Set language of new file content

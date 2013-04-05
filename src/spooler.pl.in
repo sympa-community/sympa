@@ -306,14 +306,13 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	Log::do_log('debug', 'Running server %s for spooler purpose', $$);
 
 	unless ($main::options{'batch'}) {
-	    ## Create and write the pidfile
-	    my $file = Site->pidfile_spooler;
+	    ## Create and write the PID file
 	    ## If process is running in foreground, don't write STDERR to a
 	    ## dedicated file
 	    my $options;
 	    $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 	    $options->{'multiple_process'} = 1;
-	    &tools::write_pid($file, $$, $options);
+	    tools::write_pid('spooler', $$, $options);
 	}
 
 	# Set the UserID & GroupID for the process
@@ -548,8 +547,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	SDM::db_disconnect;
     }
     Log::do_log('notice', 'spooler exited normally due to signal');
-    my $file = Site->pidfile_spooler;
-    &tools::remove_pid($file, $$);
+    tools::remove_pid('spooler', $$);
 
     exit(0);
 }
