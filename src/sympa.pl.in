@@ -1689,7 +1689,7 @@ sub process_message {
 		'list'         => $listname,
 		'action'       => 'process_message',
 		'target_email' => "",
-		'msg_id'       => $hdr->get('Message-ID'),
+		'msg_id'       => $message->get_msg_id,
 		'status'       => 'error',
 		'error_type'   => 'no_sender',
 		'user_email'   => $sender,
@@ -1713,7 +1713,7 @@ sub process_message {
 		'list'         => $listname,
 		'action'       => 'process_message',
 		'target_email' => "",
-		'msg_id'       => $hdr->get('Message-ID'),
+		'msg_id'       => $message->get_msg_id,
 		'status'       => 'error',
 		'error_type'   => 'unknown_robot',
 		'user_email'   => $sender,
@@ -1780,7 +1780,7 @@ sub process_message {
 			'list'         => $listname,
 			'action'       => 'Process_message',
 			'target_email' => "",
-			'msg_id'       => $hdr->get('Message-ID'),
+			'msg_id'       => $message->get_msg_id,
 			'status'       => 'error',
 			'error_type'   => 'unknown_list',
 			'user_email'   => $sender,
@@ -1801,7 +1801,10 @@ sub process_message {
 		);
 		$robot->send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
-		    "Failed to process message : family $dyn_list_family does not exist, impossible to create the dynamic list."
+		    {   'family' => $dyn_list_family,
+			'robot' => $robot_id,
+			'msg_id' => $message->get_msg_id,
+		    }
 		);
 		$robot->send_dsn($message, {'listname' => $listname},
 		    '5.3.5');
@@ -1829,20 +1832,16 @@ sub process_message {
 		    'Unable to create list %s. Message %s ignored.',
 		    $listname, $msg_id
 		);
-		&report::reject_report_msg(
-		    'intern',
-		    "Message ignored because automatic list '$listname' creation could not be performed.",
-		    $sender,
-		    {   'msg_id'  => $msg_id,
-			'message' => $message
-		    },
-		    $dyn_family->{'robot'},
-		    $message->{'msg_as_string'}
-		);
 		$robot->send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
-		    "Unable to create list $listname. Message $msg_id ignored."
+		    {   'listname' => $listname,
+			'family' => $dyn_list_family,
+			'robot' => $robot_id,
+			'msg_id' => $msg_id
+		    }
 		);
+		$robot->send_dsn($message, {'listname' => $listname},
+		    '5.3.5');
 		Log::db_log(
 		    {   'robot'      => $dyn_family->{'robot'},
 			'list'       => $listname,
@@ -1953,7 +1952,7 @@ sub process_message {
 		'list'         => $listname,
 		'action'       => 'Process_message',
 		'target_email' => "",
-		'msg_id'       => $hdr->get('Message-ID'),
+		'msg_id'       => $message->get_msg_id,
 		'status'       => 'error',
 		'error_type'   => 'virus',
 		'user_email'   => $sender,
@@ -1995,7 +1994,7 @@ sub process_message {
 			'list'         => $listname,
 			'action'       => 'Process_message',
 			'target_email' => "",
-			'msg_id'       => $hdr->get('Message-ID'),
+			'msg_id'       => $message->get_msg_id,
 			'status'       => 'error',
 			'error_type'   => 'dyn_cant_sync',
 			'user_email'   => $sender,
@@ -2022,7 +2021,7 @@ sub process_message {
 			'list'         => $listname,
 			'action'       => 'Process_message',
 			'target_email' => "",
-			'msg_id'       => $hdr->get('Message-ID'),
+			'msg_id'       => $message->get_msg_id,
 			'status'       => 'error',
 			'error_type'   => 'list_unknown',
 			'user_email'   => $sender,
@@ -2125,7 +2124,7 @@ sub process_message {
 		'action'       => 'Process_message',
 		'parameters'   => '',
 		'target_email' => '',
-		'msg_id'       => $hdr->get('Message-ID'),
+		'msg_id'       => $message->get_msg_id,
 		'status'       => 'success',
 		'error_type'   => '',
 		'user_email'   => $sender,
