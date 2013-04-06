@@ -1560,21 +1560,21 @@ sub search {
 
 	my $res = $ds->fetch;
 	$ds->disconnect();
-	&Log::do_log('debug2', 'Result of SQL query : %d = %s',
-	    $res->[0], $statement);
+	my $first_row = ref($res->[0]) ? $res->[0]->[0] : $res->[0];
+	Log::do_log('debug2', 'Result of SQL query : %d = %s',
+	    $first_row, $statement);
 
-	if ($res->[0] == 0) {
-	    $persistent_cache{'named_filter'}{$filter_file}{$filter}
-		{'value'} = 0;
+	if ($first_row == 0) {
+	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+		= 0;
 	} else {
-	    $persistent_cache{'named_filter'}{$filter_file}{$filter}
-		{'value'} = 1;
+	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'}
+		= 1;
 	}
 	$persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} =
 	    time;
-	return $persistent_cache{'named_filter'}{$filter_file}{$filter}
-	    {'value'};
-
+	return
+	    $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
     } elsif ($filter_file =~ /\.ldap$/) {
 	## Determine full path of the filter file
 	my $file = $that->get_etc_filename("search_filters/$filter_file");
