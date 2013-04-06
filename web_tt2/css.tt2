@@ -410,11 +410,11 @@ td.review_cels_mail {
 .color0 {
           background-color: [% color_0 %];
           }
-
+[%# for compatibility: use .color_light. #%]
 .color4 {
           background-color: [% color_9 %];
           }
-
+[%# for comatibility: use .bg_color_error. #%]
 .color7 {
           background-color: [% color_7 %];
           }
@@ -1807,6 +1807,11 @@ table.ls_template {
                     -icab-border-radius:5px;
                     border-radius:5px;
                     }
+
+table.table_style th {
+                       font-weight: bold;
+                       background-color: [% color_9 %]
+                       }
 
 table.listOfItems {
                     overflow: scroll;
