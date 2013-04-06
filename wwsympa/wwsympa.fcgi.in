@@ -1086,7 +1086,7 @@ my $birthday = time ;
      }
 
      ## We set the real UID with the effective UID value
-     ## It is usefull to allow execution of scripts like alias_manager
+     ## It is useful to allow execution of scripts like alias_manager
      ## that otherwise might loose the benefit of SetUID
      $< = $>; ## UID
      $( = $); ## GID
@@ -2664,7 +2664,8 @@ sub send_html {
     }
 
     # XSS escaping applied to all outgoing parameters.
-    my $param_copy = &tools::dup_var($param); ## Escape parameters on a copy to avoid altering usefull data.
+    ## Escape parameters on a copy to avoid altering useful data.
+    my $param_copy = tools::dup_var($param);
     if(defined $param_copy) {
 	unless(tools::sanitize_var('var' => $param_copy,
 				    'robot' => $robot,
@@ -9121,7 +9122,7 @@ sub do_create_list {
      $parameters->{'description'} = $in{'info'};
      $parameters->{'custom_input'} = $in{'custom_input'};
 
-     ## create liste
+     ## create list
      if (my $testlist = new List($in{'listname'},$robot)){
 	  &report::reject_report_web('user','list_already_exists',{'new_listname'=> $in{'listname'}},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
 	  &wwslog('info','do_create_list: requested list %s already exist (from %s)',$in{'listname'},$param->{'user'}{'email'});
@@ -9131,7 +9132,10 @@ sub do_create_list {
 		       'error_type' => 'user'});
 	  return 'create_list_request';
       }
-     my $resul = &admin::create_list_old($parameters,$in{'template'},$robot_id,"web", $param->{'user'}{'email'});
+    my $resul = admin::create_list_old(
+	$parameters, $in{'template'}, $robot,
+	'web', $param->{'user'}{'email'}
+    );
      unless(defined $resul) {
 	 &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
 	 &wwslog('info','do_create_list: unable to create list %s for %s',$in{'listname'},$param->{'user'}{'email'});
@@ -9156,7 +9160,7 @@ sub do_create_list {
      }
 
      ## notify listmaster
-     my $list = new List $in{'listname'}; #FIXME: robot?
+    my $list = List->new($in{'listname'}, $robot);
      unless (defined $list) {
        &wwslog('info',"failed to create list object for list '%s'",$in{'listname'});
        &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot_id);
@@ -9172,11 +9176,10 @@ sub do_create_list {
 	     &wwslog('notice',"Unable to send notify 'request_list_creation' to listmaster");
 	 }
      }
-     
+
      &web_db_log({'parameters' => $in{'listname'},
  		  'list' => $in{'listname'},
  		  'status' => 'success'});
-	  
 
      $in{'list'} = $resul->{'list'}{'name'};
      &check_param_in();
