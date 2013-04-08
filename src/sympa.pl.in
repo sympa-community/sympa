@@ -646,11 +646,11 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	    Log::do_log('debug', 'Starting server %s', $0);
 	    if ((my $child_pid = fork) != 0) {
-		Log::do_log('info', 'Server started %s pid %s',
+		Log::do_log('info', 'Server started %s PID %s',
 		    $0, $child_pid);
 		Log::do_log(
 		    'debug',
-		    '%s server started, pid %s, exiting from initial process',
+		    '%s server started, PID %s, exiting from initial process',
 		    $0,
 		    $child_pid
 		);
@@ -674,7 +674,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    }
 	}
 
-	# Set the UserID & GroupID for the process
+	# Set the User ID & Group ID for the process
 	$( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
 	$< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
@@ -683,7 +683,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	&POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
 	&POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
-	## Check if the UID has correctly been set (usefull on OS X)
+	## Check if the UID has correctly been set (useful on OS X)
 	unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) &&
 	    ($< == (getpwnam(Sympa::Constants::USER))[2])) {
 	    Log::fatal_err(

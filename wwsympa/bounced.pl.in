@@ -213,7 +213,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
-## Create and write the pidfile
+## Create and write the PID file
 tools::write_pid('bounced', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     tools::direct_stderr_to_file(('pid' => $$));
@@ -235,7 +235,7 @@ if ($main::options{'log_level'}) {
 
 &Log::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
 
-## Set the UserID & GroupID for the process
+## Set the User ID & Group ID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
 $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
@@ -243,7 +243,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 &POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
 &POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
-## Check if the UID has correctly been set (usefull on OS X)
+## Check if the UID has correctly been set (useful on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
     Log::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
