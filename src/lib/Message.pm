@@ -206,7 +206,7 @@ sub create_message_from_mime_entity {
     
     $self->{'msg'} = $mimeentity;
     $self->{'altered'} = '_ALTERED';
-    $self->{'msg_as_string'} = $self->{'msg'}->as_string;
+    $self->{'msg_as_string'} = $mimeentity->as_string;
 
     ## Bless Message object
     bless $self, $pkg;
@@ -786,6 +786,7 @@ sub clean_html {
     my $new_msg;
     if($new_msg = _fix_html_part($self->get_encrypted_mime_message, $robot)) {
 	$self->{'msg'} = $new_msg;
+	$self->{'msg_as_string'} = $new_msg->as_string;
 	return 1;
     }
     return 0;
@@ -1756,6 +1757,7 @@ sub prepare_reception_mail {
     if (defined $new_msg) {
 	$self->{'msg'} = $new_msg;
 	$self->{'altered'} = '_ALTERED_';
+	$self->{'msg_as_string'} = $new_msg->as_string;
     }else{
 	Log::do_log('err','Part addition failed');
 	return undef;
