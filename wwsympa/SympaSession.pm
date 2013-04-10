@@ -263,7 +263,7 @@ sub renew {
     ## interval is past.  Conditions also are checked by SQL so that
     ## simultaneous processes will be prevented renewing cookie.
     return 0
-	unless $self->{'remote_addr'} != $remote_addr or
+	unless $self->{'remote_addr'} ne $remote_addr or
 	    $self->{'refresh_date'} <= $refresh_term;
     my $sth = SDM::do_prepared_query(
 	q{UPDATE session_table
