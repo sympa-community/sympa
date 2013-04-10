@@ -3033,10 +3033,10 @@ sub DoCommand {
 
     my $sender = $message->{'sender'};
 
-    if ($msg->{'spam_status'} eq 'spam') {
+    if ($message->{'spam_status'} and $message->{'spam_status'} eq 'spam') {
 	Log::do_log(
 	    'notice',
-	    'Message for robot %s@%s ignored, because tagged as spam (Message-id: %s)',
+	    'Message for list %s@%s ignored, because tagged as spam (Message-id: %s)',
 	    $rcpt,
 	    $robot_id,
 	    $messageid
