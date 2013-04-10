@@ -5914,8 +5914,8 @@ sub _include_users_file {
 		Log::do_log('err', "Skip badly formed line: '%s'", $_);
 		next;
 	}
-
-	my $email = &tools::clean_email($1);
+	my ($email, $gecos) = ($1, $5);
+	$email = tools::clean_email($email);
 
 	unless (&tools::valid_email($email)) {
 	    Log::do_log('err', "Skip badly formed email address: '%s'",
@@ -5923,9 +5923,8 @@ sub _include_users_file {
 		next;
 	}
 
-        $lines++;
+	$lines++;
 	next unless $email;
-	my $gecos = $5;
 	$emails_found++;
 
 	my %u;
@@ -6018,8 +6017,8 @@ sub _include_users_remote_file {
 		Log::do_log('err', "Skip badly formed line: '%s'", $line);
 		next;
 	    }
-
-	    my $email = &tools::clean_email($1);
+	    my ($email, $gecos) = ($1, $5);
+	    $email = tools::clean_email($email);
 
 	    unless (&tools::valid_email($email)) {
 		Log::do_log('err', "Skip badly formed email address: '%s'",
@@ -6029,7 +6028,6 @@ sub _include_users_remote_file {
 
 	    $lines++;
 	    next unless $email;
-	    my $gecos = $5;
 	    $emails_found++;
 
 	    my %u;
@@ -6104,7 +6102,7 @@ sub _include_users_voot_group {
 	}
 
 	my $members = $consumer->getGroupMembers(group => $param->{'group'});
-    unless (defined $members) {
+	unless (defined $members) {
 		my $url = $consumer->getOAuthConsumer()->mustRedirect();
 
 		# Report error with redirect URL
@@ -6112,33 +6110,31 @@ sub _include_users_voot_group {
 		return undef;
 	}
 
-	my $email_regexp = &tools::get_regexp('email');
 	my $total = 0;
 
 	foreach my $member (@$members) {
 
-		#foreach my $email (@{$member->{'emails'}}) {
 	if (my $email = shift(@{$member->{'emails'}})) {
 	    unless (&tools::valid_email($email)) {
 		&Log::do_log('err', "Skip badly formed email address: '%s'",
 		    $email);
-				next;
-			}
+		next;
+	    }
 	    next unless ($email);
 
-			## Check if user has already been included
-			my %u;
+	    ## Check if user has already been included
+	    my %u;
 	    if ($users->{$email}) {
 		%u =
 		    $tied ? split("\n", $users->{$email}) :
 		            %{$users->{$email}};
 	    } else {
-				%u = %{$default_user_options};
-				$total++;
-			}
+		%u = %{$default_user_options};
+		$total++;
+	    }
 
-			$u{'email'} = $email;
-			$u{'gecos'} = $member->{'displayName'};
+	    $u{'email'} = $email;
+	    $u{'gecos'} = $member->{'displayName'};
 	    $u{'id'}    = join(',', split(',', $u{'id'}), $id);
 
 	    $u{'visibility'} = $default_user_options->{'visibility'}
@@ -6151,18 +6147,18 @@ sub _include_users_voot_group {
 		if (defined $default_user_options->{'info'});
 
 	    if ($tied) {
-				$users->{$email} = join("\n", %u);
+		$users->{$email} = join("\n", %u);
 	    } else {
-				$users->{$email} = \%u;
-			}
-		}
+		$users->{$email} = \%u;
+	    }
 	}
+    }
 
     &Log::do_log('info',
 	"included %d users from VOOT group %s at provider %s",
 	$total, $param->{'group'}, $param->{'provider'});
 
-	return $total;
+    return $total;
 }
 
 ## Returns a list of subscribers extracted from a remote LDAP Directory
