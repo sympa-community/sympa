@@ -20,13 +20,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-=pod 
-
 =encoding utf-8
 
 =head1 NAME 
 
-I<Message.pm> - mail message embedding for internal use in Sympa
+Message - mail message embedding for internal use in Sympa
 
 =head1 DESCRIPTION 
 
@@ -37,6 +35,7 @@ While processing a message in Sympa, we need to link informations to rhe message
 package Message;
 
 use strict;
+use warnings;
 #use Carp; # currently not used
 #use Mail::Header; #not used
 use Mail::Address;
@@ -63,16 +62,10 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
-=pod 
 
 =head1 SUBFUNCTIONS 
 
 This is the description of the subfunctions contained by Message.pm
-
-=cut 
-
-
-=pod 
 
 =head2 sub new
 
@@ -173,7 +166,8 @@ sub new {
     $message->{'size'} = length($message->{'msg_as_string'});
     $message->{'msg_id'} = $message->{'msg'}->head->get('Message-Id');
     chomp $message->{'msg_id'};
-    $message->{'list'} ||= $datas->{'list'}; # Some messages without X-Sympa-To still need a list context.
+    # Some messages without X-Sympa-To still need a list context.
+    $message->{'list'} ||= $datas->{'list'};
 
     $message->get_envelope_sender;
 
@@ -426,7 +420,8 @@ sub get_receipient {
     my $hdr = $self->{'msg'}->head;
     my $rcpt;
     if (!$self->{'rcpt'} || $self->get_family) {
-	unless (defined $self->{'noxsympato'}) { # message.pm can be used not only for message coming from queue
+	# message.pm can be used not only for message coming from queue
+	unless (defined $self->{'noxsympato'}) {
 	    unless ($rcpt = $hdr->get('X-Sympa-To')) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
@@ -617,7 +612,9 @@ sub check_smime_signature {
     Log::do_log('debug','Checking S/MIME signature for message %s, from user %s',$self->get_msg_id,$self->get_sender_email);
     ## Check S/MIME signatures
     if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
-	$self->{'protected'} = 1; ## Messages that should not be altered (no footer)
+	## Messages that should not be altered (no footer)
+	$self->{'protected'} = 1;
+
 	$self->smime_sign_check();
 	if($self->{'smime_signed'}) {
 	    Log::do_log('notice', "message %s is signed, signature is checked", $self->{'msg_id'});
@@ -625,7 +622,6 @@ sub check_smime_signature {
 	## TODO: Handle errors (0 different from undef)
     }
 }
-=pod 
 
 =head2 sub dump
 
@@ -681,8 +677,6 @@ sub dump {
     return 1;
 }
 
-=pod 
-
 =head2 sub add_topic
 
 Add topic and put header X-Sympa-Topic.
@@ -733,8 +727,6 @@ sub set_topic {
 	$self->{'topic'} = $topics;
     }
 }
-
-=pod 
 
 =head2 sub add_topic
 
@@ -845,10 +837,11 @@ sub _fix_html_part {
 # extract body as string from msg_as_string
 # do NOT use Mime::Entity in order to preserveB64 encoding form and so preserve S/MIME signature
 sub get_body_from_msg_as_string {
-    my $msg =shift;
+    my $msg = shift;
 
-    my @bodysection =split("\n\n",$msg );    # convert it as a tab with headers as first element
-    shift @bodysection;                      # remove headers
+    # convert it as a tab with headers as first element
+    my @bodysection = split "\n\n", $msg;
+    shift @bodysection;                   # remove headers
     return (join ("\n\n",@bodysection));  # convert it back as string
 }
 
@@ -923,7 +916,7 @@ sub smime_decrypt {
 	    $self->{'decrypted_msg_as_string'} .= $_;
 	}
 	close NEWMSG ;
-	my $status = $?/256;
+	my $status = $? >> 8;
 	
 	unless ($status == 0) {
 	    Log::do_log('err', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
@@ -1028,7 +1021,7 @@ sub smime_encrypt {
 	foreach (@{$self->get_mime_message->body}) { printf MSGDUMP '%s',$_;}
 	##$self->get_mime_message->bodyhandle->print(\*MSGDUMP);
 	close(MSGDUMP);
-	my $status = $?/256 ;
+	my $status = $? >> 8;
 	unless ($status == 0) {
 	    &Log::do_log('err', 'Unable to S/MIME encrypt message (error %s) : %s', $status, $openssl_errors{$status});
 	    return undef ;
@@ -1206,7 +1199,7 @@ sub smime_sign_check {
     print MSGDUMP $message->get_message_as_string;
     close MSGDUMP;
 
-    my $status = $?/256 ;
+    my $status = $? >> 8;
     unless ($status == 0) {
 	&Log::do_log('err', 'Unable to check S/MIME signature: %s', $openssl_errors{$status});
 	return undef ;
@@ -1606,11 +1599,11 @@ sub add_parts {
 		$msg->make_multipart unless $msg->is_multipart;
 		my $header_part = build MIME::Entity
 		    Path       => $header,
-		Type        => "text/plain",
-		Filename    => undef,
-		'X-Mailer'  => undef,
-		Encoding    => "8bit",
-		Charset     => "UTF-8";
+		    Type       => "text/plain",
+		    Filename   => undef,
+		    'X-Mailer' => undef,
+		    Encoding   => "8bit",
+		    Charset    => "UTF-8";
 		$msg->add_part($header_part, 0);
 	    }
 	}
@@ -1631,12 +1624,12 @@ sub add_parts {
 		$msg->make_multipart unless $msg->is_multipart;
 		$msg->attach(
 		    Path       => $footer,
-			     Type        => "text/plain",
-			     Filename    => undef,
-			     'X-Mailer'  => undef,
-			     Encoding    => "8bit",
-			     Charset     => "UTF-8"
-			     );
+		    Type       => "text/plain",
+		    Filename   => undef,
+		    'X-Mailer' => undef,
+		    Encoding   => "8bit",
+		    Charset    => "UTF-8"
+		);
 	    }
 	}
     }
@@ -1644,6 +1637,11 @@ sub add_parts {
     return $msg;
 }
 
+## Append header/footer to text/plain body.
+## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
+##   we must concatenate decoded header/body/footer and at last encode it.
+## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
+##   however, original body would be intact.
 sub _append_parts {
     my $part = shift;
     my $header_msg = shift || '';
@@ -1652,19 +1650,36 @@ sub _append_parts {
     my $eff_type = $part->effective_type || 'text/plain';
 
     if ($eff_type eq 'text/plain') {
+	my $ascii_incompat = 0; # charset is UTF-16/32 or their flavor.
+
 	my $cset = MIME::Charset->new('UTF-8');
 	$cset->encoder($part->head->mime_attr('Content-Type.Charset') ||
 		'NONE');
+	$ascii_incompat = 1
+	    if $cset->output_charset =~ /^UTF-(16|32)(BE|LE)?$/;
 
+	## Only encodable bodies are allowed.
+	my $bodyh = $part->bodyhandle;
 	my $body;
-	if (defined $part->bodyhandle) {
-	    $body = $part->bodyhandle->as_string;
+	if ($bodyh) {
+	    return 1 if $bodyh->is_encoded;
+
+	    $body = $bodyh->as_string;
+	    if ($ascii_incompat) {    # UTF-16/32
+		eval { $body = $cset->encoder->decode($body, 1); };
+		return 1 if $@;
+	    }
 	} else {
 	    $body = '';
 	}
 
 	## Only encodable footer/header are allowed.
-	if ($cset->encoder) {
+	if ($ascii_incompat) {
+	    eval { $header_msg = $cset->decode($header_msg, 1); };
+	    $header_msg = '' if $@;
+	    eval { $footer_msg = $cset->decode($footer_msg, 1); };
+	    $footer_msg = '' if $@;
+	} elsif ($cset->encoder) {
 	    eval { $header_msg = $cset->encode($header_msg, 1); };
 	    $header_msg = '' if $@;
 	    eval { $footer_msg = $cset->encode($footer_msg, 1); };
@@ -1675,23 +1690,32 @@ sub _append_parts {
 	}
 
 	if (length $header_msg or length $footer_msg) {
-	    $header_msg .= "\n"
-		if length $header_msg and
-		    $header_msg !~ /\n$/;
-	    $body .= "\n"
-		if length $footer_msg and
-		    length $body and
-		    $body !~ /\n$/;
+	    ## Add newlines. For BASE64 encoding they also must be normalized.
+	    if (length $header_msg) {
+		$header_msg .= "\n" unless $header_msg =~ /\n\z/;
+	    }
+	    if (length $footer_msg and length $body) {
+		$body .= "\n" unless $body =~ /\n\z/;
+	    }
+	    if (uc($part->head->mime_attr('Content-Transfer-Encoding') || '')
+		eq 'BASE64') {
+		$header_msg =~ s/\r\n|\r|\n/\r\n/g;
+		$body =~ s/(\r\n|\r|\n)\z/\r\n/;       # only at end
+		$footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+	    }
 
-	    my $io = $part->bodyhandle->open('w');
+	    my $new_body = $header_msg . $body . $footer_msg;
+	    if ($ascii_incompat) {
+		eval { $new_body = $cset->encode($new_body); };
+		return 1 if $@;
+	    }
+
+	    my $io = $bodyh->open('w');
 	    unless (defined $io) {
-		&Log::do_log('err',
-		    "Failed to save message : $!");
+		Log::do_log('err', "Failed to save message : $!");
 		return undef;
 	    }
-	    $io->print($header_msg);
-	    $io->print($body);
-	    $io->print($footer_msg);
+	    $io->print($new_body);
 	    $io->close;
 	    $part->sync_headers(Length => 'COMPUTE')
 		if $part->head->get('Content-Length');
@@ -1983,7 +2007,6 @@ sub _urlize_part {
 
 ## Packages must return true.
 1;
-=pod 
 
 =head1 AUTHORS 
 
