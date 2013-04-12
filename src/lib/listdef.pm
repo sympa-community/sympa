@@ -1023,7 +1023,7 @@ our %pinfo = (
 	    'attrs' => {
 		'order'      => 8,
 		'gettext_id' => "extracted attribute",
-		'format'     => '\w+(\s*,\s*\w+)?',
+		'format'     => '[-.\w]+(;[-\w]+)*(\s*,\s*[-.\w]+(;[-\w]+)*)?',
 		'default'    => 'mail',
 		'length'     => 50
 	    },
@@ -1124,7 +1124,7 @@ our %pinfo = (
 	    'attrs1' => {
 		'order'      => 8,
 		'gettext_id' => "first-level extracted attribute",
-		'format'     => '\w+',
+		'format'     => '[-.\w]+(;[-\w]+)*',
 		'length'     => 15
 	    },
 	    'select1' => {
@@ -1168,7 +1168,7 @@ our %pinfo = (
 	    'attrs2' => {
 		'order'      => 15,
 		'gettext_id' => "second-level extracted attribute",
-		'format'     => '\w+(\s*,\s*\w+)?',
+		'format'     => '[-.\w]+(;[-\w]+)*(\s*,\s*[-.\w]+(;[-\w]+)*)?',
 		'default'    => 'mail',
 		'length'     => 50
 	    },
@@ -1413,7 +1413,7 @@ our %pinfo = (
 	    'attrs' => {
 		'order'      => 8,
 		'gettext_id' => "extracted attribute",
-		'format'     => '\w+',
+		'format'     => '[-.\w]+(;[-\w]+)*',
 		'default'    => 'mail',
 		'length'     => 15
 	    },
@@ -1520,7 +1520,7 @@ our %pinfo = (
 	    'attrs1' => {
 		'order'      => 8,
 		'gettext_id' => "first-level extracted attribute",
-		'format'     => '\w+',
+		'format'     => '[-.\w]+(;[-\w]+)*',
 		'length'     => 15
 	    },
 	    'select1' => {
@@ -1564,7 +1564,7 @@ our %pinfo = (
 	    'attrs2' => {
 		'order'      => 15,
 		'gettext_id' => "second-level extracted attribute",
-		'format'     => '\w+',
+		'format'     => '[-.\w]+(;[-\w]+)*',
 		'default'    => 'mail',
 		'length'     => 15
 	    },
