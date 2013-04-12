@@ -1076,6 +1076,10 @@ sub fix_part($$$$) {
 	    return $part;
 	}
 
+	## normalize newline to CRLF if transfer-encoding is BASE64.
+	$newbody =~ s/\r\n|\r|\n/\r\n/g
+	    if $newenc and $newenc eq 'BASE64';
+
 	# Fix headers and body.
 	$head->mime_attr("Content-Type", "TEXT/PLAIN")
 	    unless $head->mime_attr("Content-Type");
