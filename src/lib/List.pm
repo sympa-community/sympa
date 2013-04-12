@@ -6393,17 +6393,21 @@ sub _include_users_ldap_2level {
 
     my ($suffix2, $filter2);
     foreach my $attr (@attrs) {
-	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$attr/g;
-	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$attr/g;
+	# Escape LDAP characters occuring in attribute
+	my $escaped_attr = $attr;
+	$escaped_attr =~ s/([\\\(\*\)\0])/sprintf "\\%02X", ord($1)/eg;
+
+	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
+	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
 	&Log::do_log('debug2',
 	    'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
 	    $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	$fetch = $ldaph->search(
-	    base   => "$suffix2",
-				  filter => "$filter2",
-				  attrs => @ldap_attrs2,
-	    scope  => "$ldap_scope2"
+	    'base'   => "$suffix2",
+	    'filter' => "$filter2",
+	    'attrs'  => @ldap_attrs2,
+	    'scope'  => "$ldap_scope2"
 	);
 	if ($fetch->code()) {
 	    &Log::do_log(
@@ -6500,8 +6504,8 @@ sub _include_users_ldap_2level {
 	}
 
 	$u{'email'} = $email;
-	$u{'gecos'}       = $gecos if ($gecos);
-	$u{'date'} = time;
+	$u{'gecos'} = $gecos if $gecos;
+	$u{'date'}        = time;
 	$u{'update_date'} = time;
 	$u{'id'}          = join(',', split(',', $u{'id'}), $id);
 
