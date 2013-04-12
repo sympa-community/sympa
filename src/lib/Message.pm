@@ -125,7 +125,6 @@ Creates a new Message object.
 
 ## Creates a new object
 sub new {
-    
     my $pkg =shift;
     my $datas = shift;
 
@@ -140,7 +139,7 @@ sub new {
     $input = 'messageasstring' if $messageasstring; 
     $input = 'message_in_spool' if $message_in_spool; 
     $input = 'mimeentity' if $mimeentity; 
-    Log::do_log('debug2', 'Message::new(input= %s, noxsympato= %s)',$input,$noxsympato);
+    Log::do_log('debug2', '(input= %s, noxsympato=%s)', $input, $noxsympato);
     
     if ($mimeentity) {
 	return create_message_from_mime_entity($pkg,$message,$mimeentity);
@@ -196,7 +195,7 @@ sub create_message_from_mime_entity {
     my $pkg = shift;
     my $self = shift;
     my $mimeentity = shift;
-    Log::do_log('debug2','Creating message object from MIME entity %s',$mimeentity);
+    Log::do_log('debug2', '(mimeentity=%s)', $mimeentity);
     
     $self->{'msg'} = $mimeentity;
     $self->{'altered'} = '_ALTERED';
@@ -211,7 +210,7 @@ sub create_message_from_mime_entity {
 sub create_message_from_spool {
     my $message_in_spool = shift;
     my $self;
-    Log::do_log('debug2','Creating message object from spooled message %s',$message_in_spool->{'messagekey'});
+    Log::do_log('debug2', '(messagekey=%s)', $message_in_spool->{'messagekey'});
     
     $self = create_message_from_string($message_in_spool->{'messageasstring'});
     $self->{'messagekey'}= $message_in_spool->{'messagekey'};
@@ -224,11 +223,11 @@ sub create_message_from_spool {
 }
 
 sub create_message_from_file {
+    Log::do_log('debug2', '(%s)', @_);
     my $file = shift;
     my $self;
     my $messageasstring;
-    Log::do_log('debug2','Creating message object from file %s',$file);
-    
+
     unless (open FILE, "$file") {
 	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
 	return undef;
@@ -252,10 +251,10 @@ sub create_message_from_file {
 }
 
 sub create_message_from_string {
+    Log::do_log('debug2', '(...)');
     my $messageasstring = shift;
     my $self;
-    Log::do_log('debug2','Creating message object from character string');
-    
+
     my $parser = new MIME::Parser;
     $parser->output_to_core(1);
     
@@ -824,7 +823,7 @@ sub _fix_html_part {
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
-	    Log::do_log('err', "Failed to save message : $!");
+	    Log::do_log('err', 'Failed to save message : %s', $!);
 	    return undef;
 	}
 	$io->print($filtered_body);
@@ -889,7 +888,7 @@ sub smime_decrypt {
     ## try all keys/certs until one decrypts.
     while (my $certfile = shift @$certs) {
 	my $keyfile = shift @$keys;
-	Log::do_log('debug', "Trying decrypt with $certfile, $keyfile");
+	Log::do_log('debug', 'Trying decrypt with %s, %s', $certfile, $keyfile);
 	if (Site->key_passwd ne '') {
 	    unless (mkfifo($temporary_pwd,0600)) {
 		Log::do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
@@ -899,7 +898,7 @@ sub smime_decrypt {
 	my $cmd = sprintf '%s smime -decrypt -in %s -recip %s -inkey %s %s',
 	    Site->openssl, $temporary_file, $certfile, $keyfile,
 	    $pass_option;
-	Log::do_log('debug3', $cmd);
+	Log::do_log('debug3', '%s', $cmd);
 	open (NEWMSG, "$cmd |");
 
 	if (defined Site->key_passwd and Site->key_passwd ne '') {
@@ -976,6 +975,7 @@ sub smime_decrypt {
 
 # input : msg object, return a new message object encrypted
 sub smime_encrypt {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my $self = shift;
     my $email = shift ;
     my $list = shift ;
@@ -983,7 +983,6 @@ sub smime_encrypt {
     my $usercert;
     my $dummy;
 
-    Log::do_log('debug2', 'tools::smime_encrypt( %s, %s)', $email, $list);
     if ($list eq 'list') {
 	my $self = new List($email);
 	($usercert, $dummy) = tools::smime_find_keys($self->{dir}, 'encrypt');
@@ -1001,7 +1000,7 @@ sub smime_encrypt {
 	## encrypt the incoming message parse it.
 	my $cmd = sprintf '%s smime -encrypt -out %s -des3 %s',
 	    Site->openssl, $temporary_file, $usercert;
-        &Log::do_log ('debug3', '%s', $cmd);
+        Log::do_log ('debug3', '%s', $cmd);
 	if (!open(MSGDUMP, "| $cmd")) {
 	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s',
 		$email);
@@ -1079,8 +1078,7 @@ sub smime_encrypt {
 sub smime_sign {
     my $self = shift;
     my $list = $self->{'list'};
-
-    Log::do_log('debug2', 'tools::smime_sign (%s,%s)',$self,$list);
+    Log::do_log('debug2', '(%s, list=%s)', $self, $list);
 
     my($cert, $key) = tools::smime_find_keys($list->dir, 'sign');
     my $temporary_file = Site->tmpdir .'/'. $list->get_id . "." . $$;
@@ -1169,8 +1167,7 @@ sub smime_sign {
 
 sub smime_sign_check {
     my $message = shift;
-
-    Log::do_log('debug2', 'tools::smime_sign_check (message, %s, %s)', $message->{'sender'}, $message->{'filename'});
+    Log::do_log('debug2', '(sender=%s, filename=%s)', $message->{'sender'}, $message->{'filename'});
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -1237,7 +1234,7 @@ sub smime_sign_check {
     my $tmpcert = Site->tmpdir . "/cert.$$";
     my $nparts = $message->get_mime_message->parts;
     my $extracted = 0;
-    &Log::do_log('debug2', "smime_sign_check: parsing $nparts parts");
+    Log::do_log('debug3', 'smime_sign_check: parsing %d parts', $nparts);
     if($nparts == 0) { # could be opaque signing...
 	$extracted +=tools::smime_extract_certs($message->get_mime_message, $certbundle);
     } else {
@@ -1254,7 +1251,7 @@ sub smime_sign_check {
     }
 
     unless(open(BUNDLE, $certbundle)) {
-	&Log::do_log('err', "Can't open cert bundle $certbundle: $!");
+	Log::do_log('err', "Can't open cert bundle %s: %s", $certbundle, $!);
 	return undef;
     }
     
@@ -1267,7 +1264,7 @@ sub smime_sign_check {
 	    my $workcert = $cert;
 	    $cert = '';
 	    unless(open(CERT, ">$tmpcert")) {
-		&Log::do_log('err', "Can't create $tmpcert: $!");
+		Log::do_log('err', "Can't create %s: %s", $tmpcert, $!);
 		return undef;
 	    }
 	    print CERT $workcert;
@@ -1278,7 +1275,7 @@ sub smime_sign_check {
 		return undef;
 	    }
 	    unless($parsed->{'email'}) {
-		&Log::do_log('debug', "No email in cert for $parsed->{subject}, skipping");
+		Log::do_log('debug', 'No email in cert for %s, skipping', $parsed->{subject});
 		next;
 	    }
 	    
@@ -1315,9 +1312,9 @@ sub smime_sign_check {
 	    unlink("$fn\@enc");
 	    unlink("$fn\@sign");
 	}
-	&Log::do_log('debug', "Saving $c cert in $fn");
+	Log::do_log('debug', 'Saving %s cert in %s', $c, $fn);
 	unless (open(CERT, ">$fn")) {
-	    &Log::do_log('err', "Unable to create certificate file $fn: $!");
+	    Log::do_log('err', 'Unable to create certificate file %s: %s', $fn, $!);
 	    return undef;
 	}
 	print CERT $certs{$c};
@@ -1451,10 +1448,10 @@ sub has_attachments {
 
 ## Make a multipart/alternative, a singlepart
 sub check_message_structure {
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $msg = shift;
     $msg ||= $self->get_mime_message->dup;
-    Log::do_log('debug2', 'Message: %s, part: %s',$self,$msg);
     $self->{'structure_already_checked'} = 1;
     if ($msg->effective_type() =~ /^multipart\/alternative/) {
 	foreach my $part ($msg->parts) {
@@ -1712,7 +1709,7 @@ sub _append_parts {
 
 	    my $io = $bodyh->open('w');
 	    unless (defined $io) {
-		Log::do_log('err', "Failed to save message : $!");
+		Log::do_log('err', 'Failed to save message: %s', $!);
 		return undef;
 	    }
 	    $io->print($new_body);
@@ -1742,7 +1739,7 @@ sub _append_parts {
 sub prepare_message_according_to_mode {
     my $self = shift;
     my $mode = shift;
-    Log::do_log('debug3','msg %s, mode: %s',$self->get_msg_id,$mode);
+    Log::do_log('debug3', '(msg_id=%s, mode=%s)', $self->get_msg_id, $mode);
     ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
 	$self->prepare_reception_mail;
@@ -1763,8 +1760,8 @@ sub prepare_message_according_to_mode {
     } elsif ($mode eq 'url') {
 	$self->prepare_reception_urlize;
     } else {
-	&Log::do_log('err',
-	    "Unknown variable/reception mode $mode");
+	Log::do_log('err',
+	    'Unknown variable/reception mode %s', $mode);
 	return undef;
     }
 
@@ -1849,7 +1846,7 @@ sub prepare_reception_urlize {
 
     unless ((-d $expl) || (mkdir $expl, 0775)) {
 	&Log::do_log('err',
-	    "Unable to create urlize directory $expl");
+	    'Unable to create urlize directory %s', $expl);
 	return undef;
     }
 
@@ -1945,7 +1942,7 @@ sub _urlize_part {
 	    if $head->mime_attr('Content-Type.Charset') =~ /\S/;
 	print OFILE "\n\n";
     } else {
-	&Log::do_log('notice', "Unable to open $expl/$dir/$filename");
+	Log::do_log('notice', 'Unable to open %s/%s/%s', $expl, $dir, $filename);
 	return undef;
     }
 
