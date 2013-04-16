@@ -409,7 +409,7 @@ sub check_cpan {
 					  usage => 'Oracle database driver, required if you connect to a Oracle database.',
 				     },
 			'DBD::Pg' => {
-				      required_version =>'0.90',
+				      required_version =>'2.00',
 				      prerequisites => 'postgresql-devel and postgresql-server. postgresql should be running for make test to succeed',
 				      package_name => 'DBD-Pg',
 				      usage => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
