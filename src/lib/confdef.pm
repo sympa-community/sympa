@@ -653,28 +653,24 @@ our @params = (
 	'default'    => Sympa::Constants::SPOOLDIR . '/moderation',
 	'gettext_id' => 'Directory for moderation spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'       => 'queuedigest',
 	'default'    => Sympa::Constants::SPOOLDIR . '/digest',
 	'gettext_id' => 'Directory for digest spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'       => 'queueauth',
 	'default'    => Sympa::Constants::SPOOLDIR . '/auth',
 	'gettext_id' => 'Directory for authentication spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'       => 'queueoutgoing',
 	'default'    => Sympa::Constants::SPOOLDIR . '/outgoing',
 	'gettext_id' => 'Directory for outgoing spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'       => 'queuesubscribe',
@@ -686,7 +682,6 @@ our @params = (
 	'default'    => Sympa::Constants::SPOOLDIR . '/topic',
 	'gettext_id' => 'Directory for topic spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'       => 'queuebounce',
@@ -703,7 +698,6 @@ our @params = (
 	'default'    => Sympa::Constants::SPOOLDIR . '/automatic',
 	'gettext_id' => 'Directory for automatic list creation spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',    # valid before version 6.3
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'            => 'sleep',

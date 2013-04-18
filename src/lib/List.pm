@@ -25,7 +25,6 @@ use warnings;
 
 use POSIX;
 use Exporter;
-## xxxxxxx faut-il virer encode ? Faut en faire un use ?
 #use Encode; # load in Log
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use Carp qw(croak);
@@ -53,7 +52,7 @@ use Task;
 use Scenario;
 use Fetch;
 use WebAgent;
-#use Sympaspool; # used in Task
+use SympaspoolClassic;
 use Archive;
 use VOOTConsumer;
 use tt2;
@@ -1623,7 +1622,7 @@ sub distribute_msg {
 
     ## Archives
 
-    $self->archive_msg($message);
+    ##$self->archive_msg($message);
 
     ## Change the reply-to header if necessary.
     if ($self->reply_to_header) {
@@ -5312,26 +5311,18 @@ sub archive_msg {
 		"Do not archive message with no-archive flag for list %s",
 		$self->get_list_id());
 	} else {
-	    my $spoolarchive = new Sympaspool('archive');
-	    unless ($message->{'messagekey'}) {
-		&Log::do_log('err',
-		    "could not store message in archive spool, messagekey missing"
-		);
-		return undef;
-	    }
-	    unless (
-		$spoolarchive->store(
-		    $msgtostore,
-		    {'robot' => $self->domain, 'list' => $self->name}
-		)
+	    my $spoolarchive = new SympaspoolClassic('outgoing');
+	    unless (File::Copy::copy($message->{'filename'},$spoolarchive->{'dir'})
 		) {
 		&Log::do_log('err',
-		    "could not store message in archive spool, unkown reason"
+		    "could not move message %s in archive spool: %s",$message->{'filename'},$!
 		);
 		return undef;
 	    }
+	    unlink $message->{'filename'};
 	}
     }
+    return 1;
 }
 
 ## Is the list moderated?

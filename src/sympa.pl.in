@@ -358,6 +358,7 @@ use Family;
 #use Sympa::Constants;
 #use tracking; # not used
 #use Sympaspool; # load in List
+use Messagespool; # load in List
 #use SDM; # load in Conf
 use Upgrade;
 
@@ -1420,7 +1421,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     my @qfile;
 
     my $spoolname = 'msg';
-    my $spool     = new Sympaspool($spoolname);
+    my $spool     = new Messagespool($spoolname);
     ## This is the main loop : look for files in the directory, handles
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
@@ -1480,46 +1481,39 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	my $message_in_spool = $spool->next;
 
-	unless (
-	    ($message_in_spool) ||
-	    (defined $message_in_spool &&
-		defined $message_in_spool->{'priority'} &&
-		$message_in_spool->{'priority'} eq 'z')
-	    ) {
+	unless ($message_in_spool) {
 	    sleep(Site->sleep);
 	    next;
 	}
-	my $listname = $message_in_spool->{'list'};
-	my $robot_id    = $message_in_spool->{'robot'};
+	my $list = $message_in_spool->{'list'};
+	my $robot    = $message_in_spool->{'robot'};
 	Log::do_log(
-	    'debug',
-	    "Processing message # %s for list = %s robot = %s reception_date = %s",
-	    $message_in_spool->{'messagekey'},
-	    $listname,
-	    $robot_id,
-	    $message_in_spool->{'date'}
+	    'trace',
+	    "Processing message %s for list = %s robot = %s",
+	    $message_in_spool->{'name'},
+	    $list,
+	    $robot,
 	);
 
 	if (!defined $main::options{'mail'} || $main::options{'mail'} != 1) {
-	    $main::options{'mail'} = $robot_id
-		if (&Conf::get_robot_conf($robot_id, 'log_smtp'));
+	    $main::options{'mail'} = $message_in_spool->{'robot'}->get_id
+		if ($message_in_spool->{'robot'}->log_smtp);
 	}
 
 	## Set NLS default lang for current message
 	$default_lang = $main::options{'lang'} ||
-	    &Conf::get_robot_conf($robot_id, 'lang');
+	    $message_in_spool->{'robot'}->lang;
 	Language::SetLang($default_lang);
 
-	my $status = &process_message($message_in_spool);
+	my $status = &process_message($message_in_spool->{'full_path'});
 
 	if (defined($status)) {
 	    Log::do_log(
-		'debug',
-		"Message key %s  processed for list = %s robot = %s reception_date = %s",
-		$message_in_spool->{'messagekey'},
-		$listname,
-		$robot_id,
-		$message_in_spool->{'date'}
+		'trace',
+		"Message %s  processed for list = %s robot = %s",
+		$message_in_spool->{'name'},
+		$list,
+		$robot,
 	    );
 
 	} else {
@@ -1530,26 +1524,21 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    #     {'messagekey' => $message_in_spool->{'messagekey'}});
 
 	    # move message to bad.
-	    $spool->update(
-		{'messagekey'     => $message_in_spool->{'messagekey'}},
-		{"message_status" => 'bad', 'messagelock' => 'NULL'}
-	    );
+	    $spool->move_current_file_to_bad;
 	    Log::do_log(
-		'debug',
-		"Message # %s  moved to spool bad (message for list = %s robot = %s reception_date = %s)",
-		$message_in_spool->{'messagekey'},
-		$listname,
-		$robot_id,
-		$message_in_spool->{'date'}
+		'trace',
+		"Message %s  moved to spool bad (message for list = %s robot = %s)",
+		$message_in_spool->{'name'},
+		$list,
+		$robot,
 	    );
 	}
+	unlink $message_in_spool->{'full_path'};
+	##$spool->unlock_current_message;
     }    ## END of infinite loop
 
     # Purge grouped notifications
     Site->send_notify_to_listmaster(undef, undef, undef, 1);
-
-    ## Dump of User files in DB
-    #List::dump();
 
     ## Disconnect from Database
     SDM::db_disconnect;
@@ -1627,29 +1616,7 @@ sub process_message {
     my $robot_id;
     my $status;
 
-    my $message = new Message({'message_in_spool' => $message_in_spool});
-
-    unless (defined $message) {
-	Log::do_log(
-	    'err',
-	    'Unable to create Message object message : %s',
-	    $message_in_spool->{'messagekey'}
-	);
-	Log::db_log(
-	    {   'robot'        => $robot_id,
-		'list'         => $listname,
-		'action'       => 'process_message',
-		'target_email' => "",
-		'msg_id'       => '',
-		'status'       => 'error',
-		'error_type'   => 'unable_create_message',
-		'user_email'   => '',
-		'client'       => $ip,
-		'daemon'       => $daemon_name
-	    }
-	);
-	return undef;
-    }
+    my $message = new Message({'file' => $message_in_spool});
 
     my $msg  = $message->get_mime_message;
     my $hdr  = $msg->head;
