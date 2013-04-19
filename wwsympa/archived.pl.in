@@ -271,7 +271,7 @@ Language::SetLang(Site->lang || 'en');
 $SIG{'TERM'} = 'sigterm';
 my $end = 0;
 
-my $spoolarchive = new Sympaspool ('archive');
+my $spoolarchive = new SympaspoolClassic ('outgoing');
 
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
@@ -284,7 +284,12 @@ while (!$end) {
 
     my @orders = split(/\n/,$item->{'messageasstring'} );
     
-   &Log::do_log('debug',"orders[0] %s ",$orders[0] );
+    unless($item->{'messageasstring'}) {
+	$spoolarchive->move_current_file_to_bad;
+	next;
+    }
+    
+   &Log::do_log('trace',"orders[0] '%s' ",$orders[0] );
 
     if ($orders[0] =~ /^rebuild\s*$/ ) {
 	&Log::do_log('debug',"rebuild found ");
@@ -388,10 +393,10 @@ while (!$end) {
 	}
 	$spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}});
     }else{
-&Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'messagekey'},$item->{'list'},$item->{'robot'});
+&Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'name'},$item->{'list'},$item->{'robot'});
 	unless (mail2arc ($item)) {
-	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to rebuild archive for unkown list','lockdate'=>'NULL'});
-	    &Log::do_log('err',"archiving_failed for message %s",$item->{'messagekey'});
+	    $spoolarchive->move_current_file_to_bad;
+	    &Log::do_log('err',"archiving_failed for message %s",$item->{'name'});
 	    unless ($item->{'robot_object'} and
 		    $item->{'robot_object'}->send_notify_to_listmaster(
 			'archiving_failed') or
@@ -401,8 +406,8 @@ while (!$end) {
 		&Log::do_log('notice',"Unable to send notify 'archiving_failed' to listmaster");
 	    }
 	}
-	unless ($spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}})){
-	   &Log::do_log ('err',"Couldn't remove message in archive spool %s . exiting to prevent infinite loop",$item->{'messagekey'});
+	unless ($spoolarchive->remove_current_message){
+	    Log::do_log ('err',"Couldn't remove message in archive spool %s . exiting to prevent infinite loop",$item->{'full_path'});
 	    last;
 	}
     }
@@ -835,7 +840,7 @@ sub mail2arc {
 
     my $arcpath = $robot->arc_path;
 
-    unless (defined $list) {
+    unless (defined $list && $list->isa('List')) {
 	&Log::do_log('err', 'Unknown list %s', $message_in_spool->{'list'});
 	return undef;
     }

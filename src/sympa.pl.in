@@ -1485,8 +1485,8 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    sleep(Site->sleep);
 	    next;
 	}
-	my $list = $message_in_spool->{'list'};
-	my $robot    = $message_in_spool->{'robot'};
+	my $list = $message_in_spool->{'list_object'};
+	my $robot    = $message_in_spool->{'robot_object'};
 	Log::do_log(
 	    'trace',
 	    "Processing message %s for list = %s robot = %s",
@@ -1496,13 +1496,13 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	);
 
 	if (!defined $main::options{'mail'} || $main::options{'mail'} != 1) {
-	    $main::options{'mail'} = $message_in_spool->{'robot'}->get_id
-		if ($message_in_spool->{'robot'}->log_smtp);
+	    $main::options{'mail'} = $message_in_spool->{'robot_object'}->get_id
+		if ($message_in_spool->{'robot_object'}->log_smtp);
 	}
 
 	## Set NLS default lang for current message
 	$default_lang = $main::options{'lang'} ||
-	    $message_in_spool->{'robot'}->lang;
+	    $message_in_spool->{'robot_object'}->lang;
 	Language::SetLang($default_lang);
 
 	my $status = &process_message($message_in_spool->{'full_path'});

@@ -8274,7 +8274,7 @@ sub do_remove_arc {
 	# Removing tracking should be done by archived.
 	tracking::remove_message_by_id($list, $msgid);
     }
-    my $spoolarchive = new Sympaspool('archive');
+    my $spoolarchive = new SympaspoolClassic('outgoing');
     $spoolarchive->store($removeorder,{'list'=>$in{'list'},'robot'=>$robot_id});
 
     &wwslog('info', 'do_remove_arc %d messages marked to be removed by archived', $#msgids+1);

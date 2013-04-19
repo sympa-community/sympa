@@ -23,10 +23,8 @@ package Messagespool;
 
 use SympaspoolClassic;
 use Log;
-use List;
 
 our @ISA = qw(SympaspoolClassic);
-our $filename_regexp = '^(\S+)\.\d+\.\w+$';
 
 sub get_next_file_to_process {
     my $self = shift;
@@ -67,48 +65,5 @@ sub is_current_file_relevant {
     return 0 if ($self->{'current_file'}{'name'} =~ /^T\./);
 
     return 1;
-}
-
-sub analyze_current_file_name {
-    my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    return undef unless($self->{'current_file'}{'name'} =~ /$filename_regexp/);
-    ($self->{'current_file'}{'listname'}, $self->{'current_file'}{'robot_id'}) = split(/\@/,$1);
-    
-    $self->{'current_file'}{'listname'} = lc($self->{'current_file'}{'listname'});
-    $self->{'current_file'}{'robot_id'}=lc($self->{'current_file'}{'robot_id'});
-    return undef unless ($self->{'current_file'}{'robot'} = Robot->new($self->{'current_file'}{'robot_id'}));
-
-    my $list_check_regexp = $self->{'current_file'}{'robot'}->list_check_regexp;
-
-    if ($self->{'current_file'}{'listname'} =~ /^(\S+)-($list_check_regexp)$/) {
-	($self->{'current_file'}{'listname'}, $self->{'current_file'}{'type'}) = ($1, $2);
-    }
-    return 1;
-}
-
-sub get_current_file_priority {
-    my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    my $email = $self->{'current_file'}{'robot'}->email;
-    
-    if ($self->{'current_file'}{'listname'} eq Site->listmaster_email) {
-	## highest priority
-	$self->{'current_file'}{'priority'} = 0;
-    }elsif ($self->{'current_file'}{'type'} eq 'request') {
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot'}->request_priority;
-    }elsif ($self->{'current_file'}{'type'} eq 'owner') {
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot'}->owner_priority;
-    }elsif ($self->{'current_file'}{'listname'} =~ /^(sympa|$email)(\@$Conf{'host'})?$/i) {	
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot'}->sympa_priority;
-    }else {
-	$self->{'current_file'}{'list'} =  List->new($self->{'current_file'}{'listname'}, $self->{'current_file'}{'robot'}, {'just_try' => 1});
-	if ($self->{'current_file'}{'list'} && $self->{'current_file'}{'list'}->isa('List')) {
-	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'list'}->priority;
-	}else {
-	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot'}->default_list_priority;
-	}
-    }
-    Log::do_log('trace','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
 }
 1;

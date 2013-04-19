@@ -22,21 +22,19 @@
 package SympaspoolClassic;
 
 use strict;
-#use Carp; # not yet used
-#require Encode; # not used
 use Exporter;
 use File::Path qw(make_path remove_tree);
-#use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN); # no longer used
 use Mail::Address;
 use MIME::Base64;
-#use POSIX; # not used
 use Sys::Hostname qw(hostname);
 # tentative
 use Data::Dumper;
 use SDM;
 use Message;
+use List;
 
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
+our $filename_regexp = '^(\S+)\.\d+\.\w+$';
 
 ## Creates an object.
 sub new {
@@ -177,17 +175,20 @@ sub next {
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
     $self->get_next_file_to_process;
     Log::do_log('trace','Will return file %s',$self->{'current_file'}{'name'});
-    unless($self->{'current_file'}{'content'}) {
-	Log::do_log('err','Unable to gather content from any file found in spool %s',$self->{'dir'});
+    $self->{'current_file'}{'full_path'} = "$self->{'dir'}/$self->{'current_file'}{'name'}";
+    $self->analyze_current_file_name;
+    $self->get_current_file_priority;
+    Log::do_log('trace','%s',$self->{'current_file'}{'list_object'});
+    unless(defined $self->{'current_file'}{'messageasstring'}) {
+	Log::do_log('err','Unable to gather content from file %s',$self->{'current_file'}{'full_path'});
 	return undef;
     }
-    $self->{'current_file'}{'full_path'} = "$self->{'dir'}/$self->{'current_file'}{'name'}";
     return $self->{'current_file'};
 }
 
 sub get_next_file_to_process {
     my $self = shift;
-    Log::do_log('trace','%s',$self->get_id);
+    Log::do_log('debug2','%s',$self->get_id);
     foreach (@{$self->{'spool_files_list'}}) {
 	$self->{'current_file'}{'name'} = $_;
 	last if ($self->get_current_message_content);
@@ -195,9 +196,52 @@ sub get_next_file_to_process {
     return 1;
 }
 
+sub analyze_current_file_name {
+    my $self = shift;
+    Log::do_log('debug3','%s',$self->get_id);
+    return undef unless($self->{'current_file'}{'name'} =~ /$filename_regexp/);
+    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$1);
+    
+    $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
+    $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
+    return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
+
+    my $list_check_regexp = $self->{'current_file'}{'robot_object'}->list_check_regexp;
+
+    if ($self->{'current_file'}{'list'} =~ /^(\S+)-($list_check_regexp)$/) {
+	($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) = ($1, $2);
+    }
+    return 1;
+}
+
+sub get_current_file_priority {
+    my $self = shift;
+    Log::do_log('debug3','%s',$self->get_id);
+    my $email = $self->{'current_file'}{'robot_object'}->email;
+    
+    if ($self->{'current_file'}{'list'} eq Site->listmaster_email) {
+	## highest priority
+	$self->{'current_file'}{'priority'} = 0;
+    }elsif ($self->{'current_file'}{'type'} eq 'request') {
+	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->request_priority;
+    }elsif ($self->{'current_file'}{'type'} eq 'owner') {
+	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->owner_priority;
+    }elsif ($self->{'current_file'}{'list'} =~ /^(sympa|$email)(\@Site->host)?$/i) {	
+	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->sympa_priority;
+    }else {
+	$self->{'current_file'}{'list_object'} =  List->new($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot_object'}, {'just_try' => 1});
+	if ($self->{'current_file'}{'list_object'} && $self->{'current_file'}{'list_object'}->isa('List')) {
+	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'list_object'}->priority;
+	}else {
+	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->default_list_priority;
+	}
+    }
+    Log::do_log('trace','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
+}
+
 sub get_current_message_content {
     my $self = shift;
-    Log::do_log('trace','%s',$self->get_id);
+    Log::do_log('debug2','%s',$self->get_id);
     return undef unless($self->lock_current_message);
     my $spool_file_content;
     unless (open $spool_file_content, $self->{'dir'}.'/'.$self->{'current_file'}{'name'}) {
@@ -205,14 +249,14 @@ sub get_current_message_content {
 	return undef;
     }
     local $/;
-    $self->{'current_file'}{'content'} = <$spool_file_content>;
+    $self->{'current_file'}{'messageasstring'} = <$spool_file_content>;
     close $spool_file_content;
     return 1;
 }
 
 sub lock_current_message {
     my $self = shift;
-    Log::do_log('trace','%s',$self->get_id);
+    Log::do_log('debug2','%s',$self->get_id);
     $self->{'current_file'}{'lock'} = new Lock($self->{'current_file'}{'name'});
     $self->{'current_file'}{'lock'}->set_timeout(-1);
     unless ($self->{'current_file'}{'lock'}->lock('write')) {
@@ -225,7 +269,7 @@ sub lock_current_message {
 
 sub unlock_current_message {
     my $self = shift;
-    Log::do_log('trace','%s',$self->get_id);
+    Log::do_log('debug2','%s',$self->get_id);
     unless($self->{'current_file'}{'lock'} && $self->{'current_file'}{'lock'}->isa('Lock')) {
 	undef$self->{'current_file'}{'lock'};
 	return undef;
@@ -263,8 +307,11 @@ sub create_spool_dir {
 sub move_current_file_to_bad {
     my $self = shift;
     Log::do_log('debug', 'Moving spooled entity %s to bad',$self->{'current_file'}{'name'});
+    unless (-d $self->{'dir'}.'/bad') {
+	make_path($self->{'dir'}.'/bad');
+    }
     unless(File::Copy::copy($self->{'dir'}.'/'.$self->{'current_file'}{'name'}, $self->{'dir'}.'/bad/'.$self->{'current_file'}{'name'})) {
-	Log::do_log('err','Could not move file %s to spool bad %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'},$self->{'dir'}.'/bad');
+	Log::do_log('err','Could not move file %s to spool bad %s: %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'},$self->{'dir'}.'/bad',$!);
 	return undef;
     }
     unless (unlink ($self->{'dir'}.'/'.$self->{'current_file'}{'name'})) {
@@ -341,75 +388,33 @@ sub unlock_message {
 			   {'messagelock' => 'NULL'}));
 }
 
-#################"
-# 
-#  update spool entries that match selector with values
-sub update {
-
-    my $self = shift;
-    my $selector = shift;
-    my $values = shift;
-
-    &Log::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
-
-    my $where = _sqlselector($selector);
-
-    my $set = '';
-
-    # hidde B64 encoding inside spool database.    
-    if ($values->{'message'}) {
-	$values->{'size'} =  length($values->{'message'});
-	$values->{'message'} =  MIME::Base64::encode($values->{'message'})  ;
-    }
-    # update can be used in order to move a message from a spool to another one
-    $values->{'spoolname'} = $self->{'spoolname'} unless($values->{'spoolname'});
-
-    foreach my $meta (keys %$values) {
-	next if ($meta =~ /^(messagekey)$/); 
-	if ($set) {
-	    $set = $set.',';
-	}
-	if (($meta eq 'messagelock')&&($values->{$meta} eq 'NULL')){
-	    # SQL set  xx = NULL and set xx = 'NULL' is not the same !
-	    $set = $set .$meta.'_spool = NULL';
-	}else{	
-	    $set = $set .$meta.'_spool = '.&SDM::quote($values->{$meta});
-	}
-	if ($meta eq 'messagelock') {
-	    if ($values->{'messagelock'} eq 'NULL'){
-		# when unlock always reset the lockdate
-		$set =  $set .', lockdate_spool = NULL ';
-	    }else{		
-		# when setting a lock always set the lockdate
-		$set =  $set .', lockdate_spool = '.time;
-	    }    
-	}
-    }
-
-    unless ($set) {
-&Log::do_log('err',"No value to update"); return undef;
-    }
-    unless ($where) {
-&Log::do_log('err',"No selector for an update"); return undef;
-    }
-
-    ## Updating Db
-    my $statement = sprintf "UPDATE spool_table SET %s WHERE (%s)", $set,$where ;
-
-    unless (&SDM::do_query($statement)) {
-	&Log::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
-	return undef;
-    }    
-    return 1;
-}
-
 ################"
 # store a message in database spool 
 #
 sub store {  
     my $self = shift;
-    my $message_asstring = shift;
+    my $messageasstring = shift;
+    my $param = shift;
+    my $target_file = $param->{'filename'};
+    $target_file ||= $self->get_storage_name({'list'=>$param->{'list'}, 'robot'=>$param->{'robot'}});
+    my $fh;
+    unless(open $fh, ">", "$self->{'dir'}/$target_file") {
+	Log::do_log('trace','');
+	return undef;
+    }
+    print $fh, $messageasstring;
+    close $fh;
     return 1;
+}
+
+sub get_storage_name {
+    my $self = shift;
+    my $filename;
+    my $param = shift;
+    if ($param->{'list'} && $param->{'robot'}) {
+	$filename = $param->{'list'}.'@'.$param->{'robot'}.'.'.time.'.'.int(rand(10000));
+    }
+    return $filename;
 }
 
 ################"
@@ -417,7 +422,10 @@ sub store {
 #
 sub remove_current_message {  
     my $self = shift;
-    unlink $self->{'dir'}.'/'.$self->{'current_message'}{'name'};
+    unless (unlink $self->{'dir'}.'/'.$self->{'current_file'}{'name'}) {
+	Log::do_log('err','Unable to remove file %s: %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'},$!);
+	return undef;
+    }
     return 1;
 }
 
@@ -458,125 +466,6 @@ sub clean {
 }
 
 
-# test the maximal message size the database will accept
-sub store_test { 
-    Log::do_log('debug2', '(%s)', @_);
-    my $value_test = shift;
-    my $divider = 100;
-    my $steps = 50;
-    my $maxtest = $value_test/$divider;
-    my $size_increment = $divider*$maxtest/$steps;
-    my $barmax = $size_increment*$steps*($steps+1)/2;
-    my $even_part = $barmax/$steps;
-
-    print "maxtest: $maxtest\n";
-    print "barmax: $barmax\n";
-    my $progress = Term::ProgressBar->new({name  => 'Total size transfered',
-                                         count => $barmax,
-                                         ETA   => 'linear', });
-
-    my $testing = __PACKAGE__->new('msg', 'bad');
-
-    my $msg = <<'EOF';
-From: justeatester@host.notadomain
-Message-Id:yep@host.notadomain
-Subject: this a test
-
-EOF
-    $progress->max_update_rate(1);
-    my $next_update = 0;
-    my $total = 0;
-
-    my $result = 0;
-    
-    for (my $z=1;$z<=$steps;$z++){	
-	for(my $i=1;$i<=1024*$size_increment;$i++){
-	    $msg .=  'a';
-	}
-	my $time = time();
-        $progress->message(sprintf "Test storing and removing of a %5d kB message (step %s out of %s)", $z*$size_increment, $z, $steps);
-	# 
-	my $messagekey;
-	unless ($messagekey = $testing->store($msg,
-	    {'list' => 'notalist', 'robot' => 'notaboot'})) {
-	    return (($z-1)*$size_increment);
-	}
-	unless ($testing->remove_message({'messagekey' => $messagekey})) {
-	    Log::do_log('err',
-		'Unable to remove test message (key = %s) from spool_table',
-		$messagekey);	    
-	}
-	$total += $z*$size_increment;
-        $progress->message(sprintf ".........[OK. Done in %.2f sec]", time() - $time);
-	$next_update = $progress->update($total+$even_part)
-	    if $total > $next_update && $total < $barmax;
-	$result = $z*$size_increment;
-    }
-    $progress->update($barmax)
-	if $barmax >= $next_update;
-    return $result;
-}
-
-
-
-
-#######################
-# Internal to ease SQL
-# return a SQL SELECT substring in ordder to select choosen fields from spool table
-# selction is comma separated list of field, '*' or '*_but_message'. in this case skip message_spool field 
-sub _selectfields{
-    my $selection = shift;  # default all valid fields from spool table
-
-    $selection = '*' unless $selection;
-    my $select ='';
-
-    if (($selection eq '*_but_message')||($selection eq '*')) {
-
-	my %db_struct = &Sympa::DatabaseDescription::db_struct();
-
-	foreach my $field ( keys %{ $db_struct{'mysql'}{'spool_table'}} ) {
-	    next if (($selection eq '*_but_message') && ($field eq 'message_spool')) ;
-	    my $var = $field;
-	    $var =~ s/\_spool//;
-	    $select = $select . $field .' AS '.$var.',';
-	}
-    }else{
-	my @fields = split (/,/,$selection);
-	foreach my $field (@fields){
-	    $select = $select . $field .'_spool AS '.$field.',';
-	}
-    }
-
-    $select =~ s/\,$//;
-    return $select;
-}
-
-#######################
-# Internal to ease SQL
-# return a SQL WHERE substring in order to select chosen fields from the spool table 
-# selector is a hash where key is a column name and value is column value expected.**** 
-#   **** value can be prefixed with <,>,>=,<=, in that case the default comparator operator (=) is changed, I known this is dirty but I'm lazy :-(
-sub _sqlselector {
-	
-    my $selector = shift; 
-    my $sqlselector = '';
-    
-    foreach my $field (keys %$selector) {
-	my $compare_operator = '=';
-	my $select_value = $selector->{$field};
-	if ($select_value =~ /^([\<\>]\=?)\.(.*)$/){ 
-	    $compare_operator = $1;
-	    $select_value = $2;
-	}
-
-	if ($sqlselector) {
-	    $sqlselector .= ' AND '.$field.'_spool '.$compare_operator.' '.&SDM::quote($selector->{$field});
-	}else{
-	    $sqlselector = ' '.$field.'_spool '.$compare_operator.' '.&SDM::quote($selector->{$field});
-	}
-    }
-    return $sqlselector;
-}
 
 ## Get unique ID
 sub get_id {

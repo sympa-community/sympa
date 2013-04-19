@@ -35,36 +35,6 @@ use Data::Dumper;
 use Message;
 use SDM;
 
-#use Datasource; # not used
-#use SQLSource qw(create_db %date_format); # not used
-#use Upgrade; # not used
-#use Lock; # not used
-#use Scenario; # not used
-#use Fetch; # not used
-#use WebAgent; # not used
-#use tt2; # not used
-#use Sympa::Constants; # used by SDM
-#use Sympa::DatabaseDescription; # used by SDM
-
-#use IO::Scalar; # not used
-#use Storable; # no longer used
-#use Mail::Header; # not used
-
-#use Archive; # not used
-#use Language; # not used
-#use Log; # used by SDM
-#use Conf; # no longer used
-#use mail; # not used
-#use Ldap; # not used
-
-#use Time::Local; # not used
-#use MIME::Entity; # no longer used
-#use MIME::EncWords; # no longer used
-#use MIME::Parser; # no longer used
-
-#use Family; # not used
-#use PlainDigest; # not used
-
 our @ISA = qw(Exporter);
 
 ## Database and SQL statement handlers
