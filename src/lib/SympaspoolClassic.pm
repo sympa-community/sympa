@@ -44,7 +44,7 @@ sub new {
     my($pkg, $spoolname, $selection_status) = @_;
     my $spool = {};
 
-    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
+    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(outgoing)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
 &Log::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
@@ -55,8 +55,8 @@ sub new {
     }else{
 	$spool->{'selection_status'} =  'ok';
     }
-    my $queue = 'queue_'.$spoolname;
-    my $queue = 'queue' if ($spoolname eq 'msg');
+    my $queue = 'queue'.$spoolname;
+    $queue = 'queue' if ($spoolname eq 'msg');
     $spool->{'dir'} = Site->$queue;
     Log::do_log('trace','Spool to scan "%s"',$spool->{'dir'});
     bless $spool, $pkg;

@@ -1622,7 +1622,7 @@ sub distribute_msg {
 
     ## Archives
 
-    ##$self->archive_msg($message);
+    $self->archive_msg($message);
 
     ## Change the reply-to header if necessary.
     if ($self->reply_to_header) {
