@@ -38,7 +38,6 @@ my %session_hard_attributes = ('id_session' => 1,
 			       'robot'  => 1,
 			       'email' => 1, 
 			       'start_date' => 1, 
-			       'refresh_date' => 1,
 			       'hit' => 1,
 			       'new_session' => 1,
 			      );
@@ -83,6 +82,12 @@ sub new {
 		$cookie);
 	    return __PACKAGE__->new($robot);
 	}
+	# checking if the client host is unchanged during the session brake sessions when using multiple proxy with
+        # load balancing (round robin, etc). This check is removed until we introduce some other method
+	# if($self->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
+	#    Log::do_log('info', 'ignoring session cookie because remote host %s is not the original host %s', $ENV{'REMOTE_ADDR'},$self->{'remote_addr'}); # start a new session
+	#    return __PACKAGE__->new($robot));
+	#}
     }else{
 	# create a new session context
 	## Tag this session as new, ie no data in the DB exist
@@ -90,8 +95,8 @@ sub new {
 	$self->{'id_session'} = &get_random();
 	$self->{'email'} = 'nobody';
 	$self->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
-	$self->{'date'} = $self->{'start_date'} = time;
-	$self->{'refresh_date'} = 0;
+	$self->{'date'} = time;
+	$self->{'start_date'} = time;
 	$self->{'hit'} = 1;
 	##$self->{'robot'} = $robot->name;
 	$self->{'data'} = '';
@@ -115,8 +120,7 @@ sub load {
 	q{SELECT id_session AS id_session, date_session AS "date",
 		 remote_addr_session AS remote_addr, robot_session AS robot,
 		 email_session AS email, data_session AS data,
-		 hit_session AS hit, start_date_session AS start_date,
-		 refresh_date_session AS refresh_date
+		 hit_session AS hit, start_date_session AS start_date
 	 FROM session_table
 	 WHERE id_session = ? AND robot_session = ?},
 	$cookie, $self->{'robot'}->name
@@ -154,11 +158,10 @@ sub load {
     $self->{'id_session'} = $session->{'id_session'};
     $self->{'date'} = $session->{'date'};
     $self->{'start_date'} = $session->{'start_date'};
-    $self->{'refresh_date'} = $session->{'refresh_date'};
     $self->{'hit'} = $session->{'hit'} +1 ;
     $self->{'remote_addr'} = $session->{'remote_addr'};
     ##$self->{'robot'} = $session->{'robot'};
-    $self->{'email'} = $session->{'email'};
+    $self->{'email'} = $session->{'email'};    
 
     return ($self);
 }
@@ -190,11 +193,11 @@ sub store {
 	    q{INSERT INTO session_table
 	      (id_session, date_session, remote_addr_session,
 	       robot_session, email_session, start_date_session,
-	       refresh_date_session, hit_session, data_session)
-	     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)},
+	       hit_session, data_session)
+	     VALUES (?, ?, ?, ?, ?, ?, ?, ?)},
 	    $self->{'id_session'}, time, $ENV{'REMOTE_ADDR'},
 	    $self->{'robot'}->name, $self->{'email'}, $self->{'start_date'},
-	    0, $self->{'hit'}, $data_string
+	    $self->{'hit'}, $data_string
 	)) {
 	    &Log::do_log('err','Unable to add new session %s informations in database', $self->{'id_session'});
 	    return undef;
@@ -202,7 +205,7 @@ sub store {
       ## If the session already exists in DB, then perform an UPDATE
     }else {
 	## Update the new session in the DB
-	my $sth = SDM::do_prepared_query(
+	unless (SDM::do_prepared_query(
 	    q{UPDATE session_table
 	      SET date_session = ?, remote_addr_session = ?, robot_session = ?,
 		  email_session = ?, start_date_session = ?, hit_session = ?,
@@ -212,20 +215,16 @@ sub store {
 	    $self->{'email'}, $self->{'start_date'}, $self->{'hit'},
 	    $data_string,
 	    $self->{'id_session'}, $self->{'robot'}->name
-	);
-	unless ($sth) {
+	)) {
 	    &Log::do_log('err','Unable to update session %s information in database', $self->{'id_session'});
 	    return undef;
-	} elsif ($sth->rows == 0) {
-	    return 0;
-	}
+	}    
     }
 
     return 1;
 }
 
 ## This method will renew the session ID 
-## Returns 1 if renewal occurred and 0 otherwise.  Returns undef on error.
 sub renew {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
@@ -247,46 +246,21 @@ sub renew {
 
     ## Renew the session ID in order to prevent session hijacking
     my $new_id = &get_random();
-    my $time = time;
-    my $remote_addr = $ENV{'REMOTE_ADDR'};
-    my $refresh_term;
-    if (Site->cookie_refresh == 0) {
-	$refresh_term = $time;
-    } else {
-	my $cookie_refresh = Site->cookie_refresh;
-	$refresh_term =
-	    int($time - $cookie_refresh * 0.5 - rand $cookie_refresh);
-    }
 
-    ## Do refresh the cookie when remote address was changed or refresh
-    ## interval is past.  Conditions also are checked by SQL so that
-    ## simultaneous processes will be prevented renewing cookie.
-    return 0
-	unless $self->{'remote_addr'} ne $remote_addr or
-	    $self->{'refresh_date'} <= $refresh_term;
-    my $sth = SDM::do_prepared_query(
+    ## First remove the DB entry for the previous session ID
+    unless(SDM::do_prepared_query(
 	q{UPDATE session_table
-	  SET id_session = ?, refresh_date_session = ?, remote_addr_session = ?
-	  WHERE id_session = ? AND robot_session = ? AND
-		(remote_addr_session <> ? OR refresh_date_session <= ?)},
-	$new_id, $time, $remote_addr,
-	$self->{'id_session'}, $self->{'robot'}->name,
-	$remote_addr, $refresh_term
-    );
-    unless ($sth) {
+	  SET id_session = ?
+	  WHERE id_session = ? AND robot_session = ?},
+	$new_id, $self->{'id_session'}, $self->{'robot'}->name
+    )) {
 	Log::do_log('err',
 	    'Unable to renew session ID for session %s', $self);
 	return undef;
-    } elsif ($sth->rows == 0) {
-	return 0;
-    }
+    }	 
 
     ## Renew the session ID in order to prevent session hijacking
-    Log::do_log('debug3',
-	'renewed session ID for session %s to %s', $self, $new_id);
     $self->{'id_session'} = $new_id;
-    $self->{'refresh_date'} = $time;
-    $self->{'remote_addr'} = $remote_addr;
 
     return 1;
 }

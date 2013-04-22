@@ -1244,11 +1244,6 @@ our @params = (
 	'vhost'      => '1',
 	'file'       => 'wwsympa.conf',
     },
-    {   'name'    => 'cookie_refresh',
-	'default' => '60',
-	'gettext_id' =>
-	    'Average interval to refresh HTTP coookie.  0 forces refreshing everytime.',
-    },
     {   'name'     => 'custom_archiver',
 	'optional' => '1',
 	'gettext_id' =>

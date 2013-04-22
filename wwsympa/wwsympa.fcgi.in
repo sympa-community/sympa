@@ -1640,32 +1640,32 @@ my $birthday = time ;
      $session->{'oauth_token'} = $in{'oauth_token'} if(defined($in{'oauth_token'}) && $in{'oauth_token'} ne '' && $session->{'email'} eq 'nobody');
 
      ## store in session table this session contexte
-    my $session_stored = $session->store();
+     $session->store();
+
      ## Do not manage cookies at this level if content was already sent
-    if ($session_stored and
-	! ($param->{'bypass'} eq 'extreme' or $param->{'action'} eq 'css' or
-	$maintenance_mode or $rss or $ajax)) {
+     unless ($param->{'bypass'} eq 'extreme' ||
+	     $param->{'action'} eq 'css' ||
+	     $maintenance_mode ||
+	     $rss||$ajax) {
 
 	 my $delay = $param->{'user'}{'cookie_delay'};
 	 unless (defined $delay) {
 	     $delay = Site->cookie_expire;
 	 }
+
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
 
-	##if ($param->{'use_ssl'} || $session->renew()) {
-	if ($session->renew()) {
-	    unless ($session->set_cookie($param->{'cookie_domain'},
-		$delay, $param->{'use_ssl'})) {
-		wwslog('notice', 'Could not set HTTP cookie');
-	    }
-	}
-    }
+	 $session->renew() unless ($param->{'use_ssl'});
 
-    if (defined $session_stored) {
+	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
+	     &wwslog('notice', 'Could not set HTTP cookie');
+	 }
+
 	 ## Set cookies "your_subscribtions" unless in one list page
 	 if ($param->{'user'}{'email'} && ref($list) ne 'List') {
+
 	    ## In case get_which was not set.
 	    ## The get_which will be limited at most (your_lists_size + 1).
 	    my %limit_which = ();
