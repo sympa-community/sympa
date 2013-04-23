@@ -138,20 +138,9 @@ use Getopt::Long;
 use Digest::MD5;
 use Pod::Usage;
 
-#use Archive; # used in List
 use List;
 use Message;
-#use Conf; # used in List - Site
-#use Log; # used in Conf
 use Commands;
-#use Language; # used in List
-
-#use wwslib; # no longer used
-#use mail; # used in mail
-
-#use tt2; # used in List
-#use tools; # used in Conf
-#use Sympa::Constants; # used in Conf - confdef
 
 my $daemon_name = &Log::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
@@ -393,7 +382,7 @@ while (!$end) {
 	}
 	$spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}});
     }else{
-&Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'name'},$item->{'list'},$item->{'robot'});
+	Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'name'},$item->{'list'},$item->{'robot'});
 	unless (mail2arc ($item)) {
 	    $spoolarchive->move_current_file_to_bad;
 	    &Log::do_log('err',"archiving_failed for message %s",$item->{'name'});
@@ -832,7 +821,7 @@ sub mail2arc {
     if ($txtdate =~ /(\d\d\d\d)\-(\d\d)\-(\d\d)\s*(\d\d)\:(\d\d)/){
 	$yyyy = $1; $mm = $2; $dd = $3; $hh = $4; $min = $5; $ss = $6;
     }else{
-	&Log::do_log('err',"could not scan date");
+	Log::do_log('err',"could not scan date");
 	return undef;
     }
 
@@ -841,7 +830,7 @@ sub mail2arc {
     my $arcpath = $robot->arc_path;
 
     unless (defined $list && $list->isa('List')) {
-	&Log::do_log('err', 'Unknown list %s', $message_in_spool->{'list'});
+	Log::do_log('err', 'Unknown list %s', $message_in_spool->{'list'});
 	return undef;
     }
 
@@ -849,14 +838,12 @@ sub mail2arc {
 
     if ($list->web_archive_spam_protection ne 'none' and
 	$list->web_archive_spam_protection ne 'cookie') {
-	&set_hidden_mode($tag);
+	set_hidden_mode($tag);
     }else {
-	&unset_hidden_mode();
+	unset_hidden_mode();
     } 
 
-   &Log::do_log('debug',"mail2arc  for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list);
-    #    chdir(Site->arc_path);
-
+    Log::do_log('trace',"mail2arc  for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list);
 
     if (Site->custom_archiver) {
 	my $file = Site->tmpdir . "/arc." . $list->get_id .
@@ -872,14 +859,14 @@ sub mail2arc {
 	
 	if (! -d $basedir) {
 	    unless (mkdir $basedir, 0775) {
-		&Log::do_log('err', 'Cannot create directory %s', $basedir);
+		Log::do_log('err', 'Cannot create directory %s', $basedir);
 		unless ($robot->send_notify_to_listmaster(
 		    'unable_to_create_dir', {'dir' => "$basedir"}
 		)) {
-		    &Log::do_log('notice', 'Unable to send notify "unable_to_create_dir" to listmaster');
+		    Log::do_log('notice', 'Unable to send notify "unable_to_create_dir" to listmaster');
 		}
 	    }
-	    &Log::do_log('debug', 'mkdir %s', $basedir);
+	    Log::do_log('trace', 'mkdir %s', $basedir);
 	}
 	
 	## Check quota
@@ -887,22 +874,22 @@ sub mail2arc {
 	    my $used = $list->get_arc_size("$arcpath") ;
 	    
 	    if ($used >= $list->web_archive->{'quota'} * 1024){
-		&Log::do_log('err',
+		Log::do_log('err',
 		    'archived::mail2arc : web_arc Quota exceeded for list %s',
 		    $list);
 		unless ($list->send_notify_to_owner('arc_quota_exceeded',{'size' => $used})) {
-		    &Log::do_log('notice',
+		    Log::do_log('notice',
 			'Unable to send notify "arc_quota_exceeded" to %s owner', $list);
 		}
 		return undef;
 	    }
 	    if ($used >= ($list->web_archive->{'quota'} * 1024 * 0.95)){
-		&Log::do_log('err',
+		Log::do_log('err',
 		    'archived::mail2arc : web_arc Quota exceeded for list %s',
 		    $list);
 		unless ($list->send_notify_to_owner('arc_quota_95',{'size' => $used,
 								    'rate' => int($used * 100 / ($list->web_archive->{'quota'} * 1024 ))})) {
-		    &Log::do_log('notice',
+		    Log::do_log('notice',
 			'Unable to send notify "arc_quota_95" to %s owner',
 			$list);	
 		}
@@ -913,11 +900,11 @@ sub mail2arc {
 	
 	if (! -d $monthdir) {
 	    unless (mkdir ($monthdir, 0775)) {
-		&Log::do_log('err', 'Cannot create directory %s', $monthdir);
+		Log::do_log('err', 'Cannot create directory %s', $monthdir);
 		return undef;
 	    }
 	    
-	    &Log::do_log('debug',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_id);
+	    Log::do_log('trace',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_id);
 	    
 	    if ($list->web_archive->{'max_month'}){
 		# maybe need to remove some old archive
@@ -927,9 +914,9 @@ sub mail2arc {
 		    my $nb_month = $#archives + 1 ;
 		    my $i = 0 ;
 		    while ( $nb_month >  $list->web_archive->{'max_month'}) {
-			&Log::do_log('info', 'removing  %s/%s/%s',
+			Log::do_log('info', 'removing  %s/%s/%s',
 			    $arcpath, $list->get_id, $archives[$i]);
-			&tools::remove_dir($arcpath.'/'.$list->get_id.'/'.$archives[$i]);
+			tools::remove_dir($arcpath.'/'.$list->get_id.'/'.$archives[$i]);
 			$i ++; $nb_month --;		    
 		    }
 		}
@@ -940,10 +927,10 @@ sub mail2arc {
 	
 	if (! -d $arctxtdir) {
 	    unless (mkdir ($arctxtdir, 0775)) {
-		&Log::do_log('err', 'Cannot create directory %s', $arctxtdir);
+		Log::do_log('err', 'Cannot create directory %s', $arctxtdir);
 		return undef;
 	    }
-	    &Log::do_log('debug',"mkdir $arctxtdir");
+	    Log::do_log('trace',"mkdir $arctxtdir");
 	}
 	
 	## fetch next message number in archive arctxt .
@@ -955,7 +942,7 @@ sub mail2arc {
 	    close IDX;
 	}else{
 	    ## recreate index file if needed and update it
-	    $newfile = &create_idx($monthdir) + 1;
+	    $newfile = create_idx($monthdir) + 1;
 	}
 
 	# savee arctxt dump of original message.
@@ -971,13 +958,13 @@ sub mail2arc {
 	    $robot, $message_in_spool, $output
 	);
 	unless ($safe) {
-	   &Log::do_log('err',"Could not clean message, ignoring message");
-	    next;
+	    Log::do_log('err',"Could not clean message, ignoring it");
+	    return undef;
 	}
 
 	my $mhonarc_ressources = $list->get_etc_filename('mhonarc-ressources.tt2');
 	
-	&Log::do_log ('debug',"calling %s for list %s", Site->mhonarc, $list);
+	Log::do_log ('trace',"calling %s for list %s", Site->mhonarc, $list);
 	
 	# call mhonarc on cleaned message source to make clean htlm view of message
 	my $cmd = sprintf
@@ -987,25 +974,28 @@ sub mail2arc {
 	    $yyyy, $mm, $yyyy, $mm, $robot->arc_path, $robot->wwsympa_url,
 	    $tag, Site->umask, $output;
 	
-	&Log::do_log('debug',"System call : %s",$cmd);
+	Log::do_log('trace',"System call : %s",$cmd);
 	
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode >> 8;
 	
 	## Remove lock if required
 	if ($exitcode == 75) {
-	    &Log::do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
+	    Log::do_log('notice', 'Removing lock directory %s', $monthdir.'/.mhonarc.lck');
 	    rmdir $monthdir.'/.mhonarc.lck';
 	    
 	    $exitcode = system($cmd);
 	    $exitcode = $exitcode >> 8;	    
 	}
 	if ($exitcode) {
-	    &Log::do_log('err',"Command $cmd failed with exit code $exitcode");
+	    Log::do_log('err',"Command $cmd failed with exit code $exitcode");
+	    return undef;
 	}
 	
-	&save_idx("$monthdir/index",$newfile);
+	save_idx("$monthdir/index",$newfile);
     }
+    Log::do_log('trace','Message %s archived',$message_in_spool->{'name'});
+    return 1;
 }
 
 =head2 sub set_hidden_mode(STRING $tag)

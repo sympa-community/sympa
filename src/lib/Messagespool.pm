@@ -37,21 +37,26 @@ sub get_next_file_to_process {
     foreach (@{$self->{'spool_files_list'}}) {
 
 	$self->{'current_file'}{'name'} = $_;
-
-	next unless ($self->is_current_file_relevant);
-
-	next unless ($self->analyze_current_file_name);
+	unless ($self->is_current_file_readable) {
+	    undef $self->{'current_file'};
+	    next;
+	}
+	
+	unless ($self->is_current_file_relevant && $self->analyze_current_file_name) {
+	    $self->move_current_file_to_bad;
+	    undef $self->{'current_file'};
+	    next;
+	}
 
 	$self->get_current_file_priority;
 	
 	if (ord($self->{'current_file'}{'priority'}) < ord($highest_priority)) {
-	    next unless $self->get_current_message_content;
 	    $highest_priority = $self->{'current_file'}{'priority'};
 	    $file_to_process = $self->{'current_file'};
 	}
     } ## END of spool lookup
     $self->{'current_file'} = $file_to_process;
-    return 1;
+    return $self->{'current_file'};
 }
 
 sub is_current_file_relevant {

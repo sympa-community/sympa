@@ -34,7 +34,7 @@ use Message;
 use List;
 
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
-our $filename_regexp = '^(\S+)\.\d+\.\w+$';
+our $filename_regexp = '^(\S+)\.(\d+)\.\w+$';
 
 ## Creates an object.
 sub new {
@@ -54,7 +54,7 @@ sub new {
     if ($spool->{'selection_status'} and $spool->{'selection_status'} eq 'bad') {
 	$spool->{'dir'} .= '/bad';
     }
-    Log::do_log('trace','Spool to scan "%s"',$spool->{'dir'});
+    Log::do_log('debug','Spool to scan "%s"',$spool->{'dir'});
     bless $spool, $pkg;
     $spool->create_spool_dir;
 
@@ -165,23 +165,55 @@ sub get_content {
 sub next {
     my $self = shift;
     Log::do_log('debug2','%s',$self->get_id);
-    undef $self->{'current_file'};
     unless($self->refresh_spool_files_list) {
 	Log::do_log('err','Unable to refresh spool %s files list',$self->get_id);
 	return undef;
     }
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
-    $self->get_next_file_to_process;
+    return 0 unless $self->get_next_file_to_process;
+    unless($self->set_current_file("$self->{'dir'}/$self->{'current_file'}{'name'}")) {
+	$self->move_current_file_to_bad;
+	return undef;
+    }
     Log::do_log('trace','Will return file %s',$self->{'current_file'}{'name'});
+    return $self->{'current_file'};
+}
+
+sub set_current_file {
+    my $self = shift;
+    my $file = shift;
+    Log::do_log('trace','%s',$file);
+    if($file) {
+	delete $self->{'current_file'};
+	if($file =~ /^((\/.+)\/)?([^\/]+)$/) {
+	    my $dir = $2;
+	    my $f = $3;
+	    unless(($dir eq $self->{'dir'} && -f "$dir/$f")  || -f "$self->{'dir'}/$file") {
+		Log::do_log('err','Message %s/%s to process not in %s spool. Stopping here.', $dir,$f, $dir);
+		return undef;
+	    }
+	$self->{'current_file'}{'name'} = $f;
+	}
+    }else{
+	unless (defined $self->{'current_file'} && $self->{'current_file'}{'name'}) {
+	    Log::do_log('err','No file provided as argument and no current file. Stopping here.');
+	    return undef;
+	}
+    }
+    unless($self->{'current_file'}{'name'}) {
+	Log::do_log('err','Unable to find out which file to process. Stopping here;');
+	return undef;
+    }
     $self->{'current_file'}{'full_path'} = "$self->{'dir'}/$self->{'current_file'}{'name'}";
     $self->analyze_current_file_name;
     $self->get_current_file_priority;
-    Log::do_log('trace','%s',$self->{'current_file'}{'list_object'});
+    $self->get_current_file_date;
+    $self->get_current_file_content;
     unless(defined $self->{'current_file'}{'messageasstring'}) {
 	Log::do_log('err','Unable to gather content from file %s',$self->{'current_file'}{'full_path'});
 	return undef;
     }
-    return $self->{'current_file'};
+    return 1;
 }
 
 sub get_next_file_to_process {
@@ -189,15 +221,27 @@ sub get_next_file_to_process {
     Log::do_log('debug2','%s',$self->get_id);
     foreach (@{$self->{'spool_files_list'}}) {
 	$self->{'current_file'}{'name'} = $_;
-	last if ($self->get_current_message_content);
+	last if ($self->is_current_file_readable);
     }
     return 1;
+}
+
+sub is_current_file_readable {
+    my $self = shift;
+    if (-f "$self->{'dir'}/$self->{'current_file'}{'name'}" && -r _) {
+	return 1;
+    }else{
+	return 0;
+    }
 }
 
 sub analyze_current_file_name {
     my $self = shift;
     Log::do_log('debug3','%s',$self->get_id);
-    return undef unless($self->{'current_file'}{'name'} =~ /$filename_regexp/);
+    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/){
+	Log::do_log('err','File %s name does not have the proper format. Stopping here.',$self->{'current_file'}{'name'});
+	return undef;
+    }
     ($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$1);
     
     $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
@@ -237,10 +281,20 @@ sub get_current_file_priority {
     Log::do_log('trace','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
 }
 
-sub get_current_message_content {
+sub get_current_file_date {
+    my $self = shift;
+    Log::do_log('debug3','%s',$self->get_id);
+    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/) {
+	$self->{'current_file'}{'date'} = (stat "$self->{'dir'}/$self->{'current_file'}{'name'}")[9];
+    }else{
+	$self->{'current_file'}{'date'} = $2;
+    }
+    return $self->{'current_file'}{'date'};
+}
+
+sub get_current_file_content {
     my $self = shift;
     Log::do_log('debug2','%s',$self->get_id);
-    return undef unless($self->lock_current_message);
     my $spool_file_content;
     unless (open $spool_file_content, $self->{'dir'}.'/'.$self->{'current_file'}{'name'}) {
 	Log::do_log('err','Unable to open file %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'});
