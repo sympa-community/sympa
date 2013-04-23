@@ -1441,28 +1441,28 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	# it should be performed by task manager !
 	## Clean queue (bad)
-	if ($index_cleanqueue++ >= 1000) {
+	if ($index_cleanqueue++ >= 1) {
 	    $index_cleanqueue = 0;
 	    Log::do_log('debug', 'Cleaning spools');
-	    my $msg_bad = new Sympaspool('msg', 'bad');
+	    my $msg_bad = new SympaspoolClassic('msg', 'bad');
 	    $msg_bad->clean({'delay' => Site->clean_delay_queue});
-	    my $archive_bad = new Sympaspool('archive', 'bad');
+	    my $archive_bad = new SympaspoolClassic('outgoing', 'bad');
 	    $archive_bad->clean({'delay' => Site->clean_delay_queueoutgoing});
-	    my $queuebounce_bad = new Sympaspool('bounce', 'bad');
+	    my $queuebounce_bad = new SympaspoolClassic('bounce', 'bad');
 	    $queuebounce_bad->clean(
 		{'delay' => Site->clean_delay_queuebounce});
-	    my $queuemod = new Sympaspool('mod');
+	    my $queuemod = new SympaspoolClassic('mod');
 	    $queuemod->clean({'delay' => Site->clean_delay_queuemod});
-	    my $queueauth = new Sympaspool('auth');
+	    my $queueauth = new SympaspoolClassic('auth');
 	    $queueauth->clean({'delay' => Site->clean_delay_queueauth});
-	    my $queuetopic = new Sympaspool('topic');
+	    my $queuetopic = new SympaspoolClassic('topic');
 	    $queuetopic->clean({'delay' => Site->clean_delay_queuetopic});
-	    my $queuesubscribe = new Sympaspool('subscribe');
+	    my $queuesubscribe = new SympaspoolClassic('subscribe');
 	    $queuesubscribe->clean(
 		{'delay' => Site->clean_delay_queuesubscribe});
-	    my $queuesignoff = new Sympaspool('signoff');
+	    my $queuesignoff = new SympaspoolClassic('signoff');
 	    $queuesignoff->clean({'delay' => Site->clean_delay_queuesignoff});
-	    my $queueautomatic = new Sympaspool('automatic');
+	    my $queueautomatic = new SympaspoolClassic('automatic');
 	    $queueautomatic->clean(
 		{'delay' => Site->clean_delay_queueautomatic});
 

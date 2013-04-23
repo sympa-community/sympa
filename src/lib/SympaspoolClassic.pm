@@ -42,20 +42,18 @@ sub new {
     my($pkg, $spoolname, $selection_status) = @_;
     my $spool = {};
 
-    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(outgoing)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
-&Log::do_log('err','internal error unknown spool %s',$spoolname);
+    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(mod)|(msg)|(outgoing)|(automatic)|(subscribe)|(signoff)|(topic)|(task)$/){
+	Log::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
     $spool->{'spoolname'} = $spoolname;
-    if ($selection_status and
-	($selection_status eq 'bad' or $selection_status eq 'ok')) {
-	$spool->{'selection_status'} = $selection_status;
-    }else{
-	$spool->{'selection_status'} =  'ok';
-    }
+    $spool->{'selection_status'} = $selection_status;
     my $queue = 'queue'.$spoolname;
     $queue = 'queue' if ($spoolname eq 'msg');
     $spool->{'dir'} = Site->$queue;
+    if ($spool->{'selection_status'} and $spool->{'selection_status'} eq 'bad') {
+	$spool->{'dir'} .= '/bad';
+    }
     Log::do_log('trace','Spool to scan "%s"',$spool->{'dir'});
     bless $spool, $pkg;
     $spool->create_spool_dir;
@@ -282,10 +280,24 @@ sub unlock_current_message {
     return 1;
 }
 
+sub get_files_in_spool {
+    my $self = shift;
+    return undef unless($self->refresh_spool_files_list);
+    return @{$self->{'spool_files_list'}};
+}
+
+sub get_dirs_in_spool {
+    my $self = shift;
+    return undef unless($self->refresh_spool_dirs_list);
+    return @{$self->{'spool_dirs_list'}};
+}
+
 sub refresh_spool_files_list {
     my $self = shift;
     Log::do_log('debug2','%s',$self->get_id);
-    $self->create_spool_dir unless (-d $self->{'dir'});
+    unless (-d $self->{'dir'}) {
+	$self->create_spool_dir;
+    }
     unless (opendir SPOOLDIR, $self->{'dir'}) {
 	Log::do_log('err','Unable to access %s spool. Please check proper rights are set;',$self->{'dir'});
 	return undef;
@@ -293,6 +305,22 @@ sub refresh_spool_files_list {
     my @qfile = sort tools::by_date grep {!/^\./ && -f "$self->{'dir'}/$_"} readdir(SPOOLDIR);
     closedir(SPOOLDIR);
     $self->{'spool_files_list'} = \@qfile;
+    return 1;
+}
+
+sub refresh_spool_dirs_list {
+    my $self = shift;
+    Log::do_log('debug2','%s',$self->get_id);
+    unless (-d $self->{'dir'}) {
+	$self->create_spool_dir;
+    }
+    unless (opendir SPOOLDIR, $self->{'dir'}) {
+	Log::do_log('err','Unable to access %s spool. Please check proper rights are set;',$self->{'dir'});
+	return undef;
+    }
+    my @qdir = sort tools::by_date grep {!/^(\.\.|\.)$/ && -d "$self->{'dir'}/$_"} readdir(SPOOLDIR);
+    closedir(SPOOLDIR);
+    $self->{'spool_dirs_list'} = \@qdir;
     return 1;
 }
 
@@ -438,30 +466,41 @@ sub clean {
     my $self = shift;
     my $filter = shift;
     &Log::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
-    my $bad = 0;
-    my $delay = $filter->{'delay'};
-    if ($self->{'selection_status'} eq 'bad') {
-	$bad =  1;
+
+    return undef unless $self->{'spoolname'};
+    return undef unless $filter->{'delay'};
+    
+    my $freshness_date = time - ($filter->{'delay'} * 60 * 60 * 24);
+    my $deleted = 0;
+
+    my @to_kill = $self->get_files_in_spool;
+    foreach my $f (@to_kill) {
+	if ((stat "$self->{'dir'}/$f")[9] < $freshness_date) {
+	    if (unlink ("$self->{'dir'}/$f") ) {
+		$deleted++;
+		Log::do_log('notice', 'Deleting old file %s', "$self->{'dir'}/$f");
+	    }else{
+		Log::do_log('notice', 'unable to delete old file %s: %s', "$self->{'dir'}/$f",$!);
+	    }
+	}else{
+	    last;
+	}
+    }
+    @to_kill = $self->get_dirs_in_spool;
+    foreach my $d (@to_kill) {
+	if ((stat "$self->{'dir'}/$d")[9] < $freshness_date) {
+	    if (tools::remove_dir("$self->{'dir'}/$d") ) {
+		$deleted++;
+		Log::do_log('notice', 'Deleting old file %s', "$self->{'dir'}/$d");
+	    }else{
+		Log::do_log('notice', 'unable to delete old file %s: %s', "$self->{'dir'}/$d",$!);
+	    }
+	}else{
+	    last;
+	}
     }
 
-    my $spoolname = $self->{'spoolname'};
-    return undef unless $spoolname;
-    return undef unless $delay;
-    
-    my $freshness_date = time - ($delay * 60 * 60 * 24);
-
-    my $sqlquery = sprintf "DELETE FROM spool_table WHERE spoolname_spool = %s AND date_spool < %s ",&SDM::quote($spoolname),$freshness_date;
-    if ($bad) {	
-	$sqlquery  = 	$sqlquery . " AND message_status_spool = 'bad' ";
-    }else{
-	$sqlquery  = 	$sqlquery . " AND message_status_spool <> 'bad'";
-    }
-    
-    push @sth_stack, $sth;
-    $sth = &SDM::do_query('%s', $sqlquery);
-    $sth->finish;
-   &Log::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
-    $sth = pop @sth_stack;
+    Log::do_log('debug',"%s entries older than %s days removed from spool %s" ,$deleted,$filter->{'delay'},$self->{'spoolname'});
     return 1;
 }
 
