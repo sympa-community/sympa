@@ -1,5 +1,6 @@
 #! --PERL--
-
+# sympa_soap_server.fcgi - This script provides SOAP HTTP interface to Sympa
+# RCS Identication ; $Revision$ ; $Date$
 
 use SOAP::Lite;
 
@@ -60,12 +61,7 @@ unless (&SDM::check_db_connect()) {
 &mail::set_send_spool(Site->queue);
 
 ## Loading all Lists at startup, in order to increase execution speed
-
-my $all_lists = &List::get_lists('*');
-foreach my $list (@$all_lists){
-    ## Nothing to do here
- }
-
+List::get_lists('Site');
 
 ##############################################################################################
 #    Soap part

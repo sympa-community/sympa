@@ -1,3 +1,6 @@
+# SympaTransport - SOAP HTTP transport for Sympa
+# RCS Identication ; $Revision$ ; $Date$
+
 package SOAP::Transport::HTTP::FCGI::Sympa;
 
 use strict;
@@ -7,34 +10,37 @@ use SympaSession;
 use SOAP::Transport::HTTP;
 @ISA = qw(SOAP::Transport::HTTP::FCGI);
 
-1;
-
 sub request {
     my $self = shift;
-    
-    
+
     if (my $request = $_[0]) {	
-	
 	## Select appropriate robot
 	if (Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
-	  $ENV{'SYMPA_ROBOT'} = Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
-	  &Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
-	}else {
-	  &Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
-	  $ENV{'SYMPA_ROBOT'} =  Site->host;
+	    $ENV{'SYMPA_ROBOT'} =
+		Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
+	    Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
+	} else {
+	    Log::do_log('debug2', 'URL : %s',
+		$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
+	    $ENV{'SYMPA_ROBOT'} = Site->domain;
 	}
 
-	## Empty cache of the List.pm module
-	&List::init_list_cache();
+	## Empty list cache of the robot
+	my $robot = Robot->new($ENV{'SYMPA_ROBOT'});
+	$robot->init_list_cache();
 	
 	my $session;
 	## Existing session or new one
-	if (&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})) {
-	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'}, {'cookie'=>&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})});
-	}else {
-	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'},{});
-	  $session->store() if (defined $session);
-	  $session->renew() if (defined $session);## Note that id_session changes each time it is saved in the DB
+	if (SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})) {
+	    $session = SympaSession->new($robot,
+		{'cookie' =>
+		 SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})}
+	    );
+	} else {
+	    $session = SympaSession->new($robot, {});
+	    $session->store() if defined $session;
+	    ## Note that id_session changes each time it is saved in the DB
+	    $session->renew() if defined $session;
 	}
 
 	delete $ENV{'USER_EMAIL'};	
@@ -86,3 +92,5 @@ sub handle ($$) {
     }
     return undef;
 }
+
+1;
