@@ -52,6 +52,7 @@ sub generic_set_cookie {
 
     
 # Sets an HTTP cookie to be sent to a SOAP client
+# OBSOLETED: Use SympaSession::soap_cookie2().
 sub set_cookie_soap {
     my ($session_id,$http_domain,$expire) = @_ ;
     my $cookie;

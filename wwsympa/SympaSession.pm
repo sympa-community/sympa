@@ -21,9 +21,9 @@ package SympaSession;
 
 use strict;
 
+use CGI::Cookie;
 #use Digest::MD5; # no longer used
 #use POSIX; # no longer used
-use CGI::Cookie;
 #use Time::Local; # not used
 
 #use Conf; # no longer used
@@ -33,7 +33,9 @@ use SDM;
 # this structure is used to define which session attributes are stored in a
 # dedicated database col where others are compiled in col 'data_session'
 my %session_hard_attributes = ('id_session' => 1, 
+			       'prev_id' => 1,
 			       'date' => 1, 
+			       'refresh_date' => 1,
 			       'remote_addr'  => 1,
 			       'robot'  => 1,
 			       'email' => 1, 
@@ -82,21 +84,15 @@ sub new {
 		$cookie);
 	    return __PACKAGE__->new($robot);
 	}
-	# checking if the client host is unchanged during the session brake sessions when using multiple proxy with
-        # load balancing (round robin, etc). This check is removed until we introduce some other method
-	# if($self->{'remote_addr'} ne $ENV{'REMOTE_ADDR'}){
-	#    Log::do_log('info', 'ignoring session cookie because remote host %s is not the original host %s', $ENV{'REMOTE_ADDR'},$self->{'remote_addr'}); # start a new session
-	#    return __PACKAGE__->new($robot));
-	#}
-    }else{
+    } else {
 	# create a new session context
 	## Tag this session as new, ie no data in the DB exist
 	$self->{'new_session'} = 1;
-	$self->{'id_session'} = &get_random();
+	$self->{'id_session'} = get_random();
 	$self->{'email'} = 'nobody';
 	$self->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
-	$self->{'date'} = time;
-	$self->{'start_date'} = time;
+	$self->{'date'} = $self->{'start_date'} = $self->{'refresh_date'} =
+	    time;
 	$self->{'hit'} = 1;
 	##$self->{'robot'} = $robot->name;
 	$self->{'data'} = '';
@@ -115,38 +111,90 @@ sub load {
     }
 
     my $sth;
+    my $id_session;
+    my $is_old_session = 0;
 
-    unless ($sth = SDM::do_prepared_query(
-	q{SELECT id_session AS id_session, date_session AS "date",
-		 remote_addr_session AS remote_addr, robot_session AS robot,
-		 email_session AS email, data_session AS data,
-		 hit_session AS hit, start_date_session AS start_date
-	 FROM session_table
-	 WHERE id_session = ? AND robot_session = ?},
-	$cookie, $self->{'robot'}->name
-    )) {
-	Log::do_log('err', 'Unable to load session %s', $cookie);
-	return undef;
+    ## Load existing session.
+    if ($cookie and $cookie =~ /^\d{,16}$/) {
+	## Compatibility: session by older releases of Sympa.
+	$id_session = $cookie;
+	$is_old_session = 1;
+
+	## Session by older releases of Sympa doesn't have refresh_date.
+	unless ($sth = SDM::do_prepared_query(
+	    q{SELECT id_session AS id_session, id_session AS prev_id,
+		     date_session AS "date",
+		     remote_addr_session AS remote_addr,
+		     robot_session AS robot, email_session AS email,
+		     data_session AS data, hit_session AS hit,
+		     start_date_session AS start_date,
+		     date_session AS refresh_date
+	      FROM session_table
+	      WHERE robot_session = ? AND
+		    id_session = ? AND
+		    refresh_date_session IS NULL},
+	    $self->{'robot'}->name, $id_session
+	)) {
+	    Log::do_log('err', 'Unable to load session %s', $id_session);
+	    return undef;
+	}
+    } else {
+	$id_session = decrypt_session_id($cookie);
+	unless ($id_session) {
+	    Log::do_log('err', 'internal error, undef id_session');
+	    return 'not_found';
+	}
+
+	## Cookie may contain current or previous session ID.
+	unless ($sth = SDM::do_prepared_query(
+	    q{SELECT id_session AS id_session, prev_id_session AS prev_id,
+		     date_session AS "date",
+		     remote_addr_session AS remote_addr,
+		     robot_session AS robot, email_session AS email,
+		     data_session AS data, hit_session AS hit,
+		     start_date_session AS start_date,
+		     refresh_date_session AS refresh_date
+	      FROM session_table
+	      WHERE robot_session = ? AND
+		    (id_session = ? AND prev_id_session IS NOT NULL OR
+		     prev_id_session = ?)},
+	    $self->{'robot'}->name, $id_session, $id_session
+	)) {
+	    Log::do_log('err', 'Unable to load session %s', $id_session);
+	    return undef;
+	}
     }
 
     my $session = undef;
     my $new_session = undef;
     my $counter = 0;
     while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
-	if ( $counter > 0){
-	    &Log::do_log('err',"The SQL statement did return more than one session. Is this a bug coming from DBI or MySQL?");
+	if ($counter > 0) {
+	    Log::do_log('err',
+		'The SQL statement did return more than one session');
 	    $session->{'email'} = '';
 	    last;
 	}
 	$session = $new_session;
-	$counter ++;
+	$counter++;
     }
     
     unless ($session) {
 	return 'not_found';
     }
-    
-    my %datas= &tools::string_2_hash($session->{'data'});
+
+    ## Compatibility: Upgrade session by older releases of Sympa.
+    if ($is_old_session) {
+	SDM::do_prepared_query(
+	    q{UPDATE session_table
+	      SET prev_id_session = id_session
+	      WHERE id_session = ? AND prev_id_session IS NULL AND
+		    refresh_date_session IS NULL},
+	    $id_session
+	);
+    }
+
+    my %datas = tools::string_2_hash($session->{'data'});
 
     ## canonicalize lang if possible.
     $datas{'lang'} =
@@ -156,8 +204,10 @@ sub load {
     foreach my $key (keys %datas) {$self->{$key} = $datas{$key};} 
 
     $self->{'id_session'} = $session->{'id_session'};
+    $self->{'prev_id'} = $session->{'prev_id'};
     $self->{'date'} = $session->{'date'};
     $self->{'start_date'} = $session->{'start_date'};
+    $self->{'refresh_date'} = $session->{'refresh_date'};
     $self->{'hit'} = $session->{'hit'} +1 ;
     $self->{'remote_addr'} = $session->{'remote_addr'};
     ##$self->{'robot'} = $session->{'robot'};
@@ -184,39 +234,80 @@ sub store {
 	next unless ($var);
 	$hash{$var} = $self->{$var};
     }
-    my $data_string = &tools::hash_2_string (\%hash);
+    my $data_string = tools::hash_2_string (\%hash);
+    my $time = time;
 
     ## If this is a new session, then perform an INSERT
     if ($self->{'new_session'}) {
 	## Store the new session ID in the DB
+	## Previous session ID is set to be same as new session ID.
 	unless (SDM::do_prepared_query(
 	    q{INSERT INTO session_table
-	      (id_session, date_session, remote_addr_session,
-	       robot_session, email_session, start_date_session,
-	       hit_session, data_session)
-	     VALUES (?, ?, ?, ?, ?, ?, ?, ?)},
-	    $self->{'id_session'}, time, $ENV{'REMOTE_ADDR'},
-	    $self->{'robot'}->name, $self->{'email'}, $self->{'start_date'},
-	    $self->{'hit'}, $data_string
+	      (id_session, prev_id_session,
+	       date_session, refresh_date_session,
+	       remote_addr_session, robot_session,
+	       email_session, start_date_session, hit_session,
+	       data_session)
+	      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+	    $self->{'id_session'}, $self->{'id_session'},
+	    $time, $time,
+	    $ENV{'REMOTE_ADDR'}, $self->{'robot'}->name,
+	    $self->{'email'}, $self->{'start_date'}, $self->{'hit'},
+	    $data_string
 	)) {
-	    &Log::do_log('err','Unable to add new session %s informations in database', $self->{'id_session'});
+	    Log::do_log('err',
+		'Unable to add new session %s informations in database',
+		$self->{'id_session'}
+	    );
 	    return undef;
 	}   
-      ## If the session already exists in DB, then perform an UPDATE
-    }else {
+
+	$self->{'prev_id'} = $self->{'id_session'};
+
+    } else {
+	## If the session already exists in DB, then perform an UPDATE
+
+	## Cookie may contain previous session ID.
+	my $sth = SDM::do_prepared_query(
+	    q{SELECT id_session
+	      FROM session_table
+	      WHERE robot_session = ? AND prev_id_session = ?},
+	    $self->{'robot'}->name, $self->{'id_session'}
+	);
+	unless ($sth) {
+	    Log::do_log('err',
+		'Unable to update session information in database');
+	    return undef;
+	}
+	if ($sth->rows) {
+	    my $new_id = $sth->fetchrow;
+	    $sth->finish;
+	    if ($new_id) {
+		$self->{'prev_id'} = $self->{'id_session'};
+		$self->{'id_session'} = $new_id;
+	    }
+	}
+
 	## Update the new session in the DB
 	unless (SDM::do_prepared_query(
 	    q{UPDATE session_table
-	      SET date_session = ?, remote_addr_session = ?, robot_session = ?,
-		  email_session = ?, start_date_session = ?, hit_session = ?,
-		  data_session = ?
-	      WHERE id_session = ? AND robot_session = ?},
-	    time, $ENV{'REMOTE_ADDR'}, $self->{'robot'}->name,
-	    $self->{'email'}, $self->{'start_date'}, $self->{'hit'},
-	    $data_string,
-	    $self->{'id_session'}, $self->{'robot'}->name
+	      SET date_session = ?, remote_addr_session = ?,
+		  robot_session = ?, email_session = ?,
+		  start_date_session = ?, hit_session = ?, data_session = ?
+	      WHERE robot_session = ? AND
+		    (id_session = ? AND prev_id_session IS NOT NULL OR
+		     prev_id_session = ?)},
+	    $time, $ENV{'REMOTE_ADDR'},
+	    $self->{'robot'}->name, $self->{'email'},
+	    $self->{'start_date'}, $self->{'hit'}, $data_string,
+	    $self->{'robot'}->name,
+	    $self->{'id_session'},
+	    $self->{'id_session'}
 	)) {
-	    &Log::do_log('err','Unable to update session %s information in database', $self->{'id_session'});
+	    Log::do_log('err',
+		'Unable to update session %s information in database',
+		$self->{'id_session'}
+	    );
 	    return undef;
 	}    
     }
@@ -242,25 +333,108 @@ sub renew {
 	next unless ($var);
 	$hash{$var} = $self->{$var};
     }
-    my $data_string = &tools::hash_2_string (\%hash);
+    my $data_string = tools::hash_2_string(\%hash);
 
-    ## Renew the session ID in order to prevent session hijacking
-    my $new_id = &get_random();
-
-    ## First remove the DB entry for the previous session ID
-    unless(SDM::do_prepared_query(
-	q{UPDATE session_table
-	  SET id_session = ?
-	  WHERE id_session = ? AND robot_session = ?},
-	$new_id, $self->{'id_session'}, $self->{'robot'}->name
-    )) {
+    my $sth;
+    ## Cookie may contain previous session ID.
+    $sth = SDM::do_prepared_query(
+	q{SELECT id_session
+	  FROM session_table
+	  WHERE robot_session = ? AND prev_id_session = ?},
+	$self->{'robot'}->name, $self->{'id_session'}
+    );
+    unless ($sth) {
 	Log::do_log('err',
-	    'Unable to renew session ID for session %s', $self);
+	    'Unable to update session information in database');
 	return undef;
-    }	 
+    }
+    if ($sth->rows) {
+	my $new_id = $sth->fetchrow;
+	$sth->finish;
+	 if ($new_id) {
+	     $self->{'prev_id'} = $self->{'id_session'};
+	     $self->{'id_session'} = $new_id;
+	 }
+    }
 
     ## Renew the session ID in order to prevent session hijacking
+    my $new_id = get_random();
+
+    ## Do refresh the session ID when remote address was changed or refresh
+    ## interval was past.  Conditions also are checked by SQL so that
+    ## simultaneous processes will be prevented renewing cookie.
+    my $time = time;
+    my $remote_addr = $ENV{'REMOTE_ADDR'};
+    my $refresh_term;
+    if (Site->cookie_refresh == 0) {
+	$refresh_term = $time;
+    } else {
+	my $cookie_refresh = Site->cookie_refresh;
+	$refresh_term =
+	    int($time - $cookie_refresh * 0.25 - rand($cookie_refresh * 0.5));
+    }
+    unless ($self->{'remote_addr'} ne $remote_addr or
+	$self->{'refresh_date'} <= $refresh_term) {
+	return 0;
+    }
+
+    ## First insert DB entry with new session ID,
+    $sth = SDM::do_prepared_query(
+	q{INSERT INTO session_table
+	  (id_session, prev_id_session,
+	   start_date_session, date_session, refresh_date_session,
+	   remote_addr_session, robot_session, email_session,
+	   hit_session, data_session)
+	  SELECT ?, id_session,
+		 start_date_session, date_session, ?,
+		 ?, robot_session, email_session,
+		 hit_session, data_session
+	  FROM session_table
+	  WHERE robot_session = ? AND
+		(id_session = ? AND prev_id_session IS NOT NULL OR
+		 prev_id_session = ?) AND
+		(remote_addr_session <> ? OR refresh_date_session <= ?)},
+	$new_id,
+	$time,
+	$remote_addr,
+	$self->{'robot'}->name,
+	$self->{'id_session'},
+	$self->{'id_session'},
+	$remote_addr, $refresh_term
+    );
+    unless ($sth) {
+	Log::do_log('err', 'Unable to renew session ID for session %s',
+	    $self->{'id_session'});
+	return undef;
+    }
+    unless ($sth->rows) {
+	return 0;
+    }
+    ## Keep previous ID to prevent crosstalk, clearing grand-parent ID.
+    SDM::do_prepared_query(
+	q{UPDATE session_table
+	  SET prev_id_session = NULL
+	  WHERE robot_session = ? AND id_session = ?},
+	$self->{'robot'}->name, $self->{'id_session'}
+    );
+    ## Remove record of grand-parent ID.
+    SDM::do_prepared_query(
+	 q{DELETE FROM session_table
+	   WHERE id_session = ? AND prev_id_session IS NULL},
+	 $self->{'prev_id'}
+    );
+
+    ## Renew the session ID in order to prevent session hijacking
+    Log::do_log('info',
+	'[robot %s] [session %s] [client %s]%s new session %s',
+	$self->{'robot'}->name, $self->{'id_session'}, $remote_addr,
+	($self->{'email'} ? sprintf(' [user %s]', $self->{'email'}) : ''),
+	$new_id
+    );
+    $self->{'prev_id'} = $self->{'id_session'};
     $self->{'id_session'} = $new_id;
+    $self->{'refresh_date'} = $time;
+    $self->{'remote_addr'} = $remote_addr;
 
     return 1;
 }
@@ -268,18 +442,19 @@ sub renew {
 ## remove old sessions from a particular robot or from all robots.
 ## delay is a parameter in seconds
 sub purge_old_sessions {
-    Log::do_log('debug2', @_);
+    Log::do_log('debug2', '(%s)', @_);
     my $robot = Robot::clean_robot(shift, 1);
 
-    my $delay = &tools::duration_conv(Site->session_table_ttl) ; 
-    my $anonymous_delay = &tools::duration_conv(Site->anonymous_session_table_ttl) ; 
+    my $delay = tools::duration_conv(Site->session_table_ttl);
+    my $anonymous_delay =
+	tools::duration_conv(Site->anonymous_session_table_ttl);
 
     unless ($delay) {
-	Log::do_log('info', 'exit with delay null');
+	Log::do_log('debug3', 'exit with delay null');
 	return;
     }
     unless ($anonymous_delay) {
-	Log::do_log('info', 'exit with anonymous delay null');
+	Log::do_log('debug3', 'exit with anonymous delay null');
 	return;
     }
 
@@ -318,7 +493,7 @@ sub purge_old_sessions {
 
     my $total =  $sth->fetchrow;
     if ($total == 0) {
-	Log::do_log('debug', 'no sessions to expire');
+	Log::do_log('debug3', 'no sessions to expire');
     }else{
 	unless ($sth = SDM::do_query($statement, $condition)) {
 	    Log::do_log('err', 'Unable to purge old sessions for robot %s',
@@ -334,7 +509,7 @@ sub purge_old_sessions {
     }
     my $anonymous_total =  $sth->fetchrow;
     if ($anonymous_total == 0) {
-	Log::do_log('debug', 'no anonymous sessions to expire');
+	Log::do_log('debug3', 'no anonymous sessions to expire');
 	return $total ;
     }
     unless ($sth = SDM::do_query($anonymous_statement,
@@ -353,7 +528,7 @@ sub purge_old_tickets {
     Log::do_log('debug2', '(%s)', @_);
     my $robot = Robot::clean_robot(shift, 1);
 
-    my $delay = &tools::duration_conv(Site->one_time_ticket_table_ttl) ; 
+    my $delay = tools::duration_conv(Site->one_time_ticket_table_ttl);
     unless ($delay) {
 	Log::do_log('debug3', 'exit with delay null');
 	return;
@@ -367,7 +542,7 @@ sub purge_old_tickets {
 	if $delay;
     $condition .= sprintf '%srobot_one_time_ticket = %s',
 	($condition ? ' AND ' : ''), SDM::quote($robot->name)
-        if ref $robot eq 'Robot';
+	if ref $robot eq 'Robot';
     $condition = " WHERE $condition"
 	if $condition;
 
@@ -406,16 +581,19 @@ sub list_sessions {
 
     my @sessions ;
     my $sth;
+    my $time = time;
 
     my $condition = '';
     $condition = sprintf 'robot_session = %s', SDM::quote($robot->name)
 	if ref $robot eq 'Robot';
     $condition .= sprintf '%s%d < date_session',
-	($condition ? ' AND ' : ''), time - $delay
+	($condition ? ' AND ' : ''), $time - $delay
 	if $delay;
-    $condition .= sprintf "%semail_session != 'nobody'",
+    $condition .= sprintf "%semail_session <> 'nobody'",
 	($condition ? ' AND ' : '')
 	if $connected_only eq 'on';
+    $condition .= sprintf "%sprev_id_session IS NOT NULL",
+	($condition ? ' AND ' : '');
     $condition = " WHERE $condition"
 	if $condition;
 
@@ -431,8 +609,10 @@ sub list_sessions {
     }
 
     while (my $session = ($sth->fetchrow_hashref('NAME_lc'))) {
-	$session->{'formated_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'date_session'}));
-	$session->{'formated_start_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'start_date_session'}));
+	$session->{'formated_date'} =
+	    Language::gettext_strftime("%d %b %y  %H:%M", localtime($session->{'date_session'}));
+	$session->{'formated_start_date'} =
+	    Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'start_date_session'}));
 
 	push @sessions, $session;
     }
@@ -464,8 +644,8 @@ sub get_session_cookie {
 ## Generic subroutine to set a cookie
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($self, $http_domain, $expires,$use_ssl) = @_ ;
-    &Log::do_log('debug','Session::set_cookie(%s,%s,secure= %s)',$http_domain, $expires,$use_ssl );
 
     my $expiration;
     if ($expires =~ /now/i) {
@@ -479,10 +659,12 @@ sub set_cookie {
 	$http_domain="";
     }
 
+    my $value = encrypt_session_id($self->{'id_session'});
+
     my $cookie;
     if ($expires =~ /session/i) {
 	$cookie = new CGI::Cookie (-name    => 'sympa_session',
-				   -value   => $self->{'id_session'},
+				   -value   => $value,
 				   -domain  => $http_domain,
 				   -path    => '/',
 				   -secure => $use_ssl,
@@ -490,7 +672,7 @@ sub set_cookie {
 				   );
     }else {
 	$cookie = new CGI::Cookie (-name    => 'sympa_session',
-				   -value   => $self->{'id_session'},
+				   -value   => $value,
 				   -expires => $expiration,
 				   -domain  => $http_domain,
 				   -path    => '/',
@@ -504,12 +686,47 @@ sub set_cookie {
     return 1;
 }
     
+# Build an HTTP cookie value to be sent to a SOAP client
+sub soap_cookie2 {
+    my ($session_id, $http_domain, $expire) = @_;
+    my $cookie;
+    my $value;
+
+    # WARNING : to check the cookie the SOAP services does not gives
+    # all the cookie, only it's value so we need ':'
+    $value = encrypt_session_id($session_id);
+
+    ## With set-cookie2 max-age of 0 means removing the cookie
+    ## Maximum cookie lifetime is the session
+    $expire ||= 600; ## 10 minutes
+
+    if ($http_domain eq 'localhost') {
+	$cookie = CGI::Cookie->new(
+	    -name => 'sympa_session',
+	    -value => $value,
+	    -path => '/',
+	);
+	$cookie->max_age(time + $expire); # needs CGI >= 3.51.
+    } else {
+	$cookie = CGI::Cookie->new(
+	    -name => 'sympa_session',
+	    -value => $value,
+	    -domain => $http_domain,
+	    -path => '/',
+	);
+	$cookie->max_age(time + $expire); # needs CGI >= 3.51.
+    }
+
+    ## Return the cookie value
+    return $cookie->as_string;
+}
 
 sub get_random {
-    &Log::do_log('debug', 'SympaSession::random ');
-     my $random = int(rand(10**7)).int(rand(10**7)); ## Concatenates 2 integers for a better entropy
-     $random =~ s/^0(\.|\,)//;
-     return ($random)
+    Log::do_log('debug3', '()');
+    ## Concatenates 2 integers for a better entropy
+    my $random = int(rand(10**7)).int(rand(10**7));
+    $random =~ s/^0(\.|\,)//;
+    return ($random)
 }
 
 ## Return the session object content, as a hashref
@@ -538,6 +755,37 @@ sub is_anonymous {
     }
 }
 
+## Generate cookie from session ID.
+sub encrypt_session_id {
+    my $id_session = shift;
+
+    return $id_session unless Site->cookie;
+    my $cipher = tools::ciphersaber_installed();
+    return $id_session unless $cipher;
+
+    my $id_session_bin =
+	pack 'nN', ($id_session >> 32), $id_session % (1 << 32);
+    my $cookie_bin = $cipher->encrypt($id_session_bin);
+    return sprintf '%*v02x', '', $cookie_bin;
+}
+
+## Get session ID from cookie.
+sub decrypt_session_id {
+    my $cookie = shift;
+
+    return $cookie unless Site->cookie;
+    my $cipher = tools::ciphersaber_installed();
+    return $cookie unless $cipher;
+
+    return undef unless $cookie =~ /\A[0-9a-f]+\z/;
+    my $cookie_bin = $cookie;
+    $cookie_bin =~ s/([0-9a-f]{2})/sprintf '%c', hex("0x$1")/eg; 
+    my ($id_session_hi, $id_session_lo) =
+	unpack 'nN', $cipher->decrypt($cookie_bin);
+
+    return ($id_session_hi << 32) + $id_session_lo;
+}
+
 ## Get unique ID
 sub get_id {
     my $self = shift;
@@ -546,4 +794,3 @@ sub get_id {
 }
 
 1;
-

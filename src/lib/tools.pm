@@ -1209,21 +1209,15 @@ sub sympa_checksum {
 
 # create a cipher
 sub ciphersaber_installed {
+    return $cipher if defined $cipher;
 
-    my $is_installed;
-    foreach my $dir (@INC) {
-	if (-f "$dir/Crypt/CipherSaber.pm") {
-	    $is_installed = 1;
-	    last;
-	}
-    }
-
-    if ($is_installed) {
-	require Crypt::CipherSaber;
+    eval { require Crypt::CipherSaber; };
+    unless ($@) {
 	$cipher = Crypt::CipherSaber->new(Site->cookie);
-    }else{
-	$cipher = 'no_cipher';
+    } else {
+	$cipher = '';
     }
+    return $cipher;
 }
 
 # create a cipher
@@ -1276,10 +1270,8 @@ sub cookie_changed {
 sub crypt_password {
     my $inpasswd = shift ;
 
-    unless (defined($cipher)){
-	$cipher = ciphersaber_installed();
-    }
-    return $inpasswd if ($cipher eq 'no_cipher') ;
+    ciphersaber_installed();
+    return $inpasswd unless $cipher;
     return ("crypt.".&MIME::Base64::encode($cipher->encrypt ($inpasswd))) ;
 }
 
@@ -1291,10 +1283,8 @@ sub decrypt_password {
     return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/) ;
     $inpasswd = $1;
 
-    unless (defined($cipher)){
-	$cipher = ciphersaber_installed();
-    }
-    if ($cipher eq 'no_cipher') {
+    ciphersaber_installed();
+    unless ($cipher) {
 	&Log::do_log('info','password seems encrypted while CipherSaber is not installed !');
 	return $inpasswd ;
     }
