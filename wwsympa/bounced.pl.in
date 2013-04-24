@@ -261,7 +261,7 @@ Log::do_log('notice', "bounced Started");
 $SIG{'TERM'} = 'sigterm';
 my $end = 0;
 
-my $spool = new Sympaspool('bounce');
+my $spool = new SympaspoolClassic('bounce');
 
 
 Log::do_log('debug','starting infinite loop');
@@ -279,17 +279,17 @@ while (!$end) {
 	my $bounce;
 	unless ($bounce = new BounceMessage({'message_in_spool' => $spooled_bounce})) {
 	    Log::do_log('err','Message %s: badly formatted bounce message. Ignoring.',$spooled_bounce->{'messagekey'});
-	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+	    $spool->move_current_file_to_bad;
 	    next;
 	}
 	if ($bounce->process) {
-	    unless ($spool->remove_message({'messagekey'=>$bounce->{'messagekey'}})) {
+	    unless ($spool->remove_current_message) {
 		Log::do_log ('err',"Could not remove message from spool bounce (messaegkey = %s)",$bounce->{'messagekey'});
-		$spool->move_to_bad($spooled_bounce->{'messagekey'});
+		$spool->move_current_file_to_bad;
 		last;
 	    }
 	}else {
-	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
+	    $spool->move_current_file_to_bad;
 	}
 	## Free zombie sendmail processes
 	mail::reaper;
