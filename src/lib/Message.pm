@@ -239,9 +239,7 @@ sub create_message_from_file {
     $self = create_message_from_string($messageasstring);
     $self->{'filename'} = $file;
     $file =~ s/^.*\/([^\/]+)$/$1/;
-    unless ($file =~ /^(\S+)\.(\d+)\.\w+$/) {
-	Log::do_log('err','Unable to extract data from filename %s',$file);
-    }else{
+    if ($file =~ /^(\S+)\.(\d+)\.\w+$/) {
 	$self->{'rcpt'} = $1;
 	$self->{'date'} = $2;
     }
@@ -419,12 +417,11 @@ sub get_receipient {
     my $rcpt;
     if (!$self->{'rcpt'} || $self->get_family) {
 	# message.pm can be used not only for message coming from queue
-	unless (defined $self->{'noxsympato'}) {
-	    unless ($rcpt = $hdr->get('X-Sympa-To')) {
+	unless ($rcpt = $hdr->get('X-Sympa-To')) {
+	    unless (defined $self->{'noxsympato'}) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
-	}else {
 	    unless ($rcpt = $hdr->get('To')) {
 		Log::do_log('err', 'no To: header found, ignoring message.');
 		return undef;
@@ -446,12 +443,13 @@ sub set_receipient {
 
 sub get_list {
     my $self = shift;
-    unless ($self->{'list'}) {
+    unless ($self->{'list'} && $self->{'list'}->isa('List')) {
 	unless ($self->{'listname'}) {
 	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
 	    $self->{'listname'} = lc($robot_id || '');
 	}
 	unless ($self->{'list'} = List->new($self->{'listname'},$self->get_robot,{'just_try' => 1})) {
+	    Log::do_log('err','Unable to create list object with listname %s and robot %s',$self->{'listname'},$self->get_robot);
 	    return undef;
 	}
     }
