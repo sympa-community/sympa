@@ -380,15 +380,15 @@ sub check_cpan {
 				      usage => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
 				     },
 			'CGI' => {
-				  required_version =>'3.35',
+				  required_version =>'3.51',
 				  package_name => 'CGI',
 				  mandatory => 1,
 				  usage => 'required to run Sympa web interface',
 				  },
 			'Crypt::CipherSaber' => {
 						 required_version =>'0.50',
-						 package_name => 'CipherSaber',
-						 usage => 'this module provides reversible encryption of user passwords in the database. Useful only when updating from old version with password reversible encryption.',
+						 package_name => 'Crypt-CipherSaber',
+						 usage => 'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
 						},
 			'Crypt::OpenSSL::Bignum' => {
 					      required_version =>'0.04',
