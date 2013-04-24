@@ -1019,6 +1019,7 @@ sub upgrade {
 	    'bounce_path'                => 'yes',
 	    'cookie_domain'              => 'NO',
 	    'cookie_expire'              => 'yes',
+	    'cookie_refresh'		 => 'yes', # 6.1.17+
 	    'custom_archiver'            => 'yes',
 	    'default_home'               => 'NO',
 	    'export_topics'              => 'yes',
