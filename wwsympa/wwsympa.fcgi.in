@@ -9656,7 +9656,7 @@ sub do_resetbounce {
 sub do_rebuildarc {
      &wwslog('info', 'do_rebuildarc(%s, %s)', $param->{'list'}, $in{'month'});
      
-     my $spoolarchive = new Sympaspool('archive');
+     my $spoolarchive = new SympaspoolClassic('outgoing');
 
      unless ($spoolarchive->store('rebuild', { 'list' => $list->name, 'robot' => $list->domain })) {
 	 &report::reject_report_web('intern','cannot_store_rebuild_order',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
@@ -9681,7 +9681,7 @@ sub do_rebuildallarc {
     #FIXME: past archives should be rebuilt even if archiving is disabled.
     my $errors = 0;
     my $spoolarchive;
-    unless ($spoolarchive = new Sympaspool('archive')){
+    unless ($spoolarchive = new SympaspoolClassic('outgoing')){
 	&report::reject_report_web('intern','cannot fetch archive spool',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	&wwslog('err','error in  new Sympaspool(archive) ');
     }

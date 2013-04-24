@@ -284,7 +284,7 @@ sub clean_archived_message {
     my $robot = shift;
     my $input = shift;
     my $output = shift;
-    my $msg = Message->new({'message_in_spool' => $input, 'noxsympato' => 1});
+    my $msg = Message->new({'file' => $input, 'noxsympato' => 1});
 
     if ($msg->clean_html($robot)) {
 	if (open TMP, '>', $output) {

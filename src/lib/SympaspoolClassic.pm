@@ -65,7 +65,6 @@ sub new {
 sub global_count {
     
     my $message_status = shift;
-    Log::do_log('trace','%s',Sympa::Constants::SPOOLDIR);
     my @files = <Sympa::Constants::SPOOLDIR/*>;
     foreach my $file (@files) {
 	log::do_log('trace','%s',$file);
@@ -471,7 +470,7 @@ sub unlock_message {
 }
 
 ################"
-# store a message in database spool 
+# store a message in spool 
 #
 sub store {  
     my $self = shift;
@@ -479,12 +478,13 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name({'list'=>$param->{'list'}, 'robot'=>$param->{'robot'}});
+    Log::do_log('trace','Storing %s in file %s',$messageasstring,"$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('trace','');
 	return undef;
     }
-    print $fh, $messageasstring;
+    print $fh $messageasstring;
     close $fh;
     return 1;
 }

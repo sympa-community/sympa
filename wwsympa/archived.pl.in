@@ -284,10 +284,10 @@ while (!$end) {
 	&Log::do_log('debug',"rebuild found ");
 	if ($item->{'list'} && $item->{'robot'}) {	
 	    &rebuild($item->{'list'}.'@'.$item->{'robot'});
-	    $spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}});
+	    $spoolarchive->remove_current_message;
 	}else{
 	   Log::do_log('err', "unable to rebuild archive for unknown list/robot.Move to bad");
-	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to rebuild archive for unkown list','lock'=>'NULL'});
+	    $spoolarchive->move_current_file_to_bad;
 	    next;
 	}
     }elsif($orders[0]  =~ /^remove\.(\d\d\d\d\-\d\d)\.\d+$/ ) {
@@ -296,7 +296,7 @@ while (!$end) {
 	&Log::do_log('debug',"removed found ");
 	unless($item->{'list'} && $item->{'robot'}){
 	   Log::do_log('err', "unable to remove messages from archive for unknown list/robot.Move to bad");
-	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to remove messages from archive, list name missing','lock'=>'NULL'});
+	    $spoolarchive->move_current_file_to_bad;
 	    next;
 	}
 	my $listadress = $item->{'list'}.'@'.$item->{'robot'}	;
@@ -304,12 +304,12 @@ while (!$end) {
 	my $arclistdir = $listadress.'.'.$yyyymm;
 	my $arcpath = Site->arc_path . "/$listadress/$yyyymm";
 	
-&Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
 	    
 	my $list;
 	unless ($list = new List ($listadress)) {
-	   &Log::do_log('err',"remove : unknown list $listadress");
-	    $spoolarchive->update({'messagekey'=>$item->{'messagekey'}},{'message_status'=>'bad','message_diag'=>'unable to remove messages from archive for unkown list','lock'=>'NULL'});
+	    Log::do_log('err',"remove : unknown list $listadress");
+	    $spoolarchive->move_current_file_to_bad;
 	    next;
 	}
 &Log::do_log('debug',"remove found : for $arclistdir");
@@ -365,13 +365,13 @@ while (!$end) {
 	    }
 	    
 	    unless (rename ("$arcpath/arctxt/$message","$arcpath/deleted/$message")) {
-	&Log::do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
+		Log::do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
 		next;
 	    }
 	    
 	    # remove directory if empty arctxt
 	    unless (opendir (DIR,"$arcpath/arctxt")) {
-	&Log::do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
+		Log::do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
 		next;
 	    }
 	    my @files = grep(/^\d+$/, readdir( DIR ));
@@ -380,7 +380,7 @@ while (!$end) {
 		&tools::remove_dir ($arcpath); 
 	    }
 	}
-	$spoolarchive->remove_message({'messagekey'=>$item->{'messagekey'}});
+	$spoolarchive->remove_current_message;
     }else{
 	Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'name'},$item->{'list'},$item->{'robot'});
 	unless (mail2arc ($item)) {
@@ -955,7 +955,7 @@ sub mail2arc {
 	
 	# prepare a temporary file with clean message content (htlm parts are cleaned) 
 	my $safe = Archive::clean_archived_message(
-	    $robot, $message_in_spool, $output
+	    $robot, $file, $output
 	);
 	unless ($safe) {
 	    Log::do_log('err',"Could not clean message, ignoring it");
