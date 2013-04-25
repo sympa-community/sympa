@@ -86,74 +86,13 @@ sub count {
 sub get_content {
 
     my $self = shift;
-    my $data= shift;
-    my $selector=$data->{'selector'};     # hash field->value used as filter  WHERE sql query 
-    my $selection=$data->{'selection'};   # the list of field to select. possible values are :
-                                          #    -  a comma separated list of field to select. 
-                                          #    -  '*'  is the default .
-                                          #    -  '*_but_message' mean any field except message which may be huge and unusefull while listing spools
-                                          #    - 'count' mean the selection is just a count.
-                                          # should be used mainly to select all but 'message' that may be huge and may be unusefull
-    my $offset = $data->{'offset'};         # for pagination, start fetch at element number = $offset;
-    my $page_size = $data->{'page_size'}; # for pagination, limit answers to $page_size
-    my $orderby = $data->{'sortby'};      # sort
-    my $way = $data->{'way'};             # asc or desc 
-    
-
-    my $sql_where = _sqlselector($selector);
-    if ($self->{'selection_status'} eq 'bad') {
-	$sql_where = $sql_where." AND message_status_spool = 'bad' " ;
-    }else{
-	$sql_where = $sql_where." AND message_status_spool <> 'bad' " ;
+    my @messages;
+    foreach my $file ($self->get_files_in_spool) {
+	$self->set_current_file("$self->{'dir'}/$file");
+	push @messages, $self->{'current_file'};
     }
-    $sql_where =~s/^\s*AND//;
-
-    my $statement ;
-    if ($selection eq 'count'){
-	# just return the selected count, not all the values
-	$statement = 'SELECT COUNT(*) ';
-    }else{
-	$statement = 'SELECT '.&_selectfields($selection);
-    }
-
-    $statement = $statement . sprintf " FROM spool_table WHERE %s AND spoolname_spool = %s ",$sql_where,&SDM::quote($self->{'spoolname'});
-
-    if ($orderby) {
-	$statement = $statement. ' ORDER BY '.$orderby.'_spool ';
-	$statement = $statement. ' DESC' if ($way eq 'desc') ;
-    }
-    if ($page_size) {
-	$statement .= SDM::get_limit_clause(
-	    {'offset' => $offset, 'rows_count' => $page_size}
-	);
-    }
-
-    push @sth_stack, $sth;
-    unless ($sth = &SDM::do_query($statement)) {
-	$sth = pop @sth_stack;
-	return undef;
-    }
-    if($selection eq 'count') {
-	my @result = $sth->fetchrow_array();
-	$sth->finish;
-	$sth = pop @sth_stack;
-	return $result[0];
-    }else{
-	my @messages;
-	while (my $message = $sth->fetchrow_hashref('NAME_lc')) {
-	    $message->{'date_asstring'} = &tools::epoch2yyyymmjj_hhmmss($message->{'date'});
-	    $message->{'lockdate_asstring'} = &tools::epoch2yyyymmjj_hhmmss($message->{'lockdate'});
-	    $message->{'messageasstring'} = MIME::Base64::decode($message->{'message'}) if ($message->{'message'}) ;
-	    $message->{'listname'} = $message->{'list'}; # duplicated because "list" is a tt2 method that convert a string to an array of chars so you can't test  [% IF  message.list %] because it is always defined!!!
-	    $message->{'status'} = $self->{'selection_status'}; 
-	    push @messages, $message;
-
-	    last if $page_size and $page_size <= scalar @messages;
-	}
-	$sth->finish();
-	$sth = pop @sth_stack;
-	return @messages;
-    }
+    undef $self->{'current_file'};
+    return @messages;
 }
 
 #######################
@@ -192,6 +131,7 @@ sub set_current_file {
 		return undef;
 	    }
 	$self->{'current_file'}{'name'} = $f;
+	Log::do_log('err','File to process: %s',$self->{'current_file'}{'name'});
 	}
     }else{
 	unless (defined $self->{'current_file'} && $self->{'current_file'}{'name'}) {
@@ -204,7 +144,10 @@ sub set_current_file {
 	return undef;
     }
     $self->{'current_file'}{'full_path'} = "$self->{'dir'}/$self->{'current_file'}{'name'}";
-    $self->analyze_current_file_name;
+    unless($self->analyze_current_file_name) {
+	$self->move_current_file_to_bad;
+	return undef;
+    }
     $self->get_current_file_priority;
     $self->get_current_file_date;
     $self->get_current_file_content;
@@ -277,7 +220,7 @@ sub get_current_file_priority {
 	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->default_list_priority;
 	}
     }
-    Log::do_log('trace','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
+    Log::do_log('debug2','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
 }
 
 sub get_current_file_date {
@@ -477,8 +420,8 @@ sub store {
     my $messageasstring = shift;
     my $param = shift;
     my $target_file = $param->{'filename'};
-    $target_file ||= $self->get_storage_name({'list'=>$param->{'list'}, 'robot'=>$param->{'robot'}});
-    Log::do_log('trace','Storing %s in file %s',$messageasstring,"$self->{'dir'}/$target_file");
+    $target_file ||= $self->get_storage_name($param);
+    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('trace','');
