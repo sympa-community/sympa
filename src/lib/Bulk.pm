@@ -32,7 +32,6 @@ use Mail::Address;
 #use Time::Local; # not used
 #use MIME::Entity; # not used
 #use MIME::EncWords; # not used
-use MIME::WordDecoder;
 use MIME::Parser;
 use MIME::Base64;
 #use Term::ProgressBar; # not used
@@ -253,20 +252,17 @@ sub merge_msg {
 
     my $body;
     if(defined $entity->bodyhandle){
-	$body      = $entity->bodyhandle->as_string;
+	$body = $entity->bodyhandle->as_string;
     }
-    ## Get the Content-Type / Charset / Content-Transfer-encoding of a message
-    my $type      = $entity->mime_type;
-    my $charset   = &MIME::WordDecoder::unmime($entity->head->mime_attr('content-type.charset'));
-    my $encoding  = &MIME::WordDecoder::unmime($entity->head->mime_encoding);
+    ## Get the charset of a message
+    my $charset = $entity->head->mime_attr('Content-Type.Charset');
 
     my $message_output;
     my $IO;
     
     ## If Content-Type is a text/*
     if($entity->mime_type =~ /^text/){
-	
-	if(defined $body){
+	if (defined $body) {
 	    ## --------- Initial Charset to UTF-8 --------- ##
 	    ## We use find_encoding() to ensure that's a valid charset
 	    if ($charset && ref Encode::find_encoding($charset)) { 
@@ -274,7 +270,7 @@ sub merge_msg {
 		    # Put the charset to UTF-8
 		    Encode::from_to($body, $charset, 'UTF-8');
 		  }       
-	    }else {
+	    } else {
 		&Log::do_log('err', "Incorrect charset '%s' ; cannot encode in this charset", $charset);
 	    }
 
