@@ -449,7 +449,7 @@ sub get_list {
 	    $self->{'listname'} = lc($robot_id || '');
 	}
 	unless ($self->{'list'} = List->new($self->{'listname'},$self->get_robot,{'just_try' => 1})) {
-	    Log::do_log('err','Unable to create list object with listname %s and robot %s',$self->{'listname'},$self->get_robot);
+	    Log::do_log('debug2','Unable to create list object with listname %s and robot %s',$self->{'listname'},$self->get_robot);
 	    return undef;
 	}
     }
