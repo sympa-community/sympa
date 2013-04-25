@@ -21,23 +21,14 @@ package Bulk;
 
 use strict;
 
-use Encode;
-#use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN); # no longer used
 #use Carp; # currently not used
-#use IO::Scalar; # not used
-#use Storable; # no longer used
-#use Mail::Header; # not used
-use Mail::Address;
+use Encode;
 #use Time::HiRes qw(time); # For more precise date; currently not used
-#use Time::Local; # not used
-#use MIME::Entity; # not used
-#use MIME::EncWords; # not used
-use MIME::Parser;
 use MIME::Base64;
-#use Term::ProgressBar; # not used
+use MIME::Charset;
+use Sys::Hostname;
 use URI::Escape;
 use constant MAX => 100_000;
-use Sys::Hostname;
 # tentative
 use Data::Dumper;
 
@@ -45,16 +36,10 @@ use Data::Dumper;
 ##The line above was removed to avoid dependency loop.
 ##"use List" MUST precede to "use Bulk".
 
-#use Lock; # not used
-#use Fetch; # not used
-#use WebAgent; # not used
 #use tools; # used in List - Site - Conf
 #use tt2; # used in List
 use Language qw(gettext_strftime);
 #use Log; # used in Conf
-#use mail; # not used
-#use Ldap; # not used
-#use Message; # not used
 #use SDM; # used in Conf
 
 ## Database and SQL statement handlers
@@ -230,99 +215,123 @@ sub message_from_spool {
 #  Merge a message with custom attributes of a user.       #
 #                                                          #
 #                                                          #
-#  IN : - MIME:Entity                                      #
-#       - $rcpt : a recipient                             #
+#  IN : - MIME::Entity                                     #
+#       - $rcpt : a recipient                              #
 #       - $bulk : HASH                                     #
 #       - $data : HASH with user's data                    #
 #  OUT : 1 | undef                                         #
 #                                                          #
 ############################################################
 sub merge_msg {
-
     my $entity = shift;
-    my $rcpt = shift;
-    my $bulk = shift;
-    my $data = shift;
+    my $rcpt   = shift;
+    my $bulk   = shift;
+    my $data   = shift;
 
-    ## Test MIME::Entity
-    unless (defined $entity && ref($entity) eq 'MIME::Entity') {
-	&Log::do_log('err', 'false entity');
+    unless (ref $entity eq 'MIME::Entity') {
+	Log::do_log('err', 'false entity');
 	return undef;
     }
 
-    my $body;
-    if(defined $entity->bodyhandle){
-	$body = $entity->bodyhandle->as_string;
+    my $eff_type = $entity->effective_type || 'text/plain';
+
+    if ($eff_type =~ /^text\b/) {
+	my ($charset, $in_cset, $bodyh, $body, $utf8_body);
+
+	$bodyh = $entity->bodyhandle;
+	if (!$bodyh or $bodyh->is_encoded) {
+	    return 1;
+	}
+	$body = $bodyh->as_string;
+	unless (defined $body and length $body) {
+	    return 1;
+	}
+
+	## Detect charset.  If charset is unknown, detect 7-bit charset.
+	$charset = $entity->head->mime_attr('Content-Type.Charset');
+	$in_cset = MIME::Charset->new($charset || 'NONE');
+	unless ($in_cset->decoder) {
+	    $in_cset = MIME::Charset->new(
+		MIME::Charset::detect_7bit_charset($body) || 'NONE');
+	}
+	unless ($in_cset->decoder) {
+	    Log::do_log('err', 'Unknown charset "%s"', $charset);
+	    return undef;
+	}
+	$in_cset->encoder($in_cset); # no charset conversion
+
+	## Only decodable bodies are allowed.
+	eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
+	if ($@) {
+	    Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
+	    return undef;
+	}
+
+	## PARSAGE ##
+
+	my $message_output;
+	unless (
+	    merge_data(
+		'rcpt'           => $rcpt,
+		'messageid'      => $bulk->{'messageid'},
+		'listname'       => $bulk->{'listname'},
+		'robot'          => $bulk->{'robot'},
+		'data'           => $data,
+		'body'           => $utf8_body,
+		'message_output' => \$message_output,
+	    )
+	    ) {
+	    Log::do_log('err', 'error merging message');
+	    return undef;
+	}
+	$utf8_body = $message_output;
+
+	## Data not encodable will fallback to UTF-8.
+	my ($new_charset, $new_encoding);
+	($body, $new_charset, $new_encoding) =
+	    $in_cset->body_encode(Encode::decode_utf8($utf8_body),
+	    Replacement => 'FALLBACK');
+	unless ($new_charset) { # bug in MIME::Charset?
+	    Log::do_log('err', 'Can\'t determine output charset');
+	    return undef;
+	} elsif ($new_charset ne $in_cset->as_string) {
+	    $entity->head->mime_attr(
+		'Content-Transfer-Encoding' => $new_encoding);
+	    $entity->head->mime_attr('Content-Type.Charset' => $new_charset);
+	}
+
+	## Save new body.
+	my $io = $bodyh->open('w');
+	unless ($io) {
+	    Log::do_log('err', 'Can\'t open Entity: %s', $!);
+	    return undef;
+	}
+	unless ($io->print($body)) {
+	    Log::do_log('err', 'Can\'t write in Entity: %s', $!);
+	    return undef;
+	}
+	unless ($io->close) {
+	    Log::do_log('err', 'Can\'t close Entity: %s', $!);
+	    return undef;
+	}
+	$entity->sync_headers(Length => 'COMPUTE')
+	    if $entity->head->get('Content-Length');
+
+	return 1;
     }
-    ## Get the charset of a message
-    my $charset = $entity->head->mime_attr('Content-Type.Charset');
 
-    my $message_output;
-    my $IO;
-    
-    ## If Content-Type is a text/*
-    if($entity->mime_type =~ /^text/){
-	if (defined $body) {
-	    ## --------- Initial Charset to UTF-8 --------- ##
-	    ## We use find_encoding() to ensure that's a valid charset
-	    if ($charset && ref Encode::find_encoding($charset)) { 
-		unless($charset =~ /UTF-8/){
-		    # Put the charset to UTF-8
-		    Encode::from_to($body, $charset, 'UTF-8');
-		  }       
-	    } else {
-		&Log::do_log('err', "Incorrect charset '%s' ; cannot encode in this charset", $charset);
-	    }
-
-	    ## PARSAGE ##
-	    
-	    &merge_data('rcpt' => $rcpt,
-			'messageid' => $bulk->{'messageid'},
-			'listname' => $bulk->{'listname'},
-			'robot' => $bulk->{'robot'},
-			'data' => $data,
-			'body' => $body,
-			'message_output' => \$message_output,
-			); 
-	    $body = $message_output;
-
-	    ## We use find_encoding() to ensure that's a valid charset
-	    if ($charset && ref Encode::find_encoding($charset)) { 
-		unless($charset =~ /UTF-8/){
-		    # Put the charset to UTF-8
-			Encode::from_to($body, 'UTF-8',$charset);
-		  }       
-	    }else {
-		&Log::do_log('err', "Incorrect charset '%s' ; cannot encode in this charset", $charset);
-	    }
-
-	    # Write the new body in the entity
-	    unless($IO = $entity->bodyhandle->open("w") || die "open body: $!"){
-		&Log::do_log('err', "Can't open Entity");
-		return undef;
-	    }
-	    unless($IO->print($body)){
-		&Log::do_log('err', "Can't write in Entity");
-		return undef;
-	    }
-	    unless($IO->close || die "close I/O handle: $!"){
-		&Log::do_log('err', "Can't close Entity");
+    ##--- Recursive call of the method. ---##
+    ## Course on the different parts of the message at all levels.
+    if ($entity->parts) {
+	foreach my $part ($entity->parts) {
+	    unless (merge_msg($part, $rcpt, $bulk, $data)) {
+		Log::do_log('err', 'Failed to merge message part');
 		return undef;
 	    }
 	}
     }
-    
-    ##--- Recursive call of the method. ---##
-    ## Course on the different parts of the message at all levels. 
-    foreach my $part ($entity->parts) {
-	unless(&merge_msg($part, $rcpt, $bulk, $data)){
-	    &Log::do_log('err', "Failed to merge message part.");
-	    return undef;
-	}  
-    }
 
     return 1;
-
 }
 
 ############################################################
@@ -334,7 +343,7 @@ sub merge_msg {
 #  It uses the method &tt2::parse_tt2                      #
 #  It uses the method &tools::get_fingerprint              #
 #                                                          #
-# IN : - rcpt : the recipient email                       #
+# IN : - rcpt : the recipient email                        #
 #      - listname : the name of the list                   #
 #      - robot_id : the host                               #
 #      - data : HASH with many data                        #
