@@ -417,7 +417,7 @@ our @params = (
 	    'Max. number of Sendmail processes (launched by Sympa) running simultaneously',
 	'file' => 'sympa.conf',
 	'gettext_comment' =>
-	    'Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.',
+	    'Proposed value is quite low.  You can rise it up to 100, 200 or even 300 with powerful systems.',
     },
     {   'name'    => 'merge_feature',
 	'default' => 'off',
