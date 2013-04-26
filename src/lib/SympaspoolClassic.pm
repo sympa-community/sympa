@@ -89,6 +89,7 @@ sub get_content {
     my @messages;
     foreach my $file ($self->get_files_in_spool) {
 	$self->set_current_file("$self->{'dir'}/$file");
+	$self->parse_current_file;
 	push @messages, $self->{'current_file'};
     }
     undef $self->{'current_file'};
@@ -109,7 +110,7 @@ sub next {
     }
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
     return 0 unless $self->get_next_file_to_process;
-    unless($self->set_current_file("$self->{'dir'}/$self->{'current_file'}{'name'}")) {
+    unless($self->parse_current_file) {
 	$self->move_current_file_to_bad;
 	return undef;
     }
@@ -120,7 +121,7 @@ sub next {
 sub set_current_file {
     my $self = shift;
     my $file = shift;
-    Log::do_log('trace','%s',$file);
+    Log::do_log('debug','%s',$file);
     if($file) {
 	delete $self->{'current_file'};
 	if($file =~ /^((\/.+)\/)?([^\/]+)$/) {
@@ -131,7 +132,7 @@ sub set_current_file {
 		return undef;
 	    }
 	$self->{'current_file'}{'name'} = $f;
-	Log::do_log('err','File to process: %s',$self->{'current_file'}{'name'});
+	Log::do_log('debug2','File to process: %s',$self->{'current_file'}{'name'});
 	}
     }else{
 	unless (defined $self->{'current_file'} && $self->{'current_file'}{'name'}) {
@@ -139,6 +140,10 @@ sub set_current_file {
 	    return undef;
 	}
     }
+}
+
+sub parse_current_file {
+    my $self = shift;
     unless($self->{'current_file'}{'name'}) {
 	Log::do_log('err','Unable to find out which file to process. Stopping here;');
 	return undef;
@@ -421,7 +426,7 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
+    Log::do_log('debug2','Storing in file %s',"$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('trace','');
@@ -454,7 +459,15 @@ sub remove_current_message {
     return 1;
 }
 
-
+sub remove_message {
+    my $self = shift;
+    my $param = shift;
+    unless(unlink "$self->{'dir'}/$param->{'file'}") {
+	Log::do_log('err','Unable to remove file %s from spool %s',$param->{'file'},$self->{'dir'});
+	return undef;
+    }
+    return 1;
+}
 ################"
 # Clean a spool by removing old messages
 #

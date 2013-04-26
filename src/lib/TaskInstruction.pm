@@ -293,7 +293,7 @@ sub cmd_process {
     my $self = shift;
     my $task = shift;# The parsed instruction to execute.
 
-    my $taskasstring = $task->{'taskasstring'};
+    my $messageasstring = $task->{'messageasstring'};
 
     &Log::do_log('debug', 'Processing "%s" (line %d of task %s)', $self->{'line_as_string'}, $self->{'line_number'},$task->get_description);
 

@@ -104,7 +104,7 @@ use Bulk;
 #use tools; # used in Conf
 #use tracking; # used in List
 #use Sympa::Constants; # used in confdef, in Conf
-#use Sympaspool; # used in List - Task
+use Sympaspool; # used in List - Task
 
 my $daemon_name = &Log::set_daemon($0);
 my $date_of_last_activity = time();

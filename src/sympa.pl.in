@@ -3245,7 +3245,7 @@ sub DoCommand {
 sub SendDigest {
     Log::do_log('debug2', '()');
 
-    my $digestspool = new Sympaspool('digest');
+    my $digestspool = new SympaspoolClassic('digest');
 
     foreach my $digest (
 	$digestspool->get_content(

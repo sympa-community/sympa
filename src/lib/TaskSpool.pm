@@ -24,6 +24,7 @@ package TaskSpool;
 use strict;
 
 use Exporter;
+use SympaspoolClassic;
 #use Time::Local; # no longer used
 # tentative
 use Data::Dumper;
@@ -31,7 +32,7 @@ use Data::Dumper;
 #use Task; # this module is used by Task
 #use List; # used by Task
 
-our @ISA = qw(Exporter);
+our @ISA = qw(Exporter SympaspoolClassic);
 our @EXPORT = qw(%global_models %months);
 
 my @task_list;
@@ -42,6 +43,7 @@ my $taskspool ;
 
 my @tasks; # list of tasks in the spool
 
+our $filename_regexp = '^(\d+)\.([^\.]+)?\.([^\.]+)\.(\S+)$';
 ## list of list task models
 #my @list_models = ('expire', 'remind', 'sync_include');
 our @list_models = ('sync_include','remind');
@@ -68,9 +70,56 @@ our %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5,
 #### Spool level subs ####
 ##########################
 
+sub new {
+    my $pkg = shift;
+    Log::do_log('debug2','Spool class %s',$pkg);
+    my $spool = new SympaspoolClassic('task');
+    bless $spool, $pkg;
+    return $spool;
+}
+
+sub get_storage_name {
+    my $self = shift;
+    my $filename;
+    my $param = shift;
+    my $object = "_global";
+    my $date = $param->{'task_date'};
+    $date ||= time;
+    $filename = $date.'.'.$param->{'task_label'}.'.'.$param->{'task_model'}.'.'.$param->{'task_object'};
+    return $filename;
+}
+
+sub analyze_current_file_name {
+    my $self = shift;
+    Log::do_log('debug3','%s',$self->get_id);
+    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/){
+	Log::do_log('err','File %s name does not have the proper format. Stopping here.',$self->{'current_file'}{'name'});
+	return undef;
+    }
+    $self->{'current_file'}{'task_date'} = $1;
+    $self->{'current_file'}{'task_label'} = $2;
+    $self->{'current_file'}{'task_model'} = $3;
+    $self->{'current_file'}{'task_object'} = $4;
+    Log::do_log('debug3','date %s, label %s, model %s, object %s',$self->{'current_file'}{'task_date'},$self->{'current_file'}{'task_label'},$self->{'current_file'}{'task_model'},$self->{'current_file'}{'task_object'});
+    unless ($self->{'current_file'}{'task_object'} eq '_global') {
+	($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$self->{'current_file'}{'task_object'});
+    }
+    
+    $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
+    $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
+    return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
+
+    my $list_check_regexp = $self->{'current_file'}{'robot_object'}->list_check_regexp;
+
+    if ($self->{'current_file'}{'list'} =~ /^(\S+)-($list_check_regexp)$/) {
+	($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) = ($1, $2);
+    }
+    return 1;
+}
+
 # Initialize Sympaspool global object.
 sub set_spool {
-    $taskspool = new Sympaspool('task');
+    $taskspool = new TaskSpool;
 }
 
 ## Build all Task objects
@@ -84,8 +133,8 @@ sub list_tasks {
     undef %task_by_model;
 
     # fetch all task
-    my $taskspool = new Sympaspool ('task');
-    my @tasks = $taskspool->get_content({'selector'=>{}});
+    my $taskspool = new TaskSpool;
+    my @tasks = $taskspool->get_content();
 
     ## Create Task objects
     foreach my $t (@tasks) {
