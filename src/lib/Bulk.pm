@@ -233,18 +233,39 @@ sub merge_msg {
 	return undef;
     }
 
+    my $enc = $entity->head->mime_encoding;
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+	return $entity;
+    }
     my $eff_type = $entity->effective_type || 'text/plain';
+    # Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}){
+	return $entity;
+    }
 
-    if ($eff_type =~ /^text\b/) {
+    if ($entity->parts) {
+	foreach my $part ($entity->parts) {
+	    unless (merge_msg($part, $rcpt, $bulk, $data)) {
+		Log::do_log('err', 'Failed to merge message part');
+		return undef;
+	    }
+	}
+    } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
+	# multipart or message types without subparts.
+	return $entity;
+    } elsif (MIME::Tools::textual_type($eff_type)) {
 	my ($charset, $in_cset, $bodyh, $body, $utf8_body);
 
 	$bodyh = $entity->bodyhandle;
+	# Encoded body or null body won't be modified.
 	if (!$bodyh or $bodyh->is_encoded) {
-	    return 1;
+	    return $entity;
 	}
+
 	$body = $bodyh->as_string;
 	unless (defined $body and length $body) {
-	    return 1;
+	    return $entity;
 	}
 
 	## Detect charset.  If charset is unknown, detect 7-bit charset.
@@ -286,52 +307,43 @@ sub merge_msg {
 	}
 	$utf8_body = $message_output;
 
-	## Data not encodable will fallback to UTF-8.
-	my ($new_charset, $new_encoding);
-	($body, $new_charset, $new_encoding) =
+	## Data not encodable by original charset will fallback to UTF-8.
+	my ($newcharset, $newenc);
+	($body, $newcharset, $newenc) =
 	    $in_cset->body_encode(Encode::decode_utf8($utf8_body),
 	    Replacement => 'FALLBACK');
-	unless ($new_charset) { # bug in MIME::Charset?
+	unless ($newcharset) { # bug in MIME::Charset?
 	    Log::do_log('err', 'Can\'t determine output charset');
 	    return undef;
-	} elsif ($new_charset ne $in_cset->as_string) {
+	} elsif ($newcharset ne $in_cset->as_string) {
 	    $entity->head->mime_attr(
-		'Content-Transfer-Encoding' => $new_encoding);
-	    $entity->head->mime_attr('Content-Type.Charset' => $new_charset);
+		'Content-Transfer-Encoding' => $newenc);
+	    $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
+
+	    ## normalize newline to CRLF if transfer-encoding is BASE64.
+	    $body =~ s/\r\n|\r|\n/\r\n/g
+		if $newenc and $newenc eq 'BASE64';
+	} else {
+	    ## normalize newline to CRLF if transfer-encoding is BASE64.
+	    $body =~ s/\r\n|\r|\n/\r\n/g
+		if $enc and uc $enc eq 'BASE64';
 	}
 
 	## Save new body.
 	my $io = $bodyh->open('w');
-	unless ($io) {
-	    Log::do_log('err', 'Can\'t open Entity: %s', $!);
-	    return undef;
-	}
-	unless ($io->print($body)) {
+	unless ($io and
+	    $io->print($body) and
+	    $io->close) {
 	    Log::do_log('err', 'Can\'t write in Entity: %s', $!);
-	    return undef;
-	}
-	unless ($io->close) {
-	    Log::do_log('err', 'Can\'t close Entity: %s', $!);
 	    return undef;
 	}
 	$entity->sync_headers(Length => 'COMPUTE')
 	    if $entity->head->get('Content-Length');
 
-	return 1;
+	return $entity;
     }
 
-    ##--- Recursive call of the method. ---##
-    ## Course on the different parts of the message at all levels.
-    if ($entity->parts) {
-	foreach my $part ($entity->parts) {
-	    unless (merge_msg($part, $rcpt, $bulk, $data)) {
-		Log::do_log('err', 'Failed to merge message part');
-		return undef;
-	    }
-	}
-    }
-
-    return 1;
+    return $entity;
 }
 
 ############################################################

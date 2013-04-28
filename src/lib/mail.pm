@@ -1014,20 +1014,18 @@ sub fix_part($$$$) {
     my $defcharset = shift;
     return $part unless $part;
 
-    my $enc = $part->head->mime_attr("Content-Transfer-Encoding");
+    my $enc = $part->head->mime_encoding;
     # Parts with nonstandard encodings aren't modified.
-
     if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
 	return $part;
     }
     my $eff_type = $part->effective_type;
-    
+    # Signed or encrypted parts aren't modified.
     if ($eff_type =~ m{^multipart/(signed|encrypted)$}){
 	return $part;
     }
-    
+
     if ($part->head->get('X-Sympa-Attach')) { # Need re-attaching data.
-	
 	my $data = shift @{$attachments};
 	if (ref($data) ne 'MIME::Entity') {
 	    eval {
@@ -1048,7 +1046,6 @@ sub fix_part($$$$) {
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
 	# multipart or message types without subparts.
-	
 	return $part;
     } elsif (MIME::Tools::textual_type($eff_type)) {
 	my $bodyh = $part->bodyhandle;

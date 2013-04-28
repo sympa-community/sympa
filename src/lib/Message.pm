@@ -1641,7 +1641,16 @@ sub _append_parts {
     my $header_msg = shift || '';
     my $footer_msg = shift || '';
 
+    my $enc = $part->head->mime_encoding;
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+       return undef;
+    }
     my $eff_type = $part->effective_type || 'text/plain';
+    ## Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}i) {
+	return undef;
+    }
 
     if ($eff_type eq 'text/plain') {
 	my $ascii_incompat = 0; # charset is UTF-16/32 or their flavor.
