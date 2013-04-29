@@ -822,7 +822,7 @@ sub verify {
     ## but we allow any number of \/ escape sequence)
     while (
 	$arguments =~ s/^\s*(
-				\[\w+(\-\>[\w\-]+)?\]
+				(\[\w+(\-\>[\w\-]+)?\](\[[-+]?\d+\])?)
 				|
 				([\w\-\.]+)
 				|
