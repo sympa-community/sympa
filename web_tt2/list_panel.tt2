@@ -30,7 +30,7 @@
 	</li>
 	
 	<li class="menuLinks">
-		[%|loc%]Owners[%END%]:
+		[%|loc%]Owners:[%END%]
 		<span style="font-weight: normal;">
 		[% FOREACH o = owner %]
 			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %],[% END %] 
@@ -45,7 +45,7 @@
 	</li>
 	
 	<li class="menuLinks">
-		[%|loc%]Moderators[%END%]:
+		[%|loc%]Moderators:[%END%]
 		<span style="font-weight: normal;">
 		[% IF editor %]
 			[% FOREACH e = editor %]

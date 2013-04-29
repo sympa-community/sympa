@@ -29,7 +29,7 @@
   <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return toggleDivDisplay('reject[% line_count %]')"/>
   <h3>[%|loc%]Rejecting message[%END%]</h3>
  
-  [%|loc%]Choose notification [%END%]:
+  [%|loc%]Choose notification:[%END%]
   <select  name="message_template">
     <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
     [% FOREACH file = available_files %]
