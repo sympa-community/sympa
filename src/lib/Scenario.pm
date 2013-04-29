@@ -26,13 +26,14 @@ use warnings;
 use Carp qw(croak);
 use Cwd;
 use File::Spec;
+use Mail::Address;
 use Net::Netmask;
+# tentative
+use Data::Dumper;
 
 #use Conf; # used in List - Site
 #use Language; # used in List
 #use List; # this package is used by List
-use Data::Dumper;
-
 #use Log; # used in Conf
 #use Sympa::Constants; # used in Conf - confdef
 #use tools; # used in Conf
@@ -922,21 +923,36 @@ sub verify {
 	    $value =~
 		s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
 
-	    ## SMTP Header field
-	} elsif ($value =~ /\[(msg_header|header)\-\>([\w\-]+)\]/i) {
+	} elsif ($value =~
+	    /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
+	    ## SMTP header field.
+	    ## "msg_header->[field] returns arrayref of field values,
+	    ## preserving order. "msg_header->[field][index]" returns one
+	    ## field value.
 	    my $field_name = $2;
+	    my $index = (defined $3) ? $3 + 0 : undef;
 	    if (defined($context->{'msg'})) {
-		my $header = $context->{'msg'}->head;
-		my @fields = $header->get($field_name);
-		## Defaulting empty or missing fields to '', so that we can test
-		## their value in Scenario, considering that, for an incoming message,
-		## a missing field is equivalent to an empty field : the information it
-		## is supposed to contain isn't available.
-		unless (@fields) {
-		    @fields = ('');
+		my $headers = $context->{'msg'}->head->header();
+		my @fields = grep { $_ } map {
+		    my ($h, $v) = split /\s*:\s*/, $_, 2;
+		    (lc $h eq lc $field_name) ? $v : undef;
+		} @{$headers || []};
+		## Defaulting empty or missing fields to '', so that we can
+		## test their value in Scenario, considering that, for an
+		## incoming message, a missing field is equivalent to an empty
+		## field : the information it is supposed to contain isn't
+		## available.
+		if (defined $index) {
+		    $value = $fields[$index];
+		    unless (defined $value) {
+			$value = '';
+		    }
+		} else {
+		    unless (@fields) {
+			@fields = ('');
+		    }
+		    $value = \@fields;
 		}
-
-		$value = \@fields;
 	    } else {
 		if ($log_it) {
 		    &Log::do_log('info',
@@ -1086,8 +1102,7 @@ sub verify {
     }
     ##### condition is_listmaster
     if ($condition_key eq 'is_listmaster') {
-
-	if ($args[0] eq 'nobody') {
+	if (!ref $args[0] and $args[0] eq 'nobody') {
 	    if ($log_it) {
 		&Log::do_log('info',
 		    '%s is not listmaster of robot %s (rule %s)',
@@ -1096,10 +1111,25 @@ sub verify {
 	    return -1 * $negation;
 	}
 
-	if ($robot->is_listmaster($args[0])) {
+	my @arg;
+	my $ok = undef;
+	if (ref $args[0] eq 'ARRAY') {
+	    @arg = map { $_->address }
+	    grep { $_ } map { (Mail::Address->parse($_)) } @{$args[0]};
+	} else {
+	    @arg = map { $_->address }
+	    grep { $_ } Mail::Address->parse($args[0]);
+	}
+	foreach my $arg (@arg) {
+	    if ($robot->is_listmaster($arg)) {
+		$ok = $arg;
+		last;
+	    }
+	}
+	if ($ok) {
 	    if ($log_it) {
 		&Log::do_log('info', '%s is listmaster of robot %s (rule %s)',
-		    $args[0], $robot, $condition);
+		    $ok, $robot, $condition);
 	    }
 	    return $negation;
 	} else {
@@ -1193,12 +1223,27 @@ sub verify {
 	    return -1 * $negation;
 	}
 
-	if ($condition_key eq 'is_subscriber') {
+	my @arg;
+	my $ok = undef;
+	if (ref $args[1] eq 'ARRAY') {
+	    @arg = map { $_->address }
+	    grep { $_ } map { (Mail::Address->parse($_)) } @{$args[1]};
+	} else {
+	    @arg = map { $_->address }
+	    grep { $_ } Mail::Address->parse($args[1]);
+	}
 
-	    if ($list2->is_list_member($args[1])) {
+	if ($condition_key eq 'is_subscriber') {
+	    foreach my $arg (@arg) {
+		if ($list2->is_list_member($arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it) {
 		    &Log::do_log('info', "%s is member of list %s (rule %s)",
-			$args[1], $args[0], $condition);
+			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
@@ -1211,10 +1256,16 @@ sub verify {
 	    }
 
 	} elsif ($condition_key eq 'is_owner') {
-	    if ($list2->am_i('owner', $args[1])) {
+	    foreach my $arg (@arg) {
+		if ($list2->am_i('owner', $arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it) {
 		    &Log::do_log('info', "%s is owner of list %s (rule %s)",
-			$args[1], $args[0], $condition);
+			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
@@ -1227,10 +1278,16 @@ sub verify {
 	    }
 
 	} elsif ($condition_key eq 'is_editor') {
-	    if ($list2->am_i('editor', $args[1])) {
+	    foreach my $arg (@arg) {
+		if ($list2->am_i('editor', $arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it) {
 		    &Log::do_log('info', "%s is editor of list %s (rule %s)",
-			$args[1], $args[0], $condition);
+			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
