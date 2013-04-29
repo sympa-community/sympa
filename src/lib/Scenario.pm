@@ -926,8 +926,8 @@ sub verify {
 	} elsif ($value =~
 	    /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
 	    ## SMTP header field.
-	    ## "msg_header->[field] returns arrayref of field values,
-	    ## preserving order. "msg_header->[field][index]" returns one
+	    ## "[msg_header->field] returns arrayref of field values,
+	    ## preserving order. "[msg_header->field][index]" returns one
 	    ## field value.
 	    my $field_name = $2;
 	    my $index = (defined $3) ? $3 + 0 : undef;
