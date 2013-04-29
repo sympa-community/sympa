@@ -41,6 +41,7 @@ use Data::Dumper;
 use Language qw(gettext_strftime);
 #use Log; # used in Conf
 #use SDM; # used in Conf
+use Sympaspool;
 
 ## Database and SQL statement handlers
 my $sth;
