@@ -27,7 +27,14 @@ Message - mail message embedding for internal use in Sympa
 
 =head1 DESCRIPTION 
 
-While processing a message in Sympa, we need to link informations to rhe message, mdify headers and such. This was quite a problem when a message was signed, as modifying anything in the message body would alter its MD5 footprint. And probably make the message to be rejected by clients verifying its identity (which is somehow a good thing as it is the reason why people use MD5 after all). With such messages, the process was complex. We then decided to embed any message treated in a "Message" object, thus making the process easier.
+While processing a message in Sympa, we need to link informations to the
+message, modify headers and such.  This was quite a problem when a message was
+signed, as modifying anything in the message body would alter its MD5
+footprint.  And probably make the message to be rejected by clients verifying
+its identity (which is somehow a good thing as it is the reason why people use
+MD5 after all).  With such messages, the process was complex.  We then decided
+to embed any message treated in a "Message" object, thus making the process
+easier.
 
 =cut 
 
@@ -62,17 +69,20 @@ my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      4 => 'an error occurred decrypting or verifying the message',
 		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
 
-=head1 SUBFUNCTIONS 
+=head1 Methods and Functions
 
 This is the description of the subfunctions contained by Message.pm
 
-=head2 sub new
+=over 4
 
+=item new ( DATAS )
+
+I<Constructor>.
 Creates a new Message object.
 
-=head3 Arguments 
+Arguments:
 
-=over 
+=over 4
 
 =item * I<$pkg>, a package name 
 
@@ -82,9 +92,9 @@ Creates a new Message object.
 
 =back 
 
-=head3 Return 
+Return:
 
-=over 
+=over 4
 
 =item * I<a Message object>, if created
 
@@ -92,9 +102,9 @@ Creates a new Message object.
 
 =back 
 
-=head3 Calls 
+Calls:
 
-=over 
+=over 4
 
 =item * Log::do_log
 
@@ -119,6 +129,8 @@ Creates a new Message object.
 =item * tools::smime_sign_check
 
 =back 
+
+=back
 
 =cut 
 
@@ -619,13 +631,15 @@ sub check_smime_signature {
     }
 }
 
-=head2 sub dump
+=over 4
+
+=item dump
 
 Dump a Message object to a stream.
 
-=head3 Arguments 
+Arguments:
 
-=over 
+=over 4
 
 =item * I<$self>, the Message object to dump
 
@@ -633,21 +647,23 @@ Dump a Message object to a stream.
 
 =back 
 
-=head3 Return 
+Return:
 
-=over 
+=over 4
 
 =item * I<1>, if everything's alright
 
 =back 
 
-=head3 Calls 
+Calls:
 
-=over 
+=over 4
 
 =item * None
 
 =back 
+
+=back
 
 =cut 
 
@@ -673,13 +689,15 @@ sub dump {
     return 1;
 }
 
-=head2 sub add_topic
+=over 4
+
+=item add_topic
 
 Add topic and put header X-Sympa-Topic.
 
-=head3 Arguments 
+Arguments:
 
-=over 
+=over 4
 
 =item * I<$self>, the Message object to which add a topic
 
@@ -687,21 +705,23 @@ Add topic and put header X-Sympa-Topic.
 
 =back 
 
-=head3 Return 
+Return:
 
-=over 
+=over 4
 
 =item * I<1>, if everything's alright
 
 =back 
 
-=head3 Calls 
+Calls:
 
-=over 
+=over 4
 
 =item * MIME::Head::add
 
 =back 
+
+=back
 
 =cut 
 
@@ -724,21 +744,23 @@ sub set_topic {
     }
 }
 
-=head2 sub add_topic
+=over 4
 
-Add topic and put header X-Sympa-Topic.
+=item get_topic
 
-=head3 Arguments 
+Get topic.
 
-=over 
+Arguments:
+
+=over 4
 
 =item * I<$self>, the Message object whose topic is retrieved
 
 =back 
 
-=head3 Return 
+Return:
 
-=over 
+=over 4
 
 =item * I<the topic>, if it exists
 
@@ -746,13 +768,15 @@ Add topic and put header X-Sympa-Topic.
 
 =back 
 
-=head3 Calls 
+Calls:
 
-=over 
+=over 4
 
 =item * MIME::Head::add
 
 =back 
+
+=back
 
 =cut 
 
@@ -2010,10 +2034,11 @@ sub _urlize_part {
 
 ## Packages must return true.
 1;
+__END__
 
 =head1 AUTHORS 
 
-=over 
+=over 4
 
 =item * Serge Aumont <sa AT cru.fr> 
 
