@@ -223,6 +223,7 @@ sub message_from_spool {
 #  OUT : 1 | undef                                         #
 #                                                          #
 ############################################################
+## OBSOLETED: Use Message::personalize().
 sub merge_msg {
     my $entity = shift;
     my $rcpt   = shift;
@@ -367,6 +368,7 @@ sub merge_msg {
 #     | undef                                              #
 #                                                          #
 ############################################################ 
+## OBSOLETED: Use Message::personalize_text().
 sub merge_data {
 
     my %params = @_;

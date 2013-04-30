@@ -43,13 +43,14 @@ package Message;
 use strict;
 use warnings;
 #use Carp; # currently not used
-#use Mail::Header; #not used
 use Mail::Address;
-#use MIME::Entity; #not used
 use MIME::Charset;
 use MIME::EncWords;
+use MIME::Entity;
 use MIME::Parser;
+use MIME::Tools;
 use POSIX qw(mkfifo);
+use URI::Escape;
 # tentative
 use Data::Dumper;
 
@@ -635,6 +636,7 @@ sub check_smime_signature {
 
 =item dump
 
+I<Instance method>.
 Dump a Message object to a stream.
 
 Arguments:
@@ -693,6 +695,7 @@ sub dump {
 
 =item add_topic
 
+I<Instance method>.
 Add topic and put header X-Sympa-Topic.
 
 Arguments:
@@ -748,6 +751,7 @@ sub set_topic {
 
 =item get_topic
 
+I<Instance method>.
 Get topic.
 
 Arguments:
@@ -1764,6 +1768,223 @@ sub _append_parts {
     }
 
     return undef;
+}
+
+=over 4
+
+=item personalize ( LIST, [ RCPT ] )
+
+I<Instance method>.
+Personalize a message with custom attributes of a user.
+
+=over 4
+
+=item LIST
+
+L<List> object.
+
+=item RCPT
+
+Recipient.
+
+=back
+
+Returns modified message itself, or C<undef> if error occurred.
+Note that message can be modified in case of error.
+
+=back
+
+=cut
+
+sub personalize {
+    my $self = shift;
+    my $list = shift;
+    my $rcpt = shift || undef;
+
+    my $entity = $self->_personalize_entity($self->{'msg'}, $list, $rcpt);
+    unless (defined $entity) {
+	return undef;
+    }
+    if ($entity) {
+	$self->{'msg_as_string'} = $entity->as_string;
+    }
+    return $self;
+}
+
+sub _personalize_entity {
+    my $self   = shift;
+    my $entity = shift;
+    my $list   = shift;
+    my $rcpt   = shift;
+
+    my $enc = $entity->head->mime_encoding;
+
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+	return $entity;
+    }
+    my $eff_type = $entity->effective_type || 'text/plain';
+
+    # Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}) {
+	return $entity;
+    }
+
+    if ($entity->parts) {
+	foreach my $part ($entity->parts) {
+	    unless (defined $self->_persinalize_entity($part, $list, $rcpt)) {
+		Log::do_log('err', 'Failed to personalize message part');
+		return undef;
+	    }
+	}
+    } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
+	# multipart or message types without subparts.
+	return $entity;
+    } elsif (MIME::Tools::textual_type($eff_type)) {
+	my ($charset, $in_cset, $bodyh, $body, $utf8_body);
+
+	# Encoded body or null body won't be modified.
+	$bodyh = $entity->bodyhandle;
+	if (!$bodyh or $bodyh->is_encoded) {
+	    return $entity;
+	}
+	$body = $bodyh->as_string;
+	unless (defined $body and length $body) {
+	    return $entity;
+	}
+
+	## Detect charset.  If charset is unknown, detect 7-bit charset.
+	$charset = $entity->head->mime_attr('Content-Type.Charset');
+	$in_cset = MIME::Charset->new($charset || 'NONE');
+	unless ($in_cset->decoder) {
+	    $in_cset = MIME::Charset->new(
+		MIME::Charset::detect_7bit_charset($body) || 'NONE');
+	}
+	unless ($in_cset->decoder) {
+	    Log::do_log('err', 'Unknown charset "%s"', $charset);
+	    return undef;
+	}
+	$in_cset->encoder($in_cset);    # no charset conversion
+
+	## Only decodable bodies are allowed.
+	eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
+	if ($@) {
+	    Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
+	    return undef;
+	}
+
+	## PARSAGE ##
+	$utf8_body = personalize_text($utf8_body, $list, $rcpt);
+	unless (defined $utf8_body) {
+	    Log::do_log('err', 'error personalizing message');
+	    return undef;
+	}
+
+	## Data not encodable by original charset will fallback to UTF-8.
+	my ($newcharset, $newenc);
+	($body, $newcharset, $newenc) =
+	    $in_cset->body_encode(Encode::decode_utf8($utf8_body),
+	    Replacement => 'FALLBACK');
+	unless ($newcharset) {    # bug in MIME::Charset?
+	    Log::do_log('err', 'Can\'t determine output charset');
+	    return undef;
+	} elsif ($newcharset ne $in_cset->as_string) {
+	    $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
+	    $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
+
+	    ## normalize newline to CRLF if transfer-encoding is BASE64.
+	    $body =~ s/\r\n|\r|\n/\r\n/g
+		if $newenc and
+		    $newenc eq 'BASE64';
+	} else {
+	    ## normalize newline to CRLF if transfer-encoding is BASE64.
+	    $body =~ s/\r\n|\r|\n/\r\n/g
+		if $enc and
+		    uc $enc eq 'BASE64';
+	}
+
+	## Save new body.
+	my $io = $bodyh->open('w');
+	unless ($io and
+	    $io->print($body) and
+	    $io->close) {
+	    Log::do_log('err', 'Can\'t write in Entity: %s', $!);
+	    return undef;
+	}
+	$entity->sync_headers(Length => 'COMPUTE')
+	    if $entity->head->get('Content-Length');
+
+	return $entity;
+    }
+
+    return $entity;
+}
+
+=over 4
+
+=item personalize_text ( BODY, LIST, [ RCPT ] )
+
+I<Function>.
+Retrieves the customized data of the
+users then parse the text. It returns the
+personalized text.
+
+=over 4
+
+=item BODY
+
+Message body with the TT2.
+
+=item LIST
+
+L<List> object
+
+=item RCPT
+
+The recipient email.
+
+=back
+
+Returns customized text, or C<undef> if error occurred.
+
+=back
+
+=cut
+
+sub personalize_text {
+    my $body = shift;
+    my $list = shift;
+    my $rcpt = shift || undef;
+
+    my $options;
+    $options->{'is_not_template'} = 1;
+
+    my $user = $list->user('member', $rcpt);
+    if ($user) {
+	$user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
+	$user->{'friendly_date'} =
+	    gettext_strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
+    }
+
+    # this method as been removed because some users may forward
+    # authentication link
+    # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
+
+    my $data = {
+	'listname'    => $list->name,
+	'robot'       => $list->domain,
+	'wwsympa_url' => $list->robot->wwsympa_url,
+    };
+    $data->{'user'} = $user if $user;
+
+    # Parse the TT2 in the message : replace the tags and the parameters by
+    # the corresponding values
+    my $output;
+    unless (tt2::parse_tt2($data, \$body, \$output, '', $options)) {
+	return undef;
+    }
+
+    return $output;
 }
 
 sub prepare_message_according_to_mode {
