@@ -55,7 +55,7 @@ use URI::Escape;
 # tentative
 use Data::Dumper;
 
-use Language qw(gettext_strtime);
+use Language qw(gettext_strftime);
 #use List;
 ##The line above was removed to avoid dependency loop.
 ##"use List" MUST precede to "use Message".
