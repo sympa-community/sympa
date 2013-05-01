@@ -10,6 +10,8 @@ Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 [%   ELSIF status == '5.2.3' -%]
 Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
+[%   ELSIF status == '5.6.5' -%]
+Subject: [% FILTER qencode %][%|loc%]Cannot personalize message[%END%][%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
 [% END %]
@@ -39,6 +41,9 @@ Content-Description: Notification
 [%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
 
 Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger that the original file.[%END%]
+
+[%   ELSIF status == '5.6.5' -%]
+[%|loc%]Your message cannot be personalized.  Please check template syntax.[%END%]
 
 [%   ELSE -%]
 [%|loc%]The following address is not a known mailing list:[%END%]

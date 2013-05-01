@@ -56,6 +56,7 @@ use List;
 use Commands;
 use Language qw(gettext gettext_strftime);
 #use Log; # used by Conf
+#use Message: # used by List
 use Auth;
 use admin;
 use SharedDocument;
@@ -68,7 +69,6 @@ use time_utils;
 use wwslib;
 use cookielib;
 #use tt2;
-#use DateTime;
 use tracking;
 #use Sympaspool; # used in List - Task
 #use SDM; # used by Conf
@@ -16621,13 +16621,17 @@ sub do_send_mail {
 	    $page_source = 'file://'.$page_source;
 	}
 	
-	my $html_part_body = &tools::create_html_part_from_web_page({'From' => $from,
-								     'To' => $to,
-								     'Headers' => {'In-Reply-To' => $in{'in_reply_to'}, 'Message-ID' => $in{'message_id'}},
-								     'return_path' => $robot->get_address(),
-								     'Subject' => $in{'subject'},
-								     'source' => $page_source,
-								 });
+	my $html_part_body = tools::create_html_part_from_web_page({
+	    'From' => $from,
+	    'To' => $to,
+	    'Headers' => {
+		'In-Reply-To' => $in{'in_reply_to'},
+		'Message-ID' => $in{'message_id'}
+	    },
+	    'return_path' => $robot->get_address(),
+	    'Subject' => $in{'subject'},
+	    'source' => $page_source,
+	});
 	if (defined $html_part_body) {
             $in{'body'} = $html_part_body;
 	}else{
@@ -16635,7 +16639,6 @@ sub do_send_mail {
 	    ($Log::log_level >= 0) && &wwslog('info','A MIME part could not be created with the supplied data, %s, %s',$in{'url'},$in{'uploaded_file'});
 	    return undef;
 	}            
-	
     }else{	 
 	## Message body should not be empty
 	if ($in{'body'} =~ /^\s*$/) {
@@ -16646,6 +16649,16 @@ sub do_send_mail {
 	}
 	
 	$in{'body'} = "\n".$in{'body'};
+    }
+
+    ## Roughly check TT2 syntax for merge_feature.
+    if ($list->merge_feature and $list->merge_feature eq 'on') {
+	unless (defined Message::personalize_text($in{'body'}, $list)) {
+	    report::reject_report_web('user', 'merge_failed',
+		{'error' => tt2::get_error()}, $param->{'action'}
+	    );
+	    return 'compose_mail';
+	}
     }
 
     ## Check if HTML editor was used.

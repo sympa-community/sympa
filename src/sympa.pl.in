@@ -2443,7 +2443,7 @@ sub DoMessage {
 	'debug2',
 	'(%s, %s, %s, sender=%s, size=%s, smime_crypted=%s)',
 	$which,
-	$message->{'msg'},
+	$message,
 	$robot_id,
 	$message->{'sender'},
 	$message->{'size'},
@@ -2664,6 +2664,15 @@ sub DoMessage {
 	    if &tools::is_in_array($list->dkim_signature_apply_on,
 	    'dkim_authenticated_messages');
 
+	## Check TT2 syntax for merge_feature.
+	unless ($message->test_personalize($list)) {
+	    Log::do_log('err',
+		'Failed to personalize. Message %s for list %s was rejected',
+		$message, $list);
+	    $list->send_dsn($message, {}, '5.6.5');
+	    return undef;
+	}
+
 	my $numsmtp;
 	eval {
 	    $numsmtp = $list->distribute_msg(
@@ -2714,6 +2723,15 @@ sub DoMessage {
 	return 1;
 
     } elsif ($action =~ /^request_auth/) {
+	## Check syntax for merge_feature.
+	unless ($message->test_personalize($list)) {
+	    Log::do_log('err',
+		'Failed to personalize. Message %s for list %s was rejected',
+		$message, $list);
+	    $list->send_dsn($message, {}, '5.6.5');
+	    return undef;
+	}
+
 	my $key = $list->send_auth($message);
 
 	unless (defined $key) {
@@ -2764,6 +2782,15 @@ sub DoMessage {
 	);
 	return 1;
     } elsif ($action =~ /^editorkey((?:\s*,\s*quiet)?)/) {
+	## Check syntax for merge_feature.
+	unless ($message->test_personalize($list)) {
+	    Log::do_log('err',
+		'Failed to personalize. Message %s for list %s was rejected',
+		$message, $list);
+	    $list->send_dsn($message, {}, '5.6.5');
+	    return undef;
+	}
+
 	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('md5', $message);
 
@@ -2821,6 +2848,15 @@ sub DoMessage {
 	}
 	return 1;
     } elsif ($action =~ /^editor((?:\s*,\s*quiet)?)/) {
+	## Check syntax for merge_feature.
+	unless ($message->test_personalize($list)) {
+	    Log::do_log('err',
+		'Failed to personalize. Message %s for list %s was rejected',
+		$message, $list);
+	    $list->send_dsn($message, {}, '5.6.5');
+	    return undef;
+	}
+
 	my $is_quiet = $1 || undef;
 	my $key = $list->send_to_editor('smtp', $message);
 

@@ -50,10 +50,12 @@ use MIME::Entity;
 use MIME::Parser;
 use MIME::Tools;
 use POSIX qw(mkfifo);
+use Storable qw(dclone);
 use URI::Escape;
 # tentative
 use Data::Dumper;
 
+use Language qw(gettext_strtime);
 #use List;
 ##The line above was removed to avoid dependency loop.
 ##"use List" MUST precede to "use Message".
@@ -1922,6 +1924,45 @@ sub _personalize_entity {
 
 =over 4
 
+=item test_personalize ( LIST )
+
+I<Instance method>.
+Test if personalization can be performed successfully over all subscribers
+of LIST.
+
+Returns C<1> if succeed, or C<undef>.
+
+=back
+
+=cut
+
+sub test_personalize {
+    my $self = shift;
+    my $list = shift;
+
+    return 1
+	unless $list->merge_feature and
+	    $list->merge_feature eq 'on';
+
+    $list->get_list_members_per_mode($self);
+    foreach my $mode (keys %{$self->{'rcpts_by_mode'}}) {
+	my $message = dclone $self;
+	$message->prepare_message_according_to_mode($mode);
+
+	foreach my $rcpt (
+	    @{$message->{'rcpts_by_mode'}{$mode}{'verp'}   || []},
+	    @{$message->{'rcpts_by_mode'}{$mode}{'noverp'} || []}
+	    ) {
+	    unless ($message->personalize($list, $rcpt)) {
+		return undef;
+	    }
+	}
+    }
+    return 1;
+}
+
+=over 4
+
 =item personalize_text ( BODY, LIST, [ RCPT ] )
 
 I<Function>.
@@ -2251,6 +2292,22 @@ sub _urlize_part {
     my $entity = $parser->parse_data(\$new_part);
 
     return $entity;
+}
+
+=over 4
+
+=item get_id
+
+I<Instance method>.
+Get unique ID for object.
+
+=back
+
+=cut
+
+sub get_id {
+    my $self = shift;
+    return sprintf '%08X;message-id=%s', $self+0, $self->get_msg_id;
 }
 
 ## Packages must return true.

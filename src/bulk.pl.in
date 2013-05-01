@@ -360,7 +360,6 @@ while (!$end) {
 	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
 	$data->{'listname'} = $bulk->{'listname'};
 	$data->{'robot'} = $bulk->{'robot'};
-	#XXX$data->{'to'} = $bulk->{'receipients'}; #XXX Insecure
 	$data->{'wwsympa_url'} = $bulk->{'robot_object'}->wwsympa_url;
 
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
@@ -386,7 +385,7 @@ while (!$end) {
 
 	if (($bulk->{'verp'})||($bulk->{'merge'})||($bulk->{'tracking'}eq 'dsn')||($bulk->{'tracking'}eq 'mdn')){ # message needs personalization
 	    my $key ;
-	    	    
+
 	    foreach $rcpt (@rcpts) {
 		my $message = new Message ({'messageasstring'=>$messageasstring_init,'noxsympato'=>'noxsympato'});
 		my $entity = $message->{'msg'};
@@ -414,11 +413,25 @@ while (!$end) {
 		    $return_path = $list->get_bounce_address($rcpt);
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
-		    unless(&Bulk::merge_msg ($entity, $rcpt, $bulk, $data)){
-			&Log::do_log('err', 'Erreur d appel &Bulk::merge_msg');
-		    }		    
-		    $messageasstring = $entity->as_string;		
-		}else{
+		    if ($message->personalize($list, $rcpt)) {
+			$messageasstring = $message->{'msg_as_string'};
+		    } else {	
+			Log::do_log('err', 'Erreur d appel personalize()');
+			unless ($list->robot->send_notify_to_listmaster(
+			    'bulk_failed',
+			    {
+				'msg' => $messageasstring_init,
+				'list' => $list,
+			    }
+			)) {
+			    Log::do_log(
+				'err',
+				'Impossible to send notify "bulk_failed" to listmaster',
+			    );
+			}
+			last;
+		    }
+		} else {
 		    $messageasstring = $messageasstring_init;
 		}
 
@@ -448,7 +461,8 @@ while (!$end) {
 		print SMTP $messageasstring;
 		close SMTP;
 	    }
-	}else{ # message dont needs personalization, they can be sent by packet
+	} else {
+	    # message doesn't need personalization, so can be sent by packet.
             if ($robot->dkim_feature eq 'on') {
 		$messageasstring_init = &tools::remove_invalid_dkim_signature($messageasstring_init );
 	    }

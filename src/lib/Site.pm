@@ -727,6 +727,9 @@ sub send_dsn {
 	# loop detected
 	'5.4.6' => 'Routing loop detected',
 
+	# failed to personalize (merge_feature)
+	'5.6.5' => 'Conversion Failed',
+
 	# virus found
 	'5.7.0' => 'Other or undefined security status',
 	}->{$status} ||
