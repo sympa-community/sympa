@@ -5312,7 +5312,7 @@ sub archive_msg {
 		$self->get_list_id());
 	} else {
 	    my $spoolarchive = new SympaspoolClassic('outgoing');
-	    unless ($spoolarchive->store($msgtostore,$message))
+	    unless ($spoolarchive->store($msgtostore,{'list'=>$self->name,'robot'=>$self->domain}))
 		{
 		&Log::do_log('err',
 		    "could not store message %s in archive spool: %s",$message->get_id,$!
