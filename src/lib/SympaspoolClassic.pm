@@ -36,6 +36,12 @@ use List;
 my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
 our $filename_regexp = '^(\S+)\.(\d+)\.\w+$';
 
+our %classes = (
+		'msg' => 'Messagespool',
+		'task' => 'TaskSpool',
+		'mod' => 'KeySpool',
+		);
+
 ## Creates an object.
 sub new {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
@@ -86,14 +92,51 @@ sub count {
 sub get_content {
 
     my $self = shift;
+    my $param = shift;
     my @messages;
     foreach my $file ($self->get_files_in_spool) {
 	$self->set_current_file("$self->{'dir'}/$file");
 	$self->parse_current_file;
-	push @messages, $self->{'current_file'};
+	push @messages, $self->{'current_file'} if $self->is_current_file_relevant;
     }
     undef $self->{'current_file'};
-    return @messages;
+    $self->{'current_files_in_spool'} = \@messages;
+    if (defined $param->{'selector'}) {
+	$self->select_files_in_spool($param->{'selector'});
+    }
+    return @{$self->{'current_files_in_spool'}};
+}
+
+sub select_files_in_spool {
+    my $self = shift;
+    my $selector = shift;
+    my @selected_messages;
+    my $answer = 1;
+    foreach my $file (@{$self->{'current_files_in_spool'}}) {
+	foreach my $criterium (keys %{$selector}) {
+	    if (ref $selector->{$criterium}) {
+		my $value = ${$selector->{$criterium}}[0];
+		my $comparator = ${$selector->{$criterium}}[1];
+		if($comparator eq 'ne') {
+		    $answer = $answer && ($file->{$criterium} ne $value);
+		}
+	    }else{
+		$answer = $answer && ($file->{$criterium} eq $selector->{$criterium});
+	    }
+	}
+	if ($answer) {
+	    push @selected_messages, $file;
+	}
+    }
+    $self->{'current_files_in_spool'} = \@selected_messages;
+    return 1;
+}
+
+sub get_count {
+    my $self = shift;
+    my $param = shift;
+    my @messages = $self->get_content($param);
+    return $#messages+1;
 }
 
 #######################
@@ -180,6 +223,11 @@ sub is_current_file_readable {
     }else{
 	return 0;
     }
+}
+
+sub is_current_file_relevant {
+    my $self = shift;
+    return 1;
 }
 
 sub analyze_current_file_name {
@@ -357,51 +405,11 @@ sub move_current_file_to_bad {
 sub get_message {
     my $self = shift;
     my $selector = shift;
-    Log::do_log('debug2', '(%s, messagekey=%s, list=%s, robot=%s)',
-	$self, $selector->{'messagekey'},
-	$selector->{'list'}, $selector->{'robot'});
-
-    my $sqlselector = _sqlselector($selector);
-    my $all = _selectfields();
-
-    push @sth_stack, $sth;
-
-    unless ($sth = SDM::do_query(
-	q{SELECT %s
-	  FROM spool_table
-	  WHERE spoolname_spool = %s%s
-	  %s},
-	$all, SDM::quote($self->{'spoolname'}),
-	($sqlselector ? " AND $sqlselector" : ''),
-	SDM::get_limit_clause({'rows_count' => 1})
-    )) {
-	Log::do_log('err',
-	    'Could not get message from spool %s', $self);
-	$sth = pop @sth_stack;
-	return undef;
-    }
-
-    my $message = $sth->fetchrow_hashref('NAME_lc');
-
-    $sth->finish;
-    $sth = pop @sth_stack;
-
-    return undef unless $message and %$message;
-
-    $message->{'lock'} =  $message->{'messagelock'}; 
-    $message->{'messageasstring'} =
-	MIME::Base64::decode($message->{'message'});
-
-    if ($message->{'list'} && $message->{'robot'}) {
-	my $robot = Robot->new($message->{'robot'});
-	if ($robot) {
-	    my $list = List->new($message->{'list'}, $robot);
-	    if ($list) {
-		$message->{'list_object'} = $list;
-	    }
-	}
-    }
-    return $message;
+    Log::do_log('debug2', '(%s, list=%s, robot=%s)',
+	$self->get_id, $selector->{'list'}, $selector->{'robot'});
+    my @messages = $self->get_content({'selector' => $selector});
+    $self->{'current_file'} = $messages[0];
+    return $self->{'current_file'};
 }
 
 #################"
@@ -417,6 +425,20 @@ sub unlock_message {
 			   {'messagelock' => 'NULL'}));
 }
 
+sub move_to {
+    my $self = shift;
+    my $param = shift;
+    my $target = shift;
+    my $file_to_move = $self->get_message($param);
+    my $new_spool = new SympaspoolClassic($target);
+    if ($classes{$target}) {
+	bless $new_spool, $target;
+    }
+    $new_spool->store($file_to_move);
+    $self->remove_message("$file_to_move->{'name'}");
+    return 1;
+}
+
 ################"
 # store a message in spool 
 #
@@ -426,10 +448,10 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-    Log::do_log('debug2','Storing in file %s',"$self->{'dir'}/$target_file");
+    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
-	Log::do_log('trace','');
+	Log::do_log('err','Unable to write file to spool %s',$self->{'dir'});
 	return undef;
     }
     print $fh $messageasstring;
@@ -441,8 +463,12 @@ sub get_storage_name {
     my $self = shift;
     my $filename;
     my $param = shift;
+    foreach my $line (split '\n',&Dumper($param)) {Log::do_log('trace','%s',$line);}
     if ($param->{'list'} && $param->{'robot'}) {
 	$filename = $param->{'list'}.'@'.$param->{'robot'}.'.'.time.'.'.int(rand(10000));
+    }else{
+	Log::do_log('err','Unsufficient parameters provided to create file name');
+	return undef;
     }
     return $filename;
 }
@@ -472,7 +498,7 @@ sub remove_message {
 # Clean a spool by removing old messages
 #
 
-sub clean {  
+sub clean {
     my $self = shift;
     my $filter = shift;
     &Log::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});

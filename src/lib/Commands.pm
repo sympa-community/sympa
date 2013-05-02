@@ -2639,22 +2639,12 @@ sub distribute {
 
     #read the moderation queue and purge it
 
-    my $modspool = new Sympaspool('mod');
+    my $modspool = new KeySpool;
     my $name     = $list->name;
 
     my $message_in_spool = $modspool->get_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
-    unless ($message_in_spool) {
-	## if the message has been accepted via WWSympa, it's in spool 'validated'
-	my $validatedspool = new Sympaspool('validated');
-	$message_in_spool = $validatedspool->get_message(
-	    {   'list'    => $list->name,
-		'robot'   => $robot->domain,
-		'authkey' => $key
-	    }
-	);
-    }
     unless ($message_in_spool) {
 	&Log::do_log(
 	    'err',
@@ -2668,7 +2658,7 @@ sub distribute {
 	return 'msg_not_found';
 
     }
-    my $message = new Message({'message_in_spool' => $message_in_spool});
+    my $message = new Message({'file' => $message_in_spool->{'full_path'}});
     unless (defined $message) {
 	&Log::do_log(
 	    'err',
@@ -2746,8 +2736,8 @@ sub distribute {
 	    );
 	}
     }
-
-    &Log::do_log('debug2', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
+    $modspool->remove_current_message;
+    Log::do_log('debug2', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
 	$name, $key, $sender, time - $time_command);
 
     return 1;
@@ -3174,7 +3164,7 @@ sub modindex {
 	return 'not_allowed';
     }
 
-    my $spool = new Sympaspool('mod');
+    my $spool = new KeySpool;
 
     my $n;
     my @now = localtime(time);

@@ -53,6 +53,7 @@ use Scenario;
 use Fetch;
 use WebAgent;
 use SympaspoolClassic;
+use KeySpool;
 use Archive;
 use VOOTConsumer;
 use tt2;
@@ -2398,10 +2399,9 @@ sub send_to_editor {
     if ($method eq 'md5') {
 
 	# move message to spool  mod
-	my $spoolmod = new Sympaspool('mod');
-	$spoolmod->update(
-	    {'messagekey' => $message->{'messagekey'}},
-	    {"authkey"    => $modkey, 'messagelock' => 'NULL'}
+	my $spoolmod = new KeySpool;
+	$spoolmod->store($message->get_message_as_string,
+	    {'list' => $message->{'list'}->name, 'robot'=> $message->{'robot'}->name, 'authkey' => $modkey}
 	);
 
 	# prepare html view of this message
@@ -2415,7 +2415,7 @@ sub send_to_editor {
     }
     @rcpt = $self->get_editors_email();
 
-   my $hdr = $message->{'msg'}->head;
+   my $hdr = $message->get_mime_message->head;
 
    ## Did we find a recipient?
    if ($#rcpt < 0) {
@@ -5312,14 +5312,13 @@ sub archive_msg {
 		$self->get_list_id());
 	} else {
 	    my $spoolarchive = new SympaspoolClassic('outgoing');
-	    unless (File::Copy::copy($message->{'filename'},$spoolarchive->{'dir'})
-		) {
+	    unless ($spoolarchive->store($msgtostore,$message))
+		{
 		&Log::do_log('err',
-		    "could not move message %s in archive spool: %s",$message->{'filename'},$!
+		    "could not store message %s in archive spool: %s",$message->get_id,$!
 		);
 		return undef;
 	    }
-	    unlink $message->{'filename'};
 	}
     }
     return 1;
@@ -9167,18 +9166,12 @@ sub get_mod_spool_size {
     my $self = shift;
     &Log::do_log('debug3', 'List::get_mod_spool_size()');
 
-    my $spool = new Sympaspool('mod');
-    my $count = $spool->get_content(
-	{   'selector'  => {'list' => $self->name, 'robot' => $self->domain},
-	    'selection' => 'count'
-    }
+    my $spool = new KeySpool;
+    my @messages = $spool->get_awaiting_messages(
+	{'selector'  => {'list' => $self->name, 'robot' => $self->domain}}
     );
 
-    if ($count) {
-	return $count;
-    } else {
-	return 0;
-    }
+    return $#messages+1;
 }
 
 ### moderation for shared

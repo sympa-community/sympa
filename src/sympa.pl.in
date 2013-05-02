@@ -1488,7 +1488,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	my $list = $message_in_spool->{'list_object'};
 	my $robot    = $message_in_spool->{'robot_object'};
 	Log::do_log(
-	    'trace',
+	    'info',
 	    "Processing message %s for list = %s robot = %s",
 	    $message_in_spool->{'name'},
 	    $list,
@@ -1509,7 +1509,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
 	if (defined($status)) {
 	    Log::do_log(
-		'trace',
+		'info',
 		"Message %s  processed for list = %s robot = %s",
 		$message_in_spool->{'name'},
 		$list,
@@ -1524,16 +1524,19 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    #     {'messagekey' => $message_in_spool->{'messagekey'}});
 
 	    # move message to bad.
-	    $spool->move_current_file_to_bad;
+	    unless($spool->move_current_file_to_bad) {
+		Log::do_log('err','unable to move file %s to bad. Stopping here.',$spool->{'current_file'}{'name'});
+		exit 1;
+	    }
 	    Log::do_log(
-		'trace',
+		'notice',
 		"Message %s  moved to spool bad (message for list = %s robot = %s)",
 		$message_in_spool->{'name'},
 		$list,
 		$robot,
 	    );
 	}
-	unlink $message_in_spool->{'full_path'};
+	$spool->remove_current_message;
 	##$spool->unlock_current_message;
     }    ## END of infinite loop
 

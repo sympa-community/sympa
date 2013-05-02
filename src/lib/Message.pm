@@ -1834,7 +1834,7 @@ sub _personalize_entity {
 
     if ($entity->parts) {
 	foreach my $part ($entity->parts) {
-	    unless (defined $self->_persinalize_entity($part, $list, $rcpt)) {
+	    unless (defined $self->_personalize_entity($part, $list, $rcpt)) {
 		Log::do_log('err', 'Failed to personalize message part');
 		return undef;
 	    }
