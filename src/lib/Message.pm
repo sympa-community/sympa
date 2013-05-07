@@ -1522,16 +1522,24 @@ sub check_message_structure {
 sub add_parts {
     my $self = shift;
     unless ($self->{'list'}) {
-	Log::do_log('err','The message has no list context; No header/footer to add');
+	Log::do_log('err',
+	    'The message %s has no list context; No header/footer to add',
+	    $self);
 	return undef;
     }
-    my $msg = $self->get_mime_message;
-    my ($listname, $type) =
-	($self->{'list'}->name, $self->{'list'}->footer_type);
-    my $listdir = $self->{'list'}->dir;
-    &Log::do_log('debug3', '%s, %s, %s',
-	$msg, $listname, $type);
-    
+    Log::do_log('debug3', '(%s, list=%s, type=%s)',
+	$self, $self->{'list'}, $self->{'list'}->footer_type);
+
+    my $msg      = $self->get_mime_message;
+    my $type     = $self->{'list'}->footer_type;
+    my $listdir  = $self->{'list'}->dir;
+    my $eff_type = $msg->effective_type || 'text/plain';
+
+    ## Signed or encrypted messages won't be modified.
+    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
+	return $msg;
+    }
+
     my ($header, $headermime);
     foreach my $file (
 	"$listdir/message.header",
@@ -1597,12 +1605,10 @@ sub add_parts {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 
-	my $content_type = $msg->effective_type || 'text/plain';
-
-	if ($content_type =~ /^multipart\/alternative/i ||
-	    $content_type =~ /^multipart\/related/i) {
-
-	    &Log::do_log('notice', 'Making message into multipart/mixed');
+	if ($eff_type =~ /^multipart\/alternative/i ||
+	    $eff_type =~ /^multipart\/related/i) {
+	    Log::do_log('debug3', 'Making message %s into multipart/mixed',
+		$self);
 	    $msg->make_multipart("mixed", Force => 1);
 	}
 
@@ -1619,7 +1625,6 @@ sub add_parts {
 		}
 	    ## text/plain header
 	    } else {
-
 		$msg->make_multipart unless $msg->is_multipart;
 		my $header_part = build MIME::Entity
 		    Path       => $header,
@@ -1644,7 +1649,6 @@ sub add_parts {
 		}
 	    ## text/plain footer
 	    } else {
-
 		$msg->make_multipart unless $msg->is_multipart;
 		$msg->attach(
 		    Path       => $footer,
