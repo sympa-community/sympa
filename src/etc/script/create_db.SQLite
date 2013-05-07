@@ -1,4 +1,4 @@
--- SQLITE Database creation script
+-- SQLite Database creation script
 
 -- --------------------------------------------------------
 --
@@ -146,18 +146,17 @@ CREATE TABLE netidmap_table (
 -- 
 
 CREATE TABLE notification_table ( 
+	 pk_notification	integer PRIMARY KEY,
 	 arrival_date_notification 	text, 
 	 date_notification 	integer, 
 	 list_notification 	text, 
 	 message_id_notification 	text, 
 	 message_notification 	text, 
-	 pk_notification 	integer, 
 	 reception_option_notification 	text, 
 	 recipient_notification 	text, 
 	 robot_notification 	text, 
 	 status_notification 	text, 
-	 type_notification 	text, 
-	 PRIMARY KEY (pk_notification) 
+	 type_notification 	text
  );
 
 
@@ -183,11 +182,10 @@ CREATE TABLE oauthconsumer_sessions_table (
 -- 
 
 CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	integer, 
-	 id_oauthprovider 	integer, 
+	 id_nonce 	integer PRIMARY KEY, 
+	 id_oauthprovider	integer, 
 	 nonce_oauthprovider 	text, 
-	 time_oauthprovider 	integer, 
-	 PRIMARY KEY (id_nonce) 
+	 time_oauthprovider 	integer
  );
 
 
@@ -197,18 +195,17 @@ CREATE TABLE oauthprovider_nonces_table (
 -- 
 
 CREATE TABLE oauthprovider_sessions_table ( 
+	 id_oauthprovider	integer PRIMARY KEY, 
 	 accessgranted_oauthprovider 	numeric, 
 	 callback_oauthprovider 	text, 
 	 consumer_oauthprovider 	text, 
 	 firsttime_oauthprovider 	integer, 
-	 id_oauthprovider 	integer, 
 	 isaccess_oauthprovider 	numeric, 
 	 lasttime_oauthprovider 	integer, 
 	 secret_oauthprovider 	text, 
 	 token_oauthprovider 	text, 
 	 user_oauthprovider 	text, 
-	 verifier_oauthprovider 	text, 
-	 PRIMARY KEY (id_oauthprovider) 
+	 verifier_oauthprovider 	text
  );
 
 
@@ -255,6 +252,7 @@ CREATE TABLE session_table (
 -- 
 
 CREATE TABLE spool_table ( 
+	 messagekey_spool	integer PRIMARY KEY,
 	 authkey_spool 	text, 
 	 create_list_if_needed_spool 	numeric, 
 	 date_spool 	integer, 
@@ -269,7 +267,6 @@ CREATE TABLE spool_table (
 	 message_spool 	text, 
 	 message_status_spool 	text, 
 	 messageid_spool 	text, 
-	 messagekey_spool 	integer, 
 	 messagelock_spool 	text, 
 	 priority_spool 	text, 
 	 robot_spool 	text, 
@@ -283,8 +280,7 @@ CREATE TABLE spool_table (
 	 task_label_spool 	text, 
 	 task_model_spool 	text, 
 	 task_object_spool 	text, 
-	 type_spool 	text, 
-	 PRIMARY KEY (messagekey_spool) 
+	 type_spool 	text 
  );
 
 
