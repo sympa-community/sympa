@@ -379,28 +379,28 @@ sub renew {
     }
 
     ## First insert DB entry with new session ID,
-    $sth = SDM::do_prepared_query(
+    $sth = SDM::do_query(
 	q{INSERT INTO session_table
 	  (id_session, prev_id_session,
 	   start_date_session, date_session, refresh_date_session,
 	   remote_addr_session, robot_session, email_session,
 	   hit_session, data_session)
-	  SELECT ?, id_session,
-		 start_date_session, date_session, ?,
-		 ?, robot_session, email_session,
+	  SELECT %s, id_session,
+		 start_date_session, date_session, %d,
+		 %s, robot_session, email_session,
 		 hit_session, data_session
 	  FROM session_table
-	  WHERE robot_session = ? AND
-		(id_session = ? AND prev_id_session IS NOT NULL OR
-		 prev_id_session = ?) AND
-		(remote_addr_session <> ? OR refresh_date_session <= ?)},
-	$new_id,
+	  WHERE robot_session = %s AND
+		(id_session = %s AND prev_id_session IS NOT NULL OR
+		 prev_id_session = %s) AND
+		(remote_addr_session <> %s OR refresh_date_session <= %d)},
+	SDM::quote($new_id),
 	$time,
-	$remote_addr,
-	$self->{'robot'}->name,
-	$self->{'id_session'},
-	$self->{'id_session'},
-	$remote_addr, $refresh_term
+	SDM::quote($remote_addr),
+	SDM::quote($self->{'robot'}->name),
+	SDM::quote($self->{'id_session'}),
+	SDM::quote($self->{'id_session'}),
+	SDM::quote($remote_addr), $refresh_term
     );
     unless ($sth) {
 	Log::do_log('err', 'Unable to renew session ID for session %s',
