@@ -235,11 +235,6 @@ my %full_db_struct = (
 		'doc'=>'the date a message is copied in spool table',
 		'order'=>6,
 	    },
-	    'message_spool' => {
-		'struct'=> 'longtext',
-		'doc'=>'message as string b64 encoded',
-		'order'=>7,
-	    },
 	    'messagelock_spool' => {
 		'struct'=> 'varchar(90)',
 		'doc'=>'a unique string for each process : $$@hostname',
@@ -349,6 +344,11 @@ my %full_db_struct = (
 		'struct'=> 'varchar(100)',
 		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
 		'order'=>38,
+	    },
+	    'message_spool' => {
+		'struct'=> 'longtext',
+		'doc'=>'message as string b64 encoded',
+		'order'=>99, # long field should be the last column on Oracle.
 	    },
 	},
 	'doc'=>'This table is created in version 6.2. It replace most of spools on file system for clustering purpose',
@@ -611,11 +611,6 @@ my %full_db_struct = (
 		'doc'=>'Type of the notification (DSN or MDM)',
 		'order'=>7,
 	    },
-	    'message_notification' => {
-		'struct'=> 'longtext',
-		'doc'=>'The DSN or the MDN itself',
-		'order'=>8,
-	    },
 	    'list_notification' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'The listname the messaage was issued for',
@@ -629,7 +624,14 @@ my %full_db_struct = (
 	    'date_notification' => {
 		'struct'=> 'int(11)',
 		'doc'=>'FIXME',
-		'not_null'=>1},		    
+		'not_null'=>1,
+	        'order' => 11,
+	    },
+	    'message_notification' => {
+		'struct'=> 'longtext',
+		'doc'=>'The DSN or the MDN itself',
+		'order'=>99, # long field should be the last column on Oracle.
+	    },
 	},
 	'doc' => 'used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionnaly a return receipt request.When DSN MDN are received by Syamp, they are store in this table in relation with the related list and message_id',
 	'order' => 8,

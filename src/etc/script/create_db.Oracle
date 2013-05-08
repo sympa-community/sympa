@@ -178,13 +178,13 @@ CREATE TABLE notification_table (
 	 date_notification 	number, 
 	 list_notification 	varchar2(50), 
 	 message_id_notification 	varchar2(100), 
-	 message_notification 	long, 
 	 pk_notification 	number, 
 	 reception_option_notification 	varchar2(20), 
 	 recipient_notification 	varchar2(100), 
 	 robot_notification 	varchar2(80), 
 	 status_notification 	varchar2(100), 
 	 type_notification 	varchar2(20), 
+	 message_notification	long,
 	 CONSTRAINT ind_notification PRIMARY KEY (pk_notification) 
  );
 
@@ -332,7 +332,6 @@ CREATE TABLE spool_table (
 	 list_spool 	varchar2(50), 
 	 lockdate_spool 	number, 
 	 message_diag_spool 	varchar2(500), 
-	 message_spool 	long, 
 	 message_status_spool 	varchar2(20), 
 	 messageid_spool 	varchar2(300), 
 	 messagekey_spool 	number, 
@@ -350,6 +349,7 @@ CREATE TABLE spool_table (
 	 task_model_spool 	varchar2(40), 
 	 task_object_spool 	varchar2(50), 
 	 type_spool 	varchar2(15), 
+	 message_spool	long,
 	 CONSTRAINT ind_spool PRIMARY KEY (messagekey_spool) 
  );
 

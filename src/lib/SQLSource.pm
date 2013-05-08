@@ -183,20 +183,36 @@ sub establish_connection {
     }
  
     ## First check if we have an active connection with this server
+    ## We require that user also matches (except SQLite).
     if (defined $db_connections{$self->{'connect_string'}} && 
+	($self->{'db_type'} eq 'SQLite' or
+	  $db_connections{$self->{'connect_string'}}{'db_user'} eq
+	    $self->{'db_user'}) &&
 	defined $db_connections{$self->{'connect_string'}}{'dbh'} && 
 	$db_connections{$self->{'connect_string'}}{'dbh'}->ping()) {
-      
-      &Log::do_log('debug', "Use previous connection");
+      Log::do_log('debug3', 'Use previous connection');
       $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'};
       return $db_connections{$self->{'connect_string'}}{'dbh'};
-
-    }else {
-      
+    } else {
       ## Set environment variables
       ## Used by Oracle (ORACLE_HOME)
+
+      ## Client encoding derived from the environment variable.
+      ## Set this before parsing db_env to allow override if one knows what
+      ## she is doing.
+      ## Note: on mysql and Pg, "SET NAMES" will be executed below; on SQLite,
+      ## no need to set encoding.
+      if ($self->{'db_type'} eq 'Oracle') {
+	## NLS_LANG.  This needs to be set before connecting, otherwise it's
+	## useless.  Underscore (_) and dot (.) are a vital part as NLS_LANG
+	## has the syntax "language_territory.charset".
+	$ENV{'NLS_LANG'} = '_.UTF8';
+      } elsif ($self->{'db_type'} eq 'Sybase') {
+	$ENV{'SYBASE_CHARSET'} = 'utf8';
+      }
+
       if ($self->{'db_env'}) {
-	foreach my $env (split /;/,$self->{'db_env'}) {
+	foreach my $env (split /;/, $self->{'db_env'}) {
 	  my ($key, $value) = split /=/, $env;
 	  $ENV{$key} = $value if ($key);
 	}
@@ -242,10 +258,10 @@ sub establish_connection {
 
       # Configure Postgres to use ISO format dates
       if ($self->{'db_type'} eq 'Pg') {
-	$self->{'dbh'}->do ("SET DATESTYLE TO 'ISO';");
+	$self->{'dbh'}->do("SET DATESTYLE TO 'ISO';");
       }
-      
-      ## Set client encoding to UTF8
+
+      ## mysql or Pg: Set client encoding to UTF8
       if ($self->{'db_type'} eq 'mysql') {
 	my ($sth, $res, $cset);
 
@@ -292,12 +308,8 @@ sub establish_connection {
       } elsif ($self->{'db_type'} eq 'Pg') {
 	Log::do_log('debug3','Setting client encoding to UTF-8');
 	$self->{'dbh'}->do("SET NAMES 'utf8'");
-      }elsif ($self->{'db_type'} eq 'oracle') { 
-	$ENV{'NLS_LANG'} = 'UTF8';
-      }elsif ($self->{'db_type'} eq 'Sybase') { 
-	$ENV{'SYBASE_CHARSET'} = 'utf8';
       }
-      
+
       ## added sybase support
       if ($self->{'db_type'} eq 'Sybase') { 
 	my $dbname;
@@ -313,10 +325,11 @@ sub establish_connection {
         $self->{'dbh'}->func( 'func_index', -1, sub { return index($_[0],$_[1]) }, 'create_function' );
 	if(defined $self->{'db_timeout'}) { $self->{'dbh'}->func( $self->{'db_timeout'}, 'busy_timeout' ); } else { $self->{'dbh'}->func( 5000, 'busy_timeout' ); };
       }
-      
+
       $self->{'connect_string'} = $self->{'connect_string'} if $self;     
       $db_connections{$self->{'connect_string'}}{'dbh'} = $self->{'dbh'};
-      &Log::do_log('debug','Connected to Database %s',$self->{'db_name'});
+      $db_connections{$self->{'connect_string'}}{'db_user'} = $self->{'db_user'};
+      Log::do_log('debug3', 'Connected to Database %s', $self->{'db_name'});
       return $self->{'dbh'};
     }
 }
