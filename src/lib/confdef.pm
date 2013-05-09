@@ -875,7 +875,7 @@ our @params = (
 	'file' => 'sympa.conf',
 	'edit' => '1',
 	'gettext_comment' =>
-	    'Set this parameter to "binary_file" or "database" if you manage a big amount of lists (1000+); it should make the web interface startup faster',
+	    'Set this parameter to "binary_file" or "database" if you manage a big amount of lists (1000+); it should make the web interface startup faster.  Note that Oracle earlier than 8 and Sybase do not support "database"',
     },
     {   'name'            => 'lock_method',
 	'default'         => 'flock',
