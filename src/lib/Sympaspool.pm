@@ -455,26 +455,43 @@ sub store {
     $metadata->{'size'}= length($message_asstring) unless ($metadata->{'size'}) ;
     $metadata->{'message_status'} = 'ok';
 
-    my $insertpart1; my $insertpart2;
-    foreach my $meta ('list','authkey','robot','message_status','priority','date','type','subject','sender','messageid','size','headerdate','spam_status','dkim_privatekey','dkim_d','dkim_i','dkim_selector','create_list_if_needed','task_label','task_date','task_model','task_flavour','task_object') {
-	$insertpart1 = $insertpart1. ', '.$meta.'_spool';
-	$insertpart2 = $insertpart2. ', '.&SDM::quote($metadata->{$meta});
+    my ($insertpart1, $insertpart2, @insertparts) = ('', '');
+    foreach my $meta (
+	qw(list authkey robot message_status priority date type subject sender
+	messageid size headerdate spam_status dkim_privatekey dkim_d dkim_i
+	dkim_selector create_list_if_needed task_label task_date task_model
+	task_flavour task_object)
+    ) {
+	$insertpart1 .= ', ' . $meta . '_spool';
+	$insertpart2 .= ', ?';
+	push @insertparts, $metadata->{$meta};
     }
     my $lock = $$.'@'.hostname() ;
 
     push @sth_stack, $sth;
-    my $statement        = sprintf "INSERT INTO spool_table (spoolname_spool, messagelock_spool, message_spool %s ) VALUES (%s,%s,%s %s )",$insertpart1,&SDM::quote($self->{'spoolname'}),&SDM::quote($lock),&SDM::quote($b64msg), $insertpart2;
 
-    $sth = &SDM::do_query ($statement);
-
-    $statement = sprintf "SELECT messagekey_spool as messagekey FROM spool_table WHERE messagelock_spool = %s AND date_spool = %s",&SDM::quote($lock),$metadata->{'date'};
-    $sth = &SDM::do_query ($statement);
+    $sth = SDM::do_prepared_query(
+	sprintf(
+	    q{INSERT INTO spool_table
+	      (spoolname_spool, messagelock_spool, message_spool%s)
+	      VALUES (?, ?, ?%s)},
+	    $insertpart1, $insertpart2
+	),
+	$self->{'spoolname'}, $lock, $b64msg, @insertparts
+    );
     # this query returns the autoinc primary key as result of this insert
+    $sth = SDM::do_prepared_query(
+	q{SELECT messagekey_spool as messagekey
+	  FROM spool_table
+	  WHERE messagelock_spool = ? AND date_spool = ?},
+	$lock, $metadata->{'date'}
+    );
+    ##FIXME: should check error
 
     my $inserted_message = $sth->fetchrow_hashref('NAME_lc');
     my $messagekey = $inserted_message->{'messagekey'};
     
-    $sth-> finish;
+    $sth->finish;
     $sth = pop @sth_stack;
 
     unless ($locked) {
