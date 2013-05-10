@@ -163,15 +163,12 @@ sub connect_sympa_database {
     return 1;
 }
 
-## Disconnect from Database
+## Disconnect from Database.
+## Destroy db handle so that any pending statement handles will be finalized.
 sub db_disconnect {
-    &Log::do_log('debug2', '()');
+    Log::do_log('debug2', '()');
 
-    unless ($db_source->{'dbh'}->disconnect()) {
-	&Log::do_log('err','Can\'t disconnect from Database %s : %s',Site->db_name, $db_source->{'dbh'}->errstr);
-	return undef;
-    }
-
+    undef $db_source->{'dbh'};
     return 1;
 }
 
