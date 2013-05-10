@@ -82,30 +82,36 @@ sub set_file_rights {
     my %param = @_;
     my ($uid, $gid);
 
-    if ($param{'user'}){
+    if ($param{'user'}) {
 	unless ($uid = (getpwnam($param{'user'}))[2]) {
-	    &Log::do_log('err', "User %s can't be found in passwd file",$param{'user'});
+	    Log::do_log('err', "User %s can't be found in passwd file",
+		$param{'user'});
 	    return undef;
 	}
-    }else {
-	$uid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
+    } else {
+	# A value of -1 is interpreted by most systems to leave that value
+	# unchanged.
+	$uid = -1;
     }
     if ($param{'group'}) {
 	unless ($gid = (getgrnam($param{'group'}))[2]) {
-	    &Log::do_log('err', "Group %s can't be found",$param{'group'});
+	    Log::do_log('err', "Group %s can't be found", $param{'group'});
 	    return undef;
 	}
-    }else {
-	$gid = -1;# "A value of -1 is interpreted by most systems to leave that value unchanged".
+    } else {
+	# A value of -1 is interpreted by most systems to leave that value
+	# unchanged.
+	$gid = -1;
     }
-    unless (chown($uid,$gid, $param{'file'})){
-	&Log::do_log('err', "Can't give ownership of file %s to %s.%s: %s",$param{'file'},$param{'user'},$param{'group'}, $!);
+    unless (chown($uid, $gid, $param{'file'})) {
+	Log::do_log('err', "Can't give ownership of file %s to %s.%s: %s",
+	    $param{'file'}, $param{'user'}, $param{'group'}, "$!");
 	return undef;
     }
-    if ($param{'mode'}){
-	unless (chmod($param{'mode'}, $param{'file'})){
-	    &Log::do_log('err', "Can't change rights of file %s: %s",
-		Site->db_name, $!);
+    if ($param{'mode'}) {
+	unless (chmod($param{'mode'}, $param{'file'})) {
+	    Log::do_log('err', "Can't change rights of file %s to %o: %s",
+		$param{'file'}, $param{'mode'}, "$!");
 	    return undef;
 	}
     }
@@ -299,14 +305,18 @@ sub by_date {
 sub safefork {
    my($i, $pid);
    
+   my $err;
    for ($i = 1; $i < 4; $i++) {
       my($pid) = fork;
       return $pid if (defined($pid));
-      &Log::do_log ('warn', 'Cannot create new process in safefork: %s',$@);
-      ## should send a mail to the listmaster
+
+      $err = "$!";
+      Log::do_log('warn', 'Cannot create new process in safefork: %s', $err);
+      ## FIXME:should send a mail to the listmaster
       sleep(10 * $i);
    }
-   &Log::fatal_err('Exiting because cannot create new process in safefork: %s',$@);
+   croak sprintf('Exiting because cannot create new process in safefork: %s',
+	$err);
    ## No return.
 }
 
@@ -518,7 +528,7 @@ sub del_dir {
     my $dir = shift;
     &Log::do_log('debug','del_dir %s',$dir);
     
-    if(opendir DIR, $dir){
+    if (opendir DIR, $dir) {
 	for (readdir DIR) {
 	    next if /^\.{1,2}$/;
 	    my $path = "$dir/$_";
@@ -526,9 +536,14 @@ sub del_dir {
 	    del_dir($path) if -d $path;
 	}
 	closedir DIR;
-	unless(rmdir $dir) {&Log::do_log('err','Unable to delete directory %s: $!',$dir);}
-    }else{
-	&Log::do_log('err','Unable to open directory %s to delete the files it contains: $!',$dir);
+	unless (rmdir $dir) {
+	    Log::do_log('err', 'Unable to delete directory %s: %s',
+		$dir, "$!");
+	}
+    } else {
+	Log::do_log('err',
+	    'Unable to open directory %s to delete the files it contains: %s',
+	    $dir, "$!");
     }
 }
 
@@ -1367,8 +1382,9 @@ sub split_mail {
 
 	    ## Store body in file 
 	    unless (open OFILE, ">$dir/$pathname.$fileExt") {
-		&Log::do_log('err', "Unable to create $dir/$pathname.$fileExt : $!") ;
-		return undef ; 
+		Log::do_log('err', 'Unable to create %s/%s.%s: %s',
+		    $dir, $pathname, $fileExt, "$!");
+		return undef;
 	    }
 	    
 	    if ($encoding =~ /^(binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64)$/ ) {
@@ -1380,7 +1396,8 @@ sub split_mail {
 
 		my $decoder = new MIME::Decoder $encoding;
 		unless (defined $decoder) {
-		    &Log::do_log('err', 'Cannot create decoder for %s', $encoding);
+		    Log::do_log('err', 'Cannot create decoder for %s',
+			$encoding);
 		    return undef;
 		}
 		$decoder->decode(\*BODY, \*OFILE);
@@ -1870,7 +1887,8 @@ sub qencode_hierarchy {
 	## Rename the file using utf8
 	&Log::do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
 	unless (rename $orig_f, $new_f) {
-	    &Log::do_log('err', "Failed to rename %s to %s : %s", $orig_f, $new_f, $!);
+	    Log::do_log('err', 'Failed to rename %s to %s : %s',
+		$orig_f, $new_f, "$!");
 	    next;
 	}
 	$count++;
@@ -1909,34 +1927,40 @@ sub remove_pid {
 		
 		## If no PID left, then remove the file
 		if($#pids < 0) {
-			## Release the lock
-			unless(unlink $pidfile) {
-				&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-				return undef;
+		    ## Release the lock
+		    unless (unlink $pidfile) {
+			Log::do_log('err', 'Failed to remove %s: %s',
+			    $pidfile, "$!");
+			return undef;
+		    }
+		} else {
+		    if (-f $pidfile) {
+			unless (open(PFILE, '> '.$pidfile)) {
+			    Log::do_log('err', 'Failed to open %s: %s',
+				$pidfile, "$!");
+			    return undef;
 			}
-		}else{
-			if(-f $pidfile) {
-				unless(open(PFILE, '> '.$pidfile)) {
-					&Log::do_log('err', "Failed to open $pidfile: %s", $!);
-					return undef;
-				}
-				print PFILE join(' ', @pids)."\n";
-				close(PFILE);
-			}else{
-				&Log::do_log('notice', 'PID file %s does not exist. Nothing to do.', $pidfile);
-			}
+			print PFILE join(' ', @pids)."\n";
+			close(PFILE);
+		    } else {
+			Log::do_log('notice',
+			    'PID file %s does not exist. Nothing to do.',
+			    $pidfile);
+		    }
 		}
 	}else{
-		unless(unlink $pidfile) {
-			&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-			return undef;
+		unless (unlink $pidfile) {
+		    Log::do_log('err', 'Failed to remove %s: %s',
+			$pidfile, "$!");
+		    return undef;
 		}
 		my $err_file = Site->tmpdir.'/'.$pid.'.stderr';
-		if(-f $err_file) {
-			unless(unlink $err_file) {
-				&Log::do_log('err', "Failed to remove $err_file: %s", $!);
-				return undef;
-			}
+		if (-f $err_file) {
+		    unless(unlink $err_file) {
+			Log::do_log('err', 'Failed to remove %s: %s',
+			    $err_file, "$!");
+			return undef;
+		    }
 		}
 	}
 	return 1;
@@ -1962,12 +1986,13 @@ sub write_pid {
     ## Create piddir
     mkdir($piddir, 0755) unless(-d $piddir);
 
-    unless(&tools::set_file_rights(
-	file => $piddir,
-	user  => Sympa::Constants::USER,
-	group => Sympa::Constants::GROUP,
+    unless(tools::set_file_rights(
+	'file' => $piddir,
+	'user'  => Sympa::Constants::USER,
+	'group' => Sympa::Constants::GROUP,
     )) {
-	&Log::fatal_err('Unable to set rights on %s. Exiting.', $piddir);
+	croak sprintf('Unable to set rights on %s. Exiting.', $piddir);
+	## No return
     }
 
     my @pids;
@@ -1975,11 +2000,12 @@ sub write_pid {
     # Lock PID file
     my $lock = new Lock ($pidfile);
     unless (defined $lock) {
-	&Log::fatal_err('Lock could not be created. Exiting.');
+	croak sprintf('Lock could not be created. Exiting.');
     }
     $lock->set_timeout(5); 
     unless ($lock->lock('write')) {
-	&Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+	croak sprintf('Unable to lock %s file in write mode. Exiting.',
+	    $pidfile);
     }
     ## If PID file exists, read the PIDs
     if(-f $pidfile) {
@@ -1994,9 +2020,10 @@ sub write_pid {
     ## Print other PIDs + this one
     if($options->{'multiple_process'}) {
 	unless(open(PIDFILE, '> '.$pidfile)) {
+	    my $err = "$!";
 	    ## Unlock PID file
 	    $lock->unlock();
-	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
+	    croak sprintf('Could not open %s, exiting: %s', $pidfile, $err);
 	}
 	## Print other PIDs + this one
 	push(@pids, $pid);
@@ -2005,9 +2032,10 @@ sub write_pid {
     }else{
 	## Create and write the PID file
 	unless(open(PIDFILE, '+>> '.$pidfile)) {
+	    my $err = "$!";
 	    ## Unlock PID file
 	    $lock->unlock();
-	    &Log::fatal_err('Could not open %s, exiting: %s', $pidfile);
+	    croak sprintf('Could not open %s, exiting: %s', $pidfile, $err);
 	}
 	## The previous process died suddenly, without PID file cleanup
 	## Send a notice to listmaster with STDERR of the previous process
@@ -2020,28 +2048,31 @@ sub write_pid {
 	}
 	
 	unless(open(PIDFILE, '> '.$pidfile)) {
+	    my $err = "$!";
 	    ## Unlock PID file
 	    $lock->unlock();
-	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
+	    croak sprintf('Could not open %s, exiting: %s', $pidfile, $err);
 	}
 	unless(truncate(PIDFILE, 0)) {
+	    my $err = "$!";
 	    ## Unlock PID file
 	    $lock->unlock();
-	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
+	    croak sprintf('Could not truncate %s, exiting: %s',
+		$pidfile, $err);
 	}
 	
 	print PIDFILE $pid."\n";
 	close(PIDFILE);
     }
 
-    unless(&tools::set_file_rights(
-	file => $pidfile,
-	user  => Sympa::Constants::USER,
-	group => Sympa::Constants::GROUP,
+    unless(tools::set_file_rights(
+	'file'  => $pidfile,
+	'user'  => Sympa::Constants::USER,
+	'group' => Sympa::Constants::GROUP,
     )) {
 	## Unlock PID file
 	$lock->unlock();
-	&Log::fatal_err('Unable to set rights on %s', $pidfile);
+	croak sprintf('Unable to set rights on %s', $pidfile);
     }
     ## Unlock PID file
     $lock->unlock();

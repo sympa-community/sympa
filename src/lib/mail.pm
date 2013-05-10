@@ -22,7 +22,7 @@ package mail;
 
 use strict;
 require Exporter;
-use Carp qw(carp);
+use Carp qw(carp croak);
 use POSIX;
 use Time::Local;
 use MIME::EncWords;
@@ -819,7 +819,8 @@ sub smtpto {
    
 
    if (!pipe(IN, OUT)) {
-       &Log::fatal_err(sprintf gettext("Unable to create a channel in smtpto: %s"), "$!"); ## No return
+	croak sprintf('Unable to create a channel in smtpto: %s', "$!");
+	## No return
    }
    $pid = &tools::safefork();
    $pid{$pid} = 0;

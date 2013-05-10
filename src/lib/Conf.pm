@@ -388,13 +388,14 @@ sub conf_2_db {
     }
     closedir (DIR);
 
-    # store in database sympa;conf and wwsympa.conf
+    # store sympa.conf into database.
     
     ## Load configuration file. Ignoring database config and get result
     my $global_conf;
     unless ($global_conf = Site->load('no_db' => 1, 'return_result' => 1)) {
-	&Log::fatal_err('Configuration file %s has errors.',
+	Log::do_log('err', 'Configuration file %s has errors.',
 	    get_sympa_conf());  
+	return undef;
     }
     
     for my $i ( 0 .. $#conf_parameters ) {
@@ -426,8 +427,9 @@ sub checkfiles_as_root {
                     mode  => 0644,
                     ))
     {
-        &Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
-        return undef;
+	    Log::do_log('err', 'Unable to set rights on %s',
+		$Conf{'sendmail_aliases'});
+	    return undef;
     }
     }
 
@@ -446,8 +448,8 @@ sub checkfiles_as_root {
                         group => Sympa::Constants::GROUP,
                         ))
         {
-        &Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
-        return undef;
+		Log::do_log('err','Unable to set rights on %s', $dir);
+		return undef;
         }
     }
     }
@@ -481,8 +483,8 @@ sub checkfiles {
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
             )) {
-                &Log::do_log('err','Unable to set rights on %s',$Conf{$qdir});
-        $config_err++;
+		Log::do_log('err','Unable to set rights on %s', $Conf{$qdir});
+		$config_err++;
             }
     }
     }
@@ -501,8 +503,8 @@ sub checkfiles {
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
             )) {
-                &Log::do_log('err','Unable to set rights on %s',$subdir);
-        $config_err++;
+		Log::do_log('err','Unable to set rights on %s', $subdir);
+		$config_err++;
             }
     }
     }

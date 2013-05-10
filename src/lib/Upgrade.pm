@@ -23,11 +23,11 @@ package Upgrade;
 
 use strict;
 
-#use Carp; # currently not used
+use Carp qw(croak);
+use File::Copy::Recursive;
 use POSIX qw(strftime);
 # tentative
 use Data::Dumper;
-use File::Copy::Recursive;
 
 use Site;
 #use Conf; # used in Site
@@ -372,7 +372,8 @@ sub upgrade {
 			    (subscribed_subscriber IS NULL OR
 			     subscribed_subscriber <> 1)});
 		unless ($sth) {
-		    Log::fatal_err("Unable to execute SQL statement");
+		    Log::do_log('err', 'Unable to execute SQL statement');
+		    return undef;
 		}
 		$rows = $sth->rows;
 		Log::do_log('notice','%d rows have been updated', $rows);
@@ -808,7 +809,8 @@ sub upgrade {
 
 	    my $spool = new Sympaspool($spools_def{$spoolparameter});
 	    if (!opendir(DIR, $spooldir)) {
-		&Log::fatal_err("Can't open dir %s: %m", $spooldir); ## No return.
+		croak sprintf("Can't open dir %s: %s", $spooldir, "$!");
+		## No return.
 	    }
 	    my @qfile = sort tools::by_date grep (!/^\./,readdir(DIR));
 	    closedir(DIR);
@@ -1321,7 +1323,7 @@ sub to_utf8 {
 					mode =>  0644,
 					))
 	{
-	    &Log::do_log('err','Unable to set rights on %s',Site->db_name);
+	    Log::do_log('err', 'Unable to set rights on %s', $file);
 	    next;
 	}
 	&Log::do_log('notice','Modified file %s ; original file kept as %s', $file, $file.'@'.$date);

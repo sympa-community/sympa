@@ -23,9 +23,9 @@ package Lock;
 
 use strict;
 use warnings;
+use Carp qw(croak);
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use FileHandle;
-#use Carp; # currently not used
 
 use Log;
 #use Conf; # this package is imported by Conf
@@ -60,7 +60,8 @@ sub new {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	&Log::fatal_err('Unable to set rights on %s', $lock_filename);
+	croak sprintf('Unable to set rights on %s', $lock_filename);
+	## No return
     }
 	
     ## Bless Message object
