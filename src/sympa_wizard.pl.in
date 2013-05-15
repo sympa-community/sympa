@@ -507,7 +507,7 @@ sub check_cpan {
 					      package_name => 'JSON-XS',
 					      usage => 'required when using the VOOT protocol',
 					     },
-			'Locale::TextDomain' => {
+			'Locale::Messages' => {
 						 package_name => 'libintl-perl',
 						 mandatory => 1,
 						 usage => 'internationalization functions',
@@ -517,6 +517,17 @@ sub check_cpan {
 				  mandatory => 1,
 				  usage => 'required when including members of a remote list',
 				 },
+			'Mail::Address' => {
+					    required_version => '1.70',
+					    package_name => 'MailTools',
+					    mandatory => 1,
+					    usage => 'used to parse or build mailboxes in message headers',
+					   },
+			'Mail::DKIM' => {
+					 required_version => '0.36',
+					 package_name => 'Mail-DKIM',
+					 usage => 'required in order to use DKIM features (both for signature verification and signature insertion)',
+					},
 			'MHonArc::UTF8' => {
 					    required_version =>'2.6.18',
 					    package_name => 'MHonArc',
@@ -623,10 +634,6 @@ sub check_cpan {
 					  mandatory => 1,
 					  usage => 'used to parse list configuration templates and instanciate list families',
 					 },
-			'Mail::DKIM' => { required_version =>'0.36',
-					  package_name => 'Mail-DKIM',
-					  usage => 'required in order to use DKIM features (both for signature verification and signature insertion)',
-				      } 
 		       );
 
     $cpan_modules{'Unicode::CaseFold'} = { required_version => '0.02',
