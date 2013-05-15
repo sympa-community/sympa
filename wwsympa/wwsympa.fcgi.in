@@ -17793,7 +17793,9 @@ sub do_viewspool_message_remove {
 	&wwslog('info','do_viewspools: unkown spool');
 	return undef;
     }
-    unless ($spool->remove_message({'messagekey'=>$messagekey})){
+    unless ($spool->remove_message(
+	{'messagekey' => $messagekey, 'just_try' => 1}
+    )){
 	&report::reject_report_web('intern','could not remove message');
 	&wwslog('info','do_viewspool_message_remove : could not remove message');
 	return;	

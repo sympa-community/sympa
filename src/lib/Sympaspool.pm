@@ -504,22 +504,12 @@ sub store {
 # remove a message in database spool using (messagekey,list,robot) which are a unique id in the spool
 #
 sub remove_message {  
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
-    my $selector = shift;
-    my $robot = $selector->{'robot'};
-    my $messagekey = $selector->{'messagekey'};
-    my $listname = $selector->{'list'};
-    Log::do_log('debug2', '(%s, list=%s, robot=%s, messagekey=%s)',
-	$self, $listname, $robot, $messagekey);
+    my $params = shift;
 
-    ## search if this message is already in spool database : mailfile may
-    ## perform multiple submission of exactly the same message 
-    unless ($self->get_message($selector)){
-	Log::do_log('err', 'message %s not in spool', $messagekey); 
-	return undef;
-    }
-
-    my $sqlselector = _sqlselector($selector);
+    my $just_try = $params->{'just_try'};
+    my $sqlselector = _sqlselector($params);
 
     push @sth_stack, $sth;
 
@@ -534,8 +524,15 @@ sub remove_message {
 	$sth = pop @sth_stack;
 	return undef;
     }
+    ## search if this message is already in spool database : mailfile may
+    ## perform multiple submission of exactly the same message
+    unless ($sth->rows) {
+	Log::do_log('err', 'message is not in spool: %s', $sqlselector)
+	    unless $just_try;
+	$sth = pop @sth_stack;
+	return undef;
+    }
 
-    $sth->finish;
     $sth = pop @sth_stack;
     return 1;
 }
@@ -620,11 +617,7 @@ EOF
 	    {'list' => 'notalist', 'robot' => 'notaboot'})) {
 	    return (($z-1)*$size_increment);
 	}
-	unless ($testing->remove_message({'messagekey' => $messagekey})) {
-	    Log::do_log('err',
-		'Unable to remove test message (key = %s) from spool_table',
-		$messagekey);	    
-	}
+	$testing->remove_message({'messagekey' => $messagekey});
 	$total += $z*$size_increment;
         $progress->message(sprintf ".........[OK. Done in %.2f sec]", time() - $time);
 	$next_update = $progress->update($total+$even_part)
@@ -677,10 +670,21 @@ sub _selectfields{
 #   **** value can be prefixed with <,>,>=,<=, in that case the default comparator operator (=) is changed, I known this is dirty but I'm lazy :-(
 sub _sqlselector {
 	
-    my $selector = shift; 
+    my $selector = shift;
     my $sqlselector = '';
-    
+
+    $selector = {%$selector};
+    if (ref $selector->{'list'}) {
+	$selector->{'robot'} = $selector->{'list'}->domain;
+	$selector->{'list'} = $selector->{'list'}->name;
+    }
+    if (ref $selector->{'robot'}) {
+	$selector->{'robot'} = $selector->{'robot'}->domain;
+    }
+
     foreach my $field (keys %$selector) {
+	next if $field eq 'just_try';
+
 	my $compare_operator = '=';
 	my $select_value = $selector->{$field};
 	if ($select_value =~ /^([\<\>]\=?)\.(.*)$/){ 

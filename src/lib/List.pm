@@ -10482,14 +10482,9 @@ sub get_subscription_requests {
 		$email,
 		$self
 	    );
-	    unless (
-		$subscription_request_spool->remove_message(
-		    {   'list'   => $self->name,
-			'robot'  => $self->domain,
-			'sender' => $email
-	    }
-		)
-		) {
+	    unless ($subscription_request_spool->remove_message(
+		{'list' => $self, 'sender' => $email, 'just_try' => 1}
+	    )) {
 		&Log::do_log(
 		    'err',
 		    'Could not delete subrequest %s for list %s from %s',
@@ -10542,10 +10537,7 @@ sub delete_subscription_request {
     foreach my $email (@list_of_email) {
 	$removed++
 	    if $subscription_request_spool->remove_message(
-		    {   'list'   => $self->name,
-			'robot'  => $self->domain,
-			'sender' => $email
-    }
+		{'list' => $self, 'sender' => $email, 'just_try' => 1}
 	    );
     }
 
@@ -10624,14 +10616,9 @@ sub get_signoff_requests {
 		$email,
 		$self
 	    );
-	    unless (
-		$signoff_request_spool->remove_message(
-		    {   'list'   => $self->name,
-			'robot'  => $self->domain,
-			'sender' => $email
-	    }
-		)
-		) {
+	    unless ($signoff_request_spool->remove_message(
+		{'list' => $self, 'sender' => $email, 'just_try' => 1}
+	    )) {
 		&Log::do_log(
 		    'err',
 		    'Could not delete sigrequest %s for list %s from %s',
@@ -10676,10 +10663,7 @@ sub delete_signoff_request {
     foreach my $email (@list_of_email) {
 	$removed++
 	    if $signoff_request_spool->remove_message(
-		    {   'list'   => $self->name,
-			'robot'  => $self->domain,
-			'sender' => $email
-    		    }
+		{'list' => $self, 'sender' => $email, 'just_try' => 1}
 	    );
     }
 
