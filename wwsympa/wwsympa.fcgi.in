@@ -6916,7 +6916,10 @@ sub do_del {
 	 }
      }
 
-     $total = $list->delete_list_member('users' => \@removed_users, 'exclude' =>'1', 'parameter' => 'deleted by admin', 'daemon' => 'wwsympa.fcgi');
+    $total = $list->delete_list_member('users' => \@removed_users,
+	'exclude' =>'1', 'parameter' => 'deleted by admin',
+	'daemon' => 'wwsympa'
+    );
 
      unless( defined $total) {
 	 &report::reject_report_web('intern','delete_subscriber_db_failed',{},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
