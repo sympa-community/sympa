@@ -1689,7 +1689,8 @@ sub distribute_msg {
 
     ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
     if (($self->is_digest()) and
-	($message->{'smime_crypted'} ne 'smime_crypted')) {
+	not ($message->{'smime_crypted'} and
+	$message->{'smime_crypted'} eq 'smime_crypted')) {
 	$self->store_digest($message);
     }
 
@@ -1824,12 +1825,13 @@ sub prepare_messages_for_digest {
         $msg->{'subject'} = $subject;	
 	$msg->{'from'} = $from;
 	$msg->{'date'} = $date;
+
 	$msg->{'full_msg'} = $mail->{'msg_as_string'};
 	$msg->{'body'} = $mail->{'msg'}->body_as_string;
-	$msg->{'plain_body'} = $mail->{'msg'}->PlainDigest::plain_body_as_string();
-
+	$msg->{'plain_body'} =
+	    $mail->{'msg'}->PlainDigest::plain_body_as_string();
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
-	chomp $msg->{'from'};
+
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} = &tools::clean_msg_id($mail->{'msg'}->head->get('Message-Id'));
 	
@@ -2451,10 +2453,10 @@ sub send_to_editor {
    my $subject = tools::decode_header($hdr, 'Subject');
     my $param = {
 	'modkey'         => $modkey,
-		'boundary' => $boundary,
-		'msg_from' => $message->{'sender'},
-		'subject' => $subject,
-		'spam_status' => $message->{'spam_status'},
+	'boundary'       => $boundary,
+	'msg_from'       => $message->{'sender'},
+	'subject'        => $subject,
+	'spam_status'    => $message->{'spam_status'},
 	'mod_spool_size' => $self->get_mod_spool_size,
 	'method'         => $method
     };
@@ -3848,7 +3850,7 @@ sub get_first_list_member {
     my $statement;
 
     ## SQL regexp
-    my $selection;
+    my $selection = '';
     if ($sql_regexp) {
 	$selection =
 	    sprintf
@@ -3859,11 +3861,11 @@ sub get_first_list_member {
     ## Additional subscriber fields
     $statement =
 	sprintf
-	'SELECT %s FROM subscriber_table WHERE list_subscriber = %s AND robot_subscriber = %s %s',
+	q{SELECT %s
+	  FROM subscriber_table
+	  WHERE list_subscriber = %s AND robot_subscriber = %s%s},
 	_list_member_cols(),
-	&SDM::quote($name),
-	&SDM::quote($self->domain),
-    $selection;
+	SDM::quote($name), SDM::quote($self->domain), $selection;
 
     ## SORT BY
     if ($sortby eq 'domain') {
@@ -3875,14 +3877,13 @@ sub get_first_list_member {
 	      WHERE list_subscriber = %s AND robot_subscriber = %s
 	      ORDER BY dom},
 	    _list_member_cols(),
-	    &SDM::get_substring_clause(
+	    SDM::get_substring_clause(
 	    {   'source_field'     => 'user_subscriber',
 		'separator'        => '\@',
 		'substring_length' => '50',
 	    }
 	    ),
-	&SDM::quote($name),
-	    &SDM::quote($self->domain);
+	    SDM::quote($name), SDM::quote($self->domain);
 
     } elsif ($sortby eq 'email') {
 	## Default SORT
@@ -5292,7 +5293,8 @@ sub archive_msg {
     if ($self->is_archived()) {
 
 	my $msgtostore = $message->get_message_as_string;
-	if (($message->{'smime_crypted'} eq 'smime_crypted') &&
+	if (($messsage->{'smime_crypted'} and
+	    $message->{'smime_crypted'} eq 'smime_crypted') &&
 	    ($self->archive_crypted_msg eq 'original')) {
 		Log::do_log('debug3', 'Will store encrypted message');
 		$msgtostore = $message->get_encrypted_message_as_string;
@@ -7292,18 +7294,21 @@ sub _load_include_admin_user_file {
 
 ## Returns a ref to an array containing the ids (as computed by Datasource::_get_datasource_id) of the list of members given as argument.
 sub get_list_of_sources_id {
-	my $self = shift;
-	my $list_of_subscribers = shift;
+    my $self = shift;
+    my $list_of_subscribers = shift;
 
-	my %old_subs_id;
-	foreach my $old_sub (keys %{$list_of_subscribers}) {
-	my @tmp_old_tab = split(/,/, $list_of_subscribers->{$old_sub}{'id'});
-		foreach my $raw (@tmp_old_tab) {
-			$old_subs_id{$raw} = 1;
-		}
+    my %old_subs_id;
+    foreach my $old_sub (keys %{$list_of_subscribers}) {
+	next unless $list_of_subscribers->{$old_sub} and
+	    defined $list_of_subscribers->{$old_sub}{'id'};
+
+	my @tmp_old_tab = split /,/, $list_of_subscribers->{$old_sub}{'id'};
+	foreach my $raw (@tmp_old_tab) {
+	    $old_subs_id{$raw} = 1;
 	}
+    }
     my $ids = join(',', keys %old_subs_id);
-	return \%old_subs_id;
+    return \%old_subs_id;
 }
 
 sub sync_include_ca {
@@ -7464,7 +7469,7 @@ sub sync_include {
 
     ## Load a hash with the new subscriber list
     my $new_subscribers;
-    unless ($option eq 'purge') {
+    unless ($option and $option eq 'purge') {
 	my $result =
 	    $self->_load_list_members_from_include(
 	    $self->get_list_of_sources_id(\%old_subscribers));
@@ -7762,7 +7767,7 @@ sub sync_include {
     $self->get_real_total;
     $self->{'last_sync'} = time;
     $self->savestats();
-    $self->sync_include_ca($option eq 'purge');
+    $self->sync_include_ca($option and $option eq 'purge');
 
     return 1;
 }
@@ -10696,9 +10701,8 @@ sub  get_next_delivery_date {
     my $self = shift;
 
     my $dtime = $self->delivery_time;
-    unless ($dtime =~ /(\d?\d)\:(\d\d)/) {
-
-	# if delivery _time if not defined, the delivery time right now
+    unless (defined $dtime and $dtime =~ /(\d?\d)\:(\d\d)/) {
+	# if delivery _time is not defined, the delivery time right now
 	return time();
     }
     my $h = $1;
@@ -11614,10 +11618,11 @@ sub _set_list_param {
 
     my $def = undef;
     if (defined $val and defined $default and exists $p->{'default'}) {
-	if ($p->{'scenario'} and $default and
-	    $val->{'name'} eq $default->{'name'}) {
+	if ($p->{'scenario'} and
+	    $val->{'name'} and $val->{'name'} eq $default->{'name'}) {
 	    $def = 1;
-	} elsif ($p->{'task'} and $val->{'name'} eq $default->{'name'}) {
+	} elsif ($p->{'task'} and
+	    $val->{'name'} and $val->{'name'} eq $default->{'name'}) {
 	    $def = 1;
 	} elsif (($p->{'split_char'} or
 	    $p->{'occurrence'} and $p->{'occurrence'} =~ /n/) and

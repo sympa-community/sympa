@@ -3446,6 +3446,7 @@ sub get_children_processes_list {
 #               trailing newline will be removed.
 #               If sep is given, return all occurrences joined by it.
 ## IN : msg, tag, [sep]
+## OUT : decoded header(s), with hostile characters (newline, nul) removed.
 #*******************************************
 sub decode_header {
     my $msg = shift;
@@ -3466,13 +3467,18 @@ sub decode_header {
 	foreach my $val (@values) {
 	    $val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
 	    chomp $val;
+	    $val =~ s/(\r\n|\r|\n)([ \t])/$2/g; #unfold
+	    $val =~ s/\0|\r\n|\r|\n//g; # remove newline & nul
 	}
 	return join $sep, @values;
     } else {
-	my $val = $head->get($tag);
+	my $val = $head->get($tag, 0);
 	return undef unless defined $val;
 	$val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
 	chomp $val;
+	$val =~ s/(\r\n|\r|\n)([ \t])/$2/g; #unfold
+	$val =~ s/\0|\r\n|\r|\n//g; # remove newline & nul
+
 	return $val;
     }
 }
