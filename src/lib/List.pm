@@ -5293,7 +5293,7 @@ sub archive_msg {
     if ($self->is_archived()) {
 
 	my $msgtostore = $message->get_message_as_string;
-	if (($messsage->{'smime_crypted'} and
+	if (($message->{'smime_crypted'} and
 	    $message->{'smime_crypted'} eq 'smime_crypted') &&
 	    ($self->archive_crypted_msg eq 'original')) {
 		Log::do_log('debug3', 'Will store encrypted message');
