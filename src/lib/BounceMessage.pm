@@ -3,6 +3,8 @@
 package BounceMessage;
 
 use strict;
+use warnings;
+
 use Message;
 use Log;
 use tracking;
@@ -46,7 +48,7 @@ sub new {
     }
     bless $self,$pkg;
     $self->{'to'} = $self->get_mime_message->head->get('to', 0);
-    chomp $self->{'to'};	
+    chomp $self->{'to'} if $self->{'to'};
 
     return $self;
 }
@@ -343,12 +345,13 @@ sub process_dsn {
     my $msg_id;
     my $orig_msg_id;
     my $arrival_date;
-    
+
     $msg_id = $self->get_mime_message->head->get('Message-Id');
-    chomp $msg_id;
-    
+    chomp $msg_id if $msg_id;
+
     my $date = $self->get_mime_message->head->get('Date');
-    
+    chomp $date if $date;
+
     foreach my $p (@parts) {
 	my $h = $p->head();
 	my $content = $h->get('Content-type');
@@ -433,8 +436,10 @@ sub process_mdn {
     Log::do_log ('debug','processing  MDN %s',$self->get_msg_id);
     my @parts = $self->get_mime_message->parts();
     
-    $self->{'mdn'}{'msg_id'} = $self->get_mime_message->head->get('Message-Id');
-    chomp $self->{'mdn'}{'msg_id'};
+    $self->{'mdn'}{'msg_id'} =
+	$self->get_mime_message->head->get('Message-Id');
+    chomp $self->{'mdn'}{'msg_id'}
+	if $self->{'mdn'}{'msg_id'};
     
     $self->{'mdn'}{'date'} = $self->get_mime_message->head->get('Date');
     

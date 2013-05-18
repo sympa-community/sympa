@@ -180,27 +180,26 @@
       return undef;
   }
   
-  my $from = $msgent->head->get('From') ? tools::decode_header($msgent, 'From') : gettext("[Unknown]");
-  my $subject = $msgent->head->get('Subject') ? tools::decode_header($msgent, 'Subject') : '';
-  my $date = $msgent->head->get('Date') ? tools::decode_header($msgent, 'Date') : '';
-  my $to = $msgent->head->get('To') ? tools::decode_header($msgent, 'To', ', ') : '';
-  my $cc = $msgent->head->get('Cc') ? tools::decode_header($msgent, 'Cc', ', ') : '';
-  
-  chomp $from;
-  chomp $to;
-  chomp $cc;
-  chomp $subject;
-  chomp $date;
-  
+  my $from = tools::decode_header($msgent, 'From');
+  $from = gettext("[Unknown]") unless defined $from and length $from;
+  my $subject = tools::decode_header($msgent, 'Subject');
+  $subject = '' unless defined $subject;
+  my $date = tools::decode_header($msgent, 'Date');
+  $date = '' unless defined $date;
+  my $to = tools::decode_header($msgent, 'To', ', ');
+  $to = '' unless defined $to;
+  my $cc = tools::decode_header($msgent, 'Cc', ', ');
+  $cc = '' unless defined $cc;
+
   my @fromline = Mail::Address->parse($msgent->head->get('From'));
   my $name;
   if ($fromline[0]) {
     $name = MIME::EncWords::decode_mimewords($fromline[0]->name(),
 					     Charset=>'utf8');
-    $name = $fromline[0]->address() unless $name =~ /\S/;
-    chomp $name;
+    $name = $fromline[0]->address() unless defined $name and $name =~ /\S/;
+    chomp $name if $name;
   }
-  $name ||= $from;
+  $name = $from unless defined $name and length $name;
 
   $outstring .= gettext("\n[Attached message follows]\n-----Original message-----\n"); 
   my $headers = '';
@@ -221,8 +220,8 @@
  sub _do_text_plain {
   my $entity = shift;    
 
-  if($entity->head->get('content-disposition') =~ /attachment/) {
-	  return _do_other($entity);
+  if (($entity->head->get('Content-Disposition') || '') =~ /attachment/) {
+    return _do_other($entity);
   }
 
   my $thispart = $entity->bodyhandle->as_string;

@@ -112,7 +112,7 @@ sub reject_report_msg {
 	}
     }
     if ($type eq 'intern') {
-	chomp($param->{'msg_id'});
+	chomp $param->{'msg_id'} if $param->{'msg_id'};
 
 	$param ||= {}; 
 	$param->{'error'} =  &gettext($error);
@@ -165,8 +165,11 @@ sub _get_msg_as_hash {
     ## TODO : we should also decode headers + remove trailing \n + use these variables in default mail templates
 
     my $from = $head->get('From');
+    chomp $from if $from;
     my $subject = $head->get('Subject');
+    chomp $subject if $subject;
     my $msg_id = $head->get('Message-Id');
+    chomp $msg_id if $msg_id;
     $msg_hash = {'full' => $msg_entity->as_string, 
 		 'body' => $body_as_string,
 		 'from' => $from,
