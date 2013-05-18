@@ -33,7 +33,7 @@ use SDM;
 use Message;
 use List;
 
-my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
+my ($sth, @sth_stack);
 our $filename_regexp = '^(\S+)\.(\d+)\.\w+$';
 
 our %classes = (

@@ -285,9 +285,10 @@ while (!$end) {
 		
 		## disconnect from database before fork
 		## to prevent DB handlers to be shared by different processes
-		my $dbh = &SDM::db_get_handler();
-		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
-		
+		# when loading conf in database disconnect because of sharing
+		# database handler may crash bulk.pl
+		SDM::db_disconnect();
+
 		if(Site->bulk_max_count > 1) {
 		    &Log::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, Site->bulk_max_count-($#remaining_children+1));
 		    for my $process_count(1..Site->bulk_max_count-($#remaining_children+1)){
@@ -325,7 +326,8 @@ while (!$end) {
 	## Go through the bulk_mailer table and process messages
 
     if ($bulk = Bulk::next()) {
-	if ($bulk->{'messagekey'} ne $messagekey) {
+	if (! defined $messagekey or
+	    $bulk->{'messagekey'} ne $messagekey) {
 	    # current packet is not related to the same message as the previous packet
             # so it is needed to fetch the new message from message_table 
 

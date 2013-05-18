@@ -38,7 +38,7 @@ use SDM;
 our @ISA = qw(Exporter);
 
 ## Database and SQL statement handlers
-my ($dbh, $sth, $db_connected, @sth_stack, $use_db);
+my ($sth, @sth_stack);
 
 
 ## Creates an object.

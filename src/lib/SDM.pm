@@ -100,6 +100,8 @@ sub do_prepared_query {
 ## Get database handler
 ## Note: if database connection is not available, this function returns
 ## immediately.
+##
+## NOT RECOMMENDED.  Should not access to database handler.
 sub db_get_handler {
     Log::do_log('debug3', '()');
 
