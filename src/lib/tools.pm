@@ -340,10 +340,9 @@ sub checkcommand {
 
    my($avoid, $i);
 
-   my $hdr = $msg->head;
-
-   ## Check for commands in the subject.
-   my $subject = $msg->head->get('Subject');
+    ## Check for commands in the subject.
+    my $subject = $msg->head->get('Subject');
+    chomp $subject if $subject;
 
    &Log::do_log('debug3', 'tools::checkcommand(msg->head->get(subject): %s,%s)', $subject, $sender);
 
