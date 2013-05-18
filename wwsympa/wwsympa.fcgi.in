@@ -41,7 +41,7 @@ This FastCGI script completely handles all aspects of the Sympa web interface
 use lib '--modulesdir--';
 
 use strict;
-use warnings;
+#use warnings; #temporarily disabled
 use Getopt::Long;
 use Archive::Zip qw(:ERROR_CODES);
 use Time::Local;
@@ -7459,14 +7459,15 @@ sub do_distribute {
 	 }
 	 $data->{'body'} .= sprintf ("QUIET DISTRIBUTE %s %s\n",$list->name,$id);
 
-	 ## TAG 
-	 if ($list_topics) {
-
-	     my $message = new Message({'message_in_spool'=> $message_in_spool});
-	     my $msg = $message->{'msg'};
-	     my $head = $msg->head();
-	     my $filetopic = $list->tag_topic(&tools::clean_msg_id($head->get('Message-Id')),$list_topics,'editor');
-	 }
+	## TAG 
+	if ($list_topics) {
+	    my $message =
+		new Message({'message_in_spool'=> $message_in_spool});
+	    my $filetopic = $list->tag_topic(
+		tools::clean_msg_id($message->get_header('Message-Id')),
+		$list_topics, 'editor'
+	    );
+	}
 
          ### move message in spool of validated messages
          unless ($modspool->validate_message) {
@@ -16743,27 +16744,26 @@ sub do_request_topic {
      }
      my $message = new Message({'message_in_spool'=> $authmessage});
 
-     my $msg = $message->{'msg'};
-     my $head = $msg->head();
-     # headers will be encoded later.
-     $param->{'subject'} = tools::decode_header($head, 'Subject');
-     $param->{'subject'} = &tools::escape_html($param->{'subject'});
-     $param->{'from'} = tools::decode_header($head, 'From');
-     $param->{'from'} = &tools::escape_html($param->{'from'});
-     $param->{'date'} = tools::decode_header($head, 'Date');
-     $param->{'date'} =  &tools::escape_html($param->{'date'});
-     $param->{'message_id'} = &tools::clean_msg_id($head->get('Message-Id'));
+    # headers will be encoded later.
+    $param->{'subject'} = tools::decode_header($message, 'Subject');
+    $param->{'subject'} = tools::escape_html($param->{'subject'});
+    $param->{'from'}    = tools::decode_header($message, 'From');
+    $param->{'from'}    = tools::escape_html($param->{'from'});
+    $param->{'date'}    = tools::decode_header($message, 'Date');
+    $param->{'date'}    = tools::escape_html($param->{'date'});
+    $param->{'message_id'} =
+	tools::clean_msg_id($message->get_header('Message-Id'));
 
-     my $body = $msg->bodyhandle();
-     if ($body) {
-	 $param->{'body'} = $body->as_string();
-     }else{
+    my $body = $message->{'msg'}->bodyhandle();
+    if ($body) {
+	$param->{'body'} = $body->as_string();
+    } else {
 	 $param->{'body'} = '';
-     }
-     $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
+    }
+    $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
 
-     return 1;
- }
+    return 1;
+}
 
 ####################################################
 #  do_tag_topic_by_sender

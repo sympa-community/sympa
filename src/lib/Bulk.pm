@@ -20,7 +20,7 @@
 package Bulk;
 
 use strict;
-
+use warnings;
 #use Carp; # currently not used
 use Encode;
 #use Time::HiRes qw(time); # For more precise date; currently not used
@@ -221,7 +221,7 @@ sub store {
     my %data = @_;
     
     my $message = $data{'message'};
-    my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
+    my $msg_id = $message->get_header('Message-Id');
     my $rcpts = $data{'rcpts'};
     my $from = $data{'from'};
     my $robot = Robot::clean_robot($data{'robot'}, 1); # maybe Site
@@ -260,7 +260,9 @@ sub store {
     my $message_already_on_spool ;
     my $bulkspool = new Sympaspool ('bulk');
 
-    if (($last_stored_message_key) && ($message->{'messagekey'} eq $last_stored_message_key)) {
+    if (defined $last_stored_message_key and
+	defined $message->{'messagekey'} and
+	$message->{'messagekey'} eq $last_stored_message_key) {
 	$message_already_on_spool = 1;
     }else{
 	my $lock = $$.'@'.hostname() ;
@@ -411,7 +413,7 @@ sub remove_bulkspool_message {
 }
 ## Return the number of remaining packets in the bulkmailer table.
 sub get_remaining_packets_count {
-    &Log::do_log('debug3', 'get_remaining_packets_count');
+    Log::do_log('debug3', '()');
 
     my $m_count = 0;
 
@@ -428,11 +430,12 @@ sub get_remaining_packets_count {
 ## Returns 1 if the number of remaining packets in the bulkmailer table exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
-    &Log::do_log('debug3', 'there_is_too_much_remaining_packets');
-    my $remaining_packets = &get_remaining_packets_count();
-    if ($remaining_packets > Site->bulk_fork_threshold) {
+    Log::do_log('debug3', '()');
+    my $remaining_packets = get_remaining_packets_count();
+    if ($remaining_packets and
+	$remaining_packets > Site->bulk_fork_threshold) {
 	return $remaining_packets;
-    }else{
+    } else {
 	return 0;
     }
 }

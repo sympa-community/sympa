@@ -395,7 +395,7 @@ while (!$end) {
 		my $return_path;
 
 		if(($bulk->{'tracking'} eq 'dsn')||($bulk->{'tracking'} eq 'mdn')){ # tracking by MDN required tracking by DSN to
-		    my $msgid = $entity->head->get('Message-Id'); chomp $msgid;		    
+		    my $msgid = $message->get_header('Message-Id');
 		    $notification_id =
 			tracking::find_notification_id_by_message(
 			    $rcpt, $msgid, $listname, $robot_id

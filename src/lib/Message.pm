@@ -177,8 +177,7 @@ sub new {
     bless $message, $pkg;
     $message->{'noxsympato'} = $noxsympato;
     $message->{'size'} = length($message->{'msg_as_string'});
-    $message->{'msg_id'} = $message->{'msg'}->head->get('Message-Id');
-    chomp $message->{'msg_id'};
+    $message->{'msg_id'} = $message->get_header('Message-Id');
     # Some messages without X-Sympa-To still need a list context.
     $message->{'list'} ||= $datas->{'list'};
 
@@ -284,6 +283,46 @@ sub create_message_from_string {
     return $self;
 }
 
+=over 4
+
+=item get_header ( FIELD, [ SEP ] )
+
+I<Instance method>.
+Gets value(s) of header field FIELD, stripping trailing newline.
+
+B<In scalar context> without SEP, returns first occurrence or C<undef>.
+If SEP is defined, returns all occurrences joined by it, or C<undef>.
+Otherwise B<in array context>, returns an array of all occurrences or C<()>.
+
+Note:
+Folding newlines will not be removed.
+
+=back
+
+=cut
+
+sub get_header {
+    my $self  = shift;
+    my $field = shift;
+    my $sep   = shift;
+
+    my $hdr = $self->{'msg'}->head;
+
+    if (defined $sep or wantarray) {
+	my @values = grep { s/\A$field\s*:\s*//i }
+	    split /\n(?![ \t])/, $hdr->as_string;
+	if (defined $sep) {
+	    return undef unless @values;
+	    return join $sep, @values;
+	}
+	return @values;
+    } else {
+	my $value = $hdr->get($field, 0);
+	chomp $value if defined $value;
+	return $value;
+    }
+}
+
 sub get_envelope_sender {
     my $self = shift;
 
@@ -378,7 +417,7 @@ sub get_subject {
 	my $hdr = $self->{'msg'}->head;
 	## Store decoded subject and its original charset
 	my $subject = $hdr->get('Subject');
-	if ($subject =~ /\S/) {
+	if (defined $subject and $subject =~ /\S/) {
 	    my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
 	    $self->{'subject_charset'} = 'US-ASCII';
 	    foreach my $token (@decoded_subject) {
@@ -405,11 +444,14 @@ sub get_subject {
 	}
 	if ($self->{'subject_charset'}) {
 	    $self->{'decoded_subject'} =
-		MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
+		tools::decode_header($self, 'Subject');
 	} else {
+	    if ($subject) {
+		chomp $subject;
+		$subject =~ s/(\r\n|\r|\n)([ \t])/$2/g;
+	    }
 	    $self->{'decoded_subject'} = $subject;
 	}
-	chomp $self->{'decoded_subject'};
     }
     return $self->{'decoded_subject'};
 }
@@ -417,10 +459,11 @@ sub get_subject {
 sub get_family {
     my $self = shift;
     unless ($self->{'family'}) {
-	$self->{'family'} = $self->{'msg'}->head->get('X-Sympa-Family');
-	chomp $self->{'family'};
-	$self->{'family'} =~ s/^\s+//;
-	$self->{'family'} =~ s/\s+$//;
+	$self->{'family'} = $self->get_header('X-Sympa-Family');
+	if ($self->{'family'}) {
+	    $self->{'family'} =~ s/^\s+//;
+	    $self->{'family'} =~ s/\s+$//;
+	}
     }
     return $self->{'family'};
 }
@@ -428,23 +471,21 @@ sub get_family {
 sub get_receipient {
     my $self = shift;
     my $force = shift;
-    my $hdr = $self->{'msg'}->head;
     my $rcpt;
     if (!$self->{'rcpt'} || $self->get_family) {
 	# message.pm can be used not only for message coming from queue
-	unless ($rcpt = $hdr->get('X-Sympa-To')) {
+	unless ($rcpt = $self->get_header('X-Sympa-To')) {
 	    unless (defined $self->{'noxsympato'}) {
 		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
 		return undef;
 	    }
-	    unless ($rcpt = $hdr->get('To')) {
+	    unless ($rcpt = $self->get_header('To')) {
 		Log::do_log('err', 'no To: header found, ignoring message.');
 		return undef;
 	    }
 	}
 	## Extract recepient address (X-Sympa-To)
 	$self->{'rcpt'} = $rcpt;
-	chomp $self->{'rcpt'};
     }
     return $self->{'rcpt'};
 }
@@ -545,7 +586,7 @@ sub get_robot {
 	}
 	unless ($self->{'robot'} = Robot->new($self->{'robot_id'},('just_try' => 1))) {
 	    if (my $from = $self->get_mime_message->head->get('X-Sympa-From')) {
-		chomp $from;
+		chomp $from if $from;
 		my ($listname, $robot_id) = split /\@/, $from;
 		$self->{'robot_id'} = lc($robot_id || '');
 		$self->{'robot'} = Robot->new($self->{'robot_id'});
@@ -589,8 +630,8 @@ sub check_x_sympa_checksum {
     unless ($self->{'noxsympato'}) {
 	## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
 	if ( $hdr->get('X-Sympa-Checksum')) {
-	    my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
-	    my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
+	    my $chksum = $self->get_header('X-Sympa-Checksum');
+	    my $rcpt   = $self->get_header('X-Sympa-To');
 
 	    if ($chksum eq &tools::sympa_checksum($rcpt)) {
 		$self->{'md5_check'} = 1 ;
@@ -874,8 +915,7 @@ sub get_body_from_msg_as_string {
 # input : msg object for a list, return a new message object decrypted
 sub smime_decrypt {
     my $self = shift;
-    my $from = $self->{'msg'}->head->get('from');
-    chomp $from;
+    my $from = $self->get_header('From');
     my $list = $self->{'list'};
 
     use Data::Dumper;
@@ -1437,7 +1477,7 @@ sub get_msg_id {
     my $self = shift;
     unless ($self->{'id'}) {
 	$self->{'id'} = $self->get_mime_message->head->get('Message-Id');
-	chomp $self->{'id'};
+	chomp $self->{'id'} if $self->{'id'};
     }
     return $self->{'id'}
 }
@@ -2196,9 +2236,10 @@ sub _urlize_part {
 
     my $head     = $message->head;
     my $encoding = $head->mime_encoding;
-    my $content_type = $head->get('Content-Type');
-    chomp $content_type;
-    return undef if ($content_type =~ /multipart\/alternative/gi || $content_type =~ /text\//gi);
+    my $eff_type = $message->effective_type || 'text/plain';
+    return undef
+	if $eff_type =~ /multipart\/alternative/gi or
+	    $eff_type =~ /text\//gi;
     ##  name of the linked file
     my $fileExt = $mime_types->{$head->mime_type};
     if ($fileExt) {
@@ -2311,7 +2352,7 @@ Get unique ID for object.
 
 sub get_id {
     my $self = shift;
-    return sprintf '%08X;message-id=%s', $self+0, $self->get_msg_id;
+    return sprintf '%08X;message-id=%s', $self+0, ($self->get_msg_id || '');
 }
 
 ## Packages must return true.

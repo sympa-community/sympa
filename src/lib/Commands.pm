@@ -2676,7 +2676,7 @@ sub distribute {
     my $msg = $message->{'msg'};
     my $hdr = $msg->head;
 
-    my $msg_id     = $hdr->get('Message-Id');
+    my $msg_id     = $message->get_header('Message-Id');
     my $msg_string = $msg->as_string;
 
     $hdr->add('X-Validation-by', $sender);
@@ -2713,13 +2713,13 @@ sub distribute {
     }
     &Log::do_log(
 	'info',
-	'Message for list %s accepted by %s (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d',
+	'Message %s for list %s accepted by %s (%d seconds, %d sessions, %d subscribers), size=%d',
+	$message,
 	$list->get_list_id(),
 	$sender,
 	time - $start_time,
 	$numsmtp,
 	$list->total(),
-	$hdr->get('Message-Id'),
 	$message->{'size'}
     );
 
@@ -2800,7 +2800,7 @@ sub confirm {
     my $bytes = $message->{'size'};
     my $hdr   = $msg->head;
 
-    my $msgid      = $hdr->get('Message-Id');
+    my $msgid      = $message->get_header('Message-Id');
     my $msg_string = $message->{'msg'}->as_string;
 
     my $result = Scenario::request_action(
@@ -2816,8 +2816,8 @@ sub confirm {
     unless (defined $action) {
 	&Log::do_log(
 	    'err',
-	    'message (%s) ignored because unable to evaluate scenario for list %s',
-	    $msgid,
+	    'message %s ignored because unable to evaluate scenario for list %s',
+	    $message,
 	    $list
 	);
 	&report::reject_report_msg(
@@ -3070,12 +3070,11 @@ sub reject {
     }
     my $msg          = $message->{'msg'};
     my $bytes        = $message->{'size'};
-    my $hdr          = $msg->head;
     my $customheader = $list->custom_header;
-    my $to_field     = $hdr->get('To');
 
-    my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
-    unless ($#sender_hdr == -1) {
+    #FIXME: use get_sender_email() ?
+    my @sender_hdr = Mail::Address->parse($message->get_header('From'));
+    unless (@sender_hdr) {
 	my $rejected_sender = $sender_hdr[0]->address;
 	my %context;
 	$context{'subject'} = &tools::decode_header($message, 'Subject');
@@ -3330,7 +3329,7 @@ sub get_auth_method {
     my $that;
     my $auth_method;
 
-    if ($sign_mod eq 'smime') {
+    if ($sign_mod and $sign_mod eq 'smime') {
 	$auth_method = 'smime';
     } elsif ($auth ne '') {
 	&Log::do_log('debug3', 'auth received from %s : %s', $sender, $auth);
@@ -3360,7 +3359,7 @@ sub get_auth_method {
 	}
     } else {
 	$auth_method = 'smtp';
-	$auth_method = 'dkim' if ($sign_mod eq 'dkim');
+	$auth_method = 'dkim' if $sign_mod and $sign_mod eq 'dkim';
     }
 
     return $auth_method;

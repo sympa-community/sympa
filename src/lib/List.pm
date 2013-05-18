@@ -1479,8 +1479,7 @@ sub distribute_msg {
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $info_msg_topic;
     if ($self->is_there_msg_topic()) {
-	my $msg_id = $hdr->get('Message-ID');
-	chomp($msg_id);
+	my $msg_id = $message->get_header('Message-Id');
 	$info_msg_topic = $self->load_msg_topic($msg_id);
 
 	# add X-Sympa-Topic header
@@ -1607,7 +1606,7 @@ sub distribute_msg {
     $apply_tracking = 'mdn'
 	if $self->tracking->{'message_delivery_notification'} eq 'on_demand'
 	    and
-	    $hdr->get('Disposition-Notification-To');
+	    $message->get_header('Disposition-Notification-To');
 
     if ($apply_tracking ne 'off') {
 	$hdr->delete('Disposition-Notification-To')
@@ -1627,18 +1626,21 @@ sub distribute_msg {
 
     ## Change the reply-to header if necessary.
     if ($self->reply_to_header) {
-	unless ($hdr->get('Reply-To') and
+	unless ($message->get_header('Reply-To') and
 	    $self->reply_to_header->{'apply'} ne 'forced') {
 	    my $reply;
 
 	    $hdr->delete('Reply-To');
 
+	    #FIXME: use get_sender_email() ?
+	    my $sender_address = $message->get_header('From');
+
 	    if ($self->reply_to_header->{'value'} eq 'list') {
 		$reply = $self->get_list_address();
 	    } elsif ($self->reply_to_header->{'value'} eq 'sender') {
-		$reply = $hdr->get('From');
+		$reply = $sender_address;
 	    } elsif ($self->reply_to_header->{'value'} eq 'all') {
-		$reply = $self->get_list_address() . ',' . $hdr->get('From');
+		$reply = $self->get_list_address() . ', ' . $sender_address;
 	    } elsif ($self->reply_to_header->{'value'} eq 'other_email') {
 		$reply = $self->reply_to_header->{'other_email'};
 	    }
@@ -1663,9 +1665,10 @@ sub distribute_msg {
     }
 
     ## Add RFC 2919 header field
-    if ($hdr->get('List-Id')) {
-	&Log::do_log('notice', 'Found List-Id: %s', $hdr->get('List-Id'));
-	$hdr->delete('List-ID');
+    if ($message->get_header('List-Id')) {
+	Log::do_log('notice', 'Found List-Id: %s',
+	    $message->get_header('List-Id'));
+	$hdr->delete('List-Id');
     }
     $self->add_list_header($hdr, 'id');
 
@@ -1833,8 +1836,9 @@ sub prepare_messages_for_digest {
 	#$msg->{'body'} = $mail->bodyhandle->as_string();
 
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
-	$msg->{'message_id'} = &tools::clean_msg_id($mail->{'msg'}->head->get('Message-Id'));
-	
+	$msg->{'message_id'} =
+	    tools::clean_msg_id($mail->get_header('Message-Id'));
+
 	## Clean up Message-ID
 	$msg->{'message_id'} = &tools::escape_chars($msg->{'message_id'});
 
@@ -2014,7 +2018,7 @@ sub send_msg {
 	$apply_dkim_signature
     );
     my $hdr = $message->{'msg'}->head;
-    my $original_message_id = $hdr->get('Message-Id');
+    my $original_message_id = $message->get_header('Message-Id');
     my $name                = $self->name;
     my $robot               = $self->domain;
 
@@ -2024,7 +2028,8 @@ sub send_msg {
 	return 0;
     }
 
-    my $sender_line = $hdr->get('From');
+    #FIXME: get_sender_email() ?
+    my $sender_line = $message->get_header('From');
     my @sender_hdr = Mail::Address->parse($sender_line);
     foreach my $email (@sender_hdr) {
 	$message->{'sender_hash'}{lc($email->address)} = 1;
@@ -2197,8 +2202,8 @@ sub get_list_members_per_mode {
 	) {
 	    Log::do_log('debug3','No certificate for user %s',$user->{'email'});
 	    ## Missing User certificate
-	    my $subject = $message->{'msg'}->head->get('Subject');
-	    my $sender = $message->{'msg'}->head->get('From');
+	    my $subject = $message->get_header('Subject');
+	    my $sender  = $message->get_header('From'); #FIXME
 	    unless (
 	    $self->send_file(
 		'x509-user-cert-missing',
@@ -2426,7 +2431,8 @@ sub send_to_editor {
 	    "No editor found for list %s. Trying to proceed ignoring nomail option",
 	    $self
 	);
-       my $messageid = $hdr->get('Message-Id');
+	my $messageid = $hdr->get('Message-Id');
+	chomp $messageid if $messageid;
 
 	@rcpt = $self->get_editors_email({'ignore_nomail', 1});
 	&Log::do_log('notice',
@@ -5302,12 +5308,14 @@ sub archive_msg {
 	    Log::do_log('debug3', 'Will store UNencrypted message');
 	}
 
-	if ((Site->ignore_x_no_archive_header_feature ne 'on') &&
-	    (   ($message->get_mime_message->head->get('X-no-archive') =~ /yes/i) ||
-		($message->get_mime_message->head->get('Restrict') =~
-		    /no\-external\-archive/i)
-	    )
-	    ) {
+	my $x_no_archive =
+	    $message->get_mime_message->head->get('X-no-archive');
+	my $restrict = $message->get_mime_message->head->get('Restrict');
+	if (
+	    Site->ignore_x_no_archive_header_feature ne 'on' and
+	    ($x_no_archive and $x_no_archive =~ /yes/i or
+		$restrict and $restrict =~ /no\-external\-archive/i)
+	) {
 	    ## ignoring message with a no-archive flag
 	    &Log::do_log('info',
 		"Do not archive message with no-archive flag for list %s",
@@ -10031,7 +10039,7 @@ sub is_msg_topic_tagging_required {
 sub automatic_tag {
     my ($self, $msg, $robot) = @_;
     my $msg_id = $msg->head->get('Message-ID');
-    chomp($msg_id);
+    chomp $msg_id if $msg_id;
     &Log::do_log('debug3', '(%s, msg_id=%s)', $self, $msg_id);
 
     my $topic_list = $self->compute_topic($msg, $robot);
@@ -10066,7 +10074,7 @@ sub automatic_tag {
 sub compute_topic {
     my ($self, $msg, $robot) = @_;
     my $msg_id = $msg->head->get('Message-ID');
-    chomp($msg_id);
+    chomp $msg_id if $msg_id;
     Log::do_log('debug3', 'compute_topic(%s, msg_id=%s)', $self, $msg_id);
     my @topic_array;
     my %topic_hash;
@@ -10075,6 +10083,7 @@ sub compute_topic {
     ## TAGGING INHERITED BY THREAD
     # getting reply-to
     my $reply_to = $msg->head->get('In-Reply-To');
+    chomp $reply_to if $reply_to;
     my $info_msg_reply_to = $self->load_msg_topic($reply_to);
 
     # is msg reply to already tagged?

@@ -89,21 +89,30 @@ sub count {
 #  get_content return the content an array of hash describing the spool content
 # 
 sub get_content {
-
     my $self = shift;
     my $data= shift;
-    my $selector=$data->{'selector'};     # hash field->value used as filter  WHERE sql query 
-    my $selection=$data->{'selection'};   # the list of field to select. possible values are :
-                                          #    -  a comma separated list of field to select. 
-                                          #    -  '*'  is the default .
-                                          #    -  '*_but_message' mean any field except message which may be huge and unusefull while listing spools
-                                          #    - 'count' mean the selection is just a count.
-                                          # should be used mainly to select all but 'message' that may be huge and may be unusefull
-    my $offset = $data->{'offset'};         # for pagination, start fetch at element number = $offset;
-    my $page_size = $data->{'page_size'}; # for pagination, limit answers to $page_size
+
+    # hash field->value used as filter WHERE sql query
+    my $selector = $data->{'selector'};
+
+    # the list of field to select. possible values are :
+    #    -  a comma separated list of field to select. 
+    #    -  '*'  is the default .
+    #    -  '*_but_message' mean any field except message which may be huge
+    #       and unusefull while listing spools
+    #    - 'count' mean the selection is just a count.
+    # should be used mainly to select all but 'message' that may be huge and
+    # may be unusefull
+    my $selection=$data->{'selection'};
+
+    # for pagination, start fetch at element number = $offset;
+    my $offset = $data->{'offset'};
+
+    # for pagination, limit answers to $page_size
+    my $page_size = $data->{'page_size'};
+
     my $orderby = $data->{'sortby'};      # sort
     my $way = $data->{'way'};             # asc or desc 
-    
 
     my $sql_where = _sqlselector($selector);
     if ($self->{'selection_status'} eq 'bad') {
@@ -435,15 +444,18 @@ sub store {
     
     if($message) {
 	$metadata->{'spam_status'} = $message->{'spam_status'};
-	$metadata->{'subject'} = $message->{'msg'}->head->get('Subject'); chomp $metadata->{'subject'} ;
-	$metadata->{'subject'} = substr $metadata->{'subject'}, 0, 109;
-	$metadata->{'messageid'} = $message->{'msg'}->head->get('Message-Id'); chomp $metadata->{'messageid'} ;
-	$metadata->{'messageid'} = substr $metadata->{'messageid'}, 0, 295;
-	$metadata->{'headerdate'} = substr $message->{'msg'}->head->get('Date'), 0, 78;
+	$metadata->{'subject'} = $message->get_header('Subject');
+	$metadata->{'subject'} = substr $metadata->{'subject'}, 0, 109
+	    if defined $metadata->{'subject'};
+	$metadata->{'messageid'} = $message->get_header('Message-Id');
+	$metadata->{'messageid'} = substr $metadata->{'messageid'}, 0, 295
+	    if defined $metadata->{'messageid'};
+	$metadata->{'headerdate'} = substr $message->get_header('Date'), 0, 78;
 
-	my @sender_hdr = Mail::Address->parse($message->{'msg'}->get('From'));
-	if ($#sender_hdr >= 0){
-	    $metadata->{'sender'} = lc($sender_hdr[0]->address) unless ($sender);
+	#FIXME: get_sender_email() ?
+	my @sender_hdr = Mail::Address->parse($message->get_header('From'));
+	if (@sender_hdr) {
+	    $metadata->{'sender'} = lc($sender_hdr[0]->address) unless $sender;
 	    $metadata->{'sender'} = substr $metadata->{'sender'}, 0, 109;
 	}
     }else{
@@ -669,8 +681,7 @@ sub _selectfields{
 # selector is a hash where key is a column name and value is column value expected.**** 
 #   **** value can be prefixed with <,>,>=,<=, in that case the default comparator operator (=) is changed, I known this is dirty but I'm lazy :-(
 sub _sqlselector {
-	
-    my $selector = shift;
+    my $selector = shift || {};
     my $sqlselector = '';
 
     $selector = {%$selector};
