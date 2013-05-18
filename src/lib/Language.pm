@@ -795,7 +795,9 @@ sub sympa_dgettext {
 
     ## This prevents meta information to be returned if the string to
     ## translate is empty
-    if ($param[0] eq '') {
+    unless (defined $param[0]) {
+	return undef;
+    } elsif ($param[0] eq '') {
 	return '';
     } elsif ($param[0] =~ '^_(\w+)_$') {
 	## return meta information on the catalog (language, charset,
@@ -857,7 +859,9 @@ sub gettext {
 
     ## This prevents meta information to be returned if the string to
     ## translate is empty
-    if ($param[0] eq '') {
+    unless (defined $param[0]) {
+	return undef;
+    } elsif ($param[0] eq '') {
 	return '';
     } elsif ($param[0] =~ '^_(\w+)_$') {
 	## return meta information on the catalog (language, charset,
