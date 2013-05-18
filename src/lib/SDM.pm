@@ -170,7 +170,9 @@ sub connect_sympa_database {
 sub db_disconnect {
     Log::do_log('debug2', '()');
 
-    undef $db_source->{'dbh'};
+    my $dbh = $db_source->{'dbh'};
+    $dbh->disconnect if $dbh;
+    delete $db_source->{'dbh'};
     return 1;
 }
 
