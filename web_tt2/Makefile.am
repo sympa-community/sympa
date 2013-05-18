@@ -137,6 +137,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   show_cert.tt2 \
 		   show_exclude.tt2 \
 		   show_sessions.tt2 \
+		   sigindex.tt2 \
 		   sigrequest.tt2 \
 		   skinsedit.tt2 \
 		   sso_login.tt2 \
