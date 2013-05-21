@@ -896,7 +896,8 @@ sub upgrade {
 			}
 		    }
 		    unless ($match){$ignored .= ','.$filename;next;}
-		}elsif (($spoolparameter eq 'queue')||($spoolparameter eq 'queuebounce')){
+		} elsif ($spoolparameter eq 'queue' or
+		    $spoolparameter eq 'queuebounce') {
 		    ## Don't process temporary files created by queue bouncequeue queueautomatic (T.xxx)
 		    next if ($filename =~ /^T\./);
 
@@ -982,7 +983,8 @@ sub upgrade {
 		}
 
 		## Store into DB spool
-		unless ($spoolparameter eq 'queuemod') {
+		unless ($spoolparameter eq 'queue' or
+		    $spoolparameter eq 'queuemod') {
 		    my $messagekey = $spool->store($messageasstring,\%meta);
 		    unless($messagekey) {
 			Log::do_log('err',
@@ -1008,7 +1010,8 @@ sub upgrade {
 		}
 
 		## Clear filesystem spool
-		unless ($spoolparameter eq 'queuemod') {
+		unless ($spoolparameter eq 'queue' or
+		    $spoolparameter eq 'queuemod') {
 		    mkdir $spooldir.'/copy_by_upgrade_process/'
 			unless -d $spooldir.'/copy_by_upgrade_process/';
 
