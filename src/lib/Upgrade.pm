@@ -984,7 +984,10 @@ sub upgrade {
 
 		## Store into DB spool
 		unless ($spoolparameter eq 'queue' or
-		    $spoolparameter eq 'queuemod') {
+		    $spoolparameter eq 'queueautomatic' or
+		    $spoolparameter eq 'queuebounce' or
+		    $spoolparameter eq 'queuemod' or
+		    $spoolparameter eq 'queueoutgoing') {
 		    my $messagekey = $spool->store($messageasstring,\%meta);
 		    unless($messagekey) {
 			Log::do_log('err',
@@ -1011,7 +1014,10 @@ sub upgrade {
 
 		## Clear filesystem spool
 		unless ($spoolparameter eq 'queue' or
-		    $spoolparameter eq 'queuemod') {
+		    $spoolparameter eq 'queueautomatic' or
+		    $spoolparameter eq 'queuebounce' or
+		    $spoolparameter eq 'queuemod' or
+		    $spoolparameter eq 'queueoutgoing') {
 		    mkdir $spooldir.'/copy_by_upgrade_process/'
 			unless -d $spooldir.'/copy_by_upgrade_process/';
 
