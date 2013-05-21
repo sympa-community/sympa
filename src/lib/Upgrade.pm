@@ -744,58 +744,65 @@ sub upgrade {
 			  'queueauth' => 'auth',
 			  'queueoutgoing' => 'archive',
 			  'queuetask' => 'task');
-   if (&tools::lower_version($previous_version, '6.1.11')) {
-	## Exclusion table was not robot-enabled.
-	Log::do_log('notice','fixing robot column of exclusion table.');
-	my $sth = SDM::do_query(q{SELECT * FROM exclusion_table});
-	unless ($sth) {
-	    Log::do_log('err',
-		'Unable to gather informations from the exclusions table.');
-	}
-	my @robots = @{Robot::get_robots() || []};
-	while (my $data = $sth->fetchrow_hashref){
-	    next
-		if defined $data->{'robot_exclusion'} and
-		$data->{'robot_exclusion'} ne '';
-	    ## Guessing right robot for each exclusion.
-	    my $valid_robot = '';
-	    my @valid_robot_candidates;
-	    foreach my $robot (@robots) {
-		if (my $list = new List($data->{'list_exclusion'},$robot)) {
-		    if ($list->is_list_member($data->{'user_exclusion'})) {
-			push @valid_robot_candidates,$robot;
+	if (&tools::lower_version($previous_version, '6.1.11')) {
+	    ## Exclusion table was not robot-enabled.
+	    Log::do_log('notice','fixing robot column of exclusion table.');
+	    my $sth = SDM::do_query(q{SELECT * FROM exclusion_table});
+	    unless ($sth) {
+		Log::do_log('err',
+		    'Unable to gather informations from the exclusions table.'
+		);
+	    }
+	    my @robots = @{Robot::get_robots() || []};
+	    while (my $data = $sth->fetchrow_hashref){
+		next
+		    if defined $data->{'robot_exclusion'} and
+		    $data->{'robot_exclusion'} ne '';
+		## Guessing right robot for each exclusion.
+		my $valid_robot = '';
+		my @valid_robot_candidates;
+		foreach my $robot (@robots) {
+		    if (my $list =
+			new List($data->{'list_exclusion'},$robot)) {
+			if ($list->is_list_member($data->{'user_exclusion'})) {
+			    push @valid_robot_candidates,$robot;
+			}
 		    }
 		}
-	    }
-	    if ($#valid_robot_candidates == 0) {
-		$valid_robot = $valid_robot_candidates[0];
-		my $sth = SDM::do_query(
-		    q{UPDATE exclusion_table
-		      SET robot_exclusion = %s
-		      WHERE list_exclusion = %s AND user_exclusion = %s},
-		    SDM::quote($valid_robot->domain),
-		    SDM::quote($data->{'list_exclusion'}),
-		    SDM::quote($data->{'user_exclusion'})
-		);
-		unless ($sth) {
-		    &Log::do_log('err','Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',$data->{'list_exclusion'},$data->{'user_exclusion'},$valid_robot);
+		if ($#valid_robot_candidates == 0) {
+		    $valid_robot = $valid_robot_candidates[0];
+		    my $sth = SDM::do_query(
+			q{UPDATE exclusion_table
+			  SET robot_exclusion = %s
+			  WHERE list_exclusion = %s AND user_exclusion = %s},
+			SDM::quote($valid_robot->domain),
+			SDM::quote($data->{'list_exclusion'}),
+			SDM::quote($data->{'user_exclusion'})
+		    );
+		    unless ($sth) {
+			Log::do_log('err',
+			    'Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',
+			    $data->{'list_exclusion'},
+			    $data->{'user_exclusion'},
+			    $valid_robot
+			);
+		    }
+		} else {
+		    Log::do_log('err',
+			"Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",
+			$data->{'user_exclusion'},
+			$data->{'list_exclusion'},
+			join(', ', map { $_->domain } @valid_robot_candidates)
+		    );
 		}
-	    }else {
-		Log::do_log('err',
-		    "Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",
-		    $data->{'user_exclusion'},
-		    $data->{'list_exclusion'},
-		    join(', ', map { $_->domain } @valid_robot_candidates)
-		);
 	    }
-	}
-	## Caching all list config
-	&Log::do_log('notice', 'Caching all list config to database...');
-	List::get_lists('Site', { 'reload_config' => 1 });
-	&Log::do_log('notice', '...done');
+	    ## Caching all list config
+	    Log::do_log('notice', 'Caching all list config to database...');
+	    List::get_lists('Site', { 'reload_config' => 1 });
+	    Log::do_log('notice', '...done');
 	}
 
-	foreach my $spoolparameter (keys %spools_def ){
+	foreach my $spoolparameter (keys %spools_def) {
 	    # task is to be done later
 	    next if ($spoolparameter eq 'queuetask');
 
@@ -804,8 +811,9 @@ sub upgrade {
 	    unless (-d $spooldir){
 		&Log::do_log('info',"Could not perform migration of spool %s because it is not a directory", $spoolparameter);
 		next;
-   }
-	    &Log::do_log('notice',"Performing upgrade for spool  %s ",$spooldir);
+	    }
+	    Log::do_log('notice',
+		'Performing upgrade for spool %s', $spooldir);
 
 	    my $spool = new Sympaspool($spools_def{$spoolparameter});
 	    if (!opendir(DIR, $spooldir)) {
@@ -835,18 +843,28 @@ sub upgrade {
 		}				
 
 		if (($spoolparameter eq 'queuedigest')){
-		    unless ($filename =~ /^([^@]*)\@([^@]*)$/){$ignored .= ','.$filename; next;}
+		    unless ($filename =~ /^([^@]*)\@([^@]*)$/) {
+			$ignored .= ','.$filename;
+			next;
+		    }
 		    $listname = $1;
 		    $robot_id = $2;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
-		}elsif (($spoolparameter eq 'queueauth')||($spoolparameter eq 'queuemod')){
-		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
+		} elsif ($spoolparameter eq 'queueauth' or
+		    $spoolparameter eq 'queuemod') {
+		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/) {
+			$ignored .= ','.$filename;
+			next;
+		    }
 		    $listname = $1;
 		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
 		}elsif ($spoolparameter eq 'queuetopic'){
-		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/){$ignored .= ','.$filename;next;}
+		    unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/) {
+			$ignored .= ','.$filename;
+			next;
+		    }
 		    $listname = $1;
 		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
@@ -962,13 +980,19 @@ sub upgrade {
 		    }
 		    $messageasstring .= "\n";
 		}
-		
-		my $messagekey = $spool->store($messageasstring,\%meta);
-		unless($messagekey) {
-		    &Log::do_log('err',"Could not load message %s/%s in db spool",$spooldir, $filename);
-		    next;
+
+		## Store into DB spool
+		unless ($spoolparameter eq 'queuemod') {
+		    my $messagekey = $spool->store($messageasstring,\%meta);
+		    unless($messagekey) {
+			Log::do_log('err',
+			    'Could not load message %s/%s in db spool',
+			    $spooldir, $filename);
+			next;
+		    }
 		}
 
+		## Move HTML view of pending messages
 		if ($spoolparameter eq 'queuemod') {
 		    my $html_view_dir = $spooldir.'/.'.$filename;
 		    my $list_html_view_dir = Site->viewmail_dir.'/mod/'.$listname.'@'.$robot_id;
@@ -982,22 +1006,31 @@ sub upgrade {
 			exit 1;
 		    }
 		}
-		mkdir $spooldir.'/copy_by_upgrade_process/'  unless (-d $spooldir.'/copy_by_upgrade_process/');		
-		
-		my $source = $spooldir.'/'.$filename;
-		my $goal = $spooldir.'/copy_by_upgrade_process/'.$filename;
 
-		&Log::do_log('notice','source %s, goal %s',$source,$goal);
-		# unless (&File::Copy::copy($spooldir.'/'.$filename, $spooldir.'/copy_by_upgrade_process/'.$filename)) {
-		unless (&File::Copy::copy($source, $goal)) {
-		    &Log::do_log('err', 'Could not rename %s to %s: %s', $source,$goal, $!);
-		    exit 1;
-		}
+		## Clear filesystem spool
+		unless ($spoolparameter eq 'queuemod') {
+		    mkdir $spooldir.'/copy_by_upgrade_process/'
+			unless -d $spooldir.'/copy_by_upgrade_process/';
+
+		    my $source = $spooldir.'/'.$filename;
+		    my $goal = $spooldir.'/copy_by_upgrade_process/'.$filename;
+
+		    Log::do_log('notice','source %s, goal %s',$source,$goal);
+		    # unless (&File::Copy::copy($spooldir.'/'.$filename,
+		    #     $spooldir.'/copy_by_upgrade_process/'.$filename)) {
+		    unless (&File::Copy::copy($source, $goal)) {
+			Log::do_log('err', 'Could not rename %s to %s: %s',
+			    $source,$goal, $!);
+			exit 1;
+		    }
 		
-		unless (unlink ($spooldir.'/'.$filename)) {
-		    &Log::do_log('err',"Could not unlink message %s/%s . Exiting",$spooldir, $filename);
+		    unless (unlink ($spooldir.'/'.$filename)) {
+			Log::do_log('err',
+			    'Could not unlink message %s/%s. Exiting',
+			    $spooldir, $filename);
+		    }
+		    $performed .= ','.$filename;
 		}
-		$performed .= ','.$filename;
 	    } 	    
 	    &Log::do_log('info',"Upgrade process for spool %s : ignored files %s",$spooldir,$ignored);
 	    &Log::do_log('info',"Upgrade process for spool %s : performed files %s",$spooldir,$performed);
