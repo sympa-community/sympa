@@ -6966,7 +6966,7 @@ sub do_modindex {
      my $doc;
 
      my $list_name = $list->name;
-     my $modspool = new KeySpool;
+     my $modspool = KeySpool->new();
      my @messages  = $modspool->get_awaiting_messages({'selector'=>{'list'=>$list_name,'robot'=>$robot_id}});
      foreach $msg ( @messages ) {
 	my $message =
@@ -7304,7 +7304,7 @@ sub do_reject {
      }     
      
     &wwslog('info', 'do_reject(%s)', $in{'id'});
-     my $modspool = new KeySpool;
+     my $modspool = KeySpool->new();
      my ($msg, $file);
 
      $param->{'blacklist_added'} = 0;
@@ -7372,7 +7372,6 @@ sub do_reject {
 
          # move message in spool of validated messages
          unless ($modspool->remove_current_message) {
-
 	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
 								 'new'=>"validated"},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
@@ -7416,7 +7415,7 @@ sub do_distribute {
 
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
 
-     my $modspool = new KeySpool;
+     my $modspool = KeySpool->new();
      my ($msg, $file);
 
      my $time = time;
@@ -7518,7 +7517,7 @@ sub do_add_frommod {
 
     ## messages
     $in{'dump'} = '';
-    my $modspool = Sympaspool->new('mod');
+    my $modspool = KeySpool->new();
     foreach my $id (split /,/, $in{'id'}) {
 	my $message_in_spool = $modspool->get_message(
 	    {'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id}

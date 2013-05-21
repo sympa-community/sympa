@@ -2406,8 +2406,8 @@ sub send_to_editor {
     if ($method eq 'md5') {
 
 	# move message to spool  mod
-	my $spoolmod = new KeySpool;
-	$spoolmod->store($message->get_message_as_string,
+	my $modspool = KeySpool->new();
+	$modspool->store($message->get_message_as_string,
 	    {'list' => $message->{'list'}->name, 'robot'=> $message->{'robot'}->name, 'authkey' => $modkey}
 	);
 
@@ -9179,8 +9179,8 @@ sub get_mod_spool_size {
     my $self = shift;
     &Log::do_log('debug3', 'List::get_mod_spool_size()');
 
-    my $spool = new KeySpool;
-    my @messages = $spool->get_awaiting_messages(
+    my $modspool = KeySpool->new();
+    my @messages = $modspool->get_awaiting_messages(
 	{'selector'  => {'list' => $self->name, 'robot' => $self->domain}}
     );
 

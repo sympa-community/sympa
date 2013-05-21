@@ -29,9 +29,9 @@ our @ISA = qw(SympaspoolClassic);
 our $filename_regexp = '^(\S+)_(\w+)(\.distribute)?$';
 
 sub new {
+    Log::do_log('debug2', '(%s)', @_);
     my $pkg = shift;
-    Log::do_log('debug2','Spool class %s',$pkg);
-    my $spool = new SympaspoolClassic('mod');
+    my $spool = SympaspoolClassic->new('mod');
     bless $spool, $pkg;
     return $spool;
 }

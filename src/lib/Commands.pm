@@ -2639,7 +2639,7 @@ sub distribute {
 
     #read the moderation queue and purge it
 
-    my $modspool = new KeySpool;
+    my $modspool = KeySpool->new();
     my $name     = $list->name;
 
     my $message_in_spool = $modspool->get_message(
@@ -3041,7 +3041,7 @@ sub reject {
 
     my $name = $list->name;
 
-    my $modspool         = new Sympaspool('mod');
+    my $modspool         = KeySpool->new();
     my $message_in_spool = $modspool->get_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
@@ -3161,7 +3161,7 @@ sub modindex {
 	return 'not_allowed';
     }
 
-    my $spool = new KeySpool;
+    my $modspool = KeySpool->new();
 
     my $n;
     my @now = localtime(time);
@@ -3170,7 +3170,7 @@ sub modindex {
     my @spool;
 
     foreach my $msg (
-	$spool->get_content(
+	$modspool->get_content(
 	    {   'selector'  => {'list' => $name, 'robot' => $robot->domain},
 		'selection' => '*',
 		'sortby'    => 'date',
