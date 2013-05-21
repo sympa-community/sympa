@@ -26,6 +26,14 @@ use Log;
 
 our @ISA = qw(SympaspoolClassic);
 
+sub new {
+    Log::do_log('debug2', '(%s)', @_);
+    my $pkg = shift;
+    my $spool = SympaspoolClassic->new('msg');
+    bless $spool, $pkg;
+    return $spool;
+}
+
 sub get_next_file_to_process {
     my $self = shift;
     Log::do_log('debug3','%s',$self->get_id);
@@ -71,4 +79,5 @@ sub is_current_file_relevant {
 
     return 1;
 }
+
 1;

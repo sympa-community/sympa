@@ -30,14 +30,14 @@ use MIME::Tools;
 # tentative
 use Data::Dumper;
 
+#use Bulk;
 #use Conf; # used in List - Site
 #use Log; # load in Conf
 use Language qw(gettext);
 #use List; # this package is loaded via List
-use Bulk;
-#use tools; # load in Conf
-#use Sympa::Constants; # load in confdef - Conf
 use Messagespool;
+#use Sympa::Constants; # load in confdef - Conf
+#use tools; # load in Conf
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
@@ -118,9 +118,10 @@ sub mail_file {
     my $return_message_as_string = shift;
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
-
-    Log::do_log('trace', '(%s, %s, ..., sign_mode=%s)',
-	$filename, $rcpt, $sign_mode);
+    Log::do_log('debug2', '(%s, %s, %s, %s, header_possible=%s, sign_mode=%s)',
+	$filename, $rcpt, $robot, $return_message_as_string, $header_possible,
+	$sign_mode
+    );
     my ($to,$message_as_string);
 
     ## boolean
@@ -723,8 +724,12 @@ sub sending {
 		'bulk_error',  {'listname' => $listname});
 	    return undef;
 	}
-    }elsif(defined $send_spool) { # in context wwsympa.fcgi store directly to database.
-	&Log::do_log('trace',"NOT USING SPOOLER: rcpt: %s, from: %s, message: %s",$rcpt, $from, $message);
+    } elsif (defined $send_spool) {
+	# in context wwsympa.fcgi store directly to spool.
+	Log::do_log('info',
+	    "NOT USING QUEUE BINARY: rcpt: %s, from: %s, message: %s",
+	    $rcpt, $from, $message
+	);
 	unless($message->get_mime_message->head->get('X-Sympa-To')) {
 	    $message->set_sympa_headers;
 	}
@@ -735,14 +740,14 @@ sub sending {
 	$meta{'list'} = $message->{'list'}->name if $message->{'list'};
 	$meta{'list'} = $message->{'listname'} if $message->{'listname'};
 	
-	my $msgspool = new Messagespool('msg');
+	my $msgspool = Messagespool->new();
 	unless($msgspool->store($message->get_mime_message->as_string,\%meta)) {
 	    Log::do_log('err',"Could not store message from %s to %s in db spool",$rcpt, $from);
 	    return undef;
 	}
 
    }else{ # send it now
-	&Log::do_log('trace',"NOT USING BULK");
+	Log::do_log('info', 'NOT USING BULK');
 	my $string_to_send;
 	if ($message->{'protected'}) {
 	    $string_to_send = $message->get_encrypted_message_as_string;

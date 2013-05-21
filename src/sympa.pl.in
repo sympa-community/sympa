@@ -1420,8 +1420,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     my $index_cleanqueue  = 0;
     my @qfile;
 
-    my $spoolname = 'msg';
-    my $spool     = new Messagespool($spoolname);
+    my $spool = Messagespool->new();
     ## This is the main loop : look for files in the directory, handles
     ## them, sleeps a while and continues the good job.
     while (!$signal) {
