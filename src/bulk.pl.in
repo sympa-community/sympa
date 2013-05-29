@@ -33,7 +33,7 @@ S<B<bulk.pl> [ B<--foreground> ] [ B<--debug> ]>
 =head1 DESCRIPTION 
 
 This daemon must be run along with Sympa.  It regularly checks the
-C<bulkmailer_table> content and submit the messages it finds in it to the
+C<bulkpacket_table> content and submit the messages it finds in it to the
 sendmail engine.  Several daemon should be used on deferent server for huge
 traffic.
 
@@ -280,7 +280,9 @@ while (!$end) {
 		&tools::direct_stderr_to_file(('pid' => $$));
 		$pids_in_pfile = [$$];
 	    }
-	    ## Start new processes if there remain at least 'bulk_fork_threshold' packets to send in the bulkmailer_table table
+	    ## Start new processes if there remain at least
+	    ## 'bulk_fork_threshold' packets to send in the bulkpacket_table
+	    ## table
 	    if((my $r_packets = &Bulk::there_is_too_much_remaining_packets()) && ($#remaining_children+1 < Site->bulk_max_count) ){
 		
 		## disconnect from database before fork
@@ -365,7 +367,7 @@ while (!$end) {
 	$data->{'wwsympa_url'} = $bulk->{'robot_object'}->wwsympa_url;
 
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
-	my @rcpts = split /,/,$bulk->{'receipients'}; # / Contain all the subscribers 
+	my @rcpts = split /,/,$bulk->{'recipients'}; # / Contain all the subscribers 
 	## Use an intermediate handler to encode to filesystem_encoding
 	my $user;
 	

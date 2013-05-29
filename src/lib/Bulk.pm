@@ -134,7 +134,7 @@ sub next {
 	q{SELECT messagekey_bulkpacket AS messagekey,
 		 messageid_bulkpacket AS messageid,
 		 packetid_bulkpacket AS packetid,
-		 receipients_bulkpacket AS receipients,
+		 recipients_bulkpacket AS recipients,
 		 returnpath_bulkpacket AS returnpath,
 		 listname_bulkpacket AS listname, robot_bulkpacket AS robot,
 		 priority_message_bulkpacket AS priority_message,
@@ -383,7 +383,7 @@ sub store {
 		q{INSERT INTO bulkpacket_table
 		  (messagekey_bulkpacket, messageid_bulkpacket,
 		   packetid_bulkpacket,
-		   receipients_bulkpacket, returnpath_bulkpacket,
+		   recipients_bulkpacket, returnpath_bulkpacket,
 		   robot_bulkpacket,
 		   listname_bulkpacket,
 		   verp_bulkpacket, tracking_bulkpacket, merge_bulkpacket,

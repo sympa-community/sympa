@@ -186,7 +186,7 @@ sub new {
     return undef unless($message->get_sender_email);
 
     $message->get_subject;
-    $message->get_receipient;
+    $message->get_recipient;
     $message->get_robot;
     $message->get_list;
     $message->get_sympa_local_part;
@@ -468,7 +468,7 @@ sub get_family {
     return $self->{'family'};
 }
 
-sub get_receipient {
+sub get_recipient {
     my $self = shift;
     my $force = shift;
     my $rcpt;
@@ -490,7 +490,7 @@ sub get_receipient {
     return $self->{'rcpt'};
 }
 
-sub set_receipient {
+sub set_recipient {
     my $self = shift;
     my $new_rcpt = shift;
 
@@ -517,7 +517,7 @@ sub set_sympa_headers {
     my $param = shift;
     my $rcpt = $param->{'rcpt'};
     my $from = $param->{'from'};
-    $rcpt ||= $self->get_receipient;
+    $rcpt ||= $self->get_recipient;
     $from ||= $self->get_sender_email;
     my $all_rcpt;
     if (ref($rcpt) eq 'ARRAY') {

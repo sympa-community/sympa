@@ -375,9 +375,9 @@ my %full_db_struct = (
 		'doc'=>'The message Id',
 		'order'=>3,
 	    },
-	    'receipients_bulkpacket' => {
+	    'recipients_bulkpacket' => {
 		'struct'=> 'text',
-		'doc'=>'the comma separated list of receipient email for this message',
+		'doc'=>'the comma separated list of recipient email for this message',
 		'order'=>4,
 	    },
 	    'returnpath_bulkpacket' => {
@@ -407,7 +407,7 @@ my %full_db_struct = (
 	    },
 	    'merge_bulkpacket' => {
 		'struct'=> 'int(1)',
-		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach receipient',
+		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
 		'order'=>10,
 	    },
 	    'priority_message_bulkpacket' => {
@@ -436,7 +436,7 @@ my %full_db_struct = (
 		'order'=>15,
 	    },
 	},
-	'doc'=>'storage of receipients with a ref to a message in spool_table. So a very simple process can distribute them',
+	'doc'=>'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',
 	'order'=>4,
     },
     'exclusion_table' => {
@@ -588,12 +588,12 @@ my %full_db_struct = (
 	    },
 	    'recipient_notification' => {
 		'struct'=> 'varchar(100)',
-		'doc'=>'email adresse of receipient for which a DSN or MDM was received',
+		'doc'=>'email address of recipient for which a DSN or MDM was received',
 		'order'=>3,
 	    },
 	    'reception_option_notification' => {
 		'struct'=> 'varchar(20)',
-		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Ussefull because some receipient may have option such as //digest// or //nomail//',
+		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Useful because some recipient may have option such as //digest// or //nomail//',
 		'order'=>4,
 	    },
 	    'status_notification' => {

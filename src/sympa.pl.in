@@ -1624,7 +1624,7 @@ sub process_message {
 
     my $msg  = $message->get_mime_message;
     my $hdr  = $msg->head;
-    my $rcpt = $message->get_receipient;
+    my $rcpt = $message->get_recipient;
 
     ## get listname & robot
     ($listname, $robot_id) = split(/\@/, $rcpt);
