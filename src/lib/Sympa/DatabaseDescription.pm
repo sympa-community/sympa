@@ -354,92 +354,85 @@ my %full_db_struct = (
 	'doc'=>'This table is created in version 6.2. It replace most of spools on file system for clustering purpose',
 	'order'=>3,	    
     },
-    'bulkmailer_table' => {
+    'bulkpacket_table' => {
 	'fields' => {
-#	    'messagekey_bulkmailer' => {
-#		'struct'=> 'varchar(80)',
-#		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_spool',
-#		'primary'=>1,
-#		'not_null'=>1,
-#		'order'=>1,
-#	    },
-	    'spoolkey_bulkmailer' => {
+	    'messagekey_bulkpacket' => {
 		'struct'=> 'bigint(20)',
 		'doc'=>'A pointer to a message in spool_table.  It must be a value of a line in table spool_table with same value as messagekey_spool',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>1,
 	    },
-	    'packetid_bulkmailer' => {
+	    'packetid_bulkpacket' => {
 		'struct'=> 'varchar(33)',
 		'doc'=>'An id for the packet',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>2,
 	    },
-	    'messageid_bulkmailer' => {
+	    'messageid_bulkpacket' => {
 		'struct'=> 'varchar(200)',
 		'doc'=>'The message Id',
 		'order'=>3,
 	    },
-	    'receipients_bulkmailer' => {
+	    'receipients_bulkpacket' => {
 		'struct'=> 'text',
 		'doc'=>'the comma separated list of receipient email for this message',
 		'order'=>4,
 	    },
-	    'returnpath_bulkmailer' => {
+	    'returnpath_bulkpacket' => {
 		'struct'=> 'varchar(100)',
 		'doc'=>'the return path value that must be set when sending the message',
 		'order'=>5,
 	    },
-	    'robot_bulkmailer' => {
+	    'robot_bulkpacket' => {
 		'struct'=> 'varchar(80)',
 		'doc'=>'',
 		'order'=>6,
 	    },
-	    'listname_bulkmailer' => {
+	    'listname_bulkpacket' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'',
 		'order'=>7,
 	    },
-	    'verp_bulkmailer' => {
+	    'verp_bulkpacket' => {
 		'struct'=> 'int(1)',
 		'doc'=>'A boolean to specify if VERP is requiered, in this cas return_path will be formated using verp form',
 		'order'=>8,
 	    },
-	    'tracking_bulkmailer' => {
+	    'tracking_bulkpacket' => {
 		'struct'=> "enum('mdn','dsn')",
 		'doc'=>'Is DSN or MDM requiered when sending this message?',
 		'order'=>9,
 	    },
-	    'merge_bulkmailer' => {
+	    'merge_bulkpacket' => {
 		'struct'=> 'int(1)',
 		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach receipient',
 		'order'=>10,
 	    },
-	    'priority_message_bulkmailer' => {
+	    'priority_message_bulkpacket' => {
 		'struct'=> 'smallint(10)',
 		'doc'=>'FIXME',
 		'order'=>11,
 	    },
-	    'priority_packet_bulkmailer' => {
+	    'priority_packet_bulkpacket' => {
 		'struct'=> 'smallint(10)',
 		'doc'=>'FIXME',
 		'order'=>12,
 	    },
-	    'reception_date_bulkmailer' => {
+	    'reception_date_bulkpacket' => {
 		'struct'=> 'int(11)',
 		'doc'=>'The date where the message was received',
 		'order'=>13,
 	    },
-	    'delivery_date_bulkmailer' => {
+	    'delivery_date_bulkpacket' => {
 		'struct'=> 'int(11)',
 		'doc'=>'The date the message was sent',
 		'order'=>14,
 	    },
-	    'lock_bulkmailer' => {
+	    'lock_bulkpacket' => {
 		'struct'=> 'varchar(30)',
-		'doc'=>'A lock. It is set as process-number @ hostname so multiple bulkmailer can handle this spool',
+		'doc' => 'A lock. It is set as process-number @ hostname so multiple bulk mailers can handle this spool',
 		'order'=>15,
 	    },
 	},

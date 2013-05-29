@@ -28,26 +28,26 @@ CREATE INDEX admin_user_index ON admin_table ( user_admin );
 
 -- --------------------------------------------------------
 --
--- Table structure for table `bulkmailer_table`
+-- Table structure for table `bulkpacket_table`
 -- 
 
-CREATE TABLE bulkmailer_table ( 
-	 delivery_date_bulkmailer 	integer, 
-	 listname_bulkmailer 	text, 
-	 lock_bulkmailer 	text, 
-	 merge_bulkmailer 	numeric, 
-	 messageid_bulkmailer 	text, 
-	 messagekey_bulkmailer 	text, 
-	 packetid_bulkmailer 	text, 
-	 priority_message_bulkmailer 	integer, 
-	 priority_packet_bulkmailer 	integer, 
-	 receipients_bulkmailer 	text, 
-	 reception_date_bulkmailer 	integer, 
-	 returnpath_bulkmailer 	text, 
-	 robot_bulkmailer 	text, 
-	 tracking_bulkmailer 	text, 
-	 verp_bulkmailer 	numeric, 
-	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+CREATE TABLE bulkpacket_table ( 
+	 delivery_date_bulkpacket 	integer, 
+	 listname_bulkpacket 	text, 
+	 lock_bulkpacket 	text, 
+	 merge_bulkpacket 	numeric, 
+	 messageid_bulkpacket 	text, 
+	 messagekey_bulkpacket 	integer, 
+	 packetid_bulkpacket 	text, 
+	 priority_message_bulkpacket 	integer, 
+	 priority_packet_bulkpacket 	integer, 
+	 receipients_bulkpacket 	text, 
+	 reception_date_bulkpacket 	integer, 
+	 returnpath_bulkpacket 	text, 
+	 robot_bulkpacket 	text, 
+	 tracking_bulkpacket 	text, 
+	 verp_bulkpacket 	numeric, 
+	 PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
  );
 
 

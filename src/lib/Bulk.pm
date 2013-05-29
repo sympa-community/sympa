@@ -72,7 +72,7 @@ sub next {
     my $limit_oracle='';
     my $limit_sybase='';
 	## Only the first record found is locked, thanks to the "LIMIT 1" clause
-    $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
+    $order = 'ORDER BY priority_message_bulkpacket ASC, priority_packet_bulkpacket ASC, reception_date_bulkpacket ASC, verp_bulkpacket ASC';
     if (Site->db_type eq 'mysql' or Site->db_type eq 'Pg' or
 	Site->db_type eq 'SQLite') {
 	$order.=' LIMIT 1';
@@ -84,10 +84,10 @@ sub next {
 
     # Select the most prioritary packet to lock.
     unless ($sth = SDM::do_prepared_query(sprintf(
-	q{SELECT %s spoolkey_bulkmailer AS messagekey,
-		 packetid_bulkmailer AS packetid
-	  FROM bulkmailer_table
-	  WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= ?
+	q{SELECT %s messagekey_bulkpacket AS messagekey,
+		 packetid_bulkpacket AS packetid
+	  FROM bulkpacket_table
+	  WHERE lock_bulkpacket IS NULL AND delivery_date_bulkpacket <= ?
 		%s %s},
 	$limit_sybase, $limit_oracle, $order), int(time()))) {
 	Log::do_log('err',
@@ -104,10 +104,10 @@ sub next {
 
     # Lock the packet previously selected.
     unless ($sth = SDM::do_prepared_query(
-	q{UPDATE bulkmailer_table
-	  SET lock_bulkmailer = ?
-	  WHERE spoolkey_bulkmailer = ? AND packetid_bulkmailer = ? AND
-		lock_bulkmailer IS NULL},
+	q{UPDATE bulkpacket_table
+	  SET lock_bulkpacket = ?
+	  WHERE messagekey_bulkpacket = ? AND packetid_bulkpacket = ? AND
+		lock_bulkpacket IS NULL},
 	$lock, $packet->{'messagekey'}, $packet->{'packetid'}
     )) {
 	Log::do_log('err',
@@ -131,20 +131,20 @@ sub next {
 
     # select the packet that has been locked previously
     unless ($sth = SDM::do_query(
-	q{SELECT spoolkey_bulkmailer AS messagekey,
-		 messageid_bulkmailer AS messageid,
-		 packetid_bulkmailer AS packetid,
-		 receipients_bulkmailer AS receipients,
-		 returnpath_bulkmailer AS returnpath,
-		 listname_bulkmailer AS listname, robot_bulkmailer AS robot,
-		 priority_message_bulkmailer AS priority_message,
-		 priority_packet_bulkmailer AS priority_packet,
-		 verp_bulkmailer AS verp, tracking_bulkmailer AS tracking,
-		 merge_bulkmailer as merge,
-		 reception_date_bulkmailer AS reception_date,
-		 delivery_date_bulkmailer AS delivery_date
-	  FROM bulkmailer_table
-	  WHERE lock_bulkmailer=%s %s},
+	q{SELECT messagekey_bulkpacket AS messagekey,
+		 messageid_bulkpacket AS messageid,
+		 packetid_bulkpacket AS packetid,
+		 receipients_bulkpacket AS receipients,
+		 returnpath_bulkpacket AS returnpath,
+		 listname_bulkpacket AS listname, robot_bulkpacket AS robot,
+		 priority_message_bulkpacket AS priority_message,
+		 priority_packet_bulkpacket AS priority_packet,
+		 verp_bulkpacket AS verp, tracking_bulkpacket AS tracking,
+		 merge_bulkpacket as merge,
+		 reception_date_bulkpacket AS reception_date,
+		 delivery_date_bulkpacket AS delivery_date
+	  FROM bulkpacket_table
+	  WHERE lock_bulkpacket=%s %s},
 	SDM::quote($lock), $order
     )) {
 	&Log::do_log('err','Unable to retrieve informations for packet %s of message %s',$packet->{'packetid'}, $packet->{'messagekey'});
@@ -181,8 +181,8 @@ sub remove {
     &Log::do_log('debug', "Bulk::remove(%s,%s)",$messagekey,$packetid);
 
     unless ($sth = SDM::do_query(
-	q{DELETE FROM bulkmailer_table
-	  WHERE packetid_bulkmailer = %s AND spoolkey_bulkmailer = %s},
+	q{DELETE FROM bulkpacket_table
+	  WHERE packetid_bulkpacket = %s AND messagekey_bulkpacket = %s},
 	SDM::quote($packetid), SDM::quote($messagekey)
     )) {
 	&Log::do_log('err','Unable to delete packet %s of message %s', $packetid,$messagekey);
@@ -329,7 +329,7 @@ sub store {
 
     my $current_date = int(time);
     
-    # second : create each recipient packet in bulkmailer_table
+    # second : create each recipient packet in bulkpacket_table
     my $type = ref $rcpts;
 
     unless (ref $rcpts) {
@@ -364,8 +364,8 @@ sub store {
 	    ## search if this packet is already in spool database : mailfile may perform multiple submission of exactly the same message 
 	    unless ($sth = SDM::do_prepared_query(
 		q{SELECT count(*)
-		  FROM bulkmailer_table
-		  WHERE spoolkey_bulkmailer = ? AND packetid_bulkmailer = ?},
+		  FROM bulkpacket_table
+		  WHERE messagekey_bulkpacket = ? AND packetid_bulkpacket = ?},
 		$message->{'messagekey'}, $packetid
 	    )) {
 		&Log::do_log('err','Unable to check presence of packet %s of message %s in database', $packetid, $message->{'messagekey'});
@@ -380,15 +380,15 @@ sub store {
 	    
 	}else {
 	    unless (SDM::do_prepared_query(
-		q{INSERT INTO bulkmailer_table
-		  (spoolkey_bulkmailer, messageid_bulkmailer,
-		   packetid_bulkmailer,
-		   receipients_bulkmailer, returnpath_bulkmailer,
-		   robot_bulkmailer,
-		   listname_bulkmailer,
-		   verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer,
-		   priority_message_bulkmailer, priority_packet_bulkmailer,
-		   reception_date_bulkmailer, delivery_date_bulkmailer)
+		q{INSERT INTO bulkpacket_table
+		  (messagekey_bulkpacket, messageid_bulkpacket,
+		   packetid_bulkpacket,
+		   receipients_bulkpacket, returnpath_bulkpacket,
+		   robot_bulkpacket,
+		   listname_bulkpacket,
+		   verp_bulkpacket, tracking_bulkpacket, merge_bulkpacket,
+		   priority_message_bulkpacket, priority_packet_bulkpacket,
+		   reception_date_bulkpacket, delivery_date_bulkpacket)
 		  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
 		$message->{'messagekey'}, $msg_id,
 		$packetid,
@@ -418,9 +418,9 @@ sub purge_bulkspool {
 
     unless ($sth = SDM::do_prepared_query(
 	q{SELECT messagekey_spool AS messagekey
-	  FROM spool_table LEFT JOIN bulkmailer_table
-	  ON messagekey_spool = spoolkey_bulkmailer
-	  WHERE spoolkey_bulkmailer IS NULL AND messagelock_spool IS NULL AND
+	  FROM spool_table LEFT JOIN bulkpacket_table
+	  ON messagekey_spool = messagekey_bulkpacket
+	  WHERE messagekey_bulkpacket IS NULL AND messagelock_spool IS NULL AND
 		spoolname_spool = ?},
 	'bulk'
     )) {
@@ -454,14 +454,19 @@ sub remove_bulkspool_message {
 
     return 1;
 }
-## Return the number of remaining packets in the bulkmailer table.
+## Return the number of remaining packets in the bulkpacket table.
 sub get_remaining_packets_count {
     Log::do_log('debug3', '()');
 
     my $m_count = 0;
 
-    unless ($sth = &SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table WHERE lock_bulkmailer IS NULL")) {
-	&Log::do_log('err','Unable to count remaining packets in bulkmailer_table');
+    unless ($sth = SDM::do_prepared_query(
+	q{SELECT COUNT(*)
+	  FROM bulkpacket_table
+	  WHERE lock_bulkpacket IS NULL}
+    )) {
+	Log::do_log('err',
+	    'Unable to count remaining packets in bulkpacket_table');
 	return undef;
     }
 
@@ -470,7 +475,7 @@ sub get_remaining_packets_count {
     return $result[0];
 }
 
-## Returns 1 if the number of remaining packets in the bulkmailer table exceeds
+## Returns 1 if the number of remaining packets in the bulkpacket table exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
     Log::do_log('debug3', '()');

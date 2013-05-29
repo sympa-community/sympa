@@ -33,26 +33,26 @@ CREATE TABLE admin_table (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `bulkmailer_table`
+-- Table structure for table `bulkpacket_table`
 -- 
 
-CREATE TABLE bulkmailer_table ( 
-	 delivery_date_bulkmailer 	 int(11), 
-	 listname_bulkmailer 	 varchar(50), 
-	 lock_bulkmailer 	 varchar(30), 
-	 merge_bulkmailer 	 int(1), 
-	 messageid_bulkmailer 	 varchar(200), 
-	 messagekey_bulkmailer 	 varchar(80), 
-	 packetid_bulkmailer 	 varchar(33), 
-	 priority_message_bulkmailer 	 smallint(10), 
-	 priority_packet_bulkmailer 	 smallint(10), 
-	 receipients_bulkmailer 	 text, 
-	 reception_date_bulkmailer 	 int(11), 
-	 returnpath_bulkmailer 	 varchar(100), 
-	 robot_bulkmailer 	 varchar(80), 
-	 tracking_bulkmailer 	 enum('mdn','dsn'), 
-	 verp_bulkmailer 	 int(1), 
-	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+CREATE TABLE bulkpacket_table ( 
+	 delivery_date_bulkpacket 	 int(11), 
+	 listname_bulkpacket 	 varchar(50), 
+	 lock_bulkpacket 	 varchar(30), 
+	 merge_bulkpacket 	 int(1), 
+	 messageid_bulkpacket 	 varchar(200), 
+	 messagekey_bulkpacket 	 bigint(20), 
+	 packetid_bulkpacket 	 varchar(33), 
+	 priority_message_bulkpacket 	 smallint(10), 
+	 priority_packet_bulkpacket 	 smallint(10), 
+	 receipients_bulkpacket 	 text, 
+	 reception_date_bulkpacket 	 int(11), 
+	 returnpath_bulkpacket 	 varchar(100), 
+	 robot_bulkpacket 	 varchar(80), 
+	 tracking_bulkpacket 	 enum('mdn','dsn'), 
+	 verp_bulkpacket 	 int(1), 
+	 PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
  ) DEFAULT CHARACTER SET utf8;
 
 

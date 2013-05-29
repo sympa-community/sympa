@@ -44,26 +44,26 @@ CREATE TABLE admin_table (
 
 ## --------------------------------------------------------
 ##
-## Table structure for table `bulkmailer_table`
+## Table structure for table `bulkpacket_table`
 ## 
 
-CREATE TABLE bulkmailer_table ( 
-	 delivery_date_bulkmailer 	number, 
-	 listname_bulkmailer 	varchar2(50), 
-	 lock_bulkmailer 	varchar2(30), 
-	 merge_bulkmailer 	number, 
-	 messageid_bulkmailer 	varchar2(200), 
-	 messagekey_bulkmailer 	varchar2(80), 
-	 packetid_bulkmailer 	varchar2(33), 
-	 priority_message_bulkmailer 	number, 
-	 priority_packet_bulkmailer 	number, 
-	 receipients_bulkmailer 	varchar2(500), 
-	 reception_date_bulkmailer 	number, 
-	 returnpath_bulkmailer 	varchar2(100), 
-	 robot_bulkmailer 	varchar2(80), 
-	 tracking_bulkmailer 	varchar2(20), 
-	 verp_bulkmailer 	number, 
-	 CONSTRAINT ind_bulkmailer PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+CREATE TABLE bulkpacket_table ( 
+	 delivery_date_bulkpacket 	number, 
+	 listname_bulkpacket 	varchar2(50), 
+	 lock_bulkpacket 	varchar2(30), 
+	 merge_bulkpacket 	number, 
+	 messageid_bulkpacket 	varchar2(200), 
+	 messagekey_bulkpacket 	number, 
+	 packetid_bulkpacket 	varchar2(33), 
+	 priority_message_bulkpacket 	number, 
+	 priority_packet_bulkpacket 	number, 
+	 receipients_bulkpacket 	varchar2(500), 
+	 reception_date_bulkpacket 	number, 
+	 returnpath_bulkpacket 	varchar2(100), 
+	 robot_bulkpacket 	varchar2(80), 
+	 tracking_bulkpacket 	varchar2(20), 
+	 verp_bulkpacket 	number, 
+	 CONSTRAINT ind_bulkpacket PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
  );
 
 

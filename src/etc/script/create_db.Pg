@@ -34,26 +34,26 @@ CREATE INDEX admin_user_index ON admin_table(user_admin);
 
 -- --------------------------------------------------------
 --
--- Table structure for table `bulkmailer_table`
+-- Table structure for table `bulkpacket_table`
 -- 
 
-CREATE TABLE bulkmailer_table ( 
-	 delivery_date_bulkmailer 	int4, 
-	 listname_bulkmailer 	varchar(50), 
-	 lock_bulkmailer 	varchar(30), 
-	 merge_bulkmailer 	int4, 
-	 messageid_bulkmailer 	varchar(200), 
-	 messagekey_bulkmailer 	varchar(80), 
-	 packetid_bulkmailer 	varchar(33), 
-	 priority_message_bulkmailer 	int4, 
-	 priority_packet_bulkmailer 	int4, 
-	 receipients_bulkmailer 	varchar(500), 
-	 reception_date_bulkmailer 	int4, 
-	 returnpath_bulkmailer 	varchar(100), 
-	 robot_bulkmailer 	varchar(80), 
-	 tracking_bulkmailer 	varchar(15), 
-	 verp_bulkmailer 	int4, 
-	 CONSTRAINT ind_bulkmailer PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+CREATE TABLE bulkpacket_table ( 
+	 delivery_date_bulkpacket 	int4, 
+	 listname_bulkpacket 	varchar(50), 
+	 lock_bulkpacket 	varchar(30), 
+	 merge_bulkpacket 	int4, 
+	 messageid_bulkpacket 	varchar(200), 
+	 messagekey_bulkpacket 	int8, 
+	 packetid_bulkpacket 	varchar(33), 
+	 priority_message_bulkpacket 	int4, 
+	 priority_packet_bulkpacket 	int4, 
+	 receipients_bulkpacket 	varchar(500), 
+	 reception_date_bulkpacket 	int4, 
+	 returnpath_bulkpacket 	varchar(100), 
+	 robot_bulkpacket 	varchar(80), 
+	 tracking_bulkpacket 	varchar(15), 
+	 verp_bulkpacket 	int4, 
+	 CONSTRAINT ind_bulkpacket PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
  );
 
 
