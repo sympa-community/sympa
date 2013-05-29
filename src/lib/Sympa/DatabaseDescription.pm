@@ -356,9 +356,16 @@ my %full_db_struct = (
     },
     'bulkmailer_table' => {
 	'fields' => {
-	    'messagekey_bulkmailer' => {
-		'struct'=> 'varchar(80)',
-		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_spool',
+#	    'messagekey_bulkmailer' => {
+#		'struct'=> 'varchar(80)',
+#		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_spool',
+#		'primary'=>1,
+#		'not_null'=>1,
+#		'order'=>1,
+#	    },
+	    'spoolkey_bulkmailer' => {
+		'struct'=> 'bigint(20)',
+		'doc'=>'A pointer to a message in spool_table.  It must be a value of a line in table spool_table with same value as messagekey_spool',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>1,
