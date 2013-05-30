@@ -595,8 +595,16 @@ sub aggregate_data {
 
     my $aggregated_data; # the hash containing aggregated data that the sub deal_data will return.
     
-    unless ($sth = &SDM::do_query("SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date)) {
-	&do_log('err','Unable to retrieve stat entries between date %s and date %s', $begin_date, $end_date);
+    unless ($sth = SDM::do_query(
+	q{SELECT *
+	  FROM stat_table
+	  WHERE (date_stat BETWEEN %s AND %s) AND (read_stat = 0)},
+	$begin_date, $end_date
+    )) {
+	do_log('err',
+	    'Unable to retrieve stat entries between date %s and date %s',
+	    $begin_date, $end_date
+	);
 	return undef;
     }
 
@@ -606,8 +614,15 @@ sub aggregate_data {
     $aggregated_data = &deal_data($res);
     
     #the line is read, so update the read_stat from 0 to 1
-    unless ($sth = &SDM::do_query( "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date)) {
-	&do_log('err','Unable to set stat entries between date %s and date %s as read', $begin_date, $end_date);
+    unless ($sth = SDM::do_query(
+	q{UPDATE stat_table
+	  SET read_stat = 1
+	  WHERE date_stat BETWEEN %s AND %s},
+	$begin_date, $end_date
+    )) {
+	do_log('err',
+	    'Unable to set stat entries between date %s and date %s as read',
+	    $begin_date, $end_date);
 	return undef;
     }
     

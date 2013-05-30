@@ -616,7 +616,7 @@ sub purge_logs_table {
 	}
 
     for (my $j=1; $j <= scalar(@slots); $j++){
-		&Log::aggregate_data($slots[$j-1], $slots[$j]);
+	Log::aggregate_data($slots[$j-1], ($slots[$j] || $date_end));
     }
     #-------------------------------------------------------------------
 
