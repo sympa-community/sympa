@@ -2378,9 +2378,9 @@ sub find_packet_to_tag_as_last {
 sub send_to_editor {
     my ($self, $method, $message) = @_;
     my $msg = $message->get_mime_message;
-    my $encrypt = 'smime_crypted' if ($message->{'smime_crypted'});
-    &Log::do_log('debug',
-	"List::send_to_editor, messagekey: $message->{'messagekey'}, method : $method, encrypt : $encrypt"
+    my $encrypt = 'smime_crypted' if $message->{'smime_crypted'};
+    Log::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
+	$self, $method, $message, $encrypt
     );
 
     my ($i, @rcpt);
@@ -2472,7 +2472,7 @@ sub send_to_editor {
    }
 
    foreach my $recipient (@rcpt) {
-	if ($encrypt eq 'smime_crypted') {
+	if ($encrypt and $encrypt eq 'smime_crypted') {
 	    $message->smime_encrypt($recipient);
 	    unless($message->{'smime_crypted'} eq 'smime_crypted') {
 		Log::do_log('err','Could not encrypt message for moderator %s',$recipient);
@@ -4808,9 +4808,10 @@ sub add_list_member {
 	);
 
 	## Crypt password if it was not encrypted
-	unless ($new_user->{'password'} =~ /^crypt/) {
+	unless ($new_user->{'password'} and
+	    $new_user->{'password'} =~ /^crypt/) {
 	    $new_user->{'password'} =
-		&tools::crypt_password($new_user->{'password'});
+		tools::crypt_password($new_user->{'password'});
 	}
 
 	$self->user('member', $who, undef);
@@ -4818,12 +4819,12 @@ sub add_list_member {
 	## Either is_included or is_subscribed must be set
 	## default is is_subscriber for backward compatibility reason
 	unless ($new_user->{'included'}) {
-		$new_user->{'subscribed'} = 1;
+	    $new_user->{'subscribed'} = 1;
 	}
 
 	unless ($new_user->{'included'}) {
 	    ## Is the email in user table?
-		## Insert in User Table
+	    ## Insert in User Table
 	    unless (
 		User->new(
 		    $who,
@@ -4831,14 +4832,14 @@ sub add_list_member {
 		    'lang'     => $new_user->{'lang'},
 		    'password' => $new_user->{'password'}
 		)
-		) {
+	    ) {
 		&Log::do_log('err', 'Unable to add user %s to user_table.',
 		    $who);
 		$self->{'add_outcome'}{'errors'}
 		    {'unable_to_add_to_database'} = 1;
 		    next;
-		}
-		}
+	    }
+	}
 
 	$new_user->{'subscribed'} ||= 0;
 	$new_user->{'included'} ||= 0;

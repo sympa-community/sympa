@@ -2352,7 +2352,8 @@ Get unique ID for object.
 
 sub get_id {
     my $self = shift;
-    return sprintf '%08X;message-id=%s', $self+0, ($self->get_msg_id || '');
+    return sprintf 'messagekey=%s; message-id=%s',
+	($self->{'messagekey'} || ''), ($self->get_msg_id || '');
 }
 
 ## Packages must return true.
