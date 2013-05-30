@@ -72,9 +72,9 @@ sub global_count {
     
     my $message_status = shift;
     my @files = <Sympa::Constants::SPOOLDIR/*>;
-    foreach my $file (@files) {
-	log::do_log('trace','%s',$file);
-    }
+##    foreach my $file (@files) {
+##	Log::do_log('trace', '%s', $file);
+##    }
     my $count = @files;
 
     return $count;
@@ -157,7 +157,8 @@ sub next {
 	$self->move_current_file_to_bad;
 	return undef;
     }
-    Log::do_log('trace','Will return file %s',$self->{'current_file'}{'name'});
+    ##Log::do_log('trace',
+    ##    'Will return file %s', $self->{'current_file'}{'name'});
     return $self->{'current_file'};
 }
 
@@ -243,11 +244,10 @@ sub analyze_current_file_name {
     $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
     return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
 
-    my $list_check_regexp = $self->{'current_file'}{'robot_object'}->list_check_regexp;
-
-    if ($self->{'current_file'}{'list'} =~ /^(\S+)-($list_check_regexp)$/) {
-	($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) = ($1, $2);
-    }
+    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) =
+	$self->{'current_file'}{'robot_object'}->split_listname(
+	    $self->{'current_file'}{'list'}
+	);
     return 1;
 }
 
@@ -448,7 +448,7 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
+    ##Log::do_log('trace', 'Storing in file %s', "$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('err','Unable to write file to spool %s',$self->{'dir'});
@@ -463,7 +463,9 @@ sub get_storage_name {
     my $self = shift;
     my $filename;
     my $param = shift;
-    foreach my $line (split '\n',&Dumper($param)) {Log::do_log('trace','%s',$line);}
+##    foreach my $line (split '\n',&Dumper($param)) {
+##	Log::do_log('trace', '%s', $line);
+##    }
     if ($param->{'list'} && $param->{'robot'}) {
 	$filename = $param->{'list'}.'@'.$param->{'robot'}.'.'.time.'.'.int(rand(10000));
     }else{

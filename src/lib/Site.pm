@@ -1602,28 +1602,10 @@ sub lang {
 These are accessors derived from default parameters.
 Some of them are obsoleted.
 
-=over 4
-
-=item list_check_regexp
-
-I<Getter>.
-Get regexp matching special list address.
-
-B<Obsoleted>.
-Use L<Robot/split_listname> method.
-
-=back
-
 =cut
 
-sub list_check_regexp {
-    my $self = shift;
-    croak "Can't modify \"list_check_regexp\" attribute" if scalar @_ > 1;
-    return join('|',
-	map { s/(\W)/\\$1/g; $_ }
-	    grep { $_ and length $_ }
-	    split(/[\s,]+/, $self->list_check_suffixes));
-}
+## DEPRECATED: Use $robot->split_listname().
+## sub list_check_regexp ( mailbox )
 
 =over 4
 

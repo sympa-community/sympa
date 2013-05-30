@@ -109,11 +109,10 @@ sub analyze_current_file_name {
     $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
     return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
 
-    my $list_check_regexp = $self->{'current_file'}{'robot_object'}->list_check_regexp;
-
-    if ($self->{'current_file'}{'list'} =~ /^(\S+)-($list_check_regexp)$/) {
-	($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) = ($1, $2);
-    }
+    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) =
+	$self->{'current_file'}{'robot_object'}->split_listname(
+	    $self->{'current_file'}{'list'}
+	);
     return 1;
 }
 

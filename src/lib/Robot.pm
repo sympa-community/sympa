@@ -759,15 +759,6 @@ Some of them are obsoleted.
 
 =over 4
 
-=item list_check_regexp
-
-I<Getters>.
-Gets derived config parameters.
-See L<Site/list_check_regexp>.
-
-B<Obsoleted>.
-Use L<split_listname> method.
-
 =item request
 
 =item sympa
