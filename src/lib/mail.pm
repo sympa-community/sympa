@@ -21,6 +21,7 @@
 package mail;
 
 use strict;
+use warnings;
 require Exporter;
 use Carp qw(carp croak);
 use POSIX;
@@ -831,9 +832,12 @@ sub smtpto {
    $pid{$pid} = 0;
        
    my $sendmail = $robot->sendmail;
-   my $sendmail_args = $robot->sendmail_args;
+   my @sendmail_args = split /\s+/, $robot->sendmail_args;
    if ($msgkey) {
-       $sendmail_args .= ' -N success,delay,failure -V '.$msgkey;
+	push @sendmail_args, '-N', 'success,delay,failure';
+	# Postfix clone of sendmail command doesn't allow spaces between
+	# "-V" and envid.
+	push @sendmail_args, "-V$msgkey";
    }
    if ($pid == 0) {
 
@@ -841,26 +845,27 @@ sub smtpto {
        open(STDIN, "<&IN");
 
 	$from = '' if $from eq '<>'; # null sender
-       if (! ref($rcpt)) {
-	   exec $sendmail, split(/\s+/,$sendmail_args),'-f', $from, $rcpt;
-       }elsif (ref($rcpt) eq 'SCALAR') {
-	   exec $sendmail, split(/\s+/,$sendmail_args), '-f', $from, $$rcpt;
-       }elsif (ref($rcpt) eq 'ARRAY'){
-	   exec $sendmail, split(/\s+/,$sendmail_args), '-f', $from, @$rcpt;
-       }
+	if (! ref($rcpt)) {
+	    exec $sendmail, @sendmail_args, '-f', $from, $rcpt;
+	} elsif (ref($rcpt) eq 'SCALAR') {
+	    exec $sendmail, @sendmail_args, '-f', $from, $$rcpt;
+	} elsif (ref($rcpt) eq 'ARRAY'){
+	    exec $sendmail, @sendmail_args, '-f', $from, @$rcpt;
+	}
 
 	exit 1; ## Should never get there.
        }
    if ($main::options{'mail'}) {
-       $str = "safefork: $sendmail $sendmail_args -f '$from' ";
-       if (! ref($rcpt)) {
-	   $str .= $rcpt;
-       }elsif (ref($rcpt) eq 'SCALAR') {
-	   $str .= $$rcpt;
-       }else {
-	   $str .= join(' ', @$rcpt);
-       }
-       &Log::do_log('debug2', '%s', $str);
+	my $r;
+	if (! ref $rcpt) {
+	    $r = $rcpt;
+	} elsif (ref $rcpt eq 'SCALAR') {
+	    $r = $$rcpt;
+	} else {
+	    $r = join(' ', @$rcpt);
+	}
+	Log::do_log('debug3', 'safefork: %s %s -f \'%s\' %s',
+	    $sendmail, join(' ', @sendmail_args), $from, $r);
    }
    unless (close(IN)){
        &Log::do_log('err',"mail::smtpto: could not close safefork" );
