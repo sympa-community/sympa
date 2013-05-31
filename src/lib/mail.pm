@@ -353,26 +353,32 @@ sub mail_message {
     my $message =  $params{'message'};
     my $list =  $params{'list'};
     my $verp = $params{'verp'};
-    my @rcpt =  @{$params{'rcpt'}};
+    my @rcpt =  @{$params{'rcpt'} || []};
     my $dkim  =  $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
     my $robot = $list->robot;
-    
-    unless (defined $message && ref($message) eq 'Message') {
-	&Log::do_log('err', 'Invalid message parameter');
-	return undef;	
+
+    unless (ref $message and $message->isa('Message')) {
+	Log::do_log('err', 'Invalid message parameter');
+	return undef;
     }
 
     # normal return_path (ie used if verp is not enabled)
     my $from = $list->get_address('return_path');
-    
-    &Log::do_log('debug', 'mail::mail_message(from: %s, , file:%s, %s, verp->%s, %d rcpt, last: %s)', $from, $message->{'filename'}, $message->{'smime_crypted'}, $verp, $#rcpt+1, $tag_as_last);
-    return 0 if ($#rcpt == -1);
-    
-    my($i, $j, $nrcpt, $size); 
+
+    Log::do_log('debug2',
+	'(from=%s, message=%s, encrypt=%s, verp=%s, %d rcpt, tag_as_last=%s)',
+	$from, $message, $message->{'smime_crypted'}, $verp, scalar(@rcpt),
+	$tag_as_last
+    );
+    return 0 unless @rcpt;
+
+    my($i, $j, $nrcpt);
+    my $size = 0;
     my $numsmtp = 0;
-    
-    ## If message contain a footer or header added by Sympa  use the object message else
+
+    ## If message contain a footer or header added by Sympa  use the object
+    ## message else
     ## Extract body from original file to preserve signature
     my $msg_body; my $msg_header;
     $msg_header = $message->get_mime_message->head;
@@ -382,13 +388,16 @@ sub mail_message {
 	##$msg_body = ${$message->{'msg_as_string'}};
     ##}else{
 	## Get body from original message body
-	my @bodysection =split("\n\n",$message->get_message_as_string);  # convert it as a tab with headers as first element
-	shift @bodysection;                                          # remove headers
-	$msg_body = join ("\n\n",@bodysection);                      # convert it back as string
+	# convert it as a tab with headers as first element
+	my @bodysection = split /\n\n/, $message->get_message_as_string;
+	# remove headers
+	shift @bodysection;
+	# convert it back as string
+	$msg_body = join("\n\n", @bodysection);
     ##}	
-    $message->{'body_as_string'} = $msg_body ;
-	
-    my %rcpt_by_dom ;
+    $message->{'body_as_string'} = $msg_body;
+
+    my %rcpt_by_dom;
 
     my @sendto;
     my @sendtobypacket;
@@ -400,8 +409,8 @@ sub mail_message {
     my $db_type = Site->db_type;
 
     while (defined ($i = shift(@rcpt))) {
-	my @k = reverse(split(/[\.@]/, $i));
-	my @l = reverse(split(/[\.@]/, $j));
+	my @k = reverse split(/[\.@]/, $i);
+	my @l = reverse split(/[\.@]/, (defined $j ? $j: '@'));
 
 	my $dom;
 	if ($i =~ /\@(.*)$/) {
@@ -680,7 +689,7 @@ sub sending {
     my $fh;
     my $signed_msg; # if signing
 
-    if ($sign_mode eq 'smime') {
+    if ($sign_mode and $sign_mode eq 'smime') {
 	Log::do_log('debug2','Will sign message');
 	unless ($message->smime_sign()) {
 	    &Log::do_log('err', 'Unable to sign message from %s', $listname);

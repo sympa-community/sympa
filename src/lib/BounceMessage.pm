@@ -281,7 +281,7 @@ sub failed_on_first_try {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    if ($self->{'unique'} =~ /[wr]/) {
+    if ($self->{'unique'} and $self->{'unique'} =~ /[wr]/) {
 	Log::do_log('debug3', 'Bounce %s comes from a service message.',
 	    $self);
 	return 1;
