@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Messagespool;
 
@@ -27,55 +26,49 @@ use Log;
 our @ISA = qw(SympaspoolClassic);
 
 sub new {
-    Log::do_log('debug2', '(%s)', @_);
-    my $pkg = shift;
-    my $spool = SympaspoolClassic->new('msg');
-    bless $spool, $pkg;
-    return $spool;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    return shift->SUPER::new('msg', shift);
 }
 
 sub get_next_file_to_process {
+    Log::do_log('debug3', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    
+
     my $highest_priority = 'z'; ## lowest priority
     my $file_to_process;
 
     ## Search file with highest priority
-    foreach (@{$self->{'spool_files_list'}}) {
+    foreach my $key (@{$self->{'spool_files_list'}}) {
+	next unless $self->is_readable($key);
 
-	$self->{'current_file'}{'name'} = $_;
-	unless ($self->is_current_file_readable) {
-	    undef $self->{'current_file'};
-	    next;
-	}
-	
-	unless ($self->is_current_file_relevant && $self->analyze_current_file_name) {
-	    $self->move_current_file_to_bad;
-	    undef $self->{'current_file'};
+	my $data = {};
+	unless ($self->is_relevant($key) and
+	    $self->analyze_file_name($key, $data)) {
+	    $self->move_to_bad($key);
 	    next;
 	}
 
-	$self->get_current_file_priority;
-	
-	if (ord($self->{'current_file'}{'priority'}) < ord($highest_priority)) {
-	    $highest_priority = $self->{'current_file'}{'priority'};
-	    $file_to_process = $self->{'current_file'};
+	$self->get_priority($key, $data);
+
+	if (ord($data->{'priority'}) < ord($highest_priority)) {
+	    $highest_priority = $data->{'priority'};
+	    $file_to_process = $key;
 	}
     } ## END of spool lookup
-    $self->{'current_file'} = $file_to_process;
-    return $self->{'current_file'};
+    return $file_to_process;
 }
 
-sub is_current_file_relevant {
+sub is_relevant {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
+    my $key  = shift;
+
     ## z and Z are a null priority, so file stay in queue and are processed
     ## only if renamed by administrator
-    return 0 unless ($self->{'current_file'}{'name'} =~ /$filename_regexp/);
+    return 0 unless $key =~ /$filename_regexp/;
 
     ## Don't process temporary files created by queue (T.xxx)
-    return 0 if ($self->{'current_file'}{'name'} =~ /^T\./);
+    return 0 if $key =~ /^T\./;
 
     return 1;
 }

@@ -2658,7 +2658,12 @@ sub distribute {
 	return 'msg_not_found';
 
     }
-    my $message = new Message({'file' => $message_in_spool->{'full_path'}});
+    my $message = new Message(
+	##FIXME
+	{   'file' =>
+	    $modspool->{'dir'} . '/' . $message_in_spool->{'messagekey'}
+	}
+    );
     unless (defined $message) {
 	&Log::do_log(
 	    'err',
@@ -2736,7 +2741,7 @@ sub distribute {
 	    );
 	}
     }
-    $modspool->remove_current_message;
+    $modspool->remove_message($message_in_spool->{'messagekey'});
     Log::do_log('debug2', 'DISTRIBUTE %s %s from %s accepted (%d seconds)',
 	$name, $key, $sender, time - $time_command);
 

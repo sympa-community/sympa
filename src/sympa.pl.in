@@ -1489,7 +1489,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	Log::do_log(
 	    'info',
 	    "Processing message %s for list = %s robot = %s",
-	    $message_in_spool->{'name'},
+	    $message_in_spool->{'messagekey'},
 	    $list,
 	    $robot,
 	);
@@ -1506,17 +1506,20 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    $message_in_spool->{'robot_object'}->lang;
 	Language::SetLang($default_lang);
 
-	my $status = &process_message($message_in_spool->{'full_path'});
+	my $status = process_message(
+	    $spool->{'dir'} . '/' . $message_in_spool->{'messagekey'} #FIXME
+	);
 
 	if (defined($status)) {
 	    Log::do_log(
 		'info',
 		"Message %s  processed for list = %s robot = %s",
-		$message_in_spool->{'name'},
+		$message_in_spool->{'messagekey'},
 		$list,
 		$robot,
 	    );
-
+	    $spool->remove_message($message_in_spool->{'messagekey'});
+	    ##$spool->unlock_message($message_in_spool->{'messagekey'});
 	} else {
 	    # Do not remove message task_manager will purge database removing
 	    # messages in spool distribute that have no links with
@@ -1525,20 +1528,20 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    #     {'messagekey' => $message_in_spool->{'messagekey'}});
 
 	    # move message to bad.
-	    unless($spool->move_current_file_to_bad) {
-		Log::do_log('err','unable to move file %s to bad. Stopping here.',$spool->{'current_file'}{'name'});
+	    unless($spool->move_to_bad($message_in_spool->{'messagekey'})) {
+		Log::do_log('err',
+		    'unable to move file %s to bad. Stopping here.',
+		    $message_in_spool->{'messagekey'});
 		exit 1;
 	    }
 	    Log::do_log(
 		'notice',
 		"Message %s  moved to spool bad (message for list = %s robot = %s)",
-		$message_in_spool->{'name'},
+		$message_in_spool->{'messagekey'},
 		$list,
 		$robot,
 	    );
 	}
-	$spool->remove_current_message;
-	##$spool->unlock_current_message;
     }    ## END of infinite loop
 
     # Purge grouped notifications
@@ -2019,7 +2022,7 @@ sub process_message {
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot_id, $message);
 
-	## Mail adressed to the robot and mail
+	## Mail addressed to the robot and mail
 	## to <list>-subscribe or <list>-unsubscribe are commands
     } elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) ||
 	($type and $type =~ /^(subscribe|unsubscribe)$/o)) {

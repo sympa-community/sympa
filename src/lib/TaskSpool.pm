@@ -32,7 +32,7 @@ use Data::Dumper;
 #use Task; # this module is used by Task
 #use List; # used by Task
 
-our @ISA = qw(Exporter SympaspoolClassic);
+our @ISA = qw(SympaspoolClassic Exporter);
 our @EXPORT = qw(%global_models %months);
 
 my @task_list;
@@ -71,11 +71,8 @@ our %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5,
 ##########################
 
 sub new {
-    my $pkg = shift;
-    Log::do_log('debug2','Spool class %s',$pkg);
-    my $spool = new SympaspoolClassic('task');
-    bless $spool, $pkg;
-    return $spool;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    return shift->SUPER::new('task', shift);
 }
 
 sub get_storage_name {
@@ -89,30 +86,36 @@ sub get_storage_name {
     return $filename;
 }
 
-sub analyze_current_file_name {
+sub analyze_file_name {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/){
-	Log::do_log('err','File %s name does not have the proper format. Stopping here.',$self->{'current_file'}{'name'});
+    my $key  = shift;
+    my $data = shift;
+
+    unless($key =~ /$filename_regexp/){
+	Log::do_log('err',
+	'File %s name does not have the proper format', $key);
 	return undef;
     }
-    $self->{'current_file'}{'task_date'} = $1;
-    $self->{'current_file'}{'task_label'} = $2;
-    $self->{'current_file'}{'task_model'} = $3;
-    $self->{'current_file'}{'task_object'} = $4;
-    Log::do_log('debug3','date %s, label %s, model %s, object %s',$self->{'current_file'}{'task_date'},$self->{'current_file'}{'task_label'},$self->{'current_file'}{'task_model'},$self->{'current_file'}{'task_object'});
-    unless ($self->{'current_file'}{'task_object'} eq '_global') {
-	($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$self->{'current_file'}{'task_object'});
+    $data->{'task_date'} = $1;
+    $data->{'task_label'} = $2;
+    $data->{'task_model'} = $3;
+    $data->{'task_object'} = $4;
+    Log::do_log('debug3', 'date %s, label %s, model %s, object %s',
+	$data->{'task_date'}, $data->{'task_label'}, $data->{'task_model'},
+	$data->{'task_object'});
+    unless ($data->{'task_object'} eq '_global') {
+	($data->{'list'}, $data->{'robot'}) =
+	    split /\@/, $data->{'task_object'};
     }
     
-    $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
-    $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
-    return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
+    $data->{'list'} = lc($data->{'list'});
+    $data->{'robot'} = lc($data->{'robot'});
+    return undef
+	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
 
-    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) =
-	$self->{'current_file'}{'robot_object'}->split_listname(
-	    $self->{'current_file'}{'list'}
-	);
+    ($data->{'list'}, $data->{'type'}) =
+	$data->{'robot_object'}->split_listname($data->{'list'});
     return 1;
 }
 

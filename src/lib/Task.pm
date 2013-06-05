@@ -259,11 +259,13 @@ sub store {
 
 ## Removes a task using message key
 sub remove {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    &Log::do_log('debug',"Removing task '%s'",$self->{'name'});
+
     my $taskspool = new TaskSpool;
-    unless ($taskspool->remove_message({'file'=>$self->{'name'}})){
-	&Log::do_log('err', 'Unable to remove task (messagekey = %s)', $self->{'messagekey'});
+    unless ($taskspool->remove_message($self->{'messagekey'})) {
+	Log::do_log('err', 'Unable to remove task (messagekey = %s)',
+	    $self->{'messagekey'});
 	return undef;
     }
     return 1;

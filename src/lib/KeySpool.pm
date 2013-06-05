@@ -16,10 +16,12 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package KeySpool;
+
+use strict;
+use warnings;
 
 use SympaspoolClassic;
 use Log;
@@ -29,11 +31,8 @@ our @ISA = qw(SympaspoolClassic);
 our $filename_regexp = '^(\S+)_(\w+)(\.distribute)?$';
 
 sub new {
-    Log::do_log('debug2', '(%s)', @_);
-    my $pkg = shift;
-    my $spool = SympaspoolClassic->new('mod');
-    bless $spool, $pkg;
-    return $spool;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    return shift->SUPER::new('mod', shift);
 }
 
 sub get_storage_name {
@@ -46,26 +45,31 @@ sub get_storage_name {
     return $filename;
 }
 
-sub analyze_current_file_name {
+sub analyze_file_name {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/){
-	Log::do_log('err','File %s name does not have the proper format. Stopping here.',$self->{'current_file'}{'name'});
+    my $key  = shift;
+    my $data = shift;
+
+    unless($key =~ /$filename_regexp/){
+	Log::do_log('err',
+	    'File %s name does not have the proper format', $key);
 	return undef;
     }
-    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$1);
-    $self->{'current_file'}{'authkey'} = $2;
-    $self->{'current_file'}{'validated'} = $3;
-    
-    $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
-    $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
-    return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
+    my $list_id;
+    ($list_id, $data->{'authkey'}, $data->{'validated'}) = ($1, $2, $3);
+    ($data->{'list'}, $data->{'robot'}) = split /\@/, $list_id;
 
-    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) =
-	$self->{'current_file'}{'robot_object'}->split_listname(
-	    $self->{'current_file'}{'list'}
-	);
-    return undef unless ($self->{'current_file'}{'list_object'} = List->new($self->{'current_file'}{'list'},$self->{'current_file'}{'robot_object'}));
+    $data->{'list'} = lc($data->{'list'});
+    $data->{'robot'} = lc($data->{'robot'});
+    return undef
+	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
+
+    ($data->{'list'}, $data->{'type'}) =
+	$data->{'robot_object'}->split_listname($data->{'list'});
+    return undef
+	unless $data->{'list_object'} =
+	    List->new($data->{'list'}, $data->{'robot_object'});
     return 1;
 }
 
@@ -74,20 +78,23 @@ sub get_awaiting_messages {
     my $self = shift;
     my $param = shift;
     $param->{'selector'}{'validated'} = ['.distribute','ne'];
-    $self->get_content($param);
-    return @{$self->{'current_files_in_spool'}};
+    return $self->get_content($param);
 }
 
 sub validate_message {
     my $self = shift;
-    my $file = shift;
-    $file ||= $self->{'current_file'}{'name'};
-    unless(File::Copy::copy($self->{'dir'}.'/'.$file , $self->{'dir'}.'/'.$file.'.distribute')) {
-	Log::do_log('err','Could not rename file %s: %s',$self->{'dir'}.'/'.$file,$!);
+    my $key  = shift;
+
+    unless(File::Copy::copy($self->{'dir'} . '/' . $key,
+	$self->{'dir'} . '/' . $key . '.distribute'
+    )) {
+	Log::do_log('err', 'Could not rename file %s/%s: %s',
+	    $self->{'dir'}, $key, $!);
 	return undef;
     }
-    unless (unlink ($self->{'dir'}.'/'.$file )) {
-	&Log::do_log('err',"Could not unlink message %s/%s . Exiting",$self->{'dir'}, $file );
+    unless (unlink($self->{'dir'} . '/' . $key)) {
+	Log::do_log('err', 'Could not unlink message %s/%s: %s',
+	    $self->{'dir'}, $key, $!);
     }
     return 1;
 }

@@ -7371,7 +7371,7 @@ sub do_reject {
 	 }
 
          # move message in spool of validated messages
-         unless ($modspool->remove_current_message) {
+         unless ($modspool->remove_message($message_in_spool->{'messagekey'})) {
 	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
 								 'new'=>"validated"},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
@@ -7469,7 +7469,7 @@ sub do_distribute {
 	}
 
          ### move message in spool of validated messages
-         unless ($modspool->validate_message) {
+         unless ($modspool->validate_message($message_in_spool->{'messagekey'})) {
 
 	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
 								 'new'=>"validated"},

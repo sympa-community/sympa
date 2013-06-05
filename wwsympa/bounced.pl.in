@@ -279,17 +279,17 @@ while (!$end) {
 	my $bounce;
 	unless ($bounce = new BounceMessage({'message_in_spool' => $spooled_bounce})) {
 	    Log::do_log('err','Message %s: badly formatted bounce message. Ignoring.',$spooled_bounce->{'messagekey'});
-	    $spool->move_current_file_to_bad;
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	    next;
 	}
 	if ($bounce->process) {
-	    unless ($spool->remove_current_message) {
+	    unless ($spool->remove_message($spooled_bounce->{'messagekey'})) {
 		Log::do_log ('err',"Could not remove message from spool bounce (messaegkey = %s)",$bounce->{'messagekey'});
-		$spool->move_current_file_to_bad;
+		$spool->move_to_bad($spooled_bounce->{'messagekey'});
 		last;
 	    }
 	}else {
-	    $spool->move_current_file_to_bad;
+	    $spool->move_to_bad($spooled_bounce->{'messagekey'});
 	}
 	## Free zombie sendmail processes
 	mail::reaper;

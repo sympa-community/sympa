@@ -274,20 +274,20 @@ while (!$end) {
     my @orders = split(/\n/,$item->{'messageasstring'} );
     
     unless($item->{'messageasstring'}) {
-	$spoolarchive->move_current_file_to_bad;
+	$spoolarchive->move_to_bad($item->{'messagekey'});
 	next;
     }
     
-   &Log::do_log('trace',"orders[0] '%s' ",$orders[0] );
+##    Log::do_log('trace', 'orders[0] "%s"', $orders[0]);
 
     if ($orders[0] =~ /^rebuild\s*$/ ) {
 	&Log::do_log('debug',"rebuild found ");
 	if ($item->{'list'} && $item->{'robot'}) {	
 	    &rebuild($item->{'list'}.'@'.$item->{'robot'});
-	    $spoolarchive->remove_current_message;
+	    $spoolarchive->remove_message($item->{'messagekey'});
 	}else{
 	   Log::do_log('err', "unable to rebuild archive for unknown list/robot.Move to bad");
-	    $spoolarchive->move_current_file_to_bad;
+	    $spoolarchive->move_to_bad($item->{'messagekey'});
 	    next;
 	}
     }elsif($orders[0]  =~ /^remove\.(\d\d\d\d\-\d\d)\.\d+$/ ) {
@@ -296,7 +296,7 @@ while (!$end) {
 	&Log::do_log('debug',"removed found ");
 	unless($item->{'list'} && $item->{'robot'}){
 	   Log::do_log('err', "unable to remove messages from archive for unknown list/robot.Move to bad");
-	    $spoolarchive->move_current_file_to_bad;
+	    $spoolarchive->move_to_bad($item->{'messagekey'});
 	    next;
 	}
 	my $listadress = $item->{'list'}.'@'.$item->{'robot'}	;
@@ -309,7 +309,7 @@ while (!$end) {
 	my $list;
 	unless ($list = new List ($listadress)) {
 	    Log::do_log('err',"remove : unknown list $listadress");
-	    $spoolarchive->move_current_file_to_bad;
+	    $spoolarchive->move_to_bad($item->{'messagekey'});
 	    next;
 	}
 &Log::do_log('debug',"remove found : for $arclistdir");
@@ -380,12 +380,15 @@ while (!$end) {
 		&tools::remove_dir ($arcpath); 
 	    }
 	}
-	$spoolarchive->remove_current_message;
+	$spoolarchive->remove_message($item->{'messagekey'});
     }else{
-	Log::do_log('notice',"Archiving message %s for list %s@%s",$item->{'name'},$item->{'list'},$item->{'robot'});
+	Log::do_log('notice',
+	    'Archiving message %s for list %s@%s',
+	    $item->{'messagekey'}, $item->{'list'},$item->{'robot'});
 	unless (mail2arc ($item)) {
-	    $spoolarchive->move_current_file_to_bad;
-	    &Log::do_log('err',"archiving_failed for message %s",$item->{'name'});
+	    $spoolarchive->move_to_bad($item->{'messagekey'});
+	    Log::do_log('err',
+		'archiving_failed for message %s', $item->{'messagekey'});
 	    unless ($item->{'robot_object'} and
 		    $item->{'robot_object'}->send_notify_to_listmaster(
 			'archiving_failed') or
@@ -395,8 +398,11 @@ while (!$end) {
 		&Log::do_log('notice',"Unable to send notify 'archiving_failed' to listmaster");
 	    }
 	}
-	unless ($spoolarchive->remove_current_message){
-	    Log::do_log ('err',"Couldn't remove message in archive spool %s . exiting to prevent infinite loop",$item->{'full_path'});
+	unless ($spoolarchive->remove_message($item->{'messagekey'})) {
+	    Log::do_log ('err',
+		"Couldn't remove message in archive spool %s. exiting to prevent infinite loop",
+		$item->{'messagekey'}
+	    );
 	    last;
 	}
     }
@@ -829,7 +835,7 @@ sub mail2arc {
 
     my $arcpath = $robot->arc_path;
 
-    unless (defined $list && $list->isa('List')) {
+    unless (ref $list and $list->isa('List')) {
 	Log::do_log('err', 'Unknown list %s', $message_in_spool->{'list'});
 	return undef;
     }
@@ -843,7 +849,9 @@ sub mail2arc {
 	unset_hidden_mode();
     } 
 
-    Log::do_log('trace',"mail2arc  for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list);
+##    Log::do_log('trace',
+##	'mail2arc for %s yyyy:%s mm:%s dd:%s hh:%s min:%s ss:%s',
+##	$list, $yyyy, $mm, $dd, $hh, $min, $ss);
 
     if (Site->custom_archiver) {
 	my $file = Site->tmpdir . "/arc." . $list->get_id .
@@ -866,7 +874,7 @@ sub mail2arc {
 		    Log::do_log('notice', 'Unable to send notify "unable_to_create_dir" to listmaster');
 		}
 	    }
-	    Log::do_log('trace', 'mkdir %s', $basedir);
+##	    Log::do_log('trace', 'mkdir %s', $basedir);
 	}
 	
 	## Check quota
@@ -904,7 +912,8 @@ sub mail2arc {
 		return undef;
 	    }
 	    
-	    Log::do_log('trace',"mkdir $arcpath/%s/$yyyy-$mm", $list->get_id);
+##	    Log::do_log('trace', 'mkdir $arcpath/%s/%s-%s',
+##		$list->get_id, $yyyy, $mm);
 	    
 	    if ($list->web_archive->{'max_month'}){
 		# maybe need to remove some old archive
@@ -930,7 +939,7 @@ sub mail2arc {
 		Log::do_log('err', 'Cannot create directory %s', $arctxtdir);
 		return undef;
 	    }
-	    Log::do_log('trace',"mkdir $arctxtdir");
+##	    Log::do_log('trace', 'mkdir %s', $arctxtdir);
 	}
 	
 	## fetch next message number in archive arctxt .
@@ -964,7 +973,7 @@ sub mail2arc {
 
 	my $mhonarc_ressources = $list->get_etc_filename('mhonarc-ressources.tt2');
 	
-	Log::do_log ('trace',"calling %s for list %s", Site->mhonarc, $list);
+##	Log::do_log ('trace', 'calling %s for list %s', Site->mhonarc, $list);
 	
 	# call mhonarc on cleaned message source to make clean htlm view of message
 	my $cmd = sprintf
@@ -974,7 +983,7 @@ sub mail2arc {
 	    $yyyy, $mm, $yyyy, $mm, $robot->arc_path, $robot->wwsympa_url,
 	    $tag, Site->umask, $output;
 	
-	Log::do_log('trace',"System call : %s",$cmd);
+##	Log::do_log('trace', 'System call : %s', $cmd);
 	
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode >> 8;
@@ -994,7 +1003,8 @@ sub mail2arc {
 	
 	save_idx("$monthdir/index",$newfile);
     }
-    Log::do_log('trace','Message %s archived',$message_in_spool->{'name'});
+##    Log::do_log('trace', 'Message %s archived',
+	$message_in_spool->{'messagekey'});
     return 1;
 }
 

@@ -16,24 +16,20 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses>.
 
 package SympaspoolClassic;
 
 use strict;
+use warnings;
+use Carp qw(croak);
 use Exporter;
 use File::Path qw(make_path remove_tree);
-use Mail::Address;
-use MIME::Base64;
-use Sys::Hostname qw(hostname);
 # tentative
 use Data::Dumper;
-use SDM;
-use Message;
+
 use List;
 
-my ($sth, @sth_stack);
 our $filename_regexp = '^(\S+)\.(\d+)\.\w+$';
 
 our %classes = (
@@ -90,46 +86,26 @@ sub count {
 #  get_content return the content an array of hash describing the spool content
 # 
 sub get_content {
-
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
-    my $param = shift;
+    my $param = shift || {};
+
+    my $perlselector = _perlselector($param->{'selector'}) || '1';
+
     my @messages;
-    foreach my $file ($self->get_files_in_spool) {
-	$self->set_current_file("$self->{'dir'}/$file");
-	$self->parse_current_file;
-	push @messages, $self->{'current_file'} if $self->is_current_file_relevant;
+    foreach my $key ($self->get_files_in_spool) {
+	my $item = $self->parse($key);
+	next unless $item;
+	next unless eval $perlselector;
+	if ($@) {
+	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
+	    next;
+	}
+	next unless $self->is_relevant($key);
+	push @messages, $item;
     }
-    undef $self->{'current_file'};
-    $self->{'current_files_in_spool'} = \@messages;
-    if (defined $param->{'selector'}) {
-	$self->select_files_in_spool($param->{'selector'});
-    }
-    return @{$self->{'current_files_in_spool'}};
-}
 
-sub select_files_in_spool {
-    my $self = shift;
-    my $selector = shift;
-    my @selected_messages;
-    my $answer = 1;
-    foreach my $file (@{$self->{'current_files_in_spool'}}) {
-	foreach my $criterium (keys %{$selector}) {
-	    if (ref $selector->{$criterium}) {
-		my $value = ${$selector->{$criterium}}[0];
-		my $comparator = ${$selector->{$criterium}}[1];
-		if($comparator eq 'ne') {
-		    $answer = $answer && ($file->{$criterium} ne $value);
-		}
-	    }else{
-		$answer = $answer && ($file->{$criterium} eq $selector->{$criterium});
-	    }
-	}
-	if ($answer) {
-	    push @selected_messages, $file;
-	}
-    }
-    $self->{'current_files_in_spool'} = \@selected_messages;
-    return 1;
+    return @messages;
 }
 
 sub get_count {
@@ -145,185 +121,191 @@ sub get_count {
 #  returns 0 if no file found
 #  returns undef if problem scanning spool
 sub next {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug2','%s',$self->get_id);
+
+    my $key;
+    my $message;
+
     unless($self->refresh_spool_files_list) {
-	Log::do_log('err','Unable to refresh spool %s files list',$self->get_id);
+	Log::do_log('err', 'Unable to refresh spool %s files list', $self);
 	return undef;
     }
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
-    return 0 unless $self->get_next_file_to_process;
-    unless($self->parse_current_file) {
-	$self->move_current_file_to_bad;
+    return 0 unless $key = $self->get_next_file_to_process;
+    unless($message = $self->parse($key)) {
+	$self->move_to_bad($key);
 	return undef;
     }
-    ##Log::do_log('trace',
-    ##    'Will return file %s', $self->{'current_file'}{'name'});
-    return $self->{'current_file'};
+##    Log::do_log('trace', 'Will return file %s', $key);
+    return $message;
 }
 
-sub set_current_file {
+sub parse {
     my $self = shift;
-    my $file = shift;
-    Log::do_log('debug','%s',$file);
-    if($file) {
-	delete $self->{'current_file'};
-	if($file =~ /^((\/.+)\/)?([^\/]+)$/) {
-	    my $dir = $2;
-	    my $f = $3;
-	    unless(($dir eq $self->{'dir'} && -f "$dir/$f")  || -f "$self->{'dir'}/$file") {
-		Log::do_log('err','Message %s/%s to process not in %s spool. Stopping here.', $dir,$f, $dir);
-		return undef;
-	    }
-	$self->{'current_file'}{'name'} = $f;
-	Log::do_log('debug2','File to process: %s',$self->{'current_file'}{'name'});
-	}
-    }else{
-	unless (defined $self->{'current_file'} && $self->{'current_file'}{'name'}) {
-	    Log::do_log('err','No file provided as argument and no current file. Stopping here.');
-	    return undef;
-	}
-    }
-}
+    my $key  = shift;
 
-sub parse_current_file {
-    my $self = shift;
-    unless($self->{'current_file'}{'name'}) {
-	Log::do_log('err','Unable to find out which file to process. Stopping here;');
+    unless($key) {
+	Log::do_log('err',
+	    'Unable to find out which file to process');
 	return undef;
     }
-    $self->{'current_file'}{'full_path'} = "$self->{'dir'}/$self->{'current_file'}{'name'}";
-    unless($self->analyze_current_file_name) {
-	$self->move_current_file_to_bad;
+
+    my $data = {};
+    unless($self->analyze_file_name($key, $data)) {
+	$self->move_to_bad($key);
 	return undef;
     }
-    $self->get_current_file_priority;
-    $self->get_current_file_date;
-    $self->get_current_file_content;
-    unless(defined $self->{'current_file'}{'messageasstring'}) {
-	Log::do_log('err','Unable to gather content from file %s',$self->{'current_file'}{'full_path'});
+    $data->{'messagekey'} = $key;
+
+    $self->get_priority($key, $data);
+    $self->get_file_date($key, $data);
+    $data->{'messageasstring'} = $self->get_file_content($key);
+    unless (defined $data->{'messageasstring'}) {
+	Log::do_log('err', 'Unable to gather content from file %s', $key);
 	return undef;
     }
-    return 1;
+    return $data;
 }
 
 sub get_next_file_to_process {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    Log::do_log('debug2','%s',$self->get_id);
-    foreach (@{$self->{'spool_files_list'}}) {
-	$self->{'current_file'}{'name'} = $_;
-	last if ($self->is_current_file_readable);
+
+    foreach my $key (@{$self->{'spool_files_list'}}) {
+	return $key if $self->is_readable($key);
     }
-    return 1;
+    return undef;
 }
 
-sub is_current_file_readable {
+sub is_readable {
     my $self = shift;
-    if (-f "$self->{'dir'}/$self->{'current_file'}{'name'}" && -r _) {
+    my $key  = shift;
+
+    if (-f "$self->{'dir'}/$key" && -r _) {
 	return 1;
-    }else{
+    } else {
 	return 0;
     }
 }
 
-sub is_current_file_relevant {
-    my $self = shift;
+sub is_relevant {
     return 1;
 }
 
-sub analyze_current_file_name {
+sub analyze_file_name {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/){
-	Log::do_log('err','File %s name does not have the proper format. Stopping here.',$self->{'current_file'}{'name'});
+    my $key  = shift;
+    my $data = shift;
+
+    unless($key =~ /$filename_regexp/){
+	Log::do_log('err',
+	    'File %s name does not have the proper format', $key);
 	return undef;
     }
-    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot'}) = split(/\@/,$1);
+    ($data->{'list'}, $data->{'robot'}) = split /\@/, $1;
     
-    $self->{'current_file'}{'list'} = lc($self->{'current_file'}{'list'});
-    $self->{'current_file'}{'robot'}=lc($self->{'current_file'}{'robot'});
-    return undef unless ($self->{'current_file'}{'robot_object'} = Robot->new($self->{'current_file'}{'robot'}));
+    $data->{'list'} = lc($data->{'list'});
+    $data->{'robot'} = lc($data->{'robot'});
+    return undef
+	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
 
-    ($self->{'current_file'}{'list'}, $self->{'current_file'}{'type'}) =
-	$self->{'current_file'}{'robot_object'}->split_listname(
-	    $self->{'current_file'}{'list'}
-	);
+    ($data->{'list'}, $data->{'type'}) =
+	$data->{'robot_object'}->split_listname($data->{'list'});
     return 1;
 }
 
-sub get_current_file_priority {
+sub get_priority {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    my $email = $self->{'current_file'}{'robot_object'}->email;
+    my $key  = shift;
+    my $data = shift;
+
+    my $email = $data->{'robot_object'}->email;
     
-    if ($self->{'current_file'}{'list'} eq Site->listmaster_email) {
+    if ($data->{'list'} eq Site->listmaster_email) {
 	## highest priority
-	$self->{'current_file'}{'priority'} = 0;
-    }elsif ($self->{'current_file'}{'type'} eq 'request') {
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->request_priority;
-    }elsif ($self->{'current_file'}{'type'} eq 'owner') {
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->owner_priority;
-    }elsif ($self->{'current_file'}{'list'} =~ /^(sympa|$email)(\@Site->host)?$/i) {	
-	$self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->sympa_priority;
-    }else {
-	$self->{'current_file'}{'list_object'} =  List->new($self->{'current_file'}{'list'}, $self->{'current_file'}{'robot_object'}, {'just_try' => 1});
-	if ($self->{'current_file'}{'list_object'} && $self->{'current_file'}{'list_object'}->isa('List')) {
-	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'list_object'}->priority;
+	$data->{'priority'} = 0;
+    } elsif ($data->{'type'} and $data->{'type'} eq 'request') {
+	$data->{'priority'} = $data->{'robot_object'}->request_priority;
+    } elsif ($data->{'type'} and $data->{'type'} eq 'owner') {
+	$data->{'priority'} = $data->{'robot_object'}->owner_priority;
+    } elsif ($data->{'list'} =~ /^(sympa|$email)(\@Site->host)?$/i) {	
+	$data->{'priority'} = $data->{'robot_object'}->sympa_priority;
+    } else {
+	$data->{'list_object'} =
+	    List->new($data->{'list'}, $data->{'robot_object'},
+		{'just_try' => 1});
+	if ($data->{'list_object'} && $data->{'list_object'}->isa('List')) {
+	    $data->{'priority'} = $data->{'list_object'}->priority;
 	}else {
-	    $self->{'current_file'}{'priority'} = $self->{'current_file'}{'robot_object'}->default_list_priority;
+	    $data->{'priority'} =
+		$data->{'robot_object'}->default_list_priority;
 	}
     }
-    Log::do_log('debug2','current file %s, priority %s',$self->{'current_file'}{'name'},$self->{'current_file'}{'priority'});
+    Log::do_log('debug3',
+	'current file %s, priority %s', $key, $data->{'priority'});
 }
 
-sub get_current_file_date {
+sub get_file_date {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug3','%s',$self->get_id);
-    unless($self->{'current_file'}{'name'} =~ /$filename_regexp/) {
-	$self->{'current_file'}{'date'} = (stat "$self->{'dir'}/$self->{'current_file'}{'name'}")[9];
-    }else{
-	$self->{'current_file'}{'date'} = $2;
+    my $key  = shift;
+    my $data = shift;
+
+    unless ($key =~ /$filename_regexp/) {
+	$data->{'date'} = (stat "$self->{'dir'}/$key")[9];
+    } else {
+	$data->{'date'} = $2;
     }
-    return $self->{'current_file'}{'date'};
+    return $data->{'date'};
 }
 
-sub get_current_file_content {
+sub get_file_content {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug2','%s',$self->get_id);
-    my $spool_file_content;
-    unless (open $spool_file_content, $self->{'dir'}.'/'.$self->{'current_file'}{'name'}) {
-	Log::do_log('err','Unable to open file %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'});
+    my $key  = shift;
+
+    my $fh;
+    unless (open $fh, $self->{'dir'}.'/'.$key) {
+	Log::do_log('err', 'Unable to open file %s: %s',
+	    $self->{'dir'}.'/'.$key, $!);
 	return undef;
     }
     local $/;
-    $self->{'current_file'}{'messageasstring'} = <$spool_file_content>;
-    close $spool_file_content;
-    return 1;
+    my $messageasstring = <$fh>;
+    close $fh;
+    return $messageasstring;
 }
 
-sub lock_current_message {
+sub lock_message {
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug2','%s',$self->get_id);
-    $self->{'current_file'}{'lock'} = new Lock($self->{'current_file'}{'name'});
-    $self->{'current_file'}{'lock'}->set_timeout(-1);
-    unless ($self->{'current_file'}{'lock'}->lock('write')) {
-	Log::do_log('err','Unable to put a lock on file %s',$self->{'current_file'}{'name'});
-	undef $self->{'current_file'}{'lock'};
+    my $key  = shift;
+
+    $self->{'lock'} = new Lock($key);
+    $self->{'lock'}->set_timeout(-1);
+    unless ($self->{'lock'}->lock('write')) {
+	Log::do_log('err', 'Unable to put a lock on file %s', $key);
+	delete $self->{'lock'};
 	return undef;
     }
     return 1;
 }
 
-sub unlock_current_message {
+sub unlock_message {
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug2','%s',$self->get_id);
-    unless($self->{'current_file'}{'lock'} && $self->{'current_file'}{'lock'}->isa('Lock')) {
-	undef$self->{'current_file'}{'lock'};
+    my $key  = shift;
+
+    unless(ref($self->{'lock'}) and $self->{'lock'}->isa('Lock')) {
+	delete $self->{'lock'};
 	return undef;
     }
-    unless ($self->{'current_file'}{'lock'}->unlock()) {
-	Log::do_log('err','Unable to remove lock from file %s',$self->{'current_file'}{'name'});
-	undef $self->{'current_file'}{'lock'};
+    unless ($self->{'lock'}->unlock()) {
+	Log::do_log('err','Unable to remove lock from file %s', $key);
+	delete $self->{'lock'};
 	return undef;
     }
     return 1;
@@ -381,20 +363,22 @@ sub create_spool_dir {
     }
 }
 
-sub move_current_file_to_bad {
+sub move_to_bad {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
-    Log::do_log('debug', 'Moving spooled entity %s to bad',$self->{'current_file'}{'name'});
+    my $key = shift;
+
     unless (-d $self->{'dir'}.'/bad') {
 	make_path($self->{'dir'}.'/bad');
     }
-    unless(File::Copy::copy($self->{'dir'}.'/'.$self->{'current_file'}{'name'}, $self->{'dir'}.'/bad/'.$self->{'current_file'}{'name'})) {
-	Log::do_log('err','Could not move file %s to spool bad %s: %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'},$self->{'dir'}.'/bad',$!);
+    unless(File::Copy::copy($self->{'dir'}.'/'.$key, $self->{'dir'}.'/bad/'.$key)) {
+	Log::do_log('err','Could not move file %s to spool bad %s: %s',$self->{'dir'}.'/'.$key,$self->{'dir'}.'/bad',$!);
 	return undef;
     }
-    unless (unlink ($self->{'dir'}.'/'.$self->{'current_file'}{'name'})) {
-	&Log::do_log('err',"Could not unlink message %s/%s . Exiting",$self->{'dir'}, $self->{'current_file'}{'name'});
+    unless (unlink ($self->{'dir'}.'/'.$key)) {
+	&Log::do_log('err',"Could not unlink message %s/%s . Exiting",$self->{'dir'}, $key);
     }
-    $self->unlock_current_message;
+    $self->unlock_message($key);
     return 1;
 }
 
@@ -408,22 +392,21 @@ sub get_message {
     Log::do_log('debug2', '(%s, list=%s, robot=%s)',
 	$self->get_id, $selector->{'list'}, $selector->{'robot'});
     my @messages = $self->get_content({'selector' => $selector});
-    $self->{'current_file'} = $messages[0];
-    return $self->{'current_file'};
+    return $messages[0];
 }
 
 #################"
 # lock one message from related spool using a specified selector
 #  
-sub unlock_message {
-
-    my $self = shift;
-    my $messagekey = shift;
-
-    &Log::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
-    return ( $self->update({'messagekey' => $messagekey},
-			   {'messagelock' => 'NULL'}));
-}
+#sub unlock_message {
+#
+#    my $self = shift;
+#    my $messagekey = shift;
+#
+#    &Log::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
+#    return ( $self->update({'messagekey' => $messagekey},
+#			   {'messagelock' => 'NULL'}));
+#}
 
 sub move_to {
     my $self = shift;
@@ -435,8 +418,12 @@ sub move_to {
 	bless $new_spool, $target;
     }
     $new_spool->store($file_to_move);
-    $self->remove_message("$file_to_move->{'name'}");
+    $self->remove_message("$file_to_move->{'messagekey'}");
     return 1;
+}
+
+sub update {
+    croak 'Not implemented yet';
 }
 
 ################"
@@ -448,7 +435,7 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-    ##Log::do_log('trace', 'Storing in file %s', "$self->{'dir'}/$target_file");
+##    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('err','Unable to write file to spool %s',$self->{'dir'});
@@ -478,24 +465,18 @@ sub get_storage_name {
 ################"
 # remove a message in database spool using (messagekey,list,robot) which are a unique id in the spool
 #
-sub remove_current_message {  
+sub remove_message {  
     my $self = shift;
-    unless (unlink $self->{'dir'}.'/'.$self->{'current_file'}{'name'}) {
-	Log::do_log('err','Unable to remove file %s: %s',$self->{'dir'}.'/'.$self->{'current_file'}{'name'},$!);
+    my $key  = shift;
+
+    unless (unlink $self->{'dir'}.'/'.$key) {
+	Log::do_log('err',
+	    'Unable to remove file %s: %s', $self->{'dir'}.'/'.$key, $!);
 	return undef;
     }
     return 1;
 }
 
-sub remove_message {
-    my $self = shift;
-    my $param = shift;
-    unless(unlink "$self->{'dir'}/$param->{'file'}") {
-	Log::do_log('err','Unable to remove file %s from spool %s',$param->{'file'},$self->{'dir'});
-	return undef;
-    }
-    return 1;
-}
 ################"
 # Clean a spool by removing old messages
 #
@@ -543,11 +524,35 @@ sub clean {
 }
 
 
+sub _perlselector {
+    my $selector = shift || {};
+
+    my ($comparator, $value, $perl_key);
+
+    my @perl_clause = ();
+    foreach my $criterium (keys %{$selector}) {
+	if (ref($selector->{$criterium}) eq 'ARRAY') {
+	    ($value, $comparator) = @{$selector->{$criterium}};
+	    $comparator = 'eq' unless $comparator and $comparator eq 'ne';
+	} else {
+	    ($value, $comparator) = ($selector->{$criterium}, 'eq');
+	}
+
+	$perl_key = sprintf '$item->{"%s"}', $criterium;
+
+	push @perl_clause,
+	sprintf '%s %s "%s"', $perl_key, $comparator, quotemeta $value;
+    }
+
+    return join ' and ', @perl_clause;
+}
+
 
 ## Get unique ID
 sub get_id {
     my $self = shift;
-    return sprintf '%s/%s', $self->{'spoolname'}, $self->{'selection_status'};
+    return sprintf '%s/%s',
+	$self->{'spoolname'}, ($self->{'selection_status'} || 'ok');
 }
 
 ###### END of the Sympapool package ######
