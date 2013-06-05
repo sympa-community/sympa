@@ -94,6 +94,8 @@ sub get_content {
 
     my @messages;
     foreach my $key ($self->get_files_in_spool) {
+	next unless $self->is_relevant($key);
+
 	my $item = $self->parse($key);
 	next unless $item;
 	next unless eval $perlselector;
@@ -101,7 +103,6 @@ sub get_content {
 	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
 	    next;
 	}
-	next unless $self->is_relevant($key);
 	push @messages, $item;
     }
 
@@ -145,21 +146,21 @@ sub parse {
     my $self = shift;
     my $key  = shift;
 
-    unless($key) {
+    unless ($key) {
 	Log::do_log('err',
 	    'Unable to find out which file to process');
 	return undef;
     }
 
-    my $data = {};
+    my $data = {
+	'file' => $self->{'dir'} . '/' . $key,
+	'messagekey' => $key,
+    };
     unless($self->analyze_file_name($key, $data)) {
 	$self->move_to_bad($key);
 	return undef;
     }
-    $data->{'messagekey'} = $key;
 
-    $self->get_priority($key, $data);
-    $self->get_file_date($key, $data);
     $data->{'messageasstring'} = $self->get_file_content($key);
     unless (defined $data->{'messageasstring'}) {
 	Log::do_log('err', 'Unable to gather content from file %s', $key);
@@ -213,14 +214,8 @@ sub analyze_file_name {
 
     ($data->{'list'}, $data->{'type'}) =
 	$data->{'robot_object'}->split_listname($data->{'list'});
-    return 1;
-}
 
-sub get_priority {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
-    my $self = shift;
-    my $key  = shift;
-    my $data = shift;
+    ## Get priority
 
     my $email = $data->{'robot_object'}->email;
     
@@ -244,22 +239,21 @@ sub get_priority {
 		$data->{'robot_object'}->default_list_priority;
 	}
     }
-    Log::do_log('debug3',
-	'current file %s, priority %s', $key, $data->{'priority'});
-}
 
-sub get_file_date {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
-    my $self = shift;
-    my $key  = shift;
-    my $data = shift;
+    Log::do_log('debug3',
+	'messagekey=%s, list=%s, robot=%s, priority=%s',
+	$key, $data->{'list'}, $data->{'robot'}, $data->{'priority'}
+    );
+
+    ## Get file date
 
     unless ($key =~ /$filename_regexp/) {
-	$data->{'date'} = (stat "$self->{'dir'}/$key")[9];
+	$data->{'date'} = (stat $data->{'file'})[9];
     } else {
 	$data->{'date'} = $2;
     }
-    return $data->{'date'};
+
+    return $data;
 }
 
 sub get_file_content {
@@ -435,7 +429,8 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-##    Log::do_log('trace','Storing in file %s',"$self->{'dir'}/$target_file");
+##    Log::do_log('trace', 'Storing in file %s/%s',
+##	$self->{'dir'}, $target_file);
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('err','Unable to write file to spool %s',$self->{'dir'});

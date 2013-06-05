@@ -48,8 +48,6 @@ sub get_next_file_to_process {
 	    next;
 	}
 
-	$self->get_priority($key, $data);
-
 	if (ord($data->{'priority'}) < ord($highest_priority)) {
 	    $highest_priority = $data->{'priority'};
 	    $file_to_process = $key;

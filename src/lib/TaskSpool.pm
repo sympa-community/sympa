@@ -116,7 +116,16 @@ sub analyze_file_name {
 
     ($data->{'list'}, $data->{'type'}) =
 	$data->{'robot_object'}->split_listname($data->{'list'});
-    return 1;
+
+    #XXX
+    if ($data->{'list'}) {
+	$data->{'list_object'} =
+	    List->new(
+		$data->{'list'}, $data->{'robot_object'}, {'just_try' => 1}
+	    );
+    }
+
+    return $data;
 }
 
 # Initialize Sympaspool global object.

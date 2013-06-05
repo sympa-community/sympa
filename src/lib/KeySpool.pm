@@ -70,7 +70,16 @@ sub analyze_file_name {
     return undef
 	unless $data->{'list_object'} =
 	    List->new($data->{'list'}, $data->{'robot_object'});
-    return 1;
+
+    ## Get priority
+
+    $data->{'priority'} = $data->{'list_object'}->priority;
+
+    ## Get file date
+
+    $data->{'date'} = (stat $data->{'file'})[9];
+
+    return $data;
 }
 
 ## Return messages not validated yet.
