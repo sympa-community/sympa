@@ -48,8 +48,16 @@ sub new {
 	return undef;
     }
     bless $self,$pkg;
-    $self->{'to'} = $self->get_mime_message->head->get('to', 0);
-    chomp $self->{'to'} if $self->{'to'};
+
+    ## Some MTAs decorate To: field of DSN as "mailbox <address>".
+    ## Pick address only.
+    my $to = $self->get_header('to');
+    if ($to) {
+	my @to = Mail::Address->parse($to);
+	if (@to and $to[0] and $to[0]->address) {
+	    $self->{'to'} = $to[0]->address;
+	}
+    }
 
     return $self;
 }
