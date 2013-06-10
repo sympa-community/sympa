@@ -502,7 +502,7 @@ sub get_list {
     unless ($self->{'list'} && $self->{'list'}->isa('List')) {
 	unless ($self->{'listname'}) {
 	    my ($listname, $robot_id) = split /\@/, $self->{'rcpt'};
-	    $self->{'listname'} = lc($robot_id || '');
+	    $self->{'listname'} = lc($listname || '');
 	}
 	unless ($self->{'list'} = List->new($self->{'listname'},$self->get_robot,{'just_try' => 1})) {
 	    Log::do_log('debug2','Unable to create list object with listname %s and robot %s',$self->{'listname'},$self->get_robot);
