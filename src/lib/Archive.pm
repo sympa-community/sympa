@@ -303,7 +303,7 @@ sub clean_archived_message {
 }
 
 #############################
-# convert a messsage to html. 
+# convert a message to HTML. 
 #    result is stored in $destination_dir
 #    attachement_url is used to link attachement
 #    

@@ -169,7 +169,7 @@ sub mustRedirect {
 
 =head2 sub fetchRessource
 
-Check if user has an access token already and fetch ressource
+Check if user has an access token already and fetch resource
 
 =head3 Arguments 
 
@@ -177,7 +177,7 @@ Check if user has an access token already and fetch ressource
 
 =item * I<$self>, the OAuthConsumer object to test.
 
-=item * I<$url>, the ressource url.
+=item * I<$url>, the resource url.
 
 =item * I<$params>, (optionnal) the request parameters.
 
@@ -187,7 +187,7 @@ Check if user has an access token already and fetch ressource
 
 =over 
 
-=item * I<string>, ressource body
+=item * I<string>, resource body
 
 =item * I<undef>, if something went wrong
 
@@ -203,7 +203,7 @@ Check if user has an access token already and fetch ressource
 
 =cut 
 
-## Check if user has an access token already and fetch ressource
+## Check if user has an access token already and fetch resource
 sub fetchRessource {
 	my $self = shift;
 	my %param = @_;

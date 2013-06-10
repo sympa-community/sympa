@@ -22,8 +22,8 @@
 
 package WebAgent;
 
-use strict "vars";
-
+use strict;
+use warnings;
 use LWP::UserAgent;
 ## Good documentation : http://articles.mongueurs.net/magazines/linuxmag57.html
 
@@ -32,9 +32,9 @@ our @ISA = qw (LWP::UserAgent);
 my ($web_user, $web_passwd);
 
 sub get_basic_credentials {
-    my ( $self, $realm, $uri ) = @_;
+    my ($self, $realm, $uri) = @_;
 
-    return ( $web_user, $web_passwd );
+    return ($web_user, $web_passwd);
 }
 
 sub set_basic_credentials {

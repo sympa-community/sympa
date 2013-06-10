@@ -1640,7 +1640,7 @@ sub listmasters {
 	    $Conf::Conf{'listmasters'};
 	}
     } else {
-	croak 'bug in loginc.  Ask developer';
+	croak 'bug in logic.  Ask developer';
     }
 }
 

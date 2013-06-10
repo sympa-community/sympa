@@ -30,7 +30,7 @@ use File::Copy::Recursive;
 use POSIX qw(strftime mkfifo strtod);
 use Sys::Hostname;
 use Mail::Header;
-use Encode::Guess; ## Usefull when encoding should be guessed
+use Encode::Guess; ## Useful when encoding should be guessed
 use Encode::MIME::Header;
 use Text::LineFold;
 use MIME::Lite::HTML;
@@ -2082,7 +2082,7 @@ sub write_pid {
 sub direct_stderr_to_file {
     my %data = @_;
     ## Error output is stored in a file with PID-based name
-    ## Usefull if process crashes
+    ## Useful if process crashes
     open(STDERR, '>>', Site->tmpdir.'/'.$data{'pid'}.'.stderr');
     unless(&tools::set_file_rights(
 	file => Site->tmpdir.'/'.$data{'pid'}.'.stderr',
@@ -2656,7 +2656,7 @@ sub diff_on_arrays {
 } 
 
 ####################################################
-# is_on_array                     
+# is_in_array                     
 ####################################################
 # Test if a value is on an array
 # 
@@ -3308,7 +3308,7 @@ sub get_lockname (){
     return substr(substr(hostname(), 0, 20).$$,0,30);   
 }
 
-## compare 2 scalars, string/numeric independant
+## compare 2 scalars, string/numeric independent
 sub smart_lessthan {
     my ($stra, $strb) = @_;
     $stra =~ s/^\s+//; $stra =~ s/\s+$//;

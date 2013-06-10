@@ -22,7 +22,6 @@
 
 package Conf;
 
-#XXXuse strict "vars";
 use strict;
 
 use Exporter;

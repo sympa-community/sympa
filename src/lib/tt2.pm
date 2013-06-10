@@ -23,11 +23,11 @@
 package tt2;
 
 use strict;
-
+use warnings;
 use CGI::Util;
 use MIME::EncWords; 
-
 use Template;
+
 use Log;
 use Language;
 use Sympa::Constants;
