@@ -457,8 +457,7 @@ sub check_cpan {
 			'FCGI' => {
 				   required_version =>'0.67',
 				   package_name => 'FCGI',
-				   mandatory => 1,
-				   usage => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
+				   usage => 'WWSympa, Sympa\'s web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.',
 				  },
 			'File::Copy::Recursive' => {
 						    required_version =>'0.36',
