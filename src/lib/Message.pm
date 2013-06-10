@@ -66,13 +66,15 @@ use Language qw(gettext_strftime);
 #use Conf; # loaded in Site
 #use Log; # loaded in Conf
 
-my %openssl_errors = (1 => 'an error occurred parsing the command options',
-		      2 => 'one of the input files could not be read',
-		      3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
-		      4 => 'an error occurred decrypting or verifying the message',
-		      5 => 'the message was verified correctly but an error occurred writing out the signers certificates');
+my %openssl_errors = (
+    1 => 'an error occurred parsing the command options',
+    2 => 'one of the input files could not be read',
+    3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
+    4 => 'an error occurred decrypting or verifying the message',
+    5 => 'the message was verified correctly but an error occurred writing out the signers certificates',
+);
 
-=head1 Methods and Functions
+=head2 Methods and Functions
 
 This is the description of the subfunctions contained by Message.pm
 
@@ -89,9 +91,7 @@ Arguments:
 
 =item * I<$pkg>, a package name 
 
-=item * I<$file>, the message file
-
-=item * I<$noxsympato>, a boolean
+=item * I<$datas>, a hashref to metadata
 
 =back 
 
@@ -139,119 +139,140 @@ Calls:
 
 ## Creates a new object
 sub new {
-    my $pkg =shift;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $pkg   = shift;
     my $datas = shift;
 
-    my $file = $datas->{'file'};
-    my $noxsympato = $datas->{'noxsympato'};
-    my $messageasstring = $datas->{'messageasstring'};
-    my $mimeentity = $datas->{'mimeentity'};
-    my $message_in_spool= $datas->{'message_in_spool'};
-
-    my $message;
-    my $input = 'file' if $file;
-    $input = 'messageasstring' if $messageasstring; 
-    $input = 'message_in_spool' if $message_in_spool; 
-    $input = 'mimeentity' if $mimeentity; 
-    Log::do_log('debug2', '(input= %s, noxsympato=%s)', $input, $noxsympato);
-    
-    if ($mimeentity) {
-	return create_message_from_mime_entity($pkg,$message,$mimeentity);
-    }
-    if ($message_in_spool){
-	$message = create_message_from_spool($message_in_spool);
-    }
-    if ($file) {
-	$message = create_message_from_file($file);
-    }
-    if($messageasstring){
-	$message = create_message_from_string($messageasstring);
-    }  
-
-    unless ($message){
-	Log::do_log('err',"Could not parse message");
-	return undef;
+    if ($datas->{'message_in_spool'}) { #compat.
+	$datas = $datas->{'message_in_spool'};
     }
 
     ## Bless Message object
-    bless $message, $pkg;
-    $message->{'noxsympato'} = $noxsympato;
-    $message->{'size'} = length($message->{'msg_as_string'});
-    $message->{'msg_id'} = $message->get_header('Message-Id');
-    # Some messages without X-Sympa-To still need a list context.
-    $message->{'list'} ||= $datas->{'list'};
+    my $self = bless {
+	'noxsympato' => $datas->{'noxsympato'},
+	'messagekey' => $datas->{'messagekey'},
+	'spoolname'  => $datas->{'spoolname'},
+	'create_list_if_needed' =>
+	    $datas->{'create_list_if_needed'},
+	'list'     => $datas->{'list_object'},
+	'robot_id' => $datas->{'robot'},
+	'filename' => $datas->{'file'},
+    } => $pkg;
 
-    $message->get_envelope_sender;
+    return undef
+	unless $self->explode_metadata($datas);
 
-    return undef unless($message->get_sender_email);
+    ## Load content
 
-    $message->get_subject;
-    $message->get_recipient;
-    $message->get_robot;
-    $message->get_list;
-    $message->get_sympa_local_part;
-    $message->check_spam_status;
-    $message->check_dkim_signature;
-    $message->check_x_sympa_checksum;
+    my $messageasstring;
+    if ($datas->{'file'}) {
+	my $fh;
+	unless (open $fh, '<', $datas->{'file'}) {
+	    Log::do_log('err', 'Cannot open message file %s : %s',
+		$datas->{'file'}, $!);
+	    return undef;
+	}
+	local $/;
+	$messageasstring = <$fh>;
+	close $fh;
+    } elsif ($datas->{'messageasstring'}){
+	$messageasstring = $datas->{'messageasstring'};
+    }
+
+    unless (defined $messageasstring) {
+	Log::do_log('warn', 'no content.  load() is required');
+	return $self;
+    }
+
+    return undef
+	unless $self->load($messageasstring);
+    return $self;
+}
+
+=over 4
+
+=item load ( MESSAGEASSTRING )
+
+I<Initializer>.
+Load message content from string.
+
+Return:
+
+=over 4
+
+=item * I<a Message object>, if loading succeeded
+
+=item * I<undef>, if something went wrong
+
+=back 
+
+=back
+
+=cut
+
+sub load {
+    my $self = shift;
+    my $messageasstring = shift;
+
+    if (ref $messageasstring) {
+	Log::do_log('err',
+	    'deprecated: $messageasstring must be string, not %s',
+	    $messageasstring);
+	return undef;
+    }
+
+    $self->{'msg_as_string'} = $messageasstring;
+    $self->{'size'} = length($self->{'msg_as_string'});
+##    # Some messages without X-Sympa-To still need a list context.
+##    $self->{'list'} ||= $datas->{'list'};
+
+    my $parser = MIME::Parser->new();
+    $parser->output_to_core(1);
+    my $msg = $parser->parse_data(\$messageasstring);
+    $self->{'msg'} = $msg;
+
+    $self->get_envelope_sender;
+
+    return undef unless $self->get_sender_email;
+
+    $self->get_subject;
+    $self->get_recipient;
+    $self->get_robot;
+    $self->get_list;
+    $self->get_sympa_local_part;
+    $self->check_spam_status;
+    $self->check_dkim_signature;
+    $self->check_x_sympa_checksum;
     
     ## S/MIME
     if (Site->openssl) {
-	return undef unless $message->decrypt;
-	$message->check_smime_signature;
+	return undef unless $self->decrypt;
+	$self->check_smime_signature;
     }
     ## TOPICS
-    $message->set_topic;
-    return $message;
+    $self->set_topic;
+
+    return $self;
 }
 
-sub create_message_from_mime_entity {
-    my $pkg = shift;
+=over 4
+
+=item explode_metadata ( DATAS )
+
+I<Instance method, overridable>.
+Load metadata from DATAS.
+
+=back
+
+=cut
+
+sub explode_metadata {
     my $self = shift;
-    my $mimeentity = shift;
-    Log::do_log('debug2', '(mimeentity=%s)', $mimeentity);
-    
-    $self->{'msg'} = $mimeentity;
-    $self->{'altered'} = '_ALTERED';
-    $self->{'msg_as_string'} = $mimeentity->as_string;
+    my $datas = shift;
 
-    ## Bless Message object
-    bless $self, $pkg;
-    
-    return $self;
-}
+    my $file = $datas->{'file'};
+    return $self unless $file;
 
-sub create_message_from_spool {
-    my $message_in_spool = shift;
-    my $self;
-    Log::do_log('debug2', '(messagekey=%s)', $message_in_spool->{'messagekey'});
-    
-    $self = create_message_from_string($message_in_spool->{'messageasstring'});
-    $self->{'messagekey'}= $message_in_spool->{'messagekey'};
-    $self->{'spoolname'}= $message_in_spool->{'spoolname'};
-    $self->{'create_list_if_needed'}= $message_in_spool->{'create_list_if_needed'};
-    $self->{'list'} = $message_in_spool->{'list_object'};
-    $self->{'robot_id'} = $message_in_spool->{'robot'};
-
-    return $self;
-}
-
-sub create_message_from_file {
-    Log::do_log('debug2', '(%s)', @_);
-    my $file = shift;
-    my $self;
-    my $messageasstring;
-
-    unless (open FILE, "$file") {
-	Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
-	return undef;
-    }
-    while (<FILE>){
-	$messageasstring = $messageasstring.$_;
-    }
-    close(FILE);
-
-    $self = create_message_from_string($messageasstring);
-    $self->{'filename'} = $file;
     $file =~ s/^.*\/([^\/]+)$/$1/;
     if ($file =~ /^(\S+)\.(\d+)\.\w+$/) {
 	$self->{'rcpt'} = $1;
@@ -261,27 +282,17 @@ sub create_message_from_file {
     return $self;
 }
 
-sub create_message_from_string {
-    Log::do_log('debug2', '(...)');
-    my $messageasstring = shift;
-    my $self;
+#DEPRECATED.
+#sub create_message_from_mime_entity(entity)
 
-    my $parser = new MIME::Parser;
-    $parser->output_to_core(1);
-    
-    my $msg;
+#DEPRECATED.
+#sub create_message_from_spool(hash)
 
-    if (ref ($messageasstring)){
-	$msg = $parser->parse_data($messageasstring);
-    }else{
-	$msg = $parser->parse_data(\$messageasstring);
-    }
+#DEPRECATED.
+#sub create_message_from_file(path)
 
-    $self->{'msg'} = $msg;
-    $self->{'msg_as_string'} = $messageasstring;
-
-    return $self;
-}
+#DEPRECATED.
+#sub create_message_from_string(messageasstring)
 
 =over 4
 
@@ -649,11 +660,11 @@ sub decrypt {
     if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	($hdr->get('Content-Type') !~ /signed-data/i)){
 	unless (defined $self->smime_decrypt()) {
-	    Log::do_log('err', "Message %s could not be decrypted", $self->{'msg_id'});
+	    Log::do_log('err', "Message %s could not be decrypted", $self);
 	    return undef;
 	    ## We should warn the sender and/or the listmaster
 	}
-	Log::do_log('notice', "message %s has been decrypted", $self->{'msg_id'});
+	Log::do_log('notice', "message %s has been decrypted", $self);
     }
     return 1;
 }
@@ -669,7 +680,8 @@ sub check_smime_signature {
 
 	$self->smime_sign_check();
 	if($self->{'smime_signed'}) {
-	    Log::do_log('notice', "message %s is signed, signature is checked", $self->{'msg_id'});
+	    Log::do_log('notice',
+		'message %s is signed, signature is checked', $self);
 	}
 	## TODO: Handle errors (0 different from undef)
     }
@@ -981,11 +993,12 @@ sub smime_decrypt {
 	while (<NEWMSG>) {
 	    $self->{'decrypted_msg_as_string'} .= $_;
 	}
-	close NEWMSG ;
+	close NEWMSG;
 	my $status = $? >> 8;
-	
-	unless ($status == 0) {
-	    Log::do_log('err', 'Unable to decrypt S/MIME message : %s', $openssl_errors{$status});
+	if ($status) {
+	    Log::do_log('err', 'Unable to decrypt S/MIME message: (%d) %s',
+		$status, ($openssl_errors{$status} || 'unknown reason')
+	    );
 	    next;
 	}
 	
@@ -1086,10 +1099,12 @@ sub smime_encrypt {
 	printf MSGDUMP "\n";
 	foreach (@{$self->get_mime_message->body}) { printf MSGDUMP '%s',$_;}
 	##$self->get_mime_message->bodyhandle->print(\*MSGDUMP);
-	close(MSGDUMP);
+	close MSGDUMP;
 	my $status = $? >> 8;
-	unless ($status == 0) {
-	    &Log::do_log('err', 'Unable to S/MIME encrypt message (error %s) : %s', $status, $openssl_errors{$status});
+	if ($status) {
+	    Log::do_log('err', 'Unable to S/MIME encrypt message: (%d) %s',
+		$status, ($openssl_errors{$status} || 'unknown reason')
+	    );
 	    return undef ;
 	}
 
@@ -1262,11 +1277,12 @@ sub smime_sign_check {
     print MSGDUMP "\n";
     print MSGDUMP $message->get_message_as_string;
     close MSGDUMP;
-
     my $status = $? >> 8;
-    unless ($status == 0) {
-	&Log::do_log('err', 'Unable to check S/MIME signature: %s', $openssl_errors{$status});
-	return undef ;
+    if ($status) {
+	Log::do_log('err', 'Unable to check S/MIME signature: (%d) %s',
+	    $status, ($openssl_errors{$status} || 'unknown reason')
+	);
+	return undef;
     }
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email. 
