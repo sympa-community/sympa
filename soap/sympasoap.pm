@@ -319,7 +319,7 @@ sub authenticateAndRun {
 	$email      = $session->{'email'};
 	$session_id = $session->{'id_session'};
     }
-    unless ($email or ($email eq 'unkown')) {
+    unless ($email or $email eq 'unknown') { #FIXME
 	Log::do_log('err',
 	    'Failed to authenticate user with session ID %s', $session_id);
 	die SOAP::Fault->faultcode('Client')
@@ -349,7 +349,7 @@ sub getUserEmailByCookie {
 
     my $session = SympaSession->new($robot, {'cookie' => $cookie});
 
-    unless (defined $session && ($session->{'email'} ne 'unkown')) {
+    unless (defined $session and $session->{'email'} ne 'unknown') {
 	&Log::do_log('err', "Failed to load session for $cookie");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Could not get email from cookie')->faultdetail('');

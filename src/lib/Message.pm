@@ -615,7 +615,7 @@ sub check_spam_status {
     my $self = shift;
     my $spam_status = Scenario::request_action($self->{'robot'},
 	'spam_status', 'smtp', {'message' => $self});
-    $self->{'spam_status'} = 'unkown';
+    $self->{'spam_status'} = 'unknown';
     if(defined $spam_status) {
 	if (ref($spam_status ) eq 'HASH') {
 	    $self->{'spam_status'} =  $spam_status ->{'action'};

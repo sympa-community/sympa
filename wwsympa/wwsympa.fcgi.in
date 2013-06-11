@@ -16737,8 +16737,9 @@ sub do_request_topic {
 
      my $authmessage = $spoolauth->get_message({'list'=> $list->name,'robot'=>$robot_id,'authkey'=>$in{'authkey'}});
      unless ($authmessage) {
-	 &report::reject_report_web('user','unkown_auth_key',{},$param->{'action'},$list);
-	 &wwslog('info','do_request_topic: unknown authentication key');
+	 &report::reject_report_web('user', 'unknown_auth_key', {},
+	    $param->{'action'}, $list);
+	 &wwslog('info', 'Unknown authentication key "%s"', $in{'authkey'});
 	 return undef;
      }
      my $message = new Message({'message_in_spool'=> $authmessage});
@@ -16787,8 +16788,12 @@ sub do_tag_topic_by_sender {
      my $messagespool = $authspool->get_message({'list'=>$listname, 'robot' => $robot_id , 'authkey'=> $in{'authkey'}});
 
      unless($messagespool){
-	 &report::reject_report_web('user','unkown authentication key %s for list %s@%s',$in{'authkey'},$listname,$robot_id );
-	 &wwslog('info','unkown authentication key %s for list %s@%s',$in{'authkey'},$listname,$robot_id );
+	 &report::reject_report_web('user', 'unknown_auth_key',
+	    {'authkey' => $in{'authkey'}}, $param->{'action'}, $list);
+	 &wwslog('info',
+	    'Unknown authentication key "%s" for list %s',
+	    $in{'authkey'}, $list
+	);
 	 return undef;
      }
      
@@ -17582,8 +17587,10 @@ sub do_viewspools {
 
     my $spool = new Sympaspool($spoolname,$spool_status);
     unless ($spool) {
-	&report::reject_report_web('intern','unkown spool');
-	&wwslog('info','do_viewspools: unkown spool');
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'Unknown spool %s/%s',
+	    $spoolname, ($spool_status || 'ok'));
 	return undef;
     }
 
@@ -17669,8 +17676,9 @@ sub do_viewspool_message {
 
     my $spool = new Sympaspool($spoolname,$status);
     unless ($spool) {
-	&report::reject_report_web('intern','unkown spool');
-	&wwslog('info','do_viewspools: unkown spool');
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'unknown spool', $spoolname, ($status || 'ok'));
 	return undef;
     }
     my @messages = $spool->get_content({'selector'=> {'messagekey'=>$messagekey},'selection'=>'*'});
@@ -17739,8 +17747,9 @@ sub do_viewspool_message_dump {
 
     my $spool = new Sympaspool($spoolname,$status);
     unless ($spool) {
-	&report::reject_report_web('intern','unkown spool');
-	&wwslog('info','do_viewspools: unkown spool');
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'Unknown spool %s/%s', $spoolname, ($status || 'ok'));
 	return undef;
     }
     my @messages = $spool->get_content(
@@ -17788,8 +17797,9 @@ sub do_viewspool_message_remove {
 
     my $spool = new Sympaspool($spoolname,$status);
     unless ($spool) {
-	&report::reject_report_web('intern','unkown spool');
-	&wwslog('info','do_viewspools: unkown spool');
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'unknown spool %s/%s', $spoolname, ($status || 'ok'));
 	return undef;
     }
     unless ($spool->remove_message(
@@ -17832,8 +17842,9 @@ sub do_viewspool_message_mv {
     $newstatus = 'ok' unless ($newstatus);
 
     unless (($newspool) && ($newstatus)){
-	&report::reject_report_web('intern','unkown spool %s or status %s',$newspool,$newstatus);
-	&wwslog('info','do_viewspool_message_mv: unkown spool %s,%s',$spoolname,$status);
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'unknown spool %s/%s', $spoolname, ($status || 'ok'));
 	return undef;
     }
 			       
@@ -17844,14 +17855,17 @@ sub do_viewspool_message_mv {
 
     my $spool = new Sympaspool($spoolname,$status);
     unless ($spool) {
-	&report::reject_report_web('intern','unkown spool');
-	&wwslog('info','do_viewspool_message_mv: unkown spool %s,%s',$spoolname,$status);
+	&report::reject_report_web('intern', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'unknown spool %s/%s', $spoolname, ($status || 'ok'));
 	return undef;
     }
 
     unless ( new Sympaspool($newspool,$newstatus)) {
-	&report::reject_report_web('user','unkopwn spool');
-	&wwslog('info','do_viewspool_message_mv : could not move message to unkown spool %s,%s',$newspool,$newstatus);
+	&report::reject_report_web('user', 'unknown_spool', {},
+	    $param->{'action'}, $list);
+	&wwslog('info', 'could not move message to unknown spool %s/%s',
+	    $newspool, ($newstatus || 'ok'));
 	return;	
     }
 
