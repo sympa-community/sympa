@@ -313,7 +313,7 @@ sub parse_tt2_messageasstring {
 	"X-Sympa-Checksum: %s\n" .
 	"%s",
 	$rcpt, $robot->get_address(), tools::sympa_checksum($rcpt),
-	$messageasstring;
+	$message_as_string;
     
     return $message_as_string;
 }
@@ -679,14 +679,15 @@ sub sending {
 	    return undef;
 	}
     }
-    my $verpfeature = (($verp eq 'on')||($verp eq 'mdn')||($verp eq 'dsn'));
+    my $verpfeature = ($verp and
+	($verp eq 'on' or $verp eq 'mdn' or $verp eq 'dsn'));
     my $trackingfeature ;
-    if (($verp eq 'mdn')||($verp eq 'dsn')) {
+    if ($verp and ($verp eq 'mdn' or $verp eq 'dsn')) {
 	$trackingfeature = $verp;
     }else{
 	$trackingfeature ='';
     }
-    my $mergefeature = ($merge eq 'on');
+    my $mergefeature = ($merge and $merge eq 'on');
     if ($use_bulk or defined $send_spool) {
 	if ($use_bulk) {
 	    # in that case use bulk tables to prepare message distribution 
@@ -701,18 +702,11 @@ sub sending {
 	    }
 	}
 
-	##Bulk package determine robots or site by its name.
-	##FIXME: Would '*' be correct?
-	my $robot_id;
-	if (ref $robot and ref $robot eq 'Robot') {
-	    $robot_id = $robot->name;
-	} elsif ($robot eq 'Site') {
-	    $robot_id = '*';
-	}
+	##Bulk package determine robots or site.
 	my $bulk_code = &Bulk::store('message' => $message,
 				     'rcpts' => $rcpt,
 				     'from' => $from,
-				     'robot' => $robot_id,
+				     'robot' => $robot,
 				     'listname' => $listname,
 				     'priority_message' => $priority_message,
 				     'priority_packet' => $priority_packet,
