@@ -7418,10 +7418,7 @@ sub do_distribute {
      my $modspool = KeySpool->new();
      my ($msg, $file);
 
-     my $time = time;
-     my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot),
-			       'X-Sympa-NoWrap' => 'yes'},
-		 'from'=> $param->{'user'}{'email'}};
+    my @mail_command = ();
 
      ## msg topics
      my @msg_topics;
@@ -7444,19 +7441,23 @@ sub do_distribute {
 
      ## messages
      foreach my $id (split (/,/, $in{'id'})) {
+	my $message_in_spool = $modspool->get_message(
+	    {'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id}
+	);
 
-	 
-	 my $message_in_spool = $modspool->get_message({'list'=>$list->name,'robot'=>$robot_id,'authkey'=>$id});
-
-	 unless ($message_in_spool) {
-	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
-	     &wwslog('err','do_distribute: Unable to find message in spool mod with authkey  %s', $id);
+	unless ($message_in_spool) {
+	    report::reject_report_web('user', 'already_moderated', {},
+		$param->{'action'});
+	    wwslog('err',
+		'Unable to find message in spool mod with authkey  %s',
+		$id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
 	     next;
 	 }
-	 $data->{'body'} .= sprintf ("QUIET DISTRIBUTE %s %s\n",$list->name,$id);
+	push @mail_command,
+	    sprintf('QUIET DISTRIBUTE %s %s', $list->name, $id);
 
 	## TAG 
 	if ($list_topics) {
@@ -7470,11 +7471,11 @@ sub do_distribute {
 
          ### move message in spool of validated messages
          unless ($modspool->validate_message($message_in_spool->{'messagekey'})) {
-
-	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
-								 'new'=>"validated"},
-					$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
-	     &wwslog('err','do_distribute: failed to move message in validated spool, key %s', $id);
+	    report::reject_report_web('intern', 'change_spool',
+		{'old' => 'mod', 'new' => 'validated'},
+		$param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id);
+	    wwslog('err', 'failed to move message in validated spool, key %s',
+		$id);
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
@@ -7484,11 +7485,22 @@ sub do_distribute {
 	 &tools::remove_dir ( Site->viewmail_dir.'/mod/'.$list->get_list_id().'/'.$id);	
      }
 
-     $data->{'not_auto_submitted'} = 1;
-     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
-	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
-	 &wwslog('err','do_distribute: failed to send message for list %s, id %s', $list->name,$in{'id'});
+    my $incomingspool = Messagespool->new();
+    unless ($incomingspool->store(
+	sprintf(
+	    "X-Sympa-To: %s\n" . #FIXME
+	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    $robot->get_address(),
+	    tools::get_message_id($robot), $param->{'user'}{'email'},
+	    join("\n", @mail_command)
+	),
+	{'list' => $robot->email, 'robot' => $robot->domain}
+    )) {
+	report::reject_report_web('intern', 'cannot_send_distribute',
+	    {'from' => $param->{'user'}{'email'}, 'listname' => $list->name},
+	    $param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id);
+	wwslog('err', 'failed to send message for list %s, id %s',
+	    $list, $in{'id'});
 	 &web_db_log({'parameters' => $in{'id'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});
@@ -15893,27 +15905,32 @@ sub do_remind {
 	 $reason = $result->{'reason'};
      }
 
-     if ($r_action =~ /reject/i) {
-	 &report::reject_report_web('auth',$reason,{},$param->{'action'},$list);
-	 &wwslog('info','remind : access denied for %s', $param->{'user'}{'email'});
+    if ($r_action =~ /reject/i) {
+	report::reject_report_web('auth', $reason, {}, $param->{'action'},
+	    $list);
+	wwslog('info', 'access denied for %s', $param->{'user'}{'email'});
 	 &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'authorization','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
-
-     }else {
-	 $mail_command = sprintf "REMIND %s", $param->{'list'};
+    } else {
+	$mail_command = sprintf 'REMIND %s', $param->{'list'};
      }
 
-     my $time = time;
-     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>',
-			       'X-Sympa-NoWrap' => 'yes'},
-		 'from'=> $param->{'user'}{'email'},
-		 'body' => $mail_command};
-
-     $data->{'not_auto_submitted'} = 1;
-     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
-	 &report::reject_report_web('intern','cannot_send_remind',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
-	 &wwslog('err','do_remind: failed to send message for command REMIND');
+    my $incomingspool = Messagespool->new();
+    unless ($incomingspool->store(
+	sprintf(
+	    "X-Sympa-To: %s\n" . #FIXME
+	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    $robot->get_address(),
+	    tools::get_message_id($robot), $param->{'user'}{'email'},
+	    $mail_command
+	),
+	{'list' => $robot->email, 'robot' => $robot->domain}
+    )) {
+	report::reject_report_web('intern', 'cannot_send_remind',
+	    {'from' => $param->{'user'}{'email'}, 'listname'=>$list->name},
+	    $param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id
+	);
+	wwslog('err', 'failed to send message for command REMIND');
 	 &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	 return undef;
      }
@@ -16511,7 +16528,7 @@ sub do_compose_mail {
 ####################################################
 #  Sends a message to a list by the Web interface
 #  or an html page getting its url.
-#  It uses mail::mail_file() to do it.
+#  Actually, it stores the message to appropriate spool.
 # 
 # IN : -
 #
@@ -16669,27 +16686,51 @@ sub do_send_mail {
 	$in{'body'} = "Content-Type: text/html\n" . $in{'body'};
     }
 
-    my $data = {'headers' => {'Message-ID' => $in{'message_id'}}, 
-		'subject' => $in{'subject'},
-		'return_path' => $robot->get_address(),
-		'to' => $to,
-		'body' => "From: $from\n" . $in{'body'},
-		'sign_mode' => '',
-		'header_possible' => '1',
-		'list' => $list,};
+    my $data = {
+	'headers' => {'Message-ID' => $in{'message_id'}}, 
+	'subject' => $in{'subject'},
+	'return_path' => $robot->get_address(),
+	'to' => $to,
+	'body' => "From: $from\n" . $in{'body'},
+	'sign_mode' => '',
+	'header_possible' => '1',
+    };
 
-    $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'} if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
+    $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'}
+	if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
     $data->{'not_auto_submitted'} = 1;
-    $data->{'not_a_list'} = 1 if($in{'sub_action'} eq 'sendmailtome');
-    unless (&mail::mail_file('', $to, $data, $robot)) {
-	&report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
-				   $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
-	&wwslog('err','do_send_mail: failed to send message for $to list');
+
+    my $messageasstring =
+	mail::parse_tt2_messageasstring($robot, '', $to, $data);
+    my $result;
+    if ($in{'sub_action'} eq 'sendmailtolist') {
+	my $incomingspool = Messagespool->new();
+	$result = $incomingspool->store($messageasstring,
+	    {'list' => $list->name, 'robot' => $list->domain}
+	);
+    } elsif ($in{'sub_action'} eq 'sendmailtome') {
+	my $message = Message->new({
+	    'messageasstring' => $messageasstring,
+	});
+	$result = mail::sending(
+	    'message' => $message,
+	    'rcpt' => $to,
+	    'from' => $robot->get_address('owner'),
+	    'robot' => $robot,
+	    'priority' => $robot->sympa_priority,
+	);
+    }
+
+    unless ($result) {
+	report::reject_report_web('intern', 'cannot_send_mail',
+	    {'from' => $param->{'user'}{'email'}, 'listname' => $list->name},
+	    $param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id
+	);
+	wwslog('err', 'failed to send message for %s', $to);
 	&web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	return undef;
      }
-    
-    
+
      &report::notice_report_web('performed',{},$param->{'action'});
     &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
     
@@ -16782,12 +16823,15 @@ sub do_tag_topic_by_sender {
      my $parser;
      my $listname = $list->name;
 
-     my $mail ;
+     my $message;
      
      my $authspool = new Sympaspool('auth');
-     my $messagespool = $authspool->get_message({'list'=>$listname, 'robot' => $robot_id , 'authkey'=> $in{'authkey'}});
+     my $message_in_spool = $authspool->get_message({
+	'list' => $listname, 'robot' => $robot_id ,
+	'authkey'=> $in{'authkey'}
+    });
 
-     unless($messagespool){
+    unless ($message_in_spool) {
 	 &report::reject_report_web('user', 'unknown_auth_key',
 	    {'authkey' => $in{'authkey'}}, $param->{'action'}, $list);
 	 &wwslog('info',
@@ -16798,12 +16842,18 @@ sub do_tag_topic_by_sender {
      }
      
 
-     unless($mail  = new Message({'message_in_spool'=>$messagespool,'noxsympato'=>'noxsympato'})) {
-	 &report::reject_report_web('intern','cannot_parse_message retrived by key %s for list %s@%s',$in{'authkey'},$listname,$robot_id );
-	 &wwslog('info','do_tag_topic_by_sender: cannot parse message retrived by key %s for list %s@%s',$in{'authkey'},$listname,$robot_id );
+     unless($message = Message->new(
+	{%$message_in_spool, 'noxsympato'=>'noxsympato'}
+    )) {
+	report::reject_report_web('intern',
+	    'cannot_parse_message retrived by key %s for list %s@%s',
+	    $in{'authkey'}, $listname, $robot_id
+	);
+	wwslog('info', 'cannot parse message retrived by key %s for list %s',
+	    $in{'authkey'}, $list);
 	 return undef;
      }
-     my $sender = $mail->{'sender'};
+     my $sender = $message->{'sender'};
 
      unless ($list->is_there_msg_topic()) {
 	 &report::reject_report_web('user','no_topic',{},$param->{'action'},$list);
@@ -16829,27 +16879,32 @@ sub do_tag_topic_by_sender {
      ## TAG 
      my $filetopic = $list->tag_topic($in{'message_id'},$list_topics,'sender');
 
-     ## CONFIRM
-     my $time = time;
-     my $data = {'headers' => {'Message-ID' => '<'.$time.'@wwsympa>',
-			       'X-Sympa-NoWrap' => 'yes'},
-		 'from'=> $sender};
-     $data->{'body'} = sprintf ("QUIET CONFIRM %s\n",$in{'authkey'});
-     $data->{'not_auto_submitted'} = 1;
+    ## CONFIRM
+    my $mail_command = sprintf 'QUIET CONFIRM %s', $in{'authkey'};
 
-
-     unless (mail::mail_file('', $robot->get_address(), $data, $robot)) {
-	 &report::reject_report_web('intern','cannot_send_mail',{'from' => $param->{'user'}{'email'},'listname'=>$list->name},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
-	 &wwslog('err','do_tag_topic_by_sender: failed to send message for list %s@%s authenticated by key %s',$listname,$robot_id,$in{'authkey'} );
+    my $incomingspool = Messagespool->new();
+    unless ($incomingspool->store(
+	sprintf(
+	    "X-Sympa-To: %s\n" . #FIXME
+	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    $robot->get_address(),
+	    tools::get_message_id($robot), $sender, $mail_command
+	),
+	{'list' => $robot->email, 'robot' => $robot->domain}
+    )) {
+	report::reject_report_web('intern', 'cannot_send_mail',
+	    {'from' => $param->{'user'}{'email'}, 'listname' => $list->name},
+	    $param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id);
+	wwslog('err',
+	    'failed to send message for list %s authenticated by key %s',
+	    $list, $in{'authkey'}
+	);
 	 return undef;
      }
 
      &report::notice_report_web('performed_soon',{},$param->{'action'});
      return 'info';
- }
-
-
+}
 
 sub do_search_user {
      &wwslog('info', 'do_search_user');

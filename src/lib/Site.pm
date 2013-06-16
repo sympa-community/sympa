@@ -322,7 +322,7 @@ command.
 
 IN : 
       -$self : ref(List) | "Site"
-      -$email(+) : recepient (the personn who asked
+      -$email(+) : recipient (the person who asked
                    for the command)
       -$cmd : -signoff|subscribe|add|del|remind if $self is List
               -remind else
@@ -820,19 +820,22 @@ sub send_file {
     my $context = shift || {};
     my $options = shift || {};
 
-    my ($robot, $list, $robot_id);
+    my ($robot, $list, $robot_id, $listname);
     if (ref $self and ref $self eq 'List') {
 	$robot    = $self->robot;
 	$list     = $self;
 	$robot_id = $self->robot->name;
+	$listname = $self->name;
     } elsif (ref $self and ref $self eq 'Robot') {
 	$robot    = $self;
 	$list     = '';
 	$robot_id = $self->name;
+	$listname = '';
     } elsif ($self eq 'Site') {
 	$robot    = $self;
 	$list     = '';
 	$robot_id = '*';
+	$listname = '';
     } else {
 	croak 'bug in logic.  Ask developer';
     }
@@ -1000,13 +1003,39 @@ sub send_file {
     # order to support Sympa server on a machine without any MTA service
     $data->{'use_bulk'} = 1
 	unless ($data->{'alarm'});
-    my $r =
-	&mail::mail_file($filename, $who, $data, $robot,
-	$options->{'parse_and_return'});
-    return $r if $options->{'parse_and_return'};
 
-    unless ($r) {
-	&Log::do_log('err', 'Could not send template "%s" to %s',
+    my $messageasstring =
+	mail::parse_tt2_messageasstring($robot, $filename, $who, $data);
+    return $messageasstring if $options->{'parse_and_return'};
+
+    my $message;
+    if ($list) {
+	$message = Message->new({
+	    'messageasstring' => $messageasstring, 'list_object' => $list,
+	});
+    } elsif (ref $robot) {
+	$message = Message->new({
+	    'messageasstring' => $messageasstring, 'robot_object' => $robot,
+	});
+    } else {
+	$message = Message->new({
+	    'messageasstring' => $messageasstring,
+	});
+    }
+
+    ## SENDING
+    unless (defined mail::sending(
+	'message' => $message,
+	'rcpt' => $who,
+	'from' => ($data->{'return_path'} || $robot->get_address('owner')),
+	'robot' => $robot,
+	'listname' => $listname,
+	'priority' => $robot->sympa_priority,
+	'sign_mode' => $data->{'sign_mode'},
+	'use_bulk' => $data->{'use_bulk'},
+	'dkim' => $data->{'dkim'},
+    )) {
+	Log::do_log('err', 'Could not send template "%s" to %s',
 	    $filename, $who);
 	return undef;
     }

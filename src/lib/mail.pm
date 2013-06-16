@@ -79,10 +79,13 @@ sub set_send_spool {
     $send_spool = $spool;
 }
 
+#sub mail_file($that, $filename, $rcpt, $data)
+#DEPRECATED: Use parse_tt2_messageastring() & sending().
+
 ####################################################
-# public mail_file                          
+# public parse_tt2_messageasstring
 ####################################################
-# send a tt2 file 
+# parse a tt2 file as message
 # 
 #  
 # IN : -$filename(+) : tt2 filename (with .tt2) | ''
@@ -110,18 +113,16 @@ sub set_send_spool {
 #         
 # OUT : 1 | undef
 ####################################################
-## NOTE: This might be moved to Site module as mutative method.
-sub mail_file {
+sub parse_tt2_messageasstring {
+    my $robot = shift;
     my $filename = shift;
     my $rcpt = shift;
     my $data = shift;
-    my $robot = Robot::clean_robot(shift, 1); # May be Site
-    my $return_message_as_string = shift;
+
     my $header_possible = $data->{'header_possible'};
     my $sign_mode = $data->{'sign_mode'};
-    Log::do_log('debug2', '(%s, %s, %s, %s, header_possible=%s, sign_mode=%s)',
-	$filename, $rcpt, $robot, $return_message_as_string, $header_possible,
-	$sign_mode
+    Log::do_log('debug2', '(%s, %s, %s, header_possible=%s, sign_mode=%s)',
+	$robot, $filename, $rcpt, $header_possible, $sign_mode
     );
     my ($to,$message_as_string);
 
@@ -130,7 +131,7 @@ sub mail_file {
     my %header_ok;           # hash containing no missing headers
     my $existing_headers = 0;# the message already contains headers
    
-    ## We may receive a list a recepients
+    ## We may receive a list of recipients
     if (ref ($rcpt)) {
 	unless (ref ($rcpt) eq 'ARRAY') {
 	    &Log::do_log('notice', 'Wrong type of reference for rcpt');
@@ -143,8 +144,8 @@ sub mail_file {
     $data->{'charset'} ||= Language::GetCharset();
     Language::PopLang() if defined $data->{'lang'};
 
-    ## TT2 file parsing 
     if ($filename =~ /\.tt2$/) {
+	# TT2 file parsing
 	my $output;
 	my @path = split /\//, $filename;	   
 
@@ -154,7 +155,7 @@ sub mail_file {
 
 	$message_as_string .= join('',$output);
 	$header_possible = 1;
-    }else { # or not
+    } else { # or not
 	$message_as_string .= $data->{'body'};
     }
        
@@ -296,43 +297,25 @@ sub mail_file {
 	close IN;
     }
 
-    my $listname = ''; 
-    if (ref($data->{'list'}) eq 'List') {
-	$listname = $data->{'list'}->name;
-    } elsif (ref($data->{'list'}) eq 'HASH') {
-        my $level = $Carp::CarpLevel;
-        $Carp::CarpLevel = 1;
-        carp 'Deprecated: $data->{\'list\'} should be a List object, not a hashref';
-        $Carp::CarpLevel = $level;
-	$listname = $data->{'list'}{'name'};
-    } elsif ($data->{'list'}) {
-	$listname = $data->{'list'};
-    }
-
-    unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
-    	&Log::do_log('err', "mail::mail_file: Failed to reformat message");
+    unless ($message_as_string = reformat_message(
+	"$headers"."$message_as_string", \@msgs, $data->{'charset'}
+    )) {
+    	Log::do_log('err', 'Failed to reformat message');
     }
 
     ## Set it in case it was not set
-    $data->{'return_path'} ||= $robot->get_address('owner');
-    $message_as_string = get_sympa_headers({'rcpt' => $rcpt, 'from' => $robot->email.'@'.$robot->domain}).$message_as_string;
+    if (ref $rcpt) {
+	$rcpt = join ',', @$rcpt;
+    }
+    $message_as_string = sprintf
+	"X-Sympa-To: %s\n" .
+	"X-Sympa-From: %s\n" .
+	"X-Sympa-Checksum: %s\n" .
+	"%s",
+	$rcpt, $robot->get_address(), tools::sympa_checksum($rcpt),
+	$messageasstring;
     
-    return $message_as_string if($return_message_as_string);
-    my $message = build_message_object($robot,$listname,$message_as_string);
-
-    ## SENDING
-    return undef unless (defined &sending('message' => $message,
-					  'rcpt' => $rcpt,
-					  'from' => $data->{'return_path'},
-					  'robot' => $robot,
-					  'listname' => $listname,
-					  'priority' => $robot->sympa_priority,
-					  'sign_mode' => $sign_mode,
-					  'use_bulk' => $data->{'use_bulk'},
-					  'dkim' => $data->{'dkim'},
-					  )
-			 );
-    return 1;
+    return $message_as_string;
 }
 
 ####################################################
@@ -344,7 +327,7 @@ sub mail_file {
 #      -$from(+) : message from
 #      -$robot(+) : robot
 #      -{verp=>[on|off]} : a hash to introduce verp parameters, starting just on or off, later will probably introduce optionnal parameters 
-#      -@rcpt(+) : recepients
+#      -@rcpt(+) : recipients
 #       
 ####################################################
 sub mail_message {
@@ -484,7 +467,7 @@ sub mail_message {
 # 
 # IN : -$mmessage(+) : ref(Message)
 #      -$from(+) : message from
-#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY)  - recepients
+#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY)  - recipients
 #      -$robot(+) : ref(Robot)
 # OUT : 1 | undef
 #
@@ -507,13 +490,13 @@ sub mail_forward {
     }
     $message->get_mime_message->head->replace('X-Sympa-To', $rcpt);
     $message->set_message_as_string($message->get_mime_message->as_string);
-    unless (defined &sending('message' => $message, 
-			     'rcpt' => $rcpt,
-			     'from' => $from,
-			     'robot' => $message->{'robot'},
-			     'priority'=> $message->{'robot'}->request_priority,
-			     )) {
-	&Log::do_log('err','mail::mail_forward from %s impossible to send',$from);
+    unless (defined sending(
+	'message' => $message, 'rcpt' => $rcpt, 'from' => $from,
+	'robot' => $message->robot,
+	'priority'=> $message->robot->request_priority,
+    )) {
+	Log::do_log('err', 'Impossible to send essage %s from %s',
+	    $message, $from);
 	return undef;
     }   
     return 1;
@@ -560,7 +543,7 @@ sub reaper {
 #  
 # IN: $message (+): Message object 
 #     $from (+): message from
-#     $rcpt(+) : ref(SCALAR) | ref(ARRAY) - message recepients
+#     $rcpt(+) : ref(SCALAR) | ref(ARRAY) - message recipients
 #     $listname : use only to format return_path if VERP on
 #     $robot(+) : ref(Robot)
 #     $encrypt : 'smime_crypted' | undef
@@ -653,7 +636,7 @@ sub sendto {
 # 
 #  
 # IN : -$msg(+) : ref(MIME::Entity) | string - message to send
-#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY) - recepients 
+#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY) - recipients 
 #       (for SMTP : "RCPT To:" field)
 #      -$from(+) : for SMTP "MAIL From:" field , for 
 #        spool sending : "X-Sympa-From" field
@@ -704,7 +687,20 @@ sub sending {
 	$trackingfeature ='';
     }
     my $mergefeature = ($merge eq 'on');
-    if ($use_bulk){ # in that case use bulk tables to prepare message distribution 
+    if ($use_bulk or defined $send_spool) {
+	if ($use_bulk) {
+	    # in that case use bulk tables to prepare message distribution 
+	} else {
+	    # in context wwsympa.fcgi store directly to spool.
+	    Log::do_log('info',
+		'NOT USING QUEUE BINARY: rcpt: %s, from: %s, message: %s',
+		$rcpt, $from, $message
+	    );
+	    unless($message->get_mime_message->head->get('X-Sympa-To')) {
+		$message->set_sympa_headers;
+	    }
+	}
+
 	##Bulk package determine robots or site by its name.
 	##FIXME: Would '*' be correct?
 	my $robot_id;
@@ -729,34 +725,14 @@ sub sending {
 				     );
 	
 	unless (defined $bulk_code) {
-	    &Log::do_log('err', 'Failed to store message for list %s', $listname);
+	    Log::do_log('err', 'Failed to store message for list %s',
+		$listname);
 	    $robot->send_notify_to_listmaster(
 		'bulk_error',  {'listname' => $listname});
 	    return undef;
 	}
-    } elsif (defined $send_spool) {
-	# in context wwsympa.fcgi store directly to spool.
-	Log::do_log('info',
-	    "NOT USING QUEUE BINARY: rcpt: %s, from: %s, message: %s",
-	    $rcpt, $from, $message
-	);
-	unless($message->get_mime_message->head->get('X-Sympa-To')) {
-	    $message->set_sympa_headers;
-	}
-	my %meta;
-	$meta{'date'} = time;
-	$meta{'robot'} = $message->{'robot_id'} if $message->{'robot_id'};
-	$meta{'robot'} = $message->{'robot'}->name if $message->{'robot'};
-	$meta{'list'} = $message->{'list'}->name if $message->{'list'};
-	$meta{'list'} = $message->{'listname'} if $message->{'listname'};
-	
-	my $msgspool = Messagespool->new();
-	unless($msgspool->store($message->get_mime_message->as_string,\%meta)) {
-	    Log::do_log('err',"Could not store message from %s to %s in db spool",$rcpt, $from);
-	    return undef;
-	}
-
-   }else{ # send it now
+   } else {
+	# send it now
 	Log::do_log('info', 'NOT USING BULK');
 	my $string_to_send;
 	if ($message->{'protected'}) {
@@ -809,7 +785,7 @@ sub smtpto {
   
    my($pid, $str);
    
-   ## Escape "-" at beginning of recepient addresses
+   ## Escape "-" at beginning of recipient addresses
    ## prevent sendmail from taking it as argument
    
    if (ref($rcpt) eq 'SCALAR') {
@@ -885,69 +861,8 @@ sub smtpto {
    return("mail::$fh"); ## Symbol for the write descriptor.
 }
 
-sub get_sympa_headers {
-    my $data = shift;
-
-    my $all_rcpt;
-    if (ref($data->{'rcpt'}) eq 'ARRAY') {
-	$all_rcpt = join(',', @{$data->{'rcpt'}});
-    }else {
-	$all_rcpt = $data->{'rcpt'};
-    }
-
-    my $sympa_headers = sprintf "X-Sympa-To: %s\n", $all_rcpt;
-    $sympa_headers .= sprintf "X-Sympa-From: %s\n", $data->{'from'};
-    $sympa_headers .= sprintf "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
-
-    return $sympa_headers;
-}
-
-####################################################
-# send_in_spool      : not used but if needed ...
-####################################################
-# send a message by putting it in global $send_spool
-#   
-# IN : $rcpt (+): ref(SCALAR)|ref(ARRAY) - recepients
-#      $robot(+) : ref(Robot) | "Site"
-#      $sympa_email : for the file name
-#      $XSympaFrom : for "X-Sympa-From" field
-# OUT : $return->
-#        -filename : name of temporary file 
-#         needing to be renamed
-#        -fh : file handle opened for writing
-#         on 
-####################################################
-sub send_in_spool {
-    my ($rcpt,$robot,$sympa_email,$XSympaFrom) = @_;
-    &Log::do_log('debug3', 'mail::send_in_spool(%s,%s, %s)',$XSympaFrom,$rcpt);
-    
-    $sympa_email ||= $robot->get_address();
-    $XSympaFrom ||= $robot->get_address();
-
-    my $sympa_file = "$send_spool/T.$sympa_email.".time.'.'.int(rand(10000));
-    
-    my $all_rcpt;
-    if (ref($rcpt) eq "ARRAY") {
-	$all_rcpt = join (',', @$rcpt);
-    } else {
-	$all_rcpt = $$rcpt;
-       }
-    
-    unless (open TMP, ">$sympa_file") {
-	&Log::do_log('notice', 'Cannot create %s : %s', $sympa_file, $!);
-	return undef;
-   }
-
-    printf TMP "X-Sympa-To: %s\n", $all_rcpt;
-    printf TMP "X-Sympa-From: %s\n", $XSympaFrom;
-    printf TMP "X-Sympa-Checksum: %s\n", &tools::sympa_checksum($all_rcpt);
-    
-    my $return;
-    $return->{'filename'} = $sympa_file;     
-    $return->{'fh'} = \*TMP;
-
-    return $return;
-}
+#sub send_in_spool($rcpt,$robot,$sympa_email,$XSympaFrom)
+#DEPRECATED: not used at all
 
 #####################################################################
 
@@ -1115,23 +1030,6 @@ sub fix_part($$$$) {
 	$part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
-}
-
-sub build_message_object {
-    my ($robot,$listname,$message_as_string) = @_;
-    
-    my $message;
-    if(Conf::valid_robot($robot->host, {'just_try' => 1})) {
-	if(my $list = new List ($listname, $robot, {'just_try' => 1})) {
-	    $message = new Message ({'messageasstring'=>$message_as_string, 'list' => $list});
-	}else{
-	    $message = new Message ({'messageasstring'=>$message_as_string});
-	}
-    }else{
-	$message = new Message ({'messageasstring'=>$message_as_string});
-    }
-
-    return $message;
 }
 
 1;
