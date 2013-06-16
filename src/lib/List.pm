@@ -22,22 +22,19 @@ package List;
 
 use strict;
 use warnings;
-
-use POSIX;
-use Exporter;
-#use Encode; # load in Log
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use Carp qw(croak);
-
+#use Encode; # load in Log
+use Exporter;
+#use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN); # no longer used
 use IO::Scalar;
-use Scalar::Util qw(refaddr);
-use Storable;
-use Mail::Header;
-
-use Time::Local;
-use MIME::Entity;
+#use Mail::Header; # not used
+#use MIME::Entity; # not used
 use MIME::EncWords;
-use MIME::Parser;
+#use MIME::Parser; # no longer used
+use POSIX;
+#use Scalar::Util qw(refaddr); # not used
+use Storable qw(dclone);
+use Time::Local qw(timelocal);
 # tentative
 use Data::Dumper;
 
@@ -67,8 +64,6 @@ use Message;
 use Family; #FIXME: dependency loop between List and Family
 use PlainDigest;
 use tracking;
-use Storable qw(dclone);
-
 #use listdef; used in Robot
 
 our @ISA    = qw(Site_r);           # not fully inherit Robot
@@ -316,7 +311,7 @@ currently selected descriptor.
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
 
-my %list_cache;
+#my %list_cache; # No longer used: Now each Robot object have list cache.
 
 ## DB fields with numeric type
 ## We should not do quote() for these while inserting data
@@ -2408,7 +2403,10 @@ sub send_to_editor {
 	# move message to spool  mod
 	my $modspool = KeySpool->new();
 	$modspool->store($message->get_message_as_string,
-	    {'list' => $message->{'list'}->name, 'robot'=> $message->{'robot'}->name, 'authkey' => $modkey}
+	    {   'list'    => $message->list->name,
+		'robot'   => $message->robot->name,
+		'authkey' => $modkey,
+	    }
 	);
 
 	# prepare html view of this message

@@ -2645,25 +2645,9 @@ sub distribute {
     my $message_in_spool = $modspool->get_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
-    unless ($message_in_spool) {
-	&Log::do_log(
-	    'err',
-	    'Commands::distribute(): Unable to find message for %s with key %s',
-	    $name,
-	    $key
-	);
-	&report::reject_report_msg('user', 'unfound_message', $sender,
-	    {'listname' => $name, 'key' => $key},
-	    $robot, '', $list);
-	return 'msg_not_found';
-
-    }
-    my $message = new Message(
-	##FIXME
-	{   'file' =>
-	    $modspool->{'dir'} . '/' . $message_in_spool->{'messagekey'}
-	}
-    );
+    my $message;
+    $message = Message->new($message_in_spool)
+	if $message_in_spool;
     unless (defined $message) {
 	&Log::do_log(
 	    'err',
@@ -2798,8 +2782,8 @@ sub confirm {
     }
 
     my $msg  = $message->{'msg'};
-    my $list = $message->{'list'};
-    &Language::SetLang($list->lang);
+    my $list = $message->list;
+    Language::SetLang($list->lang);
 
     my $name  = $list->name;
     my $bytes = $message->{'size'};
