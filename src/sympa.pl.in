@@ -1479,44 +1479,35 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	&mail::reaper;    # finish terminated process
 
 	my $message_in_spool = $spool->next;
-
-	unless ($message_in_spool) {
+	my $message;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
+	unless ($message) {
 	    sleep(Site->sleep);
 	    next;
 	}
-	my $list = $message_in_spool->{'list_object'};
-	my $robot    = $message_in_spool->{'robot_object'};
-	Log::do_log(
-	    'info',
-	    "Processing message %s for list = %s robot = %s",
-	    $message_in_spool->{'messagekey'},
-	    $list,
-	    $robot,
+	my $list  = $message->list;
+	my $robot = $message->robot;
+	Log::do_log('info', 'Processing message %s for list %s, robot %s',
+	    $message, $list, $robot,
 	);
 
 	if (!defined $main::options{'mail'} or
 	    "$main::options{'mail'}" ne '1') {
-	    $main::options{'mail'} =
-		$message_in_spool->{'robot_object'}->get_id
-		if $message_in_spool->{'robot_object'}->log_smtp;
+	    $main::options{'mail'} = $message->robot->get_id
+		if $message->robot->log_smtp;
 	}
 
 	## Set NLS default lang for current message
-	$default_lang = $main::options{'lang'} ||
-	    $message_in_spool->{'robot_object'}->lang;
+	$default_lang = $main::options{'lang'} || $message->robot->lang;
 	Language::SetLang($default_lang);
 
-	my $status = process_message(
-	    $spool->{'dir'} . '/' . $message_in_spool->{'messagekey'} #FIXME
-	);
+	my $status = process_message($message);
 
 	if (defined($status)) {
 	    Log::do_log(
-		'info',
-		"Message %s  processed for list = %s robot = %s",
-		$message_in_spool->{'messagekey'},
-		$list,
-		$robot,
+		'info', "Message %s was processed for list %s, robot %s",
+		$message, $list, $robot,
 	    );
 	    $spool->remove_message($message_in_spool->{'messagekey'});
 	    ##$spool->unlock_message($message_in_spool->{'messagekey'});
@@ -1530,16 +1521,13 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 	    # move message to bad.
 	    unless($spool->move_to_bad($message_in_spool->{'messagekey'})) {
 		Log::do_log('err',
-		    'unable to move file %s to bad. Stopping here.',
-		    $message_in_spool->{'messagekey'});
+		    'unable to move message %s to bad. Stopping here.',
+		    $message);
 		exit 1;
 	    }
-	    Log::do_log(
-		'notice',
-		"Message %s  moved to spool bad (message for list = %s robot = %s)",
-		$message_in_spool->{'messagekey'},
-		$list,
-		$robot,
+	    Log::do_log('notice',
+		'Message %s was moved to bad spool (message for list %s, robot %s)',
+		$message, $list, $robot,
 	    );
 	}
     }    ## END of infinite loop
@@ -1616,18 +1604,16 @@ sub sighup {
 #
 ##############################################################
 sub process_message {
-    my $message_in_spool = shift;
-    Log::do_log('debug', 'process_message()');
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
 
     my $listname;
     my $robot_id;
     my $status;
 
-    my $message = new Message({'file' => $message_in_spool});
-
     my $msg  = $message->get_mime_message;
     my $hdr  = $msg->head;
-    my $rcpt = $message->get_recipient;
+    my $rcpt = $message->get_recipient; #FIXME: use envelope recipient
 
     ## get listname & robot
     ($listname, $robot_id) = split(/\@/, $rcpt);
@@ -1742,7 +1728,7 @@ sub process_message {
 	$name         = $listname;
 	$list_address = $name . '@' . $host;
     } else {
-	$list = new List($listname, $robot_id);
+	$list = List->new($listname, $robot);
 	unless (defined $list) {
 	    unless ($dyn_list_family) {
 		Log::do_log('err', 'list %s does not exist', $listname);
@@ -2146,7 +2132,7 @@ sub DoSendMessage {
     $hdr->delete('X-Sympa-To');
     $hdr->delete('X-Sympa-From');
 
-    ## Multiple recepients
+    ## Multiple recipients
     my @rcpts = split /,/, $rcpt;    #/
 
     unless (&mail::mail_forward($message, $from, \@rcpts, $robot_id)) {
@@ -2224,7 +2210,7 @@ sub DoForward {
     my $msg_string = $msg->as_string;
     my $sender     = $message->get_header('From');
 
-    if ($message->{'spam_status'} eq 'spam') {
+    if ($message->{'spam_status'} and $message->{'spam_status'} eq 'spam') {
 	Log::do_log(
 	    'notice',
 	    "Message for %s-%s ignored, because tagged as spam (Message-id: %s)",
@@ -2236,10 +2222,10 @@ sub DoForward {
     }
 
     ##  Search for the list
-    my ($list, $host, $recepient, $priority);
+    my ($list, $host, $recipient, $priority);
 
     if ($function eq 'listmaster') {
-	$recepient = $robot->listmaster_email;
+	$recipient = $robot->listmaster_email;
 	$host      = $robot->host;
 	$priority  = 0;
     } else {
@@ -2258,7 +2244,7 @@ sub DoForward {
 	}
 
 	$host      = $list->host;
-	$recepient = "$name-$function";
+	$recipient = "$name-$function";
 	$priority  = $list->priority;
     }
 
@@ -2266,7 +2252,7 @@ sub DoForward {
 
     Log::do_log('info',
 	"Processing message for %s with priority %s, (Message-id:%s)",
-	$recepient, $priority, $messageid);
+	$recipient, $priority, $messageid);
 
     $hdr->add('X-Loop', "$name-$function\@$host");
     $hdr->delete('X-Sympa-To');
@@ -2834,7 +2820,9 @@ sub DoMessage {
 	    $key, $list, $sender, $message->{'filename'});
 
 	# do not report to the sender if the message was tagged as a spam
-	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
+	unless ($is_quiet or
+	    ($message->{'spam_status'} and
+	     $message->{'spam_status'} eq 'spam')) {
 	    unless (
 		&report::notice_report_msg(
 		    'moderating_message', $sender,
@@ -2900,7 +2888,9 @@ sub DoMessage {
 	    $list, $sender);
 
 	# do not report to the sender if the message was tagged as a spam
-	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
+	unless ($is_quiet or
+	    ($message->{'spam_status'} and
+	     $message->{'spam_status'} eq 'spam')) {
 	    unless (
 		&report::notice_report_msg(
 		    'moderating_message', $sender,
@@ -2927,7 +2917,9 @@ sub DoMessage {
 	);
 
 	# do not report to the sender if the message was tagued as a spam
-	unless ($is_quiet or $message->{'spam_status'} eq 'spam') {
+	unless ($is_quiet or
+	    ($message->{'spam_status'} and
+	     $message->{'spam_status'} eq 'spam')) {
 	    if (defined $result->{'tt2'}) {
 		unless (
 		    $list->send_file(
@@ -3003,7 +2995,7 @@ sub DoMessage {
 ############################################################
 #  Handles a command sent to the list manager.
 #
-# IN : -$rcpt : recepient | <listname>-<subscribe|unsubscribe>
+# IN : -$rcpt : recipient | <listname>-<subscribe|unsubscribe>
 #      -$robot_id (+): robot
 #      -$message : ref(Message) with :
 #        ->msg (+): ref(MIME::Entity) : message containing command
