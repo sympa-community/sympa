@@ -359,12 +359,6 @@ while (!$end) {
 	    }
 	    $messageasstring_init = $message_from_spool->{'messageasstring'};
 	}
-	my $data; #HASH which will contain the attributes of the subscriber
-
-	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
-	$data->{'listname'} = $bulk->{'listname'};
-	$data->{'robot'} = $bulk->{'robot'};
-	$data->{'wwsympa_url'} = $bulk->{'robot_object'}->wwsympa_url;
 
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
 	my @rcpts = split /,/,$bulk->{'recipients'}; # / Contain all the subscribers 
