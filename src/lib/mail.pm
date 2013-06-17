@@ -173,7 +173,7 @@ sub parse_tt2_messageasstring {
 	    }
 	    
 	    foreach my $header (
-		qw(date to from subject reply-to
+		qw(message-id date to from subject reply-to
 		mime-version content-type content-transfer-encoding)
 	    ) {
 		if ($line=~/^$header\s*:/i) {
@@ -186,6 +186,10 @@ sub parse_tt2_messageasstring {
     
     ## ADD MISSING HEADERS
     my $headers="";
+
+    unless ($header_ok{'message-id'}) {
+	$headers .= sprintf("Message-Id: %s\n", tools::get_message_id($robot));
+    }
 
     unless ($header_ok{'date'}) {
 	my $now = time;
