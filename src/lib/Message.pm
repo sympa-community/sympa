@@ -527,37 +527,8 @@ sub list {
     return shift->{'list'};    
 }
 
-sub set_sympa_headers {
-    my $self = shift;
-    my $param = shift;
-    my $rcpt = $param->{'rcpt'};
-    my $from = $param->{'from'};
-    $rcpt ||= $self->get_recipient;
-    $from ||= $self->get_sender_email;
-    my $all_rcpt;
-    if (ref($rcpt) eq 'ARRAY') {
-	$all_rcpt = join(',', @{$rcpt});
-    }else {
-	$all_rcpt = $rcpt;
-    }
-    if ($self->get_mime_message->head->get('X-Sympa-To')) {
-	$self->get_mime_message->head->replace('X-Sympa-To', $all_rcpt);
-    }else {
-	$self->get_mime_message->head->add('X-Sympa-To', $all_rcpt);
-    }
-    if ($self->get_mime_message->head->get('X-Sympa-From')) {
-	$self->get_mime_message->head->replace('X-Sympa-From', $from);
-    }else{
-	$self->get_mime_message->head->add('X-Sympa-From', $from);
-    }
-    if ($self->get_mime_message->head->get('X-Sympa-Authenticated')) {
-	$self->get_mime_message->head->replace('X-Sympa-Authenticated', 'md5');
-    } else {
-	$self->get_mime_message->head->add('X-Sympa-Authenticated', 'md5');
-    }
-    
-    $self->set_message_as_string($self->get_mime_message->as_string);
-}
+#sub set_sympa_headers({rcpt => $rcpt, from => $from})
+#NO LONGER USED.
 
 #FIXME: this should be moved to Messagespool.
 sub get_sympa_local_part {

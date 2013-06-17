@@ -8369,7 +8369,6 @@ sub do_send_me {
 	&wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
 	return undef;
     }
-	$message->set_sympa_headers({'from'=>$robot->get_address(),'rcpt'=>$param->{'user'}{'email'}});
 	unless (mail::mail_forward($message, $robot->get_address(),
 	    $param->{'user'}{'email'}, $robot
 	)) {

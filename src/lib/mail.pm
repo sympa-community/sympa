@@ -465,12 +465,12 @@ sub mail_message {
 #
 ####################################################
 sub mail_forward {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $message = shift;
     my $from = shift;
     my $rcpt = shift;
     my $robot = Robot::clean_robot(shift, 1); #FIXME: may be Site?
-    &Log::do_log('debug2', "mail::mail_forward($from,$rcpt)");
-    
+
     unless (ref($message) eq 'Message') {
 	&Log::do_log('err',"Unexpected parameter type: %s.",ref($message));
 	return undef;
@@ -484,8 +484,8 @@ sub mail_forward {
     $message->set_message_as_string($message->get_mime_message->as_string);
     unless (defined sending(
 	'message' => $message, 'rcpt' => $rcpt, 'from' => $from,
-	'robot' => $message->robot,
-	'priority'=> $message->robot->request_priority,
+	'robot' => $robot,
+	'priority'=> $robot->request_priority,
     )) {
 	Log::do_log('err', 'Impossible to send essage %s from %s',
 	    $message, $from);
@@ -681,17 +681,13 @@ sub sending {
     }
     my $mergefeature = ($merge and $merge eq 'on');
     if ($use_bulk or defined $send_spool) {
-	if ($use_bulk) {
-	    # in that case use bulk tables to prepare message distribution 
-	} else {
+	# in that case use bulk tables to prepare message distribution 
+	unless ($use_bulk) {
 	    # in context wwsympa.fcgi store directly to spool.
 	    Log::do_log('info',
 		'NOT USING QUEUE BINARY: rcpt: %s, from: %s, message: %s',
 		$rcpt, $from, $message
 	    );
-	    unless($message->get_mime_message->head->get('X-Sympa-To')) {
-		$message->set_sympa_headers;
-	    }
 	}
 
 	##Bulk package determine robots or site.
