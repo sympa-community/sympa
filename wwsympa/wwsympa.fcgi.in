@@ -7489,7 +7489,7 @@ sub do_distribute {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
 	    $robot->get_address(),
 	    tools::get_message_id($robot), $param->{'user'}{'email'},
 	    join("\n", @mail_command)
@@ -9495,7 +9495,7 @@ sub do_viewbounce {
 sub do_scenario_test {
      &wwslog('info', 'do_scenario_test');
 
-     ## List available scenarii
+     ## List available scenarios
      unless (opendir SCENARI, Sympa::Constants::DEFAULTDIR.'/scenari/'){
 	 &report::reject_report_web('intern','cannot_open_dir',{'dir' => Sympa::Constants::DEFAULTDIR.'/scenari/'},$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
 	 &wwslog('info',"do_scenario_test : unable to open %s/scenari", Sympa::Constants::DEFAULTDIR);
@@ -11611,7 +11611,7 @@ sub get_desc_file {
 	 }   
 
 	 if ($ligne =~ /^access\s*$/) {
-	     #case access scenari for the document
+	     #case access scenarios for the document
 	     while ($ligne = <DESC_FILE>) {
 		 last if  ($ligne =~ /^\s*$/);
 		 if ($ligne =~ /^\s*read\s*(\S*)\s*/) {
@@ -15919,7 +15919,7 @@ sub do_remind {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
 	    $robot->get_address(),
 	    tools::get_message_id($robot), $param->{'user'}{'email'},
 	    $mail_command
@@ -16574,7 +16574,7 @@ sub do_send_mail {
     # Send the mail to the sender. To test his message
     # Second if : send to the sender "send to me"
     if($in{'sub_action'} eq 'sendmailtome') {
-	#Set the sender mail to the addressee
+	#Set the sender mail to the recipient address
 	$to = $from;	
     }
     
@@ -16705,12 +16705,18 @@ sub do_send_mail {
     my $result;
     if ($in{'sub_action'} eq 'sendmailtolist') {
 	my $incomingspool = Messagespool->new();
-	$result = $incomingspool->store($messageasstring,
+	$result = $incomingspool->store(
+	    sprintf(
+		"X-Sympa-To: %s\n" . # FIXME
+		"X-Sympa-Authenticated: md5\nX-Sympa-From: %s\n%s",
+		$list->get_address(),
+		$robot->get_address('owner'), $messageasstring
+	    ),
 	    {'list' => $list->name, 'robot' => $list->domain}
 	);
     } elsif ($in{'sub_action'} eq 'sendmailtome') {
 	my $message = Message->new({
-	    'messageasstring' => $messageasstring,
+	    'messageasstring' => $messageasstring, 'noxsympato' => 1,
 	});
 	$result = mail::sending(
 	    'message' => $message,
@@ -16733,13 +16739,13 @@ sub do_send_mail {
 
      &report::notice_report_web('performed',{},$param->{'action'});
     &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'success','error_type' => '','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
-    
-	if ($in{'sub_action'} eq 'sendmailtome') {
-		$param->{'body'} = $in{'body'};
-		return 'compose_mail';
-	}else {
-		return 'info';	   
-	}
+
+    if ($in{'sub_action'} eq 'sendmailtome') {
+	$param->{'body'} = $in{'body'};
+    } else {
+	delete $in{'subject'};
+    }
+    return 'compose_mail';
 }
 
 ####################################################
@@ -16886,7 +16892,7 @@ sub do_tag_topic_by_sender {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "Message-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
 	    $robot->get_address(),
 	    tools::get_message_id($robot), $sender, $mail_command
 	),

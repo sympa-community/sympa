@@ -1621,24 +1621,6 @@ sub process_message {
     $listname = lc($listname);
     $robot_id ||= Site->host;    #FIXME: is "domain" better?
 
-    if ($message->{'md5_check'}) {
-
-	# message contain a valid checksum, it comes from wwsympa, so
-	#  mail it without other proceding unless it is for a valid list
-	unless (&Conf::valid_robot($robot_id, {'just_try' => 1})) {
-	    my $from = $hdr->get('X-Sympa-From');
-	    chomp $from if $from;
-	    my ($local_part, $robot_part) = split(/\@/, $from);
-	    $robot_part = lc($robot_part);
-	    $robot_id      = new Robot($robot_part);
-	    $robot_id ||= Site->host;    #FIXME: is "domain" better?
-	    return (&DoSendMessage($message, $robot_id));
-	}
-	unless (new List($listname, $robot_id, {'just_try' => 1})) {
-	    return (&DoSendMessage($message, $robot_id));
-	}
-    }
-
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
     unless ($sender) {
@@ -1696,9 +1678,8 @@ sub process_message {
 	);
     }
 
-    ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
+    ## Strip of the initial X-Sympa-To internal headers
     $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-Checksum');
 
     ## Initialize command report
     &report::init_report_cmd();
@@ -1772,7 +1753,7 @@ sub process_message {
 
 	    my $auth_level = 'smtp';
 	    $auth_level = 'dkim'  if $message->{'dkim_pass'};
-	    $auth_level = 'md5'   if $message->{'md5_check'};
+	    $auth_level = 'md5'   if $message->authenticated;
 	    $auth_level = 'smime' if $message->{'smime_signed'};
 	    if ($list = $dyn_family->create_automatic_list(
 		    (   'listname'   => $listname,
@@ -2099,88 +2080,8 @@ sub process_message {
     return $status;
 }
 
-############################################################
-#  DoSendMessage
-############################################################
-#  Send a message pushed in spool by another process.
-#
-# IN : -$msg (+): ref(MIME::Entity)
-#      -$robot_id (+) :robot
-#
-# OUT : 1
-#     | undef
-#
-##############################################################
-sub DoSendMessage {
-    my $message = shift;
-    my $robot_id   = shift;
-    Log::do_log('debug', 'DoSendMessage()');
-
-    my $hdr = $message->{'msg'}->head;
-
-    my $chksum = $message->get_header('X-Sympa-Checksum');
-    my $rcpt   = $message->get_header('X-Sympa-To');
-    my $from   = $message->get_header('X-Sympa-From');
-
-    Log::do_log('info', "Processing Web message for %s", $rcpt);
-
-    my $string = $message->{'msg'}->as_string;
-    my $msg_id = $message->get_header('Message-Id');
-    my $sender = $message->get_header('From'); #FIXME:use get_sender_email() ?
-
-    $hdr->delete('X-Sympa-Checksum');
-    $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-From');
-
-    ## Multiple recipients
-    my @rcpts = split /,/, $rcpt;    #/
-
-    unless (&mail::mail_forward($message, $from, \@rcpts, $robot_id)) {
-	Log::do_log('err', 'Impossible to forward mail from %s', $from);
-	&report::reject_report_msg(
-	    'intern',
-	    'Impossible to forward a message pushed in spool by another process than sympa.pl.',
-	    $sender,
-	    {'msg_id' => $msg_id, 'message' => $message->{'msg'}},
-	    $robot_id,
-	    $string,
-	    ''
-	);
-	Log::db_log(
-	    {   'robot'        => $robot_id,
-		'list'         => $rcpt,
-		'action'       => 'sendMessage',
-		'parameters'   => "$msg_id,$rcpt",
-		'target_email' => '',
-		'msg_id'       => $msg_id,
-		'status'       => 'error',
-		'error_type'   => 'internal',
-		'user_email'   => $sender,
-		'client'       => $ip,
-		'daemon'       => $daemon_name
-	    }
-	);
-	return undef;
-    }
-
-    Log::do_log('info', "Message for %s sent", $rcpt);
-    Log::db_log(
-	{   'robot'        => $robot_id,
-	    'list'         => $rcpt,
-	    'action'       => 'sendMessage',
-	    'parameters'   => "$msg_id,$rcpt",
-	    'target_email' => '',
-	    'msg_id'       => $msg_id,
-	    'status'       => 'succes',
-	    'error_type'   => '',
-	    'user_email'   => $sender,
-	    'client'       => $ip,
-	    'daemon'       => $daemon_name
-	}
-    );
-
-    return 1;
-}
+#sub DoSendMessage($message, $robot_id)
+#DEPRECATED: Now outbound messages will be stored into "bulk" spool.
 
 ############################################################
 #  DoForward
@@ -2585,8 +2486,8 @@ sub DoMessage {
 	    (!$context->{'topic'} && $list->is_msg_topic_tagging_required());
     }
 
-    ## Call scenarii : auth_method MD5 do not have any sense in send
-    ## scenarii because auth is perfom by distribute or reject command.
+    ## Call scenarios: auth_method MD5 do not have any sense in send
+    ## scenarios because auth is perfom by distribute or reject command.
 
     my $action;
     my $result;
@@ -2594,7 +2495,7 @@ sub DoMessage {
     # the order of the following 3 lines is important ! S/MIME > DKIM > SMTP
     my $auth_method = 'smtp';
     $auth_method = 'dkim'  if ($message->{'dkim_pass'});
-    $auth_method = 'md5'   if ($message->{'md5_check'});
+    $auth_method = 'md5'   if $message->authenticated;
     $auth_method = 'smime' if ($is_signed->{'body'});
 
     $result = Scenario::request_action($list, 'send', $auth_method, $context);

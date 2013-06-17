@@ -307,18 +307,6 @@ sub parse_tt2_messageasstring {
     	Log::do_log('err', 'Failed to reformat message');
     }
 
-    ## Set it in case it was not set
-    if (ref $rcpt) {
-	$rcpt = join ',', @$rcpt;
-    }
-    $message_as_string = sprintf
-	"X-Sympa-To: %s\n" .
-	"X-Sympa-From: %s\n" .
-	"X-Sympa-Checksum: %s\n" .
-	"%s",
-	$rcpt, $robot->get_address(), tools::sympa_checksum($rcpt),
-	$message_as_string;
-    
     return $message_as_string;
 }
 

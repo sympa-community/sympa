@@ -1011,15 +1011,17 @@ sub send_file {
     my $message;
     if ($list) {
 	$message = Message->new({
-	    'messageasstring' => $messageasstring, 'list_object' => $list,
+	    'messageasstring' => $messageasstring, 'noxsympato' => 1,
+	    'list_object' => $list,
 	});
     } elsif (ref $robot) {
 	$message = Message->new({
-	    'messageasstring' => $messageasstring, 'robot_object' => $robot,
+	    'messageasstring' => $messageasstring, 'noxsympato' => 1,
+	    'robot_object' => $robot,
 	});
     } else {
 	$message = Message->new({
-	    'messageasstring' => $messageasstring,
+	    'messageasstring' => $messageasstring, 'noxsympato' => 1,
 	});
     }
 

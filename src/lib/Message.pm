@@ -250,7 +250,7 @@ sub load {
     $self->get_sympa_local_part;
     $self->check_spam_status;
     $self->check_dkim_signature;
-    $self->check_x_sympa_checksum;
+    $self->authenticated;
     
     ## S/MIME
     if (Site->openssl) {
@@ -550,10 +550,10 @@ sub set_sympa_headers {
     }else{
 	$self->get_mime_message->head->add('X-Sympa-From', $from);
     }
-    if ($self->get_mime_message->head->get('X-Sympa-Checksum')) {
-	$self->get_mime_message->head->replace('X-Sympa-Checksum', tools::sympa_checksum($all_rcpt));
-    }else{
-	$self->get_mime_message->head->add('X-Sympa-Checksum', tools::sympa_checksum($all_rcpt));
+    if ($self->get_mime_message->head->get('X-Sympa-Authenticated')) {
+	$self->get_mime_message->head->replace('X-Sympa-Authenticated', 'md5');
+    } else {
+	$self->get_mime_message->head->add('X-Sympa-Authenticated', 'md5');
     }
     
     $self->set_message_as_string($self->get_mime_message->as_string);
@@ -639,22 +639,14 @@ sub check_dkim_signature {
     return 1;
 }
 
-sub check_x_sympa_checksum {
+sub authenticated {
     my $self = shift;
-    my $hdr = $self->{'msg'}->head;
-    unless ($self->{'noxsympato'}) {
-	## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
-	if ( $hdr->get('X-Sympa-Checksum')) {
-	    my $chksum = $self->get_header('X-Sympa-Checksum');
-	    my $rcpt   = $self->get_header('X-Sympa-To');
 
-	    if ($chksum eq &tools::sympa_checksum($rcpt)) {
-		$self->{'md5_check'} = 1 ;
-	    }else{
-		Log::do_log('err',"incorrect X-Sympa-Checksum header");	
-	    }
-	}
-    }
+    return $self->{'authenticated'} if defined $self->{'authenticated'};
+    return undef if $self->{'noxsympato'};
+
+    $self->{'authenticated'} = $self->get_header('X-Sympa-Authenticated');
+    return $self->{'authenticated'};
 }
 
 sub decrypt {

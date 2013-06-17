@@ -516,7 +516,7 @@ sub upgrade {
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers and footers, info files
-    ## + web_tt2, scenari, create_list_templatee, families
+    ## + web_tt2, scenari, create_list_templates, families
     if (&tools::lower_version($previous_version, '5.3b.3')) {
 	&Log::do_log('notice','Encoding all custom files to UTF-8...');
 
