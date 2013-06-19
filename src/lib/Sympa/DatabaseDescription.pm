@@ -270,11 +270,6 @@ my %full_db_struct = (
 		'doc'=>'the message header date',
 		'order'=>14,
 	    },
-	    'create_list_if_needed_spool'=> {
-		'struct'=> 'int(1)',
-		'doc'=>'set to 1 if message is related to a dynamic list, set to 0 if list as been created or if list is static',
-		'order'=>15,
-	    },
 	    'subject_spool'=>{
 		'struct'=> 'varchar(110)',
 		'doc'=>'subject of the message stored to list spool content faster',

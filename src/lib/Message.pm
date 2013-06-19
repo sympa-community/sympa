@@ -1,6 +1,5 @@
 # Message.pm - This module includes Message processing functions
 #<!-- RCS Identication ; $Revision$ ; $Date$ --> 
-
 #
 # Sympa - SYsteme de Multi-Postage Automatique
 # Copyright (c) 1997, 1998, 1999, 2000, 2001 Comite Reseau des Universites
@@ -152,11 +151,9 @@ sub new {
 	'noxsympato' => $datas->{'noxsympato'},
 	'messagekey' => $datas->{'messagekey'},
 	'spoolname'  => $datas->{'spoolname'},
-	'create_list_if_needed' =>
-	    $datas->{'create_list_if_needed'},
-	'robot_id' => $datas->{'robot'},
-	'filename' => $datas->{'file'},
-	'listname' => $datas->{'list'}, #++
+	'robot_id'   => $datas->{'robot'},
+	'filename'   => $datas->{'file'},
+	'listname'   => $datas->{'list'}, #++
     } => $pkg;
 
     return undef

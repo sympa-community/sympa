@@ -471,7 +471,7 @@ sub store {
     foreach my $meta (
 	qw(list authkey robot message_status priority date type subject sender
 	messageid size headerdate spam_status dkim_privatekey dkim_d dkim_i
-	dkim_selector create_list_if_needed task_label task_date task_model
+	dkim_selector task_label task_date task_model
 	task_flavour task_object)
     ) {
 	$insertpart1 .= ', ' . $meta . '_spool';

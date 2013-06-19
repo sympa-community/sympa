@@ -1682,12 +1682,9 @@ sub process_message {
     ## Initialize command report
     &report::init_report_cmd();
 
-    my ($dyn_list_family, $dyn_just_created);
     ## Maybe daemon is handling an automatic list
-    if ($message->{'create_list_if_needed'}) {
-	# we care of fake headers. If we put it, it's the 1st one.
-	$dyn_list_family = $message->get_family;
-    }
+    my $dyn_list_family = $message->get_family;
+    my $dyn_just_created;
 
     my $list_address;
 
@@ -1704,7 +1701,7 @@ sub process_message {
     } else {
 	$list = List->new($listname, $robot);
 	unless (defined $list) {
-	    unless ($dyn_list_family) {
+	    unless (defined $dyn_list_family) {
 		Log::do_log('err', 'list %s does not exist', $listname);
 		$robot->send_dsn($message, {'listname' => $listname},
 		    '5.1.1');
@@ -1726,7 +1723,7 @@ sub process_message {
 
 	    ## Automatic creation of a mailing list, based on a family
 	    my $dyn_family;
-	    unless ($dyn_family = new Family($dyn_list_family, $robot_id)) {
+	    unless ($dyn_family = Family->new($dyn_list_family, $robot)) {
 		Log::do_log(
 		    'err',
 		    "Failed to process message: family %s does not exist, impossible to create the dynamic list.",
@@ -1912,7 +1909,7 @@ sub process_message {
     }
 
     if (Site->automatic_list_feature eq 'on') {
-	if ($dyn_list_family && $dyn_just_created) {
+	if (defined $dyn_list_family and $dyn_just_created) {
 	    unless (defined $list->sync_include()) {
 		Log::do_log(
 		    'err',
