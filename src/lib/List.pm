@@ -658,17 +658,11 @@ sub set_status_error_config {
 	## No more save config in error...
 	#$self->save_config($self->robot->get_address('listmaster'));
 	#$self->savestats();
-	&Log::do_log('err',
+	Log::do_log('err',
 	    'The list %s is set in status error_config: %s(%s)',
 	    $self, $message, join(', ', @param));
-	unless (
-	    $self->robot->send_notify_to_listmaster(
-		$message, [$self->name, @param]
-	    )
-	    ) {
-	    &Log::do_log('notice', 'Unable to send notify "%s" to listmaster',
-		$message);
-	}
+	$self->robot->send_notify_to_listmaster($message,
+	    [$self->name, @param]);
     }
 }
 
@@ -7497,16 +7491,8 @@ sub sync_include {
 		$self
 	    );
 	    $errors_occurred = 1;
-	    unless (
-		$self->robot->send_notify_to_listmaster(
-		    'sync_include_failed',
-		    {'errors' => \@errors, 'listname' => $self->name}
-		)
-		) {
-		Log::do_log('notice',
-		    'Unable to send notify "sync_include_failed" to listmaster'
-		);
-	    }
+	    $self->robot->send_notify_to_listmaster('sync_include_failed',
+		{'errors' => \@errors, 'listname' => $self->name});
 	    foreach my $e (@errors) {
 		next unless ($e->{'type'} eq 'include_voot_group');
 		my $cfg = undef;
@@ -7842,15 +7828,8 @@ sub sync_include_admin {
 		Log::do_log('err',
 		    'Could not get %ss from an include source for list %s',
 		    $role, $self);
-		unless (
-		    $self->robot->send_notify_to_listmaster(
-			'sync_include_admin_failed', [$name]
-		    )
-		    ) {
-		    &Log::do_log('notice',
-			"Unable to send notify 'sync_include_admmin_failed' to listmaster"
-		    );
-		}
+		$self->robot->send_notify_to_listmaster(
+		    'sync_include_admin_failed', [$name]);
 		return undef;
 	    }
 

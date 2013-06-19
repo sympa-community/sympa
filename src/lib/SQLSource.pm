@@ -164,8 +164,11 @@ sub establish_connection {
     
     ## Check if DBD is installed
     unless (eval "require DBD::$self->{'db_type'}") {
-	&Log::do_log('err',"No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN");
-	Site->send_notify_to_listmaster('missing_dbd', {'db_type' => $self->{'db_type'}});
+	Log::do_log('err',
+	    'No Database Driver installed for %s; you should download and install DBD::%s from CPAN',
+	    $self->{'db_type'}, $self->{'db_type'});
+	Site->send_notify_to_listmaster('missing_dbd',
+	    {'db_type' => $self->{'db_type'}});
 	return undef;
     }
 
@@ -226,9 +229,7 @@ sub establish_connection {
 		unless (defined $db_connections{$self->{'connect_string'}} &&
 		    $db_connections{$self->{'connect_string'}}{'status'} eq 'failed') { 
     
-		    unless (Site->send_notify_to_listmaster('no_db', {})) {
-			&Log::do_log('err',"Unable to send notify 'no_db' to listmaster");
-		    }
+		    Site->send_notify_to_listmaster('no_db', {});
 		}
 	    }
 	    if ($self->{'reconnect_options'}{'keep_trying'}) {
@@ -249,10 +250,9 @@ sub establish_connection {
 	    }
 	    
 	    if ($self->{'reconnect_options'}{'warn'}) {
-	    &Log::do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
-		unless (Site->send_notify_to_listmaster('db_restored', {})) {
-		    &Log::do_log('notice',"Unable to send notify 'db_restored' to listmaster");
-		}
+		Log::do_log('notice', 'Connection to Database %s restored.',
+		    $self->{'connect_string'});
+		Site->send_notify_to_listmaster('db_restored', {});
 	    }
       }
 

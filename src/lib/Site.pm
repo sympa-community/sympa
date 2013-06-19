@@ -1146,16 +1146,17 @@ sub send_notify_to_listmaster {
 			if (($operation eq 'no_db') ||
 			($operation eq 'db_restored'));
 
-		    &Log::do_log('info', 'send messages to %s', $email);
+		    Log::do_log('info', 'send messages to %s', $email);
 		    unless (
 			$robot->send_file(
 			    'listmaster_groupednotifications',
 			    $email, $param, $options
 			)
 			) {
-			&Log::do_log('notice',
-			    "Unable to send template 'listmaster_notification' to $email"
-			) unless ($operation eq 'logs_failed');
+			Log::do_log('notice',
+			    'Unable to send notify "%s" to listmaster: Unable to send template "listmaster_groupnotifications" to %s',
+			    $operation, $email)
+			    unless $operation eq 'logs_failed';
 			return undef;
 		    }
 		}
@@ -1199,11 +1200,11 @@ sub send_notify_to_listmaster {
 	$data = [$data];
     }
     unless (ref $data eq 'HASH' or ref $data eq 'ARRAY') {
-	&Log::do_log(
+	Log::do_log(
 	    'err',
 	    'Error on incoming parameter "%s", it must be a ref on HASH or a ref on ARRAY',
-	    $data
-	) unless $operation eq 'logs_failed';
+	    $data)
+	    unless $operation eq 'logs_failed';
 	return undef;
     }
 
@@ -1245,9 +1246,9 @@ sub send_notify_to_listmaster {
 		$listmaster, $data, $options
 	    )
 	    ) {
-	    &Log::do_log('notice',
-		'Unable to send template "listmaster_notification" to %s',
-		$listmaster);
+	    Log::do_log('notice',
+		'Unable to send notify "%s" to listmaster: Unable to send template "listmaster_notification" to %s',
+		$operation, $listmaster);
 	    return undef;
 	}
 	return 1;
@@ -1302,9 +1303,9 @@ sub send_notify_to_listmaster {
 	}
 
 	unless ($r) {
-	    &Log::do_log('notice',
-		'Unable to send template "listmaster_notification" to %s',
-		$listmaster)
+	    Log::do_log('notice',
+		'Unable to send notify "%s" to listmaster: Unable to send template "listmaster_notification" to %s',
+		$operation, $listmaster)
 		unless $operation eq 'logs_failed';
 	    return undef;
 	}

@@ -1895,16 +1895,10 @@ sub process_message {
 	return undef;
 
     } elsif (!defined($rc)) {
-	unless (
-	    $robot->send_notify_to_listmaster(
-		'antivirus_failed',
-		"Could not scan message; The message has been saved as BAD."
-	    )
-	    ) {
-	    Log::do_log('notice',
-		'Unable to send notify "antivirus_failed" to listmaster');
-	}
-
+	$robot->send_notify_to_listmaster(
+	    'antivirus_failed',
+	    'Could not scan message; The message has been saved as "bad".'
+	);
 	return undef;
     }
 
@@ -2019,14 +2013,8 @@ sub process_message {
 	    ## Notify listmaster of first rejection
 	    if ($loop_info{$sender}{'count'} == Site->loop_command_max) {
 		## Notify listmaster
-		unless (
-		    $robot->send_notify_to_listmaster(
-			'loop_command', {'msg' => $message}
-		    )
-		    ) {
-		    Log::do_log('notice',
-			'Unable to send notify "loop_command" to listmaster');
-		}
+		$robot->send_notify_to_listmaster('loop_command',
+		    {'msg' => $message});
 	    }
 
 	    ## Too many reports sent => message skipped !!

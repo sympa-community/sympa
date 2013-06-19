@@ -70,7 +70,7 @@ sub fatal_err {
     };
     if ($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(Site->send_notify_to_listmaster('logs_failed', [$@])) {
+	unless (Site->send_notify_to_listmaster('logs_failed', [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     }
@@ -79,9 +79,7 @@ sub fatal_err {
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    unless (Site->send_notify_to_listmaster('sympa_died', [$full_msg])) {
-	do_log('err',"Unable to send notify 'sympa died' to listmaster");
-    }
+    Site->send_notify_to_listmaster('sympa_died', [$full_msg]);
 
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
     eval { SDM::db_disconnect(); };   # unlock database
@@ -224,7 +222,7 @@ sub do_connect {
     eval {openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(Site->send_notify_to_listmaster('logs_failed', [$@])) {
+	unless (Site->send_notify_to_listmaster('logs_failed', [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };

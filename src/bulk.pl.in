@@ -415,18 +415,13 @@ while (!$end) {
 			$messageasstring = $message->{'msg_as_string'};
 		    } else {	
 			Log::do_log('err', 'Erreur d appel personalize()');
-			unless ($list->robot->send_notify_to_listmaster(
+			$list->robot->send_notify_to_listmaster(
 			    'bulk_failed',
 			    {
 				'msg' => $messageasstring_init,
 				'list' => $list,
 			    }
-			)) {
-			    Log::do_log(
-				'err',
-				'Impossible to send notify "bulk_failed" to listmaster',
-			    );
-			}
+			);
 			last;
 		    }
 		} else {

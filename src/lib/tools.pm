@@ -423,10 +423,7 @@ sub load_edit_list_conf {
     }
 
     if ($error_in_conf) {
-	unless ($robot->send_notify_to_listmaster('edit_list_error', $file)) {
-	    &Log::do_log('notice',
-		"Unable to send notify 'edit_list_error' to listmaster");
-	}
+	$robot->send_notify_to_listmaster('edit_list_error', $file);
     }
 
     close $fh;
@@ -1641,12 +1638,8 @@ sub virus_infected {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-	unless (Site->send_notify_to_listmaster('virus_scan_failed',
-						 {'filename' => $file,
-						  'error_msg' => $error_msg})) {
-	    &Log::do_log('notice',"Unable to send notify 'virus_scan_failed' to listmaster");
-	}
-
+	Site->send_notify_to_listmaster('virus_scan_failed',
+	    {'filename' => $file, 'error_msg' => $error_msg});
     }
 
     ## if debug mode is active, the working directory is kept
@@ -3205,12 +3198,11 @@ sub save_to_bad {
 
     if (! -d $queue.'/bad') {
 	unless (mkdir $queue.'/bad', 0775) {
-	    &Log::do_log('notice','Unable to create %s/bad/ directory.',$queue);
-	    unless (Robot->new($hostname)->send_notify_to_listmaster(
+	    Log::do_log('notice', 'Unable to create %s/bad/ directory.',
+		$queue);
+	    Robot->new($hostname)->send_notify_to_listmaster(
 		'unable_to_create_dir', {'dir' => "$queue/bad"}
-	    )) {
-		&Log::do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
-	    }
+	    );
 	    return undef;
 	}
 	&Log::do_log('debug',"mkdir $queue/bad");

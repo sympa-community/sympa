@@ -120,9 +120,8 @@ sub reject_report_msg {
 	$param->{'action'} = 'message diffusion';
 	$param->{'msg_id'} = $param->{'msg_id'};
 	$param->{'list'} = $list if (defined $list);
-	unless ($robot->send_notify_to_listmaster('mail_intern_error', $param)) {
-	    &Log::do_log('notice',"report::reject_report_msg(): Unable to notify_listmaster concerning '$user'");
-	}
+
+	$robot->send_notify_to_listmaster('mail_intern_error', $param);
     }
     return 1;
 }
@@ -415,17 +414,10 @@ sub global_report_cmd {
 	    $param->{'error'} = &gettext($error);
 	    $param->{'who'} = $sender;
 	    $param->{'action'} = 'Command process';
-	    
-	    unless ($robot->send_notify_to_listmaster(
-		'mail_intern_error', $param
-	    )) {
-		&Log::do_log('notice',
-		    'Unable to notify listmaster concerning "%s"',
-		    $sender
-		);
-	    }
+
+	    $robot->send_notify_to_listmaster('mail_intern_error', $param);
 	} else {
-	    &Log::do_log(
+	    Log::do_log(
 		'notice', 'unable to send notify to listmaster : no robot'
 	    );
 	}	
@@ -506,16 +498,9 @@ sub reject_report_cmd {
 	    $param->{'who'} = $sender;
 	    $param->{'action'} = 'Command process';
 
-	    unless ($robot->send_notify_to_listmaster(
-		'mail_intern_error', $param
-	    )) {
-		&Log::do_log(
-		    'notice', 'Unable to notify listmaster concerning "%s"',
-		    $sender
-		);
-	    }
+	    $robot->send_notify_to_listmaster('mail_intern_error', $param);
 	} else {
-	    &Log::do_log(
+	    Log::do_log(
 		'notice',
 		'unable to notify listmaster for error: "%s" : (no robot)',
 		$error
@@ -815,13 +800,10 @@ sub reject_report_web {
 	    $param->{'who'} = $user;
 	    $param->{'action'} ||= 'Command process';
 
-	    unless ($robot->send_notify_to_listmaster(
-		'web_'.$type.'_error', $param
-	    )) {
-		&Log::do_log('notice', 'Unable to notify listmaster concerning "%s"', $user);
-	    } 
-	}else {
-	    &Log::do_log('notice', 'unable to notify listmaster for error: "%s" : (no robot)',
+	    $robot->send_notify_to_listmaster('web_'.$type.'_error', $param);
+	} else {
+	    Log::do_log('notice',
+		'unable to notify listmaster for error: "%s" : (no robot)',
 		$error);
 	} 
     }
