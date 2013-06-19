@@ -2402,7 +2402,7 @@ sub send_to_editor {
 
 	# move message to spool  mod
 	my $modspool = KeySpool->new();
-	$modspool->store($message->get_message_as_string,
+	$modspool->store($message->to_string, #FIXME: maybe encrypted
 	    {   'list'    => $message->list->name,
 		'robot'   => $message->robot->name,
 		'authkey' => $modkey,
@@ -5297,14 +5297,15 @@ sub archive_msg {
 
     if ($self->is_archived()) {
 
-	my $msgtostore = $message->get_message_as_string;
-	if (($message->{'smime_crypted'} and
-	    $message->{'smime_crypted'} eq 'smime_crypted') &&
+	my $msgtostore; # Stringified message without metadata
+	if ($message->{'smime_crypted'} and
+	    $message->{'smime_crypted'} eq 'smime_crypted' and
 	    ($self->archive_crypted_msg eq 'original')) {
-		Log::do_log('debug3', 'Will store encrypted message');
-		$msgtostore = $message->get_encrypted_message_as_string;
-	}else {
+	    Log::do_log('debug3', 'Will store encrypted message');
+	    $msgtostore = $message->get_encrypted_message_as_string;
+	} else {
 	    Log::do_log('debug3', 'Will store UNencrypted message');
+	    $msgtostore = $message->get_message_as_string;
 	}
 
 	my $x_no_archive =
@@ -5316,15 +5317,18 @@ sub archive_msg {
 		$restrict and $restrict =~ /no\-external\-archive/i)
 	) {
 	    ## ignoring message with a no-archive flag
-	    &Log::do_log('info',
-		"Do not archive message with no-archive flag for list %s",
-		$self->get_list_id());
+	    Log::do_log('info',
+		'Do not archive message with no-archive flag for list %s',
+		$self);
 	} else {
 	    my $spoolarchive = new SympaspoolClassic('outgoing');
-	    unless ($spoolarchive->store($msgtostore,{'list'=>$self->name,'robot'=>$self->domain}))
-		{
-		&Log::do_log('err',
-		    "could not store message %s in archive spool: %s",$message->get_id,$!
+	    unless ($spoolarchive->store(
+		$msgtostore,
+		{'list' => $self->name, 'robot' => $self->domain}
+	    )) {
+		Log::do_log('err',
+		    'Could not store message %s in archive spool: %s',
+		    $message, $!
 		);
 		return undef;
 	    }
@@ -8302,11 +8306,11 @@ sub store_digest {
     my @now  = localtime(time);
 
     my $digestspool = new Sympaspool('digest');
+    # remember that spool->next lock the selected message if any
     my $current_digest =
-	$digestspool->next({'list' => $self->name, 'robot' => $self->domain})
-	;    # remember that spool->next lock the selected message if any
-    my $message_as_string;
+	$digestspool->next({'list' => $self->name, 'robot' => $self->domain});
 
+    my $message_as_string;
     if ($current_digest) {
 	$message_as_string = $current_digest->{'messageasstring'};
     } else {
@@ -8317,13 +8321,14 @@ sub store_digest {
 	    "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
 	$message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
     }
-    $message_as_string .= $message->{'msg_as_string'};
+    $message_as_string .= $message->{'msg_as_string'}; #without metadata
     $message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
 
     # update and unlock current digest message or create it
     if ($current_digest) {
 
-# update does not modify the date field, this is needed in order to send digest when needed.
+	# update does not modify the date field, this is needed in order to
+	# send digest when needed.
 	unless (
 	    $digestspool->update(
 		{'messagekey' => $current_digest->{'messagekey'}},

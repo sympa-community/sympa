@@ -154,7 +154,7 @@ sub new {
 	'spoolname'  => $datas->{'spoolname'},
 	'create_list_if_needed' =>
 	    $datas->{'create_list_if_needed'},
-	'robot_id' => $datas->{'robot'},    #FIXME: needed?
+	'robot_id' => $datas->{'robot'},
 	'filename' => $datas->{'file'},
 	'listname' => $datas->{'list'}, #++
     } => $pkg;
@@ -231,18 +231,48 @@ sub load {
 	return undef;
     }
 
+    # Get metadata
+
+    unless ($self->{'noxsympato'}) {
+	pos($messageasstring) = 0;
+	while ($messageasstring =~ /\G(X-Sympa-\w+): (.*?)\n(?![ \t])/cgs) {
+	    my ($k, $v) = ($1, $2);
+	    next unless length $v;
+
+	    if ($k eq 'X-Sympa-To') {
+		$self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
+	    } elsif ($k eq 'X-Sympa-Family') {
+		$self->{'family'} = $v;
+	    } elsif ($k eq 'X-Sympa-From') {
+		$self->{'envelope_sender'} = $v;
+	    } elsif ($k eq 'X-Sympa-Authenticated') {
+		$self->{'authenticated'} = $v;
+	    } elsif ($k eq 'X-Sympa-Sender') {
+		$self->{'sender'} = $v;
+	    } elsif ($k eq 'X-Sympa-Gecos') {
+		$self->{'gecos'} = $v;
+	    } else {
+		Log::do_log('warn', 'Unknown meta information: "%s: %s"',
+		    $k, $v);
+	    }
+	}
+
+	# Strip meta information
+	substr($messageasstring, 0, pos $messageasstring) = '';
+    }
+
     $self->{'msg_as_string'} = $messageasstring;
-    $self->{'size'} = length($self->{'msg_as_string'});
-##    # Some messages without X-Sympa-To still need a list context.
-##    $self->{'list'} ||= $datas->{'list'};
+    $self->{'size'} = length $messageasstring;
 
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
     my $msg = $parser->parse_data(\$messageasstring);
     $self->{'msg'} = $msg;
 
+    # Get envelope sender, and actual sender according to sender_headers site
+    # parameter.
+    # FIXME: This process is needed for incoming messages only.
     $self->get_envelope_sender;
-
     return undef unless $self->get_sender_email;
 
     $self->get_subject;
@@ -250,8 +280,7 @@ sub load {
     $self->get_sympa_local_part;
     $self->check_spam_status;
     $self->check_dkim_signature;
-    $self->authenticated;
-    
+
     ## S/MIME
     if (Site->openssl) {
 	return undef unless $self->decrypt;
@@ -302,6 +331,49 @@ sub explode_metadata {
 
 #DEPRECATED.
 #sub create_message_from_string(messageasstring)
+
+=over 4
+
+=item to_string
+
+I<Serializer>.
+Returns serialized data of Message object.
+
+=back
+
+=cut
+
+sub to_string {
+    my $self = shift;
+
+    my $str = '';
+    if (ref $self->{'rcpt'} eq 'ARRAY' and @{$self->{'rcpt'}}) {
+	$str .= sprintf "X-Sympa-To: %s\n", join(',', @{$self->{'rcpt'}});
+    } elsif (defined $self->{'rcpt'} and length $self->{'rcpt'}) {
+	$str .= sprintf "X-Sympa-To: %s\n",
+	    join(',', split(/\s*,\s*/, $self->{'rcpt'}));
+    }
+    if (defined $self->{'family'}) {
+	$str .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
+    }
+    if (defined $self->{'envelope_sender'}) {
+	$str .= sprintf "X-Sympa-From: %s\n", $self->{'envelope_sender'};
+    }
+    if (defined $self->{'authenticated'}) {
+	$str .=
+	    sprintf "X-Sympa-Authenticated: %s\n", $self->{'authenticated'};
+    }
+    if (defined $self->{'sender'}) {
+	$str .= sprintf "X-Sympa-Sender: %s\n", $self->{'sender'};
+    }
+    if (defined $self->{'gecos'} and length $self->{'gecos'}) {
+	$str .= sprintf "X-Sympa-Gecos: %s\n", $self->{'gecos'};
+    }
+
+    $str .= $self->{'msg_as_string'};
+
+    return $str;
+}
 
 =over 4
 
@@ -477,38 +549,27 @@ sub get_subject {
 }
 
 sub get_family {
-    my $self = shift;
-    unless ($self->{'family'}) {
-	$self->{'family'} = $self->get_header('X-Sympa-Family');
-	if ($self->{'family'}) {
-	    $self->{'family'} =~ s/^\s+//;
-	    $self->{'family'} =~ s/\s+$//;
-	}
-    }
-    return $self->{'family'};
+    return shift->{'family'};
 }
 
 #FIXME: To: field shouldn't be used.
 sub get_recipient {
     my $self = shift;
-    my $force = shift;
-    my $rcpt;
-    if (!$self->{'rcpt'} || $self->get_family) {
-	# message.pm can be used not only for message coming from queue
-	unless ($rcpt = $self->get_header('X-Sympa-To')) {
-	    unless (defined $self->{'noxsympato'}) {
-		Log::do_log('err', 'no X-Sympa-To found, ignoring message.');
-		return undef;
-	    }
-	    unless ($rcpt = $self->get_header('To')) {
-		Log::do_log('err', 'no To: header found, ignoring message.');
-		return undef;
-	    }
-	    #FIXME: strip garbage.
-	}
-	## Extract recipient address (X-Sympa-To)
-	$self->{'rcpt'} = $rcpt;
+
+    return $self->{'rcpt'} if $self->{'rcpt'};
+
+    unless (defined $self->{'noxsympato'}) {
+	Log::do_log('err', 'no X-Sympa-To found.');
+	return undef;
     }
+    my $rcpt;
+    unless ($rcpt = $self->get_header('To')) {
+	Log::do_log('err', 'no To: header found.');
+	return undef;
+    }
+    #FIXME: strip garbage.
+    ## Extract recipient address (X-Sympa-To)
+    $self->{'rcpt'} = $rcpt;
     return $self->{'rcpt'};
 }
 
@@ -611,13 +672,7 @@ sub check_dkim_signature {
 }
 
 sub authenticated {
-    my $self = shift;
-
-    return $self->{'authenticated'} if defined $self->{'authenticated'};
-    return undef if $self->{'noxsympato'};
-
-    $self->{'authenticated'} = $self->get_header('X-Sympa-Authenticated');
-    return $self->{'authenticated'};
+    return shift->{'authenticated'};
 }
 
 sub decrypt {

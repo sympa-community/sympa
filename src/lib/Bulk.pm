@@ -275,14 +275,7 @@ sub store {
     $priority_message = $robot->sympa_priority unless $priority_message;
     $priority_packet = $robot->sympa_packet_priority unless $priority_packet;
     
-    my $msg;
-    if ($message->is_crypted) {
-	$msg = $message->get_encrypted_mime_message->as_string;
-    }elsif ($message->is_signed) {
-	$msg = $message->get_message_as_string;
-    }else{
-	$msg = $message->get_mime_message->as_string;
-    }
+    my $messageasstring = $message->to_string;
     my $message_sender = $message->get_sender_email();
 
     # first store the message in spool_table 
@@ -295,21 +288,30 @@ sub store {
 	defined $message->{'messagekey'} and
 	$message->{'messagekey'} eq $last_stored_message_key) {
 	$message_already_on_spool = 1;
-    }else{
+    } else {
 	my $lock = $$.'@'.hostname() ;
 	if ($message->{'messagekey'}) {
 	    # move message to spool bulk and keep it locked
-	    $bulkspool->update({'messagekey'=>$message->{'messagekey'}},{'messagelock'=>$lock,'spoolname'=>'bulk','message' => $msg});
-	}else{
-	    $message->{'messagekey'} = $bulkspool->store($msg,
-							 {'dkim_d'=>$dkim->{d},
-							  'dkim_i'=>$dkim->{i},
-							  'dkim_selector'=>$dkim->{selector},
-							  'dkim_privatekey'=>$dkim->{private_key},
-							  'dkim_header_list'=>$dkim->{header_list}},
-							 $lock);
-	    unless($message->{'messagekey'}) {
-		Log::do_log('err',"could not store message in spool distribute, message lost ?");
+	    $bulkspool->update(
+		{'messagekey' => $message->{'messagekey'}},
+		{   'messagelock' => $lock, 'spoolname' => 'bulk',
+		    'message' => $messageasstring}
+	    );
+	} else {
+	    $message->{'messagekey'} = $bulkspool->store(
+		$messageasstring,
+		{   'dkim_d'=>$dkim->{d},
+		    'dkim_i'=>$dkim->{i},
+		    'dkim_selector'=>$dkim->{selector},
+		    'dkim_privatekey'=>$dkim->{private_key},
+		    'dkim_header_list'=>$dkim->{header_list}
+		},
+		$lock
+	    );
+	    unless ($message->{'messagekey'}) {
+		Log::do_log('err',
+		    'Could not store message in spool distribute. Message lost?'
+		);
 		return undef;
 	    }
 	}
@@ -321,8 +323,13 @@ sub store {
 	    #ignore messages sent by robot
 	    unless (index($message_sender, "$listname-request") >= 0) {
 		#ignore messages of requests			
-		Log::db_stat_log({'robot' => $robot->name, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
-				   'mail' => $message_sender, 'client' => '', 'daemon' => 'sympa.pl'});
+		Log::db_stat_log({
+		    'robot' => $robot->name, 'list' => $listname,
+		    'operation' => 'send_mail',
+		    'parameter' => $message->{'size'},
+		    'mail' => $message_sender,
+		    'client' => '', 'daemon' => 'sympa.pl'
+		});
 	    }
 	}
     }

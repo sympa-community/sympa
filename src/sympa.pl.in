@@ -1616,6 +1616,7 @@ sub process_message {
     my $rcpt = $message->get_recipient; #FIXME: use envelope recipient
 
     ## get listname & robot
+    ##XXX FIXME: use attributes of Message object.
     ($listname, $robot_id) = split(/\@/, $rcpt);
     $robot_id    = lc($robot_id);
     $listname = lc($listname);
@@ -1678,23 +1679,15 @@ sub process_message {
 	);
     }
 
-    ## Strip of the initial X-Sympa-To internal headers
-    $hdr->delete('X-Sympa-To');
-
     ## Initialize command report
     &report::init_report_cmd();
 
     my ($dyn_list_family, $dyn_just_created);
     ## Maybe daemon is handling an automatic list
     if ($message->{'create_list_if_needed'}) {
-
 	# we care of fake headers. If we put it, it's the 1st one.
-	if ($hdr->as_string() =~ /^X-Sympa-Family/mo) {
-	    $dyn_list_family = $hdr->get('X-Sympa-Family');
-	    chomp $dyn_list_family if $dyn_list_family;
-	}
+	$dyn_list_family = $message->get_family;
     }
-    $hdr->delete('X-Sympa-Family');
 
     my $list_address;
 
@@ -1986,6 +1979,7 @@ sub process_message {
 	}
     }
 
+    #XXX FIXME: Use attributes of Message object.
     if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = &DoForward('sympa', 'listmaster', $robot_id, $message);
 
@@ -2156,8 +2150,6 @@ sub DoForward {
 	$recipient, $priority, $messageid);
 
     $hdr->add('X-Loop', "$name-$function\@$host");
-    $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-Family');
 
     if ($function eq "listmaster") {
 	@rcpt = @{$robot->listmasters};

@@ -7489,10 +7489,11 @@ sub do_distribute {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nX-Sympa-Sender: %s\n" .
+	    "Message-Id: %s\n\n%s\n",
 	    $robot->get_address(),
-	    tools::get_message_id($robot), $param->{'user'}{'email'},
-	    join("\n", @mail_command)
+	    $param->{'user'}{'email'},
+	    tools::get_message_id($robot), join("\n", @mail_command)
 	),
 	{'list' => $robot->email, 'robot' => $robot->domain}
     )) {
@@ -8353,42 +8354,50 @@ sub do_send_me {
 	 close MAIL ;
      }
 
-     my $message;
-     if ($msgfile) {
-	unless (open MSG, "$arcpath/arctxt/$msgfile") {
+    my $message;
+    if ($msgfile) {
+	my $fh;
+	unless (open $fh, '<', "$arcpath/arctxt/$msgfile") {
 	    $param->{'status'} = 'message_err';
-	    &wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
+	    wwslog('info', 'Could not read file %s/arctxt/%s',
+		$arcpath, $msgfile);
+	    return undef;
 	}
 	my $msg_string;
-	while (<MSG>){
-	    $msg_string .= $_ ;
+	local $/;
+	$msg_string = <$fh>;
+	close $fh;
+
+	unless ($message = Message->new({
+	    'messageasstring'=> $msg_string, 'noxsympato'=>'noxsympato',
+	    'list_object' => $list
+	})) {
+	    $param->{'status'} = 'message_err';
+	    wwslog('info', 'Could not read file %s/arctxt/%s',
+		$arcpath, $msgfile);
+	    return undef;
 	}
-	close MSG;
-	unless ($message = new Message({'messageasstring'=> $msg_string,'noxsympato'=>'noxsympato', 'list' => $list}) ) {
-	$param->{'status'} = 'message_err';
-	&wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
-	return undef;
-    }
 	unless (mail::mail_forward($message, $robot->get_address(),
 	    $param->{'user'}{'email'}, $robot
 	)) {
-	     $param->{'status'} = 'message_err';
-	     &wwslog('err',"do_send_me : impossible to send archive file to %s",$param->{'user'}{'email'});
-	     return undef;
-	 }
-	 &wwslog('info', 'do_send_me message %s spooled for %s', "$arcpath/arctxt/$msgfile", $param->{'user'}{'email'} );
-	 &report::notice_report_web('performed',{},$param->{'action'});
-	 $in{'month'} = $in{'yyyy'}."-".$in{'month'};
-	 return 'arc';
+	    $param->{'status'} = 'message_err';
+	    wwslog('err', 'Impossible to send archive file to %s',
+		$param->{'user'}{'email'});
+	    return undef;
+	}
+	wwslog('info', 'Message %s/arctxt/%s spooled for %s',
+	    $arcpath, $msgfile, $param->{'user'}{'email'});
+	&report::notice_report_web('performed',{},$param->{'action'});
+	$in{'month'} = $in{'yyyy'}."-".$in{'month'};
+	return 'arc';
+    } else {
+	wwslog('info', 'No file matching msgid');
+	$param->{'status'} = 'not_found';
+	return undef;
+    }
 
-     }else{
-	 &wwslog('info', 'do_send_me : no file match msgid');
-	 $param->{'status'} = 'not_found';
-	 return undef;
-     }
-
-     return 1;
- }
+    return 1;
+}
 
 ####################################################
 #  do_view_source                           
@@ -15918,10 +15927,11 @@ sub do_remind {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nX-Sympa-Sender: %s\n" .
+	    "Message-Id: %s\n\n%s\n",
 	    $robot->get_address(),
-	    tools::get_message_id($robot), $param->{'user'}{'email'},
-	    $mail_command
+	    $param->{'user'}{'email'},
+	    tools::get_message_id($robot), $mail_command
 	),
 	{'list' => $robot->email, 'robot' => $robot->domain}
     )) {
@@ -16707,8 +16717,10 @@ sub do_send_mail {
 	$result = $incomingspool->store(
 	    sprintf(
 		"X-Sympa-To: %s\n" . # FIXME
-		"X-Sympa-Authenticated: md5\nX-Sympa-From: %s\n%s",
+		"X-Sympa-Authenticated: md5\nX-Sympa-Sender: %s\n" .
+		"X-Sympa-From: %s\n%s",
 		$list->get_address(),
+		$param->{'user'}{'email'},
 		$robot->get_address('owner'), $messageasstring
 	    ),
 	    {'list' => $list->name, 'robot' => $list->domain}
@@ -16891,9 +16903,11 @@ sub do_tag_topic_by_sender {
     unless ($incomingspool->store(
 	sprintf(
 	    "X-Sympa-To: %s\n" . #FIXME
-	    "X-Sympa-Authenticated: md5\nMessage-Id: %s\nFrom: %s\n\n%s\n",
+	    "X-Sympa-Authenticated: md5\nX-Sympa-Sender: %s\n" .
+	    "Message-Id: %s\n\n%s\n",
 	    $robot->get_address(),
-	    tools::get_message_id($robot), $sender, $mail_command
+	    $sender,
+	    tools::get_message_id($robot), $mail_command
 	),
 	{'list' => $robot->email, 'robot' => $robot->domain}
     )) {
