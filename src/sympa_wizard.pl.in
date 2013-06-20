@@ -230,17 +230,28 @@ sub edit_configuration {
     my $new_sympa_conf = '/tmp/sympa.conf';
     my $somechange = 0;
 
-    my $rep;
-    print "Does your console support UTF-8 (if you are not sure, hit [Enter])? [y/N] : ";
-    $rep = <STDIN>;
-    chomp $rep;
-    if (lc $rep eq 'y') {
-	my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
-	$lang =~ s/\..*// if $lang;
-	$lang = 'en' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
-	Language::SetLang($lang);
-    } else {
-	Language::SetLang('en');
+    # Detect console encoding.
+    {
+	no warnings;
+
+	eval { require Encode::Locale; };
+	unless ($@ or
+	    Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN)
+	    eq 'ascii' or
+	    Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT)
+	    eq 'ascii') {
+	    binmode(STDIN, ':encoding(console_in):bytes');
+	    binmode(STDOUT, ':encoding(console_out):bytes');
+	    binmode(STDERR, ':encoding(console_out):bytes');
+
+	    # Set language context.
+	    my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+	    $lang =~ s/\..*// if $lang;
+	    $lang = 'en' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
+	    Language::SetLang($lang);
+	} else {
+	    Language::SetLang('en');
+	}
     }
 
     my @new_sympa_conf;
@@ -454,6 +465,11 @@ sub check_cpan {
 				     mandatory => 1,
 				     usage => 'module for character encoding processing',
 				    },
+			'Encode::Locale' => {
+					     required_version => '1.02',
+					     package_name => 'Encode-Locale',
+					     usage => 'Useful when running command line utilities in the console not supporting UTF-8 encoding',
+					    },
 			'FCGI' => {
 				   required_version =>'0.67',
 				   package_name => 'FCGI',
