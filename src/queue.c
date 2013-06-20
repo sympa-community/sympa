@@ -30,8 +30,6 @@
 #include <unistd.h>
 #include <time.h>
 
-static char rcsid[] = "(@)$Id$";
-
 static char     qfile[128];
 static char     buf[16384];
 static int      i, fd;
@@ -91,9 +89,8 @@ int
 main(int argn, char **argv)
 {
    char	*queuedir;
-   char        *listname;
-   unsigned int		priority;
-   int			firstline = 1;
+   char *listname;
+   int	firstline = 1;
 
    /* Usage : queue list-name */
    if ((argn < 2) || (argn >3)) {
@@ -127,7 +124,8 @@ main(int argn, char **argv)
      exit(EX_NOPERM);
    }
    umask(027);
-   snprintf(qfile, sizeof(qfile), "T.%s.%ld.%d", listname, time(NULL), getpid());
+   snprintf(qfile, sizeof(qfile), "T.%s.%ld.%d", listname,
+	    (unsigned long int)time(NULL), getpid());
    fd = open(qfile, O_CREAT|O_WRONLY, 0600);
    if (fd == -1){
      char* buffer=(char*)malloc(strlen(argv[0])+strlen(queuedir)+80);
@@ -152,12 +150,3 @@ main(int argn, char **argv)
    sleep(1);
    exit(0);
 }
-
-
-
-
-
-
-
-
-
