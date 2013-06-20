@@ -534,7 +534,7 @@ sub SetLocale {
 	    ## UpperCase required for FreeBSD; dashless required on HP-UX;
 	    ## null codeset is last resort.
 	    foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
-		## Trancate locale similarly in gettext: full locale, and omit
+		## Truncate locale similarly in gettext: full locale, and omit
 		## region then modifier.
 		push @try,
 		    map { sprintf $_, $cs }

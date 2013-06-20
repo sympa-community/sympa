@@ -717,12 +717,15 @@ sub sending {
    } else {
 	# send it now
 	Log::do_log('info', 'NOT USING BULK');
+
+	# Get message as string without meta information.
 	my $string_to_send;
-	if ($message->{'protected'}) {
+	if ($message->is_signed) {
 	    $string_to_send = $message->get_encrypted_message_as_string;
-	}else{
-	    $string_to_send = $message->get_mime_message->as_string;
+	} else {
+	    $string_to_send = $message->get_mime_message->as_string; #XXX
 	}
+
 	*SMTP = &smtpto($from, $rcpt, $robot);	
 	print SMTP $string_to_send ;	
 	unless (close SMTP) {
