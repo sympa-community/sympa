@@ -68,14 +68,14 @@ our %cpan_modules = (
 	},
 	'Crypt::OpenSSL::Bignum' => {
 		required_version => '0.04',
-		package_name     => 'Crypt::OpenSSL::Bignum',
+		package_name     => 'Crypt-OpenSSL-Bignum',
 		mandatory        => 1,
 		'gettext_id' =>
 			'required to prevent Mail::DKIM from crashing Sympa processes.',
 	},
 	'DB_File' => {
 		required_version => '1.75',
-		package_name     => 'DB_FILE',
+		package_name     => 'DB_File',
 		mandatory        => 1,
 		'gettext_id' =>
 			' used for maintaining snapshots of list members',
@@ -112,7 +112,7 @@ our %cpan_modules = (
 		required_version => '4.008',
 		'gettext_comment' =>
 			'mysql-devel and myslq-server. mysql should be running for make test to succeed',
-		package_name => 'Msql-Mysql-modules',
+		package_name => 'DBD-mysql',
 		mandatory    => 1,
 		'gettext_id' =>
 			'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
@@ -197,7 +197,7 @@ our %cpan_modules = (
 	},
 	'IO::Socket::INET6' => {
 		required_version => '2.69',
-		package_name     => 'IO::Socket::INET6',
+		package_name     => 'IO-Socket-INET6',
 		mandatory        => 1,
 		'gettext_id' =>
 			'required to prevent Mail::DKIM from crashing Sympa processes.',

@@ -510,8 +510,7 @@ sub check_modules {
 		printf Language::gettext(
 		    '>>>>>>> You must update "%s" to version "%s" <<<<<<') .
 		    "\n",
-		    $cpan_modules->{$mod}{package_name},
-		    $cpan_modules->{$mod}{required_version};
+		    $mod, $cpan_modules->{$mod}{required_version};
 		install_module($mod, {'default' => $default}, $cpan_modules);
 	    }
 	}
