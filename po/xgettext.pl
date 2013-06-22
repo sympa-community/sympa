@@ -354,30 +354,30 @@ foreach my $file (@ordered_files) {
       $state == BEGM && m/^([\(])  /gcx && do { $state = PARM; redo };
 
       # begin or end of string
-      $state == PAR  && m/^(\')  /gcx     && do { $state = QUO1; redo; };
+      $state == PAR  && m/^\s*(\')  /gcx     && do { $state = QUO1; redo; };
       $state == QUO1 && m/^([^\']+)/gcx && do { $str.=$1; redo; };
       $state == QUO1 && m/^\'  /gcx     && do { $state = PAR;  redo; };
 
-      $state == PAR  && m/^\"  /gcx     && do { $state = QUO2; redo; };
+      $state == PAR  && m/^\s*\"  /gcx     && do { $state = QUO2; redo; };
       $state == QUO2 && m/^([^\"]+)/gcx && do { $str.=$1; redo; };
       $state == QUO2 && m/^\"  /gcx     && do { $state = PAR;  redo; };
 
-      $state == PAR  && m/^\`  /gcx     && do { $state = QUO3; redo; };
+      $state == PAR  && m/^\s*\`  /gcx     && do { $state = QUO3; redo; };
       $state == QUO3 && m/^([^\`]*)/gcx && do { $str.=$1; redo; };
       $state == QUO3 && m/^\`  /gcx     && do { $state = PAR;  redo; };
 
       $state == BEGM && m/^(\') /gcx     && do { $state = QUOM1; redo; };
-      $state == PARM && m/^(\') /gcx     && do { $state = QUOM1; redo; };
+      $state == PARM && m/^\s*(\') /gcx     && do { $state = QUOM1; redo; };
       $state == QUOM1 && m/^([^\']+)/gcx && do { $str.=$1; redo; };
       $state == QUOM1 && m/^\'  /gcx     && do { $state = COMM;  redo; };
 
       $state == BEGM && m/^(\") /gcx     && do { $state = QUOM2; redo; };
-      $state == PARM && m/^(\") /gcx     && do { $state = QUOM2; redo; };
+      $state == PARM && m/^\s*(\") /gcx     && do { $state = QUOM2; redo; };
       $state == QUOM2 && m/^([^\"]+)/gcx && do { $str.=$1; redo; };
       $state == QUOM2 && m/^\"  /gcx     && do { $state = COMM;  redo; };
 
       # end ()
-      ($state == PAR && m/^[\)]/gcx || $state == COMM && m/^,/gcx)
+      ($state == PAR && m/^\s*[\)]/gcx || $state == COMM && m/^,/gcx)
 	&& do {
 	  $state = NUL;	
 	  $vars =~ s/[\n\r]//g if ($vars);
