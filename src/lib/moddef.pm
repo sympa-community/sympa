@@ -89,7 +89,7 @@ our %cpan_modules = (
 	'DBD::Pg' => {
 		required_version => '2.00',
 		'gettext_comment' =>
-			'postgresql-devel and postgresql-server. postgresql should be running for make test to succeed',
+			'postgresql-devel and postgresql-server. PostgreSQL server should be running for make test to succeed',
 		package_name => 'DBD-Pg',
 		'gettext_id' =>
 			'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
@@ -111,11 +111,11 @@ our %cpan_modules = (
 	'DBD::mysql' => {
 		required_version => '4.008',
 		'gettext_comment' =>
-			'mysql-devel and myslq-server. mysql should be running for make test to succeed',
+			'mysql-devel and myslq-server. MySQL (or MariaDB) server should be running for make test to succeed',
 		package_name => 'DBD-mysql',
 		mandatory    => 1,
 		'gettext_id' =>
-			'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
+			'MySQL / MariaDB database driver, required if you connect to a MySQL (or MariaDB) database.',
 	},
 	'DBI' => {
 		required_version => '1.48',
@@ -129,7 +129,7 @@ our %cpan_modules = (
 		package_name     => 'Digest-MD5',
 		mandatory        => 1,
 		'gettext_id' =>
-			'used to compute MD5 digests for passwords, etc',
+			'used to compute MD5 digests for passwords, etc.',
 	},
 	'Email::Simple' => {
 		required_version => '2.100',
@@ -152,7 +152,7 @@ our %cpan_modules = (
 		required_version => '0.67',
 		package_name     => 'FCGI',
 		'gettext_id' =>
-			'WWSympa, Sympa\'s web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.',
+			"WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
 	},
 	'File::Copy::Recursive' => {
 		required_version => '0.36',
@@ -290,7 +290,7 @@ our %cpan_modules = (
 	'Net::SMTP' => {
 		package_name => 'libnet',
 		'gettext_id' =>
-			'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
+			'this is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.',
 	},
 	'OAuth::Lite' => {
 		package_name     => 'OAuth-Lite',
