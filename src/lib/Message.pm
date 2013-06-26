@@ -154,6 +154,8 @@ sub new {
 	'robot_id'   => $datas->{'robot'},
 	'filename'   => $datas->{'file'},
 	'listname'   => $datas->{'list'}, #++
+	'authkey'    => $datas->{'authkey'}, #FIXME: needed only by KeySpool.
+	'priority'   => $datas->{'priority'}, #++
     } => $pkg;
 
     return undef
@@ -167,6 +169,7 @@ sub new {
 	} elsif ($datas->{'robot_object'}) {
 	    $self->{'robot'} = $datas->{'robot_object'};
 	}
+	$self->{'listtype'} = $datas->{'type'} if $datas->{'type'}; #++
     }
 
     ## Load content
@@ -274,7 +277,6 @@ sub load {
 
     $self->get_subject;
     $self->get_recipient;
-    $self->get_sympa_local_part;
     $self->check_spam_status;
     $self->check_dkim_signature;
 
@@ -588,37 +590,8 @@ sub list {
 #sub set_sympa_headers({rcpt => $rcpt, from => $from})
 #NO LONGER USED.
 
-#FIXME: this should be moved to Messagespool.
-sub get_sympa_local_part {
-    my $self = shift;
-    unless ($self->list) {
-	if ($self->robot) {
-	    my $conf_email = $self->robot->email;
-	    my $conf_host = $self->robot->host;
-	    my $site_email = Site->listmaster_email;
-	    my $site_host = Site->host;
-	    unless ($self->{'listname'} =~
-		/^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-		my ($listname, $type) =
-		    $self->robot->split_listname($self->{'listname'});
-		if ($listname) {
-		    $self->{'listname'} = $listname;
-		}
-
-		my $list = List->new($self->{'listname'}, $self->robot,
-		    {'just_try' => 1});
-		if ($list) {
-		    $self->{'list'} = $list;
-		}	
-	    }
-	}else{
-	    Log::do_log('debug2','No robot: will not find list');
-	}
-    }else{
-	Log::do_log('debug2','List "%s" already identified', $self->list);
-    }
-    return 1;
-}
+#sub get_sympa_local_part()
+#DEPRECATED: Use $robot->split_listname().
 
 #sub get_robot()
 #OBSOLETED: use robot().

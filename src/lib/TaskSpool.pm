@@ -114,15 +114,13 @@ sub analyze_file_name {
     return undef
 	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
 
-    ($data->{'list'}, $data->{'type'}) =
+    my $listname;
+    #FIXME: is this needed?
+    ($listname, $data->{'type'}) =
 	$data->{'robot_object'}->split_listname($data->{'list'});
-
-    #XXX
-    if ($data->{'list'}) {
+    if (defined $listname) {
 	$data->{'list_object'} =
-	    List->new(
-		$data->{'list'}, $data->{'robot_object'}, {'just_try' => 1}
-	    );
+	    List->new($listname, $data->{'robot_object'}, {'just_try' => 1});
     }
 
     return $data;

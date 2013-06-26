@@ -65,11 +65,14 @@ sub analyze_file_name {
     return undef
 	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
 
-    ($data->{'list'}, $data->{'type'}) =
-	$data->{'robot_object'}->split_listname($data->{'list'});
+    my $listname;
+    #FIXME: is this needed?
+    ($listname, $data->{'type'}) =
+	$data->{'robot_object'}->split_listname($data->{'list'}); #FIXME
     return undef
-	unless $data->{'list_object'} =
-	    List->new($data->{'list'}, $data->{'robot_object'});
+	unless defined $listname and
+	$data->{'list_object'} =
+	List->new($listname, $data->{'robot_object'});
 
     ## Get priority
 

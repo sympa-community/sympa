@@ -212,29 +212,33 @@ sub analyze_file_name {
     return undef
 	unless $data->{'robot_object'} = Robot->new($data->{'robot'});
 
-    ($data->{'list'}, $data->{'type'}) =
+    my $listname;
+    #FIXME: is this always needed?
+    ($listname, $data->{'type'}) =
 	$data->{'robot_object'}->split_listname($data->{'list'});
+    if (defined $listname) {
+	$data->{'list_object'} =
+	    List->new($listname, $data->{'robot_object'}, {'just_try' => 1});
+    }
 
     ## Get priority
 
     my $email = $data->{'robot_object'}->email;
-    
-    if ($data->{'list'} eq Site->listmaster_email) {
+
+    if ($data->{'type'} and $data->{'type'} eq 'listmaster') {
 	## highest priority
 	$data->{'priority'} = 0;
-    } elsif ($data->{'type'} and $data->{'type'} eq 'request') {
+    } elsif ($data->{'type'} and $data->{'type'} eq 'owner') { # -request
 	$data->{'priority'} = $data->{'robot_object'}->request_priority;
-    } elsif ($data->{'type'} and $data->{'type'} eq 'owner') {
+    } elsif ($data->{'type'} and $data->{'type'} eq 'return_path') { # -owner
 	$data->{'priority'} = $data->{'robot_object'}->owner_priority;
-    } elsif ($data->{'list'} =~ /^(sympa|$email)(\@Site->host)?$/i) {	
+    } elsif ($data->{'type'} and $data->{'type'} eq 'sympa') {	
 	$data->{'priority'} = $data->{'robot_object'}->sympa_priority;
     } else {
-	$data->{'list_object'} =
-	    List->new($data->{'list'}, $data->{'robot_object'},
-		{'just_try' => 1});
-	if ($data->{'list_object'} && $data->{'list_object'}->isa('List')) {
+	if (ref $data->{'list_object'} and
+	    $data->{'list_object'}->isa('List')) {
 	    $data->{'priority'} = $data->{'list_object'}->priority;
-	}else {
+	} else {
 	    $data->{'priority'} =
 		$data->{'robot_object'}->default_list_priority;
 	}

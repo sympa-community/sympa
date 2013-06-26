@@ -308,6 +308,10 @@ sub is_available_topic {
 
 XXX @todo doc
 
+Note:
+For C<-request> and C<-owner> suffix, this function returns
+C<owner> and C<return_path> type, respectively.
+
 =back
 
 =cut
@@ -315,17 +319,43 @@ XXX @todo doc
 sub split_listname {
     my $self    = shift;
     my $mailbox = shift;
-    return undef unless $mailbox;
+    return () unless defined $mailbox and length $mailbox;
 
+    my $return_path_suffix = $self->return_path_suffix;
     my $regexp = join('|',
 	map { s/(\W)/\\$1/g; $_ }
 	    grep { $_ and length $_ }
 	    split(/[\s,]+/, $self->list_check_suffixes));
 
-    return ($mailbox) unless $regexp;
+    if ($mailbox eq 'sympa' and $self->domain eq Site->domain) { # compat.
+	return (undef, 'sympa');
+    } elsif ($mailbox eq $self->email or
+	$self->domain eq Site->domain and $mailbox eq Site->email) {
+	return (undef, 'sympa');
+    } elsif ($mailbox eq $self->listmaster_email or
+	$self->domain eq Site->domain and $mailbox eq Site->listmaster_email) {
+	return (undef, 'listmaster');
+    } elsif ($mailbox =~ /^(\S+)$return_path_suffix$/) { # -owner
+	return ($1, 'return_path');
+    } elsif (!$regexp) {
+	return ($mailbox);
+    } elsif ($mailbox =~ /^(\S+)-($regexp)$/) {
+	my ($name, $suffix) = ($1, $2);
+	my $type;
 
-    if ($mailbox =~ /^(\S+)-($regexp)$/) {
-	return ($1, $2);
+	if ($suffix eq 'request') {
+	    $type = 'owner';
+	} elsif ($suffix eq 'editor') {
+	    $type = 'editor';
+	} elsif ($suffix eq 'subscribe') {
+	    $type = 'subscribe';
+	} elsif ($suffix eq 'unsubscribe') {
+	    $type = 'unsubscribe';
+	} else {
+	    $name = $mailbox;
+	    $type = 'UNKNOWN';
+	}
+	return ($name, $type);
     } else {
 	return ($mailbox);
     }

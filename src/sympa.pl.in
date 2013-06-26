@@ -1607,31 +1607,28 @@ sub process_message {
     Log::do_log('debug2', '(%s)', @_);
     my $message = shift;
 
-    my $listname;
-    my $robot_id;
+    ## get listname & robot
+    my $listname = $message->{'listname'};
+    my $robot_id = $message->{'robot_id'} || Site->domain;
+    my $list     = $message->list;
+    my $robot    = $message->robot;
+    my $sender   = $message->get_sender_email;
+    my $type     = $message->{'listtype'};
     my $status;
 
     my $msg  = $message->get_mime_message;
     my $hdr  = $msg->head;
-    my $rcpt = $message->get_recipient; #FIXME: use envelope recipient
-
-    ## get listname & robot
-    ##XXX FIXME: use attributes of Message object.
-    ($listname, $robot_id) = split(/\@/, $rcpt);
-    $robot_id    = lc($robot_id);
-    $listname = lc($listname);
-    $robot_id ||= Site->host;    #FIXME: is "domain" better?
+    my $msg_id = $message->get_msg_id;
 
     ## Ignoring messages with no sender
-    my $sender = $message->{'sender'};
     unless ($sender) {
-	Log::do_log('err', 'No From found in message, skipping.');
+	Log::do_log('err', 'No sender found in message, skipping.');
 	Log::db_log(
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
 		'action'       => 'process_message',
 		'target_email' => "",
-		'msg_id'       => $message->get_msg_id,
+		'msg_id'       => $msg_id,
 		'status'       => 'error',
 		'error_type'   => 'no_sender',
 		'user_email'   => $sender,
@@ -1645,17 +1642,19 @@ sub process_message {
     Log::do_log('notice', 'Processing: sender: %s ; message: %s',
 	$sender, $message);
 
-    my $robot;
     ## Unknown robot
-    unless ($robot = Robot->new($robot_id)) {
+    unless ($robot) {
 	Log::do_log('err', 'robot %s does not exist', $robot_id);
-	Site->send_dsn($message, {'recipient' => $rcpt}, '5.1.2');
+	Site->send_dsn($message,
+	    {'recipient' => sprintf('%s@%s', $listname, $robot_id)},
+	    '5.1.2'
+	);
 	Log::db_log(
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
 		'action'       => 'process_message',
 		'target_email' => "",
-		'msg_id'       => $message->get_msg_id,
+		'msg_id'       => $msg_id,
 		'status'       => 'error',
 		'error_type'   => 'unknown_robot',
 		'user_email'   => $sender,
@@ -1665,9 +1664,6 @@ sub process_message {
 	);
 	return undef;
     }
-
-    my $type;
-    ($listname, $type) = $robot->split_listname($listname);
 
     # setting log_level using conf unless it is set by calling option
     unless ($main::options{'log_level'}) {
@@ -1688,29 +1684,21 @@ sub process_message {
 
     my $list_address;
 
-    my ($list, $host, $name);
-
-    my $conf_email = $robot->email;
-    my $conf_host  = $robot->host;
-    my $site_email = Site->listmaster_email;
-    my $site_host  = Site->host;
-    if ($listname =~ /^(sympa|$site_email|$conf_email)(\@$conf_host)?$/i) {
-	$host         = $conf_host;
-	$name         = $listname;
-	$list_address = $name . '@' . $host;
+    if ($type and ($type eq 'sympa' or $type eq 'listmaster')) {
+	$list_address = $robot->get_address($type);
     } else {
-	$list = List->new($listname, $robot);
 	unless (defined $list) {
 	    unless (defined $dyn_list_family) {
-		Log::do_log('err', 'list %s does not exist', $listname);
+		Log::do_log('err', 'list %s@%s does not exist',
+		    $listname, $robot_id);
 		$robot->send_dsn($message, {'listname' => $listname},
 		    '5.1.1');
 		Log::db_log(
 		    {   'robot'        => $robot_id,
 			'list'         => $listname,
-			'action'       => 'Process_message',
+			'action'       => 'process_message',
 			'target_email' => "",
-			'msg_id'       => $message->get_msg_id,
+			'msg_id'       => $msg_id,
 			'status'       => 'error',
 			'error_type'   => 'unknown_list',
 			'user_email'   => $sender,
@@ -1733,7 +1721,7 @@ sub process_message {
 		    'automatic_list_creation_failed',
 		    {   'family' => $dyn_list_family,
 			'robot' => $robot_id,
-			'msg_id' => $message->get_msg_id,
+			'msg_id' => $msg_id,
 		    }
 		);
 		$robot->send_dsn($message, {'listname' => $listname},
@@ -1755,12 +1743,9 @@ sub process_message {
 		) {
 		$dyn_just_created = 1;
 	    } else {
-		my $msg_id =
-		    $message->get_mime_message->head->get('Message-Id');
-		chomp $msg_id if $msg_id;
 		Log::do_log('err',
-		    'Unable to create list %s. Message %s ignored.',
-		    $listname, $msg_id
+		    'Unable to create list %s@%s. Message %s ignored.',
+		    $listname, $robot_id, $message
 		);
 		$robot->send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
@@ -1775,7 +1760,7 @@ sub process_message {
 		Log::db_log(
 		    {   'robot'      => $dyn_family->{'robot'},
 			'list'       => $listname,
-			'action'     => 'DoFile',
+			'action'     => 'process_message',
 			'parameters' => "$msg_id,$dyn_family->{'robot'}",
 			'target_email' => '',
 			'msg_id'       => $msg_id,
@@ -1789,8 +1774,6 @@ sub process_message {
 		return undef;
 	    }
 	}
-	$host         = $list->host;
-	$name         = $list->name;
 	$list_address = $list->get_list_address();
     }
     ## Loop prevention
@@ -1846,7 +1829,7 @@ sub process_message {
 
     ## S/MIME or DKIM signed messages
     if ($message->{'smime_signed'}) {
-	# subject semantic is relater to X509 (subject is the private key
+	# subject semantic is related to X509 (subject is the private key
 	# owner, not the message Subject header !)
 	$is_signed = {
 	    'subject' => $message->{'smime_subject'},
@@ -1882,9 +1865,9 @@ sub process_message {
 	Log::db_log(
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
-		'action'       => 'Process_message',
+		'action'       => 'process_message',
 		'target_email' => "",
-		'msg_id'       => $message->get_msg_id,
+		'msg_id'       => $msg_id,
 		'status'       => 'error',
 		'error_type'   => 'virus',
 		'user_email'   => $sender,
@@ -1907,9 +1890,9 @@ sub process_message {
 	    unless (defined $list->sync_include()) {
 		Log::do_log(
 		    'err',
-		    'Failed to synchronize list members of dynamic list %s from %s family',
-		    $listname,
-		    $dyn_list_family
+		    'Failed to synchronize list members of dynamic list %s from family %s',
+		    $list,
+		    $list->family
 		);
 		$robot->send_dsn($message, {'listname' => $listname},
 		    '4.2.1');
@@ -1918,9 +1901,9 @@ sub process_message {
 		Log::db_log(
 		    {   'robot'        => $robot_id,
 			'list'         => $listname,
-			'action'       => 'Process_message',
+			'action'       => 'process_message',
 			'target_email' => "",
-			'msg_id'       => $message->get_msg_id,
+			'msg_id'       => $msg_id,
 			'status'       => 'error',
 			'error_type'   => 'dyn_cant_sync',
 			'user_email'   => $sender,
@@ -1945,9 +1928,9 @@ sub process_message {
 		Log::db_log(
 		    {   'robot'        => $robot_id,
 			'list'         => $listname,
-			'action'       => 'Process_message',
+			'action'       => 'process_message',
 			'target_email' => "",
-			'msg_id'       => $message->get_msg_id,
+			'msg_id'       => $msg_id,
 			'status'       => 'error',
 			'error_type'   => 'list_unknown',
 			'user_email'   => $sender,
@@ -1966,36 +1949,35 @@ sub process_message {
 	    }
 	    Log::do_log('info',
 		'Successfully create list %s with %s subscribers',
-		$listname, $list->total);
+		$list, $list->total);
 	}
     }
 
-    #XXX FIXME: Use attributes of Message object.
-    if ($rcpt =~ /^listmaster(\@(\S+))?$/) {
+    if ($type and $type eq 'listmaster') {
 	$status = &DoForward('sympa', 'listmaster', $robot_id, $message);
-
-	## Mail addressed to the robot and mail
-	## to <list>-subscribe or <list>-unsubscribe are commands
-    } elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) ||
-	($type and $type =~ /^(subscribe|unsubscribe)$/o)) {
-	$status = &DoCommand($rcpt, $robot_id, $message);
-
-	## forward mails to <list>-request <list>-owner etc
-    } elsif ($type and $type =~ /^(request|owner|editor)$/o) {
-
+    } elsif ($type and $type eq 'sympa') {
+	## Mail addressed to the robot is commands.
+	$status = &DoCommand($robot->email, $robot_id, $message); #XXXFIXME
+    } elsif ($type and grep {$_ eq $type} qw(subscribe unsubscribe)) {
+	## Mail addressed to <list>-subscribe or <list>-unsubscribe is
+	## commands.
+	$status = &DoCommand($list->name . '-' . $type, $robot_id, $message);
+    } elsif ($type and grep {$_ eq $type} qw(return_path owner editor)) {
+	## forward mails to <list>-request <list>-owner etc.
 	## Simulate Smartlist behaviour with command in subject
-	if (($type eq 'request') and
-	    ($subject_field =~
-		/^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i)
-	    ) {
+	my $name = $list->name;
+	if (
+	    $type eq 'owner' and
+	    $subject_field =~ /^\s*(subscribe|unsubscribe)(\s+$name)?\s*$/i
+	) {
 	    my $command = $1;
-
-	    $status = &DoCommand("$listname-$command", $robot_id, $message);
+	    $status = &DoCommand($list->name . '-' . $command, $robot_id,
+		$message);
 	} else {
-	    $status = &DoForward($listname, $type, $robot_id, $message);
+	    $status = &DoForward($list->name, $type, $robot_id, $message);
 	}
     } else {
-	$status = &DoMessage($rcpt, $message, $robot_id);
+	$status = &DoMessage($list_address, $message, $robot_id);
     }
 
     ## Mail back the result.
@@ -2042,10 +2024,10 @@ sub process_message {
 	Log::db_log(
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
-		'action'       => 'Process_message',
+		'action'       => 'process_message',
 		'parameters'   => '',
 		'target_email' => '',
-		'msg_id'       => $message->get_msg_id,
+		'msg_id'       => $msg_id,
 		'status'       => 'success',
 		'error_type'   => '',
 		'user_email'   => $sender,
@@ -2070,7 +2052,7 @@ sub process_message {
 #  Message is forwarded according to $function
 #
 # IN : -$name : list name (+) if ($function <> 'listmaster')
-#      -$function (+): 'listmaster'|'request'|'editor'
+#      -$function (+): 'listmaster'|'owner'|'editor'
 #      -$robot_id (+): robot
 #      -$msg (+): ref(message object).
 #
@@ -2136,11 +2118,11 @@ sub DoForward {
 
     $hdr->add('X-Loop', "$name-$function\@$host");
 
-    if ($function eq "listmaster") {
+    if ($function eq 'listmaster') {
 	@rcpt = @{$robot->listmasters};
 	Log::do_log('notice', 'Warning : no listmaster defined in sympa.conf')
 	    unless (@rcpt);
-    } elsif ($function eq "request") {
+    } elsif ($function eq 'owner') { # -request
 	@rcpt = $list->get_owners_email();
 
 	Log::do_log(
@@ -2148,8 +2130,7 @@ sub DoForward {
 	    'Warning : no owner defined or all of them use nomail option in list %s',
 	    $name
 	) unless (@rcpt);
-
-    } elsif ($function eq "editor") {
+    } elsif ($function eq 'editor') {
 	@rcpt = $list->get_editors_email();
 
 	Log::do_log(
@@ -2157,11 +2138,14 @@ sub DoForward {
 	    'Warning : no owner and editor defined or all of them use nomail option in list %s',
 	    $name
 	) unless (@rcpt);
+    } else {
+	Log::do_log('err', 'Unknown function "%s"', $function);
+	return undef;
     }
 
     ## Did we find a recipient?
     if ($#rcpt < 0) {
-	if ($function ne "listmaster") {
+	if ($function ne 'listmaster') {
 	    Log::do_log(
 		'err',
 		"No recipient available for %s-%s in list %s. Trying to proceed ignoring nomail option (message-id %s)",
@@ -2171,14 +2155,14 @@ sub DoForward {
 		$messageid
 	    );
 
-	    if ($function eq "request") {
+	    if ($function eq 'owner') { # -request
 		@rcpt = $list->get_owners_email({'ignore_nomail', 1});
 
 		Log::do_log('notice',
 		    'Warning : no owner defined at all in list %s', $name)
 		    unless (@rcpt);
 
-	    } elsif ($function eq "editor") {
+	    } elsif ($function eq 'editor') {
 		@rcpt = $list->get_editors_email({'ignore_nomail', 1});
 
 		Log::do_log(
