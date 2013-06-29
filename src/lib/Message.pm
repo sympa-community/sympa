@@ -42,6 +42,7 @@ package Message;
 use strict;
 use warnings;
 use Carp qw(croak);
+use HTML::Entities qw(encode_entities);
 use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
@@ -1729,99 +1730,177 @@ sub _append_parts {
        return undef;
     }
     my $eff_type = $part->effective_type || 'text/plain';
+    my $body;
+    my $io;
+
     ## Signed or encrypted parts aren't modified.
     if ($eff_type =~ m{^multipart/(signed|encrypted)$}i) {
 	return undef;
     }
 
-    if ($eff_type eq 'text/plain') {
-	my $ascii_incompat = 0; # charset is UTF-16/32 or their flavor.
+    ## Skip attached parts.
+    my $disposition = $part->head->mime_attr('Content-Disposition');
+    return undef
+	if $disposition and uc $disposition ne 'INLINE';
 
-	my $cset = MIME::Charset->new('UTF-8');
-	$cset->encoder($part->head->mime_attr('Content-Type.Charset') ||
-		'NONE');
-	$ascii_incompat = 1
-	    if $cset->output_charset =~ /^UTF-(16|32)(BE|LE)?$/;
-
-	## Only encodable bodies are allowed.
-	my $bodyh = $part->bodyhandle;
-	my $body;
-	if ($bodyh) {
-	    return 1 if $bodyh->is_encoded;
-
-	    $body = $bodyh->as_string;
-	    if ($ascii_incompat) {    # UTF-16/32
-		eval { $body = $cset->encoder->decode($body, 1); };
-		return 1 if $@;
-	    }
-	} else {
-	    $body = '';
-	}
-
-	## Only encodable footer/header are allowed.
-	if ($ascii_incompat) {
-	    eval { $header_msg = $cset->decode($header_msg, 1); };
-	    $header_msg = '' if $@;
-	    eval { $footer_msg = $cset->decode($footer_msg, 1); };
-	    $footer_msg = '' if $@;
-	} elsif ($cset->encoder) {
-	    eval { $header_msg = $cset->encode($header_msg, 1); };
-	    $header_msg = '' if $@;
-	    eval { $footer_msg = $cset->encode($footer_msg, 1); };
-	    $footer_msg = '' if $@;
-	} else {
-	    $header_msg = '' if $header_msg =~ /[^\x01-\x7F]/;
-	    $footer_msg = '' if $footer_msg =~ /[^\x01-\x7F]/;
-	}
-
+    ## Preparing header and footer for inclusion.
+    if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
 	if (length $header_msg or length $footer_msg) {
-	    ## Add newlines. For BASE64 encoding they also must be normalized.
-	    if (length $header_msg) {
-		$header_msg .= "\n" unless $header_msg =~ /\n\z/;
-	    }
-	    if (length $footer_msg and length $body) {
-		$body .= "\n" unless $body =~ /\n\z/;
-	    }
-	    if (uc($part->head->mime_attr('Content-Transfer-Encoding') || '')
-		eq 'BASE64') {
-		$header_msg =~ s/\r\n|\r|\n/\r\n/g;
-		$body =~ s/(\r\n|\r|\n)\z/\r\n/;       # only at end
-		$footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+
+	    ## Only decodable bodies are allowed.
+	    my $bodyh = $part->bodyhandle;
+	    if ($bodyh) {
+		return undef if $bodyh->is_encoded;
+		$body = $bodyh->as_string;
+	    } else {
+		$body = '';
 	    }
 
-	    my $new_body = $header_msg . $body . $footer_msg;
-	    if ($ascii_incompat) {
-		eval { $new_body = $cset->encode($new_body); };
-		return 1 if $@;
-	    }
+	    $body = _append_footer_header_to_part(
+		{   'part'     => $part,
+		    'header'   => $header_msg,
+		    'footer'   => $footer_msg,
+		    'eff_type' => $eff_type,
+		    'body'     => $body
+		}
+	    );
+	    return undef unless defined $body;
 
-	    my $io = $bodyh->open('w');
+	    $io = $bodyh->open('w');
 	    unless (defined $io) {
-		Log::do_log('err', 'Failed to save message: %s', $!);
+		Log::do_log('err', 'Failed to save message: %s', "$!");
 		return undef;
 	    }
-	    $io->print($new_body);
+	    $io->print($body);
 	    $io->close;
 	    $part->sync_headers(Length => 'COMPUTE')
 		if $part->head->get('Content-Length');
+
+	    return 1;
 	}
-	return 1;
     } elsif ($eff_type eq 'multipart/mixed') {
-	## Append to first part if text/plain
+	## Append to the first part, since other parts will be "attachments".
 	if ($part->parts and
-	    &_append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    _append_parts($part->parts(0), $header_msg, $footer_msg)) {
 	    return 1;
 	}
     } elsif ($eff_type eq 'multipart/alternative') {
-	## Append to first text/plain part
+	## We try all the alternatives
+	my $r = undef;
 	foreach my $p ($part->parts) {
-	    if (&_append_parts($p, $header_msg, $footer_msg)) {
-		return 1;
+	    $r = 1
+		if _append_parts($p, $header_msg, $footer_msg);
+	}
+	return $r if $r;
+    } elsif ($eff_type eq 'multipart/related') {
+	## Append to the first part, since other parts will be "attachments".
+	if ($part->parts and
+	    _append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    return 1;
+	}
+    }
+
+    ## We couldn't find any parts to modify.
+    return undef;
+}
+
+# Styles to cancel local CSS.
+my $div_style = 'background: transparent; border: none; clear: both; display: block; float: none; position: static';
+
+sub _append_footer_header_to_part {
+    my $data       = shift;
+
+    my $part       = $data->{'part'};
+    my $header_msg = $data->{'header'};
+    my $footer_msg = $data->{'footer'};
+    my $eff_type   = $data->{'eff_type'};
+    my $body       = $data->{'body'};
+
+    my $cset;
+
+    ## Detect charset.  If charset is unknown, detect 7-bit charset.
+    my $charset = $part->head->mime_attr('Content-Type.Charset');
+    $cset = MIME::Charset->new($charset || 'NONE');
+    unless ($cset->decoder) {
+	# n.b. detect_7bit_charset() in MIME::Charset prior to 1.009.2 doesn't
+	# work correctly.
+	my ($dummy, $charset) =
+	    MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
+	$cset = MIME::Charset->new($charset)
+	    if $charset;
+    }
+    unless ($cset->decoder) {
+	#Log::do_log('err', 'Unknown charset "%s"', $charset);
+	return undef;
+    }
+
+    ## Decode body to Unicode, since encode_entities() and newline
+    ## normalization will break texts with several character sets (UTF-16/32,
+    ## ISO-2022-JP, ...).
+    eval {
+	$body = $cset->decode($body, 1);
+	$header_msg = Encode::decode_utf8($header_msg, 1);
+	$footer_msg = Encode::decode_utf8($footer_msg, 1);
+    };
+    return undef if $@;
+
+    my $new_body;
+    if ($eff_type eq 'text/plain') {
+	Log::do_log('debug3', "Treating text/plain part");
+
+	## Add newlines. For BASE64 encoding they also must be normalized.
+	if (length $header_msg) {
+	    $header_msg .= "\n" unless $header_msg =~ /\n\z/;
+	}
+	if (length $footer_msg and length $body) {
+	    $body .= "\n" unless $body =~ /\n\z/;
+	}
+	if (uc($part->head->mime_attr(
+	    'Content-Transfer-Encoding') || '') eq 'BASE64') {
+	    $header_msg =~ s/\r\n|\r|\n/\r\n/g;
+	    $body =~ s/(\r\n|\r|\n)\z/\r\n/;       # only at end
+	    $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+	}
+
+	$new_body = $header_msg . $body . $footer_msg;
+    } elsif ($eff_type eq 'text/html') {
+	Log::do_log('debug3', "Treating text/html part");
+
+	# Escape special characters.
+	$header_msg = encode_entities($header_msg, '<>&"');
+	$header_msg =~ s/(\r\n|\r|\n)$//; # strip the last newline.
+	$header_msg =~ s,(\r\n|\r|\n),<br/>,g;
+	$footer_msg = encode_entities($footer_msg, '<>&"');
+	$footer_msg =~ s/(\r\n|\r|\n)$//; # strip the last newline.
+	$footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+
+	my @bodydata = split '</body>', $body;
+	if (length $header_msg) {
+	    $new_body = sprintf '<div style="%s">%s</div>',
+		$div_style, $header_msg;
+	} else {
+	    $new_body = '';
+	}
+	my $i = -1;
+	foreach my $html_body_bit (@bodydata) {
+	    $new_body .= $html_body_bit;
+	    $i++;
+	    if ($i == $#bodydata and length $footer_msg) {
+		$new_body .= sprintf '<div style="%s">%s</div></body>',
+		    $div_style, $footer_msg;
+	    } else {
+		$new_body .= '</body>';
 	    }
 	}
     }
 
-    return undef;
+    ## Only encodable footer/header are allowed.
+    eval {
+	$new_body = $cset->encode($new_body, 1);
+    };
+    return undef if $@;
+
+    return $new_body;
 }
 
 =over 4
