@@ -1639,13 +1639,12 @@ sub distribute_msg {
     }
 
     ## Add useful headers
-    $hdr->add('X-Loop', $self->get_list_address());
-    $message->{'msg'}->head->add('X-Loop', "$name\@$host");
+    $hdr->add('X-Loop', $self->get_address());
     $hdr->add('X-Sequence', $sequence);
     $hdr->add('Errors-to',  $self->get_list_address('return_path'));
     $hdr->add('Precedence', 'list');
     $hdr->add('Precedence', 'bulk');
-    # The Sender: header should be add at least for DKIM compatibility
+    # The Sender: header should be added at least for DKIM compatibility
     $hdr->add('Sender', $self->get_list_address('owner'));
     $hdr->add('X-no-archive', 'yes');
 
