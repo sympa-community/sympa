@@ -140,6 +140,10 @@ sub get_address {
 	} elsif ($type eq 'return_path') {
 	    return $self->name . $self->robot->return_path_suffix . '@' .
 		$self->host;
+	} elsif ($type eq 'subscribe') {
+	    return $self->name . '-subscribe' . '@' . $self->host;
+	} elsif ($type eq 'unsubscribe') {
+	    return $self->name . '-unsubscribe' . '@' . $self->host;
 	}
     } elsif (ref $self and ref $self eq 'Robot' or $self eq 'Site') {
 	unless ($type) {
