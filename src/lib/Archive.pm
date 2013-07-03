@@ -109,25 +109,29 @@ sub scan_dir_archive {
 	next unless ($file =~ /^\d+$/);
 	&Log::do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
 
-	my $mail = new Message({'file'=>"$dir/$month/arctxt/$file",'noxsympato'=>'noxsympato'});
-	unless (defined $mail) {
-	    &Log::do_log('err', 'Unable to create Message object %s', $file);
+	my $message = Message->new({
+	    'file' => "$dir/$month/arctxt/$file", 'noxsympato' => 'noxsympato'
+	});
+	unless ($message) {
+	    Log::do_log('err',
+		'Unable to create Message object from file %s', $file);
 	    return undef;
 	}
-	
-	&Log::do_log('debug',"MAIL object : $mail");
+
+	Log::do_log('debug', 'MAIL object : %s', $message);
 
 	$i++;
 	my $msg = {};
 	$msg->{'id'} = $i;
 
-	$msg->{'subject'} = &tools::decode_header($mail, 'Subject');
-	$msg->{'from'} = &tools::decode_header($mail, 'From');
-	$msg->{'date'} = &tools::decode_header($mail, 'Date');
+	$msg->{'subject'} = tools::decode_header($message, 'Subject');
+	$msg->{'from'}    = tools::decode_header($message, 'From');
+	$msg->{'date'}    = tools::decode_header($message, 'Date');
 
-	$msg->{'full_msg'} = $mail->{'msg'}->as_string;
+	$msg->{'full_msg'} = $message->{'msg'}->as_string;
 
-	&Log::do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
+	Log::do_log('debug', 'Adding message %s in archive to send',
+	    $msg->{'subject'});
 
 	push @{$all_msg}, $msg ;
     }

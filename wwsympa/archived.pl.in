@@ -308,7 +308,7 @@ while (!$end) {
 	    
 	my $list;
 	unless ($list = new List ($listadress)) {
-	    Log::do_log('err',"remove : unknown list $listadress");
+	    Log::do_log('err', 'remove: unknown list %s', $listadress);
 	    $spoolarchive->move_to_bad($item->{'messagekey'});
 	    next;
 	}
@@ -318,7 +318,10 @@ while (!$end) {
 
 	foreach my $order (@orders) { 
 	    unless($order =~ /(.*)\|\|($email_regexp)/){
-	&Log::do_log ('err',"Ignoring remove_order $order not recognized format");   
+		Log::do_log('err',
+		    'Ignoring remove_order "%s", unrecognized format',
+		    $order
+		);
 		next;
 	    }
 	    my $msgid = $1;
@@ -326,12 +329,12 @@ while (!$end) {
 	    
 	    chomp 	$msgid ;
 	    if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	&Log::do_log('err','remove_arc: no message id found');
+		Log::do_log('err', 'No message ID found');
 		next;
 	    } 
 	    
-	    my $message ;
-	    unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
+	    my $file;
+	    unless ($file = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
 	&Log::do_log('err','No message with message-id %s found in %s/arctxt',$msgid,$arcpath);
 		next;
 	    }
@@ -340,14 +343,22 @@ while (!$end) {
 		# if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 		
 		my $new_message;
-		unless ($new_message = new Message({'file'=>"$arcpath/arctxt/$message",'noxsympato'=>'noxsympato'})) {
-		   &Log::do_log('err',"unable to load new message $arcpath/arctxt/$message");
+		unless ($new_message = Message->new({
+		    'file' => "$arcpath/arctxt/$file",
+		    'noxsympato' => 'noxsympato'
+		})) {
+		    Log::do_log('err',
+			'Unable to load new message %s/arctxt/%s',
+			$arcpath, $file
+		    );
 		    next;
 		}
 		my $messagesender = lc($new_message->get_sender_email || '');
 		
 		unless ($sender eq $messagesender) {
-		    &Log::do_log('err', 'remove command by unauthorized sender');
+		    Log::do_log('err',
+			'Remove command by unauthorized sender'
+		    );
 		    next;
 		}
 	    }
@@ -364,14 +375,17 @@ while (!$end) {
 		}
 	    }
 	    
-	    unless (rename ("$arcpath/arctxt/$message","$arcpath/deleted/$message")) {
-		Log::do_log('info',"remove_arc: unable to rename message $arcpath/arctxt/$message");
+	    unless (rename "$arcpath/arctxt/$file", "$arcpath/deleted/$file") {
+		Log::do_log('info',
+		    'Unable to rename message %s/arctxt/%s',
+		    $arcpath, $file
+		);
 		next;
 	    }
 	    
 	    # remove directory if empty arctxt
 	    unless (opendir (DIR,"$arcpath/arctxt")) {
-		Log::do_log('info',"remove_arc: unable to open dir $arcpath/arctxt");
+		Log::do_log('info', 'Unable to open dir %s/arctxt', $arcpath);
 		next;
 	    }
 	    my @files = grep(/^\d+$/, readdir( DIR ));
