@@ -252,6 +252,8 @@ sub load {
 		$self->{'sender'} = $v;
 	    } elsif ($k eq 'X-Sympa-Gecos') {
 		$self->{'gecos'} = $v;
+	    } elsif ($k eq 'X-Sympa-Spam-Status') {
+		$self->{'spam_status'} = $v;
 	    } else {
 		Log::do_log('warn', 'Unknown meta information: "%s: %s"',
 		    $k, $v);
@@ -270,15 +272,15 @@ sub load {
     my $msg = $parser->parse_data(\$messageasstring);
     $self->{'msg'} = $msg;
 
-    # Get envelope sender, and actual sender according to sender_headers site
-    # parameter.
-    # FIXME: This process is needed for incoming messages only.
+    # Get envelope sender, actual sender according to sender_headers site
+    # parameter and spam status according to spam_status scenario.
+    # FIXME: These processes are needed for incoming messages only.
     $self->get_envelope_sender;
     return undef unless $self->get_sender_email;
+    $self->check_spam_status;
 
     $self->get_subject;
     $self->get_recipient;
-    $self->check_spam_status;
     $self->check_dkim_signature;
 
     ## S/MIME
@@ -368,6 +370,9 @@ sub to_string {
     }
     if (defined $self->{'gecos'} and length $self->{'gecos'}) {
 	$str .= sprintf "X-Sympa-Gecos: %s\n", $self->{'gecos'};
+    }
+    if ($self->{'spam_status'}) {
+	$str .= sprintf "X-Sympa-Spam-Status: %s\n", $self->{'spam_status'};
     }
 
     $str .= $self->{'msg_as_string'};
@@ -616,9 +621,9 @@ sub check_spam_status {
 
     return $self->{'spam_status'} if $self->{'spam_status'};
 
-    return undef unless ref $self->{'robot'} eq 'Robot';
+    return undef unless ref $self->robot eq 'Robot';
 
-    my $spam_status = Scenario::request_action($self->{'robot'},
+    my $spam_status = Scenario::request_action($self->robot,
 	'spam_status', 'smtp', {'message' => $self});
     $self->{'spam_status'} = 'unknown';
     if (defined $spam_status) {
@@ -2439,8 +2444,9 @@ Get unique ID for object.
 
 sub get_id {
     my $self = shift;
-    return sprintf 'messagekey=%s; message-id=%s',
-	($self->{'messagekey'} || ''), ($self->get_msg_id || '');
+    return sprintf 'key=%s;id=%s',
+	($self->{'messagekey'} || ''),
+	tools::clean_msg_id($self->get_msg_id || '');
 }
 
 ## Packages must return true.
