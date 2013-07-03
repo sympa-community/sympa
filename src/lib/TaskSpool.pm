@@ -39,8 +39,6 @@ my @task_list;
 my %task_by_list;
 my %task_by_model;
 
-my $taskspool ;
-
 my @tasks; # list of tasks in the spool
 
 our $filename_regexp = '^(\d+)\.([^\.]+)?\.([^\.]+)\.(\S+)$';
@@ -127,23 +125,24 @@ sub analyze_file_name {
 }
 
 # Initialize Sympaspool global object.
-sub set_spool {
-    $taskspool = new TaskSpool;
-}
+#NO LONGER USED.
+#sub set_spool {
+#    $taskspool = new TaskSpool;
+#}
 
 ## Build all Task objects
+# Internal use.
 sub list_tasks {
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
 
-    &Log::do_log('debug',"Listing all tasks");
-    my $spool_task = Site->queuetask;
     ## Reset the list of tasks
     undef @task_list;
     undef %task_by_list;
     undef %task_by_model;
 
     # fetch all task
-    my $taskspool = new TaskSpool;
-    my @tasks = $taskspool->get_content();
+    my @tasks = $self->get_content();
 
     ## Create Task objects
     foreach my $t (@tasks) {
@@ -161,14 +160,16 @@ sub list_tasks {
 }
 
 ## Return a list tasks for the given list
-sub get_tasks_by_list {
-    my $list_id = shift;
-    &Log::do_log('debug',"Getting tasks for list '%s'",$list_id);
-    return () unless (defined $task_by_list{$list_id});
-    return values %{$task_by_list{$list_id}};
-}
+# NO LONGER USED.
+#sub get_tasks_by_list {
+#    my $list_id = shift;
+#    &Log::do_log('debug',"Getting tasks for list '%s'",$list_id);
+#    return () unless (defined $task_by_list{$list_id});
+#    return values %{$task_by_list{$list_id}};
+#}
 
 ## Returns a hash containing the model used. The models returned are all the global models or, if a list name is given as argument, the models used for this list.
+# Internal use.
 sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
@@ -189,15 +190,20 @@ sub get_used_models {
 }
 
 ## Returns a ref to @task_list, previously defined in the "list_task" sub.
-sub get_task_list {
-    &Log::do_log('debug',"Getting tasks list");
-    return @task_list;
-}
+# NO LONGER USED.
+#sub get_task_list {
+#    &Log::do_log('debug',"Getting tasks list");
+#    return @task_list;
+#}
 
 ## Checks that all the required tasks at the server level are defined. Create them if needed.
 sub create_required_tasks {
+    Log::do_log('debug2', '(%s)', @_);
     my $current_date = shift;
-    &Log::do_log('debug','Creating required tasks from models');
+
+    my $taskspool = TaskSpool->new();
+    $taskspool->list_tasks();
+
     my %default_data = ('creation_date' => $current_date, # hash of datas necessary to the creation of tasks
 			'execution_date' => 'execution_date');
     create_required_global_tasks({'data' => \%default_data,'current_date' => $current_date});
@@ -288,4 +294,4 @@ sub creation_error {
 }
 
 ## Packages must return true.
-return 1;
+1;

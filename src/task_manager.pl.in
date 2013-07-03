@@ -195,7 +195,7 @@ unless (chdir(Site->home)) {
     exit (-1);
 }
 
-&TaskSpool::set_spool(); # force initialisation of $taskspool in module Task 
+my $taskspool = TaskSpool->new();
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -208,34 +208,30 @@ undef my $log; # won't execute send_msg and delete_subs commands if true, only l
 
 ###### INFINITE LOOP SCANING THE SPOOL (unless a sig TERM is received) ######
 while (!$end) {
-
     my $current_date = time; # current epoch date
     my $rep = &tools::adate ($current_date);
-
 
     ## Empty cache of the List.pm module
     &List::init_list_cache();
 
     # Process grouped notifications
     Site->send_notify_to_listmaster(undef, undef, 1, undef);
-	
-   ## List all tasks
-    unless (&TaskSpool::list_tasks) {
-        Site->send_notify_to_listmaster('intern_error',
-            {'error' => "Failed to list task files in spool"});
-        &Log::do_log ('err', "Failed to list task files in spool");
-        exit -1;
-    }
 
-    &TaskSpool::create_required_tasks($current_date);
+    TaskSpool::create_required_tasks($current_date);
 
     ## Execute existing tasks
     ## processing of tasks anterior to the current date
-    &Log::do_log ('debug2', 'processing of tasks anterior to the current date');
-    foreach my $task ( &TaskSpool::get_task_list() ) {
-        last if $end;
-        next unless ($task->{'date'} <= $current_date);
-        &Log::do_log ('debug2', 'processing of task %s, %s',$task->{'messagekey'},$task->get_description);
+    Log::do_log ('debug2', 'Processing tasks anterior to the current date');
+    foreach my $task_in_spool ($taskspool->get_content) {
+	my $task = undef;
+	$task = Task->new($task_in_spool)
+	   if $task_in_spool;
+	next unless $task;
+
+	last if $end;
+	next unless $task->{'date'} <= $current_date;
+
+	Log::do_log ('debug2', 'Processing task %s', $task);
         if ($task->{'object'} ne '_global') { # list task
             $task->check_list_task_is_valid();
         }
