@@ -6962,27 +6962,27 @@ sub do_del {
 ####################################################### 
 sub do_modindex {
      &wwslog('info', 'do_modindex');
-     my $msg;
      my $doc;
 
      my $list_name = $list->name;
      my $modspool = KeySpool->new();
      my @messages  = $modspool->get_awaiting_messages({'selector'=>{'list'=>$list_name,'robot'=>$robot_id}});
-     foreach $msg ( @messages ) {
-	my $message =
-	    Message->new({'messageasstring' => $msg->{'messageasstring'}});
+    foreach my $message_in_spool (@messages) {
+	my $message = undef;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
 	next unless $message;
-	my $id = $msg->{'authkey'};
+	my $id = $message->{'authkey'};
 
-	$param->{'spool'}{$id}{'size'} = int($msg->{'size'} / 1024 + 0.5);
+	$param->{'spool'}{$id}{'size'} = int($message->{'size'} / 1024 + 0.5);
 	$param->{'spool'}{$id}{'subject'} =
 	    tools::decode_header($message, 'Subject') || 'no_subject';
 	$param->{'spool'}{$id}{'date'} =
-	    tools::decode_header($message, 'Date');
+	    tools::decode_header($message, 'Date'); #FIXME:
 	$param->{'spool'}{$id}{'from'} = $message->get_sender_email;
 	$param->{'spool'}{$id}{'gecos'} = $message->get_sender_gecos
 	    if defined $message->get_sender_gecos;
-	$param->{'spool'}{$id}{'spam_status'} = $msg->{'spam_status'};
+	$param->{'spool'}{$id}{'spam_status'} = $message->{'spam_status'};
 	$param->{'spool'}{$id}{'is_subscriber'} =
 	    $list->is_list_member($message->get_sender_email);
 
@@ -7310,10 +7310,13 @@ sub do_reject {
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
      foreach my $id (split (/,/, $in{'id'})) {
-	 
-	 my $message_in_spool = $modspool->get_message({'list'=>$list->name,'robot'=>$robot_id,'authkey'=>$id});
-
-	 unless ($message_in_spool) {
+	my $message_in_spool = $modspool->get_message({
+	    'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id
+	});
+	my $message = undef;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
+	unless ($message) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
 	     &wwslog('err','do_distribute: Unable to find message in spool mod with authkey  %s', $id);
 	     &web_db_log({'parameters' => $in{'id'},
@@ -7321,18 +7324,17 @@ sub do_reject {
 			  'error_type' => 'internal'});
 	     next;
 	 }
-	 my $message = new Message({'message_in_spool' => $message_in_spool});
          #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
-	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
-	     my $rejected_sender = $message->{'sender'};
-	     if  ($rejected_sender) {
-		 
+	if ($in{'quiet'} ne '1' or $in{'blacklist'}) {
+	    my $rejected_sender = $message->get_sender_email;
+	    if ($rejected_sender) {
 		 unless ($in{'message_template'} eq 'reject_quiet') {
 		     my %context;
 		     $context{'subject'} = &tools::decode_header($message,'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
-		     unless ($list->send_file($in{'message_template'}, $rejected_sender, \%context)) {
+		    unless ($list->send_file($in{'message_template'}, #FIXME
+			$rejected_sender, \%context)) {
 			 &wwslog('notice', 'Unable to send template %s to %s', $in{'message_template'}, $rejected_sender);
 		     }
 		 }		 
@@ -7371,7 +7373,7 @@ sub do_reject {
 	 }
 
          # move message in spool of validated messages
-         unless ($modspool->remove_message($message_in_spool->{'messagekey'})) {
+         unless ($modspool->remove_message($message->{'messagekey'})) {
 	     &report::reject_report_web('intern','change_spool',{'old'=>'mod',
 								 'new'=>"validated"},
 					$param->{'action'},$list,$param->{'user'}{'email'},$robot_id);
@@ -7444,8 +7446,10 @@ sub do_distribute {
 	my $message_in_spool = $modspool->get_message(
 	    {'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id}
 	);
-
-	unless ($message_in_spool) {
+	my $message = undef;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
+	unless ($message) {
 	    report::reject_report_web('user', 'already_moderated', {},
 		$param->{'action'});
 	    wwslog('err',
@@ -7461,16 +7465,14 @@ sub do_distribute {
 
 	## TAG 
 	if ($list_topics) {
-	    my $message =
-		new Message({'message_in_spool'=> $message_in_spool});
 	    my $filetopic = $list->tag_topic(
-		tools::clean_msg_id($message->get_header('Message-Id')),
+		tools::clean_msg_id($message->get_msg_id),
 		$list_topics, 'editor'
 	    );
 	}
 
-         ### move message in spool of validated messages
-         unless ($modspool->validate_message($message_in_spool->{'messagekey'})) {
+	### move message in spool of validated messages
+	unless ($modspool->validate_message($message->{'messagekey'})) {
 	    report::reject_report_web('intern', 'change_spool',
 		{'old' => 'mod', 'new' => 'validated'},
 		$param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id);
@@ -7479,7 +7481,6 @@ sub do_distribute {
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
-
 	 }
 	 # clean html view of the message
 	 &tools::remove_dir ( Site->viewmail_dir.'/mod/'.$list->get_list_id().'/'.$id);	
@@ -7535,16 +7536,20 @@ sub do_add_frommod {
 	my $message_in_spool = $modspool->get_message(
 	    {'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id}
 	);
-	unless ($message_in_spool) {
+	my $message = undef;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
+	unless ($message) {
 	    ## if the message has been accepted via WWSympa, it's in spool
 	    ## 'validated'
 	    my $validatedspool = Sympaspool->new('validated');
-	    $message_in_spool = $validatedspool->get_message(
-		{   'list' => $list->name, 'robot' => $robot_id,
-		    'authkey' => $id }
-	    );
+	    $message_in_spool = $validatedspool->get_message({
+		'list' => $list->name, 'robot' => $robot_id, 'authkey' => $id
+	    });
+	    $message = Message->new($message_in_spool)
+		if $message_in_spool;
 	}
-	unless ($message_in_spool) {
+	unless ($message) {
 	    report::reject_report_web('user', 'already_moderated', {},
 		$param->{'action'});
 	    wwslog('err',
@@ -7556,8 +7561,6 @@ sub do_add_frommod {
 		    'error_type' => 'internal' });
 	    next;
 	}
-	my $message = Message->new({'message_in_spool' => $message_in_spool});
-	next unless $message;
 	my $email = $message->get_sender_email;
 	next unless $email =~ /\S/;
 	my $fullname = $message->get_sender_gecos;
@@ -16793,30 +16796,35 @@ sub do_request_topic {
 
      my $spoolauth = new Sympaspool('auth');
 
-     my $authmessage = $spoolauth->get_message({'list'=> $list->name,'robot'=>$robot_id,'authkey'=>$in{'authkey'}});
-     unless ($authmessage) {
-	 &report::reject_report_web('user', 'unknown_auth_key', {},
+    my $message_in_spool = $spoolauth->get_message({
+	'list' => $list->name, 'robot' => $robot_id,
+	'authkey' => $in{'authkey'}
+    });
+    my $message = undef;
+    $message = Message->new($message_in_spool)
+	if $message_in_spool;
+    unless ($message) {
+	&report::reject_report_web('user', 'unknown_auth_key', {},
 	    $param->{'action'}, $list);
-	 &wwslog('info', 'Unknown authentication key "%s"', $in{'authkey'});
-	 return undef;
-     }
-     my $message = new Message({'message_in_spool'=> $authmessage});
+	&wwslog('info', 'Unknown authentication key "%s"', $in{'authkey'});
+	return undef;
+    }
 
     # headers will be encoded later.
     $param->{'subject'} = tools::decode_header($message, 'Subject');
-    $param->{'subject'} = tools::escape_html($param->{'subject'});
+    $param->{'subject'} = tools::escape_html($param->{'subject'}); #FIXME
     $param->{'from'}    = tools::decode_header($message, 'From');
-    $param->{'from'}    = tools::escape_html($param->{'from'});
+    $param->{'from'}    = tools::escape_html($param->{'from'}); #FIXME
     $param->{'date'}    = tools::decode_header($message, 'Date');
-    $param->{'date'}    = tools::escape_html($param->{'date'});
+    $param->{'date'}    = tools::escape_html($param->{'date'}); #FIXME
     $param->{'message_id'} =
 	tools::clean_msg_id($message->get_header('Message-Id'));
 
-    my $body = $message->{'msg'}->bodyhandle();
-    if ($body) {
-	$param->{'body'} = $body->as_string();
+    my $bodyh = $message->{'msg'}->bodyhandle();
+    if ($bodyh) {
+	$param->{'body'} = $bodyh->as_string();
     } else {
-	 $param->{'body'} = '';
+	$param->{'body'} = '';
     }
     $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
 
