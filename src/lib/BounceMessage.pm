@@ -37,17 +37,17 @@ our %equiv = ( "user unknown" => '5.1.1',
 ## Creates a new object
 sub new {
     Log::do_log('debug2', '(%s, %s)', @_);
-    my $pkg =shift;
+    my $pkg   = shift;
     my $datas = shift;
     my $self;
 
-    return undef unless ($self = new Message($datas));
-    unless ($self->get_message_as_string) {
+    return undef
+	unless $self = $pkg->SUPER::new($datas);
+    unless ($self->get_encrypted_message_as_string) {
 	Log::do_log('notice',
 	    'Ignoring bounce %s, because it is empty', $self);
 	return undef;
     }
-    bless $self,$pkg;
 
     ## Some MTAs decorate To: field of DSN as "mailbox <address>".
     ## Pick address only.
@@ -65,15 +65,10 @@ sub new {
 sub process {
     my $self = shift;
 
-    Log::do_log('info',
-	'Processing bounce %s (key %s)',
-	$self->get_msg_id, $self->{'messagekey'}
-    );
+    Log::do_log('info', 'Processing bounce %s', $self);
     Log::do_log('debug3', 'Bounce for :%s:  Site->bounce_email_prefix=%s',
 	$self->{'to'}, Site->bounce_email_prefix);
 
-    $self->{'to'} =~ s/<//;
-    $self->{'to'} =~ s/>//;
     if ($self->is_verp_in_use) { #VERP in use
 	$self->analyze_verp_header();
 	if ($self->failed_on_first_try) {
@@ -1042,7 +1037,7 @@ Log::do_log('err',"could not read $tmpfile");
 		}
 
 		## Le champ From:
-		if($champ{from} =~ /([^\s<]+@[^\s>]+)/){
+		if ($champ{'from'} and $champ{from} =~ /([^\s<]+@[^\s>]+)/) {
 		    $$from = $1;
 		}
 	    }
@@ -1059,9 +1054,11 @@ Log::do_log('err',"could not read $tmpfile");
 		$info{$2}{error} = $1;
 		$type = 34;
 	    }
-	    if ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
+	    if ($champ{'x-failed-recipients'} and
+		$champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
 		$info{$1}{error} = "";
-	    } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+),/) {
+	    } elsif ($champ{'x-failed-recipients'} and
+		$champ{'x-failed-recipients'} =~ /^\s*(\S+),/) {
 		for my $xfr (split (/\s*,\s*/, $champ{'x-failed-recipients'})) {
 		    $info{$xfr}{error} = "";
 		}
