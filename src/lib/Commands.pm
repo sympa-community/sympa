@@ -861,8 +861,10 @@ sub subscribe {
 
     ## This is a really minimalistic handling of the comments,
     ## it is far away from RFC-822 completeness.
-    $comment =~ s/"/\\"/g;
-    $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
+    if (defined $comment) {
+	$comment =~ s/"/\\"/g;
+	$comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
+    }
 
     ## Now check if the user may subscribe to the list
 
@@ -2645,18 +2647,15 @@ sub distribute {
     my $message_in_spool = $modspool->get_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
-    my $message;
+    my $message = undef;
     $message = Message->new($message_in_spool)
 	if $message_in_spool;
     unless (defined $message) {
-	&Log::do_log(
-	    'err',
-	    'Commands::distribute(): Unable to create message object for %s@%s validation key %s',
-	    $name,
-	    $robot,
-	    $key
+	Log::do_log('err',
+	    'Unable to create message object for %s validation key %s',
+	    $list, $key
 	);
-	&report::reject_report_msg('user', 'unfound_message', $sender,
+	report::reject_report_msg('user', 'unfound_message', $sender,
 	    {'listname' => $name, 'key' => $key},
 	    $robot, '', $list);
 	return 'msg_not_found';
@@ -2693,23 +2692,15 @@ sub distribute {
 	return undef;
     }
     unless ($numsmtp) {
-	&Log::do_log(
-	    'info',
-	    'Message for %s from %s accepted but all subscribers use digest,nomail or summary',
-	    $which,
-	    $sender
+	Log::do_log('info',
+	    'Message %s for %s from %s accepted but all subscribers use digest,nomail or summary',
+	    $message, $list, $sender
 	);
     }
-    &Log::do_log(
-	'info',
-	'Message %s for list %s accepted by %s (%d seconds, %d sessions, %d subscribers), size=%d',
-	$message,
-	$list->get_list_id(),
-	$sender,
-	time - $start_time,
-	$numsmtp,
-	$list->total(),
-	$message->{'size'}
+    &Log::do_log('info',
+	'Message %s for list %s accepted by %s; %d seconds, %d sessions, %d subscribers, size=%d',
+	$message, $list, $sender, time - $start_time, $numsmtp,
+	$list->total(), $message->{'size'}
     );
 
     unless ($quiet) {
@@ -2718,10 +2709,9 @@ sub distribute {
 		'message_distributed', $sender,
 		{'key' => $key, 'message' => $message}, $robot,
 		$list
-	    )
-	    ) {
-	    &Log::do_log('notice',
-		"Commands::distribute(): Unable to send template 'message_report', entry 'message_distributed' to $sender"
+	)) {
+	    Log::do_log('notice',
+		'Unable to send template "message_report" to %s', $sender
 	    );
 	}
     }
@@ -2756,26 +2746,18 @@ sub confirm {
     chomp $key;
     my $start_time = time;    # get the time at the beginning
 
-    my $spool = new Sympaspool('auth');
+    my $spool = Sympaspool->new('auth');
 
-    my $messageinspool = $spool->get_message({'authkey' => $key});
-
-    unless ($messageinspool) {
-	&Log::do_log('info', 'CONFIRM %s from %s refused, auth failed',
-	    $key, $sender);
-	&report::reject_report_msg('user', 'unfound_file_message', $sender,
-	    {'key' => $key},
-	    $robot, '', '');
-	return 'wrong_auth';
-    }
-    my $message = new Message({'message_in_spool' => $messageinspool});
-    unless (defined $message) {
-	&Log::do_log(
-	    'err',
-	    'Commands::confirm(): Unable to create message object for key %s',
-	    $key
+    my $message_in_spool = $spool->get_message({'authkey' => $key});
+    my $message = undef;
+    $message = Message->new($message_in_spool)
+	if $message_in_spool;
+    unless ($message) {
+	Log::do_log('err',
+	    'Unable to create message object for key %s from %s',
+	    $key, $sender
 	);
-	&report::reject_report_msg('user', 'wrong_format_message', $sender,
+	report::reject_report_msg('user', 'unfound_file_message', $sender,
 	    {'key' => $key},
 	    $robot, '', '');
 	return 'msg_not_found';
@@ -3034,29 +3016,19 @@ sub reject {
     my $message_in_spool = $modspool->get_message(
 	{'list' => $list->name, 'robot' => $robot->domain, 'authkey' => $key}
     );
-
-    unless ($message_in_spool) {
-	&Log::do_log('info', 'REJECT %s %s from %s refused, auth failed',
+    my $message = undef;
+    $message = Message->new($message_in_spool)
+	if $message_in_spool;
+    unless ($message) {
+	Log::do_log('info',
+	    'Could not find message %s %s from %s, auth failed',
 	    $which, $key, $sender);
 	&report::reject_report_msg('user', 'unfound_message', $sender,
 	    {'key' => $key},
 	    $robot, '', $list);
 	return 'wrong_auth';
     }
-    my $message = new Message({'message_in_spool' => $message_in_spool});
-    unless ($message) {
-	&Log::do_log(
-	    'err',
-	    'Could not parse spool message %s %s from %s refused, auth failed',
-	    $which,
-	    $key,
-	    $sender
-	);
-	&report::reject_report_msg('user', 'unfound_message', $sender,
-	    {'key' => $key},
-	    $robot, '', $list);
-	return 'wrong_auth';
-    }
+
     my $msg          = $message->{'msg'};
     my $bytes        = $message->{'size'};
     my $customheader = $list->custom_header;
@@ -3087,14 +3059,12 @@ sub reject {
 
 	## Notify list moderator
 	unless (
-	    &report::notice_report_msg(
+	    report::notice_report_msg(
 		'message_rejected', $sender,
-		{'key' => $key, 'message' => $msg}, $robot,
-		$list
-	    )
-	    ) {
-	    &Log::do_log('err',
-		"Commands::reject(): Unable to send template 'message_report', entry 'message_rejected' to $sender"
+		{'key' => $key, 'message' => $msg}, $robot, $list
+	)) {
+	    Log::do_log('err',
+		'Unable to send template "message_report" to %s', $sender
 	    );
 	}
 
@@ -3158,7 +3128,7 @@ sub modindex {
     ## List of messages
     my @spool;
 
-    foreach my $msg (
+    foreach my $message_in_spool (
 	$modspool->get_content(
 	    {   'selector'  => {'list' => $name, 'robot' => $robot->domain},
 		'selection' => '*',
@@ -3166,9 +3136,12 @@ sub modindex {
 		'way'       => 'asc'
 	    }
 	)
-	) {
-	my $message = new Message({'message_in_spool' => $msg});
-	push @spool, $message->{'msg'};
+    ) {
+	my $message = undef;
+	$message = Message->new($message_in_spool)
+	    if $message_in_spool;
+	next unless $message;
+	push @spool, $message->get_encrypted_mime_message;
 	$n++;
     }
 
@@ -3190,12 +3163,13 @@ sub modindex {
 		'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
 		'boundary2' => "==digest $now[6].$now[5].$now[4].$now[3]=="
 	    }
-	)
-	) {
-	&Log::do_log('notice',
-	    "Unable to send template 'modindex' to $sender");
-	&report::reject_report_cmd('intern_quiet', '', {'listname' => $name},
-	    $cmd_line, $sender, $robot);
+    )) {
+	Log::do_log('notice',
+	    'Unable to send template "modindex" to %s', $sender
+	);
+	report::reject_report_cmd('intern_quiet', '', {'listname' => $name},
+	    $cmd_line, $sender, $robot
+	);
     }
 
     &Log::do_log('info', 'MODINDEX %s from %s accepted (%d seconds)',

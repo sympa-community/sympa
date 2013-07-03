@@ -969,20 +969,23 @@ sub dkim_sign {
 	&Log::do_log('err', 'Cannot sign (DKIM) message');
 	return ($msg_as_string); 
     }
-    my $message = new Message({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
-    unless ($message){
-	&Log::do_log('err',"unable to load $temporary_file as a message object");
+    my $message = Message->new({
+	'file' => $temporary_file, 'noxsympato' => 'noxsympato'
+    });
+    unless ($message) {
+	Log::do_log('err',
+	    'Unable to load %s as a message object', $temporary_file);
 	return ($msg_as_string); 
     }
 
     if ($main::options{'debug'}) {
-	&Log::do_log('debug',"temporary file is $temporary_file");
-    }else{
-	unlink ($temporary_file);
+	Log::do_log('debug', 'Temporary file is %s', $temporary_file);
+    } else {
+	unlink $temporary_file;
     }
-    unlink ($temporary_keyfile);
-    
-    $message->{'msg'}->head->add('DKIM-signature',$dkim->signature->as_string);
+    unlink $temporary_keyfile;
+
+    $message->{'msg'}->head->add('DKIM-signature', $dkim->signature->as_string);
 
     return $message->{'msg'}->head->as_string."\n".&Message::get_body_from_msg_as_string($msg_as_string);
 }
@@ -3445,13 +3448,16 @@ sub decode_header {
     my $sep = shift || undef;
 
     my $head;
-    if (ref $msg eq 'Message') {
+    if (ref $msg and $msg->isa('Message')) {
 	$head = $msg->{'msg'}->head;
     } elsif (ref $msg eq 'MIME::Entity') {
 	$head = $msg->head;
     } elsif (ref $msg eq 'MIME::Head' or ref $msg eq 'Mail::Header') {
 	$head = $msg;
+    } else {
+	croak 'bug in logic.  Ask developer';
     }
+
     if (defined $sep) {
 	my @values = $head->get($tag);
 	return undef unless scalar @values;

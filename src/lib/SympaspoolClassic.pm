@@ -222,9 +222,7 @@ sub analyze_file_name {
     }
 
     ## Get priority
-
-    my $email = $data->{'robot_object'}->email;
-
+    #FIXME: is this always needed?
     if ($data->{'type'} and $data->{'type'} eq 'listmaster') {
 	## highest priority
 	$data->{'priority'} = 0;
@@ -234,14 +232,11 @@ sub analyze_file_name {
 	$data->{'priority'} = $data->{'robot_object'}->owner_priority;
     } elsif ($data->{'type'} and $data->{'type'} eq 'sympa') {	
 	$data->{'priority'} = $data->{'robot_object'}->sympa_priority;
+    } elsif (ref $data->{'list_object'} and
+	$data->{'list_object'}->isa('List')) {
+	$data->{'priority'} = $data->{'list_object'}->priority;
     } else {
-	if (ref $data->{'list_object'} and
-	    $data->{'list_object'}->isa('List')) {
-	    $data->{'priority'} = $data->{'list_object'}->priority;
-	} else {
-	    $data->{'priority'} =
-		$data->{'robot_object'}->default_list_priority;
-	}
+	$data->{'priority'} = $data->{'robot_object'}->default_list_priority;
     }
 
     Log::do_log('debug3',

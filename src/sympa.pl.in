@@ -359,7 +359,7 @@ use Family;
 #use Sympa::Constants;
 #use tracking; # not used
 #use Sympaspool; # load in List
-use Messagespool; # load in List
+use Messagespool;
 #use SDM; # load in Conf
 use Upgrade;
 
@@ -1859,7 +1859,7 @@ sub process_message {
 	}
 	Log::do_log('notice',
 	    'Ignoring message %s for %s function %s from %s; virus "%s" found',
-	    $message, ($list || $robot), ($type || 'list'), $sender, $rc);
+	    $message, ($list || $robot), ($type || '(post)'), $sender, $rc);
 	Log::db_log(
 	    {   'robot'        => $robot_id,
 		'list'         => $listname,
@@ -2843,7 +2843,7 @@ sub DoCommand {
     ## command
     if ($command) {
 	Log::do_log('info',
-	    'Processing message %s for %s function "%s" with priority %s',
+	    'Processing message %s for %s function %s with priority %s',
 	    $message, $list, $command, $message->{'priority'}
 	);
 	my $auth_level;
@@ -2887,7 +2887,7 @@ sub DoCommand {
 
     if (defined $subject_field and $subject_field =~ /\S/) {
 	$success ||=
-	    Commands::parse($sender, $robot->name, $subject_field, $auth_level,
+	    Commands::parse($sender, $robot, $subject_field, $auth_level,
 		$message);
 	unless ($success eq 'unknown_cmd') {
 	    $cmd_found = 1;
@@ -2988,8 +2988,7 @@ sub DoCommand {
 	    $auth_level = 'dkim' if $message->{'dkim_pass'};
 	    $auth_level = $is_signed->{'body'} if $is_signed->{'body'};
 	    $status =
-		Commands::parse($sender, $robot->name, $i, $auth_level,
-		    $message);
+		Commands::parse($sender, $robot, $i, $auth_level, $message);
 
 	    $cmd_found = 1;    # if problem no_cmd_understood is sent here
 	    if ($status eq 'unknown_cmd') {

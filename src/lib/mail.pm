@@ -36,7 +36,6 @@ use Data::Dumper;
 #use Log; # load in Conf
 use Language qw(gettext);
 #use List; # this package is loaded via List
-use Messagespool;
 #use Sympa::Constants; # load in confdef - Conf
 #use tools; # load in Conf
 

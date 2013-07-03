@@ -1778,6 +1778,7 @@ sub get_lists_of_digest_recipients {
     return 1;
 }
 
+#FIXME: This method should be moved to the Class of its own.
 sub split_spooled_digest_to_messages {
     my $self = shift;
     my $param = shift;
@@ -1790,9 +1791,11 @@ sub split_spooled_digest_to_messages {
     splice @messages_as_string, 0, 1;
 
     foreach my $message_as_string (@messages_as_string) {
-	my $mail = new Message({'messageasstring' => $message_as_string});
-	next unless ($mail);
-	push @{$self->{'digest'}{'list_of_mail'}}, $mail;
+	my $message = Message->new({
+	    'messageasstring' => $message_as_string, 'noxsymnpato' => 1
+	});
+	next unless $message;
+	push @{$self->{'digest'}{'list_of_mail'}}, $message
     }
 
     ## Deletes the introduction part
@@ -2610,34 +2613,32 @@ See L<Site/request_auth>.
 #
 ######################################################
 sub archive_send {
+    Log::do_log('debug2', '(%s, %s, &s)', @_);
     my ($self, $who, $file) = @_;
-   &Log::do_log('debug', 'List::archive_send(%s, %s)', $who, $file);
 
-   return unless ($self->is_archived());
+    return unless $self->is_archived(); #FIXME
 
     my $dir = $self->robot->arc_path . '/' . $self->get_id;
-   my $msg_list = Archive::scan_dir_archive($dir, $file);
+    my $msg_list = Archive::scan_dir_archive($dir, $file);
 
-    ##FIXME: should be i18n'ed
-    my $subject = 'File ' . $self->name . ' ' . $file;
+    my $subject = sprintf 'Archive of %s, file %s', $self->name, $file;
     my $param   = {
 	'to'       => $who,
-		'subject' => $subject,
+	'subject'  => $subject,
 	'msg_list' => $msg_list
     };
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
     $param->{'boundary2'} = &tools::get_message_id($self->robot);
-    $param->{'from'}      = $self->robot->get_address();
+    $param->{'from'}      = $self->robot->get_address(); #FIXME
 
-#    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
     unless ($self->send_file('get_archive', $who, $param)) {
-	&Log::do_log('notice',
-	    "Unable to send template 'archive_send' to $who");
-	   return undef;
-       }
-
+	Log::do_log('notice',
+	    'Unable to send template "get_archive" to %s', $who
+	);
+	return undef;
+    }
 }
 
 ####################################################
@@ -2654,50 +2655,46 @@ sub archive_send_last {
     Log::do_log('debug3', '(%s, %s)', @_);
     my ($self, $who) = @_;
 
-   return unless ($self->is_archived());
+    return unless $self->is_archived(); #FIXME
     my $dir = $self->dir . '/archives';
 
-    my $mail = new Message(
+    my $message = Message->new(
 	{'file' => "$dir/last_message", 'noxsympato' => 'noxsympato'});
-   unless (defined $mail) {
-	&Log::do_log('err', 'Unable to create Message object %s',
+    unless ($message) {
+	Log::do_log('err', 'Unable to create Message object from file %s',
 	    "$dir/last_message");
-       return undef;
-   }
+	return undef;
+    }
 
-   my @msglist;
-   my $msg = {};
-   $msg->{'id'} = 1;
+    my @msglist;
+    my $msg = {};
+    $msg->{'id'} = 1;
 
-   $msg->{'subject'} = &tools::decode_header($mail, 'Subject');
-   $msg->{'from'} = &tools::decode_header($mail, 'From');
-   $msg->{'date'} = &tools::decode_header($mail, 'Date');
+    $msg->{'subject'} = tools::decode_header($message, 'Subject');
+    $msg->{'from'}    = tools::decode_header($message, 'From');
+    $msg->{'date'}    = tools::decode_header($message, 'Date');
 
-   $msg->{'full_msg'} = $mail->{'msg'}->as_string;
+    $msg->{'full_msg'} = $message->{'msg'}->as_string;
 
     push @msglist, $msg;
 
-    ##FIXME: should be i18n'ed
-    my $subject = 'File ' . $self->name . '.last_message';
+    my $subject = 'Archive of %s, file last_message', $self->name;
     my $param   = {
 	'to'       => $who,
-		'subject' => $subject,
+	'subject'  => $subject,
 	'msg_list' => \@msglist
     };
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
     $param->{'boundary2'} = &tools::get_message_id($self->robot);
-    $param->{'from'}      = $self->robot->get_address();
+    $param->{'from'}      = $self->robot->get_address(); #FIXME
     $param->{'auto_submitted'} = 'auto-replied';
 
-#    open TMP2, ">/tmp/digdump"; &tools::dump_var($param, 0, \*TMP2); close TMP2;
-
     unless ($self->send_file('get_archive', $who, $param)) {
-	&Log::do_log('notice',
-	    "Unable to send template 'archive_send' to $who");
-	   return undef;
-       }
-
+	Log::do_log('notice',
+	    'Unable to send template "get_archive" to %s', $who);
+	return undef;
+    }
 }
 
 ###################   NOTIFICATION SENDING  ###############################
@@ -10905,8 +10902,13 @@ sub purge {
     return undef unless $self->robot->lists($self->name);
 
     ## Remove tasks for this list
-    &TaskSpool::list_tasks(Site->queuetask);
-    foreach my $task (&TaskSpool::get_tasks_by_list($self->get_list_id())) {
+    my $taskspool = TaskSpool->new();
+    foreach my $task_in_spool ($taskspool->get_content({
+	'selector'  => {'list' => $self->name, 'robot' => $self->domain},
+	'selection' => '*',
+    })) {
+	my $task = Task->new($task_in_spool)
+	    if $task_in_spool;
 	unlink $task->{'filepath'};
     }
 
