@@ -2062,9 +2062,9 @@ sub send_msg {
     return 0 unless ($topics_updated_total);
     my ($tag_verp,$tag_mode) = find_packet_to_tag_as_last($message);
     
-    $message->{'messagekey'} = undef;
     foreach my $mode (sort keys %{$message->{'rcpts_by_mode'}}) {
 	my $new_message = dclone $message;
+	delete $new_message->{'messagekey'}; #FIXME: required?
 	$new_message->prepare_message_according_to_mode($mode);
 	my $verp = 'off';
 	if ($message->{'rcpts_by_mode'}{$mode}{'noverp'}) {
