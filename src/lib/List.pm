@@ -2625,7 +2625,8 @@ sub archive_send {
     my $param   = {
 	'to'       => $who,
 	'subject'  => $subject,
-	'msg_list' => $msg_list
+	'msg_list' => $msg_list,
+	'filename' => $file
     };
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
@@ -2666,7 +2667,6 @@ sub archive_send_last {
 	return undef;
     }
 
-    my @msglist;
     my $msg = {};
     $msg->{'id'} = 1;
 
@@ -2676,13 +2676,12 @@ sub archive_send_last {
 
     $msg->{'full_msg'} = $message->{'msg'}->as_string;
 
-    push @msglist, $msg;
-
-    my $subject = 'Archive of %s, file last_message', $self->name;
+    my $subject = sprintf 'Archive of %s, last message', $self->name;
     my $param   = {
 	'to'       => $who,
 	'subject'  => $subject,
-	'msg_list' => \@msglist
+	'msg_list' => [$msg],
+	'filename' => 'last_message'
     };
 
     $param->{'boundary1'} = &tools::get_message_id($self->robot);
