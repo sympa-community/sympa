@@ -10073,7 +10073,7 @@ sub compute_topic {
     # getting string to parse
     # We convert it to UTF-8 for case-ignore match with non-ASCII keywords.
     my $mail_string = '';
-    if (index $self->msg_topic_keywords_apply_on, 'subject') {
+    if (index($self->msg_topic_keywords_apply_on, 'subject') >= 0) {
 	$mail_string = $message->{'decoded_subject'} . "\n";
     }
     unless ($self->msg_topic_keywords_apply_on eq 'subject') {
@@ -10108,10 +10108,8 @@ sub compute_topic {
 
     # parsing
     foreach my $keyw (keys %keywords) {
-	my $k = $keywords{$keyw};
-	$keyw = tools::foldcase($keyw); #foldcase keyword
-	if (index $mail_string, $keyw) {
-	    $topic_hash{$k} = 1;
+	if (index($mail_string, tools::foldcase($keyw)) >= 0) {
+	    $topic_hash{$keywords{$keyw}} = 1;
 	}
     }
 
