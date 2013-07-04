@@ -2379,8 +2379,7 @@ sub DoMessage {
 	    }
 	} else {
 	    # not already tagged
-	    $context->{'topic_auto'} =
-		$list->automatic_tag($message->as_entity, $robot->name);
+	    $context->{'topic_auto'} = $list->automatic_tag($message);
 	}
 
 	$context->{'topic'} = $context->{'topic_auto'} ||
