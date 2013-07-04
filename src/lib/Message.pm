@@ -403,7 +403,7 @@ sub get_header {
     my $field = shift;
     my $sep   = shift;
 
-    my $hdr = $self->{'msg'}->head;
+    my $hdr = $self->as_entity->head;
 
     if (defined $sep or wantarray) {
 	my @values = grep { s/\A$field\s*:\s*//i }
@@ -433,7 +433,7 @@ sub get_envelope_sender {
 	##   - pipe(8):  Add 'R' in the 'flags=' attributes of master.cf.
 	## - Exim:       Set 'return_path_add' to true with pipe_transport.
 	## - qmail:      Use preline(1).
-	my $headers = $self->{'msg'}->head->header();
+	my $headers = $self->as_entity->head->header();
 	my $i = 0;
 	$i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
 	if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
@@ -458,7 +458,7 @@ sub get_sender_email {
     my $self = shift;
 
     unless ($self->{'sender'}) {
-	my $hdr = $self->{'msg'}->head;
+	my $hdr = $self->as_entity->head;
 	my $sender = undef;
 	my $gecos = undef;
 	foreach my $field (split /[\s,]+/, Site->sender_headers) {
@@ -511,7 +511,7 @@ sub get_subject {
     my $self = shift;
 
     unless ($self->{'decoded_subject'}) {
-	my $hdr = $self->{'msg'}->head;
+	my $hdr = $self->as_entity->head;
 	## Store decoded subject and its original charset
 	my $subject = $hdr->get('Subject');
 	if (defined $subject and $subject =~ /\S/) {
@@ -578,6 +578,7 @@ sub get_recipient {
     return $self->{'rcpt'};
 }
 
+# NOT USED.
 sub set_recipient {
     my $self = shift;
     my $new_rcpt = shift;
@@ -587,6 +588,17 @@ sub set_recipient {
 
 #sub get_list()
 #OBSOLETED: use list().
+
+=over 4
+
+=item list
+
+I<Getter>.
+Gets list context of message as a L<List> object if any.
+
+=back
+
+=cut
 
 sub list {
     croak "Can't modify \"list\" attribute" if scalar @_ > 1;
@@ -601,6 +613,17 @@ sub list {
 
 #sub get_robot()
 #OBSOLETED: use robot().
+
+=over 4
+
+=item robot
+
+I<Getter>.
+Gets robot context of message as a L<Robot> object if any.
+
+=back
+
+=cut
 
 sub robot {
     croak "Can't modify \"robot\" attribute" if scalar @_ > 1;
@@ -786,7 +809,7 @@ sub add_topic {
     my ($self,$topic) = @_;
 
     $self->{'topic'} = $topic;
-    my $hdr = $self->{'msg'}->head;
+    my $hdr = $self->as_entity->head;
     $hdr->add('X-Sympa-Topic', $topic);
 
     return 1;
@@ -853,7 +876,7 @@ sub clean_html {
     my $self = shift;
     my $robot = shift;
     my $new_msg;
-    if($new_msg = _fix_html_part($self->get_encrypted_mime_message, $robot)) {
+    if ($new_msg = _fix_html_part($self->as_entity, $robot)) {
 	$self->{'msg'} = $new_msg;
 	$self->{'msg_as_string'} = $new_msg->as_string;
 	return 1;
@@ -952,7 +975,7 @@ sub smime_decrypt {
 	Log::do_log('info', 'Can\'t store message in file %s',$temporary_file);
 	return undef;
     }
-    $self->{'msg'}->print(\*MSGDUMP);
+    $self->as_entity->print(\*MSGDUMP);
     close(MSGDUMP);
     
     my $pass_option;
@@ -1029,7 +1052,7 @@ sub smime_decrypt {
 	    $predefined_headers->{lc $header} = 1;
 	}
     }
-    foreach my $header (split /\n(?![ \t])/, $self->{'msg'}->head->as_string) {
+    foreach my $header (split /\n(?![ \t])/, $self->as_entity->head->as_string) {
 	next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
 	my ($tag, $val) = ($1, $2);
 	unless ($predefined_headers->{lc $tag}) {
@@ -1240,7 +1263,7 @@ sub smime_sign {
     $new_message_as_string = $signed_msg->head->as_string.'\n\n'.$new_message[1];
 	
     $self->{'msg'} = $signed_msg;
-    $self->{'msg_as_string'} = $new_message_as_string;
+    $self->{'msg_as_string'} = $new_message_as_string; #FIXME
     $self->check_smime_signature;
     return 1;
 }
@@ -1429,7 +1452,21 @@ sub get_mime_message {
     return $self->{'msg'};
 }
 
-sub get_encrypted_mime_message {
+#sub get_encrypted_mime_message()
+#DEPRECATED: Use as_entity.
+
+=over 4
+
+=item as_entity
+
+I<Instance method>.
+Returns message content as a L<MIME::Entity> object.
+
+=back
+
+=cut
+
+sub as_entity {
     my $self = shift;
     return $self->{'msg'};
 }
@@ -1457,6 +1494,7 @@ sub set_message_as_string {
     }
 }
 
+#NOT USED.
 sub set_decrypted_message_as_string {
     my $self = shift;
     my $param = shift;
@@ -1482,7 +1520,21 @@ sub reset_message_from_entity {
     return 1;
 }
 
-sub get_encrypted_message_as_string {
+#sub get_encrypted_message_as_string {
+#DEPRECATED: Use as_string().
+
+=over 4
+
+=item as_string
+
+I<Instance method>.
+Returns message content as a string.
+
+=back
+
+=cut
+
+sub as_string {
     my $self = shift;
     return $self->{'msg_as_string'};
 }
@@ -1939,7 +1991,7 @@ sub personalize {
     my $list = shift;
     my $rcpt = shift || undef;
 
-    my $entity = $self->_personalize_entity($self->{'msg'}, $list, $rcpt);
+    my $entity = _personalize_entity($self->as_entity, $list, $rcpt);
     unless (defined $entity) {
 	return undef;
     }
@@ -1950,7 +2002,6 @@ sub personalize {
 }
 
 sub _personalize_entity {
-    my $self   = shift;
     my $entity = shift;
     my $list   = shift;
     my $rcpt   = shift;
@@ -1970,7 +2021,7 @@ sub _personalize_entity {
 
     if ($entity->parts) {
 	foreach my $part ($entity->parts) {
-	    unless (defined $self->_personalize_entity($part, $list, $rcpt)) {
+	    unless (defined _personalize_entity($part, $list, $rcpt)) {
 		Log::do_log('err', 'Failed to personalize message part');
 		return undef;
 	    }
@@ -2210,7 +2261,7 @@ sub prepare_reception_mail {
 	$self->{'msg'} = $new_msg;
 	$self->{'altered'} = '_ALTERED_';
 	$self->{'msg_as_string'} = $new_msg->as_string;
-    }else{
+    } else {
 	Log::do_log('err','Part addition failed');
 	return undef;
     }

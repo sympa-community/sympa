@@ -7348,7 +7348,10 @@ sub do_reject {
 		     }
 		 }
 	     } else {
-		 &Log::do_log('err',"No sender found for message %s, %s unable to use her address to add to blacklist or send notification",$message->{'messagekey'},$message->get_mime_message->head->get('Message-Id'));
+		Log::do_log('err',
+		    'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
+		    $message
+		);
 	     }
 	 }
 
@@ -7358,12 +7361,19 @@ sub do_reject {
 		     &Log::do_log('err', 'could not execute %s',
 			Site->reporting_spam_script_path);
 		 }
-		 print SCRIPT $message->get_encrypted_message_as_string; #Sending encrypted form in case a crypted message would be sent by error.
-		 if (close(SCRIPT)){		 
-		     &Log::do_log('info',"message $file reported as spam by $param->{'user'}{'email'}") ;
-		 }else{
-		     &Log::do_log('err',"could not report message $file as spam (close failed)");
-		 }
+		# Sending encrypted form in case a crypted message would be
+		# sent by error.
+		print SCRIPT $message->as_string;
+
+		if (close SCRIPT) {		 
+		    Log::do_log('info',
+			'Message %s reported as spam by %s',
+			$message, $param->{'user'}{'email'});
+		} else {
+		    Log::do_log('err',
+			'Could not report message %s as spam (close failed)'
+		    );
+		}
 	     }else{
 		 &Log::do_log('err',
 		    'ignoring parameter reporting_spam_script_path, value %s because not an executable script',

@@ -1448,18 +1448,13 @@ sub distribute_msg {
     my $message = $param{'message'};
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
 
-    &Log::do_log(
-	'debug2',
+    Log::do_log('debug2',
 	'(%s, msg=%s, size=%s, filename=%s, smime_crypted=%s, apply_dkim_signature=%s)',
-	$self,
-	$message->{'msg'},
-	$message->{'size'},
-	$message->{'filename'},
-	$message->{'smime_crypted'},
-	$apply_dkim_signature
+	$self, $message, $message->{'size'}, $message->{'filename'},
+	$message->{'smime_crypted'}, $apply_dkim_signature
     );
 
-    my $hdr = $message->{'msg'}->head;
+    my $hdr = $message->as_entity->head;
     my ($name, $host) = ($self->name, $self->host);
 
     ## Update the stats, and returns the new X-Sequence, if any.
@@ -1468,7 +1463,7 @@ sub distribute_msg {
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $info_msg_topic;
     if ($self->is_there_msg_topic()) {
-	my $msg_id = $message->get_header('Message-Id');
+	my $msg_id = $message->get_msg_id;
 	$info_msg_topic = $self->load_msg_topic($msg_id);
 
 	# add X-Sympa-Topic header
@@ -1527,7 +1522,7 @@ sub distribute_msg {
 	$tag_regexp =~ s/\s+/\\s+/g;
 
 	## Add subject tag
-	$message->{'msg'}->head->delete('Subject');
+	$message->as_entity->head->delete('Subject');
 	my $parsed_tag;
 	&tt2::parse_tt2(
 	    {   'list' => {
@@ -1582,7 +1577,7 @@ sub distribute_msg {
 		) .
 		' ' . $after_tag;
 	}
-	$message->{'msg'}->head->add('Subject', $subject_field);
+	$message->as_entity->head->add('Subject', $subject_field);
     }
 
     ## Prepare tracking if list config allow it
@@ -1678,7 +1673,8 @@ sub distribute_msg {
         }
     }
 
-    ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
+    ## store msg in digest if list accept digest mode (encrypted message can't
+    ## be included in digest)
     if (($self->is_digest()) and
 	not ($message->{'smime_crypted'} and
 	$message->{'smime_crypted'} eq 'smime_crypted')) {
@@ -1820,11 +1816,10 @@ sub prepare_messages_for_digest {
 	$msg->{'from'} = $from;
 	$msg->{'date'} = $date;
 
-	$msg->{'full_msg'} = $mail->{'msg_as_string'};
-	$msg->{'body'} = $mail->{'msg'}->body_as_string;
+	$msg->{'full_msg'} = $mail->as_string;
+	$msg->{'body'} = $mail->as_entity->body_as_string;
 	$msg->{'plain_body'} =
-	    $mail->{'msg'}->PlainDigest::plain_body_as_string();
-	#$msg->{'body'} = $mail->bodyhandle->as_string();
+	    $mail->as_entity->PlainDigest::plain_body_as_string();
 
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} =
@@ -2008,8 +2003,8 @@ sub send_msg {
 	$message->{'smime_crypted'},
 	$apply_dkim_signature
     );
-    my $hdr = $message->{'msg'}->head;
-    my $original_message_id = $message->get_header('Message-Id');
+    my $hdr = $message->as_entity->head;
+    my $original_message_id = $message->get_msg_id;
     my $name                = $self->name;
     my $robot               = $self->domain;
 
@@ -2425,8 +2420,7 @@ sub send_to_editor {
 	    "No editor found for list %s. Trying to proceed ignoring nomail option",
 	    $self
 	);
-	my $messageid = $hdr->get('Message-Id');
-	chomp $messageid if $messageid;
+	my $messageid = $message->get_msg_id;
 
 	@rcpt = $self->get_editors_email({'ignore_nomail', 1});
 	&Log::do_log('notice',
@@ -2471,9 +2465,9 @@ sub send_to_editor {
 	    unless($message->{'smime_crypted'} eq 'smime_crypted') {
 		Log::do_log('err','Could not encrypt message for moderator %s',$recipient);
 	    }
-	    $param->{'msg'} = $message->get_encrypted_mime_message;
+	    $param->{'msg'} = $message->as_entity;
 	} else {
-	    $param->{'msg'} = $message->get_mime_message;
+	    $param->{'msg'} = $message->get_mime_message; #FIXME
 	}
 
        # create a one time ticket that will be used as an MD5 URL credential
@@ -2495,7 +2489,7 @@ sub send_to_editor {
 
 	unless ($self->send_file('moderate', $recipient, $param)) {
 	    &Log::do_log('notice',
-		"Unable to send template 'moderate' to $recipient");
+		'Unable to send template "moderate" to %s', $recipient);
 	   return undef;
        }
    }
@@ -2571,7 +2565,7 @@ sub send_auth {
 	unless($message->{'smime_crypted'} eq 'smime_crypted') {
 	    Log::do_log('err','Could not encrypt message for moderator %s',$sender);
 	}
-	$param->{'msg'} = $message->get_encrypted_mime_message;
+	$param->{'msg'} = $message->as_entity;
     } else {
 	$param->{'msg'} = $message->get_mime_message;
     }
@@ -2674,7 +2668,7 @@ sub archive_send_last {
     $msg->{'from'}    = tools::decode_header($message, 'From');
     $msg->{'date'}    = tools::decode_header($message, 'Date');
 
-    $msg->{'full_msg'} = $message->{'msg'}->as_string;
+    $msg->{'full_msg'} = $message->as_string; # raw message
 
     my $subject = sprintf 'Archive of %s, last message', $self->name;
     my $param   = {
@@ -5285,13 +5279,12 @@ sub archive_msg {
     my ($self, $message) = @_;
 
     if ($self->is_archived()) {
-
 	my $msgtostore; # Stringified message without metadata
 	if ($message->{'smime_crypted'} and
 	    $message->{'smime_crypted'} eq 'smime_crypted' and
 	    ($self->archive_crypted_msg eq 'original')) {
 	    Log::do_log('debug3', 'Will store encrypted message');
-	    $msgtostore = $message->get_encrypted_message_as_string;
+	    $msgtostore = $message->as_string;
 	} else {
 	    Log::do_log('debug3', 'Will store UNencrypted message');
 	    $msgtostore = $message->get_message_as_string;
@@ -8295,7 +8288,7 @@ sub store_digest {
 	    "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
 	$message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
     }
-    $message_as_string .= $message->{'msg_as_string'}; #without metadata
+    $message_as_string .= $message->as_string; #without metadata
     $message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
 
     # update and unlock current digest message or create it

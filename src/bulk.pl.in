@@ -355,7 +355,7 @@ while (!$end) {
 	    }
 
 	    # Get message as string without meta information.
-	    $messageasstring_init = $message->get_encrypted_message_as_string;
+	    $messageasstring_init = $message->as_string;
 
 	    Log::do_log('notice',
 		'Start sending message "%s" (key "%s") to list "%s@%s" (priority %s) (starting %s seconds after scheduled expedition date)',
@@ -401,14 +401,14 @@ while (!$end) {
 		    'noxsympato' => 'noxsympato',
 		    'list_object' => $list,
 		});
-		my $entity = $message->{'msg'};
+		my $entity = $message->as_entity;
 		my $notification_id;
 		my $return_path;
 
 		if ($bulk->{'tracking'} eq 'dsn' or
 		    $bulk->{'tracking'} eq 'mdn') {
 		    # tracking by MDN required tracking by DSN to
-		    my $msgid = $message->get_header('Message-Id');
+		    my $msgid = $message->get_msg_id;
 		    $notification_id =
 			tracking::find_notification_id_by_message(
 			    $rcpt, $msgid, $listname, $robot_id
@@ -429,7 +429,7 @@ while (!$end) {
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    if ($message->personalize($list, $rcpt)) {
-			$messageasstring = $message->{'msg_as_string'};
+			$messageasstring = $message->as_string;
 		    } else {	
 			Log::do_log('err', 'Erreur d appel personalize()');
 			$list->robot->send_notify_to_listmaster(

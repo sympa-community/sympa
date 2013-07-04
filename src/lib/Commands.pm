@@ -2661,7 +2661,7 @@ sub distribute {
 	return 'msg_not_found';
     }
 
-    my $msg = $message->{'msg'};
+    my $msg = $message->as_entity;
     my $hdr = $msg->head;
 
     my $msg_id     = $message->get_header('Message-Id');
@@ -2763,7 +2763,7 @@ sub confirm {
 	return 'msg_not_found';
     }
 
-    my $msg  = $message->{'msg'};
+    my $msg  = $message->as_entity;
     my $list = $message->list;
     Language::SetLang($list->lang);
 
@@ -2771,8 +2771,8 @@ sub confirm {
     my $bytes = $message->{'size'};
     my $hdr   = $msg->head;
 
-    my $msgid      = $message->get_header('Message-Id');
-    my $msg_string = $message->{'msg'}->as_string;
+    my $msgid      = $message->get_msg_id;
+    my $msg_string = $message->as_string; # raw message
 
     my $result = Scenario::request_action(
 	$list, 'send', 'md5',
@@ -3029,7 +3029,7 @@ sub reject {
 	return 'wrong_auth';
     }
 
-    my $msg          = $message->{'msg'};
+    my $msg          = $message->as_entity;
     my $bytes        = $message->{'size'};
     my $customheader = $list->custom_header;
 
@@ -3040,7 +3040,7 @@ sub reject {
 	my %context;
 	$context{'subject'} = &tools::decode_header($message, 'Subject');
 	$context{'rejected_by'} = $sender;
-	$context{'editor_msg_body'} = $editor_msg->{'msg'}->body_as_string
+	$context{'editor_msg_body'} = $editor_msg->as_entity->body_as_string
 	    if ($editor_msg);
 
 	&Log::do_log('debug', 'message %s from sender %s rejected by %s',
@@ -3141,7 +3141,7 @@ sub modindex {
 	$message = Message->new($message_in_spool)
 	    if $message_in_spool;
 	next unless $message;
-	push @spool, $message->get_encrypted_mime_message;
+	push @spool, $message->as_entity;
 	$n++;
     }
 

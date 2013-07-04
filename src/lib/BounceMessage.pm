@@ -43,7 +43,7 @@ sub new {
 
     return undef
 	unless $self = $pkg->SUPER::new($datas);
-    unless ($self->get_encrypted_message_as_string) {
+    unless ($self->as_string) {
 	Log::do_log('notice',
 	    'Ignoring bounce %s, because it is empty', $self);
 	return undef;
@@ -993,17 +993,21 @@ sub anabounce {
 
     Log::do_log ('debug2','Analyzing bounce %s', $self->get_msg_id); 
 
-    # this old subroutine do not use message object but parse the message itself !!! It should be rewrited
-    # a temporary file is used when introducing database spool. It should be rewrited! It should be rewrited! It should be rewrited! Yes, tt should be rewrited !
+    # this old subroutine do not use message object but parse the message
+    # itself!!! It should be rewrited.
+    # a temporary file is used when introducing database spool. It should be
+    # rewrited! It should be rewrited! It should be rewrited! Yes, it should
+    # be rewrited!
     my $tmpfile = Site->tmpdir.'/bounce.'.$$ ;
-    unless (open (BOUNCE,"> $tmpfile")){
-Log::do_log('err',"could not create $tmpfile");
+    my $fh;
+    unless (open $fh, '>', $tmpfile) {
+	Log::do_log('err', 'Could not create %s', $tmpfile);
 	return undef;
     }
-    print BOUNCE     $self->{'msg'}->as_string;
-    close BOUNCE;
-    unless (open (BOUNCE,"$tmpfile")){
-Log::do_log('err',"could not read $tmpfile");
+    print $fh $self->as_string; # raw message
+    close $fh;
+    unless (open BOUNCE, '<', $tmpfile) {
+	Log::do_log('err', 'Could not read %s', $tmpfile);
 	return undef;
     }
 

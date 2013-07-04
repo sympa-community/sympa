@@ -720,7 +720,7 @@ sub sending {
 	# Get message as string without meta information.
 	my $string_to_send;
 	if ($message->is_signed) {
-	    $string_to_send = $message->get_encrypted_message_as_string;
+	    $string_to_send = $message->as_string;
 	} else {
 	    $string_to_send = $message->get_mime_message->as_string; #XXX
 	}

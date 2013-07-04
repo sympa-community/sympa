@@ -128,7 +128,7 @@ sub scan_dir_archive {
 	$msg->{'from'}    = tools::decode_header($message, 'From');
 	$msg->{'date'}    = tools::decode_header($message, 'Date');
 
-	$msg->{'full_msg'} = $message->{'msg'}->as_string;
+	$msg->{'full_msg'} = $message->as_string; # raw message
 
 	Log::do_log('debug', 'Adding message %s in archive to send',
 	    $msg->{'subject'});
@@ -288,20 +288,20 @@ sub clean_archived_message {
     my $robot = shift;
     my $input = shift;
     my $output = shift;
-    my $msg = Message->new({'file' => $input, 'noxsympato' => 1});
+    my $message = Message->new({'file' => $input, 'noxsympato' => 1});
 
-    if ($msg->clean_html($robot)) {
+    if ($message->clean_html($robot)) {
 	if (open TMP, '>', $output) {
-	    print TMP $msg->get_encrypted_message_as_string;
+	    print TMP $message->as_string;
 	    close TMP;
-	}else{
-	    &Log::do_log('err',
-		'Unable to create a tmp file to write clean HTML to file %s',
+	} else {
+	    Log::do_log('err',
+		'Unable to create a temporary file %s to write clean HTML',
 		$output);
 	    return undef;
 	}
-    }else{
-	Log::do_log('err','HTML cleaning in file %s failed.', $output);
+    } else {
+	Log::do_log('err', 'HTML cleaning in file %s failed.', $output);
 	return undef;
     }
 }
