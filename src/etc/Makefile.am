@@ -93,6 +93,7 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/global_remind.listmaster \
 		      scenari/info.open \
 		      scenari/info.private \
+		      scenari/info.conceal \
 		      scenari/invite.closed \
 		      scenari/invite.owner \
 		      scenari/invite.private \
