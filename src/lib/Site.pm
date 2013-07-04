@@ -741,7 +741,7 @@ sub send_dsn {
     ## Delivery result, "failed" or "delivered".
     my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
 
-    my $header = $message->{'msg'}->head->as_string;
+    my $header = $message->as_entity->head->as_string;
 
     Language::PushLang('en');
     my $date = POSIX::strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime time);

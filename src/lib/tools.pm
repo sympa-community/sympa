@@ -985,9 +985,9 @@ sub dkim_sign {
     }
     unlink $temporary_keyfile;
 
-    $message->{'msg'}->head->add('DKIM-signature', $dkim->signature->as_string);
+    $message->as_entity->head->add('DKIM-signature', $dkim->signature->as_string);
 
-    return $message->{'msg'}->head->as_string."\n".&Message::get_body_from_msg_as_string($msg_as_string);
+    return $message->as_entity->head->as_string."\n".&Message::get_body_from_msg_as_string($msg_as_string);
 }
 
 ## Make a multipart/alternative, a singlepart
@@ -3449,7 +3449,7 @@ sub decode_header {
 
     my $head;
     if (ref $msg and $msg->isa('Message')) {
-	$head = $msg->{'msg'}->head;
+	$head = $msg->as_entity->head;
     } elsif (ref $msg eq 'MIME::Entity') {
 	$head = $msg->head;
     } elsif (ref $msg eq 'MIME::Head' or ref $msg eq 'Mail::Header') {

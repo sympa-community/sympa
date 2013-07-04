@@ -1838,7 +1838,7 @@ sub process_message {
     }
 
     # anti-virus
-    my $rc = &tools::virus_infected($message->{'msg'});
+    my $rc = tools::virus_infected($message->as_entity);
     if ($rc) {
 	if ($robot->antivirus_notify eq 'sender') {
 	    unless (
@@ -2064,10 +2064,10 @@ sub DoForward {
 	croak 'bug in logic.  Ask developer';
     }
 
-    my $msg        = $message->{'msg'};
+    my $msg        = $message->as_entity;
     my $hdr        = $msg->head;
     my $messageid  = $message->get_msg_id;
-    my $msg_string = $msg->as_string;
+    my $msg_string = $message->as_string; # raw message
     my $sender     = $message->get_sender_email;
 
     if ($message->{'spam_status'} and $message->{'spam_status'} eq 'spam') {
@@ -2258,11 +2258,11 @@ sub DoMessage {
     my $list  = $message->list;
     my $robot = $message->robot;
 
-    my $hdr = $message->{'msg'}->head;
+    my $hdr = $message->as_entity->head;
 
     my $messageid  = $message->get_msg_id;
-    my $msg        = $message->{'msg'};
-    my $msg_string = $msg->as_string;
+    my $msg        = $message->as_entity;
+    my $msg_string = $message->as_string; # raw message
 
     my $sender = $message->get_sender_email;
 
@@ -2300,7 +2300,7 @@ sub DoMessage {
     # Reject messages with commands
     if (Site->misaddressed_commands =~ /reject/i) {
 	## Check the message for commands and catch them.
-	if (tools::checkcommand($message->{'msg'}, $sender, $robot)) {
+	if (tools::checkcommand($message->as_entity, $sender, $robot)) {
 	    Log::do_log('err', 'Found command in message, ignoring message');
 	    report::reject_report_msg('user', 'routing_error', $sender,
 		{'message' => $message},
@@ -2380,7 +2380,7 @@ sub DoMessage {
 	} else {
 	    # not already tagged
 	    $context->{'topic_auto'} =
-		$list->automatic_tag($message->{'msg'}, $robot->name);
+		$list->automatic_tag($message->as_entity, $robot->name);
 	}
 
 	$context->{'topic'} = $context->{'topic_auto'} ||
@@ -2792,7 +2792,7 @@ sub DoCommand {
     my $list = $message->list;
     my $robot = $message->robot;
 
-    my $msg  = $message->{'msg'};
+    my $msg  = $message->as_entity;
 
     ## boolean
     my $cmd_found = 0;
@@ -2871,7 +2871,7 @@ sub DoCommand {
     }
 
     Log::do_log('info',
-	'Processing message %s for %s function "sympa" with priority %s',
+	'Processing message %s for %s function sympa with priority %s',
 	$message, $robot, $message->{'priority'}
     );
 
