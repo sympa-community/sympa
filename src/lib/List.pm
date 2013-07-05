@@ -1454,7 +1454,7 @@ sub distribute_msg {
 	$message->{'smime_crypted'}, $apply_dkim_signature
     );
 
-    my $hdr = $message->as_entity->head;
+    my $hdr = $message->as_entity()->head;
     my ($name, $host) = ($self->name, $self->host);
 
     ## Update the stats, and returns the new X-Sequence, if any.
@@ -1522,7 +1522,7 @@ sub distribute_msg {
 	$tag_regexp =~ s/\s+/\\s+/g;
 
 	## Add subject tag
-	$message->as_entity->head->delete('Subject');
+	$message->as_entity()->head->delete('Subject');
 	my $parsed_tag;
 	&tt2::parse_tt2(
 	    {   'list' => {
@@ -1577,7 +1577,7 @@ sub distribute_msg {
 		) .
 		' ' . $after_tag;
 	}
-	$message->as_entity->head->add('Subject', $subject_field);
+	$message->as_entity()->head->add('Subject', $subject_field);
     }
 
     ## Prepare tracking if list config allow it
@@ -1816,10 +1816,10 @@ sub prepare_messages_for_digest {
 	$msg->{'from'} = $from;
 	$msg->{'date'} = $date;
 
-	$msg->{'full_msg'} = $mail->as_string;
-	$msg->{'body'} = $mail->as_entity->body_as_string;
+	$msg->{'full_msg'} = $mail->as_string();
+	$msg->{'body'} = $mail->as_entity()->body_as_string();
 	$msg->{'plain_body'} =
-	    $mail->as_entity->PlainDigest::plain_body_as_string();
+	    $mail->as_entity()->PlainDigest::plain_body_as_string();
 
 	$msg->{'month'} = &POSIX::strftime("%Y-%m", localtime(time)); ## Should be extracted from Date:
 	$msg->{'message_id'} =
@@ -2003,7 +2003,7 @@ sub send_msg {
 	$message->{'smime_crypted'},
 	$apply_dkim_signature
     );
-    my $hdr = $message->as_entity->head;
+    my $hdr = $message->as_entity()->head;
     my $original_message_id = $message->get_msg_id;
     my $name                = $self->name;
     my $robot               = $self->domain;
@@ -2465,7 +2465,7 @@ sub send_to_editor {
 	    unless($message->{'smime_crypted'} eq 'smime_crypted') {
 		Log::do_log('err','Could not encrypt message for moderator %s',$recipient);
 	    }
-	    $param->{'msg'} = $message->as_entity;
+	    $param->{'msg'} = $message->as_entity();
 	} else {
 	    $param->{'msg'} = $message->get_mime_message; #FIXME
 	}
@@ -2565,7 +2565,7 @@ sub send_auth {
 	unless($message->{'smime_crypted'} eq 'smime_crypted') {
 	    Log::do_log('err','Could not encrypt message for moderator %s',$sender);
 	}
-	$param->{'msg'} = $message->as_entity;
+	$param->{'msg'} = $message->as_entity();
     } else {
 	$param->{'msg'} = $message->get_mime_message;
     }
@@ -2668,7 +2668,7 @@ sub archive_send_last {
     $msg->{'from'}    = tools::decode_header($message, 'From');
     $msg->{'date'}    = tools::decode_header($message, 'Date');
 
-    $msg->{'full_msg'} = $message->as_string; # raw message
+    $msg->{'full_msg'} = $message->as_string(); # raw message
 
     my $subject = sprintf 'Archive of %s, last message', $self->name;
     my $param   = {
@@ -5284,7 +5284,7 @@ sub archive_msg {
 	    $message->{'smime_crypted'} eq 'smime_crypted' and
 	    ($self->archive_crypted_msg eq 'original')) {
 	    Log::do_log('debug3', 'Will store encrypted message');
-	    $msgtostore = $message->as_string;
+	    $msgtostore = $message->as_string();
 	} else {
 	    Log::do_log('debug3', 'Will store UNencrypted message');
 	    $msgtostore = $message->get_message_as_string;
@@ -8288,7 +8288,7 @@ sub store_digest {
 	    "------- THIS IS A RFC934 COMPLIANT DIGEST, YOU CAN BURST IT -------\n\n";
 	$message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
     }
-    $message_as_string .= $message->as_string; #without metadata
+    $message_as_string .= $message->as_string(); #without metadata
     $message_as_string .= sprintf "\n%s\n\n", &tools::get_separator();
 
     # update and unlock current digest message or create it
@@ -10080,10 +10080,10 @@ sub compute_topic {
 
 	# get bodies of any text/* parts, not digging nested subparts.
 	my @parts;
-	if ($message->as_entity->parts) {
-	    @parts = $message->as_entity->parts;
+	if ($message->as_entity()->parts) {
+	    @parts = $message->as_entity()->parts;
 	} else {
-	    @parts = ($message->as_entity);
+	    @parts = ($message->as_entity());
 	}
 	foreach my $part (@parts) {
 	    next unless $part->effective_type =~ /^text\//i;

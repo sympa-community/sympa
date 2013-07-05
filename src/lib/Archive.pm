@@ -128,7 +128,7 @@ sub scan_dir_archive {
 	$msg->{'from'}    = tools::decode_header($message, 'From');
 	$msg->{'date'}    = tools::decode_header($message, 'Date');
 
-	$msg->{'full_msg'} = $message->as_string; # raw message
+	$msg->{'full_msg'} = $message->as_string(); # raw message
 
 	Log::do_log('debug', 'Adding message %s in archive to send',
 	    $msg->{'subject'});
@@ -292,7 +292,7 @@ sub clean_archived_message {
 
     if ($message->clean_html($robot)) {
 	if (open TMP, '>', $output) {
-	    print TMP $message->as_string;
+	    print TMP $message->as_string();
 	    close TMP;
 	} else {
 	    Log::do_log('err',

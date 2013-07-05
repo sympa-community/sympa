@@ -355,7 +355,7 @@ while (!$end) {
 	    }
 
 	    # Get message as string without meta information.
-	    $messageasstring_init = $message->as_string;
+	    $messageasstring_init = $message->as_string();
 
 	    Log::do_log('notice',
 		'Start sending message "%s" (key "%s") to list "%s@%s" (priority %s) (starting %s seconds after scheduled expedition date)',
@@ -401,7 +401,7 @@ while (!$end) {
 		    'noxsympato' => 'noxsympato',
 		    'list_object' => $list,
 		});
-		my $entity = $message->as_entity;
+		my $entity = $message->as_entity();
 		my $notification_id;
 		my $return_path;
 
@@ -418,10 +418,13 @@ while (!$end) {
 		    );
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
 		    if (($message->{'protected'})||($message->{'smime_crypted'})){
-			my $msg_body = &Message::get_body_from_msg_as_string($messageasstring_init);
-			$messageasstring_init = $entity->head->as_string. "\n" . $msg_body; # concat headers from entity with original body
+			# concat headers from entity with original body
+			my $msg_body = Message::get_body_from_msg_as_string(
+			    $messageasstring_init);
+			$messageasstring_init =
+			    $entity->head->as_string() . "\n" . $msg_body;
 		    }else{
-			$messageasstring_init = $entity->as_string;
+			$messageasstring_init = $entity->as_string();
 		    }
 		    # &trace_smime($messageasstring,'tracking');
 		}else{  # VERP
@@ -429,7 +432,7 @@ while (!$end) {
 		}
 		if (($bulk->{'merge'}) && !($message->{'protected'})) {
 		    if ($message->personalize($list, $rcpt)) {
-			$messageasstring = $message->as_string;
+			$messageasstring = $message->as_string();
 		    } else {	
 			Log::do_log('err', 'Erreur d appel personalize()');
 			$list->robot->send_notify_to_listmaster(

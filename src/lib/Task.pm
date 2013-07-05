@@ -194,7 +194,7 @@ sub generate_from_template {
 	&Log::do_log ('notice', "Ignoring creation task request") ;
 	return undef;
     }
-    &Log::do_log('debug2', 'Resulting task_as_string: %s', $self->as_string);
+    Log::do_log('debug2', 'Resulting task_as_string: %s', $self->as_string());
     return 1;
 }
 
@@ -289,7 +289,7 @@ sub stringify_parsed_instructions {
     my $self = shift;
     &Log::do_log('debug2','Resetting messageasstring key of task object from the parsed content of %s',$self->get_description);
 
-    my $new_string = $self->as_string;
+    my $new_string = $self->as_string();
     unless (defined $new_string) {
 	&Log::do_log('err','task %s has no parsed content. Leaving messageasstring key unchanged',$self->get_description);
 	return undef;

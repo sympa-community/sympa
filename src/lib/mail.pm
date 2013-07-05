@@ -481,7 +481,8 @@ sub mail_forward {
 	$rcpt = join (',',@$rcpt);
     }
     $message->{'rcpt'} = $rcpt; #FIXME: no effect
-    $message->set_message_as_string($message->get_mime_message->as_string);
+    #FIXME:
+    $message->set_message_as_string($message->get_mime_message->as_string());
     unless (defined sending(
 	'message' => $message, 'rcpt' => $rcpt, 'from' => $from,
 	'robot' => $robot,
@@ -600,7 +601,7 @@ sub sendto {
 	    }    
 	}
     }else{
-	$message->{'msg_as_string'} = $msg_header->as_string . "\n" . $msg_body;   
+	$message->{'msg_as_string'} = $msg_header->as_string() . "\n" . $msg_body;   
 	my $result = &sending('message' => $message,
 			      'rcpt' => $rcpt,
 			      'from' => $from,
@@ -720,9 +721,9 @@ sub sending {
 	# Get message as string without meta information.
 	my $string_to_send;
 	if ($message->is_signed) {
-	    $string_to_send = $message->as_string;
+	    $string_to_send = $message->as_string();
 	} else {
-	    $string_to_send = $message->get_mime_message->as_string; #XXX
+	    $string_to_send = $message->get_mime_message->as_string(); #FIXME
 	}
 
 	*SMTP = &smtpto($from, $rcpt, $robot);	
@@ -924,7 +925,7 @@ sub reformat_message($;$$) {
     $msg->head->delete("X-Mailer");
     $msg = &fix_part($msg, $parser, $attachments, $defcharset);
     $msg->head->add("X-Mailer", sprintf "Sympa %s", Sympa::Constants::VERSION);
-    return $msg->as_string;
+    return $msg->as_string();
 }
 
 sub fix_part($$$$) {
@@ -973,7 +974,7 @@ sub fix_part($$$$) {
 	return $part if !$bodyh or $bodyh->is_encoded;
 	
 	my $head = $part->head;
-	my $body = $bodyh->as_string;
+	my $body = $bodyh->as_string();
 	my $wrap = $body;
 	if ($head->get('X-Sympa-NoWrap')) { # Need not wrapping
 	    $head->delete('X-Sympa-NoWrap');

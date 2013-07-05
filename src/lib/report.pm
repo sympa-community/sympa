@@ -148,7 +148,7 @@ sub _get_msg_as_hash {
     if (ref($msg_object) =~ /^MIME::Entity/) { ## MIME-ttols object
 	$msg_entity = $msg_object;
     }elsif (ref($msg_object) =~ /^Message/) { ## Sympa's own Message object
-	$msg_entity = $msg_object->as_entity;
+	$msg_entity = $msg_object->as_entity();
     }else {
 	&Log::do_log('err', "reject_report_msg: wrong type for msg parameter");
     }
@@ -169,7 +169,7 @@ sub _get_msg_as_hash {
     chomp $subject if $subject;
     my $msg_id = $head->get('Message-Id');
     chomp $msg_id if $msg_id;
-    $msg_hash = {'full' => $msg_entity->as_string, 
+    $msg_hash = {'full' => $msg_entity->as_string(), 
 		 'body' => $body_as_string,
 		 'from' => $from,
 		 'subject' => $subject,

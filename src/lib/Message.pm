@@ -403,11 +403,11 @@ sub get_header {
     my $field = shift;
     my $sep   = shift;
 
-    my $hdr = $self->as_entity->head;
+    my $hdr = $self->as_entity()->head;
 
     if (defined $sep or wantarray) {
 	my @values = grep { s/\A$field\s*:\s*//i }
-	    split /\n(?![ \t])/, $hdr->as_string;
+	    split /\n(?![ \t])/, $hdr->as_string();
 	if (defined $sep) {
 	    return undef unless @values;
 	    return join $sep, @values;
@@ -433,7 +433,7 @@ sub get_envelope_sender {
 	##   - pipe(8):  Add 'R' in the 'flags=' attributes of master.cf.
 	## - Exim:       Set 'return_path_add' to true with pipe_transport.
 	## - qmail:      Use preline(1).
-	my $headers = $self->as_entity->head->header();
+	my $headers = $self->as_entity()->head->header();
 	my $i = 0;
 	$i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
 	if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
@@ -458,7 +458,7 @@ sub get_sender_email {
     my $self = shift;
 
     unless ($self->{'sender'}) {
-	my $hdr = $self->as_entity->head;
+	my $hdr = $self->as_entity()->head;
 	my $sender = undef;
 	my $gecos = undef;
 	foreach my $field (split /[\s,]+/, Site->sender_headers) {
@@ -511,7 +511,7 @@ sub get_subject {
     my $self = shift;
 
     unless ($self->{'decoded_subject'}) {
-	my $hdr = $self->as_entity->head;
+	my $hdr = $self->as_entity()->head;
 	## Store decoded subject and its original charset
 	my $subject = $hdr->get('Subject');
 	if (defined $subject and $subject =~ /\S/) {
@@ -809,7 +809,7 @@ sub add_topic {
     my ($self,$topic) = @_;
 
     $self->{'topic'} = $topic;
-    my $hdr = $self->as_entity->head;
+    my $hdr = $self->as_entity()->head;
     $hdr->add('X-Sympa-Topic', $topic);
 
     return 1;
@@ -876,9 +876,9 @@ sub clean_html {
     my $self = shift;
     my $robot = shift;
     my $new_msg;
-    if ($new_msg = _fix_html_part($self->as_entity, $robot)) {
+    if ($new_msg = _fix_html_part($self->as_entity(), $robot)) {
 	$self->{'msg'} = $new_msg;
-	$self->{'msg_as_string'} = $new_msg->as_string;
+	$self->{'msg_as_string'} = $new_msg->as_string();
 	return 1;
     }
     return 0;
@@ -901,7 +901,7 @@ sub _fix_html_part {
 	# Encoded body or null body won't be modified.
 	return $part if !$bodyh or $bodyh->is_encoded;
 
-	my $body = $bodyh->as_string;
+	my $body = $bodyh->as_string();
 	# Re-encode parts to UTF-8, since StripScripts cannot handle texts
 	# with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
 	my $cset = MIME::Charset->new($part->head->mime_attr('Content-Type.Charset') || '');
@@ -913,7 +913,7 @@ sub _fix_html_part {
 		if $charset;
 	}
 	if ($cset->decoder and
-	    $cset->as_string ne 'UTF-8' and $cset->as_string ne 'US-ASCII') {
+	    $cset->as_string() ne 'UTF-8' and $cset->as_string() ne 'US-ASCII') {
 	    $cset->encoder('UTF-8');
 	    $body = $cset->encode($body);
 	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
@@ -975,7 +975,7 @@ sub smime_decrypt {
 	Log::do_log('info', 'Can\'t store message in file %s',$temporary_file);
 	return undef;
     }
-    $self->as_entity->print(\*MSGDUMP);
+    $self->as_entity()->print(\*MSGDUMP);
     close(MSGDUMP);
     
     my $pass_option;
@@ -1052,7 +1052,7 @@ sub smime_decrypt {
 	    $predefined_headers->{lc $header} = 1;
 	}
     }
-    foreach my $header (split /\n(?![ \t])/, $self->as_entity->head->as_string) {
+    foreach my $header (split /\n(?![ \t])/, $self->as_entity()->head->as_string()) {
 	next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
 	my ($tag, $val) = ($1, $2);
 	unless ($predefined_headers->{lc $tag}) {
@@ -1067,7 +1067,7 @@ sub smime_decrypt {
     }
 
     ## Now add headers to message as string
-    $self->{'decrypted_msg_as_string'}  = $self->{'decrypted_msg'}->head->as_string."\n".$self->{'decrypted_msg_as_string'};
+    $self->{'decrypted_msg_as_string'} = $self->{'decrypted_msg'}->head->as_string() . "\n" . $self->{'decrypted_msg_as_string'};
     
     $self->{'smime_crypted'} = 'smime_crypted';
 
@@ -1160,14 +1160,14 @@ sub smime_encrypt {
 	    $predefined_headers->{lc $header} = 1 
 	        if ($self->{'crypted_message'}->head->get($header)) ;
 	}
-	foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string) {
+	foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string()) {
 	    next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
 	    my ($tag, $val) = ($1, $2);
 	    $self->{'crypted_message'}->head->add($tag, $val) 
 	        unless $predefined_headers->{lc $tag};
 	}
 	$self->{'msg'} = $self->{'crypted_message'};
-	$self->set_message_as_string($self->{'crypted_message'}->as_string);
+	$self->set_message_as_string($self->{'crypted_message'}->as_string());
 	$self->{'smime_crypted'} = 1;
     }else{
 	&Log::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
@@ -1252,15 +1252,16 @@ sub smime_sign {
 	$predefined_headers->{lc $header} = 1
 	    if ($signed_msg->head->get($header));
     }
-    foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string) {
+    foreach my $header (split /\n(?![ \t])/, $self->get_mime_message->head->as_string()) {
 	next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
 	my ($tag, $val) = ($1, $2);
 	$signed_msg->head->add($tag, $val)
 	    unless $predefined_headers->{lc $tag};
     }
     ## Keeping original message string in addition to updated headers.
-    my @new_message = split('\n\n',$new_message_as_string,2);
-    $new_message_as_string = $signed_msg->head->as_string.'\n\n'.$new_message[1];
+    my @new_message = split /\n\n/, $new_message_as_string, 2;
+    $new_message_as_string =
+	$signed_msg->head->as_string() . '\n\n' . $new_message[1];
 	
     $self->{'msg'} = $signed_msg;
     $self->{'msg_as_string'} = $new_message_as_string; #FIXME
@@ -1453,7 +1454,7 @@ sub get_mime_message {
 }
 
 #sub get_encrypted_mime_message()
-#DEPRECATED: Use as_entity.
+#DEPRECATED: Use as_entity().
 
 =over 4
 
@@ -1512,10 +1513,10 @@ sub reset_message_from_entity {
 	return undef;
     }
     $self->{'msg'} = $entity;
-    $self->{'msg_as_string'} = $entity->as_string;
+    $self->{'msg_as_string'} = $entity->as_string();
     if ($self->is_crypted) {
 	$self->{'decrypted_msg'} = $entity;
-	$self->{'decrypted_msg_as_string'} = $entity->as_string;
+	$self->{'decrypted_msg_as_string'} = $entity->as_string();
     }
     return 1;
 }
@@ -1808,7 +1809,7 @@ sub _append_parts {
 	    my $bodyh = $part->bodyhandle;
 	    if ($bodyh) {
 		return undef if $bodyh->is_encoded;
-		$body = $bodyh->as_string;
+		$body = $bodyh->as_string();
 	    } else {
 		$body = '';
 	    }
@@ -1991,12 +1992,12 @@ sub personalize {
     my $list = shift;
     my $rcpt = shift || undef;
 
-    my $entity = _personalize_entity($self->as_entity, $list, $rcpt);
+    my $entity = _personalize_entity($self->as_entity(), $list, $rcpt);
     unless (defined $entity) {
 	return undef;
     }
     if ($entity) {
-	$self->{'msg_as_string'} = $entity->as_string;
+	$self->{'msg_as_string'} = $entity->as_string();
     }
     return $self;
 }
@@ -2037,7 +2038,7 @@ sub _personalize_entity {
 	if (!$bodyh or $bodyh->is_encoded) {
 	    return $entity;
 	}
-	$body = $bodyh->as_string;
+	$body = $bodyh->as_string();
 	unless (defined $body and length $body) {
 	    return $entity;
 	}
@@ -2077,7 +2078,7 @@ sub _personalize_entity {
 	unless ($newcharset) {    # bug in MIME::Charset?
 	    Log::do_log('err', 'Can\'t determine output charset');
 	    return undef;
-	} elsif ($newcharset ne $in_cset->as_string) {
+	} elsif ($newcharset ne $in_cset->as_string()) {
 	    $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
 	    $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
 
@@ -2260,7 +2261,7 @@ sub prepare_reception_mail {
     if (defined $new_msg) {
 	$self->{'msg'} = $new_msg;
 	$self->{'altered'} = '_ALTERED_';
-	$self->{'msg_as_string'} = $new_msg->as_string;
+	$self->{'msg_as_string'} = $new_msg->as_string();
     } else {
 	Log::do_log('err','Part addition failed');
 	return undef;

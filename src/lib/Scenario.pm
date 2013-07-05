@@ -967,7 +967,7 @@ sub verify {
 		return -1 * $negation;
 	    }
 
-	    $value = $context->{'msg'}->bodyhandle->as_string();
+	    $value = $context->{'msg'}->bodyhandle->as_string()();
 
 	} elsif ($value =~ /\[msg_part\-\>body\]/i) {
 	    unless (defined($context->{'msg'})) {

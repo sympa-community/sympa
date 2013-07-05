@@ -872,8 +872,8 @@ sub remove_invalid_dkim_signature {
 	    return $msg_as_string ;
 	}
 	$entity->head->delete('DKIM-Signature');
-&Log::do_log('debug',"removing invalid DKIM signature header");
-	return $entity->head->as_string."\n".$body_as_string;
+	Log::do_log('debug', 'Removing invalid DKIM signature header');
+	return $entity->head->as_string() . "\n" . $body_as_string;
     }else{
 	return ($msg_as_string); # sgnature is valid.
     }
@@ -985,9 +985,9 @@ sub dkim_sign {
     }
     unlink $temporary_keyfile;
 
-    $message->as_entity->head->add('DKIM-signature', $dkim->signature->as_string);
+    $message->as_entity()->head->add('DKIM-signature', $dkim->signature->as_string());
 
-    return $message->as_entity->head->as_string."\n".&Message::get_body_from_msg_as_string($msg_as_string);
+    return $message->as_entity()->head->as_string() . "\n" . Message::get_body_from_msg_as_string($msg_as_string);
 }
 
 ## Make a multipart/alternative, a singlepart
@@ -2387,7 +2387,7 @@ sub smime_extract_certs {
 	    &Log::do_log('err', 'unable to run openssl pkcs7: %s', $!);
 	    return 0;
 	}
-	print MSGDUMP $mime->bodyhandle->as_string;
+	print MSGDUMP $mime->bodyhandle->as_string();
 	close(MSGDUMP);
 	if ($?) {
 	    &Log::do_log('err', "openssl pkcs7 returned an error: ", $?/256);
@@ -3420,7 +3420,7 @@ sub create_html_part_from_web_page {
 	&Log::do_log('err', 'Unable to convert file %s to a MIME part',$param->{'source'});
 	return undef;
     }
-    return $part->as_string;
+    return $part->as_string();
 }
 
 sub get_children_processes_list {
@@ -3449,7 +3449,7 @@ sub decode_header {
 
     my $head;
     if (ref $msg and $msg->isa('Message')) {
-	$head = $msg->as_entity->head;
+	$head = $msg->as_entity()->head;
     } elsif (ref $msg eq 'MIME::Entity') {
 	$head = $msg->head;
     } elsif (ref $msg eq 'MIME::Head' or ref $msg eq 'Mail::Header') {

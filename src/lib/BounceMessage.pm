@@ -43,7 +43,7 @@ sub new {
 
     return undef
 	unless $self = $pkg->SUPER::new($datas);
-    unless ($self->as_string) {
+    unless ($self->as_string()) {
 	Log::do_log('notice',
 	    'Ignoring bounce %s, because it is empty', $self);
 	return undef;
@@ -521,7 +521,7 @@ sub process_mdn {
 	my $content = $h->get('Content-type');
 	
 	if ($content =~ /message\/disposition-notification/) {
-	    my @report = split(/\n/, $p->bodyhandle->as_string());
+	    my @report = split /\n/, $p->bodyhandle->as_string();
 	    foreach my $line (@report) {
 		$line = lc($line);
 		# Disposition Field MUST be present in a MDN report, possible values : displayed, deleted(rfc3798)
@@ -607,7 +607,7 @@ sub process_email_feedback_report {
 	my $content = $h->get('Content-type');
 	next if ($content =~ /text\/plain/i);		 
 	if ($content =~ /message\/feedback-report/) {
-	    my @report = split(/\n/, $p->bodyhandle->as_string());
+	    my @report = split /\n/, $p->bodyhandle->as_string();
 	    foreach my $line (@report) {
 		$self->{'efr'}{'feedback_type'} = 'abuse' if ($line =~ /Feedback\-Type\:\s*abuse/i);
 		if ($line =~ /Feedback\-Type\:\s*(.*)/i) {
@@ -1004,7 +1004,7 @@ sub anabounce {
 	Log::do_log('err', 'Could not create %s', $tmpfile);
 	return undef;
     }
-    print $fh $self->as_string; # raw message
+    print $fh $self->as_string(); # raw message
     close $fh;
     unless (open BOUNCE, '<', $tmpfile) {
 	Log::do_log('err', 'Could not read %s', $tmpfile);
