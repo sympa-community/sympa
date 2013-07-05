@@ -240,8 +240,10 @@ sub load {
 	    my ($k, $v) = ($1, $2);
 	    next unless length $v;
 
-	    if ($k eq 'X-Sympa-To') {
+	    if ($k eq 'X-Sympa-To') { # obsoleted; for migration
 		$self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
+	    } elsif ($k eq 'X-Sympa-Checksum') { # obsoleted; for migration
+		$self->{'checksum'} = $v;
 	    } elsif ($k eq 'X-Sympa-Family') {
 		$self->{'family'} = $v;
 	    } elsif ($k eq 'X-Sympa-From') {
@@ -280,7 +282,7 @@ sub load {
     $self->check_spam_status;
 
     $self->get_subject;
-    $self->get_recipient;
+#    $self->get_recipient;
     $self->check_dkim_signature;
 
     ## S/MIME
@@ -354,6 +356,9 @@ sub to_string {
     } elsif (defined $self->{'rcpt'} and length $self->{'rcpt'}) {
 	$str .= sprintf "X-Sympa-To: %s\n",
 	    join(',', split(/\s*,\s*/, $self->{'rcpt'}));
+    }
+    if (defined $self->{'checksum'}) {
+	$str .= sprintf "X-Sympa-Checksum: %s\n", $self->{'checksum'};
     }
     if (defined $self->{'family'}) {
 	$str .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
@@ -557,7 +562,7 @@ sub get_family {
     return shift->{'family'};
 }
 
-#FIXME: To: field shouldn't be used.
+## NO LONGER USED.
 sub get_recipient {
     my $self = shift;
 
@@ -815,6 +820,7 @@ sub add_topic {
     return 1;
 }
 
+# Internal use.
 sub set_topic {
     my $self = shift;
     my $topics;
@@ -1503,6 +1509,7 @@ sub set_decrypted_message_as_string {
     $self->{'decrypted_msg_as_string'} = $param->{'new_message_as_string'};
 }
 
+# Internal use.
 sub reset_message_from_entity {
     my $self = shift;
     my $entity = shift;
