@@ -354,8 +354,8 @@ sub request_action {
     $context->{'remote_host'} ||= 'unknown_host';
     $context->{'robot_domain'} = $robot->domain;
     $context->{'robot_object'} = $robot;
-    $context->{'msg'}          = $context->{'message'}->{'msg'}
-	if (defined $context->{'message'});
+    $context->{'msg'}          = $context->{'message'}->as_entity()
+	if defined $context->{'message'};
     $context->{'msg_encrypted'} = 'smime'
 	if (defined $context->{'message'} &&
 	defined $context->{'message'}->{'smime_crypted'} &&
@@ -967,7 +967,7 @@ sub verify {
 		return -1 * $negation;
 	    }
 
-	    $value = $context->{'msg'}->bodyhandle->as_string()();
+	    $value = $context->{'msg'}->bodyhandle->as_string();
 
 	} elsif ($value =~ /\[msg_part\-\>body\]/i) {
 	    unless (defined($context->{'msg'})) {
