@@ -703,6 +703,7 @@ our @params = (
 	'default'    => Sympa::Constants::SPOOLDIR . '/automatic',
 	'gettext_id' => 'Directory for automatic list creation spool',
 	'file'       => 'sympa.conf',
+	'version_validity' => '6.3',	# valid before version 6.3.
 	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'            => 'sleep',
