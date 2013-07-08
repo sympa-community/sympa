@@ -27,33 +27,7 @@ our @ISA = qw(SympaspoolClassic);
 
 sub new {
     Log::do_log('debug2', '(%s, %s)', @_);
-    return shift->SUPER::new('msg', shift);
-}
-
-sub get_next_file_to_process {
-    Log::do_log('debug3', '(%s)', @_);
-    my $self = shift;
-
-    my $highest_priority = 'z'; ## lowest priority
-    my $file_to_process;
-
-    ## Search file with highest priority
-    foreach my $key (@{$self->{'spool_files_list'}}) {
-	next unless $self->is_readable($key);
-
-	my $data = {};
-	unless ($self->is_relevant($key) and
-	    $self->analyze_file_name($key, $data)) {
-	    $self->move_to_bad($key);
-	    next;
-	}
-
-	if (ord($data->{'priority'}) < ord($highest_priority)) {
-	    $highest_priority = $data->{'priority'};
-	    $file_to_process = $key;
-	}
-    } ## END of spool lookup
-    return $file_to_process;
+    return shift->SUPER::new('msg', shift, 'sortby' => 'priority');
 }
 
 sub is_relevant {

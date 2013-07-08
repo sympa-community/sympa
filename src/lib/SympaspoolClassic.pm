@@ -18,6 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses>.
 
+=head1 NAME
+
+SympaspoolClassic - Classic spool
+
+=head1 DESCRIPTION
+
+This class implements a spool based on filesystem.
+
+=cut
+
 package SympaspoolClassic;
 
 use strict;
@@ -38,10 +48,25 @@ our %classes = (
 		'mod' => 'KeySpool',
 		);
 
+=head1 CLASS METHODS
+
+=over 4
+
+=item new ( NAME, STATUS, OPTIONS... )
+
+I<Constructor>.
+Creates a new L<SympaspoolClassic> object.
+
+XXX @todo doc
+
+=back
+
+=cut
+
 ## Creates an object.
 sub new {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my($pkg, $spoolname, $selection_status) = @_;
+    my ($pkg, $spoolname, $selection_status, %opts) = @_;
     my $spool = {};
 
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(mod)|(msg)|(outgoing)|(automatic)|(subscribe)|(signoff)|(topic)|(task)$/){
@@ -56,6 +81,10 @@ sub new {
     if ($spool->{'selection_status'} and $spool->{'selection_status'} eq 'bad') {
 	$spool->{'dir'} .= '/bad';
     }
+
+    $spool->{'sortby'} = $opts{'sortby'} if $opts{'sortby'};
+    $spool->{'way'} = $opts{'way'} if $opts{'way'};
+
     Log::do_log('debug','Spool to scan "%s"',$spool->{'dir'});
     bless $spool, $pkg;
     $spool->create_spool_dir;
@@ -81,6 +110,17 @@ sub count {
     return ($self->get_content({'selection'=>'count'}));
 }
 
+=over 4
+
+=item get_content ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
+
 #######################
 #
 #  get_content return the content an array of hash describing the spool content
@@ -91,22 +131,51 @@ sub get_content {
     my $param = shift || {};
 
     my $perlselector = _perlselector($param->{'selector'}) || '1';
+    my $perlcomparator =
+	_perlcomparator($param->{'sortby'}, $param->{'way'}) ||
+	_perlcomparator($self->{'sortby'}, $self->{'way'});
+    my $offset = $param->{'offset'} || 0;
+    my $page_size = $param->{'page_size'};
 
     my @messages;
     foreach my $key ($self->get_files_in_spool) {
-	next unless $self->is_relevant($key);
-
-	my $item = $self->parse($key);
+	my $item = $self->parse_1($key);
 	next unless $item;
-	next unless eval $perlselector;
+	my $cmp = eval $perlselector;
 	if ($@) {
 	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
 	    next;
 	}
+	next unless $cmp;
 	push @messages, $item;
     }
 
-    return @messages;
+    if ($perlcomparator) {
+	my @sorted = eval sprintf 'sort { %s } @messages', $perlcomparator;
+	if ($@) {
+	    Log::do_log('err', 'Could not sort messages: %s', $@);
+	} else {
+	    @messages = @sorted;
+	}
+    }
+
+    my $end;
+    if ($page_size) {
+	$end = $offset + $page_size;
+    } else {
+	$end = scalar @messages;
+    }
+
+    my @ret = ();
+    my $i = 0;
+    foreach my $item (@messages) {
+	last if $end <= $i;
+	next unless $self->parse_2($item->{'messagekey'}, $item);
+	push @ret, $item
+	    if $offset <= $i;
+	$i++;
+    }
+    return @ret;
 }
 
 sub get_count {
@@ -115,6 +184,17 @@ sub get_count {
     my @messages = $self->get_content($param);
     return $#messages+1;
 }
+
+=over 4
+
+=item next ( )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
 
 #######################
 #
@@ -125,24 +205,24 @@ sub next {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    my $key;
-    my $message;
+    my $data;
 
     unless($self->refresh_spool_files_list) {
 	Log::do_log('err', 'Unable to refresh spool %s files list', $self);
 	return undef;
     }
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
-    return 0 unless $key = $self->get_next_file_to_process;
-    unless($message = $self->parse($key)) {
-	$self->move_to_bad($key);
+    return 0 unless $data = $self->get_next_file_to_process;
+    unless ($self->parse_2($data->{'messagekey'}, $data)) {
+	$self->move_to_bad($data->{'messagekey'});
 	return undef;
     }
-##    Log::do_log('trace', 'Will return file %s', $key);
-    return $message;
+##    Log::do_log('trace', 'Will return file %s', $data->{'messagekey'});
+    return $data;
 }
 
-sub parse {
+#FIXME: This would be replaced by Message::new().
+sub parse_1 {
     my $self = shift;
     my $key  = shift;
 
@@ -156,8 +236,25 @@ sub parse {
 	'file' => $self->{'dir'} . '/' . $key,
 	'messagekey' => $key,
     };
-    unless($self->analyze_file_name($key, $data)) {
-	$self->move_to_bad($key);
+
+    unless ($self->is_relevant($key)) {
+	return undef;
+    }
+    unless ($self->analyze_file_name($key, $data)) {
+	return undef;
+    }
+    return $data;
+}
+
+#FIXME: This would be replaced by Message::load().
+sub parse_2 {
+    my $self = shift;
+    my $key  = shift;
+    my $data = shift;
+
+    unless ($key) {
+	Log::do_log('err',
+	    'Unable to find out which file to process');
 	return undef;
     }
 
@@ -173,10 +270,30 @@ sub get_next_file_to_process {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
+    my $perlcomparator = _perlcomparator($self->{'sortby'}, $self->{'way'});
+
+    my $data = undef;
     foreach my $key (@{$self->{'spool_files_list'}}) {
-	return $key if $self->is_readable($key);
+	next unless $self->is_readable($key);
+	my $next_data = $self->parse_1($key);
+	next unless $next_data;
+	return $next_data unless $perlcomparator;
+
+	unless ($data) {
+	    $data = $next_data;
+	    next;
+	}
+	my ($a, $b) = ($data, $next_data);
+	my $cmp = eval $perlcomparator;
+	if ($@) {
+	    Log::do_log('err', 'Could not compare messages: %s', $@);
+	    return $data;
+	}
+	if ($cmp > 0) {
+	    $data = $next_data;
+	}
     }
-    return undef;
+    return $data;
 }
 
 sub is_readable {
@@ -356,6 +473,17 @@ sub create_spool_dir {
     }
 }
 
+=over 4
+
+=item move_to_bad ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
+
 sub move_to_bad {
     Log::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
@@ -374,6 +502,17 @@ sub move_to_bad {
     $self->unlock_message($key);
     return 1;
 }
+
+=over 4
+
+=item get_message ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
 
 #################"
 # return one message from related spool using a specified selector
@@ -419,6 +558,17 @@ sub update {
     croak 'Not implemented yet';
 }
 
+=over 4
+
+=item store ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
+
 ################"
 # store a message in spool 
 #
@@ -456,6 +606,17 @@ sub get_storage_name {
     return $filename;
 }
 
+=over 4
+
+=item remove_message ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
+
 ################"
 # remove a message in database spool using (messagekey,list,robot) which are a unique id in the spool
 #
@@ -470,6 +631,17 @@ sub remove_message {
     }
     return 1;
 }
+
+=over 4
+
+=item clean ( OPTIONS... )
+
+I<Instance method>.
+XXX @todo doc
+
+=back
+
+=cut
 
 ################"
 # Clean a spool by removing old messages
@@ -541,6 +713,26 @@ sub _perlselector {
     return join ' and ', @perl_clause;
 }
 
+sub _perlcomparator {
+    my $orderby = shift;
+    my $way = shift;
+
+    return undef unless $orderby;
+
+    if ($orderby eq 'date' or $orderby eq 'size') {
+	if ($way and $way eq 'desc') {
+	    return sprintf '$b->{"%s"} <=> $a->{"%s"}', $orderby, $orderby;
+	} else {
+	    return sprintf '$a->{"%s"} <=> $b->{"%s"}', $orderby, $orderby;
+	}
+    } else {
+	if ($way and $way eq 'desc') {
+	    return sprintf '$b->{"%s"} cmp $a->{"%s"}', $orderby, $orderby;
+	} else {
+	    return sprintf '$a->{"%s"} cmp $b->{"%s"}', $orderby, $orderby;
+	}
+    }
+}
 
 ## Get unique ID
 sub get_id {
