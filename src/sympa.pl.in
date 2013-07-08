@@ -2088,7 +2088,7 @@ sub DoForward {
 
     my @rcpt;
     if ($function eq 'listmaster') {
-	@rcpt = @{$robot->listmasters};
+	@rcpt = @{$robot->listmasters || Site->listmasters || []};
 	Log::do_log('notice',
 	    'Warning : no listmaster defined in robot.conf for robot %s nor sympa.conf',
 	    $robot)
@@ -2159,7 +2159,7 @@ sub DoForward {
 		{   'robot'        => $robot->name,
 		    'list'         => $list->name,
 		    'action'       => 'DoForward',
-		    'parameters'   => $list->name . ",$function",
+		    'parameters'   => $function,
 		    'target_email' => '',
 		    'msg_id'       => $messageid,
 		    'status'       => 'error',
@@ -2172,6 +2172,9 @@ sub DoForward {
 	    return undef;
 	}
     }
+
+    my $listname = '';
+    $listname = $list->name if $list;
 
     # my $msg_copy = $msg->dup;
     $message->{'msg'} = $msg;
@@ -2198,9 +2201,9 @@ sub DoForward {
 	);
 	Log::db_log(
 	    {   'robot'        => $robot->name,
-		'list'         => $list->name,
+		'list'         => $listname,
 		'action'       => 'DoForward',
-		'parameters'   => $list->name . ",$function", #FIXME
+		'parameters'   => $function, #FIXME
 		'target_email' => '',
 		'msg_id'       => $messageid,
 		'status'       => 'error',
@@ -2214,9 +2217,9 @@ sub DoForward {
     }
     Log::db_log(
 	{   'robot'        => $robot->name,
-	    'list'         => $list->name,
+	    'list'         => $listname,
 	    'action'       => 'DoForward',
-	    'parameters'   => $list->name . ",$function",
+	    'parameters'   => $function,
 	    'target_email' => '',
 	    'msg_id'       => $messageid,
 	    'status'       => 'success',
