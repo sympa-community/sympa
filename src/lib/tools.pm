@@ -234,11 +234,12 @@ sub sanitize_var {
 				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
 				  'htmlToFilter' => $parameters{'htmlToFilter'},
 				  );
-		}
-		else {
-		    if (defined $parameters{'var'}->[$index]) {
-			$parameters{'var'}->[$index] = &escape_html($parameters{'var'}->[$index]);
-		    }
+		} elsif (ref($parameters{'var'}->[$index])) {
+		    $parameters{'var'}->[$index] =
+			ref($parameters{'var'}->[$index]);
+		} elsif (defined $parameters{'var'}->[$index]) {
+		    $parameters{'var'}->[$index] =
+			escape_html($parameters{'var'}->[$index]);
 		}
 	    }
 	}
@@ -251,16 +252,20 @@ sub sanitize_var {
 				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
 				  'htmlToFilter' => $parameters{'htmlToFilter'},
 				  );
-		}
-		else {
-		    if (defined $parameters{'var'}->{$key}) {
-			unless ($parameters{'htmlAllowedParam'}{$key}||$parameters{'htmlToFilter'}{$key}) {
-			    $parameters{'var'}->{$key} = &escape_html($parameters{'var'}->{$key});
-			}
-			if ($parameters{'htmlToFilter'}{$key}) {
-			    $parameters{'var'}->{$key} = &sanitize_html('string' => $parameters{'var'}->{$key},
-									'robot' => $robot );
-			}
+		} elsif (ref($parameters{'var'}->{$key})) {
+		    $parameters{'var'}->{$key} =
+			ref($parameters{'var'}->{$key});
+		} elsif (defined $parameters{'var'}->{$key}) {
+		    unless ($parameters{'htmlAllowedParam'}{$key} or
+			$parameters{'htmlToFilter'}{$key}) {
+			$parameters{'var'}->{$key} =
+			    escape_html($parameters{'var'}->{$key});
+		    }
+		    if ($parameters{'htmlToFilter'}{$key}) {
+			$parameters{'var'}->{$key} = sanitize_html(
+			    'string' => $parameters{'var'}->{$key},
+			    'robot' => $robot
+			);
 		    }
 		}
 		
