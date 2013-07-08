@@ -65,31 +65,36 @@ XXX @todo doc
 
 ## Creates an object.
 sub new {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
     my ($pkg, $spoolname, $selection_status, %opts) = @_;
-    my $spool = {};
 
-    unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(mod)|(msg)|(outgoing)|(automatic)|(subscribe)|(signoff)|(topic)|(task)$/){
-	Log::do_log('err','internal error unknown spool %s',$spoolname);
-	return undef;
-    }
-    $spool->{'spoolname'} = $spoolname;
-    $spool->{'selection_status'} = $selection_status;
+    my $self;
+
     my $queue = 'queue'.$spoolname;
     $queue = 'queue' if ($spoolname eq 'msg');
-    $spool->{'dir'} = Site->$queue;
-    if ($spool->{'selection_status'} and $spool->{'selection_status'} eq 'bad') {
-	$spool->{'dir'} .= '/bad';
+    my $dir;
+    eval { $dir = Site->$queue; }; # check if parameter is defined.
+    if ($@) {
+	Log::do_log('err', 'internal error unknown spool %s', $spoolname);
+	return undef;
+    }
+    if ($selection_status and $selection_status eq 'bad') {
+	$dir .= '/bad';
     }
 
-    $spool->{'sortby'} = $opts{'sortby'} if $opts{'sortby'};
-    $spool->{'way'} = $opts{'way'} if $opts{'way'};
+    $self = bless {
+	'spoolname' => $spoolname,
+	'selection_status' => $selection_status,
+	'dir' => $dir,
+	'sortby' => ($opts{'sortby'} || undef),
+	'way' => ($opts{'way'} || undef),
+    } => $pkg;
 
-    Log::do_log('debug','Spool to scan "%s"',$spool->{'dir'});
-    bless $spool, $pkg;
-    $spool->create_spool_dir;
+    Log::do_log('debug3', 'Spool to scan "%s"', $dir);
 
-    return $spool;
+    $self->create_spool_dir;
+
+    return $self;
 }
 
 # total spool_table count : not object oriented, just a subroutine 
@@ -170,7 +175,10 @@ sub get_content {
     my $i = 0;
     foreach my $item (@messages) {
 	last if $end <= $i;
-	next unless $self->parse_2($item->{'messagekey'}, $item);
+	unless ($self->parse_2($item->{'messagekey'}, $item)) {
+	    $self->move_to_bad($item->{'messagekey'});
+	    next;
+	}
 	push @ret, $item
 	    if $offset <= $i;
 	$i++;
@@ -311,6 +319,7 @@ sub is_relevant {
     return 1;
 }
 
+# NOTE: This should be moved to Message class.
 sub analyze_file_name {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
@@ -590,6 +599,7 @@ sub store {
     return 1;
 }
 
+# NOTE: This should be moved to Message class.
 sub get_storage_name {
     my $self = shift;
     my $filename;
