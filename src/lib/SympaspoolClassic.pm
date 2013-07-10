@@ -136,21 +136,27 @@ sub get_content {
     my $param = shift || {};
 
     my $perlselector = _perlselector($param->{'selector'}) || '1';
-    Log::do_log('trace','selector: %s',$perlselector);
     my $perlcomparator =
 	_perlcomparator($param->{'sortby'}, $param->{'way'}) ||
 	_perlcomparator($self->{'sortby'}, $self->{'way'});
     my $offset = $param->{'offset'} || 0;
     my $page_size = $param->{'page_size'};
 
+    # the fields to select. possible values are :
+    #    -  '*'  is the default .
+    #    -  '*_but_message' mean any field except message which may be huge
+    #       and unuseful while listing spools
+    #    - 'count' mean the selection is just a count.
+    # should be used mainly to select only metadata that may be huge and
+    # may be unuseful
+    my $selection = $param->{'selection'} || '*';
+
     my @messages;
     foreach my $key ($self->get_files_in_spool) {
-	my $item = $self->parse($key);
-	unless ($item) {
-	    $self->move_to_bad($item->{'messagekey'});
-	    next;
-	}
-	##if($self->get_id =~ /subscribe/) { foreach my $line (split '\n',&Dumper($item)) { Log::do_log('trace','%s',$line);} }
+	my $item = $self->parse_1($key);
+	# We don't decide moving erroneous file to bad spool here, since it
+	# may be a temporary file "T.xxx" and so on.
+	next unless $item;
 	my $cmp = eval $perlselector;
 	if ($@) {
 	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
@@ -160,6 +166,7 @@ sub get_content {
 	push @messages, $item;
     }
 
+    # Sort
     if ($perlcomparator) {
 	my @sorted = eval sprintf 'sort { %s } @messages', $perlcomparator;
 	if ($@) {
@@ -169,17 +176,33 @@ sub get_content {
 	}
     }
 
+    # Paging
     my $end;
     if ($page_size) {
 	$end = $offset + $page_size;
+	$end = scalar @messages if $end > scalar @messages
     } else {
 	$end = scalar @messages;
     }
 
+    # Field selection
+    if ($selection eq '*_but_message') {
+	return () if $offset >= scalar @messages;
+	return (splice @messages, $offset, $end - $offset);
+    } elsif ($selection eq 'count') {
+	return 0 if $offset >= scalar @messages;
+	return scalar (splice @messages, $offset, $end - $offset);
+    }
+
+    # Parse
     my @ret = ();
     my $i = 0;
     foreach my $item (@messages) {
 	last if $end <= $i;
+	unless ($self->parse_2($item->{'messagekey'}, $item)) {
+	    $self->move_to_bad($item->{'messagekey'});
+	    next;
+	}
 	push @ret, $item
 	    if $offset <= $i;
 	$i++;
@@ -230,10 +253,8 @@ sub next {
     return $data;
 }
 
-## The aim of this sub is to gather minimal informations regarding a file awaiting in spool.
-## IT MUST REMAIN LIGHTWEIGHT, as it can potentially be applied to all the files awaiting in
-## spool at each loop!
-sub parse {
+#FIXME: This would be replaced by Message::new().
+sub parse_1 {
     my $self = shift;
     my $key  = shift;
 
@@ -254,6 +275,21 @@ sub parse {
     unless ($self->analyze_file_name($key, $data)) {
 	return undef;
     }
+    return $data;
+}
+
+#FIXME: This would be replaced by Message::load().
+sub parse_2 {
+    my $self = shift;
+    my $key  = shift;
+    my $data = shift;
+
+    unless ($key) {
+	Log::do_log('err',
+	    'Unable to find out which file to process');
+	return undef;
+    }
+
     $data->{'messageasstring'} = $self->get_file_content($key);
     unless (defined $data->{'messageasstring'}) {
 	Log::do_log('err', 'Unable to gather content from file %s', $key);
@@ -518,7 +554,7 @@ XXX @todo doc
 sub get_message {
     my $self = shift;
     my $selector = shift;
-    Log::do_log('trace', '(%s, list=%s, robot=%s)',
+    Log::do_log('debug2', '(%s, list=%s, robot=%s)',
 	$self->get_id, $selector->{'list'}, $selector->{'robot'});
     my @messages = $self->get_content({'selector' => $selector});
     return $messages[0];
@@ -601,7 +637,6 @@ sub get_storage_name {
 	Log::do_log('err','Unsufficient parameters provided to create file name');
 	return undef;
     }
-    Log::do_log('trace','Storing in %s',$filename);
     return $filename;
 }
 
