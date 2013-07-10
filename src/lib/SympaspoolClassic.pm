@@ -191,7 +191,8 @@ sub get_content {
 	return (splice @messages, $offset, $end - $offset);
     } elsif ($selection eq 'count') {
 	return 0 if $offset >= scalar @messages;
-	return scalar (splice @messages, $offset, $end - $offset);
+	my @retained_messages = splice @messages, $offset, $end - $offset;
+	return scalar (scalar @retained_messages);
     }
 
     # Parse
