@@ -153,7 +153,7 @@ sub get_content {
 
     my @messages;
     foreach my $key ($self->get_files_in_spool) {
-	my $item = $self->parse_1($key);
+	my $item = $self->parse_filename($key);
 	# We don't decide moving erroneous file to bad spool here, since it
 	# may be a temporary file "T.xxx" and so on.
 	next unless $item;
@@ -199,7 +199,7 @@ sub get_content {
     my $i = 0;
     foreach my $item (@messages) {
 	last if $end <= $i;
-	unless ($self->parse_2($item->{'messagekey'}, $item)) {
+	unless ($self->parse_file_content($item->{'messagekey'}, $item)) {
 	    $self->move_to_bad($item->{'messagekey'});
 	    next;
 	}
@@ -245,7 +245,7 @@ sub next {
     }
     return 0 unless($#{$self->{'spool_files_list'}} > -1);
     return 0 unless $data = $self->get_next_file_to_process;
-    unless ($self->parse_2($data->{'messagekey'}, $data)) {
+    unless ($self->parse_file_content($data->{'messagekey'}, $data)) {
 	$self->move_to_bad($data->{'messagekey'});
 	return undef;
     }
@@ -254,7 +254,7 @@ sub next {
 }
 
 #FIXME: This would be replaced by Message::new().
-sub parse_1 {
+sub parse_filename {
     my $self = shift;
     my $key  = shift;
 
@@ -279,7 +279,7 @@ sub parse_1 {
 }
 
 #FIXME: This would be replaced by Message::load().
-sub parse_2 {
+sub parse_file_content {
     my $self = shift;
     my $key  = shift;
     my $data = shift;
@@ -307,7 +307,7 @@ sub get_next_file_to_process {
     my $data = undef;
     foreach my $key (@{$self->{'spool_files_list'}}) {
 	next unless $self->is_readable($key);
-	my $next_data = $self->parse_1($key);
+	my $next_data = $self->parse_filename($key);
 	next unless $next_data;
 	return $next_data unless $perlcomparator;
 
