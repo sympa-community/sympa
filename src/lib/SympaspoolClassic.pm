@@ -219,6 +219,17 @@ sub get_count {
     return $#messages+1;
 }
 
+# Returns the single file corresponding to the selector.
+sub get_file_key {
+    my $self = shift;
+    my $selector = shift;
+    my $message;
+    unless ($message = $self->get_message($selector)) {
+	return undef;
+    }
+    return $message->{'messagekey'};
+}
+
 =over 4
 
 =item next ( )

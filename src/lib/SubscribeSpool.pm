@@ -45,18 +45,6 @@ sub sub_request_exists {
     return 0;
 }
 
-sub get_subscription_file_key {
-    my $self = shift;
-    my $selector = shift;
-    my $message;
-    unless ($message = $self->get_message($selector)) {
-	Log::do_log('notice', 'no subscription request for %s',
-	    $selector->{'sender'});
-	return undef;
-    }
-    return $message->{'messagekey'};
-}
-
 sub get_subscription_request_details {
     my $self = shift;
     my $string = shift;

@@ -10491,7 +10491,7 @@ sub delete_subscription_request {
     my $removed = 0;
     foreach my $email (@list_of_email) {
 	Log::do_log('debug2','Deleting sub request for %s',$email);
-	if (my $key = $subscription_request_spool->get_subscription_file_key(
+	if (my $key = $subscription_request_spool->get_file_key(
 	    {'list' => $self->name, 'robot' => $self->domain, 'sender' => $email}))
 	    {
 		$removed++
