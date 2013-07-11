@@ -102,9 +102,6 @@ sub global_count {
     
     my $message_status = shift;
     my @files = <Sympa::Constants::SPOOLDIR/*>;
-##    foreach my $file (@files) {
-##	Log::do_log('trace', '%s', $file);
-##    }
     my $count = @files;
 
     return $count;
@@ -134,7 +131,6 @@ sub get_content {
     Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $param = shift || {};
-
     my $perlselector = _perlselector($param->{'selector'}) || '1';
     my $perlcomparator =
 	_perlcomparator($param->{'sortby'}, $param->{'way'}) ||
@@ -157,6 +153,11 @@ sub get_content {
 	# We don't decide moving erroneous file to bad spool here, since it
 	# may be a temporary file "T.xxx" and so on.
 	next unless $item;
+	# Get additional details from spool file, likely to be used in queries.
+	unless ($self->get_additional_details($item->{'messagekey'}, $item)) {
+	    $self->move_to_bad($item->{'messagekey'});
+	    next;
+	}
 	my $cmp = eval $perlselector;
 	if ($@) {
 	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
@@ -195,7 +196,7 @@ sub get_content {
 	return scalar (scalar @retained_messages);
     }
 
-    # Parse
+    # Extract subset
     my @ret = ();
     my $i = 0;
     foreach my $item (@messages) {
@@ -250,7 +251,6 @@ sub next {
 	$self->move_to_bad($data->{'messagekey'});
 	return undef;
     }
-##    Log::do_log('trace', 'Will return file %s', $data->{'messagekey'});
     return $data;
 }
 
@@ -297,6 +297,14 @@ sub parse_file_content {
 	return undef;
     }
     return $data;
+}
+
+# Placeholder: overriden in inheriting classes to get additionnal details from the file content.
+sub get_additional_details {
+    my $self = shift;
+    my $key = shift;
+    my $data = shift;
+    return 1;
 }
 
 sub get_next_file_to_process {
@@ -555,9 +563,8 @@ XXX @todo doc
 sub get_message {
     my $self = shift;
     my $selector = shift;
-    Log::do_log('debug2', '(%s, list=%s, robot=%s)',
-	$self->get_id, $selector->{'list'}, $selector->{'robot'});
-    my @messages = $self->get_content({'selector' => $selector});
+    my @messages;
+    return undef unless @messages = $self->get_content({'selector' => $selector});
     return $messages[0];
 }
 
@@ -612,8 +619,6 @@ sub store {
     my $param = shift;
     my $target_file = $param->{'filename'};
     $target_file ||= $self->get_storage_name($param);
-##    Log::do_log('trace', 'Storing in file %s/%s',
-##	$self->{'dir'}, $target_file);
     my $fh;
     unless(open $fh, ">", "$self->{'dir'}/$target_file") {
 	Log::do_log('err','Unable to write file to spool %s',$self->{'dir'});
@@ -629,9 +634,6 @@ sub get_storage_name {
     my $self = shift;
     my $filename;
     my $param = shift;
-##    foreach my $line (split '\n',&Dumper($param)) {
-##	Log::do_log('trace', '%s', $line);
-##    }
     if ($param->{'list'} && $param->{'robot'}) {
 	$filename = $param->{'list'}.'@'.$param->{'robot'}.'.'.time.'.'.int(rand(10000));
     }else{

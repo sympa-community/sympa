@@ -51,6 +51,7 @@ use Fetch;
 use WebAgent;
 use SympaspoolClassic;
 use KeySpool;
+use SubscribeSpool;
 use Archive;
 use VOOTConsumer;
 use tt2;
@@ -10386,34 +10387,28 @@ sub select_list_members_for_topic {
 ########## END - functions for message topics #############################################
 
 sub store_subscription_request {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($self, $email, $gecos, $custom_attr) = @_;
 
-    my $subscription_request_spool = new Sympaspool('subscribe');
+    my $subscription_request_spool = new SubscribeSpool;
 
-    if ($subscription_request_spool->get_content(
-	    {   'selector' => {
-		    'list'   => $self->name,
-		    'robot'  => $self->domain,
-		    'sender' => $email
-		},
-		'selection' => 'count'
-	    }
-	) != 0
-	) {
-	&Log::do_log('notice', 'Subscription already requested by %s',
-	    $email);
-	return undef;
-    } else {
-	my $subrequest = sprintf "%s||%s\n", $gecos, $custom_attr;
-	$subscription_request_spool->store(
-	    $subrequest,
-	    {   'list'   => $self->name,
-		'robot'  => $self->domain,
-		'sender' => $email
-	    }
-	);
-    }
+    return 'already_subscribed' if ($subscription_request_spool->sub_request_exists(
+	{
+	    'list'   => $self->name,
+	    'robot'  => $self->domain,
+	    'sender' => $email
+	},
+    ));
+    Log::do_log('debug', 'No sub request found for (%s, %s, %s, %s)', @_);
+    my $subrequest = sprintf "%s\t%s\n%s\n",$email, $gecos, $custom_attr;
+    $subscription_request_spool->store(
+	$subrequest,
+	{   'list'   => $self->name,
+	    'robot'  => $self->domain,
+	    'sender' => $email
+	}
+    );
+    Log::do_log('debug', 'Sub request stored for (%s, %s, %s, %s)', @_);
     return 1;
 }
 
@@ -10423,50 +10418,29 @@ sub get_subscription_requests {
 
     my %subscriptions;
 
-    my $subscription_request_spool = new Sympaspool('subscribe');
+    my $subscription_request_spool = new SubscribeSpool;
     my @subrequests                = $subscription_request_spool->get_content(
 	{   'selector'  => {'list' => $self->name, 'robot' => $self->domain},
 	    'selection' => '*'
 	}
     );
 
-    foreach my $subrequest (
-	$subscription_request_spool->get_content(
-	    {   'selector' =>
-		    {'list' => $self->name, 'robot' => $self->domain},
-		'selection' => '*'
-	    }
-	)
-	) {
+    foreach my $subrequest (@subrequests) {
 
 	my $email = $subrequest->{'sender'};
-	my $gecos;
-	my $customattributes;
-	if ($subrequest->{'messageasstring'} =~ /(.*)\|\|.*$/) {
-	    $gecos            = $1;
-	    $customattributes = $subrequest->{'messageasstring'};
-	    $customattributes =~ s/^.*\|\|//;
-	} else {
-	    &Log::do_log(
-		'err',
-		"Failed to parse subscription request %s",
-		$subrequest->{'messagekey'}
-	    );
-	    next;
-	}
+	my $gecos = $subrequest->{'gecos'};
+	my $customattributes = $subrequest->{'customattributes'};
 	my $user_entry = $self->get_list_member($email, probe => 1);
 
 	if (defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
-	    &Log::do_log(
+	    Log::do_log(
 		'err',
 		'User %s is subscribed to %s already. Deleting subscription request.',
 		$email,
 		$self
 	    );
-	    unless ($subscription_request_spool->remove_message(
-		{'list' => $self, 'sender' => $email, 'just_try' => 1}
-	    )) {
-		&Log::do_log(
+	    unless ($subscription_request_spool->remove_message($subrequest->{'messagekey'})) {
+		Log::do_log(
 		    'err',
 		    'Could not delete subrequest %s for list %s from %s',
 		    $subrequest->{'messagekey'},
@@ -10498,7 +10472,7 @@ sub get_subscription_requests {
 sub get_subscription_request_count {
     my ($self) = shift;
 
-    my $subscription_request_spool = new Sympaspool('subscribe');
+    my $subscription_request_spool = new SubscribeSpool;
     return $subscription_request_spool->get_content(
 	{   'selector'  => {'list' => $self->name, 'robot' => $self->domain},
 	    'selection' => 'count'
@@ -10512,18 +10486,23 @@ sub delete_subscription_request {
     &Log::do_log('debug2', 'List::delete_subscription_request(%s, %s)',
 	$self->name, join(',', @list_of_email));
 
-    my $subscription_request_spool = new Sympaspool('subscribe');
+    my $subscription_request_spool = new SubscribeSpool;
 
     my $removed = 0;
     foreach my $email (@list_of_email) {
-	$removed++
-	    if $subscription_request_spool->remove_message(
-		{'list' => $self, 'sender' => $email, 'just_try' => 1}
-	    );
+	Log::do_log('debug2','Deleting sub request for %s',$email);
+	if (my $key = $subscription_request_spool->get_subscription_file_key(
+	    {'list' => $self->name, 'robot' => $self->domain, 'sender' => $email}))
+	    {
+		$removed++
+		if $subscription_request_spool->remove_message($key);
+	    }else {
+		Log::do_log('notice','Unable to get subscription key for %s',$email);
+	    }
     }
 
     unless ($removed > 0) {
-	&Log::do_log(
+	Log::do_log(
 	    'debug2',
 	    'No pending subscription was found for users %s',
 	    join(',', @list_of_email)

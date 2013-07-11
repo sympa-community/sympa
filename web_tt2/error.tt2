@@ -74,6 +74,7 @@
   [% ELSIF u_err.msg == 'custom_attribute' %][%|loc%]Check the additional information[%END%]
   [% ELSIF u_err.msg == 'not_available_reception_mode' %][%|loc(u_err.reception_mode)%]%1 is not an available reception mode[%END%]
   [% ELSIF u_err.msg == 'file_not_editable' %][%|loc(u_err.file)%]%1: file not editable[%END%]
+  [% ELSIF u_err.msg == 'subscription_request_failed' %][%|loc(u_err.list)%]Your subscription request to list %1 failed[%END%]
   [% ELSIF u_err.msg == 'already_subscriber' %][%|loc(u_err.list)%]You are already subscribed to the list %1[%END%]
   [% ELSIF u_err.msg == 'user_already_subscriber' %][%|loc(u_err.email,u_err.list)%]%1 is already subscribed to the list %2[%END%] 
   [% ELSIF u_err.msg == 'no_passwd' %][%|loc%]Please provide your password[%END%]

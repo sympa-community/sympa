@@ -35,7 +35,7 @@ use Encode::MIME::Header;
 use Text::LineFold;
 use MIME::Lite::HTML;
 use Proc::ProcessTable;
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
+##use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 
 use Conf;
 use Language qw(gettext_strftime);

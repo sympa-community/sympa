@@ -2933,9 +2933,6 @@ sub check_param_in {
 	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
 	    $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
 
-	    $param->{'doc_mod_list'} = $list->get_shared_moderated();
-	    $param->{'mod_total_shared'} = $#{$param->{'doc_mod_list'}} + 1;
-
 	    if ($param->{'total'} > 0) {
 		$param->{'bounce_total'} = $list->get_total_bouncing();
 		$param->{'bounce_rate'} = $param->{'bounce_total'} * 100 / $param->{'total'};
@@ -5288,20 +5285,30 @@ sub do_subscribe {
 	$param->{'may_subscribe'} = 1;	 
 	
 	if ($sub_is =~ /owner/) {
-
-	    unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
-							      'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
-							      'replyto' => $robot->get_address(),
-							      'custom_attribute' => $in{custom_attribute},
-							      'gecos' => $param->{'user'}{'gecos'},
-							      'ip'=>$ip})) {
-		&wwslog('notice', 'Unable to send notify "subrequest" to %s listowner', $list);
+	    my $status = $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
+	    unless($status) {
+		&report::reject_report_web('user','subscription_request_failed', {'list' => $list->name},$param->{'action'},$list);
+		&wwslog('info','do_subscribe: subscription request from %s to list %s failed', $param->{'user'}{'email'},$list->name);
+		&web_db_log({'parameters' => $in{'email'},
+			     'status' => 'error',
+			     'error_type' => 'subscription_request_failed'});		      
+		return undef;
 	    }
-	    
-	    $list->store_subscription_request($param->{'user'}{'email'}, "", $xml_custom_attribute);
-	    &report::notice_report_web('sent_to_owner',{},$param->{'action'});
-	    &wwslog('info', 'do_subscribe: subscribe sent to owners');
-	    
+	    unless ($status eq 'already_subscribed') {
+		unless ($list->send_notify_to_owner('subrequest',{'who' => $param->{'user'}{'email'},
+								  'keyauth' => $list->compute_auth($param->{'user'}{'email'}, 'add'),
+								  'replyto' => $robot->get_address(),
+								  'custom_attribute' => $in{custom_attribute},
+								  'gecos' => $param->{'user'}{'gecos'},
+								  'ip'=>$ip})) {
+		    &wwslog('notice', 'Unable to send notify "subrequest" to %s listowner', $list);
+		}
+		
+		&report::notice_report_web('sent_to_owner',{},$param->{'action'});
+		&wwslog('info', 'do_subscribe: subscribe sent to owners');
+	    }else{
+		&wwslog('notice', 'Ignoring subsription request from %s to list %s that was requested already', $param->{'user'}{'email'},$list->name);
+	    }
 	    return 'info';
 	}elsif ($sub_is =~ /do_it/) {
 	    if ($param->{'is_subscriber'}) {
