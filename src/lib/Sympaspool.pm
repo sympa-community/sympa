@@ -44,24 +44,27 @@ my ($sth, @sth_stack);
 ## Creates an object.
 sub new {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my($pkg, $spoolname, $selection_status) = @_;
-    my $spool = {};
+    my($pkg, $spoolname, $selection_status, %opts) = @_;
+
+    my $self;
 
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
 &Log::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
-    $spool->{'spoolname'} = $spoolname;
-    if ($selection_status and
+    unless ($selection_status and
 	($selection_status eq 'bad' or $selection_status eq 'ok')) {
-	$spool->{'selection_status'} = $selection_status;
-    }else{
-	$spool->{'selection_status'} =  'ok';
+	$selection_status = 'ok';
     }
 
-    bless $spool, $pkg;
+    $self = bless {
+	'spoolname'        => $spoolname,
+	'selection_status' => $selection_status,
+    } => $pkg;
+    $self->{'sortby'}    = $opts{'sortby'} if $opts{'sortby'};
+    $self->{'way'}       = $opts{'way'} if $opts{'way'};
 
-    return $spool;
+    return $self;
 }
 
 # total spool_table count : not object oriented, just a subroutine 
@@ -111,8 +114,8 @@ sub get_content {
     # for pagination, limit answers to $page_size
     my $page_size = $data->{'page_size'};
 
-    my $orderby = $data->{'sortby'};      # sort
-    my $way = $data->{'way'};             # asc or desc 
+    my $orderby = $data->{'sortby'} || $self->{'sortby'};  # sort
+    my $way = $data->{'way'} || $self->{'way'};            # asc or desc 
 
     my $sql_where = _sqlselector($selector);
     if ($self->{'selection_status'} eq 'bad') {
@@ -155,11 +158,10 @@ sub get_content {
     }else{
 	my @messages;
 	while (my $message = $sth->fetchrow_hashref('NAME_lc')) {
-	    $message->{'date_asstring'} = &tools::epoch2yyyymmjj_hhmmss($message->{'date'});
-	    $message->{'lockdate_asstring'} = &tools::epoch2yyyymmjj_hhmmss($message->{'lockdate'});
 	    $message->{'messageasstring'} = MIME::Base64::decode($message->{'message'}) if ($message->{'message'}) ;
 	    $message->{'listname'} = $message->{'list'}; # duplicated because "list" is a tt2 method that convert a string to an array of chars so you can't test  [% IF  message.list %] because it is always defined!!!
 	    $message->{'status'} = $self->{'selection_status'}; 
+	    $message->{'spoolname'} = $self->{'spoolname'};
 	    push @messages, $message;
 
 	    last if $page_size and $page_size <= scalar @messages;
@@ -262,6 +264,8 @@ sub next {
 	return undef;
     }
 
+    $message->{'spoolname'} = $self->{'spoolname'};
+
     ## add objects
     my $robot_id = $message->{'robot'};
     my $listname = $message->{'list'};
@@ -327,11 +331,17 @@ sub get_message {
     $sth->finish;
     $sth = pop @sth_stack;
 
-    return undef unless $message and %$message;
+    unless ($message and %$message) {
+	Log::do_log('err', 'No message: %s', $sqlselector);
+	return undef;
+    } else {
+	Log::do_log('debug3', 'Success: %s', $sqlselector);
+    }
 
     $message->{'lock'} =  $message->{'messagelock'}; 
     $message->{'messageasstring'} =
 	MIME::Base64::decode($message->{'message'});
+    $message->{'spoolname'} = $self->{'spoolname'};
 
     if ($message->{'list'} && $message->{'robot'}) {
 	my $robot = Robot->new($message->{'robot'});
@@ -362,7 +372,6 @@ sub unlock_message {
 # 
 #  update spool entries that match selector with values
 sub update {
-
     my $self = shift;
     my $selector = shift;
     my $values = shift;
