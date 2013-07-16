@@ -155,9 +155,9 @@ use BounceMessage;
 
 ## Check options
 my %options;
-unless (&GetOptions(\%main::options,
+unless (GetOptions(\%main::options,
     'debug|d', 'help|h', 'log_level=s','foreground|F')) {
-    Log::fatal_err("Unknown options.");
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'help'}) {

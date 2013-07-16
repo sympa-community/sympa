@@ -115,9 +115,9 @@ local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as mas
 ##  --foreground : prevents the script from beeing daemonized
 ##  --mail : logs every sendmail calls
 my %options;
-unless (&GetOptions(\%main::options,
+unless (GetOptions(\%main::options,
     'debug|d', 'foreground|F', 'help|h', 'log_level=s', 'mail|m')) {
-    &Log::fatal_err("Unknown options.");
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'debug'}) {

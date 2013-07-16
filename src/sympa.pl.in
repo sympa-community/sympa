@@ -383,10 +383,8 @@ $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
 
 ## Check --dump option
 my %options;
-unless (
-    &GetOptions(
-	\%main::options, 'dump=s',
-	'debug|d',,
+unless (GetOptions(\%main::options,
+	'dump=s',                       'debug|d',,
 	'log_level=s',                  'foreground',
 	'config|f=s',                   'lang|l=s',
 	'mail|m',                       'keepcopy|k=s',
@@ -408,9 +406,8 @@ unless (
 	'quiet',                        'close_unknown',
 	'test_database_message_buffer', 'conf_2_db',
 	'export_list',                  'health_check'
-    )
-    ) {
-    Log::fatal_err("Unknown options.");
+)) {
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'debug'}) {

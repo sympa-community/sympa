@@ -44,7 +44,7 @@ Sets the debug mode
 
 =item B<-F>, B<--foreground>
 
-Prevents the script from beeing daemonized
+Prevents the script from being daemonized
 
 =item B<-h>, B<--help>
 
@@ -103,7 +103,7 @@ my %options;
 
 unless (GetOptions(\%main::options,
     'debug|d', 'help|h', 'log_level=s', 'foreground|F')) {
-    Log::fatal_err("Unknown options.");
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'help'}) {

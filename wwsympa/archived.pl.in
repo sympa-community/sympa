@@ -147,8 +147,8 @@ my $ip = $ENV{'REMOTE_HOST'};
 
 ## Check options
 my %options;
-unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F', 'help|h')) {
-    &Log::fatal_err("Unknown options.");
+unless (GetOptions(\%main::options, 'debug|d', 'foreground|F', 'help|h')) {
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'help'}) {

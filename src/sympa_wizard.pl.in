@@ -132,14 +132,15 @@ my $version_string = sprintf Language::gettext('Sympa version is %s.') . "\n",
     Sympa::Constants::VERSION;
 
 my %options;
-GetOptions(
-    \%options,
+unless (GetOptions(\%options,
     'target=s',
     'create:s',    # parameter is optional
     'check',
     'help|h',
     'version|v'
-);
+)) {
+    pod2usage(-exitval => 1, -output => \*STDERR);
+}
 
 if ($options{help}) {
     pod2usage();
