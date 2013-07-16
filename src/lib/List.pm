@@ -1484,11 +1484,9 @@ sub distribute_msg {
 
 	# rename update topic content id of the message
 	if ($info_msg_topic) {
-	    my $topicspool = new Sympaspool('topic');
-	    $topicspool->update(
-		{'messagekey' => $info_msg_topic->{'messagekey'}},
-		{'messageid' => $new_id}
-	    );
+	    my $topicspool = new SympaspoolClassic('topic');
+	    rename("$topicspool->{'dir'}/$info_msg_topic->{'filename'}","$topicspool->{'dir'}/$self->->get_id.$new_id");
+	    $info_msg_topic->{'filename'} = "$self->->get_id.$new_id";
 	}
 	## TODO remove S/MIME and PGP signature if any
     }
@@ -10152,7 +10150,7 @@ sub tag_topic {
 
     my $topic_item = sprintf "TOPIC   %s\n", $topic_list;
     $topic_item .= sprintf "METHOD  %s\n", $method;
-    my $topicspool = new Sympaspool('topic');
+    my $topicspool = new SympaspoolClassic('topic');
 
     return (
 	$topicspool->store(
@@ -10187,7 +10185,7 @@ sub load_msg_topic {
     Log::do_log('debug2', '(%s, %s)', @_);
     my ($self, $msg_id, $robot) = @_;
 
-    my $topicspool = new Sympaspool('topic');
+    my $topicspool = new SympaspoolClassic('topic');
 
     my $topics_from_spool = $topicspool->get_message(
 	{   'list'  => $self->name,
