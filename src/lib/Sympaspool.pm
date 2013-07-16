@@ -61,8 +61,9 @@ sub new {
 	'spoolname'        => $spoolname,
 	'selection_status' => $selection_status,
     } => $pkg;
-    $self->{'sortby'}    = $opts{'sortby'} if $opts{'sortby'};
-    $self->{'way'}       = $opts{'way'} if $opts{'way'};
+    $self->{'selector'} = $opts{'selector'} if $opts{'selector'};
+    $self->{'sortby'}   = $opts{'sortby'} if $opts{'sortby'};
+    $self->{'way'}      = $opts{'way'} if $opts{'way'};
 
     return $self;
 }
@@ -96,7 +97,7 @@ sub get_content {
     my $data= shift;
 
     # hash field->value used as filter WHERE sql query
-    my $selector = $data->{'selector'};
+    my $selector = $data->{'selector'} || $self->{'selector'};
 
     # the list of field to select. possible values are :
     #    -  a comma separated list of field to select. 
@@ -177,12 +178,10 @@ sub get_content {
 #  next : return next spool entry ordered by priority next lock the message_in_spool that is returned
 # 
 sub next {
+    Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
-    my $selector = shift;
 
-    &Log::do_log('debug', 'Getting next spool entry in %s, %s',$self->{'spoolname'},$self->{'selection_status'});
-    
-    my $sql_where = _sqlselector($selector);
+    my $sql_where = _sqlselector($self->{'selector'});
 
     if ($self->{'selection_status'} eq 'bad') {
 	$sql_where = $sql_where." AND message_status_spool = 'bad' " ;
@@ -306,7 +305,7 @@ sub get_message {
 	$self, $selector->{'messagekey'},
 	$selector->{'list'}, $selector->{'robot'});
 
-    my $sqlselector = _sqlselector($selector);
+    my $sqlselector = _sqlselector($selector || $self->{'selector'});
     my $all = _selectfields();
 
     push @sth_stack, $sth;

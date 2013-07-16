@@ -27,7 +27,11 @@ our @ISA = qw(SympaspoolClassic);
 
 sub new {
     Log::do_log('debug2', '(%s, %s)', @_);
-    return shift->SUPER::new('msg', shift, 'sortby' => 'priority');
+    my $pkg = shift;
+    return $pkg->SUPER::new('msg', shift,
+	'sortby' => 'priority',
+	'selector' => {'priority' => ['z', 'ne']},
+    );
 }
 
 sub is_relevant {

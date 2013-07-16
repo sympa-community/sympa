@@ -1718,8 +1718,12 @@ sub send_msg_digest {
     ## Create the list of subscribers in various digest modes
     return 0 unless ($self->get_lists_of_digest_recipients());
 
-    my $digestspool = new Sympaspool ('digest');
-    $self->split_spooled_digest_to_messages({'message_in_spool' => $digestspool->next({'messagekey'=>$messagekey})});
+    my $digestspool = Sympaspool->new('digest', undef,
+	'selector' => {'messagekey' => $messagekey}
+    );
+    $self->split_spooled_digest_to_messages({
+	'message_in_spool' => $digestspool->next
+    });
     $self->prepare_messages_for_digest();
     $self->prepare_digest_parameters();
     $self->do_digest_sending();
@@ -8273,10 +8277,11 @@ sub store_digest {
 
     my @now  = localtime(time);
 
-    my $digestspool = new Sympaspool('digest');
+    my $digestspool = Sympaspool->new('digest', undef,
+	'selector' => {'list' => $self->name, 'robot' => $self->domain}
+    );
     # remember that spool->next lock the selected message if any
-    my $current_digest =
-	$digestspool->next({'list' => $self->name, 'robot' => $self->domain});
+    my $current_digest = $digestspool->next;
 
     my $message_as_string;
     if ($current_digest) {

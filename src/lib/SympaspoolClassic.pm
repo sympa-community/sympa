@@ -86,9 +86,10 @@ sub new {
 	'spoolname' => $spoolname,
 	'selection_status' => $selection_status,
 	'dir' => $dir,
-	'sortby' => ($opts{'sortby'} || undef),
-	'way' => ($opts{'way'} || undef),
     } => $pkg;
+    $self->{'selector'} = $opts{'selector'} if $opts{'selector'};
+    $self->{'sortby'} = $opts{'sortby'} if $opts{'sortby'};
+    $self->{'way'} = $opts{'way'} if $opts{'way'};
 
     Log::do_log('debug3', 'Spool to scan "%s"', $dir);
 
@@ -131,7 +132,10 @@ sub get_content {
     Log::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $param = shift || {};
-    my $perlselector = _perlselector($param->{'selector'}) || '1';
+    my $perlselector =
+	_perlselector($param->{'selector'}) ||
+	_perlselector($self->{'selector'}) ||
+	'1';
     my $perlcomparator =
 	_perlcomparator($param->{'sortby'}, $param->{'way'}) ||
 	_perlcomparator($self->{'sortby'}, $self->{'way'});
@@ -149,6 +153,7 @@ sub get_content {
 
     my @messages;
     foreach my $key ($self->get_files_in_spool) {
+	next unless $self->is_readable($key);
 	my $item = $self->parse_filename($key);
 	# We don't decide moving erroneous file to bad spool here, since it
 	# may be a temporary file "T.xxx" and so on.
@@ -161,13 +166,13 @@ sub get_content {
 	my $cmp = eval $perlselector;
 	if ($@) {
 	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
-	    next;
+	    return undef;
 	}
 	next unless $cmp;
 	push @messages, $item;
     }
 
-    # Sort
+    # Sorting
     if ($perlcomparator) {
 	my @sorted = eval sprintf 'sort { %s } @messages', $perlcomparator;
 	if ($@) {
@@ -322,30 +327,42 @@ sub get_next_file_to_process {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
+    my $perlselector = _perlselector($self->{'selector'}) || '1';
     my $perlcomparator = _perlcomparator($self->{'sortby'}, $self->{'way'});
 
     my $data = undef;
+    my $cmp;
     foreach my $key (@{$self->{'spool_files_list'}}) {
 	next unless $self->is_readable($key);
-	my $next_data = $self->parse_filename($key);
-	next unless $next_data;
-	return $next_data unless $perlcomparator;
+	my $item = $self->parse_filename($key);
+	next unless $item;
+
+	$cmp = eval $perlselector;
+	if ($@) {
+	    Log::do_log('err', 'Failed to evaluate selector: %s', $@);
+	    return undef;
+	}
+	next unless $cmp;
 
 	unless ($data) {
-	    $data = $next_data;
+	    $data = $item;
 	    next;
 	}
-	my ($a, $b) = ($data, $next_data);
-	my $cmp = eval $perlcomparator;
+	my ($a, $b) = ($data, $item);
+	$cmp = eval $perlcomparator;
 	if ($@) {
 	    Log::do_log('err', 'Could not compare messages: %s', $@);
 	    return $data;
 	}
 	if ($cmp > 0) {
-	    $data = $next_data;
+	    $data = $item;
 	}
     }
     return $data;
+}
+
+sub is_relevant {
+    return 1;
 }
 
 sub is_readable {
@@ -357,10 +374,6 @@ sub is_readable {
     } else {
 	return 0;
     }
-}
-
-sub is_relevant {
-    return 1;
 }
 
 # NOTE: This should be moved to Message class.
