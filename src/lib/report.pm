@@ -56,7 +56,7 @@ sub reject_report_msg {
     my ($type,$error,$user,$param,$robot,$msg_string,$list) = @_;
 
     unless ($type eq 'intern' or $type eq 'intern_quiet' or
-	    $type eq 'user' or $type eq 'auth' or $type eq 'plugin') {
+	    $type eq 'user' or $type eq 'auth'or $type eq 'oauth') {
 	&Log::do_log('err',"report::reject_report_msg(): error to prepare parsing 'message_report' template to $user : not a valid error type");
 	return undef
     }
@@ -77,26 +77,40 @@ sub reject_report_msg {
     }
 
     chomp($user);
-    $param->{'to'}    = $user;
-    $param->{'msg'}   = $msg_string;
+    $param->{'to'} = $user;
+    $param->{'msg'} = $msg_string;
     $param->{'auto_submitted'} = 'auto-replied';
-    $param->{'entry'} = $error;
 
-    $param->{'type'}
-       = $type eq 'user'   ? 'user_error'
-       : $type eq 'auth'   ? 'authorization_reject'
-       : $type eq 'plugin' ? 'plugin'
-       :                     'intern_error';
+    if ($type eq 'user') {
+	$param->{'entry'} = $error;
+	$param->{'type'} = 'user_error';
+
+    } elsif ($type eq 'auth') {
+	$param->{'entry'} = $error;
+	$param->{'type'} = 'authorization_reject';
+
+    } elsif ($type eq 'oauth') {
+	$param->{'entry'} = $error;
+	$param->{'type'} = 'oauth';
+
+    } else {
+	$param->{'type'} = 'intern_error';
+    }
 
     ## Prepare the original message if provided
     if (defined $param->{'message'}) {
-	$param->{'original_msg'} = _get_msg_as_hash($param->{'message'});
+	$param->{'original_msg'} = &_get_msg_as_hash($param->{'message'});
+     }
+
+    if (ref($list) eq "List") {
+	unless ($list->send_file('message_report', $user, $param)) {
+	    &Log::do_log('notice',"report::reject_report_msg(): Unable to send template 'message_report' to '$user'");
+	}
+    } else {
+	unless ($robot->send_file('message_report', $user, $param)) {
+	    &Log::do_log('notice',"report::reject_report_msg(): Unable to send template 'message_report' to '$user'");
+	}
     }
-
-    my $send_to = ref $list eq "List" ? $list : $robot;
-    $send_to->send_file('message_report', $user, $param)
-       or Log::do_log('notice',"report::reject_report_msg(): Unable to send template 'message_report' to '$user'");
-
     if ($type eq 'intern') {
 	chomp $param->{'msg_id'} if $param->{'msg_id'};
 

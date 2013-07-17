@@ -48,7 +48,7 @@ sub build_connect_string {
 sub get_substring_clause {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Building substring clause');
+    &Log::do_log('debug3','Building substring caluse');
     return "REVERSE(SUBSTRING(".$param->{'source_field'}." FROM position('".$param->{'separator'}."' IN ".$param->{'source_field'}.") FOR ".$param->{'substring_length'}."))";
 }
 
@@ -60,7 +60,7 @@ sub get_substring_clause {
 sub get_limit_clause {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Building limit 1 clause');
+    &Log::do_log('debug3','Building limit 1 caluse');
     if ($param->{'offset'}) {
 	return "LIMIT ".$param->{'offset'}.",".$param->{'rows_count'};
     }else{

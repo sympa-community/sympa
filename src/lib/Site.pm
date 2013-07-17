@@ -925,9 +925,6 @@ sub send_file {
     ## What file
     my $lang = $data->{'lang'};
     my $tt2_include_path = $self->get_etc_include_path('mail_tt2', $lang);
-    unshift @$tt2_include_path, $::plugins->tt2Paths
-        if $::plugins;
-
     if (ref $self eq 'List') {
 	## list directory to get the 'info' file
 	push @{$tt2_include_path}, $self->dir;

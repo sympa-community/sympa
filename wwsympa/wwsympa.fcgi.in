@@ -24,6 +24,7 @@
 ## Authors :
 ##           Serge Aumont <sa AT cru.fr>
 ##           Olivier Salaün <os AT cru.fr>
+=pod 
 
 =encoding utf-8
 
@@ -38,9 +39,6 @@ This FastCGI script completely handles all aspects of the Sympa web interface
 =cut 
 
 use lib '--modulesdir--';
-
-# XXX MO: during development, where modules are not installed
-do '/home/sympa/ext/DEVEL.pm';
 
 use strict;
 #use warnings; #temporarily disabled
@@ -74,9 +72,12 @@ use cookielib;
 use tracking;
 #use Sympaspool; # used in List - Task
 #use SDM; # used by Conf
+use OAuthProvider;
+use OAuthConsumer;
+use VOOTProvider;
+use VOOTConsumer;
 use Messagespool;
 
->>>>>>> .fusion-droit.r9538
 my $crypt_openssl_x509_ok;
 BEGIN {
     if (eval "require Crypt::OpenSSL::X509") {
@@ -90,38 +91,31 @@ BEGIN {
 ## WWSympa librairies
 my %options;
 
-# Used via the Sympa::Plugin interface
-our $list;
-our $param = {};
-our $robot_id;
-our $session;
-our $plugins;
-
 my $loop = 0;
+my $list;
+my $param = {};
+my $robot_id;
 my $robot;
 my $pinfo;
-my $ip; 
-my $rss;
+my $ip ; 
+my $rss ;
 my $ajax;
+my $session;
 
 ## Load sympa config
 unless (defined Robot::get_robots()) {
-    # we cannot use log without configuration
-    my $conf = Conf::get_sympa_conf();
-    die "Unable to load sympa configuration, file $conf or one of the virtual host robot.conf files contain errors. Exiting.";
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );  
 }
 
-## Open log
 Log::set_log_level(Site->log_level);
 
 my $daemon_name = &Log::set_daemon($0);
 
+## Open log
 Log::do_openlog(Site->log_facility, Site->log_socket_type, 'wwsympa');
-
-## Start plugins
-if(eval "require Sympa::Plugin::Manager") {
-    $plugins = Sympa::Plugin::Manager->new(application => 'website');
-}
 
 &mail::set_send_spool(Site->queue);
 
@@ -131,6 +125,32 @@ if (Site->use_fast_cgi) {
     require CGI;
 }
 my $mime_types = &wwslib::load_mime_types();
+
+if (Site->voot_feature eq 'on') {
+    unless ( eval "require OAuthProvider" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load OAuthProvider module: $@");
+	return undef;
+    }
+    require OAuthProvider;
+    unless ( eval "require OAuthConsumer" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load OAuthConsumer module: $@");
+	return undef;
+    }
+    require OAuthConsumer;
+    unless ( eval "require VOOTProvider" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load VOOTProvider module: $@");
+	return undef;
+    }
+    require VOOTProvider;
+    unless ( eval "require VOOTConsumer" ){
+	&Log::fatal_err("VOOT feature is on, but Sympa was Unable to load module: $@");
+	return undef;
+    }
+    require VOOTConsumer;
+}else {
+#XXX    &Log::do_log('err','Sympa is configured to use VOOT but the required modules are not accessible.');
+}
+
 
 # hash of all the description files already loaded
 # format :
@@ -165,7 +185,7 @@ $icon_table{'right'} = Site->static_content_url.'/icons/right.png';
 
 
 ## subroutines
-our %comm = ('home' => 'do_home',
+my %comm = ('home' => 'do_home',
 	 'logout' => 'do_logout',
 	 'loginrequest' => 'do_loginrequest',
 	 'login' => 'do_login',
@@ -246,6 +266,20 @@ our %comm = ('home' => 'do_home',
 	 'edit_list_request' => 'do_edit_list_request',
 	 'edit_list' => 'do_edit_list',
 	 'edit_list_request' => 'do_edit_list_request',
+	 
+	 'oauth_check' => 'do_oauth_check',
+	 'oauth_ready' => 'do_oauth_ready',
+	 
+	 'oauth_temporary' => 'do_oauth_temporary',
+	 'oauth_authorize' => 'do_oauth_authorize',
+	 'oauth_access' => 'do_oauth_access',
+	 
+	 'opensocial' => 'do_opensocial',
+	 'voot' => 'do_voot',
+	 'select_voot_provider_request' => 'do_select_voot_provider_request',
+	 'select_voot_groups_request' => 'do_select_voot_groups_request',
+	 'select_voot_groups' => 'do_select_voot_groups',
+	 
 	 'create_list_request' => 'do_create_list_request',
 	 'create_list' => 'do_create_list',
 	 'get_pending_lists' => 'do_get_pending_lists', 
@@ -349,7 +383,7 @@ my %auth_action = ('logout' => 1,
 		   );		  
 
 ## Arguments awaited in the PATH_INFO, depending on the action 
-our %action_args = ('default' => ['list'],
+my %action_args = ('default' => ['list'],
 		'editfile' => ['list','file','previous_action'],
 		'viewfile' => ['list','file'],
 		'requestpasswd' => ['email'],
@@ -438,6 +472,16 @@ our %action_args = ('default' => ['list'],
 		'attach' => ['list','dir','file'],
 		'stats' => ['list'],
 		'edit_list_request' => ['list','group'],
+		
+		'oauth_check' => ['oauth_provider'],
+		'oauth_ready' => ['oauth_provider', 'ticket'],
+		 
+		'opensocial' => ['list'],
+		'voot' => ['@voot_path'],
+		'select_voot_provider_request' => ['list'],
+		'select_voot_groups_request' => ['list', 'voot_provider'],
+		'select_voot_groups' => ['list', 'voot_provider'],
+		
 		'rename_list' => ['list','new_list','new_robot'],
 		'copy_list' => ['list','new_list','new_robot'],
 		'redirect' => [],
@@ -483,7 +527,7 @@ our %action_args = ('default' => ['list'],
 ## Alternate parameters can be defined with the '|' character
 ## Limits of this structure: it does not define optional parameters (a or b)
 ## Limit: it does not allow to have a specific error message and redirect to a given page if the parameter is missing
-our %required_args = ('active_lists' => ['for|count'],
+my %required_args = ('active_lists' => ['for|count'],
 		     'admin' => ['param.list','param.user.email'],
 		     'add' => ['param.list','param.user.email'],
 		     'add_request' => ['param.list','param.user.email'],
@@ -533,6 +577,16 @@ our %required_args = ('active_lists' => ['for|count'],
 		     'dump_scenario' => ['param.list','pname'],
 		     'edit_list' => ['param.user.email','param.list'],
 		     'edit_list_request' => ['param.user.email','param.list'],
+		     
+			 'oauth_authorize' => ['param.user.email', 'oauth_token'],
+			 'oauth_check' => ['param.user.email', 'oauth_provider'],
+			 'oauth_ready' => ['oauth_provider', 'ticket', 'oauth_token', 'oauth_verifier'],
+			 
+		     'opensocial' => ['param.user.email','param.list'],
+			 'select_voot_provider_request' => ['param.user.email','param.list'],
+		     'select_voot_groups_request' => ['param.user.email','param.list', 'voot_provider'],
+		     'select_voot_groups' => ['param.user.email','param.list', 'voot_provider'],
+		     
 		     'edit_template' => ['webormail'],
 		     'editfile' => ['param.user.email'],
 		     'editsubscriber' => ['param.list','param.user.email','email'],
@@ -618,7 +672,7 @@ our %required_args = ('active_lists' => ['for|count'],
 
 ## Defines the required privileges to access privileged actions
 ## You can define a set ofequiivalent privileges in the ARRAYREF
-our %required_privileges = ('admin' => ['owner','editor'],
+my %required_privileges = ('admin' => ['owner','editor'],
 			   'arc_delete' => ['owner'],
 			   'arc_download' => ['owner'],
 			   'arc_manage' => ['owner'],
@@ -633,6 +687,15 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'dump_scenario' => ['listmaster'],
 			   'edit_list' => ['owner'],
 			   'edit_list_request' => ['owner'],
+			   
+				 #'oauth_check' => ['everybody'],
+				 #'oauth_ready' => ['everybody'],
+				 
+				 'opensocial' => ['owner'],
+				 'select_voot_provider_request' => ['owner'],
+				 'select_voot_groups_request' => ['owner'],
+				 'select_voot_groups' => ['owner'],
+				 
 			   'edit_template' => ['listmaster'],
 			   'editsubscriber' => ['owner'],
 			   'get_closed_lists' => ['listmaster'],
@@ -773,7 +836,7 @@ my %temporary_actions = ( 'logout' => 1,
 ## Regexp applied on incoming parameters (%in)
 ## The aim is not a strict definition of parameter format
 ## but rather a security check
-our %in_regexp = (
+my %in_regexp = (
 		 ## Default regexp
 		 '*' => '[\w\-\.]+', 
 				 
@@ -915,12 +978,19 @@ our %in_regexp = (
 		 ## custom actions
 		 'cap' => '.*',
 		 'lcap' => '.*',
+		 
+		 'oauth_provider' => '[^:]+:.+',
+		 'oauth_authorize_ok' => '.+',
+		 'oauth_authorize_no' => '.+',
+		 'oauth_signature' => '[a-zA-Z0-9\+\/\=\%]+',
+		 'oauth_callback' => '[^\\\$\*\"\'\`\^\|\<\>\n]+',
+		 'voot_path' => '[^<>\\\*\$\n]+',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
 ## This regular expression defines forbidden expressions applied on all incoming parameters
 ## Note that you can use the ^ and $ expressions to match beginning and ending of expressions
-our %in_negative_regexp = (
+my %in_negative_regexp = (
 			  'arc_file' => '^(arctxt|\.)'
 			  );
 
@@ -950,15 +1020,13 @@ my %filtering = ('d_reject_shared' => {'id' => 'qencode'},
 		 'change_email' => {'*email' => 'normalize'}, ## Remove leading/trailing white spaces and lowercase
 		 );
 
+&Log::do_log('info', 'WWSympa started');
+
 ## Set locale configuration	 
 Language::SetLang(Site->lang);
 
 ## Important to leave this there because it defined defaults for user_data_source
 &SDM::check_db_connect();
-
-# Now, load all components which are implemented as plugins.  Those will
-# add fields to above configuration and may do database upgrades.
-$plugins->start if $plugins;
 
 ## Check that the data structure is uptodate
 ## If not, set the web interface to maintenance mode
@@ -972,12 +1040,9 @@ unless (SDM::data_structure_uptodate()) {
 
 our %changed_params;
 
-our %in;
-my $query;
+my (%in, $query);
 
 my $birthday = time ;
-
-Log::do_log(info => "WWSympa started, process $$");
 
 # Now internal encoding is same as input/output.
 #XXX## Set output encoding
@@ -1194,9 +1259,10 @@ Log::do_log(info => "WWSympa started, process $$");
      
     # Retreive oauth_token from session if it exists and if we have a (newly)
     # identified user
-    my $oauth_token    = $session->{'oauth_token'} || '';
-    $in{'oauth_token'} = delete $session->{'oauth_token'}
-        if $oauth_token ne '' && $session->{'email'} ne 'nobody';
+     if(defined($session->{'oauth_token'}) && $session->{'oauth_token'} ne '' && $session->{'email'} ne 'nobody') {
+		 $in{'oauth_token'} = $session->{'oauth_token'};
+		 delete $session->{'oauth_token'};
+	 }
 
     $session->{'is_family_owner'} = undef;
     my $automatic_list_families = $robot->automatic_list_families;
@@ -1504,9 +1570,10 @@ Log::do_log(info => "WWSympa started, process $$");
 	     }
 
 	     ## Execute the action ## 
-	     if(defined $action) {
-		 no strict "refs";
-	         $action = $comm{$action}->();
+	     if (defined $action) {
+		no strict "refs";
+
+	       $action = &{$comm{$action}}();
 	     }
 	     
 	     unless (defined $action) {
@@ -1570,11 +1637,8 @@ Log::do_log(info => "WWSympa started, process $$");
 	 $param->{'title_clear_txt'} = $param->{'title'};
      }
      
-     # Store oauth_token in session if present and no user so that it
-     # will not be lost during login process
-     my $oauth_token = $in{'oauth_token'} || '';
-     $session->{'oauth_token'} = $oauth_token
-         if $oauth_token ne '' && $session->{'email'} eq 'nobody';
+     # Store oauth_token in session if present and no user so that it will not be lost during login process
+     $session->{'oauth_token'} = $in{'oauth_token'} if(defined($in{'oauth_token'}) && $in{'oauth_token'} ne '' && $session->{'email'} eq 'nobody');
 
      ## store in session table this session contexte
      $session->store();
@@ -1766,9 +1830,6 @@ Log::do_log(info => "WWSympa started, process $$");
 	    ($list || $robot)->get_etc_include_path('web_tt2',
 		$param->{'lang'});
 
-        unshift @$tt2_include_path, $plugins->tt2Paths
-            if $plugins;
-
  	unless (&tt2::parse_tt2(
 	    $param, 'rss.tt2', \*STDOUT, $tt2_include_path, {}
 	)) {
@@ -1797,9 +1858,6 @@ Log::do_log(info => "WWSympa started, process $$");
 	my $tt2_include_path =
 	    ($list || $robot)->get_etc_include_path('web_tt2',
 		$param->{'lang'});
-
-        unshift @$tt2_include_path, $plugins->tt2Paths
-            if $plugins;
 
  	unless (&tt2::parse_tt2(
 	    $param, 'ajax.tt2', \*STDOUT, $tt2_include_path, {}
@@ -2620,10 +2678,6 @@ sub send_html {
 	}
     }
 
-    ## Available plugins, to switch on template fragments
-    $param_copy->{plugins}
-      = $plugins ? sub { $plugins->tt2Fragments(@_) } : sub { () };
-
     ## Save special paths.
     my @added_include_path = tt2::get_include_path();
     tt2::clear_include_path();
@@ -2674,9 +2728,6 @@ sub send_html {
     foreach my $dir (@added_include_path) {
 	tt2::add_include_path($dir);
     }
-
-    unshift @$tt2_include_path, $plugins->tt2Paths
-        if $plugins;
 
     ## Output the content.
     unless (tt2::parse_tt2(
@@ -9708,6 +9759,304 @@ sub do_rebuildallarc {
     return 'serveradmin';
 }
 
+# Consumer requests a temporary token
+sub do_oauth_temporary {
+	&wwslog('info', 'do_oauth_temporary()');
+	$param->{'bypass'} = 'extreme';
+	
+	#### Using HTTP_AUTHORIZATION header requires httpd config customization :
+	# <Location /sympa>
+	#   RewriteEngine on
+	#   RewriteBase /sympa/
+	#   RewriteCond %{HTTP:Authorization} (.+)
+	#   RewriteRule ^ - [e=HTTP_AUTHORIZATION:%1,L]
+	#   SetHandler fcgid-script
+	# </Location>
+	my $provider = new OAuthProvider(
+		method => $ENV{'REQUEST_METHOD'},
+		url => $param->{'base_url'}.$param->{'path_cgi'}.'/oauth_temporary',
+		authorization_header => $ENV{'HTTP_AUTHORIZATION'},
+		request_parameters => \%in
+	);
+	
+	my $bad = defined($provider) ? $provider->checkRequest() : 400;
+	my $http_code = $bad ? $bad : 200;
+	my $http_str = $bad ? (defined($provider) ? $provider->{'util'}->errstr : 'Bad Request') : 'OK';
+	
+	print 'Status: '.$http_code.' '.$http_str."\n";
+	print "Cache-control: no-cache\n";
+	print "Content-type: text/plain\n\n";
+	
+	print $provider->generateTemporary() unless($bad);
+	
+	return 1;
+}
+
+# User needs to authorize access
+sub do_oauth_authorize {
+	&wwslog('info', 'do_oauth_authorize()');
+	
+	$param->{'oauth_token'} = $in{'oauth_token'};
+	
+	my $key = &OAuthProvider::consumerFromToken($in{'oauth_token'});
+	return undef unless($key);
+	
+	$param->{'consumer_key'} = $key;
+	
+	if(
+		!defined($session->{'oauth_authorize_verifier'})
+		|| $session->{'oauth_authorize_verifier'} eq ''
+		|| !defined($in{'oauth_authorize_verifier'})
+		|| $in{'oauth_authorize_verifier'} eq ''
+		|| $session->{'oauth_authorize_verifier'} ne $in{'oauth_authorize_verifier'}
+	) {
+		$session->{'oauth_authorize_verifier'} = &OAuthProvider::_generateRandomString(32);
+		$param->{'oauth_authorize_verifier'} = $session->{'oauth_authorize_verifier'};
+		
+		return 1;
+	}
+	
+	delete $session->{'oauth_authorize_verifier'};
+	
+	my $provider = new OAuthProvider(
+		method => $ENV{'REQUEST_METHOD'},
+		request_parameters => {
+			oauth_token => $in{'oauth_token'},
+			oauth_consumer_key => $key
+		}
+	);
+	return undef unless($provider);
+	
+	my $ok = defined($in{'oauth_authorize_ok'}) && !defined($in{'oauth_authorize_no'});
+	
+	my $r = $provider->generateVerifier(
+		token => $in{'oauth_token'},
+		user => $param->{'user'}{'email'},
+		granted => $ok
+	);
+	return undef unless($r);
+	
+	&do_redirect($r);
+	
+	return 1;
+}
+
+# Consumer requests an access token
+sub do_oauth_access {
+	&wwslog('info', 'do_oauth_access()');
+	$param->{'bypass'} = 'extreme';
+	
+	my $provider = new OAuthProvider(
+		method => $ENV{'REQUEST_METHOD'},
+		url => $param->{'base_url'}.$param->{'path_cgi'}.'/oauth_access',
+		authorization_header => $ENV{'HTTP_AUTHORIZATION'},
+		request_parameters => \%in
+	);
+	
+	my $bad = defined($provider) ? $provider->checkRequest(checktoken => 1) : 400;
+	my $http_code = $bad ? $bad : 200;
+	my $http_str = $bad ? (defined($provider) ? $provider->{'util'}->errstr : 'Bad Request') : 'OK';
+	
+	print 'Status: '.$http_code.' '.$http_str."\n";
+	print "Cache-control: no-cache\n";
+	print "Content-type: text/plain\n\n";
+	
+	print $provider->generateAccess(
+		token => $provider->{'params'}{'oauth_token'},
+		verifier => $provider->{'params'}{'oauth_verifier'}
+	) unless($bad);
+	
+	return 1;
+}
+
+# User ask for access token check
+sub do_oauth_check {
+	&wwslog('info', 'do_oauth_check()');
+	
+	$param->{'oauth_provider_ok'} = undef;
+	$param->{'oauth_config_ok'} = undef;
+	$param->{'oauth_check_ok'} = undef;
+	
+	return 1 unless($in{'oauth_provider'} =~ /^([^:]+):(.+)$/);
+	my $type = $1;
+	my $provider = $2;
+	my $consumer = undef;
+	
+	$param->{'oauth_provider_ok'} = 1;
+	
+	if($type eq 'voot') {
+		$consumer = VOOTConsumer->new(user => $param->{'user'}{'email'}, provider => $provider);
+	}#elsif($type eq 'foo') {
+	#	$consumer = FOOConsumer->new(user => $param->{'user'}{'email'}, provider => $provider);
+	#}
+	
+	return 1 unless(defined $consumer);
+	
+	$param->{'oauth_config_ok'} = 1;
+	
+	$consumer->getOAuthConsumer()->setWebEnv(
+		robot => $robot_id,
+		here_path => 'oauth_check/'.$in{'oauth_provider'},
+		base_path => $param->{'base_url'}.$param->{'path_cgi'}
+	);
+	
+	my $data = $consumer->check();
+	unless(defined $data) {
+		my $url = $consumer->getOAuthConsumer()->mustRedirect();
+		return &do_redirect($url) if(defined $url);
+	}
+	$param->{'oauth_check_ok'} = 1;
+	
+	$param->{'oauth_access_renewed'} = defined($in{'oauth_ready_done'});
+
+	return 1;
+}
+
+# Got back from OAuth workflow (provider), needs to get authorization token and call the right action
+sub do_oauth_ready {
+	&wwslog('info', 'do_oauth_ready()');
+	
+	my $callback = &do_ticket();
+	
+	$in{'oauth_ready_done'} = 1;
+	
+	return undef unless($in{'oauth_provider'} =~ /^([^:]+):(.+)$/);
+	my $type = $1;
+	my $provider = $2;
+	my $consumer = undef;
+	
+	if($type eq 'voot') {
+		$consumer = VOOTConsumer->new(user => $param->{'user'}{'email'}, provider => $provider);
+	}#elsif($type eq 'foo') {
+	#	$consumer = FOOConsumer->new(user => $param->{'user'}{'email'}, provider => $provider);
+	#}
+	
+	return undef unless(defined $consumer);
+	$consumer = $consumer->getOAuthConsumer();
+	
+	return undef unless($consumer->getAccessToken(
+		verifier => $in{'oauth_verifier'},
+		token => $in{'oauth_token'}
+	));
+	
+	return $callback;
+}
+			 
+# OpenSocial "home"
+sub do_opensocial {
+	&wwslog('info', 'do_opensocial()');
+	
+	return 'select_voot_provider_request';
+}
+
+# VOOT request
+sub do_voot {
+	&wwslog('info', 'do_voot(%s)', $in{'voot_path'});
+	$param->{'bypass'} = 'extreme';
+	
+	my $provider = new VOOTProvider(
+		voot_path => $in{'voot_path'},
+		method => $ENV{'REQUEST_METHOD'},
+		url => $param->{'base_url'}.$param->{'path_cgi'}.'/voot/'.$in{'voot_path'},
+		authorization_header => $ENV{'HTTP_AUTHORIZATION'},
+		request_parameters => \%in,
+		robot => $robot_id
+	);
+	
+	my $bad = defined($provider) ? $provider->checkRequest() : 400;
+	my $http_code = $bad ? $bad : 200;
+	my $http_str = $bad ? (defined($provider) ? $provider->getOAuthProvider()->{'util'}->errstr : 'Bad Request') : 'OK';
+	
+	my $r = $provider->response();
+	if(defined $provider->{'error'}) {
+		my @error = split(' ', $provider->{'error'});
+		$http_code = shift @error;
+		$http_str = join(' ', @error);
+	}
+	
+	print 'Status: '.$http_code.' '.$http_str."\n";
+	print "Cache-control: no-cache\n";
+	print "Content-type: text/plain\n\n";
+	print $r unless(defined $provider->{'error'});
+	
+	return 1;
+}
+
+# Displays VOOT providers list
+sub do_select_voot_provider_request {
+	&wwslog('info', 'do_select_voot_provider_request()');
+	
+	$param->{'voot_providers'} = &VOOTConsumer::getProviders();
+	
+	return 1;
+}
+
+# Display groups list for user/VOOT_provider
+sub do_select_voot_groups_request {
+	&wwslog('info', 'select_voot_groups_request()');
+	
+	$param->{'voot_provider'} = $in{'voot_provider'};
+	
+	my $consumer = new VOOTConsumer(
+		user => $param->{'user'}{'email'},
+		provider => $in{'voot_provider'}
+	);
+	return undef unless(defined $consumer);
+	$consumer->getOAuthConsumer()->setWebEnv(
+		robot => $robot_id,
+		here_path => 'select_voot_groups_request/'.$param->{'list'}.'/'.$param->{'voot_provider'},
+		base_path => $param->{'base_url'}.$param->{'path_cgi'}
+	) unless(defined $in{'oauth_ready_done'});
+
+	$param->{'voot_groups'} = $consumer->isMemberOf();
+	unless(defined $param->{'voot_groups'}) {
+		my $url = $consumer->getOAuthConsumer()->mustRedirect();
+		return &do_redirect($url) if(defined $url);
+	}
+	
+	return 1;
+}
+
+# VOOT groups choosen, generate config
+sub do_select_voot_groups {
+	&wwslog('info', 'select_voot_groups()');
+	
+	$param->{'voot_provider'} = $in{'voot_provider'};
+	$param->{'voot_groups'} = [];
+	foreach my $k (keys(%in)) {
+		next unless($k =~ /^voot_groups\[([^\]]+)\]$/);
+		next unless($in{$k} eq '1');
+		push(@{$param->{'voot_groups'}}, $1);
+	}
+
+	my @include_voot_group = @{$list->include_voot_group};	
+	foreach my $gid (@{$param->{'voot_groups'}}) {
+		push(@include_voot_group, {
+			name => $param->{'voot_provider'}.'::'.$gid,
+			user => $param->{'user'}{'email'},
+			provider => $param->{'voot_provider'},
+			group => $gid
+		});
+		# No save otherwise ...
+		$list->defaults('include_voot_group', undef);
+	}
+	$list->include_voot_group(\@include_voot_group);
+
+	if($list->save_config($param->{'user'}{'email'})) {
+		if($list->on_the_fly_sync_include('use_ttl'=>0)) {
+			&report::notice_report_web('subscribers_updated', {}, $param->{'action'});
+		}else {
+			&report::reject_report_web('intern', 'sync_include_failed', {}, $param->{'action'}, $list,$param->{'user'}{'email'}, $robot_id);
+		}
+		return 'review';
+	}else{
+		&report::reject_report_web('intern', 'cannot_save_config', {}, $param->{'action'}, $list, $param->{'user'}{'email'}, $robot_id);
+		&wwslog('info', 'do_select_voot_groups: Cannot save config file');
+		&web_db_log({'status' => 'error', 'error_type' => 'internal'});
+		return undef;
+	}	
+}
+
  ## Search among lists
 sub do_edit_attributes {
      &wwslog('info', 'do_edit_attributes(%s)', $in{'filter'});
@@ -10820,7 +11169,6 @@ sub _prepare_data {
 			 $empty_entry->{$sub_parameter} = $struct->{'format'}{$sub_parameter}{'default'};
 		       }
 		     }
-                     $empty_entry->{is_empty} = 1;
 
 		     ## Simpe parameter
 		   }else {
@@ -10901,7 +11249,6 @@ sub _prepare_data {
 		 $d = {};
 	     }
 
-             $p->{is_empty} = delete $d->{is_empty};
 	     foreach my $k (sort {$struct->{'format'}{$a}{'order'} <=> $struct->{'format'}{$b}{'order'}} 
 			    keys %{$struct->{'format'}}) {
 		 ## Prepare data recursively
@@ -18478,7 +18825,7 @@ sub get_safe_robot_conf {
 	   color_4 color_5 color_6 color_7 color_8 color_9 color_10 color_11
 	   color_12 color_13 color_14 color_15
 	   reporting_spam_script_path automatic_list_families
-	   your_lists_size
+	   voot_feature your_lists_size
     )) {
 	 $param->{'conf'}{$p} = $robot->$p;
 	 $param->{$p} = $robot->$p if $p =~ /_color$/ or $p =~ /color_/;
@@ -18503,6 +18850,7 @@ sub get_mime_type {
 
 sub do_maintenance {
     &wwslog('notice', 'do_maintenance()');
+    
     return 1;
 }
 

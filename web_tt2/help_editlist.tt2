@@ -1,10 +1,10 @@
 <!-- $Id$ -->
 
-<dl>
 [% FOREACH p = param %]
-<dt><a name="[% p.key %]"></a>
-    <strong>[% p.value.title %]</strong> ([% p.key %])[%|helploc%]:[%END%]
-<dd>
+  <a name="[% p.key %]"></a>
+  <strong>[% p.value.title %]</strong> ([% p.key %])[%|helploc%]:[%END%]
+  <dl>
+    <dd>
       [% IF p.key == 'add' %]
         [%|helploc%]Privilege for adding (ADD command) a subscriber to the list[%END%]
       [% ELSIF p.key == 'anonymous_sender' %]
@@ -175,17 +175,10 @@
         [%|helploc%]This parameter indicates which part of the message is used to perform automatic tagging.[%END%]
       [% ELSIF p.key == 'msg_topic_tagging' %]
         [%|helploc%]This parameter indicates if the tagging is optional or required for a list.[%END%]
+      [% ELSE %]
+        [%|helploc%]No Comment[%END%]
       [% END %]
     </dd>
+  </dl>
 [% END %]
-[% FOREACH key IN plugins('help_editlist') %]
-  [% IF param(key) %]
-<dt><a name="[% key %]"></a>
-    <strong>[% param(key).value.title %]</strong> ([% key %])[%|helploc%]:[%END%]
-<dd>[% TRY %][% INCLUDE $key %]
-    [% CATCH %][% key %]
-    [%END%]</dd>
-  [%END%]
-[%END]
-</dl>
 <!-- end help_editlist.tt2 -->
