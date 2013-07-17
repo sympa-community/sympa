@@ -703,8 +703,6 @@ our @params = (
 	'default'    => Sympa::Constants::SPOOLDIR . '/automatic',
 	'gettext_id' => 'Directory for automatic list creation spool',
 	'file'       => 'sympa.conf',
-	'version_validity' => '6.3',	# valid before version 6.3.
-	'upgrade'          => 1,        # used by upgrade process after validy
     },
     {   'name'            => 'sleep',
 	'default'         => '5',
@@ -1401,19 +1399,42 @@ our @params = (
 	'file'       => 'sympa.conf',
     },
 
+    { 'gettext_id' => 'NOT CATEGORIZED' },
+
+    {
+        'name'     => 'ldap_export_connection_timeout',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'ldap_export_dnmanager',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'ldap_export_host',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'ldap_export_name',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'ldap_export_password',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'ldap_export_suffix',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'sort',
+        'default'  => 'fr,ca,be,ch,uk,edu,*,com',
+    },
 ## Not implemented yet.
 ##    {   'name'     => 'chk_cert_expiration_task',
 ##	'optional' => '1',
 ##    },
 ##    {   'name'     => 'crl_update_task',
 ##	'optional' => '1',
-##    },
-##    {
-##	name => 'dkim_header_list',
-##	vhost => '1',
-##	file   => 'sympa.conf',
-##	'gettext_id'   => 'list of headers to be included ito the message for signature',
-##	default => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
 ##    },
 );
 

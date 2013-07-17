@@ -878,11 +878,13 @@ sub rename_list{
      }
      
      ## Check custom_subject
-     if (defined $list->custom_subject &&
-	 $list->custom_subject =~ /$old_listname/) {
-	 $list->custom_subject =~ s/$old_listname/$param{'new_listname'}/g;
-
-	 $list->save_config($param{'user_email'});	
+     if (my $c = $list->custom_subject)
+     {   # FIXME MO: this is unsave: check/replace full listname
+         if($c =~ /$old_listname/) {
+             $c =~ s/$old_listname/$param{new_listname}/g;
+	     $list->custom_subject($c);
+	     $list->save_config($param{'user_email'});	
+         }
      }
 
      if ($list->status eq 'open') {
