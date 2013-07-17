@@ -124,7 +124,7 @@ if ($operation eq 'add') {
 	next if ($alias =~ /^\#/);
 	next if ($alias =~ /^\s*$/);
 
-	$alias =~ /^([^\s:]+)[\s:]+\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
+	$alias =~ /^([^:]+):\s*\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
 	my $alias_value = $1;
 	my $command_value = $2;
 	my $maildrop = $3;
@@ -135,7 +135,7 @@ if ($operation eq 'add') {
 	    $command_value = $queue_transport;
 	}
 
-	# We substitute all occurrences of + by - for the rest of the attributes, including the dn.
+	# We substitute all occurences of + by - for the rest of the attributes, including the dn.
 	# The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
 	$alias_value =~ s/\+/\-/g;
 
@@ -195,7 +195,7 @@ elsif ($operation eq 'del') {
 	    next;
 	}
 
-	$alias =~ /^([^\s:]+)[\s:]/; 
+	$alias =~ /^([^:]+):/; 
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;
 
@@ -230,7 +230,7 @@ sub already_defined {
 
     foreach my $alias (@aliases) {
 	
-	$alias =~ /^([^\s:]+)[\s:]/;
+	$alias =~ /^([^:]+):/;
 
 	my $source_result = $ldap_connection->search(filter => "(".$ldap_mail_attribute."=".$1."\@".$domain.")",
 						     base => $ldap_base_dn);

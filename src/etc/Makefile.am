@@ -107,7 +107,6 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/review.private \
 		      scenari/review.public \
 		      scenari/send.closed \
-		      scenari/send.confidential \
 		      scenari/send.editorkey \
 		      scenari/send.editorkeyonly \
 		      scenari/send.editorkeyonlyauth \

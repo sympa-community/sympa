@@ -134,10 +134,10 @@
   [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]
   [% ELSIF u_err.msg == 'change_member_email_failed_included' %][%|loc(u_err.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
   [% ELSIF u_err.msg == 'change_admin_email_failed_included' %][%|loc(u_err.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
-  [% ELSIF u_err.msg == 'sync_include_voot_failed' %][%|loc(base_url,path_cgi,u_err.oauth_provider)%]Failed to include members from VOOT group, use the following link to check the OAuth status : <a href="%1%2/oauth_check/%3">%1%2/oauth_check/%3</a>[%END%] 
   [% ELSIF u_err.msg == 'merge_failed' %][%|loc(u_err.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]
  [% ELSIF u_err.msg %][%u_err.msg%]
   [% END %]
+>>>>>>> .fusion-droit.r9537
   <br />
 [% END %]
 

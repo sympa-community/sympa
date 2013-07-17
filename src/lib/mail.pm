@@ -477,9 +477,6 @@ sub mail_forward {
     ## Add an Auto-Submitted header field according to
     ## http://www.tools.ietf.org/html/draft-palme-autosub-01
     $message->get_mime_message->head->add('Auto-Submitted', 'auto-forwarded');
-    if (ref $rcpt && ref $rcpt eq 'ARRAY') {
-	$rcpt = join (',',@$rcpt);
-    }
     $message->{'rcpt'} = $rcpt; #FIXME: no effect
     #FIXME:
     $message->set_message_as_string($message->get_mime_message->as_string());

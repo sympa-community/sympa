@@ -99,7 +99,7 @@ dl {
                 font-size: 1em;
                 text-align: left;
                 vertical-align: top;
-                /* padding-bottom: 0px; */
+                padding-bottom: 0px;
                 padding-top: 5px;
                 padding-left: 5px;
                 padding-right: 5px;
@@ -239,6 +239,7 @@ td.text_right {
 
 .list_panel,
 #list_admin_menu {
+                   font-size: 1.4em;
                    font-weight: bold;
                    border: 1px solid [% color_12 %];
                    padding:0.5em;
@@ -253,9 +254,6 @@ td.text_right {
               font-size: 1.2em;
               margin-bottom:0.5em
               }
-#list_admin_menu {
-                   font-size: 1.4em;
-                   }
 
 .list_panel ul,
 #list_admin_menu ul {
@@ -1042,7 +1040,7 @@ a.actionMenuLinksCurrentPage:hover{
 
 a.actionMenuLinksInactive {
                             border-bottom: 1px solid [% color_2 %];
-                            border-right: 1px solid [% color_10 %];
+                            border-right:  1px solid [% color_10 %];
                             border-top: 1px solid [% color_10 %];
                             border-left: 1px solid [% color_10 %];
                             color: [% color_10 %];
@@ -1053,7 +1051,7 @@ a.actionMenuLinksInactive {
 
 a.actionMenuLinksInactive:hover {
                                   border-bottom: 1px solid [% color_2 %];
-                                  border-right: 1px solid [% color_10 %];
+                                  border-right:  1px solid [% color_10 %];
                                   border-top: 1px solid [% color_10 %];
                                   border-left: 1px solid [% color_10 %];
                                   color: [% color_10 %];
@@ -1066,13 +1064,12 @@ a.actionMenuLinksInactive:hover {
                          text-decoration: none;
                          padding: 0px 0px 0px 3px;
                          }
-/*
+
 a.ArcMenuLinks {
                  border: 1px solid [% color_2 %];
                  text-decoration: none;
                  padding: 0px 10px 0px 10px;
                  }
-*/
 
 a.ArcMenuLinks,
 a.ArcMenuLinks:visited,
@@ -1129,7 +1126,7 @@ a.ArcMenuLinksCurrentPage:hover {
 a.ArcMenuLinksInactive,
 a.ArcMenuLinksInactive:hover {
                                border-bottom: 2px solid [% color_2 %];
-                               border-right: 2px solid [% color_2 %];
+                               border-right:  2px solid [% color_2 %];
                                border-top: 1px solid [% color_2 %];
                                border-left: 1px solid [% color_2 %];
                                color: [% color_2 %];
@@ -1276,6 +1273,7 @@ h7 strong {
 
 .listTitle a,
 .listTitle a:hover {
+                     color:[% color_2 %];
                      font-weight:bold;
                      letter-spacing: 0.1em;
                      text-decoration:none;
@@ -1283,11 +1281,8 @@ h7 strong {
                      border:none!important;
                      }
 
-.listTitle a {
-               color: [% color_2 %];
-               }
 .listTitle a:hover {
-                     color: [% color_8 %];
+                     color:[% color_8 %];
                      }
 
 .listTitle.description {
@@ -2101,7 +2096,7 @@ table.preferences th {
 
 #nav li.MainMenuLinksCurrentPage:hover {
                                          border-bottom:1px solid [% color_5 %];
-                                         border-right: 1px solid [% color_8 %];
+                                         border-right:1px solid [% color_8 %];
                                          z-index:300;
                                          }
 
@@ -2128,7 +2123,7 @@ table.preferences th {
 /* not for IE5.x or IE6 */
 
 #subnav {
-          background: none;
+          background-color: none;
           position:relative;
           float:left;
           width:99.9%;
@@ -2273,112 +2268,112 @@ span.bottom_page {
 /* For the calendar */
 /********************/
 .divCal {
-          position: absolute;
-          border: 1px [% color_9 %];
-          background: [% color_9 %];
-          z-index: 500;
+          position:absolute;
+          border:1px [% color_9 %];
+          background:[% color_9 %];
+          z-index:500;
           }
 
 .divCal a{
-           text-decoration: none;
-           width: 100%;
+           text-decoration:none;
+           width:100%;
            }
 
 .divCal table {
-                font-size: 12px;
-                font-family: Tahoma, Geneva, Verdana, sans-serif;
-                text-align: center;
-                margin: 0px;
-                width: 140px;
+                font-size:12px;
+                font-family:Tahoma;
+                text-align:center;
+                margin:0px;
+                width:140px;
                 }
 
 .divCal td {
-             margin: 0px;
-             border: 1px solid [% color_8 %];
+             margin : 0px;
+             border:1px solid [% color_8 %];
              }
 .divCal .zoneTitre {
-                     font-size: 12px;
-                     font-family: Tahoma, Geneva, Verdana, sans-serif;
-                     text-align: center;
-                     margin: 0px;
-                     background: [% color_9 %];
+                     font-size:12px;
+                     font-family:Tahoma;
+                     text-align:center;
+                     margin:0px;
+                     background:[% color_9 %];
                      }
 
 .divCal .zoneNav {
-                   font-size: 10px;
-                   font-family: Tahoma, Geneva, Verdana, sans-serif;
-                   text-align: center;
-                   margin: 0px;
-                   cursor: pointer;
+                   font-size:10px;
+                   font-family:Tahoma;
+                   text-align:center;
+                   margin:0px;
+                   cursor:pointer;
                    }
 
 .divCal .zoneMois {
-                    font-family: Tahoma, Geneva, Verdana, sans-serif;
-                    width: 70px;
-                    margin: 0px;
+                    font-family:Tahoma;
+                    width:70px;
+                    margin:0px;
                     }
 
 .divCal .zoneAnnee {
-                    font-size: 10px;
-                    font-weight: bold;
-                    text-align: right;
-                    margin: 0px;
-                    width: 100%;
+                    font-size:10px;
+                    font-weight:bold;
+                    text-align:right;
+                    margin:0px;
+                    width:100%;
                     }
 
 .divCal .nSemaine {
-                    font-family: Tahoma, Geneva, Verdana, sans-serif;
-                    width: 30px;
-                    margin: 0px;
-                    color: [% color_4 %];
+                    font-family:Tahoma;
+                    width:30px;
+                    margin:0px;
+                    color:[% color_4 %];
                     }
 
 .divCal div{
-             margin: 0px;
+             margin : 0px;
              }
 
 .divCal .td {
-              color: [% color_5 %];
+              color:[% color_5 %];
               } /*par defaut*/
 
 .divCal .tdx .enWeekend {
-                          background: [% color_8 %];
+                          background:[% color_8 %];
                           }
 
 .divCal .tdx .enFeriee {
-                         background: [% color_8 %];
+                         background:[% color_8 %];
                          }
 
 .divCal .tdx .enMois {
-                       color: black;
-                       font-weight: bold;
+                       color:black;
+                       font-weight:bold;
                        }
 
 .divCal .tdx .aujourdhui {
-                           border: 2px solid [% color_7 %];
+                           border:2px solid [% color_7 %];
                            }
 
 .divCal .tdxNow {
-                  color: black;
-                  font-weight: bold;
+                  color:black;
+                  font-weight:bold;
                   }
 
 .divCal .tdxNow:hover {
-                        background: [% color_4 %];
+                        background:[% color_4 %];
                         }
 
 .divCal .tdx:hover {
-                     background: [% color_3 %];
+                     background:[% color_3 %];
                      }
 
 .divCal .tdx:hover .enWeekend {
-                                background: [% color_6 %];
+                                background:[% color_6 %];
                                 }
 
 .divCal .tdx:hover .enMois {
-                             color: [% color_2 %];
-                             font-weight: bold;
-                             background: [% color_6 %];
+                             color:[% color_2 %];
+                             font-weight:bold;
+                             background:[% color_6 %];
                              } /*pour firefox */
 
 /* Line height not to be overridden by locale-specific styles. */

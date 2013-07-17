@@ -52,7 +52,7 @@
 
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
-	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
+	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
 	  [%- ELSE -%]&nbsp;
 	  [%- END -%]
 	</td>

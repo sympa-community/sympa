@@ -12,7 +12,9 @@ Installing Sympa from sources
 =============================
 
 If you get sources from svn tree first run:
-       autoreconf -i
+       aclocal
+       autoconf
+       automake --add-missing
 
 
 Create a dedicated user sympa.sympa (and it's home directory) and  run 

@@ -86,17 +86,9 @@ sub upgrade {
 	return 1;
     }
 
-    ## Check database connectivity and probe database
-    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
-	Log::do_log('err',
-	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
-	    Site->db_name
-	);
-	return undef;
-    }
-
     ## Always update config.bin files while upgrading
     &Conf::delete_binaries();
+
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     Log::do_log('notice',
@@ -734,7 +726,7 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '6.3a')) {
 	# move spools from file to database.
 	my %spools_def = ('queue' =>  'msg',
-			  'queuebounce' => 'bounce',
+			  'bouncequeue' => 'bounce',
 			  'queuedistribute' => 'msg',
 			  'queuedigest' => 'digest',
 			  'queuemod' => 'mod',
@@ -869,20 +861,6 @@ sub upgrade {
 		    $robot_id = $2;
 		    $meta{'authkey'} = $3;
 		    $meta{'date'} = (stat($spooldir.'/'.$filename))[9];
-		}elsif ($spoolparameter eq 'queueoutgoing'){
-		    unless ($filename =~ /^(\S+)\.(\d+)\.\d+\.\d+$/) {
-			$ignored .= ',' . $filename;
-			next;
-		    }
-		    my $recipient = $1;
-		    ($listname, $robot_id) = split /\@/, $recipient;
-		    $meta{'date'} = $2;
-		    $robot_id = lc($robot_id || Site->domain);
-		    ## check if robot exists
-		    unless ($robot = Robot->new($robot_id)) {
-			$ignored .= ',' . $filename;
-			next;
-		    }
 		}elsif ($spoolparameter eq 'queuesubscribe'){
 		    my $match = 0;		    
 		    foreach my $robot (@{Robot::get_robots()}) {
@@ -963,24 +941,6 @@ sub upgrade {
 		    $messageasstring = $messageasstring.$_;
 		}
 		close(FILE);
-
-		if ($spoolparameter eq 'queuesubscribe') {
-		    my @lines = split '\n', $messageasstring;
-		    $meta{'sender'} = shift @lines;
-		    $messageasstring = join '\n', @lines;
-		    my @subparts = split '\|\|',$messageasstring;
-		    if ($#subparts > 0) {
-			$messageasstring = join '||',@subparts;
-		    }else {
-			$messageasstring = $subparts[0];
-			if ($messageasstring =~ /<custom_attributes>/) {
-			    $messageasstring = '||'.$messageasstring;
-			}else {
-			    $messageasstring = $messageasstring.'||';
-			}
-		    }
-		    $messageasstring .= "\n";
-		}
 
 		## Store into DB spool
 		unless ($spoolparameter eq 'queue' or

@@ -96,7 +96,7 @@ if ($operation eq 'add') {
 	    next;
 	}
 	
-	$alias =~ /^([^\s:]+)[\s:]+(\".*\")$/;
+	$alias =~ /^([^:]+):\s*(\".*\")$/;
 	my $alias_value = $1;
 	my $command_value = $2;
 	$command_value =~ s/\"//g;
@@ -126,7 +126,7 @@ if ($operation eq 'add') {
 	    next;
 	}
 
-	$alias =~ /^([^\s:]+)[\s:]/; 
+	$alias =~ /^([^:]+):/; 
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;
 
@@ -160,7 +160,7 @@ sub already_defined {
 	    next;
 	}
 	
-	$alias =~ /^([^\s:]+)[\s:]/; 
+	$alias =~ /^([^:]+):/; 
 	my $alias_value = $1;
 	$alias_value =~ s/\+/\-/g;	
 

@@ -476,7 +476,7 @@ sub get_sender_email {
 		}
 	    } elsif ($hdr->get($field)) {
 		## Try to get message header
-		## On "Resent-*:" headers, the first occurrence must be used.
+		## On "Resent-*:" headers, the first occurrance must be used.
 		## Though "From:" can occur multiple times, only the first
 		## one is detected.
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
@@ -1488,17 +1488,8 @@ sub get_message_as_string {
 
 sub set_message_as_string {
     my $self = shift;
-    my $new_msgasstring = shift;
-    if ($self->is_signed) {# If signed, update headers only.
-	my @new_paragraphs = split '\n\n', $new_msgasstring;
-	my $headers = shift @new_paragraphs;
-	my @old_paragraphs = split '\n\n', $self->get_message_as_string;
-	shift @old_paragraphs;
-	my $old_body = join "\n\n", @old_paragraphs;
-	$self->{'msg_as_string'} = $headers."\n\n".$old_body;
-    }else{
-	$self->{'msg_as_string'} = $new_msgasstring;
-    }
+    
+    $self->{'msg_as_string'} = shift;
 }
 
 #NOT USED.
@@ -1515,8 +1506,7 @@ sub reset_message_from_entity {
     my $entity = shift;
     
     unless (ref ($entity) =~ /^MIME/) {
-	Log::do_log('err',
-	    'Can not reset a message by starting from object %s', ref $entity);
+	Log::do_log('err','Can not reset a message by starting from object %s', ref $entity);
 	return undef;
     }
     $self->{'msg'} = $entity;

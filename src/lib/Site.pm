@@ -925,6 +925,9 @@ sub send_file {
     ## What file
     my $lang = $data->{'lang'};
     my $tt2_include_path = $self->get_etc_include_path('mail_tt2', $lang);
+    unshift @$tt2_include_path, $::plugins->tt2Paths
+        if $::plugins;
+
     if (ref $self eq 'List') {
 	## list directory to get the 'info' file
 	push @{$tt2_include_path}, $self->dir;
@@ -1542,59 +1545,6 @@ sub AUTOLOAD {
 	}
     };
     goto &$AUTOLOAD;
-}
-
-=over 4
-
-=item config
-
-XXX I<Not yet implemented>.
-
-I<Getter/Setter>, I<internal use>.
-Gets or sets configuration information, eliminating defaults.
-
-B<Note>:
-Use L</fullconfig> accessor to get full configuration informaton.
-
-=back
-
-=cut
-
-sub config {
-    croak 'Not implemented';
-}
-
-=over 4
-
-=item fullconfig
-
-I<Getter>.
-Configuration information of the site, with defaults applied.
-
-B<Note>:
-Use L</config> accessor to get information without defaults.
-
-B<Note>:
-L<fullconfig> and L<config> accessors will return the copy of configuration
-information.  Modification of them will never affect to actual site
-parameters.
-Use C<E<lt>config parameterE<gt>> accessors to get or set each site parameter.
-
-=back
-
-=cut
-
-## TODO: expand scenario parameters.
-sub fullconfig {
-    my $self       = shift;
-    my $fullconfig = {};
-
-    foreach my $p (@confdef::params) {
-	next unless $p->{'name'};
-	my $attr = $p->{'name'};
-	$fullconfig->{$p->{'name'}} = $self->$attr;
-    }
-    return $fullconfig;
 }
 
 =over 4

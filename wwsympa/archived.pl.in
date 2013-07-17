@@ -278,8 +278,6 @@ while (!$end) {
 	next;
     }
     
-##    Log::do_log('trace', 'orders[0] "%s"', $orders[0]);
-
     if ($orders[0] =~ /^rebuild\s*$/ ) {
 	&Log::do_log('debug',"rebuild found ");
 	if ($item->{'list'} && $item->{'robot'}) {	
@@ -863,10 +861,6 @@ sub mail2arc {
 	unset_hidden_mode();
     } 
 
-##    Log::do_log('trace',
-##	'mail2arc for %s yyyy:%s mm:%s dd:%s hh:%s min:%s ss:%s',
-##	$list, $yyyy, $mm, $dd, $hh, $min, $ss);
-
     if (Site->custom_archiver) {
 	my $file = Site->tmpdir . "/arc." . $list->get_id .
 	    $message_in_spool->{'messagekey'} ;
@@ -888,7 +882,6 @@ sub mail2arc {
 		    Log::do_log('notice', 'Unable to send notify "unable_to_create_dir" to listmaster');
 		}
 	    }
-##	    Log::do_log('trace', 'mkdir %s', $basedir);
 	}
 	
 	## Check quota
@@ -926,9 +919,6 @@ sub mail2arc {
 		return undef;
 	    }
 	    
-##	    Log::do_log('trace', 'mkdir $arcpath/%s/%s-%s',
-##		$list->get_id, $yyyy, $mm);
-	    
 	    if ($list->web_archive->{'max_month'}){
 		# maybe need to remove some old archive
 		if (opendir DIR,$arcpath.'/'.$list->get_id) {
@@ -953,7 +943,6 @@ sub mail2arc {
 		Log::do_log('err', 'Cannot create directory %s', $arctxtdir);
 		return undef;
 	    }
-##	    Log::do_log('trace', 'mkdir %s', $arctxtdir);
 	}
 	
 	## fetch next message number in archive arctxt .
@@ -987,8 +976,6 @@ sub mail2arc {
 
 	my $mhonarc_ressources = $list->get_etc_filename('mhonarc-ressources.tt2');
 	
-##	Log::do_log ('trace', 'calling %s for list %s', Site->mhonarc, $list);
-	
 	# call mhonarc on cleaned message source to make clean htlm view of message
 	my $cmd = sprintf
 	    '%s -add -modifybodyaddresses -addressmodifycode \'%s\' -rcfile %s -outdir %s -definevars "listname=\'%s\' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s" -umask %s < %s',
@@ -996,8 +983,6 @@ sub mail2arc {
 	    $mhonarc_ressources, $monthdir, $list->name, $robot->domain,
 	    $yyyy, $mm, $yyyy, $mm, $robot->arc_path, $robot->wwsympa_url,
 	    $tag, Site->umask, $output;
-	
-##	Log::do_log('trace', 'System call : %s', $cmd);
 	
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode >> 8;
@@ -1017,8 +1002,6 @@ sub mail2arc {
 	
 	save_idx("$monthdir/index",$newfile);
     }
-##    Log::do_log('trace', 'Message %s archived',
-##	$message_in_spool->{'messagekey'});
     return 1;
 }
 

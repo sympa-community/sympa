@@ -13,14 +13,14 @@ our %default = (
     'length'     => 25
 );
 
-my @param_order =
+our @param_order =
     qw (subject visibility info subscribe add unsubscribe del owner owner_include
     send editor editor_include delivery_time account topics
     host lang web_archive archive digest digest_max_size available_user_options
     default_user_options msg_topic msg_topic_keywords_apply_on msg_topic_tagging reply_to_header reply_to forced_reply_to *
     verp_rate tracking welcome_return_path remind_return_path user_data_source include_file include_remote_file
     include_list include_remote_sympa_list include_ldap_query
-    include_ldap_2level_query include_sql_query include_voot_group include_admin ttl distribution_ttl creation update
+    include_ldap_2level_query include_sql_query include_admin ttl distribution_ttl creation update
     status serial custom_attribute include_ldap_ca include_ldap_2level_ca include_sql_ca);
 
 ## List parameters aliases
@@ -52,7 +52,7 @@ my %alias = (
 ## synonym :     Defines synonyms for parameter values (for compatibility reasons)
 ## gettext_unit :Unit of the parameter ; this is used in web forms and refers to translated
 ##               strings in PO catalogs
-## occurrence :  Occurrence of the parameter in the config file
+## occurrence :  Occurerence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
 ##               example : a list may have multiple owner
 ## gettext_id :    Title reference in NLS catalogues
@@ -514,7 +514,7 @@ our %pinfo = (
 	'group'      => 'sending',
 	'gettext_id' => "Allow message personalization",
 	'format'     => ['on', 'off'],
-	'occurrence' => '0-1',
+	'occurence'  => '0-1',
 	'default'    => {'conf' => 'merge_feature'}
     },
 
@@ -522,7 +522,7 @@ our %pinfo = (
 	'group'      => 'sending',
 	'gettext_id' => "Reject mail from automates (crontab, etc)?",
 	'format'     => ['on', 'off'],
-	'occurrence' => '0-1',
+	'occurence'  => '0-1',
 	'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
@@ -838,8 +838,17 @@ our %pinfo = (
 	'gettext_id' =>
 	    "Notify subscribers when they are included from a data source?",
 	'format'    => ['on', 'off'],
-	'occurrence'=> '0-1',
+	'occurence' => '0-1',
 	'default'   => 'off',
+    },
+
+    'sql_fetch_timeout' => {
+	'group'        => 'data_source',
+	'gettext_id'   => "Timeout for fetch of include_sql_query",
+	'gettext_unit' => 'seconds',
+	'format'       => '\d+',
+	'length'       => 6,
+	'default'      => {'conf' => 'default_sql_fetch_timeout'},
     },
 
     'user_data_source' => {
@@ -1274,47 +1283,6 @@ our %pinfo = (
 	'occurrence' => '0-n'
     },
 
-    'sql_fetch_timeout' => {
-	'group'        => 'data_source',
-	'gettext_id'   => "Timeout for fetch of SQL query inclusion",
-	'gettext_unit' => 'seconds',
-	'format'       => '\d+',
-	'length'       => 6,
-	'default'      => {'conf' => 'default_sql_fetch_timeout'},
-    },
-
-    'include_voot_group' => {
-	'group'      => 'data_source',
-	'gettext_id' => "VOOT group inclusion",
-	'format'     => {
-	    'name' => {
-		'order'      => 1,
-		'gettext_id' => "short name for this source",
-		'format'     => '.+',
-		'length'     => 15
-	    },
-	    'user' => {
-		'order'      => 2,
-		'gettext_id' => "user",
-		'format'     => '\S+',
-		'occurrence' => '1'
-	    },
-	    'provider' => {
-		'order'      => 3,
-		'gettext_id' => "provider",
-		'format'     => '\S+',
-		'occurrence' => '1'
-	    },
-	    'group' => {
-		'order'      => 4,
-		'gettext_id' => "group",
-		'format'     => '\S+',
-		'occurrence' => '1'
-	    }
-	},
-	'occurrence' => '0-n'
-    },
-
     'ttl' => {
 	'group'        => 'data_source',
 	'gettext_id'   => "Inclusions timeout",
@@ -1421,7 +1389,7 @@ our %pinfo = (
 		'order'      => 9,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurrence' => '1'
+		'occurence'  => '1'
 	    },
 	    'select' => {
 		'order'      => 10,
@@ -1585,7 +1553,7 @@ our %pinfo = (
 		'order'      => 18,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurrence' => '1'
+		'occurence'  => '1'
 	    },
 	    'nosync_time_ranges' => {
 		'order'      => 19,
@@ -1670,7 +1638,7 @@ our %pinfo = (
 		'order'      => 10,
 		'gettext_id' => "Name of email entry",
 		'format'     => '\S+',
-		'occurrence' => '1'
+		'occurence'  => '1'
 	    },
 	    'nosync_time_ranges' => {
 		'order'      => 11,
@@ -1690,7 +1658,7 @@ our %pinfo = (
 	'gettext_comment' =>
 	    "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
 	'format'    => ['on', 'off'],
-	'occurrence'=> '0-1',
+	'occurence' => '0-1',
 	'default' => {'conf' => 'dkim_feature'}
     },
 
@@ -1706,7 +1674,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    "The file must contain a RSA PEM encoded private key",
 		'format'    => '\S+',
-		'occurrence'=> '0-1',
+		'occurence' => '0-1',
 		'default'   => {'conf' => 'dkim_private_key_path'}
 	    },
 	    'selector' => {
@@ -1715,7 +1683,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
 		'format'    => '\S+',
-		'occurrence'=> '0-1',
+		'occurence' => '0-1',
 		'default'   => {'conf' => 'dkim_selector'}
 	    },
 	    'header_list' => {
@@ -1725,7 +1693,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'You should probably use the default value which is the value recommended by RFC4871',
 		'format'    => '\S+',
-		'occurrence'=> '0-1',
+		'occurence' => '0-1',
 		'default'   => {'conf' => 'dkim_header_list'},
 		'obsolete'  => 1,
 	    },
@@ -1736,7 +1704,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
 		'format'    => '\S+',
-		'occurrence'=> '0-1',
+		'occurence' => '0-1',
 		'default'   => {'conf' => 'dkim_signer_domain'}
 	    },
 	    'signer_identity' => {
@@ -1746,7 +1714,7 @@ our %pinfo = (
 		'gettext_comment' =>
 		    'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list broadcast messages is i=<listname>-request@<domain>',
 		'format'    => '\S+',
-		'occurrence'=> '0-1'
+		'occurence' => '0-1'
 	    },
 	},
 	'occurrence' => '0-1'
@@ -1860,7 +1828,7 @@ our %pinfo = (
 	'gettext_id' =>
 	    "Allow picture display? (must be enabled for the current robot)",
 	'format'    => ['on', 'off'],
-	'occurrence'=> '0-1',
+	'occurence' => '0-1',
 	'default' => {'conf' => 'pictures_feature'}
     },
 
@@ -1980,7 +1948,7 @@ our %pinfo = (
 		'gettext_id' => "type",
 		'format'     => ['string', 'text', 'integer', 'enum'],
 		'default'    => 'string',
-		'occurrence' => 1
+		'occurence'  => 1
 	    },
 	    'enum_values' => {
 		'order'      => 5,
@@ -1999,6 +1967,8 @@ our %pinfo = (
 );
 
 ## Apply defaults to parameters definition (%pinfo)
+# XXX MO: to arrange this via import() is a very bad idea!
+sub cleanup($$);
 sub import {
     return if exists $default{'order'};    # already loaded
 
@@ -2013,106 +1983,102 @@ sub import {
 
     ## Parameters
     foreach my $p (keys %pinfo) {
-	## Apply defaults to %pinfo
-	foreach my $d (keys %default) {
-	    unless (defined $pinfo{$p}->{$d}) {
-		$pinfo{$p}->{$d} = $default{$d};
-	    }
-	}
+        cleanup($p, $pinfo{$p});
+    }
+}
+        
+sub cleanup($$)
+{   my ($p, $v) = @_;
 
-	## Scenario format
-	if ($pinfo{$p}->{'scenario'}) {
-	    $pinfo{$p}->{'format'}  = tools::get_regexp('scenario');
-	    $pinfo{$p}->{'default'} = 'default';
-	}
+    ## Apply defaults to %pinfo
+    foreach my $d (keys %default) {
+    	$v->{$d} = $default{$d} unless defined $v->{$d};
+    }
 
-	## Task format
-	if ($pinfo{$p}->{'task'}) {
-	    $pinfo{$p}->{'format'} = tools::get_regexp('task');
-	}
+    ## Scenario format
+    if ($v->{'scenario'}) {
+        $v->{'format'}  = tools::get_regexp('scenario');
+        $v->{'default'} = 'default';
+    }
 
-	## Datasource format
-	if ($pinfo{$p}->{'datasource'}) {
-	    $pinfo{$p}->{'format'} = tools::get_regexp('datasource');
-	}
+    ## Task format
+    if ($v->{'task'}) {
+        $v->{'format'} = tools::get_regexp('task');
+    }
 
-	## Enumeration
-	if (ref($pinfo{$p}->{'format'}) eq 'ARRAY') {
-	    $pinfo{$p}->{'file_format'} ||= join '|',
-		@{$pinfo{$p}->{'format'}};
-	}
+    ## Datasource format
+    if ($v->{'datasource'}) {
+        $v->{'format'} = tools::get_regexp('datasource');
+    }
 
-	## Set 'format' as default for 'file_format'
-	$pinfo{$p}->{'file_format'} ||= $pinfo{$p}->{'format'};
+    ## Enumeration
+    if (ref $v->{'format'} eq 'ARRAY') {
+        $v->{'file_format'} ||= join '|', @{$v->{'format'}};
+    }
 
-	if ($pinfo{$p}->{'occurrence'} =~ /n$/ and
-	    $pinfo{$p}->{'split_char'}) {
-	    my $format = $pinfo{$p}->{'file_format'};
-	    my $char   = $pinfo{$p}->{'split_char'};
-	    $pinfo{$p}->{'file_format'} =
-		"($format)*(\\s*$char\\s*($format))*";
-	}
+    ## Set 'format' as default for 'file_format'
+    $v->{'file_format'} ||= $v->{'format'};
 
-	next
-	    unless ref($pinfo{$p}->{'format'}) eq 'HASH' and
-		ref($pinfo{$p}->{'file_format'}) eq 'HASH';
+    if ($v->{'occurrence'} =~ /n$/ && $v->{'split_char'}) {
+        my $format = $v->{'file_format'};
+        my $char   = $v->{'split_char'};
+        $v->{'file_format'} = "($format)*(\\s*$char\\s*($format))*";
+    }
 
-	## Parameter is a Paragraph)
-	foreach my $k (keys %{$pinfo{$p}->{'format'}}) {
-	    ## Defaults
-	    foreach my $d (keys %default) {
-		unless (defined $pinfo{$p}->{'format'}{$k}{$d}) {
-		    $pinfo{$p}->{'format'}{$k}{$d} = $default{$d};
-		}
-	    }
+    ref $v->{'format'} eq 'HASH' && ref $v->{'file_format'} eq 'HASH'
+        or return;
 
-	    ## Scenario format
-	    if (ref($pinfo{$p}->{'format'}{$k}) and
-		$pinfo{$p}->{'format'}{$k}{'scenario'}) {
-		$pinfo{$p}->{'format'}{$k}{'format'} =
-		    tools::get_regexp('scenario');
-		$pinfo{$p}->{'format'}{$k}{'default'} = 'default'
-		    unless $p eq 'web_archive' and
-			$k eq 'access';
-	    }
+    ## Parameter is a Paragraph
+    foreach my $k (keys %{$v->{'format'}}) {
+        ## Defaults
+        foreach my $d (keys %default) {
+    	    unless (defined $v->{'format'}{$k}{$d}) {
+    	        $v->{'format'}{$k}{$d} = $default{$d};
+    	    }
+        }
 
-	    ## Task format
-	    if (ref($pinfo{$p}->{'format'}{$k}) and
-		$pinfo{$p}->{'format'}{$k}{'task'}) {
-		$pinfo{$p}->{'format'}{$k}{'format'} =
-		    tools::get_regexp('task');
-	    }
+        ## Scenario format
+        if (ref($v->{'format'}{$k}) && $v->{'format'}{$k}{'scenario'}) {
+    	    $v->{'format'}{$k}{'format'} = tools::get_regexp('scenario');
+    	    $v->{'format'}{$k}{'default'} = 'default'
+    	        unless $p eq 'web_archive' && $k eq 'access';
+        }
 
-	    ## Datasource format
-	    if (ref($pinfo{$p}->{'format'}{$k}) and
-		$pinfo{$p}->{'format'}{$k}{'datasource'}) {
-		$pinfo{$p}->{'format'}{$k}{'format'} =
-		    tools::get_regexp('datasource');
-	    }
+        ## Task format
+        if (ref($v->{'format'}{$k}) and
+    	$v->{'format'}{$k}{'task'}) {
+    	$v->{'format'}{$k}{'format'} = tools::get_regexp('task');
+        }
 
-	    ## Enumeration
-	    if (ref($pinfo{$p}->{'format'}{$k}{'format'}) eq 'ARRAY') {
-		$pinfo{$p}->{'file_format'}{$k}{'file_format'} ||= join '|',
-		    @{$pinfo{$p}->{'format'}{$k}{'format'}};
-	    }
+        ## Datasource format
+        if (ref($v->{'format'}{$k}) and
+    	$v->{'format'}{$k}{'datasource'}) {
+    	    $v->{'format'}{$k}{'format'} = tools::get_regexp('datasource');
+        }
 
-	    if ($pinfo{$p}->{'file_format'}{$k}{'occurrence'} =~ /n$/ and
-		$pinfo{$p}->{'file_format'}{$k}{'split_char'}) {
-		my $format = $pinfo{$p}->{'file_format'}{$k}{'file_format'};
-		my $char   = $pinfo{$p}->{'file_format'}{$k}{'split_char'};
-		$pinfo{$p}->{'file_format'}{$k}{'file_format'} =
-		    "($format)*(\\s*$char\\s*($format))*";
-	    }
+        ## Enumeration
+        if (ref($v->{'format'}{$k}{'format'}) eq 'ARRAY') {
+    	$v->{'file_format'}{$k}{'file_format'} ||= join '|',
+    	    @{$v->{'format'}{$k}{'format'}};
+        }
 
-	}
+        if ($v->{'file_format'}{$k}{'occurrence'} =~ /n$/ && $v->{'file_format'}{$k}{'split_char'}) {
+    	    my $format = $v->{'file_format'}{$k}{'file_format'};
+    	    my $char   = $v->{'file_format'}{$k}{'split_char'};
+    	    $v->{'file_format'}{$k}{'file_format'} =
+    	        "($format)*(\\s*$char\\s*($format))*";
+        }
 
-	next unless ref($pinfo{$p}->{'file_format'}) eq 'HASH';
+    }
 
-	foreach my $k (keys %{$pinfo{$p}->{'file_format'}}) {
-	    ## Set 'format' as default for 'file_format'
-	    $pinfo{$p}->{'file_format'}{$k}{'file_format'} ||=
-		$pinfo{$p}->{'file_format'}{$k}{'format'};
-	}
+    ref $v->{'file_format'} eq 'HASH'
+        or return;
+
+    foreach my $k (keys %{$v->{'file_format'}}) {
+        ## Set 'format' as default for 'file_format'
+        $v->{'file_format'}{$k}{'file_format'} ||=
+    	    $v->{'file_format'}{$k}{'format'};
     }
 }
 
+1;

@@ -3062,12 +3062,12 @@ sub create_automatic_list {
     my $listname   = $param{'listname'};
 
     unless ($self->is_allowed_to_create_automatic_lists(%param)) {
-	Log::do_log(
+	&Log::do_log(
 	    'err',
-	    'User %s is not allowed to create automatic list list %s@%s.',
-	    $sender,
+	    'Unconsistent scenario evaluation result for automatic list creation of list %s@%s by user %s.',
 	    $listname,
 	    $self->domain,
+	    $sender
 	);
 	return undef;
     }
