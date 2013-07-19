@@ -18,9 +18,9 @@ sub request {
 	if (Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
 	    $ENV{'SYMPA_ROBOT'} =
 		Site->robot_by_soap_url->{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
-	    Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
+	    Sympa::Log::Syslog::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
 	} else {
-	    Log::do_log('debug2', 'URL : %s',
+	    Sympa::Log::Syslog::do_log('debug2', 'URL : %s',
 		$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
 	    $ENV{'SYMPA_ROBOT'} = Site->domain;
 	}

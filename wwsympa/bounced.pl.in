@@ -171,12 +171,12 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $daemon_name = &Log::set_daemon($0);
+my $daemon_name = &Sympa::Log::Syslog::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
 
 # Load sympa.conf
 unless (defined Robot::get_robots()) {
-    Log::fatal_err(
+    Sympa::Log::Syslog::fatal_err(
 	'Unable to load sympa configuration, file %s has errors.',
 	Conf::get_sympa_conf()
     );
@@ -186,7 +186,7 @@ unless (defined Robot::get_robots()) {
 
 ## Check databse connectivity
 unless (SDM::check_db_connect()) {
-    Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
+    Sympa::Log::Syslog::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', Site->db_name);
 }
 
 ## Put ourselves in background if not in debug mode. 
@@ -218,20 +218,20 @@ unless ($options->{'stderr_to_tty'}) {
 }
 
 if ($main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
-    Log::do_log(
+    Sympa::Log::Syslog::set_log_level($main::options{'log_level'});
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, log level set using options : %s',
 	$main::options{'log_level'}
     ); 
 } else {
-    Log::set_log_level(Site->log_level);
-    Log::do_log(
+    Sympa::Log::Syslog::set_log_level(Site->log_level);
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, default log level %s',
 	Site->log_level
     ); 
 }
 
-&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
+&Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
 
 ## Set the User ID & Group ID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -243,7 +243,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (useful on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
+    Sympa::Log::Syslog::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO.");
 }
 
 ## Sets the UMASK
@@ -251,11 +251,11 @@ umask(oct(Site->umask));
 
 ## Change to list root
 unless (chdir(Site->home)) {
-    Log::do_log('info', 'Unable to change directory');
+    Sympa::Log::Syslog::do_log('info', 'Unable to change directory');
     exit (-1);
 }
 
-Log::do_log('notice', "bounced Started");
+Sympa::Log::Syslog::do_log('notice', "bounced Started");
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -264,7 +264,7 @@ my $end = 0;
 my $spool = new SympaspoolClassic('bounce');
 
 
-Log::do_log('debug','starting infinite loop');
+Sympa::Log::Syslog::do_log('debug','starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     sleep Site->sleep;
@@ -279,7 +279,7 @@ while (!$end) {
 	$bounce = BounceMessage->new($spooled_bounce)
 	    if $spooled_bounce;
 	unless ($bounce) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Message %s: badly formatted bounce message. Ignoring.',
 		$spooled_bounce->{'messagekey'}
 	    );
@@ -288,7 +288,7 @@ while (!$end) {
 	}
 	if ($bounce->process) {
 	    unless ($spool->remove_message($bounce->{'messagekey'})) {
-		Log::do_log ('err',
+		Sympa::Log::Syslog::do_log ('err',
 		    'Could not remove message %s from bounce spool',
 		    $bounce
 		);
@@ -306,7 +306,7 @@ while (!$end) {
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
-Log::do_log('notice', 'bounced exited normally due to signal');
+Sympa::Log::Syslog::do_log('notice', 'bounced exited normally due to signal');
 tools::remove_pid('bounced', $$);
 
 exit(0);

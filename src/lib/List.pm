@@ -558,7 +558,7 @@ $DB_BTREE->{compare} = \&_compare_addresses;
 
 ## Creates an object.
 sub new {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -585,7 +585,7 @@ sub new {
 	}
 
 	unless ($robot) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Missing robot parameter, cannot create list object for %s',
 		$name)
 		unless ($options->{'just_try'});
@@ -595,7 +595,7 @@ sub new {
 	## Only process the list if the name is valid.
 	my $listname_regexp = &tools::get_regexp('listname');
 	unless ($name and ($name =~ /^($listname_regexp)$/io)) {
-	    &Log::do_log('err', 'Incorrect listname "%s"', $name)
+	    &Sympa::Log::Syslog::do_log('err', 'Incorrect listname "%s"', $name)
 		unless $options->{'just_try'};
 	    return undef;
 	}
@@ -606,7 +606,7 @@ sub new {
 	my ($listname, $type) = $robot->split_listname($name);
 	if ($type) {
 	    unless ($options->{'just_try'}) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		'Incorrect name: listname "%s" matches one of service aliases',
 		$name);	    
 		return undef;
@@ -636,7 +636,7 @@ sub new {
 
 	## Update admin_table
 	unless (defined $list->sync_include_admin()) {
-	    &Log::do_log('err', 'sync_include_admin for list %s failed',
+	    &Sympa::Log::Syslog::do_log('err', 'sync_include_admin for list %s failed',
 		$list)
 		unless $options->{'just_try'};
 	}
@@ -653,7 +653,7 @@ sub search_list_among_robots {
     my $listname = shift;
 
     unless ($listname) {
-	&Log::do_log('err', 'Missing list parameter');
+	&Sympa::Log::Syslog::do_log('err', 'Missing list parameter');
  	return undef;
     }
 
@@ -668,7 +668,7 @@ sub search_list_among_robots {
 
 ## set the list in status error_config and send a notify to listmaster
 sub set_status_error_config {
-    &Log::do_log('debug2', '(%s, %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, ...)', @_);
 
     my ($self, $message, @param) = @_;
 
@@ -678,7 +678,7 @@ sub set_status_error_config {
 	## No more save config in error...
 	#$self->save_config($self->robot->get_address('listmaster'));
 	#$self->savestats();
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'The list %s is set in status error_config: %s(%s)',
 	    $self, $message, join(', ', @param));
 	$self->robot->send_notify_to_listmaster($message,
@@ -688,22 +688,22 @@ sub set_status_error_config {
 
 ## set the list in status family_closed and send a notify to owners
 sub set_status_family_closed {
-    &Log::do_log('debug2', '(%s, %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, ...)', @_);
 
     my ($self, $message, @param) = @_;
 
     unless ($self->status eq 'family_closed') {
 	unless ($self->close_list($self->robot->get_address('listmaster'),
 	    'family_closed')) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Impossible to set the list %s in status family_closed',
 		$self);
 	    return undef;
 	}
-	&Log::do_log('info', 'The list %s is set in status family_closed',
+	&Sympa::Log::Syslog::do_log('info', 'The list %s is set in status family_closed',
 	    $self);
 	unless ($self->send_notify_to_owner($message, \@param)) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Impossible to send notify to owner informing status family_closed for the list %s',
 		$self
@@ -717,7 +717,7 @@ sub set_status_family_closed {
 
 ## Saves the statistics data to disk.
 sub savestats {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     ## Be sure the list has been loaded.
@@ -728,7 +728,7 @@ sub savestats {
     ## Lock file
     my $lock = new Lock($dir . '/stats');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	&Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(2);
@@ -751,7 +751,7 @@ sub savestats {
 
 ## msg count.
 sub increment_msg_count {
-    &Log::do_log('debug2', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     ## Be sure the list has been loaded.
@@ -776,7 +776,7 @@ sub increment_msg_count {
     }
 
     unless (open(MSG_COUNT, ">$file.$$")) {
-	&Log::do_log('err', "Unable to create '%s.%s' : %s", $file, $$, $!);
+	&Sympa::Log::Syslog::do_log('err', "Unable to create '%s.%s' : %s", $file, $$, $!);
 	return undef;
     }
     foreach my $key (sort { $a <=> $b } keys %count) {
@@ -785,7 +785,7 @@ sub increment_msg_count {
     close MSG_COUNT;
 
     unless (rename("$file.$$", $file)) {
-	&Log::do_log('err', "Unable to write '%s' : %s", $file, $!);
+	&Sympa::Log::Syslog::do_log('err', "Unable to write '%s' : %s", $file, $!);
 	return undef;
     }
 
@@ -794,7 +794,7 @@ sub increment_msg_count {
 
 # Returns the number of messages sent to the list
 sub get_msg_count {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     ## Be sure the list has been loaded.
@@ -816,7 +816,7 @@ sub get_msg_count {
 }
 ## last date of distribution message .
 sub get_latest_distribution_date {
-    &Log::do_log('debug3', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     ## Be sure the list has been loaded.
@@ -826,7 +826,7 @@ sub get_latest_distribution_date {
     my %count;
     my $latest_date = 0;
     unless (open(MSG_COUNT, $file)) {
-	&Log::do_log('debug3', 'unable to open file %s', $file);
+	&Sympa::Log::Syslog::do_log('debug3', 'unable to open file %s', $file);
 	return undef;
     }
 
@@ -845,7 +845,7 @@ sub get_latest_distribution_date {
 ## Input  : num of bytes of msg
 ## Output : num of msgs sent
 sub update_stats {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $bytes) = @_;
 
     my @stats = (@{$self->stats});
@@ -868,7 +868,7 @@ sub update_stats {
 ## return :  a tab of rcpt for which rcpt must be use depending on the message sequence number, this way every subscriber is "VERPed" from time to time
 ##           input table @rcpt is spliced : rcpt for which verp must be used are extracted from this table
 sub extract_verp_rcpt {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my $percent = shift;
     my $xseq = shift;
     my $refrcpt = shift;
@@ -881,7 +881,7 @@ sub extract_verp_rcpt {
 	if ($percent =~ /^(\d+)\%/) {
 	    $nbpart = 100 / $1;
 	} else {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Wrong format for parameter extract_verp: %s. Can\'t process VERP.',
 		$percent
@@ -902,18 +902,18 @@ sub extract_verp_rcpt {
 
 ## Dumps a copy of lists to disk, in text format
 sub dump {
-    &Log::do_log('debug2', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     unless (defined $self) {
-	&Log::do_log('err', 'Unknown list');
+	&Sympa::Log::Syslog::do_log('err', 'Unknown list');
 	return undef;
     }
 
     my $user_file_name = $self->dir . '/subscribers.db.dump';
 
     unless ($self->_save_list_members_file($user_file_name)) {
-	&Log::do_log('err', 'Failed to save file %s', $user_file_name);
+	&Sympa::Log::Syslog::do_log('err', 'Failed to save file %s', $user_file_name);
 	return undef;
     }
 
@@ -928,7 +928,7 @@ sub dump {
 
 ## Saves the configuration file to disk
 sub save_config {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $email) = @_;
 
     return undef unless $self;
@@ -936,7 +936,7 @@ sub save_config {
     ## Lock file
     my $lock = new Lock($self->dir . '/config');
     unless (defined $lock) {
-	Log::do_log('err', 'Could not create new lock');
+	Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(5);
@@ -945,7 +945,7 @@ sub save_config {
     }
 
     unless ($self->_save_list_config_file($email)) {
-	Log::do_log('info', 'unable to save config file %s/config',
+	Sympa::Log::Syslog::do_log('info', 'unable to save config file %s/config',
 	    $self->dir);
 	$lock->unlock();
 	return undef;
@@ -961,7 +961,7 @@ sub save_config {
 
 ## Loads the administrative data for a list
 sub load {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s, %s)', @_);
 
     ## NOTICE: Don't use accessors like "$self->dir" but "$self->{'dir'}",
     ## since the object has not been fully initialized yet.
@@ -975,7 +975,7 @@ sub load {
 
     $robot = Robot::clean_robot($robot);
     unless (ref $robot) {
-	Log::do_log('err', 'Unknown robot');
+	Sympa::Log::Syslog::do_log('err', 'Unknown robot');
 	return undef;
     }
 
@@ -986,7 +986,7 @@ sub load {
 	} elsif ($robot and $robot->domain eq Site->domain) {
 	    $self->{'dir'} = Site->home . '/' . $name;
 	} else {
-	    Log::do_log('err', 'No such robot (virtual domain) %s', $robot)
+	    Sympa::Log::Syslog::do_log('err', 'No such robot (virtual domain) %s', $robot)
 		unless $options->{'just_try'};
 	    return undef;
 	}
@@ -998,12 +998,12 @@ sub load {
 
     unless ($self->{'name'} eq $name and
 	$self->{'domain'} eq $robot->domain) {
-	Log::do_log('err', 'Bug in logic.  Ask developer');
+	Sympa::Log::Syslog::do_log('err', 'Bug in logic.  Ask developer');
 	return undef;
     }
 
     unless (-d $self->{'dir'} and -f $self->{'dir'} . '/config') {
-	Log::do_log('debug3', 'Missing directory (%s) or config file for %s',
+	Sympa::Log::Syslog::do_log('debug3', 'Missing directory (%s) or config file for %s',
 	    $self->{'dir'}, $self)
 	    unless $options->{'just_try'};
 	return undef;
@@ -1024,7 +1024,7 @@ sub load {
 	$m1          and
 	$time_config and
 	$time_config <= $m1) {
-	Log::do_log('debug3', 'config for %s on memory is up-to-date',
+	Sympa::Log::Syslog::do_log('debug3', 'config for %s on memory is up-to-date',
 	    $self);
     } elsif (!$options->{'reload_config'} and
 	defined($cached = $self->list_cache_fetch($m1, $time_config))) {
@@ -1033,7 +1033,7 @@ sub load {
 	$self->{'config'} = $config;
 	$self->{'admin'} = {}; # clear cached parameter values
 	$self->{'total'} = $cached->{'total'} if defined $cached->{'total'};
-	Log::do_log('debug3', 'got config for %s from serialized data',
+	Sympa::Log::Syslog::do_log('debug3', 'got config for %s from serialized data',
 	    $self);
     } elsif ($options->{'reload_config'} or $time_config > $m1) {
 	$config = _load_list_config_file($robot, $self->{'dir'}, 'config');
@@ -1045,7 +1045,7 @@ sub load {
 	$m1 = $time_config;
 	$self->{'config'} = $config;
 	$self->{'admin'} = {}; # clear cached parameter values
-	Log::do_log('debug3', 'got config for %s from file', $self);
+	Sympa::Log::Syslog::do_log('debug3', 'got config for %s from file', $self);
 
 	## check param_constraint.conf if belongs to a family and
 	## the config has been loaded
@@ -1090,7 +1090,7 @@ sub load {
 
 ## Return a list of hash's owners and their param
 sub get_owners {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     my $owners = ();
@@ -1108,7 +1108,7 @@ sub get_owners {
 }
 
 sub get_nb_owners {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     my $resul = 0;
@@ -1122,7 +1122,7 @@ sub get_nb_owners {
 
 ## Return a hash of list's editors and their param(empty if there isn't any editor)
 sub get_editors {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     my $editors = ();
@@ -1141,7 +1141,7 @@ sub get_editors {
 
 ## Returns an array of owners' email addresses
 sub get_owners_email {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $param) = @_;
 
     my @rcpt;
@@ -1160,7 +1160,7 @@ sub get_owners_email {
 	}
     }
     unless (@rcpt) {
-	&Log::do_log('notice', 'Warning : no owner found for list %s',
+	&Sympa::Log::Syslog::do_log('notice', 'Warning : no owner found for list %s',
 	    $self);
     }
     return @rcpt;
@@ -1169,7 +1169,7 @@ sub get_owners_email {
 ## Returns an array of editors' email addresses
 #  or owners if there isn't any editors'email adress
 sub get_editors_email {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $param) = @_;
 
     my @rcpt;
@@ -1188,7 +1188,7 @@ sub get_editors_email {
 	}
     }
     unless (@rcpt) {
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    'Warning : no editor found for list %s, getting owners',
 	    $self);
 	@rcpt = $self->get_owners_email($param);
@@ -1202,11 +1202,11 @@ sub get_editors_email {
 ## return the config_changes hash
 ## Used ONLY with lists belonging to a family.
 sub get_config_changes {
-    &Log::do_log('debug3', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     unless ($self->family_name) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'there is no family_name for this list %s.',
 	    $self
@@ -1220,7 +1220,7 @@ sub get_config_changes {
 	($self->{'config_changes'}{'mtime'} >= $time_file)) {
 	unless ($self->{'config_changes'} =
 	    $self->_load_config_changes_file()) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Impossible to load file config_changes from list %s',
 		$self);
 	    return undef;
@@ -1232,7 +1232,7 @@ sub get_config_changes {
 ## update file config_changes if the list belongs to a family by
 #  writing the $what(file or param) name
 sub update_config_changes {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my $self = shift;
     my $what = shift;
 
@@ -1240,7 +1240,7 @@ sub update_config_changes {
     my $name = shift;
 
     unless ($self->family_name) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'there is no family_name for this list %s.',
 	    $self
@@ -1248,7 +1248,7 @@ sub update_config_changes {
 	return undef;
     }
     unless (($what eq 'file') || ($what eq 'param')) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    '%s is wrong : must be "file" or "param".',
 	    $what
@@ -1267,7 +1267,7 @@ sub update_config_changes {
 	($self->{'config_changes'}{'mtime'} >= $time_file)) {
 	unless ($self->{'config_changes'} =
 	    $self->_load_config_changes_file()) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Impossible to load file config_changes from list %s',
 		$self);
 	    return undef;
@@ -1289,19 +1289,19 @@ sub update_config_changes {
 
 ## return a hash of config_changes file
 sub _load_config_changes_file {
-    ##Log::do_log('debug3', '(%s)', @_);
+    ##Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     my $config_changes = {};
 
     unless (-e $self->dir . '/config_changes') {
-	&Log::do_log('err', 'No file %s/config_changes. Assuming no changes',
+	&Sympa::Log::Syslog::do_log('err', 'No file %s/config_changes. Assuming no changes',
 	    $self->dir);
 	return $config_changes;
     }
 
     unless (open(FILE, $self->dir . '/config_changes')) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'File %s/config_changes exists, but unable to open it: %s',
 	    $self->dir, $!);
 	return undef;
@@ -1318,7 +1318,7 @@ sub _load_config_changes_file {
 	    $config_changes->{'file'}{$1} = 1;
 
 	} else {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'bad line : %s', $_);
 	    next;
 	}
@@ -1332,11 +1332,11 @@ sub _load_config_changes_file {
 
 ## save config_changes file in the list directory
 sub _save_config_changes_file {
-    ##Log::do_log('debug3', '(%s)', @_);
+    ##Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     unless ($self->family_name) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'there is no family_name for this list %s.',
 	    $self
@@ -1344,7 +1344,7 @@ sub _save_config_changes_file {
 	return undef;
     }
     unless (open(FILE, '>', $self->dir . '/config_changes')) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'unable to create file %s/config_changes : %s',
 	    $self->dir,
@@ -1368,7 +1368,7 @@ sub _save_config_changes_file {
 #  the value is a scalar or a ref on an array of scalar
 # (for parameter digest : only for days)
 sub get_param_value {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
     my $param = shift;
     my $as_arrayref = shift || 0;
@@ -1468,7 +1468,7 @@ sub distribute_msg {
     my $message = $param{'message'};
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
 
-    Log::do_log('debug2',
+    Sympa::Log::Syslog::do_log('debug2',
 	'(%s, msg=%s, size=%s, filename=%s, smime_crypted=%s, apply_dkim_signature=%s)',
 	$self, $message, $message->{'size'}, $message->{'filename'},
 	$message->{'smime_crypted'}, $apply_dkim_signature
@@ -1667,7 +1667,7 @@ sub distribute_msg {
 
     ## Add RFC 2919 header field
     if ($message->get_header('List-Id')) {
-	Log::do_log('notice', 'Found List-Id: %s',
+	Sympa::Log::Syslog::do_log('notice', 'Found List-Id: %s',
 	    $message->get_header('List-Id'));
 	$hdr->delete('List-Id');
     }
@@ -1728,7 +1728,7 @@ sub distribute_msg {
 #       | undef
 ####################################################
 sub send_msg_digest {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $messagekey = shift;
 
@@ -1753,7 +1753,7 @@ sub send_msg_digest {
 sub get_lists_of_digest_recipients {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug','Getting list of digest recipients for list %s',$self->get_list_id);
+    &Sympa::Log::Syslog::do_log('debug','Getting list of digest recipients for list %s',$self->get_list_id);
     $self->{'digest'}{'tabrcpt'} = [];
     $self->{'digest'}{'tabrcptsummary'} = [];
     $self->{'digest'}{'tabrcptplain'} = [];
@@ -1789,7 +1789,7 @@ sub get_lists_of_digest_recipients {
 	}
     }
     if (($#{$self->{'digest'}{'tabrcpt'}} == -1) and ($#{$self->{'digest'}{'tabrcptsummary'}} == -1) and ($#{$self->{'digest'}{'tabrcptplain'}} == -1)) {
-	Log::do_log('info', 'No subscriber for sending digest in list %s',
+	Sympa::Log::Syslog::do_log('info', 'No subscriber for sending digest in list %s',
 	    $self);
 	return 0;
     }
@@ -1800,7 +1800,7 @@ sub get_lists_of_digest_recipients {
 sub split_spooled_digest_to_messages {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug2','Splitting spooled digest into message objects for list %s',$self->get_list_id);
+    &Sympa::Log::Syslog::do_log('debug2','Splitting spooled digest into message objects for list %s',$self->get_list_id);
     my $message_in_spool = $param->{'message_in_spool'};
     $self->{'digest'}{'list_of_mail'} = [];
     my $separator = "\n\n" . &tools::get_separator() . "\n\n";
@@ -1823,7 +1823,7 @@ sub split_spooled_digest_to_messages {
 sub prepare_messages_for_digest {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug2','Preparing messages for digest for list %s',$self->get_list_id);
+    &Sympa::Log::Syslog::do_log('debug2','Preparing messages for digest for list %s',$self->get_list_id);
     $self->{'digest'}{'all_msg'} = [];
     return undef unless($self->{'digest'}{'list_of_mail'});
     foreach my $i (0 .. $#{$self->{'digest'}{'list_of_mail'}}){
@@ -1866,7 +1866,7 @@ sub prepare_messages_for_digest {
 sub prepare_digest_parameters {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug2','Preparing digest parameters for list %s',$self->get_list_id);
+    &Sympa::Log::Syslog::do_log('debug2','Preparing digest parameters for list %s',$self->get_list_id);
     $self->{'digest'}{'template_params'} = {'replyto' => $self->get_list_address('owner'),
 		 'to' => $self->get_list_address(),
 		 'table_of_content' => gettext("Table of contents:"),
@@ -1886,7 +1886,7 @@ sub prepare_digest_parameters {
 
 sub do_digest_sending {
     my $self = shift;
-    &Log::do_log('debug2','Actually sending digest for list %s',$self->get_list_id);
+    &Sympa::Log::Syslog::do_log('debug2','Actually sending digest for list %s',$self->get_list_id);
     foreach my $group (@{$self->{'digest'}{'group_of_msg'}}) {
 
 	$self->{'digest'}{'template_params'}{'current_group'}++;
@@ -1895,26 +1895,26 @@ sub do_digest_sending {
 	## Prepare Digest
 	if ($#{$self->{'digest'}{'tabrcpt'}} > -1) {
 	    ## Send digest
-	    Log::do_log('debug2','Sending MIME digest');
+	    Sympa::Log::Syslog::do_log('debug2','Sending MIME digest');
 	    unless ($self->send_file('digest', $self->{'digest'}{'tabrcpt'}, $self->{'digest'}{'template_params'})) {
-		&Log::do_log('notice', 'Unable to send template "digest" to %s list subscribers', $self);
+		&Sympa::Log::Syslog::do_log('notice', 'Unable to send template "digest" to %s list subscribers', $self);
 	    }
 	}
 	
 	## Prepare Plain Text Digest
 	if ($#{$self->{'digest'}{'tabrcptplain'}} > -1) {
 	    ## Send digest-plain
-	    Log::do_log('debug2','Sending plain digest');
+	    Sympa::Log::Syslog::do_log('debug2','Sending plain digest');
 	    unless ($self->send_file('digest_plain', $self->{'digest'}{'tabrcptplain'}, $self->{'digest'}{'template_params'})) {
-		&Log::do_log('notice', 'Unable to send template "digest_plain" to %s list subscribers', $self);
+		&Sympa::Log::Syslog::do_log('notice', 'Unable to send template "digest_plain" to %s list subscribers', $self);
 	    }
 	}
 	
 	## send summary
 	if ($#{$self->{'digest'}{'tabrcptsummary'}} > -1) {
-	    Log::do_log('debug2','Sending summary digest');
+	    Sympa::Log::Syslog::do_log('debug2','Sending summary digest');
 	    unless ($self->send_file('summary', $self->{'digest'}{'tabrcptsummary'}, $self->{'digest'}{'template_params'})) {
-		&Log::do_log('notice', 'Unable to send template "summary" to %s list subscribers', $self);
+		&Sympa::Log::Syslog::do_log('notice', 'Unable to send template "summary" to %s list subscribers', $self);
 	    }
 	}
     }    
@@ -2013,12 +2013,12 @@ sub send_msg {
     my $apply_tracking = $param{'apply_tracking'};
     my $message = $param{'message'};
     unless (defined $message && ref($message) eq 'Message') {
-	&Log::do_log('err', 'Invalid message paramater');
+	&Sympa::Log::Syslog::do_log('err', 'Invalid message paramater');
 	return undef;
     }
     $message->check_message_structure;
 
-    &Log::do_log(
+    &Sympa::Log::Syslog::do_log(
 	'debug2',
 	'List::send_msg(filename = %s, smime_crypted = %s,apply_dkim_signature = %s )',
 	$message->{'filename'},
@@ -2032,7 +2032,7 @@ sub send_msg {
 
     my $total       = $self->get_real_total;
     unless ($total > 0) {
-	&Log::do_log('info', 'No subscriber in list %s', $name);
+	&Sympa::Log::Syslog::do_log('info', 'No subscriber in list %s', $name);
 	return 0;
     }
 
@@ -2048,7 +2048,7 @@ sub send_msg {
     if ($rate > $self->bounce->{'warn_rate'}) {
 	unless ($self->send_notify_to_owner('bounce_rate', {'rate' => $rate}))
 	{
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send notify "bounce_rate" to %s listowner', $self);
 	}
     }
@@ -2097,7 +2097,7 @@ sub send_msg {
 		'tag_as_last'     => (($mode eq $tag_mode)&&($tag_verp eq 'noverp'))
 	    );
 	    unless (defined $result) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    "List::send_msg, could not send message to distribute from $from (verp disabled)"
 		);
 		return undef;
@@ -2133,7 +2133,7 @@ sub send_msg {
 		'tag_as_last'     => (($mode eq $tag_mode)&&($tag_verp eq 'verp'))
 	    );
 	    unless (defined $result) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    "List::send_msg, could not send message to distribute from $from (verp enabled)"
 		);
 		return undef;
@@ -2162,7 +2162,7 @@ sub get_list_members_per_mode {
 	$user = $self->get_next_list_member())
     {
 	unless ($user->{'email'}) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 	    'Skipping user with no email address in list %s', $self->get_list_id);
 	    next;
 	}
@@ -2187,20 +2187,20 @@ sub get_list_members_per_mode {
 	    push @tabrcpt_digestplain_verp, $user->{'email'};
 	} elsif ($user->{'reception'} eq 'digest') {
 	    push @tabrcpt_digest_verp, $user->{'email'};
-	    Log::do_log('debug3','user %s digest',$user->{'email'});
+	    Sympa::Log::Syslog::do_log('debug3','user %s digest',$user->{'email'});
 	} elsif ($user->{'reception'} eq 'summary') {
 	    push @tabrcpt_summary_verp, $user->{'email'};
-	    Log::do_log('debug3','user %s summary',$user->{'email'});
+	    Sympa::Log::Syslog::do_log('debug3','user %s summary',$user->{'email'});
 	} elsif ($user->{'reception'} eq 'nomail') {
 	    push @tabrcpt_nomail_verp, $user->{'email'};
-	    Log::do_log('debug3','user %s nomail',$user->{'email'});
+	    Sympa::Log::Syslog::do_log('debug3','user %s nomail',$user->{'email'});
 	} elsif ($user->{'reception'} eq 'notice') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_notice_verp, $user->{'email'};
-		Log::do_log('debug3','user %s notice and verp',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s notice and verp',$user->{'email'});
 	    } else {
 		push @tabrcpt_notice, $user->{'email'};
-		Log::do_log('debug3','user %s notice',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s notice',$user->{'email'});
 	    }
 	} elsif ($message->{'smime_crypted'} &&
 	    (!-r Site->ssl_cert_dir . '/' .
@@ -2208,7 +2208,7 @@ sub get_list_members_per_mode {
 	    !-r Site->ssl_cert_dir . '/' .
 	    &tools::escape_chars($user->{'email'} . '@enc'))
 	) {
-	    Log::do_log('debug3','No certificate for user %s',$user->{'email'});
+	    Sympa::Log::Syslog::do_log('debug3','No certificate for user %s',$user->{'email'});
 	    ## Missing User certificate
 	    my $subject = $message->get_header('Subject');
 	    my $sender  = $message->get_header('From'); #FIXME
@@ -2222,45 +2222,45 @@ sub get_list_members_per_mode {
 		    }
 		)
 	    ) {
-		&Log::do_log('notice',
+		&Sympa::Log::Syslog::do_log('notice',
 		"Unable to send template 'x509-user-cert-missing' to $user->{'email'}"
 		);
 	    }
 	} elsif (!$message->is_signed && $message->has_text_part && $user->{'reception'} eq 'txt') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_txt_verp, $user->{'email'};
-		Log::do_log('debug3','user %s txt and verp',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s txt and verp',$user->{'email'});
 	    } else {
 		push @tabrcpt_txt, $user->{'email'};
-		Log::do_log('debug3','user %s txt',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s txt',$user->{'email'});
 	    }
 	} elsif (!$message->is_signed && $message->has_html_part && $user->{'reception'} eq 'html') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_html_verp, $user->{'email'};
-		Log::do_log('debug3','user %s html and verp',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s html and verp',$user->{'email'});
 	    } else {
 		push @tabrcpt_html, $user->{'email'};
-		Log::do_log('debug3','user %s html',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s html',$user->{'email'});
 	    }
 	} elsif (!$message->is_signed && $message->has_attachments && $user->{'reception'} eq 'urlize') {
 	    if ($user->{'bounce_address'}) {
 		push @tabrcpt_url_verp, $user->{'email'};
-		Log::do_log('debug3','user %s urlize and verp',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s urlize and verp',$user->{'email'});
 	    } else {
 		push @tabrcpt_url, $user->{'email'};
-		Log::do_log('debug3','user %s urlize',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s urlize',$user->{'email'});
 	    }
 	} else {
 	    if ($user->{'bounce_score'}) {
 		push @tabrcpt_verp, $user->{'email'}
 		    unless ($message->{'sender_hash'}{$user->{'email'}}) &&
 		    ($user->{'reception'} eq 'not_me');
-		Log::do_log('debug3','user %s mail and verp',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s mail and verp',$user->{'email'});
 		} else {
 		push @tabrcpt, $user->{'email'}
 		    unless ($message->{'sender_hash'}{$user->{'email'}}) &&
 		    ($user->{'reception'} eq 'not_me');
-		Log::do_log('debug3','user %s mail',$user->{'email'});
+		Sympa::Log::Syslog::do_log('debug3','user %s mail',$user->{'email'});
 		}
 	    }
     }
@@ -2274,7 +2274,7 @@ sub get_list_members_per_mode {
 	@tabrcpt_txt_verp ||
 	@tabrcpt_html_verp ||
 	@tabrcpt_url_verp) {
-	&Log::do_log('info', 'No subscriber for sending msg in list %s',
+	&Sympa::Log::Syslog::do_log('info', 'No subscriber for sending msg in list %s',
 	    $self->get_list_id);
 	return 0;
     }
@@ -2379,7 +2379,7 @@ sub send_to_editor {
     my ($self, $method, $message) = @_;
     my $msg = $message->get_mime_message;
     my $encrypt = 'smime_crypted' if $message->{'smime_crypted'};
-    Log::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
 	$self, $method, $message, $encrypt
     );
 
@@ -2429,7 +2429,7 @@ sub send_to_editor {
 
    ## Did we find a recipient?
    if ($#rcpt < 0) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'notice',
 	    "No editor found for list %s. Trying to proceed ignoring nomail option",
 	    $self
@@ -2437,19 +2437,19 @@ sub send_to_editor {
 	my $messageid = $message->get_msg_id;
 
 	@rcpt = $self->get_editors_email({'ignore_nomail', 1});
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    'Warning : no owner and editor defined at all in list %s', $name)
 	    unless (@rcpt);
 
        ## Could we find a recipient by ignoring the "nomail" option?
        if ($#rcpt >= 0) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'notice',
 		'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them.',
 		$messageid, $self
 	    );
 	} else {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
 		$messageid, $self
@@ -2477,7 +2477,7 @@ sub send_to_editor {
 	if ($encrypt and $encrypt eq 'smime_crypted') {
 	    $message->smime_encrypt($recipient);
 	    unless($message->{'smime_crypted'} eq 'smime_crypted') {
-		Log::do_log('err','Could not encrypt message for moderator %s',$recipient);
+		Sympa::Log::Syslog::do_log('err','Could not encrypt message for moderator %s',$recipient);
 	    }
 	    $param->{'msg'} = $message->as_entity();
 	} else {
@@ -2491,18 +2491,18 @@ sub send_to_editor {
 		$recipient, $robot, 'modindex/' . $name, 'mail'
 	    )
 	    ) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		"Unable to create one_time_ticket for $recipient, service modindex/$name"
 	    );
 	} else {
-	    &Log::do_log('debug',
+	    &Sympa::Log::Syslog::do_log('debug',
 		"ticket $param->{'one_time_ticket'} created");
        }
        &tt2::allow_absolute_path();
        $param->{'auto_submitted'} = 'auto-forwarded';
 
 	unless ($self->send_file('moderate', $recipient, $param)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "moderate" to %s', $recipient);
 	   return undef;
        }
@@ -2531,7 +2531,7 @@ sub send_auth {
     my ($self, $message) = @_;
     my ($sender, $file) =
 	($message->{'sender'}, $message->{'filename'});
-   &Log::do_log('debug3', 'List::send_auth(%s, %s)', $sender, $file);
+   &Sympa::Log::Syslog::do_log('debug3', 'List::send_auth(%s, %s)', $sender, $file);
 
    ## Ensure 1 second elapsed since last message
    ## DV: What kind of lame hack is this???
@@ -2577,7 +2577,7 @@ sub send_auth {
     if ($message->{'smime_crypted'}) {
 	$message->smime_encrypt($sender);
 	unless($message->{'smime_crypted'} eq 'smime_crypted') {
-	    Log::do_log('err','Could not encrypt message for moderator %s',$sender);
+	    Sympa::Log::Syslog::do_log('err','Could not encrypt message for moderator %s',$sender);
 	}
 	$param->{'msg'} = $message->as_entity();
     } else {
@@ -2588,7 +2588,7 @@ sub send_auth {
    $param->{'auto_submitted'} = 'auto-forwarded';
 
     unless ($self->send_file('send_auth', $sender, $param)) {
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    "Unable to send template 'send_auth' to $sender");
        return undef;
    }
@@ -2621,7 +2621,7 @@ See L<Site/request_auth>.
 #
 ######################################################
 sub archive_send {
-    Log::do_log('debug2', '(%s, %s, &s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, &s)', @_);
     my ($self, $who, $file) = @_;
 
     return unless $self->is_archived(); #FIXME
@@ -2643,7 +2643,7 @@ sub archive_send {
 
     $param->{'auto_submitted'} = 'auto-replied';
     unless ($self->send_file('get_archive', $who, $param)) {
-	Log::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    'Unable to send template "get_archive" to %s', $who
 	);
 	return undef;
@@ -2661,7 +2661,7 @@ sub archive_send {
 #
 ######################################################
 sub archive_send_last {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $who) = @_;
 
     return unless $self->is_archived(); #FIXME
@@ -2670,7 +2670,7 @@ sub archive_send_last {
     my $message = Message->new(
 	{'file' => "$dir/last_message", 'noxsympato' => 'noxsympato'});
     unless ($message) {
-	Log::do_log('err', 'Unable to create Message object from file %s',
+	Sympa::Log::Syslog::do_log('err', 'Unable to create Message object from file %s',
 	    "$dir/last_message");
 	return undef;
     }
@@ -2698,7 +2698,7 @@ sub archive_send_last {
     $param->{'auto_submitted'} = 'auto-replied';
 
     unless ($self->send_file('get_archive', $who, $param)) {
-	Log::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    'Unable to send template "get_archive" to %s', $who);
 	return undef;
     }
@@ -2738,7 +2738,7 @@ sub archive_send_last {
 #
 ######################################################
 sub send_notify_to_owner {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
 
     my $host  = $self->host;
@@ -2746,7 +2746,7 @@ sub send_notify_to_owner {
     my $robot = $self->domain;
 
     unless (@to) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'notice',
 	    'No owner defined or all of them use nomail option in list %s ; using listmasters as default',
 	    $self
@@ -2754,11 +2754,11 @@ sub send_notify_to_owner {
 	@to = split /,/, $self->robot->listmaster;
     }
 	    foreach my $r (@to) {
-		Log::do_log('debug3','to %s',$r);
+		Sympa::Log::Syslog::do_log('debug3','to %s',$r);
 	    }
 
     unless (defined $operation) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'missing incoming parameter "$operation"'
 	);
@@ -2788,7 +2788,7 @@ sub send_notify_to_owner {
 			'listowner_notification', [$owner], $param
 		    )
 		    ) {
-		    &Log::do_log('notice',
+		    &Sympa::Log::Syslog::do_log('notice',
 			'Unable to send template "listowner_notification" to %s list owner %s', $self, $owner
 		    );
 		}
@@ -2808,7 +2808,7 @@ sub send_notify_to_owner {
 			'listowner_notification', [$owner], $param
 		    )
 		    ) {
-		    &Log::do_log('notice',
+		    &Sympa::Log::Syslog::do_log('notice',
 			'Unable to send template "listowner_notification" to %s list owner %s', $self, $owner
 		    );
 		}
@@ -2827,7 +2827,7 @@ sub send_notify_to_owner {
 			'listowner_notification', [$owner], $param
 		    )
 		    ) {
-		    Log::do_log('notice',
+		    Sympa::Log::Syslog::do_log('notice',
 			'Unable to send template "listowner_notification" to %s list owner %s', $self, $owner
 		    );
 		}
@@ -2838,7 +2838,7 @@ sub send_notify_to_owner {
 	    }
 	    unless ($self->send_file('listowner_notification', \@to, $param))
 	    {
-		&Log::do_log('notice',
+		&Sympa::Log::Syslog::do_log('notice',
 		    'Unable to send template "listowner_notification" to %s list owner', $self
 		);
 		return undef;
@@ -2856,7 +2856,7 @@ sub send_notify_to_owner {
 		$data->{"param$i"} = $param->[$i];
  	}
 	unless ($self->send_file('listowner_notification', \@to, $data)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "listowner_notification" to %s list owner',
 		$self
 	    );
@@ -2865,7 +2865,7 @@ sub send_notify_to_owner {
 
     } else {
 
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
 	);
@@ -2932,17 +2932,17 @@ sub find_picture_url {
 # remove picture from user $2 in list $1
 #########################
 sub delete_list_member_picture {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $email = shift;
 
     my $ret = 1;
     foreach my $path ($self->find_picture_paths($email)) {
 	unless (unlink $path) {
-	    Log::do_log('err', 'Failed to delete %s', $path);
+	    Sympa::Log::Syslog::do_log('err', 'Failed to delete %s', $path);
 	    $ret = undef;
 	} else {
-	    Log::do_log('debug3', 'File deleted successfully: %s', $path);
+	    Sympa::Log::Syslog::do_log('debug3', 'File deleted successfully: %s', $path);
 	}
     }
 
@@ -2964,7 +2964,7 @@ sub delete_list_member_picture {
 #
 ######################################################
 sub send_notify_to_editor {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
 
     my @to = $self->get_editors_email();
@@ -2972,7 +2972,7 @@ sub send_notify_to_editor {
     $param->{'auto_submitted'} = 'auto-generated';
 
       unless (@to) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'notice',
 	    'Warning : no editor or owner defined or all of them use nomail option in list %s',
 	    $self
@@ -2980,7 +2980,7 @@ sub send_notify_to_editor {
 	return undef;
     }
     unless (defined $operation) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'missing incoming parameter "$operation"'
 	);
@@ -2992,7 +2992,7 @@ sub send_notify_to_editor {
 	$param->{'type'} = $operation;
 
 	unless ($self->send_file('listeditor_notification', \@to, $param)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "listeditor_notification" to %s list editor', $self
 	    );
 	    return undef;
@@ -3009,14 +3009,14 @@ sub send_notify_to_editor {
 	    $data->{"param$i"} = $param->[$i];
  	}
 	unless ($self->send_file('listeditor_notification', \@to, $data)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "listeditor_notification" to %s list editor', $self
 	    );
 	    return undef;
 	}
 
     } else {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
 	);
@@ -3041,7 +3041,7 @@ sub send_notify_to_editor {
 #
 ######################################################
 sub send_notify_to_user {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($self, $operation, $user, $param) = @_;
 
     my $host  = $self->host;
@@ -3049,14 +3049,14 @@ sub send_notify_to_user {
     $param->{'auto_submitted'} = 'auto-generated';
 
     unless (defined $operation) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'missing incoming parameter "$operation"'
 	);
 	return undef;
     }
     unless ($user) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'missing incoming parameter "$user"'
 	);
@@ -3071,7 +3071,7 @@ sub send_notify_to_user {
 	}
 
 	unless ($self->send_file('user_notification', $user, $param)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "user_notification" to %s', $user);
 	    return undef;
 	}
@@ -3087,14 +3087,14 @@ sub send_notify_to_user {
 	    $data->{"param$i"} = $param->[$i];
  	}
 	unless ($self->send_file('user_notification', $user, $data)) {
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send template "user_notification" to %s', $user);
 	    return undef;
 	}
 
     } else {
 
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY'
 	);
@@ -3150,7 +3150,7 @@ See L<Site/get_etc_include_path>.
 ## $list->delete_list_member('users' => \@u, 'exclude' => 1)
 ## $list->delete_list_member('users' => [$email], 'exclude' => 1)
 sub delete_list_member {
-    &Log::do_log('debug2', '(%s, %s => %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s => %s, ...)', @_);
     my $self = shift;
     my %param = @_;
     my @u = @{$param{'users'}};
@@ -3181,7 +3181,7 @@ sub delete_list_member {
 		$who, $name, $self->domain
 	    )
 	    ) {
-	    &Log::do_log('err', 'Unable to remove member %s on list %s',
+	    &Sympa::Log::Syslog::do_log('err', 'Unable to remove member %s on list %s',
 		$who, $self);
 	    next;
 	}
@@ -3189,7 +3189,7 @@ sub delete_list_member {
 	$self->delete_list_member_picture($who);
 
 	#log in stat_table to make statistics
-	&Log::db_stat_log(
+	&Sympa::Log::Syslog::db_stat_log(
 	    {   'robot'     => $self->domain,
 		'list'      => $name,
 		'operation' => 'del subscriber',
@@ -3211,7 +3211,7 @@ sub delete_list_member {
 
 ## Delete the indicated admin users from the list.
 sub delete_list_admin {
-    &Log::do_log('debug2', '(%s, %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, ...)', @_);
     my ($self, $role, @u) = @_;
 
     my $name  = $self->name;
@@ -3229,7 +3229,7 @@ sub delete_list_admin {
 		$who, $name, $self->domain, $role
 	    )
 	    ) {
-	    &Log::do_log('err', 'Unable to remove admin %s on list %s',
+	    &Sympa::Log::Syslog::do_log('err', 'Unable to remove admin %s on list %s',
 		$who, $self);
 	    next;
 	}
@@ -3242,13 +3242,13 @@ sub delete_list_admin {
 
 ## Delete all admin_table entries
 sub delete_all_list_admin {
-    &Log::do_log('debug2', '()');
+    &Sympa::Log::Syslog::do_log('debug2', '()');
 
     my $total = 0;
 
     ## Delete record in ADMIN
     unless ($sth = &SDM::do_prepared_query(q{DELETE FROM admin_table})) {
-	&Log::do_log('err', 'Unable to remove all admin from database');
+	&Sympa::Log::Syslog::do_log('err', 'Unable to remove all admin from database');
 	return undef;
     }
 
@@ -3281,7 +3281,7 @@ sub get_reply_to {
 ## Returns the number of subscribers to the list
 ## not using cache.
 sub get_real_total {
-    &Log::do_log('debug2', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     push @sth_stack, $sth;
@@ -3294,7 +3294,7 @@ sub get_real_total {
 	    $self->domain
 	)
 	) {
-	&Log::do_log('debug', 'Unable to get subscriber count for list %s',
+	&Sympa::Log::Syslog::do_log('debug', 'Unable to get subscriber count for list %s',
 	    $self);
 	$sth = pop @sth_stack;
 	return undef;
@@ -3327,7 +3327,7 @@ sub get_real_total {
 #   - 1 if user is suspended from the list                           #
 ######################################################################
 sub suspend_subscription {
-    &Log::do_log('debug2', '(%s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my $self  = shift;
     my $email = shift;
     my $data = shift;
@@ -3342,7 +3342,7 @@ sub suspend_subscription {
 	    $self->name,          $self->domain
 	)
 	) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to suspend subscription of user %s to list %s',
 	    $email, $self);
 	return undef;
@@ -3362,7 +3362,7 @@ sub suspend_subscription {
 #   - 1 if his/her subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self  = shift;
     my $email = shift;
 
@@ -3375,7 +3375,7 @@ sub restore_suspended_subscription {
 	    $email, $self->name, $self->domain
 	)
 	) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to restore subscription of user %s to list %s',
 	    $email, $self);
 	return undef;
@@ -3396,7 +3396,7 @@ sub restore_suspended_subscription {
 #   - 1                                                              #
 ######################################################################
 sub insert_delete_exclusion {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $self   = shift;
     my $email = shift;
     my $action = shift;
@@ -3425,7 +3425,7 @@ sub insert_delete_exclusion {
 		    $name, $robot_id, $email, $date
 		)
 		) {
-		&Log::do_log('err', 'Unable to exclude user %s from list %s',
+		&Sympa::Log::Syslog::do_log('err', 'Unable to exclude user %s from list %s',
 		    $email, $self);
 		return undef;
 	    }
@@ -3454,7 +3454,7 @@ sub insert_delete_exclusion {
 			$name, $robot_id, $email
 		    )
 		    ) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'Unable to remove entry %s for list %s from table exclusion_table',
 			$email,
@@ -3465,7 +3465,7 @@ sub insert_delete_exclusion {
 	    }
 	}
     } else {
-	&Log::do_log('err', 'Unknown action %s', $action);
+	&Sympa::Log::Syslog::do_log('err', 'Unknown action %s', $action);
 	return undef;
     }
 
@@ -3481,7 +3481,7 @@ sub insert_delete_exclusion {
 #                     * %data_exclu->{'date'}->[]                    #
 ######################################################################
 sub get_exclusion {
-    &Log::do_log('debug2', '(%s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     croak "Invalid parameter: $self"
@@ -3502,7 +3502,7 @@ sub get_exclusion {
 		$name, $self->family_name, $robot_id
 	    )
 	    ) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Unable to retrieve excluded users for list %s',
 		$self);
 	    $sth = pop @sth_stack;
@@ -3517,7 +3517,7 @@ sub get_exclusion {
 		$name, $robot_id
 	    )
 	    ) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Unable to retrieve excluded users for list %s',
 		$self);
 	    $sth = pop @sth_stack;
@@ -3542,7 +3542,7 @@ sub get_exclusion {
     $sth = pop @sth_stack;
 
     unless ($data_exclu) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to retrieve information from database for list %s',
 	    $self);
 	return undef;
@@ -3557,7 +3557,7 @@ sub get_exclusion {
 ##    probe : don't log error if user does not exist                             #
 ######################################################################
 sub get_list_member {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     return $self->user('member', shift) || undef;
 }
@@ -3573,7 +3573,7 @@ sub get_list_member {
 #       a hash of tab of resembling emails
 sub get_resembling_list_members_no_object {
     my $options = shift;
-    &Log::do_log('debug2', '(%s, %s, %s)', $options->{'name'},
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', $options->{'name'},
 	$options->{'email'}, $options->{'domain'});
     my $name = $options->{'name'};
     my @output;
@@ -3759,7 +3759,7 @@ sub find_list_member_by_pattern_no_object {
 	    $email_pattern, $name, $options->{'domain'}
 	)
 	) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unable to gather information corresponding to pattern %s for list %s@%s',
 	    $email_pattern,
@@ -3806,7 +3806,7 @@ sub _list_member_cols {
 
 ## Returns an admin user of the list.
 sub get_list_admin {
-    &Log::do_log('debug2', '(%s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my $self = shift;
     my $role = shift;
     return $self->user($role, shift) || undef;
@@ -3834,12 +3834,12 @@ sub get_first_list_member {
 
     my $lock = new Lock($self->dir . '/include');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	&Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(10 * 60);
 
-    &Log::do_log('debug3', '(%s, sortby=%s, offset=%s, rows=%s)',
+    &Sympa::Log::Syslog::do_log('debug3', '(%s, sortby=%s, offset=%s, rows=%s)',
 	$self, $sortby, $offset, $rows);
 
     ## Get an Shared lock
@@ -3909,14 +3909,14 @@ sub get_first_list_member {
     push @sth_stack, $sth;
 
     unless ($sth = SDM::do_query($statement)) {
-	&Log::do_log('err', 'Unable to get members of list %s', $self);
+	&Sympa::Log::Syslog::do_log('err', 'Unable to get members of list %s', $self);
 	$sth = pop @sth_stack;
 	return undef;
     }
 
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $user->{'email'};
@@ -3968,7 +3968,7 @@ sub parseCustomAttribute {
 	}
 
 	unless (defined $tree) {
-	    &Log::do_log('err', "Failed to parse XML data: %s", $@);
+	    &Sympa::Log::Syslog::do_log('err', "Failed to parse XML data: %s", $@);
 	    return undef;
 	}
 
@@ -4017,12 +4017,12 @@ sub get_first_list_admin {
     $sql_regexp = $data->{'sql_regexp'};
     my $fh;
 
-    Log::do_log('debug3', '(%s, %s, sortby=%s, offset=%s, rows=%s)',
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, sortby=%s, offset=%s, rows=%s)',
 	$self, $role, $sortby, $offset, $rows);
 
     my $lock = new Lock($self->dir . '/include_admin_user');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	&Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(20);
@@ -4092,7 +4092,7 @@ sub get_first_list_admin {
     push @sth_stack, $sth;
 
     unless ($sth = &SDM::do_query($statement)) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to get admins having role %s for list %s',
 	    $role, $self
 	);
@@ -4102,7 +4102,7 @@ sub get_first_list_admin {
 
     my $admin_user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $admin_user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $admin_user->{'email'};
@@ -4115,7 +4115,7 @@ sub get_first_list_admin {
 	## Release the Shared lock
 	my $lock = new Lock($self->dir . '/include_admin_user');
 	unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 
@@ -4130,10 +4130,10 @@ sub get_first_list_admin {
 ## Loop for all subsequent users.
 sub get_next_list_member {
     my $self = shift;
-    &Log::do_log('debug3', '');
+    &Sympa::Log::Syslog::do_log('debug3', '');
 
     unless (defined $sth) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'No handle defined, get_first_list_member(%s) was not run',
 	    $self);
 	return undef;
@@ -4142,7 +4142,7 @@ sub get_next_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $user->{'email'};
@@ -4153,12 +4153,12 @@ sub get_next_list_member {
 		}
 		$user->{'update_date'} ||= $user->{'date'};
 
-		&Log::do_log('debug2', '(email = %s)', $user->{'email'});
+		&Sympa::Log::Syslog::do_log('debug2', '(email = %s)', $user->{'email'});
 		if (defined $user->{custom_attribute}) {
 	    my $custom_attr =
 		&parseCustomAttribute($user->{'custom_attribute'});
 			unless (defined $custom_attr) {
-		&Log::do_log(
+		&Sympa::Log::Syslog::do_log(
 		    'err',
 		    "Failed to parse custom attributes for user %s, list %s",
 		    $user->{'email'},
@@ -4174,7 +4174,7 @@ sub get_next_list_member {
 		## Release lock
 	my $lock = new Lock($self->dir . '/include');
 		unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 			return undef;
 		}
 		unless ($lock->unlock()) {
@@ -4188,10 +4188,10 @@ sub get_next_list_member {
 ## Loop for all subsequent admin users with the role defined in get_first_list_admin.
 sub get_next_list_admin {
     my $self = shift;
-    &Log::do_log('debug3', '');
+    &Sympa::Log::Syslog::do_log('debug3', '');
 
     unless (defined $sth) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Statement handle not defined, get_first_list_admin(%s) was not run',
 	    $self
@@ -4202,7 +4202,7 @@ sub get_next_list_admin {
     my $admin_user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $admin_user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $admin_user->{'email'};
@@ -4215,7 +4215,7 @@ sub get_next_list_admin {
 		## Release the Shared lock
 	my $lock = new Lock($self->dir . '/include_admin_user');
 		unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 			return undef;
 		}
 
@@ -4229,11 +4229,11 @@ sub get_next_list_admin {
 ## Returns the first bouncing user
 sub get_first_bouncing_list_member {
     my $self = shift;
-    &Log::do_log('debug2', '');
+    &Sympa::Log::Syslog::do_log('debug2', '');
 
     my $lock = new Lock($self->dir . '/include');
     unless (defined $lock) {
-	&Log::do_log('err', 'Could not create new lock');
+	&Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(10 * 60);
@@ -4256,7 +4256,7 @@ sub get_first_bouncing_list_member {
 	    $name, $self->domain
 	)
 	) {
-	Log::do_log('err', 'Unable to get bouncing users %s', $self);
+	Sympa::Log::Syslog::do_log('err', 'Unable to get bouncing users %s', $self);
 	$sth = pop @sth_stack;
 	return undef;
     }
@@ -4267,7 +4267,7 @@ sub get_first_bouncing_list_member {
     $sth = pop @sth_stack;
 
     if (defined $user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $user->{'email'};
@@ -4283,10 +4283,10 @@ sub get_first_bouncing_list_member {
 ## Loop for all subsequent bouncing users.
 sub get_next_bouncing_list_member {
     my $self = shift;
-    &Log::do_log('debug2', '');
+    &Sympa::Log::Syslog::do_log('debug2', '');
 
     unless (defined $sth) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'No handle defined, get_first_bouncing_list_member(%s) was not run',
 	    $self
@@ -4297,7 +4297,7 @@ sub get_next_bouncing_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
 
     if (defined $user) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Warning: entry with empty email address in list %s',
 	    $self
 	) unless $user->{'email'};
@@ -4314,7 +4314,7 @@ sub get_next_bouncing_list_member {
 		## Release the Shared lock
 	my $lock = new Lock($self->dir . '/include');
 		unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 			return undef;
 		}
 		unless ($lock->unlock()) {
@@ -4331,7 +4331,7 @@ sub get_info {
     my $info;
 
     unless (open INFO, $self->dir . '/info') {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Could not open %s : %s',
 	    $self->dir . '/info', $!
@@ -4350,7 +4350,7 @@ sub get_info {
 ## Total bouncing subscribers
 sub get_total_bouncing {
     my $self = shift;
-    &Log::do_log('debug2', 'List::get_total_bouncing');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::get_total_bouncing');
 
     my $name = $self->name;
 
@@ -4366,7 +4366,7 @@ sub get_total_bouncing {
 	    $name, $self->domain
 	)
 	) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to gather bouncing subscribers count for list %s',
 	    $self
 	);
@@ -4389,7 +4389,7 @@ sub get_total_bouncing {
 
 ## Is the indicated person a subscriber to the list?
 sub is_list_member {
-    &Log::do_log('debug2', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     return $self->user('member', shift) ? 1 : undef;
 }
@@ -4397,7 +4397,7 @@ sub is_list_member {
 ## Sets new values for the given user (except gecos)
 sub update_list_member {
     my ($self, $who, $values) = @_;
-    &Log::do_log('debug2', '(%s)', $who);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s)', $who);
     $who = &tools::clean_email($who);
 
     my ($field, $value);
@@ -4466,12 +4466,12 @@ sub update_list_member {
 	}
     }
 
-##    &Log::do_log('debug2',
+##    &Sympa::Log::Syslog::do_log('debug2',
 ##	'custom_attribute id: %s', Site->custom_attribute);
 ##    ## custom attributes
 ##    if (defined Site->custom_attribute) {
 ##	foreach my $f (sort keys %{Site->custom_attribute}) {
-##	    &Log::do_log('debug2',
+##	    &Sympa::Log::Syslog::do_log('debug2',
 ##		"custom_attribute id: Site->custom_attribute->{id} name: Site->custom_attribute->{name} type: Site->custom_attribute->{type} "
 ##	    );
 ##
@@ -4485,7 +4485,7 @@ sub update_list_member {
 	while (($field, $value) = each %{$values}) {
 
 	    unless ($map_field{$field} and $map_table{$field}) {
-		&Log::do_log('err', 'Unknown database field %s', $field);
+		&Sympa::Log::Syslog::do_log('err', 'Unknown database field %s', $field);
 		next;
 	    }
 
@@ -4518,7 +4518,7 @@ sub update_list_member {
 		    &SDM::quote($who)
 		)
 		) {
-		&Log::do_log('err',
+		&Sympa::Log::Syslog::do_log('err',
 		    'Could not update information for user %s in table %s',
 		    $who, $table);
 		return undef;
@@ -4534,7 +4534,7 @@ sub update_list_member {
 			&SDM::quote($self->domain)
 		    )
 		    ) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'Could not update information for user %s in table %s for list %s',
 			$who,
@@ -4554,7 +4554,7 @@ sub update_list_member {
 			&SDM::quote($self->domain)
 		    )
 		    ) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'Could not update information for user %s in table %s for list %s',
 			$who,
@@ -4575,7 +4575,7 @@ sub update_list_member {
 		tools::md5_fingerprint($values->{'email'}) . '.' . $extension
 	    );
 	    unless (rename $path, $new_path) {
-		Log::do_log('err', 'Failed to rename %s to %s : %s',
+		Sympa::Log::Syslog::do_log('err', 'Failed to rename %s to %s : %s',
 		    $path, $new_path, $!
 		);
 		last;
@@ -4593,7 +4593,7 @@ sub update_list_member {
 ## Sets new values for the given admin user (except gecos)
 sub update_list_admin {
     my ($self, $who, $role, $values) = @_;
-    &Log::do_log('debug2', '(%s,%s)', $role, $who);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s,%s)', $role, $who);
     $who = &tools::clean_email($who);
 
     my ($field, $value);
@@ -4650,7 +4650,7 @@ sub update_list_admin {
 	while (($field, $value) = each %{$values}) {
 
 	    unless ($map_field{$field} and $map_table{$field}) {
-		&Log::do_log('err', 'Unknown database field %s', $field);
+		&Sympa::Log::Syslog::do_log('err', 'Unknown database field %s', $field);
 		next;
 	    }
 
@@ -4684,7 +4684,7 @@ sub update_list_admin {
 		    &SDM::quote($who)
 		)
 		) {
-		&Log::do_log(
+		&Sympa::Log::Syslog::do_log(
 		    'err',
 		    'Could not update information for admin %s in table %s',
 		    $who,
@@ -4705,7 +4705,7 @@ sub update_list_admin {
 			&SDM::quote($role)
 		    )
 		    ) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'Could not update information for admin %s in table %s for list %s',
 			$who,
@@ -4726,7 +4726,7 @@ sub update_list_admin {
 			&SDM::quote($role)
 		    )
 		    ) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'Could not update information for admin %s in table %s for list %s',
 			$who,
@@ -4756,7 +4756,7 @@ sub update_list_admin {
 
 ## Adds a list member ; no overwrite.
 sub add_list_member {
-    Log::do_log('debug2', '(%s, ...)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, ...)', @_);
     my ($self, @new_users, $daemon) = @_; #FIXME: $daemon will be empty
 
     my $name = $self->name;
@@ -4775,7 +4775,7 @@ sub add_list_member {
 	unless ($current_list_members_count < $self->max_list_members or
 	    $self->max_list_members == 0) {
 	    $self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'} = 1;
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'notice',
 		'Subscription of user %s failed: max number of subscribers (%s) reached',
 		$new_user->{'email'},
@@ -4796,7 +4796,7 @@ sub add_list_member {
 	    if (defined $subscriptions->{$who}{'custom_attribute'});
 	$new_user->{'custom_attribute'} ||=
 	    &createXMLCustomAttribute(\%custom_attr);
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'debug2',
 	    'custom_attribute = %s',
 	    $new_user->{'custom_attribute'}
@@ -4828,7 +4828,7 @@ sub add_list_member {
 		    'password' => $new_user->{'password'}
 		)
 	    ) {
-		&Log::do_log('err', 'Unable to add user %s to user_table.',
+		&Sympa::Log::Syslog::do_log('err', 'Unable to add user %s to user_table.',
 		    $who);
 		$self->{'add_outcome'}{'errors'}
 		    {'unable_to_add_to_database'} = 1;
@@ -4840,7 +4840,7 @@ sub add_list_member {
 	$new_user->{'included'} ||= 0;
 
 	#Log in stat_table to make statistics
-	&Log::db_stat_log(
+	&Sympa::Log::Syslog::db_stat_log(
 	    {   'robot'     => $self->domain,
 		'list'      => $self->name,
 		'operation' => 'add subscriber',
@@ -4885,7 +4885,7 @@ sub add_list_member {
 		$new_user->{'startdate'}, $new_user->{'enddate'}
 	    )
 	    ) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Unable to add subscriber %s to table subscriber_table for list %s',
 		$who, $self
@@ -4923,7 +4923,7 @@ sub _create_add_error_string {
 
 ## Adds a new list admin user, no overwrite.
 sub add_list_admin {
-    Log::do_log('debug2', '(%s, %s, ...)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, ...)', @_);
     my ($self, $role, @new_admin_users) = @_;
 
     my $name  = $self->name;
@@ -4956,7 +4956,7 @@ sub add_list_admin {
 		    'password' => $new_admin_user->{'password'}
 		)
 		) {
-		&Log::do_log('err', 'Unable to add admin %s to user_table',
+		&Sympa::Log::Syslog::do_log('err', 'Unable to add admin %s to user_table',
 		    $who);
 		    next;
 		}
@@ -4991,7 +4991,7 @@ sub add_list_admin {
 		SDM::quote($new_admin_user->{'profile'})
 	    )
 	) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Unable to add admin %s to table admin_table for list %s',
 		$who,
@@ -5017,7 +5017,7 @@ sub is_listmaster {
 
 ## Does the user have a particular function in the list?
 sub am_i {
-    &Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $self     = shift;
     my $function = lc(shift || '');
     my $who      = &tools::clean_email(shift || '');
@@ -5070,7 +5070,7 @@ sub check_list_authz {
 
 ## Initialize internal list cache
 sub init_list_cache {
-    &Log::do_log('debug2', '()');
+    &Sympa::Log::Syslog::do_log('debug2', '()');
     foreach my $robot (@{Robot::get_robots() || []}) {
 	$robot->init_list_cache();
     }
@@ -5078,7 +5078,7 @@ sub init_list_cache {
 
 ## May the indicated user edit the indicated list parameter or not?
 sub may_edit {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
     my ($self, $parameter, $who) = @_;
 
     my $role;
@@ -5151,7 +5151,7 @@ sub may_edit {
 sub may_create_parameter {
 
     my ($self, $parameter, $who, $robot) = @_;
-    &Log::do_log('debug3', 'List::may_create_parameter(%s, %s, %s)',
+    &Sympa::Log::Syslog::do_log('debug3', 'List::may_create_parameter(%s, %s, %s)',
 	$parameter, $who, $robot);
 
     if ($self->robot->is_listmaster($who)) {
@@ -5160,7 +5160,7 @@ sub may_create_parameter {
     my $edit_conf = &tools::load_edit_list_conf($self);
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (!$edit_conf->{$parameter}) {
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    'tools::load_edit_list_conf privilege for parameter $parameter undefined'
 	);
 	return undef;
@@ -5177,7 +5177,7 @@ sub may_create_parameter {
 ## Action can be : send, review, index, get
 ##                 add, del, reconfirm, purge
 sub may_do {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
     my $action = lc(shift || '');
     my $who = lc(shift || '');
@@ -5269,7 +5269,7 @@ sub is_digest {
 ## Does the file exist?
 sub archive_exist {
     my ($self, $file) = @_;
-   &Log::do_log('debug', 'List::archive_exist (%s)', $file);
+   &Sympa::Log::Syslog::do_log('debug', 'List::archive_exist (%s)', $file);
 
    return undef unless ($self->is_archived());
     my $dir = $self->robot->arc_path . '/' . $self->get_id;
@@ -5280,7 +5280,7 @@ sub archive_exist {
 ## List the archived files
 sub archive_ls {
    my $self = shift;
-   &Log::do_log('debug2', 'List::archive_ls');
+   &Sympa::Log::Syslog::do_log('debug2', 'List::archive_ls');
 
     my $dir = $self->robot->arc_path . '/' . $self->get_id;
 
@@ -5289,7 +5289,7 @@ sub archive_ls {
 
 ## Archive
 sub archive_msg {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $message) = @_;
 
     if ($self->is_archived()) {
@@ -5297,10 +5297,10 @@ sub archive_msg {
 	if ($message->{'smime_crypted'} and
 	    $message->{'smime_crypted'} eq 'smime_crypted' and
 	    ($self->archive_crypted_msg eq 'original')) {
-	    Log::do_log('debug3', 'Will store encrypted message');
+	    Sympa::Log::Syslog::do_log('debug3', 'Will store encrypted message');
 	    $msgtostore = $message->as_string();
 	} else {
-	    Log::do_log('debug3', 'Will store UNencrypted message');
+	    Sympa::Log::Syslog::do_log('debug3', 'Will store UNencrypted message');
 	    $msgtostore = $message->get_message_as_string;
 	}
 
@@ -5313,7 +5313,7 @@ sub archive_msg {
 		$restrict and $restrict =~ /no\-external\-archive/i)
 	) {
 	    ## ignoring message with a no-archive flag
-	    Log::do_log('info',
+	    Sympa::Log::Syslog::do_log('info',
 		'Do not archive message with no-archive flag for list %s',
 		$self);
 	} else {
@@ -5322,7 +5322,7 @@ sub archive_msg {
 		$msgtostore,
 		{'list' => $self->name, 'robot' => $self->domain}
 	    )) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Could not store message %s in archive spool: %s',
 		    $message, $!
 		);
@@ -5342,7 +5342,7 @@ sub is_moderated {
 ## Is the list archived?
 sub is_archived {
     if (shift->web_archive->{'access'}) {
-	&Log::do_log('debug', 'List::is_archived : 1');
+	&Sympa::Log::Syslog::do_log('debug', 'List::is_archived : 1');
 	return 1;
     }
     return undef;
@@ -5360,7 +5360,7 @@ sub get_nextdigest {
     my $self = shift;
     my $date = shift;   # the date epoch as stored in the spool database
 
-    &Log::do_log('debug3', 'List::get_nextdigest (list = %s)',
+    &Sympa::Log::Syslog::do_log('debug3', 'List::get_nextdigest (list = %s)',
 	$self);
 
     my $digest = $self->digest;
@@ -5402,7 +5402,7 @@ sub get_nextdigest {
 
 ## Loads all scenarios for an action
 sub load_scenario_list {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $action = shift;
 
@@ -5498,7 +5498,7 @@ sub get_scenario {
 }
 
 sub load_task_list {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $action = shift;
 
@@ -5540,12 +5540,12 @@ sub load_task_list {
 }
 
 sub _load_task_title {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $file = shift;
     my $title = {};
 
     unless (open TASK, $file) {
-	Log::do_log('err', 'Unable to open file "%s": %s', $file, $!);
+	Sympa::Log::Syslog::do_log('err', 'Unable to open file "%s": %s', $file, $!);
 	return undef;
     }
 
@@ -5573,7 +5573,7 @@ sub _load_task_title {
 ## Loads all data sources
 ## n.b. $robot is no longer used.
 sub load_data_sources_list {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $robot) = @_;
 
     my $directory = $self->dir;
@@ -5606,7 +5606,7 @@ sub _load_stats_file {
 	unless ref $self;    #prototype changed (6.2)
 
     my $file = $self->dir . '/stats';
-    &Log::do_log('debug3', '(%s, file=%s)', $self, $file);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s, file=%s)', $self, $file);
 
    ## Create the initial stats array.
    my ($stats, $total, $last_sync, $last_sync_admin_user);
@@ -5643,7 +5643,7 @@ sub _load_stats_file {
 ## Loads the list of subscribers.
 sub _load_list_members_file {
     my $file = shift;
-    &Log::do_log('debug3', '(%s)', $file);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s)', $file);
 
     ## Open the file and switch to paragraph mode.
     open(L, $file) || return undef;
@@ -5685,7 +5685,7 @@ sub _include_users_remote_sympa_list {
 
     my $id = Datasource::_get_datasource_id($param);
 
-    &Log::do_log(
+    &Sympa::Log::Syslog::do_log(
 	'debug2',
 	'%s: https://%s:%s/%s using cert %s',
 	$self,
@@ -5711,7 +5711,7 @@ sub _include_users_remote_sympa_list {
 	$key_file  = $self->get_etc_filename('private_key');
     }
     unless ((-r $cert_file) && (-r $key_file)) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s',
 	    $host,
@@ -5751,7 +5751,7 @@ sub _include_users_remote_sympa_list {
 
 	if ($line =~ /^\s*email\s+(.+)\s*$/o) {
 	    $user{'email'} = $email = $1;
-	    &Log::do_log('debug', "email found $email");
+	    &Sympa::Log::Syslog::do_log('debug', "email found $email");
 	    $get_total++;
 	}
 	$user{'gecos'} = $1 if ($line =~ /^\s*gecos\s+(.+)\s*$/o);
@@ -5759,13 +5759,13 @@ sub _include_users_remote_sympa_list {
 	next unless ($line =~ /^$/);
 
 	unless ($user{'email'}) {
-	    &Log::do_log('debug', 'ignoring block without email definition');
+	    &Sympa::Log::Syslog::do_log('debug', 'ignoring block without email definition');
 	    next;
 	}
 	my %u;
 	## Check if user has already been included
 	if ($users->{$email}) {
-	    &Log::do_log('debug3', 'ignore %s because already member',
+	    &Sympa::Log::Syslog::do_log('debug3', 'ignore %s because already member',
 		$email);
 	    if ($tied) {
 		%u = split "\n", $users->{$email};
@@ -5773,7 +5773,7 @@ sub _include_users_remote_sympa_list {
 		%u = %{$users->{$email}};
 	    }
 	} else {
-	    &Log::do_log('debug3', 'add new subscriber %s', $email);
+	    &Sympa::Log::Syslog::do_log('debug3', 'add new subscriber %s', $email);
 	    %u = %{$default_user_options};
 	    $total++;
 	}
@@ -5800,7 +5800,7 @@ sub _include_users_remote_sympa_list {
 	undef $email;
 
     }
-    &Log::do_log('info',
+    &Sympa::Log::Syslog::do_log('info',
 	'Include %d users from list (%d subscribers) https://%s:%s%s',
 	$total, $get_total, $host, $port, $path);
     return $total;
@@ -5809,7 +5809,7 @@ sub _include_users_remote_sympa_list {
 ## include a list as subscribers.
 sub _include_users_list {
     my ($users, $includelistname, $robot, $default_user_options, $tied) = @_;
-    &Log::do_log('debug2', 'List::_include_users_list');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::_include_users_list');
 
     my $total = 0;
 
@@ -5823,7 +5823,7 @@ sub _include_users_list {
     }
 
     unless ($includelist) {
-	&Log::do_log('info', 'Included list %s unknown', $includelistname);
+	&Sympa::Log::Syslog::do_log('info', 'Included list %s unknown', $includelistname);
 	return undef;
     }
 
@@ -5867,22 +5867,22 @@ sub _include_users_list {
 	    $users->{$email} = \%u;
 	}
     }
-    &Log::do_log('info', "Include %d users from list %s",
+    &Sympa::Log::Syslog::do_log('info', "Include %d users from list %s",
 	$total, $includelistname);
     return $total;
 }
 
 sub _include_users_file {
     my ($users, $filename, $default_user_options, $tied) = @_;
-    &Log::do_log('debug3', 'List::_include_users_file(%s)', $filename);
+    &Sympa::Log::Syslog::do_log('debug3', 'List::_include_users_file(%s)', $filename);
 
     my $total = 0;
 
     unless (open(INCLUDE, "$filename")) {
-	&Log::do_log('err', 'Unable to open file "%s"', $filename);
+	&Sympa::Log::Syslog::do_log('err', 'Unable to open file "%s"', $filename);
 	return undef;
     }
-    &Log::do_log('debug2', 'including file %s', $filename);
+    &Sympa::Log::Syslog::do_log('debug2', 'including file %s', $filename);
 
     my $id = Datasource::_get_datasource_id($filename);
     my $lines = 0;
@@ -5891,7 +5891,7 @@ sub _include_users_file {
 
     while (<INCLUDE>) {
 	if ($lines > 49 && $emails_found == 0) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',
 		$filename,
@@ -5909,14 +5909,14 @@ sub _include_users_file {
 
 	## Skip badly formed emails
 	unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-		Log::do_log('err', "Skip badly formed line: '%s'", $_);
+		Sympa::Log::Syslog::do_log('err', "Skip badly formed line: '%s'", $_);
 		next;
 	}
 	my ($email, $gecos) = ($1, $5);
 	$email = tools::clean_email($email);
 
 	unless (&tools::valid_email($email)) {
-	    Log::do_log('err', "Skip badly formed email address: '%s'",
+	    Sympa::Log::Syslog::do_log('err', "Skip badly formed email address: '%s'",
 		$email);
 		next;
 	}
@@ -5966,7 +5966,7 @@ sub _include_users_remote_file {
 
     my $url = $param->{'url'};
 
-    &Log::do_log('debug2', "List::_include_users_remote_file($url)");
+    &Sympa::Log::Syslog::do_log('debug2', "List::_include_users_remote_file($url)");
 
     my $total = 0;
     my $id = Datasource::_get_datasource_id($param);
@@ -5994,7 +5994,7 @@ sub _include_users_remote_file {
 	# forgot headers (all line before one that contain a email
 	foreach my $line (@remote_file) {
 	    if ($lines > 49 && $emails_found == 0) {
-		&Log::do_log(
+		&Sympa::Log::Syslog::do_log(
 		    'err',
 		    'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',
 		    $url,
@@ -6012,14 +6012,14 @@ sub _include_users_remote_file {
 
 	    ## Skip badly formed emails
 	    unless ($line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-		Log::do_log('err', "Skip badly formed line: '%s'", $line);
+		Sympa::Log::Syslog::do_log('err', "Skip badly formed line: '%s'", $line);
 		next;
 	    }
 	    my ($email, $gecos) = ($1, $5);
 	    $email = tools::clean_email($email);
 
 	    unless (&tools::valid_email($email)) {
-		Log::do_log('err', "Skip badly formed email address: '%s'",
+		Sympa::Log::Syslog::do_log('err', "Skip badly formed email address: '%s'",
 		    $line);
 		next;
 	    }
@@ -6062,7 +6062,7 @@ sub _include_users_remote_file {
 	    }
 	}
     } else {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    "List::include_users_remote_file: Unable to fetch remote file $url : %s",
 	    $res->message()
@@ -6073,7 +6073,7 @@ sub _include_users_remote_file {
     ## Reset HTTP credentials
     &WebAgent::set_basic_credentials('', '');
 
-    &Log::do_log('info', "include %d users from remote file %s", $total,
+    &Sympa::Log::Syslog::do_log('info', "include %d users from remote file %s", $total,
 	$url);
     return $total;
 }
@@ -6082,7 +6082,7 @@ sub _include_users_remote_file {
 sub _include_users_voot_group {
     my ($users, $param, $default_user_options, $tied) = @_;
 
-    &Log::do_log('debug2', "List::_include_users_voot_group(%s, %s, %s)",
+    &Sympa::Log::Syslog::do_log('debug2', "List::_include_users_voot_group(%s, %s, %s)",
 	$param->{'user'}, $param->{'provider'}, $param->{'group'});
 
 	my $id = Datasource::_get_datasource_id($param);
@@ -6095,7 +6095,7 @@ sub _include_users_voot_group {
 # Here we need to check if we are in a web environment and set consumer's webEnv accordingly
 
     unless ($consumer) {
-		&Log::do_log('err', 'Cannot create VOOT consumer. Cancelling.');
+		&Sympa::Log::Syslog::do_log('err', 'Cannot create VOOT consumer. Cancelling.');
 		return undef;
 	}
 
@@ -6114,7 +6114,7 @@ sub _include_users_voot_group {
 
 	if (my $email = shift(@{$member->{'emails'}})) {
 	    unless (&tools::valid_email($email)) {
-		&Log::do_log('err', "Skip badly formed email address: '%s'",
+		&Sympa::Log::Syslog::do_log('err', "Skip badly formed email address: '%s'",
 		    $email);
 		next;
 	    }
@@ -6152,7 +6152,7 @@ sub _include_users_voot_group {
 	}
     }
 
-    &Log::do_log('info',
+    &Sympa::Log::Syslog::do_log('info',
 	"included %d users from VOOT group %s at provider %s",
 	$total, $param->{'group'}, $param->{'provider'});
 
@@ -6162,7 +6162,7 @@ sub _include_users_voot_group {
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
     my ($users, $id, $source, $default_user_options, $tied) = @_;
-    &Log::do_log('debug2', 'List::_include_users_ldap');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::_include_users_ldap');
 
     my $user = $source->{'user'};
     my $passwd = $source->{'passwd'};
@@ -6182,11 +6182,11 @@ sub _include_users_ldap {
     #my $timeout = 30;
 
     unless (defined $source && $source->connect()) {
-	&Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+	&Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 	    $source->{'host'});
 	    return undef;
 	}
-    &Log::do_log('debug2',
+    &Sympa::Log::Syslog::do_log('debug2',
 	'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $fetch = $source->{'ldap_handler'}->search(
@@ -6196,7 +6196,7 @@ sub _include_users_ldap {
 	scope  => "$source->{'scope'}"
     );
     if ($fetch->code()) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $fetch->error(),
@@ -6225,7 +6225,7 @@ sub _include_users_ldap {
 		my $cleanmail = &tools::clean_email($email);
 		## Skip badly formed emails
 		unless (&tools::valid_email($email)) {
-		    Log::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			"Skip badly formed email address: '%s'", $email);
 			next;
 		}
@@ -6239,7 +6239,7 @@ sub _include_users_ldap {
 	    my $cleanmail = &tools::clean_email($emailentry);
 	    ## Skip badly formed emails
 	    unless (&tools::valid_email($emailentry)) {
-		Log::do_log('err', "Skip badly formed email address: '%s'",
+		Sympa::Log::Syslog::do_log('err', "Skip badly formed email address: '%s'",
 		    $emailentry);
 		next;
 	    }
@@ -6251,7 +6251,7 @@ sub _include_users_ldap {
     }
 
     unless ($source->disconnect()) {
-	&Log::do_log('notice', 'Can\'t unbind from  LDAP server %s',
+	&Sympa::Log::Syslog::do_log('notice', 'Can\'t unbind from  LDAP server %s',
 	    $source->{'host'});
 	return undef;
     }
@@ -6296,9 +6296,9 @@ sub _include_users_ldap {
 	}
     }
 
-    &Log::do_log('debug2', "unbinded from LDAP server %s ",
+    &Sympa::Log::Syslog::do_log('debug2', "unbinded from LDAP server %s ",
 	$source->{'host'});
-    &Log::do_log('info', '%d new users included from LDAP query', $total);
+    &Sympa::Log::Syslog::do_log('info', '%d new users included from LDAP query', $total);
 
     return $total;
 }
@@ -6307,7 +6307,7 @@ sub _include_users_ldap {
 ## Directory using a two-level query
 sub _include_users_ldap_2level {
     my ($users, $id, $source, $default_user_options, $tied) = @_;
-    &Log::do_log('debug2', 'List::_include_users_ldap_2level');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::_include_users_ldap_2level');
 
     my $user = $source->{'user'};
     my $passwd = $source->{'passwd'};
@@ -6333,12 +6333,12 @@ sub _include_users_ldap_2level {
     my ($ldaph, $fetch);
 
     unless (defined $source && ($ldaph = $source->connect())) {
-	&Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+	&Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 	    $source->{'host'});
 	    return undef;
 	}
 
-    &Log::do_log('debug2',
+    &Sympa::Log::Syslog::do_log('debug2',
 	'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
     $fetch = $ldaph->search(
@@ -6348,7 +6348,7 @@ sub _include_users_ldap_2level {
 	scope  => "$ldap_scope1"
     );
     if ($fetch->code()) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'LDAP search (1st level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $fetch->error(),
@@ -6398,7 +6398,7 @@ sub _include_users_ldap_2level {
 	($suffix2 = $ldap_suffix2) =~ s/\[attrs1\]/$escaped_attr/g;
 	($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
-	&Log::do_log('debug2',
+	&Sympa::Log::Syslog::do_log('debug2',
 	    'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
 	    $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
 	$fetch = $ldaph->search(
@@ -6408,7 +6408,7 @@ sub _include_users_ldap_2level {
 	    'scope'  => "$ldap_scope2"
 	);
 	if ($fetch->code()) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'LDAP search (2nd level) failed : %s. Node: %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 		$fetch->error(),
@@ -6442,7 +6442,7 @@ sub _include_users_ldap_2level {
 		    my $cleanmail = &tools::clean_email($email);
 		    ## Skip badly formed emails
 		    unless (&tools::valid_email($email)) {
-			Log::do_log('err',
+			Sympa::Log::Syslog::do_log('err',
 			    "Skip badly formed email address: '%s'", $email);
 			next;
 		    }
@@ -6459,7 +6459,7 @@ sub _include_users_ldap_2level {
 		my $cleanmail = &tools::clean_email($emailentry);
 		## Skip badly formed emails
 		unless (&tools::valid_email($emailentry)) {
-		    Log::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			"Skip badly formed email address: '%s'", $emailentry);
 			next;
 		}
@@ -6478,7 +6478,7 @@ sub _include_users_ldap_2level {
     }
 
     unless ($source->disconnect()) {
-	&Log::do_log('err', 'Can\'t unbind from  LDAP server %s',
+	&Sympa::Log::Syslog::do_log('err', 'Can\'t unbind from  LDAP server %s',
 	    $source->{'host'});
 	return undef;
     }
@@ -6523,9 +6523,9 @@ sub _include_users_ldap_2level {
 	}
     }
 
-    &Log::do_log('debug2', "unbinded from LDAP server %s ",
+    &Sympa::Log::Syslog::do_log('debug2', "unbinded from LDAP server %s ",
 	$source->{'host'});
-    &Log::do_log('info', '%d new users included from LDAP query 2level',
+    &Sympa::Log::Syslog::do_log('info', '%d new users included from LDAP query 2level',
 	$total);
 
     my $result;
@@ -6539,7 +6539,7 @@ sub _include_sql_ca {
 
     return {} unless ($source->connect());
 
-    &Log::do_log(
+    &Sympa::Log::Syslog::do_log(
 	'debug2',
 	'%s, email_entry = %s',
 	$source->{'sql_query'},
@@ -6565,7 +6565,7 @@ sub _include_ldap_ca {
 
     return {} unless ($source->connect());
 
-    &Log::do_log(
+    &Sympa::Log::Syslog::do_log(
 	'debug2',
 	'server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'},
@@ -6583,7 +6583,7 @@ sub _include_ldap_ca {
 		scope => $source->{'scope'}
 	);
     if ($results->code()) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $results->error(),
@@ -6615,7 +6615,7 @@ sub _include_ldap_level2_ca {
 
 	return {};
 
-    &Log::do_log(
+    &Sympa::Log::Syslog::do_log(
 	'debug2',
 	'server %s ; suffix %s ; filter %s ; attrs: %s',
 	$source->{'host'},
@@ -6633,7 +6633,7 @@ sub _include_ldap_level2_ca {
 		scope => $source->{'scope'}
 	);
     if ($results->code()) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
 	    $results->error(),
@@ -6663,17 +6663,17 @@ sub _include_users_sql {
     my ($users, $id, $source, $default_user_options, $tied, $fetch_timeout) =
 	@_;
 
-    &Log::do_log('debug2', 'List::_include_users_sql()');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::_include_users_sql()');
 
     unless (ref($source) =~ /DBManipulator/) {
-	&Log::do_log('err', 'source object has not a DBManipulator type : %s',
+	&Sympa::Log::Syslog::do_log('err', 'source object has not a DBManipulator type : %s',
 	    $source);
         return undef;
     }
 
     unless ($source->connect() && ($source->do_query($source->{'sql_query'})))
     {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unable to connect to SQL datasource with parameters host: %s, database: %s',
 	    $source->{'host'},
@@ -6689,7 +6689,7 @@ sub _include_users_sql {
     my $array_of_users = $source->fetch;
 
     unless (defined $array_of_users && ref($array_of_users) eq 'ARRAY') {
-	&Log::do_log('err', 'Failed to include users from %s',
+	&Sympa::Log::Syslog::do_log('err', 'Failed to include users from %s',
 	    $source->{'name'});
 	return undef;
     }
@@ -6704,7 +6704,7 @@ sub _include_users_sql {
 
 	## Skip badly formed emails
 	unless (&tools::valid_email($email)) {
-	    Log::do_log('err', "Skip badly formed email address: '%s'",
+	    Sympa::Log::Syslog::do_log('err', "Skip badly formed email address: '%s'",
 		$email);
 		next;
 	}
@@ -6744,19 +6744,19 @@ sub _include_users_sql {
 	}
     }
     $source->disconnect();
-    &Log::do_log('info', '%d included users from SQL query', $total);
+    &Sympa::Log::Syslog::do_log('info', '%d included users from SQL query', $total);
     return $total;
 }
 
 ## Loads the list of subscribers from an external include source
 sub _load_list_members_from_include {
-    &Log::do_log('debug3', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
 
     my $self = shift;
     my $old_subs = shift;
     my $name     = $self->name;
     my $dir      = $self->dir;
-    &Log::do_log('debug2', 'Loading included users for list %s', $self);
+    &Sympa::Log::Syslog::do_log('debug2', 'Loading included users for list %s', $self);
     my (%users, $depend_on, $ref);
     my $total = 0;
     my @errors;
@@ -6782,7 +6782,7 @@ sub _load_list_members_from_include {
 	    if(my $plugin = $self->isPlugin($type))
             {   my $source = $plugin->listSource;
 		if($source->isAllowedToSync || $source_is_new)
-		{   Log::do_log(debug => "syncing members from $type");
+		{   Sympa::Log::Syslog::do_log(debug => "syncing members from $type");
 		    $included = $source->getListMembers
 		      ( users         => \%users
 		      , settings      => $incl
@@ -6797,7 +6797,7 @@ sub _load_list_members_from_include {
 	    if ($type eq 'include_sql_query') {
 			my $source = new SQLSource($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
-		    &Log::do_log('debug', 'is_new %d, syncing',
+		    &Sympa::Log::Syslog::do_log('debug', 'is_new %d, syncing',
 			$source_is_new);
 		    $included =
 			_include_users_sql(\%users, $source_id, $source,
@@ -6850,7 +6850,7 @@ sub _load_list_members_from_include {
 				if (defined $result) {
 					$included = $result->{'total'};
 			if (defined $result->{'errors'}) {
-			    &Log::do_log('err',
+			    &Sympa::Log::Syslog::do_log('err',
 				'Errors occurred during the second LDAP passe'
 			    );
 			    push @errors,
@@ -6884,7 +6884,7 @@ sub _load_list_members_from_include {
 	    } elsif ($type eq 'include_list') {
 		$depend_on->{$name} = 1;
 		if (&_inclusion_loop($name, $incl, $depend_on)) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'loop detection in list inclusion : could not include again %s in %s',
 			$incl,
@@ -6915,7 +6915,7 @@ sub _load_list_members_from_include {
 	    }
 
 	    unless (defined $included) {
-		&Log::do_log('err', 'Inclusion %s failed in list %s',
+		&Sympa::Log::Syslog::do_log('err', 'Inclusion %s failed in list %s',
 		    $type, $name);
 		next;
 	    }
@@ -6933,7 +6933,7 @@ if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
 }
 ## Loads the list of admin users from an external include source
 sub _load_list_admin_from_include {
-    &Log::do_log('debug3', '(%s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
 
     my $self = shift;
     my $role = shift;
@@ -6962,7 +6962,7 @@ sub _load_list_admin_from_include {
 	    $self->get_etc_filename("data_sources/$entry->{'source'}\.incl");
 
 	unless (defined $include_file) {
-	    &Log::do_log('err', 'the file %s.incl doesn\'t exist',
+	    &Sympa::Log::Syslog::do_log('err', 'the file %s.incl doesn\'t exist',
 		$entry->{'source'});
 	    return undef;
 	}
@@ -6984,7 +6984,7 @@ sub _load_list_admin_from_include {
 		    _load_include_admin_user_file($robot, $include_path,
 			\%parsing);
 	    } else {
-		&Log::do_log('err',
+		&Sympa::Log::Syslog::do_log('err',
 		    'errors to get path of the the file %s.incl',
 		    $entry->{'source'});
 		return undef;
@@ -7008,7 +7008,7 @@ sub _load_list_admin_from_include {
 		my $included;
 		if(my $plugin = $self->isPlugin($type))
 		{   my $source = $plugin->listSource;
-                    Log::do_log(debug => "syncing admins from $type");
+                    Sympa::Log::Syslog::do_log(debug => "syncing admins from $type");
 		    $included = $source->getListMembers
 		      ( users         => \%admin_users
 		      , settings      => $incl
@@ -7033,7 +7033,7 @@ sub _load_list_admin_from_include {
 		    if (defined $result) {
 			$included = $result->{'total'};
 			if (defined $result->{'errors'}) {
-			    &Log::do_log('err',
+			    &Sympa::Log::Syslog::do_log('err',
 				'Errors occurred during the second LDAP passe. Please verify your LDAP query.'
 			    );
 			}
@@ -7047,7 +7047,7 @@ sub _load_list_admin_from_include {
 		} elsif ($type eq 'include_list') {
 		    $depend_on->{$name} = 1;
 		    if (&_inclusion_loop($name, $incl, $depend_on)) {
-			&Log::do_log(
+			&Sympa::Log::Syslog::do_log(
 			    'err',
 			    'loop detection in list inclusion : could not include again %s in %s',
 			    $incl,
@@ -7068,7 +7068,7 @@ sub _load_list_admin_from_include {
 		};
 
 		unless (defined $included) {
-		    &Log::do_log('err', 'Inclusion %s %s failed in list %s',
+		    &Sympa::Log::Syslog::do_log('err', 'Inclusion %s %s failed in list %s',
 			$role, $type, $name);
 		    next;
 		}
@@ -7087,7 +7087,7 @@ sub _load_list_admin_from_include {
 
 # Load an include admin user file (xx.incl)
 sub _load_include_admin_user_file {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
     my $robot = shift;
     my $file = shift;
     my $parsing = shift;
@@ -7108,7 +7108,7 @@ sub _load_include_admin_user_file {
 		\$output, [$parsing->{'include_path'}]
 	    )
 	    ) {
-	    &Log::do_log('err', 'Failed to parse %s', $parsing->{'template'});
+	    &Sympa::Log::Syslog::do_log('err', 'Failed to parse %s', $parsing->{'template'});
 	    return undef;
 	}
 
@@ -7124,7 +7124,7 @@ sub _load_include_admin_user_file {
 	}
     } else {
 	unless (open INCLUDE, $file) {
-	    &Log::do_log('info', 'Cannot open %s', $file);
+	    &Sympa::Log::Syslog::do_log('info', 'Cannot open %s', $file);
 	}
 
 	## Just in case...
@@ -7172,7 +7172,7 @@ sub _load_include_admin_user_file {
 
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    &Log::do_log('info', 'Bad paragraph "%s" in %s',
+	    &Sympa::Log::Syslog::do_log('info', 'Bad paragraph "%s" in %s',
 		@paragraph, $file);
 	    next;
 	}
@@ -7180,14 +7180,14 @@ sub _load_include_admin_user_file {
 	$pname = $1;
 
         unless($config_in_admin_user_file{$pname})
-	{   &Log::do_log('info', 'Unknown parameter "%s" in %s', $pname, $file);
+	{   &Sympa::Log::Syslog::do_log('info', 'Unknown parameter "%s" in %s', $pname, $file);
 	    next;
 	}
 
 	## Uniqueness
 	if (defined $include{$pname} and
 	    $pinfo->{$pname}{'occurrence'} !~ /n$/) {
-	    Log::do_log('info', 'Multiple parameter "%s" in %s',
+	    Sympa::Log::Syslog::do_log('info', 'Multiple parameter "%s" in %s',
 		$pname, $file);
 	}
 
@@ -7195,7 +7195,7 @@ sub _load_include_admin_user_file {
 	if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		&Log::do_log(
+		&Sympa::Log::Syslog::do_log(
 		    'info',
 		    'Expecting a paragraph for "%s" parameter in %s, ignore it',
 		    $pname,
@@ -7212,14 +7212,14 @@ sub _load_include_admin_user_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);
 
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-		    &Log::do_log('info', 'Bad line "%s" in %s',
+		    &Sympa::Log::Syslog::do_log('info', 'Bad line "%s" in %s',
 			$paragraph[$i], $file);
 		}
 
 		my $key = $1;
 
 		unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
-		    &Log::do_log('info',
+		    &Sympa::Log::Syslog::do_log('info',
 			'Unknown key "%s" in paragraph "%s" in %s',
 			$key, $pname, $file);
 		    next;
@@ -7229,7 +7229,7 @@ sub _load_include_admin_user_file {
 		    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
 		    ) {
 		    chomp($paragraph[$i]);
-		    &Log::do_log('info',
+		    &Sympa::Log::Syslog::do_log('info',
 			'Bad entry "%s" for key "%s", paragraph "%s" in %s',
 			$paragraph[$i], $key, $pname, $file);
 		    next;
@@ -7252,7 +7252,7 @@ sub _load_include_admin_user_file {
 		## Required fields
 		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
-			&Log::do_log('info',
+			&Sympa::Log::Syslog::do_log('info',
 			    'Missing key "%s" in param "%s" in %s',
 			    $k, $pname, $file);
 			$missing_required_field++;
@@ -7271,7 +7271,7 @@ sub _load_include_admin_user_file {
 	} else {
 	    ## This should be a single line
 	    unless ($#paragraph == 0) {
-		&Log::do_log('info',
+		&Sympa::Log::Syslog::do_log('info',
 		    'Expecting a single line for "%s" parameter in %s',
 		    $pname, $file);
 	    }
@@ -7279,7 +7279,7 @@ sub _load_include_admin_user_file {
 	    unless ($paragraph[0] =~
 		/^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
 		chomp($paragraph[0]);
-		&Log::do_log('info', 'Bad entry "%s" in %s',
+		&Sympa::Log::Syslog::do_log('info', 'Bad entry "%s" in %s',
 		    $paragraph[0], $file);
 		next;
 	    }
@@ -7319,7 +7319,7 @@ sub get_list_of_sources_id {
 }
 
 sub sync_include_ca {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $purge = shift;
 
@@ -7367,7 +7367,7 @@ sub sync_include_ca {
 				}
 			}
 	    unless ($source->disconnect()) {
-		&Log::do_log('notice', 'Can\'t unbind from source %s', $type);
+		&Sympa::Log::Syslog::do_log('notice', 'Can\'t unbind from source %s', $type);
 				return undef;
 			}
 		}
@@ -7381,9 +7381,9 @@ sub sync_include_ca {
 		}
 	    )
 	    ) {
-			&Log::do_log('debug', 'Updated user %s', $email);
+			&Sympa::Log::Syslog::do_log('debug', 'Updated user %s', $email);
 	} else {
-			&Log::do_log('error', 'could not update user %s', $email);
+			&Sympa::Log::Syslog::do_log('error', 'could not update user %s', $email);
 		}
 	}
 
@@ -7392,7 +7392,7 @@ sub sync_include_ca {
 
 ### Purge synced custom attributes from user records, only keep user writable ones
 sub purge_ca {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     my %userattributes;
@@ -7424,9 +7424,9 @@ sub purge_ca {
 		}
 	    )
 	    ) {
-			&Log::do_log('debug', 'Updated user %s', $email);
+			&Sympa::Log::Syslog::do_log('debug', 'Updated user %s', $email);
 	} else {
-			&Log::do_log('error', 'could not update user %s', $email);
+			&Sympa::Log::Syslog::do_log('error', 'could not update user %s', $email);
 		}
 	}
 
@@ -7434,7 +7434,7 @@ sub purge_ca {
 }
 
 sub sync_include {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self   = shift;
     my $option = shift;
     my $name   = $self->name;
@@ -7454,7 +7454,7 @@ sub sync_include {
 	## User neither included nor subscribed = > set subscribed to 1
 	unless ($old_subscribers{lc($user->{'email'})}{'included'} ||
 	    $old_subscribers{lc($user->{'email'})}{'subscribed'}) {
-	    Log::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		'Update user %s neither included nor subscribed',
 		$user->{'email'});
 	    unless (
@@ -7465,7 +7465,7 @@ sub sync_include {
 		    }
 		)
 		) {
-		Log::do_log('err', 'Failed to update %s', $user->{'email'});
+		Sympa::Log::Syslog::do_log('err', 'Failed to update %s', $user->{'email'});
 		next;
 	    }
 	    $old_subscribers{lc($user->{'email'})}{'subscribed'} = 1;
@@ -7487,7 +7487,7 @@ sub sync_include {
 	## If include sources were not available, do not update subscribers
 	## Use DB cache instead and warn the listmaster.
 	if (@errors) {
-	    Log::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		'Errors occurred while synchronizing datasources for list %s',
 		$self
@@ -7568,7 +7568,7 @@ sub sync_include {
     ## Get an Exclusive lock
     my $lock = new Lock($self->dir . '/include');
     unless (defined $lock) {
-	Log::do_log('err', 'Could not create new lock');
+	Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	return undef;
     }
     $lock->set_timeout(10 * 60);
@@ -7584,7 +7584,7 @@ sub sync_include {
 	unless (defined($new_subscribers->{$email})) {
 	    ## User is also subscribed, update DB entry
 	    if ($old_subscribers{$email}{'subscribed'}) {
-		Log::do_log('debug', 'updating %s to list %s', $email, $self);
+		Sympa::Log::Syslog::do_log('debug', 'updating %s to list %s', $email, $self);
 		unless (
 		    $self->update_list_member(
 			$email,
@@ -7594,7 +7594,7 @@ sub sync_include {
 			}
 		    )
 		    ) {
-		    Log::do_log('err', 'Failed to update %s', $email);
+		    Sympa::Log::Syslog::do_log('err', 'Failed to update %s', $email);
 		    next;
 		}
 
@@ -7602,12 +7602,12 @@ sub sync_include {
 
 		## Tag user for deletion
 	    } else {
-		Log::do_log('debug3', 'removing %s from list %s',
+		Sympa::Log::Syslog::do_log('debug3', 'removing %s from list %s',
 		    $email, $self);
 		@deltab = ($email);
 		unless ($user_removed =
 		    $self->delete_list_member('users' => \@deltab)) {
-		    Log::do_log('err', 'Failed to delete %s', $user_removed);
+		    Sympa::Log::Syslog::do_log('err', 'Failed to delete %s', $user_removed);
 		    return undef;
 		}
 		if ($user_removed) {
@@ -7615,7 +7615,7 @@ sub sync_include {
 		    ## Send notification if the list config authorizes it only.
 		    if ($self->inclusion_notification_feature eq 'on') {
 			unless ($self->send_file('bye', $email)) {
-			    Log::do_log('err',
+			    Sympa::Log::Syslog::do_log('err',
 				'Unable to send template "bye" to %s',
 				$email);
 			}
@@ -7625,7 +7625,7 @@ sub sync_include {
 	}
     }
     if ($users_removed > 0) {
-	Log::do_log('notice', '%d users removed', $users_removed);
+	Sympa::Log::Syslog::do_log('notice', '%d users removed', $users_removed);
     }
 
     ## Go through new users
@@ -7650,7 +7650,7 @@ sub sync_include {
 		foreach my $attribute ('id', 'gecos') {
 		    if ($old_subscribers{$email}{$attribute} ne
 			$new_subscribers->{$email}{$attribute}) {
-			Log::do_log('debug', 'updating %s to list %s',
+			Sympa::Log::Syslog::do_log('debug', 'updating %s to list %s',
 			    $email, $self);
 			my $update_time =
 			    $new_subscribers->{$email}{'update_date'} || time;
@@ -7663,7 +7663,7 @@ sub sync_include {
 				}
 			    )
 			    ) {
-			    Log::do_log('err', 'Failed to update %s', $email);
+			    Sympa::Log::Syslog::do_log('err', 'Failed to update %s', $email);
 			    next;
 			} else {
 			    $successful_update = 1;
@@ -7673,7 +7673,7 @@ sub sync_include {
 		$users_updated++ if ($successful_update);
 		## User was already subscribed, update include_sources_subscriber in DB
 	    } else {
-		Log::do_log('debug', 'updating %s to list %s', $email, $self);
+		Sympa::Log::Syslog::do_log('debug', 'updating %s to list %s', $email, $self);
 		unless (
 		    $self->update_list_member(
 			$email,
@@ -7683,7 +7683,7 @@ sub sync_include {
 			}
 		    )
 		    ) {
-		    Log::do_log('err', 'Failed to update %s', $email);
+		    Sympa::Log::Syslog::do_log('err', 'Failed to update %s', $email);
 		    next;
 		}
 		$users_updated++;
@@ -7704,14 +7704,14 @@ sub sync_include {
 	    if ($compare eq '1') {
 		next;
 	    }
-	    Log::do_log('debug3', 'adding %s to list %s', $email, $self);
+	    Sympa::Log::Syslog::do_log('debug3', 'adding %s to list %s', $email, $self);
 	    my $u = $new_subscribers->{$email};
 	    $u->{'included'} = 1;
 	    $u->{'date'}     = time;
 	    @add_tab         = ($u);
 	    my $user_added = 0;
 	    unless ($user_added = $self->add_list_member(@add_tab)) {
-		Log::do_log('err', 'Failed to add new users');
+		Sympa::Log::Syslog::do_log('err', 'Failed to add new users');
 		return undef;
 	    }
 	    if ($user_added) {
@@ -7719,7 +7719,7 @@ sub sync_include {
 		## Send notification if the list config authorizes it only.
 		if ($self->inclusion_notification_feature eq 'on') {
 		    unless ($self->send_file('welcome', $u->{'email'})) {
-			Log::do_log('err',
+			Sympa::Log::Syslog::do_log('err',
 			    'Unable to send template "welcome" to %s',
 			    $u->{'email'});
 		    }
@@ -7729,10 +7729,10 @@ sub sync_include {
     }
 
     if ($users_added) {
-	Log::do_log('notice', '%d users added', $users_added);
+	Sympa::Log::Syslog::do_log('notice', '%d users added', $users_added);
     }
 
-    Log::do_log('notice', '%d users updated', $users_updated);
+    Sympa::Log::Syslog::do_log('notice', '%d users updated', $users_updated);
 
     ## Release lock
     unless ($lock->unlock()) {
@@ -7758,11 +7758,11 @@ sub on_the_fly_sync_include {
     my %options = @_;
 
     my $pertinent_ttl = $self->distribution_ttl || $self->ttl;
-    &Log::do_log('debug2', 'List::on_the_fly_sync_include(%s)',
+    &Sympa::Log::Syslog::do_log('debug2', 'List::on_the_fly_sync_include(%s)',
 	$pertinent_ttl);
     if ($options{'use_ttl'} != 1 ||
 	$self->{'last_sync'} < time - $pertinent_ttl) {
-	&Log::do_log('notice', "Synchronizing list members...");
+	&Sympa::Log::Syslog::do_log('notice', "Synchronizing list members...");
 	my $return_value = $self->sync_include();
 	if ($return_value == 1) {
 	    $self->remove_task('sync_include');
@@ -7779,7 +7779,7 @@ sub sync_include_admin {
     my $option = shift;
 
     my $name = $self->name;
-    &Log::do_log('debug2', 'List:sync_include_admin(%s)', $name);
+    &Sympa::Log::Syslog::do_log('debug2', 'List:sync_include_admin(%s)', $name);
 
     ## don't care about listmaster role
     foreach my $role ('owner', 'editor') {
@@ -7804,7 +7804,7 @@ sub sync_include_admin {
 	    ## If include sources were not available, do not update admin users
 	    ## Use DB cache instead
 	    unless (defined $new_admin_users_include) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Could not get %ss from an include source for list %s',
 		    $role, $self);
 		$self->robot->send_notify_to_listmaster(
@@ -7816,7 +7816,7 @@ sub sync_include_admin {
 		$self->_load_list_admin_from_config($role);
 
 	    unless (defined $new_admin_users_config) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Could not get %ss from config for list %s',
 		    $role, $self);
 		return undef;
@@ -7830,7 +7830,7 @@ sub sync_include_admin {
 	## Get an Exclusive lock
 	my $lock = new Lock($self->dir . '/include_admin_user');
 	unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 	$lock->set_timeout(20);
@@ -7866,7 +7866,7 @@ sub sync_include_admin {
 		    # updating
 		    if (defined $param_update) {
 			if (%{$param_update}) {
-			    &Log::do_log(
+			    &Sympa::Log::Syslog::do_log(
 				'debug',
 				'List:sync_include_admin : updating %s %s to list %s',
 				$role,
@@ -7880,7 +7880,7 @@ sub sync_include_admin {
 				    $email, $role, $param_update
 				)
 				) {
-				&Log::do_log(
+				&Sympa::Log::Syslog::do_log(
 				    'err',
 				    'List:sync_include_admin(%s): Failed to update %s %s',
 				    $name,
@@ -7898,7 +7898,7 @@ sub sync_include_admin {
 
 		    # add a new included and subscribed admin user
 		} else {
-		    &Log::do_log('debug2',
+		    &Sympa::Log::Syslog::do_log('debug2',
 			'List:sync_include_admin: adding %s %s to list %s',
 			$email, $role, $name);
 
@@ -7931,7 +7931,7 @@ sub sync_include_admin {
 		    # updating
 		    if (defined $param_update) {
 			if (%{$param_update}) {
-			    &Log::do_log(
+			    &Sympa::Log::Syslog::do_log(
 				'debug',
 				'List:sync_include_admin : updating %s %s to list %s',
 				$role,
@@ -7945,7 +7945,7 @@ sub sync_include_admin {
 				    $email, $role, $param_update
 				)
 				) {
-				&Log::do_log(
+				&Sympa::Log::Syslog::do_log(
 				    'err',
 				    'List:sync_include_admin(%s): Failed to update %s %s',
 				    $name,
@@ -7960,7 +7960,7 @@ sub sync_include_admin {
 
 		    # add a new included admin user
 		} else {
-		    &Log::do_log('debug2',
+		    &Sympa::Log::Syslog::do_log('debug2',
 			'List:sync_include_admin: adding %s %s to list %s',
 			$role, $email, $name);
 
@@ -7991,7 +7991,7 @@ sub sync_include_admin {
 		# updating
 		if (defined $param_update) {
 		    if (%{$param_update}) {
-			&Log::do_log(
+			&Sympa::Log::Syslog::do_log(
 			    'debug',
 			    'List:sync_include_admin : updating %s %s to list %s',
 			    $role,
@@ -8005,7 +8005,7 @@ sub sync_include_admin {
 				$email, $role, $param_update
 			    )
 			    ) {
-			    &Log::do_log(
+			    &Sympa::Log::Syslog::do_log(
 				'err',
 				'List:sync_include_admin(%s): Failed to update %s %s',
 				$name,
@@ -8020,7 +8020,7 @@ sub sync_include_admin {
 
 		# add a new subscribed admin user
 	    } else {
-		&Log::do_log('debug2',
+		&Sympa::Log::Syslog::do_log('debug2',
 		    'List:sync_include_admin: adding %s %s to list %s',
 		    $role, $email, $name);
 
@@ -8035,7 +8035,7 @@ sub sync_include_admin {
 	if ($#add_tab >= 0) {
 	    unless ($admin_users_added =
 		$self->add_list_admin($role, @add_tab)) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Failed to add new %ss to list %s',
 		    $role, $self);
 		return undef;
@@ -8043,12 +8043,12 @@ sub sync_include_admin {
 	}
 
 	if ($admin_users_added) {
-	    &Log::do_log('debug',
+	    &Sympa::Log::Syslog::do_log('debug',
 		'List:sync_include_admin(%s): %d %s(s) added',
 		    $name, $admin_users_added, $role);
 	}
 
-	&Log::do_log('debug', 'List:sync_include_admin(%s): %d %s(s) updated',
+	&Sympa::Log::Syslog::do_log('debug', 'List:sync_include_admin(%s): %d %s(s) updated',
 	    $name, $admin_users_updated, $role);
 
 	## Go though old list of admin users
@@ -8058,7 +8058,7 @@ sub sync_include_admin {
 	foreach my $email (keys %$old_admin_users) {
 	    unless (defined($new_admin_users_include->{$email}) ||
 		defined($new_admin_users_config->{$email})) {
-		&Log::do_log('debug2',
+		&Sympa::Log::Syslog::do_log('debug2',
 		    'List:sync_include_admin: removing %s %s to list %s',
 		    $role, $email, $name);
 		push(@deltab, $email);
@@ -8068,12 +8068,12 @@ sub sync_include_admin {
 	if ($#deltab >= 0) {
 	    unless ($admin_users_removed =
 		$self->delete_list_admin($role, @deltab)) {
-		&Log::do_log('err',
+		&Sympa::Log::Syslog::do_log('err',
 		    'List:sync_include_admin(%s): Failed to delete %s %s',
 			$name, $role, $admin_users_removed);
 		return undef;
 	    }
-	    &Log::do_log('debug',
+	    &Sympa::Log::Syslog::do_log('debug',
 		'List:sync_include_admin(%s): %d %s(s) removed',
 		    $name, $admin_users_removed, $role);
 	}
@@ -8097,7 +8097,7 @@ sub _load_list_admin_from_config {
     my $name = $self->name;
     my %admin_users;
 
-    &Log::do_log('debug3', '(%s) for list %s', $role, $name);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s) for list %s', $role, $name);
 
     ##FIXME: check $role argument
     foreach my $entry (@{$self->$role}) {
@@ -8125,7 +8125,7 @@ sub is_update_param {
     my $resul = {};
     my $update = 0;
 
-    &Log::do_log('debug2', 'List::is_update_param ');
+    &Sympa::Log::Syslog::do_log('debug2', 'List::is_update_param ');
 
     foreach my $p (
 	'reception', 'visibility', 'gecos',    'info',
@@ -8170,7 +8170,7 @@ sub _save_stats_file {
 
     unless (defined $self->stats and ref $self->stats eq 'ARRAY') {
 	unless ($self->_create_stats_file) {
-	    &Log::do_log('err', 'Stats file creation impossible for list %s', $self);
+	    &Sympa::Log::Syslog::do_log('err', 'Stats file creation impossible for list %s', $self);
 	    return undef;
 	}
 	$self->_load_stats_file;
@@ -8182,7 +8182,7 @@ sub _save_stats_file {
     my $last_sync            = $self->{'last_sync'};
     my $last_sync_admin_user = $self->{'last_sync_admin_user'};
 
-    &Log::do_log('debug3',
+    &Sympa::Log::Syslog::do_log('debug3',
 	'(file=%s, total=%s, last_sync=%s, last_sync_admin_user=%s)',
 	$file, $total, $last_sync, $last_sync_admin_user);
     my $untainted_filename = sprintf("%s", $file);    #XXX required?
@@ -8196,14 +8196,14 @@ sub _create_stats_file {
     my $self = shift;
 
     my $file = $self->dir . '/stats';
-    &Log::do_log('debug3', 'Creating stats file(%s, file=%s)', $self, $file);
+    &Sympa::Log::Syslog::do_log('debug3', 'Creating stats file(%s, file=%s)', $self, $file);
 
     if (-f $file) {
-	Log::do_log('debug2', 'File %s already exists. No need to create it.',$file);
+	Sympa::Log::Syslog::do_log('debug2', 'File %s already exists. No need to create it.',$file);
 	return 1;
     }
     unless (open STATS, ">$file") {
-	Log::do_log('err','Unable to create file %s.',$file);
+	Sympa::Log::Syslog::do_log('err','Unable to create file %s.',$file);
 	return undef;
     }
     print STATS "0 0 0 0 0 0 0\n";
@@ -8213,11 +8213,11 @@ sub _create_stats_file {
 ## Writes the user list to disk
 sub _save_list_members_file {
     my ($self, $file) = @_;
-    &Log::do_log('debug3', '(%s)', $file);
+    &Sympa::Log::Syslog::do_log('debug3', '(%s)', $file);
 
     my ($k, $s);
 
-    &Log::do_log('debug2', 'Saving user file %s', $file);
+    &Sympa::Log::Syslog::do_log('debug2', 'Saving user file %s', $file);
 
     rename("$file", "$file.old");
     open SUB, "> $file" or return undef;
@@ -8257,7 +8257,7 @@ sub _compare_addresses {
 ## Store the message in spool digest  by creating a new entry for it or updating an existing one for this list
 ##
 sub store_digest {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $message) = @_;
     my $separator = &tools::get_separator();
 
@@ -8294,7 +8294,7 @@ sub store_digest {
 		{'message'    => $message_as_string, 'messagelock' => 'NULL'}
 	    )
 	    ) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		"could not update digest adding this message (digest spool entry key %s)",
 		$current_digest->{'messagekey'}
@@ -8308,7 +8308,7 @@ sub store_digest {
 		{'list' => $self->name, 'robot' => $self->domain}
 	    )
 	    ) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		"could not store message in digest spool messafge digestkey %s",
 		$current_digest->{'messagekey'}
@@ -8462,7 +8462,7 @@ Returns a ref to an array of List objects.
 =cut
 
 sub get_lists {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $that    = shift || 'Site';
     my $options = shift || {};
 
@@ -8537,7 +8537,7 @@ sub get_lists {
 
 	    if ($k =~ /^(member|owner|editor)$/) {
 		if (defined $which_role) {
-		    &Log::do_log('err', "bug in logic. Ask developer");
+		    &Sympa::Log::Syslog::do_log('err', "bug in logic. Ask developer");
 		    return undef;
 		}
 		$which_role = $k;
@@ -8607,7 +8607,7 @@ sub get_lists {
 			    $ve);
 		    }
 		} else {
-                    &Log::do_log('err', "bug in logic. Ask developer");
+                    &Sympa::Log::Syslog::do_log('err', "bug in logic. Ask developer");
                     return undef;
                 }
 
@@ -8651,7 +8651,7 @@ sub get_lists {
         $cond_perl = undef;
         $cond_sql = undef;
     }
-    &Log::do_log('debug3', 'filter_query %s; %s', $cond_perl, $cond_sql);
+    &Sympa::Log::Syslog::do_log('debug3', 'filter_query %s; %s', $cond_perl, $cond_sql);
 
     ## Sort order
     my $order_perl;
@@ -8687,7 +8687,7 @@ sub get_lists {
 		push @keys_perl, sprintf '$a->total <=> $b->total';
 	    }
 	} else {
-	    &Log::do_log('err', 'bug in logic.  Ask developer');
+	    &Sympa::Log::Syslog::do_log('err', 'bug in logic.  Ask developer');
 	    return undef;
 	}
 
@@ -8702,7 +8702,7 @@ sub get_lists {
     push @keys_sql, 'name_list'
 	unless scalar grep { $_ =~ /name_list/ } @keys_sql;
     $order_sql = join(', ', @keys_sql);
-    Log::do_log('debug3', 'order %s; %s', $order_perl, $order_sql);
+    Sympa::Log::Syslog::do_log('debug3', 'order %s; %s', $order_perl, $order_sql);
 
     ## limit number of result
     my $limit = $options->{'limit'} || undef;
@@ -8773,7 +8773,7 @@ sub get_lists {
 			$robot->domain, $which_user, $which_role);
 		}
 		unless ($sth) {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'failed to get lists with user %s as %s from database: %s',
 			$which_user,
@@ -8811,7 +8811,7 @@ sub get_lists {
 			$robot->domain
 		    )
 		    ) {
-		    &Log::do_log('err', 'Failed to get lists from database');
+		    &Sympa::Log::Syslog::do_log('err', 'Failed to get lists from database');
 		    $sth = pop @sth_stack;
 		    return undef;
 		}
@@ -8825,7 +8825,7 @@ sub get_lists {
 	    }
 
 	    unless (opendir(DIR, $robot_dir)) {
-		&Log::do_log('err', 'Unable to open %s', $robot_dir);
+		&Sympa::Log::Syslog::do_log('err', 'Unable to open %s', $robot_dir);
 		return undef;
 	    }
 	    my @l = ();
@@ -8872,7 +8872,7 @@ sub get_lists {
 	    if (!($limit and $limit <= $count) and
 		$options->{'reload_config'} and %orphan) {
 		foreach my $name (keys %orphan) {
-		    Log::do_log('notice',
+		    Sympa::Log::Syslog::do_log('notice',
 			'Clearing orphan list cache on list_table: %s@%s',
 			$name, $robot->domain);
 		    SDM::do_prepared_query(
@@ -8946,7 +8946,7 @@ sub get_lists {
 	    );
 	}
 	unless ($sth) {
-	    &Log::do_log('err', 'Failed to get lists from %s', $table);
+	    &Sympa::Log::Syslog::do_log('err', 'Failed to get lists from %s', $table);
 	    $sth = pop @sth_stack;
 	    return undef;
 	}
@@ -9000,7 +9000,7 @@ sub get_netidtoemail_db {
     my $robot_id = shift;
     my $netid = shift;
     my $idpname = shift;
-    &Log::do_log('debug', 'List::get_netidtoemail_db(%s, %s)',
+    &Sympa::Log::Syslog::do_log('debug', 'List::get_netidtoemail_db(%s, %s)',
 	$netid, $idpname);
 
     my ($l, %which, $email);
@@ -9016,7 +9016,7 @@ sub get_netidtoemail_db {
 	    $netid, $idpname, $robot_id
 	)
 	) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unable to get email address from netidmap_table for id %s, service %s, robot %s',
 	    $netid,
@@ -9038,7 +9038,7 @@ sub get_netidtoemail_db {
 ## set idp xref to locally validated email address
 ## OBSOLETING: Use $robot->set_netidtoemail_db().
 sub set_netidtoemail_db {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $robot_id = shift;
     my $netid = shift;
     my $idpname = shift;
@@ -9055,7 +9055,7 @@ sub set_netidtoemail_db {
 	    $netid, $idpname, $email, $robot_id
 	)
 	) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unable to set email address %s in netidmap_table for id %s, service %s, robot %s',
 	    $email,
@@ -9077,7 +9077,7 @@ sub update_email_netidmap_db {
     unless (defined $robot_id &&
 	    defined $old_email &&
 	    defined $new_email) {
-	&Log::do_log('err', 'Missing parameter');
+	&Sympa::Log::Syslog::do_log('err', 'Missing parameter');
 	return undef;
     }
 
@@ -9089,7 +9089,7 @@ sub update_email_netidmap_db {
 	    $new_email, $old_email, $robot_id
 	)
 	) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unable to set new email address %s in netidmap_table to replace old address %s for robot %s',
 	    $new_email,
@@ -9115,13 +9115,13 @@ function to any list in ROBOT.
 =cut
 
 sub get_which {
-    &Log::do_log('debug2', '(%s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my $email = &tools::clean_email(shift);
     my $robot = Robot::clean_robot(shift);
     my $role  = shift;
 
     unless ($role eq 'member' or $role eq 'owner' or $role eq 'editor') {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Internal error, unknown or undefined parameter "%s"', $role);
 	return undef;
     }
@@ -9140,7 +9140,7 @@ sub get_which {
 ## return total of messages awaiting moderation
 sub get_mod_spool_size {
     my $self = shift;
-    &Log::do_log('debug3', 'List::get_mod_spool_size()');
+    &Sympa::Log::Syslog::do_log('debug3', 'List::get_mod_spool_size()');
 
     my $modspool = KeySpool->new();
     my @messages = $modspool->get_awaiting_messages(
@@ -9154,7 +9154,7 @@ sub get_mod_spool_size {
 
 # return the status of the shared
 sub get_shared_status {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
 
     if (-e $self->dir . '/shared') {
@@ -9168,7 +9168,7 @@ sub get_shared_status {
 
 # return the list of documents shared waiting for moderation
 sub get_shared_moderated {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $self = shift;
     my $shareddir = $self->dir . '/shared';
 
@@ -9183,13 +9183,13 @@ sub get_shared_moderated {
 
 # return the list of documents awaiting for moderation in a dir and its subdirectories
 sub sort_dir_to_get_mod {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     #dir to explore
     my $dir = shift;
 
     # listing of all the shared documents of the directory
     unless (opendir DIR, "$dir") {
-	&Log::do_log('err', "sort_dir_to_get_mod : cannot open $dir : $!");
+	&Sympa::Log::Syslog::do_log('err', "sort_dir_to_get_mod : cannot open $dir : $!");
 	return undef;
     }
 
@@ -9229,7 +9229,7 @@ sub get_db_field_type {
     my ($table, $field) = @_;
 ## TODO: Won't work with anything apart from MySQL. should use SDM framework subs.
     unless ($sth = &SDM::do_query("SHOW FIELDS FROM $table")) {
-	&Log::do_log('err', 'get the list of fields for table %s', $table);
+	&Sympa::Log::Syslog::do_log('err', 'get the list of fields for table %s', $table);
 	return undef;
     }
 
@@ -9249,7 +9249,7 @@ sub lowercase_field {
     my $total = 0;
 
     unless ($sth = &SDM::do_prepared_query("SELECT $field from $table")) {
-	&Log::do_log('err', 'Unable to get values of field %s for table %s',
+	&Sympa::Log::Syslog::do_log('err', 'Unable to get values of field %s for table %s',
 	    $field, $table);
 	return undef;
     }
@@ -9267,7 +9267,7 @@ sub lowercase_field {
 		    $table, $field, $field),
 		$lower_cased, $user->{$field}
 	    )) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to set field % from table %s to value %s',
 		$field, $lower_cased, $table);
 	    next;
@@ -9411,7 +9411,7 @@ sub _load_list_param {
 
 ## Load the certificat file
 sub get_cert {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $format = shift;
 
@@ -9428,7 +9428,7 @@ sub get_cert {
     my @cert;
     if ($format eq 'pem') {
 	unless (open(CERT, $certs)) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to open %s: %s', $certs, $!);
 	    return undef;
 	}
@@ -9452,9 +9452,9 @@ sub get_cert {
     } elsif ($format eq 'der') {
 	unless (open CERT,
 	    Site->openssl . " x509 -in $certs -outform DER|") {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		Site->openssl . " x509 -in $certs -outform DER|");
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to open get %s in DER format: %s',
 		$certs, $!
 	    );
@@ -9464,7 +9464,7 @@ sub get_cert {
 	@cert = <CERT>;
 	close CERT;
     } else {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'unknown "%s" certificate format', $format);
 	return undef;
     }
@@ -9474,7 +9474,7 @@ sub get_cert {
 
 ## Load a config file of a list
 sub _load_list_config_file {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
     my $robot = shift;
     my $directory = shift;
     my $file = shift;
@@ -9496,18 +9496,18 @@ sub _load_list_config_file {
     ## Lock file
     my $lock = new Lock($config_file);
     unless (defined $lock) {
-	Log::do_log('err', 'Could not create new lock on %s', $config_file);
+	Sympa::Log::Syslog::do_log('err', 'Could not create new lock on %s', $config_file);
 	return undef;
     }
     $lock->set_timeout(5);
     unless ($lock->lock('read')) {
-	Log::do_log('err', 'Could not put a read lock on the config file %s',
+	Sympa::Log::Syslog::do_log('err', 'Could not put a read lock on the config file %s',
 	    $config_file);
 	return undef;
     }
 
     unless (open CONFIG, "<", $config_file) {
-	Log::do_log('info', 'Cannot open %s', $config_file);
+	Sympa::Log::Syslog::do_log('info', 'Cannot open %s', $config_file);
     }
 
     ## Split in paragraphs
@@ -9550,7 +9550,7 @@ sub _load_list_config_file {
 
 	## Look for first valid line
 	unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-	    Log::do_log('err', 'Bad paragraph "%s" in %s, ignore it',
+	    Sympa::Log::Syslog::do_log('err', 'Bad paragraph "%s" in %s, ignore it',
 		@paragraph, $config_file);
 	    next;
 	}
@@ -9564,7 +9564,7 @@ sub _load_list_config_file {
 	}
 
 	unless (defined $pinfo->{$pname}) {
-	    Log::do_log('err', 'Unknown parameter "%s" in %s, ignore it',
+	    Sympa::Log::Syslog::do_log('err', 'Unknown parameter "%s" in %s, ignore it',
 		$pname, $config_file);
 	    next;
 	}
@@ -9572,7 +9572,7 @@ sub _load_list_config_file {
 	## Uniqueness
 	if (defined $admin{$pname} and
 	    $pinfo->{$pname}{'occurrence'} !~ /n$/) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Multiple occurences of a unique parameter "%s" in %s',
 		$pname, $config_file);
 	}
@@ -9581,7 +9581,7 @@ sub _load_list_config_file {
 	if (ref $pinfo->{$pname}{'file_format'} eq 'HASH') {
 	    ## This should be a paragraph
 	    unless ($#paragraph > 0) {
-		Log::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'err',
 		    'Expecting a paragraph for "%s" parameter in %s, ignore it',
 		    $pname,
@@ -9598,14 +9598,14 @@ sub _load_list_config_file {
 		next if ($paragraph[$i] =~ /^\s*\#/);
 
 		unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-		    Log::do_log('err', 'Bad line "%s" in %s',
+		    Sympa::Log::Syslog::do_log('err', 'Bad line "%s" in %s',
 			$paragraph[$i], $config_file);
 		}
 
 		my $key = $1;
 
 		unless (defined $pinfo->{$pname}{'file_format'}{$key}) {
-		    Log::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			'Unknown key "%s" in paragraph "%s" in %s',
 			$key, $pname, $config_file);
 		    next;
@@ -9615,7 +9615,7 @@ sub _load_list_config_file {
 		    /^\s*$key\s+($pinfo->{$pname}{'file_format'}{$key}{'file_format'})\s*$/i
 		    ) {
 		    chomp($paragraph[$i]);
-		    Log::do_log(
+		    Sympa::Log::Syslog::do_log(
 			'err',
 			'Bad entry "%s" for key "%s", paragraph "%s" in file "%s"',
 			$paragraph[$i],
@@ -9644,7 +9644,7 @@ sub _load_list_config_file {
 		## Required fields
 		if ($pinfo->{$pname}{'file_format'}{$k}{'occurrence'} eq '1') {
 		    unless (defined $hash{$k}) {
-			Log::do_log('info',
+			Sympa::Log::Syslog::do_log('info',
 			    'Missing key "%s" in param "%s" in %s',
 			    $k, $pname, $config_file);
 			$missing_required_field++;
@@ -9665,7 +9665,7 @@ sub _load_list_config_file {
 	} else {
 	    ## This should be a single line
 	    unless ($#paragraph == 0) {
-		Log::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    'Expecting a single line for "%s" parameter in %s',
 		    $pname, $config_file);
 	    }
@@ -9673,7 +9673,7 @@ sub _load_list_config_file {
 	    unless ($paragraph[0] =~
 		/^\s*$pname\s+($pinfo->{$pname}{'file_format'})\s*$/i) {
 		chomp($paragraph[0]);
-		Log::do_log('info', 'Bad entry "%s" in %s',
+		Sympa::Log::Syslog::do_log('info', 'Bad entry "%s" in %s',
 		    $paragraph[0], $config_file);
 		next;
 	    }
@@ -9696,7 +9696,7 @@ sub _load_list_config_file {
 
     ## Release the lock
     unless ($lock->unlock()) {
-	Log::do_log('err', 'Could not remove the read lock on file %s',
+	Sympa::Log::Syslog::do_log('err', 'Could not remove the read lock on file %s',
 	    $config_file);
 	return undef;
     }
@@ -9737,7 +9737,7 @@ sub _load_list_config_file {
 	## Required fields
 	if ($pinfo->{$p}{'occurrence'} =~ /^1(-n)?$/) {
 	    unless (defined $admin{$p}) {
-		Log::do_log('info', 'Missing parameter "%s" in %s',
+		Sympa::Log::Syslog::do_log('info', 'Missing parameter "%s" in %s',
 		    $p, $config_file);
 	    }
 	}
@@ -9796,7 +9796,7 @@ sub _load_list_config_file {
 
     ## Do we have a database config/access
     unless ($SDM::use_db) {
-	Log::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'Sympa not setup to use DBI or no database access');
 	## We should notify the listmaster here...
 	#return undef;
@@ -9807,7 +9807,7 @@ sub _load_list_config_file {
 
 ## Save a config file
 sub _save_list_config_file {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
     my $email = shift;
 
@@ -9860,14 +9860,14 @@ close OUT;
 
     ## Write to file at last.
     unless (rename $config_file, $old_config_file) {
-	Log::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'notice',     'Cannot rename %s to %s',
 	    $config_file, $old_config_file
 	);
 	return undef;
     }
     unless (open CONFIG, ">", $config_file) {
-	Log::do_log('info', 'Cannot open %s', $config_file);
+	Sympa::Log::Syslog::do_log('info', 'Cannot open %s', $config_file);
 	return undef;
     }
     print CONFIG $config_text;
@@ -10005,7 +10005,7 @@ sub is_msg_topic_tagging_required {
 #        | undef
 ####################################################
 sub automatic_tag {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $message) = @_;
     my $msg_id = $message->get_msg_id;
 
@@ -10013,7 +10013,7 @@ sub automatic_tag {
 
     if ($topic_list) {
 	unless ($self->tag_topic($msg_id, $topic_list, 'auto')) {
-	    &Log::do_log('err', 'Unable to tag message %s with topic "%s"',
+	    &Sympa::Log::Syslog::do_log('err', 'Unable to tag message %s with topic "%s"',
 		$msg_id, $topic_list);
 	    return undef;
 	}
@@ -10038,7 +10038,7 @@ sub automatic_tag {
 # OUT : string of tag(s), can be separated by ',', can be empty
 ####################################################
 sub compute_topic {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $message) = @_;
     my $msg_id = $message->get_msg_id;
 
@@ -10138,7 +10138,7 @@ sub compute_topic {
 #       | undef
 ####################################################
 sub tag_topic {
-    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my ($self, $msg_id, $topic_list, $method) = @_;
 
     my $topic_item = sprintf "TOPIC   %s\n", $topic_list;
@@ -10175,7 +10175,7 @@ sub tag_topic {
 #     | undef
 ####################################################
 sub load_msg_topic {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $msg_id, $robot) = @_;
 
     my $topicspool = new SympaspoolClassic('topic');
@@ -10187,7 +10187,7 @@ sub load_msg_topic {
 	}
     );
     unless ($topics_from_spool) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'debug',
 	    'No topic defined ; unable to find topic for message %s / list  %s',
 	    $msg_id,
@@ -10213,7 +10213,7 @@ sub load_msg_topic {
 		if ($value =~ /^(editor|sender|auto)$/) {
 		    $info{'method'} = $value;
 		} else {
-		    &Log::do_log(
+		    &Sympa::Log::Syslog::do_log(
 			'err',
 			'syntax error in record %s : %s',
 			$self,
@@ -10247,7 +10247,7 @@ sub load_msg_topic {
 #       -1 if some subscribers topics have been deleted
 #####################################################
 sub modifying_msg_topic_for_list_members() {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my ($self, $new_msg_topic) = @_;
     my $deleted = 0;
 
@@ -10292,7 +10292,7 @@ sub modifying_msg_topic_for_list_members() {
 		    }
 			)
 			) {
-			&Log::do_log('err',
+			&Sympa::Log::Syslog::do_log('err',
 			    '(%s) : impossible to send notify to user about "deleted_msg_topics"', $self
 			);
 		    }
@@ -10304,7 +10304,7 @@ sub modifying_msg_topic_for_list_members() {
 			    }
 			)
 			) {
-			&Log::do_log('err',
+			&Sympa::Log::Syslog::do_log('err',
 			    '(%s) : impossible to update user "%s"',
 			    $self, $subscriber->{'email'}
 			);
@@ -10335,7 +10335,7 @@ sub modifying_msg_topic_for_list_members() {
 #
 ####################################################
 sub select_list_members_for_topic {
-    Log::do_log('debug3', '(%s, %s, ...)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, ...)', @_);
     my ($self, $string_topic, $subscribers) = @_;
 
     my @selected_users;
@@ -10383,7 +10383,7 @@ sub select_list_members_for_topic {
 ########## END - functions for message topics #############################################
 
 sub store_subscription_request {
-    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($self, $email, $gecos, $custom_attr) = @_;
 
     my $subscription_request_spool = new SubscribeSpool;
@@ -10395,7 +10395,7 @@ sub store_subscription_request {
 	    'sender' => $email
 	},
     ));
-    Log::do_log('debug', 'No sub request found for (%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug', 'No sub request found for (%s, %s, %s, %s)', @_);
     my $subrequest = sprintf "%s\t%s\n%s\n",$email, $gecos, $custom_attr;
     $subscription_request_spool->store(
 	$subrequest,
@@ -10404,12 +10404,12 @@ sub store_subscription_request {
 	    'sender' => $email
 	}
     );
-    Log::do_log('debug', 'Sub request stored for (%s, %s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug', 'Sub request stored for (%s, %s, %s, %s)', @_);
     return 1;
 }
 
 sub get_subscription_requests {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     my %subscriptions;
@@ -10429,14 +10429,14 @@ sub get_subscription_requests {
 	my $user_entry = $self->get_list_member($email, probe => 1);
 
 	if (defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
-	    Log::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		'User %s is subscribed to %s already. Deleting subscription request.',
 		$email,
 		$self
 	    );
 	    unless ($subscription_request_spool->remove_message($subrequest->{'messagekey'})) {
-		Log::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'err',
 		    'Could not delete subrequest %s for list %s from %s',
 		    $subrequest->{'messagekey'},
@@ -10479,26 +10479,26 @@ sub get_subscription_request_count {
 
 sub delete_subscription_request {
     my ($self, @list_of_email) = @_;
-    &Log::do_log('debug2', 'List::delete_subscription_request(%s, %s)',
+    &Sympa::Log::Syslog::do_log('debug2', 'List::delete_subscription_request(%s, %s)',
 	$self->name, join(',', @list_of_email));
 
     my $subscription_request_spool = new SubscribeSpool;
 
     my $removed = 0;
     foreach my $email (@list_of_email) {
-	Log::do_log('debug2','Deleting sub request for %s',$email);
+	Sympa::Log::Syslog::do_log('debug2','Deleting sub request for %s',$email);
 	if (my $key = $subscription_request_spool->get_file_key(
 	    {'list' => $self->name, 'robot' => $self->domain, 'sender' => $email}))
 	    {
 		$removed++
 		if $subscription_request_spool->remove_message($key);
 	    }else {
-		Log::do_log('notice','Unable to get subscription key for %s',$email);
+		Sympa::Log::Syslog::do_log('notice','Unable to get subscription key for %s',$email);
 	    }
     }
 
     unless ($removed > 0) {
-	Log::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'debug2',
 	    'No pending subscription was found for users %s',
 	    join(',', @list_of_email)
@@ -10509,7 +10509,7 @@ sub delete_subscription_request {
 }
 
 sub store_signoff_request {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $email) = @_;
 
     my $signoff_request_spool = new Sympaspool('signoff');
@@ -10524,7 +10524,7 @@ sub store_signoff_request {
 	    }
 	) != 0
 	) {
-	Log::do_log('notice', 'Signoff already requested by %s',
+	Sympa::Log::Syslog::do_log('notice', 'Signoff already requested by %s',
 	    $email);
 	return undef;
     } else {
@@ -10541,7 +10541,7 @@ sub store_signoff_request {
 }
 
 sub get_signoff_requests {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     my %signoffs;
@@ -10566,7 +10566,7 @@ sub get_signoff_requests {
 	my $user_entry = $self->get_list_member($email, probe => 1);
 
 	unless (defined $user_entry and $user_entry->{'subscribed'} == 1) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'User %s is unsubscribed from %s already. Deleting signoff request.',
 		$email,
@@ -10575,7 +10575,7 @@ sub get_signoff_requests {
 	    unless ($signoff_request_spool->remove_message(
 		{'list' => $self, 'sender' => $email, 'just_try' => 1}
 	    )) {
-		&Log::do_log(
+		&Sympa::Log::Syslog::do_log(
 		    'err',
 		    'Could not delete sigrequest %s for list %s from %s',
 		    $sigrequest->{'messagekey'},
@@ -10611,7 +10611,7 @@ sub get_signoff_request_count {
 
 sub delete_signoff_request {
     my ($self, @list_of_email) = @_;
-    Log::do_log('debug2', '(%s, %s)', $self, join(',', @list_of_email));
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', $self, join(',', @list_of_email));
 
     my $signoff_request_spool = new Sympaspool('signoff');
 
@@ -10624,7 +10624,7 @@ sub delete_signoff_request {
     }
 
     unless ($removed > 0) {
-	Log::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'debug2',
 	    'No pending signoff was found for users %s',
 	    join(',', @list_of_email)
@@ -10659,7 +10659,7 @@ sub  get_next_delivery_date {
     my $h = $1;
     my $m = $2;
     unless ((($h == 24) && ($m == 0)) || (($h <= 23) && ($m <= 60))) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    "ignoring wrong parameter format delivery_time, delivery_tile must be smaller than 24:00"
 	);
 	return time();
@@ -10687,7 +10687,7 @@ sub  get_next_delivery_date {
 
 ## Searches the include datasource corresponding to the provided ID
 sub search_datasource {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $id) = @_;
     my $pinfo = $self->robot->list_params;
 
@@ -10712,7 +10712,7 @@ sub search_datasource {
 #      -$id : datasource ids (coma-separated)
 # OUT : -$name : datasources names (scalar)
 sub get_datasource_name {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my ($self, $id) = @_;
     my %sources;
 
@@ -10741,7 +10741,7 @@ sub remove_task {
     my $task = shift;
 
     unless (opendir(DIR, Site->queuetask)) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    "error : can't open dir %s: %s",
 	    Site->queuetask, $!
@@ -10756,11 +10756,11 @@ sub remove_task {
 	if ($task_file =~
 	    /^(\d+)\.\w*\.$task\.$list_id$/) {
 	    unless (unlink(Site->queuetask . "/$task_file")) {
-		&Log::do_log('err', 'Unable to remove task file %s : %s',
+		&Sympa::Log::Syslog::do_log('err', 'Unable to remove task file %s : %s',
 		    $task_file, $!);
 		return undef;
 	    }
-	    &Log::do_log('notice', 'Removing task file %s', $task_file);
+	    &Sympa::Log::Syslog::do_log('notice', 'Removing task file %s', $task_file);
 	}
     }
 
@@ -10769,7 +10769,7 @@ sub remove_task {
 
 ## Close the list (remove from DB, remove aliases, change status to 'closed' or 'family_closed')
 sub close_list {
-    &Log::do_log('debug2', '(%s, %s, %s)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $email, $status) = @_;
 
     return undef unless $self->robot->lists($self->name);
@@ -10786,7 +10786,7 @@ sub close_list {
 		($included_list_name eq $self->name and
 		    $list->domain eq $self->domain)
 		) {
-		&Log::do_log('err',
+		&Sympa::Log::Syslog::do_log('err',
 		    'List %s is included by list %s : cannot close it',
 		    $self, $list);
 			return undef;
@@ -10844,7 +10844,7 @@ sub close_list {
     $self->remove_aliases();
 
     #log in stat_table to make staistics
-    &Log::db_stat_log(
+    &Sympa::Log::Syslog::db_stat_log(
 	{   'robot'     => $self->domain,
 	    'list'      => $self->name,
 	    'operation' => 'close_list',
@@ -10897,7 +10897,7 @@ sub purge {
     &tools::remove_dir($self->dir);
 
     #log ind stat table to make statistics
-    &Log::db_stat_log(
+    &Sympa::Log::Syslog::db_stat_log(
 	{   'robot'     => $self->domain,
 	    'list'      => $self->name,
 	    'operation' => 'purge list',
@@ -10919,19 +10919,19 @@ sub remove_aliases {
 
     my $alias_manager = Site->alias_manager;
     unless (-x $alias_manager) {
-	&Log::do_log('err', 'Cannot run alias_manager %s', $alias_manager);
+	&Sympa::Log::Syslog::do_log('err', 'Cannot run alias_manager %s', $alias_manager);
 	return undef;
     }
 
     system(sprintf '%s del %s %s', $alias_manager, $self->name, $self->host);
     my $status = $? >> 8;
     unless ($status == 0) {
-	&Log::do_log('err', 'Failed to remove aliases ; status %d : %s',
+	&Sympa::Log::Syslog::do_log('err', 'Failed to remove aliases ; status %d : %s',
 	    $status, $!);
 	return undef;
     }
 
-    &Log::do_log('info', 'Aliases for list %s removed successfully', $self);
+    &Sympa::Log::Syslog::do_log('info', 'Aliases for list %s removed successfully', $self);
 
     return 1;
 }
@@ -10958,19 +10958,19 @@ sub get_max_bouncers_level {
 # Sub for removing user
 #
 sub remove_bouncers {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $reftab = shift;
 
     ## Log removal
     foreach my $bouncer (@{$reftab}) {
-	&Log::do_log('notice', 'Removing bouncing subsrciber of list %s : %s',
+	&Sympa::Log::Syslog::do_log('notice', 'Removing bouncing subsrciber of list %s : %s',
 	    $self, $bouncer);
     }
 
     unless ($self->delete_list_member('users' => $reftab, 'exclude' => ' 1'))
     {
-	&Log::do_log('info', 'error while calling sub delete_users');
+	&Sympa::Log::Syslog::do_log('info', 'error while calling sub delete_users');
       return undef;
     }
     return 1;
@@ -10979,17 +10979,17 @@ sub remove_bouncers {
 #Sub for notifying users : "Be careful,You're bouncing"
 #
 sub notify_bouncers {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $reftab = shift;
 
     foreach my $user (@$reftab) {
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    'Notifying bouncing subsrciber of list %s : %s',
 	    $self, $user);
 	unless ($self->send_notify_to_user('auto_notify_bouncers', $user, {}))
 	{
-	    &Log::do_log('notice',
+	    &Sympa::Log::Syslog::do_log('notice',
 		'Unable to send notify "auto_notify_bouncers" to %s', $user);
 	}
     }
@@ -11003,12 +11003,12 @@ sub create_shared {
     my $dir = $self->dir . '/shared';
 
     if (-e $dir) {
-	&Log::do_log('err', '%s already exists', $dir);
+	&Sympa::Log::Syslog::do_log('err', '%s already exists', $dir);
 	return undef;
     }
 
     unless (mkdir($dir, 0777)) {
-	&Log::do_log('err', 'unable to create %s : %s', $dir, $!);
+	&Sympa::Log::Syslog::do_log('err', 'unable to create %s : %s', $dir, $!);
 	return undef;
     }
 
@@ -11029,19 +11029,19 @@ sub has_include_data_sources {
 
 # move a message to a queue or distribute spool
 sub move_message {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $file, $queue) = @_;
 
     my $dir = $queue || Site->queuedistribute;
     my $filename = $self->get_list_id() . '.' . time . '.' . int(rand(999));
 
     unless (open OUT, ">$dir/T.$filename") {
-	&Log::do_log('err', 'Cannot create file %s', "$dir/T.$filename");
+	&Sympa::Log::Syslog::do_log('err', 'Cannot create file %s', "$dir/T.$filename");
 	return undef;
     }
 
     unless (open IN, $file) {
-	&Log::do_log('err', 'Cannot open file %s', $file);
+	&Sympa::Log::Syslog::do_log('err', 'Cannot open file %s', $file);
 	return undef;
     }
 
@@ -11049,7 +11049,7 @@ sub move_message {
     close IN;
     close OUT;
     unless (rename "$dir/T.$filename", "$dir/$filename") {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',              'Cannot rename file %s into %s',
 	    "$dir/T.$filename", "$dir/$filename"
 	);
@@ -11214,7 +11214,7 @@ sub add_list_header {
 	    return 0;
 	}
     } else {
-	&Log::do_log('err', 'Unknown field "%s".  Ask developer', $field);
+	&Sympa::Log::Syslog::do_log('err', 'Unknown field "%s".  Ask developer', $field);
 	return undef;
     }
 
@@ -11234,7 +11234,7 @@ sub get_data {
 	    $data, $robotname, $listname
 	)
 	) {
-	&Log::do_log('err', 'Unable to get stat data %s for liste %s@%s',
+	&Sympa::Log::Syslog::do_log('err', 'Unable to get stat data %s for liste %s@%s',
 	    $data, $listname, $robotname);
 		return undef;
     }
@@ -11289,7 +11289,7 @@ our $AUTOLOAD;
 sub DESTROY { }   # "sub DESTROY;" may cause segfault with Perl around 5.10.1.
 
 sub AUTOLOAD {
-    Log::do_log('debug3', 'Autoloading %s', $AUTOLOAD);
+    Sympa::Log::Syslog::do_log('debug3', 'Autoloading %s', $AUTOLOAD);
     $AUTOLOAD =~ m/^(.*)::(.*)/;
     my $attr = $2;
 
@@ -11444,7 +11444,7 @@ sub AUTOLOAD {
     } elsif (index($attr, '_') != 0 and defined $_[0]->{$attr}) {
 	## getter for unknwon list attributes.
 	## XXX This code would be removed later.
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err',
 	    'Unconcerned object method "%s" via package "%s".  Though it may not be fatal, you might want to report it developer',
 	    $2,
@@ -11488,7 +11488,7 @@ sub _set_list_param_compound {
 	unless (grep
 	    {$_ eq $self->default_user_options->{'reception'}}
 	    @{$self->{'admin'}{$attr}{'reception'}}) {
-	    Log::do_log('info',
+	    Sympa::Log::Syslog::do_log('info',
 		'reception is not compatible between default_user_options and available_user_options of list %s',
 		$self
 	    );
@@ -11827,7 +11827,7 @@ sub user {
     my $info;
 
     unless ($role eq 'member' or $role eq 'owner' or $role eq 'editor') {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    '"%s" is wrong: must be "member", "owner" or "editor"', $role);
 	return undef;
     }
@@ -11869,7 +11869,7 @@ sub user {
 		$self->name, $self->domain, $who
 	    )
 	    ) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to check whether user %s is subscribed to list %s',
 		$who, $self);
     $sth = pop @sth_stack;
@@ -11881,7 +11881,7 @@ sub user {
 	if (defined $info) {
 	    $info->{'reception'}   ||= 'mail';
 	    $info->{'update_date'} ||= $info->{'date'};
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'debug3',
 		'custom_attribute = (%s)',
 		$info->{custom_attribute}
@@ -11894,7 +11894,7 @@ sub user {
 		unless $self->is_available_reception_mode(
 			$info->{'reception'});
 	} else {
-	    &Log::do_log('debug3',
+	    &Sympa::Log::Syslog::do_log('debug3',
 		'No user with the email %s is subscribed to list %s',
 		$who, $self);
 	    $info = 0;
@@ -11911,7 +11911,7 @@ sub user {
 		$role
 	    )
 	    ) {
-	    &Log::do_log('err', 'Unable to get admin %s for list %s',
+	    &Sympa::Log::Syslog::do_log('err', 'Unable to get admin %s for list %s',
 		$who, $self);
 	    $sth = pop @sth_stack;
 	    return undef;
@@ -12046,7 +12046,7 @@ sub list_cache_fetch {
 
 	eval { $config = Storable::thaw($l->{'config'}) };
 	if ($@ or !defined $config) {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to deserialize binary config of %s: %s',
 		$self, $@ || 'possible format error');
 	    return undef;
@@ -12063,12 +12063,12 @@ sub list_cache_fetch {
 	## Get a shared lock on config file first
 	my $lock = new Lock($self->dir . '/config');
 	unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 	$lock->set_timeout(5);
 	unless ($lock->lock('read')) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 
@@ -12076,7 +12076,7 @@ sub list_cache_fetch {
 	## unless config is more recent than config.bin
 	eval { $config = Storable::retrieve($self->dir . '/config.bin') };
 	if ($@ or !defined $config) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err', 'Unable to deserialize config.bin of %s: $@',
 		$self, $@ || 'possible format error'
 	    );
@@ -12109,7 +12109,7 @@ open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); clo
 	## Get a shared lock on config file first
 	my $lock = new Lock($self->dir . '/config');
 	unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 	$lock->set_timeout(5);
@@ -12119,7 +12119,7 @@ open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); clo
 
 	eval { Storable::store($self->config, $self->dir . '/config.bin') };
 	if ($@) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Failed to save the binary config %s. error: %s',
 		$self->dir . '/config.bin', $@
@@ -12165,7 +12165,7 @@ open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); clo
 
     eval { $config = Storable::nfreeze($self->config); };
     if ($@) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Failed to save the config to database. error: %s', $@);
 	return undef;
     }
@@ -12211,7 +12211,7 @@ open CCC, '>', $self->dir . '/config.dump'; print CCC Dumper($self->config); clo
 	) and
 	$sth->rows
 	) {
-	&Log::do_log('err', 'Unable to insert list %s in database', $self);
+	&Sympa::Log::Syslog::do_log('err', 'Unable to insert list %s in database', $self);
 	$sth = pop @sth_stack;
 	return undef;
     }
@@ -12234,7 +12234,7 @@ sub list_cache_update_total {
 		$self->{'total'}, $self->name, $self->domain
 	    )
 	    ) {
-	    &Log::do_log(
+	    &Sympa::Log::Syslog::do_log(
 		'err',
 		'Canot update subscriber count of list %s on database cache',
 		$self
@@ -12252,7 +12252,7 @@ sub list_cache_purge {
 	## Get a shared lock on config file first
 	my $lock = new Lock($self->dir . '/config');
 	unless (defined $lock) {
-	    &Log::do_log('err', 'Could not create new lock');
+	    &Sympa::Log::Syslog::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 	$lock->set_timeout(5);

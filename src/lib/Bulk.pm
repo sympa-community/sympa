@@ -63,7 +63,7 @@ my $last_stored_message_key;
 # Next lock the packetb to prevent multiple proccessing of a single packet 
 
 sub next {
-    Log::do_log('debug2', '()');
+    Sympa::Log::Syslog::do_log('debug2', '()');
 
     # lock next packet
     my $lock = &tools::get_lockname();
@@ -90,7 +90,7 @@ sub next {
 	  WHERE lock_bulkpacket IS NULL AND delivery_date_bulkpacket <= ?
 		%s %s},
 	$limit_sybase, $limit_oracle, $order), int(time()))) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to get the most prioritary packet from database');
 	return undef;
     }
@@ -110,7 +110,7 @@ sub next {
 		lock_bulkpacket IS NULL},
 	$lock, $packet->{'messagekey'}, $packet->{'packetid'}
     )) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to lock packet %s for message %s',
 	    $packet->{'packetid'}, $packet->{'messagekey'}
 	);
@@ -118,14 +118,14 @@ sub next {
     }
     
     if ($sth->rows < 0) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to lock packet %s for message %s, though the query succeeded',
 	    $packet->{'packetid'}, $packet->{'messagekey'}
 	);
 	return undef;
     }
     unless ($sth->rows) {
-	Log::do_log('info','Bulk packet is already locked');
+	Sympa::Log::Syslog::do_log('info','Bulk packet is already locked');
 	return undef;
     }
 
@@ -147,7 +147,7 @@ sub next {
 	  WHERE lock_bulkpacket=%s %s},
 	SDM::quote($lock), $order
     )) {
-	&Log::do_log('err','Unable to retrieve informations for packet %s of message %s',$packet->{'packetid'}, $packet->{'messagekey'});
+	&Sympa::Log::Syslog::do_log('err','Unable to retrieve informations for packet %s of message %s',$packet->{'packetid'}, $packet->{'messagekey'});
 	return undef;
     }
     
@@ -178,14 +178,14 @@ sub remove {
     my $messagekey = shift;
     my $packetid= shift;
 
-    &Log::do_log('debug', "Bulk::remove(%s,%s)",$messagekey,$packetid);
+    &Sympa::Log::Syslog::do_log('debug', "Bulk::remove(%s,%s)",$messagekey,$packetid);
 
     unless ($sth = SDM::do_query(
 	q{DELETE FROM bulkpacket_table
 	  WHERE packetid_bulkpacket = %s AND messagekey_bulkpacket = %s},
 	SDM::quote($packetid), SDM::quote($messagekey)
     )) {
-	&Log::do_log('err','Unable to delete packet %s of message %s', $packetid,$messagekey);
+	&Sympa::Log::Syslog::do_log('err','Unable to delete packet %s of message %s', $packetid,$messagekey);
 	return undef;
     }
     return $sth;
@@ -194,22 +194,22 @@ sub remove {
 ## No longer used.
 sub messageasstring {
     my $messagekey = shift;
-    &Log::do_log('debug', 'Bulk::messageasstring(%s)',$messagekey);
+    &Sympa::Log::Syslog::do_log('debug', 'Bulk::messageasstring(%s)',$messagekey);
     
     unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to retrieve message %s text representation from database', $messagekey);
+	&Sympa::Log::Syslog::do_log('err','Unable to retrieve message %s text representation from database', $messagekey);
 	return undef;
     }
 
     my $messageasstring = $sth->fetchrow_hashref('NAME_lc') ;
 
     unless ($messageasstring ){
-	&Log::do_log('err',"could not fetch message $messagekey from spool");
+	&Sympa::Log::Syslog::do_log('err',"could not fetch message $messagekey from spool");
 	return undef;
     }
     my $msg = MIME::Base64::decode($messageasstring->{'message'});
     unless ($msg){
-	&Log::do_log('err',"could not decode message $messagekey extracted from spool (base64)"); 
+	&Sympa::Log::Syslog::do_log('err',"could not decode message $messagekey extracted from spool (base64)"); 
 	return undef;
     }
     return $msg;
@@ -220,10 +220,10 @@ sub messageasstring {
 ## No longer used
 sub message_from_spool {
     my $messagekey = shift;
-    &Log::do_log('debug', '(messagekey : %s)',$messagekey);
+    &Sympa::Log::Syslog::do_log('debug', '(messagekey : %s)',$messagekey);
     
     unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to retrieve message %s full data from database', $messagekey);
+	&Sympa::Log::Syslog::do_log('err','Unable to retrieve message %s full data from database', $messagekey);
 	return undef;
     }
 
@@ -267,7 +267,7 @@ sub store {
     my $dkim = $data{'dkim'};
     my $tag_as_last = $data{'tag_as_last'};
 
-    #Log::do_log('trace',
+    #Sympa::Log::Syslog::do_log('trace',
     #    'Bulk::store(<msg>,rcpts: %s,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',
     #    $rcpts, $from, $robot, $listname, $priority_message, $delivery_date,
     #    $verp,$tracking, $merge, $dkim->{'d'}, $dkim->{'i'}, $tag_as_last);
@@ -309,7 +309,7 @@ sub store {
 		$lock
 	    );
 	    unless ($message->{'messagekey'}) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Could not store message in spool distribute. Message lost?'
 		);
 		return undef;
@@ -323,7 +323,7 @@ sub store {
 	    #ignore messages sent by robot
 	    unless (index($message_sender, "$listname-request") >= 0) {
 		#ignore messages of requests			
-		Log::db_stat_log({
+		Sympa::Log::Syslog::db_stat_log({
 		    'robot' => $robot->name, 'list' => $listname,
 		    'operation' => 'send_mail',
 		    'parameter' => $message->{'size'},
@@ -375,7 +375,7 @@ sub store {
 		  WHERE messagekey_bulkpacket = ? AND packetid_bulkpacket = ?},
 		$message->{'messagekey'}, $packetid
 	    )) {
-		&Log::do_log('err','Unable to check presence of packet %s of message %s in database', $packetid, $message->{'messagekey'});
+		&Sympa::Log::Syslog::do_log('err','Unable to check presence of packet %s of message %s in database', $packetid, $message->{'messagekey'});
 		return undef;
 	    }	
 	    $packet_already_exist = $sth->fetchrow;
@@ -383,7 +383,7 @@ sub store {
 	}
 	
 	if ($packet_already_exist) {
-	    &Log::do_log('err','Duplicate message not stored in bulmailer_table');
+	    &Sympa::Log::Syslog::do_log('err','Duplicate message not stored in bulmailer_table');
 	    
 	}else {
 	    unless (SDM::do_prepared_query(
@@ -406,7 +406,7 @@ sub store {
 		$priority_message, $priority_for_packet,
 		$current_date, $delivery_date
 	    )) {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Unable to add packet %s of message %s to database spool',
 		    $packetid, $msg_id
 		);
@@ -421,7 +421,7 @@ sub store {
 
 ## remove file that are not referenced by any packet
 sub purge_bulkspool {
-    &Log::do_log('debug', 'purge_bulkspool');
+    &Sympa::Log::Syslog::do_log('debug', 'purge_bulkspool');
 
     unless ($sth = SDM::do_prepared_query(
 	q{SELECT messagekey_spool AS messagekey
@@ -431,7 +431,7 @@ sub purge_bulkspool {
 		spoolname_spool = ?},
 	'bulk'
     )) {
-	&Log::do_log('err','Unable to check messages unreferenced by packets in database');
+	&Sympa::Log::Syslog::do_log('err','Unable to check messages unreferenced by packets in database');
 	return undef;
     }
 
@@ -440,7 +440,7 @@ sub purge_bulkspool {
 	if ( &Bulk::remove_bulkspool_message('spool',$key->{'messagekey'}) ) {
 	    $count++;
 	}else{
-	    &Log::do_log('err','Unable to remove message (key = %s) from spool_table',$key->{'messagekey'});	    
+	    &Sympa::Log::Syslog::do_log('err','Unable to remove message (key = %s) from spool_table',$key->{'messagekey'});	    
 	}
    }
     $sth->finish;
@@ -455,7 +455,7 @@ sub remove_bulkspool_message {
     my $key = 'messagekey_'.$spool ;
 
     unless (&SDM::do_query( "DELETE FROM %s WHERE %s = %s",$table,$key,&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to delete %s %s from %s',$table,$key,$messagekey);
+	&Sympa::Log::Syslog::do_log('err','Unable to delete %s %s from %s',$table,$key,$messagekey);
 	return undef;
     }
 
@@ -463,7 +463,7 @@ sub remove_bulkspool_message {
 }
 ## Return the number of remaining packets in the bulkpacket table.
 sub get_remaining_packets_count {
-    Log::do_log('debug3', '()');
+    Sympa::Log::Syslog::do_log('debug3', '()');
 
     my $m_count = 0;
 
@@ -472,7 +472,7 @@ sub get_remaining_packets_count {
 	  FROM bulkpacket_table
 	  WHERE lock_bulkpacket IS NULL}
     )) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to count remaining packets in bulkpacket_table');
 	return undef;
     }
@@ -485,7 +485,7 @@ sub get_remaining_packets_count {
 ## Returns 1 if the number of remaining packets in the bulkpacket table exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
-    Log::do_log('debug3', '()');
+    Sympa::Log::Syslog::do_log('debug3', '()');
     my $remaining_packets = get_remaining_packets_count();
     if ($remaining_packets and
 	$remaining_packets > Site->bulk_fork_threshold) {

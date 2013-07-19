@@ -26,7 +26,7 @@ use Log;
 our @ISA = qw(SympaspoolClassic);
 
 sub new {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $pkg = shift;
     return $pkg->SUPER::new('msg', shift,
 	'sortby' => 'priority',
@@ -35,7 +35,7 @@ sub new {
 }
 
 sub is_relevant {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my $self = shift;
     my $key  = shift;
 

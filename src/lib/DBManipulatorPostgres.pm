@@ -50,7 +50,7 @@ our %date_format = (
 # OUT: Nothing
 sub build_connect_string{
     my $self = shift;
-    &Log::do_log('debug3','Building connect string');
+    &Sympa::Log::Syslog::do_log('debug3','Building connect string');
     $self->{'connect_string'} = "DBI:Pg:dbname=$self->{'db_name'};host=$self->{'db_host'}";
 }
 
@@ -61,7 +61,7 @@ sub build_connect_string{
 sub get_substring_clause {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug2','Building a substring clause');
+    &Sympa::Log::Syslog::do_log('debug2','Building a substring clause');
     return "SUBSTRING(".$param->{'source_field'}." FROM position('".$param->{'separator'}."' IN ".$param->{'source_field'}.") FOR ".$param->{'substring_length'}.")";
 }
 
@@ -73,7 +73,7 @@ sub get_substring_clause {
 sub get_limit_clause {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Building limit clause');
+    &Sympa::Log::Syslog::do_log('debug3','Building limit clause');
     if ($param->{'offset'}) {
 	return "LIMIT ".$param->{'rows_count'}." OFFSET ".$param->{'offset'};
     }else{
@@ -94,13 +94,13 @@ sub get_limit_clause {
 sub get_formatted_date {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Building SQL date formatting');
+    &Sympa::Log::Syslog::do_log('debug3','Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
 	return sprintf 'date_part(\'epoch\',%s)',$param->{'target'};
     }elsif(lc($param->{'mode'}) eq 'write') {
 	return sprintf '\'epoch\'::timestamp with time zone + \'%d sec\'',$param->{'target'};
     }else {
-	&Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
+	&Sympa::Log::Syslog::do_log('err',"Unknown date format mode %s", $param->{'mode'});
 	return undef;
     }
 }
@@ -114,11 +114,11 @@ sub get_formatted_date {
 sub is_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Checking whether field %s.%s is an autoincrement',$param->{'table'},$param->{'field'});
+    &Sympa::Log::Syslog::do_log('debug3','Checking whether field %s.%s is an autoincrement',$param->{'table'},$param->{'field'});
     my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
     my $sth;
     unless ($sth = $self->do_query("SELECT relname FROM pg_class WHERE relname = '%s' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )",$seqname)) {
-	&Log::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
+	&Sympa::Log::Syslog::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
 	return undef;
     }	    
     my $field = $sth->fetchrow();	    
@@ -134,22 +134,22 @@ sub is_autoinc {
 sub set_autoinc {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Setting field %s.%s as an auto increment',$param->{'table'},$param->{'field'});
+    &Sympa::Log::Syslog::do_log('debug3','Setting field %s.%s as an auto increment',$param->{'table'},$param->{'field'});
     my $seqname = $param->{'table'}.'_'.$param->{'field'}.'_seq';
     unless ($self->do_query("CREATE SEQUENCE %s",$seqname)) {
-	&Log::do_log('err','Unable to create sequence %s',$seqname);
+	&Sympa::Log::Syslog::do_log('err','Unable to create sequence %s',$seqname);
 	return undef;
     }
     unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s TYPE BIGINT",$param->{'table'},$param->{'field'})) {
-	&Log::do_log('err','Unable to set type of field %s in table %s as bigint',$param->{'field'},$param->{'table'});
+	&Sympa::Log::Syslog::do_log('err','Unable to set type of field %s in table %s as bigint',$param->{'field'},$param->{'table'});
 	return undef;
     }
     unless ($self->do_query("ALTER TABLE %s ALTER COLUMN %s SET DEFAULT NEXTVAL('%s')",$param->{'table'},$param->{'field'},$seqname)) {
-	&Log::do_log('err','Unable to set default value of field %s in table %s as next value of sequence table %',$param->{'field'},$param->{'table'},$seqname);
+	&Sympa::Log::Syslog::do_log('err','Unable to set default value of field %s in table %s as next value of sequence table %',$param->{'field'},$param->{'table'},$seqname);
 	return undef;
     }
     unless ($self->do_query("UPDATE %s SET %s = NEXTVAL('%s')",$param->{'table'},$param->{'field'},$seqname)) {
-	&Log::do_log('err','Unable to set sequence %s as value for field %s, table %s',$seqname,$param->{'field'},$param->{'table'});
+	&Sympa::Log::Syslog::do_log('err','Unable to set sequence %s as value for field %s, table %s',$seqname,$param->{'field'},$param->{'table'});
 	return undef;
     }
     return 1;
@@ -165,12 +165,12 @@ sub set_autoinc {
 #   '"$user",public'.
 sub get_tables {
     my $self = shift;
-    Log::do_log('debug3','Getting the list of tables in database %s',$self->{'db_name'});
+    Sympa::Log::Syslog::do_log('debug3','Getting the list of tables in database %s',$self->{'db_name'});
 
     ## get search_path.
     my $sth;
     unless ($sth = $self->do_query('SELECT current_schemas(false)')) {
-	Log::do_log('err', 'Unable to get search_path of database %s',
+	Sympa::Log::Syslog::do_log('err', 'Unable to get search_path of database %s',
 	    $self->{'db_name'});
 	return undef;
     }
@@ -191,7 +191,7 @@ sub get_tables {
 	}
     }
     unless (@raw_tables) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to retrieve the list of tables from database %s',
 	    $self->{'db_name'}
 	);
@@ -208,9 +208,9 @@ sub get_tables {
 sub add_table {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Adding table %s',$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Adding table %s',$param->{'table'});
     unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
-	&Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
@@ -228,11 +228,11 @@ sub add_table {
 sub get_fields {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Getting the list of fields in table %s, database %s',$param->{'table'}, $self->{'db_name'});
+    &Sympa::Log::Syslog::do_log('debug3','Getting the list of fields in table %s, database %s',$param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
     unless ($sth = $self->do_query("SELECT a.attname AS field, t.typname AS type, a.atttypmod AS length FROM pg_class c, pg_attribute a, pg_type t WHERE a.attnum > 0 and a.attrelid = c.oid and c.relname = '%s' and a.atttypid = t.oid order by a.attnum",$param->{'table'})) {
-	&Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
@@ -261,7 +261,7 @@ sub update_field {
     my $table = $param->{'table'};
     my $field = $param->{'field'};
     my $type = $param->{'type'};
-    Log::do_log('debug3', 'Updating field %s in table %s (%s, %s)',
+    Sympa::Log::Syslog::do_log('debug3', 'Updating field %s in table %s (%s, %s)',
 	$field, $table, $type, $param->{'notnull'});
     my $options = '';
     if ($param->{'notnull'}) {
@@ -285,14 +285,14 @@ sub update_field {
 	    $table, $field, $type, $options);
     }
     foreach my $sql (@sql) {
-	Log::do_log('notice', '%s', $sql);
+	Sympa::Log::Syslog::do_log('notice', '%s', $sql);
 	if ($report) {
 	    $report .= "\n$sql";
 	} else {
 	    $report = $sql;
 	}
 	unless ($self->do_query('%s', $sql)) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Could not change field \'%s\' in table\'%s\'.',
 		$param->{'field'}, $param->{'table'});
 	    return undef;
@@ -300,7 +300,7 @@ sub update_field {
     }
     $report .= sprintf("\nField %s in table %s, structure updated",
 	$field, $table);
-    &Log::do_log('info', 'Field %s in table %s, structure updated',
+    &Sympa::Log::Syslog::do_log('info', 'Field %s in table %s, structure updated',
 	$field, $table);
     return $report;
 }
@@ -319,7 +319,7 @@ sub update_field {
 sub add_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
+    &Sympa::Log::Syslog::do_log('debug3','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
     my $options;
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
@@ -329,12 +329,12 @@ sub add_field {
 	$options .= ' PRIMARY KEY ';
     }
     unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
-	&Log::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
-    &Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
+    &Sympa::Log::Syslog::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
     
     return $report;
 }
@@ -349,15 +349,15 @@ sub add_field {
 sub delete_field {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
 
     unless ($self->do_query("ALTER TABLE %s DROP COLUMN %s",$param->{'table'},$param->{'field'})) {
-	&Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     my $report = sprintf('Field %s removed from table %s', $param->{'field'}, $param->{'table'});
-    &Log::do_log('info', 'Field %s removed from table %s', $param->{'field'}, $param->{'table'});
+    &Sympa::Log::Syslog::do_log('info', 'Field %s removed from table %s', $param->{'field'}, $param->{'table'});
     
     return $report;
 }
@@ -372,11 +372,11 @@ sub get_primary_key {
     my $self = shift;
     my $param = shift;
 
-    &Log::do_log('debug3','Getting primary key for table %s',$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Getting primary key for table %s',$param->{'table'});
     my %found_keys;
     my $sth;
     unless ($sth = $self->do_query("SELECT pg_attribute.attname AS field FROM pg_index, pg_class, pg_attribute WHERE pg_class.oid ='%s'::regclass AND indrelid = pg_class.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary",$param->{'table'})) {
-	&Log::do_log('err', 'Could not get the primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not get the primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
@@ -396,7 +396,7 @@ sub get_primary_key {
 sub unset_primary_key {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Removing primary key from table %s',$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Removing primary key from table %s',$param->{'table'});
 
     my $sth;
 
@@ -411,14 +411,14 @@ sub unset_primary_key {
 		tc.constraint_type = 'PRIMARY KEY'},
 	&SDM::quote($self->{'db_name'}), &SDM::quote($param->{'table'})
     )) {
-	&Log::do_log('err', 'Could not search primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not search primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     $key_name = $sth->fetchrow_array();
     $sth->finish;
     unless (defined $key_name) {
-	&Log::do_log('err', 'Could not get primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not get primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
@@ -426,12 +426,12 @@ sub unset_primary_key {
 	q{ALTER TABLE %s DROP CONSTRAINT "%s"},
 	$param->{'table'}, $key_name
     )) {
-	&Log::do_log('err', 'Could not drop primary key "%s" from table %s in database %s', $key_name, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not drop primary key "%s" from table %s in database %s', $key_name, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
-    &Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
+    &Sympa::Log::Syslog::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
 
     return $report;
 }
@@ -458,17 +458,17 @@ sub set_primary_key {
     }
 
     my $fields = join ',',@{$param->{'fields'}};
-    &Log::do_log('debug3','Setting primary key for table %s (%s)',$param->{'table'},$fields);
+    &Sympa::Log::Syslog::do_log('debug3','Setting primary key for table %s (%s)',$param->{'table'},$fields);
     unless ($sth = $self->do_query(
 	q{ALTER TABLE %s ADD %s (%s)},
 	$param->{'table'}, $key, $fields
     )) {
-	&Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
     my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
-    &Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'}, $fields);
+    &Sympa::Log::Syslog::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'}, $fields);
     return $report;
 }
 
@@ -484,17 +484,17 @@ sub get_indexes {
     my $self = shift;
     my $param = shift;
 
-    &Log::do_log('debug3','Getting the indexes defined on table %s',$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Getting the indexes defined on table %s',$param->{'table'});
     my %found_indexes;
     my $sth;
     unless ($sth = $self->do_query("SELECT c.oid FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relname ~ \'^(%s)$\' AND pg_catalog.pg_table_is_visible(c.oid)",$param->{'table'})) {
-	&Log::do_log('err', 'Could not get the oid for table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not get the oid for table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     my $ref = $sth->fetchrow_hashref('NAME_lc');
     
     unless ($sth = $self->do_query("SELECT c2.relname, pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) AS description FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i WHERE c.oid = \'%s\' AND c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary ORDER BY i.indisprimary DESC, i.indisunique DESC, c2.relname",$ref->{'oid'})) {
-	&Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
 
@@ -519,15 +519,15 @@ sub get_indexes {
 sub unset_index {
     my $self = shift;
     my $param = shift;
-    &Log::do_log('debug3','Removing index %s from table %s',$param->{'index'},$param->{'table'});
+    &Sympa::Log::Syslog::do_log('debug3','Removing index %s from table %s',$param->{'index'},$param->{'table'});
 
     my $sth;
     unless ($sth = $self->do_query("DROP INDEX %s",$param->{'index'})) {
-	&Log::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     my $report = "Table $param->{'table'}, index $param->{'index'} dropped";
-    &Log::do_log('info', 'Table %s, index %s dropped', $param->{'table'},$param->{'index'});
+    &Sympa::Log::Syslog::do_log('info', 'Table %s, index %s dropped', $param->{'table'},$param->{'index'});
 
     return $report;
 }
@@ -546,13 +546,13 @@ sub set_index {
 
     my $sth;
     my $fields = join ',',@{$param->{'fields'}};
-    &Log::do_log('debug3', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
+    &Sympa::Log::Syslog::do_log('debug3', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
     unless ($sth = $self->do_query("CREATE INDEX %s ON %s (%s)", $param->{'index_name'},$param->{'table'}, $fields)) {
-	&Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
+	&Sympa::Log::Syslog::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
 	return undef;
     }
     my $report = "Table $param->{'table'}, index %s set using $fields";
-    &Log::do_log('info', 'Table %s, index %s set using fields %s',$param->{'table'}, $param->{'index_name'}, $fields);
+    &Sympa::Log::Syslog::do_log('info', 'Table %s, index %s set using fields %s',$param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
 

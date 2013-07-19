@@ -111,11 +111,11 @@ unless (defined Robot::get_robots()) {
 }
 
 ## Open log
-Log::set_log_level(Site->log_level);
+Sympa::Log::Syslog::set_log_level(Site->log_level);
 
-my $daemon_name = &Log::set_daemon($0);
+my $daemon_name = &Sympa::Log::Syslog::set_daemon($0);
 
-Log::do_openlog(Site->log_facility, Site->log_socket_type, 'wwsympa');
+Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'wwsympa');
 
 ## Start plugins
 if(eval "require Sympa::Plugin::Manager") {
@@ -964,7 +964,7 @@ $plugins->start if $plugins;
 my $maintenance_mode;
 unless (SDM::data_structure_uptodate()) {
     $maintenance_mode = 1;
-    &Log::do_log('err',"Web interface set to maintenance mode ; you should run sympa.pl --upgrade");
+    &Sympa::Log::Syslog::do_log('err',"Web interface set to maintenance mode ; you should run sympa.pl --upgrade");
 }
 
 &tools::ciphersaber_installed();
@@ -976,7 +976,7 @@ my $query;
 
 my $birthday = time ;
 
-Log::do_log(info => "WWSympa started, process $$");
+Sympa::Log::Syslog::do_log(info => "WWSympa started, process $$");
 
 # Now internal encoding is same as input/output.
 #XXX## Set output encoding
@@ -1003,7 +1003,7 @@ Log::do_log(info => "WWSympa started, process $$");
      undef $ajax;
      undef $session;
 
-    Log::set_log_level(Site->log_level);
+    Sympa::Log::Syslog::set_log_level(Site->log_level);
     # auto-detect browsers' lang.
     Language::SetLang(Site->best_language());
 
@@ -1028,13 +1028,13 @@ Log::do_log(info => "WWSympa started, process $$");
 
     unless (&SDM::check_db_connect()) {
 	 &report::reject_report_web('system_quiet','no_database',{},'','');
-	 &Log::do_log('info','WWSympa requires a RDBMS to run');
+	 &Sympa::Log::Syslog::do_log('info','WWSympa requires a RDBMS to run');
      }
 
      ## If in maintenance mode, check if the data structure is now uptodate
      if ($maintenance_mode && (SDM::data_structure_uptodate() && ($> eq (getpwnam(Sympa::Constants::USER))[2]))) {
 	 $maintenance_mode = undef;
-	 &Log::do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
+	 &Sympa::Log::Syslog::do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
      }
 
     ## Generate traceback if crashed.
@@ -1044,7 +1044,7 @@ Log::do_log(info => "WWSympa started, process $$");
      %in = $query->Vars;
 
      foreach my $k (keys %::changed_params) {
-         &Log::do_log('debug3', 'Changed Param: %s', $k);
+         &Sympa::Log::Syslog::do_log('debug3', 'Changed Param: %s', $k);
      }
 
      ## Free terminated sendmail processes
@@ -1091,19 +1091,19 @@ Log::do_log(info => "WWSympa started, process $$");
          &wwslog('notice', 'Cookie_domain(%s) does NOT match HTTP_HOST; setting cookie_domain to %s', $param->{'cookie_domain'}, $http_host);
          $param->{'cookie_domain'} = $http_host;
      }
-     &Log::set_log_level($robot->log_level);
+     &Sympa::Log::Syslog::set_log_level($robot->log_level);
 
     ## Set $param->{'conf'}
     get_safe_robot_conf();
 
     ## SSO
      foreach my $auth (keys  %{Site->cas_id->{$robot_id}}) {
-	 &Log::do_log('debug2', "cas authentication service $auth");
+	 &Sympa::Log::Syslog::do_log('debug2', "cas authentication service $auth");
 	 $param->{'sso'}{$auth} = Site->cas_id->{$robot_id}{$auth}{'auth_service_friendly_name'};
      }
 
      foreach my $auth (keys  %{Site->generic_sso_id->{$robot_id}}) {
-	 &Log::do_log('debug', "Generic SSO authentication service $auth");
+	 &Sympa::Log::Syslog::do_log('debug', "Generic SSO authentication service $auth");
 	 $param->{'sso'}{$auth} = Site->auth_services->{$robot_id}[Site->generic_sso_id->{$robot_id}{$auth}]{'service_name'};
      }
 
@@ -1214,7 +1214,7 @@ Log::do_log(info => "WWSympa started, process $$");
 
      $param->{'session'} = $session->as_hashref();
 
-     &Log::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
+     &Sympa::Log::Syslog::set_log_level($session->{'log_level'}) if ($session->{'log_level'});
      $param->{'restore_email'} = $session->{'restore_email'};
      $param->{'dumpvars'} = $session->{'dumpvars'};
      $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
@@ -1233,7 +1233,7 @@ Log::do_log(info => "WWSympa started, process $$");
 	 if (($ENV{'SSL_CLIENT_VERIFY'} eq 'SUCCESS') &&
 	     ($in{'action'} ne 'sso_login')) { ## Do not check client certificate automatically if in sso_login 
 	     
-	     &Log::do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{'SSL_CLIENT_S_DN_Email'});
+	     &Sympa::Log::Syslog::do_log('debug2', "SSL verified, S_EMAIL = %s,"." S_DN_Email = %s", $ENV{'SSL_CLIENT_S_EMAIL'}, $ENV{'SSL_CLIENT_S_DN_Email'});
 	     if (($ENV{'SSL_CLIENT_S_EMAIL'})) {
 		 ## this is the X509v3 SubjectAlternativeName, and requires
 		 ## a patch to mod_ssl -- cm@coretec.at
@@ -1265,7 +1265,7 @@ Log::do_log(info => "WWSympa started, process $$");
 	 }elsif($in{'ticket'}=~/(S|P)T\-/){ # the request contain a CAS named ticket that use CAS ticket format
 	     delete $session->{'do_not_use_cas'}; #reset do_not_use_cas because this client probably use CAS
 	     # select the cas server that redirect the user to sympa and check the ticket
-	     &Log::do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}");
+	     &Sympa::Log::Syslog::do_log ('notice',"CAS ticket is detected. in{'ticket'}=$in{'ticket'} checked_cas=$session->{'checked_cas'}");
 
 	     my $cas_id = '';
 	     if ($in{'checked_cas'} =~ /^(\d+)\,?/) {
@@ -1284,7 +1284,7 @@ Log::do_log(info => "WWSympa started, process $$");
 		 my $net_id = $cas_server->validateST($service_url, $ticket);
 		 
 		 if(defined $net_id) { # the ticket is valid net-id
-		     &Log::do_log('notice',"login CAS OK server netid=$net_id" );
+		     &Sympa::Log::Syslog::do_log('notice',"login CAS OK server netid=$net_id" );
 		     $param->{'user'}{'email'} = lc(&Auth::get_email_by_net_id($robot_id, $cas_id, {'uid' => $net_id}));
 		     $session->{'auth'} = 'cas';
 		     $session->{'email'}= $param->{user}{email} ;
@@ -1293,10 +1293,10 @@ Log::do_log(info => "WWSympa started, process $$");
 		     
 		     
 		 }else{
-		     &Log::do_log('err',"CAS ticket validation failed : %s", &AuthCAS::get_errors()); 
+		     &Sympa::Log::Syslog::do_log('err',"CAS ticket validation failed : %s", &AuthCAS::get_errors()); 
 		 }
 	     }else{
-		 &Log::do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
+		 &Sympa::Log::Syslog::do_log ('notice',"Internal error while receiving a CAS ticket $session->{'checked_cas'} ");
 	     }
 	 }elsif((Site->cas_number->{$robot_id} > 0) && ($in{'action'} !~ /^(login|sso_login|wsdl)$/)) { # some cas server are defined but no CAS ticket detected
 	     unless ($session->{'do_not_use_cas'}) {
@@ -1309,7 +1309,7 @@ Log::do_log(info => "WWSympa started, process $$");
 		     ## the check below works fine as long as we don't have more then 10 CAS servers (because we don't properly split the list of values)
 		    my $cas_id =
 			Site->cas_id->{$robot_id}{$auth_service->{'auth_service_name'}}{'id'};
-		    &Log::do_log ('debug',
+		    &Sympa::Log::Syslog::do_log ('debug',
 			'check_cas checker_cas : %s current cas_id %s',
 			$session->{'checked_cas'}, $cas_id
 		    );
@@ -1330,9 +1330,9 @@ Log::do_log(info => "WWSympa started, process $$");
 			 
 			 last
 			 }elsif($redirect_url == -1) { # CAS server auth error
-			     &Log::do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
+			     &Sympa::Log::Syslog::do_log('notice',"CAS server auth error $auth_service->{'auth_service_name'}" );
 			 }else{
-			     &Log::do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
+			     &Sympa::Log::Syslog::do_log('notice',"Strange CAS ticket detected and validated check sympa code !" );
 			 }
 		 }
 		 $session->{'do_not_use_cas'} = 1 unless ($param->{'redirect_to'} =~ /http(s)+\:\//i) ; #set do_not_use_cas because all cas servers have been checked without success
@@ -1742,7 +1742,7 @@ Log::do_log(info => "WWSympa started, process $$");
 
 	     }else{
 		 print "Internal error content-type nor file defined\n";
-		 Log::do_log('err', 'Internal error content-type nor file defined');
+		 Sympa::Log::Syslog::do_log('err', 'Internal error content-type nor file defined');
 	     }
 	 }
 
@@ -1813,7 +1813,7 @@ Log::do_log(info => "WWSympa started, process $$");
      }
 # 	 close FILE;
      }elsif ($param->{'redirect_to'}) {
-	 &Log::do_log ('notice',"Redirecting to $param->{'redirect_to'}");
+	 &Sympa::Log::Syslog::do_log ('notice',"Redirecting to $param->{'redirect_to'}");
 	 print "Location: $param->{'redirect_to'}\n\n";
      }else {
 	 &prepare_report_user();
@@ -1822,7 +1822,7 @@ Log::do_log(info => "WWSympa started, process $$");
 
      # exit if wwsympa.fcgi itself has changed
      if ((stat($ENV{'SCRIPT_FILENAME'}))[9] > $birthday ) {
-	  &Log::do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} has changed since fastcgi server started");
+	  &Sympa::Log::Syslog::do_log('notice',"Exiting because $ENV{'SCRIPT_FILENAME'} has changed since fastcgi server started");
 	  exit(0);
      }
 
@@ -1840,7 +1840,7 @@ sub wwslog {
     my $facility = shift;
 
     # do not log if log level if too high regarding the log requested by user 
-    return if ($Log::levels{$facility} > $Log::log_level);
+    return if ($Sympa::Log::Syslog::levels{$facility} > $Sympa::Log::Syslog::log_level);
 
     my $msg = shift;
 
@@ -1876,7 +1876,7 @@ sub wwslog {
 
     $msg = "[robot $robot_id] ".$msg;
 
-    return &Log::do_log($facility, $msg, @_);
+    return &Sympa::Log::Syslog::do_log($facility, $msg, @_);
 }
 
 sub web_db_log {
@@ -1892,7 +1892,7 @@ sub web_db_log {
     ## Default email is the user email
     $data->{'target_email'} ||= $data->{'user_email'};
 
-    unless (Log::db_log($data)) {
+    unless (Sympa::Log::Syslog::db_log($data)) {
 	&wwslog('err','web_db_log: failed to log in database');
 	return undef;
     }
@@ -1912,7 +1912,7 @@ sub web_db_stat_log {
     $data->{'client'} = $param->{'remote_addr'};
     $data->{'robot'} ||= $robot_id;
 
-    unless (Log::db_stat_log($data)) {
+    unless (Sympa::Log::Syslog::db_stat_log($data)) {
 	&wwslog('err', 'web_db_stat_log: failed to log in database');
 	return undef;
     }
@@ -1930,7 +1930,7 @@ sub crash_handler {
     eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
     eval { SDM::db_disconnect(); }; # unlock database
     Sys::Syslog::closelog(); # flush log
-    &Log::set_log_level(-1); # disable log
+    &Sympa::Log::Syslog::set_log_level(-1); # disable log
 
     ## gather traceback information
     my @calls;
@@ -1990,7 +1990,7 @@ sub get_header_field {
 sub _split_params {
     my $args_string = shift;
     
-    &Log::do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+    &Sympa::Log::Syslog::do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
     
     $args_string =~ s+^/++;
     
@@ -2018,7 +2018,7 @@ sub _split_params {
     }else{
 	$main::options{'debug_level'} = 0 ;
     } 
-    &Log::do_log ('debug2', "debug level $main::options{'debug_level'}");
+    &Sympa::Log::Syslog::do_log ('debug2', "debug level $main::options{'debug_level'}");
     
     ## rss mode 
     if ($params[0] eq 'rss') {
@@ -2085,7 +2085,7 @@ sub get_parameters {
 	     $in{'action'} = $in{'javascript_action'};
 	 }
 	 foreach my $p (keys %in) {
-	     &Log::do_log('debug2',"POST key $p value $in{$p}") unless ($p =~ /passwd/);
+	     &Sympa::Log::Syslog::do_log('debug2',"POST key $p value $in{$p}") unless ($p =~ /passwd/);
 	     if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 		 
 		 $in{$1} = $3;
@@ -2136,13 +2136,13 @@ sub get_parameters {
 	 }elsif ($pname =~ /^custom_attribute(.*)$/) {
 	     my $key = $tokens[1] ;
 	     $regexp = $in_regexp{'custom_attribute'};
-	     ##&Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
+	     ##&Sympa::Log::Syslog::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
 	     $custom_attribute->{$key} = {value=>$in{$p}} ;
 	     undef $in{$p} ;
 	 }elsif ($pname =~ /^custom_input(.*)$/) {
 	     my $key = $tokens[1];
 	     $regexp = $in_regexp{'custom_input'};
-	     &Log::do_log ('debug2', "get_parameters (custom_input) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
+	     &Sympa::Log::Syslog::do_log ('debug2', "get_parameters (custom_input) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
 	     $custom_input->{$key} = $in{$p};
              undef $in{$p};
 	 }elsif ($in_regexp{$pname}) {
@@ -2167,7 +2167,7 @@ sub get_parameters {
 		 $in{$p} = $tmpparam;
 	     }
 	     else {
-		 &Log::do_log('err','Unable to sanitize parameter %s',$pname);
+		 &Sympa::Log::Syslog::do_log('err','Unable to sanitize parameter %s',$pname);
 	     }
 	 }
 	 foreach my $one_p (split /\0/, $in{$p}) {
@@ -2255,7 +2255,7 @@ sub get_parameters_old {
     
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
 	my $path_info = $ENV{'PATH_INFO'};
-	&Log::do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
+	&Sympa::Log::Syslog::do_log('debug', "PATH_INFO: %s",$ENV{'PATH_INFO'});
 	
 	$path_info =~ s+^/++;
 	
@@ -2288,7 +2288,7 @@ sub get_parameters_old {
 	}else{
 	    $main::options{'debug_level'} = 0 ;
 	} 
-	&Log::do_log ('debug2', "debug level $main::options{'debug_level'}");
+	&Sympa::Log::Syslog::do_log ('debug2', "debug level $main::options{'debug_level'}");
 	
 	
 	
@@ -2334,7 +2334,7 @@ sub get_parameters_old {
 	     $in{'action'} = $in{'javascript_action'};
 	 }
 	 foreach my $p (keys %in) {
-	     &Log::do_log('debug2',"POST key $p value $in{$p}");
+	     &Sympa::Log::Syslog::do_log('debug2',"POST key $p value $in{$p}");
 	     if ($p =~ /^((\w*)action)_(\w+)((\.\w+)*)$/) {
 		 
 		 $in{$1} = $3;
@@ -2387,7 +2387,7 @@ sub get_parameters_old {
 	 }elsif ($pname =~ /^custom_attribute(.*)$/) {
 	     my $key = $tokens[1] ;
 	     $regexp = $in_regexp{'custom_attribute'};
-	     &Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
+	     &Sympa::Log::Syslog::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
 	     $custom_attribute->{$key} = {value=>$in{$p}} ;
 	     undef $in{$p} ;
 
@@ -2413,7 +2413,7 @@ sub get_parameters_old {
 		 $in{$p} = $tmpparam;
 	     }
 	     else {
-		 &Log::do_log('err','Unable to sanitize parameter %s',$pname);
+		 &Sympa::Log::Syslog::do_log('err','Unable to sanitize parameter %s',$pname);
 	     }
 	 }
 
@@ -2588,7 +2588,7 @@ sub send_html {
 
     ## undefined $list has been initialized to be hashref.
     if (ref $list eq 'HASH') {
-	&Log::do_log('notice',
+	&Sympa::Log::Syslog::do_log('notice',
 	    'Someone tried to access inside of List object directly.  Fix the codes');
 	undef $list;
     }
@@ -2615,7 +2615,7 @@ sub send_html {
 				    )
 	       )
 	{
-	    &Log::do_log('err','Failed to sanitize $param in host %s', $robot_id);
+	    &Sympa::Log::Syslog::do_log('err','Failed to sanitize $param in host %s', $robot_id);
 	}
     }
 
@@ -3365,7 +3365,7 @@ sub do_login {
      my $data;
 
      unless ($ENV{'REQUEST_METHOD'} eq 'POST') {
-	 &Log::do_log('notice', "Authentication failed, because do not use HTTP method POST but %s",$ENV{'REQUEST_METHOD'} );
+	 &Sympa::Log::Syslog::do_log('notice', "Authentication failed, because do not use HTTP method POST but %s",$ENV{'REQUEST_METHOD'} );
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
@@ -3375,7 +3375,7 @@ sub do_login {
 
 
      unless($data = Auth::check_auth($robot, $in{'email'},$in{'passwd'})){
-	 &Log::do_log('notice', "Authentication failed\n");
+	 &Sympa::Log::Syslog::do_log('notice', "Authentication failed\n");
 	 &web_db_log({'parameters' => $in{'email'},
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
@@ -3881,7 +3881,7 @@ sub is_ldap_user {
 	 my $ds = new LDAPSource($param);
 
 	 unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
-	     &Log::do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});
+	     &Sympa::Log::Syslog::do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});
 	     next;
 	 }
 
@@ -4049,7 +4049,7 @@ sub do_logout {
 
 sub sendssopasswd {
     my $email = shift;
-    &Log::do_log('info', 'sendssopasswd(%s)', $email);
+    &Sympa::Log::Syslog::do_log('info', 'sendssopasswd(%s)', $email);
     
     my ($passwd, $user);
     
@@ -5552,7 +5552,7 @@ sub do_auto_signoff {
 	   'ip' => $ip,
        };
        unless ($robot->send_file('user_notification', $in{'email'}, $tt2_param)) {
-	 &Log::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	 &Sympa::Log::Syslog::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
 	 return undef;
        }
    }else{
@@ -5579,7 +5579,7 @@ sub do_family_signoff_request {
 	'ip' => $ip,
     };
     unless ($robot->send_file('user_notification', $in{'email'}, $tt2_param)) {
-	&Log::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	&Sympa::Log::Syslog::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
 	return undef;
     }
     $param->{'signing_off_email'} = $in {'email'};
@@ -5785,7 +5785,7 @@ sub do_sigrequest {
 			'one_time_ticket' => $ticket,
 			'email' => $in{'email'}};
        unless ($robot->send_file('user_notification', $in{'email'}, $tt2_param)) {
-	 &Log::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	 &Sympa::Log::Syslog::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
 	 return undef;
        }
 
@@ -5949,14 +5949,14 @@ sub do_edit_config {
 	    # if the parameter is editable and if the is a change 
 	    next unless $p->{'name'} eq $in{'conf_parameter_name'};
 	    unless ($p->{'edit'} and $p->{'edit'} eq '1') {
-		Log::do_log ('err',
+		Sympa::Log::Syslog::do_log ('err',
 		    'Ignoring change of parameter %s (value %s) because not editable',
 		    $in{'conf_parameter_name'}, $in{'conf_new_value'}
 		);
 		last;
 	    }
 	    if ($in{'conf_new_value'} eq $p->{'current_value'}) {
-		Log::do_log ('notice',
+		Sympa::Log::Syslog::do_log ('notice',
 		    'Ignoring change of parameter %s (value %s) because inchanged',
 		    $in{'conf_parameter_name'}, $in{'conf_new_value'}
 		);
@@ -5965,7 +5965,7 @@ sub do_edit_config {
 		$p->{'current_value'} = $in{'conf_new_value'};
 		Conf::set_robot_conf($robot_id, $in{'conf_parameter_name'},
 		    $in{'conf_new_value'});
-		Log::do_log('notice', 'setting parameter %s to value %s',
+		Sympa::Log::Syslog::do_log('notice', 'setting parameter %s to value %s',
 		    $in{'conf_parameter_name'}, $in{'conf_new_value'});
 		last;
 	    }
@@ -6365,7 +6365,7 @@ sub do_manage_template {
 	$in{'new_default'} =~ s/\s/_/g ;
 	my $absolute_file = $base.'reject_'.$in{'new_default'}.'.tt2';
 
-        &Log::do_log('info','Change default by linking %s 2 %s',$base.'reject.tt2',$absolute_file);
+        &Sympa::Log::Syslog::do_log('info','Change default by linking %s 2 %s',$base.'reject.tt2',$absolute_file);
 	if (-l $base.'reject.tt2') {
 	    unless (unlink ($base.'reject.tt2')){
 		&wwslog('err','Could not unlink %s',$base.'reject.tt2');
@@ -7307,7 +7307,7 @@ sub do_reject {
 		     }
 		 }
 	     } else {
-		Log::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
 		    $message
 		);
@@ -7317,7 +7317,7 @@ sub do_reject {
 	 if (($in{'signal_spam'}) && (Site->reporting_spam_script_path ne '')){
 	     if (-x Site->reporting_spam_script_path){
 		 unless (open(SCRIPT, '|' . Site->reporting_spam_script_path)) {
-		     &Log::do_log('err', 'could not execute %s',
+		     &Sympa::Log::Syslog::do_log('err', 'could not execute %s',
 			Site->reporting_spam_script_path);
 		 }
 		# Sending encrypted form in case a crypted message would be
@@ -7325,16 +7325,16 @@ sub do_reject {
 		print SCRIPT $message->as_string;
 
 		if (close SCRIPT) {		 
-		    Log::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			'Message %s reported as spam by %s',
 			$message, $param->{'user'}{'email'});
 		} else {
-		    Log::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			'Could not report message %s as spam (close failed)'
 		    );
 		}
 	     }else{
-		 &Log::do_log('err',
+		 &Sympa::Log::Syslog::do_log('err',
 		    'ignoring parameter reporting_spam_script_path, value %s because not an executable script',
 		    Site->reporting_spam_script_path
 		);
@@ -10638,7 +10638,7 @@ sub _prepare_edit_form {
 	     foreach my $v (@{$p->{'value'}}) {
 		next unless ($v->{'name'} eq 'days');
 		if (ref($v->{'value'}) eq 'ARRAY'){
-		    &Log::do_log('debug2','Empty digest parameter. Putting a dummy value.');
+		    &Sympa::Log::Syslog::do_log('debug2','Empty digest parameter. Putting a dummy value.');
 		    $v->{'value'} = undef;
 		    $v->{'type'} = 'enum';
 		}else{
@@ -14031,7 +14031,7 @@ sub creation_shared_file {
 	    close HTMLFILE;
 	}
 	else {
-	    &Log::do_log('err','Unable to sanitize file %s',$fname);
+	    &Sympa::Log::Syslog::do_log('err','Unable to sanitize file %s',$fname);
 	}
     }
     
@@ -14603,7 +14603,7 @@ sub d_copy_file {
 		close HTMLFILE;
 	    }
 	    else {
-		&Log::do_log('err','Unable to sanitize file %s',$fname);
+		&Sympa::Log::Syslog::do_log('err','Unable to sanitize file %s',$fname);
 	    }
 	}
 	
@@ -14880,7 +14880,7 @@ sub do_d_rename {
 	 return undef;
      }
      if ($moderate){
-	 &Log::do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
+	 &Sympa::Log::Syslog::do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
 	 unless (rename $doc, "$shareddir/$current_directory/.$in{'new_name'}.moderate") {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$doc,
 								'new'=>"$shareddir/$current_directory/.$in{'new_name'}.moderate"},
@@ -14890,7 +14890,7 @@ sub do_d_rename {
 	     return undef;
 	 }
      }else {
-	 &Log::do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
+	 &Sympa::Log::Syslog::do_log('notice', "RENAME: $doc, $shareddir/$current_directory/$in{'new_name'}");
 	 unless (rename $doc, "$shareddir/$current_directory/$in{'new_name'}") {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$doc,
 								'new'=>"$shareddir/$current_directory/$in{'new_name'}"},
@@ -15782,9 +15782,9 @@ sub do_change_email_request {
 
     unless ($param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'new_email'},$robot_id,'change_email/'.$param->{'user'}{'email'},$ip)){
 	
-	&Log::do_log('notice',"Unable to create one_time_ticket for $in{'new_email'}, service do_change_email_request");
+	&Sympa::Log::Syslog::do_log('notice',"Unable to create one_time_ticket for $in{'new_email'}, service do_change_email_request");
     }else{
-	&Log::do_log('notice',"ticket : $param->{'one_time_ticket'}");
+	&Sympa::Log::Syslog::do_log('notice',"ticket : $param->{'one_time_ticket'}");
     }
     
     $param->{'new_email'} = $in{'new_email'};
@@ -15793,7 +15793,7 @@ sub do_change_email_request {
 		     'to' => $in{'new_email'},
 		 };
     unless ($robot->send_file('user_notification', $in{'new_email'}, $tt2_param)) {
-	&Log::do_log('notice',"Unable to send template 'user_notification' to $in{'new_email'}");
+	&Sympa::Log::Syslog::do_log('notice',"Unable to send template 'user_notification' to $in{'new_email'}");
 	return undef;
     }
     return '1';
@@ -16299,14 +16299,14 @@ sub do_send_mail {
 	# url and uploaded_file should not be both empty -> missing argument
 	if ($in{'url'} =~ /^\s*$/ && $in{'uploaded_file'} =~ /^\s*$/) {
 	    &report::reject_report_web('user','missing_post_source',{},$param->{'action'});
-	    ($Log::log_level >= 0) && &wwslog('info','Missing url and uploaded file');
+	    ($Sympa::Log::Syslog::log_level >= 0) && &wwslog('info','Missing url and uploaded file');
 	    return 'compose_mail';
 	 }
 	
 	# url and uploaded_file should not be both filled: we could not chooe which one to use.
 	if ($in{'url'} =~ /\S/ && $in{'uploaded_file'} =~ /\S/) {
 	    &report::reject_report_web('user','two_post_sources_defined',{},$param->{'action'});
-	    ($Log::log_level >= 0) && &wwslog('info','User specified both an URL (%s) and a file to upload (%s). Can\'t choose between them.',$in{'url'},$in{'uploaded_file'});
+	    ($Sympa::Log::Syslog::log_level >= 0) && &wwslog('info','User specified both an URL (%s) and a file to upload (%s). Can\'t choose between them.',$in{'url'},$in{'uploaded_file'});
 	    return 'compose_mail';
 	}
 	my $page_source = $in{'url'};
@@ -16341,14 +16341,14 @@ sub do_send_mail {
             $in{'body'} = $html_part_body;
 	}else{
 	    &report::reject_report_web('user','unable_to_parse',{},$param->{'action'});
-	    ($Log::log_level >= 0) && &wwslog('info','A MIME part could not be created with the supplied data, %s, %s',$in{'url'},$in{'uploaded_file'});
+	    ($Sympa::Log::Syslog::log_level >= 0) && &wwslog('info','A MIME part could not be created with the supplied data, %s, %s',$in{'url'},$in{'uploaded_file'});
 	    return undef;
 	}            
     }else{	 
 	## Message body should not be empty
 	if ($in{'body'} =~ /^\s*$/) {
 	    &report::reject_report_web('user','missing_arg',{'argument' => 'body'},$param->{'action'});
-	    ($Log::log_level >= 0) && &wwslog('info','Missing body');
+	    ($Sympa::Log::Syslog::log_level >= 0) && &wwslog('info','Missing body');
 	    &web_db_log({'robot' => $robot_id,'list' => $list->name,'action' => $param->{'action'},'parameters' => "",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'no_body','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	    return undef;
 	}
@@ -16825,7 +16825,7 @@ sub do_stats {
     $stats->{'deleted by admin'}{'title'} = gettext("Users deleted by admin");
     foreach my $operation (('send_mail','add_subscriber','unsubscription','deleted by admin')) {
 	my $raw_data = &List::get_data($operation, $robot_id , $in{'list'});
-	my $data = &Log::agregate_daily_data({'hourly_data'=>$raw_data});
+	my $data = &Sympa::Log::Syslog::agregate_daily_data({'hourly_data'=>$raw_data});
 	my @key_counter = keys %{$data};
 	if($#key_counter>-1) {
 	    $stats->{$operation}{'stats_values'} = "[";
@@ -17017,7 +17017,7 @@ sub do_dump_scenario {
 	 }
 	 unless (-d $scenario_dir) {
 	     unless (mkdir ($scenario_dir, 0777)) {
-		 &Log::do_log('err',"do_dump_scenario: cannot_create_dir %s : %s ", $scenario_dir, $!);
+		 &Sympa::Log::Syslog::do_log('err',"do_dump_scenario: cannot_create_dir %s : %s ", $scenario_dir, $!);
 		 &report::reject_report_web('intern','cannot_create_dir',{'file' => $scenario_dir,$param->{'action'},'',$param->{'user'}{'email'}},$robot_id);
 		 return undef;
 	     }
@@ -17197,7 +17197,7 @@ sub do_viewlogs {
     $param->{'page'} = int($in{'page'}) || 1;
     $param->{'size'} = int($in{'size'}) || Site->viewlogs_page_size;
 
-    my @date = Log::get_log_date();
+    my @date = Sympa::Log::Syslog::get_log_date();
     $param->{'date_from_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S",
 	localtime($date[0]);
     $param->{'date_to_formated'} = gettext_strftime "%Y-%m-%d-%H-%M-%S",
@@ -17242,10 +17242,10 @@ sub do_viewlogs {
     if ($in{'target_type'} or $in{'page'} or $in{'size'}) {
 
 	#sending of search parameters for the query
-	my $line = Log::get_first_db_log($select, $sortby, $in{'way'});
+	my $line = Sympa::Log::Syslog::get_first_db_log($select, $sortby, $in{'way'});
 
 	#display the number of rows of the query.
-	$param->{'total_results'} = Log::return_rows_nb();
+	$param->{'total_results'} = Sympa::Log::Syslog::return_rows_nb();
 
 	unless ($line and $param->{'total_results'}) {
 	    ##&report::reject_report_web('user','no_logs',{},$param->{'action'});
@@ -17288,7 +17288,7 @@ sub do_viewlogs {
 		    localtime $line->{'date'};
 		push @{$param->{'log_entries'}}, $line;
 	    }
-	    $line = Log::get_next_db_log();
+	    $line = Sympa::Log::Syslog::get_next_db_log();
 	}
     }
 
@@ -17531,12 +17531,12 @@ sub do_viewspool_message_dump {
     $param->{'msg_file'} = $robot->tmpdir . '/' . $messagekey . '_' . $$;
 
     unless (open OUT, '>', $param->{'msg_file'}) {
-	Log::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
+	Sympa::Log::Syslog::do_log('notice', 'Could Not open %s', $param->{'msg_file'});
 	return undef;
     }
     print OUT $messages[0]->{'messageasstring'};
     if (close(OUT)) {
-	Log::do_log('info', 'message (messagekey = %s) flushed in file %s',
+	Sympa::Log::Syslog::do_log('info', 'message (messagekey = %s) flushed in file %s',
 	    $messagekey, $param->{'msg_file'}
 	);
     }
@@ -17597,7 +17597,7 @@ sub do_viewspool_message_mv {
     my $newstatus = $in{'new_status'};
 
 
-   &Log::do_log('info',"move message %s from spool %s status %s to spool %s with status %s",$messagekey,$spoolname,$status,$newspool,$newstatus);
+   &Sympa::Log::Syslog::do_log('info',"move message %s from spool %s status %s to spool %s with status %s",$messagekey,$spoolname,$status,$newspool,$newstatus);
 
 
     $param->{'messagekey'} = $messagekey;
@@ -17641,7 +17641,7 @@ sub do_viewspool_message_mv {
 	&wwslog('info','do_viewspool_message : could not move message to spool %s, status %s',$newspool,$newstatus);
 	return;		
     }
-   &Log::do_log('debug2',"message %s moved to spool %s with status %s",$messagekey,$newspool,$newstatus);
+   &Sympa::Log::Syslog::do_log('debug2',"message %s moved to spool %s with status %s",$messagekey,$newspool,$newstatus);
     $param->{'moved'} = 1;
     return 1;
 }
@@ -17984,7 +17984,7 @@ sub _ca_process {
 	
 	eval { require "$file"; };
 	if($@) {
-		&Log::do_log('err', 'Error requiring %s : %s (%s)', $custom_action, "$@", ref($@));
+		&Sympa::Log::Syslog::do_log('err', 'Error requiring %s : %s (%s)', $custom_action, "$@", ref($@));
 		return undef;
 	}
 	
@@ -17992,7 +17992,7 @@ sub _ca_process {
 	my $res;
 	eval "\$res = ".$custom_action."_plugin::process(\@{\$cap});";
 	if($@) {
-		&Log::do_log('err', 'Error evaluating %s : %s (%s)', $custom_action, "$@", ref($@));
+		&Sympa::Log::Syslog::do_log('err', 'Error evaluating %s : %s (%s)', $custom_action, "$@", ref($@));
 		return undef;
 	}
 	
@@ -18065,7 +18065,7 @@ sub do_ca {
 	my $file = &_ca_get_file($custom_action.'.tt2', $robot_id);
 	return 1 if($file);
 	
-	&Log::do_log('err', 'Plugin not found : %s', $custom_action);
+	&Sympa::Log::Syslog::do_log('err', 'Plugin not found : %s', $custom_action);
 	return undef;
 }
 
@@ -18136,7 +18136,7 @@ sub do_lca {
 	my $file = &_ca_get_file($custom_action.'.tt2', $robot_id, $list);
 	return 1 if($file);
 	
-	&Log::do_log('err', 'Plugin not found : %s', $custom_action);
+	&Sympa::Log::Syslog::do_log('err', 'Plugin not found : %s', $custom_action);
 	return undef;
 }
 
@@ -18565,13 +18565,13 @@ sub do_automatic_lists {
     unless (defined $list) {
 	## Automatic creation of a mailing list, based on a family
 	unless ($family = new Family($family_name,$robot_id)) {
-	    &Log::do_log('err', "Failed to create the dynamic list $listname: family $family_name does not exist.");
+	    &Sympa::Log::Syslog::do_log('err', "Failed to create the dynamic list $listname: family $family_name does not exist.");
 	    $robot->send_notify_to_listmaster('automatic_list_creation_failed', ["Failed to create the dynamic list $listname: family $family_name does not exist."]);
 	    return undef;
 	}
 	
 	unless ($list = $family->create_automatic_list(('listname' => $listname,'auth_level' => 'md5','sender'=>$session->{'email'}))) {
-	    &Log::do_log('err', "Failed to create the dynamic list $listname.");
+	    &Sympa::Log::Syslog::do_log('err', "Failed to create the dynamic list $listname.");
 	    $robot->send_notify_to_listmaster('automatic_list_creation_failed', ["Failed to create the dynamic list $listname."]);
 	    return undef;
 	}

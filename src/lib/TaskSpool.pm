@@ -69,7 +69,7 @@ our %months = ('Jan', 0, 'Feb', 1, 'Mar', 2, 'Apr', 3, 'May', 4,  'Jun', 5,
 ##########################
 
 sub new {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     return shift->SUPER::new('task', shift);
 }
 
@@ -85,13 +85,13 @@ sub get_storage_name {
 }
 
 sub analyze_file_name {
-    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
     my $self = shift;
     my $key  = shift;
     my $data = shift;
 
     unless($key =~ /$filename_regexp/){
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	'File %s name does not have the proper format', $key);
 	return undef;
     }
@@ -99,7 +99,7 @@ sub analyze_file_name {
     $data->{'task_label'} = $2;
     $data->{'task_model'} = $3;
     $data->{'task_object'} = $4;
-    Log::do_log('debug3', 'date %s, label %s, model %s, object %s',
+    Sympa::Log::Syslog::do_log('debug3', 'date %s, label %s, model %s, object %s',
 	$data->{'task_date'}, $data->{'task_label'}, $data->{'task_model'},
 	$data->{'task_object'});
     unless ($data->{'task_object'} eq '_global') {
@@ -133,7 +133,7 @@ sub analyze_file_name {
 ## Build all Task objects
 # Internal use.
 sub list_tasks {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     ## Reset the list of tasks
@@ -163,7 +163,7 @@ sub list_tasks {
 # NO LONGER USED.
 #sub get_tasks_by_list {
 #    my $list_id = shift;
-#    &Log::do_log('debug',"Getting tasks for list '%s'",$list_id);
+#    &Sympa::Log::Syslog::do_log('debug',"Getting tasks for list '%s'",$list_id);
 #    return () unless (defined $task_by_list{$list_id});
 #    return values %{$task_by_list{$list_id}};
 #}
@@ -173,14 +173,14 @@ sub list_tasks {
 sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
-    &Log::do_log('debug3',"Getting used models for list '%s'",$list_id);
+    &Sympa::Log::Syslog::do_log('debug3',"Getting used models for list '%s'",$list_id);
 
     if (defined $list_id) {
 	if (defined $task_by_list{$list_id}) {
-	    &Log::do_log('debug2',"Found used models for list '%s'",$list_id);
+	    &Sympa::Log::Syslog::do_log('debug2',"Found used models for list '%s'",$list_id);
 	    return keys %{$task_by_list{$list_id}}
 	}else {
-	    &Log::do_log('debug2',"Did not find any used models for list '%s'",$list_id);
+	    &Sympa::Log::Syslog::do_log('debug2',"Did not find any used models for list '%s'",$list_id);
 	    return ();
 	}
 	
@@ -192,13 +192,13 @@ sub get_used_models {
 ## Returns a ref to @task_list, previously defined in the "list_task" sub.
 # NO LONGER USED.
 #sub get_task_list {
-#    &Log::do_log('debug',"Getting tasks list");
+#    &Sympa::Log::Syslog::do_log('debug',"Getting tasks list");
 #    return @task_list;
 #}
 
 ## Checks that all the required tasks at the server level are defined. Create them if needed.
 sub create_required_tasks {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $current_date = shift;
 
     my $taskspool = TaskSpool->new();
@@ -214,7 +214,7 @@ sub create_required_tasks {
 sub create_required_global_tasks {
     my $param = shift;
     my $data = $param->{'data'};
-    &Log::do_log('debug','Creating required tasks from global models');
+    &Sympa::Log::Syslog::do_log('debug','Creating required tasks from global models');
 
     my $task;
     my %used_models; # models for which a task exists
@@ -222,7 +222,7 @@ sub create_required_global_tasks {
 	$used_models{$model} = 1;
     }
     foreach my $key (keys %global_models) {	
-	&Log::do_log('debug2',"global_model : $key");
+	&Sympa::Log::Syslog::do_log('debug2',"global_model : $key");
 	unless ($used_models{$global_models{$key}}) {
 	    if (Site->$key) {
 		unless($task = Task::create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'flavour' => Site->$key, 'data' =>$data})) {
@@ -237,15 +237,15 @@ sub create_required_global_tasks {
 ## Checks that all the required LIST tasks are defined. Create them if needed.
 sub create_required_lists_tasks {
     my $param = shift;
-    &Log::do_log('debug','Creating required tasks from list models');
+    &Sympa::Log::Syslog::do_log('debug','Creating required tasks from list models');
 
     my $task;
     foreach my $robot (@{Robot::get_robots()}) {
-	Log::do_log('debug3', 'creating list task : current bot is %s',
+	Sympa::Log::Syslog::do_log('debug3', 'creating list task : current bot is %s',
 	    $robot);
 	my $all_lists = List::get_lists($robot);
 	foreach my $list ( @$all_lists ) {
-	    Log::do_log('debug3', 'creating list task : current list is %s',
+	    Sympa::Log::Syslog::do_log('debug3', 'creating list task : current list is %s',
 		$list);
 	    my %data = %{$param->{'data'}};
 	    $data{'list'} = {'name' => $list->name, 'robot' => $list->domain};
@@ -257,7 +257,7 @@ sub create_required_lists_tasks {
 	    foreach my $model (get_used_models($list->get_id())) {		
 		$used_list_models{$model} = 1; 
 	    }
-	    Log::do_log('debug3', 'creating list task using models');
+	    Sympa::Log::Syslog::do_log('debug3', 'creating list task using models');
 	    my $tt= 0;
 
 	    foreach my $model (@list_models) {
@@ -270,7 +270,7 @@ sub create_required_lists_tasks {
 			unless ($task = Task::create ({'creation_date' => $param->{'current_date'}, 'label' => 'INIT', 'model' => $model, 'flavour' => 'ttl', 'data' => \%data})) {
 			    creation_error(sprintf 'Unable to create task with parameters list = "%s", creation_date = "%s", label = "%s", model = "%s", flavour = "%s", data = "%s"',$list->get_list_id,$param->{'current_date'},'INIT',$model,'ttl',\%data);
 			}
-			Log::do_log('debug3', 'sync_include task creation done');
+			Sympa::Log::Syslog::do_log('debug3', 'sync_include task creation done');
 			$tt++;
 			
 		    } elsif (%{$list->$model_task_parameter} and
@@ -289,7 +289,7 @@ sub create_required_lists_tasks {
 
 sub creation_error {
     my $message = shift;
-    Log::do_log('err', $message);
+    Sympa::Log::Syslog::do_log('err', $message);
     Site->send_notify_to_listmaster('task_creation_error', $message);
 }
 

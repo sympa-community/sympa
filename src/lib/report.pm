@@ -52,17 +52,17 @@ use List;
 #
 ############################################################## 
 sub reject_report_msg {
-    &Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s, ...)', @_);
     my ($type,$error,$user,$param,$robot,$msg_string,$list) = @_;
 
     unless ($type eq 'intern' or $type eq 'intern_quiet' or
 	    $type eq 'user' or $type eq 'auth' or $type eq 'plugin') {
-	&Log::do_log('err',"report::reject_report_msg(): error to prepare parsing 'message_report' template to $user : not a valid error type");
+	&Sympa::Log::Syslog::do_log('err',"report::reject_report_msg(): error to prepare parsing 'message_report' template to $user : not a valid error type");
 	return undef
     }
 
     unless ($user){
-	&Log::do_log('err',"report::reject_report_msg(): unable to send template command_report.tt2 : no user to notify");
+	&Sympa::Log::Syslog::do_log('err',"report::reject_report_msg(): unable to send template command_report.tt2 : no user to notify");
 	return undef;
     }
 
@@ -72,7 +72,7 @@ sub reject_report_msg {
 	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
     }
     unless ($robot) {
-	&Log::do_log('err', 'unable to send template command_report.tt2 : no robot');
+	&Sympa::Log::Syslog::do_log('err', 'unable to send template command_report.tt2 : no robot');
 	return undef;
     }
 
@@ -95,7 +95,7 @@ sub reject_report_msg {
 
     my $send_to = ref $list eq "List" ? $list : $robot;
     $send_to->send_file('message_report', $user, $param)
-       or Log::do_log('notice',"report::reject_report_msg(): Unable to send template 'message_report' to '$user'");
+       or Sympa::Log::Syslog::do_log('notice',"report::reject_report_msg(): Unable to send template 'message_report' to '$user'");
 
     if ($type eq 'intern') {
 	chomp $param->{'msg_id'} if $param->{'msg_id'};
@@ -136,7 +136,7 @@ sub _get_msg_as_hash {
     }elsif (ref($msg_object) =~ /^Message/) { ## Sympa's own Message object
 	$msg_entity = $msg_object->as_entity();
     }else {
-	&Log::do_log('err', "reject_report_msg: wrong type for msg parameter");
+	&Sympa::Log::Syslog::do_log('err', "reject_report_msg: wrong type for msg parameter");
     }
     
     my $head = $msg_entity->head;
@@ -189,7 +189,7 @@ sub notice_report_msg {
     $param->{'auto_submitted'} = 'auto-replied';
 
     unless ($user){
-	&Log::do_log('err',"report::notice_report_msg(): unable to send template message_report.tt2 : no user to notify");
+	&Sympa::Log::Syslog::do_log('err',"report::notice_report_msg(): unable to send template message_report.tt2 : no user to notify");
 	return undef;
     }
 
@@ -199,7 +199,7 @@ sub notice_report_msg {
 	$robot = Robot::clean_robot($robot, 1); #FIXME: really may be Site?
     }
     unless ($robot) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'err', 'unable to send template message_report.tt2 : no robot');
 	return undef;
     }
@@ -211,11 +211,11 @@ sub notice_report_msg {
 
     if (ref $list and ref $list eq 'List') {
 	unless ($list->send_file('message_report', $user, $param)) {
-	    &Log::do_log('notice',"report::notice_report_msg(): Unable to send template 'message_report' to '$user'");
+	    &Sympa::Log::Syslog::do_log('notice',"report::notice_report_msg(): Unable to send template 'message_report' to '$user'");
 	}
     } else {
 	unless ($robot->send_file('message_report', $user, $param)) {
-	    &Log::do_log('notice',"report::notice_report_msg(): Unable to send template 'message_report' to '$user'");
+	    &Sympa::Log::Syslog::do_log('notice',"report::notice_report_msg(): Unable to send template 'message_report' to '$user'");
 	}
     }
 
@@ -301,7 +301,7 @@ sub send_report_cmd {
     my ($sender,$robot_id) = @_;
 
     unless ($sender){
-	&Log::do_log('err', 'unable to send template command_report.tt2 : no user to notify');
+	&Sympa::Log::Syslog::do_log('err', 'unable to send template command_report.tt2 : no user to notify');
 	return undef;
     }
 
@@ -311,7 +311,7 @@ sub send_report_cmd {
     }
  
     unless ($robot){
-	&Log::do_log('err', 'unable to send template command_report.tt2 : no robot');
+	&Sympa::Log::Syslog::do_log('err', 'unable to send template command_report.tt2 : no robot');
 	return undef;
     }
 
@@ -347,7 +347,7 @@ sub send_report_cmd {
 		 
 
     unless ($robot->send_file('command_report', $sender, $data)) {
-	&Log::do_log(
+	&Sympa::Log::Syslog::do_log(
 	    'notice', 'Unable to send template "command_report" to %s',
 	    $sender);
     }
@@ -383,7 +383,7 @@ sub global_report_cmd {
     my $entry;
 
     unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user') {
-	&Log::do_log('err',"report::global_report_msg(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
+	&Sympa::Log::Syslog::do_log('err',"report::global_report_msg(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
 	return undef;
     }
 
@@ -403,7 +403,7 @@ sub global_report_cmd {
 
 	    $robot->send_notify_to_listmaster('mail_intern_error', $param);
 	} else {
-	    Log::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'notice', 'unable to send notify to listmaster : no robot'
 	    );
 	}	
@@ -422,7 +422,7 @@ sub global_report_cmd {
 
     if ($now) {
 	unless ($sender and $robot) {
-	    &Log::do_log('err', 'unable to send template command_report now : no sender or robot');
+	    &Sympa::Log::Syslog::do_log('err', 'unable to send template command_report now : no sender or robot');
 	    return undef;
 	}	
 	&send_report_cmd($sender,$robot_id);
@@ -464,7 +464,7 @@ sub reject_report_cmd {
     my $robot = shift;
 
     unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'user' || $type eq 'auth') {
-	&Log::do_log('err',"report::reject_report_cmd(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
+	&Sympa::Log::Syslog::do_log('err',"report::reject_report_cmd(): error to prepare parsing 'command_report' template to $sender : not a valid error type");
 	return undef;
     }
 
@@ -486,7 +486,7 @@ sub reject_report_cmd {
 
 	    $robot->send_notify_to_listmaster('mail_intern_error', $param);
 	} else {
-	    Log::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'notice',
 		'unable to notify listmaster for error: "%s" : (no robot)',
 		$error
@@ -760,7 +760,7 @@ sub reject_report_web {
     my ($type,$error,$data,$action,$list,$user,$robot_id) = @_;
 
     unless ($type eq 'intern' || $type eq 'intern_quiet' || $type eq 'system' || $type eq 'system_quiet' || $type eq 'user'|| $type eq 'auth') {
-	&Log::do_log('err',"report::reject_report_web(): error  to prepare parsing 'web_tt2/error.tt2' template to $user : not a valid error type");
+	&Sympa::Log::Syslog::do_log('err',"report::reject_report_web(): error  to prepare parsing 'web_tt2/error.tt2' template to $user : not a valid error type");
 	return undef
     }
 
@@ -788,7 +788,7 @@ sub reject_report_web {
 
 	    $robot->send_notify_to_listmaster('web_'.$type.'_error', $param);
 	} else {
-	    Log::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		'unable to notify listmaster for error: "%s" : (no robot)',
 		$error);
 	} 

@@ -43,7 +43,7 @@ Returns a Robot object, or undef on errors.
 
 ## Constructor of a Robot instance
 sub new {
-    &Log::do_log('debug2', '(%s, %s, ...)', @_);
+    &Sympa::Log::Syslog::do_log('debug2', '(%s, %s, ...)', @_);
     my $pkg  = shift;
     my $name = shift;
 
@@ -129,7 +129,7 @@ sub load {
 	    ## robot of main conf
 	    $self->{'etc'} = Site->etc;
 	} else {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unknown robot "%s": config directory was not found', $name)
 		unless ($options{'just_try'});
 	    return undef;
@@ -139,7 +139,7 @@ sub load {
     }
 
     unless ($self->{'name'} eq $name) {
-	&Log::do_log('err', 'Bug in logic.  Ask developer');
+	&Sympa::Log::Syslog::do_log('err', 'Bug in logic.  Ask developer');
 	return undef;
     }
 
@@ -148,7 +148,7 @@ sub load {
 	my $config_file = $self->{'etc'} . '/robot.conf';
 
 	unless (-r $config_file) {
-	    &Log::do_log('err', 'No read access on %s', $config_file);
+	    &Sympa::Log::Syslog::do_log('err', 'No read access on %s', $config_file);
 	    Site->send_notify_to_listmaster(
 		'cannot_access_robot_conf',
 		[   "No read access on $config_file. you should change privileges on this file to activate this virtual host. "
@@ -169,7 +169,7 @@ sub load {
 	## Sympa might be wanted to allow arbitrary robot names  used
 	## for config & home directories, though.
 	unless ($self->domain eq $name) {
-	    &Log::do_log('err', 'Robot name "%s" is not same as domain "%s"',
+	    &Sympa::Log::Syslog::do_log('err', 'Robot name "%s" is not same as domain "%s"',
 		$name, $self->domain);
 	    Site->robots($name, undef);
 	    ##delete Site->robots_config->{$self->domain};
@@ -185,7 +185,7 @@ sub load {
 	} elsif ($self->domain eq Site->domain) {
 	    $self->{'home'} = Site->home;
 	} else {
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unknown robot "%s": home directory was not found', $name);
 	    return undef;
 	}
@@ -280,7 +280,7 @@ OUT : - 1 if the topic is in the robot conf or undef
 =cut
 
 sub is_available_topic {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self  = shift;
     my $topic = shift;
 
@@ -288,7 +288,7 @@ sub is_available_topic {
 
     my %topics;
     unless (%topics = %{$self->topics || {}}) {
-	Log::do_log('err', 'unable to load list of topics');
+	Sympa::Log::Syslog::do_log('err', 'unable to load list of topics');
     }
 
     if ($subtop) {
@@ -574,7 +574,7 @@ sub topics {
 
     my $conf_file = $self->get_etc_filename('topics.conf');
     unless ($conf_file) {
-	Log::do_log('err', 'No topics.conf defined');
+	Sympa::Log::Syslog::do_log('err', 'No topics.conf defined');
 	return undef;
     }
 
@@ -589,12 +589,12 @@ sub topics {
 	$list_of_topics = {};
 
 	unless (-r $conf_file) {
-	    Log::do_log('err', 'Unable to read %s', $conf_file);
+	    Sympa::Log::Syslog::do_log('err', 'Unable to read %s', $conf_file);
 	    return undef;
 	}
 
 	unless (open(FILE, '<', $conf_file)) {
-	    Log::do_log('err', 'Unable to open config file %s', $conf_file);
+	    Sympa::Log::Syslog::do_log('err', 'Unable to open config file %s', $conf_file);
 	    return undef;
 	}
 
@@ -631,7 +631,7 @@ sub topics {
 	$self->{'mtime'}{'topics.conf'} = (stat($conf_file))[9];
 
 	unless ($#rough_data > -1) {
-	    Log::do_log('notice', 'No topic defined in %s', $conf_file);
+	    Sympa::Log::Syslog::do_log('notice', 'No topic defined in %s', $conf_file);
 	    return undef;
 	}
 
@@ -815,7 +815,7 @@ sub clean_robot {
     my $robot      = shift;
     my $maybe_site = shift;
 
-   #Log::do_log('debug3', 'robot "%s", maybe_site "%s"', $robot, $maybe_site);
+   #Sympa::Log::Syslog::do_log('debug3', 'robot "%s", maybe_site "%s"', $robot, $maybe_site);
     unless (ref $robot or
 	($maybe_site and !ref $robot and $robot eq 'Site')) {
 	my $level = $Carp::CarpLevel;
@@ -848,7 +848,7 @@ Returns arrayref of Robot objects.
 =cut
 
 sub get_robots {
-    &Log::do_log('debug2', '(...)');
+    &Sympa::Log::Syslog::do_log('debug2', '(...)');
     my %options = @_;
 
     my $robot;
@@ -873,7 +873,7 @@ sub get_robots {
     %orphan = map { $_->domain => 1 } Site->robots;
 
     unless (opendir $dir, Site->etc) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to open directory %s for virtual robots config',
 	    Site->etc);
 	return undef;
@@ -901,7 +901,7 @@ sub get_robots {
 
     ## purge orphan robots
     foreach my $domain (keys %orphan) {
-	&Log::do_log('debug3', 'removing orphan robot %s', $domain);
+	&Sympa::Log::Syslog::do_log('debug3', 'removing orphan robot %s', $domain);
 	Site->robots($domain, undef);
     }
 

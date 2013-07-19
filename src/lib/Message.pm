@@ -109,7 +109,7 @@ Calls:
 
 =over 4
 
-=item * Log::do_log
+=item * Sympa::Log::Syslog::do_log
 
 =item * List::new
 
@@ -139,7 +139,7 @@ Calls:
 
 ## Creates a new object
 sub new {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $pkg   = shift;
     my $datas = shift;
 
@@ -179,7 +179,7 @@ sub new {
     if ($datas->{'file'}) {
 	my $fh;
 	unless (open $fh, '<', $datas->{'file'}) {
-	    Log::do_log('err', 'Cannot open message file %s : %s',
+	    Sympa::Log::Syslog::do_log('err', 'Cannot open message file %s : %s',
 		$datas->{'file'}, $!);
 	    return undef;
 	}
@@ -191,7 +191,7 @@ sub new {
     }
 
     unless (defined $messageasstring) {
-	Log::do_log('warn', 'no content.  load() is required');
+	Sympa::Log::Syslog::do_log('warn', 'no content.  load() is required');
 	return $self;
     }
 
@@ -226,7 +226,7 @@ sub load {
     my $messageasstring = shift;
 
     if (ref $messageasstring) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'deprecated: $messageasstring must be string, not %s',
 	    $messageasstring);
 	return undef;
@@ -257,7 +257,7 @@ sub load {
 	    } elsif ($k eq 'X-Sympa-Spam-Status') {
 		$self->{'spam_status'} = $v;
 	    } else {
-		Log::do_log('warn', 'Unknown meta information: "%s: %s"',
+		Sympa::Log::Syslog::do_log('warn', 'Unknown meta information: "%s: %s"',
 		    $k, $v);
 	    }
 	}
@@ -493,11 +493,11 @@ sub get_sender_email {
 	    }
 	}
 	unless (defined $sender) {
-	    Log::do_log('err', 'No valid sender address');
+	    Sympa::Log::Syslog::do_log('err', 'No valid sender address');
 	    return undef;
 	}
 	unless (tools::valid_email($sender)) {
-	    Log::do_log('err', 'Invalid sender address "%s"', $sender);
+	    Sympa::Log::Syslog::do_log('err', 'Invalid sender address "%s"', $sender);
 	    return undef;
 	}
 	$self->{'sender'} = $sender;
@@ -569,12 +569,12 @@ sub get_recipient {
     return $self->{'rcpt'} if $self->{'rcpt'};
 
     unless (defined $self->{'noxsympato'}) {
-	Log::do_log('err', 'no X-Sympa-To found.');
+	Sympa::Log::Syslog::do_log('err', 'no X-Sympa-To found.');
 	return undef;
     }
     my $rcpt;
     unless ($rcpt = $self->get_header('To')) {
-	Log::do_log('err', 'no To: header found.');
+	Sympa::Log::Syslog::do_log('err', 'no To: header found.');
 	return undef;
     }
     #FIXME: strip garbage.
@@ -686,11 +686,11 @@ sub decrypt {
     if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	($hdr->get('Content-Type') !~ /signed-data/i)){
 	unless (defined $self->smime_decrypt()) {
-	    Log::do_log('err', "Message %s could not be decrypted", $self);
+	    Sympa::Log::Syslog::do_log('err', "Message %s could not be decrypted", $self);
 	    return undef;
 	    ## We should warn the sender and/or the listmaster
 	}
-	Log::do_log('notice', "message %s has been decrypted", $self);
+	Sympa::Log::Syslog::do_log('notice', "message %s has been decrypted", $self);
     }
     return 1;
 }
@@ -698,7 +698,7 @@ sub decrypt {
 sub check_smime_signature {
     my $self = shift;
     my $hdr = $self->get_mime_message->head;
-    Log::do_log('debug','Checking S/MIME signature for message %s, from user %s',$self->get_msg_id,$self->get_sender_email);
+    Sympa::Log::Syslog::do_log('debug','Checking S/MIME signature for message %s, from user %s',$self->get_msg_id,$self->get_sender_email);
     ## Check S/MIME signatures
     if ($hdr->get('Content-Type') =~ /multipart\/signed/ || ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i && $hdr->get('Content-Type') =~ /signed-data/i)) {
 	## Messages that should not be altered (no footer)
@@ -706,7 +706,7 @@ sub check_smime_signature {
 
 	$self->smime_sign_check();
 	if($self->{'smime_signed'}) {
-	    Log::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		'message %s is signed, signature is checked', $self);
 	}
 	## TODO: Handle errors (0 different from undef)
@@ -930,7 +930,7 @@ sub _fix_html_part {
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
-	    Log::do_log('err', 'Failed to save message : %s', $!);
+	    Sympa::Log::Syslog::do_log('err', 'Failed to save message : %s', $!);
 	    return undef;
 	}
 	$io->print($filtered_body);
@@ -958,7 +958,7 @@ sub smime_decrypt {
     my $list = $self->{'list'};
 
     use Data::Dumper;
-    Log::do_log('debug2', 'Decrypting message from %s, %s', $from, $list);
+    Sympa::Log::Syslog::do_log('debug2', 'Decrypting message from %s, %s', $from, $list);
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir;
@@ -969,7 +969,7 @@ sub smime_decrypt {
     }
     my ($certs,$keys) = tools::smime_find_keys($dir, 'decrypt');
     unless (defined $certs && @$certs) {
-	Log::do_log('err', "Unable to decrypt message : missing certificate file");
+	Sympa::Log::Syslog::do_log('err', "Unable to decrypt message : missing certificate file");
 	return undef;
     }
 
@@ -978,7 +978,7 @@ sub smime_decrypt {
 
     ## dump the incoming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	Log::do_log('info', 'Can\'t store message in file %s',$temporary_file);
+	Sympa::Log::Syslog::do_log('info', 'Can\'t store message in file %s',$temporary_file);
 	return undef;
     }
     $self->as_entity()->print(\*MSGDUMP);
@@ -994,22 +994,22 @@ sub smime_decrypt {
     ## try all keys/certs until one decrypts.
     while (my $certfile = shift @$certs) {
 	my $keyfile = shift @$keys;
-	Log::do_log('debug', 'Trying decrypt with %s, %s', $certfile, $keyfile);
+	Sympa::Log::Syslog::do_log('debug', 'Trying decrypt with %s, %s', $certfile, $keyfile);
 	if (Site->key_passwd ne '') {
 	    unless (mkfifo($temporary_pwd,0600)) {
-		Log::do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
+		Sympa::Log::Syslog::do_log('err', 'Unable to make fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	}
 	my $cmd = sprintf '%s smime -decrypt -in %s -recip %s -inkey %s %s',
 	    Site->openssl, $temporary_file, $certfile, $keyfile,
 	    $pass_option;
-	Log::do_log('debug3', '%s', $cmd);
+	Sympa::Log::Syslog::do_log('debug3', '%s', $cmd);
 	open (NEWMSG, "$cmd |");
 
 	if (defined Site->key_passwd and Site->key_passwd ne '') {
 	    unless (open (FIFO,"> $temporary_pwd")) {
-		Log::do_log('err', 'Unable to open fifo for %s', $temporary_pwd);
+		Sympa::Log::Syslog::do_log('err', 'Unable to open fifo for %s', $temporary_pwd);
 		return undef;
 	    }
 	    print FIFO Site->key_passwd;
@@ -1023,7 +1023,7 @@ sub smime_decrypt {
 	close NEWMSG;
 	my $status = $? >> 8;
 	if ($status) {
-	    Log::do_log('err', 'Unable to decrypt S/MIME message: (%d) %s',
+	    Sympa::Log::Syslog::do_log('err', 'Unable to decrypt S/MIME message: (%d) %s',
 		$status, ($openssl_errors{$status} || 'unknown reason')
 	    );
 	    next;
@@ -1034,13 +1034,13 @@ sub smime_decrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($self->{'decrypted_msg'} = $parser->parse_data($self->{'decrypted_msg_as_string'})) {
-	    Log::do_log('err', 'Unable to parse message');
+	    Sympa::Log::Syslog::do_log('err', 'Unable to parse message');
 	    last;
 	}
     }
 	
     unless (defined $self->{'decrypted_msg'}) {
-      Log::do_log('err', 'Message could not be decrypted');
+      Sympa::Log::Syslog::do_log('err', 'Message could not be decrypted');
       return undef;
     }
 
@@ -1082,7 +1082,7 @@ sub smime_decrypt {
 
 # input : msg object, return a new message object encrypted
 sub smime_encrypt {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my $self = shift;
     my $email = shift ;
     my $list = shift ;
@@ -1107,9 +1107,9 @@ sub smime_encrypt {
 	## encrypt the incoming message parse it.
 	my $cmd = sprintf '%s smime -encrypt -out %s -des3 %s',
 	    Site->openssl, $temporary_file, $usercert;
-        Log::do_log ('debug3', '%s', $cmd);
+        Sympa::Log::Syslog::do_log ('debug3', '%s', $cmd);
 	if (!open(MSGDUMP, "| $cmd")) {
-	    &Log::do_log('info', 'Can\'t encrypt message for recipient %s',
+	    &Sympa::Log::Syslog::do_log('info', 'Can\'t encrypt message for recipient %s',
 		$email);
 	}
 	## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
@@ -1129,7 +1129,7 @@ sub smime_encrypt {
 	close MSGDUMP;
 	my $status = $? >> 8;
 	if ($status) {
-	    Log::do_log('err', 'Unable to S/MIME encrypt message: (%d) %s',
+	    Sympa::Log::Syslog::do_log('err', 'Unable to S/MIME encrypt message: (%d) %s',
 		$status, ($openssl_errors{$status} || 'unknown reason')
 	    );
 	    return undef ;
@@ -1140,7 +1140,7 @@ sub smime_encrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($self->{'crypted_message'} = $parser->read(\*NEWMSG)) {
-	    &Log::do_log('notice', 'Unable to parse message');
+	    &Sympa::Log::Syslog::do_log('notice', 'Unable to parse message');
 	    return undef;
 	}
 	close NEWMSG ;
@@ -1176,7 +1176,7 @@ sub smime_encrypt {
 	$self->set_message_as_string($self->{'crypted_message'}->as_string());
 	$self->{'smime_crypted'} = 1;
     }else{
-	&Log::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
+	&Sympa::Log::Syslog::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
 	return undef;
     }
         
@@ -1187,7 +1187,7 @@ sub smime_encrypt {
 sub smime_sign {
     my $self = shift;
     my $list = $self->{'list'};
-    Log::do_log('debug2', '(%s, list=%s)', $self, $list);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, list=%s)', $self, $list);
 
     my($cert, $key) = tools::smime_find_keys($list->dir, 'sign');
     my $temporary_file = Site->tmpdir .'/'. $list->get_id . "." . $$;
@@ -1206,7 +1206,7 @@ sub smime_sign {
 
     ## dump the incomming message.
     if (!open(MSGDUMP,"> $temporary_file")) {
-	Log::do_log('info', 'Can\'t store message in file %s', $temporary_file);
+	Sympa::Log::Syslog::do_log('info', 'Can\'t store message in file %s', $temporary_file);
 	return undef;
     }
     $dup_msg->print(\*MSGDUMP);
@@ -1214,22 +1214,22 @@ sub smime_sign {
 
     if (Site->key_passwd ne '') {
 	unless ( mkfifo($temporary_pwd,0600)) {
-	    Log::do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
+	    Sympa::Log::Syslog::do_log('notice', 'Unable to make fifo for %s',$temporary_pwd);
 	}
     }
     my $cmd = sprintf
 	'%s smime -sign -rand %s/rand -signer %s %s -inkey %s -in %s',
 	Site->openssl, Site->tmpdir, $cert, $pass_option, $key,
 	$temporary_file;
-    Log::do_log('debug2', '%s', $cmd);
+    Sympa::Log::Syslog::do_log('debug2', '%s', $cmd);
     unless (open NEWMSG, "$cmd |") {
-    	Log::do_log('notice', 'Cannot sign message (open pipe)');
+    	Sympa::Log::Syslog::do_log('notice', 'Cannot sign message (open pipe)');
 	return undef;
     }
 
     if (Site->key_passwd ne '') {
 	unless (open (FIFO,"> $temporary_pwd")) {
-	    Log::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
+	    Sympa::Log::Syslog::do_log('notice', 'Unable to open fifo for %s', $temporary_pwd);
 	}
 
 	print FIFO Site->key_passwd;
@@ -1246,7 +1246,7 @@ sub smime_sign {
 
     $parser->output_to_core(1);
     unless ($signed_msg = $parser->parse_data($new_message_as_string)) {
-	Log::do_log('notice', 'Unable to parse message');
+	Sympa::Log::Syslog::do_log('notice', 'Unable to parse message');
 	return undef;
     }
     unlink ($temporary_file) unless ($main::options{'debug'}) ;
@@ -1277,7 +1277,7 @@ sub smime_sign {
 
 sub smime_sign_check {
     my $message = shift;
-    Log::do_log('debug2', '(sender=%s, filename=%s)', $message->{'sender'}, $message->{'filename'});
+    Sympa::Log::Syslog::do_log('debug2', '(sender=%s, filename=%s)', $message->{'sender'}, $message->{'filename'});
 
     my $is_signed = {};
     $is_signed->{'body'} = undef;   
@@ -1294,10 +1294,10 @@ sub smime_sign_check {
     $trusted_ca_options .= "-CApath " . Site->capath . " " if Site->capath;
     my $cmd = sprintf '%s smime -verify %s -signer %s',
 	Site->openssl, $trusted_ca_options, $temporary_file;
-    &Log::do_log('debug2', '%s', $cmd);
+    &Sympa::Log::Syslog::do_log('debug2', '%s', $cmd);
 
     unless (open MSGDUMP, "| $cmd > /dev/null") {
-	&Log::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
+	&Sympa::Log::Syslog::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
 	return undef ;
     }
     
@@ -1307,7 +1307,7 @@ sub smime_sign_check {
     close MSGDUMP;
     my $status = $? >> 8;
     if ($status) {
-	Log::do_log('err', 'Unable to check S/MIME signature: (%d) %s',
+	Sympa::Log::Syslog::do_log('err', 'Unable to check S/MIME signature: (%d) %s',
 	    $status, ($openssl_errors{$status} || 'unknown reason')
 	);
 	return undef;
@@ -1318,17 +1318,17 @@ sub smime_sign_check {
 
     unless ($signer->{'email'}{lc($message->{'sender'})}) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;
-	&Log::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$message->{'sender'}, join(',', keys %{$signer->{'email'}}));
+	&Sympa::Log::Syslog::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$message->{'sender'}, join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
 
-    &Log::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
+    &Sympa::Log::Syslog::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
     ## store the signer certificat
     unless (-d Site->ssl_cert_dir) {
 	if ( mkdir (Site->ssl_cert_dir, 0775)) {
-	    &Log::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
+	    &Sympa::Log::Syslog::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
 	}else{
-	    &Log::do_log('err',
+	    &Sympa::Log::Syslog::do_log('err',
 		'Unable to create user certificat directory %s',
 		Site->ssl_cert_dir);
 	}
@@ -1345,7 +1345,7 @@ sub smime_sign_check {
     my $tmpcert = Site->tmpdir . "/cert.$$";
     my $nparts = $message->get_mime_message->parts;
     my $extracted = 0;
-    Log::do_log('debug3', 'smime_sign_check: parsing %d parts', $nparts);
+    Sympa::Log::Syslog::do_log('debug3', 'smime_sign_check: parsing %d parts', $nparts);
     if($nparts == 0) { # could be opaque signing...
 	$extracted +=tools::smime_extract_certs($message->get_mime_message, $certbundle);
     } else {
@@ -1357,12 +1357,12 @@ sub smime_sign_check {
     }
     
     unless($extracted) {
-	&Log::do_log('err', "No application/x-pkcs7-* parts found");
+	&Sympa::Log::Syslog::do_log('err', "No application/x-pkcs7-* parts found");
 	return undef;
     }
 
     unless(open(BUNDLE, $certbundle)) {
-	Log::do_log('err', "Can't open cert bundle %s: %s", $certbundle, $!);
+	Sympa::Log::Syslog::do_log('err', "Can't open cert bundle %s: %s", $certbundle, $!);
 	return undef;
     }
     
@@ -1375,32 +1375,32 @@ sub smime_sign_check {
 	    my $workcert = $cert;
 	    $cert = '';
 	    unless(open(CERT, ">$tmpcert")) {
-		Log::do_log('err', "Can't create %s: %s", $tmpcert, $!);
+		Sympa::Log::Syslog::do_log('err', "Can't create %s: %s", $tmpcert, $!);
 		return undef;
 	    }
 	    print CERT $workcert;
 	    close(CERT);
 	    my($parsed) = tools::smime_parse_cert({file => $tmpcert});
 	    unless($parsed) {
-		&Log::do_log('err', 'No result from smime_parse_cert');
+		&Sympa::Log::Syslog::do_log('err', 'No result from smime_parse_cert');
 		return undef;
 	    }
 	    unless($parsed->{'email'}) {
-		Log::do_log('debug', 'No email in cert for %s, skipping', $parsed->{subject});
+		Sympa::Log::Syslog::do_log('debug', 'No email in cert for %s, skipping', $parsed->{subject});
 		next;
 	    }
 	    
-	    &Log::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
+	    &Sympa::Log::Syslog::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
 	    if ($parsed->{'email'}{lc($message->{'sender'})}) {
 		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
 		    $certs{'both'} = $workcert;
-		    &Log::do_log('debug', 'Found a signing + encryption cert');
+		    &Sympa::Log::Syslog::do_log('debug', 'Found a signing + encryption cert');
 		}elsif ($parsed->{'purpose'}{'sign'}) {
 		    $certs{'sign'} = $workcert;
-		    &Log::do_log('debug', 'Found a signing cert');
+		    &Sympa::Log::Syslog::do_log('debug', 'Found a signing cert');
 		} elsif($parsed->{'purpose'}{'enc'}) {
 		    $certs{'enc'} = $workcert;
-		    &Log::do_log('debug', 'Found an encryption cert');
+		    &Sympa::Log::Syslog::do_log('debug', 'Found an encryption cert');
 		}
 	    }
 	    last if(($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
@@ -1408,7 +1408,7 @@ sub smime_sign_check {
     }
     close(BUNDLE);
     if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
-	&Log::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
+	&Sympa::Log::Syslog::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
     ## OK, now we have the certs, either a combined sign+encryption one
@@ -1423,9 +1423,9 @@ sub smime_sign_check {
 	    unlink("$fn\@enc");
 	    unlink("$fn\@sign");
 	}
-	Log::do_log('debug', 'Saving %s cert in %s', $c, $fn);
+	Sympa::Log::Syslog::do_log('debug', 'Saving %s cert in %s', $c, $fn);
 	unless (open(CERT, ">$fn")) {
-	    Log::do_log('err', 'Unable to create certificate file %s: %s', $fn, $!);
+	    Sympa::Log::Syslog::do_log('err', 'Unable to create certificate file %s: %s', $fn, $!);
 	    return undef;
 	}
 	print CERT $certs{$c};
@@ -1506,7 +1506,7 @@ sub reset_message_from_entity {
     my $entity = shift;
     
     unless (ref ($entity) =~ /^MIME/) {
-	Log::do_log('err','Can not reset a message by starting from object %s', ref $entity);
+	Sympa::Log::Syslog::do_log('err','Can not reset a message by starting from object %s', ref $entity);
 	return undef;
     }
     $self->{'msg'} = $entity;
@@ -1579,7 +1579,7 @@ sub has_attachments {
 
 ## Make a multipart/alternative, a singlepart
 sub check_message_structure {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $msg = shift;
     $msg ||= $self->get_mime_message->dup;
@@ -1591,13 +1591,13 @@ sub check_message_structure {
 	    ($part->effective_type() =~ /^multipart\/related$/) &&
 	    $part->parts &&
 	    ($part->parts(0)->effective_type() =~ /^text\/html$/))) {
-		Log::do_log('debug3', 'Found html part');
+		Sympa::Log::Syslog::do_log('debug3', 'Found html part');
 		$self->{'has_html_part'} = 1;
 	    }elsif($part->effective_type() =~ /^text\/plain$/) {
-		Log::do_log('debug3', 'Found text part');
+		Sympa::Log::Syslog::do_log('debug3', 'Found text part');
 		$self->{'has_text_part'} = 1;
 	    }else{
-		Log::do_log('debug3', 'Found attachment: %s',$part->effective_type());
+		Sympa::Log::Syslog::do_log('debug3', 'Found attachment: %s',$part->effective_type());
 		$self->{'has_attachments'} = 1;
 	    }
 	}
@@ -1609,13 +1609,13 @@ sub check_message_structure {
 	$self->check_message_structure($msg);
 
     }elsif ($msg->effective_type() =~ /^multipart/) {
-	Log::do_log('debug3', 'Found multipart: %s',$msg->effective_type());
+	Sympa::Log::Syslog::do_log('debug3', 'Found multipart: %s',$msg->effective_type());
 	foreach my $part ($msg->parts) {
             next unless (defined $part); ## Skip empty parts
 	    if ($part->effective_type() =~ /^multipart\/alternative/) {
 		$self->check_message_structure($part);
 	    }else{
-		Log::do_log('debug3', 'Found attachment: %s',$part->effective_type());
+		Sympa::Log::Syslog::do_log('debug3', 'Found attachment: %s',$part->effective_type());
 		$self->{'has_attachments'} = 1;
 	    }
 	}
@@ -1626,12 +1626,12 @@ sub check_message_structure {
 sub add_parts {
     my $self = shift;
     unless ($self->{'list'}) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'The message %s has no list context; No header/footer to add',
 	    $self);
 	return undef;
     }
-    Log::do_log('debug3', '(%s, list=%s, type=%s)',
+    Sympa::Log::Syslog::do_log('debug3', '(%s, list=%s, type=%s)',
 	$self, $self->{'list'}, $self->{'list'}->footer_type);
 
     my $msg      = $self->get_mime_message;
@@ -1653,7 +1653,7 @@ sub add_parts {
 	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
+		&Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $header = $file;
@@ -1670,7 +1670,7 @@ sub add_parts {
 	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
+		&Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $footer = $file;
@@ -1711,7 +1711,7 @@ sub add_parts {
 
 	if ($eff_type =~ /^multipart\/alternative/i ||
 	    $eff_type =~ /^multipart\/related/i) {
-	    Log::do_log('debug3', 'Making message %s into multipart/mixed',
+	    Sympa::Log::Syslog::do_log('debug3', 'Making message %s into multipart/mixed',
 		$self);
 	    $msg->make_multipart("mixed", Force => 1);
 	}
@@ -1721,7 +1721,7 @@ sub add_parts {
 		my $header_part;
 		eval { $header_part = $parser->parse_in($header); };
 		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+		    &Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $header, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
@@ -1745,7 +1745,7 @@ sub add_parts {
 		my $footer_part;
 		eval { $footer_part = $parser->parse_in($footer); };
 		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+		    &Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $footer, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
@@ -1823,7 +1823,7 @@ sub _append_parts {
 
 	    $io = $bodyh->open('w');
 	    unless (defined $io) {
-		Log::do_log('err', 'Failed to save message: %s', "$!");
+		Sympa::Log::Syslog::do_log('err', 'Failed to save message: %s', "$!");
 		return undef;
 	    }
 	    $io->print($body);
@@ -1885,7 +1885,7 @@ sub _append_footer_header_to_part {
 	    if $charset;
     }
     unless ($cset->decoder) {
-	#Log::do_log('err', 'Unknown charset "%s"', $charset);
+	#Sympa::Log::Syslog::do_log('err', 'Unknown charset "%s"', $charset);
 	return undef;
     }
 
@@ -1901,7 +1901,7 @@ sub _append_footer_header_to_part {
 
     my $new_body;
     if ($eff_type eq 'text/plain') {
-	Log::do_log('debug3', "Treating text/plain part");
+	Sympa::Log::Syslog::do_log('debug3', "Treating text/plain part");
 
 	## Add newlines. For BASE64 encoding they also must be normalized.
 	if (length $header_msg) {
@@ -1919,7 +1919,7 @@ sub _append_footer_header_to_part {
 
 	$new_body = $header_msg . $body . $footer_msg;
     } elsif ($eff_type eq 'text/html') {
-	Log::do_log('debug3', "Treating text/html part");
+	Sympa::Log::Syslog::do_log('debug3', "Treating text/html part");
 
 	# Escape special characters.
 	$header_msg = encode_entities($header_msg, '<>&"');
@@ -2020,7 +2020,7 @@ sub _personalize_entity {
     if ($entity->parts) {
 	foreach my $part ($entity->parts) {
 	    unless (defined _personalize_entity($part, $list, $rcpt)) {
-		Log::do_log('err', 'Failed to personalize message part');
+		Sympa::Log::Syslog::do_log('err', 'Failed to personalize message part');
 		return undef;
 	    }
 	}
@@ -2048,7 +2048,7 @@ sub _personalize_entity {
 		MIME::Charset::detect_7bit_charset($body) || 'NONE');
 	}
 	unless ($in_cset->decoder) {
-	    Log::do_log('err', 'Unknown charset "%s"', $charset);
+	    Sympa::Log::Syslog::do_log('err', 'Unknown charset "%s"', $charset);
 	    return undef;
 	}
 	$in_cset->encoder($in_cset);    # no charset conversion
@@ -2056,14 +2056,14 @@ sub _personalize_entity {
 	## Only decodable bodies are allowed.
 	eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
 	if ($@) {
-	    Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
+	    Sympa::Log::Syslog::do_log('err', 'Cannot decode by charset "%s"', $charset);
 	    return undef;
 	}
 
 	## PARSAGE ##
 	$utf8_body = personalize_text($utf8_body, $list, $rcpt);
 	unless (defined $utf8_body) {
-	    Log::do_log('err', 'error personalizing message');
+	    Sympa::Log::Syslog::do_log('err', 'error personalizing message');
 	    return undef;
 	}
 
@@ -2073,7 +2073,7 @@ sub _personalize_entity {
 	    $in_cset->body_encode(Encode::decode_utf8($utf8_body),
 	    Replacement => 'FALLBACK');
 	unless ($newcharset) {    # bug in MIME::Charset?
-	    Log::do_log('err', 'Can\'t determine output charset');
+	    Sympa::Log::Syslog::do_log('err', 'Can\'t determine output charset');
 	    return undef;
 	} elsif ($newcharset ne $in_cset->as_string()) {
 	    $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
@@ -2095,7 +2095,7 @@ sub _personalize_entity {
 	unless ($io and
 	    $io->print($body) and
 	    $io->close) {
-	    Log::do_log('err', 'Can\'t write in Entity: %s', $!);
+	    Sympa::Log::Syslog::do_log('err', 'Can\'t write in Entity: %s', $!);
 	    return undef;
 	}
 	$entity->sync_headers(Length => 'COMPUTE')
@@ -2216,7 +2216,7 @@ sub personalize_text {
 sub prepare_message_according_to_mode {
     my $self = shift;
     my $mode = shift;
-    Log::do_log('debug3', '(msg_id=%s, mode=%s)', $self->get_msg_id, $mode);
+    Sympa::Log::Syslog::do_log('debug3', '(msg_id=%s, mode=%s)', $self->get_msg_id, $mode);
     ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
 	$self->prepare_reception_mail;
@@ -2237,13 +2237,13 @@ sub prepare_message_according_to_mode {
     } elsif ($mode eq 'url') {
 	$self->prepare_reception_urlize;
     } else {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unknown variable/reception mode %s', $mode);
 	return undef;
     }
 
     unless (defined $self) {
-	    &Log::do_log('err', "Failed to create Message object");
+	    &Sympa::Log::Syslog::do_log('err', "Failed to create Message object");
 	return undef;
     }
     return 1;
@@ -2251,7 +2251,7 @@ sub prepare_message_according_to_mode {
 }
 sub prepare_reception_mail {
     my $self = shift;
-    Log::do_log('debug3','preparing message for mail reception mode');
+    Sympa::Log::Syslog::do_log('debug3','preparing message for mail reception mode');
     ## Add footer and header
     return 0 if ($self->is_signed);
     my $new_msg = $self->add_parts;
@@ -2260,7 +2260,7 @@ sub prepare_reception_mail {
 	$self->{'altered'} = '_ALTERED_';
 	$self->{'msg_as_string'} = $new_msg->as_string();
     } else {
-	Log::do_log('err','Part addition failed');
+	Sympa::Log::Syslog::do_log('err','Part addition failed');
 	return undef;
     }
     return 1;
@@ -2268,7 +2268,7 @@ sub prepare_reception_mail {
 
 sub prepare_reception_notice {
     my $self = shift;
-    Log::do_log('debug3','preparing message for notice reception mode');
+    Sympa::Log::Syslog::do_log('debug3','preparing message for notice reception mode');
     my $notice_msg = $self->get_mime_message->dup;
     $notice_msg->bodyhandle(undef);
     $notice_msg->parts([]);
@@ -2286,10 +2286,10 @@ sub prepare_reception_notice {
 
 sub prepare_reception_txt {
     my $self = shift;
-    Log::do_log('debug3','preparing message for txt reception mode');
+    Sympa::Log::Syslog::do_log('debug3','preparing message for txt reception mode');
     return 0 if ($self->is_signed);
     if (tools::as_singlepart($self->get_mime_message, 'text/plain')) {
-	Log::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    'Multipart message changed to text singlepart');
     }
     ## Add a footer
@@ -2299,10 +2299,10 @@ sub prepare_reception_txt {
 
 sub prepare_reception_html {
     my $self = shift;
-    Log::do_log('debug3','preparing message for html reception mode');
+    Sympa::Log::Syslog::do_log('debug3','preparing message for html reception mode');
     return 0 if ($self->is_signed);
     if (tools::as_singlepart($self->get_mime_message, 'text/html')) {
-	Log::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    'Multipart message changed to html singlepart');
     }
     ## Add a footer
@@ -2312,17 +2312,17 @@ sub prepare_reception_html {
 
 sub prepare_reception_urlize {
     my $self = shift;
-    Log::do_log('debug3','preparing message for urlize reception mode');
+    Sympa::Log::Syslog::do_log('debug3','preparing message for urlize reception mode');
     return 0 if ($self->is_signed);
     unless ($self->{'list'}) {
-	Log::do_log('err','The message has no list context; Nowhere to place urlized attachments.');
+	Sympa::Log::Syslog::do_log('err','The message has no list context; Nowhere to place urlized attachments.');
 	return undef;
     }
 
     my $expl = $self->{'list'}->dir . '/urlized';
 
     unless ((-d $expl) || (mkdir $expl, 0775)) {
-	&Log::do_log('err',
+	&Sympa::Log::Syslog::do_log('err',
 	    'Unable to create urlize directory %s', $expl);
 	return undef;
     }
@@ -2335,7 +2335,7 @@ sub prepare_reception_urlize {
     $dir1 = '/' . $dir1;
 
     unless (mkdir("$expl/$dir1", 0775)) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to create urlize directory %s/%s', $expl, $dir1);
 	printf "Unable to create urlized directory %s/%s\n",
 	    $expl, $dir1;
@@ -2420,7 +2420,7 @@ sub _urlize_part {
 	    if $head->mime_attr('Content-Type.Charset') =~ /\S/;
 	print OFILE "\n\n";
     } else {
-	Log::do_log('notice', 'Unable to open %s/%s/%s', $expl, $dir, $filename);
+	Sympa::Log::Syslog::do_log('notice', 'Unable to open %s/%s/%s', $expl, $dir, $filename);
 	return undef;
     }
 

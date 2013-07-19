@@ -80,14 +80,14 @@ sub set_cookie_soap {
 sub get_mac {
         my $email = shift ;
 	my $secret = shift ;	
-	&Log::do_log('debug3', "get_mac($email, $secret)");
+	&Sympa::Log::Syslog::do_log('debug3', "get_mac($email, $secret)");
 
 	unless ($secret) {
-	    &Log::do_log('err', 'get_mac : failure missing server secret for cookie MD5 digest');
+	    &Sympa::Log::Syslog::do_log('err', 'get_mac : failure missing server secret for cookie MD5 digest');
 	    return undef;
 	}
 	unless ($email) {
-	    &Log::do_log('err', 'get_mac : failure missing email adresse or cookie MD5 digest');
+	    &Sympa::Log::Syslog::do_log('err', 'get_mac : failure missing email adresse or cookie MD5 digest');
 	    return undef;
 	}
 
@@ -129,7 +129,7 @@ sub set_cookie_extern {
 				   );
     ## Send cookie to the client
     printf "Set-Cookie: %s\n", $cookie->as_string;
-    #&Log::do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
+    #&Sympa::Log::Syslog::do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
     return 1;
 }
 

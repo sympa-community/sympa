@@ -30,7 +30,7 @@ use Log;
 our @ISA = qw(SympaspoolClassic);
 
 sub new {
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     return shift->SUPER::new('subscribe', shift);
 }
 
@@ -38,7 +38,7 @@ sub sub_request_exists {
     my $self = shift;
     my $selector = shift;
     if ($self->get_message($selector)) {
-	Log::do_log('notice', 'Subscription already requested by %s',
+	Sympa::Log::Syslog::do_log('notice', 'Subscription already requested by %s',
 	    $selector->{'sender'});
 	return 1;
     }
@@ -54,7 +54,7 @@ sub get_subscription_request_details {
 	$result->{'gecos'}            = $2;
 	$result->{'customattributes'} = $3;
     } else {
-	Log::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'err',
 	    "Failed to parse subscription request %s",
 	    $string
@@ -70,7 +70,7 @@ sub get_additional_details {
     $data = $self->parse_file_content($key,$data);
     my $details;
     unless($details = $self->get_subscription_request_details($data->{'messageasstring'})) {
-	Log::do_log('err','File %s exists but its content is unparsable',$key);
+	Sympa::Log::Syslog::do_log('err','File %s exists but its content is unparsable',$key);
 	return undef;
     }
     my %tmp_hash = (%$data,%$details);

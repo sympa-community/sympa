@@ -417,7 +417,7 @@ L</PopLang>().
 =cut
 
 sub PushLang {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $lang = shift;
 
     push @previous_lang, GetLang();
@@ -438,7 +438,7 @@ Restores previous language.
 =cut
 
 sub PopLang {
-    Log::do_log('debug2', '()');
+    Sympa::Log::Syslog::do_log('debug2', '()');
 
     my $lang = pop @previous_lang;
     SetLang($lang);
@@ -468,7 +468,7 @@ This function of Sympa 3.2a.33 or earlier returned old style "locale" names.
 =cut
 
 sub SetLang {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $lang = shift;
     my %opts = @_;
     my $locale;
@@ -477,7 +477,7 @@ sub SetLang {
     $lang ||= Site->lang if $Site::is_initialized;
 
     unless ($lang) {
-	Log::do_log('err', 'missing lang parameter');
+	Sympa::Log::Syslog::do_log('err', 'missing lang parameter');
 	return undef;
     }
 
@@ -486,7 +486,7 @@ sub SetLang {
 	$locale = 'en';
     } else {
 	unless ($lang = CanonicLang($lang) and $locale = Lang2Locale($lang)) {
-	    Log::do_log('err', 'unknown language')
+	    Sympa::Log::Syslog::do_log('err', 'unknown language')
 		unless $opts{'just_try'};
 	    return undef;
 	}
@@ -508,7 +508,7 @@ sub SetLang {
 ## Sets POSIX locale and gettext locale.  LOCALE is gettext locale name.
 ## Note: Use SetLang().
 sub SetLocale {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my $locale = shift;
     my %opts   = @_;
 
@@ -549,7 +549,7 @@ sub SetLocale {
 	    unless ($success) {
 		POSIX::setlocale($type, 'C');    # reset POSIX locale
 		##FIXME: 'warn' is better.
-		Log::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'notice',
 		    'Failed to set locale "%s". You might want to extend available locales',
 		    $locale
@@ -579,7 +579,7 @@ sub SetLocale {
     ## Check if catalog is loaded.
     if ($locale and $locale ne 'C') {
 	unless (Locale::Messages::gettext('')) {
-	    Log::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Failed to bind translation catalog for locale "%s"', $locale)
 		unless $opts{'just_try'};
 	    return undef;
@@ -789,7 +789,7 @@ XXX @todo doc
 =cut
 
 sub sympa_dgettext {
-    Log::do_log('debug3', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, %s)', @_);
     my $textdomain = shift;
     my @param      = @_;
 
@@ -854,7 +854,7 @@ For argument C<''> returns empty string.
 =cut
 
 sub gettext {
-    Log::do_log('debug3', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s)', @_);
     my @param = @_;
 
     ## This prevents meta information to be returned if the string to
@@ -941,7 +941,7 @@ my %date_part_names = (
 );
 
 sub gettext_strftime {
-    Log::do_log('debug3', '(%s, ...)', @_);
+    Sympa::Log::Syslog::do_log('debug3', '(%s, ...)', @_);
     my $format = shift;
 
     my $posix_locale = POSIX::setlocale(POSIX::LC_TIME());

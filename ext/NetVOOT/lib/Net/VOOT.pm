@@ -3,7 +3,7 @@ package Net::VOOT;
 use warnings;
 use strict;
 
-use Log::Report 'net-voot';
+use Sympa::Log::Syslog::Report 'net-voot';
 
 use URI  ();
 use JSON ();

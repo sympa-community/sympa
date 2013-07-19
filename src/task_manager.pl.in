@@ -129,18 +129,18 @@ unless (Robot::get_robots()) {
     exit 1;
 }
 
-Log::do_openlog(Site->log_facility, Site->log_socket_type, 'task_manager');
+Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'task_manager');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
-    Log::do_log(
+    Sympa::Log::Syslog::set_log_level($main::options{'log_level'});
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, log level set using options : %s',
 	$main::options{'log_level'}
     );
 } else {
-    Log::set_log_level(Site->log_level);
-    Log::do_log(
+    Sympa::Log::Syslog::set_log_level(Site->log_level);
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, default log level %s',
 	Site->log_level
     );
@@ -182,7 +182,7 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Check if the UID has correctly been set (usefull on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2]) && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
-    Log::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.");
+    Sympa::Log::Syslog::fatal_err("Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.");
 }
 
 ## Sets the UMASK
@@ -190,7 +190,7 @@ umask(oct(Site->umask));
 
 ## Change to list root
 unless (chdir(Site->home)) {
-    &Log::do_log('err', 'error : unable to change to directory %s',
+    &Sympa::Log::Syslog::do_log('err', 'error : unable to change to directory %s',
 	Site->home);
     exit (-1);
 }
@@ -221,7 +221,7 @@ while (!$end) {
 
     ## Execute existing tasks
     ## processing of tasks anterior to the current date
-    Log::do_log ('debug2', 'Processing tasks anterior to the current date');
+    Sympa::Log::Syslog::do_log ('debug2', 'Processing tasks anterior to the current date');
     foreach my $task_in_spool ($taskspool->get_content) {
 	my $task = undef;
 	$task = Task->new($task_in_spool)
@@ -231,7 +231,7 @@ while (!$end) {
 	last if $end;
 	next unless $task->{'date'} <= $current_date;
 
-	Log::do_log ('debug2', 'Processing task %s', $task);
+	Sympa::Log::Syslog::do_log ('debug2', 'Processing task %s', $task);
         if ($task->{'object'} ne '_global') { # list task
             $task->check_list_task_is_valid();
         }
@@ -250,7 +250,7 @@ sub sigterm {
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
-&Log::do_log ('notice', 'task_manager exited normally due to signal'); 
+&Sympa::Log::Syslog::do_log ('notice', 'task_manager exited normally due to signal'); 
 tools::remove_pid('task_manager', $$);
 
 exit(0);

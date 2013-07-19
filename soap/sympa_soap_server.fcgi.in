@@ -33,18 +33,18 @@ my $birthday = time ;
 
 ## Load sympa config
 unless (defined Robot::get_robots()) {
-    &Log::fatal_err(
+    &Sympa::Log::Syslog::fatal_err(
 	'Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.',
 	Conf::get_sympa_conf()
     );  
 }
 
-&Log::set_log_level(Site->log_level);
+&Sympa::Log::Syslog::set_log_level(Site->log_level);
 
 
 ## Open log
-&Log::do_openlog(Site->log_facility, Site->log_socket_type, 'soap');
-&Log::do_log('info', 'SOAP server launched');
+&Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'soap');
+&Sympa::Log::Syslog::do_log('info', 'SOAP server launched');
 
 ## We set the real UID with the effective UID value
 ## It is usefull to allow execution of scripts like alias_manager
@@ -53,7 +53,7 @@ $< = $>; ## UID
 $( = $); ## GID
 
 unless (&SDM::check_db_connect()) {
-    &Log::do_log('err','SOAP server requires a RDBMS to run');
+    &Sympa::Log::Syslog::do_log('err','SOAP server requires a RDBMS to run');
 }
 
 ## The process should not fork for sending mail

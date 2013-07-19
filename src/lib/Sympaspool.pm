@@ -43,13 +43,13 @@ my ($sth, @sth_stack);
 
 ## Creates an object.
 sub new {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s, %s)', @_);
     my($pkg, $spoolname, $selection_status, %opts) = @_;
 
     my $self;
 
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
-&Log::do_log('err','internal error unknown spool %s',$spoolname);
+&Sympa::Log::Syslog::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
     unless ($selection_status and
@@ -178,7 +178,7 @@ sub get_content {
 #  next : return next spool entry ordered by priority next lock the message_in_spool that is returned
 # 
 sub next {
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
     my $sql_where = _sqlselector($self->{'selector'});
@@ -206,7 +206,7 @@ sub next {
 	    SDM::quote($self->{'spoolname'}), $sql_where,
 	    SDM::get_limit_clause({'rows_count' => 1})
 	)) {
-	    &Log::do_log('err', 'Could not search spool %s',
+	    &Sympa::Log::Syslog::do_log('err', 'Could not search spool %s',
 			 $self->{'spoolname'});
 	    $sth = pop @sth_stack;
 	    return undef;
@@ -225,7 +225,7 @@ sub next {
 	      WHERE messagekey_spool = ? AND messagelock_spool IS NULL},
 	    $lock, $epoch, $messagekey
 	)) {
-	    &Log::do_log('err', 'Could not update spool %s',
+	    &Sympa::Log::Syslog::do_log('err', 'Could not update spool %s',
 			 $self->{'spoolname'});
 	    $sth = pop @sth_stack;
 	    return undef;
@@ -244,7 +244,7 @@ sub next {
 	    &_selectfields()
 	), $messagekey, $lock
     )) {
-	&Log::do_log('err', 'Could not search message previously locked');
+	&Sympa::Log::Syslog::do_log('err', 'Could not search message previously locked');
 	$sth = pop @sth_stack;
 	return undef;
     }
@@ -254,12 +254,12 @@ sub next {
     $sth = pop @sth_stack;
 
     unless ($message and $message->{'message'}){
-&Log::do_log('err','INTERNAL Could not find message previouly locked');
+&Sympa::Log::Syslog::do_log('err','INTERNAL Could not find message previouly locked');
 	return undef;
     }
     $message->{'messageasstring'} = MIME::Base64::decode($message->{'message'});
     unless ($message->{'messageasstring'}){
-&Log::do_log('err',"Could not decode %s",$message->{'message'});
+&Sympa::Log::Syslog::do_log('err',"Could not decode %s",$message->{'message'});
 	return undef;
     }
 
@@ -286,10 +286,10 @@ sub next {
 sub move_to_bad {
     my $self = shift;
     my $key = shift;
-    Log::do_log('debug', 'Moving spooled entity with key %s to bad',$key);
+    Sympa::Log::Syslog::do_log('debug', 'Moving spooled entity with key %s to bad',$key);
     unless ($self->update({'messagekey' => $key},
 			  {'message_status' => 'bad','messagelock'=> 'NULL'})) {
-	Log::do_log('err', 'Unable to  to set status bad to spooled entity with key %s',$key);
+	Sympa::Log::Syslog::do_log('err', 'Unable to  to set status bad to spooled entity with key %s',$key);
 	return undef;
     }
 }
@@ -301,7 +301,7 @@ sub move_to_bad {
 sub get_message {
     my $self = shift;
     my $selector = shift;
-    Log::do_log('debug2', '(%s, messagekey=%s, list=%s, robot=%s)',
+    Sympa::Log::Syslog::do_log('debug2', '(%s, messagekey=%s, list=%s, robot=%s)',
 	$self, $selector->{'messagekey'},
 	$selector->{'list'}, $selector->{'robot'});
 
@@ -319,7 +319,7 @@ sub get_message {
 	($sqlselector ? " AND $sqlselector" : ''),
 	SDM::get_limit_clause({'rows_count' => 1})
     )) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Could not get message from spool %s', $self);
 	$sth = pop @sth_stack;
 	return undef;
@@ -331,10 +331,10 @@ sub get_message {
     $sth = pop @sth_stack;
 
     unless ($message and %$message) {
-	Log::do_log('err', 'No message: %s', $sqlselector);
+	Sympa::Log::Syslog::do_log('err', 'No message: %s', $sqlselector);
 	return undef;
     } else {
-	Log::do_log('debug3', 'Success: %s', $sqlselector);
+	Sympa::Log::Syslog::do_log('debug3', 'Success: %s', $sqlselector);
     }
 
     $message->{'lock'} =  $message->{'messagelock'}; 
@@ -362,7 +362,7 @@ sub unlock_message {
     my $self = shift;
     my $messagekey = shift;
 
-    &Log::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
+    &Sympa::Log::Syslog::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
     return ( $self->update({'messagekey' => $messagekey},
 			   {'messagelock' => 'NULL'}));
 }
@@ -375,7 +375,7 @@ sub update {
     my $selector = shift;
     my $values = shift;
 
-    &Log::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
+    &Sympa::Log::Syslog::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
 
     my $where = _sqlselector($selector);
 
@@ -412,17 +412,17 @@ sub update {
     }
 
     unless ($set) {
-&Log::do_log('err',"No value to update"); return undef;
+&Sympa::Log::Syslog::do_log('err',"No value to update"); return undef;
     }
     unless ($where) {
-&Log::do_log('err',"No selector for an update"); return undef;
+&Sympa::Log::Syslog::do_log('err',"No selector for an update"); return undef;
     }
 
     ## Updating Db
     my $statement = sprintf "UPDATE spool_table SET %s WHERE (%s)", $set,$where ;
 
     unless (&SDM::do_query($statement)) {
-	&Log::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
+	&Sympa::Log::Syslog::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
 	return undef;
     }    
     return 1;
@@ -439,7 +439,7 @@ sub store {
     my $sender = $metadata->{'sender'};
     $sender |= '';
 
-    Log::do_log('debug2',
+    Sympa::Log::Syslog::do_log('debug2',
 	'(%s, <message_asstring>, list=%s, robot=%s, date=%s, %s)',
 	$self, $metadata->{'list'}, $metadata->{'robot'}, $metadata->{'date'},
 	$locked);
@@ -524,7 +524,7 @@ sub store {
 # remove a message in database spool using (messagekey,list,robot) which are a unique id in the spool
 #
 sub remove_message {  
-    Log::do_log('debug2', '(%s, %s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s, %s)', @_);
     my $self = shift;
     my $params = shift;
 
@@ -539,7 +539,7 @@ sub remove_message {
 	SDM::quote($self->{'spoolname'}),
 	($sqlselector ? " AND $sqlselector" : '')
     )) {
-	Log::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
             'Could not remove message from spool %s', $self);
 	$sth = pop @sth_stack;
 	return undef;
@@ -547,7 +547,7 @@ sub remove_message {
     ## search if this message is already in spool database : mailfile may
     ## perform multiple submission of exactly the same message
     unless ($sth->rows) {
-	Log::do_log('err', 'message is not in spool: %s', $sqlselector)
+	Sympa::Log::Syslog::do_log('err', 'message is not in spool: %s', $sqlselector)
 	    unless $just_try;
 	$sth = pop @sth_stack;
 	return undef;
@@ -565,7 +565,7 @@ sub remove_message {
 sub clean {  
     my $self = shift;
     my $filter = shift;
-    &Log::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
+    &Sympa::Log::Syslog::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
     my $bad = 0;
     my $delay = $filter->{'delay'};
     if ($self->{'selection_status'} eq 'bad') {
@@ -588,7 +588,7 @@ sub clean {
     push @sth_stack, $sth;
     $sth = &SDM::do_query('%s', $sqlquery);
     $sth->finish;
-   &Log::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
+   &Sympa::Log::Syslog::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
     $sth = pop @sth_stack;
     return 1;
 }
@@ -596,7 +596,7 @@ sub clean {
 
 # test the maximal message size the database will accept
 sub store_test { 
-    Log::do_log('debug2', '(%s)', @_);
+    Sympa::Log::Syslog::do_log('debug2', '(%s)', @_);
     my $value_test = shift;
     my $divider = 100;
     my $steps = 50;

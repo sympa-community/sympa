@@ -1030,7 +1030,7 @@ sub deal_data {
 sub update_subscriber_msg_send {
 
     my ($mail, $list, $robot, $counter) = @_;
-    &Log::do_log('debug2','%s,%s,%s,%s',$mail, $list, $robot, $counter);
+    &Sympa::Log::Syslog::do_log('debug2','%s,%s,%s,%s',$mail, $list, $robot, $counter);
 
     unless ($sth = &SDM::do_query("SELECT number_messages_subscriber from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail)){
 	&do_log('err','Unable to retrieve message count for user %s, list %s@%s',$mail, $list, $robot);
@@ -1062,7 +1062,7 @@ sub get_last_date_aggregation {
 
 sub agregate_daily_data {
     my $param = shift;
-    &Log::do_log('debug2','Agregating data');
+    &Sympa::Log::Syslog::do_log('debug2','Agregating data');
     my $result;
     my $first_date = $param->{'first_date'} || time;
     my $last_date = $param->{'last_date'} || time;
