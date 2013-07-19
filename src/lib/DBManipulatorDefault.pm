@@ -47,11 +47,11 @@ our @ISA = qw(SQLSource);
 #      - Returns undef if something went wrong.
 sub get_all_primary_keys {
     my $self = shift;
-    &Sympa::Log::Syslog::do_log('debug3','Retrieving all primary keys in database %s',$self->{'db_name'});
+    Sympa::Log::Syslog::do_log('debug3','Retrieving all primary keys in database %s',$self->{'db_name'});
     my %found_keys = undef;
     foreach my $table (@{$self->get_tables()}) {
 	unless($found_keys{$table} = $self->get_primary_key({'table'=>$table})) {
-	    &Sympa::Log::Syslog::do_log('err','Primary key retrieval for table %s failed. Aborting.',$table);
+	    Sympa::Log::Syslog::do_log('err','Primary key retrieval for table %s failed. Aborting.',$table);
 	    return undef;
 	}
     }
@@ -69,11 +69,11 @@ sub get_all_primary_keys {
 #      - Returns undef if something went wrong.
 sub get_all_indexes {
     my $self = shift;
-    &Sympa::Log::Syslog::do_log('debug3','Retrieving all indexes in database %s',$self->{'db_name'});
+    Sympa::Log::Syslog::do_log('debug3','Retrieving all indexes in database %s',$self->{'db_name'});
     my %found_indexes;
     foreach my $table (@{$self->get_tables()}) {
 	unless($found_indexes{$table} = $self->get_indexes({'table'=>$table})) {
-	    &Sympa::Log::Syslog::do_log('err','Index retrieval for table %s failed. Aborting.',$table);
+	    Sympa::Log::Syslog::do_log('err','Index retrieval for table %s failed. Aborting.',$table);
 	    return undef;
 	}
     }
@@ -105,7 +105,7 @@ sub get_all_indexes {
 sub check_key {
     my $self = shift;
     my $param = shift;
-    &Sympa::Log::Syslog::do_log('debug3','Checking %s key structure for table %s',$param->{'key_name'},$param->{'table'});
+    Sympa::Log::Syslog::do_log('debug3','Checking %s key structure for table %s',$param->{'key_name'},$param->{'table'});
     my $keysFound;
     my $result;
     if (lc($param->{'key_name'}) eq 'primary') {
@@ -126,14 +126,14 @@ sub check_key {
 	}
 	foreach my $field (@{$param->{'expected_keys'}}) {
 	    unless ($keysFound->{$field}) {
-		&Sympa::Log::Syslog::do_log('info','Table %s: Missing expected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
+		Sympa::Log::Syslog::do_log('info','Table %s: Missing expected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
 		$result->{'missing_key'}{$field} = 1;
 		$result->{'existing_key_correct'} = 0;
 	    }
 	}		
 	foreach my $field (keys %{$keysFound}) {
 	    unless ($expected_keys{$field}) {
-		&Sympa::Log::Syslog::do_log('info','Table %s: Found unexpected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
+		Sympa::Log::Syslog::do_log('info','Table %s: Found unexpected key part %s in %s key.',$param->{'table'},$field,$param->{'key_name'});
 		$result->{'unexpected_key'}{$field} = 1;
 		$result->{'existing_key_correct'} = 0;
 	    }

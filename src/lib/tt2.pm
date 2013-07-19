@@ -127,7 +127,7 @@ sub maketext {
 
     ## Strangely the path is sometimes empty...
     ## TODO : investigate
-#    &Sympa::Log::Syslog::do_log('notice', "PATH: $path ; $template_name");
+#    Sympa::Log::Syslog::do_log('notice', "PATH: $path ; $template_name");
 
     ## Sample code to dump the STASH
     # my $s = $stash->_dump();    

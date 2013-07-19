@@ -563,7 +563,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     &tools::ciphersaber_installed();
 
     if (&tools::cookie_changed(Site->cookie)) {
-	&Sympa::Log::Syslog::fatal_err(
+	Sympa::Log::Syslog::fatal_err(
 	    'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file)',
 	    Site->etc
 	);
@@ -584,7 +584,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
     ## Check for several files.
     unless (&Conf::checkfiles_as_root()) {
-	&Sympa::Log::Syslog::fatal_err(
+	Sympa::Log::Syslog::fatal_err(
 	    "output checkfiles_as_root : Missing files. Aborting.");
 	## No return.
     }

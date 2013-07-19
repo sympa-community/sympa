@@ -170,14 +170,14 @@ sub plugin($;$) { @_==2 ? ($plugins{$_[0]} = $_[1]) :  $plugins{$_[0]} }
 
 =cut
 
-sub log(@)   { goto &Sympa::Log::Syslog::do_log }
-sub fatal(@) { goto &Sympa::Log::Syslog::fatal_err }
+sub log(@)   { goto Sympa::Log::Syslog::do_log }
+sub fatal(@) { goto Sympa::Log::Syslog::fatal_err }
 
 sub trace_call(@)          # simplification of method logging
 {   my $sub = (caller 1)[3];
     local $" =  ',';
     @_ = (debug2 => "$sub(@_)");
-    goto &Sympa::Log::Syslog::do_log;
+    goto Sympa::Log::Syslog::do_log;
 }
 
 # These should (have been) modularized via Sympa::Log::Syslog::

@@ -171,7 +171,7 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $daemon_name = &Sympa::Log::Syslog::set_daemon($0);
+my $daemon_name = Sympa::Log::Syslog::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
 
 # Load sympa.conf
@@ -231,7 +231,7 @@ if ($main::options{'log_level'}) {
     ); 
 }
 
-&Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
+Sympa::Log::Syslog::do_openlog(Site->log_facility, Site->log_socket_type, 'bounced');
 
 ## Set the User ID & Group ID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];

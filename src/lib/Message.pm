@@ -1109,7 +1109,7 @@ sub smime_encrypt {
 	    Site->openssl, $temporary_file, $usercert;
         Sympa::Log::Syslog::do_log ('debug3', '%s', $cmd);
 	if (!open(MSGDUMP, "| $cmd")) {
-	    &Sympa::Log::Syslog::do_log('info', 'Can\'t encrypt message for recipient %s',
+	    Sympa::Log::Syslog::do_log('info', 'Can\'t encrypt message for recipient %s',
 		$email);
 	}
 	## don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted stuff
@@ -1140,7 +1140,7 @@ sub smime_encrypt {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 	unless ($self->{'crypted_message'} = $parser->read(\*NEWMSG)) {
-	    &Sympa::Log::Syslog::do_log('notice', 'Unable to parse message');
+	    Sympa::Log::Syslog::do_log('notice', 'Unable to parse message');
 	    return undef;
 	}
 	close NEWMSG ;
@@ -1176,7 +1176,7 @@ sub smime_encrypt {
 	$self->set_message_as_string($self->{'crypted_message'}->as_string());
 	$self->{'smime_crypted'} = 1;
     }else{
-	&Sympa::Log::Syslog::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
+	Sympa::Log::Syslog::do_log ('err','unable to encrypt message to %s (missing certificate %s)',$email,$usercert);
 	return undef;
     }
         
@@ -1294,10 +1294,10 @@ sub smime_sign_check {
     $trusted_ca_options .= "-CApath " . Site->capath . " " if Site->capath;
     my $cmd = sprintf '%s smime -verify %s -signer %s',
 	Site->openssl, $trusted_ca_options, $temporary_file;
-    &Sympa::Log::Syslog::do_log('debug2', '%s', $cmd);
+    Sympa::Log::Syslog::do_log('debug2', '%s', $cmd);
 
     unless (open MSGDUMP, "| $cmd > /dev/null") {
-	&Sympa::Log::Syslog::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
+	Sympa::Log::Syslog::do_log('err', 'Unable to run command %s to check signature from %s: %s', $cmd, $message->{'sender'},$!);
 	return undef ;
     }
     
@@ -1318,17 +1318,17 @@ sub smime_sign_check {
 
     unless ($signer->{'email'}{lc($message->{'sender'})}) {
 	unlink($temporary_file) unless ($main::options{'debug'}) ;
-	&Sympa::Log::Syslog::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$message->{'sender'}, join(',', keys %{$signer->{'email'}}));
+	Sympa::Log::Syslog::do_log('err', "S/MIME signed message, sender(%s) does NOT match signer(%s)",$message->{'sender'}, join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
 
-    &Sympa::Log::Syslog::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
+    Sympa::Log::Syslog::do_log('debug', "S/MIME signed message, signature checked and sender match signer(%s)", join(',', keys %{$signer->{'email'}}));
     ## store the signer certificat
     unless (-d Site->ssl_cert_dir) {
 	if ( mkdir (Site->ssl_cert_dir, 0775)) {
-	    &Sympa::Log::Syslog::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
+	    Sympa::Log::Syslog::do_log('info', 'creating spool %s', Site->ssl_cert_dir);
 	}else{
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Unable to create user certificat directory %s',
 		Site->ssl_cert_dir);
 	}
@@ -1357,7 +1357,7 @@ sub smime_sign_check {
     }
     
     unless($extracted) {
-	&Sympa::Log::Syslog::do_log('err', "No application/x-pkcs7-* parts found");
+	Sympa::Log::Syslog::do_log('err', "No application/x-pkcs7-* parts found");
 	return undef;
     }
 
@@ -1382,7 +1382,7 @@ sub smime_sign_check {
 	    close(CERT);
 	    my($parsed) = tools::smime_parse_cert({file => $tmpcert});
 	    unless($parsed) {
-		&Sympa::Log::Syslog::do_log('err', 'No result from smime_parse_cert');
+		Sympa::Log::Syslog::do_log('err', 'No result from smime_parse_cert');
 		return undef;
 	    }
 	    unless($parsed->{'email'}) {
@@ -1390,17 +1390,17 @@ sub smime_sign_check {
 		next;
 	    }
 	    
-	    &Sympa::Log::Syslog::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
+	    Sympa::Log::Syslog::do_log('debug2', "Found cert for <%s>", join(',', keys %{$parsed->{'email'}}));
 	    if ($parsed->{'email'}{lc($message->{'sender'})}) {
 		if ($parsed->{'purpose'}{'sign'} && $parsed->{'purpose'}{'enc'}) {
 		    $certs{'both'} = $workcert;
-		    &Sympa::Log::Syslog::do_log('debug', 'Found a signing + encryption cert');
+		    Sympa::Log::Syslog::do_log('debug', 'Found a signing + encryption cert');
 		}elsif ($parsed->{'purpose'}{'sign'}) {
 		    $certs{'sign'} = $workcert;
-		    &Sympa::Log::Syslog::do_log('debug', 'Found a signing cert');
+		    Sympa::Log::Syslog::do_log('debug', 'Found a signing cert');
 		} elsif($parsed->{'purpose'}{'enc'}) {
 		    $certs{'enc'} = $workcert;
-		    &Sympa::Log::Syslog::do_log('debug', 'Found an encryption cert');
+		    Sympa::Log::Syslog::do_log('debug', 'Found an encryption cert');
 		}
 	    }
 	    last if(($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
@@ -1408,7 +1408,7 @@ sub smime_sign_check {
     }
     close(BUNDLE);
     if(!($certs{both} || ($certs{sign} || $certs{enc}))) {
-	&Sympa::Log::Syslog::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
+	Sympa::Log::Syslog::do_log('err', "Could not extract certificate for %s", join(',', keys %{$signer->{'email'}}));
 	return undef;
     }
     ## OK, now we have the certs, either a combined sign+encryption one
@@ -1653,7 +1653,7 @@ sub add_parts {
 	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
+		Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $header = $file;
@@ -1670,7 +1670,7 @@ sub add_parts {
 	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
+		Sympa::Log::Syslog::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $footer = $file;
@@ -1721,7 +1721,7 @@ sub add_parts {
 		my $header_part;
 		eval { $header_part = $parser->parse_in($header); };
 		if ($@) {
-		    &Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
+		    Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $header, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
@@ -1745,7 +1745,7 @@ sub add_parts {
 		my $footer_part;
 		eval { $footer_part = $parser->parse_in($footer); };
 		if ($@) {
-		    &Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
+		    Sympa::Log::Syslog::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $footer, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
@@ -2243,7 +2243,7 @@ sub prepare_message_according_to_mode {
     }
 
     unless (defined $self) {
-	    &Sympa::Log::Syslog::do_log('err', "Failed to create Message object");
+	    Sympa::Log::Syslog::do_log('err', "Failed to create Message object");
 	return undef;
     }
     return 1;
@@ -2322,7 +2322,7 @@ sub prepare_reception_urlize {
     my $expl = $self->{'list'}->dir . '/urlized';
 
     unless ((-d $expl) || (mkdir $expl, 0775)) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to create urlize directory %s', $expl);
 	return undef;
     }

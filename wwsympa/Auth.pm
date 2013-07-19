@@ -34,7 +34,7 @@ use report;
 ## return the password finger print (this proc allow futur replacement of md5 by sha1 or ....)
 sub password_fingerprint {
 
-    &Sympa::Log::Syslog::do_log('debug', 'Auth::password_fingerprint');
+    Sympa::Log::Syslog::do_log('debug', 'Auth::password_fingerprint');
 
     my $pwd = shift;
     if (Site->password_case eq 'insensitive') {
@@ -80,7 +80,7 @@ sub check_auth {
 	} else {
 	    &report::reject_report_web('user', 'incorrect_passwd', {})
 		unless ($ENV{'SYMPA_SOAP'});
-	    &Sympa::Log::Syslog::do_log('err', "Incorrect LDAP password");
+	    Sympa::Log::Syslog::do_log('err', "Incorrect LDAP password");
 	    return undef;
 	}
     }
@@ -135,7 +135,7 @@ sub authentication {
 	    {wrong_login_count => $user->{'wrong_login_count'} + 1});
 	&report::reject_report_web('user', 'too_many_wrong_login', {})
 	    unless ($ENV{'SYMPA_SOAP'});
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'login is blocked : too many wrong password submission for %s',
 	    $email);
 	return undef;
@@ -184,7 +184,7 @@ sub authentication {
 
     &report::reject_report_web('user', 'incorrect_passwd', {})
 	unless ($ENV{'SYMPA_SOAP'});
-    &Sympa::Log::Syslog::do_log('err', 'authentication: incorrect password for user %s',
+    Sympa::Log::Syslog::do_log('err', 'authentication: incorrect password for user %s',
 	$email);
 
     $param->{'init_email'}         = $email;
@@ -207,7 +207,7 @@ sub ldap_authentication {
 
     ## No LDAP entry is defined in auth.conf
     if ($#{Site->auth_services->{$robot->domain}} < 0) {
-	&Sympa::Log::Syslog::do_log('notice', 'Skipping empty auth.conf');
+	Sympa::Log::Syslog::do_log('notice', 'Skipping empty auth.conf');
 	return undef;
     }
 
@@ -231,7 +231,7 @@ sub ldap_authentication {
     my $ds    = new LDAPSource($param);
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
-	&Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
+	Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 	    $ldap->{'host'});
 	return undef;
     }
@@ -244,7 +244,7 @@ sub ldap_authentication {
     );
 
     if ($mesg->count() == 0) {
-	&Sympa::Log::Syslog::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    'No entry in the Ldap Directory Tree of %s for %s',
 	    $ldap->{'host'}, $auth);
 	$ds->disconnect();
@@ -266,7 +266,7 @@ sub ldap_authentication {
     $ds = new LDAPSource($param);
 
     unless (defined $ds && ($ldap_passwd = $ds->connect())) {
-	&Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
+	Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 	    $param->{'host'});
 	return undef;
     }
@@ -279,7 +279,7 @@ sub ldap_authentication {
     );
 
     if ($mesg->count() == 0 || $mesg->code() != 0) {
-	&Sympa::Log::Syslog::do_log('notice', "No entry in the LDAP Directory Tree of %s",
+	Sympa::Log::Syslog::do_log('notice', "No entry in the LDAP Directory Tree of %s",
 	    $ldap->{'host'});
 	$ds->disconnect();
 	return undef;
@@ -316,8 +316,8 @@ sub ldap_authentication {
 	$param->{'alt_emails'}{$alt} = $previous->{$alt};
     }
 
-    $ds->disconnect() or &Sympa::Log::Syslog::do_log('notice', "unable to unbind");
-    &Sympa::Log::Syslog::do_log('debug3', "canonic: $canonic_email[0]");
+    $ds->disconnect() or Sympa::Log::Syslog::do_log('notice', "unable to unbind");
+    Sympa::Log::Syslog::do_log('debug3', "canonic: $canonic_email[0]");
     ## If the identifier provided was a valid email, return the provided email.
     ## Otherwise, return the canonical email guessed after the login.
     if (&tools::valid_email($auth) && !$robot->ldap_force_canonical_email) {
@@ -357,7 +357,7 @@ sub get_email_by_net_id {
     my $ldap_anonymous;
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
-	&Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
+	Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 	    $ldap->{'ldap_host'});
 	return undef;
     }
@@ -377,7 +377,7 @@ sub get_email_by_net_id {
     my $count = $emails->count();
 
     if ($emails->count() == 0) {
-	&Sympa::Log::Syslog::do_log('notice', "No entry in the LDAP Directory Tree of %s",
+	Sympa::Log::Syslog::do_log('notice', "No entry in the LDAP Directory Tree of %s",
 	    $host);
 	$ds->disconnect();
 	return undef;
@@ -415,7 +415,7 @@ sub remote_app_check_password {
 	if (lc($application->{'name'}) eq lc($trusted_application_name)) {
 	    if ($md5 eq $application->{'md5password'}) {
 
-# &Sympa::Log::Syslog::do_log('debug', 'Auth::remote_app_check_password : authentication succeed for %s',$application->{'name'});
+# Sympa::Log::Syslog::do_log('debug', 'Auth::remote_app_check_password : authentication succeed for %s',$application->{'name'});
 		my %proxy_for_vars;
 		foreach my $varname (@{$application->{'proxy_for_variables'}})
 		{
@@ -423,7 +423,7 @@ sub remote_app_check_password {
 		}
 		return (\%proxy_for_vars);
 	    } else {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    'Auth::remote_app_check_password: bad password from %s',
 		    $trusted_application_name);
 		return undef;
@@ -432,7 +432,7 @@ sub remote_app_check_password {
     }
 
     # no matching application found
-    &Sympa::Log::Syslog::do_log('info',
+    Sympa::Log::Syslog::do_log('info',
 	'Auth::remote_app-check_password: unknown application name %s',
 	$trusted_application_name);
     return undef;
@@ -499,7 +499,7 @@ sub get_one_time_ticket {
 	    $ticket_number, $robot->domain
 	)
 	) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Unable to retrieve one time ticket %s from database',
 	    $ticket_number);
 	return {'result' => 'error'};

@@ -43,7 +43,7 @@ sub new {
     my $document = {};
 
     unless (ref($list) =~ /List/i) {
-	&Sympa::Log::Syslog::do_log('err', 'SharedDocument::new : incorrect list parameter');
+	Sympa::Log::Syslog::do_log('err', 'SharedDocument::new : incorrect list parameter');
 	return undef;
     }
 
@@ -55,7 +55,7 @@ sub new {
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
-	&Sympa::Log::Syslog::do_log('err', "SharedDocument::new : %s : description file",
+	Sympa::Log::Syslog::do_log('err', "SharedDocument::new : %s : description file",
 	    $document->{'path'});
 	return undef;
     }
@@ -76,7 +76,7 @@ sub new {
 
     ### Document exist ?
     unless (-r $document->{'absolute_path'}) {
-	&Sympa::Log::Syslog::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'err',
 	    "SharedDocument::new : unable to read %s : no such file or directory",
 	    $document->{'absolute_path'}
@@ -86,7 +86,7 @@ sub new {
 
     ### Document has non-size zero?
     unless (-s $document->{'absolute_path'}) {
-	&Sympa::Log::Syslog::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'err',
 	    "SharedDocument::new : unable to read %s : empty document",
 	    $document->{'absolute_path'}
@@ -154,7 +154,7 @@ sub new {
 	if ($document->{'absolute_path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
 	    $desc_file = $1 . '.desc.' . $3;
 	} else {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		"SharedDocument::new() : cannot determine desc file for %s",
 		$document->{'absolute_path'}
@@ -232,7 +232,7 @@ sub new {
 
 	# listing of all the shared documents of the directory
 	unless (opendir DIR, $document->{'absolute_path'}) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		"SharedDocument::new() : cannot open %s : %s",
 		$document->{'absolute_path'}, $!
@@ -326,7 +326,7 @@ sub check_access_control {
 
     my $list = $self->{'list'};
 
-    &Sympa::Log::Syslog::do_log('debug', "check_access_control(%s)", $self->{'path'});
+    Sympa::Log::Syslog::do_log('debug', "check_access_control(%s)", $self->{'path'});
 
     # Control for editing
     my $may_read     = 1;

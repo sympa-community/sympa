@@ -190,7 +190,7 @@ umask(oct(Site->umask));
 
 ## Change to list root
 unless (chdir(Site->home)) {
-    &Sympa::Log::Syslog::do_log('err', 'error : unable to change to directory %s',
+    Sympa::Log::Syslog::do_log('err', 'error : unable to change to directory %s',
 	Site->home);
     exit (-1);
 }
@@ -250,7 +250,7 @@ sub sigterm {
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
-&Sympa::Log::Syslog::do_log ('notice', 'task_manager exited normally due to signal'); 
+Sympa::Log::Syslog::do_log ('notice', 'task_manager exited normally due to signal'); 
 tools::remove_pid('task_manager', $$);
 
 exit(0);

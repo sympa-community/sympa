@@ -49,7 +49,7 @@ sub new {
     my $self;
 
     unless ($spoolname =~ /^(auth)|(bounce)|(digest)|(bulk)|(expire)|(mod)|(msg)|(archive)|(automatic)|(subscribe)|(signoff)|(topic)|(validated)|(task)$/){
-&Sympa::Log::Syslog::do_log('err','internal error unknown spool %s',$spoolname);
+Sympa::Log::Syslog::do_log('err','internal error unknown spool %s',$spoolname);
 	return undef;
     }
     unless ($selection_status and
@@ -206,7 +206,7 @@ sub next {
 	    SDM::quote($self->{'spoolname'}), $sql_where,
 	    SDM::get_limit_clause({'rows_count' => 1})
 	)) {
-	    &Sympa::Log::Syslog::do_log('err', 'Could not search spool %s',
+	    Sympa::Log::Syslog::do_log('err', 'Could not search spool %s',
 			 $self->{'spoolname'});
 	    $sth = pop @sth_stack;
 	    return undef;
@@ -225,7 +225,7 @@ sub next {
 	      WHERE messagekey_spool = ? AND messagelock_spool IS NULL},
 	    $lock, $epoch, $messagekey
 	)) {
-	    &Sympa::Log::Syslog::do_log('err', 'Could not update spool %s',
+	    Sympa::Log::Syslog::do_log('err', 'Could not update spool %s',
 			 $self->{'spoolname'});
 	    $sth = pop @sth_stack;
 	    return undef;
@@ -244,7 +244,7 @@ sub next {
 	    &_selectfields()
 	), $messagekey, $lock
     )) {
-	&Sympa::Log::Syslog::do_log('err', 'Could not search message previously locked');
+	Sympa::Log::Syslog::do_log('err', 'Could not search message previously locked');
 	$sth = pop @sth_stack;
 	return undef;
     }
@@ -254,12 +254,12 @@ sub next {
     $sth = pop @sth_stack;
 
     unless ($message and $message->{'message'}){
-&Sympa::Log::Syslog::do_log('err','INTERNAL Could not find message previouly locked');
+Sympa::Log::Syslog::do_log('err','INTERNAL Could not find message previouly locked');
 	return undef;
     }
     $message->{'messageasstring'} = MIME::Base64::decode($message->{'message'});
     unless ($message->{'messageasstring'}){
-&Sympa::Log::Syslog::do_log('err',"Could not decode %s",$message->{'message'});
+Sympa::Log::Syslog::do_log('err',"Could not decode %s",$message->{'message'});
 	return undef;
     }
 
@@ -362,7 +362,7 @@ sub unlock_message {
     my $self = shift;
     my $messagekey = shift;
 
-    &Sympa::Log::Syslog::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
+    Sympa::Log::Syslog::do_log('debug', 'Spool::unlock_message(%s,%s)',$self->{'spoolname'}, $messagekey);
     return ( $self->update({'messagekey' => $messagekey},
 			   {'messagelock' => 'NULL'}));
 }
@@ -375,7 +375,7 @@ sub update {
     my $selector = shift;
     my $values = shift;
 
-    &Sympa::Log::Syslog::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
+    Sympa::Log::Syslog::do_log('debug2', "Spool::update($self->{'spoolname'}, list = $selector->{'list'}, robot = $selector->{'robot'}, messagekey = $selector->{'messagekey'}");
 
     my $where = _sqlselector($selector);
 
@@ -412,17 +412,17 @@ sub update {
     }
 
     unless ($set) {
-&Sympa::Log::Syslog::do_log('err',"No value to update"); return undef;
+Sympa::Log::Syslog::do_log('err',"No value to update"); return undef;
     }
     unless ($where) {
-&Sympa::Log::Syslog::do_log('err',"No selector for an update"); return undef;
+Sympa::Log::Syslog::do_log('err',"No selector for an update"); return undef;
     }
 
     ## Updating Db
     my $statement = sprintf "UPDATE spool_table SET %s WHERE (%s)", $set,$where ;
 
     unless (&SDM::do_query($statement)) {
-	&Sympa::Log::Syslog::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
+	Sympa::Log::Syslog::do_log('err', 'Unable to execute SQL statement "%s"', $statement);
 	return undef;
     }    
     return 1;
@@ -565,7 +565,7 @@ sub remove_message {
 sub clean {  
     my $self = shift;
     my $filter = shift;
-    &Sympa::Log::Syslog::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
+    Sympa::Log::Syslog::do_log('debug','Cleaning spool %s (%s), delay: %s',$self->{'spoolname'},$self->{'selection_status'},$filter->{'delay'});
     my $bad = 0;
     my $delay = $filter->{'delay'};
     if ($self->{'selection_status'} eq 'bad') {
@@ -588,7 +588,7 @@ sub clean {
     push @sth_stack, $sth;
     $sth = &SDM::do_query('%s', $sqlquery);
     $sth->finish;
-   &Sympa::Log::Syslog::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
+   Sympa::Log::Syslog::do_log('debug',"%s entries older than %s days removed from spool %s" ,$sth->rows,$delay,$self->{'spoolname'});
     $sth = pop @sth_stack;
     return 1;
 }

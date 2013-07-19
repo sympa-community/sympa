@@ -148,7 +148,7 @@ sub load_mime_types {
 	next unless (-r $loc);
 
 	unless(open (CONF, $loc)) {
-	    &Sympa::Log::Syslog::do_log('err',"load_mime_types: unable to open $loc");
+	    Sympa::Log::Syslog::do_log('err',"load_mime_types: unable to open $loc");
 	    return undef;
 	}
     }
@@ -179,28 +179,28 @@ sub load_mime_types {
 
 ## Returns user information extracted from the cookie
 sub get_email_from_cookie {
-#    &Sympa::Log::Syslog::do_log('debug', 'get_email_from_cookie');
+#    Sympa::Log::Syslog::do_log('debug', 'get_email_from_cookie');
     my $cookie = shift;
     my $secret = shift;
 
     my ($email, $auth) ;
 
-    # &Sympa::Log::Syslog::do_log('info', "get_email_from_cookie($cookie,$secret)");
+    # Sympa::Log::Syslog::do_log('info', "get_email_from_cookie($cookie,$secret)");
     
     unless (defined $secret) {
 	&report::reject_report_web('intern','cookie_error',{},'','','',$robot);
-	&Sympa::Log::Syslog::do_log('info', 'parameter cookie undefined, authentication failure');
+	Sympa::Log::Syslog::do_log('info', 'parameter cookie undefined, authentication failure');
     }
 
     unless ($cookie) {
 	&report::reject_report_web('intern','cookie_error',$cookie,'get_email_from_cookie','','',$robot);
-	&Sympa::Log::Syslog::do_log('info', ' cookie undefined, authentication failure');
+	Sympa::Log::Syslog::do_log('info', ' cookie undefined, authentication failure');
     }
 
     ($email, $auth) = &cookielib::check_cookie ($cookie, $secret);
     unless ( $email) {
 	&report::reject_report_web('user','auth_failed',{},'');
-	&Sympa::Log::Syslog::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
+	Sympa::Log::Syslog::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
 
@@ -242,7 +242,7 @@ sub init_passwd {
 					   {'password' => $passwd,
 					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
 		&report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
-		&Sympa::Log::Syslog::do_log('info','init_passwd: update failed');
+		Sympa::Log::Syslog::do_log('info','init_passwd: update failed');
 		return undef;
 	    }
 	}
@@ -253,7 +253,7 @@ sub init_passwd {
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
 	    &report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},'','',$email,$robot);
-	    &Sympa::Log::Syslog::do_log('info','init_passwd: add failed');
+	    Sympa::Log::Syslog::do_log('info','init_passwd: add failed');
 	    return undef;
 	}
     }
@@ -282,15 +282,15 @@ sub get_my_url {
 # Uploade source file to the destination on the server
 sub upload_file_to_server {
     my $param = shift;
-    &Sympa::Log::Syslog::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
+    Sympa::Log::Syslog::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
     my $fh;
     unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-	&Sympa::Log::Syslog::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
+	Sympa::Log::Syslog::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
 	return undef;
     }	
  
     unless (open FILE, ">:bytes", $param->{'destination'}) {
-	&Sympa::Log::Syslog::do_log('debug',"Cannot open file $param->{'destination'} : $!");
+	Sympa::Log::Syslog::do_log('debug',"Cannot open file $param->{'destination'} : $!");
 	return undef;
     }
     while (<$fh>) {

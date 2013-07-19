@@ -106,7 +106,7 @@ use Bulk;
 #use Sympa::Constants; # used in confdef, in Conf
 use Sympaspool; # used in List - Task
 
-my $daemon_name = &Sympa::Log::Syslog::set_daemon($0);
+my $daemon_name = Sympa::Log::Syslog::set_daemon($0);
 my $date_of_last_activity = time();
 local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as master daemon.
 
@@ -139,18 +139,18 @@ unless (Robot::get_robots()) {
     exit 1;
 }
 
-&Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
+Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    &Sympa::Log::Syslog::set_log_level($main::options{'log_level'});
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::set_log_level($main::options{'log_level'});
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, log level set using options : %s',
 	$main::options{'log_level'}
     ); 
 }else{
-    &Sympa::Log::Syslog::set_log_level(Site->log_level);
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::set_log_level(Site->log_level);
+    Sympa::Log::Syslog::do_log(
 	'info', 'Configuration file read, default log level %s',
 	Site->log_level
     ); 
@@ -169,11 +169,11 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    }
    setpgrp(0, 0);
    if ((my $child_pid = fork) != 0) {
-       &Sympa::Log::Syslog::do_log('info',"Starting bulk master daemon, PID %s",$child_pid);
+       Sympa::Log::Syslog::do_log('info',"Starting bulk master daemon, PID %s",$child_pid);
        exit(0);
    }
 }
-&Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
+Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
@@ -202,11 +202,11 @@ umask(oct(Site->umask));
 
 ## Change to list root
 unless (chdir(Site->home)) {
-    &Sympa::Log::Syslog::do_log('err','unable to change directory');
+    Sympa::Log::Syslog::do_log('err','unable to change directory');
     exit (-1);
 }
 
-&Sympa::Log::Syslog::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
+Sympa::Log::Syslog::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
 
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -256,7 +256,7 @@ while (!$end) {
 	    my @pids_leftover = keys %dead_children;
 	    if ($#pids_leftover > -1) {
 		my @dc;
-		&Sympa::Log::Syslog::do_log('debug2','Some childs of current process disappeared. Checking whether they shut down cleanly or not.');
+		Sympa::Log::Syslog::do_log('debug2','Some childs of current process disappeared. Checking whether they shut down cleanly or not.');
 		my $pids_in_pfile = tools::get_pids_in_pid_file('bulk');
 		foreach my $fpid (@{$pids_in_pfile}) {
 		    if (defined $dead_children{$fpid}) {
@@ -292,11 +292,11 @@ while (!$end) {
 		SDM::db_disconnect();
 
 		if(Site->bulk_max_count > 1) {
-		    &Sympa::Log::Syslog::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, Site->bulk_max_count-($#remaining_children+1));
+		    Sympa::Log::Syslog::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, Site->bulk_max_count-($#remaining_children+1));
 		    for my $process_count(1..Site->bulk_max_count-($#remaining_children+1)){
-			&Sympa::Log::Syslog::do_log('info', "Will fork: %s", $process_count);
+			Sympa::Log::Syslog::do_log('info', "Will fork: %s", $process_count);
 			if ((my $child_pid = fork) != 0) {
-			    &Sympa::Log::Syslog::do_log('info', "Starting bulk child daemon, PID %s", $child_pid);
+			    Sympa::Log::Syslog::do_log('info', "Starting bulk child daemon, PID %s", $child_pid);
 			    # Saves the pid number
 			    tools::write_pid('bulk', $child_pid, $options);
 			    $created_children{$child_pid} = 1;
@@ -307,8 +307,8 @@ while (!$end) {
 			    &tools::direct_stderr_to_file(('pid' => $$));
 			    $date_of_last_activity = time();
 			    $main::daemon_usage = 'DAEMON_SLAVE'; # automatic lists creation
-			    &Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
-			    &Sympa::Log::Syslog::do_log('info', "Bulk slave daemon started with PID %s", $$);
+			    Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'bulk');
+			    Sympa::Log::Syslog::do_log('info', "Bulk slave daemon started with PID %s", $$);
 			    last;
 			}
 		    }
@@ -321,7 +321,7 @@ while (!$end) {
     if (($main::daemon_usage eq 'DAEMON_SLAVE') && 
 		(time() - $date_of_last_activity > Site->bulk_lazytime) && 
 		!(my $r_packets = &Bulk::there_is_too_much_remaining_packets())){
-		&Sympa::Log::Syslog::do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, Site->bulk_lazytime);
+		Sympa::Log::Syslog::do_log('info', "Process %s didn't send any message since %s seconds, exiting.", $$, Site->bulk_lazytime);
 		last;
     }
 	
@@ -502,12 +502,12 @@ while (!$end) {
 	
 	## Remove packet once it has been processed
 	unless (&Bulk::remove($bulk->{'messagekey'},$bulk->{'packetid'})) {
-	    &Sympa::Log::Syslog::do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
+	    Sympa::Log::Syslog::do_log('err',"failed to remove processed packet '%s', messagekey '%s'", $bulk->{'messagekey'},$bulk->{'packetid'});
 	}
 
 	
 	if($bulk->{'priority_packet'} == Site->sympa_packet_priority + 5){
-	    &Sympa::Log::Syslog::do_log('notice','Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.', 
+	    Sympa::Log::Syslog::do_log('notice','Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.', 
 		    $bulk->{'messageid'}, 
 		    $bulk->{'messagekey'}, 
 		    $listname, 
@@ -528,7 +528,7 @@ while (!$end) {
 # Purge grouped notifications
 Site->send_notify_to_listmaster(undef, undef, undef, 1);
 
-&Sympa::Log::Syslog::do_log('notice', 'bulk.pl exited normally due to signal');
+Sympa::Log::Syslog::do_log('notice', 'bulk.pl exited normally due to signal');
 tools::remove_pid('bulk', $$, $options);
 
 exit(0);
@@ -537,7 +537,7 @@ exit(0);
 ## When we catch SIGTERM, just change the value of the loop
 ## variable.
 sub sigterm {
-    &Sympa::Log::Syslog::do_log('notice', 'signal TERM received, still processing current task');
+    Sympa::Log::Syslog::do_log('notice', 'signal TERM received, still processing current task');
     $end = 1;
 }
 

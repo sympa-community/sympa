@@ -39,7 +39,7 @@ my $serial_number = 0; # incremented on each archived mail
 sub store_last {
     my($list, $msg) = @_;
     
-    &Sympa::Log::Syslog::do_log ('debug2','archive::store ()');
+    Sympa::Log::Syslog::do_log ('debug2','archive::store ()');
     
     my($filename, $newfile);
     
@@ -67,18 +67,18 @@ sub store_last {
 sub list {
     my $name = shift;
 
-    &Sympa::Log::Syslog::do_log ('debug',"archive::list($name)");
+    Sympa::Log::Syslog::do_log ('debug',"archive::list($name)");
 
     my($filename, $newfile);
     my(@l, $i);
     
     unless (-d "$name") {
-	&Sympa::Log::Syslog::do_log ('warning',"archive::list($name) failed, no directory $name");
+	Sympa::Log::Syslog::do_log ('warning',"archive::list($name) failed, no directory $name");
 #      @l = ($msg::no_archives_available);
       return @l;
   }
     unless (opendir(DIR, "$name")) {
-	&Sympa::Log::Syslog::do_log ('warning',"archive::list($name) failed, cannot open directory $name");
+	Sympa::Log::Syslog::do_log ('warning',"archive::list($name) failed, cannot open directory $name");
 #	@l = ($msg::no_archives_available);
 	return @l;
     }
@@ -96,10 +96,10 @@ sub scan_dir_archive {
     
     my($dir, $month) = @_;
     
-    &Sympa::Log::Syslog::do_log ('info',"archive::scan_dir_archive($dir, $month)");
+    Sympa::Log::Syslog::do_log ('info',"archive::scan_dir_archive($dir, $month)");
 
     unless (opendir (DIR, "$dir/$month/arctxt")){
-	&Sympa::Log::Syslog::do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
+	Sympa::Log::Syslog::do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
 	return undef;
     }
     
@@ -107,7 +107,7 @@ sub scan_dir_archive {
     my $i = 0 ;
     foreach my $file (sort readdir(DIR)) {
 	next unless ($file =~ /^\d+$/);
-	&Sympa::Log::Syslog::do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
+	Sympa::Log::Syslog::do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
 
 	my $message = Message->new({
 	    'file' => "$dir/$month/arctxt/$file", 'noxsympato' => 'noxsympato'
@@ -156,18 +156,18 @@ sub search_msgid {
     
     my($dir, $msgid) = @_;
     
-    &Sympa::Log::Syslog::do_log ('info',"archive::search_msgid($dir, $msgid)");
+    Sympa::Log::Syslog::do_log ('info',"archive::search_msgid($dir, $msgid)");
 
     
     if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	&Sympa::Log::Syslog::do_log('err','remove_arc: no message id found');return undef;
+	Sympa::Log::Syslog::do_log('err','remove_arc: no message id found');return undef;
     } 
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-	&Sympa::Log::Syslog::do_log ('err',"archive::search_msgid : dir $dir look improper");
+	Sympa::Log::Syslog::do_log ('err',"archive::search_msgid : dir $dir look improper");
 	return undef;
     }
     unless (opendir (ARC, "$dir")){
-	&Sympa::Log::Syslog::do_log ('err',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
+	Sympa::Log::Syslog::do_log ('err',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
 	return undef;
     }
     chomp $msgid ;
@@ -205,7 +205,7 @@ sub last_path {
     
     my $list = shift;
 
-    &Sympa::Log::Syslog::do_log('debug', 'Archived::last_path(%s)', $list->name);
+    Sympa::Log::Syslog::do_log('debug', 'Archived::last_path(%s)', $list->name);
 
     return undef unless ($list->is_archived());
     my $file = $list->dir.'/archives/last_message';
@@ -220,11 +220,11 @@ sub last_path {
 sub load_html_message {
     my %parameters = @_;
 
-    &Sympa::Log::Syslog::do_log ('debug2',$parameters{'file_path'});
+    Sympa::Log::Syslog::do_log ('debug2',$parameters{'file_path'});
     my %metadata;
 
     unless (open ARC, $parameters{'file_path'}) {
-	&Sympa::Log::Syslog::do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
+	Sympa::Log::Syslog::do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
 	return undef;
     }
 
@@ -259,7 +259,7 @@ sub clean_archive_directory {
     $answer->{'dir_to_rebuild'} = $arc_root . '/' . $dir_to_rebuild;
     $answer->{'cleaned_dir'} = Site->tmpdir . '/' . $dir_to_rebuild;
     unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
-	&Sympa::Log::Syslog::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
+	Sympa::Log::Syslog::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
 	return undef;
     }
     if(opendir ARCDIR,$answer->{'cleaned_dir'}){
@@ -272,11 +272,11 @@ sub clean_archive_directory {
 	}
 	closedir DIR;
 	if ($files_left_uncleaned) {
-	    &Sympa::Log::Syslog::do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
+	    Sympa::Log::Syslog::do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
 	}
 	$answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
     }else{
-	&Sympa::Log::Syslog::do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
+	Sympa::Log::Syslog::do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
 	&tools::del_dir($answer->{'cleaned_dir'});
 	return undef;
     }

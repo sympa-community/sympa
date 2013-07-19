@@ -48,19 +48,19 @@ sub new {
     my $pkg = shift;
     my $param = shift;
     my $self = $param;
-    &Sympa::Log::Syslog::do_log('debug',"Creating new SQLSource object for RDBMS '%s'",$param->{'db_type'});
+    Sympa::Log::Syslog::do_log('debug',"Creating new SQLSource object for RDBMS '%s'",$param->{'db_type'});
     my $actualclass;
     our @ISA = qw(Datasource);
     if ($param->{'db_type'} =~ /^mysql$/i) {
 	unless ( eval "require DBManipulatorMySQL" ){
-	    &Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
+	    Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
 	    return undef;
 	}
 	require DBManipulatorMySQL;
 	$actualclass = "DBManipulatorMySQL";
     }elsif ($param->{'db_type'} =~ /^sqlite$/i) {
 	unless ( eval "require DBManipulatorSQLite" ){
-	    &Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorSQLite module");
+	    Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorSQLite module");
 	    return undef;
 	}
 	require DBManipulatorSQLite;
@@ -68,7 +68,7 @@ sub new {
 	$actualclass = "DBManipulatorSQLite";
     }elsif ($param->{'db_type'} =~ /^pg$/i) {
 	unless ( eval "require DBManipulatorPostgres" ){
-	    &Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorPostgres module");
+	    Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorPostgres module");
 	    return undef;
 	}
 	require DBManipulatorPostgres;
@@ -76,7 +76,7 @@ sub new {
 	$actualclass = "DBManipulatorPostgres";
     }elsif ($param->{'db_type'} =~ /^oracle$/i) {
 	unless ( eval "require DBManipulatorOracle" ){
-	    &Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorOracle module");
+	    Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorOracle module");
 	    return undef;
 	}
 	require DBManipulatorOracle;
@@ -84,7 +84,7 @@ sub new {
 	$actualclass = "DBManipulatorOracle";
     }elsif ($param->{'db_type'} =~ /^sybase$/i) {
 	unless ( eval "require DBManipulatorSybase" ){
-	    &Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorSybase module");
+	    Sympa::Log::Syslog::do_log('err',"Unable to use DBManipulatorSybase module");
 	    return undef;
 	}
 	require DBManipulatorSybase;
@@ -106,7 +106,7 @@ sub new {
     $self->{'db_options'} ||= $self->{'connect_options'};
     
     unless ( eval "require DBI" ){
-	&Sympa::Log::Syslog::do_log('err',"Unable to use DBI library, install DBI (CPAN) first");
+	Sympa::Log::Syslog::do_log('err',"Unable to use DBI library, install DBI (CPAN) first");
 	return undef ;
     }
     require DBI;
@@ -117,13 +117,13 @@ sub new {
 
 sub connect {
     my $self = shift;
-    &Sympa::Log::Syslog::do_log('debug3',"Checking connection to database %s",$self->{'db_name'});
+    Sympa::Log::Syslog::do_log('debug3',"Checking connection to database %s",$self->{'db_name'});
     if ($self->{'dbh'} && $self->{'dbh'}->ping) {
-	&Sympa::Log::Syslog::do_log('debug3','Connection to database %s already available',$self->{'db_name'});
+	Sympa::Log::Syslog::do_log('debug3','Connection to database %s already available',$self->{'db_name'});
 	return 1;
     }
     unless($self->establish_connection()) {
-	&Sympa::Log::Syslog::do_log('err','Unable to establish new connection to database %s on host %s',$self->{'db_name'},$self->{'db_host'});
+	Sympa::Log::Syslog::do_log('err','Unable to establish new connection to database %s on host %s',$self->{'db_name'},$self->{'db_host'});
 	return undef;
     }
 }
@@ -144,18 +144,18 @@ sub connect {
 sub establish_connection {
     my $self = shift;
 
-    &Sympa::Log::Syslog::do_log('debug','Creating connection to database %s',$self->{'db_name'});
+    Sympa::Log::Syslog::do_log('debug','Creating connection to database %s',$self->{'db_name'});
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name') {
 	unless ($self->{$db_param}) {
-	    &Sympa::Log::Syslog::do_log('info','Missing parameter %s for DBI connection', $db_param);
+	    Sympa::Log::Syslog::do_log('info','Missing parameter %s for DBI connection', $db_param);
 	    return undef;
 	}
 	## SQLite just need a db_name
 	unless ($self->{'db_type'} eq 'SQLite') {
 	    foreach my $db_param ('db_host','db_user') {
 		unless ($self->{$db_param}) {
-		    &Sympa::Log::Syslog::do_log('info','Missing parameter %s for DBI connection', $db_param);
+		    Sympa::Log::Syslog::do_log('info','Missing parameter %s for DBI connection', $db_param);
 		    return undef;
 		}
 	    }
@@ -233,9 +233,9 @@ sub establish_connection {
 		}
 	    }
 	    if ($self->{'reconnect_options'}{'keep_trying'}) {
-		&Sympa::Log::Syslog::do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
+		Sympa::Log::Syslog::do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
 	    } else{
-		&Sympa::Log::Syslog::do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
+		Sympa::Log::Syslog::do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
 		$db_connections{$self->{'connect_string'}}{'status'} = 'failed';
 		$db_connections{$self->{'connect_string'}}{'first_try'} ||= time;
 		return undef;
@@ -365,17 +365,17 @@ sub do_query {
 
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
-    &Sympa::Log::Syslog::do_log('debug2', "Will perform query '%s'", $s);
+    Sympa::Log::Syslog::do_log('debug2', "Will perform query '%s'", $s);
 
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 	# Check connection to database in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-		&Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+		Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -383,25 +383,25 @@ sub do_query {
     unless ($self->{'sth'}->execute) {
 	# Check connection to database in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 		# Check connection to database in case it would be the cause of the problem.
 		unless($self->connect()) {
-		    &Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		    return undef;
 		}else {
 		    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 			my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-			&Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+			Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
 			return undef;
 		    }
 		}
 	    }
 	    unless ($self->{'sth'}->execute) {
 		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-		&Sympa::Log::Syslog::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
+		Sympa::Log::Syslog::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -425,7 +425,7 @@ sub do_prepared_query {
 	    $types{$i} = $p;
 	    push @params, shift;
 	} elsif (ref $p) {
-	    &Sympa::Log::Syslog::do_log('err', 'unexpected %s object.  Ask developer',
+	    Sympa::Log::Syslog::do_log('err', 'unexpected %s object.  Ask developer',
 			 ref $p);
 	    return undef;
 	} else {
@@ -439,19 +439,19 @@ sub do_prepared_query {
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
     $query =~ s/\n\s*/ /g;
-    &Sympa::Log::Syslog::do_log('debug3', "Will perform query '%s'", $query);
+    Sympa::Log::Syslog::do_log('debug3', "Will perform query '%s'", $query);
 
     if ($self->{'cached_prepared_statements'}{$query}) {
 	$sth = $self->{'cached_prepared_statements'}{$query};
     } else {
-	&Sympa::Log::Syslog::do_log('debug3','Did not find prepared statement for %s. Doing it.',$query);
+	Sympa::Log::Syslog::do_log('debug3','Did not find prepared statement for %s. Doing it.',$query);
 	unless ($sth = $self->{'dbh'}->prepare($query)) {
 	    unless($self->connect()) {
-		&Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		return undef;
 	    }else {
 		unless ($sth = $self->{'dbh'}->prepare($query)) {
-		    &Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+		    Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 		    return undef;
 		}
 	    }
@@ -468,16 +468,16 @@ sub do_prepared_query {
     unless ($sth->execute(@params)) {
 	# Check database connection in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($sth = $self->{'dbh'}->prepare($query)) {
 		unless($self->connect()) {
-		    &Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		    return undef;
 		}else {
 		    unless ($sth = $self->{'dbh'}->prepare($query)) {
-			&Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+			Sympa::Log::Syslog::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 			return undef;
 		    }
 		}
@@ -491,7 +491,7 @@ sub do_prepared_query {
 
 	    $self->{'cached_prepared_statements'}{$query} = $sth;
 	    unless ($sth->execute(@params)) {
-		&Sympa::Log::Syslog::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
+		Sympa::Log::Syslog::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -531,10 +531,10 @@ sub fetch {
 	return $status;
     };
     if ( $@ eq "TIMEOUT\n" ) {
-	&Sympa::Log::Syslog::do_log('err','Fetch timeout on remote SQL database');
+	Sympa::Log::Syslog::do_log('err','Fetch timeout on remote SQL database');
         return undef;
     }elsif ($@) {
-	&Sympa::Log::Syslog::do_log('err','Fetch failed on remote SQL database');
+	Sympa::Log::Syslog::do_log('err','Fetch failed on remote SQL database');
     return undef;
     }
 
@@ -549,7 +549,7 @@ sub disconnect {
 }
 
 sub create_db {
-    &Sympa::Log::Syslog::do_log('debug3', '()');    
+    Sympa::Log::Syslog::do_log('debug3', '()');    
     return 1;
 }
 

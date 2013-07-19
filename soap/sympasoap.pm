@@ -66,7 +66,7 @@ sub checkCookie {
 	    ->faultdetail('You should login first');
     }
 
-    &Sympa::Log::Syslog::do_log('debug', 'SOAP checkCookie');
+    Sympa::Log::Syslog::do_log('debug', 'SOAP checkCookie');
 
     return SOAP::Data->name('result')->type('string')->value($sender);
 }
@@ -80,7 +80,7 @@ sub lists {
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('notice', 'lists(%s,%s,%s)', $topic, $subtopic, $sender);
+    Sympa::Log::Syslog::do_log('notice', 'lists(%s,%s,%s)', $topic, $subtopic, $sender);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -90,7 +90,7 @@ sub lists {
 
     my @result;
 
-    &Sympa::Log::Syslog::do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
+    Sympa::Log::Syslog::do_log('info', 'SOAP lists(%s,%s)', $topic, $subtopic);
 
     my $all_lists = List::get_lists($robot);
     foreach my $list (@$all_lists) {
@@ -152,23 +152,23 @@ sub login {
 
     my $http_host = $ENV{'SERVER_NAME'};
     my $robot     = Robot->new($ENV{'SYMPA_ROBOT'});
-    &Sympa::Log::Syslog::do_log('notice', 'login(%s)', $email);
+    Sympa::Log::Syslog::do_log('notice', 'login(%s)', $email);
 
     #foreach my  $k (keys %ENV) {
-    #&Sympa::Log::Syslog::do_log('notice', 'ENV %s = %s', $k, $ENV{$k});
+    #Sympa::Log::Syslog::do_log('notice', 'ENV %s = %s', $k, $ENV{$k});
     #}
     unless (defined $http_host) {
-	&Sympa::Log::Syslog::do_log('err', 'login(): SERVER_NAME not defined');
+	Sympa::Log::Syslog::do_log('err', 'login(): SERVER_NAME not defined');
     }
     unless (defined $email) {
-	&Sympa::Log::Syslog::do_log('err', 'login(): email not defined');
+	Sympa::Log::Syslog::do_log('err', 'login(): email not defined');
     }
     unless (defined $passwd) {
-	&Sympa::Log::Syslog::do_log('err', 'login(): passwd not defined');
+	Sympa::Log::Syslog::do_log('err', 'login(): passwd not defined');
     }
 
     unless ($http_host and $email and $passwd) {
-	&Sympa::Log::Syslog::do_log('err', 'login(): incorrect number of parameters');
+	Sympa::Log::Syslog::do_log('err', 'login(): incorrect number of parameters');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <HTTP host> <email> <password>');
@@ -181,7 +181,7 @@ sub login {
     my $user = Auth::check_auth($robot, $email, $passwd);
 
     unless ($user) {
-	&Sympa::Log::Syslog::do_log('notice', "SOAP : login authentication failed");
+	Sympa::Log::Syslog::do_log('notice', "SOAP : login authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Incorrect password for user $email or bad login");
@@ -209,17 +209,17 @@ sub casLogin {
     my $http_host = $ENV{'SERVER_NAME'};
     my $sender    = $ENV{'USER_EMAIL'};
     my $robot     = Robot->new($ENV{'SYMPA_ROBOT'});
-    &Sympa::Log::Syslog::do_log('notice', 'casLogin(%s)', $proxyTicket);
+    Sympa::Log::Syslog::do_log('notice', 'casLogin(%s)', $proxyTicket);
 
     unless ($http_host and $proxyTicket) {
-	&Sympa::Log::Syslog::do_log('err', 'casLogin(): incorrect number of parameters');
+	Sympa::Log::Syslog::do_log('err', 'casLogin(): incorrect number of parameters');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <HTTP host> <proxyTicket>');
     }
 
     unless (eval "require AuthCAS") {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    "Unable to use AuthCAS library, install AuthCAS (CPAN) first");
 	return undef;
     }
@@ -242,7 +242,7 @@ sub casLogin {
 
 	($user, @proxies) = $cas->validatePT($robot->soap_url, $proxyTicket);
 	unless (defined $user) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		'CAS ticket %s not validated by server %s : %s',
 		$proxyTicket,
@@ -252,7 +252,7 @@ sub casLogin {
 	    next;
 	}
 
-	&Sympa::Log::Syslog::do_log('notice', 'User %s authenticated against server %s',
+	Sympa::Log::Syslog::do_log('notice', 'User %s authenticated against server %s',
 	    $user, $auth_service->{'base_url'});
 
 	## User was authenticated
@@ -261,7 +261,7 @@ sub casLogin {
     }
 
     unless ($user) {
-	&Sympa::Log::Syslog::do_log('notice', "SOAP : login authentication failed");
+	Sympa::Log::Syslog::do_log('notice', "SOAP : login authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
 	    ->faultdetail("Proxy ticket could not be validated");
@@ -270,7 +270,7 @@ sub casLogin {
     ## Now fetch email attribute from LDAP
     unless ($email =
 	&Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    'Could not get email address from LDAP for user %s', $user);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
@@ -305,7 +305,7 @@ sub authenticateAndRun {
     );
 
     unless ($cookie and $service) {
-	&Sympa::Log::Syslog::do_log('err', "Missing parameter");
+	Sympa::Log::Syslog::do_log('err', "Missing parameter");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
 	    ->faultdetail('Use : <email> <cookie> <service>');
@@ -339,10 +339,10 @@ sub getUserEmailByCookie {
     my ($self, $cookie) = @_;
     my $robot = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('debug3', 'getUserEmailByCookie(%s)', $cookie);
+    Sympa::Log::Syslog::do_log('debug3', 'getUserEmailByCookie(%s)', $cookie);
 
     unless ($cookie) {
-	&Sympa::Log::Syslog::do_log('err', "Missing parameter cookie");
+	Sympa::Log::Syslog::do_log('err', "Missing parameter cookie");
 	die SOAP::Fault->faultcode('Client')->faultstring('Missing parameter')
 	    ->faultdetail('Use : <cookie>');
     }
@@ -350,7 +350,7 @@ sub getUserEmailByCookie {
     my $session = SympaSession->new($robot, {'cookie' => $cookie});
 
     unless (defined $session and $session->{'email'} ne 'unknown') {
-	&Sympa::Log::Syslog::do_log('err', "Failed to load session for $cookie");
+	Sympa::Log::Syslog::do_log('err', "Failed to load session for $cookie");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Could not get email from cookie')->faultdetail('');
     }
@@ -369,7 +369,7 @@ sub authenticateRemoteAppAndRun {
     my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
     my $robot = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('notice', 'authenticateRemoteAppAndRun(%s,%s,%s,%s)',
+    Sympa::Log::Syslog::do_log('notice', 'authenticateRemoteAppAndRun(%s,%s,%s,%s)',
 	$appname, $vars, $service, defined $parameters ? join(',', @$parameters) : '');
 
     unless ($appname and $apppassword and $service) {
@@ -381,7 +381,7 @@ sub authenticateRemoteAppAndRun {
 	&Auth::remote_app_check_password($appname, $apppassword, $robot);
 
     unless (defined $proxy_vars) {
-	&Sympa::Log::Syslog::do_log('notice',
+	Sympa::Log::Syslog::do_log('notice',
 	    "authenticateRemoteAppAndRun(): authentication failed");
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authentification failed')
@@ -392,18 +392,18 @@ sub authenticateRemoteAppAndRun {
     foreach my $var (split(/,/, $vars)) {
 
 # check if the remote application is trusted proxy for this variable
-# &Sympa::Log::Syslog::do_log('notice', "sympasoap::authenticateRemoteAppAndRun: Remote application is trusted proxy for  $var");
+# Sympa::Log::Syslog::do_log('notice', "sympasoap::authenticateRemoteAppAndRun: Remote application is trusted proxy for  $var");
 
 	my ($id, $value) = split(/=/, $var);
 	if (!defined $id) {
-	    &Sympa::Log::Syslog::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		"authenticateRemoteAppAndRun(): incorrect syntax id");
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Incorrect syntax id')
 		->faultdetail("Unrecognized syntax $var");
 	}
 	if (!defined $value) {
-	    &Sympa::Log::Syslog::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		"authenticateRemoteAppAndRun(): incorrect syntax value");
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Incorrect syntax value')
@@ -422,7 +422,7 @@ sub amI {
 
     my $robot = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('notice', 'amI(%s,%s,%s)', $listname, $function, $user);
+    Sympa::Log::Syslog::do_log('notice', 'amI(%s,%s,%s)', $listname, $function, $user);
 
     unless ($listname and $user and $function) {
 	die SOAP::Fault->faultcode('Client')
@@ -433,7 +433,7 @@ sub amI {
     $listname = lc($listname);
     my $list = List->new($listname, $robot);
 
-    &Sympa::Log::Syslog::do_log('debug', 'SOAP isSubscriber(%s)', $listname);
+    Sympa::Log::Syslog::do_log('debug', 'SOAP isSubscriber(%s)', $listname);
 
     if ($list) {
 	if ($function eq 'subscriber') {
@@ -475,11 +475,11 @@ sub info {
 	    ->faultdetail('Use : <list>');
     }
 
-    &Sympa::Log::Syslog::do_log('notice', 'SOAP info(%s)', $listname);
+    Sympa::Log::Syslog::do_log('notice', 'SOAP info(%s)', $listname);
 
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info', 'Info %s from %s refused, list unknown',
+	Sympa::Log::Syslog::do_log('info', 'Info %s from %s refused, list unknown',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
 	    ->faultdetail("List $listname unknown");
@@ -501,7 +501,7 @@ sub info {
 
     if ($action =~ /reject/i) {
 	my $reason_string = get_reason_string($result->{'reason'}, $robot);
-	&Sympa::Log::Syslog::do_log('info', 'SOAP : info %s from %s refused (not allowed)',
+	Sympa::Log::Syslog::do_log('info', 'SOAP : info %s from %s refused (not allowed)',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Not allowed')
 	    ->faultdetail($reason_string);
@@ -540,7 +540,7 @@ sub info {
 	#push @result, SOAP::Data->type('listType')->value($result_item);
 	return SOAP::Data->value($result_item);
     }
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP : info %s from %s aborted, unknown requested action in scenario',
 	$listname,
@@ -565,7 +565,7 @@ sub createList {
     my $robot                   = Robot->new($ENV{'SYMPA_ROBOT'});
     my $remote_application_name = $ENV{'remote_application_name'};
 
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP createList(list = %s\@%s,subject = %s,template = %s,description = %s,topics = %s) from %s via proxy application %s',
 	$listname,
@@ -596,7 +596,7 @@ sub createList {
 
     my $list = List->new($listname, $robot);
     if ($list) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'create_list %s@%s from %s refused, list already exist',
 	    $listname, $robot->domain, $sender);
 	die SOAP::Fault->faultcode('Client')
@@ -618,7 +618,7 @@ sub createList {
 	$reject .= 'topics';
     }
     if ($reject) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'create_list %s@%s from %s refused, missing parameter(s) %s',
 	    $listname, $robot->domain, $sender, $reject);
 	die SOAP::Fault->faultcode('Server')->faultstring('Missing parameter')
@@ -643,7 +643,7 @@ sub createList {
 	$reason   = $result->{'reason'};
     }
     unless ($r_action =~ /do_it|listmaster/) {
-	&Sympa::Log::Syslog::do_log('info', 'create_list %s@%s from %s refused, reason %s',
+	Sympa::Log::Syslog::do_log('info', 'create_list %s@%s from %s refused, reason %s',
 	    $listname, $robot->domain, $sender, $reason);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Authorization reject')
@@ -679,7 +679,7 @@ sub createList {
     my $resul =
 	&admin::create_list_old($parameters, $template, $robot, "soap");
     unless (defined $resul) {
-	&Sympa::Log::Syslog::do_log('info', 'unable to create list %s@%s from %s ',
+	Sympa::Log::Syslog::do_log('info', 'unable to create list %s@%s from %s ',
 	    $listname, $robot->domain, $sender);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('unable to create list')
@@ -692,9 +692,9 @@ sub createList {
 		'request_list_creation', {'list' => $list, 'email' => $sender}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('info', 'notify listmaster for list creation');
+	    Sympa::Log::Syslog::do_log('info', 'notify listmaster for list creation');
 	} else {
-	    &Sympa::Log::Syslog::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		"Unable to send notify 'request_list_creation' to listmaster"
 	    );
 	}
@@ -711,7 +711,7 @@ sub closeList {
     my $robot                   = Robot->new($ENV{'SYMPA_ROBOT'});
     my $remote_application_name = $ENV{'remote_application_name'};
 
-    &Sympa::Log::Syslog::do_log('info',
+    Sympa::Log::Syslog::do_log('info',
 	'SOAP closeList(list = %s\@%s) from %s via proxy application %s',
 	$listname, $robot->domain, $sender, $remote_application_name);
 
@@ -733,7 +733,7 @@ sub closeList {
 
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info', 'closeList %s@%s from %s refused, unknown list',
+	Sympa::Log::Syslog::do_log('info', 'closeList %s@%s from %s refused, unknown list',
 	    $listname, $robot->domain, $sender);
 	die SOAP::Fault->faultcode('Client')->faultstring('unknown list')
 	    ->faultdetail("inknown list $listname");
@@ -742,24 +742,24 @@ sub closeList {
     # check authorization
     unless (($list->am_i('owner', $sender)) || (Site->is_listmaster($sender)))
     {
-	&Sympa::Log::Syslog::do_log('info', 'closeList %s from %s not allowed',
+	Sympa::Log::Syslog::do_log('info', 'closeList %s from %s not allowed',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
 	    ->faultdetail("Not allowed");
     }
 
     if ($list->status eq 'closed') {
-	&Sympa::Log::Syslog::do_log('info', 'closeList: already closed');
+	Sympa::Log::Syslog::do_log('info', 'closeList: already closed');
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('list allready closed')
 	    ->faultdetail("list $listname already closed");
     } elsif ($list->status eq 'pending') {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'do_close_list: closing a pending list makes it purged');
 	$list->purge($sender);
     } else {
 	$list->close_list($sender);
-	&Sympa::Log::Syslog::do_log('info', 'do_close_list: list %s closed', $listname);
+	Sympa::Log::Syslog::do_log('info', 'do_close_list: list %s closed', $listname);
     }
     return 1;
 }
@@ -775,7 +775,7 @@ sub add {
     my $robot                   = Robot->new($ENV{'SYMPA_ROBOT'});
     my $remote_application_name = $ENV{'remote_application_name'};
 
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP add(list = %s@%s,email = %s,quiet = %s) from %s via proxy application %s',
 	$listname,
@@ -804,7 +804,7 @@ sub add {
     }
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s refused, no such list ',
+	Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s refused, no such list ',
 	    $listname, $robot->domain, $email, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Undefined list')
 	    ->faultdetail("Undefined list");
@@ -830,7 +830,7 @@ sub add {
     }
 
     unless (defined $action) {
-	&Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s : scenario error',
+	Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s : scenario error',
 	    $listname, $robot->domain, $email, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('scenario error')
 	    ->faultdetail(
@@ -840,7 +840,7 @@ sub add {
 
     unless ($action =~ /do_it/) {
 	my $reason_string = get_reason_string($reason, $robot);
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'SOAP : add %s@%s %s from %s refused (not allowed)',
 	    $listname, $robot->domain, $email, $sender);
 	die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
@@ -848,7 +848,7 @@ sub add {
     }
 
     if ($list->is_list_member($email)) {
-	&Sympa::Log::Syslog::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'err',
 	    'add %s@%s %s from %s : failed, user already member of the list',
 	    $listname,
@@ -873,7 +873,7 @@ sub add {
 
 	$list->add_list_member($u);
 	if (defined $list->{'add_outcome'}{'errors'}) {
-	    &Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s : Unable to add user',
+	    Sympa::Log::Syslog::do_log('info', 'add %s@%s %s from %s : Unable to add user',
 		$listname, $robot->domain, $email, $sender);
 	    my $error = sprintf 'Unable to add user %s in list %s: %s',
 		$email, $listname,
@@ -891,12 +891,12 @@ sub add {
 		'welcome', $email, {'auto_submitted' => 'auto-generated'}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		"Unable to send template 'welcome' to $email");
 	}
     }
 
-    &Sympa::Log::Syslog::do_log('info', 'ADD %s %s from %s accepted (%d subscribers)',
+    Sympa::Log::Syslog::do_log('info', 'ADD %s %s from %s accepted (%d subscribers)',
 	$list->name, $email, $sender, $list->total);
     if ($action =~ /notify/i) {
 	unless (
@@ -909,7 +909,7 @@ sub add {
 		}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('info',
+	    Sympa::Log::Syslog::do_log('info',
 		'Unable to send notify "notice" to %s list owner', $list);
 	}
     }
@@ -925,7 +925,7 @@ sub del {
     my $robot                   = Robot->new($ENV{'SYMPA_ROBOT'});
     my $remote_application_name = $ENV{'remote_application_name'};
 
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP del(list = %s@%s,email = %s,quiet = %s) from %s via proxy application %s',
 	$listname,
@@ -954,7 +954,7 @@ sub del {
     }
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info', 'del %s@%s %s from %s refused, no such list ',
+	Sympa::Log::Syslog::do_log('info', 'del %s@%s %s from %s refused, no such list ',
 	    $listname, $robot->domain, $email, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Undefined list')
 	    ->faultdetail("Undefined list");
@@ -980,7 +980,7 @@ sub del {
     }
 
     unless (defined $action) {
-	&Sympa::Log::Syslog::do_log('info', 'del %s@%s %s from %s : scenario error',
+	Sympa::Log::Syslog::do_log('info', 'del %s@%s %s from %s : scenario error',
 	    $listname, $robot->domain, $email, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('scenario error')
 	    ->faultdetail(
@@ -990,7 +990,7 @@ sub del {
 
     unless ($action =~ /do_it/) {
 	my $reason_string = get_reason_string($reason, $robot);
-	&Sympa::Log::Syslog::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'info',
 	    'SOAP : del %s@%s %s from %s by %srefused (not allowed)',
 	    $listname,
@@ -1005,7 +1005,7 @@ sub del {
 
     my $user_entry = $list->get_list_member($email);
     unless ((defined $user_entry)) {
-	&Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s refused, not on list',
+	Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s refused, not on list',
 	    $listname, $email, $sender);
 	die SOAP::Fault->faultcode('Client')->faultstring('Not subscribed')
 	    ->faultdetail('Not member of list or not subscribed');
@@ -1019,7 +1019,7 @@ sub del {
 	$list->delete_list_member('users' => [$email], 'exclude' => ' 1')) {
 	my $error =
 	    "Unable to delete user $email from list $listname for command 'del'";
-	&Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s failed, ' . $error);
+	Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s failed, ' . $error);
 	die SOAP::Fault->faultcode('Server')
 	    ->faultstring('Unable to remove subscriber informations')
 	    ->faultdetail('Database access failed');
@@ -1035,12 +1035,12 @@ sub del {
 		'removed', $email, {'auto_submitted' => 'auto-generated'}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('notice',
+	    Sympa::Log::Syslog::do_log('notice',
 		"Unable to send template 'removed' to $email");
 	}
     }
 
-    &Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s accepted (%d subscribers)',
+    Sympa::Log::Syslog::do_log('info', 'DEL %s %s from %s accepted (%d subscribers)',
 	$listname, $email, $sender, $list->total);
     if ($action =~ /notify/i) {
 	unless (
@@ -1053,7 +1053,7 @@ sub del {
 		}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('info',
+	    Sympa::Log::Syslog::do_log('info',
 		'Unable to send notify "notice" to %s list owner', $list);
 	}
     }
@@ -1081,11 +1081,11 @@ sub review {
 	    ->faultdetail('Use : <list>');
     }
 
-    &Sympa::Log::Syslog::do_log('debug', 'SOAP review(%s,%s)', $listname, $robot);
+    Sympa::Log::Syslog::do_log('debug', 'SOAP review(%s,%s)', $listname, $robot);
 
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'Review %s from %s refused, list unknown to robot %s',
 	    $listname, $sender, $robot);
 	die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
@@ -1110,7 +1110,7 @@ sub review {
 
     if ($action =~ /reject/i) {
 	my $reason_string = get_reason_string($result->{'reason'}, $robot);
-	&Sympa::Log::Syslog::do_log('info', 'SOAP : review %s from %s refused (not allowed)',
+	Sympa::Log::Syslog::do_log('info', 'SOAP : review %s from %s refused (not allowed)',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Not allowed')
 	    ->faultdetail($reason_string);
@@ -1121,12 +1121,12 @@ sub review {
 	## Members list synchronization if include is in use
 	if ($list->has_include_data_sources()) {
 	    unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
-		&Sympa::Log::Syslog::do_log('notice', 'Unable to synchronize list %s.',
+		Sympa::Log::Syslog::do_log('notice', 'Unable to synchronize list %s.',
 		    $listname);
 	    }
 	}
 	unless ($user = $list->get_first_list_member({'sortby' => 'email'})) {
-	    &Sympa::Log::Syslog::do_log('err', "SOAP : no subscribers in list %s", $list);
+	    Sympa::Log::Syslog::do_log('err', "SOAP : no subscribers in list %s", $list);
 	    push @resultSoap,
 		SOAP::Data->name('result')->type('string')
 		->value('no_subscribers');
@@ -1144,11 +1144,11 @@ sub review {
 		    ->value($user->{'email'});
 	    }
 	} while ($user = $list->get_next_list_member());
-	&Sympa::Log::Syslog::do_log('info', 'SOAP : review %s from %s accepted',
+	Sympa::Log::Syslog::do_log('info', 'SOAP : review %s from %s accepted',
 	    $listname, $sender);
 	return SOAP::Data->name('return')->value(\@resultSoap);
     }
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP : review %s from %s aborted, unknown requested action in scenario',
 	$listname,
@@ -1180,11 +1180,11 @@ sub fullReview {
 	    ->faultdetail('Use : <list>');
     }
 
-    &Sympa::Log::Syslog::do_log('debug', 'SOAP fullReview(%s,%s)', $listname, $robot);
+    Sympa::Log::Syslog::do_log('debug', 'SOAP fullReview(%s,%s)', $listname, $robot);
 
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'Review %s from %s refused, list unknown to robot %s',
 	    $listname, $sender, $robot->domain);
 	die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
@@ -1205,7 +1205,7 @@ sub fullReview {
     ## Members list synchronization if include is in use
     if ($list->has_include_data_sources()) {
 	unless ($list->on_the_fly_sync_include('use_ttl' => 1)) {
-	    &Sympa::Log::Syslog::do_log('notice', 'Unable to synchronize list %s.',
+	    Sympa::Log::Syslog::do_log('notice', 'Unable to synchronize list %s.',
 		$listname);
 	}
     }
@@ -1271,7 +1271,7 @@ sub fullReview {
 	push @result, struct_to_soap($members->{$email});
     }
 
-    &Sympa::Log::Syslog::do_log('info', 'SOAP : fullReview %s from %s accepted',
+    Sympa::Log::Syslog::do_log('info', 'SOAP : fullReview %s from %s accepted',
 	$listname, $sender);
     return SOAP::Data->name('return')->value(\@result);
 }
@@ -1282,7 +1282,7 @@ sub signoff {
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('notice', 'SOAP signoff(%s,%s)', $listname, $sender);
+    Sympa::Log::Syslog::do_log('notice', 'SOAP signoff(%s,%s)', $listname, $sender);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -1301,7 +1301,7 @@ sub signoff {
 
     ## Is this list defined
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'SOAP : sign off from %s for %s refused, list unknown',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Unknown list.')
@@ -1339,7 +1339,7 @@ sub signoff {
 
     if ($action =~ /reject/i) {
 	my $reason_string = get_reason_string($result->{'reason'}, $robot);
-	&Sympa::Log::Syslog::do_log(
+	Sympa::Log::Syslog::do_log(
 	    'info',
 	    'SOAP : sign off from %s for the email %s of the user %s refused (not allowed)',
 	    $listname,
@@ -1375,7 +1375,7 @@ sub signoff {
 	## remove it if found, otherwise just reject the
 	## command.
 	unless ($list->is_list_member($sender)) {
-	    &Sympa::Log::Syslog::do_log('info',
+	    Sympa::Log::Syslog::do_log('info',
 		'SOAP : sign off %s from %s refused, not on list',
 		$listname, $sender);
 
@@ -1386,7 +1386,7 @@ sub signoff {
 			'warn-signoff', {'who' => $sender}
 		    )
 		    ) {
-		    &Sympa::Log::Syslog::do_log(
+		    Sympa::Log::Syslog::do_log(
 			'err',
 			'Unable to send notify "warn-signoff" to %s listowner',
 			$list
@@ -1414,23 +1414,23 @@ sub signoff {
 		    }
 		)
 		) {
-		&Sympa::Log::Syslog::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Unable to send notify "notice" to %s listowner', $list);
 	    }
 	}
 
 	## Send bye.tpl to sender
 	unless ($list->send_file('bye', $sender)) {
-	    &Sympa::Log::Syslog::do_log('err', "Unable to send template 'bye' to $sender");
+	    Sympa::Log::Syslog::do_log('err', "Unable to send template 'bye' to $sender");
 	}
 
-	&Sympa::Log::Syslog::do_log('info', 'SOAP : sign off %s from %s accepted',
+	Sympa::Log::Syslog::do_log('info', 'SOAP : sign off %s from %s accepted',
 	    $listname, $sender);
 
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
 
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP : sign off %s from %s aborted, unknown requested action in scenario',
 	$listname,
@@ -1448,7 +1448,7 @@ sub subscribe {
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('info', 'subscribe(%s,%s, %s)', $listname, $sender, $gecos);
+    Sympa::Log::Syslog::do_log('info', 'subscribe(%s,%s, %s)', $listname, $sender, $gecos);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -1462,13 +1462,13 @@ sub subscribe {
 	    ->faultdetail('Use : <list> [user gecos]');
     }
 
-    &Sympa::Log::Syslog::do_log('notice', 'SOAP subscribe(%s,%s)', $listname, $sender);
+    Sympa::Log::Syslog::do_log('notice', 'SOAP subscribe(%s,%s)', $listname, $sender);
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
     my $list = List->new($listname, $robot);
     unless ($list) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'Subscribe to %s from %s refused, list unknown to robot %s',
 	    $listname, $sender, $robot);
 	die SOAP::Fault->faultcode('Server')->faultstring('Unknown list')
@@ -1495,11 +1495,11 @@ sub subscribe {
     die SOAP::Fault->faultcode('Server')->faultstring('No action available.')
 	unless (defined $action);
 
-    &Sympa::Log::Syslog::do_log('debug2', 'SOAP subscribe action : %s', $action);
+    Sympa::Log::Syslog::do_log('debug2', 'SOAP subscribe action : %s', $action);
 
     if ($action =~ /reject/i) {
 	my $reason_string = get_reason_string($result->{'reason'}, $robot);
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    'SOAP subscribe to %s from %s refused (not allowed)',
 	    $listname, $sender);
 	die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
@@ -1519,20 +1519,20 @@ sub subscribe {
 		}
 	    )
 	    ) {
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		'Unable to send notify "subrequest" to %s listowner', $list);
 	}
 
 #      $list->send_sub_to_owner($sender, $keyauth, $list->robot->get_address(), $gecos);
 	$list->store_subscription_request($sender, $gecos);
-	&Sympa::Log::Syslog::do_log('info', '%s from %s forwarded to the owners of the list',
+	Sympa::Log::Syslog::do_log('info', '%s from %s forwarded to the owners of the list',
 	    $listname, $sender);
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
     if ($action =~ /request_auth/i) {
 	my $cmd = 'subscribe';
 	$list->request_auth($sender, $cmd, $gecos);
-	&Sympa::Log::Syslog::do_log('info', 'SOAP subscribe :  %s from %s, auth requested',
+	Sympa::Log::Syslog::do_log('info', 'SOAP subscribe :  %s from %s, auth requested',
 	    $listname, $sender);
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
@@ -1541,7 +1541,7 @@ sub subscribe {
 	my $is_sub = $list->is_list_member($sender);
 
 	unless (defined($is_sub)) {
-	    &Sympa::Log::Syslog::do_log('err', 'SOAP subscribe : user lookup failed');
+	    Sympa::Log::Syslog::do_log('err', 'SOAP subscribe : user lookup failed');
 	    die SOAP::Fault->faultcode('Server')->faultstring('Undef')
 		->faultdetail("SOAP subscribe : user lookup failed");
 	}
@@ -1554,7 +1554,7 @@ sub subscribe {
 	    $user->{'update_date'} = time;
 	    $user->{'gecos'} = $gecos if $gecos;
 
-	    &Sympa::Log::Syslog::do_log('err', 'Subscribe : user already subscribed');
+	    Sympa::Log::Syslog::do_log('err', 'Subscribe : user already subscribed');
 
 	    die SOAP::Fault->faultcode('Server')->faultstring('Undef.')
 		->faultdetail("SOAP subscribe : update user failed")
@@ -1584,7 +1584,7 @@ sub subscribe {
 	## Now send the welcome file to the user
 	unless ($action =~ /quiet/i) {
 	    unless ($list->send_file('welcome', $sender)) {
-		&Sympa::Log::Syslog::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    "Unable to send template 'bye' to $sender");
 	    }
 	}
@@ -1600,17 +1600,17 @@ sub subscribe {
 		    }
 		)
 		) {
-		&Sympa::Log::Syslog::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    'Unable to send notify "notice" to %s listowner', $list);
 	    }
 	}
-	&Sympa::Log::Syslog::do_log('info', 'SOAP subcribe : %s from %s accepted',
+	Sympa::Log::Syslog::do_log('info', 'SOAP subcribe : %s from %s accepted',
 	    $listname, $sender);
 
 	return SOAP::Data->name('result')->type('boolean')->value(1);
     }
 
-    &Sympa::Log::Syslog::do_log(
+    Sympa::Log::Syslog::do_log(
 	'info',
 	'SOAP subscribe : %s from %s aborted, unknown requested action in scenario',
 	$listname,
@@ -1628,7 +1628,7 @@ sub complexWhich {
     my $self = shift;
     my @result;
     my $sender = $ENV{'USER_EMAIL'};
-    &Sympa::Log::Syslog::do_log('notice', 'xx complexWhich(%s)', $sender);
+    Sympa::Log::Syslog::do_log('notice', 'xx complexWhich(%s)', $sender);
 
     $self->which('complex');
 }
@@ -1639,7 +1639,7 @@ sub complexLists {
     my $subtopic = shift || '';
     my @result;
     my $sender = $ENV{'USER_EMAIL'};
-    &Sympa::Log::Syslog::do_log('notice', 'complexLists(%s)', $sender);
+    Sympa::Log::Syslog::do_log('notice', 'complexLists(%s)', $sender);
 
     $self->lists($topic, $subtopic, 'complex');
 }
@@ -1655,7 +1655,7 @@ sub which {
     my $sender = $ENV{'USER_EMAIL'};
     my $robot  = Robot->new($ENV{'SYMPA_ROBOT'});
 
-    &Sympa::Log::Syslog::do_log('notice', 'which(%s,%s)', $sender, $mode);
+    Sympa::Log::Syslog::do_log('notice', 'which(%s,%s)', $sender, $mode);
 
     unless ($sender) {
 	die SOAP::Fault->faultcode('Client')
@@ -1793,7 +1793,7 @@ sub get_reason_string {
 	) {
 	my $error = &tt2::get_error();
 	$robot->send_notify_to_listmaster('web_tt2_error', [$error]);
-	&Sympa::Log::Syslog::do_log('info', "get_reason_string : error parsing");
+	Sympa::Log::Syslog::do_log('info', "get_reason_string : error parsing");
 	return '';
     }
 

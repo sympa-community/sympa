@@ -40,17 +40,17 @@ my %challenge_hard_attributes = ('id_challenge' => 1, 'date' => 1, 'robot'  => 1
 sub create {
     my ($robot, $email, $context) = @_;
 
-    &Sympa::Log::Syslog::do_log('debug', 'Challenge::new(%s, %s, %s)', $challenge_id, $email, $robot);
+    Sympa::Log::Syslog::do_log('debug', 'Challenge::new(%s, %s, %s)', $challenge_id, $email, $robot);
 
     my $challenge={};
     
     unless ($robot) {
-	&Sympa::Log::Syslog::do_log('err', 'Missing robot parameter, cannot create challenge object') ;
+	Sympa::Log::Syslog::do_log('err', 'Missing robot parameter, cannot create challenge object') ;
 	return undef;
     }
     
     unless ($email) {
-	&Sympa::Log::Syslog::do_log('err', 'Missing email parameter, cannot create challenge object') ;
+	Sympa::Log::Syslog::do_log('err', 'Missing email parameter, cannot create challenge object') ;
 	return undef;
     }
 
@@ -69,17 +69,17 @@ sub load {
 
     my $id_challenge = shift;
 
-    &Sympa::Log::Syslog::do_log('debug', 'Challenge::load(%s)', $id_challenge);
+    Sympa::Log::Syslog::do_log('debug', 'Challenge::load(%s)', $id_challenge);
 
     unless ($challenge_id) {
-	&Sympa::Log::Syslog::do_log('err', 'Challenge::load() : internal error, SympaSession::load called with undef id_challenge');
+	Sympa::Log::Syslog::do_log('err', 'Challenge::load() : internal error, SympaSession::load called with undef id_challenge');
 	return undef;
     }
     
     my $sth;
 
     unless($sth = &SDM::do_query("SELECT id_challenge AS id_challenge, date_challenge AS 'date', remote_addr_challenge AS remote_addr, robot_challenge AS robot, email_challenge AS email, data_challenge AS data, hit_challenge AS hit, start_date_challenge AS start_date FROM challenge_table WHERE id_challenge = %s", $cookie)) {
-	&Sympa::Log::Syslog::do_log('err','Unable to retrieve challenge %s from database',$cookie);
+	Sympa::Log::Syslog::do_log('err','Unable to retrieve challenge %s from database',$cookie);
 	return undef;
     }
 
@@ -98,9 +98,9 @@ sub load {
     $challenge_datas->{'robot'} = $challenge->{'robot'};
     $challenge_datas->{'email'} = $challenge->{'email'};
 
-    &Sympa::Log::Syslog::do_log('debug3', 'Challenge::load(): removing existing challenge del_statement = %s',$del_statement);	
+    Sympa::Log::Syslog::do_log('debug3', 'Challenge::load(): removing existing challenge del_statement = %s',$del_statement);	
     unless(&SDM::do_query("DELETE FROM challenge_table WHERE (id_challenge=%s)",$id_challenge)) {
-	&Sympa::Log::Syslog::do_log('err','Unable to delete challenge %s from database',$id_challenge);
+	Sympa::Log::Syslog::do_log('err','Unable to delete challenge %s from database',$id_challenge);
 	return undef;
     }
 
@@ -112,7 +112,7 @@ sub load {
 sub store {
 
     my $challenge = shift;
-    &Sympa::Log::Syslog::do_log('debug', 'Challenge::store()');
+    Sympa::Log::Syslog::do_log('debug', 'Challenge::store()');
 
     return undef unless ($challenge->{'id_challenge'});
 
@@ -126,7 +126,7 @@ sub store {
     my $sth;
 
     unless(&SDM::do_query("INSERT INTO challenge_table (id_challenge, date_challenge, robot_challenge, email_challenge, data_challenge) VALUES ('%s','%s','%s','%s','%s'')",$challenge->{'id_challenge'},$challenge->{'date'},$challenge->{'robot'},$challenge->{'email'},$data_string)) {
-	&Sympa::Log::Syslog::do_log('err','Unable to store challenge %s informations in database (robot: %s, user: %s)',$challenge->{'id_challenge'},$challenge->{'robot'},$challenge->{'email'});
+	Sympa::Log::Syslog::do_log('err','Unable to store challenge %s informations in database (robot: %s, user: %s)',$challenge->{'id_challenge'},$challenge->{'robot'},$challenge->{'email'});
 	return undef;
     }
 }

@@ -163,7 +163,7 @@ sub list_tasks {
 # NO LONGER USED.
 #sub get_tasks_by_list {
 #    my $list_id = shift;
-#    &Sympa::Log::Syslog::do_log('debug',"Getting tasks for list '%s'",$list_id);
+#    Sympa::Log::Syslog::do_log('debug',"Getting tasks for list '%s'",$list_id);
 #    return () unless (defined $task_by_list{$list_id});
 #    return values %{$task_by_list{$list_id}};
 #}
@@ -173,14 +173,14 @@ sub list_tasks {
 sub get_used_models {
     ## Optional list parameter
     my $list_id = shift;
-    &Sympa::Log::Syslog::do_log('debug3',"Getting used models for list '%s'",$list_id);
+    Sympa::Log::Syslog::do_log('debug3',"Getting used models for list '%s'",$list_id);
 
     if (defined $list_id) {
 	if (defined $task_by_list{$list_id}) {
-	    &Sympa::Log::Syslog::do_log('debug2',"Found used models for list '%s'",$list_id);
+	    Sympa::Log::Syslog::do_log('debug2',"Found used models for list '%s'",$list_id);
 	    return keys %{$task_by_list{$list_id}}
 	}else {
-	    &Sympa::Log::Syslog::do_log('debug2',"Did not find any used models for list '%s'",$list_id);
+	    Sympa::Log::Syslog::do_log('debug2',"Did not find any used models for list '%s'",$list_id);
 	    return ();
 	}
 	
@@ -192,7 +192,7 @@ sub get_used_models {
 ## Returns a ref to @task_list, previously defined in the "list_task" sub.
 # NO LONGER USED.
 #sub get_task_list {
-#    &Sympa::Log::Syslog::do_log('debug',"Getting tasks list");
+#    Sympa::Log::Syslog::do_log('debug',"Getting tasks list");
 #    return @task_list;
 #}
 
@@ -214,7 +214,7 @@ sub create_required_tasks {
 sub create_required_global_tasks {
     my $param = shift;
     my $data = $param->{'data'};
-    &Sympa::Log::Syslog::do_log('debug','Creating required tasks from global models');
+    Sympa::Log::Syslog::do_log('debug','Creating required tasks from global models');
 
     my $task;
     my %used_models; # models for which a task exists
@@ -222,7 +222,7 @@ sub create_required_global_tasks {
 	$used_models{$model} = 1;
     }
     foreach my $key (keys %global_models) {	
-	&Sympa::Log::Syslog::do_log('debug2',"global_model : $key");
+	Sympa::Log::Syslog::do_log('debug2',"global_model : $key");
 	unless ($used_models{$global_models{$key}}) {
 	    if (Site->$key) {
 		unless($task = Task::create ({'creation_date' => $param->{'current_date'},'model' => $global_models{$key}, 'flavour' => Site->$key, 'data' =>$data})) {
@@ -237,7 +237,7 @@ sub create_required_global_tasks {
 ## Checks that all the required LIST tasks are defined. Create them if needed.
 sub create_required_lists_tasks {
     my $param = shift;
-    &Sympa::Log::Syslog::do_log('debug','Creating required tasks from list models');
+    Sympa::Log::Syslog::do_log('debug','Creating required tasks from list models');
 
     my $task;
     foreach my $robot (@{Robot::get_robots()}) {

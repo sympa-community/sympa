@@ -133,7 +133,7 @@ sub parse_tt2_messageasstring {
     ## We may receive a list of recipients
     if (ref ($rcpt)) {
 	unless (ref ($rcpt) eq 'ARRAY') {
-	    &Sympa::Log::Syslog::do_log('notice', 'Wrong type of reference for rcpt');
+	    Sympa::Log::Syslog::do_log('notice', 'Wrong type of reference for rcpt');
 	    return undef;
 	}
     }
@@ -392,7 +392,7 @@ sub mail_message {
 	    chomp $dom;
 	}
 	$rcpt_by_dom{$dom} += 1 ;
-	&Sympa::Log::Syslog::do_log('debug3',
+	Sympa::Log::Syslog::do_log('debug3',
 	    'domain: %s ; rcpt by dom: %s ; limit for this domain: %s',
 	    $dom, $rcpt_by_dom{$dom}, Site->nrcpt_by_domain->{$dom});
 
@@ -512,13 +512,13 @@ sub reaper {
    while (($i = waitpid(-1, $block ? &POSIX::WNOHANG : 0)) > 0) {
       $block = 1;
       if (!defined($pid{$i})) {
-         &Sympa::Log::Syslog::do_log('debug2', "Reaper waited $i, unknown process to me");
+         Sympa::Log::Syslog::do_log('debug2', "Reaper waited $i, unknown process to me");
          next;
       }
       $opensmtp--;
       delete($pid{$i});
    }
-   &Sympa::Log::Syslog::do_log('debug2', "Reaper unwaited PIDs : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp);
+   Sympa::Log::Syslog::do_log('debug2', "Reaper unwaited PIDs : %s\nOpen = %s\n", join(' ', sort keys %pid), $opensmtp);
    return $i;
 }
      
@@ -560,7 +560,7 @@ sub sendto {
     my $use_bulk = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
 
-    &Sympa::Log::Syslog::do_log('debug2', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s, last: %s, use_bulk: %s', $from, $listname, $message->is_crypted, $verp, $priority, $tag_as_last, $use_bulk);
+    Sympa::Log::Syslog::do_log('debug2', 'mail::sendto(from : %s,listname: %s, encrypt : %s, verp : %s, priority = %s, last: %s, use_bulk: %s', $from, $listname, $message->is_crypted, $verp, $priority, $tag_as_last, $use_bulk);
 
     my $delivery_date =  $params{'delivery_date'};
     $delivery_date = time() unless $delivery_date; # if not specified, delivery tile is right now (used for sympa messages etc)
@@ -575,7 +575,7 @@ sub sendto {
 	    # trace foreach my $unique_rcpt (@{$bulk_of_rcpt}) {
 	    foreach my $email (@{$bulk_of_rcpt}) {
 		if ($email !~ /@/) {
-		    &Sympa::Log::Syslog::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
+		    Sympa::Log::Syslog::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
 		    return undef;
 		}
 		unless ($message->smime_encrypt ($email)){
@@ -591,7 +591,7 @@ sub sendto {
 				 'delivery_date' =>  $delivery_date,
 				 'use_bulk' => $use_bulk,
 				 'tag_as_last' => $tag_as_last)) {
-		    &Sympa::Log::Syslog::do_log('err',"Failed to send encrypted message"); 
+		    Sympa::Log::Syslog::do_log('err',"Failed to send encrypted message"); 
 		    return undef;
 		}
 		$tag_as_last = 0;
@@ -665,7 +665,7 @@ sub sending {
     if ($sign_mode and $sign_mode eq 'smime') {
 	Sympa::Log::Syslog::do_log('debug2','Will sign message');
 	unless ($message->smime_sign()) {
-	    &Sympa::Log::Syslog::do_log('err', 'Unable to sign message from %s', $listname);
+	    Sympa::Log::Syslog::do_log('err', 'Unable to sign message from %s', $listname);
 	    return undef;
 	}
     }
@@ -726,7 +726,7 @@ sub sending {
 	*SMTP = &smtpto($from, $rcpt, $robot);	
 	print SMTP $string_to_send ;	
 	unless (close SMTP) {
-	    &Sympa::Log::Syslog::do_log('err', 'could not close safefork to sendmail');
+	    Sympa::Log::Syslog::do_log('err', 'could not close safefork to sendmail');
 	    return undef;
 	};
     }	
@@ -757,13 +757,13 @@ sub smtpto {
     my $sign_mode = shift;
 
    unless ($from) {
-       &Sympa::Log::Syslog::do_log('err', 'Missing Return-Path in mail::smtpto()');
+       Sympa::Log::Syslog::do_log('err', 'Missing Return-Path in mail::smtpto()');
    }
 
    if (ref($rcpt) eq 'SCALAR') {
-       &Sympa::Log::Syslog::do_log('debug2', 'mail::smtpto(%s, %s, %s )', $from, $$rcpt,$sign_mode);
+       Sympa::Log::Syslog::do_log('debug2', 'mail::smtpto(%s, %s, %s )', $from, $$rcpt,$sign_mode);
    }elsif (ref($rcpt) eq 'ARRAY')  {
-       &Sympa::Log::Syslog::do_log('debug2', 'mail::smtpto(%s, %s, %s)', $from, join(',', @{$rcpt}), $sign_mode);
+       Sympa::Log::Syslog::do_log('debug2', 'mail::smtpto(%s, %s, %s)', $from, join(',', @{$rcpt}), $sign_mode);
    }
   
    my($pid, $str);
@@ -783,9 +783,9 @@ sub smtpto {
    ## Check how many open smtp's we have, if too many wait for a few
    ## to terminate and then do our job.
 
-   &Sympa::Log::Syslog::do_log('debug3',"Open = $opensmtp");
+   Sympa::Log::Syslog::do_log('debug3',"Open = $opensmtp");
    while ($opensmtp > $robot->maxsmtp) {
-       &Sympa::Log::Syslog::do_log('debug3',"mail::smtpto: too many open SMTP ($opensmtp), calling reaper" );
+       Sympa::Log::Syslog::do_log('debug3',"mail::smtpto: too many open SMTP ($opensmtp), calling reaper" );
        last if (&reaper(0) == -1); ## Blocking call to the reaper.
        }
     
@@ -836,7 +836,7 @@ sub smtpto {
 	    $sendmail, join(' ', @sendmail_args), $from, $r);
    }
    unless (close(IN)){
-       &Sympa::Log::Syslog::do_log('err',"mail::smtpto: could not close safefork" );
+       Sympa::Log::Syslog::do_log('err',"mail::smtpto: could not close safefork" );
        return undef;
    }
    $opensmtp++;
@@ -903,7 +903,7 @@ sub reformat_message($;$$) {
 
     my $parser = new MIME::Parser;
     unless (defined $parser) {
-	&Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to create MIME parser");
+	Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to create MIME parser");
 	return undef;
     }
     $parser->output_to_core(1);
@@ -915,7 +915,7 @@ sub reformat_message($;$$) {
 	    $msg = $parser->parse_data($message);
 	};
 	if ($@) {
-	    &Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to parse MIME data");
+	    Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to parse MIME data");
 	    return undef;
 	}
     }
@@ -950,7 +950,7 @@ sub fix_part($$$$) {
 		$data = $parser->parse_data($data);
 	    };
 	    if ($@) {
-		&Sympa::Log::Syslog::do_log('notice',"Failed to parse MIME data");
+		Sympa::Log::Syslog::do_log('notice',"Failed to parse MIME data");
 		$data = $parser->parse_data('');
 	    }
 	}
@@ -1003,7 +1003,7 @@ sub fix_part($$$$) {
 	my $io = $bodyh->open("w");
 
 	unless (defined $io) {
-	    &Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to save message : $!");
+	    Sympa::Log::Syslog::do_log('err', "mail::reformat_message: Failed to save message : $!");
 	    return undef;
 	}
 

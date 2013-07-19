@@ -362,7 +362,7 @@ sub request_action {
 	$context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    "fatal error : unknown auth method $auth_method in List::get_action"
 	);
 	return undef;
@@ -386,7 +386,7 @@ sub request_action {
 		(defined $loging_conditions->{'email'} &&
 		    $loging_conditions->{'email'} =~ /$context->{'email'}/i)
 		) {
-		&Sympa::Log::Syslog::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'info',
 		    'Will log scenario process for user with email: "%s", IP: "%s"',
 		    $context->{'email'},
@@ -433,7 +433,7 @@ sub request_action {
 		'condition'   => ''
 	    };
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    '%s rejected reason parameter not defined',
 		    $trace_scenario);
 	    }
@@ -457,7 +457,7 @@ sub request_action {
 		    'condition'   => ''
 		};
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"$trace_scenario rejected reason list not open");
 		}
 		return $return;
@@ -504,7 +504,7 @@ sub request_action {
     }
 
     unless (defined $scenario and defined $scenario->{'rules'}) {
-	&Sympa::Log::Syslog::do_log('err', 'Failed to load scenario for "%s"', $operation);
+	Sympa::Log::Syslog::do_log('err', 'Failed to load scenario for "%s"', $operation);
 	return undef;
     }
 
@@ -512,7 +512,7 @@ sub request_action {
     $name = $scenario->{'name'};
 
     unless ($name) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    "internal error : configuration for operation $operation is not yet performed by scenario"
 	);
 	return undef;
@@ -565,7 +565,7 @@ sub request_action {
     my $return = {};
     foreach my $rule (@rules) {
 	if ($log_it) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'info', 'Verify rule %s, auth %s, action %s',
 		$rule->{'condition'}, $rule->{'auth_method'},
 		$rule->{'action'}
@@ -573,7 +573,7 @@ sub request_action {
 	}
 	if ($auth_method eq $rule->{'auth_method'}) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'info',
 		    'Context uses auth method %s',
 		    $rule->{'auth_method'}
@@ -583,10 +583,10 @@ sub request_action {
 
 	    ## Cope with errors
 	    if (!defined($result)) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "error in $rule->{'condition'},$rule->{'auth_method'},$rule->{'action'}"
 		);
-		&Sympa::Log::Syslog::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'info',
 		    'Error in %s scenario, in list %s',
 		    $context->{'scenario'},
@@ -611,7 +611,7 @@ sub request_action {
 	    ## Rule returned false
 	    if ($result == -1) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} not verified."
 		    );
 		}
@@ -657,14 +657,14 @@ sub request_action {
 	    $return->{'action'} = $action;
 
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} issued result : $action"
 		);
 	    }
 
 	    if ($result == 1) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log(
+		    Sympa::Log::Syslog::do_log(
 			'info', "rule '%s %s -> %s' accepted",
 			$rule->{'condition'}, $rule->{'auth_method'},
 			$rule->{'action'}
@@ -680,7 +680,7 @@ sub request_action {
 		unless ($action =~
 		    /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
 		    ) {
-		    &Sympa::Log::Syslog::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			"Matched unknown action '%s' in scenario",
 			$rule->{'action'});
 		    return undef;
@@ -689,7 +689,7 @@ sub request_action {
 	    }
 	} else {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'info',
 		    'Context does not use auth method %s',
 		    $rule->{'auth_method'}
@@ -697,10 +697,10 @@ sub request_action {
 	    }
 	}
     }
-    &Sympa::Log::Syslog::do_log('info', "no rule match, reject");
+    Sympa::Log::Syslog::do_log('info', "no rule match, reject");
 
     if ($log_it) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    "$trace_scenario : no rule match request rejected");
     }
 
@@ -745,7 +745,7 @@ sub verify {
     }
 
     unless (defined($context->{'sender'})) {
-	&Sympa::Log::Syslog::do_log('info',
+	Sympa::Log::Syslog::do_log('info',
 	    "internal error, no sender find in List::verify, report authors");
 	return undef;
     }
@@ -757,7 +757,7 @@ sub verify {
     if ($context->{'listname'} && !defined $context->{'list_object'}) {
 	unless ($context->{'list_object'} =
 	    new List($context->{'listname'}, $robot)) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		'Unable to create List object for list %s',
 		$context->{'listname'}
@@ -796,7 +796,7 @@ sub verify {
     unless ($condition =~
 	/(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
 	) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    "syntax error: unknown condition $condition");
 	return undef;
     }
@@ -851,11 +851,11 @@ sub verify {
 		) {
 		$value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
 	    } else {
-		&Sympa::Log::Syslog::do_log('debug',
+		Sympa::Log::Syslog::do_log('debug',
 		    'undefined variable context %s in rule %s',
 		    $value, $condition);
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			'undefined variable context %s in rule %s',
 			$value, $condition);
 		}
@@ -878,10 +878,10 @@ sub verify {
 		my $val = $list->$param;
 		$value =~ s/\[list\-\>([\w\-]+)\]/$val/;
 	    } else {
-		&Sympa::Log::Syslog::do_log('err', 'Unknown list parameter %s in rule %s',
+		Sympa::Log::Syslog::do_log('err', 'Unknown list parameter %s in rule %s',
 		    $value, $condition);
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			'Unknown list parameter %s in rule %s',
 			$value, $condition);
 		}
@@ -946,7 +946,7 @@ sub verify {
 		}
 	    } else {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			'no message object found to evaluate rule %s',
 			$condition);
 		}
@@ -958,7 +958,7 @@ sub verify {
 		defined($context->{'msg'}->effective_type() =~ /^text/) &&
 		defined($context->{'msg'}->bodyhandle)) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log(
+		    Sympa::Log::Syslog::do_log(
 			'info',
 			'no proper textual message body to evaluate rule %s',
 			$condition
@@ -972,7 +972,7 @@ sub verify {
 	} elsif ($value =~ /\[msg_part\-\>body\]/i) {
 	    unless (defined($context->{'msg'})) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', 'no message to evaluate rule %s',
+		    Sympa::Log::Syslog::do_log('info', 'no message to evaluate rule %s',
 			$condition);
 		}
 		return -1 * $negation;
@@ -991,7 +991,7 @@ sub verify {
 	} elsif ($value =~ /\[msg_part\-\>type\]/i) {
 	    unless (defined($context->{'msg'})) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', 'no message to evaluate rule %s',
+		    Sympa::Log::Syslog::do_log('info', 'no message to evaluate rule %s',
 			$condition);
 		}
 		return -1 * $negation;
@@ -1013,10 +1013,10 @@ sub verify {
 	    if (defined($context->{$1})) {
 		$value =~ s/\[(\w+)\]/$context->{$1}/i;
 	    } else {
-		&Sympa::Log::Syslog::do_log('debug',
+		Sympa::Log::Syslog::do_log('debug',
 		    "undefined variable context $value in rule $condition");
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"undefined variable context $value in rule $condition"
 		    );
 		}
@@ -1039,7 +1039,7 @@ sub verify {
     # condition that require 0 argument
     if ($condition_key =~ /^(true|all)$/i) {
 	unless ($#args == -1) {
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		"syntax error: incorrect number of argument or incorrect argument syntaxe $condition"
 	    );
 	    return undef;
@@ -1048,7 +1048,7 @@ sub verify {
 	# condition that require 1 argument
     } elsif ($condition_key =~ /^(is_listmaster|verify_netmask)$/) {
 	unless ($#args == 0) {
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		"syntax error: incorrect argument number for condition $condition_key"
 	    );
 	    return undef;
@@ -1057,7 +1057,7 @@ sub verify {
 	# condition that require 1 or 2 args (search : historical reasons)
     } elsif ($condition_key =~ /^search$/o) {
 	unless ($#args == 1 || $#args == 0) {
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		"syntax error: Incorrect argument number for condition $condition_key"
 	    );
 	    return undef;
@@ -1068,7 +1068,7 @@ sub verify {
 	/^(is_owner|is_editor|is_subscriber|less_than|match|equal|message|newer|older)$/o
 	) {
 	unless ($#args == 1) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'err',
 		"syntax_error: incorrect argument number (%d instead of %d) for condition $condition_key",
 		$#args + 1,
@@ -1077,7 +1077,7 @@ sub verify {
 	    return undef;
 	}
     } elsif ($condition_key !~ /^customcondition::/o) {
-	&Sympa::Log::Syslog::do_log('err',
+	Sympa::Log::Syslog::do_log('err',
 	    "syntax error: unknown condition $condition_key");
 	return undef;
     }
@@ -1086,7 +1086,7 @@ sub verify {
     ##### condition : true
     if ($condition_key =~ /^(true|any|all)$/i) {
 	if ($log_it) {
-	    &Sympa::Log::Syslog::do_log('info', 'Condition %s is always true (rule %s)',
+	    Sympa::Log::Syslog::do_log('info', 'Condition %s is always true (rule %s)',
 		$condition_key, $condition);
 	}
 	return $negation;
@@ -1095,7 +1095,7 @@ sub verify {
     if ($condition_key eq 'is_listmaster') {
 	if (!ref $args[0] and $args[0] eq 'nobody') {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    '%s is not listmaster of robot %s (rule %s)',
 		    $args[0], $robot, $condition);
 	    }
@@ -1119,13 +1119,13 @@ sub verify {
 	}
 	if ($ok) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', '%s is listmaster of robot %s (rule %s)',
+		Sympa::Log::Syslog::do_log('info', '%s is listmaster of robot %s (rule %s)',
 		    $ok, $robot, $condition);
 	    }
 	    return $negation;
 	} else {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    '%s is not listmaster of robot %s (rule %s)',
 		    $args[0], $robot, $condition);
 	    }
@@ -1140,26 +1140,26 @@ sub verify {
 	## Means we are in a web context
 	unless (defined $ENV{'REMOTE_ADDR'}) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    'REMOTE_ADDR env variable not set (rule %s)', $condition);
 	    }
 	    return -1;   ## always skip this rule because we can't evaluate it
 	}
 	my $block;
 	unless ($block = new2 Net::Netmask($args[0])) {
-	    &Sympa::Log::Syslog::do_log('err',
+	    Sympa::Log::Syslog::do_log('err',
 		"syntax error: failed to parse netmask '$args[0]'");
 	    return undef;
 	}
 	if ($block->match($ENV{'REMOTE_ADDR'})) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', 'REMOTE_ADDR %s matches %s (rule %s)',
+		Sympa::Log::Syslog::do_log('info', 'REMOTE_ADDR %s matches %s (rule %s)',
 		    $ENV{'REMOTE_ADDR'}, $args[0], $condition);
 	    }
 	    return $negation;
 	} else {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    'REMOTE_ADDR %s does not match %s (rule %s)',
 		    $ENV{'REMOTE_ADDR'}, $args[0], $condition);
 	    }
@@ -1174,16 +1174,16 @@ sub verify {
 	my $arg0 = &tools::epoch_conv($args[0]);
 	my $arg1 = &tools::epoch_conv($args[1]);
 
-	&Sympa::Log::Syslog::do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
+	Sympa::Log::Syslog::do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
 	if ($arg0 <= $arg1) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', '%s is smaller than %s (rule %s)',
+		Sympa::Log::Syslog::do_log('info', '%s is smaller than %s (rule %s)',
 		    $arg0, $arg1, $condition);
 	    }
 	    return $negation;
 	} else {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', '%s is NOT smaller than %s (rule %s)',
+		Sympa::Log::Syslog::do_log('info', '%s is NOT smaller than %s (rule %s)',
 		    $arg0, $arg1, $condition);
 	    }
 	    return -1 * $negation;
@@ -1196,7 +1196,7 @@ sub verify {
 
 	if ($args[1] eq 'nobody') {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', "%s can't be used to evaluate (rule %s)",
+		Sympa::Log::Syslog::do_log('info', "%s can't be used to evaluate (rule %s)",
 		    $args[1], $condition);
 	    }
 	    return -1 * $negation;
@@ -1210,7 +1210,7 @@ sub verify {
 	}
 
 	if (!$list2) {
-	    &Sympa::Log::Syslog::do_log('err', "unable to create list object \"$args[0]\"");
+	    Sympa::Log::Syslog::do_log('err', "unable to create list object \"$args[0]\"");
 	    return -1 * $negation;
 	}
 
@@ -1233,13 +1233,13 @@ sub verify {
 	    }
 	    if ($ok) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', "%s is member of list %s (rule %s)",
+		    Sympa::Log::Syslog::do_log('info', "%s is member of list %s (rule %s)",
 			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"%s is NOT member of list %s (rule %s)",
 			$args[1], $args[0], $condition);
 		}
@@ -1255,13 +1255,13 @@ sub verify {
 	    }
 	    if ($ok) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', "%s is owner of list %s (rule %s)",
+		    Sympa::Log::Syslog::do_log('info', "%s is owner of list %s (rule %s)",
 			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"%s is NOT owner of list %s (rule %s)",
 			$args[1], $args[0], $condition);
 		}
@@ -1277,13 +1277,13 @@ sub verify {
 	    }
 	    if ($ok) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', "%s is editor of list %s (rule %s)",
+		    Sympa::Log::Syslog::do_log('info', "%s is editor of list %s (rule %s)",
 			$ok, $args[0], $condition);
 		}
 		return $negation;
 	    } else {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info',
+		    Sympa::Log::Syslog::do_log('info',
 			"%s is NOT editor of list %s (rule %s)",
 			$args[1], $args[0], $condition);
 		}
@@ -1294,7 +1294,7 @@ sub verify {
     ##### match
     if ($condition_key eq 'match') {
 	unless ($args[1] =~ /^\/(.*)\/$/) {
-	    &Sympa::Log::Syslog::do_log('err', 'Match parameter %s is not a regexp',
+	    Sympa::Log::Syslog::do_log('err', 'Match parameter %s is not a regexp',
 		$args[1]);
 	    return undef;
 	}
@@ -1303,7 +1303,7 @@ sub verify {
 	# Nothing can match an empty regexp.
 	if ($regexp =~ /^$/) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', "regexp '%s' is empty (rule %s)",
+		Sympa::Log::Syslog::do_log('info', "regexp '%s' is empty (rule %s)",
 		    $regexp, $condition);
 	    }
 	    return -1 * $negation;
@@ -1334,7 +1334,7 @@ sub verify {
 	    };
 	}
 	if ($@) {
-	    &Sympa::Log::Syslog::do_log('err', 'cannot evaluate match: %s', $@);
+	    Sympa::Log::Syslog::do_log('err', 'cannot evaluate match: %s', $@);
 	    return undef;
 	}
 	if ($r) {
@@ -1347,7 +1347,7 @@ sub verify {
 		} else {
 		    $args_as_string = $args[0];
 		}
-		&Sympa::Log::Syslog::do_log('info', "'%s' matches regexp '%s' (rule %s)",
+		Sympa::Log::Syslog::do_log('info', "'%s' matches regexp '%s' (rule %s)",
 		    $args_as_string, $regexp, $condition);
 	    }
 	    return $negation;
@@ -1361,7 +1361,7 @@ sub verify {
 		} else {
 		    $args_as_string = $args[0];
 		}
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "'%s' does not match regexp '%s' (rule %s)",
 		    $args_as_string, $regexp, $condition);
 	    }
@@ -1378,13 +1378,13 @@ sub verify {
 	return undef unless defined $val_search;
 	if ($val_search == 1) {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info', "'%s' found in '%s', robot %s (rule %s)",
+		Sympa::Log::Syslog::do_log('info', "'%s' found in '%s', robot %s (rule %s)",
 		    $context->{'sender'}, $args[0], $robot, $condition);
 	    }
 	    return $negation;
 	} else {
 	    if ($log_it) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "'%s' NOT found in '%s', robot %s (rule %s)",
 		    $context->{'sender'}, $args[0], $robot, $condition);
 	    }
@@ -1396,10 +1396,10 @@ sub verify {
     if ($condition_key eq 'equal') {
 	if (ref($args[0])) {
 	    foreach my $arg (@{$args[0]}) {
-		&Sympa::Log::Syslog::do_log('debug3', 'ARG: %s', $arg);
+		Sympa::Log::Syslog::do_log('debug3', 'ARG: %s', $arg);
 		if (lc($arg) eq lc($args[1])) {
 		    if ($log_it) {
-			&Sympa::Log::Syslog::do_log('info', "'%s' equals '%s' (rule %s)",
+			Sympa::Log::Syslog::do_log('info', "'%s' equals '%s' (rule %s)",
 			    lc($arg), lc($args[1]), $condition);
 		    }
 		    return $negation;
@@ -1408,14 +1408,14 @@ sub verify {
 	} else {
 	    if (lc($args[0]) eq lc($args[1])) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', "'%s' equals '%s' (rule %s)",
+		    Sympa::Log::Syslog::do_log('info', "'%s' equals '%s' (rule %s)",
 			lc($args[0]), lc($args[1]), $condition);
 		}
 		return $negation;
 	    }
 	}
 	if ($log_it) {
-	    &Sympa::Log::Syslog::do_log('info', "'%s' does NOT equal '%s' (rule %s)",
+	    Sympa::Log::Syslog::do_log('info', "'%s' does NOT equal '%s' (rule %s)",
 		lc($args[0]), lc($args[1]), $condition);
 	}
 	return -1 * $negation;
@@ -1432,7 +1432,7 @@ sub verify {
 		foreach my $arg (@args) {
 		    $args_as_string .= ", $arg";
 		}
-		&Sympa::Log::Syslog::do_log(
+		Sympa::Log::Syslog::do_log(
 		    'info',
 		    "custom condition '%s' returned an undef value with arguments '%s' (rule %s)",
 		    $condition,
@@ -1448,11 +1448,11 @@ sub verify {
 		$args_as_string .= ", $arg";
 	    }
 	    if ($res == 1) {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "'%s' verifies custom condition '%s' (rule %s)",
 		    $args_as_string, $condition, $condition);
 	    } else {
-		&Sympa::Log::Syslog::do_log('info',
+		Sympa::Log::Syslog::do_log('info',
 		    "'%s' does not verify custom condition '%s' (rule %s)",
 		    $args_as_string, $condition, $condition);
 	    }
@@ -1464,10 +1464,10 @@ sub verify {
     if ($condition_key eq 'less_than') {
 	if (ref($args[0])) {
 	    foreach my $arg (@{$args[0]}) {
-		&Sympa::Log::Syslog::do_log('debug3', 'ARG: %s', $arg);
+		Sympa::Log::Syslog::do_log('debug3', 'ARG: %s', $arg);
 		if (&tools::smart_lessthan($arg, $args[1])) {
 		    if ($log_it) {
-			&Sympa::Log::Syslog::do_log('info',
+			Sympa::Log::Syslog::do_log('info',
 			    "'%s' is less than '%s' (rule %s)",
 			    $arg, $args[1], $condition);
 		    }
@@ -1477,7 +1477,7 @@ sub verify {
 	} else {
 	    if (&tools::smart_lessthan($args[0], $args[1])) {
 		if ($log_it) {
-		    &Sympa::Log::Syslog::do_log('info', "'%s' is less than '%s' (rule %s)",
+		    Sympa::Log::Syslog::do_log('info', "'%s' is less than '%s' (rule %s)",
 			$args[0], $args[1], $condition);
 		}
 		return $negation;
@@ -1485,7 +1485,7 @@ sub verify {
 	}
 
 	if ($log_it) {
-	    &Sympa::Log::Syslog::do_log('info', "'%s' is NOT less than '%s' (rule %s)",
+	    Sympa::Log::Syslog::do_log('info', "'%s' is NOT less than '%s' (rule %s)",
 		$args[0], $args[1], $condition);
 	}
 	return -1 * $negation;
@@ -1544,7 +1544,7 @@ sub search {
 	    my ($var, $key) = split /\-\>/, $full_var;
 
 	    unless (defined $context->{$var}) {
-		&Sympa::Log::Syslog::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    "Failed to parse variable '%s' in filter '%s'",
 		    $var, $file);
 		return undef;
@@ -1552,7 +1552,7 @@ sub search {
 
 	    if (defined $key) {    ## Should be a hash
 		unless (defined $context->{$var}{$key}) {
-		    &Sympa::Log::Syslog::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			"Failed to parse variable '%s.%s' in filter '%s'",
 			$var, $key, $file);
 		    return undef;
@@ -1578,14 +1578,14 @@ sub search {
 		$persistent_cache{'named_filter'}{$filter_file}{$filter}
 		{'update'} + $timeout)
 	    ) {    ## Cache has 1hour lifetime
-	    &Sympa::Log::Syslog::do_log('notice', 'Using previous SQL named filter cache');
+	    Sympa::Log::Syslog::do_log('notice', 'Using previous SQL named filter cache');
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}
 		{'value'};
 	}
 
 	my $ds = new SQLSource($sql_conf->{'sql_named_filter_query'});
 	unless (defined $ds && $ds->connect() && $ds->ping) {
-	    &Sympa::Log::Syslog::do_log(
+	    Sympa::Log::Syslog::do_log(
 		'notice',
 		'Unable to connect to the SQL server %s:%d',
 		$sql_conf->{'db_host'},
@@ -1601,7 +1601,7 @@ sub search {
 
 	$statement = sprintf $statement, @statement_args;
 	unless ($ds->query($statement)) {
-	    &Sympa::Log::Syslog::do_log('debug', '%s named filter cancelled', $file);
+	    Sympa::Log::Syslog::do_log('debug', '%s named filter cancelled', $file);
 	    return undef;
 	}
 
@@ -1627,7 +1627,7 @@ sub search {
 	my $file = $that->get_etc_filename("search_filters/$filter_file");
 
 	unless ($file) {
-	    &Sympa::Log::Syslog::do_log('err', 'Could not find search filter %s',
+	    Sympa::Log::Syslog::do_log('err', 'Could not find search filter %s',
 		$filter_file);
 	    return undef;
 	}
@@ -1647,7 +1647,7 @@ sub search {
 	    my ($var, $key) = split /\-\>/, $full_var;
 
 	    unless (defined $context->{$var}) {
-		&Sympa::Log::Syslog::do_log('err',
+		Sympa::Log::Syslog::do_log('err',
 		    "Failed to parse variable '%s' in filter '%s'",
 		    $var, $file);
 		return undef;
@@ -1655,7 +1655,7 @@ sub search {
 
 	    if (defined $key) {    ## Should be a hash
 		unless (defined $context->{$var}{$key}) {
-		    &Sympa::Log::Syslog::do_log('err',
+		    Sympa::Log::Syslog::do_log('err',
 			"Failed to parse variable '%s.%s' in filter '%s'",
 			$var, $key, $file);
 		    return undef;
@@ -1676,7 +1676,7 @@ sub search {
 		$persistent_cache{'named_filter'}{$filter_file}{$filter}
 		{'update'} + $timeout)
 	    ) {    ## Cache has 1hour lifetime
-	    &Sympa::Log::Syslog::do_log('notice', 'Using previous LDAP named filter cache');
+	    Sympa::Log::Syslog::do_log('notice', 'Using previous LDAP named filter cache');
 	    return $persistent_cache{'named_filter'}{$filter_file}{$filter}
 		{'value'};
 	}
@@ -1686,7 +1686,7 @@ sub search {
 	my $ds    = new LDAPSource($param);
 
 	unless (defined $ds && ($ldap = $ds->connect())) {
-	    &Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
+	    Sympa::Log::Syslog::do_log('err', "Unable to connect to the LDAP server '%s'",
 		$param->{'ldap_host'});
 	    return undef;
 	}
@@ -1700,11 +1700,11 @@ sub search {
 	    attrs  => ['1.1']
 	);
 	unless ($mesg) {
-	    &Sympa::Log::Syslog::do_log('err', "Unable to perform LDAP search");
+	    Sympa::Log::Syslog::do_log('err', "Unable to perform LDAP search");
 	    return undef;
 	}
 	unless ($mesg->code == 0) {
-	    &Sympa::Log::Syslog::do_log('err', 'Ldap search failed');
+	    Sympa::Log::Syslog::do_log('err', 'Ldap search failed');
 	    return undef;
 	}
 
@@ -1718,7 +1718,7 @@ sub search {
 	}
 
 	$ds->disconnect() or
-	    &Sympa::Log::Syslog::do_log('notice', 'List::search_ldap.Unbind impossible');
+	    Sympa::Log::Syslog::do_log('notice', 'List::search_ldap.Unbind impossible');
 	$persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} =
 	    time;
 
@@ -1727,7 +1727,7 @@ sub search {
 
     } elsif ($filter_file =~ /\.txt$/) {
 
-	# &Sympa::Log::Syslog::do_log('info', 'List::search: eval %s', $filter_file);
+	# Sympa::Log::Syslog::do_log('info', 'List::search: eval %s', $filter_file);
 	my @files =
 	    $that->get_etc_filename("search_filters/$filter_file",
 	    {'order' => 'all'});
@@ -1737,7 +1737,7 @@ sub search {
 	    if ($filter_file eq 'blacklist.txt') {
 		return -1;
 	    } else {
-		&Sympa::Log::Syslog::do_log('err', 'Could not find search filter %s',
+		Sympa::Log::Syslog::do_log('err', 'Could not find search filter %s',
 		    $filter_file);
 		return undef;
 	    }
@@ -1745,27 +1745,27 @@ sub search {
 
 	my $sender = lc($sender);
 	foreach my $file (@files) {
-	    &Sympa::Log::Syslog::do_log('debug3', 'List::search: found file  %s', $file);
+	    Sympa::Log::Syslog::do_log('debug3', 'List::search: found file  %s', $file);
 	    unless (open FILE, $file) {
-		&Sympa::Log::Syslog::do_log('err', 'Could not open file %s', $file);
+		Sympa::Log::Syslog::do_log('err', 'Could not open file %s', $file);
 		return undef;
 	    }
 	    while (<FILE>) {
 
-		# &Sympa::Log::Syslog::do_log('debug3', 'List::search: eval rule %s', $_);
+		# Sympa::Log::Syslog::do_log('debug3', 'List::search: eval rule %s', $_);
 		next if (/^\s*$/o || /^[\#\;]/o);
 		my $regexp = $_;
 		chomp $regexp;
 		$regexp =~ s/\*/.*/;
 		$regexp = '^' . $regexp . '$';
 
- # &Sympa::Log::Syslog::do_log('debug3', 'List::search: eval  %s =~ /%s/i', $sender,$regexp);
+ # Sympa::Log::Syslog::do_log('debug3', 'List::search: eval  %s =~ /%s/i', $sender,$regexp);
 		return 1 if ($sender =~ /$regexp/i);
 	    }
 	}
 	return -1;
     } else {
-	&Sympa::Log::Syslog::do_log('err', "Unknown filter file type %s", $filter_file);
+	Sympa::Log::Syslog::do_log('err', "Unknown filter file type %s", $filter_file);
 	return undef;
     }
 }
@@ -1794,7 +1794,7 @@ sub verify_custom {
 	    $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} +
 	    $timeout)
 	) {    ## Cache has 1hour lifetime
-	&Sympa::Log::Syslog::do_log('notice', 'Using previous custom condition cache %s',
+	Sympa::Log::Syslog::do_log('notice', 'Using previous custom condition cache %s',
 	    $filter);
 	return $persistent_cache{'named_filter'}{$condition}{$filter}
 	    {'value'};
@@ -1805,21 +1805,21 @@ sub verify_custom {
     #my $file = $that->get_etc_filename("custom_conditions/${condition}.pm");
     my $file = $robot->get_etc_filename("custom_conditions/${condition}.pm");
     unless ($file) {
-	&Sympa::Log::Syslog::do_log('err', 'No module found for %s custom condition',
+	Sympa::Log::Syslog::do_log('err', 'No module found for %s custom condition',
 	    $condition);
 	return undef;
     }
-    &Sympa::Log::Syslog::do_log('notice', 'Use module %s for custom condition', $file);
+    Sympa::Log::Syslog::do_log('notice', 'Use module %s for custom condition', $file);
     eval { require "$file"; };
     if ($@) {
-	&Sympa::Log::Syslog::do_log('err', 'Error requiring %s : %s (%s)',
+	Sympa::Log::Syslog::do_log('err', 'Error requiring %s : %s (%s)',
 	    $condition, "$@", ref($@));
 	return undef;
     }
     my $res;
     eval "\$res = CustomCondition::${condition}::verify(\@{\$args_ref});";
     if ($@) {
-	&Sympa::Log::Syslog::do_log('err', 'Error evaluating %s : %s (%s)',
+	Sympa::Log::Syslog::do_log('err', 'Error evaluating %s : %s (%s)',
 	    $condition, "$@", ref($@));
 	return undef;
     }

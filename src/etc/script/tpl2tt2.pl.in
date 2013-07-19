@@ -265,7 +265,7 @@ sub convert {
 				    group => Sympa::Constants::GROUP
 				    ))
     {
-	&Sympa::Log::Syslog::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	Sympa::Log::Syslog::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
 	return undef;
     }
 }
