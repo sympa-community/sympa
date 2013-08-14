@@ -64,8 +64,14 @@ sub do_query {
     my @params = @_;
     my $sth;
 
-    unless ($sth = $db_source->do_query($query,@params)) {
-	Sympa::Log::Syslog::do_log('err','SQL query failed to execute in the Sympa database');
+    if (check_db_connect()) {
+	unless ($sth = $db_source->do_query($query, @params)) {
+	    Sympa::Log::Syslog::do_log('err',
+		'SQL query failed to execute in the Sympa database');
+	    return undef;
+	}
+    } else {
+	Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
 
@@ -77,8 +83,14 @@ sub do_prepared_query {
     my @params = @_;
     my $sth;
 
-    unless ($sth = $db_source->do_prepared_query($query,@params)) {
-	Sympa::Log::Syslog::do_log('err','SQL query failed to execute in the Sympa database');
+    if (check_db_connect()) {
+	unless ($sth = $db_source->do_prepared_query($query, @params)) {
+	    Sympa::Log::Syslog::do_log('err',
+		'SQL query failed to execute in the Sympa database');
+	    return undef;
+	}
+    } else {
+	Sympa::Log::Syslog::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
 
@@ -114,7 +126,8 @@ sub check_db_connect {
 	return undef;
     }
     
-    unless ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
+    unless ($db_source and $db_source->{'dbh'} and
+	$db_source->{'dbh'}->ping()) {
 	unless (connect_sympa_database(@options)) {
 	    Sympa::Log::Syslog::do_log('err', 'Failed to connect to database');
 	    return undef;

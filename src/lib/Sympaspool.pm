@@ -446,7 +446,7 @@ sub store {
 
     my $b64msg = MIME::Base64::encode($message_asstring);
     my $message;
-    if ($self->{'spoolname'} ne 'task' && $message_asstring ne 'rebuild' && $self->{'spoolname'} ne 'digest') {
+    if ($self->{'spoolname'} ne 'task' && $message_asstring ne 'rebuild' && $self->{'spoolname'} ne 'digest' && $self->{'spoolname'} ne 'subscribe') {
 	$message = Message->new({'messageasstring' => $message_asstring,'noxsympato'=>1});
     }
     

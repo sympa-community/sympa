@@ -32,7 +32,7 @@
     <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
-     [%|loc%]page[%END%] [% page %] / [% total_page %]
+     [%|loc(page,total_page)%]page %1 / %2[%END%]
    [% END %]
    [% IF next_page %]
      <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>

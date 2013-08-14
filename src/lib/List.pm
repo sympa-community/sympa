@@ -6923,7 +6923,7 @@ sub _load_list_members_from_include {
 	}
     }
 
-    ## If an error occured, return an undef value
+    ## If an error occurred, return an undef value
     $result->{'users'} = \%users;
     $result->{'errors'} = \@errors;
     $result->{'exclusions'} = \@ex_sources;
@@ -7076,7 +7076,7 @@ sub _load_list_admin_from_include {
 	    }
 	}
 
-	## If an error occured, return an undef value
+	## If an error occurred, return an undef value
 	unless (defined $total) {
 	    return undef;
 	}

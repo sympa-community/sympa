@@ -1070,7 +1070,7 @@ sub load_trusted_application {
     my $robot = shift;
     
     # find appropriate trusted-application.conf file
-    my $config_file = &_get_config_file_name({'robot' => $robot, 'file' => "trusted_applications.conf"});
+    my $config_file = &_get_config_file_name({'file' => "trusted_applications.conf"});
     return undef unless -r $config_file;
     return &load_generic_conf_file($config_file, \%trusted_applications);
 }
@@ -1710,6 +1710,11 @@ sub load_robot_conf {
 	! $force_reload and ! $return_result and
 	$cached = _load_binary_cache({ 'config_file' => $config_file })) {
 	%$conf = %$cached;
+	if ($conf->{'soap_url'}) {
+	    my $url = $conf->{'soap_url'};
+	    $url =~ s/^http(s)?:\/\/(.+)$/$2/;
+	    $Conf{'robot_by_soap_url'}{$url} = $conf->{'robot_name'};
+	}
 	Sympa::Log::Syslog::do_log('debug3', 'got %s from serialized data',
 		     ($robot ne '*') ? "config for robot $robot" : 'main conf');
     } elsif (

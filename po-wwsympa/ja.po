@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-13 14:50+0200\n"
-"PO-Revision-Date: 2012-10-05 04:37+0200\n"
+"PO-Revision-Date: 2013-02-04 10:13+0200\n"
 "Last-Translator: IKEDA Soji <hatuka@nezumi.nu>\n"
 "Language-Team: 日本語\n"
 "MIME-Version: 1.0\n"
@@ -760,14 +760,15 @@ msgstr ""
 "メッセージには、Sympa に理解できるコマンド以外はなにも書かない (署名を自動的"
 "に付けるようにしない)。"
 
+# IEバグ回避のためリンクを段落先頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:23
 msgid ""
 "A description of all the commands you can send to Sympa is available at <a "
 "href=\"%1/help/mail_commands\">%1/help/mail_commands</a>."
 msgstr ""
-"<a href=\"%1/help/mail_commands\">Sympa にメールで送れるコマンド一覧</a> も見"
-"てください。"
+"Sympa にメールで送れるコマンドすべての説明が<a href=\"%1/help/mail_commands"
+"\">こちら</a>にあります。"
 
 #: ../web_tt2/help_user.tt2:25
 msgid "Subscribing to mailing lists"
@@ -1720,53 +1721,57 @@ msgstr ""
 msgid "Reading a list archive online"
 msgstr "ウェブで投稿保管庫の投稿を読む"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:156
 msgid ""
 "Please refer to the <a href=\"%1/help/arc\"><strong>archive documentation</"
 "strong></a>."
 msgstr ""
-"<a href=\"%1/help/arc\"><strong>アーカイブ ドキュメント</strong></a>を見てく"
-"ださい。"
+"やりかたは<a href=\"%1/help/arc\"><strong>投稿保管庫の説明</strong></a>を見て"
+"ください。"
 
 #: ../web_tt2/help_sendmsg.tt2:3 ../web_tt2/help_user.tt2:158
 msgid "Sending a message"
 msgstr "メッセージを送る"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:159
 msgid ""
 "Please refer to the <a href=\"%1/help/sendmsg\"><strong>documentation about "
 "sending messages</strong></a>."
 msgstr ""
-"<a href=\"%1/help/sendmsg\"><strong>メッセージの送りかたの説明</strong></a>を"
-"見てください。"
+"やりかたは<a href=\"%1/help/sendmsg\"><strong>メッセージの送りかたの説明</"
+"strong></a>を見てください。"
 
 #: ../web_tt2/help_shared.tt2:3 ../web_tt2/help_user.tt2:161
 msgid "Using the shared document web space"
 msgstr "共有文書置き場を使う"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:162
 msgid ""
 "Please refer to the <a href=\"%1/help/shared\"><strong>shared document web "
 "space documentation</strong></a>."
 msgstr ""
-"<a href=\"%1/help/shared\"><strong>共有文書置き場の説明</strong></a>を見てく"
-"ださい。"
+"やりかたは<a href=\"%1/help/shared\"><strong>共有文書置き場の説明</strong></"
+"a>を見てください。"
 
 #: ../web_tt2/help_user.tt2:164
 msgid "Suspending or resuming your subscription of each list"
 msgstr "リストごとに受け取りを休止したり再開したりする"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_user.tt2:165
 msgid ""
 "Please refer to the <a href=\"%1/help/suspend\"><strong>subscription "
 "management documentation</strong></a>."
 msgstr ""
-"<a href=\"%1/help/suspend\"><strong>受け取り休止/再開の説明</strong></a>を見"
-"てください。"
+"やりかたは<a href=\"%1/help/suspend\"><strong>受け取り休止/再開の説明</"
+"strong></a>を見てください。"
 
 #: ../web_tt2/help_user.tt2:167
 msgid "Unsubscribing from lists"
@@ -2162,14 +2167,15 @@ msgstr ""
 msgid "Configuring the list"
 msgstr "リストの設定変更"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #. (path_cgi)
 #: ../web_tt2/help_admin.tt2:78
 msgid ""
 "To learn how to configure the list, please refer to the <a href=\"%1/help/"
 "listconfig\"><strong>documentation about list configuration</strong></a>."
 msgstr ""
-"<a href=\"%1/help/listconfig\"><strong>リストの設定変更についての説明</"
-"strong></a>を見てください。"
+"やりかたは<a href=\"%1/help/listconfig\"><strong>リストの設定変更についての説"
+"明</strong></a>を見てください。"
 
 #: ../web_tt2/help_admin.tt2:80
 msgid "Customizing the list"
@@ -6690,15 +6696,16 @@ msgstr ""
 "セージの送り手だけに返信したいときは、<strong>自分の返信メッセージの宛先を、"
 "しっかり確かめましょうね</strong>。"
 
+# IEバグ回避のためリンクを段落冒頭に置かない
 #: ../web_tt2/help_sendmsg.tt2:16
 msgid ""
 "You can also reply to a message directly <a href=\"#answeronline\">from the "
 "mailing list environment</a>. However, it is far simpler and more functional "
 "to reply using an email client or a webmail..."
 msgstr ""
-"<a href=\"#answeronline\">リストのウェブページから</a>も、メッセージに直接返"
-"信できます。ただし、これはごく簡略なものなので、電子メールクライアントやウェ"
-"ブメールのほうが便利でしょうね……。"
+"また、<a href=\"#answeronline\">リストのウェブページから</a>メッセージに直接"
+"返信することもできます。ただし、これはごく簡略なものなので、電子メールクライ"
+"アントやウェブメールのほうが便利でしょうね……。"
 
 #: ../web_tt2/help_sendmsg.tt2:18
 msgid "A few rules"

@@ -86,9 +86,17 @@ sub upgrade {
 	return 1;
     }
 
+    ## Check database connectivity and probe database
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+	Log::do_log('err',
+	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
+	    Site->db_name
+	);
+	return undef;
+    }
+
     ## Always update config.bin files while upgrading
     &Conf::delete_binaries();
-
     ## Always update config.bin files while upgrading
     ## This is especially useful for character encoding reasons
     Sympa::Log::Syslog::do_log('notice',
@@ -726,7 +734,7 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '6.3a')) {
 	# move spools from file to database.
 	my %spools_def = ('queue' =>  'msg',
-			  'bouncequeue' => 'bounce',
+			  'queuebounce' => 'bounce',
 			  'queuedistribute' => 'msg',
 			  'queuedigest' => 'digest',
 			  'queuemod' => 'mod',

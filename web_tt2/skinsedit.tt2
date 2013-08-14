@@ -63,7 +63,7 @@ Be careful: the CSS file is overwritten using css.tt2 template, usually this fil
 
 </li>
 <li>
-<input class="MainMenuLinks" type="submit" name="subaction_test" value="[%|loc%]test this color in my session[%END%]" />
+<input class="MainMenuLinks" type="submit" name="subaction_test" value="[%|loc%]test this color in my session[%END%]" onClick="return (isNotEmpty('custom_color_number') && isNotEmpty('custom_color_value'));" />
 <input class="MainMenuLinks" type="submit" name="subaction_reset" value="[%|loc%]reset colors in my session[%END%]" />
 <input class="MainMenuLinks" type="submit" name="subaction_install" value="[%|loc%]Install my session colors in a new static CSS[%END%]" />
 </li>

@@ -86,6 +86,12 @@ Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
   [% report_item %]
 [% END %]
 
+[% ELSIF type == 'css_updated' -%]
+Subject: [% FILTER qencode %][%|loc%]CSS files have been updated[%END%][%END%]
+
+[%|loc%]Static CSS files have been updated.  Check log file for details.[%END%]
+
+
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]Database connection restored[%END%][%END%]
 
@@ -216,7 +222,7 @@ If you are able to do so, you should probably update these data sources with thi
 [% ELSIF type == 'error_copy_file' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END%][%END%]
 
-[%|loc(param0,param1)%]Errors occured while copying family %2 file in list %1 directory.[%END%]
+[%|loc(param0,param1)%]Errors occurred while copying family %2 file in list %1 directory.[%END%]
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
@@ -313,7 +319,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [% ELSIF type == 'bounce_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
 
-[%|loc(error)%]The following error occurred whila managing bounces: %&[%END%]
+[%|loc(error)%]The following error occurred while managing bounces: %1[%END%]
 
 [%|loc%]See logs for more details.[%END%]
 

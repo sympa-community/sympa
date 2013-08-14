@@ -476,7 +476,7 @@ sub get_sender_email {
 		}
 	    } elsif ($hdr->get($field)) {
 		## Try to get message header
-		## On "Resent-*:" headers, the first occurrance must be used.
+		## On "Resent-*:" headers, the first occurrence must be used.
 		## Though "From:" can occur multiple times, only the first
 		## one is detected.
 		my @sender_hdr = Mail::Address->parse($hdr->get($field));
