@@ -6791,6 +6791,8 @@ sub _load_list_members_from_include {
 		    defined $included
 			or push @errors, {type => $type, name => $incl->{name}};
 		}
+	    } # if (my $plugin = ...)
+
 	    ## Get the list of users.
 	    ## Verify if we can synchronize sources. If it's allowed OR there are new sources, we update the list, and can add subscribers.
 		## Else if we can't synchronize sources. We make an array with excluded sources.
