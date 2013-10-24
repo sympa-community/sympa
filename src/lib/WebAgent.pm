@@ -18,12 +18,13 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package WebAgent;
 
-use strict;
-use warnings;
+use strict "vars";
+
 use LWP::UserAgent;
 ## Good documentation : http://articles.mongueurs.net/magazines/linuxmag57.html
 
@@ -32,9 +33,9 @@ our @ISA = qw (LWP::UserAgent);
 my ($web_user, $web_passwd);
 
 sub get_basic_credentials {
-    my ($self, $realm, $uri) = @_;
+    my ( $self, $realm, $uri ) = @_;
 
-    return ($web_user, $web_passwd);
+    return ( $web_user, $web_passwd );
 }
 
 sub set_basic_credentials {

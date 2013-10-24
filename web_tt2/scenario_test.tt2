@@ -5,7 +5,7 @@
 <fieldset>
     <input type="hidden" name="action" value="scenario_test" />
       <label for="scenario">[%|loc%]Scenario name:[%END%]  </label>
-	  <select id="scenario" name="scenario">
+	  <select id="scenarion" name="scenario">
 	      [% FOREACH sc = scenario %]
 	        <option value="[% sc.key %]" [% sc.value.selected %]>[% sc.key %]</option>
 	      [% END %]

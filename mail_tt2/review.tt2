@@ -1,10 +1,10 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]REVIEW %1[%END%][%END%]
+Subject: [% FILTER qencode %][%subject%][%END%]
 
 [%|loc(list.name,list.host)%]Here are the subscribers of %1@%2 mailing list:[%END%]
 
 [%|wrap(0,4)%][% FOREACH u = users -%]
-[% u.email %] - [% u.gecos %] - [%|optdesc('reception')%][% u.reception %][% END %]
+[% u.email %] - [% u.gecos %] - [% u.reception %]
 [% END %][%END#wrap%]
 
 [%|loc(total)%]Total subscribers: %1[%END%]

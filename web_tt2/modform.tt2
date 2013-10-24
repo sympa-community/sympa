@@ -10,7 +10,7 @@
      <h3> [%|loc%]This list is configured to require topic(s).[%END%]</h3>
      <br />[%|loc%]Please select one or more topic(s) that correspond to the messages you wish to distribute:[%END%] <br />
      [% FOREACH t = available_topics %]
-       <input id="topic_[%t.name%].[%line_count%]" type="checkbox" name="topic_[%t.name%]" value="1" /> <label for="topic_[%t.name%].[%line_count%]">[% t.title %] </label><br />
+       <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input><br />
      [%- END- %]
      <br />
    [%- END -%]
@@ -29,7 +29,7 @@
   <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return toggleDivDisplay('reject[% line_count %]')"/>
   <h3>[%|loc%]Rejecting message[%END%]</h3>
  
-  [%|loc%]Choose notification:[%END%]
+  [%|loc%]Choose notification [%END%]:
   <select  name="message_template">
     <option  value="reject_quiet"[%- IF msg.value.spam_status == 'spam' -%] [% one_template_is_selected = '1' %]selected="selected"[% END %]>[%|loc %]No notification[%END%]</option>
     [% FOREACH file = available_files %]
@@ -40,10 +40,10 @@
   <br />
   [% IF conf.reporting_spam_script_path %]
      [%- IF msg.value.spam_status != 'spam' -%]
-        <br /> <input id="signal_spam[% line_count %]" type=checkbox name="signal_spam" /><label for="signal_spam[% line_count %]">[%|loc %]Report message as undetected spam [%END%]</label>
+        <br /> <input type=checkbox name="signal_spam" />[%|loc %]Report message as undetected spam [%END%]</option>
      [% END %] 
   [% END %] 
-  <br /> <input id="blacklist[% line_count %]" type=checkbox name="blacklist" /><label for="blacklist[% line_count %]">[%|loc %]Add sender to blacklist[%END%]</label>
+  <br /> <input type=checkbox name="blacklist" />[%|loc %]Add sender to blacklist[%END%]</option>
   <br />
   <div class="formError" style="display:none"  id="warningSpam[% line_count %]">
    [%|loc%]You should rejet spams quietly because the sender of a spam is often spoofed, if you really want to send this notification, please confirm [%END%]
@@ -58,9 +58,9 @@
   <br />
   </div>
 [% IF mod_display_message %]
-<input type="button" class="MainMenuLinks" name="action_distribute" value="[%|loc%]hide[%END%]" onclick="return hideform('mainviewmod[% msg.key %]')" />
+<input type="button" class="MainMenuLinks" name="action_distribute" value="hide" onclick="return hideform('mainviewmod[% msg.key %]')" />
 [% ELSE %]
-<input type="button" class="MainMenuLinks" name="action_distribute" value="[%|loc%]view[%END%]" onclick="jQuery('.viewmod').hide();jQuery('#viewmod[% msg.key %]').load('[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]').parent().show()" />
+<input type="button" class="MainMenuLinks" name="action_distribute" value="view" onclick="jQuery('.viewmod').hide();jQuery('#viewmod[% msg.key %]').load('[% path_cgi %]/ajax/viewmod/[% list %]/[% msg.key %]').parent().show()" />
 [% END %]
 
 

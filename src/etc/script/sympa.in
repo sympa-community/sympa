@@ -12,7 +12,7 @@
 # Modified by Michel Bouissou  27/07/2000
 #
 # chkconfig: 345 95 05
-# description: Sympa is a powerful mailing list management system.
+# description: sympa is a powerfull mailing lists management system.
 
 if [ -f --initdir--/functions ]; then
     # Source function library.
@@ -28,6 +28,7 @@ fi
 sympadir="--sbindir--"
 # Sympa config files directory
 sympaconf="--CONFIG--"
+wwsympaconf="--WWSCONFIG--"
 
 sympapiddir="--piddir--"
 sympalockdir="--lockdir--"
@@ -103,24 +104,6 @@ sympa_status() {
         echo "$1 is stopped."
         return 3
     fi
-}
-
-# Health check
-sympa_check() {
-	echo $echo_opt "Checking environment: "
-	if [ ${use_functions} ]; then
-		$sympadir/sympa.pl --health_check && success || failure
-		return $?
-	else
-		if $sympadir/sympa.pl --health_check; then
-			echo "success"
-			return 0
-		else
-			echo "failure"
-			return 1
-		fi
-	fi
-        echo
 }
 
 # Start a module
@@ -237,13 +220,13 @@ fi
 # Check config files
 [ -d $sympadir ] || exit 0
 [ -f $sympaconf ] || exit 0
+[ -f $wwsympaconf ] || exit 0
 
 # See how we were called.
 case "$1" in
   start)
 	if [ ! -f ${sympalockdir}/sympa ]; then
 		echo "Starting Sympa subsystem: "
-		sympa_check || exit 1
 		sympa_start sympa
 		sympa_start bulk
 		sympa_start archived

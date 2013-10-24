@@ -156,27 +156,11 @@ function toggle_selection(myfield) {
   }
 }
 
-function chooseColorNumber(cn, cv) {
+function chooseColorNumber(cn) {
     var select = document.getElementById('custom_color_number');
-    var text = document.getElementById('custom_color_value');
 
-    if (select)
-        for (var i=0; i<select.options.length; i++)
-            if (select.options[i].value == cn) {
-                select.options.selectedIndex = i;
-                if (text && cv) {
-                    text.value = cv; 
-                    // FIXME: use jQuery trigger()
-                    if (document.all)
-                        text.fireEvent('onchange');
-                    else {
-                        var evt = document.createEvent('HTMLEvents');
-                        evt.initEvent('change', false, true);
-                        text.dispatchEvent(evt);
-                    }
-                }
-            }
-}
+    if(select) for(var i=0; i<select.options.length; i++) if(select.options[i].value == cn) select.options.selectedIndex = i;
+ }
 
 // check if rejecting quietly spams
  function check_reject_spam(form,warningId) {
@@ -234,17 +218,6 @@ function searched_by_msgId(id) {
 	f.elements["target"].value = id;
 	f.submit();
 }
-function searched_by_target(target_type, target) {
-	var f = document.forms["log_form"];
-
-	set_select_value(f.elements["type"], 'all_actions');
-
-	set_select_value(f.elements["target_type"], target_type);
-
-	f.elements["target"].value = target;
-	f.submit();
-}
-
 
 //reset all field in log form.
 function clear_log_form() {
@@ -1113,34 +1086,4 @@ function hideform(my_message_id)
 jQuery(document).ready(function() {
     $('#noticeMsg').delay(500).fadeOut(4000);
   }
-);
-
-function spoolPopup(msgkey, url, trigger, remove_if_divclass_present) {
-	if(!remove_if_divclass_present) remove_if_divclass_present = '';
-	jQuery('.viewspool').hide();
-	var p = jQuery('#viewspool' + msgkey).attr({msgkey: msgkey, ridcp: remove_if_divclass_present}).load(url, function(t, s, r) {
-		var p = jQuery(this), msgkey = p.attr('msgkey'), ridcp = p.attr('ridcp');
-		if(ridcp && p.has('.' + ridcp).length) {
-			p.parent().delay(2000).queue(function() {
-				jQuery(this).remove();
-			});
-			if(msgkey) jQuery('#spoolitem' + msgkey).delay(2000).queue(function() {
-				jQuery(this).remove();
-			});
-		}
-	}).parent().show();
-	if(!p.parent().is('body')) {
-		var pos = (trigger ? jQuery(trigger) : p.parent()).offset();
-		p.detach().appendTo(jQuery('body')).css({'top': pos.top, 'left': pos.left, 'width': (jQuery('body').innerWidth() - pos.left - 100) + 'px', 'z-index': 10000});
-	}
-}
-
-/* check if the value of element is not empty */
-function isNotEmpty(id) {
-  if (document.getElementById(id)) {
-    var value = document.getElementById(id).value;
-    if (value.replace(/\s+/g, ''))
-      return true;
-  }
-  return false;
-}
+); 

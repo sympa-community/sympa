@@ -1,6 +1,6 @@
 From: [% from %]
 To: [% to %]
-Subject: [% FILTER qencode %][% IF filename == 'last_message' %][%|loc(list.name)%]Archive of %1, last message[%END%][%ELSE%][%|loc(list.name,filename)%]Archive of %1, file %2[%END%][%END%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Archive of %1, file %2[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]

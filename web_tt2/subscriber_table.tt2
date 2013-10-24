@@ -98,7 +98,7 @@
  	     [% END %]
 	   </td>
 	 [% IF is_owner %]
-           <td class="bg_color_error"><strong>[%|loc%]bouncing[%END%]</strong>
+           <td class="color7"><strong>[%|loc%]bouncing[%END%]</strong>
 	   </td>
 	 [% END %]
 
@@ -129,7 +129,7 @@
           </td>
 	  [% IF is_owner %]
   	    <td>
-  	      [%|optdesc('reception')%][% u.reception %][% END %]
+  	      [% u.reception %]
 	    </td>
             <td>
             [% IF u.subscribed %]

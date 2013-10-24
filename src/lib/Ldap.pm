@@ -16,14 +16,16 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package Ldap;
 
-use strict;
+use strict "vars";
+
 use Exporter;
 
-use Log;
+use Conf;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%Ldap);
@@ -52,7 +54,7 @@ my %Ldap = ();
 sub load {
     my $config = shift;
 
-   Sympa::Log::Syslog::do_log('debug3','Ldap::load(%s)', $config);
+   &Log::do_log('debug3','Ldap::load(%s)', $config);
 
     my $line_num = 0;
     my $config_err = 0;
@@ -60,7 +62,7 @@ sub load {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
-	Sympa::Log::Syslog::do_log('err','Unable to open %s: %s', $config, $!);
+	&Log::do_log('err','Unable to open %s: %s', $config, $!);
 	return undef;
     }
 
@@ -98,14 +100,14 @@ sub load {
 	$Ldap{$i} = $o{$i}[0] || $Default_Conf{$i};
 	
 	unless ($valid_options{$i}) {
-	    Sympa::Log::Syslog::do_log('err',"Line %d, unknown field: %s \n", $o{$i}[1], $i);
+	    &Log::do_log('err',"Line %d, unknown field: %s \n", $o{$i}[1], $i);
 	    $config_err++;
 	}
     }
     ## Do we have all required values ?
     foreach $i (keys %required_options) {
 	unless (defined $o{$i} or defined $Default_Conf{$i}) {
-	    Sympa::Log::Syslog::do_log('err',"Required field not found : %s\n", $i);
+	    &Log::do_log('err',"Required field not found : %s\n", $i);
 	    $config_err++;
 	    next;
 	}

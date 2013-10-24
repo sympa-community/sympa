@@ -16,7 +16,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package Sympa::DatabaseDescription;
 use strict;
@@ -199,239 +200,137 @@ my %full_db_struct = (
 	'doc' => 'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if he never log through the web interface.',
 	'order'=>2,
     },
-    'spool_table' => {
+    'bulkspool_table' => {
 	'fields' => {
-	    'messagekey_spool' => {
-		'struct'=> 'bigint(20)',
+	    'messagekey_bulkspool' => {
+		'struct'=> 'varchar(33)',
 		'doc'=>'primary key',
 		'primary'=>1,
 		'not_null'=>1,
-		'autoincrement'=>1,
 		'order'=>1,
 	    },
-	    'spoolname_spool'=> {
-		'struct'=>  "enum('msg','auth','mod','digest','archive','bounce','subscribe','topic','bulk','validated','task')",
-		'doc'=>'the spool name',
-		'not_null'=>1,
-		'order'=>2,
-	    },
-	    'list_spool'=> {
-		'struct'=> 'varchar(50)',
-		'doc' => '',
-		'order'=>3,
-	    },
-	    'robot_spool' =>{
-		'struct'=> 'varchar(80)',
-		'doc'=>'',
-		'order'=>4,
-	    },
-	    'priority_spool'=> {
-		'struct'=> 'varchar(2)',
-		'doc'=>'priority (list priority, owner pririty etc)',
-		'order'=>5,
-	    },
-	    'date_spool'=> {
-		'struct'=> 'int(11)',
-		'doc'=>'the date a message is copied in spool table',
-		'order'=>6,
-	    },
-	    'messagelock_spool' => {
-		'struct'=> 'varchar(90)',
-		'doc'=>'a unique string for each process : $$@hostname',
-		'order'=>8,
-	    },
-	    'lockdate_spool' => {
-		'struct'=> 'int(11)',
-		'doc'=>'the date a lock is set. Used in order detect old locks',
-		'order'=>9,
-	    },
-	    'message_status_spool' => {
-		'struct'=> "enum('ok','bad')",
-		'doc'=>'if problem when processed entries have bad status',
-		'order'=>10,
-	    },
-	    'message_diag_spool' =>{
-		'struct'=> 'text',
-		'doc'=>'the reason why a message is moved to bad',
-		'order'=>11,
-	    },
-	    'type_spool'=> {
-		'struct'=> 'varchar(15)',
-		'doc'=>'list, list-request,, sympa robot or other rcp ',
-		'order'=>12,
-	    },
-	    'authkey_spool' => {
-		'struct'=> 'varchar(33)',
-		'doc'=>' authentication key for email chalenge',
-		'order'=>13,
-	    },
-	    'headerdate_spool' => {
-		'struct'=> 'varchar(80)',
-		'doc'=>'the message header date',
-		'order'=>14,
-	    },
-	    'subject_spool'=>{
-		'struct'=> 'varchar(110)',
-		'doc'=>'subject of the message stored to list spool content faster',
-		'order'=>16,
-	    },
-	    'sender_spool'=>{
-		'struct'=> 'varchar(110)',
-		'doc'=>'this info is stored to browse spool content faster',
-		'order'=>17,
-	    },
-	    'messageid_spool' => {
-		'struct'=> 'varchar(300)',
-		'doc'=>'stored to list spool content faster',
-		'order'=>18,
-	    },
-	    'spam_status_spool' => {
-		'struct'=> 'varchar(12)',
-		'doc'=>'spamstatus scenario result',
-		'order'=>19,
-	    },
-	    'size_spool' => {
-		'struct'=> 'int(11)',
-		'doc'=>'info stored in order to browse spool content faster',
-		'order'=>20,
-	    },
-	    'task_date_spool' => {
-		'struct'=> 'int(11)',
-		'doc'=>'date for a task',
-		'order'=>21,
-	    },
-	    'task_label_spool' => {
-		'struct'=> 'varchar(20)',
-		'doc'=>'label for a task',
-		'order'=>22,
-	    },
-	    'task_model_spool' => {
-		'struct'=> 'varchar(40)',
-		'doc'=>'model of related task',
-		'order'=>23,
-	    },
-	    'task_flavour_spool' => {
-		'struct'=> 'varchar(60)',
-		'doc'=>'the declinaison of the model used with this task',
-		'order'=>24,
-	    },
-	    'task_object_spool' => {
-		'struct'=> 'varchar(50)',
-		'doc'=>'object of related task',
-		'order'=>25,
-	    },
-	    'dkim_privatekey_spool' => {
-		'struct'=> 'varchar(2000)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
-		'order'=>35,
-	    },
-	    'dkim_selector_spool' => {
-		'struct'=> 'varchar(50)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
-		'order'=>36,
-	    },
-	    'dkim_d_spool' => {
-		'struct'=> 'varchar(50)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
-		'order'=>37,
-	    },
-	    'dkim_i_spool' => {
-		'struct'=> 'varchar(100)',
-		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
-		'order'=>38,
-	    },
-	    'message_spool' => {
+	    'message_bulkspool' => {
 		'struct'=> 'longtext',
 		'doc'=>'message as string b64 encoded',
-		'order'=>99, # long field should be the last column on Oracle.
+		'order'=>2,
+	    },
+	    'messageid_bulkspool' => {
+		'struct'=> 'varchar(300)',
+		'doc'=>'stored to list spool content faster',
+		'order'=>4,
+	    },
+	    'lock_bulkspool' => {
+		'struct'=> 'int(1)',
+		'doc'=>'when set to 1, this field prevents Sympa from processing the message',
+		'order'=>5,
+	    },
+	    'dkim_privatekey_bulkspool' => {
+		'struct'=> 'varchar(1000)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
+		'order'=>6,
+	    },
+	    'dkim_selector_bulkspool' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
+		'order'=>7,
+	    },
+	    'dkim_d_bulkspool' => {
+		'struct'=> 'varchar(50)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
+		'order'=>8,
+	    },
+	    'dkim_i_bulkspool' => {
+		'struct'=> 'varchar(100)',
+		'doc'=>'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
+		'order'=>9,
 	    },
 	},
-	'doc'=>'This table is created in version 6.2. It replace most of spools on file system for clustering purpose',
+	'doc'=>'This table contains the messages to be sent by bulk.pl',
 	'order'=>3,	    
     },
-    'bulkpacket_table' => {
+    'bulkmailer_table' => {
 	'fields' => {
-	    'messagekey_bulkpacket' => {
-		'struct'=> 'bigint(20)',
-		'doc'=>'A pointer to a message in spool_table.  It must be a value of a line in table spool_table with same value as messagekey_spool',
+	    'messagekey_bulkmailer' => {
+		'struct'=> 'varchar(80)',
+		'doc'=>'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_bulkspool',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>1,
 	    },
-	    'packetid_bulkpacket' => {
+	    'packetid_bulkmailer' => {
 		'struct'=> 'varchar(33)',
 		'doc'=>'An id for the packet',
 		'primary'=>1,
 		'not_null'=>1,
 		'order'=>2,
 	    },
-	    'messageid_bulkpacket' => {
+	    'messageid_bulkmailer' => {
 		'struct'=> 'varchar(200)',
 		'doc'=>'The message Id',
 		'order'=>3,
 	    },
-	    'recipients_bulkpacket' => {
+	    'receipients_bulkmailer' => {
 		'struct'=> 'text',
-		'doc'=>'the comma separated list of recipient email for this message',
+		'doc'=>'the comma separated list of receipient email for this message',
 		'order'=>4,
 	    },
-	    'returnpath_bulkpacket' => {
+	    'returnpath_bulkmailer' => {
 		'struct'=> 'varchar(100)',
 		'doc'=>'the return path value that must be set when sending the message',
 		'order'=>5,
 	    },
-	    'robot_bulkpacket' => {
+	    'robot_bulkmailer' => {
 		'struct'=> 'varchar(80)',
 		'doc'=>'',
 		'order'=>6,
 	    },
-	    'listname_bulkpacket' => {
+	    'listname_bulkmailer' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'',
 		'order'=>7,
 	    },
-	    'verp_bulkpacket' => {
+	    'verp_bulkmailer' => {
 		'struct'=> 'int(1)',
 		'doc'=>'A boolean to specify if VERP is requiered, in this cas return_path will be formated using verp form',
 		'order'=>8,
 	    },
-	    'tracking_bulkpacket' => {
+	    'tracking_bulkmailer' => {
 		'struct'=> "enum('mdn','dsn')",
 		'doc'=>'Is DSN or MDM requiered when sending this message?',
 		'order'=>9,
 	    },
-	    'merge_bulkpacket' => {
+	    'merge_bulkmailer' => {
 		'struct'=> 'int(1)',
-		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
+		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach receipient',
 		'order'=>10,
 	    },
-	    'priority_message_bulkpacket' => {
+	    'priority_message_bulkmailer' => {
 		'struct'=> 'smallint(10)',
 		'doc'=>'FIXME',
 		'order'=>11,
 	    },
-	    'priority_packet_bulkpacket' => {
+	    'priority_packet_bulkmailer' => {
 		'struct'=> 'smallint(10)',
 		'doc'=>'FIXME',
 		'order'=>12,
 	    },
-	    'reception_date_bulkpacket' => {
+	    'reception_date_bulkmailer' => {
 		'struct'=> 'int(11)',
 		'doc'=>'The date where the message was received',
 		'order'=>13,
 	    },
-	    'delivery_date_bulkpacket' => {
+	    'delivery_date_bulkmailer' => {
 		'struct'=> 'int(11)',
 		'doc'=>'The date the message was sent',
 		'order'=>14,
 	    },
-	    'lock_bulkpacket' => {
+	    'lock_bulkmailer' => {
 		'struct'=> 'varchar(30)',
-		'doc' => 'A lock. It is set as process-number @ hostname so multiple bulk mailers can handle this spool',
+		'doc'=>'A lock. It is set as process-number @ hostname so multiple bulkmailer can handle this spool',
 		'order'=>15,
 	    },
 	},
-	'doc'=>'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',
+	'doc'=>'storage of receipients with a ref to a message in spool_table. So a very simple process can distribute them',
 	'order'=>4,
     },
     'exclusion_table' => {
@@ -480,55 +379,45 @@ my %full_db_struct = (
 		'not_null'=>1,
 		'order'=>1,
 	    },
-	    'prev_id_session' => {
-		'struct' => 'varchar(30)',
-		'doc' => 'previous identifier of the database record',
-		'order' => 2,
-	    },
 	    'start_date_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'the date when the session was created',
 		'not_null'=>1,
-		'order' => 3,
+		'order'=>2,
 	    },
 	    'date_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'date epoch of the last use of this session. It is used in order to expire old sessions',
 		'not_null'=>1,
-		'order' => 4,
-	    },
-	    'refresh_date_session' => {
-		'struct' => 'int(11)',
-		'doc' => 'date epoch of the last refresh of this session.  It is used in order to refresh available sessions',
-		'order' => 5,
+		'order'=>3,
 	    },
 	    'remote_addr_session' => {
 		'struct'=> 'varchar(60)',
 		'doc'=>'The IP address of the computer from which the session was created',
-		'order' => 6,
+		'order'=>4,
 	    },
 	    'robot_session'  => {
 		'struct'=> 'varchar(80)',
 		'doc'=>'The virtual host in which the session was created',
-		'order' => 7,
+		'order'=>5,
 	    },
 	    'email_session'  => {
 		'struct'=> 'varchar(100)',
 		'doc'=>'the email associated to this session',
-		'order' => 8,
+		'order'=>6,
 	    },
 	    'hit_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'the number of hit performed during this session. Used to detect crawlers',
-		'order' => 9,
+		'order'=>7,
 	    },
 	    'data_session'  => {
 		'struct'=> 'text',
 		'doc'=>'parameters attached to this session that don\'t have a dedicated column in the database',
-		'order' => 10,
+		'order'=>8,
 	    },
 	},
-	'doc'=>'management of HTTP session',
+	'doc'=>'managment of http session',
 	'order' => 6,
     },
     'one_time_ticket_table' => {
@@ -583,12 +472,12 @@ my %full_db_struct = (
 	    },
 	    'recipient_notification' => {
 		'struct'=> 'varchar(100)',
-		'doc'=>'email address of recipient for which a DSN or MDM was received',
+		'doc'=>'email adresse of receipient for which a DSN or MDM was received',
 		'order'=>3,
 	    },
 	    'reception_option_notification' => {
 		'struct'=> 'varchar(20)',
-		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Useful because some recipient may have option such as //digest// or //nomail//',
+		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Ussefull because some receipient may have option such as //digest// or //nomail//',
 		'order'=>4,
 	    },
 	    'status_notification' => {
@@ -606,6 +495,11 @@ my %full_db_struct = (
 		'doc'=>'Type of the notification (DSN or MDM)',
 		'order'=>7,
 	    },
+	    'message_notification' => {
+		'struct'=> 'longtext',
+		'doc'=>'The DSN or the MDN itself',
+		'order'=>8,
+	    },
 	    'list_notification' => {
 		'struct'=> 'varchar(50)',
 		'doc'=>'The listname the messaage was issued for',
@@ -619,14 +513,7 @@ my %full_db_struct = (
 	    'date_notification' => {
 		'struct'=> 'int(11)',
 		'doc'=>'FIXME',
-		'not_null'=>1,
-	        'order' => 11,
-	    },
-	    'message_notification' => {
-		'struct'=> 'longtext',
-		'doc'=>'The DSN or the MDN itself',
-		'order'=>99, # long field should be the last column on Oracle.
-	    },
+		'not_null'=>1},		    
 	},
 	'doc' => 'used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionnaly a return receipt request.When DSN MDN are received by Syamp, they are store in this table in relation with the related list and message_id',
 	'order' => 8,
@@ -646,7 +533,7 @@ my %full_db_struct = (
 		'order'=>2,
 	    },
 	    'date_logs' => {
-		'struct'=> 'double',
+		'struct'=> 'int(11)',
 		'doc'=>'date when the action was executed',
 		'not_null'=>1,
 		'order'=>3,
@@ -690,7 +577,7 @@ my %full_db_struct = (
 	    },
 	    'error_type_logs' => {
 		'struct'=> 'varchar(150)',
-		'doc'=>'name of the error string (if any) issued by the subroutine',
+		'doc'=>'name of the error string – if any – issued by the subroutine',
 		'order'=>11,
 	    },
 	    'client_logs' => {
@@ -1007,7 +894,7 @@ my %full_db_struct = (
     'oauthprovider_sessions_table' => {
 	'fields' => {
 	    'id_oauthprovider' => {
-		'struct' => 'bigint(20)',
+		'struct' => 'int(11)',
 		'doc' => 'Autoincremental key',
 		'order' => 1,
 		'primary'=>1,
@@ -1076,7 +963,7 @@ my %full_db_struct = (
     'oauthprovider_nonces_table' => {
 	'fields' => {
 	    'id_nonce' => {
-		'struct' => 'bigint(20)',
+		'struct' => 'int(11)',
 		'doc' => 'Autoincremental key',
 		'order' => 1,
 		'primary'=>1,
@@ -1105,109 +992,73 @@ my %full_db_struct = (
     },
     'list_table' => {
 	'fields' => {
-	    ## Identification
 	    'name_list'=> => {
 		'struct' => 'varchar(100)',
-		'doc' => 'Name of the list',
+		'doc' => 'FIXME',
 		'order' => 1,
 		'primary'=>1,
 		'not_null'=>1,
 	    },
 	    'robot_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'Name of the robot (domain) the list belongs to',
+		'doc' => 'FIXME',
 		'order' => 2,
 		'primary'=>1,
 		'not_null'=>1,
 	    },
-	    ## basic profile
-	    'family_list' => {
+	    'path_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'Name of the family the list belongs to',
+		'doc' => 'FIXME',
 		'order' => 3,
 	    },
 	    'status_list' => {
 		'struct' => "enum('open','closed','pending','error_config','family_closed')",
-		'doc' => 'Status of the list',
+		'doc' => 'FIXME',
 		'order' => 4,
 	    },
 	    'creation_email_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'Email of user who created the list',
+		'doc' => 'FIXME',
 		'order' => 5,
 	    },
 	    'creation_epoch_list' => {
-		'struct' => 'int(11)',
-		'doc' => 'UNIX time when the list was created',
+		'struct' => 'datetime',
+		'doc' => 'FIXME',
 		'order' => 6,
 	    },
-	    'update_email_list' => {
+	    'subject_list' => {
 		'struct' => 'varchar(100)',
-		'doc' => 'Email of user who updated the list',
+		'doc' => 'FIXME',
 		'order' => 7,
-	    },
-	    'update_epoch_list' => {
-		'struct' => 'int(11)',
-		'doc' => 'UNIX time when the list was updated',
-		'order' => 8,
-	    },
-	    ## Other indices to help searching lists
-	    'searchkey_list' => {
-		'struct' => 'varchar(255)',
-		'doc' => 'Case-folded list subject to help searching',
-		'order' => 10,
 	    },
 	    'web_archive_list' => {
 		'struct' => 'tinyint(1)',
-		'doc' => 'If the list has archives',
-		'order' => 11,
+		'doc' => 'FIXME',
+		'order' => 8,
 	    },
 	    'topics_list' => {
-		'struct' => 'varchar(255)',
-		'doc' => 'Topics of the list, separated and enclosed by commas',
-		'order' => 12,
+		'struct' => 'varchar(100)',
+		'doc' => 'FIXME',
+		'order' => 9,
 	    },
-	    ## total cache
-	    'total_list' => {
-		'struct' => 'int(7)',
-		'doc' => 'Estimated number of subscribers',
-		'order' => 90,
+	    'editors_list' => {
+		'struct' => 'varchar(100)',
+		'doc' => 'FIXME',
+		'order' => 10,
 	    },
-	    ## cache management
-	    'cache_epoch_list' => {
-		'struct' => 'int(11)',
-		'doc' => 'UNIX time of cache entry',
-		'order' => 98,
-	    },
-	    ## admin cache
-	    'config_list' => {
-		'struct' => 'mediumblob',
-		'doc' => 'Serialized list config',
-		'order' => 99,
+	    'owners_list' => {
+		'struct' => 'varchar(100)',
+		'doc' => 'FIXME',
+		'order' => 11,
 	    },
 	},
-	'doc' => 'The list_table holds cached list config and some items to help searching lists.',
+	'doc' => 'FIXME',
 	'order' => 18,
     },
 );
 return %full_db_struct;
 }
-
-## Conversion of column data types.  Basic definitions are based on MySQL.
-## Following types are recognized:
-## varchar(X)     : Text with length upto X.  X must be lower than 2^16 - 2.
-## int(1):        : Boolean, 1 or 0.
-## int(11)        : Unix time (a.k.a. "epoch").
-## int(X)         : Integer with columns upto X, -2^31 to 2^31 - 1.
-## tinyint        : Integer, -2^7 to 2^7 - 1.
-## smallint       : Integer, -2^15 to 2^15 - 1.
-## bigint         : Integer, -2^63 to 2^63 - 1.
-## double         : IEEE floating point number, 8 bytes.
-## enum           : Keyword with length upto 20 o.
-## text           : Text with length upto 500 o.
-## longtext       : Text with length upto 2^32 - 4 o.
-## datetime:      : Timestamp.
-## mediumblob     : Binary data with length upto 2^24 - 3 o.
+    
 
 sub db_struct {
 
@@ -1227,46 +1078,37 @@ sub db_struct {
 	  $trans_o =~ s/^int.*/number/g;	
 	  $trans_o =~ s/^bigint.*/number/g;	
 	  $trans_o =~ s/^smallint.*/number/g;	
-	  $trans_o =~ s/^double/float(24)/g;
 	  $trans_o =~ s/^enum.*/varchar2(20)/g;	
 	  $trans_o =~ s/^text.*/varchar2(500)/g;	
 	  $trans_o =~ s/^longtext.*/long/g;	
 	  $trans_o =~ s/^datetime.*/date/g;	
-	  $trans_o =~ s/^mediumblob/blob/g;
 #Postgresql
 	  $trans_pg =~ s/^int(1)/smallint/g;
 	  $trans_pg =~ s/^int\(?.*\)?/int4/g;
 	  $trans_pg =~ s/^smallint.*/int4/g;
 	  $trans_pg =~ s/^tinyint\(.*\)/int2/g;
 	  $trans_pg =~ s/^bigint.*/int8/g;
-	  $trans_pg =~ s/^double/float8/g;
 	  $trans_pg =~ s/^text.*/varchar(500)/g;
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
 	  $trans_pg =~ s/^enum.*/varchar(15)/g;
-	  $trans_pg =~ s/^mediumblob/bytea/g;
 #Sybase		
 	  $trans_syb =~ s/^int.*/numeric/g;
 	  $trans_syb =~ s/^text.*/varchar(500)/g;
 	  $trans_syb =~ s/^smallint.*/numeric/g;
 	  $trans_syb =~ s/^bigint.*/numeric/g;
-	  $trans_syb =~ s/^double/double precision/g;
 	  $trans_syb =~ s/^longtext.*/text/g;
 	  $trans_syb =~ s/^enum.*/varchar(15)/g;
-	  $trans_syb =~ s/^mediumblob/long binary/g;
 #Sqlite		
 	  $trans_sq =~ s/^varchar.*/text/g;
-	  $trans_sq =~ s/^.*int\(1\).*/numeric/g;
+	  $trans_sq =~ s/^int\(1\).*/numeric/g;
 	  $trans_sq =~ s/^int.*/integer/g;
 	  $trans_sq =~ s/^tinyint.*/integer/g;
 	  $trans_sq =~ s/^bigint.*/integer/g;
 	  $trans_sq =~ s/^smallint.*/integer/g;
-	  $trans_sq =~ s/^double/real/g;
-	  $trans_sq =~ s/^longtext.*/text/g;
 	  $trans_sq =~ s/^datetime.*/numeric/g;
 	  $trans_sq =~ s/^enum.*/text/g;	 
-	  $trans_sq =~ s/^mediumblob/none/g;
-
+	  
 	  $db_struct{'mysql'}{$table}{$field} = $trans;
 	  $db_struct{'Pg'}{$table}{$field} = $trans_pg;
 	  $db_struct{'Oracle'}{$table}{$field} = $trans_o;
@@ -1277,13 +1119,14 @@ sub db_struct {
   return %db_struct;
 }
 
+
 sub not_null {
     my %not_null;
     my %full_db_struct = &full_db_struct() ;
     my %db_struct = &db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
-	    $not_null{'$field'} = $full_db_struct{$table}{'fields'}{$field}{'not_null'}; 
+	    $not_null{'$field'} = $full_db_struct{$table}{'fields'}{'not_null'}; 
 	}
     }
     return %not_null;
@@ -1295,7 +1138,7 @@ sub autoincrement {
     my %db_struct = &db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {		
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
-	    $autoincrement{$table} = $field if ($full_db_struct{$table}{'fields'}{$field}{'autoincrement'}); 
+	    $autoincrement{$table} = $field if ($full_db_struct{$table}{'fields'}{'autoincrement'}); 
 	}
     }
     return %autoincrement;

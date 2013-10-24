@@ -3,7 +3,9 @@
 
 <h2>[%|loc%]Archive Management[%END%] <a class="input" href="[% path_cgi %]/nomenu/help/admin#manage_archives" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help">[%|loc%]Help[%END%]</a></h2>
 <br />
-[%|loc%]Select the Archive months you want to delete or download (ZIP format):[%END%]
+[%|loc%]Select below Archives months you want to delete or download (ZiP format):[%END%]
+
+
 
 <form class="noborder" name="zip_form" method="post" action="[% path_cgi %]">
 <fieldset>
@@ -18,8 +20,8 @@
 </select>
 <input name="list" type="hidden" value="[% list %]" />
 <input name="zip" type="hidden" value="0" /><br />
-<input class="MainMenuLinks" type="submit" name="action_arc_download" value="[%|loc%]Download ZIP File[%END%]" />
-<input class="MainMenuLinks" type="submit" name="action_arc_delete" value="[%|loc%]Delete Selected Month(s)[%END%]" onclick="return dbl_confirm(this.form,'[% FILTER escape_quote %][%|loc%]Do you really want to delete Selected Archives?[%END%][%END%]','[% FILTER escape_quote %][%|loc%]Do you want to download a ZIP file containing the selected archives?[%END%][%END%]')" />
+<input class="MainMenuLinks" type="submit" name="action_arc_download" value="[%|loc%]DownLoad ZipFile[%END%]" />
+<input class="MainMenuLinks" type="submit" name="action_arc_delete" value="[%|loc%]Delete Selected Month(s)[%END%]" onclick="return dbl_confirm(this.form,'[% FILTER escape_quote %][%|loc%]Do you really want to delete Selected Archives?[%END%][%END%]','[% FILTER escape_quote %][%|loc%]Do you want to DownLoad a Zip of the selected Archives?[%END%][%END%]')" />
 </fieldset>
 </form>
 

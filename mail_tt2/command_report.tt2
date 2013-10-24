@@ -1,3 +1,4 @@
+From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 Subject: [% FILTER qencode %][%|loc%]Results of your commands[%END%][%END%]
 X-Loop: [% conf.sympa %]
@@ -19,7 +20,7 @@ X-Loop: [% conf.sympa %]
 [%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
 
 [% ELSIF notice.entry == 'dkim' -%]
-[%|loc%]Your message contains a DKIM signature. It was successfully verified.[%END%]
+[%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
 
 [% ELSIF notice.entry == 'req_forward' -%]
 [%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's
@@ -117,16 +118,7 @@ you subscribed from a different e-mail address ?[%END-%]
 Your configuration regarding this command has not been updated.[%END-%]
 
 [% ELSIF u_err.entry == 'available_reception_mode' -%]
-  [%|loc(u_err.listname)%]List %1 allows only these reception modes: [%END -%]
-[%- FOREACH m = u_err.reception_modes -%]
-[%- IF loop.size >= 2 && loop.count == loop.size -%]
-[%|loc%], and [%END%][%|optdesc('reception',1)%][% m %][%END-%]
-[%- ELSIF loop.count > 1 -%]
-[%|loc%], [%END%][%|optdesc('reception',1)%][% m %][%END-%]
-[%- ELSE -%]
-[%|optdesc('reception',1)%][% m %][%END-%]
-[%- END -%]
-[%- END -%]
+  [%|loc(u_err.listname,u_err.modes)%]List %1 allows only these reception modes: %2[%END%]
 
 [% ELSIF u_err.entry == 'empty_archives' -%]
   [%|loc()%]This list archive is empty.[%END%] 

@@ -1,3 +1,4 @@
+From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 Subject: [% FILTER qencode %][%|loc(list.name)%]Archives index of list %1[%END%][%END%]
 
 [% FOREACH a = archives -%]

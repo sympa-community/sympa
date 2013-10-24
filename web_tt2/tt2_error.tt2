@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html lang="[% lang %]" xml:lang="[% lang %]" xmlns="http://www.w3.org/1999/xhtml">
-
+<html xml:lang="[% iso639 = locale.match('^(.)(.)'); iso639.0; iso639.1 %]" xmlns="http://www.w3.org/1999/xhtml">
 <!-- $Id$ -->
+
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Derived from style Blank Canvas by tw3k AT tw3k.tw3k.q3machines.net" />
@@ -21,7 +21,7 @@
  <div class="search_form">
    <em>[%|loc%]Powered by[%END%]</em></td>
    <a href="http://www.sympa.org/">
-     <img src="[% icons_url %]/logo-s.png" alt="Sympa" />
+     <img src="[% icons_url %]/logo-s.png" alt="Sympa [% version %]" />
    </a>
 </body>
 <!-- end tt2_error.tt2 -->

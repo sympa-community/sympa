@@ -14,7 +14,7 @@
     [% line_count = line_count + 1 %]
 <div id="mainviewmod[% msg.key %]" class="block viewmod" style="display:none; background-color:[% color_5 %]; position:absolute; width:80%">
 <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return hideform('mainviewmod[% msg.key %]')"/>
-<h3>[%|loc%]Current message[%END%]</h3>
+<h3>Current message</h3>
 [% PROCESS modform.tt2 %]
 <p>
 <div id="viewmod[% msg.key %]">
@@ -31,10 +31,10 @@
  <table summary="[%|loc%]Listing messages to moderate[%END%]" class="listOfItems">
       <tr>
      [%- IF conf.antispam_feature == 'on' -%]
-	<th>[%|loc%]Spam[%END%]</th>	
+	<th>Spam</th>	
      [%- END -%]
-	<th>[%|loc%]Moderate[%END%]</th>
-	<th [% IF is_owner %]colspan="2"[%END%]>[%|loc%]Author[%END%]</th>
+	<th>Moderate</th>
+	<th>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
@@ -52,7 +52,7 @@
 
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
-	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
+	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
 	  [%- ELSE -%]&nbsp;
 	  [%- END -%]
 	</td>
@@ -62,42 +62,16 @@
            [% PROCESS modform.tt2 %]
           </td>
 
-	  <td>
-	    [% IF msg.value.gecos %]
-	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
-	    [% ELSE %]
-	    [% msg.value.from %]
-	    [% END %]
-	  </td>
-
-	[% IF is_owner %]
-	  <td>
-	    [% IF msg.value.is_subscriber %]
-	    &nbsp;
-	    [% ELSE %]
-	    <form class="noborder" style="display:inline"
-	     action="[% path_cgi %]" method="post"
-	     name="add_frommod[% line_count %]"><fieldset>
-	      <input type="hidden" name="list" value="[% list %]" />
-	      <input type="hidden" name="id" value="[% msg.key %]" />
-	      <input type="hidden" name="from_modindex" value="from_modindex" />
-	      <input class="MainMenuLinks" type="submit"
-	       name="action_add_frommod"
-	       onclick="return request_confirm('[%|loc(msg.value.from)%]Dou you really want to add %1?[%END%]');"
-	       value="[%|loc%]Add subscribers[%END%]" />
-	    </form>
-	    [% END %]
-	  </td>
-	[% END %]
-
+	  <td>[% msg.value.from %]</td>
 	  <td>
 	    [% IF msg.value.subject == 'no_subject' %]
 	      [%|loc%]No subject[%END%]
 	    [% ELSE %]
 	      [% msg.value.subject %]
 	    [% END %]
-	  </td>
 
+
+	  </td>
 	  <td>
 	    [% IF msg.value.date %]
 	      [% msg.value.date %]
@@ -155,7 +129,7 @@
     </table>
 
 <br />
-[% IF list_blacklist.keys.size %]
+[% IF conf.use_blacklist != 'none' %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [%- END- %]
   <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" /><br />
@@ -174,7 +148,7 @@
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
 <fieldset>
   <input type="hidden" name="list" value="[% list %]" />
-[% IF list_blacklist.keys.size %]
+[% IF conf.use_blacklist != 'none' %]
    <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
 [% END %]
  <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" <br />

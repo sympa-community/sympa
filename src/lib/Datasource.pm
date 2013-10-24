@@ -17,7 +17,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package Datasource;
 
@@ -42,9 +43,8 @@ use Data::Dumper;
 #
 ##############################################################
 sub new {
-
     my($pkg, $param) = @_;
-    Sympa::Log::Syslog::do_log('debug', '');
+    &Log::do_log('debug', '');
     my $self = $param;
     ## Bless Message object
     bless $self, $pkg;
@@ -54,7 +54,7 @@ sub new {
 # Returns a unique ID for an include datasource
 sub _get_datasource_id {
     my ($source) = shift;
-	Sympa::Log::Syslog::do_log('debug2',"Getting datasource id for source '%s'",$source);
+	&Log::do_log('debug2',"Getting datasource id for source '%s'",$source);
     if (ref($source) eq 'Datasource') {
     	$source = shift;
     }
@@ -83,7 +83,7 @@ sub is_allowed_to_sync {
 	my $rsre = &tools::get_regexp('time_ranges');
 	return 1 unless($ranges =~ /^$rsre$/);
 	
-	Sympa::Log::Syslog::do_log('debug', "Checking whether sync is allowed at current time");
+	&Log::do_log('debug', "Checking whether sync is allowed at current time");
 	
 	my ($sec, $min, $hour) = localtime(time);
 	my $now = 60 * int($hour) + int($min);
@@ -94,19 +94,19 @@ sub is_allowed_to_sync {
 		my $end = 60 * int($3) + int($4);
 		$end += 24 * 60 if($end < $start);
 		
-		Sympa::Log::Syslog::do_log('debug', "Checking for range from ".sprintf('%02d', $start / 60)."h".sprintf('%02d', $start % 60)." to ".sprintf('%02d', ($end / 60) % 24)."h".sprintf('%02d', $end % 60));
+		&Log::do_log('debug', "Checking for range from ".sprintf('%02d', $start / 60)."h".sprintf('%02d', $start % 60)." to ".sprintf('%02d', ($end / 60) % 24)."h".sprintf('%02d', $end % 60));
 		
 		next if($start == $end);
 		
 		if($now >= $start && $now <= $end) {
-			Sympa::Log::Syslog::do_log('debug', "Failed, sync not allowed.");
+			&Log::do_log('debug', "Failed, sync not allowed.");
 			return 0;
 		}
 		
-		Sympa::Log::Syslog::do_log('debug', "Pass ...");
+		&Log::do_log('debug', "Pass ...");
 	}
 	
-	Sympa::Log::Syslog::do_log('debug', "Sync allowed");
+	&Log::do_log('debug', "Sync allowed");
 	return 1;
 }
 

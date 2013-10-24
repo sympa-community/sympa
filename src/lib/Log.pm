@@ -16,20 +16,20 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package Log;
 
-use strict;
-#use Carp; # currently not used
-#use Encode; # not used
-use Exporter;
-use POSIX qw(mktime);
-use Sys::Syslog;
-use Time::HiRes;
+use strict "vars";
 
-#XXXuse List; # no longer used
-#use SDM; #FIXME: dependency loop between Log & SDM
+use Exporter;
+use Sys::Syslog;
+use Carp;
+use POSIX qw(mktime);
+use Encode;
+use List;
+
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw($log_level %levels);
@@ -40,7 +40,7 @@ my $warning_timeout = 600;
 # Date of the last time a message was sent to warn the listmaster that the logs are unavailable.
 my $warning_date = 0;
 
-our $log_level = undef;
+our $log_level = 0;
 
 our %levels = (
     err    => 0,
@@ -68,22 +68,21 @@ sub fatal_err {
 	syslog('err', $m, @_);
 	syslog('err', "Exiting.");
     };
-    if ($@ && ($warning_date < time - $warning_timeout)) {
+    if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless (Site->send_notify_to_listmaster('logs_failed', [$@])) {
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
-    }
+    };
     $m =~ s/%m/$errno/g;
 
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    Site->send_notify_to_listmaster('sympa_died', [$full_msg]);
+    unless (&List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'}, [$full_msg])) {
+	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
+    }
 
-    eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
-    eval { SDM::db_disconnect(); };   # unlock database
-    Sys::Syslog::closelog();          # flush log
 
     printf STDERR "$m\n", @_;
     exit(1);   
@@ -92,75 +91,45 @@ sub fatal_err {
 sub do_log {
     my $level = shift;
 
-    unless (defined $levels{$level}) {
-	&do_log('err', 'Invalid $level: "%s"', $level);
-	$level = 'info';
-    }
-
-    # do not log if log level is too high regarding the log requested by user 
-    return if defined $log_level and $levels{$level} > $log_level;
-    return if ! defined $log_level and $levels{$level} > 0;
+    # do not log if log level if too high regarding the log requested by user 
+    return if ($levels{$level} > $log_level);
 
     my $message = shift;
-    my @param = ();
+    my @param = @_;
 
     my $errno = $!;
 
     ## Do not display variables which are references.
-    my @n = ($message =~ /(%[^%])/g);
-    for (my $i = 0; $i < scalar @n; $i++) {
-	my $p = $_[$i];
+    foreach my $p (@param) {
 	unless (defined $p) {
-	    # prevent 'Use of uninitialized value' warning
-	    push @param, '';
+	    $p = ''; # prevent 'Use of uninitialized value' warning
 	} elsif (ref $p) {
-	    if (ref $p eq 'ARRAY') {
-		push @param, '[...]';
-	    } elsif (ref $p eq 'HASH') {
-		push @param, sprintf('{%s}', join('/', keys %{$p}));
-	    } elsif (ref $p eq 'Regexp' or ref $p eq uc ref $p) {
-		# other unblessed references
-		push @param, ref $p;
-	    } elsif ($p->can('get_id')) {
-		push @param, sprintf('%s <%s>', ref $p, $p->get_id);
-	    } else {
-		push @param, ref $p;
-	    }
-	} else {
-	    push @param, $p;
+	    $p = ref $p;
 	}
     }
 
     ## Determine calling function
     my $caller_string;
    
-    ## If in 'err' level, build a stack trace,
-    ## except if syslog has not been setup yet.
-    if (defined $log_level and $level eq 'err'){
+    ## If in 'err' level, build a stack trace
+    if ($level eq 'err'){
 	my $go_back = 1;
 	my @calls;
-
-	my @f = caller($go_back);
-	if ($f[3] =~ /wwslog$/) { ## If called via wwslog, go one step ahead
-	    @f = caller(++$go_back);
+	while (my @call = caller($go_back)) {
+		unshift @calls, $call[3].'#'.$call[2];
+		$go_back++;
 	}
-	@calls = ('#'.$f[2]);
-	while (@f = caller(++$go_back)) {
-	    $calls[0] = $f[3].$calls[0];
-	    unshift @calls, '#'.$f[2];
-	}
-	$calls[0] = '(top-level)'.$calls[0];
-
+	
 	$caller_string = join(' > ',@calls);
     }else {
 	my @call = caller(1);
 	
 	## If called via wwslog, go one step ahead
-	if ($call[3] and $call[3] =~ /wwslog$/) {
-	    @call = caller(2);
+	if ($call[3] =~ /wwslog$/) {
+		my @call = caller(2);
 	}
 	
-	$caller_string = ($call[3] || '').'()';
+	$caller_string = $call[3].'()';
     }
     
     $message = $caller_string. ' ' . $message if ($caller_string);
@@ -176,16 +145,6 @@ sub do_log {
         $level = 'debug';
     }
 
-    ## Output to STDERR if needed
-    if (! defined $log_level or
-	($main::options{'foreground'} and $main::options{'log_to_stderr'}) or
-	($main::options{'foreground'} and $main::options{'batch'} and
-	 $level eq 'err')) {
-	$message =~ s/%m/$errno/g;
-	printf STDERR "$message\n", @param;
-    }
-
-    return unless defined $log_level;
     eval {
         unless (syslog($level, $message, @param)) {
             &do_connect();
@@ -194,9 +153,21 @@ sub do_log {
     };
 
     if ($@ && ($warning_date < time - $warning_timeout)) {
-	$warning_date = time + $warning_timeout;
-	Site->send_notify_to_listmaster('logs_failed', [$@]);
-    }
+        $warning_date = time + $warning_timeout;
+        &List::send_notify_to_listmaster(
+            'logs_failed', $Conf::Conf{'domain'}, [$@]
+        );
+    };
+
+    if ($main::options{'foreground'}) {
+        if (
+            $main::options{'log_to_stderr'} ||
+            ($main::options{'batch'} && $level eq 'err')
+        ) {
+            $message =~ s/%m/$errno/g;
+            printf STDERR "$message\n", @param;
+        }
+    }    
 }
 
 
@@ -222,7 +193,7 @@ sub do_connect {
     eval {openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless (Site->send_notify_to_listmaster('logs_failed', [$@])) {
+	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -264,7 +235,7 @@ sub db_log {
     my $list = $arg->{'list'};
     my $robot = $arg->{'robot'};
     my $action = $arg->{'action'};
-    my $parameters = $arg->{'parameters'};
+    my $parameters = &tools::clean_msg_id($arg->{'parameters'});
     my $target_email = $arg->{'target_email'};
     my $msg_id = &tools::clean_msg_id($arg->{'msg_id'});
     my $status = $arg->{'status'};
@@ -272,31 +243,23 @@ sub db_log {
     my $user_email = &tools::clean_msg_id($arg->{'user_email'});
     my $client = $arg->{'client'};
     my $daemon = $arg->{'daemon'};
-    my $date = Time::HiRes::time;
+    my $date=time;
     my $random = int(rand(1000000));
-    my $id = int($date * 1000) . $random;
+#    my $id = $date*1000000+$random;
+    my $id = $date.$random;
 
     unless($user_email) {
 	$user_email = 'anonymous';
     }
-
-    my $listname;
     unless($list) {
-	$listname = '';
-    } elsif (ref $list and ref $list eq 'List') {
-	$listname = $list->name;
-	$robot ||= $list->robot;
-    } elsif ($list =~ /(.+)\@(.+)/) {
-	#remove the robot name of the list name
-	$listname = $1;
-	$robot ||= $2;
+	$list = '';
     }
-
-    my $robot_id;
-    if (ref $robot and ref $robot eq 'Robot') {
-	$robot_id = $robot->name;
-    } else {
-	$robot_id = $robot || '';
+    #remove the robot name of the list name
+    if($list =~ /(.+)\@(.+)/) {
+	$list = $1;
+	unless($robot) {
+	    $robot = $2;
+	}
     }
 
     unless ($daemon =~ /^(task|archived|sympa|wwsympa|bounced|sympa_soap)$/) {
@@ -306,23 +269,23 @@ sub db_log {
     
     ## Insert in log_table
 
-    unless (SDM::do_prepared_query(
-	q{INSERT INTO logs_table
-	  (id_logs, date_logs, robot_logs, list_logs, action_logs,
-	   parameters_logs, target_email_logs, msg_id_logs, status_logs,
-	   error_type_logs, user_email_logs, client_logs, daemon_logs)
-	  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-	$id, SDM::AS_DOUBLE($date), $robot_id, $listname, $action,
-	substr($parameters, 0, 100), $target_email, $msg_id, $status,
-	$error_type, $user_email, $client, $daemon
-    )) {
+    unless(&SDM::do_query( 'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+    $id, 
+    $date, 
+    &SDM::quote($robot), 
+    &SDM::quote($list), 
+    &SDM::quote($action), 
+    &SDM::quote(substr($parameters,0,100)),
+    &SDM::quote($target_email),
+    &SDM::quote($msg_id),
+    &SDM::quote($status),
+    &SDM::quote($error_type),
+    &SDM::quote($user_email),
+    &SDM::quote($client),
+    &SDM::quote($daemon))) {
 	do_log('err','Unable to insert new db_log entry in the database');
 	return undef;
     }
-    #if (($action eq 'send_mail') && $list && $robot){
-    #	&update_subscriber_msg_send($user_email,$list,$robot,1);
-    #}
-
     return 1;
 }
 
@@ -343,7 +306,7 @@ sub db_stat_log{
     my $read = 0; 
 
     if (ref($list) =~ /List/i) {
-	$list = $list->get_id;
+	$list = $list->{'name'};
     }
     if($list =~ /(.+)\@(.+)/) {#remove the robot name of the list name
 	$list = $1;
@@ -409,14 +372,10 @@ sub db_stat_counter_log {
 
 # delete logs in RDBMS
 sub db_log_del {
-    my $exp = Site->logs_expiration_period;
+    my $exp = &Conf::get_robot_conf('*','logs_expiration_period');
     my $date = time - ($exp * 30 * 24 * 60 * 60);
 
-    unless(SDM::do_query(
-	q{DELETE FROM logs_table
-	  WHERE logs_table.date_logs <= %d},
-	$date
-    )) {
+    unless(&SDM::do_query( "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", &SDM::quote($date))) {
 	do_log('err','Unable to delete db_log entry from the database');
 	return undef;
     }
@@ -426,15 +385,9 @@ sub db_log_del {
 
 # Scan log_table with appropriate select 
 sub get_first_db_log {
+    my $dbh = &SDM::db_get_handler();
+
     my $select = shift;
-    my $sortby = shift || 'date';
-    my $way = shift || 'asc';
-    $sortby = 'date'
-	unless $sortby =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
-    $way = 'asc'
-	unless $way =~ /^(asc|desc)$/;
-    $select->{'target_type'} = 'none'
-	unless $select->{'target_type'} =~ /^(list|parameters|msg_id|action|client|user_email|daemon|target_email|status|error_type|robot)$/;
 
     my %action_type = ('message' => ['reject','distribute','arc_delete','arc_download',
 				     'sendMessage','remove','record_email','send_me',
@@ -474,14 +427,14 @@ sub get_first_db_log {
 
     #if the search is between two date
     if ($select->{'date_from'}) {
-	my @tab_date_from = split /[-\/.]/, $select->{'date_from'};
+	my @tab_date_from = split(/\//,$select->{'date_from'});
 	my $date_from = mktime(0,0,-1,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
 	unless($select->{'date_to'}) {
 	    my $date_from2 = mktime(0,0,25,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
 	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_from2;
 	}
 	if($select->{'date_to'}) {
-	    my @tab_date_to = split /[-\/.]/, $select->{'date_to'};
+	    my @tab_date_to = split(/\//,$select->{'date_to'});
 	    my $date_to = mktime(0,0,25,$tab_date_to[0],$tab_date_to[1]-1,$tab_date_to[2]-1900);
 	    
 	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_to;
@@ -508,33 +461,24 @@ sub get_first_db_log {
 	
     }
     
-    #if the listmaster want to make a search by an IP adress.
-    if ($select->{'ip'}) {
-	$statement .= sprintf 'AND client_logs = %s ', SDM::quote($select->{'ip'});
-    }
-
+    #if the listmaster want to make a search by an IP adress.    if($select->{'ip'}) {
+	$statement .= sprintf "AND client_logs = '%s'",$select->{'ip'};
+    
+    
     ## Currently not used
     #if the search is on the actor of the action
     if ($select->{'user_email'}) {
 	$select->{'user_email'} = lc ($select->{'user_email'});
-	$statement .= sprintf 'AND user_email_logs = %s ', SDM::quote($select->{'user_email'});
+	$statement .= sprintf "AND user_email_logs = '%s' ",$select->{'user_email'}; 
     }
     
     #if a list is specified -just for owner or above-
     if($select->{'list'}) {
 	$select->{'list'} = lc ($select->{'list'});
-	$statement .= sprintf 'AND list_logs = %s ', SDM::quote($select->{'list'});
+	$statement .= sprintf "AND list_logs = '%s' ",$select->{'list'};
     }
-
-    if ($sortby eq 'date') {
-	$statement .= sprintf 'ORDER BY date_logs %s ', $way;
-    } elsif (Site->db_type =~ /^(mysql|Sybase)$/) {
-	# On MySQL, collation is case-insensitive by default.
-	# On Sybase, collation is defined at the time of database creation.
-	$statement .= sprintf 'ORDER BY %s_logs %s, date_logs ', $sortby, $way;
-    } else {
-	$statement .= sprintf 'ORDER BY lower(%s_logs) %s, date_logs ', $sortby, $way;
-    }
+    
+    $statement .= sprintf "ORDER BY date_logs "; 
 
     push @sth_stack, $sth;
     unless($sth = &SDM::do_query($statement)) {
@@ -548,20 +492,18 @@ sub get_first_db_log {
     ## If no rows returned, return an empty hash
     ## Required to differenciate errors and empty results
     if ($rows_nb == 0) {
-	$sth->finish;
-	$sth = pop @sth_stack;
 	return {};
     }
 
     ## We can't use the "AS date" directive in the SELECT statement because "date" is a reserved keywork with Oracle
-    $log->{'date'} = $log->{'date_logs'} if defined $log->{'date_logs'};
+    $log->{date} = $log->{date_logs} if defined($log->{date_logs});
     return $log;
-}
 
+    
+}
 sub return_rows_nb {
     return $rows_nb;
 }
-
 sub get_next_db_log {
 
     my $log = $sth->fetchrow_hashref('NAME_lc');
@@ -593,34 +535,20 @@ sub aggregate_data {
 
     my $aggregated_data; # the hash containing aggregated data that the sub deal_data will return.
     
-    unless ($sth = SDM::do_query(
-	q{SELECT *
-	  FROM stat_table
-	  WHERE (date_stat BETWEEN %s AND %s) AND (read_stat = 0)},
-	$begin_date, $end_date
-    )) {
-	do_log('err',
-	    'Unable to retrieve stat entries between date %s and date %s',
-	    $begin_date, $end_date
-	);
+    unless ($sth = &SDM::do_query("SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date)) {
+	&do_log('err','Unable to retrieve stat entries between date % and date %s', $begin_date, $end_date);
 	return undef;
     }
 
     
     my $res = $sth->fetchall_hashref('id_stat');
+
     
     $aggregated_data = &deal_data($res);
     
     #the line is read, so update the read_stat from 0 to 1
-    unless ($sth = SDM::do_query(
-	q{UPDATE stat_table
-	  SET read_stat = 1
-	  WHERE date_stat BETWEEN %s AND %s},
-	$begin_date, $end_date
-    )) {
-	do_log('err',
-	    'Unable to set stat entries between date %s and date %s as read',
-	    $begin_date, $end_date);
+    unless ($sth = &SDM::do_query( "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date)) {
+	&do_log('err','Unable to set stat entries between date % and date %s as read', $begin_date, $end_date);
 	return undef;
     }
     
@@ -633,7 +561,7 @@ sub aggregate_data {
 	#store send mail data-------------------------------
 	if($key_op eq 'send_mail'){
 
-	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){ 
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
@@ -641,11 +569,11 @@ sub aggregate_data {
 		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' => '', 'robot' => $key_robot});
 		    
 		    #updating susbcriber_table
-		     foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
-		    
-	            	if (($key_mail ne 'count') && ($key_mail ne 'size')){
-		            &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
-		       }
+		    foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
+
+			if (($key_mail ne 'count') && ($key_mail ne 'size')){
+			    &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
+			}
 		    }
 		}
 	    }
@@ -907,7 +835,7 @@ sub deal_data {
 	if($result_request->{$id}->{'operation_stat'} eq 'purge list'){
 	    
 	    unless(exists ($data{'purge_list'})){
-		$data{'purge_list'} = undef;
+		$data{'purge_list'} = 0;
 	    }
 	    
 	    my $r_name = $result_request->{$id}->{'robot_stat'}; #get the name of the robot
@@ -1030,7 +958,7 @@ sub deal_data {
 sub update_subscriber_msg_send {
 
     my ($mail, $list, $robot, $counter) = @_;
-    Sympa::Log::Syslog::do_log('debug2','%s,%s,%s,%s',$mail, $list, $robot, $counter);
+    Log::do_log('debug2','%s,%s,%s,%s',$mail, $list, $robot, $counter);
 
     unless ($sth = &SDM::do_query("SELECT number_messages_subscriber from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail)){
 	&do_log('err','Unable to retrieve message count for user %s, list %s@%s',$mail, $list, $robot);
@@ -1062,7 +990,7 @@ sub get_last_date_aggregation {
 
 sub agregate_daily_data {
     my $param = shift;
-    Sympa::Log::Syslog::do_log('debug2','Agregating data');
+    &Log::do_log('debug2','Agregating data');
     my $result;
     my $first_date = $param->{'first_date'} || time;
     my $last_date = $param->{'last_date'} || time;

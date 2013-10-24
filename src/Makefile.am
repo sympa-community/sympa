@@ -16,7 +16,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 SUBDIRS = etc lib
 
@@ -75,16 +76,7 @@ alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--defaultdir--|$(defaultdir)|' \
-		-e 's|--docdir--|$(docdir)|' \
-		-e 's|--libexecdir--|$(libexecdir)|' \
-		-e 's|--localedir--|$(localedir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
-		-e 's|--piddir--|$(piddir)|' \
-		-e 's|--spooldir--|$(spooldir)|' \
-		-e 's|--sysconfdir--|$(sysconfdir)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
-		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
 		< $(srcdir)/$@.in > $@
 	chmod +x $@
 

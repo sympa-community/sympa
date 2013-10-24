@@ -1,4 +1,4 @@
--- SQLite Database creation script
+-- SQLITE Database creation script
 
 -- --------------------------------------------------------
 --
@@ -28,26 +28,44 @@ CREATE INDEX admin_user_index ON admin_table ( user_admin );
 
 -- --------------------------------------------------------
 --
--- Table structure for table `bulkpacket_table`
+-- Table structure for table `bulkmailer_table`
 -- 
 
-CREATE TABLE bulkpacket_table ( 
-	 delivery_date_bulkpacket 	integer, 
-	 listname_bulkpacket 	text, 
-	 lock_bulkpacket 	text, 
-	 merge_bulkpacket 	numeric, 
-	 messageid_bulkpacket 	text, 
-	 messagekey_bulkpacket 	integer, 
-	 packetid_bulkpacket 	text, 
-	 priority_message_bulkpacket 	integer, 
-	 priority_packet_bulkpacket 	integer, 
-	 recipients_bulkpacket 	text, 
-	 reception_date_bulkpacket 	integer, 
-	 returnpath_bulkpacket 	text, 
-	 robot_bulkpacket 	text, 
-	 tracking_bulkpacket 	text, 
-	 verp_bulkpacket 	numeric, 
-	 PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
+CREATE TABLE bulkmailer_table ( 
+	 delivery_date_bulkmailer 	integer, 
+	 listname_bulkmailer 	text, 
+	 lock_bulkmailer 	text, 
+	 merge_bulkmailer 	numeric, 
+	 messageid_bulkmailer 	text, 
+	 messagekey_bulkmailer 	text, 
+	 packetid_bulkmailer 	text, 
+	 priority_message_bulkmailer 	integer, 
+	 priority_packet_bulkmailer 	integer, 
+	 receipients_bulkmailer 	text, 
+	 reception_date_bulkmailer 	integer, 
+	 returnpath_bulkmailer 	text, 
+	 robot_bulkmailer 	text, 
+	 tracking_bulkmailer 	text, 
+	 verp_bulkmailer 	numeric, 
+	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+ );
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkspool_table`
+-- 
+
+CREATE TABLE bulkspool_table ( 
+	 dkim_d_bulkspool 	text, 
+	 dkim_i_bulkspool 	text, 
+	 dkim_privatekey_bulkspool 	text, 
+	 dkim_selector_bulkspool 	text, 
+	 lock_bulkspool 	numeric, 
+	 message_bulkspool 	longtext, 
+	 messageid_bulkspool 	text, 
+	 messagekey_bulkspool 	text, 
+	 PRIMARY KEY (messagekey_bulkspool) 
  );
 
 
@@ -85,20 +103,17 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 cache_epoch_list 	integer, 
-	 config_list 	none, 
 	 creation_email_list 	text, 
-	 creation_epoch_list 	integer, 
-	 family_list 	text, 
+	 creation_epoch_list 	numeric, 
+	 editors_list 	text, 
 	 name_list 	text, 
+	 owners_list 	text, 
+	 path_list 	text, 
 	 robot_list 	text, 
-	 searchkey_list 	text, 
 	 status_list 	text, 
+	 subject_list 	text, 
 	 topics_list 	text, 
-	 total_list 	integer, 
-	 update_email_list 	text, 
-	 update_epoch_list 	integer, 
-	 web_archive_list 	numeric, 
+	 web_archive_list 	integer, 
 	 PRIMARY KEY (name_list, robot_list) 
  );
 
@@ -112,7 +127,7 @@ CREATE TABLE logs_table (
 	 action_logs 	text, 
 	 client_logs 	text, 
 	 daemon_logs 	text, 
-	 date_logs 	real, 
+	 date_logs 	integer, 
 	 error_type_logs 	text, 
 	 id_logs 	integer, 
 	 list_logs 	text, 
@@ -146,17 +161,18 @@ CREATE TABLE netidmap_table (
 -- 
 
 CREATE TABLE notification_table ( 
-	 pk_notification	integer PRIMARY KEY,
 	 arrival_date_notification 	text, 
 	 date_notification 	integer, 
 	 list_notification 	text, 
 	 message_id_notification 	text, 
-	 message_notification 	text, 
+	 message_notification 	longtext, 
+	 pk_notification 	integer, 
 	 reception_option_notification 	text, 
 	 recipient_notification 	text, 
 	 robot_notification 	text, 
 	 status_notification 	text, 
-	 type_notification 	text
+	 type_notification 	text, 
+	 PRIMARY KEY (pk_notification) 
  );
 
 
@@ -182,10 +198,11 @@ CREATE TABLE oauthconsumer_sessions_table (
 -- 
 
 CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	integer PRIMARY KEY, 
-	 id_oauthprovider	integer, 
+	 id_nonce 	integer, 
+	 id_oauthprovider 	integer, 
 	 nonce_oauthprovider 	text, 
-	 time_oauthprovider 	integer
+	 time_oauthprovider 	integer, 
+	 PRIMARY KEY (id_nonce) 
  );
 
 
@@ -195,17 +212,18 @@ CREATE TABLE oauthprovider_nonces_table (
 -- 
 
 CREATE TABLE oauthprovider_sessions_table ( 
-	 id_oauthprovider	integer PRIMARY KEY, 
-	 accessgranted_oauthprovider 	numeric, 
+	 accessgranted_oauthprovider 	integer, 
 	 callback_oauthprovider 	text, 
 	 consumer_oauthprovider 	text, 
 	 firsttime_oauthprovider 	integer, 
-	 isaccess_oauthprovider 	numeric, 
+	 id_oauthprovider 	integer, 
+	 isaccess_oauthprovider 	integer, 
 	 lasttime_oauthprovider 	integer, 
 	 secret_oauthprovider 	text, 
 	 token_oauthprovider 	text, 
 	 user_oauthprovider 	text, 
-	 verifier_oauthprovider 	text
+	 verifier_oauthprovider 	text, 
+	 PRIMARY KEY (id_oauthprovider) 
  );
 
 
@@ -237,49 +255,10 @@ CREATE TABLE session_table (
 	 email_session 	text, 
 	 hit_session 	integer, 
 	 id_session 	text, 
-	 prev_id_session	text,
-	 refresh_date_session 	integer, 
 	 remote_addr_session 	text, 
 	 robot_session 	text, 
 	 start_date_session 	integer, 
 	 PRIMARY KEY (id_session) 
- );
-
-
--- --------------------------------------------------------
---
--- Table structure for table `spool_table`
--- 
-
-CREATE TABLE spool_table ( 
-	 messagekey_spool	integer PRIMARY KEY,
-	 authkey_spool 	text, 
-	 date_spool 	integer, 
-	 dkim_d_spool 	text, 
-	 dkim_i_spool 	text, 
-	 dkim_privatekey_spool 	text, 
-	 dkim_selector_spool 	text, 
-	 headerdate_spool 	text, 
-	 list_spool 	text, 
-	 lockdate_spool 	integer, 
-	 message_diag_spool 	text, 
-	 message_spool 	text, 
-	 message_status_spool 	text, 
-	 messageid_spool 	text, 
-	 messagelock_spool 	text, 
-	 priority_spool 	text, 
-	 robot_spool 	text, 
-	 sender_spool 	text, 
-	 size_spool 	integer, 
-	 spam_status_spool 	text, 
-	 spoolname_spool 	text, 
-	 subject_spool 	text, 
-	 task_date_spool 	integer, 
-	 task_flavour_spool 	text, 
-	 task_label_spool 	text, 
-	 task_model_spool 	text, 
-	 task_object_spool 	text, 
-	 type_spool 	text 
  );
 
 
@@ -314,7 +293,7 @@ CREATE TABLE stat_table (
 	 list_stat 	text, 
 	 operation_stat 	text, 
 	 parameter_stat 	text, 
-	 read_stat 	numeric, 
+	 read_stat 	integer, 
 	 robot_stat 	text, 
 	 user_ip_stat 	text, 
 	 PRIMARY KEY (id_stat) 

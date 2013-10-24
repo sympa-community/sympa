@@ -7,8 +7,6 @@
   [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
 [% ELSIF action == 'search_user' %]
   [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]
-[% ELSIF subtitle %]
-  <strong>[% subtitle %]</strong>
 [% END %]
 
 [% IF which %]
@@ -39,7 +37,7 @@
   <div class="admin_cmd"><a  href="[% path_cgi %]/edit_list_request/[% listname %]">[%|loc%]Edit List Config[%END%]</a></div>
   <div class="admin_cmd"><a  href="[% path_cgi %]/editfile/[% listname %]">[%|loc%]Customizing[%END%]</a></div>
   <div class="admin_cmd"><a  href="[% path_cgi %]/review/[% listname %]">[%|loc%]Manage Subscribers[%END%]</a></div>
-  [% IF list_blacklist.keys.size %]
+  [% IF conf.use_blacklist != 'none' %]
   <div class="admin_cmd"><a  href="[% path_cgi %]/blacklist/[% listname %]" >[%|loc%]Blacklist[%END%]</a></div>
   [% END %]
   <div class="admin_cmd"><a  href="[% path_cgi %]/reviewbouncing/[% listname %]">[%|loc%]Bounces[%END%]</a></div>

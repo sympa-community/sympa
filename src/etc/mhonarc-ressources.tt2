@@ -47,9 +47,9 @@ SEARCH_FORM
 	<input name="limit" type="hidden" value="10" /> 
 	<input name="body"  type="hidden" value="true" />
 	<input name="subj"  type="hidden" value="true" />
-	<input id="key_word" name="key_word" type="text" size="12" />
+	<input name="key_word"     type="text"   size="12" />
 	<input name="action"  type="hidden" value="arcsearch" />
-	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" onClick="return isNotEmpty('key_word')" />
+	<input type="submit" class="MainMenuLinks" name="action_arcsearch" value="($tag$%|loc%$tag$)Search($tag$%END%$tag$)" onClick="if (document.getElementsByName('key_word')[0].value.replace(/\s+/g, '')) return true; else return false;" />
 	<input type="submit" class="MainMenuLinks" name="action_arcsearch_form" value="($tag$%|loc%$tag$)Advanced search($tag$%END%$tag$)" />
 	</form>
     </div>
@@ -196,7 +196,7 @@ IDXPGEND
 
 <!-- item of maillist.html -->
 <LITEMPLATE>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)
 
 <b>$SUBJECT$</b>, <em>$FROMNAME$</em></li>
 </LITEMPLATE> 
@@ -303,15 +303,15 @@ TIDXPGEND
 </THEAD>
 
 <TSINGLETXT>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TSINGLETXT>
 
 <TTOPBEGIN>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TTOPBEGIN>
 
 <TLITXT>
-<li>($tag$% IF is_owner %$tag$)<input type="checkbox" name="msgid" value="$MSGID$" />($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
+<li>($tag$% IF is_owner %$tag$)<label for="msgid"><input type="checkbox" name="msgid" value="$MSGID$" /></label>($tag$%END%$tag$)<b>$SUBJECT$</b>, <em>$FROMNAME$, ($tag$%|locdt("$YYYYMMDD$")%$tag$)%m/%d/%Y($tag$%END%$tag$)</em>
 </TLITXT>
 
 <TTOPEND>
@@ -469,25 +469,12 @@ $POWERED_BY$
           <input type="hidden" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" />
       ($tag$% END %$tag$)
   ($tag$% ELSE %$tag$)
-      ($tag$%|loc%$tag$)Reply to($tag$%END%$tag$)
-      <input id="to_sender" type="radio" name="to"
-       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$"
-       ($tag$% IF list_conf.reply_to_header.value == 'sender' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label for="to_sender">($tag$%|loc%$tag$)sender($tag$%END%$tag$)</label>
-      <input id="to_list" type="radio" name="to"
-       value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
-       ($tag$% IF list_conf.reply_to_header.value == 'list' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label for="to_list">($tag$%|loc%$tag$)list($tag$%END%$tag$)</label>
-      <input id="to_both" type="radio" name="to"
-       value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)"
-       ($tag$% IF list_conf.reply_to_header.value == 'all' %$tag$)
-	checked
-	($tag$%END%$tag$) />
-      <label for="to_both">($tag$%|loc%$tag$)both($tag$%END%$tag$)</label>
+      ($tag$%|loc%$tag$)Reply to sender($tag$%END%$tag$)
+      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$" checked />
+      ($tag$%|loc%$tag$)to list($tag$%END%$tag$)
+      <input type="radio" name="to" value="($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
+      ($tag$%|loc%$tag$)to both($tag$%END%$tag$)
+      <input type="radio" name="to" value="$FROMADDRNAME:J$ $FROMADDRDOMAIN$,($tag$% list %$tag$) ($tag$% list_conf.host %$tag$)" />
   ($tag$% END %$tag$)
   <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="($tag$%|loc%$tag$)Reply($tag$%END%$tag$)" /><br />
   <input class="MainMenuLinks" type="submit" name="action_send_me" value="($tag$%|loc(user.email)%$tag$)send it back to %1($tag$%END%$tag$)" /><br />
@@ -649,9 +636,9 @@ Subject:strong
 ($tag$%|loc%$tag$)Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday($tag$%END%$tag$)
 </WEEKDAYS>
 
-($tag$% IF lang == 'cs' %$tag$)
+($tag$% IF lang == 'cz' %$tag$)
 <WEEKDAYSABR>
-Ne:Po:√öt:St:ƒåt:P√°:So
+Ne:Po:⁄t:St:»t:P·:So
 </WEEKDAYSABR>
 ($tag$% ELSIF lang == 'hu' %$tag$)
 <WEEKDAYSABR>
@@ -661,35 +648,27 @@ V:H:K:Sz:Cs:P:Szo
 <WEEKDAYSABR>
 P:M:T:K:N:R:L
 </WEEKDAYSABR>
-($tag$% ELSE %$tag$)
-<WEEKDAYSABR>
-($tag$%|loc%$tag$)Sun:Mon:Tue:Wed:Thu:Fri:Sat($tag$%END%$tag$)
-</WEEKDAYSABR>
 ($tag$% END %$tag$)
 
 <MONTHS>
 ($tag$%|loc%$tag$)January:February:March:April:May:June:July:August:September:October:November:December($tag$%END%$tag$)
 </MONTHS>
 
-($tag$% IF lang == 'cs' %$tag$)
+($tag$% IF lang == 'cz' %$tag$)
 <MONTHSABR>
-Led:√öno:B≈ôe:Dub:Kvƒõ:ƒåern:ƒåerv:Srp:Z√°≈ô:≈ò√≠j:List:Pro
+Led:⁄no:B¯e:Dub:KvÏ:»ern:»erv:Srp:Z·¯:ÿÌj:List:Pro
 </MONTHSABR>
 ($tag$% ELSIF lang == 'hu' %$tag$)
 <MONTHSABR>
-Jan:Feb:M√°r:√Åpr:M√°j:J√∫n:J√∫l:Aug:Szep:Okt:Nov:Dec
+Jan:Feb:M·r:¡pr:M·j:J˙n:J˙l:Aug:Szep:Okt:Nov:Dec
 </MONTHSABR>
-($tag$% ELSIF lang == 'et' %$tag$)
+($tag$% ELSIF lang == 'hu' %$tag$)
 <MONTHSABR>
-Jan:Veeb:M√§r:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
-</MONTHSABR>
-($tag$% ELSE %$tag$)
-<MONTHSABR>
-($tag$%|loc%$tag$)Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec($tag$%END%$tag$)
+Jan:Veeb:M‰r:Apr:Mai:Juun:Juul:Aug:Sep:Okt:Nov:Dets
 </MONTHSABR>
 ($tag$% END %$tag$)
 
-($tag$% IF lang == 'cs' %$tag$)
+($tag$% IF lang == 'cz' %$tag$)
 <UseLocalTime>
 
 <MSGLOCALDATEFMT>

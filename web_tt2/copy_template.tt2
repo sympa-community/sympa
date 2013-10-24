@@ -8,7 +8,7 @@
   <label>[%|loc%]Name: [%END%]</label><strong> [% template_name %] </strong><br />
   <label>[%|loc%]Scope: [%END%]</label><strong> [% scope %] </strong><br />
   <label for="scope_out">[%|loc%]Scope: [%END%]</label><br />
-  <label>[%|loc%]Language: [%END%]</label><strong> [% tpl_lang %] </strong><br />
+  <label>[%|loc%]Language: [%END%]<strong></label> [% tpl_lang %] </strong><br />
 
 </fieldset>
 <fieldset>
@@ -21,7 +21,7 @@
         <option value="list" [% IF scope == 'list' %]selected[% END %]>[%|loc%]list[%END%]</option>
     </select><br />
   <label for="tpl_lang_out">[%|loc%]Language: [%END%] </label>
-    <select id="tpl_lang_out" name="tpl_lang_out" class="LanguageNeutral">
+    <select is="tpl_lang_out" name="tpl_lang_out">
 	<option value="default">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
         <option value="[%lg.key%]" [% IF tpl_lang == lg.key %]selected[% END %]>[%lg.value.complete%]</option>

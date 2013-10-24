@@ -1,4 +1,4 @@
-From: [% fromlist %]
+From: [% conf.sympa %]
 Reply-to: [% conf.sympa %]
 [% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name)%]Tag your message for list %1[%END%][%END%]
 [% ELSE -%]Subject: [% FILTER qencode %]Confirm [% authkey %][%END%]
@@ -26,5 +26,6 @@ Content-Transfer-Encoding:  8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 
+[% INSERT $file IF file %]
 
 --[% boundary %]--

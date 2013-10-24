@@ -4,7 +4,7 @@
 
 <ul>
 [% FOREACH confparam IN editable_params %]
- [% IF confparam.title %]<li><a href="#[%confparam.group%]">[%confparam.title%]</a></li>[% END %]
+ [% IF confparam.title %]<li><a href="#[%confparam.title%]">[%confparam.title%]</a></li>[% END %]
 [% END %]
 </ul>
 <p>
@@ -12,7 +12,7 @@
 [% FOREACH confparam IN editable_params %]
   [% IF confparam.title %]
      [% close_table %]
-     <a name="[%confparam.group%]"></a>
+     <a name="[%confparam.title%]">
      <h4>[% confparam.title %]</h4>
 <table class="listOfItems"><tr><th>[%|loc%]parameter name[%END%]</th><th>[%|loc%]value[%END%]</th><th>[%|loc%]apply to[%END%]</th><th>[%|loc%]default[%END%]</th>[%# <th>semantic</th> %]</tr> 
   [% ELSE %]

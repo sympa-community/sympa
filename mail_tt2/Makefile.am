@@ -16,14 +16,14 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 mailtemplate_DATA = authorization_reject.tt2 \
 		    bye.tt2 certif_warning.tt2 \
 		    command_report.tt2 \
 		    digest_plain.tt2 \
 		    digest.tt2 \
-		    dsn.tt2 \
 		    d_install_shared.tt2 \
 		    d_reject_shared.tt2 \
 		    expire_deletion.tt2 \
@@ -42,6 +42,7 @@ mailtemplate_DATA = authorization_reject.tt2 \
 		    listowner_notification.tt2 \
 		    list_rejected.tt2 \
 		    lists.tt2 \
+		    list_unknown.tt2 \
 		    message_report.tt2 \
 		    moderate.tt2 \
 		    modindex.tt2 \

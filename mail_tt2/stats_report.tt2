@@ -1,7 +1,7 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]STATS %1[%END%][%END%]
+Subject: [% FILTER qencode %][%subject%][%END%]
 
-[%|loc(list.name)%]Information regarding list %1:[%END%]
+[%|loc(list.name)%]Information regarding list %1[%END%] :
 
    [%|loc(stats.msg_rcv)%]Number of received messages :      %1[%END%]
    [%|loc(stats.msg_sent)%]Number of forwarded messages:      %1[%END%]

@@ -16,88 +16,78 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package confdef;
 
 use strict "vars";
 
 use Sympa::Constants;
+sub gettext { shift } # to mark i18n'ed messages.
 
 ## This defines the parameters to be edited :
+##   title  : Title for the group of parameters following
 ##   name   : Name of the parameter
-##   file   : Conf file where the parameter is defined.  If omitted, the
-##            parameter won't be added automatically to the config file, even
-##            if a default is set.
-##            "wwsympa.conf" is a synonym of "sympa.conf".  It remains there
-##            in order to migrating older versions of config.
-##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless
-##            and can lead to errors on fresh install.
-##   gettext_id : Description of the parameter
-##   gettext_comment : FIXME FIXME
-##   sample : FIXME FIXME
-##   edit   : 1|0: FIXME FIXME
-##   optional: 1|0: FIXME FIXME
-##   vhost  : 1|0 : if 1, the parameter can have a specific value in a
-##            virtual host
-##   db     : 'db_first', 'file_first', 'no'
-##   multiple: 1|0: If 1, the parameter can have mutiple values. Default is 0.
-##   scenario: 1|0: If 1, the parameter is the name of scenario
+##   default: Default value
+##   file   : Conf file where the param. is defined. If omitted, the parameter won't be added automatically to the config file, even if a default is set.
+##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless and can lead to errors on fresh install.
+##   query  : Description of the parameter
+##   file   : Conf file where the param. is defined
+##   vhost   : 1|0 : if 1, the parameter can have a specific value in a virtual host
+##   db   : 'db_first','file_first','no'
+##   multiple   : 1|0: If 1, the parameter can have mutiple values. Default i 0.
 
 our @params = (
 
-    { 'gettext_id' => 'Site customization' },
+    { 'title' => gettext('Site customization') },
 
     {
         'name'     => 'domain',
-        'gettext_id'    => 'Main robot hostname',
+        'query'    => gettext('Main robot hostname'),
         'sample'   => 'domain.tld',
         'edit'     => '1',
         'file'     => 'sympa.conf',
         'vhost'    => '1',
     },
     {
-        'name'     => 'host',
-        'optional' => 1,
-        'vhost'    => '1',
-    },
-    {
         'name'     => 'email',
         'default'  => 'sympa',
-        'gettext_id'    => 'Local part of sympa email address',
+        'query'    => gettext('Local part of sympa email address'),
         'vhost'    => '1',
         'edit'     => '1',
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Effective address will be [EMAIL]@[HOST]',
+        'advice'   => gettext('Effective address will be [EMAIL]@[HOST]'),
     },
     {
-        'name'     => 'email_gecos',
+        'name'     => 'email_',
         'default'  => 'SYMPA',
-        'gettext_id'    => 'Gecos for service mail sent by Sympa itself',
+        'query'    => gettext('Gecos for service mail sent by Sympa itself'),
         'vhost'    => '1',
         'edit'     => '1',
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'This parameter is used for display name in the "From:" header',
+        'advice'   => gettext('This parameter is used in mail_tt2 files'),
+        'optional' => '1',
     },
     {
         'name'     => 'listmaster',
         'default'  => 'your_email_address@domain.tld',
-        'gettext_id'    => 'Listmasters email list comma separated',
+        'query'    => gettext('Listmasters email list comma separated'),
         'file'     => 'sympa.conf',
         'vhost'    => '1',
         'edit'     => '1',
-        'gettext_comment'   => 'Sympa will associate listmaster privileges to these email addresses (mail and web interfaces). Some error reports may also be sent to these addresses.',
+        'advice'   => gettext('Sympa will associate listmaster privileges to these email addresses (mail and web interfaces). Some error reports may also be sent to these addresses.'),
     },
     {
         'name'     => 'listmaster_email',
         'default'  => 'listmaster',
-        'gettext_id'    => 'Local part of listmaster email address',
+        'query'    => gettext('Local part of listmaster email address'),
         'vhost'    => '1',
     },
     {
         'name'     => 'wwsympa_url',
         'sample'   => 'http://host.domain.tld/sympa',
-        'gettext_id'    => 'URL of main Web page',
+        'query'    => gettext('URL of main Web page'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -335,7 +325,7 @@ our @params = (
     {
         'name'     => 'static_content_path',
         'default'  => Sympa::Constants::STATICDIR,
-        'gettext_id'    => 'Directory for storing static contents (CSS, members pictures, documentation) directly delivered by Apache',
+        'query'    => gettext('Directory for storing static contents (CSS, members pictures, documentation) directly delivered by Apache'),
         'vhost'    => '1',
         'edit'     => '1',
         'file'     => 'sympa.conf',
@@ -343,7 +333,7 @@ our @params = (
     {
         'name'     => 'static_content_url',
         'default'  => '/static-sympa',
-        'gettext_id'    => 'URL mapped with the static_content_path directory defined above',
+        'query'    => gettext('URL mapped with the static_content_path directory defined above'),
         'vhost'    => '1',
         'edit'     => '1',
         'file'     => 'sympa.conf',
@@ -354,31 +344,29 @@ our @params = (
     },
     {
         'name'     => 'pictures_max_size',
-        'default'  => 102400, ## 100 kiB,
+        'default'  => 102400, ## 100Kb,
         'vhost'    => '1',
     },
     {
         'name'     => 'cookie',
         'sample'   => '123456789',
-        'gettext_id'    => 'Secret used by Sympa to make MD5 fingerprint in web cookies secure',
+        'query'    => gettext('Secret used by Sympa to make MD5 fingerprint in web cookies secure'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Should not be changed ! May invalid all user password',
+        'advice'   => gettext('Should not be changed ! May invalid all user password'),
         'optional' => '1',
     },
     {
         'name'     => 'create_list',
         'default'  => 'public_listmaster',
-        'gettext_id'    => 'Who is able to create lists',
+        'query'    => gettext('Who is able to create lists'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'This parameter is a scenario, check sympa documentation about scenarios if you want to define one',
-	'scenario' => '1',
+        'advice'   => gettext('This parameter is a scenario, check sympa documentation about scenarios if you want to define one'),
     },
     {
         'name'     => 'global_remind',
         'default'  => 'listmaster',
-	'scenario' => '1',
     },
     {
         'name'     => 'allow_subscribe_if_pending',
@@ -387,79 +375,98 @@ our @params = (
     },
     {
         'name'     => 'custom_robot_parameter',
-        'gettext_id'    => 'Used to define a custom parameter for your server. Do not forget the semicolon between the param name and the param value.',
+        'query'    => gettext('Used to define a custom parameter for your server. Do not forget the semicolon between the param name and the param value.'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'multiple' => '1',
         'optional' => '1',
     },
 
-    { 'gettext_id' => 'Directories' },
+    { 'title' => gettext('Directories') },
 
     {
         'name'     => 'home',
         'default'  => Sympa::Constants::EXPLDIR,
-        'gettext_id'    => 'Directory containing mailing lists subdirectories',
+        'query'    => gettext('Directory containing mailing lists subdirectories'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
     },
     {
         'name'     => 'etc',
         'default'  => Sympa::Constants::SYSCONFDIR,
-        'gettext_id'    => 'Directory for configuration files; it also contains scenari/ and templates/ directories',
+        'query'    => gettext('Directory for configuration files; it also contains scenari/ and templates/ directories'),
         'file'     => 'sympa.conf',
     },
 
-    { 'gettext_id' => 'System related' },
+    { 'title' => gettext('System related') },
 
     {
         'name'     => 'syslog',
         'default'  => 'LOCAL1',
-        'gettext_id'    => 'Syslog facility for sympa',
+        'query'    => gettext('Syslog facility for sympa'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Do not forget to edit syslog.conf',
+        'advice'   => gettext('Do not forget to edit syslog.conf'),
     },
     {
         'name'     => 'log_level',
         'default'  => '0',
-        'gettext_id'    => 'Log verbosity',
+        'query'    => gettext('Log verbosity'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
-        'gettext_comment'   => '0: normal, 2,3,4: for debug',
+        'advice'   => gettext('0: normal, 2,3,4: for debug'),
     },
     {
         'name'     => 'log_socket_type',
         'default'  => 'unix',
-        'gettext_id'    => 'Communication mode with syslogd (unix | inet)',
+        'query'    => gettext('Communication mode with syslogd (unix | inet)'),
         'file'     => 'sympa.conf',
     },
     {
-        'name'     => 'log_condition',
-        'optional' => '1',
-        'vhost'    => '1',
+        'name'     => 'pidfile',
+        'default'  => Sympa::Constants::PIDDIR . '/sympa.pid',
+        'query'    => gettext('File containing Sympa PID while running'),
+        'file'     => 'sympa.conf',
+        'advice'   => gettext('Sympa also locks this file to ensure that it is not running more than once. Caution: user sympa need to write access without special privilege.'),
     },
     {
-        'name'     => 'log_module',
-        'optional' => '1',
-        'vhost'    => '1',
+        'name'     => 'pidfile_creation',
+        'default'  => Sympa::Constants::PIDDIR . '/sympa-creation.pid',
+        'file'     => 'sympa.conf',
     },
     {
         'name'     => 'umask',
         'default'  => '027',
-        'gettext_id'    => 'Umask used for file creation by Sympa',
+        'query'    => gettext('Umask used for file creation by Sympa'),
         'file'     => 'sympa.conf',
     },
-
-    { 'gettext_id' => 'Sending related' },
-
+    { title => 'Internationalization' },
+    {
+        name    => 'lang',
+        default => 'en',
+        query   => 'Default lang (ca | cs | de | el | es | et_EE | en | fr | fi | hu | it | ja_JP | ko | nl | nb_NO | oc | pl | pt_BR | ru | sv | tr | vi | zh_CN | zh_TW)',
+        vhost   => '1',
+        file    => 'sympa.conf',
+        edit    => '1',
+        advice  => gettext('This is the default language used by Sympa'),
+    },
+    {
+        name    => 'supported_lang',
+        default => 'ca,cs,de,el,es,et_EE,en,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
+        query   => 'Supported languages',
+        vhost   => '1',
+        file    => 'sympa.conf',
+        edit    => '1',
+        advice  => gettext("This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed."),
+    },
+    { 'title' => gettext('Sending related') },
     {
         'name'     => 'sendmail',
         'default'  => '/usr/sbin/sendmail',
-        'gettext_id'    => 'Path to the MTA (sendmail, postfix, exim or qmail)',
+        'query'    => gettext('Path to the MTA (sendmail, postfix, exim or qmail)'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'should point to a sendmail-compatible binary (eg: a binary named "sendmail" is distributed with Postfix)',
+        'advice'   => gettext('should point to a sendmail-compatible binary (eg: a binary named "sendmail" is distributed with Postfix)'),
     },
     {
         'name'     => 'sendmail_args',
@@ -472,13 +479,9 @@ our @params = (
     {
         'name'     => 'maxsmtp',
         'default'  => '40',
-        'gettext_id'    => 'Max. number of Sendmail processes (launched by Sympa) running simultaneously',
+        'query'    => gettext('Max. number of Sendmail processes (launched by Sympa) running simultaneously'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.',
-    },
-    {
-        'name'     => 'merge_feature',
-        'default'  => 'off',
+        'advice'   => gettext('Proposed value is quite low, you can rise it up to 100, 200 or even 300 with powerfull systems.'),
     },
     {
         'name'    => 'automatic_list_removal',
@@ -494,18 +497,17 @@ our @params = (
         'name'    => 'automatic_list_creation',
         'default' => 'public',
         'vhost'   => '1',
-	'scenario' => '1',
     },
     {
         'name'    => 'automatic_list_families',
-        'gettext_id'   => 'Defines the name of the family the automatic lists are based on.', 
+        'query'   => 'Defines the name of the family the automatic lists are based on.', 
         'file'    => 'sympa.conf',
         'optional' => '1',
         vhost   => '1',
     },
     {
         'name'    => 'automatic_list_prefix',
-        'gettext_id'   => 'Defines the prefix allowing to recognize that a list is an automatic list.', 
+        'query'   => 'Defines the prefix allowing to recognize that a list is an automatic list.', 
         'file'    => 'sympa.conf',
         'optional' => '1',
     },
@@ -516,25 +518,29 @@ our @params = (
         'file'     => 'sympa.conf',
     },
     {
+        'name'    => 'global_remind',
+        'default' => 'listmaster',
+    },
+    {
         'name'     => 'use_blacklist',
-        'gettext_id'    => 'comma separated list of operations for which blacklist filter is applied',
+        'query'    => gettext('comma separated list of operations for which blacklist filter is applied'),
         'default'  => 'send,create_list',
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Setting this parameter to "none" will hide the blacklist feature',
+        'advice'   => gettext('Setting this parameter to "none" will hide the blacklist feature'),
     },
     {
         'name'     => 'reporting_spam_script_path',
         'optional'  => '1',
-        'gettext_id'    => 'If set, when a list editor report a spam, this external script is run by wwsympa or sympa, the spam is sent into script stdin',
+        'query'    => gettext('If set, when a list editor report a spam, this external script is run by wwsympa or sympa, the spam is sent into script stdin'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'max_size',
-        'gettext_id'    => 'Default maximum size (in bytes) for messages (can be re-defined for each list)',
-        'default'  => '5242880', ## 5 MiB
+        'query'    => gettext('Default maximum size (in bytes) for messages (can be re-defined for each list)'),
+        'default'  => '5242880',
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -550,13 +556,13 @@ our @params = (
     {
         'name'     => 'nrcpt',
         'default'  => '25',
-        'gettext_id'    => 'Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf file allows a different tuning per destination domain.',
+        'query'    => gettext('Maximum number of recipients per call to Sendmail. The nrcpt_by_domain.conf file allows a different tuning per destination domain.'),
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'avg',
         'default'  => '10',
-        'gettext_id'    => 'Max. number of different domains per call to Sendmail',
+        'query'    => gettext('Max. number of different domains per call to Sendmail'),
         'file'     => 'sympa.conf',
     },
     {
@@ -566,7 +572,7 @@ our @params = (
     {
         name    => 'db_list_cache',
         default => 'off',
-        'gettext_comment'  => 'Whether or not to cache lists in the database',
+        advice  => gettext('Whether or not to cache lists in the database'),
     },
     {
         'name'     => 'sendmail_aliases',
@@ -574,13 +580,13 @@ our @params = (
     },
     {
         'name'     => 'rfc2369_header_fields',
-        'gettext_id'    => 'Specify which rfc2369 mailing list headers to add',
+        'query'    => gettext('Specify which rfc2369 mailing list headers to add'),
         'default'  => 'help,subscribe,unsubscribe,post,owner,archive',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'remove_headers',
-        'gettext_id'    => 'Specify header fields to be removed before message distribution',
+        'query'    => gettext('Specify header fields to be removed before message distribution'),
         'default'  => 'X-Sympa-To,X-Family-To,Return-Receipt-To,Precedence,X-Sequence,Disposition-Notification-To,Sender',
         'file'     => 'sympa.conf',
     },
@@ -590,7 +596,7 @@ our @params = (
     },
     {
         'name'     => 'reject_mail_from_automates_feature',
-        'gettext_id'    => 'Reject mail from automates (crontab, etc) sent to a list?',
+        'query'    => gettext('Reject mail from automates (crontab, etc) sent to a list?'),
         'default'  => 'on',
         'file'     => 'sympa.conf',
     },
@@ -605,9 +611,9 @@ our @params = (
     {
         'name'     => 'list_check_smtp',
         'optional' => '1',
-        'gettext_id'    => 'SMTP server to which Sympa verify if alias with the same name as the list to be created',
+        'query'    => gettext('SMTP server to which Sympa verify if alias with the same name as the list to be created'),
         'vhost'    => '1',
-        'gettext_comment'   => 'Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-standard port.',
+        'advice'   => gettext('Default value is real FQDN of host. Set [HOST]:[PORT] to specify non-standard port.'),
     },
     {
         'name'     => 'list_check_suffixes',
@@ -617,79 +623,70 @@ our @params = (
     {
         'name'     => 'list_check_helo',
         'optional' => '1',
-        'gettext_id'    => 'SMTP HELO (EHLO) parameter used for alias verification',
+        'query'    => gettext('SMTP HELO (EHLO) parameter used for alias verification'),
         'vhost'    => '1',
-        'gettext_comment'   => 'Default value is the host part of list_check_smtp parameter.',
+        'advice'   => gettext('Default value is the host part of list_check_smtp parameter.'),
     },
     {
         'name'     => 'urlize_min_size',
-        'default'  => 10240, ## 10 kiB,
+        'default'  => 10240, ## 10Kb,
     },
+
+    { 'title' => gettext('Bulk mailer') },
+
     {
-	'name'     => 'sender_headers',
-	'default'  => 'Resent-From,From,From_,Resent-Sender,Sender',
-	'gettext_id'    => 'Header field names used to determine sender of the messages.  "From_" means envelope sender (a.k.a. "UNIX From")',
+        'name'     => 'pidfile_bulk',
+        'default'  => Sympa::Constants::PIDDIR . '/bulk.pid',
+        'file'     => 'sympa.conf',
     },
-
-    { 'gettext_id' => 'Bulk mailer' },
-
     {
         'name'     => 'sympa_packet_priority',
-        'gettext_id'    => 'Default priority for a packet to be sent by bulk.',
+        'query'    => gettext('Default priority for a packet to be sent by bulk.'),
         'file'     => 'sympa.conf',
         'default'  => '5',
-        'vhost'    => '1',
     },
     {
         'name'     => 'bulk_fork_threshold',
         'default'  => '1',
-        'gettext_id'    => 'Minimum number of packets in database before the bulk forks to increase sending rate',
+        'query'    => gettext('Minimum number of packets in database before the bulk forks to increase sending rate'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => '',
+        'advice'   => gettext(''),
     },
     {
         'name'     => 'bulk_max_count',
         'default'  => '3',
-        'gettext_id'    => 'Max number of bulks that will run on the same server',
+        'query'    => gettext('Max number of bulks that will run on the same server'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => '',
+        'advice'   => gettext(''),
     },
     {
         'name'     => 'bulk_lazytime',
         'default'  => '600',
-        'gettext_id'    => 'The number of seconds a slave bulk will remain running without processing a message before it spontaneously dies.',
+        'query'    => gettext('The number of seconds a slave bulk will remain running without processing a message before it spontaneously dies.'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => '',
+        'advice'   => gettext(''),
     },
     {
         'name'     => 'bulk_sleep',
         'default'  => '1',
-        'gettext_id'    => "The number of seconds a bulk sleeps between starting a new loop if it didn't find a message to send.",
+        'query'    => gettext("The number of seconds a bulk sleeps between starting a new loop if it didn't find a message to send."),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Keep it small if you want your server to be reactive.',
+        'advice'   => gettext('Keep it small if you want your server to be reactive.'),
     },
     {
         'name'     => 'bulk_wait_to_fork',
         'default'  => '10',
-        'gettext_id'    => 'Number of seconds a master bulk waits between two packets number checks.',
+        'query'    => gettext('Number of seconds a master bulk waits between two packets number checks.'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Keep it small if you expect brutal increases in the message sending load.',
+        'advice'   => gettext('Keep it small if you expect brutal increases in the message sending load.'),
     },
 
-    { 'gettext_id' => 'Quotas' },
+    { 'title' => gettext('Quotas') },
 
-    {
-        'name'     => 'default_max_list_members',
-        'default'  => '0',
-        'optional' => '1',
-        'gettext_id'    => 'Default limit for the number of subscribers per list (0 means no limit)',
-        'vhost'    => '1',
-        'file'     => 'sympa.conf',
-    },
     {
         'name'     => 'default_shared_quota',
         'optional' => '1',
-        'gettext_id'    => 'Default disk quota for shared repository',
+        'query'    => gettext('Default disk quota for shared repository'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
     },
@@ -698,113 +695,91 @@ our @params = (
         'optional' => '1',
     },
 
-    { 'gettext_id' => 'Spool related' },
+    { 'title' => gettext('Spool related') },
 
     {
         'name'     => 'spool',
         'default'  => Sympa::Constants::SPOOLDIR,
-        'gettext_id'    => 'Directory containing various specialized spools',
+        'query'    => gettext('Directory containing various specialized spools'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'All spool are created at runtime by sympa.pl',
+        'advice'   => gettext('All spool are created at runtime by sympa.pl'),
     },
     {
         'name'     => 'queue',
         'default'  => Sympa::Constants::SPOOLDIR . '/msg',
-        'gettext_id'    => 'Directory for incoming spool',
+        'query'    => gettext('Directory for incoming spool'),
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'queuedistribute',
         'default'  => Sympa::Constants::SPOOLDIR . '/distribute',
         'file'     => 'sympa.conf',
-	'version_validity' => '6.3', # valid before version 6.3
-	'upgrade'          => 1,     # used by upgrade process after validy
     },
+    ##{
+	##name => 'dkim_header_list',
+        ##vhost => '1',
+	##file   => 'sympa.conf',
+        ##query   => 'list of headers to be included ito the message for signature', 
+        ##default => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description', 
+    ##}, 
+    { 'title' => 'S/MIME pluggin' },
     {
         'name'     => 'queuemod',
         'default'  => Sympa::Constants::SPOOLDIR . '/moderation',
-        'gettext_id'    => 'Directory for moderation spool',
+        'query'    => gettext('Directory for moderation spool'),
         'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
     },
     {
         'name'     => 'queuedigest',
         'default'  => Sympa::Constants::SPOOLDIR . '/digest',
-        'gettext_id'    => 'Directory for digest spool',
+        'query'    => gettext('Directory for digest spool'),
         'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
     },
     {
         'name'     => 'queueauth',
         'default'  => Sympa::Constants::SPOOLDIR . '/auth',
-        'gettext_id'    => 'Directory for authentication spool',
+        'query'    => gettext('Directory for authentication spool'),
         'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
     },
     {
         'name'     => 'queueoutgoing',
         'default'  => Sympa::Constants::SPOOLDIR . '/outgoing',
-        'gettext_id'    => 'Directory for outgoing spool',
-        'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
-    },
-    {
-        'name'     => 'queuesubscribe',
-        'default'  => Sympa::Constants::SPOOLDIR . '/subscribe',
-        'gettext_id'    => 'Directory for subscription spool',
+        'query'    => gettext('Directory for outgoing spool'),
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'queuetopic',
         'default'  => Sympa::Constants::SPOOLDIR . '/topic',
-        'gettext_id'    => 'Directory for topic spool',
+        'query'    => gettext('Directory for topic spool'),
         'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
-    {   'name'       => 'queuesignoff',
-	'default'    => Sympa::Constants::SPOOLDIR . '/signoff',
-	'gettext_id' => 'Directory for unsubscription spool',
-	'file'       => 'sympa.conf',
     },
     {
         'name'     => 'queuebounce',
         'default'  => Sympa::Constants::SPOOLDIR . '/bounce',
-        'gettext_id'    => 'Directory for bounce incoming spool',
+        'query'    => gettext('Directory for bounce incoming spool'),
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'queuetask',
         'default'  => Sympa::Constants::SPOOLDIR . '/task',
-        'gettext_id'    => 'Directory for task spool',
+        'query'    => gettext('Directory for task spool'),
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'queueautomatic',
         'default'  => Sympa::Constants::SPOOLDIR . '/automatic',
-        'gettext_id'    => 'Directory for automatic list creation spool',
+        'query'    => gettext('Directory for automatic list creation spool'),
         'file'     => 'sympa.conf',
-        'version_validity' => '6.3', # valid before version 6.3
-        'upgrade'          => 1,      # used by upgrade process after validy
-    },
-    {
-        'name'     => 'sleep',
-        'default'  => '5',
-        'gettext_comment'   => 'Must not be 0.',
     },
     {
         'name'     => 'tmpdir',
         'default'  => Sympa::Constants::SPOOLDIR . '/tmp',
-        'gettext_id'    => 'Temporary directory used by OpenSSL, antivirus plugins, mhonarc etc',
+        'query'    => gettext('Temporary directory used by OpenSSL and antivirus plugins'),
     },
     {
-        name    => 'viewmail_dir',
-        default => Sympa::Constants::EXPLDIR . '/viewmail',
-        'gettext_id'   => 'Directory containing html file generated by mhonarc while diplay messages others than archives',
-        file    => 'sympa.conf',
+        'name'     => 'sleep',
+        'default'  => '5',
+        'advice'   => gettext('Must not be 0.'),
     },
     {
         'name'     => 'clean_delay_queue',
@@ -831,10 +806,6 @@ our @params = (
         'default'  => '30',
     },
     {
-        'name'     => 'clean_delay_queuesignoff',
-        'default'  => '30',
-    },
-    {
         'name'     => 'clean_delay_queuetopic',
         'default'  => '30',
     },
@@ -847,39 +818,38 @@ our @params = (
         'default'  => '7,',
     },
 
-    { 'gettext_id' => 'Internationalization related' },
+    { 'title' => gettext('Internationalization related') },
 
-    {   'name' => 'supported_lang',
-	'default' =>
-	    'ca,cs,de,el,en-US,es,et,fr,fi,hu,it,ja,ko,nb,nl,oc,pl,pt-BR,ru,sv,tr,vi,zh-CN,zh-TW',
-	'gettext_id' => 'Supported languages',
-	'vhost'      => '1',
-	'file'       => 'sympa.conf',
-	'edit'       => '1',
-	'gettext_comment' =>
-	    "This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed.",
-    },
-    {   'name'            => 'lang',
-	'default'         => 'en-US',
-	'gettext_id'      => 'Default language (one of supported languages)',
-	'vhost'           => '1',
-	'file'            => 'sympa.conf',
-	'edit'            => '1',
-	'gettext_comment' => 'This is the default language used by Sympa',
+    {
+        'name'     => 'localedir',
+        'default'  => Sympa::Constants::LOCALEDIR,
+        'query'    => gettext('Directory containing available NLS catalogues (Message internationalization)'),
+        'file'     => 'sympa.conf',
     },
     {
-        'name'     => 'legacy_character_support_feature',
-        'default'  => 'off',
-        'gettext_id'    => 'If set to "on", enables support of legacy character set',
+        'name'     => 'supported_lang',
+        'default'  => 'ca,cs,de,el,es,et_EE,en_US,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
+        'query'    => gettext('Supported languages'),
+        'vhost'    => '1',
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'In some language environments, legacy encoding (character set) is preferred for e-mail messages: for example iso-2022-jp in Japanese language.',
+        'edit'     => '1',
+        'advice'   => gettext("This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed."),
+    },
+    {
+        'name'     => 'lang',
+        'default'  => 'en_US',
+        'query'    => gettext('Default language (one of supported languages)'),
+        'vhost'    => '1',
+        'file'     => 'sympa.conf',
+        'edit'     => '1',
+        'advice'   => gettext('This is the default language used by Sympa'),
     },
     {
         'name'     => 'filesystem_encoding',
         'default'  => 'utf-8',
     },
 
-    { 'gettext_id' => 'Bounce related' },
+    { 'title' => gettext('Bounce related') },
 
     {
         'name'     => 'verp_rate',
@@ -889,16 +859,16 @@ our @params = (
     {
         'name'     => 'welcome_return_path',
         'default'  => 'owner',
-        'gettext_id'    => 'Welcome message return-path ( unique | owner )',
+        'query'    => gettext('Welcome message return-path ( unique | owner )'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'If set to unique, new subcriber is removed if welcome message bounce',
+        'advice'   => gettext('If set to unique, new subcriber is removed if welcome message bounce'),
     },
     {
         'name'     => 'remind_return_path',
         'default'  => 'owner',
-        'gettext_id'    => 'Remind message return-path ( unique | owner )',
+        'query'    => gettext('Remind message return-path ( unique | owner )'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'If set to unique, subcriber is removed if remind message bounce, use with care',
+        'advice'   => gettext('If set to unique, subcriber is removed if remind message bounce, use with care'),
     },
     {
         'name'     => 'return_path_suffix',
@@ -907,7 +877,7 @@ our @params = (
     {
         'name'     => 'expire_bounce_task',
         'default'  => 'daily',
-        'gettext_id'    => 'Task name for expiration of old bounces',
+        'query'    => gettext('Task name for expiration of old bounces'),
         'file'     => 'sympa.conf',
     },
     {
@@ -951,20 +921,16 @@ our @params = (
     {
         'name'     => 'bounce_warn_rate',
         'default'  => '30',
-        'gettext_id'    => 'Bouncing email rate for warn list owner',
+        'query'    => gettext('Bouncing email rate for warn list owner'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
     },
     {
         'name'     => 'bounce_halt_rate',
         'default'  => '50',
-        'gettext_id'    => 'Bouncing email rate for halt the list (not implemented)',
+        'query'    => gettext('Bouncing email rate for halt the list (not implemented)'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'Not yet used in current version, Default is 50',
-    },
-    {
-        'name'     => 'tracking_default_retention_period',
-        'default'  => '90',
+        'advice'   => gettext('Not yet used in current version, Default is 50'),
     },
     {
         'name'     => 'tracking_delivery_status_notification',
@@ -979,50 +945,45 @@ our @params = (
         'optional' => '1',
     },
 
-    { 'gettext_id' => 'Tuning' },
+    { 'title' => gettext('Tuning') },
 
-    {   'name'    => 'cache_list_config',
-	'default' => 'none',
-	'gettext_id' =>
-	    'Use of binary version of the list config structure on disk (none | binary_file | database)',
-	'file' => 'sympa.conf',
-	'edit' => '1',
-	'gettext_comment' =>
-	    'Set this parameter to "binary_file" or "database" if you manage a big amount of lists (1000+); it should make the web interface startup faster.  Note that Oracle earlier than 8 and Sybase do not support "database"',
+    {
+        'name'     => 'cache_list_config',
+        'default'  => 'none',
+        'query'    => gettext('Use of binary version of the list config structure on disk (none | binary_file)'),
+        'file'     => 'sympa.conf',
+        'edit'     => '1',
+        'advice'   => gettext('Set this parameter to "binary_file" if you manage a big amount of lists (1000+); it should make the web interface startup faster'),
     },
     {
         'name'     => 'lock_method',
         'default'  => 'flock',
-        'gettext_comment'   => 'flock | nfs',
+        'advice'   => gettext('flock | nfs'),
     },
     {
         'name'     => 'sympa_priority',
-        'gettext_id'    => 'Sympa commands priority',
+        'query'    => gettext('Sympa commands priority'),
         'file'     => 'sympa.conf',
         'default'  => '1',
-        'vhost'    => '1',
     },
     {
         'name'     => 'request_priority',
         'default'  => '0',
         'file'     => 'sympa.conf',
-        'vhost'    => '1',
     },
     {
         'name'     => 'owner_priority',
         'default'  => '9',
         'file'     => 'sympa.conf',
-        'vhost'    => '1',
     },
     {
         'name'     => 'default_list_priority',
-        'gettext_id'    => 'Default priority for list messages',
+        'query'    => gettext('Default priority for list messages'),
         'file'     => 'sympa.conf',
         'default'  => '5',
-        'vhost'    => '1',
     },
 
-    { 'gettext_id' => 'Database related' },
+    { 'title' => gettext('Database related') },
 
     {
         'name'     => 'update_db_field_types',
@@ -1031,31 +992,31 @@ our @params = (
     {
         'name'     => 'db_type',
         'default'  => 'mysql',
-        'gettext_id'    => 'Type of the database (mysql|Pg|Oracle|Sybase|SQLite)',
+        'query'    => gettext('Type of the database (mysql|Pg|Oracle|Sybase|SQLite)'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Be careful to the case',
+        'advice'   => gettext('Be careful to the case'),
     },
     {
         'name'     => 'db_name',
         'default'  => 'sympa',
-        'gettext_id'    => 'Name of the database',
+        'query'    => gettext('Name of the database'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'With SQLite, the name of the DB corresponds to the DB file',
+        'advice'   => gettext('With SQLite, the name of the DB corresponds to the DB file'),
     },
     {
         'name'     => 'db_host',
         'default'  => 'localhost',
         'sample'   => 'localhost',
-        'gettext_id'    => 'Hostname of the database server',
+        'query'    => gettext('Hostname of the database server'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
     },
     {
         'name'     => 'db_port',
         'default'  => undef,
-        'gettext_id'    => 'Port of the database server',
+        'query'    => gettext('Port of the database server'),
         'file'     => 'sympa.conf',
         'optional' => '1',
     },
@@ -1063,7 +1024,7 @@ our @params = (
         'name'     => 'db_user',
         'default'  => 'user_name',
         'sample'   => 'sympa',
-        'gettext_id'    => 'User for the database connection',
+        'query'    => gettext('User for the database connection'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
     },
@@ -1071,10 +1032,10 @@ our @params = (
         'name'     => 'db_passwd',
         'default'  => 'user_password',
         'sample'   => 'your_passwd',
-        'gettext_id'    => 'Password for the database connection',
+        'query'    => gettext('Password for the database connection'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'What ever you use a password or not, you must protect the SQL server (is it not a public internet service ?)',
+        'advice'   => gettext('What ever you use a password or not, you must protect the SQL server (is it not a public internet service ?)'),
     },
     {
         'name'     => 'db_timeout',
@@ -1086,25 +1047,25 @@ our @params = (
     },
     {
         'name'     => 'db_env',
-        'gettext_id'    => 'Environment variables setting for database',
+        'query'    => gettext('Environment variables setting for database'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'This is useful for defining ORACLE_HOME ',
+        'advice'   => gettext('This is useful for defining ORACLE_HOME '),
         'optional' => '1',
     },
     {
         'name'     => 'db_additional_subscriber_fields',
         'sample'   => 'billing_delay,subscription_expiration',
-        'gettext_id'    => 'Database private extention to subscriber table',
+        'query'    => gettext('Database private extention to subscriber table'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'You need to extend the database format with these fields',
+        'advice'   => gettext('You need to extend the database format with these fields'),
         'optional' => '1',
     },
     {
         'name'     => 'db_additional_user_fields',
         'sample'   => 'age,address',
-        'gettext_id'    => 'Database private extention to user table',
+        'query'    => gettext('Database private extention to user table'),
         'file'     => 'sympa.conf',
-        'gettext_comment'   => 'You need to extend the database format with these fields',
+        'advice'   => gettext('You need to extend the database format with these fields'),
         'optional' => '1',
     },
     {
@@ -1121,17 +1082,9 @@ our @params = (
     },
     {
         'name'     => 'logs_expiration_period',
-        'gettext_id'    => 'Number of months that elapse before a log is expired',
+        'query'    => gettext('Number of months that elapse before a log is expired'),
         'default'  => '3',
         'file'     => 'sympa.conf',
-    },
-    {
-        'name'     => 'purge_one_time_ticket_table_task',
-        'default'  => 'daily',
-    },
-    {
-        'name'     => 'one_time_ticket_table_ttl',
-        'default'  => '10d',
     },
     {
         'name'     => 'purge_session_table_task',
@@ -1140,10 +1093,6 @@ our @params = (
     {
         'name'     => 'session_table_ttl',
         'default'  => '2d',
-    },
-    {
-        'name'     => 'anonymous_session_table_ttl',
-        'default'  => '1h',
     },
     {
         'name'     => 'purge_challenge_table_task',
@@ -1155,24 +1104,24 @@ our @params = (
     },
     {
         'name'     => 'default_ttl',
-        'gettext_id'    => 'Default timeout between two scheduled synchronizations of list members with data sources.',
+        'query'    => gettext('Default timeout between two scheduled synchronizations of list members with data sources.'),
         'file'     => 'sympa.conf',
         'default'  => '3600',
     },
     {
         'name'     => 'default_distribution_ttl',
-        'gettext_id'    => 'Default timeout between two action-triggered synchronizations of list members with data sources.',
+        'query'    => gettext('Default timeout between two action-triggered synchronizations of list members with data sources.'),
         'file'     => 'sympa.conf',
         'default'  => '300',
     },
     {
         'name'     => 'default_sql_fetch_timeout',
-        'gettext_id'    => 'Default timeout while performing a fetch for an include_sql_query sync',
+        'query'    => gettext('Default timeout while performing a fetch for an include_sql_query sync'),
         'file'     => 'sympa.conf',
         'default'  => '300',
     },
 
-    { 'gettext_id' => 'Loop prevention' },
+    { 'title' => gettext('Loop prevention') },
 
     {
         'name'     => 'loop_command_max',
@@ -1200,22 +1149,22 @@ our @params = (
         'default'  => '3600',
     },
 
-    { 'gettext_id' => 'S/MIME configuration' },
+    { 'title' => gettext('S/MIME configuration') },
 
     {
         'name'     => 'openssl',
         'sample'   => '/usr/bin/ssl',
-        'gettext_id'    => 'Path to OpenSSL',
+        'query'    => gettext('Path to OpenSSL'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Sympa recognizes S/MIME if OpenSSL is installed',
+        'advice'   => gettext('Sympa recognizes S/MIME if OpenSSL is installed'),
         'optional' => '1',
     },
     {
         'name'     => 'capath',
         'optional' => '1',
         'sample'   => Sympa::Constants::SYSCONFDIR . '/ssl.crt',
-        'gettext_id'    => 'Directory containing trusted CA certificates',
+        'query'    => gettext('Directory containing trusted CA certificates'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
         'optional' => '1',
@@ -1223,32 +1172,21 @@ our @params = (
     {
         'name'     => 'cafile',
         'sample'   => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
-        'gettext_id'    => 'File containing bundled trusted CA certificates',
+        'query'    => gettext('File containing bundled trusted CA certificates'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
         'optional' => '1',
     },
     {
-        'name'     => 'crl_dir',
-        'default'  => Sympa::Constants::EXPLDIR . '/crl',
-        'file'     => 'sympa.conf',
-    },
-    {
-        'name'     => 'ssl_cert_dir',
-        'default'  => Sympa::Constants::EXPLDIR . '/X509-user-certs',
-        'gettext_id'    => 'Directory containing user certificates',
-        'file'     => 'sympa.conf',
-    },
-    {
         'name'     => 'key_passwd',
         'sample'   => 'your_password',
-        'gettext_id'    => 'Password used to crypt lists private keys',
+        'query'    => gettext('Password used to crypt lists private keys'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
         'optional' => '1',
     },
 
-    { 'gettext_id' => 'DKIM' },
+    { 'title' => gettext('DKIM') },
 
     {
         'name'     => 'dkim_feature',
@@ -1259,62 +1197,61 @@ our @params = (
     {
         'name'     => 'dkim_add_signature_to',
         'default'  => 'robot,list',
-        'gettext_comment'   => 'Insert a DKIM signature to message from the robot, from the list or both',
+        'advice'   => gettext('Insert a DKIM signature to message from the robot, from the list or both'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'dkim_signature_apply_on',
         'default'  => 'md5_authenticated_messages,smime_authenticated_messages,dkim_authenticated_messages,editor_validated_messages',
-        'gettext_comment'   => 'Type of message that is added a DKIM signature before distribution to subscribers. Possible values are "none", "any" or a list of the following keywords: "md5_authenticated_messages", "smime_authenticated_messages", "dkim_authenticated_messages", "editor_validated_messages".',
+        'advice'   => gettext('Type of message that is added a DKIM signature before distribution to subscribers. Possible values are "none", "any" or a list of the following keywords: "md5_authenticated_messages", "smime_authenticated_messages", "dkim_authenticated_messages", "editor_validated_messages".'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'dkim_private_key_path',
         'vhost'    => '1',
-        'gettext_id'    => 'Location of the file where DKIM private key is stored',
+        'query'    => gettext('Location of the file where DKIM private key is stored'),
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'dkim_signer_domain',
         'vhost'    => '1',
-        'gettext_id'    => 'The "d=" tag as defined in rfc 4871, default is virtual host domain name',
+        'query'    => gettext('The "d=" tag as defined in rfc 4871, default is virtual host domain name'),
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'dkim_selector',
         'vhost'    => '1',
-        'gettext_id'    => 'The selector',
+        'query'    => gettext('The selector'),
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
     {
         'name'     => 'dkim_signer_identity',
         'vhost'    => '1',
-        'gettext_id'    => 'The "i=" tag as defined in rfc 4871, default is null',
+        'query'    => gettext('The "i=" tag as defined in rfc 4871, default is null'),
         'optional' => '1',
         'file'     => 'sympa.conf',
     },
-
-    { 'gettext_id' => 'Antivirus plug-in' },
+    { 'title' => gettext('Antivirus plug-in') },
 
     {
         'name'     => 'antivirus_path',
         'optional' => '1',
         'sample'   => '/usr/local/uvscan/uvscan',
-        'gettext_id'    => 'Path to the antivirus scanner engine',
+        'query'    => gettext('Path to the antivirus scanner engine'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall',
+        'advice'   => gettext('supported antivirus: McAfee/uvscan, Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall'),
     },
     {
         'name'     => 'antivirus_args',
         'optional' => '1',
         'sample'   => '--secure --summary --dat /usr/local/uvscan',
-        'gettext_id'    => 'Antivirus plugin command argument',
+        'query'    => gettext('Antivirus plugin command argument'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
     },
@@ -1323,7 +1260,7 @@ our @params = (
         'default'  => 'sender',
     },
 
-    { 'gettext_id' => 'Tag based spam filtering' },
+    { 'title' => gettext('Tag based spam filtering') },
 
     {
         'name'     => 'antispam_feature',
@@ -1333,7 +1270,7 @@ our @params = (
     {
         'name'     => 'antispam_tag_header_name',
         'default'  => 'X-Spam-Status',
-        'gettext_id'    => 'If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag spams, name of this header (example X-Spam-Status)',
+        'query'    => gettext('If a spam filter (like spamassassin or j-chkmail) add a smtp headers to tag spams, name of this header (example X-Spam-Status)'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -1341,7 +1278,7 @@ our @params = (
     {
         'name'     => 'antispam_tag_header_spam_regexp',
         'default'  => '^\s*Yes',
-        'gettext_id'    => 'Regexp applied on this header to verify message is a spam (example Yes)',
+        'query'    => gettext('Regexp applied on this header to verify message is a spam (example Yes)'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -1349,208 +1286,122 @@ our @params = (
     {
         'name'     => 'antispam_tag_header_ham_regexp',
         'default'  => '^\s*No',
-        'gettext_id'    => 'Regexp applied on this header to verify message is NOT a spam (example No)',
+        'query'    => gettext('Regexp applied on this header to verify message is NOT a spam (example No)'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
-    },
-    {
-        'name'     => 'spam_status',
-        'default'  => 'x-spam-status',
-        'gettext_id'    => 'Messages are supposed to be filtered by an antispam that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status: ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
-        'vhost'    => '1',
-        'file'     => 'sympa.conf',
-        'edit'     => '1',
-	'scenario' => '1',
     },
 
-    { 'gettext_id' => 'Web interface parameters' },
+    { 'title' => gettext('wwsympa.conf parameters') },
 
     {
         'name'     => 'arc_path',
         'default'  => Sympa::Constants::ARCDIR,
-        'gettext_id'    => 'Directory for storing HTML archives',
+        'query'    => gettext('Directory for storing HTML archives'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Better if not in a critical partition',
+        'advice'   => gettext('Better if not in a critical partition'),
         'vhost'     => '1',
     },
     {
         'name'     => 'archive_default_index',
         'default'  => 'thrd',
-        'gettext_id'    => 'Default index organization when entering the web archive: either threaded or in chronological order',
+        'query'    => gettext('Default index organization when entering the web archive: either threaded or in chronological order'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
     },
     {
+        'name'     => 'archived_pidfile',
+        'default'  => Sympa::Constants::PIDDIR . '/archived.pid',
+        'query'    => gettext('File containing archived PID while running'),
+        'file'     => 'wwsympa.conf',
+    },
+    {
         'name'     => 'bounce_path',
         'default'  => Sympa::Constants::BOUNCEDIR ,
-        'gettext_id'    => 'Directory for storing bounces',
+        'query'    => gettext('Directory for storing bounces'),
         'file'     => 'wwsympa.conf',
-        'gettext_comment'   => 'Better if not in a critical partition',
+        'advice'   => gettext('Better if not in a critical partition'),
+    },
+    {
+        'name'     => 'bounced_pidfile',
+        'default'  => Sympa::Constants::PIDDIR . '/bounced.pid',
+        'query'    => gettext('File containing bounced PID while running'),
+        'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'cookie_expire',
         'default'  => '0',
-        'gettext_id'    => 'HTTP cookies lifetime',
+        'query'    => gettext('HTTP cookies lifetime'),
         'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'cookie_domain',
         'default'  => 'localhost',
-        'gettext_id'    => 'HTTP cookies validity domain',
+        'query'    => gettext('HTTP cookies validity domain'),
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
-    },
-    {   'name'       => 'cookie_refresh',
-	'default'    => '60',
-	'gettext_id' => 'Average interval to refresh HTTP session ID.',
-	'file'       => 'sympa.conf', # added after migration of wwsympa.conf
     },
     {
         'name'     => 'custom_archiver',
         'optional' => '1',
-        'gettext_id'    => 'Activates a custom archiver to use instead of MHonArc. The value of this parameter is the absolute path on the file system to the script of the custom archiver.',
+        'query'    => gettext('Activates a custom archiver to use instead of MHonArc. The value of this parameter is the absolute path on the file system to the script of the custom archiver.'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
     },
     {
         'name'     => 'default_home',
         'default'  => 'home',
-        'gettext_id'    => 'Type of main Web page ( lists | home )',
+        'query'    => gettext('Type of main Web page ( lists | home )'),
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-    },
-    {
-        'name'     => 'edit_list',
-        'default'  => 'owner',
-        'file'     => 'sympa.conf',
-    },
-    {
-        'name'     => 'ldap_force_canonical_email',
-        'default'  => '1',
-        'gettext_id'    => 'When using LDAP authentication, if the identifier provided by the user was a valid email, if this parameter is set to false, then the provided email will be used to authenticate the user. Otherwise, use of the first email returned by the LDAP server will be used.',
-        'file'     => 'wwsympa.conf',
-        'vhost'    => '1',
     },
     {
         'name'     => 'log_facility',
         'default'  => 'LOCAL1',
-        'gettext_id'    => 'Syslog facility for wwsympa, archived and bounced',
+        'query'    => gettext('Syslog facility for wwsympa, archived and bounced'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'Default is to use previously defined sympa log facility.',
+        'advice'   => gettext('Default is to use previously defined sympa log facility.'),
     },
     {
         'name'     => 'mhonarc',
         'default'  => '/usr/bin/mhonarc',
-        'gettext_id'    => 'Path to MHonArc mail2html plugin',
+        'query'    => gettext('Path to MHonArc mail2html plugin'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'This is required for HTML mail archiving',
-    },
-    {
-        'name'     => 'one_time_ticket_lifetime',
-        'default'  => '2d',
-        'gettext_id'    => 'Duration before the one time tickets are expired',
-    },
-    {
-        'name'     => 'one_time_ticket_lockout',
-        'default'  => 'one_time',
-        'gettext_id'    => 'Is access to the one time ticket restricted, if any users previously accessed? (one_time | remote_addr | open)',
-        'edit'     => '1',
-        'vhost'    => '1',
+        'advice'   => gettext('This is required for HTML mail archiving'),
     },
     {
         'name'     => 'password_case',
         'default'  => 'insensitive',
-        'gettext_id'    => 'Password case (insensitive | sensitive)',
+        'query'    => gettext('Password case (insensitive | sensitive)'),
         'file'     => 'wwsympa.conf',
-        'gettext_comment'   => 'Should not be changed ! May invalid all user password',
-    },
-    {
-        'name'     => 'review_page_size',
-        'gettext_id'    => 'Default number of lines of the array displaying users in the review page',
-        'vhost'    => '1',
-        'default'  => 25,
-        'file'     => 'wwsympa.conf',
+        'advice'   => gettext('Should not be changed ! May invalid all user password'),
     },
     {
         'name'     => 'title',
         'default'  => 'Mailing lists service',
-        'gettext_id'    => 'Title of main Web page',
+        'query'    => gettext('Title of main Web page'),
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-    },
-    {
-        'name'     => 'use_html_editor',
-        'gettext_id'    => 'If set to "on", users will be able to post messages in HTML using a javascript WYSIWYG editor.',
-        'vhost'    => '1',
-        'default'  => '0',
-        'edit'     => '1',
-        'file'     => 'wwsympa.conf',
-    },
-    {
-        'name'     => 'html_editor_url',
-        'gettext_id'    => 'URL path to the javascript file making the WYSIWYG HTML editor available.  Relative path under <static_content_url> or absolute path',
-        'gettext_comment' => 'Default value is an example of TinyMCE installed under <static_content_path>/js/tinymce/.',
-        'vhost'    => '1',
-        'default'  => 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
-        'file'     => 'sympa.conf', # added after migration of wwsympa.conf
-    },
-    {   'name' => 'html_editor_init',
-	'gettext_id' =>
-	    'Javascript excerpt that enables and configures the WYSIWYG HTML editor.',
-	'vhost' => '1',
-	'default' =>
-	    'tinyMCE.init({mode:"exact",elements:"body",language:lang.toLowerCase()});',
-	'file' => 'wwsympa.conf',
-    },
-    {   'name' => 'html_editor_hide',
-	'gettext_id' =>
-	    'Javascript excerpt that disable the WYSIWYG HTML editor.',
-	'gettext_comment' =>
-	    'If this is empty, HTML editor cannot be disabled.',
-	'vhost'   => '1',
-	'default' => 'tinyMCE.get("body").hide();',
-	'file' => 'sympa.conf',    # added after migration of wwsympa.conf
-    },
-    {   'name' => 'html_editor_show',
-	'gettext_id' =>
-	    'Javascript excerpt that re-enable the WYSIWYG HTML editor.',
-	'gettext_comment' =>
-	    'If this is empty, HTML editor cannot be disabled.',
-	'vhost'   => '1',
-	'default' => 'tinyMCE.get("body").show();',
-	'file' => 'sympa.conf',    # added after migration of wwsympa.conf
     },
     {
         'name'     => 'use_fast_cgi',
         'default'  => '1',
-        'gettext_id'    => 'Is fast_cgi module for Apache (or Roxen) installed (0 | 1)',
+        'query'    => gettext('Is fast_cgi module for Apache (or Roxen) installed (0 | 1)'),
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
-        'gettext_comment'   => 'This module provide much faster web interface',
+        'advice'   => gettext('This module provide much faster web interface'),
     },
-    {
-        'name'     => 'viewlogs_page_size',
-        'gettext_id'    => 'Default number of lines of the array displaying the log entries in the logs page',
-        'vhost'    => '1',
-        'default'  => 25,
-        'file'     => 'wwsympa.conf',
-    },
-    {
-        'name'     => 'your_lists_size',
-        'gettext_id'    => 'Maximum number of lists listed in "Your lists" menu.  0 lists none.  negative value means unlimited.',
-        'vhost'    => '1',
-        'default'  => '10',
-    },
+
+    { 'title' => gettext('Virtual host specific parameters') },
 
     {
         'name'     => 'http_host',
-        'gettext_id'    => 'URL of a virtual host',
+        'query'    => gettext('URL of a virtual host'),
         'sample'   => 'http://host.domain.tld',
         'default'  => 'http://host.domain.tld',
         'vhost'    => '1',
@@ -1558,8 +1409,69 @@ our @params = (
         'file'     => 'sympa.conf',
     },
 
-    { 'gettext_id' => 'NOT CATEGORIZED' },
+    { 'title' => 'NOT CATEGORIZED' },
 
+    {
+        'name'     => 'anonymous_session_table_ttl',
+        'default'  => '1h',
+    },
+    {
+        'name'     => 'chk_cert_expiration_task',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'crl_dir',
+        'default'  => Sympa::Constants::EXPLDIR . '/crl',
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'crl_update_task',
+        'optional' => '1',
+    },
+    {
+        'name'     => 'default_max_list_members',
+        'default'  => '0',
+        'optional' => '1',
+        'query'    => gettext('Default limit for the number of subscribers per list (0 means no limit)'),
+        'vhost'    => '1',
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'edit_list',
+        'default'  => 'owner',
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'host',
+        'optional' => 1,
+        'vhost'    => '1',
+    },
+    {
+        'name'     => 'tracking_default_retention_period',
+        'default'  => '90',
+    },
+    {
+        'name'     => 'use_html_editor',
+        'query'    => gettext('If set to "on", users will be able to post messages in HTML using a javascript WYSIWYG editor.'),
+        'vhost'    => '1',
+        'default'  => '0',
+        'edit'     => '1',
+        'file'     => 'wwsympa.conf',
+    },
+    {
+        'name'     => 'html_editor_file',
+        'query'    => gettext('Path to the javascript file making the WYSIWYG HTML editor available'),
+        'vhost'    => '1',
+        'default'  => 'tinymce/jscripts/tiny_mce/tiny_mce.js',
+        'file'     => 'wwsympa.conf',
+    },
+    {
+        'name'     => 'html_editor_init',
+        'query'    => gettext('Javascript excerpt that enables and configures the WYSIWYG HTML editor.'),
+        'vhost'    => '1',
+        'default'  => 'tinyMCE.init({mode : "exact",elements : "body"});',
+        'file'     => 'wwsympa.conf',
+    },
     {
         'name'     => 'ldap_export_connection_timeout',
         'optional' => '1',
@@ -1585,15 +1497,89 @@ our @params = (
         'optional' => '1',
     },
     {
+        'name'     => 'ldap_force_canonical_email',
+        'default'  => '1',
+        'query'    => gettext('When using LDAP authentication, if the identifier provided by the user was a valid email, if this parameter is set to false, then the provided email will be used to authenticate the user. Otherwise, use of the first email returned by the LDAP server will be used.'),
+        'file'     => 'wwsympa.conf',
+        'vhost'    => '1',
+    },
+    {
+        'name'     => 'legacy_character_support_feature',
+        'default'  => 'off',
+        'query'    => gettext('If set to "on", enables support of legacy character set'),
+        'file'     => 'sympa.conf',
+        'advice'   => gettext('In some language environments, legacy encoding (character set) is preferred for e-mail messages: for example iso-2022-jp in Japanese language.'),
+    },
+    {
+        'name'     => 'log_condition',
+        'optional' => '1',
+        'vhost'    => '1',
+    },
+    {
+        'name'     => 'log_module',
+        'optional' => '1',
+        'vhost'    => '1',
+    },
+    {
+        'name'     => 'merge_feature',
+        'default'  => 'off',
+    },
+    {
+        'name'     => 'one_time_ticket_table_ttl',
+        'default'  => '10d',
+    },
+    {
+        'name'     => 'pidfile_distribute',
+        'default'  => Sympa::Constants::PIDDIR . '/sympa-distribute.pid',
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'purge_one_time_ticket_table_task',
+        'default'  => 'daily',
+    },
+    {
+        'name'     => 'queuesubscribe',
+        'default'  => Sympa::Constants::SPOOLDIR . '/subscribe',
+        'query'    => gettext('Directory for subscription spool'),
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'review_page_size',
+        'query'    => gettext('Default number of lines of the array displaying users in the review page'),
+        'vhost'    => '1',
+        'default'  => 25,
+        'file'     => 'wwsympa.conf',
+    },
+    {
         'name'     => 'sort',
         'default'  => 'fr,ca,be,ch,uk,edu,*,com',
     },
-## Not implemented yet.
-##    {   'name'     => 'chk_cert_expiration_task',
-##	'optional' => '1',
-##    },
-##    {   'name'     => 'crl_update_task',
-##	'optional' => '1',
-##    },
+    {
+        'name'     => 'spam_status',
+        'default'  => 'x-spam-status',
+        'query'    => gettext('Messages are supposed to be filtered by an antispam that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status: ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.'),
+        'vhost'    => '1',
+        'file'     => 'sympa.conf',
+        'edit'     => '1',
+    },
+    {
+        'name'     => 'ssl_cert_dir',
+        'default'  => Sympa::Constants::EXPLDIR . '/X509-user-certs',
+        'query'    => gettext('Directory containing user certificates'),
+        'file'     => 'sympa.conf',
+    },
+    {
+        'name'     => 'task_manager_pidfile',
+        'default'  => Sympa::Constants::PIDDIR . '/task_manager.pid',
+        'query'    => gettext('File containing task_manager PID while running'),
+        'file'     => 'wwsympa.conf',
+    },
+    {
+        'name'     => 'viewlogs_page_size',
+        'query'    => gettext('Default number of lines of the array displaying the log entries in the logs page'),
+        'vhost'    => '1',
+        'default'  => 25,
+        'file'     => 'wwsympa.conf',
+    },
 );
 

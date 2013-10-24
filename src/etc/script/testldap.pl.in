@@ -18,7 +18,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use Getopt::Long;
 
@@ -33,7 +34,7 @@ unless (defined $opt{'host'} &&
     die "Usage $ARGV[-1] --host=<host> --ssl=on|off --suffix=<suffix> --scope=base|one|sub --filter=<filter> --attrs=<attrs>";
 }
 
-print "host : $opt{'host'}\nsuffix : $opt{'suffix'}\nfilter: $opt{'filter'}\n";
+printf "host : $opt{'host'}\nsuffix : $opt{'suffix'}\nfilter: $opt{'filter'}\n";
 
 my %arg;
 $arg{'scope'} = $opt{'scope'};
@@ -51,13 +52,13 @@ if ($opt{'ssl'} eq 'on') {
     $ldap=Net::LDAP->new($opt{'host'},%arg) or print "connect impossible\n";
 }
 
-$ldap->bind or print "bind impossible\n";
+$ldap->bind or print "bind impossible \n";
 
 #$mesg = $ldap->search ( base => "$opt{'suffix'}", filter => "(cn=$nom)" )
 $mesg = $ldap->search ( base => $opt{'suffix'}, 
 			filter => $opt{'filter'}, 
 			attrs => [$opt{'attrs'}] )
-or  print "Search  impossible\n";
+or  print "Search  impossible \n";
 
 # $mesg->code or  print "code chjie\n";
 
@@ -91,7 +92,7 @@ foreach $dn (keys %$res) {
 
 print "Total : $cpt\n";
 
-$ldap->unbind or print "unbind impossible\n";
+$ldap->unbind or print "unbind impo \n";
 
 
 

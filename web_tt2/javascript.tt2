@@ -1,17 +1,15 @@
 <!-- $Id$ -->
-[%#
-## DEVELOPMENT WARNING
-## Don't add javascript to this file, except if you need to initialize
-## variables using TT2 parsing.
-## Use the src/etc/script/js/sympa.js file instead to write your scripts.
-#%]
+
+<!-- DEVELOPMENT WARNING
+ //Don't add javascript to this file, except if you need to initialize variables using TT2 parsing.
+ //Use the src/etc/script/js/sympa.js file instead to write your scripts. -->
+
 <script type="text/javascript">
 
 // this script only contains variable initializations.
 
 // Miscellaneous vars
 var path_cgi = '[% path_cgi %]/';
-var lang = '[% lang %]';
 
 </script>
 
@@ -25,9 +23,9 @@ var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
 
 // Variables used by the calendar js.
 var pDefaut = { 
-	"mois" : "[%|loc%]January:February:March:April:May:June:July:August:September:October:November:December[%END%]".split(":"),
-	"jour" : "[%|loc%]Sun:Mon:Tue:Wed:Thu:Fri:Sat[%END%]".split(":"),
-	"jLib" : "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
+	"mois" : new Array("[%|loc%]January[%END%]","[%|loc%]February[%END%]","[%|loc%]March[%END%]","[%|loc%]April[%END%]","[%|loc%]May[%END%]","[%|loc%]June[%END%]","[%|loc%]July[%END%]","[%|loc%]August[%END%]","[%|loc%]September[%END%]","[%|loc%]October[%END%]","[%|loc%]November[%END%]","[%|loc%]December[%END%]"),
+	"jour" : new Array("[%|loc%]Su[%END%]","[%|loc%]Mo[%END%]","[%|loc%]Tu[%END%]","[%|loc%]We[%END%]","[%|loc%]Th[%END%]","[%|loc%]Fr[%END%]","[%|loc%]Sa[%END%]"),
+	"jLib" : new Array("[%|loc%]Sunday[%END%]","[%|loc%]Monday[%END%]","[%|loc%]Tuesday[%END%]","[%|loc%]Wednesday[%END%]","[%|loc%]Thursday[%END%]","[%|loc%]Friday[%END%]","[%|loc%]Saturday[%END%]"),
 	"titre" : "[%|loc%]Calendar[%END%]",
 	"aujourdhui" : "[%|loc%]today[%END%]",
 	"debutSemaine" : 1,                      /*debut de la semaine 0=dim,1=lun,...*/
@@ -60,28 +58,10 @@ var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI
 <link rel="stylesheet" type="text/css" href="[% static_content_url %]/js/jquery.jqplot.css" />
 <script type="text/javascript" src="[% static_content_url %]/js/sympa.js"></script>
 
-[% IF use_html_editor -%]
-<script type="text/javascript" src="[% html_editor_url %]"></script>
+[% IF use_html_editor %]
+<script type="text/javascript" src="[% static_content_url %]/js/[% html_editor_file %]"></script>
 <script type="text/javascript">
-function html_editor_toggle(id) {
-  var flg = document.getElementById("html_editor_enabled");
-  var btn = document.getElementById("html_editor_button");
-  if (flg && flg.value) {
-[% IF html_editor_hide -%]
-    [% html_editor_hide %];
-    flg.value = "";
-    if (btn) btn.value = "[%|loc%]Enable HTML Editor[%END%]";
-[%- END %]
-  } else {
-[% IF html_editor_show -%]
-    [% html_editor_show %];
-    if (flg) flg.value = "on";
-    if (btn) btn.value = "[%|loc%]Disable HTML Editor[%END%]";
-[%- END %]
-  }
-  return false;
-}
-[% html_editor_init %];
+[% html_editor_init %]
 </script>
-[% END -%]
+[% END %]
 <!-- end javascript.tt2 -->

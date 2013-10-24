@@ -1,9 +1,0 @@
-<!-- $Id: viewspool_message_dump.tt2 6796 2010-11-25 15:40:21Z serge.aumont $ -->
-
-[% IF msg_file %]
-[%|loc(msg_file)%]Message was flushed into file %1.[%END%]
-[% ELSE %]
-[%|loc%]Could not make a file copy of this message![%END%]
-[% END %]
-
-<!-- end viewspool_message.tt2 -->

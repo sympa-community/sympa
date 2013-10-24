@@ -3,7 +3,7 @@
 <div class="block">
 
   <div class="search_form">
-     <a class="input"  href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"><img src="[% father_icon %]" alt="[%|loc%]Up to higher level directory[%END%]"> [%|loc%]Up to higher level directory[%END%] </a>
+     <a class="input"  href="[% path_cgi %]/d_read/[% list %]/[% escaped_father %]"><img src="[% father_icon %]" alt="up to higher level directory"> [%|loc%]Up to higher level directory[%END%] </a>
   </div>
 <br/>
 
@@ -27,7 +27,7 @@
   <fieldset>
 
   [% IF url %]
-  <label for="url"><strong> [%|loc%]Bookmark URL[%END%] </strong></label><br /> 
+  <label for="url"><strong> [%|loc%]Bookmark URL[%END%] </strong</label>><br /> 
   <input id="url" name="url" value="[% url %]" />
   [% ELSE %]
   <label for="uploaded_file"><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong></label>

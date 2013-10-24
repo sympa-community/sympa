@@ -18,28 +18,29 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-use strict;
 use lib '--modulesdir--';
+use wwslib;
+use Sympa::Constants;
 
-#use wwslib; # not used
-#use Sympa::Constants; # used in List - Robot - Site - Conf - confdef
 use List;
-#use SDM; # used by Conf
-#use Log; # used by Conf
+use SDM;
+use Log;
 
 ## Load sympa config
-Site->load or die 'config_error';
+&Conf::load(Sympa::Constants::CONFIG) || die 'config_error';
 
-chdir Site->home;
+chdir $Conf::Conf{'home'};
 
-SDM::check_db_connect('just_try') or die "Can't connect to database";
+&SDM::db_connect() || die "Can't connect to database";
 
-my $sth = SDM::do_query(
-    q{SELECT user_subscriber, comment_subscriber
-      FROM subscriber_table}
-) or die 'Unable to execute SQL statement';
+my $dbh = &SDM::db_get_handler();
+
+my $sth =  $dbh->prepare("SELECT user_subscriber, comment_subscriber FROM subscriber_table") || die "Can't prepare SQL statement";
+
+$sth->execute || die "Unable to execute SQL statement";
 
 my $user;
 
@@ -47,30 +48,26 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
     printf "\nUser: %s", $user->{'user_subscriber'};
 
     unless ($user->{'comment_subscriber'}) {
-	my $sth2 = SDM::do_prepared_query(
-	    q{SELECT gecos_user
-	      FROM user_table
-	      WHERE email_user = ?},
-	    $user->{'user_subscriber'}
-	) or die "Unable to execute SQL statement";
+	my $statement = sprintf "SELECT gecos_user FROM user_table WHERE email_user=%s", $dbh->quote($user->{'user_subscriber'});
+	my $sth2 =  $dbh->prepare($statement) || die "Can't prepare SQL statement";
+	
+	$sth2->execute || die "Unable to execute SQL statement";
 
 	my $gecos = $sth2->fetchrow;
 	$sth2->finish();
 	
 	if ($gecos) {
 	    printf " =>%s", $gecos;
-	    my $sth2 = SDM::do_prepared_query(
-		q{UPDATE subscriber_table
-		  SET comment_subscriber = ?
-		  WHERE user_subscriber = ?},
-		$gecos, $user->{'user_subscriber'}
-	    ) or die "Unable to execute SQL statement";
+	    my $statement = sprintf "UPDATE subscriber_table SET comment_subscriber=%s WHERE (user_subscriber=%s)", $dbh->quote($gecos), $dbh->quote($user->{'user_subscriber'});
+	    my $sth2 =  $dbh->prepare($statement) || die "Can't prepare SQL statement";
+	    $sth2->execute || die "Unable to execute SQL statement";
 	    $sth2->finish();
 	}
+	
     }
 }
 
 $sth->finish();
 
 ## Disconnect from Database
-SDM::db_disconnect();
+SDM::db_disconnect if ($SDM::dbh);

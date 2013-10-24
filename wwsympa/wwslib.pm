@@ -16,7 +16,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package wwslib;
 
@@ -24,7 +25,6 @@ use Log;
 use Conf;
 use Sympa::Constants;
 
-## No longer used: Use List->get_option_title().
 %reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
 		   'digest' => {'gettext_id' => 'digest MIME format'},
 		   'digestplain' => {'gettext_id' => 'digest plain text format'},
@@ -47,7 +47,6 @@ use Sympa::Constants;
 		  10800 => {'gettext_id' => "1 week"},
 		  43200 => {'gettext_id' => "30 days"});
 
-## No longer used: Use List->get_option_title().
 %visibility_mode = ('noconceal' => {'gettext_id' => "listed in the list review page"},
 		    'conceal' => {'gettext_id' => "concealed"}
 		    );
@@ -72,12 +71,6 @@ use Sympa::Constants;
 	      'your_infected_msg.tt2'   => {'gettext_id' => "virus infection message"},
 	      'list_aliases.tt2'        => {'gettext_id' => "list aliases template"}
 	      );
-
-%task_flavours = (
-		  'daily'   => {'gettext_id' => 'daily' },
-		  'monthly' => {'gettext_id' => 'monthly' },
-		  'weekly'  => {'gettext_id' => 'weekly' },
-		  );
 
 ## Defined in RFC 1893
 %bounce_status = ('1.0' => 'Other address status',
@@ -134,21 +127,79 @@ use Sympa::Constants;
 my $cipher;
 
 ## Load WWSympa configuration file
-##sub load_config
-## MOVED: use Conf::load_wwsconf().
+sub load_config {
+    my $file = pop;
+
+    ## Old params
+    my %old_param = ('alias_manager' => 'No more used, using '.$Conf{'alias_manager'},
+		     'wws_path' => 'No more used',
+		     'icons_url' => 'No more used. Using static_content/icons instead.',
+		     'robots' => 'Not used anymore. Robots are fully described in their respective robot.conf file.',
+		     );
+
+    my %default_conf = ();
+
+    ## Valid params
+    foreach my $key (keys %Conf::params) {
+	if (defined $Conf::params{$key}{'file'} && $Conf::params{$key}{'file'} eq 'wwsympa.conf') {
+	    $default_conf{$key} = $Conf::params{$key}{'default'};
+	}
+    }
+
+    my $conf = \%default_conf;
+
+    unless (open (FILE, $file)) {
+	&Log::do_log('err',"load_config: unable to open $file");
+	return undef;
+    }
+    
+    while (<FILE>) {
+	next if /^\s*\#/;
+
+	if (/^\s*(\S+)\s+(.+)$/i) {
+	    my ($k, $v) = ($1, $2);
+	    $v =~ s/\s*$//;
+	    if (defined ($conf->{$k})) {
+		$conf->{$k} = $v;
+	    }elsif (defined $old_param{$k}) {
+		&Log::do_log('err',"Parameter %s in %s no more supported : %s", $k, $file, $old_param{$k});
+	    }else {
+		&Log::do_log('err',"Unknown parameter %s in %s", $k, $file);
+	    }
+	}
+	next;
+    }
+    
+    close FILE;
+
+    ## Check binaries and directories
+    if ($conf->{'arc_path'} && (! -d $conf->{'arc_path'})) {
+	&Log::do_log('err',"No web archives directory: %s\n", $conf->{'arc_path'});
+    }
+
+    if ($conf->{'bounce_path'} && (! -d $conf->{'bounce_path'})) {
+	&Log::do_log('err',"Missing directory '%s' (defined by 'bounce_path' parameter)", $conf->{'bounce_path'});
+    }
+
+    if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {
+	&Log::do_log('err',"MHonArc is not installed or %s is not executable.", $conf->{'mhonarc'});
+    }
+
+    return $conf;
+}
 
 ## Load HTTPD MIME Types
 sub load_mime_types {
     my $types = {};
 
     @localisation = ('/etc/mime.types', '/usr/local/apache/conf/mime.types',
-		     '/etc/httpd/conf/mime.types',Site->etc.'/mime.types');
+		     '/etc/httpd/conf/mime.types',$Conf{'etc'}.'/mime.types');
 
     foreach my $loc (@localisation) {
 	next unless (-r $loc);
 
 	unless(open (CONF, $loc)) {
-	    Sympa::Log::Syslog::do_log('err',"load_mime_types: unable to open $loc");
+	    &Log::do_log('err',"load_mime_types: unable to open $loc");
 	    return undef;
 	}
     }
@@ -179,28 +230,28 @@ sub load_mime_types {
 
 ## Returns user information extracted from the cookie
 sub get_email_from_cookie {
-#    Sympa::Log::Syslog::do_log('debug', 'get_email_from_cookie');
+#    &Log::do_log('debug', 'get_email_from_cookie');
     my $cookie = shift;
     my $secret = shift;
 
     my ($email, $auth) ;
 
-    # Sympa::Log::Syslog::do_log('info', "get_email_from_cookie($cookie,$secret)");
+    # &Log::do_log('info', "get_email_from_cookie($cookie,$secret)");
     
     unless (defined $secret) {
 	&report::reject_report_web('intern','cookie_error',{},'','','',$robot);
-	Sympa::Log::Syslog::do_log('info', 'parameter cookie undefined, authentication failure');
+	&Log::do_log('info', 'parameter cookie undefined, authentication failure');
     }
 
     unless ($cookie) {
 	&report::reject_report_web('intern','cookie_error',$cookie,'get_email_from_cookie','','',$robot);
-	Sympa::Log::Syslog::do_log('info', ' cookie undefined, authentication failure');
+	&Log::do_log('info', ' cookie undefined, authentication failure');
     }
 
     ($email, $auth) = &cookielib::check_cookie ($cookie, $secret);
     unless ( $email) {
 	&report::reject_report_web('user','auth_failed',{},'');
-	Sympa::Log::Syslog::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
+	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
 	return undef;
     }    
 
@@ -230,30 +281,30 @@ sub init_passwd {
     
     my ($passwd, $user);
     
-    if (User::is_global_user($email)) {
-	$user = User::get_global_user($email);
+    if (&List::is_global_user($email)) {
+	$user = &List::get_global_user($email);
 	
 	$passwd = $user->{'password'};
 	
 	unless ($passwd) {
 	    $passwd = &new_passwd();
 	    
-	    unless ( User::update_global_user($email,
+	    unless ( &List::update_global_user($email,
 					   {'password' => $passwd,
 					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
 		&report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
-		Sympa::Log::Syslog::do_log('info','init_passwd: update failed');
+		&Log::do_log('info','init_passwd: update failed');
 		return undef;
 	    }
 	}
     }else {
 	$passwd = &new_passwd();
-	unless ( User::add_global_user({'email' => $email,
+	unless ( &List::add_global_user({'email' => $email,
 				     'password' => $passwd,
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
 	    &report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},'','',$email,$robot);
-	    Sympa::Log::Syslog::do_log('info','init_passwd: add failed');
+	    &Log::do_log('info','init_passwd: add failed');
 	    return undef;
 	}
     }
@@ -282,15 +333,15 @@ sub get_my_url {
 # Uploade source file to the destination on the server
 sub upload_file_to_server {
     my $param = shift;
-    Sympa::Log::Syslog::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
+    &Log::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
     my $fh;
     unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-	Sympa::Log::Syslog::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
+	&Log::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
 	return undef;
     }	
  
     unless (open FILE, ">:bytes", $param->{'destination'}) {
-	Sympa::Log::Syslog::do_log('debug',"Cannot open file $param->{'destination'} : $!");
+	&Log::do_log('debug',"Cannot open file $param->{'destination'} : $!");
 	return undef;
     }
     while (<$fh>) {

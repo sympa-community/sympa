@@ -1,6 +1,6 @@
 ## MySQL Database creation script
 
-CREATE DATABASE sympa CHARACTER SET utf8;
+CREATE DATABASE sympa;
 
 ## Connect to DB 
 \r sympa 
@@ -33,26 +33,44 @@ CREATE TABLE admin_table (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `bulkpacket_table`
+-- Table structure for table `bulkmailer_table`
 -- 
 
-CREATE TABLE bulkpacket_table ( 
-	 delivery_date_bulkpacket 	 int(11), 
-	 listname_bulkpacket 	 varchar(50), 
-	 lock_bulkpacket 	 varchar(30), 
-	 merge_bulkpacket 	 int(1), 
-	 messageid_bulkpacket 	 varchar(200), 
-	 messagekey_bulkpacket 	 bigint(20), 
-	 packetid_bulkpacket 	 varchar(33), 
-	 priority_message_bulkpacket 	 smallint(10), 
-	 priority_packet_bulkpacket 	 smallint(10), 
-	 recipients_bulkpacket 	 text, 
-	 reception_date_bulkpacket 	 int(11), 
-	 returnpath_bulkpacket 	 varchar(100), 
-	 robot_bulkpacket 	 varchar(80), 
-	 tracking_bulkpacket 	 enum('mdn','dsn'), 
-	 verp_bulkpacket 	 int(1), 
-	 PRIMARY KEY (packetid_bulkpacket, messagekey_bulkpacket) 
+CREATE TABLE bulkmailer_table ( 
+	 delivery_date_bulkmailer 	 int(11), 
+	 listname_bulkmailer 	 varchar(50), 
+	 lock_bulkmailer 	 varchar(30), 
+	 merge_bulkmailer 	 int(1), 
+	 messageid_bulkmailer 	 varchar(200), 
+	 messagekey_bulkmailer 	 varchar(80), 
+	 packetid_bulkmailer 	 varchar(33), 
+	 priority_message_bulkmailer 	 smallint(10), 
+	 priority_packet_bulkmailer 	 smallint(10), 
+	 receipients_bulkmailer 	 text, 
+	 reception_date_bulkmailer 	 int(11), 
+	 returnpath_bulkmailer 	 varchar(100), 
+	 robot_bulkmailer 	 varchar(80), 
+	 tracking_bulkmailer 	 enum('mdn','dsn'), 
+	 verp_bulkmailer 	 int(1), 
+	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+ ) DEFAULT CHARACTER SET utf8;
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `bulkspool_table`
+-- 
+
+CREATE TABLE bulkspool_table ( 
+	 dkim_d_bulkspool 	 varchar(50), 
+	 dkim_i_bulkspool 	 varchar(100), 
+	 dkim_privatekey_bulkspool 	 varchar(1000), 
+	 dkim_selector_bulkspool 	 varchar(50), 
+	 lock_bulkspool 	 int(1), 
+	 message_bulkspool 	 longtext, 
+	 messageid_bulkspool 	 varchar(300), 
+	 messagekey_bulkspool 	 varchar(33), 
+	 PRIMARY KEY (messagekey_bulkspool) 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -90,19 +108,16 @@ CREATE TABLE exclusion_table (
 -- 
 
 CREATE TABLE list_table ( 
-	 cache_epoch_list 	 int(11), 
-	 config_list 	 mediumblob, 
 	 creation_email_list 	 varchar(100), 
-	 creation_epoch_list 	 int(11), 
-	 family_list 	 varchar(100), 
+	 creation_epoch_list 	 datetime, 
+	 editors_list 	 varchar(100), 
 	 name_list 	 varchar(100), 
+	 owners_list 	 varchar(100), 
+	 path_list 	 varchar(100), 
 	 robot_list 	 varchar(100), 
-	 searchkey_list 	 varchar(255), 
 	 status_list 	 enum('open','closed','pending','error_config','family_closed'), 
-	 topics_list 	 varchar(255), 
-	 total_list 	 int(7), 
-	 update_email_list 	 varchar(100), 
-	 update_epoch_list 	 int(11), 
+	 subject_list 	 varchar(100), 
+	 topics_list 	 varchar(100), 
 	 web_archive_list 	 tinyint(1), 
 	 PRIMARY KEY (name_list, robot_list) 
  ) DEFAULT CHARACTER SET utf8;
@@ -117,7 +132,7 @@ CREATE TABLE logs_table (
 	 action_logs 	 varchar(50), 
 	 client_logs 	 varchar(100), 
 	 daemon_logs 	 varchar(10), 
-	 date_logs 	 double, 
+	 date_logs 	 int(11), 
 	 error_type_logs 	 varchar(150), 
 	 id_logs 	 bigint(20), 
 	 list_logs 	 varchar(50), 
@@ -156,7 +171,7 @@ CREATE TABLE notification_table (
 	 list_notification 	 varchar(50), 
 	 message_id_notification 	 varchar(100), 
 	 message_notification 	 longtext, 
-	 pk_notification 	 bigint(20) AUTO_INCREMENT, 
+	 pk_notification 	 bigint(20), 
 	 reception_option_notification 	 varchar(20), 
 	 recipient_notification 	 varchar(100), 
 	 robot_notification 	 varchar(80), 
@@ -188,7 +203,7 @@ CREATE TABLE oauthconsumer_sessions_table (
 -- 
 
 CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	 bigint(20) AUTO_INCREMENT, 
+	 id_nonce 	 int(11), 
 	 id_oauthprovider 	 int(11), 
 	 nonce_oauthprovider 	 varchar(100), 
 	 time_oauthprovider 	 int(11), 
@@ -206,7 +221,7 @@ CREATE TABLE oauthprovider_sessions_table (
 	 callback_oauthprovider 	 varchar(100), 
 	 consumer_oauthprovider 	 varchar(100), 
 	 firsttime_oauthprovider 	 int(11), 
-	 id_oauthprovider 	 bigint(20) AUTO_INCREMENT, 
+	 id_oauthprovider 	 int(11), 
 	 isaccess_oauthprovider 	 tinyint(1), 
 	 lasttime_oauthprovider 	 int(11), 
 	 secret_oauthprovider 	 varchar(32), 
@@ -245,50 +260,10 @@ CREATE TABLE session_table (
 	 email_session 	 varchar(100), 
 	 hit_session 	 int(11), 
 	 id_session 	 varchar(30), 
-	 prev_id_session	varchar(30),
-	 refresh_date_session 	 int(11), 
 	 remote_addr_session 	 varchar(60), 
 	 robot_session 	 varchar(80), 
 	 start_date_session 	 int(11), 
 	 PRIMARY KEY (id_session) 
- ) DEFAULT CHARACTER SET utf8;
-
-
--- --------------------------------------------------------
---
--- Table structure for table `spool_table`
--- 
-
-CREATE TABLE spool_table ( 
-	 authkey_spool 	 varchar(33), 
-	 date_spool 	 int(11), 
-	 dkim_d_spool 	 varchar(50), 
-	 dkim_i_spool 	 varchar(100), 
-	 dkim_privatekey_spool 	 varchar(2000), 
-	 dkim_selector_spool 	 varchar(50), 
-	 headerdate_spool 	 varchar(80), 
-	 list_spool 	 varchar(50), 
-	 lockdate_spool 	 int(11), 
-	 message_diag_spool 	 text, 
-	 message_spool 	 longtext, 
-	 message_status_spool 	 enum('ok','bad'), 
-	 messageid_spool 	 varchar(300), 
-	 messagekey_spool 	 bigint(20) AUTO_INCREMENT, 
-	 messagelock_spool 	 varchar(90), 
-	 priority_spool 	 varchar(2), 
-	 robot_spool 	 varchar(80), 
-	 sender_spool 	 varchar(110), 
-	 size_spool 	 int(11), 
-	 spam_status_spool 	 varchar(12), 
-	 spoolname_spool 	 enum('msg','auth','mod','digest','archive','bounce','subscribe','topic','bulk','validated','task'), 
-	 subject_spool 	 varchar(110), 
-	 task_date_spool 	 int(11), 
-	 task_flavour_spool 	 varchar(60), 
-	 task_label_spool 	 varchar(20), 
-	 task_model_spool 	 varchar(40), 
-	 task_object_spool 	 varchar(50), 
-	 type_spool 	 varchar(15), 
-	 PRIMARY KEY (messagekey_spool) 
  ) DEFAULT CHARACTER SET utf8;
 
 

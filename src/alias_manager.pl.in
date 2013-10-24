@@ -24,141 +24,25 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-=encoding utf-8
-
-=head1 NAME
-
-alias_manager, alias_manager.pl - Manage Sympa Aliases
-
-=head1 SYNOPSIS
-
-S<B<alias_manager.pl> B<add> | B<del> I<listname> I<domain>>
-
-=head1 DESCRIPTION
-
-Alias_manager is a program that helps in installing aliases for newly
-created lists and deleting aliases for closed lists. 
-
-It is called by
-L<wwsympa.fcgi(8)> or L<sympa.pl(8)> via the I<aliaswrapper>.
-Alias management is performed only if it was setup in F<--CONFIG-->
-(C<sendmail_aliases> configuration parameter).
-
-Administrators using MTA functionalities to manage aliases (ie
-virtual_regexp and transport_regexp with postfix) can disable alias
-management by setting
-C<sendmail_aliases> configuration parameter to B<none>.
-
-=head1 OPTIONS
-
-=over 4
-
-=item B<add> I<listname> I<domain>
-
-Add the set of aliases for the mailing list I<listname> in the
-domain I<domain>.
-
-=item B<del> I<listname> I<domain>
-
-Remove the set of aliases for the mailing list I<listname> in the
-domain I<domain>.
-
-=back
-
-=head1 FILES
-
-F<--SENDMAIL_ALIASES--> sendmail aliases file.
-
-=head1 DOCUMENTATION
-
-The full documentation in HTML and PDF formats can be
-found in L<http://www.sympa.org/manual/>. 
-
-The mailing lists (with web archives) can be accessed at
-http://listes.renater.fr/sympa/lists/informatique/sympa.
-
-=head1 AUTHORS
-
-=over 4
-
-=item Serge Aumont
-
-ComitE<233> RE<233>seau des UniversitE<233>s
-
-=item Olivier SalaE<252>n
-
-ComitE<233> RE<233>seau des UniversitE<233>s
-
-=back
-
-Contact authors at <sympa-authors@listes.renater.fr>
-
-This manual page was initially written by
-JE<233>rE<244>me Marant <jerome.marant@IDEALX.org>
-for the Debian GNU/Linux system.
-
-=head1 COPYRIGHT
-
-Copyright E<169> 1997,1998,1999,2000,2001 ComitE<233> RE<233>seau des UniversitE<233>s
-
-Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
-
-You may distribute this software under the terms of the GNU General
-Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
-
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
-any later version published by the Free Software Foundation; with no
-Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
-copy of the license can be found under
-L<http://www.gnu.org/licenses/fdl.html>.
-
-=head1 BUGS
-
-Report bugs to Sympa bug tracker.
-See L<http://www.sympa.org/tracking>.
-
-=head1 SEE ALSO
-
-L<sympa(8)>, L<sendmail(8)>.
-
-=cut
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 $ENV{'PATH'} = '';
 
+## Load Sympa.conf
 use strict;
-use warnings;
 use lib '--modulesdir--';
-use Getopt::Long;
-use Pod::Usage;
+use Conf;
 use POSIX;
-
-#use Conf; # load in Site - Robot
-#use tools; # load in Conf - Robot
+use tools;
 use tt2;
-#use Sympa::Constants; # load in confdef - Conf
-use Robot;
+use Sympa::Constants;
 
-my %options;
-GetOptions(\%main::options, 'help|h');
-
-if ($main::options{'help'}) {
-    pod2usage(0);
+my $sympa_conf_file = Sympa::Constants::CONFIG;
+unless (Conf::load($sympa_conf_file)) {
+   &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");
 }
-
-unless (Site->load('no_db' => 1)) {
-    printf STDERR
-	"Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-	Conf::get_sympa_conf();
-    exit 1;
-}
-
-Sympa::Log::Syslog::set_log_level(Site->log_level);
-Sympa::Log::Syslog::do_openlog(Site->syslog, Site->log_socket_type, 'alias_manager');
-
-my $tmp_alias_file = Site->tmpdir . '/sympa_aliases.' . time;
+my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
 
 my $default_domain;
@@ -169,22 +53,16 @@ my $path_to_bouncequeue = Sympa::Constants::LIBEXECDIR .'/bouncequeue';
 
 my ($operation, $listname, $domain, $file) = @ARGV;
 
-my $robot;
 
 if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
-    print STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
+    printf STDERR "Usage: $0 <add|del> <listname> <robot> [<file>]\n";
     exit(2);
 }
 
-unless ($robot = Robot->new($domain, 'no_db' => 1)) {
-    printf STDERR "Unknown robot %s\n", $domain;
-    exit(16);
-}
-
-$default_domain = Site->domain;
+$default_domain = $Conf{'domain'};
 
 my $alias_file;
-$alias_file = Site->sendmail_aliases || Sympa::Constants::SENDMAIL_ALIASES;
+$alias_file = $Conf{'sendmail_aliases'} || Sympa::Constants::SENDMAIL_ALIASES;
 $alias_file = $file if ($file);
 
 unless (-w "$alias_file") {
@@ -194,15 +72,18 @@ unless (-w "$alias_file") {
     
 my %data;
 $data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
+
+
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-$data{'return_path_suffix'} = $robot->return_path_suffix;
+$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
 
-my @aliases;
 
-my $tt2_include_path = $robot->get_etc_include_path();
+my @aliases ;
+
+my $tt2_include_path = &tools::make_tt2_include_path($domain,'',,);
 
 my $aliases_dump;
 &tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
@@ -210,8 +91,8 @@ my $aliases_dump;
 @aliases = split /\n/, $aliases_dump;
 
 unless (@aliases) {
-    print STDERR "No aliases defined\n";
-    exit(15);
+    	print STDERR "No aliases defined\n";
+	exit(15);
 }
 
 if ($operation eq 'add') {
@@ -224,7 +105,7 @@ if ($operation eq 'add') {
 
     ## Check existing aliases
     if (&already_defined(@aliases)) {
-	print STDERR "some alias already exist\n";
+	printf STDERR "some alias already exist\n";
 	exit(13);
     }
 
@@ -233,8 +114,8 @@ if ($operation eq 'add') {
 	exit(5);
     }
 
-    foreach my $alias (@aliases) {
-	print ALIAS "$alias\n";
+    foreach (@aliases) {
+	print ALIAS "$_\n";
     }
     close ALIAS;
 
@@ -260,20 +141,20 @@ if ($operation eq 'add') {
 	print STDERR "Could not read $alias_file\n";
 	exit(7);
     }
-
+    
     unless (open NEWALIAS, ">$tmp_alias_file") {
-	printf STDERR "Could not create %s\n", $tmp_alias_file;
+	printf STDERR "Could not create $tmp_alias_file\n";
 	exit (8);
     }
 
     my @deleted_lines;
     while (my $alias = <ALIAS>) {
 	my $left_side = '';
-	$left_side = $1 if ($alias =~ /^([^\s:]+)[\s:]/);
+	$left_side = $1 if ($alias =~ /^([^:]+):/);
 
 	my $to_be_deleted = 0;
 	foreach my $new_alias (@aliases) {
-	    next unless ($new_alias =~ /^([^\s:]+)[\s:]/);
+	    next unless ($new_alias =~ /^([^:]+):/);
 	    my $new_left_side = $1;
 	    
 	    if ($left_side eq  $new_left_side) {
@@ -332,18 +213,18 @@ sub already_defined {
     my @aliases = @_;
     
     unless (open  ALIAS, "$alias_file") {
-	printf STDERR "Could not read %s\n", $alias_file;
+	printf STDERR "Could not read $alias_file\n";
 	exit (7);
     }
 
     while (my $alias = <ALIAS>) {
 	# skip comment
 	next if $alias =~ /^#/ ; 
-	$alias =~ /^([^\s:]+)[\s:]/;
+	$alias =~ /^([^:]+):/;
 	my $left_side = $1;
 	next unless ($left_side);
 	foreach (@aliases) {
-	    next unless ($_ =~ /^([^\s:]+)[\s:]/); 
+	    next unless ($_ =~ /^([^:]+):/); 
 	    my $new_left_side = $1;
 	    if ($left_side eq  $new_left_side) {
 		print STDERR "Alias already defined : $left_side\n";

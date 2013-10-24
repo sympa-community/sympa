@@ -6,7 +6,6 @@
 
 [% IF which %] 
 <table summary="[%|loc(email)%]Lists which %1 is subscribed [%END%]" class="listOfItems">
-  <tr>
    <th>[%|loc%]list[%END%]
    </th>
    <th>[%|loc%]role[%END%]</span>
@@ -19,12 +18,12 @@
    </th>
    <th colspan="2">	    
    </th>
-  </tr>
+
  [% FOREACH l = which %]
 
 	[% IF dark == '1' %]
          [% SET dark = 0 %]
-	<tr class="color_light">
+	<tr class="color4">
 	[% ELSE %]
           [% SET dark = 1 %]
           <tr class="color0">
@@ -38,7 +37,7 @@
            [% IF l.value.is_editor %][%|loc%]editor[%END%] [% END %]
         </td>
         <td>
-	[%|optdesc('reception')%][% l.value.reception %][% END %]
+	[% l.value.reception %]
         </td>
         <td>
         [% l.value.topic %]

@@ -16,7 +16,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 
@@ -49,7 +50,7 @@ installconfig: installdir
 		if [ ! -d $(DESTDIR)$(confdir) ]; then \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
 		fi; \
-		$(SED) \
+		$(AM_V_GEN)$(SED) \
 			-e 's|--PERL--|$(PERL)|' \
 			-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
 			< $(top_srcdir)/src/sympa_wizard.pl.in > \
@@ -58,6 +59,10 @@ installconfig: installdir
 		$(top_srcdir)/src/sympa_wizard.pl.install \
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
+			|| /bin/true; \
+		$(top_srcdir)/src/sympa_wizard.pl.install \
+			--create wwsympa.conf \
+			--target $(DESTDIR)$(confdir)/wwsympa.conf \
 			|| /bin/true; \
 		rm -f $(top_srcdir)/src/sympa_wizard.pl.install; \
 	fi; \

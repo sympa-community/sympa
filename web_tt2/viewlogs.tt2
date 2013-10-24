@@ -9,7 +9,6 @@
   <form action="[% path_cgi %]">
   <fieldset>
   <input type="hidden" name="sortby" value="[% sortby %]" />
-  <input type="hidden" name="way" value="[% way %]" />
   <input type="hidden" name="action" value="viewlogs" />
   <input type="hidden" name="list" value="[% list %]" />
   <input type="hidden" name="target_type" value="[% target_type %]" />
@@ -29,13 +28,13 @@
   </form>
 <br />
    [% IF prev_page %]
-    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
+    <a href="[% path_cgi %]/viewlogs/[% list %]/[% prev_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/left.png" alt="[%|loc%]Previous page[%END%]" /></a>
    [% END %]
    [% IF page %]
-     [%|loc(page,total_page)%]page %1 / %2[%END%]
+     [%|loc%]page[%END%] [% page %] / [% total_page %]
    [% END %]
    [% IF next_page %]
-     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]/[% way %]/[% date_from %]/[% date_to %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
+     <a href="[% path_cgi %]/viewlogs/[% list %]/[% next_page %]/[% size %]/[% sortby %]"><img src="[% icons_url %]/right.png" alt="[%|loc%]Next page[%END%]" /></a>
    [% END %]
 
 
@@ -50,16 +49,23 @@
 
   <label for="target_type">[%|loc%]Search by:[%END%]</label>
     <select id="target_type" name="target_type">
-       <option value="none">[%|loc%]All[%END%]</option>
-       <option value="target_email"[% IF target_type == 'target_email' %] selected[%END%]>[%|loc%]Target Email[%END%]</option>
-       <option value="msg_id"[% IF target_type == 'msg_id' %] selected[%END%]>[%|loc%]Message Id[%END%]</option>
-       <option value="user_email"[% IF target_type == 'user_email' %] selected[%END%]>[%|loc%]User Email[%END%]</option>
-       [% IF is_listmaster || is_owner %]
-       <option value="client"[% IF target_type == 'client' %] selected[%END%]>[%|loc%]User IP[%END%]</option>
+
+       [% IF target_type  == 'target_email' %]
+	 <option value="[% target_type %]">[%|loc%]Email[%END%]</option>
+	 <option value="none">-----------</option>
+       [% ELSE %] 
+	 [% IF target_type == 'msg_id' %]
+	   <option value="[% target_type %]">[%|loc%]Message Id[%END%]</option>
+	   <option value="none">-----------</option>
+         [% END %]
        [% END %]
+
+       <option value="target_email">[%|loc%]Email[%END%]</option>
+       <option value="msg_id">[%|loc%]Message Id[%END%]</option>
+       <option value="none">-----------</option>
     </select>
        
-    <input id="target" type="text" name="target" value="[% target %]" size ="40"/><br />
+    <input id="target" type="text" name="target" value="[% target %]" size ="20"/><br />
 
     <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
       <input type="text" id="date_from" name="date_from" maxlength="10" size="10" value="[% date_from %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" >
@@ -68,14 +74,25 @@
       <br />
     <label for="type">[%|loc%]Search by type:[%END%]</label>
       <select id="type" name="type">
-       <option value="all_actions"[% IF type == 'all_actions' %] selected[%END%]>[%|loc%]All[%END%]</option>
-       <option value="authentication"[% IF type == 'authentication' %] selected[%END%]>[%|loc%]Authentication[%END%]</option>
-       <option value="bounced"[% IF type == 'bounced' %] selected[%END%]>[%|loc%]Bounce management[%END%]</option>
-       <option value="list_management"[% IF type == 'list_management' %] selected[%END%]>[%|loc%]List Management[%END%]</option>
-       <option value="message"[% IF type == 'message' %] selected[%END%]>[%|loc%]Message[%END%]</option>
-       <option value="preferences"[% IF type == 'preferences' %] selected[%END%]>[%|loc%]User preferences[%END%]</option>
-       <option value="subscription"[% IF type == 'subscription' %] selected[%END%]>[%|loc%]User management[%END%]</option>
-       <option value="shared"[% IF type == 'shared' %] selected[%END%]>[%|loc%]Web documents management[%END%]</option>
+       [% IF type %]
+	 [% IF type == 'all_actions' %]
+	   <option value="all_actions">[%|loc%]All[%END%]</option>
+	   <option value="none">------------</option>
+	 [% ELSE %]
+           <option value="[% type %]">[% type %]</option>
+	   <option value="none">------------</option>
+	 [% END %]
+       [% END %]
+       <option value="all_actions">[%|loc%]All[%END%]</option>
+       <option value="none">------------</option>
+       <option value="authentication">[%|loc%]Authentication[%END%]</option>
+       <option value="bounced">[%|loc%]Bounce management[%END%]</option>
+       <option value="list_management">[%|loc%]List Management[%END%]</option>
+       <option value="message">[%|loc%]Message[%END%]</option>
+       <option value="preferences">[%|loc%]User preferences[%END%]</option>
+       <option value="subscription">[%|loc%]User management[%END%]</option>
+       <option value="shared">[%|loc%]Web documents management[%END%]</option>
+       <option value="none">------------</option>
       </select><br />
        
    [% IF is_listmaster %]
@@ -95,24 +112,32 @@
 
 <em>[%|loc%]Search period: [%END%]<strong>[%|locdt(date_from_formated)%]%d %b %Y %H:%M:%S[%END%]</strong> [%|loc%]to[%END%] <strong>[%|locdt(date_to_formated)%]%d %b %Y %H:%M:%S[%END%]</strong></em><br />
 [% IF total_results %]
-[% IF list %]<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
-<br />[% END %]
+<em>[%|loc(list)%]Research was carried out in list <strong>%1</strong>.[%END%]</em><br />
+<br />
 <em>[%|loc(total_results)%]%1 results[%END%].</em>
 <div id="table_container">
 <table class="listOfItems" summary="logs table">
       <tr>
-        <th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date/[%IF sortby == 'date' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Date[%END%][% IF sortby == 'date' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	[% IF sortby == 'date' %]
+  	    <th class="sortby">
+	    [%|loc%]Sub date[%END%]
+	[% ELSE %]
+	    <th>
+            <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/date" >[%|loc%]Date[%END%]</a>
+	[% END %]
         </th>
 
-	[% UNLESS "$list" %]
-	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list/[%IF sortby == 'list' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]List[%END%][% IF sortby == 'list' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	    <th>
+               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/list">[%|loc%]List[%END%]</a>
 	</th>
-	[% END %]
 
-  	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action/[%IF sortby == 'action' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Action[%END%][% IF sortby == 'action' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	[% IF sortby == 'action' %]
+  	    <th class="sortby">
+	    [%|loc%]Action[%END%]
+	[% ELSE %]
+	    <th>
+               <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/action">[%|loc%]Action[%END%]</a>
+	[% END %]
 	</th>
 
 	<th>
@@ -135,9 +160,13 @@
 	  [%|loc%]Error type[%END%]
 	</th>
 
-	[% IF sortby == 'email' %][% SET sortby = 'user_email' %][% END %]
-  	<th>
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email/[%IF sortby == 'user_email' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]User Email[%END%][% IF sortby == 'user_email' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	[% IF sortby == 'email' %]
+  	    <th class="sortby">
+	    [%|loc%]User Email[%END%]
+	[% ELSE %]
+	    <th>	    
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/email">[%|loc%]User Email[%END%]</a>
+	[% END %]
 	</th>
 
 	[% IF is_listmaster || is_owner %]
@@ -147,7 +176,7 @@
 	[% END %]
 
 	<th>
-	  <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/daemon/[%IF sortby == 'daemon' && way == 'asc'%]desc[%ELSE%]asc[%END%]/[% date_from %]/[% date_to %]" >[%|loc%]Service[%END%][% IF sortby == 'daemon' %][%IF way == 'asc'%]&#9660;[%ELSE%]&#9650;[%END%][%ELSE%]&nbsp;&nbsp;[%END%]</a>
+	  [%|loc%]Service[%END%]
 	</th>
         
       </tr>
@@ -165,7 +194,7 @@
 	  <td>
 	    [% l.date %]
 	  </td>
-	  [% UNLESS "$list" %]
+	 [% IF is_listmaster || is_owner %]
 	  <td>
   	      [% l.list %]
 	  </td>
@@ -177,9 +206,7 @@
   	      [% l.parameters %]
 	  </td>
 	  <td>
-  	      [% IF l.target_email %]
-                <a href="javascript:searched_by_target('target_email', '[% l.target_email %]')" title="[%|loc%]view other events related to this email.[%END%]">[% l.target_email %]</a>
-	      [% END %]
+  	      [% l.target_email %]
 	  </td>
 	  <td>
 	      [% IF l.msg_id %]
@@ -193,17 +220,11 @@
   	      [% l.error_type %]
 	  </td>
 	  <td>
-	    [% IF l.user_email == 'anonymous' %]
-		<a href="javascript:searched_by_target('user_email', 'anonymous')" title="[%|loc%]view other events related to this email.[%END%]">[%|loc%]anonymous[%END%]</a>
-	    [% ELSE %]
-		<a href="javascript:searched_by_target('user_email', '[% l.user_email %]')" title="[%|loc%]view other events related to this email.[%END%]">[% l.user_email %]</a>
-	    [% END %]
+  	    [% l.user_email %]</span>
 	  </td>
 	  [% IF is_listmaster || is_owner %]
 	  <td>
-	    [% IF l.client %]
-		<a href="javascript:searched_by_target('client', '[% l.client %]')" title="[%|loc%]view other events related to this IP address.[%END%]">[% l.client %]</a>
-            [% END %]
+  	      [% l.client %]
 	  </td>
 	  [% END %]
 	  <td>

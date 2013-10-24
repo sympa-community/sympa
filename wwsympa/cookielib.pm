@@ -16,7 +16,9 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 
 package cookielib;
 
@@ -52,7 +54,6 @@ sub generic_set_cookie {
 
     
 # Sets an HTTP cookie to be sent to a SOAP client
-# OBSOLETED: Use SympaSession::soap_cookie2().
 sub set_cookie_soap {
     my ($session_id,$http_domain,$expire) = @_ ;
     my $cookie;
@@ -80,14 +81,14 @@ sub set_cookie_soap {
 sub get_mac {
         my $email = shift ;
 	my $secret = shift ;	
-	Sympa::Log::Syslog::do_log('debug3', "get_mac($email, $secret)");
+	&Log::do_log('debug3', "get_mac($email, $secret)");
 
 	unless ($secret) {
-	    Sympa::Log::Syslog::do_log('err', 'get_mac : failure missing server secret for cookie MD5 digest');
+	    &Log::do_log('err', 'get_mac : failure missing server secret for cookie MD5 digest');
 	    return undef;
 	}
 	unless ($email) {
-	    Sympa::Log::Syslog::do_log('err', 'get_mac : failure missing email adresse or cookie MD5 digest');
+	    &Log::do_log('err', 'get_mac : failure missing email adresse or cookie MD5 digest');
 	    return undef;
 	}
 
@@ -129,7 +130,7 @@ sub set_cookie_extern {
 				   );
     ## Send cookie to the client
     printf "Set-Cookie: %s\n", $cookie->as_string;
-    #Sympa::Log::Syslog::do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
+    #&Log::do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
     return 1;
 }
 

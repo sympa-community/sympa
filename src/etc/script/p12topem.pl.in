@@ -20,66 +20,39 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-=encoding utf-8
-
-=head1 NAME
-
-p12topem.pl - Convert PKCS#12 certificates to PEM format
-
-=head1 SYNOPSIS
-
-    p12topem.pl --pkcs12 <PKCS#12_cert_file> --listname <listname> or
-    p12topem.pl --pkcs12 <PKCS#12_cert_file> --robot <robot>
-
-=head1 DESCRIPTION
-
-This script is intended to convert a PKCS#12 certificates in PEM format
-using Openssl.  This is useful because most PKI providers deliver certificates
-using a web interface so the certificate is stored in your browser.
-
-When exporting a certificate from a browser (Netscape, IE, Mozilla etc)
-the result is stored using PKCS#12 format.  Sympa requires a pair of PEM
-certificate and private key.  You must then convert your PKCS#12 into PEM. 
-
-For a list certificate, the file will be installed in
-$home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key.
-
-For Sympa itself a certificate will be installed in 
-$etc_sympa/<robot>/cert.pem and  $etc_sympa/<robot>/private_key or
-$etc_sympa/cert.pem and $etc_sympa/private_key.
-
-You are then prompted for inpassword (the password used to encrypt the
-PKCS#12 file).
-
-=cut
 
 use strict;
+
 use lib '--modulesdir--';
 use Getopt::Long;
-use Pod::Usage;
+use Sympa::Constants;
 
-#use Sympa::Constants; # used by Conf
-#use Conf; # used in List - Robot - Site
+my $sympa_conf_file = Sympa::Constants::CONFIG;
+use Conf;
 use List;
-#use SDM; # used by Conf
 
 ## Load sympa config
-Site->load or die 'config_error';
+unless (&Conf::load($sympa_conf_file)) {
+    die 'config_error';
+}
 
 ## Probe Db if defined
-if (Site->db_name and Site->db_type) {
-    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
-	die sprintf 'Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', Site->db_name;
+if ($Conf{'db_name'} and $Conf{'db_type'}) {
+    unless (&Upgrade::probe_db()) {
+	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
     }
 }
 
-my $openssl = Site->openssl;
-my $etc_sympa = Site->etc;
-my $home_sympa = Site->home;
-my $outpass = Site->key_passwd;
-my $etc_dir = Site->etc;
+## Apply defaults to %List::pinfo
+&List::_apply_defaults();
+
+my $openssl = $Conf{'openssl'};
+my $home_sympa = $Conf{'home'};
+my $outpass = $Conf{'key_passwd'};
+my $etc_dir = $Conf{'etc'};
 
 ## Check option
 my %options;
@@ -87,76 +60,104 @@ my %options;
 
 $main::options{'foreground'} = 1;
 my $listname = $main::options{'listname'};
-my $robot_id = $main::options{'robot'};
+my $robot = $main::options{'robot'};
 my $p12input = $main::options{'pkcs12'};
 
 
 my ($cert,$privatekey,$inpass,$key);
 
-if ($main::options{'help'} or ! -r $p12input or ($listname and $robot_id)) {
-    pod2usage(0);
+if (($main::options{'help'} ne '') || 
+    !(-r $main::options{'pkcs12'}) || 
+    (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
+   ){
+    &print_usage(); 
 }else{
+
     if ($listname) {
-	my $list = List->new($listname);
-	unless ($list) {
-	    printf "unknown list %s\n", $listname;
+	my $self = new List($listname, $robot);
+	$cert = $self->{'dir'}.'/cert.pem';
+	$privatekey = $self->{'dir'}.'/private_key';
+	unless (-d $self->{'dir'}) {
+	    printf "unknown list $listname (directory $self->{'dir'} not found)\n";
 	    die;
 	}
-	$cert = $list->dir . '/cert.pem';
-	$privatekey = $list->dir . '/private_key';
-    } elsif ($robot_id) {
-	my $robot = Robot->new($robot_id);
-	unless ($robot) {
-	    printf "unknown robot %s\n", $robot_id;
-	    die;
+    }elsif($robot) {
+	if (-d $Conf{'etc'}.'/'.$robot) {
+	    $cert = $Conf{'etc'}.'/'.$robot.'/cert.pem';
+	    $privatekey = $Conf{'etc'}.'/'.$robot.'/private_key';
+	}else{
+	    $cert = $Conf{'etc'}.'/cert.pem';
+	    $privatekey = $Conf{'etc'}.'/private_key';	    
 	}
-	$cert = $robot->etc . '/cert.pem';
-	$privatekey = $robot->etc . '/private_key';
     }
 
     if (-r "$cert") {
-	printf "certificate %s already exists\n", $cert;
+	printf "$cert certificat already exist\n";
 	die;
     }
     if (-r "$privatekey") {
-	printf "private key %s already exists\n", $privatekey;
+	printf "$privatekey already exist\n";
 	die;
     }
     
     unless ($openssl) {
-	print "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
+	printf "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
 	die;
     }
     
     system 'stty', '-echo';
-    printf "password to access to %s :", $p12input;
+    printf "password to access to $p12input :";
     chop($inpass = <STDIN>);
     print "\n";
     system 'stty', 'echo';
     open  PASS, "| $openssl pkcs12 -in $p12input -out $cert -nokeys -clcerts -passin stdin";
     print PASS "$inpass\n";
-    close PASS;
+    close PASS ;
     
     unless ($outpass) {
 	system 'stty', '-echo';
-	printf "Sympa password to protect list private key %s:", $key;
+	printf "sympa password to protect list private_key $key:";
 	chop($outpass = <STDIN>);
 	print "\n";
 	system 'stty', 'echo';
     }
     open  PASS, "| $openssl pkcs12 -in $p12input -out $privatekey -nocerts -passin stdin -des3 -passout stdin";
     print PASS "$inpass\n$outpass\n";
-    close PASS;
+    close PASS ;
     
-    printf "private key %s and certificate %s were created.\n", $privatekey, $cert;
+    printf "$privatekey and  $cert created.\n";
     exit;
 }
 
-    unless ($outpass) {
-	print <<"EOF";
-Because you did not configure Sympa's password \"key_passwd\" in
+
+
+sub print_usage {
+printf "
+
+Usage p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname> or
+      p12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot>
+
+This script is intended to convert a PKCS#12 certificates in PEM format
+using Openssl. This is usefull because most PKI providerd deliver certificates
+using a web interface so the certificat is stored in your browser.
+
+When exporting a certificate from a browser (Netscape, IE, Mozilla etc)
+the result is stored using PKCS#12 format.Sympa requires a pair of PEM
+certificat and private key. You must then convert your pkcs#12 into PEM. 
+
+For a list certificat, the file will be installed in
+$home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key
+
+For Sympa itself a certificate will be installed in 
+$Conf{'etc'}/<robot>/cert.pem and  $Conf{'etc'}/<robot>/private_key or
+$Conf{'etc'}/cert.pem and Conf{'etc'}/private_key
+
+
+You are then prompted for inpassword (the password used to encrypt the
+pkc#12 file).\n";
+unless ($outpass) {
+printf "Because you did not configure Sympa's password \"key_passwd\"  in
 sympa.conf you will also be prompted for the password used by sympa to access
-to the list private key)
-EOF
-    } 
+to the list private key)\n";
+} 
 }

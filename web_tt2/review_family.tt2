@@ -11,7 +11,7 @@
 
 [% FOREACH list = family_lists %]
 <tr>
-<td>[%|optdesc('status')%][% list.status %][%END%]</td>
+<td>[% list.status %]</td>
 <td><a href="[% path_cgi %]/admin/[% list.name %]">[% list.name %]</a></td>
 <td>[% list.instantiation_date %]</td>
 <td>[% list.subject %]</td>

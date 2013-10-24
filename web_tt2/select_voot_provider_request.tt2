@@ -1,0 +1,15 @@
+<!-- $Id: select_voot_provider.tt2 7079 2011-05-10 14:57:47Z etiennemeleard $ -->
+<div class="block">
+
+<h2>[%|loc%]Select VOOT provider[%END%]</h2>
+
+<p>[%|loc%]Hereafter is the list of VOOT providers that share group information with Sympa. Select which provider you want to use your groups from.[%END%]</p>
+
+<ul>
+	[% FOREACH provider = voot_providers %]
+	<li><a href="[% path_cgi %]/select_voot_groups_request/[% list %]/[% provider.key %]">[% provider.value %]</a>
+	[%END%]
+</ul>
+
+</div>
+<!-- end select_voot_provider.tt2 -->

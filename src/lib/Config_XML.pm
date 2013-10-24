@@ -17,7 +17,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 package Config_XML;
 
@@ -39,7 +40,7 @@ use Log;
 sub new {
     my $class = shift;
     my $fh = shift;
-    Sympa::Log::Syslog::do_log('debug2','Config_XML::new()');
+    &Log::do_log('debug2','Config_XML::new()');
     
     my $self = {};
     my $parser = XML::LibXML->new();
@@ -65,22 +66,22 @@ sub new {
 ################################################
 sub createHash {
     my $self = shift;
-    Sympa::Log::Syslog::do_log('debug2','Config_XML::createHash()');
+    &Log::do_log('debug2','Config_XML::createHash()');
 
     unless ($self->{'root'}->nodeName eq 'list') {
-	Sympa::Log::Syslog::do_log('err',"Config_XML::createHash() : the root element must be called \"list\" ");
+	&Log::do_log('err',"Config_XML::createHash() : the root element must be called \"list\" ");
 	return undef;
     }
 
     unless (defined $self->_getRequiredElements()){
-	Sympa::Log::Syslog::do_log('err',"Config_XML::createHash() : error in required elements ");
+	&Log::do_log('err',"Config_XML::createHash() : error in required elements ");
 	return undef;
     }
     
     if ($self->{'root'}->hasChildNodes()) {
 	my $hash = &_getChildren($self->{'root'});
 	unless (defined $hash){
-	    Sympa::Log::Syslog::do_log('err',"Config_XML::createHash() : error in list elements ");
+	    &Log::do_log('err',"Config_XML::createHash() : error in list elements ");
 	    return undef;
 	}
 	if (ref($hash) eq "HASH") {
@@ -92,7 +93,7 @@ sub createHash {
 		}
 	    }
 	}elsif ($hash ne "") { # a string
-	    Sympa::Log::Syslog::do_log('err','Config_XML::createHash() : the list\'s children are not homogeneous');
+	    &Log::do_log('err','Config_XML::createHash() : the list\'s children are not homogeneous');
 	    return undef;
 	}
     }
@@ -111,7 +112,7 @@ sub createHash {
 #########################################
 sub getHash {
     my $self = shift;
-    Sympa::Log::Syslog::do_log('debug2','Config_XML::getHash()');
+    &Log::do_log('debug2','Config_XML::getHash()');
 
     my $hash = {};
 
@@ -137,7 +138,7 @@ sub getHash {
 #################################################################
 sub _getRequiredElements {
     my $self = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_getRequiredElements()');
+    &Log::do_log('debug3','Config_XML::_getRequiredElements()');
     my $error = 0;
 
     # listname element is obligatory
@@ -163,7 +164,7 @@ sub _getMultipleAndRequiredChild {
     my $self = shift;
     my $nodeName = shift;
     my $childName = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_getMultipleAndRequiredChild(%s,%s)',$nodeName,$childName);
+    &Log::do_log('debug3','Config_XML::_getMultipleAndRequiredChild(%s,%s)',$nodeName,$childName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
 
@@ -174,13 +175,13 @@ sub _getMultipleAndRequiredChild {
     foreach my $o (@nodes) {
 	my @child = $o->getChildrenByTagName($childName);
 	if ($#child < 0){
-	    Sympa::Log::Syslog::do_log('err','Element "%s" is required for element "%s", line : %s',$childName,$nodeName,$o->line_number());
+	    &Log::do_log('err','Element "%s" is required for element "%s", line : %s',$childName,$nodeName,$o->line_number());
 	    return undef;
 	}
 	
 	my $hash = &_getChildren($o);	    
 	unless (defined $hash) {
-	     Sympa::Log::Syslog::do_log('err','Config_XML::_getMultipleAndRequiredChild() : error on _getChildren(%s) ',$o->nodeName);
+	     &Log::do_log('err','Config_XML::_getMultipleAndRequiredChild() : error on _getChildren(%s) ',$o->nodeName);
 	     return undef;
 	 } 
 	    
@@ -204,7 +205,7 @@ sub _getMultipleAndRequiredChild {
 sub _getRequiredSingle {
     my $self = shift;
     my $nodeName = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_getRequiredSingle(%s)',$nodeName);
+    &Log::do_log('debug3','Config_XML::_getRequiredSingle(%s)',$nodeName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
  
@@ -213,7 +214,7 @@ sub _getRequiredSingle {
     }
 
     if ($#nodes <0) {
-	Sympa::Log::Syslog::do_log('err','Element "%s" is required for the list ',$nodeName);
+	&Log::do_log('err','Element "%s" is required for the list ',$nodeName);
 	return undef;
     }
 	
@@ -222,14 +223,14 @@ sub _getRequiredSingle {
 	foreach my $i (@nodes) {
 	    push (@error,$i->line_number());    
 	}
-	Sympa::Log::Syslog::do_log('err','Only one element "%s" is allowed for the list, lines : %s',$nodeName,join(", ",@error));
+	&Log::do_log('err','Only one element "%s" is allowed for the list, lines : %s',$nodeName,join(", ",@error));
 	return undef;
     }
 
     my $node = shift(@nodes);
     
     if ($node->getAttribute('multiple')){
-	Sympa::Log::Syslog::do_log('err','Attribute multiple=1 not allowed for the element "%s"',$nodeName);
+	&Log::do_log('err','Attribute multiple=1 not allowed for the element "%s"',$nodeName);
 	return undef;
     }
     
@@ -243,7 +244,7 @@ sub _getRequiredSingle {
     }else {
 	my $values = &_getChildren($node);
 	unless (defined $values) {
-	     Sympa::Log::Syslog::do_log('err','Config_XML::_getRequiredSingle() : error on _getChildren(%s) ',$node->nodeName);
+	     &Log::do_log('err','Config_XML::_getRequiredSingle() : error on _getChildren(%s) ',$node->nodeName);
 	     return undef;
 	 } 
 
@@ -277,7 +278,7 @@ sub _getRequiredSingle {
 ##############################################
 sub _getChildren {
     my $node = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_getChildren(%s)',$node->nodeName);
+    &Log::do_log('debug3','Config_XML::_getChildren(%s)',$node->nodeName);
 
     my %error_nodes;
     ## return value
@@ -302,7 +303,7 @@ sub _getChildren {
 	if ($type == 1) {
 	    my $values = &_getChildren($child);
 	    unless (defined $values) {
-		Sympa::Log::Syslog::do_log('err','Config_XML::_getChildren() : error on _getChildren(%s) ',$childName);
+		&Log::do_log('err','Config_XML::_getChildren() : error on _getChildren(%s) ',$childName);
 		return undef;
 	    } 
 	    
@@ -350,7 +351,7 @@ sub _getChildren {
 	
 	## error
 	if ($error) {
-	    Sympa::Log::Syslog::do_log('err','Config_XML::_getChildren(%s) : the children are not homogeneous, line %s',$node->nodeName,$node->line_number());
+	    &Log::do_log('err','Config_XML::_getChildren(%s) : the children are not homogeneous, line %s',$node->nodeName,$node->line_number());
 	    return undef;
 	}
     }
@@ -384,7 +385,7 @@ sub _getChildren {
 ##################################################
 sub _verify_single_nodes {
     my $nodeList = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_verify_single_nodes()');
+    &Log::do_log('debug3','Config_XML::_verify_single_nodes()');
     
     my $error = 0;
     my %error_nodes;
@@ -402,7 +403,7 @@ sub _verify_single_nodes {
     }
     foreach my $node (keys %error_nodes) {
 	my $lines = join ', ',@{$nodeLines->{$node}};
-	Sympa::Log::Syslog::do_log('err','Element %s is not declared in multiple but it is : lines %s',$node,$lines);
+	&Log::do_log('err','Element %s is not declared in multiple but it is : lines %s',$node,$lines);
 	$error = 1;
     }
 
@@ -424,7 +425,7 @@ sub _verify_single_nodes {
 ###############################################
 sub _find_lines {
     my $nodeList = shift;
-    Sympa::Log::Syslog::do_log('debug3','Config_XML::_find_lines()');
+    &Log::do_log('debug3','Config_XML::_find_lines()');
     my $hash = {};
 
     foreach my $node (@$nodeList) {

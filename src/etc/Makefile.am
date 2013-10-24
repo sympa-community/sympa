@@ -13,7 +13,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 SUBDIRS = script
 
@@ -43,8 +44,6 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      ca-bundle.crt \
 		      mhonarc-ressources.tt2 \
 		      list_aliases.tt2 \
-		      create_list_templates/confidential/comment.tt2 \
-		      create_list_templates/confidential/config.tt2 \
 		      create_list_templates/discussion_list/comment.tt2 \
 		      create_list_templates/discussion_list/config.tt2 \
 		      create_list_templates/hotline/comment.tt2 \
@@ -93,7 +92,6 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/global_remind.listmaster \
 		      scenari/info.open \
 		      scenari/info.private \
-		      scenari/info.conceal \
 		      scenari/invite.closed \
 		      scenari/invite.owner \
 		      scenari/invite.private \
@@ -107,7 +105,6 @@ nobase_default_DATA = list_task_models/expire.yearly.task \
 		      scenari/review.private \
 		      scenari/review.public \
 		      scenari/send.closed \
-		      scenari/send.confidential \
 		      scenari/send.editorkey \
 		      scenari/send.editorkeyonly \
 		      scenari/send.editorkeyonlyauth \

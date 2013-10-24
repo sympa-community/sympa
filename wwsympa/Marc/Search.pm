@@ -244,7 +244,7 @@ sub _find_match
         push @{$self->{'res'}}, $res;
     }
 
-  return $match;		# 1 if match succeeds; 0 otherwise
+  return $match;		# 1 if match suceeds; 0 otherwise
 }
 
 ##------------------------------------------------------------------------##
@@ -286,7 +286,7 @@ sub search
 	foreach $file (@MSGFILES) 
 	{
 		my ($subj,$from,$date,$id,$body_ref);
-		unless (open FH, '<:encoding(utf8)', $file)
+		unless (open FH, '<:utf8', $file)
 		{
 #			$self->error("Couldn't open file $file, $!");
 		}

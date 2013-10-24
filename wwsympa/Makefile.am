@@ -16,7 +16,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 SUBDIRS = icons
 
@@ -26,7 +27,7 @@ execcgi_PROGRAMS = wwsympa-wrapper.fcgi
 wwsympa_wrapper_fcgi_SOURCES = wwsympa-wrapper.fcgi.c
 wwsympa_wrapper_fcgi_CPPFLAGS = -DWWSYMPA=\"$(execcgidir)/wwsympa.fcgi\"
 
-nobase_modules_DATA = wwslib.pm cookielib.pm Marc.pm Auth.pm \
+nobase_modules_DATA = wwslib.pm cookielib.pm Bounce.pm Marc.pm Auth.pm \
 		      Marc/Search.pm SharedDocument.pm SympaSession.pm
 
 default_DATA = mime.types 
@@ -47,13 +48,7 @@ archived.pl bounced.pl wwsympa.fcgi: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--defaultdir--|$(defaultdir)|' \
-		-e 's|--docdir--|$(docdir)|' \
-		-e 's|--libexecdir--|$(libexecdir)|' \
 		-e 's|--modulesdir--|$(modulesdir)|' \
-		-e 's|--piddir--|$(piddir)|' \
-		-e 's|--spooldir--|$(spooldir)|' \
-		-e 's|--CONFIG--|$(CONFIG)|' \
 		< $(srcdir)/$@.in > $@
 	chmod +x $@
 
