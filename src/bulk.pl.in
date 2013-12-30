@@ -33,7 +33,10 @@ I<bulk.pl> - Daemon for submitting to smtp engine bulkmailer_table content.
 
 =head1 DESCRIPTION 
 
-This script must be run along with sympa. It regularly checks the bulkmailer_table content and submit the messages it finds in it to the sendmail engine. Several deamon should be used on deferent server for hugue traffic.
+This script must be run along with sympa. It regularly checks the
+bulkmailer_table content and submit the messages it finds in it to the
+sendmail engine. Several daemons should tun in parallel on different
+servers for huge traffic.
 
 =cut 
 
