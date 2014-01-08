@@ -18,8 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Options :  F         -> do not detach TTY
 ##         :  d		-> debug -d is equiv to -dF
@@ -294,9 +293,10 @@ while (!$end) {
 	my $data; #HASH which will contain the attributes of the subscriber
 	
 	# Initialization of the HASH : $data. It will be used by parse_tt2 to personalized messages.
+	$data->{'messageid'} = $message_from_spool->{'messageid'};
 	$data->{'listname'} = $bulk->{'listname'};
 	$data->{'robot'} = $bulk->{'robot'};
-	$data->{'to'} = $bulk->{'receipients'};
+	#XXX$data->{'to'} = $bulk->{'receipients'}; #XXX Insecure
 	$data->{'wwsympa_url'} = &Conf::get_robot_conf($bulk->{'robot'},'wwsympa_url');
 	
 	my $rcpt; # It is the email of a subscriber, use it in the foreach

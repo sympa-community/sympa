@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 webtemplate_DATA = active_lists.tt2 \
 		   add_request.tt2 \
@@ -66,6 +65,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   editsubscriber.tt2 \
 		   edit_template.tt2 \
 		   error.tt2 \
+		   exclusion_table.tt2 \
 		   family_signoff.tt2 \
 		   family_signoff_request.tt2 \
 		   footer.tt2 \

@@ -15,14 +15,18 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package List;
 
 use strict;
-use POSIX;
-use SQLSource;
+
+use Encode;
+use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
+use HTML::Entities qw(encode_entities);
+use POSIX qw(strftime);
+
 use Datasource;
 use LDAPSource;
 use SDM;
@@ -44,7 +48,9 @@ use Sympa::Constants;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%list_of_lists);
 
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
+=encoding utf-8
+
+=cut
 
 my @sources_providing_listmembers = qw/
   include_file
@@ -66,8 +72,6 @@ my @more_data_sources = qw/
 my %config_in_admin_user_file = map +($_ => 1), @sources_providing_listmembers;
 
 =head1 CONSTRUCTOR
-
-=encoding utf-8
 
 =item new( [PHRASE] )
 
@@ -1531,7 +1535,8 @@ my %alias = ('reply-to' => 'reply_to',
 				'order' => 2,
 				'gettext_id' => "remote host",
 				'format' => &tools::get_regexp('host'),
-				'occurrence' => '1'
+# Not required for ODBC
+#				'occurrence' => '1'
 			},
 			'db_port' => {
 				'order' => 3,
@@ -2378,9 +2383,14 @@ sub new {
     }
 
     ## Config file was loaded or reloaded
-    if (($status == 1 && ! $options->{'skip_sync_admin'}) ||
-	$options->{'force_sync_admin'}) {
-
+    my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}||$list->{'admin'}{'ttl'};
+    if (
+	$status == 1
+	&& (! $options->{'skip_sync_admin'}
+	|| ($options->{'optional_sync_admin'} && $list->{'last_sync'} < time - $pertinent_ttl)
+	|| $options->{'force_sync_admin'})
+	)
+    {
 	## Update admin_table
 	unless (defined $list->sync_include_admin()) {
 	    &Log::do_log('err','List::new() : sync_include_admin_failed') unless ($options->{'just_try'});
@@ -5446,84 +5456,203 @@ sub add_parts {
     return $msg;
 }
 
+## Append header/footer to text/plain body.
+## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
+##   we must concatenate decoded header/body/footer and at last encode it.
+## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
+##   however, original body would be intact.
 sub _append_parts {
     my $part = shift;
     my $header_msg = shift || '';
     my $footer_msg = shift || '';
 
+    my $enc = $part->head->mime_encoding;
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+       return undef;
+    }
     my $eff_type = $part->effective_type || 'text/plain';
+    my $body;
+    my $io;
 
-    if ($eff_type eq 'text/plain') {
-	my $cset = MIME::Charset->new('UTF-8');
-	$cset->encoder($part->head->mime_attr('Content-Type.Charset')||'NONE');
+    ## Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}i) {
+	return undef;
+    }
 
-	my $body;
-	if (defined $part->bodyhandle) {
-	    $body = $part->bodyhandle->as_string;
-	} else {
-	    $body = '';
-	}
+    ## Skip attached parts.
+    my $disposition = $part->head->mime_attr('Content-Disposition');
+    return undef
+	if $disposition and uc $disposition ne 'INLINE';
 
-	## Only encodable footer/header are allowed.
-	if ($cset->encoder) {
-	    eval {
-		$header_msg = $cset->encode($header_msg, 1);
-	    };
-	    $header_msg = '' if $@;
-	    eval {
-		$footer_msg = $cset->encode($footer_msg, 1);
-	    };
-	    $footer_msg = '' if $@;
-	} else {
-	    $header_msg = '' if $header_msg =~ /[^\x01-\x7F]/;
-	    $footer_msg = '' if $footer_msg =~ /[^\x01-\x7F]/;
-	}
-
+    ## Preparing header and footer for inclusion.
+    if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
 	if (length $header_msg or length $footer_msg) {
-	    $header_msg .= "\n"
-		if length $header_msg and $header_msg !~ /\n$/;
-	    $body .= "\n"
-		if length $footer_msg and length $body and $body !~ /\n$/;
 
-	    my $io = $part->bodyhandle->open('w');
+	    ## Only decodable bodies are allowed.
+	    my $bodyh = $part->bodyhandle;
+	    if ($bodyh) {
+		return undef if $bodyh->is_encoded;
+		$body = $bodyh->as_string;
+	    } else {
+		$body = '';
+	    }
+
+	    $body = _append_footer_header_to_part(
+		{   'part'     => $part,
+		    'header'   => $header_msg,
+		    'footer'   => $footer_msg,
+		    'eff_type' => $eff_type,
+		    'body'     => $body
+		}
+	    );
+	    return undef unless defined $body;
+
+	    $io = $bodyh->open('w');
 	    unless (defined $io) {
-		&do_log('err', "List::add_parts: Failed to save message : $!");
+		Log::do_log('err', 'Failed to save message: %s', "$!");
 		return undef;
 	    }
-	    $io->print($header_msg);
 	    $io->print($body);
-	    $io->print($footer_msg);
 	    $io->close;
 	    $part->sync_headers(Length => 'COMPUTE')
 		if $part->head->get('Content-Length');
+
+	    return 1;
 	}
-	return 1;
     } elsif ($eff_type eq 'multipart/mixed') {
-	## Append to first part if text/plain
+	## Append to the first part, since other parts will be "attachments".
 	if ($part->parts and
-	    &_append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    _append_parts($part->parts(0), $header_msg, $footer_msg)) {
 	    return 1;
 	}
     } elsif ($eff_type eq 'multipart/alternative') {
-	## Append to first text/plain part
+	## We try all the alternatives
+	my $r = undef;
 	foreach my $p ($part->parts) {
-	    if (&_append_parts($p, $header_msg, $footer_msg)) {
-		return 1;
+	    $r = 1
+		if _append_parts($p, $header_msg, $footer_msg);
+	}
+	return $r if $r;
+    } elsif ($eff_type eq 'multipart/related') {
+	## Append to the first part, since other parts will be "attachments".
+	if ($part->parts and
+	    _append_parts($part->parts(0), $header_msg, $footer_msg)) {
+	    return 1;
+	}
+    }
+
+    ## We couldn't find any parts to modify.
+    return undef;
+}
+
+# Styles to cancel local CSS.
+my $div_style = 'background: transparent; border: none; clear: both; display: block; float: none; position: static';
+
+sub _append_footer_header_to_part {
+    my $data       = shift;
+
+    my $part       = $data->{'part'};
+    my $header_msg = $data->{'header'};
+    my $footer_msg = $data->{'footer'};
+    my $eff_type   = $data->{'eff_type'};
+    my $body       = $data->{'body'};
+
+    my $cset;
+
+    ## Detect charset.  If charset is unknown, detect 7-bit charset.
+    my $charset = $part->head->mime_attr('Content-Type.Charset');
+    $cset = MIME::Charset->new($charset || 'NONE');
+    unless ($cset->decoder) {
+	# n.b. detect_7bit_charset() in MIME::Charset prior to 1.009.2 doesn't
+	# work correctly.
+	my ($dummy, $charset) =
+	    MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
+	$cset = MIME::Charset->new($charset)
+	    if $charset;
+    }
+    unless ($cset->decoder) {
+	#Log::do_log('err', 'Unknown charset "%s"', $charset);
+	return undef;
+    }
+
+    ## Decode body to Unicode, since encode_entities() and newline
+    ## normalization will break texts with several character sets (UTF-16/32,
+    ## ISO-2022-JP, ...).
+    eval {
+	$body = $cset->decode($body, 1);
+	$header_msg = Encode::decode_utf8($header_msg, 1);
+	$footer_msg = Encode::decode_utf8($footer_msg, 1);
+    };
+    return undef if $@;
+
+    my $new_body;
+    if ($eff_type eq 'text/plain') {
+	Log::do_log('debug3', "Treating text/plain part");
+
+	## Add newlines. For BASE64 encoding they also must be normalized.
+	if (length $header_msg) {
+	    $header_msg .= "\n" unless $header_msg =~ /\n\z/;
+	}
+	if (length $footer_msg and length $body) {
+	    $body .= "\n" unless $body =~ /\n\z/;
+	}
+	if (uc($part->head->mime_attr(
+	    'Content-Transfer-Encoding') || '') eq 'BASE64') {
+	    $header_msg =~ s/\r\n|\r|\n/\r\n/g;
+	    $body =~ s/(\r\n|\r|\n)\z/\r\n/;       # only at end
+	    $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+	}
+
+	$new_body = $header_msg . $body . $footer_msg;
+    } elsif ($eff_type eq 'text/html') {
+	Log::do_log('debug3', "Treating text/html part");
+
+	# Escape special characters.
+	$header_msg = encode_entities($header_msg, '<>&"');
+	$header_msg =~ s/(\r\n|\r|\n)$//; # strip the last newline.
+	$header_msg =~ s,(\r\n|\r|\n),<br/>,g;
+	$footer_msg = encode_entities($footer_msg, '<>&"');
+	$footer_msg =~ s/(\r\n|\r|\n)$//; # strip the last newline.
+	$footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+
+	my @bodydata = split '</body>', $body;
+	if (length $header_msg) {
+	    $new_body = sprintf '<div style="%s">%s</div>',
+		$div_style, $header_msg;
+	} else {
+	    $new_body = '';
+	}
+	my $i = -1;
+	foreach my $html_body_bit (@bodydata) {
+	    $new_body .= $html_body_bit;
+	    $i++;
+	    if ($i == $#bodydata and length $footer_msg) {
+		$new_body .= sprintf '<div style="%s">%s</div></body>',
+		    $div_style, $footer_msg;
+	    } else {
+		$new_body .= '</body>';
 	    }
 	}
     }
 
-    return undef;
+    ## Only encodable footer/header are allowed.
+    eval {
+	$new_body = $cset->encode($new_body, 1);
+    };
+    return undef if $@;
+
+    return $new_body;
 }
 
-## Delete a user in the user_table
+## Delete a new user to Database (in User table)
 sub delete_global_user {
     my @users = @_;
     
     &Log::do_log('debug2', '');
     
     return undef unless ($#users >= 0);
-    
+
     foreach my $who (@users) {
 	$who = &tools::clean_email($who);
 	## Update field
@@ -5721,8 +5850,8 @@ sub get_global_user {
 	## Turn user_attributes into a hash
 	my $attributes = $user->{'attributes'};
 	$user->{'attributes'} = undef;
-	foreach my $attr (split (/\;/, $attributes)) {
-	    my ($key, $value) = split (/\=/, $attr);
+	foreach my $attr (split (/__ATT_SEP__/, $attributes)) {
+	    my ($key, $value) = split (/__PAIRS_SEP__/, $attr);
 	    $user->{'attributes'}{$key} = $value;
 	}    
 	## Turn data_user into a hash
@@ -6015,7 +6144,11 @@ sub get_list_member {
 #
 # OUT : undef if something wrong
 #       a hash of tab of ressembling emails
-sub get_ressembling_list_members_no_object {
+#
+# Note that the name of this function in 6.2a.32 or earlier is
+# "get_ressembling_list_members_no_object" (look at doubled "s").
+#
+sub get_resembling_list_members_no_object {
     my $options = shift;
     &Log::do_log('debug2', '(%s, %s, %s)', $options->{'name'}, $options->{'email'}, $options->{'domain'});
     my $name = $options->{'name'};
@@ -7256,6 +7389,7 @@ sub add_list_member {
     &Log::do_log('debug2', '%s', $self->{'name'});
     
     my $name = $self->{'name'};
+
     $self->{'add_outcome'} = undef;
     $self->{'add_outcome'}{'added_members'} = 0;
     $self->{'add_outcome'}{'expected_number_of_added_users'} = $#new_users;
@@ -7266,7 +7400,10 @@ sub add_list_member {
 
     foreach my $new_user (@new_users) {
 	my $who = &tools::clean_email($new_user->{'email'});
-	next unless $who;
+	unless ($who) {
+	    Log::do_log('err', 'Ignoring %s which is not a valid email',$new_user->{'email'});
+	    next;
+	}
 	unless ($current_list_members_count < $self->{'admin'}{'max_list_members'} || $self->{'admin'}{'max_list_members'} == 0) {
 	    $self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'} = 1;
 	    &Log::do_log('notice','Subscription of user %s failed: max number of subscribers (%s) reached',$new_user->{'email'},$self->{'admin'}{'max_list_members'});
@@ -7276,7 +7413,10 @@ sub add_list_member {
 	# Delete from exclusion_table and force a sync_include if new_user was excluded
 	if(&insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete')) {
 		$self->sync_include();
-		next if($self->is_list_member($who));
+		if($self->is_list_member($who)) {
+		    $self->{'add_outcome'}{'added_members'}++;
+		    next;
+		}
 	}
 
 	$new_user->{'date'} ||= time;
@@ -7676,6 +7816,8 @@ sub may_edit {
 
 ## May the indicated user edit a paramter while creating a new list
 ## Dev note: This sub is never called. Shall we remove it?
+# sa cette procÃ©dure est appelÃ©e nul part, je lui ajoute malgrÃ¨s tout le paramÃªtre robot
+# edit_conf devrait Ãªtre aussi dÃ©pendant du robot
 sub may_create_parameter {
 
     my($self, $parameter, $who,$robot) = @_;
@@ -7904,13 +8046,25 @@ sub load_scenario_list {
     my $directory = "$self->{'dir'}";
     my %list_of_scenario;
     my %skip_scenario;
-
-    foreach my $dir (
-        "$directory/scenari",
-        "$Conf::Conf{'etc'}/$robot/scenari",
-        "$Conf::Conf{'etc'}/scenari",
-        Sympa::Constants::DEFAULTDIR . '/scenari'
-    ) {
+    my @list_of_scenario_dir;
+    if (defined $self->{'admin'}{'family_name'} ) {
+	@list_of_scenario_dir = (
+	    "$directory/scenari",
+	    "$Conf::Conf{'etc'}/$robot/families/$self->{'admin'}{'family_name'}/scenari",
+	    "$Conf::Conf{'etc'}/families/$self->{'admin'}{'family_name'}/scenari",
+	    "$Conf::Conf{'etc'}/$robot/scenari",
+	    "$Conf::Conf{'etc'}/scenari",
+	    Sympa::Constants::DEFAULTDIR . '/scenari'
+	);
+    }else{
+	@list_of_scenario_dir = (
+	    "$directory/scenari",
+	    "$Conf::Conf{'etc'}/$robot/scenari",
+	    "$Conf::Conf{'etc'}/scenari",
+	    Sympa::Constants::DEFAULTDIR . '/scenari'
+	);
+    }
+    foreach my $dir (@list_of_scenario_dir) {
 	next unless (-d $dir);
 	
 	my $scenario_regexp = &tools::get_regexp('scenario');
@@ -8273,8 +8427,8 @@ sub _include_users_list {
 ## include a lists owners lists privileged_owners or lists_editors.
 sub _include_users_admin {
     my ($users, $selection, $role, $default_user_options,$tied) = @_;
-#   il faut préparer une liste de hash avec le nom de liste, le nom de robot, le répertoire de la liset pour appeler
-#    load_admin_file décommanter le include_admin
+#   il faut prÃ©parer une liste de hash avec le nom de liste, le nom de robot, le rÃ©pertoire de la liset pour appeler
+#    load_admin_file dÃ©commanter le include_admin
     my $lists;
     
     unless ($role eq 'listmaster') {
@@ -9050,7 +9204,7 @@ sub _load_list_members_from_include {
 		    $included = $source->getListMembers
 		      ( users         => \%users
 		      , settings      => $incl
-		      , user_defaults => $self->default_user_options
+		      , user_defaults => $self->get_default_user_options
 		      );
 		    defined $included
 			or push @errors, {type => $type, name => $incl->{name}};
@@ -9632,9 +9786,9 @@ sub sync_include {
 	    );
 	    $errors_occurred = 1;
 	    unless (
-		$self->robot->send_notify_to_listmaster(
-		    'sync_include_failed',
-		    {'errors' => \@errors, 'listname' => $self->name}
+		List::send_notify_to_listmaster(
+		    'sync_include_failed', $self->{domain},
+		    {'errors' => \@errors, 'listname' => $self->{'name'}}
 		)
 		) {
 		Log::do_log('notice',
@@ -9663,24 +9817,17 @@ sub sync_include {
 			$new_subscribers->{$email}{'update_date'} =
 			    $old_subscribers{$email}{'update_date'};
 			$new_subscribers->{$email}{'visibility'} =
-			    $self->{'default_user_options'}{'visibility'}
-			    if (
-			    defined $self->{'default_user_options'}
-			    {'visibility'});
+			    $self->get_default_user_options->{'visibility'}
+			    if defined $self->get_default_user_options->{'visibility'};
 			$new_subscribers->{$email}{'reception'} =
-			    $self->{'default_user_options'}{'reception'}
-			    if (
-			    defined $self->{'default_user_options'}
-			    {'reception'});
+			    $self->get_default_user_options->{'reception'}
+			    if defined $self->get_default_user_options->{'reception'};
 			$new_subscribers->{$email}{'profile'} =
-			    $self->{'default_user_options'}{'profile'}
-			    if (
-			    defined $self->{'default_user_options'}
-			    {'profile'});
+			    $self->get_default_user_options->{'profile'}
+			    if defined $self->get_default_user_options->{'profile'};
 			$new_subscribers->{$email}{'info'} =
-			    $self->{'default_user_options'}{'info'}
-			    if (
-			    defined $self->{'default_user_options'}{'info'});
+			    $self->get_default_user_options->{'info'}
+			    if defined $self->get_default_user_options->{'info'};
 			if (defined $new_subscribers->{$email}{'id'} &&
 			    $new_subscribers->{$email}{'id'} ne '') {
 			    $new_subscribers->{$email}{'id'} = join(',',
@@ -10448,7 +10595,7 @@ sub get_lists {
 
 	    foreach my $l (@files) {
 		next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
-		
+		$options->{'optional_sync_admin'} = 1;
 		my $list = new List ($l, $robot, $options);
 		
 		next unless (defined $list);
@@ -11127,7 +11274,7 @@ sub _save_list_param {
     }else {
 	if (($::pinfo{$key}{'occurrence'} =~ /n$/)
 	    && $::pinfo{$key}{'split_char'}) {
-	    ################" avant de debugger do_edit_list qui crée des nouvelles entrées vides
+	    ################" avant de debugger do_edit_list qui crÃ©e des nouvelles entrÃ©es vides
  	    my $string = join($::pinfo{$key}{'split_char'}, @{$p});
  	    $string =~ s/\,\s*$//;
 	    
@@ -12709,7 +12856,7 @@ sub has_include_data_sources {
     my $self = shift;
 
     foreach my $type (@sources_providing_listmembers, @more_data_sources)
-    {   my $resource = $self->$type || [];
+    {   my $resource = $self->{'admin'}{$type} || [];
         return 1 if ref $resource eq 'ARRAY' && @$resource;
     }
     
@@ -12923,6 +13070,9 @@ sub get_option_title {
 More abstract accessor for $list->include_DATASOURCE.  It will return
 a LIST of the data.  You may pass a NEW single or ARRAY of values.
 
+NOTE: As on this version accessor methods have not been implemented yet,
+so $list->{'admin'}->{"include_DATASOURCE"}->(...) is used instead.
+
 =cut
 
 sub includes($;$)
@@ -12930,9 +13080,9 @@ sub includes($;$)
     my $source = 'include_'.shift;
     if(@_)
     {   my $data = ref $_[0] ? shift : [ shift ];
-        return $self->$source($data);
+        return $self->{'admin'}->{$source}->($data);
     }
-    @{$self->$source || []};
+    @{$self->{'admin'}{$source} || []};
 }
 
 =head3 $class->registerPlugin(CLASS)

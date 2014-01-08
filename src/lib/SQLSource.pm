@@ -17,8 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package SQLSource;
 
@@ -152,13 +151,22 @@ sub establish_connection {
 	    &Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 	    return undef;
 	}
-	## SQLite just need a db_name
-	unless ($self->{'db_type'} eq 'SQLite') {
-	    foreach my $db_param ('db_host','db_user') {
-		unless ($self->{$db_param}) {
-		    &Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
-		    return undef;
-		}
+    }
+    if ($self->{'db_type'} eq 'SQLite') {
+        ## SQLite just need a db_name
+    } elsif ($self->{'db_type'} eq 'ODBC') {
+        ## ODBC just needs a db_name, db_user
+	foreach my $db_param ('db_user','db_passwd') {
+	    unless ($self->{$db_param}) {
+		do_log('info','Missing parameter %s for DBI connection', $db_param);
+		return undef;
+	    }
+	}
+    } else {
+	foreach my $db_param ('db_host','db_user','db_passwd') {
+	    unless ($self->{$db_param}) {
+		do_log('info','Missing parameter %s for DBI connection', $db_param);
+		return undef;
 	    }
 	}
     }
@@ -173,6 +181,9 @@ sub establish_connection {
     ## Build connect_string
     if ($self->{'f_dir'}) {
 	$self->{'connect_string'} = "DBI:CSV:f_dir=$self->{'f_dir'}";
+    # ODBC support
+    }elsif ($self->{'db_type'} eq 'ODBC') {
+	$self->{'connect_string'} = "DBI:ODBC:".$self->{'db_name'};
     }else {
 	$self->build_connect_string();
     }
@@ -184,7 +195,10 @@ sub establish_connection {
     }
  
     ## First check if we have an active connection with this server
+    ## We require that user also matches (except SQLite).
     if (defined $db_connections{$self->{'connect_string'}} && 
+	($self->{'db_type'} eq 'SQLite' or
+	 $db_connections{$self->{'connect_string'}}{'db_user'} eq $self->{'db_user'}) &&
 	defined $db_connections{$self->{'connect_string'}}{'dbh'} && 
 	$db_connections{$self->{'connect_string'}}{'dbh'}->ping()) {
       
@@ -196,6 +210,21 @@ sub establish_connection {
       
       ## Set environment variables
       ## Used by Oracle (ORACLE_HOME)
+
+      ## Client encoding derived from the environment variable.
+      ## Set this before parsing db_env to allow override if one knows what
+      ## she is doing.
+      ## Note: on mysql and Pg, "SET NAMES" will be executed below; on SQLite,
+      ## no need to set encoding.
+      if ($self->{'db_type'} eq 'Oracle') {
+	## NLS_LANG.  This needs to be set before connecting, otherwise it's
+	## useless.  Underscore (_) and dot (.) are a vital part as NLS_LANG
+	## has the syntax "language_territory.charset".
+	$ENV{'NLS_LANG'} = '_.UTF8';
+      } elsif ($self->{'db_type'} eq 'Sybase') {
+	$ENV{'SYBASE_CHARSET'} = 'utf8';
+      }
+
       if ($self->{'db_env'}) {
 	foreach my $env (split /;/,$self->{'db_env'}) {
 	  my ($key, $value) = split /=/, $env;
@@ -240,20 +269,23 @@ sub establish_connection {
 		}
 	    }
       }
-      
-      if ($self->{'db_type'} eq 'Pg') { # Configure Postgres to use ISO format dates
+
+      # mysql: At first, reset "mysql_auto_reconnect" driver attribute.
+      # connect() sets it to true when the processes are running under
+      # mod_perl or CGI environment so that "SET NAMES utf8" will be skipped.
+      if ($self->{'db_type'} eq 'mysql') {
+	    $self->{'dbh'}->{'mysql_auto_reconnect'} = 0;
+      }
+
+      # Configure Postgres to use ISO format dates
+      if ($self->{'db_type'} eq 'Pg') {
 	$self->{'dbh'}->do ("SET DATESTYLE TO 'ISO';");
       }
       
-      ## Set client encoding to UTF8
+      ## mysql or Pg: Set client encoding to UTF8
       if ($self->{'db_type'} eq 'mysql' ||
 	  $self->{'db_type'} eq 'Pg') {
-	&Log::do_log('debug','Setting client encoding to UTF-8');
 	$self->{'dbh'}->do("SET NAMES 'utf8'");
-      }elsif ($self->{'db_type'} eq 'oracle') { 
-	$ENV{'NLS_LANG'} = 'UTF8';
-      }elsif ($self->{'db_type'} eq 'Sybase') { 
-	$ENV{'SYBASE_CHARSET'} = 'utf8';
       }
       
       ## added sybase support
@@ -272,9 +304,31 @@ sub establish_connection {
 	if(defined $self->{'db_timeout'}) { $self->{'dbh'}->func( $self->{'db_timeout'}, 'busy_timeout' ); } else { $self->{'dbh'}->func( 5000, 'busy_timeout' ); };
       }
       
-      $self->{'connect_string'} = $self->{'connect_string'} if $self;     
       $db_connections{$self->{'connect_string'}}{'dbh'} = $self->{'dbh'};
-      &Log::do_log('debug','Connected to Database %s',$self->{'db_name'});
+      $db_connections{$self->{'connect_string'}}{'db_user'} = $self->{'db_user'};
+      
+      do_log('debug2','Connected to Database %s',$self->{'db_name'});
+
+      ## We set Long preload length to two times global max message size
+      ## (because of base64 encoding) instead of defaulting to 80 on Oracle
+      ## and 32768 on Sybase.
+      ## This is to avoid error in Bulk::messageasstring when using Oracle
+      ## or Sybase database:
+      ##   bulk[pid]: internal error : current packet 'messagekey= 0c40f56e07d3c8ce34683b98d54b6575 contain a ref to a null message
+      ## FIXME: would be better to use lists' setting, but
+      ##  * list config is not load()-ed at this point, and
+      ##  * when invoked from Bulk::messageasstring, list settings is not even
+      ##    load()-ed later.
+      if ($self->{'db_type'} eq 'Oracle' or
+	$self->{'db_type'} eq 'Sybase') {
+	$self->{'dbh'}->{LongReadLen} = ($Conf::Conf{'max_size'} || 102400) * 2;
+	$self->{'dbh'}->{LongTruncOk} = 0;
+      }
+      do_log('debug3',
+	'Database driver seetings for this session: LongReadLen= %d, LongTruncOk = %d, RaiseError= %d',
+	$self->{'dbh'}->{LongReadLen}, $self->{'dbh'}->{LongTruncOk},
+	$self->{'dbh'}->{RaiseError});
+
       return $self->{'dbh'};
     }
 }

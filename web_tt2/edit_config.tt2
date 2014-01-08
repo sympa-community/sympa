@@ -35,7 +35,11 @@
   <input class="MainMenuLinks" type="submit" name="action_edit_config" value="[%|loc%]Set[%END%]" style="width:20%" />
 
 [% ELSE %]
+[% UNLESS confparam.obfuscated == '1' %]
 [% confparam.current_value %]
+[% ELSE %]
+[% confparam.current_value.replace('.','*') %]
+[% END %]
 [% END %]
 </td>
 <td>

@@ -16,9 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package cookielib;
 
@@ -54,6 +52,7 @@ sub generic_set_cookie {
 
     
 # Sets an HTTP cookie to be sent to a SOAP client
+# OBSOLETED: Use SympaSession::soap_cookie2().
 sub set_cookie_soap {
     my ($session_id,$http_domain,$expire) = @_ ;
     my $cookie;

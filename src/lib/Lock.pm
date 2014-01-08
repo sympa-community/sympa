@@ -17,8 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lock;
 
@@ -229,7 +228,7 @@ sub remove_lock {
 	    return undef;
 	}
     }
-    $list_of_locks{$self->{'lock_filename'}}{'fh'} = undef;
+    $list_of_locks{$self->{'lock_filename'}} = undef;
     return 1
 }
 
@@ -332,7 +331,7 @@ sub _lock_nfs {
     &Log::do_log('debug3', "Lock::_lock_nfs($lock_file, $mode, $timeout)");
     
     ## TODO should become a configuration parameter, used with or without NFS
-    my $hold = 30; 
+    my $hold = 60*30; 
     my ($open_mode, $operation);
     
     if ($mode eq 'read') {
@@ -348,8 +347,8 @@ sub _lock_nfs {
     if ($nfs_lock = File::NFSLock->new( {
 	file      => $lock_file,
 	lock_type => $operation|LOCK_NB,
-	blocking_timeout   => $hold,
-	stale_lock_timeout => $timeout,
+	blocking_timeout   => $timeout,
+	stale_lock_timeout => $hold,
     })) {
 	## Read access to prevent "Bad file number" error on Solaris
 	$FH = new FileHandle;

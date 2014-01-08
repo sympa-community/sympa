@@ -9,8 +9,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package SOAP::XMLSchema1999::Serializer;
 
@@ -177,7 +176,8 @@ sub login {
     } 
 
     ## Create SympaSession object
-    my $session = new SympaSession($robot, {'cookie' => $ENV{'SESSION_ID'}});
+    my $session = new SympaSession($robot,
+	{ 'cookie' => SympaSession::encrypt_session_id($ENV{'SESSION_ID'}) });
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -186,7 +186,8 @@ sub login {
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')->value($ENV{'SESSION_ID'});
+    return SOAP::Data->name('result')->type('string')
+	->value(SympaSession::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 sub casLogin {
@@ -252,7 +253,8 @@ sub casLogin {
     }
 
     ## Create SympaSession object
-    my $session = new SympaSession($robot, {'cookie' => $ENV{'SESSION_ID'}});
+    my $session = new SympaSession($robot,
+	{ 'cookie' => SympaSession::encrypt_session_id($ENV{'SESSION_ID'}) });
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -261,18 +263,19 @@ sub casLogin {
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')->value($ENV{'SESSION_ID'});
+    return SOAP::Data->name('result')->type('string')
+	->value(SympaSession::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
 ## First parameter is the secret contained in the cookie
 sub authenticateAndRun {
     my ($self, $email, $cookie, $service, $parameters) = @_;
+    my $session_id;
 
-    my $session_id = $cookie;
-    &Log::do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $session_id, $service, join(',',@$parameters));
+    Log::do_log('notice','authenticateAndRun(%s,%s,%s,%s)', $email, $cookie, $service, join(',',@$parameters));
 
-    unless ($session_id and $service) {
+    unless ($cookie and $service) {
       &Log::do_log('err', "Missing parameter");
 	die SOAP::Fault->faultcode('Client')
 	    ->faultstring('Incorrect number of parameters')
@@ -282,8 +285,11 @@ sub authenticateAndRun {
     
 
     ## Provided email is not trusted, we fetch the user email from the session_table instead
-    my $session = new SympaSession($ENV{'SYMPA_ROBOT'},{'cookie' => $session_id});
-    $email = $session->{'email'} if (defined $session);
+    my $session = new SympaSession($ENV{'SYMPA_ROBOT'},{'cookie' => $cookie});
+    if (defined $session) {
+	$email = $session->{'email'};
+	$session_id = $session->{'id_session'};
+    }
     unless ($email or ($email eq 'unkown')  ) {
       &Log::do_log('err', "Failed to authenticate user with session ID $session_id");
       die SOAP::Fault->faultcode('Client')
@@ -750,7 +756,7 @@ sub add {
     }else {
 	my $u;
 	my $defaults = $list->get_default_user_options();
-	my $u2 = &List::get_user_db($email);
+	my $u2 = &List::get_global_user($email);
 	%{$u} = %{$defaults};
 	$u->{'email'} = $email;
 	$u->{'gecos'} = $gecos || $u2->{'gecos'};
@@ -1497,14 +1503,6 @@ sub struct_to_soap {
 	my $formated_data;
 	foreach my $k (keys %$data) {
 	    my $one_data = $k.'='.$data->{$k};
-	    
-	    ## Decode from the current charset to perl internal charset
-	    ## Then encode strings to UTF-8
-	    if (require "Encode.pm") {
-		# $one_data = &Encode::decode(&Language::GetCharset(), $one_data);
-		$one_data = &Encode::encode('utf-8', $one_data);
-	    }
-
 	    push @all, $one_data;
 	}
 

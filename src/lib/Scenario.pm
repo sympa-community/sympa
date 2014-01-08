@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Scenario;
 
@@ -1201,9 +1200,10 @@ sub search{
  
         my $res = $ds->fetch;
         $ds->disconnect();
-        &Log::do_log('debug2','Result of SQL query : %d = %s', $res->[0], $statement);
+        my $first_row = ref($res->[0]) ? $res->[0]->[0] : $res->[0];
+        Log::do_log('debug2','Result of SQL query : %d = %s', $first_row, $statement);
  
-        if ($res->[0] == 0){
+        if ($first_row == 0){
             $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 0;
         }else {
             $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'} = 1;

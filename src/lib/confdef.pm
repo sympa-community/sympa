@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package confdef;
 
@@ -416,6 +415,11 @@ our @params = (
         'file'     => 'sympa.conf',
         'advice'   => gettext('0: normal, 2,3,4: for debug'),
     },
+    {   'name'    => 'cookie_refresh',
+        'default' => '60',
+        'query' => 'Average interval to refresh HTTP session ID.',
+        'file' => 'wwsympa.conf',
+    },
     {
         'name'     => 'log_socket_type',
         'default'  => 'unix',
@@ -645,6 +649,15 @@ our @params = (
         'file'     => 'sympa.conf',
         'default'  => '5',
     },
+    {
+	name    => 'sender_headers',
+	default => 'From',
+	sample  => 'Resent-From,From,Return-Path',
+	query   => 'Header field name(s) used to determine sender of the messages',
+	advice  => '"Return-Path" means envelope sender (a.k.a. "UNIX From") which will be alternative to sender of messages without "From" field.  "Resent-From" may also be inserted before "From", because some mailers add it into redirected messages and keep original "From" field intact.  In particular cases, "Return-Path" can not give right sender: several mail gateway products rewrite envelope sender and add original one as non-standard field such as "X-Envelope-From".  If that is the case, you might want to insert it in place of "Return-Path".',
+    },
+
+    { title => 'Plugin' },
     {
         'name'     => 'bulk_fork_threshold',
         'default'  => '1',
@@ -1035,6 +1048,7 @@ our @params = (
         'query'    => gettext('Password for the database connection'),
         'file'     => 'sympa.conf',
         'edit'     => '1',
+        'obfuscated' => '1',
         'advice'   => gettext('What ever you use a password or not, you must protect the SQL server (is it not a public internet service ?)'),
     },
     {

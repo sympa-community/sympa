@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## This module handles the configuration file for Sympa.
 
@@ -1636,16 +1635,21 @@ sub _check_cpan_modules_required_by_config {
             $number_of_missing_modules++;
         }
     }
-         
+
     ## Some parameters require CPAN modules
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
         eval "require Mail::DKIM";
         if ($@) {
-            printf STDERR "Conf::_check_cpan_modules_required_by_config(): Failed to load Mail::DKIM perl module ; setting 'DKIM_feature' to 'off'\n";
+            printf STDERR "Conf::_check_cpan_modules_required_by_config(): Failed to load Mail::DKIM perl module ; setting 'dkim_feature' to 'off'\n";
             $param->{'config_hash'}{'dkim_feature'} = 'off';
             $number_of_missing_modules++;
         }
     }
+    unless ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
+	# dkim_signature_apply_ on nothing if dkim_feature is off
+	$param->{'config_hash'}{'dkim_signature_apply_on'} = ['']; # empty array
+    }
+
     return $number_of_missing_modules;
 }
 

@@ -15,8 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # TT2 adapter for sympa's template system - Chia-liang Kao <clkao@clkao.org>
 # usage: replace require 'parser.pl' in wwwsympa and other .pl
@@ -265,7 +264,7 @@ sub parse_tt2 {
 
     unless ($tt2->process($template, $data, $output)) {
 	$last_error = $tt2->error();
-	&Log::do_log('err', 'Failed to parse %s : %s', $template, "$last_error");
+	&Log::do_log('err', 'Failed to parse %s : %s', $template, $last_error->as_string);
 	&Log::do_log('err', 'Looking for TT2 files in %s', join(',',@{$include_path}));
 
 

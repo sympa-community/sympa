@@ -94,12 +94,10 @@ sub get_formatted_date {
     my $self = shift;
     my $param = shift;
     &Log::do_log('debug','Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
-    }elsif(lc($param->{'mode'}) eq 'write') {
-	return sprintf 'FROM_UNIXTIME(%d)',$param->{'target'};
+    if (lc($param->{'mode'}) eq 'read' or lc($param->{'mode'}) eq 'write') {
+	return $param->{'target'};
     }else {
-	&Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
+	Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
 	return undef;
     }
 }

@@ -14,8 +14,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =head1 NAME
 
@@ -49,7 +48,7 @@ Display usage instructions
 
 =item Serge Aumont <sa@cru.fr>
 
-=item Olivier Salaün <os@cru.fr>
+=item Olivier SalaE<252>n <os@cru.fr>
 
 =back
 
@@ -362,8 +361,8 @@ sub check_cpan {
 				  },
 			'Crypt::CipherSaber' => {
 						 required_version =>'0.50',
-						 package_name => 'CipherSaber',
-						 usage => 'this module provides reversible encryption of user passwords in the database.usefull only when updating from old version with password reversible encryption.',
+						 package_name => 'Crypt-CipherSaber',
+						 usage => 'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
 						},
 			'DB_File' => {
 				      required_version =>'1.75',
@@ -602,6 +601,7 @@ Strike return key to continue...
     my %opt_CPAN = (
 		'AuthCAS' => 'AuthCAS',
         'DBD::Pg' => 'DBD-Pg',
+        'DBD::ODBC' => 'DBD-ODBC',
         'DBD::Oracle' => 'DBD-Oracle',
         'DBD::Sybase' => 'DBD-Sybase',
         'DBD::SQLite' => 'DBD-SQLite',

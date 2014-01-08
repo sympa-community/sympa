@@ -17,10 +17,9 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=pod 
+=encoding utf-8
 
 =head1 NAME 
 
@@ -190,22 +189,9 @@ sub new {
 
     my $hdr = $message->{'msg'}->head;
 
-    ## Extract sender address
-    unless ($hdr->get('From')) {
-	&Log::do_log('err', 'No From found in message %s, skipping.', $file);
-	return undef;
-    }   
-    my @sender_hdr = Mail::Address->parse($hdr->get('From'));
-    if ($#sender_hdr == -1) {
-	&Log::do_log('err', 'No valid address in From: field in %s, skipping', $file);
-	return undef;
-    }
-    $message->{'sender'} = lc($sender_hdr[0]->address);
-
-    unless (&tools::valid_email($message->{'sender'})) {
-	&Log::do_log('err', "Invalid From: field '%s'", $message->{'sender'});
-	return undef;
-    }
+    $message->{'envelope_sender'} = _get_envelope_sender($message);
+    $message->{'sender'} = _get_sender_email($message);
+    return undef unless defined $message->{'sender'};
 
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
@@ -329,7 +315,7 @@ sub new {
 		$message->{'smime_subject'} = $signed->{'subject'};
 		&Log::do_log('debug', "message %s is signed, signature is checked", $file);
 	    }
-	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
+	    ## Il faudrait traiter les cas d'erreur (0 diffÃ©rent de undef)
 	}
     }
     ## TOPICS
@@ -340,6 +326,84 @@ sub new {
 
     bless $message, $pkg;
     return $message;
+}
+
+## Get envelope sender (a.k.a. "UNIX From") from Return-Path: header field.
+##
+## We trust in "Return-Path:" header field only at the top of message
+## to prevent forgery.  To ensure it will be added to messages by MDA:
+##
+## - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
+##               as 'Mlocal').
+## - Postfix:
+##   - local(8): Available by default.
+##   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
+## - Exim:       Set 'return_path_add' to true with pipe_transport.
+## - qmail:      Use preline(1).
+##
+sub _get_envelope_sender {
+    my $message = shift;
+
+    my $headers = $message->{'msg'}->head->header();
+    my $i = 0;
+    $i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
+    if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
+	my $addr = $1;
+	if ($addr =~ /<>/) { # special: null envelope sender
+	    return '<>';
+	} else {
+	    my @addrs = Mail::Address->parse($addr);
+	    if (@addrs and tools::valid_email($addrs[0]->address)) {
+		return $addrs[0]->address;
+	    }
+	}
+    }
+
+    return undef;
+}
+
+## Get sender of the message according to header fields specified by
+## 'sender_headers' parameter.
+## FIXME: S/MIME signer may not be same as the sender given by this function.
+sub _get_sender_email {
+    my $message = shift;
+
+    my $hdr = $message->{'msg'}->head;
+
+    my $sender = undef;
+    foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
+	if (lc $field eq 'return-path') {
+	    ## Try to get envelope sender
+	    if ($message->{'envelope_sender'} and
+		$message->{'envelope_sender'} ne '<>') {
+		$sender = lc($message->{'envelope_sender'});
+	    }
+	} elsif ($hdr->get($field)) {
+	    ## Try to get message header.
+	    ## On "Resent-*:" headers, the first occurrence must be used (see
+	    ## RFC 5322 3.6.6).
+	    ## FIXME: Though "From:" can occur multiple times, only the first
+	    ## one is detected.
+	    my $addr = $hdr->get($field, 0); # get the first one
+	    my @sender_hdr = Mail::Address->parse($addr);
+	    if (@sender_hdr and $sender_hdr[0]->address) {
+		$sender = lc($sender_hdr[0]->address);
+		last;
+	    }
+	}
+
+	last if defined $sender;
+    }
+    unless (defined $sender) {
+	do_log('err', 'No valid sender address');
+	return undef;
+    }
+    unless (tools::valid_email($sender)) {
+	do_log('err', 'Invalid sender address "%s"', $sender);
+	return undef;
+    }
+
+    return $sender;
 }
 
 =pod 
@@ -560,7 +624,7 @@ sub fix_html_part {
 
 =item * Serge Aumont <sa AT cru.fr> 
 
-=item * Olivier Salaün <os AT cru.fr> 
+=item * Olivier SalaE<252>n <os AT cru.fr> 
 
 =back 
 

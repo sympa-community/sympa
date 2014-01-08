@@ -18,8 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
 
@@ -1330,7 +1329,7 @@ sub DoFile {
     &report::init_report_cmd();
 	
     ## Maybe we are an automatic list
-    #_amr ici on ne doit prendre que la première ligne !
+    #_amr ici on ne doit prendre que la premiÃ¨re ligne !
     my ($dyn_list_family, $dyn_just_created);
     # we care of fake headers. If we put it, it's the 1st one.
     if ($hdr->as_string() =~ /^X-Sympa-Family/mo) {
@@ -1487,9 +1486,9 @@ sub DoFile {
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
 		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
 		    # but what about list_of_lists ?
-		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
+		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test Ã  virer si ok
 		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};
-		      &Log::do_log('err', 'la liste a été trouvée dans la list_of_lists',$listname, $dyn_list_family);
+		      &Log::do_log('err', 'la liste a Ã©tÃ© trouvÃ©e dans la list_of_lists',$listname, $dyn_list_family);
 		    }
 		}
                 return undef;
@@ -1502,9 +1501,9 @@ sub DoFile {
 		if ($Conf{'automatic_list_removal'} =~ /if_empty/i) {
 		    $list->close_list(); $list->purge(); # verifier pour tt ce bloc si supprime bien tout
 		    # but what about list_of_lists ?
-		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test à virer si ok
+		    if (exists $List::list_of_lists{$list->{'domain'}}{$list->{'name'}}) { # test Ã  virer si ok
 		      delete $List::list_of_lists{$list->{'domain'}}{$list->{'name'}};
-		      &Log::do_log('err', 'la liste a été trouvée dans la list_of_lists',$listname, $dyn_list_family);
+		      &Log::do_log('err', 'la liste a Ã©tÃ© trouvÃ©e dans la list_of_lists',$listname, $dyn_list_family);
 		    }
 		}
                 return undef;
@@ -2101,8 +2100,10 @@ sub DoCommand {
     
     my $sender = $message->{'sender'};
 
-    if ($msg->{'spam_status'} eq 'spam'){
-	&Log::do_log('notice', "Message for robot %s@%s ignored, because tagged as spam (Message-id: %s)",$rcpt,$robot,$messageid);
+    if ($message->{'spam_status'} eq 'spam') {
+	Log::do_log('notice',
+	    'Message for list %s@%s ignored, because tagged as spam (Message-id: %s)',
+	    $rcpt, $robot, $messageid);
 	return undef;
     }
 

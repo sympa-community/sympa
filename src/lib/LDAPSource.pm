@@ -17,8 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package LDAPSource;
 
@@ -145,7 +144,7 @@ sub connect {
 	return undef;
     }
 
-    ## Using startçtls() will convert the existing connection to using Transport Layer Security (TLS), which pro-
+    ## Using start_tls() will convert the existing connection to using Transport Layer Security (TLS), which pro-
     ## vides an encrypted connection. This is only possible if the connection uses LDAPv3, and requires that the
     ## server advertizes support for LDAP_EXTENSION_START_TLS. Use "supported_extension" in Net::LDAP::RootDSE to
     ## check this.

@@ -18,8 +18,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Options :  F         -> do not detach TTY
 ##         :  d		-> debug -d is equiv to -dF
@@ -952,7 +951,7 @@ Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and $ENV{'M2H_MODIFYBODYADDRESSE
 sub set_hidden_mode {
     my $tag = shift; ## tag is used as variable elements in tags to prevent message contents to be parsed
 
-    ## $ENV{'M2H_MODIFYBODYADDRESSES'} à positionner si le corps du message est parse
+    ## $ENV{'M2H_MODIFYBODYADDRESSES'} Ã  positionner si le corps du message est parse
     $ENV{'M2H_ADDRESSMODIFYCODE'} = "s|^([^\@]+)\@([^\@]+)\$|\($tag\%hidden_head\%$tag\)\$1\($tag\%hidden_at\%$tag\)\$2\($tag\%hidden_end\%$tag\)|g";
     $ENV{'M2H_MODIFYBODYADDRESSES'} = 1;
 }

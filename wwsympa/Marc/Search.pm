@@ -286,7 +286,7 @@ sub search
 	foreach $file (@MSGFILES) 
 	{
 		my ($subj,$from,$date,$id,$body_ref);
-		unless (open FH, '<:utf8', $file)
+		unless (open FH, '<:encoding(utf8)', $file)
 		{
 #			$self->error("Couldn't open file $file, $!");
 		}

@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Sympa::DatabaseDescription;
 use strict;
@@ -379,42 +378,52 @@ my %full_db_struct = (
 		'not_null'=>1,
 		'order'=>1,
 	    },
+	    'prev_id_session' => {
+		'struct' => 'varchar(30)',
+		'doc' => 'previous identifier of the database record',
+		'order' => 2,
+	    },
 	    'start_date_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'the date when the session was created',
 		'not_null'=>1,
-		'order'=>2,
+		'order' => 3,
 	    },
 	    'date_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'date epoch of the last use of this session. It is used in order to expire old sessions',
 		'not_null'=>1,
-		'order'=>3,
+		'order' => 4,
+	    },
+	    'refresh_date_session' => {
+		'struct' => 'int(11)',
+		'doc' => 'date epoch of the last refresh of this session.  It is used in order to refresh available sessions',
+		'order' => 5,
 	    },
 	    'remote_addr_session' => {
 		'struct'=> 'varchar(60)',
 		'doc'=>'The IP address of the computer from which the session was created',
-		'order'=>4,
+		'order' => 6,
 	    },
 	    'robot_session'  => {
 		'struct'=> 'varchar(80)',
 		'doc'=>'The virtual host in which the session was created',
-		'order'=>5,
+		'order' => 7,
 	    },
 	    'email_session'  => {
 		'struct'=> 'varchar(100)',
 		'doc'=>'the email associated to this session',
-		'order'=>6,
+		'order' => 8,
 	    },
 	    'hit_session' => {
 		'struct'=> 'int(11)',
 		'doc'=>'the number of hit performed during this session. Used to detect crawlers',
-		'order'=>7,
+		'order' => 9,
 	    },
 	    'data_session'  => {
 		'struct'=> 'text',
 		'doc'=>'parameters attached to this session that don\'t have a dedicated column in the database',
-		'order'=>8,
+		'order' => 10,
 	    },
 	},
 	'doc'=>'managment of http session',

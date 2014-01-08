@@ -14,8 +14,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Bulk;
 
@@ -217,6 +217,12 @@ sub merge_msg {
     unless (defined $entity && ref($entity) eq 'MIME::Entity') {
 	&Log::do_log('err', 'echec entity');
 	return undef;
+    }
+
+    $data->{'headers'} = {} if(!defined $data->{'headers'});
+    my $headers = $entity->head;
+    foreach my $key ( qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/ ) {
+        $data->{'headers'}{$key} = $headers->get($key) if($headers->count($key));
     }
 
     my $body;
@@ -428,8 +434,31 @@ sub store {
 	
 	# if message is not found in bulkspool_table store it
 	if ($message_already_on_spool == 0) {
-	    unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, messageid_bulkspool, message_bulkspool, lock_bulkspool, dkim_d_bulkspool,dkim_i_bulkspool,dkim_selector_bulkspool, dkim_privatekey_bulkspool) VALUES (%s, %s, %s, 1, %s, %s, %s ,%s)",&SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($msg),&SDM::quote($dkim->{d}), &SDM::quote($dkim->{i}),&SDM::quote($dkim->{selector}),&SDM::quote($dkim->{private_key}))) {
-		&Log::do_log('err','Unable to add message %s to database spool', $msg_id);
+	    my $statement =
+		q{INSERT INTO bulkspool_table
+		  (messagekey_bulkspool, messageid_bulkspool,
+		   message_bulkspool, lock_bulkspool,
+		   dkim_d_bulkspool, dkim_i_bulkspool,
+		   dkim_selector_bulkspool, dkim_privatekey_bulkspool)
+		  VALUES (?, ?, ?, 1, ?, ?, ?, ?)};
+	    my $statementtrace = $statement;
+	    $statementtrace =~ s/\n\s*/ /g;
+	    $statementtrace =~ s/\?/\%s/g;
+
+	    unless (SDM::do_prepared_query($statement,
+		$messagekey, $msg_id, $msg, $dkim->{d}, $dkim->{i},
+		$dkim->{selector}, $dkim->{private_key}
+	    )) {
+		do_log('err',
+		    'Unable to add message in bulkspool_table "%s"',
+		    sprintf($statementtrace,
+			SDM::quote($messagekey), SDM::quote($msg_id),
+			SDM::quote(substr($msg, 0, 100)),
+			SDM::quote($dkim->{d}), SDM::quote($dkim->{i}),
+			SDM::quote($dkim->{selector}),
+			SDM::quote(substr($dkim->{private_key}, 0, 30))
+		    )
+		);
 		return undef;
 	    }
 

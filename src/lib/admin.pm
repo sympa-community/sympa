@@ -16,8 +16,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =pod 
 
@@ -346,7 +345,7 @@ sub create_list_old{
 	$list->sync_include();
     }
     
-    $list->save_config;
+    $list->save_config($param->{'creation_email'});
    return $return;
 }
 
@@ -668,6 +667,24 @@ sub update_list{
 	$list->{'admin'}{'status'} = 'open';
     }
     $list->{'admin'}{'family_name'} = $family->{'name'};
+
+   ## Create associated files if a template was given.
+    for my $file ('message.footer','message.header','message.footer.mime','message.header.mime','info') {
+	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
+	if (defined $template_file) {
+	    my $file_content;
+	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
+	    unless (defined $tt_result) {
+		&do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
+			$param->{'listname'}, $family->{'name'},$robot,$file);
+	    }
+	    unless (open FILE, '>', "$list->{'dir'}/$file") {
+		&do_log('err','Impossible to create %s/%s : %s',$list->{'dir'},$file,$!);
+	    }
+	    print FILE $file_content;
+	    close FILE;
+	}
+    }
 
     ## Synchronize list members if required
     if ($list->has_include_data_sources()) {

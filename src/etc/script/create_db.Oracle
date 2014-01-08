@@ -80,9 +80,9 @@ CREATE TABLE bulkspool_table (
 	 dkim_privatekey_bulkspool 	varchar2(1000), 
 	 dkim_selector_bulkspool 	varchar2(50), 
 	 lock_bulkspool 	number, 
-	 message_bulkspool 	long, 
 	 messageid_bulkspool 	varchar2(300), 
 	 messagekey_bulkspool 	varchar2(33), 
+	 message_bulkspool	long,
 	 CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool) 
  );
 
@@ -232,9 +232,11 @@ CREATE TABLE one_time_ticket_table (
 CREATE TABLE session_table ( 
 	 data_session 	varchar2(500), 
 	 date_session 	number, 
+	 refresh_date_session	number NOT NULL,
 	 email_session 	varchar2(100), 
 	 hit_session 	number, 
 	 id_session 	varchar2(30), 
+	 prev_id_session	varchar2(30),
 	 remote_addr_session 	varchar2(60), 
 	 robot_session 	varchar2(80), 
 	 start_date_session 	number, 

@@ -1,10 +1,10 @@
 =head1 NAME
 
-sympa (or sympa.pl) - A Modern Mailing List Manager
+sympa, sympa.pl - A Modern Mailing List Manager
 
 =head1 SYNOPSIS
 
-S<B<sympa> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
+S<B<sympa.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
       S<[ B<-k, --keepcopy>=I<directory> ]>
       S<[ B<-l, --lang>=I<catalog> ]> [ B<-m, --mail> ]
       S<[ B<-h, --help> ]> [ B<-v, --version> ]
@@ -37,7 +37,7 @@ Enable debug mode.
 =item B<-f, --file=>F<another.sympa.conf>
 
 Force Sympa to use an alternative configuration file instead
-of F</etc/sympa/sympa.conf>.
+of F<--CONFIG-->.
 
 =item B<-k, --keepcopy=>F<directory>
 
@@ -48,7 +48,7 @@ store messages.
 =item B<-l, --lang=>I<catalog>
 
 Set this option to use a language catalog for Sympa. The corresponding
-catalog file `catalogue'.cat must be located in F</usr/lib/sympa/nls>
+catalog file `catalogue'.mo must be located in F<--localedir-->
 directory.
 
 =item B<-m, --mail>
@@ -112,36 +112,42 @@ dumped in subscribers.db.dump.
 
 =head1 FILES
 
-F</etc/sympa/sympa.conf> main configuration file.
+F<--CONFIG--> main configuration file.
 
-F</var/spool/sympa/sympa.pid> this file contains the process ID
+F<--piddir--/sympa.pid> this file contains the process ID
 of F<sympa.pl>.
 
 =head1 AVAILABILITY
 
-Latest version of B<Sympa> is available from http://www.sympa.org.
+Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
 
 =head1 MORE DOCUMENTATION
 
-The full documentation in HTML and PostScript formats can be
-found in F</usr/share/doc/sympa/html/>. 
+The full documentation in HTML and PDF formats can be
+found in L<http://www.sympa.org/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-http://listes.cru.fr/wws/lists/informatique/sympa.
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
 
 =head1 AUTHORS
 
-Serge Aumont
- 	Comité Réseau des Universités
+=over 4
 
-Olivier Salaün
- 	Comité Réseau des Universités
+=item Serge Aumont
 
-Contact authors at <sympa-authors@cru.fr>
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=item Olivier SalaE<252>n
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=back
+
+Contact authors at <sympa-authors@listes.renater.fr>
 
 =head1 COPYRIGHT
 
-Copyright E<169> 1997,1998,1999,2000,2001 Comité Réseau des Universités
+Copyright E<169> 1997,1998,1999,2000,2001 ComitE<233> RE<233>seau des UniversitE<233>s
 
 Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
 
@@ -150,7 +156,8 @@ Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
 
 =head1 BUGS
 
-Report bugs to <sympa-dev@cru.fr>.
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
 
 =head1 SEE ALSO
 

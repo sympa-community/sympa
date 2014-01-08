@@ -16,19 +16,20 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## Copyright 1999 Comité Réseaux des Universités
+## Copyright 1999 ComitÃ© RÃ©seaux des UniversitÃ©s
 ## web interface to Sympa mailing lists manager
 ## Sympa: http://www.sympa.org/
 ## Authors :
 ##           Serge Aumont <sa AT cru.fr>
-##           Olivier Salaün <os AT cru.fr>
+##           Olivier SalaÃ¼n <os AT cru.fr>
 
-=head1 NAME
+=encoding utf-8
 
-wwsympa.fcgi - Sympa web interface 
+=head1 NAME 
+
+wwsympa, wwsympa.fcgi - Sympa web interface 
 
 =head1 DESCRIPTION 
 
@@ -615,38 +616,38 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'close_list' => ['privileged_owner'],
 			   'close_list_request' => ['privileged_owner'],
 			   'copy_template' => ['listmaster'],
-			   'd_install_shared' => ['editor'],
-			   'd_reject_shared' => ['editor'],
-			   'distribute' => ['editor'],
+			   'd_install_shared' => ['editor','owner'],
+			   'd_reject_shared' => ['editor','owner'],
+			   'distribute' => ['editor','owner','listmaster'],
 			   'dump_scenario' => ['listmaster'],
 			   'edit_list' => ['owner'],
 			   'edit_list_request' => ['owner'],
 			   'edit_template' => ['listmaster'],
-			   'editsubscriber' => ['owner'],
+			   'editsubscriber' => ['owner','editor'],
 			   'get_closed_lists' => ['listmaster'],
 			   'get_inactive_lists' => ['listmaster'],
 			   'get_latest_lists' => ['listmaster'],
 			   'get_biggest_lists' => ['listmaster'],
 			   'get_pending_lists' => ['listmaster'],
-			   'ignoresub' => ['owner'],
+			   'ignoresub' => ['owner','editor'],
 			   'install_pending_list' => ['listmaster'],
 			   'edit_config' => ['listmaster'],
 			   'ls_templates' => ['listmaster'],
 			   'manage_template' => ['owner'],
 			   'manage_template' => ['owner'],
-			   'modindex' => ['editor'],
+			   'modindex' => ['editor','owner','listmaster'],
 			   'purge_list' => ['privileged_owner','listmaster'],
 			   'rebuildallarc' => ['listmaster'],
 			   'rebuildarc' => ['listmaster'],
-			   'reject' => ['editor'],
+			   'reject' => ['editor','owner','listmaster'],
 			   'remove_template' => ['listmaster'],
 			   'rename_list' => ['privileged_owner'],
-			   'copy_list' => ['owner'],
+			   'copy_list' => ['owner','listmaster'],
 			   'rename_list_request' => ['privileged_owner'],
-			   'resetbounce' => ['owner'],
+			   'resetbounce' => ['owner','editor'],
 			   'restore_list' => ['listmaster'],
 			   'review_family' => ['listmaster'],
-			   'reviewbouncing' => ['owner'],
+			   'reviewbouncing' => ['owner','editor'],
 			   'search_user' => ['listmaster'],
 			   'serveradmin' => ['listmaster'],
 			   'set_dumpvars' => ['listmaster'],
@@ -655,13 +656,13 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'set_session_email' => ['listmaster'],
 			   'show_sessions' => ['listmaster'],
 			   'stats' => ['owner'],
-			   'subindex' => ['owner'],
-			   'sync_include' => ['owner'],
+			   'subindex' => ['owner','editor'],
+			   'sync_include' => ['owner','editor'],
 			   'skinedit' => ['listmaster'],
 			   'view_template' => ['listmaster'],
-			   'viewbounce' => ['owner'],
+			   'viewbounce' => ['owner','editor'],
 			   'viewlogs' => ['owner','editor'],
-			   'viewmod' => ['editor'],
+			   'viewmod' => ['editor','owner','listmaster'],
 			    'automatic_lists_management_request' => ['listmaster'],
 			    'automatic_lists_management' => ['listmaster'],
 			  );
@@ -1512,8 +1513,8 @@ Log::do_log(info => "WWSympa started, process $$");
 	 if ($delay == 0) {
 	     $delay = 'session';
 	 }
-	 $session->renew() unless($param->{'use_ssl'});
-	 
+	 $session->renew() unless $param->{'use_ssl'};
+
 	 unless ($session->set_cookie($param->{'cookie_domain'},$delay,$param->{'use_ssl'})) {
 	     &wwslog('notice', 'Could not set HTTP cookie');
 	 }
@@ -2089,7 +2090,7 @@ sub get_parameters {
 		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
 		 }
 		 $in{$p} = join '/', @tokens;
-		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
+		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('Â¥' character)
 		 ## This should be transformed into a '/' again
 
 	     }elsif ($filtering_action eq 'unescape_html') {
@@ -2320,7 +2321,7 @@ sub get_parameters_old {
 		     $tokens[$i] = &tools::qencode_filename($tokens[$i]);
 		 }
 		 $in{$p} = join '/', @tokens;
-		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('¥' character)
+		 ## Sympa's URI escaping subroutine (tools::escape_chars()) replaces '/' with %A5 ('Â¥' character)
 		 ## This should be transformed into a '/' again
 
 	     }elsif ($filtering{$in{'action'}}{$p} eq 'fix_escape_uri') {
@@ -3026,7 +3027,22 @@ Use it to create a List object and initialize output parameters.
 	 $main::action = $result->{'action'} if (ref($result) eq 'HASH');
 	 
 	 $param->{'may_subscribe'} = 1 if ($main::action =~ /do_it|owner|request_auth/);
-	 
+	
+# SJS START 
+	 ## May Add or del subscribers
+	 my $result = $list->check_list_authz('add',$param->{'auth_method'},
+					      {'sender' =>$param->{'user'}{'email'},
+					       'remote_host' => $param->{'remote_host'},
+					       'remote_addr' => $param->{'remote_addr'}});
+	 $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	 $param->{'may_add'} = 1 if ($main::action =~ /do_it/);
+	 my $result = $list->check_list_authz('del',$param->{'auth_method'},
+					      {'sender' =>$param->{'user'}{'email'},
+					       'remote_host' => $param->{'remote_host'},
+					       'remote_addr' => $param->{'remote_addr'}});
+	 $main::action = $result->{'action'} if (ref($result) eq 'HASH');
+	 $param->{'may_del'} = 1 if ($main::action =~ /do_it/);
+# SJS END
 	
 	 
 	 ## Archives Access control
@@ -3561,22 +3577,21 @@ sub do_sso_login {
 	  
 	  foreach my $field (split(/,/, $list_of_headers)) {
 	    if (defined $ENV{$field}) {
-	      push @sso_attr, "$field=$ENV{$field}";
+	      push @sso_attr, $field.'__PAIRS_SEP__'.$ENV{$field};
 	    }
 	  }
 	  
-	}elsif ($Conf{'auth_services'}{$robot}[$sso_id]{'http_header_list'}) {
+	}elsif ($Conf{'auth_services'}{$robot}[$sso_id]{'http_header_prefix'}) {
 	  
 	  my $prefix = $Conf{'auth_services'}{$robot}[$sso_id]{'http_header_prefix'};
-	  
 	  foreach my $k (keys %ENV) {
 	    if ($k =~ /^$prefix/) {
-	      push @sso_attr, "$k=$ENV{$k}";
+	      push @sso_attr, $k.'__PAIRS_SEP__'.$ENV{$k};
 	    }
 	  }
 	}	
 	
-	my $all_sso_attr = join ';', @sso_attr;
+	my $all_sso_attr = join '__ATT_SEP__', @sso_attr;
 	
 	## Create user entry if required
 	unless (&List::is_global_user($email)) {
@@ -4594,14 +4609,12 @@ sub do_search {
 
     $param->{'similar_subscribers_occurrence'} = 0;
     if($param->{'filter'} !~ /^\@[\w-]+\./) {
-		foreach my $user (@{&List::get_ressembling_list_members_no_object({'name'=>$list->{'name'},'domain'=>$robot,'email'=>$in{'filter'}})}) {
-			next if($emails{$user->{'email'}});
-			push @{$param->{'similar_subscribers'}}, $user;
-			last if($#{$param->{'similar_subscribers'}} + 1 > $max_select);
-		}
-		$param->{'similar_subscribers_occurence'} = $#{$param->{'similar_subscribers'}} + 1;
+	foreach my $user (@{List::get_resembling_list_members_no_object({'name' => $list->{'name'}, 'domain' => $robot, 'email' => $in{'filter'}})}) {
+	    next if($emails{$user->{'email'}});
+	    push @{$param->{'similar_subscribers'}}, $user;
+	    last if($#{$param->{'similar_subscribers'}} + 1 > $max_select);
 	}
-	$param->{'similar_subscribers_occurrence'} = $#{$param->{'similar_subscribers'}} + 1;
+	$param->{'similar_subscribers_occurence'} = $#{$param->{'similar_subscribers'}} + 1;
     }
     # for misspelling in 6.2a or earlier.
     $param->{'similar_subscribers_occurence'} =
@@ -4928,7 +4941,7 @@ sub check_custom_attribute {
      }
  }
 
- ## Prendre en compte les défauts
+ ## Prendre en compte les dÃ©fauts
  sub do_viewfile {
      &wwslog('info', 'do_viewfile');
 
@@ -6339,7 +6352,7 @@ sub do_skinsedit {
 #      | ($in{'previous_action'} || 'review')
 #      | undef
 ####################################################
-## TODO: vérifier validité email
+## TODO: vÃ©rifier validitÃ© email
  sub do_add {
      &wwslog('info', 'do_add(%s)', $in{'email'}||$in{'pending_email'});
      my $subscriptions = $list->get_subscription_requests();
@@ -6370,7 +6383,9 @@ sub do_skinsedit {
 	     }
 	 }
      }elsif ($in{'email'}) {
-	 $user{&tools::get_canonical_email($in{'email'})} = $in{'gecos'};
+	foreach my $email (split /\0/, $in{'email'}) {
+	    $user{&tools::get_canonical_email($email)} = $in{'gecos'};
+	}
      }elsif ($in{'pending_email'}) {
 	 foreach my $pair (split /\0/, $in{'pending_email'}) {
 	     my ($email, $gecos);
@@ -6506,7 +6521,7 @@ sub do_skinsedit {
 #      | ($in{'previous_action'} || 'review') | undef
 #
 ####################################################
- ## TODO: vérifier validité email
+ ## TODO: vÃ©rifier validitÃ© email
  sub do_del {
      &wwslog('info', 'do_del()');
 
@@ -7119,7 +7134,8 @@ sub do_skinsedit {
 
 
      ## messages
-     foreach my $id (split (/,/, $in{'id'})) {
+     foreach my $id (split (/,/, $in{'id'})) { # QUIET DISTRIBUTE
+         &do_log('notice', 'Moderator approves message: %s %s', $list->{'name'},$id);
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} .= $mail_command;
 
@@ -7736,7 +7752,7 @@ sub do_arc {
     $param->{'archive_name'} = $in{'month'};
  
 
-    #test pour différentier les action d'un robot et d'un simple abonné
+    #test pour diffÃ©rentier les action d'un robot et d'un simple abonnÃ©
     
     &web_db_stat_log({'robot' => $robot, 'liste' => $list->{'name'}, 'operation' => $param->{'action'}, 'parameter' => "",
 	'mail' => $param->{'user'}{'email'}, 'client' => $ip, 'daemon' => $daemon_name});
@@ -10813,7 +10829,7 @@ sub do_rename_list {
      $param->{'list'} = $in{'new_listname'};
      &web_db_log({'parameters' => "$in{'new_listname'},$in{'new_robot'}",
 		  'status' => 'success'});
-     $list->save_config();
+     $list->save_config($param->{'user'}{'email'});
      return 1;     
 }
 
@@ -15484,6 +15500,75 @@ sub do_change_email {
 
      &report::notice_report_web('performed',{},$param->{'action'});
      
+     ## Change email as list OWNER/MODERATOR
+     my %updated_lists;
+     foreach my $role ('owner', 'editor') {
+         foreach my $list ( &List::get_which($old_email,$robot, $role) ) {
+
+	     ## Check if admin is include via an external datasource
+	     my $admin_user = $list->get_admin_user($role, $old_email);
+	     if ($admin_user->{'included'}) {
+		 ## Notify listmaster
+		 &List::send_notify_to_listmaster('failed_to_change_included_admin',$robot,{'list' => $list,
+											    'current_email' => $old_email, 
+											    'new_email' => $new_email,
+											    'datasource' => $list->get_datasource_name($admin_user->{'id'})});
+		 
+		 &report::reject_report_web('user','change_admin_email_failed_included',{'listname'=>$list->{'name'}},
+					    $param->{'action'},$list,$old_email,$robot);
+		 &wwslog('err', 'could not change %s email for list %s because admin is included', $role, $list->{'name'});
+		 next;
+	     }
+
+	     ## Go through owners/editors of the list
+	     foreach my $admin (@{$list->{'admin'}{$role}}) {
+		 next unless (lc($admin->{'email'}) eq lc($old_email));
+		 
+		 ## Update entry with new email address
+		 $admin->{'email'} = $new_email;
+		 $updated_lists{$list->{'name'}}++;
+	     }
+	     
+	     ## Update Db cache for the list
+	     $list->sync_include_admin();
+	     $list->save_config($param->{'session'}{'email'});
+	 }
+     }
+     ## Notify listmasters that list owners/moderators email have changed
+     if (keys %updated_lists) {
+	 &List::send_notify_to_listmaster('listowner_email_changed',$robot, 
+					  {'list' => $list,
+					   'previous_email' => $old_email,
+					   'new_email' => $new_email,
+					   'updated_lists' => keys %updated_lists})
+	 }
+     
+     ## Update User_table and remove existing entry first (to avoid duplicate entries)
+     &List::delete_global_user($new_email,);
+     
+     unless ( &List::update_global_user($old_email,
+				    {'email' => $new_email,
+				   
+				 })) {
+	 &report::reject_report_web('intern','update_user_db_failed',{'user'=>$new_email,
+								      'old_email' => $old_email},
+				    $param->{'action'},'',$old_email,$robot);
+	 &wwslog('info','change_email: update failed');
+	 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$new_email",'target_email' => "$new_email",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $old_email,'client' => $ip,'daemon' => $daemon_name});
+	 return undef;
+     }
+
+     ## Update netidmap_table
+     unless ( &List::update_email_netidmap_db($robot, $old_email, $new_email) ){
+	 &report::reject_report_web('intern','update_netidmap_failed',{'user'=>$new_email,
+								       'old_email' => $old_email},
+				    $param->{'action'},'',$param->{'user'}{'email'},$robot);
+	 &wwslog('info','change_email: update failed');
+	 &web_db_log({'target_email' => $old_email,
+		      'status' => 'error',
+		      'error_type' => 'internal'});
+	 return undef;
+     }
 
      ## Update the data structure that tells which lists the current user is member/owner/editor of
      unless ($edited_by_listmaster == 1) {
@@ -17705,7 +17790,7 @@ sub prevent_visibility_bypass {
 
 =item * Serge Aumont <sa AT cru.fr> 
 
-=item * Olivier Salaun <os AT cru.fr> 
+=item * Olivier SalaE<252>n <os AT cru.fr> 
 
 =back 
 

@@ -230,9 +230,11 @@ create table session_table
 ( 
 	 data_session 	varchar(500), 
 	 date_session 	numeric, 
+	 refresh_date_session	numeric NOT NULL,
 	 email_session 	varchar(100), 
 	 hit_session 	numeric, 
 	 id_session 	varchar(30), 
+	 prev_id_session	varchar(30),
 	 remote_addr_session 	varchar(60), 
 	 robot_session 	varchar(80), 
 	 start_date_session 	numeric, 
