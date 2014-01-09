@@ -29,13 +29,21 @@ sub gettext { shift } # to mark i18n'ed messages.
 ##   title  : Title for the group of parameters following
 ##   name   : Name of the parameter
 ##   default: Default value
-##   file   : Conf file where the param. is defined. If omitted, the parameter won't be added automatically to the config file, even if a default is set.
-##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless and can lead to errors on fresh install.
+##   file   : Conf file where the parameter is defined.  If omitted, the
+##            parameter won't be added automatically to the config file, even
+##            if a default is set.
+##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless
+##            and can lead to errors on fresh install.
 ##   query  : Description of the parameter
-##   file   : Conf file where the param. is defined
-##   vhost   : 1|0 : if 1, the parameter can have a specific value in a virtual host
-##   db   : 'db_first','file_first','no'
-##   multiple   : 1|0: If 1, the parameter can have mutiple values. Default i 0.
+##   advice : Additionnal advice concerning the parameter
+##   sample : FIXME FIXME
+##   edit   : 1|0: FIXME FIXME
+##   optional: 1|0: FIXME FIXME
+##   vhost  : 1|0 : if 1, the parameter can have a specific value in a
+##            virtual host
+##   db     : 'db_first', 'file_first', 'no'
+##   obfuscated: 1|0: FIXME FIXME
+##   multiple: 1|0: If 1, the parameter can have mutiple values. Default is 0.
 
 our @params = (
 
@@ -47,7 +55,7 @@ our @params = (
         'sample'   => 'domain.tld',
         'edit'     => '1',
         'file'     => 'sympa.conf',
-        'vhost'    => '1',
+        'vhost'    => '1', #FIXME:not fully implemented yet.
     },
     {
         'name'     => 'email',
@@ -454,15 +462,15 @@ our @params = (
         edit    => '1',
         advice  => gettext('This is the default language used by Sympa'),
     },
-    {
-        name    => 'supported_lang',
-        default => 'ca,cs,de,el,es,et_EE,en,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
-        query   => 'Supported languages',
-        vhost   => '1',
-        file    => 'sympa.conf',
-        edit    => '1',
-        advice  => gettext("This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed."),
-    },
+#    {
+#        name    => 'supported_lang',
+#        default => 'ca,cs,de,el,es,et_EE,en,fr,fi,hu,it,ja_JP,ko,nl,nb_NO,oc,pl,pt_BR,ru,sv,tr,vi,zh_CN,zh_TW',
+#        query   => 'Supported languages',
+#        vhost   => '1',
+#        file    => 'sympa.conf',
+#        edit    => '1',
+#        advice  => gettext("This is the set of language that will be proposed to your users for the Sympa GUI. Don't select a language if you don't have the proper locale packages installed."),
+#    },
     { 'title' => gettext('Sending related') },
     {
         'name'     => 'sendmail',
@@ -489,7 +497,7 @@ our @params = (
     },
     {
         'name'    => 'automatic_list_removal',
-        'default' => 'none',
+        'default' => 'none', ## Can be 'if_empty'
         'vhost'   => '1',
     },
     {
@@ -504,14 +512,14 @@ our @params = (
     },
     {
         'name'    => 'automatic_list_families',
-        'query'   => 'Defines the name of the family the automatic lists are based on.', 
+        'query'   => 'Defines the name of the family the automatic lists are based on.',
         'file'    => 'sympa.conf',
         'optional' => '1',
         vhost   => '1',
     },
     {
         'name'    => 'automatic_list_prefix',
-        'query'   => 'Defines the prefix allowing to recognize that a list is an automatic list.', 
+        'query'   => 'Defines the prefix allowing to recognize that a list is an automatic list.',
         'file'    => 'sympa.conf',
         'optional' => '1',
     },
@@ -544,7 +552,7 @@ our @params = (
     {
         'name'     => 'max_size',
         'query'    => gettext('Default maximum size (in bytes) for messages (can be re-defined for each list)'),
-        'default'  => '5242880',
+        'default'  => '5242880', ## 5 MiB
         'vhost'    => '1',
         'file'     => 'sympa.conf',
         'edit'     => '1',
@@ -633,7 +641,7 @@ our @params = (
     },
     {
         'name'     => 'urlize_min_size',
-        'default'  => 10240, ## 10Kb,
+        'default'  => 10240, ## 10 kiB,
     },
 
     { 'title' => gettext('Bulk mailer') },
@@ -648,6 +656,7 @@ our @params = (
         'query'    => gettext('Default priority for a packet to be sent by bulk.'),
         'file'     => 'sympa.conf',
         'default'  => '5',
+        vhost      => '1',
     },
     {
 	name    => 'sender_headers',
@@ -702,6 +711,7 @@ our @params = (
         'query'    => gettext('Default disk quota for shared repository'),
         'vhost'    => '1',
         'file'     => 'sympa.conf',
+        'edit'     => '1',
     },
     {
         'name'     => 'default_archive_quota',
@@ -732,9 +742,9 @@ our @params = (
 	##name => 'dkim_header_list',
         ##vhost => '1',
 	##file   => 'sympa.conf',
-        ##query   => 'list of headers to be included ito the message for signature', 
-        ##default => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description', 
-    ##}, 
+        ##query   => 'list of headers to be included ito the message for signature',
+        ##default => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
+    ##},
     { 'title' => 'S/MIME pluggin' },
     {
         'name'     => 'queuemod',
@@ -828,7 +838,7 @@ our @params = (
     },
     {
         'name'     => 'clean_delay_tmpdir',
-        'default'  => '7,',
+        'default'  => '7',
     },
 
     { 'title' => gettext('Internationalization related') },
@@ -978,22 +988,26 @@ our @params = (
         'query'    => gettext('Sympa commands priority'),
         'file'     => 'sympa.conf',
         'default'  => '1',
+        'vhost'    => '1',
     },
     {
         'name'     => 'request_priority',
         'default'  => '0',
         'file'     => 'sympa.conf',
+        'vhost'    => '1',
     },
     {
         'name'     => 'owner_priority',
         'default'  => '9',
         'file'     => 'sympa.conf',
+        'vhost'    => '1',
     },
     {
         'name'     => 'default_list_priority',
         'query'    => gettext('Default priority for list messages'),
         'file'     => 'sympa.conf',
         'default'  => '5',
+        'vhost'    => '1',
     },
 
     { 'title' => gettext('Database related') },
@@ -1315,7 +1329,7 @@ our @params = (
         'file'     => 'wwsympa.conf',
         'edit'     => '1',
         'advice'   => gettext('Better if not in a critical partition'),
-        'vhost'     => '1',
+        'vhost'     => 1,
     },
     {
         'name'     => 'archive_default_index',
@@ -1392,6 +1406,7 @@ our @params = (
         'default'  => 'insensitive',
         'query'    => gettext('Password case (insensitive | sensitive)'),
         'file'     => 'wwsympa.conf',
+        #vhost      => '1', # per-robot config is impossible.
         'advice'   => gettext('Should not be changed ! May invalid all user password'),
     },
     {
@@ -1528,11 +1543,13 @@ our @params = (
         'name'     => 'log_condition',
         'optional' => '1',
         'vhost'    => '1',
+        'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'log_module',
         'optional' => '1',
         'vhost'    => '1',
+        'file'     => 'wwsympa.conf',
     },
     {
         'name'     => 'merge_feature',

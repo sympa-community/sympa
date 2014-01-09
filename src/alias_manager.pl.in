@@ -45,7 +45,7 @@ my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
 
 my $default_domain;
-my $alias_wrapper       = Sympa::Constants::SBINDIR . '/aliaswrapper';
+my $alias_wrapper       = Sympa::Constants::LIBEXECDIR . '/sympa_newaliases-wrapper';
 my $lock_file           = Sympa::Constants::EXPLDIR . '/alias_manager.lock';
 my $path_to_queue       = Sympa::Constants::LIBEXECDIR . '/queue';
 my $path_to_bouncequeue = Sympa::Constants::LIBEXECDIR .'/bouncequeue';
@@ -149,11 +149,11 @@ if ($operation eq 'add') {
     my @deleted_lines;
     while (my $alias = <ALIAS>) {
 	my $left_side = '';
-	$left_side = $1 if ($alias =~ /^([^:]+):/);
+	$left_side = $1 if ($alias =~ /^([^\s:]+)[\s:]/);
 
 	my $to_be_deleted = 0;
 	foreach my $new_alias (@aliases) {
-	    next unless ($new_alias =~ /^([^:]+):/);
+	    next unless ($new_alias =~ /^([^\s:]+)[\s:]/);
 	    my $new_left_side = $1;
 	    
 	    if ($left_side eq  $new_left_side) {
@@ -219,11 +219,11 @@ sub already_defined {
     while (my $alias = <ALIAS>) {
 	# skip comment
 	next if $alias =~ /^#/ ; 
-	$alias =~ /^([^:]+):/;
+	$alias =~ /^([^\s:]+)[\s:]/;
 	my $left_side = $1;
 	next unless ($left_side);
 	foreach (@aliases) {
-	    next unless ($_ =~ /^([^:]+):/); 
+	    next unless ($_ =~ /^([^\s:]+)[\s:]/); 
 	    my $new_left_side = $1;
 	    if ($left_side eq  $new_left_side) {
 		print STDERR "Alias already defined : $left_side\n";

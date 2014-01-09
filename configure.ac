@@ -391,35 +391,64 @@ AC_SUBST(GROUP)
 
 SENDMAIL_ALIASES=/etc/mail/sympa_aliases
 AC_ARG_WITH(
-    [sendmail_aliases],
+    [aliases_file],
     AS_HELP_STRING(
-	[--with-sendmail_aliases=ALIASFILE],
+	[--with-aliases_file=ALIASFILE],
 	[aliases file to store Sympa mail aliases @<:@/etc/mail/sympa_aliases@:>@]
     ),
     [SENDMAIL_ALIASES="$withval"]
 )
 AC_SUBST(SENDMAIL_ALIASES)
 
-## The postfix virtual file we use. Better use a seperate one for sympa.
-## Of course an extra alias file must be generated with proper permissions
-## (owner sympa, write access for sympa, no write access for anyone else)
-## and declared in main.cf!
-VIRTUAL_ALIASES=/etc/mail/sympa_virtual
 AC_ARG_WITH(
-    [virtual_aliases],
-    AS_HELP_STRING(
-	[--with-virtual_aliases=ALIASFILE],
-	[postfix virtual file to be used by Sympa @<:@/etc/mail/sympa_virtual@:>@]
-    ),
-    [VIRTUAL_ALIASES="$withval"]
+    [sendmail_aliases], ,
+    AC_MSG_ERROR([--with-sendmail_aliases was deprecated.  Use --with-aliases_file.])
+)
+
+VIRTUAL_ALIASES=
+AC_ARG_WITH(
+    [virtual_aliases], ,
+    AC_MSG_ERROR([--with-virtual_aliases was deprecated.  Use --with-aliases_file.])
 )
 AC_SUBST(VIRTUAL_ALIASES)
 
+MAKEMAP=
+AC_ARG_WITH(
+    [makemap],
+    AS_HELP_STRING(
+	[--with-makemap=FULLPATH],
+	[path to Sendmail makemap command @<:@AUTO-DETECT@:>@]
+    ),
+    [MAKEMAP="$withval"]
+)
+if test -n "$MAKEMAP"; then
+    # user-supplied value
+    AC_MSG_CHECKING([user-supplied makemap command])
+    if test -f "$MAKEMAP"; then
+	:
+    else
+	AC_MSG_RESULT([non-existing])
+	AC_MSG_ERROR([invalid value $MAKEMAP for makemap command])
+    fi
+    if test -x "$MAKEMAP"; then
+	:
+    else
+	AC_MSG_RESULT([non-executable])
+	AC_MSG_ERROR([invalid value $MAKEMAP for makemap command])
+    fi
+    AC_MSG_RESULT([$MAKEMAP])
+else
+    # default value
+    AC_PATH_PROG([MAKEMAP], [makemap], [/usr/bin/makemap])
+fi
+AC_SUBST(MAKEMAP)
+
+NEWALIASES=
 AC_ARG_WITH(
     [newaliases],
     AS_HELP_STRING(
 	[--with-newaliases=FULLPATH],
-	[path to newaliases command @<:@/usr/bin/newaliases@:>@]
+	[path to newaliases command @<:@AUTO-DETECT@:>@]
     ),
     [NEWALIASES="$withval"]
 )
@@ -441,10 +470,11 @@ if test -n "$NEWALIASES"; then
     AC_MSG_RESULT([$NEWALIASES])
 else
     # default value
-    NEWALIASES=/usr/bin/newaliases
+    AC_PATH_PROG([NEWALIASES], [newaliases], [/usr/bin/newaliases])
 fi
 AC_SUBST(NEWALIASES)
 
+AC_MSG_CHECKING([argument to newaliases command])
 NEWALIASES_ARG=
 AC_ARG_WITH(
     [newaliases_arg],
@@ -455,12 +485,49 @@ AC_ARG_WITH(
     [NEWALIASES_ARG="$withval"]
 )
 AC_SUBST(NEWALIASES_ARG)
+if test -z "$NEWALIASES_ARG"; then
+    AC_MSG_RESULT([none])
+else
+    AC_MSG_RESULT([$NEWALIASES_ARG])
+fi
 
+POSTALIAS=
+AC_ARG_WITH(
+    [postalias],
+    AS_HELP_STRING(
+	[--with-postalias=FULLPATH],
+	[path to Postfix postalias command @<:@AUTO-DETECT@:>@]
+    ),
+    [POSTALIAS="$withval"]
+)
+if test -n "$POSTALIAS"; then
+    # user-supplied value
+    AC_MSG_CHECKING([user-supplied postalias command])
+    if test -f "$POSTALIAS"; then
+	:
+    else
+	AC_MSG_RESULT([non-existing])
+	AC_MSG_ERROR([invalid value $POSTALIAS for postalias command])
+    fi
+    if test -x "$POSTALIAS"; then
+	:
+    else
+	AC_MSG_RESULT([non-executable])
+	AC_MSG_ERROR([invalid value $POSTALIAS for postalias command])
+    fi
+    AC_MSG_RESULT([$POSTALIAS])
+else
+    # default value
+    AC_PATH_PROG([POSTALIAS], [postalias], [/usr/sbin/postalias])
+fi
+AC_SUBST(POSTALIAS)
+
+POSTMAP=
 AC_ARG_WITH(
     [postmap],
     AS_HELP_STRING(
 	[--with-postmap=FULLPATH],
-	[path to postfix postmap command @<:@/usr/sbin/postmap@:>@]
+	[path to Postfix postmap command @<:@AUTO-DETECT@:>@]
     ),
     [POSTMAP="$withval"]
 )
@@ -482,18 +549,14 @@ if test -n "$POSTMAP"; then
     AC_MSG_RESULT([$POSTMAP])
 else
     # default value
-    POSTMAP=/usr/sbin/postmap
+    AC_PATH_PROG([POSTMAP], [postmap], [/usr/sbin/postmap])
 fi
 AC_SUBST(POSTMAP)
 
-POSTMAP_ARG=${VIRTUAL_ALIASES}
+POSTMAP_ARG=
 AC_ARG_WITH(
-    [postmap_arg],
-    AS_HELP_STRING(
-	[--with-postmap_arg=ARGS],
-	[set arguments to postfix postmap command @<:@VIRTUAL_ALIASES@:>@]
-    ),
-    [POSTMAP_ARG="$withval"]
+    [postmap_arg], ,
+    AC_MSG_ERROR([--with-postmap_arg was deprecated.  Use --with-newaliases_arg.])
 )
 AC_SUBST(POSTMAP_ARG)
 

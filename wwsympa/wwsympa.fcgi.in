@@ -1191,7 +1191,7 @@ Log::do_log(info => "WWSympa started, process $$");
      unless (defined $session) {
 	 &List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
 	 &wwslog('info','Failed to create session');
-	 $session->{'email'}= 'nobody'; $session->{'id_session'} = &SympaSession::get_random();
+	$session = new SympaSession($robot, {});
      }
      
      # Retreive oauth_token from session if it exists and if we have a (newly) identified user
@@ -1668,7 +1668,7 @@ Log::do_log(info => "WWSympa started, process $$");
  	 }
 
 	my $locale = Language::Lang2Locale($param->{'lang'});
-	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
+	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$locale,$list);
 	 
         unshift @$tt2_include_path, $plugins->tt2Paths
             if $plugins;
@@ -1698,7 +1698,7 @@ Log::do_log(info => "WWSympa started, process $$");
  	 }
 
 	my $locale = Language::Lang2Locale($param->{'lang'});
-	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
+	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$locale,$list);
 	 
         unshift @$tt2_include_path, $plugins->tt2Paths
             if $plugins;
@@ -7607,8 +7607,8 @@ sub do_arc {
     &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
     my $latest;
     
-    my $index = $session->{'arc_mode'} ;
-    unless ($index) {$index = $wwsconf->{'archive_default_index'};}
+    my $index = $session->{'arc_mode'} || $wwsconf->{'archive_default_index'};
+    $index = 'thrd' unless $index and $index =~ /^(thrd|mail)$/;
 
     ## Clean arc_file
     if ($in{'arc_file'} eq '/') {

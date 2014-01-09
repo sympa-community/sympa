@@ -339,6 +339,8 @@ sub mail_message {
     my $dkim  =  $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
 
+    my $merge = $list->{'admin'}{'merge_feature'};
+
     my $host = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
 
@@ -383,6 +385,8 @@ sub mail_message {
     }
     $message->{'body_as_string'} = $msg_body ;
 
+    $merge = 0 if ($message->{'protected'});
+    
     my %rcpt_by_dom ;
 
     my @sendto;
@@ -440,26 +444,21 @@ sub mail_message {
 	my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
     }
 
-    
-    unless (&sendto('message' => $message,
-		    'from' => $from,
-		    'rcpt' => \@sendtobypacket,
-		    'listname' => $list->{'name'},
-		    'priority' => $list->{'admin'}{'priority'},
-		    'delivery_date' => $list->get_next_delivery_date,
-		    'robot' => $robot,
-		    'encrypt' => $message->{'smime_crypted'},
-		    'use_bulk' => 1,
-		    'verp' => $verp,
-		    'dkim' => $dkim,
-		    'merge' => $list->{'admin'}{'merge_feature'},
-		    'tag_as_last' => $tag_as_last
-		    )) {
-	&Log::do_log ('err',"Failed to send message to list %s", $list->{'name'});
-	return undef;
-    }
-    
-    return $numsmtp;
+    return $numsmtp if (&sendto('msg_header' => $msg_header, 
+				'msg_body' => $msg_body,
+				'from' => $from,
+				'rcpt' => \@sendtobypacket,
+				'listname' => $list->{'name'},
+				'priority' => $list->{'admin'}{'priority'},
+				'delivery_date' => $list->get_next_delivery_date,
+				'robot' => $robot,
+				'encrypt' => $message->{'smime_crypted'},
+				'use_bulk' => 1,
+				'verp' => $verp,
+				'dkim' => $dkim,
+				'merge' => $merge,
+				'tag_as_last' => $tag_as_last));
+    return undef;
 }
 
 # ####################################################
@@ -712,49 +711,52 @@ sub sendto {
     if ($encrypt eq 'smime_crypted') {
         # encrypt message for each rcpt and send the message
 	# this MUST be moved to the bulk mailer. This way, merge will be applied after the SMIME encryption is applied ! This is a bug !
-	foreach my $bulk_of_rcpt (@{$rcpt}) {
-	    # trace foreach my $unique_rcpt (@{$bulk_of_rcpt}) {
-	    foreach my $email (@{$bulk_of_rcpt}) {
-		if ($email !~ /@/) {
-		    &Log::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
-		    return undef;
-		}
-		unless ($message->{'msg_as_string'} = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
-    		    &Log::do_log('err',"Failed to encrypt message"); 
-		    return undef;
-                }	
-
-		unless (&sending('message' => $message,
-				 'rcpt' => $email,
-				 'from' => $from,
-				 'listname' => $listname,
-				 'robot' => $robot,
-				 'priority' => $priority,
-				 'delivery_date' =>  $delivery_date,
-				 'use_bulk' => $use_bulk,
-				 'tag_as_last' => $tag_as_last)) {
-		    &Log::do_log('err',"Failed to send encrypted message"); 
-		    return undef;
-		}
-		$tag_as_last = 0;
-	    }    
+	foreach my $unique_rcpt (@{$rcpt}) {
+	    my $email = lc(@{$unique_rcpt}[0]);
+	    if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
+		do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
+		# internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
+		return undef;
+	    }
+	    my $encrypted_msg_as_string;
+	    if ($encrypted_msg_as_string = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
+		my $result = &sending('msg' => $encrypted_msg_as_string,
+			 'rcpt' => $email,
+			 'from' => $from,
+			 'listname' => $listname,
+			 'robot' => $robot,
+			 'priority' => $priority,
+			 'delivery_date' =>  $delivery_date,
+			 'use_bulk' => $use_bulk,
+			 'tag_as_last' => $tag_as_last);
+		return $result;
+	    }else{
+		Log::do_log('err','Unable to encrypt message to list %s for receipient %s',$listname,$email);
+		return undef;
+	    }
+	    $tag_as_last = 0;
 	}
     }else{
-	$message->{'msg_as_string'} = $msg_header->as_string . "\n" . $msg_body;   
-	my $result = &sending('message' => $message,
-			      'rcpt' => $rcpt,
-			      'from' => $from,
-			      'listname' => $listname,
-			      'robot' => $robot,
-			      'priority' => $priority,
-			      'delivery_date' =>  $delivery_date,
-			      'verp' => $verp,
-			      'merge' => $merge,
-			      'use_bulk' => $use_bulk,
-			      'dkim' => $dkim,
-			      'tag_as_last' => $tag_as_last);
-	return $result;
-	
+	$msg = $msg_header->as_string . "\n" . $msg_body;   
+	if ($msg) {
+	    # my $result = &sending($msg,$rcpt,$from,$robot,'','none');
+	    my $result = &sending('msg' => $msg,
+				  'rcpt' => $rcpt,
+				  'from' => $from,
+				  'listname' => $listname,
+				  'robot' => $robot,
+				  'priority' => $priority,
+				  'delivery_date' =>  $delivery_date,
+				  'verp' => $verp,
+				  'merge' => $merge,
+				  'use_bulk' => $use_bulk,
+				  'dkim' => $dkim,
+				  'tag_as_last' => $tag_as_last);
+	    return $result;
+	}else{
+	    Log::do_log('err','Unable to get string from message to list %s',$listname);
+	    return undef;
+	}   
     }
     return 1;
 }

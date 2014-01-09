@@ -22,33 +22,31 @@ SUBDIRS = etc lib
 
 AM_CPPFLAGS = -DCONFIG=\"$(CONFIG)\"
 
-sbin_SCRIPTS = sympa.pl bulk.pl alias_manager.pl task_manager.pl sympa_wizard.pl
-sbin_PROGRAMS = aliaswrapper virtualwrapper
-aliaswrapper_SOURCES = aliaswrapper.c
-aliaswrapper_CPPFLAGS = $(AM_CPPFLAGS) \
-			-DNEWALIASES=\"${NEWALIASES}\" \
-			-DNEWALIASES_ARG=\"${NEWALIASES_ARG}\"
-virtualwrapper_SOURCES = virtualwrapper.c
-virtualwrapper_CPPFLAGS = $(AM_CPPFLAGS) \
-			  -DPOSTMAP=\"${POSTMAP}\" \
-			  -DPOSTMAP_ARG=\"${POSTMAP_ARG}\"
+sbin_SCRIPTS = sympa.pl bulk.pl alias_manager.pl task_manager.pl \
+	       sympa_wizard.pl sympa_newaliases.pl
 
-libexec_PROGRAMS = queue bouncequeue familyqueue
+libexec_PROGRAMS = queue bouncequeue familyqueue sympa_newaliases-wrapper
 queue_SOURCES = queue.c
 queue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 bouncequeue_SOURCES = bouncequeue.c
 bouncequeue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
 familyqueue_SOURCES = familyqueue.c
 familyqueue_CPPFLAGS = $(AM_CPPFLAGS) -DSPOOLDIR=\"${spooldir}\"
+sympa_newaliases_wrapper_SOURCES = sympa_newaliases-wrapper.c
+sympa_newaliases_wrapper_CPPFLAGS = $(AM_CPPFLAGS) \
+	-DSYMPA_NEWALIASES=\"${sbindir}/sympa_newaliases.pl\"
+
+man1_MANS = sympa_newaliases.1
 
 EXTRA_DIST = $(modules_DATA) \
 	     bulk.pl.in \
 	     alias_manager.pl.in \
 	     sympa.pl.in \
 	     sympa_wizard.pl.in \
-	     task_manager.pl.in
+	     task_manager.pl.in \
+	     sympa_newaliases.pl.in
 
-CLEANFILES = $(sbin_SCRIPTS)
+CLEANFILES = $(man1_MANS) $(sbin_SCRIPTS)
 
 install-exec-hook:
 	-chown $(USER) $(DESTDIR)$(libexecdir)/queue
@@ -63,13 +61,9 @@ install-exec-hook:
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/familyqueue
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 
-	-chown root $(DESTDIR)$(sbindir)/aliaswrapper
-	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/aliaswrapper
-	chmod 4750 aliaswrapper $(DESTDIR)$(sbindir)/aliaswrapper
-
-	-chown root $(DESTDIR)$(sbindir)/virtualwrapper
-	-chgrp $(GROUP) $(DESTDIR)$(sbindir)/virtualwrapper
-	chmod 4750 $(DESTDIR)$(sbindir)/virtualwrapper
+	-chown root $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
+	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
+	chmod 4750 $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 
 alias_manager.pl bulk.pl task_manager.pl sympa.pl sympa_wizard.pl: Makefile
 	rm -f $@
@@ -84,3 +78,25 @@ bulk.pl: $(srcdir)/bulk.pl.in
 sympa.pl: $(srcdir)/sympa.pl.in
 sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
 task_manager.pl: $(srcdir)/task_manager.pl.in
+
+sympa_newaliases.pl: $(srcdir)/sympa_newaliases.pl.in Makefile
+	rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--libexecdir--|$(libexecdir)|' \
+		-e 's|--modulesdir--|$(modulesdir)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
+		-e 's|--SENDMAIL_ALIASES--|$(SENDMAIL_ALIASES)|' \
+		-e 's|--MAKEMAP--|$(MAKEMAP)|' \
+		-e 's|--NEWALIASES--|$(NEWALIASES)|' \
+		-e 's|--NEWALIASES_ARG--|$(NEWALIASES_ARG)|' \
+		-e 's|--POSTALIAS--|$(POSTALIAS)|' \
+		-e 's|--POSTMAP--|$(POSTMAP)|' \
+		< $(srcdir)/$@.in > $@
+	chmod +x $@
+
+.pl.1:
+	rm -f $@
+	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
+		--lax --release="$(VERSION)" $< $@
+

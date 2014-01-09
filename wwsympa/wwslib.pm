@@ -136,14 +136,12 @@ sub load_config {
 		     'robots' => 'Not used anymore. Robots are fully described in their respective robot.conf file.',
 		     );
 
-    my %default_conf = ();
-
     ## Valid params
-    foreach my $key (keys %Conf::params) {
-	if (defined $Conf::params{$key}{'file'} && $Conf::params{$key}{'file'} eq 'wwsympa.conf') {
-	    $default_conf{$key} = $Conf::params{$key}{'default'};
-	}
-    }
+    my %default_conf = map {
+	$_->{'name'} => $_->{'default'}
+    } grep {
+	exists $_->{'file'} and $_->{'file'} eq 'wwsympa.conf'
+    } @confdef::params;
 
     my $conf = \%default_conf;
 
@@ -158,7 +156,7 @@ sub load_config {
 	if (/^\s*(\S+)\s+(.+)$/i) {
 	    my ($k, $v) = ($1, $2);
 	    $v =~ s/\s*$//;
-	    if (defined ($conf->{$k})) {
+	    if (exists $conf->{$k}) {
 		$conf->{$k} = $v;
 	    }elsif (defined $old_param{$k}) {
 		&Log::do_log('err',"Parameter %s in %s no more supported : %s", $k, $file, $old_param{$k});

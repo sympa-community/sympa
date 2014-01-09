@@ -270,21 +270,27 @@ sub establish_connection {
 	    }
       }
 
-      # mysql: At first, reset "mysql_auto_reconnect" driver attribute.
-      # connect() sets it to true when the processes are running under
-      # mod_perl or CGI environment so that "SET NAMES utf8" will be skipped.
+      # mysql:
+      # - At first, reset "mysql_auto_reconnect" driver attribute.
+      #   connect() sets it to true not according to \%attr argument
+      #   when the processes are running under mod_perl or CGI environment so
+      #   that "SET NAMES utf8" will be skipped.
+      # - Set client-side character set to "utf8" or "utf8mb4".
       if ($self->{'db_type'} eq 'mysql') {
 	    $self->{'dbh'}->{'mysql_auto_reconnect'} = 0;
+
+	    unless (defined $self->{'dbh'}->do("SET NAMES 'utf8mb4'") or
+		defined $self->{'dbh'}->do("SET NAMES 'utf8'")) {
+		do_log('err', 'Cannot set client-side character set: %s',
+		    $self->{'dbh'}->errstr);
+	    }
       }
 
-      # Configure Postgres to use ISO format dates
+      # Pg:
+      # - Configure Postgres to use ISO format dates.
+      # - Set client encoding to UTF8.
       if ($self->{'db_type'} eq 'Pg') {
 	$self->{'dbh'}->do ("SET DATESTYLE TO 'ISO';");
-      }
-      
-      ## mysql or Pg: Set client encoding to UTF8
-      if ($self->{'db_type'} eq 'mysql' ||
-	  $self->{'db_type'} eq 'Pg') {
 	$self->{'dbh'}->do("SET NAMES 'utf8'");
       }
       

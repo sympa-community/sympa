@@ -4333,18 +4333,22 @@ sub send_msg {
 	my @verp_selected_tabrcpt = &extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@possible_verptabrcpt);
 	my $verp= 'off';
 
-	my $result = &mail::mail_message('message'=>$new_message, 
-					 'rcpt'=> \@selected_tabrcpt, 
-					 'list'=>$self, 
-					 'verp' => $verp,					 
-					 'dkim_parameters'=>$dkim_parameters,
-					 'tag_as_last' => $tags_to_use->{'tag_noverp'});
-	unless (defined $result) {
-	    &Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp disabled)");
-	    return undef;
+	if ($#selected_tabrcpt > -1) {
+	    my $result = &mail::mail_message('message'=>$new_message, 
+					     'rcpt'=> \@selected_tabrcpt, 
+					     'list'=>$self, 
+					     'verp' => 'off', 
+					     'dkim_parameters'=>$dkim_parameters,
+					     'tag_as_last' => $tags_to_use->{'tag_noverp'});
+	    unless (defined $result) {
+		&do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
+		return undef;
+	    }
+	    $tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
+	    $nbr_smtp += $result;
+	}else{
+	    Log::do_log('notice','No non VERP subscribers left to distribute message from %s to list %s',$from,$self->{'name'});
 	}
-	$tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
-	$nbr_smtp += $result;
 	
 	$verp= 'on';
 
@@ -4364,19 +4368,23 @@ sub send_msg {
 	next if  ($array_name =~ /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain))(_verp)?/);
 	
 	## prepare VERP sending.
-	$result = &mail::mail_message('message'=> $new_message, 
-				      'rcpt'=> \@verp_selected_tabrcpt, 
-				      'list'=> $self,
-				      'verp' => $verp,
-				      'dkim_parameters'=>$dkim_parameters,
-				      'tag_as_last' => $tags_to_use->{'tag_verp'});
-	unless (defined $result) {
-	    &Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
-	    return undef;
+	if ($#verp_selected_tabrcpt > -1) {
+	    my $result = &mail::mail_message('message'=> $new_message, 
+					  'rcpt'=> \@verp_selected_tabrcpt, 
+					  'list'=> $self,
+					  'verp' => 'on',
+					  'dkim_parameters'=>$dkim_parameters,
+					  'tag_as_last' => $tags_to_use->{'tag_verp'});
+	    unless (defined $result) {
+		&do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
+		return undef;
+	    }
+	    $tags_to_use->{'tag_verp'} = 0 if ($result > 0);
+	    $nbr_smtp += $result;
+	    $nbr_verp += $result;
+	}else{
+	    Log::do_log('notice','No VERP subscribers left to distribute message from %s to list %s',$from,$self->{'name'});
 	}
-	$tags_to_use->{'tag_verp'} = 0 if ($result > 0);
-	$nbr_smtp += $result;
-	$nbr_verp += $result;	
     }
     return $nbr_smtp;
 }
@@ -9837,8 +9845,11 @@ sub sync_include {
 			    $new_subscribers->{$email}{'id'} =
 				$old_subscribers{$email}{'id'};
 			}
+		    }
 		}
+	    }
 	}
+    }
 
 	my $data_exclu;
 	my @subscriber_exclusion;
@@ -13038,30 +13049,6 @@ sub _flush_list_db
     }	
 }
 
-##
-## Method for UI
-##
-
-sub get_option_title {
-    my $self = shift;
-    my $option = shift;
-    my $type = shift || '';
-    my $withval = shift || 0;
-
-    my $map = { 'reception' => \%reception_mode,
-                'visibility' => \%visibility_mode,
-                'status' => \%list_status,
-              }->{$type} || \%list_option;
-    my $t = $map->{$option} || {};
-    if ($t->{'gettext_id'}) {
-	my $ret = gettext($t->{'gettext_id'});
-	$ret =~ s/^\s+//;
-	$ret =~ s/\s+$//;
-	return sprintf '%s (%s)', $ret, $option if $withval;
-	return $ret;
-    }
-    return $option;
-}
 
 =head2 Pluggin data-sources
 
