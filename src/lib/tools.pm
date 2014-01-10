@@ -22,19 +22,19 @@ package tools;
 
 use strict;
 
-use Time::Local;
-use File::Find;
 use Digest::MD5;
-use HTML::StripScripts::Parser;
-use File::Copy::Recursive;
-use POSIX qw(strftime mkfifo strtod);
-use Sys::Hostname;
-use Mail::Header;
-use Encode::Guess; ## Usefull when encoding should be guessed
+use Encode::Guess; ## Useful when encoding should be guessed
 use Encode::MIME::Header;
-use Text::LineFold;
+use File::Copy::Recursive;
+use File::Find;
+use HTML::StripScripts::Parser;
+use Mail::Header;
 use MIME::Lite::HTML;
+use POSIX qw(strftime mkfifo strtod);
 use Proc::ProcessTable;
+use Sys::Hostname;
+use Text::LineFold;
+use Time::Local;
 
 use Conf;
 use Language;
@@ -707,6 +707,7 @@ sub get_template_path {
     }
 
     my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
+    $distrib_dir .= '/' . $lang unless $lang eq 'default';
     my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
     $site_dir .= '/'.$lang unless ($lang eq 'default');
     my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
@@ -2293,7 +2294,7 @@ sub get_filename {
 	}
 	my @result;
 	foreach my $f (@try) {
-	    &Log::do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
+	    &do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
 		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
@@ -2499,8 +2500,11 @@ sub dump_encoding {
 
 ## Remove PID file and STDERR output
 sub remove_pid {
-	my ($pidfile, $pid, $options) = @_;
-	
+	my ($name, $pid, $options) = @_;
+
+	my $piddir = Sympa::Constants::PIDDIR;
+	my $pidfile = $piddir . '/' . $name . '.pid';
+
 	## If in multi_process mode (bulk.pl for instance can have child processes)
 	## Then the pidfile contains a list of space-separated PIDs on a single line
 	if($options->{'multiple_process'}) {
@@ -2566,10 +2570,10 @@ sub is_a_crawler {
 }
 
 sub write_pid {
-    my ($pidfile, $pid, $options) = @_;
+    my ($name, $pid, $options) = @_;
 
-    my $piddir = $pidfile;
-    $piddir =~ s/\/[^\/]+$//;
+    my $piddir = Sympa::Constants::PIDDIR;
+    my $pidfile = $piddir . '/' . $name . '.pid';
 
     ## Create piddir
     mkdir($piddir, 0755) unless(-d $piddir);
@@ -3898,7 +3902,11 @@ sub smart_lessthan {
 
 ## Returns the list of pid identifiers in the pid file.
 sub get_pids_in_pid_file {
-	my $pidfile = shift;
+	my $name = shift;
+
+	my $piddir = Sympa::Constants::PIDDIR;
+	my $pidfile = $piddir . '/' . $name . '.pid';
+
 	unless (open(PFILE, $pidfile)) {
 		&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
 		return undef;

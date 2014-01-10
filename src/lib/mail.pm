@@ -166,8 +166,11 @@ sub mail_file {
 		last;
 	    }
 	    
-	    foreach my $header ('date', 'to','from','subject','reply-to','mime-version', 'content-type','content-transfer-encoding') {
-		if ($line=~/^$header:/i) {
+	    foreach my $header (
+		qw(message-id date to from subject reply-to
+		mime-version content-type content-transfer-encoding)
+	    ) {
+		if ($line=~/^$header\s*:/i) {
 		    $header_ok{$header} = 1;
 		    last;
 		}
@@ -177,6 +180,10 @@ sub mail_file {
     
     ## ADD MISSING HEADERS
     my $headers="";
+
+    unless ($header_ok{'message-id'}) {
+	$headers .= sprintf("Message-Id: %s\n", tools::get_message_id($robot));
+    }
 
     unless ($header_ok{'date'}) {
 	my $now = time;
@@ -794,7 +801,7 @@ sub sending {
     my $sign_mode = $params{'sign_mode'};
     my $sympa_email =  $params{'sympa_email'};
     my $priority_message =  $params{'priority'};
-    my $priority_packet = $Conf::Conf{'sympa_packet_priority'};
+    my $priority_packet = Conf::get_robot_conf($robot, 'sympa_packet_priority');
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date); 
     my $verp  =  $params{'verp'};
@@ -1185,6 +1192,10 @@ sub fix_part($$$$) {
 	    $head->add("MIME-Version", "1.0") unless $head->get("MIME-Version");
 	    return $part;
 	}
+
+	## normalize newline to CRLF if transfer-encoding is BASE64.
+	$newbody =~ s/\r\n|\r|\n/\r\n/g
+	    if $newenc and $newenc eq 'BASE64';
 
 	# Fix headers and body.
 	$head->mime_attr("Content-Type", "TEXT/PLAIN")

@@ -7,7 +7,7 @@
 <h2>[% p.stamp %]</h2>
 <p> [% p.description %]</p>
 [% FOREACH i = p.instances %]
-<input type="radio" name="automatic_list_part_[% p.order %]" value="[% i.value %]"[% IF i.default %] checked="checked"[% END %]> [% i.tag %]<br>
+<input type="radio" id="automatic_list_part_[% p.order %].[% i.value %]" name="automatic_list_part_[% p.order %]" value="[% i.value %]"[% IF i.default %] checked="checked"[% END %]> <label for="automatic_list_part_[% p.order %].[% i.value %]">[% i.tag %]</label><br>
 [%END%]
 [%END%]
 <input class="MainMenuLinks" type="submit" name="action_automatic_lists" value="[%|loc%]Go to list[%END%]" />

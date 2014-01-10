@@ -4,7 +4,7 @@ Subject: [% FILTER qencode %][%subject%][%END%]
 [%|loc(list.name,list.host)%]Here are the subscribers of %1@%2 mailing list:[%END%]
 
 [%|wrap(0,4)%][% FOREACH u = users -%]
-[% u.email %] - [% u.gecos %] - [% u.reception %]
+[% u.email %] - [% u.gecos %] - [%|optdesc('reception')%][% u.reception %][% END %]
 [% END %][%END#wrap%]
 
 [%|loc(total)%]Total subscribers: %1[%END%]

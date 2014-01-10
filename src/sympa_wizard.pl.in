@@ -63,6 +63,12 @@ use Pod::Usage;
 use Sys::Hostname qw(hostname);
 use Sympa::Constants;
 
+my $with_CPAN; # check if module "CPAN" installed.
+
+BEGIN {
+    $with_CPAN = eval { require CPAN; };
+}
+
 ## sympa configuration files
 my $wwsympa_conf = Sympa::Constants::WWSCONFIG;
 my $sympa_conf   = Sympa::Constants::CONFIG;
@@ -338,7 +344,6 @@ sub edit_configuration {
 }
 
 sub check_cpan {
-    require CPAN;
 
     ## assume required_version = 1.0 if not specified.
     my %cpan_modules = (
@@ -354,11 +359,13 @@ sub check_cpan {
 				      usage => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
 				     },
 			'CGI' => {
-				  required_version =>'3.35',
+				  required_version =>'3.51',
 				  package_name => 'CGI',
 				  mandatory => 1,
 				  usage => 'required to run Sympa web interface',
 				  },
+			# CGI::Cookie is included in CGI.
+			# CGI::Fast is included in CGI.
 			'Crypt::CipherSaber' => {
 						 required_version =>'0.50',
 						 package_name => 'Crypt-CipherSaber',
@@ -366,10 +373,14 @@ sub check_cpan {
 						},
 			'DB_File' => {
 				      required_version =>'1.75',
-				      package_name => 'DB_FILE',
+				      package_name => 'DB_File',
 				      mandatory => 1,
 				      usage => ' used for maintaining snapshots of list members',
 				     },
+			'DBD::ODBC' => {
+					package_name => 'DBD-ODBC',
+					usage => 'ODBC database driver, required if you connect to a database via ODBC.',
+					},
 			'DBD::Oracle' => {
 					  required_version =>'0.90',
 					  package_name => 'DBD-Oracle',
@@ -395,7 +406,7 @@ sub check_cpan {
 			'DBD::mysql' => {
 					 required_version =>'4.008',
 					 prerequisites => 'mysql-devel and myslq-server. mysql should be running for make test to succeed',
-					 package_name => 'Msql-Mysql-modules',
+					 package_name => 'DBD-mysql',
 					 mandatory => 1,
 					 usage => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
 					},
@@ -423,10 +434,9 @@ sub check_cpan {
 				     usage => 'module for character encoding processing',
 				    },
 			'FCGI' => {
-				   required_version =>'0.67',
+				   required_version => '0.67',
 				   package_name => 'FCGI',
-				   mandatory => 1,
-				   usage => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
+				   'usage' => "WWSympa, Sympa's web interface can run as a FastCGI (i.e. a persistent CGI). If you install this module, you will also need to install the associated FastCGI frontend, e.g. mod_fcgid for Apache.",
 				  },
 			'File::Copy::Recursive' => {
 						    required_version =>'0.36',
@@ -464,23 +474,35 @@ sub check_cpan {
 					      package_name => 'IO-Socket-SSL',
 					      usage => 'required when including members of a remote list',
 					     },
+			# Net::SSLeay is included in IO-Socket-SSL.
 			'JSON::XS' => {
 					      required_version =>'2.32',
 					      package_name => 'JSON-XS',
 					      usage => 'required when using the VOOT protocol',
 					     },
-			'Locale::TextDomain' => {
+			'Locale::Messages' => {
 						 package_name => 'libintl-perl',
 						 mandatory => 1,
 						 usage => 'internationalization functions',
 						},
 			'LWP' => {
-				  package_name => 'libwww-per',
+				  package_name => 'libwww-perl',
 				  mandatory => 1,
 				  usage => 'required when including members of a remote list',
 				 },
+			'Mail::Address' => {
+					    required_version => '1.70',
+					    package_name => 'MailTools',
+					    mandatory => 1,
+					    usage => 'used to parse or build mailboxes in message headers',
+					   },
+			'Mail::DKIM' => {
+					 required_version => '0.36',
+					 package_name => 'Mail-DKIM',
+					 usage => 'required in order to use DKIM features (both for signature verification and signature insertion)',
+					},
 			'MHonArc::UTF8' => {
-					    required_version =>'2.6.0',
+					    required_version =>'2.6.18',
 					    package_name => 'MHonArc',
 					    mandatory => 1, 
 					    usage => 'mhonarc is used to build Sympa web archives',
@@ -492,13 +514,13 @@ sub check_cpan {
 					   usage => 'required to compute digest for password and emails',
 					  },
 			'MIME::Charset' => {
-					    required_version =>'1.006.2',
+					    required_version =>'1.010',
 					    package_name => 'MIME-Charset',
 					    mandatory => 1,
 					    usage => 'used to encode mail body using a different charset',
 					   },
 			'MIME::EncWords' => {
-					     required_version =>'1.010',
+					     required_version =>'1.014',
 					     package_name => 'MIME-EncWords',
 					     mandatory => 1,
 					     usage => 'required to decode/encode SMTP header fields without breaking character encoding', 
@@ -531,6 +553,11 @@ sub check_cpan {
 					package_name => 'libnet',
 					usage => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
 				       },
+			'OAuth::Lite' => {
+					  package_name => 'OAuth-Lite',
+					  required_version => '1.31',
+					  usage => 'This is required if you want to use the VOOT protocol.',
+					 },
 			'perl' => {
 				   required_version =>'5.008',
 				  },
@@ -580,10 +607,6 @@ sub check_cpan {
 					  mandatory => 1,
 					  usage => 'used to parse list configuration templates and instanciate list families',
 					 },
-			'Mail::DKIM' => { required_version =>'0.36',
-					  package_name => 'Mail-DKIM',
-					  usage => 'required in order to use DKIM features (both for signature verification and signature insertion)',
-				      } 
 		       );
 
     print "##########################################################################################
@@ -597,52 +620,6 @@ sub check_cpan {
 Strike return key to continue...
 ";
     my $rep = <STDIN>;
-
-    my %opt_CPAN = (
-		'AuthCAS' => 'AuthCAS',
-        'DBD::Pg' => 'DBD-Pg',
-        'DBD::ODBC' => 'DBD-ODBC',
-        'DBD::Oracle' => 'DBD-Oracle',
-        'DBD::Sybase' => 'DBD-Sybase',
-        'DBD::SQLite' => 'DBD-SQLite',
-        'Net::LDAP' =>   'perl-ldap',
-        'CGI::Fast' => 'CGI',
-        'Net::SMTP' => 'libnet',
-        'IO::Socket::SSL' => 'IO-Socket-SSL',
-        'JSON::XS' => 'JSON-XS',
-        'Net::SSLeay' => 'NET-SSLeay',
-        'OAuth::Lite' => 'OAuth-Lite',
-        'Bundle::LWP' => 'LWP',
-        'SOAP::Lite' => 'SOAP-Lite',
-        'File::NFSLock' => 'File-NFSLock',
-        'File::Copy::Recursive' => 'File-Copy-Recursive',
-        'Crypt::CipherSaber' => 'CipherSaber',
-	'mail::DKIM' =>'Mail-DKIM',
-    );
-
-    my %opt_features = (
-	'AuthCAS' => 'CAS Single Sign-On client libraries. Required if you configure Sympa to delegate web authentication to a CAS server.',
-        'DBI' => 'a generic Database Driver, required by Sympa to access Subscriber information and User preferences. An additional Database Driver is required for each database type you wish to connect to.',
-        'DBD::mysql' => 'Mysql database driver, required if you connect to a Mysql database.\nYou first need to install the Mysql server and have it started before installing the Perl DBD module.',
-        'DBD::Pg' => 'PostgreSQL database driver, required if you connect to a PostgreSQL database.',
-        'DBD::Oracle' => 'Oracle database driver, required if you connect to a Oracle database.',
-        'DBD::Sybase' => 'Sybase database driver, required if you connect to a Sybase database.',
-        'DBD::SQLite' => 'SQLite database driver, required if you connect to a SQLite database.',
-        'JSON::XS' => 'Required to use the VOOT protocol.',
-        'Net::LDAP' =>   'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
-        'CGI::Fast' => 'WWSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
-        'Crypt::CipherSaber' => 'this module provides reversible encryption of user passwords in the database.usefull only when updating from old version with password reversible encryption.',
-        'Archive::Zip ' => 'this module provides zip/unzip for archive and shared document download/upload',
-        'FCGI' => 'WSympa, Sympa\'s web interface can run as a FastCGI (ie: a persistent CGI). If you install this module, you will also need to install the associated mod_fastcgi for Apache.',
-        'Net::SMTP' => 'this is required if you set \'list_check_smtp\' sympa.conf parameter, used to check existing aliases before mailing list creation.',
-        'OAuth::Lite' => 'This it required if you want to use the VOOT protocol.',
-        'IO::Socket::SSL' => 'required by CAS (single sign-on) and the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-        'Net::SSLeay' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-        'Bundle::LWP' => 'required by the \'include_remote_sympa_list\' feature that includes members of a list on a remote server, using X509 authentication',
-        'SOAP::Lite' => 'required if you want to run the Sympa SOAP server that provides ML services via a "web service"',
-        'File::NFSLock' => 'required to perform NFS lock ; see also lock_method sympa.conf parameter',
-	'mail::DKIM' => 'requiered in order to use Sympa DKIM features, both for signature verification  and signature insertion. it should be used event if you do not want your server to add signature !',
-    );
 
     ### main:
     print "******* Check perl for SYMPA ********\n";
@@ -733,8 +710,9 @@ sub check_modules {
 # Install a CPAN module
 ##----------------------
 sub install_module {
-#    my ($module, $options, $opt_features) = @_;
-  my ($module, $options, $cpan_modules) = @_;
+    return unless $with_CPAN;
+
+    my ($module, $options, $cpan_modules) = @_;
 
     my $default = $options->{'default'};
 

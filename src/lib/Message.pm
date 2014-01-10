@@ -585,19 +585,21 @@ sub fix_html_part {
 	return $part if !$bodyh or $bodyh->is_encoded;
 
 	my $body = $bodyh->as_string;
-	# Re-encode parts with 7-bit charset (ISO-2022-*), since
-	# StripScripts cannot handle them correctly.
+	# Re-encode parts to UTF-8, since StripScripts cannot handle texts
+	# with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
 	my $cset = MIME::Charset->new($part->head->mime_attr('Content-Type.Charset') || '');
 	unless ($cset->decoder) {
 	    # Charset is unknown.  Detect 7-bit charset.
 	    my ($dummy, $charset) =
 		MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
-	    $cset = MIME::Charset->new($charset);
+	    $cset = MIME::Charset->new($charset)
+		if $charset;
 	}
-	if ($cset->decoder and $cset->as_string =~ /^ISO-2022-/i) {
-	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
+	if ($cset->decoder and
+	    $cset->as_string ne 'UTF-8' and $cset->as_string ne 'US-ASCII') {
 	    $cset->encoder('UTF-8');
 	    $body = $cset->encode($body);
+	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
 	}
 
 	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot);
@@ -609,6 +611,7 @@ sub fix_html_part {
 	}
 	$io->print($filtered_body);
 	$io->close;
+	$part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
 }

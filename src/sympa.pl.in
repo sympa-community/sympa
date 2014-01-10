@@ -343,15 +343,16 @@ if ($signal ne 'hup') {
     &Log::do_log('debug', "Running server $$ for $service purpose ");
     unless ($main::options{'batch'} ) {
 
-	## Create and write the pidfile
-	my $file = $Conf{'pidfile'};
-	$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
-	$file = $Conf{'pidfile_creation'} if ($main::daemon_usage == DAEMON_CREATION) ;
+	## Create and write the PID file
+	my $file = 'sympa';
+	$file = 'sympa-distribute' if $main::daemon_usage == DAEMON_MESSAGE;
+	$file = 'sympa-creation' if $main::daemon_usage == DAEMON_CREATION;
 
-	## If process is running in foreground, don't write STDERR to a dedicated file
+	## If process is running in foreground, don't write STDERR to a
+	## dedicated file
 	my $options;
 	$options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-	&tools::write_pid($file, $$, $options);
+	tools::write_pid($file, $$, $options);
 	unless ($options->{'stderr_to_tty'}) {
 	    &tools::direct_stderr_to_file(('pid' => $$));
 	}
@@ -1201,10 +1202,10 @@ SDM::db_disconnect if ($SDM::dbh);
 } #end of block while ($signal ne 'term'){
 
 &Log::do_log('notice', 'Sympa exited normally due to signal');
-my $file = $Conf{'pidfile'};
-$file = $Conf{'pidfile_distribute'} if ($main::daemon_usage == DAEMON_MESSAGE) ;
-$file = $Conf{'pidfile_creation'} if ($main::daemon_usage == DAEMON_CREATION) ;
-&tools::remove_pid($file, $$);
+my $file = 'sympa';
+$file = 'sympa-distribute' if $main::daemon_usage == DAEMON_MESSAGE;
+$file = 'sympa-creation' if $main::daemon_usage == DAEMON_CREATION;
+tools::remove_pid($file, $$);
 
 exit(0);
 
@@ -1375,7 +1376,15 @@ sub DoFile {
             my $dyn_family;
             unless ($dyn_family = new Family($dyn_list_family,$robot)) {
                 &Log::do_log('err', "Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list.");
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list."]);
+		&List::send_notify_to_listmaster(
+		    'automatic_list_creation_failed',
+		    $robot,
+		    {   'family' => $dyn_list_family,
+			'robot' => $robot,
+			'msg_id' => $msg_id,
+		    }
+		);
+		# FIXME: send DSN.
 		&report::reject_report_msg('user','list_unknown',$sender,{'listname' => $listname,'message' => $message},$robot,$message->{'msg'}->as_string,'');
 		return undef;
             }
@@ -1388,9 +1397,17 @@ sub DoFile {
 		$dyn_just_created = 1;
 	    }else {
 		&Log::do_log('err', 'Unable to create list %s. Message %s ignored.', $listname,'msg_id' => $hdr->get('Message-Id'));
-		&report::reject_report_msg('intern',"Message ignored because automatic list '$listname' creation could not be performed.",$sender,
-					   {'msg_id' => $hdr->get('Message-Id'),'message' => $message}, $dyn_family->{'robot'},$message->{'msg_as_string'});
-		&List::send_notify_to_listmaster('automatic_list_creation_failed',$dyn_family->{'robot'},["Failed to process $file"]);
+		&List::send_notify_to_listmaster(
+		    'automatic_list_creation_failed',
+		    $dyn_family->{'robot'},
+		    {   'listname' => $listname,
+			'family' => $dyn_list_family,
+			'robot' => $robot,
+			'msg_id' => $msg_id,
+		    }
+		);
+		# FIXME: send DSN.
+		&report::reject_report_msg('user','dyn_cant_create',$sender,{'listname' => $listname,'message' => $message},$robot,$message->{'msg_as_string'},'');
 		&Log::db_log({'robot' => $dyn_family->{'robot'},'list' => $listname,'action' => 'DoFile',
 			      'parameters' => $hdr->get('Message-Id').",$dyn_family->{'robot'}",'target_email' => '','msg_id' => hdr->get('Message-Id'),'status' => 'error','error_type' => 'internal','user_email' => $sender,'client' => $ip,'daemon' => $daemon_name});
 		return undef ;

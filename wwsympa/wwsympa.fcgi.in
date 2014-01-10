@@ -109,6 +109,13 @@ my $ip;
 my $rss;
 my $ajax;
 
+my $allow_absolute_path; #FIXME: to be removed in the future.
+
+## Load config 
+unless ($wwsconf = &wwslib::load_config($conf_file)) {
+    Log::fatal_err('Unable to load config file %s', $conf_file);
+}
+
 ## Load sympa config
 unless (&Conf::load( $sympa_conf_file )) {
     &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
@@ -124,13 +131,6 @@ $wwsconf->{'log_facility'}||= $Conf{'syslog'};
 ## Start plugins
 if(eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
-}
-
-&mail::set_send_spool(Site->queue);
-
-## Load config 
-unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
 }
 
 &mail::set_send_spool($Conf{'queue'});
@@ -346,7 +346,7 @@ my %auth_action = ('logout' => 1,
 		   'renewpasswd' => 1,
 		   'firstpasswd' => 1,
 		   'choosepasswd' => 1,
-		   'sendssopasswd' => 1,
+		   'sendssopasswd' => 1, #FIXME: currently not used
 		   'ticket' => 1,
 		   );		  
 
@@ -417,7 +417,7 @@ our %action_args = ('default' => ['list'],
 		'get_inactive_lists' => [],
 		'get_biggest_lists' => [],
 		'search_list' => ['filter'],
-		'shared' => ['list','@path'],
+		'shared' => ['list','@path'], #FIXME: no such function.
 		'd_read' => ['list','@path'],
 		'latest_d_read' => ['list'],
 		'd_admin' => ['list','d_admin'],
@@ -555,7 +555,7 @@ our %required_args = ('active_lists' => ['for|count'],
 		     'reject' => ['param.list','param.user.email','id|idspam'],
 		     'remind' => ['param.list','param.user.email'],
 		     'remove_arc' => ['param.list'],
-		     'remove_templates' => ['webormail'],
+		     'remove_template' => ['webormail'],
 		     'rename_list' => ['param.user.email','param.list','new_listname','new_robot'],
 		     'copy_list' => ['param.user.email','param.list','new_listname','new_robot'],
 		     'rename_list_request' => ['param.user.email','param.list'],
@@ -583,7 +583,7 @@ our %required_args = ('active_lists' => ['for|count'],
 		     'setpref' => ['param.user.email'],
 		     'signoff' => ['param.list'],
 		     'sigrequest' => ['param.list'],
-		     'skinedit' => ['param.user.email'],
+		     'skinsedit' => ['param.user.email'],
 		     'sso_login' => ['auth_service_name'],
 		     'stats' => ['param.list'],
 		     'subindex' => ['param.list','param.user.email'],
@@ -658,7 +658,7 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'stats' => ['owner'],
 			   'subindex' => ['owner','editor'],
 			   'sync_include' => ['owner','editor'],
-			   'skinedit' => ['listmaster'],
+			   'skinsedit' => ['listmaster'],
 			   'view_template' => ['listmaster'],
 			   'viewbounce' => ['owner','editor'],
 			   'viewlogs' => ['owner','editor'],
@@ -723,7 +723,7 @@ my %action_type = ('editfile' => 'admin',
 		'get_latest_lists' => 'serveradmin',
 		'get_biggest_lists' => 'serveradmin',
 		'ls_templates' => 'serveradmin',
-		'skinedit' => 'serveradmin',
+		'skinsedit' => 'serveradmin',
 		'review_family' => 'serveradmin',
 		'search_user' => 'serveradmin',
 		'show_sessions' => 'serveradmin',
@@ -746,7 +746,7 @@ my %temporary_actions = ( 'logout' => 1,
  			  'sso_login_succeeded' => 1,
  			  'ticket' => 1,
  			  'css' => 1,
- 			  'rss' => 1,
+ 			  'rss' => 1, # FIXME:currently not used.
  			  'ajax' => 1,
  			  'wsdl' => 1,
  			  'redirect' => 1,
@@ -879,23 +879,8 @@ our %in_regexp = (
 		 'subaction_test' => '.*',
 		 'subaction_reset' => '.*',
 		 'subaction_install' => '.*',
-		 'custom_color_value' => '\#.*',
-		 'custom_color_0' => '.*',
-		 'custom_color_1' => '.*',
-		 'custom_color_2' => '.*',
-		 'custom_color_3' => '.*',
-		 'custom_color_4' => '.*',
-		 'custom_color_5' => '.*',
-		 'custom_color_6' => '.*',
-		 'custom_color_7' => '.*',
-		 'custom_color_8' => '.*',
-		 'custom_color_9' => '.*',
-		 'custom_color_10' => '.*',
-		 'custom_color_11' => '.*',
-		 'custom_color_12' => '.*',
-		 'custom_color_13' => '.*',
-		 'custom_color_14' => '.*',
-		 'custom_color_15' => '.*',
+		 'custom_color_value' => '\#[0-9a-fA-F]+',
+		'custom_color_number' => 'color_\w+',
 
                  ## Custom attribute
                  'custom_attribute' => '.*',
@@ -1221,11 +1206,13 @@ Log::do_log(info => "WWSympa started, process $$");
      $param->{'dumpvars'} = $session->{'dumpvars'};
      $param->{'unauthenticated_email'} = $session->{'unauthenticated_email'};
 
-     if ($session->{'custom_color'} == 1) {	 
-	 foreach my $i (0 .. 15){
-	     $param->{'color_'.$i} = $session->{'color_'.$i} if ($session->{'color_'.$i});
-	 }
-     }
+    ## testing custom CSS
+    if ($session->{'custom_css'}) {	 
+	foreach my $i (0 .. 15) {
+	    $param->{'color_' . $i} = $session->{'color_' . $i}
+		if $session->{'color_' . $i};
+	}
+    }
 
      ## RSS does not require user authentication
      unless ($rss) {
@@ -1406,7 +1393,8 @@ Log::do_log(info => "WWSympa started, process $$");
 	     $param->{'lang'} = $session->{'lang'} || $param->{'user_lang'} || $param->{'list_lang'} || &Conf::get_robot_conf($robot, 'lang');	     
 
 	     $param->{'locale'} = &Language::SetLang($param->{'lang'});
-	     
+	    $param->{'lang_tag'} = &Language::LanguageTag($param->{'lang'});
+
 	     &export_topics ($robot);
 	     
 	     unless ($comm{$action}) {
@@ -1474,6 +1462,7 @@ Log::do_log(info => "WWSympa started, process $$");
      $param->{'action_type'} = 'none' unless (($param->{'is_priv'})||($param->{'action_type'} eq 'serveradmin'));
      $param->{'lang'} ||= $param->{'user'}{'lang'} if (defined $param->{'user'});
      $param->{'lang'} ||= &Conf::get_robot_conf($robot, 'lang');
+    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($param->{'list'}) {
 	 $param->{'list_title'} = $list->{'admin'}{'subject'};
@@ -1599,6 +1588,8 @@ Log::do_log(info => "WWSympa started, process $$");
 	 }else {
 	     $param->{'languages'}{$l}{'selected'} = '';
 	 }
+
+	$param->{'languages'}{$l}{'lang_tag'} = Language::LanguageTag($l);
      }
 
      &Language::SetLang($saved_lang);
@@ -1630,24 +1621,24 @@ Log::do_log(info => "WWSympa started, process $$");
 		 my $auth = &report::get_auth_reject_web();
 		
 		 if (ref($intern) eq 'ARRAY'){
-		     printf "INTERNAL SERVER ERROR\n";
+		     print "INTERNAL SERVER ERROR\n";
 		 };
 		 if (ref($system) eq 'ARRAY'){
-		     printf "SYSTEM ERROR\n";
+		     print "SYSTEM ERROR\n";
 		 };
 		 if (ref($user) eq 'ARRAY'){
 		     foreach my $err (@$user){
-			 printf "ERROR : $err\n";
+			 printf "ERROR : %s\n", $err;
 		     }
 		 };
 		 if (ref($auth) eq 'ARRAY'){
 		     foreach my $err (@$auth){
-			 printf "AUTHORISATION FAILED : $err\n";
+			 printf "AUTHORISATION FAILED : %s\n", $err;
 		     }
 		 };
 
 	     }else{
-		 printf "Internal error content-type nor file defined\n";
+		 print "Internal error content-type nor file defined\n";
 		 &Log::do_log('err', 'Internal error content-type nor file defined');
 	     }
 	 }
@@ -1668,7 +1659,8 @@ Log::do_log(info => "WWSympa started, process $$");
  	 }
 
 	my $locale = Language::Lang2Locale($param->{'lang'});
-	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$locale,$list);
+	my $tt2_include_path =
+	    tools::make_tt2_include_path($robot, 'web_tt2', $locale, $list);
 	 
         unshift @$tt2_include_path, $plugins->tt2Paths
             if $plugins;
@@ -1991,7 +1983,7 @@ sub get_parameters {
  	 next if ($in{$p} =~ /^$/);
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{$p} =~ s/\015//g;	 
+	 $in{$p} =~ s/\r\n|\r/\n/g;	 
 
 	 #XXX## Convert from the web encoding to unicode string
 	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
@@ -2242,7 +2234,7 @@ sub get_parameters_old {
  	 next if ($in{$p} =~ /^$/);
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{$p} =~ s/\015//g;	 
+	 $in{$p} =~ s/\r\n|\r/\n/g;	 
 
 	 #XXX## Convert from the web encoding to unicode string
 	 #XXX$in{$p} = Encode::decode('utf8', $in{$p});
@@ -2417,10 +2409,9 @@ sub check_action_parameters {
 
 ## Send HTML output
 sub send_html {
-
     my $tt2_file = shift;
 
-    ## Send HTML
+    ## Send HTML headers
     if ($param->{'date'}) {
 	Language::PushLang("en");
 	printf "Date: %s\n", &POSIX::strftime("%a, %d %b %Y %H:%M:%S GMT", gmtime(time));
@@ -2434,13 +2425,18 @@ sub send_html {
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html; charset=utf-8\n";
-    ## Workaround for Internet Explorer 8.
-    print "X-UA-Compatible: IE=7\n";
+    ## Workaround for Internet Explorer 8 or later.
+    print "X-UA-Compatible: IE=100\n";
+
+    ## Notify crash to client.
+    if ($param->{'action'} eq 'crash') {
+	print "Status: 503 Service Unavailable\n";
+	print "Retry-After: 300\n";
+    }
 
     ## Icons
     $param->{'icons_url'} = &Conf::get_robot_conf($robot, 'static_content_url').'/icons';
-    
-    
+
     ## Retro compatibility concerns
     $param->{'active'} = 1;
     
@@ -2454,9 +2450,6 @@ sub send_html {
  	    $param->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
 	}
     }
-    
-    my $lang = &Language::Lang2Locale($param->{'lang'});
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,$list);
     
     # XSS escaping applied to all outgoing parameters.
     my $param_copy = &tools::dup_var($param); ## Escape parameters on a copy to avoid altering usefull data.
@@ -2484,10 +2477,10 @@ sub send_html {
     ## Custom CSSes.  They are stored to $param_copy so that they won't be
     ## escaped.
 
-    # Do not include lcale paths.
+    # Do not include locale paths.
     # The css.tt2 by each locales will override styles in main CSS.
     my $tt2_include_path =
-	($list || $robot)->get_etc_include_path('web_tt2');
+	tools::make_tt2_include_path($robot, 'web_tt2', '', $list);
 
     unshift @$tt2_include_path, $plugins->tt2Paths
         if $plugins;
@@ -2509,8 +2502,8 @@ sub send_html {
 
     # per-locale CSS.
     my $locale_css;
-    if (($list || $robot)->get_etc_filename(
-	'web_tt2/' . $locale . '/css.tt2'
+    if (tools::get_filename('etc', {}, 
+	'web_tt2/' . $locale . '/css.tt2', $robot, $list
     )) {
 	unless (tt2::parse_tt2($param, $locale . '/css.tt2',
 	    \$locale_css, $tt2_include_path
@@ -2524,22 +2517,22 @@ sub send_html {
 
     ## Now include locale paths.
     $tt2_include_path =
-	($list || $robot)->get_etc_include_path('web_tt2', $locale);
+	tools::make_tt2_include_path($robot, 'web_tt2', $locale, $list);
 
-    ## Restore special paths.
+    ## Restore special paths and enable absolute path if neccesary.
     foreach my $dir (@added_include_path) {
 	tt2::add_include_path($dir);
     }
+    tt2::allow_absolute_path() if $allow_absolute_path;
+    undef $allow_absolute_path;
 
     unshift @$tt2_include_path, $plugins->tt2Paths
         if $plugins;
 
     ## Output the content.
-    unless (tt2::parse_tt2(
-	$param_copy, $tt2_file, \*STDOUT, $tt2_include_path,
-	{'has_header' => 1}
-    )) {
-	my $error = tt2::get_error();
+    unless (&tt2::parse_tt2($param_copy,$tt2_file , \*STDOUT,
+	    $tt2_include_path, { 'has_header' => 1 })) {
+	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	$param_copy->{'tt2_error'} = $error;
 
@@ -3257,10 +3250,16 @@ sub do_ticket {
      unless($param->{'alt_emails'}{$email}){
 	 unless(&cookielib::set_cookie_extern($Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}})){
 	     &wwslog('notice', 'Could not set HTTP cookie for external_auth');
-	     &web_db_log({'parameters' => "$Conf{'cookie'},$param->{'cookie_domain'},%{$param->{'alt_emails'}}",
-			  'target_email' => $in{'email'},
-			  'status' => 'error',
-			  'error_type' => 'cookie'});
+	    web_db_log(
+		{
+		    'parameters' => $param->{'cookie_domain'}.','.
+		    join(',', map { "$_ => $param->{'alt_emails'}{$_}" }
+			keys %{$param->{'alt_emails'} || {}}),
+		    'target_email' => $in{'email'},
+		    'status' => 'error',
+		    'error_type' => 'cookie'
+		}
+	    );
 	     return undef;
 	 }
      }
@@ -3276,6 +3275,7 @@ sub do_ticket {
 	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 	 $session->{'lang'} = $param->{'lang'} ;
      }
+    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
 	 &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
@@ -4634,7 +4634,7 @@ sub do_pref {
 	 my $entry = {'value' => $p};
 
 	 ## Set description from NLS
-	 $entry->{'desc'} = sprintf gettext($wwslib::cookie_period{$p}{'gettext_id'});
+	 $entry->{'desc'} = gettext($wwslib::cookie_period{$p}{'gettext_id'});
 
 	 ## Choose nearest delay
 	 if ((! $selected) && $param->{'user'}{'cookie_delay'} >= $p) {
@@ -4903,6 +4903,7 @@ sub check_custom_attribute {
      ## Set session language and user language to new value
      $session->{'lang'} = $in{'lang'} ;
      $param->{'lang'} = $in{'lang'};
+    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if (&List::is_global_user($param->{'user'}{'email'})) {
 
@@ -5178,24 +5179,24 @@ sub do_suboptions {
     $s->{'date'} = gettext_strftime "%d %b %Y", localtime($s->{'date'});
     $s->{'update_date'} = gettext_strftime "%d %b %Y", localtime($s->{'update_date'});
     
-    foreach $m (keys %wwslib::reception_mode) {
-	if ($list->is_available_reception_mode($m)) {
-	    $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
+    foreach $m ($list->available_reception_mode) {
+	    $param->{'reception'}{$m}{'description'} =
+		$list->get_option_title($m, 'reception');
 	    if ($s->{'reception'} eq $m) {
-		$param->{'reception'}{$m}{'selected'} = 'selected="selected"';
+		$param->{'reception'}{$m}{'selected'} = ' selected';
 		if ($m =~ /^(mail|notice|not_me|txt|html|urlize)$/i) {
 		    $param->{'possible_topic'} = 1;
 		}
 	    }else {
 		$param->{'reception'}{$m}{'selected'} = '';
 	    }
-	}
     }
     
-    foreach $m (keys %wwslib::visibility_mode) {
-	$param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+    foreach $m (qw(conceal noconceal)) {
+	$param->{'visibility'}{$m}{'description'} =
+	    $list->get_option_title($m, 'visibility');
 	if ($s->{'visibility'} eq $m) {
-	    $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	    $param->{'visibility'}{$m}{'selected'} = ' selected';
 	}else {
 	    $param->{'visibility'}{$m}{'selected'} = '';
 	}
@@ -5812,7 +5813,11 @@ sub do_ls_templates  {
     foreach my $file (keys %{$param->{'templates'}}) {
 	foreach my $level (keys %{$param->{'templates'}{$file}}) {
 	    foreach my $lang (keys %{$param->{'templates'}{$file}{$level}}) {
-		$param->{'lang_per_level'}{$level}{$lang} = 1;
+		$param->{'lang_per_level'}{$level}{$lang} =
+		    {
+			'title' => (Language::GetLangName($lang) || $lang),
+			'lang_tag' => Language::LanguageTag($lang),
+		    };
 	    }
 	}	
     }
@@ -5838,14 +5843,19 @@ sub do_remove_template {
     
     &wwslog('info', 'do_remove_template');
 
-    my $template_path ;
+    my $template_path;
 
-    if ($in{'scope'} eq 'list') { 
-	$template_path = &tools::get_template_path($in{'webormail'},$robot,'list',$in{'template_name'},$in{'tpl_lang'},$list);
-    }else{
-	$template_path = &tools::get_template_path($in{'webormail'},$robot,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') { 
+	report::reject_report_web('user', 'missing_arg',
+	    {'argument' => 'list'}, $param->{'action'});
+	wwslog('err', 'do_remove_template: missing parameter list');
+	web_db_log({'parameters' => $in{'webormail'}, 'status' => 'error',
+	    'error_type' => 'missing_parameter'});
+	return 1;
     }
-        
+    $template_path = tools::get_template_path($in{'webormail'}, $robot,
+	$in{'scope'}, $in{'template_name'}, $in{'tpl_lang'}, $list);
+
     my $template_old_path = &tools::shift_file($template_path,10);
     unless ($template_old_path) {
 	&report::reject_report_web('intern','remove_failed',{'path'=>$template_path},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -5869,16 +5879,20 @@ sub do_remove_template {
 
 # show a template, used by copy_template and edit_emplate
 sub do_view_template {
-    
     &wwslog('info', "do_view_template(type=$in{'webormail'},template-name=$in{'template_name'},listname=$in{'list'},path=$in{'template_path'},scope=$in{'scope'},lang=$in{'tpl_lang'})");
 
-    my $template_path ;
- 
-    if ($in{'scope'} eq 'list') { 
-	$template_path = &tools::get_template_path($in{'webormail'},$robot,'list',$in{'template_name'},$in{'tpl_lang'},$list);
-    }else{
-	$template_path = &tools::get_template_path($in{'webormail'},$robot,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    my $template_path;
+
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') {
+	report::reject_report_web('user', 'missing_arg',
+	    {'argument' => 'list'}, $param->{'action'});
+	wwslog('err', 'do_view_template: missing parameter webormail');
+	web_db_log({'parameters' => $in{'webormail'}, 'status' => 'error',
+	    'error_type' => 'missing_parameter'});
+	return 1;
     }
+    $template_path = tools::get_template_path($in{'webormail'}, $robot,
+	$in{'scope'}, $in{'template_name'}, $in{'tpl_lang'}, $list);
 
     unless (open (TPL,$template_path)) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $in{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -5897,7 +5911,14 @@ sub do_view_template {
     $param->{'template_name'} = $in{'template_name'};
     $param->{'template_path'} = $template_path;
     $param->{'scope'} = $in{'scope'};    
-    $param->{'tpl_lang'} = $in{'tpl_lang'};
+
+    my $tpl_lang = $in{'tpl_lang'} || 'default';
+    $param->{'tpl_lang'} = $tpl_lang;
+    unless ($tpl_lang eq 'default') {
+	$param->{'tpl_lang_title'} =
+	    Language::GetLangName($tpl_lang) || $tpl_lang;
+	$param->{'tpl_lang_tag'} = Language::LanguageTag($tpl_lang);
+    }
 
     return 1;
 }
@@ -5927,8 +5948,10 @@ sub do_copy_template {
 			     'error_type' => 'unknown_list'});
 		return undef;
 	    }
-	    
-	    $param->{'template_path_out'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope_out'},$in{'template_name_out'},$in{'tpl_lang_out'},$list_out);
+	    $param->{'template_path_out'} =
+		tools::get_template_path($in{'webormail'}, $robot,
+		'list', $in{'template_name_out'}, $in{'tpl_lang_out'},
+		$list_out);
 	}else{
 	    &report::reject_report_web('user','missing_arg',{'argument' => 'list'},$param->{'action'});
 	    &wwslog('err','do_copy_template: missing parameter webormail');
@@ -5938,7 +5961,9 @@ sub do_copy_template {
 	    return 1;
 	}
     }else{
-	$param->{'template_path_out'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope_out'},$in{'template_name_out'},$in{'tpl_lang_out'});
+	$param->{'template_path_out'} =
+	    tools::get_template_path($in{'webormail'}, $robot,
+	    $in{'scope_out'}, $in{'template_name_out'}, $in{'tpl_lang_out'});
     }
     
     unless (&tools::mk_parent_dir($param->{'template_path_out'})) {
@@ -5964,7 +5989,15 @@ sub do_copy_template {
     if ($in{'list_out'}) {$param->{'list'} = $in{'list'} = $in{'list_out'} ;}		  
 
     $param->{'webormail'} = $in{'webormail'};
-    $param->{'tpl_lang'} = $in{'tpl_lang'} = $in{'tpl_lang_out'};
+
+    my $tpl_lang = $in{'tpl_lang_out'} || 'default';
+    $param->{'tpl_lang'} = $in{'tpl_lang'} = $tpl_lang;
+    unless ($tpl_lang eq 'default') {
+	$param->{'tpl_lang_title'} =
+	    Language::GetLangName($tpl_lang) || $tpl_lang;
+	$param->{'tpl_lang_tag'} = Language::LanguageTag($tpl_lang);
+    }
+
     $param->{'scope'} = $in{'scope'} = $in{'scope_out'} ;
     $param->{'template_path'} = $in{'template_path'} = $param->{'template_path_out'};
     $param->{'template_name'} = $in{'template_name'} = $in{'template_name_out'};
@@ -5985,11 +6018,11 @@ sub do_manage_template {
     if  ($in{'message_template'}) {		
 	my $escaped_template_path = $in{'message_template'};
 	$escaped_template_path =~ s/\s/_/g ;
-	$param->{'template_path'} = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
+	$param->{'template_path'} = tools::get_template_path('mail', $robot,
+	    'list', 'reject_'.$escaped_template_path.'.tt2', '', $list);
     }
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2','',$list);
-    my $default_file = &tools::find_file('reject.tt2',@{$tt2_include_path});
-
+    my $default_file =
+	tools::get_filename('etc', {}, 'mail_tt2/reject.tt2', $robot, $list);
 
     if ($in{'subaction'} eq 'save') {
 	## create the parent directory if it doesn't already exist
@@ -6024,7 +6057,8 @@ sub do_manage_template {
 	    return undef;  
 	}
 	my $escaped_template_path = $in{'new_template_name'};$escaped_template_path =~ s/\s/_/g ;
-	my $new_template_path = &tools::get_template_path('mail',$robot,'list', ,'reject_'.$escaped_template_path.'.tt2','',$list);
+	my $new_template_path = tools::get_template_path('mail', $robot,
+	    'list', 'reject_'.$escaped_template_path.'.tt2', '', $list);
 
 	if (-f $new_template_path) {
 	    &report::reject_report_web('intern','template already exist',{'path' => $new_template_path},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -6041,9 +6075,8 @@ sub do_manage_template {
 	    return undef;
 	}	
 
-	my $default_file =  &tools::get_template_path('mail',$robot,'robot', ,'reject.tt2','',$list);
-	$default_file = &tools::get_template_path('mail',$robot,'site', ,'reject.tt2','',$list) unless (-f $default_file);
-	$default_file = &tools::get_template_path('mail',$robot,'distrib', ,'reject.tt2','',$list)unless (-f $default_file);
+	my $default_file =
+	    tools::get_filename('etc', {}, 'mail_tt2/reject.tt2', $robot, $list);
 
 	unless(open (DEFAULT, $default_file)){
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -6169,21 +6202,19 @@ sub do_edit_template  {
     unless ($in{'content'}) {
 	return 1;
     }
-    if ($in{'scope'} eq 'list') { 
-	if ($in{'list'}) {
-	    $param->{'template_path'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope'},$in{'template_name'},$in{'tpl_lang'},$list);
-	}else{
-	    &report::reject_report_web('user','listname_needed',{},$param->{'action'});
-	    &wwslog('info',"edit_template : no output lisname while output scope is list");
-	    &web_db_log({'parameters' => $in{'template_name'},
-			 'status' => 'error',
-			 'error_type' => 'no_list'});
-	    return undef;
-	}
-    }else {
-	$param->{'template_path'} = &tools::get_template_path($in{'webormail'},$robot,$in{'scope'},$in{'template_name'},$in{'tpl_lang'});
+    if ($in{'scope'} eq 'list' and ref $list ne 'List') { 
+	report::reject_report_web('user', 'listname_needed',
+	    {}, $param->{'action'});
+	wwslog('info',
+	    "edit_template : no output lisname while output scope is list");
+	web_db_log({'parameters' => $in{'template_name'}, 'status' => 'error',
+	    'error_type' => 'no_list'});
+	return undef;
     }
-    
+    $param->{'template_path'} =
+	tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
+	$in{'template_name'}, $in{'tpl_lang'}, $list);
+
     unless (open (TPLOUT,'>'.$param->{'template_path'})) {
 	&report::reject_report_web('intern','cannot_open_file',{'path' => $param->{'template_path'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	&wwslog('err',"edit_template: can't open file %s", $param->{'template_path'});
@@ -6239,13 +6270,12 @@ sub do_skinsedit {
 	}
     }
 
-    if(($in{'editcolors'})&&($in{'subaction'} eq 'test')){
-
-	return unless ($in{'custom_color_number'} =~ /color_/);
+    if ($in{'editcolors'} and $in{'subaction'} eq 'test') {
+	return unless $in{'custom_color_number'} =~ /color_/;
 	$param->{'custom_color_number'} = $in{'custom_color_number'};
 	$param->{'custom_color_value'} = $in{'custom_color_value'};
 	$param->{'custom_css'} = $css_url.'/'.$param->{'user'}{'email'}.'.style.css';
-	$session->{'custom_css'} = $param->{'custom_css'} ;
+	$session->{'custom_css'} = $param->{'custom_css'};
 
 	$session->{$in{'custom_color_number'}} =  $in{'custom_color_value'};
 	
@@ -6256,12 +6286,12 @@ sub do_skinsedit {
 		$param->{'session'}{'color_'.$colornumber} = $session->{'color_'.$colornumber} ;
 	    }
 	}
-
     }
-    if (($in{'subaction'} eq 'install')||($in{'installcss'})) {
 
-	my $lang = &Language::Lang2Locale($param->{'lang'});
-	my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,'');
+    if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
+	## Do not include locale subdirectories.
+	## The css.tt2 by each locales will override styles in main CSS.
+	my $tt2_include_path = tools::make_tt2_include_path($robot, 'web_tt2', '', '');
 
 	my $date= time;
 	my $style_file;
@@ -7470,7 +7500,7 @@ sub do_viewmod_old {
      }
      &web_db_log({'parameters' => $in{'file'},
 		  'status' => 'success'});
-     &tt2::allow_absolute_path();
+     $allow_absolute_path = 1;
 
      return 1;
  }
@@ -7557,7 +7587,7 @@ sub do_viewmod_old {
      if ($in{'content'} && ($in{'content'} !~ /^\s*$/)) {			
 
 	 ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
-	 $in{'content'} =~ s/\015//g;
+	 $in{'content'} =~ s/\r\n|\r/\n/g;
 
 	 ## Create directory if required
 	 my $dir = $param->{'filepath'};
@@ -8891,7 +8921,7 @@ Creates a list using a list template
      }
 
      ## notify listmaster
-     my $list = new List $in{'listname'};
+    my $list = List->new($in{'listname'}, $robot);
      unless (defined $list) {
        &wwslog('info',"failed to create list object for list '%s'",$in{'listname'});
        &report::reject_report_web('intern','create_list',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -8960,8 +8990,6 @@ Sends back the list creation edition form.
 
 =item * tools::get_list_list_tpl
 
-=item * tt2::allow_absolute_path
-
 =item * report::reject_report_web
 
 =back 
@@ -9016,7 +9044,7 @@ Sends back the list creation edition form.
 	 &report::reject_report_web('intern','unable_to_load_create_list_templates',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
      }	
 
-     &tt2::allow_absolute_path();
+     $allow_absolute_path = 1;
 
      foreach my $template (keys %{$param->{'list_list_tpl'}}){
 	 $param->{'tpl_count'} ++ ;
@@ -9099,21 +9127,21 @@ sub do_home {
      my $user = &List::get_global_user($in{'email'});
      $param->{'current_subscriber'}{'lang'} = &Language::GetLangName($user->{'lang'});
 
-     foreach my $m (keys %wwslib::reception_mode) {		
-       if ($list->is_available_reception_mode($m)) {
-	 $param->{'reception'}{$m}{'description'} = sprintf(gettext($wwslib::reception_mode{$m}->{'gettext_id'}));
+     foreach my $m ($list->available_reception_mode) {		
+	 $param->{'reception'}{$m}{'description'} =
+	    $list->get_option_title($m, 'reception');
 	 if ($param->{'current_subscriber'}{'reception'} eq $m) {
-	     $param->{'reception'}{$m}{'selected'} = 'selected="selected"';
+	     $param->{'reception'}{$m}{'selected'} = ' selected';
 	 }else {
 	     $param->{'reception'}{$m}{'selected'} = '';
 	 }
-       }
      }
 
-     foreach my $m (keys %wwslib::visibility_mode) {
-	 $param->{'visibility'}{$m}{'description'} = sprintf(gettext($wwslib::visibility_mode{$m}->{'gettext_id'}));
+     foreach my $m (qw(conceal noconceal)) {
+	 $param->{'visibility'}{$m}{'description'} =
+	    $list->get_option_title($m, 'visibility');
 	 if ($param->{'current_subscriber'}{'visibility'} eq $m) {
-	     $param->{'visibility'}{$m}{'selected'} = 'selected="selected"';
+	     $param->{'visibility'}{$m}{'selected'} = ' selected';
 	 }else {
 	     $param->{'visibility'}{$m}{'selected'} = '';
 	 }
@@ -9185,7 +9213,7 @@ sub do_home {
 	 return undef;
      }
 
-     &tt2::allow_absolute_path();
+     $allow_absolute_path = 1;
 
      return 1;
  }
@@ -10339,8 +10367,9 @@ sub _prepare_edit_form {
 	     foreach my $selected_topic (@topics) {
 		 next unless (defined $selected_topic);
 		 $p->{'value'}{$selected_topic}{'selected'} = 1;
-		 $p->{'value'}{$selected_topic}{'title'} = "Unknown ($selected_topic)"
-		     unless (defined $p->{'value'}{$selected_topic}{'title'});
+		 $p->{'value'}{$selected_topic}{'title'} =
+		    sprintf gettext("Unknown (%s)"), $selected_topic
+		    unless (defined $p->{'value'}{$selected_topic}{'title'});
 	     }
 	 }elsif ($pname eq 'digest') {
 	     foreach my $v (@{$p->{'value'}}) {
@@ -10351,7 +10380,10 @@ sub _prepare_edit_form {
 		    $v->{'type'} = 'enum';
 		}else{
 		    foreach my $day (keys %{$v->{'value'}}) {
-			$v->{'value'}{$day}{'title'} = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
+			my $t = gettext_strftime "%A", gmtime(0 + ($day +3) * (3600 * 24));
+			$t = sprintf '%s (%s)', $t, $day
+			    if List::is_listmaster($param->{'user'}{'email'}, $robot);
+			$v->{'value'}{$day}{'title'} = $t;
 		    }
 		}
 	    }
@@ -10359,11 +10391,37 @@ sub _prepare_edit_form {
 	     my $saved_lang = &Language::GetLang();
 	     
 	     foreach my $lang (keys %{$p->{'value'}}) {
-		 #&wwslog('notice','LANG: %s', $lang);
-		 &Language::SetLang($lang);
-		 $p->{'value'}{$lang}{'title'} = gettext('_language_');
+		&Language::SetLang($lang);
+		my $t = gettext('_language_');
+		$t = sprintf '%s (%s)', $t, $lang
+		    if List::is_listmaster($param->{'user'}{'email'}, $robot);
+		$p->{'value'}{$lang}{'title'} = $t;
+		$p->{'value'}{$lang}{'lang_tag'} = Language::LanguageTag($lang);
 	     }
 	     &Language::SetLang($saved_lang);
+	 } elsif ($pname eq 'available_user_options' or
+		  $pname eq 'default_user_options') {
+	    foreach my $v (@{$p->{'value'}}) {
+		if ($v->{'name'} eq 'reception') {
+		    foreach my $x (keys %{$v->{'value'}}) {
+			$v->{'value'}{$x}{'title'} =
+			    $list->get_option_title($x, 'reception',
+				List::is_listmaster($param->{'user'}{'email'}, $robot));
+		    }
+		} elsif ($v->{'name'} eq 'visibility') {
+		    foreach my $x (keys %{$v->{'value'}}) {
+			$v->{'value'}{$x}{'title'} =
+			    $list->get_option_title($x, 'visibility',
+				List::is_listmaster($param->{'user'}{'email'}, $robot));
+		    }
+		}
+	    }
+	 } elsif ($pname eq 'status') {
+	    foreach my $x (keys %{$p->{'value'}}) {
+		$p->{'value'}{$x}{'title'} =
+		    $list->get_option_title($x, 'status',
+			List::is_listmaster($param->{'user'}{'email'}, $robot));
+	    }
 	 }
 
 	 push @{$param->{'param'}}, $p;	
@@ -12409,7 +12467,7 @@ sub do_latest_d_read {
      ## parameters of the current directory
      $param->{'doc_date'} =  gettext_strftime "%d %b %y  %H:%M", localtime($info[9]);
 
-     &tt2::allow_absolute_path();
+     $allow_absolute_path = 1;
 
      $param->{'father_icon'} = $icon_table{'father'};
 
@@ -12542,7 +12600,7 @@ sub do_latest_d_read {
      ## parameters of the current directory
      $param->{'doc_date'} = gettext_strftime "%d %b %y  %H:%M", localtime($info[9]);
 
-     &tt2::allow_absolute_path();
+     $allow_absolute_path = 1;
 
      $param->{'father_icon'} = $icon_table{'father'};
 
@@ -15642,15 +15700,15 @@ sub do_suspend_request {
 
 	$member_info->{'reception'} ||= 'mail';
 	$member_info->{'visibility'} ||= 'noconceal';
-	foreach my $mode (keys %wwslib::reception_mode) {
-	    if ($list->is_available_reception_mode($mode)) {
-		$param->{'reception'}{$list->{'name'}}{$mode}{'description'} = sprintf(gettext($wwslib::reception_mode{$mode}->{'gettext_id'}));
+	foreach my $mode ($list->available_reception_mode) {
+		$param->{'reception'}{$list->{'name'}}{$mode}{'description'} =
+		     $list->get_option_title($mode, 'reception');
 		if ($member_info->{'reception'} eq $mode) {
-		    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} = 'selected="selected"';
+		    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} =
+			' selected';
 		}else {
 		    $param->{'reception'}{$list->{'name'}}{$mode}{'selected'} = '';
 		}
-	    }
 	}
 	
 	my $subscription = {'listname' => $list->{'name'},
@@ -15887,7 +15945,9 @@ sub do_compose_mail {
 	}
 	$param->{'topic_required'} = $list->is_msg_topic_tagging_required();
     }
-    
+
+    $param->{'merge_feature'} = $list->{'admin'}{'merge_feature'} eq 'on';
+
     return 1;
  }
 
@@ -16288,6 +16348,7 @@ sub do_send_mail {
 
      $session->{'lang'} = $in{'lang'} ;
      $param->{'lang'} = $in{'lang'};
+    $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($param->{'user'}{'email'}) {
 	 if (&List::is_global_user($param->{'user'}{'email'})) {
@@ -16503,7 +16564,6 @@ sub export_topics {
      $param->{'topics'}[int($total / 2)]{'next'} = 1;
  }
 
-
 # manage blacklist
 sub do_blacklist {
     &wwslog('info', 'do_blacklist(%s)', $param->{'list'});
@@ -16536,12 +16596,10 @@ sub do_blacklist {
 	    &wwslog('info','do_blacklist : unable to create file %s',$file);
 	    &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$param->{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	}
-	my @lines = split(/\n/, $in{'blacklist'});
+	my @lines = split(/\r\n|\r|\n/, $in{'blacklist'});
 	$param->{'ignored'} = 0;
 	my $count = 0; # count utils lines in order to remove empty blacklist file
 	foreach my $line (@lines) {
-	    $line =~ s/\015//;
-
 	    if ($line =~ /\*.*\*/) {
 		$param->{'ignored_linest'} .=  $line."\n";
 		$param->{'ignored'} += 1;
@@ -16811,6 +16869,9 @@ sub do_viewlogs {
 		my $line = &Log::get_first_db_log($select); 
 		while(defined $line->{'date'}) {
 			$line->{'date'} = gettext_strftime "%d %b %Y %H:%M:%S", localtime($line->{'date'});
+			# can be wrapped
+			$line->{'parameters'} =~ s/,(?!\s)/, /g
+			    if $line->{'parameters'};
 			push @{$param->{'log_entries'}}, $line;
 			$line = &Log::get_next_db_log();
 		}
@@ -17019,21 +17080,22 @@ sub do_arc_delete {
 
 
 sub do_css {
-    &wwslog('debug', 'do_css(%s)', $in{'file'});
+    &wwslog('debug', 'do_css(%s)', $in{'file'});		
     $param->{'bypass'} = 'extreme';
-    printf "Content-type: text/css\n\n";
+    print "Content-type: text/css; charset=utf-8\n\n";
     $param->{'css'} = $in{'file'}; 
 
-    my $lang = &Language::Lang2Locale($param->{'lang'});
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$lang,'');
+    ## Do not include locale subdirectories.
+    ## The css.tt2 by each locales will override styles in main CSS.
+    my $tt2_include_path = tools::make_tt2_include_path($robot, 'web_tt2', '', '');
 
-    unless (&tt2::parse_tt2($param, 'css.tt2', \*STDOUT, $tt2_include_path)) {
+    unless (&tt2::parse_tt2($param, 'css.tt2' ,\*STDOUT, $tt2_include_path)) {
 	my $error = &tt2::get_error();
 	$param->{'tt2_error'} = $error;
 	&List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
 	&wwslog('info', "do_css/$in{'file'} : error");
     }
-    
+
     return;
 }
 
@@ -17077,7 +17139,7 @@ sub do_wsdl {
     }
 
     $param->{'bypass'} = 'extreme';
-    printf "Content-type: text/xml\n\n";
+    print "Content-type: text/xml\n\n";
     
    $param->{'conf'}{'soap_url'}  = $soap_url;
     
@@ -17113,7 +17175,7 @@ sub do_sync_include {
 sub do_review_family {
     &wwslog('info', 'do_review_family');
 
-    my $family = new Family ($in{'family_name'}, $robot);
+    my $family = Family->new($in{'family_name'}, $robot);
     unless (defined $family) {
 	&report::reject_report_web('user','unknown_family',{'family'=>$in{'family_name'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	&wwslog('err', 'do_review_family: incorrect family %s', $in{'family_name'});
@@ -17122,17 +17184,18 @@ sub do_review_family {
 
     my $all_lists = $family->get_family_lists();
     foreach my $flist (@{$all_lists}) {
-	my $l = $list->{'name'};
-	
 	unless (defined $flist) {
-	    &wwslog('err', 'do_review_family: incorrect list %s', $l);
-	    next;	    
+	    wwslog('err', 'incorrect list');
+	    next;
 	}
-	push @{$param->{'family_lists'}}, {'name' => $flist->{'name'},
-					   'status' => $flist->{'admin'}{'status'},
-					   'instantiation_date' => $flist->{'admin'}{'latest_instantiation'}{'date'},
-					   'subject' => $flist->{'admin'}{'subject'},
-				       };
+
+	push @{$param->{'family_lists'}},
+	    {   'name' => $flist->{'name'},
+		'status' => $flist->{'admin'}{'status'},
+		'instantiation_date' =>
+		    (gettext_strftime "%d %b %Y at %H:%M:%S", localtime $flist->{'admin'}{'latest_instantiation'}{'date_epoch'}),
+		'subject' => $flist->{'admin'}{'subject'},
+	    };
     }
 
     return 1;
@@ -17341,9 +17404,9 @@ sub _prepare_subscriber {
     ## Reception mode and topics
     $user->{'reception'} ||= 'mail';
     if (($user->{'reception'} eq 'mail') &&  $user->{'topics'}) {
-	$user->{'reception'} = "topic ($user->{'topics'})";
+       $user->{'reception'} = sprintf gettext("topic (%s)"), $user->{'topics'};
     }
-    
+
     $user->{'email'} =~ /\@(.+)$/;
     $user->{'domain'} = $1;
     $user->{'pictures_url'} = &tools::make_pictures_url('email' => $user->{'email'}, 'list' => $list);
@@ -17618,7 +17681,9 @@ sub check_authz {
     }
     
     unless ($r_action =~ /do_it/i) {
-	&report::reject_report_web('auth',$reason,{'login'=> $param->{'need_login'}},$param->{'action'});
+	unless(prevent_visibility_bypass()) {
+	    &report::reject_report_web('auth',$reason,{'login'=> $param->{'need_login'}},$param->{'action'});
+	}
 	&wwslog('info','check_authz: access denied in %s for %s', $subname, $param->{'user'}{'email'});
 	return undef;
     }

@@ -86,7 +86,7 @@
  	     [% END %]
 	   </td>
 	 [% IF is_listmaster || is_owner || is_editor  %]
-           <td class="color7"><strong>[%|loc%]bouncing[%END%]</strong>
+           <td class="bg_color_error"><strong>[%|loc%]bouncing[%END%]</strong>
 	   </td>
 	 [% END %]
 
@@ -117,7 +117,7 @@
           </td>
 	  [% IF is_listmaster || is_owner || is_editor  %]
   	    <td>
-  	      [% u.reception %]
+  	      [%|optdesc('reception')%][% u.reception %][% END %]
 	    </td>
             <td>
             [% IF u.subscribed %]

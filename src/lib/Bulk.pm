@@ -32,7 +32,6 @@ use Time::HiRes qw(time);
 use Time::Local;
 use MIME::Entity;
 use MIME::EncWords;
-use MIME::WordDecoder;
 use MIME::Parser;
 use MIME::Base64;
 use Term::ProgressBar;
@@ -103,18 +102,14 @@ sub next {
 	return undef;
     }
 
-    my $rv;
+    my $sth;
     # Lock the packet previously selected.
-    unless ($rv = &SDM::do_query( "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", &SDM::quote($lock), $packet->{'messagekey'}, $packet->{'packetid'})) {
+    unless ($sth = &SDM::do_query( "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", &SDM::quote($lock), $packet->{'messagekey'}, $packet->{'packetid'})) {
 	&Log::do_log('err','Unable to lock packet %s for message %s',$packet->{'packetid'}, $packet->{'messagekey'});
 	return undef;
     }
     
-    if ($rv < 0) {
-	&Log::do_log('err','Unable to lock packet %s for message %s, though the query succeeded',$packet->{'packetid'}, $packet->{'messagekey'});
-	return undef;
-    }
-    unless ($rv) {
+    if ($sth->rows == 0) {
 	&Log::do_log('info','Bulk packet is already locked');
 	return undef;
     }
@@ -231,8 +226,8 @@ sub merge_msg {
     }
     ## Get the Content-Type / Charset / Content-Transfer-encoding of a message
     my $type      = $entity->mime_type;
-    my $charset   = &MIME::WordDecoder::unmime($entity->head->mime_attr('content-type.charset'));
-    my $encoding  = &MIME::WordDecoder::unmime($entity->head->mime_encoding);
+    my $charset   = $entity->head->mime_attr('content-type.charset');
+    my $encoding  = $entity->head->mime_encoding;
 
     my $message_output;
     my $IO;

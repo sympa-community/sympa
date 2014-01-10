@@ -1,0 +1,42 @@
+[%# $Id: $ -%]
+[%#
+This style sheet will override any portion of main CSS, not fully replacing it.
+So this may be used for locale-specific customization.
+-%]
+/* begin ja_JP/css.tt2 */
+@media screen {  }
+[%# Enlarge fonts. %]
+body {
+    font-size: 69%;
+    line-height: 1.5;
+}
+[%#
+Overriding font families.  Problems such as below will be solved:
+
+- Default css.tt2 specifies the font families covering Western scripts
+  (Latin, Cyrillic, ...).  East Asian users may prefer consistent font family
+  supporting Western along with Eastern scripts (Han, Hiragana, ...).
+- Internet Explorer 8 bug: pulsatory motion of East Asian texts in links
+  when their font size are around 9 to 11 pt and when font family is not
+  specified explicitly.
+- Windows 7 bug: "Batang", a Korean font, is used for generic family "serif".
+
+Family names are ordered by platforms: Mac OS X and iOS (localized names are
+ignored by Safari), MacOS classic (if any), Windows (Vista or later, then
+XP/2000 or earlier), Red Hat/Fedora, Debian/Ubuntu, and others if any.
+-%]
+[%# Overriding default font family. %]
+* {
+    font-family:"ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "ヒラギノ 角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴ シック", "VL Pゴシック", "VL PGothic", "TakaoExゴシック", TakaoExGothic, "IPAex ゴシック", IPAexGothic, "IPA Pゴシック", IPAPGothic, sans-serif;
+}
+[%# Overriding "serif!important" %]
+#bandeau_top #Identity,
+#bandeau_top #Identity_not_connect,
+#bandeau_top #Identity_not_connect label,
+#bandeau_top .prefs,
+#bandeau_top a,
+#bandeau_top .login,
+#bandeau_top .remember {
+    font-family: "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "さざなみ明朝", "Sazanami Mincho", "TakaoEx明朝", TakaoExMincho, "IPAex明朝", IPAexMincho, "IPA P明朝", IPAPMincho, serif !important;
+}
+/* end ja_JP/css.tt2 */

@@ -4,10 +4,12 @@
 
 <ul>
 	
-	[% IF list_status == 'closed' %]
+	[% IF list_status == 'closed' || list_status == 'family_closed' %]
 	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Closed list[%END%]</span></li>
 	[% ELSIF list_status == 'pending' %]
 	<li class="menuLinks"><span class="bg_color_error">[%|loc%]List not yet activated[%END%]</span></li>
+	[% ELSIF list_status == 'error_config' %]
+	<li class="menuLinks"><span class="bg_color_error">[%|loc%]Erroneous configuration[%END%]</span></li>
 	[% END %]
 	
 	<li class="menuLinks">
@@ -28,7 +30,7 @@
 	</li>
 	
 	<li class="menuLinks">
-		[%|loc%]Owners[%END%]:
+		[%|loc%]Owners:[%END%]
 		<span style="font-weight: normal;">
 		[% FOREACH o = owner %]
 			[% IF o.value.gecos %][% o.value.gecos %][% ELSE %][% o.value.local %][% END %][% IF ! loop.last %],[% END %] 
@@ -43,7 +45,7 @@
 	</li>
 	
 	<li class="menuLinks">
-		[%|loc%]Moderators[%END%]:
+		[%|loc%]Moderators:[%END%]
 		<span style="font-weight: normal;">
 		[% IF editor %]
 			[% FOREACH e = editor %]
@@ -52,7 +54,7 @@
 				[% END %]
 			[% END %]
 		[% ELSE %]
-			<i>(same as owners)</i>
+			<i>[%|loc%](same as owners)[%END%]</i>
 		[% END %]
 		</span>
 		

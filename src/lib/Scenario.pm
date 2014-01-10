@@ -22,9 +22,12 @@ package Scenario;
 
 use strict;
 
+use Mail::Address;
 use Net::Netmask;
+# tentative
+use Data::Dumper;
 
-use tools;
+#use tools; # temporarily disabled to avoid dependency loop.
 use List;
 use Log;
 use Conf;
@@ -590,8 +593,9 @@ sub verify {
     
     ## The expression for regexp is tricky because we don't allow the '/' character (that indicates the end of the regexp
     ## but we allow any number of \/ escape sequence)
-    while ($arguments =~ s/^\s*(
-				\[\w+(\-\>[\w\-]+)?\]
+    while (
+	$arguments =~ s/^\s*(
+				(\[\w+(\-\>[\w\-]+)?\](\[[-+]?\d+\])?)
 				|
 				([\w\-\.]+)
 				|
@@ -669,21 +673,36 @@ sub verify {
 	    $context->{'subscriber'} ||= $list->get_list_member($context->{'sender'});
 	    $value =~ s/\[subscriber\-\>([\w\-]+)\]/$context->{'subscriber'}{$1}/;
 	    
-	    ## SMTP Header field
-	}elsif ($value =~ /\[(msg_header|header)\-\>([\w\-]+)\]/i) {
+	} elsif ($value =~
+	    /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
+	    ## SMTP header field.
+	    ## "[msg_header->field] returns arrayref of field values,
+	    ## preserving order. "[msg_header->field][index]" returns one
+	    ## field value.
 	    my $field_name = $2;
+	    my $index = (defined $3) ? $3 + 0 : undef;
 	    if (defined ($context->{'msg'})) {
-		my $header = $context->{'msg'}->head;
-		my @fields = $header->get($field_name);
-		## Defaulting empty or missing fields to '', so that we can test
-		## their value in Scenario, considering that, for an incoming message,
-		## a missing field is equivalent to an empty field : the information it
-		## is supposed to contain isn't available.
-		unless (@fields) {
-		    @fields = ('');
+		my $headers = $context->{'msg'}->head->header();
+		my @fields = grep { $_ } map {
+		    my ($h, $v) = split /\s*:\s*/, $_, 2;
+		    (lc $h eq lc $field_name) ? $v : undef;
+		} @{$headers || []};
+		## Defaulting empty or missing fields to '', so that we can
+		## test their value in Scenario, considering that, for an
+		## incoming message, a missing field is equivalent to an empty
+		## field : the information it is supposed to contain isn't
+		## available.
+		if (defined $index) {
+		    $value = $fields[$index];
+		    unless (defined $value) {
+			$value = '';
+		    }
+		} else {
+		    unless (@fields) {
+		        @fields = ('');
+		    }
+		    $value = \@fields;
 		}
-		
-		$value = \@fields;
 	    }else {
 		if ($log_it == 1) {
 		    &Log::do_log('info','no message object found to evaluate rule %s', $condition);
@@ -799,15 +818,29 @@ sub verify {
     }
     ##### condition is_listmaster
     if ($condition_key eq 'is_listmaster') {
-	
-	if ($args[0] eq 'nobody') {
+	if (!ref $args[0] and $args[0] eq 'nobody') {
 	    if ($log_it == 1) {
 		&Log::do_log('info','%s is not listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
 	    }
 	    return -1 * $negation ;
 	}
 
-	if ( &List::is_listmaster($args[0],$robot)) {
+	my @arg;
+	my $ok = undef;
+	if (ref $args[0] eq 'ARRAY') {
+	    @arg = map { $_->address }
+	    grep { $_ } map { (Mail::Address->parse($_)) } @{$args[0]};
+	} else {
+	    @arg = map { $_->address }
+	    grep { $_ } Mail::Address->parse($args[0]);
+	}
+	foreach my $arg (@arg) {
+	    if (List::is_listmaster($arg, $robot)) {
+		$ok = $arg;
+		last;
+	    }
+	}
+	if ($ok) {
 	    if ($log_it == 1) {
 		&Log::do_log('info','%s is listmaster of robot %s (rule %s)',$args[0],$robot,$condition);
 	    }
@@ -894,11 +927,26 @@ sub verify {
 	    return -1 * $negation ;
 	}
 
-	if ($condition_key eq 'is_subscriber') {
+	my @arg;
+	my $ok = undef;
+	if (ref $args[1] eq 'ARRAY') {
+	    @arg = map { $_->address }
+	    grep { $_ } map { (Mail::Address->parse($_)) } @{$args[1]};
+	} else {
+	    @arg = map { $_->address }
+	    grep { $_ } Mail::Address->parse($args[1]);
+	}
 
-	    if ($list2->is_list_member($args[1])) {
+	if ($condition_key eq 'is_subscriber') {
+	    foreach my $arg (@arg) {
+		if ($list2->is_list_member($arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it == 1) {
-		    &Log::do_log('info',"%s is member of list %s (rule %s)",$args[1],$args[0],$condition);
+		    Log::do_log('info', "%s is member of list %s (rule %s)", $args[1], $args[0], $condition);
 		}
 		return $negation ;
 	    }else{
@@ -909,7 +957,13 @@ sub verify {
 	    }
 
 	}elsif ($condition_key eq 'is_owner') {
-	    if ($list2->am_i('owner',$args[1])) {
+	    foreach my $arg (@arg) {
+		if ($list2->am_i('owner', $arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it == 1) {
 		    &Log::do_log('info',"%s is owner of list %s (rule %s)",$args[1],$args[0],$condition);
 		}
@@ -922,7 +976,13 @@ sub verify {
 	    }
 
 	}elsif ($condition_key eq 'is_editor') {
-	    if ($list2->am_i('editor',$args[1])) {
+	    foreach my $arg (@arg) {
+		if ($list2->am_i('editor', $arg)) {
+		    $ok = $arg;
+		    last;
+		}
+	    }
+	    if ($ok) {
 		if ($log_it == 1) {
 		    &Log::do_log('info',"%s is editor of list %s (rule %s)",$args[1],$args[0],$condition);
 		}

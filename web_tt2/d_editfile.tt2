@@ -27,7 +27,7 @@
   <fieldset>
 
   [% IF url %]
-  <label for="url"><strong> [%|loc%]Bookmark URL[%END%] </strong</label>><br /> 
+  <label for="url"><strong> [%|loc%]Bookmark URL[%END%] </strong></label><br /> 
   <input id="url" name="url" value="[% url %]" />
   [% ELSE %]
   <label for="uploaded_file"><strong> [%|loc(visible_path)%]Replace the file %1 with your file[%END%] </strong></label>

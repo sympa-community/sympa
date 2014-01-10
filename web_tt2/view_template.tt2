@@ -5,19 +5,33 @@
 
 <ul>
 <li>[%|loc%]Template name: [%END%] <strong> [% template_name %] </strong></li>
-<li>[%|loc%]Type: [%END%]<strong> [% webormail %] </strong></li>
+<li>[%|loc%]Type: [%END%]<strong> [% SWITCH webormail -%]
+[% CASE 'web' %][%|loc%]web[%END -%]
+[% CASE 'mail' %][%|loc%]mail[%END -%]
+[% CASE %][% webormail -%]
+[%END%] </strong></li>
 <li>[%|loc%]Path: [%END%]<strong> [% template_path %] </strong></li>
-<li>[%|loc%]Scope: [%END%]<strong> [% scope %] </strong>.
-[% IF scope == 'list' %]
-  [%|loc(list,robot)%]( this template is defined for list %1@%2 )[%END%]
-[% ELSE %]
-  [% IF scope == 'robot' %]
-     [%|loc(robot)%]( this template is the default for all lists of robot %1 unless it is redefined for a specific list )[%END%]
-  [% ELSE %]
-     [%|loc%]( this template is the default used by all robots unless redefined for a specific robot )[%END%]
-  [% END %]
-[% END %]
-</li>
+<li>[%|loc%]Scope: [%END%]
+[%- SWITCH scope -%]
+[% CASE 'distrib' %]<strong> [%|loc%]default[%END%] </strong>
+[%|loc%](this template is the default included in the distribution)[%END%]
+[% CASE 'site' %]<strong> [%|loc%]site[%END%] </strong>
+[%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
+[% CASE 'robot' %]<strong> [%|loc%]robot[%END%] </strong>
+[%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
+[% CASE 'list' %]<strong> [%|loc%]list[%END -%] </strong>
+[%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]
+[% CASE %]<strong> [% scope %] </strong>
+[% END %]</li>
+<li>[%|loc%]Language: [%END%]
+[%- IF tpl_lang == 'default' -%]
+<strong> [%|loc%]default[%END%] </strong>
+[%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
+[%- ELSE -%]
+<strong class="LanguageNeutral"
+lang="[%tpl_lang_tag%]" xml:lang="[%tpl_lang_tag%]"
+> [%tpl_lang_title%] </strong>
+[%- END %]</li>
 </ul>
 </p><br />
 <div class="block">

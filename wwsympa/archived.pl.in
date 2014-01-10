@@ -115,8 +115,8 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
-## Create and write the pidfile
-&tools::write_pid($wwsconf->{'archived_pidfile'}, $$, $options);
+## Create and write the PID file
+tools::write_pid('archived', $$, $options);
 unless ($options->{'stderr_to_tty'}) {
     &tools::direct_stderr_to_file(('pid' => $$));
 }
@@ -368,7 +368,7 @@ while (!$end) {
 &List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
 
 &Log::do_log('notice', 'archived exited normally due to signal');
-&tools::remove_pid($wwsconf->{'archived_pidfile'}, $$);
+tools::remove_pid('archived', $$);
 
 exit(0);
 

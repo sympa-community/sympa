@@ -24,10 +24,9 @@ package SharedDocument;
 use strict;
 
 use Carp;
-use POSIX;
 
 use tools;
-use List;
+use Language qw(gettext_strftime);
 use Log;
 
 ## Creates a new object
@@ -85,7 +84,7 @@ sub new {
     
     ## Date
     my @info = stat $document->{'absolute_path'};
-    $document->{'date'} =  &POSIX::strftime("%d %b %Y", localtime($info[9]));
+    $document->{'date'} = gettext_strftime "%d %b %Y", localtime $info[9];
     $document->{'date_epoch'} =  $info[9];
     
     # Size of the doc

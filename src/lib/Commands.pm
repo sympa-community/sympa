@@ -967,7 +967,11 @@ sub info {
 	    $data->{'digest'} = join (',', @days).' '.$list->{'admin'}{'digest'}{'hour'}.':'.$list->{'admin'}{'digest'}{'minute'};
 	}
 
-	$data->{'available_reception_mode'} = $list->available_reception_mode();
+	## Reception mode
+	$data->{'available_reception_mode'} =
+	    $list->available_reception_mode();
+	$data->{'available_reception_modeA'} =
+	    [$list->available_reception_mode()];
 
 	my $wwsympa_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
 	$data->{'url'} = $wwsympa_url.'/info/'.$list->{'name'};
@@ -1942,7 +1946,16 @@ sub set {
     if ($mode =~ /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)/){
         # Verify that the mode is allowed
         if (! $list->is_available_reception_mode($mode)) {
-	    &report::reject_report_cmd('user','available_reception_mode',{'listname' => $which, 'modes' => $list->available_reception_mode},$cmd_line); 
+	    &report::reject_report_cmd(
+		'user',
+		'available_reception_mode',
+		{   'listname'        => $which,
+		    'modes'           =>
+			join(' ', $list->available_reception_mode()),
+		    'reception_modes' => [$list->available_reception_mode()]
+		},
+		$cmd_line
+	    ); 
 	    &Log::do_log('info','SET %s %s from %s refused, mode not available', $which, $mode, $sender);
 	    return 'not_allowed';
 	}

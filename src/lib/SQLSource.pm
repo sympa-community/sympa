@@ -24,6 +24,7 @@ package SQLSource;
 use strict;
 
 use Carp;
+use DBI;
 use Log;
 use Conf;
 use List;
@@ -105,12 +106,6 @@ sub new {
     $self->{'db_passwd'} ||= $self->{'passwd'};
     $self->{'db_options'} ||= $self->{'connect_options'};
     
-    unless ( eval "require DBI" ){
-	&Log::do_log('err',"Unable to use DBI library, install DBI (CPAN) first");
-	return undef ;
-    }
-    require DBI;
-
     bless $self, $actualclass;
     return $self;
 }

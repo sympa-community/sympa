@@ -14,7 +14,7 @@
     [% line_count = line_count + 1 %]
 <div id="mainviewmod[% msg.key %]" class="block viewmod" style="display:none; background-color:[% color_5 %]; position:absolute; width:80%">
 <input style="float:right" type="button" name="action_distribute" value="X"  onclick="return hideform('mainviewmod[% msg.key %]')"/>
-<h3>Current message</h3>
+<h3>[%|loc%]Current message[%END%]</h3>
 [% PROCESS modform.tt2 %]
 <p>
 <div id="viewmod[% msg.key %]">
@@ -31,9 +31,9 @@
  <table summary="[%|loc%]Listing messages to moderate[%END%]" class="listOfItems">
       <tr>
      [%- IF conf.antispam_feature == 'on' -%]
-	<th>Spam</th>	
+	<th>[%|loc%]Spam[%END%]</th>	
      [%- END -%]
-	<th>Moderate</th>
+	<th>[%|loc%]Moderate[%END%]</th>
 	<th>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
         <th>[%|loc%]Date[%END%]</th>
@@ -52,7 +52,7 @@
 
         [%- IF conf.antispam_feature == 'on' -%]	
 	 <td>
-	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="junk" />
+	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
 	  [%- ELSE -%]&nbsp;
 	  [%- END -%]
 	</td>

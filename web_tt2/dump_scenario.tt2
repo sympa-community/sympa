@@ -33,7 +33,7 @@
 </select>	
 [% END %]
 -->
-[%|loc%]scenario name:[%END%]<input type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
+<label for="new_scenario_name">[%|loc%]scenario name:[%END%]</label> <input id="new_scenario_name" type="text" name="new_scenario_name" size="30" value="[% scenario_name %]" />
 <input class="MainMenuLinks" type="submit" name="action_dump_scenario" value="[%|loc%]save[%END%]" />
 </fieldset>
 </form>

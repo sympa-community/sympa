@@ -67,6 +67,12 @@ Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
   [% report_item %]
 [% END %]
 
+[% ELSIF type == 'css_updated' -%]
+Subject: [% FILTER qencode %][%|loc%]CSS files have been updated[%END%][%END%]
+
+[%|loc%]Static CSS files have been updated.  Check log file for details.[%END%]
+
+
 [% ELSIF type == 'db_restored' -%]
 Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 
@@ -297,6 +303,15 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%|loc(error)%]The following error occurred whila managing bounces: %&[%END%]
 
 [%|loc%]See logs for more details.[%END%]
+
+[% ELSIF type == 'automatic_list_creation_failed' -%]
+Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]
+
+[% IF listname -%]
+[%|loc(listname,family,robot,msg_id)%]Failed to process message. Unable to create the dynamic list %1 on family %2@%3. Message <%4> was ignored.[%END%]
+[%- ELSE -%]
+[%|loc(family,robot,msg_id)%]Failed to process message: family %1@%2 does not exist. Unable to create the dynamic list.  Message <%3> was ignored.[%END%]
+[%- END -%]
 
 [%# INTERNAL SERVER ERROR  : WEB -%]
 [% ELSIF type == 'web_intern_error' -%]

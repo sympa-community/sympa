@@ -457,7 +457,7 @@ our @params = (
 ##        'file'     => 'wwsympa.conf',
 ##    },
     {
-        'name'     => 'log_condition',
+        'name'    => 'log_condition',
         'optional' => '1',
         'vhost'    => '1',
         'file'     => 'wwsympa.conf',
@@ -594,9 +594,21 @@ our @params = (
     {
         'name'     => 'sendmail_aliases',
         'default'  => Sympa::Constants::SENDMAIL_ALIASES,
+        'query'   => gettext('Path of the file that contains all list related aliases'),
+        'vhost'   => '1',
     },
-    ##{ aliases_program: not yet implemented. },
-    ##{ aliases_db_type: not yet implemented. },
+    {
+        'name' => 'aliases_program',
+        'default' => 'newaliases',
+        'query' => gettext('Program used to update alias database.  "makemap", "newaliases", "postalias", "postmap" or full path to custom program'),
+        'vhost'   => '1',
+    },
+    {
+        'name' => 'aliases_db_type',
+        'default' => 'hash',
+        'query' => gettext('Type of alias database.  "btree", "dbm", "hash" and so on.  Available when aliases_program is "makemap", "postalias" or "postmap"'),
+        'vhost'   => '1',
+    },
     {
         'name'     => 'rfc2369_header_fields',
         'query'    => gettext('Specify which rfc2369 mailing list headers to add'),
@@ -859,10 +871,10 @@ our @params = (
     { 'title' => gettext('Internationalization related') },
 
 ##    {
-##        'name'     => 'localedir',
-##        'default'  => Sympa::Constants::LOCALEDIR,
-##        'query'    => gettext('Directory containing available NLS catalogues (Message internationalization)'),
-##        'file'     => 'sympa.conf',
+##        name    => 'localedir',
+##        default => Sympa::Constants::LOCALEDIR,
+##        query   => gettext('Directory containing available NLS catalogues (Message internationalization)'),
+##        file    => 'sympa.conf',
 ##    },
     {
         'name'     => 'supported_lang',
@@ -1331,7 +1343,7 @@ our @params = (
 	##name => 'dkim_header_list',
         ##vhost => '1',
 	##file   => 'sympa.conf',
-        ##query   => 'list of headers to be included ito the message for signature',
+        ##query   => gettext('List of headers to be included ito the message for signature'),
         ##default => 'from:sender:reply-to:subject:date:message-id:to:cc:list-id:list-help:list-unsubscribe:list-subscribe:list-post:list-owner:list-archive:in-reply-to:references:resent-date:resent-from:resent-sender:resent-to:resent-cc:resent-message-id:mime-version:content-type:content-transfer-encoding:content-id:content-description',
     ##},
 

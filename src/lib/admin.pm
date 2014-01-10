@@ -1204,7 +1204,7 @@ sub install_aliases {
     &Log::do_log('debug', "admin::install_aliases($list->{'name'},$robot)");
 
     return 1
-	if ($Conf::Conf{'sendmail_aliases'} =~ /^none$/i);
+	if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~ /^none$/i;
 
     my $alias_manager = $Conf::Conf{'alias_manager' };
     my $output_file = $Conf::Conf{'tmpdir'}.'/aliasmanager.stdout.'.$$;
@@ -1279,7 +1279,7 @@ sub install_aliases {
      &Log::do_log('info', "_remove_aliases($list->{'name'},$robot");
 
     return 1
-	if ($Conf::Conf{'sendmail_aliases'} =~ /^none$/i);
+	if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~ /^none$/i;
 
      my $status = $list->remove_aliases();
      my $suffix = &Conf::get_robot_conf($robot, 'return_path_suffix');

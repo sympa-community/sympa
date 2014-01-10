@@ -1,28 +1,29 @@
 From: [% fromlist %]
 To: [% to %]
 Reply-to: [% replyto %]
-Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][% IF total_group > 1 %][%|loc(current_group,total_group)%] (%1/%2)[%END%][% END %][%END%]
 X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 Digest %2[%END%]
 
 [%|loc%]Table of contents:[%END%]
 
-[%|wrap(0,4)%][% FOREACH m = msg_list -%]
-[% m.id %]. [% m.subject %] - [% m.from %]
+[%|wrap(0,2)%][% FOREACH m = msg_list -%]
+* [% m.id %] - [% m.subject %] - [% m.from %]
 [% END %][%END#wrap%]
-
 ----------------------------------------------------------------------
 
 [% FOREACH m = msg_list -%]
-[%|wrap(0,4)%]Date: [% m.date %]
+[%|wrap(0,1)%]Message-ID: <[% m.id %]>
+Date: [% m.date %]
 From: [% m.from %]
 Subject: [% m.subject %][%END#wrap%]
 
 [% m.plain_body %]
 
 ------------------------------
-
 [% END %]
-[%|loc(list.name,date)%]End of %1 Digest %2[%END%]
 *********************************************
+
+[%|loc(list.name,date)%]End of %1 Digest %2[%END%]
+

@@ -673,22 +673,29 @@ sub soap_cookie2 {
     $expire ||= 600; ## 10 minutes
 
     if ($http_domain eq 'localhost') {
-	$cookie = sprintf "%s=%s; Path=/; Max-Age=%s",
-	    'sympa_session', $value, $expire;
+	$cookie = CGI::Cookie->new(
+	    -name => 'sympa_session',
+	    -value => $value,
+	    -path => '/',
+	);
+	$cookie->max_age(time + $expire); # needs CGI >= 3.51.
     } else {
-	$cookie = sprintf "%s=%s; Domain=%s; Path=/; Max-Age=%s",
-	    'sympa_session', $value, $http_domain, $expire;
+	$cookie = CGI::Cookie->new(
+	    -name => 'sympa_session',
+	    -value => $value,
+	    -domain => $http_domain,
+	    -path => '/',
+	);
+	$cookie->max_age(time + $expire); # needs CGI >= 3.51.
     }
 
     ## Return the cookie value
-    return $cookie;
+    return $cookie->as_string;
 }
 
 sub get_random {
-    &Log::do_log('debug', 'SympaSession::random ');
-     my $random = int(rand(10**7)).int(rand(10**7)); ## Concatenates 2 integers for a better entropy
-     $random =~ s/^0(\.|\,)//;
-     return ($random)
+    ## Concatenates two integers for a better entropy.
+    return sprintf '%07d%07d', int(rand(10**7)), int(rand(10**7));
 }
 
 ## Return the session object content, as a hashref
@@ -717,31 +724,25 @@ sub is_anonymous {
 sub encrypt_session_id {
     my $id_session = shift;
 
-    #XXXreturn $id_session unless $Conf::Conf{'cookie'};
     my $cipher = tools::ciphersaber_installed();
-    return $id_session unless $cipher;
-
-    my $id_session_bin =
-	pack 'nN', ($id_session >> 32), $id_session % (1 << 32);
-    my $cookie_bin = $cipher->encrypt($id_session_bin);
-    return sprintf '%*v02x', '', $cookie_bin;
+    unless ($cipher) {
+	return "5e55$id_session";
+    }
+    return unpack 'H*', $cipher->encrypt(pack 'H*', $id_session);
 }
 
 ## Get session ID from cookie.
 sub decrypt_session_id {
     my $cookie = shift;
 
-    #XXXreturn $cookie unless $Conf::Conf{'cookie'};
+    return undef unless $cookie and $cookie =~ /\A(?:[0-9a-f]{2})+\z/;
+
     my $cipher = tools::ciphersaber_installed();
-    return $cookie unless $cipher;
-
-    return undef unless $cookie =~ /\A[0-9a-f]+\z/;
-    my $cookie_bin = $cookie;
-    $cookie_bin =~ s/([0-9a-f]{2})/sprintf '%c', hex("0x$1")/eg; 
-    my ($id_session_hi, $id_session_lo) =
-	unpack 'nN', $cipher->decrypt($cookie_bin);
-
-    return ($id_session_hi << 32) + $id_session_lo;
+    unless ($cipher) {
+	return undef unless $cookie =~ s/\A5e55//;
+	return $cookie;
+    }
+    return unpack 'H*', $cipher->decrypt(pack 'H*', $cookie);
 }
 
 1;

@@ -61,7 +61,7 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
 $default_domain = $Conf{'domain'};
 
 my $alias_file;
-$alias_file = $Conf{'sendmail_aliases'} || Sympa::Constants::SENDMAIL_ALIASES;
+$alias_file = Conf::get_robot_conf($domain, 'sendmail_aliases') || Sympa::Constants::SENDMAIL_ALIASES;
 $alias_file = $file if ($file);
 
 unless (-w "$alias_file") {
@@ -120,10 +120,14 @@ if ($operation eq 'add') {
 
     ## Newaliases
     unless ($file) {
-	unless (system($alias_wrapper) == 0) {
-	    print STDERR "Failed to execute newaliases: $!\n";
-	    exit(6)
+	unless (system($alias_wrapper, "--domain=$domain") == 0) {
+	    if ($? == -1) {
+		print STDERR "Failed to execute newaliases: $!\n";
+	    } else {
+		printf STDERR "newaliases exited with status %d\n", ($? >> 8);
 	    }
+	    exit(6);
+	}
     }
 
     ## Unlock
@@ -191,9 +195,13 @@ if ($operation eq 'add') {
 
     ## Newaliases
     unless ($file) {
-	unless (system($alias_wrapper) == 0) {
-	    print STDERR "Failed to execute newaliases: $!\n";
-	exit (6);
+	unless (system($alias_wrapper, "--domain=$domain") == 0) {
+	    if ($? == -1) {
+		print STDERR "Failed to execute newaliases: $!\n";
+	    } else {
+		printf STDERR "newaliases exited with status %d\n", ($? >> 8);
+	    }
+	    exit(6);
 	}
     }
     ## Unlock

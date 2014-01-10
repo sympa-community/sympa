@@ -245,6 +245,23 @@ sub Lang2Locale {
     return $lang2locale{$lang} || $lang;
 }
 
+# Convert language code or locale name to IETF language tag (RFC 5646).
+# Note: Format of result is "xx" or "xx-XX".  Vague region subtag will be
+# omitted.
+sub LanguageTag {
+    my $lang = shift;
+    my @parts = split /[\W_]/, $lang;
+
+    if ({reverse %lang2locale}->{$lang} and
+	{reverse %lang2locale}->{$lang} eq $parts[0]) {
+	return $parts[0];
+    } elsif (scalar @parts > 1 and length $parts[1]) {
+	return join '-', $parts[0], $parts[1];
+    } else {
+	return $parts[0];
+    }
+}
+
 sub maketext {
     my $template_file = shift;
     my $msg = shift;

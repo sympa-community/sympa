@@ -1,11 +1,13 @@
 From: [% fromlist %]
 To: [% to %]
 Reply-to: [% replyto %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Digest for list %1[%END%] [% IF total_group > 1 -%]([% current_group %]/[% total_group %])[% END %][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][% IF total_group > 1 %][%|loc(current_group,total_group)%] (%1/%2)[%END%][% END %][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary1 %]"
 
 --[% boundary1 %]
 Content-Disposition: inline
+
+[%|loc(list.name,date)%]%1 Digest %2[%END%]
 
 [%|loc%]Table of contents:[%END%]
 
@@ -28,14 +30,12 @@ X-Sympa-Attach: yes
 [% m.full_msg %]
 
 [% END %]
---[% boundary2 %]
-Content-Disposition: inline
-
-[%|loc(list.name,date)%]End of digest for list %1 - %2[%END%]
-
 --[% boundary2 %]--
 
+--[% boundary1 %]
+Content-Disposition: inline
+
+[%|loc(list.name,date)%]End of %1 Digest %2[%END%]
+
 --[% boundary1 %]--
-
-
 
