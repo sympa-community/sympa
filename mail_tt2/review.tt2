@@ -1,5 +1,5 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%subject%][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]REVIEW %1[%END%][%END%]
 
 [%|loc(list.name,list.host)%]Here are the subscribers of %1@%2 mailing list:[%END%]
 

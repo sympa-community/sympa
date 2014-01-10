@@ -1,4 +1,4 @@
 From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
-Subject: [% FILTER qencode %][% list.name %][%END%]
+Subject: [% FILTER qencode %][%|loc(list.name)%]Rejected mailing list %1 creation[%END%][%END%]
 
 [%|loc(list.name,list.host)%]%1@%2 mailing list has been rejected by listmaster.[%END%]

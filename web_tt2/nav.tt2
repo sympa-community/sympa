@@ -47,12 +47,12 @@
   <ul>
 [% FOREACH letter IN letters %]
   [% IF orderedlist.$letter.0 %]
-    <li class="MainMenuLinks"><a href="#[%letter%]">[%letter%]</a></li>
+    <li class="MainMenuLinks"><a href="#[%letter%]">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</a></li>
   [% ELSE %]
-    <li class="nolink">[%letter%]</li>
+    <li class="nolink">[%IF letter == 'others'%][%|loc%]others[%END%][%ELSE%][%letter%][%END%]</li>
  [% END %] 
 [% END %]
- <li class="MainMenuLinks"><a href="[% path_cgi %]/lists" >All</a> </li>
+ <li class="MainMenuLinks"><a href="[% path_cgi %]/lists" >[%|loc%]all[%END%]</a> </li>
   </ul>
 </div>
 [% END %]

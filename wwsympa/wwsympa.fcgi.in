@@ -3,7 +3,11 @@
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
-# Copyright (c) 1997-2003 Comite Reseau des Universites
+#
+# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
+# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
+# Copyright (c) 2011, 2012, 2013, 2014 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -190,7 +194,7 @@ our %comm = ('home' => 'do_home',
 	 'auto_signoff' => 'do_auto_signoff',
 	 'family_signoff' => 'do_family_signoff',
 	 'family_signoff_request' => 'do_family_signoff_request',
-	 'multiple_signoff' => 'do_multiple_sigoff',
+	 #XXX'multiple_signoff' => 'do_multiple_signoff',
 	 'sigrequest' => 'do_sigrequest',
 	 'ignoresub' => 'do_ignoresub',
 	 'which' => 'do_which',
@@ -216,12 +220,11 @@ our %comm = ('home' => 'do_home',
 	 'del' => 'do_del',
 	 'modindex' => 'do_modindex',
 	 'reject' => 'do_reject',
-	 'reject_notify' => 'do_reject_notify',
-         'reject_notify_shared' =>'admin',
+	 #XXX'reject_notify' => 'do_reject_notify',
 	 'distribute' => 'do_distribute',
 	 'viewmod' => 'do_viewmod',
 	 'd_reject_shared' => 'do_d_reject_shared',
-	 'reject_notify_shared' => 'do_reject_notify_shared',
+	 #XXX'reject_notify_shared' => 'do_reject_notify_shared',
 	 'd_install_shared' => 'do_d_install_shared',
 	 'editfile' => 'do_editfile',
 	 'savefile' => 'do_savefile',
@@ -263,7 +266,7 @@ our %comm = ('home' => 'do_home',
 	 'set_pending_list_request' => 'do_set_pending_list_request', 
 	 'install_pending_list' => 'do_install_pending_list', 
 	 'edit_config' => 'do_edit_config',
-	 'submit_list' => 'do_submit_list',
+	 #XXX'submit_list' => 'do_submit_list',
 	 'editsubscriber' => 'do_editsubscriber',
 	 'viewbounce' => 'do_viewbounce',
 	 'redirect' => 'do_redirect',
@@ -274,7 +277,7 @@ our %comm = ('home' => 'do_home',
 	 'resetbounce' => 'do_resetbounce',
 	 'scenario_test' => 'do_scenario_test',
 	 'search_list' => 'do_search_list',
-	 'show_cert' => 'show_cert',
+	 'show_cert' => 'do_show_cert',
 	 'close_list_request' => 'do_close_list_request',
 	 'close_list' => 'do_close_list',
 	 'purge_list' => 'do_purge_list',	    
@@ -320,13 +323,14 @@ our %comm = ('home' => 'do_home',
 	 'copy_template' => 'do_copy_template',	   
 	 'view_template' => 'do_view_template',
 	 'edit_template' => 'do_edit_template',
+	#'rss' => 'do_rss', #FIXME:Currently processed in differenct way.
 	 'rss_request' => 'do_rss_request',
 	 'maintenance' => 'do_maintenance',
 	 'blacklist' => 'do_blacklist',
 	 'edit_attributes' => 'do_edit_attributes',
 	 'ticket' => 'do_ticket',
 	 'manage_template' => 'do_manage_template',
-	 'send_newsletter' => 'do_send_newsletter',
+	 #XXX'send_newsletter' => 'do_send_newsletter',
 	 'suspend_request' => 'do_suspend_request',
 	 'suspend_request_action' => 'do_suspend_request_action',
 	 'show_exclude' => 'do_show_exclude',
@@ -353,7 +357,6 @@ my %auth_action = ('logout' => 1,
 ## Arguments awaited in the PATH_INFO, depending on the action 
 our %action_args = ('default' => ['list'],
 		'editfile' => ['list','file','previous_action'],
-		'viewfile' => ['list','file'],
 		'requestpasswd' => ['email'],
 		'choosepasswd' => ['email','passwd'],
 		'lists' => ['topic','subtopic'],
@@ -398,7 +401,7 @@ our %action_args = ('default' => ['list'],
 		'help' => ['help_topic'],
 		'show_cert' => [],
 		'subscribe' => ['list','email','passwd'],
-		'subrequest' => ['list','email'],
+		#'subrequest' => ['list','email'],
 		'subrequest' => ['list'],
 		'subindex' => ['list'],
                 'ignoresub' => ['list','@email','@gecos'],
@@ -634,7 +637,6 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'edit_config' => ['listmaster'],
 			   'ls_templates' => ['listmaster'],
 			   'manage_template' => ['owner'],
-			   'manage_template' => ['owner'],
 			   'modindex' => ['editor','owner','listmaster'],
 			   'purge_list' => ['privileged_owner','listmaster'],
 			   'rebuildallarc' => ['listmaster'],
@@ -668,7 +670,7 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			  );
 
 # this definition is used to choose the left side menu type (admin -> listowner admin menu | serveradmin -> server_admin menu | none list or your_list menu)
-my %action_type = ('editfile' => 'admin',
+my %action_type = (
 		'review' => 'admin',
 		'search' => 'admin',
 		'viewfile' => 'admin',
@@ -679,12 +681,10 @@ my %action_type = ('editfile' => 'admin',
 #		'modindex' =>'admin',
 		'reject' =>'admin',
 		'reject_notify' =>'admin',
-		'add_request' =>'admin',
 		'distribute' =>'admin',
 		'viewmod' =>'admin',
 		'savefile' =>'admin',
-		'rebuildarc' =>'admin',
-		'rebuildallarc' =>'admin',
+		'rebuildallarc' =>'admin', #FIXME: serveradmin?
 		'reviewbouncing' =>'admin',
 		'edit_list_request' =>'admin',
 		'edit_list' =>'admin',
@@ -709,7 +709,6 @@ my %action_type = ('editfile' => 'admin',
 		'rename_list_request' => 'admin',
 		'arc_manage' => 'admin',
 		'sync_include' => 'admin',
-		'ls_templates' => 'admin',
 		'view_template' => 'admin',
 		'remove_template' => 'admin',
 		'copy_template' => 'admin',
@@ -731,7 +730,7 @@ my %action_type = ('editfile' => 'admin',
 		'rebuildarc' => 'serveradmin',
 		'set_session_email' => 'serveradmin',
 		'set_loglevel' => 'serveradmin',
-		'editfile' => 'serveradmin',
+		'editfile' => 'serveradmin', #FIXME: admin?
 		'unset_dumpvars' => 'serveradmin',
 		'set_dumpvars' => 'serveradmin',
 		'automatic_lists_management_request' => 'serveradmin',
@@ -11049,7 +11048,7 @@ sub do_purge_list {
  }
 
 
- sub show_cert {
+ sub do_show_cert {
      return 1;
  }
 
