@@ -4319,7 +4319,7 @@ sub send_msg {
 	    my $subject = $message->{'msg'}->head->get('Subject');
 	    my $sender = $message->{'msg'}->head->get('From');
 	    unless ($self->send_file('x509-user-cert-missing', $user->{'email'}, $robot, {'mail' => {'subject' => $subject, 'sender' => $sender}, 'auto_submitted' => 'auto-generated'})) {
-	        &do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
+	        Log::do_log('notice',"Unable to send template 'x509-user-cert-missing' to $user->{'email'}");
 	    }
 	}else{
 	    if ($user->{'bounce_score'}) {
@@ -4540,7 +4540,7 @@ sub send_msg {
 					     'dkim_parameters'=>$dkim_parameters,
 					     'tag_as_last' => $tags_to_use->{'tag_noverp'});
 	    unless (defined $result) {
-		&do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
+		Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp desabled)");
 		return undef;
 	    }
 	    $tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
@@ -4575,7 +4575,7 @@ sub send_msg {
 					  'dkim_parameters'=>$dkim_parameters,
 					  'tag_as_last' => $tags_to_use->{'tag_verp'});
 	    unless (defined $result) {
-		&do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
+		Log::do_log('err',"List::send_msg, could not send message to distribute from $from (verp enabled)");
 		return undef;
 	    }
 	    $tags_to_use->{'tag_verp'} = 0 if ($result > 0);
@@ -12967,7 +12967,7 @@ sub purge {
     ## Clean list table if needed
     if ($Conf::Conf{'db_list_cache'} eq 'on') {
 	unless (&SDM::do_query('DELETE FROM list_table WHERE name_list = %s AND robot_list = %s', &SDM::quote($self->{'name'}), &SDM::quote($self->{'domain'}))) {
-	    &do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
+	    Log::do_log('err', 'Cannot remove list %s (robot %s) from table', $self->{'name'}, $self->{'domain'});
 	}
     }
     

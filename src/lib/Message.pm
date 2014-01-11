@@ -398,11 +398,11 @@ sub _get_sender_email {
 	last if defined $sender;
     }
     unless (defined $sender) {
-	do_log('err', 'No valid sender address');
+	Log::do_log('err', 'No valid sender address');
 	return undef;
     }
     unless (tools::valid_email($sender)) {
-	do_log('err', 'Invalid sender address "%s"', $sender);
+	Log::do_log('err', 'Invalid sender address "%s"', $sender);
 	return undef;
     }
 

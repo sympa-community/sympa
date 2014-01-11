@@ -42,18 +42,18 @@ my $robot_id = $options{'domain'};
 # Load configuration
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 unless ( Conf::load( $sympa_conf_file, 'no_db' ) ) {    # skip db config
-    do_log( 'err', 'The configuration file %s contains error',
+    Log::do_log( 'err', 'The configuration file %s contains error',
         $sympa_conf_file );
     exit 1;
 }
 
-do_openlog( $Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa_newaliases' );
+Log::do_openlog( $Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa_newaliases' );
 Log::set_log_level( $Conf{'log_level'} );
 
 my ( $aliases_file, $aliases_program, $aliases_db_type );
 if ($robot_id) {
     unless ( Conf::valid_robot($robot_id) ) {
-        do_log( 'err', 'robot %s does not exist', $robot_id );
+        Log::do_log( 'err', 'robot %s does not exist', $robot_id );
         exit 1;
     }
     $aliases_file    = Conf::get_robot_conf( $robot_id, 'sendmail_aliases' );
@@ -67,29 +67,29 @@ if ($robot_id) {
 if ( $aliases_file eq 'none' ) {
     exit 0;    # do nothing
 } elsif ( !-e $aliases_file ) {
-    do_log( 'err', 'The aliases file %s does not exist', $aliases_file );
+    Log::do_log( 'err', 'The aliases file %s does not exist', $aliases_file );
     exit 1;
 }
 unless ( $aliases_db_type =~ /\A\w+\z/ ) {
-    do_log( 'err', 'Invalid aliases_db_type "%s"', $aliases_db_type );
+    Log::do_log( 'err', 'Invalid aliases_db_type "%s"', $aliases_db_type );
     exit 1;
 }
 
 if ( $aliases_program =~ m{\A/} ) {
-    do_log( 'debug2', 'executing "%s %s"', $aliases_program, $aliases_file );
+    Log::do_log( 'debug2', 'executing "%s %s"', $aliases_program, $aliases_file );
 
     exec $aliases_program, $aliases_file;
 } elsif ( $aliases_program eq 'makemap' ) {
-    do_log( 'debug2', 'executing "%s %s %s < %s"',
+    Log::do_log( 'debug2', 'executing "%s %s %s < %s"',
         q{--MAKEMAP--}, $aliases_db_type, $aliases_file, $aliases_file );
 
     unless ( open STDIN, '<', $aliases_file ) {
-        do_log( 'err', 'Canot open $s', $aliases_file );
+        Log::do_log( 'err', 'Canot open $s', $aliases_file );
         exit 1;
     }
     exec q{--MAKEMAP--}, $aliases_db_type, $aliases_file;
 } elsif ( $aliases_program eq 'newaliases' ) {
-    do_log( 'debug2', 'executing "%s"',
+    Log::do_log( 'debug2', 'executing "%s"',
         q{--NEWALIASES-- --NEWALIASES_ARG--} );
 
     # Some newaliases utilities e.g. with Postfix cannot take arguments.
@@ -101,22 +101,22 @@ if ( $aliases_program =~ m{\A/} ) {
         exec q{--NEWALIASES--};
     }
 } elsif ( $aliases_program eq 'postalias' ) {
-    do_log( 'debug2', 'executing "%s %s:%s"',
+    Log::do_log( 'debug2', 'executing "%s %s:%s"',
         q{--POSTALIAS--}, $aliases_db_type, $aliases_file );
 
     exec q{--POSTALIAS--}, "$aliases_db_type:$aliases_file";
 } elsif ( $aliases_program eq 'postmap' ) {
-    do_log( 'debug2', 'executing "%s %s:%s"',
+    Log::do_log( 'debug2', 'executing "%s %s:%s"',
         q{--POSTMAP--}, $aliases_db_type, $aliases_file );
 
     exec q{--POSTMAP--}, "$aliases_db_type:$aliases_file";
 } else {
-    do_log( 'err', 'Invalid aliases_program "%s"', $aliases_program );
+    Log::do_log( 'err', 'Invalid aliases_program "%s"', $aliases_program );
     exit 1;
 }
 
 my $errno = $!;
-do_log( 'Cannot execute aliases_program "%s": %s', $aliases_program, $errno );
+Log::do_log( 'Cannot execute aliases_program "%s": %s', $aliases_program, $errno );
 exit( $errno || 1 );
 
 __END__

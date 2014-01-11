@@ -447,7 +447,7 @@ sub store {
 		$messagekey, $msg_id, $msg, $dkim->{d}, $dkim->{i},
 		$dkim->{selector}, $dkim->{private_key}
 	    )) {
-		do_log('err',
+		Log::do_log('err',
 		    'Unable to add message in bulkspool_table "%s"',
 		    sprintf($statementtrace,
 			SDM::quote($messagekey), SDM::quote($msg_id),

@@ -156,14 +156,14 @@ sub establish_connection {
         ## ODBC just needs a db_name, db_user
 	foreach my $db_param ('db_user','db_passwd') {
 	    unless ($self->{$db_param}) {
-		do_log('info','Missing parameter %s for DBI connection', $db_param);
+		Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 		return undef;
 	    }
 	}
     } else {
 	foreach my $db_param ('db_host','db_user','db_passwd') {
 	    unless ($self->{$db_param}) {
-		do_log('info','Missing parameter %s for DBI connection', $db_param);
+		Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 		return undef;
 	    }
 	}
@@ -279,7 +279,7 @@ sub establish_connection {
 
 	    unless (defined $self->{'dbh'}->do("SET NAMES 'utf8mb4'") or
 		defined $self->{'dbh'}->do("SET NAMES 'utf8'")) {
-		do_log('err', 'Cannot set client-side character set: %s',
+		Log::do_log('err', 'Cannot set client-side character set: %s',
 		    $self->{'dbh'}->errstr);
 	    }
       }
@@ -311,7 +311,7 @@ sub establish_connection {
       $db_connections{$self->{'connect_string'}}{'dbh'} = $self->{'dbh'};
       $db_connections{$self->{'connect_string'}}{'db_user'} = $self->{'db_user'};
       
-      do_log('debug2','Connected to Database %s',$self->{'db_name'});
+      Log::do_log('debug2','Connected to Database %s',$self->{'db_name'});
 
       ## We set Long preload length to two times global max message size
       ## (because of base64 encoding) instead of defaulting to 80 on Oracle
@@ -328,7 +328,7 @@ sub establish_connection {
 	$self->{'dbh'}->{LongReadLen} = ($Conf::Conf{'max_size'} || 102400) * 2;
 	$self->{'dbh'}->{LongTruncOk} = 0;
       }
-      do_log('debug3',
+      Log::do_log('debug3',
 	'Database driver seetings for this session: LongReadLen= %d, LongTruncOk = %d, RaiseError= %d',
 	$self->{'dbh'}->{LongReadLen}, $self->{'dbh'}->{LongTruncOk},
 	$self->{'dbh'}->{RaiseError});

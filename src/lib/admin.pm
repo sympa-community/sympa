@@ -206,7 +206,7 @@ sub create_list_old{
     }    
 
     if ($param->{'listname'} eq &Conf::get_robot_conf($robot,'email')) {
-	&do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
+	Log::do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
 	return undef;
     }
 
@@ -285,7 +285,7 @@ sub create_list_old{
 	return undef;
     }
     unless (open CONFIG, '>', "$list_dir/config") {
-	&do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
+	Log::do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
 	$lock->unlock();
 	return undef;
     }
@@ -417,7 +417,7 @@ sub create_list{
 	}
     }    
     if ($param->{'listname'} eq &Conf::get_robot_conf($robot,'email')) {
-	&do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
+	Log::do_log('err','admin::create_list : incorrect listname %s matches one of service aliases', $param->{'listname'});
 	return undef;
     }
 
@@ -494,7 +494,7 @@ sub create_list{
 
     ## Creation of the config file
     unless (open CONFIG, '>', "$list_dir/config") {
-	&do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
+	Log::do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
 	$lock->unlock();
 	return undef;
     }
@@ -639,7 +639,7 @@ sub update_list{
 
     ## Creation of the config file
     unless (open CONFIG, '>', "$list->{'dir'}/config") {
-	&do_log('err','Impossible to create %s/config : %s', $list->{'dir'}, $!);
+	Log::do_log('err','Impossible to create %s/config : %s', $list->{'dir'}, $!);
 	$lock->unlock();
 	return undef;
     }
@@ -678,11 +678,11 @@ sub update_list{
 	    my $file_content;
 	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
 	    unless (defined $tt_result) {
-		&do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
+		Log::do_log('err', 'admin::create_list : tt2 error. List %s from family %s@%s, file %s',
 			$param->{'listname'}, $family->{'name'},$robot,$file);
 	    }
 	    unless (open FILE, '>', "$list->{'dir'}/$file") {
-		&do_log('err','Impossible to create %s/%s : %s',$list->{'dir'},$file,$!);
+		Log::do_log('err','Impossible to create %s/%s : %s',$list->{'dir'},$file,$!);
 	    }
 	    print FILE $file_content;
 	    close FILE;

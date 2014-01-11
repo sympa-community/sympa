@@ -1344,7 +1344,7 @@ sub smime_decrypt {
     my $list = shift ; ## the recipient of the msg
     my $from = $msg->head->get('from');
 
-    &do_log('debug2', 'tools::smime_decrypt message msg from %s,%s', $from, $list->{'name'});
+    Log::do_log('debug2', 'tools::smime_decrypt message msg from %s,%s', $from, $list->{'name'});
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir = $list->{'dir'};
@@ -2297,7 +2297,7 @@ sub get_filename {
 	}
 	my @result;
 	foreach my $f (@try) {
-	    &do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
+	    Log::do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
 	    if (-r $f) {
 		if ($options->{'order'} eq 'all') {
 		    push @result, $f;
@@ -2512,7 +2512,7 @@ sub remove_pid {
 	## Then the pidfile contains a list of space-separated PIDs on a single line
 	if($options->{'multiple_process'}) {
 		unless(open(PFILE, $pidfile)) {
-			# fatal_err('Could not open %s, exiting', $pidfile);
+			# Log::fatal_err('Could not open %s, exiting', $pidfile);
 			&Log::do_log('err','Could not open %s to remove pid %s', $pidfile, $pid);
 			return undef;
 		}
@@ -2586,7 +2586,7 @@ sub write_pid {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	&fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
+	Log::fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
     }
 
     my @pids;
@@ -2594,11 +2594,11 @@ sub write_pid {
     # Lock pid file
     my $lock = new Lock ($pidfile);
     unless (defined $lock) {
-	&fatal_err('Lock could not be created. Exiting.');
+	Log::fatal_err('Lock could not be created. Exiting.');
     }
     $lock->set_timeout(5); 
     unless ($lock->lock('write')) {
-	&fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+	Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
     }
     ## If pidfile exists, read the PIDs
     if(-f $pidfile) {
@@ -2615,7 +2615,7 @@ sub write_pid {
 	unless(open(PIDFILE, '> '.$pidfile)) {
 	    ## Unlock pid file
 	    $lock->unlock();
-	    &fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
+	    Log::fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
 	}
 	## Print other pids + this one
 	push(@pids, $pid);
@@ -2626,7 +2626,7 @@ sub write_pid {
 	unless(open(PIDFILE, '+>> '.$pidfile)) {
 	    ## Unlock pid file
 	    $lock->unlock();
-	    &fatal_err('Could not open %s, exiting: %s', $pidfile);
+	    Log::fatal_err('Could not open %s, exiting: %s', $pidfile);
 	}
 	## The previous process died suddenly, without pidfile cleanup
 	## Send a notice to listmaster with STDERR of the previous process

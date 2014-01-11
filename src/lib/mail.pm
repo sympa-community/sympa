@@ -724,7 +724,7 @@ sub sendto {
 	foreach my $unique_rcpt (@{$rcpt}) {
 	    my $email = lc(@{$unique_rcpt}[0]);
 	    if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
-		do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
+		Log::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
 		# internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
 		return undef;
 	    }

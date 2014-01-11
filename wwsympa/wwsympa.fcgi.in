@@ -5357,7 +5357,7 @@ sub do_family_signoff_request {
 	'ip' => $ip,
     };
     unless (&List::send_global_file('user_notification', $in{'email'}, $robot, $tt2_param)) {
-	&do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
+	Log::do_log('notice',"Unable to send template 'user_notification' to $in{'email'}");
 	return undef;
     }
     $param->{'signing_off_email'} = $in {'email'};
@@ -7164,7 +7164,7 @@ sub do_skinsedit {
 
      ## messages
      foreach my $id (split (/,/, $in{'id'})) { # QUIET DISTRIBUTE
-         &do_log('notice', 'Moderator approves message: %s %s', $list->{'name'},$id);
+         Log::do_log('notice', 'Moderator approves message: %s %s', $list->{'name'},$id);
 	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
 	 $data->{'body'} .= $mail_command;
 
