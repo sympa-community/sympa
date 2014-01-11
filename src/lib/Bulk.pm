@@ -112,8 +112,15 @@ sub next {
 	return undef;
     }
     
-    if ($sth->rows == 0) {
-	&Log::do_log('info','Bulk packet is already locked');
+    if ($sth->rows < 0) {
+	Log::do_log('err',
+	    'Unable to lock packet %s for message %s, though the query succeeded',
+	    $packet->{'packetid'}, $packet->{'messagekey'}
+	);
+	return undef;
+    }
+    unless ($sth->rows) {
+	Log::do_log('info', 'Bulk packet is already locked');
 	return undef;
     }
 
