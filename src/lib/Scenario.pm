@@ -35,6 +35,7 @@ use List;
 use Log;
 use Conf;
 use Sympa::Constants;
+use Data::Dumper;
 
 my %all_scenarios;
 my %persistent_cache;
@@ -1442,6 +1443,18 @@ sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
     &tools::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
+}
+
+sub is_purely_closed {
+    my $self = shift;
+    foreach my $rule (@{$self->{'rules'}}) {
+	if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
+	    Log::do_log('debug2','Scenario %s is not purely closed.',$self->{'title'});
+	    return 0;
+	}
+    }
+    Log::do_log('notice','Scenario %s is purely closed.',$self->{'file_path'});
+    return 1;
 }
 
 1;

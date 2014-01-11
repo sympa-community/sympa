@@ -366,6 +366,8 @@ while (!$end) {
 	   }
        }
    }
+    ## Free zombie sendmail processes
+    &mail::reaper;
 }
 
 &List::send_notify_to_listmaster(undef, undef, undef, undef, 1); # Purge grouped notifications
