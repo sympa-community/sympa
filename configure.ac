@@ -321,6 +321,15 @@ AC_ARG_WITH(
     [scriptdir="$withval"]
 )
 
+AC_ARG_WITH(
+    staticdir,
+    AS_HELP_STRING(
+	[--with-staticdir=DIR],
+	[static data @<:@PREFIX/static_content@:>@]
+    ),
+    [staticdir="$withval"]
+)
+
 CONFIG=$confdir/sympa.conf
 AC_SUBST(CONFIG)
 WWSCONFIG=$confdir/wwsympa.conf

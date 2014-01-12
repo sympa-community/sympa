@@ -255,7 +255,6 @@ our %comm = ('home' => 'do_home',
 	 'help' => 'do_help',
 	 'edit_list_request' => 'do_edit_list_request',
 	 'edit_list' => 'do_edit_list',
-	 'edit_list_request' => 'do_edit_list_request',
 	 'create_list_request' => 'do_create_list_request',
 	 'create_list' => 'do_create_list',
 	 'get_pending_lists' => 'do_get_pending_lists', 
@@ -870,8 +869,8 @@ our %in_regexp = (
 		 ##Logs
 		 'target_type' => '[\w\-\.\:]*', 
 		 'target' => &tools::get_regexp('email'),
-		 'date_from' => '[\d\/]+',
-		 'date_to' => '[\d\/]+',
+		 'date_from' => '[\d\/\-]+',
+		 'date_to' => '[\d\/\-]+',
 		 'ip' => &tools::get_regexp('host'),
          
 		 ## colors
