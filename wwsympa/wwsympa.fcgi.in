@@ -7280,19 +7280,21 @@ sub do_viewmod {
 	 }
      }
      
-     unless (-d $tmp_dir) {
-	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $tmp_dir},$param->{'action'});
-	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $tmp_dir);
+     my $html_dir = $Conf::Conf{'viewmail_dir'}.'/mod/'.$list->get_list_id().'/'.$in{'id'};
+
+     unless (-d $html_dir) {
+	 &report::reject_report_web('intern','no_html_message_available',{'dir' => $html_dir},$param->{'action'});
+	 &wwslog('err','do_viewmod: no HTML version of the message available in %s', $html_dir);
 	 return undef;
      }     
 
      if ($in{'file'}) {
 	 $in{'file'} =~ /\.(\w+)$/;
 	 $param->{'file_extension'} = $1;
-	 $param->{'file'} = $tmp_dir.'/'.$in{'file'};
+	 $param->{'file'} = $html_dir.'/'.$in{'file'};
 	 $param->{'bypass'} = 1; 
      }else {
-	 &tt2::add_include_path($tmp_dir) ;
+	 &tt2::add_include_path($html_dir) ;
      }
 
      $param->{'base'} = sprintf "%s/viewmod/%s/%s/", &Conf::get_robot_conf($robot, 'wwsympa_url'), $param->{'list'}, $in{'id'};     
@@ -7736,6 +7738,7 @@ sub do_arc {
     
     ## File exist ?
     my $arc_file_path = $arc_month_path.'/'.$in{'arc_file'};
+
     unless (-r $arc_file_path) {
 	&wwslog('err',"unable to read $arc_file_path");
 	&report::reject_report_web('user','arc_not_found',{'arc_file' => $in{'arc_file'},
@@ -9037,6 +9040,8 @@ Sends back the list creation edition form.
 	 &wwslog('info','do_create_list: not allowed');
 	 return undef;
      }
+     $param->{'all_lists'} = &List::get_lists($robot);
+
 
      my %topics;
      unless (%topics = &List::load_topics($robot)) {

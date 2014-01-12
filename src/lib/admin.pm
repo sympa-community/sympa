@@ -453,7 +453,7 @@ sub create_list{
                 $param->{'listname'}, $family->{'name'},$robot);
       return undef;
     }
-    
+
      ## Create the list directory
      my $list_dir;
 

@@ -148,6 +148,7 @@ sub mail_file {
 	my $output;
 	my @path = split /\//, $filename;	   
 	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
+	my $dump = &Dumper($data); open (DUMP,">>/tmp/dumper2"); printf DUMP 'avant tt2 \n%s',$dump ; close DUMP;
 	&tt2::parse_tt2($data, $path[$#path], \$output);
 	&Language::PopLang() if (defined $data->{'lang'});
 	$message_as_string .= join('',$output);
@@ -303,6 +304,7 @@ sub mail_file {
     unless ($message_as_string = &reformat_message("$headers"."$message_as_string", \@msgs, $data->{'charset'})) {
     	&Log::do_log('err', "mail::mail_file: Failed to reformat message");
     }
+    my $dump = &Dumper($message_as_string); open (DUMP,">>/tmp/dumper2"); printf DUMP 'avant \n%s',$dump ; close DUMP;
 
     ## Set it in case it was not set
     $data->{'return_path'} ||= &Conf::get_robot_conf($robot, 'request');
@@ -1126,7 +1128,6 @@ sub reformat_message($;$$) {
 	    return undef;
 	}
     }
-
     $msg->head->delete("X-Mailer");
     $msg = &fix_part($msg, $parser, $attachments, $defcharset);
     $msg->head->add("X-Mailer", sprintf "Sympa %s", Sympa::Constants::VERSION);
@@ -1142,11 +1143,14 @@ sub fix_part($$$$) {
 
     my $enc = $part->head->mime_attr("Content-Transfer-Encoding");
     # Parts with nonstandard encodings aren't modified.
-    return $part
-	if $enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i;
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+	return $part;
+    }
 
     my $eff_type = $part->effective_type;
-    return $part if $eff_type =~ m{^multipart/(signed|encrypted)$};
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}){
+	return $part;
+    }
 
     if ($part->head->get('X-Sympa-Attach')) { # Need re-attaching data.
 	my $data = shift @{$attachments};

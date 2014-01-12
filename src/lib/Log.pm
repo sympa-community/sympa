@@ -288,6 +288,10 @@ sub db_log {
 	do_log('err','Unable to insert new db_log entry in the database');
 	return undef;
     }
+    #if (($action eq 'send_mail') && $list && $robot){
+    #	&update_subscriber_msg_send($user_email,$list,$robot,1);
+    #}
+
     return 1;
 }
 
@@ -563,7 +567,7 @@ sub aggregate_data {
 	#store send mail data-------------------------------
 	if($key_op eq 'send_mail'){
 
-	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
+	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){ 
 
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
@@ -571,11 +575,11 @@ sub aggregate_data {
 		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' => '', 'robot' => $key_robot});
 		    
 		    #updating susbcriber_table
-		    foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
-
-			if (($key_mail ne 'count') && ($key_mail ne 'size')){
-			    &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
-			}
+		     foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
+		    
+	            	if (($key_mail ne 'count') && ($key_mail ne 'size')){
+		            &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
+		       }
 		    }
 		}
 	    }

@@ -289,6 +289,101 @@ sub load_html_message {
     return \%metadata;
 }
 
+sub clean_archived_message{
+    my $params = shift;
+    &do_log('debug',"Cleaning HTML parts of a message input %s , output  %s ",$params->{'input'},$params->{'output'});
+
+    my $input = $params->{'input'};
+    my $output = $params->{'output'};
+
+
+    if (my $msg = new Message({'file'=>$input})){
+	if($msg->clean_html()){
+	    if(open TMP, ">$output") {
+		print TMP $msg->{'msg'}->as_string;
+		close TMP;
+	    }else{
+		&do_log('err','Unable to create a tmp file to write clean HTML to file %s',$output);
+		return undef;
+	    }
+	}else{
+	    &do_log('err','HTML cleaning in file %s failed.',$output);
+	    return undef;
+	}
+    }else{
+	&do_log('err','Unable to create a Message object with file %s',$input);
+	exit;
+	return undef;
+    }
+}
+
+#############################
+# convert a messsage to html. 
+#    result is stored in $destination_dir
+#    attachement_url is used to link attachement
+#    
+sub convert_single_msg_2_html {
+    
+    my $data =shift;
+    my $msg_as_string = $data->{'msg_as_string'};
+    my $destination_dir = $data->{'destination_dir'};
+    my $attachement_url = $data->{'attachement_url'};
+    my $list = $data->{'list'};
+    my $robot = $data->{'robot'};
+    my $messagekey = $data->{'messagekey'};
+
+    my $listname =''; my $msg_file;
+    my $host = $robot;
+    if ($list) {
+	$host = $list->{'admin'}{'host'};
+	$robot = $list->{'robot'};
+	$listname = $list->{'name'};
+	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$list->get_list_id().'_'.$$;
+    }else{
+	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$messagekey.'_'.$$;
+    }
+
+    my $pwd = getcwd;  #  mhonarc require du change workdir so this proc must retore it    
+    unless (open(OUT, ">$msg_file")) {
+	do_log('notice', 'Could Not open %s', $msg_file);
+	return undef;
+    }
+    printf OUT $msg_as_string ;
+    close(OUT);
+
+    unless (-d $destination_dir) {
+	unless (&tools::mkdir_all($destination_dir, 0777)) {
+	    &do_log('err','Unable to create %s', $destination_dir);
+	    return undef;
+	}
+    }
+    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot,$list);
+    
+    unless ($mhonarc_ressources) {
+	do_log('notice',"Cannot find any MhOnArc ressource file");
+	return undef;
+    }
+    ## generate HTML
+    unless (chdir $destination_dir) {
+	do_log('err',"Could not change working directory to %s",$destination_dir);
+    }
+    my $tracepwd = getcwd ;
+
+
+    my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
+    my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
+    #open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file |";
+    #open MSG, ">msg00000.html";
+    #&do_log('debug', "$mhonarc  --outdir .. -single -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host $msg_file");
+    #print MSG <ARCMOD>;
+    #close MSG;
+    #close ARCMOD;
+    `$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file > msg00000.html`;
+
+    # restore current wd 
+    chdir $pwd;		
+
+    return 1;
+}
+
 1;
-
-
