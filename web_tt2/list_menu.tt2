@@ -70,6 +70,7 @@
   [% FOREACH file IN plugins('list_menu') %]
     [% INCLUDE $file %]
   [% END %]
+[% END %]
 
 [% IF is_archived %]
    [% IF arc_access %]
