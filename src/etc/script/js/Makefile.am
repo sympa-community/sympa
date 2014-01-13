@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-jsdir = $(DESTDIR)$(staticdir)/js
+jsdir = $(staticdir)/js
 
 js_DATA = jqplot.barRenderer.min.js \
 	jqplot.CanvasAxisTickRenderer.js \
@@ -32,10 +32,4 @@ js_DATA = jqplot.barRenderer.min.js \
 	jquery.js \
 	sympa.js
 
-EXTRA_DIST = $(js_DATA) tinymce
-
-install-data-hook:
-	if [ ! -d $(DESTDIR)$(staticdir)/js/tinymce ] ; then \
-		echo "Creating $(DESTDIR)$(staticdir)/js/tinymce"; \
-		mv tinymce $(DESTDIR)$(staticdir)/js; \
-	fi;
+EXTRA_DIST = $(js_DATA)
