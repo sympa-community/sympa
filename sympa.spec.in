@@ -55,7 +55,7 @@ encryption.
     --libdir=%{_libdir} \
     --sysconfdir=%{_sysconfdir} \
     --localstatedir=%{_localstatedir}
-make
+make DESTDIR=%{buildroot}
 
 %install
 rm -rf %{buildroot}

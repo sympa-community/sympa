@@ -486,6 +486,28 @@ else
 fi
 AC_SUBST(NEWALIASES)
 
+if test -n "$CAT"; then
+    # user-supplied value
+    AC_MSG_CHECKING([user-supplied cat command])
+    if test -f "$CAT"; then
+	:
+    else
+	AC_MSG_RESULT([non-existing])
+	AC_MSG_ERROR([invalid value $CAT for cat command])
+    fi
+    if test -x "$CAT"; then
+	:
+    else
+	AC_MSG_RESULT([non-executable])
+	AC_MSG_ERROR([invalid value $CAT for cat command])
+    fi
+    AC_MSG_RESULT([$CAT])
+else
+    # default value
+    AC_PATH_PROG([CAT], [cat], [/bin/cat])
+fi
+AC_SUBST(CAT)
+
 AC_MSG_CHECKING([argument to newaliases command])
 NEWALIASES_ARG=
 AC_ARG_WITH(

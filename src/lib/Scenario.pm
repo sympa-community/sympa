@@ -756,6 +756,12 @@ sub verify {
 	    }
 	    $value = \@types;
 
+	}elsif ($value =~ /\[msg\-\>(\w+)\]/i) {
+	    return -1 * $negation unless (defined ($context->{'message'}));
+	    my $message_field = $1;
+	    return -1 * $negation unless (defined ($context->{'message'}{$message_field}));
+	    $value = $context->{'message'}{$message_field};
+
 	}elsif ($value =~ /\[current_date\]/i) {
 	    my $time = time;
 	    $value =~ s/\[current_date\]/$time/;

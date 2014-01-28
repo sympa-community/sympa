@@ -501,8 +501,10 @@ sub check_cpan {
 					    mandatory => 1,
 					    usage => 'used to parse or build mailboxes in message headers',
 					   },
-			'Mail::DKIM' => {
-					 required_version => '0.36',
+			# Mail::DKIM::Signer is included in Mail-DKIM.
+			# Mail::DKIM::TextWrap is included in Mail-DKIM.
+			'Mail::DKIM::Verifier' => {
+					 required_version => '0.39',
 					 package_name => 'Mail-DKIM',
 					 usage => 'required in order to use DKIM features (both for signature verification and signature insertion)',
 					},

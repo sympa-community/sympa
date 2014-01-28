@@ -104,7 +104,8 @@ Options:
    --log_level=LEVEL                     : sets Sympa log level
    --lowercase                           : lowercase email addresses in database
    --mail                            : log calls to sendmail
-   --make_alias_file                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
+   --make_alias_file [--robot=robot_name,...]
+                                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
    --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
    --md5_encode_password                 : rewrite password in database using md5 fingerprint. YOU CAN'T UNDO unless you save this table first
    --modify_list=family_name --robot=robot_name --input_file=/path/to/file.xml
@@ -432,19 +433,78 @@ if ($main::options{'dump'}) {
     print $usage_string;
     exit 0;
 }elsif ($main::options{'make_alias_file'}) {
-    my $all_lists = &List::get_lists('*');
-    unless (open TMP, ">$Conf{'tmpdir'}/sympa_aliases.$$") {
-	printf STDERR "Unable to create $Conf{'tmpdir'}/sympa_aliases.$$, exiting\n";
-	exit;
-    }
-    printf TMP "#\n#\tAliases for all Sympa lists open (but not for robots)\n#\n";
-    close TMP;
-    foreach my $list (@$all_lists) {
-	system ("$Conf{'alias_manager'} add $list->{'name'} $list->{'domain'} $Conf{'tmpdir'}/sympa_aliases.$$") if ($list->{'admin'}{'status'} eq 'open');
-    }
-    printf ("Sympa aliases file is $Conf{'tmpdir'}/sympa_aliases.$$ file made, you probably need to installed it in your SMTP engine\n");
-    
-    exit 0;
+        my $robots = $main::options{'robot'} || '*';
+        my @robots;
+        if ($robots eq '*') {
+            @robots = List::get_robots();
+        } else {
+            @robots = grep { length $_ } split(/[\s,]+/, $robots);
+        }
+        exit 0 unless @robots;
+
+        # There may be multiple aliases files.  Give each of them suffixed
+        # name.
+        my ($basename, %robots_of, %sympa_aliases);
+        $basename = sprintf '%s/sympa_aliases.%s', $Conf::Conf{'tmpdir'}, $$;
+
+        foreach my $robot (@robots) {
+            my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
+            $robots_of{$file} ||= [];
+            push @{$robots_of{$file}}, $robot;
+        }
+        if (1 < scalar(keys %robots_of)) {
+            my $i = 0;
+            %sympa_aliases = map {
+                $i++;
+                map { $_ => sprintf('%s.%03d', $basename, $i) }
+                    @{$robots_of{$_}}
+            } sort keys %robots_of;
+        } else {
+            %sympa_aliases = map { $_ => $basename } @robots;
+        }
+
+        # Create files.
+        foreach my $sympa_aliases (values %sympa_aliases) {
+            my $fh;
+            unless (open $fh, '>', $sympa_aliases) {    # truncate if exists
+                printf STDERR "Unable to create %s: %s\n", $sympa_aliases, $!;
+                exit 1;
+            }
+            close $fh;
+        }
+
+        # Write files.
+        foreach my $robot (sort @robots) {
+            my $all_lists     = List::get_lists($robot);
+            my $alias_manager = Conf::get_robot_conf($robot, 'alias_manager');
+            my $sympa_aliases = $sympa_aliases{$robot};
+
+            my $fh;
+            unless (open $fh, '>>', $sympa_aliases) {    # append
+                printf STDERR "Unable to create %s: %s\n", $sympa_aliases, $!;
+                exit 1;
+            }
+            printf $fh "#\n#\tAliases for all Sympa lists open on %s\n#\n",
+                $robot;
+            close $fh;
+            foreach my $list (@{$all_lists || []}) {
+                next unless $list->{'admin'}{'status'} eq 'open';
+
+                system($alias_manager, 'add', $list->{'name'},
+                    $list->{'domain'}, $sympa_aliases);
+            }
+        }
+
+        if (1 < scalar(keys %robots_of)) {
+            printf
+                "Sympa aliases files %s.??? were made.  You probably need to install them in your SMTP engine.\n",
+                $basename;
+        } else {
+            printf
+                "Sympa aliases file %s was made.  You probably need to install it in your SMTP engine.\n",
+                $basename;
+        }
+        exit 0;
 }elsif ($main::options{'version'}) {
     print $version_string;
     

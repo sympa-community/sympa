@@ -39,6 +39,14 @@ EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
+	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
+		PREVIOUS=`$(PERL) -Mlib=$(DESTDIR)$(modulesdir) -MSympa::Constants -e 'print Sympa::Constants::VERSION'`; \
+	elif [ -f $(DESTDIR)$(bindir)/Version.pm ]; then \
+		PREVIOUS=`$(PERL) -Mlib=$(DESTDIR)$(bindir) -MVersion -e 'print $$Version::Version'`; \
+	else \
+		PREVIOUS=$(VERSION); \
+	fi; \
+	echo $${PREVIOUS} > $(top_srcdir)/previous_sympa_version;
 	[ -d Sympa ] || mkdir Sympa
 	rm -f $@
 	$(AM_V_GEN)$(SED) \

@@ -518,7 +518,12 @@ sub create_list{
     close INFO;
 
     ## Create associated files if a template was given.
-    for my $file ('message.footer','message.header','message.footer.mime','message.header.mime','info') {
+    my @files_to_parse;
+    foreach my $file (split ',',Conf::get_robot_conf($robot,'parsed_family_files')) {
+	$file =~ s{\s}{}g;
+	push @files_to_parse,$file;
+    }
+    for my $file (@files_to_parse) {
 	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
 	if (defined $template_file) {
 	    my $file_content;
@@ -672,7 +677,12 @@ sub update_list{
     $list->{'admin'}{'family_name'} = $family->{'name'};
 
    ## Create associated files if a template was given.
-    for my $file ('message.footer','message.header','message.footer.mime','message.header.mime','info') {
+    my @files_to_parse;
+    foreach my $file (split ',',Conf::get_robot_conf($robot,'parsed_family_files')) {
+	$file =~ s{\s}{}g;
+	push @files_to_parse,$file;
+    }
+    for my $file (@files_to_parse) {
 	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
 	if (defined $template_file) {
 	    my $file_content;
