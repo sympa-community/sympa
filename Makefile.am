@@ -78,7 +78,7 @@ installconfig: installdir
 		chown $(USER) data_structure.version || /bin/true; \
 		chgrp $(GROUP) data_structure.version || /bin/true; \
 	fi
-	@for dir in create_list_templates families \
+	@for dir in create_list_templates custom_actions families \
 		global_task_models list_task_models scenari search_filters \
 		mail_tt2 web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
