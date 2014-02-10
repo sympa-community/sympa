@@ -26,7 +26,8 @@ SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
 	     sympa.spec \
-	     README.charset
+	     README.charset \
+	     etc_README
 CLEANFILES = previous_sympa_version
 
 install-data-hook: installdir installconfig nextstep importantchanges
@@ -76,6 +77,24 @@ installconfig: installdir
 		echo $(VERSION) >> data_structure.version; \
 		chown $(USER) data_structure.version || /bin/true; \
 		chgrp $(GROUP) data_structure.version || /bin/true; \
+	fi
+	@for dir in create_list_templates families \
+		global_task_models list_task_models scenari search_filters \
+		mail_tt2 web_tt2; do \
+		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
+			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
+			install -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
+		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
+	done
+	@if [ ! -e $(DESTDIR)$(sysconfdir)/README ]; then \
+		echo "Creating $(DESTDIR)$(sysconfdir)/README"; \
+		$(SED) \
+			-e 's|--sysconfdir--|$(sysconfdir)|' \
+			-e 's|--defaultdir--|$(defaultdir)|' \
+			etc_README > $(DESTDIR)$(sysconfdir)/README; \
+		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
 	fi
 
 nextstep: 

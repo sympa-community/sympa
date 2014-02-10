@@ -3638,12 +3638,7 @@ sub distribute_msg {
     }
 
     ## Archives
-    my $msgtostore = $message->{'msg'};
-    if (($message->{'smime_crypted'} eq 'smime_crypted') &&
-	($self->{admin}{archive_crypted_msg} eq 'original')) {
-	$msgtostore = $message->{'orig_msg'};
-    }
-    $self->archive_msg($msgtostore);
+    $self->archive_msg($message);
     
     ## Change the reply-to header if necessary. 
     if ($self->{'admin'}{'reply_to_header'}) {
@@ -3723,7 +3718,7 @@ sub distribute_msg {
     
     ## store msg in digest if list accept digest mode (encrypted message can't be included in digest)
     if (($self->is_digest()) and ($message->{'smime_crypted'} ne 'smime_crypted')) {
-	$self->archive_msg_digest($msgtostore);
+	$self->store_digest($message);
     }
 
     ## Synchronize list members, required if list uses include sources
@@ -4743,49 +4738,6 @@ sub send_to_editor {
 	   return undef;
        }
    }
-#  Old code 5.4 and before to be removed in 5.5
-#   if ($encrypt eq 'smime_crypted') {
-#
-#       ## Send a different crypted message to each moderator
-#       foreach my $recipient (@rcpt) {
-#
-#	   # create a one time ticket that will be used as un md5 URL credential
-#	   $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'modindex/'.$name,$ip)
-#
-#	   ## $msg->body_as_string respecte-t-il le Base64 ??
-#	   my $cryptedmsg = &tools::smime_encrypt($msg->head, $msg->body_as_string, $recipient); #
-#	   unless ($cryptedmsg) {
-#	       &Log::do_log('notice', 'Failed encrypted message for moderator');
-#	       # xxxx send a generic error message : X509 cert missing
-#	       return undef;
-#	   }
-#
-#	   my $crypted_file = $Conf::Conf{'tmpdir'}.'/'.$self->get_list_id().'.moderate.'.$$;
-#	   unless (open CRYPTED, ">$crypted_file") {
-#	       &Log::do_log('notice', 'Could not create file %s', $crypted_file);
-#	       return undef;
-#	   }
-#	   print CRYPTED $cryptedmsg;
-#	   close CRYPTED;
-#	   
-#
-#	   $param->{'msg_path'} = $crypted_file;
-#
-#	   &tt2::allow_absolute_path();
-#	   unless ($self->send_file('moderate', $recipient, $self->{'domain'}, $param)) {
-#	       &Log::do_log('notice',"Unable to send template 'moderate' to $recipient");
-#	       return undef;
-#	   }
-#       }
-#   }else{
-#       $param->{'msg_path'} = $file;
-#
-#       &tt2::allow_absolute_path();
-#       unless ($self->send_file('moderate', \@rcpt, $self->{'domain'}, $param)) {
-#	   &Log::do_log('notice',"Unable to send template 'moderate' to $self->{'name'} editors");
-#	   return undef;
-#       }
-#  }
    return $modkey;
 }
 
@@ -6658,8 +6610,9 @@ sub get_first_list_member {
     }
     $lock->set_timeout(10*60); 
 
-    &Log::do_log('debug2', 'List::get_first_list_member(%s,%s,%d,%d)', $self->{'name'},$sortby, $offset, $rows);
-        
+    Log::do_log('debug2', '(%s, %s, %s, %s)',
+	$self->{'name'}, $sortby, $offset, $rows);
+
     ## Get an Shared lock	    
     unless ($lock->lock('read')) {
 	return undef;
@@ -6825,7 +6778,8 @@ sub get_first_list_admin {
     $sql_regexp = $data->{'sql_regexp'};
     my $fh;
 
-    &Log::do_log('debug2', '(%s,%s,%s,%d,%d)', $self->{'name'},$role, $sortby, $offset, $rows);
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)',
+	$self->{'name'}, $role, $sortby, $offset, $rows);
 
     my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
     unless (defined $lock) {
@@ -8154,22 +8108,67 @@ sub archive_ls {
 }
 
 ## Archive 
+
+our $serial_number = 0; # incremented on each archived mail
+
 sub archive_msg {
-    my($self, $msg ) = @_;
-    &Log::do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
+    my($self, $message) = @_;
+    Log::do_log('debug2', 'List::archive_msg for %s',$self->{'name'});
 
-    my $is_archived = $self->is_archived();
-    Archive::store_last($self, $msg) if ($is_archived);
+    if ($self->is_archived()) {
+        my $msg = $message->{'msg'};
+        if (($message->{'smime_crypted'} eq 'smime_crypted') &&
+            ($self->{admin}{archive_crypted_msg} eq 'original')) {
+            $msg = $message->{'orig_msg'};
+        }
 
-    Archive::outgoing("$Conf::Conf{'queueoutgoing'}",$self->get_list_id(),$msg) 
-      if ($self->is_web_archived());
-}
+        Archive::store_last($self, $msg);
 
-sub archive_msg_digest {
-   my($self, $msg) = @_;
-   &Log::do_log('debug2', 'List::archive_msg_digest');
+        ## copie a message in outgoing spool using a unique file name based on
+        ## listname
 
-   $self->store_digest( $msg) if ($self->{'name'});
+        ## ignoring message with a no-archive flag
+        if (   ref($msg)
+            && ($Conf::Conf{'ignore_x_no_archive_header_feature'} ne 'on')
+            && (   ($msg->head->get('X-no-archive') =~ /yes/i)
+                || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))
+            ) {
+            Log::do_log('info',
+                "Do not archive message with no-archive flag for list %s",
+                $self->get_list_id);
+            return 1;
+        }
+
+        ## Create the archive directory if needed
+        my $queue = $Conf::Conf{'queueoutgoing'};
+        unless (-d $queue) {
+            mkdir($queue, 0775);
+            chmod 0774, $queue;
+            Log::do_log('info', "creating $queue");
+        }
+
+        my @now = localtime(time);
+
+        # my $prefix = sprintf("%04d-%02d-%02d-%02d-%02d-%02d",
+        #     1900+$now[5],$now[4]+1,$now[3],$now[2],$now[1],$now[0]);
+        # my $filename = "$queue"."/"."$prefix-$list_id";
+        my $filename = sprintf '%s/%s.%d.%d.%d',
+            $queue, $self->get_list_id, time, $$, $serial_number;
+        $serial_number = ($serial_number + 1) % 100000;
+        unless (open(OUT, "> $filename")) {
+            Log::do_log('info',
+                "error unable open outgoing dir %s for list %s",
+                $queue, $self->get_list_id);
+            return undef;
+        }
+        Log::do_log('debug', "put message in $filename");
+        if (ref($msg)) {
+            $msg->print(\*OUT);
+        } else {
+            print OUT $msg;
+        }
+        close(OUT);
+    }
 }
 
 ## Is the list moderated?                                                          
@@ -9387,7 +9386,8 @@ sub _load_list_members_from_include {
     my $name = $self->{'name'}; 
     my $admin = $self->{'admin'};
     my $dir = $self->{'dir'};
-    &Log::do_log('debug2', 'List::_load_users_include for list %s',$name);
+    Log::do_log('debug2', '(%s)', $name);
+
     my (%users, $depend_on, $ref);
     my $total = 0;
     my @errors;
@@ -10601,7 +10601,8 @@ sub _save_stats_file {
 	return undef;
     }
 
-    &Log::do_log('debug2', 'List::_save_stats_file(%s, %d, %d, %d)', $file, $total,$last_sync,$last_sync_admin_user );
+    Log::do_log('debug2', '(%s, %s, %s, %s)',
+	$file, $total, $last_sync, $last_sync_admin_user);
     my $untainted_filename = sprintf ("%s",$file);
     open(L, "> $untainted_filename") || return undef;
     printf L "%d %.0f %.0f %.0f %d %d %d\n", @{$stats}, $total, $last_sync, $last_sync_admin_user;
@@ -10648,7 +10649,7 @@ sub _compare_addresses {
 ## Does the real job : stores the message given as an argument into
 ## the digest of the list.
 sub store_digest {
-    my($self,$msg) = @_;
+    my($self, $message) = @_;
     &Log::do_log('debug3', 'List::store_digest');
 
     my($filename, $newfile);
@@ -10680,6 +10681,8 @@ sub store_digest {
 
        # send the date of the next digest to the users
     }
+
+    my $msg = $message->{'msg'};
     #$msg->head->delete('Received') if ($msg->head->get('received'));
     $msg->print(\*OUT);
     printf OUT "\n%s\n\n", &tools::get_separator();

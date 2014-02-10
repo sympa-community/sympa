@@ -10207,14 +10207,14 @@ sub _check_new_values {
 		    foreach my $p (@{$p_val}) {
 			if (!($constraint->{$p}) && (($nb_for == 1) || ($p ne ''))) {
 			    &report::reject_report_web('user','p_family_wrong',{'param' => $pname,'val'=> $p},$param->{'action'});
-			    &wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p);
+			    &wwslog('info', 'do_edit_list : parameter %s has got wrong value : %s (family context)', $pname, $p);
 			    return undef;
 			}
 		    }
 		} else { # single value
 		    if (!($constraint->{$p_val}) && (($nb_for == 1) || ($p_val ne ''))) {
 			&report::reject_report_web('user','p_family_wrong',{'param' => $pname,'val'=> $p_val},$param->{'action'});
-			&wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p_val);
+			&wwslog('info', 'do_edit_list : parameter %s has got wrong value : %s (family context)', $pname, $p_val);
 			return undef;
 		    }
 		}
@@ -10241,14 +10241,14 @@ sub _check_new_values {
 		foreach my $p (@{$p_val}) {
 		    if (!($constraint->{$p}) && (($nb_for == 1) || ($p ne ''))) {
 			&report::reject_report_web('user','p_family_wrong',{'param' => $pname,'val'=> $p},$param->{'action'});
-			&wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p);
+			&wwslog('info', 'do_edit_list : parameter %s has got wrong value : %s (family context)', $pname, $p);
 			return undef;
 		    }
 		}
 	    } else { # single value
 		if (!($constraint->{$p_val}) && (($nb_for == 1) || ($p_val ne ''))) {
 		    &report::reject_report_web('user','p_family_wrong',{'param' => $pname,'val'=> $p_val},$param->{'action'});
-		    &wwslog('info','do_edit_list : parameter %s has got wrong value : %s (family context), %s, %d',$pname,$p_val);
+		    &wwslog('info', 'do_edit_list : parameter %s has got wrong value : %s (family context)', $pname, $p_val);
 		    return undef;
 		}
 	    }

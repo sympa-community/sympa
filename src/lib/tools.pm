@@ -119,12 +119,16 @@ sub set_file_rights {
 ## Returns an HTML::StripScripts::Parser object built with  the parameters provided as arguments.
 sub _create_xss_parser {
     my %parameters = @_;
-    &Log::do_log('debug3','tools::_create_xss_parser(%s)',$parameters{'robot'});
+    my $robot = $parameters{'robot'};
+    Log::do_log('debug3', '(%s)', $robot);
+
+    my $http_host_re = Conf::get_robot_conf($robot, 'http_host');
+    $http_host_re =~ s/([^\s\w\x80-\xFF])/\\$1/g;
     my $hss = HTML::StripScripts::Parser->new({ Context => 'Document',
 						AllowSrc        => 1,
 						Rules => {
 						    '*' => {
-							src => '^http://'.&Conf::get_robot_conf($parameters{'robot'},'http_host'),
+							src => qr{^http://$http_host_re},
 						    },
 						},
 					    });
@@ -175,14 +179,16 @@ sub make_pictures_url {
 ## Returns sanitized version (using StripScripts) of the string provided as argument.
 sub sanitize_html {
     my %parameters = @_;
-    &Log::do_log('debug3','tools::sanitize_html(%s,%s)',$parameters{'string'},$parameters{'robot'});
+    my $robot = $parameters{'robot'};
+    Log::do_log('debug3', '(string=%s, robot=%s)',
+	$parameters{'string'}, $robot);
 
     unless (defined $parameters{'string'}) {
 	&Log::do_log('err',"No string provided.");
 	return undef;
     }
 
-    my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
+    my $hss = _create_xss_parser('robot' => $robot);
     unless (defined $hss) {
 	&Log::do_log('err',"Can't create StripScript parser.");
 	return undef;
@@ -194,14 +200,15 @@ sub sanitize_html {
 ## Returns sanitized version (using StripScripts) of the content of the file whose path is provided as argument.
 sub sanitize_html_file {
     my %parameters = @_;
-    &Log::do_log('debug3','tools::sanitize_html_file(%s)',$parameters{'robot'});
+    my $robot = $parameters{'robot'};
+    Log::do_log('debug3', '(file=%s, robot=%s)', $parameters{'file'}, $robot);
 
     unless (defined $parameters{'file'}) {
 	&Log::do_log('err',"No path to file provided.");
 	return undef;
     }
 
-    my $hss = &_create_xss_parser('robot' => $parameters{'robot'});
+    my $hss = _create_xss_parser('robot' => $robot);
     unless (defined $hss) {
 	&Log::do_log('err',"Can't create StripScript parser.");
 	return undef;
@@ -213,13 +220,15 @@ sub sanitize_html_file {
 ## Sanitize all values in the hash $var, starting from $level
 sub sanitize_var {
     my %parameters = @_;
-    &Log::do_log('debug3','tools::sanitize_var(%s,%s,%s)',$parameters{'var'},$parameters{'level'},$parameters{'robot'});
+    my $robot = $parameters{'robot'};
+    Log::do_log('debug3','(var=%s, level=%s, robot=%s)',
+	$parameters{'var'}, $parameters{'level'}, $robot);
     unless (defined $parameters{'var'}){
-	&Log::do_log('err','Missing var to sanitize.');
+	Log::do_log('err','Missing var to sanitize.');
 	return undef;
     }
     unless (defined $parameters{'htmlAllowedParam'} && $parameters{'htmlToFilter'}){
-	&Log::do_log('err','Missing var *** %s *** %s *** to ignore.',$parameters{'htmlAllowedParam'},$parameters{'htmlToFilter'});
+	Log::do_log('err','Missing var *** %s *** %s *** to ignore.',$parameters{'htmlAllowedParam'},$parameters{'htmlToFilter'});
 	return undef;
     }
     my $level = $parameters{'level'};
@@ -231,15 +240,13 @@ sub sanitize_var {
 		if ((ref($parameters{'var'}->[$index]) eq 'ARRAY') || (ref($parameters{'var'}->[$index]) eq 'HASH')) {
 		    &sanitize_var('var' => $parameters{'var'}->[$index],
 				  'level' => $level+1,
-				  'robot' => $parameters{'robot'},
+				  'robot' => $robot,
 				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
 				  'htmlToFilter' => $parameters{'htmlToFilter'},
 				  );
-		}
-		else {
-		    if (defined $parameters{'var'}->[$index]) {
-			$parameters{'var'}->[$index] = &escape_html($parameters{'var'}->[$index]);
-		    }
+		} elsif (defined $parameters{'var'}->[$index]) {
+		    $parameters{'var'}->[$index] =
+			escape_html($parameters{'var'}->[$index]);
 		}
 	    }
 	}
@@ -248,20 +255,21 @@ sub sanitize_var {
 		if ((ref($parameters{'var'}->{$key}) eq 'ARRAY') || (ref($parameters{'var'}->{$key}) eq 'HASH')) {
 		    &sanitize_var('var' => $parameters{'var'}->{$key},
 				  'level' => $level+1,
-				  'robot' => $parameters{'robot'},
+				  'robot' => $robot,
 				  'htmlAllowedParam' => $parameters{'htmlAllowedParam'},
 				  'htmlToFilter' => $parameters{'htmlToFilter'},
 				  );
-		}
-		else {
-		    if (defined $parameters{'var'}->{$key}) {
-			unless ($parameters{'htmlAllowedParam'}{$key}||$parameters{'htmlToFilter'}{$key}) {
-			    $parameters{'var'}->{$key} = &escape_html($parameters{'var'}->{$key});
-			}
-			if ($parameters{'htmlToFilter'}{$key}) {
-			    $parameters{'var'}->{$key} = &sanitize_html('string' => $parameters{'var'}->{$key},
-									'robot' =>$parameters{'robot'} );
-			}
+		} elsif (defined $parameters{'var'}->{$key}) {
+		    unless ($parameters{'htmlAllowedParam'}{$key} or
+			$parameters{'htmlToFilter'}{$key}) {
+			$parameters{'var'}->{$key} =
+			    escape_html($parameters{'var'}->{$key});
+		    }
+		    if ($parameters{'htmlToFilter'}{$key}) {
+			$parameters{'var'}->{$key} = sanitize_html(
+			    'string' => $parameters{'var'}->{$key},
+			    'robot' => $robot
+			);
 		    }
 		}
 		

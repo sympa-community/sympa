@@ -559,27 +559,25 @@ sub get_topic {
 
 sub clean_html {
     my $self = shift;
-    my ($listname, $robot) = split(/\@/,$self->{'rcpt'});
-    $robot = lc($robot);
-    $listname = lc($listname);
-    $robot ||= $Conf::Conf{'host'};
+    my $robot = shift;
     my $new_msg;
-    if($new_msg = &fix_html_part($self->{'msg'},$robot)) {
+    if($new_msg = _fix_html_part($self->{'msg'}, $robot)) {
 	$self->{'msg'} = $new_msg;
 	return 1;
     }
     return 0;
 }
 
-sub fix_html_part {
+sub _fix_html_part {
     my $part = shift;
     my $robot = shift;
     return $part unless $part;
+
     my $eff_type = $part->head->mime_attr("Content-Type");
     if ($part->parts) {
 	my @newparts = ();
 	foreach ($part->parts) {
-	    push @newparts, &fix_html_part($_,$robot);
+	    push @newparts, _fix_html_part($_, $robot);
 	}
 	$part->parts(\@newparts);
     } elsif ($eff_type =~ /^text\/html/i) {
@@ -605,7 +603,8 @@ sub fix_html_part {
 	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
 	}
 
-	my $filtered_body = &tools::sanitize_html('string' => $body, 'robot'=> $robot);
+	my $filtered_body = tools::sanitize_html(
+	    'string' => $body, 'robot'=> $robot);
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {

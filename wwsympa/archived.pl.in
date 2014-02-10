@@ -103,7 +103,8 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
    open(STDERR, ">> /dev/null");
    open(STDOUT, ">> /dev/null");
    if (open(TTY, "/dev/tty")) {
-      ioctl(TTY, 0x20007471, 0);
+        # ioctl(TTY, &TIOCNOTTY, 0);
+        ioctl(TTY, 0x20007471, 0);	# XXX s/b &TIOCNOTTY
       close(TTY);
    }
    setpgrp(0, 0);
@@ -234,9 +235,9 @@ while (!$end) {
 
 	   my $email_regexp = &tools::get_regexp('email');
 
-	   foreach my $removeorder (<REMOVE>) { 
-	       unless($removeorder =~ /(.*)\|\|($email_regexp)/){
-		   &Log::do_log ('err',"Ignoring remove_order $removeorder not recognized format");   
+	   foreach my $order (<REMOVE>) { 
+	       unless($order =~ /(.*)\|\|($email_regexp)/){
+		   Log::do_log('err',"Ignoring remove_order $order not recognized format");   
 		   next;
 	       }
 	       my $msgid = $1;
@@ -250,7 +251,7 @@ while (!$end) {
 
 	       my $message ;
 	       unless ($message = &Archive::search_msgid("$arcpath/arctxt",$msgid)){
-		   &Log::do_log('err','No message with message-id %s found in %s',$msgid,$arcpath);
+		   Log::do_log('err','No message with message-id %s found in %s/arctxt',$msgid,$arcpath);
 		   next;
 	       }
 
@@ -559,7 +560,7 @@ sub rebuild {
     my $list = new List($listname, $hostname);
     my $robot = $list->{'domain'};
     my $arcpath = &Conf::get_robot_conf($robot,'arc_path');
-    &Log::do_log('debug',"Rebuilding $adrlist archive ($2)");
+    Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
 
     my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
@@ -569,10 +570,11 @@ sub rebuild {
 	&unset_hidden_mode();
     }
 
-    &Log::do_log('notice',"Rebuilding  $arc with M2H_ADDRESSMODIFYCODE : %s",$ENV{'M2H_ADDRESSMODIFYCODE'});
+    Log::do_log('notice', "Rebuilding %s with M2H_ADDRESSMODIFYCODE : %s",
+	$arc, $ENV{'M2H_ADDRESSMODIFYCODE'});
 
     if ($arc) {
-        &Log::do_log('notice',"Rebuilding  $arc of $adrlist archive");
+        Log::do_log('notice',"Rebuilding %s of %s archive", $arc, $adrlist);
 	$arc =~ /^(\d{4})-(\d{2})$/ ;
 	my $yyyy = $1 ;
 	my $mm = $2 ;
@@ -584,7 +586,7 @@ sub rebuild {
 	    my @files = (grep(/^\d+$/,(readdir DIR )));
 	    close (DIR);
 	    if ($#files == -1) { 
-		&Log::do_log('notice', "Removing empty directory $arcdir");
+		Log::do_log('notice', "Removing empty directory %s", $arcdir);
 		&tools::remove_dir ($arcdir);
 		next ;	 
 	    } 
@@ -611,10 +613,11 @@ sub rebuild {
 	}	
 	closedir HTML;
 
-	my $arcs_dir = &clean_archive_directory({'arc_root' => $arcpath,'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	my $arcs_dir = Archive::clean_archive_directory(
+	    $robot, "/$adrlist/$arc/arctxt");
 	my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if($arcs_dir);
 
-	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 
 	&Log::do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
@@ -664,8 +667,9 @@ sub rebuild {
 		unlink $arcdir.'/'.$html_file;
 	    }	
 	    closedir HTML;
-	    my $dir_to_rebuild = "$arcpath/$adrlist/$arc/arctxt";
-	    my $arcs_dir = &clean_archive_directory({'arc_root' => $arcpath,'dir_to_rebuild' => "/$adrlist/$arc/arctxt"});
+	    my $dir_to_rebuild = $arcpath . "/$adrlist/$arc/arctxt";
+	    my $arcs_dir = Archive::clean_archive_directory(
+		$robot, "/$adrlist/$arc/arctxt");
 	    if($arcs_dir) {
 		$dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
 	    }
@@ -674,7 +678,7 @@ sub rebuild {
 		&create_idx($arcdir);
 	    }
 
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;
 
@@ -702,7 +706,7 @@ sub rebuild {
 
 =pod 
 
-=head2 sub mail2arc(STRING $file,STRING $listname,STRING $hostname,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
+=head2 sub mail2arc(STRING $file,STRING $listname,STRING $robot,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
 
 Archives one message into one list archives directory.
 
@@ -714,7 +718,7 @@ Archives one message into one list archives directory.
 
 =item * I<$listname>: a character string containing the name of the list in which to archive the message
 
-=item * I<$hostname>: a character string containing the name of the virtual robot hosting the list.
+=item * I<$robot>: a character string containing the name of the virtual robot hosting the list.
 
 =item * I<$yyyy>: a character string containing the year of the date when the message is archived (i.e. now)
 
@@ -770,14 +774,14 @@ Archives one message into one list archives directory.
 
 sub mail2arc {
 
-    my ($file, $listname, $hostname, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
+    my ($file, $listname, $robot, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
     my $newfile;
 
-    my $list = new List($listname, $hostname);
+    my $list = new List($listname, $robot);
     my $arcpath = &Conf::get_robot_conf($list->{'domain'},'arc_path');
 
     unless (defined $list) {
-	&Log::do_log('err', 'Unknown list %s@%s', $listname, $hostname);
+	Log::do_log('err', 'Unknown list %s@%s', $listname, $robot);
 	return undef;
     }
 
@@ -793,7 +797,7 @@ sub mail2arc {
     #    chdir($arcpath);
 
     if ($wwsconf->{'custom_archiver'}) {
-	`$wwsconf->{'custom_archiver'} --list=$listname\@$hostname --file=$queue/$file`;
+	`$wwsconf->{'custom_archiver'} --list=$listname\@$robot --file=$queue/$file`;
 	return 1;
     }else{
 
@@ -802,7 +806,7 @@ sub mail2arc {
 	if (! -d $basedir) {
 	    unless (mkdir $basedir, 0775) {
 		&Log::do_log('err', 'Cannot create directory %s', $basedir);
-		unless (&List::send_notify_to_listmaster('unable_to_create_dir',$hostname,{'dir' => "$basedir"})) {
+		unless (&List::send_notify_to_listmaster('unable_to_create_dir',$robot,{'dir' => "$basedir"})) {
 		    &Log::do_log('notice',"Unable to send notify 'unable_to_create_dir' to listmaster");
 		}
 	    }
@@ -865,35 +869,49 @@ sub mail2arc {
 	}
 	
 	## copy the file in the arctxt and in "mhonarc -add"
-	if( -f $monthdir."/index" )
-	{
+	if( -f $monthdir."/index" ){
 	    open(IDX,"<$monthdir/index") || &Log::fatal_err("couldn't read index for $listname");
 	    $newfile = <IDX>;
 	    chomp($newfile);
 	    $newfile++;
 	    close IDX;
-	}
-	else
-	{
+	}else{
 	    ## recreate index file if needed and update it
 	    $newfile = &create_idx($monthdir) + 1;
 	}
-	
-	my $file_to_archive = $queue.'/'.$file;
-	my $cleaned_file = clean_archived_message({'path' => $queue, 'file' => $file});
-	$file_to_archive = $cleaned_file if($cleaned_file);
+
+	# savee arctxt dump of original message.
+	my $output = $Conf::Conf{'tmpdir'}.'/arc'.$newfile;
+	open ORIG, '<', "$queue/$file" or fatal_err("couldn't open file $queue/$file");
+	open DUMP, '>', "$arctxtdir/$newfile" or fatal_err("couldn't open file $arctxtdir/$newfile");
+	print DUMP join('', <ORIG>);
+	close ORIG;
+	close DUMP;
+
+	# prepare a temporary file with clean message content (htlm parts are cleaned) 
+	my $safe = Archive::clean_archived_message(
+	    $robot, "$arctxtdir/$newfile", $output);
+	unless ($safe) {
+	    do_log('err',"Could not clean message, ignoring message");
+	    next;
+	}
+
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 	
-	&Log::do_log ('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
-	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=$Conf{'wwsympa_url'}/arc tag=$tag\" -umask $Conf{'umask'} < $file_to_archive";
-	
-	&Log::do_log('debug',"System call : $cmd");
-	
+	Log::do_log('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
+
+	# call mhonarc on cleaned message source to make clean htlm view of message
+	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$robot yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} < $output";
+
+	Log::do_log('debug',"System call : %s",$cmd);
+
 	my $exitcode = system($cmd);
 	$exitcode = $exitcode / 256;
 	
 	# Delete temporary file containing escaped HTML.
-	if ($cleaned_file && -f $cleaned_file) {unlink $cleaned_file;}
+	if ($output && -f $output) {
+	    unlink $output;
+	}
 
 	## Remove lock if required
 	if ($exitcode == 75) {
@@ -906,16 +924,6 @@ sub mail2arc {
 	if ($exitcode) {
 	    &Log::do_log('err',"Command $cmd failed with exit code $exitcode");
 	}
-	
-	
-	open (ORIG, "$queue/$file") || &Log::fatal_err("couldn't open file $queue/$file");
-	open (DEST, ">$arctxtdir/$newfile") || &Log::fatal_err("couldn't open file $newfile");
-	while (<ORIG>) {
-	    print DEST $_ ;
-	}
-	
-	close ORIG;  
-	close DEST;
 
 	&save_idx("$monthdir/index",$newfile);
     }
@@ -1107,66 +1115,6 @@ sub get_tag {
     my $listname = shift;
     
     return (substr(Digest::MD5::md5_hex(join('/', $Conf{'cookie'}, $listname)), -10)) ;
-}
-
-sub clean_archive_directory{
-    my $params = shift;
-    &Log::do_log('debug',"Cleaning archives for directory '%s'.",$params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'});
-    my $answer;
-    $answer->{'dir_to_rebuild'} = $params->{'arc_root'}.'/'.$params->{'dir_to_rebuild'};
-    $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'}.'/'.$params->{'dir_to_rebuild'};
-    unless(my $number_of_copies = &tools::copy_dir($answer->{'dir_to_rebuild'},$answer->{'cleaned_dir'})){
-	&Log::do_log('err',"Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",$number_of_copies);
-	return undef;
-    }
-    if(opendir ARCDIR,$answer->{'cleaned_dir'}){
-	my $files_left_uncleaned = 0;
-	foreach my $file (readdir(ARCDIR)){
-	    next if($file =~ /^\./);
-	    $files_left_uncleaned++ unless(&clean_archived_message({'path' => $answer->{'cleaned_dir'}, 'file' => $file, 'overwrite' => 1}));
-	}
-	closedir DIR;
-	if ($files_left_uncleaned) {
-	    &Log::do_log('err',"HTML cleaning failed for %s files in the directory %s.",$files_left_uncleaned,$answer->{'dir_to_rebuild'});
-	}
-	$answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
-    }else{
-	&Log::do_log('err','Unable to open directory %s: %s',$answer->{'dir_to_rebuild'},$!);
-	&tools::del_dir($answer->{'cleaned_dir'});
-	return undef;
-    }
-    return $answer;
-}
-
-sub clean_archived_message{
-    my $params = shift;
-    &Log::do_log('debug',"Cleaning HTML in archived file '%s/%s' (overwrite: %s).",$params->{'path'},$params->{'file'},$params->{'overwrite'});
-    my $filtered_file;
-    if ($params->{'overwrite'}){
-	$filtered_file = $params->{'path'}.'/'.$params->{'file'};
-    }else{
-	$filtered_file = $Conf::Conf{'tmpdir'}.'/'.$params->{'file'};
-    }
-    my $file_to_archive = $params->{'path'}.'/'.$params->{'file'};
-    if (my $msg = new Message({'file'=>$file_to_archive,'noxsympato'=>'noxsympato'})){
-	if($msg->clean_html()){
-	    if(open TMP, ">$filtered_file") {
-		print TMP $msg->{'msg'}->as_string;
-		close TMP;
-		$file_to_archive = $filtered_file;
-	    }else{
-		&Log::do_log('err','Unable to create a tmp file to write clean HTML to file %s',$filtered_file);
-		return undef;
-	    }
-	}else{
-	    &Log::do_log('err','HTML cleaning in file %s failed.',$file_to_archive);
-	    return undef;
-	}
-    }else{
-	&Log::do_log('err','Unable to create a Message object with file %s',$file_to_archive);
-	return undef;
-    }
-    return $file_to_archive;
 }
 
 # Checks if directory exists and we have write and read accec to it.

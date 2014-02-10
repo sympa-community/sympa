@@ -294,8 +294,10 @@ sub mail_file {
     }
 
     my $listname = ''; 
-    if (ref($data->{'list'}) eq "HASH") {
+    if (ref($data->{'list'}) eq "HASH") { # compatibility
 	$listname = $data->{'list'}{'name'};
+    } elsif (ref($data->{'list'}) eq 'List') {
+	$listname = $data->{'list'}->{'name'};
     } elsif ($data->{'list'}) {
 	$listname = $data->{'list'};
     }

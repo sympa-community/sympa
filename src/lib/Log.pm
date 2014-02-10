@@ -400,7 +400,7 @@ sub get_first_db_log {
 				     'd_remove_arc','rebuildarc','remind','send_mail',
 				     'DoFile','sendMessage','DoForward','DoMessage',
 				     'DoCommand','SendDigest'],
-		       'authentication' => ['login','logout','loginrequest','sendpasswd',
+		       'authentication' => ['login','logout','loginrequest','requestpasswd',
 					    'ssologin','ssologin_succeses','remindpasswd',
 					    'choosepasswd'],
 		       'subscription' => ['subscribe','signoff','add','del','ignoresub',
