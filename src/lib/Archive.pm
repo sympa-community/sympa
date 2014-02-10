@@ -250,7 +250,7 @@ sub clean_archive_directory {
     my $robot = shift;
     my $dir_to_rebuild = shift;
 
-    my $arc_root = Conf::get_robot_conf('*', 'arc_path'); #FIXME: robot?
+    my $arc_root = Conf::get_robot_conf($robot, 'arc_path');
     my $answer;
     $answer->{'dir_to_rebuild'} = $arc_root . '/' . $dir_to_rebuild;
     $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'} . '/' . $dir_to_rebuild;
