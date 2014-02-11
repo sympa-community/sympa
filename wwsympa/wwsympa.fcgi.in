@@ -4564,10 +4564,11 @@ sub do_search {
     my @additional_fields = split ',', $Conf{'db_additional_subscriber_fields'};
     ## Access control
     return undef unless (defined &check_authz('do_search', 'review'));
-    ## Regexp
+    ## Search key
     $param->{'filter'} = $in{'filter'};
-    ## Decode regexp to Unicode for case-insensitive match.
-    my $regexp = &tools::escape_regexp(Encode::decode_utf8($param->{'filter'} || ''));
+    my $searchkey = undef;
+    $searchkey = tools::foldcase($param->{'filter'})
+	if defined $param->{'filter'} and length $param->{'filter'};
 
     my $record = 0;
     ## Maximum size of selection
@@ -4576,14 +4577,15 @@ sub do_search {
     ## Members list
     for (my $i = $list->get_first_list_member({'sortby' => 'email'}); $i; $i = $list->get_next_list_member()) {
 
-	## Decode gecos to Unicode for case-insensitive match.
-	my $gecos = Encode::decode_utf8($i->{'gecos'} || '');
 	## Search filter
-	next if ($i->{'email'} !~ /$regexp/i
-		 && $gecos !~ /$regexp/i);
-	
-	next if (($i->{'visibility'} eq 'conceal')
-		 and (! $param->{'is_owner'}) );
+	next if $i->{'visibility'} eq 'conceal' and ! $param->{'is_owner'};
+
+	if (defined $searchkey) {
+	    my $gecos = undef;
+	    $gecos = tools::foldcase($i->{'gecos'}) if defined $i->{'gecos'};
+	    next unless index($i->{'email'}, $searchkey) >= 0 or
+			(defined $gecos and index($gecos, $searchkey) >= 0);
+	}
 
 	## Add user
 	&_prepare_subscriber($i, \@additional_fields, \%sources);
@@ -4602,8 +4604,11 @@ sub do_search {
 	$key = $key + 1;
 
         ## Search filter
-	next if ($email !~ /$regexp/i);
-	next if (!$param->{'is_owner'});
+	next unless $param->{'is_owner'};
+
+	if (defined $searchkey) {
+	    next unless index($email, $searchkey) >= 0;
+	}
 
 	my $excluded = {'email' => $email,
 			'since' => $date};
@@ -9485,9 +9490,11 @@ sub do_home {
 	 return undef;
      }
 
-     ## Regexp
-     $param->{'filter'} = $in{'filter'};
-     $param->{'regexp'} = &tools::escape_regexp($param->{'filter'});
+    ## Search key
+    $param->{'filter'} = $in{'filter'};
+    my $searchkey = undef;
+    $searchkey = tools::foldcase($param->{'filter'})
+	if defined $param->{'filter'} and length $param->{'filter'};
 
      ## Members list
      my $record = 0;
@@ -9495,15 +9502,12 @@ sub do_home {
      foreach my $list ( @$all_lists ) {
 	 my $is_admin;
 	 ## Search filter
-	 my $regtest = eval { (($list->{'name'} !~ /$param->{'regexp'}/i)
-			       && ($list->{'admin'}{'subject'} !~ /$param->{'regexp'}/i)) };
-	 unless (defined($regtest)) {
-	     &report::reject_report_web('user','syntax_errors',{'params' => 'filter'},$param->{'action'});
- 	     &wwslog('err','do_search_list: syntax error');
-	     return undef;
-	  }
-	 next if $regtest;
-	 	 
+	my $subj = undef;
+	$subj = tools::foldcase($list->{'admin'}{'subject'})
+	    if defined $list->{'admin'}{'subject'};
+	next unless index($list->{'name'}, $searchkey) >= 0 or
+		    (defined $subj and index($subj, $searchkey) >= 0);
+
 	 my $result = $list->check_list_authz('visibility',$param->{'auth_method'},
 					      {'sender' => $param->{'user'}{'email'}, 
 					       'remote_host' => $param->{'remote_host'},
