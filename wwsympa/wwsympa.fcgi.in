@@ -8661,7 +8661,18 @@ sub do_get_inactive_lists {
 		$l->{'creation_date'} = gettext_strftime "%d %b %Y", localtime($l->{'creation_date'});
 		push @{$param->{'biggest_lists'}}, $l;
 	}
-	
+
+## Not yet implemented.
+##	my $all_lists = &List::get_lists($robot, { 'order' => [ '-total' ] });
+##	$param->{'biggest_lists'} = [
+##	    map { {
+##		'name' => $_->name,
+##		'subject' => $_->subject,
+##		'creation_date' => (gettext_strftime "%d %b %Y", localtime $_->creation->{'date_epoch'}),
+##		'subscribers' => $_->total
+##	    }; } @{$all_lists || []}
+##	];
+
 	return 1;
 }
 
