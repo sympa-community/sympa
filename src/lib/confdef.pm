@@ -72,16 +72,14 @@ our @params = (
         'file'     => 'sympa.conf',
         'advice'   => gettext('Effective address will be [EMAIL]@[HOST]'),
     },
-    ##{ email_gecos: not yet implemented. },
     {
-        'name'     => 'email_',
+        'name'     => 'gecos',
         'default'  => 'SYMPA',
         'query'    => gettext('Gecos for service mail sent by Sympa itself'),
         'vhost'    => '1',
         'edit'     => '1',
         'file'     => 'sympa.conf',
-        'advice'   => gettext('This parameter is used in mail_tt2 files'),
-        'optional' => '1',
+        'advice'   => gettext('This parameter is used for display name in the "From:" header'),
     },
     {
         'name'     => 'listmaster',

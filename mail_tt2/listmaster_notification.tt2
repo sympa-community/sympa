@@ -1,4 +1,3 @@
-From: [% conf.email_gecos %]  <[% conf.email %]@[% conf.host %]>
 To: [% FILTER qencode %][%|loc%]Listmaster[%END%] <[% to %]>[%END%]
 [% IF type == 'request_list_creation' -%]
 Subject: [% FILTER qencode %][%|loc(list.name,list.host,email)%]List "%1@%2" creation request from %3[%END%][%END%]

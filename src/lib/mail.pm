@@ -222,11 +222,13 @@ sub mail_file {
 	$headers .= "To: $to\n";
     }     
     unless ($header_ok{'from'}) {
-	if ($data->{'from'} eq 'sympa') {
-	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
-		sprintf("SYMPA <%s>",&Conf::get_robot_conf($robot, 'sympa')),
-		'Encoding' => 'A', 'Charset' => "US-ASCII", 'Field' => 'From'
-		)."\n";
+	if (! defined $data->{'from'} or $data->{'from'} eq 'sympa' or
+	    $data->{'from'} eq $data->{'conf'}{'sympa'}) {
+	    $headers .= 'From: ' . tools::addrencode(
+		$data->{'conf'}{'sympa'},
+		$data->{'conf'}{'gecos'},
+		$data->{'charset'}
+	    ) . "\n";
 	} else {
 	    $headers .= "From: ".MIME::EncWords::encode_mimewords(
 		Encode::decode('utf8', $data->{'from'}),

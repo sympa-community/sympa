@@ -1,4 +1,3 @@
-From: [% conf.email_gecos %] <[% conf.email %]@[% conf.host %]>
 To: [% to %]
 [% IF type == 'shared_moderated' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Shared document to be approved for %1[%END%][%END%]

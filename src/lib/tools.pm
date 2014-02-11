@@ -3972,17 +3972,12 @@ sub addrencode {
     return undef unless $addr =~ /\S/;
 
     if ($phrase =~ /[^\s\x21-\x7E]/) {
-	# Minimal encoding leaves special characters unencoded.
-	# In this case do maximal encoding for workaround.
-	my $minimal =
-	    ($phrase =~ /(\A|\s)[\x21-\x7E]*[\"(),:;<>\@\\][\x21-\x7E]*(\s|\z)/)?
-	    'NO': 'YES';
 	$phrase = MIME::EncWords::encode_mimewords(
 	    Encode::decode('utf8', $phrase),
 	    'Encoding' => 'A', 'Charset' => $charset,
 	    'Replacement' => 'FALLBACK',
 	    'Field' => 'Resent-Sender', # almost longest
-	    'Minimal' => $minimal
+	    'Minimal' => 'DISPNAME',    # needs MIME::EncWords >= 1.012
             );
 	return "$phrase <$addr>";
     } elsif ($phrase =~ /\S/) {

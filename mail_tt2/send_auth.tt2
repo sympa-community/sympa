@@ -1,4 +1,3 @@
-From: [% conf.sympa %]
 Reply-to: [% conf.sympa %]
 [% IF request_topic -%]Subject: [% FILTER qencode %][%|loc(list.name)%]Tag your message for list %1[%END%][%END%]
 [% ELSE -%]Subject: [% FILTER qencode %]Confirm [% authkey %][%END%]

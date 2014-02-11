@@ -92,6 +92,7 @@ my %old_params = (
     'archived_pidfile'     => '',                    # ,,
     'bounced_pidfile'      => '',                    # ,,
     'task_manager_pidfile' => '',                    # ,,
+    'email_gecos'          => 'gecos',               # 6.2a.?? - 6.2a.33
 );
 
 ## These parameters now have a hard-coded value
