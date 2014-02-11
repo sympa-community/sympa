@@ -33,7 +33,7 @@
 [% FOREACH user_with_errors = errors_summary -%]
 <li>[%|loc(user_with_errors.key)%] List %1: [%END%]
 [% IF user_with_errors.value %] [%|loc(user_with_errors.value)%] %1 error(s)[% END %], 
-<a href="mailto:[% user_with_errors.key %]-request@dev-sympa.cru.fr">please contact the list owners</a>
+<a href="mailto:[% user_with_errors.key %]-request@[% conf.host %]">please contact the list owners</a>
 [% END %]<!--IF-->
 </li>
 [% END %]<!--FOREACH-->

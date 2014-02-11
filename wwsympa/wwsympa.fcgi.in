@@ -6523,6 +6523,7 @@ sub do_skinsedit {
      }
      
      $list->add_list_member(@new_users);
+    $total = $list->{'add_outcome'}{'added_members'};
      if (defined $list->{'add_outcome'}{'errors'}) {
 	my $error = sprintf &gettext("Unable to add users in list %s : %s"),$list->{'name'},$list->{'add_outcome'}{'errors'}{'error_message'};
 	my $error_type = 'intern';

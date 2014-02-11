@@ -254,7 +254,7 @@ sub upgrade {
 		     
 	    my ($listname, $listdomain) = split /\@/, $dir;
 
-	    next unless ($listname & $listdomain);
+	    next unless ($listname && $listdomain);
 
 	    my $list = new List $listname;
 	    unless (defined $list) {
@@ -285,7 +285,7 @@ sub upgrade {
     ## DB fields of enum type have been changed to int
     if (&tools::lower_version($previous_version, '5.2a.1')) {
 	
-	if (&SDM::use_db & $Conf::Conf{'db_type'} eq 'mysql') {
+	if (&SDM::use_db && $Conf::Conf{'db_type'} eq 'mysql') {
 	    my %check = ('subscribed_subscriber' => 'subscriber_table',
 			 'included_subscriber' => 'subscriber_table',
 			 'subscribed_admin' => 'admin_table',
@@ -576,8 +576,8 @@ sub upgrade {
 		next;
 	    }
 	    foreach my $file (readdir DIR) {
-		next unless (($d =~ /mail_tt2|web_tt2|create_list_templates|families/ & $file =~ /\.tt2$/) ||
-			     ($d =~ /scenari$/ & $file =~ /\w+\.\w+$/));
+		next unless (($d =~ /mail_tt2|web_tt2|create_list_templates|families/ && $file =~ /\.tt2$/) ||
+			     ($d =~ /scenari$/ && $file =~ /\w+\.\w+$/));
 		push @files, [$d.'/'.$file, $lang];
 	    }
 	    closedir DIR;
@@ -779,7 +779,7 @@ sub to_utf8 {
 	}
 	
 	# Add X-Sympa-Attach: headers if required.
-	if (($file =~ /mail_tt2/) & ($file =~ /\/($with_attachments)$/)) {
+	if (($file =~ /mail_tt2/) && ($file =~ /\/($with_attachments)$/)) {
 	    while (<TEMPLATE>) {
 		$text .= $_;
 		if (m/^Content-Type:\s*message\/rfc822/i) {

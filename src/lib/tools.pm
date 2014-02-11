@@ -898,7 +898,7 @@ sub dkim_sign {
     close(MSGDUMP);
 
     unless (eval "require Mail::DKIM::Signer") {
-	&Log::do_log('err', "Failed to load Mail::DKIM::signer perl module, ignoring DKIM signature");
+	&Log::do_log('err', "Failed to load Mail::DKIM::Signer perl module, ignoring DKIM signature");
 	return ($msg_as_string); 
     }
     unless (eval "require Mail::DKIM::TextWrap") {
