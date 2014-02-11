@@ -197,7 +197,7 @@ sub probe_db {
 	}
     }
     ## Get fields
-    foreach my $t (@tables) {
+    foreach my $t (keys %{$db_struct{'mysql'}}) {
 	$real_struct{$t} = $db_source->get_fields({'table'=>$t});
     }
     ## Check tables structure if we could get it
@@ -293,7 +293,7 @@ sub check_fields {
 	}
 	
 	## Change DB types if different and if update_db_types enabled
-	if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto' && &Conf::get_robot_conf('*','db_type') ne 'SQLite') {
+	if (&Conf::get_robot_conf('*','update_db_field_types') eq 'auto') {
 	    unless (&check_db_field_type(effective_format => $real_struct{$t}{$f},
 					 required_format => $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f})) {
 		push @{$report_ref}, sprintf("Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",$f, $t, &Conf::get_robot_conf('*','db_name'), $db_struct{&Conf::get_robot_conf('*','db_type')}{$t}{$f});
@@ -580,4 +580,12 @@ sub get_canonical_read_date {
     }
 }
 
-return 1;
+## bound parameters for do_prepared_query().
+## returns an array ( { sql_type => SQL_type }, value ),
+## single scalar or empty array.
+##
+sub AS_BLOB {
+    return $db_source->AS_BLOB(@_);
+}
+
+1;

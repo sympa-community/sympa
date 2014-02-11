@@ -1090,6 +1090,7 @@ sub db_struct {
 	  $trans_o =~ s/^text.*/varchar2(500)/g;	
 	  $trans_o =~ s/^longtext.*/long/g;	
 	  $trans_o =~ s/^datetime.*/date/g;	
+	  $trans_o =~ s/^mediumblob/blob/g;
 #Postgresql
 	  $trans_pg =~ s/^int(1)/smallint/g;
 	  $trans_pg =~ s/^int\(?.*\)?/int4/g;
@@ -1100,6 +1101,7 @@ sub db_struct {
 	  $trans_pg =~ s/^longtext.*/text/g;
 	  $trans_pg =~ s/^datetime.*/timestamptz/g;
 	  $trans_pg =~ s/^enum.*/varchar(15)/g;
+	  $trans_pg =~ s/^mediumblob/bytea/g;
 #Sybase		
 	  $trans_syb =~ s/^int.*/numeric/g;
 	  $trans_syb =~ s/^text.*/varchar(500)/g;
@@ -1107,16 +1109,19 @@ sub db_struct {
 	  $trans_syb =~ s/^bigint.*/numeric/g;
 	  $trans_syb =~ s/^longtext.*/text/g;
 	  $trans_syb =~ s/^enum.*/varchar(15)/g;
+	  $trans_syb =~ s/^mediumblob/long binary/g;
 #Sqlite		
 	  $trans_sq =~ s/^varchar.*/text/g;
-	  $trans_sq =~ s/^int\(1\).*/numeric/g;
+	  $trans_sq =~ s/^.*int\(1\).*/numeric/g;
 	  $trans_sq =~ s/^int.*/integer/g;
 	  $trans_sq =~ s/^tinyint.*/integer/g;
 	  $trans_sq =~ s/^bigint.*/integer/g;
 	  $trans_sq =~ s/^smallint.*/integer/g;
+	  $trans_sq =~ s/^longtext.*/text/g;
 	  $trans_sq =~ s/^datetime.*/numeric/g;
 	  $trans_sq =~ s/^enum.*/text/g;	 
-	  
+	  $trans_sq =~ s/^mediumblob/none/g;
+
 	  $db_struct{'mysql'}{$table}{$field} = $trans;
 	  $db_struct{'Pg'}{$table}{$field} = $trans_pg;
 	  $db_struct{'Oracle'}{$table}{$field} = $trans_o;
