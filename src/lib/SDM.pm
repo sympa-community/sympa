@@ -584,6 +584,10 @@ sub get_canonical_read_date {
 ## returns an array ( { sql_type => SQL_type }, value ),
 ## single scalar or empty array.
 ##
+sub AS_DOUBLE {
+    return $db_source->AS_DOUBLE(@_);
+}
+
 sub AS_BLOB {
     return $db_source->AS_BLOB(@_);
 }
