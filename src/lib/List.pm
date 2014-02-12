@@ -3627,7 +3627,7 @@ sub distribute_msg {
 	if $self->{'admin'}{'tracking'}->{'message_delivery_notification'} eq 'on';
     $apply_tracking = 'mdn'
 	if $self->{'admin'}{'tracking'}->{'message_delivery_notification'} eq 'on_demand'
-	   and $hdr->get('Disposition-Notification-To';
+	   and $hdr->get('Disposition-Notification-To');
 
     if ($apply_tracking ne 'off'){
 	$hdr->delete('Disposition-Notification-To'); # remove notification request becuse a new one will be inserted if needed
@@ -3747,7 +3747,7 @@ sub send_msg_digest {
  	$filename = $Conf::Conf{'queuedigest'}.'/'.$self->get_list_id();
     }
     
-    my $param = {'replyto' => $self->get_list_address('owner');
+    my $param = {'replyto' => $self->get_list_address('owner'),
 		 'to' => $self->get_list_address(),
 		 'table_of_content' => sprintf(gettext("Table of contents:")),
 		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
