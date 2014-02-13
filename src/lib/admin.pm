@@ -1245,7 +1245,10 @@ sub install_aliases {
 	unlink $error_output_file;
 
      if ($status == 1) {
-		&Log::do_log('err','Configuration file %s has errors : %s', Sympa::Constants::CONFIG, $error_output);
+	Log::do_log(
+	    'err', 'Configuration file %s has errors : %s',
+	    Conf::get_sympa_conf(), $error_output
+	);
      }elsif ($status == 2)  {
          &Log::do_log('err','admin::install_aliases : Internal error : Incorrect call to alias_manager : %s', $error_output);
      }elsif ($status == 3)  {

@@ -76,7 +76,7 @@ sub response {
 	if (defined $ENV{'SESSION_ID'}) {
 	    my $expire =
 		$main::param->{'user'}{'cookie_delay'} ||
-		$main::wwsconf->{'cookie_expire'};
+		$Conf::Conf{'cookie_expire'};
 	    my $cookie = SympaSession::soap_cookie2(
 		$ENV{'SESSION_ID'}, $ENV{'SERVER_NAME'}, $expire
 	    );

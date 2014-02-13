@@ -78,27 +78,33 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
 # Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");
+unless (Conf::load()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf());
 }
+
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
 
 ## Check database connectivity
 unless (&SDM::check_db_connect()) {
     &Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable.', $Conf::Conf{'db_name'});
 }
 
-&Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');
-
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    ); 
 }else{
-    &Log::set_log_level($Conf::Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf::Conf{'log_level'}"); 
+    Log::set_log_level($Conf::Conf{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	$Conf::Conf{'log_level'}
+    ); 
 }
 
 ## Set the process as main bulk daemon by default.

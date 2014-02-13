@@ -40,10 +40,16 @@ use tools;
 use tt2;
 use Sympa::Constants;
 
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-unless (Conf::load($sympa_conf_file)) {
-   &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");
+unless (defined Conf::load()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );
 }
+
+Log::set_log_level($Conf::Conf{'log_level'});
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'alias_manager');
+
 my $tmp_alias_file = $Conf{'tmpdir'}.'/sympa_aliases.'.time;
 
 

@@ -186,35 +186,47 @@ local $main::daemon_usage;
 
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
-my $config_file = $main::options{'config'} || Sympa::Constants::CONFIG;
-
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
-unless (Conf::load($config_file,1)) {
-   &Log::fatal_err("Unable to load sympa configuration, file $config_file or one of the vhost robot.conf files contain errors. Exiting.");  
+unless (Conf::load(Conf::get_sympa_conf(), 1)) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );  
 }
 
 ## Open the syslog and say we're read out stuff.
-&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'sympa');
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}); 
 }else{
-    &Log::set_log_level($Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    Log::set_log_level($Conf::Conf{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	$Conf::Conf{'log_level'}
+    ); 
 }
 
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
     unless (&Upgrade::probe_db()) {
-	&Log::fatal_err('Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf', $Conf{'db_name'});
+	Log::fatal_err(
+	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
+	    $Conf{'db_name'}
+	);
     }
 }
 
 ## Now trying to load full config (including database)
-unless (Conf::load($config_file)) {
-   &Log::fatal_err("Configuration file $config_file has errors.");
+unless (Conf::load()) {
+    Log::fatal_err(
+	'Configuration file %s has errors.',
+	Conf::get_sympa_conf()
+    );
    
 }
 
@@ -717,8 +729,8 @@ if ($main::options{'dump'}) {
     
 }elsif ($main::options{'conf_2_db'}) {
    
-    printf "Sympa is going to store $config_file in database conf_table. This operation do NOT remove original files\n";
-    if ( Conf::conf_2_db($config_file) ) {
+    printf "Sympa is going to store %s in database conf_table. This operation do NOT remove original files\n", Conf::get_sympa_conf();
+    if (Conf::conf_2_db()) {
 	printf "Done";
     }else{
 	printf "an error occur";

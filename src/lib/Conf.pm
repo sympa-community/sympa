@@ -35,7 +35,6 @@ use List;
 use SDM;
 use Log;
 use Language;
-use wwslib;
 use confdef;
 use tools;
 use Sympa::Constants;
@@ -43,6 +42,16 @@ use Data::Dumper;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
+
+=head1 NAME
+
+Conf - Sympa configuration
+
+=head1 DESCRIPTION
+
+=head2 CONSTANTS AND EXPORTED VARIABLES
+
+=cut
 
 sub DAEMON_MESSAGE {1};
 sub DAEMON_COMMAND {2};
@@ -129,15 +138,28 @@ my %trusted_applications = ('trusted_application' => {
 my $binary_file_extension = ".bin";
 
 
-my $wwsconf = &wwslib::load_config(Sympa::Constants::WWSCONFIG);
+our $wwsconf;
 our %Conf = ();
 
-## Loads and parses the configuration file. Reports errors if any.
-# do not try to load database values if $no_db is set ;
-# do not change gloval hash %Conf if $return_result  is set ;
-# we known that's dirty, this proc should be rewritten without this global var %Conf
+=head2 FUNCTIONS
+
+=over 4
+
+=item load ( [ CONFIG_FILE ], [ NO_DB ], [ RETURN_RESULT ] )
+
+Loads and parses the configuration file.  Reports errors if any.
+
+do not try to load database values if NO_DB is set;
+do not change gloval hash %Conf if RETURN_RESULT is set;
+
+##we known that's dirty, this proc should be rewritten without this global var %Conf
+
+=back
+
+=cut
+
 sub load {
-    my $config_file = shift;
+    my $config_file = shift || get_sympa_conf();
     my $no_db = shift;
     my $return_result = shift;
     my $force_reload;
@@ -257,13 +279,73 @@ sub get_robot_conf {
         }
     }
     ## default
-    return $Conf{$param} || $wwsconf->{$param};
+    return $Conf{$param};
+}
+
+=over 4
+
+=item get_sympa_conf
+
+Gets path name of main config file.
+Path name is taken from:
+
+=over 4
+
+=item 1
+
+C<--config> command line option
+
+=item 2
+
+C<SYMPA_CONFIG> environment variable
+
+=item 3
+
+built-in default
+
+=back
+
+=back
+
+=cut
+
+sub get_sympa_conf {
+    return $main::options{'config'}
+	if %main::options and defined $main::options{'config'};
+    return $ENV{'SYMPA_CONFIG'} || Sympa::Constants::CONFIG;
+}
+
+=over 4
+
+=item get_wwsympa_conf
+
+Gets path name of wwsympa.conf file.
+Path name is taken from:
+
+=over 4
+
+=item 1
+
+C<SYMPA_WWSCONFIG> environment variable
+
+=item 2
+
+built-in default
+
+=back
+
+=back
+
+=cut
+
+sub get_wwsympa_conf {
+    return $ENV{'SYMPA_WWSCONFIG'} || Sympa::Constants::WWSCONFIG;
 }
 
 # deletes all the *.conf.bin files.
 sub delete_binaries {
-    &Log::do_log('notice',"Removing binary cache for sympa.conf, wwsympa.conf and all the robot.conf files");
-    my @files = (Sympa::Constants::CONFIG,Sympa::Constants::WWSCONFIG);
+    &Log::do_log('debug2', '()');
+    my @files = (get_sympa_conf(), get_wwsympa_conf());
     foreach my $robot (@{&get_robots_list()}) {
         push @files, "$Conf{'etc'}/$robot/robot.conf";
     }
@@ -373,8 +455,8 @@ sub set_robot_conf  {
 
 # Store configs to database
 sub conf_2_db {
-    my $config_file = shift;
-    &Log::do_log('info',"conf_2_db");
+    Log::do_log('debug2', '(%s)', @_);
+    my $config_file = shift || get_sympa_conf();
 
     my @conf_parameters = @confdef::params ;
 
@@ -549,7 +631,7 @@ sub checkfiles {
     }
 
     ## queuebounce and bounce_path pointing to the same directory
-    if ($Conf{'queuebounce'} eq $wwsconf->{'bounce_path'}) {
+    if ($Conf{'queuebounce'} eq $Conf{'bounce_path'}) {
     &Log::do_log('err', 'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)', $Conf{'queuebounce'});
     unless (&List::send_notify_to_listmaster('queuebounce_and_bounce_path_are_the_same', $Conf{'domain'}, [$Conf{'queuebounce'}])) {
         &Log::do_log('err', 'Unable to send notify "queuebounce_and_bounce_path_are_the_same" to listmaster');    
@@ -1518,6 +1600,11 @@ sub _infer_server_specific_parameter_values {
 
 sub _load_server_specific_secondary_config_files {
     my $param = shift;
+
+    ## As several parameters prefer to wwsympa.conf, overwrite them of
+    ## sympa.conf.
+    _load_wwsconf($param);
+
     ## Load charset.conf file if necessary.
     if($param->{'config_hash'}{'legacy_character_support_feature'} eq 'on'){
         $param->{'config_hash'}{'locale2charset'} = &load_charset ();
@@ -1932,6 +2019,103 @@ sub _get_parameters_names_by_category {
         }
     }
     return $param_by_categories;
+}
+
+=over 4
+
+=item _load_wwsconf ( FILE )
+
+Load WWSympa configuration file.
+
+=back
+
+=cut
+
+sub _load_wwsconf {
+    my $param = shift;
+    my $config_hash = $param->{'config_hash'};
+    my $config_file = get_wwsympa_conf();
+
+    return 0 unless -f $config_file; # this file is optional.
+
+    ## Old params
+    my %old_param = (
+        'alias_manager' => 'No more used, using ' .
+			   $config_hash->{'alias_manager'},
+        'wws_path'      => 'No more used',
+        'icons_url' => 'No more used. Using static_content/icons instead.',
+        'robots' =>
+            'Not used anymore. Robots are fully described in their respective robot.conf file.',
+        'task_manager_pidfile' => 'No more used',
+        'bounced_pidfile'      => 'No more used',
+        'archived_pidfile'     => 'No more used',
+    );
+
+    ## Valid params
+    my %default_conf =
+        map { $_->{'name'} => $_->{'default'} }
+        grep { exists $_->{'file'} and $_->{'file'} eq 'wwsympa.conf' }
+        @confdef::params;
+
+    my $conf = \%default_conf;
+
+    my $fh;
+    unless (open $fh, '<', $config_file) {
+        Log::do_log('err', 'unable to open %s', $config_file);
+        return undef;
+    }
+
+    while (<$fh>) {
+        next if /^\s*\#/;
+
+        if (/^\s*(\S+)\s+(.+)$/i) {
+            my ($k, $v) = ($1, $2);
+            $v =~ s/\s*$//;
+            if (exists $conf->{$k}) {
+                $conf->{$k} = $v;
+            } elsif (defined $old_param{$k}) {
+                Log::do_log(
+		    'err', "Parameter %s in %s no more supported : %s",
+                    $k, $config_file, $old_param{$k});
+            } else {
+                Log::do_log(
+		    'err', 'Unknown parameter %s in %s', $k, $config_file
+		);
+            }
+        }
+        next;
+    }
+
+    close $fh;
+
+    ## Check binaries and directories
+    if ($conf->{'arc_path'} && (!-d $conf->{'arc_path'})) {
+        &Log::do_log('err', "No web archives directory: %s\n",
+            $conf->{'arc_path'});
+    }
+
+    if ($conf->{'bounce_path'} && (!-d $conf->{'bounce_path'})) {
+        &Log::do_log(
+            'err',
+            "Missing directory '%s' (defined by 'bounce_path' parameter)",
+            $conf->{'bounce_path'}
+        );
+    }
+
+    if ($conf->{'mhonarc'} && (!-x $conf->{'mhonarc'})) {
+        &Log::do_log('err',
+            "MHonArc is not installed or %s is not executable.",
+            $conf->{'mhonarc'});
+    }
+
+    ## set default
+    $conf->{'log_facility'} ||= $config_hash->{'syslog'};
+
+    foreach my $k (keys %$conf) {
+	$config_hash->{$k} = $conf->{$k};
+    }
+    $wwsconf = $conf;
+    return $wwsconf;
 }
 
 ## Packages must return true.

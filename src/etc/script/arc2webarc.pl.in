@@ -25,14 +25,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use lib '--modulesdir--';
-use wwslib;
+use Conf;
 use Sympa::Constants;
-
-$wwsympa_conf_file = Sympa::Constants::WWSCONFIG;
-$sympa_conf_file = Sympa::Constants::CONFIG;
-
 use List;
 use Log;
+
 use Getopt::Long;
 
 my %month_idx = qw(jan 1 
@@ -83,15 +80,8 @@ unless ([getpwuid $<]->[0] eq Sympa::Constants::USER) {
     die unless ($s =~ /^y$/i);
 }
 
-my $wwsconf = {};
-
-## Load config 
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf_file)) {
-    die 'unable to load config file';
-}
-
 ## Load sympa config
-unless (&Conf::load($sympa_conf_file)) {
+unless (Conf::load()) {
     die 'config_error';
 }
 
@@ -108,7 +98,7 @@ if ($robot) {
 }else {
     $home_sympa = $Conf::Conf{'home'};
 }
-my $dest_dir = $wwsconf->{'arc_path'}.'/'.$list->get_list_id();
+my $dest_dir = Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
 
 unless (-d "$home_sympa/$listname") {
     die "No directory for list $listname";

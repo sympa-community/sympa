@@ -76,7 +76,6 @@ my %equiv = ( "user unknown" => '5.1.1',
 
 
 use Bounce;
-use wwslib;
 
 #getopts('dF');
 ## Check options
@@ -94,28 +93,18 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-
-my $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
 my $daemon_name = &Log::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
 
-my $wwsconf = {};
-
-# Load WWSympa configuration
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    print STDERR 'unable to load config file';
-    exit;
-}
-
 # Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+unless (Conf::load()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s has errors.',
+	Conf::get_sympa_conf()
+    );
 }
 
-
-unshift @INC, $wwsconf->{'wws_path'};
+##unshift @INC, $Conf::Conf{'wws_path'};
 
 ## Check databse connectivity
 unless (&SDM::check_db_connect()) {
@@ -151,15 +140,21 @@ unless ($options->{'stderr_to_tty'}) {
 }
 
 if ($main::options{'log_level'}) {
-    &Log::set_log_level($main::options{'log_level'});
-    &Log::do_log('info', "Configuration file read, log level set using options : $main::options{'log_level'}"); 
-}else{
-    &Log::set_log_level($Conf{'log_level'});
-    &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
+    Log::set_log_level($main::options{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, log level set using options : %s',
+	$main::options{'log_level'}
+    ); 
+} else {
+    Log::set_log_level($Conf::Conf{'log_level'});
+    Log::do_log(
+	'info', 'Configuration file read, default log level %s',
+	$Conf::Conf{'log_level'}
+    ); 
 }
 
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'bounced');
+my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
+Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'bounced');
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];

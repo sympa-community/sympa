@@ -92,11 +92,6 @@ BEGIN {
 ## WWSympa librairies
 my %options;
 
-## Configuration
-my $wwsconf = {};
-
-## Change to your wwsympa.conf location
-my $conf_file = Sympa::Constants::WWSCONFIG;
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 
 # Used via the Sympa::Plugin interface
@@ -115,23 +110,22 @@ my $ajax;
 
 my $allow_absolute_path; #FIXME: to be removed in the future.
 
-## Load config 
-unless ($wwsconf = &wwslib::load_config($conf_file)) {
-    Log::fatal_err('Unable to load config file %s', $conf_file);
-}
-
 ## Load sympa config
-unless (&Conf::load( $sympa_conf_file )) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file or one of the vhost robot.conf files contain errors. Exiting.");  
+unless (Conf::load()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
+	Conf::get_sympa_conf()
+    );  
 }
 
-&Log::set_log_level($Conf{'log_level'}) if ($Conf{'log_level'});
+Log::set_log_level($Conf::Conf{'log_level'});
 
 my $daemon_name = &Log::set_daemon($0);
 
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
+## Open log
+my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
+Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'wwsympa');
 
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'wwsympa');
 ## Start plugins
 if(eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
@@ -139,7 +133,7 @@ if(eval "require Sympa::Plugin::Manager") {
 
 &mail::set_send_spool($Conf{'queue'});
 
-if ($wwsconf->{'use_fast_cgi'}) {
+if ($Conf::Conf{'use_fast_cgi'}) {
     require CGI::Fast;
 }else {
     require CGI;
@@ -1102,7 +1096,7 @@ Log::do_log(info => "WWSympa started, process $$");
      $param->{'use_passwd'} = $Conf{'use_passwd'}{$robot};
      $param->{'use_sso'} = 1 if ($param->{'sso_number'});
      $param->{'authentication_info_url'} = $Conf{'authentication_info_url'}{$robot}; 
-     $param->{'wwsconf'} = $wwsconf;
+     $param->{'wwsconf'} = Conf::_load_wwsconf; #FXIME: no longer used?
 
      $param->{'path_cgi'} = $ENV{'SCRIPT_NAME'};
      $param->{'path_cgi'} =~ s/\/\//\//g; ## Replace '//' with '/' because it would break navigation     
@@ -1334,7 +1328,7 @@ Log::do_log(info => "WWSympa started, process $$");
 	     ## For the parser to display an empty field instead of [xxx]
 	     $param->{'user'}{'gecos'} ||= '';
 	     unless (defined $param->{'user'}{'cookie_delay'}) {
-		 $param->{'user'}{'cookie_delay'} = $wwsconf->{'cookie_expire'};
+		 $param->{'user'}{'cookie_delay'} = $Conf::Conf{'cookie_expire'};
 	     }
 	     
 	     ## Skip get_which if either in a list context or accessing the CSS
@@ -1363,8 +1357,8 @@ Log::do_log(info => "WWSympa started, process $$");
      $param->{'remote_addr'} = $ENV{'REMOTE_ADDR'} ;
      $param->{'remote_host'} = $ENV{'REMOTE_HOST'};
      $param->{'http_user_agent'} = $ENV{'HTTP_USER_AGENT'};
-     $param->{'htmlarea_url'} = $wwsconf->{'htmlarea_url'} ;
-     # if ($wwsconf->{'export_topics'} =~ /all/i);
+     $param->{'htmlarea_url'} = $Conf::Conf{'htmlarea_url'} ;
+     # if ($Conf::Conf{'export_topics'} =~ /all/i);
 
      if ($in{'action'} eq 'css') {
 	 &do_css();
@@ -1500,7 +1494,7 @@ Log::do_log(info => "WWSympa started, process $$");
 
 	 my $delay = $param->{'user'}{'cookie_delay'};
 	 unless (defined $delay) {
-	     $delay = $wwsconf->{'cookie_expire'};
+	     $delay = $Conf::Conf{'cookie_expire'};
 	 }
 		 
 	 if ($delay == 0) {
@@ -1823,7 +1817,7 @@ sub web_db_stat_log {
      $loop++;
      my $query;
 
-     if ($wwsconf->{'use_fast_cgi'}) {
+     if ($Conf::Conf{'use_fast_cgi'}) {
 	 $query = new CGI::Fast;
 	 $loop_count++;
      }else {	
@@ -4426,7 +4420,7 @@ sub do_renewpasswd {
 	     &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	 }
      }else{
-	 $size = $param->{'user'}{'prefs'}{'review_page_size'} || $session->{'review_page_size'} || $wwsconf->{'review_page_size'};
+	 $size = $param->{'user'}{'prefs'}{'review_page_size'} || $session->{'review_page_size'} || $Conf::Conf{'review_page_size'};
      }
      $param->{'review_page_size'} = $size;
      
@@ -7658,7 +7652,7 @@ sub do_arc {
     &wwslog('info', 'do_arc(%s, %s)', $in{'month'}, $in{'arc_file'});
     my $latest;
     
-    my $index = $session->{'arc_mode'} || $wwsconf->{'archive_default_index'};
+    my $index = $session->{'arc_mode'} || $Conf::Conf{'archive_default_index'};
     $index = 'thrd' unless $index and $index =~ /^(thrd|mail)$/;
 
     ## Clean arc_file
@@ -9310,7 +9304,7 @@ sub do_home {
  ## Bouncing addresses review
  sub do_reviewbouncing {
      &wwslog('info', 'do_reviewbouncing(%s)', $in{'page'});
-     my $size = $in{'size'} || $wwsconf->{'review_page_size'};
+     my $size = $in{'size'} || $Conf::Conf{'review_page_size'};
 
      ## Owner
      $param->{'page'} = $in{'page'} || 1;
@@ -12466,9 +12460,8 @@ sub do_latest_d_read {
      } else {
 	 $param->{'textfile'} = 0;
      }
-     $param->{'use_htmlarea'} = '1' if (($wwsconf->{'htmlarea_url'}) and ($param->{'textfile'}) and ($path =~ /\.html?/));
-
-
+    $param->{'use_htmlarea'} = '1'
+	if $Conf::Conf{'htmlarea_url'} and $param->{'textfile'} and $path =~ /\.html?/;
 
      #Current directory
      if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
@@ -12598,9 +12591,8 @@ sub do_latest_d_read {
      } else {
 	 $param->{'textfile'} = 0;
      }
-     $param->{'use_htmlarea'} = '1' if (($wwsconf->{'htmlarea_url'}) and ($param->{'textfile'}) and ($path =~ /\.html?/));
-
-
+    $param->{'use_htmlarea'} = '1'
+	if $Conf::Conf{'htmlarea_url'} and $param->{'textfile'} and $path =~ /\.html?/;
 
      #Current directory
      if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
@@ -16878,7 +16870,7 @@ sub do_viewlogs {
 	&wwslog('info', 'do_viewlogs(%s)', $in{'page'});
 	
 	$param->{'page'} = int($in{'page'}) || 1;
-	$param->{'size'} = int($in{'size'}) || $wwsconf->{'viewlogs_page_size'};
+	$param->{'size'} = int($in{'size'}) || $Conf::Conf{'viewlogs_page_size'};
 	$param->{'sortby'} = $in{'sortby'} || 'email';
 	
 	$param->{'total_results'} = 0;

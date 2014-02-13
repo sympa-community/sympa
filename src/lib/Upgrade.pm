@@ -503,11 +503,11 @@ sub upgrade {
 	}
 
 	foreach my $f (
-        Sympa::Constants::CONFIG,
-        Sympa::Constants::WWSCONFIG,
-        $Conf::Conf{'etc'}.'/'.'topics.conf',
-        $Conf::Conf{'etc'}.'/'.'auth.conf'
-    ) {
+	    Conf::get_sympa_conf(),
+	    Conf::get_wwsympa_conf(),
+	    $Conf::Conf{'etc'}.'/'.'topics.conf',
+	    $Conf::Conf{'etc'}.'/'.'auth.conf'
+	) {
 	    if (-f $f) {
 		push @files, [$f, $Conf::Conf{'lang'}];
 	    }

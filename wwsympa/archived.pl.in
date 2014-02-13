@@ -52,7 +52,6 @@ use Getopt::Long;
 use Language;
 use Digest::MD5;
 
-use wwslib;
 use mail;
 
 use tt2;
@@ -77,20 +76,12 @@ if ($main::options{'debug'}) {
 $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $wwsympa_conf    = Sympa::Constants::WWSCONFIG;
-my $sympa_conf_file = Sympa::Constants::CONFIG;
-
-my $wwsconf = {};
-
-# Load WWSympa configuration
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf)) {
-    print STDERR 'unable to load config file';
-    exit -1;
-}
-
 # Load sympa.conf
-unless (Conf::load($sympa_conf_file)) {
-    &Log::fatal_err("Unable to load sympa configuration, file $sympa_conf_file has errors.");
+unless (Conf::load()) {
+    Log::fatal_err(
+	'Unable to load sympa configuration, file %s has errors.',
+	Conf::get_sympa_conf()
+    );
 }
 
 ## Check databse connectivity
@@ -134,8 +125,8 @@ if ($main::options{'log_level'}) {
     &Log::do_log('info', "Configuration file read, default log level $Conf{'log_level'}"); 
 }
 
-$wwsconf->{'log_facility'}||= $Conf{'syslog'};
-&Log::do_openlog($wwsconf->{'log_facility'}, $Conf{'log_socket_type'}, 'archived');
+my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
+Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'archived');
 
 ## Set the UserID & GroupID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -487,7 +478,7 @@ sub remove {
     my $mm = $2 ;
     
     $msgid =~ s/\$/\\\$/g;
-    system "$wwsconf->{'mhonarc'}  -outdir $arcpath/$adrlist/$yyyy-$mm -rmm $msgid";
+    system "$Conf::Conf{'mhonarc'}  -outdir $arcpath/$adrlist/$yyyy-$mm -rmm $msgid";
 }
 
 =pod 
@@ -617,7 +608,7 @@ sub rebuild {
 	    $robot, "/$adrlist/$arc/arctxt");
 	my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if($arcs_dir);
 
-	my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	my $cmd = "$Conf::Conf{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 
 	&Log::do_log('debug',"System call : $cmd");
 	my $exitcode = system($cmd);
@@ -678,7 +669,7 @@ sub rebuild {
 		&create_idx($arcdir);
 	    }
 
-	    my $cmd = "$wwsconf->{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
+	    my $cmd = "$Conf::Conf{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} $dir_to_rebuild";
 	    my $exitcode = system($cmd);
 	    $exitcode = $exitcode / 256;
 
@@ -796,8 +787,8 @@ sub mail2arc {
     &Log::do_log('debug',"mail2arc $file for %s yyyy:$yyyy, mm:$mm dd:$dd hh:$hh min$min ss:$ss", $list->get_list_id());
     #    chdir($arcpath);
 
-    if ($wwsconf->{'custom_archiver'}) {
-	`$wwsconf->{'custom_archiver'} --list=$listname\@$robot --file=$queue/$file`;
+    if ($Conf::Conf{'custom_archiver'}) {
+	`$Conf::Conf{'custom_archiver'} --list=$listname\@$robot --file=$queue/$file`;
 	return 1;
     }else{
 
@@ -898,10 +889,10 @@ sub mail2arc {
 
 	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 	
-	Log::do_log('debug',"calling $wwsconf->{'mhonarc'} for list %s", $list->get_list_id() ) ;
+	Log::do_log('debug',"calling $Conf::Conf{'mhonarc'} for list %s", $list->get_list_id() ) ;
 
 	# call mhonarc on cleaned message source to make clean htlm view of message
-	my $cmd = "$wwsconf->{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$robot yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} < $output";
+	my $cmd = "$Conf::Conf{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$robot yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base=" . Conf::get_robot_conf($robot, 'wwsympa_url') . "/arc tag=$tag\" -umask $Conf{'umask'} < $output";
 
 	Log::do_log('debug',"System call : %s",$cmd);
 

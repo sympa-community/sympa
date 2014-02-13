@@ -24,14 +24,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use lib '--modulesdir--';
-use wwslib;
 use Conf;
 use Language;
 use tt2;
 use Sympa::Constants;
-
-$wwsympa_conf_file = Sympa::Constants::WWSCONFIG;
-$sympa_conf_file = Sympa::Constants::CONFIG;
 
 use List;
 use Log;
@@ -47,15 +43,8 @@ $| = 1;
 #    die unless ($s =~ /^y$/i);
 #}
 
-my $wwsconf = {};
-
-## Load config 
-unless ($wwsconf = &wwslib::load_config($wwsympa_conf_file)) {
-    die 'unable to load config file';
-}
-
 ## Load sympa config
-unless (&Conf::load($sympa_conf_file)) {
+unless (Conf::load()) {
     die 'config_error';
 }
 
@@ -253,7 +242,7 @@ sub convert {
 
     ## Convert tpl file
     unless (open TPL, $in_file) {
-	print STDERR "Cannot open $in_filel : $!\n";
+	print STDERR "Cannot open $in_file : $!\n";
 	return undef;
     }
     if ($out_file) {

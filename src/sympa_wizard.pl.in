@@ -192,7 +192,6 @@ sub edit_configuration {
 
     my $new_wwsympa_conf = '/tmp/wwsympa.conf';
     my $new_sympa_conf = '/tmp/sympa.conf';
-    my $wwsconf = {};
     my $somechange = 0;
 
     my $rep;
@@ -207,13 +206,8 @@ sub edit_configuration {
 	Language::SetLang('en_US');
     }
 
-    ## Load config 
-    unless ($wwsconf = wwslib::load_config($wwsympa_conf)) {
-	&Log::fatal_err("Unable to load sympa configuration, file $wwsympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
-    }
-
     ## Load sympa config (but not using database)
-    unless (Conf::load( $sympa_conf,'nodb')) {
+    unless (Conf::load( $sympa_conf,'nodb')) { # Use built-in default file.
 	&Log::fatal_err("Unable to load sympa configuration, file $sympa_conf or one of the vhost robot.conf files contain errors. Exiting.");  
     }
 
@@ -245,7 +239,7 @@ sub edit_configuration {
         my $sample = $param->{'sample'} ;
         my $current_value ;
         if ($file eq 'wwsympa.conf') {	
-            $current_value = $wwsconf->{$name} ;
+            $current_value = $Conf::Conf{$name} ;
         } elsif ($file eq 'sympa.conf') {
             $current_value = $Conf::Conf{$name}; 
         } else {

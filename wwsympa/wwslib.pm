@@ -131,67 +131,8 @@ use Sympa::Constants;
 my $cipher;
 
 ## Load WWSympa configuration file
-sub load_config {
-    my $file = pop;
-
-    ## Old params
-    my %old_param = ('alias_manager' => 'No more used, using '.$Conf{'alias_manager'},
-		     'wws_path' => 'No more used',
-		     'icons_url' => 'No more used. Using static_content/icons instead.',
-		    'robots' => 'Not used anymore. Robots are fully described in their respective robot.conf file.',
-		     'task_manager_pidfile' => 'No more used',
-		     'bounced_pidfile' => 'No more used',
-		     'archived_pidfile' => 'No more used',
-    );
-
-    ## Valid params
-    my %default_conf = map {
-	$_->{'name'} => $_->{'default'}
-    } grep {
-	exists $_->{'file'} and $_->{'file'} eq 'wwsympa.conf'
-    } @confdef::params;
-
-    my $conf = \%default_conf;
-
-    unless (open (FILE, $file)) {
-	&Log::do_log('err',"load_config: unable to open $file");
-	return undef;
-    }
-    
-    while (<FILE>) {
-	next if /^\s*\#/;
-
-	if (/^\s*(\S+)\s+(.+)$/i) {
-	    my ($k, $v) = ($1, $2);
-	    $v =~ s/\s*$//;
-	    if (exists $conf->{$k}) {
-		$conf->{$k} = $v;
-	    }elsif (defined $old_param{$k}) {
-		&Log::do_log('err',"Parameter %s in %s no more supported : %s", $k, $file, $old_param{$k});
-	    }else {
-		&Log::do_log('err',"Unknown parameter %s in %s", $k, $file);
-	    }
-	}
-	next;
-    }
-    
-    close FILE;
-
-    ## Check binaries and directories
-    if ($conf->{'arc_path'} && (! -d $conf->{'arc_path'})) {
-	&Log::do_log('err',"No web archives directory: %s\n", $conf->{'arc_path'});
-    }
-
-    if ($conf->{'bounce_path'} && (! -d $conf->{'bounce_path'})) {
-	&Log::do_log('err',"Missing directory '%s' (defined by 'bounce_path' parameter)", $conf->{'bounce_path'});
-    }
-
-    if ($conf->{'mhonarc'} && (! -x $conf->{'mhonarc'})) {
-	&Log::do_log('err',"MHonArc is not installed or %s is not executable.", $conf->{'mhonarc'});
-    }
-
-    return $conf;
-}
+##sub load_config
+## MOVED: use Conf::_load_wwsconf().
 
 ## Load HTTPD MIME Types
 sub load_mime_types {
