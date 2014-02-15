@@ -30,7 +30,6 @@ pidfilepath="/dist/sympa/run"
 
 sympadir="--sbindir--"
 sympaconf="--CONFIG--"
-wwsympaconf="--WWSCONFIG--"
 
 start_wait=3
 stop_wait=5
@@ -82,10 +81,6 @@ case "$1" in
 	fi
 	if [ ! -f $sympaconf ]; then
 		echo "XXX $sympaconf not found!"
-		exit 2
-	fi
-	if [ ! -f $wwsympaconf ]; then
-		echo "XXX $wwsympadir not found!"
 		exit 2
 	fi
 
