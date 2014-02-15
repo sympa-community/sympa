@@ -1222,7 +1222,7 @@ while (!$signal) {
     &mail::reaper;
 
     unless ($filename) {
-	sleep(&Conf::get_robot_conf($robot, 'sleep'));
+	sleep($Conf::Conf{'sleep'});
 	next;
     }
 
@@ -1647,10 +1647,10 @@ sub DoFile {
 	$loop_info{$sender}{'count'}++;
 	
 	## Sampling delay 
-	if ((time - $loop_info{$sender}{'date_init'}) < &Conf::get_robot_conf($robot, 'loop_command_sampling_delay')) {
+	if ((time - $loop_info{$sender}{'date_init'}) < $Conf::Conf{'loop_command_sampling_delay'}) {
 
 	    ## Notify listmaster of first rejection
-	    if ($loop_info{$sender}{'count'} ==  &Conf::get_robot_conf($robot, 'loop_command_max')) {
+	    if ($loop_info{$sender}{'count'} == $Conf::Conf{'loop_command_max'}) {
 		## Notify listmaster
 		unless (&List::send_notify_to_listmaster('loop_command',  &Conf::get_robot_conf($robot, 'domain'),
 							 {'msg' => $file})) {
@@ -1659,7 +1659,7 @@ sub DoFile {
 	    }
 	    
 	    ## Too many reports sent => message skipped !!
-	    if ($loop_info{$sender}{'count'} >=  &Conf::get_robot_conf($robot, 'loop_command_max')) {
+	    if ($loop_info{$sender}{'count'} >= $Conf::Conf{'loop_command_max'}) {
 		&Log::do_log('err', 'Ignoring message which would cause a loop, %d messages sent to %s; loop_command_max exceeded', $loop_info{$sender}{'count'}, $sender);
 		
 		return undef;
@@ -1669,7 +1669,7 @@ sub DoFile {
 	    $loop_info{$sender}{'date_init'} = time;
 
 	    ## We apply Decrease factor if a loop occured
-	    $loop_info{$sender}{'count'} *=  &Conf::get_robot_conf($robot,'loop_command_decrease_factor');
+	    $loop_info{$sender}{'count'} *= $Conf::Conf{'loop_command_decrease_factor'};
 	}
 
 	## Send the reply message
@@ -1948,7 +1948,7 @@ sub DoMessage{
     }
 	
     # Reject messages with commands
-    if ( &Conf::get_robot_conf($robot,'misaddressed_commands') =~ /reject/i) {
+    if ($Conf::Conf{'misaddressed_commands'} =~ /reject/i) {
 	## Check the message for commands and catch them.
 	if (&tools::checkcommand($message->{'msg'}, $sender, $robot)) {
 	    &Log::do_log('err', 'sympa::DoMessage(): Found command in message, ignoring message');
