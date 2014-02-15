@@ -11512,7 +11512,7 @@ sub _load_list_param {
     }
 
     ## Synonyms
-    if (defined $p->{'synonym'}{$value}) {
+    if (defined $value and defined $p->{'synonym'}{$value}) {
 	$value = $p->{'synonym'}{$value};
     }
 

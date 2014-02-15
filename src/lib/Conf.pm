@@ -1601,9 +1601,13 @@ sub _infer_server_specific_parameter_values {
 sub _load_server_specific_secondary_config_files {
     my $param = shift;
 
-    ## As several parameters prefer to wwsympa.conf, overwrite them of
-    ## sympa.conf.
-    _load_wwsconf($param);
+    ## wwsympa.conf exists
+    if (-f get_wwsympa_conf()) {
+	Log::do_log('notice',
+	    '%s was found but it is no longer loaded.  Please run sympa.pl --upgrade to migrate it.',
+	    get_wwsympa_conf()
+	);
+    }
 
     ## Load charset.conf file if necessary.
     if($param->{'config_hash'}{'legacy_character_support_feature'} eq 'on'){

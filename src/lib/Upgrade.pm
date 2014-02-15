@@ -468,6 +468,7 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.8')) {
 	&Log::do_log('notice','Q-Encoding web documents filenames...');
 
+	Language::PushLang($Conf::Conf{'lang'});
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
 	    if (-d $list->{'dir'}.'/shared') {
@@ -485,8 +486,8 @@ sub upgrade {
 		}
 	    }
 	}
-
-    }    
+	Language::PopLang();
+    }
 
     ## We now support UTF-8 only for custom templates, config files, headers and footers, info files
     ## + web_tt2, scenari, create_list_templatee, families
@@ -736,6 +737,225 @@ sub upgrade {
 	    $list->_update_list_db;
 	}
    }
+
+    ## We have obsoleted wwsympa.conf.  It would be migrated to sympa.conf.
+    if (&tools::lower_version($previous_version, '6.2b.1')) {
+	my $sympa_conf = Conf::get_sympa_conf();
+	my $wwsympa_conf = Conf::get_wwsympa_conf();
+	my $fh;
+	my %migrated = ();
+	my @newconf = ();
+	my $date;
+
+	## Some sympa.conf parameters were overridden by wwsympa.conf.
+	## Others prefer sympa.conf.
+	my %wwsconf_override = (
+	    'arc_path'                   => 'yes',
+	    'archive_default_index'      => 'yes',
+	    'bounce_path'                => 'yes',
+	    'cookie_domain'              => 'NO',
+	    'cookie_expire'              => 'yes',
+	    'cookie_refresh'             => 'NO',
+	    'custom_archiver'            => 'yes',
+	    'default_home'               => 'NO',
+	    'export_topics'              => 'yes',
+	    'htmlarea_url'               => 'yes',
+	    'html_editor_file'           => 'NO',
+	    'html_editor_init'           => 'NO',
+	    'ldap_force_canonical_email' => 'NO',
+	    'log_facility'               => 'yes',
+	    'mhonarc'                    => 'yes',
+	    'password_case'              => 'NO',
+	    'review_page_size'           => 'yes',
+	    'title'                      => 'NO',
+	    'use_fast_cgi'               => 'yes',
+	    'use_html_editor'            => 'NO',
+	    'viewlogs_page_size'         => 'yes',
+	    'wws_path'                   => undef,
+	);
+	## Old params
+	my %old_param = (
+	    'alias_manager' =>
+		'No more used, using ' . $Conf::Conf{'alias_manager'},
+	    'wws_path'      => 'No more used',
+	    'icons_url' =>
+		'No more used. Using static_content/icons instead.',
+	    'robots' =>
+		'Not used anymore. Robots are fully described in their respective robot.conf file.',
+	    'task_manager_pidfile' => 'No more used',
+	    'archived_pidfile'     => 'No more used',
+	    'bounced_pidfile'      => 'No more used',
+	);
+
+	## Set language of new file content
+	Language::PushLang($Conf::Conf{'lang'});
+	$date = Language::gettext_strftime("%d.%b.%Y-%H.%M.%S",
+	    localtime time);
+
+	if (-r $wwsympa_conf) {
+	    ## load only sympa.conf
+	    my $conf = ${
+		Conf::_load_config_file_to_hash(
+		    {'path_to_config_file' => $sympa_conf}
+		) || {}
+	    }->{'config'};
+	    # not yet implemented.
+	    #my $conf = Conf::load_robot_conf(
+	    #    {'robot' => '*', 'no_db' => 1, 'return_result' => 1}
+	    #);
+
+	    my %infile = ();
+	    ## load defaults
+	    foreach my $p (@confdef::params) {
+		next if $p->{'title'};
+		next unless $p->{'file'};
+		next unless $p->{'file'} eq 'wwsympa.conf';
+		$infile{$p->{'name'}} = $p->{'default'};
+	    }
+	    ## get content of wwsympa.conf
+	    open my $fh, '<', $wwsympa_conf;
+	    while (<$fh>) {
+		next if /^\s*#/;
+		chomp $_;
+		next unless /^\s*(\S+)\s+(.+)$/i;
+		my ($k, $v) = ($1, $2);
+		$infile{$k} = $v;
+	    }
+	    close $fh;
+
+	    my $name;
+	    foreach my $p (@confdef::params) {
+		next if $p->{'title'};
+		$name = $p->{'name'};
+		next unless exists $infile{$name};
+
+		unless ($p->{'file'} and $p->{'file'} eq 'wwsympa.conf') {
+		    ## may it exist in wwsympa.conf?
+		    $migrated{'unknown'} ||= {};
+		    $migrated{'unknown'}->{$name} = [$p, $infile{$name}];
+		} elsif (exists $conf->{$name}) {
+		    if ($wwsconf_override{$name} eq 'yes') {
+			## does it override sympa.conf?
+			$migrated{'override'} ||= {};
+			$migrated{'override'}->{$name} = [$p, $infile{$name}];
+		    } elsif (defined $conf->{$name}) {
+			## or, is it there in sympa.conf?
+			$migrated{'duplicate'} ||= {};
+			$migrated{'duplicate'}->{$name} = [$p, $infile{$name}];
+		    } else {
+			## otherwise, use values in wwsympa.conf
+			$migrated{'add'} ||= {};
+			$migrated{'add'}->{$name} = [$p, $infile{$name}];
+		    }
+		} else {
+		    ## otherwise, use values in wwsympa.conf
+		    $migrated{'add'} ||= {};
+		    $migrated{'add'}->{$name} = [$p, $infile{$name}];
+		}
+		delete $infile{$name};
+	    }
+	    ## obsoleted or unknown parameters
+	    foreach my $name (keys %infile) {
+		if ($old_param{$name}) {
+		    $migrated{'obsolete'} ||= {};
+		    $migrated{'obsolete'}->{$name} =
+			[{'name' => $name, 'query' => $old_param{$name}},
+			 $infile{$name}];
+		} else {
+		    $migrated{'unknown'} ||= {};
+		    $migrated{'unknown'}->{$name} =
+			[{'name' => $name,
+			  'query' => Language::gettext("Unknown parameter")},
+			 $infile{$name}];
+		}
+	    }
+	}
+
+	## Add contents to sympa.conf
+	if (%migrated) {
+	    open $fh, '<', $sympa_conf or die $!;
+	    @newconf = <$fh>;
+	    close $fh;
+	    $newconf[$#newconf] .= "\n" unless $newconf[$#newconf] =~ /\n\z/;
+
+	    push @newconf, "\n" . ('#' x 76) . "\n" . '#### ' .
+		Language::gettext("Migration from wwsympa.conf") .  "\n" .
+		'#### ' . $date . "\n" .  ('#' x 76) . "\n\n";
+
+	    foreach my $type (qw(duplicate add obsolete unknown)) {
+		my %newconf = %{$migrated{$type} || {}};
+		next unless scalar keys %newconf;
+
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Migrated Parameters\nFollowing parameters were migrated from wwsympa.conf."), '#### ', '#### ') . "\n"
+		    if $type eq 'add';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Overrididing Parameters\nFollowing parameters existed both in sympa.conf and  wwsympa.conf.  Previous release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to be disabled."), '#### ', '#### ') . "\n"
+		    if $type eq 'override';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Duplicate of sympa.conf\nThese parameters were found in both sympa.conf and wwsympa.conf.  Previous release of Sympa used those in sympa.conf.  Uncomment ones you wish to be enabled."), '#### ', '#### ') . "\n"
+		    if $type eq 'duplicate';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Old Parameters\nThese parameters are no longer used."),
+		    '#### ', '#### ') . "\n"
+		    if $type eq 'obsolete';
+		push @newconf, tools::wrap_text(
+		    Language::gettext("Unknown Parameters\nThough these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."),
+		    '#### ', '#### ') . "\n"
+		    if $type eq 'unknown';
+
+		foreach my $k (sort keys %newconf) {
+		    my ($param, $v) = @{$newconf{$k}};
+
+		    push @newconf, tools::wrap_text(
+			Language::gettext($param->{'query'}), '## ', '## ')
+			if defined $param->{'query'};
+		    push @newconf, tools::wrap_text(
+			Language::gettext($param->{'advice'}), '## ', '## ')
+			if defined $param->{'advice'};
+		    if (defined $v and
+			($type eq 'add' or $type eq 'override')) {
+			push @newconf,
+			    sprintf("%s\t%s\n\n", $param->{'name'}, $v);
+		    } else {
+			push @newconf,
+			    sprintf("#%s\t%s\n\n", $param->{'name'}, $v);
+		    }
+		}
+	    }
+	}
+
+	## Restore language
+	Language::PopLang();
+
+	if (%migrated) {
+	    warn sprintf("Unable to rename %s : %s", $sympa_conf, $!)
+		unless rename $sympa_conf, "$sympa_conf.$date";
+	    ## Write new config files
+	    my $umask = umask 037;
+	    unless (open $fh, '>', $sympa_conf) {
+		umask $umask;
+		die sprintf("Unable to open %s : %s", $sympa_conf, $!);
+	    }
+	    umask $umask;
+	    chown [getpwnam(Sympa::Constants::USER)]->[2],
+		[getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
+	    print $fh @newconf;
+	    close $fh;
+
+	    ## Keep old config file
+	    printf "%s has been updated.\nPrevious version has been saved as %s.\n",
+		$sympa_conf, "$sympa_conf.$date";
+	}
+
+	if (-r $wwsympa_conf) {
+	    ## Keep old config file
+	    warn sprintf("Unable to rename %s : %s", $wwsympa_conf, $!)
+		unless rename $wwsympa_conf, "$wwsympa_conf.$date";
+	    printf "%s will NO LONGER be used.\nPrevious version has been saved as %s.\n",
+		$wwsympa_conf, "$wwsympa_conf.$date";
+	}
+    }
 
     return 1;
 }
