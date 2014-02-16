@@ -34,6 +34,8 @@ sub gettext { shift } # to mark i18n'ed messages.
 ##   file   : Conf file where the parameter is defined.  If omitted, the
 ##            parameter won't be added automatically to the config file, even
 ##            if a default is set.
+##            "wwsympa.conf" is a synonym of "sympa.conf".  It remains there
+##            in order to migrating older versions of config.
 ##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless
 ##            and can lead to errors on fresh install.
 ##   query  : Description of the parameter
