@@ -4083,4 +4083,42 @@ sub foldcase {
 
 sub fix_children {
 }
+
+=over 4
+
+=item get_supported_languages ( [ string ROBOT ] )
+
+I<Function>.
+Gets supported languages, canonicalized.
+In array context, returns array of supported languages.
+In scalar context, returns arrayref to them.
+
+=back
+
+=cut
+
+sub get_supported_languages {
+    my $robot = shift;
+
+    my @lang_list = ();
+    if (%Conf::Conf) { # configuration loaded.
+	my $supported_lang;
+
+	if ($robot and $robot ne '*') {
+	    $supported_lang = Conf::get_robot_conf($robot, 'supported_lang');
+	} else {
+	    $supported_lang = $Conf::Conf{'supported_lang'};
+	}
+
+	my $saved_lang = Language::GetLang();
+	my @lang_list =
+            grep { $_ and $_ = Language::SetLang($_) }
+            split /\s*,\s*/, $supported_lang;
+	Language::SetLang($saved_lang);
+    }
+    @lang_list = ('en') unless @lang_list;
+    return @lang_list if wantarray;
+    return \@lang_list;
+}
+
 1;

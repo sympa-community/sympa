@@ -1572,7 +1572,7 @@ Log::do_log(info => "WWSympa started, process $$");
      my $saved_lang = &Language::GetLang();
 
 
-     foreach my $l (@{&Language::GetSupportedLanguages($robot)}) {
+     foreach my $l (tools::get_supported_languages($robot)) {
 	 &Language::SetLang($l) || next;
 
 	 if (gettext("_language_")) {

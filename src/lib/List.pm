@@ -546,7 +546,7 @@ my %alias = ('reply-to' => 'reply_to',
 	'lang' => {
 		'group' => 'description',
 		'gettext_id' => "Language of the list",
-		'format' => [], ## &Language::GetSupportedLanguages() called later
+		'format' => [], ## tools::get_supported_languages() called later
 		'file_format' => '\w+',
 		'default' => {
 			'conf' => 'lang'
@@ -11322,7 +11322,7 @@ sub _apply_defaults {
     &Log::do_log('debug3', 'List::_apply_defaults()');
 
     ## List of available languages
-    $::pinfo{'lang'}{'format'} = &Language::GetSupportedLanguages();
+    $::pinfo{'lang'}{'format'} = [tools::get_supported_languages()];
 
     ## Parameter order
     foreach my $index (0..$#param_order) {
