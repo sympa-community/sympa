@@ -77,6 +77,43 @@ BEGIN {
     $modfail = ! eval { require Conf; require tools; };
 }
 
+# Detect console encoding.
+if (-t) {
+    no warnings;
+
+    eval { require Encode::Locale; };
+    unless ($@ or
+        Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN) eq 'ascii'
+        or
+        Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT) eq
+        'ascii') {
+        binmode(STDIN,  ':encoding(console_in):bytes');
+        binmode(STDOUT, ':encoding(console_out):bytes');
+        binmode(STDERR, ':encoding(console_out):bytes');
+    }
+}
+
+# Set language context if possible.
+if ($modfail) {
+    no warnings;
+
+    *Language::gettext = sub {shift};
+
+    eval { require Text::Wrap; };
+    if ($@) {
+        *tools::wrap_text = sub {"$_[1]$_[0]\n"};
+    } else {
+        $Text::Wrap::columns = 78;
+        *tools::wrap_text =
+            sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
+    }
+} else {
+    my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
+    $lang =~ s/\..*// if $lang;
+    $lang = 'en_US' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
+    Language::SetLang($lang);
+}
+
 ## sympa configuration file
 my $sympa_conf = Sympa::Constants::CONFIG;
 
@@ -103,20 +140,6 @@ exit 0;
 
 sub create_configuration {
     require confdef;
-
-    if ($modfail) {
-	*{Language::gettext} = sub { shift };
-	eval { require Text::Wrap; };
-	if ($@) {
-	    *{tools::wrap_text} = sub { "$_[1]$_[0]\n" };
-	} else {
-	    $Text::Wrap::columns = 78;
-	    *{tools::wrap_text} =
-		sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
-	}
-    } else {
-	Language::SetLang('');
-    }
 
     my $conf;
     if ($options{create} eq '' or $options{create} eq 'sympa.conf') {
@@ -427,6 +450,11 @@ sub check_cpan {
 				     mandatory => 1,
 				     usage => 'module for character encoding processing',
 				    },
+			'Encode::Locale' => {
+					     required_version => '1.02',
+					     package_name => 'Encode-Locale',
+					     usage => 'Useful when running command line utilities in the console not supporting UTF-8 encoding',
+					    },
 			'FCGI' => {
 				   required_version => '0.67',
 				   package_name => 'FCGI',
