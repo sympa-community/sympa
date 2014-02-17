@@ -4111,7 +4111,7 @@ sub get_supported_languages {
 	}
 
 	my $saved_lang = Language::GetLang();
-	my @lang_list =
+	@lang_list =
             grep { $_ and $_ = Language::SetLang($_) }
             split /\s*,\s*/, $supported_lang;
 	Language::SetLang($saved_lang);
