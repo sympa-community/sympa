@@ -23,6 +23,8 @@
   [% ELSIF i_err.msg == 'db_update_failed' %][%|loc(i_err.key)%]Failed to update database.[%END%]
   [% ELSIF i_err.msg == 'file_update_failed' %][%|loc(i_err.key)%]Failed to update a file.[%END%]
   [% ELSIF i_err.msg == 'create_list' %][%|loc(i_err.listname)%]Failed creating list '%1'. The list might already exist or listname might include forbidden characters.[%END%]
+  [% ELSIF i_err.msg == 'unable_to_rename_list' %][%|loc(i_err.listname,i_err.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
+
 [% END %]
 <br />
 	

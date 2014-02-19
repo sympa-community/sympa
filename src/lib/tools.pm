@@ -75,7 +75,8 @@ my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
 	      'time' => $time_regexp,
 	      'time_range' => $time_range_regexp,
 	      'time_ranges' => $time_range_regexp.'(?:\s+'.$time_range_regexp.')*',
-	      're' => '(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS)\s*:',
+	      're' => '(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS|Antw|\xCE\x91(?:\xCE\xA0|\xCF\x80)|\xCE\xA3(?:\xCE\xA7\xCE\x95\xCE\xA4|\xCF\x87\xCE\xB5\xCF\x84)|Odp|YNT)\s*:',
+	      # ( de | ru etc. | en, la etc. | it | da, sv | fi | nl | el | el | pl | tr ).
 	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',

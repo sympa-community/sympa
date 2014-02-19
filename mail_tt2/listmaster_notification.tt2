@@ -379,6 +379,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [%ELSIF error == 'new_document_failed' %][%|loc(path,list.name)%]Unable to create a SharedDocument with path '%1' for list '%2'.[%END%]
 [%ELSIF error == 'cookie_error' %][%|loc%]Parameter cookie undefined, authentication failure.[%END%]
 [%ELSIF error == 'cookie_error_env' %][%|loc(env)%]Cookie error: '%1' undefined, authentication failure.[%END%]
+[%ELSIF error == 'unable_to_rename_list' %][%|loc(list.name,new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
 [%ELSIF error%][%error%]
 [%END%]
 [%|loc%]See logs for more details.[%END%]
