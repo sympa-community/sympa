@@ -41,7 +41,6 @@ use Term::ProgressBar;
 use URI::Escape;
 use constant MAX => 100_000;
 
-use Lock;
 use Task;
 use Fetch;
 use WebAgent;

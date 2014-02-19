@@ -42,6 +42,7 @@ use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 
 use Conf;
 use Language qw(gettext_strftime);
+use Sympa::LockedFile;
 use Log;
 use Sympa::Constants;
 use Message;
@@ -2601,65 +2602,46 @@ sub write_pid {
     my @pids;
 
     # Lock pid file
-    my $lock = new Lock ($pidfile);
-    unless (defined $lock) {
-	Log::fatal_err('Lock could not be created. Exiting.');
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('write')) {
+    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
+    unless ($lock_fh) {
 	Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
     }
     ## If pidfile exists, read the PIDs
-    if(-f $pidfile) {
+    if(-s $pidfile) {
 	# Read pid file
-	open(PFILE, $pidfile);
-	my $l = <PFILE>;
-	close PFILE;	
+	seek $lock_fh, 0, 0;
+	my $l = <$lock_fh>;
 	@pids = grep {/[0-9]+/} split(/\s+/, $l);
     }
 
     ## If we can have multiple instances for the process.
     ## Print other pids + this one
     if($options->{'multiple_process'}) {
-	unless(open(PIDFILE, '> '.$pidfile)) {
-	    ## Unlock pid file
-	    $lock->unlock();
-	    Log::fatal_err('Could not open %s, exiting: %s', $pidfile,$!);
-	}
 	## Print other pids + this one
 	push(@pids, $pid);
-	print PIDFILE join(' ', @pids)."\n";
-	close(PIDFILE);
+
+	seek $lock_fh, 0, 0;
+	truncate $lock_fh, 0;
+	print $lock_fh join(' ', @pids)."\n";
     }else{
-	## Create and write the pidfile
-	unless(open(PIDFILE, '+>> '.$pidfile)) {
-	    ## Unlock pid file
-	    $lock->unlock();
-	    Log::fatal_err('Could not open %s, exiting: %s', $pidfile);
-	}
 	## The previous process died suddenly, without pidfile cleanup
 	## Send a notice to listmaster with STDERR of the previous process
-	if($#pids >= 0) {
+	if(@pids) {
 	    my $other_pid = $pids[0];
 	    &Log::do_log('notice', "Previous process %s died suddenly ; notifying listmaster", $other_pid);
 	    my $pname = $0;
 	    $pname =~ s/.*\/(\w+)/$1/;
 	    &send_crash_report(('pid'=>$other_pid,'pname'=>$pname));
 	}
-	
-	unless(open(PIDFILE, '> '.$pidfile)) {
+
+	seek $lock_fh, 0, 0;
+	unless(truncate $lock_fh, 0) {
 	    ## Unlock pid file
-	    $lock->unlock();
-	    &Log::fatal_err('Could not open %s, exiting', $pidfile);
-	}
-	unless(truncate(PIDFILE, 0)) {
-	    ## Unlock pid file
-	    $lock->unlock();
+	    $lock_fh->close();
 	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
 	}
-	
-	print PIDFILE $pid."\n";
-	close(PIDFILE);
+
+	print $lock_fh $pid."\n";
     }
 
     unless(&tools::set_file_rights(
@@ -2668,11 +2650,11 @@ sub write_pid {
 	group => Sympa::Constants::GROUP,
     )) {
 	## Unlock pid file
-	$lock->unlock();
+	$lock_fh->close();
 	&Log::fatal_err('Unable to set rights on %s', $Conf::Conf{'db_name'});
     }
     ## Unlock pid file
-    $lock->unlock();
+    $lock_fh->close();
 
     return 1;
 }

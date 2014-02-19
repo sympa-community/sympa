@@ -102,6 +102,7 @@ my %old_params = (
     'bounced_pidfile'      => '',                    # ,,
     'task_manager_pidfile' => '',                    # ,,
     'email_gecos'          => 'gecos',               # 6.2a.?? - 6.2a.33
+    'lock_method'          => '',                    # 5.3b.3 - 6.2a.33
 );
 
 ## These parameters now have a hard-coded value
@@ -1738,14 +1739,6 @@ sub _detect_missing_mandatory_parameters {
 sub _check_cpan_modules_required_by_config {
     my $param = shift;
     my $number_of_missing_modules = 0;
-    if ($param->{'config_hash'}{'lock_method'} eq 'nfs') {
-        eval "require File::NFSLock";
-        if ($@) {
-            printf STDERR "Conf::_check_cpan_modules_required_by_config(): Failed to load File::NFSLock perl module ; setting 'lock_method' to 'flock'\n";
-            $param->{'config_hash'}{'lock_method'} = 'flock';
-            $number_of_missing_modules++;
-        }
-    }
 
     ## Some parameters require CPAN modules
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
@@ -1908,20 +1901,16 @@ sub _replace_file_value_by_db_value {
 # Returns 1 or undef if something went wrong.
 sub _save_binary_cache {
     my $param = shift;
-    my $lock = new Lock ($param->{'target_file'});
-    unless (defined $lock) {
-        &Log::do_log('err','Could not create new lock');
+    my $lock_fh = Sympa::LockedFile->new($param->{'target_file'}, 2, '>');
+    unless ($lock_fh) {
+        Log::do_log('err', 'Could not create new lock');
         return undef;
     }
-    $lock->set_timeout(2); 
-    unless ($lock->lock('write')) {
-        return undef;
-    }   
 
-    eval {&Storable::store($param->{'conf_to_save'},$param->{'target_file'});};
+    eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
     if ($@) {
         printf STDERR  'Conf::_save_binary_cache(): Failed to save the binary config %s. error: %s\n', $param->{'target_file'},$@;
-        unless ($lock->unlock()) {
+        unless ($lock_fh->close()) {
             return undef;
         }
         return undef;
@@ -1929,12 +1918,12 @@ sub _save_binary_cache {
     eval {chown ((getpwnam(Sympa::Constants::USER))[2], (getgrnam(Sympa::Constants::GROUP))[2], $param->{'target_file'});};
     if ($@){
         printf STDERR  'Conf::_save_binary_cache(): Failed to change owner of the binary file %s. error: %s\n', $param->{'target_file'},$@;
-        unless ($lock->unlock()) {
+        unless ($lock_fh->close()) {
             return undef;
         }
         return undef;
      }
-    unless ($lock->unlock()) {
+    unless ($lock_fh->close()) {
         return undef;
     }
     return 1;
@@ -1946,28 +1935,24 @@ sub _load_binary_cache {
     my $param = shift;
     my $result = undef;
 
-    my $lock = new Lock ($param->{'config_file'});
-    unless (defined $lock) {
-        &Log::do_log('err','Could not create new lock');
+    my $lock_fh = Sympa::LockedFile->new($param->{'config_file'}, 2, '<');
+    unless ($lock_fh) {
+        Log::do_log('err', 'Could not create new lock');
         return undef;
     }
-    $lock->set_timeout(2); 
-    unless ($lock->lock('read')) {
-        return undef;
-    }   
-    
+
     eval {
-        $result = &Storable::retrieve($param->{'config_file'});
+        $result = Storable::fd_retrieve($lock_fh);
     };
     if ($@) {
         printf STDERR  "Conf::_load_binary_cache(): Failed to load the binary config %s. error: %s\n", $param->{'config_file'},$@;
-        unless ($lock->unlock()) {
+        unless ($lock_fh->close()) {
             return undef;
         }
         return undef;
     }
     ## Release the lock
-    unless ($lock->unlock()) {
+    unless ($lock_fh->close()) {
         return undef;
     }
     return $result;

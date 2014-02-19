@@ -35,7 +35,7 @@ use LDAPSource;
 use SDM;
 use SQLSource qw(create_db);
 use Upgrade;
-use Lock;
+use Sympa::LockedFile;
 use Task;
 use Scenario;
 use Fetch;
@@ -2677,22 +2677,25 @@ sub savestats {
     my $name = $self->{'name'};
     my $dir = $self->{'dir'};
     return undef unless ($list_of_lists{$self->{'domain'}}{$name});
-    
-    ## Lock file
-    my $lock = new Lock ($dir.'/stats');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
+
+    unless (ref($self->{'stats'}) eq 'ARRAY') {
+	Log::do_log('err', 'incorrect parameter');
 	return undef;
     }
-    $lock->set_timeout(2); 
-    unless ($lock->lock('write')) {
+
+    ## Lock file
+    my $lock_fh = Sympa::LockedFile->new($dir . '/stats', 2, '>');
+    unless ($lock_fh) {
+	Log::do_log('err','Could not create new lock');
 	return undef;
     }   
 
-   _save_stats_file("$dir/stats", $self->{'stats'}, $self->{'total'}, $self->{'last_sync'}, $self->{'last_sync_admin_user'});
-    
+    printf $lock_fh "%d %.0f %.0f %.0f %d %d %d\n",
+	@{$self->{'stats'}}, $self->{'total'}, $self->{'last_sync'},
+	$self->{'last_sync_admin_user'};
+
     ## Release the lock
-    unless ($lock->unlock()) {
+    unless ($lock_fh->close) {
 	return undef;
     }
 
@@ -2883,13 +2886,9 @@ sub save_config {
     my $config_file_name = "$self->{'dir'}/config";
 
     ## Lock file
-    my $lock = new Lock ($self->{'dir'}.'/config');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
-	return undef;
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('write')) {
+    my $lock_fh = Sympa::LockedFile->new($config_file_name, 5, '+<');
+    unless ($lock_fh) {
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
 
@@ -2906,7 +2905,7 @@ sub save_config {
 
     unless (&_save_list_config_file($config_file_name, $old_config_file_name, $self->{'admin'})) {
 	&Log::do_log('info', 'unable to save config file %s', $config_file_name);
-	$lock->unlock();
+	$lock_fh->close();
 	return undef;
     }
     
@@ -2921,7 +2920,7 @@ sub save_config {
 #    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
     
     ## Release the lock
-    unless ($lock->unlock()) {
+    unless ($lock_fh->close()) {
 	return undef;
     }
 
@@ -2998,13 +2997,10 @@ sub load {
 	! $options->{'reload_config'}) { 
 
 	## Get a shared lock on config file first 
-	my $lock = new Lock ($self->{'dir'}.'/config');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
-	    return undef;
-	}
-	$lock->set_timeout(5); 
-	unless ($lock->lock('read')) {
+	my $lock_fh =
+	    Sympa::LockedFile->new($self->{'dir'} . '/config', 5, '<');
+	unless ($lock_fh) {
+	    Log::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
 
@@ -3013,26 +3009,23 @@ sub load {
 	eval {$admin = &Storable::retrieve("$self->{'dir'}/config.bin")};
 	if ($@) {
 	    &Log::do_log('err', 'Failed to load the binary config %s, error: %s', "$self->{'dir'}/config.bin",$@);
-	    $lock->unlock();
+	    $lock_fh->close();
 	    return undef;
 	}	    
 
 	$config_reloaded = 1;
 	$m1 = $time_config_bin;
-	$lock->unlock();
+	$lock_fh->close();
 
     }elsif ($self->{'name'} ne $name || $time_config > $self->{'mtime'}->[0] ||
 	    $options->{'reload_config'}) {	
 	$admin = _load_list_config_file($self->{'dir'}, $self->{'domain'}, 'config');
 
 	## Get a shared lock on config file first 
-	my $lock = new Lock ($self->{'dir'}.'/config');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
-	    return undef;
-	}
-	$lock->set_timeout(5); 
-	unless ($lock->lock('write')) {
+	my $lock_fh =
+	    Sympa::LockedFile->new($self->{'dir'} . '/config', 5, '+<');
+	unless ($lock_fh) {
+	    Log::do_log('err','Could not create new lock');
 	    return undef;
 	}
 
@@ -3048,12 +3041,12 @@ sub load {
  	unless (defined $admin) {
  	    &Log::do_log('err', 'Impossible to load list config file for list % set in status error_config',$self->{'name'});
  	    $self->set_status_error_config('load_admin_file_error',$self->{'name'});
-	    $lock->unlock();
+	    $lock_fh->close();
  	    return undef;	    
  	}
 
 	$m1 = $time_config;
-	$lock->unlock();
+	$lock_fh->close();
     }
     
     ## If config was reloaded...
@@ -6573,6 +6566,8 @@ sub get_list_admin {
 
 
 ## Returns the first user for the list.
+my $lock_fh_member;
+
 sub get_first_list_member {
     my ($self, $data) = @_;
 
@@ -6584,21 +6579,16 @@ sub get_first_list_member {
     $rows = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
     
-    my $lock = new Lock ($self->{'dir'}.'/include');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
+    $lock_fh_member =
+	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '<');
+    unless ($lock_fh_member) {
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
-    $lock->set_timeout(10*60); 
 
     Log::do_log('debug2', '(%s, %s, %s, %s)',
 	$self->{'name'}, $sortby, $offset, $rows);
 
-    ## Get an Shared lock	    
-    unless ($lock->lock('read')) {
-	return undef;
-    }
-    
     my $name = $self->{'name'};
     my $statement;
     
@@ -6680,7 +6670,7 @@ sub get_first_list_member {
 		$sth = pop @sth_stack;
 	
 		## Release the Shared lock
-		unless ($lock->unlock()) {
+		unless ($lock_fh_member->close()) {
 			return undef;
 		}
     }
@@ -6747,6 +6737,8 @@ sub createXMLCustomAttribute {
 }
 
 ## Returns the first admin_user with $role for the list.
+my $lock_fh_admin;
+
 sub get_first_list_admin {
     my ($self, $role, $data) = @_;
 
@@ -6762,18 +6754,13 @@ sub get_first_list_admin {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)',
 	$self->{'name'}, $role, $sortby, $offset, $rows);
 
-    my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
+    $lock_fh_admin =
+	Sympa::LockedFile->($self->{'dir'} . '/include_admin_user', 20, '<');
+    unless ($lock_fh_admin) {
+	Log::do_log('err','Could not create new lock');
 	return undef;
     }
-    $lock->set_timeout(20); 
 
-    ## Get a shared lock
-    unless ($fh = $lock->lock('read')) {
-	return undef;
-    }
-          
     my $name = $self->{'name'};
     my $statement;
     
@@ -6838,13 +6825,7 @@ sub get_first_list_admin {
         $sth = pop @sth_stack;
 
 	## Release the Shared lock
-	my $lock = new Lock($self->{'dir'}.'/include_admin_user');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
-	    return undef;
-	}
-	
-	unless ($lock->unlock()) {
+	unless ($lock_fh_admin->close()) {
 	    return undef;
 	}
     }
@@ -6885,12 +6866,7 @@ sub get_next_list_member {
 		$sth = pop @sth_stack;
 	
 		## Release lock
-		my $lock = new Lock ($self->{'dir'}.'/include');
-		unless (defined $lock) {
-			&Log::do_log('err','Could not create new lock');
-			return undef;
-		}
-		unless ($lock->unlock()) {
+		unless ($lock_fh_member->close()) {
 			return undef;
 		}
     }
@@ -6919,13 +6895,7 @@ sub get_next_list_admin {
 		$sth = pop @sth_stack;
 	
 		## Release the Shared lock
-		my $lock = new Lock($self->{'dir'}.'/include_admin_user');
-		unless (defined $lock) {
-			&Log::do_log('err','Could not create new lock');
-			return undef;
-		}
-	
-		unless ($lock->unlock()) {
+		unless ($lock_fh_admin->close()) {
 			return undef;
 		}
     }
@@ -6936,19 +6906,16 @@ sub get_next_list_admin {
 
 
 ## Returns the first bouncing user
+my $lock_fh_bouncing_member;
+
 sub get_first_bouncing_list_member {
     my $self = shift;
     &Log::do_log('debug2', '');
 
-    my $lock = new Lock ($self->{'dir'}.'/include');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
-	return undef;
-    }
-    $lock->set_timeout(10*60); 
-
-    ## Get an Shared lock
-    unless ($lock->lock('read')) {
+    $lock_fh_bouncing_member =
+	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '<');
+    unless ($lock_fh_bouncing_member) {
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
 
@@ -6981,7 +6948,7 @@ sub get_first_bouncing_list_member {
 		$sth = pop @sth_stack;
 	
 		## Release the Shared lock
-		unless ($lock->unlock()) {
+		unless ($lock_fh_bouncing_member->close()) {
 			return undef;
 		}
     }
@@ -7012,12 +6979,7 @@ sub get_next_bouncing_list_member {
 		$sth = pop @sth_stack;
 	
 		## Release the Shared lock
-		my $lock = new Lock ($self->{'dir'}.'/include');
-		unless (defined $lock) {
-			&Log::do_log('err','Could not create new lock');
-			return undef;
-		}
-		unless ($lock->unlock()) {
+		unless ($lock_fh_bouncing_member->close()) {
 			return undef;
 		}
     }
@@ -10053,13 +10015,10 @@ sub sync_include {
     my $users_updated = 0;
 
     ## Get an Exclusive lock
-    my $lock = new Lock ($self->{'dir'}.'/include');
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock');
-	return undef;
-    }
-    $lock->set_timeout(10*60); 
-    unless ($lock->lock('write')) {
+    my $lock_fh =
+	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '>');
+    unless ($lock_fh) {
+	Log::do_log('err', 'Could not create new lock');
 	return undef;
     }
 
@@ -10199,7 +10158,7 @@ sub sync_include {
     &Log::do_log('notice', 'List:sync_include(%s): %d users updated', $name, $users_updated);
 
     ## Release lock
-    unless ($lock->unlock()) {
+    unless ($lock_fh->close()) {
 	return undef;
     }
 
@@ -10284,16 +10243,13 @@ sub sync_include_admin {
 	my $admin_users_updated = 0;
 	
 	## Get an Exclusive lock
-	my $lock = new Lock ($self->{'dir'}.'/include_admin_user');
-	unless (defined $lock) {
-	    &Log::do_log('err','Could not create new lock');
+	my $lock_fh = Sympa::LockedFile->new(
+	    $self->{'dir'} . '/include_admin_user', 20, '>');
+	unless ($lock_fh) {
+	    Log::do_log('err', 'Could not create new lock');
 	    return undef;
 	}
-	$lock->set_timeout(20); 
-	unless ($lock->lock('write')) {
-	    return undef;
-	}
-	
+
 	## Go through new admin_users_include
 	foreach my $email (keys %{$new_admin_users_include}) {
 	    
@@ -10459,7 +10415,7 @@ sub sync_include_admin {
 	}
 
 	## Release lock
-	unless ($lock->unlock()) {
+	unless ($lock_fh->close()) {
 	    return undef;
 	}
     }	
@@ -10567,27 +10523,6 @@ sub _load_total_db {
     $list_cache{'load_total_db'}{$self->{'domain'}}{$self->{'name'}} = $total;
 
     return $total;
-}
-
-## Writes to disk the stats data for a list.
-sub _save_stats_file {
-    my $file = shift;
-    my $stats = shift;
-    my $total = shift;
-    my $last_sync = shift;
-    my $last_sync_admin_user = shift;
-    
-    unless (defined $stats && ref ($stats) eq 'ARRAY') {
-	&Log::do_log('err', 'List_save_stats_file() : incorrect parameter');
-	return undef;
-    }
-
-    Log::do_log('debug2', '(%s, %s, %s, %s)',
-	$file, $total, $last_sync, $last_sync_admin_user);
-    my $untainted_filename = sprintf ("%s",$file);
-    open(L, "> $untainted_filename") || return undef;
-    printf L "%d %.0f %.0f %.0f %d %d %d\n", @{$stats}, $total, $last_sync, $last_sync_admin_user;
-    close(L);
 }
 
 ## Writes the user list to disk
@@ -11625,24 +11560,15 @@ sub _load_list_config_file {
     }
 
     ## Lock file
-    my $lock = new Lock ($config_file);
-    unless (defined $lock) {
-	&Log::do_log('err','Could not create new lock on %s',$config_file);
+    my $lock_fh = Sympa::LockedFile->new($config_file, 5, '<');
+    unless ($lock_fh) {
+	Log::do_log('err', 'Could not create new lock on %s', $config_file);
 	return undef;
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('read')) {
-	&Log::do_log('err','Could not put a read lock on the config file %s',$config_file);
-	return undef;
-    }   
-
-    unless (open CONFIG, "<", $config_file) {
-	&Log::do_log('info', 'Cannot open %s', $config_file);
     }
 
     ## Split in paragraphs
     my $i = 0;
-    while (<CONFIG>) {
+    while (<$lock_fh>) {
 	if (/^\s*$/) {
 	    $i++ if $paragraphs[$i];
 	}else {
@@ -11794,12 +11720,11 @@ sub _load_list_config_file {
 	    }
 	}
     }
-    
-    close CONFIG;
 
     ## Release the lock
-    unless ($lock->unlock()) {
-	&Log::do_log('err', 'Could not remove the read lock on file %s',$config_file);
+    unless ($lock_fh->close) {
+	Log::do_log('err', 'Could not remove the read lock on file %s',
+	    $config_file);
 	return undef;
     }
 
@@ -11931,8 +11856,9 @@ sub _save_list_config_file {
 	return undef;
     }
 
-    unless (open CONFIG, ">", $config_file) {
-	&Log::do_log('info', 'Cannot open %s', $config_file);
+    my $fh_config;
+    unless (open $fh_config, '>', $config_file) {
+	Log::do_log('info', 'Cannot open %s', $config_file);
 	return undef;
     }
     my $config = '';
@@ -11957,11 +11883,9 @@ sub _save_list_config_file {
 	}else {
 	    &_save_list_param($key, $admin->{$key}, $admin->{'defaults'}{$key}, $fd);
 	}
-close OUT;
-
     }
-    print CONFIG $config;
-    close CONFIG;
+    print $fh_config $config;
+    close $fh_config;
 
     return 1;
 }

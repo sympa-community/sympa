@@ -275,18 +275,9 @@ sub create_list_old{
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
 
     ## Lock config before openning the config file
-    my $lock = new Lock ($list_dir.'/config');
-    unless (defined $lock) {
-	&Log::do_log('err','Lock could not be created');
-	return undef;
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('write')) {
-	return undef;
-    }
-    unless (open CONFIG, '>', "$list_dir/config") {
+    my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
+    unless ($lock_fh) {
 	Log::do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
-	$lock->unlock();
 	return undef;
     }
     ## Use an intermediate handler to encode to filesystem_encoding
@@ -294,12 +285,10 @@ sub create_list_old{
     my $fd = new IO::Scalar \$config;    
     &tt2::parse_tt2($param, 'config.tt2', $fd, $tt2_include_path);
 #    Encode::from_to($config, 'utf8', $Conf::Conf{'filesystem_encoding'});
-    print CONFIG $config;
+    print $lock_fh $config;
 
-    close CONFIG;
-    
     ## Unlock config file
-    $lock->unlock();
+    $lock_fh->close;
 
     ## Creation of the info file 
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
@@ -482,28 +471,16 @@ sub create_list{
     }
       
     ## Lock config before openning the config file
-    my $lock = new Lock ($list_dir.'/config');
-    unless (defined $lock) {
-	&Log::do_log('err','Lock could not be created');
-	return undef;
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('write')) {
-	return undef;
-    }
-
-    ## Creation of the config file
-    unless (open CONFIG, '>', "$list_dir/config") {
+    my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
+    unless ($lock_fh) {
 	Log::do_log('err','Impossible to create %s/config : %s', $list_dir, $!);
-	$lock->unlock();
 	return undef;
     }
-    #&tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
-    print CONFIG $conf;
-    close CONFIG;
-    
+    #&tt2::parse_tt2($param, 'config.tt2', $lock_fh, [$family->{'dir'}]);
+    print $lock_fh $conf;
+
     ## Unlock config file
-    $lock->unlock();
+    $lock_fh->close;
 
     ## Creation of the info file 
     # remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL, and EIMS:
@@ -632,27 +609,14 @@ sub update_list{
     }
 
     ## Lock config before openning the config file
-    my $lock = new Lock ($list->{'dir'}.'/config');
-    unless (defined $lock) {
-	&Log::do_log('err','Lock could not be created');
-	return undef;
-    }
-    $lock->set_timeout(5); 
-    unless ($lock->lock('write')) {
-	return undef;
-    }
-
-    ## Creation of the config file
-    unless (open CONFIG, '>', "$list->{'dir'}/config") {
+    my $lock_fh = Sympa::LockedFile->new($list->{'dir'} . '/config', 5, '>');
+    unless ($lock_fh) {
 	Log::do_log('err','Impossible to create %s/config : %s', $list->{'dir'}, $!);
-	$lock->unlock();
 	return undef;
     }
-    &tt2::parse_tt2($param, 'config.tt2', \*CONFIG, [$family->{'dir'}]);
-    close CONFIG;
-
+    &tt2::parse_tt2($param, 'config.tt2', $lock_fh, [$family->{'dir'}]);
     ## Unlock config file
-    $lock->unlock();
+    $lock_fh->close;
 
     ## Create list object
     unless ($list = new List ($param->{'listname'}, $robot)) {

@@ -1037,11 +1037,11 @@ our @params = (
         'edit'     => '1',
         'advice'   => gettext('Set this parameter to "binary_file" if you manage a big amount of lists (1000+); it should make the web interface startup faster'),
     },
-    {
-        'name'     => 'lock_method',
-        'default'  => 'flock',
-        'advice'   => gettext('flock | nfs'),
-    },
+##    {
+##        'name'     => 'lock_method',
+##        'default'  => 'flock',
+##        'advice'   => gettext('flock | nfs'),
+##    },
     {
         'name'     => 'sympa_priority',
         'query'    => gettext('Sympa commands priority'),
