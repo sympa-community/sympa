@@ -33,6 +33,7 @@ use POSIX qw(strftime);
 use Datasource;
 use LDAPSource;
 use SDM;
+use Sympa::User;
 use SQLSource qw(create_db);
 use Upgrade;
 use Sympa::LockedFile;
@@ -3942,7 +3943,7 @@ sub send_global_file {
     my $data = &tools::dup_var($context);
 
     unless ($data->{'user'}) {
-	$data->{'user'} = &get_global_user($who) unless ($options->{'skip_db'});
+	$data->{'user'} = Sympa::User::get_global_user($who) unless ($options->{'skip_db'});
 	$data->{'user'}{'email'} = $who unless (defined $data->{'user'});;
     }
     unless ($data->{'user'}{'lang'}) {
@@ -4044,7 +4045,7 @@ sub send_file {
     ## Unless multiple recipients
     unless (ref ($who)) {
 	unless ($data->{'user'}) {
-	    unless ($data->{'user'} = &get_global_user($who)) {
+	    unless ($data->{'user'} = Sympa::User::get_global_user($who)) {
 		$data->{'user'}{'email'} = $who;
 		$data->{'user'}{'lang'} = $self->{'admin'}{'lang'};
 	    }
@@ -5778,26 +5779,9 @@ sub _append_footer_header_to_part {
     return $new_body;
 }
 
-## Delete a new user to Database (in User table)
-sub delete_global_user {
-    my @users = @_;
-    
-    &Log::do_log('debug2', '');
-    
-    return undef unless ($#users >= 0);
-
-    foreach my $who (@users) {
-	$who = &tools::clean_email($who);
-	## Update field
-	
-	unless (&SDM::do_query("DELETE FROM user_table WHERE (email_user =%s)", &SDM::quote($who))) {
-	    &Log::do_log('err','Unable to delete user %s', $who);
-	    next;
-	}
-    }
-
-    return $#users + 1;
-}
+## Delete a user in the user_table
+##sub delete_global_user
+## DEPRECATED: Use User::delete_global_user() or $user->expire();
 
 ## Delete the indicate list member 
 ## IN : - ref to array 
@@ -5948,78 +5932,12 @@ sub get_total {
 }
 
 ## Returns a hash for a given user
-sub get_global_user {
-    my $who = &tools::clean_email(shift);
-    &Log::do_log('debug2', '(%s)', $who);
-
-    ## Additional subscriber fields
-    my $additional;
-    if ($Conf::Conf{'db_additional_user_fields'}) {
-	$additional = ',' . $Conf::Conf{'db_additional_user_fields'};
-    }
-
-    
-    push @sth_stack, $sth;
-
-    $sth = &SDM::do_query("SELECT email_user AS email, gecos_user AS gecos, password_user AS password, cookie_delay_user AS cookie_delay, lang_user AS lang %s, attributes_user AS attributes, data_user AS data, last_login_date_user AS last_login_date, wrong_login_count_user AS wrong_login_count, last_login_host_user AS last_login_host FROM user_table WHERE email_user = %s ", $additional, &SDM::quote($who));
-    
-    unless (defined $sth) {
-	&Log::do_log('err','Failed to prepare SQL query');
-	return undef;
-    }
-   
-    my $user = $sth->fetchrow_hashref('NAME_lc');
- 
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-
-    if (defined $user) {
-	## decrypt password
-	if ($user->{'password'}) {
-	    $user->{'password'} = &tools::decrypt_password($user->{'password'});
-	}
-
-	## Turn user_attributes into a hash
-	my $attributes = $user->{'attributes'};
-	$user->{'attributes'} = undef;
-	foreach my $attr (split (/__ATT_SEP__/, $attributes)) {
-	    my ($key, $value) = split (/__PAIRS_SEP__/, $attr);
-	    $user->{'attributes'}{$key} = $value;
-	}    
-	## Turn data_user into a hash
-	 if ($user->{'data'}) {
-	     my %prefs = &tools::string_2_hash($user->{'data'});
-	     $user->{'prefs'} = \%prefs;
-	 }
-    }
-
-    return $user;
-}
+##sub get_global_user {
+## DEPRECATED: Use Sympa::User::get_global_user() or Sympa::User->new().
 
 ## Returns an array of all users in User table hash for a given user
-sub get_all_global_user {
-    &Log::do_log('debug2', '');
-
-    my @users;
-    my $sth;
-    push @sth_stack, $sth;
-    
-    unless ($sth = &SDM::do_query("SELECT email_user FROM user_table")) {
-	&Log::do_log('err','Unable to gather all users in DB');
-	return undef;
-    }
-    
-    while (my $email = ($sth->fetchrow_array)[0]) {
-	push @users, $email;
-    }
- 
-    $sth->finish();
-
-    $sth = pop @sth_stack;
-
-    return @users;
-}
+##sub get_all_global_user {
+## DEPRECATED: Use Sympa::User::get_all_global_user() or Sympa::User::get_users().
 
 ######################################################################
 ###  suspend_subscription                                            #
@@ -7030,27 +6948,8 @@ sub get_total_bouncing {
 }
 
 ## Is the person in user table (db only)
-sub is_global_user {
-   my $who = &tools::clean_email(pop);
-   &Log::do_log('debug3', '(%s)', $who);
-
-   return undef unless ($who);
-   
-   push @sth_stack, $sth;
-
-   ## Query the Database
-   unless($sth = &SDM::do_query("SELECT count(*) FROM user_table WHERE email_user = %s", &SDM::quote($who))) {
-       &Log::do_log('err','Unable to check whether user %s is in the user table.');
-       return undef;
-   }
-   
-   my $is_user = $sth->fetchrow();
-   $sth->finish();
-   
-   $sth = pop @sth_stack;
-
-   return $is_user;
-}
+##sub is_global_user {
+## DEPRECATED: Use Sympa::User::is_global_user().
 
 ## Is the indicated person a subscriber to the list?
 sub is_list_member {
@@ -7372,120 +7271,12 @@ sub update_list_admin {
 
 
 ## Sets new values for the given user in the Database
-sub update_global_user {
-    my($who, $values) = @_;
-    &Log::do_log('debug', '(%s)', $who);
-
-    $who = &tools::clean_email($who);
-
-    ## use md5 fingerprint to store password   
-    $values->{'password'} = &Auth::password_fingerprint($values->{'password'}) if ($values->{'password'});
-
-    my ($field, $value);
-    
-    my ($user, $statement, $table);
-    
-    ## mapping between var and field names
-    my %map_field = ( gecos => 'gecos_user',
-		      password => 'password_user',
-		      cookie_delay => 'cookie_delay_user',
-		      lang => 'lang_user',
-		      attributes => 'attributes_user',
-		      email => 'email_user',
-		      data => 'data_user',
-		      last_login_date => 'last_login_date_user',
-		      last_login_host => 'last_login_host_user',
-		      wrong_login_count => 'wrong_login_count_user'
-		      );
-    
-    ## Update each table
-    my @set_list;
-
-    while (($field, $value) = each %{$values}) {
-	unless ($map_field{$field}) {
-	    &Log::do_log('error',"unkown field $field in map_field internal error");
-	    next;
-	};
-	my $set;
-	
-	if ($numeric_field{$map_field{$field}})  {
-	    $value ||= 0; ## Can't have a null value
-	    $set = sprintf '%s=%s', $map_field{$field}, $value;
-	}else { 
-	    $set = sprintf '%s=%s', $map_field{$field}, &SDM::quote($value);
-	}
-	push @set_list, $set;
-    }
-    
-    return undef unless @set_list;
-    
-    ## Update field
-
-    unless ($sth = &SDM::do_query("UPDATE user_table SET %s WHERE (email_user=%s)"
-	    , join(',', @set_list), &SDM::quote($who))) {
-	&Log::do_log('err','Could not update informations for user %s in user_table',$who);
-	return undef;
-    }
-    
-    return 1;
-}
+##sub update_global_user {
+## DEPRECATED: Use Sympa::User::update_global_user() or $user->save().
 
 ## Adds a user to the user_table
-sub add_global_user {
-    my($values) = @_;
-    &Log::do_log('debug2', '');
-
-    my ($field, $value);
-    my ($user, $statement, $table);
-    
-    ## encrypt password   
-    $values->{'password'} = &Auth::password_fingerprint($values->{'password'}) if ($values->{'password'});
-    
-    return undef unless (my $who = &tools::clean_email($values->{'email'}));
-    
-    return undef if (is_global_user($who));
-    
-    ## mapping between var and field names
-    my %map_field = ( email => 'email_user',
-		      gecos => 'gecos_user',
-		      custom_attribute => 'custom_attribute',
-		      password => 'password_user',
-		      cookie_delay => 'cookie_delay_user',
-		      lang => 'lang_user',
-		      attributes => 'attributes_user'
-		      );
-    
-    ## Update each table
-    my (@insert_field, @insert_value);
-    while (($field, $value) = each %{$values}) {
-	
-	next unless ($map_field{$field});
-	
-	my $insert;
-	if ($numeric_field{$map_field{$field}}) {
-	    $value ||= 0; ## Can't have a null value
-	    $insert = $value;
-	}else {
-	    $insert = sprintf "%s", &SDM::quote($value);
-	}
-	push @insert_value, $insert;
-	push @insert_field, $map_field{$field}
-    }
-    
-    unless (@insert_field) {
-	&Log::do_log('err','The fields (%s) do not correspond to anything in the database',join (',',keys(%{$values})));
-	return undef;
-    }
-    
-    ## Update field
-    unless($sth = &SDM::do_query("INSERT INTO user_table (%s) VALUES (%s)"
-	, join(',', @insert_field), join(',', @insert_value))) {
-	    &Log::do_log('err','Unable to add user %s to the DB table user_table', $values->{'email'});
-	    return undef;
-	}
-    
-    return 1;
-}
+##sub add_global_user {
+## DEPRECATED: Use Sympa::User::add_global_user() or $user->save().
 
 ## Adds a list member ; no overwrite.
 sub add_list_member {
@@ -7545,15 +7336,22 @@ sub add_list_member {
 	
 	unless ($new_user->{'included'}) {
 	    ## Is the email in user table?
-	    if (! is_global_user($who)) {
 		## Insert in User Table
-		unless(&SDM::do_query("INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",&SDM::quote($who), &SDM::quote($new_user->{'gecos'}), &SDM::quote($new_user->{'lang'}), &SDM::quote($new_user->{'password'}))){
-		    &Log::do_log('err','Unable to add user %s to user_table.', $who);
-		    $self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'} = 1;
-		    next;
-		}
-		}
-	}	    
+	    unless (
+		Sympa::User->new(
+		    $who,
+		    'gecos'    => $new_user->{'gecos'},
+		    'lang'     => $new_user->{'lang'},
+		    'password' => $new_user->{'password'}
+		)
+	    ) {
+		Log::do_log('err', 'Unable to add user %s to user_table.',
+		    $who);
+		$self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}
+		    = 1;
+		next;
+	    }
+	}
 	
 	$new_user->{'subscribed'} ||= 0;
 	$new_user->{'included'} ||= 0;
@@ -7632,12 +7430,18 @@ sub add_list_admin {
 	    
 	unless ($new_admin_user->{'included'}) {
 	    ## Is the email in user table?
-	    if (! is_global_user($who)) {
-		## Insert in User Table
-		unless(&SDM::do_query("INSERT INTO user_table (email_user, gecos_user, lang_user, password_user) VALUES (%s,%s,%s,%s)",&SDM::quote($who), &SDM::quote($new_admin_user->{'gecos'}), &SDM::quote($new_admin_user->{'lang'}), &SDM::quote($new_admin_user->{'password'}))){
-		    &Log::do_log('err','Unable to add admin %s to user_table', $who);
-		    next;
-		}
+	    ## Insert in User Table
+	    unless (
+		Sympa::User->new(
+		    $who,
+		    'gecos'    => $new_admin_user->{'gecos'},
+		    'lang'     => $new_admin_user->{'lang'},
+		    'password' => $new_admin_user->{'password'}
+		)
+	    ) {
+		Log::do_log('err', 'Unable to add admin %s to user_table',
+		    $who);
+		next;
 	    }
 	}	    
 
@@ -12580,9 +12384,9 @@ sub get_subscription_requests {
 	$subscriptions{$email} = {'gecos' => $gecos,
 				  'custom_attribute' => $xml};
 	unless($subscriptions{$email}{'gecos'}) {
-		my $user = get_global_user($email);
-		if ($user->{'gecos'}) {
-			$subscriptions{$email}{'gecos'} = $user->{'gecos'};
+		my $user = Sympa::User->new($email);
+		if ($user->gecos) {
+			$subscriptions{$email}{'gecos'} = $user->gecos;
 		}
 	}
 

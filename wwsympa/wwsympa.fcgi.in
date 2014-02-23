@@ -1321,8 +1321,8 @@ Log::do_log(info => "WWSympa started, process $$");
 	 if ($param->{'user'}{'email'}) {
 #         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
 	     
-	     if (&List::is_global_user($param->{'user'}{'email'})) {
-		 $param->{'user'} = &List::get_global_user($param->{'user'}{'email'});
+	     if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
+		 $param->{'user'} = Sympa::User::get_global_user($param->{'user'}{'email'});
 	     }
 	     
 	     ## For the parser to display an empty field instead of [xxx]
@@ -3110,11 +3110,11 @@ sub do_ticket {
 	((($param->{'ticket_context'}{'result'} eq 'expired')||($param->{'ticket_context'}{'result'} eq 'closed')) && (lc($param->{'ticket_context'}{'email'}) eq $session->{'email'})) 
        ) {
 	    $session->{'email'} = lc($param->{'ticket_context'}{'email'});
-	    $param->{'user'} =  &List::get_global_user($session->{'email'});
+	    $param->{'user'} =  Sympa::User::get_global_user($session->{'email'});
 	    $param->{'user'}{'email'} =  $session->{'email'} ;
 	    $param->{'last_login _host'} = $param->{'user'}{'last_login_host'};   
 	    $param->{'last_login_date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime($param->{'user'}{'last_login_date'}) if ($param->{'user'}{'last_login_date'}); 
-	    &List::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
+	    Sympa::User::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip }) ;
 	}elsif($param->{'ticket_context'}{'result'} eq 'closed'){
 	    &wwslog('info', 'do_ticket(%s) : Refusing to perform login because the ticket has been used before', $in{'ticket'});
 	    return 1;
@@ -3217,7 +3217,7 @@ sub do_ticket {
 		      'target_email' => $in{'email'},
 		      'status' => 'error',
 		      'error_type' => 'authentication'});
-	 my $unauthenticated_user = &List::get_global_user($in{'email'});
+	 my $unauthenticated_user = Sympa::User::get_global_user($in{'email'});
 	 if ($unauthenticated_user->{'wrong_login_count'} > &Conf::get_robot_conf($robot, 'max_wrong_password')){
 	     $param->{'login_error'} = 'password_reset';
 	 }else{
@@ -3241,7 +3241,7 @@ sub do_ticket {
      $session->{'email'} = $email;
      $session->{'unauthenticated_email'} = '';
 
-     &List::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip, wrong_login_count =>0}) ;
+     Sympa::User::update_global_user($param->{'user'}{'email'},{last_login_date =>time(),last_login_host=>$ip, wrong_login_count =>0}) ;
      
      ## Set alt_email
      if ($data->{'alt_emails'}) {
@@ -3273,7 +3273,7 @@ sub do_ticket {
 
 
      if ($session->{'lang'}) {   #  user did choose a specific language before being logged. Apply it as a user pref.
-	 &List::update_global_user($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
+	 Sympa::User::update_global_user($param->{'user'}{'email'},{lang=>$session->{'lang'}}) ;
 	 $param->{'lang'} = $session->{'lang'};
      }else{                      # user did not choose a specific language, apply user pref for this session. 
 	 $param->{'lang'} = $user->{'lang'} || $list->{'admin'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
@@ -3282,11 +3282,11 @@ sub do_ticket {
     $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($session->{'review_page_size'}) {   #  user did choose a specific page size upgrade prefs
-	 &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }
 
      if ($session->{'shared_mode'}) {   #  user did choose a shared expert/standard mode
-	 &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	 Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
      }    
 
      if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
@@ -3598,8 +3598,8 @@ sub do_sso_login {
 	my $all_sso_attr = join '__ATT_SEP__', @sso_attr;
 	
 	## Create user entry if required
-	unless (&List::is_global_user($email)) {
-	    unless (&List::add_global_user({'email' => $email})) {
+	unless (Sympa::User::is_global_user($email)) {
+	    unless (Sympa::User::add_global_user({'email' => $email})) {
 		&report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
 		&wwslog('info','do_sso_login: add failed');
 		&web_db_log({'parameters' => $in{'auth_service_name'},
@@ -3610,7 +3610,7 @@ sub do_sso_login {
 	    }
 	}
 	
-	unless (&List::update_global_user($email,
+	unless (Sympa::User::update_global_user($email,
 				      {'attributes' => $all_sso_attr })) {
 	    &report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},$param->{'action'},'',$email,$robot);
 	    &wwslog('info','do_sso_login: update failed');
@@ -3899,11 +3899,11 @@ sub sendssopasswd {
     
     my $url_redirect;
     
-    if ($param->{'newuser'} =  &List::get_global_user($email)) {
+    if ($param->{'newuser'} =  Sympa::User::get_global_user($email)) {
 	
 	## Create a password if none
 	unless ($param->{'newuser'}{'password'}) {
-	    unless ( &List::update_global_user($email,
+	    unless ( Sympa::User::update_global_user($email,
 					   {'password' => &tools::tmp_passwd($email) 
 					    })) {
 		&report::reject_report_web('intern','db_update_failed',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -4020,7 +4020,7 @@ sub do_renewpasswd {
      &wwslog('debug','do_requestpasswd: sending one time ticket for %s', $in{'email'});
      $param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'choosepasswd',$ip);
      $param->{'request_from_host'} = $ip;
-     unless ($param->{'newuser'} = &List::get_global_user($in{'email'})) {
+     unless ($param->{'newuser'} = Sympa::User::get_global_user($in{'email'})) {
 	$param->{'newuser'} =
 	    { 'email' => &tools::clean_email($in{'email'}) };
 	$param->{'newuser'}{'escaped_email'} = 
@@ -4417,7 +4417,7 @@ sub do_renewpasswd {
 	 if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
 	     # update user pref  as soon as connected user change page size
 	     $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};	     
-	     &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	     Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	 }
      }else{
 	 $size = $param->{'user'}{'prefs'}{'review_page_size'} || $session->{'review_page_size'} || $Conf::Conf{'review_page_size'};
@@ -4790,11 +4790,11 @@ sub do_pref {
 	 }
 
 	 ## Duplicate entry in user_table
-	 unless (&List::is_global_user($in{'new_email'})) {
+	 unless (Sympa::User::is_global_user($in{'new_email'})) {
 
-	     my $user_pref = &List::get_global_user($in{'email'});
+	     my $user_pref = Sympa::User::get_global_user($in{'email'});
 	     $user_pref->{'email'} = $in{'new_email'};
-	     &List::add_global_user($user_pref);
+	     Sympa::User::add_global_user($user_pref);
 	 }
 
 	 $update->{'email'} = $in{'new_email'};
@@ -4914,9 +4914,9 @@ sub check_custom_attribute {
      $param->{'lang'} = $in{'lang'};
     $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
-     if (&List::is_global_user($param->{'user'}{'email'})) {
+     if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
 
-	 unless (&List::update_global_user($param->{'user'}{'email'}, $changes)) {
+	 unless (Sympa::User::update_global_user($param->{'user'}{'email'}, $changes)) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_pref: update failed');
 	     &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
@@ -4926,7 +4926,7 @@ sub check_custom_attribute {
 	 }
      }else {
 	 $changes->{'email'} = $param->{'user'}{'email'};
-	 unless (&List::add_global_user($changes)) {
+	 unless (Sympa::User::add_global_user($changes)) {
 	     &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_pref: add failed');
 	     &web_db_log({'parameters' => "$in{'gecos'},$in{'lang'},$in{'cookie_delay'}",
@@ -5275,14 +5275,14 @@ sub do_subrequest {
 	    return 1;
 	}
 	my $user;
-	$user = &List::get_global_user($in{'email'})
-	    if &List::is_global_user($in{'email'});
+	$user = Sympa::User::get_global_user($in{'email'})
+	    if Sympa::User::is_global_user($in{'email'});
 	
 	## Need to send a password by email
 	$param->{'one_time_ticket'} = &Auth::create_one_time_ticket($in{'email'},$robot,'subscribe/'.$list->{'name'},$ip);
 	$param->{'login_error'}='ticket_sent';
 	$param->{'request_from_host'} = $ip;
-	unless ($param->{'newuser'} = &List::get_global_user($in{'email'})) {
+	unless ($param->{'newuser'} = Sympa::User::get_global_user($in{'email'})) {
 	    $param->{'newuser'} =
 		{ 'email' => &tools::clean_email($in{'email'}) };
 	    $param->{'newuser'}{'escaped_email'} =
@@ -5424,7 +5424,7 @@ sub do_family_signoff {
 	     return 'login';
 	 }
 
-	 if ( &List::is_global_user($in{'email'}) ) {
+	 if ( Sympa::User::is_global_user($in{'email'}) ) {
 	     &report::reject_report_web('user','no_user',{},$param->{'action'});
 	     &wwslog('info','do_signoff: need auth for user %s', $in{'email'});
 	     &web_db_log({'target_email' => $in{'email'},
@@ -5600,9 +5600,9 @@ sub unsubscribe {
 	 return undef;
      }
 
-     if (&List::is_global_user($param->{'user'}{'email'})) {
+     if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
 
-	 unless ( &List::update_global_user($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
+	 unless ( Sympa::User::update_global_user($param->{'user'}{'email'}, {'password' => $in{'newpasswd1'},'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	     &wwslog('info','do_setpasswd: update failed');
 	     &web_db_log({'status' => 'error',
@@ -5611,7 +5611,7 @@ sub unsubscribe {
 	 }
      }else {
 
-	 unless ( &List::add_global_user({'email' => $param->{'user'}{'email'}, 
+	 unless ( Sympa::User::add_global_user({'email' => $param->{'user'}{'email'}, 
 				      'password' => $in{'newpasswd1'},
 				      'wrong_login_count' => 0} )) {
 	     &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -6495,7 +6495,7 @@ sub do_skinsedit {
 	     next;
 	 }
 	 
-	 my $u2 = &List::get_global_user($email);
+	 my $u2 = Sympa::User::get_global_user($email);
 	 my $defaults = $list->get_default_user_options();
 	 my $u;
 	 %{$u} = %{$defaults};
@@ -7760,7 +7760,7 @@ sub do_arc {
 	    if ($param->{'user'}{'prefs'}{'arc_mode'} ne $session->{'arc_mode'}) {
 		# update user pref  as soon as connected user change the way he consult archives
 		$param->{'user'}{'prefs'}{'arc_mode'} = $session->{'arc_mode'}; 
-		&List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+		Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	    }
 	}
 	
@@ -9153,7 +9153,7 @@ sub do_home {
      $param->{'current_subscriber'}{'visibility'} ||= 'noconceal';
 
      ## Get language from user_table
-     my $user = &List::get_global_user($in{'email'});
+     my $user = Sympa::User::get_global_user($in{'email'});
      $param->{'current_subscriber'}{'lang'} = &Language::GetLangName($user->{'lang'});
 
      foreach my $m ($list->available_reception_mode) {		
@@ -12002,7 +12002,7 @@ sub do_d_read {
       if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
 	# update user pref  as soon as connected user change shared mode
 	$param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-	&List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
       }
       $param->{'expert_page'} = 1;
  
@@ -12011,7 +12011,7 @@ sub do_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 0;
     } else {
@@ -15562,7 +15562,7 @@ sub do_change_email {
 
      my ($password, $newuser);
 
-     if ($newuser =  &List::get_global_user($old_email)) {
+     if ($newuser =  Sympa::User::get_global_user($old_email)) {
 	 
 	 $password = $newuser->{'password'};
      }
@@ -15628,9 +15628,9 @@ sub do_change_email {
 	 }
      
      ## Update User_table and remove existing entry first (to avoid duplicate entries)
-     &List::delete_global_user($new_email,);
+     Sympa::User::delete_global_user($new_email,);
      
-     unless ( &List::update_global_user($old_email,
+     unless ( Sympa::User::update_global_user($old_email,
 				    {'email' => $new_email,
 				   
 				 })) {
@@ -16377,15 +16377,15 @@ sub do_send_mail {
     $param->{'lang_tag'} = Language::LanguageTag($param->{'lang'});
 
      if ($param->{'user'}{'email'}) {
-	 if (&List::is_global_user($param->{'user'}{'email'})) {
-	     unless (&List::update_global_user($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
+	 if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
+	     unless (Sympa::User::update_global_user($param->{'user'}{'email'}, {'lang' => $in{'lang'}})) {
 		  &report::reject_report_web('intern','update_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		  &wwslog('info','do_set_lang: update failed');
 		  &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'lang'}",'target_email' => "$param->{'user'}{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 		  return undef;
 	     }
 	 }else {
-	     unless (&List::add_global_user({'email' => $param->{'user'}{'email'}, 'lang' => $in{'lang'}})) {
+	     unless (Sympa::User::add_global_user({'email' => $param->{'user'}{'email'}, 'lang' => $in{'lang'}})) {
 		 &report::reject_report_web('intern','add_user_db_failed',{'user'=>$param->{'user'}{'email'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 		 &wwslog('info','do_set_lang: update failed');
 		 &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'lang'}",'target_email' => "$param->{'user'}{'email'}",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
@@ -17682,7 +17682,7 @@ sub new_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 1;
  
@@ -17691,7 +17691,7 @@ sub new_d_read {
 	if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
 	  # update user pref  as soon as connected user change shared mode
 	  $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-	  &List::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
+	  Sympa::User::update_global_user($param->{'user'}{'email'},{data=>&tools::hash_2_string($param->{'user'}{'prefs'})}) ;
 	}
 	$param->{'expert_page'} = 0;
     } else {

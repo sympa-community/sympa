@@ -459,7 +459,7 @@ sub info {
     my $user;
 
     # Part of the authorization code
-    $user = &List::get_global_user($sender);
+    $user = Sympa::User::get_global_user($sender);
      
     my $result = $list->check_list_authz('info','md5',
 					 {'sender' => $sender,
@@ -586,8 +586,8 @@ sub createList {
     # prepare parameters
     my $param = {};
     $param->{'user'}{'email'} = $sender;
-    if (&List::is_global_user($param->{'user'}{'email'})) {
-	$param->{'user'} = &List::get_global_user($sender);
+    if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
+	$param->{'user'} = Sympa::User::get_global_user($sender);
     }
     my $parameters;
     $parameters->{'creation_email'} =$sender;
@@ -765,13 +765,13 @@ sub add {
     }else {
 	my $u;
 	my $defaults = $list->get_default_user_options();
-	my $u2 = &List::get_global_user($email);
+	my $u2       = Sympa::User->new($email);
 	%{$u} = %{$defaults};
-	$u->{'email'} = $email;
-	$u->{'gecos'} = $gecos || $u2->{'gecos'};
-	$u->{'date'} = $u->{'update_date'} = time;
-	$u->{'password'} = $u2->{'password'} || &tools::tmp_passwd($email) ;
-	$u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
+	$u->{'email'}    = $email;
+	$u->{'gecos'}    = $gecos || $u2->gecos;
+	$u->{'date'}     = $u->{'update_date'} = time;
+	$u->{'password'} = $u2->password || tools::tmp_passwd($email) ;
+	$u->{'lang'}     = $u2->lang || $list->{'admin'}{'lang'};
 
 	$list->add_list_member($u);
 	if (defined $list->{'add_outcome'}{'errors'}) {
@@ -950,7 +950,7 @@ sub review {
     my $user;
 
     # Part of the authorization code
-    $user = &List::get_global_user($sender);
+    $user = Sympa::User::get_global_user($sender);
      
     my $result = $list->check_list_authz('review','md5',
 					 {'sender' => $sender,
@@ -1161,7 +1161,7 @@ sub signoff {
     $list = new List ($listname, $robot);
     
     # Part of the authorization code
-    my $user = &List::get_global_user($sender);
+    my $user = Sympa::User::get_global_user($sender);
     
     my $result = $list->check_list_authz('unsubscribe','md5',
 					 {'email' => $sender,
@@ -1350,10 +1350,11 @@ sub subscribe {
       }
       
       if ($List::use_db) {
-	  my $u = &List::get_global_user($sender);
-	  
-	  &List::update_global_user($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'}
-					  });
+            my $u = Sympa::User->new($sender);
+            unless ($u->lang) {
+                $u->lang($list->{'admin'}{'lang'});
+                $u->save();
+            }
       }
       
       ## Now send the welcome file to the user

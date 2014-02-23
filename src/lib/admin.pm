@@ -1425,17 +1425,16 @@ sub change_user_email {
 					  'new_email' => $in{'new_email'},
 					  'updated_lists' => keys %updated_lists})
     }
-    
+
     ## Update User_table and remove existing entry first (to avoid duplicate entries)
-    &List::delete_global_user($in{'new_email'},);
-    
-    unless ( &List::update_global_user($in{'current_email'},
-				       {'email' => $in{'new_email'},					
-				       })) {
-	&Log::do_log('err','change_email: update failed');
+    my $oldu = Sympa::User->new($in{'new_email'});
+    $oldu->expire if $oldu;
+    my $u = Sympa::User->new($in{'current_email'});
+    unless ($u and $u->moveto($in{'new_mail'})) {
+	Log::do_log('err', 'change_email: update failed');
 	return undef;
     }
-    
+
     ## Update netidmap_table
     unless ( &List::update_email_netidmap_db($in{'robot'}, $in{'current_email'}, $in{'new_email'}) ){
 	&Log::do_log('err','change_email: update failed');

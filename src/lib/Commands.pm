@@ -191,11 +191,12 @@ sub help {
 	my @owner = &List::get_which ($sender, $robot,'owner');
 	my @editor = &List::get_which ($sender, $robot, 'editor');
 	
-	$data->{'is_owner'} = 1 if ($#owner > -1);
-	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'user'} =  &List::get_global_user($sender);
-	&Language::SetLang($data->{'user'}{'lang'}) if $data->{'user'}{'lang'};
-	$data->{'subject'} = gettext("User guide");
+	$data->{'is_owner'}  = 1 if @owner;
+	$data->{'is_editor'} = 1 if @editor;
+	$data->{'user'}      = Sympa::User->new($sender);
+	&Language::SetLang($data->{'user'}->lang)
+	    if $data->{'user'}->lang;
+	$data->{'subject'}        = gettext("User guide");
 	$data->{'auto_submitted'} = 'auto-replied';
 
 	unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
@@ -844,11 +845,10 @@ sub subscribe {
 	}
 	
 	if ($List::use_db) {
-	    my $u = &List::get_global_user($sender);
-	    
-	    &List::update_global_user($sender, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
-					    'password' => $u->{'password'} || &tools::tmp_passwd($sender)
-					    });
+	    my $u = Sympa::User->new($sender);
+	    $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
+	    $u->password(tools::tmp_passwd($sender)) unless $u->password;
+	    $u->save;
 	}
 	
 	## Now send the welcome file to the user
@@ -1294,11 +1294,10 @@ sub add {
 	}
 	
 	if ($List::use_db) {
-	    my $u = &List::get_global_user($email);
-	    
-	    &List::update_global_user($email, {'lang' => $u->{'lang'} || $list->{'admin'}{'lang'},
-					   'password' => $u->{'password'} || &tools::tmp_passwd($email)
-					    });
+	    my $u = Sympa::User->new($email);
+	    $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
+	    $u->password(tools::tmp_passwd($email)) unless $u->password;
+	    $u->save;
 	}
 	
 	## Now send the welcome file to the user if it exists and notification is supposed to be sent.
@@ -1683,7 +1682,7 @@ sub remind {
 	    &Log::do_log('debug2','Sending REMIND * to %d users', $count);
 
 	    foreach my $email (keys %global_subscription) {
-		my $user = &List::get_global_user($email);
+		my $user = Sympa::User::get_global_user($email);
 		foreach my $key (keys %{$user}) {
 		    $global_info{$email}{$key} = $user->{$key}
 		    if ($user->{$key});
