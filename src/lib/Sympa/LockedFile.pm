@@ -64,10 +64,12 @@ sub open {
         return undef;
     }
 
-    unless ($self->SUPER::open($file, $mode)) {
-        Log::do_log('err', 'Failed opening %s: %s', $file, $!);
-        $lock->unlock;    # make sure unlock to occur immediately.
-        return undef;
+    if ($mode ne '+') {
+        unless ($self->SUPER::open($file, $mode)) {
+            Log::do_log('err', 'Failed opening %s: %s', $file, $!);
+            $lock->unlock;    # make sure unlock to occur immediately.
+            return undef;
+        }
     }
 
     $lock_of{$self + 0} = $lock;    # register lock object, i.e. keep locking.
@@ -78,7 +80,12 @@ sub close {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    my $ret = $self->SUPER::close;
+    my $ret;
+    if (defined $self->fileno) {
+        $ret = $self->SUPER::close;
+    } else {
+        $ret = 1;
+    }
 
     croak 'Lock not found'
         unless exists $lock_of{$self + 0};
@@ -184,6 +191,9 @@ C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<LOCK_EX>),
 otherwise shared lock (C<LOCK_SH>).
 
 Default is C<'E<lt>'>.
+
+Additionally, a special mode C<'+'> will acquire exclusive lock
+without opening file.  In this case the file does not have to exist.
 
 =back
 
