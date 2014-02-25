@@ -889,6 +889,8 @@ our %in_regexp = (
 		 ## custom actions
 		 'cap' => '.*',
 		 'lcap' => '.*',
+		 
+		 'plugin' => '.*',
 		 );
 
 ## Regexp applied on incoming parameters (%in)
@@ -1145,6 +1147,9 @@ Log::do_log(info => "WWSympa started, process $$");
 
      ## Get PATH_INFO parameters
      &get_parameters();
+
+     # Propagate plugins parameters
+     $param->{'plugin'} = $in{'plugin'};
 
      # Static content
      $param->{'static_content_url'} = &Conf::get_robot_conf($robot, 'static_content_url');
@@ -1973,6 +1978,7 @@ sub get_parameters {
 
      my $custom_attribute ;
      my $custom_input;
+     my $plugin = {};
      
      ## Check parameters format
      foreach my $p (keys %in) {
@@ -1999,6 +2005,13 @@ sub get_parameters {
 	     $regexp = $in_regexp{'custom_attribute'};
 	     ##&Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
 	     $custom_attribute->{$key} = {value=>$in{$p}} ;
+	     undef $in{$p} ;
+	 }elsif ($pname eq 'plugin' and $#tokens >= 2) {
+	     my $plugin_name = $tokens[1];
+	     my $param_name = $tokens[2];
+	     $regexp = $in_regexp{'plugin'};
+	     $plugin->{$plugin_name} = {} unless defined $plugin->{$plugin_name};
+	     $plugin->{$plugin_name}{$param_name} = $in{$p};
 	     undef $in{$p} ;
 	 }elsif ($pname =~ /^custom_input(.*)$/) {
 	     my $key = $tokens[1];
@@ -2052,6 +2065,7 @@ sub get_parameters {
      
      $in{custom_attribute} = $custom_attribute ;
      $in{custom_input} = $custom_input;
+     $in{plugin} = $plugin;
      
      ## For shared-related actions, Q-encode filenames
      ## This required for filenames that include non ascii characters
