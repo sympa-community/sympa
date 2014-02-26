@@ -33,6 +33,13 @@ CLEANFILES = previous_sympa_version
 install-data-hook: installdir installconfig nextstep importantchanges
 
 installdir:
+	@echo "Creating plugin directory"
+	@for dir in $(modulesdir)/Sympa/Template/Plugin; do \
+		if [ ! -d $(DESTDIR)$$dir ] ; then \
+			echo "Creating $(DESTDIR)$$dir"; \
+			install -d -m 755 $(DESTDIR)$$dir; \
+		fi; \
+	done
 	@echo "Creating writable directories"
 	@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
 		$(spooldir)/moderation $(spooldir)/expire $(spooldir)/auth \
