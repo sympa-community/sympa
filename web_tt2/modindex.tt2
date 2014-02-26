@@ -34,7 +34,7 @@
 	<th>[%|loc%]Spam[%END%]</th>	
      [%- END -%]
 	<th>[%|loc%]Moderate[%END%]</th>
-	<th>[%|loc%]Author[%END%]</th>
+	<th [% IF is_owner %]colspan="2"[%END%]>[%|loc%]Author[%END%]</th>
 	<th>[%|loc%]Subject[%END%]</th>
         <th>[%|loc%]Date[%END%]</th>
 	<th>[%|loc%]Size[%END%]</th>
@@ -62,16 +62,42 @@
            [% PROCESS modform.tt2 %]
           </td>
 
-	  <td>[% msg.value.from %]</td>
+	  <td>
+	    [% IF msg.value.gecos %]
+	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
+	    [% ELSE %]
+	    [% msg.value.from %]
+	    [% END %]
+	  </td>
+
+	[% IF is_owner %]
+	  <td>
+	    [% IF msg.value.is_subscriber %]
+	    &nbsp;
+	    [% ELSE %]
+	    <form class="noborder" style="display:inline"
+	     action="[% path_cgi %]" method="post"
+	     name="add_frommod[% line_count %]"><fieldset>
+	      <input type="hidden" name="list" value="[% list %]" />
+	      <input type="hidden" name="id" value="[% msg.key %]" />
+	      <input type="hidden" name="from_modindex" value="from_modindex" />
+	      <input class="MainMenuLinks" type="submit"
+	       name="action_add_frommod"
+	       onclick="return request_confirm('[%|loc(msg.value.from)%]Dou you really want to add %1?[%END%]');"
+	       value="[%|loc%]Add subscribers[%END%]" />
+	    </form>
+	    [% END %]
+	  </td>
+	[% END %]
+
 	  <td>
 	    [% IF msg.value.subject == 'no_subject' %]
 	      [%|loc%]No subject[%END%]
 	    [% ELSE %]
 	      [% msg.value.subject %]
 	    [% END %]
-
-
 	  </td>
+
 	  <td>
 	    [% IF msg.value.date %]
 	      [% msg.value.date %]

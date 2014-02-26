@@ -217,6 +217,7 @@ our %comm = ('home' => 'do_home',
 	 'reject' => 'do_reject',
 	 #XXX'reject_notify' => 'do_reject_notify',
 	 'distribute' => 'do_distribute',
+	'add_frommod' => 'do_add_frommod',
 	 'viewmod' => 'do_viewmod',
 	 'd_reject_shared' => 'do_d_reject_shared',
 	 #XXX'reject_notify_shared' => 'do_reject_notify_shared',
@@ -367,6 +368,7 @@ our %action_args = ('default' => ['list'],
 		'pref' => ['previous_action','previous_list'],
 		'reject' => ['list','id'],
 		'distribute' => ['list','id'],
+		'add_frommod' => ['list', 'id'],
 		'dump_scenario' => ['list','pname'],
 		'd_reject_shared' => ['list','id'],
 		'd_install_shared' => ['list','id'],
@@ -521,6 +523,7 @@ our %required_args = ('active_lists' => ['for|count'],
 		     'del' => ['param.list','param.user.email','email'],
 		     'delete_pictures' => ['param.list','param.user.email'],
 		     'distribute' => ['param.list','param.user.email','id|idspam'],
+		    'add_frommod' => ['param.list','param.user.email','id'],
 		     'dump' => ['param.list'],
 		     'dump_scenario' => ['param.list','pname'],
 		     'edit_list' => ['param.user.email','param.list'],
@@ -616,6 +619,7 @@ our %required_privileges = ('admin' => ['owner','editor'],
 			   'd_install_shared' => ['editor','owner'],
 			   'd_reject_shared' => ['editor','owner'],
 			   'distribute' => ['editor','owner','listmaster'],
+			    'add_frommod' => ['editor', 'owner'],
 			   'dump_scenario' => ['listmaster'],
 			   'edit_list' => ['owner'],
 			   'edit_list_request' => ['owner'],
@@ -676,6 +680,7 @@ my %action_type = (
 		'reject' =>'admin',
 		'reject_notify' =>'admin',
 		'distribute' =>'admin',
+		'add_frommod' => 'admin',
 		'viewmod' =>'admin',
 		'savefile' =>'admin',
 		'rebuildallarc' =>'admin', #FIXME: serveradmin?
@@ -6712,22 +6717,27 @@ sub do_skinsedit {
 	 my $id = $1;
 
 	 ## Load msg
-	 my $mail = new Message({'file'=>"$Conf{'queuemod'}/$msg"});
-	 
-	 unless (defined $mail) {
+	 my $message = Message->new({'file'=>"$Conf{'queuemod'}/$msg"});
+
+	 unless (defined $message) {
 	     &report::reject_report_web('intern','cannot_get_msg',{'msg'=>"$Conf{'queuemod'}/$msg"},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	     &wwslog('err','do_modindex: unable to parse msg %s', $msg);
 	     closedir SPOOL;
 	     next;
 	 }
 
+	$param->{'spool'}{$id}{'size'} = int($message->{'size'} / 1024 + 0.5);
+	$param->{'spool'}{$id}{'subject'} =
+	    tools::decode_header($message, 'Subject') || 'no_subject';
+	$param->{'spool'}{$id}{'date'} =
+	    tools::decode_header($message, 'Date'); #FIXME:
+	$param->{'spool'}{$id}{'from'} = $message->{'sender'};
+	$param->{'spool'}{$id}{'gecos'} = $message->{'gecos'}
+	    if defined $message->{'gecos'};
+	 $param->{'spool'}{$id}{'spam_status'} = $message->{'spam_status'};
+	$param->{'spool'}{$id}{'is_subscriber'} =
+	    $list->is_list_member($message->{'sender'});
 
-	 $param->{'spool'}{$id}{'size'} = int( (-s "$Conf{'queuemod'}/$msg") / 1024 + 0.5);
-	 $param->{'spool'}{$id}{'subject'} =  &tools::decode_header($mail, 'Subject');
-	 $param->{'spool'}{$id}{'subject'} ||= 'no_subject';
-	 $param->{'spool'}{$id}{'date'} = &tools::decode_header($mail, 'Date');
-	 $param->{'spool'}{$id}{'from'} = &tools::decode_header($mail, 'From');
-	 $param->{'spool'}{$id}{'spam_status'} = $mail->{'spam_status'};
 	 foreach my $field ('subject','date','from') {
 	     $param->{'spool'}{$id}{$field} =~ s/&/&amp;/g;
 	     $param->{'spool'}{$id}{$field} =~ s/</&lt;/g;
@@ -7261,6 +7271,56 @@ sub do_skinsedit {
 
      return 'modindex';
  }
+
+####################################################
+#  do_add_frommod
+####################################################
+#  add user from moderation index
+#
+####################################################
+sub do_add_frommod {
+    $in{'id'} =~ s/^,//;
+    $in{'id'} =~ s/\0/,/g;
+
+    wwslog('info', 'do_add_frommod(%s)', $in{'id'});
+
+    ## messages
+    $in{'dump'} = '';
+    foreach my $id (split /,/, $in{'id'}) {
+	my $file = $Conf::Conf{'queuemod'}.'/'.$list->get_list_id().'_'.$id;
+	my $message = Message->new({ 'file' => $file });
+	unless ($message) {
+	    report::reject_report_web('user', 'already_moderated', {},
+		$param->{'action'});
+	    wwslog('err',
+		'No message with authkey %s.  It may be already moderated',
+		$id);
+	    web_db_log(
+		{   'parameters' => $id,
+		    'status' => 'error',
+		    'error_type' => 'internal' });
+	    next;
+	}
+	my $email = $message->{'sender'};
+	next unless defined $email and $email =~ /\S/;
+	my $fullname = $message->{'gecos'};
+
+	if (defined $fullname and $fullname =~ /\S/) {
+	    $in{'dump'} .= "$email $fullname\n";
+	} else {
+	    $in{'dump'} .= "$email\n";
+	}
+    }
+
+    if ($in{'dump'}) {
+	delete $in{'email'};
+	delete $in{'pending_email'};
+	$in{'previous_list'} = $list->{'name'};
+	do_add();
+    }
+
+    return 'modindex';
+}
 
 ####################################################
 #  do_viewmod
