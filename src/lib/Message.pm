@@ -193,7 +193,7 @@ sub new {
     my $hdr = $message->{'msg'}->head;
 
     $message->{'envelope_sender'} = _get_envelope_sender($message);
-    $message->{'sender'} = _get_sender_email($message);
+    ($message->{'sender'}, $message->{'gecos'}) = _get_sender_email($message);
     return undef unless defined $message->{'sender'};
 
     ## Store decoded subject and its original charset
@@ -374,6 +374,7 @@ sub _get_sender_email {
     my $hdr = $message->{'msg'}->head;
 
     my $sender = undef;
+    my $gecos = undef;
     foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
 	if (lc $field eq 'return-path') {
 	    ## Try to get envelope sender
@@ -391,6 +392,12 @@ sub _get_sender_email {
 	    my @sender_hdr = Mail::Address->parse($addr);
 	    if (@sender_hdr and $sender_hdr[0]->address) {
 		$sender = lc($sender_hdr[0]->address);
+		my $phrase = $sender_hdr[0]->phrase;
+		if (defined $phrase and length $phrase) {
+		    $gecos = MIME::EncWords::decode_mimewords(
+			$phrase, Charset => 'UTF-8'
+		    );
+		}
 		last;
 	    }
 	}
@@ -406,7 +413,7 @@ sub _get_sender_email {
 	return undef;
     }
 
-    return $sender;
+    return ($sender, $gecos);
 }
 
 =pod 
