@@ -46,6 +46,7 @@ use lib '--modulesdir--';
 use Getopt::Long;
 use Archive::Zip;
 use Data::Dumper;
+use Date::Parse;
   
 use strict 'vars';
 use Time::Local;
@@ -66,7 +67,7 @@ use report;
 use SympaSession;
 use Log;
 use tools;
-use time_utils;
+#use time_utils;
 use Sympa::Constants;
 use wwslib;
 use cookielib;
@@ -7960,17 +7961,18 @@ sub do_arc {
 		     next;
 		 }
 
-		 my @array_date = &time_utils::parse_date($date);
-
 		 $msg_info{'date_smtp'} = $date;
-		 $msg_info{'date_epoch'} = &get_timelocal_from_date(@array_date[1..$#array_date]);
+		my $date_epoch = Date::Parse::str2time($date);
+		if ($date_epoch) {
+		    $msg_info{'date_epoch'} = $date_epoch;
+		    $msg_info{'date'} =
+			gettext_strftime "%d %b %Y", localtime $date_epoch;
 
-		 $msg_info{'date'} = gettext_strftime "%d %b %Y", localtime($msg_info{'date_epoch'});
-		 if ($msg_info{'date_epoch'} < $oldest_day) {
-		     $stop_search = 1;
-		     last;
-		 }
-	
+		    if ($date_epoch < $oldest_day) {
+			$stop_search = 1;
+			last;
+		    }
+		}
  		 foreach my $key (keys %msg_info) {
  		     chomp($msg_info{$key});
  		 }

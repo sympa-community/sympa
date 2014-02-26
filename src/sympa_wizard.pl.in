@@ -388,6 +388,11 @@ sub check_cpan {
 						 package_name => 'Crypt-CipherSaber',
 						 usage => 'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
 						},
+			'Date::Parse' => {
+					  package_name => 'TimeDate',
+					  mandatory => 1,
+					  usage => 'used to decode date and time in message headers',
+					 },
 			'DB_File' => {
 				      required_version =>'1.75',
 				      package_name => 'DB_File',
