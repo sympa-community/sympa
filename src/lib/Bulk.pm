@@ -229,6 +229,15 @@ sub merge_msg {
         $data->{'headers'}{$key} = $headers->get($key) if($headers->count($key));
     }
 
+    return _merge_msg($entity, $rcpt, $bulk, $data);
+}
+
+sub _merge_msg {
+    my $entity = shift;
+    my $rcpt = shift;
+    my $bulk = shift;
+    my $data = shift;
+
     my $body;
     if(defined $entity->bodyhandle){
 	$body      = $entity->bodyhandle->as_string;
@@ -297,7 +306,7 @@ sub merge_msg {
     ##--- Recursive call of the method. ---##
     ## Course on the different parts of the message at all levels. 
     foreach my $part ($entity->parts) {
-	unless(&merge_msg($part, $rcpt, $bulk, $data)){
+	unless(_merge_msg($part, $rcpt, $bulk, $data)){
 	    &Log::do_log('err', "Failed to merge message part.");
 	    return undef;
 	}  

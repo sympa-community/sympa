@@ -639,8 +639,8 @@ our @params = (
         'default'  => 'off',
     },
     {
-        'name'     => 'anonymous_header_fields',
-        'default'  => 'Sender,X-Sender,Received,Message-id,From,DKIM-Signature,X-Envelope-To,Resent-From,Reply-To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender',
+        'name'    => 'anonymous_header_fields',
+        'default' => 'Authentication-Results,Disposition-Notification-To,DKIM-Signature,Injection-Info,Organisation,Organization,Original-Recipient,Originator,Path,Received,Received-SPF,Reply-To,Resent-Reply-To,Return-Receipt-To,X-Envelope-From,X-Envelope-To,X-Sender,X-X-Sender',
     },
     {
         'name'     => 'list_check_smtp',

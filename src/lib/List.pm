@@ -3531,10 +3531,14 @@ sub distribute_msg {
 	    $hdr->delete($field);
 	}
 
-	$hdr->add('From', $self->{'admin'}{'anonymous_sender'});
+	# override From: and Message-ID: fields.
+	# Note that corresponding Resent-*: fields will be removed.
+	$hdr->replace('From', $self->{'admin'}{'anonymous_sender'});
+	$hdr->delete('Resent-From');
 	my $new_id = $self->{'name'} . '.' . $sequence . '@anonymous';
-	$hdr->add('Message-id',"<$new_id>");
-	
+	$hdr->replace('Message-Id', "<$new_id>");
+	$hdr->delete('Resent-Message-Id');
+
 	# rename msg_topic filename
 	if ($info_msg_topic) {
 	    my $queuetopic = &Conf::get_robot_conf($robot, 'queuetopic');
@@ -3644,6 +3648,7 @@ sub distribute_msg {
 	    my $reply;
 
 	    $hdr->delete('Reply-To');
+	    $hdr->delete('Resent-Reply-To');
 
 	    if ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'list') {
 		$reply = $self->get_list_address();
@@ -3659,14 +3664,26 @@ sub distribute_msg {
 	}
     }
     
-    ## Add useful headers
+    ## Add/replace useful headers
+
+    ## These fields should be added preserving existing ones.
     $hdr->add('X-Loop', $self->get_list_address());
     $hdr->add('X-Sequence', $sequence);
+    ## These fields should be overwritten if any of them already exist
+    $hdr->delete('Errors-To');
     $hdr->add('Errors-to', $self->get_list_address('return_path'));
+    ## Two Precedence: fields are added (overwritten), as some MTAs recognize
+    ## only one of them.
+    $hdr->delete('Precedence');
     $hdr->add('Precedence', 'list');
     $hdr->add('Precedence', 'bulk');
-    $hdr->add('Sender', $self->get_list_address('owner')); # The Sender: header should be add at least for DKIM compatibility
-    $hdr->add('X-no-archive', 'yes');
+    ## The Sender: field should be added (overwritten) at least for DKIM
+    ## compatibility.  Note that Resent-Sender: field will be removed.
+    $hdr->replace('Sender', $self->get_list_address('owner'));
+    $hdr->delete('Resent-Sender');
+    $hdr->replace('X-no-archive', 'yes');
+
+    ## - add custom headers
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
 	$hdr->add($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
     }
