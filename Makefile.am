@@ -23,12 +23,20 @@
 
 SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 
+check_SCRIPTS = t/LockedFile.t
+
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
 	     sympa.spec \
 	     README.charset \
-	     etc_README
+	     etc_README \
+	     $(check_SCRIPTS)
 CLEANFILES = previous_sympa_version
+
+check-local:
+	@PERL5LIB=src/lib:wwsympa:soap; export PERL5LIB; \
+        $(PERL) -Mstrict -Mwarnings -MTest::Harness -e 'runtests(@ARGV)' \
+	$(check_SCRIPTS)
 
 install-data-hook: installdir installconfig nextstep importantchanges
 
