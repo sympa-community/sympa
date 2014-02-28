@@ -6514,7 +6514,6 @@ sub get_list_admin {
 
 
 ## Returns the first user for the list.
-my $lock_fh_member;
 
 sub get_first_list_member {
     my ($self, $data) = @_;
@@ -6527,13 +6526,6 @@ sub get_first_list_member {
     $rows = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
     
-    $lock_fh_member =
-	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '<');
-    unless ($lock_fh_member) {
-	Log::do_log('err', 'Could not create new lock');
-	return undef;
-    }
-
     Log::do_log('debug2', '(%s, %s, %s, %s)',
 	$self->{'name'}, $sortby, $offset, $rows);
 
@@ -6616,11 +6608,6 @@ sub get_first_list_member {
     else {
 		$sth->finish;
 		$sth = pop @sth_stack;
-	
-		## Release the Shared lock
-		unless ($lock_fh_member->close()) {
-			return undef;
-		}
     }
     
     ## If no offset (for LIMIT) was used, update total of subscribers
@@ -6685,7 +6672,6 @@ sub createXMLCustomAttribute {
 }
 
 ## Returns the first admin_user with $role for the list.
-my $lock_fh_admin;
 
 sub get_first_list_admin {
     my ($self, $role, $data) = @_;
@@ -6701,13 +6687,6 @@ sub get_first_list_admin {
 
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)',
 	$self->{'name'}, $role, $sortby, $offset, $rows);
-
-    $lock_fh_admin =
-	Sympa::LockedFile->($self->{'dir'} . '/include_admin_user', 20, '<');
-    unless ($lock_fh_admin) {
-	Log::do_log('err','Could not create new lock');
-	return undef;
-    }
 
     my $name = $self->{'name'};
     my $statement;
@@ -6771,11 +6750,6 @@ sub get_first_list_admin {
     }else {
 	$sth->finish;
         $sth = pop @sth_stack;
-
-	## Release the Shared lock
-	unless ($lock_fh_admin->close()) {
-	    return undef;
-	}
     }
 
     return $admin_user;
@@ -6812,11 +6786,6 @@ sub get_next_list_member {
     }else {
 		$sth->finish;
 		$sth = pop @sth_stack;
-	
-		## Release lock
-		unless ($lock_fh_member->close()) {
-			return undef;
-		}
     }
     
     return $user;
@@ -6841,11 +6810,6 @@ sub get_next_list_admin {
     }else {
 		$sth->finish;
 		$sth = pop @sth_stack;
-	
-		## Release the Shared lock
-		unless ($lock_fh_admin->close()) {
-			return undef;
-		}
     }
     return $admin_user;
 }
@@ -6854,18 +6818,10 @@ sub get_next_list_admin {
 
 
 ## Returns the first bouncing user
-my $lock_fh_bouncing_member;
 
 sub get_first_bouncing_list_member {
     my $self = shift;
     &Log::do_log('debug2', '');
-
-    $lock_fh_bouncing_member =
-	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '<');
-    unless ($lock_fh_bouncing_member) {
-	Log::do_log('err', 'Could not create new lock');
-	return undef;
-    }
 
     my $name = $self->{'name'};
     
@@ -6894,11 +6850,6 @@ sub get_first_bouncing_list_member {
     }else {
 		$sth->finish;
 		$sth = pop @sth_stack;
-	
-		## Release the Shared lock
-		unless ($lock_fh_bouncing_member->close()) {
-			return undef;
-		}
     }
     return $user;
 }
@@ -6925,11 +6876,6 @@ sub get_next_bouncing_list_member {
     }else {
 		$sth->finish;
 		$sth = pop @sth_stack;
-	
-		## Release the Shared lock
-		unless ($lock_fh_bouncing_member->close()) {
-			return undef;
-		}
     }
 
     return $user;
@@ -9850,7 +9796,7 @@ sub sync_include {
 
     ## Get an Exclusive lock
     my $lock_fh =
-	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '>');
+	Sympa::LockedFile->new($self->{'dir'} . '/include', 10 * 60, '+');
     unless ($lock_fh) {
 	Log::do_log('err', 'Could not create new lock');
 	return undef;
@@ -10078,7 +10024,7 @@ sub sync_include_admin {
 	
 	## Get an Exclusive lock
 	my $lock_fh = Sympa::LockedFile->new(
-	    $self->{'dir'} . '/include_admin_user', 20, '>');
+	    $self->{'dir'} . '/include_admin_user', 20, '+');
 	unless ($lock_fh) {
 	    Log::do_log('err', 'Could not create new lock');
 	    return undef;
