@@ -5480,47 +5480,60 @@ sub compute_auth {
 
 ## Add footer/header to a message
 sub add_parts {
-    my ($self, $msg) = @_;
-    my ($listname,$type) = ($self->{'name'}, $self->{'admin'}{'footer_type'});
-    my $listdir = $self->{'dir'};
-    &Log::do_log('debug2', 'List:add_parts(%s, %s, %s)', $msg, $listname, $type);
+    my $self = shift;
+    my $msg = shift;
+    Log::do_log('debug3', '(%s, %s, type=%s)',
+	$self, $msg, $self->{'admin'}{'footer_type'});
+
+    my $type     = $self->{'admin'}{'footer_type'};
+    my $listdir  = $self->{'dir'};
+    my $eff_type = $msg->effective_type || 'text/plain';
+
+    ## Signed or encrypted messages won't be modified.
+    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
+	return $msg;
+    }
 
     my ($header, $headermime);
-    foreach my $file ("$listdir/message.header", 
-		      "$listdir/message.header.mime",
-		      "$Conf::Conf{'etc'}/mail_tt2/message.header", 
-		      "$Conf::Conf{'etc'}/mail_tt2/message.header.mime") {
+    foreach my $file (
+	"$listdir/message.header",
+	"$listdir/message.header.mime",
+	$Conf::Conf{'etc'} . '/mail_tt2/message.header',
+	$Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
+	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
+		Log::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $header = $file;
 	    last;
-	} 
+	}
     }
 
     my ($footer, $footermime);
-    foreach my $file ("$listdir/message.footer", 
-		      "$listdir/message.footer.mime",
-		      "$Conf::Conf{'etc'}/mail_tt2/message.footer", 
-		      "$Conf::Conf{'etc'}/mail_tt2/message.footer.mime") {
+    foreach my $file (
+	"$listdir/message.footer",
+	"$listdir/message.footer.mime",
+	$Conf::Conf{'etc'} . '/mail_tt2/message.footer',
+	$Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
+	) {
 	if (-f $file) {
 	    unless (-r $file) {
-		&Log::do_log('notice', 'Cannot read %s', $file);
+		Log::do_log('notice', 'Cannot read %s', $file);
 		next;
 	    }
 	    $footer = $file;
 	    last;
-	} 
+	}
     }
-    
+
     ## No footer/header
     unless (($footer and -s $footer) or ($header and -s $header)) {
  	return undef;
     }
-    
-    if ($type eq 'append'){
+
+    if ($type eq 'append') {
 	## append footer/header
 	my ($footer_msg, $header_msg);
 	if ($header and -s $header) {
@@ -5536,7 +5549,7 @@ sub add_parts {
 	    $footer_msg = '' unless $footer_msg =~ /\S/;
 	}
 	if (length $header_msg or length $footer_msg) {
-	    if (&_append_parts($msg, $header_msg, $footer_msg)) {
+	    if (_append_parts($msg, $header_msg, $footer_msg)) {
 		$msg->sync_headers(Length => 'COMPUTE')
 		    if $msg->head->get('Content-Length');
 	    }
@@ -5546,35 +5559,35 @@ sub add_parts {
 	my $parser = new MIME::Parser;
 	$parser->output_to_core(1);
 
-	my $content_type = $msg->effective_type || 'text/plain';
-
-	if ($content_type =~ /^multipart\/alternative/i || $content_type =~ /^multipart\/related/i) {
-
-	    &Log::do_log('notice', 'Making $1 into multipart/mixed'); 
-	    $msg->make_multipart("mixed",Force=>1); 
+	if ($eff_type =~ /^multipart\/alternative/i ||
+	    $eff_type =~ /^multipart\/related/i) {
+	    Log::do_log(
+		'debug3', 'Making message %s into multipart/mixed', $msg
+	    );
+	    $msg->make_multipart("mixed", Force => 1);
 	}
-	
+
 	if ($header and -s $header) {
 	    if ($header =~ /\.mime$/) {
 		my $header_part;
 		eval { $header_part = $parser->parse_in($header); };
 		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+		    Log::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $header, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
 		    $msg->add_part($header_part, 0); ## Add AS FIRST PART (0)
 		}
 	    ## text/plain header
-	    }else {
-		
+	    } else {
 		$msg->make_multipart unless $msg->is_multipart;
-		my $header_part = build MIME::Entity Path        => $header,
-		Type        => "text/plain",
-		Filename    => undef,
-		'X-Mailer'  => undef,
-		Encoding    => "8bit",
-		Charset     => "UTF-8";
+		my $header_part = build MIME::Entity
+		    Path       => $header,
+		    Type       => "text/plain",
+		    Filename   => undef,
+		    'X-Mailer' => undef,
+		    Encoding   => "8bit",
+		    Charset    => "UTF-8";
 		$msg->add_part($header_part, 0);
 	    }
 	}
@@ -5583,23 +5596,23 @@ sub add_parts {
 		my $footer_part;
 		eval { $footer_part = $parser->parse_in($footer); };
 		if ($@) {
-		    &Log::do_log('err', 'Failed to parse MIME data %s: %s',
+		    Log::do_log('err', 'Failed to parse MIME data %s: %s',
 				 $footer, $parser->last_error);
 		} else {
 		    $msg->make_multipart unless $msg->is_multipart;
 		    $msg->add_part($footer_part);
 		}
 	    ## text/plain footer
-	    }else {
-		
+	    } else {
 		$msg->make_multipart unless $msg->is_multipart;
-		$msg->attach(Path        => $footer,
-			     Type        => "text/plain",
-			     Filename    => undef,
-			     'X-Mailer'  => undef,
-			     Encoding    => "8bit",
-			     Charset     => "UTF-8"
-			     );
+		$msg->attach(
+		    Path       => $footer,
+		    Type       => "text/plain",
+		    Filename   => undef,
+		    'X-Mailer' => undef,
+		    Encoding   => "8bit",
+		    Charset    => "UTF-8"
+		);
 	    }
 	}
     }
@@ -5644,7 +5657,7 @@ sub _append_parts {
 	    my $bodyh = $part->bodyhandle;
 	    if ($bodyh) {
 		return undef if $bodyh->is_encoded;
-		$body = $bodyh->as_string;
+		$body = $bodyh->as_string();
 	    } else {
 		$body = '';
 	    }
