@@ -2514,57 +2514,59 @@ sub dump_encoding {
 
 ## Remove PID file and STDERR output
 sub remove_pid {
-	my ($name, $pid, $options) = @_;
+    my ($name, $pid, $options) = @_;
 
-	my $piddir = Sympa::Constants::PIDDIR;
-	my $pidfile = $piddir . '/' . $name . '.pid';
+    my $piddir = Sympa::Constants::PIDDIR;
+    my $pidfile = $piddir . '/' . $name . '.pid';
 
-	## If in multi_process mode (bulk.pl for instance can have child processes)
-	## Then the pidfile contains a list of space-separated PIDs on a single line
-	if($options->{'multiple_process'}) {
-		unless(open(PFILE, $pidfile)) {
-			# Log::fatal_err('Could not open %s, exiting', $pidfile);
-			&Log::do_log('err','Could not open %s to remove pid %s', $pidfile, $pid);
-			return undef;
-		}
-		my $l = <PFILE>;
-		close PFILE;	
-		my @pids = grep {/[0-9]+/} split(/\s+/, $l);
-		@pids = grep {!/^$pid$/} @pids;
-		
-		## If no PID left, then remove the file
-		if($#pids < 0) {
-			## Release the lock
-			unless(unlink $pidfile) {
-				&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-				return undef;
-			}
-		}else{
-			if(-f $pidfile) {
-				unless(open(PFILE, '> '.$pidfile)) {
-					&Log::do_log('err', "Failed to open $pidfile: %s", $!);
-					return undef;
-				}
-				print PFILE join(' ', @pids)."\n";
-				close(PFILE);
-			}else{
-				&Log::do_log('notice', 'pidfile %s does not exist. Nothing to do.', $pidfile);
-			}
-		}
-	}else{
-		unless(unlink $pidfile) {
-			&Log::do_log('err', "Failed to remove $pidfile: %s", $!);
-			return undef;
-		}
-		my $err_file = $Conf::Conf{'tmpdir'}.'/'.$pid.'.stderr';
-		if(-f $err_file) {
-			unless(unlink $err_file) {
-				&Log::do_log('err', "Failed to remove $err_file: %s", $!);
-				return undef;
-			}
-		}
-	}
-	return 1;
+    my @pids;
+
+    # Lock pid file
+    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+<');
+    unless ($lock_fh) {
+        Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+    }
+
+    ## If in multi_process mode (bulk.pl for instance can have child
+    ## processes) then the PID file contains a list of space-separated PIDs
+    ## on a single line
+    if ($options->{'multiple_process'}) {
+        # Read pid file
+        seek $lock_fh, 0, 0;
+        my $l = <$lock_fh>;
+        @pids = grep {/^[0-9]+$/ and $_ != $pid } split(/\s+/, $l);
+
+        ## If no PID left, then remove the file
+        unless (@pids) {
+            ## Release the lock
+            unless (unlink $pidfile) {
+                Log::do_log('err', "Failed to remove %s: %s", $pidfile, $!);
+                $lock_fh->close;
+                return undef;
+            }
+        } else {
+            seek $lock_fh, 0, 0;
+            truncate $lock_fh, 0;
+            print $lock_fh join(' ', @pids)."\n";
+        }
+    } else {
+        unless (unlink $pidfile) {
+            Log::do_log('err', "Failed to remove %s: %s", $pidfile, $!);
+            $lock_fh->close;
+            return undef;
+        }
+        my $err_file = $Conf::Conf{'tmpdir'} . '/' . $pid . '.stderr';
+        if (-f $err_file) {
+            unless (unlink $err_file) {
+                Log::do_log('err', "Failed to remove %s: %s", $err_file, $!);
+                $lock_fh->close;
+                return undef;
+            }
+        }
+    }
+
+    $lock_fh->close;
+    return 1;
 }
 
 # input user agent string and IP. return 1 if suspected to be a crawler.
@@ -2612,7 +2614,7 @@ sub write_pid {
 	# Read pid file
 	seek $lock_fh, 0, 0;
 	my $l = <$lock_fh>;
-	@pids = grep {/[0-9]+/} split(/\s+/, $l);
+	@pids = grep {/^[0-9]+$/} split(/\s+/, $l);
     }
 
     ## If we can have multiple instances for the process.
@@ -3902,13 +3904,14 @@ sub get_pids_in_pid_file {
 	my $piddir = Sympa::Constants::PIDDIR;
 	my $pidfile = $piddir . '/' . $name . '.pid';
 
-	unless (open(PFILE, $pidfile)) {
+	my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
+	unless ($lock_fh) {
 		&Log::do_log('err', "unable to open pidfile %s:%s",$pidfile,$!);
 		return undef;
 	}
-	my $l = <PFILE>;
-	close PFILE;
-	my @pids = grep {/[0-9]+/} split(/\s+/, $l);
+	my $l = <$lock_fh>;
+	my @pids = grep {/^[0-9]+$/} split(/\s+/, $l);
+	$lock_fh->close;
 	return \@pids;
 }
 
