@@ -318,8 +318,8 @@ sub get_global_user {
 
     ## Additional subscriber fields
     my $additional = '';
-    if (Site->db_additional_user_fields) {
-	$additional = ', ' . Site->db_additional_user_fields;
+    if ($Conf::Conf{'db_additional_user_fields'}) {
+	$additional = ', ' . $Conf::Conf{'db_additional_user_fields'};
     }
 
     push @sth_stack, $sth;

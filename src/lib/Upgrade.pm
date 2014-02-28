@@ -794,11 +794,11 @@ sub upgrade {
 
 	if (-r $wwsympa_conf) {
 	    ## load only sympa.conf
-	    my $conf = ${
+	    my $conf = (
 		Conf::_load_config_file_to_hash(
 		    {'path_to_config_file' => $sympa_conf}
 		) || {}
-	    }->{'config'};
+	    )->{'config'};
 	    # not yet implemented.
 	    #my $conf = Conf::load_robot_conf(
 	    #    {'robot' => '*', 'no_db' => 1, 'return_result' => 1}
