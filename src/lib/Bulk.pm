@@ -81,20 +81,35 @@ sub next {
     my $lock = &tools::get_lockname();
 
     my $order;
-    my $limit_oracle='';
-    my $limit_sybase='';
-	## Only the first record found is locked, thanks to the "LIMIT 1" clause
+    my $limit_oracle = '';
+    my $limit_sybase = '';
+    my $limit_other = '';
+    ## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order = 'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
-    if (lc($Conf::Conf{'db_type'}) eq 'mysql' || lc($Conf::Conf{'db_type'}) eq 'Pg' || lc($Conf::Conf{'db_type'}) eq 'SQLite'){
-	$order.=' LIMIT 1';
-    }elsif (lc($Conf::Conf{'db_type'}) eq 'Oracle'){
-	$limit_oracle = 'AND rownum<=1';
-    }elsif (lc($Conf::Conf{'db_type'}) eq 'Sybase'){
+    if ($Conf::Conf{'db_type'} eq 'mysql' or
+	$Conf::Conf{'db_type'} eq 'Pg' or
+	$Conf::Conf{'db_type'} eq 'SQLite') {
+	$limit_other = 'LIMIT 1';
+    } elsif ($Conf::Conf{'db_type'} eq 'Oracle') {
+	$limit_oracle = 'AND rownum <= 1';
+    } elsif ($Conf::Conf{'db_type'} eq 'Sybase') {
 	$limit_sybase = 'TOP 1';
     }
 
     # Select the most prioritary packet to lock.
-    unless ($sth = &SDM::do_prepared_query( sprintf("SELECT %s messagekey_bulkmailer AS messagekey, packetid_bulkmailer AS packetid FROM bulkmailer_table WHERE lock_bulkmailer IS NULL AND delivery_date_bulkmailer <= ? %s %s",$limit_sybase, $limit_oracle, $order), int(time()))) {
+    unless (
+	$sth = SDM::do_prepared_query(
+	    sprintf(
+		q{SELECT %s messagekey_bulkmailer AS messagekey,
+		         packetid_bulkmailer AS packetid
+		  FROM bulkmailer_table
+		  WHERE lock_bulkmailer IS NULL AND
+		        delivery_date_bulkmailer <= ?
+		  %s %s %s},
+		$limit_sybase, $limit_oracle, $order, $limit_other
+	    ), int time
+	)
+	) {
 	&Log::do_log('err','Unable to get the most prioritary packet from database');
 	return undef;
     }
