@@ -1553,13 +1553,13 @@ our @params = (
         'file'     => 'wwsympa.conf',
     },
     {
-        'name'     => 'html_editor_file',
-        'query'    => gettext('Path to the javascript file making the WYSIWYG HTML editor available'),
+        'name'     => 'html_editor_url',
+        'query'    => 'URL path to the javascript file making the WYSIWYG HTML editor available.  Relative path under <static_content_url> or absolute path',
+        'advice'   => 'Default value is an example of TinyMCE installed under <static_content_path>/js/tinymce/.',
         'vhost'    => '1',
-        'default'  => 'tinymce/jscripts/tiny_mce/tiny_mce.js',
-        'file'     => 'wwsympa.conf',
+        'default'  => 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
+        'file'     => 'sympa.conf', # added after migration of wwsympa.conf
     },
-    ##{ html_editor_url: not yet implemented. },
     {
         'name'     => 'html_editor_init',
         'query'    => gettext('Javascript excerpt that enables and configures the WYSIWYG HTML editor.'),

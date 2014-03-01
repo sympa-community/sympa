@@ -16013,10 +16013,19 @@ sub do_compose_mail {
 	return undef;
     }
 
-    $param->{'use_html_editor'} = &Conf::get_robot_conf($robot, 'use_html_editor');
-    $param->{'html_editor_file'} = &Conf::get_robot_conf($robot, 'html_editor_file');
-    $param->{'html_editor_init'} = &Conf::get_robot_conf($robot, 'html_editor_init');
-    
+    if (Conf::get_robot_conf($robot, 'use_html_editor') and
+	Conf::get_robot_conf($robot, 'use_html_editor') eq 'on') {
+	$param->{'use_html_editor'} = Conf::get_robot_conf($robot, 'use_html_editor');
+	if (Conf::get_robot_conf($robot, 'html_editor_url') and
+	    Conf::get_robot_conf($robot, 'html_editor_url') =~ /^([-.\w]+:\/\/|\/)/i) {
+	    $param->{'html_editor_url'} = Conf::get_robot_conf($robot, 'html_editor_url');
+	} elsif (Conf::get_robot_conf($robot, 'html_editor_url')) {
+	    $param->{'html_editor_url'} = Conf::get_robot_conf($robot, 'static_content_url') . '/' .
+		Conf::get_robot_conf($robot, 'html_editor_url');
+	}
+	$param->{'html_editor_init'} = Conf::get_robot_conf($robot, 'html_editor_init');
+    }
+
     # Set the subaction to html_news_letter or undef
     $param->{'subaction'} = $in{'subaction'};
     if ($in{'to'}) {
