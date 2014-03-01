@@ -35,8 +35,7 @@ CLEANFILES = previous_sympa_version
 
 check-local:
 	@PERL5LIB=src/lib:wwsympa:soap; export PERL5LIB; \
-        $(PERL) -Mstrict -Mwarnings -MTest::Harness -e 'runtests(@ARGV)' \
-	$(check_SCRIPTS)
+	$(PERL) -MTest::Harness -e 'runtests @ARGV' $(check_SCRIPTS)
 
 install-data-hook: installdir installconfig nextstep importantchanges
 
