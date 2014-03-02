@@ -2389,6 +2389,8 @@ sub reject {
     
     close(IN);
     &Log::do_log('info', 'REJECT %s %s from %s accepted (%d seconds)', $name, $sender, $key, time-$time_command);
+    tools::remove_dir(
+	$Conf::Conf{'viewmail_dir'} . '/mod/' . $list->get_list_id() . '/' . $key);
     unlink($file);
 
     return 1;

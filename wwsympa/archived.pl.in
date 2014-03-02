@@ -507,7 +507,7 @@ Rebuilds archives for the list the name of which is given in the argument $adrli
 
 =over 
 
-=item * get_tag
+=item * Archive::get_tag
 
 =item * set_hidden_mode
 
@@ -546,12 +546,12 @@ sub rebuild {
 	       return undef;
     }
 
-    my $tag = &get_tag($listname);
-
     my $list = new List($listname, $hostname);
     my $robot = $list->{'domain'};
     my $arcpath = &Conf::get_robot_conf($robot,'arc_path');
     Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
+
+    my $tag = Archive::get_tag($list);
 
     my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
 
@@ -737,7 +737,7 @@ Archives one message into one list archives directory.
 
 =over 
 
-=item * get_tag
+=item * Archive::get_tag
 
 =item * save_idx
 
@@ -770,13 +770,12 @@ sub mail2arc {
 
     my $list = new List($listname, $robot);
     my $arcpath = &Conf::get_robot_conf($list->{'domain'},'arc_path');
-
     unless (defined $list) {
 	Log::do_log('err', 'Unknown list %s@%s', $listname, $robot);
 	return undef;
     }
 
-    my $tag = &get_tag($listname);
+    my $tag = Archive::get_tag($list);
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
 	&set_hidden_mode($tag);
@@ -930,7 +929,7 @@ Sets the value of $ENV{'M2H_ADDRESSMODIFYCODE'} and $ENV{'M2H_MODIFYBODYADDRESSE
 
 =over 
 
-=item * I<$tag> a character string (containing the result of get_tag($listname))
+=item * I<$tag> a character string (containing the result of get_tag($list))
 
 =back 
 
@@ -1062,43 +1061,10 @@ sub create_idx {
     return $index;
 }
 
-=pod 
-
 =head2 sub get_tag(STRING $listname)
 
-Returns a tag derived from the listname.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$listname>, a character string correspondiong to the list name.
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<a character string>, corresponding to the 10 last characters of a 32 bytes string containing the MD5 digest of the concatenation of the following strings (in this order):
-
-=over 4
-
-=item - the cookie config parameter
-
-=item - a slash: "/"
-
-=item - the I<$listname> argument
-
-=back 
-
-=head3 Calls 
-
-=over 
-
-=item * Digest::MD5::md5_hex
-
-=back 
+I<OBSOLETED>.
+Use L<Archive/get_tag>.
 
 =cut 
 

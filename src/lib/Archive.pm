@@ -24,6 +24,7 @@
 package Archive;
 
 use strict;
+use Carp qw(croak);
 use Cwd qw(getcwd);
 use Encode qw(decode_utf8 encode_utf8);
 use HTML::Entities qw(decode_entities);
@@ -323,73 +324,160 @@ sub clean_archived_message{
     }
 }
 
-#############################
-# convert a messsage to html. 
+###########################
+# convert a message to HTML. 
 #    result is stored in $destination_dir
 #    attachement_url is used to link attachement
 #    
-sub convert_single_msg_2_html {
-    
-    my $data =shift;
-    my $msg_as_string = $data->{'msg_as_string'};
-    my $destination_dir = $data->{'destination_dir'};
-    my $attachement_url = $data->{'attachement_url'};
-    my $list = $data->{'list'};
-    my $robot = $data->{'robot'};
-    my $messagekey = $data->{'messagekey'};
+# NOTE: This might be moved to Site package as a mutative method.
+# NOTE: convert_single_msg_2_html() was deprecated.
+sub convert_single_message {
+    my $that = shift; # List or Robot object
+    my $message = shift; # Message object or hashref
+    my %opts = @_;
 
-    my $listname =''; my $msg_file;
-    my $host = $robot;
-    if ($list) {
-	$host = $list->{'admin'}{'host'};
-	$robot = $list->{'robot'};
-	$listname = $list->{'name'};
-	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$list->get_list_id().'_'.$$;
-    }else{
-	$msg_file = &Conf::get_robot_conf($robot, 'tmpdir').'/'.$messagekey.'_'.$$;
+    my $list;
+    my $robot;
+    my $listname;
+    my $hostname;
+    if (ref $that eq 'List') {
+	$list = $that;
+	$robot = $that->{'domain'};
+	$listname = $that->{'name'};
+	$hostname = $that->{'admin'}{'host'};
+    } elsif (! ref($that) and $that and $that ne '*') {
+	$list = '';
+	$robot = $that;
+	$listname = '';
+	$hostname = Conf::get_robot_conf($that, 'host');
+    } else {
+	croak 'bug in logic.  Ask developer';
     }
 
-    my $pwd = getcwd;  #  mhonarc require du change workdir so this proc must retore it    
-    unless (open(OUT, ">$msg_file")) {
-	do_log('notice', 'Could Not open %s', $msg_file);
+    my $msg_as_string;
+    if (ref $message eq 'Message') {
+	$msg_as_string = $message->{'msg_as_string'};
+    } elsif (ref $message eq 'HASH') {
+	$msg_as_string = $message->{'messageasstring'};
+    } else {
+        croak 'bug in logic.  Ask developer';
+    }
+
+    my $destination_dir = $opts{'destination_dir'};
+    my $attachement_url = $opts{'attachement_url'};
+
+    my $mhonarc_ressources = tools::get_filename('etc', {},
+	'mhonarc-ressources.tt2', $robot, $list);
+    unless ($mhonarc_ressources) {
+	Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
 	return undef;
     }
-    printf OUT $msg_as_string ;
-    close(OUT);
 
     unless (-d $destination_dir) {
-	unless (&tools::mkdir_all($destination_dir, 0777)) {
-	    &do_log('err','Unable to create %s', $destination_dir);
+	unless (tools::mkdir_all($destination_dir, 0755)) {
+	    Log::do_log('err', 'Unable to create %s', $destination_dir);
 	    return undef;
 	}
     }
-    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot,$list);
-    
-    unless ($mhonarc_ressources) {
-	do_log('notice',"Cannot find any MhOnArc ressource file");
+
+    my $msg_file = $destination_dir . '/msg00000.txt';
+    unless (open OUT, '>', $msg_file) {
+	Log::do_log('notice', 'Could Not open %s', $msg_file);
 	return undef;
     }
+    print OUT $msg_as_string;
+    close OUT;
+
+    # mhonarc require du change workdir so this proc must retore it    
+    my $pwd = getcwd;
+
     ## generate HTML
     unless (chdir $destination_dir) {
-	do_log('err',"Could not change working directory to %s",$destination_dir);
+	Log::do_log('err', 'Could not change working directory to %s',
+	    $destination_dir);
+	return undef;
     }
-    my $tracepwd = getcwd ;
 
-
-    my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
-    my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
-    #open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file |";
-    #open MSG, ">msg00000.html";
-    #&do_log('debug', "$mhonarc  --outdir .. -single -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host $msg_file");
-    #print MSG <ARCMOD>;
-    #close MSG;
-    #close ARCMOD;
-    `$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$listname -definevars hostname=$host -attachmenturl=$attachement_url $msg_file > msg00000.html`;
+    my $tag = get_tag($that);
+    my $exitcode = system(
+	Conf::get_robot_conf($robot, 'mhonarc'), '-single',
+	'-rcfile' => $mhonarc_ressources,
+	'-definevars' => "listname='$listname' hostname=$hostname tag=$tag",
+	'-outdir' => $destination_dir,
+	'-attachmentdir' => $destination_dir,
+	'-attachmenturl' => $attachement_url,
+	'-umask' => $Conf::Conf{'umask'},
+	'-stdout' => "$destination_dir/msg00000.html",
+	'--', $msg_file
+    ) >> 8;
 
     # restore current wd 
     chdir $pwd;		
 
+    if ($exitcode) {
+	Log::do_log('err', 'Command %s failed with exit code %d',
+	    Conf::get_robot_conf($robot, 'mhonarc'), $exitcode
+	);
+    }
+
     return 1;
+}
+
+=head2 sub get_tag(OBJECT $that)
+
+Returns a tag derived from the listname.
+
+=head3 Arguments 
+
+=over 
+
+=item * I<$that>, a List or Robot object.
+
+=back 
+
+=head3 Return 
+
+=over 
+
+=item * I<a character string>, corresponding to the 10 last characters of a 32 bytes string containing the MD5 digest of the concatenation of the following strings (in this order):
+
+=over 4
+
+=item - the cookie config parameter
+
+=item - a slash: "/"
+
+=item - name attribute of the I<$that> argument
+
+=back 
+
+=back
+
+=head3 Calls 
+
+=over 
+
+=item * Digest::MD5::md5_hex
+
+=back 
+
+=cut 
+
+sub get_tag {
+    my $that = shift;
+
+    my $name;
+    if (ref $that eq 'List') {
+	$name = $that->{'name'};
+    } elsif (! ref($that) and $that and $that ne '*') {
+	$name = $that;
+    } elsif (! ref($that)) {
+	$name = '*';
+    }
+
+    return substr(
+	Digest::MD5::md5_hex(join '/', $Conf::Conf{'cookie'}, $name), -10
+    );
 }
 
 1;

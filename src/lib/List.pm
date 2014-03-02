@@ -4596,19 +4596,19 @@ sub send_msg {
 #       | undef
 #################################################################
 sub send_to_editor {
-   my($self, $method, $message) = @_;
-   my ($msg, $file, $encrypt) = ($message->{'msg'}, $message->{'filename'});
-
-   $encrypt = 'smime_crypted' if ($message->{'smime_crypted'}); 
-   &Log::do_log('debug3', "List::send_to_editor, msg: $msg, file: $file method : $method, encrypt : $encrypt");
+    my($self, $method, $message) = @_;
+    my $msg = $message->{'msg'};
+    my $file = $message->{'filename'};
+    my $encrypt = 'smime_crypted' if $message->{'smime_crypted'};
+    Log::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
+	$self, $method, $message, $encrypt
+    );
 
    my($i, @rcpt);
-   my $admin = $self->{'admin'};
    my $name = $self->{'name'};
-   my $host = $admin->{'host'};
+   my $host = $self->{'admin'}{'host'};
    my $robot = $self->{'domain'};
    my $modqueue = $Conf::Conf{'queuemod'};
-   return unless ($name && $admin);
   
    my @now = localtime(time);
    my $messageid=$now[6].$now[5].$now[4].$now[3].$now[2].$now[1]."."
@@ -4618,45 +4618,30 @@ sub send_to_editor {
    
    ## Keeps a copy of the message
    if ($method eq 'md5'){  
+	## move message to spool  mod
        my $mod_file = $modqueue.'/'.$self->get_list_id().'_'.$modkey;
-       unless (open(OUT, ">$mod_file")) {
+	unless (open OUT, '>', $mod_file) {
 	   &Log::do_log('notice', 'Could Not open %s', $mod_file);
 	   return undef;
        }
-
        unless (open (MSG, $file)) {
 	   &Log::do_log('notice', 'Could not open %s', $file);
 	   return undef;   
        }
-
        print OUT <MSG>;
-       close MSG ;
-       close(OUT);
+       close MSG;
+       close OUT;
 
-       my $tmp_dir = $modqueue.'/.'.$self->get_list_id().'_'.$modkey;
-       unless (-d $tmp_dir) {
-	   unless (mkdir ($tmp_dir, 0777)) {
-	       &Log::do_log('err','Unable to create %s: %s', $tmp_dir, $!);
-	       return undef;
-	   }
-	   my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2', $robot, $self);
-
-	   unless ($mhonarc_ressources) {
-	       &Log::do_log('notice',"Cannot find any MhOnArc ressource file");
-	       return undef;
-	   }
-	   ## generate HTML
-	   chdir $tmp_dir;
-	   my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
-	   my $base_url = &Conf::get_robot_conf($robot, 'wwsympa_url');
-	   open ARCMOD, "$mhonarc  -single --outdir .. -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host -attachmenturl=viewmod/$name/$modkey $mod_file|";
-	   open MSG, ">msg00000.html";
-	   &Log::do_log('debug', "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $mod_file");
-	   print MSG <ARCMOD>;
-	   close MSG;
-	   close ARCMOD;
-	   chdir $Conf::Conf{'home'};
-       }
+	# prepare HTML view of this message
+	# Note: 6.2a.32 or earlier stored HTML view into modqueue.
+	# 6.2b has dedicated directory specified by viewmail_dir parameter.
+	my $destination_dir =
+	    $Conf::Conf{'viewmail_dir'} . '/mod/' . $self->get_list_id() . '/' . $modkey;
+	Archive::convert_single_message(
+	    $self, $message,
+	    'destination_dir' => $destination_dir,
+	    'attachement_url' => join('/', '..', 'viewmod', $name, $modkey),
+	);
    }
 
    @rcpt = $self->get_editors_email();

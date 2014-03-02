@@ -7062,15 +7062,15 @@ sub do_skinsedit {
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
      foreach my $id (split (/,/, $in{'id'})) {
-	 
 	 ## For compatibility concerns
 	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
 	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
 	     last if (-f $file);
 	 }
-
-	 ## Open the file
-	 unless (open(IN, $file)) {
+	my $message = undef;
+	$message = Message->new({'file' => $file})
+	    if $file;
+	unless ($message) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
 	     &wwslog('err','do_reject: Unable to open %s', $file);
 	     &web_db_log({'parameters' => $in{'id'},
@@ -7081,23 +7081,15 @@ sub do_skinsedit {
 
          #  extract sender address is needed to report reject to sender and in case the sender is to be added to the blacklist
 	 if (($in{'quiet'} ne '1')||($in{'blacklist'})) {
-	     my $msg;
-	     my $parser = new MIME::Parser;
-	     $parser->output_to_core(1);
-	     unless ($msg = $parser->read(\*IN)) {
-		 &wwslog('err', 'Unable to parse message %s', $file);
-		 next;
-	     }	   
-
-	     my @sender_hdr = Mail::Address->parse($msg->head->get('From'));
-	     unless  ($#sender_hdr == -1) {
-		 my $rejected_sender = $sender_hdr[0]->address;
-		 unless ($in{'quiet'}) {
+	    my $rejected_sender = $message->{'sender'};
+	    if ($rejected_sender) {
+		 unless ($in{'message_template'} eq 'reject_quiet') {
 		     my %context;
 		     $context{'subject'} = &tools::decode_header($msg, 'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
-		     unless ($list->send_file($in{'message_template'}, $rejected_sender, $robot, \%context)) {
+		    unless ($list->send_file($in{'message_template'}, #FIXME
+			$rejected_sender, $robot, \%context)) {
 			 &wwslog('notice',"Unable to send template $in{'message_template'} to $rejected_sender");
 		     }
 		 }		 
@@ -7110,21 +7102,23 @@ sub do_skinsedit {
 			 $param->{'blacklist_ignored'} += 0;
 		     }
 		 }
-	     }
+	    } else {
+		Log::do_log('err',
+		    'No sender found for message %s.  Unable to use her address to add to blacklist or send notification',
+                    $message
+		);
+	    }
 	 }
-	 close(IN);  
+
 	 if (($in{'signal_spam'}) && ($Conf{'reporting_spam_script_path'} ne '')){
 	     if (-x $Conf{'reporting_spam_script_path'}){
-		 unless (open(IN, $file)) {
-		     &Log::do_log('err',"could not open $file");
-		 }
 		 unless (open(SCRIPT, "|$Conf{'reporting_spam_script_path'}")) {
 		     &Log::do_log('err',"could not execute $Conf{'reporting_spam_script_path'}");
 		 }
-		 while(<IN>){
-		     print SCRIPT $_;
-		 }
-		 close (IN);
+		# Sending encrypted form in case a crypted message would be
+		# sent by error.
+		print SCRIPT $message->{'msg_as_string'};
+
 		 if (close(SCRIPT)){		 
 		     &Log::do_log('info',"message $file reported as spam by $param->{'user'}{'email'}") ;
 		 }else{
@@ -7141,9 +7135,10 @@ sub do_skinsedit {
 	     &web_db_log({'parameters' => $in{'id'},
 			  'status' => 'error',
 			  'error_type' => 'internal'});
-	     return undef;
+	     #XXreturn undef;
 	 }
-
+	# clean HTML view of the message
+	tools::remove_dir($Conf::Conf{'viewmail_dir'}. '/mod/' . $list->get_list_id() . '/' . $id); 
      }
      &web_db_log({'parameters' => $in{'id'},
 		  'status' => 'success'});
@@ -7168,7 +7163,6 @@ sub do_skinsedit {
 #      
 ###################################################### 
  sub do_distribute {
-
      $in{'id'} .= ','.$in{'idspam'} if ( $in{'idspam'});
      $in{'id'} =~ s/^,//;
      $in{'id'} =~ s/\0/,/g;
@@ -7176,14 +7170,11 @@ sub do_skinsedit {
      &wwslog('info', 'do_distribute(%s)', $in{'id'});
      my ($msg, $file);
 
-     my $time = time;
-     my $data = {'headers' => {'Message-ID' => &tools::get_message_id($robot),
-			       'X-Sympa-NoWrap' => 'yes'},
-		 'from'=> $param->{'user'}{'email'}};
+    my @mail_command = ();
 
      ## msg topics
      my @msg_topics;
-     foreach my $msg_topic (@{$list->{'admin'}{'msg_topic'}}) {
+     foreach my $msg_topic (@{$list->{'admin'}{'msg_topic'} || []}) {
 	 my $var_name = "topic_"."$msg_topic->{'name'}";
 	 if ($in{"$var_name"}) {
 	     push @msg_topics, $msg_topic->{'name'};
@@ -7200,48 +7191,37 @@ sub do_skinsedit {
 	 return undef;
      } 
 
-
      ## messages
      foreach my $id (split (/,/, $in{'id'})) { # QUIET DISTRIBUTE
-         Log::do_log('notice', 'Moderator approves message: %s %s', $list->{'name'},$id);
-	 my $mail_command = sprintf ("QUIET DISTRIBUTE %s %s\n",$list->{'name'},$id);
-	 $data->{'body'} .= $mail_command;
-
 	 ## For compatibility concerns
 	 foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
 	     $file = $Conf{'queuemod'}.'/'.$list_id.'_'.$id;
 	     last if (-f $file);
 	 }
 
-	 unless (-f $file) {
+	my $message = undef;
+	$message = Message->new({'file' => $file})
+	    if $file;
+	unless ($message) {
 	     &report::reject_report_web('user','already_moderated',{},$param->{'action'});
-	     &wwslog('err','do_distribute: Unable to open %s', $file);
-	     &web_db_log({'parameters' => $in{'id'},
+	    wwslog('err',
+		'Unable to find message in spool mod with authkey %s', $id);
+	    web_db_log({'parameters' => $id,
 			  'status' => 'error',
 			  'error_type' => 'internal'});
 	     next;
 	 }
+	push @mail_command,
+	    sprintf('QUIET DISTRIBUTE %s %s', $list->{'name'}, $id);
 
 	 ## TAG 
 	 if ($list_topics) {
-
-	     my $parser = new MIME::Parser;
-	     $parser->output_to_core(1);
-	     
-	     unless (open FILE, "$file") {
-		 &wwslog('notice', 'do_distribute: Cannot open file %s', $file);
-		 &report::reject_report_web('intern','cannot_open_file',{'file' => $file},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
-		 &web_db_log({'parameters' => $in{'id'},
-			      'status' => 'error',
-			      'error_type' => 'internal'});
-		 return undef;
-	     }
-
-	     my $msg = $parser->parse(\*FILE);
-	     my $head = $msg->head();
-	     my $filetopic = $list->tag_topic(&tools::clean_msg_id($head->get('Message-Id')),$list_topics,'editor');
+	    my $filetopic = $list->tag_topic(
+		tools::clean_msg_id($message->{'msg_id'}),
+		$list_topics, 'editor'
+	    );
 	 }
-	 
+
 	 unless (rename($file,"$file.distribute")) {
 	     &report::reject_report_web('intern','rename_file',{'old'=>$file,
 								'new'=>"$file.distribute"},
@@ -7251,13 +7231,26 @@ sub do_skinsedit {
 			  'status' => 'error',
 			  'error_type' => 'internal'});
 	 }
+	# clean HTML view of the message
+	tools::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/' . $list->get_list_id() . '/' . $id);
      }
 
-     $data->{'not_auto_submitted'} = 1;
+    #FIXME: commands should be injected into incoming spool directly.
+    my $data = {
+	'headers' => {
+	    'Message-ID' => tools::get_message_id($robot),
+	    'X-Sympa-NoWrap' => 'yes'
+	},
+	'from'=> $param->{'user'}{'email'},
+	'not_auto_submitted' => 1,
+	'body' => join("\n", @mail_command),
+    };
      unless (&mail::mail_file('',&Conf::get_robot_conf($robot, 'sympa'), $data, $robot)) {
-	 &report::reject_report_web('intern','cannot_send_distribute',{'from' => $param->{'user'}{'email'},'listname'=>$list->{'name'}},
-				    $param->{'action'},$list,$param->{'user'}{'email'},$robot);
-	 &wwslog('err','do_distribute: failed to send message for file %s', $file);
+	report::reject_report_web('intern','cannot_send_distribute',
+	    {'from' => $param->{'user'}{'email'}, 'listname' => $list->{'name'}},
+	    $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
+	wwslog('err', 'failed to send message for list %s, id %s',
+	    $list, $in{'id'});
 	 &web_db_log({'parameters' => $in{'id'},
 		      'status' => 'error',
 		      'error_type' => 'internal'});
@@ -7347,14 +7340,6 @@ sub do_viewmod {
 	 push (@{$param->{'available_files'}},$file); 
      }
 
-     ## For compatibility concerns
-     foreach my $list_id ($list->get_list_id(),$list->{'name'}) {
-	 $tmp_dir = $Conf{'queuemod'}.'/.'.$list_id.'_'.$in{'id'};
-	 if (-d $tmp_dir) {
-	     last;
-	 }
-     }
-     
      my $html_dir = $Conf::Conf{'viewmail_dir'}.'/mod/'.$list->get_list_id().'/'.$in{'id'};
 
      unless (-d $html_dir) {
@@ -7376,10 +7361,9 @@ sub do_viewmod {
      $param->{'id'} = $in{'id'};
 
      if ($list->is_there_msg_topic()) {
-
 	 $param->{'request_topic'} = 1;
      
-	 foreach my $top (@{$list->{'admin'}{'msg_topic'}}) {
+	 foreach my $top (@{$list->{'admin'}{'msg_topic'} || []}) {
 	     if ($top->{'name'}) {
 		 push (@{$param->{'available_topics'}},$top);
 	     }
