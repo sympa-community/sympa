@@ -966,7 +966,8 @@ my %alias = ('reply-to' => 'reply_to',
 				'format' => ['day', 'week', 'month', 'quarter', 'year'],
 				'synonym' => {
 					'weekly' => 'week'
-				}
+				},
+				'obsolete' => 1,
 			},
 			'access' => {
 				'order' => 2,
@@ -1019,7 +1020,8 @@ my %alias = ('reply-to' => 'reply_to',
 				'length' => 3,
 				'default' => {
 					'conf' => 'bounce_halt_rate'
-				}
+				},
+				'obsolete' => 1,
 			}
 		}
 	},
@@ -2040,7 +2042,8 @@ my %alias = ('reply-to' => 'reply_to',
 				'occurence' => '0-1',
 				'default' => {
 					'conf' => 'dkim_header_list'
-				}
+				},
+				'obsolete' => 1,
 			},
 			'signer_domain' => {
 				'order' => 5,
@@ -2081,7 +2084,8 @@ my %alias = ('reply-to' => 'reply_to',
 		'group' => 'other',
 		'gettext_id' => "Account",
 		'format' => '\S+',
-		'length' => 10
+		'length' => 10,
+		'obsolete' => 1,
 	},
 	
 	'clean_delay_queuemod' => {
@@ -2353,7 +2357,8 @@ my %list_option = (
     'notify_bouncers' => {'gettext_id' => 'send notify to bouncing users'},
 
     # pictures_feature, dkim_feature, merge_feature,
-    # inclusion_notification_feature
+    # inclusion_notification_feature, tracking.delivery_status_notification,
+    # tracking.message_delivery_notification
     'on'  => {'gettext_id' => 'enabled'},
     'off' => {'gettext_id' => 'disabled'},
 
@@ -2475,6 +2480,9 @@ my %list_option = (
     # archive_crypted_msg
     'original'  => {'gettext_id' => 'original messages'},
     'decrypted' => {'gettext_id' => 'decrypted messages'},
+
+    # tracking.message_delivery_notification
+    'on_demand' => {'gettext_id' => 'on demand'},
 );
 
 ## Values for subscriber reception mode.
