@@ -2001,7 +2001,7 @@ my %alias = ('reply-to' => 'reply_to',
 	'dkim_feature' => {
 		'group' => 'dkim',
 		'gettext_id' => "Insert DKIM signature to messages sent to the list",
-		'comment' =>  "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
+		'gettext_comment' =>  "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
 		'format' => ['on', 'off'],
 		'occurence' => '0-1',
 		'default' => {
@@ -2012,12 +2012,12 @@ my %alias = ('reply-to' => 'reply_to',
 	'dkim_parameters' => {
 		'group' => 'dkim',
 		'gettext_id' => "DKIM configuration",
-		'comment' => 'A set of parameters in order to define outgoing DKIM signature', 
+		'gettext_comment' => 'A set of parameters in order to define outgoing DKIM signature', 
 		'format' => {
 			'private_key_path' => {
 				'order' => 1,
 				'gettext_id' => "File path for list DKIM private key",
-				'comment' => "The file must contain a RSA pem encoded private key", 
+				'gettext_comment' => "The file must contain a RSA pem encoded private key", 
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
@@ -2027,7 +2027,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'selector' => {
 				'order' => 2,
 				'gettext_id' => "Selector for DNS lookup of DKIM public key",
-				'comment' => "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
+				'gettext_comment' => "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
@@ -2037,7 +2037,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'header_list' => {
 				'order' => 4,
 				'gettext_id' => 'List of headers to be included ito the message for signature',
-				'comment' => 'You should probably use teh default value which is the value recommended by RFC4871',
+				'gettext_comment' => 'You should probably use teh default value which is the value recommended by RFC4871',
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
@@ -2048,7 +2048,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'signer_domain' => {
 				'order' => 5,
 				'gettext_id' => 'DKIM "d=" tag, you should probably use the default value',
-				'comment' => ' The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
+				'gettext_comment' => ' The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
@@ -2058,7 +2058,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'signer_identity' => {
 				'order' => 6,
 				'gettext_id' => 'DKIM "i=" tag, you should probably leave this parameter empty',
-				'comment' => 'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
+				'gettext_comment' => 'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
 				'format' => '\S+',
 				'occurence' => '0-1'
 			},
@@ -2069,7 +2069,7 @@ my %alias = ('reply-to' => 'reply_to',
 	'dkim_signature_apply_on' => {
 		'group' => 'dkim',
 		'gettext_id' => "The categories of messages sent to the list that will be signed using DKIM.",
-		'comment' => "This parameter controls in which case messages must be signed using DKIM, you may sign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
+		'gettext_comment' => "This parameter controls in which case messages must be signed using DKIM, you may sign every message choosing 'any' or a subset. The parameter value is a comma separated list of keywords",
 		'format' => ['md5_authenticated_messages', 'smime_authenticated_messages', 'dkim_authenticated_messages', 'editor_validated_messages', 'none', 'any'],
 		'occurrence' => '0-n',
 		'split_char' => ',',
