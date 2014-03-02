@@ -3558,17 +3558,25 @@ sub distribute_msg {
 	## Search previous subject tagging in Subject
 	my $custom_subject = $self->{'admin'}{'custom_subject'};
 
-	## tag_regexp will be used to remove the custom subject if it is already present in the message subject.
-	## Remember that the value of custom_subject can be "dude number [%list.sequence"%]" whereas the actual
-	## subject will contain "dude number 42".
+	## tag_regexp will be used to remove the custom subject if it is
+	## already present in the message subject.
+	## Remember that the value of custom_subject can be
+	## "dude number [%list.sequence"%]" whereas the actual subject will
+	## contain "dude number 42".
 	my $list_name_escaped = $self->{'name'};
 	$list_name_escaped =~ s/(\W)/\\$1/g;
 	my $tag_regexp = $custom_subject;
-	$tag_regexp =~ s/([^\w\s\x80-\xFF])/\\$1/g;  ## cleanup, just in case dangerous chars were left
-	$tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g; ## Replaces "[%list.sequence%]" by "\d+"
-	$tag_regexp =~ s/\\\[\\\%\s*list\\\.name\s*\\\%\\\]/$list_name_escaped/g; ## Replace "[%list.name%]" by escaped list name
-	$tag_regexp =~ s/\\\[\\\%\s*[^]]+\s*\\\%\\\]/[^]]+/g; ## Replaces variables declarations by "[^\]]+"
-	$tag_regexp =~ s/\s+/\\s+/g; ## Takes spaces into account
+	## cleanup, just in case dangerous chars were left
+	$tag_regexp =~ s/([^\w\s\x80-\xFF])/\\$1/g;
+	## Replaces "[%list.sequence%]" by "\d+"
+	$tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g;
+	## Replace "[%list.name%]" by escaped list name
+	$tag_regexp =~
+	    s/\\\[\\\%\s*list\\\.name\s*\\\%\\\]/$list_name_escaped/g;
+	## Replaces variables declarations by "[^\]]+"
+	$tag_regexp =~ s/\\\[\\\%\s*[^]]+\s*\\\%\\\]/[^]]+/g;
+	## Takes spaces into account
+	$tag_regexp =~ s/\s+/\\s+/g;
 
 	## Add subject tag
 	$message->{'msg'}->head->delete('Subject');
@@ -3581,7 +3589,7 @@ sub distribute_msg {
 	## If subject is tagged, replace it with new tag
 	## Splitting the subject in two parts :
 	##   - what will be before the custom subject (probably some "Re:")
-	##   - what will be after it : the orginal subject sent to the list.
+	##   - what will be after it : the original subject sent to the list.
 	## The custom subject is not kept.
 	my $before_tag;
 	my $after_tag;
@@ -3597,20 +3605,29 @@ sub distribute_msg {
 	} else {
 	    ($before_tag, $after_tag) = ('', $subject_field);
 	}
-	
+
  	## Encode subject using initial charset
 
-	## Don't try to encode the subject if it was not originaly encoded.
+	## Don't try to encode the subject if it was not originally encoded.
 	if ($message->{'subject_charset'}) {
-	    $subject_field = MIME::EncWords::encode_mimewords([
-							       [Encode::decode('utf8', $before_tag), $message->{'subject_charset'}],
-							       [Encode::decode('utf8', '['.$parsed_tag.'] '), &Language::GetCharset()],
-							       [Encode::decode('utf8', $after_tag), $message->{'subject_charset'}]
-							       ], Encoding=>'A', Field=>'Subject');
-	}else {
-	    $subject_field = $before_tag . ' ' .  MIME::EncWords::encode_mimewords([
-										    [Encode::decode('utf8', '['.$parsed_tag.']'), &Language::GetCharset()]
-										    ], Encoding=>'A', Field=>'Subject') . ' ' . $after_tag;
+	    $subject_field = MIME::EncWords::encode_mimewords(
+		Encode::decode_utf8(
+		    $before_tag .'[' . $parsed_tag . '] ' . $after_tag
+		),
+		Charset  => $message->{'subject_charset'},
+		Encoding => 'A',
+		Field    => 'Subject',
+		Replacement => 'FALLBACK'
+	    );
+	} else {
+	    $subject_field = $before_tag . ' ' .
+		MIME::EncWords::encode_mimewords(
+		Encode::decode_utf8('[' . $parsed_tag . ']'),
+		Charset  => Language::GetCharset(),
+		Encoding => 'A',
+		Field    => 'Subject'
+		) .
+		' ' . $after_tag;
 	}
 
 	$message->{'msg'}->head->add('Subject', $subject_field);
