@@ -806,7 +806,7 @@ sub upgrade {
 	    my %infile = ();
 	    ## load defaults
 	    foreach my $p (@confdef::params) {
-		next if $p->{'title'};
+		next unless $p->{'name'};
 		next unless $p->{'file'};
 		next unless $p->{'file'} eq 'wwsympa.conf';
 		$infile{$p->{'name'}} = $p->{'default'};
@@ -824,7 +824,7 @@ sub upgrade {
 
 	    my $name;
 	    foreach my $p (@confdef::params) {
-		next if $p->{'title'};
+		next unless $p->{'name'};
 		$name = $p->{'name'};
 		next unless exists $infile{$name};
 
@@ -858,14 +858,16 @@ sub upgrade {
 		if ($old_param{$name}) {
 		    $migrated{'obsolete'} ||= {};
 		    $migrated{'obsolete'}->{$name} =
-			[{'name' => $name, 'query' => $old_param{$name}},
+			[{'name' => $name, 'gettext_id' => $old_param{$name}},
 			 $infile{$name}];
 		} else {
 		    $migrated{'unknown'} ||= {};
 		    $migrated{'unknown'}->{$name} =
-			[{'name' => $name,
-			  'query' => Language::gettext("Unknown parameter")},
-			 $infile{$name}];
+			[   {   'name' => $name,
+				'gettext_id' => 'Unknown parameter'
+			    },
+			    $infile{$name}
+			];
 		}
 	    }
 	}
@@ -907,11 +909,13 @@ sub upgrade {
 		    my ($param, $v) = @{$newconf{$k}};
 
 		    push @newconf, tools::wrap_text(
-			Language::gettext($param->{'query'}), '## ', '## ')
-			if defined $param->{'query'};
+			Language::gettext($param->{'gettext_id'}),
+			'## ', '## '
+		    ) if $param->{'gettext_id'};
 		    push @newconf, tools::wrap_text(
-			Language::gettext($param->{'advice'}), '## ', '## ')
-			if defined $param->{'advice'};
+			Language::gettext($param->{'gettext_comment'}),
+			'## ', '## '
+		    ) if $param->{'gettext_comment'};
 		    if (defined $v and
 			($type eq 'add' or $type eq 'override')) {
 			push @newconf,

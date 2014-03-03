@@ -5712,45 +5712,70 @@ sub unsubscribe {
  }
 
 sub do_edit_config {
+    my $editable_params = tools::dup_var(\@confdef::params);
 
-    my @editable_params = @confdef::params ;
-
-    &get_server_details;
+    get_server_details;
 
     unless ($param->{'main_robot'}) {
 	&report::reject_report_web('auth','super lismaster feature only','{}',$param->{'action'});
 	&wwslog('info','check_authz: access denied in edit_config for %s because not super listmaster',  $param->{'user'}{'email'});
     }
 
-    for my $i ( 0 .. $#editable_params ) {
-	if ($editable_params[$i]->{'name'}) {
-	    $editable_params[$i]->{'current_value'} = &Conf::get_robot_conf($robot, $editable_params[$i]->{'name'});
-            $editable_params[$i]->{'current_value'} = join( ",", @{$editable_params[$i]->{'current_value'}}) if (ref($editable_params[$i]->{'current_value'}) eq 'ARRAY');
-	}	     
+    for my $p (@$editable_params) {
+	if ($p->{'name'}) {
+	    my $name = $p->{'name'};
+	    my $v = Conf::get_robot_conf($robot || '*', $name);
+	    if (ref $v eq 'ARRAY') {
+		$p->{'current_value'} = join ',', @$v;
+	    } else {
+		$p->{'current_value'} = $v;
+	    }
+	    $p->{'query'} = Language::gettext($p->{'gettext_id'})
+		if $p->{'gettext_id'};
+	    $p->{'advice'} = Language::gettext($p->{'gettext_comment'})
+		if $p->{'gettext_comment'};
+	} elsif ($p->{'gettext_id'}) {
+	    $p->{'title'} = Language::gettext($p->{'gettext_id'});
+	    unless ($p->{'group'}) {
+		my $g = $p->{'gettext_id'};
+		$g =~ s/([^-\w])/sprintf '.%02X', ord $1/eg;
+		$p->{'group'} = $g;
+	    }
+	}
     }
-    
+
     if ($in{'conf_new_value'}) {
 	my $editable; my $i;
-	for $i ( 0 .. $#editable_params ) {
+	foreach my $p (@$editable_params) {
+	    next unless $p->{'name'};
+
 	    # if the parameter is editable and if the is a change 
-	    next unless ($editable_params[$i]->{'name'} eq   $in{'conf_parameter_name'});
-	    if ($editable_params[$i]->{'edit'} ne '1'){
-		&Log::do_log ('err','Ignoring change of parameter %s (value %s) because not editable', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+	    next unless $p->{'name'} eq $in{'conf_parameter_name'};
+	    unless ($p->{'edit'} and $p->{'edit'} eq '1') {
+		Log::do_log('err',
+		    'Ignoring change of parameter %s (value %s) because not editable',
+		    $in{'conf_parameter_name'}, $in{'conf_new_value'}
+		);
 		last;
 	    }
-	    if ($in{'conf_new_value'} eq $editable_params[$i]->{'current_value'} ){
-		&Log::do_log ('notice','Ignoring change of parameter %s (value %s) because inchanged', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+	    if ($in{'conf_new_value'} eq $p->{'current_value'}) {
+		Log::do_log('notice',
+		    'Ignoring change of parameter %s (value %s) because inchanged',
+		    $in{'conf_parameter_name'}, $in{'conf_new_value'}
+		);
 		last;
-	    }else{
-		$editable_params[$i]->{'current_value'} = $in{'conf_new_value'};
-		&Conf::set_robot_conf($robot, $in{'conf_parameter_name'}, $in{'conf_new_value'});
-		&Log::do_log ('notice','setting parameter %s to value %s', $in{'conf_parameter_name'}, $in{'conf_new_value'});
+	    } else {
+		$p->{'current_value'} = $in{'conf_new_value'};
+		Conf::set_robot_conf($robot, $in{'conf_parameter_name'},
+		    $in{'conf_new_value'});
+		Log::do_log('notice', 'setting parameter %s to value %s',
+		    $in{'conf_parameter_name'}, $in{'conf_new_value'});
 		last;
 	    }
 	}
     }
     
-    $param->{'editable_params'} = \@editable_params ; 
+    $param->{'editable_params'} = $editable_params;
     return 1;
     
 }
