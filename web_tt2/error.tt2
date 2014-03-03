@@ -48,7 +48,7 @@
   [% ELSIF u_err.msg == 'unknown_action' %][%|loc()%]Unknown action[%END%]
   [% ELSIF u_err.msg == 'syntax_errors' %][%|loc(u_err.params)%]Syntax errors with the following parameters: %1[%END%]
   [% ELSIF u_err.msg == 'authorization_reject' %][%|loc()%]Authorization rejected. Maybe you forgot to log in?[%END%]
-  [% ELSIF u_err.msg == 'unknown_list' %][%|loc(u_err.list)%]List %1 not found[%END%]
+  [% ELSIF u_err.msg == 'unknown_list' %][%|loc(u_err.list)%]%1: unknown list[%END%]
   [% ELSIF u_err.msg == 'unknown_robot' %][%|loc(u_err.new_robot)%]%1: unknown robot[%END%]
   [% ELSIF u_err.msg == 'unknown_family' %][%|loc(u_err.family)%]%1: unknown family[%END%]
   [% ELSIF u_err.msg == 'already_login' %][%|loc(u_err.email)%]You are already logged in as %1[%END%]

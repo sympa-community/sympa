@@ -2037,7 +2037,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'header_list' => {
 				'order' => 4,
 				'gettext_id' => 'List of headers to be included ito the message for signature',
-				'gettext_comment' => 'You should probably use teh default value which is the value recommended by RFC4871',
+				'gettext_comment' => 'You should probably use the default value which is the value recommended by RFC4871',
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
@@ -2048,7 +2048,7 @@ my %alias = ('reply-to' => 'reply_to',
 			'signer_domain' => {
 				'order' => 5,
 				'gettext_id' => 'DKIM "d=" tag, you should probably use the default value',
-				'gettext_comment' => ' The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST must be included in the "d=" domain',
+				'gettext_comment' => 'The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST be included in the "d=" domain',
 				'format' => '\S+',
 				'occurence' => '0-1',
 				'default' => {
