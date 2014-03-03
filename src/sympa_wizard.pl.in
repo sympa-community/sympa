@@ -230,20 +230,9 @@ sub edit_configuration {
     my $new_sympa_conf = '/tmp/sympa.conf';
     my $somechange = 0;
 
-    my $rep;
-    print "Does your console support UTF-8 (if you are not sure, hit [Enter])? [y/N] : ";
-    $rep = <STDIN>;
-    chomp $rep;
-    if (lc $rep eq 'y') {
-        my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'} || '';
-        $lang =~ s/\..*//;
-        Language::SetLang($lang);
-    } else {
-	Language::SetLang('en_US');
-    }
-
     my @new_sympa_conf;
     my $title = undef;
+
     # dynamic defaults
     my $domain = hostname();
     my $http_host = "http://$domain";
