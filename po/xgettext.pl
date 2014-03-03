@@ -297,10 +297,10 @@ foreach my $file (@ordered_files) {
 	&add_expression($expression);
     }	    
 
-	    # Sympa variables (gettext_id and gettext_unit)
+	    # Sympa variables (gettext_comment, gettext_id and gettext_unit)
 	    $line = 1; pos($_) = 0;
-	    while (/\G.*?\'(gettext_comment|gettext_id|gettext_unit)\'\s*=>\s*\"([^\"]+)\"/sg) {
-		my $str = $2;
+	    while (/\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\"([^\"]+)\"/sg) {
+		my $str = $3;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 		&add_expression({'expression' => $str,
 				 'filename' => $filename,
@@ -308,8 +308,8 @@ foreach my $file (@ordered_files) {
 	    }
 
 	    $line = 1; pos($_) = 0;
-	    while (/\G.*?\'(gettext_comment|gettext_id|gettext_unit)\'\s*=>\s*\'([^\']+)\'/sg) {
-		my $str = $2;
+	    while (/\G.*?(\'?)(gettext_comment|gettext_id|gettext_unit)\1\s*=>\s*\'([^\']+)\'/sg) {
+		my $str = $3;
 		$line += ( () = ($& =~ /\n/g) ); # cryptocontext!
 		&add_expression({'expression' => $str,
 				 'filename' => $filename,
