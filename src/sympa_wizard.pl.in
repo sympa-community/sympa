@@ -176,26 +176,41 @@ sub create_configuration {
         }
 
         next unless $param->{'file'};
-        next unless defined $param->{'default'} or defined $param->{'sample'};
+        ##next unless defined $param->{'default'} or defined $param->{'sample'};
 
         if ($title) {
             printf NEWF "###\\\\\\\\ %s ////###\n\n", $title;
             undef $title;
         }
 
-        print NEWF tools::wrap_text(
-	    Language::gettext($param->{'gettext_id'}), '## ', '## '
-	    ) if $param->{'gettext_id'};
+        printf NEWF "## %s\n", $param->{'name'};
+
+        if ($param->{'gettext_id'}) {
+            print NEWF tools::wrap_text(
+	        Language::gettext($param->{'gettext_id'}), '## ', '## '
+	    );
+        }
 
         print NEWF tools::wrap_text(
 	    Language::gettext($param->{'gettext_comment'}), '## ', '## '
 	    ) if $param->{'gettext_comment'};
 
         if (defined $param->{'sample'}) {
-            printf NEWF "#%s\t%s\n\n", $param->{'name'}, $param->{'sample'};
-        } elsif (defined $param->{'default'}) {
-            printf NEWF "%s\t%s\n\n", $param->{'name'}, $param->{'default'};
+            printf NEWF '## ' . Language::gettext("Example: %s\t%s") . "\n",
+		$param->{'name'}, $param->{'sample'};
+	}
+
+        if (defined $param->{'default'}) {
+            printf NEWF "#%s\t%s\n", $param->{'name'}, $param->{'default'};
+        } elsif ($param->{'optional'}) {
+            printf NEWF "#%s\t\n", $param->{'name'};
+        } else {
+            printf NEWF
+                '#' .
+                Language::gettext("%s\t(You must define this parameter)") .
+                "\n", $param->{'name'};
         }
+        print NEWF "\n";
     }
 
     close NEWF;
