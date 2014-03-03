@@ -64,6 +64,17 @@ install-exec-hook:
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/familyqueue
 	chmod 4755 $(DESTDIR)$(libexecdir)/familyqueue
 
+if SMRSH
+	@echo 'Installing symbolic links for Sendmail smrsh'
+	install -d -m755 $(DESTDIR)$(smrshdir)
+	-rm -f $(DESTDIR)$(smrshdir)/queue
+	$(LN_S) $(libexecdir)/queue $(DESTDIR)$(smrshdir)/queue
+	-rm -f $(DESTDIR)$(smrshdir)/bouncequeue
+	$(LN_S) $(libexecdir)/bouncequeue $(DESTDIR)$(smrshdir)/bouncequeue
+	-rm -f $(DESTDIR)$(smrshdir)/familyqueue
+	$(LN_S) $(libexecdir)/familyqueue $(DESTDIR)$(smrshdir)/familyqueue
+endif
+
 	-chown root $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper
 	chmod 4750 $(DESTDIR)$(libexecdir)/sympa_newaliases-wrapper

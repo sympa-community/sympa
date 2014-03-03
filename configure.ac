@@ -48,6 +48,7 @@ AC_ARG_ENABLE(
 if test "$fhs" = "yes"; then
     # only define custom variables
     initdir=$sysconfdir/rc.d/init.d
+    smrshdir=$sysconfdir/smrsh
     piddir=$localstatedir/run/sympa
     lockdir=$localstatedir/lock/subsys
     modulesdir=$datadir/sympa/lib
@@ -80,6 +81,7 @@ else
 
     # define custom variables
     initdir=/etc/rc.d/init.d
+    smrshdir=/etc/smrsh
     piddir=$prefix
     lockdir=$localstatedir/lock/subsys
     modulesdir=$prefix/bin
@@ -98,6 +100,7 @@ fi
  
 # substitute custom variables
 AC_SUBST(initdir)
+AC_SUBST(smrshdir)
 AC_SUBST(piddir)
 AC_SUBST(lockdir)
 AC_SUBST(modulesdir)
@@ -275,6 +278,16 @@ AC_ARG_WITH(
     ),
     [initdir="$withval"]
 )
+
+AC_ARG_WITH(
+    smrshdir,
+    AS_HELP_STRING(
+	[--with-smrshdir=DIR],
+	[install symbolic links for Sendmail smrsh @<:@SYSCONFDIR/smrsh@:>@]
+    ),
+    [smrshdir="$withval"]
+)
+AM_CONDITIONAL(SMRSH, [test "x$smrshdir" != "x" && test "x$smrshdir" != "xno"])
 
 AC_ARG_WITH(
     lockdir,
