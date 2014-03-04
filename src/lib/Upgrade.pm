@@ -960,6 +960,115 @@ sub upgrade {
 	}
     }
 
+    # Create HTML view of pending messages
+    if (tools::lower_version($previous_version, '6.2b.1')) {
+        my $spooldir  = $Conf::Conf{'queuemod'};
+        my $viewmail_dir = $Conf::Conf{'viewmail_dir'};
+        my @ignored   = ();
+        my @performed = ();
+        my $umask = umask oct($Conf::Conf{'umask'});
+
+        # Create viewmail directory if necessary
+        unless (-d $viewmail_dir) {
+            tools::mkdir_all($viewmail_dir, 0755 & ~oct($Conf::Conf{'umask'}));
+            tools::set_file_rights(
+		'file' => $viewmail_dir,
+		'user' => Sympa::Constants::USER(),
+		'group' => Sympa::Constants::GROUP(),
+	    );
+        }
+        unless (-d "$viewmail_dir/mod") {
+            mkdir "$viewmail_dir/mod";
+            tools::set_file_rights(
+                'file' => "$viewmail_dir/mod",
+                'user' => Sympa::Constants::USER(),
+                'group' => Sympa::Constants::GROUP(),
+            );
+        }
+
+        unless (opendir DIR, $spooldir) {
+            croak sprintf("Can't open dir %s: %s", $spooldir, "$!");
+            ## No return.
+        }
+        my @qfile = grep !/^\./, readdir DIR;
+        closedir DIR;
+
+        foreach my $filename (sort @qfile) {
+            unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/) {
+                push @ignored, $filename;
+                next;
+            }
+            my $listname = lc $1;
+            my $robot_id = lc($2 || $Conf::Conf{'domain'});
+            my $modkey   = $3;
+            my $date     = (stat($spooldir . '/' . $filename))[9];
+
+            # check if robot exists
+            unless (Conf::valid_robot($robot_id)) {
+                push @ignored, $filename;
+                next;
+            }
+            my $list = List->new($listname, $robot_id);
+            unless ($list) {
+                push @ignored, $filename;
+                next;
+            }
+            my $message = Message->new({'file' => "$spooldir/$filename"});
+            unless ($message) {
+                push @ignored, $filename;
+                next;
+            }
+
+            my $list_viewmail_dir =
+                $viewmail_dir . '/mod/' . $list->get_list_id();
+            unless (-d $list_viewmail_dir) {
+                mkdir $list_viewmail_dir;
+                tools::set_file_rights(
+                    'file'  => $list_viewmail_dir,
+                    'user'  => Sympa::Constants::USER(),
+                    'group' => Sympa::Constants::GROUP(),
+                );
+            }
+
+            my $destination_dir =
+                $viewmail_dir . '/mod/' . $list->get_list_id() . '/' . $modkey;
+            if (-e destination_dir) {
+                push @ignored, $filename;
+                next;
+            }
+
+            Archive::convert_single_message(
+                $list, $message,
+                'destination_dir' => $destination_dir,
+                'attachement_url' =>
+                    join('/', '..', 'viewmod', $listname, $modkey),
+            );
+            FIle::Find::find(
+                sub {
+                    tools::set_file_rights(
+                        'file'  => $File::Find::name,
+                        'user'  => Sympa::Constants::USER(),
+                        'group' => Sympa::Constants::GROUP(),
+                    );
+                },
+                $destination_dir
+            );
+
+            push @performed, $filename;
+        }
+
+        # Restore umask
+        umask $umask;
+
+        Log::do_log('info', 'Upgrade process for spool %s: ignored files %s',
+            $spooldir, join(', ', @ignored))
+            if @ignored;
+        Log::do_log('info',
+            'Upgrade process for spool %s: performed files %s',
+            $spooldir, join(', ', @performed))
+            if @performed;
+    }
+
     return 1;
 }
 
