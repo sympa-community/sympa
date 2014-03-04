@@ -27,6 +27,7 @@ package Upgrade;
 use strict;
 
 use Carp;
+use File::Path;
 use POSIX qw(strftime);
 
 use Conf;
@@ -966,24 +967,19 @@ sub upgrade {
         my $viewmail_dir = $Conf::Conf{'viewmail_dir'};
         my @ignored   = ();
         my @performed = ();
+
         my $umask = umask oct($Conf::Conf{'umask'});
 
-        # Create viewmail directory if necessary
-        unless (-d $viewmail_dir) {
-            tools::mkdir_all($viewmail_dir, 0755 & ~oct($Conf::Conf{'umask'}));
-            tools::set_file_rights(
-		'file' => $viewmail_dir,
-		'user' => Sympa::Constants::USER(),
-		'group' => Sympa::Constants::GROUP(),
-	    );
-        }
+        # Create directory for HTML view if necessary
         unless (-d "$viewmail_dir/mod") {
-            mkdir "$viewmail_dir/mod";
-            tools::set_file_rights(
-                'file' => "$viewmail_dir/mod",
-                'user' => Sympa::Constants::USER(),
-                'group' => Sympa::Constants::GROUP(),
-            );
+            my @dirs = File::Path::mkpath("$viewmail_dir/mod");
+            foreach my $dir (@dirs) {
+                tools::set_file_rights(
+                    'file' => $dir,
+                    'user' => Sympa::Constants::USER(),
+                    'group' => Sympa::Constants::GROUP(),
+                );
+            }
         }
 
         unless (opendir DIR, $spooldir) {
@@ -1019,22 +1015,20 @@ sub upgrade {
                 next;
             }
 
-            my $list_viewmail_dir =
-                $viewmail_dir . '/mod/' . $list->get_list_id();
-            unless (-d $list_viewmail_dir) {
-                mkdir $list_viewmail_dir;
-                tools::set_file_rights(
-                    'file'  => $list_viewmail_dir,
-                    'user'  => Sympa::Constants::USER(),
-                    'group' => Sympa::Constants::GROUP(),
-                );
-            }
-
             my $destination_dir =
                 $viewmail_dir . '/mod/' . $list->get_list_id() . '/' . $modkey;
-            if (-e destination_dir) {
+            if (-e $destination_dir) {
                 push @ignored, $filename;
                 next;
+            } else {
+                my @dirs = File::Path::mkpath($destination_dir);
+                foreach my $dir (@dirs) {
+                    tools::set_file_rights(
+                        'file' => $dir,
+                        'user' => Sympa::Constants::USER(),
+                        'group' => Sympa::Constants::GROUP(),
+                    );
+                }
             }
 
             Archive::convert_single_message(
