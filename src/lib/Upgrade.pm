@@ -990,7 +990,9 @@ sub upgrade {
         closedir DIR;
 
         foreach my $filename (sort @qfile) {
-            unless ($filename =~ /^([^@]*)\@([^@]*)\_(.*)$/) {
+            ## For compatibility concern:
+            ## <name>@<robot>_<key> and <name>_<key> are possible.
+            unless ($filename =~ /^([^@]*)(?:\@([^@]*))?\_(.*)$/) {
                 push @ignored, $filename;
                 next;
             }
