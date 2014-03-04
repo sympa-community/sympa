@@ -231,6 +231,8 @@ sub edit_configuration {
             $param->{'default'} = hostname();
         } elsif ($param->{'name'} eq 'wwsympa_url') {
             $param->{'default'} = sprintf 'http://%s/sympa', hostname();
+        } elsif ($param->{'name'} eq 'listmaster') {
+            $param->{'default'} = sprintf 'your_email_address@%s', hostname();
         }
     }
 
