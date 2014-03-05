@@ -155,9 +155,15 @@ sub mail_file {
 
     }else { # or not
 	$message_as_string .= $data->{'body'};
-       }
-       
-    ## ## Does the message include headers ?
+    }
+
+    # Does the message include headers ?
+    if ($data->{'headers'}) {
+        foreach my $field (keys %{$data->{'headers'}}) {
+            $field =~ tr/A-Z/a-z/;
+            $header_ok{$field} = 1;
+        }
+    }
     if ($header_possible) {
 	foreach my $line (split(/\n/,$message_as_string)) {
 	    last if ($line=~/^\s*$/);  
