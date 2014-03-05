@@ -1039,7 +1039,7 @@ sub upgrade {
                 'attachement_url' =>
                     join('/', '..', 'viewmod', $listname, $modkey),
             );
-            FIle::Find::find(
+            File::Find::find(
                 sub {
                     tools::set_file_rights(
                         'file'  => $File::Find::name,
