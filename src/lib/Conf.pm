@@ -1720,7 +1720,7 @@ sub _detect_missing_mandatory_parameters {
     $param->{'file_to_check'} =~ /^(\/.*\/)?([^\/]+)$/;
     my $config_file_name = $2;
     foreach my $parameter (keys %params) {
-        next if (defined $params{$parameter}->{'file'} && $params{$parameter}->{'file'} ne $config_file_name);
+##        next if (defined $params{$parameter}->{'file'} && $params{$parameter}->{'file'} ne $config_file_name);
         unless (defined $param->{'config_hash'}{$parameter} or defined $params{$parameter}->{'default'} or defined $params{$parameter}->{'optional'}) {
             printf STDERR "Conf::_detect_missing_mandatory_parameters(): Required field not found in sympa.conf: %s\n", $parameter;
             $number_of_errors++;
