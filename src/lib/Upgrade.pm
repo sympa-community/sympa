@@ -26,7 +26,7 @@ package Upgrade;
 
 use strict;
 
-use Carp;
+use Carp qw(croak);
 use File::Path;
 use POSIX qw(strftime);
 
@@ -87,6 +87,15 @@ sub upgrade {
 	return 1;
     }
 
+    ## Check database connectivity and probe database
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+        Log::do_log('err',
+            'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
+            $Conf::Conf{'db_name'}
+        );
+        return undef;
+    }
+
     ## Always update config.bin files while upgrading
     &Conf::delete_binaries();
 
@@ -117,7 +126,7 @@ sub upgrade {
 	&Log::do_log('notice','Rebuilding web archives...');
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
-
+	    # FIXME: line below will always success
 	    next unless (defined $list->{'admin'}{'web_archive'});
 	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 	    
@@ -290,28 +299,18 @@ sub upgrade {
 			 'included_subscriber' => 'subscriber_table',
 			 'subscribed_admin' => 'admin_table',
 			 'included_admin' => 'admin_table');
-	    
-    my $dbh = &SDM::db_get_handler();
 
 	    foreach my $field (keys %check) {
-
 		my $statement;
-				
-		## Query the Database
-		$statement = sprintf "SELECT max(%s) FROM %s", $field, $check{$field};
-		
 		my $sth;
-		
-		unless ($sth = $dbh->prepare($statement)) {
-		    &Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
+
+		$sth = SMD::do_query(q{SELECT max(%s) FROM %s},
+		    $field, $check{$field});
+		unless ($sth) {
+		    Log::do_log('err', 'Unable to prepare SQL statement');
 		    return undef;
 		}
-		
-		unless ($sth->execute) {
-		    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
-		    return undef;
-		}
-		
+
 		my $max = $sth->fetchrow();
 		$sth->finish();		
 
@@ -320,40 +319,51 @@ sub upgrade {
 		if ($max > 1) {
 		    ## 1 to 0
 		    &Log::do_log('notice', 'Fixing DB field %s ; turning 1 to 0...', $field);
-		    
-		    my $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 0, $field, 1;
 		    my $rows;
-		    unless ($rows = $dbh->do($statement)) {
-			&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    $sth = SDM::do_query(
+			q{UPDATE %s SET %s = %d WHERE %s = %d},
+			$check{$field}, $field, 0, $field, 1
+		    );
+		    unless ($sth) {
+			Log::do_log('err', 'Unable to execute SQL statement');
 			return undef;
 		    }
-		    
+		    $rows = $sth->rows;
 		    &Log::do_log('notice', 'Updated %d rows', $rows);
 
 		    ## 2 to 1
 		    &Log::do_log('notice', 'Fixing DB field %s ; turning 2 to 1...', $field);
 		    
-		    $statement = sprintf "UPDATE %s SET %s=%d WHERE (%s=%d)", $check{$field}, $field, 1, $field, 2;
-
-		    unless ($rows = $dbh->do($statement)) {
-			&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+		    $sth = SDM::do_query(
+			q{UPDATE %s SET %s = %d WHERE %s = %d},
+			$check{$field}, $field, 1, $field, 2
+		    );
+		    unless ($sth) {
+			Log::do_log('err','Unable to execute SQL statement');
 			return undef;
 		    }
-		    
-		    &Log::do_log('notice', 'Updated %d rows', $rows);		    
-
+		    $rows = $sth->rows;
+		    &Log::do_log('notice', 'Updated %d rows', $rows);
 		}
 
 		## Set 'subscribed' data field to '1' is none of 'subscribed' and 'included' is set		
-		$statement = "UPDATE subscriber_table SET subscribed_subscriber=1 WHERE ((included_subscriber IS NULL OR included_subscriber!=1) AND (subscribed_subscriber IS NULL OR subscribed_subscriber!=1))";
-		
-		&Log::do_log('notice','Updating subscribed field of the subscriber table...');
-		my $rows = $dbh->do($statement);
-		unless (defined $rows) {
-		    &Log::fatal_err("Unable to execute SQL statement %s : %s", $statement, $dbh->errstr);	    
+		Log::do_log('notice',
+		    'Updating subscribed field of the subscriber table...');
+		my $rows;
+		$sth = SDM::do_query(
+		    q{UPDATE subscriber_table
+		      SET subscribed_subscriber = 1
+		      WHERE (included_subscriber IS NULL OR
+			     included_subscriber <> 1) AND
+			    (subscribed_subscriber IS NULL OR
+			     subscribed_subscriber <> 1)}
+		);
+		unless ($sth) {
+		    Log::do_log('err', 'Unable to execute SQL statement');
+		    return undef;
 		}
+		$rows = $sth->rows;
 		&Log::do_log('notice','%d rows have been updated', $rows);
-				
 	    }
 	}
     }
@@ -407,20 +417,25 @@ sub upgrade {
 	foreach my $list ( @$all_lists ) {
 
 	    if (defined $list->{'admin'}{'include_list'}) {
-	    
-		foreach my $index (0..$#{$list->{'admin'}{'include_list'}}) {
-		    my $incl = $list->{'admin'}{'include_list'}[$index];
-		    my $incl_list = new List ($incl);
-		    
-		    if (defined $incl_list &
-			$incl_list->{'domain'} ne $list->{'domain'}) {
-			&Log::do_log('notice','Update config file of list %s, including list %s', $list->get_list_id(), $incl_list->get_list_id());
-			
-			$list->{'admin'}{'include_list'}[$index] = $incl_list->get_list_id();
+		my $include_lists = $list->{'admin'}{'include_list'};
+		my $changed = 0;
+		foreach my $index (0..$#{$include_lists}) {
+		    my $incl = $include_lists->[$index];
+		    my $incl_list = List->new($incl);
 
-			$list->save_config('listmaster@'.$list->{'domain'});
+		    if (defined $incl_list and
+			$incl_list->{'domain'} ne $list->{'domain'}) {
+			Log::do_log('notice',
+			    'Update config file of list %s, including list %s',
+			    $list->get_list_id(), $incl_list->get_list_id());
+			$include_lists->[$index] = $incl_list->get_list_id();
+			$changed = 1;
 		    }
 		}
+		if ($changed) {
+		    $list->{'admin'}{'include_list'} = $include_lists;
+		    $list->save_config('listmaster@'.$list->{'domain'});
+		}	
 	    }
 	}	
     }
@@ -449,7 +464,7 @@ sub upgrade {
 	&Log::do_log('notice','Rebuilding web archives...');
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
-
+	    # FIXME: next line always success
 	    next unless (defined $list->{'admin'}{'web_archive'});
 	    my $file = $Conf::Conf{'queueoutgoing'}.'/.rebuild.'.$list->get_list_id();
 	    
@@ -1190,20 +1205,15 @@ sub md5_encode_password {
 
     &Log::do_log('notice', 'Upgrade::md5_encode_password() recoding password using md5 fingerprint');
     
-    unless (&List::check_db_connect()) {
+    unless (SDM::check_db_connect('just_try')) {
 	return undef;
     }
 
-    my $dbh = &SDM::db_get_handler();
-
-    my $sth;
-    unless ($sth = $dbh->prepare("SELECT email_user,password_user from user_table")) {
-	&Log::do_log('err','Unable to prepare SQL statement : %s', $dbh->errstr);
-	return undef;
-    }
-
-    unless ($sth->execute) {
-	&Log::do_log('err','Unable to execute SQL statement : %s', $dbh->errstr);
+    my $sth = SDM::do_query(
+	q{SELECT email_user, password_user from user_table}
+    );
+    unless ($sth) {
+	Log::do_log('err','Unable to prepare SQL statement');
 	return undef;
     }
 
@@ -1231,12 +1241,14 @@ sub md5_encode_password {
 	$total++;
 
 	## Updating Db
-	my $escaped_email =  $user->{'email_user'};
-	$escaped_email =~ s/\'/''/g;
-	my $statement = sprintf "UPDATE user_table SET password_user='%s' WHERE (email_user='%s')", &Auth::password_fingerprint($clear_password), $escaped_email ;
-	
-	unless ($dbh->do($statement)) {
-	    &Log::do_log('err','Unable to execute SQL statement "%s" : %s', $statement, $dbh->errstr);
+	unless (SDM::do_query(
+	    q{UPDATE user_table
+	      SET password_user = %s
+	      WHERE email_user = %s},
+	    SDM::quote(Auth::password_fingerprint($clear_password)),
+	    SDM::quote($user->{'email_user'})
+        )) {
+	    Log::do_log('err', 'Unable to execute SQL statement');
 	    return undef;
 	}
     }

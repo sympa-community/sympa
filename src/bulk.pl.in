@@ -232,9 +232,10 @@ while (!$end) {
 		
 		## disconnect from database before fork
 		## to prevent DB handlers to be shared by different processes
-		my $dbh = &SDM::db_get_handler();
-		$dbh->disconnect; # when loading conf in database disconnect because of sharing dbh may crash bulk.pl
-		
+		# when loading conf in database disconnect because of sharing
+		# dbh may crash bulk.pl
+		SDM::db_disconnect();
+
 		if($Conf::Conf{'bulk_max_count'} > 1) {
 		    &Log::do_log('info','Important workload: %s packets to process. Creating %s child bulks to increase sending rate.', $r_packets, $Conf::Conf{'bulk_max_count'}-($#remaining_children+1));
 		    for my $process_count(1..$Conf::Conf{'bulk_max_count'}-($#remaining_children+1)){

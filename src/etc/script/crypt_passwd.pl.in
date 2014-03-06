@@ -23,34 +23,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict;
 use lib '--modulesdir--';
-use wwslib;
-use Sympa::Constants;
 
 unless (require Crypt::CipherSaber) {
     die "Crypt::CipherSaber not installed ; cannot crypt passwords";
 }
 
 require tools;
-
 use List;
 use SDM;
 use Log;
 
 ## Load sympa config
-&Conf::load(Sympa::Constants::CONFIG) || die 'config_error';
+Conf::load(Sympa::Constants::CONFIG) or die 'config_error';
 
 chdir $Conf::Conf{'home'};
 
-&SDM::db_connect() || die "Can't connect to database";
-
-my $dbh = &SDM::db_get_handler();
+SDM::check_db_connect('just_try') or die "Can't connect to database";
 
 print "Searching uncrypted passwords\n";
 
-my $sth =  $dbh->prepare("SELECT email_user, password_user FROM user_table WHERE (password_user not like 'crypt.%')") || die "Can't prepare SQL statement";
-
-$sth->execute || die "Unable to execute SQL statement";
+my $sth = SDM::do_query(
+    q{SELECT email_user, password_user
+      FROM user_table
+      WHERE password_user NOT LIKE 'crypt.%'}
+) or die 'Unable to execute SQL statement';
 
 my $user;
 
@@ -65,9 +63,12 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
     printf " => %s", $crypted_password;
 
-    my $statement = sprintf "UPDATE user_table SET password_user=%s WHERE (email_user=%s)", $dbh->quote($crypted_password), $dbh->quote($user->{'email_user'});
-    my $sth2 =  $dbh->prepare($statement) || die "Can't prepare SQL statement";
-    $sth2->execute || die "Unable to execute SQL statement";
+    my $sth2 = SDM::do_prepared_query(
+        q{UPDATE user_table
+          SET password_user = ?
+          WHERE email_user = ?},
+        $crypted_password, $user->{'email_user'}
+    ) or die "Unable to execute SQL statement";
     $sth2->finish();
 
     $count++;
@@ -76,6 +77,6 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 $sth->finish();
 
 ## Disconnect from Database
-SDM::db_disconnect if ($SDM::dbh);
+SDM::db_disconnect();
 
-printf "Crypted %d passwords\n", $count;
+printf "Encrypted %d passwords\n", $count;
