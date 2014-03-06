@@ -391,8 +391,6 @@ sub db_log_del {
 
 # Scan log_table with appropriate select 
 sub get_first_db_log {
-    my $dbh = &SDM::db_get_handler();
-
     my $select = shift;
 
     my %action_type = ('message' => ['reject','distribute','arc_delete','arc_download',

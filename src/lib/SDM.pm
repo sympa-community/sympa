@@ -67,8 +67,14 @@ sub do_query {
     my @params = @_;
     my $sth;
 
-    unless ($sth = $db_source->do_query($query,@params)) {
-	&Log::do_log('err','SQL query failed to execute in the Sympa database');
+    if (check_db_connect()) {
+	unless ($sth = $db_source->do_query($query, @params)) {
+	    Log::do_log('err',
+		'SQL query failed to execute in the Sympa database');
+	    return undef;
+	}
+    } else {
+	Log::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
 
@@ -80,39 +86,52 @@ sub do_prepared_query {
     my @params = @_;
     my $sth;
 
-    unless ($sth = $db_source->do_prepared_query($query,@params)) {
-	&Log::do_log('err','SQL query failed to execute in the Sympa database');
+    if (check_db_connect()) {
+	unless ($sth = $db_source->do_prepared_query($query, @params)) {
+	    Log::do_log('err',
+		'SQL query failed to execute in the Sympa database');
+	    return undef;
+	}
+    } else {
+	Log::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
-
+    
     return $sth;
 }
 
 ## Get database handler
+## Note: if database connection is not available, this function returns
+## immediately.
+##
+## NOT RECOMMENDED.  Should not access to database handler.
 sub db_get_handler {
-    &Log::do_log('debug3', 'Returning handle to sympa database');
+    Log::do_log('debug3', '()');
 
-    if(&check_db_connect()) {
+    if (check_db_connect('just_try')) {
 	return $db_source->{'dbh'};
-    }else {
-	&Log::do_log('err', 'Unable to get a handle to Sympa database');
+    } else {
+	Log::do_log('err', 'Unable to get a handle to Sympa database');
 	return undef;
     }
 }
 
 ## Just check if DB connection is ok
+## Possible option is 'just_try', won't try to reconnect if database
+## connection is not available.
 sub check_db_connect {
+    my @options = @_;
     
-    #&Log::do_log('debug2', 'Checking connection to the Sympa database');
     ## Is the Database defined
     unless (&Conf::get_robot_conf('*','db_name')) {
-	&Log::do_log('err', 'No db_name defined in configuration file');
+	Log::do_log('err', 'No db_name defined in configuration file');
 	return undef;
     }
     
-    unless ($db_source->{'dbh'} && $db_source->{'dbh'}->ping()) {
-	unless (&connect_sympa_database('just_try')) {
-	    &Log::do_log('err', 'Failed to connect to database');	   
+    unless ($db_source and $db_source->{'dbh'} and
+        $db_source->{'dbh'}->ping()) {
+	unless (connect_sympa_database(@options)) {
+	    Log::do_log('err', 'Failed to connect to database');	   
 	    return undef;
 	}
     }
@@ -122,9 +141,8 @@ sub check_db_connect {
 
 ## Connect to Database
 sub connect_sympa_database {
-    my $option = shift;
-
-    &Log::do_log('debug', 'Connecting to Sympa database');
+    Log::do_log('debug2', '(%s)', @_);
+    my $option = shift || '';
 
     ## We keep trying to connect if this is the first attempt
     ## Unless in a web context, because we can't afford long response time on the web interface
@@ -161,10 +179,15 @@ sub db_disconnect {
 }
 
 sub probe_db {
-    &Log::do_log('debug3', 'Checking database structure');    
+    Log::do_log('debug3', 'Checking database structure');    
     my (%checked, $table);
     
-    my $dbh = &db_get_handler();
+    unless (check_db_connect()) {
+        Log::do_log('err',
+            'Could not check the database structure.  Make sure that database connection is available'
+        );
+        return undef;
+    }
 
     ## Database structure
     ## Report changes to listmaster
@@ -257,7 +280,9 @@ sub probe_db {
     $List::use_db = 1;
 
     ## Notify listmaster
-    &List::send_notify_to_listmaster('db_struct_updated',  &Conf::get_robot_conf('*','domain'), {'report' => \@report}) if ($#report >= 0);
+    List::send_notify_to_listmaster('db_struct_updated',
+        Conf::get_robot_conf('*','domain'), {'report' => \@report})
+        if @report;
 
     return 1;
 }
