@@ -24,6 +24,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 use lib '--modulesdir--';
 
 unless (require Crypt::CipherSaber) {
@@ -44,7 +45,7 @@ SDM::check_db_connect('just_try') or die "Can't connect to database";
 
 print "Searching uncrypted passwords\n";
 
-my $sth = SDM::do_query(
+my $sth = SDM::do_prepared_query( # don't use do_query() which uses sprintf
     q{SELECT email_user, password_user
       FROM user_table
       WHERE password_user NOT LIKE 'crypt.%'}
