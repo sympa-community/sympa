@@ -761,8 +761,8 @@ while (!$end) {
  
 	    my $adr_count;
 	    ## Bouncing addresses
-		# Voir si pas mettre un test conditionnel sur le status code pour detecter les dsn positifs et ne pas fausser les statistiques de l'abonné.
-		# Peut être possibilité de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
+		# Voir si pas mettre un test conditionnel sur le status code pour detecter les dsn positifs et ne pas fausser les statistiques de l'abonnÃ©.
+		# Peut Ãªtre possibilitÃ© de lancer la maj des tables pour chaque recipient ici a condition d'avoir approfondi le parsing en amont.
 	    while (my ($rcpt, $status) = each %hash) {
 		$adr_count++;
 		my $bouncefor = $who;
