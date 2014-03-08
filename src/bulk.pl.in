@@ -344,8 +344,11 @@ while (!$end) {
 		    $return_path = $Conf::Conf{'bounce_email_prefix'}.'+'.$escaped_rcpt.'=='.$listname.'=='.$notification_id.'@'.$robot;
 		    $entity->head->replace('Disposition-Notification-To',$return_path) if ($bulk->{'tracking'} eq 'mdn') ;
 		    if (($message->{'protected'})||($message->{'smime_crypted'})){
-			my $msg_body =$messageasstring_init; $msg_body =~ s/^.*\n\n//;      # remove headers
-			$messageasstring_init = $entity->head->as_string. "\n" . $msg_body; # concat headers from entity with original body
+			my ($dummy, $msg_body) =
+			    split(/\r?\n\r?\n/, $messageasstring_init, 2);
+			## concat headers from entity with original body
+			$messageasstring_init =
+			    $entity->head->as_string. "\n" . $msg_body;
 		    }else{
 			$messageasstring_init = $entity->as_string;
 		    }
