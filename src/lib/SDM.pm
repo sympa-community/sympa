@@ -262,8 +262,14 @@ sub probe_db {
 	foreach my $table (keys %autoincrement) {
 	    &Log::do_log('notice',"Checking autoincrement for table $table, field $autoincrement{$table}");
 	    unless ($db_source->is_autoinc({'table'=>$table,'field'=>$autoincrement{$table}})){
-		if ($db_source->set_autoinc({'table'=>$table,'field'=>$autoincrement{$table},
-		'field_type'=>$db_struct{'mysql'}{$table}{'fields'}{$autoincrement{$table}}{'struct'}})){
+		if ($db_source->set_autoinc(
+		    {   'table'      => $table,
+			'field'      => $autoincrement{$table},
+			'field_type' =>
+			    $db_struct{ $Conf::Conf{'db_type'} }->{$table}
+			    ->{ $autoincrement{$table} }
+		    }
+		)) {
 		    &Log::do_log('notice',"Setting table $table field $autoincrement{$table} as autoincrement");
 		}else{
 		    &Log::do_log('err',"Could not set table $table field $autoincrement{$table} as autoincrement");
