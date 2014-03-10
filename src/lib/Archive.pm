@@ -301,7 +301,7 @@ sub clean_archived_message{
     my $output = shift;
 
     my $msg;
-    unless ($msg = Message->new($input, 1)) {
+    unless ($msg = Message->new({ 'file' => $input, 'noxsympato' => 1 })) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);
         return undef;
