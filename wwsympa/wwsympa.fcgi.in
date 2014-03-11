@@ -5740,10 +5740,11 @@ sub unsubscribe {
 sub do_edit_config {
     my $editable_params = tools::dup_var(\@confdef::params);
 
-    get_server_details;
+    get_server_details();
 
     unless ($param->{'main_robot'}) {
-	&report::reject_report_web('auth','super lismaster feature only','{}',$param->{'action'});
+	report::reject_report_web('auth', 'super lismaster feature only',
+	    {}, $param->{'action'});
 	&wwslog('info','check_authz: access denied in edit_config for %s because not super listmaster',  $param->{'user'}{'email'});
     }
 
@@ -7111,7 +7112,7 @@ sub do_skinsedit {
      }     
      
     &wwslog('info', 'do_reject(%s)', $in{'id'});
-     my ($msg, $file);
+    my $file;
 
      $param->{'blacklist_added'} = 0;
      $param->{'blacklist_ignored'} = 0;
@@ -7139,7 +7140,8 @@ sub do_skinsedit {
 	    if ($rejected_sender) {
 		 unless ($in{'message_template'} eq 'reject_quiet') {
 		     my %context;
-		     $context{'subject'} = &tools::decode_header($msg, 'Subject');
+		    $context{'subject'} =
+			tools::decode_header($message, 'Subject');
 		     $context{'rejected_by'} = $param->{'user'}{'email'};
 		     $context{'template_used'} = $in{'message_template'};
 		    unless ($list->send_file($in{'message_template'}, #FIXME
