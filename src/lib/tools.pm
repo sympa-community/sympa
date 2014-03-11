@@ -39,7 +39,7 @@ use Sys::Hostname;
 use Text::LineFold;
 use Time::Local;
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
-use if ($] <= 5.016), qw(feature fc);
+use if (5.016 <= $]), qw(feature fc);
 
 use Conf;
 use Language qw(gettext_strftime);
