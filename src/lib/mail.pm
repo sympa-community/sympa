@@ -359,12 +359,10 @@ sub mail_message {
     my $dkim  =  $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
 
-    my $merge = $list->{'admin'}{'merge_feature'};
-
     my $host = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
 
-    unless (defined $message && ref($message) eq 'Message') {
+    unless (ref $message and $message->isa('Message')) {
 	&Log::do_log('err', 'Invalid message parameter');
 	return undef;	
     }
@@ -383,30 +381,11 @@ sub mail_message {
     ## Extract body from original file to preserve signature
     my ($msg_body, $msg_header);
     $msg_header = $message->{'msg'}->head;
-    if (!($message->{'protected'})) {
-	$msg_body = $message->{'msg'}->body_as_string;
-    }elsif ($message->{'smime_crypted'}) {
-	$msg_body = ${$message->{'msg_as_string'}}; # why is object message msg_as_string contain a body _as_string ? wrong name for this mesage property	
-    }else{
-	## Get body from original file
-	unless (open MSG, $message->{'filename'}) {
-	    &Log::do_log ('notice',"mail::mail_message : Unable to open %s:%s",$message->{'filename'},$!);
-	    return undef;
-	}
-	my $in_header = 1 ;
-	while (<MSG>) {
-	    if ( !$in_header)  { 
-		$msg_body .= $_;       
-	    }else {
-		$in_header = 0 if (/^$/); 
-	    }
-	}
-	close (MSG);
-    }
-    $message->{'body_as_string'} = $msg_body ;
+    ##FIXME: message may be encrypted.
+    my ($dummy, $msg_body) =
+	split /\r?\n\r?\n/, $message->{'msg_as_string'}, 2;
+    $message->{'body_as_string'} = $msg_body;
 
-    $merge = 0 if ($message->{'protected'});
-    
     my %rcpt_by_dom ;
 
     my @sendto;
@@ -464,8 +443,7 @@ sub mail_message {
 	my @tab =  @sendto ; push @sendtobypacket, \@tab ;# do not replace this line by push @sendtobypacket, \@sendto !!!
     }
 
-    return $numsmtp if (&sendto('msg_header' => $msg_header, 
-				'msg_body' => $msg_body,
+    return $numsmtp if (sendto('message' => $message,
 				'from' => $from,
 				'rcpt' => \@sendtobypacket,
 				'listname' => $list->{'name'},
@@ -476,7 +454,7 @@ sub mail_message {
 				'use_bulk' => 1,
 				'verp' => $verp,
 				'dkim' => $dkim,
-				'merge' => $merge,
+				'merge' => $list->{'admin'}{'merge_feature'},
 				'tag_as_last' => $tag_as_last));
     return undef;
 }
@@ -731,16 +709,30 @@ sub sendto {
     if ($encrypt eq 'smime_crypted') {
         # encrypt message for each rcpt and send the message
 	# this MUST be moved to the bulk mailer. This way, merge will be applied after the SMIME encryption is applied ! This is a bug !
-	foreach my $unique_rcpt (@{$rcpt}) {
-	    my $email = lc(@{$unique_rcpt}[0]);
-	    if (($email !~ /@/) || ($#{@$unique_rcpt} != 0)) {
-		Log::do_log('err',"incorrect call for encrypt with incorrect number of recipient"); 
-		# internal check, if encryption is on packet should be unique and shoud contain only one rcpt 
-		return undef;
-	    }
-	    my $encrypted_msg_as_string;
-	    if ($encrypted_msg_as_string = &tools::smime_encrypt ($msg_header, $msg_body, $email)){
-		my $result = &sending('msg' => $encrypted_msg_as_string,
+	foreach my $bulk_of_rcpt (@{$rcpt}) {
+	    foreach my $email (@{$bulk_of_rcpt}) {
+		if ($email !~ /@/) {
+		    Log::do_log('err',
+			'incorrect call for encrypt with incorrect number of recipient'); 
+		    return undef;
+		}
+
+		my $encrypted_msg_as_string;
+		my $encrypted_message;
+		if (($encrypted_msg_as_string =
+		    tools::smime_encrypt($msg_header, $msg_body, $email)) and
+		    ($encrypted_message = Message->new(
+			{   'messsageasstring' => $encrypted_msg_as_string,
+			    'noxsympato' => 'noxsympato'
+			}
+		    ))
+		) {
+		    Log::do_log('err',
+			'Unable to encrypt message to list %s for receipient %s',
+			$listname, $email);
+		    return undef;
+	        }
+		unless (sending('message' => $encrypted_message,
 			 'rcpt' => $email,
 			 'from' => $from,
 			 'listname' => $listname,
@@ -748,19 +740,17 @@ sub sendto {
 			 'priority' => $priority,
 			 'delivery_date' =>  $delivery_date,
 			 'use_bulk' => $use_bulk,
-			 'tag_as_last' => $tag_as_last);
-		return $result;
-	    }else{
-		Log::do_log('err','Unable to encrypt message to list %s for receipient %s',$listname,$email);
-		return undef;
+			 'tag_as_last' => $tag_as_last)) {
+		    Log::do_log('err', 'Failed to send encrypted message');
+		    return undef;
+		}
+		$tag_as_last = 0;
 	    }
-	    $tag_as_last = 0;
 	}
     }else{
-	$msg = $msg_header->as_string . "\n" . $msg_body;   
-	if ($msg) {
-	    # my $result = &sending($msg,$rcpt,$from,$robot,'','none');
-	    my $result = &sending('msg' => $msg,
+	$message->{'msg_as_string'} =
+	    $msg_header->as_string . "\n" . $msg_body;
+	my $result = sending('message' => $message,
 				  'rcpt' => $rcpt,
 				  'from' => $from,
 				  'listname' => $listname,
@@ -772,11 +762,7 @@ sub sendto {
 				  'use_bulk' => $use_bulk,
 				  'dkim' => $dkim,
 				  'tag_as_last' => $tag_as_last);
-	    return $result;
-	}else{
-	    Log::do_log('err','Unable to get string from message to list %s',$listname);
-	    return undef;
-	}   
+	return $result;
     }
     return 1;
 }
