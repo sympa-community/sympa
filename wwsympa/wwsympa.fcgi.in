@@ -1019,6 +1019,9 @@ Log::do_log(info => "WWSympa started, process $$");
 	 &Log::do_log('notice',"Data structure seem updated, setting OFF maintenance mode");
      }
 
+    ## Generate traceback if crashed.
+    $SIG{'__DIE__'} = \&_crash_handler;
+
      ## Get params in a hash
  #    foreach ($query->param) {
  #      $in{$_} = $query->param($_);
@@ -1823,6 +1826,29 @@ sub web_db_stat_log {
 }
 
 ####################################	
+
+sub _crash_handler {
+    return if $^S;
+
+    my $msg = "$_[0]";
+    chomp $msg;
+    printf STDERR "DIED: %s\n", $msg;
+    wwslog('err', 'DIED: %s', $msg);
+    eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
+    eval { SDM::db_disconnect(); };    # unlock database
+    Sys::Syslog::closelog();           # flush log
+    Log::set_log_level(-1);            # disable log
+
+    $param->{'traceback'}     = Carp::longmess($msg);
+    $param->{'error_message'} = $msg;
+    $param->{'main_title'} ||= Conf::get_robot_conf($robot, 'title');
+    $param->{'last_action'} = $param->{'action'};
+    $param->{'action'}      = 'crash';
+    eval { send_html('crash.tt2'); };
+    print "\n\n";                      # when tt2 failed to parse
+    exit 0;
+}
+
 
  sub new_loop {
      $loop++;

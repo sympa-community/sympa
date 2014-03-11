@@ -1017,12 +1017,33 @@ sub agregate_daily_data {
     }
     return $result;
 }
+
+
+# Crash handler to dump stack trace.
+# Note: This should be moved to package providing Site singleton.
+
+INIT {
+    ## Register crash handler.  This is done during INIT phase so that
+    ## compilation errors won't be captured.
+    $SIG{'__DIE__'} = \&_crash_handler;
+}
+
+# Handler for $SIG{__DIE__} to generate traceback.
+# IN : error message
+# OUT : none.  This function exits with status 255 or (if invoked from inside
+# eval) simply returns.
+sub _crash_handler {
+    return if $^S;    # invoked from inside eval.
+
+    my $msg = "$_[0]";
+    chomp $msg;
+    Log::do_log('err', 'DIED: %s', $msg);
+    eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
+    SDM::db_disconnect();       # unlock database
+    Sys::Syslog::closelog();    # flush log
+    Log::set_log_level(-1);     # disable log
+
+    Carp::confess("DIED: $msg");
+}
+
 1;
-
-
-
-
-
-
-
-
