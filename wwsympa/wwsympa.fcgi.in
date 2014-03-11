@@ -1054,8 +1054,9 @@ Log::do_log(info => "WWSympa started, process $$");
      
      $robot = $Conf{'host'} unless $robot;
 
-     ## Create Robot object
-     $robot_object = new Robot $robot;
+     # Not yet implemented
+     ### Create Robot object
+     #$robot_object = new Robot $robot;
 
      ## Default robot
      if ($robot eq $Conf{'host'}) {
@@ -1834,12 +1835,12 @@ sub _crash_handler {
     chomp $msg;
     printf STDERR "DIED: %s\n", $msg;
     wwslog('err', 'DIED: %s', $msg);
-    eval { Site->send_notify_to_listmaster(undef, undef, undef, 1); };
+    eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
     eval { SDM::db_disconnect(); };    # unlock database
     Sys::Syslog::closelog();           # flush log
     Log::set_log_level(-1);            # disable log
 
-    $param->{'traceback'}     = Carp::longmess($msg);
+    $param->{'traceback'}     = Carp::longmess("$msg\n");
     $param->{'error_message'} = $msg;
     $param->{'main_title'} ||= Conf::get_robot_conf($robot, 'title');
     $param->{'last_action'} = $param->{'action'};

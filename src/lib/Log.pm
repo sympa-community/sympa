@@ -1043,7 +1043,7 @@ sub _crash_handler {
     Sys::Syslog::closelog();    # flush log
     Log::set_log_level(-1);     # disable log
 
-    Carp::confess("DIED: $msg");
+    Carp::confess("DIED: $msg\n");
 }
 
 1;

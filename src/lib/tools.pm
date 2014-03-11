@@ -2687,7 +2687,7 @@ sub send_crash_report {
     my (@err_output, $err_date);
     if(-f $err_file) {
 	open(ERR, $err_file);
-	@err_output = <ERR>;
+	@err_output = map { chomp $_; $_; } <ERR>;
 	close ERR;
 	$err_date = gettext_strftime "%d %b %Y  %H:%M", localtime((stat($err_file))[9]);
     }

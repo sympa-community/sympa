@@ -39,16 +39,17 @@ Subject: [% FILTER qencode %][%|loc(db_type)%]No DataBase Driver for %1[%END%][%
 
 [% ELSIF type == 'crash' -%]
 Subject: [% FILTER qencode %][%|loc(crashed_process)%]Previous process %1 crashed[%END%][%END%]
+X-Sympa-NoWrap: yes
 
-[%|loc(crashed_process,pid)%]Previous process %1 (with pid %2) has died unexpectedly.[%END%]
+[%|wrap(0,0)%][%|loc(crashed_process,pid)%]Previous process %1 (with PID %2) has died unexpectedly.[%END%][%END#wrap%]
 [%|loc(crash_date)%]Date of crash: %1[%END%]
 [%|loc%]Errors:[%END%]
 
-[% FOREACH err IN crash_err%]
+[% FOREACH err IN crash_err -%]
 [% err %]
 [% END %]
 
-[%|loc%]Check log file for further details.[%END%]
+[%|wrap(0,0)%][%|loc%]Check log file for further details.[%END%][%END#wrap%]
 
 [% ELSIF type == 'upgrade_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
