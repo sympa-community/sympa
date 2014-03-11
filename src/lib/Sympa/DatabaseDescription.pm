@@ -201,11 +201,10 @@ my %full_db_struct = (
     'bulkspool_table' => {
 	'fields' => {
 	    'messagekey_bulkspool' => {
-		'struct'=> 'bigint(20)',
+		'struct'=> 'varchar(33)',
 		'doc'=>'primary key',
 		'primary'=>1,
 		'not_null'=>1,
-		'autoincrement'=>1,
 		'order'=>1,
 	    },
 	    'message_bulkspool' => {
