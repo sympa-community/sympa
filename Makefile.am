@@ -23,7 +23,9 @@
 
 SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 
-check_SCRIPTS = t/LockedFile.t t/compile_modules.t
+check_SCRIPTS = t/LockedFile.t \
+		t/compile_modules.t \
+		t/compile_executables.t
 
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
