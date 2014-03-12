@@ -480,7 +480,7 @@ sub check_indexes {
 ## Check if data structures are uptodate
 ## If not, no operation should be performed before the upgrade process is run
 sub data_structure_uptodate {
-     my $version_file = "&Conf::get_robot_conf('*','etc')/data_structure.version";
+     my $version_file = Conf::get_robot_conf('*', 'etc') . '/data_structure.version';
      my $data_structure_version;
 
      if (-f $version_file) {
