@@ -150,7 +150,7 @@ sub connect_sympa_database {
     my $db_conf = &Conf::get_parameters_group('*','Database related');
     $db_conf->{'reconnect_options'} = {
 	'keep_trying' =>
-	    ($option ne 'just_try' && ! $ENV{'HTTP_HOST'}),
+	    ($option ne 'just_try' && ! $ENV{'GATEWAY_INTERFACE'}),
 	'warn' => 1,
     };
     unless ($db_source = new SQLSource($db_conf)) {
