@@ -144,11 +144,15 @@ sub connect_sympa_database {
     Log::do_log('debug2', '(%s)', @_);
     my $option = shift || '';
 
-    ## We keep trying to connect if this is the first attempt
-    ## Unless in a web context, because we can't afford long response time on the web interface
+    ## We keep trying to connect if 'just_try' option was not set.
+    ## Unless in a web context, because we can't afford long response time on
+    ## the web interface
     my $db_conf = &Conf::get_parameters_group('*','Database related');
-    $db_conf->{'reconnect_options'} = {'keep_trying'=>($option ne 'just_try' && ( !$db_source->{'connected'} && !$ENV{'HTTP_HOST'})),
-						 'warn'=>1 };
+    $db_conf->{'reconnect_options'} = {
+	'keep_trying' =>
+	    ($option ne 'just_try' && ! $ENV{'HTTP_HOST'}),
+	'warn' => 1,
+    };
     unless ($db_source = new SQLSource($db_conf)) {
 	&Log::do_log('err', 'Unable to create SQLSource object');
     	return undef;
