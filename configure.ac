@@ -275,8 +275,12 @@ AC_ARG_WITH(
     AS_HELP_STRING(
 	[--with-initdir=DIR],
 	[install System V init script @<:@SYSCONFDIR/rc.d/init.d@:>@]
+    )
+AS_HELP_STRING(
+        [--without-initdir],
+        [do not install System V init script]
     ),
-    [initdir="$withval"]
+    [test "x$withval" = "xyes" || initdir="$withval"; test "x$withval" = "xno" && initdir=""]
 )
 
 AC_ARG_WITH(
@@ -284,10 +288,14 @@ AC_ARG_WITH(
     AS_HELP_STRING(
 	[--with-smrshdir=DIR],
 	[install symbolic links for Sendmail smrsh @<:@SYSCONFDIR/smrsh@:>@]
+    )
+AS_HELP_STRING(
+        [--without-smrshdir],
+        [do not install symbolic links for Sendmail smrsh]
     ),
-    [smrshdir="$withval"]
+    [test "x$withval" = "xyes" || smrshdir="$withval"; test "x$withval" = "xno" && smrshdir=""]
 )
-AM_CONDITIONAL(SMRSH, [test "x$smrshdir" != "x" && test "x$smrshdir" != "xno"])
+AM_CONDITIONAL(SMRSH, [test "x$smrshdir" != "x"])
 
 AC_ARG_WITH(
     lockdir,
