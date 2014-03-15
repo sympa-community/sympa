@@ -58,7 +58,7 @@
 	[% IF !subaction %]
 		[% balise_email = '['_'%'_' user.email '_'%'_']' %]
 		[% balise_fingerprint = '['_'%'_' user.fingerprint '_'%'_']' %]
-  		<textarea name="body" cols="80" rows="25">[% body %]</textarea>
+  		<textarea name="body" id="body" cols="80" rows="25">[% body %]</textarea>
 		<br />
 
 		[% IF merge_feature %]
