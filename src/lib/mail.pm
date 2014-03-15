@@ -953,7 +953,8 @@ sub smtpto {
    
 
    if (!pipe(IN, OUT)) {
-       &Log::fatal_err(sprintf gettext("Unable to create a channel in smtpto: %s"), "$!"); ## No return
+	Carp::croak sprintf('Unable to create a channel in smtpto: %s', "$!");
+	## No return
    }
    $pid = &tools::safefork();
    $pid{$pid} = 0;

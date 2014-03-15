@@ -28,6 +28,7 @@
 
 use lib '--modulesdir--';
 use strict "vars";
+use Pod::Usage;
 
 use Task;
 use List;
@@ -51,7 +52,7 @@ my $opt_F;
 my %options;
 
 unless (&GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground')) {
-    &Log::fatal_err("Unknown options.");
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 # $main::options{'debug2'} = 1 if ($main::options{'debug'});
@@ -69,10 +70,10 @@ my $adrlist = {};
 
 # Load sympa.conf
 unless (Conf::load()) {
-    Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );  
+    printf STDERR
+	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 Log::do_openlog($Conf::Conf{'log_facility'}, $Conf::Conf{'log_socket_type'}, 'task_manager');

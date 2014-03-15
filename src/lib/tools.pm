@@ -25,6 +25,7 @@ package tools;
 
 use strict;
 
+use Carp;
 use Digest::MD5;
 use Encode::Guess; ## Useful when encoding should be guessed
 use Encode::MIME::Header;
@@ -317,15 +318,19 @@ sub by_date {
 ## tests have been exhausted.
 sub safefork {
    my($i, $pid);
-   
+
+    my $err;
    for ($i = 1; $i < 4; $i++) {
       my($pid) = fork;
       return $pid if (defined($pid));
-      &Log::do_log ('warning', "Can't create new process in safefork: %m");
-      ## should send a mail to the listmaster
+
+	$err = "$!";
+	Log::do_log('warn', 'Cannot create new process in safefork: %s', $err);
+	## FIXME:should send a mail to the listmaster
       sleep(10 * $i);
    }
-   &Log::fatal_err("Can't create new process in safefork: %m");
+    Carp::croak sprintf('Exiting because cannot create new process in safefork: %s',
+	$err);
    ## No return.
 }
 
@@ -2525,7 +2530,8 @@ sub remove_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+<');
     unless ($lock_fh) {
-        Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+        Log::do_log('err', 'Could not open %s to remove PID %s', $pidfile, $pid);
+	return undef;
     }
 
     ## If in multi_process mode (bulk.pl for instance can have child
@@ -2600,7 +2606,8 @@ sub write_pid {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	Log::fatal_err('Unable to set rights on %s. Exiting.', $Conf::Conf{'db_name'});
+	Carp::croak sprintf('Unable to set rights on %s. Exiting.', $piddir);
+	## No return
     }
 
     my @pids;
@@ -2608,7 +2615,8 @@ sub write_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
     unless ($lock_fh) {
-	Log::fatal_err('Unable to lock %s file in write mode. Exiting.',$pidfile);
+	Carp::croak sprintf('Unable to lock %s file in write mode. Exiting.',
+	    $pidfile);
     }
     ## If pidfile exists, read the PIDs
     if(-s $pidfile) {
@@ -2642,7 +2650,7 @@ sub write_pid {
 	unless(truncate $lock_fh, 0) {
 	    ## Unlock pid file
 	    $lock_fh->close();
-	    &Log::fatal_err('Could not truncate %s, exiting.', $pidfile);
+	    Carp::croak sprintf('Could not truncate %s, exiting.', $pidfile);
 	}
 
 	print $lock_fh $pid."\n";
@@ -2655,7 +2663,7 @@ sub write_pid {
     )) {
 	## Unlock pid file
 	$lock_fh->close();
-	&Log::fatal_err('Unable to set rights on %s', $Conf::Conf{'db_name'});
+	Carp::croak sprintf('Unable to set rights on %s', $pidfile);
     }
     ## Unlock pid file
     $lock_fh->close();

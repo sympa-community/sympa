@@ -41,10 +41,10 @@ use tt2;
 use Sympa::Constants;
 
 unless (defined Conf::load()) {
-    Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );
+    printf STDERR
+	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 Log::set_log_level($Conf::Conf{'log_level'});

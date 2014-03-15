@@ -34,7 +34,8 @@ my %options;
 
 ## Load configuration file
 unless (Conf::load()) {
-    Log::fatal_err('Configuration file %s has errors.', Conf::get_sympa_conf());
+    sprintf STDERR "Configuration file %s has errors.\n", Conf::get_sympa_conf();
+    exit 1;
 }
 
 

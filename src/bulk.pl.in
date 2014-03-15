@@ -45,6 +45,7 @@ servers for huge traffic.
 use lib '--modulesdir--';
 
 use strict;
+use Pod::Usage;
 
 use Conf;
 use Log;
@@ -68,7 +69,7 @@ local $main::daemon_usage = 'DAEMON_MASTER'; ## Default is to launch bulk as mas
 ##  --mail : logs every sendmail calls
 my %options;
 unless (&GetOptions(\%main::options, 'debug|d', 'foreground|F','mail|m')) {
-    &Log::fatal_err("Unknown options.");
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'debug'}) {
@@ -80,9 +81,10 @@ $main::options{'log_to_stderr'} = 1 if ($main::options{'debug'} || $main::option
 
 # Load sympa.conf
 unless (Conf::load()) {
-    Log::fatal_err(
-	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf());
+    printf STDERR
+	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'bulk');

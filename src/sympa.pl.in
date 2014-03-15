@@ -31,6 +31,7 @@ use Getopt::Long;
 
 use Mail::Address;
 use File::Path;
+use Pod::Usage;
 
 use Commands;
 use Conf;
@@ -135,8 +136,9 @@ unless (&GetOptions(\%main::options, 'dump=s', 'debug|d', ,'log_level=s','foregr
             'lang|l=s', 'mail|m', 'keepcopy|k=s', 'help', 'version', 'import=s','make_alias_file','lowercase','sync_list_db','md5_encode_password',
 		    'close_list=s','rename_list=s','new_listname=s','new_listrobot=s','purge_list=s','create_list','instantiate_family=s',
 		    'robot=s','add_list=s','modify_list=s','close_family=s','md5_digest=s','change_user_email','current_email=s','new_email=s',
-		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db')) {
-    &Log::fatal_err("Unknown options.");
+		    'input_file=s','sync_include=s','upgrade','upgrade_shared','from=s','to=s','reload_list_config','list=s','quiet','close_unknown','test_database_message_buffer','conf_2_db'
+)) {
+    pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
 if ($main::options{'debug'}) {
@@ -188,10 +190,10 @@ while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
 unless (Conf::load(Conf::get_sympa_conf(), 1)) {
-    Log::fatal_err(
+    printf STDERR
 	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
-	Conf::get_sympa_conf()
-    );  
+	Conf::get_sympa_conf();
+    exit 1;
 }
 
 ## Open the syslog and say we're read out stuff.
@@ -214,19 +216,19 @@ if ($main::options{'log_level'}) {
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
     unless (&Upgrade::probe_db()) {
-	Log::fatal_err(
-	    'Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf',
-	    $Conf{'db_name'}
-	);
+	printf STDERR
+	    "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+	    $Conf{'db_name'};
+	exit 1;
     }
 }
 
 ## Now trying to load full config (including database)
 unless (Conf::load()) {
-    Log::fatal_err(
-	'Configuration file %s has errors.',
-	Conf::get_sympa_conf()
-    );
+    printf STDERR
+	"Configuration file %s has errors.\n",
+	Conf::get_sympa_conf();
+    exit 1;
    
 }
 

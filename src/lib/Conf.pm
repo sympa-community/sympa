@@ -495,8 +495,10 @@ sub conf_2_db {
     
     ## Load configuration file. Ignoring database config and get result
     my $global_conf;
-    unless ($global_conf= Conf::load($config_file,1,'return_result')) {
-    &Log::fatal_err("Configuration file $config_file has errors.");  
+    unless ($global_conf = Conf::load(Conf::get_sympa_conf(), 1, 'return_result')) {
+	Log::do_log('err', 'Configuration file %s has errors',
+	    Conf::get_sympa_conf());  
+	return undef;
     }
     
     for my $i ( 0 .. $#conf_parameters ) {
