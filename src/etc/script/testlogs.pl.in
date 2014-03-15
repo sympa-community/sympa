@@ -34,7 +34,7 @@ my %options;
 
 ## Load configuration file
 unless (Conf::load()) {
-    sprintf STDERR "Configuration file %s has errors.\n", Conf::get_sympa_conf();
+    printf STDERR "Configuration file %s has errors.\n", Conf::get_sympa_conf();
     exit 1;
 }
 

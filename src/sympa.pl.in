@@ -191,7 +191,7 @@ while ($signal ne 'term') { #as long as a SIGTERM is not received }
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
 unless (Conf::load(Conf::get_sympa_conf(), 1)) {
     printf STDERR
-	'Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.',
+	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
 	Conf::get_sympa_conf();
     exit 1;
 }
