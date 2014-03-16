@@ -24,7 +24,9 @@ use strict;
 use warnings;
 use Carp qw(carp croak);
 
-#use Site; # this module is used in Site
+use Log;
+use SDM;
+use tools;
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
