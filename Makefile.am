@@ -36,8 +36,9 @@ EXTRA_DIST = important_changes.pl \
 CLEANFILES = previous_sympa_version
 
 check-local:
-	@PERL5LIB=src/lib:wwsympa:soap; export PERL5LIB; \
-	$(PERL) -MTest::Harness -e 'runtests @ARGV' $(check_SCRIPTS)
+	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
+	PERL5LIB=src/lib:wwsympa:soap; export PERL5LIB; \
+	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep importantchanges
 
