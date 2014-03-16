@@ -965,7 +965,7 @@ sub info {
 	if (defined $list->{'admin'}{'digest'}) {
 	    
 	    foreach my $d (@{$list->{'admin'}{'digest'}{'days'}}) {
-		push @days, (gettext_strftime "%A", localtime(0 + ($d +3) * (3600 * 24)));
+		push @days, gettext_strftime("%A", localtime(0 + ($d +3) * (3600 * 24)));
 		}
 	    $data->{'digest'} = join (',', @days).' '.$list->{'admin'}{'digest'}{'hour'}.':'.$list->{'admin'}{'digest'}{'minute'};
 	}

@@ -267,7 +267,7 @@ sub create_list_old{
       
     ## Creation of the config file
     my $host = &Conf::get_robot_conf($robot, 'host');
-    $param->{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
+    $param->{'creation'}{'date'} = gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $param->{'creation'}{'date_epoch'} = time;
     $param->{'creation_email'} = "listmaster\@$host" unless ($param->{'creation_email'});
     $param->{'status'} = 'open'  unless ($param->{'status'});
@@ -529,7 +529,7 @@ sub create_list{
 	$list->create_shared();
     }   
     
-    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
+    $list->{'admin'}{'creation'}{'date'} = gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
@@ -624,7 +624,7 @@ sub update_list{
 	return undef;
     }
 ############## ? update
-    $list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %Y at %H:%M:%S", localtime(time);
+    $list->{'admin'}{'creation'}{'date'} = gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
     $list->{'admin'}{'creation'}{'date_epoch'} = time;
     if ($param->{'creation_email'}) {
 	$list->{'admin'}{'creation'}{'email'} = $param->{'creation_email'};
@@ -1011,7 +1011,7 @@ sub clone_list_as_empty {
     $new_list->{'admin'}{'serial'} = 0 ;
     $new_list->{'admin'}{'creation'}{'email'} = $email if ($email);
     $new_list->{'admin'}{'creation'}{'date_epoch'} = time;
-    $new_list->{'admin'}{'creation'}{'date'} = gettext_strftime "%d %b %y at %H:%M:%S", localtime(time);
+    $new_list->{'admin'}{'creation'}{'date'} = gettext_strftime("%d %b %y at %H:%M:%S", localtime time);
     $new_list->save_config($email);
     return $new_list;
 }

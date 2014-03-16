@@ -2697,7 +2697,7 @@ sub send_crash_report {
 	open(ERR, $err_file);
 	@err_output = map { chomp $_; $_; } <ERR>;
 	close ERR;
-	$err_date = gettext_strftime "%d %b %Y  %H:%M", localtime((stat($err_file))[9]);
+	$err_date = gettext_strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
     }
     &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crashed_process' => $data{'pname'}, 'crash_err' => \@err_output, 'crash_date' => $err_date, 'pid' => $data{'pid'}});
 }
