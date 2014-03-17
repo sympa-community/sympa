@@ -2829,7 +2829,7 @@ sub update_stats {
 ##           @rcpt   : a tab of emails
 ## return :  a tab of rcpt for which rcpt must be use depending on the message sequence number, this way every subscriber is "verped" from time to time
 ##           input table @rcpt is spliced : rcpt for which verp must be used are extracted from this table
-sub extract_verp_rcpt() {
+sub extract_verp_rcpt {
     my $percent = shift;
     my $xseq = shift;
     my $refrcpt = shift;
@@ -12064,7 +12064,7 @@ sub load_msg_topic_file {
 # OUT : -0 if no subscriber topics have been deleted
 #       -1 if some subscribers topics have been deleted 
 ##################################################### 
-sub modifying_msg_topic_for_list_members(){
+sub modifying_msg_topic_for_list_members {
     my ($self,$new_msg_topic) = @_;
     &Log::do_log('debug3',"($self->{'name'}");
     my $deleted = 0;

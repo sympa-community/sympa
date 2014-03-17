@@ -1942,7 +1942,7 @@ Initializes all the values used for instantiation and results description to emp
 # IN  : -$self
 # OUT : -1 
 #####################################################
-sub _initialize_instantiation() {
+sub _initialize_instantiation {
     my $self = shift;
     &Log::do_log('debug3','Family::_initialize_instantiation(%s)',$self->{'name'});
 

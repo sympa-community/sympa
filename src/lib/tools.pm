@@ -3885,7 +3885,7 @@ sub CleanSpool {
 
 
 # return a lockname that is a uniq id of a processus (hostname + pid) ; hostname (20) and pid(10) are truncated in order to store lockname in database varchar(30)
-sub get_lockname (){
+sub get_lockname {
     return substr(substr(hostname(), 0, 20).$$,0,30);   
 }
 
