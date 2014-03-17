@@ -72,8 +72,8 @@ C<loc>, C<x>, C<_> and C<__>.
 
 =item HTML::Mason
 
-The text inside C<E<lt>&|/lE<gt>I<...>E<lt>/&E<gt>> or
-C<E<lt>&|/locE<gt>I<...>E<lt>/&E<gt>> will be extracted.
+The text inside C<E<lt>E<amp>|/lE<gt>I<...>E<lt>/E<amp>E<gt>> or
+C<E<lt>E<amp>|/locE<gt>I<...>E<lt>/E<amp>E<gt>> will be extracted.
 
 =item Template Toolkit
 
