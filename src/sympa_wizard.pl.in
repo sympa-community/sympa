@@ -311,7 +311,7 @@ sub edit_configuration {
         }
 
         unless ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
-            printf STDERR gettext("Incorrect parameter definition: %s\n"),
+            printf STDERR Language::gettext("Incorrect parameter definition: %s\n"),
                 $file;
         }
 
