@@ -185,8 +185,8 @@ sub SetLang {
     &Locale::Messages::bindtextdomain('sympa',Sympa::Constants::LOCALEDIR);
     &Locale::Messages::bindtextdomain('web_help',Sympa::Constants::LOCALEDIR);
     # Get translations by internal encoding.
-    bind_textdomain_codeset sympa => 'utf-8';
-    bind_textdomain_codeset web_help => 'utf-8';
+    Locale::Messages::bind_textdomain_codeset(sympa => 'utf-8');
+    Locale::Messages::bind_textdomain_codeset(web_help => 'utf-8');
 
     $current_lang = $lang;
     $current_locale = $locale;

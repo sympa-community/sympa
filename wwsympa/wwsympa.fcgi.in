@@ -8436,7 +8436,7 @@ sub do_remove_arc {
      unless (defined($in{'directories'})) {
 	# by default search in current month and in the previous non-empty one
 	my $archive_name = $in{'archive_name'} || '';
-	$archive_name = POSIX::strftime '%Y-%m', localtime(time)
+	$archive_name = POSIX::strftime('%Y-%m', localtime time)
 	    unless $archive_name =~ /^\d{4}-\d{2}$/;
 	my @directories = ();
 	 my $search_base = &Conf::get_robot_conf($robot, 'arc_path').'/'.$list->get_list_id();
