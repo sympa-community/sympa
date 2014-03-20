@@ -1113,8 +1113,9 @@ sub to_utf8 {
 
 	## If filesystem_encoding is set, files are supposed to be encoded according to it
 	my $charset;
-	if ((defined $Conf::Conf::Ignored_Conf{'filesystem_encoding'})&($Conf::Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8')) {
-	    $charset = $Conf::Conf::Ignored_Conf{'filesystem_encoding'};
+	if (defined $Conf::Ignored_Conf{'filesystem_encoding'} and
+	    $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
+	    $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
 	}else {	    
 	    &Language::PushLang($lang);
 	    $charset = &Language::GetCharset;

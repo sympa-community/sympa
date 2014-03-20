@@ -522,7 +522,10 @@ sub check_cpan {
 					      package_name => 'JSON-XS',
 					      'gettext_id' => 'required when using the VOOT protocol',
 					     },
-			'Locale::Messages' => {
+			# Locale::Messages 1.16 or earlier does not have its
+			# own $VERSION variable.  Check the version of
+			# Locale::TextDomain instead.
+			'Locale::TextDomain' => {
 						 package_name => 'libintl-perl',
 						 mandatory => 1,
 						 'gettext_id' => 'internationalization functions',
@@ -744,7 +747,7 @@ sub check_modules {
 	    next;
 	  } else {
 	    print "version is too old ($v < $rv).\n";
-	    print ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}}\" <<<<<<.\n";
+	    print ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}\" <<<<<<.\n";
 	    install_module($mod, {'default' => $default}, $cpan_modules);
 	  }
         }
