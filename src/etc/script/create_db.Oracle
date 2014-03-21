@@ -36,7 +36,7 @@ CREATE TABLE admin_table (
 	 update_admin 	date, 
 	 user_admin 	varchar2(100), 
 	 visibility_admin 	varchar2(20), 
-	 CONSTRAINT ind_admin PRIMARY KEY (list_admin, role_admin, user_admin, robot_admin) 
+ 
  );
 
 
@@ -63,7 +63,7 @@ CREATE TABLE bulkmailer_table (
 	 robot_bulkmailer 	varchar2(80), 
 	 tracking_bulkmailer 	varchar2(20), 
 	 verp_bulkmailer 	number, 
-	 CONSTRAINT ind_bulkmailer PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+ 
  );
 
 
@@ -80,10 +80,10 @@ CREATE TABLE bulkspool_table (
 	 dkim_privatekey_bulkspool 	varchar2(2000), 
 	 dkim_selector_bulkspool 	varchar2(50), 
 	 lock_bulkspool 	number, 
+	 message_bulkspool 	long, 
 	 messageid_bulkspool 	varchar2(300), 
 	 messagekey_bulkspool 	varchar2(33), 
-	 message_bulkspool	long,
-	 CONSTRAINT ind_bulkspool PRIMARY KEY (messagekey_bulkspool) 
+ 
  );
 
 
@@ -98,7 +98,7 @@ CREATE TABLE conf_table (
 	 label_conf 	varchar2(80), 
 	 robot_conf 	varchar2(80), 
 	 value_conf 	varchar2(300), 
-	 CONSTRAINT ind_conf PRIMARY KEY (robot_conf, label_conf) 
+ 
  );
 
 
@@ -115,7 +115,7 @@ CREATE TABLE exclusion_table (
 	 list_exclusion 	varchar2(50), 
 	 robot_exclusion 	varchar2(50), 
 	 user_exclusion 	varchar2(100), 
-	 CONSTRAINT ind_exclusion PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
+ 
  );
 
 
@@ -138,7 +138,7 @@ CREATE TABLE list_table (
 	 subject_list 	varchar2(100), 
 	 topics_list 	varchar2(100), 
 	 web_archive_list 	tinyint(1), 
-	 CONSTRAINT ind_list PRIMARY KEY (name_list, robot_list) 
+ 
  );
 
 
@@ -163,7 +163,7 @@ CREATE TABLE logs_table (
 	 status_logs 	varchar2(10), 
 	 target_email_logs 	varchar2(100), 
 	 user_email_logs 	varchar2(100), 
-	 CONSTRAINT ind_logs PRIMARY KEY (id_logs) 
+ 
  );
 
 
@@ -179,7 +179,7 @@ CREATE TABLE netidmap_table (
 	 netid_netidmap 	varchar2(100), 
 	 robot_netidmap 	varchar2(80), 
 	 serviceid_netidmap 	varchar2(100), 
-	 CONSTRAINT ind_netidmap PRIMARY KEY (netid_netidmap, robot_netidmap, serviceid_netidmap) 
+ 
  );
 
 
@@ -202,8 +202,68 @@ CREATE TABLE notification_table (
 	 robot_notification 	varchar2(80), 
 	 status_notification 	varchar2(100), 
 	 type_notification 	varchar2(20), 
-	 CONSTRAINT ind_notification PRIMARY KEY (pk_notification) 
+ 
  );
+
+
+
+
+## --------------------------------------------------------
+##
+## Table structure for table `oauthconsumer_sessions_table`
+## 
+
+CREATE TABLE oauthconsumer_sessions_table ( 
+	 access_secret_oauthconsumer 	varchar2(100), 
+	 access_token_oauthconsumer 	varchar2(100), 
+	 provider_oauthconsumer 	varchar2(100), 
+	 tmp_secret_oauthconsumer 	varchar2(100), 
+	 tmp_token_oauthconsumer 	varchar2(100), 
+	 user_oauthconsumer 	varchar2(100), 
+ 
+ );
+
+
+
+
+## --------------------------------------------------------
+##
+## Table structure for table `oauthprovider_nonces_table`
+## 
+
+CREATE TABLE oauthprovider_nonces_table ( 
+	 id_nonce 	number, 
+	 id_oauthprovider 	number, 
+	 nonce_oauthprovider 	varchar2(100), 
+	 time_oauthprovider 	number, 
+ 
+ );
+
+
+
+
+## --------------------------------------------------------
+##
+## Table structure for table `oauthprovider_sessions_table`
+## 
+
+CREATE TABLE oauthprovider_sessions_table ( 
+	 accessgranted_oauthprovider 	tinyint(1), 
+	 callback_oauthprovider 	varchar2(100), 
+	 consumer_oauthprovider 	varchar2(100), 
+	 firsttime_oauthprovider 	number, 
+	 id_oauthprovider 	number, 
+	 isaccess_oauthprovider 	tinyint(1), 
+	 lasttime_oauthprovider 	number, 
+	 secret_oauthprovider 	varchar2(32), 
+	 token_oauthprovider 	varchar2(32), 
+	 user_oauthprovider 	varchar2(100), 
+	 verifier_oauthprovider 	varchar2(32), 
+ 
+ );
+
+
+
 
 ## --------------------------------------------------------
 ##
@@ -218,7 +278,7 @@ CREATE TABLE one_time_ticket_table (
 	 robot_one_time_ticket 	varchar2(80), 
 	 status_one_time_ticket 	varchar2(60), 
 	 ticket_one_time_ticket 	varchar2(30), 
-	 CONSTRAINT ind_one_time_ticket PRIMARY KEY (ticket_one_time_ticket) 
+ 
  );
 
 
@@ -232,15 +292,15 @@ CREATE TABLE one_time_ticket_table (
 CREATE TABLE session_table ( 
 	 data_session 	varchar2(500), 
 	 date_session 	number, 
-	 refresh_date_session	number NOT NULL,
 	 email_session 	varchar2(100), 
 	 hit_session 	number, 
 	 id_session 	varchar2(30), 
-	 prev_id_session	varchar2(30),
+	 prev_id_session 	varchar2(30), 
+	 refresh_date_session 	number, 
 	 remote_addr_session 	varchar2(60), 
 	 robot_session 	varchar2(80), 
 	 start_date_session 	number, 
-	 CONSTRAINT ind_session PRIMARY KEY (id_session) 
+ 
  );
 
 
@@ -260,7 +320,7 @@ CREATE TABLE stat_counter_table (
 	 robot_counter 	varchar2(80), 
 	 total_counter 	number, 
 	 variation_counter 	number, 
-	 CONSTRAINT ind_stat_counter PRIMARY KEY (id_counter) 
+ 
  );
 
 
@@ -282,7 +342,7 @@ CREATE TABLE stat_table (
 	 read_stat 	tinyint(1), 
 	 robot_stat 	varchar2(80), 
 	 user_ip_stat 	varchar2(100), 
-	 CONSTRAINT ind_stat PRIMARY KEY (id_stat) 
+ 
  );
 
 
@@ -314,7 +374,7 @@ CREATE TABLE subscriber_table (
 	 update_subscriber 	date, 
 	 user_subscriber 	varchar2(100), 
 	 visibility_subscriber 	varchar2(20), 
-	 CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber) 
+ 
  );
 
 
@@ -336,7 +396,7 @@ CREATE TABLE user_table (
 	 last_login_host_user 	varchar2(60), 
 	 password_user 	varchar2(40), 
 	 wrong_login_count_user 	number, 
-	 CONSTRAINT ind_user PRIMARY KEY (email_user) 
+ 
  );
 
 

@@ -26,7 +26,7 @@ CREATE TABLE admin_table (
 	 update_admin 	 datetime, 
 	 user_admin 	 varchar(100), 
 	 visibility_admin 	 varchar(20), 
-	 PRIMARY KEY (list_admin, role_admin, user_admin, robot_admin), 
+, 
  	 INDEX admin_user_index ( user_admin ) 
  ) DEFAULT CHARACTER SET utf8;
 
@@ -52,7 +52,7 @@ CREATE TABLE bulkmailer_table (
 	 robot_bulkmailer 	 varchar(80), 
 	 tracking_bulkmailer 	 enum('mdn','dsn'), 
 	 verp_bulkmailer 	 int(1), 
-	 PRIMARY KEY (packetid_bulkmailer, messagekey_bulkmailer) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -70,7 +70,7 @@ CREATE TABLE bulkspool_table (
 	 message_bulkspool 	 longtext, 
 	 messageid_bulkspool 	 varchar(300), 
 	 messagekey_bulkspool 	 varchar(33), 
-	 PRIMARY KEY (messagekey_bulkspool) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -83,7 +83,7 @@ CREATE TABLE conf_table (
 	 label_conf 	 varchar(80), 
 	 robot_conf 	 varchar(80), 
 	 value_conf 	 varchar(300), 
-	 PRIMARY KEY (robot_conf, label_conf) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -98,7 +98,7 @@ CREATE TABLE exclusion_table (
 	 list_exclusion 	 varchar(50), 
 	 robot_exclusion 	 varchar(50), 
 	 user_exclusion 	 varchar(100), 
-	 PRIMARY KEY (user_exclusion, robot_exclusion, list_exclusion) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -119,7 +119,7 @@ CREATE TABLE list_table (
 	 subject_list 	 varchar(100), 
 	 topics_list 	 varchar(100), 
 	 web_archive_list 	 tinyint(1), 
-	 PRIMARY KEY (name_list, robot_list) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -142,7 +142,7 @@ CREATE TABLE logs_table (
 	 status_logs 	 varchar(10), 
 	 target_email_logs 	 varchar(100), 
 	 user_email_logs 	 varchar(100), 
-	 PRIMARY KEY (id_logs) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -156,7 +156,7 @@ CREATE TABLE netidmap_table (
 	 netid_netidmap 	 varchar(100), 
 	 robot_netidmap 	 varchar(80), 
 	 serviceid_netidmap 	 varchar(100), 
-	 PRIMARY KEY (netid_netidmap, robot_netidmap, serviceid_netidmap) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -177,7 +177,58 @@ CREATE TABLE notification_table (
 	 robot_notification 	 varchar(80), 
 	 status_notification 	 varchar(100), 
 	 type_notification 	 enum('DSN', 'MDN'), 
-	 PRIMARY KEY (pk_notification) 
+ 
+ ) DEFAULT CHARACTER SET utf8;
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthconsumer_sessions_table`
+-- 
+
+CREATE TABLE oauthconsumer_sessions_table ( 
+	 access_secret_oauthconsumer 	 varchar(100), 
+	 access_token_oauthconsumer 	 varchar(100), 
+	 provider_oauthconsumer 	 varchar(100), 
+	 tmp_secret_oauthconsumer 	 varchar(100), 
+	 tmp_token_oauthconsumer 	 varchar(100), 
+	 user_oauthconsumer 	 varchar(100), 
+ 
+ ) DEFAULT CHARACTER SET utf8;
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthprovider_nonces_table`
+-- 
+
+CREATE TABLE oauthprovider_nonces_table ( 
+	 id_nonce 	 int(11), 
+	 id_oauthprovider 	 int(11), 
+	 nonce_oauthprovider 	 varchar(100), 
+	 time_oauthprovider 	 int(11), 
+ 
+ ) DEFAULT CHARACTER SET utf8;
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `oauthprovider_sessions_table`
+-- 
+
+CREATE TABLE oauthprovider_sessions_table ( 
+	 accessgranted_oauthprovider 	 tinyint(1), 
+	 callback_oauthprovider 	 varchar(100), 
+	 consumer_oauthprovider 	 varchar(100), 
+	 firsttime_oauthprovider 	 int(11), 
+	 id_oauthprovider 	 int(11), 
+	 isaccess_oauthprovider 	 tinyint(1), 
+	 lasttime_oauthprovider 	 int(11), 
+	 secret_oauthprovider 	 varchar(32), 
+	 token_oauthprovider 	 varchar(32), 
+	 user_oauthprovider 	 varchar(100), 
+	 verifier_oauthprovider 	 varchar(32), 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -194,7 +245,7 @@ CREATE TABLE one_time_ticket_table (
 	 robot_one_time_ticket 	 varchar(80), 
 	 status_one_time_ticket 	 varchar(60), 
 	 ticket_one_time_ticket 	 varchar(30), 
-	 PRIMARY KEY (ticket_one_time_ticket) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -206,15 +257,15 @@ CREATE TABLE one_time_ticket_table (
 CREATE TABLE session_table ( 
 	 data_session 	 text, 
 	 date_session 	 int(11), 
-	 refresh_date_session	int(11) NOT NULL,
 	 email_session 	 varchar(100), 
 	 hit_session 	 int(11), 
 	 id_session 	 varchar(30), 
-	 prev_id_session	varchar(30),
+	 prev_id_session 	 varchar(30), 
+	 refresh_date_session 	 int(11), 
 	 remote_addr_session 	 varchar(60), 
 	 robot_session 	 varchar(80), 
 	 start_date_session 	 int(11), 
-	 PRIMARY KEY (id_session) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -232,7 +283,7 @@ CREATE TABLE stat_counter_table (
 	 robot_counter 	 varchar(80), 
 	 total_counter 	 int, 
 	 variation_counter 	 int, 
-	 PRIMARY KEY (id_counter) 
+ 
  ) DEFAULT CHARACTER SET utf8;
 
 
@@ -252,7 +303,7 @@ CREATE TABLE stat_table (
 	 read_stat 	 tinyint(1), 
 	 robot_stat 	 varchar(80), 
 	 user_ip_stat 	 varchar(100), 
-	 PRIMARY KEY (id_stat), 
+, 
  	 INDEX stats_user_index ( email_stat ) 
  ) DEFAULT CHARACTER SET utf8;
 
@@ -283,7 +334,7 @@ CREATE TABLE subscriber_table (
 	 update_subscriber 	 datetime, 
 	 user_subscriber 	 varchar(100), 
 	 visibility_subscriber 	 varchar(20), 
-	 PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber), 
+, 
  	 INDEX subscriber_user_index ( user_subscriber ) 
  ) DEFAULT CHARACTER SET utf8;
 
@@ -304,5 +355,5 @@ CREATE TABLE user_table (
 	 last_login_host_user 	 varchar(60), 
 	 password_user 	 varchar(40), 
 	 wrong_login_count_user 	 int(11), 
-	 PRIMARY KEY (email_user) 
+ 
  ) DEFAULT CHARACTER SET utf8;
