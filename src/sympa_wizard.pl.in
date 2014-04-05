@@ -396,8 +396,10 @@ sub check_cpan {
 						 package_name => 'Crypt-CipherSaber',
 						 'gettext_id' => 'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
 						},
-			'Date::Parse' => {
-					  package_name => 'TimeDate',
+			# DateTime is used by DateTime::Format::Mail.
+			'DateTime::Format::Mail' => {
+					  required_version => '0.28',
+					  package_name => 'DateTime-Format-Mail',
 					  mandatory => 1,
 					  'gettext_id' => 'used to decode date and time in message headers',
 					 },

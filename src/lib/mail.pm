@@ -28,11 +28,12 @@ use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
 
-#use strict;
-use POSIX;
-use Time::Local;
+use strict;
+use DateTime;
 use MIME::Charset;
 use MIME::Tools;
+use POSIX;
+
 use Conf;
 use Log;
 use Language;
@@ -40,10 +41,6 @@ use List;
 use Bulk;
 use tools;
 use Sympa::Constants;
-
-use strict;
-
-#use strict;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -195,22 +192,12 @@ sub mail_file {
     }
 
     unless ($header_ok{'date'}) {
-	my $now = time;
-	my $tzoff = timegm(localtime $now) - $now;
-	my $sign;
-	if ($tzoff < 0) {
-	   ($sign, $tzoff) = ('-', -$tzoff);
-	} else {
-	   $sign = '+';
-	}
-	$tzoff = sprintf '%s%02d%02d',
-			 $sign, int($tzoff / 3600), int($tzoff / 60) % 60;
-	Language::PushLang('en');
-	$headers .= 'Date: ' .
-		    POSIX::strftime("%a, %d %b %Y %H:%M:%S $tzoff",
-				    localtime $now) .
-		    "\n";
-	Language::PopLang();
+	## Format current time.
+	## If setting local timezone fails, fallback to UTC.
+	my $date = (
+	    eval { DateTime->now(time_zone => 'local') } || DateTime->now
+	)->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+	$headers .= sprintf "Date: %s\n", $date;
     }
 
     unless ($header_ok{'to'}) {
