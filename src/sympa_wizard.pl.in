@@ -524,10 +524,8 @@ sub check_cpan {
 					      package_name => 'JSON-XS',
 					      'gettext_id' => 'required when using the VOOT protocol',
 					     },
-			# Locale::Messages 1.16 or earlier does not have its
-			# own $VERSION variable.  Check the version of
-			# Locale::TextDomain instead.
-			'Locale::TextDomain' => {
+			'Locale::Messages' => {
+						 required_version => '1.22',
 						 package_name => 'libintl-perl',
 						 mandatory => 1,
 						 'gettext_id' => 'internationalization functions',

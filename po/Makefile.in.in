@@ -135,7 +135,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	$(XGETTEXT) -u \
 	  -o $(DOMAIN).pot \
 	  ../src/*.pl.in \
-	  ../src/lib/*.pm ../src/lib/HTML/*.pm \
+	  ../src/lib/*.pm ../src/lib/HTML/*.pm ../src/lib/Sympa/*.pm \
 	  ../soap/*.pl.in ../soap/*.pm ../soap/*.fcgi.in \
 	  ../wwsympa/wwsympa.fcgi.in ../wwsympa/*.pl.in ../wwsympa/*.pm \
 	  ../web_tt2/*.tt2 ../mail_tt2/*.tt2 \
@@ -173,7 +173,7 @@ $(POFILES): $(srcdir)/$(DOMAIN).pot
 	if test -f "$(srcdir)/$${lang}.po"; then \
 	  test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	  echo "$${cdcmd}$(MSGMERGE_UPDATE) $${lang}.po $(DOMAIN).pot"; \
-	  cd $(srcdir) && $(MSGMERGE_UPDATE) $${lang}.po $(DOMAIN).pot; \
+	  cd $(srcdir) && $(MSGMERGE_UPDATE) --lang=$${lang} $${lang}.po $(DOMAIN).pot; \
 	else \
 	  $(MAKE) $${lang}.po-create; \
 	fi
@@ -377,9 +377,9 @@ update-po: Makefile
 	echo "$${cdcmd}$(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$lang.new.po"; \
 	cd $(srcdir); \
 	if test "$$lang" = "en"; then\
-          $(MSGEN) -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
+          $(MSGEN) --lang=$$lang -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
         else \
-	  if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
+	  if $(MSGMERGE) --lang=$$lang -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
 	    :; \
 	  else \
 	    echo "msgmerge for $$lang.po failed!" 1>&2; \
@@ -389,7 +389,7 @@ update-po: Makefile
 	if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
 	  rm -f $$tmpdir/$$lang.new.po; \
 	else \
-          $(MSGCAT) --use-first -o $$tmpdir/$$lang.po $$tmpdir/$$lang.new.po $$lang.po; \
+          $(MSGCAT) --use-first --lang=$$lang -o $$tmpdir/$$lang.po $$tmpdir/$$lang.new.po $$lang.po; \
 	fi; \
         rm -f $$tmpdir/$$lang.new.po;
 
@@ -438,13 +438,13 @@ clean-po:
 	        rm -f $$tmpdir/$$lang.new.po; \
 	      else \
                 $(MSGEN) -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
-                $(MSGCAT) --use-first -o $$tmpdir/$$lang.new.po $$lang.po $$tmpdir/$$lang.new.po; \
+                $(MSGCAT) --use-first --lang=$$lang -o $$tmpdir/$$lang.new.po $$lang.po $$tmpdir/$$lang.new.po; \
 	      fi; \
 	    else \
 	      echo "Could not gather not fuzzy translated strings in en.po" 1>&2; \
 	    fi;\
           else \
-	    if $(MSGMERGE) $$lang.po $(DOMAIN).pot -o $$tmpdir/$$lang.new.po; then \
+	    if $(MSGMERGE) --lang=$$lang -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
 	      if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
 	        rm -f $$tmpdir/$$lang.new.po; \
 	      else \

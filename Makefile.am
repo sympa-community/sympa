@@ -23,17 +23,25 @@
 
 SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
 
-check_SCRIPTS = t/LockedFile.t \
+check_SCRIPTS = t/Language.t \
+		t/LockedFile.t \
 		t/compile_modules.t \
 		t/compile_executables.t
+check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
+	     t/locale/cs/LC_MESSAGES/web_help.mo \
+	     t/locale/zh_TW/LC_MESSAGES/sympa.mo
 
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
 	     sympa.spec \
 	     README.charset \
 	     etc_README \
-	     $(check_SCRIPTS)
+	     $(check_SCRIPTS) $(check_DATA)
 CLEANFILES = previous_sympa_version
+
+MSGFMT=@MSGFMT@
+.po.mo:
+	$(MSGFMT) -o $@ $<
 
 check-local:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
