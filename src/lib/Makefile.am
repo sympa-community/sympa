@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
-		      Conf.pm Config_XML.pm Family.pm Sympa/Language.pm \
+		      Conf.pm Config_XML.pm Family.pm Language.pm \
 		      List.pm Sympa/LockedFile.pm Log.pm mail.pm Ldap.pm \
 		      Upgrade.pm Sympa/User.pm \
 		      Fetch.pm Message.pm Task.pm Datasource.pm SQLSource.pm \
