@@ -40,6 +40,14 @@ BEGIN {
     Locale::Messages->select_package('gettext_dumb');
     ## Workaround: Prevent from searching catalogs in /usr/share/locale.
     undef $Locale::gettext_pp::__gettext_pp_default_dir;
+
+    ## Define what catalogs are used
+    Locale::Messages::bindtextdomain(sympa    => Sympa::Constants::LOCALEDIR);
+    Locale::Messages::bindtextdomain(web_help => Sympa::Constants::LOCALEDIR);
+    Locale::Messages::textdomain('sympa');
+    ## Get translations by internal encoding.
+    Locale::Messages::bind_textdomain_codeset(sympa    => 'utf-8');
+    Locale::Messages::bind_textdomain_codeset(web_help => 'utf-8');
 }
 
 INIT {
@@ -145,7 +153,9 @@ my %script2modifier = (
     'Deva' => 'devanagari',
     'Dsrt' => 'deseret',
     'Glag' => 'glagolitic',
+    'Grek' => 'greek',
     'Guru' => 'gurmukhi',
+    'Hebr' => 'hebrew',
     'Latn' => 'latin',
     'Mong' => 'mongolian',
     'Shaw' => 'shaw',         # found in Debian "en@shaw" locale.
@@ -404,15 +414,6 @@ sub _set_locale {
     #   provides "nb_NO" NLS catalog.
     $locale =~ s/^(nb|nn)\b/${1}_NO/;
 
-    # Set gettext locale
-    ## Define what catalogs are used
-    Locale::Messages::bindtextdomain(sympa    => Sympa::Constants::LOCALEDIR);
-    Locale::Messages::bindtextdomain(web_help => Sympa::Constants::LOCALEDIR);
-    Locale::Messages::textdomain('sympa');
-    ## Get translations by internal encoding.
-    Locale::Messages::bind_textdomain_codeset(sympa    => 'utf-8');
-    Locale::Messages::bind_textdomain_codeset(web_help => 'utf-8');
-
     ## Check if catalog is loaded.
     if ($locale ne 'en') {
         local %ENV;
@@ -440,10 +441,10 @@ sub _set_locale {
 }
 
 sub GetLangName {
-    my $lang = shift || GetLang();
+    my $lang = shift;
     my $name;
 
-    PushLang($lang);
+    PushLang($lang) if $lang;
 
     unless ($current_lang and $current_lang ne 'en') {
         $name = 'English';
@@ -458,7 +459,7 @@ sub GetLangName {
         }
     }
 
-    PopLang();
+    PopLang() if $lang;
 
     return (defined $name and $name =~ /\S/) ? $name : '';
 }
@@ -567,15 +568,15 @@ sub Lang2Locale_old {
 ## NOTE: This might be moved to tt2 package.
 sub maketext {
     my $template_file = shift;
-    my $msg           = shift;
+    my $msgid         = shift;
 
     my $translation;
     my $textdomain = $template2textdomain{$template_file};
 
     if ($textdomain) {
-        $translation = dgettext($textdomain, $msg);
+        $translation = dgettext($textdomain, $msgid);
     } else {
-        $translation = &gettext($msg);
+        $translation = gettext($msgid);
     }
 
     ## replace parameters in string
@@ -589,109 +590,47 @@ sub maketext {
 # Note: older name is sympa_dgettext().
 sub dgettext {
     my $textdomain = shift;
-    my @param      = @_;
+    my $msgid      = shift;
 
-    ## This prevents meta information to be returned if the string to
-    ## translate is empty
-    unless (defined $param[0]) {
+    # Returns meta information on the catalog.
+    # Note: currently, charset is always 'utf-8'; encoding won't be used.
+    unless (defined $msgid) {
         return;
-    } elsif ($param[0] eq '') {
+    } elsif ($msgid eq '') {    # prevents meta information to be returned
         return '';
-    } elsif ($param[0] =~ '^_(\w+)_$') {
-        ## return meta information on the catalog (language, charset,
-        ## encoding, ...).
-        ## Note: currently, charset is always 'utf-8'; encoding won't be used.
-        my $var = $1;
-        my $metadata;
-        ## Special case: 'en' is null locale
-        if (not $current_lang or $current_lang eq 'en') {
-            $metadata = 'Language-Team: English';
-        } else {
-            local %ENV;
-            $ENV{'LANGUAGE'} = $current_locale;
-            $metadata = Locale::Messages::gettext('');    # get header
-        }
-        foreach (split /\n/, $metadata) {
-            if ($var eq 'language') {
-                if (/^Language-Team:\s*(.+)$/i) {
-                    my $language = $1;
-                    $language =~ s/\s*\<\S+\>//;
-
-                    return $language;
-                }
-            } elsif ($var eq 'charset') {
-                if (/^Content-Type:\s*.*charset=(\S+)$/i) {
-                    return $1;
-                }
-            } elsif ($var eq 'encoding') {
-                if (/^Content-Transfer-Encoding:\s*(.+)$/i) {
-                    return $1;
-                }
-            }
-        }
-        return '';
+    } elsif ($msgid eq '_language_') {
+        return GetLangName();
+    } elsif ($msgid eq '_charset_') {
+        return 'UTF-8';
+    } elsif ($msgid eq '_encoding_') {
+        return '8bit';
     }
 
-    my $ret;
-    do {
-        local %ENV;
-        $ENV{'LANGUAGE'} = $current_locale;
-        $ret = Locale::Messages::dgettext($textdomain, $param[0]);
-    };
-    return $ret;
+    local %ENV;
+    $ENV{'LANGUAGE'} = $current_locale;
+    return Locale::Messages::dgettext($textdomain, $msgid);
 }
 
 sub gettext {
-    my @param = @_;
+    my $msgid = shift;
 
-    ## This prevents meta information to be returned if the string to
-    ## translate is empty
-    unless (defined $param[0]) {
+    # Returns meta information on the catalog.
+    # Note: currently, charset is always 'utf-8'; encoding won't be used.
+    unless (defined $msgid) {
         return;
-    } elsif ($param[0] eq '') {
+    } elsif ($msgid eq '') {    # prevents meta information to be returned
         return '';
-    } elsif ($param[0] =~ '^_(\w+)_$') {
-        ## return meta information on the catalog (language, charset,
-        ## encoding,...)
-        ## Note: currently charset is always 'utf-8'; encoding won't be used.
-        my $var = $1;
-        my $metadata;
-        ## Special case: 'en' is null locale
-        if ($current_lang and $current_lang eq 'en') {    #FIXME
-            $metadata = 'Language-Team: English';
-        } else {
-            local %ENV;
-            $ENV{'LANGUAGE'} = $current_locale;
-            $metadata = Locale::Messages::gettext('');    # get header
-        }
-        foreach (split /\n/, $metadata) {
-            if ($var eq 'language') {
-                if (/^Language-Team:\s*(.+)$/i) {
-                    my $language = $1;
-                    $language =~ s/\<\S+\>//;
-
-                    return $language;
-                }
-            } elsif ($var eq 'charset') {
-                if (/^Content-Type:\s*.*charset=(\S+)$/i) {
-                    return $1;
-                }
-            } elsif ($var eq 'encoding') {
-                if (/^Content-Transfer-Encoding:\s*(.+)$/i) {
-                    return $1;
-                }
-            }
-        }
-        return '';
+    } elsif ($msgid eq '_language_') {
+        return GetLangName();
+    } elsif ($msgid eq '_charset_') {
+        return 'UTF-8';
+    } elsif ($msgid eq '_encoding_') {
+        return '8bit';
     }
 
-    my $ret;
-    do {
-        local %ENV;
-        $ENV{'LANGUAGE'} = $current_locale;
-        $ret = Locale::Messages::gettext($param[0]);
-    };
-    return $ret;
+    local %ENV;
+    $ENV{'LANGUAGE'} = $current_locale;
+    return Locale::Messages::gettext($msgid);
 }
 
 my %date_part_names = (
@@ -1090,7 +1029,7 @@ For argument C<''> returns empty string.
 
 I<Function>.
 Internationalized L<strftime|POSIX/strftime>().
-At first, translates FORMAT argument using current catalog.
+At first, translates $format argument using current catalog.
 Then returns formatted date/time by remainder of arguments.
 
 If appropriate POSIX locale is not available, parts of result (names of days,
@@ -1115,12 +1054,38 @@ Returns:
 
 Translated and formatted string.
 
+=item Lang2Locale ( $lang )
+
+I<Function>, I<internal use>.
+Convert language tag to gettext locale name.
+This function may be useful if you want to know internal information such as
+name of catalog file.
+
+Parameter:
+
+=over
+
+=item $lang
+
+Language tag or similar thing.
+
+=back
+
+Returns:
+
+The gettext locale name.
+For malformed inputs returns C<undef>.
+
+Note:
+In earlier releases this function returned POSIX locale name.
+For this purpose use L</Lang2Locale_old> (See L</Compatibility>).
+
 =back
 
 
 B<Note>:
 
-Calls of L</gettext>() and L</gettext_strftime>() are 
+Calls of L</maketext>(), L</gettext>() and L</gettext_strftime>() are 
 extracted during build process and are added to translation catalog.
 
 =head1 CAVEATS
