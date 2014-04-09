@@ -203,19 +203,15 @@ sub CanonicLang {
 
 sub ImplicatedLangs {
     my @langs = @_;
-    @langs = (GetLang()) unless @langs;
+    @langs = ($current_lang || 'en') unless @langs;
 
     my @implicated_langs = ();
-    my %implicated_langs = ();
 
     foreach my $lang (@langs) {
         my @subtags = CanonicLang($lang);
         while (@subtags) {
             my $l = join '-', grep {$_} @subtags;
-            unless ($implicated_langs{$l}) {
-                push @implicated_langs, $l;
-                $implicated_langs{$l} = 1;
-            }
+            @implicated_langs = ((grep { $_ ne $l } @implicated_langs), $l);
 
             ## Workaround:
             ## - "zh-Hans-CN", "zh-Hant-TW", ... may occasionally be
@@ -223,10 +219,8 @@ sub ImplicatedLangs {
             ##   implication list.
             if ($l =~ /^zh-(Hans|Hant)-[A-Z]{2}\b/) {
                 $l = join '-', grep {$_} @subtags[0, 2 .. $#subtags];
-                unless ($implicated_langs{$l}) {
-                    push @implicated_langs, $l;
-                    $implicated_langs{$l} = 1;
-                }
+                @implicated_langs =
+                    ((grep { $_ ne $l } @implicated_langs), $l);
             }
 
             1 until pop @subtags;

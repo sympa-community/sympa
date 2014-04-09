@@ -111,21 +111,27 @@ my %tests = (
 
     ## Implicated langs
     ImplicatedLangs => [
-        ['ca'             => ['ca']],
-        ['en-US'          => [qw(en-US en)]],
-        ['ca-ES-valencia' => [qw(ca-ES-valencia ca-ES ca)]],
-        ['be-Latn'        => [qw(be-Latn be)]],
-        ['tyv-Latn-MN'    => [qw(tyv-Latn-MN tyv-Latn tyv)]],
+        [[]                 => ['cs']],
+        [['ca']             => ['ca']],
+        [['en-US']          => [qw(en-US en)]],
+        [['ca-ES-valencia'] => [qw(ca-ES-valencia ca-ES ca)]],
+        [['be-Latn']        => [qw(be-Latn be)]],
+        [['tyv-Latn-MN']    => [qw(tyv-Latn-MN tyv-Latn tyv)]],
         ## zh-Hans-*/zh-Hant-* workaround
-        ['zh-Hans-CN' => [qw(zh-Hans-CN zh-CN zh-Hans zh)]],
-        [   'zh-Hant-HK-xxxxx' => [
+        [['zh-Hans-CN'] => [qw(zh-Hans-CN zh-CN zh-Hans zh)]],
+        [   ['zh-Hant-HK-xxxxx'] => [
                 qw(zh-Hant-HK-xxxxx zh-HK-xxxxx zh-Hant-HK zh-HK zh-Hant zh)]
         ],
         ## non-POSIX locales
-        ['cn' => [qw(zh-CN zh)]],
+        [['cn'] => [qw(zh-CN zh)]],
         ## Old style locales
-        ['en_US' => [qw(en-US en)]],
-        ['nb_NO' => ['nb']],
+        [['en_US'] => [qw(en-US en)]],
+        [['nb_NO'] => ['nb']],
+        ## Multiple arguments
+        [   [qw(tyv-MN tyv-Latn-MN kim tyv-Mong)] =>
+                [qw(tyv-MN tyv-Latn-MN tyv-Latn kim tyv-Mong tyv)]
+        ],
+        [[qw(zh zh-TW zh-Hant-TW)] => [qw(zh-Hant-TW zh-TW zh-Hant zh)]],
     ],
 
     ## Content negotiation
@@ -224,10 +230,12 @@ foreach my $test (@{$tests{CanonicLang}}) {
     );
 }
 
+Sympa::Language::SetLang('cs');
 foreach my $test (@{$tests{ImplicatedLangs}}) {
-    is_deeply([Sympa::Language::ImplicatedLangs($test->[0])],
-        $test->[1],
-        "ImplicatedLangs($test->[0])" . ($test->[2] ? ": $test->[2]" : ''));
+    is_deeply([Sympa::Language::ImplicatedLangs(@{$test->[0]})], $test->[1],
+              'ImplicatedLangs('
+            . join(' ', @{$test->[0]}) . ')'
+            . ($test->[2] ? ": $test->[2]" : ''));
 }
 
 foreach my $test (@{$tests{NegotiateLang}}) {
