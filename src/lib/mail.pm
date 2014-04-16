@@ -1125,9 +1125,8 @@ sub fix_part($$$$) {
 
     my $enc = $part->head->mime_encoding;
     # Parts with nonstandard encodings aren't modified.
-    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
-	return $part;
-    }
+    return $part
+	if $enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i;
     my $eff_type = $part->effective_type;
     # Signed or encrypted parts aren't modified.
     if ($eff_type =~ m{^multipart/(signed|encrypted)$}){

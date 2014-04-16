@@ -3871,12 +3871,13 @@ sub wrap_text {
 #*******************************************
 # Function : addrencode
 # Description : return formatted (and encoded) name-addr as RFC5322 3.4.
-## IN : addr, [phrase, [charset]]
+## IN : addr, [phrase, [charset, [comment]]]
 #*******************************************
 sub addrencode {
     my $addr = shift;
     my $phrase = (shift || '');
     my $charset = (shift || 'utf8');
+    my $comment = (shift || '');
 
     return undef unless $addr =~ /\S/;
 
@@ -3886,15 +3887,26 @@ sub addrencode {
 	    'Encoding' => 'A', 'Charset' => $charset,
 	    'Replacement' => 'FALLBACK',
 	    'Field' => 'Resent-Sender', # almost longest
-	    'Minimal' => 'DISPNAME',    # needs MIME::EncWords >= 1.012
+	    'Minimal' => 'DISPNAME',	# needs MIME::EncWords >= 1.012.
             );
-	return "$phrase <$addr>";
     } elsif ($phrase =~ /\S/) {
 	$phrase =~ s/([\\\"])/\\$1/g;
-	return "\"$phrase\" <$addr>";
-    } else {
-	return "<$addr>";
+	$phrase = '"' . $phrase . '"';
     }
+    if ($comment =~ /[^\s\x21-\x27\x2A-\x5B\x5D-\x7E]/) {
+	$comment = MIME::EncWords::encode_mimewords(
+	    Encode::decode('utf8', $comment),
+	    'Encoding' => 'A', 'Charset' => $charset,
+	    'Replacement' => 'FALLBACK',
+	    'Minimal' => 'DISPNAME',
+	    );
+    } elsif ($comment =~ /\S/) {
+	$comment =~ s/([\\\"])/\\$1/g;
+    }
+
+    return ($phrase =~ /\S/ ? "$phrase " : '')
+	. ($comment =~ /\S/ ? "($comment) " : '')
+	. "<$addr>";
 }
 
 # Generate a newsletter from an HTML URL or a file path.

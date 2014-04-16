@@ -237,11 +237,16 @@ sub merge_msg {
     }
 
     # Initialize parameters at first only once.
-    $data->{'headers'} = {} unless defined $data->{'headers'};
+    $data->{'headers'} ||= {};
     my $headers = $entity->head;
     foreach my $key ( qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/ ) {
-	$data->{'headers'}{$key} = $headers->get($key) if $headers->count($key);
+	next unless $headers->count($key);
+	my $value = $headers->get($key, 0);
+	chomp $value;
+	$value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g; # unfold
+	$data->{'headers'}{$key} = $value;
     }
+    $data->{'subject'} = tools::decode_header($headers, 'Subject');
 
     return _merge_msg($entity, $rcpt, $bulk, $data);
 }
@@ -275,6 +280,15 @@ sub _merge_msg {
 	return $entity;
     } elsif (MIME::Tools::textual_type($eff_type)) {
 	my ($charset, $in_cset, $bodyh, $body, $utf8_body);
+
+	$data->{'part'} = {
+	    description =>
+		tools::decode_header($entity, 'Content-Description'),
+	    disposition =>
+		lc($entity->head->mime_attr('Content-Disposition') || ''),
+	    encoding => $enc,
+	    type     => $eff_type,
+	};
 
 	$bodyh = $entity->bodyhandle;
 	# Encoded body or null body won't be modified.
@@ -399,7 +413,7 @@ sub merge_data {
     $options->{'is_not_template'} = 1;
 
     # get_list_member_no_object() return the user's details with the custom attributes
-    my $user = &List::get_list_member_no_object(
+    my $user = List::get_list_member_no_object(
 	{
 	    'email'  => $rcpt,
 	    'name'   => $listname,

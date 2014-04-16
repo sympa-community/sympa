@@ -2077,6 +2077,53 @@ my %alias = ('reply-to' => 'reply_to',
 			'conf' => 'dkim_signature_apply_on'
 		}
 	},
+
+# SJS START
+	'dmarc_protection' => { 
+	    'format' => {
+		'mode' => {
+		    'format' => [ 'none', 'all', 'dkim_signature', 'dmarc_reject', 'domain_regex' ],
+		    'synonym' => {
+			'dkim' => 'dkim_signature',
+			'domain' => 'domain_regex',
+		    },
+		    'gettext_id' => "Protection modes",
+		    'split_char' => ',',
+		    'occurrence' => '0-n',
+		    'default' => 'none',
+		    'gettext_comment' => 'Select one or more operation modes.  Domain matches the specified Domain regexp; Dkim matches any message with a DKIM signature header; Dmarc matches messages from sender domains with a reject DMARC policy; All matches all messages.',
+		    'order' => 1,
+		},
+		'domain_regex' => {
+		    'format' => '.+',
+		    'gettext_id' => "Match domain regexp",
+		    'occurrence' => '0-1',
+		    'gettext_comment' => 'Regexp match pattern for From domain',
+		    'order' => 2,
+		},
+		'other_email' => {
+		    'format' => '.+',
+		    'gettext_id' => "New From address",
+		    'occurrence' => '0-1',
+		    'gettext_comment' => 'This is the email address to use when modifying the From header.  It defaults to the list address.  This is similar to Anonymisation but preserves the original sender details in the From address phrase.',
+		    'order' => 3,
+		},
+		'phrase' => {
+		    'format' => [ 'display_name', 'name_and_email', 'name_via_list' ],
+		    'synonym' => {'name' => 'display_name'},
+		    'default' => 'name_via_list',
+		    'gettext_id' => "New From name format",
+		    'occurrence' => '0-1',
+		    'gettext_comment' => 'This is the format to be used for the sender name part of the new From header.',
+		    'order' => 4,
+		},
+	    },
+	    'gettext_id' => "DMARC Protection",
+	    'group' => 'dkim',
+	    'gettext_comment' => 'Parameters to define how to manage From address processing to avoid some domains\' excessive DMARC protection', 
+	    'occurrence' => '0-1',
+        },
+# SJS END
 	
 	### Others page ###
 	
@@ -2328,7 +2375,7 @@ my %list_option = (
     'list' => {'gettext_id' => 'list'},
 
     # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
-    # include_ldap_query.select, reply_to_header.value
+    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode
     'all' => {'gettext_id' => 'all'},
 
     # reply_to_header.value
@@ -2341,7 +2388,8 @@ my %list_option = (
 
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
-    # spam_protection, dkim_signature_apply_on, web_archive_spam_protection
+    # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
+    # dmarc_protection.mode
     'none' => {'gettext_id' => 'do nothing'},
 
     # bouncers_level2.notification, bouncers_level1.notification,
@@ -2483,6 +2531,16 @@ my %list_option = (
 
     # tracking.message_delivery_notification
     'on_demand' => {'gettext_id' => 'on demand'},
+
+    # dmarc_protection.mode
+    'dkim_signature' => {'gettext_id' => 'DKIM signature exists'},
+    'dmarc_reject'   => {'gettext_id' => 'DMARC policy suggests rejection'},
+    'domain_regex'   => {'gettext_id' => 'domain matching regular expression'},
+
+    # dmarc_protection.phrase
+    'display_name'   => {'gettext_id' => 'display name'},
+    'name_and_email' => {'gettext_id' => 'display name and e-mail'},
+    'name_via_list'  => {'gettext_id' => '"via Mailing List"'},
 );
 
 ## Values for subscriber reception mode.
@@ -3532,6 +3590,105 @@ sub distribute_msg {
 	    $message->add_topic($info_msg_topic->{'topic'});
 	}
     }
+
+# SJS START
+    ## Munge the From header if we are using DMARC Protection mode
+    if ( $self->{'admin'}{'dmarc_protection'}{'mode'} ) {
+        my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
+        my $originalFromHeader = $hdr->get('From');
+        my $anonaddr;
+        my @addresses = Mail::Address->parse($originalFromHeader);
+        my @anonFrom;
+        my $dkimSignature = $hdr->get('DKIM-Signature');
+        my $origFrom = '';
+        my $mungeFrom = 0;
+
+        if ( @addresses ) { $origFrom = $addresses[0]->address; }
+
+        # Will this message be processed?
+        $mungeFrom = 1 if( &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'all') );
+        if( !$mungeFrom and $dkimSignature 
+            and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dkim_signature')) {
+            $mungeFrom = 1;
+        }
+        if( !$mungeFrom and $origFrom and $dkimdomain 
+            and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'domain_regex') ) {
+            $mungeFrom = 1 if( $origFrom =~ /$dkimdomain$/ );
+        }
+        if( !$mungeFrom and $origFrom 
+            and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_reject') ) {
+            # Strict auto policy - is the sender domain policy to reject
+            my $dom = $origFrom; $dom =~ s/^.*\@//;
+            $hdr->add('X-DMARC-DNS-Check',$dom);
+            eval { # In case Net::DNS is not installed
+                require Net::DNS;
+                my $res = Net::DNS::Resolver->new;
+                my $packet = $res->query("_dmarc.$dom","TXT");
+                if ($packet) {
+                    foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
+                        $mungeFrom = 1 if($rr->string =~ /p=reject/);
+                        $hdr->add('X-Original-DMARC-Record',"domain=$dom; ".$rr->string);
+                    }
+                }
+            };
+            $hdr->add('X-DMARC-Error',$@) if($@);
+        }
+
+        if( $mungeFrom ) {
+            # Remove any DKIM signatures we find
+            if( $dkimSignature ) {
+                $hdr->add('X-Original-DKIM-Signature',$dkimSignature);
+                $hdr->delete('DKIM-Signature');
+                $hdr->delete('DomainKey-Signature');
+            }
+
+            # Identify default new From address
+            my $phraseMode = $self->{'admin'}{'dmarc_protection'}{'phrase'};
+            my $newAddr = '';
+            my $userName = gettext('Anonymous');
+	    my $newComment;
+            $anonaddr = $self->{'admin'}{'dmarc_protection'}{'other_email'};
+            $anonaddr = $name . '@' . $host if(!$anonaddr or $anonaddr !~/@/);
+            @anonFrom = Mail::Address->parse($anonaddr);
+
+            if (@addresses) {
+                # We should always have a From address in reality, unless the
+                # message is from a badly-behaved automate
+                if ($addresses[0]->phrase) {
+                    $userName = MIME::EncWords::decode_mimewords(
+			$addresses[0]->phrase, Charset => 'UTF-8');
+                    $newComment = $addresses[0]->address
+			if $phraseMode eq 'name_and_email';
+                } else {
+                    # If we dont have a Phrase, should we search the Sympa database
+                    # for the sender to obtain their name that way? Might be difficult.
+                    $userName = $addresses[0]->address;
+                    $userName =~ s/\@.*// unless($phraseMode eq 'name_and_email');
+                    $userName = gettext('Anonymous') unless $userName =~ /\S/;
+                }
+                if($phraseMode eq 'name_and_email') { # NAME (EMAIL)
+                    ;
+                } elsif($phraseMode eq 'name_via_list') { # NAME (via LIST Mailing List)
+                    $newComment =
+			sprintf gettext('via %s Mailing List'), $name;
+                } else { # default:  NAME
+                    undef $newComment;
+                }
+                $hdr->add('Reply-To',$addresses[0]->address) unless($hdr->get('Reply-To'));
+            }
+            # If the new From email address has a Phrase component, then append it
+            $userName .= ' '.$anonFrom[0]->phrase if(@anonFrom and $anonFrom[0]->phrase);
+           
+            $newAddr = tools::addrencode(
+		(@anonFrom ? $anonFrom[0]->address : $anonaddr),
+		$userName, Language::GetCharset(), $newComment);
+
+            $hdr->add('X-Original-From',"$originalFromHeader");
+            $hdr->replace('From', $newAddr);
+        }
+
+    }
+# SJS END
 
     ## Hide the sender if the list is anonymoused
     if ($self->{'admin'}{'anonymous_sender'}) {

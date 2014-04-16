@@ -59,7 +59,7 @@ sub new {
     my $ajax =  $context->{'ajax'};
 
     &Log::do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
-    my $self = {};
+    my $self = {'robot' => $robot}; # set current robot
     bless $self, $pkg;
     
     unless ($robot) {
@@ -79,7 +79,7 @@ sub new {
     # store sessions from bots
     if (($cookie)&&($self->{'passive_session'} != 1)){
 	my $status ;
-	$status = $self->load($robot, $cookie);
+	$status = $self->load($cookie);
 	unless (defined $status) {
 	    return undef;
 	}
@@ -96,7 +96,6 @@ sub new {
 	$self->{'date'} = $self->{'refresh_date'} = $self->{'start_date'} =
 	    time;
 	$self->{'hit'} = 1;
-	$self->{'robot'} = $robot; 
 	$self->{'data'} = '';
     }
     return $self;
@@ -104,10 +103,8 @@ sub new {
 
 sub load {
     my $self = shift;
-    my $robot = shift;
     my $cookie = shift;
-    
-    Log::do_log('debug', 'SympaSession::load(%s, %s)', $robot, $cookie);
+    Log::do_log('debug', '(%s)', $cookie);
 
     unless ($cookie) {
 	Log::do_log('err',
@@ -131,15 +128,14 @@ sub load {
 	    q{SELECT id_session AS id_session, id_session AS prev_id,
 		     date_session AS "date",
 		     remote_addr_session AS remote_addr,
-		     robot_session AS robot, email_session AS email,
+		     email_session AS email,
 		     data_session AS data, hit_session AS hit,
 		     start_date_session AS start_date,
 		     date_session AS refresh_date
 	      FROM session_table
-	      WHERE robot_session = ? AND
-		    id_session = ? AND
+	      WHERE id_session = ? AND
 		    refresh_date_session IS NULL},
-	    $robot, $id_session
+	    $id_session
 	)) {
 	    Log::do_log('err', 'Unable to load session %s', $id_session);
 	    return undef;
@@ -157,16 +153,14 @@ sub load {
 	    q{SELECT id_session AS id_session, prev_id_session AS prev_id,
 		     date_session AS "date",
 		     remote_addr_session AS remote_addr,
-		     robot_session AS robot, email_session AS email,
+		     email_session AS email,
 		     data_session AS data, hit_session AS hit,
 		     start_date_session AS start_date,
 		     refresh_date_session AS refresh_date
 	      FROM session_table
-	      WHERE robot_session = ? AND
-		    (id_session = ? AND prev_id_session IS NOT NULL OR
-		     prev_id_session = ?)},
-	    $robot, $id_session, $id_session
-	)) {
+	      WHERE id_session = ? AND prev_id_session IS NOT NULL OR
+		    prev_id_session = ?},
+	    $id_session, $id_session)) {
 	    Log::do_log('err', 'Unable to load session %s', $id_session);
 	    return undef;
 	}    
@@ -210,7 +204,6 @@ sub load {
     $self->{'start_date'} = $session->{'start_date'};
     $self->{'hit'} = $session->{'hit'} +1 ;
     $self->{'remote_addr'} = $session->{'remote_addr'};
-    $self->{'robot'} = $session->{'robot'};
     $self->{'email'} = $session->{'email'};    
 
     return ($self);
@@ -218,7 +211,6 @@ sub load {
 
 ## This method will both store the session information in the database
 sub store {
-
     my $self = shift;
     &Log::do_log('debug', '');
 
@@ -269,9 +261,8 @@ sub store {
 	my $sth = SDM::do_prepared_query(
 	    q{SELECT id_session
 	      FROM session_table
-	      WHERE robot_session = ? AND prev_id_session = ?},
-	    $self->{'robot'}, $self->{'id_session'}
-	);
+	      WHERE prev_id_session = ?},
+	    $self->{'id_session'});
 	unless ($sth) {
 	    Log::do_log('err',
 		'Unable to update session information in database');
@@ -292,13 +283,11 @@ sub store {
 	      SET date_session = ?, remote_addr_session = ?,
 		  robot_session = ?, email_session = ?,
 		  start_date_session = ?, hit_session = ?, data_session = ?
-	      WHERE robot_session = ? AND
-		    (id_session = ? AND prev_id_session IS NOT NULL OR
-		     prev_id_session = ?)},
+	      WHERE id_session = ? AND prev_id_session IS NOT NULL OR
+		    prev_id_session = ?},
 	    $time, $ENV{'REMOTE_ADDR'},
 	    $self->{'robot'}, $self->{'email'},
 	    $self->{'start_date'}, $self->{'hit'}, $data_string,
-	    $self->{'robot'},
 	    $self->{'id_session'},
 	    $self->{'id_session'}
     )) {
@@ -307,7 +296,7 @@ sub store {
 	    $self->{'id_session'}
 	);
 	return undef;
-      }    
+      }
     }
 
     return 1;
@@ -315,7 +304,6 @@ sub store {
 
 ## This method will renew the session ID 
 sub renew {
-
     my $self = shift;
     &Log::do_log('debug', 'id_session=(%s)',$self->{'id_session'});
 
@@ -336,8 +324,8 @@ sub renew {
     $sth = SDM::do_prepared_query(
 	q{SELECT id_session
 	  FROM session_table
-	  WHERE robot_session = ? AND prev_id_session = ?},
-	$self->{'robot'}, $self->{'id_session'}
+	  WHERE prev_id_session = ?},
+	$self->{'id_session'}
     );
     unless ($sth) {
 	Log::do_log('err',
@@ -386,11 +374,10 @@ sub renew {
 	   hit_session, data_session)
 	  SELECT %s, id_session,
 		 start_date_session, date_session, %d,
-		 %s, robot_session, email_session,
+		 %s, %s, email_session,
 		 hit_session, data_session
 	  FROM session_table
-	  WHERE robot_session = %s AND
-		(id_session = %s AND prev_id_session IS NOT NULL OR
+	  WHERE (id_session = %s AND prev_id_session IS NOT NULL OR
 		 prev_id_session = %s) AND
 		(remote_addr_session <> %s OR refresh_date_session <= %d)},
 	SDM::quote($new_id),
@@ -413,8 +400,8 @@ sub renew {
     SDM::do_prepared_query(
 	q{UPDATE session_table
 	  SET prev_id_session = NULL
-	  WHERE robot_session = ? AND id_session = ?},
-	$self->{'robot'}, $self->{'id_session'}
+	  WHERE id_session = ?},
+	$self->{'id_session'}
     );
     ## Remove record of grand-parent ID.
     SDM::do_prepared_query(
@@ -586,8 +573,8 @@ sub list_sessions {
     
     while (my $session = ($sth->fetchrow_hashref('NAME_lc'))) {
 
-	$session->{'formated_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'date_session'}));
-	$session->{'formated_start_date'} = &Language::gettext_strftime ("%d %b %y  %H:%M", localtime($session->{'start_date_session'}));
+	$session->{'formated_date'} = Language::gettext_strftime("%d %b %Y at %H:%M:%S", localtime($session->{'date_session'}));
+	$session->{'formated_start_date'} = Language::gettext_strftime("%d %b %Y at %H:%M:%S", localtime($session->{'start_date_session'}));
 
 	push @sessions, $session;
     }
