@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use Test::More;
 
-use lib 't/stub', @INC;
+use lib qw(t/stub);
 use Sympa::Language;
 
 my %tests = (
