@@ -11139,7 +11139,7 @@ sub do_purge_list {
      my @users = &List::_load_list_members_file("$list->{'dir'}/subscribers.closed.dump");
      ## Insert users in database
      foreach my $user (@users) {
-	 $list->add_user($user);
+	 $list->add_list_member($user);
      }
 
      $list->savestats(); 
@@ -15731,7 +15731,7 @@ sub do_change_email {
          foreach my $list ( &List::get_which($old_email,$robot, $role) ) {
 
 	     ## Check if admin is include via an external datasource
-	     my $admin_user = $list->get_admin_user($role, $old_email);
+	     my $admin_user = $list->get_list_admin($role, $old_email);
 	     if ($admin_user->{'included'}) {
 		 ## Notify listmaster
 		 &List::send_notify_to_listmaster('failed_to_change_included_admin',$robot,{'list' => $list,

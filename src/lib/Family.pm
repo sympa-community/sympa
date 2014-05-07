@@ -2556,7 +2556,7 @@ sub _set_status_changes {
 ##	    
 ##	    ## Insert users in database
 ##	    foreach my $user (@users) {
-##		$list->add_user($user);
+##		$list->add_list_member($user);
 ##	    }
 ##	}
 ##    }
