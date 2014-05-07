@@ -2352,7 +2352,7 @@ Gets list customizations from the config_changes file and keeps on changes allow
 
 =item * List::get_config_changes
 
-=item * List::_get_param_value_anywhere
+=item * List::get_param_value
 
 =item * Log::do_log
 
@@ -2412,6 +2412,11 @@ sub _get_customizing {
 	return undef;
     }
 
+    my $fake_list =
+        bless {'domain' => $list->{'domain'}, 'admin' => $changed_values} =>
+        'List';
+    ## TODO: update parameter cache
+
     foreach my $param (keys %{$constraint}) {
 	my $constraint_value = $constraint->{$param};
 	my $param_value;
@@ -2422,7 +2427,7 @@ sub _get_customizing {
 	    next;
 	}
 
-	$param_value = &List::_get_param_value_anywhere($changed_values,$param);
+	$param_value = $fake_list->get_param_value($param, 1);
  
 	$value_error = $self->check_values($param_value,$constraint_value);
 

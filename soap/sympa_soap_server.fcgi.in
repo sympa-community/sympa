@@ -74,8 +74,6 @@ unless (&SDM::check_db_connect()) {
     &Log::do_log('err','SOAP server requires a RDBMS to run');
 }
 
-my $pinfo = &List::_apply_defaults();
-
 ## The process should not fork for sending mail
 ## Messages will be spooled instead
 &mail::set_send_spool($Conf{'queue'});

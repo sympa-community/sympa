@@ -179,8 +179,6 @@ unless (chdir($Conf{'home'})) {
     exit (-1);
 }
 
-my $pinfo = &List::_apply_defaults();
-
 &Log::do_log('notice', "bounced Started");
 
 

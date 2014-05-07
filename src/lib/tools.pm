@@ -4041,4 +4041,24 @@ sub get_supported_languages {
     return \@lang_list;
 }
 
+=over 4
+
+=item get_list_params
+
+I<Getter>.
+Returns hashref to list parameter information.
+
+=back
+
+=cut
+
+sub get_list_params {
+    my $robot_id = shift;
+
+    my $pinfo = tools::dup_var(\%Sympa::ListDef::pinfo);
+    $pinfo->{'lang'}{'format'} = [tools::get_supported_languages($robot_id)];
+
+    return $pinfo;
+}
+
 1;

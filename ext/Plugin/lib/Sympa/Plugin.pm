@@ -191,8 +191,8 @@ warn ref $self, Dumper $args;
 sub registerListSource($)
 {   my ($self, $args) = @_;
 
-    # Add info to listdef.pm table.  This can be made simpler with some
-    # better defaults in listdef.pm itself.
+    # Add info to ListDef.pm table.  This can be made simpler with some
+    # better defaults in ListDef.pm itself.
     if(my $form = $args->{listdef})
     {   my @form = @$form;
         while(@form)
@@ -214,10 +214,10 @@ sub registerListSource($)
             # for convenience, default occurence==1
             $_->{occurrence} ||= 1 for values %$format;
 
-            listdef::cleanup($header, $fields);
-            $listdef::pinfo{$header} = $fields;
-            $fields->{order} = @listdef::param_order;  # to late for init
-            push @listdef::param_order, $header;
+            Sympa::ListDef::cleanup($header, $fields);
+            $Sympa::ListDef::pinfo{$header} = $fields;
+            $fields->{order} = @Sympa::ListDef::param_order;  # to late for init
+            push @Sympa::ListDef::param_order, $header;
         }
     }
 

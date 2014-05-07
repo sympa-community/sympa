@@ -935,8 +935,6 @@ $Language::default_lang = $Conf{'lang'};
 ## Important to leave this there because it defined defaults for user_data_source
 &SDM::check_db_connect();
 
-my $pinfo = &List::_apply_defaults();
-
 # Now, load all components which are implemented as plugins.  Those will
 # add fields to above configuration and may do database upgrades.
 $plugins->start if $plugins;
@@ -979,6 +977,7 @@ Log::do_log(info => "WWSympa started, process $$");
      undef $list;
      undef $robot;
      undef $robot_object;
+    undef $pinfo;
      undef $ip;
      undef $rss;
      undef $ajax;
@@ -1054,6 +1053,7 @@ Log::do_log(info => "WWSympa started, process $$");
      # Not yet implemented
      ### Create Robot object
      #$robot_object = new Robot $robot;
+    $pinfo = tools::get_list_params($robot);
 
      ## Default robot
      if ($robot eq $Conf{'host'}) {
@@ -9776,7 +9776,7 @@ sub do_edit_list {
 	## If the list belongs to a family, gather all the constraints for each edited parameter.
 	if (ref($family) eq 'Family') {
 	    
-	    if ((ref($::pinfo{$pname}{'format'}) ne 'HASH') && (!ref($pname))) { # simple parameter
+	    if ((ref($pinfo->{$pname}{'format'}) ne 'HASH') && (!ref($pname))) { # simple parameter
 		my $constraint = $family->get_param_constraint($pname);
 		
 		if (ref($constraint) eq 'HASH') { # controlled parameter        
@@ -10329,15 +10329,18 @@ sub _check_new_values {
     my $pname = shift;
     my $new_admin = shift;
     &wwslog('debug3', '_check_new_values(%s)',$pname);
-    
+
+    my $fake_list =
+        bless { 'domain' => $robot, 'admin' => $new_admin } => 'List';
+    ## TODO: update parameter cache    
     my $uncompellable_param = &Family::get_uncompellable_param();
 
-    if (ref($::pinfo{$pname}{'format'}) eq 'HASH') { #composed parameter
+    if (ref($pinfo->{$pname}{'format'}) eq 'HASH') { #composed parameter
 
 	foreach my $key (keys %{$check_family->{$pname}}) {
 		    
 	    my $constraint = $check_family->{$pname}{$key};
-	    my $values = &List::_get_param_value_anywhere($new_admin,"$pname.$key");
+	    my $values = $fake_list->get_param_value("$pname.$key", 1);
 	    my $nb_for = 0;
 	    
 	    # exception for uncompellable param
@@ -10380,7 +10383,7 @@ sub _check_new_values {
 
 
 	my $constraint = $check_family->{$pname};
-	my $values = &List::_get_param_value_anywhere($new_admin,$pname);
+	my $values = $fake_list->get_param_value($pname, 1);
 	my $nb_for = 0;
 
 
@@ -10612,7 +10615,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 =item * I<$name> (STRING), the name of the parameter processed
 
-=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %List::pinfo
+=item * I<$struct> (HASH_Ref), a ref to the hash describing this parameter in %Sympa::ListDef::pinfo
 
 =item * I<$data> (), the value(s) taken by this parameter in the current list. Can be a reference to a list or the value of a single parameter.
 
@@ -10671,12 +10674,12 @@ Returns a reference to a hash containing the data used to edit the parameter (of
     my $constraint;
     if ((ref($family) eq 'Family') && ($may_edit eq 'write')) {
 	
- 	if ($main_p && defined $::pinfo{$main_p}) { 
- 	    if (ref($::pinfo{$main_p}{'format'}) eq 'HASH') { # composed parameter
+ 	if ($main_p && defined $pinfo->{$main_p}) { 
+ 	    if (ref($pinfo->{$main_p}{'format'}) eq 'HASH') { # composed parameter
  		$constraint = $family->get_param_constraint("$main_p.$p_glob->{'name'}");
  	    }	
  	} else {       # simple parameter
- 	    if (ref($::pinfo{$p_glob->{'name'}}{'format'}) ne 'HASH') { # simple parameter
+ 	    if (ref($pinfo->{$p_glob->{'name'}}{'format'}) ne 'HASH') { # simple parameter
  		$constraint = $family->get_param_constraint($p_glob->{'name'});
  	    }
  	}

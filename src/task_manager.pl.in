@@ -157,8 +157,6 @@ unless (chdir($Conf{'home'})) {
     exit (-1);
 }
 
-my $pinfo = &List::_apply_defaults();
-
 ## Catch SIGTERM, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
 my $end = 0;

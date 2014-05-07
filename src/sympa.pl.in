@@ -232,9 +232,6 @@ unless (Conf::load()) {
    
 }
 
-## Apply defaults to %List::pinfo
-&List::_apply_defaults();
-
 &tools::ciphersaber_installed();
 
 if (&tools::cookie_changed($Conf{'cookie'})) {
