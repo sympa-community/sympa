@@ -369,9 +369,9 @@ sub get_global_user {
 	## Turn user_attributes into a hash
 	my $attributes = $user->{'attributes'};
 	if (defined $attributes and length $attributes) {
-	    $user->{'attributes'} ||= {};
-	    foreach my $attr (split(/\;/, $attributes)) {
-		my ($key, $value) = split(/\=/, $attr);
+	    $user->{'attributes'} = {};
+	    foreach my $attr (split(/__ATT_SEP__/, $attributes)) {
+		my ($key, $value) = split(/__PAIRS_SEP__/, $attr);
 		$user->{'attributes'}{$key} = $value;
 	    }
 	    delete $user->{'attributes'}
