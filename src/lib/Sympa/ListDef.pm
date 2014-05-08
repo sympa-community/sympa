@@ -1842,7 +1842,7 @@ our %pinfo = (
         'gettext_id' => "DMARC Protection",
         'group'      => 'dkim',
         'gettext_comment' =>
-            'Parameters to define how to manage From address processing to avoid some domains\' excessive DMARC protection',
+            "Parameters to define how to manage From address processing to avoid some domains' excessive DMARC protection",
         'occurrence' => '0-1',
     },
     # SJS END
