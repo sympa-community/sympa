@@ -119,25 +119,45 @@ sub decode_utf8 {
 
 }
 
+## We use different catalog/textdomains depending on the template that
+## requests translations
+my %template2textdomain = (
+    'help_admin.tt2'         => 'web_help',
+    'help_arc.tt2'           => 'web_help',
+    'help_editfile.tt2'      => 'web_help',
+    'help_editlist.tt2'      => 'web_help',
+    'help_faqadmin.tt2'      => 'web_help',
+    'help_faquser.tt2'       => 'web_help',
+    'help_introduction.tt2'  => 'web_help',
+    'help_listconfig.tt2'    => 'web_help',
+    'help_mail_commands.tt2' => 'web_help',
+    'help_sendmsg.tt2'       => 'web_help',
+    'help_shared.tt2'        => 'web_help',
+    'help.tt2'               => 'web_help',
+    'help_user_options.tt2'  => 'web_help',
+    'help_user.tt2'          => 'web_help',
+);
+
 sub maketext {
     my ($context, @arg) = @_;
 
-    my $stash = $context->stash();
-    my $component = $stash->get('component');
-    my $template_name = $component->{'name'};
-    my ($provider) = grep { $_->{HEAD}[2] eq $component } @{ $context->{LOAD_TEMPLATES} };
-    my $path = $provider->{HEAD}[1] if $provider;
-
-    ## Strangely the path is sometimes empty...
-    ## TODO : investigate
-#    &Log::do_log('notice', "PATH: $path ; $template_name");
-
-    ## Sample code to dump the STASH
-    # my $s = $stash->_dump();    
+    my $template_name = $context->stash->get('component')->{'name'};
+    my $textdomain = $template2textdomain{$template_name};
 
     return sub {
-	&Language::maketext($template_name, $_[0],  @arg);
-    }	
+	my $translation;
+
+	if ($textdomain) {
+	    $translation = Language::sympa_dgettext($textdomain, $_[0]);
+	} else {
+	    $translation = Language::gettext($_[0]);
+	}
+
+	## replace parameters in string
+	$translation =~ s/[%]([%]|\d+)/($1 eq '%') ? '%' : $arg[$1 - 1]/eg;
+
+	return $translation;
+    }
 }
 
 # IN:
