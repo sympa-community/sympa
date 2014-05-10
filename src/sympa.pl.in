@@ -933,7 +933,7 @@ if ($main::options{'dump'}) {
 	## Determine default lang for this list
 	## It should tell us what character encoding was used for filenames
 	&Language::SetLang($list->{'admin'}{'lang'});
-	my $list_encoding = &Language::GetCharset();
+	my $list_encoding = tools::lang2charset(Language::GetLang());
 	
 	my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
 	

@@ -1589,7 +1589,8 @@ sub distribute_msg {
            
             $newAddr = tools::addrencode(
 		(@anonFrom ? $anonFrom[0]->address : $anonaddr),
-		$userName, Language::GetCharset(), $newComment);
+		$userName, tools::lang2charset(Language::GetLang()),
+		$newComment);
 
             $hdr->add('X-Original-From',"$originalFromHeader");
             $hdr->replace('From', $newAddr);
@@ -1696,7 +1697,7 @@ sub distribute_msg {
 	    $subject_field = $before_tag . ' ' .
 		MIME::EncWords::encode_mimewords(
 		Encode::decode_utf8('[' . $parsed_tag . ']'),
-		Charset  => Language::GetCharset(),
+		Charset  => tools::lang2charset(Language::GetLang()),
 		Encoding => 'A',
 		Field    => 'Subject'
 		) .
@@ -10220,7 +10221,7 @@ sub _urlize_part {
     my $new_part;
 
     my $lang = &Language::GetLang();
-    my $charset = &Language::GetCharset();
+    my $charset = tools::lang2charset(Language::GetLang());
 
     my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$list);
 

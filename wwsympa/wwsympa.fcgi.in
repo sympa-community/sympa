@@ -14125,7 +14125,8 @@ sub d_unzip_shared_file {
 
     ## Qencode 8bit filenames afterward
     ## The suspected charset is the one that is associated to the user's language
-    &tools::qencode_hierarchy($zip_abs_dir.'/zip', &Language::GetCharset());
+    &tools::qencode_hierarchy($zip_abs_dir.'/zip',
+	tools::lang2charset(Language::GetLang()));
 
     return $status;
 }
@@ -16187,7 +16188,7 @@ sub do_send_mail {
     
     if (defined $param->{'subscriber'}) {
 	$from = &tools::addrencode($from, $param->{'subscriber'}{'gecos'},
-				   &Language::GetCharset());
+	    tools::lang2charset(Language::GetLang()));
     }
     
     ##--------------- TOPICS --------------------

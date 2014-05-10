@@ -492,7 +492,7 @@ sub upgrade {
 		## Determine default lang for this list
 		## It should tell us what character encoding was used for filenames
 		&Language::SetLang($list->{'admin'}{'lang'});
-		my $list_encoding = &Language::GetCharset();
+		my $list_encoding = tools::lang2charset(Language::GetLang());
 
 		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
 
@@ -1118,7 +1118,7 @@ sub to_utf8 {
 	    $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
 	}else {	    
 	    &Language::PushLang($lang);
-	    $charset = &Language::GetCharset;
+	    $charset = tools::lang2charset(Language::GetLang());
 	    &Language::PopLang;
 	}
 	

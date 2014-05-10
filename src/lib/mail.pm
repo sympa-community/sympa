@@ -137,7 +137,7 @@ sub mail_file {
 
     ## Charset for encoding
     &Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
-    $data->{'charset'} ||= &Language::GetCharset();
+    $data->{'charset'} ||= tools::lang2charset(Language::GetLang());
     &Language::PopLang() if defined $data->{'lang'};
 
     ## TT2 file parsing 

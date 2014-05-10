@@ -4061,4 +4061,39 @@ sub get_list_params {
     return $pinfo;
 }
 
+=over
+
+=item lang2charset ( $lang )
+
+Gets charset for e-mail messages sent by Sympa.
+
+Parameters:
+
+$lang - language.
+
+Returns:
+
+Charset name.
+If it is not known, returns default charset.
+
+=back
+
+=cut
+
+## FIXME: This would be moved to such as Site package.
+sub lang2charset {
+    my $lang = shift;
+    return 'utf-8' unless $lang;
+
+    my $locale = Language::Lang2Locale($lang);
+
+    if (%Conf::Conf and $locale) {   # configuration loaded
+	my $locale2charset = $Conf::Conf{'locale2charset'} || {};
+	if (exists $locale2charset->{$locale}) {
+	    return $locale2charset->{$locale};
+        }
+    }
+    return 'utf-8';                  # the last resort
+}
+
 1;
