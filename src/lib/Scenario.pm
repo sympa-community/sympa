@@ -24,7 +24,7 @@
 package Scenario;
 
 use strict;
-
+use warnings;
 use Mail::Address;
 use Net::Netmask;
 # tentative
@@ -35,7 +35,6 @@ use List;
 use Log;
 use Conf;
 use Sympa::Constants;
-use Data::Dumper;
 
 my %all_scenarios;
 my %persistent_cache;
@@ -173,8 +172,13 @@ sub _parse_scenario {
 	if ($current_rule =~ /^\s*title\.gettext\s+(.*)\s*$/i) {
 	    $structure->{'title'}{'gettext'} = $1;
 	    next;
-	}elsif ($current_rule =~ /^\s*title\.(\w+)\s+(.*)\s*$/i) {
-	    $structure->{'title'}{$1} = $2;
+	}elsif ($current_rule =~ /^\s*title\.(\S+)\s+(.*)\s*$/i) {
+	    my ($lang, $title) = ($1, $2);
+	    my $locale = Language::Lang2Locale($lang) || $lang;
+	    $structure->{'title'}{$locale} = $title;
+	    next;
+	} elsif ($current_rule =~ /^\s*title\s+(.*)\s*$/i) {
+	    $structure->{'title'}{'default'} = $1;
 	    next;
 	}
         
@@ -1449,6 +1453,22 @@ sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
     &tools::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
+}
+
+## Get the title in the current language
+sub get_current_title {
+    my $self = shift;
+
+    my $locale = Language::Lang2Locale(Language::GetLang());
+    if (defined $self->{'title'}{$locale}) {
+	return $self->{'title'}{$locale};
+    } elsif (defined $self->{'title'}{'gettext'}) {
+	return Language::gettext($self->{'title'}{'gettext'});
+    } elsif (defined $self->{'title'}{'default'}) {
+	return $self->{'title'}{'default'};
+    } else {
+	return $self->{'name'};
+    }
 }
 
 sub is_purely_closed {

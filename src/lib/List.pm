@@ -24,7 +24,7 @@
 package List;
 
 use strict;
-
+use warnings;
 use Encode;
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use HTML::Entities qw(encode_entities);
@@ -43,8 +43,6 @@ use Fetch;
 use WebAgent;
 use Exporter;
 use Data::Dumper;
-# xxxxxxx faut-il virer encode ? Faut en faire un use ? 
-require Encode;
 
 use tt2;
 use Sympa::Constants;
@@ -6093,18 +6091,6 @@ sub load_scenario_list {
 					 'function' => $action,
 					 'name' => $name);
 	    $list_of_scenario{$name} = $scenario;
-
-	    ## Set the title in the current language
-	    if (defined  $scenario->{'title'}{&Language::GetLang()}) {
-		$list_of_scenario{$name}{'web_title'} = $scenario->{'title'}{&Language::GetLang()};
-	    }elsif (defined $scenario->{'title'}{'gettext'}) {
-		$list_of_scenario{$name}{'web_title'} = gettext($scenario->{'title'}{'gettext'});
-	    }elsif (defined $scenario->{'title'}{'us'}) {
-		$list_of_scenario{$name}{'web_title'} = gettext($scenario->{'title'}{'us'});
-	    }else {
-		$list_of_scenario{$name}{'web_title'} = $name;		     
-	    }
-	    $list_of_scenario{$name}{'name'} = $name;	    
 	}
     }
 

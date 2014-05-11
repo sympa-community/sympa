@@ -10769,8 +10769,11 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 	     
 	     ## Only get required scenario attributes
 	     foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-		 $list_of_scenario->{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						   'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+		$list_of_scenario->{$scenario} = {
+		    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+		    'web_title' =>
+			$tmp_list_of_scenario->{$scenario}->get_current_title()
+		};
 	     }
 
 	     $list_of_scenario->{$d->{'name'}}{'selected'} = 1;
@@ -15127,8 +15130,11 @@ sub d_test_existing_and_rights {
 	     
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-	 $param->{'scenari_read'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+	$param->{'scenari_read'}{$scenario} = {
+	    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+	    'web_title' =>
+		$tmp_list_of_scenario->{$scenario}->get_current_title()
+	};
      }
 
      $param->{'scenari_read'}{$read}{'selected'} = 'selected="selected"';
@@ -15138,8 +15144,11 @@ sub d_test_existing_and_rights {
 	     
      ## Only get required scenario attributes
      foreach my $scenario (keys %{$tmp_list_of_scenario}) {
-	 $param->{'scenari_edit'}{$scenario} = {'name' => $tmp_list_of_scenario->{$scenario}{'name'},
-						'web_title' => $tmp_list_of_scenario->{$scenario}{'web_title'}};
+	$param->{'scenari_edit'}{$scenario} = {
+	    'name' => $tmp_list_of_scenario->{$scenario}{'name'},
+	    'web_title' =>
+		$tmp_list_of_scenario->{$scenario}->get_current_title()
+	};
      }
      $param->{'scenari_edit'}{$edit}{'selected'} = 'selected="selected"';
 
