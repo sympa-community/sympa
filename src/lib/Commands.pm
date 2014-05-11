@@ -951,13 +951,13 @@ sub info {
 	    $data->{$key} = $list->{'admin'}{$key};
 	}
 
+	## Set title in the current language
 	foreach my $p ('subscribe','unsubscribe','send','review') {
 	  my $scenario = new Scenario ('robot' => $robot,
 				       'directory' => $list->{'dir'},
 				       'file_path' => $list->{'admin'}{$p}{'file_path'}
 				      );
-	  my $title = $scenario->{'title'}{'gettext'};
-	  $data->{$p} = gettext($title); 
+	    $data->{$p} = $scenario->get_current_title();
 	}
 
 	## Digest
