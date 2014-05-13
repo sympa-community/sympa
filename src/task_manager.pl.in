@@ -29,6 +29,7 @@
 use lib '--modulesdir--';
 use strict "vars";
 use Pod::Usage;
+use Template;
 
 use Task;
 use List;
@@ -42,7 +43,6 @@ use SympaSession;
 use tracking;
 use Bulk;
 use mail;
-use tt2;
 use tools;
 use Sympa::Constants;
 use SDM;

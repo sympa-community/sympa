@@ -38,19 +38,16 @@ use lib '--modulesdir--';
 use strict;
 
 use FileHandle;
+use Getopt::Long;
 use Pod::Usage;
+use POSIX;
 
 use List;
 use Conf;
 use Log;
 use mail;
-#use Getopt::Std;
-use Getopt::Long;
-use POSIX;
-
-use tt2;
-use tools;
 use Sympa::Constants;
+use tools;
 use tracking;
 
 ## Equivalents relative to RFC 1893

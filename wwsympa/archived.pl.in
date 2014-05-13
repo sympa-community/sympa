@@ -41,23 +41,19 @@ This script must be run along with sympa. It regularly checks the 'outgoing' spo
 
 use lib '--modulesdir--';
 use strict;
+use Digest::MD5;
+use Getopt::Long;
 use Pod::Usage;
 
+use Sympa::Constants;
 use List;
 use Message;
 use Conf;
 use Log;
 use Commands;
-#use Getopt::Std;
-use Getopt::Long;
 use Language;
-use Digest::MD5;
-
 use mail;
-
-use tt2;
 use tools;
-use Sympa::Constants;
 
 my $daemon_name = &Log::set_daemon($0);
 my $ip = $ENV{'REMOTE_HOST'};
