@@ -335,8 +335,8 @@ foreach my $file (@ordered_files) {
       my $line = $orig - (() = ((my $__ = $_) =~ /\n/g));
       # maketext or loc or _
       $state == NUL &&
-        m/\b(translate|gettext(?:_strftime)?|maketext|__?|loc|x)/gcx && do {
-          if ($& eq 'gettext_strftime') {
+        m/\b(translate|gettext(?:_strftime|_sprintf)?|maketext|__?|loc|x)/gcx && do {
+          if ($& eq 'gettext_strftime' or $& eq 'gettext_sprintf') {
             $state = BEGM;
 	    $is_date = 1;
           } else {

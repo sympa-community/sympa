@@ -26,6 +26,8 @@ package Sympa::Language;
 
 use strict;
 use warnings;
+use base qw(Class::Singleton);
+
 use Locale::Messages '1.22';    # virtually same as 1.23.
 use POSIX qw();
 
@@ -50,14 +52,14 @@ BEGIN {
     Locale::Messages::bind_textdomain_codeset(web_help => 'utf-8');
 }
 
-INIT {
-    ## Initialize lang/locale.
-    SetLang('en');
-}
+sub _new_instance {
+    my $class = shift;
+    my $self  = $class->SUPER::_new_instance();
 
-## The locale is the gettext catalog name; lang is the IETF language tag.
-## Ex: locale = pt_BR ; lang = pt-BR
-my ($current_lang, $current_locale, $current_charset, @previous_lang);
+    ## Initialize lang/locale.
+    $self->set_lang('en');
+    return $self;
+}
 
 ## The map to get language tag from older non-POSIX locale naming.
 my %language_equiv = (
@@ -73,8 +75,8 @@ my %language_equiv = (
 ## languages in proper way, e.g. Common Arabic ("ar"), Esperanto ("eo").
 ##
 ## This map is also used to convert old-style Sympa "locales" to language
-## tags ('en' is special case. cf. SetLang()).
-my %lang2locale = (
+## tags ('en' is special case. cf. set_lang()).
+my %lang2oldlocale = (
     'af' => 'af_ZA',
     'ar' => 'ar_SY',
     'br' => 'br_FR',
@@ -110,27 +112,8 @@ my %lang2locale = (
     'vi' => 'vi_VN',
 );
 
-## We use different catalog/textdomains depending on the template that
-## requests translations
-my %template2textdomain = (
-    'help_admin.tt2'         => 'web_help',
-    'help_arc.tt2'           => 'web_help',
-    'help_editfile.tt2'      => 'web_help',
-    'help_editlist.tt2'      => 'web_help',
-    'help_faqadmin.tt2'      => 'web_help',
-    'help_faquser.tt2'       => 'web_help',
-    'help_introduction.tt2'  => 'web_help',
-    'help_listconfig.tt2'    => 'web_help',
-    'help_mail_commands.tt2' => 'web_help',
-    'help_sendmsg.tt2'       => 'web_help',
-    'help_shared.tt2'        => 'web_help',
-    'help.tt2'               => 'web_help',
-    'help_user_options.tt2'  => 'web_help',
-    'help_user.tt2'          => 'web_help',
-);
-
-## Regexp for old style canonical locale used by Sympa-6.2b.1 or earlier.
-my $old_lang_re = qr/^([a-z]{2})_([A-Z]{2})(?![A-Z])/i;
+## Regexp for old style canonical locale used by Sympa-6.2a or earlier.
+my $oldlocale_re = qr/^([a-z]{2})_([A-Z]{2})(?![A-Z])/i;
 
 ## Regexp for IETF language tag described in RFC 5646 (BCP 47), modified.
 my $language_tag_re = qr/^
@@ -162,7 +145,7 @@ my %script2modifier = (
     'Tfng' => 'tifinagh',
 );
 
-sub CanonicLang {
+sub canonic_lang {
     my $lang = shift;
     return unless $lang;
 
@@ -170,8 +153,8 @@ sub CanonicLang {
     if ($language_equiv{$lang}) {
         $lang = $language_equiv{$lang};
     }
-    ## Compatibility: names used as "lang" or "locale" by Sympa <= 6.2b.1.
-    elsif ($lang =~ $old_lang_re) {
+    ## Compatibility: names used as "lang" or "locale" by Sympa <= 6.2a.
+    elsif ($lang =~ $oldlocale_re) {
         $lang = _oldlocale2lang(lc($1) . '_' . uc($2));
     }
 
@@ -201,14 +184,14 @@ sub CanonicLang {
     return join '-', grep {$_} @subtags;
 }
 
-sub ImplicatedLangs {
+sub implicated_langs {
     my @langs = @_;
-    @langs = ($current_lang || 'en') unless @langs;
+    die 'missing langs parameter' unless @langs;
 
     my @implicated_langs = ();
 
     foreach my $lang (@langs) {
-        my @subtags = CanonicLang($lang);
+        my @subtags = canonic_lang($lang);
         while (@subtags) {
             my $l = join '-', grep {$_} @subtags;
             @implicated_langs = ((grep { $_ ne $l } @implicated_langs), $l);
@@ -258,14 +241,14 @@ sub parse_http_accept_string {
     return @ret;
 }
 
-sub NegotiateLang {
+sub negotiate_lang {
     my $accept_string = shift || '*';
-    my @supported_languages = grep {$_} map { split /\s*,\s*/, $_ } @_;
+    my @supported_languages = grep {$_} map { split /[\s,]+/, $_ } @_;
 
     ## parse Accept-Language: header field.
     ## unknown languages are ignored.
     my @accept_languages =
-        grep { $_->[0] eq '*' or $_->[0] = CanonicLang($_->[0]) }
+        grep { $_->[0] eq '*' or $_->[0] = canonic_lang($_->[0]) }
         parse_http_accept_string($accept_string);
     return unless @accept_languages;
 
@@ -273,7 +256,7 @@ sub NegotiateLang {
     my $best_lang   = undef;
     my $best_weight = 0.0;
     foreach my $supported_lang (@supported_languages) {
-        my @supported_pfxs = ImplicatedLangs($supported_lang);
+        my @supported_pfxs = implicated_langs($supported_lang);
         foreach my $pair (@accept_languages) {
             my ($accept_lang, $weight) = @$pair;
             if ($accept_lang eq '*'
@@ -293,114 +276,91 @@ sub NegotiateLang {
 ##DEPRECATED: use tools::get_supported_languages().
 ## Supported languages are defined by 'supported_lang' sympa.conf parameter.
 
-sub PushLang {
-    my $lang = shift;
+## Old name: PushLang()
+sub push_lang {
+    my $self  = shift;
+    my @langs = @_;
 
-    push @previous_lang, GetLang();
-    SetLang($lang);
-
-    return 1;
-}
-
-sub PopLang {
-    my $lang = pop @previous_lang;
-    SetLang($lang);
+    push @{$self->{previous_lang}}, $self->get_lang;
+    $self->set_lang(@langs);
 
     return 1;
 }
 
-sub SetLang {
-    my $lang = shift;
+## Old name: PopLang()
+sub pop_lang {
+    my $self = shift;
+
+    die 'calling pop_lang() without push_lang()'
+        unless @{$self->{previous_lang}};
+    my $lang = pop @{$self->{previous_lang}};
+    $self->set_lang($lang);
+
+    return 1;
+}
+
+## Old name: SetLang()
+sub set_lang {
+    my $self  = shift;
+    my @langs = @_;
     my $locale;
 
-    return unless $lang;
+    foreach my $lang (@langs) {
+        # Canonicalize lang.
+        # Note: 'en' is always allowed.  Use 'en-US' and so on to provide NLS
+        # for English.
+        next unless $lang = canonic_lang($lang);
 
-    # Canonicalize lang.
-    # Note: 'en' is always allowed.  Use 'en-US' and so on to provide NLS for
-    # English.
-    return unless $lang = CanonicLang($lang);
-
-    # Try to set POSIX locale and gettext locale, and get lang actually set.
-    # Note: Macrolanguage 'zh', 'zh-Hans' or 'zh-Hant' may fallback to lang
-    # with available region.
-    if ($locale = _set_locale(Lang2Locale($lang))) {
-        ($lang) = grep { Lang2Locale($_) eq $locale } ImplicatedLangs($lang);
-    } elsif ($lang =~ /^zh\b/) {
-        my @rr;
-        if ($lang =~ /^zh-Hans\b/) {
-            @rr = qw(CN SG  HK MO TW);    # try simp. first
-        } elsif ($lang =~ /^zh-Hant\b/) {
-            @rr = qw(HK MO TW  CN SG);    # try trad. first
-        } else {
-            @rr = qw(CN HK MO SG TW);
+        # Try to set POSIX locale and gettext locale, and get lang actually
+        # set.
+        # Note: Macrolanguage 'zh', 'zh-Hans' or 'zh-Hant' may fallback to
+        # lang with available region.
+        if ($locale = _resolve_gettext_locale(lang2locale($lang))) {
+            ($lang) =
+                grep { lang2locale($_) eq $locale } implicated_langs($lang);
+        } elsif ($lang =~ /^zh\b/) {
+            my @rr;
+            if ($lang =~ /^zh-Hans\b/) {
+                @rr = qw(CN SG  HK MO TW);    # try simp. first
+            } elsif ($lang =~ /^zh-Hant\b/) {
+                @rr = qw(HK MO TW  CN SG);    # try trad. first
+            } else {
+                @rr = qw(CN HK MO SG TW);
+            }
+            foreach my $rr (@rr) {
+                $lang = "zh-$rr";
+                last if $locale = _resolve_gettext_locale(lang2locale($lang));
+            }
         }
-        foreach my $rr (@rr) {
-            $lang = "zh-$rr";
-            last if $locale = _set_locale(Lang2Locale($lang));
-        }
-    }
-    unless ($locale and $lang) {
-        _set_locale($current_locale || 'en');    # failed.  restore locale
-        return;
+
+        next unless $locale and $lang;
+
+        # The locale is the gettext catalog name; lang is the IETF language
+        # tag.  Ex: locale = pt_BR ; lang = pt-BR
+        # locale_numeric and locale_time are POSIX locales for LC_NUMERIC and
+        # LC_TIME catogories, respectively.  As of 6.2b, they became optional:
+        # If setting each of them failed, 'C' locale will be set.
+        $self->{lang}   = $lang;
+        $self->{locale} = $locale;
+        $self->{locale_numeric} =
+            _find_posix_locale(POSIX::LC_NUMERIC(), $locale)
+            || 'C';
+        $self->{locale_time} = _find_posix_locale(POSIX::LC_TIME(), $locale)
+            || 'C';
+
+        return $lang;
     }
 
-    $current_lang   = $lang;
-    $current_locale = $locale;
-    undef $current_charset;    # set on demand: See GetCharset().
-
-    return $lang;
+    return;
 }
 
-## Internal function.
-## Sets POSIX locale and gettext locale.
+## Trys to set gettext locale and returns actually set locale.
 ## Mandatory parameter is gettext locale name.
-## Note: Use SetLang() instead of using this directly.
-sub _set_locale {
+sub _resolve_gettext_locale {
     my $locale = shift or die 'missing locale parameter';
 
-    # Try to set POSIX locale which affects to strftime, sprintf etc.
-    # Special case: 'en' is an alias of 'C' locale.  Use 'en_US' and so on for
-    # real English.
-    # As of 6.2b.2, POSIX locale became optional: if setting it failed, 'C'
-    # locale will be set.
-    if ($locale eq 'en') {
-        POSIX::setlocale(POSIX::LC_ALL(),  'C');
-        POSIX::setlocale(POSIX::LC_TIME(), 'C');
-    } else {
-        ## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
-        my ($loc, $mod) = split /(?=\@)/, $locale, 2;
-        my $machloc = $loc;
-        $machloc =~ s/^([a-z]{2,3})(?!_)/$lang2locale{$1} || $1/e;
-        $mod ||= '';
-
-        ## Set POSIX locale
-        foreach my $type (POSIX::LC_ALL(), POSIX::LC_TIME()) {
-            my $success = 0;
-            my @try;
-
-            ## Add codeset.
-            ## UpperCase required for FreeBSD; dashless required on HP-UX;
-            ## null codeset is last resort.
-            foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
-                ## Truncate locale similarly in gettext: full locale, and omit
-                ## region then modifier.
-                push @try,
-                    map { sprintf $_, $cs }
-                    ("$machloc%s$mod", "$loc%s$mod", "$loc%s");
-            }
-            foreach my $try (@try) {
-                if (POSIX::setlocale($type, $try)) {
-                    $success = 1;
-                    last;
-                }
-            }
-            unless ($success) {
-                POSIX::setlocale($type, 'C');
-            }
-        }
-    }
-
-    # Set gettext locale (Locale::Messages context).
+    # 'en' is always allowed.
+    return $locale if $locale eq 'en';
 
     # Workaround:
     # - "nb" and "nn" are recommended not to have "_NO" region suffix:
@@ -409,23 +369,21 @@ sub _set_locale {
     $locale =~ s/^(nb|nn)\b/${1}_NO/;
 
     ## Check if catalog is loaded.
-    if ($locale ne 'en') {
-        local %ENV;
-        $ENV{'LANGUAGE'} = $locale;
-        my $metadata = Locale::Messages::gettext('');    # get header
+    local %ENV;
+    $ENV{'LANGUAGE'} = $locale;
+    my $metadata = Locale::Messages::gettext('');    # get header
 
-        unless ($metadata) {
-            ## If a sublanguage of 'en' failed, fallback to 'en'.
-            ## Otherwise fails.
-            if ($locale =~ /^en(?![a-z])/) {
-                $locale = 'en';
-            } else {
-                return;
-            }
-        } elsif ($metadata =~ /(?:\A|\n)Language:\s*([\@\w]+)/) {
-            ## Get precise name of gettext locale if possible.
-            $locale = $1;
+    unless ($metadata) {
+        ## If a sub-locale of 'en' (en-CA, en@shaw, ...) failed, fallback to
+        ## 'en'.  Otherwise fails.
+        if ($locale =~ /^en(?![a-z])/) {
+            $locale = 'en';
+        } else {
+            return;
         }
+    } elsif ($metadata =~ /(?:\A|\n)Language:\s*([\@\w]+)/i) {
+        ## Get precise name of gettext locale if possible.
+        $locale = $1;
     }
 
     ## Workaround for "nb" and "nn": See above.
@@ -434,67 +392,97 @@ sub _set_locale {
     return $locale;
 }
 
-sub GetLangName {
-    my $lang = shift;
+# Trys to set POSIX locale which affects to strftime, sprintf etc.
+sub _find_posix_locale {
+    my $type   = shift;
+    my $locale = shift;
+
+    # Special case: 'en' is an alias of 'C' locale.  Use 'en_US' and so on for
+    # real English.
+    return 'C' if $locale eq 'en';
+
+    my $orig_locale = POSIX::setlocale($type);
+
+    ## From "ll@modifier", gets "ll", "ll_RR" and "@modifier".
+    my ($loc, $mod) = split /(?=\@)/, $locale, 2;
+    my $machloc = $loc;
+    $machloc =~ s/^([a-z]{2,3})(?!_)/$lang2oldlocale{$1} || $1/e;
+    $mod ||= '';
+
+    ## Set POSIX locale
+    my $posix_locale;
+    my @try;
+
+    ## Add codeset.
+    ## UpperCase required for FreeBSD; dashless required on HP-UX;
+    ## null codeset is last resort.
+    foreach my $cs ('.utf-8', '.UTF-8', '.utf8', '') {
+        ## Truncate locale similarly in gettext: full locale, and omit
+        ## region then modifier.
+        push @try,
+            map { sprintf $_, $cs }
+            ("$machloc%s$mod", "$loc%s$mod", "$loc%s");
+    }
+    foreach my $try (@try) {
+        if (POSIX::setlocale($type, $try)) {
+            $posix_locale = $try;
+            last;
+        }
+    }
+
+    POSIX::setlocale($type, $orig_locale);
+
+    return $posix_locale;
+}
+
+## Old name: GetLangName()
+## Note: Optional $lang argument was deprecated.
+sub native_name {
+    my $self = shift;
+    die 'extra argument(s)' if @_;
     my $name;
 
-    PushLang($lang) if $lang;
-
-    unless ($current_lang and $current_lang ne 'en') {
+    unless ($self->{lang} and $self->{lang} ne 'en') {
         $name = 'English';
     } else {
+        ## Workaround for nb/nn.
+        my $locale = $self->{locale};
+        $locale =~ s/^(nb|nn)\b/${1}_NO/;
+
         local %ENV;
-        $ENV{'LANGUAGE'} = $current_locale;
+        $ENV{'LANGUAGE'} = $locale;
         my $metadata = Locale::Messages::gettext('');    # get header
 
-        if ($metadata =~ /(?:\A|\n)Language-Team:\s*(.+)/) {
+        if ($metadata =~ /(?:\A|\n)Language-Team:\s*(.+)/i) {
             $name = $1;
             $name =~ s/\s*\<\S+\>//;
         }
     }
 
-    PopLang() if $lang;
-
     return (defined $name and $name =~ /\S/) ? $name : '';
 }
 
-sub GetLang {
-    return $current_lang || 'en';    # the last resort
+## Old name: GetLang()
+sub get_lang {
+    my $self = shift;
+    return $self->{lang} || 'en';    # the last resort
 }
 
-sub GetCharset {
-    return $current_charset if $current_charset;
+# DEPRECATED: use tools::lang2charset().
+# sub GetCharset;
 
-    if (%Conf::Conf) {               # configuration loaded
-        if ($current_lang) {
-            my $locale2charset = $Conf::Conf{'locale2charset'} || {};
-
-            ## get charset of lang with fallback.
-            $current_charset = 'utf-8';    # the default
-            foreach my $lang (ImplicatedLangs($current_lang)) {
-                if (exists $locale2charset->{$lang}) {
-                    $current_charset = $locale2charset->{$lang};
-                    last;
-                }
-            }
-        }
-    }
-    return $current_charset || 'utf-8';    # the last resort
-}
-
-## DEPRECATED: Use CanonicLang().
+## DEPRECATED: Use canonic_lang().
 ## sub Locale2Lang;
 
 # Internal function.
 # Convert language tag to gettext locale name.
-# Note: This function in earlier releases returned POSIX locale name.
-sub Lang2Locale {
+sub lang2locale {
     my $lang = shift;
     my $locale;
     my @subtags;
 
     ## unknown format.
-    return unless @subtags = CanonicLang($lang);
+    return unless @subtags = canonic_lang($lang);
 
     ## convert from "ll-Scri-RR" to "ll_RR@scriptname", or
     ## from "ll-RR-variant" to "ll_RR@variant".
@@ -513,14 +501,14 @@ sub Lang2Locale {
 
 # Internal function.
 # Get language tag from old-style "locale".
-# Note: Old name is Locale2Lang_old().
-# Note: Use CanonicLang().
+# Note: Old name is Locale2Lang().
+# Note: Use canonic_lang().
 sub _oldlocale2lang {
-    my $old_lang = shift;
-    my @parts = split /[\W_]/, $old_lang;
+    my $oldlocale = shift;
+    my @parts = split /[\W_]/, $oldlocale;
     my $lang;
 
-    if ($lang = {reverse %lang2locale}->{$old_lang}) {
+    if ($lang = {reverse %lang2oldlocale}->{$oldlocale}) {
         return $lang;
     } elsif (scalar @parts > 1 and length $parts[1]) {
         return join '-', lc $parts[0], uc $parts[1];
@@ -529,13 +517,15 @@ sub _oldlocale2lang {
     }
 }
 
-sub Lang2Locale_old {
+# Convert language tag to old style "locale".
+# Note: This function in earlier releases was named Lang2Locale().
+sub lang2oldlocale {
     my $lang = shift;
-    my $old_lang;
+    my $oldlocale;
     my @subtags;
 
     ## unknown format.
-    return unless @subtags = CanonicLang($lang);
+    return unless @subtags = canonic_lang($lang);
 
     ## 'zh-Hans' and 'zh-Hant' cannot map to useful POSIX locale.  Map them to
     ## 'zh_CN' and 'zh_TW'.
@@ -549,8 +539,8 @@ sub Lang2Locale_old {
     }
 
     unless ($subtags[2]) {
-        if ($lang2locale{$subtags[0]}) {
-            return $lang2locale{$subtags[0]};
+        if ($lang2oldlocale{$subtags[0]}) {
+            return $lang2oldlocale{$subtags[0]};
         }
     } else {
         return join '_', $subtags[0], $subtags[2];
@@ -559,30 +549,12 @@ sub Lang2Locale_old {
     return;
 }
 
-## NOTE: This might be moved to tt2 package.
-sub maketext {
-    my $template_file = shift;
-    my $msgid         = shift;
-
-    my $translation;
-    my $textdomain = $template2textdomain{$template_file};
-
-    if ($textdomain) {
-        $translation = dgettext($textdomain, $msgid);
-    } else {
-        $translation = gettext($msgid);
-    }
-
-    ## replace parameters in string
-    $translation =~ s/\%\%/'_ESCAPED_'.'%_'/eg;    ## First escape '%%'
-    $translation =~ s/\%(\d+)/$_[$1-1]/eg;
-    $translation =~ s/_ESCAPED_%\_/'%'/eg;         ## Unescape '%%'
-
-    return $translation;
-}
+# DEPRECATED: merged to tt2::maketext().
+# sub maketext;
 
 # Note: older name is sympa_dgettext().
 sub dgettext {
+    my $self       = shift;
     my $textdomain = shift;
     my $msgid      = shift;
 
@@ -593,19 +565,26 @@ sub dgettext {
     } elsif ($msgid eq '') {    # prevents meta information to be returned
         return '';
     } elsif ($msgid eq '_language_') {
-        return GetLangName();
+        return $self->native_name;
     } elsif ($msgid eq '_charset_') {
         return 'UTF-8';
     } elsif ($msgid eq '_encoding_') {
         return '8bit';
     }
 
+    return $msgid unless $self->{lang} and $self->{lang} ne 'en';
+
+    ## Workaround for nb/nn.
+    my $locale = $self->{locale};
+    $locale =~ s/^(nb|nn)\b/${1}_NO/;
+
     local %ENV;
-    $ENV{'LANGUAGE'} = $current_locale;
+    $ENV{'LANGUAGE'} = $locale;
     return Locale::Messages::dgettext($textdomain, $msgid);
 }
 
 sub gettext {
+    my $self  = shift;
     my $msgid = shift;
 
     # Returns meta information on the catalog.
@@ -615,16 +594,45 @@ sub gettext {
     } elsif ($msgid eq '') {    # prevents meta information to be returned
         return '';
     } elsif ($msgid eq '_language_') {
-        return GetLangName();
+        return $self->native_name;
     } elsif ($msgid eq '_charset_') {
         return 'UTF-8';
     } elsif ($msgid eq '_encoding_') {
         return '8bit';
     }
 
+    return $msgid unless $self->{lang} and $self->{lang} ne 'en';
+
+    ## Workaround for nb/nn.
+    my $locale = $self->{locale};
+    $locale =~ s/^(nb|nn)\b/${1}_NO/;
+
     local %ENV;
-    $ENV{'LANGUAGE'} = $current_locale;
+    $ENV{'LANGUAGE'} = $locale;
     return Locale::Messages::gettext($msgid);
+}
+
+sub gettext_sprintf {
+    my $self   = shift;
+    my $format = shift;
+    my @args   = @_;
+
+    my $orig_locale = POSIX::setlocale(POSIX::LC_NUMERIC());
+
+    ## if lang has not been set or 'en' is set, fallback to native sprintf().
+    unless ($self->{lang} and $self->{lang} ne 'en') {
+        POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
+        my $ret = sprintf($format, @args);
+        POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
+        return $ret;
+    }
+
+    $format = $self->gettext($format);
+
+    POSIX::setlocale(POSIX::LC_NUMERIC(), $self->{locale_numeric});
+    my $ret = sprintf($format, @args);
+    POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
+    return $ret;
 }
 
 my %date_part_names = (
@@ -653,29 +661,32 @@ my %date_part_names = (
 );
 
 sub gettext_strftime {
+    my $self   = shift;
     my $format = shift;
     my @args   = @_;
 
-    my $posix_locale = POSIX::setlocale(POSIX::LC_TIME());
+    my $orig_locale = POSIX::setlocale(POSIX::LC_TIME());
 
     ## if lang has not been set or 'en' is set, fallback to native strftime().
-    unless ($current_lang and $current_lang ne 'en') {
+    unless ($self->{lang} and $self->{lang} ne 'en') {
         POSIX::setlocale(POSIX::LC_TIME(), 'C');
-        my $datestr = POSIX::strftime($format, @args);
-        POSIX::setlocale(POSIX::LC_TIME(), $posix_locale);
-        return $datestr;
+        my $ret = POSIX::strftime($format, @args);
+        POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
+        return $ret;
     }
 
-    $format = gettext($format);
+    $format = $self->gettext($format);
 
     ## If POSIX locale was not set, emulate format strings.
-    unless ($posix_locale
-        and $posix_locale ne 'C'
-        and $posix_locale ne 'POSIX') {
+    unless ($self->{locale_time}
+        and $self->{locale_time} ne 'C'
+        and $self->{locale_time} ne 'POSIX') {
         my %names;
         foreach my $k (keys %date_part_names) {
-            $names{$k} =
-                [split /:/, gettext($date_part_names{$k}->{'gettext_id'})];
+            $names{$k} = [
+                split /:/,
+                $self->gettext($date_part_names{$k}->{'gettext_id'})
+            ];
         }
         $format =~ s{(\%[EO]?.)}{
 	    my $index;
@@ -690,7 +701,10 @@ sub gettext_strftime {
 	}eg;
     }
 
-    return POSIX::strftime($format, @args);
+    POSIX::setlocale(POSIX::LC_TIME(), $self->{locale_time});
+    my $ret = POSIX::strftime($format, @args);
+    POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
+    return $ret;
 }
 
 1;
@@ -751,7 +765,7 @@ gettext locales and are used by this package internally.
 
 =over 4
 
-=item CanonicLang ( $lang )
+=item canonic_lang ( $lang )
 
 I<Function>.
 Canonicalizes language tag according to RFC 5646 (BCP 47) and returns it.
@@ -777,7 +791,7 @@ For malformed inputs, returns C<undef> or empty array.
 
 See L</CAVEATS> about details on format.
 
-=item ImplicatedLangs ( [ $lang, ... ] )
+=item implicated_langs ( $lang, ... )
 
 I<Function>.
 Gets a list of each language $lang itself and its "super" languages.
@@ -792,17 +806,40 @@ Parameters:
 =item $lang, ...
 
 Language tags or similar things.
-They will be canonicalized by L</CanonicLang>()
+They will be canonicalized by L</canonic_lang>()
 and malformed inputs will be ignored.
-If none are given, result of L</GetLang>() is used.
 
 =back
 
 Returns:
 
 A list of implicated languages, if any.
+If no $lang arguments were given, this function will die.
 
-=item NegotiateLang ( $string, $lang, ... )
+=item lang2locale ( $lang )
+
+I<Function>, I<internal use>.
+Convert language tag to gettext locale name
+(see also L</"Native language support (NLS)">).
+This function may be useful if you want to know internal information such as
+name of catalog file.
+
+Parameter:
+
+=over
+
+=item $lang
+
+Language tag or similar thing.
+
+=back
+
+Returns:
+
+The gettext locale name.
+For malformed inputs returns C<undef>.
+
+=item negotiate_lang ( $string, $lang, ... )
 
 I<Function>.
 Get the best language according to the content of C<Accept-Language:> HTTP
@@ -828,132 +865,9 @@ The best language or, if negotiation failed, C<undef>.
 
 =back
 
-=head3 Getting/setting language context
-
-=over 4
-
-=item PushLang ( $lang )
-
-I<Function>.
-Set current language by L</SetLang>() keeping the previous one;
-it can be restored with L</PopLang>().
-
-Parameter:
-
-=over
-
-=item $lang
-
-Language tag or similar thing.
-
-=back
-
-Returns:
-
-Always C<1>.
-
-=item PopLang
-
-I<Function>.
-Restores previous language.
-
-Parameters:
-
-None.
-
-Returns:
-
-Always C<1>.
-
-=item SetLang ( $lang )
-
-I<Function>.
-Sets current language along with translation catalog,
-and POSIX locale if possible.
-
-Parameter:
-
-=over
-
-=item $lang
-
-Language tag or similer thing.
-Old style "locale" by Sympa (see also L</Compatibility>) will also be
-accepted.
-
-=back
-
-Returns:
-
-Canonic language tag actually set or, if no usable catalog was found,
-C<undef>.
-
-Note that the language actually set may not be identical to the parameter
-$lang, even when latter has been canonicalized.
-
-The language tag C<'en'> is special:
-it is used to set C<'C'> locale and will succeed always.
-
-Note:
-This function of Sympa 6.2b.1 or earlier returned old style "locale" names.
-
-=item GetLangName ( [ $lang ] )
-
-I<Function>.
-Get the name of the language, ie the one defined in the catalog.
-
-Parameter:
-
-=over
-
-=item $lang
-
-Language tag or similar thing.
-If omitted, value of L</GetLang>() is used.
-
-=back
-
-Returns:
-
-Name of the language in native notation.
-If it was not found, returns an empty string C<''>.
-
-Note:
-The name is the content of C<Language-Team:> field in the header of catalog.
-
-=item GetLang ()
-
-I<Function>.
-Get current language.
-
-Parameters:
-
-None.
-
-Returns:
-
-Current language.
-If it is not known, returns default language tag.
-
-=item GetCharset ()
-
-I<Function>.
-Gets current charset for e-mail messages sent by Sympa.
-
-Parameters:
-
-None.
-
-Returns:
-
-Current charset.
-If it is not known, returns default charset.
-
-=back
-
 =head3 Compatibility
 
-As of Sympa 6.2b.2, language tags are used to specify languages along with
+As of Sympa 6.2b, language tags are used to specify languages along with
 locales.  Earlier releases used POSIX locale names.
 
 These functions are used to migrate data structures and configurations of
@@ -961,7 +875,7 @@ earlier versions.
 
 =over 4
 
-=item Lang2Locale_old ( $lang )
+=item lang2oldlocale ( $lang )
 
 I<Function>.
 Convert language tag to old-style "locale".
@@ -981,25 +895,139 @@ Returns:
 Old-style "locale".
 If corresponding locale could not be determined, returns C<undef>.
 
+Note:
+In earlier releases this function was named Lang2Locale()
+(don't confuse with L</lang2locale>()).
+
+=back
+
+=head2 Methods
+
+=over 4
+
+=item instance ( )
+
+I<Constructor>.
+Gets the singleton instance of L<Sympa::Language> class.
+
+=back
+
+=head3 Getting/setting language context
+
+=over 4
+
+=item push_lang ( $lang, ... )
+
+I<Instance method>.
+Set current language by L</set_lang>() keeping the previous one;
+it can be restored with L</pop_lang>().
+
+Parameter:
+
+=over
+
+=item $lang, ...
+
+Language tags or similar things.
+
+=back
+
+Returns:
+
+Always C<1>.
+
+=item pop_lang
+
+I<Instance method>.
+Restores previous language.
+
+Parameters:
+
+None.
+
+Returns:
+
+Always C<1>.
+
+=item set_lang ( $lang, ... )
+
+I<Instance method>.
+Sets current language along with translation catalog,
+and POSIX locale if possible.
+
+Parameter:
+
+=over
+
+=item $lang, ...
+
+Language tags or similer things.
+Old style "locale" by Sympa (see also L</Compatibility>) will also be
+accepted.
+
+=back
+
+Returns:
+
+Canonic language tag actually set or, if no usable catalogs were found,
+C<undef>.
+
+Note that the language actually set may not be identical to the parameter
+$lang, even when latter has been canonicalized.
+
+The language tag C<'en'> is special:
+it is used to set C<'C'> locale and will succeed always.
+
+Note:
+This function of Sympa 6.2a or earlier returned old style "locale" names.
+
+=item native_name ( )
+
+I<Instance method>.
+Get the name of the language, ie the one defined in the catalog.
+
+Parameters:
+
+None.
+
+Returns:
+
+Name of the language in native notation.
+If it was not found, returns an empty string C<''>.
+
+Note:
+The name is the content of C<Language-Team:> field in the header of catalog.
+
+=item get_lang ()
+
+I<Instance method>.
+Get current language tag.
+
+Parameters:
+
+None.
+
+Returns:
+
+Current language.
+If it is not known, returns default language tag.
+
 =back
 
 =head3 Native language support (NLS)
 
 =over 4
 
-=item maketext ( $template, $msgid )
-
-XXX @todo doc
-
 =item dgettext ( $domain, $msgid )
 
+I<Instance method>.
 XXX @todo doc
 
 =item gettext ( $msgid )
 
-I<Function>.
-Returns the translation of given string.
-Note that L</SetLang>() must be called in advance.
+I<Instance method>.
+Returns the translation of given string using current NLS catalog.
+Note that L</set_lang>() must be called in advance.
 
 Parameter:
 
@@ -1016,14 +1044,43 @@ Returns:
 Translated string or, if it wasn't found, original string.
 
 If special argument C<'_language_'> is given,
-returns the name of language in native form (See L<GetLangName>()).
+returns the name of language in native form (See L<native_name>()).
 For argument C<''> returns empty string.
+
+=item gettext_sprintf ( $format, $args, ... )
+
+I<Instance method>.
+Internationalized L<sprintf>().
+At first, translates $format argument using L</gettext>().
+Then returns formatted string by remainder of arguments.
+
+This is equivalent to C<sprintf( gettext($format), $args, ... )>
+with appropriate POSIX locale if possible.
+
+Parameters:
+
+=over
+
+=item $format
+
+Format string.
+See also L<perlfunc/sprintf>.
+
+=item $args, ...
+
+Arguments fed to sprintf().
+
+=back
+
+Returns:
+
+Translated and formatted string.
 
 =item gettext_strftime ( $format, $args, ... )
 
-I<Function>.
+I<Instance method>.
 Internationalized L<strftime|POSIX/strftime>().
-At first, translates $format argument using current catalog.
+At first, translates $format argument using L</gettext>().
 Then returns formatted date/time by remainder of arguments.
 
 If appropriate POSIX locale is not available, parts of result (names of days,
@@ -1036,7 +1093,7 @@ Parameters:
 =item $format
 
 Format string.
-See also L<strftime(3)>.
+See also L<POSIX/strftime>.
 
 =item $args, ...
 
@@ -1048,38 +1105,12 @@ Returns:
 
 Translated and formatted string.
 
-=item Lang2Locale ( $lang )
-
-I<Function>, I<internal use>.
-Convert language tag to gettext locale name.
-This function may be useful if you want to know internal information such as
-name of catalog file.
-
-Parameter:
-
-=over
-
-=item $lang
-
-Language tag or similar thing.
-
-=back
-
-Returns:
-
-The gettext locale name.
-For malformed inputs returns C<undef>.
-
-Note:
-In earlier releases this function returned POSIX locale name.
-For this purpose use L</Lang2Locale_old> (See L</Compatibility>).
-
 =back
 
 
 B<Note>:
 
-Calls of L</maketext>(), L</gettext>() and L</gettext_strftime>() are 
+Calls of L</gettext>(), L</gettext_sprintf>() and L</gettext_strftime>() are 
 extracted during build process and are added to translation catalog.
 
 =head1 CAVEATS
@@ -1098,15 +1129,8 @@ extension subtags are not supported.
 
 =item *
 
-L</SetLang>() and its companions set POSIX categories
-C<LC_ALL> and C<LC_TIME> using setlocale().
-This may affect behavior of strftime() in L<POSIX> module,
-and built-in functions printf(), sprintf() and write().
-
-=item *
-
 Since catalogs for C<zh>, C<zh-Hans> and C<zh-Hant> may not be provided,
-L</SetLang>() will choose approximate C<zh_I<??>> catalogs for these tags.
+L</set_lang>() will choose approximate C<zh_I<??>> catalogs for these tags.
 
 =back
 

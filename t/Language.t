@@ -16,7 +16,7 @@ use Sympa::Language;
 
 my %tests = (
     ## Lang 2 gettext locale
-    Lang2Locale => [
+    lang2locale => [
         ## not a language tag or available locale.
         [undef() => undef],
         ['C'     => undef],
@@ -50,7 +50,7 @@ my %tests = (
     ],
 
     ## Lang to old style locale
-    Lang2Locale_old => [
+    lang2oldlocale => [
         ['ca'    => 'ca_ES'],
         ['cs'    => 'cs_CZ'],
         ['en'    => undef, 'special'],
@@ -78,7 +78,7 @@ my %tests = (
     ],
 
     ## Canonical names
-    CanonicLang => [
+    canonic_lang => [
         ## not a language tag
         [undef() => undef],
         ['C'     => undef],
@@ -110,8 +110,8 @@ my %tests = (
     ],
 
     ## Implicated langs
-    ImplicatedLangs => [
-        [[]                 => ['cs']],
+    implicated_langs => [
+        #[[]                 => ['cs']],
         [['ca']             => ['ca']],
         [['en-US']          => [qw(en-US en)]],
         [['ca-ES-valencia'] => [qw(ca-ES-valencia ca-ES ca)]],
@@ -135,14 +135,14 @@ my %tests = (
     ],
 
     ## Content negotiation
-    NegotiateLang => [
+    negotiate_lang => [
         [['de',                      'en']             => undef],
         [['DE,en,fr;Q=0.5,es;q=0.1', 'es,fr,de,en']    => 'de'],
         [['en',                      'EN-CA,en']       => 'en-CA'],
         [['en-US',                   'en,en-CA,en-US'] => 'en-US'],
     ],
 
-    SetLang => [
+    set_lang => [
         ## Unknown language
         [undef() => undef],
         ['C',    => undef],
@@ -153,7 +153,8 @@ my %tests = (
         ['cs-lasstina'    => 'cs', 'locale-independent case'],
         ['cs-CZ'          => 'cs'],
         ['cs'             => 'cs'],
-        ['en-CA'          => 'en', 'no catalog (en) - fallback to en'],
+        ['en-CA'          => 'en', 'no catalog (en_CA) - fallback to en'],
+        ['en-Shaw'        => 'en', 'no catalog (en@shaw) - fallback to en'],
         ['en'             => 'en', 'no catalog (en) - fallback to en'],
         ['zh'             => 'zh-TW', 'macrolanguage zh'],
         ['zh-guoyu'       => 'zh-TW', 'macrolanguage zh'],
@@ -165,11 +166,11 @@ my %tests = (
         ['zh-Hans-CN'     => 'zh-TW', 'macrolanguage zh'],
     ],
 
-    GetLangName => [
-        [undef() => "\xC4\x8Cesky", 'current lang'],
+    native_name => [
+        ['cs'    => "\xC4\x8Cesky"],
         ['cs-CZ' => "\xC4\x8Cesky"],
         ['en'    => 'English'],
-        ['en-CA' => 'English',      'fallback to en'],
+        ['en-CA' => 'English', 'fallback to en'],
         ['zh-TW' => "\xE7\xB9\x81\xE9\xAB\x94\xE4\xB8\xAD\xE6\x96\x87"],
     ],
 
@@ -202,77 +203,78 @@ my %tests = (
 
 plan tests => scalar map {@$_} values %tests;
 
-foreach my $test (@{$tests{Lang2Locale}}) {
-    is( Sympa::Language::Lang2Locale($test->[0]),
+foreach my $test (@{$tests{lang2locale}}) {
+    is( Sympa::Language::lang2locale($test->[0]),
         $test->[1],
         (   defined $test->[0]
-            ? "Lang2Locale($test->[0])"
-            : 'Lang2Locale(undef)'
+            ? "lang2locale($test->[0])"
+            : 'lang2locale(undef)'
             )
             . ($test->[2] ? ": $test->[2]" : '')
     );
 }
 
-foreach my $test (@{$tests{Lang2Locale_old}}) {
-    is(Sympa::Language::Lang2Locale_old($test->[0]),
+foreach my $test (@{$tests{lang2oldlocale}}) {
+    is(Sympa::Language::lang2oldlocale($test->[0]),
         $test->[1],
-        "Lang2Locale_old($test->[0])" . ($test->[2] ? ": $test->[2]" : ''));
+        "lang2oldlocale($test->[0])" . ($test->[2] ? ": $test->[2]" : ''));
 }
 
-foreach my $test (@{$tests{CanonicLang}}) {
-    is( Sympa::Language::CanonicLang($test->[0]),
+foreach my $test (@{$tests{canonic_lang}}) {
+    is( Sympa::Language::canonic_lang($test->[0]),
         $test->[1],
         (   defined $test->[0]
-            ? "CanonicLang($test->[0])"
-            : 'CanonicLang(undef)'
+            ? "canonic_lang($test->[0])"
+            : 'canonic_lang(undef)'
             )
             . ($test->[2] ? ": $test->[2]" : '')
     );
 }
 
-Sympa::Language::SetLang('cs');
-foreach my $test (@{$tests{ImplicatedLangs}}) {
-    is_deeply([Sympa::Language::ImplicatedLangs(@{$test->[0]})], $test->[1],
-              'ImplicatedLangs('
+foreach my $test (@{$tests{implicated_langs}}) {
+    is_deeply([Sympa::Language::implicated_langs(@{$test->[0]})], $test->[1],
+              'implicated_langs('
             . join(' ', @{$test->[0]}) . ')'
             . ($test->[2] ? ": $test->[2]" : ''));
 }
 
-foreach my $test (@{$tests{NegotiateLang}}) {
-    is(Sympa::Language::NegotiateLang(@{$test->[0]}), $test->[1],
-              "NegotiateLang("
+foreach my $test (@{$tests{negotiate_lang}}) {
+    is(Sympa::Language::negotiate_lang(@{$test->[0]}), $test->[1],
+              "negotiate_lang("
             . join(' ', @{$test->[0]}) . ')'
             . ($test->[2] ? ": $test->[2]" : ''));
 }
 
-foreach my $test (@{$tests{SetLang}}) {
-    is(Sympa::Language::SetLang($test->[0]), $test->[1],
-              (defined $test->[0] ? "SetLang($test->[0])" : 'SetLang(undef)')
-            . ($test->[2]         ? ": $test->[2]"        : ''));
+my $language = Sympa::Language->instance;
+
+foreach my $test (@{$tests{set_lang}}) {
+    is($language->set_lang($test->[0]), $test->[1],
+        (defined $test->[0] ? "set_lang($test->[0])" : 'set_lang(undef)')
+            . ($test->[2]   ? ": $test->[2]"         : ''));
 }
 
-Sympa::Language::SetLang('cs');
-foreach my $test (@{$tests{GetLangName}}) {
-    is( Sympa::Language::GetLangName($test->[0]),
+foreach my $test (@{$tests{native_name}}) {
+    $language->set_lang($test->[0]);
+    is( $language->native_name,
         $test->[1],
         (   defined $test->[0]
-            ? "GetLangName($test->[0])"
-            : 'GetLangName(undef)'
+            ? "native_name($test->[0])"
+            : 'native_name(undef)'
             )
             . ($test->[2] ? ": $test->[2]" : '')
     );
 }
 
-Sympa::Language::SetLang('cs');
+$language->set_lang('cs');
 foreach my $test (@{$tests{gettext}}) {
-    is(Sympa::Language::gettext($test->[0]), $test->[1],
+    is($language->gettext($test->[0]), $test->[1],
               (defined $test->[0] ? "gettext($test->[0])" : 'gettext(undef)')
             . ($test->[2]         ? ": $test->[2]"        : ''));
 }
 
-Sympa::Language::SetLang('cs');
+$language->set_lang('cs');
 foreach my $test (@{$tests{dgettext}}) {
-    is( Sympa::Language::dgettext(@{$test->[0]}),
+    is( $language->dgettext(@{$test->[0]}),
         $test->[1],
         (   defined $test->[0]->[1]
             ? "dgettext(" . join(' ', @{$test->[0]}) . ")"
@@ -282,20 +284,18 @@ foreach my $test (@{$tests{dgettext}}) {
     );
 }
 
-Sympa::Language::SetLang('en');
+$language->set_lang('en');
 foreach my $test (@{$tests{strftime}}) {
-    is( Sympa::Language::gettext_strftime($test->[0], gmtime 0),
+    is($language->gettext_strftime($test->[0], gmtime 0),
         $test->[1],
-        "gettext_strftime($test->[0])" . ($test->[2] ? ": $test->[2]" : '')
-    );
+        "gettext_strftime($test->[0])" . ($test->[2] ? ": $test->[2]" : ''));
 }
 
-Sympa::Language::SetLang('cs');
-POSIX::setlocale(POSIX::LC_TIME(), 'C');
+$language->set_lang('cs');
+$language->{locale_time} = 'C';    # hack to cancel POSIX locale.
 foreach my $test (@{$tests{gettext_strftime}}) {
-    is( Sympa::Language::gettext_strftime($test->[0], gmtime 0),
+    is($language->gettext_strftime($test->[0], gmtime 0),
         $test->[1],
-        "gettext_strftime($test->[0])" . ($test->[2] ? ": $test->[2]" : '')
-    );
+        "gettext_strftime($test->[0])" . ($test->[2] ? ": $test->[2]" : ''));
 }
 

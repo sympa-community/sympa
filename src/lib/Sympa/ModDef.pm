@@ -70,6 +70,12 @@ our %cpan_modules = (
     },
     # CGI::Cookie is included in CGI.
     # CGI::Fast is included in CGI.
+    'Class::Singleton' => {
+        required_version => '1.03',
+        package_name     => 'Class-Singleton',
+        mandatory        => 1,
+        'gettext_id'     => 'used to construct various singleton classes.',
+    },
     'Crypt::CipherSaber' => {
         required_version => '0.50',
         package_name     => 'Crypt-CipherSaber',
@@ -216,13 +222,11 @@ our %cpan_modules = (
         package_name     => 'JSON-XS',
         'gettext_id'     => 'required when using the VOOT protocol',
     },
-    # Locale::Messages 1.16 or earlier does not have its
-    # own $VERSION variable.  Check the version of
-    # Locale::TextDomain instead.
-    'Locale::TextDomain' => {
-        package_name => 'libintl-perl',
-        mandatory    => 1,
-        'gettext_id' => 'internationalization functions',
+    'Locale::Messages' => {
+        required_version => '1.22',
+        package_name     => 'libintl-perl',
+        mandatory        => 1,
+        'gettext_id'     => 'internationalization functions',
     },
     'LWP' => {
         package_name => 'libwww-perl',
