@@ -1536,7 +1536,8 @@ sub get_reason_string {
 
     my $data = {'reason' => $reason };
     my $string;
-    my $tt2_include_path =  &tools::make_tt2_include_path($robot,'mail_tt2','','');
+    my $tt2_include_path =
+	tools::get_search_path($robot, subdir => 'mail_tt2'); # FIXME: lang?
 
     unless (&tt2::parse_tt2($data,'authorization_reject.tt2' ,\$string, $tt2_include_path)) {
 	my $error = &tt2::get_error();

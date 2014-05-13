@@ -75,7 +75,8 @@ sub new {
 	($parameters{'function'}, $parameters{'name'}) = ($1, $2);
 
     }else {
-	## We can't use &tools::get_filename() because we don't have a List object yet ; it's being constructed
+	## We can't use tools::search_fullpath() because we don't have a List object yet ; it's being constructed
+	## FIXME: Give List object instead of 'directory' parameter.
 	my @dirs = ($Conf::Conf{'etc'}.'/'.$parameters{'robot'}, $Conf::Conf{'etc'}, Sympa::Constants::DEFAULTDIR);
 	unshift @dirs, $parameters{'directory'} if (defined $parameters{'directory'});
 	foreach my $dir (@dirs) {
@@ -1086,11 +1087,7 @@ sub verify {
     if ($condition_key eq 'search') {
 	my $val_search;
  	# we could search in the family if we got ref on Family object
- 	if (defined $list){
- 	    $val_search = &search($args[0],$context,$robot,$list);
- 	}else {
- 	    $val_search = &search($args[0],$context,$robot);
- 	}
+ 	$val_search = search($list || $robot, $args[0], $context);
 	return undef unless defined $val_search;
 	if($val_search == 1) {
 	    if ($log_it == 1) {
@@ -1191,26 +1188,25 @@ sub verify {
 
 ## Verify if a given user is part of an LDAP, SQL or TXT search filter
 sub search{
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $that = shift; # List or Robot
     my $filter_file = shift;
     my $context = shift;
-    my $robot = shift;
-    my $list = shift;
 
     my $sender = $context->{'sender'};
 
-    &Log::do_log('debug2', 'List::search(%s,%s,%s)', $filter_file, $sender, $robot);
-    
     if ($filter_file =~ /\.sql$/) {
  
-	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	my $file = tools::search_fullpath(
+	    $that, $filter_file, subdir => 'search_filters');
 	
         my $timeout = 3600;
         my ($sql_conf, $tsth);
         my $time = time;
 	
         unless ($sql_conf = &Conf::load_sql_filter($file)) {
-            $list->send_notify_to_owner('named_filter',{'filter' => $filter_file})
-                if (defined $list && ref($list) eq 'List');
+            $that->send_notify_to_owner('named_filter',{'filter' => $filter_file})
+                if ref $that eq 'List';
             return undef;
         }
 	
@@ -1287,7 +1283,8 @@ sub search{
  
      }elsif ($filter_file =~ /\.ldap$/) {	
 	## Determine full path of the filter file
-	my $file = &tools::get_filename('etc',{},"search_filters/$filter_file", $robot, $list);
+	my $file = tools::search_fullpath(
+	    $that, $filter_file, subdir => 'search_filters');
 	
 	unless ($file) {
 	    &Log::do_log('err', 'Could not find search filter %s', $filter_file);
@@ -1372,7 +1369,9 @@ sub search{
 
     }elsif($filter_file =~ /\.txt$/){ 
 	# &Log::do_log('info', 'List::search: eval %s', $filter_file);
-	my @files = &tools::get_filename('etc',{'order'=>'all'},"search_filters/$filter_file", $robot, $list); 
+	my @files = tools::search_fullpath(
+	    $that, $filter_file, subdir => 'search_filters',
+	    'order' => 'all');
 
 	## Raise an error except for blacklist.txt
 	unless (@files) {
@@ -1423,8 +1422,11 @@ sub verify_custom {
         }
 
     	# use this if your want per list customization (be sure you know what you are doing)
-	#my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot, $list);
-	my $file = &tools::get_filename('etc',{},"custom_conditions/${condition}.pm", $robot);
+	# my $file = tools::search_fullpath(
+	#     $list || $robot, $condition . '.pm',
+	#     subdir => 'custom_conditions');
+	my $file = tools::search_fullpath(
+	    $robot, $condition . '.pm', subdir => 'custom_conditions');
 	unless ($file) {
 	    &Log::do_log('err', 'No module found for %s custom condition', $condition);
 	    return undef;

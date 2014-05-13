@@ -366,8 +366,8 @@ sub convert_single_message {
     my $destination_dir = $opts{'destination_dir'};
     my $attachement_url = $opts{'attachement_url'};
 
-    my $mhonarc_ressources = tools::get_filename('etc', {},
-	'mhonarc-ressources.tt2', $robot, $list);
+    my $mhonarc_ressources = tools::search_fullpath(
+	$that, 'mhonarc-ressources.tt2');
     unless ($mhonarc_ressources) {
 	Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
 	return undef;

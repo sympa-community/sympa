@@ -120,13 +120,15 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =item * List::has_include_data_sources
 
-=item * List::sync_includetools::get_filename
+=item * List::sync_include
+
+=item * tools::search_fullpath
 
 =item * Log::do_log
 
 =item * tools::get_regexp
 
-=item * tools::make_tt2_include_path
+=item * tools::get_search_path
 
 =item * tt2::parse_tt2 
 
@@ -230,7 +232,8 @@ sub create_list_old{
 
 
     ## Check the template supposed to be used exist.
-    my $template_file = &tools::get_filename('etc',{},'create_list_templates/'.$template.'/config.tt2', $robot);
+    my $template_file = tools::search_fullpath(
+	$robot, 'config.tt2', subidr => 'create_list_templates/' . $template);
     unless (defined $template_file) {
 	&Log::do_log('err', 'no template %s found',$template);
 	return undef;
@@ -272,7 +275,8 @@ sub create_list_old{
     $param->{'creation_email'} = "listmaster\@$host" unless ($param->{'creation_email'});
     $param->{'status'} = 'open'  unless ($param->{'status'});
        
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'create_list_templates/'.$template,'','');
+    my $tt2_include_path = tools::get_search_path(
+	$robot, subdir => 'create_list_templates/' . $template);
 
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
@@ -427,7 +431,7 @@ sub create_list{
     }
 
     ## template file
-    my $template_file = &tools::get_filename('etc',{},'config.tt2', $robot,$family);
+    my $template_file = tools::search_fullpath($family, 'config.tt2');
     unless (defined $template_file) {
 	&Log::do_log('err', 'admin::create_list : no config template from family %s@%s',$family->{'name'},$robot);
 	return undef;
@@ -501,7 +505,7 @@ sub create_list{
 	push @files_to_parse,$file;
     }
     for my $file (@files_to_parse) {
-	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
+	my $template_file = tools::search_fullpath($family, $file.".tt2");
 	if (defined $template_file) {
 	    my $file_content;
 	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);
@@ -595,7 +599,7 @@ sub update_list{
     }
 
     ## template file
-    my $template_file = &tools::get_filename('etc',{}, 'config.tt2', $robot,$family);
+    my $template_file = tools::search_fullpath($family, 'config.tt2');
     unless (defined $template_file) {
 	&Log::do_log('err', 'admin::update_list : no config template from family %s@%s',$family->{'name'},$robot);
 	return undef;
@@ -647,7 +651,7 @@ sub update_list{
 	push @files_to_parse,$file;
     }
     for my $file (@files_to_parse) {
-	my $template_file = &tools::get_filename('etc',{},$file.".tt2", $robot,$family);
+	my $template_file = tools::search_fullpath($family, $file.".tt2");
 	if (defined $template_file) {
 	    my $file_content;
 	    my $tt_result = &tt2::parse_tt2($param, $file.".tt2", \$file_content, [$family->{'dir'}]);

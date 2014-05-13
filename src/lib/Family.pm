@@ -110,10 +110,8 @@ sub get_available_families {
     my %families;
 
     foreach my $dir (
-        Sympa::Constants::DEFAULTDIR . "/families",
-        $Conf::Conf{'etc'}           . "/families",
-        $Conf::Conf{'etc'}           . "/$robot/families"
-     ) {
+	reverse @{tools::get_search_path($robot, subdir => 'families')}
+    ) {
 	next unless (-d $dir);
 
 	unless (opendir FAMILIES, $dir) {
@@ -1819,11 +1817,7 @@ sub _get_directory {
     my $name = $self->{'name'};
     &Log::do_log('debug3','Family::_get_directory(%s)',$name);
 
-    my @try = (
-        $Conf::Conf{'etc'}           . "/$robot/families",
-        $Conf::Conf{'etc'}           . "/families",
-	    Sympa::Constants::DEFAULTDIR . "/families"
-    );
+    my @try = @{tools::get_search_path($robot, subdir => 'families')};
 
     foreach my $d (@try) {
 	if (-d "$d/$name") {

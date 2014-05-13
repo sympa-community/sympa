@@ -1668,9 +1668,8 @@ Log::do_log(info => "WWSympa started, process $$");
  	     $param->{'list_conf'} = $list->{'admin'};
  	 }
 
-	my $locale = Language::Lang2Locale($param->{'lang'});
-	my $tt2_include_path =
-	    tools::make_tt2_include_path($robot, 'web_tt2', $locale, $list);
+	my $tt2_include_path = tools::get_search_path(
+	    $list || $robot, subdir => 'web_tt2', lang => $param->{'lang'});
 	 
         unshift @$tt2_include_path, $plugins->tt2Paths
             if $plugins;
@@ -1699,8 +1698,8 @@ Log::do_log(info => "WWSympa started, process $$");
  	     $param->{'list_conf'} = $list->{'admin'};
  	 }
 
-	my $locale = Language::Lang2Locale($param->{'lang'});
-	 my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2',$locale,$list);
+	my $tt2_include_path = tools::get_search_path(
+	    $list || $robot, subdir => 'web_tt2', lang => $param->{'lang'});
 	 
         unshift @$tt2_include_path, $plugins->tt2Paths
             if $plugins;
@@ -2486,13 +2485,23 @@ sub send_html {
 
     ## Retro compatibility concerns
     $param->{'active'} = 1;
+
+    ## undefined $list has been initialized to be hashref.
+    if (ref $list eq 'HASH') {
+	Log::do_log('notice',
+	    'Someone tried to access inside of List object directly.  Fix the codes');
+	local $Data::Dumper::Varname = 'list';
+	local $Data::Dumper::Indent = 0;
+	Log::do_log('notice', '%s', Dumper($list));
+	undef $list;
+    }
     
-    if (defined $list) {
+    if (ref $list eq 'List') {
 	$param->{'list_conf'} = $list->{'admin'};
     }
     
     ## Trying to use custom_vars
-    if (defined $list->{'admin'}{'custom_vars'}) {
+    if (ref $list eq 'List' and @{$list->{'admin'}{'custom_vars'} || []}) {
 	foreach my $var (@{$list->{'admin'}{'custom_vars'}}) {
  	    $param->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
 	}
@@ -2527,7 +2536,7 @@ sub send_html {
     # Do not include locale paths.
     # The css.tt2 by each locales will override styles in main CSS.
     my $tt2_include_path =
-	tools::make_tt2_include_path($robot, 'web_tt2', '', $list);
+	tools::get_search_path($list || $robot, subdir => 'web_tt2');
 
     unshift @$tt2_include_path, $plugins->tt2Paths
         if $plugins;
@@ -2545,26 +2554,27 @@ sub send_html {
 	}
     }
 
-    my $locale = Language::Lang2Locale($param->{'lang'});
-
     # per-locale CSS.
     my $locale_css;
-    if (tools::get_filename('etc', {}, 
-	'web_tt2/' . $locale . '/css.tt2', $robot, $list
+    if (tools::search_fullpath($list || $robot, 'css.tt2',
+	subdir => 'web_tt2', lang => $param->{'lang'}, lang_only => 1
     )) {
-	unless (tt2::parse_tt2($param, $locale . '/css.tt2',
-	    \$locale_css, $tt2_include_path
+	my $tt2_include_path = tools::get_search_path($list || $robot,
+	    subdir => 'web_tt2', lang => $param->{'lang'}, lang_only => 1);
+
+	unless (tt2::parse_tt2(
+	    $param, 'css.tt2', \$locale_css, $tt2_include_path
 	)) {
-	    wwslog('info', 'error while parsing locale CSS %s',
-		$locale . '/css.tt2');
+	    wwslog('info', 'error while parsing CSS css.tt2 for lang %s',
+		$param->{'lang'});
 	} else {
 	    $param_copy->{'locale_css'} = $locale_css;
 	}
     }
 
     ## Now include locale paths.
-    $tt2_include_path =
-	tools::make_tt2_include_path($robot, 'web_tt2', $locale, $list);
+    $tt2_include_path = tools::get_search_path($list || $robot,
+	subdir => 'web_tt2', lang => $param->{'lang'});
 
     ## Restore special paths and enable absolute path if neccesary.
     foreach my $dir (@added_include_path) {
@@ -3717,7 +3727,7 @@ sub do_sso_login_succeeded {
      my $auth = shift; ## User email or UID
      &wwslog('debug2',"is_ldap_user ($auth)");
 
-     unless (&tools::get_filename('etc',{}, 'auth.conf', $robot)) {
+     unless (tools::search_fullpath($robot, 'auth.conf')) {
 	 return undef;
      }
 
@@ -6105,8 +6115,8 @@ sub do_manage_template {
 	$param->{'template_path'} = tools::get_template_path('mail', $robot,
 	    'list', 'reject_'.$escaped_template_path.'.tt2', '', $list);
     }
-    my $default_file =
-	tools::get_filename('etc', {}, 'mail_tt2/reject.tt2', $robot, $list);
+    my $default_file = tools::search_fullpath(
+	$list || $robot, 'reject.tt2', subdir => 'mail_tt2');
 
     if ($in{'subaction'} eq 'save') {
 	## create the parent directory if it doesn't already exist
@@ -6159,8 +6169,8 @@ sub do_manage_template {
 	    return undef;
 	}	
 
-	my $default_file =
-	    tools::get_filename('etc', {}, 'mail_tt2/reject.tt2', $robot, $list);
+	my $default_file = tools::search_fullpath(
+	    $list || $robot, 'reject.tt2', subdir => 'mail_tt2');
 
 	unless(open (DEFAULT, $default_file)){
 	    &report::reject_report_web('intern','cannot_open_file',{'path' => $default_file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -6375,7 +6385,8 @@ sub do_skinsedit {
     if ($in{'subaction'} eq 'install' or $in{'installcss'}) {
 	## Do not include locale subdirectories.
 	## The css.tt2 by each locales will override styles in main CSS.
-	my $tt2_include_path = tools::make_tt2_include_path($robot, 'web_tt2', '', '');
+	my $tt2_include_path =
+	    tools::get_search_path($robot, subidr => 'web_tt2');
 
 	my $date= time;
 	my $style_file;
@@ -7579,7 +7590,8 @@ sub do_viewmod_old {
 	 #$file =~ s/\.tpl$/\.$list->{'admin'}{'lang'}\.tpl/;
 
 	 ## Look for the template
-	 $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot, $list);
+	$param->{'filepath'} =
+	    tools::search_fillpath($list || $robot, $file, subdir => $subdir);
 
 	 ## There might be no matching file if default template not provided with Sympa
 	 if (defined $param->{'filepath'}) {
@@ -7606,7 +7618,8 @@ sub do_viewmod_old {
 	 ## Default for 'homepage' is 'info'
 	 if (($in{'file'} eq 'homepage') &&
 	     ! $param->{'filepath'}) {
-	     $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.'info',$robot, $list);
+	    $param->{'filepath'} = tools::search_fullpath(
+		$list || $robot, 'info', subdir => $subdir);
 	 }
      }else {
 	 unless (&List::is_listmaster($param->{'user'}{'email'},$robot)) {
@@ -7622,12 +7635,14 @@ sub do_viewmod_old {
 
 	 ## Look for the template
 	 if ($file eq 'list_aliases.tt2') {
-	     $param->{'filepath'} = &tools::get_filename('etc',{},$file,$robot,$list);
+	    $param->{'filepath'} =
+		tools::search_fullpath($list || $robot, $file);
 	 }else {
 	     #my $lang = &Conf::get_robot_conf($robot, 'lang');
 	     #$file =~ s/\.tpl$/\.$lang\.tpl/;
 
-	     $param->{'filepath'} = &tools::get_filename('etc',{},$subdir.$file,$robot,$list);
+	     $param->{'filepath'} = tools::search_fullpath(
+		$list || $robot, $file, subdir => $subdir);
 	 }
      }
 
@@ -17276,7 +17291,8 @@ sub do_css {
 
     ## Do not include locale subdirectories.
     ## The css.tt2 by each locales will override styles in main CSS.
-    my $tt2_include_path = tools::make_tt2_include_path($robot, 'web_tt2', '', '');
+    my $tt2_include_path =
+	tools::get_search_path($robot, subdir => 'web_tt2');
 
     unless (&tt2::parse_tt2($param, 'css.tt2' ,\*STDOUT, $tt2_include_path)) {
 	my $error = &tt2::get_error();
@@ -17330,7 +17346,7 @@ sub do_rss_request {
 sub do_wsdl {
   
     &wwslog('info', "do_wsdl ()");
-    my $sympawsdl = &tools::get_filename('etc',{}, 'sympa.wsdl', $robot);
+    my $sympawsdl = tools::search_fullpath($robot, 'sympa.wsdl');
 
     unless (-r $sympawsdl){
       	&report::reject_report_web('intern','err_404',{},$param->{'action'});
@@ -17414,7 +17430,8 @@ sub _ca_get_file {
 	my $robot = shift;
 	my $list = shift;
 	
-	my $file = &tools::get_filename('etc', {}, 'custom_actions/'.$custom_action, $robot, $list);
+	my $file = tools::search_fullpath(
+	    $list || $robot, $custom_action, subdir => 'custom_actions');
 	return undef unless($file);
 	
 	&_ca_add_file_path_to_tt2_include_path($file);

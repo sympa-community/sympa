@@ -55,7 +55,7 @@ $data{'is_default_domain'} = 1;
 $data{'return_path_suffix'} = $return_path_suffix;
 my @aliases ;
 
-my $tt2_include_path = &tools::make_tt2_include_path($domain,'',,);
+my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
 &tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);

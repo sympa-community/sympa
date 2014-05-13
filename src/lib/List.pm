@@ -2064,8 +2064,8 @@ sub send_global_file {
     $data->{'lang'} = $data->{'lang'} || $data->{'user'}{'lang'} || &Conf::get_robot_conf($robot, 'lang');
 
     ## What file 
-    my $lang = &Language::Lang2Locale($data->{'lang'});
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,'');
+    my $tt2_include_path = tools::get_search_path(
+	$robot, subdir => 'mail_tt2', lang => $data->{'lang'});
 
     foreach my $d (@{$tt2_include_path}) {
 	&tt2::add_include_path($d);
@@ -2195,8 +2195,8 @@ sub send_file {
     }
     
     ## What file   
-    my $lang = &Language::Lang2Locale($data->{'lang'});
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$self);
+    my $tt2_include_path = tools::get_search_path(
+	$self, subdir => 'mail_tt2', lang => $data->{'lang'});
 
     push @{$tt2_include_path},$self->{'dir'};             ## list directory to get the 'info' file
     push @{$tt2_include_path},$self->{'dir'}.'/archives'; ## list archives to include the last message
@@ -5718,10 +5718,10 @@ sub may_edit {
     my $edit_conf;
 
     # Load edit_list.conf: track by file, not domain (file may come from server, robot, family or list context)
-    my $edit_conf_file = &tools::get_filename('etc',{},'edit_list.conf',$self->{'domain'},$self); 
+    my $edit_conf_file = tools::search_fullpath($self, 'edit_list.conf');
     if (! $edit_list_conf{$edit_conf_file} || ((stat($edit_conf_file))[9] > $mtime{'edit_list_conf'}{$edit_conf_file})) {
 
-        $edit_conf = $edit_list_conf{$edit_conf_file} = &tools::load_edit_list_conf($self->{'domain'}, $self);
+        $edit_conf = $edit_list_conf{$edit_conf_file} = tools::load_edit_list_conf($self);
 	$mtime{'edit_list_conf'}{$edit_conf_file} = time;
     }else {
         $edit_conf = $edit_list_conf{$edit_conf_file};
@@ -5784,7 +5784,7 @@ sub may_create_parameter {
     if ( &is_listmaster($who,$robot)) {
 	return 1;
     }
-    my $edit_conf = &tools::load_edit_list_conf($robot,$self);
+    my $edit_conf = tools::load_edit_list_conf($self);
     $edit_conf->{$parameter} ||= $edit_conf->{'default'};
     if (! $edit_conf->{$parameter}) {
 	&Log::do_log('notice','tools::load_edit_list_conf privilege for parameter $parameter undefined');
@@ -6049,24 +6049,10 @@ sub load_scenario_list {
     my $directory = "$self->{'dir'}";
     my %list_of_scenario;
     my %skip_scenario;
-    my @list_of_scenario_dir;
-    if (defined $self->{'admin'}{'family_name'} ) {
-	@list_of_scenario_dir = (
-	    "$directory/scenari",
-	    "$Conf::Conf{'etc'}/$robot/families/$self->{'admin'}{'family_name'}/scenari",
-	    "$Conf::Conf{'etc'}/families/$self->{'admin'}{'family_name'}/scenari",
-	    "$Conf::Conf{'etc'}/$robot/scenari",
-	    "$Conf::Conf{'etc'}/scenari",
-	    Sympa::Constants::DEFAULTDIR . '/scenari'
-	);
-    }else{
-	@list_of_scenario_dir = (
-	    "$directory/scenari",
-	    "$Conf::Conf{'etc'}/$robot/scenari",
-	    "$Conf::Conf{'etc'}/scenari",
-	    Sympa::Constants::DEFAULTDIR . '/scenari'
-	);
-    }
+    my @list_of_scenario_dir =
+	@{tools::get_search_path($self, subdir => 'scenari')};
+    unshift @list_of_scenario_dir, $self->{'dir'} . '/scenari'; #FIXME
+
     foreach my $dir (@list_of_scenario_dir) {
 	next unless (-d $dir);
 	
@@ -6106,12 +6092,8 @@ sub load_task_list {
     my %list_of_task;
     
     foreach my $dir (
-        "$directory/list_task_models",
-        "$Conf::Conf{'etc'}/$robot/list_task_models",
-        "$Conf::Conf{'etc'}/list_task_models",
-        Sympa::Constants::DEFAULTDIR . '/list_task_models'
+	@{tools::get_search_path($self, subdir => 'list_task_models')}
     ) {
-
 	next unless (-d $dir);
 
 	foreach my $file (<$dir/$action.*>) {
@@ -6173,10 +6155,7 @@ sub load_data_sources_list {
     my %list_of_data_sources;
 
     foreach my $dir (
-        "$directory/data_sources",
-        "$Conf::Conf{'etc'}/$robot/data_sources",
-        "$Conf::Conf{'etc'}/data_sources",
-        Sympa::Constants::DEFAULTDIR . '/data_sources'
+	@{tools::get_search_path($self, subdir => 'data_sources')}
     ) {
 
 	next unless (-d $dir);
@@ -6283,8 +6262,8 @@ sub _include_users_remote_sympa_list {
 	$cert_file = $dir.'/cert.pem';
 	$key_file = $dir.'/private_key';
     }elsif($cert eq 'robot') {
-	$cert_file = &tools::get_filename('etc',{},'cert.pem',$robot,$self);
-	$key_file =  &tools::get_filename('etc',{},'private_key',$robot,$self);
+	$cert_file = tools::search_fullpath($self, 'cert.pem');
+	$key_file  = tools::search_fullpath($self, 'private_key');
     }
     unless ((-r $cert_file) && ( -r $key_file)) {
 	&Log::do_log('err', 'Include remote list https://%s:%s/%s using cert %s, unable to open %s or %s', $host, $port, $path, $cert,$cert_file,$key_file);
@@ -7334,7 +7313,8 @@ sub _load_list_admin_from_include {
 	$option{'profile'} = $entry->{'profile'} if (defined $entry->{'profile'} && ($role eq 'owner'));
 	
 
-      	my $include_file = &tools::get_filename('etc',{},"data_sources/$entry->{'source'}\.incl",$self->{'domain'},$self);
+      	my $include_file = tools::search_fullpath(
+	    $self, $entry->{'source'} . '.incl', subdir => 'data_sources');
 
         unless (defined $include_file){
 	    &Log::do_log('err', 'the file %s.incl doesn\'t exist',$entry->{'source'});
@@ -8951,12 +8931,13 @@ sub lowercase_field {
 }
 
 ## Loads the list of topics if updated
+## FIXME: This might be moved to Robot package.
 sub load_topics {
     
     my $robot = shift ;
     &Log::do_log('debug2', 'List::load_topics(%s)',$robot);
 
-    my $conf_file = &tools::get_filename('etc',{},'topics.conf',$robot);
+    my $conf_file = tools::search_fullpath($robot, 'topics.conf');
 
     unless ($conf_file) {
 	&Log::do_log('err','No topics.conf defined');
@@ -9013,7 +8994,7 @@ sub load_topics {
 	$mtime{'topics'}{$robot} = (stat($conf_file))[9];
 
 	unless ($#raugh_data > -1) {
-	    &Log::do_log('notice', 'No topic defined in %s/topics.conf', $Conf::Conf{'etc'});
+	    Log::do_log('notice', 'No topic defined in %s', $conf_file);
 	    return undef;
 	}
 
@@ -10206,10 +10187,10 @@ sub _urlize_part {
     $parser->output_to_core(1);
     my $new_part;
 
-    my $lang = &Language::GetLang();
     my $charset = tools::lang2charset(Language::GetLang());
 
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'mail_tt2',$lang,$list);
+    my $tt2_include_path = tools::get_search_path(
+	$list, subdir => 'mail_tt2', lang => Language::GetLang());
 
     &tt2::parse_tt2({'file_name' => $file_name,
 		     'file_url'  => $file_url,

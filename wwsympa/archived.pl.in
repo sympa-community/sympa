@@ -516,7 +516,7 @@ Rebuilds archives for the list the name of which is given in the argument $adrli
 
 =item * Log::do_log
 
-=item * tools::get_filename
+=item * tools::search_fullpath
 
 =item * tools::remove_dir
 
@@ -552,7 +552,8 @@ sub rebuild {
 
     my $tag = Archive::get_tag($list);
 
-    my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
+    my $mhonarc_ressources =
+	tools::search_fullpath($list, 'mhonarc-ressources.tt2');
 
     if (($list->{'admin'}{'web_archive_spam_protection'} ne 'none') && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
 	&set_hidden_mode($tag);
@@ -754,7 +755,7 @@ Archives one message into one list archives directory.
 
 =item * Log::do_log
 
-=item * tools::get_filename
+=item * tools::search_fullpath
 
 =item * tools::remove_dir
 
@@ -885,7 +886,8 @@ sub mail2arc {
 	    next;
 	}
 
-	my $mhonarc_ressources = &tools::get_filename('etc',{},'mhonarc-ressources.tt2',$list->{'domain'}, $list);
+	my $mhonarc_ressources =
+	    tools::search_fullpath($list, 'mhonarc-ressources.tt2');
 	
 	Log::do_log('debug',"calling $Conf::Conf{'mhonarc'} for list %s", $list->get_list_id() ) ;
 

@@ -697,7 +697,8 @@ sub checkfiles {
     }
 
     ## Set TT2 path
-    my $tt2_include_path = &tools::make_tt2_include_path($robot,'web_tt2','','');
+    my $tt2_include_path =
+	tools::get_search_path($robot, subdir => 'web_tt2');
 
     ## Create directory if required
     unless (-d $dir) {
@@ -711,7 +712,8 @@ sub checkfiles {
     foreach my $css ('style.css','print.css','fullPage.css','print-preview.css') {
 
         $param->{'css'} = $css;
-        my $css_tt2_path = &tools::get_filename('etc',{}, 'web_tt2/css.tt2', $robot, undef);
+        my $css_tt2_path =
+	    tools::search_fullpath($robot, 'css.tt2', subdir => 'web_tt2');
         
         ## Update the CSS if it is missing or if a new css.tt2 was installed
         if (! -f $dir.'/'.$css ||
@@ -1015,10 +1017,12 @@ sub _load_auth {
 sub load_charset {
     my $charset = {};
 
-    my $config_file = &_get_config_file_name({'robot' => '', 'file' => "charset.conf"});
-    if (-f $config_file) {
+    my $config_file = tools::search_fullpath('*', 'charset.conf');
+    return {} unless $config_file;
+
     unless (open CONFIG, $config_file) {
-        printf STDERR 'Conf::load_charset(): Unable to read configuration file %s: %s\n',$config_file, $!;
+        Log::do_log('err', 'Unable to read configuration file %s: %s',
+	    $config_file, $!);
         return {};
     }
     while (<CONFIG>) {
@@ -1028,37 +1032,35 @@ sub load_charset {
         next unless /\S/;
         my ($locale, $cset) = split(/\s+/, $_);
         unless ($cset) {
-        printf STDERR 'Conf::load_charset(): Charset name is missing in configuration file %s line %d\n',$config_file, $.;
-        next;
+	    Log::do_log('err', 'Charset name is missing in configuration file %s line %d',$config_file, $.);
+            next;
         }
         unless ($locale =~ s/^([a-z]+)_([a-z]+)/lc($1).'_'.uc($2).$'/ei) { #'
-        printf STDERR 'Conf::load_charset():  Illegal locale name in configuration file %s line %d\n',$config_file, $.;
-        next;
+	    Log::do_log('err', 'Illegal locale name in configuration file %s line %d',$config_file, $.);
+	    next;
         }
         $charset->{$locale} = $cset;
     
     }
     close CONFIG;
-    }
 
     return $charset;
 }
 
-
 ## load nrcpt file (limite receipient par domain
 sub load_nrcpt_by_domain {
-  my $config_file = &_get_config_file_name({'robot' => '', 'file' => "nrcpt_by_domain.conf"});
-  return undef unless  (-r $config_file);
+  my $config_file = tools::search_fullpath('*', 'nrcpt_by_domain.conf');
+  return unless $config_file;
+
   my $line_num = 0;
   my $config_err = 0;
-  my $nrcpt_by_domain ; 
+  my $nrcpt_by_domain = {};
   my $valid_dom = 0;
 
-  return undef unless (-f $config_file) ;
   ## Open the configuration file or return and read the lines.
-  unless (open(IN, $config_file)) {
-      printf STDERR  "Conf::load_nrcpt_by_domain(): : Unable to open %s: %s\n", $config_file, $!;
-      return undef;
+  unless (open IN, '<', $config_file) {
+	Log::do_log('err', 'Unable to open %s: %s', $config_file, $!);
+	return;
   }
   while (<IN>) {
       $line_num++;
@@ -1069,12 +1071,12 @@ sub load_nrcpt_by_domain {
       $nrcpt_by_domain->{$domain} = $value;
       $valid_dom +=1;
       }else {
-      printf STDERR gettext("Conf::load_nrcpt_by_domain(): Error at line %d: %s"), $line_num, $config_file, $_;
-      $config_err++;
+	    Log::do_log('notice', 'Error at configuration file %s line %d: %s', $config_file, $line_num, $_);
+	    $config_err++;
       }
   } 
-  close(IN);
-  return ($nrcpt_by_domain);
+  close IN;
+  return $nrcpt_by_domain;
 }
 
 ## load .sql named filter conf file
@@ -1980,6 +1982,7 @@ sub _store_source_file_name {
     $param->{'config_hash'}{'source_file'} = $param->{'config_file'};
 }
 
+# FXIME:Use tools::search_fullpath().
 sub _get_config_file_name {
     my $param = shift;
     my $config_file;

@@ -26,6 +26,7 @@ package tools;
 use strict;
 
 use Carp;
+#use Cwd qw();
 use Digest::MD5;
 use Encode::Guess; ## Useful when encoding should be guessed
 use Encode::MIME::Header;
@@ -384,15 +385,15 @@ sub checkcommand {
 
 ## return a hash from the edit_list_conf file
 sub load_edit_list_conf {
-    my $robot = shift;
+    Log::do_log('debug2', '(%s)', @_);
     my $list = shift;
-    &Log::do_log('debug2', 'tools::load_edit_list_conf (%s)',$robot);
 
+    my $robot = $list->{'domain'};
     my $file;
     my $conf ;
     
     return undef 
-	unless ($file = &tools::get_filename('etc',{},'edit_list.conf',$robot,$list));
+	unless $file = tools::search_fullpath($list, 'edit_list.conf');
 
     unless (open (FILE, $file)) {
 	&Log::do_log('info','Unable to open config file %s', $file);
@@ -443,7 +444,7 @@ sub load_create_list_conf {
     my $file;
     my $conf ;
     
-    $file = &tools::get_filename('etc',{}, 'create_list.conf', $robot);
+    $file = tools::search_fullpath($robot, 'create_list.conf');
     unless ($file) {
 	&Log::do_log('info', 'unable to read %s', Sympa::Constants::DEFAULTDIR . '/create_list.conf');
 	return undef;
@@ -492,9 +493,8 @@ sub get_list_list_tpl {
     }
     
     foreach my $dir (
-        Sympa::Constants::DEFAULTDIR . '/create_list_templates',
-        "$Conf::Conf{'etc'}/create_list_templates",
-        "$Conf::Conf{'etc'}/$robot/create_list_templates"
+	reverse
+	@{tools::get_search_path($robot, subdir => 'create_list_templates')}
     ) {
 	if (opendir(DIR, $dir)) {
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
@@ -2250,179 +2250,261 @@ sub duration_conv {
     return $duration;
 }
 
-## Look for a file in the list > robot > server > default locations
-## Possible values for $options : order=all
-sub get_filename {
-    my ($type, $options, $name, $robot, $object) = @_;
-    my $list;
-    my $family;
-    &Log::do_log('debug3','tools::get_filename(%s,%s,%s,%s,%s)', $type,  join('/',keys %$options), $name, $robot, $object->{'name'});
+=head3 Finding config files and templates
 
-    
-    if (ref($object) eq 'List') {
- 	$list = $object;
- 	if ($list->{'admin'}{'family_name'}) {
- 	    unless ($family = $list->get_family()) {
- 		&Log::do_log('err', 'Impossible to get list %s family : %s. The list is set in status error_config',$list->{'name'},$list->{'admin'}{'family_name'});
- 		$list->set_status_error_config('no_list_family',$list->{'name'}, $list->{'admin'}{'family_name'});
- 		return undef;
- 	    }  
- 	}
-    }elsif (ref($object) eq 'Family') {
- 	$family = $object;
+=over 4
+
+=item search_fullpath ( $that, $name, [ opt => val, ...] )
+
+    # To get file name for global site
+    $file = tools::search_fullpath('*', $name);
+    # To get file name for a robot
+    $file = tools::search_fullpath($robot_id, $name);
+    # To get file name for a family
+    $file = tools::search_fullpath($family, $name);
+    # To get file name for a list
+    $file = tools::search_fullpath($list, $name);
+
+Look for a file in the list > robot > site > default locations.
+
+Possible values for options:
+    order     => 'all'
+    subdir    => directory ending each path
+    lang      => language
+    lang_only => if paths without lang subdirectory would be omitted
+
+Returns full path of target file C<I<root>/I<subdir>/I<lang>/I<name>>
+or C<I<root>/I<subdir>/I<name>>.
+I<root> is the location determined by target object $that.
+I<subdir> and I<lang> are optional.
+If C<lang_only> option is set, paths without I<lang> subdirectory is omitted.
+
+=back
+
+=cut
+
+sub search_fullpath {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $that    = shift;
+    my $name    = shift;
+    my %options = @_;
+
+    my (@try, $default_name);
+
+    ## template refers to a language
+    ## => extend search to default tpls
+    ## FIXME: family path precedes to list path.  Is it appropriate?
+    if ($name =~ /^(\S+)\.([^\s\/]+)\.tt2$/) {
+        $default_name = $1 . '.tt2';
+        @try =
+            map { ($_ . '/' . $name, $_ . '/' . $default_name) }
+            @{get_search_path($that, %options)};
+    } else {
+        @try =
+            map { $_ . '/' . $name } @{get_search_path($that, %options)};
     }
-    
-    if ($type eq 'etc') {
-	my (@try, $default_name);
-	
-	## template refers to a language
-	## => extend search to default tpls
-	if ($name =~ /^(\S+)\.([^\s\/]+)\.tt2$/) {
-	    $default_name = $1.'.tt2';
-	    
-	    @try = (
-            $Conf::Conf{'etc'} . "/$robot/$name",
-		    $Conf::Conf{'etc'} . "/$robot/$default_name",
-		    $Conf::Conf{'etc'} . "/$name",
-		    $Conf::Conf{'etc'} . "/$default_name",
-		    Sympa::Constants::DEFAULTDIR . "/$name",
-		    Sympa::Constants::DEFAULTDIR . "/$default_name");
-	}else {
-	    @try = (
-            $Conf::Conf{'etc'} . "/$robot/$name",
-		    $Conf::Conf{'etc'} . "/$name",
-		    Sympa::Constants::DEFAULTDIR . "/$name"
-        );
-	}
-	
-	if ($family) {
- 	    ## Default tpl
- 	    if ($default_name) {
-		unshift @try, $family->{'dir'}.'/'.$default_name;
-	    }
-	}
-	
-	unshift @try, $family->{'dir'}.'/'.$name;
-    
-	if ($list->{'name'}) {
-	    ## Default tpl
-	    if ($default_name) {
-		unshift @try, $list->{'dir'}.'/'.$default_name;
-	    }
-	    
-	    unshift @try, $list->{'dir'}.'/'.$name;
-	}
-	my @result;
-	foreach my $f (@try) {
-	    Log::do_log('debug3','get_filename : name: %s ; dir %s', $name, $f  );
-	    if (-r $f) {
-		if ($options->{'order'} eq 'all') {
-		    push @result, $f;
-		}else {
-		    return $f;
-		}
-	    }
-	}
-	if ($options->{'order'} eq 'all') {
-	    return @result ;
-	}
+
+    my @result;
+    foreach my $f (@try) {
+##        if (-l $f) {
+##            my $realpath = Cwd::abs_path($f);    # follow symlink
+##            next unless $realpath and -r $realpath;
+##        } elsif (!-r $f) {
+##            next;
+##        }
+        next unless -r $f;
+        Log::do_log('debug3', 'name: %s ; file %s', $name, $f);
+
+        if ($options{'order'} and $options{'order'} eq 'all') {
+            push @result, $f;
+        } else {
+            return $f;
+        }
     }
-    
-    #&Log::do_log('notice','tools::get_filename: Cannot find %s in %s', $name, join(',',@try));
+    if ($options{'order'} and $options{'order'} eq 'all') {
+        return @result;
+    }
+
     return undef;
 }
-####################################################
-# make_tt2_include_path
-####################################################
-# make an array of include path for tt2 parsing
-# 
-# IN -$robot(+) : robot
-#    -$dir : directory ending each path
-#    -$lang : lang
-#    -$list : ref(List)
-#
-# OUT : ref(ARRAY) of tt2 include path
-#
-######################################################
-sub make_tt2_include_path {
-    my ($robot,$dir,$lang,$list) = @_;
 
-    my $listname;
-    if (ref $list eq 'List') {
-	$listname = $list->{'name'};
-    } else {
-	$listname = $list;
-    }
-    &Log::do_log('debug3', 'tools::make_tt2_include_path(%s,%s,%s,%s)', $robot, $dir, $lang, $listname);
+=over 4
 
-    my @include_path;
+=item get_search_path ( $that, [ opt => val, ... ] )
 
-    my $path_etcbindir;
-    my $path_etcdir;
-    my $path_robot;  ## optional
-    my $path_list;   ## optional
-    my $path_family; ## optional
+    # To make include path for global site
+    @path = @{tools::get_search_path('*')};
+    # To make include path for a robot
+    @path = @{tools::get_search_path($robot_id)};
+    # To make include path for a family
+    @path = @{tools::get_search_path($family)};
+    # To make include path for a list
+    @path = @{tools::get_search_path($list)};
 
-    if ($dir) {
-	$path_etcbindir = Sympa::Constants::DEFAULTDIR . "/$dir";
-	$path_etcdir = "$Conf::Conf{'etc'}/".$dir;
-	$path_robot = "$Conf::Conf{'etc'}/".$robot.'/'.$dir if (lc($robot) ne lc($Conf::Conf{'domain'}));
-	if (ref($list) eq 'List'){
-	    $path_list = $list->{'dir'}.'/'.$dir;
-	    if (defined $list->{'admin'}{'family_name'}) {
-		my $family = $list->get_family();
-	        $path_family = $family->{'dir'}.'/'.$dir;
-	    }
-	} 
-    }else {
-	$path_etcbindir = Sympa::Constants::DEFAULTDIR;
-	$path_etcdir = "$Conf::Conf{'etc'}";
-	$path_robot = "$Conf::Conf{'etc'}/".$robot if (lc($robot) ne lc($Conf::Conf{'domain'}));
-	if (ref($list) eq 'List') {
-	    $path_list = $list->{'dir'} ;
-	    if (defined $list->{'admin'}{'family_name'}) {
-		my $family = $list->get_family();
-	        $path_family = $family->{'dir'};
-	    }
-	}
-    }
+make an array of include path for tt2 parsing
+
+IN :
+      -$that(+) : ref(List) | ref(Family) | Robot | "*"
+      -%options : options
+
+Possible values for options:
+    subdir    => directory ending each path
+    lang      => language
+    lang_only => if paths without lang subdirectory would be omitted
+
+OUT : ref(ARRAY) of tt2 include path
+
+=begin comment
+
+Note:
+As of 6.2b, argument $lang is recommended to be IETF language tag,
+rather than locale name.
+
+=end comment
+
+=back
+
+=cut
+
+sub get_search_path {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $that    = shift;
+    my %options = @_;
+
+    my $subdir    = $options{'subdir'};
+    my $lang      = $options{'lang'};
+    my $lang_only = $options{'lang_only'};
+
+    ## Get language subdirectories.
+    my $lang_dirs = undef;
     if ($lang) {
-	@include_path = ($path_etcdir.'/'.$lang,
-			 $path_etcdir,
-			 $path_etcbindir.'/'.$lang,
-			 $path_etcbindir);
-	if ($path_robot) {
-	    unshift @include_path,$path_robot;
-	    unshift @include_path,$path_robot.'/'.$lang;
-	}
-	if ($path_list) {
-	    unshift @include_path,$path_list;
-	    unshift @include_path,$path_list.'/'.$lang;
-
-	    if ($path_family) {
-		unshift @include_path,$path_family;
-		unshift @include_path,$path_family.'/'.$lang;
-	    }	
-	    
-	}
-    }else {
-	@include_path = ($path_etcdir,
-			 $path_etcbindir);
-
-	if ($path_robot) {
-	    unshift @include_path,$path_robot;
-	}
-	if ($path_list) {
-	    unshift @include_path,$path_list;
-	   
-	    if ($path_family) {
-		unshift @include_path,$path_family;
-	    }
-	}
+        ## For compatibility: add old-style "locale" directory at first.
+        my $oldlocale = Language::Lang2Locale($lang);
+        if ($oldlocale) {
+            $lang_dirs = [$oldlocale];
+        } else {
+            $lang_dirs = [];
+        }
+##	## Add lang itself and fallback directories.
+##	push @$lang_dirs, Language::ImplicatedLangs($lang);
     }
 
-    return \@include_path;
+    return [_get_search_path($that, $subdir, $lang_dirs, $lang_only)];
+}
 
+sub _get_search_path {
+    my $that = shift;
+    my ($subdir, $lang_dirs, $lang_only) = @_;    # shift is not used
+
+    my @search_path;
+
+    if (ref $that and ref $that eq 'List') {
+        my $path_list;
+        my $path_family;
+        @search_path = _get_search_path($that->{'domain'}, @_);
+
+        if ($subdir) {
+            $path_list = $that->{'dir'} . '/' . $subdir;
+        } else {
+            $path_list = $that->{'dir'};
+        }
+        if ($lang_dirs) {
+            unless ($lang_only) {
+                unshift @search_path, $path_list;
+            }
+            unshift @search_path, map { $path_list . '/' . $_ } @$lang_dirs;
+        } else {
+            unshift @search_path, $path_list;
+        }
+
+        if (defined $that->get_family) {
+            my $family = $that->get_family;
+            if ($subdir) {
+                $path_family = $family->{'dir'} . '/' . $subdir;
+            } else {
+                $path_family = $family->{'dir'};
+            }
+            if ($lang_dirs) {
+                unless ($lang_only) {
+                    unshift @search_path, $path_family;
+                }
+                unshift @search_path,
+                    map { $path_family . '/' . $_ } @$lang_dirs;
+            } else {
+                unshift @search_path, $path_family;
+            }
+        }
+    } elsif (ref $that and ref $that eq 'Family') {
+        my $path_family;
+        @search_path = _get_search_path($that->{'robot'}, @_);
+
+        if ($subdir) {
+            $path_family = $that->{'dir'} . '/' . $subdir;
+        } else {
+            $path_family = $that->{'dir'};
+        }
+        if ($lang_dirs) {
+            unless ($lang_only) {
+                unshift @search_path, $path_family;
+            }
+            unshift @search_path, map { $path_family . '/' . $_ } @$lang_dirs;
+        } else {
+            unshift @search_path, $path_family;
+        }
+    } elsif (not ref $that and $that and $that ne '*') {    # Robot
+        my $path_robot;
+        @search_path = _get_search_path('*', @_);
+
+        if ($that ne $Conf::Conf{'domain'}) {
+            if ($subdir) {
+                $path_robot =
+                    $Conf::Conf{'etc'} . '/' . $that . '/' . $subdir;
+            } else {
+                $path_robot = $Conf::Conf{'etc'} . '/' . $that;
+            }
+            if ($lang_dirs) {
+                unless ($lang_only) {
+                    unshift @search_path, $path_robot;
+                }
+                unshift @search_path,
+                    map { $path_robot . '/' . $_ } @$lang_dirs;
+            } else {
+                unshift @search_path, $path_robot;
+            }
+        }
+    } elsif (not ref $that and $that eq '*') {    # Site
+        my $path_etcbindir;
+        my $path_etcdir;
+
+        if ($subdir) {
+            $path_etcbindir = Sympa::Constants::DEFAULTDIR . '/' . $subdir;
+            $path_etcdir    = $Conf::Conf{'etc'} . '/' . $subdir;
+        } else {
+            $path_etcbindir = Sympa::Constants::DEFAULTDIR;
+            $path_etcdir    = $Conf::Conf{'etc'};
+        }
+        if ($lang_dirs) {
+            unless ($lang_only) {
+                @search_path = (
+                    (map { $path_etcdir . '/' . $_ } @$lang_dirs),
+                    $path_etcdir,
+                    (map { $path_etcbindir . '/' . $_ } @$lang_dirs),
+                    $path_etcbindir
+                );
+            } else {
+                @search_path = (
+                    (map { $path_etcdir . '/' . $_ } @$lang_dirs),
+                    (map { $path_etcbindir . '/' . $_ } @$lang_dirs)
+                );
+            }
+        } else {
+            @search_path = ($path_etcdir, $path_etcbindir);
+        }
+    } else {
+        Carp::croak 'bug in logic.  Ask developer';
+    }
+
+    return @search_path;
 }
 
 ## Find a file in an ordered list of directories

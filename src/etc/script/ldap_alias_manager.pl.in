@@ -82,9 +82,7 @@ $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
 $data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases ;
 
-my $tt2_include_path = [$Conf{'etc'}.'/'.$domain,
-                        $Conf{'etc'},
-                        Sympa::Constants::DEFAULTDIR];
+my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
 &tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
