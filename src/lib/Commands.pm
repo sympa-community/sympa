@@ -172,59 +172,27 @@ sub finished {
 #      
 ##############################################
 sub help {
-
+    Log::do_log('debug2', '(%s, %s)', @_);
     shift;
     my $robot=shift;
 
-    my $sympa = &Conf::get_robot_conf($robot, 'sympa');
-    my $etc =  &Conf::get_robot_conf($robot, 'etc');
+    my $data = {};
 
-    &Log::do_log('debug', 'Commands::help to robot %s',$robot);
-
-    # sa ne prends pas en compte la structure des répertoires par lang.
-    # we should make this utilize Template's chain of responsibility
-    if ((-r "$etc/mail_tt2/helpfile.tt2")||("$etc/$robot/mail_tt2/helpfile.tt2")) {
-  
-
-	my $data = {};
-
-	my @owner = &List::get_which ($sender, $robot,'owner');
-	my @editor = &List::get_which ($sender, $robot, 'editor');
+    my @owner = &List::get_which ($sender, $robot,'owner');
+    my @editor = &List::get_which ($sender, $robot, 'editor');
 	
-	$data->{'is_owner'}  = 1 if @owner;
-	$data->{'is_editor'} = 1 if @editor;
-	$data->{'user'}      = Sympa::User->new($sender);
-	&Language::SetLang($data->{'user'}->lang)
-	    if $data->{'user'}->lang;
-	$data->{'subject'}        = gettext("User guide");
-	$data->{'auto_submitted'} = 'auto-replied';
+    $data->{'is_owner'}  = 1 if @owner;
+    $data->{'is_editor'} = 1 if @editor;
+    $data->{'user'}      = Sympa::User->new($sender);
+    &Language::SetLang($data->{'user'}->lang)
+	if $data->{'user'}->lang;
+    $data->{'subject'}        = gettext("User guide");
+    $data->{'auto_submitted'} = 'auto-replied';
 
-	unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
-	    &Log::do_log('notice',"Unable to send template 'helpfile' to $sender");
-	    &report::reject_report_cmd('intern_quiet','',{},$cmd_line,$sender,$robot);
-	}
-
-    }elsif (-r Sympa::Constants::DEFAULTDIR . '/mail_tt2/helpfile.tt2') {
-
-	my $data = {};
-
-	my @owner = &List::get_which ($sender,$robot, 'owner');
-	my @editor = &List::get_which ($sender,$robot, 'editor');
-	
-	$data->{'is_owner'} = 1 if ($#owner > -1);
-	$data->{'is_editor'} = 1 if ($#editor > -1);
-	$data->{'subject'} = gettext("User guide");
-	$data->{'auto_submitted'} = 'auto-replied';
-	unless (&List::send_global_file("helpfile", $sender, $robot, $data)){
-	    &Log::do_log('notice',"Unable to send template 'helpfile' to $sender");
-	    &report::reject_report_cmd('intern_quiet','',{},$cmd_line,$sender,$robot);
-	}
-
-    }else{
-	my $error = sprintf('Unable to read "help file" : %s',$!);
-	&report::reject_report_cmd('intern',$error,{},$cmd_line,$sender,$robot);
-	&Log::do_log('info', 'HELP from %s refused, file not found', $sender,);
-	return undef;
+    unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
+	&Log::do_log('notice', 'Unable to send template "helpfile" to %s',
+	    $sender);
+	&report::reject_report_cmd('intern_quiet','',{},$cmd_line,$sender,$robot);
     }
 
     &Log::do_log('info', 'HELP from %s accepted (%d seconds)',$sender,time-$time_command);
