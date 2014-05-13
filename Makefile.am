@@ -99,9 +99,9 @@ installconfig: installdir
 		chown $(USER) data_structure.version || /bin/true; \
 		chgrp $(GROUP) data_structure.version || /bin/true; \
 	fi
-	@for dir in create_list_templates custom_actions families \
-		global_task_models list_task_models scenari search_filters \
-		mail_tt2 web_tt2; do \
+	@for dir in create_list_templates custom_actions custom_conditions \
+		data_sources families global_task_models list_task_models \
+		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
 			install -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
