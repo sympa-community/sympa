@@ -1,33 +1,32 @@
-<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="[% lang_tag %]" xml:lang="[% lang_tag %]" xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html lang="[% lang_tag %]" xml:lang="[% lang_tag %]">
 <!-- $Id$ -->
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Sympa" />
+<meta charset="UTF-8" />
+<meta name="generator" content="Sympa [% version %]" />
 
 <title> [% main_title %] - [% action %] </title>
 
 [% IF custom_css %]
-<style type="text/css">
+<style>
 [% custom_css %]
 </style>
 [% ELSE %]
-<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Sympa CSS" />
+<link rel="stylesheet" href="[% css_url %]/style.css" media="screen" title="Sympa CSS" />
 [% END %]
 
 [% PROCESS css_ie.tt2 %]
 
 [% IF locale_css %]
-<style type="text/css">
+<style>
 [% locale_css %]
 </style>
 [% END %]
 
 <!-- the following CSS have to be improved before to be used -->
-<!-- <link rel="stylesheet" href="[% css_url %]/print.css" type="text/css" media="print" />                                            -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
-<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
+<!-- <link rel="stylesheet" href="[% css_url %]/print.css" media="print" /> -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" media="screen" title="View Full Page" /> -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" media="screen" title="Print Preview" /> -->
 
 [% IF conf.favicon_url %]
 <link rel="shortcut icon" href="[% conf.favicon_url %]" />
