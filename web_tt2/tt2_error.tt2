@@ -1,29 +1,71 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="[% lang_tag %]" xml:lang="[% lang_tag %]" xmlns="http://www.w3.org/1999/xhtml">
-<!-- $Id$ -->
 
+<!-- $Id$ -->
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Derived from style Blank Canvas by tw3k AT tw3k.tw3k.q3machines.net" />
-  <title>[%|loc%]Sympa error - could not display web page[%END%]</title>
+<meta name="generator" content="Sympa" />
+
+<title> [%|loc%]Sympa error - could not display web page[%END%] - [% main_title %] - [% action %] </title>
+
+[% IF custom_css %]
+<style type="text/css">
+[% custom_css %]
+</style>
+[% ELSE %]
+<link rel="stylesheet" href="[% css_url %]/style.css" type="text/css" media="screen" title="Sympa CSS" />
+[% END %]
+
+[% PROCESS css_ie.tt2 %]
+
+[% IF locale_css %]
+<style type="text/css">
+[% locale_css %]
+</style>
+[% END %]
+
+<!-- the following CSS have to be improved before to be used -->
+<!-- <link rel="stylesheet" href="[% css_url %]/print.css" type="text/css" media="print" />                                            -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/fullPage.css" type="text/css" media="screen" title="View Full Page" />     -->
+<!-- <link rel="alternative stylesheet" href="[% css_url %]/print-preview.css" type="text/css" media="screen" title="Print Preview" /> -->
+
+[% IF conf.favicon_url %]
+<link rel="shortcut icon" href="[% conf.favicon_url %]" />
+[% ELSE %]
+<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+[% END %]
+
+[% PROCESS javascript.tt2 %]
+
+[% IF base %] <base href="[% base %]" /> [% END %]
+
 </head>
 
-<body id="error">
-<h1>[%|loc%]Sympa could not deliver the requested page for the following reason: [%END%]</h1><br />
-<br />
-[% IF tt2_error %]
-<em>[% tt2_error %]</em><br /><br />
-[% ELSIF errors %]
-    [% PROCESS error.tt2 %]
-[% END %]
-<h2>[%|loc%]Please contact the listmaster.[%END%]</h2>
+<body>
 
- <div class="search_form">
-   <em>[%|loc%]Powered by[%END%]</em></td>
-   <a href="http://www.sympa.org/">
-     <img src="[% icons_url %]/logo-s.png" alt="Sympa [% version %]" />
-   </a>
+[% PROCESS login_menu.tt2 %]
+
+<div id="Canvas">
+  <div id="Header">
+    [% PROCESS title.tt2 %]
+    [% PROCESS menu.tt2 %]
+  </div> <!-- end div Header -->
+
+  <div id="Stretcher">&nbsp;<br />
+     <div id="Paint">
+        <div class="ContentBlock">
+
+         <h1>[%|loc%]Internal Server Error[%END%]</h1>
+         <p>[%|loc%]Sympa could not deliver the requested page for the following reason: [%END%]</p>
+         <p>[%|loc(error_message)%]Error: %1[%END%]</p>
+         <p>[%|loc%]Please contact the listmaster.[%END%]</p>
+
+       </div><!-- End div ContentBlock -->
+     </div><!-- End div Paint -->
+  </div><!-- end div Stretcher -->
+</div> <!-- end div canvas -->
+
+  [% PROCESS footer.tt2 %]
 </body>
-<!-- end tt2_error.tt2 -->
+<!-- end crash.tt2 -->
 </html>
-
