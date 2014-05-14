@@ -327,7 +327,10 @@ foreach my $file (@ordered_files) {
 	    }
 
     # Perl source file
-	    my ($state,$str,$vars)=(0); my $is_date = 0;
+    my ($state, $str, $vars) = (0);
+    my $is_date = 0;
+    my $is_printf = 0;
+
     pos($_) = 0;
     my $orig = 1 + (() = ((my $__ = $_) =~ /\n/g));
   PARSER: {
@@ -338,10 +341,12 @@ foreach my $file (@ordered_files) {
         m/\b(translate|gettext(?:_strftime|_sprintf)?|maketext|__?|loc|x)/gcx && do {
           if ($& eq 'gettext_strftime' or $& eq 'gettext_sprintf') {
             $state = BEGM;
-	    $is_date = 1;
+            $is_date = ($& eq 'gettext_strftime');
+            $is_printf = ($& eq 'gettext_sprintf');
           } else {
             $state = BEG;
-	    $is_date = 0;
+            $is_date = 0;
+            $is_printf = 0;
           }
           redo;
         };
@@ -387,6 +392,7 @@ foreach my $file (@ordered_files) {
 				'line' => $line - (() = $str =~ /\n/g),
 				'vars' => $vars};
 	      $expression->{'type'} = 'date' if ($is_date);
+	      $expression->{'type'} = 'printf' if ($is_printf);
 
 	      &add_expression($expression);
 	  }
@@ -485,6 +491,9 @@ foreach my $entry (@ordered_bis) {
     if ($type_of_entries{$entry} eq 'date') {
 	print "#. This entry is a date/time format\n";
 	print "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
+    } elsif ($type_of_entries{$entry} eq 'printf') {
+	print "#. This entry is a sprintf format\n";
+	print "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
     }
 
     print "#, maketext-format" if $gnu_gettext and /%(?:\d|\w+\([^\)]*\))/;

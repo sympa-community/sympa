@@ -964,6 +964,10 @@ Parameter:
 Language tags or similer things.
 Old style "locale" by Sympa (see also L</Compatibility>) will also be
 accepted.
+If multiple tags are specified, this function trys each of them in order.
+
+Note that C<'en'> will always succeed.  Thus, it may be useful to put it at
+the end of argument list.
 
 =back
 
