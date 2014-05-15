@@ -23,8 +23,8 @@
 
 package Commands;
 
-use strict 'subs';
-
+use strict;
+use warnings;
 use Exporter;
 use Digest::MD5;
 use Fcntl;
@@ -95,13 +95,12 @@ my $quiet;
 #      
 ##############################################
 sub parse {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
    $sender = lc(shift);
    my $robot = shift;
    my $i = shift;
    my $sign_mod = shift;
    my $message = shift;
-
-   &Log::do_log('debug2', 'Commands::parse(%s, %s, %s, %s, %s)', $sender, $robot, $i, $sign_mod, $message->{'msg'}->as_string );
 
    my $j;
    $cmd_line = '';
@@ -125,17 +124,20 @@ sub parse {
 
    foreach $j (keys %comms) {
        if ($i =~ /^($j)(\s+(.+))?\s*$/i) {
+	    no strict 'refs';
+
 	   $time_command = time;
 	   my $args = $3;
-	   $args =~ s/^\s*//;
-	   $args =~ s/\s*$//;
+	    if ($args and length $args) {
+		$args =~ s/^\s*//;
+		$args =~ s/\s*$//;
+	    }
 
-	   my $status;
-	  
+	    my $status;
 	   $cmd_line = $i;
-	   $status = & {$comms{$j}}($args, $robot, $sign_mod, $message);
-	   
-	   return $status ;
+	    $status = &{$comms{$j}}($args, $robot, $sign_mod, $message);
+
+	    return $status;
        }
    }
    
@@ -154,7 +156,7 @@ sub parse {
 #      
 ################################################
 sub finished {
-    &Log::do_log('debug2', 'Commands::finished');
+    Log::do_log('debug2', '()');
 
     &report::notice_report_cmd('finished',{},$cmd_line);
     return 1;
@@ -259,7 +261,8 @@ sub lists {
     
     unless (&List::send_global_file('lists', $sender, $robot, $data)){
 	&Log::do_log('notice',"Unable to send template 'lists' to $sender");
-	&report::reject_report_cmd('intern_quiet','',{'listname'=> $l},$cmd_line,$sender,$robot);
+	&report::reject_report_cmd('intern_quiet', '', {}, $cmd_line, $sender,
+	    $robot);
     }
 
     &Log::do_log('info', 'LISTS from %s accepted (%d seconds)', $sender, time-$time_command);
@@ -308,15 +311,18 @@ sub stats {
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
-	my $error = "Unable to evaluate scenario 'review' for list $l";
-	&report::reject_report_cmd('intern',$error,{'listname'=>$l},$cmd_line,$sender,$robot);
+	my $error = "Unable to evaluate scenario 'review' for list $listname";
+	&report::reject_report_cmd('intern', $error,
+	    {'listname' => $listname, 'list' => $list}, $cmd_line, $sender,
+	    $robot);
 	return undef;
     }
 
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice', "Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }
 	}else {
@@ -335,7 +341,9 @@ sub stats {
 								   'subject' => "STATS $list->{'name'}", # compat <= 6.1.17.
 								   'auto_submitted' => 'auto-replied'})) {
 	    &Log::do_log('notice',"Unable to send template 'stats_reports' to $sender");
-	    &report::reject_report_cmd('intern_quiet','',{'listname'=> $l},$cmd_line,$sender,$robot);
+	    &report::reject_report_cmd('intern_quiet','',
+		{'listname' => $listname, 'list' => $list},
+		$cmd_line, $sender, $robot);
 	}
 
 	
@@ -577,7 +585,8 @@ sub review {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice', "Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);  
 	    }
 	}else {
@@ -636,12 +645,21 @@ sub review {
 #
 #############################################################
 sub verify {
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $listname = shift ;
     my $robot = shift;
-
     my $sign_mod = shift ;
-    &Log::do_log('debug', 'Commands::verify(%s, %s)', $sign_mod, $robot);
-    
+
+    my $list = List->new($listname, $robot);
+    unless ($list) {
+        &report::reject_report_cmd('user', 'no_existing_list',
+            {'listname' => $listname}, $cmd_line);
+        Sympa::Log::Syslog::do_log('info',
+            'VERIFY from %s refused, unknown list for robot %s',
+            $sender, $robot);
+        return 'unknown_list';
+    }
+
     my $user;
     
     &Language::SetLang($list->{'admin'}{'lang'});
@@ -649,10 +667,10 @@ sub verify {
     if  ($sign_mod) {
 	&Log::do_log('info', 'VERIFY successfull from %s', $sender,time-$time_command);
 	if ($sign_mod eq 'smime') {
-	    $auth_method='smime';
+	    ##$auth_method='smime';
 	    &report::notice_report_cmd('smime',{},$cmd_line); 
 	}elsif($sign_mod eq 'dkim') {
-	    $auth_method='dkim';
+	    ##$auth_method='dkim';
 	    &report::notice_report_cmd('dkim',{},$cmd_line); 
 	}
     }else{
@@ -730,7 +748,8 @@ sub subscribe {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {'auto_submitted' => 'auto-replied'})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice', "Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }	    
 	}else {
@@ -789,7 +808,7 @@ sub subscribe {
 	    $user->{'subscribed'} = 1;
 	    
 	    unless ($list->update_list_member($sender, $user)){
-		my $error = "Unable to update user $user in list $listname";
+		my $error = sprintf "Unable to update user %s in list %s", $user, $list->{'name'};
 		&report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 		return undef; 
 	    }
@@ -804,7 +823,10 @@ sub subscribe {
 
 	    $list->add_list_member($u);
 	    if (defined $list->{'add_outcome'}{'errors'}) {
-		my $error = sprintf "Unable to add user %s in list %s : %s",$user,$listname,$list->{'add_outcome'}{'errors'}{'error_message'};
+		my $error =
+		    sprintf "Unable to add user %s in list %s : %s",
+		    $u, $which,
+		    $list->{'add_outcome'}{'errors'}{'error_message'};
 		my $error_type = 'intern';
 		$error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
 		&report::reject_report_cmd($error_type,$error,{'listname'=>$which},$cmd_line,$sender,$robot);
@@ -895,15 +917,18 @@ sub info {
     $action = $result->{'action'} if (ref($result) eq 'HASH');
     
     unless (defined $action) {
-	my $error = "Unable to evaluate scenario 'review' for list $l";
-	&report::reject_report_cmd('intern',$error,{'listname'=>$l},$cmd_line,$sender,$robot);
+	my $error = "Unable to evaluate scenario 'review' for list $listname";
+	&report::reject_report_cmd('intern',$error,
+	    {'listname' => $listname, 'list' => $list},
+	    $cmd_line,$sender,$robot);
 	return undef;
     }
 
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice',"Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }
 	}else {
@@ -986,7 +1011,7 @@ sub signoff {
 
     &Log::do_log('debug', 'Commands::signoff(%s,%s, %s, %s)', $which,$robot, $sign_mod, $message);
 
-    my ($l,$list,$auth_method);
+    my ($email, $l, $list, $auth_method);
     my $host = &Conf::get_robot_conf($robot, 'host');
 
     ## $email is defined if command is "unsubscribe <listname> <e-mail>"    
@@ -1065,7 +1090,8 @@ sub signoff {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice',"Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{'listname' => $which},$cmd_line);
 	    }
 	}else {
@@ -1111,7 +1137,10 @@ sub signoff {
 	    if ($action =~ /notify/i) {
 		# try to find email from same domain or email wwith same local part.
 	
-		unless ($list->send_notify_to_owner('warn-signoff',{'who' => $email, 'gecos' => $comment })) {
+		unless ($list->send_notify_to_owner('warn-signoff',
+		    {   'who' => $email,
+			'gecos' => ($user_entry->{'gecos'} || '')
+		    })) {
 		    &Log::do_log('info',"Unable to send notify 'warn-signoff' to $list->{'name'} list owner");
 		}
 	    }
@@ -1120,16 +1149,17 @@ sub signoff {
 	
 	## Really delete and rewrite to disk.
 	unless ($list->delete_list_member('users' => [$email], 'exclude' =>' 1', 'parameter' => 'unsubscription')){
-	    my $error = "Unable to delete user $user from list $listname";
+	    my $error = "Unable to delete user $email from list $which";
 	    &report::reject_report_cmd('intern',$error,{'listname'=>$which},$cmd_line,$sender,$robot);
 	}
 	
 	
 	## Notify the owner
 	if ($action =~ /notify/i) {
-	    unless ($list->send_notify_to_owner('notice',{'who' => $email, 
-					 'gecos' => $comment, 
-							  'command' => 'signoff'})) {
+	    unless ($list->send_notify_to_owner('notice',
+		{   'who' => $email, 
+		    'gecos' => ($user_entry->{'gecos'} || ''),
+		    'command' => 'signoff'})) {
 		&Log::do_log('info',"Unable to send notify 'notice' to $list->{'name'} list owner");
 	    } 
 	}
@@ -1213,7 +1243,8 @@ sub add {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice', "Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{'listname' => $which},$cmd_line);
 	    }
 	}else {
@@ -1250,7 +1281,10 @@ sub add {
 	    
 	    $list->add_list_member($u);
 	    if (defined $list->{'add_outcome'}{'errors'}) {
-		my $error = sprintf "Unable to add user %s in list %s : %s",$user,$listname,$list->{'add_outcome'}{'errors'}{'error_message'};
+		my $error =
+		    sprintf "Unable to add user %s in list %s : %s",
+			$u, $which,
+			$list->{'add_outcome'}{'errors'}{'error_message'};
 		my $error_type = 'intern';
 		$error_type = 'user' if (defined $list->{'add_outcome'}{'errors'}{'max_list_members_exceeded'});
 		&report::reject_report_cmd($error_type,$error,{'listname'=>$which},$cmd_line,$sender,$robot);
@@ -1355,7 +1389,8 @@ sub invite {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})){
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice',"Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 	    }
 	}else {
@@ -1430,7 +1465,7 @@ sub invite {
 		&Log::do_log('info', 'INVITE %s %s from %s refused, not allowed (%d seconds, %d subscribers)', $which, $email, $sender, time-$time_command, $list->get_total() );
 		if (defined $result->{'tt2'}) {
 		    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-			&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+			&Log::do_log('notice', "Unable to send template '%s' to %s", $result->{'tt2'}, $sender);
 			&report::reject_report_cmd('auth',$result->{'reason'},{},$cmd_line);
 		    }
 		}else {
@@ -1542,7 +1577,8 @@ sub remind {
 	&Log::do_log ('info',"Remind for list $listname from $sender refused");
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice', "Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 
 		&report::reject_report_cmd('auth',$result->{'reason'},{'listname' => $listname},$cmd_line);
 	    }
@@ -1610,9 +1646,8 @@ sub remind {
 
 	    my $all_lists = &List::get_lists($robot);
 	    foreach my $list (@$all_lists){
-		
 		my $listname = $list->{'name'};
-
+		my $user;
 		next unless ($user = $list->get_first_list_member()) ;
 
 		do {
@@ -1746,7 +1781,8 @@ sub del {
     if ($action =~ /reject/i) {
 	if (defined $result->{'tt2'}) {
 	    unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
-		&Log::do_log('notice',"Unable to send template '$tpl' to $sender");
+		&Log::do_log('notice',"Unable to send template '%s' to %s",
+		    $result->{'tt2'}, $sender);
 		&report::reject_report_cmd('auth',$result->{'reason'},{'listname' => $which},$cmd_line);
 	    }
 	}else {
@@ -1760,7 +1796,9 @@ sub del {
 	$cmd = "quiet $cmd" if $quiet;
         unless ($list->request_auth ($sender, $cmd, $robot, $who )){
 	    my $error = "Unable to request authentification for command 'del'";
-	    &report::reject_report_cmd('intern',$error,{'listname'=>$listname},$cmd_line,$sender,$robot);
+	    &report::reject_report_cmd('intern', $error,
+		{'listname' => $which, 'list' => $list},
+		$cmd_line, $sender, $robot);
 	    return undef; 
 	}
 	&Log::do_log('info', 'DEL %s %s from %s, auth requested (%d seconds)', $which, $who, $sender,time-$time_command);
@@ -1811,7 +1849,9 @@ sub del {
     }
     &Log::do_log('info', 'DEL %s %s from %s aborted, unknown requested action in scenario',$which,$who,$sender);
     my $error = "Unknown requested action in scenario: $action.";
-    &report::reject_report_cmd('intern',$error{'listname' => $listname},$cmd_line,$sender,$robot); 
+    &report::reject_report_cmd('intern', $error,
+	{'listname' => $which, 'list' => $list},
+	$cmd_line, $sender, $robot);
     return undef;
 }
 
@@ -2045,7 +2085,7 @@ sub distribute {
 	unless ($numsmtp) {
 	    &Log::do_log('info', 'Message for %s from %s accepted but all subscribers use digest,nomail or summary',$which, $sender);
 	} 
-	&Log::do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $msg_id, $bytes);
+	&Log::do_log('info', 'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message-id=%s, size=%d', $which, $sender, time - $start_time, $numsmtp, $list->get_total(), $msg_id, $message->{'size'});
 
 	unless ($quiet) {
 	    unless (&report::notice_report_msg('message_distributed',$sender,{'key' => $key,'message' => $message},$robot,$list)) {
@@ -2058,7 +2098,7 @@ sub distribute {
     }else{   
 	# this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
 	unless ($list->move_message($file, $Conf{'queuedistribute'})) {
-	    &Log::do_log('err','COmmands::distribute(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
+	    &Log::do_log('err','COmmands::distribute(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $list->{'name'});
 	    &report::reject_report_msg('intern','',$sender,{'msg_id' => $msg_id},$robot,$msg_string,$list);
 	    return undef;
 	}
@@ -2102,7 +2142,8 @@ sub confirm {
     unless (opendir DIR, $queueauth ) {
         &Log::do_log('info', 'Commands::confirm(): WARNING unable to read %s directory', $queueauth);
 	my $string = sprintf 'Unable to open directory %s to confirm message with key %s',$queueauth,$key;
-	&report::reject_report_msg('intern',$string,$sender,{},$robot,'',$list);
+	&report::reject_report_msg('intern', $string, $sender, {},
+	    $robot, '', '');
 	return undef;
     }
 
@@ -2147,7 +2188,8 @@ sub confirm {
 
 
     unless (defined $action) {
-	&Log::do_log('err', 'Commands::confirm(): message (%s) ignored because unable to evaluate scenario for list %s',$messageid,$name);
+	&Log::do_log('err',
+	    'message (%s) ignored because unable to evaluate scenario for list %s', $msgid, $name);
 	&report::reject_report_msg('intern','Message ignored because scenario "send" cannot be evaluated',$sender,{'msg_id' => $msgid,'message' => $message},
 				  $robot,$msg_string,$list);
 	return undef ;
@@ -2235,7 +2277,7 @@ sub confirm {
 	}else{
 	    # this message is to be distributed but this daemon is dedicated to commands -> move it to distribution spool
 	    unless ($list->move_message($file, $Conf{'queuedistribute'})){
-		&Log::do_log('err','Commands::confirm(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $listname);
+		&Log::do_log('err','Commands::confirm(): Unable to move in spool for distribution message to list %s (daemon_usage = command)', $list->{'name'});
 		&report::reject_report_msg('intern','',$sender,{'msg_id' => $msgid,'message' => $message},$robot,$msg_string,$list);
 		return undef;
 	    }
@@ -2580,9 +2622,9 @@ sub which {
 #       | undef   
 ##########################################################
 sub get_auth_method {
+    Log::do_log('debug3', '(%s, %s, %s, %s, %s)', @_);
     my ($cmd,$email,$error,$sign_mod,$list) = @_;
-    &Log::do_log('debug3',"Commands::get_auth_method()");
-    
+    my $that;
     my $auth_method;
 
     if ($sign_mod eq 'smime') {
@@ -2592,18 +2634,19 @@ sub get_auth_method {
 	&Log::do_log('debug',"auth received from $sender : $auth");	
       
 	my $compute;
-	if (ref($list) eq "List"){
+	if (ref $list eq "List"){
 	    $compute= $list->compute_auth($email,$cmd);
-
+	    $that = $list->{'domain'}; # Robot
 	}else {
 	    $compute= &List::compute_auth($email,$cmd);	    
+	    $that = '*'; # Site
 	}
 	if ($auth eq $compute) {
 	    $auth_method = 'md5' ;
 	}else{           
 	    &Log::do_log('debug2', 'auth should be %s',$compute);
 	    if ($error->{'type'} eq 'auth_failed'){
-		&report::reject_report_cmd('intern',"The authentication process failed",$error->{'data'},$cmd_line,$sender,$robot); 
+		&report::reject_report_cmd('intern',"The authentication process failed",$error->{'data'},$cmd_line,$sender, $that); 
 	    }else {
 		&report::reject_report_cmd('user',$error->{'type'},$error->{'data'},$cmd_line); 
 	    }
