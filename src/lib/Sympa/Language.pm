@@ -52,6 +52,7 @@ BEGIN {
     Locale::Messages::bind_textdomain_codeset(web_help => 'utf-8');
 }
 
+# Constructor for Class::Singleton.
 sub _new_instance {
     my $class = shift;
     my $self  = $class->SUPER::_new_instance();
@@ -127,7 +128,7 @@ my $language_tag_re = qr/^
 $/ix;
 
 ## A tiny subset of script codes and gettext modifier names.
-## Keys are ISO 15924 script codes (Titlecased).
+## Keys are ISO 15924 script codes (Titlecased, four characters).
 ## Values are property value aliases standardised by Unicode Consortium
 ## (lowercased).  cf. <http://www.unicode.org/iso15924/iso15924-codes.html>.
 my %script2modifier = (
@@ -549,9 +550,6 @@ sub lang2oldlocale {
     return;
 }
 
-# DEPRECATED: merged to tt2::maketext().
-# sub maketext;
-
 # Note: older name is sympa_dgettext().
 sub dgettext {
     my $self       = shift;
@@ -587,29 +585,7 @@ sub gettext {
     my $self  = shift;
     my $msgid = shift;
 
-    # Returns meta information on the catalog.
-    # Note: currently, charset is always 'utf-8'; encoding won't be used.
-    unless (defined $msgid) {
-        return;
-    } elsif ($msgid eq '') {    # prevents meta information to be returned
-        return '';
-    } elsif ($msgid eq '_language_') {
-        return $self->native_name;
-    } elsif ($msgid eq '_charset_') {
-        return 'UTF-8';
-    } elsif ($msgid eq '_encoding_') {
-        return '8bit';
-    }
-
-    return $msgid unless $self->{lang} and $self->{lang} ne 'en';
-
-    ## Workaround for nb/nn.
-    my $locale = $self->{locale};
-    $locale =~ s/^(nb|nn)\b/${1}_NO/;
-
-    local %ENV;
-    $ENV{'LANGUAGE'} = $locale;
-    return Locale::Messages::gettext($msgid);
+    return $self->dgettext('', $msgid);
 }
 
 sub gettext_sprintf {
@@ -622,15 +598,12 @@ sub gettext_sprintf {
     ## if lang has not been set or 'en' is set, fallback to native sprintf().
     unless ($self->{lang} and $self->{lang} ne 'en') {
         POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
-        my $ret = sprintf($format, @args);
-        POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
-        return $ret;
+    } else {
+        $format = $self->gettext($format);
+        POSIX::setlocale(POSIX::LC_NUMERIC(), $self->{locale_numeric});
     }
-
-    $format = $self->gettext($format);
-
-    POSIX::setlocale(POSIX::LC_NUMERIC(), $self->{locale_numeric});
     my $ret = sprintf($format, @args);
+
     POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
     return $ret;
 }
@@ -670,40 +643,63 @@ sub gettext_strftime {
     ## if lang has not been set or 'en' is set, fallback to native strftime().
     unless ($self->{lang} and $self->{lang} ne 'en') {
         POSIX::setlocale(POSIX::LC_TIME(), 'C');
-        my $ret = POSIX::strftime($format, @args);
-        POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
-        return $ret;
-    }
+    } else {
+        $format = $self->gettext($format);
 
-    $format = $self->gettext($format);
-
-    ## If POSIX locale was not set, emulate format strings.
-    unless ($self->{locale_time}
-        and $self->{locale_time} ne 'C'
-        and $self->{locale_time} ne 'POSIX') {
-        my %names;
-        foreach my $k (keys %date_part_names) {
-            $names{$k} = [
-                split /:/,
-                $self->gettext($date_part_names{$k}->{'gettext_id'})
-            ];
+        ## If POSIX locale was not set, emulate format strings.
+        unless ($self->{locale_time}
+            and $self->{locale_time} ne 'C'
+            and $self->{locale_time} ne 'POSIX') {
+            my %names;
+            foreach my $k (keys %date_part_names) {
+                $names{$k} = [
+                    split /:/,
+                    $self->gettext($date_part_names{$k}->{'gettext_id'})
+                ];
+            }
+            $format =~ s{(\%[EO]?.)}{
+                my $index;
+                if (    $names{$1}
+                    and defined(
+                        $index = $args[$date_part_names{$1}->{'index'}]
+                    )
+                    ) {
+                    $index = ($index < 12) ? 0 : 1
+                        if $1 eq '%p';
+                    $names{$1}->[$index];
+                } else {
+                    $1;
+                }
+            }eg;
         }
-        $format =~ s{(\%[EO]?.)}{
-	    my $index;
-	    if ($names{$1} and
-		defined($index = $args[$date_part_names{$1}->{'index'}])) {
-		$index = ($index < 12) ? 0 : 1
-		    if $1 eq '%p';
-		$names{$1}->[$index];
-	    } else {
-		$1;
-	    }
-	}eg;
-    }
 
-    POSIX::setlocale(POSIX::LC_TIME(), $self->{locale_time});
+        POSIX::setlocale(POSIX::LC_TIME(), $self->{locale_time});
+    }
     my $ret = POSIX::strftime($format, @args);
+
     POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
+    return $ret;
+}
+
+sub maketext {
+    my $self       = shift;
+    my $textdomain = shift;
+    my $template   = shift;
+    my @args       = @_;
+
+    my $orig_locale = POSIX::setlocale(POSIX::LC_NUMERIC());
+
+    unless ($self->{lang} and $self->{lang} ne 'en') {
+        POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
+    } else {
+        $template = $self->dgettext($textdomain, $template);
+        POSIX::setlocale(POSIX::LC_NUMERIC(), $self->{locale_numeric});
+    }
+    my $ret = $template;
+    # replace parameters in string
+    $ret =~ s/[%]([%]|\d+)/($1 eq '%') ? '%' : $args[$1 - 1]/eg;
+
+    POSIX::setlocale(POSIX::LC_NUMERIC(), $orig_locale);
     return $ret;
 }
 
@@ -916,7 +912,7 @@ Gets the singleton instance of L<Sympa::Language> class.
 
 =over 4
 
-=item push_lang ( $lang, ... )
+=item push_lang ( [ $lang, ... ] )
 
 I<Instance method>.
 Set current language by L</set_lang>() keeping the previous one;
@@ -949,7 +945,7 @@ Returns:
 
 Always C<1>.
 
-=item set_lang ( $lang, ... )
+=item set_lang ( [ $lang, ... ] )
 
 I<Instance method>.
 Sets current language along with translation catalog,
@@ -966,15 +962,15 @@ Old style "locale" by Sympa (see also L</Compatibility>) will also be
 accepted.
 If multiple tags are specified, this function trys each of them in order.
 
-Note that C<'en'> will always succeed.  Thus, it may be useful to put it at
-the end of argument list.
+Note that C<'en'> will always succeed.  Thus, putting it at the end of
+argument list may be useful.
 
 =back
 
 Returns:
 
 Canonic language tag actually set or, if no usable catalogs were found,
-C<undef>.
+C<undef>.  If no arguments are given, do nothing and returns C<undef>.
 
 Note that the language actually set may not be identical to the parameter
 $lang, even when latter has been canonicalized.
@@ -1109,6 +1105,11 @@ Returns:
 
 Translated and formatted string.
 
+=item maketext ( $textdomain, $template, $args, ... )
+
+I<Instance method>.
+XXX @todo doc
+
 =back
 
 
@@ -1133,8 +1134,8 @@ extension subtags are not supported.
 
 =item *
 
-Since catalogs for C<zh>, C<zh-Hans> and C<zh-Hant> may not be provided,
-L</set_lang>() will choose approximate C<zh_I<??>> catalogs for these tags.
+Since catalogs for C<zh>, C<zh-Hans> or C<zh-Hant> may not be provided,
+L</set_lang>() will choose approximate catalogs for these tags.
 
 =back
 
