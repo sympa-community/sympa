@@ -312,6 +312,11 @@ our %cpan_modules = (
         'gettext_id' =>
             'Used by the bulk.pl daemon to check the number of slave bulks running.',
     },
+    'Scalar::Util' => {
+        required_version => '1.22',
+        package_name     => 'Scalar-List-Utils',
+        'gettext_id'     => 'set of various subroutines to handle scalar',
+    },
     'SOAP::Lite' => {
         required_version => '0.712',
         package_name     => 'SOAP-Lite',

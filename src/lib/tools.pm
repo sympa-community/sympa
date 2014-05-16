@@ -37,6 +37,7 @@ use Mail::Header;
 use MIME::Lite::HTML;
 use POSIX qw(strftime mkfifo strtod);
 use Proc::ProcessTable;
+use Scalar::Util '1.22'; # looks_like_number() works.
 use Sys::Hostname;
 use Text::LineFold;
 use Time::Local;
@@ -252,7 +253,10 @@ sub sanitize_var {
 				  );
 		} elsif (defined $parameters{'var'}->[$index]) {
 		    $parameters{'var'}->[$index] =
-			escape_html($parameters{'var'}->[$index]);
+			escape_html($parameters{'var'}->[$index])
+			unless Scalar::Util::looks_like_number(
+			    $parameters{'var'}->[$index]
+			); # preserve numeric flags.
 		}
 	    }
 	}
@@ -269,7 +273,10 @@ sub sanitize_var {
 		    unless ($parameters{'htmlAllowedParam'}{$key} or
 			$parameters{'htmlToFilter'}{$key}) {
 			$parameters{'var'}->{$key} =
-			    escape_html($parameters{'var'}->{$key});
+			    escape_html($parameters{'var'}->{$key})
+			    unless Scalar::Util::looks_like_number(
+				$parameters{'var'}->{$key}
+			    ); # preserve numeric flags.
 		    }
 		    if ($parameters{'htmlToFilter'}{$key}) {
 			$parameters{'var'}->{$key} = sanitize_html(
