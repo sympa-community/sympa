@@ -379,7 +379,7 @@ update-po: Makefile
 	if test "$$lang" = "en"; then\
           $(MSGEN) --lang=$$lang -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
         else \
-	  if $(MSGMERGE) --lang=$$lang -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
+	  if $(MSGMERGE) -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
 	    :; \
 	  else \
 	    echo "msgmerge for $$lang.po failed!" 1>&2; \
