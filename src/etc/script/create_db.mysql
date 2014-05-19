@@ -256,10 +256,10 @@ CREATE TABLE one_time_ticket_table (
 
 CREATE TABLE session_table ( 
 	 data_session 	 text, 
-	 date_session 	 int(11), 
+	 date_session 	 int(11) NOT NULL, 
 	 email_session 	 varchar(100), 
 	 hit_session 	 int(11), 
-	 id_session 	 varchar(30), 
+	 id_session 	 varchar(30) NOT NULL,
 	 prev_id_session 	 varchar(30), 
 	 refresh_date_session 	 int(11), 
 	 remote_addr_session 	 varchar(60), 

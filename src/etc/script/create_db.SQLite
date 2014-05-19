@@ -113,7 +113,7 @@ CREATE TABLE list_table (
 	 status_list 	text, 
 	 subject_list 	text, 
 	 topics_list 	text, 
-	 web_archive_list 	numeric, 
+	 web_archive_list 	integer, 
  
  );
 
@@ -251,10 +251,10 @@ CREATE TABLE one_time_ticket_table (
 
 CREATE TABLE session_table ( 
 	 data_session 	text, 
-	 date_session 	integer, 
+	 date_session 	integer NOT NULL, 
 	 email_session 	text, 
 	 hit_session 	integer, 
-	 id_session 	text, 
+	 id_session 	text NOT NULL,
 	 prev_id_session 	text, 
 	 refresh_date_session 	integer, 
 	 remote_addr_session 	text, 
