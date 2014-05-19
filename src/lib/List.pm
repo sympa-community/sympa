@@ -464,13 +464,16 @@ my %list_option = (
 
     # dmarc_protection.mode
     'dkim_signature' => {'gettext_id' => 'DKIM signature exists'},
+    'dmarc_any'      => {'gettext_id' => 'DMARC policy exists'},
     'dmarc_reject'   => {'gettext_id' => 'DMARC policy suggests rejection'},
+    'dmarc_quarantine' => {'gettext_id' => 'DMARC policy suggests quarantine'},
     'domain_regex'   => {'gettext_id' => 'domain matching regular expression'},
 
     # dmarc_protection.phrase
     'display_name'   => {'gettext_id' => 'display name'},
     'name_and_email' => {'gettext_id' => 'display name and e-mail'},
-    'name_via_list'  => {'gettext_id' => '"via Mailing List"'},
+    'name_via_list'  => {'gettext_id' => 'name "via Mailing List"'},
+    'name_email_via_list' => {'gettext_id' => 'e-mail "via Mailing List"'},
 );
 
 ## Values for subscriber reception mode.
@@ -1494,7 +1497,6 @@ sub distribute_msg {
 	}
     }
 
-# SJS START
     ## Munge the From header if we are using DMARC Protection mode
     if ( $self->{'admin'}{'dmarc_protection'}{'mode'} ) {
         my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
@@ -1519,18 +1521,31 @@ sub distribute_msg {
             $mungeFrom = 1 if( $origFrom =~ /$dkimdomain$/ );
         }
         if( !$mungeFrom and $origFrom 
-            and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_reject') ) {
+            and (
+                &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_reject')
+                or &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_any')
+                or &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_quarantine')
+            )) {
             # Strict auto policy - is the sender domain policy to reject
             my $dom = $origFrom; $dom =~ s/^.*\@//;
-            $hdr->add('X-DMARC-DNS-Check',$dom);
             eval { # In case Net::DNS is not installed
                 require Net::DNS;
                 my $res = Net::DNS::Resolver->new;
                 my $packet = $res->query("_dmarc.$dom","TXT");
                 if ($packet) {
                     foreach my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
-                        $mungeFrom = 1 if($rr->string =~ /p=reject/);
+                        next if($rr->string !~ /v=DMARC/);
+                        if(!$mungeFrom and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_reject')) {
+                            $mungeFrom = 1 if($rr->string =~ /p=reject/);
+                        }
+                        if(!$mungeFrom and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_quarantine')) {
+                            $mungeFrom = 1 if($rr->string =~ /p=quarantine/);
+                        }
+                        if(!$mungeFrom and &tools::is_in_array($self->{'admin'}{'dmarc_protection'}{'mode'},'dmarc_any')) {
+                            $mungeFrom = 1;
+                        }
                         $hdr->add('X-Original-DMARC-Record',"domain=$dom; ".$rr->string);
+                        last;
                     }
                 }
             };
@@ -1546,45 +1561,55 @@ sub distribute_msg {
             }
 
             # Identify default new From address
-            my $phraseMode = $self->{'admin'}{'dmarc_protection'}{'phrase'};
-            my $newAddr = '';
-            my $userName = $language->gettext('Anonymous');
-	    my $newComment;
+            my $phraseMode = $self->{'admin'}{'dmarc_protection'}{'phrase'} ||
+                'name_via_list';
+            my $newAddr;
+            my $displayName;
+            my $newComment;
             $anonaddr = $self->{'admin'}{'dmarc_protection'}{'other_email'};
-            $anonaddr = $name . '@' . $host if(!$anonaddr or $anonaddr !~/@/);
+            $anonaddr = $self->get_list_address()
+                unless $anonaddr and $anonaddr =~ /\@/;
             @anonFrom = Mail::Address->parse($anonaddr);
 
             if (@addresses) {
                 # We should always have a From address in reality, unless the
                 # message is from a badly-behaved automate
                 if ($addresses[0]->phrase) {
-                    $userName = MIME::EncWords::decode_mimewords(
+                    $displayName = MIME::EncWords::decode_mimewords(
 			$addresses[0]->phrase, Charset => 'UTF-8');
                     $newComment = $addresses[0]->address
-			if $phraseMode eq 'name_and_email';
+			if $phraseMode =~ /email/;
                 } else {
                     # If we dont have a Phrase, should we search the Sympa database
                     # for the sender to obtain their name that way? Might be difficult.
-                    $userName = $addresses[0]->address;
-                    $userName =~ s/\@.*// unless($phraseMode eq 'name_and_email');
-                    $userName = $language->gettext('Anonymous') unless $userName =~ /\S/;
+                    $displayName = $addresses[0]->address;
+                    $displayName =~ s/\@.*// unless $phraseMode =~ /email/;
                 }
-                if($phraseMode eq 'name_and_email') { # NAME (EMAIL)
-                    ;
-                } elsif($phraseMode eq 'name_via_list') { # NAME (via LIST Mailing List)
-                    $newComment =
-			$language->gettext_sprintf('via %s Mailing List', $name);
-                } else { # default:  NAME
-                    undef $newComment;
+                if($phraseMode =~ /list/) {
+                    if ($newComment and $newComment =~ /\S/) {
+                        $newComment = $language->gettext_sprintf(
+			    '%s via %s Mailing List', $newComment, $name);
+                    } else {
+                        $newComment = $language->gettext_sprintf(
+			    'via %s Mailing List', $name);
+                    }
                 }
                 $hdr->add('Reply-To',$addresses[0]->address) unless($hdr->get('Reply-To'));
             }
             # If the new From email address has a Phrase component, then append it
-            $userName .= ' '.$anonFrom[0]->phrase if(@anonFrom and $anonFrom[0]->phrase);
-           
+            if (@anonFrom and $anonFrom[0]->phrase) {
+                if ($displayName and $displayName =~ /\S/) {
+                    $displayName .= ' ' . $anonFrom[0]->phrase;
+                } else {
+                    $displayName = $anonFrom[0]->phrase;
+                }
+            }
+            $displayName = $language->gettext('Anonymous')
+                unless $displayName and $displayName =~ /\S/;
+
             $newAddr = tools::addrencode(
 		(@anonFrom ? $anonFrom[0]->address : $anonaddr),
-		$userName, tools::lang2charset($language->get_lang),
+		$displayName, tools::lang2charset($language->get_lang),
 		$newComment);
 
             $hdr->add('X-Original-From',"$originalFromHeader");
@@ -1592,7 +1617,6 @@ sub distribute_msg {
         }
 
     }
-# SJS END
 
     ## Hide the sender if the list is anonymoused
     if ($self->{'admin'}{'anonymous_sender'}) {

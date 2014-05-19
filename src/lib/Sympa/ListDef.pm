@@ -1791,26 +1791,29 @@ our %pinfo = (
         'default'    => {'conf' => 'dkim_signature_apply_on'}
     },
 
-    # SJS START
     'dmarc_protection' => {
         'format' => {
             'mode' => {
                 'format' => [
                     'none',           'all',
                     'dkim_signature', 'dmarc_reject',
+                    'dmarc_any',      'dmarc_quarantine',
                     'domain_regex'
                 ],
                 'synonym' => {
-                    'dkim'   => 'dkim_signature',
-                    'domain' => 'domain_regex',
+                    'dkim'         => 'dkim_signature',
+                    'dkim_exists'  => 'dkim_signature',
+                    'dmarc_exists' => 'dmarc_any',
+                    'domain'       => 'domain_regex',
+                    'domain_match' => 'domain_regex',
                 },
                 'gettext_id' => "Protection modes",
                 'split_char' => ',',
                 'occurrence' => '0-n',
-                'default'    => 'none',
+                'default'    => {'conf' => 'dmarc_protection_mode'},
                 'gettext_comment' =>
-                    'Select one or more operation modes.  Domain matches the specified Domain regexp; Dkim matches any message with a DKIM signature header; Dmarc matches messages from sender domains with a reject DMARC policy; All matches all messages.',
-                'order' => 1,
+                    'Select one or more operation modes.  "Domain matching regular expression" (domain_regex) matches the specified Domain regexp; "DKIM signature exists" (dkim_signature) matches any message with a DKIM signature header; "DMARC policy ..." (dmarc_*) matches messages from sender domains with a DMARC policy as given; "all" (all) matches all messages.',
+                'order' => 1
             },
             'domain_regex' => {
                 'format'          => '.+',
@@ -1818,6 +1821,7 @@ our %pinfo = (
                 'occurrence'      => '0-1',
                 'gettext_comment' => 'Regexp match pattern for From domain',
                 'order'           => 2,
+                'default' => {'conf' => 'dmarc_protection_domain_regex'},
             },
             'other_email' => {
                 'format'     => '.+',
@@ -1825,13 +1829,16 @@ our %pinfo = (
                 'occurrence' => '0-1',
                 'gettext_comment' =>
                     'This is the email address to use when modifying the From header.  It defaults to the list address.  This is similar to Anonymisation but preserves the original sender details in the From address phrase.',
-                'order' => 3,
+                'order'   => 3,
+                'default' => {'conf' => 'dmarc_protection_other_email'},
             },
             'phrase' => {
-                'format' =>
-                    ['display_name', 'name_and_email', 'name_via_list'],
-                'synonym'    => {'name' => 'display_name'},
-                'default'    => 'name_via_list',
+                'format' => [
+                    'display_name',  'name_and_email',
+                    'name_via_list', 'name_email_via_list'
+                ],
+                'synonym' => {'name' => 'display_name'},
+                'default' => {'conf' => 'dmarc_protection_phrase'},
                 'gettext_id' => "New From name format",
                 'occurrence' => '0-1',
                 'gettext_comment' =>
@@ -1842,10 +1849,9 @@ our %pinfo = (
         'gettext_id' => "DMARC Protection",
         'group'      => 'dkim',
         'gettext_comment' =>
-            "Parameters to define how to manage From address processing to avoid some domains' excessive DMARC protection",
+            'Parameters to define how to manage From address processing to avoid some domains\' excessive DMARC protection',
         'occurrence' => '0-1',
     },
-    # SJS END
 
     ### Others page ###
 
