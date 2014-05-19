@@ -31,14 +31,13 @@ use Exporter;
 use Carp;
 use Storable;
 
-use List;
-use SDM;
-use Log;
-use Language;
 use confdef;
-use tools;
 use Sympa::Constants;
-use Data::Dumper;
+use Sympa::Language;
+use List;
+use Log;
+use SDM;
+use tools;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
@@ -1030,16 +1029,16 @@ sub load_charset {
         s/\s*#.*//;
         s/^\s+//;
         next unless /\S/;
-        my ($locale, $cset) = split(/\s+/, $_);
+        my ($lang, $cset) = split(/\s+/, $_);
         unless ($cset) {
-	    Log::do_log('err', 'Charset name is missing in configuration file %s line %d',$config_file, $.);
+	    Log::do_log('err',
+		'Charset name is missing in configuration file %s line %d',
+		$config_file, $.);
             next;
         }
-        unless ($locale =~ s/^([a-z]+)_([a-z]+)/lc($1).'_'.uc($2).$'/ei) { #'
-	    Log::do_log('err', 'Illegal locale name in configuration file %s line %d',$config_file, $.);
-	    next;
-        }
-        $charset->{$locale} = $cset;
+	# canonicalize lang if possible.
+	$lang = Sympa::Language::canonic_lang($lang) || $lang;
+	$charset->{$lang} = $cset;
     
     }
     close CONFIG;
@@ -1487,7 +1486,7 @@ sub _load_config_file_to_hash {
                 $result->{'numbered_config'}{$keyword} = [ $value, $line_num ];
             }
         } else {
-            printf STDERR  "Conf::_load_config_file_to_hash(): ".gettext("Error at line %d: %s\n"), $line_num, $param->{'path_to_config_file'}, $_;
+            printf STDERR  "Conf::_load_config_file_to_hash(): Error at line %d: %s\n", $line_num, $param->{'path_to_config_file'}, $_;
             $result->{'errors'}++;
         }
     }
@@ -1615,6 +1614,11 @@ sub _load_server_specific_secondary_config_files {
 	);
     }
 
+    # canonicalize language, or if failed, apply site-wide default.
+    $param->{'config_hash'}{'lang'} =
+	Sympa::Language::canonic_lang($param->{'config_hash'}{'lang'})
+	|| 'en-US';
+
     ## Load charset.conf file if necessary.
     if($param->{'config_hash'}{'legacy_character_support_feature'} eq 'on'){
         $param->{'config_hash'}{'locale2charset'} = &load_charset ();
@@ -1625,7 +1629,6 @@ sub _load_server_specific_secondary_config_files {
     ## Load nrcpt_by_domain.conf
     $param->{'config_hash'}{'nrcpt_by_domain'} = &load_nrcpt_by_domain () ;
     $param->{'config_hash'}{'crawlers_detection'} = &load_crawlers_detection($param->{'config_hash'}{'robot_name'});
-        
 }
 
 sub _infer_robot_parameter_values {
@@ -1682,6 +1685,11 @@ sub _infer_robot_parameter_values {
         }
         $param->{'config_hash'}{'automatic_list_families'} = \%families_description;
     }
+
+    # canonicalize language
+    $param->{'config_hash'}{'lang'} =
+	Sympa::Language::canonic_lang($param->{'config_hash'}{'lang'})
+	or delete $param->{'config_hash'}{'lang'};
 
     &_parse_custom_robot_parameters({'config_hash' => $param->{'config_hash'}});
 }

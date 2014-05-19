@@ -81,10 +81,10 @@ sub new {
     my $self;
     return undef unless $who;
 
-#    ## Canonicalize lang if possible
-#    $values{'lang'} =
-#	Sympa::Language::canonic_lang($values{'lang'}) || $values{'lang'}
-#	if $values{'lang'};
+    ## Canonicalize lang if possible
+    $values{'lang'} =
+	Sympa::Language::canonic_lang($values{'lang'}) || $values{'lang'}
+	if $values{'lang'};
 
     if (!($self = get_global_user($who))) {
 	## unauthenticated user would not be added to database.
@@ -365,11 +365,11 @@ sub get_global_user {
 		&tools::decrypt_password($user->{'password'});
 	}
 
-#	## Canonicalize lang if possible
-#	if ($user->{'lang'}) {
-#	    $user->{'lang'} =
-#		Sympa::Language::canonic_lang($user->{'lang'}) || $user->{'lang'};
-#	}
+	## Canonicalize lang if possible
+	if ($user->{'lang'}) {
+	    $user->{'lang'} =
+		Sympa::Language::canonic_lang($user->{'lang'}) || $user->{'lang'};
+	}
 
 	## Turn user_attributes into a hash
 	my $attributes = $user->{'attributes'};
@@ -465,10 +465,10 @@ sub update_global_user {
     $values->{'password'} = &Auth::password_fingerprint($values->{'password'})
 	if ($values->{'password'});
 
-#    ## Canonicalize lang if possible.
-#    $values->{'lang'} =
-#	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
-#	if $values->{'lang'};
+    ## Canonicalize lang if possible.
+    $values->{'lang'} =
+	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
+	if $values->{'lang'};
 
     my ($field, $value);
 
@@ -538,10 +538,10 @@ sub add_global_user {
     $values->{'password'} = &Auth::password_fingerprint($values->{'password'})
 	if ($values->{'password'});
 
-#    ## Canonicalize lang if possible
-#    $values->{'lang'} =
-#	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
-#	if $values->{'lang'};
+    ## Canonicalize lang if possible
+    $values->{'lang'} =
+	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
+	if $values->{'lang'};
 
     return undef unless (my $who = &tools::clean_email($values->{'email'}));
     return undef if (is_global_user($who));

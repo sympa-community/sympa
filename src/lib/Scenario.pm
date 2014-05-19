@@ -176,8 +176,9 @@ sub _parse_scenario {
 	    next;
 	}elsif ($current_rule =~ /^\s*title\.(\S+)\s+(.*)\s*$/i) {
 	    my ($lang, $title) = ($1, $2);
-	    my $locale = Sympa::Language::lang2oldlocale($lang) || $lang;
-	    $structure->{'title'}{$locale} = $title;
+	    # canonicalize lang if possible.
+	    $lang = Sympa::Language::canonic_lang($lang) || $lang;
+	    $structure->{'title'}{$lang} = $title;
 	    next;
 	} elsif ($current_rule =~ /^\s*title\s+(.*)\s*$/i) {
 	    $structure->{'title'}{'default'} = $1;
@@ -1464,12 +1465,16 @@ sub get_current_title {
 
     my $language = Sympa::Language->instance;
 
-    my $locale = Sympa::Language::lang2oldlocale($language->get_lang);
-    if (defined $self->{'title'}{$locale}) {
-	return $self->{'title'}{$locale};
-    } elsif (defined $self->{'title'}{'gettext'}) {
+    foreach my $lang (
+	Sympa::Language::implicated_langs($language->get_lang)
+    ) {
+	if (exists $self->{'title'}{$lang}) {
+	    return $self->{'title'}{$lang};
+	}
+    }
+    if (exists $self->{'title'}{'gettext'}) {
 	return $language->gettext($self->{'title'}{'gettext'});
-    } elsif (defined $self->{'title'}{'default'}) {
+    } elsif (exists $self->{'title'}{'default'}) {
 	return $self->{'title'}{'default'};
     } else {
 	return $self->{'name'};

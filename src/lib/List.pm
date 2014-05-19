@@ -25,10 +25,18 @@ package List;
 
 use strict;
 use warnings;
+use Exporter;
 use Encode;
 use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use HTML::Entities qw(encode_entities);
 use POSIX qw(strftime);
+
+use IO::Scalar;
+use Storable;
+use Time::Local qw(timelocal);
+use MIME::Entity;
+use MIME::EncWords;
+use MIME::Parser;
 
 use Datasource;
 use LDAPSource;
@@ -41,19 +49,23 @@ use Task;
 use Scenario;
 use Fetch;
 use WebAgent;
-use Exporter;
-use Data::Dumper;
 
 use tt2;
 use Sympa::Constants;
 use Sympa::ListDef;
 
+use Archive;
+use Sympa::Language;
+use Log;
+use Conf;
+use mail;
+use Ldap;
+use Message;
+use Family;
+use PlainDigest;
+
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%list_of_lists);
-
-=encoding utf-8
-
-=cut
 
 my @sources_providing_listmembers = qw/
   include_file
@@ -261,26 +273,6 @@ Print the list information to the given file descriptor, or the
 currently selected descriptor.
 
 =cut
-
-use Carp;
-
-use IO::Scalar;
-use Storable;
-use Mail::Header;
-use Archive;
-use Sympa::Language;
-use Log;
-use Conf;
-use mail;
-use Ldap;
-use Time::Local;
-use MIME::Entity;
-use MIME::EncWords;
-use MIME::Parser;
-use Message;
-use Family;
-use PlainDigest;
-
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
@@ -519,9 +511,7 @@ my %edit_list_conf = ();
 ## Last modification times
 my %mtime;
 
-use Fcntl;
 use DB_File;
-
 $DB_BTREE->{compare} = \&_compare_addresses;
 
 our %listmaster_messages_stack;
@@ -5453,15 +5443,12 @@ sub _create_add_error_string {
     my $self = shift;
     $self->{'add_outcome'}{'errors'}{'error_message'} = '';
     if ($self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'}) {
-	$self->{'add_outcome'}{'errors'}{'error_message'} .=
-	    $language->gettext_sprintf(
-		'Attempt to exceed the max number of members (%s) for this list.',
-		$self->{'admin'}{'max_list_members'});
+	$self->{'add_outcome'}{'errors'}{'error_message'} .= $language->gettext_sprintf('Attempt to exceed the max number of members (%s) for this list.', $self->{'admin'}{'max_list_members'});
     }
     if ($self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}) {
 	$self->{'add_outcome'}{'error_message'} .= ' '. $language->gettext('Attempts to add some users in database failed.');
     }
-    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '. $language->gettext_sorintf('Added %s users out of %s required.'),$self->{'add_outcome'}{'added_members'},$self->{'add_outcome'}{'expected_number_of_added_users'});
+    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '. $language->gettext_sprintf('Added %s users out of %s required.', $self->{'add_outcome'}{'added_members'},$self->{'add_outcome'}{'expected_number_of_added_users'});
 }
     
 ## Adds a new list admin user, no overwrite.
@@ -6106,6 +6093,7 @@ sub load_task_list {
     ) {
 	next unless (-d $dir);
 
+	LOOP_FOREACH_FILE:
 	foreach my $file (<$dir/$action.*>) {
 	    next unless ($file =~ /$action\.(\w+)\.task$/);
 	    my $name = $1;
@@ -6114,19 +6102,25 @@ sub load_task_list {
 	    
 	    $list_of_task{$name}{'name'} = $name;
 
-	    my $titles = &List::_load_task_title ($file);
+	    my $titles = List::_load_task_title($file);
 
 	    ## Set the title in the current language
-	    if (defined  $titles->{$language->get_lang}) {
-		$list_of_task{$name}{'title'} = $titles->{$language->get_lang};
-	    }elsif (defined $titles->{'gettext'}) {
-		$list_of_task{$name}{'title'} = $language->gettext( $titles->{'gettext'});
-	    }elsif (defined $titles->{'us'}) {
-		$list_of_task{$name}{'title'} = $language->gettext( $titles->{'us'});		
-	    }else {
+	    foreach my $lang (
+		Sympa::Language::implicated_langs($language->get_lang)
+	    ) {
+		if (exists $titles->{$lang}) {
+		    $list_of_task{$name}{'title'} = $titles->{$lang};
+		    next LOOP_FOREACH_FILE;
+		}
+	    }
+	    if (exists $titles->{'gettext'}) {
+		$list_of_task{$name}{'title'} =
+		    $language->gettext($titles->{'gettext'});
+	    } elsif (exists $titles->{'default'}) {
+		$list_of_task{$name}{'title'} = $titles->{'default'};
+	    } else {
 		$list_of_task{$name}{'title'} = $name;		     
 	    }
-
 	}
     }
 
@@ -6134,11 +6128,11 @@ sub load_task_list {
 }
 
 sub _load_task_title {
+    Log::do_log('debug3', '(%s)', @_);
     my $file = shift;
-    &Log::do_log('debug3', 'List::_load_task_title(%s)', $file);
-    my $title = {};
+    my $titles = {};
 
-    unless (open TASK, $file) {
+    unless (open TASK, '<', $file) {
 	&Log::do_log('err', 'Unable to open file "%s"' , $file);
 	return undef;
     }
@@ -6146,14 +6140,21 @@ sub _load_task_title {
     while (<TASK>) {
 	last if /^\s*$/;
 
-	if (/^title\.([\w-]+)\s+(.*)\s*$/) {
-	    $title->{$1} = $2;
+	if (/^title\.gettext\s+(.*)\s*$/i) {
+	    $titles->{'gettext'} = $1;
+	} elsif (/^title\.(\S+)\s+(.*)\s*$/i) {
+	     my ($lang, $title) = ($1, $2);
+	    # canonicalize lang if possible.
+	    $lang = Sympa::Language::canonic_lang($lang) || $lang;
+	    $titles->{$lang} = $title;
+	} elsif (/^title\s+(.*)\s*$/i) {
+	     $titles->{'default'} = $1;
 	}
     }
 
     close TASK;
 
-    return $title;
+    return $titles;
 }
 
 ## Loads all data sources
@@ -7296,8 +7297,8 @@ sub _load_list_members_from_include {
     $result->{'users'} = \%users;
     $result->{'errors'} = \@errors;
     $result->{'exclusions'} = \@ex_sources;
-use Data::Dumper;
-if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
+    ##use Data::Dumper;
+    ##if(open OUT, '>/tmp/result') { print OUT Dumper $result; close OUT }
     return $result;
 }
 ## Loads the list of admin users from an external include source
@@ -8943,7 +8944,6 @@ sub lowercase_field {
 ## Loads the list of topics if updated
 ## FIXME: This might be moved to Robot package.
 sub load_topics {
-    
     my $robot = shift ;
     &Log::do_log('debug2', 'List::load_topics(%s)',$robot);
 
@@ -8972,9 +8972,9 @@ sub load_topics {
 	    return undef;
 	}
 	
-	## Raugh parsing
+	## Rough parsing
 	my $index = 0;
-	my (@raugh_data, $topic);
+	my (@rough_data, $topic);
 	while (<FILE>) {
 	    Encode::from_to($_, $Conf::Conf{'filesystem_encoding'}, 'utf8');
 	    if (/^([\-\w\/]+)\s*$/) {
@@ -8987,29 +8987,29 @@ sub load_topics {
 		
 		$topic->{$1} = $2;
 	    }elsif (/^\s*$/) {
-		if (defined $topic->{'name'}) {
-		    push @raugh_data, $topic;
-		    $topic = {};
-		}
+		next unless defined $topic->{'name'};
+
+		push @rough_data, $topic;
+		$topic = {};
 	    }	    
 	}
 	close FILE;
 
 	## Last topic
 	if (defined $topic->{'name'}) {
-	    push @raugh_data, $topic;
+	    push @rough_data, $topic;
 	    $topic = {};
 	}
 
 	$mtime{'topics'}{$robot} = (stat($conf_file))[9];
 
-	unless ($#raugh_data > -1) {
+	unless ($#rough_data > -1) {
 	    Log::do_log('notice', 'No topic defined in %s', $conf_file);
 	    return undef;
 	}
 
 	## Analysis
-	foreach my $topic (@raugh_data) {
+	foreach my $topic (@rough_data) {
 	    my @tree = split '/', $topic->{'name'};
 	    
 	    if ($#tree == 0) {
@@ -9041,10 +9041,39 @@ sub load_topics {
     my $lang = $language->get_lang;
     foreach my $top (keys %{$list_of_topics{$robot}}) {
 	my $topic = $list_of_topics{$robot}{$top};
-	$topic->{'current_title'} = $topic->{'title'}{$lang} || $topic->{'title'}{'default'} || $top;
+	foreach my $l (Sympa::Language::implicated_langs($lang)) {
+	    if (exists $topic->{'title'}{$l}) {
+		$topic->{'current_title'} = $topic->{'title'}{$l};
+	    }
+	}
+	unless (exists $topic->{'current_title'}) {
+	    if (exists $topic->{'title'}{'gettext'}) {
+		$topic->{'current_title'} =
+		    $language->gettext($topic->{'title'}{'gettext'});
+	    } else {
+		$topic->{'current_title'} = $topic->{'title'}{'default'}
+		|| $top;
+	    }
+	}
 
 	foreach my $subtop (keys %{$topic->{'sub'}}) {
-	$topic->{'sub'}{$subtop}{'current_title'} = $topic->{'sub'}{$subtop}{'title'}{$lang} || $topic->{'sub'}{$subtop}{'title'}{'default'} || $subtop;	    
+	    foreach my $l (Sympa::Language::implicated_langs($lang)) {
+		if (exists $topic->{'sub'}{$subtop}{'title'}{$l}) {
+		    $topic->{'sub'}{$subtop}{'current_title'} =
+			$topic->{'sub'}{$subtop}{'title'}{$l};
+		}
+	    }
+	    unless (exists $topic->{'sub'}{$subtop}{'current_title'}) {
+		if (exists $topic->{'sub'}{$subtop}{'title'}{'gettext'}) {
+		    $topic->{'sub'}{$subtop}{'current_title'} =
+			$language->gettext(
+			    $topic->{'sub'}{$subtop}{'title'}{'gettext'});
+		} else {
+		    $topic->{'sub'}{$subtop}{'current_title'} =
+			$topic->{'sub'}{$subtop}{'title'}{'default'}
+			|| $subtop;
+		}
+	    }
 	}
     }
 
@@ -9056,12 +9085,18 @@ sub _get_topic_titles {
 
     my $title;
     foreach my $key (%{$topic}) {
-	if ($key =~ /^title(.(\w+))?$/) {
-	    my $lang = $2 || 'default';
+	if ($key =~ /^title\.gettext$/i) {
+	    $title->{'gettext'} = $topic->{$key};
+	} elsif ($key =~ /^title\.(\S+)$/i) {
+	    my $lang = $1;
+	    # canonicalize lang if possible.
+	    $lang = Sympa::Language::canonic_lang($lang) || $lang;
 	    $title->{$lang} = $topic->{$key};
+	} elsif ($key =~ /^title$/i) {
+	    $title->{'default'} = $topic->{$key};
 	}
     }
-    
+
     return $title;
 }
 
@@ -9537,6 +9572,12 @@ sub _load_list_config_file {
 	## delete old entries
 	$admin{'reply_to'} = undef;
 	$admin{'forced_reply_to'} = undef;
+    }
+
+    # lang
+    # canonicalize language
+    unless ($admin{'lang'} = Sympa::Language::canonic_lang($admin{'lang'})) {
+	$admin{'lang'} = Conf::get_robot_conf($robot, 'lang');
     }
 
     ############################################

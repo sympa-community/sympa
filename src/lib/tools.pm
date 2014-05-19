@@ -45,7 +45,7 @@ use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
 use Conf;
-use Language qw(gettext_strftime);
+use Sympa::Language;
 use Sympa::LockedFile;
 use Log;
 use Sympa::Constants;
@@ -498,26 +498,38 @@ sub get_list_list_tpl {
     unless ($list_conf = &load_create_list_conf($robot)) {
 	return undef;
     }
-    
+
     foreach my $dir (
 	reverse
 	@{tools::get_search_path($robot, subdir => 'create_list_templates')}
     ) {
 	if (opendir(DIR, $dir)) {
+	    LOOP_FOREACH_TEMPLATE:
 	    foreach my $template ( sort grep (!/^\./,readdir(DIR))) {
-
 		my $status = $list_conf->{$template} || $list_conf->{'default'};
-
-		next if ($status eq 'hidden') ;
+		next if $status eq 'hidden';
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		my $locale = Sympa::Language::lang2oldlocale( $language->get_lang);
-		## Look for a comment.tt2 in the appropriate locale first
-		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
-		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/'.$locale.'/comment.tt2';
-		}elsif (-r $dir.'/'.$template.'/comment.tt2') {
-		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/comment.tt2';
+		# Look for a comment.tt2.
+		# Check old style locale first then canonic language and its
+		# fallbacks.
+		my $lang = Sympa::Language->instance->get_lang;
+		my $comment_tt2;
+		foreach my $l (
+		    Sympa::Language::lang2oldlocale($lang),
+		    Sympa::Language::implicated_langs($lang)
+		) {
+		    next unless $l;
+		    $comment_tt2 = $dir.'/'.$template.'/'.$l.'/comment.tt2';
+		    if (-r $comment_tt2) {
+			$list_templates->{$template}{'comment'} = $comment_tt2;
+			next LOOP_FOREACH_TEMPLATE;
+		    }
+		}
+		$comment_tt2 = $dir.'/'.$template.'/comment.tt2';
+		if (-r $comment_tt2) {
+		    $list_templates->{$template}{'comment'} = $comment_tt2;
 		}
 	    }
 	    closedir(DIR);
@@ -714,7 +726,7 @@ sub get_templates_list {
 
 # return the path for a specific template
 sub get_template_path {
-
+    Log::do_log('debug2', '(%s, %s. %s, %s, %s, %s)', @_);
     my $type = shift;
     my $robot = shift;
     my $scope = shift;
@@ -722,41 +734,44 @@ sub get_template_path {
     my $lang = shift || 'default';
     my $list = shift;
 
-    &Log::do_log('debug', "get_templates_path ($type,$robot,$scope,$tpl,$lang,%s)", $list->{'name'});
-
-    my $listdir;
-    if (defined $list) {
-	$listdir = $list->{'dir'};
+    my $subdir = '';
+    # canonicalize language name which may be old-style locale name.
+    unless ($lang eq 'default') {
+	my $oldlocale = Sympa::Language::lang2oldlocale($lang);
+	unless ($oldlocale eq $lang) {
+	    $subdir = Sympa::Language::canonic_lang($lang);
+	    unless ($subdir) {
+		Log::do_log('info', 'internal error incorrect parameter');
+		return undef;
+	    }
+	}
     }
 
-    unless (($type == 'web')||($type == 'mail')) {
-	&Log::do_log('info', 'get_templates_path () : internal error incorrect parameter');
+    unless ($type eq 'web' or $type eq 'mail') {
+	Log::do_log('info', 'internal error incorrect parameter');
+	return undef;
     }
 
-    my $distrib_dir = Sympa::Constants::DEFAULTDIR . '/'.$type.'_tt2';
-    $distrib_dir .= '/' . $lang unless $lang eq 'default';
-    my $site_dir = $Conf::Conf{'etc'}.'/'.$type.'_tt2';
-    $site_dir .= '/'.$lang unless ($lang eq 'default');
-    my $robot_dir = $Conf::Conf{'etc'}.'/'.$robot.'/'.$type.'_tt2';
-    $robot_dir .= '/'.$lang unless ($lang eq 'default');    
-
+    my $dir;
     if ($scope eq 'list')  {
-	my $dir = $listdir.'/'.$type.'_tt2';
-	$dir .= '/'.$lang unless ($lang eq 'default');
-	return $dir.'/'.$tpl ;
-
-    }elsif ($scope eq 'robot')  {
-	return $robot_dir.'/'.$tpl;
-
-    }elsif ($scope eq 'site') {
-	return $site_dir.'/'.$tpl;
-
-    }elsif ($scope eq 'distrib') {
-	return $distrib_dir.'/'.$tpl;
-
+        unless (ref $list eq 'List') {
+            Log::do_log('err', 'missing parameter "list"');
+            return undef;
+        }
+        $dir = $list->{'dir'};
+    } elsif ($scope eq 'robot')  {
+        $dir = $Conf::Conf{'etc'} . '/' . $robot;
+    } elsif ($scope eq 'site') {
+        $dir = $Conf::Conf{'etc'};
+    } elsif ($scope eq 'distrib') {
+        $dir = Sympa::Constants::DEFAULTDIR;
+    } else {
+        return undef;
     }
 
-    return undef;
+    $dir .= '/'.$type.'_tt2';
+    $dir .= '/' . $subdir if length $subdir;
+    return $dir.'/'.$tpl;
 }
 
 sub get_dkim_parameters {
@@ -2383,17 +2398,16 @@ sub get_search_path {
     my $lang_only = $options{'lang_only'};
 
     ## Get language subdirectories.
-    my $lang_dirs = undef;
+    my $lang_dirs;
     if ($lang) {
         ## For compatibility: add old-style "locale" directory at first.
-        my $oldlocale = Sympa::Language::lang2oldlocale($lang);
-        if ($oldlocale) {
-            $lang_dirs = [$oldlocale];
-        } else {
-            $lang_dirs = [];
-        }
-##	## Add lang itself and fallback directories.
-##	push @$lang_dirs, Language::ImplicatedLangs($lang);
+	## Add lang itself and fallback directories.
+	$lang_dirs = [
+	    grep {$_} (
+		Sympa::Language::lang2oldlocale($lang),
+		Sympa::Language::implicated_langs($lang)
+	    )
+	];
     }
 
     return [_get_search_path($that, $subdir, $lang_dirs, $lang_only)];
@@ -2786,7 +2800,11 @@ sub send_crash_report {
 	open(ERR, $err_file);
 	@err_output = map { chomp $_; $_; } <ERR>;
 	close ERR;
-	$err_date = gettext_strftime("%d %b %Y  %H:%M", localtime((stat($err_file))[9]));
+
+	my $language = Sympa::Language->instance;
+	$err_date = $language->gettext_strftime(
+	    "%d %b %Y  %H:%M", localtime((stat($err_file))[9])
+	);
     }
     &List::send_notify_to_listmaster('crash', $Conf::Conf{'domain'}, {'crashed_process' => $data{'pname'}, 'crash_err' => \@err_output, 'crash_date' => $err_date, 'pid' => $data{'pid'}});
 }
@@ -3948,7 +3966,7 @@ sub wrap_text {
     return $text unless $cols;
 
     $text = Text::LineFold->new(
-	    Language => $language->get_lang,
+	    Language => Sympa::Language->instance->get_lang,
 	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
 	    Prep => 'NONBREAKURI',
 	    ColumnsMax => $cols
@@ -4106,6 +4124,7 @@ In scalar context, returns arrayref to them.
 
 =cut
 
+#FIXME: Inefficient.  Would be cached.
 sub get_supported_languages {
     my $robot = shift;
 
@@ -4119,11 +4138,12 @@ sub get_supported_languages {
 	    $supported_lang = $Conf::Conf{'supported_lang'};
 	}
 
-	my $saved_lang = $language->get_lang;
+	my $language = Sympa::Language->instance;
+	$language->push_lang;
 	@lang_list =
             grep { $_ and $_ = $language->set_lang($_) }
-            split /\s*,\s*/, $supported_lang;
-	$language->set_lang($saved_lang);
+            split /[\s,]+/, $supported_lang;
+	$language->pop_lang;
     }
     @lang_list = ('en') unless @lang_list;
     return @lang_list if wantarray;
@@ -4172,15 +4192,15 @@ If it is not known, returns default charset.
 ## FIXME: This would be moved to such as Site package.
 sub lang2charset {
     my $lang = shift;
-    return 'utf-8' unless $lang;
 
-    my $locale = Sympa::Language::lang2oldlocale($lang);
-
-    if (%Conf::Conf and $locale) {   # configuration loaded
-	my $locale2charset = $Conf::Conf{'locale2charset'} || {};
-	if (exists $locale2charset->{$locale}) {
-	    return $locale2charset->{$locale};
-        }
+    my $locale2charset;
+    if ($lang and %Conf::Conf        # configuration loaded
+        and $locale2charset = $Conf::Conf{'locale2charset'}) {
+	foreach my $l (Sympa::Language::implicated_langs($lang)) {
+	    if (exists $locale2charset->{$l}) {
+		return $locale2charset->{$l};
+	    }
+	}
     }
     return 'utf-8';                  # the last resort
 }
