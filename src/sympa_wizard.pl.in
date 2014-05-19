@@ -100,7 +100,7 @@ if (-t) {
 if ($modfail) {
     no warnings;
 
-    *Language::gettext = sub {shift};
+    *gettext = sub {shift};
 
     eval { require Text::Wrap; };
     if ($@) {
@@ -111,10 +111,15 @@ if ($modfail) {
             sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
     }
 } else {
+    no warnings;
+
+    my $language = Sympa::Language->instance;
+    *gettext = sub { $language->gettext(shift) };
+    *gettext_strftime = sub { $language->gettext_strftime(@_) };
+
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
     $lang =~ s/\..*// if $lang;
-    $lang = 'en_US' unless $lang and $lang ne 'C' and $lang ne 'POSIX';
-    Language::SetLang($lang);
+    $language->set_lang($lang, 'en-US', 'en');
 }
 
 ## sympa configuration file
@@ -173,7 +178,7 @@ sub create_configuration {
     my $title;
     foreach my $param (@confdef::params) {
         unless ($param->{'name'}) {
-            $title = Language::gettext($param->{'gettext_id'})
+            $title = gettext($param->{'gettext_id'})
 		if $param->{'gettext_id'};
             next;
         }
@@ -190,16 +195,16 @@ sub create_configuration {
 
         if ($param->{'gettext_id'}) {
             print NEWF tools::wrap_text(
-	        Language::gettext($param->{'gettext_id'}), '## ', '## '
+	        gettext($param->{'gettext_id'}), '## ', '## '
 	    );
         }
 
         print NEWF tools::wrap_text(
-	    Language::gettext($param->{'gettext_comment'}), '## ', '## '
+	    gettext($param->{'gettext_comment'}), '## ', '## '
 	    ) if $param->{'gettext_comment'};
 
         if (defined $param->{'sample'}) {
-            printf NEWF '## ' . Language::gettext("Example: %s\t%s") . "\n",
+            printf NEWF '## ' . gettext("Example: %s\t%s") . "\n",
 		$param->{'name'}, $param->{'sample'};
 	}
 
@@ -210,7 +215,7 @@ sub create_configuration {
         } else {
             printf NEWF
                 '#' .
-                Language::gettext("%s\t(You must define this parameter)") .
+                gettext("%s\t(You must define this parameter)") .
                 "\n", $param->{'name'};
         }
         print NEWF "\n";
@@ -260,7 +265,7 @@ sub edit_configuration {
     ## Edition mode
     foreach my $param (@confdef::params) {
         unless ($param->{'name'}) {
-            $title = Language::gettext($param->{'gettext_id'})
+            $title = gettext($param->{'gettext_id'})
 		if $param->{'gettext_id'};
             next;
         }    
@@ -268,9 +273,9 @@ sub edit_configuration {
         my $file = $param->{'file'} ;
         my $name = $param->{'name'} ; 
         my $query = $param->{'gettext_id'} || '';
-        $query = Language::gettext($query) if $query;
+        $query = gettext($query) if $query;
         my $advice = $param->{'gettext_comment'} ;
-        $advice = Language::gettext($advice) if $advice;
+        $advice = gettext($advice) if $advice;
         my $sample = $param->{'sample'} ;
         my $current_value ;
 
@@ -295,7 +300,7 @@ sub edit_configuration {
             print "\n";
             print tools::wrap_text($query || '', '* ', '  ');
             print tools::wrap_text($advice, '  ... ', '  ') if $advice;
-            printf(Language::gettext('%s [%s] : '), $name, $current_value);
+            printf(gettext('%s [%s] : '), $name, $current_value);
             $new_value = <STDIN> ;
             chomp $new_value;
         }
@@ -314,7 +319,7 @@ sub edit_configuration {
         }
 
         unless ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
-            printf STDERR Language::gettext("Incorrect parameter definition: %s\n"),
+            printf STDERR gettext("Incorrect parameter definition: %s\n"),
                 $file;
         }
 
@@ -344,21 +349,19 @@ sub edit_configuration {
     }
 
     if ($somechange) {
-
-        my $date = Language::gettext_strftime("%d.%b.%Y-%H.%M.%S",
-                                              localtime(time));
+        my $date = gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf.'.'.$date) {
-            warn sprintf(Language::gettext("Unable to rename %s : %s"),
-                         $sympa_conf, $!);
+            warn sprintf(gettext("Unable to rename %s : %s"),
+			 $sympa_conf, $!);
         }
 
         ## Write new config file
         my $umask = umask 037;
         unless (open (SYMPA,"> $sympa_conf")){
             umask $umask;
-            die sprintf(Language::gettext("Unable to open %s : %s"),
+            die sprintf(gettext("Unable to open %s : %s"),
                         $sympa_conf, $!);
         };
         umask $umask;
@@ -367,7 +370,7 @@ sub edit_configuration {
         print SYMPA @new_sympa_conf;
         close SYMPA;
 
-        printf Language::gettext("%s have been updated.\nPrevious versions have been saved as %s.\n"), $sympa_conf, "$sympa_conf.$date";
+        printf gettext("%s have been updated.\nPrevious versions have been saved as %s.\n"), $sympa_conf, "$sympa_conf.$date";
     }
 }
 
@@ -498,15 +501,15 @@ sub install_module {
     unless ($options->{'force'}) {
         print tools::wrap_text(
 	    sprintf(
-		Language::gettext('-> Usage of this module: %s') . "\n",
-		Language::gettext($cpan_modules->{$module}{'gettext_id'})
+		gettext('-> Usage of this module: %s') . "\n",
+		gettext($cpan_modules->{$module}{'gettext_id'})
 	    ),
 	    '', '   '
 	) if ($cpan_modules->{$module}{'gettext_id'});
         print tools::wrap_text(
 	    sprintf(
-		Language::gettext('-> Prerequisites: %s') . "\n",
-		Language::gettext($cpan_modules->{$module}{'gettext_comment'})
+		gettext('-> Prerequisites: %s') . "\n",
+		gettext($cpan_modules->{$module}{'gettext_comment'})
 	    ),
 	    '', '   '
 	) if ($cpan_modules->{$module}{'gettext_comment'});
