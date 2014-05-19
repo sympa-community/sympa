@@ -30,6 +30,7 @@ use POSIX;
 use CGI::Cookie;
 use Time::Local;
 
+use Sympa::Language;
 use Log;
 use Conf;
 
@@ -566,7 +567,8 @@ sub list_sessions {
 
     my $statement = sprintf
 	q{SELECT remote_addr_session, email_session, robot_session,
-		 date_session, start_date_session, hit_session
+		 date_session AS date_epoch,
+		 start_date_session AS start_date_epoch, hit_session
 	  FROM session_table
 	  WHERE %s},
 	$condition;
@@ -578,10 +580,6 @@ sub list_sessions {
     }
     
     while (my $session = ($sth->fetchrow_hashref('NAME_lc'))) {
-
-	$session->{'formated_date'} = Language::gettext_strftime("%d %b %Y at %H:%M:%S", localtime($session->{'date_session'}));
-	$session->{'formated_start_date'} = Language::gettext_strftime("%d %b %Y at %H:%M:%S", localtime($session->{'start_date_session'}));
-
 	push @sessions, $session;
     }
 

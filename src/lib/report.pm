@@ -26,7 +26,6 @@ package report;
 
 use strict;
 
-use Language;
 use Log;
 use List;
 
@@ -105,7 +104,7 @@ sub reject_report_msg {
 	chomp($param->{'msg_id'});
 
 	$param ||= {}; 
-	$param->{'error'} =  &gettext($error);
+	$param->{'error'} = $error;
 	$param->{'who'} = $user;
 	$param->{'action'} = 'message diffusion';
 	$param->{'msg_id'} = $param->{'msg_id'};
@@ -381,7 +380,7 @@ sub global_report_cmd {
 	if ($robot){
 	    my $param = $data;
 	    $param ||= {};
-	    $param->{'error'} = &gettext($error);
+	    $param->{'error'} = $error;
 	    $param->{'who'} = $sender;
 	    $param->{'action'} = 'Command process';
 	    
@@ -456,7 +455,7 @@ sub reject_report_cmd {
 	    
 	    my $param = $data;
 	    $param ||= {};
-	    $param->{'error'} = &gettext($error);
+	    $param->{'error'} = $error;
 	    $param->{'cmd'} = $cmd;
 	    $param->{'listname'} = $listname;
 	    $param->{'who'} = $sender;
@@ -749,9 +748,8 @@ sub reject_report_web {
     ## Notify listmaster for internal or system errors
     if ($type eq 'intern'|| $type eq 'system') {
 	if ($robot){
-	    my $param = $data;
-	    $param ||= {};
-	    $param->{'error'} = &gettext($error);
+	    my $param = $data || {};
+	    $param->{'error'} = $error;
 	    $param->{'list'} = $list if (defined $list);
 	    $param->{'who'} = $user;
 	    $param->{'action'} ||= 'Command process';

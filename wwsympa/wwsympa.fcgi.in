@@ -5879,7 +5879,19 @@ sub do_show_sessions {
 
     $in{'session_delay'} = 10 unless ($in{'session_delay'});
     my $delay = 60 * $in{'session_delay'};
-    $param->{'sessions'} = &SympaSession::list_sessions($delay,$robot,$in{'connected_only'});        
+    my $sessions =
+	SympaSession::list_sessions($delay, $robot, $in{'connected_only'});
+    foreach my $session (@$sessions) {
+	$session->{'date'} = $language->gettext_strftime(
+	    "%d %b %Y at %H:%M:%S", localtime($session->{'date_epoch'}));
+	$session->{'start_date'} = $language->gettext_strftime(
+	    "%d %b %Y at %H:%M:%S",
+	    localtime($session->{'start_date_epoch'}));
+	# Compatibility for misspelling.
+	$session->{'formated_date'} = $session->{'date'};
+	$session->{'formated_start_date'} = $session->{'start_date'}
+    }
+    $param->{'sessions'} = $sessions;
     return '1';
 }
 
@@ -17766,7 +17778,8 @@ sub new_d_read {
      my $ref_access = $document->{'access'}; my %access = %{$ref_access};
      $param->{'doc_owner'} = $document->{'owner'};
      $param->{'doc_title'} = $document->{'title'};
-     $param->{'doc_date'} = $document->{'date'};
+    $param->{'doc_date'} = $language->gettext_strftime("%d %b %Y",
+	localtime $document->{'date_epoch'});
 
      ### Access control    
      unless ($access{'may'}{'read'}) {

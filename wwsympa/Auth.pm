@@ -24,8 +24,8 @@
 package Auth;
 
 use Digest::MD5;
+use POSIX qw();
 
-use Language;
 use Log;
 use Conf;
 use List;
@@ -433,7 +433,9 @@ sub get_one_time_ticket {
     }
     
     my $result;
-    my $printable_date = gettext_strftime("%d %b %Y at %H:%M:%S", localtime($ticket->{'date'}));
+    my $printable_date = POSIX::strftime(
+	"%d %b %Y at %H:%M:%S", localtime($ticket->{'date'})
+    );
 
     if ($ticket->{'status'} ne 'open') {
 	$result = 'closed';

@@ -43,7 +43,6 @@ my @EXPORT = ();
 use Conf;
 use Log;
 use Auth;
-use Language;
 
 ## Define types of SOAP type listType
 my %types = ('listType' => {'listAddress' => 'string',

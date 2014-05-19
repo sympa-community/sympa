@@ -28,7 +28,6 @@ use strict;
 
 use Carp;
 
-use Language;
 use Log;
 use tools;
 
@@ -87,7 +86,6 @@ sub new {
     
     ## Date
     my @info = stat $document->{'absolute_path'};
-    $document->{'date'} = gettext_strftime("%d %b %Y", localtime $info[9]);
     $document->{'date_epoch'} =  $info[9];
     
     # Size of the doc
