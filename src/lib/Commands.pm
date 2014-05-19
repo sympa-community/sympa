@@ -33,7 +33,7 @@ use Time::Local;
 use MIME::EncWords;
 
 use Conf;
-use Language;
+use Sympa::Language;
 use Log;
 use List;
 use Message;
@@ -67,6 +67,9 @@ my %comms =  ('add' =>			   	     'add',
 	      'ver|verify' =>     	             'verify',
 	      'whi|which|status' =>     	     'which'
 	      );
+
+my $language = Sympa::Language->instance;
+
 # command sender
 my $sender = '';
 # time of the process command 
@@ -186,9 +189,9 @@ sub help {
     $data->{'is_owner'}  = 1 if @owner;
     $data->{'is_editor'} = 1 if @editor;
     $data->{'user'}      = Sympa::User->new($sender);
-    &Language::SetLang($data->{'user'}->lang)
+    $language->set_lang($data->{'user'}->lang)
 	if $data->{'user'}->lang;
-    $data->{'subject'}        = gettext("User guide");
+    $data->{'subject'}        = $language->gettext("User guide");
     $data->{'auto_submitted'} = 'auto-replied';
 
     unless(&List::send_global_file("helpfile", $sender, $robot, $data)){
@@ -378,7 +381,7 @@ sub getfile {
 	return 'unknownlist';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
 	&report::reject_report_cmd('user','empty_archives',{},$cmd_line);
@@ -439,7 +442,7 @@ sub last {
 	return 'unknownlist';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     unless ($list->is_archived()) {
 	&report::reject_report_cmd('user','empty_archives',{},$cmd_line);
@@ -492,7 +495,7 @@ sub index {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
     
     ## Now check if we may send the list of users to the requestor.
     ## Check all this depending on the values of the Review field in
@@ -550,7 +553,7 @@ sub review {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     $list->on_the_fly_sync_include('use_ttl' => 1);
 
@@ -662,7 +665,7 @@ sub verify {
 
     my $user;
     
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
     
     if  ($sign_mod) {
 	&Log::do_log('info', 'VERIFY successfull from %s', $sender,time-$time_command);
@@ -714,7 +717,7 @@ sub subscribe {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     ## This is a really minimalistic handling of the comments,
     ## it is far away from RFC-822 completeness.
@@ -899,7 +902,7 @@ sub info {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $auth_method = &get_auth_method('info','',{'type'=>'auth_failed',
 						  'data'=>{},
@@ -958,7 +961,7 @@ sub info {
 	if (defined $list->{'admin'}{'digest'}) {
 	    
 	    foreach my $d (@{$list->{'admin'}{'digest'}{'days'}}) {
-		push @days, gettext_strftime("%A", localtime(0 + ($d +3) * (3600 * 24)));
+		push @days, $language->gettext_strftime("%A", localtime(0 + ($d +3) * (3600 * 24)));
 		}
 	    $data->{'digest'} = join (',', @days).' '.$list->{'admin'}{'digest'}{'hour'}.':'.$list->{'admin'}{'digest'}{'minute'};
 	}
@@ -1065,7 +1068,7 @@ sub signoff {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     $auth_method = &get_auth_method('signoff',$email,{'type'=>'wrong_email_confirm',
 							 'data'=>{'command'=>'unsubscription'},
@@ -1219,7 +1222,7 @@ sub add {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
     
     my $auth_method = &get_auth_method('add',$email,{'type'=>'wrong_email_confirm',
 						     'data'=>{'command'=>'addition'},
@@ -1365,7 +1368,7 @@ sub invite {
 	return 'unknown_list';
     }
     
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $auth_method = &get_auth_method('invite',$email,{'type'=>'wrong_email_confirm',
 							'data'=>{'command'=>'invitation'},
@@ -1554,7 +1557,7 @@ sub remind {
 	
     }else{
 	
-	&Language::SetLang($list->{'admin'}{'lang'});
+	$language->set_lang($list->{'admin'}{'lang'});
 
 	$host = $list->{'admin'}{'host'};
 
@@ -1641,7 +1644,7 @@ sub remind {
 	    my %global_info;
 	    my $count = 0 ;
 
-	    $context{'subject'} = gettext("Subscription summary");
+	    $context{'subject'} = $language->gettext("Subscription summary");
 	    # this remind is a global remind.
 
 	    my $all_lists = &List::get_lists($robot);
@@ -1754,7 +1757,7 @@ sub del {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $auth_method = &get_auth_method('del',$who,{'type'=>'wrong_email_confirm',
 						   'data'=>{'command'=>'delete'},
@@ -1936,7 +1939,7 @@ sub set {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     ## Check if we know this email on the list and remove it. Otherwise
     ## just reject the message.
@@ -2029,7 +2032,7 @@ sub distribute {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     #read the moderation queue and purge it
     my $modqueue =  &Conf::get_robot_conf($robot,'queuemod') ;
@@ -2170,7 +2173,7 @@ sub confirm {
 
     my $msg = $message->{'msg'};
     my $list = $message->{'list'};
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $name = $list->{'name'};
     my $bytes = -s $file;
@@ -2328,7 +2331,7 @@ sub reject {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $name = "$list->{'name'}";
     my $file;
@@ -2434,7 +2437,7 @@ sub modindex {
 	return 'unknown_list';
     }
 
-    &Language::SetLang($list->{'admin'}{'lang'});
+    $language->set_lang($list->{'admin'}{'lang'});
 
     my $modqueue = &Conf::get_robot_conf($robot,'queuemod');
     

@@ -85,8 +85,12 @@
  use MIME::Charset;
  use HTML::TreeBuilder;
  use HTML::FormatText;
- use Language;
+
+use Sympa::Language;
+use Sympa::ListDef;
  use tools;
+
+my $language = Sympa::Language->instance;
  
  sub plain_body_as_string {
  
@@ -176,11 +180,14 @@
   my $msgent = $topent->parts(0);
 
   unless ($msgent) {
-      $outstring .= sprintf(gettext("----- Malformed message ignored -----\n\n"));
+	$outstring .=
+	    $language->gettext("----- Malformed message ignored -----\n\n");
       return undef;
   }
   
-  my $from = $msgent->head->get('From') ? tools::decode_header($msgent, 'From') : gettext("[Unknown]");
+  my $from = $msgent->head->get('From')
+	? tools::decode_header($msgent, 'From')
+	: $language->gettext("[Unknown]");
   my $subject = $msgent->head->get('Subject') ? tools::decode_header($msgent, 'Subject') : '';
   my $date = $msgent->head->get('Date') ? tools::decode_header($msgent, 'Date') : '';
   my $to = $msgent->head->get('To') ? tools::decode_header($msgent, 'To', ', ') : '';
@@ -202,19 +209,22 @@
   }
   $name ||= $from;
 
-  $outstring .= gettext("\n[Attached message follows]\n-----Original message-----\n"); 
+  $outstring .= $language->gettext(
+	"\n[Attached message follows]\n-----Original message-----\n"); 
   my $headers = '';
-  $headers .= sprintf(gettext("Date: %s\n") , $date) if $date;
-  $headers .= sprintf(gettext("From: %s\n"), $from) if $from;
-  $headers .= sprintf(gettext("To: %s\n"), $to) if $to;
-  $headers .= sprintf(gettext("Cc: %s\n"), $cc) if $cc;
-  $headers .= sprintf(gettext("Subject: %s\n"),$subject ) if $subject;
+  $headers .= $language->gettext_sprintf("Date: %s\n", $date) if $date;
+  $headers .= $language->gettext_sprintf("From: %s\n", $from) if $from;
+  $headers .= $language->gettext_sprintf("To: %s\n", $to) if $to;
+  $headers .= $language->gettext_sprintf("Cc: %s\n", $cc) if $cc;
+  $headers .= $language->gettext_sprintf("Subject: %s\n", $subject )
+	if $subject;
   $headers .= "\n";
   $outstring .= &tools::wrap_text($headers, '', '    ');
   
   _do_toplevel ($msgent);
   
-  $outstring .= sprintf(gettext("-----End of original message from %s-----\n\n"), $name);
+  $outstring .= $language->gettext_sprintf(
+	"-----End of original message from %s-----\n\n", $name);
   return 1;
  }
 
@@ -239,8 +249,10 @@
     $thispart = $charset->encode($thispart);
   };
   if ($@) {
-    # mmm, what to do if it fails?
-    $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+	# mmm, what to do if it fails?
+	$outstring .= $language->gettext_sprintf(
+	    "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+	    $charset->as_string);
     $thispart =~ s/[^\x00-\x7F]/?/g;
   }
     
@@ -257,15 +269,19 @@
  sub _do_other {
   # just add a note that attachment was stripped.
   my $entity = shift;
-  $outstring .= sprintf (gettext("\n[An attachment of type %s was included here]\n"), $entity->mime_type);
+
+    $outstring .= $language->gettext_sprintf(
+	"\n[An attachment of type %s was included here]\n",
+	$entity->mime_type);
   return 1;
  }
  
  sub _do_dsn {
    my $entity = shift;
-   $outstring .= sprintf (gettext("\n-----Delivery Status Report-----\n"));
+
+    $outstring .= $language->gettext("\n-----Delivery Status Report-----\n");
    _do_text_plain ($entity);
-   $outstring .= sprintf (gettext("\n-----End of Delivery Status Report-----\n"));
+    $outstring .= $language->gettext("\n-----End of Delivery Status Report-----\n");
  }
 
  sub _do_text_html {
@@ -273,9 +289,10 @@
   my $entity = shift;
   my $text;
   my $have_mods = 1;
-  
+ 
   unless (defined $entity->bodyhandle) {
-    $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
+	$outstring .= $language->gettext(
+	    "\n[** Unable to process HTML message part **]\n");
     return undef;
   }
   
@@ -292,8 +309,10 @@
       if ($charset->decoder) {
         $body =  $charset->decode($body);
       } else {
-        # mmm, what to do if it fails?
-        $outstring .= sprintf (gettext("** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n"), $charset->as_string);
+	    # mmm, what to do if it fails?
+	    $outstring .= $language->gettext_sprintf(
+		"** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
+		$charset->as_string);
         $body =~ s/[^\x00-\x7F]/?/g;
       }           
       my $tree = HTML::TreeBuilder->new->parse($body);
@@ -304,11 +323,12 @@
       $text = Encode::encode_utf8($text);
   } ;
   if ($@) {
-      $outstring .= gettext("\n[** Unable to process HTML message part **]\n");
+      $outstring .= $language->gettext(
+	    "\n[** Unable to process HTML message part **]\n");
       return 1;
   }      
 
-  $outstring .= sprintf(gettext ("[ Text converted from HTML ]\n"));
+  $outstring .= $language->gettext("[ Text converted from HTML ]\n");
   
   # deal with 30 hyphens (RFC 1153)
   $text =~ s/\n-{30}(\n|$)/\n -----------------------------\n/g;
@@ -348,15 +368,22 @@
  
  # This is a subclass of the HTML::FormatText object. 
  # This subclassing is done to allow internationalisation of some strings
- 
+
  @ISA = qw(HTML::FormatText);
-     
- use Language;
+ 
  use strict;
+
+use Sympa::Language;
 
  sub img_start   {
   my($self,$node) = @_;
+
   my $alt = Encode::encode_utf8($node->attr('alt'));
-  $self->out(  Encode::decode_utf8(defined($alt) ? sprintf(gettext("[ Image%s ]"), ":" . $alt) : sprintf(gettext("[Image%s]"),"")));
+    $self->out(
+	Encode::decode_utf8(defined($alt)
+	? $language->gettext_sprintf("[ Image%s ]", ":" . $alt)
+	: $language->gettext_sprintf("[Image%s]"), "")
+    );
  }
 
+1;

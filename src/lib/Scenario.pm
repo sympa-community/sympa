@@ -31,6 +31,7 @@ use Net::Netmask;
 use Data::Dumper;
 
 #use tools; # temporarily disabled to avoid dependency loop.
+use Sympa::Language;
 use List;
 use Log;
 use Conf;
@@ -175,7 +176,7 @@ sub _parse_scenario {
 	    next;
 	}elsif ($current_rule =~ /^\s*title\.(\S+)\s+(.*)\s*$/i) {
 	    my ($lang, $title) = ($1, $2);
-	    my $locale = Language::Lang2Locale($lang) || $lang;
+	    my $locale = Sympa::Language::lang2oldlocale($lang) || $lang;
 	    $structure->{'title'}{$locale} = $title;
 	    next;
 	} elsif ($current_rule =~ /^\s*title\s+(.*)\s*$/i) {
@@ -1461,11 +1462,13 @@ sub dump_all_scenarios {
 sub get_current_title {
     my $self = shift;
 
-    my $locale = Language::Lang2Locale(Language::GetLang());
+    my $language = Sympa::Language->instance;
+
+    my $locale = Sympa::Language::lang2oldlocale($language->get_lang);
     if (defined $self->{'title'}{$locale}) {
 	return $self->{'title'}{$locale};
     } elsif (defined $self->{'title'}{'gettext'}) {
-	return Language::gettext($self->{'title'}{'gettext'});
+	return $language->gettext($self->{'title'}{'gettext'});
     } elsif (defined $self->{'title'}{'default'}) {
 	return $self->{'title'}{'default'};
     } else {

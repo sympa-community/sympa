@@ -37,7 +37,7 @@ use Commands;
 use Conf;
 use Auth;
 use SympaSession;
-use Language;
+use Sympa::Language;
 use Log;
 use mail;
 use MIME::QuotedPrint;
@@ -185,6 +185,8 @@ my $signal = 0;
 
 local $main::daemon_usage; 
 
+my $language = Sympa::Language->instance;
+
 while ($signal ne 'term') { #as long as a SIGTERM is not received }
 
 ## Load configuration file. Ignoring database config for now: it avoids trying to load a database that could not exist yet.
@@ -239,7 +241,8 @@ if (&tools::cookie_changed($Conf{'cookie'})) {
 
 ## Set locale configuration
 $main::options{'lang'} =~ s/\.cat$//; ## Compatibility with version < 2.3.3
-$Language::default_lang = $main::options{'lang'} || $Conf{'lang'};
+my $default_lang =
+    $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'}, 'en');
 
 ## Main program
 if (!chdir($Conf{'home'})) {
@@ -931,8 +934,9 @@ if ($main::options{'dump'}) {
 	
 	## Determine default lang for this list
 	## It should tell us what character encoding was used for filenames
-	&Language::SetLang($list->{'admin'}{'lang'});
-	my $list_encoding = tools::lang2charset(Language::GetLang());
+	$language->set_lang($list->{'admin'}{'lang'},
+	    Conf::get_robot_conf($robot, 'lang'), $default_lang);
+	my $list_encoding = tools::lang2charset($language->get_lang);
 	
 	my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
 	
@@ -1092,8 +1096,7 @@ if ($main::daemon_usage == DAEMON_MESSAGE) {
 ## This is the main loop : look for files in the directory, handles
 ## them, sleeps a while and continues the good job.
 while (!$signal) {
-
-    &Language::SetLang($Language::default_lang);
+    $language->set_lang($default_lang);
 
     &List::init_list_cache();
 	&List::send_notify_to_listmaster(undef, undef, undef, 1); # Process grouped notifications
@@ -1231,7 +1234,7 @@ while (!$signal) {
     }
 
     ## Set NLS default lang for current message
-    $Language::default_lang = $main::options{'lang'} || &Conf::get_robot_conf($robot, 'lang');
+    $language->set_lang(Conf::get_robot_conf($robot, 'lang'), $default_lang);
 	
 	# Appel de la fonction de traitement des mails entrants
     my $status = &DoFile("$t_spool/$filename");
@@ -1540,7 +1543,7 @@ sub DoFile {
 	if ( &Conf::get_robot_conf($robot,'antivirus_notify') eq 'sender') {
 	    unless (&List::send_global_file('your_infected_msg', $sender, $robot, {'virus_name' => $rc,
 										   'recipient' => $list_address,
-										   'lang' => $Language::default_lang,
+										   'lang' => Conf::get_robot_conf($robot, 'lang'),
 										   'auto_submitted' => 'auto-replied'})) {
 		&Log::do_log('notice',"Unable to send template 'your infected_msg' to $sender");
 	    }
@@ -1932,7 +1935,9 @@ sub DoMessage{
 	    
 	    my $start_time = time;
 	    
-	    &Language::SetLang($list->{'admin'}{'lang'});
+	    $language->set_lang($list->{'admin'}{'lang'},
+		Conf::get_robot_conf($robot, 'lang'), $Conf::Conf{'lang'},
+		'en');
 	    
 	    ## Now check if the sender is an authorized address.
 	    
@@ -2353,16 +2358,17 @@ sub SendDigest{
 
  	my $filename = $Conf{'queuedigest'}.'/'.$listaddress;
 	
- 	my ($listname, $listrobot) = split /\@/, $listaddress;
- 	my $list = new List ($listname, $listrobot);
+ 	my ($listname, $robot) = split /\@/, $listaddress;
+ 	my $list = new List ($listname, $robot);
 	unless ($list) {
-	    &Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename, $listname, $listrobot);
-	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
+	    &Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename, $listname, $robot);
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	    unlink $filename;
 	    return undef;
 	}
 
-	&Language::SetLang($list->{'admin'}{'lang'});
+	$language->set_lang($list->{'admin'}{'lang'},
+	    Conf::get_robot_conf($robot, 'lang'), $Conf::Conf{'lang'}, 'en');
 
 	if ($list->get_nextdigest()){
 	    ## Blindly send the message to all users.
@@ -2372,7 +2378,7 @@ sub SendDigest{
 
 	    unlink($filename);
 	    &Log::do_log('info', 'Digest of the list %s sent (%d seconds)', $listname,time - $start_time);
-	    &Log::db_log({'robot' => $listrobot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "",'target_email' => '','msg_id' => '','status' => 'success','error_type' => '','user_email' => '','client' => $ip,'daemon' => $daemon_name});
+	    &Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "",'target_email' => '','msg_id' => '','status' => 'success','error_type' => '','user_email' => '','client' => $ip,'daemon' => $daemon_name});
 	}
     }
 }

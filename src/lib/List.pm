@@ -74,6 +74,11 @@ my @more_data_sources = qw/
 # All non-pluggable sources are in the admin user file
 my %config_in_admin_user_file = map +($_ => 1), @sources_providing_listmembers;
 
+# Language context
+my $language = Sympa::Language->instance;
+
+=encoding utf-8
+
 =head1 CONSTRUCTOR
 
 =item new( [PHRASE] )
@@ -263,7 +268,7 @@ use IO::Scalar;
 use Storable;
 use Mail::Header;
 use Archive;
-use Language;
+use Sympa::Language;
 use Log;
 use Conf;
 use mail;
@@ -898,10 +903,12 @@ sub save_config {
 
     ## Update management info
     $self->{'admin'}{'serial'}++;
-    $self->{'admin'}{'update'} = {'email' => $email,
-				  'date_epoch' => time,
-				  'date' => gettext_strftime("%d %b %Y at %H:%M:%S", localtime time),
-				  };
+    $self->{'admin'}{'update'} = {
+	'email' => $email,
+	'date_epoch' => time,
+	'date' => $language->gettext_strftime(
+	    "%d %b %Y at %H:%M:%S", localtime time),
+    };
 
     unless ($self->_save_list_config_file($config_file_name, $old_config_file_name)) {
 	&Log::do_log('info', 'unable to save config file %s', $config_file_name);
@@ -1551,7 +1558,7 @@ sub distribute_msg {
             # Identify default new From address
             my $phraseMode = $self->{'admin'}{'dmarc_protection'}{'phrase'};
             my $newAddr = '';
-            my $userName = gettext('Anonymous');
+            my $userName = $language->gettext('Anonymous');
 	    my $newComment;
             $anonaddr = $self->{'admin'}{'dmarc_protection'}{'other_email'};
             $anonaddr = $name . '@' . $host if(!$anonaddr or $anonaddr !~/@/);
@@ -1570,13 +1577,13 @@ sub distribute_msg {
                     # for the sender to obtain their name that way? Might be difficult.
                     $userName = $addresses[0]->address;
                     $userName =~ s/\@.*// unless($phraseMode eq 'name_and_email');
-                    $userName = gettext('Anonymous') unless $userName =~ /\S/;
+                    $userName = $language->gettext('Anonymous') unless $userName =~ /\S/;
                 }
                 if($phraseMode eq 'name_and_email') { # NAME (EMAIL)
                     ;
                 } elsif($phraseMode eq 'name_via_list') { # NAME (via LIST Mailing List)
                     $newComment =
-			sprintf gettext('via %s Mailing List'), $name;
+			$language->gettext_sprintf('via %s Mailing List', $name);
                 } else { # default:  NAME
                     undef $newComment;
                 }
@@ -1587,7 +1594,7 @@ sub distribute_msg {
            
             $newAddr = tools::addrencode(
 		(@anonFrom ? $anonFrom[0]->address : $anonaddr),
-		$userName, tools::lang2charset(Language::GetLang()),
+		$userName, tools::lang2charset($language->get_lang),
 		$newComment);
 
             $hdr->add('X-Original-From',"$originalFromHeader");
@@ -1695,7 +1702,7 @@ sub distribute_msg {
 	    $subject_field = $before_tag . ' ' .
 		MIME::EncWords::encode_mimewords(
 		Encode::decode_utf8('[' . $parsed_tag . ']'),
-		Charset  => tools::lang2charset(Language::GetLang()),
+		Charset  => tools::lang2charset($language->get_lang),
 		Encoding => 'A',
 		Field    => 'Subject'
 		) .
@@ -1849,7 +1856,7 @@ sub send_msg_digest {
     
     my $param = {'replyto' => $self->get_list_address('owner'),
 		 'to' => $self->get_list_address(),
-		 'table_of_content' => sprintf(gettext("Table of contents:")),
+		 'table_of_content' => $language->gettext("Table of contents:"),
 		 'boundary1' => '----------=_'.&tools::get_message_id($robot),
 		 'boundary2' => '----------=_'.&tools::get_message_id($robot),
 		 };
@@ -1964,8 +1971,8 @@ sub send_msg_digest {
     }
     
     my @now  = localtime(time);
-    $param->{'datetime'} = gettext_strftime("%a, %d %b %Y %H:%M:%S", @now);
-    $param->{'date'} = gettext_strftime("%a, %d %b %Y", @now);
+    $param->{'datetime'} = $language->gettext_strftime("%a, %d %b %Y %H:%M:%S", @now);
+    $param->{'date'} = $language->gettext_strftime("%a, %d %b %Y", @now);
 
     ## Split messages into groups of digest_max_size size
     my @group_of_msg;
@@ -2052,9 +2059,9 @@ sub send_global_file {
 	$data->{'user'} = Sympa::User::get_global_user($who) unless ($options->{'skip_db'});
 	$data->{'user'}{'email'} = $who unless (defined $data->{'user'});;
     }
-    unless ($data->{'user'}{'lang'}) {
-	$data->{'user'}{'lang'} = $Language::default_lang;
-    }
+##    unless ($data->{'user'}{'lang'}) {
+##	$data->{'user'}{'lang'} = $Language::default_lang;
+##    }
     
     unless ($data->{'user'}{'password'}) {
 	$data->{'user'}{'password'} = &tools::tmp_passwd($who);
@@ -2160,12 +2167,12 @@ sub send_file {
 	$data->{'subscriber'} = $self->get_list_member($who);
 	
 	if ($data->{'subscriber'}) {
-	    $data->{'subscriber'}{'date'} = gettext_strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
-	    $data->{'subscriber'}{'update_date'} = gettext_strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
+	    $data->{'subscriber'}{'date'} = $language->gettext_strftime("%d %b %Y", localtime($data->{'subscriber'}{'date'}));
+	    $data->{'subscriber'}{'update_date'} = $language->gettext_strftime("%d %b %Y", localtime($data->{'subscriber'}{'update_date'}));
 	    if ($data->{'subscriber'}{'bounce'}) {
 		$data->{'subscriber'}{'bounce'} =~ /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
 		
-		$data->{'subscriber'}{'first_bounce'} = gettext_strftime("%d %b %Y", localtime $1);
+		$data->{'subscriber'}{'first_bounce'} = $language->gettext_strftime("%d %b %Y", localtime $1);
 	    }
 	}
 	
@@ -5446,12 +5453,15 @@ sub _create_add_error_string {
     my $self = shift;
     $self->{'add_outcome'}{'errors'}{'error_message'} = '';
     if ($self->{'add_outcome'}{'errors'}{'max_list_members_exceeded'}) {
-	$self->{'add_outcome'}{'errors'}{'error_message'} .= sprintf &gettext('Attempt to exceed the max number of members (%s) for this list.'), $self->{'admin'}{'max_list_members'} ;
+	$self->{'add_outcome'}{'errors'}{'error_message'} .=
+	    $language->gettext_sprintf(
+		'Attempt to exceed the max number of members (%s) for this list.',
+		$self->{'admin'}{'max_list_members'});
     }
     if ($self->{'add_outcome'}{'errors'}{'unable_to_add_to_database'}) {
-	$self->{'add_outcome'}{'error_message'} .= ' '.&gettext('Attempts to add some users in database failed.');
+	$self->{'add_outcome'}{'error_message'} .= ' '. $language->gettext('Attempts to add some users in database failed.');
     }
-    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '.sprintf &gettext('Added %s users out of %s required.'),$self->{'add_outcome'}{'added_members'},$self->{'add_outcome'}{'expected_number_of_added_users'};
+    $self->{'add_outcome'}{'errors'}{'error_message'} .= ' '. $language->gettext_sorintf('Added %s users out of %s required.'),$self->{'add_outcome'}{'added_members'},$self->{'add_outcome'}{'expected_number_of_added_users'});
 }
     
 ## Adds a new list admin user, no overwrite.
@@ -6107,12 +6117,12 @@ sub load_task_list {
 	    my $titles = &List::_load_task_title ($file);
 
 	    ## Set the title in the current language
-	    if (defined  $titles->{&Language::GetLang()}) {
-		$list_of_task{$name}{'title'} = $titles->{&Language::GetLang()};
+	    if (defined  $titles->{$language->get_lang}) {
+		$list_of_task{$name}{'title'} = $titles->{$language->get_lang};
 	    }elsif (defined $titles->{'gettext'}) {
-		$list_of_task{$name}{'title'} = gettext( $titles->{'gettext'});
+		$list_of_task{$name}{'title'} = $language->gettext( $titles->{'gettext'});
 	    }elsif (defined $titles->{'us'}) {
-		$list_of_task{$name}{'title'} = gettext( $titles->{'us'});		
+		$list_of_task{$name}{'title'} = $language->gettext( $titles->{'us'});		
 	    }else {
 		$list_of_task{$name}{'title'} = $name;		     
 	    }
@@ -9028,7 +9038,7 @@ sub load_topics {
     }
 
     ## Set the title in the current language
-    my $lang = &Language::GetLang();
+    my $lang = $language->get_lang;
     foreach my $top (keys %{$list_of_topics{$robot}}) {
 	my $topic = $list_of_topics{$robot}{$top};
 	$topic->{'current_title'} = $topic->{'title'}{$lang} || $topic->{'title'}{'default'} || $top;
@@ -10187,10 +10197,10 @@ sub _urlize_part {
     $parser->output_to_core(1);
     my $new_part;
 
-    my $charset = tools::lang2charset(Language::GetLang());
+    my $charset = tools::lang2charset($language->get_lang);
 
     my $tt2_include_path = tools::get_search_path(
-	$list, subdir => 'mail_tt2', lang => Language::GetLang());
+	$list, subdir => 'mail_tt2', lang => $language->get_lang);
 
     &tt2::parse_tt2({'file_name' => $file_name,
 		     'file_url'  => $file_url,
@@ -11032,7 +11042,7 @@ sub get_option_title {
               }->{$type} || \%list_option;
     my $t = $map->{$option} || {};
     if ($t->{'gettext_id'}) {
-	my $ret = gettext($t->{'gettext_id'});
+	my $ret = $language->gettext($t->{'gettext_id'});
 	$ret =~ s/^\s+//;
 	$ret =~ s/\s+$//;
 	return sprintf '%s (%s)', $ret, $option if $withval;

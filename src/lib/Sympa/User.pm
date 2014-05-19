@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Carp qw(carp croak);
 
+use Sympa::Language;
 use Log;
 use SDM;
 use tools;
@@ -82,7 +83,7 @@ sub new {
 
 #    ## Canonicalize lang if possible
 #    $values{'lang'} =
-#	Language::CanonicLang($values{'lang'}) || $values{'lang'}
+#	Sympa::Language::canonic_lang($values{'lang'}) || $values{'lang'}
 #	if $values{'lang'};
 
     if (!($self = get_global_user($who))) {
@@ -367,7 +368,7 @@ sub get_global_user {
 #	## Canonicalize lang if possible
 #	if ($user->{'lang'}) {
 #	    $user->{'lang'} =
-#		Language::CanonicLang($user->{'lang'}) || $user->{'lang'};
+#		Sympa::Language::canonic_lang($user->{'lang'}) || $user->{'lang'};
 #	}
 
 	## Turn user_attributes into a hash
@@ -466,7 +467,7 @@ sub update_global_user {
 
 #    ## Canonicalize lang if possible.
 #    $values->{'lang'} =
-#	Language::CanonicLang($values->{'lang'}) || $values->{'lang'}
+#	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
 #	if $values->{'lang'};
 
     my ($field, $value);
@@ -539,7 +540,7 @@ sub add_global_user {
 
 #    ## Canonicalize lang if possible
 #    $values->{'lang'} =
-#	Language::CanonicLang($values->{'lang'}) || $values->{'lang'}
+#	Sympa::Language::canonic_lang($values->{'lang'}) || $values->{'lang'}
 #	if $values->{'lang'};
 
     return undef unless (my $who = &tools::clean_email($values->{'email'}));

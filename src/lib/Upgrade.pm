@@ -31,10 +31,13 @@ use File::Path;
 use POSIX qw(strftime);
 
 use Conf;
+use Sympa::Language;
 use Log;
 use Sympa::Constants;
 use SDM;
 use Data::Dumper;
+
+my $language = Sympa::Language->instance;
 
 ## Return the previous Sympa version, ie the one listed in data_structure.version
 sub get_previous_version {
@@ -483,7 +486,7 @@ sub upgrade {
     if (&tools::lower_version($previous_version, '5.3a.8')) {
 	&Log::do_log('notice','Q-Encoding web documents filenames...');
 
-	Language::PushLang($Conf::Conf{'lang'});
+	$language->push_lang($Conf::Conf{'lang'});
 	my $all_lists = &List::get_lists('*');
 	foreach my $list ( @$all_lists ) {
 	    if (-d $list->{'dir'}.'/shared') {
@@ -491,8 +494,8 @@ sub upgrade {
 
 		## Determine default lang for this list
 		## It should tell us what character encoding was used for filenames
-		&Language::SetLang($list->{'admin'}{'lang'});
-		my $list_encoding = tools::lang2charset(Language::GetLang());
+		$language->set_lang($list->{'admin'}{'lang'});
+		my $list_encoding = tools::lang2charset($language->get_lang);
 
 		my $count = &tools::qencode_hierarchy($list->{'dir'}.'/shared', $list_encoding);
 
@@ -501,7 +504,7 @@ sub upgrade {
 		}
 	    }
 	}
-	Language::PopLang();
+	$language->pop_lang;
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers and footers, info files
@@ -803,8 +806,8 @@ sub upgrade {
 	);
 
 	## Set language of new file content
-	Language::PushLang($Conf::Conf{'lang'});
-	$date = Language::gettext_strftime("%d.%b.%Y-%H.%M.%S",
+	$language->push_lang($Conf::Conf{'lang'});
+	$date = $language->gettext_strftime("%d.%b.%Y-%H.%M.%S",
 	    localtime time);
 
 	if (-r $wwsympa_conf) {
@@ -896,7 +899,7 @@ sub upgrade {
 	    $newconf[$#newconf] .= "\n" unless $newconf[$#newconf] =~ /\n\z/;
 
 	    push @newconf, "\n" . ('#' x 76) . "\n" . '#### ' .
-		Language::gettext("Migration from wwsympa.conf") .  "\n" .
+		$language->gettext("Migration from wwsympa.conf") .  "\n" .
 		'#### ' . $date . "\n" .  ('#' x 76) . "\n\n";
 
 	    foreach my $type (qw(duplicate add obsolete unknown)) {
@@ -904,20 +907,20 @@ sub upgrade {
 		next unless scalar keys %newconf;
 
 		push @newconf, tools::wrap_text(
-		    Language::gettext("Migrated Parameters\nFollowing parameters were migrated from wwsympa.conf."), '#### ', '#### ') . "\n"
+		    $language->gettext("Migrated Parameters\nFollowing parameters were migrated from wwsympa.conf."), '#### ', '#### ') . "\n"
 		    if $type eq 'add';
 		push @newconf, tools::wrap_text(
-		    Language::gettext("Overrididing Parameters\nFollowing parameters existed both in sympa.conf and  wwsympa.conf.  Previous release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to be disabled."), '#### ', '#### ') . "\n"
+		    $language->gettext("Overrididing Parameters\nFollowing parameters existed both in sympa.conf and  wwsympa.conf.  Previous release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to be disabled."), '#### ', '#### ') . "\n"
 		    if $type eq 'override';
 		push @newconf, tools::wrap_text(
-		    Language::gettext("Duplicate of sympa.conf\nThese parameters were found in both sympa.conf and wwsympa.conf.  Previous release of Sympa used those in sympa.conf.  Uncomment ones you wish to be enabled."), '#### ', '#### ') . "\n"
+		    $language->gettext("Duplicate of sympa.conf\nThese parameters were found in both sympa.conf and wwsympa.conf.  Previous release of Sympa used those in sympa.conf.  Uncomment ones you wish to be enabled."), '#### ', '#### ') . "\n"
 		    if $type eq 'duplicate';
 		push @newconf, tools::wrap_text(
-		    Language::gettext("Old Parameters\nThese parameters are no longer used."),
+		    $language->gettext("Old Parameters\nThese parameters are no longer used."),
 		    '#### ', '#### ') . "\n"
 		    if $type eq 'obsolete';
 		push @newconf, tools::wrap_text(
-		    Language::gettext("Unknown Parameters\nThough these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."),
+		    $language->gettext("Unknown Parameters\nThough these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."),
 		    '#### ', '#### ') . "\n"
 		    if $type eq 'unknown';
 
@@ -925,11 +928,11 @@ sub upgrade {
 		    my ($param, $v) = @{$newconf{$k}};
 
 		    push @newconf, tools::wrap_text(
-			Language::gettext($param->{'gettext_id'}),
+			$language->gettext($param->{'gettext_id'}),
 			'## ', '## '
 		    ) if $param->{'gettext_id'};
 		    push @newconf, tools::wrap_text(
-			Language::gettext($param->{'gettext_comment'}),
+			$language->gettext($param->{'gettext_comment'}),
 			'## ', '## '
 		    ) if $param->{'gettext_comment'};
 		    if (defined $v and
@@ -945,7 +948,7 @@ sub upgrade {
 	}
 
 	## Restore language
-	Language::PopLang();
+	$language->pop_lang;
 
 	if (%migrated) {
 	    warn sprintf("Unable to rename %s : %s", $sympa_conf, $!)
@@ -1117,9 +1120,9 @@ sub to_utf8 {
 	    $Conf::Ignored_Conf{'filesystem_encoding'} ne 'utf-8') {
 	    $charset = $Conf::Ignored_Conf{'filesystem_encoding'};
 	}else {	    
-	    &Language::PushLang($lang);
-	    $charset = tools::lang2charset(Language::GetLang());
-	    &Language::PopLang;
+	    $language->push_lang($lang);
+	    $charset = tools::lang2charset($language->get_lang);
+	    $language->pop_lang;
 	}
 	
 	# Add X-Sympa-Attach: headers if required.

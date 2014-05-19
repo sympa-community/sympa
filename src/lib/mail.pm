@@ -36,7 +36,6 @@ use POSIX;
 
 use Conf;
 use Log;
-use Language;
 use List;
 use Bulk;
 use tools;
@@ -51,7 +50,13 @@ my $fh = 'fh0000000000';	## File handle for the stream.
 my $max_arg = eval { &POSIX::_SC_ARG_MAX; };
 if ($@) {
     $max_arg = 4096;
-    printf STDERR gettext("Your system does not conform to the POSIX P1003.1 standard, or\nyour Perl system does not define the _SC_ARG_MAX constant in its POSIX\nlibrary. You must modify the smtp.pm module in order to set a value\nfor variable %s.\n"), $max_arg;
+    printf STDERR <<'EOF', $max_arg;
+Your system does not conform to the POSIX P1003.1 standard, or
+your Perl system does not define the _SC_ARG_MAX constant in its POSIX
+library. You must modify the smtp.pm module in order to set a value
+for variable %s.
+
+EOF
 } else {
     $max_arg = POSIX::sysconf($max_arg);
 }
@@ -136,17 +141,13 @@ sub mail_file {
     }
 
     ## Charset for encoding
-    &Language::PushLang($data->{'lang'}) if defined $data->{'lang'};
-    $data->{'charset'} ||= tools::lang2charset(Language::GetLang());
-    &Language::PopLang() if defined $data->{'lang'};
+    $data->{'charset'} ||= tools::lang2charset($data->{'lang'});
 
     ## TT2 file parsing 
     if ($filename =~ /\.tt2$/) {
 	my $output;
 	my @path = split /\//, $filename;	   
-	&Language::PushLang($data->{'lang'}) if (defined $data->{'lang'});
 	&tt2::parse_tt2($data, $path[$#path], \$output);
-	&Language::PopLang() if (defined $data->{'lang'});
 	$message_as_string .= join('',$output);
 	$header_possible = 1;
 

@@ -32,13 +32,15 @@ use MIME::EncWords;
 use Template;
 
 use Sympa::Constants;
-use Language;
+use Sympa::Language;
 use Log;
 use Sympa::Template::Compat;
 
 my $last_error;
 my @other_include_path;
 my $allow_absolute;
+
+my $language = Sympa::Language->instance;
 
 sub qencode {
     my $string = shift;
@@ -47,7 +49,7 @@ sub qencode {
     return MIME::EncWords::encode_mimewords(
         Encode::decode('utf8', $string),
         Encoding => 'A',
-        Charset  => tools::lang2charset(Language::GetLang()),
+        Charset  => tools::lang2charset($language->get_lang),
         Field    => "message-id"
     );
 }
@@ -140,22 +142,9 @@ sub maketext {
     my ($context, @arg) = @_;
 
     my $template_name = $context->stash->get('component')->{'name'};
-    my $textdomain    = $template2textdomain{$template_name};
+    my $textdomain    = $template2textdomain{$template_name} || '';
 
-    return sub {
-        my $translation;
-
-        if ($textdomain) {
-            $translation = Language::sympa_dgettext($textdomain, $_[0]);
-        } else {
-            $translation = Language::gettext($_[0]);
-        }
-
-        ## replace parameters in string
-        $translation =~ s/[%]([%]|\d+)/($1 eq '%') ? '%' : $arg[$1 - 1]/eg;
-
-        return $translation;
-        }
+    return sub { $language->maketext($textdomain, $_[0], @arg); };
 }
 
 # IN:
@@ -169,11 +158,11 @@ sub locdatetime {
     if ($arg !~
         /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
         ) {
-        return sub { Language::gettext("(unknown date)"); };
+        return sub { $language->gettext("(unknown date)"); };
     } else {
         my @arg =
             ($6 + 0, $5 + 0, $4 + 0, $3 + 0 || 1, $2 - 1, $1 - 1900, 0, 0, 0);
-        return sub { Language::gettext_strftime($_[0], @arg); };
+        return sub { $language->gettext_strftime($_[0], @arg); };
     }
 }
 
@@ -267,7 +256,8 @@ sub parse_tt2 {
         $template = \join('', @$template);
     }
 
-    Language::SetLang($data->{lang}) if ($data->{'lang'});
+    # Set language if possible: Must be restored later
+    $language->push_lang($data->{lang} || undef);
 
     my $config = {
         # ABSOLUTE => 1,
@@ -323,9 +313,11 @@ sub parse_tt2 {
             join(',', @{$include_path})
         );
 
+	$language->pop_lang;
         return undef;
     }
 
+    $language->pop_lang;
     return 1;
 }
 

@@ -512,7 +512,7 @@ sub get_list_list_tpl {
 
 		$list_templates->{$template}{'path'} = $dir;
 
-		my $locale = &Language::Lang2Locale( &Language::GetLang());
+		my $locale = Sympa::Language::lang2oldlocale( $language->get_lang);
 		## Look for a comment.tt2 in the appropriate locale first
 		if (-r $dir.'/'.$template.'/'.$locale.'/comment.tt2') {
 		    $list_templates->{$template}{'comment'} = $dir.'/'.$template.'/'.$locale.'/comment.tt2';
@@ -2386,7 +2386,7 @@ sub get_search_path {
     my $lang_dirs = undef;
     if ($lang) {
         ## For compatibility: add old-style "locale" directory at first.
-        my $oldlocale = Language::Lang2Locale($lang);
+        my $oldlocale = Sympa::Language::lang2oldlocale($lang);
         if ($oldlocale) {
             $lang_dirs = [$oldlocale];
         } else {
@@ -3948,7 +3948,7 @@ sub wrap_text {
     return $text unless $cols;
 
     $text = Text::LineFold->new(
-	    Language => &Language::GetLang(),
+	    Language => $language->get_lang,
 	    OutputCharset => (&Encode::is_utf8($text)? '_UNICODE_': 'utf8'),
 	    Prep => 'NONBREAKURI',
 	    ColumnsMax => $cols
@@ -4119,11 +4119,11 @@ sub get_supported_languages {
 	    $supported_lang = $Conf::Conf{'supported_lang'};
 	}
 
-	my $saved_lang = Language::GetLang();
+	my $saved_lang = $language->get_lang;
 	@lang_list =
-            grep { $_ and $_ = Language::SetLang($_) }
+            grep { $_ and $_ = $language->set_lang($_) }
             split /\s*,\s*/, $supported_lang;
-	Language::SetLang($saved_lang);
+	$language->set_lang($saved_lang);
     }
     @lang_list = ('en') unless @lang_list;
     return @lang_list if wantarray;
@@ -4174,7 +4174,7 @@ sub lang2charset {
     my $lang = shift;
     return 'utf-8' unless $lang;
 
-    my $locale = Language::Lang2Locale($lang);
+    my $locale = Sympa::Language::lang2oldlocale($lang);
 
     if (%Conf::Conf and $locale) {   # configuration loaded
 	my $locale2charset = $Conf::Conf{'locale2charset'} || {};

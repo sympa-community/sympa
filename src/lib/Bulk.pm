@@ -46,7 +46,7 @@ use Fetch;
 use WebAgent;
 use tools;
 use tt2;
-use Language;
+use Sympa::Language;
 use Log;
 use Conf;
 use mail;
@@ -422,7 +422,9 @@ sub merge_data {
     );
 
     $user->{'escaped_email'} = &URI::Escape::uri_escape($rcpt);
-    $user->{'friendly_date'} = gettext_strftime("%d %b %Y  %H:%M", localtime($user->{'date'}));
+    my $language = Sympa::Language->instance;
+    $user->{'friendly_date'} = $language->gettext_strftime(
+	"%d %b %Y  %H:%M", localtime($user->{'date'}));
 
     # this method as been removed because some users may forward authentication link
     # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);

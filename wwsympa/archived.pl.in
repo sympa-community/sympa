@@ -51,7 +51,7 @@ use Message;
 use Conf;
 use Log;
 use Commands;
-use Language;
+use Sympa::Language;
 use mail;
 use tools;
 
@@ -162,7 +162,7 @@ unless (chdir($Conf{'home'})) {
     exit (-1);
 }
 
-$Language::default_lang = $Conf{'lang'};
+Sympa::Language->instance->set_lang($Conf::Conf{'lang'}, 'en');
 
 &Log::do_log('notice', "archived %s Started", Sympa::Constants::VERSION);
 
