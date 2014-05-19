@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="[% lang_tag %]" xml:lang="[% lang_tag %]">
+<html lang="[% lang %]" xml:lang="[% lang %]">
 <!-- $Id$ -->
 <head>
 <meta charset="UTF-8" />
@@ -109,7 +109,7 @@
 	 [% IF action == 'edit_list_request' || action == 'editfile' %]<br /><br />[% END %]
          [% PROCESS "${action}.tt2" IF action %]
        </div><!-- End div ContentBlock -->
-      <div class="top"><a href="#top" title="Top of Page"><img src="[% icons_url %]/top.png" alt="Top of page" /></a></div>
+      <div class="top"><a href="#top" title="Top of Page"><img src="[% icons_url %]/top.png" alt="Top of Page" /></a></div>
      </div><!-- End div Paint -->
   </div><!-- end div Stretcher -->
 

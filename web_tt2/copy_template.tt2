@@ -24,7 +24,7 @@
 [%|loc%](This template is the default for all languages unless it is redefined for a specific language)[%END%]
 [%- ELSE -%]
 <strong class="LanguageNeutral"
-lang="[%tpl_lang_tag%]" xml:lang="[%tpl_lang_tag%]"
+lang="[%tpl_lang_lang%]" xml:lang="[%tpl_lang_lang%]"
 > [%tpl_lang_title%] </strong>
 [%- END %] <br />
 
@@ -42,8 +42,8 @@ lang="[%tpl_lang_tag%]" xml:lang="[%tpl_lang_tag%]"
     <select id="tpl_lang_out" name="tpl_lang_out" class="LanguageNeutral">
 	<option value="default">[%|loc%]default[%END%]</option>
 	[% FOREACH lg = languages %]
-        <option lang="[%lg.value.lang_tag%]" xml:lang="[%lg.value.lang_tag%]"
-        value="[%lg.key%]" [% IF tpl_lang == lg.key %]selected[% END %]>[%lg.value.complete%]</option>
+        <option lang="[%lg.key%]" xml:lang="[%lg.key%]"
+        value="[%lg.key%]" [% IF tpl_lang_lang == lg.key %]selected[% END %]>[%lg.value.complete%]</option>
 	[%END%]
 	</select><br />
   <label for="list_out">[%|loc%]Enter list name: [%END%] </label><input id="list_out" type="text" name="list_out" size="20" value="[% list %]" /><br />

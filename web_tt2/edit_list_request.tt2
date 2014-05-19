@@ -338,8 +338,8 @@
                                                 selected="selected"
                                               [% END %]
                                               [% IF p.name == 'lang' %]
-                                                lang="[%enum.value.lang_tag%]"
-                                                xml:lang="[%enum.value.lang_tag%]"
+                                                lang="[%enum.key%]"
+                                                xml:lang="[%enum.key%]"
                                               [%END%]
                                               [% IF enum.value.title %]
                                                 >[% enum.value.title %]</option>
@@ -356,8 +356,8 @@
                                                 [% IF p.name == 'lang' %]
                                                   <span
                                                   class="LanguageNeutral"
-                                                  lang="[%enum.value.lang_tag%]"
-                                                  xml:lang="[%enum.value.lang_tag%]"
+                                                  lang="[%enum.key%]"
+                                                  xml:lang="[%enum.key%]"
                                                   >[% enum.value.title %]</span>
                                                 [% ELSE %]
                                                   [% enum.value.title %]
@@ -395,8 +395,8 @@
                                     selected="selected"
                                   [% END %]
                                   [% IF p.name == 'lang' %]
-                                    lang="[%enum.value.lang_tag%]"
-                                    xml:lang="[%enum.value.lang_tag%]"
+                                    lang="[%enum.key%]"
+                                    xml:lang="[%enum.key%]"
                                   [%END%]
                                   [% IF enum.value.title %]
                                     >[% enum.value.title %]</option>
@@ -412,8 +412,8 @@
                                     [% IF p.name == 'lang' %]
                                       <span
                                       class="LanguageNeutral"
-                                      lang="[%enum.value.lang_tag%]"
-                                      xml:lang="[%enum.value.lang_tag%]"
+                                      lang="[%enum.key%]"
+                                      xml:lang="[%enum.key%]"
                                       >[% enum.value.title %]</span>
                                     [% ELSE %]
                                       [% enum.value.title %]
