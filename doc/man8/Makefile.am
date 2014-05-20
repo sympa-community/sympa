@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-man8_MANS = archived.8 bounced.8 alias_manager.8 sympa.8 
+#~ man8_MANS = archived.8 bounced.8 alias_manager.8 sympa.8 
 
 EXTRA_DIST = archived.pod.in bounced.pod.in alias_manager.pod.in sympa.pod.in
 
