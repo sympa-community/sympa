@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # -*- indent-tabs-mode: nil; -*-
-# vim:ft=perl:et:sw=4:textwidth=78
+# vim:ft=perl:et:sw=4
 # $Id$
 
 # Author: Gábor Hargitai <higany@sch.bme.hu.>
