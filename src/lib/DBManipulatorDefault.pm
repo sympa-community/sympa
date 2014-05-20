@@ -1,7 +1,7 @@
-# DBManipulatorDefault.pm - This module contains default manipulation functions.
-# they are used if not defined in the DBManipulator<*> subclasses.
-#<!-- RCS Identication ; $Revision: 7016 $ --> 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4:textwidth=78
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel

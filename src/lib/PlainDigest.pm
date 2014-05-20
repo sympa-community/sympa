@@ -1,3 +1,7 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4:textwidth=78
+# $Id$
+
  ###############################################################
  #                      PlainDigest                            #
  # version: 0.4.0rc6                                           #

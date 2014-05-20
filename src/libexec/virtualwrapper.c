@@ -1,5 +1,5 @@
-/* virtualwrapper.c
- 
+/* $Id$ */
+/* 
   Sympa - SYsteme de Multi-Postage Automatique
 
   Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel

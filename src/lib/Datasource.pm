@@ -1,7 +1,7 @@
-# Datasource.pm - This module includes external datasources related functions
-#<!-- RCS Identication ; $Revision$ --> 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
-#
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -112,5 +112,4 @@ sub is_allowed_to_sync {
 	return 1;
 }
 
-## Packages must return true.
 1;

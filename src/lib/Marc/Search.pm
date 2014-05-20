@@ -1,3 +1,7 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4:textwidth=78
+# $Id$
+
 package Marc::Search;
 
 use strict;
@@ -501,7 +505,3 @@ sub match_this
 }
 
 1;
-__END__
-
-vim:ts=4
-

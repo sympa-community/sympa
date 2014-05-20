@@ -1,6 +1,7 @@
-# Log.pm - This module includes all Logging-related functions
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -1017,7 +1018,6 @@ sub agregate_daily_data {
     }
     return $result;
 }
-
 
 # Crash handler to dump stack trace.
 # Note: This should be moved to package providing Site singleton.

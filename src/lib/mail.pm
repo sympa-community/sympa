@@ -1,6 +1,7 @@
-# mail.pm - This module includes mail sending functions and does the smtp job.
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel

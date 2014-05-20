@@ -1,5 +1,7 @@
-# Bulk.pm - This module includes bulk mailer subroutines
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4:textwidth=78
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -738,5 +740,4 @@ sub there_is_too_much_remaining_packets {
     }
 }
 
-## Packages must return true.
 1;

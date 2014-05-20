@@ -1,7 +1,7 @@
-# SQLSource.pm - This module includes SQL DB related functions
-#<!-- RCS Identication ; $Revision$ --> 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
-#
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -573,5 +573,4 @@ sub get_canonical_read_date {
     return $self->get_formatted_date({'mode'=>'read','target'=>$value});
 }
 
-## Packages must return true.
 1;

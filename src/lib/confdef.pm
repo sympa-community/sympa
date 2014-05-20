@@ -1,6 +1,7 @@
-# Conf.pm - This module does the sympa.conf and robot.conf parsing
-# RCS Identication ; $Revision: 5688 $ ; $Date: 2009-04-30 14:49:42 +0200 (jeu, 30 avr 2009) $ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -1668,3 +1669,5 @@ our @params = (
 ##        'default'  => 'fr,ca,be,ch,uk,edu,*,com',
 ##    },
 );
+
+1;

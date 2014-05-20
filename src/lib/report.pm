@@ -1,7 +1,7 @@
-# report.pm - This module provides various tools for command and message 
-# diffusion report
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -782,12 +782,5 @@ sub reject_report_web {
 	
     }
 }
-
-
-#############################################
-
-
-
-
 
 1;

@@ -1,6 +1,7 @@
-# DBManipulatorSybase.pm - This module contains the code specific to using a Sybase server.
-#<!-- RCS Identication ; $Revision: 7016 $ --> 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -435,4 +436,4 @@ sub set_index {
     return $report;
 }
 
-return 1;
+1;

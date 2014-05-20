@@ -1,7 +1,7 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
 # $Id$
-#
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -1204,4 +1204,4 @@ our %indexes = ('admin_table' => {'admin_user_index' => ['user_admin']},
 # table indexes that can be removed during upgrade process
 our @former_indexes = ('user_subscriber', 'list_subscriber', 'subscriber_idx', 'admin_idx', 'netidmap_idx', 'user_admin', 'list_admin', 'role_admin', 'admin_table_index', 'logs_table_index','netidmap_table_index','subscriber_table_index','user_index');
 
-return 1;
+1;

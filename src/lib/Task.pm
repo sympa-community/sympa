@@ -1,7 +1,7 @@
-# Task.pm - This module includes Task processing functions, used by task_manager.pl
-#<!-- RCS Identication ; $Revision$ ; $Date$ --> 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
-#
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -168,5 +168,4 @@ sub epoch_sort {
 }
 
 
-## Packages must return true.
 1;

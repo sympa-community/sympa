@@ -1,7 +1,7 @@
-# SDM.pm - Sympa Database Manager : This module contains all functions relative to
-# the access and maintenance of the Sympa database.
-#<!-- RCS Identication ; $Revision: 7016 $ --> 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel

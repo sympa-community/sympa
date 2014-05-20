@@ -1,7 +1,7 @@
-# Upgrade.pm - This module gathers all subroutines used to upgrade Sympa data structures
-#<!-- RCS Identication ; $Revision$ --> 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
-#
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -1265,6 +1265,4 @@ sub md5_encode_password {
     return $total;
 }
 
- 
-## Packages must return true.
 1;

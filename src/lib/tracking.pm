@@ -1,5 +1,6 @@
-# Tracking.pm - this module does the mail tracking processing
-# RCS Identication ; mar, 15 septembre 2009 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #

@@ -1,3 +1,5 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
 # $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -69,7 +71,4 @@ sub get_lists {
 }
 
 
-###### END of the Robot package ######
-
-## Packages must return true.
 1;

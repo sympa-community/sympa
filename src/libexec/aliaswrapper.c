@@ -1,6 +1,5 @@
-/* aliaswrapper.c - This program, distributed with Sympa, is a wrapper to 'newaliases'
-  RCS Identication ; $Revision$ ; $Date$ 
- 
+/* $Id$ */
+/* 
   Sympa - SYsteme de Multi-Postage Automatique
 
   Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel

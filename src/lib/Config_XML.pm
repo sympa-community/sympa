@@ -1,7 +1,7 @@
-# Config_XML.pm - Parse XML file and extract a hash structure
-# used to create a list.
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -438,6 +438,4 @@ sub _find_lines {
     return $hash;
 }
 
- 
-######################################################
 1;

@@ -1,3 +1,7 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
  package HTML::myFormatText;
  
  # This is a subclass of the HTML::FormatText object. 

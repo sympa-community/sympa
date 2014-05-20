@@ -1,6 +1,5 @@
-/* boucequeue.c - This program does the non-delivery deports spooling
-  RCS Identication ; $Revision$ ; $Date$ 
-
+/* $Id$ */
+/*
   Sympa - SYsteme de Multi-Postage Automatique
 
   Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -132,10 +131,3 @@ main(int argn, char **argv)
    sleep(1);
    exit(0);
 }
-
-
-
-
-
-
-

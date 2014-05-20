@@ -1,6 +1,7 @@
-# Ldap.pm - This module includes most LDAP-related functions
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -117,11 +118,4 @@ sub load {
  return %Ldap;
 }
 
-## Packages must return true.
 1;
-
-
-
-
-
-

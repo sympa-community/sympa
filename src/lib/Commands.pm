@@ -1,5 +1,6 @@
-# Command.pm - this module does the mail commands processing
-# RCS Identication ; $Revision$ ; $Date$ 
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -2664,9 +2665,4 @@ sub get_auth_method {
     return $auth_method;
 }
 
-
-# end of package
 1;
-
-
-

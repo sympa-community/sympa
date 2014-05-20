@@ -1,6 +1,7 @@
-# Conf.pm - This module does the sympa.conf and robot.conf parsing
-# RCS Identication ; $Revision$ ; $Date$ 
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -2121,5 +2122,4 @@ sub _load_wwsconf {
     return $wwsconf;
 }
 
-## Packages must return true.
 1;

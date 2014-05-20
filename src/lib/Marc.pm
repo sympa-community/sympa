@@ -1,3 +1,7 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 package Marc;
 
 use strict;
@@ -55,4 +59,5 @@ sub AUTOLOAD
 		return $self->{$name};
 	}
 }
+
 1;

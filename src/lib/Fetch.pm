@@ -1,8 +1,7 @@
-# Fetch.pm - This module includes functions to fetch remote files
-#
-#<!-- RCS Identication ; $Revision$ ; $Date$ -->
-#
-#
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -187,9 +186,4 @@ sub get_https2{
 	return (@result);	
 }
 
-
-
-#################################################################
-
-## Packages must return true.
 1;
