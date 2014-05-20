@@ -101,5 +101,5 @@ sympa_wizard.pl: $(srcdir)/sympa_wizard.pl.in
 .pl.8:
 	rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
-		--lax --release="$(VERSION)" $(srcdir)/$*.pl $@
+		--lax --release="$(VERSION)" $*.pl $@
 
