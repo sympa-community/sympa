@@ -42,7 +42,6 @@ nobase_modules_DATA = \
 	DBManipulatorSybase.pm \
 	Family.pm \
 	Fetch.pm \
-	HTML/myFormatText.pm \
 	Sympa/Language.pm \
 	Ldap.pm \
 	LDAPSource.pm \
