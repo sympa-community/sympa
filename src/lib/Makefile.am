@@ -20,20 +20,60 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-nobase_modules_DATA = admin.pm Archive.pm Bulk.pm Commands.pm confdef.pm \
-		      Conf.pm Config_XML.pm Family.pm Sympa/Language.pm \
-		      List.pm Sympa/LockedFile.pm Log.pm mail.pm Ldap.pm \
-		      Upgrade.pm Sympa/User.pm \
-		      Fetch.pm Message.pm Task.pm Datasource.pm SQLSource.pm \
-		      LDAPSource.pm Scenario.pm PlainDigest.pm report.pm \
-		      tools.pm tt2.pm Sympa/Constants.pm \
-		      Sympa/Template/Compat.pm Robot.pm WebAgent.pm \
-		      HTML/myFormatText.pm tracking.pm \
-		      Sympa/DatabaseDescription.pm SDM.pm \
-		      DBManipulatorMySQL.pm DBManipulatorSQLite.pm\
-		      DBManipulatorSybase.pm DBManipulatorOracle.pm \
-		      DBManipulatorPostgres.pm DBManipulatorDefault.pm \
-		      Sympa/ListDef.pm Sympa/ModDef.pm
+nobase_modules_DATA = \
+	admin.pm \
+	Archive.pm \
+	Auth.pm \
+	Bounce.pm \
+	Bulk.pm \
+	Commands.pm \
+	Conf.pm \
+	confdef.pm \
+	Config_XML.pm \
+	Sympa/Constants.pm \
+	cookielib.pm \
+	Sympa/DatabaseDescription.pm \
+	Datasource.pm \
+	DBManipulatorDefault.pm \
+	DBManipulatorMySQL.pm \
+	DBManipulatorOracle.pm \
+	DBManipulatorPostgres.pm \
+	DBManipulatorSQLite.pm \
+	DBManipulatorSybase.pm \
+	Family.pm \
+	Fetch.pm \
+	HTML/myFormatText.pm \
+	Sympa/Language.pm \
+	Ldap.pm \
+	LDAPSource.pm \
+	List.pm \
+	Sympa/ListDef.pm \
+	Sympa/LockedFile.pm \
+	Log.pm \
+	Sympa/ModDef.pm \
+	mail.pm \
+	Marc.pm \
+	Marc/Search.pm \
+	Message.pm \
+	PlainDigest.pm \
+	report.pm \
+	Robot.pm \
+	Scenario.pm \
+	SDM.pm \
+	SharedDocument.pm \
+	SQLSource.pm \
+	SympaSession.pm \
+	sympasoap.pm \
+	SympaTransport.pm \
+	Task.pm \
+	Sympa/Template/Compat.pm \
+	tools.pm \
+	tracking.pm \
+	tt2.pm \
+	Upgrade.pm \
+	Sympa/User.pm \
+	WebAgent.pm \
+	wwslib.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm

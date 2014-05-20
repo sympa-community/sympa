@@ -54,8 +54,6 @@ if test "$fhs" = "yes"; then
     modulesdir=$datadir/sympa/lib
     scriptdir=$datadir/sympa/bin
     defaultdir=$datadir/sympa/default
-    mailtemplatedir=$defaultdir/mail_tt2
-    webtemplatedir=$defaultdir/web_tt2
     execcgidir=$libdir/sympa/cgi
     expldir=$localstatedir/lib/sympa/list_data
     staticdir=$localstatedir/lib/sympa/static_content
@@ -87,8 +85,6 @@ else
     modulesdir=$prefix/bin
     scriptdir=$prefix/bin
     defaultdir=$prefix/default
-    mailtemplatedir=$defaultdir/mail_tt2
-    webtemplatedir=$defaultdir/web_tt2
     execcgidir=$prefix/bin
     expldir=$prefix/list_data
     spooldir=$prefix/spool
@@ -106,8 +102,6 @@ AC_SUBST(lockdir)
 AC_SUBST(modulesdir)
 AC_SUBST(scriptdir)
 AC_SUBST(defaultdir)
-AC_SUBST(mailtemplatedir)
-AC_SUBST(webtemplatedir)
 AC_SUBST(execcgidir)
 AC_SUBST(expldir)
 AC_SUBST(spooldir)
@@ -617,21 +611,20 @@ AC_SUBST(POSTMAP_ARG)
 
 AC_CONFIG_FILES([
     Makefile
+    default/Makefile
+    doc/Makefile
+    po/Makefile
+    po/sympa/Makefile.in
+    po/web_help/Makefile.in
     src/Makefile
+    src/bin/Makefile
+    src/cgi/Makefile
     src/etc/Makefile
     src/etc/script/Makefile
-    src/etc/script/js/Makefile
     src/lib/Makefile
-    soap/Makefile
-    doc/Makefile
-    doc/man8/Makefile
-    doc/sample/Makefile
-    web_tt2/Makefile
-    wwsympa/Makefile
-    wwsympa/icons/Makefile
-    mail_tt2/Makefile
-    po/Makefile.in
-    po-wwsympa/Makefile.in
+    src/libexec/Makefile
+    src/sbin/Makefile
+    www/Makefile
     sympa.spec
 ])
 AC_OUTPUT

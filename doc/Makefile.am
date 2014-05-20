@@ -19,9 +19,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = man8 sample
+nobase_doc_DATA = \
+	sympa.pdf \
+	samples/README \
+	samples/trusted_applications.conf \
+	samples/robot.conf \
+	samples/employees.ldap \
+	samples/test/config \
+	samples/test/info \
+	samples/test/message.footer \
+	samples/test/web_tt2/welcome.tt2 \
+	samples/sampleClient.php \
+	samples/families/sample-auto/config.tt2 \
+	samples/families/sample-auto/param_constraint.conf
 
-## pdf_DATA requires autoconf 2.60; not available yet
-#pdf_DATA = sympa.pdf
-
-EXTRA_DIST = $(pdf_DATA)
+EXTRA_DIST = $(nobase_doc_DATA) README.charset README.config README.postfix

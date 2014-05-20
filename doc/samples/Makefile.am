@@ -1,4 +1,4 @@
-# Makefile - This Makefile builds and installs Sympa sources
+# Makefile - This Makefile does Sympa samples installation
 # RCS Identication ; $Revision$ ; $Date$ 
 #
 # Sympa - SYsteme de Multi-Postage Automatique
@@ -21,5 +21,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = bin cgi etc lib libexec sbin
+sampledir = $(docdir)/sample
+nobase_sample_DATA = README \
+		     trusted_applications.conf \
+		     robot.conf \
+		     employees.ldap \
+		     test/config \
+		     test/info \
+		     test/message.footer \
+		     test/web_tt2/welcome.tt2 \
+		     sampleClient.php
 
+EXTRA_DIST = $(nobase_sample_DATA)

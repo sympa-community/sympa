@@ -22,9 +22,9 @@ if ($EVAL_ERROR) {
 all_pl_files_ok(
 	'important_changes.pl',
 	##<po/*.pl>,
-	<src/*.pl>,
-	<src/etc/script/*.pl>,
-	<soap/*.pl>,
-	<wwsympa/wwsympa.fcgi>,
-	<soap/sympa_soap_server.fcgi>,
+        <src/sbin/*.pl>,
+        <src/bin/*.pl>,
+        <src/libexec/*.pl>,
+        'src/cgi/wwsympa.fcgi',
+        'src/cgi/sympa_soap_server.fcgi',
 );

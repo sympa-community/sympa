@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src wwsympa soap web_tt2 mail_tt2 doc po po-wwsympa
+SUBDIRS = src default doc po www
 
 check_SCRIPTS = t/Language.t \
 		t/LockedFile.t \
@@ -34,7 +34,6 @@ check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
 	     sympa.spec \
-	     README.charset \
 	     etc_README \
 	     $(check_SCRIPTS) $(check_DATA)
 CLEANFILES = previous_sympa_version
@@ -45,7 +44,7 @@ MSGFMT=@MSGFMT@
 
 check-local:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
-	PERL5LIB=src/lib:wwsympa:soap; export PERL5LIB; \
+	PERL5LIB=src/lib; export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
 install-data-hook: installdir installconfig nextstep importantchanges
@@ -142,9 +141,9 @@ importantchanges:
 	if test -f $(top_srcdir)/previous_sympa_version; then \
 		export PREVIOUS=`$(CAT) $(top_srcdir)/previous_sympa_version`; \
 	fi; \
-		$(PERL) $(top_srcdir)/important_changes.pl \
-			--current=$(VERSION) \
-			--previous=$${PREVIOUS};
+	$(PERL) $(top_srcdir)/important_changes.pl \
+		--current=$(VERSION) \
+		--previous=$${PREVIOUS};
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf

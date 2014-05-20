@@ -17,6 +17,6 @@ if ($EVAL_ERROR) {
     plan(skip_all => $msg);
 }
 
-my @files = all_pm_files(qw{src/lib wwsympa soap});
+my @files = all_pm_files(qw{src/lib});
 
 all_pm_files_ok(@files);
