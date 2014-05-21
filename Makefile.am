@@ -25,6 +25,7 @@ SUBDIRS = src default doc po www
 
 check_SCRIPTS = t/Language.t \
 		t/LockedFile.t \
+		t/Regexps.t \
 		t/compile_modules.t \
 		t/compile_executables.t
 check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
