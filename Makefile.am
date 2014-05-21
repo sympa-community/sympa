@@ -37,7 +37,7 @@ EXTRA_DIST = important_changes.pl \
 	     sympa.spec \
 	     etc_README \
 	     $(check_SCRIPTS) $(check_DATA)
-CLEANFILES = previous_sympa_version
+CLEANFILES = previous_sympa_version sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -71,7 +71,13 @@ installdir:
 		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
 	done
 
-installconfig: installdir
+sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
+	$(SED) \
+		-e 's|--PERL--|$(PERL)|' \
+		-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
+		< $(top_srcdir)/src/sbin/sympa_wizard.pl.in > $@
+
+installconfig: installdir sympa_wizard.pl.inst
 	@echo "Installing basic configuration ..."
 	export PERL5LIB=$(DESTDIR)$(modulesdir); \
 	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
@@ -79,17 +85,10 @@ installconfig: installdir
 		if [ ! -d $(DESTDIR)$(confdir) ]; then \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
 		fi; \
-		$(SED) \
-			-e 's|--PERL--|$(PERL)|' \
-			-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
-			< $(top_srcdir)/src/sympa_wizard.pl.in > \
-			$(top_srcdir)/src/sympa_wizard.pl.install; \
-		chmod +x $(top_srcdir)/src/sympa_wizard.pl.install; \
-		$(top_srcdir)/src/sympa_wizard.pl.install \
+		$(PERL) sympa_wizard.pl.inst \
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
 			|| /bin/true; \
-		rm -f $(top_srcdir)/src/sympa_wizard.pl.install; \
 	fi; \
 	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
