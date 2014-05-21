@@ -55,6 +55,7 @@ nobase_modules_DATA = \
 	Marc/Search.pm \
 	Message.pm \
 	PlainDigest.pm \
+	Sympa/Regexps.pm \
 	report.pm \
 	Robot.pm \
 	Scenario.pm \

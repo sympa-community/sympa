@@ -46,11 +46,12 @@ use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
 use Conf;
+use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Log;
-use Sympa::Constants;
 use Message;
+use Sympa::Regexps;
 use SDM;
 
 ## RCS identification.
@@ -60,29 +61,6 @@ use SDM;
 my $cipher;
 
 my $separator="------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
-
-## Regexps for list params
-## Caution : if this regexp changes (more/less parenthesis), then regexp using it should 
-## also be changed
-my $time_regexp = '[012]?[0-9](?:\:[0-5][0-9])?';
-my $time_range_regexp = $time_regexp.'-'.$time_regexp;
-my %regexp = ('email' => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+',
-	      'family_name' => '[a-z0-9][a-z0-9\-\.\+_]*', 
-	      'template_name' => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*', ## Allow \s
-	      'host' => '[\w\.\-]+',
-	      'multiple_host_with_port' => '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*',
-	      'listname' => '[a-z0-9][a-z0-9\-\.\+_]{0,49}',
-	      'sql_query' => '(SELECT|select).*',
-	      'scenario' => '[\w,\.\-]+',
-	      'task' => '\w+',
-	      'datasource' => '[\w-]+',
-	      'uid' => '[\w\-\.\+]+',
-	      'time' => $time_regexp,
-	      'time_range' => $time_range_regexp,
-	      'time_ranges' => $time_range_regexp.'(?:\s+'.$time_range_regexp.')*',
-	      're' => '(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS|Antw|\xCE\x91(?:\xCE\xA0|\xCF\x80)|\xCE\xA3(?:\xCE\xA7\xCE\x95\xCE\xA4|\xCF\x87\xCE\xB5\xCF\x84)|Odp|YNT)\s*:',
-	      # ( de | ru etc. | en, la etc. | it | da, sv | fi | nl | el | el | pl | tr ).
-	      );
 
 my %openssl_errors = (1 => 'an error occurred parsing the command options',
 		      2 => 'one of the input files could not be read',
@@ -2844,7 +2822,8 @@ sub get_dir_size {
 sub valid_email {
     my $email = shift;
     
-    unless ($email =~ /^$regexp{'email'}$/) {
+    my $email_re = Sympa::Regexps::email();
+    unless ($email =~ /^${email_re}$/) {
 	&Log::do_log('err', "Invalid email address '%s'", $email);
 	return undef;
     }
@@ -3710,8 +3689,8 @@ sub get_separator {
 sub get_regexp {
     my $type = shift;
 
-    if (defined $regexp{$type}) {
-	return $regexp{$type};
+    if (my $re = Sympa::Regexps->can($type)) {
+	return $re->();
     }else {
 	return '\w+'; ## default is a very strict regexp
     }
