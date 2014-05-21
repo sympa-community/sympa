@@ -3348,7 +3348,7 @@ sub do_ticket {
 	# user did not choose a specific language, apply user pref for this
 	# session. 
 	my $list_lang = $list->{'admin'}{'lang'} if ref $list eq 'List';
-	my $param->{'lang'} = $language->set_lang(
+	$param->{'lang'} = $language->set_lang(
 	    $user->{'lang'}, $list_lang,
 	    Conf::get_robot_conf($robot, 'lang'), 'en'
 	);
