@@ -21,9 +21,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-libexec_SCRIPTS = alias_manager.pl \
-		  ldap_alias_manager.pl \
-		  mysql_alias_manager.pl
+#FIXME:These lines might be enabled by Sympa-7.0.
+#libexec_SCRIPTS = alias_manager.pl \
+#		  ldap_alias_manager.pl \
+#		  mysql_alias_manager.pl
+
+sbin_SCRIPTS = alias_manager.pl
+script_SCRIPTS = ldap_alias_manager.pl mysql_alias_manager.pl
 
 #~ man8_MANS = alias_manager.8
 
@@ -31,7 +35,8 @@ EXTRA_DIST = alias_manager.pl.in \
 	     ldap_alias_manager.pl.in \
 	     mysql_alias_manager.pl.in
 
-CLEANFILES = $(libexec_SCRIPTS) $(man8_MANS)
+#CLEANFILES = $(libexec_SCRIPTS) $(man8_MANS)
+CLEANFILES = $(sbin_SCRIPTS) $(script_SCRIPTS) $(man8_MANS)
 
 libexec_PROGRAMS = queue bouncequeue familyqueue sympa_newaliases-wrapper
 

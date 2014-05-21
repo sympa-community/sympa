@@ -21,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-bin_SCRIPTS = sympa_soap_client.pl
-
 dbscripts = \
 	create_db.Pg \
 	create_db.mysql \
@@ -38,7 +36,8 @@ perlscripts = \
 	crypt_passwd.pl \
 	testlogs.pl \
 	mod2html.pl \
-	tpl2tt2.pl
+	tpl2tt2.pl \
+	sympa_soap_client.pl
 
 script_SCRIPTS = $(dbscripts) $(perlscripts)
 
