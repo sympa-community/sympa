@@ -132,19 +132,21 @@ stamp-po: $(srcdir)/$(DOMAIN).pot
 # Note that $(DOMAIN).pot is not touched if it doesn't need to be changed.
 $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	test -x $(XGETTEXT) || chmod u+x $(XGETTEXT) ; \
-	$(XGETTEXT) -u \
-	  -o $(DOMAIN).pot \
-	  ../src/bin/*.pl.in ../src/libexec/*.pl.in ../src/sbin/*.pl.in \
-	  ../src/lib/*.pm ../src/lib/Sympa/*.pm ../src/lib/Sympa/*/*.pm \
-	  ../src/lib/Sympa/*/*/*.pm \
-	  ../src/cgi/*.fcgi.in \
-	  ../default/web_tt2/*.tt2 ../default/mail_tt2/*.tt2 \
-	  ../default/mhonarc-ressources.tt2 ../default/topics.conf \
-	  ../default/scenari/* \
-	  ../default/global_task_models/* ../default/list_task_models/* \
-	  ../default/create_list_templates/*/* \
-	  ../ext/*/lib/Sympa/*.pm \
-	  ../ext/*/lib/Sympa/*/tt2/*.tt2 ../ext/*/lib/Sympa/*/*/tt2/*.tt2;\
+	cd ../../; \
+	po/sympa/$(XGETTEXT) -u \
+	  -o po/sympa/$(DOMAIN).pot \
+	  src/bin/*.pl.in src/libexec/*.pl.in src/sbin/*.pl.in \
+	  src/lib/*.pm src/lib/Sympa/*.pm src/lib/Sympa/*/*.pm \
+	  src/lib/Sympa/*/*/*.pm \
+	  src/cgi/*.fcgi.in \
+	  default/web_tt2/*.tt2 default/mail_tt2/*.tt2 \
+	  default/mhonarc-ressources.tt2 default/topics.conf \
+	  default/scenari/* \
+	  default/global_task_models/* default/list_task_models/* \
+	  default/create_list_templates/*/* \
+	  ext/*/lib/Sympa/*.pm \
+	  ext/*/lib/Sympa/*/tt2/*.tt2 ext/*/lib/Sympa/*/*/tt2/*.tt2;\
+	cd po/sympa; \
 	test ! -f $(DOMAIN).po || { \
 	  if test -f $(srcdir)/$(DOMAIN).pot; then \
 	    sed -f remove-potcdate.sed < $(srcdir)/$(DOMAIN).pot > $(DOMAIN).1po && \
@@ -370,7 +372,7 @@ update-po: Makefile
 
 .nop.po-update:
 	@lang=`echo $@ | sed -e 's/\.po-update$$//'`; \
-	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
+	if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../../src:$$PATH; fi; \
 	tmpdir=`pwd`; \
 	echo "$$lang:"; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
@@ -412,13 +414,13 @@ export:
           mkdir /tmp/sympa-po/sympa/$$lang; \
 	  cp $$lang.po /tmp/sympa-po/sympa/$$lang/sympa.po; \
 	  mkdir /tmp/sympa-po/web_help/$$lang; \
-	  cp ../po-wwsympa/$$lang.po /tmp/sympa-po/web_help/$$lang/web_help.po; \
+	  cp ../web_help/$$lang.po /tmp/sympa-po/web_help/$$lang/web_help.po; \
 	done
 	mkdir /tmp/sympa-po/sympa/templates; \
 	mkdir /tmp/sympa-po/web_help/templates; \
 	mkdir /tmp/sympa-po/terminology/templates; \
 	cp sympa.pot /tmp/sympa-po/sympa/templates/sympa.pot; \
-	cp ../po-wwsympa/web_help.pot /tmp/sympa-po/web_help/templates/web_help.pot; \
+	cp ../web_help/web_help.pot /tmp/sympa-po/web_help/templates/web_help.pot; \
 	cp terminology.pot /tmp/sympa-po/terminology/templates/terminology.pot; \
 	(cd /tmp/sympa-po; tar -zcvf /tmp/sympa-po.tar.gz *)
 
@@ -426,7 +428,7 @@ clean-po:
 	$(MAKE) $(DOMAIN).pot-update
 	@languages=`echo $(POFILES) | sed -e 's/\.po//g'`;\
 	for lang in $$languages; do \
-	  if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../src:$$PATH; fi; \
+	  if test "$(PACKAGE)" = "gettext-tools"; then PATH=`pwd`/../../src:$$PATH; fi; \
 	  tmpdir=`pwd`; \
 	  echo "$$lang:"; \
 	  test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
