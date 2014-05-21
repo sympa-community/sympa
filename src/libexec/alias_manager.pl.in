@@ -251,3 +251,106 @@ sub already_defined {
     return 0;
 }
 
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+alias_manager, alias_manager.pl - Manage Sympa Aliases
+
+=head1 SYNOPSIS
+
+S<B<alias_manager.pl> B<add> | B<del> I<listname> I<domain>>
+
+=head1 DESCRIPTION
+
+Alias_manager is a program that helps in installing aliases for newly
+created lists and deleting aliases for closed lists. 
+
+It is called by
+L<wwsympa.fcgi(8)> or L<sympa.pl(8)> via the I<aliaswrapper>.
+Alias management is performed only if it was setup in F<--CONFIG-->
+(C<sendmail_aliases> configuration parameter).
+
+Administrators using MTA functionalities to manage aliases (ie
+virtual_regexp and transport_regexp with postfix) can disable alias
+management by setting
+C<sendmail_aliases> configuration parameter to B<none>.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<add> I<listname> I<domain>
+
+Add the set of aliases for the mailing list I<listname> in the
+domain I<domain>.
+
+=item B<del> I<listname> I<domain>
+
+Remove the set of aliases for the mailing list I<listname> in the
+domain I<domain>.
+
+=back
+
+=head1 FILES
+
+F<--SENDMAIL_ALIASES--> sendmail aliases file.
+
+=head1 DOCUMENTATION
+
+The full documentation in HTML and PDF formats can be
+found in L<http://www.sympa.org/manual/>. 
+
+The mailing lists (with web archives) can be accessed at
+http://listes.renater.fr/sympa/lists/informatique/sympa.
+
+=head1 AUTHORS
+
+=over 4
+
+=item Serge Aumont
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=item Olivier SalaE<252>n
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=back
+
+Contact authors at <sympa-authors@listes.renater.fr>
+
+This manual page was initially written by
+JE<233>rE<244>me Marant <jerome.marant@IDEALX.org>
+for the Debian GNU/Linux system.
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 ComitE<233> RE<233>seau des UniversitE<233>s
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license can be found under
+L<http://www.gnu.org/licenses/fdl.html>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>, L<sendmail(8)>.
+
+
+=cut
+

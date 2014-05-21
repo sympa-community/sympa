@@ -2398,4 +2398,314 @@ sub clean_msgid_table {
 	return 1;
 }
 
-1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa, sympa.pl - A Modern Mailing List Manager
+
+=head1 SYNOPSIS
+
+S<B<sympa.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
+      S<[ B<-k, --keepcopy>=I<directory> ]>
+      S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
+      S<[ B<-h, --help> ]> [ B<-v, --version> ]
+      S<>
+      S<[ B<--import>=I<listname> ]>
+      S<[ B<--close_list>=I<list[@robot]> ]>
+      S<[ B<--purge_list>=I<list[@robot]> ]>
+      S<[ B<--lowercase> ] [ B<--make_alias_file> ]>
+      S<[ B<--dump>=I<listname> | ALL ]>
+
+=head1 DESCRIPTION
+
+B<Sympa> is scalable and highly customizable mailing list manager. 
+It can cope with big lists (200,000 subscribers) and comes with 
+a complete (user and admin) Web interface. It is 
+internationalized, and supports the us, fr, de, es, it, fi, and 
+chinese locales. A scripting language allows you to extend the 
+behavior of commands. B<Sympa> can be linked to an LDAP directory 
+or an RDBMS to create dynamic mailing lists. B<Sympa> provides S/MIME 
+and HTTPS based authentication and encryption.
+Sympa is a modern mailing-list manager. It supports a lot of useful
+features.
+
+=head1 OPTIONS
+
+F<sympa.pl> may run with following options in general.
+
+=over 4
+
+=item B<-d>, B<--debug>
+
+Enable debug mode.
+
+=item B<-f>, B<--config=>I<file>
+
+Force Sympa to use an alternative configuration file instead
+of F<--CONFIG-->.
+
+=item B<-l>, B<--lang=>I<lang>
+
+Set this option to use a language for Sympa. The corresponding
+gettext catalog file must be located in F<--localedir-->
+directory.
+
+=item B<--log_level=>I<level>
+
+Sets Sympa log level.
+
+=back
+
+F<sympa.pl> may run in daemon mode with following options.
+
+=over 4
+
+=item B<--foreground>
+
+The process remains attached to the TTY.
+
+=item B<-k>, B<--keepcopy=>F<directory>
+
+This option tells Sympa to keep a copy of every incoming message, 
+instead of deleting them. `directory' is the directory to 
+store messages.
+
+=item B<-m>, B<--mail>
+
+Sympa will log calls to sendmail, including recipients. This option is
+useful for keeping track of each mail sent (log files may grow faster
+though).
+
+=begin comment
+
+=item B<--service=process_command>|B<process_message>|B<process_creation>
+
+Process is dedicated to messages distribution, commands or to automatic lists
+creation (default three of them).
+
+B<Not implemented>.
+
+=end comment
+
+=back
+
+With the following options F<sympa.pl> will run in batch mode:
+
+=over 4
+
+=item B<--add_list=>I<family_name> B<--robot=>I<robot_name>
+    B<--input_file=>I</path/to/file.xml>
+
+Add the list described by the file.xml under robot_name, to the family
+family_name.
+
+=item B<--change_user_email> B<--current_email=>I<xx> B<--new_email=>I<xx>
+
+Changes a user email address in all Sympa  databases (subscriber_table,
+list config, etc) for all virtual robots.
+
+=item B<--close_family=>I<family_name> B<--robot=>I<robot_name>
+
+Close lists of family_name family under robot_name.      
+
+=item B<--close_list=>I<list[@robot]>
+
+Close the list (changing its status to closed), remove aliases and remove
+subscribers from DB (a dump is created in the list directory to allow
+restoring the list)
+
+=item B<--conf_2_db>
+
+Load sympa.conf and each robot.conf into database.
+
+=item B<--create_list> B<--robot=>I<robot_name>
+    B<--input_file=>I</path/to/file.xml >
+
+Create a list with the XML file under robot robot_name.
+
+=item B<--dump=>I<list>@I<dom>|C<ALL>
+
+Dumps subscribers of for `listname' list or all lists. Subscribers are 
+dumped in subscribers.db.dump.
+
+=begin comment
+
+=item B<--export_list> [B<--robot=>I<robot_name>]
+
+B<Not fully implemented>.
+
+=end comment
+
+=item B<--health_check>
+
+Check if F<sympa.conf>, F<robot.conf> of virtual robots and database structure
+are correct.  If any errors occur, exits with non-zero status.
+
+=item B<--import=>I<list>@I<dom>
+
+Import subscribers in the list. Data are read from standard input.
+The imported data should contain one entry per line : the first field
+is an email address, the second (optional) field is the free form name.
+Fields are spaces-separated.
+
+Sample:
+
+    ## Data to be imported
+    ## email        gecos
+    john.steward@some.company.com           John - accountant
+    mary.blacksmith@another.company.com     Mary - secretary
+
+=item B<--instantiate_family=>I<family_name> B<--robot=>I<robot_name>
+    B<--input_file=>I</path/to/file.xml> [B<--close_unknown>] [B<--quiet>]
+
+Instantiate family_name lists described in the file.xml under robot_name.
+The family directory must exist; automatically close undefined lists in a
+new instantiation if --close_unknown is specified; do not print report if
+C<--quiet> is specified.
+
+=item B<--lowercase>
+
+Lowercases email addresses in database.
+
+=item B<--make_alias_file>
+
+Create an aliases file in /tmp/ with all list aliases. It uses the
+F<list_aliases.tt2> template  (useful when list_aliases.tt2 was changed).
+
+=item B<--md5_encode_password>
+
+Rewrite password in C<user_table> of database using MD5 fingerprint.
+YOU CAN'T UNDO unless you save this table first.
+
+=item B<--modify_list=>I<family_name> B<--robot=>I<robot_name>
+    B<--input_file=>I</path/to/file.xml>
+
+Modify the existing list installed under the robot robot_name and that
+belongs to the family family_name. The new description is in the C<file.xml>.
+
+=item B<--purge_list>=I<list>[@I<robot>]
+
+Remove the list (remove archive, configuration files, users and owners in admin table. Restore is not possible after this operation.
+
+=item B<--reload_list_config>
+    [B<--list=>I<mylist>@I<mydom>] [B<--robot=>I<mydom>]
+
+Recreates all F<config.bin> files or cache in C<list_table>.
+You should run this command if you edit authorization scenarios.
+The list and robot parameters are optional.
+
+=item B<--rename_list=>I<listname>@I<robot>
+    B<--new_listname=>I<newlistname> B<--new_listrobot=>I<newrobot>
+
+Renames a list or move it to another virtual robot.
+
+=item B<--sync_include=>I<listname>@I<robot>
+
+Trigger the list members update.
+
+=begin comment
+
+=item B<--sync_list_db>
+
+B<Deprecated>.  Use B<--reload_list_config>.
+
+=end comment
+
+=item B<--test_database_message_buffer>
+
+Test the database message buffer size.
+
+=item B<--upgrade> [B<--from=>I<X>] [B<--to=>I<Y>]
+
+Runs Sympa maintenance script to upgrade from version I<X> to version I<Y>.
+
+=item B<--upgrade_shared> [B<--list=>I<X>] [B<--robot=>I<Y>]>
+
+Rename files in shared.
+
+=back
+
+With following options F<sympa.pl> will print some information and exit.
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Print this help message.
+
+=item B<--md5_digest=>I<password>
+
+Output a MD5 digest of a password (useful for SOAP client trusted
+application).
+
+=item B<-v>, B<--version>
+
+Print the version number.
+
+=back
+
+=head1 FILES
+
+F<--CONFIG--> main configuration file.
+
+F<--piddir--/sympa.pid> this file contains the process ID
+of F<sympa.pl>.
+
+=head1 AVAILABILITY
+
+Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML and PDF formats can be
+found in L<http://www.sympa.org/manual/>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 AUTHORS
+
+=over 4
+
+=item Serge Aumont
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=item Olivier SalaE<252>n
+
+ComitE<233> RE<233>seau des UniversitE<233>s
+
+=back
+
+Contact authors at <sympa-authors@listes.renater.fr>
+
+=head1 COPYRIGHT
+
+Copyright E<169> 1997,1998,1999,2000,2001 ComitE<233> RE<233>seau des UniversitE<233>s
+
+Copyright E<169> 1997,1998,1999 Institut Pasteur & Christophe Wolfhugel
+
+You may distribute this software under the terms of the GNU General
+Public License Version 2 (L<http://www.gnu.org/copyleft/gpl.html>)
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa.conf(5)>, L<sympa_wizard(1)>.
+
+L<archived(8)>, L<bulk(8)>, L<bounced(8)>, L<spooler(8)>, L<task_manager(8)>.
+
+L<sendmail(8)>, L<alias_manager(8)>.
+
+L<wwsympa(8)>, L<sympa_soap_server(8)>.
+
+
+=cut
+

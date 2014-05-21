@@ -1816,3 +1816,69 @@ sub sync_include {
 	return -1;	
     }    
 }
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+task_manager, task_manager.pl - Daemon to Process Periodical Sympa Tasks
+
+=head1 SYNOPSIS
+
+S<B<task_manager.pl> [ B<--foreground> ] [ B<--debug> ]>
+
+=head1 DESCRIPTION
+
+XXX @todo doc
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-d>, B<--debug>
+
+Sets the debug mode
+
+=item B<-F>, B<--foreground>
+
+Prevents the script from being daemonized
+
+=item B<-h>, B<--help>
+
+Prints this help message.
+
+=item B<--log_level=>I<level>
+
+Set log level.
+
+=back
+
+=head1 FILES
+
+F<--spooldir--/task/> directory for task spool.
+
+F<--piddir--/task_manager.pid> this file contains the process ID
+of F<task_manager.pl>.
+
+=head1 MORE DOCUMENTATION
+
+The full documentation in HTML and PDF formats can be
+found in L<http://www.sympa.org/manual/>.
+
+The mailing lists (with web archives) can be accessed at
+L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+
+=head1 BUGS
+
+Report bugs to Sympa bug tracker.
+See L<http://www.sympa.org/tracking>.
+
+=head1 SEE ALSO
+
+L<sympa(8)>, L<wwsympa(8)>
+
+
+=cut
+

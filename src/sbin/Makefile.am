@@ -28,15 +28,15 @@ sbin_SCRIPTS = archived.pl \
 	       sympa_wizard.pl \
 	       task_manager.pl
 
-#~ man1_MANS = \
-	#~ sympa_newaliases.1 \
-	#~ sympa_wizard.1
-#~ man8_MANS = \
-	#~ archived.8 \
-	#~ bounced.8 \
-	#~ bulk.8 \
-	#~ sympa.8 \
-	#~ task_manager.8
+man1_MANS = \
+	sympa_newaliases.1 \
+	sympa_wizard.1
+man8_MANS = \
+	archived.8 \
+	bounced.8 \
+	bulk.8 \
+	sympa.8 \
+	task_manager.8
 
 EXTRA_DIST = \
 	archived.pl.in \

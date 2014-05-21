@@ -29,7 +29,7 @@
 sbin_SCRIPTS = alias_manager.pl
 script_SCRIPTS = ldap_alias_manager.pl mysql_alias_manager.pl
 
-#~ man8_MANS = alias_manager.8
+man8_MANS = alias_manager.8
 
 EXTRA_DIST = alias_manager.pl.in \
 	     ldap_alias_manager.pl.in \

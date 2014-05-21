@@ -23,46 +23,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=encoding UTF-8
-
-=head1 NAME
-
-sympa_wizard.pl - help perform sympa initial setup
-    
-=head1 SYNOPSIS
-
-=over
-
-=item sympa_wizard.pl
-
-Edit current sympa configuration
-
-=item sympa_wizard.pl [--target file] --create
-
-Creates a new sympa.conf configuration file
-
-=item sympa_wizard.pl --check
-
-check CPAN modules needed for running sympa
-
-=item sympa_wizard.pl --help
-
-Display usage instructions
-
-=back
-
-=head1 AUTHORS
-
-=over
-
-=item Serge Aumont <sa@cru.fr>
-
-=item Olivier SalaE<252>n <os@cru.fr>
-
-=back
-
-=cut
-
 use lib '--modulesdir--';
 use strict;
 use POSIX qw(strftime);
@@ -560,3 +520,57 @@ sub install_module {
     $ENV{'LANG'} = $lang if (defined $lang);
 
 }
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+sympa_wizard, sympa_wizard.pl - Help Performing Sympa Initial Setup
+    
+=head1 SYNOPSIS
+
+S<B<sympa_wizard.pl>>
+    S<[B<--check>]>
+    S<[B<--create> [B<--target=>I<file>]]>
+    S<[B<-h, --help>]>
+    S<[B<-v, --version>]>
+
+=head1 OPTIONS
+
+=over 4
+
+=item sympa_wizard.pl
+
+Edit current Sympa configuration.
+
+=item sympa_wizard.pl --check
+
+Check CPAN modules needed for running Sympa.
+
+=item sympa_wizard.pl --create [--target file]
+
+Creates a new F<sympa.conf> configuration file.
+
+=item sympa_wizard.pl --help
+
+Display usage instructions.
+
+=item sympa_wizard.pl --version
+
+Print version number.
+
+=back
+
+=head1 AUTHORS
+
+=over 4
+
+=item Serge Aumont <sa@cru.fr>
+
+=item Olivier SalaE<252>n <os@cru.fr>
+
+=back
+
+=cut
+
