@@ -59,7 +59,7 @@ sub new {
 	$task->{'domain'} = $5;
 	
 	if ($task->{'object'} ne '_global') { # list task
-	    $task->{'list_object'} = new List ($task->{'object'},$task->{'domain'});
+	    $task->{'list_object'} = List->new($task->{'object'},$task->{'domain'});
 	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
 
@@ -70,7 +70,7 @@ sub new {
 	$task->{'object'} = $4;
 
 	if ($task->{'object'} ne '_global') { # list task
-	    $task->{'list_object'} = new List ($task->{'object'});
+	    $task->{'list_object'} = List->new($task->{'object'});
 	    $task->{'domain'} = $task->{'list_object'}{'domain'};
 	}
     }else {
@@ -107,7 +107,7 @@ sub list_tasks {
     ## Create Task objects
     foreach my $t (@task_files) {
 	next if ($t =~ /^\./);
-	my $task = new Task ($spool_task.'/'.$t);
+	my $task = Task->new($spool_task.'/'.$t);
 	
 	## Maintain list of tasks
 	push @task_list, $task;

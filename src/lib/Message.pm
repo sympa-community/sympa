@@ -261,7 +261,7 @@ sub new {
 		$listname = $1;
 	    }
 	    
-	    my $list = new List ($listname, $robot, {'just_try' => 1});
+	    my $list = List->new($listname, $robot, {'just_try' => 1});
 	    if ($list) {
 		$message->{'list'} = $list;
 	    }	

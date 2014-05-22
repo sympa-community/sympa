@@ -87,7 +87,7 @@ SDM::probe_db();
 
 chdir $Conf::Conf{'home'};
 
-my $list = new List($listname, $robot) 
+my $list = List->new($listname, $robot) 
     or die 'Cannot create List object';
 
 my $home_sympa;

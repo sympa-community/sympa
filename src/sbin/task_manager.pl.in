@@ -444,7 +444,7 @@ sub create {
 
     # for a list
     if ($object  eq 'list') {
-	my $list = new List($list_name, $robot);
+	my $list = List->new($list_name, $robot);
 
 	$Rdata->{'list'}{'ttl'} = $list->{'admin'}{'ttl'};
 
@@ -1064,7 +1064,7 @@ sub create_cmd {
 		'execution_date' => 'execution_date');
 
     if ($type eq 'list') {
-	my $list = new List ($object);
+	my $list = List->new($object);
 	$data{'list'}{'name'} = $list->{'name'};
     }
     $type = '_global';

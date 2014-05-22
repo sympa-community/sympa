@@ -221,7 +221,7 @@ sub create_list_old{
     }
     
     ## Check this listname doesn't exist already.
-    if( $res || new List ($param->{'listname'}, $robot, {'just_try' => 1})) {
+    if( $res || List->new($param->{'listname'}, $robot, {'just_try' => 1})) {
 	Log::do_log('err', 'admin::create_list_old : could not create already existing list %s on %s for ', 
 		$param->{'listname'}, $robot);
 	foreach my $o (@{$param->{'owner'}}){
@@ -312,7 +312,7 @@ sub create_list_old{
     
     ## Create list object
     my $list;
-    unless ($list = new List ($param->{'listname'}, $robot)) {
+    unless ($list = List->new($param->{'listname'}, $robot)) {
 	Log::do_log('err','admin::create_list_old : unable to create list %s', $param->{'listname'});
 	return undef;
     }
@@ -525,7 +525,7 @@ sub create_list{
 
     ## Create list object
     my $list;
-    unless ($list = new List ($param->{'listname'}, $robot)) {
+    unless ($list = List->new($param->{'listname'}, $robot)) {
 	Log::do_log('err','admin::create_list : unable to create list %s', $param->{'listname'});
 	return undef;
     }
@@ -627,7 +627,7 @@ sub update_list{
     $lock_fh->close;
 
     ## Create list object
-    unless ($list = new List ($param->{'listname'}, $robot)) {
+    unless ($list = List->new($param->{'listname'}, $robot)) {
 	Log::do_log('err','admin::create_list : unable to create list %s', $param->{'listname'});
 	return undef;
     }
@@ -752,7 +752,7 @@ sub rename_list{
 
     if( $res || 
 	($list->{'name'} ne $param{'new_listname'}) && ## Do not test if listname did not change
-	(new List ($param{'new_listname'}, $param{'new_robot'}, {'just_try' => 1}))) {
+	(List->new($param{'new_listname'}, $param{'new_robot'}, {'just_try' => 1}))) {
       Log::do_log('err', 'Could not rename list %s on %s: new list %s on %s already existing list', $list->{'name'}, $robot, $param{'new_listname'}, 	$param{'new_robot'});
       return 'list_already_exists';
     }
@@ -863,7 +863,7 @@ sub rename_list{
      ## Install new aliases
      $param{'listname'} = $param{'new_listname'};
      
-     unless ($list = new List ($param{'new_listname'}, $param{'new_robot'},{'reload_config' => 1})) {
+     unless ($list = List->new($param{'new_listname'}, $param{'new_robot'},{'reload_config' => 1})) {
 	 Log::do_log('err',"Unable to load $param{'new_listname'} while renaming");
 	 return 'internal';
      }
@@ -965,7 +965,7 @@ sub clone_list_as_empty {
     my $email = shift;
 
     my $list;
-    unless ($list = new List ($source_list_name, $source_robot)) {
+    unless ($list = List->new($source_list_name, $source_robot)) {
 	Log::do_log('err','Admin::clone_list_as_empty : new list failed %s %s',$source_list_name, $source_robot);
 	return undef;;
     }    
@@ -1014,7 +1014,7 @@ sub clone_list_as_empty {
 
     my $new_list;
     # now switch List object to new list, update some values
-    unless ($new_list = new List ($new_listname, $new_robot,{'reload_config' => 1})) {
+    unless ($new_list = List->new($new_listname, $new_robot,{'reload_config' => 1})) {
 	Log::do_log('info',"Admin::clone_list_as_empty : unable to load $new_listname while renamming");
 	return undef;
     }

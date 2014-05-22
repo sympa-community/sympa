@@ -308,14 +308,14 @@ while (!$end) {
         # 
  
 
-	#my $list = new List($bulk->{'listname'}, $bulk->{'robot'});
+	#my $list = List->new($bulk->{'listname'}, $bulk->{'robot'});
 	my $listname= $bulk->{'listname'}; my $robot =  $bulk->{'robot'};
 
 	if (($bulk->{'verp'})||($bulk->{'merge'})||($bulk->{'tracking'}eq 'dsn')||($bulk->{'tracking'}eq 'mdn')){ # message needs personalization
 	    my $key ;
 	    	    
 	    foreach $rcpt (@rcpts) {
-		my $message = new Message ({'messageasstring'=>$messageasstring_init,'noxsympato'=>'noxsympato'});
+		my $message = Message->new({'messageasstring'=>$messageasstring_init,'noxsympato'=>'noxsympato'});
 		my $entity = $message->{'msg'};
 		my $notification_id;
 		my $return_path;

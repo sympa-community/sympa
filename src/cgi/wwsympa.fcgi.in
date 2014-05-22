@@ -1169,7 +1169,7 @@ Log::do_log(info => "WWSympa started, process $$");
      
      wwslog('info', "parameter css_url '%s' seems strange, it must be the url of a directory not a css file", $param->{'css_url'}) if ($param->{'css_url'} =~ /\.css$/);
 
-     $session = new SympaSession ($robot,{'cookie'=>SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}),
+     $session = SympaSession->new($robot,{'cookie'=>SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'}),
 					  'action'=>$in{'action'},
 					  'rss'=>$rss, 'ajax' => $ajax});
 
@@ -1177,7 +1177,7 @@ Log::do_log(info => "WWSympa started, process $$");
      unless (defined $session) {
 	 List::send_notify_to_listmaster('failed_to_create_web_session', $robot);
 	 wwslog('info','Failed to create session');
-	$session = new SympaSession($robot, {});
+	$session = SympaSession->new($robot, {});
      }
      
      # Retreive oauth_token from session if it exists and if we have a (newly) identified user
@@ -1190,7 +1190,7 @@ Log::do_log(info => "WWSympa started, process $$");
     if (defined $automatic_list_families) {
 	foreach my $key (keys %{$automatic_list_families}){
 	    my $family;
-	    if ($family = new Family($key,$robot)) {
+	    if ($family = Family->new($key,$robot)) {
 		if ($family->is_allowed_to_create_automatic_lists(('auth_level' => 'md5', 'sender' => $session->{'email'}, 'message' => undef, 'listname' => ''))){
 		    $session->{'is_family_owner'}{$key} = 1;
 		}else{
@@ -1406,7 +1406,7 @@ Log::do_log(info => "WWSympa started, process $$");
 	     export_topics ($robot);
 	     
 	     unless ($comm{$action}) {
-		 if (new List ($action, $robot)){
+		 if (List->new($action, $robot)){
 		      do_redirect ($param->{'base_url'}.$param->{'path_cgi'}.'/info/'.$action);   
 		      last;
 		 }
@@ -2707,7 +2707,7 @@ Use it to create a List object and initialize output parameters.
 	 $in{'list'} = $1;
 
 	 ## Create a new List instance.
-	 unless ($list = new List ($in{'list'}, $robot)) {
+	 unless ($list = List->new($in{'list'}, $robot)) {
 	     report::reject_report_web('user','unknown_list',{'list' => $in{'list'}},$param->{'action'},'');
 	     wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	     return undef;
@@ -2724,7 +2724,7 @@ Use it to create a List object and initialize output parameters.
 
      if ($in{'list'}) {
 	## Create a new List instance.
-	unless ($list = new List ($in{'list'}, $robot, {})) {
+	unless ($list = List->new($in{'list'}, $robot, {})) {
 	    report::reject_report_web('user','unknown_list',{'list' => $in{'list'}},$param->{'action'},'');
 	    wwslog('info','check_param_in: unknown list %s', $in{'list'});
 	    return undef;
@@ -3778,7 +3778,7 @@ sub do_sso_login_succeeded {
 	 next unless ($auth =~ /$ldap->{'regexp'}/i);
 
 	 my $param = tools::dup_var($ldap);
-	 my $ds = new LDAPSource($param);
+	 my $ds = LDAPSource->new($param);
 
 	 unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
 	     Log::do_log('err',"Unable to connect to the LDAP server '%s'", $ldap->{'ldap_host'});
@@ -4337,7 +4337,7 @@ sub do_renewpasswd {
 
      ## get msg count for each list
      foreach my $l (keys (%{$param->{'which'}})) {
-	 my $list = new List ($l, $robot);
+	 my $list = List->new($l, $robot);
 	 my $file = "$list->{'dir'}/msg_count";
    
 	 my %count ; 
@@ -5247,7 +5247,7 @@ sub do_multiple_subscribe {
     
     
     foreach my $requested_list (@lists) {	 
-	my $param->{'list'} = new List ($requested_list, $robot);
+	my $param->{'list'} = List->new($requested_list, $robot);
 	$results{'requested_list'} = do_subscribe();
     }
 }
@@ -8324,7 +8324,7 @@ sub do_remove_arc {
      my $message;
      if ($msgfile) {
 
-	 unless ($message = new Message({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato'}) ) {
+	 unless ($message = Message->new({'file'=> "$arcpath/arctxt/$msgfile",'noxsympato'=>'noxsympato'}) ) {
 	     $param->{'status'} = 'message_err';
 	     wwslog('info', 'do_send_me : could not read file %s',"$arcpath/arctxt/$msgfile");
 	     return undef;
@@ -9120,7 +9120,7 @@ Creates a list using a list template
      $parameters->{'custom_input'} = $in{'custom_input'};
 
      ## create liste
-     if (my $testlist = new List($in{'listname'},$robot)){
+     if (my $testlist = List->new($in{'listname'},$robot)){
 	  report::reject_report_web('user','list_already_exists',{'new_listname'=> $in{'listname'}},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	  wwslog('info','do_create_list: requested list %s already exist (from %s)',$in{'listname'},$param->{'user'}{'email'});
 	  web_db_log({'parameters' => $in{'listname'},
@@ -11148,7 +11148,7 @@ sub do_purge_list {
      my @lists = split /\0/, $in{'selected_lists'};
 
      foreach my $l (@lists) {
-	 my $list = new List ($l, $robot);
+	 my $list = List->new($l, $robot);
 	 next unless (defined $list);
 	 $list->purge($param->{'user'}{'email'});
      }    
@@ -16115,7 +16115,7 @@ sub do_suspend_request_action {
 	my $report = "";
 	foreach my $line (@lists) {
 
-	    my $unsub_list = new List ($line, $robot);
+	    my $unsub_list = List->new($line, $robot);
 	    unless ($unsub_list) {
 		wwslog('info', 'List %s unknown' , $unsub_list);
 		return undef;
@@ -16497,7 +16497,7 @@ sub do_send_mail {
      my $filename = "$authqueue\/$listname".'@'."$robot\_$in{'authkey'}";
 
      my $mail ;
-     unless($mail  = new Message({'file'=>$filename,'noxsympato'=>'noxsympato'})) {
+     unless($mail  = Message->new({'file'=>$filename,'noxsympato'=>'noxsympato'})) {
 	 report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'});
 	 wwslog('info','do_tag_topic_by_sender: cannot parse message %s',$filename);
 	 return undef;
@@ -16928,7 +16928,7 @@ sub do_blacklist {
 sub do_dump_scenario {
      wwslog('info', "do_dump_scenario($param->{'list'}), $in{'pname'}");
 
-     my $scenario = new Scenario ('function' => $in{'pname'},
+     my $scenario = Scenario->new('function' => $in{'pname'},
 				  'robot' => $robot,
 				  'name' => $list->{'admin'}{$in{'pname'}}{'name'},
 				  'directory' => $list->{'dir'});
@@ -17753,7 +17753,7 @@ sub new_d_read {
      # current list / current shared directory
      my $list_name = $list->{'name'};
 
-     my $document = new SharedDocument ($list, $in{'path'}, $param);
+     my $document = SharedDocument->new($list, $in{'path'}, $param);
 
      unless (defined $document) {
 	 report::reject_report_web('intern','new_document_failed',{'path'=>$in{'path'}},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
@@ -18076,7 +18076,7 @@ sub do_automatic_lists_request {
     wwslog('notice', 'Starting');
     # check authorization
     my $family;
-    unless ($family = new Family($in{'family'},$robot)) {
+    unless ($family = Family->new($in{'family'},$robot)) {
 	wwslog('err', "Failed to instantiate family %s. This family does not exist.",$in{'family'});
 	List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to instantiate family $in{'family'}. This family does not exist."]);
 	return undef;
@@ -18113,10 +18113,10 @@ sub do_automatic_lists {
 	$listname = $1;
     }
 
-    $list = new List ($listname, $robot);
+    $list = List->new($listname, $robot);
     unless (defined $list) {
 	## Automatic creation of a mailing list, based on a family
-	unless ($family = new Family($family_name,$robot)) {
+	unless ($family = Family->new($family_name,$robot)) {
 	    Log::do_log('err', "Failed to create the dynamic list $listname: family $family_name does not exist.");
 	    List::send_notify_to_listmaster('automatic_list_creation_failed',$robot,["Failed to create the dynamic list $listname: family $family_name does not exist."]);
 	    return undef;
@@ -18159,7 +18159,7 @@ sub prevent_visibility_bypass {
 
 sub purely_closed {
     my $action = shift;
-    my $scenario = new Scenario ('robot' => $robot, 
+    my $scenario = Scenario->new('robot' => $robot, 
 			      'directory' => $list->{'dir'},
 			      'file_path' => $list->{'admin'}{$action}{'file_path'},
 			      'options' => undef);

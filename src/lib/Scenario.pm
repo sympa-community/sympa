@@ -330,7 +330,7 @@ sub request_action {
 	}
 	
 	## Create Scenario object
-	$scenario = new Scenario ('robot' => $robot, 
+	$scenario = Scenario->new('robot' => $robot, 
 				  'directory' => $list->{'dir'},
 				  'file_path' => $scenario_path,
 				  'options' => $context->{'options'});
@@ -354,7 +354,7 @@ sub request_action {
 	if (defined $context->{'scenario'}) { 
 	    
 	    # loading of the structure
-	    $scenario = new Scenario ('robot' => $robot, 
+	    $scenario = Scenario->new('robot' => $robot, 
 				      'directory' => $list->{'dir'},
 				      'function' => $operations[$#operations],
 				      'name' => $context->{'scenario'},
@@ -364,7 +364,7 @@ sub request_action {
     }elsif ($context->{'topicname'}) {
 	## Topics
 
-	$scenario = new Scenario ('robot' => $robot, 
+	$scenario = Scenario->new('robot' => $robot, 
 				  'function' => 'topics_visibility',
 				  'name' => $List::list_of_topics{$robot}{$context->{'topicname'}}{'visibility'},
 				  'options' => $context->{'options'});
@@ -373,7 +373,7 @@ sub request_action {
 	## Global scenario (ie not related to a list) ; example : create_list
 	
 	my $p = Conf::get_robot_conf($robot, $operation);
-	$scenario = new Scenario ('robot' => $robot, 
+	$scenario = Scenario->new('robot' => $robot, 
 				  'function' => $operation,
 				  'name' => $p,
 				  'options' => $context->{'options'});
@@ -566,7 +566,7 @@ sub verify {
     
     my $list;
     if ($context->{'listname'} && ! defined $context->{'list_object'}) {
-        unless ( $context->{'list_object'} = new List ($context->{'listname'}, $robot) ){
+        unless ( $context->{'list_object'} = List->new($context->{'listname'}, $robot) ){
 	    Log::do_log('info',"Unable to create List object for list $context->{'listname'}");
 	    return undef ;
 	}
@@ -934,9 +934,9 @@ sub verify {
 
 	## The list is local or in another local robot
 	if ($args[0] =~ /\@/) {
-	    $list2 = new List ($args[0]);
+	    $list2 = List->new($args[0]);
 	}else {
-	    $list2 = new List ($args[0], $robot);
+	    $list2 = List->new($args[0], $robot);
 	}
 		
 	if (! $list2) {
@@ -1253,7 +1253,7 @@ sub search{
             return $persistent_cache{'named_filter'}{$filter_file}{$filter}{'value'};
         }
 	
-	my $ds = new SQLSource($sql_conf->{'sql_named_filter_query'});
+	my $ds = SQLSource->new($sql_conf->{'sql_named_filter_query'});
 	unless (defined $ds && $ds->connect() && $ds->ping) {
             Log::do_log('notice','Unable to connect to the SQL server %s:%d',$sql_conf->{'db_host'}, $sql_conf->{'db_port'});
             return undef;
@@ -1335,7 +1335,7 @@ sub search{
 	
 	my $ldap;
 	my $param = tools::dup_var(\%ldap_conf);
-	my $ds = new LDAPSource($param);
+	my $ds = LDAPSource->new($param);
 	    
 	unless (defined $ds && ($ldap = $ds->connect())) {
 	    Log::do_log('err',"Unable to connect to the LDAP server '%s'", $param->{'ldap_host'});

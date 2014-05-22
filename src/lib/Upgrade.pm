@@ -247,7 +247,7 @@ sub upgrade {
 		}
 		
 		## Force Sync_admin
-		$list = new List ($list->{'name'}, $list->{'domain'}, {'force_sync_admin' => 1});
+		$list = List->new($list->{'name'}, $list->{'domain'}, {'force_sync_admin' => 1});
 	    }
 	}
 
@@ -730,7 +730,7 @@ sub upgrade {
 	    my $valid_robot = '';
 	    my @valid_robot_candidates;
 	    foreach my $robot (@robots) {
-		if (my $list = new List($data->{'list_exclusion'},$robot)) {
+		if (my $list = List->new($data->{'list_exclusion'},$robot)) {
 		    if ($list->is_list_member($data->{'user_exclusion'})) {
 			push @valid_robot_candidates,$robot;
 		    }

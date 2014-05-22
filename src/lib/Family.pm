@@ -124,7 +124,7 @@ sub get_available_families {
 	## If we can create a Family object with what we find in the family
 	## directory, then it is worth being added to the list.
 	foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
-	    if (my $family = new Family($subdir, $robot)) { 
+	    if (my $family = Family->new($subdir, $robot)) { 
 		$families{$subdir} = 1;
 	    }
 	}
@@ -354,7 +354,7 @@ sub add_list {
 	
 	# get list data
 	open (FIC, '<:raw', "$self->{'dir'}/_new_list.xml");
-	my $config = new Config_XML(\*FIC);
+	my $config = Config_XML->new(\*FIC);
 	close FIC;
 	unless (defined $config->createHash()) {
 	    push @{$return->{'string_error'}}, "Error in representation data with these xml data";
@@ -538,7 +538,7 @@ sub modify_list {
 
     # get list data
     open (FIC, '<:raw', "$self->{'dir'}/_mod_list.xml");
-    my $config = new Config_XML(\*FIC);
+    my $config = Config_XML->new(\*FIC);
     close FIC;
     unless (defined $config->createHash()) {
 	push @{$return->{'string_error'}}, "Error in representation data with these xml data";
@@ -549,7 +549,7 @@ sub modify_list {
 
     #getting list
     my $list;
-    unless ($list = new List($hash_list->{'config'}{'listname'}, $self->{'robot'})) {
+    unless ($list = List->new($hash_list->{'config'}{'listname'}, $self->{'robot'})) {
 	push @{$return->{'string_error'}}, "The list $hash_list->{'config'}{'listname'} does not exist.";
 	return $return;
     }
@@ -914,12 +914,12 @@ sub instantiate {
     ## EACH FAMILY LIST
     foreach my $listname (@{$self->{'list_to_generate'}}) {
 
-	my $list = new List($listname, $self->{'robot'});
+	my $list = List->new($listname, $self->{'robot'});
 	
         ## get data from list XML file. Stored into $config (class Config_XML).
 	my $xml_fh;
 	open $xml_fh, '<:raw', "$self->{'dir'}"."/".$listname.".xml";
-	my $config = new Config_XML($xml_fh);
+	my $config = Config_XML->new($xml_fh);
 	close $xml_fh;
 	unless (defined $config->createHash()) {
 	    push (@{$self->{'errors'}{'create_hash'}},"$self->{'dir'}/$listname.xml");
@@ -1031,7 +1031,7 @@ sub instantiate {
     ## PREVIOUS LIST LEFT
     foreach my $l (keys %{$previous_family_lists}) {
 	my $list;
-	unless ($list = new List ($l,$self->{'robot'})) {
+	unless ($list = List->new($l,$self->{'robot'})) {
 	    push (@{$self->{'errors'}{'previous_list'}},$l);
 	    next;
 	}
@@ -1057,7 +1057,7 @@ sub instantiate {
 	    ## get data from list xml file
 	    my $xml_fh;
 	    open $xml_fh, '<:raw', "$list->{'dir'}/instance.xml";
-	    my $config = new Config_XML($xml_fh);
+	    my $config = Config_XML->new($xml_fh);
 	    close $xml_fh;
 	    unless (defined $config->createHash()) {
 		push (@{$self->{'errors'}{'create_hash'}},"$list->{'dir'}/instance.xml");
@@ -2884,7 +2884,7 @@ sub create_automatic_list {
 	Log::do_log('err', "Failed to add a dynamic list to the family %s : %s", $self->{'name'}, join(';', @{$details}));
 	return undef;
     }
-    my $list = new List ($listname, $self->{'robot'});
+    my $list = List->new($listname, $self->{'robot'});
     unless (defined $list) {
 	Log::do_log('err', 'sympa::DoFile() : dynamic list %s could not be created',$listname);
 	return undef;

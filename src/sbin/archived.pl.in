@@ -193,7 +193,7 @@ while (!$end) {
 	   ##my $arcpath = "$arcpath/$listadress/$yyyymm";
 	  
 	   my $list;
-	   unless ($list = new List ($listadress)) {
+	   unless ($list = List->new($listadress)) {
 	       Log::do_log('err',"remove : unknown list $listadress");
 	       next;
 	   }
@@ -234,7 +234,7 @@ while (!$end) {
 		   # if not list owner or list editor or listmaster,n check if sender of remove order is sender of the message to remove
 
 		   my $new_message;
-		   unless ($new_message = new Message({'file'=>"$arcpath/arctxt/$message",'noxsympato'=>'noxsympato'})) {
+		   unless ($new_message = Message->new({'file'=>"$arcpath/arctxt/$message",'noxsympato'=>'noxsympato'})) {
 		      Log::do_log('err',"unable to load new message $arcpath/arctxt/$message");
 		      next;
 		   }
@@ -415,7 +415,7 @@ sub rebuild {
 	       return undef;
     }
 
-    my $list = new List($listname, $hostname);
+    my $list = List->new($listname, $hostname);
     my $robot = $list->{'domain'};
     my $arcpath = Conf::get_robot_conf($robot,'arc_path');
     Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
@@ -580,7 +580,7 @@ sub mail2arc {
     my ($file, $listname, $robot, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
     my $newfile;
 
-    my $list = new List($listname, $robot);
+    my $list = List->new($listname, $robot);
     my $arcpath = Conf::get_robot_conf($list->{'domain'},'arc_path');
     unless (defined $list) {
 	Log::do_log('err', 'Unknown list %s@%s', $listname, $robot);

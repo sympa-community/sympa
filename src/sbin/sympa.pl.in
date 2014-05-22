@@ -419,7 +419,7 @@ if ($main::options{'dump'}) {
 	    exit;
 	} 
 
-	my $list = new List ($main::options{'dump'});
+	my $list = List->new($main::options{'dump'});
 	unless (defined $list) {
 	    Log::do_log('err','Unknown list %s', $main::options{'dump'});
 	    
@@ -530,7 +530,7 @@ if ($main::options{'dump'}) {
     } 
 
 
-    unless ($list = new List ($main::options{'import'})) {
+    unless ($list = List->new($main::options{'import'})) {
 	Log::fatal_err('Unknown list name %s', $main::options{'import'});
     }
 
@@ -597,7 +597,7 @@ if ($main::options{'dump'}) {
 }elsif ($main::options{'close_list'}) {
 
     my ($listname, $robotname) = split /\@/, $main::options{'close_list'};
-    my $list = new List ($listname, $robotname);
+    my $list = List->new($listname, $robotname);
 
     unless (defined $list) {
 	print STDERR "Incorrect list name $main::options{'close_list'}\n";
@@ -648,7 +648,7 @@ if ($main::options{'dump'}) {
 }elsif ($main::options{'purge_list'}) {
 
     my ($listname, $robotname) = split /\@/, $main::options{'purge_list'};
-    my $list = new List ($listname, $robotname);
+    my $list = List->new($listname, $robotname);
 
     unless (defined $list) {
 	print STDERR "Incorrect list name $main::options{'purge_list'}\n";
@@ -675,7 +675,7 @@ if ($main::options{'dump'}) {
   ## TODO A completer
   
     my ($listname, $robotname) = split /\@/, $main::options{'rename_list'};
-    my $list = new List ($listname, $robotname);
+    my $list = List->new($listname, $robotname);
 
     unless (defined $list) {
 	print STDERR "Incorrect list name $main::options{'rename_list'}\n";
@@ -744,7 +744,7 @@ if ($main::options{'dump'}) {
  	exit 1;	
     }
     
-    my $config = new Config_XML(\*INFILE);
+    my $config = Config_XML->new(\*INFILE);
     unless (defined $config->createHash()) {
  	print STDERR "Error in representation data with these xml data\n";
  	exit 1;
@@ -777,7 +777,7 @@ if ($main::options{'dump'}) {
  	exit 1;
     }
     my $family;
-    unless ($family = new Family($family_name,$robot)) {
+    unless ($family = Family->new($family_name,$robot)) {
  	print STDERR "The family $family_name does not exist, impossible instantiation\n";
  	exit 1;
     }
@@ -823,7 +823,7 @@ if ($main::options{'dump'}) {
     print STDOUT "\n************************************************************\n";
     
     my $family;
-    unless ($family = new Family($family_name,$robot)) {
+    unless ($family = Family->new($family_name,$robot)) {
  	print STDERR "The family $family_name does not exist, impossible to add a list\n";
  	exit 1;
     }
@@ -859,7 +859,7 @@ if ($main::options{'dump'}) {
     exit 0;
 }elsif ($main::options{'sync_include'}) {
 
-    my $list = new List ($main::options{'sync_include'});
+    my $list = List->new($main::options{'sync_include'});
 
     unless (defined $list) {
 	print STDERR "Incorrect list name $main::options{'sync_include'}\n";
@@ -915,7 +915,7 @@ if ($main::options{'dump'}) {
     Log::do_log('notice', "Upgrading share for list=%s robot=%s",$listname,$robot);
     
 
-    my $list = new List ($listname,$robot);
+    my $list = List->new($listname,$robot);
     
     unless (defined $list) {
 	printf STDERR "Incorrect list or domain name : %s %s\n",$listname,$robot;
@@ -946,7 +946,7 @@ if ($main::options{'dump'}) {
     if ($main::options{'list'}) {
 
 	Log::do_log('notice', "Loading list $main::options{'list'}...");
-	my $list = new List ($main::options{'list'}, '', {'reload_config' => 1});
+	my $list = List->new($main::options{'list'}, '', {'reload_config' => 1});
 	unless (defined $list) {
 	    print STDERR "Error : incorrect list name '$main::options{'list'}'\n";
 	    exit 1;
@@ -973,7 +973,7 @@ elsif ($main::options{'modify_list'}) {
     print STDOUT "\n************************************************************\n";
     
     my $family;
-    unless ($family = new Family($family_name,$robot)) {
+    unless ($family = Family->new($family_name,$robot)) {
  	print STDERR "The family $family_name does not exist, impossible to modify the list.\n";
  	exit 1;
     }
@@ -1020,7 +1020,7 @@ elsif ($main::options{'close_family'}) {
  	exit 1;
     }
     my $family;
-    unless ($family = new Family($family_name,$robot)) {
+    unless ($family = Family->new($family_name,$robot)) {
  	print STDERR "The family $family_name does not exist, impossible family closure\n";
  	exit 1;
     }
@@ -1042,7 +1042,7 @@ elsif ($main::options{'sync_list_db'}) {
     }
     my $listname = $main::options{'list'} || '';
     if (length($listname) > 1) {
-	my $list = new List ($listname); 
+	my $list = List->new($listname); 
 	unless (defined $list) {
 	    print STDOUT "\nList '$listname' does not exist. \n";
 	    exit 1;
@@ -1184,7 +1184,7 @@ while (!$signal) {
 
 	# (sa) le terme "(\@$Conf::Conf{'host'})?" est inutile
 	#unless ($t_listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$Conf::Conf{'email'})(\@$Conf::Conf{'host'})?$/i) {
-	#    $list = new List ($t_listname);
+	#    $list = List->new($t_listname);
 	#}
 
 	my $email = Conf::get_robot_conf($robot, 'email');	
@@ -1199,7 +1199,7 @@ while (!$signal) {
 	}elsif ($t_listname =~ /^(sympa|$email)(\@$Conf::Conf{'host'})?$/i) {	
 	    $priority = Conf::get_robot_conf($robot,'sympa_priority');
 	}else {
-	    my $list =  new List ($t_listname, $t_robot, {'just_try' => 1});
+	    my $list =  List->new($t_listname, $t_robot, {'just_try' => 1});
 	    if ($list) {
 		$priority = $list->{'admin'}{'priority'};
 	    }else {
@@ -1341,7 +1341,7 @@ sub DoFile {
     my ($listname, $robot);
     my $status;
     
-    my $message = new Message({'file'=>$file});
+    my $message = Message->new({'file'=>$file});
 
     unless (defined $message) {
 	Log::do_log('err', 'Unable to create Message object %s', $file);
@@ -1374,7 +1374,7 @@ sub DoFile {
 	# message contain a valid checksum, it comes from wwsympa, so
         #  mail it without other proceding unless it is for a valid list
 	return (DoSendMessage ($message,$robot)) unless(Conf::valid_robot($robot, {'just_try' => 1})) ;
-	return (DoSendMessage ($message,$robot)) unless( new List ($listname, $robot, {'just_try' => 1}));	    	    
+	return (DoSendMessage ($message,$robot)) unless( List->new($listname, $robot, {'just_try' => 1}));	    	    
     }
 
     # setting log_level using conf unless it is set by calling option
@@ -1432,7 +1432,7 @@ sub DoFile {
 	$name = $listname;
 	$list_address = $name.'@'.$host;
     }else {
-	$list = new List ($listname, $robot);
+	$list = List->new($listname, $robot);
 	unless (defined $list) {
 	    unless ($dyn_list_family) {
 		Log::do_log('err', 'sympa::DoFile() : list %s does not exist',$listname);
@@ -1443,7 +1443,7 @@ sub DoFile {
 
 	    ## Automatic creation of a mailing list, based on a family
             my $dyn_family;
-            unless ($dyn_family = new Family($dyn_list_family,$robot)) {
+            unless ($dyn_family = Family->new($dyn_list_family,$robot)) {
                 Log::do_log('err', "Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list.");
 		List::send_notify_to_listmaster(
 		    'automatic_list_creation_failed',
@@ -1767,7 +1767,7 @@ sub DoForward {
 	$host = Conf::get_robot_conf($robot, 'host');
 	$priority = 0;
     }else {
-	unless ($list = new List ($name, $robot)) {
+	unless ($list = List->new($name, $robot)) {
 	    Log::do_log('notice', "Message for %s-%s ignored, unknown list %s (Message-id: %s)",$name, $function, $name,$messageid);
 	    my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
 	    unless (List::send_global_file('list_unknown', $sender, $robot,
@@ -1905,7 +1905,7 @@ sub DoMessage{
 
 
 	    ## Search for the list
-	    my $list = new List ($listname, $robot);
+	    my $list = List->new($listname, $robot);
 	    
 	    ## List unknown
 	    unless ($list) {
@@ -2352,7 +2352,7 @@ sub SendDigest{
  	my $filename = $Conf::Conf{'queuedigest'}.'/'.$listaddress;
 	
  	my ($listname, $robot) = split /\@/, $listaddress;
- 	my $list = new List ($listname, $robot);
+ 	my $list = List->new($listname, $robot);
 	unless ($list) {
 	    Log::do_log('info', 'Unknown list %s, (robot %s), deleting digest file %s', $filename, $listname, $robot);
 	    Log::db_log({'robot' => $robot,'list' => $list->{'name'},'action' => 'SendDigest','parameters' => "$filename",'target_email' => '','msg_id' => '','status' => 'error','error_type' => 'unknown_list','user_email' => '','client' => $ip,'daemon' => $daemon_name});

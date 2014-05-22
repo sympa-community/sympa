@@ -296,7 +296,7 @@ sub stats {
 
     Log::do_log('debug', 'Commands::stats(%s, %s, %s, %s)', $listname, $robot, $sign_mod, $message);
 
-    my $list = new List ($listname, $robot);
+    my $list = List->new($listname, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $listname},$cmd_line);
 	Log::do_log('info', 'STATS %s from %s refused, unknown list for robot %s', $listname, $sender,$robot);
@@ -376,7 +376,7 @@ sub getfile {
 
     Log::do_log('debug', 'Commands::getfile(%s, %s, %s)', $which, $file, $robot);
 
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'GET %s %s from %s refused, list unknown for robot %s', $which, $file, $sender, $robot);
@@ -437,7 +437,7 @@ sub last {
 
     Log::do_log('debug', 'Commands::last(%s, %s)', $which, $robot);
 
-    my $list = new List ($which,$robot);
+    my $list = List->new($which,$robot);
     unless ($list)  {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'LAST %s from %s refused, list unknown for robot %s', $which, $sender, $robot);
@@ -490,7 +490,7 @@ sub index {
 
     Log::do_log('debug', 'Commands::index(%s) robot (%s)',$which,$robot);
 
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'INDEX %s from %s refused, list unknown for robot %s', $which, $sender,$robot);
@@ -547,7 +547,7 @@ sub review {
     my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
     my $user;
-    my $list = new List ($listname, $robot);
+    my $list = List->new($listname, $robot);
 
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $listname},$cmd_line);
@@ -712,7 +712,7 @@ sub subscribe {
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'SUB %s from %s refused, unknown list for robot %s', $which,$sender,$robot);
@@ -897,7 +897,7 @@ sub info {
 
     my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
-    my $list = new List ($listname, $robot);
+    my $list = List->new($listname, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $listname},$cmd_line);
 	Log::do_log('info', 'INFO %s from %s refused, unknown list for robot %s', $listname,$sender,$robot);
@@ -951,7 +951,7 @@ sub info {
 
 	## Set title in the current language
 	foreach my $p ('subscribe','unsubscribe','send','review') {
-	  my $scenario = new Scenario ('robot' => $robot,
+	  my $scenario = Scenario->new('robot' => $robot,
 				       'directory' => $list->{'dir'},
 				       'file_path' => $list->{'admin'}{$p}{'file_path'}
 				      );
@@ -1061,7 +1061,7 @@ sub signoff {
 	return ($success);
     }
 
-    $list = new List ($which, $robot);
+    $list = List->new($which, $robot);
     
     ## Is this list defined
     unless ($list) {
@@ -1217,7 +1217,7 @@ sub add {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'ADD %s %s from %s refused, unknown list for robot %s', $which, $email,$sender,$robot);
@@ -1363,7 +1363,7 @@ sub invite {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'INVITE %s %s from %s refused, unknown list for robot', $which, $email,$sender,$robot);
@@ -1525,7 +1525,7 @@ sub remind {
     my $list;
 
     unless ($listname eq '*') {
-	$list = new List ($listname, $robot);
+	$list = List->new($listname, $robot);
 	unless ($list) {
 	    report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	    Log::do_log('info', 'REMIND %s from %s refused, unknown list for robot %s', $which, $sender,$robot);
@@ -1752,7 +1752,7 @@ sub del {
     
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
 	Log::do_log('info', 'DEL %s %s from %s refused, unknown list for robot %s', $which, $who,$sender,$robot);
@@ -1933,7 +1933,7 @@ sub set {
 
     ## Load the list if not already done, and reject
     ## if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
 
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $which},$cmd_line);
@@ -2027,7 +2027,7 @@ sub distribute {
     my $start_time=time; # get the time at the beginning
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
     unless ($list) {
 	Log::do_log('info', 'DISTRIBUTE %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
 	report::reject_report_msg('user','list_unknown',$sender,{'listname' => $which},$robot,'','');
@@ -2058,7 +2058,7 @@ sub distribute {
     }
 
     ## Open and parse the file
-    my $message = new Message({'file'=>$file});
+    my $message = Message->new({'file'=>$file});
     unless (defined $message) {
 	Log::do_log('err', 'Commands::distribute(): Unable to create Message object %s', $file);
 	report::reject_report_msg('user','unfound_message',$sender,{'listname' => $name,'key'=> $key},$robot,'',$list);
@@ -2166,7 +2166,7 @@ sub confirm {
 	return 'wrong_auth';
     }
 
-    my $message = new Message ({'file'=>$file});
+    my $message = Message->new({'file'=>$file});
     unless (defined $message) {
 	Log::do_log('err', 'Commands::confirm(): Unable to create Message object %s', $file);
 	report::reject_report_msg('user','wrong_format_message',$sender,{'key'=> $key},$robot,'','');
@@ -2325,7 +2325,7 @@ sub reject {
     my $modqueue = Conf::get_robot_conf($robot,'queuemod');
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = new List ($which, $robot);
+    my $list = List->new($which, $robot);
 
     unless ($list) {
 	Log::do_log('info', 'REJECT %s %s from %s refused, unknown list for robot %s', $which, $key, $sender,$robot);
@@ -2432,7 +2432,7 @@ sub modindex {
     
     $name =~ y/A-Z/a-z/;
 
-    my $list = new List ($name, $robot);
+    my $list = List->new($name, $robot);
     unless ($list) {
 	report::reject_report_cmd('user','no_existing_list',{'listname' => $name},$cmd_line);	
 	Log::do_log('info', 'MODINDEX %s from %s refused, unknown list for robot %s', $name, $sender, $robot);
@@ -2463,7 +2463,7 @@ sub modindex {
 	next if (-d "$modqueue/$i");
 
 	$i=~/\_(.+)$/;
-	$curlist = new List ($`,$robot);
+	$curlist = List->new($`,$robot);
 	if ($curlist) {
 	    # list loaded    
 	    if (exists $curlist->{'admin'}{'clean_delay_queuemod'}){
@@ -2551,7 +2551,7 @@ sub which {
     ## Subscriptions
     my $data;
     foreach my $list (List::get_which ($sender,$robot,'member')){
-        ## wwsympa :  my $list = new List ($l);
+        ## wwsympa :  my $list = List->new($l);
         ##            next unless (defined $list);
 	$listname = $list->{'name'};
 

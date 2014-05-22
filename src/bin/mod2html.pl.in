@@ -54,7 +54,7 @@ foreach my $msg ( sort grep(!/^\./, readdir SPOOL )) {
     print "Creating HTML version for $Conf::Conf{'queuemod'}/$msg\n";
     
     my ($listname, $listrobot) = split /\@/, $listaddress;
-    my $self = new List ($listname, $listrobot);
+    my $self = List->new($listname, $listrobot);
     
     my( @rcpt);
     my $admin = $self->{'admin'};

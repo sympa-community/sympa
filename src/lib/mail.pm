@@ -306,7 +306,7 @@ sub mail_file {
     
     return $message_as_string if($return_message_as_string);
 
-    my $message = new Message ({'messageasstring'=>$message_as_string,'noxsympato'=>'noxsympato'});
+    my $message = Message->new({'messageasstring'=>$message_as_string,'noxsympato'=>'noxsympato'});
 
     ## SENDING
     return undef unless (defined sending('message' => $message,

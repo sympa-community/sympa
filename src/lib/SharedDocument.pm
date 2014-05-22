@@ -218,7 +218,7 @@ sub new {
 
 	foreach my $d (@{$dir}) {
 
-	    my $sub_document = new SharedDocument ($list, $document->{'path'}.'/'.$d, $param);	    
+	    my $sub_document = SharedDocument->new($list, $document->{'path'}.'/'.$d, $param);	    
 	    push @{$document->{'subdir'}}, $sub_document;
 	}
     }

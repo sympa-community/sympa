@@ -1221,8 +1221,8 @@ sub get_family {
     $family_name = $self->{'admin'}{'family_name'};
 	    
     my $family;
-    unless ($family = new Family($family_name,$robot) ) {
-	Log::do_log('err', 'List::get_family(%s) : new Family(%s) impossible', $self->{'name'},$family_name);
+    unless ($family = Family->new($family_name,$robot) ) {
+	Log::do_log('err', 'List::get_family(%s) : Family->new(%s) impossible', $self->{'name'},$family_name);
 	return undef;
     }
   	
@@ -2523,7 +2523,7 @@ sub send_msg {
 	    my $notice_msg = $saved_msg->dup;
 	    $notice_msg->bodyhandle(undef);    
 	    $notice_msg->parts([]);
-	    $new_message = new Message({'mimeentity' => $notice_msg});
+	    $new_message = Message->new({'mimeentity' => $notice_msg});
 
 	##Prepare message for txt reception mode
 	}elsif($array_name eq 'tabrcpt_txt'){
@@ -2537,7 +2537,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$txt_msg = $new_msg;
 	    }
-	    $new_message = new Message({'mimeentity' => $txt_msg});
+	    $new_message = Message->new({'mimeentity' => $txt_msg});
 
 	##Prepare message for html reception mode
 	}elsif($array_name eq 'tabrcpt_html'){
@@ -2550,7 +2550,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$html_msg = $new_msg;
 	    }
-	    $new_message = new Message({'mimeentity' => $html_msg});
+	    $new_message = Message->new({'mimeentity' => $html_msg});
 	    
 	##Prepare message for urlize reception mode
 	}elsif($array_name eq 'tabrcpt_url'){
@@ -2595,7 +2595,7 @@ sub send_msg {
 	    if (defined $new_msg) {
 		$url_msg = $new_msg;
 	    } 
-	    $new_message = new Message({'mimeentity' => $url_msg});
+	    $new_message = Message->new({'mimeentity' => $url_msg});
 	}else {
 	    Log::do_log('err', "Unknown variable/reception mode $array_name");
 	    return undef;
@@ -3057,7 +3057,7 @@ sub archive_send_last {
    return unless ($self->is_archived());
    my $dir = $self->{'dir'}.'/archives' ;
 
-   my $mail = new Message({'file' => "$dir/last_message",'noxsympato'=>'noxsympato'});
+   my $mail = Message->new({'file' => "$dir/last_message",'noxsympato'=>'noxsympato'});
    unless (defined $mail) {
        Log::do_log('err', 'Unable to create Message object %s', "$dir/last_message");
        return undef;
@@ -3212,7 +3212,7 @@ sub send_notify_to_listmaster {
 	if($operation eq 'automatic_bounce_management') {
 		## Automatic action done on bouncing adresses
 		delete $data->{'alarm'};
-		my $list = new List ($data->{'list'}{'name'}, $robot);
+		my $list = List->new($data->{'list'}{'name'}, $robot);
 		unless(defined $list) {
 			Log::do_log('err','Parameter %s is not a valid list', $data->{'list'}{'name'});
 			return undef;
@@ -3673,13 +3673,14 @@ sub add_parts {
 	    ## text/plain header
 	    } else {
 		$msg->make_multipart unless $msg->is_multipart;
-		my $header_part = build MIME::Entity
+		my $header_part = MIME::Entity->build(
 		    Path       => $header,
 		    Type       => "text/plain",
 		    Filename   => undef,
 		    'X-Mailer' => undef,
 		    Encoding   => "8bit",
-		    Charset    => "UTF-8";
+		    Charset    => "UTF-8"
+                );
 		$msg->add_part($header_part, 0);
 	    }
 	}
@@ -4219,7 +4220,7 @@ sub get_exclusion {
     my  $robot= shift;
     Log::do_log('debug2', 'List::get_exclusion(%s@%s)', $name,$robot);
 
-    my $list = new List($name, $robot);
+    my $list = List->new($name, $robot);
     unless (defined $list) {
 	Log::do_log('err','List %s@%s does not exist', $name,$robot);
 	return undef;
@@ -6090,7 +6091,7 @@ sub load_scenario_list {
 	    next if (defined $list_of_scenario{$name});
 	    next if (defined $skip_scenario{$name});
 
-	    my $scenario = new Scenario ('robot' => $robot,
+	    my $scenario = Scenario->new('robot' => $robot,
 					 'directory' => $directory,
 					 'function' => $action,
 					 'name' => $name);
@@ -6380,9 +6381,9 @@ sub _include_users_list {
     
     ## The included list is local or in another local robot
     if ($includelistname =~ /\@/) {
-	$includelist = new List ($includelistname);
+	$includelist = List->new($includelistname);
     }else {
-	$includelist = new List ($includelistname, $robot);
+	$includelist = List->new($includelistname, $robot);
     }
 
     unless ($includelist) {
@@ -6640,7 +6641,7 @@ sub _include_users_voot_group {
 
 	my $id = Datasource::_get_datasource_id($param);
 	
-	my $consumer = new VOOTConsumer(
+	my $consumer = VOOTConsumer->new(
 		user => $param->{'user'},
 		provider => $param->{'provider'}
 	);
@@ -7220,7 +7221,7 @@ sub _load_list_members_from_include {
 		}
 	    }
 	    elsif ($type eq 'include_sql_query') {
-			my $source = new SQLSource($incl);
+			my $source = SQLSource->new($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
 				Log::do_log('debug', 'is_new %d, syncing', $source_is_new);
 				$included = _include_users_sql(\%users, $source_id, $source, $admin->{'default_user_options'}, 'untied', $admin->{'sql_fetch_timeout'});
@@ -7238,7 +7239,7 @@ sub _load_list_members_from_include {
 				$included = 0;
 			}
 	    }elsif ($type eq 'include_ldap_query') {
-			my $source = new LDAPSource($incl);
+			my $source = LDAPSource->new($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
 				$included = _include_users_ldap(\%users, $source_id, $source, $admin->{'default_user_options'});
 				unless (defined $included){
@@ -7255,7 +7256,7 @@ sub _load_list_members_from_include {
 				$included = 0;
 			}
 		}elsif ($type eq 'include_ldap_2level_query') {
-			my $source = new LDAPSource($incl);
+			my $source = LDAPSource->new($incl);
 			if ($source->is_allowed_to_sync() || $source_is_new) {
 				my $result = _include_users_ldap_2level(\%users,$source_id, $source, $admin->{'default_user_options'});
 				if (defined $result) {
@@ -7399,13 +7400,13 @@ sub _load_list_admin_from_include {
 		      , admin_only    => 1
 		      );
 		} elsif ($type eq 'include_sql_query') {
-		    my $source = new SQLSource($incl);
+		    my $source = SQLSource->new($incl);
 		    $included = _include_users_sql(\%admin_users, $incl,$source,\%option, 'untied', $list_admin->{'sql_fetch_timeout'}); 
 		}elsif ($type eq 'include_ldap_query') {
-		    my $source = new LDAPSource($incl);
+		    my $source = LDAPSource->new($incl);
 		    $included = _include_users_ldap(\%admin_users, $incl,$source,\%option); 
 		}elsif ($type eq 'include_ldap_2level_query') {
-		    my $source = new LDAPSource($incl);
+		    my $source = LDAPSource->new($incl);
 		    my $result = _include_users_ldap_2level(\%admin_users, $incl,$source,\%option); 
 		    if (defined $result) {
 			$included = $result->{'total'};
@@ -7676,9 +7677,9 @@ sub sync_include_ca {
 			my $source = undef;
 			my $srcca = undef;
 			if ($type eq 'include_sql_ca') {
-				$source = new SQLSource($incl);
+				$source = SQLSource->new($incl);
 			}elsif(($type eq 'include_ldap_ca') or ($type eq 'include_ldap_2level_ca')) {
-				$source = new LDAPSource($incl);
+				$source = LDAPSource->new($incl);
 			}
 			next unless(defined($source));
 			if($source->is_allowed_to_sync()) {
@@ -8586,7 +8587,7 @@ sub get_lists {
 	    foreach my $l (@files) {
 		next if (($l =~ /^\./o) || (! -d "$robot_dir/$l") || (! -f "$robot_dir/$l/config"));
 		$options->{'optional_sync_admin'} = 1;
-		my $list = new List ($l, $robot, $options);
+		my $list = List->new($l, $robot, $options);
 		
 		next unless (defined $list);
 
@@ -9233,7 +9234,7 @@ sub _load_list_param {
     ## Scenario
     if ($p->{'scenario'}) {
 	$value =~ y/,/_/;
-	my $scenario = new Scenario ('function' => $p->{'scenario'},
+	my $scenario = Scenario->new('function' => $p->{'scenario'},
 				     'robot' => $robot, 
 				     'name' => $value, 
 				     'directory' => $directory);

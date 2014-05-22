@@ -44,7 +44,7 @@ sub generic_set_cookie {
 	$cookie_param{'-domain'} = '';
     }
 
-    my $cookie = new CGI::Cookie(%cookie_param);
+    my $cookie = CGI::Cookie->new(%cookie_param);
 
     ## Send cookie to the client
     printf "Set-Cookie:  %s\n", $cookie->as_string;
@@ -124,7 +124,7 @@ sub set_cookie_extern {
 	$http_domain="";
     }
 
-	$cookie = new CGI::Cookie (-name    => 'sympa_altemails',
+	$cookie = CGI::Cookie->new(-name    => 'sympa_altemails',
 	                           -value   => $value,
 				   -expires => '+1y',
 				   -domain  => $http_domain,

@@ -764,7 +764,7 @@ sub get_dkim_parameters {
     my $data ; my $keyfile ;
     if ($listname) {
 	# fetch dkim parameter in list context
-	my $list = new List ($listname,$robot);
+	my $list = List->new($listname,$robot);
 	unless ($list){
 	    Log::do_log('err',"Could not load list %s@%s",$listname, $robot);
 	    return undef;
@@ -964,7 +964,7 @@ sub dkim_sign {
 	Log::do_log('err', 'Cannot sign (DKIM) message');
 	return ($msg_as_string); 
     }
-    my $message = new Message({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
+    my $message = Message->new({'file'=>$temporary_file,'noxsympato'=>'noxsympato'});
     unless ($message){
 	Log::do_log('err',"unable to load $temporary_file as a message objet");
 	return ($msg_as_string); 
@@ -990,7 +990,7 @@ sub smime_sign {
 
     Log::do_log('debug2', 'tools::smime_sign (%s,%s)',$in_msg,$list);
 
-    my $self = new List($list, $robot);
+    my $self = List->new($list, $robot);
     my($cert, $key) = smime_find_keys($self->{dir}, 'sign');
     my $temporary_file = $Conf::Conf{'tmpdir'}."/".$self->get_list_id().".".$$ ;    
     my $temporary_pwd = $Conf::Conf{'tmpdir'}.'/pass.'.$$;
@@ -1271,7 +1271,7 @@ sub smime_encrypt {
 
     Log::do_log('debug2', 'tools::smime_encrypt( %s, %s', $email, $list);
     if ($list eq 'list') {
-	my $self = new List($email);
+	my $self = List->new($email);
 	($usercert, $dummy) = smime_find_keys($self->{dir}, 'encrypt');
     }else{
 	my $base = "$Conf::Conf{'ssl_cert_dir'}/".tools::escape_chars($email);
@@ -4001,7 +4001,7 @@ sub addrencode {
 sub create_html_part_from_web_page {
     my $param = shift;
     Log::do_log('debug',"Creating HTML MIME part. Source: %s",$param->{'source'});
-    my $mailHTML = new MIME::Lite::HTML(
+    my $mailHTML = MIME::Lite::HTML->new(
 					{
 					    From => $param->{'From'},
 					    To => $param->{'To'},

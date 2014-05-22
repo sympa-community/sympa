@@ -294,7 +294,7 @@ while (!$end) {
 
 	    if ($unique =~ /[wr]/) { # in this case the bounce result from a remind or a welcome message ;so try to remove the subscriber
 		Log::do_log('debug', "VERP for a service message, try to remove the subscriber");
-		my $list = new List ($listname, $robot);		
+		my $list = List->new($listname, $robot);		
 		unless($list) {
 		    Log::do_log('notice','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
 		    ignore_bounce({'file' => $file,
@@ -342,7 +342,7 @@ while (!$end) {
 	    }# close VERP + remind or welcome block
 	}# close VERP in use block
 
-        my $list = new List ($listname, $robot);
+        my $list = List->new($listname, $robot);
         unless($list) {
             Log::do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
             ignore_bounce({'file' => $file,
@@ -630,7 +630,7 @@ while (!$end) {
 			$listname =~ /(.*)\@(.*)/;
 			$listname = $1;
 			$robot = $2;
-			my $list = new List ($listname, $robot);
+			my $list = List->new($listname, $robot);
 			unless($list) {
 			    Log::do_log('err','Skipping Feedback Report for unknown list %s@%s',$file,$listname,$robot);
 			    ignore_bounce({'file' => $file,
@@ -699,7 +699,7 @@ while (!$end) {
 
 	# Fin section feedback report
 	# else (not welcome or remind) 
-	$list = new List ($listname, $robot);
+	$list = List->new($listname, $robot);
 	if (! $list) {
  	    Log::do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
 	    ignore_bounce({'file' => $file,

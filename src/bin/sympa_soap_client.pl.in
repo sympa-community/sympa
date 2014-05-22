@@ -139,7 +139,7 @@ sub play_soap_as_trusted{
     my $proxy_vars=shift;
     my $service_parameters=shift;
 
-    my $soap = new SOAP::Lite();    
+    my $soap = SOAP::Lite->new();    
     $soap->uri('urn:sympasoap');
     $soap->proxy($soap_url);
 
@@ -163,7 +163,7 @@ sub get_email {
     my ($service, $reponse, @ret, $val, %fault);
 
     ## Cookies management
-    # my $uri = new URI($soap_url);
+    # my $uri = URI->new($soap_url);
     
 #    my $cookies = HTTP::Cookies->new(ignore_discard => 1,
 #				     file => '/tmp/my_cookies' );
@@ -171,7 +171,7 @@ sub get_email {
     printf "cookie : %s\n", $cookie;
 
      
-    my $soap = new SOAP::Lite();
+    my $soap = SOAP::Lite->new();
     #$soap->on_debug(sub{print@_});
     $soap->uri('urn:sympasoap');
      $soap->proxy($soap_url);
@@ -197,7 +197,7 @@ sub play_soap{
   my ($reponse, @ret, $val, %fault);
 
     ## Cookies management
-    # my $uri = new URI($soap_url);
+    # my $uri = URI->new($soap_url);
     
     my $cookies = HTTP::Cookies->new(ignore_discard => 1,
 				     file => '/tmp/my_cookies' );
@@ -216,7 +216,7 @@ sub play_soap{
     #$reponse = $service->login($user_email,$user_password);
     #my $soap = SOAP::Lite->service($soap_url);
      
-    my $soap = new SOAP::Lite() || die;
+    my $soap = SOAP::Lite->new() || die;
     #$soap->on_debug(sub{print@_});
     $soap->uri('urn:sympasoap');
     $soap->proxy($soap_url,

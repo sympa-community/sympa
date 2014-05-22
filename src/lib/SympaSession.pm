@@ -85,8 +85,8 @@ sub new {
 	    return undef;
 	}
 	if ($status eq 'not_found') {
-	    Log::do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a new session (may ne a fake cookie)
-	    return (new SympaSession ($robot));
+	    Log::do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a session->new(may ne a fake cookie)
+	    return (SympaSession->new($robot));
 	}
     }else{
 	# create a new session context
@@ -595,7 +595,7 @@ sub get_session_cookie {
     my $http_cookie = shift;
 
     if ($http_cookie =~/\S+/g) {
-	my %cookies = parse CGI::Cookie($http_cookie);
+	my %cookies = CGI::Cookie->parse($http_cookie);
 	foreach (keys %cookies) {
 	    my $cookie = $cookies{$_};
 	    next unless ($cookie->name eq 'sympa_session');
@@ -629,7 +629,7 @@ sub set_cookie {
 
     my $cookie;
     if ($expires =~ /session/i) {
-	$cookie = new CGI::Cookie (-name    => 'sympa_session',
+	$cookie = CGI::Cookie->new(-name    => 'sympa_session',
 				   -value   => $value,
 				   -domain  => $http_domain,
 				   -path    => '/',
@@ -637,7 +637,7 @@ sub set_cookie {
 				   -httponly => 1 
 				   );
     }else {
-	$cookie = new CGI::Cookie (-name    => 'sympa_session',
+	$cookie = CGI::Cookie->new(-name    => 'sympa_session',
 				   -value   => $value,
 				   -expires => $expiration,
 				   -domain  => $http_domain,

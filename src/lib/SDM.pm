@@ -146,7 +146,7 @@ sub connect_sympa_database {
 	    ($option ne 'just_try' && ! $ENV{'GATEWAY_INTERFACE'}),
 	'warn' => 1,
     };
-    unless ($db_source = new SQLSource($db_conf)) {
+    unless ($db_source = SQLSource->new($db_conf)) {
 	Log::do_log('err', 'Unable to create SQLSource object');
     	return undef;
     }
