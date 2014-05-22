@@ -58,6 +58,7 @@ MSGMERGE_UPDATE = @MSGMERGE@ --update
 MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
+ADD_LANG = ../../po/sympa/add-lang.pl
 
 POFILES = @POFILES@
 GMOFILES = @GMOFILES@
@@ -83,10 +84,16 @@ CATALOGS = @CATALOGS@
 	$(MSGFMT) -c -o t-$@ $< && mv t-$@ $@
 
 .po.gmo:
+	@test -x $(ADD_LANG) || chmod u+x $(ADD_LANG)
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) --statistics -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
+	cd $(srcdir) && \
+	$(ADD_LANG) --lang=$${lang} $${lang}.po > $${lang}.lpo && \
+	rm -f $${lang}.gmo && \
+	$(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.lpo && \
+	rm -f $${lang}.lpo && \
+	mv t-$${lang}.gmo $${lang}.gmo
 
 .sin.sed:
 	sed -e '/^#/d' $< > t-$@
@@ -128,6 +135,7 @@ stamp-po: $(srcdir)/$(DOMAIN).pot
 # This target rebuilds $(DOMAIN).pot; it is an expensive operation.
 # Note that $(DOMAIN).pot is not touched if it doesn't need to be changed.
 $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
+	test -x $(XGETTEXT) || chmod u+x $(XGETTEXT) ; \
 	cd ../..; \
 	po/sympa/$(XGETTEXT) -u \
 	  -o po/web_help/$(DOMAIN).pot \

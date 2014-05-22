@@ -61,12 +61,13 @@ MSGEN = msgen
 MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
+ADD_LANG = ./add-lang.pl
 
 POFILES = @POFILES@
 GMOFILES = @GMOFILES@
 UPDATEPOFILES = @UPDATEPOFILES@
 DUMMYPOFILES = @DUMMYPOFILES@
-DISTFILES.common = Makefile.in.in remove-potcdate.sin \
+DISTFILES.common = Makefile.in.in remove-potcdate.sin add-lang.pl \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) Makevars POTFILES.in \
 $(POFILES) $(GMOFILES) \
@@ -86,10 +87,16 @@ CATALOGS = @CATALOGS@
 	$(MSGFMT) -o t-$@ $< && mv t-$@ $@
 
 .po.gmo:
+	@test -x $(ADD_LANG) || chmod u+x $(ADD_LANG)
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) --statistics -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
+	cd $(srcdir) && \
+	$(ADD_LANG) --lang=$${lang} $${lang}.po > $${lang}.lpo && \
+	rm -f $${lang}.gmo && /
+	$(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.po && \
+	rm -f $${lang}.lpo && \
+	mv t-$${lang}.gmo $${lang}.gmo
 
 .sin.sed:
 	sed -e '/^#/d' $< > t-$@
@@ -391,7 +398,7 @@ update-po: Makefile
 	if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
 	  rm -f $$tmpdir/$$lang.new.po; \
 	else \
-          $(MSGCAT) --use-first $$lang -o $$tmpdir/$$lang.po $$tmpdir/$$lang.new.po $$lang.po; \
+          $(MSGCAT) --use-first -o $$tmpdir/$$lang.po $$tmpdir/$$lang.new.po $$lang.po; \
 	fi; \
         rm -f $$tmpdir/$$lang.new.po;
 
@@ -440,13 +447,13 @@ clean-po:
 	        rm -f $$tmpdir/$$lang.new.po; \
 	      else \
                 $(MSGEN) -o $$tmpdir/$$lang.new.po $(DOMAIN).pot; \
-                $(MSGCAT) --use-first $$lang -o $$tmpdir/$$lang.new.po $$lang.po $$tmpdir/$$lang.new.po; \
+                $(MSGCAT) --use-first -o $$tmpdir/$$lang.new.po $$lang.po $$tmpdir/$$lang.new.po; \
 	      fi; \
 	    else \
 	      echo "Could not gather not fuzzy translated strings in en.po" 1>&2; \
 	    fi;\
           else \
-	    if $(MSGMERGE) $$lang -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
+	    if $(MSGMERGE) -o $$tmpdir/$$lang.new.po $$lang.po $(DOMAIN).pot; then \
 	      if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
 	        rm -f $$tmpdir/$$lang.new.po; \
 	      else \
