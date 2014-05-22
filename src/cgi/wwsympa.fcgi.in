@@ -42,41 +42,35 @@ This fcgi script completely handles all aspects of the Sympa web interface
 
 =cut 
 
+use strict;
+##use warnings;
 use lib '--modulesdir--';
 
-use Getopt::Long;
-use Archive::Zip;
+use Archive::Zip qw();
 use DateTime::Format::Mail;
-  
-use strict 'vars';
+use MIME::Parser;
 use Time::Local;
 use Data::Dumper;
 
-## Sympa API
-use List;
-use mail;
+use admin;
+use Auth;
 use Conf;
 use confdef;
-use Commands;
-use Sympa::Language;
-use Log;
-use Auth;
-use admin;
-use SharedDocument;
-use report;
-use SympaSession;
-use Log;
-use tools;
 use Sympa::Constants;
-use wwslib;
 use cookielib;
+use List;
+use Log;
+use Sympa::Language;
+use LDAPSource;
+use mail;
+use Marc::Search;
+use report;
+use SharedDocument;
+use SympaSession;
+use tools;
 use tt2;
 use tracking;
-
-#use open ':utf8'; ## Default is to consider files utf8 
-
-use Mail::Header;
-use Mail::Address;
+use wwslib;
 
 my $crypt_openssl_x509_ok;
 BEGIN {
@@ -1443,7 +1437,8 @@ Log::do_log(info => "WWSympa started, process $$");
 
 	     ## Execute the action ## 
 	     if (defined $action) {
-	       $action = &{$comm{$action}}();
+                no strict 'refs';
+	       $action = $comm{$action}->();
 	     }
 	     
 	     unless (defined $action) {
@@ -5524,7 +5519,7 @@ sub do_family_signoff {
 	 }
 
 	 ## No passwd
-	 &init_passwd($in{'email'}, {'lang' => $param->{'lang'} });
+	 wwslib::init_passwd($robot, $in{'email'}, {'lang' => $param->{'lang'} });
 
 	 $param->{'user'}{'email'} = $in{'email'};
      }
@@ -8096,7 +8091,6 @@ sub do_arc {
 	     if ($arc =~ /^(\d)+$/) {
 		 my %msg_info;
 
-                 use MIME::Parser;
 		 my $parser = new MIME::Parser;
 		 $parser->output_to_core(1);
 		 
@@ -8112,7 +8106,6 @@ sub do_arc {
 		     next;
 		 }
 
-		 use Mail::Header;
 		 my $hdr = $message->head;
 		 
 		 unless (defined $hdr) {
@@ -8525,8 +8518,6 @@ sub do_remove_arc {
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch', 'web_archive.access'));
 
-     use Marc::Search;
-
      my $search = new Marc::Search;
      $search->search_base (&Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
      $search->base_href (&Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
@@ -8661,8 +8652,6 @@ sub do_remove_arc {
 
      ## Access control
      return undef unless (defined &check_authz('do_arcsearch_id', 'web_archive.access'));
-
-     use Marc::Search;
 
      my $search = new Marc::Search;
      $search->search_base (&Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
@@ -14194,7 +14183,7 @@ sub d_unzip_shared_file {
 
     my $az = $zip->read( "$zip_abs_dir/$fname" );
  
-    unless ($az == AZ_OK){
+    unless ($az == Archive::Zip::AZ_OK()){
 	&wwslog('err',"unzip_shared_file : Unable to read the zip file $zip_abs_dir/$fname : $az");
 	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$zip_abs_dir,$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	return undef;
@@ -14204,7 +14193,7 @@ sub d_unzip_shared_file {
  
     foreach my $name (@memberNames) {
 	my $az = $zip->extractMember($name, $zip_abs_dir.'/zip/'.$name);
-	unless ($az == AZ_OK) {
+	unless ($az == Archive::Zip::AZ_OK()) {
 	    &wwslog('err',"unzip_shared_file : Unable to extract member $name of the zip file $zip_abs_dir/$fname : $az");
 	    &web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$zip_abs_dir,$fname",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});
 	    $status = 0;
@@ -17306,7 +17295,7 @@ sub do_arc_download {
 	return undef;
     }   
     ##writing zip file
-    unless ($zip->writeToFileNamed($zip_abs_file) == AZ_OK){
+    unless ($zip->writeToFileNamed($zip_abs_file) == Archive::Zip::AZ_OK()){
 	&report::reject_report_web('intern','write_file_zip',{'zipfile'=>$zip_abs_file},$param->{'action'},'',$param->{'user'}{'email'},$robot);
 	&wwslog ('info', 'Error while writing Zip File %s\n',$zip_file_name);
 	&web_db_log({'robot' => $robot,'list' => $list->{'name'},'action' => $param->{'action'},'parameters' => "$in{'list'}",'target_email' => "",'msg_id' => '','status' => 'error','error_type' => 'internal','user_email' => $param->{'user'}{'email'},'client' => $ip,'daemon' => $daemon_name});

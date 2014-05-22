@@ -24,12 +24,14 @@
 
 package Auth;
 
-use Digest::MD5;
+use strict;
+use warnings;
 use POSIX qw();
 
-use Log;
 use Conf;
+use LDAPSource;
 use List;
+use Log;
 use report;
 use SDM;
 
@@ -164,6 +166,7 @@ sub authentication {
     &report::reject_report_web('user','incorrect_passwd',{}) unless ($ENV{'SYMPA_SOAP'});
     &Log::do_log('err','authentication: incorrect password for user %s', $email);
 
+    my $param; #FIXME FIXME: not used.
     $param->{'init_email'} = $email;
     $param->{'escaped_init_email'} = &tools::escape_chars($email);
     return undef;
@@ -308,7 +311,7 @@ sub get_email_by_net_id {
 	
 	$netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 	
-	$email = &List::get_netidtoemail_db($robot, $netid_cookie, $Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
+	my $email = &List::get_netidtoemail_db($robot, $netid_cookie, $Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
 	
 	return $email;
     }
@@ -338,7 +341,8 @@ sub get_email_by_net_id {
 	my $count = $emails->count();
 
 	if ($emails->count() == 0) {
-	    &Log::do_log('notice',"No entry in the Ldap Directory Tree of %s", $host);
+            Log::do_log('notice', "No entry in the Ldap Directory Tree of %s",
+                $ldap->{'ldap_host'});
 	$ds->disconnect();
 	return undef;
 	}

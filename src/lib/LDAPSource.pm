@@ -25,21 +25,12 @@
 package LDAPSource;
 
 use strict;
+use warnings;
 
-use Exporter;
-use Datasource;
-use Carp;
-
-use tools;
-use tt2;
-use Conf;
 use Log;
-use List;
-use Data::Dumper;
 
-our @ISA = qw(Datasource Exporter);
-our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch ping quote set_fetch_timeout);
+use Datasource;
+our @ISA = qw(Datasource);
 
 sub new {
     my $pkg = shift;

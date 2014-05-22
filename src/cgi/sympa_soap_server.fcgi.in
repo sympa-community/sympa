@@ -23,29 +23,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use lib '--modulesdir--';
+use strict;
+use warnings;
+use Getopt::Long;
 use SOAP::Lite;
-
 # Use this line for more debug facility
 #use SOAP::Lite +trace;
 use SOAP::Transport::HTTP;
 
-use lib '--modulesdir--';
-
 ## Defines SOAP::Transport::HTTP::FCGI::Sympa with a modified handle()
 use SympaTransport;
 
-use Getopt::Long;
-use strict;
-
 ## Sympa API
-use List;
-use mail;
 use Conf;
+use List;
 use Log;
+use mail;
 use sympasoap;
-
-## WWSympa librairies
-use cookielib;
 
 my $birthday = time ;
 

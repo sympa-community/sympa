@@ -24,25 +24,15 @@
 
 package wwslib;
 
-use Log;
+use strict;
+use warnings;
+
 use Conf;
 use Sympa::Constants;
-
-## No longer used: Use List->get_option_title().
-%reception_mode = ('mail' => {'gettext_id' => 'standard (direct reception)'},
-		   'digest' => {'gettext_id' => 'digest MIME format'},
-		   'digestplain' => {'gettext_id' => 'digest plain text format'},
-		   'summary' => {'gettext_id' => 'summary mode'},
-		   'notice' => {'gettext_id' => 'notice mode'},
-		   'txt' => {'gettext_id' => 'text-only mode'},
-		   'html'=> {'gettext_id' => 'html-only mode'},
-		   'urlize' => {'gettext_id' => 'urlize mode'},
-		   'nomail' => {'gettext_id' => 'no mail (useful for vacations)'},
-		   'not_me' => {'gettext_id' => 'you do not receive your own posts'}
-		   );
+use Log;
 
 ## Cookie expiration periods with corresponding entry in NLS
-%cookie_period = (0     => {'gettext_id' => "session"},
+our %cookie_period = (0     => {'gettext_id' => "session"},
 		  10    => {'gettext_id' => "10 minutes"},
 		  30    => {'gettext_id' => "30 minutes"}, 
 		  60    => {'gettext_id' => "1 hour"},
@@ -51,13 +41,8 @@ use Sympa::Constants;
 		  10800 => {'gettext_id' => "1 week"},
 		  43200 => {'gettext_id' => "30 days"});
 
-## No longer used: Use List->get_option_title().
-%visibility_mode = ('noconceal' => {'gettext_id' => "listed in the list review page"},
-		    'conceal' => {'gettext_id' => "concealed"}
-		    );
-
 ## Filenames with corresponding entry in NLS set 15
-%filenames = ('welcome.tt2'             => {'gettext_id' => "welcome message"},
+our %filenames = ('welcome.tt2'             => {'gettext_id' => "welcome message"},
 	      'bye.tt2'                 => {'gettext_id' => "unsubscribe message"},
 	      'removed.tt2'             => {'gettext_id' => "deletion message"},
 	      'message.footer'          => {'gettext_id' => "message footer"},
@@ -78,7 +63,7 @@ use Sympa::Constants;
 	      );
 
 ## Defined in RFC 1893
-%bounce_status = ('1.0' => 'Other address status',
+our %bounce_status = ('1.0' => 'Other address status',
 		  '1.1' => 'Bad destination mailbox address',
 		  '1.2' => 'Bad destination system address',
 		  '1.3' => 'Bad destination mailbox address syntax',
@@ -139,7 +124,7 @@ my $cipher;
 sub load_mime_types {
     my $types = {};
 
-    @localisation = ('/etc/mime.types', '/usr/local/apache/conf/mime.types',
+    my @localisation = ('/etc/mime.types', '/usr/local/apache/conf/mime.types',
 		     '/etc/httpd/conf/mime.types',$Conf{'etc'}.'/mime.types');
 
     foreach my $loc (@localisation) {
@@ -176,34 +161,8 @@ sub load_mime_types {
 }
 
 ## Returns user information extracted from the cookie
-sub get_email_from_cookie {
-#    &Log::do_log('debug', 'get_email_from_cookie');
-    my $cookie = shift;
-    my $secret = shift;
-
-    my ($email, $auth) ;
-
-    # &Log::do_log('info', "get_email_from_cookie($cookie,$secret)");
-    
-    unless (defined $secret) {
-	&report::reject_report_web('intern','cookie_error',{},'','','',$robot);
-	&Log::do_log('info', 'parameter cookie undefined, authentication failure');
-    }
-
-    unless ($cookie) {
-	&report::reject_report_web('intern','cookie_error',$cookie,'get_email_from_cookie','','',$robot);
-	&Log::do_log('info', ' cookie undefined, authentication failure');
-    }
-
-    ($email, $auth) = &cookielib::check_cookie ($cookie, $secret);
-    unless ( $email) {
-	&report::reject_report_web('user','auth_failed',{},'');
-	&Log::do_log('info', 'get_email_from_cookie: auth failed for user %s', $email);
-	return undef;
-    }    
-
-    return ($email, $auth);
-}
+# Deprecated.  Use cookielib::check_cookie().
+#sub get_email_from_cookie;
 
 sub new_passwd {
 
@@ -223,8 +182,9 @@ sub valid_email {
     $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
 }
 
+# 6.2b: added $robot parameter.
 sub init_passwd {
-    my ($email, $data) = @_;
+    my ($robot, $email, $data) = @_;
     
     my ($passwd, $user);
     
@@ -236,9 +196,9 @@ sub init_passwd {
 	unless ($passwd) {
 	    $passwd = &new_passwd();
 	    
-	    unless ( Sympa::User::update_global_user($email,
-					   {'password' => $passwd,
-					    'lang' => $user->{'lang'} || $data->{'lang'}} )) {
+	    unless (Sympa::User::update_global_user(
+                $email, { 'password' => $passwd }
+            )) {
 		&report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
 		&Log::do_log('info','init_passwd: update failed');
 		return undef;

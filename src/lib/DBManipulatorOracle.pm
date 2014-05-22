@@ -25,13 +25,12 @@
 package DBManipulatorOracle;
 
 use strict;
+use warnings;
 use Data::Dumper;
 
-use Carp;
 use Log;
 
 use DBManipulatorDefault;
-
 our @ISA = qw(DBManipulatorDefault);
 
 #######################################################

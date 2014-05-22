@@ -25,13 +25,12 @@
 package DBManipulatorMySQL;
 
 use strict;
-use Data::Dumper;
+use warnings;
+#use Data::Dumper;
 
-use Carp;
 use Log;
 
 use DBManipulatorDefault;
-
 our @ISA = qw(DBManipulatorDefault);
 
 # Builds the string to be used by the DBI to connect to the database.
@@ -383,7 +382,7 @@ sub get_indexes {
 	    $found_indexes{$index_name}{$field_name} = 1;
 	}
     }
-    open TMP, ">>/tmp/toto"; print TMP &Dumper(\%found_indexes); close TMP;
+    ##open TMP, ">>/tmp/toto"; print TMP &Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

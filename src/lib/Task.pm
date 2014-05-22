@@ -25,14 +25,11 @@
 package Task;
 
 use strict;
-
-use Carp;
+use warnings;
 
 use List;
-use Conf;
 use Log;
 use tools;
-use Data::Dumper;
 
 my @task_list;
 my %task_by_list;

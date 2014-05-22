@@ -25,13 +25,12 @@
 package DBManipulatorSybase;
 
 use strict;
-use Data::Dumper;
+use warnings;
+##use Data::Dumper;
 
-use Carp;
 use Log;
 
 use DBManipulatorDefault;
-
 our @ISA = qw(DBManipulatorDefault);
 
 #######################################################
@@ -385,7 +384,7 @@ sub get_indexes {
 	    $found_indexes{$index_name}{$field_name} = 1;
 	}
     }
-    open TMP, ">>/tmp/toto"; print TMP &Dumper(\%found_indexes); close TMP;
+    ##open TMP, ">>/tmp/toto"; print TMP &Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

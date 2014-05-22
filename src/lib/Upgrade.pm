@@ -25,7 +25,7 @@
 package Upgrade;
 
 use strict;
-
+use warnings;
 use Carp qw(croak);
 use File::Path;
 use POSIX qw(strftime);
@@ -35,7 +35,6 @@ use Sympa::Language;
 use Log;
 use Sympa::Constants;
 use SDM;
-use Data::Dumper;
 
 my $language = Sympa::Language->instance;
 

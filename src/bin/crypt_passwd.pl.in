@@ -23,18 +23,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use lib '--modulesdir--';
 use strict;
 use warnings;
-use lib '--modulesdir--';
 
-unless (require Crypt::CipherSaber) {
-    die "Crypt::CipherSaber not installed ; cannot crypt passwords";
-}
-
-require tools;
-use List;
+use Conf;
 use SDM;
-use Log;
+use tools;
+
+die "Crypt::CipherSaber not installed ; cannot crypt passwords"
+    unless tools::ciphersaber_installed();
 
 ## Load sympa config
 Conf::load(Sympa::Constants::CONFIG) or die 'config_error';

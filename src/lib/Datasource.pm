@@ -25,10 +25,9 @@
 package Datasource;
 
 use strict;
+use warnings;
 
-use Carp;
 use Log;
-use Data::Dumper;
 
 ############################################################
 #  constructor

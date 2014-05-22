@@ -27,17 +27,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use lib '--modulesdir--';
+use strict;
+use warnings;
+use POSIX;
+
+use Conf;
+use Sympa::Constants;
+use tools;
+use tt2;
+
 $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
-use strict;
-use lib '--modulesdir--';
-use Conf;
-use POSIX;
-use tools;
-use tt2;
-use Sympa::Constants;
-
 unless (defined Conf::load()) {
     printf STDERR
 	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",

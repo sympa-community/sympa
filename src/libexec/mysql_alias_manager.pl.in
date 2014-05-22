@@ -8,19 +8,20 @@
 ## To make sympa use this script, you should install it as /home/sympa/bin/alias_manager.pl
 ## You should edit all the $mysql_xxx below to use your own mysql database
 
+use strict;
+use warnings;
+use lib '--modulesdir--';
+use DBI;
+use POSIX;
+
+use Conf;
+use Sympa::Constants;
+use tools;
+use tt2;
+
 $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
-use strict;
-use lib '--modulesdir--';
-use Conf;
-use POSIX;
-require tools;
-require tt2;
-use Sympa::Constants;
-
-use DBI;
-
 unless (Conf::load(Sympa::Constants::CONFIG)) {
    print gettext("The configuration file contains errors.\n");
    exit(1);
@@ -152,7 +153,7 @@ sub already_defined {
         $dbh->do($sql) or die "$sql : $DBI::errstr";
 
         @enr = $dbh->selectrow_array($sql);
-	if (@enr[0] != 0) {
+	if ($enr[0] != 0) {
 	    print STDERR "Alias already defined : $alias_value\n";
 	    &finalize_mysql;
 	    return 1;

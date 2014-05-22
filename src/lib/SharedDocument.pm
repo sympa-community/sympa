@@ -25,8 +25,7 @@
 package SharedDocument;
 
 use strict;
-
-use Carp;
+use warnings;
 
 use Log;
 use tools;

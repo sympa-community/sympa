@@ -25,13 +25,11 @@
 package DBManipulatorPostgres;
 
 use strict;
-#use Carp; # not used
-# tentative
-use Data::Dumper;
+use warnings;
 
 use Log;
-use DBManipulatorDefault;
 
+use DBManipulatorDefault;
 our @ISA = qw(DBManipulatorDefault);
 
 #######################################################

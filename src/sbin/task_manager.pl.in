@@ -27,25 +27,25 @@
 ##         :  d		-> debug -d is equiv to -dF
 
 use lib '--modulesdir--';
-use strict "vars";
+use strict;
+use warnings;
+use Getopt::Long;
 use Pod::Usage;
 use Template;
-
-use Task;
-use List;
-use Conf;
-use Log;
-use Getopt::Long;
 use Time::Local;
-use Digest::MD5;
-use Scenario;
-use SympaSession;
-use tracking;
+
 use Bulk;
-use mail;
-use tools;
+use Conf;
 use Sympa::Constants;
+use List;
+use Log;
+use mail;
+use Scenario;
 use SDM;
+use SympaSession;
+use Task;
+use tools;
+use tracking;
 
 my $opt_d;
 my $opt_F;
@@ -1148,15 +1148,16 @@ sub purge_session_table {
 
 ## remove messages from bulkspool table when no more packet have any pointer to this message
 sub purge_tables {    
+    Log::do_log('info','()');
+    my $removed;
 
-    &Log::do_log('info','task_manager::purge_tables()');
-    my $removed = &Bulk::purge_bulkspool();
+    $removed = Bulk::purge_bulkspool();
     unless(defined $removed) {
 	&Log::do_log('err','Failed to purge bulkspool');
     }
     &Log::do_log('notice','%s rows removed in bulkspool_table',$removed);    
     #
-    my $removed = 0;
+    $removed = 0;
     foreach my $robot (keys %{$Conf{'robots'}}) {
 	my $all_lists = &List::get_lists($robot);
 	foreach my $list ( @$all_lists ) {
@@ -1652,6 +1653,7 @@ sub process_bouncers {
 	  
 	    if (@{$bouncers[$level]}){
 		## calling action subroutine with (list,email list) in parameter 
+                no strict 'refs';
 		unless ($actions{$action}->($list,$bouncers[$level])){
 		    &Log::do_log('err','error while calling action sub for bouncing users in list %s',$listname);
 		    return undef;

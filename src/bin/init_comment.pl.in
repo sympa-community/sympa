@@ -23,13 +23,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use strict;
 use lib '--modulesdir--';
+use strict;
+use warnings;
 
+use Conf;
 use Sympa::Constants;
-use List;
 use SDM;
-use Log;
 
 ## Load sympa config
 Conf::load(Sympa::Constants::CONFIG) or die 'config_error';

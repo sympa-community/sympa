@@ -81,20 +81,22 @@
  
  package PlainDigest;
 
- @ISA = qw(MIME::Entity);
- use Mail::Internet;
+use strict;
+use warnings;
+
+our @ISA = qw(MIME::Entity);
  use Mail::Address;
- use MIME::Parser;
  use MIME::EncWords;
  use MIME::Charset;
  use HTML::TreeBuilder;
  use HTML::FormatText;
 
 use Sympa::Language;
-use Sympa::ListDef;
  use tools;
 
 my $language = Sympa::Language->instance;
+
+our $outstring;
  
  sub plain_body_as_string {
  
@@ -139,7 +141,7 @@ my $language = Sympa::Language->instance;
   my $topent = shift;
 
   # cycle through each part and process accordingly
-  foreach $subent ($topent->parts) {    
+  foreach my $subent ($topent->parts) {    
      if ($subent->effective_type =~ /^text\/plain$/i || $subent->effective_type =~ /^text\/enriched/i) {
        _do_text_plain($subent);
      }
@@ -373,7 +375,7 @@ my $language = Sympa::Language->instance;
  # This is a subclass of the HTML::FormatText object. 
  # This subclassing is done to allow internationalisation of some strings
 
- @ISA = qw(HTML::FormatText);
+our @ISA = qw(HTML::FormatText);
  
  use strict;
 

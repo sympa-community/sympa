@@ -23,35 +23,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use strict;
-
 use lib '--modulesdir--';
-#use Getopt::Std;
+use strict;
+use warnings;
+use File::Copy;
 use Getopt::Long;
-
-use Mail::Address;
-use File::Path;
 use Pod::Usage;
 
+use admin;
 use Commands;
 use Conf;
-use Auth;
-use SympaSession;
+use Config_XML;
+use Sympa::Constants;
+use Family;
 use Sympa::Language;
+use List;
 use Log;
 use mail;
-use MIME::QuotedPrint;
-use List;
 use Message;
-use admin;
-use Config_XML;
-use Family;
 use report;
-use File::Copy;
-use tools;
-use Sympa::Constants;
-use tracking;
 use SDM;
+use tools;
 
 # durty global variables
 my $is_signed = {}; 

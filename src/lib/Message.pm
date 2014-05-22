@@ -37,19 +37,16 @@ While processing a message in Sympa, we need to link informations to rhe message
 package Message;
 
 use strict;
-
-use Carp;
-use Mail::Header;
+use warnings;
 use Mail::Address;
-use MIME::Entity;
 use MIME::EncWords;
 use MIME::Parser;
 
+use Conf;
 use List;
+use Log;
 use tools;
 use tt2;
-use Conf;
-use Log;
 
 =pod 
 

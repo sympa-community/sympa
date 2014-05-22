@@ -25,12 +25,11 @@
 package DBManipulatorDefault;
 
 use strict;
-
+use warnings;
 use Carp;
-use Log;
 
+use Log;
 use SQLSource;
-use Data::Dumper;
 
 our @ISA = qw(SQLSource);
 

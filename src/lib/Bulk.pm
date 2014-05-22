@@ -25,35 +25,21 @@
 package Bulk;
 
 use strict;
-
+use warnings;
 use Encode;
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
-use Carp;
-use IO::Scalar;
-use Storable;
-use Mail::Header;
 use Mail::Address;
 use Time::HiRes qw(time);
-use Time::Local;
-use MIME::Entity;
-use MIME::EncWords;
 use MIME::Parser;
 use MIME::Base64;
 use Term::ProgressBar;
 use URI::Escape;
 use constant MAX => 100_000;
 
-use Task;
-use Fetch;
-use WebAgent;
 use tools;
 use tt2;
 use Sympa::Language;
 use Log;
 use Conf;
-use mail;
-use Ldap;
-use Message;
 use List;
 use SDM;
 

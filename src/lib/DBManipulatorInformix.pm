@@ -25,12 +25,11 @@
 package DBManipulatorInformix;
 
 use strict;
+use warnings;
 
-use Carp;
 use Log;
 
 use DBManipulatorDefault;
-
 our @ISA = qw(DBManipulatorDefault);
 
 sub build_connect_string{

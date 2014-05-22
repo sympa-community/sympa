@@ -24,12 +24,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use lib '--modulesdir--';
+use strict;
+use warnings;
+use Getopt::Long;
+
 use Conf;
 use Sympa::Constants;
 use List;
-use Log;
-
-use Getopt::Long;
 
 my %month_idx = qw(jan 1 
 		   fev 2
@@ -120,6 +121,8 @@ if ($opt{'input-directory'}) {
 
     opendir DIR, $opt{'input-directory'} || die;
     foreach my $file ( sort grep (!/^\.\.?$/,readdir(DIR))) {
+        my @msgs; #FIXME: Not used anymore.
+
 	open ARCFILE, $opt{'input-directory'}.'/'.$file;
 	my @msg = <ARCFILE>;
 	push @msgs, \@msg;
@@ -259,7 +262,7 @@ sub store_messages {
 		last;
 	    }
 	}
-	close MSG;
+
 	# Unknown date format/No date
 	if ($incorrect || ! $month || ! $year) {
 	    $year = 'UN';

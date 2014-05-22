@@ -29,6 +29,7 @@
 
 use lib '--modulesdir--';
 use strict;
+use warnings;
 use Digest::MD5;
 use Getopt::Long;
 use Pod::Usage;
@@ -38,7 +39,6 @@ use List;
 use Message;
 use Conf;
 use Log;
-use Commands;
 use Sympa::Language;
 use mail;
 use tools;

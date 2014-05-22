@@ -23,6 +23,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use strict;
+use warnings;
 use Getopt::Long;
 
 my %opt;
@@ -41,6 +43,10 @@ printf "host : $opt{'host'}\nsuffix : $opt{'suffix'}\nfilter: $opt{'filter'}\n";
 my %arg;
 $arg{'scope'} = $opt{'scope'};
 
+my $ldap;
+my $mesg;
+my $res;
+my $dn;
 
 if ($opt{'ssl'} eq 'on') {
     eval "require Net::LDAPS";
@@ -76,6 +82,7 @@ $res = $mesg->as_struct ;
 #   printf "\t%s => %s\n", $k, $res->{$k};
 #}
 
+my $cpt = 0;
 foreach $dn (keys %$res) {
         
    my $hash = $res->{$dn};

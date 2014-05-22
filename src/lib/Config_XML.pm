@@ -25,7 +25,7 @@
 package Config_XML;
 
 use strict;
-
+use warnings;
 use XML::LibXML;
 
 use Log;

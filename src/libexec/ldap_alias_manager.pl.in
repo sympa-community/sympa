@@ -19,20 +19,21 @@
 #Purpose: It has the ability to add/remove list aliases in an LDAP directory
 # You should edit all the --defaultdir--/ldap_alias_manager.conf to use your own LDAP directory
 
+use strict;
+use warnings;
+use lib '--modulesdir--';
+use Net::LDAP;
+use Net::LDAPS;
+use POSIX;
+
+use Conf;
+use Sympa::Constants;
+use tools;
+use tt2;
+
 $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
-use strict;
-use lib '--modulesdir--';
-use Conf;
-use POSIX;
-require tools;
-require tt2;
-use Sympa::Constants;
-
-use Net::LDAP;
-use Net::LDAPS;
-
 unless (Conf::load(Sympa::Constants::CONFIG)) {
    print gettext("The configuration file contains errors.\n");
    exit(1);
@@ -226,7 +227,7 @@ sub already_defined {
 	my $source_result = $ldap_connection->search(filter => "(".$ldap_mail_attribute."=".$1."\@".$domain.")",
 						     base => $ldap_base_dn);
 	if ($source_result->count != 0) {
-	    print STRERR "Alias already defined : $1\n";
+	    print STDERR "Alias already defined : $1\n";
 	    &finalize_ldap;
 	    return 1;
 	}
@@ -279,15 +280,18 @@ sub initialize_ldap {
     {
     	if ($ldap_cachain)
     	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'require', sslversion=> 'sslv3',
-        		                  cafile => $ldap_cachain) {
+    		unless ($ldap_connection = Net::LDAPS->new($ldap_host,
+                        version => 3, verify => 'require',
+                        sslversion=> 'sslv3', cafile => $ldap_cachain)) {
 			print STDERR "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
 			return 0;
     		}
     	}
     	else
     	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host), version => 3, verify => 'none', sslversion=> 'sslv3') {
+    		unless ($ldap_connection = Net::LDAPS->new($ldap_host,
+                        version => 3, verify => 'none',
+                        sslversion=> 'sslv3')) {
 			print STDERR "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
 			return 0;
     		}
@@ -295,7 +299,7 @@ sub initialize_ldap {
     }        
     else 
     {
-    	unless ($ldap_connection = Net::LDAP->new($ldap_host), version => 3) {
+    	unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {
 		print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
 		return 0;
     	}

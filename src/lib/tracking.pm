@@ -25,11 +25,9 @@
 package tracking;
 
 use strict;
+use warnings;
 
-use CGI;
-use Email::Simple;
 use Log;
-use MIME::Base64;
 use SDM;
 
 ##############################################
@@ -180,7 +178,7 @@ sub find_notification_id_by_message{
 	&Log::do_log('err','Found more then one pk_notification maching  (recipient=%s,msgis=%s,listname=%s,robot%s)',$recipient,$msgid ,$listname,$robot );	
 	# we should return undef...
     }
-    return @pk_notifications[0];
+    return $pk_notifications[0];
 }
 
 

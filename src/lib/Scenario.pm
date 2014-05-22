@@ -28,11 +28,10 @@ use strict;
 use warnings;
 use Mail::Address;
 use Net::Netmask;
-# tentative
-use Data::Dumper;
 
 #use tools; # temporarily disabled to avoid dependency loop.
 use Sympa::Language;
+use LDAPSource;
 use List;
 use Log;
 use Conf;

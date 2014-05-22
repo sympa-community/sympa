@@ -23,35 +23,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use lib '--modulesdir--';
 use strict;
+use warnings;
+use Getopt::Long;
+use HTTP::Cookies;
 #use SOAP::Lite +trace;
 use SOAP::Lite;
-use HTTP::Cookies;
-use URI;
-use Getopt::Long;
 
-use lib '--modulesdir--';
-# use Conf;
-use Commands;
-use Conf;
-use Auth;
-use SympaSession;
-use Log;
-use mail;
-use MIME::QuotedPrint;
-use List;
-use Message;
-use admin;
-use Config_XML;
-use Family;
-use report;
-use File::Copy;
-use tools;
 use Sympa::Constants;
-
+use tools;
 
 my ($reponse, @ret, $val, %fault);
-
 
 my $usage = "$0 is a perl soap client for Sympa for TEST ONLY. Use it to illustrate how to
 code access to features of Sympa soap server. Authentication can be done via
@@ -161,7 +144,11 @@ sub play_soap_as_trusted{
     $soap->proxy($soap_url);
 
     my @parameters; 
-    @parameters= split(/,/,$service_parameters) if (defined $service_parameters);
+    if (defined $service_parameters) {
+        @parameters = split /,/, $service_parameters;
+    } else {
+        @parameters = ();
+    }
     my $p= join(',',@parameters);
     printf "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
 
@@ -248,11 +235,11 @@ sub play_soap{
     &print_result($reponse);
     $session_id = $reponse->result;
   }    
-    
+
   ## Don't use authenticateAndRun for lists command
 
-  ## Split parameters
-  my @parameters=split /,/,$service_parameters;
+    ## Split parameters
+    @parameters = split /,/, $service_parameters;
 
     if ($service eq 'lists') {
       printf "\n\nlists....\n";

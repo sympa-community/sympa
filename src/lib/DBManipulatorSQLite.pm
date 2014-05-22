@@ -25,13 +25,11 @@
 package DBManipulatorSQLite;
 
 use strict;
-use Data::Dumper;
+use warnings;
 
-use Carp;
 use Log;
 
 use DBManipulatorDefault;
-
 our @ISA = qw(DBManipulatorDefault);
 
 #######################################################

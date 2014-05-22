@@ -8,10 +8,13 @@
 ## This script will create all missing HTML files in the moderation spool
 
 use lib '--modulesdir--';
-use Conf; # to load Sympa conf which is needed by List.pm
-use List;
-use Log; # if you want to get logs of List.pm
+use strict;
+use warnings;
+
+use Conf;
 use Sympa::Constants;
+use List;
+use Log;
 
 unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";
@@ -36,8 +39,7 @@ unless (opendir SPOOL, $Conf{'queuemod'}) {
     die "Unable to read spool";
 }
 
-foreach $msg ( sort grep(!/^\./, readdir SPOOL )) {
-    
+foreach my $msg ( sort grep(!/^\./, readdir SPOOL )) {
     next if ($msg =~ /^\./);
     
     $msg =~ /^(.*)\_([^\_]+)$/;

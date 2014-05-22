@@ -25,13 +25,8 @@
 
 package sympasoap;
 
-use strict "vars";
-
-use Exporter;
-use HTTP::Cookies;
-
-my @ISA = ('Exporter');
-my @EXPORT = ();
+use strict;
+use warnings;
 
 use Conf;
 use Log;
@@ -301,6 +296,7 @@ sub authenticateAndRun {
     $ENV{'USER_EMAIL'} = $email;
     $ENV{'SESSION_ID'} = $session_id;
 
+    no strict 'refs';
     &{$service}($self,@$parameters);
 }
 ## request user email from http cookie
@@ -376,6 +372,8 @@ sub authenticateRemoteAppAndRun {
 	}
 	$ENV{$id}=$value	if ($proxy_vars->{$id}) ;	
     }		
+
+    no strict 'refs';
     &{$service}($self,@$parameters);
 }
 
@@ -768,7 +766,9 @@ sub add {
 	$list->add_list_member($u);
 	if (defined $list->{'add_outcome'}{'errors'}) {
 	    &Log::do_log('info', 'add %s@%s %s from %s : Unable to add user', $listname,$robot,$email,$sender);
-	    my $error = sprintf ("Unable to add user %s in list %s: %s"),$email,$listname,$list->{'add_outcome'}{'errors'}{'error_message'};
+	    my $error = sprintf "Unable to add user %s in list %s: %s",
+                $email, $listname,
+                $list->{'add_outcome'}{'errors'}{'error_message'};
 	    die SOAP::Fault->faultcode('Server')
 		->faultstring('Unable to add user')
 		->faultdetail($error);

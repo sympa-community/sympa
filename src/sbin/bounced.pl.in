@@ -36,17 +36,16 @@
 
 use lib '--modulesdir--';
 use strict;
-
-use FileHandle;
+use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use POSIX;
 
-use List;
 use Conf;
+use Sympa::Constants;
+use List;
 use Log;
 use mail;
-use Sympa::Constants;
 use tools;
 use tracking;
 
@@ -71,9 +70,6 @@ my %equiv = ( "user unknown" => '5.1.1',
 	      "user mailbox exceeds allowed size" => '4.2.2',
 	      "insufficient system storage" => '4.2.2',
 	      "User's Disk Quota Exceeded:" => '4.2.2');
-
-
-use Bounce;
 
 #getopts('dF');
 ## Check options
@@ -366,10 +362,10 @@ while (!$end) {
 	
 	    my @parts = $entity->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $listname, $robot;
+	    my $listname;
 	    my $arrival_date;
 
-	    my $msg_id = $head->get('Message-Id');
+	    $msg_id = $head->get('Message-Id');
 	    chomp $msg_id;
 
 	    my $date = $head->get('Date');
@@ -473,14 +469,14 @@ while (!$end) {
 
 	    my @parts = $entity->parts();
 	    my $original_rcpt; my $final_rcpt; my $user_agent; my $version; my $dsn_status; my $msg_id; my $orig_msg_id;
-	    my $listname, $robot;
+	    my $listname;
 	    my $date;
             my $mdn_status;
 
-	    my $msg_id = $head->get('Message-Id');
+	    $msg_id = $head->get('Message-Id');
 	    chomp $msg_id;
 
-	    my $date = $head->get('Date');
+	    $date = $head->get('Date');
 
 	    foreach my $p (@parts) {
 		my $h = $p->head();
@@ -702,7 +698,7 @@ while (!$end) {
 
 	# Fin section feedback report
 	# else (not welcome or remind) 
-	my $list = new List ($listname, $robot);
+	$list = new List ($listname, $robot);
 	if (! $list) {
  	    &Log::do_log('err','Skipping bouncefile %s for unknown list %s@%s',$file,$listname,$robot);
 	    &ignore_bounce({'file' => $file,

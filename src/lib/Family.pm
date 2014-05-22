@@ -37,9 +37,9 @@ Sympa allows lists creation and management by sets. These are the families, sets
 package Family;
 
 use strict;
-
+use warnings;
+use File::Copy;
 use Term::ProgressBar;
-use XML::LibXML;
 
 use List;
 use Conf;
@@ -47,7 +47,6 @@ use Sympa::Language;
 use Log;
 use admin;
 use Config_XML;
-use File::Copy;
 use Sympa::Constants;
 
 my $language = Sympa::Language->instance;

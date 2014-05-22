@@ -37,6 +37,8 @@ Central module for creating and editing lists.
 package admin;
 
 use strict;
+use warnings;
+use File::Copy;
 
 use List;
 use Conf;
@@ -44,8 +46,6 @@ use Sympa::Language;
 use Log;
 use tools;
 use Sympa::Constants;
-use File::Copy;
-use Data::Dumper;
 
 my $language = Sympa::Language->instance;
 

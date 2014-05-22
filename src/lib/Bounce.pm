@@ -25,7 +25,7 @@
 package Bounce;
 
 use strict;
-
+use warnings;
 use MIME::Parser;
 use Exporter;
 

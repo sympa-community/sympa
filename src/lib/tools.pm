@@ -25,16 +25,15 @@
 package tools;
 
 use strict;
-
+use warnings;
 use Carp;
 #use Cwd qw();
 use Digest::MD5;
 use Encode::Guess; ## Useful when encoding should be guessed
-use Encode::MIME::Header;
+use Encode::MIME::Header; # for 'MIME-Q' encoding
 use File::Copy::Recursive;
 use File::Find;
 use HTML::StripScripts::Parser;
-use Mail::Header;
 use MIME::Lite::HTML;
 use POSIX qw(strftime mkfifo strtod);
 use Proc::ProcessTable;
@@ -48,6 +47,7 @@ use if (5.016 <= $]), qw(feature fc);
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
+use List;
 use Sympa::LockedFile;
 use Log;
 use Message;

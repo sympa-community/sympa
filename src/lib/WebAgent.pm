@@ -24,7 +24,8 @@
 
 package WebAgent;
 
-use strict "vars";
+use strict;
+use warnings;
 
 use LWP::UserAgent;
 ## Good documentation : http://articles.mongueurs.net/magazines/linuxmag57.html

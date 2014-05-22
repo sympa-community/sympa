@@ -26,10 +26,9 @@
 
 package Conf;
 
-use strict "vars";
-
+use strict;
+use warnings;
 use Exporter;
-use Carp;
 use Storable;
 
 use confdef;

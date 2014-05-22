@@ -26,9 +26,7 @@
 package SympaSession;
 
 use strict ;
-
-use Digest::MD5;
-use POSIX;
+use warnings;
 use CGI::Cookie;
 use Time::Local;
 

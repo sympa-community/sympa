@@ -5,6 +5,8 @@
 ## This script will detect incorrectly archived messages and move them back 
 ## in the archiving spool (outgoing)
 
+use strict;
+
 unless ($#ARGV >= 0) {
     die "Usage: $0 <path_to_outgoing_dir> <path_to_web_archives>";
 }

@@ -28,7 +28,6 @@ use strict;
 use warnings;
 use Exporter;
 use Encode;
-use Fcntl qw(LOCK_SH LOCK_EX LOCK_NB LOCK_UN);
 use HTML::Entities qw(encode_entities);
 use POSIX qw(strftime);
 
@@ -43,27 +42,24 @@ use Datasource;
 use LDAPSource;
 use SDM;
 use Sympa::User;
-use SQLSource qw(create_db);
-use Upgrade;
+use SQLSource;
 use Sympa::LockedFile;
 use Task;
 use Scenario;
 use Fetch;
 use WebAgent;
 
-use tt2;
-use Sympa::Constants;
-use Sympa::ListDef;
-
 use Archive;
-use Sympa::Language;
-use Log;
 use Conf;
-use mail;
-use Ldap;
-use Message;
+use Sympa::Constants;
 use Family;
+use Sympa::Language;
+use Sympa::ListDef;
+use Log;
+use mail;
+use Message;
 use PlainDigest;
+use tt2;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%list_of_lists);

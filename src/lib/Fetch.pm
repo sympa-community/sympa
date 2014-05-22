@@ -24,6 +24,9 @@
 
 package Fetch;
 
+use strict;
+use warnings;
+
 use Log;
 
 # request a document using https, return status and content

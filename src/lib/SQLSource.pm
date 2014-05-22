@@ -25,21 +25,15 @@
 package SQLSource;
 
 use strict;
-
-use Carp;
+use warnings;
 use DBI;
+
 use Log;
 use Conf;
 use List;
 use tools;
 use tt2;
-use Exporter;
-use Data::Dumper;
 use Datasource;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%date_format);
-our @EXPORT_OK = qw(connect query disconnect fetch create_db ping quote set_fetch_timeout);
 
 ## Structure to keep track of active connections/connection status
 ## Key : connect_string (includes server+port+dbname+DB type)

@@ -23,16 +23,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-use strict;
-
 use lib '--modulesdir--';
+use strict;
+use warnings;
 use Getopt::Long;
+
+use Conf;
 use Sympa::Constants;
+use List;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
-use Conf;
-use List;
 
 ## Load sympa config
 unless (&Conf::load($sympa_conf_file)) {

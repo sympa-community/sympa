@@ -25,6 +25,7 @@
 package Archive;
 
 use strict;
+use warnings;
 use Carp qw(croak);
 use Cwd qw(getcwd);
 use Encode qw(decode_utf8 encode_utf8);
@@ -390,7 +391,7 @@ sub convert_single_message {
     close OUT;
 
     # mhonarc require du change workdir so this proc must retore it    
-    my $pwd = getcwd;
+    my $pwd = getcwd();
 
     ## generate HTML
     unless (chdir $destination_dir) {

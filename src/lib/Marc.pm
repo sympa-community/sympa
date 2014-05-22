@@ -5,8 +5,8 @@
 package Marc;
 
 use strict;
-
-use Carp;
+use warnings;
+use Carp qw(croak);
 
 our $AUTOLOAD;
 our $VERSION = "4.3";

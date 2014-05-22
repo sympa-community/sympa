@@ -25,11 +25,12 @@
 package mail;
 
 require Exporter;
-use Carp;
 @ISA = qw(Exporter);
 @EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
 
 use strict;
+use warnings;
+use Carp;
 use DateTime;
 use MIME::Charset;
 use MIME::Tools;
@@ -41,9 +42,6 @@ use List;
 use Bulk;
 use tools;
 use Sympa::Constants;
-
-## RCS identification.
-#my $id = '@(#)$Id$';
 
 my $opensmtp = 0;
 my $fh = 'fh0000000000';	## File handle for the stream.
@@ -368,8 +366,7 @@ sub mail_message {
 
     ## If message contain a footer or header added by Sympa  use the object message else
     ## Extract body from original file to preserve signature
-    my ($msg_body, $msg_header);
-    $msg_header = $message->{'msg'}->head;
+    my $msg_header = $message->{'msg'}->head;
     ##FIXME: message may be encrypted.
     my ($dummy, $msg_body) =
 	split /\r?\n\r?\n/, $message->{'msg_as_string'}, 2;

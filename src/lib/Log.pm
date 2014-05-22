@@ -24,15 +24,14 @@
 
 package Log;
 
-use strict "vars";
-
-use Exporter;
-use Sys::Syslog;
+use strict;
+use warnings;
 use Carp;
+use Exporter;
 use POSIX qw(mktime);
-use Encode;
-use List;
+use Sys::Syslog;
 
+use List;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw($log_level %levels);

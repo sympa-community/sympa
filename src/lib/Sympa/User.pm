@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Carp qw(carp croak);
 
+use Sympa::DatabaseDescription;
 use Sympa::Language;
 use Log;
 use SDM;

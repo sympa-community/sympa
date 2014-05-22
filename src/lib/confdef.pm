@@ -24,7 +24,8 @@
 
 package confdef;
 
-use strict "vars";
+use strict;
+use warnings;
 
 use Sympa::Constants;
 

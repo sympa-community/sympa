@@ -25,9 +25,10 @@
 package report;
 
 use strict;
+use warnings;
 
-use Log;
 use List;
+use Log;
 
 ######################## MESSAGE DIFFUSION REPORT #############################################
 
