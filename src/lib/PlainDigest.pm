@@ -386,7 +386,7 @@ use Sympa::Language;
     $self->out(
 	Encode::decode_utf8(defined($alt)
 	? $language->gettext_sprintf("[ Image%s ]", ":" . $alt)
-	: $language->gettext_sprintf("[Image%s]"), "")
+	: $language->gettext_sprintf("[Image%s]", ""))
     );
  }
 
