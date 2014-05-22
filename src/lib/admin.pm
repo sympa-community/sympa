@@ -40,12 +40,13 @@ use strict;
 use warnings;
 use File::Copy;
 
-use List;
 use Conf;
-use Sympa::Language;
-use Log;
-use tools;
 use Sympa::Constants;
+use Sympa::Language;
+use List;
+use Log;
+use Sympa::Regexps;
+use tools;
 
 my $language = Sympa::Language->instance;
 
@@ -127,8 +128,6 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =item * Log::do_log
 
-=item * tools::get_regexp
-
 =item * tools::get_search_path
 
 =item * tt2::parse_tt2 
@@ -193,7 +192,7 @@ sub create_list_old{
    
     ## check listname
     $param->{'listname'} = lc ($param->{'listname'});
-    my $listname_regexp = &tools::get_regexp('listname');
+    my $listname_regexp = Sympa::Regexps::listname();
 
     unless ($param->{'listname'} =~ /^$listname_regexp$/i) {
 	&Log::do_log('err','admin::create_list_old : incorrect listname %s', $param->{'listname'});
@@ -398,7 +397,7 @@ sub create_list{
    
     ## check listname
     $param->{'listname'} = lc ($param->{'listname'});
-    my $listname_regexp = &tools::get_regexp('listname');
+    my $listname_regexp = Sympa::Regexps::listname();
 
     unless ($param->{'listname'} =~ /^$listname_regexp$/i) {
 	&Log::do_log('err','admin::create_list : incorrect listname %s', $param->{'listname'});
@@ -717,7 +716,7 @@ sub rename_list{
 
     # check new listname syntax
     my $new_listname = lc ($param{'new_listname'});
-    my $listname_regexp = &tools::get_regexp('listname');
+    my $listname_regexp = Sympa::Regexps::listname();
     
     unless ($new_listname =~ /^$listname_regexp$/i) {
       &Log::do_log('err','incorrect listname %s', $new_listname);

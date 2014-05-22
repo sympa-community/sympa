@@ -34,13 +34,14 @@ use Time::Local;
 use MIME::EncWords;
 
 use Conf;
+use Sympa::Constants;
 use Sympa::Language;
-use Log;
 use List;
+use Log;
 use Message;
+use Sympa::Regexps;
 use report;
 use tools;
-use Sympa::Constants;
 
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw($sender);
@@ -1209,7 +1210,7 @@ sub add {
 
     &Log::do_log('debug', 'Commands::add(%s,%s,%s,%s)', $what,$robot, $sign_mod, $message);
 
-    my $email_regexp = &tools::get_regexp('email');    
+    my $email_regexp = Sympa::Regexps::email();    
 
     $what =~ /^(\S+)\s+($email_regexp)(\s+(.+))?\s*$/;
     my($which, $email, $comment) = ($1, $2, $6);
@@ -1744,7 +1745,7 @@ sub del {
 
     &Log::do_log('debug', 'Commands::del(%s,%s,%s,%s)', $what,$robot,$sign_mod,$message);
 
-    my $email_regexp = &tools::get_regexp('email');    
+    my $email_regexp = Sympa::Regexps::email();    
 
     $what =~ /^(\S+)\s+($email_regexp)\s*/;
     my($which, $who) = ($1, $2);

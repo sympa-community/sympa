@@ -46,6 +46,7 @@ use Sympa::Constants;
 use List;
 use Log;
 use mail;
+use Sympa::Regexps;
 use tools;
 use tracking;
 
@@ -595,7 +596,7 @@ while (!$end) {
 			if ($line =~ /Version\:\s*(.*)/i) {
 			    $version = $1;
 			}
-			my $email_regexp = &tools::get_regexp('email');
+			my $email_regexp = Sympa::Regexps::email();
 			if ($line =~ /Original\-Rcpt\-To\:\s*($email_regexp)\s*$/i) {
 			    $original_rcpt = $1;
 			    chomp $original_rcpt;

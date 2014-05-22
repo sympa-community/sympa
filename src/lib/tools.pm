@@ -3686,6 +3686,7 @@ sub get_separator {
 }
 
 ## Return the Sympa regexp corresponding to the input param
+# OBSOLETED: Use Sympa::Regexps::<type>().
 sub get_regexp {
     my $type = shift;
 

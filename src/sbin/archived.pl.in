@@ -41,6 +41,7 @@ use Conf;
 use Log;
 use Sympa::Language;
 use mail;
+use Sympa::Regexps;
 use tools;
 
 my $daemon_name = &Log::set_daemon($0);
@@ -207,7 +208,7 @@ while (!$end) {
 		   next;
 	       }
 
-	   my $email_regexp = &tools::get_regexp('email');
+	   my $email_regexp = Sympa::Regexps::email();
 
 	   foreach my $order (<REMOVE>) { 
 	       unless($order =~ /(.*)\|\|($email_regexp)/){

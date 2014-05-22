@@ -41,13 +41,14 @@ use warnings;
 use File::Copy;
 use Term::ProgressBar;
 
-use List;
-use Conf;
-use Sympa::Language;
-use Log;
 use admin;
+use Conf;
 use Config_XML;
 use Sympa::Constants;
+use Sympa::Language;
+use List;
+use Log;
+use Sympa::Regexps;
 
 my $language = Sympa::Language->instance;
 
@@ -176,8 +177,6 @@ Creates a new Family object of name $name, belonging to the robot $robot.
 
 =item * Log::do_log
 
-=item * tools::get_regexp
-
 =back 
 
 =cut
@@ -218,7 +217,7 @@ sub new {
     bless $self, $class;
     $list_of_families{$robot}{$name} = $self;
 
-    my $family_name_regexp = &tools::get_regexp('family_name');
+    my $family_name_regexp = Sympa::Regexps::family_name();
 
     ## family name
     unless ($name && ($name =~ /^$family_name_regexp$/io) ) {

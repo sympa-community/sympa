@@ -2220,7 +2220,7 @@ sub DoCommand {
     ## Search and process a command in the Subject field
     my $subject_field = $message->{'decoded_subject'};
     $subject_field =~ s/\n//mg; ## multiline subjects
-    my $re_regexp = tools::get_regexp('re');
+    my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
 
     my $auth_level = 'dkim' if ($message->{'dkim_pass'});

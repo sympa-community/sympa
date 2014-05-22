@@ -29,7 +29,7 @@ use warnings;
 
 use List;
 use Log;
-use tools;
+use Sympa::Regexps;
 
 my @task_list;
 my %task_by_list;
@@ -47,8 +47,8 @@ sub new {
     ## Extract filename from path
     my @path = split /\//, $file;
     $task->{'filename'} = $path[$#path];
-    my $listname_regexp = &tools::get_regexp('listname');
-    my $host_regexp = &tools::get_regexp('host');
+    my $listname_regexp = Sympa::Regexps::listname();
+    my $host_regexp = Sympa::Regexps::host();
 
     ## File including the list domain
     if ($task->{'filename'} =~ /^(\d+)\.(\w*)\.(\w+)\.($listname_regexp|_global)\@($host_regexp)$/) {

@@ -790,10 +790,10 @@ our %in_regexp = (
 		 'shortname' => '[^<>\\\*\$\n]+',
 		 'new_name' => '[^<>\\\*\$\n]+',
 		 'id' => '[^<>\\\*\$\n]+',
-		 'template_name' => &tools::get_regexp('template_name'),
-		 'new_template_name' => &tools::get_regexp('template_name'),
-		 'message_template' => &tools::get_regexp('template_name'),
-		 'new_default' => &tools::get_regexp('template_name'),
+		 'template_name' => Sympa::Regexps::template_name(),
+		 'new_template_name' => Sympa::Regexps::template_name(),
+		 'message_template' => Sympa::Regexps::template_name(),
+		 'new_default' => Sympa::Regexps::template_name(),
 
 		 ## Archives
 		 'month' => '\d{2}|\d{4}\-\d{2}', ## format is yyyy-mm for 'arc' and mm for 'send_me'
@@ -822,7 +822,7 @@ our %in_regexp = (
 		 
 
 		 ## List names
-		 'list' => '[\w\-\.\+]*', ## &tools::get_regexp('listname') + uppercase
+		 'list' => '[\w\-\.\+]*', ## Sympa::Regexps::listname() + uppercase
 		 'previous_list' => '[\w\-\.\+]*',
 		 'new_list' =>  '[\w\-\.\+]*',
 		 'listname' => '[\w\-\.\+]*',
@@ -830,29 +830,29 @@ our %in_regexp = (
 		 'selected_lists' => '[\w\-\.\+]*',
 
 		 ## Family names
-		 'family_name' => &tools::get_regexp('family_name'),
-		 'family' => &tools::get_regexp('family_name'),
+		 'family_name' => Sympa::Regexps::family_name(),
+		 'family' => Sympa::Regexps::family_name(),
 
 		 ## Email addresses
-		 'email' => &tools::get_regexp('email').'|'.&tools::get_regexp('uid'),
-		 'init_email' => &tools::get_regexp('email'),
-		 'old_email' => &tools::get_regexp('email'),
-		 'new_email' => &tools::get_regexp('email'),
-		 'pending_email' => &tools::get_regexp('email').',.*', # Email address is followed by ',' + gecos data
-		 'sender' => &tools::get_regexp('email'),
-		 'fromaddr' =>  &tools::get_regexp('email'),
+		 'email' => Sympa::Regexps::email().'|'.Sympa::Regexps::uid(),
+		 'init_email' => Sympa::Regexps::email(),
+		 'old_email' => Sympa::Regexps::email(),
+		 'new_email' => Sympa::Regexps::email(),
+		 'pending_email' => Sympa::Regexps::email().',.*', # Email address is followed by ',' + gecos data
+		 'sender' => Sympa::Regexps::email(),
+		 'fromaddr' =>  Sympa::Regexps::email(),
 		 'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
 		 'automatic_list_part_*' => '[\w\-\.\+]*',
 
 		 ## Host
-		 'new_robot' => &tools::get_regexp('host'),
-		 'remote_host' => &tools::get_regexp('host'),
-		 'remote_addr' => &tools::get_regexp('host'),
+		 'new_robot' => Sympa::Regexps::host(),
+		 'remote_host' => Sympa::Regexps::host(),
+		 'remote_addr' => Sympa::Regexps::host(),
     
 		 ## Scenario name
-		 'scenario' => &tools::get_regexp('scenario'),
-		 'read_access' => &tools::get_regexp('scenario'),
-		 'edit_access' => &tools::get_regexp('scenario'),
+		 'scenario' => Sympa::Regexps::scenario(),
+		 'read_access' => Sympa::Regexps::scenario(),
+		 'edit_access' => Sympa::Regexps::scenario(),
                  ## RSS URL or blank
                  'active_lists' => '.*',
                  'latest_lists' => '.*',
@@ -861,10 +861,10 @@ our %in_regexp = (
 
 		 ##Logs
 		 'target_type' => '[\w\-\.\:]*', 
-		 'target' => &tools::get_regexp('email'),
+		 'target' => Sympa::Regexps::email(),
 		 'date_from' => '[\d\/\-]+',
 		 'date_to' => '[\d\/\-]+',
-		 'ip' => &tools::get_regexp('host'),
+		 'ip' => Sympa::Regexps::host(),
          
 		 ## colors
 		 'subaction_test' => '.*',
@@ -3166,7 +3166,7 @@ sub do_ticket {
     return 1 unless ($param->{'ticket_context'}{'result'} eq 'success' or $param->{'ticket_context'}{'result'} eq 'closed');
     
     # if the ticket is related to someone which is not logged in, the system performs the same operation as for a login
-    my $email_regexp = &tools::get_regexp('email');
+    my $email_regexp = Sympa::Regexps::email();
     if (($param->{'ticket_context'}{'result'} eq 'success')||  # a valid ticket or a closed or expired ticket but with a valid pre-existing session
 	((($param->{'ticket_context'}{'result'} eq 'expired')||($param->{'ticket_context'}{'result'} eq 'closed')) && (lc($param->{'ticket_context'}{'email'}) eq $session->{'email'})) 
        ) {
@@ -5897,7 +5897,7 @@ sub do_show_sessions {
 sub do_set_session_email {
     &wwslog('info', 'do_set_session_email');
     
-    my $email_regexp = &tools::get_regexp('email');
+    my $email_regexp = Sympa::Regexps::email();
     unless ($in{'email'} =~ /^\s*$email_regexp\s*$/){
 	&report::reject_report_web('user','Invalid email provided.',{},$param->{'action'},$list);
 	return 'serveradmin';
@@ -6559,7 +6559,7 @@ sub do_skinsedit {
 	 return undef;
      }
      
-     my $email_regexp = &tools::get_regexp('email');
+     my $email_regexp = Sympa::Regexps::email();
      if ($in{'dump'}) {
 	 foreach (split /\n/, $in{'dump'}) {
 	     if (/^\s*($email_regexp)(\s+(.*))?\s*$/) {

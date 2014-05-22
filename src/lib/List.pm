@@ -29,37 +29,37 @@ use warnings;
 use Exporter;
 use Encode;
 use HTML::Entities qw(encode_entities);
-use POSIX qw(strftime);
-
 use IO::Scalar;
+use MIME::EncWords;
+use MIME::Entity;
+use MIME::Parser;
+use POSIX qw(strftime);
 use Storable;
 use Time::Local qw(timelocal);
-use MIME::Entity;
-use MIME::EncWords;
-use MIME::Parser;
-
-use Datasource;
-use LDAPSource;
-use SDM;
-use Sympa::User;
-use SQLSource;
-use Sympa::LockedFile;
-use Task;
-use Scenario;
-use Fetch;
-use WebAgent;
 
 use Archive;
 use Conf;
 use Sympa::Constants;
+use Datasource;
 use Family;
+use Fetch;
 use Sympa::Language;
+use LDAPSource;
 use Sympa::ListDef;
+use Sympa::LockedFile;
 use Log;
 use mail;
 use Message;
 use PlainDigest;
+use Sympa::Regexps;
+use Scenario;
+use SDM;
+use SQLSource;
+use Task;
+use tools;
 use tt2;
+use Sympa::User;
+use WebAgent;
 
 our @ISA = qw(Exporter);
 our @EXPORT = qw(%list_of_lists);
@@ -540,7 +540,7 @@ sub new {
     $options = {} unless (defined $options);
 
     ## Only process the list if the name is valid.
-    my $listname_regexp = &tools::get_regexp('listname');
+    my $listname_regexp = Sympa::Regexps::listname();
     unless ($name and ($name =~ /^($listname_regexp)$/io) ) {
 	&Log::do_log('err', 'Incorrect listname "%s"',  $name) unless ($options->{'just_try'});
 	return undef;
@@ -1689,7 +1689,7 @@ sub distribute_msg {
 	$subject_field =~ s/\s+$//;
 
 	# truncate multiple "Re:" and equivalents.
-	my $re_regexp = tools::get_regexp('re');
+	my $re_regexp = Sympa::Regexps::re();
 	if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
 	    ($before_tag, $after_tag) = ($1, $'); #'
 	} else {
@@ -6074,7 +6074,7 @@ sub load_scenario_list {
     foreach my $dir (@list_of_scenario_dir) {
 	next unless (-d $dir);
 	
-	my $scenario_regexp = &tools::get_regexp('scenario');
+	my $scenario_regexp = Sympa::Regexps::scenario();
 
 	while (<$dir/$action.*:ignore>) {
 	    if (/$action\.($scenario_regexp):ignore$/) {
@@ -6464,7 +6464,7 @@ sub _include_users_file {
     my $id = Datasource::_get_datasource_id($filename);
     my $lines = 0;
     my $emails_found = 0;
-    my $email_regexp = &tools::get_regexp('email');
+    my $email_regexp = Sympa::Regexps::email();
     
     while (<INCLUDE>) {
 	if($lines > 49 && $emails_found == 0){
@@ -6557,7 +6557,7 @@ sub _include_users_remote_file {
 	my @remote_file = split(/\n/,$res->content);
 	my $lines = 0;
 	my $emails_found = 0;
-	my $email_regexp = &tools::get_regexp('email');
+	my $email_regexp = Sympa::Regexps::email();
 
 	# forgot headers (all line before one that contain a email
 	foreach my $line (@remote_file) {
@@ -6660,7 +6660,7 @@ sub _include_users_voot_group {
 		return undef;
 	}
 	
-	my $email_regexp = &tools::get_regexp('email');
+	my $email_regexp = Sympa::Regexps::email();
 	my $total = 0;
 	
 	foreach my $member (@$members) {
@@ -10408,7 +10408,7 @@ sub delete_subscription_request {
     &Log::do_log('debug2', 'List::delete_subscription_request(%s, %s)', $self->{'name'}, join(',',@list_of_email));
 
     my $removed_file = 0;
-    my $email_regexp = &tools::get_regexp('email');
+    my $email_regexp = Sympa::Regexps::email();
     
     unless (opendir SPOOL, $Conf::Conf{'queuesubscribe'}) {
 	&Log::do_log('info', 'Unable to read spool %s', $Conf::Conf{'queuesubscribe'});
