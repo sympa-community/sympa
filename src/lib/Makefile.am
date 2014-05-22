@@ -75,8 +75,16 @@ nobase_modules_DATA = \
 	WebAgent.pm \
 	wwslib.pm
 
+man3dir = $(mandir)/man3
+man3ext = 3Sympa
+MAN3PM = \
+        Sympa/Language.pm \
+        Sympa/LockedFile.pm \
+        Sympa/ModDef.pm \
+        Sympa/User.pm
+
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
-CLEANFILES = Sympa/Constants.pm
+CLEANFILES = Sympa/Constants.pm *.$(man3ext)
 
 Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 	if [ -f $(DESTDIR)$(modulesdir)/Sympa/Constants.pm ]; then \
@@ -110,3 +118,29 @@ Sympa/Constants.pm: Sympa/Constants.pm.in Makefile
 		-e 's|--arcdir--|$(arcdir)|' \
 		-e 's|--bouncedir--|$(bouncedir)|' \
 		< $(srcdir)/$@.in > $@
+
+man3pm: $(MAN3PM) Makefile
+	@test -n "$(man3ext)" || exit 0; \
+	for pm in $(MAN3PM); do \
+		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\//::/g' \
+		| while read pod; do \
+		rm -f $$pod.$(man3ext); \
+		echo "GEN $$pod.$(man3ext)"; \
+		$(POD2MAN) --section=$(man3ext) --center="sympa $(VERSION)" \
+			--lax --release="$(VERSION)" $$pm $$pod.$(man3ext); \
+		done; \
+	done
+
+install-data-hook: man3pm
+	@test -n "$(man3ext)" || exit 0; \
+	test -n "$(man3dir)" || exit 0; \
+	$(MKDIR_P) "$(DESTDIR)$(man3dir)" || exit 1; \
+	for pm in $(MAN3PM); do \
+		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\//::/g' \
+		| while read pod; do \
+		echo "installing $$pod.$(man3ext)"; \
+		$(INSTALL_DATA) "$$pod.$(man3ext)" "$(DESTDIR)$(man3dir)" \
+		|| exit $$?; \
+		done; \
+	done
+
