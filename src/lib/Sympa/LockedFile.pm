@@ -29,7 +29,7 @@ use warnings;
 use base qw(IO::File);
 
 use Carp qw(croak);
-use Fcntl qw(LOCK_EX LOCK_NB LOCK_SH);
+use Fcntl qw();
 use File::NFSLock;
 $File::NFSLock::LOCK_EXTENSION = '.lock';
 
@@ -45,12 +45,12 @@ sub open {
 
     my $lock_type;
     if ($mode =~ /[+>aw]/) {
-        $lock_type = LOCK_EX;
+        $lock_type = Fcntl::LOCK_EX;
     } else {
-        $lock_type = LOCK_SH;
+        $lock_type = Fcntl::LOCK_SH;
     }
     if ($blocking_timeout < 0) {
-        $lock_type |= LOCK_NB;
+        $lock_type |= Fcntl::LOCK_NB;
     }
 
     my $lock = File::NFSLock->new(
@@ -185,8 +185,8 @@ lock will be stolen.
 
 Mode to open file.
 If it implys any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
-C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<LOCK_EX>),
-otherwise shared lock (C<LOCK_SH>).
+C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<Fcntl::LOCK_EX>),
+otherwise shared lock (C<Fcntl::LOCK_SH>).
 
 Default is C<'E<lt>'>.
 

@@ -36,10 +36,10 @@ sub new {
     my($pkg, $name) = @_;
 
     my $robot = {'name' => $name};
-    &Log::do_log('debug2', '');
+    Log::do_log('debug2', '');
     
     unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-	&Log::do_log('err',"Unknown robot '$name'");
+	Log::do_log('err',"Unknown robot '$name'");
 	return undef;
     }
 
@@ -49,7 +49,7 @@ sub new {
     }else {
 	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;
 	unless (-d $robot->{'home'}) {
-	    &Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
+	    Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
 	    return undef;
 	}
     }
@@ -67,7 +67,7 @@ sub new {
 sub get_lists {
     my $self = shift;
 
-    return &List::get_lists($self->{'name'});
+    return List::get_lists($self->{'name'});
 }
 
 

@@ -59,18 +59,18 @@ sub new {
     my $rss = $context->{'rss'};
     my $ajax =  $context->{'ajax'};
 
-    &Log::do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
+    Log::do_log('debug', 'SympaSession::new(%s,%s,%s)', $robot,$cookie,$action);
     my $self = {'robot' => $robot}; # set current robot
     bless $self, $pkg;
     
     unless ($robot) {
-	&Log::do_log('err', 'Missing robot parameter, cannot create session object') ;
+	Log::do_log('err', 'Missing robot parameter, cannot create session object') ;
 	return undef;
     }
 
 #   passive_session are session not stored in the database, they are used for crawler bots and action such as css, wsdl, ajax and rss
     
-    if (&tools::is_a_crawler($robot,{'user_agent_string' => $ENV{'HTTP_USER_AGENT'}})) {
+    if (tools::is_a_crawler($robot,{'user_agent_string' => $ENV{'HTTP_USER_AGENT'}})) {
 	$self->{'is_a_crawler'} = 1;
 	$self->{'passive_session'} = 1;
     }
@@ -85,13 +85,13 @@ sub new {
 	    return undef;
 	}
 	if ($status eq 'not_found') {
-	    &Log::do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a new session (may ne a fake cookie)
+	    Log::do_log('info',"SympaSession::new ignoring unknown session cookie '$cookie'" ); # start a new session (may ne a fake cookie)
 	    return (new SympaSession ($robot));
 	}
     }else{
 	# create a new session context
 	$self->{'new_session'} = 1; ## Tag this session as new, ie no data in the DB exist
-	$self->{'id_session'} = &get_random();
+	$self->{'id_session'} = get_random();
 	$self->{'email'} = 'nobody';
 	$self->{'remote_addr'} = $ENV{'REMOTE_ADDR'};
 	$self->{'date'} = $self->{'refresh_date'} = $self->{'start_date'} =
@@ -172,7 +172,7 @@ sub load {
     my $counter = 0;
     while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
 	if ( $counter > 0){
-	    &Log::do_log('err',"The SQL statement did return more than one session. Is this a bug coming from dbi or mysql?");
+	    Log::do_log('err',"The SQL statement did return more than one session. Is this a bug coming from dbi or mysql?");
 	    $session->{'email'} = '';
 	    last;
 	}
@@ -195,7 +195,7 @@ sub load {
 	);
     }
 
-    my %datas= &tools::string_2_hash($session->{'data'});
+    my %datas= tools::string_2_hash($session->{'data'});
 
     ## canonicalize lang if possible.
     $datas{'lang'} =
@@ -219,7 +219,7 @@ sub load {
 ## This method will both store the session information in the database
 sub store {
     my $self = shift;
-    &Log::do_log('debug', '');
+    Log::do_log('debug', '');
 
     return undef unless ($self->{'id_session'});
     return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
@@ -231,7 +231,7 @@ sub store {
 	next unless ($var);
 	$hash{$var} = $self->{$var};
     }
-    my $data_string = &tools::hash_2_string (\%hash);
+    my $data_string = tools::hash_2_string (\%hash);
     my $time = time;
 
     ## If this is a new session, then perform an INSERT
@@ -312,7 +312,7 @@ sub store {
 ## This method will renew the session ID 
 sub renew {
     my $self = shift;
-    &Log::do_log('debug', 'id_session=(%s)',$self->{'id_session'});
+    Log::do_log('debug', 'id_session=(%s)',$self->{'id_session'});
 
     return undef unless ($self->{'id_session'});
     return if ($self->{'is_a_crawler'}); # do not create a session in session table for crawlers; 
@@ -324,7 +324,7 @@ sub renew {
 	next unless ($var);
 	$hash{$var} = $self->{$var};
     }
-    my $data_string = &tools::hash_2_string (\%hash);
+    my $data_string = tools::hash_2_string (\%hash);
 
     my $sth;
     ## Cookie may contain previous session ID.
@@ -352,7 +352,7 @@ sub renew {
     }
 
     ## Renew the session ID in order to prevent session hijacking
-    my $new_id = &get_random();
+    my $new_id = get_random();
 
     ## Do refresh the session ID when remote address was changed or refresh
     ## interval was past.  Conditions also are checked by SQL so that
@@ -438,18 +438,18 @@ sub purge_old_sessions {
 
     my $robot = shift;
 
-    &Log::do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
+    Log::do_log('info', 'SympaSession::purge_old_sessions(%s,%s)',$robot);
 
-    my $delay = &tools::duration_conv($Conf{'session_table_ttl'}) ; 
-    my $anonymous_delay = &tools::duration_conv($Conf{'anonymous_session_table_ttl'}) ; 
+    my $delay = tools::duration_conv($Conf::Conf{'session_table_ttl'}) ; 
+    my $anonymous_delay = tools::duration_conv($Conf::Conf{'anonymous_session_table_ttl'}) ; 
 
-    unless ($delay) { &Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
-    unless ($anonymous_delay) { &Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with anonymous delay null',$robot); return;}
+    unless ($delay) { Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with delay null',$robot); return;}
+    unless ($anonymous_delay) { Log::do_log('info', 'SympaSession::purge_old_session(%s) exit with anonymous delay null',$robot); return;}
 
     my @sessions ;
     my  $sth;
 
-    my $robot_condition = sprintf "robot_session = %s", &SDM::quote($robot) unless (($robot eq '*')||($robot));
+    my $robot_condition = sprintf "robot_session = %s", SDM::quote($robot) unless (($robot eq '*')||($robot));
 
     my $delay_condition = time-$delay.' > date_session' if ($delay);
     my $anonymous_delay_condition = time-$anonymous_delay.' > date_session' if ($anonymous_delay);
@@ -473,31 +473,31 @@ sub purge_old_sessions {
 	  WHERE %s %s %s AND email_session = 'nobody' AND hit_session = '1'},
 	$robot_condition, $anonymous_and, $anonymous_delay_condition;
 
-    unless ($sth = &SDM::do_query($count_statement)) {
-	&Log::do_log('err', 'Unable to count old session for robot %s', $robot);
+    unless ($sth = SDM::do_query($count_statement)) {
+	Log::do_log('err', 'Unable to count old session for robot %s', $robot);
 	return undef;
     }
     
     my $total =  $sth->fetchrow;
     if ($total == 0) {
-	&Log::do_log('debug','SympaSession::purge_old_sessions no sessions to expire');
+	Log::do_log('debug','SympaSession::purge_old_sessions no sessions to expire');
     }else{
-	unless ($sth = &SDM::do_query($statement)) {
-	    &Log::do_log('err','Unable to purge old sessions for robot %s', $robot);
+	unless ($sth = SDM::do_query($statement)) {
+	    Log::do_log('err','Unable to purge old sessions for robot %s', $robot);
 	    return undef;
 	}
     }
-    unless ($sth = &SDM::do_query($anonymous_count_statement)) {
-	&Log::do_log('err','Unable to count anonymous sessions for robot %s', $robot);
+    unless ($sth = SDM::do_query($anonymous_count_statement)) {
+	Log::do_log('err','Unable to count anonymous sessions for robot %s', $robot);
 	return undef;
     }
     my $anonymous_total =  $sth->fetchrow;
     if ($anonymous_total == 0) {
-	&Log::do_log('debug','SympaSession::purge_old_sessions no anonymous sessions to expire');
+	Log::do_log('debug','SympaSession::purge_old_sessions no anonymous sessions to expire');
 	return $total ;
     }
-    unless ($sth = &SDM::do_query($anonymous_statement)) {
-	&Log::do_log('err','Unable to purge anonymous sessions for robot %s',$robot);
+    unless ($sth = SDM::do_query($anonymous_statement)) {
+	Log::do_log('err','Unable to purge anonymous sessions for robot %s',$robot);
 	return undef;
     }
     return $total+$anonymous_total;
@@ -510,32 +510,32 @@ sub purge_old_tickets {
 
     my $robot = shift;
 
-    &Log::do_log('info', 'SympaSession::purge_old_tickets(%s,%s)',$robot);
+    Log::do_log('info', 'SympaSession::purge_old_tickets(%s,%s)',$robot);
 
-    my $delay = &tools::duration_conv($Conf{'one_time_ticket_table_ttl'}) ; 
+    my $delay = tools::duration_conv($Conf::Conf{'one_time_ticket_table_ttl'}) ; 
 
-    unless ($delay) { &Log::do_log('info', 'SympaSession::purge_old_tickets(%s) exit with delay null',$robot); return;}
+    unless ($delay) { Log::do_log('info', 'SympaSession::purge_old_tickets(%s) exit with delay null',$robot); return;}
 
     my @tickets ;
     my  $sth;
 
-    my $robot_condition = sprintf "robot_one_time_ticket = %s", &SDM::quote($robot) unless (($robot eq '*')||($robot));
+    my $robot_condition = sprintf "robot_one_time_ticket = %s", SDM::quote($robot) unless (($robot eq '*')||($robot));
     my $delay_condition = time-$delay.' > date_one_time_ticket' if ($delay);
     my $and = ' AND ' if (($delay_condition) && ($robot_condition));
     my $count_statement = sprintf "SELECT count(*) FROM one_time_ticket_table WHERE $robot_condition $and $delay_condition";
     my $statement = sprintf "DELETE FROM one_time_ticket_table WHERE $robot_condition $and $delay_condition";
 
-    unless ($sth = &SDM::do_query($count_statement)) {
-	&Log::do_log('err','Unable to count old one time tickets for robot %s',$robot);
+    unless ($sth = SDM::do_query($count_statement)) {
+	Log::do_log('err','Unable to count old one time tickets for robot %s',$robot);
 	return undef;
     }
     
     my $total =  $sth->fetchrow;
     if ($total == 0) {
-	&Log::do_log('debug','SympaSession::purge_old_tickets no tickets to expire');
+	Log::do_log('debug','SympaSession::purge_old_tickets no tickets to expire');
     }else{
-	unless ($sth = &SDM::do_query($statement)) {
-	    &Log::do_log('err','Unable to delete expired one time tickets for robot %s',$robot);
+	unless ($sth = SDM::do_query($statement)) {
+	    Log::do_log('err','Unable to delete expired one time tickets for robot %s',$robot);
 	    return undef;
 	}
     }
@@ -548,12 +548,12 @@ sub list_sessions {
     my $robot = shift;
     my $connected_only = shift;
 
-    &Log::do_log('debug', 'SympaSession::list_session(%s,%s,%s)',$delay,$robot,$connected_only);
+    Log::do_log('debug', 'SympaSession::list_session(%s,%s,%s)',$delay,$robot,$connected_only);
 
     my @sessions ;
     my $sth;
 
-    my $condition = sprintf "robot_session = %s", &SDM::quote($robot) unless ($robot eq '*');
+    my $condition = sprintf "robot_session = %s", SDM::quote($robot) unless ($robot eq '*');
     my $condition2 = time-$delay.' < date_session ' if ($delay);
     my $and = ' AND ' if (($condition) && ($condition2));
     $condition = $condition.$and.$condition2 ;
@@ -572,10 +572,10 @@ sub list_sessions {
 	  FROM session_table
 	  WHERE %s},
 	$condition;
-    &Log::do_log('debug', 'SympaSession::list_session() : statement = %s',$statement);
+    Log::do_log('debug', 'SympaSession::list_session() : statement = %s',$statement);
 
-    unless ($sth = &SDM::do_query($statement)) {
-	&Log::do_log('err','Unable to get the list of sessions for robot %s',$robot);
+    unless ($sth = SDM::do_query($statement)) {
+	Log::do_log('err','Unable to get the list of sessions for robot %s',$robot);
 	return undef;
     }
     
@@ -611,7 +611,7 @@ sub get_session_cookie {
 ## Set user $email cookie, ckecksum use $secret, expire=(now|session|#sec) domain=(localhost|<a domain>)
 sub set_cookie {
     my ($self, $http_domain, $expires,$use_ssl) = @_ ;
-    &Log::do_log('debug','Session::set_cookie(%s,%s,secure= %s)',$http_domain, $expires,$use_ssl );
+    Log::do_log('debug','Session::set_cookie(%s,%s,secure= %s)',$http_domain, $expires,$use_ssl );
 
     my $expiration;
     if ($expires =~ /now/i) {

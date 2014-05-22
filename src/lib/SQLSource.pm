@@ -46,19 +46,19 @@ sub new {
     my $pkg = shift;
     my $param = shift;
     my $self = $param;
-    &Log::do_log('debug',"Creating new SQLSource object for RDBMS '%s'",$param->{'db_type'});
+    Log::do_log('debug',"Creating new SQLSource object for RDBMS '%s'",$param->{'db_type'});
     my $actualclass;
     our @ISA = qw(Datasource);
     if ($param->{'db_type'} =~ /^mysql$/i) {
 	unless ( eval "require DBManipulatorMySQL" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
+	    Log::do_log('err',"Unable to use DBManipulatorMySQL module: $@");
 	    return undef;
 	}
 	require DBManipulatorMySQL;
 	$actualclass = "DBManipulatorMySQL";
     }elsif ($param->{'db_type'} =~ /^sqlite$/i) {
 	unless ( eval "require DBManipulatorSQLite" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorSQLite module");
+	    Log::do_log('err',"Unable to use DBManipulatorSQLite module");
 	    return undef;
 	}
 	require DBManipulatorSQLite;
@@ -66,7 +66,7 @@ sub new {
 	$actualclass = "DBManipulatorSQLite";
     }elsif ($param->{'db_type'} =~ /^pg$/i) {
 	unless ( eval "require DBManipulatorPostgres" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorPostgres module");
+	    Log::do_log('err',"Unable to use DBManipulatorPostgres module");
 	    return undef;
 	}
 	require DBManipulatorPostgres;
@@ -74,7 +74,7 @@ sub new {
 	$actualclass = "DBManipulatorPostgres";
     }elsif ($param->{'db_type'} =~ /^oracle$/i) {
 	unless ( eval "require DBManipulatorOracle" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorOracle module");
+	    Log::do_log('err',"Unable to use DBManipulatorOracle module");
 	    return undef;
 	}
 	require DBManipulatorOracle;
@@ -82,7 +82,7 @@ sub new {
 	$actualclass = "DBManipulatorOracle";
     }elsif ($param->{'db_type'} =~ /^sybase$/i) {
 	unless ( eval "require DBManipulatorSybase" ){
-	    &Log::do_log('err',"Unable to use DBManipulatorSybase module");
+	    Log::do_log('err',"Unable to use DBManipulatorSybase module");
 	    return undef;
 	}
 	require DBManipulatorSybase;
@@ -109,13 +109,13 @@ sub new {
 
 sub connect {
     my $self = shift;
-    &Log::do_log('debug3',"Checking connection to database %s",$self->{'db_name'});
+    Log::do_log('debug3',"Checking connection to database %s",$self->{'db_name'});
     if ($self->{'dbh'} && $self->{'dbh'}->ping) {
-	&Log::do_log('debug3','Connection to database %s already available',$self->{'db_name'});
+	Log::do_log('debug3','Connection to database %s already available',$self->{'db_name'});
 	return 1;
     }
     unless($self->establish_connection()) {
-	&Log::do_log('err','Unable to establish new connection to database %s on host %s',$self->{'db_name'},$self->{'db_host'});
+	Log::do_log('err','Unable to establish new connection to database %s on host %s',$self->{'db_name'},$self->{'db_host'});
 	return undef;
     }
 }
@@ -136,11 +136,11 @@ sub connect {
 sub establish_connection {
     my $self = shift;
 
-    &Log::do_log('debug','Creating connection to database %s',$self->{'db_name'});
+    Log::do_log('debug','Creating connection to database %s',$self->{'db_name'});
     ## Do we have db_xxx required parameters
     foreach my $db_param ('db_type','db_name') {
 	unless ($self->{$db_param}) {
-	    &Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
+	    Log::do_log('info','Missing parameter %s for DBI connection', $db_param);
 	    return undef;
 	}
     }
@@ -165,8 +165,8 @@ sub establish_connection {
     
     ## Check if DBD is installed
     unless (eval "require DBD::$self->{'db_type'}") {
-	&Log::do_log('err',"No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN");
-	&List::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},{'db_type' => $self->{'db_type'}});
+	Log::do_log('err',"No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN");
+	List::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},{'db_type' => $self->{'db_type'}});
 	return undef;
     }
 
@@ -194,7 +194,7 @@ sub establish_connection {
 	defined $db_connections{$self->{'connect_string'}}{'dbh'} && 
 	$db_connections{$self->{'connect_string'}}{'dbh'}->ping()) {
       
-      &Log::do_log('debug', "Use previous connection");
+      Log::do_log('debug', "Use previous connection");
       $self->{'dbh'} = $db_connections{$self->{'connect_string'}}{'dbh'};
       return $db_connections{$self->{'connect_string'}}{'dbh'};
 
@@ -232,15 +232,15 @@ sub establish_connection {
 		unless (defined $db_connections{$self->{'connect_string'}} &&
 		    $db_connections{$self->{'connect_string'}}{'status'} eq 'failed') { 
     
-		    unless (&List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
-			&Log::do_log('err',"Unable to send notify 'no_db' to listmaster");
+		    unless (List::send_notify_to_listmaster('no_db', $Conf::Conf{'domain'},{})) {
+			Log::do_log('err',"Unable to send notify 'no_db' to listmaster");
 		    }
 		}
 	    }
 	    if ($self->{'reconnect_options'}{'keep_trying'}) {
-		&Log::do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
+		Log::do_log('err','Can\'t connect to Database %s as %s, still trying...', $self->{'connect_string'}, $self->{'db_user'});
 	    } else{
-		&Log::do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
+		Log::do_log('err','Can\'t connect to Database %s as %s', $self->{'connect_string'}, $self->{'db_user'});
 		$db_connections{$self->{'connect_string'}}{'status'} = 'failed';
 		$db_connections{$self->{'connect_string'}}{'first_try'} ||= time;
 		return undef;
@@ -255,9 +255,9 @@ sub establish_connection {
 	    }
 	    
 	    if ($self->{'reconnect_options'}{'warn'}) {
-	    &Log::do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
-		unless (&List::send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
-		    &Log::do_log('notice',"Unable to send notify 'db_restored' to listmaster");
+	    Log::do_log('notice','Connection to Database %s restored.', $self->{'connect_string'});
+		unless (List::send_notify_to_listmaster('db_restored', $Conf::Conf{'domain'},{})) {
+		    Log::do_log('notice',"Unable to send notify 'db_restored' to listmaster");
 		}
 	    }
       }
@@ -342,17 +342,17 @@ sub do_query {
 
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
-    &Log::do_log('debug3', "Will perform query '%s'", $s);
+    Log::do_log('debug3', "Will perform query '%s'", $s);
 
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 	# Check connection to database in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-		&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+		Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -360,25 +360,25 @@ sub do_query {
     unless ($self->{'sth'}->execute) {
 	# Check connection to database in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 		# Check connection to database in case it would be the cause of the problem.
 		unless($self->connect()) {
-		    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		    return undef;
 		}else {
 		    unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
 			my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-			&Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
+			Log::do_log('err','Unable to prepare SQL statement %s : %s', $trace_statement, $self->{'dbh'}->errstr);
 			return undef;
 		    }
 		}
 	    }
 	    unless ($self->{'sth'}->execute) {
 		my $trace_statement = sprintf $query, @{$self->prepare_query_log_values(@params)};
-		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
+		Log::do_log('err','Unable to execute SQL statement "%s" : %s', $trace_statement, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -402,7 +402,7 @@ sub do_prepared_query {
 	    $types{$i} = $p;
 	    push @params, shift;
 	} elsif (ref $p) {
-	    &Log::do_log('err', 'unexpected %s object.  Ask developer',
+	    Log::do_log('err', 'unexpected %s object.  Ask developer',
 			 ref $p);
 	    return undef;
 	} else {
@@ -416,19 +416,19 @@ sub do_prepared_query {
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
     $query =~ s/\n\s*/ /g;
-    &Log::do_log('debug3', "Will perform query '%s'", $query);
+    Log::do_log('debug3', "Will perform query '%s'", $query);
 
     if ($self->{'cached_prepared_statements'}{$query}) {
 	$sth = $self->{'cached_prepared_statements'}{$query};
     } else {
-	&Log::do_log('debug3','Did not find prepared statement for %s. Doing it.',$query);
+	Log::do_log('debug3','Did not find prepared statement for %s. Doing it.',$query);
 	unless ($sth = $self->{'dbh'}->prepare($query)) {
 	    unless($self->connect()) {
-		&Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		return undef;
 	    }else {
 		unless ($sth = $self->{'dbh'}->prepare($query)) {
-		    &Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+		    Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 		    return undef;
 		}
 	    }
@@ -445,16 +445,16 @@ sub do_prepared_query {
     unless ($sth->execute(@params)) {
 	# Check database connection in case it would be the cause of the problem.
 	unless($self->connect()) {
-	    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+	    Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 	    return undef;
 	}else {
 	    unless ($sth = $self->{'dbh'}->prepare($query)) {
 		unless($self->connect()) {
-		    &Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
+		    Log::do_log('err', 'Unable to get a handle to %s database',$self->{'db_name'});
 		    return undef;
 		}else {
 		    unless ($sth = $self->{'dbh'}->prepare($query)) {
-			&Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
+			Log::do_log('err','Unable to prepare SQL statement : %s', $self->{'dbh'}->errstr);
 			return undef;
 		    }
 		}
@@ -468,7 +468,7 @@ sub do_prepared_query {
 
 	    $self->{'cached_prepared_statements'}{$query} = $sth;
 	    unless ($sth->execute(@params)) {
-		&Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
+		Log::do_log('err','Unable to execute SQL statement "%s" : %s', $query, $self->{'dbh'}->errstr);
 		return undef;
 	    }
 	}
@@ -508,10 +508,10 @@ sub fetch {
 	return $status;
     };
     if ( $@ eq "TIMEOUT\n" ) {
-	&Log::do_log('err','Fetch timeout on remote SQL database');
+	Log::do_log('err','Fetch timeout on remote SQL database');
         return undef;
     }elsif ($@) {
-	&Log::do_log('err','Fetch failed on remote SQL database');
+	Log::do_log('err','Fetch failed on remote SQL database');
     return undef;
     }
 
@@ -526,7 +526,7 @@ sub disconnect {
 }
 
 sub create_db {
-    &Log::do_log('debug3', 'List::create_db()');    
+    Log::do_log('debug3', 'List::create_db()');    
     return 1;
 }
 

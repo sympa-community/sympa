@@ -48,8 +48,8 @@ unless ( Conf::load() ) {
     exit 1;
 }
 
-Log::do_openlog( $Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa_newaliases' );
-Log::set_log_level( $Conf{'log_level'} );
+Log::do_openlog( $Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'sympa_newaliases' );
+Log::set_log_level( $Conf::Conf{'log_level'} );
 
 my ( $aliases_file, $aliases_program, $aliases_db_type );
 if ($robot_id) {
@@ -61,9 +61,9 @@ if ($robot_id) {
     $aliases_program = Conf::get_robot_conf( $robot_id, 'aliases_program' );
     $aliases_db_type = Conf::get_robot_conf( $robot_id, 'aliases_db_type' );
 } else {
-    $aliases_file    = $Conf{'sendmail_aliases'};
-    $aliases_program = $Conf{'aliases_program'};
-    $aliases_db_type = $Conf{'aliases_db_type'};
+    $aliases_file    = $Conf::Conf{'sendmail_aliases'};
+    $aliases_program = $Conf::Conf{'aliases_program'};
+    $aliases_db_type = $Conf::Conf{'aliases_db_type'};
 }
 if ( $aliases_file eq 'none' ) {
     exit 0;    # do nothing

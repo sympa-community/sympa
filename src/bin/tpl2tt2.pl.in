@@ -50,9 +50,9 @@ unless (Conf::load()) {
     die 'config_error';
 }
 
-if ($Conf{'db_name'} and $Conf{'db_type'}) {
+if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     unless ($List::use_db = SDM::probe_db()) {
- 	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+ 	die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf::Conf{'db_name'});
     }
 }
 
@@ -64,7 +64,7 @@ if ($#ARGV >=0) {
 	die "unable to find file $f";
     }
     
-    &convert($f);
+    convert($f);
 
     exit 0;
 }
@@ -122,7 +122,7 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
 
     ## Search in V. Robot Lists
-    my $listOfLists = &List::get_lists($vr);
+    my $listOfLists = List::get_lists($vr);
     foreach my $list ( @$listOfLists ) {
 
 	push @directories, $list->{'dir'};
@@ -207,24 +207,24 @@ foreach my $tpl (@templates) {
     ## Create directory if required
     unless (-d $dest_path) {
 	printf "Creating $dest_path directory\n";
-	unless (&my_mkdir ($dest_path)) {
+	unless (my_mkdir ($dest_path)) {
 	    printf STDERR "Error : Cannot create $dest_path directory : $!\n";
 	    next;
 	}
-	unless (&tools::set_file_rights(file => $dest_path,
+	unless (tools::set_file_rights(file => $dest_path,
 					user => Sympa::Constants::USER,
 					group => Sympa::Constants::GROUP,
 					mode => 0755,
 					))
 	{
-	    &Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	    Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	    next;
 	}
     }
 
     my $tt2 = "$dest_path/$dest_file";
 
-    &convert($tpl, $tt2);
+    convert($tpl, $tt2);
     $total++;
     
     ## Rename old files to .converted
@@ -264,12 +264,12 @@ sub convert {
 
     printf "Template file $in_file has been converted to $out_file\n";
     
-    unless (&tools::set_file_rights(file => $out_file,
+    unless (tools::set_file_rights(file => $out_file,
 				    user => Sympa::Constants::USER,
 				    group => Sympa::Constants::GROUP
 				    ))
     {
-	&Log::do_log('err','Unable to set rights on %s',$Conf{'db_name'});
+	Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
 	return undef;
     }
 }

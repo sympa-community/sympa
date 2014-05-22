@@ -89,7 +89,7 @@ Creates a new Message object.
 
 =over 
 
-=item * &Log::do_log
+=item * Log::do_log()
 
 =item * Conf::get_robot_conf
 
@@ -130,7 +130,7 @@ sub new {
     my $message_in_spool= $datas->{'message_in_spool'};
 
     my $message;
-    &Log::do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
+    Log::do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
     
     if ($mimeentity) {
 	$message->{'msg'} = $mimeentity;
@@ -156,12 +156,12 @@ sub new {
 	## Parse message as a MIME::Entity
 	$message->{'filename'} = $file;
 	unless (open FILE, $file) {
-	    &Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
+	    Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
 	    return undef;
 	}
     
 	# unless ($msg = $parser->read(\*FILE)) {
-	#    &Log::do_log('err', 'Unable to parse message %s', $file);
+	#    Log::do_log('err', 'Unable to parse message %s', $file);
 	#    close(FILE);
 	#    return undef;
 	#}
@@ -179,7 +179,7 @@ sub new {
     }  
      
     unless ($msg) {
-	&Log::do_log('err', 'Unable to parse message from file %s, skipping.', $file);
+	Log::do_log('err', 'Unable to parse message from file %s, skipping.', $file);
 	return undef;
     }   
     
@@ -233,7 +233,7 @@ sub new {
     chomp $message->{'rcpt'};
     unless (defined $noxsympato) { # message.pm can be used not only for message comming from queue
 	unless ($message->{'rcpt'}) {
-	    &Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
+	    Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
 	    return undef;
 	}
 	    
@@ -243,7 +243,7 @@ sub new {
 	$robot = lc($robot);
 	$listname = lc($listname);
 	$robot ||= $Conf::Conf{'domain'};
-	my $spam_status = &Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
+	my $spam_status = Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
 	$message->{'spam_status'} = 'unkown';
 	if(defined $spam_status) {
 	    if (ref($spam_status ) eq 'HASH') {
@@ -253,10 +253,10 @@ sub new {
 	    }
 	}
 	
-	my $conf_email = &Conf::get_robot_conf($robot, 'email');
-	my $conf_host = &Conf::get_robot_conf($robot, 'host');
+	my $conf_email = Conf::get_robot_conf($robot, 'email');
+	my $conf_host = Conf::get_robot_conf($robot, 'host');
 	unless ($listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
-	    my $list_check_regexp = &Conf::get_robot_conf($robot,'list_check_regexp');
+	    my $list_check_regexp = Conf::get_robot_conf($robot,'list_check_regexp');
 	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
 		$listname = $1;
 	    }
@@ -267,8 +267,8 @@ sub new {
 	    }	
 	}
 	# verify DKIM signature
-	if (&Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
-	    $message->{'dkim_pass'} = &tools::dkim_verifier($message->{'msg_as_string'});
+	if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
+	    $message->{'dkim_pass'} = tools::dkim_verifier($message->{'msg_as_string'});
 	}
     }
         
@@ -277,10 +277,10 @@ sub new {
 	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
 	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
 
-	if ($chksum eq &tools::sympa_checksum($rcpt)) {
+	if ($chksum eq tools::sympa_checksum($rcpt)) {
 	    $message->{'md5_check'} = 1 ;
 	}else{
-	    &Log::do_log('err',"incorrect X-Sympa-Checksum header");	
+	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
 	}
     }
 
@@ -290,10 +290,10 @@ sub new {
 	## Decrypt messages
 	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
 	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    my ($dec, $dec_as_string) = &tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
+	    my ($dec, $dec_as_string) = tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
 	    
 	    unless (defined $dec) {
-		&Log::do_log('debug', "Message %s could not be decrypted", $file);
+		Log::do_log('debug', "Message %s could not be decrypted", $file);
 		return undef;
 		## We should the sender and/or the listmaster
 	    }
@@ -303,17 +303,17 @@ sub new {
 	    $message->{'msg'} = $dec;
 	    $message->{'msg_as_string'} = $dec_as_string;
 	    $hdr = $dec->head;
-	    &Log::do_log('debug', "message %s has been decrypted", $file);
+	    Log::do_log('debug', "message %s has been decrypted", $file);
 	}
 	
 	## Check S/MIME signatures
 	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
 	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
-	    my $signed = &tools::smime_sign_check ($message);
+	    my $signed = tools::smime_sign_check ($message);
 	    if ($signed->{'body'}) {
 		$message->{'smime_signed'} = 1;
 		$message->{'smime_subject'} = $signed->{'subject'};
-		&Log::do_log('debug', "message %s is signed, signature is checked", $file);
+		Log::do_log('debug', "message %s is signed, signature is checked", $file);
 	    }
 	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
 	}
@@ -612,7 +612,7 @@ sub _fix_html_part {
 
 	my $io = $bodyh->open("w");
 	unless (defined $io) {
-	    &Log::do_log('err', "Failed to save message : $!");
+	    Log::do_log('err', "Failed to save message : $!");
 	    return undef;
 	}
 	$io->print($filtered_body);

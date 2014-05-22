@@ -28,7 +28,7 @@ use strict;
 use English qw(-no_match_vars);
 use Getopt::Long;
 use Pod::Usage;
-use Sys::Hostname qw(hostname);
+use Sys::Hostname qw();
 
 use Sympa::Constants;
 use Sympa::ModDef;
@@ -197,11 +197,11 @@ sub edit_configuration {
     foreach my $param (@confdef::params) {
         next unless $param->{'name'};
         if ($param->{'name'} eq 'domain') {
-            $param->{'default'} = hostname();
+            $param->{'default'} = Sys::Hostname::hostname();
         } elsif ($param->{'name'} eq 'wwsympa_url') {
-            $param->{'default'} = sprintf 'http://%s/sympa', hostname();
+            $param->{'default'} = sprintf 'http://%s/sympa', Sys::Hostname::hostname();
         } elsif ($param->{'name'} eq 'listmaster') {
-            $param->{'default'} = sprintf 'your_email_address@%s', hostname();
+            $param->{'default'} = sprintf 'your_email_address@%s', Sys::Hostname::hostname();
         }
     }
 
@@ -220,7 +220,7 @@ sub edit_configuration {
     my $title = undef;
 
     # dynamic defaults
-    my $domain = hostname();
+    my $domain = Sys::Hostname::hostname();
     my $http_host = "http://$domain";
 
     ## Edition mode

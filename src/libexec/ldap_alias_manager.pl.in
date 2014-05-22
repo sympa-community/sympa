@@ -39,12 +39,12 @@ unless (Conf::load(Sympa::Constants::CONFIG)) {
    exit(1);
 }
 
-my $manager_conf_file = $Conf{etc}.'/ldap_alias_manager.conf';
+my $manager_conf_file = $Conf::Conf{etc}.'/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
 my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclasses,$ldap_ssl,$ldap_cachain,$queue_transport,$bouncequeue_transport)=(undef,undef,undef,undef,undef,undef,undef,undef,undef,undef);
-&GetLdapParameter();
+GetLdapParameter();
 
 my $ldap_connection = undef;
 $ldap_host = $ldap_params{'ldap_host'} or print STDERR "Missing required parameter ldap_host in the config file $manager_conf_file\n" and exit 0;
@@ -75,22 +75,22 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     exit(2);
 }
 
-$default_domain = $Conf{'domain'};
+$default_domain = $Conf::Conf{'domain'};
 
 my %data;
-$data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
+$data{'date'} =  POSIX::strftime("%d %b %Y", localtime(time));
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
 $data{'ldap_base_dn'} = $ldap_base_dn;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-$data{'return_path_suffix'} = &Conf::get_robot_conf($domain, 'return_path_suffix');
+$data{'return_path_suffix'} = Conf::get_robot_conf($domain, 'return_path_suffix');
 my @aliases ;
 
 my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
-&tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
+tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
 
 @aliases = split /\n/, $aliases_dump;
 
@@ -102,12 +102,12 @@ unless (@aliases) {
 if ($operation eq 'add') {
 
 ## Check existing aliases
-if (&already_defined(@aliases)) {
+if (already_defined(@aliases)) {
 print STDERR "some alias already exist\n";
 exit(13);
 }
 
-if (!&initialize_ldap) {
+if (!initialize_ldap()) {
 print STDERR "Can't bind to LDAP server\n";
 exit(14);
 }
@@ -135,7 +135,7 @@ foreach my $alias (@aliases) {
     $data{'list'}{'alias'} = $alias_value;
     $data{'list'}{'command'} = $command_value;
     $data{'list'}{'maildrop'} = $maildrop;
-    &tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
+    tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
     my @attribute_lines = split /\n/, $ldif_dump;
 
     # We create the new LDAP entry.
@@ -172,12 +172,12 @@ foreach my $alias (@aliases) {
 	$entry = undef;
 } # end foreach aliases
 
-&finalize_ldap;
+finalize_ldap();
 
 } # end if add
 elsif ($operation eq 'del') {
     
-    if (!&initialize_ldap) {
+    if (!initialize_ldap()) {
 	print STDERR "Can't bind to LDAP server\n";
 	exit(7);
     }
@@ -193,7 +193,7 @@ elsif ($operation eq 'del') {
 
 	my $ldif_dump;
 	$data{'list'}{'alias'} = $alias_value;
-	&tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump, $tt2_include_path);
+	tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump, $tt2_include_path);
 	my $value = (grep(/^dn:/, split(/\n/, $ldif_dump)))[0];
 	$value =~ s/^dn:\s*//;
 
@@ -204,7 +204,7 @@ elsif ($operation eq 'del') {
 	}
 	} # end foreach aliases
 
-    &finalize_ldap;
+    finalize_ldap();
 } # end if del
 else {
     print STDERR "Action $operation not implemented yet\n";
@@ -218,7 +218,7 @@ sub already_defined {
     
     my @aliases = @_;
 
-    &initialize_ldap;
+    initialize_ldap();
 
     foreach my $alias (@aliases) {
 	
@@ -228,12 +228,12 @@ sub already_defined {
 						     base => $ldap_base_dn);
 	if ($source_result->count != 0) {
 	    print STDERR "Alias already defined : $1\n";
-	    &finalize_ldap;
+	    finalize_ldap();
 	    return 1;
 	}
     }
     
-    &finalize_ldap;
+    finalize_ldap();
     return 0;
 }
 

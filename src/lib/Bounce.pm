@@ -1003,7 +1003,7 @@ sub anabounce {
 
 	}
 
-	$a3 = &corrige($a2, $$from);
+	$a3 = corrige($a2, $$from);
 #        print "CORRECTION : $a2 --> $a3\n" if $a2 ne $a3;
 
         $a3 =~ y/[A-Z]/[a-z]/;

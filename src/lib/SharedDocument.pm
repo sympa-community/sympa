@@ -37,21 +37,21 @@ sub new {
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
-    &Log::do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
+    Log::do_log('debug2', 'SharedDocument::new(%s, %s)', $list->{'name'}, $path);
     
     unless (ref($list) =~ /List/i) {
-	&Log::do_log('err', 'SharedDocument::new : incorrect list parameter');
+	Log::do_log('err', 'SharedDocument::new : incorrect list parameter');
 	return undef;
     }
 
     $document->{'root_path'} = $list->{'dir'}.'/shared';
 
     $document->{'path'} = &main::no_slash_end($path);
-    $document->{'escaped_path'} = &tools::escape_chars($document->{'path'}, '/');
+    $document->{'escaped_path'} = tools::escape_chars($document->{'path'}, '/');
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
-	&Log::do_log('err',"SharedDocument::new : %s : description file", $document->{'path'});
+	Log::do_log('err',"SharedDocument::new : %s : description file", $document->{'path'});
 	return undef;
     }
 
@@ -63,7 +63,7 @@ sub new {
     }
 
     ## Check access control
-    &check_access_control($document, $param);
+    check_access_control($document, $param);
 
     ###############################
     ## The path has been checked ##
@@ -71,13 +71,13 @@ sub new {
 
     ### Document exist ? 
     unless (-r $document->{'absolute_path'}) {
-	&Log::do_log('err',"SharedDocument::new : unable to read %s : no such file or directory", $document->{'absolute_path'});
+	Log::do_log('err',"SharedDocument::new : unable to read %s : no such file or directory", $document->{'absolute_path'});
 	return undef;
     }
     
     ### Document has non-size zero?
     unless (-s $document->{'absolute_path'}) {
-	&Log::do_log('err',"SharedDocument::new : unable to read %s : empty document", $document->{'absolute_path'});
+	Log::do_log('err',"SharedDocument::new : unable to read %s : empty document", $document->{'absolute_path'});
 	return undef;
     }
     
@@ -100,7 +100,7 @@ sub new {
 	$document->{'visible_filename'} = $1;
     }
 
-    $document->{'escaped_filename'} =  &tools::escape_chars($document->{'filename'});
+    $document->{'escaped_filename'} =  tools::escape_chars($document->{'filename'});
 
     ## Father dir
     if ($document->{'path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
@@ -108,7 +108,7 @@ sub new {
     }else {
 	$document->{'father_path'} = '';
     }
-    $document->{'escaped_father_path'} = &tools::escape_chars($document->{'father_path'}, '/');
+    $document->{'escaped_father_path'} = tools::escape_chars($document->{'father_path'}, '/');
     
 
     ### File, directory or URL ?
@@ -137,7 +137,7 @@ sub new {
 	if ($document->{'absolute_path'} =~ /^(([^\/]*\/)*)([^\/]+)$/) {
 	    $desc_file = $1.'.desc.'.$3;
 	}else {
-	    &Log::do_log('err',"SharedDocument::new() : cannot determine desc file for %s", $document->{'absolute_path'});
+	    Log::do_log('err',"SharedDocument::new() : cannot determine desc file for %s", $document->{'absolute_path'});
 	    return undef;
 	}
     }
@@ -149,7 +149,7 @@ sub new {
 	my %desc_hash = &main::get_desc_file($desc_file);
 	$document->{'owner'} = $desc_hash{'email'};
 	    $document->{'title'} = $desc_hash{'title'};
-	$document->{'escaped_title'} = &tools::escape_html($document->{'title'});
+	$document->{'escaped_title'} = tools::escape_html($document->{'title'});
 	
 	# Author
 	if ($desc_hash{'email'}) {
@@ -207,7 +207,7 @@ sub new {
 	
 	# listing of all the shared documents of the directory
 	unless (opendir DIR, $document->{'absolute_path'}) {
-	    &Log::do_log('err',"SharedDocument::new() : cannot open %s : %s", $document->{'absolute_path'}, $!);
+	    Log::do_log('err',"SharedDocument::new() : cannot open %s : %s", $document->{'absolute_path'}, $!);
 	    return undef;
 	}
 	
@@ -235,7 +235,7 @@ sub dump {
     my $self = shift;
     my $fd = shift;
 
-    &tools::dump_var($self, 0, $fd);
+    tools::dump_var($self, 0, $fd);
 
 }
 
@@ -293,7 +293,7 @@ sub check_access_control {
 
     my $list = $self->{'list'};
 
-    &Log::do_log('debug', "check_access_control(%s)", $self->{'path'});
+    Log::do_log('debug', "check_access_control(%s)", $self->{'path'});
 
     # Control for editing
     my $may_read = 1;

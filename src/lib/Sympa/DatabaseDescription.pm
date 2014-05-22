@@ -1088,7 +1088,7 @@ return %full_db_struct;
 sub db_struct {
 
   my %db_struct;
-  my %full_db_struct = &full_db_struct();
+  my %full_db_struct = full_db_struct();
 
   foreach my $table ( keys %full_db_struct  ) { 
       foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
@@ -1155,8 +1155,8 @@ sub db_struct {
 
 sub not_null {
     my %not_null;
-    my %full_db_struct = &full_db_struct() ;
-    my %db_struct = &db_struct() ;
+    my %full_db_struct = full_db_struct() ;
+    my %db_struct = db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
 	    $not_null{'$field'} = $full_db_struct{$table}{'fields'}{$field}{'not_null'}; 
@@ -1167,8 +1167,8 @@ sub not_null {
 
 sub autoincrement {
     my %autoincrement;
-    my %full_db_struct = &full_db_struct() ;
-    my %db_struct = &db_struct() ;
+    my %full_db_struct = full_db_struct() ;
+    my %db_struct = db_struct() ;
     foreach my $table ( keys %full_db_struct  ) {		
 	foreach my $field  ( keys %{ $full_db_struct{$table}{'fields'}  }) {
 	    $autoincrement{$table} = $field if ($full_db_struct{$table}{'fields'}{$field}{'autoincrement'}); 
@@ -1179,7 +1179,7 @@ sub autoincrement {
 
 sub primary {
     my %primary;
-    my %full_db_struct = &full_db_struct() ;
+    my %full_db_struct = full_db_struct() ;
 
     foreach my $table ( keys %full_db_struct ) {
 	my @primarykey;

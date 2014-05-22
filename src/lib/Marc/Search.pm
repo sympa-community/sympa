@@ -7,8 +7,8 @@ package Marc::Search;
 use strict;
 
 use File::Find;
-use HTML::Entities qw(decode_entities encode_entities);
-use Encode qw(decode_utf8 encode_utf8 is_utf8);
+use HTML::Entities qw();
+use Encode qw();
 
 use Marc;
 
@@ -108,7 +108,7 @@ sub key_word
     my $key_word = shift;
     if (defined $key_word)
     {
-      $key_word = decode_utf8($key_word) unless is_utf8($key_word);
+      $key_word = Encode::decode_utf8($key_word) unless Encode::is_utf8($key_word);
       $self->{'key_word'} = $key_word;
     }
     else
@@ -233,17 +233,17 @@ sub _find_match
 				if ($s =~ /\n/) {
 					push @rich, { 'text' => '', 'format' => 'br' };
 				} elsif ($s =~ /\001(.*)\002/) {
-					push @rich, { 'text' => encode_utf8($1), 'format' => 'b' };
+					push @rich, { 'text' => Encode::encode_utf8($1), 'format' => 'b' };
 				} else {
-					push @rich, { 'text' => encode_utf8($s), 'format' => '' };
+					push @rich, { 'text' => Encode::encode_utf8($s), 'format' => '' };
 				}
 			}
 			$res->{'rich'}->{$k} = \@rich;
-			$res->{$k} = encode_entities($res->{$k}, '<>&"');
+			$res->{$k} = HTML::Entities::encode_entities($res->{$k}, '<>&"');
 			$res->{$k} =~ s,\001,<B>,g;
 			$res->{$k} =~ s,\002,</B>,g;
 			$res->{$k} =~ s,\n,<BR/>,g;
-			$res->{$k} = encode_utf8($res->{$k});
+			$res->{$k} = Encode::encode_utf8($res->{$k});
 		}
         push @{$self->{'res'}}, $res;
     }
@@ -360,7 +360,7 @@ sub search
 			$lines =~ s/<[^>]*>[ \t]*//g;
 			$lines =~ s/[<>]/ /g;
 			# Decode entities
-			$lines = decode_entities($lines);
+			$lines = HTML::Entities::decode_entities($lines);
 			$lines =~ s/[\001\002]/ /g;
 			# Split lines
 			$body_ref = [split /(?<=\n)/, $lines];
@@ -372,19 +372,19 @@ sub search
 
 		# Decode entities
 		if ($subj) {
-			$subj = decode_entities($subj);
+			$subj = HTML::Entities::decode_entities($subj);
 			$subj =~ s/[\001\002\r\n]/ /g;
 		}
 		if ($from) {
-			$from = decode_entities($from);
+			$from = HTML::Entities::decode_entities($from);
 			$from =~ s/[\001\002\r\n]/ /g;
 		}
 		if ($date) {
-			$date = decode_entities($date);
+			$date = HTML::Entities::decode_entities($date);
 			$date =~ s/[\001\002\r\n]/ /g;
 		}
 		if ($id) {
-			$id = decode_entities($id);
+			$id = HTML::Entities::decode_entities($id);
 			$id =~ s/[\001\002\r\n]/ /g;
 		}
 

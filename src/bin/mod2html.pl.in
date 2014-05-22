@@ -20,9 +20,9 @@ use SDM;
 unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";
 }
-&Log::do_openlog($Conf{'syslog'}, $Conf{'log_socket_type'}, 'sympa');
+Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'}, 'sympa');
 
-if ($Conf{'db_name'} and $Conf{'db_type'}) {
+if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     unless (SDM::probe_db()) {
 	die "Sympa can't connect to database";
     }
@@ -33,10 +33,10 @@ $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
 $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
 # Sets the UMASK
-umask(oct($Conf{'umask'}));
+umask(oct($Conf::Conf{'umask'}));
 
 ## Loads message list
-unless (opendir SPOOL, $Conf{'queuemod'}) {
+unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
     die "Unable to read spool";
 }
 
@@ -47,11 +47,11 @@ foreach my $msg ( sort grep(!/^\./, readdir SPOOL )) {
     my ($listaddress, $modkey) = ($1, $2);
     
     
-    if (-d "$Conf{'queuemod'}/.$msg") {
+    if (-d "$Conf::Conf{'queuemod'}/.$msg") {
 	next;
     }
     
-    print "Creating HTML version for $Conf{'queuemod'}/$msg\n";
+    print "Creating HTML version for $Conf::Conf{'queuemod'}/$msg\n";
     
     my ($listname, $listrobot) = split /\@/, $listaddress;
     my $self = new List ($listname, $listrobot);
@@ -61,7 +61,7 @@ foreach my $msg ( sort grep(!/^\./, readdir SPOOL )) {
     my $name = $self->{'name'};
     my $host = $admin->{'host'};
     my $robot = $self->{'domain'};
-    my $modqueue = $Conf{'queuemod'};
+    my $modqueue = $Conf::Conf{'queuemod'};
     unless ($name && $admin) {
 	print STDERR "Unkown list $listaddress, skipping\n";
 	next;
@@ -80,13 +80,13 @@ foreach my $msg ( sort grep(!/^\./, readdir SPOOL )) {
 	
 	## generate HTML
 	chdir $tmp_dir;
-	my $mhonarc = &Conf::get_robot_conf($robot, 'mhonarc');
+	my $mhonarc = Conf::get_robot_conf($robot, 'mhonarc');
 	open ARCMOD, "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey|";
 	open MSG, ">msg00000.html";
 	print MSG <ARCMOD>;
 	close MSG;
 	close ARCMOD;
-	chdir $Conf{'home'};
+	chdir $Conf::Conf{'home'};
     }    
 }
 closedir SPOOL;

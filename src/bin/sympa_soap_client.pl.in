@@ -67,7 +67,7 @@ $0 --soap_url=<soap sympa server url> --cookie=sympauser=someone\@cru.fr
 ";
 
 my %options;
-unless (&GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s','session_id=s')) {
+unless (GetOptions(\%main::options, 'soap_url=s', 'service=s', 'trusted_application=s', 'trusted_application_password=s','user_email=s', 'user_password=s','cookie=s','proxy_vars=s','service_parameters=s','session_id=s')) {
     printf "";
 }
 
@@ -106,15 +106,15 @@ if (defined $trusted_application) {
 	exit;
     }
 
-    &play_soap_as_trusted($soap_url, $trusted_application,  $trusted_application_password, $service, $proxy_vars, $service_parameters);
+    play_soap_as_trusted($soap_url, $trusted_application,  $trusted_application_password, $service, $proxy_vars, $service_parameters);
 }elsif($service eq 'getUserEmailByCookie'){
-  &play_soap(soap_url => $soap_url, 
+  play_soap(soap_url => $soap_url, 
 	     session_id => $session_id,
 	     service => $service);
 
 }elsif(defined $cookie){
     printf "error : get_email_cookie\n";
-     &get_email($soap_url, $cookie);
+     get_email($soap_url, $cookie);
      exit;
 }else{
     unless (defined $session_id || (defined $user_email && defined  $user_password)){
@@ -123,7 +123,7 @@ if (defined $trusted_application) {
 	exit;
     }
 
-    &play_soap(soap_url => $soap_url, 
+    play_soap(soap_url => $soap_url, 
 	       user_email => $user_email, 
 	       user_password => $user_password, 
 	       session_id => $session_id,
@@ -153,7 +153,7 @@ sub play_soap_as_trusted{
     printf "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
 
     my $reponse = $soap->authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,\@parameters);
-    &print_result($reponse);
+    print_result($reponse);
 }
 
 sub get_email {
@@ -179,7 +179,7 @@ sub get_email {
 
     print "\n\ngetEmailUserByCookie....\n";
     $reponse = $soap->getUserEmailByCookie($cookie);
-    &print_result($reponse);
+    print_result($reponse);
 exit;
   
  }
@@ -232,7 +232,7 @@ sub play_soap{
     #$reponse = $soap->casLogin($soap_url);
     $reponse = $soap->login($user_email,$user_password);
     $cookies->save;
-    &print_result($reponse);
+    print_result($reponse);
     $session_id = $reponse->result;
   }    
 
@@ -270,7 +270,7 @@ sub play_soap{
       $reponse = $soap->authenticateAndRun($user_email,$session_id,$service,\@parameters);
     }
 
-    &print_result($reponse);
+    print_result($reponse);
     
 }
 
@@ -294,7 +294,7 @@ sub print_result {
 	}else {
 	    @ret = $r->result;
 	}
-	&tools::dump_var(\@ret, 0, \*STDOUT);
+	tools::dump_var(\@ret, 0, \*STDOUT);
     }
 
     return 1;

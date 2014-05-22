@@ -58,7 +58,7 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
     printf "\n%s", $user->{'email_user'};
 
-    my $crypted_password = &tools::crypt_password($user->{'password_user'});
+    my $crypted_password = tools::crypt_password($user->{'password_user'});
 
     printf " => %s", $crypted_password;
 

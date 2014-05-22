@@ -125,13 +125,13 @@ sub load_mime_types {
     my $types = {};
 
     my @localisation = ('/etc/mime.types', '/usr/local/apache/conf/mime.types',
-		     '/etc/httpd/conf/mime.types',$Conf{'etc'}.'/mime.types');
+		     '/etc/httpd/conf/mime.types',$Conf::Conf{'etc'}.'/mime.types');
 
     foreach my $loc (@localisation) {
 	next unless (-r $loc);
 
 	unless(open (CONF, $loc)) {
-	    &Log::do_log('err',"load_mime_types: unable to open $loc");
+	    Log::do_log('err',"load_mime_types: unable to open $loc");
 	    return undef;
 	}
     }
@@ -194,24 +194,24 @@ sub init_passwd {
 	$passwd = $user->{'password'};
 	
 	unless ($passwd) {
-	    $passwd = &new_passwd();
+	    $passwd = new_passwd();
 	    
 	    unless (Sympa::User::update_global_user(
                 $email, { 'password' => $passwd }
             )) {
-		&report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
-		&Log::do_log('info','init_passwd: update failed');
+		report::reject_report_web('intern','update_user_db_failed',{'user'=>$email},'','',$email,$robot);
+		Log::do_log('info','init_passwd: update failed');
 		return undef;
 	    }
 	}
     }else {
-	$passwd = &new_passwd();
+	$passwd = new_passwd();
 	unless ( Sympa::User::add_global_user({'email' => $email,
 				     'password' => $passwd,
 				     'lang' => $data->{'lang'},
 				     'gecos' => $data->{'gecos'}})) {
-	    &report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},'','',$email,$robot);
-	    &Log::do_log('info','init_passwd: add failed');
+	    report::reject_report_web('intern','add_user_db_failed',{'user'=>$email},'','',$email,$robot);
+	    Log::do_log('info','init_passwd: add failed');
 	    return undef;
 	}
     }
@@ -240,15 +240,15 @@ sub get_my_url {
 # Uploade source file to the destination on the server
 sub upload_file_to_server {
     my $param = shift;
-    &Log::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
+    Log::do_log('debug',"Uploading file from field %s to destination %s",$param->{'file_field'},$param->{'destination'});
     my $fh;
     unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-	&Log::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
+	Log::do_log('debug',"Cannot upload file from field $param->{'file_field'}");
 	return undef;
     }	
  
     unless (open FILE, ">:bytes", $param->{'destination'}) {
-	&Log::do_log('debug',"Cannot open file $param->{'destination'} : $!");
+	Log::do_log('debug',"Cannot open file $param->{'destination'} : $!");
 	return undef;
     }
     while (<$fh>) {

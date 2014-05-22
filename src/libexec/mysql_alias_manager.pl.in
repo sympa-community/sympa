@@ -46,11 +46,11 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     exit(2);
 }
 
-$default_domain = $Conf{'domain'};
-$return_path_suffix = $Conf{'return_path_suffix'};
+$default_domain = $Conf::Conf{'domain'};
+$return_path_suffix = $Conf::Conf{'return_path_suffix'};
 
 my %data;
-$data{'date'} =  &POSIX::strftime("%d %b %Y", localtime(time));
+$data{'date'} =  POSIX::strftime("%d %b %Y", localtime(time));
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
 $data{'list'}{'name'} = $listname;
 $data{'default_domain'} = $default_domain;
@@ -62,7 +62,7 @@ my @aliases ;
 my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
-&tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
+tt2::parse_tt2 (\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
 
 @aliases = split /\n/, $aliases_dump;
 
@@ -74,12 +74,12 @@ unless (@aliases) {
 if ($operation eq 'add') {
 
     ## Check existing aliases
-    if (&already_defined(@aliases)) {
+    if (already_defined(@aliases)) {
 	print STDERR "some alias already exist\n";
 	exit(13);
     }
 
-    if (!&initialize_mysql) {
+    if (!initialize_mysql()) {
 	print STDERR "Can't connect to MySQL database\n";
 	exit(14);
     }
@@ -101,12 +101,12 @@ if ($operation eq 'add') {
 	$dbh->do($sql) or die "$sql : $DBI::errstr";
     }
 
-    &finalize_mysql;
+    finalize_mysql();
 
 }
 elsif ($operation eq 'del') {
     
-    if (!&initialize_mysql) {
+    if (!initialize_mysql()) {
 	print STDERR "Can't connect to MySQL database\n";
 	exit(7);
     }
@@ -124,7 +124,7 @@ elsif ($operation eq 'del') {
         $dbh->do($sql) or die "$sql : $DBI::errstr";
     }
 
-    &finalize_mysql;
+    finalize_mysql();
 }
 else {
     print STDERR "Action $operation not implemented yet\n";
@@ -138,7 +138,7 @@ sub already_defined {
     
     my @aliases = @_;
 
-    &initialize_mysql;
+    initialize_mysql();
 
     foreach my $alias (@aliases) {
         if ($alias =~ /^\#/) {
@@ -155,12 +155,12 @@ sub already_defined {
         @enr = $dbh->selectrow_array($sql);
 	if ($enr[0] != 0) {
 	    print STDERR "Alias already defined : $alias_value\n";
-	    &finalize_mysql;
+	    finalize_mysql();
 	    return 1;
 	}
     }
     
-    &finalize_mysql;
+    finalize_mysql();
     return 0;
 }
 

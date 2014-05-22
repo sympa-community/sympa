@@ -53,7 +53,7 @@ my $message_fingerprint;
 # create an empty Bulk
 #sub new {
 #    my $pkg = shift;
-#    my $packet = &Bulk::next();;
+#    my $packet = Bulk::next();;
 #    bless \$packet, $pkg;
 #    return $packet
 #}
@@ -63,10 +63,10 @@ my $message_fingerprint;
 # Next lock the packetb to prevent multiple proccessing of a single packet 
 
 sub next {
-    &Log::do_log('debug', 'Bulk::next');
+    Log::do_log('debug', 'Bulk::next');
 
     # lock next packet
-    my $lock = &tools::get_lockname();
+    my $lock = tools::get_lockname();
 
     my $order;
     my $limit_oracle = '';
@@ -98,7 +98,7 @@ sub next {
 	    ), int time
 	)
 	) {
-	&Log::do_log('err','Unable to get the most prioritary packet from database');
+	Log::do_log('err','Unable to get the most prioritary packet from database');
 	return undef;
     }
 
@@ -109,8 +109,8 @@ sub next {
 
     my $sth;
     # Lock the packet previously selected.
-    unless ($sth = &SDM::do_query( "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", &SDM::quote($lock), $packet->{'messagekey'}, $packet->{'packetid'})) {
-	&Log::do_log('err','Unable to lock packet %s for message %s',$packet->{'packetid'}, $packet->{'messagekey'});
+    unless ($sth = SDM::do_query( "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL", SDM::quote($lock), $packet->{'messagekey'}, $packet->{'packetid'})) {
+	Log::do_log('err','Unable to lock packet %s for message %s',$packet->{'packetid'}, $packet->{'messagekey'});
 	return undef;
     }
     
@@ -127,8 +127,8 @@ sub next {
     }
 
     # select the packet that has been locked previously
-    unless ($sth = &SDM::do_query( "SELECT messagekey_bulkmailer AS messagekey, messageid_bulkmailer AS messageid, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, tracking_bulkmailer AS tracking, merge_bulkmailer as merge, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",&SDM::quote($lock), $order)) {
-	&Log::do_log('err','Unable to retrieve informations for packet %s of message %s',$packet->{'packetid'}, $packet->{'messagekey'});
+    unless ($sth = SDM::do_query( "SELECT messagekey_bulkmailer AS messagekey, messageid_bulkmailer AS messageid, packetid_bulkmailer AS packetid, receipients_bulkmailer AS receipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, tracking_bulkmailer AS tracking, merge_bulkmailer as merge, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",SDM::quote($lock), $order)) {
+	Log::do_log('err','Unable to retrieve informations for packet %s of message %s',$packet->{'packetid'}, $packet->{'messagekey'});
 	return undef;
     }
     
@@ -145,10 +145,10 @@ sub remove {
     my $messagekey = shift;
     my $packetid= shift;
 
-    &Log::do_log('debug', "Bulk::remove(%s,%s)",$messagekey,$packetid);
+    Log::do_log('debug', "Bulk::remove(%s,%s)",$messagekey,$packetid);
 
-    unless ($sth = &SDM::do_query( "DELETE FROM bulkmailer_table WHERE packetid_bulkmailer = %s AND messagekey_bulkmailer = %s",&SDM::quote($packetid),&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to delete packet %s of message %s', $packetid,$messagekey);
+    unless ($sth = SDM::do_query( "DELETE FROM bulkmailer_table WHERE packetid_bulkmailer = %s AND messagekey_bulkmailer = %s",SDM::quote($packetid),SDM::quote($messagekey))) {
+	Log::do_log('err','Unable to delete packet %s of message %s', $packetid,$messagekey);
 	return undef;
     }
     return $sth;
@@ -156,22 +156,22 @@ sub remove {
 
 sub messageasstring {
     my $messagekey = shift;
-    &Log::do_log('debug', 'Bulk::messageasstring(%s)',$messagekey);
+    Log::do_log('debug', 'Bulk::messageasstring(%s)',$messagekey);
     
-    unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to retrieve message %s text representation from database', $messagekey);
+    unless ($sth = SDM::do_query( "SELECT message_bulkspool AS message FROM bulkspool_table WHERE messagekey_bulkspool = %s",SDM::quote($messagekey))) {
+	Log::do_log('err','Unable to retrieve message %s text representation from database', $messagekey);
 	return undef;
     }
 
     my $messageasstring = $sth->fetchrow_hashref('NAME_lc') ;
 
     unless ($messageasstring ){
-	&Log::do_log('err',"could not fetch message $messagekey from spool");
+	Log::do_log('err',"could not fetch message $messagekey from spool");
 	return undef;
     }
     my $msg = MIME::Base64::decode($messageasstring->{'message'});
     unless ($msg){
-	&Log::do_log('err',"could not decode message $messagekey extrated from spool (base64)"); 
+	Log::do_log('err',"could not decode message $messagekey extrated from spool (base64)"); 
 	return undef;
     }
     return $msg;
@@ -181,10 +181,10 @@ sub messageasstring {
 #
 sub message_from_spool {
     my $messagekey = shift;
-    &Log::do_log('debug', '(messagekey : %s)',$messagekey);
+    Log::do_log('debug', '(messagekey : %s)',$messagekey);
     
-    unless ($sth = &SDM::do_query( "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector FROM bulkspool_table WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to retrieve message %s full data from database', $messagekey);
+    unless ($sth = SDM::do_query( "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector FROM bulkspool_table WHERE messagekey_bulkspool = %s",SDM::quote($messagekey))) {
+	Log::do_log('err','Unable to retrieve message %s full data from database', $messagekey);
 	return undef;
     }
 
@@ -373,9 +373,9 @@ sub _merge_msg {
 #  This function retrieves the customized data of the      #
 #  users then parse the message. It returns the message    #
 #  personalized to bulk.pl                                 #
-#  It uses the method &tt2::parse_tt2                      #
-#  It uses the method &List::get_list_member_no_object     #
-#  It uses the method &tools::get_fingerprint              #
+#  It uses the method tt2::parse_tt2()                      #
+#  It uses the method List::get_list_member_no_object()     #
+#  It uses the method tools::get_fingerprint()              #
 #                                                          #
 # IN : - rcpt : the recipient email                        #
 #      - listname : the name of the list                   #
@@ -409,21 +409,21 @@ sub merge_data {
 	}
     );
 
-    $user->{'escaped_email'} = &URI::Escape::uri_escape($rcpt);
+    $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
     my $language = Sympa::Language->instance;
     $user->{'friendly_date'} = $language->gettext_strftime(
 	"%d %b %Y  %H:%M", localtime($user->{'date'}));
 
     # this method as been removed because some users may forward authentication link
-    # $user->{'fingerprint'} = &tools::get_fingerprint($rcpt);
+    # $user->{'fingerprint'} = tools::get_fingerprint($rcpt);
 
     $data->{'user'} = $user;
     $data->{'robot'} = $robot_id;
     $data->{'listname'} = $listname;
 
     # Parse the TT2 in the message : replace the tags and the parameters by the corresponding values
-    unless (&tt2::parse_tt2($data,\$body, $message_output, '', $options)) {
-	&Log::do_log('err','Unable to parse body : "%s"', \$body);
+    unless (tt2::parse_tt2($data,\$body, $message_output, '', $options)) {
+	Log::do_log('err','Unable to parse body : "%s"', \$body);
 	return undef;
     }
 
@@ -452,10 +452,10 @@ sub store {
     my $dkim = $data{'dkim'};
     my $tag_as_last = $data{'tag_as_last'};
 
-    &Log::do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
+    Log::do_log('debug', 'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$tracking, $merge,$dkim->{'d'},$dkim->{'i'},$tag_as_last);
 
-    $priority_message = &Conf::get_robot_conf($robot,'sympa_priority') unless ($priority_message);
-    $priority_packet = &Conf::get_robot_conf($robot,'sympa_packet_priority') unless ($priority_packet);
+    $priority_message = Conf::get_robot_conf($robot,'sympa_priority') unless ($priority_message);
+    $priority_packet = Conf::get_robot_conf($robot,'sympa_packet_priority') unless ($priority_packet);
     
     #creation of a MIME entity to extract the real sender of a message
     my $parser = MIME::Parser->new();
@@ -473,7 +473,7 @@ sub store {
 
     ##-----------------------------##
     
-    my $messagekey = &tools::md5_fingerprint($msg);
+    my $messagekey = tools::md5_fingerprint($msg);
 
     # first store the message in bulk_spool_table 
     # because as soon as packet are created bulk.pl may distribute them
@@ -490,8 +490,8 @@ sub store {
     }else {
 
 	## search if this message is already in spool database : mailfile may perform multiple submission of exactly the same message 
-	unless ($sth = &SDM::do_query("SELECT count(*) FROM bulkspool_table WHERE ( messagekey_bulkspool = %s )", &SDM::quote($messagekey))) {
-	    &Log::do_log('err','Unable to check whether message %s is in spool already', $messagekey);
+	unless ($sth = SDM::do_query("SELECT count(*) FROM bulkspool_table WHERE ( messagekey_bulkspool = %s )", SDM::quote($messagekey))) {
+	    Log::do_log('err','Unable to check whether message %s is in spool already', $messagekey);
 	    return undef;
 	}	
 	
@@ -531,7 +531,7 @@ sub store {
 	    #log in stat_table to make statistics...
 	    unless($message_sender =~ /($robot)\@/) { #ignore messages sent by robot
 		unless ($message_sender =~ /($listname)-request/) { #ignore messages of requests
-		    &Log::db_stat_log({'robot' => $robot, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
+		    Log::db_stat_log({'robot' => $robot, 'list' => $listname, 'operation' => 'send_mail', 'parameter' => length($msg),
 				       'mail' => $message_sender, 'client' => '', 'daemon' => 'sympa.pl'});
 		}
 	    }
@@ -567,15 +567,15 @@ sub store {
 	}else{
 	    $rcptasstring  = $packet;
 	}
-	my $packetid =  &tools::md5_fingerprint($rcptasstring);
+	my $packetid =  tools::md5_fingerprint($rcptasstring);
 	my $packet_already_exist;
 	if (ref($listname) =~ /List/i) {
 	    $listname = $listname->{'name'};
 	}
 	if ($message_already_on_spool) {
 	    ## search if this packet is already in spool database : mailfile may perform multiple submission of exactly the same message 
-	    unless ($sth = &SDM::do_query( "SELECT count(*) FROM bulkmailer_table WHERE ( messagekey_bulkmailer = %s AND  packetid_bulkmailer = %s)", &SDM::quote($messagekey),&SDM::quote($packetid))) {
-		&Log::do_log('err','Unable to check presence of packet %s of message %s in database', $packetid, $messagekey);
+	    unless ($sth = SDM::do_query( "SELECT count(*) FROM bulkmailer_table WHERE ( messagekey_bulkmailer = %s AND  packetid_bulkmailer = %s)", SDM::quote($messagekey),SDM::quote($packetid))) {
+		Log::do_log('err','Unable to check presence of packet %s of message %s in database', $packetid, $messagekey);
 		return undef;
 	    }	
 	    $packet_already_exist = $sth->fetchrow;
@@ -583,19 +583,19 @@ sub store {
 	}
 	 
 	 if ($packet_already_exist) {
-	     &Log::do_log('err','Duplicate message not stored in bulmailer_table');
+	     Log::do_log('err','Duplicate message not stored in bulmailer_table');
 	     
 	 }else {
-	     unless (&SDM::do_query( "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", &SDM::quote($messagekey),&SDM::quote($msg_id),&SDM::quote($packetid),&SDM::quote($rcptasstring),&SDM::quote($from),&SDM::quote($robot),&SDM::quote($listname),$verp,&SDM::quote($tracking),$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date)) {
-		&Log::do_log('err','Unable to add packet %s of message %s to database spool',$packetid,$msg_id);
+	     unless (SDM::do_query( "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", SDM::quote($messagekey),SDM::quote($msg_id),SDM::quote($packetid),SDM::quote($rcptasstring),SDM::quote($from),SDM::quote($robot),SDM::quote($listname),$verp,SDM::quote($tracking),$merge,$priority_message, $priority_for_packet, $current_date,$delivery_date)) {
+		Log::do_log('err','Unable to add packet %s of message %s to database spool',$packetid,$msg_id);
 		return undef;
 	     }
 	 }
 	$packet_rank++;
     }
     # last : unlock message in bulkspool_table so it is now possible to remove this message if no packet has a ref on it			
-    unless (&SDM::do_query( "UPDATE bulkspool_table SET lock_bulkspool='0' WHERE messagekey_bulkspool = %s",&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to unlock packet %s in bulkmailer_table',$messagekey);
+    unless (SDM::do_query( "UPDATE bulkspool_table SET lock_bulkspool='0' WHERE messagekey_bulkspool = %s",SDM::quote($messagekey))) {
+	Log::do_log('err','Unable to unlock packet %s in bulkmailer_table',$messagekey);
 	return undef;
     }
     return 1;
@@ -603,19 +603,19 @@ sub store {
 
 ## remove file that are not referenced by any packet
 sub purge_bulkspool {
-    &Log::do_log('debug', 'purge_bulkspool');
+    Log::do_log('debug', 'purge_bulkspool');
 
-    unless ($sth = &SDM::do_query( "SELECT messagekey_bulkspool AS messagekey FROM bulkspool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0")) {
-	&Log::do_log('err','Unable to check messages unreferenced by packets in database');
+    unless ($sth = SDM::do_query( "SELECT messagekey_bulkspool AS messagekey FROM bulkspool_table LEFT JOIN bulkmailer_table ON messagekey_bulkspool = messagekey_bulkmailer WHERE messagekey_bulkmailer IS NULL AND lock_bulkspool = 0")) {
+	Log::do_log('err','Unable to check messages unreferenced by packets in database');
 	return undef;
     }
 
     my $count = 0;
     while (my $key = $sth->fetchrow_hashref('NAME_lc')) {	
-	if ( &Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
+	if ( Bulk::remove_bulkspool_message('bulkspool',$key->{'messagekey'}) ) {
 	    $count++;
 	}else{
-	    &Log::do_log('err','Unable to remove message (key = %s) from bulkspool_table',$key->{'messagekey'});	    
+	    Log::do_log('err','Unable to remove message (key = %s) from bulkspool_table',$key->{'messagekey'});	    
 	}
    }
     $sth->finish;
@@ -629,8 +629,8 @@ sub remove_bulkspool_message {
     my $table = $spool.'_table';
     my $key = 'messagekey_'.$spool ;
 
-    unless (&SDM::do_query( "DELETE FROM %s WHERE %s = %s",$table,$key,&SDM::quote($messagekey))) {
-	&Log::do_log('err','Unable to delete %s %s from %s',$table,$key,$messagekey);
+    unless (SDM::do_query( "DELETE FROM %s WHERE %s = %s",$table,$key,SDM::quote($messagekey))) {
+	Log::do_log('err','Unable to delete %s %s from %s',$table,$key,$messagekey);
 	return undef;
     }
 
@@ -655,7 +655,7 @@ sub store_test {
     my $verp  = 'on';
     my $merge  = 1;
     
-    &Log::do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s,delivery_date= %s,verp = %s, merge = %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$merge);
+    Log::do_log('debug', 'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s,delivery_date= %s,verp = %s, merge = %s)',$from,$robot,$listname,$priority_message,$delivery_date,$verp,$merge);
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";
@@ -664,7 +664,7 @@ sub store_test {
                                          ETA   => 'linear', });
     $priority_message = 9;
 
-    my $messagekey = &tools::md5_fingerprint(time());
+    my $messagekey = tools::md5_fingerprint(time());
     my $msg;
     $progress->max_update_rate(1);
     my $next_update = 0;
@@ -681,11 +681,11 @@ sub store_test {
 	my $time = time();
         $progress->message(sprintf "Test storing and removing of a %5d kB message (step %s out of %s)", $z*$size_increment, $z, $steps);
 	# 
-	unless (&SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",&SDM::quote($messagekey),&SDM::quote($msg))) {
+	unless (SDM::do_query( "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",SDM::quote($messagekey),SDM::quote($msg))) {
 	    return (($z-1)*$size_increment);
 	}
-	unless ( &Bulk::remove_bulkspool_message('bulkspool',$messagekey) ) {
-	    &Log::do_log('err','Unable to remove test message (key = %s) from bulkspool_table',$messagekey);	    
+	unless ( Bulk::remove_bulkspool_message('bulkspool',$messagekey) ) {
+	    Log::do_log('err','Unable to remove test message (key = %s) from bulkspool_table',$messagekey);	    
 	}
 	$total += $z*$size_increment;
         $progress->message(sprintf ".........[OK. Done in %.2f sec]", time() - $time);
@@ -700,12 +700,12 @@ sub store_test {
 
 ## Return the number of remaining packets in the bulkmailer table.
 sub get_remaining_packets_count {
-    &Log::do_log('debug3', 'get_remaining_packets_count');
+    Log::do_log('debug3', 'get_remaining_packets_count');
 
     my $m_count = 0;
 
-    unless ($sth = &SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table WHERE lock_bulkmailer IS NULL")) {
-	&Log::do_log('err','Unable to count remaining packets in bulkmailer_table');
+    unless ($sth = SDM::do_prepared_query( "SELECT COUNT(*) FROM bulkmailer_table WHERE lock_bulkmailer IS NULL")) {
+	Log::do_log('err','Unable to count remaining packets in bulkmailer_table');
 	return undef;
     }
 
@@ -717,9 +717,9 @@ sub get_remaining_packets_count {
 ## Returns 1 if the number of remaining packets in the bulkmailer table exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
-    &Log::do_log('debug3', 'there_is_too_much_remaining_packets');
-    my $remaining_packets = &get_remaining_packets_count();
-    if ($remaining_packets > &Conf::get_robot_conf('*','bulk_fork_threshold')) {
+    Log::do_log('debug3', 'there_is_too_much_remaining_packets');
+    my $remaining_packets = get_remaining_packets_count();
+    if ($remaining_packets > Conf::get_robot_conf('*','bulk_fork_threshold')) {
 	return $remaining_packets;
     }else{
 	return 0;

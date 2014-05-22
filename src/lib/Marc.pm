@@ -46,8 +46,8 @@ sub AUTOLOAD
 
 	unless (exists($self->{permitted}->{$name}))
 	{
-		&message('arcsearch_marc_autoload_no_access');
-		&wwslog('info','arcsearch_marc: Can not access %s field in object of class %s', $name, $type);
+		message('arcsearch_marc_autoload_no_access');
+		wwslog('info','arcsearch_marc: Can not access %s field in object of class %s', $name, $type);
 		return undef;
 	}
 	if (@_)

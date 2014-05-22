@@ -40,19 +40,19 @@ sub request {
 	## Select appropriate robot
 	if ($Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}}) {
 	  $ENV{'SYMPA_ROBOT'} = $Conf::Conf{'robot_by_soap_url'}{$ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'}};
-	  &Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
+	  Log::do_log('debug2', 'Robot : %s', $ENV{'SYMPA_ROBOT'});
 	}else {
-	  &Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
+	  Log::do_log('debug2', 'URL : %s', $ENV{'SERVER_NAME'}.$ENV{'SCRIPT_NAME'});
 	  $ENV{'SYMPA_ROBOT'} =  $Conf::Conf{'host'} ;
 	}
 
 	## Empty cache of the List.pm module
-	&List::init_list_cache();
+	List::init_list_cache();
 	
 	my $session;
 	## Existing session or new one
-	if (&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})) {
-	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'}, {'cookie'=>&SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})});
+	if (SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})) {
+	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'}, {'cookie'=>SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})});
 	}else {
 	  $session = new SympaSession ($ENV{'SYMPA_ROBOT'},{});
 	  $session->store() if (defined $session);

@@ -36,25 +36,25 @@ use SDM;
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 
 ## Load sympa config
-unless (&Conf::load($sympa_conf_file)) {
+unless (Conf::load($sympa_conf_file)) {
     die 'config_error';
 }
 
 ## Probe Db if defined
-if ($Conf{'db_name'} and $Conf{'db_type'}) {
+if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     unless (SDM::probe_db()) {
-	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
+	die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf::Conf{'db_name'});
     }
 }
 
-my $openssl = $Conf{'openssl'};
-my $home_sympa = $Conf{'home'};
-my $outpass = $Conf{'key_passwd'};
-my $etc_dir = $Conf{'etc'};
+my $openssl = $Conf::Conf{'openssl'};
+my $home_sympa = $Conf::Conf{'home'};
+my $outpass = $Conf::Conf{'key_passwd'};
+my $etc_dir = $Conf::Conf{'etc'};
 
 ## Check option
 my %options;
-&GetOptions(\%main::options, 'pkcs12=s','listname=s', 'robot=s', 'help|h');
+GetOptions(\%main::options, 'pkcs12=s','listname=s', 'robot=s', 'help|h');
 
 $main::options{'foreground'} = 1;
 my $listname = $main::options{'listname'};
@@ -68,7 +68,7 @@ if (($main::options{'help'} ne '') ||
     !(-r $main::options{'pkcs12'}) || 
     (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
    ){
-    &print_usage(); 
+    print_usage(); 
 }else{
 
     if ($listname) {
@@ -80,12 +80,12 @@ if (($main::options{'help'} ne '') ||
 	    die;
 	}
     }elsif($robot) {
-	if (-d $Conf{'etc'}.'/'.$robot) {
-	    $cert = $Conf{'etc'}.'/'.$robot.'/cert.pem';
-	    $privatekey = $Conf{'etc'}.'/'.$robot.'/private_key';
+	if (-d $Conf::Conf{'etc'}.'/'.$robot) {
+	    $cert = $Conf::Conf{'etc'}.'/'.$robot.'/cert.pem';
+	    $privatekey = $Conf::Conf{'etc'}.'/'.$robot.'/private_key';
 	}else{
-	    $cert = $Conf{'etc'}.'/cert.pem';
-	    $privatekey = $Conf{'etc'}.'/private_key';	    
+	    $cert = $Conf::Conf{'etc'}.'/cert.pem';
+	    $privatekey = $Conf::Conf{'etc'}.'/private_key';	    
 	}
     }
 
@@ -147,8 +147,8 @@ For a list certificat, the file will be installed in
 $home_sympa/<listname>/cert.pem and $home_sympa/<listname>/private_key
 
 For Sympa itself a certificate will be installed in 
-$Conf{'etc'}/<robot>/cert.pem and  $Conf{'etc'}/<robot>/private_key or
-$Conf{'etc'}/cert.pem and Conf{'etc'}/private_key
+$Conf::Conf{'etc'}/<robot>/cert.pem and  $Conf::Conf{'etc'}/<robot>/private_key or
+$Conf::Conf{'etc'}/cert.pem and Conf{'etc'}/private_key
 
 
 You are then prompted for inpassword (the password used to encrypt the

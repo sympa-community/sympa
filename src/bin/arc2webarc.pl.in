@@ -61,7 +61,7 @@ my $msg_count = 0;
 $| = 1;
 
 my %opt;
-unless (&GetOptions(\%opt, 'input-directory=s')) {
+unless (GetOptions(\%opt, 'input-directory=s')) {
     die("Unknown options.");
 }
 
@@ -171,7 +171,7 @@ if ($opt{'input-directory'}) {
 	#}
 	
 	## Store messages in web arc
-	&store_messages(\@msgs, $dest_dir);      
+	store_messages(\@msgs, $dest_dir);      
 	
     }
 }

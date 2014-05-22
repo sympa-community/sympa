@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use Carp;
 use Exporter;
-use POSIX qw(mktime);
+use POSIX qw();
 use Sys::Syslog;
 
 use List;
@@ -72,7 +72,7 @@ sub fatal_err {
     };
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
+	unless(List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -81,8 +81,8 @@ sub fatal_err {
     my $full_msg = sprintf $m,@_;
 
     ## Notify listmaster
-    unless (&List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'}, [$full_msg])) {
-	&do_log('err',"Unable to send notify 'sympa died' to listmaster");
+    unless (List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'}, [$full_msg])) {
+	do_log('err',"Unable to send notify 'sympa died' to listmaster");
     }
 
 
@@ -149,14 +149,14 @@ sub do_log {
 
     eval {
         unless (syslog($level, $message, @param)) {
-            &do_connect();
+            do_connect();
             syslog($level, $message, @param);
         }
     };
 
     if ($@ && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
-        &List::send_notify_to_listmaster(
+        List::send_notify_to_listmaster(
             'logs_failed', $Conf::Conf{'domain'}, [$@]
         );
     };
@@ -183,7 +183,7 @@ sub do_openlog {
 #       printf "%s = %s\n", $k, $options{$k};
 #   }
 
-   &do_connect();
+   do_connect();
 }
 
 sub do_connect {
@@ -195,7 +195,7 @@ sub do_connect {
     eval {openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
-	unless(&List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
+	unless(List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {
 	    print STDERR "No logs available, can't send warning message";
 	}
     };
@@ -237,12 +237,12 @@ sub db_log {
     my $list = $arg->{'list'};
     my $robot = $arg->{'robot'};
     my $action = $arg->{'action'};
-    my $parameters = &tools::clean_msg_id($arg->{'parameters'});
+    my $parameters = tools::clean_msg_id($arg->{'parameters'});
     my $target_email = $arg->{'target_email'};
-    my $msg_id = &tools::clean_msg_id($arg->{'msg_id'});
+    my $msg_id = tools::clean_msg_id($arg->{'msg_id'});
     my $status = $arg->{'status'};
     my $error_type = $arg->{'error_type'};
-    my $user_email = &tools::clean_msg_id($arg->{'user_email'});
+    my $user_email = tools::clean_msg_id($arg->{'user_email'});
     my $client = $arg->{'client'};
     my $daemon = $arg->{'daemon'};
     my $date=time;
@@ -265,31 +265,31 @@ sub db_log {
     }
 
     unless ($daemon =~ /^(task|archived|sympa|wwsympa|bounced|sympa_soap)$/) {
-	do_log ('err',"Internal_error : incorrect process value $daemon");
+	do_log('err',"Internal_error : incorrect process value $daemon");
 	return undef;
     }
     
     ## Insert in log_table
 
-    unless(&SDM::do_query( 'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+    unless(SDM::do_query( 'INSERT INTO logs_table (id_logs,date_logs,robot_logs,list_logs,action_logs,parameters_logs,target_email_logs,msg_id_logs,status_logs,error_type_logs,user_email_logs,client_logs,daemon_logs) VALUES (%s,%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
     $id, 
     $date, 
-    &SDM::quote($robot), 
-    &SDM::quote($list), 
-    &SDM::quote($action), 
-    &SDM::quote(substr($parameters,0,100)),
-    &SDM::quote($target_email),
-    &SDM::quote($msg_id),
-    &SDM::quote($status),
-    &SDM::quote($error_type),
-    &SDM::quote($user_email),
-    &SDM::quote($client),
-    &SDM::quote($daemon))) {
+    SDM::quote($robot), 
+    SDM::quote($list), 
+    SDM::quote($action), 
+    SDM::quote(substr($parameters,0,100)),
+    SDM::quote($target_email),
+    SDM::quote($msg_id),
+    SDM::quote($status),
+    SDM::quote($error_type),
+    SDM::quote($user_email),
+    SDM::quote($client),
+    SDM::quote($daemon))) {
 	do_log('err','Unable to insert new db_log entry in the database');
 	return undef;
     }
     #if (($action eq 'send_mail') && $list && $robot){
-    #	&update_subscriber_msg_send($user_email,$list,$robot,1);
+    #	update_subscriber_msg_send($user_email,$list,$robot,1);
     #}
 
     return 1;
@@ -322,17 +322,17 @@ sub db_stat_log{
     }
 
     ##insert in stat table
-    unless(&SDM::do_query( 'INSERT INTO stat_table (id_stat, date_stat, email_stat, operation_stat, list_stat, daemon_stat, user_ip_stat, robot_stat, parameter_stat, read_stat) VALUES (%s, %d, %s, %s, %s, %s, %s, %s, %s, %d)', 
+    unless(SDM::do_query( 'INSERT INTO stat_table (id_stat, date_stat, email_stat, operation_stat, list_stat, daemon_stat, user_ip_stat, robot_stat, parameter_stat, read_stat) VALUES (%s, %d, %s, %s, %s, %s, %s, %s, %s, %d)', 
     $id,
     $date,
-    &SDM::quote($mail),
-    &SDM::quote($operation),
-    &SDM::quote($list),
-    &SDM::quote($daemon),
-    &SDM::quote($ip),
-    &SDM::quote($robot),
-    &SDM::quote($parameter),
-    &SDM::quote($read))) {
+    SDM::quote($mail),
+    SDM::quote($operation),
+    SDM::quote($list),
+    SDM::quote($daemon),
+    SDM::quote($ip),
+    SDM::quote($robot),
+    SDM::quote($parameter),
+    SDM::quote($read))) {
 	do_log('err','Unable to insert new stat entry in the database');
 	return undef;
     }
@@ -359,13 +359,13 @@ sub db_stat_counter_log {
 	}
     }
 
-    unless(&SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
+    unless(SDM::do_query( 'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
     $id,
     $date_deb,
     $date_fin,
-    &SDM::quote($data),
-    &SDM::quote($robot),
-    &SDM::quote($list),
+    SDM::quote($data),
+    SDM::quote($robot),
+    SDM::quote($list),
     $variation,
     $total)) {
 	do_log('err','Unable to insert new stat counter entry in the database');
@@ -378,10 +378,10 @@ sub db_stat_counter_log {
 
 # delete logs in RDBMS
 sub db_log_del {
-    my $exp = &Conf::get_robot_conf('*','logs_expiration_period');
+    my $exp = Conf::get_robot_conf('*','logs_expiration_period');
     my $date = time - ($exp * 30 * 24 * 60 * 60);
 
-    unless(&SDM::do_query( "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", &SDM::quote($date))) {
+    unless(SDM::do_query( "DELETE FROM logs_table WHERE (logs_table.date_logs <= %s)", SDM::quote($date))) {
 	do_log('err','Unable to delete db_log entry from the database');
 	return undef;
     }
@@ -418,28 +418,28 @@ sub get_first_db_log {
 				    'change_email','set_lang','new_d_read','d_control'],
 		       );
 		       
-    my $statement = sprintf "SELECT date_logs, robot_logs AS robot, list_logs AS list, action_logs AS action, parameters_logs AS parameters, target_email_logs AS target_email,msg_id_logs AS msg_id, status_logs AS status, error_type_logs AS error_type, user_email_logs AS user_email, client_logs AS client, daemon_logs AS daemon FROM logs_table WHERE robot_logs=%s ", &SDM::quote($select->{'robot'});	
+    my $statement = sprintf "SELECT date_logs, robot_logs AS robot, list_logs AS list, action_logs AS action, parameters_logs AS parameters, target_email_logs AS target_email,msg_id_logs AS msg_id, status_logs AS status, error_type_logs AS error_type, user_email_logs AS user_email, client_logs AS client, daemon_logs AS daemon FROM logs_table WHERE robot_logs=%s ", SDM::quote($select->{'robot'});	
 
     #if a type of target and a target are specified
     if (($select->{'target_type'}) && ($select->{'target_type'} ne 'none')) {
 	if($select->{'target'}) {
 	    $select->{'target_type'} = lc ($select->{'target_type'});
 	    $select->{'target'} = lc ($select->{'target'});
-	    $statement .= 'AND ' . $select->{'target_type'} . '_logs = ' . &SDM::quote($select->{'target'}).' ';
+	    $statement .= 'AND ' . $select->{'target_type'} . '_logs = ' . SDM::quote($select->{'target'}).' ';
 	}
     }
 
     #if the search is between two date
     if ($select->{'date_from'}) {
 	my @tab_date_from = split(/\//,$select->{'date_from'});
-	my $date_from = mktime(0,0,-1,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
+	my $date_from = POSIX::mktime(0,0,-1,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
 	unless($select->{'date_to'}) {
-	    my $date_from2 = mktime(0,0,25,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
+	    my $date_from2 = POSIX::mktime(0,0,25,$tab_date_from[0],$tab_date_from[1]-1,$tab_date_from[2]-1900);
 	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_from2;
 	}
 	if($select->{'date_to'}) {
 	    my @tab_date_to = split(/\//,$select->{'date_to'});
-	    my $date_to = mktime(0,0,25,$tab_date_to[0],$tab_date_to[1]-1,$tab_date_to[2]-1900);
+	    my $date_to = POSIX::mktime(0,0,25,$tab_date_to[0],$tab_date_to[1]-1,$tab_date_to[2]-1900);
 	    
 	    $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",$date_from, $date_to;
 	}
@@ -487,7 +487,7 @@ sub get_first_db_log {
     $statement .= sprintf "ORDER BY date_logs "; 
 
     push @sth_stack, $sth;
-    unless($sth = &SDM::do_query($statement)) {
+    unless($sth = SDM::do_query($statement)) {
 	do_log('err','Unable to retrieve logs entry from the database');
 	return undef;
     }
@@ -541,8 +541,8 @@ sub aggregate_data {
 
     my $aggregated_data; # the hash containing aggregated data that the sub deal_data will return.
     
-    unless ($sth = &SDM::do_query("SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date)) {
-	&do_log('err','Unable to retrieve stat entries between date % and date %s', $begin_date, $end_date);
+    unless ($sth = SDM::do_query("SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)", $begin_date, $end_date)) {
+	do_log('err','Unable to retrieve stat entries between date % and date %s', $begin_date, $end_date);
 	return undef;
     }
 
@@ -550,11 +550,11 @@ sub aggregate_data {
     my $res = $sth->fetchall_hashref('id_stat');
 
     
-    $aggregated_data = &deal_data($res);
+    $aggregated_data = deal_data($res);
     
     #the line is read, so update the read_stat from 0 to 1
-    unless ($sth = &SDM::do_query( "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date)) {
-	&do_log('err','Unable to set stat entries between date % and date %s as read', $begin_date, $end_date);
+    unless ($sth = SDM::do_query( "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')", $begin_date, $end_date)) {
+	do_log('err','Unable to set stat entries between date % and date %s as read', $begin_date, $end_date);
 	return undef;
     }
     
@@ -562,7 +562,7 @@ sub aggregate_data {
     #store reslults in stat_counter_table
     foreach my $key_op (keys (%$aggregated_data)) {
 	
-	#open TMP2, ">/tmp/digdump"; &tools::dump_var($aggregated_data->{$key_op}, 0, \*TMP2); close TMP2;
+	#open TMP2, ">/tmp/digdump"; tools::dump_var($aggregated_data->{$key_op}, 0, \*TMP2); close TMP2;
 
 	#store send mail data-------------------------------
 	if($key_op eq 'send_mail'){
@@ -572,13 +572,13 @@ sub aggregate_data {
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
 
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' => '', 'robot' => $key_robot});
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' => '', 'robot' => $key_robot});
 		    
 		    #updating susbcriber_table
 		     foreach my $key_mail (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
 		    
 	            	if (($key_mail ne 'count') && ($key_mail ne 'size')){
-		            &update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
+		            update_subscriber_msg_send($key_mail, $key_list, $key_robot, $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_mail});
 		       }
 		    }
 		}
@@ -592,7 +592,7 @@ sub aggregate_data {
 		
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' =>'', 'robot' => $key_robot}); 
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{'count'}, 'total' =>'', 'robot' => $key_robot}); 
 		}
 	    }
 	}
@@ -605,7 +605,7 @@ sub aggregate_data {
 		    
 		    foreach my $key_param (keys (%{$aggregated_data->{$key_op}->{$key_robot}->{$key_list}})){
 			
-			&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_param, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_param}, 'total'=>'', 'robot' => $key_robot});
+			db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_param, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}->{$key_param}, 'total'=>'', 'robot' => $key_robot});
 			
 		    }
 		}
@@ -616,7 +616,7 @@ sub aggregate_data {
 	    
 	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 		
-		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+		db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
 	    }
 	}
 	#store lists copy-----------------------------------------------
@@ -624,7 +624,7 @@ sub aggregate_data {
 	    
 	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 		
-		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+		db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
 	    }
 	}
 	#store lists closed----------------------------------------------
@@ -632,7 +632,7 @@ sub aggregate_data {
 	    
 	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 		
-		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+		db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
 	    }
 	}
 	#store lists purged-------------------------------------------------
@@ -640,7 +640,7 @@ sub aggregate_data {
 	    
 	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 		
-		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+		db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
 	    }
 	}
 	#store messages rejected-------------------------------------------
@@ -650,7 +650,7 @@ sub aggregate_data {
 		
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
 		}
 	    }
 	}
@@ -659,7 +659,7 @@ sub aggregate_data {
 	    
 	    foreach my $key_robot (keys (%{$aggregated_data->{$key_op}})){
 		
-		&db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
+		db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => '', 'variation' => $aggregated_data->{$key_op}->{$key_robot}, 'total' => '', 'robot' => $key_robot});
 	    }
 	}
 	#store documents uploaded------------------------------------------
@@ -669,7 +669,7 @@ sub aggregate_data {
 
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
 		}
 	    }
 				     
@@ -681,7 +681,7 @@ sub aggregate_data {
 		
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
 		}
 	    }
 	    
@@ -693,7 +693,7 @@ sub aggregate_data {
 		
 		foreach my $key_list (keys (%{$aggregated_data->{$key_op}->{$key_robot}})){
 		    
-		    &db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
+		    db_stat_counter_log({'begin_date' => $begin_date, 'end_date' => $end_date, 'data' => $key_op, 'list' => $key_list, 'variation' => $aggregated_data->{$key_op}->{$key_robot}->{$key_list}, 'total' => '', 'robot' => $key_robot});
 		}
 	    }
 	    
@@ -703,7 +703,7 @@ sub aggregate_data {
 	
     my $d_deb = localtime($begin_date);
     my $d_fin = localtime($end_date);
-    &do_log('debug2', 'data aggregated from %s to %s', $d_deb, $d_fin);
+    do_log('debug2', 'data aggregated from %s to %s', $d_deb, $d_fin);
 }
 
 
@@ -966,16 +966,16 @@ sub update_subscriber_msg_send {
     my ($mail, $list, $robot, $counter) = @_;
     Log::do_log('debug2','%s,%s,%s,%s',$mail, $list, $robot, $counter);
 
-    unless ($sth = &SDM::do_query("SELECT number_messages_subscriber from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail)){
-	&do_log('err','Unable to retrieve message count for user %s, list %s@%s',$mail, $list, $robot);
+    unless ($sth = SDM::do_query("SELECT number_messages_subscriber from subscriber_table WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $robot, $list, $mail)){
+	do_log('err','Unable to retrieve message count for user %s, list %s@%s',$mail, $list, $robot);
 	return undef;
     }
     
     my $nb_msg = $sth->fetchrow_hashref('number_messages_subscriber') + $counter;
     
     
-    unless (&SDM::do_query("UPDATE subscriber_table SET number_messages_subscriber = '%d' WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $nb_msg, $robot, $list, $mail)){
-	&do_log('err','Unable to update message count for user %s, list %s@%s',$mail, $list, $robot);
+    unless (SDM::do_query("UPDATE subscriber_table SET number_messages_subscriber = '%d' WHERE (robot_subscriber = '%s' AND list_subscriber = '%s' AND user_subscriber = '%s')", $nb_msg, $robot, $list, $mail)){
+	do_log('err','Unable to update message count for user %s, list %s@%s',$mail, $list, $robot);
 	return undef;
     }
     return 1;
@@ -985,8 +985,8 @@ sub update_subscriber_msg_send {
 #get date of the last time we have aggregated data
 sub get_last_date_aggregation {
     
-    unless ($sth = &SDM::do_query(" SELECT MAX( end_date_counter ) FROM `stat_counter_table` ")){
-	&do_log('err','Unable to retrieve last date of aggregation');
+    unless ($sth = SDM::do_query(" SELECT MAX( end_date_counter ) FROM `stat_counter_table` ")){
+	do_log('err','Unable to retrieve last date of aggregation');
 	return undef;
     }
     
@@ -996,7 +996,7 @@ sub get_last_date_aggregation {
 
 sub agregate_daily_data {
     my $param = shift;
-    &Log::do_log('debug2','Agregating data');
+    Log::do_log('debug2','Agregating data');
     my $result;
     my $first_date = $param->{'first_date'} || time;
     my $last_date = $param->{'last_date'} || time;
