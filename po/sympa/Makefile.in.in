@@ -94,7 +94,7 @@ CATALOGS = @CATALOGS@
 	cd $(srcdir) && \
 	$(ADD_LANG) --lang=$${lang} $${lang}.po > $${lang}.lpo && \
 	rm -f $${lang}.gmo && \
-	$(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.po && \
+	$(GMSGFMT) --statistics -o t-$${lang}.gmo $${lang}.lpo && \
 	rm -f $${lang}.lpo && \
 	mv t-$${lang}.gmo $${lang}.gmo
 
