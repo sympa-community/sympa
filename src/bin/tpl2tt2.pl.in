@@ -32,6 +32,7 @@ use Sympa::Constants;
 use Sympa::Language;
 use List;
 use Log;
+use SDM;
 
 my %options;
 
@@ -50,7 +51,7 @@ unless (Conf::load()) {
 }
 
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
-    unless ($List::use_db = &Upgrade::probe_db()) {
+    unless ($List::use_db = SDM::probe_db()) {
  	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
     }
 }

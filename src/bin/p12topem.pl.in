@@ -31,6 +31,7 @@ use Getopt::Long;
 use Conf;
 use Sympa::Constants;
 use List;
+use SDM;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
 
@@ -41,7 +42,7 @@ unless (&Conf::load($sympa_conf_file)) {
 
 ## Probe Db if defined
 if ($Conf{'db_name'} and $Conf{'db_type'}) {
-    unless (&Upgrade::probe_db()) {
+    unless (SDM::probe_db()) {
 	&die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf{'db_name'});
     }
 }

@@ -99,7 +99,7 @@ unless (&SDM::check_db_connect()) {
 }
 
 ## Check that the data structure is uptodate
-unless (&Upgrade::data_structure_uptodate()) {
+unless (SDM::data_structure_uptodate()) {
     &Log::fatal_err("error : data structure was not updated ; you should run sympa.pl to run the upgrade process.");
 }
 

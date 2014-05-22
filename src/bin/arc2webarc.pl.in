@@ -31,6 +31,7 @@ use Getopt::Long;
 use Conf;
 use Sympa::Constants;
 use List;
+use SDM;
 
 my %month_idx = qw(jan 1 
 		   fev 2
@@ -82,7 +83,7 @@ unless (Conf::load()) {
     die 'config_error';
 }
 
-&Upgrade::probe_db();
+SDM::probe_db();
 
 chdir $Conf::Conf{'home'};
 
