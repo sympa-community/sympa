@@ -381,8 +381,11 @@ foreach my $file (@ordered_files) {
       $state == QUOM2 && m/^([^\"]+)/gcx && do { $str.=$1; redo; };
       $state == QUOM2 && m/^\"  /gcx     && do { $state = COMM;  redo; };
 
+      $state == BEGM                     && do { $state = NUL; redo; };
+
       # end ()
-      ($state == PAR && m/^\s*[\)]/gcx || $state == COMM && m/^,/gcx)
+      ($state == PAR && m/^\s*[\)]/gcx || $state == PARM && m/^\s*[\)]/gcx ||
+	$state == COMM && m/^\s*,/gcx)
 	&& do {
 	  $state = NUL;	
 	  $vars =~ s/[\n\r]//g if ($vars);
@@ -402,6 +405,13 @@ foreach my $file (@ordered_files) {
 
       # a line of vars
       $state == PAR && m/^([^\)]*)/gcx && do { 	$vars.=$1."\n"; redo; };
+      $state == PARM && m/^([^\)]*)/gcx && do { $vars.=$1."\n"; redo; };
+    }
+
+    unless ($state == NUL) {
+	my $post = $_;
+	$post =~ s/\A(\s*.*\n.*\n.*)\n(.|\n)+\z/$1\n.../;
+	warn sprintf "Warning: incomplete state just before ---\n%s\n", $post;
     }
 }
 
