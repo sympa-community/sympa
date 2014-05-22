@@ -78,10 +78,11 @@ nobase_modules_DATA = \
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3PM = \
-        Sympa/Language.pm \
-        Sympa/LockedFile.pm \
-        Sympa/ModDef.pm \
-        Sympa/User.pm
+	Sympa/Language.pm \
+	Sympa/LockedFile.pm \
+	Sympa/ModDef.pm \
+	Sympa/Regexps.pm \
+	Sympa/User.pm
 
 EXTRA_DIST = Sympa/Constants.pm.in $(nobase_modules_DATA)
 CLEANFILES = Sympa/Constants.pm *.$(man3ext)

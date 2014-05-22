@@ -26,29 +26,44 @@ package Sympa::Regexps;
 
 use strict;
 use warnings;
-no warnings 'ambiguous';
 
 ## Regexps for list params
 ## Caution : if this regexp changes (more/less parenthesis), then regexp using
 ## it should also be changed
-use constant email => '([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
-use constant family_name   => '[a-z0-9][a-z0-9\-\.\+_]*';
-use constant template_name => '[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';  ## Allow \s
-use constant host          => '[\w\.\-]+';
+use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
+use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
+## Allow \s for template names
+use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';
+use constant host => qr'[\w\.\-]+';
 use constant multiple_host_with_port =>
     '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*';
-use constant listname    => '[a-z0-9][a-z0-9\-\.\+_]{0,49}';
-use constant sql_query   => '(SELECT|select).*';
-use constant scenario    => '[\w,\.\-]+';
-use constant task        => '\w+';
-use constant datasource  => '[\w-]+';
-use constant uid         => '[\w\-\.\+]+';
-use constant time        => '[012]?[0-9](?:\:[0-5][0-9])?';
+use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]{0,49}';
+use constant sql_query   => qr'(SELECT|select).*';
+use constant scenario    => qr'[\w,\.\-]+';
+use constant task        => qr'\w+';
+use constant datasource  => qr'[\w-]+';
+use constant uid         => qr'[\w\-\.\+]+';
+use constant time        => qr'[012]?[0-9](?:\:[0-5][0-9])?';
 use constant time_range  => __PACKAGE__->time . '-' . __PACKAGE__->time;
 use constant time_ranges => time_range() . '(?:\s+' . time_range() . ')*';
 
 use constant re =>
-    '(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS|Antw|\xCE\x91(?:\xCE\xA0|\xCF\x80)|\xCE\xA3(?:\xCE\xA7\xCE\x95\xCE\xA4|\xCF\x87\xCE\xB5\xCF\x84)|Odp|YNT)\s*:';
+    qr'(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS|Antw|\xCE\x91(?:\xCE\xA0|\xCF\x80)|\xCE\xA3(?:\xCE\xA7\xCE\x95\xCE\xA4|\xCF\x87\xCE\xB5\xCF\x84)|Odp|YNT)\s*:';
 # (de | ru etc. | en, la etc. | it | da, sv | fi | nl | el | el | pl | tr).
 
 1;
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Regexps - Definition of regular expressions
+
+=head1 DESCRIPTION
+
+This module keeps definition of regular expressions used by Sympa software.
+
+=cut
+
