@@ -134,7 +134,7 @@ man3pm: $(MAN3PM) Makefile
 install-data-hook: man3pm
 	@test -n "$(man3ext)" || exit 0; \
 	test -n "$(man3dir)" || exit 0; \
-	$(MKDIR_P) "$(DESTDIR)$(man3dir)" || exit 1; \
+	$(mkdir_p) "$(DESTDIR)$(man3dir)" || exit 1; \
 	for pm in $(MAN3PM); do \
 		echo "$$pm" | $(SED) -e 's/\.pm$$//' -e 's/\//::/g' \
 		| while read pod; do \
