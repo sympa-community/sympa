@@ -2472,13 +2472,13 @@ sub send_html {
     ## Send HTML headers
     if ($param->{'date'}) {
 	printf "Date: %s\n",
-	    DateTime->now->POSIX::strftime("%a, %{day} %b %Y %H:%M:%S GMT");
+	    DateTime->now->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
     }
     ## If we set the header indicating the last time the file to send was modified, add an HTTP header (limitate web harvesting).
     if ($param->{'header_date'}) {
 	printf "Last-Modified: %s\n",
 	    DateTime->from_epoch(epoch => $param->{'header_date'})
-		->POSIX::strftime("%a, %{day} %b %Y %H:%M:%S GMT");
+		->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
     }
     print "Cache-control: no-cache\n"  unless ( $param->{'action'} eq 'arc')  ;
     print "Content-Type: text/html; charset=utf-8\n";

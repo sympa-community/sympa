@@ -194,7 +194,7 @@ sub mail_file {
 	## If setting local timezone fails, fallback to UTC.
 	my $date = (
 	    eval { DateTime->now(time_zone => 'local') } || DateTime->now
-	)->POSIX::strftime('%a, %{day} %b %Y %H:%M:%S %z');
+	)->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 	$headers .= sprintf "Date: %s\n", $date;
     }
 
