@@ -2,7 +2,7 @@
 
 ## This script should be run on server where Sympa 4.1 has been running
 ## Sympa 4.1 included a bug that lead to incorrect archiving of messages
-## This script will detect incorrectly archived messages and move them back 
+## This script will detect incorrectly archived messages and move them back
 ## in the archiving spool (outgoing)
 
 use strict;
@@ -23,21 +23,21 @@ unless (-d $arc_path) {
 }
 
 opendir(DIR, $arc_path);
-my @files =  (grep(!/^\.{1,2}$/, readdir DIR ));
+my @files = (grep(!/^\.{1,2}$/, readdir DIR));
 
 my $i = 0;
 
 foreach my $d1 (@files) {
     if ($d1 =~ /\.(\d+)$/) {
-	my $f1 = "$arc_path/$d1/1970-01/arctxt/1";
-	unless (-f $f1) {
-	    die "Could not find $f1";
-	    next;
-	}
-	print "Moving $f1 to $outgoing/$d1.$i\n";
-	rename $f1, "$outgoing/$d1.$i";      
-	$i++;
-	`rm -rf $arc_path/$d1`;
+        my $f1 = "$arc_path/$d1/1970-01/arctxt/1";
+        unless (-f $f1) {
+            die "Could not find $f1";
+            next;
+        }
+        print "Moving $f1 to $outgoing/$d1.$i\n";
+        rename $f1, "$outgoing/$d1.$i";
+        $i++;
+        `rm -rf $arc_path/$d1`;
     }
 }
 closedir DIR;

@@ -238,4 +238,3 @@ Support for NFS was added by Kazuo Moriwaka.
 L<Sympa::LockedFile> module was initially written by IKEDA Soji.
 
 =cut
-

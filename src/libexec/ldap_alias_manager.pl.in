@@ -5,19 +5,22 @@
 
 #Author: Philippe Baumgart
 #Company: BT
-#License: GPL 
+#License: GPL
 #Version: 1.0
-## This version of alias_manager.pl has been customized by Ludovic Marcotte, Kazuo Moriwaka and Francis Lachapelle
+## This version of alias_manager.pl has been customized by Ludovic Marcotte,
+## Kazuo Moriwaka and Francis Lachapelle
 ## Modified by Philippe Baumgart:
 ## Added  Optional LDAPS support
-## Added LDAP configuration stored in a separate config file --defaultdir--/ldap_alias_manager.conf
+## Added LDAP configuration stored in a separate config file
+## --defaultdir--/ldap_alias_manager.conf
 #
 # Modified by Roland Hopferwieser:
 #   Use template for entry definition
 #   Added simulation mode
 #	Bugfix for ldap_ssl = 0
 #Purpose: It has the ability to add/remove list aliases in an LDAP directory
-# You should edit all the --defaultdir--/ldap_alias_manager.conf to use your own LDAP directory
+# You should edit all the --defaultdir--/ldap_alias_manager.conf to use your
+# own LDAP directory
 
 use strict;
 use warnings;
@@ -35,35 +38,64 @@ $ENV{'PATH'} = '';
 
 ## Load Sympa.conf
 unless (Conf::load(Sympa::Constants::CONFIG)) {
-   print gettext("The configuration file contains errors.\n");
-   exit(1);
+    print gettext("The configuration file contains errors.\n");
+    exit(1);
 }
 
-my $manager_conf_file = $Conf::Conf{etc}.'/ldap_alias_manager.conf';
+my $manager_conf_file = $Conf::Conf{etc} . '/ldap_alias_manager.conf';
 
 ## LDAP configuration
 my %ldap_params;
-my ($ldap_host,$ldap_base_dn,$ldap_bind_dn,$ldap_bind_pwd,$ldap_mail_attribute,$ldap_objectclasses,$ldap_ssl,$ldap_cachain,$queue_transport,$bouncequeue_transport)=(undef,undef,undef,undef,undef,undef,undef,undef,undef,undef);
+my ($ldap_host,     $ldap_base_dn,        $ldap_bind_dn,
+    $ldap_bind_pwd, $ldap_mail_attribute, $ldap_objectclasses,
+    $ldap_ssl,      $ldap_cachain,        $queue_transport,
+    $bouncequeue_transport
+    )
+    = (undef, undef, undef, undef, undef, undef, undef, undef, undef, undef);
 GetLdapParameter();
 
 my $ldap_connection = undef;
-$ldap_host = $ldap_params{'ldap_host'} or print STDERR "Missing required parameter ldap_host in the config file $manager_conf_file\n" and exit 0;
-$ldap_base_dn = $ldap_params{'ldap_base_dn'} or print STDERR "Missing required parameter ldap_base_dn in the config file $manager_conf_file\n" and exit 0;
-$ldap_bind_dn = $ldap_params{'ldap_bind_dn'} or print STDERR "Missing required parameter ldap_bind_dn in the config file $manager_conf_file\n" and exit 0;
-$ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'} or print STDERR "Missing required parameter ldap_bind_pwd in the config file $manager_conf_file\n" and exit 0;
-$ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'} or print STDERR "Missing required parameter ldap_mail_attribute in the config file $manager_conf_file\n" and exit 0;
-(($ldap_ssl = $ldap_params{'ldap_ssl'}) ne '') or print STDERR "Missing required parameter ldap_ssl (possible value: 0 or 1) in the config file $manager_conf_file\n" and exit 0;
-$ldap_cachain=$ldap_params{'ldap_cachain'} or undef;
-$queue_transport = $ldap_params{'queue_transport'} or print STDERR "Missing required parameter queue_transport in the config file $manager_conf_file\n" and exit 0;
-$bouncequeue_transport = $ldap_params{'bouncequeue_transport'} or print STDERR "Missing required parameter bouncequeue_transport in the config file $manager_conf_file\n" and exit 0;
+$ldap_host = $ldap_params{'ldap_host'}
+    or print STDERR
+    "Missing required parameter ldap_host in the config file $manager_conf_file\n"
+    and exit 0;
+$ldap_base_dn = $ldap_params{'ldap_base_dn'}
+    or print STDERR
+    "Missing required parameter ldap_base_dn in the config file $manager_conf_file\n"
+    and exit 0;
+$ldap_bind_dn = $ldap_params{'ldap_bind_dn'}
+    or print STDERR
+    "Missing required parameter ldap_bind_dn in the config file $manager_conf_file\n"
+    and exit 0;
+$ldap_bind_pwd = $ldap_params{'ldap_bind_pwd'}
+    or print STDERR
+    "Missing required parameter ldap_bind_pwd in the config file $manager_conf_file\n"
+    and exit 0;
+$ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'}
+    or print STDERR
+    "Missing required parameter ldap_mail_attribute in the config file $manager_conf_file\n"
+    and exit 0;
+(($ldap_ssl = $ldap_params{'ldap_ssl'}) ne '')
+    or print STDERR
+    "Missing required parameter ldap_ssl (possible value: 0 or 1) in the config file $manager_conf_file\n"
+    and exit 0;
+$ldap_cachain = $ldap_params{'ldap_cachain'} or undef;
+$queue_transport = $ldap_params{'queue_transport'}
+    or print STDERR
+    "Missing required parameter queue_transport in the config file $manager_conf_file\n"
+    and exit 0;
+$bouncequeue_transport = $ldap_params{'bouncequeue_transport'}
+    or print STDERR
+    "Missing required parameter bouncequeue_transport in the config file $manager_conf_file\n"
+    and exit 0;
 
 my $default_domain;
 
 # Check for simulation mode
 my $simulation_mode = 0;
 if (grep(/^-s$/, @ARGV)) {
-	$simulation_mode = 1;
-	@ARGV = grep(!/^-s$/, @ARGV);
+    $simulation_mode = 1;
+    @ARGV = grep(!/^-s$/, @ARGV);
 }
 my ($operation, $listname, $domain, $file) = @ARGV;
 
@@ -71,141 +103,148 @@ if (($operation !~ /^(add|del)$/) || ($#ARGV < 2)) {
     printf "Usage: $0 <add|del> <listname> <domain> [<file>]\n";
     printf "\n";
     printf "  Options:\n";
-    printf "    -s\tSimulation mode. Dump the entries but don't add it to the directory.\n";
+    printf
+        "    -s\tSimulation mode. Dump the entries but don't add it to the directory.\n";
     exit(2);
 }
 
 $default_domain = $Conf::Conf{'domain'};
 
 my %data;
-$data{'date'} =  POSIX::strftime("%d %b %Y", localtime(time));
+$data{'date'} = POSIX::strftime("%d %b %Y", localtime(time));
 $data{'list'}{'domain'} = $data{'robot'} = $domain;
-$data{'list'}{'name'} = $listname;
+$data{'list'}{'name'}   = $listname;
 $data{'default_domain'} = $default_domain;
-$data{'ldap_base_dn'} = $ldap_base_dn;
+$data{'ldap_base_dn'}   = $ldap_base_dn;
 $data{'is_default_domain'} = 1 if ($domain eq $default_domain);
-$data{'return_path_suffix'} = Conf::get_robot_conf($domain, 'return_path_suffix');
-my @aliases ;
+$data{'return_path_suffix'} =
+    Conf::get_robot_conf($domain, 'return_path_suffix');
+my @aliases;
 
 my $tt2_include_path = tools::get_search_path($domain);
 
 my $aliases_dump;
-tt2::parse_tt2(\%data, 'list_aliases.tt2',\$aliases_dump, $tt2_include_path);
+tt2::parse_tt2(\%data, 'list_aliases.tt2', \$aliases_dump, $tt2_include_path);
 
 @aliases = split /\n/, $aliases_dump;
 
 unless (@aliases) {
-	print STDERR "No aliases defined\n";
-	exit(15);
+    print STDERR "No aliases defined\n";
+    exit(15);
 }
 
 if ($operation eq 'add') {
 
 ## Check existing aliases
-if (already_defined(@aliases)) {
-print STDERR "some alias already exist\n";
-exit(13);
-}
-
-if (!initialize_ldap()) {
-print STDERR "Can't bind to LDAP server\n";
-exit(14);
-}
-
-foreach my $alias (@aliases) {
-    next if ($alias =~ /^\#/);
-    next if ($alias =~ /^\s*$/);
-
-    $alias =~ /^([^\s:]+)[\s:]+\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
-    my $alias_value = $1;
-    my $command_value = $2;
-    my $maildrop = $3;
-
-    if ($command_value =~ m/bouncequeue/) {
-	$command_value = $bouncequeue_transport;
-    } else{
-	$command_value = $queue_transport;
+    if (already_defined(@aliases)) {
+        print STDERR "some alias already exist\n";
+        exit(13);
     }
 
-    # We substitute all occurrences of + by - for the rest of the attributes, including the dn.
-    # The rationale behind this is that the "uid" attribute prevents the use of the '+' character.
-    $alias_value =~ s/\+/\-/g;
-
-    my $ldif_dump;
-    $data{'list'}{'alias'} = $alias_value;
-    $data{'list'}{'command'} = $command_value;
-    $data{'list'}{'maildrop'} = $maildrop;
-    tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2',\$ldif_dump, $tt2_include_path);
-    my @attribute_lines = split /\n/, $ldif_dump;
-
-    # We create the new LDAP entry.
-    my %ldap_attributes = ();
-    my $entry = Net::LDAP::Entry->new;
-    foreach my $line (@attribute_lines) {
-	next if ($line =~ /^\s*$/);
-	next if ($line =~ /^\s*\#/);
-	$line =~ /^([^:]+):\s*(.+)\s*$/;
-	if ($1 eq 'dn') {
-		$entry->dn($2);
-	} else {
-		push @{$ldap_attributes{$1}}, $2;
-	}
-    }
-
-	# We add the the attributes
-	foreach my $hash_key (keys %ldap_attributes) {
-	    foreach my $hash_value (@{$ldap_attributes{$hash_key}}) {
-			$entry->add($hash_key, $hash_value);
-	    }
-	}
-	
-	if ($simulation_mode) {
-		$entry->dump;
-	} else {
-		# We finally add the entry
-		my $msg = $ldap_connection->add($entry);
-		if ($msg->is_error()) {
-			print STDERR "Can't add entry for $alias_value\@$domain: ",$msg->error(),"\n";
-			exit(15);
-		}
-	}
-	$entry = undef;
-} # end foreach aliases
-
-finalize_ldap();
-
-} # end if add
-elsif ($operation eq 'del') {
-    
     if (!initialize_ldap()) {
-	print STDERR "Can't bind to LDAP server\n";
-	exit(7);
+        print STDERR "Can't bind to LDAP server\n";
+        exit(14);
     }
 
     foreach my $alias (@aliases) {
-	if ($alias =~ /^\#/) {
-	    next;
-	}
-	
-	$alias =~ /^([^\s:]+)[\s:]/; 
-	my $alias_value = $1;
-	$alias_value =~ s/\+/\-/g;
+        next if ($alias =~ /^\#/);
+        next if ($alias =~ /^\s*$/);
 
-	my $ldif_dump;
-	$data{'list'}{'alias'} = $alias_value;
-	tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump, $tt2_include_path);
-	my $value = (grep(/^dn:/, split(/\n/, $ldif_dump)))[0];
-	$value =~ s/^dn:\s*//;
+        $alias =~ /^([^\s:]+)[\s:]+\"\s*\|\s*(.*)\s+(.*)\s*\"$/;
+        my $alias_value   = $1;
+        my $command_value = $2;
+        my $maildrop      = $3;
 
-	if ($simulation_mode) {
-		printf "Would delete dn $value\n";
-	} else {
-		$ldap_connection->delete($value);
-	}
-	} # end foreach aliases
+        if ($command_value =~ m/bouncequeue/) {
+            $command_value = $bouncequeue_transport;
+        } else {
+            $command_value = $queue_transport;
+        }
+
+        # We substitute all occurrences of + by - for the rest of the
+        # attributes, including the dn.
+        # The rationale behind this is that the "uid" attribute prevents the
+        # use of the '+' character.
+        $alias_value =~ s/\+/\-/g;
+
+        my $ldif_dump;
+        $data{'list'}{'alias'}    = $alias_value;
+        $data{'list'}{'command'}  = $command_value;
+        $data{'list'}{'maildrop'} = $maildrop;
+        tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump,
+            $tt2_include_path);
+        my @attribute_lines = split /\n/, $ldif_dump;
+
+        # We create the new LDAP entry.
+        my %ldap_attributes = ();
+        my $entry           = Net::LDAP::Entry->new;
+        foreach my $line (@attribute_lines) {
+            next if ($line =~ /^\s*$/);
+            next if ($line =~ /^\s*\#/);
+            $line =~ /^([^:]+):\s*(.+)\s*$/;
+            if ($1 eq 'dn') {
+                $entry->dn($2);
+            } else {
+                push @{$ldap_attributes{$1}}, $2;
+            }
+        }
+
+        # We add the the attributes
+        foreach my $hash_key (keys %ldap_attributes) {
+            foreach my $hash_value (@{$ldap_attributes{$hash_key}}) {
+                $entry->add($hash_key, $hash_value);
+            }
+        }
+
+        if ($simulation_mode) {
+            $entry->dump;
+        } else {
+            # We finally add the entry
+            my $msg = $ldap_connection->add($entry);
+            if ($msg->is_error()) {
+                print STDERR "Can't add entry for $alias_value\@$domain: ",
+                    $msg->error(), "\n";
+                exit(15);
+            }
+        }
+        $entry = undef;
+    }    # end foreach aliases
 
     finalize_ldap();
-} # end if del
+
+}    # end if add
+elsif ($operation eq 'del') {
+
+    if (!initialize_ldap()) {
+        print STDERR "Can't bind to LDAP server\n";
+        exit(7);
+    }
+
+    foreach my $alias (@aliases) {
+        if ($alias =~ /^\#/) {
+            next;
+        }
+
+        $alias =~ /^([^\s:]+)[\s:]/;
+        my $alias_value = $1;
+        $alias_value =~ s/\+/\-/g;
+
+        my $ldif_dump;
+        $data{'list'}{'alias'} = $alias_value;
+        tt2::parse_tt2(\%data, 'ldap_alias_entry.tt2', \$ldif_dump,
+            $tt2_include_path);
+        my $value = (grep(/^dn:/, split(/\n/, $ldif_dump)))[0];
+        $value =~ s/^dn:\s*//;
+
+        if ($simulation_mode) {
+            printf "Would delete dn $value\n";
+        } else {
+            $ldap_connection->delete($value);
+        }
+    }    # end foreach aliases
+
+    finalize_ldap();
+}    # end if del
 else {
     print STDERR "Action $operation not implemented yet\n";
     exit(2);
@@ -213,103 +252,109 @@ else {
 
 exit 0;
 
-## Check if an alias is already defined  
+## Check if an alias is already defined
 sub already_defined {
-    
+
     my @aliases = @_;
 
     initialize_ldap();
 
     foreach my $alias (@aliases) {
-	
-	$alias =~ /^([^\s:]+)[\s:]/;
 
-	my $source_result = $ldap_connection->search(filter => "(".$ldap_mail_attribute."=".$1."\@".$domain.")",
-						     base => $ldap_base_dn);
-	if ($source_result->count != 0) {
-	    print STDERR "Alias already defined : $1\n";
-	    finalize_ldap();
-	    return 1;
-	}
+        $alias =~ /^([^\s:]+)[\s:]/;
+
+        my $source_result = $ldap_connection->search(
+            filter => "("
+                . $ldap_mail_attribute . "="
+                . $1 . "\@"
+                . $domain . ")",
+            base => $ldap_base_dn
+        );
+        if ($source_result->count != 0) {
+            print STDERR "Alias already defined : $1\n";
+            finalize_ldap();
+            return 1;
+        }
     }
-    
+
     finalize_ldap();
     return 0;
 }
 
 ## Parse the alias_ldap.conf config file
 sub GetLdapParameter {
-	#read the config file
-	open(LDAPCONFIG,$manager_conf_file) or print STDERR "Can't read the config file $manager_conf_file\n" and return 0;
-	my @ldap_conf=<LDAPCONFIG>;
-	close LDAPCONFIG;
-	foreach(@ldap_conf)
-	{
-        	#we skip the comments
-        	if ($_ =~ /^\s*\#/)
-        	{
-        		next;
-        	}        	
-        	elsif ($_  =~ /^\s*(\w+)\s+(.+)\s*$/)
-        	{
-        		
-        		my ($param_name, $param_value) = ($1, $2);
-        		$ldap_params{$param_name}=$param_value;
-        		#print "$param_name: $ldap_params{$param_name}\n";     		
-        	}
-        	#we skip the blank line
-        	elsif ($_  =~ /^\s*$/)
-        	{
-        		next;
-        	}
-        	else
-        	{
-        		print STDERR "Unknown syntax in config file $manager_conf_file\n" and return 0;
-        	}        
-        
+    #read the config file
+    open(LDAPCONFIG, $manager_conf_file)
+        or print STDERR "Can't read the config file $manager_conf_file\n"
+        and return 0;
+    my @ldap_conf = <LDAPCONFIG>;
+    close LDAPCONFIG;
+    foreach (@ldap_conf) {
+        #we skip the comments
+        if ($_ =~ /^\s*\#/) {
+            next;
+        } elsif ($_ =~ /^\s*(\w+)\s+(.+)\s*$/) {
+
+            my ($param_name, $param_value) = ($1, $2);
+            $ldap_params{$param_name} = $param_value;
+            #print "$param_name: $ldap_params{$param_name}\n";
         }
-         
+        #we skip the blank line
+        elsif ($_ =~ /^\s*$/) {
+            next;
+        } else {
+            print STDERR "Unknown syntax in config file $manager_conf_file\n"
+                and return 0;
+        }
+
+    }
+
 }
-	
 
 ## Initialize the LDAP connection
 sub initialize_ldap {
-    
-    
-    if ($ldap_ssl eq '1')
-    {
-    	if ($ldap_cachain)
-    	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host,
-                        version => 3, verify => 'require',
-                        sslversion=> 'sslv3', cafile => $ldap_cachain)) {
-			print STDERR "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
-			return 0;
-    		}
-    	}
-    	else
-    	{
-    		unless ($ldap_connection = Net::LDAPS->new($ldap_host,
-                        version => 3, verify => 'none',
-                        sslversion=> 'sslv3')) {
-			print STDERR "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
-			return 0;
-    		}
-    	}
-    }        
-    else 
-    {
-    	unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {
-		print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
-		return 0;
-    	}
+
+    if ($ldap_ssl eq '1') {
+        if ($ldap_cachain) {
+            unless (
+                $ldap_connection = Net::LDAPS->new(
+                    $ldap_host,
+                    version    => 3,
+                    verify     => 'require',
+                    sslversion => 'sslv3',
+                    cafile     => $ldap_cachain
+                )
+                ) {
+                print STDERR
+                    "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $@\n";
+                return 0;
+            }
+        } else {
+            unless (
+                $ldap_connection = Net::LDAPS->new(
+                    $ldap_host,
+                    version    => 3,
+                    verify     => 'none',
+                    sslversion => 'sslv3'
+                )
+                ) {
+                print STDERR
+                    "Can't connect to LDAP server using SSL for $ldap_host: $@\n";
+                return 0;
+            }
+        }
+    } else {
+        unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {
+            print STDERR "Can't connect to LDAP server $ldap_host: $@\n";
+            return 0;
+        }
     }
-    
-    
-    my $msg = $ldap_connection->bind($ldap_bind_dn, password => $ldap_bind_pwd);
+
+    my $msg =
+        $ldap_connection->bind($ldap_bind_dn, password => $ldap_bind_pwd);
     if ($msg->is_error()) {
-	print STDERR "Can't bind to server $ldap_host: ",$msg->error(),"\n";
-	return 0;
+        print STDERR "Can't bind to server $ldap_host: ", $msg->error(), "\n";
+        return 0;
     }
 
     return 1;
@@ -318,7 +363,7 @@ sub initialize_ldap {
 ## Close the LDAP connection
 sub finalize_ldap {
     if (defined $ldap_connection) {
-	$ldap_connection->unbind;
-	$ldap_connection = undef;
+        $ldap_connection->unbind;
+        $ldap_connection = undef;
     }
 }

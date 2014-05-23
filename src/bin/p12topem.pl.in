@@ -43,94 +43,97 @@ unless (Conf::load($sympa_conf_file)) {
 ## Probe Db if defined
 if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     unless (SDM::probe_db()) {
-	die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf::Conf{'db_name'});
+        die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf',
+            $Conf::Conf{'db_name'}
+        );
     }
 }
 
-my $openssl = $Conf::Conf{'openssl'};
+my $openssl    = $Conf::Conf{'openssl'};
 my $home_sympa = $Conf::Conf{'home'};
-my $outpass = $Conf::Conf{'key_passwd'};
-my $etc_dir = $Conf::Conf{'etc'};
+my $outpass    = $Conf::Conf{'key_passwd'};
+my $etc_dir    = $Conf::Conf{'etc'};
 
 ## Check option
 my %options;
-GetOptions(\%main::options, 'pkcs12=s','listname=s', 'robot=s', 'help|h');
+GetOptions(\%main::options, 'pkcs12=s', 'listname=s', 'robot=s', 'help|h');
 
 $main::options{'foreground'} = 1;
 my $listname = $main::options{'listname'};
-my $robot = $main::options{'robot'};
+my $robot    = $main::options{'robot'};
 my $p12input = $main::options{'pkcs12'};
 
+my ($cert, $privatekey, $inpass, $key);
 
-my ($cert,$privatekey,$inpass,$key);
-
-if (($main::options{'help'} ne '') || 
-    !(-r $main::options{'pkcs12'}) || 
-    (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
-   ){
-    print_usage(); 
-}else{
+if (   ($main::options{'help'} ne '')
+    || !(-r $main::options{'pkcs12'})
+    || (($main::options{'listname'} ne '') && ($main::options{'robot'} ne ''))
+    ) {
+    print_usage();
+} else {
 
     if ($listname) {
-	my $self = List->new($listname, $robot);
-	$cert = $self->{'dir'}.'/cert.pem';
-	$privatekey = $self->{'dir'}.'/private_key';
-	unless (-d $self->{'dir'}) {
-	    printf "unknown list $listname (directory $self->{'dir'} not found)\n";
-	    die;
-	}
-    }elsif($robot) {
-	if (-d $Conf::Conf{'etc'}.'/'.$robot) {
-	    $cert = $Conf::Conf{'etc'}.'/'.$robot.'/cert.pem';
-	    $privatekey = $Conf::Conf{'etc'}.'/'.$robot.'/private_key';
-	}else{
-	    $cert = $Conf::Conf{'etc'}.'/cert.pem';
-	    $privatekey = $Conf::Conf{'etc'}.'/private_key';	    
-	}
+        my $self = List->new($listname, $robot);
+        $cert       = $self->{'dir'} . '/cert.pem';
+        $privatekey = $self->{'dir'} . '/private_key';
+        unless (-d $self->{'dir'}) {
+            printf
+                "unknown list $listname (directory $self->{'dir'} not found)\n";
+            die;
+        }
+    } elsif ($robot) {
+        if (-d $Conf::Conf{'etc'} . '/' . $robot) {
+            $cert       = $Conf::Conf{'etc'} . '/' . $robot . '/cert.pem';
+            $privatekey = $Conf::Conf{'etc'} . '/' . $robot . '/private_key';
+        } else {
+            $cert       = $Conf::Conf{'etc'} . '/cert.pem';
+            $privatekey = $Conf::Conf{'etc'} . '/private_key';
+        }
     }
 
     if (-r "$cert") {
-	printf "$cert certificat already exist\n";
-	die;
+        printf "$cert certificat already exist\n";
+        die;
     }
     if (-r "$privatekey") {
-	printf "$privatekey already exist\n";
-	die;
+        printf "$privatekey already exist\n";
+        die;
     }
-    
+
     unless ($openssl) {
-	printf "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
-	die;
+        printf
+            "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
+        die;
     }
-    
+
     system 'stty', '-echo';
     printf "password to access to $p12input :";
     chop($inpass = <STDIN>);
     print "\n";
     system 'stty', 'echo';
-    open  PASS, "| $openssl pkcs12 -in $p12input -out $cert -nokeys -clcerts -passin stdin";
+    open PASS,
+        "| $openssl pkcs12 -in $p12input -out $cert -nokeys -clcerts -passin stdin";
     print PASS "$inpass\n";
-    close PASS ;
-    
+    close PASS;
+
     unless ($outpass) {
-	system 'stty', '-echo';
-	printf "sympa password to protect list private_key $key:";
-	chop($outpass = <STDIN>);
-	print "\n";
-	system 'stty', 'echo';
+        system 'stty', '-echo';
+        printf "sympa password to protect list private_key $key:";
+        chop($outpass = <STDIN>);
+        print "\n";
+        system 'stty', 'echo';
     }
-    open  PASS, "| $openssl pkcs12 -in $p12input -out $privatekey -nocerts -passin stdin -des3 -passout stdin";
+    open PASS,
+        "| $openssl pkcs12 -in $p12input -out $privatekey -nocerts -passin stdin -des3 -passout stdin";
     print PASS "$inpass\n$outpass\n";
-    close PASS ;
-    
+    close PASS;
+
     printf "$privatekey and  $cert created.\n";
     exit;
 }
 
-
-
 sub print_usage {
-printf "
+    printf "
 
 Usage p12topem.pl --pkcs12 <pkcs#12_cert_file> --listname <listname> or
       p12topem.pl --pkcs12 <pkcs#12_cert_file> --robot <robot>
@@ -153,9 +156,10 @@ $Conf::Conf{'etc'}/cert.pem and Conf{'etc'}/private_key
 
 You are then prompted for inpassword (the password used to encrypt the
 pkc#12 file).\n";
-unless ($outpass) {
-printf "Because you did not configure Sympa's password \"key_passwd\"  in
+    unless ($outpass) {
+        printf
+            "Because you did not configure Sympa's password \"key_passwd\"  in
 sympa.conf you will also be prompted for the password used by sympa to access
 to the list private key)\n";
-} 
+    }
 }

@@ -42,13 +42,13 @@ use Log;
 use mail;
 use sympasoap;
 
-my $birthday = time ;
+my $birthday = time;
 
 ## Load sympa config
 unless (Conf::load()) {
     printf STDERR
-	"Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting\n",
-	Conf::get_sympa_conf();
+        "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting\n",
+        Conf::get_sympa_conf();
     exit 1;
 }
 
@@ -62,11 +62,11 @@ Log::do_log('info', 'SOAP server launched');
 ## We set the real UID with the effective UID value
 ## It is usefull to allow execution of scripts like alias_manager
 ## that otherwise might loose the benefit of SetUID
-$< = $>; ## UID
-$( = $); ## GID
+$< = $>;    ## UID
+$( = $);    ## GID
 
 unless (SDM::check_db_connect()) {
-    Log::do_log('err','SOAP server requires a RDBMS to run');
+    Log::do_log('err', 'SOAP server requires a RDBMS to run');
 }
 
 ## The process should not fork for sending mail
@@ -76,19 +76,17 @@ mail::set_send_spool($Conf::Conf{'queue'});
 ## Loading all Lists at startup, in order to increase execution speed
 
 my $all_lists = List::get_lists('*');
-foreach my $list (@$all_lists){
+foreach my $list (@$all_lists) {
     ## Nothing to do here
- }
+}
 
-
-##############################################################################################
+##############################################################################
 #    Soap part
-##############################################################################################
+##############################################################################
 
-my $server = SOAP::Transport::HTTP::FCGI::Sympa->new(); 
+my $server = SOAP::Transport::HTTP::FCGI::Sympa->new();
 
 #$server->dispatch_with({'urn:Sympa' => 'sympasoap'});
-$server->dispatch_to('--modulesdir--','sympasoap');
+$server->dispatch_to('--modulesdir--', 'sympasoap');
 
 $server->handle($birthday);
-

@@ -70,9 +70,12 @@ my %alias = (
 ## split_char:   Character used to separate multiple parameters
 ## length :      Length of a scalar variable ; used in web forms
 ## scenario :    tells that the parameter is a scenario, providing its name
-## default :     Default value for the param ; may be a configuration parameter (conf)
-## synonym :     Defines synonyms for parameter values (for compatibility reasons)
-## gettext_unit :Unit of the parameter ; this is used in web forms and refers to translated
+## default :     Default value for the param ; may be a configuration
+## parameter (conf)
+## synonym :     Defines synonyms for parameter values (for compatibility
+## reasons)
+## gettext_unit :Unit of the parameter ; this is used in web forms and refers
+## to translated
 ##               strings in PO catalogs
 ## occurrence :  Occurerence of the parameter in the config file
 ##               possible values: 0-1 | 1 | 0-n | 1-n
@@ -83,7 +86,8 @@ my %alias = (
 ## obsolete :    Obsolete parameter ; should not be displayed
 ##               nor saved
 ## obsolete_values : defined obsolete values for a parameter
-##                   these values should not get proposed on the web interface edition form
+##                   these values should not get proposed on the web interface
+##                   edition form
 ## order :       Order of parameters within paragraph
 ## internal :    Indicates that the parameter is an internal parameter
 ##               that should always be saved in the config file
@@ -536,7 +540,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Allow message personnalization",
         'format'     => ['on', 'off'],
-        'occurrence'  => '0-1',
+        'occurrence' => '0-1',
         'default'    => {'conf' => 'merge_feature'}
     },
 
@@ -544,7 +548,7 @@ our %pinfo = (
         'group'      => 'sending',
         'gettext_id' => "Reject mail from automates (crontab, etc)?",
         'format'     => ['on', 'off'],
-        'occurrence'  => '0-1',
+        'occurrence' => '0-1',
         'default'    => {'conf' => 'reject_mail_from_automates_feature'}
     },
 
@@ -859,9 +863,9 @@ our %pinfo = (
         'group' => 'data_source',
         'gettext_id' =>
             "Notify subscribers when they are included from a data source?",
-        'format'    => ['on', 'off'],
+        'format'     => ['on', 'off'],
         'occurrence' => '0-1',
-        'default'   => 'off',
+        'default'    => 'off',
     },
 
     'sql_fetch_timeout' => {
@@ -1444,7 +1448,7 @@ our %pinfo = (
                 'order'      => 9,
                 'gettext_id' => "Name of email entry",
                 'format'     => '\S+',
-                'occurrence'  => '1'
+                'occurrence' => '1'
             },
             'select' => {
                 'order'      => 10,
@@ -1608,7 +1612,7 @@ our %pinfo = (
                 'order'      => 18,
                 'gettext_id' => "Name of email entry",
                 'format'     => '\S+',
-                'occurrence'  => '1'
+                'occurrence' => '1'
             },
             'nosync_time_ranges' => {
                 'order'      => 19,
@@ -1693,7 +1697,7 @@ our %pinfo = (
                 'order'      => 10,
                 'gettext_id' => "Name of email entry",
                 'format'     => '\S+',
-                'occurrence'  => '1'
+                'occurrence' => '1'
             },
             'nosync_time_ranges' => {
                 'order'      => 11,
@@ -1712,7 +1716,7 @@ our %pinfo = (
         'gettext_id' => "Insert DKIM signature to messages sent to the list",
         'gettext_comment' =>
             "Enable/Disable DKIM. This feature require Mail::DKIM to installed and may be some custom scenario to be updated",
-        'format'    => ['on', 'off'],
+        'format'     => ['on', 'off'],
         'occurrence' => '0-1',
         'default' => {'conf' => 'dkim_feature'}
     },
@@ -1728,18 +1732,18 @@ our %pinfo = (
                 'gettext_id' => "File path for list DKIM private key",
                 'gettext_comment' =>
                     "The file must contain a RSA pem encoded private key",
-                'format'    => '\S+',
+                'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'   => {'conf' => 'dkim_private_key_path'}
+                'default'    => {'conf' => 'dkim_private_key_path'}
             },
             'selector' => {
                 'order'      => 2,
                 'gettext_id' => "Selector for DNS lookup of DKIM public key",
                 'gettext_comment' =>
                     "The selector is used in order to build the DNS query for public key. It is up to you to choose the value you want but verify that you can query the public DKIM key for <selector>._domainkey.your_domain",
-                'format'    => '\S+',
+                'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'   => {'conf' => 'dkim_selector'}
+                'default'    => {'conf' => 'dkim_selector'}
             },
             'header_list' => {
                 'order' => 4,
@@ -1747,10 +1751,10 @@ our %pinfo = (
                     'List of headers to be included ito the message for signature',
                 'gettext_comment' =>
                     'You should probably use the default value which is the value recommended by RFC4871',
-                'format'    => '\S+',
+                'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'   => {'conf' => 'dkim_header_list'},
-                'obsolete'  => 1,
+                'default'    => {'conf' => 'dkim_header_list'},
+                'obsolete'   => 1,
             },
             'signer_domain' => {
                 'order' => 5,
@@ -1758,9 +1762,9 @@ our %pinfo = (
                     'DKIM "d=" tag, you should probably use the default value',
                 'gettext_comment' =>
                     'The DKIM "d=" tag, is the domain of the signing entity. the list domain MUST be included in the "d=" domain',
-                'format'    => '\S+',
+                'format'     => '\S+',
                 'occurrence' => '0-1',
-                'default'   => {'conf' => 'dkim_signer_domain'}
+                'default'    => {'conf' => 'dkim_signer_domain'}
             },
             'signer_identity' => {
                 'order' => 6,
@@ -1768,7 +1772,7 @@ our %pinfo = (
                     'DKIM "i=" tag, you should probably leave this parameter empty',
                 'gettext_comment' =>
                     'DKIM "i=" tag, you should probably not use this parameter, as recommended by RFC 4871, default for list brodcasted messages is i=<listname>-request@<domain>',
-                'format'    => '\S+',
+                'format'     => '\S+',
                 'occurrence' => '0-1'
             },
         },
@@ -1944,7 +1948,7 @@ our %pinfo = (
         'group' => 'other',
         'gettext_id' =>
             "Allow picture display? (must be enabled for the current robot)",
-        'format'    => ['on', 'off'],
+        'format'     => ['on', 'off'],
         'occurrence' => '0-1',
         'default' => {'conf' => 'pictures_feature'}
     },
@@ -2065,7 +2069,7 @@ our %pinfo = (
                 'gettext_id' => "type",
                 'format'     => ['string', 'text', 'integer', 'enum'],
                 'default'    => 'string',
-                'occurrence'  => 1
+                'occurrence' => 1
             },
             'enum_values' => {
                 'order'      => 5,

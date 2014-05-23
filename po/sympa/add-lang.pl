@@ -39,4 +39,3 @@ print $_;
 while (<>) {
     print $_;
 }
-

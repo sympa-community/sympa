@@ -33,25 +33,26 @@ use Conf;
 
 ## Constructor of a Robot instance
 sub new {
-    my($pkg, $name) = @_;
+    my ($pkg, $name) = @_;
 
     my $robot = {'name' => $name};
     Log::do_log('debug2', '');
-    
+
     unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-	Log::do_log('err',"Unknown robot '$name'");
-	return undef;
+        Log::do_log('err', "Unknown robot '$name'");
+        return undef;
     }
 
     ## The default robot
     if ($name eq $Conf::Conf{'domain'}) {
-	$robot->{'home'} = $Conf::Conf{'home'};
-    }else {
-	$robot->{'home'} = $Conf::Conf{'home'}.'/'.$name;
-	unless (-d $robot->{'home'}) {
-	    Log::do_log('err', "Missing directory '$robot->{'home'}' for robot '$name'");
-	    return undef;
-	}
+        $robot->{'home'} = $Conf::Conf{'home'};
+    } else {
+        $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
+        unless (-d $robot->{'home'}) {
+            Log::do_log('err',
+                "Missing directory '$robot->{'home'}' for robot '$name'");
+            return undef;
+        }
     }
 
     ## Initialize internal list cache
@@ -69,6 +70,5 @@ sub get_lists {
 
     return List::get_lists($self->{'name'});
 }
-
 
 1;

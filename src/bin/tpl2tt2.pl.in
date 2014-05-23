@@ -52,18 +52,20 @@ unless (Conf::load()) {
 
 if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     unless ($List::use_db = SDM::probe_db()) {
- 	die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf', $Conf::Conf{'db_name'});
+        die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf',
+            $Conf::Conf{'db_name'}
+        );
     }
 }
 
 ## We have a parameter that should be a template to convert
 ## Output is sent to stdout
-if ($#ARGV >=0) {
+if ($#ARGV >= 0) {
     my $f = $ARGV[0];
     unless (-f $f) {
-	die "unable to find file $f";
+        die "unable to find file $f";
     }
-    
+
     convert($f);
 
     exit 0;
@@ -89,50 +91,50 @@ if (-f "$Conf::Conf{'etc'}/mhonarc-ressources") {
 }
 
 ## Create_list_templates
-if (-d $Conf::Conf{'etc'}.'/create_list_templates') {
+if (-d $Conf::Conf{'etc'} . '/create_list_templates') {
     foreach my $dir (<$Conf::Conf{'etc'}/create_list_templates/*>) {
-	next unless (-d $dir);
-	push @directories, $dir;       
+        next unless (-d $dir);
+        push @directories, $dir;
     }
 }
 
 ## Go through Virtual Robots
 foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     ## Search in etc/
-    if ( -d "$Conf::Conf{'etc'}/$vr") {
-	push @directories, "$Conf::Conf{'etc'}/$vr";
+    if (-d "$Conf::Conf{'etc'}/$vr") {
+        push @directories, "$Conf::Conf{'etc'}/$vr";
     }
 
     if (-d "$Conf::Conf{'etc'}/$vr/templates") {
-	push @directories, "$Conf::Conf{'etc'}/$vr/templates";
+        push @directories, "$Conf::Conf{'etc'}/$vr/templates";
     }
     if (-d "$Conf::Conf{'etc'}/$vr/wws_templates") {
-	push @directories, "$Conf::Conf{'etc'}/$vr/wws_templates";
+        push @directories, "$Conf::Conf{'etc'}/$vr/wws_templates";
     }
     if (-f "$Conf::Conf{'etc'}/$vr/mhonarc-ressources") {
-	push @templates, "$Conf::Conf{'etc'}/$vr/mhonarc-ressources";
+        push @templates, "$Conf::Conf{'etc'}/$vr/mhonarc-ressources";
     }
 
     ## Create_list_templates
-    if (-d $Conf::Conf{'etc'}.'/'.$vr.'/create_list_templates') {
-	foreach my $dir (<$Conf::Conf{'etc'}/$vr/create_list_templates/*>) {
-	    next unless (-d $dir);
-	    push @directories, $dir;       
-	}
+    if (-d $Conf::Conf{'etc'} . '/' . $vr . '/create_list_templates') {
+        foreach my $dir (<$Conf::Conf{'etc'}/$vr/create_list_templates/*>) {
+            next unless (-d $dir);
+            push @directories, $dir;
+        }
     }
 
     ## Search in V. Robot Lists
     my $listOfLists = List::get_lists($vr);
-    foreach my $list ( @$listOfLists ) {
+    foreach my $list (@$listOfLists) {
 
-	push @directories, $list->{'dir'};
-	
-	if (-d "$list->{'dir'}/templates") {
-	    push @directories, "$list->{'dir'}/templates";
-	}
-	if (-d "$list->{'dir'}/wws_templates") {
-	    push @directories, "$list->{'dir'}/wws_templates";
-	}
+        push @directories, $list->{'dir'};
+
+        if (-d "$list->{'dir'}/templates") {
+            push @directories, "$list->{'dir'}/templates";
+        }
+        if (-d "$list->{'dir'}/wws_templates") {
+            push @directories, "$list->{'dir'}/wws_templates";
+        }
     }
 }
 
@@ -140,14 +142,14 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 foreach my $d (@directories) {
 
     unless (opendir DIR, $d) {
-	printf STDERR "Error: Cannot read %s directory : %s\n", $d, $!;
-	next;
+        printf STDERR "Error: Cannot read %s directory : %s\n", $d, $!;
+        next;
     }
-    
-    foreach my $tpl (sort grep(/\.tpl$/,readdir DIR)) {
-	push @templates, "$d/$tpl";
+
+    foreach my $tpl (sort grep(/\.tpl$/, readdir DIR)) {
+        push @templates, "$d/$tpl";
     }
-    
+
     closedir DIR;
 }
 
@@ -156,36 +158,37 @@ foreach my $tpl (@templates) {
 
     ## We don't migrate mhonarc-ressources files
     if ($tpl =~ /mhonarc\-ressources$/) {
-	rename $tpl, "$tpl.incompatible";
-	printf STDERR "File $tpl could not be translated to TT2 ; it has been renamed $tpl.incompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
-	next;
+        rename $tpl, "$tpl.incompatible";
+        printf STDERR
+            "File $tpl could not be translated to TT2 ; it has been renamed $tpl.incompatible. You should customize a standard mhonarc-ressourses.tt2 file\n";
+        next;
     }
 
     unless (-r $tpl) {
-	printf STDERR "Error : Unable to read file %s\n", $tpl;
-	next;
+        printf STDERR "Error : Unable to read file %s\n", $tpl;
+        next;
     }
 
     unless ($tpl =~ /^(.+)\/([^\/]+)$/) {
-	printf STDERR "Error : Incorrect Path %s\n", $tpl;
-	next;
+        printf STDERR "Error : Incorrect Path %s\n", $tpl;
+        next;
     }
-    
+
     my ($path, $file) = ($1, $2);
     my ($dest_path, $dest_file);
 
     ## Destinatination Path
     $dest_path = $path;
     if ($path =~ /\/wws_templates$/) {
-	## translated web templates should not be used because they
-	## will not fit the new CSS/XHTML web structure
-	$dest_path =~ s/wws_templates/web_tt2.old/;
-    }elsif ($path =~ /\/templates$/) {
-	$dest_path =~ s/templates/mail_tt2/;
-    }elsif ($path =~ /\/expl\//) {
-	$dest_path .= '/mail_tt2';
-    }else {
-	$dest_path = $path;
+        ## translated web templates should not be used because they
+        ## will not fit the new CSS/XHTML web structure
+        $dest_path =~ s/wws_templates/web_tt2.old/;
+    } elsif ($path =~ /\/templates$/) {
+        $dest_path =~ s/templates/mail_tt2/;
+    } elsif ($path =~ /\/expl\//) {
+        $dest_path .= '/mail_tt2';
+    } else {
+        $dest_path = $path;
     }
 
     ## Destination filename
@@ -194,43 +197,47 @@ foreach my $tpl (@templates) {
 
     ## Localized template
     if ($dest_file =~ /^([\w\-]+)\.(\w+)\.tt2$/) {
-	my $lang = $2;
-	$dest_file =~ s/^([\w\-]+)\.(\w+)\.tt2$/$1\.tt2/;
-	$dest_path .= '/' . Sympa::Language::lang2oldlocale($lang);
+        my $lang = $2;
+        $dest_file =~ s/^([\w\-]+)\.(\w+)\.tt2$/$1\.tt2/;
+        $dest_path .= '/' . Sympa::Language::lang2oldlocale($lang);
     }
 
     ## If file has no extension
     unless ($dest_file =~ /\./) {
-	$dest_file = $file.'.tt2';
+        $dest_file = $file . '.tt2';
     }
 
     ## Create directory if required
     unless (-d $dest_path) {
-	printf "Creating $dest_path directory\n";
-	unless (my_mkdir ($dest_path)) {
-	    printf STDERR "Error : Cannot create $dest_path directory : $!\n";
-	    next;
-	}
-	unless (tools::set_file_rights(file => $dest_path,
-					user => Sympa::Constants::USER,
-					group => Sympa::Constants::GROUP,
-					mode => 0755,
-					))
-	{
-	    Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
-	    next;
-	}
+        printf "Creating $dest_path directory\n";
+        unless (my_mkdir($dest_path)) {
+            printf STDERR "Error : Cannot create $dest_path directory : $!\n";
+            next;
+        }
+        unless (
+            tools::set_file_rights(
+                file  => $dest_path,
+                user  => Sympa::Constants::USER,
+                group => Sympa::Constants::GROUP,
+                mode  => 0755,
+            )
+            ) {
+            Log::do_log('err', 'Unable to set rights on %s',
+                $Conf::Conf{'db_name'});
+            next;
+        }
     }
 
     my $tt2 = "$dest_path/$dest_file";
 
     convert($tpl, $tt2);
     $total++;
-    
+
     ## Rename old files to .converted
     unless (rename $tpl, "$tpl.converted") {
-	printf STDERR "Error : failed to rename $tpl to $tpl.converted : $!\n";
-	next;
+        printf STDERR
+            "Error : failed to rename $tpl to $tpl.converted : $!\n";
+        next;
     }
 }
 
@@ -242,35 +249,38 @@ sub convert {
 
     ## Convert tpl file
     unless (open TPL, $in_file) {
-	print STDERR "Cannot open $in_file : $!\n";
-	return undef;
+        print STDERR "Cannot open $in_file : $!\n";
+        return undef;
     }
     if ($out_file) {
-	unless (open TT2, ">$out_file") {
-	    print STDERR "Cannot create $out_file : $!\n";
-	    return undef;
-	}
+        unless (open TT2, ">$out_file") {
+            print STDERR "Cannot create $out_file : $!\n";
+            return undef;
+        }
     }
 
     while (<TPL>) {
-	if ($out_file) {
-	    print TT2 Sympa::Template::Compat::_translate($_);
-	}else {
-	    print STDOUT Sympa::Template::Compat::_translate($_);
-	}
+        if ($out_file) {
+            print TT2 Sympa::Template::Compat::_translate($_);
+        } else {
+            print STDOUT Sympa::Template::Compat::_translate($_);
+        }
     }
     close TT2 if ($out_file);
     close TPL;
 
     printf "Template file $in_file has been converted to $out_file\n";
-    
-    unless (tools::set_file_rights(file => $out_file,
-				    user => Sympa::Constants::USER,
-				    group => Sympa::Constants::GROUP
-				    ))
-    {
-	Log::do_log('err','Unable to set rights on %s',$Conf::Conf{'db_name'});
-	return undef;
+
+    unless (
+        tools::set_file_rights(
+            file  => $out_file,
+            user  => Sympa::Constants::USER,
+            group => Sympa::Constants::GROUP
+        )
+        ) {
+        Log::do_log('err', 'Unable to set rights on %s',
+            $Conf::Conf{'db_name'});
+        return undef;
     }
 }
 
@@ -280,26 +290,27 @@ sub my_mkdir {
     $path =~ s/\/$//;
 
     unless ($path) {
-	return undef;
+        return undef;
     }
 
     if ($path =~ /^(.*)\/[^\/]+$/) {
-	my $root_path = $1;
+        my $root_path = $1;
 
-	unless (-d $root_path) {
-	    unless (mkdir ($root_path, 0777)) {
-		printf STDERR "Error : Cannot create $root_path directory : $!\n";
-		return undef;
-	    }
-	}
-	
-	unless (mkdir ($path, 0777)) {
-	    printf STDERR "Error : Cannot create $path directory : $!\n";
-	    return undef;
-	}
-    }else {
-	return undef;
-    }    
-    
+        unless (-d $root_path) {
+            unless (mkdir($root_path, 0777)) {
+                printf STDERR
+                    "Error : Cannot create $root_path directory : $!\n";
+                return undef;
+            }
+        }
+
+        unless (mkdir($path, 0777)) {
+            printf STDERR "Error : Cannot create $path directory : $!\n";
+            return undef;
+        }
+    } else {
+        return undef;
+    }
+
     return 1;
 }

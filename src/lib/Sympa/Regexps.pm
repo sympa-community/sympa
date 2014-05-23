@@ -34,7 +34,7 @@ use constant email => qr'([\w\-\_\.\/\+\=\'\&]+|\".*\")\@[\w\-]+(\.[\w\-]+)+';
 use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 ## Allow \s for template names
 use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';
-use constant host => qr'[\w\.\-]+';
+use constant host          => qr'[\w\.\-]+';
 use constant multiple_host_with_port =>
     '[\w\.\-]+(:\d+)?(,[\w\.\-]+(:\d+)?)*';
 use constant listname    => qr'[a-z0-9][a-z0-9\-\.\+_]{0,49}';
@@ -66,4 +66,3 @@ Sympa::Regexps - Definition of regular expressions
 This module keeps definition of regular expressions used by Sympa software.
 
 =cut
-

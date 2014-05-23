@@ -41,7 +41,6 @@ sub file_types {
     return qw( * );
 }
 
-
 sub extract {
     my $self = shift;
     local $_ = shift;

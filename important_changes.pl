@@ -1,4 +1,5 @@
-# important_changes.pl - This script prints important changes in Sympa since last install
+# important_changes.pl - This script prints important changes in Sympa since
+# last install
 # It is based on the NEWS ***** entries
 # RCS Identication ; $Revision$ ; $Date$ 
 #
@@ -29,11 +30,7 @@ use strict;
 use Getopt::Long;
 
 my %options;
-GetOptions(
-    \%options,
-    'current=s',
-    'previous=s',
-);
+GetOptions(\%options, 'current=s', 'previous=s',);
 
 die "no current given version, aborting" unless $options{current};
 
@@ -43,11 +40,11 @@ if (!$options{previous}) {
 }
 
 my $previous_version = $options{previous};
-my $current_version = $options{current};
+my $current_version  = $options{current};
 
 # exit immediatly if previous version is higher or equal
-if (($previous_version eq $current_version) ||
-    &higher($previous_version,$current_version)){
+if (($previous_version eq $current_version)
+    || &higher($previous_version, $current_version)) {
     exit 0;
 }
 
@@ -65,26 +62,25 @@ open NOTES, 'NEWS';
 my ($current, $ok);
 while (<NOTES>) {
     if (/^([\w_.]+)\s/) {
-	my $v = $1;
-	if ($v eq $previous_version  || 
-	    &higher($previous_version,$v)
-	    ) {
-	    last;
-	}else{
-	    $ok = 1;
-	}
+        my $v = $1;
+        if (   $v eq $previous_version
+            || &higher($previous_version, $v)) {
+            last;
+        } else {
+            $ok = 1;
+        }
     }
 
     next unless $ok;
 
     if (/^\*{4}/) {
-	print "\n" unless $current;
-	$current = 1;
-	print;
-    }else {
-	$current = 0;
+        print "\n" unless $current;
+        $current = 1;
+        print;
+    } else {
+        $current = 0;
     }
-    
+
 }
 close NOTES;
 print "<RETURN>";
@@ -93,24 +89,23 @@ my $wait = <STDIN>;
 sub higher {
     my ($v1, $v2) = @_;
 
-    my @tab1 = split /\./,$v1;
-    my @tab2 = split /\./,$v2;
-    
-    
+    my @tab1 = split /\./, $v1;
+    my @tab2 = split /\./, $v2;
+
     my $max = $#tab1;
     $max = $#tab2 if ($#tab2 > $#tab1);
 
-    for my $i (0..$max) {
-    
+    for my $i (0 .. $max) {
+
         if ($tab1[0] =~ /^(\d*)a$/) {
             $tab1[0] = $1 - 0.5;
-        }elsif ($tab1[0] =~ /^(\d*)b$/) {
+        } elsif ($tab1[0] =~ /^(\d*)b$/) {
             $tab1[0] = $1 - 0.25;
         }
 
         if ($tab2[0] =~ /^(\d*)a$/) {
             $tab2[0] = $1 - 0.5;
-        }elsif ($tab2[0] =~ /^(\d*)b$/) {
+        } elsif ($tab2[0] =~ /^(\d*)b$/) {
             $tab2[0] = $1 - 0.25;
         }
 

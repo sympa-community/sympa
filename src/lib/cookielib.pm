@@ -36,43 +36,44 @@ sub generic_set_cookie {
     my %param = @_;
 
     my %cookie_param;
-    foreach my $p ('name','value','expires','domain','path') {
-	$cookie_param{'-'.$p} = $param{$p}; ## CGI::Cookie expects -param => value
+    foreach my $p ('name', 'value', 'expires', 'domain', 'path') {
+        $cookie_param{'-' . $p} =
+            $param{$p};    ## CGI::Cookie expects -param => value
     }
 
     if ($cookie_param{'-domain'} eq 'localhost') {
-	$cookie_param{'-domain'} = '';
+        $cookie_param{'-domain'} = '';
     }
 
     my $cookie = CGI::Cookie->new(%cookie_param);
 
     ## Send cookie to the client
     printf "Set-Cookie:  %s\n", $cookie->as_string;
-   
+
     return 1;
 }
-    
 
-    
 # Sets an HTTP cookie to be sent to a SOAP client
 # OBSOLETED: Use SympaSession::soap_cookie2().
 sub set_cookie_soap {
-    my ($session_id,$http_domain,$expire) = @_ ;
+    my ($session_id, $http_domain, $expire) = @_;
     my $cookie;
     my $value;
 
     # WARNING : to check the cookie the SOAP services does not gives
     # all the cookie, only it's value so we need ':'
     $value = $session_id;
-  
+
     ## With set-cookie2 max-age of 0 means removing the cookie
     ## Maximum cookie lifetime is the session
-    $expire ||= 600; ## 10 minutes
+    $expire ||= 600;    ## 10 minutes
 
     if ($http_domain eq 'localhost') {
-	$cookie = sprintf "%s=%s; Path=/; Max-Age=%s", 'sympa_session', $value, $expire;
-    }else {
-	$cookie = sprintf "%s=%s; Domain=%s; Path=/; Max-Age=%s", 'sympa_session', $value, $http_domain, $expire;;
+        $cookie = sprintf "%s=%s; Path=/; Max-Age=%s", 'sympa_session',
+            $value, $expire;
+    } else {
+        $cookie = sprintf "%s=%s; Domain=%s; Path=/; Max-Age=%s",
+            'sympa_session', $value, $http_domain, $expire;
     }
 
     ## Return the cookie value
@@ -81,63 +82,61 @@ sub set_cookie_soap {
 
 ## returns Message Authentication Check code
 sub get_mac {
-        my $email = shift ;
-	my $secret = shift ;	
-	Log::do_log('debug3', "get_mac($email, $secret)");
+    my $email  = shift;
+    my $secret = shift;
+    Log::do_log('debug3', "get_mac($email, $secret)");
 
-	unless ($secret) {
-	    Log::do_log('err', 'get_mac : failure missing server secret for cookie MD5 digest');
-	    return undef;
-	}
-	unless ($email) {
-	    Log::do_log('err', 'get_mac : failure missing email address or cookie MD5 digest');
-	    return undef;
-	}
+    unless ($secret) {
+        Log::do_log('err',
+            'get_mac : failure missing server secret for cookie MD5 digest');
+        return undef;
+    }
+    unless ($email) {
+        Log::do_log('err',
+            'get_mac : failure missing email address or cookie MD5 digest');
+        return undef;
+    }
 
+    my $md5 = Digest::MD5->new;
 
+    $md5->reset;
+    $md5->add($email . $secret);
 
-	my $md5 = Digest::MD5->new;
-
-	$md5->reset;
-	$md5->add($email.$secret);
-
-	return substr( unpack("H*", $md5->digest) , -8 );
+    return substr(unpack("H*", $md5->digest), -8);
 
 }
 
 sub set_cookie_extern {
-    my ($secret,$http_domain,%alt_emails) = @_ ;
+    my ($secret, $http_domain, %alt_emails) = @_;
     my $expiration;
     my $cookie;
     my $value;
 
-    my @mails ;
+    my @mails;
     foreach my $mail (keys %alt_emails) {
-	my $string = $mail.':'.$alt_emails{$mail};
-	push(@mails,$string);
+        my $string = $mail . ':' . $alt_emails{$mail};
+        push(@mails, $string);
     }
-    my $emails = join(',',@mails);
+    my $emails = join(',', @mails);
 
-    $value = sprintf '%s&%s',$emails,get_mac($emails,$secret);
- 
+    $value = sprintf '%s&%s', $emails, get_mac($emails, $secret);
+
     if ($http_domain eq 'localhost') {
-	$http_domain="";
+        $http_domain = "";
     }
 
-	$cookie = CGI::Cookie->new(-name    => 'sympa_altemails',
-	                           -value   => $value,
-				   -expires => '+1y',
-				   -domain  => $http_domain,
-				   -path    => '/'
-				   );
+    $cookie = CGI::Cookie->new(
+        -name    => 'sympa_altemails',
+        -value   => $value,
+        -expires => '+1y',
+        -domain  => $http_domain,
+        -path    => '/'
+    );
     ## Send cookie to the client
     printf "Set-Cookie: %s\n", $cookie->as_string;
     #Log::do_log('notice',"set_cookie_extern : %s",$cookie->as_string);
     return 1;
 }
-
-
-
 
 ###############################
 # Subroutines to read cookies #
@@ -148,13 +147,13 @@ sub generic_get_cookie {
     my $http_cookie = shift;
     my $cookie_name = shift;
 
-    if ($http_cookie =~/\S+/g) {
-	my %cookies = parse CGI::Cookie($http_cookie);
-	foreach (keys %cookies) {
-	    my $cookie = $cookies{$_};
-	    next unless ($cookie->name eq $cookie_name);
-	    return ($cookie->value);
-	}
+    if ($http_cookie =~ /\S+/g) {
+        my %cookies = parse CGI::Cookie($http_cookie);
+        foreach (keys %cookies) {
+            my $cookie = $cookies{$_};
+            next unless ($cookie->name eq $cookie_name);
+            return ($cookie->value);
+        }
     }
     return (undef);
 }
@@ -162,45 +161,45 @@ sub generic_get_cookie {
 ## Returns user information extracted from the cookie
 sub check_cookie {
     my $http_cookie = shift;
-    my $secret = shift;
-    
+    my $secret      = shift;
+
     my $user = generic_get_cookie($http_cookie, 'sympauser');
 
-    my @values = split /:/, $user; 
+    my @values = split /:/, $user;
     if ($#values >= 1) {
-	my ($email, $mac, $auth) = @values;
-	$auth ||= 'classic';
-	
-	## Check the MAC
-	if (get_mac($email,$secret) eq $mac) {
-	    return ($email, $auth);
-	}
-    }	
+        my ($email, $mac, $auth) = @values;
+        $auth ||= 'classic';
+
+        ## Check the MAC
+        if (get_mac($email, $secret) eq $mac) {
+            return ($email, $auth);
+        }
+    }
 
     return undef;
 }
 
 sub check_cookie_extern {
-    my ($http_cookie,$secret,$user_email) = @_;
+    my ($http_cookie, $secret, $user_email) = @_;
 
     my $extern_value = generic_get_cookie($http_cookie, 'sympa_altemails');
- 
+
     if ($extern_value =~ /^(\S+)&(\w+)$/) {
-	return undef unless (get_mac($1,$secret) eq $2) ;
-		
-	my %alt_emails ;
-	foreach my $element (split(/,/,$1)){
-	    my @array = split(/:/,$element);
-	    $alt_emails{$array[0]} = $array[1];
-	}
-	      
-	my $e = lc($user_email);
-	unless ($alt_emails{$e}) {
-	    return undef;
-	}
-	return (\%alt_emails);
+        return undef unless (get_mac($1, $secret) eq $2);
+
+        my %alt_emails;
+        foreach my $element (split(/,/, $1)) {
+            my @array = split(/:/, $element);
+            $alt_emails{$array[0]} = $array[1];
+        }
+
+        my $e = lc($user_email);
+        unless ($alt_emails{$e}) {
+            return undef;
+        }
+        return (\%alt_emails);
     }
-    return undef
+    return undef;
 }
 
 1;

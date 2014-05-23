@@ -339,7 +339,8 @@ sub set_lang {
         # The locale is the gettext catalog name; lang is the IETF language
         # tag.  Ex: locale = pt_BR ; lang = pt-BR
         # locale_numeric and locale_time are POSIX locales for LC_NUMERIC and
-        # POSIX::LC_TIME catogories, respectively.  As of 6.2b, they became optional:
+        # POSIX::LC_TIME catogories, respectively.  As of 6.2b, they became
+        # optional:
         # If setting each of them failed, 'C' locale will be set.
         $self->{lang}   = $lang;
         $self->{locale} = $locale;
@@ -640,7 +641,8 @@ sub gettext_strftime {
 
     my $orig_locale = POSIX::setlocale(POSIX::LC_TIME());
 
-    ## if lang has not been set or 'en' is set, fallback to native POSIX::strftime().
+    ## if lang has not been set or 'en' is set, fallback to native
+    ## POSIX::strftime().
     unless ($self->{lang} and $self->{lang} ne 'en') {
         POSIX::setlocale(POSIX::LC_TIME(), 'C');
     } else {
@@ -1156,4 +1158,3 @@ Sympa 4.1 adopted gettext portable object (PO) catalog and POSIX locale.
 
 On Sympa 6.2, rewritten module L<Sympa::Language> adopted BCP 47 language tag
 to determine language context, and installing POSIX locale became optional.
-

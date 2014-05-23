@@ -112,7 +112,8 @@ sub decode_utf8 {
     ## Skip if already internally tagged utf8
     unless (Encode::is_utf8($string)) {
         ## Wrapped with eval to prevent Sympa process from dying
-        ## FB_CROAK is used instead of FB_WARN to pass $string intact to succeeding processes it operation fails
+        ## FB_CROAK is used instead of FB_WARN to pass $string intact to
+        ## succeeding processes it operation fails
         eval { $string = Encode::decode('utf8', $string, Encode::FB_CROAK); };
         $@ = '';
     }
@@ -144,7 +145,7 @@ sub maketext {
     my ($context, @arg) = @_;
 
     my $template_name = $context->stash->get('component')->{'name'};
-    my $textdomain    = $template2textdomain{$template_name} || '';
+    my $textdomain = $template2textdomain{$template_name} || '';
 
     return sub { $language->maketext($textdomain, $_[0], @arg); };
 }
@@ -315,7 +316,7 @@ sub parse_tt2 {
             join(',', @{$include_path})
         );
 
-	$language->pop_lang;
+        $language->pop_lang;
         return undef;
     }
 

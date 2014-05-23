@@ -89,13 +89,13 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'used to decode date and time in message headers',
     },
-     'DateTime::TimeZone' => {
+    'DateTime::TimeZone' => {
         required_version => '1.10',
         package_name     => 'DateTime-TimeZone',
         mandatory        => 1,
         'gettext_id'     => 'used to decode date and time in message headers',
     },
-   'DB_File' => {
+    'DB_File' => {
         required_version => '1.75',
         package_name     => 'DB_File',
         mandatory        => 1,
@@ -380,4 +380,3 @@ $cpan_modules{'Unicode::CaseFold'} = {
     if 5.008 < $] and $] < 5.016;
 
 1;
-

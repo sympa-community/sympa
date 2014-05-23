@@ -57,7 +57,6 @@ This is the description of the subfunctions contained by Message.pm
 
 =cut 
 
-
 =pod 
 
 =head2 sub new
@@ -120,73 +119,74 @@ Creates a new Message object.
 
 ## Creates a new object
 sub new {
-    
-    my $pkg =shift;
+
+    my $pkg   = shift;
     my $datas = shift;
 
-    my $file = $datas->{'file'};
-    my $noxsympato = $datas->{'noxsympato'};
-    my $messageasstring = $datas->{'messageasstring'};
-    my $mimeentity = $datas->{'mimeentity'};
-    my $message_in_spool= $datas->{'message_in_spool'};
+    my $file             = $datas->{'file'};
+    my $noxsympato       = $datas->{'noxsympato'};
+    my $messageasstring  = $datas->{'messageasstring'};
+    my $mimeentity       = $datas->{'mimeentity'};
+    my $message_in_spool = $datas->{'message_in_spool'};
 
     my $message;
-    Log::do_log('debug2', 'Message::new(%s,%s)',$file,$noxsympato);
-    
-    if ($mimeentity) {
-	$message->{'msg'} = $mimeentity;
-	$message->{'altered'} = '_ALTERED';
+    Log::do_log('debug2', 'Message::new(%s,%s)', $file, $noxsympato);
 
-	## Bless Message object
-	bless $message, $pkg;
-	
-	return $message;
+    if ($mimeentity) {
+        $message->{'msg'}     = $mimeentity;
+        $message->{'altered'} = '_ALTERED';
+
+        ## Bless Message object
+        bless $message, $pkg;
+
+        return $message;
     }
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
-    
+
     my $msg;
 
-    if ($message_in_spool){
-	$messageasstring = $message_in_spool->{'messageasstring'};
-	$message->{'messagekey'}= $message_in_spool->{'messagekey'};
-	$message->{'spoolname'}= $message_in_spool->{'spoolname'};
+    if ($message_in_spool) {
+        $messageasstring         = $message_in_spool->{'messageasstring'};
+        $message->{'messagekey'} = $message_in_spool->{'messagekey'};
+        $message->{'spoolname'}  = $message_in_spool->{'spoolname'};
     }
     if ($file) {
-	## Parse message as a MIME::Entity
-	$message->{'filename'} = $file;
-	unless (open FILE, $file) {
-	    Log::do_log('err', 'Cannot open message file %s : %s',  $file, $!);
-	    return undef;
-	}
-    
-	# unless ($msg = $parser->read(\*FILE)) {
-	#    Log::do_log('err', 'Unable to parse message %s', $file);
-	#    close(FILE);
-	#    return undef;
-	#}
-	while (<FILE>){
-	    $messageasstring = $messageasstring.$_;
-	}
-	close(FILE);
+        ## Parse message as a MIME::Entity
+        $message->{'filename'} = $file;
+        unless (open FILE, $file) {
+            Log::do_log('err', 'Cannot open message file %s : %s', $file, $!);
+            return undef;
+        }
+
+        # unless ($msg = $parser->read(\*FILE)) {
+        #    Log::do_log('err', 'Unable to parse message %s', $file);
+        #    close(FILE);
+        #    return undef;
+        #}
+        while (<FILE>) {
+            $messageasstring = $messageasstring . $_;
+        }
+        close(FILE);
     }
-    if($messageasstring){
-	if (ref ($messageasstring)){
-	    $msg = $parser->parse_data($messageasstring);
-	}else{
-	    $msg = $parser->parse_data(\$messageasstring);
-	}
-    }  
-     
+    if ($messageasstring) {
+        if (ref($messageasstring)) {
+            $msg = $parser->parse_data($messageasstring);
+        } else {
+            $msg = $parser->parse_data(\$messageasstring);
+        }
+    }
+
     unless ($msg) {
-	Log::do_log('err', 'Unable to parse message from file %s, skipping.', $file);
-	return undef;
-    }   
-    
-    $message->{'msg'} = $msg;
-    $message->{'msg_as_string'} = $msg->as_string; 
-    $message->{'size'} = length($msg->as_string);
+        Log::do_log('err', 'Unable to parse message from file %s, skipping.',
+            $file);
+        return undef;
+    }
+
+    $message->{'msg'}           = $msg;
+    $message->{'msg_as_string'} = $msg->as_string;
+    $message->{'size'}          = length($msg->as_string);
 
     my $hdr = $message->{'msg'}->head;
 
@@ -197,132 +197,148 @@ sub new {
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
     if ($subject =~ /\S/) {
-	my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
-	$message->{'subject_charset'} = 'US-ASCII';
-	foreach my $token (@decoded_subject) {
-	    unless ($token->[1]) {
-		# don't decode header including raw 8-bit bytes.
-		if ($token->[0] =~ /[^\x00-\x7F]/) {
-		    $message->{'subject_charset'} = undef;
-		    last;
-		}
-		next;
-	    }
-	    my $cset = MIME::Charset->new($token->[1]);
-	    # don't decode header encoded with unknown charset.
-	    unless ($cset->decoder) {
-		$message->{'subject_charset'} = undef;
-		last;
-	    }
-	    unless ($cset->output_charset eq 'US-ASCII') {
-		$message->{'subject_charset'} = $token->[1];
-	    }
-	}
+        my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
+        $message->{'subject_charset'} = 'US-ASCII';
+        foreach my $token (@decoded_subject) {
+            unless ($token->[1]) {
+                # don't decode header including raw 8-bit bytes.
+                if ($token->[0] =~ /[^\x00-\x7F]/) {
+                    $message->{'subject_charset'} = undef;
+                    last;
+                }
+                next;
+            }
+            my $cset = MIME::Charset->new($token->[1]);
+            # don't decode header encoded with unknown charset.
+            unless ($cset->decoder) {
+                $message->{'subject_charset'} = undef;
+                last;
+            }
+            unless ($cset->output_charset eq 'US-ASCII') {
+                $message->{'subject_charset'} = $token->[1];
+            }
+        }
     } else {
-	$message->{'subject_charset'} = undef;
+        $message->{'subject_charset'} = undef;
     }
     if ($message->{'subject_charset'}) {
-	$message->{'decoded_subject'} =
-	    MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
+        $message->{'decoded_subject'} =
+            MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
     } else {
-	$message->{'decoded_subject'} = $subject;
+        $message->{'decoded_subject'} = $subject;
     }
     chomp $message->{'decoded_subject'};
 
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
     chomp $message->{'rcpt'};
-    unless (defined $noxsympato) { # message.pm can be used not only for message comming from queue
-	unless ($message->{'rcpt'}) {
-	    Log::do_log('err', 'no X-Sympa-To found, ignoring message file %s', $file);
-	    return undef;
-	}
-	    
-	## get listname & robot
-	my ($listname, $robot) = split(/\@/,$message->{'rcpt'});
-	
-	$robot = lc($robot);
-	$listname = lc($listname);
-	$robot ||= $Conf::Conf{'domain'};
-	my $spam_status = Scenario::request_action('spam_status','smtp',$robot, {'message' => $message});
-	$message->{'spam_status'} = 'unkown';
-	if(defined $spam_status) {
-	    if (ref($spam_status ) eq 'HASH') {
-		$message->{'spam_status'} =  $spam_status ->{'action'};
-	    }else{
-		$message->{'spam_status'} = $spam_status ;
-	    }
-	}
-	
-	my $conf_email = Conf::get_robot_conf($robot, 'email');
-	my $conf_host = Conf::get_robot_conf($robot, 'host');
-	unless ($listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i) {
-	    my $list_check_regexp = Conf::get_robot_conf($robot,'list_check_regexp');
-	    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-		$listname = $1;
-	    }
-	    
-	    my $list = List->new($listname, $robot, {'just_try' => 1});
-	    if ($list) {
-		$message->{'list'} = $list;
-	    }	
-	}
-	# verify DKIM signature
-	if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'){
-	    $message->{'dkim_pass'} = tools::dkim_verifier($message->{'msg_as_string'});
-	}
-    }
-        
-    ## valid X-Sympa-Checksum prove the message comes from web interface with authenticated sender
-    if ( $hdr->get('X-Sympa-Checksum')) {
-	my $chksum = $hdr->get('X-Sympa-Checksum'); chomp $chksum;
-	my $rcpt = $hdr->get('X-Sympa-To'); chomp $rcpt;
+    unless (defined $noxsympato) {
+        # message.pm can be used not only for message comming from queue
+        unless ($message->{'rcpt'}) {
+            Log::do_log('err',
+                'no X-Sympa-To found, ignoring message file %s', $file);
+            return undef;
+        }
 
-	if ($chksum eq tools::sympa_checksum($rcpt)) {
-	    $message->{'md5_check'} = 1 ;
-	}else{
-	    Log::do_log('err',"incorrect X-Sympa-Checksum header");	
-	}
+        ## get listname & robot
+        my ($listname, $robot) = split(/\@/, $message->{'rcpt'});
+
+        $robot    = lc($robot);
+        $listname = lc($listname);
+        $robot ||= $Conf::Conf{'domain'};
+        my $spam_status =
+            Scenario::request_action('spam_status', 'smtp', $robot,
+            {'message' => $message});
+        $message->{'spam_status'} = 'unkown';
+        if (defined $spam_status) {
+            if (ref($spam_status) eq 'HASH') {
+                $message->{'spam_status'} = $spam_status->{'action'};
+            } else {
+                $message->{'spam_status'} = $spam_status;
+            }
+        }
+
+        my $conf_email = Conf::get_robot_conf($robot, 'email');
+        my $conf_host  = Conf::get_robot_conf($robot, 'host');
+        unless ($listname =~
+            /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i
+            ) {
+            my $list_check_regexp =
+                Conf::get_robot_conf($robot, 'list_check_regexp');
+            if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
+                $listname = $1;
+            }
+
+            my $list = List->new($listname, $robot, {'just_try' => 1});
+            if ($list) {
+                $message->{'list'} = $list;
+            }
+        }
+        # verify DKIM signature
+        if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
+            $message->{'dkim_pass'} =
+                tools::dkim_verifier($message->{'msg_as_string'});
+        }
+    }
+
+    ## valid X-Sympa-Checksum prove the message comes from web interface with
+    ## authenticated sender
+    if ($hdr->get('X-Sympa-Checksum')) {
+        my $chksum = $hdr->get('X-Sympa-Checksum');
+        chomp $chksum;
+        my $rcpt = $hdr->get('X-Sympa-To');
+        chomp $rcpt;
+
+        if ($chksum eq tools::sympa_checksum($rcpt)) {
+            $message->{'md5_check'} = 1;
+        } else {
+            Log::do_log('err', "incorrect X-Sympa-Checksum header");
+        }
     }
 
     ## S/MIME
     if ($Conf::Conf{'openssl'}) {
 
-	## Decrypt messages
-	if (($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i) &&
-	    ($hdr->get('Content-Type') !~ /signed-data/)){
-	    my ($dec, $dec_as_string) = tools::smime_decrypt ($message->{'msg'}, $message->{'list'});
-	    
-	    unless (defined $dec) {
-		Log::do_log('debug', "Message %s could not be decrypted", $file);
-		return undef;
-		## We should the sender and/or the listmaster
-	    }
+        ## Decrypt messages
+        if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
+            && ($hdr->get('Content-Type') !~ /signed-data/)) {
+            my ($dec, $dec_as_string) =
+                tools::smime_decrypt($message->{'msg'}, $message->{'list'});
 
-	    $message->{'smime_crypted'} = 'smime_crypted';
-	    $message->{'orig_msg'} = $message->{'msg'};
-	    $message->{'msg'} = $dec;
-	    $message->{'msg_as_string'} = $dec_as_string;
-	    $hdr = $dec->head;
-	    Log::do_log('debug', "message %s has been decrypted", $file);
-	}
-	
-	## Check S/MIME signatures
-	if ($hdr->get('Content-Type') =~ /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
-	    $message->{'protected'} = 1; ## Messages that should not be altered (no footer)
-	    my $signed = tools::smime_sign_check ($message);
-	    if ($signed->{'body'}) {
-		$message->{'smime_signed'} = 1;
-		$message->{'smime_subject'} = $signed->{'subject'};
-		Log::do_log('debug', "message %s is signed, signature is checked", $file);
-	    }
-	    ## Il faudrait traiter les cas d'erreur (0 différent de undef)
-	}
+            unless (defined $dec) {
+                Log::do_log('debug', "Message %s could not be decrypted",
+                    $file);
+                return undef;
+                ## We should the sender and/or the listmaster
+            }
+
+            $message->{'smime_crypted'} = 'smime_crypted';
+            $message->{'orig_msg'}      = $message->{'msg'};
+            $message->{'msg'}           = $dec;
+            $message->{'msg_as_string'} = $dec_as_string;
+            $hdr                        = $dec->head;
+            Log::do_log('debug', "message %s has been decrypted", $file);
+        }
+
+        ## Check S/MIME signatures
+        if ($hdr->get('Content-Type') =~
+            /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
+            $message->{'protected'} =
+                1;    ## Messages that should not be altered (no footer)
+            my $signed = tools::smime_sign_check($message);
+            if ($signed->{'body'}) {
+                $message->{'smime_signed'}  = 1;
+                $message->{'smime_subject'} = $signed->{'subject'};
+                Log::do_log('debug',
+                    "message %s is signed, signature is checked", $file);
+            }
+            ## Il faudrait traiter les cas d'erreur (0 différent de undef)
+        }
     }
     ## TOPICS
     my $topics;
-    if ($topics = $hdr->get('X-Sympa-Topic')){
-	$message->{'topic'} = $topics;
+    if ($topics = $hdr->get('X-Sympa-Topic')) {
+        $message->{'topic'} = $topics;
     }
 
     bless $message, $pkg;
@@ -346,18 +362,18 @@ sub _get_envelope_sender {
     my $message = shift;
 
     my $headers = $message->{'msg'}->head->header();
-    my $i = 0;
+    my $i       = 0;
     $i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
     if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
-	my $addr = $1;
-	if ($addr =~ /<>/) { # special: null envelope sender
-	    return '<>';
-	} else {
-	    my @addrs = Mail::Address->parse($addr);
-	    if (@addrs and tools::valid_email($addrs[0]->address)) {
-		return $addrs[0]->address;
-	    }
-	}
+        my $addr = $1;
+        if ($addr =~ /<>/) {    # special: null envelope sender
+            return '<>';
+        } else {
+            my @addrs = Mail::Address->parse($addr);
+            if (@addrs and tools::valid_email($addrs[0]->address)) {
+                return $addrs[0]->address;
+            }
+        }
     }
 
     return undef;
@@ -372,43 +388,42 @@ sub _get_sender_email {
     my $hdr = $message->{'msg'}->head;
 
     my $sender = undef;
-    my $gecos = undef;
+    my $gecos  = undef;
     foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
-	if (lc $field eq 'return-path') {
-	    ## Try to get envelope sender
-	    if ($message->{'envelope_sender'} and
-		$message->{'envelope_sender'} ne '<>') {
-		$sender = lc($message->{'envelope_sender'});
-	    }
-	} elsif ($hdr->get($field)) {
-	    ## Try to get message header.
-	    ## On "Resent-*:" headers, the first occurrence must be used (see
-	    ## RFC 5322 3.6.6).
-	    ## FIXME: Though "From:" can occur multiple times, only the first
-	    ## one is detected.
-	    my $addr = $hdr->get($field, 0); # get the first one
-	    my @sender_hdr = Mail::Address->parse($addr);
-	    if (@sender_hdr and $sender_hdr[0]->address) {
-		$sender = lc($sender_hdr[0]->address);
-		my $phrase = $sender_hdr[0]->phrase;
-		if (defined $phrase and length $phrase) {
-		    $gecos = MIME::EncWords::decode_mimewords(
-			$phrase, Charset => 'UTF-8'
-		    );
-		}
-		last;
-	    }
-	}
+        if (lc $field eq 'return-path') {
+            ## Try to get envelope sender
+            if (    $message->{'envelope_sender'}
+                and $message->{'envelope_sender'} ne '<>') {
+                $sender = lc($message->{'envelope_sender'});
+            }
+        } elsif ($hdr->get($field)) {
+            ## Try to get message header.
+            ## On "Resent-*:" headers, the first occurrence must be used (see
+            ## RFC 5322 3.6.6).
+            ## FIXME: Though "From:" can occur multiple times, only the first
+            ## one is detected.
+            my $addr = $hdr->get($field, 0);               # get the first one
+            my @sender_hdr = Mail::Address->parse($addr);
+            if (@sender_hdr and $sender_hdr[0]->address) {
+                $sender = lc($sender_hdr[0]->address);
+                my $phrase = $sender_hdr[0]->phrase;
+                if (defined $phrase and length $phrase) {
+                    $gecos = MIME::EncWords::decode_mimewords($phrase,
+                        Charset => 'UTF-8');
+                }
+                last;
+            }
+        }
 
-	last if defined $sender;
+        last if defined $sender;
     }
     unless (defined $sender) {
-	Log::do_log('err', 'No valid sender address');
-	return undef;
+        Log::do_log('err', 'No valid sender address');
+        return undef;
     }
     unless (tools::valid_email($sender)) {
-	Log::do_log('err', 'Invalid sender address "%s"', $sender);
-	return undef;
+        Log::do_log('err', 'Invalid sender address "%s"', $sender);
+        return undef;
     }
 
     return ($sender, $gecos);
@@ -457,14 +472,14 @@ sub dump {
     select $output;
 
     foreach my $key (keys %{$self}) {
-	if (ref($self->{$key}) eq 'MIME::Entity') {
-	    printf "%s =>\n", $key;
-	    $self->{$key}->print;
-	}else {
-	    printf "%s => %s\n", $key, $self->{$key};
-	}
+        if (ref($self->{$key}) eq 'MIME::Entity') {
+            printf "%s =>\n", $key;
+            $self->{$key}->print;
+        } else {
+            printf "%s => %s\n", $key, $self->{$key};
+        }
     }
-    
+
     select $old_output;
 
     return 1;
@@ -506,7 +521,7 @@ Add topic and put header X-Sympa-Topic.
 
 ## Add topic and put header X-Sympa-Topic
 sub add_topic {
-    my ($self,$topic) = @_;
+    my ($self, $topic) = @_;
 
     $self->{'topic'} = $topic;
     my $hdr = $self->{'msg'}->head;
@@ -514,7 +529,6 @@ sub add_topic {
 
     return 1;
 }
-
 
 =pod 
 
@@ -555,76 +569,79 @@ sub get_topic {
     my ($self) = @_;
 
     if (defined $self->{'topic'}) {
-	return $self->{'topic'};
+        return $self->{'topic'};
 
     } else {
-	return '';
+        return '';
     }
 }
 
 sub clean_html {
-    my $self = shift;
+    my $self  = shift;
     my $robot = shift;
     my $new_msg;
-    if($new_msg = _fix_html_part($self->{'msg'}, $robot)) {
-	$self->{'msg'} = $new_msg;
-	return 1;
+    if ($new_msg = _fix_html_part($self->{'msg'}, $robot)) {
+        $self->{'msg'} = $new_msg;
+        return 1;
     }
     return 0;
 }
 
 sub _fix_html_part {
-    my $part = shift;
+    my $part  = shift;
     my $robot = shift;
     return $part unless $part;
 
     my $eff_type = $part->head->mime_attr("Content-Type");
     if ($part->parts) {
-	my @newparts = ();
-	foreach ($part->parts) {
-	    push @newparts, _fix_html_part($_, $robot);
-	}
-	$part->parts(\@newparts);
+        my @newparts = ();
+        foreach ($part->parts) {
+            push @newparts, _fix_html_part($_, $robot);
+        }
+        $part->parts(\@newparts);
     } elsif ($eff_type =~ /^text\/html/i) {
-	my $bodyh = $part->bodyhandle;
-	# Encoded body or null body won't be modified.
-	return $part if !$bodyh or $bodyh->is_encoded;
+        my $bodyh = $part->bodyhandle;
+        # Encoded body or null body won't be modified.
+        return $part if !$bodyh or $bodyh->is_encoded;
 
-	my $body = $bodyh->as_string;
-	# Re-encode parts to UTF-8, since StripScripts cannot handle texts
-	# with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
-	my $cset = MIME::Charset->new($part->head->mime_attr('Content-Type.Charset') || '');
-	unless ($cset->decoder) {
-	    # Charset is unknown.  Detect 7-bit charset.
-	    my ($dummy, $charset) =
-		MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
-	    $cset = MIME::Charset->new($charset)
-		if $charset;
-	}
-	if ($cset->decoder and
-	    $cset->as_string ne 'UTF-8' and $cset->as_string ne 'US-ASCII') {
-	    $cset->encoder('UTF-8');
-	    $body = $cset->encode($body);
-	    $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
-	}
+        my $body = $bodyh->as_string;
+        # Re-encode parts to UTF-8, since StripScripts cannot handle texts
+        # with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
+        my $cset =
+            MIME::Charset->new($part->head->mime_attr('Content-Type.Charset')
+                || '');
+        unless ($cset->decoder) {
+            # Charset is unknown.  Detect 7-bit charset.
+            my ($dummy, $charset) =
+                MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
+            $cset = MIME::Charset->new($charset)
+                if $charset;
+        }
+        if (    $cset->decoder
+            and $cset->as_string ne 'UTF-8'
+            and $cset->as_string ne 'US-ASCII') {
+            $cset->encoder('UTF-8');
+            $body = $cset->encode($body);
+            $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
+        }
 
-	my $filtered_body = tools::sanitize_html(
-	    'string' => $body, 'robot'=> $robot);
+        my $filtered_body =
+            tools::sanitize_html('string' => $body, 'robot' => $robot);
 
-	my $io = $bodyh->open("w");
-	unless (defined $io) {
-	    Log::do_log('err', "Failed to save message : $!");
-	    return undef;
-	}
-	$io->print($filtered_body);
-	$io->close;
-	$part->sync_headers(Length => 'COMPUTE');
+        my $io = $bodyh->open("w");
+        unless (defined $io) {
+            Log::do_log('err', "Failed to save message : $!");
+            return undef;
+        }
+        $io->print($filtered_body);
+        $io->close;
+        $part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
 }
 
-
 1;
+
 =pod 
 
 =head1 AUTHORS 

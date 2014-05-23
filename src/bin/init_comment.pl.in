@@ -56,20 +56,20 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
             $user->{'user_subscriber'}
         ) or die "Unable to execute SQL statement";
 
-	my $gecos = $sth2->fetchrow;
-	$sth2->finish();
-	
-	if ($gecos) {
-	    printf " =>%s", $gecos;
+        my $gecos = $sth2->fetchrow;
+        $sth2->finish();
+
+        if ($gecos) {
+            printf " =>%s", $gecos;
             my $sth2 = SDM::do_prepared_query(
                 q{UPDATE subscriber_table
                   SET comment_subscriber = ?
                   WHERE user_subscriber = ?},
                 $gecos, $user->{'user_subscriber'}
             ) or die "Unable to execute SQL statement";
-	    $sth2->finish();
-	}
-	
+            $sth2->finish();
+        }
+
     }
 }
 
@@ -77,4 +77,3 @@ $sth->finish();
 
 ## Disconnect from Database
 SDM::db_disconnect();
-

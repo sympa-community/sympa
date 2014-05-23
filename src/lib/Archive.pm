@@ -33,7 +33,7 @@ use HTML::Entities qw();
 
 use Log;
 
-my $serial_number = 0; # incremented on each archived mail
+my $serial_number = 0;    # incremented on each archived mail
 
 ## RCS identification.
 
@@ -41,29 +41,28 @@ my $serial_number = 0; # incremented on each archived mail
 ## the indicated directory.
 
 sub store_last {
-    my($list, $msg) = @_;
-    
-    Log::do_log ('debug2','archive::store ()');
-    
-    my($filename, $newfile);
-    
+    my ($list, $msg) = @_;
+
+    Log::do_log('debug2', 'archive::store ()');
+
+    my ($filename, $newfile);
+
     return unless $list->is_archived();
-    my $dir = $list->{'dir'}.'/archives';
-    
+    my $dir = $list->{'dir'} . '/archives';
+
     ## Create the archive directory if needed
-    mkdir ($dir, "0775") if !(-d $dir);
+    mkdir($dir, "0775") if !(-d $dir);
     chmod 0774, $dir;
-    
-    
+
     ## erase the last  message and replace it by the current one
     open(OUT, "> $dir/last_message");
-    if (ref ($msg)) {
-  	$msg->print(\*OUT);
-    }else {
- 	print OUT $msg;
+    if (ref($msg)) {
+        $msg->print(\*OUT);
+    } else {
+        print OUT $msg;
     }
     close(OUT);
-    
+
 }
 
 ## Lists the files included in the archive, preformatted for printing
@@ -71,146 +70,162 @@ sub store_last {
 sub list {
     my $name = shift;
 
-    Log::do_log ('debug',"archive::list($name)");
+    Log::do_log('debug', "archive::list($name)");
 
-    my($filename, $newfile);
-    my(@l, $i);
-    
+    my ($filename, $newfile);
+    my (@l,        $i);
+
     unless (-d "$name") {
-	Log::do_log ('warning',"archive::list($name) failed, no directory $name");
+        Log::do_log('warning',
+            "archive::list($name) failed, no directory $name");
 #      @l = ($msg::no_archives_available);
-      return @l;
-  }
-    unless (opendir(DIR, "$name")) {
-	Log::do_log ('warning',"archive::list($name) failed, cannot open directory $name");
-#	@l = ($msg::no_archives_available);
-	return @l;
+        return @l;
     }
-   foreach $i (sort readdir(DIR)) {
-       next if ($i =~ /^\./o);
-       next unless  ($i =~ /^\d\d\d\d\-\d\d$/);
-       my(@s) = stat("$name/$i");
-       my $a = localtime($s[9]);
-       push(@l, sprintf("%-40s %7d   %s\n", $i, $s[7], $a));
-   }
+    unless (opendir(DIR, "$name")) {
+        Log::do_log('warning',
+            "archive::list($name) failed, cannot open directory $name");
+#	@l = ($msg::no_archives_available);
+        return @l;
+    }
+    foreach $i (sort readdir(DIR)) {
+        next if ($i =~ /^\./o);
+        next unless ($i =~ /^\d\d\d\d\-\d\d$/);
+        my (@s) = stat("$name/$i");
+        my $a = localtime($s[9]);
+        push(@l, sprintf("%-40s %7d   %s\n", $i, $s[7], $a));
+    }
     return @l;
 }
 
 sub scan_dir_archive {
-    
-    my($dir, $month) = @_;
-    
-    Log::do_log ('info',"archive::scan_dir_archive($dir, $month)");
 
-    unless (opendir (DIR, "$dir/$month/arctxt")){
-	Log::do_log ('info',"archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt");
-	return undef;
+    my ($dir, $month) = @_;
+
+    Log::do_log('info', "archive::scan_dir_archive($dir, $month)");
+
+    unless (opendir(DIR, "$dir/$month/arctxt")) {
+        Log::do_log('info',
+            "archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt"
+        );
+        return undef;
     }
-    
+
     my $all_msg = [];
-    my $i = 0 ;
+    my $i       = 0;
     foreach my $file (sort readdir(DIR)) {
-	next unless ($file =~ /^\d+$/);
-	Log::do_log ('debug',"archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file");
+        next unless ($file =~ /^\d+$/);
+        Log::do_log('debug',
+            "archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file"
+        );
 
-	my $mail = Message->new({'file'=>"$dir/$month/arctxt/$file",'noxsympato'=>'noxsympato'});
-	unless (defined $mail) {
-	    Log::do_log('err', 'Unable to create Message object %s', $file);
-	    return undef;
-	}
-	
-	Log::do_log('debug',"MAIL object : $mail");
+        my $mail = Message->new(
+            {   'file'       => "$dir/$month/arctxt/$file",
+                'noxsympato' => 'noxsympato'
+            }
+        );
+        unless (defined $mail) {
+            Log::do_log('err', 'Unable to create Message object %s', $file);
+            return undef;
+        }
 
-	$i++;
-	my $msg = {};
-	$msg->{'id'} = $i;
+        Log::do_log('debug', "MAIL object : $mail");
 
-	$msg->{'subject'} = tools::decode_header($mail, 'Subject');
-	$msg->{'from'} = tools::decode_header($mail, 'From');
-	$msg->{'date'} = tools::decode_header($mail, 'Date');
+        $i++;
+        my $msg = {};
+        $msg->{'id'} = $i;
 
-	$msg->{'full_msg'} = $mail->{'msg'}->as_string;
+        $msg->{'subject'} = tools::decode_header($mail, 'Subject');
+        $msg->{'from'}    = tools::decode_header($mail, 'From');
+        $msg->{'date'}    = tools::decode_header($mail, 'Date');
 
-	Log::do_log('debug','Archive::scan_dir_archive adding message %s in archive to send', $msg->{'subject'});
+        $msg->{'full_msg'} = $mail->{'msg'}->as_string;
 
-	push @{$all_msg}, $msg ;
+        Log::do_log(
+            'debug',
+            'Archive::scan_dir_archive adding message %s in archive to send',
+            $msg->{'subject'}
+        );
+
+        push @{$all_msg}, $msg;
     }
-    closedir DIR ;
+    closedir DIR;
 
     return $all_msg;
 }
 
 #####################################################
-#  search_msgid                  
+#  search_msgid
 ####################################################
-#  
+#
 # find a message in archive specified by arcpath and msgid
-# 
+#
 # IN : arcpath and msgid
 #
 # OUT : undef | #message in arctxt
 #
-#################################################### 
+####################################################
 
 sub search_msgid {
-    
-    my($dir, $msgid) = @_;
-    
-    Log::do_log ('info',"archive::search_msgid($dir, $msgid)");
 
-    
+    my ($dir, $msgid) = @_;
+
+    Log::do_log('info', "archive::search_msgid($dir, $msgid)");
+
     if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-	Log::do_log('err','remove_arc: no message id found');return undef;
-    } 
+        Log::do_log('err', 'remove_arc: no message id found');
+        return undef;
+    }
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-	Log::do_log ('info',"archive::search_msgid : dir $dir look unproper");
-	return undef;
+        Log::do_log('info', "archive::search_msgid : dir $dir look unproper");
+        return undef;
     }
-    unless (opendir (ARC, "$dir")){
-	Log::do_log ('info',"archive::scan_dir_archive($dir, $msgid): unable to open dir $dir");
-	return undef;
+    unless (opendir(ARC, "$dir")) {
+        Log::do_log('info',
+            "archive::scan_dir_archive($dir, $msgid): unable to open dir $dir"
+        );
+        return undef;
     }
-    chomp $msgid ;
+    chomp $msgid;
 
-    foreach my $file (grep (!/\./,readdir ARC)) {
-	next unless (open MAIL,"$dir/$file") ;
-	while (<MAIL>) {
-	    last if /^$/ ; #stop parse after end of headers
-	    if (/^Message-id:\s?<?([^>\s]+)>?\s?/i ) {
-		my $id = $1;
-		if ($id eq $msgid) {
-		    close MAIL; closedir ARC;
-		    return $file;
-		}
-	    }
-	}
-	close MAIL;
+    foreach my $file (grep (!/\./, readdir ARC)) {
+        next unless (open MAIL, "$dir/$file");
+        while (<MAIL>) {
+            last if /^$/;    #stop parse after end of headers
+            if (/^Message-id:\s?<?([^>\s]+)>?\s?/i) {
+                my $id = $1;
+                if ($id eq $msgid) {
+                    close MAIL;
+                    closedir ARC;
+                    return $file;
+                }
+            }
+        }
+        close MAIL;
     }
     closedir ARC;
     return undef;
 }
 
-
 sub exist {
-    my($name, $file) = @_;
+    my ($name, $file) = @_;
     my $fn = "$name/$file";
-    
+
     return $fn if (-r $fn && -f $fn);
     return undef;
 }
 
-
 # return path for latest message distributed in the list
 sub last_path {
-    
+
     my $list = shift;
 
     Log::do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
 
     return undef unless ($list->is_archived());
-    my $file = $list->{'dir'}.'/archives/last_message';
+    my $file = $list->{'dir'} . '/archives/last_message';
 
-    return ($list->{'dir'}.'/archives/last_message') if (-f $list->{'dir'}.'/archives/last_message'); 
+    return ($list->{'dir'} . '/archives/last_message')
+        if (-f $list->{'dir'} . '/archives/last_message');
     return undef;
 
 }
@@ -220,37 +235,44 @@ sub last_path {
 sub load_html_message {
     my %parameters = @_;
 
-    Log::do_log ('debug2',$parameters{'file_path'});
+    Log::do_log('debug2', $parameters{'file_path'});
     my %metadata;
 
     unless (open ARC, $parameters{'file_path'}) {
-	Log::do_log('err', "Failed to load message '%s' : $!", $parameters{'file_path'});
-	return undef;
+        Log::do_log(
+            'err',
+            "Failed to load message '%s' : $!",
+            $parameters{'file_path'}
+        );
+        return undef;
     }
 
     while (<ARC>) {
-	last if /^\s*$/; ## Metadata end with an emtpy line
+        last if /^\s*$/;    ## Metadata end with an emtpy line
 
-	if (/^<!--(\S+): (.*) -->$/) {
-	    my ($key, $value) = ($1, $2);
-	    $value = Encode::encode_utf8(HTML::Entities::decode_entities(Encode::decode_utf8($value)));
-	    if ($key eq 'X-From-R13') {
-		$metadata{'X-From'} = $value;
-		$metadata{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/; ## Mhonarc protection of email addresses
-		$metadata{'X-From'} =~ s/^.*<(.*)>/$1/g; ## Remove the gecos
-	    }
-	    $metadata{$key} = $value;
-	}
+        if (/^<!--(\S+): (.*) -->$/) {
+            my ($key, $value) = ($1, $2);
+            $value =
+                Encode::encode_utf8(
+                HTML::Entities::decode_entities(Encode::decode_utf8($value)));
+            if ($key eq 'X-From-R13') {
+                $metadata{'X-From'} = $value;
+                ## Mhonarc protection of email addresses
+                $metadata{'X-From'} =~ tr/N-Z[@A-Mn-za-m/@A-Z[a-z/;
+                $metadata{'X-From'} =~ s/^.*<(.*)>/$1/g;   ## Remove the gecos
+            }
+            $metadata{$key} = $value;
+        }
     }
 
     close ARC;
-    
+
     return \%metadata;
 }
 
 sub clean_archive_directory {
     Log::do_log('debug2', '(%s, %s)', @_);
-    my $robot = shift;
+    my $robot          = shift;
     my $dir_to_rebuild = shift;
 
     my $arc_root = Conf::get_robot_conf($robot, 'arc_path');
@@ -259,8 +281,7 @@ sub clean_archive_directory {
     $answer->{'cleaned_dir'} = $Conf::Conf{'tmpdir'} . '/' . $dir_to_rebuild;
     unless (
         my $number_of_copies = tools::copy_dir(
-            $answer->{'dir_to_rebuild'},
-            $answer->{'cleaned_dir'}
+            $answer->{'dir_to_rebuild'}, $answer->{'cleaned_dir'}
         )
         ) {
         Log::do_log(
@@ -296,14 +317,14 @@ sub clean_archive_directory {
     return $answer;
 }
 
-sub clean_archived_message{
+sub clean_archived_message {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my $robot = shift;
-    my $input = shift;
+    my $robot  = shift;
+    my $input  = shift;
     my $output = shift;
 
     my $msg;
-    unless ($msg = Message->new({ 'file' => $input, 'noxsympato' => 1 })) {
+    unless ($msg = Message->new({'file' => $input, 'noxsympato' => 1})) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);
         return undef;
@@ -315,9 +336,11 @@ sub clean_archived_message{
             close TMP;
             return 1;
         } else {
-            Log::do_log('err',
+            Log::do_log(
+                'err',
                 'Unable to create a tmp file to write clean HTML to file %s',
-                $output);
+                $output
+            );
             return undef;
         }
     } else {
@@ -327,40 +350,40 @@ sub clean_archived_message{
 }
 
 ###########################
-# convert a message to HTML. 
+# convert a message to HTML.
 #    result is stored in $destination_dir
 #    attachement_url is used to link attachement
-#    
+#
 # NOTE: This might be moved to Site package as a mutative method.
 # NOTE: convert_single_msg_2_html() was deprecated.
 sub convert_single_message {
-    my $that = shift; # List or Robot object
-    my $message = shift; # Message object or hashref
-    my %opts = @_;
+    my $that    = shift;    # List or Robot object
+    my $message = shift;    # Message object or hashref
+    my %opts    = @_;
 
     my $list;
     my $robot;
     my $listname;
     my $hostname;
     if (ref $that eq 'List') {
-	$list = $that;
-	$robot = $that->{'domain'};
-	$listname = $that->{'name'};
-	$hostname = $that->{'admin'}{'host'};
-    } elsif (! ref($that) and $that and $that ne '*') {
-	$list = '';
-	$robot = $that;
-	$listname = '';
-	$hostname = Conf::get_robot_conf($that, 'host');
+        $list     = $that;
+        $robot    = $that->{'domain'};
+        $listname = $that->{'name'};
+        $hostname = $that->{'admin'}{'host'};
+    } elsif (!ref($that) and $that and $that ne '*') {
+        $list     = '';
+        $robot    = $that;
+        $listname = '';
+        $hostname = Conf::get_robot_conf($that, 'host');
     } else {
-	Carp::croak('bug in logic.  Ask developer');
+        Carp::croak('bug in logic.  Ask developer');
     }
 
     my $msg_as_string;
     if (ref $message eq 'Message') {
-	$msg_as_string = $message->{'msg_as_string'};
+        $msg_as_string = $message->{'msg_as_string'};
     } elsif (ref $message eq 'HASH') {
-	$msg_as_string = $message->{'messageasstring'};
+        $msg_as_string = $message->{'messageasstring'};
     } else {
         Carp::croak('bug in logic.  Ask developer');
     }
@@ -368,58 +391,60 @@ sub convert_single_message {
     my $destination_dir = $opts{'destination_dir'};
     my $attachement_url = $opts{'attachement_url'};
 
-    my $mhonarc_ressources = tools::search_fullpath(
-	$that, 'mhonarc-ressources.tt2');
+    my $mhonarc_ressources =
+        tools::search_fullpath($that, 'mhonarc-ressources.tt2');
     unless ($mhonarc_ressources) {
-	Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
-	return undef;
+        Log::do_log('notice', 'Cannot find any MhOnArc ressource file');
+        return undef;
     }
 
     unless (-d $destination_dir) {
-	unless (tools::mkdir_all($destination_dir, 0755)) {
-	    Log::do_log('err', 'Unable to create %s', $destination_dir);
-	    return undef;
-	}
+        unless (tools::mkdir_all($destination_dir, 0755)) {
+            Log::do_log('err', 'Unable to create %s', $destination_dir);
+            return undef;
+        }
     }
 
     my $msg_file = $destination_dir . '/msg00000.txt';
     unless (open OUT, '>', $msg_file) {
-	Log::do_log('notice', 'Could Not open %s', $msg_file);
-	return undef;
+        Log::do_log('notice', 'Could Not open %s', $msg_file);
+        return undef;
     }
     print OUT $msg_as_string;
     close OUT;
 
-    # mhonarc require du change workdir so this proc must retore it    
+    # mhonarc require du change workdir so this proc must retore it
     my $pwd = Cwd::getcwd();
 
     ## generate HTML
     unless (chdir $destination_dir) {
-	Log::do_log('err', 'Could not change working directory to %s',
-	    $destination_dir);
-	return undef;
+        Log::do_log('err', 'Could not change working directory to %s',
+            $destination_dir);
+        return undef;
     }
 
-    my $tag = get_tag($that);
+    my $tag      = get_tag($that);
     my $exitcode = system(
-	Conf::get_robot_conf($robot, 'mhonarc'), '-single',
-	'-rcfile' => $mhonarc_ressources,
-	'-definevars' => "listname='$listname' hostname=$hostname tag=$tag",
-	'-outdir' => $destination_dir,
-	'-attachmentdir' => $destination_dir,
-	'-attachmenturl' => $attachement_url,
-	'-umask' => $Conf::Conf{'umask'},
-	'-stdout' => "$destination_dir/msg00000.html",
-	'--', $msg_file
+        Conf::get_robot_conf($robot, 'mhonarc'), '-single',
+        '-rcfile'     => $mhonarc_ressources,
+        '-definevars' => "listname='$listname' hostname=$hostname tag=$tag",
+        '-outdir'     => $destination_dir,
+        '-attachmentdir' => $destination_dir,
+        '-attachmenturl' => $attachement_url,
+        '-umask'         => $Conf::Conf{'umask'},
+        '-stdout'        => "$destination_dir/msg00000.html",
+        '--', $msg_file
     ) >> 8;
 
-    # restore current wd 
-    chdir $pwd;		
+    # restore current wd
+    chdir $pwd;
 
     if ($exitcode) {
-	Log::do_log('err', 'Command %s failed with exit code %d',
-	    Conf::get_robot_conf($robot, 'mhonarc'), $exitcode
-	);
+        Log::do_log(
+            'err',
+            'Command %s failed with exit code %d',
+            Conf::get_robot_conf($robot, 'mhonarc'), $exitcode
+        );
     }
 
     return 1;
@@ -470,16 +495,16 @@ sub get_tag {
 
     my $name;
     if (ref $that eq 'List') {
-	$name = $that->{'name'};
-    } elsif (! ref($that) and $that and $that ne '*') {
-	$name = $that;
-    } elsif (! ref($that)) {
-	$name = '*';
+        $name = $that->{'name'};
+    } elsif (!ref($that) and $that and $that ne '*') {
+        $name = $that;
+    } elsif (!ref($that)) {
+        $name = '*';
     }
 
-    return substr(
-	Digest::MD5::md5_hex(join '/', $Conf::Conf{'cookie'}, $name), -10
-    );
+    return
+        substr(Digest::MD5::md5_hex(join '/', $Conf::Conf{'cookie'}, $name),
+        -10);
 }
 
 1;

@@ -37,22 +37,19 @@ use base qw(DBManipulatorDefault);
 #######################################################
 
 our %date_format = (
-		   'read' => {
-		       'Sybase' => 'datediff(second, \'01/01/1970\',%s)',
-		       },
-		   'write' => {
-		       'Sybase' => 'dateadd(second,%s,\'01/01/1970\')',
-		       }
-	       );
+    'read'  => {'Sybase' => 'datediff(second, \'01/01/1970\',%s)',},
+    'write' => {'Sybase' => 'dateadd(second,%s,\'01/01/1970\')',}
+);
 
 # Builds the string to be used by the DBI to connect to the database.
 #
 # IN: Nothing
 #
 # OUT: Nothing
-sub build_connect_string{
+sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} = "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
+    $self->{'connect_string'} =
+        "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
 }
 
 ## Returns an SQL clause to be inserted in a query.
@@ -60,9 +57,15 @@ sub build_connect_string{
 ## $param->{'substring_length'} starting from the first character equal
 ## to $param->{'separator'} found in the value of field $param->{'source_field'}.
 sub get_substring_clause {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    return "substring(".$param->{'source_field'}.",charindex('".$param->{'separator'}."',".$param->{'source_field'}.")+1,".$param->{'substring_length'}.")";
+    return
+          "substring("
+        . $param->{'source_field'}
+        . ",charindex('"
+        . $param->{'separator'} . "',"
+        . $param->{'source_field'} . ")+1,"
+        . $param->{'substring_length'} . ")";
 }
 
 ## Returns an SQL clause to be inserted in a query.
@@ -71,7 +74,7 @@ sub get_substring_clause {
 ## $param->{'offset'} rows is done from the first record before selecting
 ## the rows to return.
 sub get_limit_clause {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
     return "";
 }
@@ -81,22 +84,23 @@ sub get_limit_clause {
 # IN: A ref to hash containing the following keys:
 #	* 'mode'
 # 	   authorized values:
-#		- 'write': the sub returns the expression to use in 'INSERT' or 'UPDATE' queries
+#		- 'write': the sub returns the expression to use in 'INSERT'
+#		or 'UPDATE' queries
 #		- 'read': the sub returns the expression to use in 'SELECT' queries
 #	* 'target': the name of the field or the value to be used in the query
 #
 # OUT: the formatted date or undef if the date format mode is unknonw.
 sub get_formatted_date {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Building SQL date formatting');
+    Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-	return sprintf 'UNIX_TIMESTAMP(%s)',$param->{'target'};
-    }elsif(lc($param->{'mode'}) eq 'write') {
-	return sprintf 'FROM_UNIXTIME(%d)',$param->{'target'};
-    }else {
-	Log::do_log('err',"Unknown date format mode %s", $param->{'mode'});
-	return undef;
+        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
+    } elsif (lc($param->{'mode'}) eq 'write') {
+        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
+    } else {
+        Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
+        return undef;
     }
 }
 
@@ -107,15 +111,24 @@ sub get_formatted_date {
 #
 # OUT: Returns true if the field is an autoincrement field, false otherwise
 sub is_autoinc {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Checking whether field %s.%s is autoincremental',$param->{'field'},$param->{'table'});
+    Log::do_log('debug', 'Checking whether field %s.%s is autoincremental',
+        $param->{'field'}, $param->{'table'});
     my $sth;
-    unless ($sth = $self->do_query("SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",$param->{'table'},$param->{'field'})) {
-	Log::do_log('err','Unable to gather autoincrement field named %s for table %s',$param->{'field'},$param->{'table'});
-	return undef;
-    }	    
-    my $ref = $sth->fetchrow_hashref('NAME_lc') ;
+    unless (
+        $sth = $self->do_query(
+            "SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",
+            $param->{'table'},
+            $param->{'field'}
+        )
+        ) {
+        Log::do_log('err',
+            'Unable to gather autoincrement field named %s for table %s',
+            $param->{'field'}, $param->{'table'});
+        return undef;
+    }
+    my $ref = $sth->fetchrow_hashref('NAME_lc');
     return ($ref->{'field'} eq $param->{'field'});
 }
 
@@ -126,31 +139,46 @@ sub is_autoinc {
 #
 # OUT: 1 if the autoincrement could be set, undef otherwise.
 sub set_autoinc {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Setting field %s.%s as autoincremental',$param->{'field'},$param->{'table'});
-    unless ($self->do_query("ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",$param->{'table'},$param->{'field'},$param->{'field'})) {
-	Log::do_log('err','Unable to set field %s in table %s as autoincrement',$param->{'field'},$param->{'table'});
-	return undef;
+    Log::do_log('debug', 'Setting field %s.%s as autoincremental',
+        $param->{'field'}, $param->{'table'});
+    unless (
+        $self->do_query(
+            "ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",
+            $param->{'table'}, $param->{'field'}, $param->{'field'}
+        )
+        ) {
+        Log::do_log('err',
+            'Unable to set field %s in table %s as autoincrement',
+            $param->{'field'}, $param->{'table'});
+        return undef;
     }
     return 1;
 }
 
-
 # Returns the list of the tables in the database.
 # Returns undef if something goes wrong.
 #
-# OUT: a ref to an array containing the list of the tables names in the database, undef if something went wrong
+# OUT: a ref to an array containing the list of the tables names in the
+# database, undef if something went wrong
 sub get_tables {
     my $self = shift;
     my @raw_tables;
     my $sth;
-    unless ($sth = $self->do_query("SELECT name FROM %s..sysobjects WHERE type='U'",$self->{'db_name'})) {
-	Log::do_log('err','Unable to retrieve the list of tables from database %s',$self->{'db_name'});
-	return undef;
+    unless (
+        $sth = $self->do_query(
+            "SELECT name FROM %s..sysobjects WHERE type='U'",
+            $self->{'db_name'}
+        )
+        ) {
+        Log::do_log('err',
+            'Unable to retrieve the list of tables from database %s',
+            $self->{'db_name'});
+        return undef;
     }
-    while (my $table= $sth->fetchrow()) {
-	push @raw_tables, lc ($table);   	
+    while (my $table = $sth->fetchrow()) {
+        push @raw_tables, lc($table);
     }
     return \@raw_tables;
 }
@@ -159,19 +187,26 @@ sub get_tables {
 # IN: A ref to hash containing the following keys:
 #	* 'table' : the name of the table to add
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 sub add_table {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Adding table %s to database %s',$param->{'table'},$self->{'db_name'});
-    unless ($self->do_query("CREATE TABLE %s (temporary INT)",$param->{'table'})) {
-	Log::do_log('err', 'Could not create table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;
+    Log::do_log('debug', 'Adding table %s to database %s',
+        $param->{'table'}, $self->{'db_name'});
+    unless (
+        $self->do_query("CREATE TABLE %s (temporary INT)", $param->{'table'}))
+    {
+        Log::do_log('err', 'Could not create table %s in database %s',
+            $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
-    return sprintf "Table %s created in database %s", $param->{'table'}, $self->{'db_name'};
+    return sprintf "Table %s created in database %s", $param->{'table'},
+        $self->{'db_name'};
 }
 
-# Returns a ref to an hash containing the description of the fields in a table from the database.
+# Returns a ref to an hash containing the description of the fields in a table
+# from the database.
 # IN: A ref to hash containing the following keys:
 #	* 'table' : the name of the table whose fields are requested.
 #
@@ -181,17 +216,21 @@ sub add_table {
 #	Returns undef if something went wrong.
 #
 sub get_fields {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Getting fields list from table %s in database %s',$param->{'table'},$self->{'db_name'});
+    Log::do_log('debug', 'Getting fields list from table %s in database %s',
+        $param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
-    unless ($sth = $self->do_query("SHOW FIELDS FROM %s",$param->{'table'})) {
-	Log::do_log('err', 'Could not get the list of fields from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless ($sth = $self->do_query("SHOW FIELDS FROM %s", $param->{'table'}))
+    {
+        Log::do_log('err',
+            'Could not get the list of fields from table %s in database %s',
+            $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
-    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {		
-	$result{$ref->{'field'}} = $ref->{'type'};
+    while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+        $result{$ref->{'field'}} = $ref->{'type'};
     }
     return \%result;
 }
@@ -203,24 +242,42 @@ sub get_fields {
 # * 'type' : the type of the field to add
 # * 'notnull' : specifies that the field must not be null
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub update_field {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Updating field %s in table %s (%s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'});
+    Log::do_log('debug', 'Updating field %s in table %s (%s, %s)',
+        $param->{'field'}, $param->{'table'}, $param->{'type'},
+        $param->{'notnull'});
     my $options;
     if ($param->{'notnull'}) {
-	$options .= ' NOT NULL ';
+        $options .= ' NOT NULL ';
     }
-    my $report = sprintf("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
-    Log::do_log('notice', "ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options);
-    unless ($self->do_query("ALTER TABLE %s CHANGE %s %s %s %s",$param->{'table'},$param->{'field'},$param->{'field'},$param->{'type'},$options)) {
-	Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',$param->{'field'}, $param->{'table'});
-	return undef;
+    my $report = sprintf(
+        "ALTER TABLE %s CHANGE %s %s %s %s",
+        $param->{'table'}, $param->{'field'}, $param->{'field'},
+        $param->{'type'},  $options
+    );
+    Log::do_log('notice', "ALTER TABLE %s CHANGE %s %s %s %s",
+        $param->{'table'}, $param->{'field'}, $param->{'field'},
+        $param->{'type'}, $options);
+    unless (
+        $self->do_query(
+            "ALTER TABLE %s CHANGE %s %s %s %s",
+            $param->{'table'}, $param->{'field'}, $param->{'field'},
+            $param->{'type'},  $options
+        )
+        ) {
+        Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',
+            $param->{'field'}, $param->{'table'});
+        return undef;
     }
-    $report .= sprintf("\nField %s in table %s, structure updated", $param->{'field'}, $param->{'table'});
-    Log::do_log('info', 'Field %s in table %s, structure updated', $param->{'field'}, $param->{'table'});
+    $report .= sprintf("\nField %s in table %s, structure updated",
+        $param->{'field'}, $param->{'table'});
+    Log::do_log('info', 'Field %s in table %s, structure updated',
+        $param->{'field'}, $param->{'table'});
     return $report;
 }
 
@@ -233,31 +290,47 @@ sub update_field {
 #	* 'autoinc' : specifies that the field must be autoincremental
 #	* 'primary' : specifies that the field is a key
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub add_field {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Adding field %s in table %s (%s, %s, %s, %s)',$param->{'field'},$param->{'table'},$param->{'type'},$param->{'notnull'},$param->{'autoinc'},$param->{'primary'});
+    Log::do_log(
+        'debug',             'Adding field %s in table %s (%s, %s, %s, %s)',
+        $param->{'field'},   $param->{'table'},
+        $param->{'type'},    $param->{'notnull'},
+        $param->{'autoinc'}, $param->{'primary'}
+    );
     my $options;
     # To prevent "Cannot add a NOT NULL column with default value NULL" errors
     if ($param->{'notnull'}) {
-	$options .= 'NOT NULL ';
+        $options .= 'NOT NULL ';
     }
-    if ( $param->{'autoinc'}) {
-	$options .= ' AUTO_INCREMENT ';
+    if ($param->{'autoinc'}) {
+        $options .= ' AUTO_INCREMENT ';
     }
-    if ( $param->{'primary'}) {
-	$options .= ' PRIMARY KEY ';
+    if ($param->{'primary'}) {
+        $options .= ' PRIMARY KEY ';
     }
-    unless ($self->do_query("ALTER TABLE %s ADD %s %s %s",$param->{'table'},$param->{'field'},$param->{'type'},$options)) {
-	Log::do_log('err', 'Could not add field %s to table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless (
+        $self->do_query(
+            "ALTER TABLE %s ADD %s %s %s", $param->{'table'},
+            $param->{'field'},             $param->{'type'},
+            $options
+        )
+        ) {
+        Log::do_log('err',
+            'Could not add field %s to table %s in database %s',
+            $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
 
-    my $report = sprintf('Field %s added to table %s (options : %s)', $param->{'field'}, $param->{'table'}, $options);
-    Log::do_log('info', 'Field %s added to table %s  (options : %s)', $param->{'field'}, $param->{'table'}, $options);
-    
+    my $report = sprintf('Field %s added to table %s (options : %s)',
+        $param->{'field'}, $param->{'table'}, $options);
+    Log::do_log('info', 'Field %s added to table %s  (options : %s)',
+        $param->{'field'}, $param->{'table'}, $options);
+
     return $report;
 }
 
@@ -266,21 +339,32 @@ sub add_field {
 #	* 'field' : the name of the field to delete
 #	* 'table' : the name of the table where the field will be deleted.
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub delete_field {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Deleting field %s from table %s',$param->{'field'},$param->{'table'});
+    Log::do_log('debug', 'Deleting field %s from table %s',
+        $param->{'field'}, $param->{'table'});
 
-    unless ($self->do_query("ALTER TABLE %s DROP COLUMN `%s`",$param->{'table'},$param->{'field'})) {
-	Log::do_log('err', 'Could not delete field %s from table %s in database %s', $param->{'field'}, $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless (
+        $self->do_query(
+            "ALTER TABLE %s DROP COLUMN `%s`", $param->{'table'},
+            $param->{'field'}
+        )
+        ) {
+        Log::do_log('err',
+            'Could not delete field %s from table %s in database %s',
+            $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
 
-    my $report = sprintf('Field %s removed from table %s', $param->{'field'}, $param->{'table'});
-    Log::do_log('info', 'Field %s removed from table %s', $param->{'field'}, $param->{'table'});
-    
+    my $report = sprintf('Field %s removed from table %s',
+        $param->{'field'}, $param->{'table'});
+    Log::do_log('info', 'Field %s removed from table %s',
+        $param->{'field'}, $param->{'table'});
+
     return $report;
 }
 
@@ -288,44 +372,56 @@ sub delete_field {
 # IN: A ref to hash containing the following keys:
 #	* 'table' : the name of the table for which the primary keys are requested.
 #
-# OUT: A ref to a hash in which each key is the name of a primary key or undef if something went wrong.
+# OUT: A ref to a hash in which each key is the name of a primary key or undef
+# if something went wrong.
 #
 sub get_primary_key {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Getting primary key for table %s',$param->{'table'});
+    Log::do_log('debug', 'Getting primary key for table %s',
+        $param->{'table'});
 
     my %found_keys;
     my $sth;
-    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s",$param->{'table'})) {
-	Log::do_log('err', 'Could not get field list from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s", $param->{'table'}))
+    {
+        Log::do_log('err',
+            'Could not get field list from table %s in database %s',
+            $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
 
     my $test_request_result = $sth->fetchall_hashref('field');
-    foreach my $scannedResult ( keys %$test_request_result ) {
-	if ( $test_request_result->{$scannedResult}{'key'} eq "PRI" ) {
-	    $found_keys{$scannedResult} = 1;
-	}
+    foreach my $scannedResult (keys %$test_request_result) {
+        if ($test_request_result->{$scannedResult}{'key'} eq "PRI") {
+            $found_keys{$scannedResult} = 1;
+        }
     }
     return \%found_keys;
 }
 
 # Drops the primary key of a table.
 # IN: A ref to hash containing the following keys:
-#	* 'table' : the name of the table for which the primary keys must be dropped.
+#	* 'table' : the name of the table for which the primary keys must be
+#	dropped.
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub unset_primary_key {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Removing primary key from table %s',$param->{'table'});
+    Log::do_log('debug', 'Removing primary key from table %s',
+        $param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP PRIMARY KEY",$param->{'table'})) {
-	Log::do_log('err', 'Could not drop primary key from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless ($sth =
+        $self->do_query("ALTER TABLE %s DROP PRIMARY KEY", $param->{'table'}))
+    {
+        Log::do_log('err',
+            'Could not drop primary key from table %s in database %s',
+            $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
     my $report = "Table $param->{'table'}, PRIMARY KEY dropped";
     Log::do_log('info', 'Table %s, PRIMARY KEY dropped', $param->{'table'});
@@ -335,24 +431,40 @@ sub unset_primary_key {
 
 # Sets the primary key of a table.
 # IN: A ref to hash containing the following keys:
-#	* 'table' : the name of the table for which the primary keys must be defined.
-#	* 'fields' : a ref to an array containing the names of the fields used in the key.
+#	* 'table' : the name of the table for which the primary keys must be
+#	defined.
+#	* 'fields' : a ref to an array containing the names of the fields used
+#	in the key.
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub set_primary_key {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
 
     my $sth;
-    my $fields = join ',',@{$param->{'fields'}};
-    Log::do_log('debug','Setting primary key for table %s (%s)',$param->{'table'},$fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD PRIMARY KEY (%s)",$param->{'table'}, $fields)) {
-	Log::do_log('err', 'Could not set fields %s as primary key for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
-	return undef;
+    my $fields = join ',', @{$param->{'fields'}};
+    Log::do_log('debug', 'Setting primary key for table %s (%s)',
+        $param->{'table'}, $fields);
+    unless (
+        $sth = $self->do_query(
+            "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
+            $fields
+        )
+        ) {
+        Log::do_log(
+            'err',
+            'Could not set fields %s as primary key for table %s in database %s',
+            $fields,
+            $param->{'table'},
+            $self->{'db_name'}
+        );
+        return undef;
     }
     my $report = "Table $param->{'table'}, PRIMARY KEY set on $fields";
-    Log::do_log('info', 'Table %s, PRIMARY KEY set on %s', $param->{'table'},$fields);
+    Log::do_log('info', 'Table %s, PRIMARY KEY set on %s',
+        $param->{'table'}, $fields);
     return $report;
 }
 
@@ -360,28 +472,34 @@ sub set_primary_key {
 # IN: A ref to hash containing the following keys:
 #	* 'table' : the name of the table for which the indexes are requested.
 #
-# OUT: A ref to a hash in which each key is the name of an index. These key point to
+# OUT: A ref to a hash in which each key is the name of an index. These key
+# point to
 #	a second level hash in which each key is the name of the field indexed.
 #      Returns undef if something went wrong.
 #
 sub get_indexes {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Looking for indexes in %s',$param->{'table'});
+    Log::do_log('debug', 'Looking for indexes in %s', $param->{'table'});
 
     my %found_indexes;
     my $sth;
-    unless ($sth = $self->do_query("SHOW INDEX FROM %s",$param->{'table'})) {
-	Log::do_log('err', 'Could not get the list of indexes from table %s in database %s', $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless ($sth = $self->do_query("SHOW INDEX FROM %s", $param->{'table'})) {
+        Log::do_log(
+            'err',
+            'Could not get the list of indexes from table %s in database %s',
+            $param->{'table'},
+            $self->{'db_name'}
+        );
+        return undef;
     }
     my $index_part;
-    while($index_part = $sth->fetchrow_hashref('NAME_lc')) {
-	if ( $index_part->{'key_name'} ne "PRIMARY" ) {
-	    my $index_name = $index_part->{'key_name'};
-	    my $field_name = $index_part->{'column_name'};
-	    $found_indexes{$index_name}{$field_name} = 1;
-	}
+    while ($index_part = $sth->fetchrow_hashref('NAME_lc')) {
+        if ($index_part->{'key_name'} ne "PRIMARY") {
+            my $index_name = $index_part->{'key_name'};
+            my $field_name = $index_part->{'column_name'};
+            $found_indexes{$index_name}{$field_name} = 1;
+        }
     }
     ##open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
@@ -392,20 +510,30 @@ sub get_indexes {
 #	* 'table' : the name of the table for which the index must be dropped.
 #	* 'index' : the name of the index to be dropped.
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub unset_index {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
-    Log::do_log('debug','Removing index %s from table %s',$param->{'index'},$param->{'table'});
+    Log::do_log('debug', 'Removing index %s from table %s',
+        $param->{'index'}, $param->{'table'});
 
     my $sth;
-    unless ($sth = $self->do_query("ALTER TABLE %s DROP INDEX %s",$param->{'table'},$param->{'index'})) {
-	Log::do_log('err', 'Could not drop index %s from table %s in database %s',$param->{'index'}, $param->{'table'}, $self->{'db_name'});
-	return undef;
+    unless (
+        $sth = $self->do_query(
+            "ALTER TABLE %s DROP INDEX %s", $param->{'table'},
+            $param->{'index'}
+        )
+        ) {
+        Log::do_log('err',
+            'Could not drop index %s from table %s in database %s',
+            $param->{'index'}, $param->{'table'}, $self->{'db_name'});
+        return undef;
     }
     my $report = "Table $param->{'table'}, index $param->{'index'} dropped";
-    Log::do_log('info', 'Table %s, index %s dropped', $param->{'table'},$param->{'index'});
+    Log::do_log('info', 'Table %s, index %s dropped',
+        $param->{'table'}, $param->{'index'});
 
     return $report;
 }
@@ -413,24 +541,43 @@ sub unset_index {
 # Sets an index in a table.
 # IN: A ref to hash containing the following keys:
 #	* 'table' : the name of the table for which the index must be defined.
-#	* 'fields' : a ref to an array containing the names of the fields used in the index.
+#	* 'fields' : a ref to an array containing the names of the fields used
+#	in the index.
 #	* 'index_name' : the name of the index to be defined..
 #
-# OUT: A character string report of the operation done or undef if something went wrong.
+# OUT: A character string report of the operation done or undef if something
+# went wrong.
 #
 sub set_index {
-    my $self = shift;
+    my $self  = shift;
     my $param = shift;
 
     my $sth;
-    my $fields = join ',',@{$param->{'fields'}};
-    Log::do_log('debug', 'Setting index %s for table %s using fields %s', $param->{'index_name'},$param->{'table'}, $fields);
-    unless ($sth = $self->do_query("ALTER TABLE %s ADD INDEX %s (%s)",$param->{'table'}, $param->{'index_name'}, $fields)) {
-	Log::do_log('err', 'Could not add index %s using field %s for table %s in database %s', $fields, $param->{'table'}, $self->{'db_name'});
-	return undef;
+    my $fields = join ',', @{$param->{'fields'}};
+    Log::do_log(
+        'debug',
+        'Setting index %s for table %s using fields %s',
+        $param->{'index_name'},
+        $param->{'table'}, $fields
+    );
+    unless (
+        $sth = $self->do_query(
+            "ALTER TABLE %s ADD INDEX %s (%s)", $param->{'table'},
+            $param->{'index_name'},             $fields
+        )
+        ) {
+        Log::do_log(
+            'err',
+            'Could not add index %s using field %s for table %s in database %s',
+            $fields,
+            $param->{'table'},
+            $self->{'db_name'}
+        );
+        return undef;
     }
     my $report = "Table $param->{'table'}, index %s set using $fields";
-    Log::do_log('info', 'Table %s, index %s set using fields %s',$param->{'table'}, $param->{'index_name'}, $fields);
+    Log::do_log('info', 'Table %s, index %s set using fields %s',
+        $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
 }
 

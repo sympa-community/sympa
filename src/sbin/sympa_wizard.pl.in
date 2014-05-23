@@ -33,12 +33,12 @@ use Sys::Hostname qw();
 use Sympa::Constants;
 use Sympa::ModDef;
 
-my $with_CPAN; # check if module "CPAN" installed.
-my $modfail;   # any of required modules are not installed.
+my $with_CPAN;    # check if module "CPAN" installed.
+my $modfail;      # any of required modules are not installed.
 
 BEGIN {
     $with_CPAN = eval { require CPAN; };
-    $modfail = ! eval { require Conf; require tools; };
+    $modfail = !eval { require Conf; require tools; };
 }
 
 # Detect console encoding.
@@ -46,10 +46,10 @@ if (-t) {
     no warnings;
 
     eval { require Encode::Locale; };
-    unless ($@ or
-        Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN) eq 'ascii'
-        or
-        Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT) eq
+    unless ($@
+        or Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN) eq
+        'ascii'
+        or Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT) eq
         'ascii') {
         binmode(STDIN,  ':encoding(console_in):bytes');
         binmode(STDOUT, ':encoding(console_out):bytes');
@@ -75,7 +75,7 @@ if ($modfail) {
     no warnings;
 
     my $language = Sympa::Language->instance;
-    *gettext = sub { $language->gettext(shift) };
+    *gettext          = sub { $language->gettext(shift) };
     *gettext_strftime = sub { $language->gettext_strftime(@_) };
 
     my $lang = $ENV{'LANGUAGE'} || $ENV{'LC_ALL'} || $ENV{'LANG'};
@@ -88,9 +88,9 @@ my $sympa_conf = Sympa::Constants::CONFIG;
 
 my %options;
 GetOptions(
-    \%options, 
+    \%options,
     'target=s',
-    'create:s', # parameter is optional
+    'create:s',    # parameter is optional
     'check',
     'help'
 );
@@ -125,7 +125,7 @@ sub create_configuration {
 
     unless (open NEWF, '>', $conf) {
         die "Unable to open $conf : $!";
-    };
+    }
 
     if ($options{create} eq 'sympa.conf') {
 #        print NEWF <<EOF
@@ -140,7 +140,7 @@ sub create_configuration {
     foreach my $param (@confdef::params) {
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
-		if $param->{'gettext_id'};
+                if $param->{'gettext_id'};
             next;
         }
 
@@ -155,29 +155,27 @@ sub create_configuration {
         printf NEWF "## %s\n", $param->{'name'};
 
         if ($param->{'gettext_id'}) {
-            print NEWF tools::wrap_text(
-	        gettext($param->{'gettext_id'}), '## ', '## '
-	    );
+            print NEWF tools::wrap_text(gettext($param->{'gettext_id'}),
+                '## ', '## ');
         }
 
-        print NEWF tools::wrap_text(
-	    gettext($param->{'gettext_comment'}), '## ', '## '
-	    ) if $param->{'gettext_comment'};
+        print NEWF tools::wrap_text(gettext($param->{'gettext_comment'}),
+            '## ', '## ')
+            if $param->{'gettext_comment'};
 
         if (defined $param->{'sample'}) {
             printf NEWF '## ' . gettext("Example: %s\t%s") . "\n",
-		$param->{'name'}, $param->{'sample'};
-	}
+                $param->{'name'}, $param->{'sample'};
+        }
 
         if (defined $param->{'default'}) {
             printf NEWF "#%s\t%s\n", $param->{'name'}, $param->{'default'};
         } elsif ($param->{'optional'}) {
             printf NEWF "#%s\t\n", $param->{'name'};
         } else {
-            printf NEWF
-                '#' .
-                gettext("%s\t(You must define this parameter)") .
-                "\n", $param->{'name'};
+            printf NEWF '#'
+                . gettext("%s\t(You must define this parameter)")
+                . "\n", $param->{'name'};
         }
         print NEWF "\n";
     }
@@ -188,10 +186,10 @@ sub create_configuration {
 
 sub edit_configuration {
     die "You must run as superuser.\n"
-	if $UID;
-    die "Installation of Sympa has not been completed.\n" .
-	"Run sympa_wizard.pl --check\n"
-	if $modfail;
+        if $UID;
+    die "Installation of Sympa has not been completed.\n"
+        . "Run sympa_wizard.pl --check\n"
+        if $modfail;
 
     # complement required fields.
     foreach my $param (@confdef::params) {
@@ -199,50 +197,52 @@ sub edit_configuration {
         if ($param->{'name'} eq 'domain') {
             $param->{'default'} = Sys::Hostname::hostname();
         } elsif ($param->{'name'} eq 'wwsympa_url') {
-            $param->{'default'} = sprintf 'http://%s/sympa', Sys::Hostname::hostname();
+            $param->{'default'} = sprintf 'http://%s/sympa',
+                Sys::Hostname::hostname();
         } elsif ($param->{'name'} eq 'listmaster') {
-            $param->{'default'} = sprintf 'your_email_address@%s', Sys::Hostname::hostname();
+            $param->{'default'} = sprintf 'your_email_address@%s',
+                Sys::Hostname::hostname();
         }
     }
 
     ## Load sympa config (but not using database)
     unless (defined Conf::load($sympa_conf, 1)) {
-	printf STDERR
-	    "Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
-	    $sympa_conf;
-	exit 1;
+        printf STDERR
+            "Unable to load sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
+            $sympa_conf;
+        exit 1;
     }
 
     my $new_sympa_conf = '/tmp/sympa.conf';
-    my $somechange = 0;
+    my $somechange     = 0;
 
     my @new_sympa_conf;
     my $title = undef;
 
     # dynamic defaults
-    my $domain = Sys::Hostname::hostname();
+    my $domain    = Sys::Hostname::hostname();
     my $http_host = "http://$domain";
 
     ## Edition mode
     foreach my $param (@confdef::params) {
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
-		if $param->{'gettext_id'};
+                if $param->{'gettext_id'};
             next;
-        }    
+        }
 
-        my $file = $param->{'file'} ;
-        my $name = $param->{'name'} ; 
+        my $file  = $param->{'file'};
+        my $name  = $param->{'name'};
         my $query = $param->{'gettext_id'} || '';
         $query = gettext($query) if $query;
-        my $advice = $param->{'gettext_comment'} ;
+        my $advice = $param->{'gettext_comment'};
         $advice = gettext($advice) if $advice;
-        my $sample = $param->{'sample'} ;
-        my $current_value ;
+        my $sample = $param->{'sample'};
+        my $current_value;
 
-	next unless $file;
+        next unless $file;
         if ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
-            $current_value = $Conf::Conf{$name}; 
+            $current_value = $Conf::Conf{$name};
             $current_value = '' unless defined $current_value;
         } else {
             next;
@@ -256,27 +256,27 @@ sub edit_configuration {
 
         my $new_value = '';
         if ($param->{'edit'} and $param->{'edit'} eq '1') {
-	    print "\n\n** $title **\n" if $title;
+            print "\n\n** $title **\n" if $title;
 
             print "\n";
             print tools::wrap_text($query || '', '* ', '  ');
             print tools::wrap_text($advice, '  ... ', '  ') if $advice;
             printf(gettext('%s [%s] : '), $name, $current_value);
-            $new_value = <STDIN> ;
+            $new_value = <STDIN>;
             chomp $new_value;
         }
         if ($new_value eq '') {
             $new_value = $current_value;
         }
 
-	undef $title;
+        undef $title;
 
         ## Skip empty parameters
-        next if $new_value eq '' and ! $sample;
+        next if $new_value eq '' and !$sample;
 
         ## param is an ARRAY
         if (ref($new_value) eq 'ARRAY') {
-            $new_value = join ',',@{$new_value};
+            $new_value = join ',', @{$new_value};
         }
 
         unless ($file eq 'sympa.conf' or $file eq 'wwsympa.conf') {
@@ -294,7 +294,7 @@ sub edit_configuration {
             }
 
             push @new_sympa_conf, "# $name\t$sample\n\n";
-        }else {
+        } else {
             push @new_sympa_conf, tools::wrap_text($query, '## ', '## ');
             if (defined $advice and length $advice) {
                 push @new_sympa_conf, tools::wrap_text($advice, '## ', '## ');
@@ -313,37 +313,44 @@ sub edit_configuration {
         my $date = gettext_strftime("%d.%b.%Y-%H.%M.%S", localtime(time));
 
         ## Keep old config file
-        unless (rename $sympa_conf, $sympa_conf.'.'.$date) {
-            warn sprintf(gettext("Unable to rename %s : %s"),
-			 $sympa_conf, $!);
+        unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
+            warn
+                sprintf(gettext("Unable to rename %s : %s"), $sympa_conf, $!);
         }
 
         ## Write new config file
         my $umask = umask 037;
-        unless (open (SYMPA,"> $sympa_conf")){
+        unless (open(SYMPA, "> $sympa_conf")) {
             umask $umask;
-            die sprintf(gettext("Unable to open %s : %s"),
-                        $sympa_conf, $!);
-        };
+            die sprintf(gettext("Unable to open %s : %s"), $sympa_conf, $!);
+        }
         umask $umask;
-        chown [getpwnam(Sympa::Constants::USER)]->[2], [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
+        chown [getpwnam(Sympa::Constants::USER)]->[2],
+            [getgrnam(Sympa::Constants::GROUP)]->[2], $sympa_conf;
 
         print SYMPA @new_sympa_conf;
         close SYMPA;
 
-        printf gettext("%s have been updated.\nPrevious versions have been saved as %s.\n"), $sympa_conf, "$sympa_conf.$date";
+        printf gettext(
+            "%s have been updated.\nPrevious versions have been saved as %s.\n"
+        ), $sympa_conf, "$sympa_conf.$date";
     }
 }
 
 sub check_cpan {
-    print "##########################################################################################
-# This process will help you install all Perl (CPAN) modules required by Sympa software.
+    print
+        "##########################################################################################
+# This process will help you install all Perl (CPAN) modules required by Sympa
+# software.
 # Sympa requires from 50 to 65 additional Perl modules to run properly. 
 # The whole installation process should take around 15 minutes.
-# You'll first have to configure the CPAN shell itself and select your favourite CPAN server.
-# Note that you might prefer to install the required Perl modules using your favourite DEB/RPM mechanism.
-# Feel free to interrupt the process if needed ; you can restart it safely afterward.
-##############################################################################################
+# You'll first have to configure the CPAN shell itself and select your
+# favourite CPAN server.
+# Note that you might prefer to install the required Perl modules using your
+# favourite DEB/RPM mechanism.
+# Feel free to interrupt the process if needed ; you can restart it safely
+# afterward.
+##############################################################################
 Strike return key to continue...
 ";
     my $rep = <STDIN>;
@@ -353,15 +360,18 @@ Strike return key to continue...
     ### REQ perl version
     print "\nChecking for PERL version:\n-----------------------------\n";
     my $rpv = $Sympa::ModDef::cpan_modules{"perl"}{'required_version'};
-    if ($] >= $Sympa::ModDef::cpan_modules{"perl"}{'required_version'}){
+    if ($] >= $Sympa::ModDef::cpan_modules{"perl"}{'required_version'}) {
         print "your version of perl is OK ($]  >= $rpv)\n";
-    }else {
-        print "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
+    } else {
+        print
+            "Your version of perl is TOO OLD ($]  < $rpv)\nPlease INSTALL a new one !\n";
     }
 
-    print "\nChecking for REQUIRED modules:\n------------------------------------------\n";
+    print
+        "\nChecking for REQUIRED modules:\n------------------------------------------\n";
     check_modules('y', \%Sympa::ModDef::cpan_modules, 'mandatory');
-    print "\nChecking for OPTIONAL modules:\n------------------------------------------\n";
+    print
+        "\nChecking for OPTIONAL modules:\n------------------------------------------\n";
     check_modules('n', \%Sympa::ModDef::cpan_modules, 'optional');
 
     print <<EOM;
@@ -378,24 +388,24 @@ EOM
 
 sub check_modules {
 #    my($default, $todo, $versions, $opt_features) = @_;
-    my($default, $cpan_modules, $type) = @_;
+    my ($default, $cpan_modules, $type) = @_;
 
-    print "perl module          from CPAN       STATUS\n"; 
+    print "perl module          from CPAN       STATUS\n";
     print "-----------          ---------       ------\n";
 
     foreach my $mod (sort keys %$cpan_modules) {
-      
-      ## Only check modules of the expected type
-      if ($type eq 'mandatory') {
-	next unless ($cpan_modules->{$mod}{mandatory});
-      }elsif ($type eq 'optional') {
-	next if ($cpan_modules->{$mod}{mandatory});
-      }
-      
-      ## Skip perl itself to prevent a huge upgrade
-      next if ($mod eq 'perl');
 
-        printf ("%-20s %-15s", $mod, $cpan_modules->{$mod}{package_name});
+        ## Only check modules of the expected type
+        if ($type eq 'mandatory') {
+            next unless ($cpan_modules->{$mod}{mandatory});
+        } elsif ($type eq 'optional') {
+            next if ($cpan_modules->{$mod}{mandatory});
+        }
+
+        ## Skip perl itself to prevent a huge upgrade
+        next if ($mod eq 'perl');
+
+        printf("%-20s %-15s", $mod, $cpan_modules->{$mod}{package_name});
 
         eval "require $mod";
         if ($@) {
@@ -404,31 +414,32 @@ sub check_modules {
             install_module($mod, {'default' => $default}, $cpan_modules);
         } else {
 
-	  my ($vs, $v);
-	  
-	  ## MHonArc module does not provide its version the standard way
-	  if ($mod =~ /^MHonArc/i) {
-	    require "mhamain.pl";
-	    $v = $mhonarc::VERSION;
-	  }else {
-           
-	    $vs = "$mod" . "::VERSION";
-	    {
-	      no strict 'refs';
-	      $v = $$vs;
-	    }
-	  }
+            my ($vs, $v);
 
-	  my $rv = $cpan_modules->{$mod}{required_version} || "1.0" ;
-	  ### OK: check version
-	  if ($v ge $rv) {
-	    printf ("OK (%-6s >= %s)\n", $v, $rv);
-	    next;
-	  } else {
-	    print "version is too old ($v < $rv).\n";
-	    print ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}\" <<<<<<.\n";
-	    install_module($mod, {'default' => $default}, $cpan_modules);
-	  }
+            ## MHonArc module does not provide its version the standard way
+            if ($mod =~ /^MHonArc/i) {
+                require "mhamain.pl";
+                $v = $mhonarc::VERSION;
+            } else {
+
+                $vs = "$mod" . "::VERSION";
+                {
+                    no strict 'refs';
+                    $v = $$vs;
+                }
+            }
+
+            my $rv = $cpan_modules->{$mod}{required_version} || "1.0";
+            ### OK: check version
+            if ($v ge $rv) {
+                printf("OK (%-6s >= %s)\n", $v, $rv);
+                next;
+            } else {
+                print "version is too old ($v < $rv).\n";
+                print
+                    ">>>>>>> You must update \"$cpan_modules->{$mod}{package_name}\" to version \"$cpan_modules->{$mod}{required_version}\" <<<<<<.\n";
+                install_module($mod, {'default' => $default}, $cpan_modules);
+            }
         }
     }
 }
@@ -453,7 +464,8 @@ sub install_module {
     $ENV{'LANG'} = 'C' if ($ENV{'LANG'} =~ /UTF\-8/);
 
     unless ($EUID == 0) {
-        print "\#\# You need root privileges to install $module module. \#\#\n";
+        print
+            "\#\# You need root privileges to install $module module. \#\#\n";
         print "\#\# Press the Enter key to continue checking modules. \#\#\n";
         my $t = <STDIN>;
         return undef;
@@ -461,31 +473,37 @@ sub install_module {
 
     unless ($options->{'force'}) {
         print tools::wrap_text(
-	    sprintf(
-		gettext('-> Usage of this module: %s') . "\n",
-		gettext($cpan_modules->{$module}{'gettext_id'})
-	    ),
-	    '', '   '
-	) if ($cpan_modules->{$module}{'gettext_id'});
+            sprintf(
+                gettext('-> Usage of this module: %s') . "\n",
+                gettext($cpan_modules->{$module}{'gettext_id'})
+            ),
+            '', '   '
+        ) if ($cpan_modules->{$module}{'gettext_id'});
         print tools::wrap_text(
-	    sprintf(
-		gettext('-> Prerequisites: %s') . "\n",
-		gettext($cpan_modules->{$module}{'gettext_comment'})
-	    ),
-	    '', '   '
-	) if ($cpan_modules->{$module}{'gettext_comment'});
-	print "-> Install module $module ? [$default]";
-        my $answer = <STDIN>; chomp $answer;
+            sprintf(
+                gettext('-> Prerequisites: %s') . "\n",
+                gettext($cpan_modules->{$module}{'gettext_comment'})
+            ),
+            '', '   '
+        ) if ($cpan_modules->{$module}{'gettext_comment'});
+        print "-> Install module $module ? [$default]";
+        my $answer = <STDIN>;
+        chomp $answer;
         $answer ||= $default;
         return unless ($answer =~ /^y$/i);
     }
 
-  $CPAN::Config->{'inactivity_timeout'} = 0; ## disable timeout to prevent timeout during modules installation 
-  $CPAN::Config->{'colorize_output'} = 1; 
-  $CPAN::Config->{'build_requires_install_policy'} = 'yes';  ## automatically installed prerequisites without asking
-  $CPAN::Config->{'prerequisites_policy'} = 'follow'; ## build prerequisites automatically
-  $CPAN::Config->{'load_module_verbosity'} = 'none';  ## minimum verbosity during module loading
-  $CPAN::Config->{'tar_verbosity'} = 'none';  ## minimum verbosity with tar command
+    $CPAN::Config->{'inactivity_timeout'} =
+        0;   ## disable timeout to prevent timeout during modules installation
+    $CPAN::Config->{'colorize_output'} = 1;
+    $CPAN::Config->{'build_requires_install_policy'} =
+        'yes';    ## automatically installed prerequisites without asking
+    $CPAN::Config->{'prerequisites_policy'} =
+        'follow';    ## build prerequisites automatically
+    $CPAN::Config->{'load_module_verbosity'} =
+        'none';      ## minimum verbosity during module loading
+    $CPAN::Config->{'tar_verbosity'} =
+        'none';      ## minimum verbosity with tar command
 
     #CPAN::Shell->clean($module) if ($options->{'force'});
 
@@ -493,22 +511,26 @@ sub install_module {
 
     if ($options->{'force'}) {
         CPAN::Shell->force('test', $module);
-    }else {
+    } else {
         CPAN::Shell->test($module);
     }
 
-    CPAN::Shell->install($module); ## Could use CPAN::Shell->force('install') if make test failed
+    ## Could use CPAN::Shell->force('install') if make test failed
+    CPAN::Shell->install($module);
 
     ## Check if module has been successfuly installed
     unless (eval "require $module") {
 
         ## Prevent recusive calls if already in force mode
         if ($options->{'force'}) {
-            print  "Installation of $module still FAILED. You should download the tar.gz from http://search.cpan.org and install it manually.";
+            print
+                "Installation of $module still FAILED. You should download the tar.gz from http://search.cpan.org and install it manually.";
             my $answer = <STDIN>;
-        }else {
-            print  "Installation of $module FAILED. Do you want to force the installation of this module? (y/N) ";
-            my $answer = <STDIN>; chomp $answer;
+        } else {
+            print
+                "Installation of $module FAILED. Do you want to force the installation of this module? (y/N) ";
+            my $answer = <STDIN>;
+            chomp $answer;
             if ($answer =~ /^y/i) {
                 install_module($module, {'force' => 1}, $cpan_modules);
             }
@@ -574,4 +596,3 @@ This program was originally written by:
 =back
 
 =cut
-
