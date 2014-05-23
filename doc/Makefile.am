@@ -33,4 +33,10 @@ nobase_doc_DATA = \
 	samples/families/sample-auto/config.tt2 \
 	samples/families/sample-auto/param_constraint.conf
 
-EXTRA_DIST = $(nobase_doc_DATA) README.charset README.config README.postfix
+EXTRA_DIST = \
+	$(nobase_doc_DATA) \
+	dot.perltidyrc \
+	README.charset \
+	README.config \
+	README.perltidy \
+	README.postfix
