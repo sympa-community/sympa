@@ -30,8 +30,7 @@ use warnings;
 
 use Log;
 
-use DBManipulatorDefault;
-our @ISA = qw(DBManipulatorDefault);
+use base qw(DBManipulatorDefault);
 
 #######################################################
 ####### Beginning the RDBMS-specific code. ############

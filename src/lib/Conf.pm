@@ -28,7 +28,6 @@ package Conf;
 
 use strict;
 use warnings;
-use Exporter;
 use Storable;
 
 use confdef;
@@ -38,9 +37,6 @@ use List;
 use Log;
 use SDM;
 use tools;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%params %Conf DAEMON_MESSAGE DAEMON_COMMAND DAEMON_CREATION DAEMON_ALL);
 
 =head1 NAME
 

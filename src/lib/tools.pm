@@ -26,7 +26,7 @@ package tools;
 
 use strict;
 use warnings;
-use Carp;
+use Carp qw();
 #use Cwd qw();
 use Digest::MD5;
 use Encode::Guess; ## Useful when encoding should be guessed
@@ -40,9 +40,9 @@ use MIME::Parser;
 use POSIX qw();
 use Proc::ProcessTable;
 use Scalar::Util '1.22'; # looks_like_number() works.
-use Sys::Hostname;
+use Sys::Hostname qw();
 use Text::LineFold;
-use Time::Local;
+use Time::Local qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
@@ -318,8 +318,8 @@ sub safefork {
 	## FIXME:should send a mail to the listmaster
       sleep(10 * $i);
    }
-    Carp::croak sprintf('Exiting because cannot create new process in safefork: %s',
-	$err);
+    Carp::croak(sprintf('Exiting because cannot create new process in safefork: %s',
+	$err));
    ## No return.
 }
 
@@ -2503,7 +2503,7 @@ sub _get_search_path {
             @search_path = ($path_etcdir, $path_etcbindir);
         }
     } else {
-        Carp::croak 'bug in logic.  Ask developer';
+        Carp::croak('bug in logic.  Ask developer');
     }
 
     return @search_path;
@@ -2690,7 +2690,7 @@ sub write_pid {
 	user  => Sympa::Constants::USER,
 	group => Sympa::Constants::GROUP,
     )) {
-	Carp::croak sprintf('Unable to set rights on %s. Exiting.', $piddir);
+	Carp::croak(sprintf('Unable to set rights on %s. Exiting.', $piddir));
 	## No return
     }
 
@@ -2699,8 +2699,8 @@ sub write_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
     unless ($lock_fh) {
-	Carp::croak sprintf('Unable to lock %s file in write mode. Exiting.',
-	    $pidfile);
+	Carp::croak(sprintf('Unable to lock %s file in write mode. Exiting.',
+	    $pidfile));
     }
     ## If pidfile exists, read the PIDs
     if(-s $pidfile) {
@@ -2734,7 +2734,7 @@ sub write_pid {
 	unless(truncate $lock_fh, 0) {
 	    ## Unlock pid file
 	    $lock_fh->close();
-	    Carp::croak sprintf('Could not truncate %s, exiting.', $pidfile);
+	    Carp::croak(sprintf('Could not truncate %s, exiting.', $pidfile));
 	}
 
 	print $lock_fh $pid."\n";
@@ -2747,7 +2747,7 @@ sub write_pid {
     )) {
 	## Unlock pid file
 	$lock_fh->close();
-	Carp::croak sprintf('Unable to set rights on %s', $pidfile);
+	Carp::croak(sprintf('Unable to set rights on %s', $pidfile));
     }
     ## Unlock pid file
     $lock_fh->close();
@@ -3887,7 +3887,7 @@ sub CleanSpool {
 }
 
 
-# return a lockname that is a uniq id of a processus (hostname + pid) ; Sys::Hostname::hostname(20) and pid(10) are truncated in order to store lockname in database varchar(30)
+# return a lockname that is a uniq id of a processus (hostname + pid) ; hostname(20) and pid(10) are truncated in order to store lockname in database varchar(30)
 sub get_lockname {
     return substr(substr(Sys::Hostname::hostname(), 0, 20).$$,0,30);   
 }

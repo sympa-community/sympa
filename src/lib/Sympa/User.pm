@@ -26,7 +26,7 @@ package Sympa::User;
 
 use strict;
 use warnings;
-use Carp qw(carp croak);
+use Carp qw();
 
 use Sympa::DatabaseDescription;
 use Sympa::Language;
@@ -231,10 +231,10 @@ sub AUTOLOAD {
 	no strict "refs";
 	*{$AUTOLOAD} = sub {
 	    my $self = shift;
-	    croak "Can't call method \"$attr\" on uninitialized " .
+	    Carp::croak "Can't call method \"$attr\" on uninitialized " .
 		ref($self) . " object"
 		unless $self->{'email'};
-	    croak "Can't modify \"$attr\" attribute"
+	    Carp::croak "Can't modify \"$attr\" attribute"
 		if scalar @_ > 1;
 	    $self->{$attr};
 	};
@@ -243,7 +243,7 @@ sub AUTOLOAD {
 	no strict "refs";
 	*{$AUTOLOAD} = sub {
 	    my $self = shift;
-	    croak "Can't call method \"$attr\" on uninitialized " .
+	    Carp::croak "Can't call method \"$attr\" on uninitialized " .
 		ref($self) . " object"
 		unless $self->{'email'};
 	    $self->{$attr} = shift
@@ -251,7 +251,7 @@ sub AUTOLOAD {
 	    $self->{$attr};
 	};
     } else {
-	croak "Can't locate object method \"$2\" via package \"$1\"";
+	Carp::croak "Can't locate object method \"$2\" via package \"$1\"";
     }
     goto &$AUTOLOAD;
 }
@@ -267,7 +267,7 @@ sub AUTOLOAD {
 =cut
 
 sub get_users {
-    croak();
+    Carp::croak();
 }
 
 ############################################################################
@@ -624,7 +624,7 @@ sub clean_user {
     unless (ref $user eq 'Sympa::User') {
 	my $level = $Carp::CarpLevel;
 	$Carp::CarpLevel = 1;
-	carp "Deprecated usage: user should be a Sympa::User object";
+	Carp::carp("Deprecated usage: user should be a Sympa::User object");
 	$Carp::CarpLevel = $level;
 
 	if (ref $user eq 'HASH') {
@@ -646,7 +646,7 @@ sub clean_users {
 	    unless ($warned) {
 		my $level = $Carp::CarpLevel;
 		$Carp::CarpLevel = 1;
-		carp "Deprecated usage: user should be a Sympa::User object";
+		Carp::carp("Deprecated usage: user should be a Sympa::User object");
 		$Carp::CarpLevel = $level;
 
 		$warned = 1;

@@ -25,11 +25,13 @@
 package SOAP::Transport::HTTP::FCGI::Sympa;
 
 use strict;
-use vars qw(@ISA);
+use warnings;
+use SOAP::Transport::HTTP;
+
 use SympaSession;
 
-use SOAP::Transport::HTTP;
-@ISA = qw(SOAP::Transport::HTTP::FCGI);
+# 'base' pragma doesn't work here
+our @ISA = qw(SOAP::Transport::HTTP::FCGI);
 
 sub request {
     my $self = shift;

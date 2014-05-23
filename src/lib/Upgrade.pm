@@ -26,7 +26,7 @@ package Upgrade;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use Carp qw();
 use File::Path;
 use POSIX qw();
 
@@ -1000,7 +1000,7 @@ sub upgrade {
         }
 
         unless (opendir DIR, $spooldir) {
-            croak sprintf("Can't open dir %s: %s", $spooldir, "$!");
+            Carp::croak(sprintf("Can't open dir %s: %s", $spooldir, "$!"));
             ## No return.
         }
         my @qfile = grep !/^\./, readdir DIR;

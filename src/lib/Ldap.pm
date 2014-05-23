@@ -26,10 +26,6 @@ package Ldap;
 
 use strict;
 use warnings;
-use Exporter;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%Ldap);
 
 my @valid_options = qw(host suffix filter scope bind_dn bind_password);
 my  @required_options = qw(host suffix filter);

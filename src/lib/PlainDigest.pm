@@ -83,16 +83,15 @@
 
 use strict;
 use warnings;
-
-our @ISA = qw(MIME::Entity);
- use Mail::Address;
- use MIME::EncWords;
- use MIME::Charset;
- use HTML::TreeBuilder;
- use HTML::FormatText;
+use HTML::TreeBuilder;
+use Mail::Address;
+use MIME::Charset;
+use MIME::EncWords;
 
 use Sympa::Language;
  use tools;
+
+use base qw(MIME::Entity); #FIXME FIXME
 
 my $language = Sympa::Language->instance;
 
@@ -375,11 +374,11 @@ our $outstring;
  # This is a subclass of the HTML::FormatText object. 
  # This subclassing is done to allow internationalisation of some strings
 
-our @ISA = qw(HTML::FormatText);
- 
  use strict;
 
 use Sympa::Language;
+
+use base qw(HTML::FormatText);
 
  sub img_start   {
   my($self,$node) = @_;

@@ -23,13 +23,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Sympa::DatabaseDescription;
+
 use strict;
-
-use Exporter;
-our @ISA = qw(Exporter);
-our @EXPORT = qw(db_struct not_null primary %indexes %former_indexes autoincrement);
-
-sub full_db_struct {
 
 my %full_db_struct = (
     'subscriber_table' => {
@@ -1066,7 +1061,9 @@ my %full_db_struct = (
 	'order' => 18,
     },
 );
-return %full_db_struct;
+
+sub full_db_struct {
+    return %full_db_struct;
 }
 
 ## Conversion of column data types.  Basic definitions are based on MySQL.

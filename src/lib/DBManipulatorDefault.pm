@@ -26,12 +26,10 @@ package DBManipulatorDefault;
 
 use strict;
 use warnings;
-use Carp;
 
 use Log;
-use SQLSource;
 
-our @ISA = qw(SQLSource);
+use base qw(SQLSource);
 
 ############################
 #### Section containing generic functions          #

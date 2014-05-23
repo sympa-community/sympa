@@ -30,8 +30,7 @@ use warnings;
 
 use Log;
 
-use DBManipulatorDefault;
-our @ISA = qw(DBManipulatorDefault);
+use base qw(DBManipulatorDefault);
 
 # Builds the string to be used by the DBI to connect to the database.
 #

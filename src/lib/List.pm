@@ -26,10 +26,10 @@ package List;
 
 use strict;
 use warnings;
-use Exporter;
 use Encode;
 use HTML::Entities qw();
 use IO::Scalar;
+use MIME::Decoder;
 use MIME::EncWords;
 use MIME::Entity;
 use MIME::Parser;
@@ -60,9 +60,6 @@ use tools;
 use tt2;
 use Sympa::User;
 use WebAgent;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw(%list_of_lists);
 
 my @sources_providing_listmembers = qw/
   include_file
@@ -6737,7 +6734,7 @@ sub _include_users_ldap {
 			      attrs => @ldap_attrs,
 			      scope => "$source->{'scope'}");
     if ($fetch->code()) {
-	Log::do_log('err','Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
+	Log::do_log('err','LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', 
 	       $fetch->error(), $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
         return undef;
     }
@@ -7047,7 +7044,7 @@ sub _include_ldap_ca {
 		scope => $source->{'scope'}
 	);
 	if($results->code()) {
-		Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		Log::do_log('err', 'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
 		return {};
 	}
     
@@ -7082,7 +7079,7 @@ sub _include_ldap_level2_ca {
 		scope => $source->{'scope'}
 	);
 	if($results->code()) {
-		Log::do_log('err', 'Ldap search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
+		Log::do_log('err', 'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)', $results->error(), $source->{'host'}, $source->{'suffix'}, $source->{'filter'}, $source->{'attrs'});
 		return {};
 	}
     

@@ -27,10 +27,7 @@ package DBManipulatorInformix;
 use strict;
 use warnings;
 
-use Log;
-
-use DBManipulatorDefault;
-our @ISA = qw(DBManipulatorDefault);
+use base qw(DBManipulatorDefault);
 
 sub build_connect_string{
     my $self = shift;

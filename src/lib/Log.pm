@@ -26,15 +26,11 @@ package Log;
 
 use strict;
 use warnings;
-use Carp;
-use Exporter;
+use Carp qw();
 use POSIX qw();
-use Sys::Syslog;
+use Sys::Syslog qw();
 
 use List;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw($log_level %levels);
 
 my ($log_facility, $log_socket_type, $log_service,$sth,@sth_stack,$rows_nb);
 # When logs are not available, period of time to wait before sending another warning to listmaster.
@@ -67,8 +63,8 @@ sub fatal_err {
     my $errno  = $!;
     
     eval {
-	syslog('err', $m, @_);
-	syslog('err', "Exiting.");
+	Sys::Syslog::syslog('err', $m, @_);
+	Sys::Syslog::syslog('err', "Exiting.");
     };
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
@@ -148,9 +144,9 @@ sub do_log {
     }
 
     eval {
-        unless (syslog($level, $message, @param)) {
+        unless (Sys::Syslog::syslog($level, $message, @param)) {
             do_connect();
-            syslog($level, $message, @param);
+            Sys::Syslog::syslog($level, $message, @param);
         }
     };
 
@@ -191,8 +187,8 @@ sub do_connect {
       Sys::Syslog::setlogsock(lc($log_socket_type));
     }
     # close log may be usefull : if parent processus did open log child process inherit the openlog with parameters from parent process 
-    closelog ; 
-    eval {openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
+    Sys::Syslog::closelog;
+    eval {Sys::Syslog::openlog("$log_service\[$$\]", 'ndelay,nofatal', $log_facility)};
     if($@ && ($warning_date < time - $warning_timeout)) {
 	$warning_date = time + $warning_timeout;
 	unless(List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'}, [$@])) {

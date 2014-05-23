@@ -5,14 +5,13 @@
 package Marc::Search;
 
 use strict;
-
+use warnings;
+use Encode qw();
 use File::Find;
 use HTML::Entities qw();
-use Encode qw();
 
-use Marc;
+use base qw(Marc);
 
-our @ISA     = qw(Marc);
 our $VERSION = "4.3";
 our ($AUTOLOAD, @MSGFILES);
 

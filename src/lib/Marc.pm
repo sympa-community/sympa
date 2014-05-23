@@ -6,7 +6,7 @@ package Marc;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use Carp qw();
 
 our $AUTOLOAD;
 our $VERSION = "4.3";
@@ -36,7 +36,7 @@ sub new
 sub AUTOLOAD
 {
 	my $self = shift;
-	my $type = ref($self) or croak "$self is not an object";
+	my $type = ref($self) or Carp::croak("$self is not an object");
 	my $name = $AUTOLOAD;
 
 	# DESTROY messages should never be propagated.

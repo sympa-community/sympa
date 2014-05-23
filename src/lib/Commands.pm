@@ -26,12 +26,7 @@ package Commands;
 
 use strict;
 use warnings;
-use Exporter;
-use Digest::MD5;
-use Fcntl;
-use DB_File;
-use Time::Local;
-use MIME::EncWords;
+use MIME::Parser;
 
 use Conf;
 use Sympa::Constants;
@@ -42,9 +37,6 @@ use Message;
 use Sympa::Regexps;
 use report;
 use tools;
-
-our @ISA = qw(Exporter);
-our @EXPORT_OK = qw($sender);
 
 my %comms =  ('add' =>			   	     'add',
 	      'con|confirm' =>	                     'confirm',
@@ -101,7 +93,7 @@ my $quiet;
 ##############################################
 sub parse {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
-   $sender = lc(shift);
+   $sender = lc(shift); #FIXME: eliminate module-global variable.
    my $robot = shift;
    my $i = shift;
    my $sign_mod = shift;

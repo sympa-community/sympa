@@ -28,7 +28,6 @@ package SympaSession;
 use strict ;
 use warnings;
 use CGI::Cookie;
-use Time::Local;
 
 use Sympa::Language;
 use Log;

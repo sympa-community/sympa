@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use base qw(IO::File);
 
-use Carp qw(croak);
+use Carp qw();
 use Fcntl qw();
 use File::NFSLock;
 $File::NFSLock::LOCK_EXTENSION = '.lock';
@@ -85,7 +85,7 @@ sub close {
         $ret = 1;
     }
 
-    croak 'Lock not found'
+    Carp::croak('Lock not found')
         unless exists $lock_of{$self + 0};
 
     $lock_of{$self + 0}->unlock;    # make sure unlock to occur immediately.

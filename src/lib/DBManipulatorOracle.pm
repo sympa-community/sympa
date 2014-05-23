@@ -26,12 +26,11 @@ package DBManipulatorOracle;
 
 use strict;
 use warnings;
-use Data::Dumper;
+##use Data::Dumper;
 
 use Log;
 
-use DBManipulatorDefault;
-our @ISA = qw(DBManipulatorDefault);
+use base qw(DBManipulatorDefault);
 
 #######################################################
 ####### Beginning the RDBMS-specific code. ############
@@ -387,7 +386,7 @@ sub get_indexes {
 	    $found_indexes{$index_name}{$field_name} = 1;
 	}
     }
-    open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
+    ##open TMP, ">>/tmp/toto"; print TMP Dumper(\%found_indexes); close TMP;
     return \%found_indexes;
 }
 

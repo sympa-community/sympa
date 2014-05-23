@@ -24,24 +24,22 @@
 
 package mail;
 
-require Exporter;
-@ISA = qw(Exporter);
-@EXPORT = qw(mail_file mail_message mail_forward set_send_spool);
-
 use strict;
 use warnings;
-use Carp;
+use Carp qw();
 use DateTime;
 use MIME::Charset;
+use MIME::EncWords;
+use MIME::Parser;
 use MIME::Tools;
 use POSIX;
 
-use Conf;
-use Log;
-use List;
 use Bulk;
-use tools;
+use Conf;
 use Sympa::Constants;
+use List;
+use Log;
+use tools;
 
 my $opensmtp = 0;
 my $fh = 'fh0000000000';	## File handle for the stream.
@@ -939,7 +937,7 @@ sub smtpto {
    
 
    if (!pipe(IN, OUT)) {
-	Carp::croak sprintf('Unable to create a channel in smtpto: %s', "$!");
+	Carp::croak(sprintf('Unable to create a channel in smtpto: %s', "$!"));
 	## No return
    }
    $pid = tools::safefork();

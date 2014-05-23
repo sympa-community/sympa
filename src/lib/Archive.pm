@@ -26,7 +26,7 @@ package Archive;
 
 use strict;
 use warnings;
-use Carp qw(croak);
+use Carp qw();
 use Cwd qw();
 use Encode qw();
 use HTML::Entities qw();
@@ -353,7 +353,7 @@ sub convert_single_message {
 	$listname = '';
 	$hostname = Conf::get_robot_conf($that, 'host');
     } else {
-	croak 'bug in logic.  Ask developer';
+	Carp::croak('bug in logic.  Ask developer');
     }
 
     my $msg_as_string;
@@ -362,7 +362,7 @@ sub convert_single_message {
     } elsif (ref $message eq 'HASH') {
 	$msg_as_string = $message->{'messageasstring'};
     } else {
-        croak 'bug in logic.  Ask developer';
+        Carp::croak('bug in logic.  Ask developer');
     }
 
     my $destination_dir = $opts{'destination_dir'};

@@ -47,9 +47,11 @@ use strict;
 use lib '--modulesdir--';
 
 use Archive::Zip qw();
+use Carp qw();
 use DateTime::Format::Mail;
 use MIME::Parser;
-use Time::Local;
+use Sys::Syslog qw();
+use Time::Local qw();
 use Data::Dumper;
 
 use admin;

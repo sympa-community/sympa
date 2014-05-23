@@ -27,10 +27,6 @@ package Bounce;
 use strict;
 use warnings;
 use MIME::Parser;
-use Exporter;
-
-our @ISA = qw(Exporter);
-our @EXPORT = qw(rfc1891 corrige anabounce);
 
 ## RFC1891 compliance check
 sub rfc1891 {
