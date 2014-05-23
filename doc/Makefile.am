@@ -20,7 +20,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_doc_DATA = \
-	sympa.pdf \
+	README.charset \
+	README.perltidy \
+	README.postfix \
+	dot.perltidyrc \
 	samples/README \
 	samples/trusted_applications.conf \
 	samples/robot.conf \
@@ -31,12 +34,7 @@ nobase_doc_DATA = \
 	samples/test/web_tt2/welcome.tt2 \
 	samples/sampleClient.php \
 	samples/families/sample-auto/config.tt2 \
-	samples/families/sample-auto/param_constraint.conf
+	samples/families/sample-auto/param_constraint.conf \
+	sympa.pdf
 
-EXTRA_DIST = \
-	$(nobase_doc_DATA) \
-	dot.perltidyrc \
-	README.charset \
-	README.config \
-	README.perltidy \
-	README.postfix
+EXTRA_DIST = $(nobase_doc_DATA)
