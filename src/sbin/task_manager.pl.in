@@ -1793,7 +1793,7 @@ sub error {
     my $message = $_[1];
 
     my @param;
-    $param[0] = "An error has occured during the execution of the task $task_file :
+    $param[0] = "An error has occurred during the execution of the task $task_file :
                  $message";
     Log::do_log ('err', "$message");
     change_label ($task_file, 'ERROR') unless ($task_file eq '');

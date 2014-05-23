@@ -4542,7 +4542,7 @@ sub get_list_member_no_object {
     }else {
 	my $error = $sth->err;
 	if ($error) {
-	    Log::do_log('err',"An error occured while fetching the data from the database.");
+	    Log::do_log('err',"An error occurred while fetching the data from the database.");
 	    return undef;
 	}else{
 	    Log::do_log('debug2',"No user with the email %s is subscribed to list %s@%s",$email,$name,$options->{'domain'});
@@ -7312,7 +7312,7 @@ sub _load_list_members_from_include {
 	}
     }
 
-    ## If an error occured, return an undef value
+    ## If an error occurred, return an undef value
     $result->{'users'} = \%users;
     $result->{'errors'} = \@errors;
     $result->{'exclusions'} = \@ex_sources;
@@ -7438,7 +7438,7 @@ sub _load_list_admin_from_include {
 	    }
 	}
 
-	## If an error occured, return an undef value
+	## If an error occurred, return an undef value
 	unless (defined $total) {
 	    return undef;
 	}
@@ -9405,7 +9405,7 @@ sub _load_list_config_file {
 	if (defined $admin{$pname}) {
 	    unless (($pinfo->{$pname}{'occurrence'} eq '0-n') or
 		    ($pinfo->{$pname}{'occurrence'} eq '1-n')) {
-		Log::do_log('err', 'Multiple occurences of a unique parameter "%s" in %s', $pname, $config_file);
+		Log::do_log('err', 'Multiple occurrences of a unique parameter "%s" in %s', $pname, $config_file);
 	    }
 	}
 	

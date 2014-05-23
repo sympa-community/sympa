@@ -1662,7 +1662,7 @@ sub DoFile {
 	    ## Sampling delay is over, reinit
 	    $loop_info{$sender}{'date_init'} = time;
 
-	    ## We apply Decrease factor if a loop occured
+	    ## We apply Decrease factor if a loop occurred
 	    $loop_info{$sender}{'count'} *= $Conf::Conf{'loop_command_decrease_factor'};
 	}
 
