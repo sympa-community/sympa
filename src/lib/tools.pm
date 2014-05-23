@@ -34,7 +34,9 @@ use Encode::MIME::Header; # for 'MIME-Q' encoding
 use File::Copy::Recursive;
 use File::Find;
 use HTML::StripScripts::Parser;
+use MIME::Decoder;
 use MIME::Lite::HTML;
+use MIME::Parser;
 use POSIX qw();
 use Proc::ProcessTable;
 use Scalar::Util '1.22'; # looks_like_number() works.
@@ -860,7 +862,7 @@ sub remove_invalid_dkim_signature {
     my ($header_as_string, $body_as_string) = split("\n\n",$msg_as_string,2);
 
     unless (tools::dkim_verifier($msg_as_string)){
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1);
 	my $entity = $parser->parse_data($msg_as_string);
 	unless($entity) {
@@ -1036,7 +1038,7 @@ sub smime_sign {
 	unlink ($temporary_pwd);
     }
 
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
 
     $parser->output_to_core(1);
     unless ($signed_msg = $parser->read(\*NEWMSG)) {
@@ -1312,7 +1314,7 @@ sub smime_encrypt {
 
         ## Get as MIME object
 	open (NEWMSG, $temporary_file);
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1);
 	unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
 	    Log::do_log('notice', 'Unable to parse message');
@@ -1428,7 +1430,7 @@ sub smime_decrypt {
 	
 	unlink ($temporary_file) unless ($main::options{'debug'}) ;
 	
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1);
 	unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
 	    Log::do_log('notice', 'Unable to parse message');
@@ -1871,7 +1873,7 @@ sub split_mail {
 
 		open BODY, "$dir/$pathname.$fileExt.$encoding";
 
-		my $decoder = new MIME::Decoder $encoding;
+		my $decoder = MIME::Decoder->new($encoding);
 		unless (defined $decoder) {
 		    Log::do_log('err', 'Cannot create decoder for %s', $encoding);
 		    return undef;
@@ -3624,7 +3626,7 @@ sub md5_fingerprint {
     return undef unless (defined $input_string);
     chomp $input_string;
     
-    my $digestmd5 = new Digest::MD5;
+    my $digestmd5 = Digest::MD5->new;
     $digestmd5->reset;
     $digestmd5->add($input_string);
     return (unpack("H*", $digestmd5->digest));
@@ -4026,7 +4028,7 @@ sub create_html_part_from_web_page {
 sub get_children_processes_list {
     Log::do_log('debug3','');
     my @children;
-    for my $p (@{new Proc::ProcessTable->table}){
+    for my $p (@{Proc::ProcessTable->new->table}){
 	if($p->ppid == $$) {
 	    push @children, $p->pid;
 	}

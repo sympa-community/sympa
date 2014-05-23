@@ -96,7 +96,7 @@ sub get_mac {
 
 
 
-	my $md5 = new Digest::MD5;
+	my $md5 = Digest::MD5->new;
 
 	$md5->reset;
 	$md5->add($email.$secret);

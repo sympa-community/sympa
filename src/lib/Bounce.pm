@@ -39,7 +39,7 @@ sub rfc1891 {
     local $/ = "\n";
 
     my $nbrcpt;
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
  
     my $entity = $parser->read($fic);

@@ -2345,7 +2345,7 @@ sub reject {
     }       
 
     my $msg;
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
 
     unless ($msg = $parser->read(\*IN)) {
@@ -2369,7 +2369,7 @@ sub reject {
     }
     
     my $message;
-    $parser = new MIME::Parser;
+    $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     unless ($message = $parser->read(\*IN)) {
 	Log::do_log('notice', 'Commands::reject(): Unable to parse message');

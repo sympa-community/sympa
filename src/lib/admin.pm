@@ -39,6 +39,7 @@ package admin;
 use strict;
 use warnings;
 use File::Copy;
+use IO::Scalar;
 
 use Conf;
 use Sympa::Constants;
@@ -288,7 +289,7 @@ sub create_list_old{
     }
     ## Use an intermediate handler to encode to filesystem_encoding
     my $config = '';
-    my $fd = new IO::Scalar \$config;    
+    my $fd = IO::Scalar->new(\$config);
     tt2::parse_tt2($param, 'config.tt2', $fd, $tt2_include_path);
 #    Encode::from_to($config, 'utf8', $Conf::Conf{'filesystem_encoding'});
     print $lock_fh $config;

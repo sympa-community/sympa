@@ -1861,12 +1861,12 @@ sub _crash_handler {
      my $query;
 
      if ($Conf::Conf{'use_fast_cgi'}) {
-	 $query = new CGI::Fast;
+	 $query = CGI::Fast->new;
 	 $loop_count++;
      }else {	
 	 return undef if ($loop > 1);
 
-	 $query = new CGI;
+	 $query = CGI->new;
      }
 
      return $query;
@@ -3803,7 +3803,7 @@ sub do_sso_login_succeeded {
 						timeout => $ldap->{'timeout'} );
 
 	     unless($mesg->count() != 0) {
-	     wwslog('notice','No entry in the Ldap Directory Tree of %s for %s',$ldap->{'host'},$auth);
+	     wwslog('notice','No entry in the LDAP Directory Tree of %s for %s',$ldap->{'host'},$auth);
 	     $ds->disconnect();
 		 last;
 	     } 
@@ -6088,7 +6088,7 @@ sub do_copy_template {
     if ($in{'scope_out'} eq 'list') { 
 	if ($in{'list_out'}) {
 	    my $list_out;
-	    unless ($list_out = new List $in{'list_out'}, $robot) {
+	    unless ($list_out = List->new($in{'list_out'}, $robot)) {
 		report::reject_report_web('user','unknown_list',{'list' => $in{'list_out'}},$param->{'action'},'');
 		wwslog('info','do_copy_template: unknown list %s', $in{'list_out'});
 		web_db_log({'parameters' => $in{'list_out'},
@@ -8092,7 +8092,7 @@ sub do_arc {
 	     if ($arc =~ /^(\d)+$/) {
 		 my %msg_info;
 
-		 my $parser = new MIME::Parser;
+		 my $parser = MIME::Parser->new;
 		 $parser->output_to_core(1);
 		 
 		 my $arc_file = $arc_month_path.'/'.$arc;
@@ -8519,7 +8519,7 @@ sub do_remove_arc {
      ## Access control
      return undef unless (defined check_authz('do_arcsearch', 'web_archive.access'));
 
-     my $search = new Marc::Search;
+     my $search = Marc::Search->new;
      $search->search_base (Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
      $search->base_href (Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
      $search->archive_name ($in{'archive_name'});
@@ -8654,7 +8654,7 @@ sub do_remove_arc {
      ## Access control
      return undef unless (defined check_authz('do_arcsearch_id', 'web_archive.access'));
 
-     my $search = new Marc::Search;
+     my $search = Marc::Search->new;
      $search->search_base (Conf::get_robot_conf($robot, 'arc_path') . '/' . $list->get_list_id());
      $search->base_href (Conf::get_robot_conf($robot, 'wwsympa_url') . '/arc/' . $param->{'list'});
 
@@ -10246,7 +10246,7 @@ sub do_edit_list {
 
 
      ## Reload config to clean some empty entries in $list->{'admin'}
-     $list = new List $list->{'name'}, $robot, {'reload_config' => 1};
+     $list = List->new($list->{'name'}, $robot, {'reload_config' => 1});
 
       unless (defined $list) {
  	  report::reject_report_web('intern','list_reload',{},$param->{'action'},'',$param->{'user'}{'email'},$robot);
@@ -16443,7 +16443,7 @@ sub do_send_mail {
      }
 
      my $parser;
-     unless ($parser = new MIME::Parser) {
+     unless ($parser = MIME::Parser->new) {
 	  report::reject_report_web('intern','cannot_parse_message',{'file' => $filename},$param->{'action'},$list,$param->{'user'}{'email'},$robot);
 	 wwslog('notice', 'Cannot parse message %s', $filename);
 	 return undef;

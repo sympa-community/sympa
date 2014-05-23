@@ -1930,7 +1930,7 @@ sub send_msg_digest {
 	    $text[$i] .= "\n";
 	}
 	
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1);
 	$parser->extract_uuencode(1);  
 	$parser->extract_nested_messages(1);
@@ -3648,7 +3648,7 @@ sub add_parts {
 	}
     } else {
 	## MIME footer/header
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1);
 
 	if ($eff_type =~ /^multipart\/alternative/i ||
@@ -6543,7 +6543,7 @@ sub _include_users_remote_file {
 
     ## WebAgent package is part of Fetch.pm and inherites from LWP::UserAgent
 
-    my $fetch = WebAgent->new (agent => 'Sympa/'. Sympa::Constants::VERSION);
+    my $fetch = WebAgent->new(agent => 'Sympa/'. Sympa::Constants::VERSION);
 
     my $req = HTTP::Request->new(GET => $url);
     
@@ -9652,7 +9652,7 @@ sub _save_list_config_file {
 	return undef;
     }
     my $config = '';
-    my $fd = new IO::Scalar \$config;
+    my $fd = IO::Scalar->new(\$config);
     
     foreach my $c (@{$self->{'admin'}{'comment'}}) {
 	$fd->print(sprintf "%s\n", $c);
@@ -10234,7 +10234,7 @@ sub _urlize_part {
 	close TMP;
 
 	open BODY, "$expl/$dir/$filename.$encoding";
-	my $decoder = new MIME::Decoder $encoding;
+	my $decoder = MIME::Decoder->new($encoding);
 	$decoder->decode(\*BODY, \*OFILE);
 	unlink "$expl/$dir/$filename.$encoding";
     }else {
@@ -10256,7 +10256,7 @@ sub _urlize_part {
     (my $file_name = $filename) =~ s/\./\_/g;
     my $file_url = "$wwsympa_url/attach/$listname".tools::escape_chars("$dir/$filename",'/'); # do NOT escape '/' chars
 
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     my $new_part;
 

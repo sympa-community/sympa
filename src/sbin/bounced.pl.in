@@ -38,9 +38,11 @@ use lib '--modulesdir--';
 use strict;
 use warnings;
 use Getopt::Long;
+use MIME::Parser;
 use Pod::Usage;
 use POSIX;
 
+use Bounce;
 use Conf;
 use Sympa::Constants;
 use List;
@@ -244,7 +246,7 @@ while (!$end) {
 			});
 	    next;
 	}
-	my $parser = new MIME::Parser;
+	my $parser = MIME::Parser->new;
 	$parser->output_to_core(1); 
 	my $entity = $parser->read(\*BOUNCE);
 	my $head = $entity->head;

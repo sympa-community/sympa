@@ -39,6 +39,7 @@ package Message;
 use strict;
 use warnings;
 use Mail::Address;
+use MIME::Charset;
 use MIME::EncWords;
 use MIME::Parser;
 
@@ -142,7 +143,7 @@ sub new {
 	return $message;
     }
 
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
     
     my $msg;

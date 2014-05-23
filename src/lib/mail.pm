@@ -1091,7 +1091,7 @@ sub reformat_message($;$$) {
     my $defcharset = shift;
     my $msg;
 
-    my $parser = new MIME::Parser;
+    my $parser = MIME::Parser->new;
     unless (defined $parser) {
 	Log::do_log('err', "mail::reformat_message: Failed to create MIME parser");
 	return undef;
