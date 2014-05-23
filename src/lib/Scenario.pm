@@ -1353,7 +1353,7 @@ sub search{
 		return undef;
 	    }    
 	    unless ($mesg->code == 0) {
-		Log::do_log('err','Ldap search failed');
+		Log::do_log('err','LDAP search failed');
 		return undef;
 	    }
 
