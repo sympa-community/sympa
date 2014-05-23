@@ -2249,7 +2249,7 @@ sub send_file {
 
     # if the list have it's private_key and cert sign the message
     # . used only for the welcome message, could be usefull in other case? 
-    # . a list should have several certificats and use if possible a certificat
+    # . a list should have several certificates and use if possible a certificate
     #   issued by the same CA as the recipient CA if it exists 
     if ($sign_mode eq 'smime') {
 	$data->{'fromlist'} = $self->get_list_address();
@@ -6899,7 +6899,7 @@ sub _include_users_ldap_2level {
 
     my ($suffix2, $filter2);
     foreach my $attr (@attrs) {
-	# Escape LDAP characters occuring in attribute
+	# Escape LDAP characters occurring in attribute
 	my $escaped_attr = $attr;
 	$escaped_attr =~ s/([\\\(\*\)\0])/sprintf "\\%02X", ord($1)/eg;
 
