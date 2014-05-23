@@ -11,11 +11,13 @@ language.
 
 charset.conf defines mappings between locale and legacy character
 set for service messages.  If you want to enable legacy character
-set support, simply copy sample charset.conf onto etc directory:
+set support, simply copy sample charset.conf onto configuration
+directory:
 
-    # cp /home/sympa/default/charset.conf /home/sympa/etc/charset.conf
+    # cp --defaultdir--/charset.conf --sysconfdir--/charset.conf
 
-And set the 'legacy_character_support_feature' parameter value to 'on'.
+And set the 'legacy_character_support_feature' parameter value in
+--CONFIG-- to 'on'.
 
 Note: if you are planning to upgrade Sympa earlier than 5.3a.8,
 original charset.conf is required to convert shared documents

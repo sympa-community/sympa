@@ -37,4 +37,14 @@ nobase_doc_DATA = \
 	samples/families/sample-auto/param_constraint.conf \
 	sympa.pdf
 
-EXTRA_DIST = $(nobase_doc_DATA)
+EXTRA_DIST = $(nobase_doc_DATA) README.charset.in
+CLEANFILES = README.charset
+
+README.charset: README.charset.in Makefile
+	@rm -f $@
+	$(AM_V_GEN)$(SED) \
+		-e 's|--defaultdir--|$(defaultdir)|' \
+		-e 's|--sysconfdir--|$(sysconfdir)|' \
+		-e 's|--CONFIG--|$(CONFIG)|' \
+		< $(srcdir)/$@.in > $@
+
