@@ -290,11 +290,11 @@ while (!$end) {
 	$data->{'messageid'} = $message_from_spool->{'messageid'};
 	$data->{'listname'} = $bulk->{'listname'};
 	$data->{'robot'} = $bulk->{'robot'};
-	#XXX$data->{'to'} = $bulk->{'receipients'}; #XXX Insecure
+	#XXX$data->{'to'} = $bulk->{'recipients'}; #XXX Insecure
 	$data->{'wwsympa_url'} = Conf::get_robot_conf($bulk->{'robot'},'wwsympa_url');
 	
 	my $rcpt; # It is the email of a subscriber, use it in the foreach
-	my @rcpts = split /,/,$bulk->{'receipients'}; # Contain all the subscribers
+	my @rcpts = split /,/,$bulk->{'recipients'}; # Contain all the subscribers
 	## Use an intermediate handler to encode to filesystem_encoding
 	my $user;
 	

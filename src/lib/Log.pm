@@ -461,7 +461,7 @@ sub get_first_db_log {
 	
     }
     
-    # if the listmaster want to make a search by an IP adress.
+    # if the listmaster want to make a search by an IP address.
     if ($select->{'ip'}) {
 	$statement .= sprintf ' AND client_logs = %s ', SDM::quote($select->{'ip'
 });

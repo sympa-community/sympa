@@ -712,7 +712,7 @@ sub sendto {
 		    ))
 		) {
 		    Log::do_log('err',
-			'Unable to encrypt message to list %s for receipient %s',
+			'Unable to encrypt message to list %s for recipient %s',
 			$listname, $email);
 		    return undef;
 	        }

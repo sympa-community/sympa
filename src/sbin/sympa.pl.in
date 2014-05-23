@@ -1612,7 +1612,7 @@ sub DoFile {
     }elsif ($rcpt =~ /^listmaster(\@(\S+))?$/) {
 	$status = DoForward('sympa', 'listmaster', $robot, $message);
 
-	## Mail adressed to the robot and mail 
+	## Mail addressed to the robot and mail 
 	## to <list>-subscribe or <list>-unsubscribe are commands
     }elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i) || ($type =~ /^(subscribe|unsubscribe)$/o)) {
 	$status = DoCommand($rcpt, $robot, $message);

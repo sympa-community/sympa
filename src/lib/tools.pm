@@ -277,7 +277,7 @@ sub sanitize_var {
     return 1;
 }
 
-## Sorts the list of adresses by domain name
+## Sorts the list of addresses by domain name
 ## Input : users hash
 ## Sort by domain.
 sub sortbydomain {

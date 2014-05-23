@@ -1169,7 +1169,7 @@ sub get_owners_email {
 }
 
 ## Returns an array of editors' email addresses
-#  or owners if there isn't any editors'email adress
+#  or owners if there isn't any editors' email addresses
 sub get_editors_email {
     my($self,$param) = @_;
     Log::do_log('debug3', 'List::get_editors_email(%s,%s)', $self->{'name'}, $param -> {'ignore_nomail'});
@@ -2250,7 +2250,7 @@ sub send_file {
     # if the list have it's private_key and cert sign the message
     # . used only for the welcome message, could be usefull in other case? 
     # . a list should have several certificats and use if possible a certificat
-    #   issued by the same CA as the receipient CA if it exists 
+    #   issued by the same CA as the recipient CA if it exists 
     if ($sign_mode eq 'smime') {
 	$data->{'fromlist'} = $self->get_list_address();
 	$data->{'replyto'} = $self->get_list_address('owner');
@@ -2620,7 +2620,7 @@ sub send_msg {
 	    $reception_option = 'mail' unless $reception_option ;
 	}
 	
-	## Preparing VERP receipients.
+	## Preparing VERP recipients.
 	my @verp_selected_tabrcpt = extract_verp_rcpt($verp_rate, $xsequence,\@selected_tabrcpt, \@possible_verptabrcpt);
 	my $verp= 'off';
 
@@ -3207,7 +3207,7 @@ sub send_notify_to_listmaster {
 	my @tosend;
 	
 	if($operation eq 'automatic_bounce_management') {
-		## Automatic action done on bouncing adresses
+		## Automatic action done on bouncing addresses
 		delete $data->{'alarm'};
 		my $list = List->new($data->{'list'}{'name'}, $robot);
 		unless(defined $list) {

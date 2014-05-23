@@ -188,18 +188,18 @@ while (!$end) {
 
        if ($file  =~ /^\.remove\.((.*)\.(\d\d\d\d\-\d\d))\.\d+$/ ) {
 	   my $arclistdir = $1;
-	   my $listadress = $2;
+	   my $listname = $2;
 	   my $yyyymm = $3;
-	   ##my $arcpath = "$arcpath/$listadress/$yyyymm";
+	   ##my $arcpath = "$arcpath/$listname/$yyyymm";
 	  
 	   my $list;
-	   unless ($list = List->new($listadress)) {
-	       Log::do_log('err',"remove : unknown list $listadress");
+	   unless ($list = List->new($listname)) {
+	       Log::do_log('err',"remove : unknown list $listname");
 	       next;
 	   }
-	   my $arcpath = Conf::get_robot_conf($list->{'domain'},'arc_path')."/$listadress/$yyyymm";
+	   my $arcpath = Conf::get_robot_conf($list->{'domain'},'arc_path')."/$listname/$yyyymm";
 
-	   Log::do_log('debug',"start remove process :listadress :'$listadress' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
+	   Log::do_log('debug',"start remove process :listname :'$listname' arclistdir '$arclistdir' arcpath '$arcpath'  yyyymm '$yyyymm'");
 	    
 	   Log::do_log('debug',"remove found : $file for list $yyyymm");
 

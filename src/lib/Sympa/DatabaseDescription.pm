@@ -263,9 +263,10 @@ my %full_db_struct = (
 		'doc'=>'The message Id',
 		'order'=>3,
 	    },
+            ##FIXME: column name is "recEipients_bulkmailer"
 	    'receipients_bulkmailer' => {
 		'struct'=> 'text',
-		'doc'=>'the comma separated list of receipient email for this message',
+		'doc'=>'the comma separated list of recipient email for this message',
 		'order'=>4,
 	    },
 	    'returnpath_bulkmailer' => {
@@ -295,7 +296,7 @@ my %full_db_struct = (
 	    },
 	    'merge_bulkmailer' => {
 		'struct'=> 'int(1)',
-		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach receipient',
+		'doc'=>'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
 		'order'=>10,
 	    },
 	    'priority_message_bulkmailer' => {
@@ -324,7 +325,7 @@ my %full_db_struct = (
 		'order'=>15,
 	    },
 	},
-	'doc'=>'storage of receipients with a ref to a message in spool_table. So a very simple process can distribute them',
+	'doc'=>'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',
 	'order'=>4,
     },
     'exclusion_table' => {
@@ -477,12 +478,12 @@ my %full_db_struct = (
 	    },
 	    'recipient_notification' => {
 		'struct'=> 'varchar(100)',
-		'doc'=>'email adresse of receipient for which a DSN or MDM was received',
+		'doc'=>'email address of recipient for which a DSN or MDM was received',
 		'order'=>3,
 	    },
 	    'reception_option_notification' => {
 		'struct'=> 'varchar(20)',
-		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Ussefull because some receipient may have option such as //digest// or //nomail//',
+		'doc'=>'The subscription option of the subscriber when the related message was sent to the list. Ussefull because some recipient may have option such as //digest// or //nomail//',
 		'order'=>4,
 	    },
 	    'status_notification' => {
@@ -520,7 +521,7 @@ my %full_db_struct = (
 		'doc'=>'FIXME',
 		'not_null'=>1},		    
 	},
-	'doc' => 'used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionnaly a return receipt request.When DSN MDN are received by Syamp, they are store in this table in relation with the related list and message_id',
+	'doc' => 'used for message tracking feature. If the list is configured for tracking, outgoing messages include a delivery status notification request and optionnaly a return receipt request. When DSN MDN are received by Sympa, they are stored in this table in relation with the related list and message_id',
 	'order' => 8,
     },
     'logs_table' => {

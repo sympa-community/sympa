@@ -110,7 +110,7 @@ sub corrige {
 
     my ($adr, $from) = @_;
 
-    ## adresse X400
+    ## X400 address
     if ($adr =~ /^\//) {
 	
 	my (%x400, $newadr);
@@ -337,7 +337,7 @@ sub anabounce {
 	    }
 	    local $/ = '';
 
-	}elsif (/^Your message adressed to .* couldn\'t be delivered/m) {
+	}elsif (/^Your message add?ressed to .* couldn\'t be delivered/m) {
 
 	    my $adr;
 	    
@@ -346,7 +346,7 @@ sub anabounce {
  	    local $/ = "\n";
 	    foreach (@paragraphe) {
 	    
-		if (/^Your message adressed to (.*) couldn\'t be delivered, for the following reason :/) {
+		if (/^Your message add?ressed to (.*) couldn\'t be delivered, for the following reason :/) {
 		    $adr = $1;
 		    $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
 		    $type = 5;
