@@ -2112,12 +2112,15 @@ sub web_db_stat_log {
 }
 
 ####################################
+our @CARP_NOT;
 
 sub _crash_handler {
     return if $^S;
 
     my $msg = "$_[0]";
     chomp $msg;
+    $msg =~ s/\r\n|\r|\n/ /g;
+
     printf STDERR "DIED: %s\n", $msg;
     wwslog('err', 'DIED: %s', $msg);
     eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
@@ -2125,13 +2128,18 @@ sub _crash_handler {
     Sys::Syslog::closelog();           # flush log
     Log::set_log_level(-1);            # disable log
 
-    $param->{'traceback'}     = Carp::longmess("$msg\n");
+    local @CARP_NOT        = qw(Carp);
+    local $Carp::CarpLevel = 1;
+    my $longmess = Carp::longmess("$msg\n");
+    $longmess =~ s/(?<!\A)\n at \S+ line \d+\n/\n/;
+
+    $param->{'traceback'}     = $longmess;
     $param->{'error_message'} = $msg;
     $param->{'main_title'} ||= Conf::get_robot_conf($robot, 'title');
     $param->{'last_action'} = $param->{'action'};
     $param->{'action'}      = 'crash';
     eval { send_html('crash.tt2'); };
-    print "\n\n";                      # when tt2 failed to parse
+    print "\n\n";    # when tt2 failed to parse
     exit 0;
 }
 

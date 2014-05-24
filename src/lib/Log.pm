@@ -1319,18 +1319,28 @@ INIT {
 # IN : error message
 # OUT : none.  This function exits with status 255 or (if invoked from inside
 # eval) simply returns.
+our @CARP_NOT;
+
 sub _crash_handler {
     return if $^S;    # invoked from inside eval.
 
     my $msg = "$_[0]";
     chomp $msg;
+    $msg =~ s/\r\n|\r|\n/ /g;
+
     Log::do_log('err', 'DIED: %s', $msg);
     eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
     SDM::db_disconnect();       # unlock database
     Sys::Syslog::closelog();    # flush log
     Log::set_log_level(-1);     # disable log
 
-    Carp::confess("DIED: $msg\n");
+    local @CARP_NOT        = qw(Carp);
+    local $Carp::CarpLevel = 1;
+    my $longmess = Carp::longmess("DIED: $msg\n");
+    $longmess =~ s/(?<!\A)\n at \S+ line \d+\n/\n/;
+
+    print STDERR $longmess;
+    exit 255;
 }
 
 1;
