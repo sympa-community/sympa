@@ -1300,8 +1300,9 @@ while ($query = new_loop()) {
         }
     );
 
-    undef $ENV{'HTTP_COOKIE'
-        }; # Getting rid of the environment variable to make sure it won't be affected to another anonymous session.
+    # Getting rid of the environment variable to make sure it won't be
+    # affected to another anonymous session.
+    undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
         List::send_notify_to_listmaster('failed_to_create_web_session',
             $robot);
