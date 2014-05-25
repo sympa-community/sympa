@@ -2485,14 +2485,14 @@ sub date_conv {
     if ($arg =~ /^(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/) {
         # absolute date
 
-        my @date = ("$6", "$5", "$4", "$3", "$2", "$1");
-        for (my $i = 0; $i < 6; $i++) {
-            chop($date[$i]);
-            if (($i == 1) || ($i == 2)) { chop($date[$i]); chop($date[$i]); }
-            $date[$i] = 0 unless ($date[$i]);
+        my @date = ($6, $5, $4, $3, $2, $1);
+        foreach my $part (@date) {
+            $part =~ s/[a-z]+$// if $part;
+            $part ||= 0;
+            $part += 0;
         }
-        $date[3] = 1 if ($date[3] == 0);
-        $date[4]-- if ($date[4] != 0);
+        $date[3] = 1 if $date[3] == 0;
+        $date[4]-- if $date[4] != 0;
         $date[5] -= 1900;
 
         return Time::Local::timelocal(@date);
