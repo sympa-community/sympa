@@ -1173,7 +1173,7 @@ sub info {
     if ($action =~ /do_it/i) {
 
         my $data;
-        foreach my $key (%{$list->{'admin'}}) {
+        foreach my $key (keys %{$list->{'admin'}}) {
             $data->{$key} = $list->{'admin'}{$key};
         }
 
@@ -3511,7 +3511,7 @@ sub get_auth_method {
     my $that;
     my $auth_method;
 
-    if ($sign_mod eq 'smime') {
+    if ($sign_mod and $sign_mod eq 'smime') {
         $auth_method = 'smime';
 
     } elsif ($auth ne '') {
@@ -3542,7 +3542,7 @@ sub get_auth_method {
         }
     } else {
         $auth_method = 'smtp';
-        $auth_method = 'dkim' if ($sign_mod eq 'dkim');
+        $auth_method = 'dkim' if $sign_mod and $sign_mod eq 'dkim';
     }
 
     return $auth_method;

@@ -329,12 +329,12 @@ sub sortbydomain {
 
 ## Sort subroutine to order files in sympa spool by date
 sub by_date {
-    my @a_tokens = split /\./, $a;
-    my @b_tokens = split /\./, $b;
+    my @a_tokens = split /\./, ($a || '');
+    my @b_tokens = split /\./, ($b || '');
 
     ## File format : list@dom.date.pid
-    my $a_time = $a_tokens[$#a_tokens - 1];
-    my $b_time = $b_tokens[$#b_tokens - 1];
+    my $a_time = $a_tokens[$#a_tokens - 1] || 0;
+    my $b_time = $b_tokens[$#b_tokens - 1] || 0;
 
     return $a_time <=> $b_time;
 
@@ -2508,10 +2508,11 @@ sub duration_conv {
 
     return 0 unless $arg;
 
-    $arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/i;
-    my @date = ("$1", "$2", "$3", "$4", "$5", "$6", "$7");
-    for (my $i = 0; $i < 7; $i++) {
-        $date[$i] =~ s/[a-z]+$//;    ## Remove trailing units
+    my @date =
+        ($arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/i);
+    foreach my $part (@date) {
+        $part =~ s/[a-z]+$// if $part;    ## Remove trailing units
+        $part ||= 0;
     }
 
     my $duration =
@@ -2525,7 +2526,7 @@ sub duration_conv {
         31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
         31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
     );
-    my $start = (localtime($start_date))[4];
+    my $start = (defined $start_date) ? (localtime($start_date))[4] : 0;
     for (my $i = 0; $i < $date[1]; $i++) {
         $duration += $months[$start + $i] * 60 * 60 * 24;
     }
@@ -3658,7 +3659,7 @@ sub diff_on_arrays {
 }
 
 ####################################################
-# is_on_array
+# is_in_array
 ####################################################
 # Test if a value is on an array
 #
@@ -3668,12 +3669,22 @@ sub diff_on_arrays {
 # OUT : boolean
 #######################################################
 sub is_in_array {
-    my ($set, $value) = @_;
+    my $set = shift;
+    die 'missing parameter "$value"' unless @_;
+    my $value = shift;
 
-    foreach my $elt (@$set) {
-        return 1 if ($elt eq $value);
+    if (defined $value) {
+        foreach my $elt (@{$set || []}) {
+            next unless defined $elt;
+            return 1 if $elt eq $value;
+        }
+    } else {
+        foreach my $elt (@{$set || []}) {
+            return 1 unless defined $elt;
+        }
     }
-    return undef;
+
+    return;
 }
 
 ####################################################
@@ -3777,6 +3788,8 @@ sub smart_eq {
 ######################################################
 sub clean_msg_id {
     my $msg_id = shift;
+
+    return unless defined $msg_id;
 
     chomp $msg_id;
 
@@ -4111,12 +4124,14 @@ sub string_2_hash {
 sub hash_2_string {
     my $refhash = shift;
 
-    return undef unless ((ref($refhash)) && (ref($refhash) eq 'HASH'));
+    return unless ref $refhash eq 'HASH';
 
     my $data_string;
     foreach my $var (keys %$refhash) {
-        next unless ($var);
+        next unless length $var;
         my $val = $refhash->{$var};
+        $val = '' unless defined $val;
+
         $val =~ s/([\"\\])/\\$1/g;
         $data_string .= ';' . $var . '="' . $val . '"';
     }

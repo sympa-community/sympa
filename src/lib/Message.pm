@@ -196,7 +196,7 @@ sub new {
 
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
-    if ($subject =~ /\S/) {
+    if (defined $subject and $subject =~ /\S/) {
         my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
         $message->{'subject_charset'} = 'US-ASCII';
         foreach my $token (@decoded_subject) {
@@ -222,16 +222,19 @@ sub new {
         $message->{'subject_charset'} = undef;
     }
     if ($message->{'subject_charset'}) {
-        $message->{'decoded_subject'} =
-            MIME::EncWords::decode_mimewords($subject, Charset => 'utf8');
+        $message->{'decoded_subject'} = tools::decode_header($hdr, 'Subject');
     } else {
+        if ($subject) {
+            chomp $subject;
+            $subject =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+            $subject =~ s/\r\n|\r|\n/ /g;
+        }
         $message->{'decoded_subject'} = $subject;
     }
-    chomp $message->{'decoded_subject'};
 
     ## Extract recepient address (X-Sympa-To)
     $message->{'rcpt'} = $hdr->get('X-Sympa-To');
-    chomp $message->{'rcpt'};
+    chomp $message->{'rcpt'} if defined $message->{'rcpt'};
     unless (defined $noxsympato) {
         # message.pm can be used not only for message comming from queue
         unless ($message->{'rcpt'}) {

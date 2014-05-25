@@ -315,7 +315,7 @@ while (!$end) {
                 my %data = %default_data;
                 create($current_date, '', $global_models{$key},
                     $Conf::Conf{$key}, \%data);
-                $used_models{$1} = 1;
+                $used_models{$1} = 1;    #!!!FIXME FIXME FIXME!!!
             }
         }
     }
@@ -883,7 +883,11 @@ sub cmd_process {
     # building of %context
     my %context = ('line_number' => $lnb);
 
-    Log::do_log('debug2', 'Current task : %s', join(':', %$task));
+    Log::do_log(
+        'debug2',
+        'Current task : %s',
+        join(':', map { (defined $_) ? $_ : '' } (%$task))
+    );
 
     # regular commands
     return stop($task, \%context) if ($command eq 'stop');
@@ -1931,10 +1935,9 @@ sub process_bouncers {
             my $notification =
                 $list->{'admin'}{'bouncers_level' . $level}{'notification'};
 
-            if (@{$bouncers[$level]}) {
+            if (@{$bouncers[$level] || []}) {
                 ## calling action subroutine with (list,email list) in
                 ## parameter
-                no strict 'refs';
                 unless ($actions{$action}->($list, $bouncers[$level])) {
                     Log::do_log(
                         'err',

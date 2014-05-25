@@ -556,7 +556,9 @@ sub store {
 
     my $message_already_on_spool;
 
-    if ($messagekey eq $message_fingerprint) {
+    if (    defined $message_fingerprint
+        and defined $messagekey
+        and $messagekey eq $message_fingerprint) {
         $message_already_on_spool = 1;
 
     } else {

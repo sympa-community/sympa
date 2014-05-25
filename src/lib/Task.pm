@@ -117,8 +117,8 @@ sub list_tasks {
         ## Maintain list of tasks
         push @task_list, $task;
 
-        my $list_id = $task->{'id'};
-        my $model   = $task->{'model'};
+        my $list_id = (defined $task->{'id'}) ? $task->{'id'} : '';
+        my $model = $task->{'model'};
 
         $task_by_model{$model}{$list_id} = $task;
         $task_by_list{$list_id}{$model}  = $task;

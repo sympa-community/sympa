@@ -1606,8 +1606,9 @@ sub get_constraints {
 
     ## load param_constraint.conf
     my $time_file = (stat("$self->{'dir'}/param_constraint.conf"))[9];
-    unless ((defined $self->{'param_constraint_conf'})
-        && ($self->{'mtime'}{'param_constraint_conf'} >= $time_file)) {
+    $time_file ||= 0;
+    unless (defined($self->{'param_constraint_conf'})
+        and $self->{'mtime'}{'param_constraint_conf'} >= $time_file) {
         $self->{'param_constraint_conf'} =
             $self->_load_param_constraint_conf();
         unless (defined $self->{'param_constraint_conf'}) {

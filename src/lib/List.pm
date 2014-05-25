@@ -1072,7 +1072,7 @@ sub load {
         $lock_fh->close();
 
     } elsif ($self->{'name'} ne $name
-        || $time_config > $self->{'mtime'}->[0]
+        || $time_config > ($self->{'mtime'}->[0] || 0)
         || $options->{'reload_config'}) {
         $admin =
             _load_list_config_file($self->{'dir'}, $self->{'domain'},
@@ -1181,7 +1181,7 @@ sub load {
     }
 
     ## We have updated %users, Total may have changed
-    if ($m2 > $self->{'mtime'}[1]) {
+    if ($m2 > ($self->{'mtime'}[1] || 0)) {
         $self->savestats();
     }
 
@@ -1854,8 +1854,9 @@ sub distribute_msg {
     ## Add Custom Subject
     if ($self->{'admin'}{'custom_subject'}) {
         my $subject_field = $message->{'decoded_subject'};
-        $subject_field =~
-            s/^\s*(.*)\s*$/$1/;    ## Remove leading and trailing blanks
+        $subject_field = '' unless defined $subject_field;
+        ## Remove leading and trailing blanks
+        $subject_field =~ s/^\s*(.*)\s*$/$1/;
 
         ## Search previous subject tagging in Subject
         my $custom_subject = $self->{'admin'}{'custom_subject'};
@@ -2054,8 +2055,9 @@ sub distribute_msg {
 
     ## store msg in digest if list accept digest mode (encrypted message can't
     ## be included in digest)
-    if (    ($self->is_digest())
-        and ($message->{'smime_crypted'} ne 'smime_crypted')) {
+    if ($self->is_digest()
+        and not tools::smart_eq($message->{'smime_crypted'}, 'smime_crypted'))
+    {
         $self->store_digest($message);
     }
 
@@ -2565,7 +2567,7 @@ sub send_file {
     # . a list should have several certificates and use if possible a
     # certificate
     #   issued by the same CA as the recipient CA if it exists
-    if ($sign_mode eq 'smime') {
+    if ($sign_mode and $sign_mode eq 'smime') {
         $data->{'fromlist'} = $self->get_list_address();
         $data->{'replyto'}  = $self->get_list_address('owner');
     } else {
@@ -2711,7 +2713,9 @@ sub send_msg {
             ## test to know if the rcpt suspended her subscription for this
             ## list
             ## if yes, don't send the message
-            if (defined $user_data && $user_data->{'suspend'} eq '1') {
+            if (    $user_data
+                and defined $user_data->{'suspend'}
+                and $user_data->{'suspend'} + 0) {
                 if (($user_data->{'startdate'} <= time)
                     && (   (time <= $user_data->{'enddate'})
                         || (!$user_data->{'enddate'}))
@@ -4738,7 +4742,7 @@ sub get_total {
     my $option = shift;
     Log::do_log('debug3', 'List::get_total(%s)', $name);
 
-    if ($option eq 'nocache') {
+    if ($option and $option eq 'nocache') {
         $self->{'total'} = $self->_load_total_db($option);
     }
 
@@ -5507,10 +5511,10 @@ sub get_first_list_member {
         "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)",
         SDM::get_canonical_read_date('date_subscriber'),
         SDM::get_canonical_read_date('update_subscriber'),
-        $additional,
+        ($additional || ''),
         SDM::quote($name),
         SDM::quote($self->{'domain'}),
-        $selection;
+        ($selection || '');
 
     ## SORT BY
     if ($sortby eq 'domain') {
@@ -5527,7 +5531,7 @@ sub get_first_list_member {
                 'substring_length' => '50',
             }
             ),
-            $additional,
+            ($additional || ''),
             SDM::quote($name),
             SDM::quote($self->{'domain'});
 
@@ -5682,7 +5686,7 @@ sub get_first_list_admin {
         SDM::get_canonical_read_date('update_admin'),
         SDM::quote($name),
         SDM::quote($self->{'domain'}),
-        $selection,
+        ($selection || ''),
         SDM::quote($role);
 
     ## SORT BY
@@ -6083,8 +6087,11 @@ sub update_list_member {
         }
     }
 
-    Log::do_log('debug2',
-        " custom_attribute id: $Conf::Conf{'custom_attribute'}");
+    Log::do_log(
+        'debug2',
+        ' custom_attribute id: %s',
+        $Conf::Conf{'custom_attribute'}
+    );
     ## custom attributes
     if (defined $Conf::Conf{'custom_attribute'}) {
         foreach my $f (sort keys %{$Conf::Conf{'custom_attribute'}}) {
@@ -6721,9 +6728,9 @@ sub is_listmaster {
     my $who   = shift;
     my $robot = shift;
 
-    $who =~ y/A-Z/a-z/;
+    return unless $who;
 
-    return 0 unless ($who);
+    $who =~ y/A-Z/a-z/;
 
     foreach my $listmaster (@{Conf::get_robot_conf($robot, 'listmasters')}) {
         return 1 if (lc($listmaster) eq lc($who));
@@ -6774,7 +6781,7 @@ sub am_i {
 
         ## Check cache first
         if ($list_cache{'am_i'}{$function}{$self->{'domain'}}{$self->{'name'}}
-            {$who} == 1) {
+            {$who}) {
             return 1;
         }
 
@@ -7099,8 +7106,10 @@ sub archive_msg {
 
     if ($self->is_archived()) {
         my $msg = $message->{'msg'};
-        if (   ($message->{'smime_crypted'} eq 'smime_crypted')
-            && ($self->{admin}{archive_crypted_msg} eq 'original')) {
+        if (    tools::smart_eq($message->{'smime_crypted'}, 'smime_crypted')
+            and
+            tools::smart_eq($self->{admin}{archive_crypted_msg}, 'original'))
+        {
             $msg = $message->{'orig_msg'};
         }
 
@@ -7110,10 +7119,16 @@ sub archive_msg {
         ## listname
 
         ## ignoring message with a no-archive flag
-        if (   ref($msg)
-            && ($Conf::Conf{'ignore_x_no_archive_header_feature'} ne 'on')
-            && (   ($msg->head->get('X-no-archive') =~ /yes/i)
-                || ($msg->head->get('Restrict') =~ /no\-external\-archive/i))
+        if (ref($msg)
+            and !tools::smart_eq(
+                $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
+            and (
+                tools::smart_eq($msg->head->get('X-no-archive'), qr/yes/i)
+                or tools::smart_eq(
+                    $msg->head->get('Restrict'),
+                    qr/no\-external\-archive/i
+                )
+            )
             ) {
             Log::do_log('info',
                 "Do not archive message with no-archive flag for list %s",
@@ -9300,7 +9315,7 @@ sub sync_include {
 
     ## Load a hash with the new subscriber list
     my $new_subscribers;
-    unless ($option eq 'purge') {
+    unless ($option and $option eq 'purge') {
         my $result =
             $self->_load_list_members_from_include(
             $self->get_list_of_sources_id(\%old_subscribers));
@@ -9609,7 +9624,7 @@ sub sync_include {
     $self->{'total'}     = $self->_load_total_db('nocache');
     $self->{'last_sync'} = time;
     $self->savestats();
-    $self->sync_include_ca($option eq 'purge');
+    $self->sync_include_ca($option and $option eq 'purge');
 
     return 1;
 }
@@ -9666,8 +9681,7 @@ sub sync_include_admin {
         my $new_admin_users_include;
         ## Load a hash with the new admin user users from the list config
         my $new_admin_users_config;
-        unless ($option eq 'purge') {
-
+        unless ($option and $option eq 'purge') {
             $new_admin_users_include =
                 $self->_load_list_admin_from_include($role);
 
@@ -10013,7 +10027,7 @@ sub is_update_param {
                 $update = 1;
             }
         } else {
-            if (defined $old_param->{$p} && ($old_param->{$p} ne '')) {
+            if (defined $old_param->{$p} and $old_param->{$p} ne '') {
                 $resul->{$p} = '';
                 $update = 1;
             }
@@ -10578,7 +10592,7 @@ sub get_which {
             }
 
         } elsif ($function eq 'owner') {
-            if ($db_which->{$robot}{$l}{'owner'} == 1) {
+            if ($db_which->{$robot}{$l}{'owner'}) {
                 push @which, $list;
 
                 ## Update cache
@@ -10590,7 +10604,7 @@ sub get_which {
                     0;
             }
         } elsif ($function eq 'editor') {
-            if ($db_which->{$robot}{$l}{'editor'} == 1) {
+            if ($db_which->{$robot}{$l}{'editor'}) {
                 push @which, $list;
 
                 ## Update cache
@@ -10781,7 +10795,7 @@ sub load_topics {
         || ((stat($conf_file))[9] > $mtime{'topics'}{$robot})) {
 
         ## delete previous list of topics
-        %list_of_topics = undef;
+        %list_of_topics = ();
 
         unless (-r $conf_file) {
             Log::do_log('err', "Unable to read $conf_file");
@@ -11068,15 +11082,13 @@ sub _load_list_param {
     }
 
     ## Do we need to split param if it is not already an array
-    if (   ($p->{'occurrence'} =~ /n$/)
-        && $p->{'split_char'}
-        && !(ref($value) eq 'ARRAY')) {
-        my @array = split /$p->{'split_char'}/, $value;
-        foreach my $v (@array) {
-            $v =~ s/^\s*(.+)\s*$/$1/g;
-        }
-
-        return \@array;
+    if (    exists $p->{'occurrence'}
+        and $p->{'occurrence'} =~ /n$/
+        and $p->{'split_char'}
+        and defined $value
+        and ref $value ne 'ARRAY') {
+        $value =~ s/^\s*(.+)\s*$/$1/;
+        return [split /\s*$p->{'split_char'}\s*/, $value];
     } else {
         return $value;
     }
@@ -12441,7 +12453,7 @@ sub get_next_delivery_date {
     my $self = shift;
 
     my $dtime = $self->{'admin'}{'delivery_time'};
-    unless ($dtime =~ /(\d?\d)\:(\d\d)/) {
+    unless ($dtime and $dtime =~ /(\d?\d)\:(\d\d)/) {
         # if delivery _time if not defined, the delivery time right now
         return time();
     }

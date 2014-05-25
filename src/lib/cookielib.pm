@@ -147,15 +147,14 @@ sub generic_get_cookie {
     my $http_cookie = shift;
     my $cookie_name = shift;
 
-    if ($http_cookie =~ /\S+/g) {
-        my %cookies = parse CGI::Cookie($http_cookie);
-        foreach (keys %cookies) {
-            my $cookie = $cookies{$_};
-            next unless ($cookie->name eq $cookie_name);
+    if ($http_cookie and $http_cookie =~ /\S+/g) {
+        my %cookies = CGI::Cookie->parse($http_cookie);
+        foreach my $cookie (values %cookies) {
+            next unless $cookie->name eq $cookie_name;
             return ($cookie->value);
         }
     }
-    return (undef);
+    return;
 }
 
 ## Returns user information extracted from the cookie
@@ -184,7 +183,7 @@ sub check_cookie_extern {
 
     my $extern_value = generic_get_cookie($http_cookie, 'sympa_altemails');
 
-    if ($extern_value =~ /^(\S+)&(\w+)$/) {
+    if ($extern_value and $extern_value =~ /^(\S+)&(\w+)$/) {
         return undef unless (get_mac($1, $secret) eq $2);
 
         my %alt_emails;

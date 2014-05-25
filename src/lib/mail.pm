@@ -402,9 +402,10 @@ sub mail_message {
         $#rcpt + 1,
         $tag_as_last
     );
-    return 0 if ($#rcpt == -1);
+    return 0 unless @rcpt;
 
-    my ($i, $j, $nrcpt, $size);
+    my ($i, $j, $nrcpt);
+    my $size    = 0;
     my $numsmtp = 0;
 
     ## If message contain a footer or header added by Sympa  use the object
@@ -429,8 +430,8 @@ sub mail_message {
     my $db_type = $Conf::Conf{'db_type'};
 
     while (defined($i = shift(@rcpt))) {
-        my @k = reverse(split(/[\.@]/, $i));
-        my @l = reverse(split(/[\.@]/, $j));
+        my @k = reverse split /[\.@]/, $i;
+        my @l = reverse split /[\.@]/, (defined $j ? $j : '@');
 
         my $dom;
         if ($i =~ /\@(.*)$/) {
@@ -438,8 +439,12 @@ sub mail_message {
             chomp $dom;
         }
         $rcpt_by_dom{$dom} += 1;
-        Log::do_log('debug2',
-            "domain: $dom ; rcpt by dom: $rcpt_by_dom{$dom} ; limit for this domain: $Conf::Conf{'nrcpt_by_domain'}{$dom}"
+        Log::do_log(
+            'debug2',
+            'domain: %s ; rcpt by dom: %s ; limit for this domain: %s',
+            $dom,
+            $rcpt_by_dom{$dom},
+            $Conf::Conf{'nrcpt_by_domain'}{$dom}
         );
 
         if (
@@ -784,7 +789,7 @@ sub sendto {
 
     my $msg;
 
-    if ($encrypt eq 'smime_crypted') {
+    if ($encrypt and $encrypt eq 'smime_crypted') {
         # encrypt message for each rcpt and send the message
         # this MUST be moved to the bulk mailer. This way, merge will be
         # applied after the SMIME encryption is applied ! This is a bug !
@@ -906,7 +911,7 @@ sub sending {
     my $fh;
     my $signed_msg;    # if signing
 
-    if ($sign_mode eq 'smime') {
+    if ($sign_mode and $sign_mode eq 'smime') {
         if ($signed_msg =
             tools::smime_sign($message->{'msg'}, $listname, $robot)) {
             $message->{'msg'} = $signed_msg->dup;
@@ -919,14 +924,14 @@ sub sending {
     # my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
 
     my $verpfeature =
-        (($verp eq 'on') || ($verp eq 'mdn') || ($verp eq 'dsn'));
+        ($verp and ($verp eq 'on' or $verp eq 'mdn' or $verp eq 'dsn'));
     my $trackingfeature;
-    if (($verp eq 'mdn') || ($verp eq 'dsn')) {
+    if ($verp and ($verp eq 'mdn' or $verp eq 'dsn')) {
         $trackingfeature = $verp;
     } else {
         $trackingfeature = '';
     }
-    my $mergefeature = ($merge eq 'on');
+    my $mergefeature = ($merge and $merge eq 'on');
 
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution

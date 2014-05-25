@@ -2321,7 +2321,11 @@ sub _set_listmasters_entry {
 sub _check_double_url_usage {
     my $param = shift;
     my ($host, $path);
-    if ($param->{'config_hash'}{'http_host'} =~ /^([^\/]+)(\/.*)$/) {
+    if (tools::smart_eq(
+            $param->{'config_hash'}{'http_host'},
+            qr/^([^\/]+)(\/.*)$/
+        )
+        ) {
         ($host, $path) = ($1, $2);
     } else {
         ($host, $path) = ($param->{'config_hash'}{'http_host'}, '/');

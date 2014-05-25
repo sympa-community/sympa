@@ -79,11 +79,12 @@ sub new {
         $self->{'passive_session'} = 1;
     }
     $self->{'passive_session'} = 1
-        if ($rss || $action eq 'wsdl' || $action eq 'css');
+        if $rss
+            or $action and ($action eq 'wsdl' or $action eq 'css');
 
     # if a session cookie exist, try to restore an existing session, don't
     # store sessions from bots
-    if (($cookie) && ($self->{'passive_session'} != 1)) {
+    if ($cookie and !$self->{'passive_session'}) {
         my $status;
         $status = $self->load($cookie);
         unless (defined $status) {
@@ -495,17 +496,20 @@ sub purge_old_sessions {
     my @sessions;
     my $sth;
 
-    my $robot_condition = sprintf "robot_session = %s", SDM::quote($robot)
-        unless (($robot eq '*') || ($robot));
+    my $robot_condition = '';
+    $robot_condition = sprintf "robot_session = %s", SDM::quote($robot)
+        if $robot and $robot ne '*';
 
     my $delay_condition = time - $delay . ' > date_session' if ($delay);
-    my $anonymous_delay_condition =
-        time - $anonymous_delay . ' > date_session'
-        if ($anonymous_delay);
+    my $anonymous_delay_condition = '';
+    $anonymous_delay_condition = time - $anonymous_delay . ' > date_session'
+        if $anonymous_delay;
 
-    my $and = ' AND ' if (($delay_condition) && ($robot_condition));
-    my $anonymous_and = ' AND '
-        if (($anonymous_delay_condition) && ($robot_condition));
+    my $and = '';
+    $and = ' AND ' if $delay_condition and $robot_condition;
+    my $anonymous_and = '';
+    $anonymous_and = ' AND '
+        if $anonymous_delay_condition and $robot_condition;
 
     my $count_statement = sprintf
         q{SELECT count(*) FROM session_table WHERE %s %s %s},
@@ -581,12 +585,15 @@ sub purge_old_tickets {
     my @tickets;
     my $sth;
 
-    my $robot_condition = sprintf "robot_one_time_ticket = %s",
+    my $robot_condition = '';
+    $robot_condition = sprintf "robot_one_time_ticket = %s",
         SDM::quote($robot)
-        unless (($robot eq '*') || ($robot));
-    my $delay_condition = time - $delay . ' > date_one_time_ticket'
-        if ($delay);
-    my $and = ' AND ' if (($delay_condition) && ($robot_condition));
+        if $robot and $robot ne '*';
+    my $delay_condition = '';
+    $delay_condition = time - $delay . ' > date_one_time_ticket'
+        if $delay;
+    my $and = '';
+    $and = ' AND ' if $delay_condition and $robot_condition;
     my $count_statement = sprintf
         "SELECT count(*) FROM one_time_ticket_table WHERE $robot_condition $and $delay_condition";
     my $statement = sprintf
@@ -666,20 +673,10 @@ sub list_sessions {
 # Subroutines to read cookies #
 ###############################
 
-## Generic subroutine to get a cookie value
+## Subroutine to get session cookie value
 sub get_session_cookie {
     my $http_cookie = shift;
-
-    if ($http_cookie =~ /\S+/g) {
-        my %cookies = CGI::Cookie->parse($http_cookie);
-        foreach (keys %cookies) {
-            my $cookie = $cookies{$_};
-            next unless ($cookie->name eq 'sympa_session');
-            return ($cookie->value);
-        }
-    }
-
-    return (undef);
+    return cookielib::generic_get_cookie($http_cookie, 'sympa_session');
 }
 
 ## Generic subroutine to set a cookie

@@ -133,11 +133,11 @@ sub do_log {
         my @call = caller(1);
 
         ## If called via wwslog, go one step ahead
-        if ($call[3] =~ /wwslog$/) {
+        if ($call[3] and $call[3] =~ /wwslog$/) {
             my @call = caller(2);
         }
 
-        $caller_string = $call[3] . '()';
+        $caller_string = ($call[3] || '') . '()';
     }
 
     $message = $caller_string . ' ' . $message if ($caller_string);
@@ -263,11 +263,10 @@ sub db_log {
     unless ($user_email) {
         $user_email = 'anonymous';
     }
-    unless ($list) {
+    unless (defined $list and length $list) {
         $list = '';
-    }
-    #remove the robot name of the list name
-    if ($list =~ /(.+)\@(.+)/) {
+    } elsif ($list =~ /(.+)\@(.+)/) {
+        #remove the robot name of the list name
         $list = $1;
         unless ($robot) {
             $robot = $2;
@@ -325,10 +324,10 @@ sub db_stat_log {
     my $id        = $date . $random;
     my $read      = 0;
 
-    if (ref($list) =~ /List/i) {
+    if (ref $list eq 'List') {
         $list = $list->{'name'};
-    }
-    if ($list =~ /(.+)\@(.+)/) {    #remove the robot name of the list name
+    } elsif ($list and $list =~ /(.+)\@(.+)/) {
+        #remove the robot name of the list name
         $list = $1;
         unless ($robot) {
             $robot = $2;
@@ -370,7 +369,8 @@ sub db_stat_counter_log {
     my $random    = int(rand(1000000));
     my $id        = $date_deb . $random;
 
-    if ($list =~ /(.+)\@(.+)/) {    #remove the robot name of the list name
+    if ($list and $list =~ /(.+)\@(.+)/) {
+        #remove the robot name of the list name
         $list = $1;
         unless ($robot) {
             $robot = $2;
@@ -941,7 +941,7 @@ sub aggregate_data {
     }    #end of foreach
 
     my $d_deb = localtime($begin_date);
-    my $d_fin = localtime($end_date);
+    my $d_fin = localtime($end_date) if defined $end_date;
     do_log('debug2', 'data aggregated from %s to %s', $d_deb, $d_fin);
 }
 

@@ -29,13 +29,13 @@ use warnings;
 use Mail::Address;
 use Net::Netmask;
 
-#use tools; # temporarily disabled to avoid dependency loop.
+use Conf;
+use Sympa::Constants;
 use Sympa::Language;
 use LDAPSource;
 use List;
 use Log;
-use Conf;
-use Sympa::Constants;
+use tools;
 
 my %all_scenarios;
 my %persistent_cache;
@@ -65,7 +65,7 @@ sub new {
 
     ## Determine the file path of the scenario
 
-    if ($parameters{'file_path'} eq 'ERROR') {
+    if (tools::smart_eq($parameters{'file_path'}, 'ERROR')) {
         return $all_scenarios{$scenario->{'file_path'}};
     }
 
@@ -107,7 +107,8 @@ sub new {
     }
 
     ## Load the scenario if previously loaded in memory
-    if (defined $all_scenarios{$scenario->{'file_path'}}) {
+    if ($scenario->{'file_path'}
+        and defined $all_scenarios{$scenario->{'file_path'}}) {
 
         ## Option 'dont_reload_scenario' prevents scenario reloading
         ## Usefull for performances reasons
@@ -293,10 +294,11 @@ sub request_action {
     $context->{'remote_host'} ||= 'unknown_host';
     $context->{'robot_domain'} = $robot;
     $context->{'msg'}          = $context->{'message'}->{'msg'}
-        if (defined $context->{'message'});
+        if defined $context->{'message'};
     $context->{'msg_encrypted'} = 'smime'
-        if (defined $context->{'message'}
-        && $context->{'message'}->{'smime_crypted'} eq 'smime_crypted');
+        if defined $context->{'message'}
+            and tools::smart_eq($context->{'message'}->{'smime_crypted'},
+                'smime_crypted');
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
         Log::do_log('info',
@@ -309,7 +311,7 @@ sub request_action {
     # this var is defined to control if log scenario is activated or not
     my $log_it;
     my $loging_targets = Conf::get_robot_conf($robot, 'loging_for_module');
-    if ($loging_targets->{'scenario'} == 1) {
+    if ($loging_targets->{'scenario'}) {
         #activate log if no condition is defined
         unless (Conf::get_robot_conf($robot, 'loging_condition')) {
             $log_it = 1;
@@ -378,10 +380,9 @@ sub request_action {
                 'auth_method' => '',
                 'condition'   => ''
             };
-            if ($log_it) {
-                Log::do_log('info',
-                    "$trace_scenario rejected reason parameter not defined");
-            }
+            Log::do_log('info',
+                "$trace_scenario rejected reason parameter not defined")
+                if $log_it;
             return $return;
         }
 
@@ -409,10 +410,9 @@ sub request_action {
                     'auth_method' => '',
                     'condition'   => ''
                 };
-                if ($log_it) {
-                    Log::do_log('info',
-                        "$trace_scenario rejected reason list not open");
-                }
+                Log::do_log('info',
+                    "$trace_scenario rejected reason list not open")
+                    if $log_it;
                 return $return;
             }
         }
@@ -519,21 +519,17 @@ sub request_action {
 
     my $return = {};
     foreach my $rule (@rules) {
-        if ($log_it) {
-            Log::do_log(
-                'info', 'Verify rule %s, auth %s, action %s',
-                $rule->{'condition'}, $rule->{'auth_method'},
-                $rule->{'action'}
-            );
-        }
+        Log::do_log(
+            'info', 'Verify rule %s, auth %s, action %s',
+            $rule->{'condition'}, $rule->{'auth_method'},
+            $rule->{'action'}
+        ) if $log_it;
         if ($auth_method eq $rule->{'auth_method'}) {
-            if ($log_it) {
-                Log::do_log(
-                    'info',
-                    'Context uses auth method %s',
-                    $rule->{'auth_method'}
-                );
-            }
+            Log::do_log(
+                'info',
+                'Context uses auth method %s',
+                $rule->{'auth_method'}
+            ) if $log_it;
             my $result = verify($context, $rule->{'condition'}, $log_it);
 
             ## Cope with errors
@@ -575,11 +571,9 @@ sub request_action {
 
             ## Rule returned false
             if ($result == -1) {
-                if ($log_it) {
-                    Log::do_log('info',
-                        "$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} not verified."
-                    );
-                }
+                Log::do_log('info',
+                    "$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} not verified."
+                ) if $log_it;
                 next;
             }
 
@@ -591,12 +585,12 @@ sub request_action {
             }
             if ($action =~ /^reject(\((.+)\))?(\s?,\s?(quiet))?/) {
 
-                if ($4 eq 'quiet') {
+                if ($4) {
                     $action = 'reject,quiet';
                 } else {
                     $action = 'reject';
                 }
-                my @param = split /,/, $2;
+                my @param = split /,/, $2 if defined $2;
 
                 foreach my $p (@param) {
                     if ($p =~ /^reason=\'?(\w+)\'?/) {
@@ -619,20 +613,16 @@ sub request_action {
 
             $return->{'action'} = $action;
 
-            if ($log_it) {
-                Log::do_log('info',
-                    "$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} issued result : $action"
-                );
-            }
+            Log::do_log('info',
+                "$trace_scenario condition $rule->{'condition'} with authentication method $rule->{'auth_method'} issued result : $action"
+            ) if $log_it;
 
             if ($result == 1) {
-                if ($log_it) {
-                    Log::do_log(
-                        'info', "rule '%s %s -> %s' accepted",
-                        $rule->{'condition'}, $rule->{'auth_method'},
-                        $rule->{'action'}
-                    );
-                }
+                Log::do_log(
+                    'info', "rule '%s %s -> %s' accepted",
+                    $rule->{'condition'}, $rule->{'auth_method'},
+                    $rule->{'action'}
+                ) if $log_it;
                 if ($debug) {
                     $return->{'auth_method'} = $rule->{'auth_method'};
                     $return->{'condition'}   = $rule->{'condition'};
@@ -651,21 +641,17 @@ sub request_action {
                 return $return;
             }
         } else {
-            if ($log_it) {
-                Log::do_log(
-                    'info',
-                    'Context does not use auth method %s',
-                    $rule->{'auth_method'}
-                );
-            }
+            Log::do_log(
+                'info',
+                'Context does not use auth method %s',
+                $rule->{'auth_method'}
+            ) if $log_it;
         }
     }
     Log::do_log('info', "no rule match, reject");
 
-    if ($log_it) {
-        Log::do_log('info',
-            "$trace_scenario : no rule match request rejected");
-    }
+    Log::do_log('info', "$trace_scenario : no rule match request rejected")
+        if $log_it;
 
     $return = {
         'action'      => 'reject',
@@ -715,15 +701,13 @@ sub verify {
     }
 
     if (defined($context->{'msg'})) {
-        my $header = $context->{'msg'}->head;
+        my $header   = $context->{'msg'}->head;
+        my $listname = $context->{'listname'};
+        #FIXME: need more acculate test.
         unless (
-            (   $header->get('to')
-                && (join(', ', $header->get('to')) =~
-                    /$context->{'listname'}/i)
-            )
-            || ($header->get('cc')
-                && (join(', ', $header->get('cc')) =~
-                    /$context->{'listname'}/i))
+            $listname
+            and index(lc join(', ', $header->get('To'), $header->get('Cc')),
+                lc $listname) >= 0
             ) {
             $context->{'is_bcc'} = 1;
         } else {
@@ -739,7 +723,7 @@ sub verify {
         return undef;
     }
     my $negation = 1;
-    if ($1 eq '!') {
+    if ($1 and $1 eq '!') {
         $negation = -1;
     }
 
@@ -786,11 +770,9 @@ sub verify {
             } else {
                 Log::do_log('debug',
                     "undefine variable context $value in rule $condition");
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        "undefine variable context $value in rule $condition"
-                    );
-                }
+                Log::do_log('info',
+                    "undefine variable context $value in rule $condition")
+                    if $log_it;
                 # a condition related to a undefined context variable is
                 # always false
                 return -1 * $negation;
@@ -812,11 +794,9 @@ sub verify {
             } else {
                 Log::do_log('err', 'Unknown list parameter %s in rule %s',
                     $value, $condition);
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        'Unknown list parameter %s in rule %s',
-                        $value, $condition);
-                }
+                Log::do_log('info', 'Unknown list parameter %s in rule %s',
+                    $value, $condition)
+                    if $log_it;
                 return undef;
             }
 
@@ -877,11 +857,9 @@ sub verify {
                     $value = \@fields;
                 }
             } else {
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        'no message object found to evaluate rule %s',
-                        $condition);
-                }
+                Log::do_log('info',
+                    'no message object found to evaluate rule %s', $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -889,13 +867,10 @@ sub verify {
             unless (defined($context->{'msg'})
                 && defined($context->{'msg'}->effective_type() =~ /^text/)
                 && defined($context->{'msg'}->bodyhandle)) {
-                if ($log_it == 1) {
-                    Log::do_log(
-                        'info',
-                        'no proper textual message body to evaluate rule %s',
-                        $condition
-                    );
-                }
+                Log::do_log('info',
+                    'no proper textual message body to evaluate rule %s',
+                    $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -903,10 +878,9 @@ sub verify {
 
         } elsif ($value =~ /\[msg_part\-\>body\]/i) {
             unless (defined($context->{'msg'})) {
-                if ($log_it == 1) {
-                    Log::do_log('info', 'no message to evaluate rule %s',
-                        $condition);
-                }
+                Log::do_log('info', 'no message to evaluate rule %s',
+                    $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -922,10 +896,9 @@ sub verify {
 
         } elsif ($value =~ /\[msg_part\-\>type\]/i) {
             unless (defined($context->{'msg'})) {
-                if ($log_it == 1) {
-                    Log::do_log('info', 'no message to evaluate rule %s',
-                        $condition);
-                }
+                Log::do_log('info', 'no message to evaluate rule %s',
+                    $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -954,11 +927,9 @@ sub verify {
             } else {
                 Log::do_log('debug',
                     "undefine variable context $value in rule $condition");
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        "undefine variable context $value in rule $condition"
-                    );
-                }
+                Log::do_log('info',
+                    "undefine variable context $value in rule $condition")
+                    if $log_it;
                 # a condition related to a undefined context variable is
                 # always false
                 return -1 * $negation;
@@ -1019,20 +990,17 @@ sub verify {
     ## Now eval the condition
     ##### condition : true
     if ($condition_key =~ /^(true|any|all)$/i) {
-        if ($log_it == 1) {
-            Log::do_log('info', 'Condition %s is always true (rule %s)',
-                $condition_key, $condition);
-        }
+        Log::do_log('info', 'Condition %s is always true (rule %s)',
+            $condition_key, $condition)
+            if $log_it;
         return $negation;
     }
     ##### condition is_listmaster
     if ($condition_key eq 'is_listmaster') {
         if (!ref $args[0] and $args[0] eq 'nobody') {
-            if ($log_it == 1) {
-                Log::do_log('info',
-                    '%s is not listmaster of robot %s (rule %s)',
-                    $args[0], $robot, $condition);
-            }
+            Log::do_log('info', '%s is not listmaster of robot %s (rule %s)',
+                $args[0], $robot, $condition)
+                if $log_it;
             return -1 * $negation;
         }
 
@@ -1052,17 +1020,14 @@ sub verify {
             }
         }
         if ($ok) {
-            if ($log_it == 1) {
-                Log::do_log('info', '%s is listmaster of robot %s (rule %s)',
-                    $args[0], $robot, $condition);
-            }
+            Log::do_log('info', '%s is listmaster of robot %s (rule %s)',
+                $args[0], $robot, $condition)
+                if $log_it;
             return $negation;
         } else {
-            if ($log_it == 1) {
-                Log::do_log('info',
-                    '%s is not listmaster of robot %s (rule %s)',
-                    $args[0], $robot, $condition);
-            }
+            Log::do_log('info', '%s is not listmaster of robot %s (rule %s)',
+                $args[0], $robot, $condition)
+                if $log_it;
             return -1 * $negation;
         }
     }
@@ -1073,10 +1038,9 @@ sub verify {
         ## Check that the IP address of the client is available
         ## Means we are in a web context
         unless (defined $ENV{'REMOTE_ADDR'}) {
-            if ($log_it == 1) {
-                Log::do_log('info',
-                    'REMOTE_ADDR env variable not set (rule %s)', $condition);
-            }
+            Log::do_log('info', 'REMOTE_ADDR env variable not set (rule %s)',
+                $condition)
+                if $log_it;
             return -1;   ## always skip this rule because we can't evaluate it
         }
         my $block;
@@ -1086,17 +1050,14 @@ sub verify {
             return undef;
         }
         if ($block->match($ENV{'REMOTE_ADDR'})) {
-            if ($log_it == 1) {
-                Log::do_log('info', 'REMOTE_ADDR %s matches %s (rule %s)',
-                    $ENV{'REMOTE_ADDR'}, $args[0], $condition);
-            }
+            Log::do_log('info', 'REMOTE_ADDR %s matches %s (rule %s)',
+                $ENV{'REMOTE_ADDR'}, $args[0], $condition)
+                if $log_it;
             return $negation;
         } else {
-            if ($log_it == 1) {
-                Log::do_log('info',
-                    'REMOTE_ADDR %s does not match %s (rule %s)',
-                    $ENV{'REMOTE_ADDR'}, $args[0], $condition);
-            }
+            Log::do_log('info', 'REMOTE_ADDR %s does not match %s (rule %s)',
+                $ENV{'REMOTE_ADDR'}, $args[0], $condition)
+                if $log_it;
             return -1 * $negation;
         }
     }
@@ -1110,16 +1071,14 @@ sub verify {
 
         Log::do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
         if ($arg0 <= $arg1) {
-            if ($log_it == 1) {
-                Log::do_log('info', '%s is smaller than %s (rule %s)',
-                    $arg0, $arg1, $condition);
-            }
+            Log::do_log('info', '%s is smaller than %s (rule %s)',
+                $arg0, $arg1, $condition)
+                if $log_it;
             return $negation;
         } else {
-            if ($log_it == 1) {
-                Log::do_log('info', '%s is NOT smaller than %s (rule %s)',
-                    $arg0, $arg1, $condition);
-            }
+            Log::do_log('info', '%s is NOT smaller than %s (rule %s)',
+                $arg0, $arg1, $condition)
+                if $log_it;
             return -1 * $negation;
         }
     }
@@ -1129,10 +1088,9 @@ sub verify {
         my ($list2);
 
         if ($args[1] eq 'nobody') {
-            if ($log_it == 1) {
-                Log::do_log('info', "%s can't be used to evaluate (rule %s)",
-                    $args[1], $condition);
-            }
+            Log::do_log('info', "%s can't be used to evaluate (rule %s)",
+                $args[1], $condition)
+                if $log_it;
             return -1 * $negation;
         }
 
@@ -1166,17 +1124,14 @@ sub verify {
                 }
             }
             if ($ok) {
-                if ($log_it == 1) {
-                    Log::do_log('info', "%s is member of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is member of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return $negation;
             } else {
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        "%s is NOT member of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is NOT member of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -1188,17 +1143,14 @@ sub verify {
                 }
             }
             if ($ok) {
-                if ($log_it == 1) {
-                    Log::do_log('info', "%s is owner of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is owner of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return $negation;
             } else {
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        "%s is NOT owner of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is NOT owner of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
 
@@ -1210,17 +1162,14 @@ sub verify {
                 }
             }
             if ($ok) {
-                if ($log_it == 1) {
-                    Log::do_log('info', "%s is editor of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is editor of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return $negation;
             } else {
-                if ($log_it == 1) {
-                    Log::do_log('info',
-                        "%s is NOT editor of list %s (rule %s)",
-                        $args[1], $args[0], $condition);
-                }
+                Log::do_log('info', "%s is NOT editor of list %s (rule %s)",
+                    $args[1], $args[0], $condition)
+                    if $log_it;
                 return -1 * $negation;
             }
         }
@@ -1236,10 +1185,9 @@ sub verify {
 
         # Nothing can match an empty regexp.
         if ($regexp =~ /^$/) {
-            if ($log_it == 1) {
-                Log::do_log('info', "regexp '%s' is empty (rule %s)",
-                    $regexp, $condition);
-            }
+            Log::do_log('info', "regexp '%s' is empty (rule %s)",
+                $regexp, $condition)
+                if $log_it;
             return -1 * $negation;
         }
 
@@ -1272,7 +1220,7 @@ sub verify {
             return undef;
         }
         if ($r) {
-            if ($log_it == 1) {
+            if ($log_it) {
                 my $args_as_string = '';
                 if (ref($args[0])) {
                     foreach my $arg (@{$args[0]}) {
@@ -1286,7 +1234,7 @@ sub verify {
             }
             return $negation;
         } else {
-            if ($log_it == 1) {
+            if ($log_it) {
                 my $args_as_string = '';
                 if (ref($args[0])) {
                     foreach my $arg (@{$args[0]}) {
@@ -1310,17 +1258,14 @@ sub verify {
         $val_search = search($list || $robot, $args[0], $context);
         return undef unless defined $val_search;
         if ($val_search == 1) {
-            if ($log_it == 1) {
-                Log::do_log('info', "'%s' found in '%s', robot %s (rule %s)",
-                    $context->{'sender'}, $args[0], $robot, $condition);
-            }
+            Log::do_log('info', "'%s' found in '%s', robot %s (rule %s)",
+                $context->{'sender'}, $args[0], $robot, $condition)
+                if $log_it;
             return $negation;
         } else {
-            if ($log_it == 1) {
-                Log::do_log('info',
-                    "'%s' NOT found in '%s', robot %s (rule %s)",
-                    $context->{'sender'}, $args[0], $robot, $condition);
-            }
+            Log::do_log('info', "'%s' NOT found in '%s', robot %s (rule %s)",
+                $context->{'sender'}, $args[0], $robot, $condition)
+                if $log_it;
             return -1 * $negation;
         }
     }
@@ -1331,26 +1276,23 @@ sub verify {
             foreach my $arg (@{$args[0]}) {
                 Log::do_log('debug3', 'ARG: %s', $arg);
                 if (lc($arg) eq lc($args[1])) {
-                    if ($log_it == 1) {
-                        Log::do_log('info', "'%s' equals '%s' (rule %s)",
-                            lc($arg), lc($args[1]), $condition);
-                    }
+                    Log::do_log('info', "'%s' equals '%s' (rule %s)",
+                        lc($arg), lc($args[1]), $condition)
+                        if $log_it;
                     return $negation;
                 }
             }
         } else {
             if (lc($args[0]) eq lc($args[1])) {
-                if ($log_it == 1) {
-                    Log::do_log('info', "'%s' equals '%s' (rule %s)",
-                        lc($args[0]), lc($args[1]), $condition);
-                }
+                Log::do_log('info', "'%s' equals '%s' (rule %s)",
+                    lc($args[0]), lc($args[1]), $condition)
+                    if $log_it;
                 return $negation;
             }
         }
-        if ($log_it == 1) {
-            Log::do_log('info', "'%s' does NOT equal '%s' (rule %s)",
-                lc($args[0]), lc($args[1]), $condition);
-        }
+        Log::do_log('info', "'%s' does NOT equal '%s' (rule %s)",
+            lc($args[0]), lc($args[1]), $condition)
+            if $log_it;
         return -1 * $negation;
     }
 
@@ -1360,7 +1302,7 @@ sub verify {
 
         my $res = verify_custom($condition, \@args, $robot, $list);
         unless (defined $res) {
-            if ($log_it == 1) {
+            if ($log_it) {
                 my $args_as_string = '';
                 foreach my $arg (@args) {
                     $args_as_string .= ", $arg";
@@ -1375,7 +1317,7 @@ sub verify {
             }
             return undef;
         }
-        if ($log_it == 1) {
+        if ($log_it) {
             my $args_as_string = '';
             foreach my $arg (@args) {
                 $args_as_string .= ", $arg";
@@ -1399,28 +1341,24 @@ sub verify {
             foreach my $arg (@{$args[0]}) {
                 Log::do_log('debug3', 'ARG: %s', $arg);
                 if (tools::smart_lessthan($arg, $args[1])) {
-                    if ($log_it == 1) {
-                        Log::do_log('info',
-                            "'%s' is less than '%s' (rule %s)",
-                            $arg, $args[1], $condition);
-                    }
+                    Log::do_log('info', "'%s' is less than '%s' (rule %s)",
+                        $arg, $args[1], $condition)
+                        if $log_it;
                     return $negation;
                 }
             }
         } else {
             if (tools::smart_lessthan($args[0], $args[1])) {
-                if ($log_it == 1) {
-                    Log::do_log('info', "'%s' is less than '%s' (rule %s)",
-                        $args[0], $args[1], $condition);
-                }
+                Log::do_log('info', "'%s' is less than '%s' (rule %s)",
+                    $args[0], $args[1], $condition)
+                    if $log_it;
                 return $negation;
             }
         }
 
-        if ($log_it == 1) {
-            Log::do_log('info', "'%s' is NOT less than '%s' (rule %s)",
-                $args[0], $args[1], $condition);
-        }
+        Log::do_log('info', "'%s' is NOT less than '%s' (rule %s)",
+            $args[0], $args[1], $condition)
+            if $log_it;
         return -1 * $negation;
     }
     return undef;
