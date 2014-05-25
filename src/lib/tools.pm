@@ -3718,6 +3718,53 @@ sub a_is_older_than_b {
     return $answer;
 }
 
+=over
+
+=item smart_eq ( $a, $b )
+
+I<Function>.
+Check if two strings are identical.
+
+Parameters:
+
+=over
+
+=item $a, $b
+
+Operands.
+
+If both of them are undefined, they are equal.
+If only one of them is undefined, the are not equal.
+If C<$b> is a L<Regexp> object and it matches to C<$a>, they are equal.
+Otherwise, they are compared as strings.
+
+=back
+
+Returns:
+
+If arguments matched, true value.  Otherwise false value.
+
+=back
+
+=cut
+
+sub smart_eq {
+    die 'missing argument' if scalar @_ < 2;
+    my ($a, $b) = @_;
+
+    if (defined $a and defined $b) {
+        if (ref $b eq 'Regexp') {
+            return 1 if $a =~ $b;
+        } else {
+            return 1 if $a eq $b;
+        }
+    } elsif (!defined $a and !defined $b) {
+        return 1;
+    }
+
+    return;
+}
+
 ####################################################
 # clean_msg_id
 ####################################################

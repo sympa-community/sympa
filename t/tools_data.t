@@ -95,6 +95,23 @@ my @recursive_transformation_tests = (
     [ [ 'a', [ 'a' ], {  a => 'a' } ] => [ 'aa', [ 'aa' ], { a => 'aa' } ] ],
 );
 
+my @smart_eq_tests = (
+    [ [ undef,   undef   ] => 1 ],
+    [ [ undef,   ''      ] => undef ],
+    [ [ undef,   0       ] => undef ],
+    [ [ '',      undef   ] => undef ],
+    [ [ 0,       undef   ] => undef ],
+    [ [ undef,   'undef' ] => undef ],
+    [ [ 'undef', undef   ] => undef ],
+    [ [ 0,       0       ] => 1 ],
+    [ [ '',      ''      ] => 1 ],
+    [ [ 'undef', 'undef' ] => 1 ],
+    [ [ 'undef', 'fednu' ] => undef ],
+    [ [ 'undef', qr/nde/ ] => 1 ],
+    [ [ 'undef', qr/edn/ ] => undef ],
+    [ [ undef,   qr/nde/ ] => undef ],
+);
+
 plan tests =>
     @array_from_string_tests       +
     @string_2_hash_tests           +
@@ -102,7 +119,8 @@ plan tests =>
     @smart_lessthan_ok_tests       +
     @smart_lessthan_nok_tests      +
     @diff_on_arrays_tests          +
-    @recursive_transformation_tests ;
+    @recursive_transformation_tests +
+    @smart_eq_tests;
 
 foreach my $test (@array_from_string_tests) {
     is_deeply(
@@ -164,4 +182,8 @@ foreach my $test (@recursive_transformation_tests) {
         $test->[1],
         "recursive_transformation"
    );
+}
+
+foreach my $test (@smart_eq_tests) {
+    is(tools::smart_eq(@{$test->[0]}), $test->[1]);
 }
