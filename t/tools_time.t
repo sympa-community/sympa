@@ -13,6 +13,10 @@ use tools; #Sympa::Tools::Time;
 
 setlocale(LC_ALL, 'C');
 
+# Fix our time zone for localtime().
+$ENV{'TZ'} = 'CEST-2';
+POSIX::tzset();
+
 my @epoch2yyyymmjj_hhmmss_tests = (
     [ 1350544367, '2012-10-18  09:12:47' ],
     [ 1250544367, '2009-08-17  23:26:07' ],
