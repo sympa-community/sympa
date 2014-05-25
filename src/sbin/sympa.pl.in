@@ -265,8 +265,8 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
     }
 
 ## Set locale configuration
-    $main::options{'lang'} =~
-        s/\.cat$//;    ## Compatibility with version < 2.3.3
+    $main::options{'lang'} =~ s/\.cat$//
+        if $main::options{'lang'};    ## Compatibility with version < 2.3.3
     my $default_lang =
         $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'},
         'en');
@@ -277,11 +277,11 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
         ## Function never returns.
     }
 
-    if ($main::options{'service'} eq 'process_message') {
+    if (tools::smart_eq($main::options{'service'}, 'process_message')) {
         $main::daemon_usage = Conf::DAEMON_MESSAGE;
-    } elsif ($main::options{'service'} eq 'process_command') {
+    } elsif (tools::smart_eq($main::options{'service'}, 'process_command')) {
         $main::daemon_usage = Conf::DAEMON_COMMAND;
-    } elsif ($main::options{'service'} eq 'process_creation') {
+    } elsif (tools::smart_eq($main::options{'service'}, 'process_creation')) {
         $main::daemon_usage = Conf::DAEMON_CREATION;
     } else {
         # default is to run one sympa.pl server for commands, messages and

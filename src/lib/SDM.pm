@@ -697,8 +697,9 @@ sub check_db_field_type {
         ($effective_type, $effective_size) = ($1, $3);
     }
 
-    if (   ($effective_type eq $required_type)
-        && ($effective_size >= $required_size)) {
+    if (tools::smart_eq($effective_type, $required_type)
+        and (not defined $required_size or $effective_size >= $required_size))
+    {
         return 1;
     }
 
