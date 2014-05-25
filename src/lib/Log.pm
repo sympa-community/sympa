@@ -1335,7 +1335,7 @@ sub _crash_handler {
     Log::set_log_level(-1);     # disable log
 
     local @CARP_NOT        = qw(Carp);
-    local $Carp::CarpLevel = 1;
+    local $Carp::CarpLevel = 0;
     my $longmess = Carp::longmess("DIED: $msg\n");
     $longmess =~ s/(?<!\A)\n at \S+ line \d+\n/\n/;
 

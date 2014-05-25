@@ -7122,13 +7122,9 @@ sub archive_msg {
         if (ref($msg)
             and !tools::smart_eq(
                 $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
-            and (
-                tools::smart_eq($msg->head->get('X-no-archive'), qr/yes/i)
-                or tools::smart_eq(
-                    $msg->head->get('Restrict'),
-                    qr/no\-external\-archive/i
-                )
-            )
+            and (  grep {/yes/i} $msg->head->get('X-no-archive')
+                or grep {/no\-external\-archive/i}
+                $msg->head->get('Restrict'))
             ) {
             Log::do_log('info',
                 "Do not archive message with no-archive flag for list %s",
@@ -10022,7 +10018,8 @@ sub is_update_param {
         'profile',   'id',         'included', 'subscribed'
         ) {
         if (defined $new_param->{$p}) {
-            if ($new_param->{$p} ne $old_param->{$p}) {
+            if (!defined($old_param->{$p})
+                or $new_param->{$p} ne $old_param->{$p}) {
                 $resul->{$p} = $new_param->{$p};
                 $update = 1;
             }
