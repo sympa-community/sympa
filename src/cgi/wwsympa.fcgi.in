@@ -7990,7 +7990,7 @@ sub do_skinsedit {
         ## Do not include locale subdirectories.
         ## The css.tt2 by each locales will override styles in main CSS.
         my $tt2_include_path =
-            tools::get_search_path($robot, subidr => 'web_tt2');
+            tools::get_search_path($robot, subdir => 'web_tt2');
 
         my $date = time;
         my $style_file;
