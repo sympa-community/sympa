@@ -2438,7 +2438,9 @@ sub send_file {
             }
         }
 
-        $data->{'subscriber'} = $self->get_list_member($who);
+        # FIXME: Don't overwrite date & update_date.  Format datetime on the
+        # template.
+        $data->{'subscriber'} = tools::dup_var($self->get_list_member($who));
 
         if ($data->{'subscriber'}) {
             $data->{'subscriber'}{'date'} =
