@@ -1751,11 +1751,12 @@ sub escape_regexp {
     return $s;
 }
 
-## Escape weird characters
+# Escape weird characters
+# FIXME: Should not use.
 sub escape_chars {
     my $s          = shift;
     my $except     = shift;                               ## Exceptions
-    my $ord_except = ord($except) if (defined $except);
+    my $ord_except = ord $except if defined $except;
 
     ## Escape chars
     ##  !"#$%&'()+,:;<=>?[] AND accented chars
@@ -1769,11 +1770,12 @@ sub escape_chars {
         0x80 .. 0x9f,
         0xa0 .. 0xff
         ) {
-        next if ($i == $ord_except);
+        next if defined $ord_except and $i == $ord_except;
         my $hex_i = sprintf "%lx", $i;
         $s =~ s/\x$hex_i/%$hex_i/g;
     }
-    $s =~ s/\//%a5/g unless ($except eq '/');    ## Special traetment for '/'
+    ## Special traetment for '/'
+    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
 
     return $s;
 }

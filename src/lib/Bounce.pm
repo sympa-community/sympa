@@ -25,7 +25,7 @@
 package Bounce;
 
 use strict;
-use warnings;
+#use warnings;    # temporarily disabling runtime warnings.
 use MIME::Parser;
 
 ## RFC1891 compliance check
