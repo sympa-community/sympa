@@ -1958,17 +1958,9 @@ sub process_bouncers {
                 };
 
                 if ($notification eq 'listmaster') {
-
-                    unless (
-                        List::send_notify_to_listmaster(
-                            'automatic_bounce_management',
-                            $list->{'domain'},
-                            $param
-                        )
-                        ) {
-                        Log::do_log('err',
-                            'error while notifying listmaster');
-                    }
+                    List::send_notify_to_listmaster(
+                        'automatic_bounce_management', $list->{'domain'},
+                        $param);
                 } elsif ($notification eq 'owner') {
                     unless (
                         $list->send_notify_to_owner(
@@ -2104,15 +2096,8 @@ sub error {
                  $message";
     Log::do_log('err', "$message");
     change_label($task_file, 'ERROR') unless ($task_file eq '');
-    unless (
-        List::send_notify_to_listmaster(
-            'error in task',
-            $Conf::Conf{'domain'}, \@param
-        )
-        ) {
-        Log::do_log('notice',
-            'error while notifying listmaster about "error_in_task"');
-    }
+    List::send_notify_to_listmaster('error in task',
+        $Conf::Conf{'domain'}, \@param);
 }
 
 sub sync_include {

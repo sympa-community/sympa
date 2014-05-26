@@ -758,16 +758,8 @@ sub checkfiles {
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
         unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
             Log::do_log('err', 'Cannot access cafile %s', $Conf{'cafile'});
-            unless (
-                List::send_notify_to_listmaster(
-                    'cannot_access_cafile', $Conf{'domain'},
-                    [$Conf{'cafile'}]
-                )
-                ) {
-                Log::do_log('err',
-                    'Unable to send notify "cannot access cafile" to listmaster'
-                );
-            }
+            List::send_notify_to_listmaster('cannot_access_cafile',
+                $Conf{'domain'}, [$Conf{'cafile'}]);
             $config_err++;
         }
     }
@@ -775,16 +767,8 @@ sub checkfiles {
     if (defined $Conf{'capath'} && $Conf{'capath'}) {
         unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
             Log::do_log('err', 'Cannot access capath %s', $Conf{'capath'});
-            unless (
-                List::send_notify_to_listmaster(
-                    'cannot_access_capath', $Conf{'domain'},
-                    [$Conf{'capath'}]
-                )
-                ) {
-                Log::do_log('err',
-                    'Unable to send notify "cannot access capath" to listmaster'
-                );
-            }
+            List::send_notify_to_listmaster('cannot_access_capath',
+                $Conf{'domain'}, [$Conf{'capath'}]);
             $config_err++;
         }
     }
@@ -796,16 +780,9 @@ sub checkfiles {
             'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)',
             $Conf{'queuebounce'}
         );
-        unless (
-            List::send_notify_to_listmaster(
-                'queuebounce_and_bounce_path_are_the_same', $Conf{'domain'},
-                [$Conf{'queuebounce'}]
-            )
-            ) {
-            Log::do_log('err',
-                'Unable to send notify "queuebounce_and_bounce_path_are_the_same" to listmaster'
-            );
-        }
+        List::send_notify_to_listmaster(
+            'queuebounce_and_bounce_path_are_the_same',
+            $Conf{'domain'}, [$Conf{'queuebounce'}]);
         $config_err++;
     }
 
@@ -817,16 +794,9 @@ sub checkfiles {
             'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)',
             $Conf{'queue'}
         );
-        unless (
-            List::send_notify_to_listmaster(
-                'queue_and_queueautomatic_are_the_same', $Conf{'domain'},
-                [$Conf{'queue'}]
-            )
-            ) {
-            Log::do_log('err',
-                'Unable to send notify "queue_and_queueautomatic_are_the_same" to listmaster'
-            );
-        }
+        List::send_notify_to_listmaster(
+            'queue_and_queueautomatic_are_the_same',
+            $Conf{'domain'}, [$Conf{'queue'}]);
         $config_err++;
     }
 

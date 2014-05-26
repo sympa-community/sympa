@@ -553,19 +553,9 @@ sub request_action {
                     };
                     return $return;
                 }
-                unless (
-                    List::send_notify_to_listmaster(
-                        'error-performing-condition',
-                        $robot,
-                        [         $context->{'listname'} . "  "
-                                . $rule->{'condition'}
-                        ]
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'error-performing-condition' to listmaster"
-                    );
-                }
+                List::send_notify_to_listmaster('error-performing-condition',
+                    $robot,
+                    [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
             }
 

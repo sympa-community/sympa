@@ -392,16 +392,8 @@ while (!$end) {
                         'queue'    => $queue,
                     }
                 );
-                unless (
-                    List::send_notify_to_listmaster(
-                        'archiving_failed', $hostname,
-                        {'file' => "$file", 'bad' => "$queue/bad"}
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'archiving_failed' to listmaster"
-                    );
-                }
+                List::send_notify_to_listmaster('archiving_failed', $hostname,
+                    {'file' => "$file", 'bad' => "$queue/bad"});
             }
             if (-f "$queue/$file") {
                 unless (unlink("$queue/$file")) {
@@ -743,16 +735,8 @@ sub mail2arc {
         if (!-d $basedir) {
             unless (mkdir $basedir, 0775) {
                 Log::do_log('err', 'Cannot create directory %s', $basedir);
-                unless (
-                    List::send_notify_to_listmaster(
-                        'unable_to_create_dir', $robot,
-                        {'dir' => "$basedir"}
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'unable_to_create_dir' to listmaster"
-                    );
-                }
+                List::send_notify_to_listmaster('unable_to_create_dir',
+                    $robot, {'dir' => "$basedir"});
             }
             Log::do_log('debug', "mkdir $basedir");
         }

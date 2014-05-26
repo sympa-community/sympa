@@ -274,8 +274,7 @@ sub sanitize_var {
                     $parameters{'var'}->[$index] =
                         escape_html($parameters{'var'}->[$index])
                         unless Scalar::Util::looks_like_number(
-                                $parameters{'var'}->[$index]
-                        );
+                        $parameters{'var'}->[$index]);
                 }
             }
         } elsif (ref($parameters{'var'}) eq 'HASH') {
@@ -296,8 +295,7 @@ sub sanitize_var {
                         $parameters{'var'}->{$key} =
                             escape_html($parameters{'var'}->{$key})
                             unless Scalar::Util::looks_like_number(
-                                    $parameters{'var'}->{$key}
-                            );
+                            $parameters{'var'}->{$key});
                     }
                     if ($parameters{'htmlToFilter'}{$key}) {
                         $parameters{'var'}->{$key} = sanitize_html(
@@ -467,14 +465,7 @@ sub load_edit_list_conf {
     }
 
     if ($error_in_conf) {
-        unless (
-            List::send_notify_to_listmaster(
-                'edit_list_error', $robot, [$file]
-            )
-            ) {
-            Log::do_log('notice',
-                "Unable to send notify 'edit_list_error' to listmaster");
-        }
+        List::send_notify_to_listmaster('edit_list_error', $robot, [$file]);
     }
 
     close FILE;
@@ -2385,19 +2376,13 @@ sub virus_infected {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-        unless (
-            List::send_notify_to_listmaster(
-                'virus_scan_failed',
-                $Conf::Conf{'domain'},
-                {   'filename'  => $file,
-                    'error_msg' => $error_msg
-                }
-            )
-            ) {
-            Log::do_log('notice',
-                "Unable to send notify 'virus_scan_failed' to listmaster");
-        }
-
+        List::send_notify_to_listmaster(
+            'virus_scan_failed',
+            $Conf::Conf{'domain'},
+            {   'filename'  => $file,
+                'error_msg' => $error_msg
+            }
+        );
     }
 
     ## if debug mode is active, the working directory is kept
@@ -4197,16 +4182,8 @@ sub save_to_bad {
         unless (mkdir $queue . '/bad', 0775) {
             Log::do_log('notice', 'Unable to create %s/bad/ directory.',
                 $queue);
-            unless (
-                List::send_notify_to_listmaster(
-                    'unable_to_create_dir', $hostname
-                ),
-                {'dir' => "$queue/bad"}
-                ) {
-                Log::do_log('notice',
-                    "Unable to send notify 'unable_to_create_dir' to listmaster"
-                );
-            }
+            List::send_notify_to_listmaster('unable_to_create_dir', $hostname,
+                {'dir' => "$queue/bad"});
             return undef;
         }
         Log::do_log('debug', "mkdir $queue/bad");

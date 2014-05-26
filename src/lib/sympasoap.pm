@@ -692,10 +692,6 @@ sub createList {
             )
             ) {
             Log::do_log('info', 'notify listmaster for list creation');
-        } else {
-            Log::do_log('notice',
-                "Unable to send notify 'request_list_creation' to listmaster"
-            );
         }
     }
     return SOAP::Data->name('result')->type('boolean')->value(1);

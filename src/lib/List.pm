@@ -650,14 +650,7 @@ sub set_status_error_config {
         #$self->savestats();
         Log::do_log('err', 'The list "%s" is set in status error_config',
             $self->{'name'});
-        unless (
-            List::send_notify_to_listmaster(
-                $message, $self->{'domain'}, \@param
-            )
-            ) {
-            Log::do_log('notice',
-                "Unable to send notify '$message' to listmaster");
-        }
+        List::send_notify_to_listmaster($message, $self->{'domain'}, \@param);
     }
 }
 
@@ -3700,19 +3693,15 @@ sub send_notify_to_listmaster {
     }
 
     unless (defined $operation) {
-        Log::do_log('err',
-            'List::send_notify_to_listmaster(%s) : missing incoming parameter "$operation"'
-        );
+        Log::do_log('err', '() : missing incoming parameter "$operation"');
         return undef;
     }
 
     unless ($operation eq 'logs_failed') {
-        Log::do_log('debug2', 'List::send_notify_to_listmaster(%s,%s )',
-            $operation, $robot);
+        Log::do_log('debug2', '(%s, %s)', $operation, $robot);
         unless (defined $robot) {
-            Log::do_log('err',
-                'List::send_notify_to_listmaster(%s) : missing incoming parameter "$robot"'
-            );
+            Log::do_log('err', '(%s) : missing incoming parameter "$robot"',
+                $operation);
             return undef;
         }
     }
@@ -3725,10 +3714,10 @@ sub send_notify_to_listmaster {
     if ((ref($data) ne 'HASH') and (ref($data) ne 'ARRAY')) {
         Log::do_log(
             'err',
-            'List::send_notify_to_listmaster(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
             $operation,
             $robot
-        ) unless ($operation eq 'logs_failed');
+        ) unless $operation eq 'logs_failed';
         return undef;
     }
 
@@ -9311,16 +9300,9 @@ sub sync_include {
                 $self
             );
             $errors_occurred = 1;
-            unless (
-                List::send_notify_to_listmaster(
-                    'sync_include_failed', $self->{domain},
-                    {'errors' => \@errors, 'listname' => $self->{'name'}}
-                )
-                ) {
-                Log::do_log('notice',
-                    'Unable to send notify "sync_include_failed" to listmaster'
-                );
-            }
+            List::send_notify_to_listmaster('sync_include_failed',
+                $self->{domain},
+                {'errors' => \@errors, 'listname' => $self->{'name'}});
             foreach my $e (@errors) {
                 my $plugin = $self->isPlugin($e->{type}) or next;
                 my $source = $plugin->listSource;
@@ -9671,16 +9653,8 @@ sub sync_include_admin {
                 Log::do_log('err',
                     'Could not get %ss from an include source for list %s',
                     $role, $name);
-                unless (
-                    List::send_notify_to_listmaster(
-                        'sync_include_admin_failed', $self->{'domain'},
-                        [$name]
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'sync_include_admmin_failed' to listmaster"
-                    );
-                }
+                List::send_notify_to_listmaster('sync_include_admin_failed',
+                    $self->{'domain'}, [$name]);
                 return undef;
             }
 

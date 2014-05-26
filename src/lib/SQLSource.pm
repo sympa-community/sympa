@@ -254,15 +254,8 @@ sub establish_connection {
                 unless (defined $db_connections{$self->{'connect_string'}}
                     && $db_connections{$self->{'connect_string'}}{'status'} eq
                     'failed') {
-
-                    unless (
-                        List::send_notify_to_listmaster(
-                            'no_db', $Conf::Conf{'domain'}, {}
-                        )
-                        ) {
-                        Log::do_log('err',
-                            "Unable to send notify 'no_db' to listmaster");
-                    }
+                    List::send_notify_to_listmaster('no_db',
+                        $Conf::Conf{'domain'}, {});
                 }
             }
             if ($self->{'reconnect_options'}{'keep_trying'}) {
@@ -305,14 +298,8 @@ sub establish_connection {
                     'Connection to Database %s restored.',
                     $self->{'connect_string'}
                 );
-                unless (
-                    List::send_notify_to_listmaster(
-                        'db_restored', $Conf::Conf{'domain'}, {}
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'db_restored' to listmaster");
-                }
+                List::send_notify_to_listmaster('db_restored',
+                    $Conf::Conf{'domain'}, {});
             }
         }
 

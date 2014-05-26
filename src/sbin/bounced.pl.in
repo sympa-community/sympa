@@ -1272,20 +1272,14 @@ sub ignore_bounce {
         }
     );
     if ($notify) {
-        unless (
-            List::send_notify_to_listmaster(
-                'bounce_management_failed',
-                $robot,
-                {   'file'  => $file,
-                    'bad'   => "$queue/bad",
-                    'error' => $error,
-                }
-            )
-            ) {
-            Log::do_log('notice',
-                "Unable to send notify 'bounce_management_failed' to listmaster"
-            );
-        }
+        List::send_notify_to_listmaster(
+            'bounce_management_failed',
+            $robot,
+            {   'file'  => $file,
+                'bad'   => "$queue/bad",
+                'error' => $error,
+            }
+        );
     }
 }
 

@@ -79,13 +79,8 @@ sub fatal_err {
     my $full_msg = sprintf $m, @_;
 
     ## Notify listmaster
-    unless (
-        List::send_notify_to_listmaster(
-            'sympa_died', $Conf::Conf{'domain'}, [$full_msg]
-        )
-        ) {
-        do_log('err', "Unable to send notify 'sympa died' to listmaster");
-    }
+    List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'},
+        [$full_msg]);
 
     printf STDERR "$m\n", @_;
     exit(1);

@@ -1937,16 +1937,8 @@ sub DoFile {
         return undef;
 
     } elsif (!defined($rc)) {
-        unless (
-            List::send_notify_to_listmaster(
-                'antivirus_failed',
-                $robot,
-                ["Could not scan $file; The message has been saved as BAD."]
-            )
-            ) {
-            Log::do_log('notice',
-                "Unable to send notify 'antivirus_failed' to listmaster");
-        }
+        List::send_notify_to_listmaster('antivirus_failed', $robot,
+            ["Could not scan $file; The message has been saved as BAD."]);
 
         return undef;
     }
@@ -2167,16 +2159,11 @@ sub DoFile {
             if ($loop_info{$sender}{'count'} ==
                 $Conf::Conf{'loop_command_max'}) {
                 ## Notify listmaster
-                unless (
-                    List::send_notify_to_listmaster(
-                        'loop_command',
-                        Conf::get_robot_conf($robot, 'domain'),
-                        {'msg' => $file}
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'loop_command' to listmaster");
-                }
+                List::send_notify_to_listmaster(
+                    'loop_command',
+                    Conf::get_robot_conf($robot, 'domain'),
+                    {'msg' => $file}
+                );
             }
 
             ## Too many reports sent => message skipped !!
