@@ -296,9 +296,6 @@ sub probe_db {
         }
         # add autoincrement if needed
         foreach my $table (keys %autoincrement) {
-            Log::do_log('notice',
-                "Checking autoincrement for table $table, field $autoincrement{$table}"
-            );
             unless (
                 $db_source->is_autoinc(
                     {'table' => $table, 'field' => $autoincrement{$table}}
@@ -358,7 +355,7 @@ sub check_fields {
                 "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...",
                 $f, $t, Conf::get_robot_conf('*', 'db_name'));
             Log::do_log(
-                'info',
+                'notice',
                 "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...",
                 $f,
                 $t,
