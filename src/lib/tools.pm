@@ -270,11 +270,11 @@ sub sanitize_var {
                         'htmlToFilter'     => $parameters{'htmlToFilter'},
                     );
                 } elsif (defined $parameters{'var'}->[$index]) {
+                    # preserve numeric flags.
                     $parameters{'var'}->[$index] =
                         escape_html($parameters{'var'}->[$index])
                         unless Scalar::Util::looks_like_number(
-                        # preserve numeric flags.
-                        $parameters{'var'}->[$index]
+                                $parameters{'var'}->[$index]
                         );
                 }
             }
@@ -292,11 +292,11 @@ sub sanitize_var {
                 } elsif (defined $parameters{'var'}->{$key}) {
                     unless ($parameters{'htmlAllowedParam'}{$key}
                         or $parameters{'htmlToFilter'}{$key}) {
+                        # preserve numeric flags.
                         $parameters{'var'}->{$key} =
                             escape_html($parameters{'var'}->{$key})
                             unless Scalar::Util::looks_like_number(
-                            # preserve numeric flags.
-                            $parameters{'var'}->{$key}
+                                    $parameters{'var'}->{$key}
                             );
                     }
                     if ($parameters{'htmlToFilter'}{$key}) {
@@ -718,7 +718,7 @@ sub shift_file {
 }
 
 sub get_templates_list {
-
+    Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my $type    = shift;
     my $robot   = shift;
     my $list    = shift;
@@ -726,7 +726,6 @@ sub get_templates_list {
 
     my $listdir;
 
-    Log::do_log('debug', "get_templates_list ($type, $robot, $list)");
     unless (($type eq 'web') || ($type eq 'mail')) {
         Log::do_log('info',
             'get_templates_list () : internal error incorrect parameter');
@@ -748,6 +747,8 @@ sub get_templates_list {
     if (defined $list) {
         $listdir = $list->{'dir'} . '/' . $type . '_tt2';
         push @try, $listdir;
+    } else {
+        $listdir = '';
     }
 
     my $i = 0;
@@ -1904,6 +1905,7 @@ sub unescape_chars {
 
 sub escape_html {
     my $s = shift;
+    return $s unless defined $s;
 
     $s =~ s/\"/\&quot\;/gm;
     $s =~ s/\</&lt\;/gm;
@@ -1914,6 +1916,7 @@ sub escape_html {
 
 sub unescape_html {
     my $s = shift;
+    return $s unless defined $s;
 
     $s =~ s/\&quot\;/\"/g;
     $s =~ s/&lt\;/\</g;
@@ -3684,7 +3687,7 @@ sub is_in_array {
         }
     }
 
-    return;
+    return undef;
 }
 
 ####################################################
@@ -3773,7 +3776,7 @@ sub smart_eq {
         return 1;
     }
 
-    return;
+    return undef;
 }
 
 ####################################################
@@ -3789,7 +3792,7 @@ sub smart_eq {
 sub clean_msg_id {
     my $msg_id = shift;
 
-    return unless defined $msg_id;
+    return $msg_id unless defined $msg_id;
 
     chomp $msg_id;
 
@@ -4124,7 +4127,7 @@ sub string_2_hash {
 sub hash_2_string {
     my $refhash = shift;
 
-    return unless ref $refhash eq 'HASH';
+    return undef unless ref $refhash eq 'HASH';
 
     my $data_string;
     foreach my $var (keys %$refhash) {

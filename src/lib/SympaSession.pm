@@ -496,35 +496,29 @@ sub purge_old_sessions {
     my @sessions;
     my $sth;
 
-    my $robot_condition = '';
-    $robot_condition = sprintf "robot_session = %s", SDM::quote($robot)
+    my (@conditions, @anonymous_conditions);
+    push @conditions, sprintf('robot_session = %s', SDM::quote($robot))
         if $robot and $robot ne '*';
+    @anonymous_conditions = @conditions;
 
-    my $delay_condition = time - $delay . ' > date_session' if ($delay);
-    my $anonymous_delay_condition = '';
-    $anonymous_delay_condition = time - $anonymous_delay . ' > date_session'
+    push @conditions, sprintf('%d > date_session', time - $delay) if $delay;
+    push @anonymous_conditions,
+        sprintf('%d > date_session', time - $anonymous_delay)
         if $anonymous_delay;
 
-    my $and = '';
-    $and = ' AND ' if $delay_condition and $robot_condition;
-    my $anonymous_and = '';
-    $anonymous_and = ' AND '
-        if $anonymous_delay_condition and $robot_condition;
+    my $condition           = join ' AND ', @conditions;
+    my $anonymous_condition = join ' AND ', @anonymous_conditions,
+        "email_session = 'nobody'", 'hit_session = 1';
 
-    my $count_statement = sprintf
-        q{SELECT count(*) FROM session_table WHERE %s %s %s},
-        $robot_condition, $and, $delay_condition;
+    my $count_statement =
+        sprintf q{SELECT count(*) FROM session_table WHERE %s}, $condition;
     my $anonymous_count_statement =
-        sprintf q{SELECT count(*) FROM session_table
-	  WHERE %s %s %s AND email_session = 'nobody' AND hit_session = '1'},
-        $robot_condition, $anonymous_and, $anonymous_delay_condition;
+        sprintf q{SELECT count(*) FROM session_table WHERE %s},
+        $anonymous_condition;
 
-    my $statement = sprintf
-        q{DELETE FROM session_table WHERE %s %s %s},
-        $robot_condition, $and, $delay_condition;
-    my $anonymous_statement = sprintf q{DELETE FROM session_table
-	  WHERE %s %s %s AND email_session = 'nobody' AND hit_session = '1'},
-        $robot_condition, $anonymous_and, $anonymous_delay_condition;
+    my $statement = sprintf q{DELETE FROM session_table WHERE %s}, $condition;
+    my $anonymous_statement = sprintf q{DELETE FROM session_table WHERE %s},
+        $anonymous_condition;
 
     unless ($sth = SDM::do_query($count_statement)) {
         Log::do_log('err', 'Unable to count old session for robot %s',
@@ -567,10 +561,8 @@ sub purge_old_sessions {
 ## delay is a parameter in seconds
 ##
 sub purge_old_tickets {
-
+    Log::do_log('debug2', '(%s)', @_);
     my $robot = shift;
-
-    Log::do_log('info', 'SympaSession::purge_old_tickets(%s,%s)', $robot);
 
     my $delay =
         tools::duration_conv($Conf::Conf{'one_time_ticket_table_ttl'});
@@ -585,19 +577,19 @@ sub purge_old_tickets {
     my @tickets;
     my $sth;
 
-    my $robot_condition = '';
-    $robot_condition = sprintf "robot_one_time_ticket = %s",
-        SDM::quote($robot)
+    my @conditions;
+    push @conditions,
+        sprintf('robot_one_time_ticket = %s', SDM::quote($robot))
         if $robot and $robot ne '*';
-    my $delay_condition = '';
-    $delay_condition = time - $delay . ' > date_one_time_ticket'
+    push @conditions, sprintf('%d > date_one_time_ticket', time - $delay)
         if $delay;
-    my $and = '';
-    $and = ' AND ' if $delay_condition and $robot_condition;
-    my $count_statement = sprintf
-        "SELECT count(*) FROM one_time_ticket_table WHERE $robot_condition $and $delay_condition";
-    my $statement = sprintf
-        "DELETE FROM one_time_ticket_table WHERE $robot_condition $and $delay_condition";
+
+    my $condition = join(' AND ', @conditions);
+    my $where = "WHERE $condition" if $condition;
+
+    my $count_statement =
+        sprintf 'SELECT count(*) FROM one_time_ticket_table %s', $where;
+    my $statement = sprintf 'DELETE FROM one_time_ticket_table %s', $where;
 
     unless ($sth = SDM::do_query($count_statement)) {
         Log::do_log('err',
@@ -623,29 +615,22 @@ sub purge_old_tickets {
 # list sessions for $robot where last access is newer then $delay. List is
 # limited to connected users if $connected_only
 sub list_sessions {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $delay          = shift;
     my $robot          = shift;
     my $connected_only = shift;
 
-    Log::do_log('debug', 'SympaSession::list_session(%s,%s,%s)',
-        $delay, $robot, $connected_only);
-
     my @sessions;
     my $sth;
 
-    my $condition = sprintf "robot_session = %s", SDM::quote($robot)
-        unless ($robot eq '*');
-    my $condition2 = time - $delay . ' < date_session ' if ($delay);
-    my $and = ' AND ' if (($condition) && ($condition2));
-    $condition = $condition . $and . $condition2;
+    my @conditions;
+    push @conditions, sprintf('robot_session = %s', SDM::quote($robot))
+        if $robot and $robot ne '*';
+    push @conditions, sprintf('%d < date_session ', time - $delay) if $delay;
+    push @conditions, " email_session <> 'nobody' "
+        if $connected_only and $connected_only eq 'on';
 
-    my $condition3 = " email_session <> 'nobody' "
-        if ($connected_only eq 'on');
-    my $and2 = ' AND ' if (($condition) && ($condition3));
-    $condition = $condition . $and2 . $condition3;
-
-    $condition .= sprintf '%sprev_id_session IS NOT NULL',
-        ($condition ? ' AND ' : '');
+    my $condition = join ' AND ', @conditions, 'prev_id_session IS NOT NULL';
 
     my $statement =
         sprintf q{SELECT remote_addr_session, email_session, robot_session,

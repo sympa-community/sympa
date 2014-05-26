@@ -288,7 +288,7 @@ sub db_log {
             SDM::quote($robot),
             SDM::quote($list),
             SDM::quote($action),
-            SDM::quote(substr($parameters, 0, 100)),
+            SDM::quote(substr($parameters || '', 0, 100)),
             SDM::quote($target_email),
             SDM::quote($msg_id),
             SDM::quote($status),

@@ -5640,9 +5640,12 @@ sub createXMLCustomAttribute {
         if (not defined $custom_attr);
     my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
     foreach my $k (sort keys %{$custom_attr}) {
+        my $value = $custom_attr->{$k}{value};
+        $value = '' unless defined $value;
+
         $XMLstr .=
               "<custom_attribute id=\"$k\"><value>"
-            . tools::escape_html($custom_attr->{$k}{value})
+            . tools::escape_html($value)
             . "</value></custom_attribute>";
     }
     $XMLstr .= "</custom_attributes>";
