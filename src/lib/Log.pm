@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Carp qw();
 use POSIX qw();
+use Scalar::Util;
 use Sys::Syslog qw();
 
 use List;
@@ -41,9 +42,9 @@ my $warning_timeout = 600;
 # logs are unavailable.
 my $warning_date = 0;
 
-our $log_level = 0;
+our $log_level = undef;
 
-our %levels = (
+my %levels = (
     err    => 0,
     info   => 0,
     notice => 0,
@@ -55,12 +56,6 @@ our %levels = (
 
 our $last_date_aggregation;
 
-##sub import {
-##my @call = caller(1);
-##printf "Import from $call[3]\n";
-##Log->export_to_level(1, @_);
-##}
-##
 sub fatal_err {
     my $m     = shift;
     my $errno = $!;
@@ -97,81 +92,114 @@ sub fatal_err {
 }
 
 sub do_log {
-    my $level = shift;
-
-    # do not log if log level if too high regarding the log requested by user
-    return if ($levels{$level} > $log_level);
-
+    my $level   = shift;
     my $message = shift;
-    my @param   = @_;
+    my $errno   = $!;
 
-    my $errno = $!;
+    unless (exists $levels{$level}) {
+        do_log('err', 'Invalid $level: "%s"', $level);
+        $level = 'info';
+    }
+
+    # do not log if log level is too high regarding the log requested by user
+    return if defined $log_level  and $levels{$level} > $log_level;
+    return if !defined $log_level and $levels{$level} > 0;
 
     ## Do not display variables which are references.
-    foreach my $p (@param) {
+    my @param = ();
+    foreach my $fstring (($message =~ /(%.)/g)) {
+        next if $fstring eq '%%' or $fstring eq '%m';
+
+        my $p = shift @_;
         unless (defined $p) {
-            $p = '';    # prevent 'Use of uninitialized value' warning
+            # prevent 'Use of uninitialized value' warning
+            push @param, '';
+        } elsif (Scalar::Util::blessed($p) and $p->can('get_id')) {
+            push @param, sprintf('%s <%s>', ref $p, $p->get_id);
+        } elsif (ref $p eq 'Regexp') {
+            push @param, "qr<$p>";
         } elsif (ref $p) {
-            $p = ref $p;
+            push @param, ref $p;
+        } else {
+            push @param, $p;
         }
     }
+    $message =~ s/(%.)/($1 eq '%m') ? '%%%%errno%%%%' : $1/eg;
+    $message = sprintf $message, @param;
+    $message =~ s/%%errno%%/$errno/g;
 
-    ## Determine calling function
-    my $caller_string;
-
-    ## If in 'err' level, build a stack trace
-    if ($level eq 'err') {
-        my $go_back = 1;
+    ## If in 'err' level, build a stack trace,
+    ## except if syslog has not been setup yet.
+    if (defined $log_level and $level eq 'err') {
+        my $go_back = 0;
         my @calls;
-        while (my @call = caller($go_back)) {
-            unshift @calls, $call[3] . '#' . $call[2];
-            $go_back++;
-        }
 
-        $caller_string = join(' > ', @calls);
+        my @f = caller($go_back);
+        #if ($f[3] and $f[3] =~ /wwslog$/) {
+        #    ## If called via wwslog, go one step ahead
+        #    @f = caller(++$go_back);
+        #}
+        @calls = '#' . $f[2];
+        while (@f = caller(++$go_back)) {
+            $calls[0] = ($f[3] || '') . $calls[0];
+            unshift @calls, '#' . $f[2];
+        }
+        $calls[0] = 'main::' . $calls[0];
+
+        my $caller_string = join ' > ', @calls;
+        $message = "$caller_string $message";
     } else {
         my @call = caller(1);
-
         ## If called via wwslog, go one step ahead
-        if ($call[3] and $call[3] =~ /wwslog$/) {
-            my @call = caller(2);
-        }
+        #if ($call[3] and $call[3] =~ /wwslog$/) {
+        #    @call = caller(2);
+        #}
 
-        $caller_string = ($call[3] || '') . '()';
+        my $caller_string = $call[3];
+        if (defined $caller_string and length $caller_string) {
+            if ($message =~ /\A[(].*[)]/) {
+                $message = "$caller_string$message";
+            } else {
+                $message = "$caller_string() $message";
+            }
+        } else {
+            $message = "main:: $message";
+        }
     }
 
-    $message = $caller_string . ' ' . $message if ($caller_string);
-
     ## Add facility to log entry
-    $message = $level . ' ' . $message;
+    $message = "$level $message";
 
     # map to standard syslog facility if needed
     if ($level eq 'trace') {
         $message = "###### TRACE MESSAGE ######:  " . $message;
         $level   = 'notice';
-    } elsif ($level eq 'debug2' || $level eq 'debug3') {
+    } elsif ($level eq 'debug2' or $level eq 'debug3') {
         $level = 'debug';
     }
 
+    ## Output to STDERR if needed
+    if (   !defined $log_level
+        or ($main::options{'foreground'} and $main::options{'log_to_stderr'})
+        or (    $main::options{'foreground'}
+            and $main::options{'batch'}
+            and $level eq 'err')
+        ) {
+        print STDERR "$message\n";
+    }
+    return unless defined $log_level;
+
+    # Output to syslog
     eval {
-        unless (Sys::Syslog::syslog($level, $message, @param)) {
+        unless (Sys::Syslog::syslog($level, $message)) {
             do_connect();
-            Sys::Syslog::syslog($level, $message, @param);
+            Sys::Syslog::syslog($level, $message);
         }
     };
-
-    if ($@ && ($warning_date < time - $warning_timeout)) {
+    if ($@ and $warning_date < time - $warning_timeout) {
         $warning_date = time + $warning_timeout;
         List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'},
             [$@]);
-    }
-
-    if ($main::options{'foreground'}) {
-        if ($main::options{'log_to_stderr'}
-            || ($main::options{'batch'} && $level eq 'err')) {
-            $message =~ s/%m/$errno/g;
-            printf STDERR "$message\n", @param;
-        }
     }
 }
 

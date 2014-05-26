@@ -2068,7 +2068,9 @@ sub wwslog {
 
     $msg = "[robot $robot] " . $msg;
 
-    return Log::do_log($facility, $msg, @_);
+    # Don't push caller stack.  Note that goto requires "&" prefix!
+    unshift @_, $facility, $msg;
+    goto &Log::do_log;
 }
 
 sub web_db_log {
@@ -2139,7 +2141,7 @@ sub _crash_handler {
     $param->{'last_action'} = $param->{'action'};
     $param->{'action'}      = 'crash';
     eval { send_html('crash.tt2'); };
-    print "\n\n";    # when tt2 failed to parse
+    print "\n\n";                      # when tt2 failed to parse
     exit 0;
 }
 

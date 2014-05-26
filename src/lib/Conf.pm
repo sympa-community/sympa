@@ -175,10 +175,6 @@ sub load {
             # Will force the robot.conf reloading, as sympa.conf is the
             # default.
             $force_reload = 1;
-        } else {
-            printf STDERR
-                "Binary config file loading failed while loading source file '%s'\n",
-                $config_file;
         }
     } else {
         printf
@@ -196,8 +192,6 @@ sub load {
             %Conf       = %{$config_loading_result->{'config'}};
             $config_err = $config_loading_result->{'errors'};
         } else {
-            printf STDERR "Conf::load(): Unable to load %s. Aborting\n",
-                $config_file;
             return undef;
         }
         # Returning the config file content if this is what has been asked.
@@ -231,8 +225,8 @@ sub load {
         _infer_robot_parameter_values({'config_hash' => \%Conf});
 
         if ($config_err) {
-            printf STDERR "Errors while parsing main config file %s\n",
-                $config_file;
+            Log::do_log('err', 'Errors while parsing main config file %s',
+                $config_file);
             return undef;
         }
 
@@ -243,9 +237,8 @@ sub load {
 
     if (my $missing_modules_count =
         _check_cpan_modules_required_by_config({'config_hash' => \%Conf,})) {
-        printf STDERR
-            "Conf::load(): Warning: %n required modules are missing.\n",
-            $missing_modules_count;
+        Log::do_log('err', 'Warning: %d required modules are missing.\n',
+            $missing_modules_count);
     }
 
     _replace_file_value_by_db_value({'config_hash' => \%Conf})
@@ -262,7 +255,6 @@ sub load {
             }
         )
         ) {
-        printf STDERR "Unable to load robots\n";
         return undef;
     }
     ##_create_robot_like_config_for_main_robot();
@@ -276,7 +268,7 @@ sub load_robots {
 
     my $robots_list_ref = get_robots_list();
     unless (defined $robots_list_ref) {
-        printf STDERR "robots config loading failed.\n";
+        Log::do_log('err', 'robots config loading failed');
         return undef;
     } else {
         @robots = @{$robots_list_ref};
@@ -296,8 +288,11 @@ sub load_robots {
                 }
             )
             ) {
-            printf STDERR
-                "The config for robot %s contain errors: it could not be correctly loaded.\n";
+            Log::do_log(
+                'err',
+                'The config for robot %s contain errors: it could not be correctly loaded',
+                $robot
+            );
             $exiting = 1;
         } else {
             $param->{'config_hash'}{'robots'}{$robot} = $robot_conf;
@@ -412,8 +407,9 @@ sub get_robots_list {
     Log::do_log('debug2', "Retrieving the list of robots on the server");
     my @robots_list;
     unless (opendir DIR, $Conf{'etc'}) {
-        printf STDERR
-            "Conf::load_robots(): Unable to open directory $Conf{'etc'} for virtual robots config\n";
+        Log::do_log('err',
+            'Unable to open directory %s for virtual robots config',
+            $Conf{'etc'});
         return undef;
     }
     foreach my $robot (readdir DIR) {
@@ -562,8 +558,9 @@ sub conf_2_db {
     my $robots_conf = load_robots();
 
     unless (opendir DIR, $Conf{'etc'}) {
-        printf STDERR
-            "Conf::conf2db(): Unable to open directory $Conf{'etc'} for virtual robots config\n";
+        Log::do_log('err',
+            'Unable to open directory %s for virtual robots config',
+            $Conf{'etc'});
         return undef;
     }
 
@@ -638,7 +635,6 @@ sub checkfiles_as_root {
                 "Failed to create aliases file %s",
                 $Conf{'sendmail_aliases'}
             );
-            # printf STDERR "Failed to create aliases file %s", $Conf{'sendmail_aliases'};
             return undef;
         }
 
@@ -672,9 +668,7 @@ sub checkfiles_as_root {
         my $dir = get_robot_conf($robot, 'static_content_path');
         if ($dir ne '' && !-d $dir) {
             unless (mkdir($dir, 0775)) {
-                Log::do_log('err', 'Unable to create directory %s: %s',
-                    $dir, $!);
-                printf STDERR 'Unable to create directory %s: %s', $dir, $!;
+                Log::do_log('err', 'Unable to create directory %s: %m', $dir);
                 $config_err++;
             }
 
@@ -1483,7 +1477,6 @@ sub load_trusted_application {
     my $config_file = _get_config_file_name(
         {'robot' => $robot, 'file' => "trusted_applications.conf"});
     return undef unless (-r $config_file);
-    # print STDERR "load_trusted_applications $config_file ($robot)\n";
 
     return undef unless (-r $config_file);
     # open TMP,
@@ -1542,8 +1535,6 @@ sub load_generic_conf_file {
     my $on_error      = shift;
     my %structure     = %$structure_ref;
 
-    # printf STDERR "load_generic_file  $config_file \n";
-
     my %admin;
     my (@paragraphs);
 
@@ -1559,7 +1550,8 @@ sub load_generic_conf_file {
     ## Split in paragraphs
     my $i = 0;
     unless (open(CONFIG, $config_file)) {
-        printf STDERR 'unable to read configuration file %s\n', $config_file;
+        Log::do_log('err', 'unable to read configuration file %s',
+            $config_file);
         return undef;
     }
     while (<CONFIG>) {
@@ -1599,16 +1591,16 @@ sub load_generic_conf_file {
 
         ## Look for first valid line
         unless ($paragraph[0] =~ /^\s*([\w-]+)(\s+.*)?$/) {
-            printf STDERR 'Bad paragraph "%s" in %s, ignored', @paragraph,
-                $config_file;
+            Log::do_log('notice', 'Bad paragraph "%s" in %s, ignored',
+                $paragraph[0], $config_file);
             return undef if $on_error eq 'abort';
             next;
         }
 
         $pname = $1;
         unless (defined $structure{$pname}) {
-            printf STDERR 'Unknown parameter "%s" in %s, ignored', $pname,
-                $config_file;
+            Log::do_log('notice', 'Unknown parameter "%s" in %s, ignored',
+                $pname, $config_file);
             return undef if $on_error eq 'abort';
             next;
         }
@@ -1616,8 +1608,8 @@ sub load_generic_conf_file {
         if (defined $admin{$pname}) {
             unless (($structure{$pname}{'occurrence'} eq '0-n')
                 or ($structure{$pname}{'occurrence'} eq '1-n')) {
-                printf STDERR 'Multiple parameter "%s" in %s', $pname,
-                    $config_file;
+                Log::do_log('err', 'Multiple parameter "%s" in %s',
+                    $pname, $config_file);
                 return undef if $on_error eq 'abort';
             }
         }
@@ -1626,9 +1618,12 @@ sub load_generic_conf_file {
         if (ref $structure{$pname}{'format'} eq 'HASH') {
             ## This should be a paragraph
             unless ($#paragraph > 0) {
-                printf STDERR
-                    'Expecting a paragraph for "%s" parameter in %s, ignore it\n',
-                    $pname, $config_file;
+                Log::do_log(
+                    'notice',
+                    'Expecting a paragraph for "%s" parameter in %s, ignore it',
+                    $pname,
+                    $config_file
+                );
                 return undef if $on_error eq 'abort';
                 next;
             }
@@ -1640,15 +1635,15 @@ sub load_generic_conf_file {
             for my $i (0 .. $#paragraph) {
                 next if ($paragraph[$i] =~ /^\s*\#/);
                 unless ($paragraph[$i] =~ /^\s*(\w+)\s*/) {
-                    printf STDERR 'Bad line "%s" in %s\n', $paragraph[$i],
-                        $config_file;
+                    Log::do_log('notice', 'Bad line "%s" in %s',
+                        $paragraph[$i], $config_file);
                     return undef if $on_error eq 'abort';
                 }
                 my $key = $1;
                 unless (defined $structure{$pname}{'format'}{$key}) {
-                    printf STDERR
-                        'Unknown key "%s" in paragraph "%s" in %s\n', $key,
-                        $pname, $config_file;
+                    Log::do_log('notice',
+                        'Unknown key "%s" in paragraph "%s" in %s',
+                        $key, $pname, $config_file);
                     return undef if $on_error eq 'abort';
                     next;
                 }
@@ -1656,8 +1651,9 @@ sub load_generic_conf_file {
                 unless ($paragraph[$i] =~
                     /^\s*$key\s+($structure{$pname}{'format'}{$key}{'format'})\s*$/i
                     ) {
-                    printf STDERR 'Bad entry "%s" in paragraph "%s" in %s\n',
-                        $paragraph[$i], $key, $pname, $config_file;
+                    Log::do_log('notice',
+                        'Bad entry "%s" in paragraph "%s" in %s',
+                        $paragraph[$i], $key, $pname, $config_file);
                     return undef if $on_error eq 'abort';
                     next;
                 }
@@ -1681,8 +1677,9 @@ sub load_generic_conf_file {
                 ## Required fields
                 if ($structure{$pname}{'format'}{$k}{'occurrence'} eq '1') {
                     unless (defined $hash{$k}) {
-                        printf STDERR 'Missing key %s in param %s in %s\n',
-                            $k, $pname, $config_file;
+                        Log::do_log('notice',
+                            'Missing key %s in param %s in %s\n',
+                            $k, $pname, $config_file);
                         return undef if $on_error eq 'abort';
                         $missing_required_field++;
                     }
@@ -1703,16 +1700,16 @@ sub load_generic_conf_file {
             ## This should be a single line
             my $xxxmachin = $structure{$pname}{'format'};
             unless ($#paragraph == 0) {
-                printf STDERR
-                    'Expecting a single line for %s parameter in %s %s\n',
-                    $pname, $config_file, $xxxmachin;
+                Log::do_log('err',
+                    'Expecting a single line for %s parameter in %s %s',
+                    $pname, $config_file, $xxxmachin);
                 return undef if $on_error eq 'abort';
             }
 
             unless ($paragraph[0] =~
                 /^\s*$pname\s+($structure{$pname}{'format'})\s*$/i) {
-                printf STDERR 'Bad entry "%s" in %s\n', $paragraph[0],
-                    $config_file;
+                Log::do_log('err', 'Bad entry "%s" in %s',
+                    $paragraph[0], $config_file);
                 return undef if $on_error eq 'abort';
                 next;
             }
@@ -1783,9 +1780,11 @@ sub _load_config_file_to_hash {
     my $line_num = 0;
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $param->{'path_to_config_file'})) {
-        printf STDERR
-            "Conf::_load_config_file_to_hash(): Unable to open %s: %s\n",
-            $param->{'path_to_config_file'}, $!;
+        Log::do_log(
+            'notice',
+            'Unable to open %s: %m',
+            $param->{'path_to_config_file'}
+        );
         return undef;
     }
     while (<IN>) {
@@ -1824,9 +1823,8 @@ sub _load_config_file_to_hash {
                 $result->{'numbered_config'}{$keyword} = [$value, $line_num];
             }
         } else {
-            printf STDERR
-                "Conf::_load_config_file_to_hash(): Error at line %d: %s\n",
-                $line_num, $param->{'path_to_config_file'}, $_;
+            Log::do_log('err', 'Error at line %d: %s',
+                $line_num, $param->{'path_to_config_file'}, $_);
             $result->{'errors'}++;
         }
     }
@@ -1841,8 +1839,7 @@ sub _remove_unvalid_robot_entry {
     my $config_hash = $param->{'config_hash'};
     foreach my $keyword (keys %$config_hash) {
         unless ($valid_robot_key_words{$keyword}) {
-            printf STDERR
-                "Conf::_remove_unvalid_robot_entry(): removing unknown robot keyword $keyword\n"
+            Log::do_log('err', 'removing unknown robot keyword %s', $keyword)
                 unless ($param->{'quiet'});
             delete $config_hash->{$keyword};
         }
@@ -1857,22 +1854,32 @@ sub _detect_unknown_parameters_in_config {
         next if (exists $params{$parameter});
         if (defined $old_params{$parameter}) {
             if ($old_params{$parameter}) {
-                printf STDERR
-                    "Conf::_detect_unknown_parameters_in_config(): Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s\n",
+                Log::do_log(
+                    'err',
+                    'Line %d of sympa.conf, parameter %s is no more available, read documentation for new parameter(s) %s',
                     $param->{'config_file_line_numbering_reference'}
-                    {$parameter}[1], $parameter, $old_params{$parameter};
+                        {$parameter}[1],
+                    $parameter,
+                    $old_params{$parameter}
+                );
             } else {
-                printf STDERR
-                    "Conf::_detect_unknown_parameters_in_config(): Line %d of sympa.conf, parameter %s is now obsolete\n",
+                Log::do_log(
+                    'err',
+                    'Line %d of sympa.conf, parameter %s is now obsolete',
                     $param->{'config_file_line_numbering_reference'}
-                    {$parameter}[1], $parameter;
+                        {$parameter}[1],
+                    $parameter
+                );
                 next;
             }
         } else {
-            printf STDERR
-                "Conf::_detect_unknown_parameters_in_config(): Line %d, unknown field: %s in sympa.conf\n",
+            Log::do_log(
+                'err',
+                'Line %d, unknown field: %s in sympa.conf',
                 $param->{'config_file_line_numbering_reference'}{$parameter}
-                [1], $parameter;
+                    [1],
+                $parameter
+            );
         }
         $number_of_unknown_parameters_found++;
     }
@@ -2143,9 +2150,8 @@ sub _detect_missing_mandatory_parameters {
         unless (defined $param->{'config_hash'}{$parameter}
             or defined $params{$parameter}->{'default'}
             or defined $params{$parameter}->{'optional'}) {
-            printf STDERR
-                "Conf::_detect_missing_mandatory_parameters(): Required field not found in sympa.conf: %s\n",
-                $parameter;
+            Log::do_log('err', 'Required field not found in sympa.conf: %s',
+                $parameter);
             $number_of_errors++;
             next;
         }
@@ -2169,8 +2175,9 @@ sub _check_cpan_modules_required_by_config {
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
         eval "require Mail::DKIM";
         if ($@) {
-            printf STDERR
-                "Conf::_check_cpan_modules_required_by_config(): Failed to load Mail::DKIM perl module ; setting 'dkim_feature' to 'off'\n";
+            Log::do_log('notice',
+                'Failed to load Mail::DKIM perl module ; setting "dkim_feature" to "off"'
+            );
             $param->{'config_hash'}{'dkim_feature'} = 'off';
             $number_of_missing_modules++;
         }
@@ -2189,9 +2196,8 @@ sub _dump_non_robot_parameters {
     foreach my $key (keys %{$param->{'config_hash'}}) {
         unless ($valid_robot_key_words{$key}) {
             delete $param->{'config_hash'}{$key};
-            printf STDERR
-                "Conf::_dump_non_robot_parameters(): Robot %s config: unknown robot parameter: %s\n",
-                $param->{'robot'}, $key;
+            Log::do_log('err', 'Robot %s config: unknown robot parameter: %s',
+                $param->{'robot'}, $key);
         }
     }
 }
@@ -2213,9 +2219,7 @@ sub _load_single_robot_config {
             "Conf::_load_single_robot_config(): File %s has not changed since the last cache. Using cache.\n",
             $config_file;
         unless (-r $config_file) {
-            printf STDERR
-                "Conf::_load_single_robot_config(): No read access on %s\n",
-                $config_file;
+            Log::do_log('err', 'No read access on %s', $config_file);
             List::send_notify_to_listmaster(
                 'cannot_access_robot_conf',
                 $Conf{'domain'},
@@ -2229,9 +2233,6 @@ sub _load_single_robot_config {
                 {'config_file' => $config_file . $binary_file_extension}
             )
             ) {
-            printf STDERR
-                "Binary config file loading failed. Loading source file '%s'\n",
-                $config_file;
             $force_reload = 1;
         }
     }
@@ -2243,9 +2244,7 @@ sub _load_single_robot_config {
             $robot_conf = $config_loading_result->{'config'};
             $config_err = $config_loading_result->{'errors'};
         } else {
-            printf STDERR
-                "Conf::_load_single_robot_config(): Unable to load %s. Aborting\n",
-                $config_file;
+            Log::do_log('err', 'Unable to load %s. Aborting', $config_file);
             return undef;
         }
 
@@ -2291,15 +2290,19 @@ sub _set_listmasters_entry {
                     $lismaster_address;
                 $number_of_valid_email++;
             } else {
-                printf STDERR
-                    "Conf::_set_listmasters_entry(): Robot %s config: Listmaster address '%s' is not a valid email\n",
-                    $param->{'config_hash'}{'host'}, $lismaster_address;
+                Log::do_log(
+                    'err',
+                    'Robot %s config: Listmaster address "%s" is not a valid email',
+                    $param->{'config_hash'}{'host'},
+                    $lismaster_address
+                );
             }
         }
     } else {
         if ($param->{'main_config'}) {
-            printf STDERR
-                "Conf::_set_listmasters_entry(): Robot %s config: No listmaster defined. This is the main config. It MUST define at least one listmaster. Stopping here.\n.";
+            Log::do_log('err',
+                'Robot %s config: No listmaster defined. This is the main config. It MUST define at least one listmaster. Stopping here'
+            );
             return undef;
         } else {
             $param->{'config_hash'}{'listmasters'} = $Conf{'listmasters'};
@@ -2309,10 +2312,13 @@ sub _set_listmasters_entry {
         }
     }
     if ($number_of_email_provided > $number_of_valid_email) {
-        printf STDERR
-            "Conf::_set_listmasters_entry(): Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses.\n",
-            $param->{'config_hash'}{'host'}, $number_of_email_provided,
-            $number_of_valid_email;
+        Log::do_log(
+            'err',
+            'Robot %s config: All the listmasters addresses found were not valid. Out of %s addresses provided, %s only are valid email addresses',
+            $param->{'config_hash'}{'host'},
+            $number_of_email_provided,
+            $number_of_valid_email
+        );
         return undef;
     }
     return $number_of_valid_email;
@@ -2334,10 +2340,14 @@ sub _check_double_url_usage {
     ## Warn listmaster if another virtual host is defined with the same host
     ## +path
     if (defined $Conf{'robot_by_http_host'}{$host}{$path}) {
-        printf STDERR
-            "Conf::_infer_robot_parameter_values(): Error: two virtual hosts (%s and %s) are mapped via a single URL '%s%s'\n",
+        Log::do_log(
+            'err',
+            'Two virtual hosts (%s and %s) are mapped via a single URL "%s%s"',
             $Conf{'robot_by_http_host'}{$host}{$path},
-            $param->{'config_hash'}{'robot_name'}, $host, $path;
+            $param->{'config_hash'}{'robot_name'},
+            $host,
+            $path
+        );
     }
 
     $Conf{'robot_by_http_host'}{$host}{$path} =
@@ -2385,9 +2395,11 @@ sub _save_binary_cache {
 
     eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
     if ($@) {
-        printf STDERR
-            'Conf::_save_binary_cache(): Failed to save the binary config %s. error: %s\n',
-            $param->{'target_file'}, $@;
+        Log::do_log(
+            'err',
+            'Failed to save the binary config %s. error: %s',
+            $param->{'target_file'}, $@
+        );
         unless ($lock_fh->close()) {
             return undef;
         }
@@ -2401,9 +2413,11 @@ sub _save_binary_cache {
         );
     };
     if ($@) {
-        printf STDERR
-            'Conf::_save_binary_cache(): Failed to change owner of the binary file %s. error: %s\n',
-            $param->{'target_file'}, $@;
+        Log::do_log(
+            'err',
+            'Failed to change owner of the binary file %s. error: %s',
+            $param->{'target_file'}, $@
+        );
         unless ($lock_fh->close()) {
             return undef;
         }
@@ -2429,9 +2443,11 @@ sub _load_binary_cache {
 
     eval { $result = Storable::fd_retrieve($lock_fh); };
     if ($@) {
-        printf STDERR
-            "Conf::_load_binary_cache(): Failed to load the binary config %s. error: %s\n",
-            $param->{'config_file'}, $@;
+        Log::do_log(
+            'err',
+            'Failed to load the binary config %s. error: %s',
+            $param->{'config_file'}, $@
+        );
         unless ($lock_fh->close()) {
             return undef;
         }
@@ -2454,9 +2470,11 @@ sub _save_config_hash_to_binary {
             }
         )
         ) {
-        printf STDERR
-            "Conf::_save_config_hash_to_binary(): Could not save main config %s\n",
-            $param->{'config_hash'}{'source_file'};
+        Log::do_log(
+            'err',
+            'Could not save main config %s',
+            $param->{'config_hash'}{'source_file'}
+        );
     }
 }
 
