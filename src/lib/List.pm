@@ -1308,38 +1308,18 @@ sub get_editors_email {
     return @rcpt;
 }
 
-## Returns an object Family if the list belongs to a family
-#  or undef
+## Returns an object Family if the list belongs to a family or undef
 sub get_family {
     my $self = shift;
-    Log::do_log('debug3', 'List::get_family(%s)', $self->{'name'});
 
-    if (ref($self->{'family'}) eq 'Family') {
+    if (ref $self->{'family'} eq 'Family') {
         return $self->{'family'};
-    }
-
-    my $family_name;
-    my $robot = $self->{'domain'};
-
-    unless (defined $self->{'admin'}{'family_name'}) {
-        Log::do_log('err',
-            'List::get_family(%s) : this list has not got any family',
-            $self->{'name'});
+    } elsif ($self->{'admin'}{'family_name'}) {
+        return $self->{'family'} =
+            Family->new($self->{'admin'}{'family_name'}, $self->{'domain'});
+    } else {
         return undef;
     }
-
-    $family_name = $self->{'admin'}{'family_name'};
-
-    my $family;
-    unless ($family = Family->new($family_name, $robot)) {
-        Log::do_log('err',
-            'List::get_family(%s) : Family->new(%s) impossible',
-            $self->{'name'}, $family_name);
-        return undef;
-    }
-
-    $self->{'family'} = $family;
-    return $family;
 }
 
 ## return the config_changes hash
