@@ -154,7 +154,7 @@ sub generic_get_cookie {
             return ($cookie->value);
         }
     }
-    return;
+    return undef;
 }
 
 ## Returns user information extracted from the cookie
