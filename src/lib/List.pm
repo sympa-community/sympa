@@ -5242,28 +5242,24 @@ sub get_resembling_list_members_no_object {
 sub find_list_member_by_pattern_no_object {
     my $options = shift;
 
-    my $name = $options->{'name'};
-
+    my $name          = $options->{'name'};
     my $email_pattern = tools::clean_email($options->{'email_pattern'});
-
     my @ressembling_users;
 
     push @sth_stack, $sth;
 
-    ## Additional subscriber fields
-    my $additional;
-    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
-        $additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
-    }
     unless (
-        $sth = SDM::do_query(
-            "SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (user_subscriber LIKE %s AND list_subscriber = %s AND robot_subscriber = %s)",
-            SDM::get_canonical_read_date('date_subscriber'),
-            SDM::get_canonical_read_date('update_subscriber'),
-            $additional,
-            SDM::quote($email_pattern),
-            SDM::quote($name),
-            SDM::quote($options->{'domain'})
+        $sth = SDM::do_prepared_query(
+            sprintf(
+                q{SELECT %s
+                FROM subscriber_table
+                WHERE user_subscriber LIKE ? AND
+                      list_subscriber = ? AND robot_subscriber = ?},
+                _list_member_cols()
+            ),
+            $email_pattern,
+            $name,
+            $options->{'domain'}
         )
         ) {
         Log::do_log(
@@ -5297,6 +5293,19 @@ sub find_list_member_by_pattern_no_object {
     return @ressembling_users;
 }
 
+sub _list_member_cols {
+    my $additional = '';
+    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
+        $additional = ', ' . $Conf::Conf{'db_additional_subscriber_fields'};
+    }
+    return
+        sprintf
+        'user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS "date", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate%s',
+        SDM::get_canonical_read_date('date_subscriber'),
+        SDM::get_canonical_read_date('update_subscriber'),
+        $additional;
+}
+
 ######################################################################
 ###  get_list_member_no_object                                        #
 ## Get details regarding a subscriber.                               #
@@ -5328,20 +5337,18 @@ sub get_list_member_no_object {
 
     push @sth_stack, $sth;
 
-    ## Additional subscriber fields
-    my $additional;
-    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
-        $additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
-    }
     unless (
-        $sth = SDM::do_query(
-            q{SELECT user_subscriber AS email, comment_subscriber AS gecos, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address, reception_subscriber AS reception,  topics_subscriber AS topics, visibility_subscriber AS visibility, %s AS "date", %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate, number_messages_subscriber AS number_messages %s FROM subscriber_table WHERE (user_subscriber = %s AND list_subscriber = %s AND robot_subscriber = %s)},
-            SDM::get_canonical_read_date('date_subscriber'),
-            SDM::get_canonical_read_date('update_subscriber'),
-            $additional,
-            SDM::quote($email),
-            SDM::quote($name),
-            SDM::quote($options->{'domain'})
+        $sth = SDM::do_prepared_query(
+            sprintf(
+                q{SELECT %s, number_messages_subscriber AS number_messages
+                FROM subscriber_table
+                WHERE user_subscriber = ? AND
+                      list_subscriber = ? AND robot_subscriber = ?},
+                _list_member_cols()
+            ),
+            $email,
+            $name,
+            $options->{'domain'}
         )
         ) {
         Log::do_log('err', 'Unable to gather informations for user: %s',
@@ -5469,38 +5476,28 @@ sub get_first_list_member {
             SDM::quote($sql_regexp), SDM::quote($sql_regexp);
     }
 
-    ## Additional subscriber fields
-    my $additional;
-    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
-        $additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
-    }
-
-    $statement =
-        sprintf
-        "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s %s)",
-        SDM::get_canonical_read_date('date_subscriber'),
-        SDM::get_canonical_read_date('update_subscriber'),
-        ($additional || ''),
+    $statement = sprintf q{SELECT %s
+          FROM subscriber_table
+          WHERE list_subscriber = %s AND robot_subscriber = %s %s},
+        _list_member_cols(),
         SDM::quote($name),
         SDM::quote($self->{'domain'}),
         ($selection || '');
 
     ## SORT BY
     if ($sortby eq 'domain') {
-        ## Redefine query to set "dom"
-
-        $statement =
-            sprintf
-            "SELECT user_subscriber AS email, comment_subscriber AS gecos, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce, bounce_score_subscriber AS bounce_score, bounce_address_subscriber AS bounce_address,  %s AS date, %s AS update_date, subscribed_subscriber AS subscribed, included_subscriber AS included, include_sources_subscriber AS id, custom_attribute_subscriber AS custom_attribute, %s AS dom, suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s ) ORDER BY dom",
-            SDM::get_canonical_read_date('date_subscriber'),
-            SDM::get_canonical_read_date('update_subscriber'),
+        # Redefine query to set "dom"
+        # Note: "dom" is reserved keyword of some RDBMS (Oracle, ...).
+        $statement = sprintf q{SELECT %s, %s AS "dom"
+              FROM subscriber_table
+              WHERE list_subscriber = %s AND robot_subscriber = %s
+              ORDER BY "dom"}, _list_member_cols(),
             SDM::get_substring_clause(
             {   'source_field'     => 'user_subscriber',
                 'separator'        => '\@',
                 'substring_length' => '50',
             }
             ),
-            ($additional || ''),
             SDM::quote($name),
             SDM::quote($self->{'domain'});
 
@@ -5808,22 +5805,19 @@ sub get_first_bouncing_list_member {
 
     my $name = $self->{'name'};
 
-    ## Additional subscriber fields
-    my $additional;
-    if ($Conf::Conf{'db_additional_subscriber_fields'}) {
-        $additional = ',' . $Conf::Conf{'db_additional_subscriber_fields'};
-    }
-
     push @sth_stack, $sth;
 
     unless (
-        $sth = SDM::do_query(
-            "SELECT user_subscriber AS email, reception_subscriber AS reception, topics_subscriber AS topics, visibility_subscriber AS visibility, bounce_subscriber AS bounce,bounce_score_subscriber AS bounce_score, %s AS date, %s AS update_date,suspend_subscriber AS suspend, suspend_start_date_subscriber AS startdate, suspend_end_date_subscriber AS enddate %s FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND bounce_subscriber is not NULL)",
-            SDM::get_canonical_read_date('date_subscriber'),
-            SDM::get_canonical_read_date('update_subscriber'),
-            $additional,
-            SDM::quote($name),
-            SDM::quote($self->{'domain'})
+        $sth = SDM::do_prepared_query(
+            sprintf(
+                q{SELECT %s
+                FROM subscriber_table
+                WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                      bounce_subscriber IS NOT NULL},
+                _list_member_cols()
+            ),
+            $name,
+            $self->{'domain'}
         )
         ) {
         Log::do_log('err', 'Unable to get bouncing users %s@%s',
@@ -5913,10 +5907,12 @@ sub get_total_bouncing {
 
     ## Query the Database
     unless (
-        $sth = SDM::do_query(
-            "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s  AND robot_subscriber = %s AND bounce_subscriber is not NULL)",
-            SDM::quote($name),
-            SDM::quote($self->{'domain'})
+        $sth = SDM::do_prepared_query(
+            q{SELECT count(*)
+                FROM subscriber_table
+                WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                bounce_subscriber IS NOT NULL},
+            $name, $self->{'domain'}
         )
         ) {
         Log::do_log('err',
@@ -5958,11 +5954,12 @@ sub is_list_member {
 
     ## Query the Database
     unless (
-        $sth = SDM::do_query(
-            "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s AND user_subscriber = %s)",
-            SDM::quote($name),
-            SDM::quote($self->{'domain'}),
-            SDM::quote($who)
+        $sth = SDM::do_prepared_query(
+            q{SELECT count(*)
+                FROM subscriber_table
+                WHERE list_subscriber = ? AND robot_subscriber = ? AND
+                      user_subscriber = ?},
+            $name, $self->{'domain'}, $who
         )
         ) {
         Log::do_log(
@@ -10023,10 +10020,11 @@ sub _load_total_db {
 
     ## Query the Database
     unless (
-        $sth = SDM::do_query(
-            "SELECT count(*) FROM subscriber_table WHERE (list_subscriber = %s AND robot_subscriber = %s)",
-            SDM::quote($self->{'name'}),
-            SDM::quote($self->{'domain'})
+        $sth = SDM::do_prepared_query(
+            q{SELECT count(*)
+                FROM subscriber_table
+                WHERE list_subscriber = ? AND robot_subscriber = ?},
+            $self->{'name'}, $self->{'domain'}
         )
         ) {
         Log::do_log('debug', 'Unable to get subscriber count for list %s@%s',
@@ -10327,9 +10325,14 @@ sub get_which_db {
         push @sth_stack, $sth;
 
         unless (
-            $sth = SDM::do_query(
-                "SELECT list_subscriber, robot_subscriber, bounce_subscriber, reception_subscriber, topics_subscriber, include_sources_subscriber, subscribed_subscriber, included_subscriber  FROM subscriber_table WHERE user_subscriber = %s",
-                SDM::quote($email)
+            $sth = SDM::do_prepared_query(
+                sprintf(
+                    q{SELECT %s
+                    FROM subscriber_table
+                    WHERE user_subscriber = ?},
+                    _list_member_cols()
+                ),
+                $email
             )
             ) {
             Log::do_log(
