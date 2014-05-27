@@ -949,9 +949,7 @@ sub subscribe {
                 }
             )
             ) {
-            Log::do_log('info',
-                "Unable to send notify 'subrequest' to $list->{'name'} list owner"
-            );
+            #FIXME: Why is error reported only in this case?
             report::reject_report_cmd(
                 'intern',
                 "Unable to send subrequest to $list->{'name'} list owner",
@@ -1052,20 +1050,13 @@ sub subscribe {
 
         ## If requested send notification to owners
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $sender,
-                        'gecos'   => $comment,
-                        'command' => 'subscribe'
-                    }
-                )
-                ) {
-                Log::do_log('info',
-                    "Unable to send notify 'notice' to $list->{'name'} list owner"
-                );
-            }
-
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $sender,
+                    'gecos'   => $comment,
+                    'command' => 'subscribe'
+                }
+            );
         }
         Log::do_log(
             'info', 'SUB %s from %s accepted (%d seconds, %d subscribers)',
@@ -1401,9 +1392,7 @@ sub signoff {
                 }
             )
             ) {
-            Log::do_log('info',
-                "Unable to send notify 'sigrequest' to $list->{'name'} list owner"
-            );
+            #FIXME: Why is error reported only in this case?
             report::reject_report_cmd(
                 'intern_quiet',
                 "Unable to send sigrequest to $list->{'name'} list owner",
@@ -1438,19 +1427,12 @@ sub signoff {
             if ($action =~ /notify/i) {
                 # try to find email from same domain or email wwith same local
                 # part.
-
-                unless (
-                    $list->send_notify_to_owner(
-                        'warn-signoff',
-                        {   'who'   => $email,
-                            'gecos' => ($user_entry->{'gecos'} || '')
-                        }
-                    )
-                    ) {
-                    Log::do_log('info',
-                        "Unable to send notify 'warn-signoff' to $list->{'name'} list owner"
-                    );
-                }
+                $list->send_notify_to_owner(
+                    'warn-signoff',
+                    {   'who'   => $email,
+                        'gecos' => ($user_entry->{'gecos'} || '')
+                    }
+                );
             }
             return 'not_allowed';
         }
@@ -1471,19 +1453,13 @@ sub signoff {
 
         ## Notify the owner
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $email,
-                        'gecos'   => ($user_entry->{'gecos'} || ''),
-                        'command' => 'signoff'
-                    }
-                )
-                ) {
-                Log::do_log('info',
-                    "Unable to send notify 'notice' to $list->{'name'} list owner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $email,
+                    'gecos'   => ($user_entry->{'gecos'} || ''),
+                    'command' => 'signoff'
+                }
+            );
         }
 
         unless ($quiet || ($action =~ /quiet/i)) {
@@ -1684,20 +1660,14 @@ sub add {
             $list->get_total()
         );
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $email,
-                        'gecos'   => $comment,
-                        'command' => 'add',
-                        'by'      => $sender
-                    }
-                )
-                ) {
-                Log::do_log('info',
-                    "Unable to send notify 'notice' to $list->{'name'} list owner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $email,
+                    'gecos'   => $comment,
+                    'command' => 'add',
+                    'by'      => $sender
+                }
+            );
         }
         return 1;
     }
@@ -2424,20 +2394,14 @@ sub del {
             $list->get_total()
         );
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $who,
-                        'gecos'   => "",
-                        'command' => 'del',
-                        'by'      => $sender
-                    }
-                )
-                ) {
-                Log::do_log('info',
-                    "Unable to send notify 'notice' to $list->{'name'} list owner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $who,
+                    'gecos'   => "",
+                    'command' => 'del',
+                    'by'      => $sender
+                }
+            );
         }
         return 1;
     }

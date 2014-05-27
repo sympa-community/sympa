@@ -682,17 +682,8 @@ sub modify_list {
             "These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param"
         );
 
-        unless (
-            $list->send_notify_to_owner(
-                'erase_customizing', [$self->{'name'}, $forbidden_param]
-            )
-            ) {
-            Log::do_log(
-                'notice',
-                'the owner isn\'t informed from erased customizing of the list %s',
-                $list->{'name'}
-            );
-        }
+        $list->send_notify_to_owner('erase_customizing',
+            [$self->{'name'}, $forbidden_param]);
     }
 
     ## status
@@ -2498,17 +2489,8 @@ sub _update_existing_list {
             "These parameters aren't allowed in the new family definition, they are erased by a new instantiation family : \n $forbidden_param"
         );
 
-        unless (
-            $list->send_notify_to_owner(
-                'erase_customizing', [$self->{'name'}, $forbidden_param]
-            )
-            ) {
-            Log::do_log(
-                'notice',
-                'the owner isn\'t informed from erased customizing of the list %s',
-                $list->{'name'}
-            );
-        }
+        $list->send_notify_to_owner('erase_customizing',
+            [$self->{'name'}, $forbidden_param]);
     }
 
     ## status

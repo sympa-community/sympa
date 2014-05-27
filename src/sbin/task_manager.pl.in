@@ -1962,13 +1962,8 @@ sub process_bouncers {
                         'automatic_bounce_management', $list->{'domain'},
                         $param);
                 } elsif ($notification eq 'owner') {
-                    unless (
-                        $list->send_notify_to_owner(
-                            'automatic_bounce_management', $param
-                        )
-                        ) {
-                        Log::do_log('err', 'error while notifying owner');
-                    }
+                    $list->send_notify_to_owner('automatic_bounce_management',
+                        $param);
                 }
             }
         }

@@ -896,20 +896,14 @@ sub add {
     Log::do_log('info', 'ADD %s %s from %s accepted (%d subscribers)',
         $list->{'name'}, $email, $sender, $list->get_total());
     if ($action =~ /notify/i) {
-        unless (
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => $gecos,
-                    'command' => 'add',
-                    'by'      => $sender
-                }
-            )
-            ) {
-            Log::do_log('info',
-                "Unable to send notify 'notice' to $list->{'name'} list owner"
-            );
-        }
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $email,
+                'gecos'   => $gecos,
+                'command' => 'add',
+                'by'      => $sender
+            }
+        );
     }
 }
 
@@ -1040,20 +1034,14 @@ sub del {
     Log::do_log('info', 'DEL %s %s from %s accepted (%d subscribers)',
         $listname, $email, $sender, $list->get_total());
     if ($action =~ /notify/i) {
-        unless (
-            $list->send_notify_to_owner(
-                'notice',
-                {   'who'     => $email,
-                    'gecos'   => "",
-                    'command' => 'del',
-                    'by'      => $sender
-                }
-            )
-            ) {
-            Log::do_log('info',
-                "Unable to send notify 'notice' to $list->{'name'} list owner"
-            );
-        }
+        $list->send_notify_to_owner(
+            'notice',
+            {   'who'     => $email,
+                'gecos'   => "",
+                'command' => 'del',
+                'by'      => $sender
+            }
+        );
     }
     return 1;
 }
@@ -1364,15 +1352,8 @@ sub signoff {
 
             ## Tell the owner somebody tried to unsubscribe
             if ($action =~ /notify/i) {
-                unless (
-                    $list->send_notify_to_owner(
-                        'warn-signoff', {'who' => $sender}
-                    )
-                    ) {
-                    Log::do_log('err',
-                        "Unable to send notify 'warn-signoff' to $list->{'name'} listowner"
-                    );
-                }
+                $list->send_notify_to_owner('warn-signoff',
+                    {'who' => $sender});
             }
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail(
@@ -1385,18 +1366,12 @@ sub signoff {
 
         ## Notify the owner
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $sender,
-                        'command' => 'signoff'
-                    }
-                )
-                ) {
-                Log::do_log('err',
-                    "Unable to send notify 'notice' to $list->{'name'} listowner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $sender,
+                    'command' => 'signoff'
+                }
+            );
         }
 
         ## Send bye.tpl to sender
@@ -1488,20 +1463,14 @@ sub subscribe {
 
         ## Send a notice to the owners.
         my $keyauth = $list->compute_auth($sender, 'add');
-        unless (
-            $list->send_notify_to_owner(
-                'subrequest',
-                {   'who'     => $sender,
-                    'keyauth' => $list->compute_auth($sender, 'add'),
-                    'replyto' => Conf::get_robot_conf($robot, 'sympa'),
-                    'gecos'   => $gecos
-                }
-            )
-            ) {
-            Log::do_log('err',
-                "Unable to send notify 'subrequest' to $list->{'name'} listowner"
-            );
-        }
+        $list->send_notify_to_owner(
+            'subrequest',
+            {   'who'     => $sender,
+                'keyauth' => $list->compute_auth($sender, 'add'),
+                'replyto' => Conf::get_robot_conf($robot, 'sympa'),
+                'gecos'   => $gecos
+            }
+        );
 
 #      $list->send_sub_to_owner($sender, $keyauth, Conf::get_robot_conf($robot, 'sympa'), $gecos);
         $list->store_subscription_request($sender, $gecos);
@@ -1571,19 +1540,13 @@ sub subscribe {
 
         ## If requested send notification to owners
         if ($action =~ /notify/i) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $sender,
-                        'gecos'   => $gecos,
-                        'command' => 'subscribe'
-                    }
-                )
-                ) {
-                Log::do_log('err',
-                    "Unable to send notify 'notice' to $list->{'name'} listowner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $sender,
+                    'gecos'   => $gecos,
+                    'command' => 'subscribe'
+                }
+            );
         }
         Log::do_log('info', 'SOAP subcribe : %s from %s accepted',
             $listname, $sender);

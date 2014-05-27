@@ -749,15 +749,8 @@ sub mail2arc {
                 Log::do_log('err',
                     "archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}"
                 );
-                unless (
-                    $list->send_notify_to_owner(
-                        'arc_quota_exceeded', {'size' => $used}
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'arc_quota_exceeded' to $list->{'name'} owner"
-                    );
-                }
+                $list->send_notify_to_owner('arc_quota_exceeded',
+                    {'size' => $used});
                 return undef;
             }
             if ($used >=
@@ -765,23 +758,17 @@ sub mail2arc {
                 Log::do_log('err',
                     "archived::mail2arc : web_arc Quota exceeded for list $list->{'name'}"
                 );
-                unless (
-                    $list->send_notify_to_owner(
-                        'arc_quota_95',
-                        {   'size' => $used,
-                            'rate' => int(
-                                $used * 100 / (
-                                    $list->{'admin'}{'web_archive'}{'quota'} *
-                                        1024
-                                )
+                $list->send_notify_to_owner(
+                    'arc_quota_95',
+                    {   'size' => $used,
+                        'rate' => int(
+                            $used * 100 / (
+                                $list->{'admin'}{'web_archive'}{'quota'} *
+                                    1024
                             )
-                        }
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send notify 'arc_quota_95' to $list->{'name'} owner"
-                    );
-                }
+                        )
+                    }
+                );
             }
         }
 

@@ -381,19 +381,13 @@ while (!$end) {
                         );
 
                         if ($action =~ /notify/) {
-                            unless (
-                                $list->send_notify_to_owner(
-                                    'automatic_del',
-                                    {   'who'    => $who,
-                                        'by'     => 'bounce manager',
-                                        'reason' => 'welcome'
-                                    }
-                                )
-                                ) {
-                                wwslog('err',
-                                    "Unable to send notify 'automatic_del' to $list->{'name'} list owner"
-                                );
-                            }
+                            $list->send_notify_to_owner(
+                                'automatic_del',
+                                {   'who'    => $who,
+                                    'by'     => 'bounce manager',
+                                    'reason' => 'welcome'
+                                }
+                            );
                         }
                     }
                 } else {
@@ -865,18 +859,12 @@ while (!$end) {
                                     "$original_rcpt has been removed from %s because abuse feedback report",
                                     $list->name
                                 );
-                                unless (
-                                    $list->send_notify_to_owner(
-                                        'automatic_del',
-                                        {   'who' => $original_rcpt,
-                                            'by'  => 'listmaster'
-                                        }
-                                    )
-                                    ) {
-                                    Log::do_log('notice',
-                                        "Unable to send notify 'automatic_del' to $list->{'name'} list owner"
-                                    );
-                                }
+                                $list->send_notify_to_owner(
+                                    'automatic_del',
+                                    {   'who' => $original_rcpt,
+                                        'by'  => 'listmaster'
+                                    }
+                                );
                             } else {
                                 Log::do_log(
                                     'err',
@@ -886,16 +874,8 @@ while (!$end) {
                                     $robot,
                                     $original_rcpt
                                 );
-                                unless (
-                                    $list->send_notify_to_owner(
-                                        'warn-signoff',
-                                        {'who' => $original_rcpt}
-                                    )
-                                    ) {
-                                    Log::do_log('notice',
-                                        "Unable to send notify 'warn-signoff' to $list->{'name'} list owner"
-                                    );
-                                }
+                                $list->send_notify_to_owner('warn-signoff',
+                                    {'who' => $original_rcpt});
                             }
                         } else {
                             $forward = 'request';

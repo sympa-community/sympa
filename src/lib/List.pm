@@ -670,14 +670,8 @@ sub set_status_family_closed {
         }
         Log::do_log('info', 'The list "%s" is set in status family_closed',
             $self->{'name'});
-        unless ($self->send_notify_to_owner($message, \@param)) {
-            Log::do_log(
-                'err',
-                'Impossible to send notify to owner informing status family_closed for the list %s',
-                $self->{'name'}
-            );
-        }
-# messages : close_list
+        $self->send_notify_to_owner($message, \@param);
+        # messages : close_list
     }
     return 1;
 }
@@ -2633,12 +2627,7 @@ sub send_msg {
     ## Bounce rate
     my $rate = $self->get_total_bouncing() * 100 / $total;
     if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
-        unless ($self->send_notify_to_owner('bounce_rate', {'rate' => $rate}))
-        {
-            Log::do_log('notice',
-                "Unable to send notify 'bounce_rate' to $self->{'name'} listowner"
-            );
-        }
+        $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
     }
 
     ## Who is the enveloppe sender?
@@ -3669,9 +3658,12 @@ sub send_notify_to_listmaster {
                             $email, $robot, $param, $options
                         )
                         ) {
-                        Log::do_log('notice',
-                            "Unable to send template 'listmaster_notification' to $email"
-                        ) unless ($operation eq 'logs_failed');
+                        Log::do_log(
+                            'notice',
+                            'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
+                            $robot,
+                            $email
+                        ) unless $operation eq 'logs_failed';
                         return undef;
                     }
                 }
@@ -3694,18 +3686,15 @@ sub send_notify_to_listmaster {
         $stack = 1;
     }
 
+    Log::do_log('debug2', '(%s, %s)', $operation, $robot)
+        unless $operation and $operation eq 'logs_failed';
+
     unless (defined $operation) {
-        Log::do_log('err', '() : missing incoming parameter "$operation"');
-        return undef;
+        die 'missing incoming parameter "$operation"';
     }
 
-    unless ($operation eq 'logs_failed') {
-        Log::do_log('debug2', '(%s, %s)', $operation, $robot);
-        unless (defined $robot) {
-            Log::do_log('err', '(%s) : missing incoming parameter "$robot"',
-                $operation);
-            return undef;
-        }
+    unless (defined $robot) {
+        die 'missing incoming parameter "$robot"';
     }
 
     my $host       = Conf::get_robot_conf($robot, 'host');
@@ -3754,9 +3743,9 @@ sub send_notify_to_listmaster {
         unless (defined $list) {
             Log::do_log(
                 'err',
-                'Parameter %s is not a valid list',
-                $data->{'list'}{'name'}
-            );
+                'Parameter %s (%s) is not a valid list',
+                $data->{'list'}{'name'}, $robot
+            ) unless $operation eq 'logs_failed';
             return undef;
         }
         unless (
@@ -3765,9 +3754,12 @@ sub send_notify_to_listmaster {
                 $listmaster, $robot, $data, $options
             )
             ) {
-            Log::do_log('notice',
-                "Unable to send template 'listmaster_notification' to $listmaster"
-            );
+            Log::do_log(
+                'notice',
+                'Unable to send template "listmaster_notification" to %s listmaster %s',
+                $robot,
+                $listmaster
+            ) unless $operation eq 'logs_failed';
             return undef;
         }
         return 1;
@@ -3776,8 +3768,8 @@ sub send_notify_to_listmaster {
     if (($operation eq 'no_db') || ($operation eq 'db_restored')) {
         ## No DataBase |  DataBase restored
         $data->{'db_name'} = Conf::get_robot_conf($robot, 'db_name');
-        $options->{'skip_db'} =
-            1;    ## Skip DB access because DB is not accessible
+        ## Skip DB access because DB is not accessible
+        $options->{'skip_db'} = 1;
     }
 
     if ($operation eq 'loop_command') {
@@ -3814,16 +3806,20 @@ sub send_notify_to_listmaster {
             $robot, $ts->{'data'}, $options);
         if ($stack) {
             Log::do_log('info', 'stacking message about "%s" for %s (%s)',
-                $operation, $ts->{'email'}, $robot);
+                $operation, $ts->{'email'}, $robot)
+                unless $operation eq 'logs_failed';
             push @{$List::listmaster_messages_stack{$robot}{$operation}
                     {'messages'}{$ts->{'email'}}}, $r;
             return 1;
         }
 
         unless ($r) {
-            Log::do_log('notice',
-                "Unable to send template 'listmaster_notification' to $listmaster"
-            ) unless ($operation eq 'logs_failed');
+            Log::do_log(
+                'notice',
+                'Unable to send template "listmaster_notification" to %s listmaster %s',
+                $robot,
+                $listmaster
+            ) unless $operation eq 'logs_failed';
             return undef;
         }
     }
@@ -3846,10 +3842,8 @@ sub send_notify_to_listmaster {
 #
 ######################################################
 sub send_notify_to_owner {
-
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
-    Log::do_log('debug2', 'List::send_notify_to_owner(%s, %s)',
-        $self->{'name'}, $operation);
 
     my $host  = $self->{'admin'}{'host'};
     my @to    = $self->get_owners_email();
@@ -3864,12 +3858,7 @@ sub send_notify_to_owner {
         @to = split /,/, Conf::get_robot_conf($robot, 'listmaster');
     }
     unless (defined $operation) {
-        Log::do_log(
-            'err',
-            'List::send_notify_to_owner(%s) : missing incoming parameter "$operation"',
-            $self->{'name'}
-        );
-        return undef;
+        die 'missing incoming parameter "$operation"';
     }
 
     if (ref($param) eq 'HASH') {
@@ -3897,8 +3886,11 @@ sub send_notify_to_owner {
                         'listowner_notification', [$owner], $robot, $param
                     )
                     ) {
-                    Log::do_log('notice',
-                        "Unable to send template 'listowner_notification' to $self->{'name'} list owner $owner"
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "listowner_notification" to %s list owner %s',
+                        $self,
+                        $owner
                     );
                 }
             }
@@ -3917,8 +3909,11 @@ sub send_notify_to_owner {
                         'listowner_notification', [$owner], $robot, $param
                     )
                     ) {
-                    Log::do_log('notice',
-                        "Unable to send template 'listowner_notification' to $self->{'name'} list owner $owner"
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "listowner_notification" to %s list owner %s',
+                        $self,
+                        $owner
                     );
                 }
             }
@@ -3938,8 +3933,10 @@ sub send_notify_to_owner {
                     \@to, $robot, $param
                 )
                 ) {
-                Log::do_log('notice',
-                    "Unable to send template 'listowner_notification' to $self->{'name'} list owner"
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "listowner_notification" to %s list owner',
+                    $self
                 );
                 return undef;
             }
@@ -3957,18 +3954,19 @@ sub send_notify_to_owner {
         }
         unless (
             $self->send_file('listowner_notification', \@to, $robot, $data)) {
-            Log::do_log('notice',
-                "Unable to send template 'listowner_notification' to $self->{'name'} list owner"
+            Log::do_log(
+                'notice',
+                'Unable to send template "listowner_notification" to %s list owner',
+                $self
             );
             return undef;
         }
 
     } else {
-
         Log::do_log(
             'err',
-            'List::send_notify_to_owner(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self->{'name'},
+            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            $self,
             $operation
         );
         return undef;
@@ -4026,10 +4024,8 @@ sub delete_list_member_picture {
 #
 ######################################################
 sub send_notify_to_editor {
-
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $operation, $param) = @_;
-    Log::do_log('debug2', 'List::send_notify_to_editor(%s, %s)',
-        $self->{'name'}, $operation);
 
     my @to    = $self->get_editors_email();
     my $robot = $self->{'domain'};
@@ -4044,12 +4040,7 @@ sub send_notify_to_editor {
         return undef;
     }
     unless (defined $operation) {
-        Log::do_log(
-            'err',
-            'List::send_notify_to_editor(%s) : missing incoming parameter "$operation"',
-            $self->{'name'}
-        );
-        return undef;
+        die 'missing incoming parameter "$operation"';
     }
     if (ref($param) eq 'HASH') {
 
@@ -4059,8 +4050,10 @@ sub send_notify_to_editor {
         unless (
             $self->send_file('listeditor_notification', \@to, $robot, $param))
         {
-            Log::do_log('notice',
-                "Unable to send template 'listeditor_notification' to $self->{'name'} list editor"
+            Log::do_log(
+                'notice',
+                'Unable to send template "listeditor_notification" to %s list editor',
+                $self
             );
             return undef;
         }
@@ -4079,7 +4072,7 @@ sub send_notify_to_editor {
             $self->send_file('listeditor_notification', \@to, $robot, $data))
         {
             Log::do_log('notice',
-                "Unable to send template 'listeditor_notification' to $self->{'name'} list editor"
+                'Unable to send template "listeditor_notification" to %s list editor'
             );
             return undef;
         }
@@ -4087,8 +4080,8 @@ sub send_notify_to_editor {
     } else {
         Log::do_log(
             'err',
-            'List::send_notify_to_editor(%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self->{'name'},
+            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            $self,
             $operation
         );
         return undef;
