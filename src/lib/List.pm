@@ -12887,7 +12887,7 @@ sub get_bounce_address {
 
 =over 4
 
-=item get_list_id ( )
+=item get_id ( )
 
 Return the list ID, different from the list address (uses the robot name)
 
@@ -12895,11 +12895,15 @@ Return the list ID, different from the list address (uses the robot name)
 
 =cut
 
-sub get_list_id {
+sub get_id {
     my $self = shift;
 
+    return '' unless $self->{'name'} and $self->{'domain'};
     return $self->{'name'} . '@' . $self->{'domain'};
 }
+
+# OBSOLETED: use get_id()
+sub get_list_id { shift->get_id }
 
 =over 4
 
