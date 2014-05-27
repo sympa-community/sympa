@@ -10321,12 +10321,12 @@ sub get_which_db {
 
         unless (
             $sth = SDM::do_prepared_query(
-                sprintf(
-                    q{SELECT %s
-                    FROM subscriber_table
-                    WHERE user_subscriber = ?},
-                    _list_member_cols()
-                ),
+                q{SELECT list_subscriber, robot_subscriber, bounce_subscriber,
+                         reception_subscriber, topics_subscriber,
+                         include_sources_subscriber, subscribed_subscriber,
+                         included_subscriber
+                  FROM subscriber_table
+                  WHERE user_subscriber = ?},
                 $email
             )
             ) {
