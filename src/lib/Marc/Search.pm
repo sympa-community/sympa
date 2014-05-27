@@ -7,12 +7,12 @@ package Marc::Search;
 use strict;
 use warnings;
 use Encode qw();
-use File::Find;
+use File::Find qw();
 use HTML::Entities qw();
 
 use base qw(Marc);
 
-our $VERSION = "4.3";
+our $VERSION = "4.3+Sympa-6.2";
 our ($AUTOLOAD, @MSGFILES);
 
 ##------------------------------------------------------------------------##
@@ -248,7 +248,7 @@ sub search {
     my @directories = split /\0/, $directories;
     foreach my $dir (@directories) {
         my $directory = ($self->search_base . '/' . $dir . '/');
-        find(
+        File::Find::find(
             {   wanted          => \&_get_file_list,
                 untaint         => 1,
                 untaint_pattern => qr|^([-@\w./]+)$|

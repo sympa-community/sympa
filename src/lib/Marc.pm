@@ -9,7 +9,7 @@ use warnings;
 use Carp qw();
 
 our $AUTOLOAD;
-our $VERSION = "4.3";
+our $VERSION = "4.3+Sympa-6.2";
 
 ##------------------------------------------------------------------------##
 ## Constructor
@@ -42,10 +42,15 @@ sub AUTOLOAD {
     $name =~ s/^.*://;
 
     unless (exists($self->{permitted}->{$name})) {
-        message('arcsearch_marc_autoload_no_access');
-        wwslog('info',
-            'arcsearch_marc: Can not access %s field in object of class %s',
-            $name, $type);
+        #message('arcsearch_marc_autoload_no_access');
+        #wwslog('info',
+        #    'arcsearch_marc: Can not access %s field in object of class %s',
+        #    $name, $type);
+        Carp::carp(
+            sprintf
+                'arcsearch_marc: Can not access %s field in object of class %s',
+            $name, $type
+        );
         return undef;
     }
     if (@_) {
