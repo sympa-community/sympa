@@ -62,6 +62,8 @@ my %pid = ();
 
 my $send_spool;    ## for calling context
 
+our $log_smtp;     # SMTP logging is enabled or not
+
 ### PUBLIC FUNCTIONS ###
 
 ####################################################
@@ -1096,7 +1098,7 @@ sub smtpto {
 
         exit 1;    ## Should never get there.
     }
-    if ($main::options{'mail'}) {
+    if ($log_smtp) {
         $str = "safefork: $sendmail $sendmail_args -f $from ";
         if (!ref($rcpt)) {
             $str .= $rcpt;

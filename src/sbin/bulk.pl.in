@@ -83,16 +83,23 @@ unless (SDM::check_db_connect()) {
     );
 }
 
+# Enable SMTP logging if required
+my $default_log_smtp = $main::options{'mail'}
+    || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+$mail::log_smtp = $default_log_smtp;
 # setting log_level using conf unless it is set by calling option
+my $default_log_level;
 if ($main::options{'log_level'}) {
-    Log::set_log_level($main::options{'log_level'});
+    $default_log_level = $main::options{'log_level'};
+    Log::set_log_level($default_log_level);
     Log::do_log(
         'info',
         'Configuration file read, log level set using options : %s',
         $main::options{'log_level'}
     );
 } else {
-    Log::set_log_level($Conf::Conf{'log_level'});
+    $default_log_level = $Conf::Conf{'log_level'};
+    Log::set_log_level($default_log_level);
     Log::do_log(
         'info',
         'Configuration file read, default log level %s',
@@ -177,6 +184,11 @@ $Conf::Conf{'maxsmtp'} =
     int($Conf::Conf{'maxsmtp'} / $Conf::Conf{'bulk_max_count'});
 
 while (!$end) {
+    # Enable SMTP logging if required.
+    $mail::log_smtp = $default_log_smtp;
+    # setting log_level using conf unless it is set by calling option
+    Log::set_log_level($default_log_level);
+
     List::init_list_cache();
     # Process grouped notifications
     List::send_notify_to_listmaster(undef, undef, undef, 1);
@@ -346,8 +358,24 @@ while (!$end) {
             $messagekey = $bulk->{'messagekey'};
         }
 
-        my $data;    #HASH which will contain the attributes of the subscriber
+        # Get list/robot context.
+        # NOTE: The robot that injected packet can no longer be available.
+        # In such case fallback to site-wide robot.
+        my $listname = $bulk->{'listname'};
+        my $robot    = $bulk->{'robot'};
+        $robot = $Conf::Conf{'domain'}
+            unless $robot and $robot ne '*' and Conf::valid_robot($robot);
 
+        # Enable SMTP logging if required.
+        $mail::log_smtp = $main::options{'mail'}
+            || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'), 'on');
+        # setting log_level using conf unless it is set by calling option
+        Log::set_log_level((defined $main::options{'log_level'})
+            ? $main::options{'log_level'}
+            : Conf::get_robot_conf($robot, 'log_level'));
+
+        #HASH which will contain the attributes of the subscriber
+        my $data;
         # Initialization of the HASH : $data. It will be used by parse_tt2 to
         # personalized messages.
         $data->{'messageid'} = $message_from_spool->{'messageid'};
@@ -371,10 +399,6 @@ while (!$end) {
         #  -5 remove existing signature if altered
         #  -6 dkim sign
         #
-
-        #my $list = List->new($bulk->{'listname'}, $bulk->{'robot'});
-        my $listname = $bulk->{'listname'};
-        my $robot    = $bulk->{'robot'};
 
         if (   ($bulk->{'verp'})
             || ($bulk->{'merge'})
