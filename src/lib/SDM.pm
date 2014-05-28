@@ -33,6 +33,7 @@ use Sympa::DatabaseDescription;
 use Log;
 use List;
 use SQLSource;
+use tools;
 
 # db structure description has moved in Sympa/Constant.pm
 my %db_struct = Sympa::DatabaseDescription::db_struct();

@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use Carp qw();
 
+use Auth;
 use Sympa::DatabaseDescription;
 use Sympa::Language;
 use Log;
@@ -269,7 +270,7 @@ sub AUTOLOAD {
 =cut
 
 sub get_users {
-    Carp::croak();
+    die;
 }
 
 ############################################################################
@@ -623,10 +624,8 @@ sub clean_user {
     my $user = shift;
 
     unless (ref $user eq 'Sympa::User') {
-        my $level = $Carp::CarpLevel;
-        $Carp::CarpLevel = 1;
+        local $Carp::CarpLevel = 1;
         Carp::carp("Deprecated usage: user should be a Sympa::User object");
-        $Carp::CarpLevel = $level;
 
         if (ref $user eq 'HASH') {
             $user = bless $user => __PACKAGE__;
@@ -645,11 +644,9 @@ sub clean_users {
     foreach my $user (@$users) {
         unless (ref $user eq 'Sympa::User') {
             unless ($warned) {
-                my $level = $Carp::CarpLevel;
-                $Carp::CarpLevel = 1;
+                local $Carp::CarpLevel = 1;
                 Carp::carp(
                     "Deprecated usage: user should be a Sympa::User object");
-                $Carp::CarpLevel = $level;
 
                 $warned = 1;
             }

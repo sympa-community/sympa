@@ -25,6 +25,7 @@
 package Sympa::DatabaseDescription;
 
 use strict;
+use warnings;
 
 my %full_db_struct = (
     'subscriber_table' => {

@@ -17,6 +17,7 @@ use Sympa::Constants;
 use List;
 use Log;
 use SDM;
+use tools;
 
 unless (Conf::load(Sympa::Constants::CONFIG)) {
     die "Can't load Sympa configuration file";

@@ -28,12 +28,10 @@ use strict;
 use warnings;
 use DBI;
 
-use Log;
 use Conf;
-use List;
-use tools;
-use tt2;
 use Datasource;
+use List;
+use Log;
 
 ## Structure to keep track of active connections/connection status
 ## Key : connect_string (includes server+port+dbname+DB type)

@@ -1755,7 +1755,7 @@ sub escape_regexp {
 # FIXME: Should not use.
 sub escape_chars {
     my $s          = shift;
-    my $except     = shift;                               ## Exceptions
+    my $except     = shift;                            ## Exceptions
     my $ord_except = ord $except if defined $except;
 
     ## Escape chars
@@ -1784,7 +1784,7 @@ sub escape_chars {
 ## Q-decode it first
 sub escape_docname {
     my $filename = shift;
-    my $except   = shift;                        ## Exceptions
+    my $except   = shift;    ## Exceptions
 
     ## Q-decode
     $filename = MIME::EncWords::decode_mimewords($filename);

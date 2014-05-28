@@ -28,9 +28,12 @@ use strict;
 use warnings;
 use CGI::Cookie;
 
+use Conf;
+use cookielib;
 use Sympa::Language;
 use Log;
-use Conf;
+use SDM;
+use tools;
 
 # this structure is used to define which session attributes are stored in a
 # dedicated database col where others are compiled in col 'data_session'
@@ -426,8 +429,7 @@ sub renew {
         SDM::quote($remote_addr), $refresh_term
     );
     unless ($sth) {
-        Sympa::Log::Syslog::do_log('err',
-            'Unable to renew session ID for session %s',
+        Log::do_log('err', 'Unable to renew session ID for session %s',
             $self->{'id_session'});
         return undef;
     }

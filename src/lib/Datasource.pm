@@ -26,6 +26,7 @@ package Datasource;
 
 use strict;
 use warnings;
+use Digest::MD5 qw();
 
 use Log;
 use Sympa::Regexps;

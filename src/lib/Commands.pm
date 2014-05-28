@@ -26,17 +26,20 @@ package Commands;
 
 use strict;
 use warnings;
+use Mail::Address;
 use MIME::Parser;
 
+use Archive;
 use Conf;
-use Sympa::Constants;
 use Sympa::Language;
 use List;
 use Log;
 use Message;
 use Sympa::Regexps;
 use report;
+use Scenario;
 use tools;
+use Sympa::User;
 
 my %comms = (
     'add'                               => 'add',
@@ -786,7 +789,7 @@ sub verify {
     unless ($list) {
         report::reject_report_cmd('user', 'no_existing_list',
             {'listname' => $listname}, $cmd_line);
-        Sympa::Log::Syslog::do_log('info',
+        Log::do_log('info',
             'VERIFY from %s refused, unknown list for robot %s',
             $sender, $robot);
         return 'unknown_list';

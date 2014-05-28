@@ -26,15 +26,22 @@ package Upgrade;
 
 use strict;
 use warnings;
-use Carp qw();
-use File::Path;
+use Encode qw();
+use File::Find qw();
+use File::Path qw();
 use POSIX qw();
 
+use Archive;
+use Auth;
 use Conf;
-use Sympa::Language;
-use Log;
+use confdef;
 use Sympa::Constants;
+use Sympa::Language;
+use List;
+use Log;
+use Message;
 use SDM;
+use tools;
 
 my $language = Sympa::Language->instance;
 
@@ -358,7 +365,7 @@ sub upgrade {
                 my $statement;
                 my $sth;
 
-                $sth = SMD::do_query(q{SELECT max(%s) FROM %s},
+                $sth = SDM::do_query(q{SELECT max(%s) FROM %s},
                     $field, $check{$field});
                 unless ($sth) {
                     Log::do_log('err', 'Unable to prepare SQL statement');
@@ -1172,13 +1179,13 @@ sub upgrade {
         $language->pop_lang;
 
         if (%migrated) {
-            warn sprintf("Unable to rename %s : %s", $sympa_conf, $!)
+            warn sprintf 'Unable to rename %s : %s', $sympa_conf, $!
                 unless rename $sympa_conf, "$sympa_conf.$date";
             ## Write new config files
             my $umask = umask 037;
             unless (open $fh, '>', $sympa_conf) {
                 umask $umask;
-                die sprintf("Unable to open %s : %s", $sympa_conf, $!);
+                die sprintf 'Unable to open %s : %s', $sympa_conf, $!;
             }
             umask $umask;
             chown [getpwnam(Sympa::Constants::USER)]->[2],
@@ -1194,7 +1201,7 @@ sub upgrade {
 
         if (-r $wwsympa_conf) {
             ## Keep old config file
-            warn sprintf("Unable to rename %s : %s", $wwsympa_conf, $!)
+            warn sprintf 'Unable to rename %s : %s', $wwsympa_conf, $!
                 unless rename $wwsympa_conf, "$wwsympa_conf.$date";
             printf
                 "%s will NO LONGER be used.\nPrevious version has been saved as %s.\n",
@@ -1224,7 +1231,7 @@ sub upgrade {
         }
 
         unless (opendir DIR, $spooldir) {
-            Carp::croak(sprintf("Can't open dir %s: %s", $spooldir, "$!"));
+            die sprintf 'Can\t open dir %s: %s', $spooldir, "$!";
             ## No return.
         }
         my @qfile = grep !/^\./, readdir DIR;

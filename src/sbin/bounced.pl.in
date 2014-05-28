@@ -37,9 +37,10 @@ use lib '--modulesdir--';
 use strict;
 use warnings;
 use Getopt::Long;
+use Mail::Address;
 use MIME::Parser;
 use Pod::Usage;
-use POSIX;
+use POSIX qw();
 
 use Bounce;
 use Conf;
@@ -48,6 +49,7 @@ use List;
 use Log;
 use mail;
 use Sympa::Regexps;
+use SDM;
 use tools;
 use tracking;
 

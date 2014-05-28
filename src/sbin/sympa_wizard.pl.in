@@ -30,6 +30,7 @@ use Getopt::Long;
 use Pod::Usage;
 use Sys::Hostname qw();
 
+use confdef;
 use Sympa::Constants;
 use Sympa::ModDef;
 
@@ -38,7 +39,8 @@ my $modfail;      # any of required modules are not installed.
 
 BEGIN {
     $with_CPAN = eval { require CPAN; };
-    $modfail = !eval { require Conf; require tools; };
+    $modfail =
+        !eval { require Conf; require Sympa::Language; require tools; };
 }
 
 # Detect console encoding.
@@ -108,8 +110,6 @@ if ($options{help}) {
 exit 0;
 
 sub create_configuration {
-    require confdef;
-
     my $conf;
     if ($options{create} eq '' or $options{create} eq 'sympa.conf') {
         $conf = $options{target} ? $options{target} : $sympa_conf;

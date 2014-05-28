@@ -26,12 +26,15 @@ package Archive;
 
 use strict;
 use warnings;
-use Carp qw();
 use Cwd qw();
+use Digest::MD5 qw();
 use Encode qw();
 use HTML::Entities qw();
 
+use Conf;
 use Log;
+use Message;
+use tools;
 
 my $serial_number = 0;    # incremented on each archived mail
 
@@ -376,7 +379,7 @@ sub convert_single_message {
         $listname = '';
         $hostname = Conf::get_robot_conf($that, 'host');
     } else {
-        Carp::croak('bug in logic.  Ask developer');
+        die 'bug in logic.  Ask developer';
     }
 
     my $msg_as_string;
@@ -385,7 +388,7 @@ sub convert_single_message {
     } elsif (ref $message eq 'HASH') {
         $msg_as_string = $message->{'messageasstring'};
     } else {
-        Carp::croak('bug in logic.  Ask developer');
+        die 'bug in logic.  Ask developer';
     }
 
     my $destination_dir = $opts{'destination_dir'};

@@ -31,7 +31,10 @@ use POSIX qw();
 use Scalar::Util;
 use Sys::Syslog qw();
 
+use Conf;
 use List;
+use SDM;
+use tools;
 
 my ($log_facility, $log_socket_type, $log_service, $sth, @sth_stack,
     $rows_nb);

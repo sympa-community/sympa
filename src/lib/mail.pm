@@ -26,20 +26,22 @@ package mail;
 
 use strict;
 use warnings;
-use Carp qw();
 use DateTime;
+use Encode qw();
 use MIME::Charset;
 use MIME::EncWords;
 use MIME::Parser;
 use MIME::Tools;
-use POSIX;
+use POSIX qw();
 
 use Bulk;
 use Conf;
 use Sympa::Constants;
 use List;
 use Log;
+use Message;
 use tools;
+use tt2;
 
 my $opensmtp = 0;
 my $fh       = 'fh0000000000';    ## File handle for the stream.
@@ -1071,8 +1073,7 @@ sub smtpto {
     *OUT = ++$fh;
 
     if (!pipe(IN, OUT)) {
-        Carp::croak(
-            sprintf('Unable to create a channel in smtpto: %s', "$!"));
+        die "Unable to create a channel in smtpto: $!";
         ## No return
     }
     $pid = tools::safefork();

@@ -37,7 +37,7 @@ This module keeps definition of modules required by Sympa.
 package Sympa::ModDef;
 
 use strict;
-
+use warnings;
 use English qw(-no_match_vars);
 
 ## This defines the modules :

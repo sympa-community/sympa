@@ -28,15 +28,16 @@
 package Sympa::Template::Compat;
 
 use strict;
-use base 'Template::Provider';
-use Encode;
+use warnings;
+
+use base qw(Template::Provider);
 
 sub _load {
-	my ($self, $name, $alias) = @_;
-	my ($data, $error) = $self->SUPER::_load($name, $alias);
-	$data->{text} = _translate($data->{text});
+    my ($self, $name, $alias) = @_;
+    my ($data, $error) = $self->SUPER::_load($name, $alias);
+    $data->{text} = _translate($data->{text});
 
-	return ($data, $error);
+    return ($data, $error);
 }
 
 sub _translate {
@@ -54,8 +55,8 @@ sub _translate {
     s/\[\s*PARSE\s*(.*?)\]/[% PROCESS \$$1 IF $1 %]/ig;
 
     # variable access
-    while(s/\[(.*?)([^\]-]+?)->(\d+)(.*)\]/[$1$2.item('$3')$4]/g){};
-    while(s/\[(.*?)([^\]-]+?)->(\w+)(.*)\]/[$1$2.$3$4]/g){};
+    while (s/\[(.*?)([^\]-]+?)->(\d+)(.*)\]/[$1$2.item('$3')$4]/g) { }
+    while (s/\[(.*?)([^\]-]+?)->(\w+)(.*)\]/[$1$2.$3$4]/g)         { }
     s/\[\s*SET\s+(\w+)=(.*?)\s*\]/[% SET $1 = $2 %]/ig;
 
     # foreach
@@ -69,12 +70,12 @@ sub _translate {
 
     ## Be careful to absolute path
     if (/\[%\s*(PROCESS|INSERT)\s*\'(\S+)\'\s*%\]/) {
-	my $file = $2;
-	my $new_file = $file;
-	$new_file =~ s/\.tpl$/\.tt2/;
-	my @path = split /\//, $new_file;
-	$new_file = $path[$#path];
-	s/\'$file\'/\'$new_file\'/;
+        my $file     = $2;
+        my $new_file = $file;
+        $new_file =~ s/\.tpl$/\.tt2/;
+        my @path = split /\//, $new_file;
+        $new_file = $path[$#path];
+        s/\'$file\'/\'$new_file\'/;
     }
 
     # setoption

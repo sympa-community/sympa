@@ -32,10 +32,13 @@ use Net::Netmask;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
+use Ldap;
 use LDAPSource;
 use List;
 use Log;
+use SQLSource;
 use tools;
+use Sympa::User;
 
 my %all_scenarios;
 my %persistent_cache;
@@ -1034,7 +1037,7 @@ sub verify {
             return -1;   ## always skip this rule because we can't evaluate it
         }
         my $block;
-        unless ($block = new2 Net::Netmask($args[0])) {
+        unless ($block = Net::Netmask->new2($args[0])) {
             Log::do_log('err',
                 "error rule syntaxe : failed to parse netmask '$args[0]'");
             return undef;

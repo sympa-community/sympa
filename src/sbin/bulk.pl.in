@@ -30,8 +30,9 @@
 use lib '--modulesdir--';
 use strict;
 use warnings;
-use Pod::Usage;
 use Getopt::Long;
+use Pod::Usage;
+use POSIX qw();
 
 use Bulk;
 use Conf;
@@ -39,6 +40,8 @@ use Sympa::Constants;
 use List;
 use Log;
 use mail;
+use Message;
+use SDM;
 use tools;
 use tracking;
 
@@ -364,15 +367,20 @@ while (!$end) {
         my $listname = $bulk->{'listname'};
         my $robot    = $bulk->{'robot'};
         $robot = $Conf::Conf{'domain'}
-            unless $robot and $robot ne '*' and Conf::valid_robot($robot);
+            unless $robot
+                and $robot ne '*'
+                and Conf::valid_robot($robot);
 
         # Enable SMTP logging if required.
         $mail::log_smtp = $main::options{'mail'}
-            || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'), 'on');
+            || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
+            'on');
         # setting log_level using conf unless it is set by calling option
-        Log::set_log_level((defined $main::options{'log_level'})
+        Log::set_log_level(
+            (defined $main::options{'log_level'})
             ? $main::options{'log_level'}
-            : Conf::get_robot_conf($robot, 'log_level'));
+            : Conf::get_robot_conf($robot, 'log_level')
+        );
 
         #HASH which will contain the attributes of the subscriber
         my $data;

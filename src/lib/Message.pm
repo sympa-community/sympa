@@ -46,8 +46,8 @@ use MIME::Parser;
 use Conf;
 use List;
 use Log;
+use Scenario;
 use tools;
-use tt2;
 
 =pod 
 
@@ -98,8 +98,6 @@ Creates a new Message object.
 =item * Mail::Address::parse
 
 =item * MIME::EncWords::decode_mimewords
-
-=item * MIME::Entity::as_string
 
 =item * MIME::Head::get
 

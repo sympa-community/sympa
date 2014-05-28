@@ -38,8 +38,9 @@ package Family;
 
 use strict;
 use warnings;
-use File::Copy;
+use File::Copy qw();
 use Term::ProgressBar;
+use XML::LibXML;
 
 use admin;
 use Conf;
@@ -49,6 +50,8 @@ use Sympa::Language;
 use List;
 use Log;
 use Sympa::Regexps;
+use Scenario;
+use tools;
 
 my $language = Sympa::Language->instance;
 
@@ -2229,32 +2232,6 @@ Splits the XML family file into XML list files. New list names are put in the ar
 
 =item * XML::LibXML::Document::createDocument
 
-=item * XML::LibXML::Document::documentElement
-
-=item * XML::LibXML::Document::encoding
-
-=item * XML::LibXML::Document::setDocumentElement
-
-=item * XML::LibXML::Document::toFile
-
-=item * XML::LibXML::Document::version
-
-=item * XML::LibXML::Node::childNodes
-
-=item * XML::LibXML::Node::getChildrenByTagName
-
-=item * XML::LibXML::Node::line_number
-
-=item * XML::LibXML::Node::nodeName
-
-=item * XML::LibXML::Node::nodeType
-
-=item * XML::LibXML::Node::textContent
-
-=item * XML::LibXML::Parser::line_numbers
-
-=item * XML::LibXML::Parser::parse_file
-
 =back 
 
 =cut
@@ -2986,7 +2963,7 @@ sub _copy_files {
 
     # instance.xml
     if (defined $file) {
-        unless (&File::Copy::copy("$dir/$file", "$list_dir/instance.xml")) {
+        unless (File::Copy::copy("$dir/$file", "$list_dir/instance.xml")) {
             Log::do_log(
                 'err',
                 'Family::_copy_files(%s) : impossible to copy %s/%s into %s/instance.xml : %s',

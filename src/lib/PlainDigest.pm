@@ -83,6 +83,7 @@ package PlainDigest;
 
 use strict;
 use warnings;
+use Encode qw();
 use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;

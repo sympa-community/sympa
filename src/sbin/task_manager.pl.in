@@ -31,6 +31,7 @@ use strict;
 use warnings;
 use Getopt::Long;
 use Pod::Usage;
+use POSIX qw();
 use Template;
 use Time::Local qw();
 
@@ -46,6 +47,7 @@ use SympaSession;
 use Task;
 use tools;
 use tracking;
+use Sympa::User;
 
 my $opt_d;
 my $opt_F;

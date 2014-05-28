@@ -28,6 +28,7 @@ use strict;
 use warnings;
 use SOAP::Transport::HTTP;
 
+use Log;
 use SympaSession;
 
 # 'base' pragma doesn't work here

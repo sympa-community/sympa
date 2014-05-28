@@ -30,18 +30,20 @@
 use lib '--modulesdir--';
 use strict;
 use warnings;
-use Digest::MD5;
+use Digest::MD5 qw();
 use Getopt::Long;
 use Pod::Usage;
+use POSIX qw();
 
-use Sympa::Constants;
-use List;
-use Message;
 use Conf;
-use Log;
+use Sympa::Constants;
 use Sympa::Language;
+use List;
+use Log;
 use mail;
+use Message;
 use Sympa::Regexps;
+use SDM;
 use tools;
 
 my $daemon_name = Log::set_daemon($0);

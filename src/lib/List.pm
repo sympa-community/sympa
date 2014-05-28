@@ -26,9 +26,13 @@ package List;
 
 use strict;
 use warnings;
-use Encode;
+use Digest::MD5 qw();
+use Encode qw();
 use HTML::Entities qw();
+use HTTP::Request;
 use IO::Scalar;
+use Mail::Address;
+use MIME::Charset;
 use MIME::Decoder;
 use MIME::EncWords;
 use MIME::Entity;
@@ -36,8 +40,10 @@ use MIME::Parser;
 use POSIX qw();
 use Storable;
 use Time::Local qw();
+use XML::LibXML;
 
 use Archive;
+use Auth;
 use Conf;
 use Sympa::Constants;
 use Datasource;
@@ -57,6 +63,7 @@ use SDM;
 use SQLSource;
 use Task;
 use tools;
+use tracking;
 use tt2;
 use Sympa::User;
 use WebAgent;
@@ -1484,7 +1491,7 @@ sub _save_config_changes_file {
 #  the value is a scalar or a ref on an array of scalar
 # (for parameter digest : only for days)
 sub get_param_value {
-    Sympa::Log::Syslog::do_log('debug3', '(%s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $self        = shift;
     my $param       = shift;
     my $as_arrayref = shift || 0;

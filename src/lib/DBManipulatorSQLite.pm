@@ -26,6 +26,8 @@ package DBManipulatorSQLite;
 
 use strict;
 use warnings;
+use DBI qw();
+use POSIX qw();
 
 use Log;
 

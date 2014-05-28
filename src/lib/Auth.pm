@@ -34,6 +34,9 @@ use List;
 use Log;
 use report;
 use SDM;
+use SympaSession;
+use tools;
+use Sympa::User;
 
 ## return the password finger print (this proc allow futur replacement of md5
 ## by sha1 or ....)
