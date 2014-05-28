@@ -1,16 +1,21 @@
 A few Sympa developers prefer to reformat source files casually using
-automated tools, perltidy.
+automated tool, perltidy by Steve Hancock.
 
 To get perltidy, install Perl-Tidy CPAN module or corresponding package
-(if you are using package management system such as RPM, ports etc.).
+(if you are using package management system such as RPM, *BSD ports etc.).
 
 dot.perltidyrc is the perltidy configuration file currently used to reformat
 Sympa sources.  To use this file, copy it to your home directory renaming it
-to ".perltidy", and run:
+to ".perltidyrc", and run:
 
-  perltidy -it=2 <source to be reformatted>
+  perltidy -it=2 source_to_be_reformatted
 
 and so on.  To know more about perltidy, run:
 
-  perltidy -h | less
+  perltidy -h
 
+or visit The Perltidy Home Page:
+
+  http://perltidy.sourceforge.net/
+
+$$
