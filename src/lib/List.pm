@@ -1033,14 +1033,20 @@ sub load {
     my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
     my $time_subscribers;
     my $time_stats      = (stat("$self->{'dir'}/stats"))[9];
+    my $main_config_time = (stat(Sympa::Constants::CONFIG))[9];
+    my $web_config_time = (stat(Sympa::Constants::WWSCONFIG))[9];
     my $config_reloaded = 0;
     my $admin;
-
-    if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
-           'binary_file'
+    
+    if (
+        Conf::get_robot_conf($self->{'domain'}, 'cache_list_config')
+            eq 'binary_file'
+        && ! $options->{'reload_config'}
         && $time_config_bin > $self->{'mtime'}->[0]
-        && $time_config <= $time_config_bin
-        && !$options->{'reload_config'}) {
+        && $time_config_bin >= $time_config 
+        && $time_config_bin >= $main_config_time
+        && $time_config_bin >= $web_config_time
+        ){
 
         ## Get a shared lock on config file first
         my $lock_fh =
@@ -1064,13 +1070,13 @@ sub load {
         $config_reloaded = 1;
         $m1              = $time_config_bin;
         $lock_fh->close();
-
-    } elsif ($self->{'name'} ne $name
-        || $time_config > ($self->{'mtime'}->[0] || 0)
-        || $options->{'reload_config'}) {
-        $admin =
-            _load_list_config_file($self->{'dir'}, $self->{'domain'},
-            'config');
+    }elsif (
+        $self->{'name'} ne $name
+        || $time_config > $self->{'mtime'}->[0]
+        || $options->{'reload_config'}
+        ) {
+	$admin =
+        _load_admin_file($self->{'dir'}, $self->{'domain'} ,'config');
 
         ## Get a shared lock on config file first
         my $lock_fh =
