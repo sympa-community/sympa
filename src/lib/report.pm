@@ -56,8 +56,7 @@ use Log;
 ##############################################################
 sub reject_report_msg {
     my ($type, $error, $user, $param, $robot, $msg_string, $list) = @_;
-    Log::do_log('debug2', "reject::reject_report_msg(%s,%s,%s)",
-        $type, $error, $user);
+    Log::do_log('debug2', '(%s, %s, %s)', $type, $error, $user);
 
     unless ($type eq 'intern'
         or $type eq 'intern_quiet'
@@ -152,7 +151,7 @@ sub _get_msg_as_hash {
     } elsif (ref($msg_object) =~ /^Message/) {   ## Sympa's own Message object
         $msg_entity = $msg_object->{'msg'};
     } else {
-        Log::do_log('err', "reject_report_msg: wrong type for msg parameter");
+        Log::do_log('err', 'Wrong type for msg parameter');
     }
 
     my $head        = $msg_entity->head;

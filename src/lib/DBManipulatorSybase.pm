@@ -270,7 +270,7 @@ sub update_field {
             $param->{'type'},  $options
         )
         ) {
-        Log::do_log('err', 'Could not change field \'%s\' in table\'%s\'.',
+        Log::do_log('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
     }
@@ -328,7 +328,7 @@ sub add_field {
 
     my $report = sprintf('Field %s added to table %s (options : %s)',
         $param->{'field'}, $param->{'table'}, $options);
-    Log::do_log('info', 'Field %s added to table %s  (options : %s)',
+    Log::do_log('info', 'Field %s added to table %s (options: %s)',
         $param->{'field'}, $param->{'table'}, $options);
 
     return $report;

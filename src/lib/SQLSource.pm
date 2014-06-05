@@ -44,13 +44,14 @@ sub new {
     my $pkg   = shift;
     my $param = shift;
     my $self  = $param;
-    Log::do_log('debug', "Creating new SQLSource object for RDBMS '%s'",
+    Log::do_log('debug', 'Creating new SQLSource object for RDBMS "%s"',
         $param->{'db_type'});
     my $actualclass;
     our @ISA = qw(Datasource);    #FIXME FIXME
     if ($param->{'db_type'} =~ /^mysql$/i) {
         unless (eval "require DBManipulatorMySQL") {
-            Log::do_log('err', "Unable to use DBManipulatorMySQL module: $@");
+            Log::do_log('err', 'Unable to use DBManipulatorMySQL module: %s',
+                $@);
             return undef;
         }
         require DBManipulatorMySQL;
@@ -293,7 +294,7 @@ sub establish_connection {
             if ($self->{'reconnect_options'}{'warn'}) {
                 Log::do_log(
                     'notice',
-                    'Connection to Database %s restored.',
+                    'Connection to Database %s restored',
                     $self->{'connect_string'}
                 );
                 List::send_notify_to_listmaster('db_restored',
@@ -401,7 +402,7 @@ sub do_query {
 
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
-    Log::do_log('debug3', "Will perform query '%s'", $s);
+    Log::do_log('debug3', 'Will perform query "%s"', $s);
 
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
         # Check connection to database in case it would be the cause of the
@@ -414,7 +415,7 @@ sub do_query {
             unless ($self->{'sth'} = $self->{'dbh'}->prepare($statement)) {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
-                Log::do_log('err', 'Unable to prepare SQL statement %s : %s',
+                Log::do_log('err', 'Unable to prepare SQL statement %s: %s',
                     $trace_statement, $self->{'dbh'}->errstr);
                 return undef;
             }
@@ -442,7 +443,7 @@ sub do_query {
                         my $trace_statement = sprintf $query,
                             @{$self->prepare_query_log_values(@params)};
                         Log::do_log('err',
-                            'Unable to prepare SQL statement %s : %s',
+                            'Unable to prepare SQL statement %s: %s',
                             $trace_statement, $self->{'dbh'}->errstr);
                         return undef;
                     }
@@ -451,8 +452,7 @@ sub do_query {
             unless ($self->{'sth'}->execute) {
                 my $trace_statement = sprintf $query,
                     @{$self->prepare_query_log_values(@params)};
-                Log::do_log('err',
-                    'Unable to execute SQL statement "%s" : %s',
+                Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
                     $trace_statement, $self->{'dbh'}->errstr);
                 return undef;
             }
@@ -477,7 +477,7 @@ sub do_prepared_query {
             $types{$i} = $p;
             push @params, shift;
         } elsif (ref $p) {
-            Log::do_log('err', 'unexpected %s object.  Ask developer',
+            Log::do_log('err', 'Unexpected %s object.  Ask developer',
                 ref $p);
             return undef;
         } else {
@@ -491,13 +491,13 @@ sub do_prepared_query {
     $query =~ s/^\s+//;
     $query =~ s/\s+$//;
     $query =~ s/\n\s*/ /g;
-    Log::do_log('debug3', "Will perform query '%s'", $query);
+    Log::do_log('debug3', 'Will perform query "%s"', $query);
 
     if ($self->{'cached_prepared_statements'}{$query}) {
         $sth = $self->{'cached_prepared_statements'}{$query};
     } else {
         Log::do_log('debug3',
-            'Did not find prepared statement for %s. Doing it.', $query);
+            'Did not find prepared statement for %s. Doing it', $query);
         unless ($sth = $self->{'dbh'}->prepare($query)) {
             unless ($self->connect()) {
                 Log::do_log('err', 'Unable to get a handle to %s database',
@@ -507,7 +507,7 @@ sub do_prepared_query {
                 unless ($sth = $self->{'dbh'}->prepare($query)) {
                     Log::do_log(
                         'err',
-                        'Unable to prepare SQL statement : %s',
+                        'Unable to prepare SQL statement: %s',
                         $self->{'dbh'}->errstr
                     );
                     return undef;
@@ -541,7 +541,7 @@ sub do_prepared_query {
                     unless ($sth = $self->{'dbh'}->prepare($query)) {
                         Log::do_log(
                             'err',
-                            'Unable to prepare SQL statement : %s',
+                            'Unable to prepare SQL statement: %s',
                             $self->{'dbh'}->errstr
                         );
                         return undef;
@@ -557,8 +557,7 @@ sub do_prepared_query {
 
             $self->{'cached_prepared_statements'}{$query} = $sth;
             unless ($sth->execute(@params)) {
-                Log::do_log('err',
-                    'Unable to execute SQL statement "%s" : %s',
+                Log::do_log('err', 'Unable to execute SQL statement "%s": %s',
                     $query, $self->{'dbh'}->errstr);
                 return undef;
             }
@@ -617,7 +616,7 @@ sub disconnect {
 }
 
 sub create_db {
-    Log::do_log('debug3', 'List::create_db()');
+    Log::do_log('debug3', '');
     return 1;
 }
 

@@ -55,7 +55,7 @@ Log::set_log_level($Conf::Conf{'log_level'});
 my ($aliases_file, $aliases_program, $aliases_db_type);
 if ($robot_id) {
     unless (Conf::valid_robot($robot_id)) {
-        Log::do_log('err', 'robot %s does not exist', $robot_id);
+        Log::do_log('err', 'Robot %s does not exist', $robot_id);
         exit 1;
     }
     $aliases_file    = Conf::get_robot_conf($robot_id, 'sendmail_aliases');
@@ -78,12 +78,12 @@ unless ($aliases_db_type =~ /\A\w+\z/) {
 }
 
 if ($aliases_program =~ m{\A/}) {
-    Log::do_log('debug2', 'executing "%s %s"',
+    Log::do_log('debug2', 'Executing "%s %s"',
         $aliases_program, $aliases_file);
 
     exec $aliases_program, $aliases_file;
 } elsif ($aliases_program eq 'makemap') {
-    Log::do_log('debug2', 'executing "%s %s %s < %s"',
+    Log::do_log('debug2', 'Executing "%s %s %s < %s"',
         q{--MAKEMAP--}, $aliases_db_type, $aliases_file, $aliases_file);
 
     unless (open STDIN, '<', $aliases_file) {
@@ -94,7 +94,7 @@ if ($aliases_program =~ m{\A/}) {
 } elsif ($aliases_program eq 'newaliases') {
     Log::do_log(
         'debug2',
-        'executing "%s"',
+        'Executing "%s"',
         q{--NEWALIASES-- --NEWALIASES_ARG--}
     );
 
@@ -107,12 +107,12 @@ if ($aliases_program =~ m{\A/}) {
         exec q{--NEWALIASES--};
     }
 } elsif ($aliases_program eq 'postalias') {
-    Log::do_log('debug2', 'executing "%s %s:%s"',
+    Log::do_log('debug2', 'Executing "%s %s:%s"',
         q{--POSTALIAS--}, $aliases_db_type, $aliases_file);
 
     exec q{--POSTALIAS--}, "$aliases_db_type:$aliases_file";
 } elsif ($aliases_program eq 'postmap') {
-    Log::do_log('debug2', 'executing "%s %s:%s"',
+    Log::do_log('debug2', 'Executing "%s %s:%s"',
         q{--POSTMAP--}, $aliases_db_type, $aliases_file);
 
     exec q{--POSTMAP--}, "$aliases_db_type:$aliases_file";

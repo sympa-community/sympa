@@ -131,8 +131,11 @@ sub new {
     if (defined $scenario->{'file_path'}) {
         ## Get the data from file
         unless (open SCENARIO, $scenario->{'file_path'}) {
-            Log::do_log('err',
-                "Failed to open scenario '$scenario->{'file_path'}'");
+            Log::do_log(
+                'err',
+                'Failed to open scenario "%s"',
+                $scenario->{'file_path'}
+            );
             return undef;
         }
         my $data = join '', <SCENARIO>;
@@ -190,7 +193,7 @@ sub new {
 ## Parse scenario rules
 sub _parse_scenario {
     my ($function, $robot, $scenario_name, $paragraph, $directory) = @_;
-    Log::do_log('debug2', "($function, $scenario_name, $robot)");
+    Log::do_log('debug2', '(%s, %s, %s)', $function, $scenario_name, $robot);
 
     my $structure = {};
     $structure->{'name'} = $scenario_name;
@@ -232,7 +235,7 @@ sub _parse_scenario {
             Log::do_log('err',
                 "error rule syntaxe in scenario $function rule line $. expected : <condition> <auth_mod> -> <action>"
             );
-            Log::do_log('err', "error parsing $current_rule");
+            Log::do_log('err', 'Error parsing %s', $current_rule);
             return undef;
         }
 
@@ -286,8 +289,7 @@ sub request_action {
     my $robot       = shift;
     my $context     = shift;
     my $debug       = shift;
-    Log::do_log('debug', 'List::request_action %s,%s,%s',
-        $operation, $auth_method, $robot);
+    Log::do_log('debug', '%s, %s, %s', $operation, $auth_method, $robot);
 
     my $trace_scenario;
 
@@ -383,8 +385,8 @@ sub request_action {
                 'auth_method' => '',
                 'condition'   => ''
             };
-            Log::do_log('info',
-                "$trace_scenario rejected reason parameter not defined")
+            Log::do_log('info', '%s rejected reason parameter not defined',
+                $trace_scenario)
                 if $log_it;
             return $return;
         }
@@ -413,8 +415,8 @@ sub request_action {
                     'auth_method' => '',
                     'condition'   => ''
                 };
-                Log::do_log('info',
-                    "$trace_scenario rejected reason list not open")
+                Log::do_log('info', '%s rejected reason list not open',
+                    $trace_scenario)
                     if $log_it;
                 return $return;
             }
@@ -457,7 +459,7 @@ sub request_action {
     }
 
     unless ((defined $scenario) && (defined $scenario->{'rules'})) {
-        Log::do_log('err', "Failed to load scenario for '$operation'");
+        Log::do_log('err', 'Failed to load scenario for "%s"', $operation);
         return undef;
     }
 
@@ -612,7 +614,7 @@ sub request_action {
 
             if ($result == 1) {
                 Log::do_log(
-                    'info', "rule '%s %s -> %s' accepted",
+                    'info', 'Rule "%s %s -> %s" accepted',
                     $rule->{'condition'}, $rule->{'auth_method'},
                     $rule->{'action'}
                 ) if $log_it;
@@ -627,7 +629,7 @@ sub request_action {
                     /^(do_it|reject|request_auth|owner|editor|editorkey|listmaster|ham|spam|unsure)/
                     ) {
                     Log::do_log('err',
-                        "Matched unknown action '%s' in scenario",
+                        'Matched unknown action "%s" in scenario',
                         $rule->{'action'});
                     return undef;
                 }
@@ -641,9 +643,9 @@ sub request_action {
             ) if $log_it;
         }
     }
-    Log::do_log('info', "no rule match, reject");
+    Log::do_log('info', 'No rule match, reject');
 
-    Log::do_log('info', "$trace_scenario : no rule match request rejected")
+    Log::do_log('info', '%s: no rule match request rejected', $trace_scenario)
         if $log_it;
 
     $return = {
@@ -658,17 +660,17 @@ sub request_action {
 ## check if email respect some condition
 sub verify {
     my ($context, $condition, $log_it) = @_;
-    Log::do_log('debug2', 'condition %s, log %s', $condition, $log_it);
+    Log::do_log('debug2', 'Condition %s, log %s', $condition, $log_it);
 
     my $robot = $context->{'robot_domain'};
 
 #    while (my($k,$v) = each %{$context}) {
-#	Log::do_log('debug3',"verify: context->{$k} = $v");
+#	Log::do_log('debug3','Context->{%s} = %s', $k, $v);
 #    }
 
     unless (defined($context->{'sender'})) {
         Log::do_log('info',
-            "internal error, no sender find in List::verify, report authors");
+            'Internal error, no sender find in List::verify, report authors');
         return undef;
     }
 
@@ -711,8 +713,8 @@ sub verify {
     unless ($condition =~
         /(\!)?\s*(true|is_listmaster|verify_netmask|is_editor|is_owner|is_subscriber|less_than|match|equal|message|older|newer|all|search|customcondition\:\:\w+)\s*\(\s*(.*)\s*\)\s*/i
         ) {
-        Log::do_log('err',
-            "error rule syntaxe: unknown condition $condition");
+        Log::do_log('err', 'Error rule syntaxe: unknown condition %s',
+            $condition);
         return undef;
     }
     my $negation = 1;
@@ -762,9 +764,10 @@ sub verify {
                 $value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
             } else {
                 Log::do_log('debug',
-                    "undefine variable context $value in rule $condition");
-                Log::do_log('info',
-                    "undefine variable context $value in rule $condition")
+                    'Undefine variable context %s in rule %s',
+                    $value, $condition);
+                Log::do_log('info', 'Undefine variable context %s in rule %s',
+                    $value, $condition)
                     if $log_it;
                 # a condition related to a undefined context variable is
                 # always false
@@ -851,7 +854,7 @@ sub verify {
                 }
             } else {
                 Log::do_log('info',
-                    'no message object found to evaluate rule %s', $condition)
+                    'No message object found to evaluate rule %s', $condition)
                     if $log_it;
                 return -1 * $negation;
             }
@@ -861,7 +864,7 @@ sub verify {
                 && defined($context->{'msg'}->effective_type() =~ /^text/)
                 && defined($context->{'msg'}->bodyhandle)) {
                 Log::do_log('info',
-                    'no proper textual message body to evaluate rule %s',
+                    'No proper textual message body to evaluate rule %s',
                     $condition)
                     if $log_it;
                 return -1 * $negation;
@@ -871,7 +874,7 @@ sub verify {
 
         } elsif ($value =~ /\[msg_part\-\>body\]/i) {
             unless (defined($context->{'msg'})) {
-                Log::do_log('info', 'no message to evaluate rule %s',
+                Log::do_log('info', 'No message to evaluate rule %s',
                     $condition)
                     if $log_it;
                 return -1 * $negation;
@@ -889,7 +892,7 @@ sub verify {
 
         } elsif ($value =~ /\[msg_part\-\>type\]/i) {
             unless (defined($context->{'msg'})) {
-                Log::do_log('info', 'no message to evaluate rule %s',
+                Log::do_log('info', 'No message to evaluate rule %s',
                     $condition)
                     if $log_it;
                 return -1 * $negation;
@@ -919,9 +922,10 @@ sub verify {
                 $value =~ s/\[(\w+)\]/$context->{$1}/i;
             } else {
                 Log::do_log('debug',
-                    "undefine variable context $value in rule $condition");
-                Log::do_log('info',
-                    "undefine variable context $value in rule $condition")
+                    'Undefine variable context %s in rule %s',
+                    $value, $condition);
+                Log::do_log('info', 'Undefine variable context %s in rule %s',
+                    $value, $condition)
                     if $log_it;
                 # a condition related to a undefined context variable is
                 # always false
@@ -968,15 +972,16 @@ sub verify {
         unless ($#args == 1) {
             Log::do_log(
                 'err',
-                "error rule syntaxe : incorrect argument number (%d instead of %d) for condition $condition_key",
+                'Incorrect argument number (%d instead of %d) for condition %s',
                 $#args + 1,
-                2
+                2,
+                $condition_key
             );
             return undef;
         }
     } elsif ($condition_key !~ /^customcondition::/o) {
-        Log::do_log('err',
-            "error rule syntaxe : unknown condition $condition_key");
+        Log::do_log('err', 'Error rule syntaxe: unknown condition %s',
+            $condition_key);
         return undef;
     }
 
@@ -1039,7 +1044,8 @@ sub verify {
         my $block;
         unless ($block = Net::Netmask->new2($args[0])) {
             Log::do_log('err',
-                "error rule syntaxe : failed to parse netmask '$args[0]'");
+                'Error rule syntaxe: failed to parse netmask "%s"',
+                $args[0]);
             return undef;
         }
         if ($block->match($ENV{'REMOTE_ADDR'})) {
@@ -1095,7 +1101,7 @@ sub verify {
         }
 
         if (!$list2) {
-            Log::do_log('err', "unable to create list object \"$args[0]\"");
+            Log::do_log('err', 'Unable to create list object "%s"', $args[0]);
             return -1 * $negation;
         }
 
@@ -1178,7 +1184,7 @@ sub verify {
 
         # Nothing can match an empty regexp.
         if ($regexp =~ /^$/) {
-            Log::do_log('info', "regexp '%s' is empty (rule %s)",
+            Log::do_log('info', 'Regexp "%s" is empty (rule %s)',
                 $regexp, $condition)
                 if $log_it;
             return -1 * $negation;
@@ -1209,7 +1215,7 @@ sub verify {
             };
         }
         if ($@) {
-            Log::do_log('err', 'cannot evaluate match: %s', $@);
+            Log::do_log('err', 'Cannot evaluate match: %s', $@);
             return undef;
         }
         if ($r) {
@@ -1222,7 +1228,7 @@ sub verify {
                 } else {
                     $args_as_string = $args[0];
                 }
-                Log::do_log('info', "'%s' matches regexp '%s' (rule %s)",
+                Log::do_log('info', '"%s" matches regexp "%s" (rule %s)',
                     $args_as_string, $regexp, $condition);
             }
             return $negation;
@@ -1237,7 +1243,7 @@ sub verify {
                     $args_as_string = $args[0];
                 }
                 Log::do_log('info',
-                    "'%s' does not match regexp '%s' (rule %s)",
+                    '"%s" does not match regexp "%s" (rule %s)',
                     $args_as_string, $regexp, $condition);
             }
             return -1 * $negation;
@@ -1251,12 +1257,12 @@ sub verify {
         $val_search = search($list || $robot, $args[0], $context);
         return undef unless defined $val_search;
         if ($val_search == 1) {
-            Log::do_log('info', "'%s' found in '%s', robot %s (rule %s)",
+            Log::do_log('info', '"%s" found in "%s", robot %s (rule %s)',
                 $context->{'sender'}, $args[0], $robot, $condition)
                 if $log_it;
             return $negation;
         } else {
-            Log::do_log('info', "'%s' NOT found in '%s', robot %s (rule %s)",
+            Log::do_log('info', '"%s" NOT found in "%s", robot %s (rule %s)',
                 $context->{'sender'}, $args[0], $robot, $condition)
                 if $log_it;
             return -1 * $negation;
@@ -1267,9 +1273,9 @@ sub verify {
     if ($condition_key eq 'equal') {
         if (ref($args[0])) {
             foreach my $arg (@{$args[0]}) {
-                Log::do_log('debug3', 'ARG: %s', $arg);
+                Log::do_log('debug3', 'Arg: %s', $arg);
                 if (lc($arg) eq lc($args[1])) {
-                    Log::do_log('info', "'%s' equals '%s' (rule %s)",
+                    Log::do_log('info', '"%s" equals "%s" (rule %s)',
                         lc($arg), lc($args[1]), $condition)
                         if $log_it;
                     return $negation;
@@ -1277,13 +1283,13 @@ sub verify {
             }
         } else {
             if (lc($args[0]) eq lc($args[1])) {
-                Log::do_log('info', "'%s' equals '%s' (rule %s)",
+                Log::do_log('info', '"%s" equals "%s" (rule %s)',
                     lc($args[0]), lc($args[1]), $condition)
                     if $log_it;
                 return $negation;
             }
         }
-        Log::do_log('info', "'%s' does NOT equal '%s' (rule %s)",
+        Log::do_log('info', '"%s" does NOT equal "%s" (rule %s)',
             lc($args[0]), lc($args[1]), $condition)
             if $log_it;
         return -1 * $negation;
@@ -1302,7 +1308,7 @@ sub verify {
                 }
                 Log::do_log(
                     'info',
-                    "custom condition '%s' returned an undef value with arguments '%s' (rule %s)",
+                    'Custom condition "%s" returned an undef value with arguments "%s" (rule %s)',
                     $condition,
                     $args_as_string,
                     $condition
@@ -1317,11 +1323,11 @@ sub verify {
             }
             if ($res == 1) {
                 Log::do_log('info',
-                    "'%s' verifies custom condition '%s' (rule %s)",
+                    '"%s" verifies custom condition "%s" (rule %s)',
                     $args_as_string, $condition, $condition);
             } else {
                 Log::do_log('info',
-                    "'%s' does not verify custom condition '%s' (rule %s)",
+                    '"%s" does not verify custom condition "%s" (rule %s)',
                     $args_as_string, $condition, $condition);
             }
         }
@@ -1332,9 +1338,9 @@ sub verify {
     if ($condition_key eq 'less_than') {
         if (ref($args[0])) {
             foreach my $arg (@{$args[0]}) {
-                Log::do_log('debug3', 'ARG: %s', $arg);
+                Log::do_log('debug3', 'Arg: %s', $arg);
                 if (tools::smart_lessthan($arg, $args[1])) {
-                    Log::do_log('info', "'%s' is less than '%s' (rule %s)",
+                    Log::do_log('info', '"%s" is less than "%s" (rule %s)',
                         $arg, $args[1], $condition)
                         if $log_it;
                     return $negation;
@@ -1342,14 +1348,14 @@ sub verify {
             }
         } else {
             if (tools::smart_lessthan($args[0], $args[1])) {
-                Log::do_log('info', "'%s' is less than '%s' (rule %s)",
+                Log::do_log('info', '"%s" is less than "%s" (rule %s)',
                     $args[0], $args[1], $condition)
                     if $log_it;
                 return $negation;
             }
         }
 
-        Log::do_log('info', "'%s' is NOT less than '%s' (rule %s)",
+        Log::do_log('info', '"%s" is NOT less than "%s" (rule %s)',
             $args[0], $args[1], $condition)
             if $log_it;
         return -1 * $negation;
@@ -1394,7 +1400,7 @@ sub search {
 
             unless (defined $context->{$var}) {
                 Log::do_log('err',
-                    "Failed to parse variable '%s' in filter '%s'",
+                    'Failed to parse variable "%s" in filter "%s"',
                     $var, $file);
                 return undef;
             }
@@ -1402,7 +1408,7 @@ sub search {
             if (defined $key) {    ## Should be a hash
                 unless (defined $context->{$var}{$key}) {
                     Log::do_log('err',
-                        "Failed to parse variable '%s.%s' in filter '%s'",
+                        'Failed to parse variable "%s.%s" in filter "%s"',
                         $var, $key, $file);
                     return undef;
                 }
@@ -1456,7 +1462,7 @@ sub search {
         my $res = $ds->fetch;
         $ds->disconnect();
         my $first_row = ref($res->[0]) ? $res->[0]->[0] : $res->[0];
-        Log::do_log('debug2', 'Result of SQL query : %d = %s',
+        Log::do_log('debug2', 'Result of SQL query: %d = %s',
             $first_row, $statement);
 
         if ($first_row == 0) {
@@ -1498,7 +1504,7 @@ sub search {
 
             unless (defined $context->{$var}) {
                 Log::do_log('err',
-                    "Failed to parse variable '%s' in filter '%s'",
+                    'Failed to parse variable "%s" in filter "%s"',
                     $var, $file);
                 return undef;
             }
@@ -1506,7 +1512,7 @@ sub search {
             if (defined $key) {    ## Should be a hash
                 unless (defined $context->{$var}{$key}) {
                     Log::do_log('err',
-                        "Failed to parse variable '%s.%s' in filter '%s'",
+                        'Failed to parse variable "%s.%s" in filter "%s"',
                         $var, $key, $file);
                     return undef;
                 }
@@ -1535,7 +1541,7 @@ sub search {
         my $ds    = LDAPSource->new($param);
 
         unless (defined $ds && ($ldap = $ds->connect())) {
-            Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+            Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
                 $param->{'ldap_host'});
             return undef;
         }
@@ -1567,7 +1573,7 @@ sub search {
         }
 
         $ds->disconnect()
-            or Log::do_log('notice', 'List::search_ldap.Unbind impossible');
+            or Log::do_log('notice', 'Unbind impossible');
         $persistent_cache{'named_filter'}{$filter_file}{$filter}{'update'} =
             time;
 
@@ -1575,7 +1581,7 @@ sub search {
             {'value'};
 
     } elsif ($filter_file =~ /\.txt$/) {
-        # Log::do_log('info', 'List::search: eval %s', $filter_file);
+        # Log::do_log('info', 'Eval %s', $filter_file);
         my @files = tools::search_fullpath(
             $that, $filter_file,
             subdir  => 'search_filters',
@@ -1595,19 +1601,19 @@ sub search {
 
         my $sender = lc($sender);
         foreach my $file (@files) {
-            Log::do_log('debug3', 'List::search: found file  %s', $file);
+            Log::do_log('debug3', 'Found file %s', $file);
             unless (open FILE, $file) {
                 Log::do_log('err', 'Could not open file %s', $file);
                 return undef;
             }
             while (<FILE>) {
-                # Log::do_log('debug3', 'List::search: eval rule %s', $_);
+                # Log::do_log('debug3', 'Eval rule %s', $_);
                 next if (/^\s*$/o || /^[\#\;]/o);
                 my $regexp = $_;
                 chomp $regexp;
                 $regexp =~ s/\*/.*/;
                 $regexp = '^' . $regexp . '$';
-                # Log::do_log('debug3', 'List::search: eval  %s =~ /%s/i',
+                # Log::do_log('debug3', 'Eval %s =~ /%s/i',
                 # $sender,$regexp);
                 return 1 if ($sender =~ /$regexp/i);
             }
@@ -1625,7 +1631,7 @@ sub verify_custom {
     my $timeout = 3600;
 
     my $filter = join('*', @{$args_ref});
-    Log::do_log('debug2', 'List::verify_custom(%s,%s,%s,%s)',
+    Log::do_log('debug2', '(%s, %s, %s, %s)',
         $condition, $filter, $robot, $list);
     if (defined($persistent_cache{'named_filter'}{$condition}{$filter})
         && (time <=
@@ -1656,14 +1662,14 @@ sub verify_custom {
     Log::do_log('notice', 'Use module %s for custom condition', $file);
     eval { require "$file"; };
     if ($@) {
-        Log::do_log('err', 'Error requiring %s : %s (%s)',
+        Log::do_log('err', 'Error requiring %s: %s (%s)',
             $condition, "$@", ref($@));
         return undef;
     }
     my $res;
     eval "\$res = CustomCondition::${condition}::verify(\@{\$args_ref});";
     if ($@) {
-        Log::do_log('err', 'Error evaluating %s : %s (%s)',
+        Log::do_log('err', 'Error evaluating %s: %s (%s)',
             $condition, "$@", ref($@));
         return undef;
     }
@@ -1707,12 +1713,12 @@ sub is_purely_closed {
     my $self = shift;
     foreach my $rule (@{$self->{'rules'}}) {
         if ($rule->{'condition'} ne 'true' && $rule->{'action'} !~ /reject/) {
-            Log::do_log('debug2', 'Scenario %s is not purely closed.',
+            Log::do_log('debug2', 'Scenario %s is not purely closed',
                 $self->{'title'});
             return 0;
         }
     }
-    Log::do_log('notice', 'Scenario %s is purely closed.',
+    Log::do_log('notice', 'Scenario %s is purely closed',
         $self->{'file_path'});
     return 1;
 }

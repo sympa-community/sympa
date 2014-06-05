@@ -400,7 +400,7 @@ sub get_global_user {
 
 ## Returns an array of all users in User table hash for a given user
 sub get_all_global_user {
-    Log::do_log('debug2', '()');
+    Log::do_log('debug2', '');
 
     my @users;
 
@@ -439,7 +439,7 @@ sub is_global_user {
         )
         ) {
         Log::do_log('err',
-            'Unable to check whether user %s is in the user table.');
+            'Unable to check whether user %s is in the user table');
         $sth = pop @sth_stack;
         return undef;
     }

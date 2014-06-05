@@ -53,7 +53,7 @@ my %Ldap = ();
 sub load {
     my $config = shift;
 
-    Log::do_log('debug3', 'Ldap::load(%s)', $config);
+    Log::do_log('debug3', '(%s)', $config);
 
     my $line_num   = 0;
     my $config_err = 0;
@@ -98,15 +98,14 @@ sub load {
         $Ldap{$i} = $o{$i}[0] || $Default_Conf{$i};
 
         unless ($valid_options{$i}) {
-            Log::do_log('err', "Line %d, unknown field: %s \n", $o{$i}[1],
-                $i);
+            Log::do_log('err', 'Line %d, unknown field: %s', $o{$i}[1], $i);
             $config_err++;
         }
     }
     ## Do we have all required values ?
     foreach $i (keys %required_options) {
         unless (defined $o{$i} or defined $Default_Conf{$i}) {
-            Log::do_log('err', "Required field not found : %s\n", $i);
+            Log::do_log('err', 'Required field not found: %s', $i);
             $config_err++;
             next;
         }

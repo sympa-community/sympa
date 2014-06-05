@@ -47,8 +47,7 @@ sub get_recipients_status {
     my $listname = shift;
     my $robot    = shift;
 
-    Log::do_log('debug2', 'get_recipients_status(%s,%s,%s)',
-        $msgid, $listname, $robot);
+    Log::do_log('debug2', '(%s, %s, %s)', $msgid, $listname, $robot);
 
     my $sth;
     my $pk;
@@ -110,13 +109,8 @@ sub db_init_notification_table {
     my $reception_option = $params{'reception_option'};
     my @rcpt             = @{$params{'rcpt'}};
 
-    Log::do_log(
-        'debug2',
-        "db_init_notification_table (msgid = %s, listname = %s, reception_option = %s",
-        $msgid,
-        $listname,
-        $reception_option
-    );
+    Log::do_log('debug2', '(msgid = %s, listname = %s, reception_option = %s',
+        $msgid, $listname, $reception_option);
 
     my $time = time;
 
@@ -179,7 +173,7 @@ sub db_insert_notification {
 
     Log::do_log(
         'debug2',
-        "db_insert_notification  :notification_id : %s, type : %s, recipient : %s, msgid : %s, status :%s",
+        'Notification_id: %s, type: %s, recipient: %s, msgid: %s, status: %s',
         $notification_id,
         $type,
         $status
@@ -223,7 +217,7 @@ sub find_notification_id_by_message {
     my $listname = shift;
     my $robot    = shift;
 
-    Log::do_log('debug2', 'find_notification_id_by_message(%s,%s,%s,%s)',
+    Log::do_log('debug2', '(%s, %s, %s, %s)',
         $recipient, $msgid, $listname, $robot);
     my $pk;
 
@@ -257,7 +251,7 @@ sub find_notification_id_by_message {
     if ($#pk_notifications > 0) {
         Log::do_log(
             'err',
-            'Found more then one pk_notification maching  (recipient=%s,msgis=%s,listname=%s,robot%s)',
+            'Found more then one pk_notification maching (recipient=%s, msgis=%s, listname=%s, robot%s)',
             $recipient,
             $msgid,
             $listname,
@@ -285,8 +279,7 @@ sub remove_message_by_id {
     my $listname = shift;
     my $robot    = shift;
 
-    Log::do_log('debug2',
-        'Remove message id =  %s, listname = %s, robot = %s',
+    Log::do_log('debug2', 'Remove message id = %s, listname = %s, robot = %s',
         $msgid, $listname, $robot);
     my $sth;
     unless (
@@ -323,13 +316,11 @@ sub remove_message_by_id {
 #
 ##############################################
 sub remove_message_by_period {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my $period   = shift;
     my $listname = shift;
     my $robot    = shift;
 
-    Log::do_log('debug2',
-        'Remove message by period=  %s, listname = %s, robot = %s',
-        $period, $listname, $robot);
     my $sth;
 
     my $limit = time - ($period * 24 * 60 * 60);

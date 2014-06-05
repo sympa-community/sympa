@@ -307,7 +307,7 @@ sub parse_tt2 {
     unless ($tt2->process($template, $data, $output)) {
         $last_error = $tt2->error();
         Log::do_log(
-            'err',     'Failed to parse %s : %s',
+            'err',     'Failed to parse %s: %s',
             $template, $last_error->as_string
         );
         Log::do_log(

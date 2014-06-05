@@ -42,7 +42,7 @@ use Log;
 sub new {
     my $class = shift;
     my $fh    = shift;
-    Log::do_log('debug2', 'Config_XML::new()');
+    Log::do_log('debug2', '');
 
     my $self   = {};
     my $parser = XML::LibXML->new();
@@ -67,7 +67,7 @@ sub new {
 ################################################
 sub createHash {
     my $self = shift;
-    Log::do_log('debug2', 'Config_XML::createHash()');
+    Log::do_log('debug2', '');
 
     unless ($self->{'root'}->nodeName eq 'list') {
         Log::do_log('err',
@@ -77,16 +77,14 @@ sub createHash {
     }
 
     unless (defined $self->_getRequiredElements()) {
-        Log::do_log('err',
-            "Config_XML::createHash() : error in required elements ");
+        Log::do_log('err', 'Error in required elements');
         return undef;
     }
 
     if ($self->{'root'}->hasChildNodes()) {
         my $hash = _getChildren($self->{'root'});
         unless (defined $hash) {
-            Log::do_log('err',
-                "Config_XML::createHash() : error in list elements ");
+            Log::do_log('err', 'Error in list elements');
             return undef;
         }
         if (ref($hash) eq "HASH") {
@@ -119,7 +117,7 @@ sub createHash {
 #########################################
 sub getHash {
     my $self = shift;
-    Log::do_log('debug2', 'Config_XML::getHash()');
+    Log::do_log('debug2', '');
 
     my $hash = {};
 
@@ -145,7 +143,7 @@ sub getHash {
 #################################################################
 sub _getRequiredElements {
     my $self = shift;
-    Log::do_log('debug3', 'Config_XML::_getRequiredElements()');
+    Log::do_log('debug3', '');
     my $error = 0;
 
     # listname element is obligatory
@@ -170,8 +168,7 @@ sub _getMultipleAndRequiredChild {
     my $self      = shift;
     my $nodeName  = shift;
     my $childName = shift;
-    Log::do_log('debug3', 'Config_XML::_getMultipleAndRequiredChild(%s,%s)',
-        $nodeName, $childName);
+    Log::do_log('debug3', '(%s, %s)', $nodeName, $childName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
 
@@ -183,18 +180,14 @@ sub _getMultipleAndRequiredChild {
         my @child = $o->getChildrenByTagName($childName);
         if ($#child < 0) {
             Log::do_log('err',
-                'Element "%s" is required for element "%s", line : %s',
+                'Element "%s" is required for element "%s", line: %s',
                 $childName, $nodeName, $o->line_number());
             return undef;
         }
 
         my $hash = _getChildren($o);
         unless (defined $hash) {
-            Log::do_log(
-                'err',
-                'Config_XML::_getMultipleAndRequiredChild() : error on _getChildren(%s) ',
-                $o->nodeName
-            );
+            Log::do_log('err', 'Error on _getChildren(%s)', $o->nodeName);
             return undef;
         }
 
@@ -217,7 +210,7 @@ sub _getMultipleAndRequiredChild {
 sub _getRequiredSingle {
     my $self     = shift;
     my $nodeName = shift;
-    Log::do_log('debug3', 'Config_XML::_getRequiredSingle(%s)', $nodeName);
+    Log::do_log('debug3', '(%s)', $nodeName);
 
     my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
 
@@ -226,7 +219,7 @@ sub _getRequiredSingle {
     }
 
     if ($#nodes < 0) {
-        Log::do_log('err', 'Element "%s" is required for the list ',
+        Log::do_log('err', 'Element "%s" is required for the list',
             $nodeName);
         return undef;
     }
@@ -237,7 +230,7 @@ sub _getRequiredSingle {
             push(@error, $i->line_number());
         }
         Log::do_log('err',
-            'Only one element "%s" is allowed for the list, lines : %s',
+            'Only one element "%s" is allowed for the list, lines: %s',
             $nodeName, join(", ", @error));
         return undef;
     }
@@ -262,11 +255,7 @@ sub _getRequiredSingle {
     } else {
         my $values = _getChildren($node);
         unless (defined $values) {
-            Log::do_log(
-                'err',
-                'Config_XML::_getRequiredSingle() : error on _getChildren(%s) ',
-                $node->nodeName
-            );
+            Log::do_log('err', 'Error on _getChildren(%s)', $node->nodeName);
             return undef;
         }
 
@@ -299,7 +288,7 @@ sub _getRequiredSingle {
 ##############################################
 sub _getChildren {
     my $node = shift;
-    Log::do_log('debug3', 'Config_XML::_getChildren(%s)', $node->nodeName);
+    Log::do_log('debug3', '(%s)', $node->nodeName);
 
     my %error_nodes;
     ## return value
@@ -324,11 +313,7 @@ sub _getChildren {
         if ($type == 1) {
             my $values = _getChildren($child);
             unless (defined $values) {
-                Log::do_log(
-                    'err',
-                    'Config_XML::_getChildren() : error on _getChildren(%s) ',
-                    $childName
-                );
+                Log::do_log('err', 'Error on _getChildren(%s)', $childName);
                 return undef;
             }
 
@@ -375,12 +360,9 @@ sub _getChildren {
 
         ## error
         if ($error) {
-            Log::do_log(
-                'err',
-                'Config_XML::_getChildren(%s) : the children are not homogeneous, line %s',
-                $node->nodeName,
-                $node->line_number()
-            );
+            Log::do_log('err',
+                '(%s) The children are not homogeneous, line %s',
+                $node->nodeName, $node->line_number());
             return undef;
         }
     }
@@ -413,7 +395,7 @@ sub _getChildren {
 ##################################################
 sub _verify_single_nodes {
     my $nodeList = shift;
-    Log::do_log('debug3', 'Config_XML::_verify_single_nodes()');
+    Log::do_log('debug3', '');
 
     my $error = 0;
     my %error_nodes;
@@ -432,7 +414,7 @@ sub _verify_single_nodes {
     foreach my $node (keys %error_nodes) {
         my $lines = join ', ', @{$nodeLines->{$node}};
         Log::do_log('err',
-            'Element %s is not declared in multiple but it is : lines %s',
+            'Element %s is not declared in multiple but it is: lines %s',
             $node, $lines);
         $error = 1;
     }
@@ -454,7 +436,7 @@ sub _verify_single_nodes {
 ###############################################
 sub _find_lines {
     my $nodeList = shift;
-    Log::do_log('debug3', 'Config_XML::_find_lines()');
+    Log::do_log('debug3', '');
     my $hash = {};
 
     foreach my $node (@$nodeList) {

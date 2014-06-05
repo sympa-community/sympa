@@ -46,7 +46,7 @@ my $serial_number = 0;    # incremented on each archived mail
 sub store_last {
     my ($list, $msg) = @_;
 
-    Log::do_log('debug2', 'archive::store ()');
+    Log::do_log('debug2', '');
 
     my ($filename, $newfile);
 
@@ -73,20 +73,19 @@ sub store_last {
 sub list {
     my $name = shift;
 
-    Log::do_log('debug', "archive::list($name)");
+    Log::do_log('debug', '(%s)', $name);
 
     my ($filename, $newfile);
     my (@l,        $i);
 
     unless (-d "$name") {
-        Log::do_log('warning',
-            "archive::list($name) failed, no directory $name");
+        Log::do_log('warning', '(%s) Failed, no directory %s', $name, $name);
 #      @l = ($msg::no_archives_available);
         return @l;
     }
     unless (opendir(DIR, "$name")) {
-        Log::do_log('warning',
-            "archive::list($name) failed, cannot open directory $name");
+        Log::do_log('warning', '(%s) Failed, cannot open directory %s',
+            $name, $name);
 #	@l = ($msg::no_archives_available);
         return @l;
     }
@@ -104,7 +103,7 @@ sub scan_dir_archive {
 
     my ($dir, $month) = @_;
 
-    Log::do_log('info', "archive::scan_dir_archive($dir, $month)");
+    Log::do_log('info', '(%s, %s)', $dir, $month);
 
     unless (opendir(DIR, "$dir/$month/arctxt")) {
         Log::do_log('info',
@@ -131,7 +130,7 @@ sub scan_dir_archive {
             return undef;
         }
 
-        Log::do_log('debug', "MAIL object : $mail");
+        Log::do_log('debug', 'MAIL object: %s', $mail);
 
         $i++;
         my $msg = {};
@@ -143,11 +142,8 @@ sub scan_dir_archive {
 
         $msg->{'full_msg'} = $mail->{'msg'}->as_string;
 
-        Log::do_log(
-            'debug',
-            'Archive::scan_dir_archive adding message %s in archive to send',
-            $msg->{'subject'}
-        );
+        Log::do_log('debug', 'Adding message %s in archive to send',
+            $msg->{'subject'});
 
         push @{$all_msg}, $msg;
     }
@@ -172,14 +168,14 @@ sub search_msgid {
 
     my ($dir, $msgid) = @_;
 
-    Log::do_log('info', "archive::search_msgid($dir, $msgid)");
+    Log::do_log('info', '(%s, %s)', $dir, $msgid);
 
     if ($msgid =~ /NO-ID-FOUND\.mhonarc\.org/) {
-        Log::do_log('err', 'remove_arc: no message id found');
+        Log::do_log('err', 'No message id found');
         return undef;
     }
     unless ($dir =~ /\d\d\d\d\-\d\d\/arctxt/) {
-        Log::do_log('info', "archive::search_msgid : dir $dir look unproper");
+        Log::do_log('info', 'Dir %s look unproper', $dir);
         return undef;
     }
     unless (opendir(ARC, "$dir")) {
@@ -222,7 +218,7 @@ sub last_path {
 
     my $list = shift;
 
-    Log::do_log('debug', 'Archived::last_path(%s)', $list->{'name'});
+    Log::do_log('debug', '(%s)', $list->{'name'});
 
     return undef unless ($list->is_archived());
     my $file = $list->{'dir'} . '/archives/last_message';
@@ -244,7 +240,7 @@ sub load_html_message {
     unless (open ARC, $parameters{'file_path'}) {
         Log::do_log(
             'err',
-            "Failed to load message '%s' : $!",
+            'Failed to load message "%s": %m',
             $parameters{'file_path'}
         );
         return undef;
@@ -289,7 +285,7 @@ sub clean_archive_directory {
         ) {
         Log::do_log(
             'err',
-            "Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling.",
+            'Unable to create a temporary directory where to store files for HTML escaping (%s). Cancelling',
             $number_of_copies
         );
         return undef;
@@ -304,7 +300,7 @@ sub clean_archive_directory {
         closedir DIR;
         if ($files_left_uncleaned) {
             Log::do_log('err',
-                "HTML cleaning failed for %s files in the directory %s.",
+                'HTML cleaning failed for %s files in the directory %s',
                 $files_left_uncleaned, $answer->{'dir_to_rebuild'});
         }
         $answer->{'dir_to_rebuild'} = $answer->{'cleaned_dir'};
@@ -347,7 +343,7 @@ sub clean_archived_message {
             return undef;
         }
     } else {
-        Log::do_log('err', 'HTML cleaning in file %s failed.', $output);
+        Log::do_log('err', 'HTML cleaning in file %s failed', $output);
         return undef;
     }
 }

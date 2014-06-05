@@ -43,7 +43,7 @@ sub get_https {
     my $trusted_ca_path = $ssl_data->{'capath'};
 
     Log::do_log(
-        'debug',          'get_https (%s,%s,%s,%s,%s,%s,%s,%s)',
+        'debug',          '(%s, %s, %s, %s, %s, %s, %s, %s)',
         $host,            $port,
         $path,            $client_cert,
         $client_key,      $key_passwd,
@@ -90,11 +90,11 @@ sub get_https {
     );
 
     unless ($ssl_socket) {
-        Log::do_log('err', 'error %s unable to connect https://%s:%s/',
+        Log::do_log('err', 'Error %s unable to connect https://%s:%s/',
             IO::Socket::SSL::errstr(), $host, $port);
         return undef;
     }
-    Log::do_log('debug', 'connected to https://%s:%s/',
+    Log::do_log('debug', 'Connected to https://%s:%s/',
         IO::Socket::SSL::errstr(), $host, $port);
 
     if (ref($ssl_socket) eq "IO::Socket::SSL") {
@@ -102,26 +102,26 @@ sub get_https {
         my $issuer_name  = $ssl_socket->peer_certificate("issuer");
         my $cipher       = $ssl_socket->get_cipher();
         Log::do_log('debug',
-            'ssl peer certificat %s issued by %s. Cipher used %s',
+            'Ssl peer certificat %s issued by %s. Cipher used %s',
             $subject_name, $issuer_name, $cipher);
     }
 
     print $ssl_socket "GET $path HTTP/1.0\nHost: $host\n\n";
 
-    Log::do_log('debug', "requested GET $path HTTP/1.1");
+    Log::do_log('debug', 'Requested GET %s HTTP/1.1', $path);
     #my ($buffer) = $ssl_socket->getlines;
     # print STDERR $buffer;
     #Log::do_log ('debug',"return");
     #return ;
 
-    Log::do_log('debug', "get_https reading answer");
+    Log::do_log('debug', 'Get_https reading answer');
     my @result;
     while (my $line = $ssl_socket->getline) {
         push @result, $line;
     }
 
     $ssl_socket->close(SSL_no_shutdown => 1);
-    Log::do_log('debug', "disconnected");
+    Log::do_log('debug', 'Disconnected');
 
     return (@result);
 }
@@ -139,7 +139,7 @@ sub get_https2 {
     my $trusted_ca_path = $ssl_data->{'capath'};
     $trusted_ca_path ||= $Conf::Conf{'capath'};
 
-    Log::do_log('debug', 'Fetch::get_https2 (%s,%s,%s,%s,%s)',
+    Log::do_log('debug', '(%s, %s, %s, %s, %s)',
         $host, $port, $path, $trusted_ca_file, $trusted_ca_path);
 
     unless (-r ($trusted_ca_file) || (-d $trusted_ca_path)) {
@@ -179,11 +179,11 @@ sub get_https2 {
     );
 
     unless ($ssl_socket) {
-        Log::do_log('err', 'error %s unable to connect https://%s:%s/',
+        Log::do_log('err', 'Error %s unable to connect https://%s:%s/',
             IO::Socket::SSL::errstr(), $host, $port);
         return undef;
     }
-    Log::do_log('debug', "connected to https://$host:$port/");
+    Log::do_log('debug', 'Connected to https://%s:%s/', $host, $port);
 
 #	if( ref($ssl_socket) eq "IO::Socket::SSL") {
 #	   my $subject_name = $ssl_socket->peer_certificate("subject");
@@ -197,21 +197,21 @@ sub get_https2 {
     my $request = "GET $path HTTP/1.0\nHost: $host\n\n";
     print $ssl_socket "$request\n\n";
 
-    Log::do_log('debug', "requesting  $request");
+    Log::do_log('debug', 'Requesting %s', $request);
     #my ($buffer) = $ssl_socket->getlines;
     # print STDERR $buffer;
     #Log::do_log ('debug',"return");
     #return ;
 
-    Log::do_log('debug', "get_https reading answer returns :");
+    Log::do_log('debug', 'Get_https reading answer returns:');
     my @result;
     while (my $line = $ssl_socket->getline) {
-        Log::do_log('debug', "$line");
+        Log::do_log('debug', '%s', $line);
         push @result, $line;
     }
 
     $ssl_socket->close(SSL_no_shutdown => 1);
-    Log::do_log('debug', "disconnected");
+    Log::do_log('debug', 'Disconnected');
 
     return (@result);
 }

@@ -37,11 +37,10 @@ sub new {
     my $email = $param->{'user'}{'email'};
     #$email ||= 'nobody';
     my $document = {};
-    Log::do_log('debug2', 'SharedDocument::new(%s, %s)',
-        $list->{'name'}, $path);
+    Log::do_log('debug2', '(%s, %s)', $list->{'name'}, $path);
 
     unless (ref($list) =~ /List/i) {
-        Log::do_log('err', 'SharedDocument::new : incorrect list parameter');
+        Log::do_log('err', 'Incorrect list parameter');
         return undef;
     }
 
@@ -53,8 +52,7 @@ sub new {
 
     ### Document isn't a description file
     if ($document->{'path'} =~ /\.desc/) {
-        Log::do_log('err', "SharedDocument::new : %s : description file",
-            $document->{'path'});
+        Log::do_log('err', '%s: description file', $document->{'path'});
         return undef;
     }
 
@@ -76,7 +74,7 @@ sub new {
     unless (-r $document->{'absolute_path'}) {
         Log::do_log(
             'err',
-            "SharedDocument::new : unable to read %s : no such file or directory",
+            'Unable to read %s: no such file or directory',
             $document->{'absolute_path'}
         );
         return undef;
@@ -86,7 +84,7 @@ sub new {
     unless (-s $document->{'absolute_path'}) {
         Log::do_log(
             'err',
-            "SharedDocument::new : unable to read %s : empty document",
+            'Unable to read %s: empty document',
             $document->{'absolute_path'}
         );
         return undef;
@@ -153,7 +151,7 @@ sub new {
         } else {
             Log::do_log(
                 'err',
-                "SharedDocument::new() : cannot determine desc file for %s",
+                'Cannot determine desc file for %s',
                 $document->{'absolute_path'}
             );
             return undef;
@@ -229,7 +227,7 @@ sub new {
         unless (opendir DIR, $document->{'absolute_path'}) {
             Log::do_log(
                 'err',
-                "SharedDocument::new() : cannot open %s : %s",
+                'Cannot open %s: %s',
                 $document->{'absolute_path'}, $!
             );
             return undef;
@@ -320,7 +318,7 @@ sub check_access_control {
 
     my $list = $self->{'list'};
 
-    Log::do_log('debug', "check_access_control(%s)", $self->{'path'});
+    Log::do_log('debug', '(%s)', $self->{'path'});
 
     # Control for editing
     my $may_read     = 1;

@@ -55,7 +55,7 @@ sub get_all_primary_keys {
         unless ($found_keys{$table} =
             $self->get_primary_key({'table' => $table})) {
             Log::do_log('err',
-                'Primary key retrieval for table %s failed. Aborting.',
+                'Primary key retrieval for table %s failed. Aborting',
                 $table);
             return undef;
         }
@@ -82,7 +82,7 @@ sub get_all_indexes {
         unless ($found_indexes{$table} =
             $self->get_indexes({'table' => $table})) {
             Log::do_log('err',
-                'Index retrieval for table %s failed. Aborting.', $table);
+                'Index retrieval for table %s failed. Aborting', $table);
             return undef;
         }
     }
@@ -147,7 +147,7 @@ sub check_key {
         foreach my $field (@{$param->{'expected_keys'}}) {
             unless ($keysFound->{$field}) {
                 Log::do_log('info',
-                    'Table %s: Missing expected key part %s in %s key.',
+                    'Table %s: Missing expected key part %s in %s key',
                     $param->{'table'}, $field, $param->{'key_name'});
                 $result->{'missing_key'}{$field} = 1;
                 $result->{'existing_key_correct'} = 0;
@@ -156,7 +156,7 @@ sub check_key {
         foreach my $field (keys %{$keysFound}) {
             unless ($expected_keys{$field}) {
                 Log::do_log('info',
-                    'Table %s: Found unexpected key part %s in %s key.',
+                    'Table %s: Found unexpected key part %s in %s key',
                     $param->{'table'}, $field, $param->{'key_name'});
                 $result->{'unexpected_key'}{$field} = 1;
                 $result->{'existing_key_correct'} = 0;

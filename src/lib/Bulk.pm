@@ -63,7 +63,7 @@ my $message_fingerprint;
 # Next lock the packetb to prevent multiple proccessing of a single packet
 
 sub next {
-    Log::do_log('debug', 'Bulk::next');
+    Log::do_log('debug', '');
 
     # lock next packet
     my $lock = tools::get_lockname();
@@ -167,7 +167,7 @@ sub remove {
     my $messagekey = shift;
     my $packetid   = shift;
 
-    Log::do_log('debug', "Bulk::remove(%s,%s)", $messagekey, $packetid);
+    Log::do_log('debug', '(%s, %s)', $messagekey, $packetid);
 
     unless (
         $sth = SDM::do_query(
@@ -185,7 +185,7 @@ sub remove {
 
 sub messageasstring {
     my $messagekey = shift;
-    Log::do_log('debug', 'Bulk::messageasstring(%s)', $messagekey);
+    Log::do_log('debug', '(%s)', $messagekey);
 
     unless (
         $sth = SDM::do_query(
@@ -204,7 +204,8 @@ sub messageasstring {
     my $messageasstring = $sth->fetchrow_hashref('NAME_lc');
 
     unless ($messageasstring) {
-        Log::do_log('err', "could not fetch message $messagekey from spool");
+        Log::do_log('err', 'Could not fetch message %s from spool',
+            $messagekey);
         return undef;
     }
     my $msg = MIME::Base64::decode($messageasstring->{'message'});
@@ -221,7 +222,7 @@ sub messageasstring {
 #
 sub message_from_spool {
     my $messagekey = shift;
-    Log::do_log('debug', '(messagekey : %s)', $messagekey);
+    Log::do_log('debug', '(messagekey: %s)', $messagekey);
 
     unless (
         $sth = SDM::do_query(
@@ -271,7 +272,7 @@ sub merge_msg {
     my $data   = shift;
 
     unless (ref $entity eq 'MIME::Entity') {
-        Log::do_log('err', 'false entity');
+        Log::do_log('err', 'False entity');
         return undef;
     }
 
@@ -377,7 +378,7 @@ sub _merge_msg {
                 'message_output' => \$message_output,
             )
             ) {
-            Log::do_log('err', 'error merging message');
+            Log::do_log('err', 'Error merging message');
             return undef;
         }
         $utf8_body = $message_output;
@@ -478,7 +479,7 @@ sub merge_data {
     # Parse the TT2 in the message : replace the tags and the parameters by
     # the corresponding values
     unless (tt2::parse_tt2($data, \$body, $message_output, '', $options)) {
-        Log::do_log('err', 'Unable to parse body : "%s"', \$body);
+        Log::do_log('err', 'Unable to parse body: "%s"', \$body);
         return undef;
     }
 
@@ -510,7 +511,7 @@ sub store {
 
     Log::do_log(
         'debug',
-        'Bulk::store(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s, delivery_date= %s,verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',
+        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',
         $from,
         $robot,
         $listname,
@@ -744,7 +745,7 @@ sub store {
 
 ## remove file that are not referenced by any packet
 sub purge_bulkspool {
-    Log::do_log('debug', 'purge_bulkspool');
+    Log::do_log('debug', '');
 
     unless (
         $sth = SDM::do_query(
@@ -812,7 +813,7 @@ sub store_test {
 
     Log::do_log(
         'debug',
-        'Bulk::store_test(<msg>,<rcpts>,from = %s,robot = %s,listname= %s,priority_message = %s,delivery_date= %s,verp = %s, merge = %s)',
+        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, merge = %s)',
         $from,
         $robot,
         $listname,
@@ -884,7 +885,7 @@ sub store_test {
 
 ## Return the number of remaining packets in the bulkmailer table.
 sub get_remaining_packets_count {
-    Log::do_log('debug3', 'get_remaining_packets_count');
+    Log::do_log('debug3', '');
 
     my $m_count = 0;
 
@@ -907,7 +908,7 @@ sub get_remaining_packets_count {
 ## exceeds
 ## the value of the 'bulk_fork_threshold' config parameter.
 sub there_is_too_much_remaining_packets {
-    Log::do_log('debug3', 'there_is_too_much_remaining_packets');
+    Log::do_log('debug3', '');
     my $remaining_packets = get_remaining_packets_count();
     if ($remaining_packets > Conf::get_robot_conf('*', 'bulk_fork_threshold'))
     {

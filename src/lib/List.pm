@@ -526,8 +526,8 @@ our %listmaster_messages_stack;
 sub new {
     my ($pkg, $name, $robot, $options) = @_;
     my $list = {};
-    Log::do_log('debug2', 'List::new(%s, %s, %s)',
-        $name, $robot, join('/', keys %$options));
+    Log::do_log('debug2', '(%s, %s, %s)', $name, $robot,
+        join('/', keys %$options));
 
     ## Allow robot in the name
     if ($name =~ /\@/) {
@@ -604,7 +604,7 @@ sub new {
         ) {
         ## Update admin_table
         unless (defined $list->sync_include_admin()) {
-            Log::do_log('err', 'List::new() : sync_include_admin_failed')
+            Log::do_log('err', '')
                 unless ($options->{'just_try'});
         }
         if (   $list->get_nb_owners() < 1
@@ -624,8 +624,7 @@ sub search_list_among_robots {
     my $listname = shift;
 
     unless ($listname) {
-        Log::do_log('err',
-            'List::search_list_among_robots() : Missing list parameter');
+        Log::do_log('err', 'Missing list parameter');
         return undef;
     }
 
@@ -646,7 +645,7 @@ sub search_list_among_robots {
 ## set the list in status error_config and send a notify to listmaster
 sub set_status_error_config {
     my ($self, $message, @param) = @_;
-    Log::do_log('debug3', 'List::set_status_error_config');
+    Log::do_log('debug3', '');
 
     unless ($self->{'admin'}{'status'} eq 'error_config') {
         $self->{'admin'}{'status'} = 'error_config';
@@ -664,7 +663,7 @@ sub set_status_error_config {
 ## set the list in status family_closed and send a notify to owners
 sub set_status_family_closed {
     my ($self, $message, @param) = @_;
-    Log::do_log('debug2', 'List::set_status_family_closed');
+    Log::do_log('debug2', '');
 
     unless ($self->{'admin'}{'status'} eq 'family_closed') {
 
@@ -686,7 +685,7 @@ sub set_status_family_closed {
 ## Saves the statistics data to disk.
 sub savestats {
     my $self = shift;
-    Log::do_log('debug2', 'List::savestats');
+    Log::do_log('debug2', '');
 
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
@@ -694,7 +693,7 @@ sub savestats {
     return undef unless ($list_of_lists{$self->{'domain'}}{$name});
 
     unless (ref($self->{'stats'}) eq 'ARRAY') {
-        Log::do_log('err', 'incorrect parameter');
+        Log::do_log('err', 'Incorrect parameter');
         return undef;
     }
 
@@ -723,7 +722,7 @@ sub savestats {
 ## msg count.
 sub increment_msg_count {
     my $self = shift;
-    Log::do_log('debug2', "List::increment_msg_count($self->{'name'})");
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
@@ -746,7 +745,7 @@ sub increment_msg_count {
     }
 
     unless (open(MSG_COUNT, ">$file.$$")) {
-        Log::do_log('err', "Unable to create '%s.%s' : %s", $file, $$, $!);
+        Log::do_log('err', 'Unable to create "%s.%s": %s', $file, $$, $!);
         return undef;
     }
     foreach my $key (sort { $a <=> $b } keys %count) {
@@ -755,7 +754,7 @@ sub increment_msg_count {
     close MSG_COUNT;
 
     unless (rename("$file.$$", $file)) {
-        Log::do_log('err', "Unable to write '%s' : %s", $file, $!);
+        Log::do_log('err', 'Unable to write "%s": %s', $file, $!);
         return undef;
     }
     return 1;
@@ -787,7 +786,7 @@ sub get_msg_count {
 ## last date of distribution message .
 sub get_latest_distribution_date {
     my $self = shift;
-    Log::do_log('debug3', "List::latest_distribution_date($self->{'name'})");
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     ## Be sure the list has been loaded.
     my $name = $self->{'name'};
@@ -796,8 +795,7 @@ sub get_latest_distribution_date {
     my %count;
     my $latest_date = 0;
     unless (open(MSG_COUNT, $file)) {
-        Log::do_log('debug2',
-            "get_latest_distribution_date: unable to open $file");
+        Log::do_log('debug2', 'Unable to open %s', $file);
         return undef;
     }
 
@@ -817,7 +815,7 @@ sub get_latest_distribution_date {
 ## Output : num of msgs sent
 sub update_stats {
     my ($self, $bytes) = @_;
-    Log::do_log('debug2', 'List::update_stats(%d)', $bytes);
+    Log::do_log('debug2', '(%d)', $bytes);
 
     my $stats = $self->{'stats'};
     $stats->[0]++;
@@ -846,8 +844,8 @@ sub extract_verp_rcpt {
     my $refrcpt     = shift;
     my $refrcptverp = shift;
 
-    Log::do_log('debug', 'extract_verp(%s,%s,%s,%s)', $percent, $xseq,
-        $refrcpt, $refrcptverp);
+    Log::do_log('debug', '(%s, %s, %s, %s)',
+        $percent, $xseq, $refrcpt, $refrcptverp);
 
     my @result;
 
@@ -858,7 +856,7 @@ sub extract_verp_rcpt {
         } else {
             Log::do_log(
                 'err',
-                'Wrong format for parameter extract_verp: %s. Can\'t process VERP.',
+                'Wrong format for parameter extract_verp: %s. Can\'t process VERP',
                 $percent
             );
             return undef;
@@ -878,7 +876,7 @@ sub extract_verp_rcpt {
 ## Dumps a copy of lists to disk, in text format
 sub dump {
     my $self = shift;
-    Log::do_log('debug2', 'List::dump(%s)', $self->{'name'});
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     unless (defined $self) {
         Log::do_log('err', 'Unknown list');
@@ -904,8 +902,7 @@ sub dump {
 ## Saves the configuration file to disk
 sub save_config {
     my ($self, $email) = @_;
-    Log::do_log('debug3', 'List::save_config(%s,%s)', $self->{'name'},
-        $email);
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $email);
 
     return undef
         unless ($self);
@@ -939,7 +936,7 @@ sub save_config {
             $config_file_name, $old_config_file_name
         )
         ) {
-        Log::do_log('info', 'unable to save config file %s',
+        Log::do_log('info', 'Unable to save config file %s',
             $config_file_name);
         $lock_fh->close();
         return undef;
@@ -977,8 +974,8 @@ sub save_config {
 ## Loads the administrative data for a list
 sub load {
     my ($self, $name, $robot, $options) = @_;
-    Log::do_log('debug2', 'List::load(%s, %s, %s)',
-        $name, $robot, join('/', keys %$options));
+    Log::do_log('debug2', '(%s, %s, %s)', $name, $robot,
+        join('/', keys %$options));
 
     my $users;
 
@@ -1122,7 +1119,7 @@ sub load {
             unless ($family = $self->get_family()) {
                 Log::do_log(
                     'err',
-                    'Impossible to get list %s family : %s. The list is set in status error_config',
+                    'Impossible to get list %s family: %s. The list is set in status error_config',
                     $self->{'name'},
                     $self->{'admin'}{'family_name'}
                 );
@@ -1190,7 +1187,7 @@ sub load {
 ## Return a list of hash's owners and their param
 sub get_owners {
     my ($self) = @_;
-    Log::do_log('debug3', 'List::get_owners(%s)', $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     my $owners = ();
 
@@ -1209,7 +1206,7 @@ sub get_owners {
 
 sub get_nb_owners {
     my ($self) = @_;
-    Log::do_log('debug3', 'List::get_nb_owners(%s)', $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     my $resul  = 0;
     my $owners = $self->get_owners;
@@ -1224,7 +1221,7 @@ sub get_nb_owners {
 ## editor)
 sub get_editors {
     my ($self) = @_;
-    Log::do_log('debug3', 'List::get_editors(%s)', $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     my $editors = ();
 
@@ -1244,10 +1241,8 @@ sub get_editors {
 ## Returns an array of owners' email addresses
 sub get_owners_email {
     my ($self, $param) = @_;
-    Log::do_log(
-        'debug3',        'List::get_owners_email(%s,%s)',
-        $self->{'name'}, $param->{'ignore_nomail'}
-    );
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'},
+        $param->{'ignore_nomail'});
 
     my @rcpt;
     my $owners = ();
@@ -1265,7 +1260,7 @@ sub get_owners_email {
         }
     }
     unless (@rcpt) {
-        Log::do_log('notice', 'Warning : no owner found for list %s',
+        Log::do_log('notice', 'Warning: No owner found for list %s',
             $self->{'name'});
     }
     return @rcpt;
@@ -1275,10 +1270,8 @@ sub get_owners_email {
 #  or owners if there isn't any editors' email addresses
 sub get_editors_email {
     my ($self, $param) = @_;
-    Log::do_log(
-        'debug3',        'List::get_editors_email(%s,%s)',
-        $self->{'name'}, $param->{'ignore_nomail'}
-    );
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'},
+        $param->{'ignore_nomail'});
 
     my @rcpt;
     my $editors = ();
@@ -1321,14 +1314,12 @@ sub get_family {
 ## Used ONLY with lists belonging to a family.
 sub get_config_changes {
     my $self = shift;
-    Log::do_log('debug3', 'List::get_config_changes(%s)', $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     unless ($self->{'admin'}{'family_name'}) {
-        Log::do_log(
-            'err',
-            'List::get_config_changes(%s) is called but there is no family_name for this list.',
-            $self->{'name'}
-        );
+        Log::do_log('err',
+            '(%s) Is called but there is no family_name for this list',
+            $self->{'name'});
         return undef;
     }
 
@@ -1354,25 +1345,20 @@ sub update_config_changes {
     my $what = shift;
     # one param or a ref on array of param
     my $name = shift;
-    Log::do_log('debug2', 'List::update_config_changes(%s,%s)',
-        $self->{'name'}, $what);
+    Log::do_log('debug2', '(%s, %s)', $self->{'name'}, $what);
 
     unless ($self->{'admin'}{'family_name'}) {
         Log::do_log(
             'err',
-            'List::update_config_changes(%s,%s,%s) is called but there is no family_name for this list.',
+            '(%s, %s, %s) Is called but there is no family_name for this list',
             $self->{'name'},
             $what
         );
         return undef;
     }
     unless (($what eq 'file') || ($what eq 'param')) {
-        Log::do_log(
-            'err',
-            'List::update_config_changes(%s,%s) : %s is wrong : must be "file" or "param".',
-            $self->{'name'},
-            $what
-        );
+        Log::do_log('err', '(%s, %s) %s is wrong: must be "file" or "param"',
+            $self->{'name'}, $what);
         return undef;
     }
 
@@ -1410,8 +1396,7 @@ sub update_config_changes {
 ## return a hash of config_changes file
 sub _load_config_changes_file {
     my $self = shift;
-    Log::do_log('debug3', 'List::_load_config_changes_file(%s)',
-        $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     my $config_changes = {};
 
@@ -1439,9 +1424,7 @@ sub _load_config_changes_file {
             $config_changes->{'file'}{$1} = 1;
 
         } else {
-            Log::do_log('err',
-                'List::_load_config_changes_file(%s) : bad line : %s',
-                $self->{'name'}, $_);
+            Log::do_log('err', '(%s) Bad line: %s', $self->{'name'}, $_);
             next;
         }
     }
@@ -1455,25 +1438,17 @@ sub _load_config_changes_file {
 ## save config_changes file in the list directory
 sub _save_config_changes_file {
     my $self = shift;
-    Log::do_log('debug3', 'List::_save_config_changes_file(%s)',
-        $self->{'name'});
+    Log::do_log('debug3', '(%s)', $self->{'name'});
 
     unless ($self->{'admin'}{'family_name'}) {
-        Log::do_log(
-            'err',
-            'List::_save_config_changes_file(%s) is called but there is no family_name for this list.',
-            $self->{'name'}
-        );
+        Log::do_log('err',
+            '(%s) Is called but there is no family_name for this list',
+            $self->{'name'});
         return undef;
     }
     unless (open(FILE, ">$self->{'dir'}/config_changes")) {
-        Log::do_log(
-            'err',
-            'List::_save_config_changes_file(%s) : unable to create file %s/config_changes : %s',
-            $self->{'name'},
-            $self->{'dir'},
-            $_
-        );
+        Log::do_log('err', '(%s) Unable to create file %s/config_changes: %s',
+            $self->{'name'}, $self->{'dir'}, $_);
         return undef;
     }
 
@@ -1531,7 +1506,7 @@ sub get_param_value {
 #  the single value can be a ref on a list when the parameter value is a list
 sub _get_single_param_value {
     my ($pinfo, $p, $key, $k) = @_;
-    Log::do_log('debug3', 'List::_get_single_value(%s %s)', $key, $k);
+    Log::do_log('debug3', '(%s %s)', $key, $k);
 
     if (   defined($pinfo->{$key}{'scenario'})
         || defined($pinfo->{$key}{'task'})) {
@@ -1600,7 +1575,7 @@ sub distribute_msg {
 
     Log::do_log(
         'debug2',
-        'List::distribute_msg(%s, %s, %s, %s, %s, %s, apply_dkim_signature=%s)',
+        '(%s, %s, %s, %s, %s, %s, apply_dkim_signature=%s)',
         $self->{'name'},
         $message->{'msg'},
         $message->{'size'},
@@ -2070,7 +2045,7 @@ sub send_msg_digest {
 
     my $listname = $self->{'name'};
     my $robot    = $self->{'domain'};
-    Log::do_log('debug2', 'List:send_msg_digest(%s)', $listname);
+    Log::do_log('debug2', '(%s)', $listname);
 
     my $filename;
     ## Backward compatibility concern
@@ -2303,8 +2278,7 @@ sub send_msg_digest {
 ####################################################
 sub send_global_file {
     my ($tpl, $who, $robot, $context, $options) = @_;
-    Log::do_log('debug2', 'List::send_global_file(%s, %s, %s)',
-        $tpl, $who, $robot);
+    Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
 
     my $data = tools::dup_var($context);
 
@@ -2417,7 +2391,7 @@ sub send_global_file {
 ####################################################
 sub send_file {
     my ($self, $tpl, $who, $robot, $context) = @_;
-    Log::do_log('debug2', 'List::send_file(%s, %s, %s)', $tpl, $who, $robot);
+    Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
 
     my $name = $self->{'name'};
     my $sign_mode;
@@ -2568,8 +2542,8 @@ sub send_file {
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
     unless (mail::mail_file($filename, $who, $data, $self->{'domain'})) {
-        Log::do_log('err',
-            "List::send_file, could not send template $filename to $who");
+        Log::do_log('err', 'Could not send template %s to %s',
+            $filename, $who);
         return undef;
     }
 
@@ -2603,7 +2577,7 @@ sub send_msg {
 
     Log::do_log(
         'debug2',
-        'List::send_msg(filname = %s, smime_crypted = %s,apply_dkim_signature = %s )',
+        '(filname = %s, smime_crypted = %s, apply_dkim_signature = %s)',
         $message->{'filename'},
         $message->{'smime_crypted'},
         $apply_dkim_signature
@@ -2940,7 +2914,8 @@ sub send_msg {
             my $expl = $self->{'dir'} . '/urlized';
 
             unless ((-d $expl) || (mkdir $expl, 0775)) {
-                Log::do_log('err', "Unable to create urlize directory $expl");
+                Log::do_log('err', 'Unable to create urlize directory %s',
+                    $expl);
                 return undef;
             }
 
@@ -2951,8 +2926,8 @@ sub send_msg {
             $dir1 = '/' . $dir1;
 
             unless (mkdir("$expl/$dir1", 0775)) {
-                Log::do_log('err',
-                    "Unable to create urlize directory $expl/$dir1");
+                Log::do_log('err', 'Unable to create urlize directory %s/%s',
+                    $expl, $dir1);
                 printf "Unable to create urlized directory $expl/$dir1";
                 return 0;
             }
@@ -2981,7 +2956,8 @@ sub send_msg {
             }
             $new_message = Message->new({'mimeentity' => $url_msg});
         } else {
-            Log::do_log('err', "Unknown variable/reception mode $array_name");
+            Log::do_log('err', 'Unknown variable/reception mode %s',
+                $array_name);
             return undef;
         }
 
@@ -3199,14 +3175,14 @@ sub send_to_editor {
 
         @rcpt = $self->get_editors_email({'ignore_nomail', 1});
         Log::do_log('notice',
-            'Warning : no owner and editor defined at all in list %s', $name)
+            'Warning: No owner and editor defined at all in list %s', $name)
             unless (@rcpt);
 
         ## Could we find a recipient by ignoring the "nomail" option?
         if ($#rcpt >= 0) {
             Log::do_log(
                 'notice',
-                'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them.',
+                'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them',
                 $messageid,
                 $self->{'name'}
             );
@@ -3277,8 +3253,11 @@ sub send_to_editor {
                 "Unable to create one_time_ticket for $recipient, service modindex/$name"
             );
         } else {
-            Log::do_log('debug',
-                "ticket $param->{'one_time_ticket'} created");
+            Log::do_log(
+                'debug',
+                'Ticket %s created',
+                $param->{'one_time_ticket'}
+            );
         }
         tt2::allow_absolute_path();
         $param->{'auto_submitted'} = 'auto-forwarded';
@@ -3288,8 +3267,8 @@ sub send_to_editor {
                 'moderate', $recipient, $self->{'domain'}, $param
             )
             ) {
-            Log::do_log('notice',
-                "Unable to send template 'moderate' to $recipient");
+            Log::do_log('notice', 'Unable to send template "moderate" to %s',
+                $recipient);
             return undef;
         }
     }
@@ -3317,7 +3296,7 @@ sub send_auth {
     my ($self, $message) = @_;
     my ($sender, $msg, $file) =
         ($message->{'sender'}, $message->{'msg'}, $message->{'filename'});
-    Log::do_log('debug3', 'List::send_auth(%s, %s)', $sender, $file);
+    Log::do_log('debug3', '(%s, %s)', $sender, $file);
 
     ## Ensure 1 second elapsed since last message
     sleep(1);
@@ -3377,8 +3356,8 @@ sub send_auth {
     tt2::allow_absolute_path();
     $param->{'auto_submitted'} = 'auto-replied';
     unless ($self->send_file('send_auth', $sender, $robot, $param)) {
-        Log::do_log('notice',
-            "Unable to send template 'send_auth' to $sender");
+        Log::do_log('notice', 'Unable to send template "send_auth" to %s',
+            $sender);
         return undef;
     }
 
@@ -3405,7 +3384,7 @@ sub send_auth {
 #
 ####################################################
 sub request_auth {
-    Log::do_log('debug2', 'List::request_auth(%s, %s, %s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $first_param = shift;
     my ($self, $email, $cmd, $robot, @param);
 
@@ -3418,8 +3397,7 @@ sub request_auth {
     $cmd   = shift;
     $robot = shift;
     @param = @_;
-    Log::do_log('debug3',
-        'List::request_auth() List : %s,$email: %s cmd : %s',
+    Log::do_log('debug3', 'List: %s, $email: %s cmd: %s',
         $self->{'name'}, $email, $cmd);
 
     my $keyauth;
@@ -3465,7 +3443,7 @@ sub request_auth {
         $data->{'auto_submitted'}  = 'auto-replied';
         unless ($self->send_file('request_auth', $email, $robot, $data)) {
             Log::do_log('notice',
-                "Unable to send template 'request_auth' to $email");
+                'Unable to send template "request_auth" to %s', $email);
             return undef;
         }
 
@@ -3480,7 +3458,7 @@ sub request_auth {
         $data->{'auto_submitted'} = 'auto-replied';
         unless (send_global_file('request_auth', $email, $robot, $data)) {
             Log::do_log('notice',
-                "Unable to send template 'request_auth' to $email");
+                'Unable to send template "request_auth" to %s', $email);
             return undef;
         }
     }
@@ -3502,7 +3480,7 @@ sub request_auth {
 ######################################################
 sub archive_send {
     my ($self, $who, $file) = @_;
-    Log::do_log('debug', 'List::archive_send(%s, %s)', $who, $file);
+    Log::do_log('debug', '(%s, %s)', $who, $file);
 
     return unless ($self->is_archived());
 
@@ -3527,8 +3505,8 @@ sub archive_send {
     $param->{'auto_submitted'} = 'auto-replied';
     unless ($self->send_file('get_archive', $who, $self->{'domain'}, $param))
     {
-        Log::do_log('notice',
-            "Unable to send template 'archive_send' to $who");
+        Log::do_log('notice', 'Unable to send template "archive_send" to %s',
+            $who);
         return undef;
     }
 
@@ -3546,8 +3524,7 @@ sub archive_send {
 ######################################################
 sub archive_send_last {
     my ($self, $who) = @_;
-    Log::do_log('debug', 'List::archive_send_last(%s, %s)',
-        $self->{'listname'}, $who);
+    Log::do_log('debug', '(%s, %s)', $self->{'listname'}, $who);
 
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
@@ -3588,8 +3565,8 @@ sub archive_send_last {
 
     unless ($self->send_file('get_archive', $who, $self->{'domain'}, $param))
     {
-        Log::do_log('notice',
-            "Unable to send template 'archive_send' to $who");
+        Log::do_log('notice', 'Unable to send template "archive_send" to %s',
+            $who);
         return undef;
     }
 
@@ -3638,7 +3615,7 @@ sub send_notify_to_listmaster {
                     %{$List::listmaster_messages_stack{$robot}{$operation}
                         {'messages'}};
                 Log::do_log(
-                    'info', 'got messages about "%s" (%s)',
+                    'info', 'Got messages about "%s" (%s)',
                     $operation, join(', ', keys %messages)
                 );
 
@@ -3659,7 +3636,7 @@ sub send_notify_to_listmaster {
                         if (($operation eq 'no_db')
                         || ($operation eq 'db_restored'));
 
-                    Log::do_log('info', 'send messages to %s', $email);
+                    Log::do_log('info', 'Send messages to %s', $email);
                     unless (
                         send_global_file(
                             'listmaster_groupednotifications',
@@ -3676,7 +3653,7 @@ sub send_notify_to_listmaster {
                     }
                 }
 
-                Log::do_log('info', 'cleaning stacked notifications');
+                Log::do_log('info', 'Cleaning stacked notifications');
                 delete $List::listmaster_messages_stack{$robot}{$operation};
             }
         }
@@ -3713,7 +3690,7 @@ sub send_notify_to_listmaster {
     if ((ref($data) ne 'HASH') and (ref($data) ne 'ARRAY')) {
         Log::do_log(
             'err',
-            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
             $operation,
             $robot
         ) unless $operation eq 'logs_failed';
@@ -3813,7 +3790,7 @@ sub send_notify_to_listmaster {
             send_global_file('listmaster_notification', $ts->{'email'},
             $robot, $ts->{'data'}, $options);
         if ($stack) {
-            Log::do_log('info', 'stacking message about "%s" for %s (%s)',
+            Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
                 $operation, $ts->{'email'}, $robot)
                 unless $operation eq 'logs_failed';
             push @{$List::listmaster_messages_stack{$robot}{$operation}
@@ -3860,7 +3837,7 @@ sub send_notify_to_owner {
     unless (@to) {
         Log::do_log(
             'notice',
-            'No owner defined or all of them use nomail option in list %s ; using listmasters as default',
+            'No owner defined or all of them use nomail option in list %s; using listmasters as default',
             $self->{'name'}
         );
         @to = split /,/, Conf::get_robot_conf($robot, 'listmaster');
@@ -3976,7 +3953,7 @@ sub send_notify_to_owner {
     } else {
         Log::do_log(
             'err',
-            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
             $self,
             $operation
         );
@@ -4045,7 +4022,7 @@ sub send_notify_to_editor {
     unless (@to) {
         Log::do_log(
             'notice',
-            'Warning : no editor or owner defined or all of them use nomail option in list %s',
+            'Warning: No editor or owner defined or all of them use nomail option in list %s',
             $self->{'name'}
         );
         return undef;
@@ -4091,7 +4068,7 @@ sub send_notify_to_editor {
     } else {
         Log::do_log(
             'err',
-            '(%s, %s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
+            '(%s, %s) Error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
             $self,
             $operation
         );
@@ -4118,8 +4095,7 @@ sub send_notify_to_editor {
 sub send_notify_to_user {
 
     my ($self, $operation, $user, $param) = @_;
-    Log::do_log('debug2', 'List::send_notify_to_user(%s, %s, %s)',
-        $self->{'name'}, $operation, $user);
+    Log::do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $operation, $user);
 
     my $host  = $self->{'admin'}->{'host'};
     my $robot = $self->{'domain'};
@@ -4142,7 +4118,7 @@ sub send_notify_to_user {
         unless ($self->send_file('user_notification', $user, $robot, $param))
         {
             Log::do_log('notice',
-                "Unable to send template 'user_notification' to $user");
+                'Unable to send template "user_notification" to %s', $user);
             return undef;
         }
     } elsif (ref($param) eq "ARRAY") {
@@ -4156,7 +4132,7 @@ sub send_notify_to_user {
         }
         unless ($self->send_file('user_notification', $user, $robot, $data)) {
             Log::do_log('notice',
-                "Unable to send template 'user_notification' to $user");
+                'Unable to send template "user_notification" to %s', $user);
             return undef;
         }
     } else {
@@ -4174,7 +4150,7 @@ sub send_notify_to_user {
 
 ## genererate a md5 checksum using private cookie and parameters
 sub compute_auth {
-    Log::do_log('debug3', 'List::compute_auth(%s, %s, %s)', @_);
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
 
     my $first_param = shift;
     my ($self, $email, $cmd);
@@ -4555,7 +4531,7 @@ sub delete_list_member {
     my $parameter = $param{'parameter'
         };    #case of deleting : bounce? manual signoff or deleted by admin?
     my $daemon_name = $param{'daemon'};
-    Log::do_log('debug2', 'List::delete_list_member');
+    Log::do_log('debug2', '');
 
     my $name  = $self->{'name'};
     my $total = 0;
@@ -4684,7 +4660,7 @@ sub get_reply_to {
 sub get_default_user_options {
     my $self = shift->{'admin'};
     my $what = shift;
-    Log::do_log('debug3', 'List::get_default_user_options(%s)', $what);
+    Log::do_log('debug3', '(%s)', $what);
 
     if ($self) {
         return $self->{'default_user_options'};
@@ -4697,7 +4673,7 @@ sub get_total {
     my $self   = shift;
     my $name   = $self->{'name'};
     my $option = shift;
-    Log::do_log('debug3', 'List::get_total(%s)', $name);
+    Log::do_log('debug3', '(%s)', $name);
 
     if ($option and $option eq 'nocache') {
         $self->{'total'} = $self->_load_total_db($option);
@@ -4734,8 +4710,7 @@ sub suspend_subscription {
     my $list  = shift;
     my $data  = shift;
     my $robot = shift;
-    Log::do_log('debug2', 'List::suspend_subscription("%s", "%s", "%s" )',
-        $email, $list, $data);
+    Log::do_log('debug2', '("%s", "%s", "%s")', $email, $list, $data);
 
     unless (
         SDM::do_query(
@@ -4773,9 +4748,7 @@ sub restore_suspended_subscription {
     my $email = shift;
     my $list  = shift;
     my $robot = shift;
-    Log::do_log('debug2',
-        'List::restore_suspended_subscription("%s", "%s", "%s")',
-        $email, $list, $robot);
+    Log::do_log('debug2', '("%s", "%s", "%s")', $email, $list, $robot);
 
     unless (
         SDM::do_query(
@@ -4814,8 +4787,7 @@ sub insert_delete_exclusion {
     my $robot  = shift;
     my $action = shift;
     my $family = shift;
-    Log::do_log('info',
-        'List::insert_delete_exclusion("%s", "%s", "%s", "%s", "%s")',
+    Log::do_log('info', '("%s", "%s", "%s", "%s", "%s")',
         $email, $list, $robot, $action, $family);
 
     my $r = 1;
@@ -4925,7 +4897,7 @@ sub get_exclusion {
 
     my $name  = shift;
     my $robot = shift;
-    Log::do_log('debug2', 'List::get_exclusion(%s@%s)', $name, $robot);
+    Log::do_log('debug2', '(%s@%s)', $name, $robot);
 
     my $list = List->new($name, $robot);
     unless (defined $list) {
@@ -5026,7 +4998,7 @@ sub get_list_member {
     } else {
         unless ($user) {
             Log::do_log('debug',
-                'User %s was not found in the subscribers of list %s@%s.',
+                'User %s was not found in the subscribers of list %s@%s',
                 $email, $self->{'name'}, $self->{'domain'});
             return undef;
         } else {
@@ -5350,7 +5322,7 @@ sub get_list_member_no_object {
         $user->{'update_date'} ||= $user->{'date'};
         Log::do_log(
             'debug2',
-            'custom_attribute  = (%s)',
+            'Custom_attribute = (%s)',
             $user->{custom_attribute}
         );
         if (defined $user->{custom_attribute}) {
@@ -5386,7 +5358,7 @@ sub get_list_admin {
     my $role  = shift;
     my $email = tools::clean_email(shift);
 
-    Log::do_log('debug2', '(%s,%s)', $role, $email);
+    Log::do_log('debug2', '(%s, %s)', $role, $email);
 
     my $name = $self->{'name'};
 
@@ -5519,7 +5491,7 @@ sub get_first_list_member {
     my $user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$user->{'email'});
         $user->{'reception'} ||= 'mail';
@@ -5693,7 +5665,7 @@ sub get_first_list_admin {
     my $admin_user = $sth->fetchrow_hashref('NAME_lc');
     if (defined $admin_user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$admin_user->{'email'});
         $admin_user->{'reception'}   ||= 'mail';
@@ -5722,7 +5694,7 @@ sub get_next_list_member {
 
     if (defined $user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$user->{'email'});
         $user->{'reception'} ||= 'mail';
@@ -5773,7 +5745,7 @@ sub get_next_list_admin {
 
     if (defined $admin_user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$admin_user->{'email'});
         $admin_user->{'reception'}   ||= 'mail';
@@ -5817,7 +5789,7 @@ sub get_first_bouncing_list_member {
 
     if (defined $user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$user->{'email'});
     } else {
@@ -5845,7 +5817,7 @@ sub get_next_bouncing_list_member {
 
     if (defined $user) {
         Log::do_log('err',
-            'Warning: entry with empty email address in list %s',
+            'Warning: Entry with empty email address in list %s',
             $self->{'name'})
             if (!$user->{'email'});
 
@@ -5870,7 +5842,7 @@ sub get_info {
     unless (open INFO, "$self->{'dir'}/info") {
         Log::do_log(
             'err',
-            'Could not open %s : %s',
+            'Could not open %s: %s',
             $self->{'dir'} . '/info', $!
         );
         return undef;
@@ -5887,7 +5859,7 @@ sub get_info {
 ## Total bouncing subscribers
 sub get_total_bouncing {
     my $self = shift;
-    Log::do_log('debug2', 'List::get_total_boucing');
+    Log::do_log('debug2', '');
 
     my $name = $self->{'name'};
 
@@ -5952,7 +5924,7 @@ sub is_list_member {
         ) {
         Log::do_log(
             'err',
-            'Unable to check chether user %s is subscribed to list %s@%s : %s',
+            'Unable to check chether user %s is subscribed to list %s@%s: %s',
             $who,
             $name,
             $self->{'domain'}
@@ -6046,7 +6018,7 @@ sub update_list_member {
 
     Log::do_log(
         'debug2',
-        ' custom_attribute id: %s',
+        'Custom_attribute ID: %s',
         $Conf::Conf{'custom_attribute'}
     );
     ## custom attributes
@@ -6171,7 +6143,7 @@ sub update_list_member {
                     ) {
                     Log::do_log(
                         'err',
-                        "Failed to rename %s to %s : %s",
+                        'Failed to rename %s to %s: %s',
                         $picture_file_path . '/'
                             . $file_name . '.'
                             . $extension,
@@ -6194,7 +6166,7 @@ sub update_list_member {
 ## Sets new values for the given admin user (except gecos)
 sub update_list_admin {
     my ($self, $who, $role, $values) = @_;
-    Log::do_log('debug2', '(%s,%s)', $role, $who);
+    Log::do_log('debug2', '(%s, %s)', $role, $who);
     $who = tools::clean_email($who);
 
     my ($field, $value);
@@ -6413,7 +6385,7 @@ sub add_list_member {
             createXMLCustomAttribute(\%custom_attr);
         Log::do_log(
             'debug2',
-            'custom_attribute = %s',
+            'Custom_attribute = %s',
             $new_user->{'custom_attribute'}
         );
 
@@ -6442,7 +6414,7 @@ sub add_list_member {
                     'password' => $new_user->{'password'}
                 )
                 ) {
-                Log::do_log('err', 'Unable to add user %s to user_table.',
+                Log::do_log('err', 'Unable to add user %s to user_table',
                     $who);
                 $self->{'add_outcome'}{'errors'}
                     {'unable_to_add_to_database'} = 1;
@@ -6614,8 +6586,8 @@ sub add_list_admin {
 ## Update subscribers and admin users (used while renaming a list)
 sub rename_list_db {
     my ($self, $new_listname, $new_robot) = @_;
-    Log::do_log('debug', 'List::rename_list_db(%s,%s,%s)',
-        $self->{'name'}, $new_listname, $new_robot);
+    Log::do_log('debug', '(%s, %s, %s)', $self->{'name'}, $new_listname,
+        $new_robot);
 
     my $statement_subscriber;
     my $statement_admin;
@@ -6636,8 +6608,7 @@ sub rename_list_db {
         next;
     }
 
-    Log::do_log('debug', 'List::rename_list_db statement : %s',
-        $statement_subscriber);
+    Log::do_log('debug', 'Statement: %s', $statement_subscriber);
 
     # admin_table is "alive" only in case include2
     unless (
@@ -6659,8 +6630,7 @@ sub rename_list_db {
         );
         next;
     }
-    Log::do_log('debug', 'List::rename_list_db statement : %s',
-        $statement_admin);
+    Log::do_log('debug', 'Statement: %s', $statement_admin);
 
     if ($SDM::use_db) {
         unless (
@@ -6703,8 +6673,7 @@ sub is_listmaster {
 ## Does the user have a particular function in the list?
 sub am_i {
     my ($self, $function, $who, $options) = @_;
-    Log::do_log('debug2', 'List::am_i(%s, %s, %s)',
-        $function, $self->{'name'}, $who);
+    Log::do_log('debug2', '(%s, %s, %s)', $function, $self->{'name'}, $who);
 
     return undef unless ($self && $who);
     $function =~ y/A-Z/a-z/;
@@ -6728,7 +6697,7 @@ sub am_i {
     if (defined $list_cache{'am_i'}{$function}{$self->{'domain'}}
         {$self->{'name'}}{$who}
         && $function ne 'editor') {    ## Defaults for editor may be owners) {
-        # Log::do_log('debug3', 'Use cache(%s,%s): %s', $name, $who, $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who});
+        # Log::do_log('debug3', 'Use cache(%s, %s): %s', $name, $who, $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who});
         return $list_cache{'am_i'}{$function}{$self->{'domain'}}
             {$self->{'name'}}{$who};
     }
@@ -6815,8 +6784,7 @@ sub check_list_authz {
     my $auth_method = shift;
     my $context     = shift;
     my $debug       = shift;
-    Log::do_log('debug', 'List::check_list_authz %s,%s',
-        $operation, $auth_method);
+    Log::do_log('debug', '%s, %s', $operation, $auth_method);
 
     $context->{'list_object'} = $self;
 
@@ -6826,7 +6794,7 @@ sub check_list_authz {
 
 ## Initialize internal list cache
 sub init_list_cache {
-    Log::do_log('debug2', 'List::init_list_cache()');
+    Log::do_log('debug2', '');
 
     undef %list_cache;
 }
@@ -6835,7 +6803,7 @@ sub init_list_cache {
 sub may_edit {
 
     my ($self, $parameter, $who) = @_;
-    Log::do_log('debug3', 'List::may_edit(%s, %s)', $parameter, $who);
+    Log::do_log('debug3', '(%s, %s)', $parameter, $who);
 
     my $role;
 
@@ -6914,8 +6882,7 @@ sub may_edit {
 sub may_create_parameter {
 
     my ($self, $parameter, $who, $robot) = @_;
-    Log::do_log('debug3', 'List::may_create_parameter(%s, %s, %s)',
-        $parameter, $who, $robot);
+    Log::do_log('debug3', '(%s, %s, %s)', $parameter, $who, $robot);
 
     if (is_listmaster($who, $robot)) {
         return 1;
@@ -6941,7 +6908,7 @@ sub may_create_parameter {
 ##                 add, del, reconfirm, purge
 sub may_do {
     my ($self, $action, $who) = @_;
-    Log::do_log('debug3', 'List::may_do(%s, %s)', $action, $who);
+    Log::do_log('debug3', '(%s, %s)', $action, $who);
 
     my $i;
 
@@ -7031,7 +6998,7 @@ sub is_digest {
 ## Does the file exist?
 sub archive_exist {
     my ($self, $file) = @_;
-    Log::do_log('debug', 'List::archive_exist (%s)', $file);
+    Log::do_log('debug', '(%s)', $file);
 
     return undef unless ($self->is_archived());
     my $dir =
@@ -7044,7 +7011,7 @@ sub archive_exist {
 ## List the archived files
 sub archive_ls {
     my $self = shift;
-    Log::do_log('debug2', 'List::archive_ls');
+    Log::do_log('debug2', '');
 
     my $dir =
         Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
@@ -7059,7 +7026,7 @@ our $serial_number = 0;    # incremented on each archived mail
 
 sub archive_msg {
     my ($self, $message) = @_;
-    Log::do_log('debug2', 'List::archive_msg for %s', $self->{'name'});
+    Log::do_log('debug2', 'For %s', $self->{'name'});
 
     if ($self->is_archived()) {
         my $msg = $message->{'msg'};
@@ -7094,7 +7061,7 @@ sub archive_msg {
         unless (-d $queue) {
             mkdir($queue, 0775);
             chmod 0774, $queue;
-            Log::do_log('info', "creating $queue");
+            Log::do_log('info', 'Creating %s', $queue);
         }
 
         my @now = localtime(time);
@@ -7107,11 +7074,11 @@ sub archive_msg {
         $serial_number = ($serial_number + 1) % 100000;
         unless (open(OUT, "> $filename")) {
             Log::do_log('info',
-                "error unable open outgoing dir %s for list %s",
+                'Error unable open outgoing dir %s for list %s',
                 $queue, $self->get_list_id);
             return undef;
         }
-        Log::do_log('debug', "put message in $filename");
+        Log::do_log('debug', 'Put message in %s', $filename);
         if (ref($msg)) {
             $msg->print(\*OUT);
         } else {
@@ -7131,12 +7098,12 @@ sub is_moderated {
 
 ## Is the list archived?
 sub is_archived {
-    Log::do_log('debug', 'List::is_archived');
+    Log::do_log('debug', '');
     if (shift->{'admin'}{'web_archive'}{'access'}) {
-        Log::do_log('debug', 'List::is_archived : 1');
+        Log::do_log('debug', '1');
         return 1;
     }
-    Log::do_log('debug', 'List::is_archived : undef');
+    Log::do_log('debug', 'Undef');
     return undef;
 }
 
@@ -7150,7 +7117,7 @@ sub is_web_archived {
 ## Returns 1 if the  digest  must be send
 sub get_nextdigest {
     my $self = shift;
-    Log::do_log('debug3', 'List::get_nextdigest (%s)');
+    Log::do_log('debug3', '(%s)');
 
     my $digest   = $self->{'admin'}{'digest'};
     my $listname = $self->{'name'};
@@ -7205,7 +7172,7 @@ sub get_nextdigest {
 ## Loads all scenari for an action
 sub load_scenario_list {
     my ($self, $action, $robot) = @_;
-    Log::do_log('debug3', 'List::load_scenario_list(%s,%s)', $action, $robot);
+    Log::do_log('debug3', '(%s, %s)', $action, $robot);
 
     my $directory = "$self->{'dir'}";
     my %list_of_scenario;
@@ -7250,7 +7217,7 @@ sub load_scenario_list {
 
 sub load_task_list {
     my ($self, $action, $robot) = @_;
-    Log::do_log('debug2', 'List::load_task_list(%s,%s)', $action, $robot);
+    Log::do_log('debug2', '(%s, %s)', $action, $robot);
 
     my $directory = "$self->{'dir'}";
     my %list_of_task;
@@ -7325,8 +7292,7 @@ sub _load_task_title {
 ## Loads all data sources
 sub load_data_sources_list {
     my ($self, $robot) = @_;
-    Log::do_log('debug3', 'List::load_data_sources_list(%s,%s)',
-        $self->{'name'}, $robot);
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $robot);
 
     my $directory = "$self->{'dir'}";
     my %list_of_data_sources;
@@ -7355,7 +7321,7 @@ sub load_data_sources_list {
 ## Loads the statistics information
 sub _load_stats_file {
     my $file = shift;
-    Log::do_log('debug3', 'List::_load_stats_file(%s)', $file);
+    Log::do_log('debug3', '(%s)', $file);
 
     ## Create the initial stats array.
     my ($stats, $total, $last_sync, $last_sync_admin_user);
@@ -7432,15 +7398,8 @@ sub _include_users_remote_sympa_list {
 
     my $id = Datasource::_get_datasource_id($param);
 
-    Log::do_log(
-        'debug',
-        'List::_include_users_remote_sympa_list(%s) https://%s:%s/%s using cert %s,',
-        $self->{'name'},
-        $host,
-        $port,
-        $path,
-        $cert
-    );
+    Log::do_log('debug', '(%s) https://%s:%s/%s using cert %s,',
+        $self->{'name'}, $host, $port, $path, $cert);
 
     my $total     = 0;
     my $get_total = 0;
@@ -7498,7 +7457,7 @@ sub _include_users_remote_sympa_list {
 
         if ($line =~ /^\s*email\s+(.+)\s*$/o) {
             $user{'email'} = $email = $1;
-            Log::do_log('debug', "email found $email");
+            Log::do_log('debug', 'Email found %s', $email);
             $get_total++;
         }
         $user{'gecos'} = $1 if ($line =~ /^\s*gecos\s+(.+)\s*$/o);
@@ -7506,20 +7465,20 @@ sub _include_users_remote_sympa_list {
         next unless ($line =~ /^$/);
 
         unless ($user{'email'}) {
-            Log::do_log('debug', 'ignoring block without email definition');
+            Log::do_log('debug', 'Ignoring block without email definition');
             next;
         }
         my %u;
         ## Check if user has already been included
         if ($users->{$email}) {
-            Log::do_log('debug3', "ignore $email because already member");
+            Log::do_log('debug3', 'Ignore %s because already member', $email);
             if ($tied) {
                 %u = split "\n", $users->{$email};
             } else {
                 %u = %{$users->{$email}};
             }
         } else {
-            Log::do_log('debug3', "add new subscriber $email");
+            Log::do_log('debug3', 'Add new subscriber %s', $email);
             %u = %{$default_user_options};
             $total++;
         }
@@ -7555,7 +7514,7 @@ sub _include_users_remote_sympa_list {
 ## include a list as subscribers.
 sub _include_users_list {
     my ($users, $includelistname, $robot, $default_user_options, $tied) = @_;
-    Log::do_log('debug2', 'List::_include_users_list');
+    Log::do_log('debug2', '');
 
     my $total = 0;
 
@@ -7644,7 +7603,7 @@ sub _include_users_admin {
 
 sub _include_users_file {
     my ($users, $filename, $default_user_options, $tied) = @_;
-    Log::do_log('debug2', 'List::_include_users_file(%s)', $filename);
+    Log::do_log('debug2', '(%s)', $filename);
 
     my $total = 0;
 
@@ -7652,7 +7611,7 @@ sub _include_users_file {
         Log::do_log('err', 'Unable to open file "%s"', $filename);
         return undef;
     }
-    Log::do_log('debug2', 'including file %s', $filename);
+    Log::do_log('debug2', 'Including file %s', $filename);
 
     my $id           = Datasource::_get_datasource_id($filename);
     my $lines        = 0;
@@ -7663,7 +7622,7 @@ sub _include_users_file {
         if ($lines > 49 && $emails_found == 0) {
             Log::do_log(
                 'err',
-                'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',
+                'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling',
                 $filename,
                 $lines,
                 $emails_found
@@ -7679,14 +7638,14 @@ sub _include_users_file {
 
         ## Skip badly formed emails
         unless (/^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-            Log::do_log('err', "Skip badly formed line: '%s'", $_);
+            Log::do_log('err', 'Skip badly formed line: "%s"', $_);
             next;
         }
 
         my $email = tools::clean_email($1);
 
         unless (tools::valid_email($email)) {
-            Log::do_log('err', "Skip badly formed email address: '%s'",
+            Log::do_log('err', 'Skip badly formed email address: "%s"',
                 $email);
             next;
         }
@@ -7729,7 +7688,7 @@ sub _include_users_file {
     }
     close INCLUDE;
 
-    Log::do_log('info', "include %d new users from file %s",
+    Log::do_log('info', 'Include %d new users from file %s',
         $total, $filename);
     return $total;
 }
@@ -7739,7 +7698,7 @@ sub _include_users_remote_file {
 
     my $url = $param->{'url'};
 
-    Log::do_log('debug', "List::_include_users_remote_file($url)");
+    Log::do_log('debug', '(%s)', $url);
 
     my $total = 0;
     my $id    = Datasource::_get_datasource_id($param);
@@ -7768,7 +7727,7 @@ sub _include_users_remote_file {
             if ($lines > 49 && $emails_found == 0) {
                 Log::do_log(
                     'err',
-                    'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling.',
+                    'Too much errors in file %s (%s lines, %s emails found). Source file probably corrupted. Cancelling',
                     $url,
                     $lines,
                     $emails_found
@@ -7784,14 +7743,14 @@ sub _include_users_remote_file {
 
             ## Skip badly formed emails
             unless ($line =~ /^\s*($email_regexp)(\s*(\S.*))?\s*$/) {
-                Log::do_log('err', "Skip badly formed line: '%s'", $line);
+                Log::do_log('err', 'Skip badly formed line: "%s"', $line);
                 next;
             }
 
             my $email = tools::clean_email($1);
 
             unless (tools::valid_email($email)) {
-                Log::do_log('err', "Skip badly formed email address: '%s'",
+                Log::do_log('err', 'Skip badly formed email address: "%s"',
                     $line);
                 next;
             }
@@ -7835,18 +7794,15 @@ sub _include_users_remote_file {
             }
         }
     } else {
-        Log::do_log(
-            'err',
-            "List::include_users_remote_file: Unable to fetch remote file $url : %s",
-            $res->message()
-        );
+        Log::do_log('err', 'Unable to fetch remote file %s: %s',
+            $url, $res->message());
         return undef;
     }
 
     ## Reset http credentials
     WebAgent::set_basic_credentials('', '');
 
-    Log::do_log('info', "include %d users from remote file %s", $total, $url);
+    Log::do_log('info', 'Include %d users from remote file %s', $total, $url);
     return $total;
 }
 
@@ -7854,8 +7810,8 @@ sub _include_users_remote_file {
 sub _include_users_voot_group {
     my ($users, $param, $default_user_options, $tied) = @_;
 
-    Log::do_log('debug', "List::_include_users_voot_group(%s, %s, %s)",
-        $param->{'user'}, $param->{'provider'}, $param->{'group'});
+    Log::do_log('debug', '(%s, %s, %s)', $param->{'user'},
+        $param->{'provider'}, $param->{'group'});
 
     my $id = Datasource::_get_datasource_id($param);
 
@@ -7868,7 +7824,7 @@ sub _include_users_voot_group {
     # webEnv accordingly
 
     unless ($consumer) {
-        Log::do_log('err', 'Cannot create VOOT consumer. Cancelling.');
+        Log::do_log('err', 'Cannot create VOOT consumer. Cancelling');
         return undef;
     }
 
@@ -7887,7 +7843,7 @@ sub _include_users_voot_group {
         #foreach my $email (@{$member->{'emails'}}) {
         if (my $email = shift(@{$member->{'emails'}})) {
             unless (tools::valid_email($email)) {
-                Log::do_log('err', "Skip badly formed email address: '%s'",
+                Log::do_log('err', 'Skip badly formed email address: "%s"',
                     $email);
                 next;
             }
@@ -7926,7 +7882,7 @@ sub _include_users_voot_group {
         }
     }
 
-    Log::do_log('info', "included %d users from VOOT group %s at provider %s",
+    Log::do_log('info', 'Included %d users from VOOT group %s at provider %s',
         $total, $param->{'group'}, $param->{'provider'});
 
     return $total;
@@ -7935,7 +7891,7 @@ sub _include_users_voot_group {
 ## Returns a list of subscribers extracted from a remote LDAP Directory
 sub _include_users_ldap {
     my ($users, $id, $source, $default_user_options, $tied) = @_;
-    Log::do_log('debug2', 'List::_include_users_ldap');
+    Log::do_log('debug2', '');
 
     my $user        = $source->{'user'};
     my $passwd      = $source->{'passwd'};
@@ -7955,12 +7911,12 @@ sub _include_users_ldap {
     #my $timeout = 30;
 
     unless (defined $source && $source->connect()) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
     }
     Log::do_log('debug2',
-        'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
+        'Searching on server %s; suffix %s; filter %s; attrs: %s',
         $source->{'host'}, $ldap_suffix, $ldap_filter, $ldap_attrs);
     $fetch = $source->{'ldap_handler'}->search(
         base   => "$ldap_suffix",
@@ -7971,7 +7927,7 @@ sub _include_users_ldap {
     if ($fetch->code()) {
         Log::do_log(
             'err',
-            'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
             $fetch->error(),
             $source->{'host'},
             $ldap_suffix,
@@ -7999,7 +7955,7 @@ sub _include_users_ldap {
                 ## Skip badly formed emails
                 unless (tools::valid_email($email)) {
                     Log::do_log('err',
-                        "Skip badly formed email address: '%s'", $email);
+                        'Skip badly formed email address: "%s"', $email);
                     next;
                 }
 
@@ -8012,7 +7968,7 @@ sub _include_users_ldap {
             my $cleanmail = tools::clean_email($emailentry);
             ## Skip badly formed emails
             unless (tools::valid_email($emailentry)) {
-                Log::do_log('err', "Skip badly formed email address: '%s'",
+                Log::do_log('err', 'Skip badly formed email address: "%s"',
                     $emailentry);
                 next;
             }
@@ -8024,7 +7980,7 @@ sub _include_users_ldap {
     }
 
     unless ($source->disconnect()) {
-        Log::do_log('notice', 'Can\'t unbind from  LDAP server %s',
+        Log::do_log('notice', 'Can\'t unbind from LDAP server %s',
             $source->{'host'});
         return undef;
     }
@@ -8069,7 +8025,7 @@ sub _include_users_ldap {
         }
     }
 
-    Log::do_log('debug2', "unbinded from LDAP server %s ", $source->{'host'});
+    Log::do_log('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
     Log::do_log('info', '%d new users included from LDAP query', $total);
 
     return $total;
@@ -8079,7 +8035,7 @@ sub _include_users_ldap {
 ## Directory using a two-level query
 sub _include_users_ldap_2level {
     my ($users, $id, $source, $default_user_options, $tied) = @_;
-    Log::do_log('debug2', 'List::_include_users_ldap_2level');
+    Log::do_log('debug2', '');
 
     my $user         = $source->{'user'};
     my $passwd       = $source->{'passwd'};
@@ -8105,13 +8061,13 @@ sub _include_users_ldap_2level {
     my ($ldaph, $fetch);
 
     unless (defined $source && ($ldaph = $source->connect())) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $source->{'host'});
         return undef;
     }
 
     Log::do_log('debug2',
-        'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
+        'Searching on server %s; suffix %s; filter %s; attrs: %s',
         $source->{'host'}, $ldap_suffix1, $ldap_filter1, $ldap_attrs1);
     $fetch = $ldaph->search(
         base   => "$ldap_suffix1",
@@ -8122,7 +8078,7 @@ sub _include_users_ldap_2level {
     if ($fetch->code()) {
         Log::do_log(
             'err',
-            'LDAP search (1st level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+            'LDAP search (1st level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
             $fetch->error(),
             $source->{'host'},
             $ldap_suffix1,
@@ -8171,7 +8127,7 @@ sub _include_users_ldap_2level {
         ($filter2 = $ldap_filter2) =~ s/\[attrs1\]/$escaped_attr/g;
 
         Log::do_log('debug2',
-            'Searching on server %s ; suffix %s ; filter %s ; attrs: %s',
+            'Searching on server %s; suffix %s; filter %s; attrs: %s',
             $source->{'host'}, $suffix2, $filter2, $ldap_attrs2);
         $fetch = $ldaph->search(
             base   => "$suffix2",
@@ -8182,7 +8138,7 @@ sub _include_users_ldap_2level {
         if ($fetch->code()) {
             Log::do_log(
                 'err',
-                'LDAP search (2nd level) failed : %s. Node: %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+                'LDAP search (2nd level) failed: %s. Node: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
                 $fetch->error(),
                 $attr,
                 $source->{'host'},
@@ -8215,7 +8171,7 @@ sub _include_users_ldap_2level {
                     ## Skip badly formed emails
                     unless (tools::valid_email($email)) {
                         Log::do_log('err',
-                            "Skip badly formed email address: '%s'", $email);
+                            'Skip badly formed email address: "%s"', $email);
                         next;
                     }
 
@@ -8232,7 +8188,7 @@ sub _include_users_ldap_2level {
                 ## Skip badly formed emails
                 unless (tools::valid_email($emailentry)) {
                     Log::do_log('err',
-                        "Skip badly formed email address: '%s'", $emailentry);
+                        'Skip badly formed email address: "%s"', $emailentry);
                     next;
                 }
 
@@ -8250,7 +8206,7 @@ sub _include_users_ldap_2level {
     }
 
     unless ($source->disconnect()) {
-        Log::do_log('err', 'Can\'t unbind from  LDAP server %s',
+        Log::do_log('err', 'Can\'t unbind from LDAP server %s',
             $source->{'host'});
         return undef;
     }
@@ -8295,7 +8251,7 @@ sub _include_users_ldap_2level {
         }
     }
 
-    Log::do_log('debug2', "unbinded from LDAP server %s ", $source->{'host'});
+    Log::do_log('debug2', 'Unbinded from LDAP server %s', $source->{'host'});
     Log::do_log('info', '%d new users included from LDAP query 2level',
         $total);
 
@@ -8336,14 +8292,9 @@ sub _include_ldap_ca {
 
     return {} unless ($source->connect());
 
-    Log::do_log(
-        'debug',
-        'server %s ; suffix %s ; filter %s ; attrs: %s',
-        $source->{'host'},
-        $source->{'suffix'},
-        $source->{'filter'},
-        $source->{'attrs'}
-    );
+    Log::do_log('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
+        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
+        $source->{'attrs'});
 
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
@@ -8356,7 +8307,7 @@ sub _include_ldap_ca {
     if ($results->code()) {
         Log::do_log(
             'err',
-            'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
             $results->error(),
             $source->{'host'},
             $source->{'suffix'},
@@ -8386,14 +8337,9 @@ sub _include_ldap_level2_ca {
 
     return {};
 
-    Log::do_log(
-        'debug',
-        'server %s ; suffix %s ; filter %s ; attrs: %s',
-        $source->{'host'},
-        $source->{'suffix'},
-        $source->{'filter'},
-        $source->{'attrs'}
-    );
+    Log::do_log('debug', 'Server %s; suffix %s; filter %s; attrs: %s',
+        $source->{'host'}, $source->{'suffix'}, $source->{'filter'},
+        $source->{'attrs'});
 
     my @attrs = split(/\s*,\s*/, $source->{'attrs'});
 
@@ -8406,7 +8352,7 @@ sub _include_ldap_level2_ca {
     if ($results->code()) {
         Log::do_log(
             'err',
-            'LDAP search (single level) failed : %s (searching on server %s ; suffix %s ; filter %s ; attrs: %s)',
+            'LDAP search (single level) failed: %s (searching on server %s; suffix %s; filter %s; attrs: %s)',
             $results->error(),
             $source->{'host'},
             $source->{'suffix'},
@@ -8434,10 +8380,10 @@ sub _include_users_sql {
     my ($users, $id, $source, $default_user_options, $tied, $fetch_timeout) =
         @_;
 
-    Log::do_log('debug', 'List::_include_users_sql()');
+    Log::do_log('debug', '');
 
     unless (ref($source) =~ /DBManipulator/) {
-        Log::do_log('err', 'source object has not a DBManipulator type : %s',
+        Log::do_log('err', 'Source object has not a DBManipulator type: %s',
             $source);
         return undef;
     }
@@ -8475,7 +8421,7 @@ sub _include_users_sql {
 
         ## Skip badly formed emails
         unless (tools::valid_email($email)) {
-            Log::do_log('err', "Skip badly formed email address: '%s'",
+            Log::do_log('err', 'Skip badly formed email address: "%s"',
                 $email);
             next;
         }
@@ -8566,7 +8512,7 @@ sub _load_list_members_from_include {
             } elsif ($type eq 'include_sql_query') {
                 my $source = SQLSource->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
-                    Log::do_log('debug', 'is_new %d, syncing',
+                    Log::do_log('debug', 'Is_new %d, syncing',
                         $source_is_new);
                     $included =
                         _include_users_sql(\%users, $source_id, $source,
@@ -8656,7 +8602,7 @@ sub _load_list_members_from_include {
                 if (_inclusion_loop($name, $incl, $depend_on)) {
                     Log::do_log(
                         'err',
-                        'loop detection in list inclusion : could not include again %s in %s',
+                        'Loop detection in list inclusion: could not include again %s in %s',
                         $incl,
                         $name
                     );
@@ -8709,7 +8655,7 @@ sub _load_list_admin_from_include {
     my $role = shift;
     my $name = $self->{'name'};
 
-    Log::do_log('debug2', '(%s) for list %s', $role, $name);
+    Log::do_log('debug2', '(%s) For list %s', $role, $name);
 
     my (%admin_users, $depend_on, $ref);
     my $total      = 0;
@@ -8735,7 +8681,7 @@ sub _load_list_admin_from_include {
         );
 
         unless (defined $include_file) {
-            Log::do_log('err', 'the file %s.incl doesn\'t exist',
+            Log::do_log('err', 'The file %s.incl doesn\'t exist',
                 $entry->{'source'});
             return undef;
         }
@@ -8758,7 +8704,7 @@ sub _load_list_admin_from_include {
                     $include_path, \%parsing);
             } else {
                 Log::do_log('err',
-                    'errors to get path of the the file %s.incl',
+                    'Errors to get path of the the file %s.incl',
                     $entry->{'source'});
                 return undef;
             }
@@ -8825,7 +8771,7 @@ sub _load_list_admin_from_include {
                     if (_inclusion_loop($name, $incl, $depend_on)) {
                         Log::do_log(
                             'err',
-                            'loop detection in list inclusion : could not include again %s in %s',
+                            'Loop detection in list inclusion: could not include again %s in %s',
                             $incl,
                             $name
                         );
@@ -9112,7 +9058,7 @@ sub sync_include_ca {
 
     $self->purge_ca() if ($purge);
 
-    Log::do_log('debug', 'syncing CA');
+    Log::do_log('debug', 'Syncing CA');
 
     for (
         my $user = $self->get_first_list_member();
@@ -9172,7 +9118,7 @@ sub sync_include_ca {
             ) {
             Log::do_log('debug', 'Updated user %s', $email);
         } else {
-            Log::do_log('error', 'could not update user %s', $email);
+            Log::do_log('error', 'Could not update user %s', $email);
         }
     }
 
@@ -9187,7 +9133,7 @@ sub purge_ca {
     my %userattributes;
     my %users;
 
-    Log::do_log('debug', 'purge CA');
+    Log::do_log('debug', 'Purge CA');
 
     foreach my $attr (@{$admin->{'custom_attribute'}}) {
         $userattributes{$attr->{'id'}} = 1;
@@ -9217,7 +9163,7 @@ sub purge_ca {
             ) {
             Log::do_log('debug', 'Updated user %s', $email);
         } else {
-            Log::do_log('error', 'could not update user %s', $email);
+            Log::do_log('error', 'Could not update user %s', $email);
         }
     }
 
@@ -9228,7 +9174,7 @@ sub sync_include {
     my ($self) = shift;
     my $option = shift;
     my $name   = $self->{'name'};
-    Log::do_log('debug', 'List:sync_include(%s)', $name);
+    Log::do_log('debug', '(%s)', $name);
     my %old_subscribers;
     my $total           = 0;
     my $errors_occurred = 0;
@@ -9255,9 +9201,10 @@ sub sync_include {
                     }
                 )
                 ) {
-                Log::do_log('err',
-                    'List:sync_include(%s): Failed to update %s',
-                    $name, lc($user->{'email'}));
+                Log::do_log(
+                    'err', '(%s) Failed to update %s',
+                    $name, lc($user->{'email'})
+                );
                 next;
             }
             $old_subscribers{lc($user->{'email'})}{'subscribed'} = 1;
@@ -9374,9 +9321,7 @@ sub sync_include {
         unless (defined($new_subscribers->{$email})) {
             ## User is also subscribed, update DB entry
             if ($old_subscribers{$email}{'subscribed'}) {
-                Log::do_log('debug',
-                    'List:sync_include: updating %s to list %s',
-                    $email, $name);
+                Log::do_log('debug', 'Updating %s to list %s', $email, $name);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -9386,8 +9331,7 @@ sub sync_include {
                         }
                     )
                     ) {
-                    Log::do_log('err',
-                        'List:sync_include(%s): Failed to update %s',
+                    Log::do_log('err', '(%s) Failed to update %s',
                         $name, $email);
                     next;
                 }
@@ -9396,14 +9340,12 @@ sub sync_include {
 
                 ## Tag user for deletion
             } else {
-                Log::do_log('debug3',
-                    'List:sync_include: removing %s from list %s',
+                Log::do_log('debug3', 'Removing %s from list %s',
                     $email, $name);
                 @deltab = ($email);
                 unless ($user_removed =
                     $self->delete_list_member('users' => \@deltab)) {
-                    Log::do_log('err',
-                        'List:sync_include(%s): Failed to delete %s',
+                    Log::do_log('err', '(%s) Failed to delete %s',
                         $name, $user_removed);
                     return undef;
                 }
@@ -9428,8 +9370,7 @@ sub sync_include {
         }
     }
     if ($users_removed > 0) {
-        Log::do_log('notice', 'List:sync_include(%s): %d users removed',
-            $name, $users_removed);
+        Log::do_log('notice', '(%s) %d users removed', $name, $users_removed);
     }
 
     ## Go through new users
@@ -9455,8 +9396,7 @@ sub sync_include {
                 foreach my $attribute ('id', 'gecos') {
                     if ($old_subscribers{$email}{$attribute} ne
                         $new_subscribers->{$email}{$attribute}) {
-                        Log::do_log('debug',
-                            'List:sync_include: updating %s to list %s',
+                        Log::do_log('debug', 'Updating %s to list %s',
                             $email, $name);
                         my $update_time =
                             $new_subscribers->{$email}{'update_date'} || time;
@@ -9470,12 +9410,8 @@ sub sync_include {
                             )
                             ) {
 
-                            Log::do_log(
-                                'err',
-                                'List:sync_include(%s): Failed to update %s',
-                                $name,
-                                $email
-                            );
+                            Log::do_log('err', '(%s) Failed to update %s',
+                                $name, $email);
                             next;
                         } else {
                             $succesful_update = 1;
@@ -9486,9 +9422,7 @@ sub sync_include {
                 ## User was already subscribed, update
                 ## include_sources_subscriber in DB
             } else {
-                Log::do_log('debug',
-                    'List:sync_include: updating %s to list %s',
-                    $email, $name);
+                Log::do_log('debug', 'Updating %s to list %s', $email, $name);
                 unless (
                     $self->update_list_member(
                         $email,
@@ -9498,8 +9432,7 @@ sub sync_include {
                         }
                     )
                     ) {
-                    Log::do_log('err',
-                        'List:sync_include(%s): Failed to update %s',
+                    Log::do_log('err', '(%s) Failed to update %s',
                         $name, $email);
                     next;
                 }
@@ -9521,16 +9454,14 @@ sub sync_include {
             if ($compare eq '1') {
                 next;
             }
-            Log::do_log('debug3', 'List:sync_include: adding %s to list %s',
-                $email, $name);
+            Log::do_log('debug3', 'Adding %s to list %s', $email, $name);
             my $u = $new_subscribers->{$email};
             $u->{'included'} = 1;
             $u->{'date'}     = time;
             @add_tab         = ($u);
             my $user_added = 0;
             unless ($user_added = $self->add_list_member(@add_tab)) {
-                Log::do_log('err',
-                    'List:sync_include(%s): Failed to add new users', $name);
+                Log::do_log('err', '(%s) Failed to add new users', $name);
                 return undef;
             }
             if ($user_added) {
@@ -9554,12 +9485,10 @@ sub sync_include {
     }
 
     if ($users_added) {
-        Log::do_log('notice', 'List:sync_include(%s): %d users added',
-            $name, $users_added);
+        Log::do_log('notice', '(%s) %d users added', $name, $users_added);
     }
 
-    Log::do_log('notice', 'List:sync_include(%s): %d users updated',
-        $name, $users_updated);
+    Log::do_log('notice', '(%s) %d users updated', $name, $users_updated);
 
     ## Release lock
     unless ($lock_fh->close()) {
@@ -9588,8 +9517,7 @@ sub on_the_fly_sync_include {
 
     my $pertinent_ttl = $self->{'admin'}{'distribution_ttl'}
         || $self->{'admin'}{'ttl'};
-    Log::do_log('debug2', 'List::on_the_fly_sync_include(%s)',
-        $pertinent_ttl);
+    Log::do_log('debug2', '(%s)', $pertinent_ttl);
     if (   $options{'use_ttl'} != 1
         || $self->{'last_sync'} < time - $pertinent_ttl) {
         Log::do_log('notice', "Synchronizing list members...");
@@ -9609,7 +9537,7 @@ sub sync_include_admin {
     my $option = shift;
 
     my $name = $self->{'name'};
-    Log::do_log('debug2', 'List:sync_include_admin(%s)', $name);
+    Log::do_log('debug2', '(%s)', $name);
 
     ## don't care about listmaster role
     foreach my $role ('owner', 'editor') {
@@ -9695,13 +9623,8 @@ sub sync_include_admin {
                     # updating
                     if (defined $param_update) {
                         if (%{$param_update}) {
-                            Log::do_log(
-                                'debug',
-                                'List:sync_include_admin : updating %s %s to list %s',
-                                $role,
-                                $email,
-                                $name
-                            );
+                            Log::do_log('debug', 'Updating %s %s to list %s',
+                                $role, $email, $name);
                             $param_update->{'update_date'} = time;
 
                             unless (
@@ -9709,13 +9632,9 @@ sub sync_include_admin {
                                     $email, $role, $param_update
                                 )
                                 ) {
-                                Log::do_log(
-                                    'err',
-                                    'List:sync_include_admin(%s): Failed to update %s %s',
-                                    $name,
-                                    $role,
-                                    $email
-                                );
+                                Log::do_log('err',
+                                    '(%s) Failed to update %s %s',
+                                    $name, $role, $email);
                                 next;
                             }
                             $admin_users_updated++;
@@ -9727,8 +9646,7 @@ sub sync_include_admin {
 
                     # add a new included and subscribed admin user
                 } else {
-                    Log::do_log('debug2',
-                        'List:sync_include_admin: adding %s %s to list %s',
+                    Log::do_log('debug2', 'Adding %s %s to list %s',
                         $email, $role, $name);
 
                     foreach my $key (keys %{$param}) {
@@ -9761,13 +9679,8 @@ sub sync_include_admin {
                     # updating
                     if (defined $param_update) {
                         if (%{$param_update}) {
-                            Log::do_log(
-                                'debug',
-                                'List:sync_include_admin : updating %s %s to list %s',
-                                $role,
-                                $email,
-                                $name
-                            );
+                            Log::do_log('debug', 'Updating %s %s to list %s',
+                                $role, $email, $name);
                             $param_update->{'update_date'} = time;
 
                             unless (
@@ -9775,13 +9688,9 @@ sub sync_include_admin {
                                     $email, $role, $param_update
                                 )
                                 ) {
-                                Log::do_log(
-                                    'err',
-                                    'List:sync_include_admin(%s): Failed to update %s %s',
-                                    $name,
-                                    $role,
-                                    $email
-                                );
+                                Log::do_log('err',
+                                    '(%s) Failed to update %s %s',
+                                    $name, $role, $email);
                                 next;
                             }
                             $admin_users_updated++;
@@ -9789,8 +9698,7 @@ sub sync_include_admin {
                     }
                     # add a new included admin user
                 } else {
-                    Log::do_log('debug2',
-                        'List:sync_include_admin: adding %s %s to list %s',
+                    Log::do_log('debug2', 'Adding %s %s to list %s',
                         $role, $email, $name);
 
                     foreach my $key (keys %{$param}) {
@@ -9821,13 +9729,8 @@ sub sync_include_admin {
                 # updating
                 if (defined $param_update) {
                     if (%{$param_update}) {
-                        Log::do_log(
-                            'debug',
-                            'List:sync_include_admin : updating %s %s to list %s',
-                            $role,
-                            $email,
-                            $name
-                        );
+                        Log::do_log('debug', 'Updating %s %s to list %s',
+                            $role, $email, $name);
                         $param_update->{'update_date'} = time;
 
                         unless (
@@ -9835,13 +9738,8 @@ sub sync_include_admin {
                                 $email, $role, $param_update
                             )
                             ) {
-                            Log::do_log(
-                                'err',
-                                'List:sync_include_admin(%s): Failed to update %s %s',
-                                $name,
-                                $role,
-                                $email
-                            );
+                            Log::do_log('err', '(%s) Failed to update %s %s',
+                                $name, $role, $email);
                             next;
                         }
                         $admin_users_updated++;
@@ -9849,8 +9747,7 @@ sub sync_include_admin {
                 }
                 # add a new subscribed admin user
             } else {
-                Log::do_log('debug2',
-                    'List:sync_include_admin: adding %s %s to list %s',
+                Log::do_log('debug2', 'Adding %s %s to list %s',
                     $role, $email, $name);
 
                 foreach my $key (keys %{$param}) {
@@ -9864,20 +9761,18 @@ sub sync_include_admin {
         if ($#add_tab >= 0) {
             unless ($admin_users_added =
                 $self->add_list_admin($role, @add_tab)) {
-                Log::do_log('err',
-                    'List:sync_include_admin(%s): Failed to add new %ss',
-                    $role, $name);
+                Log::do_log('err', '(%s) Failed to add new %ss', $role,
+                    $name);
                 return undef;
             }
         }
 
         if ($admin_users_added) {
-            Log::do_log('debug',
-                'List:sync_include_admin(%s): %d %s(s) added',
+            Log::do_log('debug', '(%s) %d %s(s) added',
                 $name, $admin_users_added, $role);
         }
 
-        Log::do_log('debug', 'List:sync_include_admin(%s): %d %s(s) updated',
+        Log::do_log('debug', '(%s) %d %s(s) updated',
             $name, $admin_users_updated, $role);
 
         ## Go though old list of admin users
@@ -9887,8 +9782,7 @@ sub sync_include_admin {
         foreach my $email (keys %$old_admin_users) {
             unless (defined($new_admin_users_include->{$email})
                 || defined($new_admin_users_config->{$email})) {
-                Log::do_log('debug2',
-                    'List:sync_include_admin: removing %s %s to list %s',
+                Log::do_log('debug2', 'Removing %s %s to list %s',
                     $role, $email, $name);
                 push(@deltab, $email);
             }
@@ -9897,13 +9791,11 @@ sub sync_include_admin {
         if ($#deltab >= 0) {
             unless ($admin_users_removed =
                 $self->delete_list_admin($role, @deltab)) {
-                Log::do_log('err',
-                    'List:sync_include_admin(%s): Failed to delete %s %s',
+                Log::do_log('err', '(%s) Failed to delete %s %s',
                     $name, $role, $admin_users_removed);
                 return undef;
             }
-            Log::do_log('debug',
-                'List:sync_include_admin(%s): %d %s(s) removed',
+            Log::do_log('debug', '(%s) %d %s(s) removed',
                 $name, $admin_users_removed, $role);
         }
 
@@ -9926,7 +9818,7 @@ sub _load_list_admin_from_config {
     my $name = $self->{'name'};
     my %admin_users;
 
-    Log::do_log('debug2', '(%s) for list %s', $role, $name);
+    Log::do_log('debug2', '(%s) For list %s', $role, $name);
 
     foreach my $entry (@{$self->{'admin'}{$role}}) {
         my $email = lc($entry->{'email'});
@@ -9953,7 +9845,7 @@ sub is_update_param {
     my $resul     = {};
     my $update    = 0;
 
-    Log::do_log('debug2', 'List::is_update_param ');
+    Log::do_log('debug2', '');
 
     foreach my $p (
         'reception', 'visibility', 'gecos',    'info',
@@ -9993,7 +9885,7 @@ sub _inclusion_loop {
 sub _load_total_db {
     my $self   = shift;
     my $option = shift;
-    Log::do_log('debug2', 'List::_load_total_db(%s)', $self->{'name'});
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     ## Use session cache
     if (($option ne 'nocache')
@@ -10080,7 +9972,7 @@ sub _compare_addresses {
 ## the digest of the list.
 sub store_digest {
     my ($self, $message) = @_;
-    Log::do_log('debug3', 'List::store_digest');
+    Log::do_log('debug3', '');
 
     my ($filename, $newfile);
     my $separator = tools::get_separator();
@@ -10135,7 +10027,7 @@ sub get_lists {
     my $cond_sql;
 
     my (@lists, $l, @robots);
-    Log::do_log('debug2', 'List::get_lists(%s)', $robot_context);
+    Log::do_log('debug2', '(%s)', $robot_context);
 
     # Determin if files are used instead of list_table DB cache.
     if ($Conf::Conf{'db_list_cache'} ne 'on' or defined $requested_lists) {
@@ -10171,7 +10063,7 @@ sub get_lists {
                     push @expr_perl, sprintf '$list->{"admin"}{"%s"} eq "%s"',
                         quotemeta $k, quotemeta $v;
                 } else {
-                    Log::do_log('err', "bug in logic. Ask developer");
+                    Log::do_log('err', 'Bug in logic. Ask developer');
                     return undef;
                 }
                 if ($k eq 'web_archive') {
@@ -10191,7 +10083,7 @@ sub get_lists {
     if (scalar @clause_perl) {
         $cond_perl = join ' && ',  map {"($_)"} @clause_perl;
         $cond_sql  = join ' AND ', map {"($_)"} @clause_sql;
-        Log::do_log('debug2', 'query %s; %s', $cond_perl, $cond_sql);
+        Log::do_log('debug2', 'Query %s; %s', $cond_perl, $cond_sql);
     } else {
         $cond_perl = undef;
         $cond_sql  = undef;
@@ -10220,8 +10112,8 @@ sub get_lists {
                 unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'domain'}));
 
             unless (-d $robot_dir) {
-                Log::do_log('err',
-                    "unknown robot $robot, Unable to open $robot_dir");
+                Log::do_log('err', 'Unknown robot %s, Unable to open %s',
+                    $robot, $robot_dir);
                 return undef;
             }
 
@@ -10232,7 +10124,7 @@ sub get_lists {
                 @files = sort @{$requested_lists};
             } elsif ($use_files) {
                 unless (opendir(DIR, $robot_dir)) {
-                    Log::do_log('err', "Unable to open $robot_dir");
+                    Log::do_log('err', 'Unable to open %s', $robot_dir);
                     return undef;
                 }
                 @files = sort readdir(DIR);
@@ -10280,10 +10172,10 @@ sub get_lists {
 sub get_robots {
 
     my (@robots, $r);
-    Log::do_log('debug2', 'List::get_robots()');
+    Log::do_log('debug2', '');
 
     unless (opendir(DIR, $Conf::Conf{'etc'})) {
-        Log::do_log('err', "Unable to open $Conf::Conf{'etc'}");
+        Log::do_log('err', 'Unable to open %s', $Conf::Conf{'etc'});
         return undef;
     }
     my $use_default_robot = 1;
@@ -10304,7 +10196,7 @@ sub get_robots {
 sub get_which_db {
     my $email    = shift;
     my $function = shift;
-    Log::do_log('debug3', 'List::get_which_db(%s,%s)', $email, $function);
+    Log::do_log('debug3', '(%s, %s)', $email, $function);
 
     my ($l, %which);
 
@@ -10384,8 +10276,7 @@ sub get_netidtoemail_db {
     my $robot   = shift;
     my $netid   = shift;
     my $idpname = shift;
-    Log::do_log('debug', 'List::get_netidtoemail_db(%s, %s)',
-        $netid, $idpname);
+    Log::do_log('debug', '(%s, %s)', $netid, $idpname);
 
     my ($l, %which, $email);
 
@@ -10424,8 +10315,7 @@ sub set_netidtoemail_db {
     my $netid   = shift;
     my $idpname = shift;
     my $email   = shift;
-    Log::do_log('debug', 'List::set_netidtoemail_db(%s, %s, %s)',
-        $netid, $idpname, $email);
+    Log::do_log('debug', '(%s, %s, %s)', $netid, $idpname, $email);
 
     my ($l, %which);
 
@@ -10492,7 +10382,7 @@ sub get_which {
     my $email    = shift;
     my $robot    = shift;
     my $function = shift;
-    Log::do_log('debug2', 'List::get_which(%s, %s)', $email, $function);
+    Log::do_log('debug2', '(%s, %s)', $email, $function);
 
     my ($l, @which);
 
@@ -10574,7 +10464,7 @@ sub get_which {
 ## return total of messages awaiting moderation
 sub get_mod_spool_size {
     my $self = shift;
-    Log::do_log('debug3', 'List::get_mod_spool_size()');
+    Log::do_log('debug3', '');
     my @msg;
 
     unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
@@ -10610,7 +10500,7 @@ sub get_shared_status {
 # return the list of documents shared waiting for moderation
 sub get_shared_moderated {
     my $self = shift;
-    Log::do_log('debug3', 'List::get_shared_moderated()');
+    Log::do_log('debug3', '');
     my $shareddir = $self->{'dir'} . '/shared';
 
     unless (-e "$shareddir") {
@@ -10627,11 +10517,11 @@ sub get_shared_moderated {
 sub sort_dir_to_get_mod {
     #dir to explore
     my $dir = shift;
-    Log::do_log('debug3', 'List::sort_dir_to_get_mod()');
+    Log::do_log('debug3', '');
 
     # listing of all the shared documents of the directory
     unless (opendir DIR, "$dir") {
-        Log::do_log('err', "sort_dir_to_get_mod : cannot open $dir : $!");
+        Log::do_log('err', 'Cannot open %s: %m', $dir);
         return undef;
     }
 
@@ -10670,7 +10560,7 @@ sub get_db_field_type {
     my ($table, $field) = @_;
 
     unless ($sth = SDM::do_query("SHOW FIELDS FROM $table")) {
-        Log::do_log('err', 'get the list of fields for table %s', $table);
+        Log::do_log('err', 'Get the list of fields for table %s', $table);
         return undef;
     }
 
@@ -10724,7 +10614,7 @@ sub lowercase_field {
 ## FIXME: This might be moved to Robot package.
 sub load_topics {
     my $robot = shift;
-    Log::do_log('debug2', 'List::load_topics(%s)', $robot);
+    Log::do_log('debug2', '(%s)', $robot);
 
     my $conf_file = tools::search_fullpath($robot, 'topics.conf');
 
@@ -10743,12 +10633,12 @@ sub load_topics {
         %list_of_topics = ();
 
         unless (-r $conf_file) {
-            Log::do_log('err', "Unable to read $conf_file");
+            Log::do_log('err', 'Unable to read %s', $conf_file);
             return undef;
         }
 
         unless (open(FILE, "<", $conf_file)) {
-            Log::do_log('err', "Unable to open config file $conf_file");
+            Log::do_log('err', 'Unable to open config file %s', $conf_file);
             return undef;
         }
 
@@ -10982,8 +10872,7 @@ sub _save_list_param {
 ## Load a single line
 sub _load_list_param {
     my ($robot, $key, $value, $p, $directory) = @_;
-    Log::do_log('debug3', '_load_list_param(%s,\'%s\',\'%s\')',
-        $robot, $key, $value);
+    Log::do_log('debug3', '(%s, "%s", "%s")', $robot, $key, $value);
 
     ## Empty value
     if ($value =~ /^\s*$/) {
@@ -11048,7 +10937,7 @@ sub get_cert {
     ## Default format is PEM (can be DER)
     $format ||= 'pem';
 
-    Log::do_log('debug2', 'List::load_cert(%s)', $self->{'name'});
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     # we only send the encryption certificate: this is what the user
     # needs to send mail to the list; if he ever gets anything signed,
@@ -11060,7 +10949,7 @@ sub get_cert {
     my @cert;
     if ($format eq 'pem') {
         unless (open(CERT, $certs)) {
-            Log::do_log('err', "List::get_cert(): Unable to open $certs: $!");
+            Log::do_log('err', 'Unable to open %s: %m', $certs);
             return undef;
         }
 
@@ -11082,8 +10971,8 @@ sub get_cert {
     } elsif ($format eq 'der') {
         unless (open CERT,
             "$Conf::Conf{'openssl'} x509 -in $certs -outform DER|") {
-            Log::do_log('err',
-                "$Conf::Conf{'openssl'} x509 -in $certs -outform DER|");
+            Log::do_log('err', '%s x509 -in %s -outform DER|',
+                $Conf::Conf{'openssl'}, $certs);
             Log::do_log('err',
                 "List::get_cert(): Unable to open get $certs in DER format: $!"
             );
@@ -11093,8 +10982,7 @@ sub get_cert {
         @cert = <CERT>;
         close CERT;
     } else {
-        Log::do_log('err',
-            "List::get_cert(): unknown '$format' certificate format");
+        Log::do_log('err', 'Unknown "%s" certificate format', $format);
         return undef;
     }
 
@@ -11459,7 +11347,7 @@ sub _load_list_config_file {
             $admin{'default_user_options'}{'reception'};
         Log::do_log(
             'info',
-            'reception is not compatible between default_user_options and available_user_options in %s',
+            'Reception is not compatible between default_user_options and available_user_options in %s',
             $directory
         );
     }
@@ -11662,7 +11550,7 @@ sub automatic_tag {
     my ($self, $msg, $robot) = @_;
     my $msg_id = $msg->head->get('Message-ID');
     chomp($msg_id);
-    Log::do_log('debug3', 'automatic_tag(%s,%s)', $self->{'name'}, $msg_id);
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
 
     my $topic_list = $self->compute_topic($msg, $robot);
 
@@ -11699,7 +11587,7 @@ sub compute_topic {
     my ($self, $msg, $robot) = @_;
     my $msg_id = $msg->head->get('Message-ID');
     chomp($msg_id);
-    Log::do_log('debug3', 'compute_topic(%s,%s)', $self->{'name'}, $msg_id);
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
     my @topic_array;
     my %topic_hash;
     my %keywords;
@@ -11797,8 +11685,8 @@ sub compute_topic {
 ####################################################
 sub tag_topic {
     my ($self, $msg_id, $topic_list, $method) = @_;
-    Log::do_log('debug3', 'tag_topic(%s,%s,"%s",%s)', $self->{'name'},
-        $msg_id, $topic_list, $method);
+    Log::do_log('debug3', '(%s, %s, "%s", %s)',
+        $self->{'name'}, $msg_id, $topic_list, $method);
 
     my $robot      = $self->{'domain'};
     my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
@@ -11808,7 +11696,7 @@ sub tag_topic {
     my $file = $list_id . '.' . $msg_id;
 
     unless (open(FILE, ">$queuetopic/$file")) {
-        Log::do_log('info', 'Unable to create msg topic file %s/%s : %s',
+        Log::do_log('info', 'Unable to create msg topic file %s/%s: %s',
             $queuetopic, $file, $!);
         return undef;
     }
@@ -11842,15 +11730,14 @@ sub tag_topic {
 sub load_msg_topic_file {
     my ($self, $msg_id, $robot) = @_;
     $msg_id = tools::clean_msg_id($msg_id);
-    Log::do_log('debug3', 'List::load_msg_topic_file(%s,%s)',
-        $self->{'name'}, $msg_id);
+    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
 
     my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
     my $list_id    = $self->get_list_id();
     my $file       = "$list_id.$msg_id";
 
     unless (open(FILE, "$queuetopic/$file")) {
-        Log::do_log('debug', 'No topic define ; unable to open %s/%s : %s',
+        Log::do_log('debug', 'No topic define; unable to open %s/%s: %s',
             $queuetopic, $file, $!);
         return undef;
     }
@@ -11871,13 +11758,9 @@ sub load_msg_topic_file {
                 if ($value =~ /^(editor|sender|auto)$/) {
                     $info{'method'} = $value;
                 } else {
-                    Log::do_log(
-                        'err',
-                        'List::load_msg_topic_file(%s,%s): syntax error in file %s/%s : %s',
-                        $queuetopic,
-                        $file,
-                        $!
-                    );
+                    Log::do_log('err',
+                        '(%s, %s) Syntax error in file %s/%s: %s',
+                        $queuetopic, $file, $!);
                     return undef;
                 }
             }
@@ -11909,7 +11792,7 @@ sub load_msg_topic_file {
 #####################################################
 sub modifying_msg_topic_for_list_members {
     my ($self, $new_msg_topic) = @_;
-    Log::do_log('debug3', "($self->{'name'}");
+    Log::do_log('debug3', '(%s', $self->{'name'});
     my $deleted = 0;
 
     my @old_msg_topic_name;
@@ -12094,7 +11977,8 @@ sub _urlize_part {
             if $head->mime_attr('Content-Type.Charset') =~ /\S/;
         print OFILE "\n\n";
     } else {
-        Log::do_log('notice', "Unable to open $expl/$dir/$filename");
+        Log::do_log('notice', 'Unable to open %s/%s/%s',
+            $expl, $dir, $filename);
         return undef;
     }
 
@@ -12215,8 +12099,7 @@ sub store_subscription_request {
 
 sub get_subscription_requests {
     my ($self) = shift;
-    Log::do_log('debug2', 'List::get_subscription_requests(%s)',
-        $self->{'name'});
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     my %subscriptions;
 
@@ -12258,7 +12141,7 @@ sub get_subscription_requests {
         if (defined($user_entry) && ($user_entry->{'subscribed'} == 1)) {
             Log::do_log(
                 'err',
-                'User %s is subscribed to %s already. Deleting subscription request.',
+                'User %s is subscribed to %s already. Deleting subscription request',
                 $email,
                 $self->{'name'}
             );
@@ -12292,8 +12175,7 @@ sub get_subscription_requests {
 
 sub get_subscription_request_count {
     my ($self) = shift;
-    Log::do_log('debug2', 'List::get_subscription_requests_count(%s)',
-        $self->{'name'});
+    Log::do_log('debug2', '(%s)', $self->{'name'});
 
     my %subscriptions;
     my $i = 0;
@@ -12320,8 +12202,8 @@ sub get_subscription_request_count {
 
 sub delete_subscription_request {
     my ($self, @list_of_email) = @_;
-    Log::do_log('debug2', 'List::delete_subscription_request(%s, %s)',
-        $self->{'name'}, join(',', @list_of_email));
+    Log::do_log('debug2', '(%s, %s)', $self->{'name'},
+        join(',', @list_of_email));
 
     my $removed_file = 0;
     my $email_regexp = Sympa::Regexps::email();
@@ -12429,8 +12311,7 @@ sub get_next_delivery_date {
 ## Searches the include datasource corresponding to the provided ID
 sub search_datasource {
     my ($self, $id) = @_;
-    Log::do_log('debug2', 'List::search_datasource(%s,%s)',
-        $self->{'name'}, $id);
+    Log::do_log('debug2', '(%s, %s)', $self->{'name'}, $id);
 
     ## Go through list parameters
     foreach my $p (keys %{$self->{'admin'}}) {
@@ -12453,7 +12334,7 @@ sub search_datasource {
 # OUT : -$name : datasources names (scalar)
 sub get_datasource_name {
     my ($self, $id) = @_;
-    Log::do_log('debug2', '(%s,%s)', $self->{'name'}, $id);
+    Log::do_log('debug2', '(%s, %s)', $self->{'name'}, $id);
     my %sources;
 
     my @ids = split /,/, $id;
@@ -12483,7 +12364,7 @@ sub remove_task {
     unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
         Log::do_log(
             'err',
-            "error : can't open dir %s: %s",
+            'Can\'t open dir %s: %s',
             $Conf::Conf{'queuetask'}, $!
         );
         return undef;
@@ -12495,7 +12376,7 @@ sub remove_task {
         if ($task_file =~
             /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
             unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
-                Log::do_log('err', 'Unable to remove task file %s : %s',
+                Log::do_log('err', 'Unable to remove task file %s: %s',
                     $task_file, $!);
                 return undef;
             }
@@ -12530,7 +12411,7 @@ sub close_list {
                     && $list->{'domain'} eq $self->{'domain'})
                 ) {
                 Log::do_log('err',
-                    'List %s is included by list %s : cannot close it',
+                    'List %s is included by list %s: cannot close it',
                     $self->get_list_id(), $list->get_list_id());
                 return undef;
             }
@@ -12679,7 +12560,7 @@ sub remove_aliases {
         $alias_manager, $self->{'name'}, $self->{'admin'}{'host'});
     my $status = $? >> 8;
     unless ($status == 0) {
-        Log::do_log('err', 'Failed to remove aliases ; status %d : %s',
+        Log::do_log('err', 'Failed to remove aliases; status %d: %s',
             $status, $!);
         return undef;
     }
@@ -12699,17 +12580,17 @@ sub remove_aliases {
 sub remove_bouncers {
     my $self   = shift;
     my $reftab = shift;
-    Log::do_log('debug', 'List::remove_bouncers(%s)', $self->{'name'});
+    Log::do_log('debug', '(%s)', $self->{'name'});
 
     ## Log removal
     foreach my $bouncer (@{$reftab}) {
-        Log::do_log('notice', 'Removing bouncing subsrciber of list %s : %s',
+        Log::do_log('notice', 'Removing bouncing subsrciber of list %s: %s',
             $self->{'name'}, $bouncer);
     }
 
     unless ($self->delete_list_member('users' => $reftab, 'exclude' => ' 1'))
     {
-        Log::do_log('info', 'error while calling sub delete_users');
+        Log::do_log('info', 'Error while calling sub delete_users');
         return undef;
     }
     return 1;
@@ -12720,10 +12601,10 @@ sub remove_bouncers {
 sub notify_bouncers {
     my $self   = shift;
     my $reftab = shift;
-    Log::do_log('debug', 'List::notify_bouncers(%s)', $self->{'name'});
+    Log::do_log('debug', '(%s)', $self->{'name'});
 
     foreach my $user (@$reftab) {
-        Log::do_log('notice', 'Notifying bouncing subsrciber of list %s : %s',
+        Log::do_log('notice', 'Notifying bouncing subsrciber of list %s: %s',
             $self->{'name'}, $user);
         $self->send_notify_to_user('auto_notify_bouncers', $user, {});
     }
@@ -12737,13 +12618,12 @@ sub create_shared {
     my $dir = $self->{'dir'} . '/shared';
 
     if (-e $dir) {
-        Log::do_log('err', "List::create_shared : %s already exists", $dir);
+        Log::do_log('err', '%s already exists', $dir);
         return undef;
     }
 
     unless (mkdir($dir, 0777)) {
-        Log::do_log('err', "List::create_shared : unable to create %s : %s ",
-            $dir, $!);
+        Log::do_log('err', 'Unable to create %s: %s', $dir, $!);
         return undef;
     }
 
@@ -12765,8 +12645,7 @@ sub has_include_data_sources {
 # move a message to a queue or distribute spool
 sub move_message {
     my ($self, $file, $queue) = @_;
-    Log::do_log('debug2',
-        "List::move_message($file, $self->{'name'}, $queue)");
+    Log::do_log('debug2', '(%s, %s, %s)', $file, $self->{'name'}, $queue);
 
     my $dir = $queue || $Conf::Conf{'queuedistribute'};
     my $filename = $self->get_list_id() . '.' . time . '.' . int(rand(999));
@@ -12992,7 +12871,7 @@ sub get_data {
 ## Support for list config caching in database
 sub get_lists_db {
     my $where = shift || '';
-    Log::do_log('debug2', 'List::get_lists_db(%s)', $where);
+    Log::do_log('debug2', '(%s)', $where);
 
     unless ($SDM::use_db) {
         Log::do_log('info', 'Sympa not setup to use DBI');
@@ -13212,7 +13091,7 @@ sub new {
     Log::do_log('debug2', '');
 
     unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-        Log::do_log('err', "Unknown robot '$name'");
+        Log::do_log('err', 'Unknown robot "%s"', $name);
         return undef;
     }
 
@@ -13222,8 +13101,8 @@ sub new {
     } else {
         $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
         unless (-d $robot->{'home'}) {
-            Log::do_log('err',
-                "Missing directory '$robot->{'home'}' for robot '$name'");
+            Log::do_log('err', 'Missing directory "%s" for robot "%s"',
+                $robot->{'home'}, $name);
             return undef;
         }
     }

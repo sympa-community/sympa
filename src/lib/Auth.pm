@@ -42,7 +42,7 @@ use Sympa::User;
 ## by sha1 or ....)
 sub password_fingerprint {
 
-    Log::do_log('debug', 'Auth::password_fingerprint');
+    Log::do_log('debug', '');
 
     my $pwd = shift;
     if (Conf::get_robot_conf('*', 'password_case') eq 'insensitive') {
@@ -57,7 +57,7 @@ sub check_auth {
     my $robot = shift;
     my $auth  = shift;    ## User email or UID
     my $pwd   = shift;    ## Password
-    Log::do_log('debug', 'Auth::check_auth(%s)', $auth);
+    Log::do_log('debug', '(%s)', $auth);
 
     my ($canonic, $user);
 
@@ -124,7 +124,7 @@ sub may_use_sympa_native_auth {
 sub authentication {
     my ($robot, $email, $pwd) = @_;
     my ($user, $canonic);
-    Log::do_log('debug', 'Auth::authentication(%s)', $email);
+    Log::do_log('debug', '(%s)', $email);
 
     unless ($user = Sympa::User::get_global_user($email)) {
         $user = {'email' => $email};
@@ -141,7 +141,7 @@ sub authentication {
         report::reject_report_web('user', 'too_many_wrong_login', {})
             unless ($ENV{'SYMPA_SOAP'});
         Log::do_log('err',
-            'login is blocked : too many wrong password submission for %s',
+            'Login is blocked: too many wrong password submission for %s',
             $email);
         return undef;
     }
@@ -192,8 +192,7 @@ sub authentication {
 
     report::reject_report_web('user', 'incorrect_passwd', {})
         unless ($ENV{'SYMPA_SOAP'});
-    Log::do_log('err', 'authentication: incorrect password for user %s',
-        $email);
+    Log::do_log('err', 'Incorrect password for user %s', $email);
 
     my $param;    #FIXME FIXME: not used.
     $param->{'init_email'}         = $email;
@@ -204,8 +203,7 @@ sub authentication {
 sub ldap_authentication {
     my ($robot, $ldap, $auth, $pwd, $whichfilter) = @_;
     my ($mesg, $host, $ldap_passwd, $ldap_anonymous);
-    Log::do_log('debug2', 'Auth::ldap_authentication(%s,%s,%s)',
-        $auth, '****', $whichfilter);
+    Log::do_log('debug2', '(%s, %s, %s)', $auth, '****', $whichfilter);
     Log::do_log('debug3', 'Password used: %s', $pwd);
 
     unless (tools::search_fullpath($robot, 'auth.conf')) {
@@ -238,7 +236,7 @@ sub ldap_authentication {
     my $ds    = LDAPSource->new($param);
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'host'});
         return undef;
     }
@@ -273,7 +271,7 @@ sub ldap_authentication {
     $ds = LDAPSource->new($param);
 
     unless (defined $ds && ($ldap_passwd = $ds->connect())) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $param->{'host'});
         return undef;
     }
@@ -323,8 +321,8 @@ sub ldap_authentication {
         $param->{'alt_emails'}{$alt} = $previous->{$alt};
     }
 
-    $ds->disconnect() or Log::do_log('notice', "unable to unbind");
-    Log::do_log('debug3', "canonic: $canonic_email[0]");
+    $ds->disconnect() or Log::do_log('notice', 'Unable to unbind');
+    Log::do_log('debug3', 'Canonic: %s', $canonic_email[0]);
     ## If the identifier provided was a valid email, return the provided
     ## email.
     ## Otherwise, return the canonical email guessed after the login.
@@ -343,8 +341,7 @@ sub get_email_by_net_id {
     my $auth_id    = shift;
     my $attributes = shift;
 
-    Log::do_log('debug',
-        "Auth::get_email_by_net_id($auth_id,$attributes->{'uid'})");
+    Log::do_log('debug', '(%s, %s)', $auth_id, $attributes->{'uid'});
 
     if (defined $Conf::Conf{'auth_services'}{$robot}[$auth_id]
         {'internal_email_by_netid'}) {
@@ -367,7 +364,7 @@ sub get_email_by_net_id {
     my $ldap_anonymous;
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $ldap->{'ldap_host'});
         return undef;
     }
@@ -408,8 +405,7 @@ sub get_email_by_net_id {
 sub remote_app_check_password {
 
     my ($trusted_application_name, $password, $robot) = @_;
-    Log::do_log('debug', 'Auth::remote_app_check_password (%s,%s)',
-        $trusted_application_name, $robot);
+    Log::do_log('debug', '(%s, %s)', $trusted_application_name, $robot);
 
     my $md5 = tools::md5_fingerprint($password);
 
@@ -424,7 +420,7 @@ sub remote_app_check_password {
 
         if (lc($application->{'name'}) eq lc($trusted_application_name)) {
             if ($md5 eq $application->{'md5password'}) {
-                # Log::do_log('debug', 'Auth::remote_app_check_password : authentication succeed for %s',$application->{'name'});
+                # Log::do_log('debug', 'Authentication succeed for %s',$application->{'name'});
                 my %proxy_for_vars;
                 foreach my $varname (@{$application->{'proxy_for_variables'}})
                 {
@@ -432,16 +428,14 @@ sub remote_app_check_password {
                 }
                 return (\%proxy_for_vars);
             } else {
-                Log::do_log('info',
-                    'Auth::remote_app_check_password: bad password from %s',
+                Log::do_log('info', 'Bad password from %s',
                     $trusted_application_name);
                 return undef;
             }
         }
     }
     # no matching application found
-    Log::do_log('info',
-        'Auth::remote_app-check_password: unknown application name %s',
+    Log::do_log('info', '-check_password: unknown application name %s',
         $trusted_application_name);
     return undef;
 }
@@ -458,8 +452,7 @@ sub create_one_time_ticket {
         shift;    ## Value may be 'mail' if the IP address is not known
 
     my $ticket = SympaSession::get_random();
-    Log::do_log('info',
-        'Auth::create_one_time_ticket(%s,%s,%s,%s) value = %s',
+    Log::do_log('info', '(%s, %s, %s, %s) Value = %s',
         $email, $robot, $data_string, $remote_addr, $ticket);
 
     my $date = time;
@@ -513,9 +506,7 @@ sub get_one_time_ticket {
     my $ticket = $sth->fetchrow_hashref('NAME_lc');
 
     unless ($ticket) {
-        Log::do_log('info',
-            'Auth::get_one_time_ticket: Unable to find one time ticket %s',
-            $ticket);
+        Log::do_log('info', 'Unable to find one time ticket %s', $ticket);
         return {'result' => 'not_found'};
     }
 
@@ -525,21 +516,11 @@ sub get_one_time_ticket {
 
     if ($ticket->{'status'} ne 'open') {
         $result = 'closed';
-        Log::do_log(
-            'info',
-            'Auth::get_one_time_ticket: ticket %s from %s has been used before (%s)',
-            $ticket_number,
-            $ticket->{'email'},
-            $printable_date
-        );
+        Log::do_log('info', 'Ticket %s from %s has been used before (%s)',
+            $ticket_number, $ticket->{'email'}, $printable_date);
     } elsif (time - $ticket->{'date'} > 48 * 60 * 60) {
-        Log::do_log(
-            'info',
-            'Auth::get_one_time_ticket: ticket %s from %s refused because expired (%s)',
-            $ticket_number,
-            $ticket->{'email'},
-            $printable_date
-        );
+        Log::do_log('info', 'Ticket %s from %s refused because expired (%s)',
+            $ticket_number, $ticket->{'email'}, $printable_date);
         $result = 'expired';
     } else {
         $result = 'success';
@@ -555,8 +536,7 @@ sub get_one_time_ticket {
             $ticket_number, $addr);
     }
 
-    Log::do_log('info', 'Auth::get_one_time_ticket(%s) : result : %s',
-        $ticket_number, $result);
+    Log::do_log('info', '(%s) Result: %s', $ticket_number, $result);
     return {
         'result'      => $result,
         'date'        => $ticket->{'date'},

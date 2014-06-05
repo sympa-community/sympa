@@ -138,7 +138,7 @@ sub load_mime_types {
         next unless (-r $loc);
 
         unless (open(CONF, $loc)) {
-            Log::do_log('err', "load_mime_types: unable to open $loc");
+            Log::do_log('err', 'Unable to open %s', $loc);
             return undef;
         }
     }
@@ -211,7 +211,7 @@ sub init_passwd {
                 report::reject_report_web('intern', 'update_user_db_failed',
                     {'user' => $email},
                     '', '', $email, $robot);
-                Log::do_log('info', 'init_passwd: update failed');
+                Log::do_log('info', 'Update failed');
                 return undef;
             }
         }
@@ -229,7 +229,7 @@ sub init_passwd {
             report::reject_report_web('intern', 'add_user_db_failed',
                 {'user' => $email},
                 '', '', $email, $robot);
-            Log::do_log('info', 'init_passwd: add failed');
+            Log::do_log('info', 'Add failed');
             return undef;
         }
     }
@@ -267,13 +267,20 @@ sub upload_file_to_server {
     );
     my $fh;
     unless ($fh = $param->{'query'}->upload($param->{'file_field'})) {
-        Log::do_log('debug',
-            "Cannot upload file from field $param->{'file_field'}");
+        Log::do_log(
+            'debug',
+            'Cannot upload file from field %s',
+            $param->{'file_field'}
+        );
         return undef;
     }
 
     unless (open FILE, ">:bytes", $param->{'destination'}) {
-        Log::do_log('debug', "Cannot open file $param->{'destination'} : $!");
+        Log::do_log(
+            'debug',
+            'Cannot open file %s: %m',
+            $param->{'destination'}
+        );
         return undef;
     }
     while (<$fh>) {

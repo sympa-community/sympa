@@ -148,7 +148,7 @@ if ($main::options{'log_level'}) {
     Log::set_log_level($main::options{'log_level'});
     Log::do_log(
         'info',
-        'Configuration file read, log level set using options : %s',
+        'Configuration file read, log level set using options: %s',
         $main::options{'log_level'}
     );
 } else {
@@ -188,7 +188,7 @@ unless (chdir($Conf::Conf{'home'})) {
     exit(-1);
 }
 
-Log::do_log('notice', "bounced Started");
+Log::do_log('notice', 'Bounced Started');
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -197,7 +197,7 @@ my $end = 0;
 
 my $queue = $Conf::Conf{'queuebounce'};
 
-Log::do_log('debug', 'starting infinite loop');
+Log::do_log('debug', 'Starting infinite loop');
 ## infinite loop scanning the queue (unless a sig TERM is received
 while (!$end) {
     ## this sleep is important to be raisonably sure that sympa is not
@@ -226,7 +226,8 @@ while (!$end) {
             my @s = stat("$queue/$file");
             if (POSIX::S_ISREG($s[2])) {
                 Log::do_log('notice',
-                    "Ignoring file $queue/$file because unknown format");
+                    'Ignoring file %s/%s because unknown format',
+                    $queue, $file);
                 ignore_bounce(
                     {   'file'  => $file,
                         'queue' => $queue,
@@ -246,8 +247,8 @@ while (!$end) {
         $robot ||= List::search_list_among_robots($listname);
 
         if (-z "$queue/$file") {
-            Log::do_log('notice',
-                "Ignoring file $queue/$file because empty file");
+            Log::do_log('notice', 'Ignoring file %s/%s because empty file',
+                $queue, $file);
             ignore_bounce(
                 {   'file'  => $file,
                     'robot' => $robot,
@@ -290,7 +291,7 @@ while (!$end) {
         my $who;
         my $distribution_id;
         Log::do_log(
-            'debug', 'bounce for :%s:  Conf{bounce_email_prefix}=%',
+            'debug', 'Bounce for: %s: Conf{bounce_email_prefix}=%',
             $to,     $Conf::Conf{'bounce_email_prefix'}
         );
 
@@ -311,7 +312,7 @@ while (!$end) {
                 $local_part = $1;
             } else {
                 undef $distribution_id;
-                Log::do_log('err', 'NOT ID PART in the bounce for :%s', $to);
+                Log::do_log('err', 'NOT ID PART in the bounce for: %s', $to);
             }
 
             $local_part =~ s/\=\=a\=\=/\@/;
@@ -320,7 +321,7 @@ while (!$end) {
             $listname = $2;
 
             Log::do_log('notice',
-                'VERP in use : bounce related to %s for list %s@%s',
+                'VERP in use: bounce related to %s for list %s@%s',
                 $who, $listname, $robot);
 
             if ($unique =~ /[wr]/) {
@@ -520,35 +521,33 @@ while (!$end) {
                 ($msg_id) = $msg_id =~ /<(\S+\@\S+)>/;
             }
 
-            Log::do_log('debug2', "FINAL DSN Action Detected, value : %s",
+            Log::do_log('debug2', 'FINAL DSN Action Detected, value: %s',
                 $dsn_status);
-            Log::do_log('debug2', "FINAL DSN Recipient Detected, value : %s",
+            Log::do_log('debug2', 'FINAL DSN Recipient Detected, value: %s',
                 $original_rcpt);
             Log::do_log('debug2',
-                "FINAL DSN final Recipient Detected, value : %s",
-                $final_rcpt);
-            Log::do_log('debug2', "FINAL DSN Message-Id Detected, value : %s",
+                'FINAL DSN final Recipient Detected, value: %s', $final_rcpt);
+            Log::do_log('debug2', 'FINAL DSN message ID Detected, value: %s',
                 $msg_id);
             Log::do_log('debug2',
-                "FINAL DSN Arrival Date Detected, value : %s",
+                'FINAL DSN Arrival Date Detected, value: %s',
                 $arrival_date);
 
             unless ($dsn_status =~ /failed/) {
                 # DSN with status "failed" should not be removed because they
                 # must be processed for classical bounce managment (not only
                 # for tracking feature)
-                Log::do_log('err', "Non failed dsn status $dsn_status");
+                Log::do_log('err', 'Non failed dsn status %s', $dsn_status);
                 unless ($distribution_id) {
                     Log::do_log('err',
-                        "error: Id not found in to address %s, will ignore",
-                        $to);
+                        'Id not found in to address %s, will ignore', $to);
                     unlink("$queue/$file");
                     next;
                 }
                 unless ($original_rcpt) {
                     Log::do_log(
                         'err',
-                        "error: original recipient not found in dsn: %s, will ignore",
+                        'Original recipient not found in dsn: %s, will ignore',
                         $msg_id
                     );
                     unlink("$queue/$file");
@@ -556,7 +555,7 @@ while (!$end) {
                 }
                 unless ($msg_id) {
                     Log::do_log('err',
-                        "error: message_id not found in dsn will ignore");
+                        'Message_id not found in dsn will ignore');
                     unlink("$queue/$file");
                     next;
                 }
@@ -577,7 +576,8 @@ while (!$end) {
                 if (unlink("$queue/$file")) {
                     Log::do_log('debug2', "DSN Correctly removed...");
                 } else {
-                    Log::do_log('err', "could not unlink $queue/$file");
+                    Log::do_log('err', 'Could not unlink %s/%s',
+                        $queue, $file);
                 }
                 next;
             }
@@ -664,40 +664,36 @@ while (!$end) {
             # let's use VERP
             $original_rcpt = $who;
 
-            Log::do_log('debug2',
-                "FINAL MDN Disposition Detected, value : %s", $mdn_status);
-            Log::do_log('debug2', "FINAL MDN Recipient Detected, value : %s",
+            Log::do_log('debug2', 'FINAL MDN Disposition Detected, value: %s',
+                $mdn_status);
+            Log::do_log('debug2', 'FINAL MDN Recipient Detected, value: %s',
                 $original_rcpt);
-            Log::do_log('debug2', "FINAL MDN Message-Id Detected, value : %s",
+            Log::do_log('debug2', 'FINAL MDN message ID Detected, value: %s',
                 $msg_id);
-            Log::do_log('debug2', "FINAL MDN Date Detected, value : %s",
+            Log::do_log('debug2', 'FINAL MDN Date Detected, value: %s',
                 $date);
 
             unless ($distribution_id) {
                 Log::do_log('err',
-                    "error: Id not found in to address %s, will ignore", $to);
+                    'Id not found in to address %s, will ignore', $to);
                 unlink("$queue/$file");
                 next;
             }
             unless ($original_rcpt) {
-                Log::do_log(
-                    'err',
-                    "error: original recipient not found in dsn: %s, will ignore",
-                    $msg_id
-                );
+                Log::do_log('err',
+                    'Original recipient not found in dsn: %s, will ignore',
+                    $msg_id);
                 unlink("$queue/$file");
                 next;
             }
             unless ($msg_id) {
-                Log::do_log('err',
-                    "error: message_id not found in dsn will ignore");
+                Log::do_log('err', 'Message_id not found in dsn will ignore');
                 unlink("$queue/$file");
                 next;
             }
             unless ($mdn_status) {
                 Log::do_log('err',
-                    "error: dsn status not found in dsn: %s, will ignore",
-                    $msg_id);
+                    'Dsn status not found in dsn: %s, will ignore', $msg_id);
                 unlink("$queue/$file");
                 next;
             }
@@ -716,7 +712,7 @@ while (!$end) {
             if (unlink("$queue/$file")) {
                 Log::do_log('debug2', "MDN Correctly removed...");
             } else {
-                Log::do_log('debug2', "could not unlink queue/$file");
+                Log::do_log('debug2', 'Could not unlink queue/%s', $file);
             }
             next;
         }
@@ -727,7 +723,7 @@ while (!$end) {
             # this case a report Email Feedback Reports
             # http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt
             # mainly use by AOL
-            Log::do_log('notice', "processing  Email Feedback Report");
+            Log::do_log('notice', 'Processing Email Feedback Report');
             my @parts = $entity->parts();
             my $original_rcpt;
             my $user_agent;
@@ -793,8 +789,8 @@ while (!$end) {
                     "Email Feedback Report: $listname feedback-type: $feedback_type"
                 );
                 if (defined $original_rcpt) {
-                    Log::do_log('debug',
-                        "Recognized user : $original_rcpt list");
+                    Log::do_log('debug', 'Recognized user: %s list',
+                        $original_rcpt);
                     my @lists;
 
                     if (   ($feedback_type =~ /(opt-out-list|abuse)/i)
@@ -830,7 +826,7 @@ while (!$end) {
                     } else {
                         Log::do_log(
                             'notice',
-                            'Ignoring Feedback Report %s : Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
+                            'Ignoring Feedback Report %s: Nothing to do for this feedback type.(feedback_type:%s, original_rcpt:%s, listname:%s)',
                             $file,
                             $feedback_type,
                             $original_rcpt,
@@ -859,7 +855,8 @@ while (!$end) {
 
                                 Log::do_log(
                                     'notice',
-                                    "$original_rcpt has been removed from %s because abuse feedback report",
+                                    '%s has been removed from %s because abuse feedback report',
+                                    $original_rcpt,
                                     $list->name
                                 );
                                 $list->send_notify_to_owner(
@@ -871,7 +868,7 @@ while (!$end) {
                             } else {
                                 Log::do_log(
                                     'err',
-                                    'Ignore Feedback Report %s for list %s@%s : user %s not subscribed',
+                                    'Ignore Feedback Report %s for list %s@%s: user %s not subscribed',
                                     $file,
                                     $list->name,
                                     $robot,
@@ -884,7 +881,7 @@ while (!$end) {
                             $forward = 'request';
                             Log::do_log(
                                 'err',
-                                'Ignore Feedback Report %s for list %s@%s : user %s is not allowed to unsubscribe',
+                                'Ignore Feedback Report %s for list %s@%s: user %s is not allowed to unsubscribe',
                                 $file,
                                 $list->name,
                                 $robot,
@@ -895,7 +892,7 @@ while (!$end) {
                 } else {
                     Log::do_log(
                         'err',
-                        'Ignoring Feedback Report %s : Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',
+                        'Ignoring Feedback Report %s: Unknown Original-Rcpt-To field. Can\'t do anything. (feedback_type:%s, listname:%s)',
                         $file,
                         $feedback_type,
                         $listname
@@ -913,7 +910,7 @@ while (!$end) {
             } else {
                 Log::do_log(
                     'err',
-                    'Ignoring Feedback Report %s : Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',
+                    'Ignoring Feedback Report %s: Unknown format (feedback_type:%s, original_rcpt:%s, listname:%s)',
                     $file,
                     $feedback_type,
                     $original_rcpt,
@@ -951,8 +948,8 @@ while (!$end) {
             unlink("$queue/$file");
             next;
         } else {
-            Log::do_log('debug',
-                "Processing bouncefile $file for list $listname");
+            Log::do_log('debug', 'Processing bouncefile %s for list %s',
+                $file, $listname);
 
             unless (open BOUNCE, "$queue/$file") {
                 Log::do_log('notice', 'Could not open %s/%s: %s',
@@ -1046,12 +1043,9 @@ while (!$end) {
                     update_subscriber_bounce_history($list, 'unknown', $who);
                 } else {    # no VERP and no rcpt recognized
                     my $escaped_from = tools::escape_chars($from);
-                    Log::do_log(
-                        'info',
-                        'error: no address found in message from %s for list %s',
-                        $from,
-                        $list->{'name'}
-                    );
+                    Log::do_log('info',
+                        'No address found in message from %s for list %s',
+                        $from, $list->{'name'});
                     ignore_bounce(
                         {   'file'  => $file,
                             'robot' => $robot,
@@ -1088,7 +1082,7 @@ while (!$end) {
 # Purge grouped notifications
 List::send_notify_to_listmaster(undef, undef, undef, undef, 1);
 
-Log::do_log('notice', 'bounced exited normally due to signal');
+Log::do_log('notice', 'Bounced exited normally due to signal');
 tools::remove_pid('bounced', $$);
 
 exit(0);
@@ -1106,7 +1100,7 @@ sub store_bounce {
     my $file       = shift;
     my $rcpt       = shift;
 
-    Log::do_log('debug', 'store_bounce(%s,%s,%s)', $bounce_dir, $file, $rcpt);
+    Log::do_log('debug', '(%s, %s, %s)', $bounce_dir, $file, $rcpt);
 
     my $queue = $Conf::Conf{'queuebounce'};
 
@@ -1124,7 +1118,8 @@ sub store_bounce {
     my $filename = tools::escape_chars($rcpt);
 
     unless (open ARC, ">$bounce_dir/$filename") {
-        Log::do_log('notice', "Unable to write $bounce_dir/$filename");
+        Log::do_log('notice', 'Unable to write %s/%s', $bounce_dir,
+            $filename);
         ignore_bounce(
             {   'file'  => $file,
                 'queue' => $queue,
@@ -1165,7 +1160,7 @@ sub update_subscriber_bounce_history {
     my $bouncefor = shift;
     my $status    = shift;
 
-    Log::do_log('debug', 'update_subscriber_bounce_history (%s,%s,%s,%s)',
+    Log::do_log('debug', '(%s, %s, %s, %s)',
         $list->{'name'}, $rcpt, $bouncefor, $status);
 
     my $first = my $last = time;
@@ -1174,7 +1169,7 @@ sub update_subscriber_bounce_history {
     my $user = $list->get_list_member($bouncefor);
 
     unless ($user) {
-        Log::do_log('notice', 'Subscriber not found in list %s : %s',
+        Log::do_log('notice', 'Subscriber not found in list %s: %s',
             $list->{'name'}, $bouncefor);
         return undef;
     }
@@ -1185,18 +1180,10 @@ sub update_subscriber_bounce_history {
     $count++;
     if ($rcpt ne $bouncefor) {
         Log::do_log('notice',
-            'Bouncing address identified with VERP : %s / %s',
+            'Bouncing address identified with VERP: %s / %s',
             $rcpt, $bouncefor);
-        Log::do_log(
-            'debug',
-            'update_subscribe (%s, bounce-> %s %s %s %s,bounce_address->%s)',
-            $bouncefor,
-            $first,
-            $last,
-            $count,
-            $status,
-            $rcpt
-        );
+        Log::do_log('debug', '(%s, bounce-> %s %s %s %s, bounce_address->%s)',
+            $bouncefor, $first, $last, $count, $status, $rcpt);
         $list->update_list_member(
             $bouncefor,
             {   'bounce'         => "$first $last $count $status",

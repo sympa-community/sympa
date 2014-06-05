@@ -53,7 +53,7 @@ sub get_previous_version {
 
     if (-f $version_file) {
         unless (open VFILE, $version_file) {
-            Log::do_log('err', "Unable to open %s : %s", $version_file, $!);
+            Log::do_log('err', 'Unable to open %s: %s', $version_file, $!);
             return undef;
         }
         while (<VFILE>) {
@@ -78,7 +78,7 @@ sub update_version {
     unless (open VFILE, ">$version_file") {
         Log::do_log(
             'err',
-            "Unable to write %s ; sympa.pl needs write access on %s directory : %s",
+            'Unable to write %s; sympa.pl needs write access on %s directory: %s',
             $version_file,
             $Conf::Conf{'etc'},
             $!
@@ -138,7 +138,7 @@ sub upgrade {
 
         my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
         unless (open EXEC, "$tpl_script|") {
-            Log::do_log('err', "Unable to run $tpl_script");
+            Log::do_log('err', 'Unable to run %s', $tpl_script);
             return undef;
         }
         close EXEC;
@@ -274,7 +274,7 @@ sub upgrade {
                         ) {
                         Log::do_log(
                             'err',
-                            'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s.',
+                            'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
                             $r
                         );
                         List::send_notify_to_listmaster(
@@ -302,7 +302,7 @@ sub upgrade {
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'arc_path');
         unless (opendir ARCDIR, $root_dir) {
-            Log::do_log('err', "Unable to open $root_dir : $!");
+            Log::do_log('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
@@ -317,7 +317,7 @@ sub upgrade {
 
             my $list = new List $listname;
             unless (defined $list) {
-                Log::do_log('notice', "Skipping unknown list $listname");
+                Log::do_log('notice', 'Skipping unknown list %s', $listname);
                 next;
             }
 
@@ -330,14 +330,14 @@ sub upgrade {
                 if (-d $new_path) {
                     Log::do_log(
                         'err',
-                        "Could not rename %s to %s ; directory already exists",
+                        'Could not rename %s to %s; directory already exists',
                         $old_path,
                         $new_path
                     );
                     next;
                 } else {
                     unless (rename $old_path, $new_path) {
-                        Log::do_log('err', "Failed to rename %s to %s : %s",
+                        Log::do_log('err', 'Failed to rename %s to %s: %s',
                             $old_path, $new_path, $!);
                         next;
                     }
@@ -380,7 +380,7 @@ sub upgrade {
                 if ($max > 1) {
                     ## 1 to 0
                     Log::do_log('notice',
-                        'Fixing DB field %s ; turning 1 to 0...', $field);
+                        'Fixing DB field %s; turning 1 to 0...', $field);
                     my $rows;
                     $sth =
                         SDM::do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
@@ -394,7 +394,7 @@ sub upgrade {
 
                     ## 2 to 1
                     Log::do_log('notice',
-                        'Fixing DB field %s ; turning 2 to 1...', $field);
+                        'Fixing DB field %s; turning 2 to 1...', $field);
 
                     $sth =
                         SDM::do_query(q{UPDATE %s SET %s = %d WHERE %s = %d},
@@ -439,7 +439,7 @@ sub upgrade {
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path');
         unless (opendir BOUNCEDIR, $root_dir) {
-            Log::do_log('err', "Unable to open $root_dir : $!");
+            Log::do_log('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
@@ -455,7 +455,7 @@ sub upgrade {
             my $listname = $dir;
             my $list     = new List $listname;
             unless (defined $list) {
-                Log::do_log('notice', "Skipping unknown list $listname");
+                Log::do_log('notice', 'Skipping unknown list %s', $listname);
                 next;
             }
 
@@ -465,12 +465,12 @@ sub upgrade {
 
             if (-d $new_path) {
                 Log::do_log('err',
-                    "Could not rename %s to %s ; directory already exists",
+                    'Could not rename %s to %s; directory already exists',
                     $old_path, $new_path);
                 next;
             } else {
                 unless (rename $old_path, $new_path) {
-                    Log::do_log('err', "Failed to rename %s to %s : %s",
+                    Log::do_log('err', 'Failed to rename %s to %s: %s',
                         $old_path, $new_path, $!);
                     next;
                 }
@@ -577,7 +577,7 @@ sub upgrade {
             if (-d $list->{'dir'} . '/shared') {
                 Log::do_log(
                     'notice',
-                    '  Processing list %s...',
+                    'Processing list %s...',
                     $list->get_list_address()
                 );
 
@@ -593,7 +593,7 @@ sub upgrade {
 
                 if ($count) {
                     Log::do_log('notice',
-                        'List %s : %d filenames has been changed',
+                        'List %s: %d filenames has been changed',
                         $list->{'name'}, $count);
                 }
             }
@@ -748,7 +748,7 @@ sub upgrade {
 
                 Log::do_log(
                     'notice',
-                    'List %s ; changing user_data_source from file to include2...',
+                    'List %s; changing user_data_source from file to include2...',
                     $list->{'name'}
                 );
 
@@ -782,7 +782,7 @@ sub upgrade {
 
                 Log::do_log(
                     'notice',
-                    'List %s ; changing user_data_source from database to include2...',
+                    'List %s; changing user_data_source from database to include2...',
                     $list->{'name'}
                 );
 
@@ -817,15 +817,18 @@ sub upgrade {
                     . '/OTHER';
                 if (-d $other_dir) {
                     tools::remove_dir($other_dir);
-                    Log::do_log('notice', "Directory $other_dir removed");
+                    Log::do_log('notice', 'Directory %s removed', $other_dir);
                 }
             }
 
             close BOUNCEDIR;
 
         } else {
-            Log::do_log('err',
-                "Failed to open directory $Conf::Conf{'queuebounce'} : $!");
+            Log::do_log(
+                'err',
+                'Failed to open directory %s: %m',
+                $Conf::Conf{'queuebounce'}
+            );
         }
 
     }
@@ -843,7 +846,7 @@ sub upgrade {
             if (-d $list->{'dir'} . '/shared') {
                 Log::do_log(
                     'notice',
-                    '  Processing list %s...',
+                    'Processing list %s...',
                     $list->get_list_address()
                 );
 
@@ -870,7 +873,7 @@ sub upgrade {
                             $orig_f, $new_f);
                         unless (rename $orig_f, $new_f) {
                             Log::do_log('err',
-                                "Failed to rename %s to %s : %s",
+                                'Failed to rename %s to %s: %s',
                                 $orig_f, $new_f, $!);
                             next;
                         }
@@ -879,7 +882,7 @@ sub upgrade {
                 }
                 if ($count) {
                     Log::do_log('notice',
-                        'List %s : %d filenames has been changed',
+                        'List %s: %d filenames has been changed',
                         $list->{'name'}, $count);
                 }
             }
@@ -888,11 +891,11 @@ sub upgrade {
     }
     if (tools::lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
-        Log::do_log('notice', 'fixing robot column of exclusion table.');
+        Log::do_log('notice', 'Fixing robot column of exclusion table');
         my $sth;
         unless ($sth = SDM::do_query("SELECT * FROM exclusion_table")) {
             Log::do_log('err',
-                'Unable to gather informations from the exclusions table.');
+                'Unable to gather informations from the exclusions table');
         }
         my @robots = List::get_robots();
         while (my $data = $sth->fetchrow_hashref) {
@@ -922,7 +925,7 @@ sub upgrade {
                     ) {
                     Log::do_log(
                         'err',
-                        'Unable to update entry (%s,%s) in exclusions table (trying to add robot %s)',
+                        'Unable to update entry (%s, %s) in exclusions table (trying to add robot %s)',
                         $data->{'list_exclusion'},
                         $data->{'user_exclusion'},
                         $valid_robot
@@ -931,7 +934,7 @@ sub upgrade {
             } else {
                 Log::do_log(
                     'err',
-                    "Exclusion robot could not be guessed for user '%s' in list '%s'. Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: '%s'",
+                    'Exclusion robot could not be guessed for user "%s" in list "%s". Either this user is no longer subscribed to the list or the list appears in more than one robot (or the query to the database failed). Here is the list of robots in which this list name appears: "%s"',
                     $data->{'user_exclusion'},
                     $data->{'list_exclusion'},
                     @valid_robot_candidates
@@ -1429,7 +1432,7 @@ sub to_utf8 {
                 $Conf::Conf{'db_name'});
             next;
         }
-        Log::do_log('notice', 'Modified file %s ; original file kept as %s',
+        Log::do_log('notice', 'Modified file %s; original file kept as %s',
             $file, $file . '@' . $date);
 
         $total++;
@@ -1469,7 +1472,7 @@ sub md5_encode_password {
         my $clear_password;
         if ($user->{'password_user'} =~ /^[0-9a-f]{32}/) {
             Log::do_log('info',
-                'password from %s already encoded as md5 fingerprint',
+                'Password from %s already encoded as md5 fingerprint',
                 $user->{'email_user'});
             $total_md5++;
             next;

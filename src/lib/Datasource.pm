@@ -57,7 +57,7 @@ sub new {
 # Returns a unique ID for an include datasource
 sub _get_datasource_id {
     my ($source) = shift;
-    Log::do_log('debug2', "Getting datasource id for source '%s'", $source);
+    Log::do_log('debug2', 'Getting datasource id for source "%s"', $source);
     if (ref($source) eq 'Datasource') {
         $source = shift;
     }
@@ -114,7 +114,7 @@ sub is_allowed_to_sync {
         next if ($start == $end);
 
         if ($now >= $start && $now <= $end) {
-            Log::do_log('debug', "Failed, sync not allowed.");
+            Log::do_log('debug', 'Failed, sync not allowed');
             return 0;
         }
 

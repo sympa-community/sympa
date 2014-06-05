@@ -235,7 +235,7 @@ sub load {
 
     if (my $missing_modules_count =
         _check_cpan_modules_required_by_config({'config_hash' => \%Conf,})) {
-        Log::do_log('err', 'Warning: %d required modules are missing.\n',
+        Log::do_log('err', 'Warning: %d required modules are missing',
             $missing_modules_count);
     }
 
@@ -266,7 +266,7 @@ sub load_robots {
 
     my $robots_list_ref = get_robots_list();
     unless (defined $robots_list_ref) {
-        Log::do_log('err', 'robots config loading failed');
+        Log::do_log('err', 'Robots config loading failed');
         return undef;
     } else {
         @robots = @{$robots_list_ref};
@@ -378,7 +378,7 @@ sub get_wwsympa_conf {
 
 # deletes all the *.conf.bin files.
 sub delete_binaries {
-    Log::do_log('debug2', '()');
+    Log::do_log('debug2', '');
     my @files = (get_sympa_conf(), get_wwsympa_conf());
     foreach my $robot (@{get_robots_list()}) {
         push @files, "$Conf{'etc'}/$robot/robot.conf";
@@ -391,7 +391,7 @@ sub delete_binaries {
             } else {
                 Log::do_log(
                     'err',
-                    "Could not remove file %s. You should remove it manually to ensure the configuration used is valid.",
+                    'Could not remove file %s. You should remove it manually to ensure the configuration used is valid',
                     $binary_file
                 );
             }
@@ -472,7 +472,7 @@ sub set_robot_conf {
     my $label = shift;
     my $value = shift;
 
-    Log::do_log('info', 'Set config for robot %s , %s="%s"',
+    Log::do_log('info', 'Set config for robot %s, %s="%s"',
         $robot, $label, $value);
 
     # set the current config before to update database.
@@ -711,7 +711,7 @@ sub checkfiles {
         'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
-            Log::do_log('info', "creating spool $Conf{$qdir}");
+            Log::do_log('info', 'Creating spool %s', $Conf{$qdir});
             unless (mkdir($Conf{$qdir}, 0775)) {
                 Log::do_log('err', 'Unable to create spool %s', $Conf{$qdir});
                 $config_err++;
@@ -734,7 +734,7 @@ sub checkfiles {
     foreach my $qdir ('queue', 'queuedistribute', 'queueautomatic') {
         my $subdir = $Conf{$qdir} . '/bad';
         unless (-d $subdir) {
-            Log::do_log('info', "creating spool $subdir");
+            Log::do_log('info', 'Creating spool %s', $subdir);
             unless (mkdir($subdir, 0775)) {
                 Log::do_log('err', 'Unable to create spool %s', $subdir);
                 $config_err++;
@@ -905,7 +905,8 @@ sub checkfiles {
                     $param->{'tt2_error'} = $error;
                     List::send_notify_to_listmaster('web_tt2_error', $robot,
                         [$error]);
-                    Log::do_log('err', "Error while installing $dir/$css");
+                    Log::do_log('err', 'Error while installing %s/%s',
+                        $dir, $css);
                 }
 
                 $css_updated++;
@@ -944,7 +945,7 @@ sub valid_robot {
     ## Missing etc directory
     unless (-d $Conf{'etc'} . '/' . $robot) {
         Log::do_log(
-            'err',  'Robot %s undefined ; no %s directory',
+            'err',  'Robot %s undefined; no %s directory',
             $robot, $Conf{'etc'} . '/' . $robot
         ) unless ($options->{'just_try'});
         return undef;
@@ -953,7 +954,7 @@ sub valid_robot {
     ## Missing expl directory
     unless (-d $Conf{'home'} . '/' . $robot) {
         Log::do_log(
-            'err',  'Robot %s undefined ; no %s directory',
+            'err',  'Robot %s undefined; no %s directory',
             $robot, $Conf{'home'} . '/' . $robot
         ) unless ($options->{'just_try'});
         return undef;
@@ -980,7 +981,7 @@ sub get_sso_by_id {
     }
 
     foreach my $sso (@{$Conf{'auth_services'}{$param{'robot'}}}) {
-        Log::do_log('notice', "SSO: $sso->{'service_id'}");
+        Log::do_log('notice', 'SSO: %s', $sso->{'service_id'});
         next unless ($sso->{'service_id'} eq $param{'service_id'});
 
         return $sso;
@@ -1000,7 +1001,7 @@ sub _load_auth {
     # find appropriate auth.conf file
     my $config_file =
         _get_config_file_name({'robot' => $robot, 'file' => "auth.conf"});
-    Log::do_log('debug', 'Conf::_load_auth(%s)', $config_file);
+    Log::do_log('debug', '(%s)', $config_file);
 
     $robot ||= $Conf{'domain'};
     my $line_num   = 0;
@@ -1085,8 +1086,7 @@ sub _load_auth {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config_file)) {
-        Log::do_log('notice', "_load_auth: Unable to open %s: %s",
-            $config_file, $!);
+        Log::do_log('notice', 'Unable to open %s: %s', $config_file, $!);
         return undef;
     }
 
@@ -1111,22 +1111,16 @@ sub _load_auth {
             unless (
                 defined $valid_keywords{$current_paragraph->{'auth_type'}}
                 {$keyword}) {
-                Log::do_log('err',
-                    "_load_auth: unknown keyword '%s' in %s line %d",
+                Log::do_log('err', 'Unknown keyword "%s" in %s line %d',
                     $keyword, $config_file, $line_num);
                 next;
             }
             unless ($value =~
                 /^$valid_keywords{$current_paragraph->{'auth_type'}}{$keyword}$/
                 ) {
-                Log::do_log(
-                    'err',
-                    "_load_auth: unknown format '%s' for keyword '%s' in %s line %d",
-                    $value,
-                    $keyword,
-                    $config_file,
-                    $line_num
-                );
+                Log::do_log('err',
+                    'Unknown format "%s" for keyword "%s" in %s line %d',
+                    $value, $keyword, $config_file, $line_num);
                 next;
             }
 
@@ -1358,7 +1352,7 @@ sub load_sql_filter {
 sub load_automatic_lists_description {
     my $robot  = shift;
     my $family = shift;
-    Log::do_log('debug2', 'Starting: robot %s family %s', $robot, $family);
+    Log::do_log('debug2', 'Starting: Robot %s family %s', $robot, $family);
 
     my %automatic_lists_params = (
         'class' => {
@@ -1518,7 +1512,7 @@ sub load_generic_conf_file {
     ## Split in paragraphs
     my $i = 0;
     unless (open(CONFIG, $config_file)) {
-        Log::do_log('err', 'unable to read configuration file %s',
+        Log::do_log('err', 'Unable to read configuration file %s',
             $config_file);
         return undef;
     }
@@ -1646,7 +1640,7 @@ sub load_generic_conf_file {
                 if ($structure{$pname}{'format'}{$k}{'occurrence'} eq '1') {
                     unless (defined $hash{$k}) {
                         Log::do_log('notice',
-                            'Missing key %s in param %s in %s\n',
+                            'Missing key %s in param %s in %s',
                             $k, $pname, $config_file);
                         return undef if $on_error eq 'abort';
                         $missing_required_field++;
@@ -1807,7 +1801,7 @@ sub _remove_unvalid_robot_entry {
     my $config_hash = $param->{'config_hash'};
     foreach my $keyword (keys %$config_hash) {
         unless ($valid_robot_key_words{$keyword}) {
-            Log::do_log('err', 'removing unknown robot keyword %s', $keyword)
+            Log::do_log('err', 'Removing unknown robot keyword %s', $keyword)
                 unless ($param->{'quiet'});
             delete $config_hash->{$keyword};
         }
@@ -1919,8 +1913,7 @@ sub _infer_server_specific_parameter_values {
         if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) {
             $param->{'config_hash'}{'loging_condition'}{$1} = $2;
         } else {
-            Log::do_log('err',
-                "unrecognized log_condition token %s ; ignored",
+            Log::do_log('err', 'Unrecognized log_condition token %s; ignored',
                 $log_condition);
         }
     }
@@ -1957,7 +1950,7 @@ sub _load_server_specific_secondary_config_files {
     if (-f get_wwsympa_conf()) {
         Log::do_log(
             'notice',
-            '%s was found but it is no longer loaded.  Please run sympa.pl --upgrade to migrate it.',
+            '%s was found but it is no longer loaded.  Please run sympa.pl --upgrade to migrate it',
             get_wwsympa_conf()
         );
     }
@@ -2539,7 +2532,7 @@ sub _load_wwsconf {
 
     my $fh;
     unless (open $fh, '<', $config_file) {
-        Log::do_log('err', 'unable to open %s', $config_file);
+        Log::do_log('err', 'Unable to open %s', $config_file);
         return undef;
     }
 
@@ -2552,8 +2545,7 @@ sub _load_wwsconf {
             if (exists $conf->{$k}) {
                 $conf->{$k} = $v;
             } elsif (defined $old_param{$k}) {
-                Log::do_log('err',
-                    "Parameter %s in %s no more supported : %s",
+                Log::do_log('err', 'Parameter %s in %s no more supported: %s',
                     $k, $config_file, $old_param{$k});
             } else {
                 Log::do_log('err', 'Unknown parameter %s in %s',
@@ -2567,21 +2559,20 @@ sub _load_wwsconf {
 
     ## Check binaries and directories
     if ($conf->{'arc_path'} && (!-d $conf->{'arc_path'})) {
-        Log::do_log('err', "No web archives directory: %s\n",
+        Log::do_log('err', 'No web archives directory: %s',
             $conf->{'arc_path'});
     }
 
     if ($conf->{'bounce_path'} && (!-d $conf->{'bounce_path'})) {
         Log::do_log(
             'err',
-            "Missing directory '%s' (defined by 'bounce_path' parameter)",
+            'Missing directory "%s" (defined by "bounce_path" parameter)',
             $conf->{'bounce_path'}
         );
     }
 
     if ($conf->{'mhonarc'} && (!-x $conf->{'mhonarc'})) {
-        Log::do_log('err',
-            "MHonArc is not installed or %s is not executable.",
+        Log::do_log('err', 'MHonArc is not installed or %s is not executable',
             $conf->{'mhonarc'});
     }
 

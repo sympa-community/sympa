@@ -39,7 +39,7 @@ sub new {
     Log::do_log('debug2', '');
 
     unless (defined $name && $Conf::Conf{'robots'}{$name}) {
-        Log::do_log('err', "Unknown robot '$name'");
+        Log::do_log('err', 'Unknown robot "%s"', $name);
         return undef;
     }
 
@@ -49,8 +49,8 @@ sub new {
     } else {
         $robot->{'home'} = $Conf::Conf{'home'} . '/' . $name;
         unless (-d $robot->{'home'}) {
-            Log::do_log('err',
-                "Missing directory '$robot->{'home'}' for robot '$name'");
+            Log::do_log('err', 'Missing directory "%s" for robot "%s"',
+                $robot->{'home'}, $name);
             return undef;
         }
     }

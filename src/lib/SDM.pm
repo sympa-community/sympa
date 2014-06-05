@@ -100,7 +100,7 @@ sub do_prepared_query {
 ##
 ## NOT RECOMMENDED.  Should not access to database handler.
 sub db_get_handler {
-    Log::do_log('debug3', '()');
+    Log::do_log('debug3', '');
 
     if (check_db_connect('just_try')) {
         return $db_source->{'dbh'};
@@ -173,7 +173,7 @@ sub connect_sympa_database {
 ## Disconnect from Database.
 ## Destroy db handle so that any pending statement handles will be finalized.
 sub db_disconnect {
-    Log::do_log('debug2', '()');
+    Log::do_log('debug2', '');
 
     my $dbh = $db_source->{'dbh'};
     $dbh->disconnect if $dbh;
@@ -236,7 +236,7 @@ sub probe_db {
             unless ($real_struct{$t}) {
                 Log::do_log(
                     'err',
-                    "Table '%s' not found in database '%s' ; you should create it with create_db.%s script",
+                    'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
                     Conf::get_robot_conf('*', 'db_type')
@@ -253,7 +253,7 @@ sub probe_db {
                 ) {
                 Log::do_log(
                     'err',
-                    "Unable to check the validity of fields definition for table %s. Aborting.",
+                    'Unable to check the validity of fields definition for table %s. Aborting',
                     $t
                 );
                 return undef;
@@ -277,7 +277,7 @@ sub probe_db {
                 {
                     Log::do_log(
                         'err',
-                        "Unable to check the valifity of primary key for table %s. Aborting.",
+                        'Unable to check the valifity of primary key for table %s. Aborting',
                         $t
                     );
                     return undef;
@@ -287,7 +287,7 @@ sub probe_db {
                 {
                     Log::do_log(
                         'err',
-                        "Unable to check the valifity of indexes for table %s. Aborting.",
+                        'Unable to check the valifity of indexes for table %s. Aborting',
                         $t
                     );
                     return undef;
@@ -357,7 +357,7 @@ sub check_fields {
                 $f, $t, Conf::get_robot_conf('*', 'db_name'));
             Log::do_log(
                 'notice',
-                "Field '%s' (table '%s' ; database '%s') was NOT found. Attempting to add it...",
+                'Field "%s" (table "%s"; database "%s") was NOT found. Attempting to add it...',
                 $f,
                 $t,
                 Conf::get_robot_conf('*', 'db_name')
@@ -380,7 +380,7 @@ sub check_fields {
 
             } else {
                 Log::do_log('err',
-                    'Addition of fields in database failed. Aborting.');
+                    'Addition of fields in database failed. Aborting');
                 return undef;
             }
             next;
@@ -407,7 +407,7 @@ sub check_fields {
 
                 Log::do_log(
                     'notice',
-                    "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...",
+                    'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s) where type in database seems to be (%s). Attempting to change it...',
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
@@ -428,7 +428,7 @@ sub check_fields {
                     push @{$report_ref}, $rep;
                 } else {
                     Log::do_log('err',
-                        'Fields update in database failed. Aborting.');
+                        'Fields update in database failed. Aborting');
                     return undef;
                 }
             }
@@ -437,7 +437,7 @@ sub check_fields {
                 $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}{$f}) {
                 Log::do_log(
                     'err',
-                    'Field \'%s\'  (table \'%s\' ; database \'%s\') does NOT have awaited type (%s).',
+                    'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s)',
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
@@ -474,7 +474,7 @@ sub check_primary_key {
         my $list_of_keys = join ',', @{$primary{$t}};
         my $key_as_string = "$t [$list_of_keys]";
         if ($should_update->{'empty'}) {
-            Log::do_log('notice', "Primary key %s is missing. Adding it.",
+            Log::do_log('notice', 'Primary key %s is missing. Adding it',
                 $key_as_string);
             ## Add primary key
             my $rep = undef;
@@ -506,7 +506,7 @@ sub check_primary_key {
     } else {
         Log::do_log(
             'err',
-            'Unable to evaluate table %s primary key. Trying to reset primary key anyway.',
+            'Unable to evaluate table %s primary key. Trying to reset primary key anyway',
             $t
         );
         ## drop previous primary key
@@ -555,7 +555,7 @@ sub check_indexes {
         ## Add indexes
         unless ($index_columns{$idx}) {
             Log::do_log('notice',
-                'Index %s on table %s does not exist. Adding it.',
+                'Index %s on table %s does not exist. Adding it',
                 $idx, $t);
             if (my $rep = $db_source->set_index(
                     {   'table'      => $t,
@@ -579,7 +579,7 @@ sub check_indexes {
             if ($index_check->{'empty'}) {
                 ## Add index
                 my $rep = undef;
-                Log::do_log('notice', "Index %s is missing. Adding it.",
+                Log::do_log('notice', 'Index %s is missing. Adding it',
                     $index_as_string);
                 if ($rep = $db_source->set_index(
                         {   'table'      => $t,
@@ -597,7 +597,7 @@ sub check_indexes {
             } else {
                 ## drop previous index
                 Log::do_log('notice',
-                    "Index %s has not the right structure. Changing it.",
+                    'Index %s has not the right structure. Changing it',
                     $index_as_string);
                 my $rep = undef;
                 if ($rep =
@@ -620,7 +620,7 @@ sub check_indexes {
         } else {
             Log::do_log(
                 'err',
-                'Unable to evaluate index %s in table %s. Trying to reset index anyway.',
+                'Unable to evaluate index %s in table %s. Trying to reset index anyway',
                 $t,
                 $idx
             );
@@ -655,7 +655,7 @@ sub data_structure_uptodate {
 
     if (-f $version_file) {
         unless (open VFILE, $version_file) {
-            Log::do_log('err', "Unable to open %s : %s", $version_file, $!);
+            Log::do_log('err', 'Unable to open %s: %s', $version_file, $!);
             return undef;
         }
         while (<VFILE>) {

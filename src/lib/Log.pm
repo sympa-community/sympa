@@ -1251,9 +1251,8 @@ sub deal_data {
 # subroutine to Update subscriber_table about message send, upgrade field
 # number_messages_subscriber
 sub update_subscriber_msg_send {
-
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($mail, $list, $robot, $counter) = @_;
-    Log::do_log('debug2', '%s,%s,%s,%s', $mail, $list, $robot, $counter);
 
     unless (
         $sth = SDM::do_query(

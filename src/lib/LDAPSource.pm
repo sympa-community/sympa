@@ -147,7 +147,7 @@ sub connect {
     }
 
     unless (defined $self->{'ldap_handler'}) {
-        Log::do_log('err', "Unable to connect to the LDAP server '%s'",
+        Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
             $self->{'ldap_host'});
         return undef;
     }
@@ -185,17 +185,13 @@ sub connect {
     }
 
     unless (defined($cnx) && ($cnx->code() == 0)) {
-        Log::do_log(
-            'err',
-            "Failed to bind to LDAP server : '%s', LDAP server error : '%s'",
-            $host_entry,
-            $cnx->error,
-            $cnx->server_error
-        );
+        Log::do_log('err',
+            'Failed to bind to LDAP server: "%s", LDAP server error: "%s"',
+            $host_entry, $cnx->error, $cnx->server_error);
         $self->{'ldap_handler'}->unbind;
         return undef;
     }
-    Log::do_log('debug', "Bound to LDAP host '$host_entry'");
+    Log::do_log('debug', 'Bound to LDAP host "%s"', $host_entry);
 
     Log::do_log('debug', 'Connected to Database %s', $self->{'db_name'});
     return $self->{'ldap_handler'};
@@ -207,13 +203,13 @@ sub query {
     unless ($self->{'sth'} = $self->{'dbh'}->prepare($sql_query)) {
         Log::do_log(
             'err',
-            'Unable to prepare SQL query : %s',
+            'Unable to prepare SQL query: %s',
             $self->{'dbh'}->errstr
         );
         return undef;
     }
     unless ($self->{'sth'}->execute) {
-        Log::do_log('err', 'Unable to perform SQL query %s : %s ',
+        Log::do_log('err', 'Unable to perform SQL query %s: %s',
             $sql_query, $self->{'dbh'}->errstr);
         return undef;
     }

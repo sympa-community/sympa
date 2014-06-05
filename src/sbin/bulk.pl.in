@@ -97,7 +97,7 @@ if ($main::options{'log_level'}) {
     Log::set_log_level($default_log_level);
     Log::do_log(
         'info',
-        'Configuration file read, log level set using options : %s',
+        'Configuration file read, log level set using options: %s',
         $main::options{'log_level'}
     );
 } else {
@@ -123,7 +123,7 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     }
     setpgrp(0, 0);
     if ((my $child_pid = fork) != 0) {
-        Log::do_log('info', "Starting bulk master daemon, pid %s",
+        Log::do_log('info', 'Starting bulk master daemon, PID %s',
             $child_pid);
         exit(0);
     }
@@ -161,11 +161,11 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    Log::do_log('err', 'unable to change directory');
+    Log::do_log('err', 'Unable to change directory');
     exit(-1);
 }
 
-Log::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
+Log::do_log('notice', 'Bulk %s Started', Sympa::Constants::VERSION);
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
@@ -231,7 +231,7 @@ while (!$end) {
                     if (defined $dead_children{$fpid}) {
                         Log::do_log(
                             'err',
-                            'The %s child exists in the pid file but is no longer running. Removing it and notyfying listmaster.',
+                            'The %s child exists in the PID file but is no longer running. Removing it and notyfying listmaster',
                             $fpid
                         );
                         my $pname = $0;
@@ -269,7 +269,7 @@ while (!$end) {
                 if ($Conf::Conf{'bulk_max_count'} > 1) {
                     Log::do_log(
                         'info',
-                        'Important workload: %s packets to process. Creating %s child bulks to increase sending rate.',
+                        'Important workload: %s packets to process. Creating %s child bulks to increase sending rate',
                         $r_packets,
                         $Conf::Conf{'bulk_max_count'} -
                             ($#remaining_children + 1)
@@ -280,7 +280,7 @@ while (!$end) {
                         Log::do_log('info', "Will fork: %s", $process_count);
                         if ((my $child_pid = fork) != 0) {
                             Log::do_log('info',
-                                "Starting bulk child daemon, pid %s",
+                                'Starting bulk child daemon, PID %s',
                                 $child_pid);
                             # Saves the pid number
                             tools::write_pid('bulk', $child_pid, $options);
@@ -296,7 +296,7 @@ while (!$end) {
                             Log::do_openlog($Conf::Conf{'syslog'},
                                 $Conf::Conf{'log_socket_type'}, 'bulk');
                             Log::do_log('info',
-                                "Bulk slave daemon started with pid %s", $$);
+                                'Bulk slave daemon started with PID %s', $$);
                             last;
                         }
                     }
@@ -311,7 +311,7 @@ while (!$end) {
         && (time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'})
         && !(my $r_packets = Bulk::there_is_too_much_remaining_packets())) {
         Log::do_log('info',
-            "Process %s didn't send any message since %s seconds, exiting.",
+            'Process %s didn\'t send any message since %s seconds, exiting',
             $$, $Conf::Conf{'bulk_lazytime'});
         last;
     }
@@ -345,7 +345,7 @@ while (!$end) {
             unless ($messageasstring_init) {
                 Log::do_log(
                     'err',
-                    "internal error : current packet (messagekey= %s) contains a ref to a null message",
+                    'Internal error: current packet (messagekey= %s) contains a ref to a null message',
                     $bulk->{'messagekey'}
                 );
                 unless (
@@ -353,7 +353,7 @@ while (!$end) {
                 {
                     Log::do_log(
                         'err',
-                        "failed to remove processed packet '%s', messagekey '%s'",
+                        'Failed to remove processed packet "%s", messagekey "%s"',
                         $bulk->{'messagekey'},
                         $bulk->{'packetid'}
                     );
@@ -533,7 +533,7 @@ while (!$end) {
         ## Remove packet once it has been processed
         unless (Bulk::remove($bulk->{'messagekey'}, $bulk->{'packetid'})) {
             Log::do_log('err',
-                "failed to remove processed packet '%s', messagekey '%s'",
+                'Failed to remove processed packet "%s", messagekey "%s"',
                 $bulk->{'messagekey'}, $bulk->{'packetid'});
         }
 
@@ -542,7 +542,7 @@ while (!$end) {
             5) {
             Log::do_log(
                 'notice',
-                'Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date.',
+                'Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date',
                 $bulk->{'messageid'},
                 $bulk->{'messagekey'},
                 $bulk->{'listname'},
@@ -563,7 +563,7 @@ while (!$end) {
 # Purge grouped notifications
 List::send_notify_to_listmaster(undef, undef, undef, undef, 1);
 
-Log::do_log('notice', 'bulk.pl exited normally due to signal');
+Log::do_log('notice', 'Bulk.pl exited normally due to signal');
 tools::remove_pid('bulk', $$, $options);
 
 exit(0);
@@ -572,7 +572,7 @@ exit(0);
 ## variable.
 sub sigterm {
     my ($sig) = @_;
-    Log::do_log('notice', 'signal %s received, still processing current task',
+    Log::do_log('notice', 'Signal %s received, still processing current task',
         $sig);
     $end = 1;
 }
@@ -593,7 +593,7 @@ sub trace_smime {
             "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options > /dev/null"
         )
         ) {
-        Log::do_log('err', "unable to verify smime signature");
+        Log::do_log('err', 'Unable to verify S/MIME signature');
         return undef;
     }
 
@@ -603,9 +603,9 @@ sub trace_smime {
 
     my $status = $? / 256;
     unless ($status == 0) {
-        Log::do_log('debug', "signature SMIME NOT OK   (%s)", $where);
+        Log::do_log('debug', 'Signature S/MIME NOT OK (%s)', $where);
     } else {
-        Log::do_log('debug', "signature SMIME OK    (%s)", $where);
+        Log::do_log('debug', 'Signature S/MIME OK (%s)', $where);
     }
 }
 

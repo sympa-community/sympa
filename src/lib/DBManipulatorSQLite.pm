@@ -769,7 +769,7 @@ sub _update_table {
     ## create temporary table with new structure
     $statement = $self->_get_create_table($table);
     unless (defined $statement) {
-        Log::do_log('err', 'Table \'%s\' does not exist', $table);
+        Log::do_log('err', 'Table "%s" does not exist', $table);
         return undef;
     }
     $statement =~
@@ -780,12 +780,12 @@ sub _update_table {
     $s =~ s/\t/ /g;
     Log::do_log('info', '%s', $s);
     unless ($self->do_query('%s', $statement)) {
-        Log::do_log('err', 'Could not create temporary table \'%s_new\'',
+        Log::do_log('err', 'Could not create temporary table "%s_new"',
             $table_saved);
         return undef;
     }
 
-    Log::do_log('info', 'Copy \'%s\' to \'%s_new\'', $table, $table_saved);
+    Log::do_log('info', 'Copy "%s" to "%s_new"', $table, $table_saved);
     ## save old table
     my $indexes = $self->get_indexes({'table' => $table});
     unless (defined $self->_copy_table($table, "${table_saved}_new")
@@ -857,7 +857,7 @@ sub _copy_table {
         )
         ) {
         Log::do_log('err',
-            'Could not copy talbe \'%s\' to temporary table \'%s_new\'',
+            'Could not copy talbe "%s" to temporary table "%s_new"',
             $table, $table_new);
         return undef;
     }
@@ -878,7 +878,7 @@ sub _rename_table {
     }
     unless (
         $self->do_query(q{ALTER TABLE %s RENAME TO %s}, $table, $table_new)) {
-        Log::do_log('err', 'Could not rename table \'%s\' to \'%s\'',
+        Log::do_log('err', 'Could not rename table "%s" to "%s"',
             $table, $table_new);
         return undef;
     }
@@ -899,7 +899,7 @@ sub _rename_or_drop_table {
         return $r;
     } else {
         unless ($self->do_query(q{DROP TABLE "%s"}, $table)) {
-            Log::do_log('err', 'Could not drop table \'%s\'', $table);
+            Log::do_log('err', 'Could not drop table "%s"', $table);
             return undef;
         }
         return 0;
