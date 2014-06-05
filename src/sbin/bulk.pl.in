@@ -167,8 +167,9 @@ unless (chdir($Conf::Conf{'home'})) {
 
 Log::do_log('notice', "bulk.pl %s Started", Sympa::Constants::VERSION);
 
-## Catch SIGTERM, in order to exit cleanly, whenever possible.
+## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
+$SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
 my $opensmtp = 0;
@@ -567,11 +568,12 @@ tools::remove_pid('bulk', $$, $options);
 
 exit(0);
 
-## When we catch SIGTERM, just change the value of the loop
+## When we catch signal, just change the value of the loop
 ## variable.
 sub sigterm {
-    Log::do_log('notice',
-        'signal TERM received, still processing current task');
+    my ($sig) = @_;
+    Log::do_log('notice', 'signal %s received, still processing current task',
+        $sig);
     $end = 1;
 }
 

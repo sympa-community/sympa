@@ -209,7 +209,7 @@ local $main::daemon_usage;
 
 my $language = Sympa::Language->instance;
 
-while ($signal ne 'term') {    #as long as a SIGTERM is not received }
+while ($signal ne 'term') {    #as long as a signal is not received }
 
 ## Load configuration file. Ignoring database config for now: it avoids trying
 ## to load a database that could not exist yet.
@@ -1253,8 +1253,9 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
         }
     }
 
-## Catch SIGTERM, in order to exit cleanly, whenever possible.
+    ## Catch signals, in order to exit cleanly, whenever possible.
     $SIG{'TERM'} = 'sigterm';
+    $SIG{'INT'}  = \&sigterm; # Interrupt from terminal.
     $SIG{'HUP'}  = 'sighup';
     $SIG{'PIPE'} = 'IGNORE';  ## Ignore SIGPIPE ; prevents sympa.pl from dying
 
@@ -1514,7 +1515,7 @@ exit(0);
 ############################################################
 # sigterm
 ############################################################
-#  When we catch SIGTERM, just changes the value of the $signal
+#  When we catch signal, just changes the value of the $signal
 #  loop variable.
 #
 # IN : -
@@ -1523,8 +1524,9 @@ exit(0);
 #
 ############################################################
 sub sigterm {
-    Log::do_log('notice',
-        'signal TERM received, still processing current task');
+    my ($sig) = @_;
+    Log::do_log('notice', 'signal %s received, still processing current task',
+        $sig);
     $signal = 'term';
 }
 

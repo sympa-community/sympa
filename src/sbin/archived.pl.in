@@ -170,8 +170,9 @@ Sympa::Language->instance->set_lang($Conf::Conf{'lang'}, 'en');
 
 Log::do_log('notice', "archived %s Started", Sympa::Constants::VERSION);
 
-## Catch SIGTERM, in order to exit cleanly, whenever possible.
+## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
+$SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
 my $queue = $Conf::Conf{'queueoutgoing'};
@@ -422,7 +423,7 @@ tools::remove_pid('archived', $$);
 
 exit(0);
 
-## When we catch SIGTERM, just change the value of the loop
+## When we catch signal, just change the value of the loop
 ## variable.
 sub sigterm {
     $end = 1;

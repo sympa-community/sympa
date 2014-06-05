@@ -190,8 +190,9 @@ unless (chdir($Conf::Conf{'home'})) {
 
 Log::do_log('notice', "bounced Started");
 
-## Catch SIGTERM, in order to exit cleanly, whenever possible.
+## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
+$SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
 my $queue = $Conf::Conf{'queuebounce'};
@@ -1092,7 +1093,7 @@ tools::remove_pid('bounced', $$);
 
 exit(0);
 
-## When we catch SIGTERM, just change the value of the loop
+## When we catch signal, just change the value of the loop
 ## variable.
 sub sigterm {
     $end = 1;

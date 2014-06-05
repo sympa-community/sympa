@@ -175,8 +175,9 @@ unless (chdir($Conf::Conf{'home'})) {
     exit(-1);
 }
 
-## Catch SIGTERM, in order to exit cleanly, whenever possible.
+## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';
+$SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
 ###### VARIABLES DECLARATION ######
@@ -2049,7 +2050,7 @@ sub get_score {
 
 ### MISCELLANEOUS SUBROUTINES ###
 
-## when we catch SIGTERM, just change the value of the loop variable.
+## when we catch signal, just change the value of the loop variable.
 sub sigterm {
     $end = 1;
 }
