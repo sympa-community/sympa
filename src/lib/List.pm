@@ -4126,20 +4126,10 @@ sub send_notify_to_user {
     $param->{'auto_submitted'} = 'auto-generated';
 
     unless (defined $operation) {
-        Log::do_log(
-            'err',
-            'List::send_notify_to_user(%s) : missing incoming parameter "$operation"',
-            $self->{'name'}
-        );
-        return undef;
+        die 'missing incoming parameter "$operation"';
     }
     unless ($user) {
-        Log::do_log(
-            'err',
-            'List::send_notify_to_user(%s) : missing incoming parameter "$user"',
-            $self->{'name'}
-        );
-        return undef;
+        die 'missing incoming parameter "$user"';
     }
 
     if (ref($param) eq "HASH") {
@@ -4155,9 +4145,7 @@ sub send_notify_to_user {
                 "Unable to send template 'user_notification' to $user");
             return undef;
         }
-
     } elsif (ref($param) eq "ARRAY") {
-
         my $data = {
             'to'   => $user,
             'type' => $operation
@@ -4171,15 +4159,9 @@ sub send_notify_to_user {
                 "Unable to send template 'user_notification' to $user");
             return undef;
         }
-
     } else {
-
-        Log::do_log(
-            'err',
-            'List::send_notify_to_user(%s,%s,%s) : error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY',
-            $self->{'name'},
-            $operation,
-            $user
+        Log::do_log('err',
+            'error on incoming parameter "$param", it must be a ref on HASH or a ref on ARRAY'
         );
         return undef;
     }
@@ -11963,21 +11945,16 @@ sub modifying_msg_topic_for_list_members {
                     my $wwsympa_url =
                         Conf::get_robot_conf($self->{'domain'},
                         'wwsympa_url');
-                    unless (
-                        $self->send_notify_to_user(
-                            'deleted_msg_topics',
-                            $subscriber->{'email'},
-                            {   'del_topics' => $topics->{'intersection'},
-                                'url'        => $wwsympa_url
-                                    . '/suboptions/'
-                                    . $self->{'name'}
-                            }
-                        )
-                        ) {
-                        Log::do_log('err',
-                            "($self->{'name'}) : impossible to send notify to user about 'deleted_msg_topics'"
-                        );
-                    }
+                    $self->send_notify_to_user(
+                        'deleted_msg_topics',
+                        $subscriber->{'email'},
+                        {   'del_topics' => $topics->{'intersection'},
+                            'url'        => sprintf(
+                                '%s/suboptions/%s',
+                                $wwsympa_url, $self->{'name'}
+                            ),
+                        }
+                    );
                     unless (
                         $self->update_list_member(
                             lc($subscriber->{'email'}),
@@ -12748,11 +12725,7 @@ sub notify_bouncers {
     foreach my $user (@$reftab) {
         Log::do_log('notice', 'Notifying bouncing subsrciber of list %s : %s',
             $self->{'name'}, $user);
-        unless ($self->send_notify_to_user('auto_notify_bouncers', $user, {}))
-        {
-            Log::do_log('notice',
-                "Unable to send notify 'auto_notify_bouncers' to $user");
-        }
+        $self->send_notify_to_user('auto_notify_bouncers', $user, {});
     }
     return 1;
 }

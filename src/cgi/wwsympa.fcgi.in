@@ -1951,14 +1951,8 @@ while ($query = new_loop()) {
             ) {
             my $error = tt2::get_error();
             $param->{'tt2_error'} = $error;
-            unless (
-                List::send_notify_to_listmaster(
-                    'web_tt2_error', $robot, [$error]
-                )
-                ) {
-                wwslog('notice',
-                    'Unable to send notify "web_tt2_error" to listmaster');
-            }
+            List::send_notify_to_listmaster('web_tt2_error', $robot,
+                [$error]);
         }
 
     } elsif ($ajax) {
@@ -1991,15 +1985,8 @@ while ($query = new_loop()) {
             ) {
             my $error = tt2::get_error();
             $param->{'tt2_error'} = $error;
-            unless (
-                List::send_notify_to_listmaster(
-                    'web_tt2_error', $robot, [$error]
-                )
-                ) {
-                wwslog('notice',
-                    'Unable to send notify "web_tt2_error" to listmaster');
-            }
-
+            List::send_notify_to_listmaster('web_tt2_error', $robot,
+                [$error]);
         }
 # 	 close FILE;
     } elsif ($param->{'redirect_to'}) {
@@ -6141,24 +6128,17 @@ sub do_subscribe {
 
         if ($sub_is =~ /owner/) {
 
-            unless (
-                $list->send_notify_to_owner(
-                    'subrequest',
-                    {   'who'     => $param->{'user'}{'email'},
-                        'keyauth' => $list->compute_auth(
-                            $param->{'user'}{'email'}, 'add'
-                        ),
-                        'replyto' => Conf::get_robot_conf($robot, 'sympa'),
-                        'custom_attribute' => $in{custom_attribute},
-                        'gecos'            => $param->{'user'}{'gecos'},
-                        'ip'               => $ip
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'subrequest' to $list->{'name'} listowner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'subrequest',
+                {   'who' => $param->{'user'}{'email'},
+                    'keyauth' =>
+                        $list->compute_auth($param->{'user'}{'email'}, 'add'),
+                    'replyto' => Conf::get_robot_conf($robot, 'sympa'),
+                    'custom_attribute' => $in{custom_attribute},
+                    'gecos'            => $param->{'user'}{'gecos'},
+                    'ip'               => $ip
+                }
+            );
 
             $list->store_subscription_request($param->{'user'}{'email'},
                 "", $xml_custom_attribute);
@@ -6259,18 +6239,13 @@ sub do_subscribe {
             }
 
             if ($sub_is =~ /notify/) {
-                unless (
-                    $list->send_notify_to_owner(
-                        'notice',
-                        {   'who'     => $param->{'user'}{'email'},
-                            'gecos'   => $param->{'user'}{'gecos'},
-                            'command' => 'subscribe'
-                        }
-                    )
-                    ) {
-                    wwslog('notice',
-                        'Unable to send notify "notice" to listmaster');
-                }
+                $list->send_notify_to_owner(
+                    'notice',
+                    {   'who'     => $param->{'user'}{'email'},
+                        'gecos'   => $param->{'user'}{'gecos'},
+                        'command' => 'subscribe'
+                    }
+                );
             }
 
         }
@@ -6773,19 +6748,13 @@ sub unsubscribe {
         $report{'details_error'}  = {};
         return %report;
     } elsif ($sig_is =~ /owner/) {
-        unless (
-            $list->send_notify_to_owner(
-                'sigrequest',
-                {   'who' => $param->{'user'}{'email'},
-                    'keyauth' =>
-                        $list->compute_auth($param->{'user'}{'email'}, 'del')
-                }
-            )
-            ) {
-            wwslog('notice',
-                "Unable to send notify 'sigrequest' to $list->{'name'} list owner"
-            );
-        }
+        $list->send_notify_to_owner(
+            'sigrequest',
+            {   'who' => $param->{'user'}{'email'},
+                'keyauth' =>
+                    $list->compute_auth($param->{'user'}{'email'}, 'del')
+            }
+        );
         wwslog('info', 'do_signoff: signoff sent to owner');
         $report{'success'} = 1;
         $report{'details'} = 'sent_to_owner';
@@ -6812,19 +6781,13 @@ sub unsubscribe {
         }
 
         if ($sig_is =~ /notify/) {
-            unless (
-                $list->send_notify_to_owner(
-                    'notice',
-                    {   'who'     => $authenticated_email_address,
-                        'gecos'   => '',
-                        'command' => 'signoff'
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'notice' to $list->{'name'} list owner"
-                );
-            }
+            $list->send_notify_to_owner(
+                'notice',
+                {   'who'     => $authenticated_email_address,
+                    'gecos'   => '',
+                    'command' => 'signoff'
+                }
+            );
         }
 
         ## perform which to update your_subscribtions cookie ;
@@ -11471,19 +11434,13 @@ sub do_create_list {
     if ($param->{'create_action'} =~ /notify/) {
         wwslog('info', 'notify listmaster');
 
-        unless (
-            List::send_notify_to_listmaster(
-                'request_list_creation',
-                $robot,
-                {   'list'  => $list,
-                    'email' => $param->{'user'}{'email'}
-                }
-            )
-            ) {
-            wwslog('notice',
-                "Unable to send notify 'request_list_creation' to listmaster"
-            );
-        }
+        List::send_notify_to_listmaster(
+            'request_list_creation',
+            $robot,
+            {   'list'  => $list,
+                'email' => $param->{'user'}{'email'}
+            }
+        );
     }
 
     web_db_log(
@@ -16386,18 +16343,12 @@ sub do_d_savefile {
             $visible_path =~ s/\.url$//;
         }
 
-        unless (
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => $visible_path,
-                    'who'      => $param->{'user'}{'email'}
-                }
-            )
-            ) {
-            wwslog('notice',
-                "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-            );
-        }
+        $list->send_notify_to_editor(
+            'shared_moderated',
+            {   'filename' => $visible_path,
+                'who'      => $param->{'user'}{'email'}
+            }
+        );
 
         report::notice_report_web('to_moderate', {'path' => $visible_path},
             $param->{'action'});
@@ -16687,18 +16638,12 @@ sub do_d_overwrite {
                 }
             );
         }
-        unless (
-            $list->send_notify_to_editor(
-                'shared_moderated',
-                {   'filename' => $visible_path,
-                    'who'      => $param->{'user'}{'email'}
-                }
-            )
-            ) {
-            wwslog('notice',
-                "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-            );
-        }
+        $list->send_notify_to_editor(
+            'shared_moderated',
+            {   'filename' => $visible_path,
+                'who'      => $param->{'user'}{'email'}
+            }
+        );
         $in{'path'} = "$dir.$file.moderate";
         report::notice_report_web('to_moderate', {'path' => $visible_path},
             $param->{'action'});
@@ -17349,19 +17294,12 @@ sub do_d_upload {
                 );
             }
 
-            unless (
-                $list->send_notify_to_editor(
-                    'shared_moderated',
-                    {   'filename' => "$path/$fname",
-                        'who'      => $param->{'user'}{'email'}
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-                );
-            }
-
+            $list->send_notify_to_editor(
+                'shared_moderated',
+                {   'filename' => "$path/$fname",
+                    'who'      => $param->{'user'}{'email'}
+                }
+            );
         } else {
             report::reject_report_web('auth', $access_dir{'reason'}{'edit'},
                 {}, $param->{'action'}, $list);
@@ -17692,19 +17630,12 @@ sub do_d_upload {
                 );
             }
 
-            unless (
-                $list->send_notify_to_editor(
-                    'shared_moderated',
-                    {   'filename' => "$path/$in{'new_name'}",
-                        'who'      => $param->{'user'}{'email'}
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-                );
-            }
-
+            $list->send_notify_to_editor(
+                'shared_moderated',
+                {   'filename' => "$path/$in{'new_name'}",
+                    'who'      => $param->{'user'}{'email'}
+                }
+            );
         } else {
             report::reject_report_web('auth', $access_dir{'reason'}{'edit'},
                 {}, $param->{'action'}, $list);
@@ -17817,18 +17748,12 @@ sub do_d_upload {
         creation_desc_file($shareddir, $path, $modname, %access_dir);
 
         unless ($file_moderated) {
-            unless (
-                $list->send_notify_to_editor(
-                    'shared_moderated',
-                    {   'filename' => "$path/$fname",
-                        'who'      => $param->{'user'}{'email'}
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-                );
-            }
+            $list->send_notify_to_editor(
+                'shared_moderated',
+                {   'filename' => "$path/$fname",
+                    'who'      => $param->{'user'}{'email'}
+                }
+            );
         }
 
         report::notice_report_web('to_moderate', {'path' => $fname},
@@ -20377,19 +20302,13 @@ sub do_d_create_dir {
         }
 
         unless ($file_moderated) {
-            unless (
-                $list->send_notify_to_editor(
-                    'shared_moderated',
-                    {   'filename' => $param->{'decoded_path'} . '/'
-                            . $param->{'decoded_name_doc'},
-                        'who' => $param->{'user'}{'email'}
-                    }
-                )
-                ) {
-                wwslog('notice',
-                    "Unable to send notify 'shared_moderated' to $list->{'name'} list editor"
-                );
-            }
+            $list->send_notify_to_editor(
+                'shared_moderated',
+                {   'filename' => $param->{'decoded_path'} . '/'
+                        . $param->{'decoded_name_doc'},
+                    'who' => $param->{'user'}{'email'}
+                }
+            );
         }
     }
 
