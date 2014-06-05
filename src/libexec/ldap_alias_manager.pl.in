@@ -24,7 +24,7 @@
 
 use strict;
 use warnings;
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use Net::LDAP;
 use Net::LDAPS;
 use POSIX;

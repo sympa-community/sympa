@@ -44,7 +44,7 @@ This fcgi script completely handles all aspects of the Sympa web interface
 
 use strict;
 ##use warnings;
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
 use Carp qw();

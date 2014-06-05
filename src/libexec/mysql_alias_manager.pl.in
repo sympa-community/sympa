@@ -12,7 +12,7 @@
 
 use strict;
 use warnings;
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use DBI;
 use POSIX;
 

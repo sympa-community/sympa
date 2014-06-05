@@ -33,7 +33,7 @@
 ##         :  d		-> debug -d is equiv to -dF
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use Getopt::Long;
@@ -80,8 +80,12 @@ my %equiv = (
 #getopts('dF');
 ## Check options
 my %options;
-unless (GetOptions(\%main::options, 'debug|d', 'log_level=s', 'foreground|F'))
-{
+unless (
+    GetOptions(
+        \%main::options, 'config|f=s', 'debug|d', 'log_level=s',
+        'foreground|F'
+    )
+    ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 

@@ -27,7 +27,7 @@
 ##         :  d		-> debug -d is equiv to -dF
 ## Now, it is impossible to use -dF but you have to write it -d -F
 
-use lib '--modulesdir--';
+use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use Getopt::Long;
@@ -55,7 +55,11 @@ local $main::daemon_usage =
 ##  --foreground : prevents the script from beeing daemonized
 ##  --mail : logs every sendmail calls
 my %options;
-unless (GetOptions(\%main::options, 'debug|d', 'foreground|F', 'mail|m')) {
+unless (
+    GetOptions(
+        \%main::options, 'config|f=s', 'debug|d', 'foreground|F', 'mail|m'
+    )
+    ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
