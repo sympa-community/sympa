@@ -152,7 +152,7 @@ sub set_autoinc {
 
     my $r;
     my $pk;
-    if ($type =~ /\bintegeri\s+PRIMARY\s+KEY\b/i) {
+    if ($type =~ /\binteger\s+PRIMARY\s+KEY\b/i) {
         ## INTEGER PRIMARY KEY is auto-increment.
         return 1;
     } elsif ($type =~ /\bPRIMARY\s+KEY\b/i) {
