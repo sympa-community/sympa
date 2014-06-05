@@ -33,7 +33,8 @@ check_SCRIPTS = t/Language.t \
 		t/tools_time.t
 check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 	     t/locale/cs/LC_MESSAGES/web_help.mo \
-	     t/locale/zh_TW/LC_MESSAGES/sympa.mo
+	     t/locale/zh_TW/LC_MESSAGES/sympa.mo \
+	     t/stub/Sympa/Constants.pm
 
 EXTRA_DIST = important_changes.pl \
 	     sympa.spec.in \
