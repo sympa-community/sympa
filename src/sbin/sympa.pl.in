@@ -1348,7 +1348,7 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
 
         ## Scans files in queue
         ## Search file with highest priority
-        foreach my $t_filename (sort @qfile) {
+        foreach my $t_filename (@qfile) {
             my $priority;
             my $type;
             my $list;
