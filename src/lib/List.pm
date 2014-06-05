@@ -1032,21 +1032,19 @@ sub load {
     my $time_config     = (stat("$self->{'dir'}/config"))[9];
     my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
     my $time_subscribers;
-    my $time_stats      = (stat("$self->{'dir'}/stats"))[9];
+    my $time_stats       = (stat("$self->{'dir'}/stats"))[9];
     my $main_config_time = (stat(Sympa::Constants::CONFIG))[9];
-    my $web_config_time = (stat(Sympa::Constants::WWSCONFIG))[9];
-    my $config_reloaded = 0;
+    my $web_config_time  = (stat(Sympa::Constants::WWSCONFIG))[9];
+    my $config_reloaded  = 0;
     my $admin;
-    
-    if (
-        Conf::get_robot_conf($self->{'domain'}, 'cache_list_config')
-            eq 'binary_file'
-        && ! $options->{'reload_config'}
+
+    if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
+           'binary_file'
+        && !$options->{'reload_config'}
         && $time_config_bin > $self->{'mtime'}->[0]
-        && $time_config_bin >= $time_config 
+        && $time_config_bin >= $time_config
         && $time_config_bin >= $main_config_time
-        && $time_config_bin >= $web_config_time
-        ){
+        && $time_config_bin >= $web_config_time) {
 
         ## Get a shared lock on config file first
         my $lock_fh =
@@ -1070,13 +1068,11 @@ sub load {
         $config_reloaded = 1;
         $m1              = $time_config_bin;
         $lock_fh->close();
-    }elsif (
-        $self->{'name'} ne $name
+    } elsif ($self->{'name'} ne $name
         || $time_config > $self->{'mtime'}->[0]
-        || $options->{'reload_config'}
-        ) {
-	$admin =
-        _load_admin_file($self->{'dir'}, $self->{'domain'} ,'config');
+        || $options->{'reload_config'}) {
+        $admin =
+            _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
 
         ## Get a shared lock on config file first
         my $lock_fh =
@@ -1300,9 +1296,8 @@ sub get_editors_email {
         }
     }
     unless (@rcpt) {
-        Log::do_log('notice',
-            'Warning : no editor found for list %s, getting owners',
-            $self->{'name'});
+        Log::do_log('debug3', 'No editors found for list %s, getting owners',
+            $self);
         @rcpt = $self->get_owners_email($param);
     }
     return @rcpt;
@@ -3242,7 +3237,7 @@ sub send_to_editor {
     }
 
     foreach my $recipient (@rcpt) {
-        if ($encrypt eq 'smime_crypted') {
+        if ($encrypt and $encrypt eq 'smime_crypted') {
             ## is $msg->body_as_string respect base64 number of char per line ??
             my $cryptedmsg =
                 tools::smime_encrypt($msg->head, $msg->body_as_string,
@@ -3908,8 +3903,11 @@ sub send_notify_to_owner {
                 }
             }
         } elsif ($operation eq 'subrequest') {
-            $param->{'escaped_gecos'} = $param->{'gecos'};
-            $param->{'escaped_gecos'} =~ s/\s/\%20/g;
+            if (defined $param->{'gecos'} and $param->{'gecos'} =~ /\S/) {
+                #FIXME: Escape metacharacters.
+                $param->{'escaped_gecos'} = $param->{'gecos'};
+                $param->{'escaped_gecos'} =~ s/\s/\%20/g;
+            }
             $param->{'escaped_who'} = $param->{'who'};
             $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@to) {
@@ -6438,7 +6436,7 @@ sub add_list_member {
         );
 
         ## Crypt password if it was not crypted
-        unless ($new_user->{'password'} =~ /^crypt/) {
+        unless (tools::smart_eq($new_user->{'password'}, qr/^crypt/)) {
             $new_user->{'password'} =
                 tools::crypt_password($new_user->{'password'});
         }
@@ -12228,10 +12226,10 @@ sub store_subscription_request {
     }
 
     ## First line of the file contains the user email address + his/her name
-    print REQUEST "$email\t$gecos\n";
+    printf REQUEST "%s\t%s\n", $email, (defined $gecos ? $gecos : '');
 
     ## Following lines may contain custom attributes in an XML format
-    print REQUEST "$custom_attr\n";
+    printf REQUEST "%s\n", $custom_attr if defined $custom_attr;
 
     close REQUEST;
 

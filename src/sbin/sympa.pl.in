@@ -1281,7 +1281,8 @@ while ($signal ne 'term') {    #as long as a SIGTERM is not received }
         List::send_notify_to_listmaster(undef, undef, undef, 1);
 
         if (!opendir(DIR, $spool)) {
-            Log::fatal_err("Can't open dir %s: %m", $spool);    ## No return.
+            die sprintf('Can\'t open dir %s: %m', $spool);
+            ## No return.
         }
         @qfile = sort tools::by_date grep (!/^\./, readdir(DIR));
         closedir(DIR);
@@ -2652,7 +2653,8 @@ sub DoMessage {
     Log::do_log('info', "Processing message for %s with priority %s, %s",
         $listname, $list->{'admin'}{'priority'}, $messageid);
 
-    if ($msgid_table{$list->get_list_id()}{$messageid}) {
+    #FIXME: Might reject message when no message ID found.
+    if ($messageid and $msgid_table{$list->get_list_id()}{$messageid}) {
         Log::do_log('err',
             'Found known Message-ID, ignoring message which would cause a loop'
         );
@@ -2891,7 +2893,7 @@ sub DoMessage {
             };
             ## Keep track of known message IDs...if any
             $msgid_table{$list->get_list_id()}{$messageid} = time
-                if ($messageid);
+                if $messageid;
 
             unless (defined($numsmtp)) {
                 Log::do_log('err',
@@ -3039,7 +3041,7 @@ sub DoMessage {
         );
         return 1;
     } elsif ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
-
+        my $quiet = $2;
         my $key = $list->send_to_editor('md5', $message);
 
         unless (defined $key) {
@@ -3079,7 +3081,7 @@ sub DoMessage {
             $key, $listname, $sender, $message->{'filename'});
 
         # do not report to the sender if the message was tagged as a spam
-        unless (($2 eq 'quiet') || ($message->{'spam_status'} eq 'spam')) {
+        unless ($quiet or $message->{'spam_status'} eq 'spam') {
             unless (
                 report::notice_report_msg(
                     'moderating_message', $sender,
@@ -3094,6 +3096,7 @@ sub DoMessage {
         }
         return 1;
     } elsif ($action =~ /^editor(\s?,\s?(quiet))?/) {
+        my $quiet = $2;
         my $key = $list->send_to_editor('smtp', $message);
 
         unless (defined $key) {
@@ -3133,7 +3136,7 @@ sub DoMessage {
             $listname, $sender);
 
         # do not report to the sender if the message was tagged as a spam
-        unless (($2 eq 'quiet') || ($message->{'spam_status'} eq 'spam')) {
+        unless ($quiet or $message->{'spam_status'} eq 'spam') {
             unless (
                 report::notice_report_msg(
                     'moderating_message', $sender,
@@ -3148,6 +3151,7 @@ sub DoMessage {
         }
         return 1;
     } elsif ($action =~ /^reject(,(quiet))?/) {
+        my $quiet = $2;
 
         Log::do_log(
             'notice',
@@ -3158,7 +3162,7 @@ sub DoMessage {
         );
 
         # do not report to the sender if the message was tagued as a spam
-        unless (($2 eq 'quiet') || ($message->{'spam_status'} eq 'spam')) {
+        unless ($quiet or $message->{'spam_status'} eq 'spam') {
             if (defined $result->{'tt2'}) {
                 unless (
                     $list->send_file(
@@ -3349,7 +3353,7 @@ sub DoCommand {
     $success ||= Commands::parse($sender, $robot, $subject_field, $auth_level,
         $message);
 
-    unless ($success eq 'unknown_cmd') {
+    unless ($success and $success eq 'unknown_cmd') {
         $cmd_found = 1;
     }
 

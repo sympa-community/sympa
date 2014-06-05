@@ -165,8 +165,6 @@ sub load {
 
     if (_source_has_not_changed({'config_file' => $config_file})
         && !$return_result) {
-        ## printf "Conf::load(): File %s has not changed since the last cache.
-        ## Using cache.\n",$config_file;
         if (my $tmp_conf = _load_binary_cache(
                 {'config_file' => $config_file . $binary_file_extension}
             )
@@ -177,9 +175,9 @@ sub load {
             $force_reload = 1;
         }
     } else {
-        printf
-            "Conf::load(): File %s has changed since the last cache. Loading file.\n",
-            $config_file;
+        Log::do_log('debug3',
+            'File %s has changed since the last cache. Loading file',
+            $config_file);
         # Will force the robot.conf reloading, as sympa.conf is the default.
         $force_reload = 1;
         ## Loading the Sympa main config file.
@@ -1872,8 +1870,8 @@ sub _infer_server_specific_parameter_values {
             Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
     }
 
-    unless ($param->{'config_hash'}{'DKIM_feature'} eq 'on') {
-        # dkim_signature_apply_ on nothing if DKIM_feature is off
+    unless (tools::smart_eq($param->{'config_hash'}{'dkim_feature'}, 'on')) {
+        # dkim_signature_apply_ on nothing if dkim_feature is off
         $param->{'config_hash'}{'dkim_signature_apply_on'} =
             [''];    # empty array
     }
@@ -1885,12 +1883,12 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'list_check_regexp'} =~ s/[,\s]+/\|/g;
     }
 
-    my $p = 1;
-    foreach (split(/,/, $param->{'config_hash'}{'sort'})) {
-        $param->{'config_hash'}{'poids'}{$_} = $p++;
-    }
-    $param->{'config_hash'}{'poids'}{'*'} = $p
-        if !$param->{'config_hash'}{'poids'}{'*'};
+#    my $p = 1;
+#    foreach (split(/,/, $param->{'config_hash'}{'sort'})) {
+#        $param->{'config_hash'}{'poids'}{$_} = $p++;
+#    }
+#    $param->{'config_hash'}{'poids'}{'*'} = $p
+#        if !$param->{'config_hash'}{'poids'}{'*'};
 
     ## Parameters made of comma-separated list
     foreach my $parameter (
@@ -1910,13 +1908,13 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'blacklist'}{$action} = 1;
     }
 
-    foreach my $log_module (split(/,/, $param->{'config_hash'}{'log_module'}))
-    {
+    foreach my $log_module (
+        split(/,/, $param->{'config_hash'}{'log_module'} || '')) {
         $param->{'config_hash'}{'loging_for_module'}{$log_module} = 1;
     }
 
     foreach my $log_condition (
-        split(/,/, $param->{'config_hash'}{'log_condition'})) {
+        split(/,/, $param->{'config_hash'}{'log_condition'} || '')) {
         chomp $log_condition;
         if ($log_condition =~ /^\s*(ip|email)\s*\=\s*(.*)\s*$/i) {
             $param->{'config_hash'}{'loging_condition'}{$1} = $2;
@@ -2185,9 +2183,9 @@ sub _load_single_robot_config {
         $force_reload = 0;
     }
     if (!$force_reload) {
-        printf
-            "Conf::_load_single_robot_config(): File %s has not changed since the last cache. Using cache.\n",
-            $config_file;
+        Log::do_log('debug3',
+            'File %s has not changed since the last cache. Using cache',
+            $config_file);
         unless (-r $config_file) {
             Log::do_log('err', 'No read access on %s', $config_file);
             List::send_notify_to_listmaster(

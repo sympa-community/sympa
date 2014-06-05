@@ -3324,7 +3324,7 @@ sub check_param_out {
 
     ## Email addresses protection
 
-    if (defined $list) {
+    if (ref $list eq 'List') {
         if ($list->{'admin'}{'spam_protection'} eq 'at') {
             $param->{'hidden_head'} = '';
             $param->{'hidden_at'}   = ' AT ';
@@ -3367,7 +3367,7 @@ sub check_param_out {
         }
     }
 
-    if ($list->{'name'}) {
+    if (ref $list eq 'List' and $list->{'name'}) {
         wwslog('debug2', "list-name $list->{'name'}");
 
         ## Email addresses protection

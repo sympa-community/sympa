@@ -862,8 +862,12 @@ sub subscribe {
 
     ## This is a really minimalistic handling of the comments,
     ## it is far away from RFC-822 completeness.
-    $comment =~ s/"/\\"/g;
-    $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
+    if (defined $comment and $comment =~ /\S/) {
+        $comment =~ s/"/\\"/g;
+        $comment = "\"$comment\"" if ($comment =~ /[<>\(\)]/);
+    } else {
+        undef $comment;
+    }
 
     ## Now check if the user may subscribe to the list
 
