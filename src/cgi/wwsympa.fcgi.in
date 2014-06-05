@@ -2022,10 +2022,10 @@ sub wwslog {
     return if ($Log::levels{$facility} > $Log::log_level);
 
     my $msg = shift;
-
     my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
+    my $wwsmsg = '';
 
-    $msg = "[list $param->{'list'}] " . $msg
+    $wwsmsg = "[list $param->{'list'}] " . $wwsmsg
         if $param->{'list'};
 
     if ($param->{'alt_emails'}) {
@@ -2037,25 +2037,32 @@ sub wwslog {
 
         if ($#alts >= 0) {
             my $alt_list = join ',', @alts;
-            $msg = "[alt $alt_list] " . $msg;
+            $wwsmsg = "[alt $alt_list] " . $wwsmsg;
         }
     }
 
-    $msg = "[user $param->{'user'}{'email'}] " . $msg
+    $wwsmsg = "[user $param->{'user'}{'email'}] " . $wwsmsg
         if $param->{'user'}{'email'};
 
-    $msg = "[rss] " . $msg
+    $wwsmsg = "[rss] " . $wwsmsg
         if $rss;
 
-    $msg = "[client $remote] " . $msg
+    $wwsmsg = "[client $remote] " . $wwsmsg
         if $remote;
 
-    $msg = "[session $session->{'id_session'}] " . $msg
+    $wwsmsg = "[session $session->{'id_session'}] " . $wwsmsg
         if $session;
 
-    $msg = "[robot $robot] " . $msg;
+    $wwsmsg = "[robot $robot] " . $wwsmsg;
 
-    # Don't push caller stack.  Note that goto requires "&" prefix!
+    push @_, $wwsmsg;
+    if ($msg =~ /^([(][^)]*[)])\s*(.*)/s) {
+        $msg = sprintf '%s %%%d$s%s', $1, scalar(@_), $2;
+    } else {
+        $msg = sprintf '%%%d$s%s', scalar(@_), $msg;
+    }
+
+    # Don't push caller stack.  Note that goto statement requires "&" prefix!
     unshift @_, $facility, $msg;
     goto &Log::do_log;
 }
