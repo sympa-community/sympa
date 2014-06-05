@@ -33,7 +33,7 @@ use Conf;
 use Log;
 
 my %options;
-unless (GetOptions(\%options, 'config|f=2', 'domain=s', 'help|h')) {
+unless (GetOptions(\%options, 'config|f=s', 'domain=s', 'help|h')) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($options{'help'}) {
