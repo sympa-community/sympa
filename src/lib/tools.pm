@@ -978,7 +978,15 @@ sub remove_invalid_dkim_signature {
     }
 }
 
-# input object msg and listname, output signed message object
+# input object msg and listname, output signed message as string
+#################### PARENTAL ADVISORY ############################
+# This functions contains code that could hurt the sensitivity
+# of pretty code lovers. In order to preserve both DKIM AND S/MIME
+# signatures, I had to hack some parts of this function with
+# horrible hooks.
+#
+# Anyway it works.
+###################################################################
 sub dkim_sign {
     # in case of any error, this proc MUST return $msg_as_string NOT undef ;
     # this would cause Sympa to send empty mail
@@ -1071,13 +1079,18 @@ sub dkim_sign {
         Log::do_log('err', 'Can\'t read temporary file %s', $temporary_file);
         return undef;
     }
-
+    # $new_body will store the body as fed to Mail::DKIM to reuse it
+    # when returning the message as string
+    my $new_body;
+    my $toggle_store_body = 0;
     while (<MSGDUMP>) {
         # remove local line terminators
         chomp;
         s/\015$//;
         # use SMTP line terminators
         $dkim->PRINT("$_\015\012");
+	$new_body .= "$_\015\012" if ($toggle_store_body);
+	$toggle_store_body = 1 if ($_ =~ m{^$});
     }
     close MSGDUMP;
     unless ($dkim->CLOSE) {
@@ -1102,7 +1115,12 @@ sub dkim_sign {
     $message->{'msg'}
         ->head->add('DKIM-signature', $dkim->signature->as_string);
 
-    return $message->{'msg'}->as_string;
+    # Signing is done. Rebuilding message as string with original body
+    # and new headers WITH DKIM line terminators.
+    my $head_string = $message->{'msg'}->stringify_header();
+    my $new_message_as_string = $head_string."\n".$new_body;
+
+    return $new_message_as_string;
 }
 
 # input object msg and listname, output signed message object
