@@ -1069,7 +1069,8 @@ sub load {
         || $time_config > $self->{'mtime'}->[0]
         || $options->{'reload_config'}) {
         $admin =
-            _load_admin_file($self->{'dir'}, $self->{'domain'}, 'config');
+            _load_list_config_file($self->{'dir'}, $self->{'domain'},
+            'config');
 
         ## Get a shared lock on config file first
         my $lock_fh =
