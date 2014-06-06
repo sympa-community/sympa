@@ -14,7 +14,7 @@ use Fcntl qw(:mode);
 
 use tools; #Sympa::Tools::File;
 
-plan tests => 21;
+plan tests => 25;
 
 my $user  = getpwuid($UID);
 my $group = getgrgid($GID);
@@ -98,6 +98,14 @@ ok(-d "$dir/foo", 'mkdir_all first element');
 ok(-d "$dir/foo/bar", 'mkdir_all second element');
 is(get_perms("$dir/foo"), "0777", "first element, expected mode");
 is(get_perms("$dir/foo/bar"), "0777", "second element, expected mode");
+
+utime 1234567890, 123456789, $file;
+is(tools::get_mtime($file), 123456789);
+utime 123456789, 1234567890, $file;
+is(tools::get_mtime($file), 1234567890);
+ok(tools::get_mtime("$dir/no-such-file") < -32768);
+chmod 0333, $file;
+ok(tools::get_mtime($file) < -32768);
 
 sub touch {
     my ($file) = @_;

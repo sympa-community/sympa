@@ -706,6 +706,42 @@ sub shift_file {
     return ($file . '.' . $file_extention);
 }
 
+=over
+
+=item get_mtime ( $file )
+
+Gets modification time of the file.
+
+Parameter:
+
+=over
+
+=item $file
+
+Full path of file.
+
+=back
+
+Returns:
+
+Modification time as UNIX time.
+If the file is not found or is not readable, returns C<POSIX::INT_MIN>.
+In case of other error, returns C<undef>.
+
+=back
+
+=cut
+
+sub get_mtime {
+    my $file = shift;
+    die 'Missing parameter $file' unless $file;
+
+    return POSIX::INT_MIN() unless -e $file and -r $file;
+
+    my @stat = stat $file;
+    return $stat[9];
+}
+
 sub get_templates_list {
     Log::do_log('debug3', '(%s, %s, %s, %s)', @_);
     my $type    = shift;
