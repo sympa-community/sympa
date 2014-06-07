@@ -34,12 +34,30 @@ use Sympa::Crash;    # Show traceback.
 use Log;
 
 my %options;
-unless (GetOptions(\%options, 'config|f=s', 'domain=s', 'help|h')) {
+unless (
+    GetOptions(
+        \%options, 'config|f=s', 'debug|d', 'domain=s',
+        'help|h',  'log_level',  'version|v'
+    )
+    ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
+
+if ($main::options{'debug'}) {
+    $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
+}
+# Some option force foreground mode
+$main::options{'foreground'} = 1 if $main::options{'debug'} or -t;
+$main::options{'log_to_stderr'} = 1
+    if ($main::options{'debug'} || $main::options{'foreground'});
+
 if ($options{'help'}) {
     pod2usage(0);
+} elsif ($main::options{'version'}) {
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
 }
+
 my $robot_id = $options{'domain'};
 
 # Load configuration
@@ -51,7 +69,13 @@ unless (Conf::load()) {
 
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
     'sympa_newaliases');
-Log::set_log_level($Conf::Conf{'log_level'});
+
+# setting log_level using conf unless it is set by calling option
+if (defined $main::options{'log_level'}) {
+    Log::set_log_level($main::options{'log_level'});
+} else {
+    Log::set_log_level($Conf::Conf{'log_level'});
+}
 
 my ($aliases_file, $aliases_program, $aliases_db_type);
 if ($robot_id) {

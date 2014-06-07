@@ -29,10 +29,6 @@
 ## Patch 2001.07.24 by nablaphi <nablaphi@bigfoot.com>
 ## Change the Getopt::Std to Getopt::Long
 
-## Options :  F         -> do not detach TTY
-##         :  d		-> debug -d is equiv to -dF
-## Now, it is impossible to use -dF but you have to write it -d -F
-
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
@@ -78,19 +74,23 @@ my %equiv = (
     "User's Disk Quota Exceeded:"                      => '4.2.2'
 );
 
-#getopts('dF');
 ## Check options
 my %options;
 unless (
     GetOptions(
-        \%main::options, 'config|f=s', 'debug|d', 'log_level=s',
-        'foreground|F'
+        \%main::options, 'config|f=s',   'debug|d', 'help|h',
+        'log_level=s',   'foreground|F', 'version|v',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
-# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+if ($main::options{'help'}) {
+    pod2usage(0);
+} elsif ($main::options{'version'}) {
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
+}
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
@@ -128,7 +128,6 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
         ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
-#	ioctl(TTY, TIOCNOTTY(), 0);
         close(TTY);
     }
     setpgrp(0, 0);
@@ -168,19 +167,20 @@ if ($main::options{'log_level'}) {
 my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
 Log::do_openlog($log_facility, $Conf::Conf{'log_socket_type'}, 'bounced');
 
-## Set the UserID & GroupID for the process
+## Set the User ID & Group ID for the process
 $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
 $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
-## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
+## Required on FreeBSD to change ALL IDs
+## (effective UID + real UID + saved UID)
 POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
 POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
-## Check if the UID has correctly been set (usefull on OS X)
+## Check if the UID has correctly been set (useful on OS X)
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
     Log::fatal_err(
-        "Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
     );
 }
 
@@ -189,8 +189,8 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    Log::do_log('info', 'Unable to change directory');
-    exit(-1);
+    die sprintf "Unable to change directory to %s: %s", $Conf::Conf{'home'},
+        $!;
 }
 
 Log::do_log('notice', 'Bounced Started');

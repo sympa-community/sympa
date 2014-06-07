@@ -92,13 +92,17 @@ my %options;
 GetOptions(
     \%options,
     'target=s',
-    'create:s',    # parameter is optional
+    'create:s',    # parameter is optional and only "sympa.conf" is allowed.
     'check',
-    'help'
+    'help|h',
+    'version|v',
 );
 
 if ($options{help}) {
     pod2usage();
+} elsif ($main::options{'version'}) {
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
 } elsif (defined $options{create}) {
     create_configuration();
 } elsif ($options{check}) {
