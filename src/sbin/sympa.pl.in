@@ -61,9 +61,6 @@ my $digestsleep = 5;
 ## Init random engine
 srand(time());
 
-my $version_string =
-    sprintf("Sympa version is %s\n", Sympa::Constants::VERSION);
-
 my $daemon_name = Log::set_daemon($0);
 my $ip;
 $ip = $ENV{'REMOTE_HOST'};
@@ -73,13 +70,12 @@ $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
 my %options;
 unless (
     GetOptions(
-        \%main::options, 'dump=s',
-        'debug|d',,
-        'log_level=s',          'foreground',
-        'service=s',            'config|f=s',
+        \%main::options,        'dump=s',
+        'debug|d',              'log_level=s',
+        'foreground',           'config|f=s',
         'lang|l=s',             'mail|m',
-        'keepcopy|k=s',         'help',
-        'version',              'import=s',
+        'keepcopy|k=s',         'help|h',
+        'version|v',            'import=s',
         'make_alias_file',      'lowercase',
         'sync_list_db',         'md5_encode_password',
         'close_list=s',         'rename_list=s',
@@ -96,6 +92,7 @@ unless (
         'list=s',               'quiet',
         'close_unknown',        'test_database_message_buffer',
         'conf_2_db',            'export_list',
+        'health_check',         'service=s',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -144,7 +141,77 @@ $main::options{'log_to_stderr'} = 1
 if ($main::options{'help'}) {
     pod2usage(0);
 } elsif ($main::options{'version'}) {
-    print $version_string;
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
+} elsif ($main::options{'health_check'}) {
+    ## Health check
+
+    ## Load configuration file. Ignoring database config for now: it avoids
+    ## trying to load a database that could not exist yet.
+    unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
+        #FIXME: force reload
+        printf STDERR
+            "Configuration file %s has errors.\n",
+            Conf::get_sympa_conf();
+        exit 1;
+    }
+
+    ## Open the syslog and say we're read out stuff.
+    Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
+        'health_check');
+
+    ## Setting log_level using conf unless it is set by calling option
+    if ($main::options{'log_level'}) {
+        Log::set_log_level($main::options{'log_level'});
+        Log::do_log(
+            'info',
+            'Configuration file read, log level set using options: %s',
+            $main::options{'log_level'}
+        );
+    } else {
+        Log::set_log_level($Conf::Conf{'log_level'});
+        Log::do_log(
+            'info',
+            'Configuration file read, default log level %s',
+            $Conf::Conf{'log_level'}
+        );
+    }
+
+    ## Check database connectivity and probe database
+    unless (SDM::check_db_connect('just_try') and SDM::probe_db()) {
+        printf STDERR
+            "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
+            $Conf::Conf{'db_name'};
+        exit 1;
+    }
+
+    ## Now trying to load full config (including database)
+    unless (Conf::load()) {    #FIXME: load Site, then robot cache
+        printf STDERR
+            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
+            Conf::get_sympa_conf();
+        exit 1;
+    }
+
+    ## Change working directory.
+    if (!chdir($Conf::Conf{'home'})) {
+        printf STDERR "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
+        exit 1;
+    }
+
+    ## Check for several files.
+    unless (Conf::checkfiles_as_root()) {
+        printf STDERR "Missing files.\n";
+        exit 1;
+    }
+
+    ## Check that the data structure is uptodate
+    unless (SDM::data_structure_uptodate()) {
+        printf STDERR
+            "Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process.\n";
+        exit 1;
+    }
+
     exit 0;
 }
 
@@ -153,6 +220,7 @@ if ($main::options{'help'}) {
 my %loop_info;
 my %msgid_table;
 my $latest_msgid_table_cleanup = time;
+my $default_lang;
 
 # this loop is run foreach HUP signal received
 my $signal = 0;
@@ -162,23 +230,22 @@ local $main::daemon_usage;
 my $language = Sympa::Language->instance;
 
 while ($signal ne 'term') {    #as long as a signal is not received }
-
-## Load configuration file. Ignoring database config for now: it avoids trying
-## to load a database that could not exist yet.
-    unless (Conf::load(Conf::get_sympa_conf(), 1)) {
+    ## Load sympa.conf.
+    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
         printf STDERR
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
         exit 1;
     }
 
-## Open the syslog and say we're read out stuff.
+    ## Open the syslog and say we're read out stuff.
     Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
         'sympa');
 
     # Enable SMTP logging if required
     $mail::log_smtp = $main::options{'mail'}
         || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+
     # setting log_level using conf unless it is set by calling option
     if (defined $main::options{'log_level'}) {
         Log::set_log_level($main::options{'log_level'});
@@ -196,41 +263,24 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         );
     }
 
-## Probe Db if defined
-    if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
-        unless (SDM::probe_db()) {
-            printf STDERR
-                "Database %s defined in sympa.conf has not the right structure or is unreachable. verify db_xxx parameters in sympa.conf\n",
-                $Conf::Conf{'db_name'};
-            exit 1;
-        }
-    }
-
-## Now trying to load full config (including database)
-    unless (Conf::load()) {
-        printf STDERR
-            "Configuration file %s has errors.\n",
-            Conf::get_sympa_conf();
-        exit 1;
-
-    }
-
     tools::ciphersaber_installed();
 
     if (tools::cookie_changed($Conf::Conf{'cookie'})) {
         Log::fatal_err(
-            "sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at $Conf::Conf{'etc'}/cookies.history file)"
+            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file)',
+            $Conf::Conf{'etc'}
         );
     }
 
-## Set locale configuration
+    ## Set locale configuration
+    ## Compatibility with version < 2.3.3
     $main::options{'lang'} =~ s/\.cat$//
-        if $main::options{'lang'};    ## Compatibility with version < 2.3.3
-    my $default_lang =
+        if defined $main::options{'lang'};
+    $default_lang =
         $language->set_lang($main::options{'lang'}, $Conf::Conf{'lang'},
         'en');
 
-## Main program
+    ## Main program
     if (!chdir($Conf::Conf{'home'})) {
         die sprintf "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
         ## Function never returns.
@@ -248,31 +298,20 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         $main::daemon_usage = Conf::DAEMON_ALL;
     }
 
-## Check for several files.
+    ## Check for several files.
     unless (Conf::checkfiles_as_root()) {
         Log::fatal_err('Missing files');
         ## No return.
-    }
-
-## Check that the data structure is uptodate
-    unless ($main::options{'upgrade'}) {
-        unless (SDM::data_structure_uptodate()) {
-            Log::fatal_err(
-                'Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process'
-            );
-        }
     }
 
     if ($signal ne 'hup') {
         ## Put ourselves in background if we're not in debug mode. That method
         ## works on many systems, although, it seems that Unix conceptors have
         ## decided that there won't be a single and easy way to detach a
-        ## process
-        ## from its controlling tty.
+        ## process from its controlling TTY.
         unless ($main::options{'foreground'}) {
             if (open(TTY, "/dev/tty")) {
                 ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
-                #       ioctl(TTY, TIOCNOTTY(), 0);
                 close(TTY);
             }
             open(STDIN,  ">> /dev/null");
@@ -400,20 +439,20 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             }
         }
 
-        # Set the UserID & GroupID for the process
+        # Set the User ID & Group ID for the process
         $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
         $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 
-        ## Required on FreeBSD to change ALL IDs(effective UID + real UID +
-        ## saved UID)
+        ## Required on FreeBSD to change ALL IDs
+        ## (effective UID + real UID + saved UID)
         POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
         POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
-        ## Check if the UID has correctly been set (usefull on OS X)
+        ## Check if the UID has correctly been set (useful on OS X)
         unless (($( == (getgrnam(Sympa::Constants::GROUP))[2])
             && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
             Log::fatal_err(
-                "Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+                "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
             );
         }
 
@@ -467,7 +506,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         foreach my $list (@$all_lists) {
             unless ($list->dump()) {
-                printf STDERR "Could not dump list(s)\n";
+                print STDERR "Could not dump list(s)\n";
             }
         }
 

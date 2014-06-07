@@ -23,9 +23,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-## Options :  F         -> do not detach TTY
-##         :  d		-> debug -d is equiv to -dF
-
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
@@ -50,20 +47,23 @@ use tools;
 use tracking;
 use Sympa::User;
 
-my $opt_d;
-my $opt_F;
 my %options;
 
 unless (
     GetOptions(
-        \%main::options, 'config|f=s', 'debug|d', 'log_level=s',
-        'foreground'
+        \%main::options, 'config|f=s',  'debug|d', 'help|h',
+        'version|v',     'log_level=s', 'foreground|F'
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 
-# $main::options{'debug2'} = 1 if ($main::options{'debug'});
+if ($main::options{'help'}) {
+    pod2usage(0);
+} elsif ($main::options{'version'}) {
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
+}
 
 if ($main::options{'debug'}) {
     $main::options{'log_level'} = 2 unless ($main::options{'log_level'});
@@ -73,14 +73,12 @@ $main::options{'foreground'} = 1 if ($main::options{'debug'});
 $main::options{'log_to_stderr'} = 1
     if ($main::options{'debug'} || $main::options{'foreground'});
 
-my $Version = '0.1';
-
 my $adrlist = {};
 
 # Load sympa.conf
 unless (Conf::load()) {
     printf STDERR
-        "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
+        "Unable to load Sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting.\n",
         Conf::get_sympa_conf();
     exit 1;
 }
@@ -108,27 +106,6 @@ if ($main::options{'log_level'}) {
     );
 }
 
-## Check databse connectivity
-unless (SDM::check_db_connect()) {
-    Log::fatal_err(
-        'Database %s defined in sympa.conf has not the right structure or is unreachable.',
-        $Conf::Conf{'db_name'}
-    );
-}
-
-## Check that the data structure is uptodate
-unless (SDM::data_structure_uptodate()) {
-    Log::fatal_err(
-        'Data structure was not updated; you should run sympa.pl to run the upgrade process'
-    );
-}
-
-## Check for several files.
-unless (Conf::checkfiles()) {
-    Log::fatal_err('Missing files');
-    ## No return.
-}
-
 ## Put ourselves in background if not in debug mode.
 
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
@@ -136,13 +113,12 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
         ioctl(TTY, 0x20007471, 0);    #  s/b TIOCNOTTY()
-#       ioctl(TTY, TIOCNOTTY(), 0);
         close(TTY);
     }
 
     setpgrp(0, 0);
     if ((my $child_pid = fork) != 0) {
-        print STDOUT "Starting task_manager daemon, pid $_\n";
+        print STDOUT "Starting task_manager daemon, PID $_\n";
         exit(0);
     }
 }
@@ -167,7 +143,7 @@ POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 unless (($( == (getgrnam(Sympa::Constants::GROUP))[2])
     && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
     Log::fatal_err(
-        "Failed to change process userID and groupID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via SUDO."
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
     );
 }
 
@@ -176,9 +152,7 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    Log::do_log('err', 'Unable to change to directory %s',
-        $Conf::Conf{'home'});
-    exit(-1);
+    die sprintf "Unable to change to directory %s\n", $Conf::Conf{'home'};
 }
 
 ## Catch signals, in order to exit cleanly, whenever possible.
@@ -287,7 +261,6 @@ foreach (keys %asgn_commands) {
 
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
-
     my $current_date = time;                          # current epoch date
     my $rep          = tools::adate($current_date);
 
