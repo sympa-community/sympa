@@ -588,7 +588,9 @@ sub fetch {
     ## SELECT does not respond
     my $array_of_users;
     $array_of_users = eval {
-        local $SIG{ALRM} = sub { die "TIMEOUT\n" };    # NB: \n required
+        local %SIG;
+        $SIG{__DIE__} = 'DEFAULT';
+        $SIG{ALRM} = sub { die "TIMEOUT\n" };    # NB: \n required
         alarm $self->{'fetch_timeout'};
 
         ## Inner eval just in case the fetchall_arrayref call would die, thus
