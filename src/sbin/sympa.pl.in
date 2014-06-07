@@ -95,7 +95,7 @@ unless (
         'to=s',                 'reload_list_config',
         'list=s',               'quiet',
         'close_unknown',        'test_database_message_buffer',
-        'conf_2_db'
+        'conf_2_db',            'export_list',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -106,28 +106,29 @@ if ($main::options{'debug'}) {
 }
 ## Batch mode, ie NOT daemon
 $main::options{'batch'} = 1
-    if ($main::options{'dump'}
-    || $main::options{'import'}
-    || $main::options{'make_alias_file'}
-    || $main::options{'lowercase'}
-    || $main::options{'md5_encode_password'}
-    || $main::options{'change_user_email'}
-    || $main::options{'close_list'}
-    || $main::options{'purge_list'}
-    || $main::options{'create_list'}
-    || $main::options{'rename_list'}
-    || $main::options{'instantiate_family'}
-    || $main::options{'add_list'}
-    || $main::options{'modify_list'}
-    || $main::options{'close_family'}
-    || $main::options{'md5_digest'}
-    || $main::options{'sync_include'}
-    || $main::options{'upgrade'}
-    || $main::options{'upgrade_shared'}
-    || $main::options{'test_database_message_buffer'}
-    || $main::options{'conf_2_db'}
-    || $main::options{'reload_list_config'}
-    || $main::options{'sync_list_db'});
+    if $main::options{'dump'}
+        || $main::options{'import'}
+        || $main::options{'make_alias_file'}
+        || $main::options{'lowercase'}
+        || $main::options{'md5_encode_password'}
+        || $main::options{'change_user_email'}
+        || $main::options{'close_list'}
+        || $main::options{'purge_list'}
+        || $main::options{'create_list'}
+        || $main::options{'rename_list'}
+        || $main::options{'instantiate_family'}
+        || $main::options{'add_list'}
+        || $main::options{'modify_list'}
+        || $main::options{'close_family'}
+        || $main::options{'md5_digest'}
+        || $main::options{'sync_include'}
+        || $main::options{'upgrade'}
+        || $main::options{'upgrade_shared'}
+        || $main::options{'test_database_message_buffer'}
+        || $main::options{'conf_2_db'}
+        || $main::options{'reload_list_config'}
+        || $main::options{'sync_list_db'}
+        || $main::options{'export_list'};
 
 # Some option force foreground mode
 $main::options{'foreground'} = 1
@@ -1174,6 +1175,14 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             foreach my $list (@$all_lists) {
                 $list->_update_list_db;
             }
+        }
+        exit 0;
+    } elsif ($main::options{'export_list'}) {
+        my $robot_id = $main::options{'robot'} || '*';
+        my $all_lists = List::get_lists($robot_id);
+        exit 1 unless defined $all_lists;
+        foreach my $list (@$all_lists) {
+            printf "%s\n", $list->{'name'};
         }
         exit 0;
     }
