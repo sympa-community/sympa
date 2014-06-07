@@ -121,7 +121,7 @@ sub new {
 
         ## Use cache unless file has changed on disk
         if ($all_scenarios{$scenario->{'file_path'}}{'date'} >=
-            (stat($scenario->{'file_path'}))[9]) {
+            tools::get_mtime($scenario->{'file_path'})) {
             return $all_scenarios{$scenario->{'file_path'}};
         }
     }

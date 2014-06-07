@@ -3287,7 +3287,8 @@ sub modindex {
                     Conf::get_robot_conf($robot, 'clean_delay_queuemod');
             }
 
-            if ((stat "$modqueue/$i")[9] < (time - $moddelay * 86400)) {
+            if (tools::get_mtime("$modqueue/$i") < (time - $moddelay * 86400))
+            {
                 unlink("$modqueue/$i");
                 Log::do_log('notice',
                     'Deleting unmoderated message %s, too old', $i);

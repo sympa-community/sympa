@@ -94,8 +94,8 @@ sub new {
         &main::make_visible_path($document->{'path'});
 
     ## Date
-    my @info = stat $document->{'absolute_path'};
-    $document->{'date_epoch'} = $info[9];
+    $document->{'date_epoch'} =
+        tools::get_mtime($document->{'absolute_path'});
 
     # Size of the doc
     $document->{'size'} = (-s $document->{'absolute_path'}) / 1000;
@@ -159,8 +159,7 @@ sub new {
     }
 
     if ($document->{'path'} && (-e $desc_file)) {
-        my @info = stat $desc_file;
-        $document->{'serial_desc'} = $info[9];
+        $document->{'serial_desc'} = (stat $desc_file)[9];
 
         my %desc_hash = &main::get_desc_file($desc_file);
         $document->{'owner'} = $desc_hash{'email'};

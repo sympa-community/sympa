@@ -115,7 +115,7 @@ sub handle ($$) {
 
         $r2 = $self->SOAP::Transport::HTTP::CGI::handle;
 
-        if ((stat($ENV{'SCRIPT_FILENAME'}))[9] > $birthday) {
+        if (tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
             exit(0);
         }
         # print

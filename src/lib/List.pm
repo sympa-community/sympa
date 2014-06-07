@@ -890,10 +890,11 @@ sub dump {
         return undef;
     }
 
+    # Note: "subscribers" file was deprecated.
     $self->{'mtime'} = [
-        (stat("$self->{'dir'}/config"))[9],
-        (stat("$self->{'dir'}/subscribers"))[9],
-        (stat("$self->{'dir'}/stats"))[9]
+        tools::get_mtime("$self->{'dir'}/config"),
+        undef,    # subscribers
+        tools::get_mtime("$self->{'dir'}/stats")
     ];
 
     return 1;
@@ -955,7 +956,7 @@ sub save_config {
         }
     }
 
-#    $self->{'mtime'}[0] = (stat("$list->{'dir'}/config"))[9];
+#    $self->{'mtime'}[0] = tools::get_mtime("$list->{'dir'}/config");
 
     ## Release the lock
     unless ($lock_fh->close()) {
@@ -1026,23 +1027,20 @@ sub load {
     my ($m1, $m2, $m3) = (0, 0, 0);
     ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
 
-    my $time_config     = (stat("$self->{'dir'}/config"))[9];
-    my $time_config_bin = (stat("$self->{'dir'}/config.bin"))[9];
-    my $time_subscribers;
-    my $time_stats       = (stat("$self->{'dir'}/stats"))[9];
-    my $main_config_time = (stat(Sympa::Constants::CONFIG))[9];
-    my $web_config_time  = (stat(Sympa::Constants::WWSCONFIG))[9];
-    my $config_reloaded  = 0;
+    my $time_config      = tools::get_mtime("$self->{'dir'}/config");
+    my $time_config_bin  = tools::get_mtime("$self->{'dir'}/config.bin");
+    my $time_stats       = tools::get_mtime("$self->{'dir'}/stats");
+    my $main_config_time = tools::get_mtime(Sympa::Constants::CONFIG);
+    # my $web_config_time  = tools::get_mtime(Sympa::Constants::WWSCONFIG);
+    my $config_reloaded = 0;
     my $admin;
 
     if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
-           'binary_file'
-        && !$options->{'reload_config'}
-        && $time_config_bin > $self->{'mtime'}->[0]
-        && $time_config_bin >= $time_config
-        && $time_config_bin >= $main_config_time
-        && $time_config_bin >= $web_config_time) {
-
+            'binary_file'
+        and !$options->{'reload_config'}
+        and $time_config_bin > $self->{'mtime'}->[0]
+        and $time_config_bin >= $time_config
+        and $time_config_bin >= $main_config_time) {
         ## Get a shared lock on config file first
         my $lock_fh =
             Sympa::LockedFile->new($self->{'dir'} . '/config', 5, '<');
@@ -1066,8 +1064,8 @@ sub load {
         $m1              = $time_config_bin;
         $lock_fh->close();
     } elsif ($self->{'name'} ne $name
-        || $time_config > $self->{'mtime'}->[0]
-        || $options->{'reload_config'}) {
+        or $time_config > $self->{'mtime'}->[0]
+        or $options->{'reload_config'}) {
         $admin =
             _load_list_config_file($self->{'dir'}, $self->{'domain'},
             'config');
@@ -1325,7 +1323,7 @@ sub get_config_changes {
     }
 
     ## load config_changes
-    my $time_file = (stat("$self->{'dir'}/config_changes"))[9];
+    my $time_file = tools::get_mtime("$self->{'dir'}/config_changes");
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -1369,7 +1367,7 @@ sub update_config_changes {
     }
 
     ## load config_changes
-    my $time_file = (stat("$self->{'dir'}/config_changes"))[9];
+    my $time_file = tools::get_mtime("$self->{'dir'}/config_changes");
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -1431,7 +1429,8 @@ sub _load_config_changes_file {
     }
     close FILE;
 
-    $config_changes->{'mtime'} = (stat("$self->{'dir'}/config_changes"))[9];
+    $config_changes->{'mtime'} =
+        tools::get_mtime("$self->{'dir'}/config_changes");
 
     return $config_changes;
 }
@@ -6816,9 +6815,8 @@ sub may_edit {
     # server, robot, family or list context)
     my $edit_conf_file = tools::search_fullpath($self, 'edit_list.conf');
     if (!$edit_list_conf{$edit_conf_file}
-        || ((stat($edit_conf_file))[9] >
-            $mtime{'edit_list_conf'}{$edit_conf_file})
-        ) {
+        or tools::get_mtime($edit_conf_file) >
+        $mtime{'edit_list_conf'}{$edit_conf_file}) {
 
         $edit_conf = $edit_list_conf{$edit_conf_file} =
             tools::load_edit_list_conf($self);
@@ -7139,9 +7137,9 @@ sub get_nextdigest {
     my @days = @{$digest->{'days'}};
     my ($hh, $mm) = ($digest->{'hour'}, $digest->{'minute'});
 
-    my @now        = localtime(time);
-    my $today      = $now[6];                          # current day
-    my @timedigest = localtime((stat $filename)[9]);
+    my @now        = localtime time;
+    my $today      = $now[6];                                 # current day
+    my @timedigest = localtime tools::get_mtime($filename);
 
     ## Should we send a digest today
     my $send_digest = 0;
@@ -9992,7 +9990,7 @@ sub store_digest {
     }
 
     $newfile = !(-e $filename);
-    my $oldtime = (stat $filename)[9] unless ($newfile);
+    my $oldtime = tools::get_mtime($filename) unless $newfile;
 
     open(OUT, ">> $filename") || return;
     if ($newfile) {
@@ -10628,7 +10626,7 @@ sub load_topics {
 
     ## Load if not loaded or changed on disk
     if (!$list_of_topics{$robot}
-        || ((stat($conf_file))[9] > $mtime{'topics'}{$robot})) {
+        or tools::get_mtime($conf_file) > $mtime{'topics'}{$robot}) {
 
         ## delete previous list of topics
         %list_of_topics = ();
@@ -10673,7 +10671,7 @@ sub load_topics {
             $topic = {};
         }
 
-        $mtime{'topics'}{$robot} = (stat($conf_file))[9];
+        $mtime{'topics'}{$robot} = tools::get_mtime($conf_file);
 
         unless ($#rough_data > -1) {
             Log::do_log('notice', 'No topic defined in %s', $conf_file);

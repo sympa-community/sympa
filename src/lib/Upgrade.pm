@@ -1250,7 +1250,6 @@ sub upgrade {
             my $listname = lc $1;
             my $robot_id = lc($2 || $Conf::Conf{'domain'});
             my $modkey   = $3;
-            my $date     = (stat($spooldir . '/' . $filename))[9];
 
             # check if robot exists
             unless (Conf::valid_robot($robot_id)) {

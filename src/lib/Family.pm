@@ -1586,8 +1586,7 @@ sub get_constraints {
     Log::do_log('debug3', '(%s)', $self->{'name'});
 
     ## load param_constraint.conf
-    my $time_file = (stat("$self->{'dir'}/param_constraint.conf"))[9];
-    $time_file ||= 0;
+    my $time_file = tools::get_mtime("$self->{'dir'}/param_constraint.conf");
     unless (defined($self->{'param_constraint_conf'})
         and $self->{'mtime'}{'param_constraint_conf'} >= $time_file) {
         $self->{'param_constraint_conf'} =

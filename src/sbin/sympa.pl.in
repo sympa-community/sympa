@@ -1360,12 +1360,10 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
             ## test ever if it is an old bad file
             if ($t_filename =~ /^BAD\-/i) {
-                if ((stat "$t_spool/$t_filename")[9] < (
-                        time -
-                            Conf::get_robot_conf($robot, 'clean_delay_queue')
-                            * 86400
-                    )
-                    ) {
+                if (tools::get_mtime("$t_spool/$t_filename") <
+                    time -
+                    Conf::get_robot_conf($robot, 'clean_delay_queue') * 86400)
+                {
                     unlink("$t_spool/$t_filename");
                     Log::do_log('notice',
                         "Deleting bad message %s because too old",

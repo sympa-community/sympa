@@ -3128,15 +3128,23 @@ sub send_crash_report {
     my %data = @_;
     Log::do_log('debug', 'Sending crash report for process %s', $data{'pid'}),
         my $err_file = $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr';
+
+    my $language = Sympa::Language->instance;
     my (@err_output, $err_date);
     if (-f $err_file) {
         open(ERR, $err_file);
         @err_output = map { chomp $_; $_; } <ERR>;
         close ERR;
 
-        my $language = Sympa::Language->instance;
-        $err_date = $language->gettext_strftime("%d %b %Y  %H:%M",
-            localtime((stat($err_file))[9]));
+        my $err_date_epoch = (stat $err_file)[9];
+        if (defined $err_date_epoch) {
+            $err_date = $language->gettext_strftime("%d %b %Y  %H:%M",
+                localtime $err_date_epoch);
+        } else {
+            $err_date = $language->gettext('(unknown date)');
+        }
+    } else {
+        $err_date = $language->gettext('(unknown date)');
     }
     List::send_notify_to_listmaster(
         'crash',
@@ -3746,18 +3754,10 @@ sub is_in_array {
 #######################################################
 sub a_is_older_than_b {
     my $param = shift;
-    my ($a_file_readable, $b_file_readable) = (0, 0);
-    my $answer = undef;
-    if (-r $param->{'a_file'} and -r $param->{'b_file'}) {
-        my @a_stats = stat($param->{'a_file'});
-        my @b_stats = stat($param->{'b_file'});
-        if ($a_stats[9] < $b_stats[9]) {
-            $answer = 1;
-        } else {
-            $answer = 0;
-        }
-    }
-    return $answer;
+
+    return undef unless -r $param->{'a_file'} and -r $param->{'b_file'};
+    return (tools::get_mtime($param->{'a_file'}) <
+            tools::get_mtime($param->{'b_file'})) ? 1 : 0;
 }
 
 =over
@@ -4309,10 +4309,9 @@ sub CleanSpool {
     closedir DIR;
 
     my ($curlist, $moddelay);
-    foreach my $f (sort @qfile) {
-
-        if ((stat "$spool_dir/$f")[9] < (time - $clean_delay * 60 * 60 * 24))
-        {
+    foreach my $f (@qfile) {
+        if (tools::get_mtime("$spool_dir/$f") <
+            time - $clean_delay * 60 * 60 * 24) {
             if (-f "$spool_dir/$f") {
                 unlink("$spool_dir/$f");
                 Log::do_log('notice', 'Deleting old file %s',
