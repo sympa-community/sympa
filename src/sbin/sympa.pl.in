@@ -51,7 +51,7 @@ use SDM;
 use tools;
 use Upgrade;
 
-# durty global variables
+# dirty global variables
 my $is_signed = {};
 
 ## Internal tuning
@@ -164,8 +164,6 @@ if ($main::options{'debug'}) {
 ## Batch mode, ie NOT daemon
 $main::options{'batch'} = 1
     if ($main::options{'dump'}
-    || $main::options{'help'}
-    || $main::options{'version'}
     || $main::options{'import'}
     || $main::options{'make_alias_file'}
     || $main::options{'lowercase'}
@@ -198,6 +196,15 @@ $main::options{'log_to_stderr'} = 1
     || $main::options{'reload_list_config'}
     || $main::options{'test_database_message_buffer'}
     || $main::options{'conf_2_db'});
+
+if ($main::options{'help'}) {
+    pod2usage(0);
+} elsif ($main::options{'version'}) {
+    print $version_string;
+    exit 0;
+}
+
+## Main loop
 
 my %loop_info;
 my %msgid_table;
@@ -304,7 +311,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     }
 
 ## Check that the data structure is uptodate
-    unless ($main::options{'upgrade'} || $main::options{'help'}) {
+    unless ($main::options{'upgrade'}) {
         unless (SDM::data_structure_uptodate()) {
             Log::fatal_err(
                 'Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process'
@@ -521,9 +528,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         exit 0;
-    } elsif ($main::options{'help'}) {
-        print $usage_string;
-        exit 0;
     } elsif ($main::options{'make_alias_file'}) {
         my $robots = $main::options{'robot'} || '*';
         my @robots;
@@ -596,10 +600,6 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 "Sympa aliases file %s was made.  You probably need to install it in your SMTP engine.\n",
                 $basename;
         }
-        exit 0;
-    } elsif ($main::options{'version'}) {
-        print $version_string;
-
         exit 0;
     } elsif ($main::options{'md5_digest'}) {
         my $md5 = tools::md5_fingerprint($main::options{'md5_digest'});
