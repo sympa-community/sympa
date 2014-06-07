@@ -1283,7 +1283,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         List::send_notify_to_listmaster(undef, undef, undef, 1);
 
         if (!opendir(DIR, $spool)) {
-            die sprintf('Can\'t open dir %s: %m', $spool);
+            die sprintf "Can't open dir %s: %s\n", $spool, $!;
             ## No return.
         }
         @qfile = sort tools::by_date grep (!/^\./, readdir(DIR));
