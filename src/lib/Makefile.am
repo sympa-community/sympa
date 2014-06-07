@@ -32,6 +32,7 @@ nobase_modules_DATA = \
 	Config_XML.pm \
 	Sympa/Constants.pm \
 	cookielib.pm \
+	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
 	Datasource.pm \
 	DBManipulatorDefault.pm \

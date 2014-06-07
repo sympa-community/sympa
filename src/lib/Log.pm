@@ -26,7 +26,6 @@ package Log;
 
 use strict;
 use warnings;
-use Carp qw();
 use POSIX qw();
 use Scalar::Util;
 use Sys::Syslog qw();
@@ -139,8 +138,13 @@ sub do_log {
         #}
         @calls = '#' . $f[2];
         while (@f = caller(++$go_back)) {
-            $calls[0] = ($f[3] || '') . $calls[0];
-            unshift @calls, '#' . $f[2];
+            if ($f[3] and $f[3] =~ /\ASympa::Crash::/) {
+                # Discard trace inside crash handler.
+                @calls = '#' . $f[2];
+            } else {
+                $calls[0] = ($f[3] || '') . $calls[0];
+                unshift @calls, '#' . $f[2];
+            }
         }
         $calls[0] = 'main::' . $calls[0];
 
@@ -1326,42 +1330,6 @@ sub agregate_daily_data {
         $result->{$date} = 0 unless (defined $result->{$date});
     }
     return $result;
-}
-
-# Crash handler to dump stack trace.
-# Note: This should be moved to package providing Site singleton.
-
-INIT {
-    ## Register crash handler.  This is done during INIT phase so that
-    ## compilation errors won't be captured.
-    $SIG{'__DIE__'} = \&_crash_handler;
-}
-
-# Handler for $SIG{__DIE__} to generate traceback.
-# IN : error message
-# OUT : none.  This function exits with status 255 or (if invoked from inside
-# eval) simply returns.
-our @CARP_NOT;
-
-sub _crash_handler {
-    return if $^S;    # invoked from inside eval.
-
-    my $msg = "$_[0]";
-    chomp $msg;
-    $msg =~ s/\r\n|\r|\n/ /g;
-
-    Log::do_log('err', 'DIED: %s', $msg);
-    eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
-    SDM::db_disconnect();       # unlock database
-    Sys::Syslog::closelog();    # flush log
-    Log::set_log_level(-1);     # disable log
-
-    local @CARP_NOT = qw(Carp);
-    my $longmess = Carp::longmess("DIED: $msg\n");
-    $longmess =~ s/(?<!\A)\n at \S+ line \d+\n/\n/;
-
-    print STDERR $longmess;
-    exit 255;
 }
 
 1;

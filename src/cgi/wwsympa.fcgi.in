@@ -47,7 +47,6 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
-use Carp qw();
 use DateTime::Format::Mail;
 use MIME::Parser;
 use Sys::Syslog qw();
@@ -60,6 +59,7 @@ use Conf;
 use confdef;
 use Sympa::Constants;
 use cookielib;
+use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use List;
 use Log;
 use Sympa::Language;
@@ -1062,7 +1062,8 @@ while ($query = new_loop()) {
     }
 
     ## Generate traceback if crashed.
-    $SIG{'__DIE__'} = \&_crash_handler;
+    ## Though I don't know why, __DIE__ handler is cleared after INIT.
+    Sympa::Crash::register_handler();
 
     ## Get params in a hash
     #    foreach ($query->param) {
@@ -2108,33 +2109,16 @@ sub web_db_stat_log {
 }
 
 ####################################
-our @CARP_NOT;
-
 sub _crash_handler {
-    return if $^S;
-
-    my $msg = "$_[0]";
-    chomp $msg;
-    $msg =~ s/\r\n|\r|\n/ /g;
-
-    printf STDERR "DIED: %s\n", $msg;
-    wwslog('err', 'DIED: %s', $msg);
-    eval { List::send_notify_to_listmaster(undef, undef, undef, 1); };
-    eval { SDM::db_disconnect(); };    # unlock database
-    Sys::Syslog::closelog();           # flush log
-    Log::set_log_level(-1);            # disable log
-
-    local @CARP_NOT = qw(Carp);
-    my $longmess = Carp::longmess("$msg\n");
-    $longmess =~ s/(?<!\A)\n at \S+ line \d+\n/\n/;
+    my ($mess, $longmess) = @_;
 
     $param->{'traceback'}     = $longmess;
-    $param->{'error_message'} = $msg;
+    $param->{'error_message'} = $mess;
     $param->{'main_title'} ||= Conf::get_robot_conf($robot, 'title');
     $param->{'last_action'} = $param->{'action'};
     $param->{'action'}      = 'crash';
     eval { send_html('crash.tt2'); };
-    print "\n\n";                      # when tt2 failed to parse
+    print "\n\n";    # when tt2 failed to parse
     exit 0;
 }
 
