@@ -280,7 +280,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
 ## Main program
     if (!chdir($Conf::Conf{'home'})) {
-        Log::fatal_err("Can't chdir to %s: %m", $Conf::Conf{'home'});
+        die sprintf "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
         ## Function never returns.
     }
 
@@ -298,8 +298,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
 ## Check for several files.
     unless (Conf::checkfiles_as_root()) {
-        Log::fatal_err(
-            "output checkfiles_as_root : Missing files. Aborting.");
+        Log::fatal_err('Missing files');
         ## No return.
     }
 
@@ -307,7 +306,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     unless ($main::options{'upgrade'} || $main::options{'help'}) {
         unless (SDM::data_structure_uptodate()) {
             Log::fatal_err(
-                "error : data structure was not updated ; you should run sympa.pl --upgrade to run the upgrade process."
+                'Data structure was not updated; you should run sympa.pl --upgrade to run the upgrade process'
             );
         }
     }
@@ -482,7 +481,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     if (   $main::daemon_usage == Conf::DAEMON_COMMAND
         || $main::daemon_usage == Conf::DAEMON_ALL) {
         unless (Conf::checkfiles()) {
-            Log::fatal_err("Missing files. Aborting.");
+            Log::fatal_err('Missing files');
             ## No return.
         }
     } else {
@@ -1472,9 +1471,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
             if (-d $bad_dir) {
                 unless (rename("$t_spool/$filename", "$bad_dir/$filename")) {
-                    Log::fatal_err(
-                        "Exiting, unable to rename bad file $filename to $bad_dir/$filename (check directory permission)"
-                    );
+                    die sprintf
+                        "Unable to rename bad file %s to %s/%s: %s\n",
+                        $filename, $bad_dir, $filename, $!;
                 }
                 Log::do_log('notice', "Moving bad file %s to bad/",
                     $filename);
@@ -1482,9 +1481,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 Log::do_log('notice', 'Missing directory "%s"', $bad_dir);
                 unless (
                     rename("$t_spool/$filename", "$t_spool/BAD-$filename")) {
-                    Log::fatal_err(
-                        "Exiting, unable to rename bad file $filename to BAD-$filename"
-                    );
+                    die sprintf
+                        "Unable to rename bad file %s to BAD-%s: %s\n",
+                        $filename, $filename, $!;
                 }
                 Log::do_log('notice', "Renaming bad file %s to BAD-%s",
                     $filename, $filename);
@@ -3502,8 +3501,9 @@ sub SendDigest {
     Log::do_log('debug', '');
 
     if (!opendir(DIR, $Conf::Conf{'queuedigest'})) {
-        Log::fatal_err("Unable to access directory %s : %m",
-            $Conf::Conf{'queuedigest'});    ## No return.
+        die sprintf "Unable to access directory %s : %s\n",
+            $Conf::Conf{'queuedigest'}, $!;
+        ## No return.
     }
     my @dfile = (sort grep (!/^\./, readdir(DIR)));
     closedir(DIR);

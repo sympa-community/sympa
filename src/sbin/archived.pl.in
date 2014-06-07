@@ -187,7 +187,8 @@ while (!$end) {
     List::send_notify_to_listmaster(undef, undef, undef, 1);
 
     unless (opendir(DIR, $queue)) {
-        Log::fatal_err("Can't open dir %s: %m", $queue);    ## No return.
+        die sprintf "Can't open dir %s: %s\n", $queue, $!;
+        ## No return.
     }
 
     my @files = (grep(/(^[^\.]|^\.(remove|rebuild)\.(.*))/, readdir DIR));
@@ -825,8 +826,8 @@ sub mail2arc {
 
         ## copy the file in the arctxt and in "mhonarc -add"
         if (-f $monthdir . "/index") {
-            open(IDX, "<$monthdir/index")
-                || Log::fatal_err("couldn't read index for $listname");
+            open IDX, '<', "$monthdir/index"
+                or die sprintf "Couldn't read index for %s: %s/n", $listname, $!;
             $newfile = <IDX>;
             chomp($newfile);
             $newfile++;
@@ -839,9 +840,9 @@ sub mail2arc {
         # savee arctxt dump of original message.
         my $output = $Conf::Conf{'tmpdir'} . '/arc' . $newfile;
         open ORIG, '<', "$queue/$file"
-            or Log::fatal_err("couldn't open file $queue/$file");
+            or die sprintf "Couldn't open file %s/%s: %s\n", $queue, $file, $!;
         open DUMP, '>', "$arctxtdir/$newfile"
-            or Log::fatal_err("couldn't open file $arctxtdir/$newfile");
+            or die sprintf "Couldn't open file %s/%s: %s\n", $arctxtdir, $newfile, $!;
         print DUMP join('', <ORIG>);
         close ORIG;
         close DUMP;
@@ -928,8 +929,8 @@ sub save_idx {
     my ($index, $lst) = @_;
 #    Log::do_log('notice', '(%s, %s)', $index, $lst);
 
-    open(INDEXF, ">$index")
-        || Log::fatal_err("couldn't overwrite index $index");
+    open INDEXF, '>', $index
+        or die sprintf "Couldn't overwrite index %s: %s\n", $index, $!;
     print INDEXF "$lst\n";
     close INDEXF;
     #   Log::do_log('debug','Last arc entry for %s is %s', $index, $lst);

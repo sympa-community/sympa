@@ -214,8 +214,9 @@ while (!$end) {
     # Process grouped notifications
     List::send_notify_to_listmaster(undef, undef, undef, 1);
 
-    unless (opendir(DIR, $queue)) {
-        Log::fatal_err("Can't open dir %s: %m", $queue);    ## No return.
+    unless (opendir DIR, $queue) {
+        die sprintf "Can't open dir %s: %s\n", $queue, $!;
+        ## No return.
     }
 
     my @files = (sort grep(!/^(\.|T\.|BAD\-)/, readdir DIR));

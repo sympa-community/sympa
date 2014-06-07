@@ -118,13 +118,13 @@ unless (SDM::check_db_connect()) {
 ## Check that the data structure is uptodate
 unless (SDM::data_structure_uptodate()) {
     Log::fatal_err(
-        "error : data structure was not updated ; you should run sympa.pl to run the upgrade process."
+        'Data structure was not updated; you should run sympa.pl to run the upgrade process'
     );
 }
 
 ## Check for several files.
 unless (Conf::checkfiles()) {
-    Log::fatal_err("Missing files. Aborting.");
+    Log::fatal_err('Missing files');
     ## No return.
 }
 
