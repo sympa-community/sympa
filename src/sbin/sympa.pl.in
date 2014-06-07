@@ -69,63 +69,6 @@ my $ip;
 $ip = $ENV{'REMOTE_HOST'};
 $ip = $ENV{'REMOTE_ADDR'} unless ($ip);
 
-my $usage_string = "Usage:
-   $0 [OPTIONS]
-
-Options:
-   --add_list=family_name --robot=robot_name --input_file=/path/to/file.xml
-                                         : add the list described by the file.xml under robot_name, to the family
-                                           family_name.
-   --change_user_email --current_email=xx --new_email=xx : changes a user email address in all Sympa 
-                                           databases (subscriber_table, list config, etc) for all virtual robots.
-   --close_family=family_name --robot=robot_name 
-                                         : close lists of family_name family under robot_name.      
-
-   --close_list=listname\@robot          : close a list
-   --conf_2_db			         : load in database, sympa;conf, wwsympa.conf and each robot.conf
-   --config=FILE                     : uses an alternative configuration file
-   --create_list --robot=robot_name --input_file=/path/to/file.xml 
-                                         : create a list with the xml file under robot_name
-   --debug                           : sets Sympa in debug mode 
-   --dump=list\@dom|ALL                  : dumps subscribers 
-   --foreground                          : the process remains attached to the TTY
-   --help                            : print this help
-   --import=list\@dom                    : import subscribers (read from STDIN)
-   --instantiate_family=family_name  --robot=robot_name --input_file=/path/to/file.xml [--close_unknown] [--quiet]
-                                         : instantiate family_name lists described in the file.xml under robot_name,
-                                           the family directory must exist ;
-                                           automatically close undefined lists in a new instantation if --close_unknown specified,
-                                           do not print report if --quiet specified.
-   --keepcopy=dir                    : keep a copy of incoming message
-   --lang=LANG                       : use a language catalog for Sympa
-   --log_level=LEVEL                     : sets Sympa log level
-   --lowercase                           : lowercase email addresses in database
-   --mail                            : log calls to sendmail
-   --make_alias_file [--robot=robot_name,...]
-                                     : create file in /tmp with all aliases (usefull when aliases.tpl is changed)
-   --md5_digest=password                 : output a MD5 digest of a password (usefull for SOAP client trusted application)
-   --md5_encode_password                 : rewrite password in database using md5 fingerprint. YOU CAN'T UNDO unless you save this table first
-   --modify_list=family_name --robot=robot_name --input_file=/path/to/file.xml
-                                         : modify the existing list installed under the robot_name robot and that 
-                                           belongs to family_name family. The new description is in the file.xml
-   --purge_list=listname\@robot          : remove a list no backup is possible
-   --reload_list_config --list=mylist\@mydom  : recreates all config.bin files. You should run this command if you edit 
-                                                authorization scenarios. The list parameter is optional.
-   --rename_list=listname\@robot --new_listname=newlistname --new_listrobot=newrobot : renames a list or move it to another virtual robot
-   --service=process_command|process_message|process_creation  : process dedicated to messages distribution, commands or to automatic lists creation (default three of them)
-   --sync_include=listname\@robot        : trigger the list members update
-   --sync_list_db [--list=listname]      : syncs filesystem list configs to the database cache of list configs, optionally sync an individual list if specified.
-   --test_database_message_buffer        : test the database message buffer size
-   --upgrade [--from=X] [--to=Y]             : runs Sympa maintenance script to upgrade from version X to version Y
-   --upgrade_shared  --[listname=X] --[robot=Y] : rename files in shared.
-   --version                         : print version number
-
-Sympa is a mailinglists manager and comes with a complete (user and admin)
-web interface. Sympa  can be linked to an LDAP directory or an RDBMS to 
-create dynamic mailing lists. Sympa provides S/MIME and HTTPS based authentication and
-encryption.
-";
-
 ## Check --dump option
 my %options;
 unless (
@@ -1192,8 +1135,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         my $family_name;
         unless ($family_name = $main::options{'close_family'}) {
-            print STDERR $usage_string;
-            exit 1;
+            pod2usage(-exitval => 1, -output => \*STDERR);
         }
         my $family;
         unless ($family = Family->new($family_name, $robot)) {
