@@ -83,14 +83,6 @@ unless (Conf::load()) {
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
     'bulk');
 
-## Check database connectivity
-unless (SDM::check_db_connect()) {
-    Log::fatal_err(
-        'Database %s defined in sympa.conf has not the right structure or is unreachable.',
-        $Conf::Conf{'db_name'}
-    );
-}
-
 # Enable SMTP logging if required
 my $default_log_smtp = $main::options{'mail'}
     || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
