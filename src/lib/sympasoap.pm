@@ -26,6 +26,7 @@ package sympasoap;
 
 use strict;
 use warnings;
+use Encode qw();
 
 use Conf;
 use Log;
@@ -1666,11 +1667,7 @@ sub struct_to_soap {
         my @all;
         my $formated_data;
         foreach my $k (keys %$data) {
-            my $one_data = $k . '=' . $data->{$k};
-            if (require "Encode.pm") {
-                $one_data = &Encode::decode('utf-8', $one_data);
-            }
-            push @all, $one_data;
+            push @all, Encode::decode_utf8($k . '=' . $data->{$k});
         }
 
         $formated_data = join ';', @all;
