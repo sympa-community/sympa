@@ -290,6 +290,13 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id' => 'provides libraries for manipulating MIME messages',
     },
+    'Net::DNS' => {
+        required_version => '0.65',
+        package_name     => 'Net-DNS',
+        mandatory        => 1,
+        'gettext_id' =>
+            'this is required if you set a value for "dmarc_protection_mode" which requires DNS verification',
+    },
     'Net::LDAP' => {
         required_version => '0.27',
         'gettext_comment' =>

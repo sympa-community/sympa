@@ -1606,6 +1606,7 @@ sub distribute_msg {
 
     ## Munge the From header if we are using DMARC Protection mode
     if ($self->{'admin'}{'dmarc_protection'}{'mode'}) {
+        Log::do_log('debug', 'DMARC protection on');
         my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
         my $originalFromHeader = $hdr->get('From');
         my $anonaddr;
@@ -1615,15 +1616,19 @@ sub distribute_msg {
         my $origFrom      = '';
         my $mungeFrom     = 0;
 
-        if (@addresses) { $origFrom = $addresses[0]->address; }
+        if (@addresses) {
+            $origFrom = $addresses[0]->address;
+            Log::do_log('debug', 'From addresses: %s', $origFrom);
+        }
 
         # Will this message be processed?
-        $mungeFrom = 1
-            if (
-            tools::is_in_array(
+        if (tools::is_in_array(
                 $self->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
             )
-            );
+            ) {
+            Log::do_log('debug', 'Munging From for ALL messages');
+            $mungeFrom = 1;
+        }
         if (   !$mungeFrom
             and $dkimSignature
             and tools::is_in_array(
@@ -1631,6 +1636,7 @@ sub distribute_msg {
                 'dkim_signature'
             )
             ) {
+            Log::do_log('debug', 'Munging From for DKIM-signed messages');
             $mungeFrom = 1;
         }
         if (   !$mungeFrom
@@ -1641,6 +1647,8 @@ sub distribute_msg {
                 'domain_regex'
             )
             ) {
+            Log::do_log('debug',
+                'Munging From for messages based on domain regexp');
             $mungeFrom = 1 if ($origFrom =~ /$dkimdomain$/);
         }
         if (   !$mungeFrom
@@ -1657,14 +1665,18 @@ sub distribute_msg {
                 )
             )
             ) {
+            Log::do_log('debug',
+                'Munging From for messages with strict policy');
             # Strict auto policy - is the sender domain policy to reject
             my $dom = $origFrom;
             $dom =~ s/^.*\@//;
             eval {    # In case Net::DNS is not installed
+                Log::do_log('debug', 'Requiring Net::DNS');
                 require Net::DNS;
                 my $res = Net::DNS::Resolver->new;
                 my $packet = $res->query("_dmarc.$dom", "TXT");
                 if ($packet) {
+                    Log::do_log('debug', 'DMARC DNS entry found');
                     foreach
                         my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
                         next if ($rr->string !~ /v=DMARC/);
@@ -1674,7 +1686,13 @@ sub distribute_msg {
                                 'dmarc_reject'
                             )
                             ) {
-                            $mungeFrom = 1 if ($rr->string =~ /p=reject/);
+                            Log::do_log('debug',
+                                'Will block if DMARC rejects');
+                            if ($rr->string =~ /p=reject/) {
+                                Log::do_log('debug',
+                                    'DMARC reject policy found');
+                                $mungeFrom = 1;
+                            }
                         }
                         if (!$mungeFrom
                             and tools::is_in_array(
@@ -1682,7 +1700,13 @@ sub distribute_msg {
                                 'dmarc_quarantine'
                             )
                             ) {
-                            $mungeFrom = 1 if ($rr->string =~ /p=quarantine/);
+                            Log::do_log('debug',
+                                'Will block if DMARC quarantine');
+                            if ($rr->string =~ /p=quarantine/) {
+                                Log::do_log('debug',
+                                    'DMARC quarantine  policy found');
+                                $mungeFrom = 1;
+                            }
                         }
                         if (!$mungeFrom
                             and tools::is_in_array(
@@ -1690,6 +1714,8 @@ sub distribute_msg {
                                 'dmarc_any'
                             )
                             ) {
+                            Log::do_log('debug',
+                                'Will munge whatever DMARC policy is');
                             $mungeFrom = 1;
                         }
                         $hdr->add(
@@ -1700,15 +1726,23 @@ sub distribute_msg {
                     }
                 }
             };
-            $hdr->add('X-DMARC-Error', $@) if ($@);
+            if ($@) {
+                $hdr->add('X-DMARC-Error', $@);
+                Log::do_log('error',
+                    'No Net::DNS found. Trying to save the message by adding a X-DMARC-Error header'
+                );
+            }
         }
 
         if ($mungeFrom) {
+            Log::do_log('debug', 'Will munge From field');
             # Remove any DKIM signatures we find
             if ($dkimSignature) {
                 $hdr->add('X-Original-DKIM-Signature', $dkimSignature);
                 $hdr->delete('DKIM-Signature');
                 $hdr->delete('DomainKey-Signature');
+                Log::do_log('debug',
+                    'Removing previous DKIM and DomainKey signatures');
             }
 
             # Identify default new From address
@@ -1721,6 +1755,7 @@ sub distribute_msg {
             $anonaddr = $self->get_list_address()
                 unless $anonaddr and $anonaddr =~ /\@/;
             @anonFrom = Mail::Address->parse($anonaddr);
+            Log::do_log('debug', 'Anonymous From: %s', $anonaddr);
 
             if (@addresses) {
                 # We should always have a From address in reality, unless the
@@ -1772,7 +1807,6 @@ sub distribute_msg {
             $hdr->add('X-Original-From', "$originalFromHeader");
             $hdr->replace('From', $newAddr);
         }
-
     }
 
     ## Hide the sender if the list is anonymoused

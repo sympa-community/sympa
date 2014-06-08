@@ -1877,6 +1877,10 @@ sub _infer_server_specific_parameter_values {
         $param->{'config_hash'}{'dkim_signer_domain'} = $param->{'config_hash'}{'domain'};
     }
 
+    $param->{'config_hash'}{'dmarc_protection_mode'} =~ s/\s//g ;
+    my @dmarc = split(/,/, $param->{'config_hash'}{'dmarc_protection_mode'});
+    $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
+
     ## Set Regexp for accepted list suffixes
     if (defined($param->{'config_hash'}{'list_check_suffixes'})) {
         $param->{'config_hash'}{'list_check_regexp'} =
@@ -2223,6 +2227,10 @@ sub _load_single_robot_config {
         unless ($robot_conf->{'dkim_signer_domain'}) {
             $robot_conf->{'dkim_signer_domain'} = $robot;
         }
+
+        $robot_conf->{'dmarc_protection_mode'} =~ s/\s//g ;
+        my @dmarc = split(/,/, $robot_conf->{'dmarc_protection_mode'});
+        $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
 
         _set_listmasters_entry({'config_hash' => $robot_conf});
 
