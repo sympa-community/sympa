@@ -4390,8 +4390,7 @@ sub _append_parts {
     ## Preparing header and footer for inclusion.
     if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
         if (length $header_msg or length $footer_msg) {
-
-            ## Only decodable bodies are allowed.
+            # Only decodable bodies are allowed.
             my $bodyh = $part->bodyhandle;
             if ($bodyh) {
                 return undef if $bodyh->is_encoded;
@@ -4400,6 +4399,7 @@ sub _append_parts {
                 $body = '';
             }
 
+            # Alter body.
             $body = _append_footer_header_to_part(
                 {   'part'     => $part,
                     'header'   => $header_msg,
@@ -4410,6 +4410,7 @@ sub _append_parts {
             );
             return undef unless defined $body;
 
+            # Save new body.
             $io = $bodyh->open('w');
             unless (defined $io) {
                 Log::do_log('err', 'Failed to save message: %s', "$!");
@@ -4461,30 +4462,27 @@ sub _append_footer_header_to_part {
     my $eff_type   = $data->{'eff_type'};
     my $body       = $data->{'body'};
 
-    my $cset;
+    my $in_cset;
 
     ## Detect charset.  If charset is unknown, detect 7-bit charset.
     my $charset = $part->head->mime_attr('Content-Type.Charset');
-    $cset = MIME::Charset->new($charset || 'NONE');
-    unless ($cset->decoder) {
-        # n.b. detect_7bit_charset() in MIME::Charset prior to 1.009.2 doesn't
-        # work correctly.
-        my ($dummy, $charset) =
-            MIME::Charset::body_encode($body, '', Detect7Bit => 'YES');
-        $cset = MIME::Charset->new($charset)
-            if $charset;
+    $in_cset = MIME::Charset->new($charset || 'NONE');
+    unless ($in_cset->decoder) {
+        # MIME::Charset 1.009.2 or later required.
+        $in_cset = MIME::Charset->new(
+            MIME::Charset::detect_7bit_charset($body) || 'NONE');
     }
-    unless ($cset->decoder) {
-        #Log::do_log('err', 'Unknown charset "%s"', $charset);
+    unless ($in_cset->decoder) {
         return undef;
     }
+    $in_cset->encoder($in_cset);    # no charset conversion
 
     ## Decode body to Unicode, since HTML::Entities::encode_entities() and
-    ## newline
-    ## normalization will break texts with several character sets (UTF-16/32,
-    ## ISO-2022-JP, ...).
+    ## newline normalization will break texts with several character sets
+    ## (UTF-16/32, ISO-2022-JP, ...).
+    ## Only decodable bodies are allowed.
     eval {
-        $body = $cset->decode($body, 1);
+        $body = $in_cset->decode($body, 1);
         $header_msg = Encode::decode_utf8($header_msg, 1);
         $footer_msg = Encode::decode_utf8($footer_msg, 1);
     };
@@ -4494,12 +4492,15 @@ sub _append_footer_header_to_part {
     if ($eff_type eq 'text/plain') {
         Log::do_log('debug3', "Treating text/plain part");
 
-        ## Add newlines. For BASE64 encoding they also must be normalized.
+        ## Add newlines.  For BASE64 encoding they also must be normalized.
         if (length $header_msg) {
             $header_msg .= "\n" unless $header_msg =~ /\n\z/;
         }
         if (length $footer_msg and length $body) {
             $body .= "\n" unless $body =~ /\n\z/;
+        }
+        if (length $footer_msg) {
+            $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
         }
         if (uc($part->head->mime_attr('Content-Transfer-Encoding') || '') eq
             'BASE64') {
@@ -4509,6 +4510,20 @@ sub _append_footer_header_to_part {
         }
 
         $new_body = $header_msg . $body . $footer_msg;
+
+        ## Data not encodable by original charset will fallback to UTF-8.
+        my ($newcharset, $newenc);
+        ($body, $newcharset, $newenc) =
+            $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
+        unless ($newcharset) {    # bug in MIME::Charset?
+            Log::do_log('err', 'Can\'t determine output charset');
+            return undef;
+        } elsif ($newcharset ne $in_cset->as_string) {
+            $part->head->mime_attr(
+                'Content-Transfer-Encoding' => $newenc);
+            $part->head->mime_attr(
+                'Content-Type.Charset' => $newcharset);
+        }
     } elsif ($eff_type eq 'text/html') {
         Log::do_log('debug3', "Treating text/html part");
 
@@ -4520,31 +4535,28 @@ sub _append_footer_header_to_part {
         $footer_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
 
-        my @bodydata = split '</body>', $body;
+        $new_body = $body;
         if (length $header_msg) {
-            $new_body = sprintf '<div style="%s">%s</div>',
+            my $div = sprintf '<div style="%s">%s</div>',
                 $div_style, $header_msg;
-        } else {
-            $new_body = '';
+            $new_body =~ s,(<body\b[^>]*>),$1$div,i
+                or $new_body = $div . $new_body;
         }
-        my $i = -1;
-        foreach my $html_body_bit (@bodydata) {
-            $new_body .= $html_body_bit;
-            $i++;
-            if ($i == $#bodydata and length $footer_msg) {
-                $new_body .= sprintf '<div style="%s">%s</div></body>',
-                    $div_style, $footer_msg;
-            } else {
-                $new_body .= '</body>';
-            }
+        if (length $footer_msg) {
+            my $div = sprintf '<div style="%s">%s</div>',
+                $div_style, $footer_msg;
+            $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
+                or $new_body = $new_body . $div;
         }
+
+        # Unencodable characters are encoded to entity, because charset
+        # metadata in HTML won't be altered.
+        # Problem: FB_HTMLCREF of several codecs are broken.
+        eval { $body = $in_cset->encode($new_body, Encode::FB_HTMLCREF); };
+        return undef if $@;
     }
 
-    ## Only encodable footer/header are allowed.
-    eval { $new_body = $cset->encode($new_body, 1); };
-    return undef if $@;
-
-    return $new_body;
+    return $body;
 }
 
 ## Delete a user in the user_table
