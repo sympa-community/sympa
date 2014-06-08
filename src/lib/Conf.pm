@@ -1866,8 +1866,15 @@ sub _infer_server_specific_parameter_values {
 
     unless (tools::smart_eq($param->{'config_hash'}{'dkim_feature'}, 'on')) {
         # dkim_signature_apply_ on nothing if dkim_feature is off
-        $param->{'config_hash'}{'dkim_signature_apply_on'} =
-            [''];    # empty array
+        # Sets empty array.
+        $param->{'config_hash'}{'dkim_signature_apply_on'} = [''];
+    }else {
+        $param->{'config_hash'}{'dkim_signature_apply_on'} =~ s/\s//g ;
+        my @dkim = split(/,/, $param->{'config_hash'}{'dkim_signature_apply_on'});
+        $param->{'config_hash'}{'dkim_signature_apply_on'} = \@dkim;
+    }
+    unless ($param->{'config_hash'}{'dkim_signer_domain'}) {
+        $param->{'config_hash'}{'dkim_signer_domain'} = $param->{'config_hash'}{'domain'};
     }
 
     ## Set Regexp for accepted list suffixes
@@ -2143,11 +2150,6 @@ sub _check_cpan_modules_required_by_config {
             $number_of_missing_modules++;
         }
     }
-    unless ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
-        # dkim_signature_apply_ on nothing if dkim_feature is off
-        $param->{'config_hash'}{'dkim_signature_apply_on'} =
-            [''];    # empty array
-    }
 
     return $number_of_missing_modules;
 }
@@ -2217,6 +2219,10 @@ sub _load_single_robot_config {
         ## Default for 'host' is the domain
         $robot_conf->{'host'}       ||= $robot;
         $robot_conf->{'robot_name'} ||= $robot;
+
+        unless ($robot_conf->{'dkim_signer_domain'}) {
+            $robot_conf->{'dkim_signer_domain'} = $robot;
+        }
 
         _set_listmasters_entry({'config_hash' => $robot_conf});
 

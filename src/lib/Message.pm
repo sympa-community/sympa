@@ -168,12 +168,11 @@ sub new {
         }
         close(FILE);
     }
-    if ($messageasstring) {
-        if (ref($messageasstring)) {
-            $msg = $parser->parse_data($messageasstring);
-        } else {
-            $msg = $parser->parse_data(\$messageasstring);
-        }
+
+    $messageasstring = ${$messageasstring} if ref $messageasstring;
+
+    if (defined $messageasstring and length $messageasstring) {
+        $msg = $parser->parse_data(\$messageasstring);
     }
 
     unless ($msg) {
@@ -183,8 +182,8 @@ sub new {
     }
 
     $message->{'msg'}           = $msg;
-    $message->{'msg_as_string'} = $msg->as_string;
-    $message->{'size'}          = length($msg->as_string);
+    $message->{'msg_as_string'} = $messageasstring;
+    $message->{'size'}          = length $messageasstring;
 
     my $hdr = $message->{'msg'}->head;
 
