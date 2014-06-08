@@ -383,6 +383,7 @@ our @params = (
         'default'    => 'unix',
         'gettext_id' => 'Communication mode with syslogd (unix | inet)',
         'file'       => 'sympa.conf',
+        'edit'       => '1',
     },
 ##    {
 ##        'name'     => 'pidfile',
@@ -822,6 +823,7 @@ our @params = (
         'gettext_id' =>
             'If set to "on", enables support of legacy character set',
         'file' => 'sympa.conf',
+        'edit' => '1',
         'gettext_comment' =>
             'In some language environments, legacy encoding (character set) is preferred for e-mail messages: for example iso-2022-jp in Japanese language.',
     },
