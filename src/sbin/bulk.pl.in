@@ -465,8 +465,10 @@ while (!$end) {
                         . $robot;
                 }
                 if (($bulk->{'merge'}) && !($message->{'protected'})) {
-                    unless (Bulk::merge_msg($entity, $rcpt, $bulk, $data)) {
-                        Log::do_log('err', 'Erreur d appel Bulk::merge_msg');
+                    unless (Message::merge_msg($entity, $rcpt, $bulk, $data))
+                    {
+                        Log::do_log('err',
+                            'Erreur d appel Message::merge_msg');
                     }
                     $messageasstring = $entity->as_string;
                 } else {

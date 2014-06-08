@@ -341,6 +341,9 @@ sub new {
         $message->{'topic'} = $topics;
     }
 
+    # Message ID
+    $message->{'message_id'} = _get_message_id($message);
+
     bless $message, $pkg;
     return $message;
 }
@@ -427,6 +430,69 @@ sub _get_sender_email {
     }
 
     return ($sender, $gecos);
+}
+
+# Note that this must be called after decrypting message
+# FIXME: Also check Resent-Message-ID:.
+sub _get_message_id {
+    my $self = shift;
+
+    return tools::clean_message_id(
+        $self->{'msg'}->head->get('Message-ID', 0));
+}
+
+=over
+
+=item as_entity ( )
+
+I<Instance method>.
+Get message content as MIME entity (L<MIME::Entity> instance).
+
+=back
+
+=cut
+
+sub as_entity {
+    my $self = shift;
+
+    unless (defined $self->{'msg'}) {
+        my $string = $self->{'msg_as_string'};
+        return undef unless defined $string;
+
+        my $parser = MIME::Parser->new();
+        $parser->output_to_core(1);
+        $self->{'msg'} = $parser->parse_data(\$string);
+    }
+    return $self->{'msg'};
+}
+
+=over
+
+=item set_entity ( $entity )
+
+I<Instance method>.
+Update message with MIME entity (L<MIME::Entity> instance).
+String representation will be automatically updated.
+
+=back
+
+=cut
+
+sub set_entity {
+    my $self   = shift;
+    my $entity = shift;
+    return undef unless $entity;
+
+    local $Storable::canonical = 1;
+    my $orig = Storable::freeze($self->as_entity);
+    my $new  = Storable::freeze($entity);
+
+    if ($orig ne $new) {
+        $self->{'msg'}           = $entity;
+        $self->{'msg_as_string'} = $entity->as_string;
+    }
+
+    return $entity;
 }
 
 =pod 
@@ -638,6 +704,371 @@ sub _fix_html_part {
         $part->sync_headers(Length => 'COMPUTE');
     }
     return $part;
+}
+
+############################################################
+#  merge_msg                                               #
+############################################################
+#  Merge a message with custom attributes of a user.       #
+#                                                          #
+#                                                          #
+#  IN : - MIME::Entity                                     #
+#       - $rcpt : a recipient                              #
+#       - $bulk : HASH                                     #
+#       - $data : HASH with user's data                    #
+#  OUT : 1 | undef                                         #
+#                                                          #
+############################################################
+# Unrecommended: presonalize() is preferred.
+
+=over
+
+=item personalize ( $list, [ $rcpt ], [ $data ] )
+
+I<Instance method>.
+Personalize a message with custom attributes of a user.
+
+Parameters:
+
+=over
+
+=item $list
+
+L<List> object.
+
+=item $rcpt
+
+Recipient.
+
+=item $data
+
+Hashref.  Additional data to be interpolated into personalized message.
+
+=back
+
+Returns:
+
+Modified message itself, or C<undef> if error occurred.
+Note that message can be modified in case of error.
+
+=back
+
+=cut
+
+sub personalize {
+    my $self = shift;
+    my $list = shift;
+    my $rcpt = shift || undef;
+    my $data = shift || {};
+
+    my $entity = merge_msg(
+        $self->as_entity,
+        $rcpt,
+        {   listname  => $list->{'name'},
+            robot     => $list->{'domain'},
+            messageid => $self->{'message_id'},
+        },
+        $data
+    );
+
+    unless (defined $entity) {
+        return undef;
+    }
+
+    $self->set_entity($entity);
+    return $self;
+}
+
+sub merge_msg {
+    my $entity = shift;
+    my $rcpt   = shift;
+    my $bulk   = shift;
+    my $data   = shift;
+
+    unless (ref $entity eq 'MIME::Entity') {
+        Log::do_log('err', 'False entity');
+        return undef;
+    }
+
+    # Initialize parameters at first only once.
+    $data->{'headers'} ||= {};
+    my $headers = $entity->head;
+    foreach my $key (
+        qw/subject x-originating-ip message-id date x-original-to from to thread-topic content-type/
+        ) {
+        next unless $headers->count($key);
+        my $value = $headers->get($key, 0);
+        chomp $value;
+        $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
+        $data->{'headers'}{$key} = $value;
+    }
+    $data->{'subject'} = tools::decode_header($headers, 'Subject');
+
+    return _merge_msg($entity, $rcpt, $bulk, $data);
+}
+
+sub _merge_msg {
+    my $entity = shift;
+    my $rcpt   = shift;
+    my $bulk   = shift;
+    my $data   = shift;
+
+    my $enc = $entity->head->mime_encoding;
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+        return $entity;
+    }
+    my $eff_type = $entity->effective_type || 'text/plain';
+    # Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}) {
+        return $entity;
+    }
+
+    if ($entity->parts) {
+        foreach my $part ($entity->parts) {
+            unless (_merge_msg($part, $rcpt, $bulk, $data)) {
+                Log::do_log('err', 'Failed to merge message part');
+                return undef;
+            }
+        }
+    } elsif ($eff_type =~ m{^(?:multipart|message)(?:/|\Z)}i) {
+        # multipart or message types without subparts.
+        return $entity;
+    } elsif (MIME::Tools::textual_type($eff_type)) {
+        my ($charset, $in_cset, $bodyh, $body, $utf8_body);
+
+        $data->{'part'} = {
+            description =>
+                tools::decode_header($entity, 'Content-Description'),
+            disposition =>
+                lc($entity->head->mime_attr('Content-Disposition') || ''),
+            encoding => $enc,
+            type     => $eff_type,
+        };
+
+        $bodyh = $entity->bodyhandle;
+        # Encoded body or null body won't be modified.
+        if (!$bodyh or $bodyh->is_encoded) {
+            return $entity;
+        }
+
+        $body = $bodyh->as_string;
+        unless (defined $body and length $body) {
+            return $entity;
+        }
+
+        ## Detect charset.  If charset is unknown, detect 7-bit charset.
+        $charset = $entity->head->mime_attr('Content-Type.Charset');
+        $in_cset = MIME::Charset->new($charset || 'NONE');
+        unless ($in_cset->decoder) {
+            $in_cset =
+                MIME::Charset->new(MIME::Charset::detect_7bit_charset($body)
+                    || 'NONE');
+        }
+        unless ($in_cset->decoder) {
+            Log::do_log('err', 'Unknown charset "%s"', $charset);
+            return undef;
+        }
+        $in_cset->encoder($in_cset);    # no charset conversion
+
+        ## Only decodable bodies are allowed.
+        eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
+        if ($@) {
+            Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
+            return undef;
+        }
+
+        ## PARSAGE ##
+
+        my $message_output;
+        unless (
+            merge_data(
+                'rcpt'           => $rcpt,
+                'messageid'      => $bulk->{'messageid'},
+                'listname'       => $bulk->{'listname'},
+                'robot'          => $bulk->{'robot'},
+                'data'           => $data,
+                'body'           => $utf8_body,
+                'message_output' => \$message_output,
+            )
+            ) {
+            Log::do_log('err', 'Error merging message');
+            return undef;
+        }
+        $utf8_body = $message_output;
+
+        ## Data not encodable by original charset will fallback to UTF-8.
+        my ($newcharset, $newenc);
+        ($body, $newcharset, $newenc) =
+            $in_cset->body_encode(Encode::decode_utf8($utf8_body),
+            Replacement => 'FALLBACK');
+        unless ($newcharset) {    # bug in MIME::Charset?
+            Log::do_log('err', 'Can\'t determine output charset');
+            return undef;
+        } elsif ($newcharset ne $in_cset->as_string) {
+            $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
+            $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
+
+            ## normalize newline to CRLF if transfer-encoding is BASE64.
+            $body =~ s/\r\n|\r|\n/\r\n/g
+                if $newenc and $newenc eq 'BASE64';
+        } else {
+            ## normalize newline to CRLF if transfer-encoding is BASE64.
+            $body =~ s/\r\n|\r|\n/\r\n/g
+                if $enc and uc $enc eq 'BASE64';
+        }
+
+        ## Save new body.
+        my $io = $bodyh->open('w');
+        unless ($io
+            and $io->print($body)
+            and $io->close) {
+            Log::do_log('err', 'Can\'t write in Entity: %s', $!);
+            return undef;
+        }
+        $entity->sync_headers(Length => 'COMPUTE')
+            if $entity->head->get('Content-Length');
+
+        return $entity;
+    }
+
+    return $entity;
+}
+
+############################################################
+#  merge_data                                              #
+############################################################
+#  This function retrieves the customized data of the      #
+#  users then parse the message. It returns the message    #
+#  personalized to bulk.pl                                 #
+#  It uses the method tt2::parse_tt2()                      #
+#  It uses the method List::get_list_member_no_object()     #
+#  It uses the method tools::get_fingerprint()              #
+#                                                          #
+# IN : - rcpt : the recipient email                        #
+#      - listname : the name of the list                   #
+#      - robot_id : the host                               #
+#      - data : HASH with many data                        #
+#      - body : message with the TT2                       #
+#      - message_output : object, IO::Scalar               #
+#                                                          #
+# OUT : - message_output : customized message              #
+#     | undef                                              #
+#                                                          #
+############################################################
+# Unrecommended: presonalize_text() is preferred.
+
+=over
+
+=item personalize_text ( $body, $list, [ $rcpt ], [ $data ] )
+
+I<Function>.
+Retrieves the customized data of the
+users then parse the text. It returns the
+personalized text.
+
+Parameters:
+
+=over
+
+=item $body
+
+Message body with the TT2.
+
+=item $list
+
+L<List> object.
+
+=item $rcpt
+
+The recipient email.
+
+=item $data
+
+Hashref.  Additional data to be interpolated into personalized message.
+
+=back
+
+Returns:
+
+Customized text, or C<undef> if error occurred.
+
+=back
+
+=cut
+
+sub personalize_text {
+    my $body = shift;
+    my $list = shift;
+    my $rcpt = shift;
+    my $data = shift || {};
+
+    die 'Unexpected type of $list' unless ref $list eq 'List';
+
+    $data->{'listname'} = $list->{'name'};
+    $data->{'robot'}    = $list->{'domain'};
+    $data->{'wwsympa_url'} =
+        Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
+
+    my $message_output;
+    return undef
+        unless merge_data(
+        listname       => $list->{'name'},
+        robot          => $list->{'domain'},
+        body           => $body,
+        rcpt           => $rcpt,
+        data           => $data,
+        message_output => \$message_output
+        );
+    return $message_output;
+}
+
+sub merge_data {
+    my %params = @_;
+
+    my $rcpt           = $params{'rcpt'};
+    my $listname       = $params{'listname'};
+    my $robot_id       = $params{'robot'};
+    my $data           = $params{'data'};
+    my $body           = $params{'body'};
+    my $message_output = $params{'message_output'};
+    my $options;
+
+    $options->{'is_not_template'} = 1;
+
+    # get_list_member_no_object() return the user's details with the custom
+    # attributes
+    my $user = List::get_list_member_no_object(
+        {   'email'  => $rcpt,
+            'name'   => $listname,
+            'domain' => $robot_id,
+        }
+    );
+
+    if ($user) {
+        $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
+        my $language = Sympa::Language->instance;
+        $user->{'friendly_date'} =
+            $language->gettext_strftime("%d %b %Y  %H:%M",
+            localtime($user->{'date'}));
+    }
+
+    # this method has been removed because some users may forward
+    # authentication link
+    # $user->{'fingerprint'} = tools::get_fingerprint($rcpt);
+
+    $data->{'user'}     = $user if $user;
+    $data->{'robot'}    = $robot_id;
+    $data->{'listname'} = $listname;
+
+    # Parse the TT2 in the message : replace the tags and the parameters by
+    # the corresponding values
+    unless (tt2::parse_tt2($data, \$body, $message_output, '', $options)) {
+        Log::do_log('err', 'Unable to parse body: "%s"', \$body);
+        return undef;
+    }
+
+    return 1;
 }
 
 1;
