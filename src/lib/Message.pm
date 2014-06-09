@@ -26,11 +26,18 @@
 
 =head1 NAME 
 
-I<Message.pm> - mail message embedding for internal use in Sympa
+Message - Mail message embedding for internal use in Sympa
 
 =head1 DESCRIPTION 
 
-While processing a message in Sympa, we need to link informations to rhe message, mdify headers and such. This was quite a problem when a message was signed, as modifying anything in the message body would alter its MD5 footprint. And probably make the message to be rejected by clients verifying its identity (which is somehow a good thing as it is the reason why people use MD5 after all). With such messages, the process was complex. We then decided to embed any message treated in a "Message" object, thus making the process easier.
+While processing a message in Sympa, we need to link informations to the
+message, modify headers and such.  This was quite a problem when a message was
+signed, as modifying anything in the message body would alter its MD5
+footprint. And probably make the message to be rejected by clients verifying
+its identity (which is somehow a good thing as it is the reason why people use
+MD5 after all). With such messages, the process was complex. We then decided
+to embed any message treated in a "Message" object, thus making the process
+easier.
 
 =cut 
 
@@ -49,69 +56,44 @@ use Log;
 use Scenario;
 use tools;
 
-=pod 
+=head2 Methods and functions
 
-=head1 SUBFUNCTIONS 
+=over
 
-This is the description of the subfunctions contained by Message.pm
+=item new ( parameter =E<gt> value, ... )
 
-=cut 
-
-=pod 
-
-=head2 sub new
-
+I<Constructor>.
 Creates a new Message object.
 
-=head3 Arguments 
+Parameters:
 
 =over 
 
-=item * I<$pkg>, a package name 
+=item $file
 
-=item * I<$file>, the message file
+the message file
 
-=item * I<$noxsympato>, a boolean
+=item $noxsympato
+
+a boolean
 
 =back 
 
-=head3 Return 
+Returns:
 
 =over 
 
-=item * I<a Message object>, if created
+=item a Message object
 
-=item * I<undef>, if something went wrong
+if created
 
-=back 
+=item undef
 
-=head3 Calls 
-
-=over 
-
-=item * Log::do_log()
-
-=item * Conf::get_robot_conf
-
-=item * List::new
-
-=item * Mail::Address::parse
-
-=item * MIME::EncWords::decode_mimewords
-
-=item * MIME::Head::get
-
-=item * MIME::Parser::output_to_core
-
-=item * MIME::Parser::read
-
-=item * tools::valid_email
-
-=item * tools::smime_decrypt
-
-=item * tools::smime_sign_check
+if something went wrong
 
 =back 
+
+=back
 
 =cut 
 
@@ -495,37 +477,34 @@ sub set_entity {
     return $entity;
 }
 
-=pod 
+=over
 
-=head2 sub dump
+=item dump ( $output )
 
+I<Instance method>.
 Dump a Message object to a stream.
 
-=head3 Arguments 
+Parameters:
 
 =over 
 
-=item * I<$self>, the Message object to dump
+=item $output
 
-=item * I<$output>, the stream to which dump the object
+the stream to which dump the object
 
 =back 
 
-=head3 Return 
+Returns:
 
 =over 
 
-=item * I<1>, if everything's alright
+=item 1
+
+if everything's alright
 
 =back 
 
-=head3 Calls 
-
-=over 
-
-=item * None
-
-=back 
+=back
 
 =cut 
 
@@ -551,37 +530,34 @@ sub dump {
     return 1;
 }
 
-=pod 
+=over
 
-=head2 sub add_topic
+=item add_topic ( $output )
 
+I<Instance method>.
 Add topic and put header X-Sympa-Topic.
 
-=head3 Arguments 
+Parameters:
 
 =over 
 
-=item * I<$self>, the Message object to which add a topic
+=item $output
 
-=item * I<$output>, the string containing the topic to add
+the string containing the topic to add
 
 =back 
 
-=head3 Return 
+Returns:
 
 =over 
 
-=item * I<1>, if everything's alright
+=item 1
+
+if everything's alright
 
 =back 
 
-=head3 Calls 
-
-=over 
-
-=item * MIME::Head::add
-
-=back 
+=back
 
 =cut 
 
@@ -596,37 +572,32 @@ sub add_topic {
     return 1;
 }
 
-=pod 
+=over
 
-=head2 sub add_topic
+=item get_topic ( )
 
-Add topic and put header X-Sympa-Topic.
+I<Instance method>.
+Get topic of message.
 
-=head3 Arguments 
+Parameters:
 
-=over 
+None.
 
-=item * I<$self>, the Message object whose topic is retrieved
-
-=back 
-
-=head3 Return 
+Returns:
 
 =over 
 
-=item * I<the topic>, if it exists
+=item the topic
 
-=item * I<empty string>, otherwise
+if it exists
 
-=back 
+=item empty string
 
-=head3 Calls 
-
-=over 
-
-=item * MIME::Head::add
+otherwise
 
 =back 
+
+=back
 
 =cut 
 
@@ -641,6 +612,17 @@ sub get_topic {
         return '';
     }
 }
+
+=over
+
+=item clean_html ( $robot )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
 
 sub clean_html {
     my $self  = shift;
@@ -1073,9 +1055,10 @@ sub merge_data {
 
 1;
 
-=pod 
+=head1 HISTORY
 
-=head1 AUTHORS 
+L<Message> module appeared on Sympa 3.3.6.
+It was initially written by:
 
 =over 
 
