@@ -419,8 +419,7 @@ sub _get_sender_email {
 sub _get_message_id {
     my $self = shift;
 
-    return tools::clean_message_id(
-        $self->{'msg'}->head->get('Message-ID', 0));
+    return tools::clean_msg_id($self->{'msg'}->head->get('Message-Id', 0));
 }
 
 =over
@@ -1051,6 +1050,23 @@ sub merge_data {
     }
 
     return 1;
+}
+
+=over
+
+=item get_id ( )
+
+I<Instance method>.
+Get unique identifier of instance.
+
+=back
+
+=cut
+
+sub get_id {
+    my $self = shift;
+
+    return $self->{'messagekey'} || $self->{'message_id'};
 }
 
 1;
