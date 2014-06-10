@@ -2446,10 +2446,12 @@ sub set {
 
     $what =~ /^\s*(\S+)\s+(\S+)\s*$/;
     my ($which, $mode) = ($1, $2);
+    $which = (defined $which) ? lc $which : '';
+    $mode = (defined $mode) ? lc $mode : '';
 
     ## Unknown command (should be checked....)
     unless ($mode =~
-        /^(digest|digestplain|nomail|normal|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)$/i
+        /^(digest|digestplain|nomail|normal|not_me|each|mail|conceal|noconceal|summary|notice|txt|html|urlize)$/i
         ) {
         report::reject_report_cmd('user', 'error_syntax', {}, $cmd_line);
         return 'syntax_error';
@@ -2457,7 +2459,6 @@ sub set {
 
     ## SET EACH is a synonim for SET MAIL
     $mode = 'mail' if ($mode =~ /^(each|eachmail|nodigest|normal)$/i);
-    $mode =~ y/[A-Z]/[a-z]/;
 
     ## Recursive call to subroutine
     if ($which eq "*") {
