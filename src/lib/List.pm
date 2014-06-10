@@ -2053,7 +2053,7 @@ sub distribute_msg {
 
     ## Blindly send the message to all users.
     my $numsmtp = $self->send_msg(
-        'message'              => $message,
+        $message,
         'apply_dkim_signature' => $apply_dkim_signature,
         'apply_tracking'       => $apply_tracking
     );
@@ -2063,9 +2063,9 @@ sub distribute_msg {
 }
 
 ####################################################
-# send_msg_digest
+# distribute_digest
 ####################################################
-# Send a digest message to the subscribers with
+# Prepare and distribute digest message(s) to the subscribers with
 # reception digest, digestplain or summary
 #
 # IN : -$self(+) : ref(List)
@@ -2074,12 +2074,19 @@ sub distribute_msg {
 #       | 0 if no subscriber for sending digest
 #       | undef
 ####################################################
-sub send_msg_digest {
-    my ($self) = @_;
+sub distribute_digest {
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
 
     my $listname = $self->{'name'};
     my $robot    = $self->{'domain'};
-    Log::do_log('debug2', '(%s)', $listname);
+
+    my $available_recipients = $self->get_digest_recipients_per_mode;
+    unless ($available_recipients) {
+        Log::do_log('info', 'No subscriber for sending digest in list %s',
+            $self);
+        return 0;
+    }
 
     my $filename;
     ## Backward compatibility concern
@@ -2100,59 +2107,7 @@ sub send_msg_digest {
         $param->{'replyto'} = "$param->{'to'}";
     }
 
-    my @tabrcpt;
-    my @tabrcptsummary;
-    my @tabrcptplain;
-    my $i;
-
-    my (@list_of_mail);
-
-    ## Create the list of subscribers in various digest modes
-    for (
-        my $user = $self->get_first_list_member();
-        $user;
-        $user = $self->get_next_list_member()
-        ) {
-        my $options;
-        $options->{'email'}  = $user->{'email'};
-        $options->{'name'}   = $self->{'name'};
-        $options->{'domain'} = $self->{'domain'};
-        my $user_data = get_list_member_no_object($options);
-        ## test to know if the rcpt suspended her subscription for this list
-        ## if yes, don't send the message
-        if ($user_data->{'suspend'} eq '1') {
-            if (($user_data->{'startdate'} <= time)
-                && (   (time <= $user_data->{'enddate'})
-                    || (!$user_data->{'enddate'}))
-                ) {
-                next;
-            } elsif (($user_data->{'enddate'} < time)
-                && ($user_data->{'enddate'})) {
-                ## If end date is < time, update the BDD by deleting the
-                ## suspending's data
-                restore_suspended_subscription($user->{'email'},
-                    $self->{'name'}, $self->{'domain'});
-            }
-        }
-        if ($user->{'reception'} eq "digest") {
-            push @tabrcpt, $user->{'email'};
-
-        } elsif ($user->{'reception'} eq "summary") {
-            ## Create the list of subscribers in summary mode
-            push @tabrcptsummary, $user->{'email'};
-
-        } elsif ($user->{'reception'} eq "digestplain") {
-            push @tabrcptplain, $user->{'email'};
-        }
-    }
-    if (    ($#tabrcptsummary == -1)
-        and ($#tabrcpt == -1)
-        and ($#tabrcptplain == -1)) {
-        Log::do_log('info', 'No subscriber for sending digest in list %s',
-            $listname);
-        return 0;
-    }
-
+    my @list_of_mail;
     my $old = $/;
     local $/ = "\n\n" . tools::get_separator() . "\n\n";
 
@@ -2165,7 +2120,7 @@ sub send_msg_digest {
         pop @text;
 
         ## Restore carriage returns
-        foreach $i (0 .. $#text) {
+        foreach my $i (0 .. $#text) {
             $text[$i] .= "\n";
         }
 
@@ -2173,7 +2128,7 @@ sub send_msg_digest {
         $parser->output_to_core(1);
         $parser->extract_uuencode(1);
         $parser->extract_nested_messages(1);
-#   $parser->output_dir($Conf::Conf{'spool'} ."/tmp");
+        # $parser->output_dir($Conf::Conf{'spool'} ."/tmp");
         my $mail = $parser->parse_data(\@text);
 
         next unless (defined $mail);
@@ -2188,7 +2143,7 @@ sub send_msg_digest {
 
     ## Digest index
     my @all_msg;
-    foreach $i (0 .. $#list_of_mail) {
+    foreach my $i (0 .. $#list_of_mail) {
         my $mail    = $list_of_mail[$i];
         my $subject = tools::decode_header($mail, 'Subject');
         my $from    = tools::decode_header($mail, 'From');
@@ -2245,42 +2200,119 @@ sub send_msg_digest {
         $param->{'auto_submitted'} = 'auto-forwarded';
 
         ## Prepare Digest
-        if (@tabrcpt) {
+        if (exists $available_recipients->{'digest'}) {
             ## Send digest
-            unless ($self->send_file('digest', \@tabrcpt, $robot, $param)) {
-                Log::do_log('notice',
-                    "Unable to send template 'digest' to $self->{'name'} list subscribers"
+            unless (
+                $self->send_file(
+                    'digest', $available_recipients->{'digest'},
+                    $robot,   $param
+                )
+                ) {
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "digest" to %s list subscribers',
+                    $self
                 );
             }
         }
 
         ## Prepare Plain Text Digest
-        if (@tabrcptplain) {
+        if (exists $available_recipients->{'digestplain'}) {
             ## Send digest-plain
             unless (
                 $self->send_file(
-                    'digest_plain', \@tabrcptplain, $robot, $param
+                    'digest_plain', $available_recipients->{'digestplain'},
+                    $robot,         $param
                 )
                 ) {
-                Log::do_log('notice',
-                    "Unable to send template 'digest_plain' to $self->{'name'} list subscribers"
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "digest_plain" to %s list subscribers',
+                    $self
                 );
             }
         }
 
         ## send summary
-        if (@tabrcptsummary) {
+        if (exists $available_recipients->{'summary'}) {
             unless (
-                $self->send_file('summary', \@tabrcptsummary, $robot, $param))
-            {
-                Log::do_log('notice',
-                    "Unable to send template 'summary' to $self->{'name'} list subscribers"
+                $self->send_file(
+                    'summary', $available_recipients->{'summary'},
+                    $robot,    $param
+                )
+                ) {
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "summary" to %s list subscribers',
+                    $self
                 );
             }
         }
     }
 
     return 1;
+}
+
+sub get_digest_recipients_per_mode {
+    my $self = shift;
+
+    my @tabrcpt_digest;
+    my @tabrcpt_summary;
+    my @tabrcpt_digestplain;
+
+    ## Create the list of subscribers in various digest modes
+    for (
+        my $user = $self->get_first_list_member();
+        $user;
+        $user = $self->get_next_list_member()
+        ) {
+        my $user_data = get_list_member_no_object(
+            {   email  => $user->{'email'},
+                name   => $self->{'name'},
+                domain => $self->{'domain'},
+            }
+        );
+        ## test to know if the rcpt suspended her subscription for this list
+        ## if yes, don't send the message
+        if (defined $user_data->{'suspend'}
+            and $user_data->{'suspend'} + 0) {
+            if ($user_data->{'startdate'} <= time
+                and (time <= $user_data->{'enddate'}
+                    or !$user_data->{'enddate'})
+                ) {
+                next;
+            } elsif ($user_data->{'enddate'} < time
+                and $user_data->{'enddate'}) {
+                ## If end date is < time, update the BDD by deleting the
+                ## suspending's data
+                $self->restore_suspended_subscription($user->{'email'});
+            }
+        }
+        if ($user->{'reception'} eq "digest") {
+            push @tabrcpt_digest, $user->{'email'};
+
+        } elsif ($user->{'reception'} eq "summary") {
+            ## Create the list of subscribers in summary mode
+            push @tabrcpt_summary, $user->{'email'};
+
+        } elsif ($user->{'reception'} eq "digestplain") {
+            push @tabrcpt_digestplain, $user->{'email'};
+        }
+    }
+
+    return 0
+        unless @tabrcpt_summary
+            or @tabrcpt_digest
+            or @tabrcpt_digestplain;
+
+    my $available_recipients;
+    $available_recipients->{'summary'} = \@tabrcpt_summary
+        if @tabrcpt_summary;
+    $available_recipients->{'digest'} = \@tabrcpt_digest if @tabrcpt_digest;
+    $available_recipients->{'digestplain'} = \@tabrcpt_digestplain
+        if @tabrcpt_digestplain;
+
+    return $available_recipients;
 }
 
 ###   TEMPLATE SENDING  ###
@@ -2601,38 +2633,23 @@ sub send_file {
 #       | undef
 ####################################################
 sub send_msg {
+    Log::do_log('debug2', '(%s, %s, %s => %s, %s => %s)', @_);
+    my $self    = shift;
+    my $message = shift;
+    my %param   = @_;
 
-    my $self  = shift;
-    my %param = @_;
-
-    my $message              = $param{'message'};
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
     my $apply_tracking       = $param{'apply_tracking'};
 
-    Log::do_log(
-        'debug2',
-        '(filname = %s, smime_crypted = %s, apply_dkim_signature = %s)',
-        $message->{'filename'},
-        $message->{'smime_crypted'},
-        $apply_dkim_signature
-    );
     my $hdr                 = $message->{'msg'}->head;
     my $original_message_id = $hdr->get('Message-Id');
     my $name                = $self->{'name'};
     my $robot               = $self->{'domain'};
     my $admin               = $self->{'admin'};
     my $total               = $self->get_total('nocache');
-    my $sender_line         = $hdr->get('From');
-    my @sender_hdr          = Mail::Address->parse($sender_line);
-    my %sender_hash;
 
-    foreach my $email (@sender_hdr) {
-        $sender_hash{lc($email->address)} = 1;
-    }
-
-    unless (defined $message && ref($message) eq 'Message') {
-        Log::do_log('err', 'Invalid message paramater');
-        return undef;
+    unless (ref $message eq 'Message') {
+        die 'Invalid message paramater';
     }
 
     unless ($total > 0) {
@@ -2649,162 +2666,6 @@ sub send_msg {
     ## Who is the enveloppe sender?
     my $host = $self->{'admin'}{'host'};
     my $from = $self->get_list_address('return_path');
-
-    # separate subscribers depending on user reception option and also if verp
-    # a dicovered some bounce for them.
-    my (@tabrcpt,                  @tabrcpt_notice,
-        @tabrcpt_txt,              @tabrcpt_html,
-        @tabrcpt_url,              @tabrcpt_verp,
-        @tabrcpt_notice_verp,      @tabrcpt_txt_verp,
-        @tabrcpt_html_verp,        @tabrcpt_url_verp,
-        @tabrcpt_digestplain,      @tabrcpt_digest,
-        @tabrcpt_summary,          @tabrcpt_nomail,
-        @tabrcpt_digestplain_verp, @tabrcpt_digest_verp,
-        @tabrcpt_summary_verp,     @tabrcpt_nomail_verp
-    );
-    my $mixed =
-        ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
-    my $alternative =
-        ($message->{'msg'}->head->get('Content-Type') =~
-            /multipart\/alternative/i);
-    my $recip = $message->{'msg'}->head->get('X-Sympa-Receipient');
-
-    if ($recip) {
-        @tabrcpt = split /,/, $recip;
-        $message->{'msg'}->head->delete('X-Sympa-Receipient');
-
-    } else {
-
-        for (
-            my $user = $self->get_first_list_member();
-            $user;
-            $user = $self->get_next_list_member()
-            ) {
-            unless ($user->{'email'}) {
-                Log::do_log('err',
-                    'Skipping user with no email address in list %s', $name);
-                next;
-            }
-            my $options;
-            $options->{'email'}  = $user->{'email'};
-            $options->{'name'}   = $name;
-            $options->{'domain'} = $robot;
-            my $user_data = get_list_member_no_object($options);
-            ## test to know if the rcpt suspended her subscription for this
-            ## list
-            ## if yes, don't send the message
-            if (    $user_data
-                and defined $user_data->{'suspend'}
-                and $user_data->{'suspend'} + 0) {
-                if (($user_data->{'startdate'} <= time)
-                    && (   (time <= $user_data->{'enddate'})
-                        || (!$user_data->{'enddate'}))
-                    ) {
-                    push @tabrcpt_nomail_verp, $user->{'email'};
-                    next;
-                } elsif (($user_data->{'enddate'} < time)
-                    && ($user_data->{'enddate'})) {
-                    ## If end date is < time, update the BDD by deleting the
-                    ## suspending's data
-                    restore_suspended_subscription($user->{'email'}, $name,
-                        $robot);
-                }
-            }
-            if ($user->{'reception'} eq 'digestplain') {
-                # digest digestplain, nomail and summary reception option are
-                # initialized for tracking feature only
-                push @tabrcpt_digestplain_verp, $user->{'email'};
-                next;
-            } elsif ($user->{'reception'} eq 'digest') {
-                push @tabrcpt_digest_verp, $user->{'email'};
-                next;
-            } elsif ($user->{'reception'} eq 'summary') {
-                push @tabrcpt_summary_verp, $user->{'email'};
-                next;
-            } elsif ($user->{'reception'} eq 'nomail') {
-                push @tabrcpt_nomail_verp, $user->{'email'};
-                next;
-            } elsif ($user->{'reception'} eq 'notice') {
-                if ($user->{'bounce_address'}) {
-                    push @tabrcpt_notice_verp, $user->{'email'};
-                } else {
-                    push @tabrcpt_notice, $user->{'email'};
-                }
-            } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
-                if ($user->{'bounce_address'}) {
-                    push @tabrcpt_txt_verp, $user->{'email'};
-                } else {
-                    push @tabrcpt_txt, $user->{'email'};
-                }
-            } elsif ($alternative and ($user->{'reception'} eq 'html')) {
-                if ($user->{'bounce_address'}) {
-                    push @tabrcpt_html_verp, $user->{'email'};
-                } else {
-                    if ($user->{'bounce_address'}) {
-                        push @tabrcpt_html_verp, $user->{'email'};
-                    } else {
-                        push @tabrcpt_html, $user->{'email'};
-                    }
-                }
-            } elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
-                if ($user->{'bounce_address'}) {
-                    push @tabrcpt_url_verp, $user->{'email'};
-                } else {
-                    push @tabrcpt_url, $user->{'email'};
-                }
-            } elsif (
-                $message->{'smime_crypted'}
-                && (!-r $Conf::Conf{'ssl_cert_dir'} . '/'
-                    . tools::escape_chars($user->{'email'})
-                    && !-r $Conf::Conf{'ssl_cert_dir'} . '/'
-                    . tools::escape_chars($user->{'email'} . '@enc'))
-                ) {
-                ## Missing User certificate
-                my $subject = $message->{'msg'}->head->get('Subject');
-                my $sender  = $message->{'msg'}->head->get('From');
-                unless (
-                    $self->send_file(
-                        'x509-user-cert-missing',
-                        $user->{'email'},
-                        $robot,
-                        {   'mail' =>
-                                {'subject' => $subject, 'sender' => $sender},
-                            'auto_submitted' => 'auto-generated'
-                        }
-                    )
-                    ) {
-                    Log::do_log('notice',
-                        "Unable to send template 'x509-user-cert-missing' to $user->{'email'}"
-                    );
-                }
-            } else {
-                if ($user->{'bounce_score'}) {
-                    push @tabrcpt_verp, $user->{'email'}
-                        unless ($sender_hash{$user->{'email'}})
-                        && ($user->{'reception'} eq 'not_me');
-                } else {
-                    push @tabrcpt, $user->{'email'}
-                        unless ($sender_hash{$user->{'email'}})
-                        && ($user->{'reception'} eq 'not_me');
-                }
-            }
-        }
-    }
-
-    unless (@tabrcpt
-        || @tabrcpt_notice
-        || @tabrcpt_txt
-        || @tabrcpt_html
-        || @tabrcpt_url
-        || @tabrcpt_verp
-        || @tabrcpt_notice_verp
-        || @tabrcpt_txt_verp
-        || @tabrcpt_html_verp
-        || @tabrcpt_url_verp) {
-        Log::do_log('info', 'No subscriber for sending msg in list %s',
-            $name);
-        return 0;
-    }
 
     #save the message before modifying it
     my $saved_msg = $message->{'msg'}->dup;
@@ -2839,58 +2700,22 @@ sub send_msg {
         $dkim_parameters = tools::get_dkim_parameters(
             {'robot' => $self->{'domain'}, 'listname' => $self->{'name'}});
     }
-    ## Storing the not empty subscribers' arrays into a hash.
-    my $available_rcpt;
-    my $available_verp_rcpt;
 
-    if (@tabrcpt) {
-        $available_rcpt->{'tabrcpt'}      = \@tabrcpt;
-        $available_verp_rcpt->{'tabrcpt'} = \@tabrcpt_verp;
+    # Separate subscribers depending on user reception option and also if verp
+    # a dicovered some bounce for them.
+    # Storing the not empty subscribers' arrays into a hash.
+    my $available_recipients = $self->get_recipients_per_mode($message);
+    unless ($available_recipients) {
+        Log::do_log('info', 'No subscriber for sending msg in list %s',
+            $self);
+        return 0;
     }
-    if (@tabrcpt_notice) {
-        $available_rcpt->{'tabrcpt_notice'}      = \@tabrcpt_notice;
-        $available_verp_rcpt->{'tabrcpt_notice'} = \@tabrcpt_notice_verp;
-    }
-    if (@tabrcpt_txt) {
-        $available_rcpt->{'tabrcpt_txt'}      = \@tabrcpt_txt;
-        $available_verp_rcpt->{'tabrcpt_txt'} = \@tabrcpt_txt_verp;
-    }
-    if (@tabrcpt_html) {
-        $available_rcpt->{'tabrcpt_html'}      = \@tabrcpt_html;
-        $available_verp_rcpt->{'tabrcpt_html'} = \@tabrcpt_html_verp;
-    }
-    if (@tabrcpt_url) {
-        $available_rcpt->{'tabrcpt_url'}      = \@tabrcpt_url;
-        $available_verp_rcpt->{'tabrcpt_url'} = \@tabrcpt_url_verp;
-    }
-    if (@tabrcpt_digestplain_verp) {
-        $available_rcpt->{'tabrcpt_digestplain'} = \@tabrcpt_digestplain;
-        $available_verp_rcpt->{'tabrcpt_digestplain'} =
-            \@tabrcpt_digestplain_verp;
-    }
-    if (@tabrcpt_digest_verp) {
-        $available_rcpt->{'tabrcpt_digest'}      = \@tabrcpt_digest;
-        $available_verp_rcpt->{'tabrcpt_digest'} = \@tabrcpt_digest_verp;
-    }
-    if (@tabrcpt_summary_verp) {
-        $available_rcpt->{'tabrcpt_summary'}      = \@tabrcpt_summary;
-        $available_verp_rcpt->{'tabrcpt_summary'} = \@tabrcpt_summary_verp;
-    }
-    if (@tabrcpt_nomail_verp) {
-        $available_rcpt->{'tabrcpt_nomail'}      = \@tabrcpt_nomail;
-        $available_verp_rcpt->{'tabrcpt_nomail'} = \@tabrcpt_nomail_verp;
-    }
-    foreach my $array_name (keys %$available_rcpt) {
-        my $reception_option;
-        if ($array_name =~
-            /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(html)|(txt)|(notice))?(_verp)?/
-            ) {
-            $reception_option = $1;
-            $reception_option = 'mail' unless $reception_option;
-        }
+
+    foreach my $mode (keys %$available_recipients) {
         my $new_message;
+
         ##Prepare message for normal reception mode
-        if ($array_name eq 'tabrcpt') {
+        if ($mode eq 'mail') {
             ## Add a footer
             unless ($message->{'protected'}) {
                 my $new_msg = $self->add_parts($message->{'msg'});
@@ -2900,20 +2725,20 @@ sub send_msg {
                 }
             }
             $new_message = $message;
-        } elsif (($array_name eq 'tabrcpt_nomail')
-            || ($array_name eq 'tabrcpt_summary')
-            || ($array_name eq 'tabrcpt_digest')
-            || ($array_name eq 'tabrcpt_digestplain')) {
+        } elsif ($mode eq 'nomail'
+            or $mode eq 'summary'
+            or $mode eq 'digest'
+            or $mode eq 'digestplain') {
             $new_message = $message;
         }    ##Prepare message for notice reception mode
-        elsif ($array_name eq 'tabrcpt_notice') {
+        elsif ($mode eq 'notice') {
             my $notice_msg = $saved_msg->dup;
             $notice_msg->bodyhandle(undef);
             $notice_msg->parts([]);
             $new_message = Message->new({'mimeentity' => $notice_msg});
 
             ##Prepare message for txt reception mode
-        } elsif ($array_name eq 'tabrcpt_txt') {
+        } elsif ($mode eq 'txt') {
             my $txt_msg = $saved_msg->dup;
             if (tools::as_singlepart($txt_msg, 'text/plain')) {
                 Log::do_log('notice',
@@ -2928,7 +2753,7 @@ sub send_msg {
             $new_message = Message->new({'mimeentity' => $txt_msg});
 
             ##Prepare message for html reception mode
-        } elsif ($array_name eq 'tabrcpt_html') {
+        } elsif ($mode eq 'html') {
             my $html_msg = $saved_msg->dup;
             if (tools::as_singlepart($html_msg, 'text/html')) {
                 Log::do_log('notice',
@@ -2942,33 +2767,33 @@ sub send_msg {
             $new_message = Message->new({'mimeentity' => $html_msg});
 
             ##Prepare message for urlize reception mode
-        } elsif ($array_name eq 'tabrcpt_url') {
-            my $url_msg = $saved_msg->dup;
+        } elsif ($mode eq 'urlize') {
+            my $urlize_msg = $saved_msg->dup;
 
             my $expl = $self->{'dir'} . '/urlized';
 
             unless ((-d $expl) || (mkdir $expl, 0775)) {
-                Log::do_log('err', 'Unable to create urlize directory %s',
+                Log::do_log('err', 'Unable to create urlized directory %s',
                     $expl);
                 return undef;
             }
 
-            my $dir1 = tools::clean_msg_id($url_msg->head->get('Message-ID'));
+            my $dir1 =
+                tools::clean_msg_id($urlize_msg->head->get('Message-ID'));
 
             ## Clean up Message-ID
             $dir1 = tools::escape_chars($dir1);
             $dir1 = '/' . $dir1;
 
             unless (mkdir("$expl/$dir1", 0775)) {
-                Log::do_log('err', 'Unable to create urlize directory %s/%s',
+                Log::do_log('err', 'Unable to create urlized directory %s/%s',
                     $expl, $dir1);
-                printf "Unable to create urlized directory $expl/$dir1";
                 return 0;
             }
             my $mime_types = tools::load_mime_types();
             my @parts      = ();
             my $i          = 0;
-            foreach my $part ($url_msg->parts()) {
+            foreach my $part ($urlize_msg->parts()) {
                 my $entity =
                     _urlize_part($part, $self, $dir1, $i, $mime_types,
                     Conf::get_robot_conf($robot, 'wwsympa_url'));
@@ -2981,17 +2806,16 @@ sub send_msg {
             }
 
             ## Replace message parts
-            $url_msg->parts(\@parts);
+            $urlize_msg->parts(\@parts);
 
             ## Add a footer
-            my $new_msg = $self->add_parts($url_msg);
+            my $new_msg = $self->add_parts($urlize_msg);
             if (defined $new_msg) {
-                $url_msg = $new_msg;
+                $urlize_msg = $new_msg;
             }
-            $new_message = Message->new({'mimeentity' => $url_msg});
+            $new_message = Message->new({'mimeentity' => $urlize_msg});
         } else {
-            Log::do_log('err', 'Unknown variable/reception mode %s',
-                $array_name);
+            Log::do_log('err', 'Unknown variable/reception mode %s', $mode);
             return undef;
         }
 
@@ -3007,22 +2831,16 @@ sub send_msg {
             @selected_tabrcpt =
                 $self->select_list_members_for_topic(
                 $new_message->get_topic(),
-                $available_rcpt->{$array_name});
+                $available_recipients->{$mode}{'noverp'} || []);
             @possible_verptabrcpt =
                 $self->select_list_members_for_topic(
                 $new_message->get_topic(),
-                $available_verp_rcpt->{$array_name});
+                $available_recipients->{$mode}{'verp'} || []);
         } else {
-            @selected_tabrcpt     = @{$available_rcpt->{$array_name}};
-            @possible_verptabrcpt = @{$available_verp_rcpt->{$array_name}};
-        }
-
-        if ($array_name =~
-            /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain)|(url)|(html)|(txt)|(notice))?(_verp)?/
-            ) {
-            my $reception_option = $1;
-
-            $reception_option = 'mail' unless $reception_option;
+            @selected_tabrcpt =
+                @{$available_recipients->{$mode}{'noverp'} || []};
+            @possible_verptabrcpt =
+                @{$available_recipients->{$mode}{'verp'} || []};
         }
 
         ## Preparing VERP recipients.
@@ -3041,8 +2859,10 @@ sub send_msg {
                 'tag_as_last'     => $tags_to_use->{'tag_noverp'}
             );
             unless (defined $result) {
-                Log::do_log('err',
-                    "List::send_msg, could not send message to distribute from $from (verp desabled)"
+                Log::do_log(
+                    'err',
+                    'Could not send message to distribute from %s (verp desabled)',
+                    $from
                 );
                 return undef;
             }
@@ -3068,18 +2888,17 @@ sub send_msg {
                 # reception option, tracking use the original message id
                 'msgid'            => $original_message_id,
                 'rcpt'             => \@verp_selected_tabrcpt,
-                'reception_option' => $reception_option,
+                'reception_option' => $mode,
             );
 
         }
 
-        #  ignore those reception option where mail must not ne sent
-        #  next if  (($array_name eq 'tabrcpt_digest') or ($array_name eq
-        #  'tabrcpt_digestlplain') or ($array_name eq 'tabrcpt_summary') or
-        #  ($array_name eq 'tabrcpt_nomail')) ;
+        # Ignore those reception option where mail must not ne sent.
         next
-            if ($array_name =~
-            /^tabrcpt_((nomail)|(summary)|(digest)|(digestplain))(_verp)?/);
+            if $mode eq 'digest'
+                or $mode eq 'digestlplain'
+                or $mode eq 'summary'
+                or $mode eq 'nomail';
 
         ## prepare VERP sending.
         if ($#verp_selected_tabrcpt > -1) {
@@ -3092,8 +2911,10 @@ sub send_msg {
                 'tag_as_last'     => $tags_to_use->{'tag_verp'}
             );
             unless (defined $result) {
-                Log::do_log('err',
-                    "List::send_msg, could not send message to distribute from $from (verp enabled)"
+                Log::do_log(
+                    'err',
+                    'Could not send message to distribute from %s (verp enabled)',
+                    $from
                 );
                 return undef;
             }
@@ -3110,6 +2931,207 @@ sub send_msg {
         }
     }
     return $nbr_smtp;
+}
+
+sub get_recipients_per_mode {
+    my $self    = shift;
+    my $message = shift;
+    my %options = @_;
+
+    my $name  = $self->{'name'};
+    my $robot = $self->{'domain'};
+
+    my $sender_line = $message->as_entity->head->get('From');
+    my @sender_hdr  = Mail::Address->parse($sender_line);
+    my %sender_hash;
+    foreach my $email (@sender_hdr) {
+        $sender_hash{lc($email->address)} = 1;
+    }
+
+    my (@tabrcpt_mail,        @tabrcpt_mail_verp,
+        @tabrcpt_notice,      @tabrcpt_notice_verp,
+        @tabrcpt_txt,         @tabrcpt_txt_verp,
+        @tabrcpt_html,        @tabrcpt_html_verp,
+        @tabrcpt_urlize,      @tabrcpt_urlize_verp,
+        @tabrcpt_digestplain, @tabrcpt_digestplain_verp,
+        @tabrcpt_digest,      @tabrcpt_digest_verp,
+        @tabrcpt_summary,     @tabrcpt_summary_verp,
+        @tabrcpt_nomail,      @tabrcpt_nomail_verp,
+    );
+    my $mixed =
+        ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
+    my $alternative =
+        ($message->{'msg'}->head->get('Content-Type') =~
+            /multipart\/alternative/i);
+
+    for (
+        my $user = $self->get_first_list_member();
+        $user;
+        $user = $self->get_next_list_member()
+        ) {
+        unless ($user->{'email'}) {
+            Log::do_log('err',
+                'Skipping user with no email address in list %s', $self);
+            next;
+        }
+        my $user_data = get_list_member_no_object(
+            {   email  => $user->{'email'},
+                name   => $self->{'name'},
+                domain => $self->{'domain'},
+            }
+        );
+        ## test to know if the rcpt suspended her subscription for this list
+        ## if yes, don't send the message
+        if (    $user_data
+            and defined $user_data->{'suspend'}
+            and $user_data->{'suspend'} + 0) {
+            if (($user_data->{'startdate'} <= time)
+                && (   (time <= $user_data->{'enddate'})
+                    || (!$user_data->{'enddate'}))
+                ) {
+                push @tabrcpt_nomail_verp, $user->{'email'};
+                next;
+            } elsif (($user_data->{'enddate'} < time)
+                && ($user_data->{'enddate'})) {
+                ## If end date is < time, update the BDD by deleting the
+                ## suspending's data
+                $self->restore_suspended_subscription($user->{'email'});
+            }
+        }
+        if ($user->{'reception'} eq 'digestplain') {
+            # digest digestplain, nomail and summary reception option are
+            # initialized for tracking feature only
+            push @tabrcpt_digestplain_verp, $user->{'email'};
+            next;
+        } elsif ($user->{'reception'} eq 'digest') {
+            push @tabrcpt_digest_verp, $user->{'email'};
+            next;
+        } elsif ($user->{'reception'} eq 'summary') {
+            push @tabrcpt_summary_verp, $user->{'email'};
+            next;
+        } elsif ($user->{'reception'} eq 'nomail') {
+            push @tabrcpt_nomail_verp, $user->{'email'};
+            next;
+        } elsif ($user->{'reception'} eq 'notice') {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_notice_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_notice, $user->{'email'};
+            }
+        } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_txt_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_txt, $user->{'email'};
+            }
+        } elsif ($alternative and ($user->{'reception'} eq 'html')) {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_html_verp, $user->{'email'};
+            } else {
+                if ($user->{'bounce_address'}) {
+                    push @tabrcpt_html_verp, $user->{'email'};
+                } else {
+                    push @tabrcpt_html, $user->{'email'};
+                }
+            }
+        } elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_urlize_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_urlize, $user->{'email'};
+            }
+        } elsif (
+            $message->{'smime_crypted'}
+            && (!-r $Conf::Conf{'ssl_cert_dir'} . '/'
+                . tools::escape_chars($user->{'email'})
+                && !-r $Conf::Conf{'ssl_cert_dir'} . '/'
+                . tools::escape_chars($user->{'email'} . '@enc'))
+            ) {
+            ## Missing User certificate
+            my $subject = $message->{'msg'}->head->get('Subject');
+            my $sender  = $message->{'msg'}->head->get('From');
+            unless (
+                $self->send_file(
+                    'x509-user-cert-missing',
+                    $user->{'email'},
+                    $robot,
+                    {   'mail' =>
+                            {'subject' => $subject, 'sender' => $sender},
+                        'auto_submitted' => 'auto-generated'
+                    }
+                )
+                ) {
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "x509-user-cert-missing" to %s',
+                    $user->{'email'}
+                );
+            }
+        } else {
+            if ($user->{'bounce_score'}) {
+                push @tabrcpt_mail_verp, $user->{'email'}
+                    unless ($sender_hash{$user->{'email'}})
+                    && ($user->{'reception'} eq 'not_me');
+            } else {
+                push @tabrcpt_mail, $user->{'email'}
+                    unless ($sender_hash{$user->{'email'}})
+                    && ($user->{'reception'} eq 'not_me');
+            }
+        }
+    }
+
+    return 0
+        unless @tabrcpt_mail
+            or @tabrcpt_notice
+            or @tabrcpt_txt
+            or @tabrcpt_html
+            or @tabrcpt_urlize
+            or @tabrcpt_mail_verp
+            or @tabrcpt_notice_verp
+            or @tabrcpt_txt_verp
+            or @tabrcpt_html_verp
+            or @tabrcpt_urlize_verp;
+
+    my $available_recipients;
+
+    $available_recipients->{'mail'}{'noverp'} = \@tabrcpt_mail
+        if @tabrcpt_mail;
+    $available_recipients->{'mail'}{'verp'} = \@tabrcpt_mail_verp
+        if @tabrcpt_mail_verp;
+    $available_recipients->{'notice'}{'noverp'} = \@tabrcpt_notice
+        if @tabrcpt_notice;
+    $available_recipients->{'notice'}{'verp'} = \@tabrcpt_notice_verp
+        if @tabrcpt_notice_verp;
+    $available_recipients->{'txt'}{'noverp'} = \@tabrcpt_txt if @tabrcpt_txt;
+    $available_recipients->{'txt'}{'verp'} = \@tabrcpt_txt_verp
+        if @tabrcpt_txt_verp;
+    $available_recipients->{'html'}{'noverp'} = \@tabrcpt_html
+        if @tabrcpt_html;
+    $available_recipients->{'html'}{'verp'} = \@tabrcpt_html_verp
+        if @tabrcpt_html_verp;
+    $available_recipients->{'urlize'}{'noverp'} = \@tabrcpt_urlize
+        if @tabrcpt_urlize;
+    $available_recipients->{'urlize'}{'verp'} = \@tabrcpt_urlize_verp
+        if @tabrcpt_urlize_verp;
+    $available_recipients->{'digestplain'}{'noverp'} = \@tabrcpt_digestplain
+        if @tabrcpt_digestplain;
+    $available_recipients->{'digestplain'}{'verp'} =
+        \@tabrcpt_digestplain_verp
+        if @tabrcpt_digestplain_verp;
+    $available_recipients->{'digest'}{'noverp'} = \@tabrcpt_digest
+        if @tabrcpt_digest;
+    $available_recipients->{'digest'}{'verp'} = \@tabrcpt_digest_verp
+        if @tabrcpt_digest_verp;
+    $available_recipients->{'summary'}{'noverp'} = \@tabrcpt_summary
+        if @tabrcpt_summary;
+    $available_recipients->{'summary'}{'verp'} = \@tabrcpt_summary_verp
+        if @tabrcpt_summary_verp;
+    $available_recipients->{'nomail'}{'noverp'} = \@tabrcpt_nomail
+        if @tabrcpt_nomail;
+    $available_recipients->{'nomail'}{'verp'} = \@tabrcpt_nomail_verp
+        if @tabrcpt_nomail_verp;
+
+    return $available_recipients;
 }
 
 ###   SERVICE MESSAGES   ###
@@ -4469,8 +4491,9 @@ sub _append_footer_header_to_part {
     $in_cset = MIME::Charset->new($charset || 'NONE');
     unless ($in_cset->decoder) {
         # MIME::Charset 1.009.2 or later required.
-        $in_cset = MIME::Charset->new(
-            MIME::Charset::detect_7bit_charset($body) || 'NONE');
+        $in_cset =
+            MIME::Charset->new(MIME::Charset::detect_7bit_charset($body)
+                || 'NONE');
     }
     unless ($in_cset->decoder) {
         return undef;
@@ -4515,14 +4538,12 @@ sub _append_footer_header_to_part {
         my ($newcharset, $newenc);
         ($body, $newcharset, $newenc) =
             $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
-        unless ($newcharset) {    # bug in MIME::Charset?
+        unless ($newcharset) {                        # bug in MIME::Charset?
             Log::do_log('err', 'Can\'t determine output charset');
             return undef;
         } elsif ($newcharset ne $in_cset->as_string) {
-            $part->head->mime_attr(
-                'Content-Transfer-Encoding' => $newenc);
-            $part->head->mime_attr(
-                'Content-Type.Charset' => $newcharset);
+            $part->head->mime_attr('Content-Transfer-Encoding' => $newenc);
+            $part->head->mime_attr('Content-Type.Charset' => $newcharset);
         }
     } elsif ($eff_type eq 'text/html') {
         Log::do_log('debug3', "Treating text/html part");
@@ -4783,30 +4804,29 @@ sub suspend_subscription {
 ######################################################################
 # IN:                                                                #
 #   - email : the subscriber email                                   #
-#   - list : the name of the list                                    #
-#   - robot : domain                                                 #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
 #   - 1 if his/her subscription is restored                          #
 ######################################################################
 sub restore_suspended_subscription {
-
+    Log::do_log('debug2', '(%s)', @_);
+    my $self  = shift;
     my $email = shift;
-    my $list  = shift;
-    my $robot = shift;
-    Log::do_log('debug2', '("%s", "%s", "%s")', $email, $list, $robot);
 
     unless (
-        SDM::do_query(
-            "UPDATE subscriber_table SET suspend_subscriber='0', suspend_start_date_subscriber=NULL, suspend_end_date_subscriber=NULL WHERE (user_subscriber=%s AND list_subscriber=%s AND robot_subscriber = %s )",
-            SDM::quote($email),
-            SDM::quote($list),
-            SDM::quote($robot)
+        SDM::do_prepared_query(
+            q{UPDATE subscriber_table
+              SET suspend_subscriber = 0,
+                  suspend_start_date_subscriber  = NULL,
+                  suspend_end_date_subscriber = NULL
+              WHERE user_subscriber = ? AND list_subscriber = ? AND
+                    robot_subscriber = ?},
+            $email, $self->{'name'}, $self->{'domain'}
         )
         ) {
         Log::do_log('err',
-            'Unable to restore subscription of user %s to list %s@%s',
-            $email, $list, $robot);
+            'Unable to restore subscription of user %s to list %s',
+            $email, $self);
         return undef;
     }
 

@@ -21506,12 +21506,10 @@ sub do_suspend_request {
 
     foreach my $list (@lists) {
         my $member_info = $list->get_list_member($param->{'user'}{'email'});
-        if (($member_info->{'enddate'} < time) && ($member_info->{'enddate'}))
-        {
+        if ($member_info->{'enddate'} and $member_info->{'enddate'} < time) {
             ## If end date is < time, update the BDD by deleting the
             ## suspending's data
-            List::restore_suspended_subscription($param->{'user'}{'email'},
-                $list->{'name'}, $list->{'domain'});
+            $list->restore_suspended_subscription($param->{'user'}{'email'});
         }
         my $final_start_date =
             $language->gettext_strftime("%d %b %Y",
@@ -21729,8 +21727,9 @@ sub do_suspend_request_action {
         # to renew membership lists selected
         @lists = split /\0/, $in{'listname'};
         foreach my $line (@lists) {
-            List::restore_suspended_subscription($param->{'user'}{'email'},
-                $line, $robot);
+            my $list = List->new($line, $robot);
+            next unless $list;
+            $list->restore_suspended_subscription($param->{'user'}{'email'});
         }
 
         if ($lists[0] eq '') {
