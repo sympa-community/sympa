@@ -162,7 +162,7 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    die sprintf "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
+    die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $!;
 }
 
 Log::do_log('notice', 'Bulk %s Started', Sympa::Constants::VERSION);

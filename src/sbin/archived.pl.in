@@ -174,7 +174,7 @@ foreach my $robot (@{Conf::get_robots_list()}) {
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    die sprintf "Unable to change directory to %s: %s\n", $Conf::Conf{'home'},
+    die sprintf 'Unable to change directory to %s: %s', $Conf::Conf{'home'},
         $!;
 }
 
@@ -198,7 +198,7 @@ while (!$end) {
     List::send_notify_to_listmaster(undef, undef, undef, 1);
 
     unless (opendir(DIR, $queue)) {
-        die sprintf "Can't open dir %s: %s\n", $queue, $!;
+        die sprintf 'Can\'t open dir %s: %s', $queue, $!;
         ## No return.
     }
 
@@ -852,10 +852,10 @@ sub mail2arc {
         # savee arctxt dump of original message.
         my $output = $Conf::Conf{'tmpdir'} . '/arc' . $newfile;
         open ORIG, '<', "$queue/$file"
-            or die sprintf "Couldn't open file %s/%s: %s\n", $queue, $file,
+            or die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file,
             $!;
         open DUMP, '>', "$arctxtdir/$newfile"
-            or die sprintf "Couldn't open file %s/%s: %s\n", $arctxtdir,
+            or die sprintf 'Couldn\'t open file %s/%s: %s', $arctxtdir,
             $newfile, $!;
         print DUMP join('', <ORIG>);
         close ORIG;
@@ -944,7 +944,7 @@ sub save_idx {
 #    Log::do_log('notice', '(%s, %s)', $index, $lst);
 
     open INDEXF, '>', $index
-        or die sprintf "Couldn't overwrite index %s: %s\n", $index, $!;
+        or die sprintf 'Couldn\'t overwrite index %s: %s', $index, $!;
     print INDEXF "$lst\n";
     close INDEXF;
     #   Log::do_log('debug','Last arc entry for %s is %s', $index, $lst);

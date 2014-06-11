@@ -216,7 +216,7 @@ while (!$end) {
     List::send_notify_to_listmaster(undef, undef, undef, 1);
 
     unless (opendir DIR, $queue) {
-        die sprintf "Can't open dir %s: %s\n", $queue, $!;
+        die sprintf 'Can\'t open dir %s: %s', $queue, $!;
         ## No return.
     }
 

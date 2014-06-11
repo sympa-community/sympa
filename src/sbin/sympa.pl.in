@@ -283,7 +283,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
     ## Main program
     if (!chdir($Conf::Conf{'home'})) {
-        die sprintf "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
+        die sprintf 'Can\'t chdir to %s: %s', $Conf::Conf{'home'}, $!;
         ## Function never returns.
     }
 
@@ -1275,7 +1275,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         List::send_notify_to_listmaster(undef, undef, undef, 1);
 
         if (!opendir(DIR, $spool)) {
-            die sprintf "Can't open dir %s: %s\n", $spool, $!;
+            die sprintf 'Can\'t open dir %s: %s', $spool, $!;
             ## No return.
         }
         @qfile = sort tools::by_date grep (!/^\./, readdir(DIR));
@@ -1464,7 +1464,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             if (-d $bad_dir) {
                 unless (rename("$t_spool/$filename", "$bad_dir/$filename")) {
                     die sprintf
-                        "Unable to rename bad file %s to %s/%s: %s\n",
+                        'Unable to rename bad file %s to %s/%s: %s',
                         $filename, $bad_dir, $filename, $!;
                 }
                 Log::do_log('notice', "Moving bad file %s to bad/",
@@ -1474,7 +1474,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 unless (
                     rename("$t_spool/$filename", "$t_spool/BAD-$filename")) {
                     die sprintf
-                        "Unable to rename bad file %s to BAD-%s: %s\n",
+                        'Unable to rename bad file %s to BAD-%s: %s',
                         $filename, $filename, $!;
                 }
                 Log::do_log('notice', "Renaming bad file %s to BAD-%s",
@@ -3493,7 +3493,7 @@ sub SendDigest {
     Log::do_log('debug', '');
 
     if (!opendir(DIR, $Conf::Conf{'queuedigest'})) {
-        die sprintf "Unable to access directory %s : %s\n",
+        die sprintf 'Unable to access directory %s : %s',
             $Conf::Conf{'queuedigest'}, $!;
         ## No return.
     }

@@ -152,7 +152,7 @@ umask(oct($Conf::Conf{'umask'}));
 
 ## Change to list root
 unless (chdir($Conf::Conf{'home'})) {
-    die sprintf "Unable to change to directory %s\n", $Conf::Conf{'home'};
+    die sprintf 'Unable to change to directory %s', $Conf::Conf{'home'};
 }
 
 ## Catch signals, in order to exit cleanly, whenever possible.
