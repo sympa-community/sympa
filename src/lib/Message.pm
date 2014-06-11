@@ -433,6 +433,14 @@ sub _get_message_id {
 I<Instance method>.
 Get message content as MIME entity (L<MIME::Entity> instance).
 
+Note that returned value is real reference to internal data structure.
+Even if it was changed, string representaion of message won't be updated.
+Below is better way to modify message.
+
+    my $entity = $message->as_entity->dup;
+    # Mofify entity...
+    $message->set_entity($entity);
+
 =back
 
 =cut
@@ -639,27 +647,27 @@ sub clean_html {
 }
 
 sub _fix_html_part {
-    my $part  = shift;
+    my $entity  = shift;
     my $robot = shift;
-    return $part unless $part;
+    return $entity unless $entity;
 
-    my $eff_type = $part->head->mime_attr("Content-Type");
-    if ($part->parts) {
+    my $eff_type = $entity->head->mime_attr("Content-Type");
+    if ($entity->parts) {
         my @newparts = ();
-        foreach ($part->parts) {
-            push @newparts, _fix_html_part($_, $robot);
+        foreach my $part ($entity->parts) {
+            push @newparts, _fix_html_part($part, $robot);
         }
-        $part->parts(\@newparts);
+        $entity->parts(\@newparts);
     } elsif ($eff_type =~ /^text\/html/i) {
-        my $bodyh = $part->bodyhandle;
+        my $bodyh = $entity->bodyhandle;
         # Encoded body or null body won't be modified.
-        return $part if !$bodyh or $bodyh->is_encoded;
+        return $entity if !$bodyh or $bodyh->is_encoded;
 
         my $body = $bodyh->as_string;
         # Re-encode parts to UTF-8, since StripScripts cannot handle texts
         # with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
         my $cset =
-            MIME::Charset->new($part->head->mime_attr('Content-Type.Charset')
+            MIME::Charset->new($entity->head->mime_attr('Content-Type.Charset')
                 || '');
         unless ($cset->decoder) {
             # Charset is unknown.  Detect 7-bit charset.
@@ -673,7 +681,7 @@ sub _fix_html_part {
             and $cset->as_string ne 'US-ASCII') {
             $cset->encoder('UTF-8');
             $body = $cset->encode($body);
-            $part->head->mime_attr('Content-Type.Charset', 'UTF-8');
+            $entity->head->mime_attr('Content-Type.Charset', 'UTF-8');
         }
 
         my $filtered_body =
@@ -686,361 +694,10 @@ sub _fix_html_part {
         }
         $io->print($filtered_body);
         $io->close;
-        $part->sync_headers(Length => 'COMPUTE');
+        $entity->sync_headers(Length => 'COMPUTE')
+            if $entity->head->get('Content-Length');
     }
-    return $part;
-}
-
-=over
-
-=item decorate_parts ( ... )
-
-I<XXX>.
-Add footer/header to a message.
-XXX
-
-=back
-
-=cut
-
-sub decorate_parts {
-    Log::do_log('debug3', '(%s, %s)');
-    my $msg  = shift;
-    my $list = shift;
-
-    my $type     = $list->{'admin'}{'footer_type'};
-    my $listdir  = $list->{'dir'};
-    my $eff_type = $msg->effective_type || 'text/plain';
-
-    ## Signed or encrypted messages won't be modified.
-    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
-        return $msg;
-    }
-
-    my ($header, $headermime);
-    foreach my $file (
-        "$listdir/message.header",
-        "$listdir/message.header.mime",
-        $Conf::Conf{'etc'} . '/mail_tt2/message.header',
-        $Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
-        ) {
-        if (-f $file) {
-            unless (-r $file) {
-                Log::do_log('notice', 'Cannot read %s', $file);
-                next;
-            }
-            $header = $file;
-            last;
-        }
-    }
-
-    my ($footer, $footermime);
-    foreach my $file (
-        "$listdir/message.footer",
-        "$listdir/message.footer.mime",
-        $Conf::Conf{'etc'} . '/mail_tt2/message.footer',
-        $Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
-        ) {
-        if (-f $file) {
-            unless (-r $file) {
-                Log::do_log('notice', 'Cannot read %s', $file);
-                next;
-            }
-            $footer = $file;
-            last;
-        }
-    }
-
-    ## No footer/header
-    unless (($footer and -s $footer) or ($header and -s $header)) {
-        return undef;
-    }
-
-    if ($type eq 'append') {
-        ## append footer/header
-        my ($footer_msg, $header_msg);
-        if ($header and -s $header) {
-            open HEADER, $header;
-            $header_msg = join '', <HEADER>;
-            close HEADER;
-            $header_msg = '' unless $header_msg =~ /\S/;
-        }
-        if ($footer and -s $footer) {
-            open FOOTER, $footer;
-            $footer_msg = join '', <FOOTER>;
-            close FOOTER;
-            $footer_msg = '' unless $footer_msg =~ /\S/;
-        }
-        if (length $header_msg or length $footer_msg) {
-            if (_append_parts($msg, $header_msg, $footer_msg)) {
-                $msg->sync_headers(Length => 'COMPUTE')
-                    if $msg->head->get('Content-Length');
-            }
-        }
-    } else {
-        ## MIME footer/header
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-
-        if (   $eff_type =~ /^multipart\/alternative/i
-            || $eff_type =~ /^multipart\/related/i) {
-            Log::do_log('debug3', 'Making message %s into multipart/mixed',
-                $msg);
-            $msg->make_multipart("mixed", Force => 1);
-        }
-
-        if ($header and -s $header) {
-            if ($header =~ /\.mime$/) {
-                my $header_part;
-                eval { $header_part = $parser->parse_in($header); };
-                if ($@) {
-                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
-                        $header, $parser->last_error);
-                } else {
-                    $msg->make_multipart unless $msg->is_multipart;
-                    $msg->add_part($header_part, 0);  ## Add AS FIRST PART (0)
-                }
-                ## text/plain header
-            } else {
-                $msg->make_multipart unless $msg->is_multipart;
-                my $header_part = MIME::Entity->build(
-                    Path       => $header,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-                $msg->add_part($header_part, 0);
-            }
-        }
-        if ($footer and -s $footer) {
-            if ($footer =~ /\.mime$/) {
-                my $footer_part;
-                eval { $footer_part = $parser->parse_in($footer); };
-                if ($@) {
-                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
-                        $footer, $parser->last_error);
-                } else {
-                    $msg->make_multipart unless $msg->is_multipart;
-                    $msg->add_part($footer_part);
-                }
-                ## text/plain footer
-            } else {
-                $msg->make_multipart unless $msg->is_multipart;
-                $msg->attach(
-                    Path       => $footer,
-                    Type       => "text/plain",
-                    Filename   => undef,
-                    'X-Mailer' => undef,
-                    Encoding   => "8bit",
-                    Charset    => "UTF-8"
-                );
-            }
-        }
-    }
-
-    return $msg;
-}
-
-## Append header/footer to text/plain body.
-## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
-##   we must concatenate decoded header/body/footer and at last encode it.
-## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
-##   however, original body would be intact.
-sub _append_parts {
-    my $part       = shift;
-    my $header_msg = shift || '';
-    my $footer_msg = shift || '';
-
-    my $enc = $part->head->mime_encoding;
-    # Parts with nonstandard encodings aren't modified.
-    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
-        return undef;
-    }
-    my $eff_type = $part->effective_type || 'text/plain';
-    my $body;
-    my $io;
-
-    ## Signed or encrypted parts aren't modified.
-    if ($eff_type =~ m{^multipart/(signed|encrypted)$}i) {
-        return undef;
-    }
-
-    ## Skip attached parts.
-    my $disposition = $part->head->mime_attr('Content-Disposition');
-    return undef
-        if $disposition and uc $disposition ne 'INLINE';
-
-    ## Preparing header and footer for inclusion.
-    if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
-        if (length $header_msg or length $footer_msg) {
-            # Only decodable bodies are allowed.
-            my $bodyh = $part->bodyhandle;
-            if ($bodyh) {
-                return undef if $bodyh->is_encoded;
-                $body = $bodyh->as_string();
-            } else {
-                $body = '';
-            }
-
-            # Alter body.
-            $body = _append_footer_header_to_part(
-                {   'part'     => $part,
-                    'header'   => $header_msg,
-                    'footer'   => $footer_msg,
-                    'eff_type' => $eff_type,
-                    'body'     => $body
-                }
-            );
-            return undef unless defined $body;
-
-            # Save new body.
-            $io = $bodyh->open('w');
-            unless (defined $io) {
-                Log::do_log('err', 'Failed to save message: %s', "$!");
-                return undef;
-            }
-            $io->print($body);
-            $io->close;
-            $part->sync_headers(Length => 'COMPUTE')
-                if $part->head->get('Content-Length');
-
-            return 1;
-        }
-    } elsif ($eff_type eq 'multipart/mixed') {
-        ## Append to the first part, since other parts will be "attachments".
-        if ($part->parts
-            and _append_parts($part->parts(0), $header_msg, $footer_msg)) {
-            return 1;
-        }
-    } elsif ($eff_type eq 'multipart/alternative') {
-        ## We try all the alternatives
-        my $r = undef;
-        foreach my $p ($part->parts) {
-            $r = 1
-                if _append_parts($p, $header_msg, $footer_msg);
-        }
-        return $r if $r;
-    } elsif ($eff_type eq 'multipart/related') {
-        ## Append to the first part, since other parts will be "attachments".
-        if ($part->parts
-            and _append_parts($part->parts(0), $header_msg, $footer_msg)) {
-            return 1;
-        }
-    }
-
-    ## We couldn't find any parts to modify.
-    return undef;
-}
-
-# Styles to cancel local CSS.
-my $div_style =
-    'background: transparent; border: none; clear: both; display: block; float: none; position: static';
-
-sub _append_footer_header_to_part {
-    my $data = shift;
-
-    my $part       = $data->{'part'};
-    my $header_msg = $data->{'header'};
-    my $footer_msg = $data->{'footer'};
-    my $eff_type   = $data->{'eff_type'};
-    my $body       = $data->{'body'};
-
-    my $in_cset;
-
-    ## Detect charset.  If charset is unknown, detect 7-bit charset.
-    my $charset = $part->head->mime_attr('Content-Type.Charset');
-    $in_cset = MIME::Charset->new($charset || 'NONE');
-    unless ($in_cset->decoder) {
-        # MIME::Charset 1.009.2 or later required.
-        $in_cset =
-            MIME::Charset->new(MIME::Charset::detect_7bit_charset($body)
-                || 'NONE');
-    }
-    unless ($in_cset->decoder) {
-        return undef;
-    }
-    $in_cset->encoder($in_cset);    # no charset conversion
-
-    ## Decode body to Unicode, since HTML::Entities::encode_entities() and
-    ## newline normalization will break texts with several character sets
-    ## (UTF-16/32, ISO-2022-JP, ...).
-    ## Only decodable bodies are allowed.
-    eval {
-        $body = $in_cset->decode($body, 1);
-        $header_msg = Encode::decode_utf8($header_msg, 1);
-        $footer_msg = Encode::decode_utf8($footer_msg, 1);
-    };
-    return undef if $@;
-
-    my $new_body;
-    if ($eff_type eq 'text/plain') {
-        Log::do_log('debug3', "Treating text/plain part");
-
-        ## Add newlines.  For BASE64 encoding they also must be normalized.
-        if (length $header_msg) {
-            $header_msg .= "\n" unless $header_msg =~ /\n\z/;
-        }
-        if (length $footer_msg and length $body) {
-            $body .= "\n" unless $body =~ /\n\z/;
-        }
-        if (length $footer_msg) {
-            $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
-        }
-        if (uc($part->head->mime_attr('Content-Transfer-Encoding') || '') eq
-            'BASE64') {
-            $header_msg =~ s/\r\n|\r|\n/\r\n/g;
-            $body       =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
-            $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
-        }
-
-        $new_body = $header_msg . $body . $footer_msg;
-
-        ## Data not encodable by original charset will fallback to UTF-8.
-        my ($newcharset, $newenc);
-        ($body, $newcharset, $newenc) =
-            $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
-        unless ($newcharset) {                        # bug in MIME::Charset?
-            Log::do_log('err', 'Can\'t determine output charset');
-            return undef;
-        } elsif ($newcharset ne $in_cset->as_string) {
-            $part->head->mime_attr('Content-Transfer-Encoding' => $newenc);
-            $part->head->mime_attr('Content-Type.Charset' => $newcharset);
-        }
-    } elsif ($eff_type eq 'text/html') {
-        Log::do_log('debug3', "Treating text/html part");
-
-        # Escape special characters.
-        $header_msg = HTML::Entities::encode_entities($header_msg, '<>&"');
-        $header_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
-        $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $footer_msg = HTML::Entities::encode_entities($footer_msg, '<>&"');
-        $footer_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
-        $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
-
-        $new_body = $body;
-        if (length $header_msg) {
-            my $div = sprintf '<div style="%s">%s</div>',
-                $div_style, $header_msg;
-            $new_body =~ s,(<body\b[^>]*>),$1$div,i
-                or $new_body = $div . $new_body;
-        }
-        if (length $footer_msg) {
-            my $div = sprintf '<div style="%s">%s</div>',
-                $div_style, $footer_msg;
-            $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
-                or $new_body = $new_body . $div;
-        }
-
-        # Unencodable characters are encoded to entity, because charset
-        # metadata in HTML won't be altered.
-        # Problem: FB_HTMLCREF of several codecs are broken.
-        eval { $body = $in_cset->encode($new_body, Encode::FB_HTMLCREF); };
-        return undef if $@;
-    }
-
-    return $body;
+    return $entity;
 }
 
 ############################################################
@@ -1426,84 +1083,71 @@ sub prepare_message_according_to_mode {
 
     my $robot_id = $list->{'domain'};
 
-    my $saved_msg = $self->as_entity;
-
-    ##Prepare message for normal reception mode
     if ($mode eq 'mail') {
+        ##Prepare message for normal reception mode
         ## Add a footer
         unless ($self->{'protected'}) {
-            my $new_msg = decorate_parts($self->{'msg'}, $list);
-            if (defined $new_msg) {
-                $self->{'msg'}     = $new_msg;
-                $self->{'altered'} = '_ALTERED_';
-            }
+            my $entity = $self->as_entity->dup;
+
+            _decorate_parts($entity, $list);
+            $self->set_entity($entity);
         }
     } elsif ($mode eq 'nomail'
         or $mode eq 'summary'
         or $mode eq 'digest'
         or $mode eq 'digestplain') {
-        return $self;
+        ;
     } elsif ($mode eq 'notice') {
         ##Prepare message for notice reception mode
-        my $notice_msg = $saved_msg->dup;
-        $notice_msg->bodyhandle(undef);
-        $notice_msg->parts([]);
+        my $entity = $self->as_entity->dup;
 
-        $self->set_entity($notice_msg);
+        $entity->bodyhandle(undef);
+        $entity->parts([]);
+        $self->set_entity($entity);
     } elsif ($mode eq 'txt') {
         ##Prepare message for txt reception mode
-        my $txt_msg = $saved_msg->dup;
-        if (tools::as_singlepart($txt_msg, 'text/plain')) {
+        my $entity = $self->as_entity->dup;
+
+        if (tools::as_singlepart($entity, 'text/plain')) {
             Log::do_log('notice', 'Multipart message changed to singlepart');
         }
-
         ## Add a footer
-        my $new_msg = decorate_parts($txt_msg, $list);
-        if (defined $new_msg) {
-            $txt_msg = $new_msg;
-        }
-
-        $self->set_entity($txt_msg);
+        _decorate_parts($entity, $list);
+        $self->set_entity($entity);
     } elsif ($mode eq 'html') {
         ##Prepare message for html reception mode
-        my $html_msg = $saved_msg->dup;
-        if (tools::as_singlepart($html_msg, 'text/html')) {
+        my $entity = $self->as_entity->dup;
+
+        if (tools::as_singlepart($entity, 'text/html')) {
             Log::do_log('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
-        my $new_msg = decorate_parts($html_msg, $list);
-        if (defined $new_msg) {
-            $html_msg = $new_msg;
-        }
-
-        $self->set_entity($html_msg);
+        _decorate_parts($entity, $list);
+        $self->set_entity($entity);
     } elsif ($mode eq 'urlize') {
         ##Prepare message for urlize reception mode
-        my $urlize_msg = $saved_msg->dup;
-
         my $expl = $list->{'dir'} . '/urlized';
 
-        unless ((-d $expl) || (mkdir $expl, 0775)) {
+        unless (-d $expl or mkdir $expl, 0775) {
             Log::do_log('err', 'Unable to create urlized directory %s',
                 $expl);
             return undef;
         }
 
-        my $dir1 = tools::clean_msg_id($urlize_msg->head->get('Message-ID'));
-
         ## Clean up Message-ID
-        $dir1 = tools::escape_chars($dir1);
+        my $dir1 = tools::escape_chars($self->{'message_id'});
         $dir1 = '/' . $dir1;
 
-        unless (mkdir("$expl/$dir1", 0775)) {
+        unless (mkdir "$expl/$dir1", 0775) {
             Log::do_log('err', 'Unable to create urlized directory %s/%s',
                 $expl, $dir1);
             return 0;
         }
         my $mime_types = tools::load_mime_types();
+        my $entity     = $self->as_entity->dup;
         my @parts      = ();
         my $i          = 0;
-        foreach my $part ($urlize_msg->parts()) {
+        foreach my $part ($entity->parts) {
             my $entity =
                 _urlize_part($part, $list, $dir1, $i, $mime_types,
                 Conf::get_robot_conf($robot_id, 'wwsympa_url'));
@@ -1516,15 +1160,11 @@ sub prepare_message_according_to_mode {
         }
 
         ## Replace message parts
-        $urlize_msg->parts(\@parts);
+        $entity->parts(\@parts);
 
         ## Add a footer
-        my $new_msg = decorate_parts($urlize_msg, $list);
-        if (defined $new_msg) {
-            $urlize_msg = $new_msg;
-        }
-
-        $self->set_entity($urlize_msg);
+        _decorate_parts($entity, $list);
+        $self->set_entity($entity);
     } else {
         die sprintf 'Unknown variable/reception mode %s', $mode;
     }
@@ -1532,8 +1172,351 @@ sub prepare_message_according_to_mode {
     return $self;
 }
 
+# Add footer/header to a message.
+# Old name: List::add_parts() or Message::add_parts(), n.b. not add_part().
+sub _decorate_parts {
+    Log::do_log('debug3', '(%s, %s)');
+    my $entity = shift;
+    my $list = shift;
+
+    my $type     = $list->{'admin'}{'footer_type'};
+    my $listdir  = $list->{'dir'};
+    my $eff_type = $entity->effective_type || 'text/plain';
+
+    ## Signed or encrypted messages won't be modified.
+    if ($eff_type =~ /^multipart\/(signed|encrypted)$/i) {
+        return $entity;
+    }
+
+    my ($header, $headermime);
+    foreach my $file (
+        "$listdir/message.header",
+        "$listdir/message.header.mime",
+        $Conf::Conf{'etc'} . '/mail_tt2/message.header',
+        $Conf::Conf{'etc'} . '/mail_tt2/message.header.mime'
+        ) {
+        if (-f $file) {
+            unless (-r $file) {
+                Log::do_log('notice', 'Cannot read %s', $file);
+                next;
+            }
+            $header = $file;
+            last;
+        }
+    }
+
+    my ($footer, $footermime);
+    foreach my $file (
+        "$listdir/message.footer",
+        "$listdir/message.footer.mime",
+        $Conf::Conf{'etc'} . '/mail_tt2/message.footer',
+        $Conf::Conf{'etc'} . '/mail_tt2/message.footer.mime'
+        ) {
+        if (-f $file) {
+            unless (-r $file) {
+                Log::do_log('notice', 'Cannot read %s', $file);
+                next;
+            }
+            $footer = $file;
+            last;
+        }
+    }
+
+    ## No footer/header
+    unless (($footer and -s $footer) or ($header and -s $header)) {
+        return undef;
+    }
+
+    if ($type eq 'append') {
+        ## append footer/header
+        my ($footer_msg, $header_msg);
+        if ($header and -s $header) {
+            open HEADER, $header;
+            $header_msg = join '', <HEADER>;
+            close HEADER;
+            $header_msg = '' unless $header_msg =~ /\S/;
+        }
+        if ($footer and -s $footer) {
+            open FOOTER, $footer;
+            $footer_msg = join '', <FOOTER>;
+            close FOOTER;
+            $footer_msg = '' unless $footer_msg =~ /\S/;
+        }
+        if (length $header_msg or length $footer_msg) {
+            if (_append_parts($entity, $header_msg, $footer_msg)) {
+                $entity->sync_headers(Length => 'COMPUTE')
+                    if $entity->head->get('Content-Length');
+            }
+        }
+    } else {
+        ## MIME footer/header
+        my $parser = MIME::Parser->new;
+        $parser->output_to_core(1);
+
+        if (   $eff_type =~ /^multipart\/alternative/i
+            || $eff_type =~ /^multipart\/related/i) {
+            Log::do_log('debug3', 'Making message %s into multipart/mixed',
+                $entity);
+            $entity->make_multipart("mixed", Force => 1);
+        }
+
+        if ($header and -s $header) {
+            if ($header =~ /\.mime$/) {
+                my $header_part;
+                eval { $header_part = $parser->parse_in($header); };
+                if ($@) {
+                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
+                        $header, $parser->last_error);
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    ## Add AS FIRST PART (0)
+                    $entity->add_part($header_part, 0);
+                }
+            } else {
+                ## text/plain header
+                $entity->make_multipart unless $entity->is_multipart;
+                my $header_part = MIME::Entity->build(
+                    Path       => $header,
+                    Type       => "text/plain",
+                    Filename   => undef,
+                    'X-Mailer' => undef,
+                    Encoding   => "8bit",
+                    Charset    => "UTF-8"
+                );
+                $entity->add_part($header_part, 0);
+            }
+        }
+        if ($footer and -s $footer) {
+            if ($footer =~ /\.mime$/) {
+                my $footer_part;
+                eval { $footer_part = $parser->parse_in($footer); };
+                if ($@) {
+                    Log::do_log('err', 'Failed to parse MIME data %s: %s',
+                        $footer, $parser->last_error);
+                } else {
+                    $entity->make_multipart unless $entity->is_multipart;
+                    $entity->add_part($footer_part);
+                }
+            } else {
+                ## text/plain footer
+                $entity->make_multipart unless $entity->is_multipart;
+                $entity->attach(
+                    Path       => $footer,
+                    Type       => "text/plain",
+                    Filename   => undef,
+                    'X-Mailer' => undef,
+                    Encoding   => "8bit",
+                    Charset    => "UTF-8"
+                );
+            }
+        }
+    }
+
+    return $entity;
+}
+
+## Append header/footer to text/plain body.
+## Note: As some charsets (e.g. UTF-16) are not compatible to US-ASCII,
+##   we must concatenate decoded header/body/footer and at last encode it.
+## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
+##   however, original body would be intact.
+sub _append_parts {
+    my $entity       = shift;
+    my $header_msg = shift || '';
+    my $footer_msg = shift || '';
+
+    my $enc = $entity->head->mime_encoding;
+    # Parts with nonstandard encodings aren't modified.
+    if ($enc and $enc !~ /^(?:base64|quoted-printable|[78]bit|binary)$/i) {
+        return undef;
+    }
+    my $eff_type = $entity->effective_type || 'text/plain';
+    my $body;
+    my $io;
+
+    ## Signed or encrypted parts aren't modified.
+    if ($eff_type =~ m{^multipart/(signed|encrypted)$}i) {
+        return undef;
+    }
+
+    ## Skip attached parts.
+    my $disposition = $entity->head->mime_attr('Content-Disposition');
+    return undef
+        if $disposition and uc $disposition ne 'INLINE';
+
+    ## Preparing header and footer for inclusion.
+    if ($eff_type eq 'text/plain' or $eff_type eq 'text/html') {
+        if (length $header_msg or length $footer_msg) {
+            # Only decodable bodies are allowed.
+            my $bodyh = $entity->bodyhandle;
+            if ($bodyh) {
+                return undef if $bodyh->is_encoded;
+                $body = $bodyh->as_string();
+            } else {
+                $body = '';
+            }
+
+            # Alter body.
+            $body = _append_footer_header_to_part(
+                {   'part'     => $entity,
+                    'header'   => $header_msg,
+                    'footer'   => $footer_msg,
+                    'eff_type' => $eff_type,
+                    'body'     => $body
+                }
+            );
+            return undef unless defined $body;
+
+            # Save new body.
+            $io = $bodyh->open('w');
+            unless (defined $io) {
+                Log::do_log('err', 'Failed to save message: %s', "$!");
+                return undef;
+            }
+            $io->print($body);
+            $io->close;
+            $entity->sync_headers(Length => 'COMPUTE')
+                if $entity->head->get('Content-Length');
+
+            return 1;
+        }
+    } elsif ($eff_type eq 'multipart/mixed') {
+        ## Append to the first part, since other parts will be "attachments".
+        if ($entity->parts
+            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            return 1;
+        }
+    } elsif ($eff_type eq 'multipart/alternative') {
+        ## We try all the alternatives
+        my $r = undef;
+        foreach my $p ($entity->parts) {
+            $r = 1
+                if _append_parts($p, $header_msg, $footer_msg);
+        }
+        return $r if $r;
+    } elsif ($eff_type eq 'multipart/related') {
+        ## Append to the first part, since other parts will be "attachments".
+        if ($entity->parts
+            and _append_parts($entity->parts(0), $header_msg, $footer_msg)) {
+            return 1;
+        }
+    }
+
+    ## We couldn't find any parts to modify.
+    return undef;
+}
+
+# Styles to cancel local CSS.
+my $div_style =
+    'background: transparent; border: none; clear: both; display: block; float: none; position: static';
+
+sub _append_footer_header_to_part {
+    my $data = shift;
+
+    my $entity       = $data->{'part'};
+    my $header_msg = $data->{'header'};
+    my $footer_msg = $data->{'footer'};
+    my $eff_type   = $data->{'eff_type'};
+    my $body       = $data->{'body'};
+
+    my $in_cset;
+
+    ## Detect charset.  If charset is unknown, detect 7-bit charset.
+    my $charset = $entity->head->mime_attr('Content-Type.Charset');
+    $in_cset = MIME::Charset->new($charset || 'NONE');
+    unless ($in_cset->decoder) {
+        # MIME::Charset 1.009.2 or later required.
+        $in_cset =
+            MIME::Charset->new(MIME::Charset::detect_7bit_charset($body)
+                || 'NONE');
+    }
+    unless ($in_cset->decoder) {
+        return undef;
+    }
+    $in_cset->encoder($in_cset);    # no charset conversion
+
+    ## Decode body to Unicode, since HTML::Entities::encode_entities() and
+    ## newline normalization will break texts with several character sets
+    ## (UTF-16/32, ISO-2022-JP, ...).
+    ## Only decodable bodies are allowed.
+    eval {
+        $body = $in_cset->decode($body, 1);
+        $header_msg = Encode::decode_utf8($header_msg, 1);
+        $footer_msg = Encode::decode_utf8($footer_msg, 1);
+    };
+    return undef if $@;
+
+    my $new_body;
+    if ($eff_type eq 'text/plain') {
+        Log::do_log('debug3', "Treating text/plain part");
+
+        ## Add newlines.  For BASE64 encoding they also must be normalized.
+        if (length $header_msg) {
+            $header_msg .= "\n" unless $header_msg =~ /\n\z/;
+        }
+        if (length $footer_msg and length $body) {
+            $body .= "\n" unless $body =~ /\n\z/;
+        }
+        if (length $footer_msg) {
+            $footer_msg .= "\n" unless $footer_msg =~ /\n\z/;
+        }
+        if (uc($entity->head->mime_attr('Content-Transfer-Encoding') || '') eq
+            'BASE64') {
+            $header_msg =~ s/\r\n|\r|\n/\r\n/g;
+            $body       =~ s/(\r\n|\r|\n)\z/\r\n/;    # only at end
+            $footer_msg =~ s/\r\n|\r|\n/\r\n/g;
+        }
+
+        $new_body = $header_msg . $body . $footer_msg;
+
+        ## Data not encodable by original charset will fallback to UTF-8.
+        my ($newcharset, $newenc);
+        ($body, $newcharset, $newenc) =
+            $in_cset->body_encode($new_body, Replacement => 'FALLBACK');
+        unless ($newcharset) {                        # bug in MIME::Charset?
+            Log::do_log('err', 'Can\'t determine output charset');
+            return undef;
+        } elsif ($newcharset ne $in_cset->as_string) {
+            $entity->head->mime_attr('Content-Transfer-Encoding' => $newenc);
+            $entity->head->mime_attr('Content-Type.Charset' => $newcharset);
+        }
+    } elsif ($eff_type eq 'text/html') {
+        Log::do_log('debug3', "Treating text/html part");
+
+        # Escape special characters.
+        $header_msg = HTML::Entities::encode_entities($header_msg, '<>&"');
+        $header_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
+        $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $footer_msg = HTML::Entities::encode_entities($footer_msg, '<>&"');
+        $footer_msg =~ s/(\r\n|\r|\n)$//;        # strip the last newline.
+        $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+
+        $new_body = $body;
+        if (length $header_msg) {
+            my $div = sprintf '<div style="%s">%s</div>',
+                $div_style, $header_msg;
+            $new_body =~ s,(<body\b[^>]*>),$1$div,i
+                or $new_body = $div . $new_body;
+        }
+        if (length $footer_msg) {
+            my $div = sprintf '<div style="%s">%s</div>',
+                $div_style, $footer_msg;
+            $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
+                or $new_body = $new_body . $div;
+        }
+
+        # Unencodable characters are encoded to entity, because charset
+        # metadata in HTML won't be altered.
+        # Problem: FB_HTMLCREF of several codecs are broken.
+        eval { $body = $in_cset->encode($new_body, Encode::FB_HTMLCREF); };
+        return undef if $@;
+    }
+
+    return $body;
+}
+
 sub _urlize_part {
-    my $part     = shift;
+    my $entity     = shift;
     my $list        = shift;
     my $expl        = $list->{'dir'} . '/urlized';
     my $robot       = $list->{'domain'};
@@ -1543,7 +1526,7 @@ sub _urlize_part {
     my $listname    = $list->{'name'};
     my $wwsympa_url = shift;
 
-    my $head     = $part->head;
+    my $head     = $entity->head;
     my $encoding = $head->mime_encoding;
 
     ##  name of the linked file
@@ -1559,18 +1542,18 @@ sub _urlize_part {
         if ($head->mime_type =~ /multipart\//i) {
             my $content_type = $head->get('Content-Type');
             $content_type =~ s/multipart\/[^;]+/multipart\/mixed/g;
-            $part->head->replace('Content-Type', $content_type);
-            my @parts = $part->parts();
+            $entity->head->replace('Content-Type', $content_type);
+            my @parts = $entity->parts();
             foreach my $i (0 .. $#parts) {
                 my $entity =
-                    _urlize_part($part->parts($i), $list, $dir, $i,
+                    _urlize_part($entity->parts($i), $list, $dir, $i,
                     $mime_types, Conf::get_robot_conf($robot, 'wwsympa_url'));
                 if (defined $entity) {
                     $parts[$i] = $entity;
                 }
             }
             ## Replace message parts
-            $part->parts(\@parts);
+            $entity->parts(\@parts);
         }
         $filename = "msg.$i" . $fileExt;
     }
@@ -1578,7 +1561,7 @@ sub _urlize_part {
     ##create the linked file
     ## Store body in file
     if (open OFILE, ">$expl/$dir/$filename") {
-        my $ct = $part->effective_type || 'text/plain';
+        my $ct = $entity->effective_type || 'text/plain';
         printf OFILE "Content-type: %s", $ct;
         printf OFILE "; Charset=%s", $head->mime_attr('Content-Type.Charset')
             if $head->mime_attr('Content-Type.Charset') =~ /\S/;
@@ -1593,7 +1576,7 @@ sub _urlize_part {
         /^(binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64)$/
         ) {
         open TMP, ">$expl/$dir/$filename.$encoding";
-        $part->print_body(\*TMP);
+        $entity->print_body(\*TMP);
         close TMP;
 
         open BODY, "$expl/$dir/$filename.$encoding";
@@ -1601,7 +1584,7 @@ sub _urlize_part {
         $decoder->decode(\*BODY, \*OFILE);
         unlink "$expl/$dir/$filename.$encoding";
     } else {
-        $part->print_body(\*OFILE);
+        $entity->print_body(\*OFILE);
     }
     close(OFILE);
     my $file = "$expl/$dir/$filename";
@@ -1615,7 +1598,7 @@ sub _urlize_part {
 
     ## Delete files created twice or more (with Content-Type.name and Content-
     ## Disposition.filename)
-    $part->purge;
+    $entity->purge;
 
     (my $file_name = $filename) =~ s/\./\_/g;
     # do NOT escape '/' chars
@@ -1645,9 +1628,7 @@ sub _urlize_part {
         $tt2_include_path
     );
 
-    my $entity = $parser->parse_data(\$new_part);
-
-    return $entity;
+    return $parser->parse_data(\$new_part);
 }
 
 =over
