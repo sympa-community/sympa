@@ -2862,12 +2862,12 @@ sub DoMessage {
                 'dkim_authenticated_messages');
 
             my $numsmtp;
-            eval {
-                $numsmtp = $list->distribute_msg(
-                    'message'              => $message,
-                    'apply_dkim_signature' => $apply_dkim_signature
-                );
-            };
+            #XXX eval {
+            $numsmtp = $list->distribute_msg(
+                'message'              => $message,
+                'apply_dkim_signature' => $apply_dkim_signature
+            );
+            #XXX };
             ## Keep track of known message IDs...if any
             $msgid_table{$list->get_list_id()}{$messageid} = time
                 if $messageid;
