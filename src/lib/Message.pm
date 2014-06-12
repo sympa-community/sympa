@@ -1125,42 +1125,9 @@ sub prepare_message_according_to_mode {
         $self->set_entity($entity);
     } elsif ($mode eq 'urlize') {
         ##Prepare message for urlize reception mode
-        my $expl = $list->{'dir'} . '/urlized';
+        my $entity = $self->as_entity->dup;
 
-        unless (-d $expl or mkdir $expl, 0775) {
-            Log::do_log('err', 'Unable to create urlized directory %s',
-                $expl);
-            return undef;
-        }
-
-        ## Clean up Message-ID
-        my $dir1 = tools::escape_chars($self->{'message_id'});
-        $dir1 = '/' . $dir1;
-
-        unless (mkdir "$expl/$dir1", 0775) {
-            Log::do_log('err', 'Unable to create urlized directory %s/%s',
-                $expl, $dir1);
-            return 0;
-        }
-        my $mime_types = tools::load_mime_types();
-        my $entity     = $self->as_entity->dup;
-        my @parts      = ();
-        my $i          = 0;
-        foreach my $part ($entity->parts) {
-            my $entity =
-                _urlize_part($part, $list, $dir1, $i, $mime_types,
-                Conf::get_robot_conf($robot_id, 'wwsympa_url'));
-            if (defined $entity) {
-                push @parts, $entity;
-            } else {
-                push @parts, $part;
-            }
-            $i++;
-        }
-
-        ## Replace message parts
-        $entity->parts(\@parts);
-
+        _urlize_parts($entity, $list, $self->{'message_id'});
         ## Add a footer
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
@@ -1514,17 +1481,65 @@ sub _append_footer_header_to_part {
     return $body;
 }
 
-sub _urlize_part {
+sub _urlize_parts {
+    my $entity     = shift;
+    my $list       = shift;
+    my $message_id = shift;
+
+    ## Only multipart/mixed messages are modified.
+    my $eff_type = $entity->effective_type || 'text/plain';
+    unless ($eff_type eq 'multipart/mixed') {
+        return undef;
+    }
+
+    my $expl = $list->{'dir'} . '/urlized';
+    unless (-d $expl or mkdir $expl, 0775) {
+        Log::do_log('err', 'Unable to create urlized directory %s', $expl);
+        return undef;
+    }
+
+    ## Clean up Message-ID
+    my $dir1 = tools::escape_chars($message_id);
+    $dir1 = '/' . $dir1;
+    unless (mkdir "$expl/$dir1", 0775) {
+        Log::do_log('err', 'Unable to create urlized directory %s/%s',
+            $expl, $dir1);
+        return 0;
+    }
+
+    my $wwsympa_url = Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
+    my $mime_types  = tools::load_mime_types();
+    my @parts       = ();
+    my $i           = 0;
+    foreach my $part ($entity->parts) {
+        my $p = _urlize_one_part($part->dup, $list, $dir1, $i, $mime_types,
+            $wwsympa_url);
+        if (defined $p) {
+            push @parts, $p;
+            $i++;
+        } else {
+            push @parts, $part;
+        }
+    }
+    if ($i) {
+        ## Replace message parts
+        $entity->parts(\@parts);
+    }
+
+    return $entity;
+}
+
+sub _urlize_one_part {
     my $entity      = shift;
     my $list        = shift;
-    my $expl        = $list->{'dir'} . '/urlized';
-    my $robot       = $list->{'domain'};
     my $dir         = shift;
     my $i           = shift;
     my $mime_types  = shift;
-    my $listname    = $list->{'name'};
     my $wwsympa_url = shift;
 
+    my $expl     = $list->{'dir'} . '/urlized';
+    my $robot    = $list->{'domain'};
+    my $listname = $list->{'name'};
     my $head     = $entity->head;
     my $encoding = $head->mime_encoding;
 
@@ -1541,22 +1556,6 @@ sub _urlize_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        if ($head->mime_type =~ /multipart\//i) {
-            my $content_type = $head->get('Content-Type');
-            $content_type =~ s/multipart\/[^;]+/multipart\/mixed/g;
-            $entity->head->replace('Content-Type', $content_type);
-            my @parts = $entity->parts();
-            foreach my $i (0 .. $#parts) {
-                my $entity =
-                    _urlize_part($entity->parts($i), $list, $dir, $i,
-                    $mime_types, Conf::get_robot_conf($robot, 'wwsympa_url'));
-                if (defined $entity) {
-                    $parts[$i] = $entity;
-                }
-            }
-            ## Replace message parts
-            $entity->parts(\@parts);
-        }
         $filename = "msg.$i" . $fileExt;
     }
 
