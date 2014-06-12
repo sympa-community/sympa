@@ -45,10 +45,17 @@ package Message;
 
 use strict;
 use warnings;
+use Encode qw();
+use HTML::Entities qw();
 use Mail::Address;
 use MIME::Charset;
+use MIME::Decoder;
+use MIME::Entity;
 use MIME::EncWords;
 use MIME::Parser;
+use MIME::Tools;
+use Storable qw();
+use URI::Escape qw();
 
 use Conf;
 use Sympa::Language;
@@ -56,6 +63,7 @@ use List;
 use Log;
 use Scenario;
 use tools;
+use tt2;
 
 # Language context
 my $language = Sympa::Language->instance;

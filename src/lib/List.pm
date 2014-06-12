@@ -28,17 +28,14 @@ use strict;
 use warnings;
 use Digest::MD5 qw();
 use Encode qw();
-use HTML::Entities qw();
 use HTTP::Request;
 use IO::Scalar;
 use Mail::Address;
 use MIME::Charset;
-use MIME::Decoder;
 use MIME::EncWords;
-use MIME::Entity;
 use MIME::Parser;
 use POSIX qw();
-use Storable;
+use Storable qw();
 use Time::Local qw();
 use XML::LibXML;
 
@@ -947,7 +944,7 @@ sub save_config {
     if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
         'binary_file') {
         eval {
-            &Storable::store($self->{'admin'}, "$self->{'dir'}/config.bin");
+            Storable::store($self->{'admin'}, "$self->{'dir'}/config.bin");
         };
         if ($@) {
             Log::do_log('err',
@@ -1051,7 +1048,7 @@ sub load {
 
         ## Load a binary version of the data structure
         ## unless config is more recent than config.bin
-        eval { $admin = &Storable::retrieve("$self->{'dir'}/config.bin") };
+        eval { $admin = Storable::retrieve("$self->{'dir'}/config.bin") };
         if ($@) {
             Log::do_log('err',
                 'Failed to load the binary config %s, error: %s',
@@ -1081,7 +1078,7 @@ sub load {
         ## update the binary version of the data structure
         if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
             'binary_file') {
-            eval { &Storable::store($admin, "$self->{'dir'}/config.bin") };
+            eval { Storable::store($admin, "$self->{'dir'}/config.bin") };
             if ($@) {
                 Log::do_log('err',
                     'Failed to save the binary config %s. error: %s',
@@ -2074,6 +2071,7 @@ sub distribute_msg {
 #       | 0 if no subscriber for sending digest
 #       | undef
 ####################################################
+# Old name: send_msg_digest().
 sub distribute_digest {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
@@ -2713,7 +2711,8 @@ sub send_msg {
 
     foreach my $mode (sort keys %$available_recipients) {
         my $new_message = Storable::dclone($message);
-        unless ($new_message->prepare_message_according_to_mode($mode, $self)) {
+        unless ($new_message->prepare_message_according_to_mode($mode, $self))
+        {
             Log::do_log('err', "Failed to create Message object");
             return undef;
         }
@@ -2852,11 +2851,6 @@ sub get_recipients_per_mode {
         @tabrcpt_summary,     @tabrcpt_summary_verp,
         @tabrcpt_nomail,      @tabrcpt_nomail_verp,
     );
-    my $mixed =
-        ($message->{'msg'}->head->get('Content-Type') =~ /multipart\/mixed/i);
-    my $alternative =
-        ($message->{'msg'}->head->get('Content-Type') =~
-            /multipart\/alternative/i);
 
     for (
         my $user = $self->get_first_list_member();
@@ -2912,13 +2906,13 @@ sub get_recipients_per_mode {
             } else {
                 push @tabrcpt_notice, $user->{'email'};
             }
-        } elsif ($alternative and ($user->{'reception'} eq 'txt')) {
+        } elsif ($user->{'reception'} eq 'txt') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_txt_verp, $user->{'email'};
             } else {
                 push @tabrcpt_txt, $user->{'email'};
             }
-        } elsif ($alternative and ($user->{'reception'} eq 'html')) {
+        } elsif ($user->{'reception'} eq 'html') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_html_verp, $user->{'email'};
             } else {
@@ -2928,7 +2922,7 @@ sub get_recipients_per_mode {
                     push @tabrcpt_html, $user->{'email'};
                 }
             }
-        } elsif ($mixed and ($user->{'reception'} eq 'urlize')) {
+        } elsif ($user->{'reception'} eq 'urlize') {
             if ($user->{'bounce_address'}) {
                 push @tabrcpt_urlize_verp, $user->{'email'};
             } else {
@@ -4132,6 +4126,8 @@ sub compute_auth {
     return $key;
 }
 
+# DEPRECATED: Moved to Message::_decorate_parts().
+#sub add_parts;
 
 ## Delete a user in the user_table
 ##sub delete_global_user
