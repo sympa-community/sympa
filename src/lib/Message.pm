@@ -647,8 +647,8 @@ sub clean_html {
 }
 
 sub _fix_html_part {
-    my $entity  = shift;
-    my $robot = shift;
+    my $entity = shift;
+    my $robot  = shift;
     return $entity unless $entity;
 
     my $eff_type = $entity->head->mime_attr("Content-Type");
@@ -666,9 +666,8 @@ sub _fix_html_part {
         my $body = $bodyh->as_string;
         # Re-encode parts to UTF-8, since StripScripts cannot handle texts
         # with some charsets (ISO-2022-*, UTF-16*, ...) correctly.
-        my $cset =
-            MIME::Charset->new($entity->head->mime_attr('Content-Type.Charset')
-                || '');
+        my $cset = MIME::Charset->new(
+            $entity->head->mime_attr('Content-Type.Charset') || '');
         unless ($cset->decoder) {
             # Charset is unknown.  Detect 7-bit charset.
             my ($dummy, $charset) =
@@ -1177,7 +1176,7 @@ sub prepare_message_according_to_mode {
 sub _decorate_parts {
     Log::do_log('debug3', '(%s, %s)');
     my $entity = shift;
-    my $list = shift;
+    my $list   = shift;
 
     my $type     = $list->{'admin'}{'footer_type'};
     my $listdir  = $list->{'dir'};
@@ -1321,7 +1320,7 @@ sub _decorate_parts {
 ## Note: With BASE64 transfer-encoding, newline must be normalized to CRLF,
 ##   however, original body would be intact.
 sub _append_parts {
-    my $entity       = shift;
+    my $entity     = shift;
     my $header_msg = shift || '';
     my $footer_msg = shift || '';
 
@@ -1413,7 +1412,7 @@ my $div_style =
 sub _append_footer_header_to_part {
     my $data = shift;
 
-    my $entity       = $data->{'part'};
+    my $entity     = $data->{'part'};
     my $header_msg = $data->{'header'};
     my $footer_msg = $data->{'footer'};
     my $eff_type   = $data->{'eff_type'};
@@ -1516,7 +1515,7 @@ sub _append_footer_header_to_part {
 }
 
 sub _urlize_part {
-    my $entity     = shift;
+    my $entity      = shift;
     my $list        = shift;
     my $expl        = $list->{'dir'} . '/urlized';
     my $robot       = $list->{'domain'};
