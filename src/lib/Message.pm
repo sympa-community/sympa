@@ -1537,6 +1537,9 @@ sub _urlize_part {
 
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
+        # MIME-tools >= 5.501 returns Unicode value ("utf8" flag on).
+        $filename = Encode::encode_utf8($filename)
+            if Encode::is_utf8($filename);
     } else {
         if ($head->mime_type =~ /multipart\//i) {
             my $content_type = $head->get('Content-Type');
