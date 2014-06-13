@@ -1837,7 +1837,7 @@ sub DoFile {
                         'parameters' => $hdr->get('Message-Id')
                             . ",$dyn_family->{'robot'}",
                         'target_email' => '',
-                        'msg_id'       => hdr->get('Message-Id'),
+                        'msg_id'       => $hdr->get('Message-Id'),
                         'status'       => 'error',
                         'error_type'   => 'internal',
                         'user_email'   => $sender,
@@ -2859,7 +2859,8 @@ sub DoMessage {
             $apply_dkim_signature = 'on'
                 if tools::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'},
-                'dkim_authenticated_messages');
+                'dkim_authenticated_messages')
+                and $message->{'dkim_pass'};
 
             my $numsmtp;
             #XXX eval {
