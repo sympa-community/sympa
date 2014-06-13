@@ -959,6 +959,48 @@ sub _merge_msg {
     return $entity;
 }
 
+=over 4
+
+=item test_personalize ( $list )
+
+I<Instance method>.
+Test if personalization can be performed successfully over all subscribers
+of list.
+
+Parameters:
+
+Returns:
+
+C<1> if succeed, or C<undef>.
+
+=back
+
+=cut
+
+sub test_personalize {
+    my $self = shift;
+    my $list = shift;
+
+    return 1
+	unless tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+
+    my $available_recipients = $list->get_recipients_per_mode($self);
+    foreach my $mode (sort keys %$available_recipients) {
+	my $message = dclone $self;
+	$message->prepare_message_according_to_mode($mode, $list);
+
+	foreach my $rcpt (
+	    @{$available_recipients->{$mode}{'verp'}   || []},
+	    @{$available_recipients->{$mode}{'noverp'} || []}
+	    ) {
+	    unless ($message->personalize($list, $rcpt, {})) {
+		return undef;
+	    }
+	}
+    }
+    return 1;
+}
+
 ############################################################
 #  merge_data                                              #
 ############################################################
