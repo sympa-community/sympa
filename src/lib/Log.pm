@@ -192,10 +192,13 @@ sub do_log {
     return unless defined $log_level;
 
     # Output to syslog
+    # Note: Sys::Syslog <= 0.07 which are bundled in Perl <= 5.8.7 pass
+    # $message to sprintf() even when no arguments are given.  As a
+    # workaround, always pass format string '%s' along with $message.
     eval {
-        unless (Sys::Syslog::syslog($level, $message)) {
+        unless (Sys::Syslog::syslog($level, '%s', $message)) {
             do_connect();
-            Sys::Syslog::syslog($level, $message);
+            Sys::Syslog::syslog($level, '%s', $message);
         }
     };
     if ($@ and $warning_date < time - $warning_timeout) {
