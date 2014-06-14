@@ -2574,13 +2574,8 @@ sub DoForward {
 #
 ####################################################
 sub DoMessage {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($which, $message, $robot) = @_;
-    Log::do_log(
-        'debug',            '(%s, %s, %s, msg from %s, %s, %s)',
-        $which,             $message->{'msg'},
-        $robot,             $message->{'sender'},
-        $message->{'size'}, $message->{'smime_crypted'}
-    );
 
     ## List and host.
     my ($listname, $host) = split(/[@\s]+/, $which);
@@ -2861,6 +2856,18 @@ sub DoMessage {
                 'dkim_authenticated_messages')
                 and $message->{'dkim_pass'};
 
+            ## Check TT2 syntax for merge_feature.
+            unless ($message->test_personalize($list)) {
+                Log::do_log(
+                    'err',
+                    'Failed to personalize. Message %s for list %s was rejected',
+                    $message,
+                    $list
+                );
+                $list->send_dsn($message, {}, '5.6.5');
+                return undef;
+            }
+
             my $numsmtp;
             #XXX eval {
             $numsmtp = $list->distribute_msg(
@@ -2967,6 +2974,18 @@ sub DoMessage {
         }
 
     } elsif ($action =~ /^request_auth/) {
+        ## Check syntax for merge_feature.
+        unless ($message->test_personalize($list)) {
+            Log::do_log(
+                'err',
+                'Failed to personalize. Message %s for list %s was rejected',
+                $message,
+                $list
+            );
+            $list->send_dsn($message, {}, '5.6.5');
+            return undef;
+        }
+
         my $key = $list->send_auth($message);
 
         unless (defined $key) {
@@ -3018,6 +3037,19 @@ sub DoMessage {
         return 1;
     } elsif ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
         my $quiet = $2;
+
+        ## Check syntax for merge_feature.
+        unless ($message->test_personalize($list)) {
+            Log::do_log(
+                'err',
+                'Failed to personalize. Message %s for list %s was rejected',
+                $message,
+                $list
+            );
+            $list->send_dsn($message, {}, '5.6.5');
+            return undef;
+        }
+
         my $key = $list->send_to_editor('md5', $message);
 
         unless (defined $key) {
@@ -3073,6 +3105,19 @@ sub DoMessage {
         return 1;
     } elsif ($action =~ /^editor(\s?,\s?(quiet))?/) {
         my $quiet = $2;
+
+        ## Check syntax for merge_feature.
+        unless ($message->test_personalize($list)) {
+            Log::do_log(
+                'err',
+                'Failed to personalize. Message %s for list %s was rejected',
+                $message,
+                $list
+            );
+            $list->send_dsn($message, {}, '5.6.5');
+            return undef;
+        }
+
         my $key = $list->send_to_editor('smtp', $message);
 
         unless (defined $key) {

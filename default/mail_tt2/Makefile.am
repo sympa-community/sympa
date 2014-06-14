@@ -26,6 +26,7 @@ mailtemplate_DATA = authorization_reject.tt2 \
 		    command_report.tt2 \
 		    digest_plain.tt2 \
 		    digest.tt2 \
+		    dsn.tt2 \
 		    d_install_shared.tt2 \
 		    d_reject_shared.tt2 \
 		    expire_deletion.tt2 \

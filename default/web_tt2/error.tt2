@@ -134,6 +134,7 @@
   [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]
   [% ELSIF u_err.msg == 'change_member_email_failed_included' %][%|loc(u_err.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
   [% ELSIF u_err.msg == 'change_admin_email_failed_included' %][%|loc(u_err.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
+  [% ELSIF u_err.msg == 'merge_failed' %][%|loc(u_err.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]
   [% ELSE %]
     [% TRY %][% INCLUDE $u_err.msg %]
     [% CATCH %][% u_err.msg %]

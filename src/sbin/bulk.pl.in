@@ -395,9 +395,10 @@ while (!$end) {
         $data->{'wwsympa_url'} =
             Conf::get_robot_conf($bulk->{'robot'}, 'wwsympa_url');
 
-        my $rcpt;    # It is the email of a subscriber, use it in the foreach
-        my @rcpts = split /,/,
-            $bulk->{'recipients'};    # Contain all the subscribers
+        # It is the email of a subscriber, use it in the foreach
+        my $rcpt;
+        # Contain all the subscribers
+        my @rcpts = split /,/, $bulk->{'recipients'};
         ## Use an intermediate handler to encode to filesystem_encoding
         my $user;
 
@@ -410,11 +411,14 @@ while (!$end) {
         #  -6 dkim sign
         #
 
-        if (   ($bulk->{'verp'})
-            || ($bulk->{'merge'})
-            || ($bulk->{'tracking'} eq 'dsn')
-            || ($bulk->{'tracking'} eq 'mdn'))
-        {    # message needs personalization
+        # FIXME: $message would know its list context.
+        my $list = new List($bulk->{'listname'}, $bulk->{'robot'});
+
+        if (   $bulk->{'verp'}
+            or $bulk->{'merge'}
+            or $bulk->{'tracking'} eq 'dsn'
+            or $bulk->{'tracking'} eq 'mdn') {
+            # message needs personalization
             my $key;
 
             foreach $rcpt (@rcpts) {
@@ -423,33 +427,26 @@ while (!$end) {
                         'noxsympato'      => 'noxsympato'
                     }
                 );
-                my $entity = $message->{'msg'};
+                my $entity = $message->as_entity;
                 my $notification_id;
                 my $return_path;
-                my $escaped_rcpt = $rcpt;
-                $escaped_rcpt =~ s/\@/\=\=a\=\=/;
 
-                if (   ($bulk->{'tracking'} eq 'dsn')
-                    || ($bulk->{'tracking'} eq 'mdn'))
-                {    # tracking by MDN required tracking by DSN to
-                    my $msgid = $entity->head->get('Message-Id');
-                    chomp $msgid;
+                if (   $bulk->{'tracking'} eq 'dsn'
+                    or $bulk->{'tracking'} eq 'mdn') {
+                    # tracking by MDN required tracking by DSN to
+                    my $msgid = $message->{'message_id'};
                     $notification_id =
                         tracking::find_notification_id_by_message($rcpt,
                         $msgid, $listname, $robot);
                     $return_path =
-                          $Conf::Conf{'bounce_email_prefix'} . '+'
-                        . $escaped_rcpt . '=='
-                        . $listname . '=='
-                        . $notification_id . '@'
-                        . $robot;
+                        $list->get_bounce_address($rcpt, $notification_id);
                     $entity->head->replace('Disposition-Notification-To',
                         $return_path)
-                        if ($bulk->{'tracking'} eq 'mdn');
-                    if (   ($message->{'protected'})
-                        || ($message->{'smime_crypted'})) {
+                        if $bulk->{'tracking'} eq 'mdn';
+                    if (   $message->{'protected'}
+                        or $message->{'smime_crypted'}) {
                         my ($dummy, $msg_body) =
-                            split(/\r?\n\r?\n/, $messageasstring_init, 2);
+                            split /\r?\n\r?\n/, $messageasstring_init, 2;
                         ## concat headers from entity with original body
                         $messageasstring_init =
                             $entity->head->as_string . "\n" . $msg_body;
@@ -458,19 +455,24 @@ while (!$end) {
                     }
                     # trace_smime($messageasstring,'tracking');
                 } else {    # VERP
-                    $return_path =
-                          $Conf::Conf{'bounce_email_prefix'} . '+'
-                        . $escaped_rcpt . '=='
-                        . $listname . '@'
-                        . $robot;
+                    $return_path = $list->get_bounce_address($rcpt);
                 }
-                if (($bulk->{'merge'}) && !($message->{'protected'})) {
-                    unless (Message::merge_msg($entity, $rcpt, $bulk, $data))
-                    {
-                        Log::do_log('err',
-                            'Erreur d appel Message::merge_msg');
+                if ($bulk->{'merge'} and !$message->{'protected'}) {
+                    if ($message->personalize($list, $rcpt)) {
+                        $messageasstring = $message->as_string;
+                    } else {
+                        #FIXME: Mark packet as "bad".
+                        Log::do_log('err', 'Erreur d appel personalize()');
+                        List::send_notify_to_listmaster(
+                            'bulk_failed',
+                            $list->{'domain'},
+                            {   'msg'  => $messageasstring_init,
+                                'list' => $list,
+                            }
+                        );
+
+                        last;    # foreach $rcpt
                     }
-                    $messageasstring = $entity->as_string;
                 } else {
                     $messageasstring = $messageasstring_init;
                 }
@@ -504,7 +506,8 @@ while (!$end) {
                 print SMTP $messageasstring;
                 close SMTP;
             }
-        } else { # message dont needs personalization, they can be sent by packet
+        } else {
+            # message doesn't need personalization, so can be sent by packet.
             if (Conf::get_robot_conf($bulk->{'robot'}, 'dkim_feature') eq
                 'on') {
                 $messageasstring_init = tools::remove_invalid_dkim_signature(

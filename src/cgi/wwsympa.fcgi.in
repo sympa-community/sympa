@@ -47,6 +47,7 @@ use strict;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
 use Archive::Zip qw();
+use DateTime;
 use DateTime::Format::Mail;
 use MIME::Parser;
 use Sys::Syslog qw();
@@ -22097,7 +22098,6 @@ sub do_send_mail {
             );
             return undef;
         }
-
     } else {
         ## Message body should not be empty
         if ($in{'body'} =~ /^\s*$/) {
@@ -22123,6 +22123,16 @@ sub do_send_mail {
         }
 
         $in{'body'} = "\n" . $in{'body'};
+    }
+
+    ## Roughly check TT2 syntax for merge_feature.
+    if (tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on')) {
+        unless (defined Message::personalize_text($in{'body'}, $list)) {
+            report::reject_report_web('user', 'merge_failed',
+                {'error' => tt2::get_error()},
+                $param->{'action'});
+            return 'compose_mail';
+        }
     }
 
     my $data = {
