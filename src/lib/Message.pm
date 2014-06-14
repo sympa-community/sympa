@@ -519,6 +519,46 @@ sub as_string {
     return $self->{'msg_as_string'};
 }
 
+=over 4
+
+=item get_header ( $field, [ $sep ] )
+
+I<Instance method>.
+Gets value(s) of header field $field, stripping trailing newline.
+
+B<In scalar context> without $sep, returns first occurrence or C<undef>.
+If $sep is defined, returns all occurrences joined by it, or C<undef>.
+Otherwise B<in array context>, returns an array of all occurrences or C<()>.
+
+Note:
+Folding newlines will not be removed.
+
+=back
+
+=cut
+
+sub get_header {
+    my $self  = shift;
+    my $field = shift;
+    my $sep   = shift;
+
+    my $hdr = $self->as_entity->head;
+
+    if (defined $sep or wantarray) {
+        my @values = grep { s/\A$field\s*:\s*//i }
+            split /\n(?![ \t])/, $hdr->as_string();
+        if (defined $sep) {
+            return undef unless @values;
+            return join $sep, @values;
+        }
+        return @values;
+    } else {
+        my $value = $hdr->get($field, 0);
+        chomp $value if defined $value;
+        return $value;
+    }
+}
+
 =over
 
 =item dump ( $output )

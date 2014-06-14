@@ -11154,24 +11154,21 @@ sub is_msg_topic_tagging_required {
 #  Compute the topic(s) of the message and tag it.
 #
 # IN : -$self (+): ref(List)
-#      -$msg (+): ref(MIME::Entity)
-#      -$robot (+): robot
+#      -$message (+): ref(message object)
+#      -$robot (+): *** No longer used
 #
 # OUT : string of tag(s), can be separated by ',', can be empty
 #        | undef
 ####################################################
 sub automatic_tag {
-    my ($self, $msg, $robot) = @_;
-    my $msg_id = $msg->head->get('Message-ID');
-    chomp($msg_id);
-    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
+    Log::do_log('debug3', '(%s, %s)', @_);
+    my ($self, $message) = @_;
+    my $msg_id = $message->{'message_id'};
 
-    my $topic_list = $self->compute_topic($msg, $robot);
+    my $topic_list = $self->compute_topic($message);
 
     if ($topic_list) {
-        my $filename = $self->tag_topic($msg_id, $topic_list, 'auto');
-
-        unless ($filename) {
+        unless ($self->tag_topic($msg_id, $topic_list, 'auto')) {
             Log::do_log('err', 'Unable to tag message %s with topic "%s"',
                 $msg_id, $topic_list);
             return undef;
@@ -11185,42 +11182,39 @@ sub automatic_tag {
 # compute_topic
 ####################################################
 #  Compute the topic of the message. The topic is got
-#  from applying a regexp on the message, regexp
-#  based on keywords defined in list_parameter
-#  msg_topic.keywords. The regexp is applied on the
+#  from keywords defined in list_parameter
+#  msg_topic.keywords. The keyword is applied on the
 #  subject and/or the body of the message according
 #  to list parameter msg_topic_keywords_apply_on
 #
 # IN : -$self (+): ref(List)
-#      -$msg (+): ref(MIME::Entity)
-#      -$robot(+) : robot
+#      -$message (+): ref(message object)
+#      -$robot (+): *** No longer used.
 #
 # OUT : string of tag(s), can be separated by ',', can be empty
 ####################################################
 sub compute_topic {
-    my ($self, $msg, $robot) = @_;
-    my $msg_id = $msg->head->get('Message-ID');
-    chomp($msg_id);
-    Log::do_log('debug3', '(%s, %s)', $self->{'name'}, $msg_id);
+    Log::do_log('debug3', '(%s, %s)', @_);
+    my ($self, $message) = @_;
+
     my @topic_array;
     my %topic_hash;
     my %keywords;
 
     ## TAGGING INHERITED BY THREAD
-    # getting reply-to
-    my $reply_to = $msg->head->get('In-Reply-To');
-    $reply_to = tools::clean_msg_id($reply_to);
-    my $info_msg_reply_to = $self->load_msg_topic_file($reply_to, $robot);
+    # getting in-reply-to
+    my $reply_to          = $message->get_header('In-Reply-To');
+    my $info_msg_reply_to = $self->load_msg_topic_file($reply_to)
+        if $reply_to;
 
     # is msg reply to already tagged?
-    if (ref($info_msg_reply_to) eq "HASH") {
+    if (ref $info_msg_reply_to eq 'HASH') {
         return $info_msg_reply_to->{'topic'};
     }
 
     ## TAGGING BY KEYWORDS
     # getting keywords
-    foreach my $topic (@{$self->{'admin'}{'msg_topic'}}) {
-
+    foreach my $topic (@{$self->{'admin'}{'msg_topic'} || []}) {
         my $list_keyw =
             tools::get_array_from_splitted_string($topic->{'keywords'});
 
@@ -11230,58 +11224,59 @@ sub compute_topic {
     }
 
     # getting string to parse
-    # We convert it to Unicode for case-ignore match with non-ASCII keywords.
+    # We convert it to UTF-8 for case-ignore match with non-ASCII keywords.
     my $mail_string = '';
-    if ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
-        $mail_string =
-            Encode::decode_utf8(tools::decode_header($msg, 'Subject')) . "\n";
+    if (index($self->{'admin'}{'msg_topic_keywords_apply_on'}, 'subject') >= 0) {
+        $mail_string = $message->{'decoded_subject'} . "\n";
     }
     unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
         # get bodies of any text/* parts, not digging nested subparts.
         my @parts;
-        if ($msg->effective_type =~ /^(multipart|message)\//i) {
-            @parts = $msg->parts();
+        if ($message->as_entity()->parts) {
+            @parts = $message->as_entity()->parts;
         } else {
-            @parts = ($msg);
+            @parts = ($message->as_entity());
         }
         foreach my $part (@parts) {
             next unless $part->effective_type =~ /^text\//i;
             my $charset = $part->head->mime_attr("Content-Type.Charset");
             $charset = MIME::Charset->new($charset);
+            $charset->encoder('UTF-8');
+
             if (defined $part->bodyhandle) {
                 my $body = $part->bodyhandle->as_string();
                 my $converted;
-                eval { $converted = $charset->decode($body); };
+                eval { $converted = $charset->encode($body); };
                 if ($@) {
-                    $converted = Encode::decode('US-ASCII', $body);
+                    $converted = $body;
+                    $converted =~ s/[^\x01-\x7F]/?/g;
                 }
                 $mail_string .= $converted . "\n";
             }
         }
     }
+    # foldcase string
+    $mail_string = tools::foldcase($mail_string);
 
     # parsing
     foreach my $keyw (keys %keywords) {
-        my $k = $keywords{$keyw};
-        $keyw = Encode::decode_utf8($keyw);
-        $keyw = tools::escape_regexp($keyw);
-        if ($mail_string =~ /$keyw/i) {
-            $topic_hash{$k} = 1;
+        if (index($mail_string, tools::foldcase($keyw)) >= 0) {
+            $topic_hash{$keywords{$keyw}} = 1;
         }
     }
 
     # for no double
-    foreach my $k (keys %topic_hash) {
-        push @topic_array, $k if ($topic_hash{$k});
+    foreach my $k (sort keys %topic_hash) {
+        push @topic_array, $k if $topic_hash{$k};
     }
 
-    if ($#topic_array < 0) {
+    unless (@topic_array) {
         return '';
-
     } else {
         return (join(',', @topic_array));
     }
 }
+
 
 ####################################################
 # tag_topic
