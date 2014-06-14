@@ -2315,6 +2315,147 @@ sub get_digest_recipients_per_mode {
 
 ###   TEMPLATE SENDING  ###
 
+=over 4
+
+=item send_dsn ( $that, $message, [ { key => val, ... }, [ $status, [ $diag ] ] ] )
+
+    # To send site-wide DSN
+    send_dsn('*', $message, {'recipient' => $rcpt},
+        '5.1.2', 'Unknown robot');
+    # To send DSN related to a robot
+    send_dsn($robot, $message, {'listname' => $name},
+        '5.1.1', 'Unknown list');
+    # To send DSN specific to a list
+    send_dsn($list, $message, {}, '2.1.5', 'Success');
+
+Sends a delivery status notification (DSN) to SENDER
+by parsing dsn.tt2 template.
+
+=back
+
+=cut
+
+# Default diagnostic messages taken from IANA registry:
+# http://www.iana.org/assignments/smtp-enhanced-status-codes/
+# They should be modified to fit in Sympa.
+my %diag_messages = (
+    'default' => 'Other undefined Status',
+    # success
+    '2.1.5' => 'Destination address valid',
+    # no available family, dynamic list creation failed, etc.
+    '4.2.1' => 'Mailbox disabled, not accepting messages',
+    # no subscribers in dynamic list
+    '4.2.4' => 'Mailing list expansion problem',
+    # unknown list address
+    '5.1.1' => 'Bad destination mailbox address',
+    # unknown robot
+    '5.1.2' => 'Bad destination system address',
+    # too large
+    '5.2.3' => 'Message length exceeds administrative limit',
+    # misconfigured family list
+    '5.3.5' => 'System incorrectly configured',
+    # loop detected
+    '5.4.6' => 'Routing loop detected',
+    # failed to personalize (merge_feature)
+    '5.6.5' => 'Conversion Failed',
+    # virus found
+    '5.7.0' => 'Other or undefined security status',
+);
+
+sub send_dsn {
+    my $that    = shift;
+    my $message = shift;
+    my $param   = shift || {};
+    my $status  = shift;
+    my $diag    = shift;
+
+    unless (ref $message eq 'Message') {
+        Log::do_log('err', 'object %s is not Message', $message);
+        return undef;
+    }
+
+    my $sender;
+    if (defined($sender = $message->{'envelope_sender'})) {
+        ## Won't reply to message with null envelope sender.
+        return 0 if $sender eq '<>';
+    } elsif (!defined($sender = $message->{'sender'})) {
+        Log::do_log('err', 'No sender found');
+        return undef;
+    }
+
+    my $recipient = '';
+    if (ref $that eq 'List') {
+        $recipient = $that->get_list_address;
+        $status ||= '5.1.1';
+    } elsif (! ref $that and $that and $that ne '*') {
+        if ($param->{'listname'}) {
+            if ($param->{'function'}) {
+                $recipient = sprintf '%s-%s@%s', $param->{'listname'},
+                    $param->{'function'}, Conf::get_robot_conf($that, 'host');
+            } else {
+                $recipient = sprintf '%s@%s', $param->{'listname'},
+                    Conf::get_robot_conf($that, 'host');
+            }
+        }
+        $recipient ||= $param->{'recipient'};
+        $status ||= '5.1.1';
+    } elsif ($that eq '*') {
+        $recipient = $param->{'recipient'};
+        $status ||= '5.1.2';
+    } else {
+        die 'bug in logic.  Ask developer';
+    }
+
+    # Diagnostic message.
+    $diag ||= $diag_messages{$status} || $diag_messages{'default'};
+    # Delivery result, "failed" or "delivered".
+    my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
+
+    my $header = $message->as_entity()->head->as_string();
+
+    my $date =
+        (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+        ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+
+    unless (
+        _generic_send_file(
+            $that, 'dsn', $sender,
+            {   %$param,
+                'recipient'       => $recipient,
+                'to'              => $sender,
+                'date'            => $date,
+                'header'          => $header,
+                'auto_submitted'  => 'auto-replied',
+                'action'          => $action,
+                'status'          => $status,
+                'diagnostic_code' => $diag,
+                'return_path'     => '<>'
+            }
+        )
+        ) {
+        Log::do_log('err', 'Unable to send DSN to %s', $sender);
+        return undef;
+    }
+
+    return 1;
+}
+
+# NOTE: send_file() and send_global_file() should be merged.
+sub _generic_send_file {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $that = shift;
+    my $tpl = shift;
+    my $who = shift;
+    my $param = shift;
+    my $options = shift;
+
+    if (ref $that eq 'List') {
+        return $that->send_file($tpl, $who, $that->{'domain'}, $param);
+    } else {
+        return send_global_file($tpl, $who, $that, $param, $options);
+    }
+}
+
 ####################################################
 # send_global_file
 ####################################################
@@ -2351,19 +2492,15 @@ sub send_global_file {
             unless ($options->{'skip_db'});
         $data->{'user'}{'email'} = $who unless (defined $data->{'user'});
     }
-##    unless ($data->{'user'}{'lang'}) {
-##	$data->{'user'}{'lang'} = $Language::default_lang;
-##    }
-
     unless ($data->{'user'}{'password'}) {
         $data->{'user'}{'password'} = tools::tmp_passwd($who);
     }
 
     ## Lang
-    $data->{'lang'} =
-           $data->{'lang'}
-        || $data->{'user'}{'lang'}
-        || Conf::get_robot_conf($robot, 'lang');
+    $language->push_lang($data->{'lang'}, $data->{'user'}{'lang'},
+        Conf::get_robot_conf($robot, 'lang'));
+    $data->{'lang'} = $language->get_lang;
+    $language->pop_lang;
 
     ## What file
     my $tt2_include_path = tools::get_search_path(
@@ -2398,7 +2535,10 @@ sub send_global_file {
     $data->{'from'} = "$data->{'conf'}{'email'}\@$data->{'conf'}{'host'}"
         unless ($data->{'from'});
     $data->{'robot_domain'} = $robot;
-    $data->{'return_path'}  = Conf::get_robot_conf($robot, 'request');
+    unless (tools::smart_eq($data->{'return_path'}, '<>')) {
+        $data->{'return_path'} = Conf::get_robot_conf($robot, 'request');
+    }
+
     $data->{'boundary'}     = '----------=_' . tools::get_message_id($robot)
         unless ($data->{'boundary'});
 
@@ -2512,13 +2652,11 @@ sub send_file {
         }
     }
 
-    $data->{'return_path'} ||= $self->get_list_address('return_path');
-
     ## Lang
-    $data->{'lang'} =
-           $data->{'user'}{'lang'}
-        || $self->{'admin'}{'lang'}
-        || Conf::get_robot_conf($robot, 'lang');
+    $language->push_lang($data->{'user'}{'lang'}, $self->{'admin'}{'lang'},
+        Conf::get_robot_conf($robot, 'lang'));
+    $data->{'lang'} = $language->get_lang;
+    $language->pop_lang;
 
     ## Trying to use custom_vars
     if (defined $self->{'admin'}{'custom_vars'}) {
@@ -2590,6 +2728,8 @@ sub send_file {
     }
 
     $data->{'from'} = $data->{'fromlist'} unless ($data->{'from'});
+    $data->{'return_path'} ||= $self->get_list_address('return_path');
+
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
         unless ($data->{'boundary'});
     $data->{'sign_mode'} = $sign_mode;
