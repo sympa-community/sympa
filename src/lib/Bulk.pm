@@ -389,9 +389,10 @@ sub store {
             }
 
             #log in stat_table to make statistics...
-            unless ($message_sender =~ /($robot)\@/) {
+            my $robot_domain = ($robot and $robot ne '*') ? $robot : $Conf::Conf{'domain'};
+            unless (index($message_sender, $robot_domain . '@') >= 0) {
                 # ignore messages sent by robot
-                unless ($message_sender =~ /($listname)-request/) {
+                unless (index($message_sender, $listname . '-request') >= 0) {
                     # ignore messages of requests
                     Log::db_stat_log(
                         {   'robot'     => $robot,
