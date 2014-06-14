@@ -1024,9 +1024,19 @@ sub test_personalize {
     return 1
 	unless tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
-    my $available_recipients = $list->get_recipients_per_mode($self);
+    # Get available recipients to test.
+    my $available_recipients = $list->get_recipients_per_mode($self) || {};
+    # Always test all available reception modes using sender.
+    foreach my $mode (
+	@{$list->{'admin'}{'available_user_options'}->{'reception'} || []}
+    ) {
+	next unless $mode and $mode ne 'nomail' and $mode ne 'not_me';
+	push @{$available_recipients->{$mode}{'verp'}}, $self->{'sender'};
+	push @{$available_recipients->{$mode}{'noverp'}}, $self->{'sender'};
+    }
+
     foreach my $mode (sort keys %$available_recipients) {
-	my $message = dclone $self;
+	my $message = Storable::dclone $self;
 	$message->prepare_message_according_to_mode($mode, $list);
 
 	foreach my $rcpt (
