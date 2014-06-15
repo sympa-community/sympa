@@ -3160,9 +3160,14 @@ sub send_crash_report {
 sub get_message_id {
     my $robot = shift;
 
-    my $id = sprintf '<sympa.%d.%d.%d@%s>', time, $$, int(rand(999)), $robot;
+    my $domain;
+    if ($robot and $robot ne '*') {
+        $domain = Conf::get_robot_conf($robot, 'domain');
+    } else {
+        $domain = $Conf::Conf{'domain'};
+    }
 
-    return $id;
+    return sprintf '<sympa.%d.%d.%d@%s>', time, $$, int(rand(999)), $domain;
 }
 
 sub get_dir_size {
