@@ -1863,6 +1863,7 @@ sub distribute_msg {
         $tag_regexp =~ s/\s+/\\s+/g;
 
         ## Add subject tag
+        #FIXME: Check parse error
         $message->{'msg'}->head->delete('Subject');
         my $parsed_tag;
         tt2::parse_tt2(

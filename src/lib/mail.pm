@@ -139,6 +139,7 @@ sub mail_file {
     $data->{'charset'} ||= tools::lang2charset($data->{'lang'});
 
     ## TT2 file parsing
+    #FIXME: Check TT2 parse error
     if ($filename =~ /\.tt2$/) {
         my $output;
         my @path = split /\//, $filename;
