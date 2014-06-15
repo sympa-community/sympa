@@ -252,10 +252,10 @@ sub message_from_spool {
 
 }
 
-# DEPRECATED: Use Message::merge_msg().
+# DEPRECATED: Use Message::personalize().
 # sub merge_msg;
 
-# DEPRECATED: Use Message::merger_data().
+# DEPRECATED: Use Message::personalize_text().
 # sub merge_data;
 
 ##

@@ -545,7 +545,7 @@ sub get_header {
     my $hdr = $self->as_entity->head;
 
     if (defined $sep or wantarray) {
-        my @values = grep { s/\A$field\s*:\s*//i }
+        my @values = grep {s/\A$field\s*:\s*//i}
             split /\n(?![ \t])/, $hdr->as_string();
         if (defined $sep) {
             return undef unless @values;
@@ -770,21 +770,6 @@ sub _fix_html_part {
     return $entity;
 }
 
-############################################################
-#  merge_msg                                               #
-############################################################
-#  Merge a message with custom attributes of a user.       #
-#                                                          #
-#                                                          #
-#  IN : - MIME::Entity                                     #
-#       - $rcpt : a recipient                              #
-#       - $bulk : HASH                                     #
-#       - $data : HASH with user's data                    #
-#  OUT : 1 | undef                                         #
-#                                                          #
-############################################################
-# Unrecommended: presonalize() is preferred.
-
 =over
 
 =item personalize ( $list, [ $rcpt ], [ $data ] )
@@ -813,46 +798,19 @@ Hashref.  Additional data to be interpolated into personalized message.
 Returns:
 
 Modified message itself, or C<undef> if error occurred.
-Note that message can be modified in case of error.
 
 =back
 
 =cut
 
+# Old name: Bulk::merge_msg()
 sub personalize {
     my $self = shift;
     my $list = shift;
     my $rcpt = shift || undef;
     my $data = shift || {};
 
-    my $entity = merge_msg(
-        $self->as_entity,
-        $rcpt,
-        {   listname  => $list->{'name'},
-            robot     => $list->{'domain'},
-            messageid => $self->{'message_id'},
-        },
-        $data
-    );
-
-    unless (defined $entity) {
-        return undef;
-    }
-
-    $self->set_entity($entity);
-    return $self;
-}
-
-sub merge_msg {
-    my $entity = shift;
-    my $rcpt   = shift;
-    my $bulk   = shift;
-    my $data   = shift;
-
-    unless (ref $entity eq 'MIME::Entity') {
-        Log::do_log('err', 'False entity');
-        return undef;
-    }
+    my $entity = $self->as_entity->dup;
 
     # Initialize parameters at first only once.
     $data->{'headers'} ||= {};
@@ -868,13 +826,18 @@ sub merge_msg {
     }
     $data->{'subject'} = tools::decode_header($headers, 'Subject');
 
-    return _merge_msg($entity, $rcpt, $bulk, $data);
+    unless (defined _merge_msg($entity, $list, $rcpt, $data)) {
+        return undef;
+    }
+
+    $self->set_entity($entity);
+    return $self;
 }
 
 sub _merge_msg {
     my $entity = shift;
+    my $list   = shift;
     my $rcpt   = shift;
-    my $bulk   = shift;
     my $data   = shift;
 
     my $enc = $entity->head->mime_encoding;
@@ -890,7 +853,7 @@ sub _merge_msg {
 
     if ($entity->parts) {
         foreach my $part ($entity->parts) {
-            unless (_merge_msg($part, $rcpt, $bulk, $data)) {
+            unless (_merge_msg($part, $list, $rcpt, $data)) {
                 Log::do_log('err', 'Failed to merge message part');
                 return undef;
             }
@@ -946,14 +909,9 @@ sub _merge_msg {
 
         my $message_output;
         unless (
-            merge_data(
-                'rcpt'           => $rcpt,
-                'messageid'      => $bulk->{'messageid'},
-                'listname'       => $bulk->{'listname'},
-                'robot'          => $bulk->{'robot'},
-                'data'           => $data,
-                'body'           => $utf8_body,
-                'message_output' => \$message_output,
+            defined(
+                $message_output =
+                    personalize_text($utf8_body, $list, $rcpt, $data)
             )
             ) {
             Log::do_log('err', 'Error merging message');
@@ -1022,57 +980,32 @@ sub test_personalize {
     my $list = shift;
 
     return 1
-	unless tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+        unless tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
     # Get available recipients to test.
     my $available_recipients = $list->get_recipients_per_mode($self) || {};
     # Always test all available reception modes using sender.
-    foreach my $mode (
-	@{$list->{'admin'}{'available_user_options'}->{'reception'} || []}
-    ) {
-	next unless $mode and $mode ne 'nomail' and $mode ne 'not_me';
-	push @{$available_recipients->{$mode}{'verp'}}, $self->{'sender'};
-	push @{$available_recipients->{$mode}{'noverp'}}, $self->{'sender'};
+    foreach my $mode ('mail',
+        grep { $_ and $_ ne 'nomail' and $_ ne 'not_me' }
+        @{$list->{'admin'}{'available_user_options'}->{'reception'} || []}) {
+        push @{$available_recipients->{$mode}{'verp'}}, $self->{'sender'};
     }
 
     foreach my $mode (sort keys %$available_recipients) {
-	my $message = Storable::dclone $self;
-	$message->prepare_message_according_to_mode($mode, $list);
+        my $message = Storable::dclone $self;
+        $message->prepare_message_according_to_mode($mode, $list);
 
-	foreach my $rcpt (
-	    @{$available_recipients->{$mode}{'verp'}   || []},
-	    @{$available_recipients->{$mode}{'noverp'} || []}
-	    ) {
-	    unless ($message->personalize($list, $rcpt, {})) {
-		return undef;
-	    }
-	}
+        foreach my $rcpt (
+            @{$available_recipients->{$mode}{'verp'}   || []},
+            @{$available_recipients->{$mode}{'noverp'} || []}
+            ) {
+            unless ($message->personalize($list, $rcpt, {})) {
+                return undef;
+            }
+        }
     }
     return 1;
 }
-
-############################################################
-#  merge_data                                              #
-############################################################
-#  This function retrieves the customized data of the      #
-#  users then parse the message. It returns the message    #
-#  personalized to bulk.pl                                 #
-#  It uses the method tt2::parse_tt2()                      #
-#  It uses the method List::get_list_member_no_object()     #
-#  It uses the method tools::get_fingerprint()              #
-#                                                          #
-# IN : - rcpt : the recipient email                        #
-#      - listname : the name of the list                   #
-#      - robot_id : the host                               #
-#      - data : HASH with many data                        #
-#      - body : message with the TT2                       #
-#      - message_output : object, IO::Scalar               #
-#                                                          #
-# OUT : - message_output : customized message              #
-#     | undef                                              #
-#                                                          #
-############################################################
-# Unrecommended: presonalize_text() is preferred.
 
 =over
 
@@ -1113,6 +1046,7 @@ Customized text, or C<undef> if error occurred.
 
 =cut
 
+# Old name: Bulk::merge_data()
 sub personalize_text {
     my $body = shift;
     my $list = shift;
@@ -1121,33 +1055,14 @@ sub personalize_text {
 
     die 'Unexpected type of $list' unless ref $list eq 'List';
 
-    $data->{'listname'} = $list->{'name'};
-    $data->{'robot'}    = $list->{'domain'};
-    $data->{'wwsympa_url'} =
-        Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
+    my $listname = $list->{'name'};
+    my $robot_id = $list->{'domain'};
+
+    $data->{'listname'}    = $listname;
+    $data->{'robot'}       = $robot_id;
+    $data->{'wwsympa_url'} = Conf::get_robot_conf($robot_id, 'wwsympa_url');
 
     my $message_output;
-    return undef
-        unless merge_data(
-        listname       => $list->{'name'},
-        robot          => $list->{'domain'},
-        body           => $body,
-        rcpt           => $rcpt,
-        data           => $data,
-        message_output => \$message_output
-        );
-    return $message_output;
-}
-
-sub merge_data {
-    my %params = @_;
-
-    my $rcpt           = $params{'rcpt'};
-    my $listname       = $params{'listname'};
-    my $robot_id       = $params{'robot'};
-    my $data           = $params{'data'};
-    my $body           = $params{'body'};
-    my $message_output = $params{'message_output'};
     my $options;
 
     $options->{'is_not_template'} = 1;
@@ -1163,28 +1078,23 @@ sub merge_data {
 
     if ($user) {
         $user->{'escaped_email'} = URI::Escape::uri_escape($rcpt);
-        my $language = Sympa::Language->instance;
         $user->{'friendly_date'} =
             $language->gettext_strftime("%d %b %Y  %H:%M",
             localtime($user->{'date'}));
+
+        # this method has been removed because some users may forward
+        # authentication link
+        # $user->{'fingerprint'} = tools::get_fingerprint($rcpt);
     }
 
-    # this method has been removed because some users may forward
-    # authentication link
-    # $user->{'fingerprint'} = tools::get_fingerprint($rcpt);
-
-    $data->{'user'}     = $user if $user;
-    $data->{'robot'}    = $robot_id;
-    $data->{'listname'} = $listname;
+    $data->{'user'} = $user if $user;
 
     # Parse the TT2 in the message : replace the tags and the parameters by
     # the corresponding values
-    unless (tt2::parse_tt2($data, \$body, $message_output, '', $options)) {
-        Log::do_log('err', 'Unable to parse body: "%s"', \$body);
-        return undef;
-    }
+    return undef
+        unless tt2::parse_tt2($data, \$body, \$message_output, '', $options);
 
-    return 1;
+    return $message_output;
 }
 
 =over
@@ -1688,7 +1598,8 @@ sub _urlize_one_part {
         my $ct = $entity->effective_type || 'text/plain';
         printf OFILE "Content-type: %s", $ct;
         printf OFILE "; Charset=%s", $head->mime_attr('Content-Type.Charset')
-            if $head->mime_attr('Content-Type.Charset') =~ /\S/;
+            if tools::smart_eq($head->mime_attr('Content-Type.Charset'),
+            qr/\S/);
         print OFILE "\n\n";
     } else {
         Log::do_log('notice', 'Unable to open %s/%s/%s',
