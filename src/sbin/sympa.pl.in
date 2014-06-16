@@ -93,6 +93,7 @@ unless (
         'close_unknown',        'test_database_message_buffer',
         'conf_2_db',            'export_list',
         'health_check',         'service=s',
+        'send_digest',          'keep_digest',
     )
     ) {
     pod2usage(-exitval => 1, -output => \*STDERR);
@@ -126,7 +127,8 @@ $main::options{'batch'} = 1
         || $main::options{'reload_list_config'}
         || $main::options{'sync_list_db'}
         || $main::options{'export_list'}
-        || $main::options{'health_check'};
+        || $main::options{'health_check'}
+        || $main::options{'send_digest'};
 
 # Some option force foreground mode
 $main::options{'foreground'} = 1
@@ -1224,6 +1226,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         foreach my $list (@$all_lists) {
             printf "%s\n", $list->{'name'};
         }
+        exit 0;
+    } elsif ($main::options{'send_digest'}) {
+        SendDigest(
+            send_now    => 1,
+            keep_digest => $main::options{'keep_digest'}
+        );
         exit 0;
     }
 
@@ -3535,7 +3543,10 @@ sub DoCommand {
 #
 ##############################################################
 sub SendDigest {
-    Log::do_log('debug', '');
+    Log::do_log('debug', '(%s => %s, %s => %s)', @_);
+    my %options     = @_;
+    my $keep_digest = $options{keep_digest};
+    my $send_now    = $options{send_now};
 
     if (!opendir(DIR, $Conf::Conf{'queuedigest'})) {
         die sprintf 'Unable to access directory %s : %s',
@@ -3546,7 +3557,6 @@ sub SendDigest {
     closedir(DIR);
 
     foreach my $listaddress (@dfile) {
-
         my $filename = $Conf::Conf{'queuedigest'} . '/' . $listaddress;
 
         my ($listname, $robot) = split /\@/, $listaddress;
@@ -3570,7 +3580,7 @@ sub SendDigest {
                 }
             );
             unlink $filename;
-            return undef;
+            next;    # foreach my $listaddress
         }
 
         $language->set_lang(
@@ -3579,15 +3589,16 @@ sub SendDigest {
             $Conf::Conf{'lang'}, 'en'
         );
 
-        if ($list->get_nextdigest()) {
+        if ($send_now or $list->get_nextdigest()) {
             ## Blindly send the message to all users.
             Log::do_log('info', "Sending digest to list %s", $listaddress);
             my $start_time = time;
-            $list->send_msg_digest();
+            $list->distribute_digest();
 
-            unlink($filename);
+            unlink($filename) unless $keep_digest;
+
             Log::do_log('info', 'Digest of the list %s sent (%d seconds)',
-                $listname, time - $start_time);
+                $list, time - $start_time);
             Log::db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -3604,6 +3615,8 @@ sub SendDigest {
             );
         }
     }
+
+    return 1;
 }
 
 ## Cleanup the msgid_table every 'msgid_table_cleanup_frequency' sec
@@ -3825,6 +3838,11 @@ The list and robot parameters are optional.
     B<--new_listname=>I<newlistname> B<--new_listrobot=>I<newrobot>
 
 Renames a list or move it to another virtual robot.
+
+=item B<--send_digest> [B<--keep_digest>]
+
+Send digest right now.
+If B<--keep_digest> is specified, stocked digest will not be removed.
 
 =item B<--sync_include=>I<listname>@I<robot>
 
