@@ -202,7 +202,8 @@ while (!$end) {
         ## No return.
     }
 
-    my @files = (grep(/(^[^\.]|^\.(remove|rebuild)\.(.*))/, readdir DIR));
+    my @files =
+        sort grep {/(^[^\.]|^\.(remove|rebuild)\.(.*))/} readdir DIR;
     closedir DIR;
 
     ## this sleep is important to be raisonably sure that sympa is not
