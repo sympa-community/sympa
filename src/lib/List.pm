@@ -2098,6 +2098,7 @@ sub distribute_digest {
     my $param = {
         'replyto'          => $self->get_list_address('owner'),
         'to'               => $self->get_list_address(),
+        # Compat. to 6.2a or earlier
         'table_of_content' => $language->gettext("Table of contents:"),
         'boundary1'        => '----------=_' . tools::get_message_id($robot),
         'boundary2'        => '----------=_' . tools::get_message_id($robot),
