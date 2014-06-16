@@ -1503,6 +1503,8 @@ sub _append_footer_header_to_part {
             $new_body =~ s,(</\s*body\b[^>]*>),$div$1,i
                 or $new_body = $new_body . $div;
         }
+        # Append newline if it is not there: A few MUAs need it.
+        $new_body .= "\n" unless $new_body =~ /\n\z/;
 
         # Unencodable characters are encoded to entity, because charset
         # metadata in HTML won't be altered.
@@ -1585,7 +1587,7 @@ sub _urlize_one_part {
 
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
-        # MIME-tools >= 5.501 returns Unicode value ("utf8" flag on).
+        # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
@@ -1795,11 +1797,14 @@ sub _fix_utf8_parts {
         {
             $wrap = tools::wrap_text($body);
         }
-        my $charset = $head->mime_attr("Content-Type.Charset") || $defcharset;
 
+        my $charset = $head->mime_attr("Content-Type.Charset") || $defcharset;
         my ($newbody, $newcharset, $newenc) =
             MIME::Charset::body_encode(Encode::decode_utf8($wrap),
             $charset, Replacement => 'FALLBACK');
+        # Append newline if it is not there.  A few MUAs need it.
+        $newbody .= "\n" unless $newbody =~ /\n\z/;
+
         if (    $newenc eq $enc
             and $newcharset eq $charset
             and $newbody eq $body) {
