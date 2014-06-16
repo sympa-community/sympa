@@ -4,7 +4,7 @@ Reply-to: [% replyto %]
 Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Digest %2[%END%][% IF total_group > 1 %][%|loc(current_group,total_group)%] (%1/%2)[%END%][% END %][%END%]
 X-Sympa-NoWrap: yes
 
-[%|loc(list.name,date)%]%1 Digest %2[%END%]
+[%|loc(list.name,date)%]%1 digest %2[%END%]
 
 [%|loc%]Table of contents:[%END%]
 
@@ -14,7 +14,7 @@ X-Sympa-NoWrap: yes
 ----------------------------------------------------------------------
 
 [% FOREACH m = msg_list -%]
-[%|wrap(0,1)%]Message-ID: <[% m.id %]>
+[%|wrap(0,1)%]Message-ID: <[% m.message_id %]>
 Date: [% m.date %]
 From: [% m.from %]
 Subject: [% m.subject %][%END#wrap%]
