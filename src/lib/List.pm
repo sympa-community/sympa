@@ -592,7 +592,7 @@ sub new {
     ## Config file was loaded or reloaded
     my $pertinent_ttl = $list->{'admin'}{'distribution_ttl'}
         || $list->{'admin'}{'ttl'};
-    if ($status == 1
+    if ($status
         && (!$options->{'skip_sync_admin'}
             || (   $options->{'optional_sync_admin'}
                 && $list->{'last_sync'} < time - $pertinent_ttl)
@@ -690,7 +690,7 @@ sub savestats {
     return undef unless ($list_of_lists{$self->{'domain'}}{$name});
 
     unless (ref($self->{'stats'}) eq 'ARRAY') {
-        Log::do_log('err', 'Incorrect parameter');
+        Log::do_log('err', 'Incorrect parameter %s', $self->{'stats'});
         return undef;
     }
 
@@ -711,7 +711,7 @@ sub savestats {
     }
 
     ## Changed on disk
-    $self->{'mtime'}[2] = time;
+    $self->{'_mtime'}{'stats'} = time;
 
     return 1;
 }
@@ -888,11 +888,10 @@ sub dump {
     }
 
     # Note: "subscribers" file was deprecated.
-    $self->{'mtime'} = [
-        tools::get_mtime("$self->{'dir'}/config"),
-        undef,    # subscribers
-        tools::get_mtime("$self->{'dir'}/stats")
-    ];
+    $self->{'_mtime'} = {
+        'config' => tools::get_mtime($self->{'dir'} . '/config'),
+        'stats'  => tools::get_mtime($self->{'dir'} . '/stats'),
+    };
 
     return 1;
 }
@@ -952,8 +951,6 @@ sub save_config {
                 "$self->{'dir'}/config.bin", $@);
         }
     }
-
-#    $self->{'mtime'}[0] = tools::get_mtime("$list->{'dir'}/config");
 
     ## Release the lock
     unless ($lock_fh->close()) {
@@ -1021,8 +1018,17 @@ sub load {
         return undef;
     }
 
-    my ($m1, $m2, $m3) = (0, 0, 0);
-    ($m1, $m2, $m3) = @{$self->{'mtime'}} if (defined $self->{'mtime'});
+    # Last modification of list config ($last_time_config) and stats
+    # ($last_time_stats) on memory cache.
+    # Note: "subscribers" file was deprecated.
+    my ($last_time_config, $last_time_stats);
+    if ($self->{'_mtime'}) {
+        $last_time_config = $self->{'_mtime'}{'config'};
+        $last_time_stats  = $self->{'_mtime'}{'stats'};
+    } else {
+        $last_time_config = POSIX::INT_MIN();
+        $last_time_stats  = POSIX::INT_MIN();
+    }
 
     my $time_config      = tools::get_mtime("$self->{'dir'}/config");
     my $time_config_bin  = tools::get_mtime("$self->{'dir'}/config.bin");
@@ -1035,7 +1041,7 @@ sub load {
     if (Conf::get_robot_conf($self->{'domain'}, 'cache_list_config') eq
             'binary_file'
         and !$options->{'reload_config'}
-        and $time_config_bin > $self->{'mtime'}->[0]
+        and $time_config_bin > $last_time_config
         and $time_config_bin >= $time_config
         and $time_config_bin >= $main_config_time) {
         ## Get a shared lock on config file first
@@ -1057,11 +1063,11 @@ sub load {
             return undef;
         }
 
-        $config_reloaded = 1;
-        $m1              = $time_config_bin;
+        $config_reloaded  = 1;
+        $last_time_config = $time_config_bin;
         $lock_fh->close();
     } elsif ($self->{'name'} ne $name
-        or $time_config > $self->{'mtime'}->[0]
+        or $time_config > $last_time_config
         or $options->{'reload_config'}) {
         $admin =
             _load_list_config_file($self->{'dir'}, $self->{'domain'},
@@ -1099,7 +1105,7 @@ sub load {
             return undef;
         }
 
-        $m1 = $time_config;
+        $last_time_config = $time_config;
         $lock_fh->close();
     }
 
@@ -1152,11 +1158,12 @@ sub load {
 
     ## Load stats file if first new() or stats file changed
     my ($stats, $total);
-    if (!$self->{'mtime'}[2] || ($time_stats > $self->{'mtime'}[2])) {
+    my $stats_file = $self->{'dir'} . '/stats';
+    if (!-e $stats_file or $time_stats > $last_time_stats) {
         (   $stats, $total, $self->{'last_sync'},
             $self->{'last_sync_admin_user'}
-        ) = _load_stats_file("$self->{'dir'}/stats");
-        $m3 = $time_stats;
+        ) = _load_stats_file($stats_file);
+        $last_time_stats = $time_stats;
 
         $self->{'stats'} = $stats if (defined $stats);
         $self->{'total'} = $total if (defined $total);
@@ -1169,12 +1176,10 @@ sub load {
         $self->{'total'} = $users->{'total'};
     }
 
-    ## We have updated %users, Total may have changed
-    if ($m2 > ($self->{'mtime'}[1] || 0)) {
-        $self->savestats();
-    }
-
-    $self->{'mtime'} = [$m1, $m2, $m3];
+    $self->{'_mtime'} = {
+        'config' => $last_time_config,
+        'stats'  => $last_time_stats,
+    };
 
     $list_of_lists{$self->{'domain'}}{$name} = $self;
     return $config_reloaded;
@@ -2096,13 +2101,14 @@ sub distribute_digest {
     }
 
     my $param = {
-        'replyto'          => $self->get_list_address('owner'),
-        'to'               => $self->get_list_address(),
-        # Compat. to 6.2a or earlier
-        'table_of_content' => $language->gettext("Table of contents:"),
-        'boundary1'        => '----------=_' . tools::get_message_id($robot),
-        'boundary2'        => '----------=_' . tools::get_message_id($robot),
+        'replyto'   => $self->get_list_address('owner'),
+        'to'        => $self->get_list_address(),
+        'boundary1' => '----------=_' . tools::get_message_id($robot),
+        'boundary2' => '----------=_' . tools::get_message_id($robot),
     };
+    # Compat. to 6.2a or earlier
+    $param->{'table_of_content'} = $language->gettext("Table of contents:");
+
     if ($self->get_reply_to() =~ /^list$/io) {
         $param->{'replyto'} = "$param->{'to'}";
     }
@@ -2389,7 +2395,7 @@ sub send_dsn {
     if (ref $that eq 'List') {
         $recipient = $that->get_list_address;
         $status ||= '5.1.1';
-    } elsif (! ref $that and $that and $that ne '*') {
+    } elsif (!ref $that and $that and $that ne '*') {
         if ($param->{'listname'}) {
             if ($param->{'function'}) {
                 $recipient = sprintf '%s-%s@%s', $param->{'listname'},
@@ -2445,10 +2451,10 @@ sub send_dsn {
 # NOTE: send_file() and send_global_file() should be merged.
 sub _generic_send_file {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
-    my $that = shift;
-    my $tpl = shift;
-    my $who = shift;
-    my $param = shift;
+    my $that    = shift;
+    my $tpl     = shift;
+    my $who     = shift;
+    my $param   = shift;
     my $options = shift;
 
     if (ref $that eq 'List') {
@@ -2499,8 +2505,11 @@ sub send_global_file {
     }
 
     ## Lang
-    $language->push_lang($data->{'lang'}, $data->{'user'}{'lang'},
-        Conf::get_robot_conf($robot, 'lang'));
+    $language->push_lang(
+        $data->{'lang'},
+        $data->{'user'}{'lang'},
+        Conf::get_robot_conf($robot, 'lang')
+    );
     $data->{'lang'} = $language->get_lang;
     $language->pop_lang;
 
@@ -2541,7 +2550,7 @@ sub send_global_file {
         $data->{'return_path'} = Conf::get_robot_conf($robot, 'request');
     }
 
-    $data->{'boundary'}     = '----------=_' . tools::get_message_id($robot)
+    $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
         unless ($data->{'boundary'});
 
     if (   (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on')
@@ -2655,8 +2664,11 @@ sub send_file {
     }
 
     ## Lang
-    $language->push_lang($data->{'user'}{'lang'}, $self->{'admin'}{'lang'},
-        Conf::get_robot_conf($robot, 'lang'));
+    $language->push_lang(
+        $data->{'user'}{'lang'},
+        $self->{'admin'}{'lang'},
+        Conf::get_robot_conf($robot, 'lang')
+    );
     $data->{'lang'} = $language->get_lang;
     $language->pop_lang;
 
@@ -11368,7 +11380,8 @@ sub compute_topic {
     # getting string to parse
     # We convert it to UTF-8 for case-ignore match with non-ASCII keywords.
     my $mail_string = '';
-    if (index($self->{'admin'}{'msg_topic_keywords_apply_on'}, 'subject') >= 0) {
+    if (index($self->{'admin'}{'msg_topic_keywords_apply_on'}, 'subject') >=
+        0) {
         $mail_string = $message->{'decoded_subject'} . "\n";
     }
     unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
@@ -11418,7 +11431,6 @@ sub compute_topic {
         return (join(',', @topic_array));
     }
 }
-
 
 ####################################################
 # tag_topic
