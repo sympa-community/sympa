@@ -1861,7 +1861,13 @@ Get unique identifier of instance.
 sub get_id {
     my $self = shift;
 
-    return $self->{'messagekey'} || $self->{'message_id'};
+    # Tentative.  Alternatives for more general ID in the future.
+    return $self->{'messagekey'} if $self->{'messagekey'};
+    if ($self->{'filename'}) {
+        my @parts = split /\//, $self->{'filename'};
+        return pop @parts;
+    }
+    return $self->{'message_id'};
 }
 
 1;

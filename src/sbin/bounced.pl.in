@@ -449,11 +449,14 @@ while (!$end) {
             if (
             $list->{'admin'}{'tracking'}{'message_delivery_notification'} eq
             "on_demand");
-        if (($head->get('Content-type') =~ /multipart\/report/)
-            && ($head->get('Content-type') =~
-                /report\-type\=delivery-status/i)
-            && ($tracking_in_use)) {
 
+        my $eff_type = $entity->effective_type || '';
+        my $report_type =
+            lc($head->mime_attr('Content-Type.Report-Type') || '');
+
+        if (    $eff_type eq 'multipart/report'
+            and $report_type eq 'delivery-status'
+            and $tracking_in_use) {
             my @parts = $entity->parts();
             my $original_rcpt;
             my $final_rcpt;
@@ -593,15 +596,13 @@ while (!$end) {
         # ---
         # If the MDN notification is correct and the tracking mode is enable,
         # it will be inserted in the database
-        if (($head->get('Content-type') =~ /multipart\/report/)
-            && ($head->get('Content-type') =~
-                /report\-type\=disposition-notification/i)
-            && ((   $list->{'admin'}{'tracking'}
-                    {'message_delivery_notification'} eq "on"
-                )
-                || ($list->{'admin'}{'tracking'}
-                    {'message_delivery_notification'} eq "on_demand")
-            )
+        if (    $eff_type eq 'multipart/report'
+            and $report_type eq 'disposition-notification'
+            and ($list->{'admin'}{'tracking'}{'message_delivery_notification'}
+                eq "on"
+                or
+                $list->{'admin'}{'tracking'}{'message_delivery_notification'}
+                eq "on_demand")
             ) {
 
             my @parts = $entity->parts();
@@ -725,9 +726,8 @@ while (!$end) {
             next;
         }
 
-        if (   ($head->get('Content-type') =~ /multipart\/report/)
-            && ($head->get('Content-type') =~ /report\-type\=feedback-report/)
-            ) {
+        if (    $eff_type eq 'multipart/report'
+            and $report_type eq 'feedback-report') {
             # this case a report Email Feedback Reports
             # http://www.shaftek.org/publications/drafts/abuse-report/draft-shafranovich-feedback-report-01.txt
             # mainly use by AOL

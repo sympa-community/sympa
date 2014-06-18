@@ -412,7 +412,9 @@ while (!$end) {
         #
 
         # FIXME: $message would know its list context.
-        my $list = new List($bulk->{'listname'}, $bulk->{'robot'});
+        my $list =
+            List->new($bulk->{'listname'}, $bulk->{'robot'},
+            {'just_try' => 1});
 
         if (   $bulk->{'verp'}
             or $bulk->{'merge'}
