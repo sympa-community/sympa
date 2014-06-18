@@ -944,13 +944,13 @@ sub unset_hidden_mode {
 #* $lst, a character string
 sub save_idx {
     my ($index, $lst) = @_;
-#    Log::do_log('notice', '(%s, %s)', $index, $lst);
+
+    return unless $lst;
 
     open INDEXF, '>', $index
         or die sprintf 'Couldn\'t overwrite index %s: %s', $index, $!;
     print INDEXF "$lst\n";
     close INDEXF;
-    #   Log::do_log('debug','Last arc entry for %s is %s', $index, $lst);
 }
 
 ## Create the 'index' file for one archive subdir
@@ -965,7 +965,7 @@ sub create_idx {
     }
 
     my @files = (sort { $a <=> $b; } grep(/^\d+$/, (readdir DIR)));
-    my $index = $files[$#files];
+    my $index = $files[$#files] || 0;
     save_idx($arc_dir . '/index', $index);
 
     closedir DIR;

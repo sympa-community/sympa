@@ -8808,7 +8808,9 @@ sub get_list_of_sources_id {
 
     my %old_subs_id;
     foreach my $old_sub (keys %{$list_of_subscribers}) {
-        my @tmp_old_tab = split(/,/, $list_of_subscribers->{$old_sub}{'id'});
+        my $ids = $list_of_subscribers->{$old_sub}{'id'};
+        $ids = '' unless defined $ids;
+        my @tmp_old_tab = split /,/, $ids;
         foreach my $raw (@tmp_old_tab) {
             $old_subs_id{$raw} = 1;
         }

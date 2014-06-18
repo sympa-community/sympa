@@ -25,7 +25,8 @@
 package Bounce;
 
 use strict;
-#use warnings;    # temporarily disabling runtime warnings.
+use warnings;
+use Mail::Address;
 use MIME::Parser;
 
 ## RFC1891 compliance check
@@ -44,18 +45,12 @@ sub rfc1891 {
         return undef;
     }
 
-    my $head = $entity->head;
-    $$from = $head->get('From', 0);
+    my @addrs = Mail::Address->parse($entity->head->get('From', 0));
+    $$from = $addrs[0]->address if @addrs;
 
-    $$from =~ s/^.*<(.*)>.*$/$1/;
-
-    my @parts = $entity->parts();
-
-    foreach my $p (@parts) {
-        my $h       = $p->head();
-        my $content = $h->get('Content-type');
-
-        next unless ($content =~ /message\/delivery-status/i);
+    foreach my $p ($entity->parts) {
+        my $eff_type = $p->effective_type || '';
+        next unless $eff_type eq 'message/delivery-status';
 
         my $body = $p->body();
 
@@ -75,7 +70,6 @@ sub rfc1891 {
             local $/ = '';
 
             while (<BODY>) {
-
                 my ($status, $recipient);
                 if (/^Status:\s*(\d+\.\d+\.\d+)(\s|$)/mi) {
                     $status = $1;
@@ -88,7 +82,7 @@ sub rfc1891 {
                         $recipient = $1;
                     }
                     $recipient =~ s/^<(.*)>$/$1/;
-                    $recipient =~ y/[A-Z]/[a-z]/;
+                    $recipient = lc $recipient;
                 }
 
                 if ($recipient and $status) {
@@ -155,7 +149,6 @@ sub corrige {
 ## //    3 : reference d'un tableau pour retourner des stats
 ## //    4 : reference d'un tableau pour renvoyer le bounce
 sub anabounce {
-
     my ($fic, $result, $from) = @_;
     my $entete = 1;
     my $type;
@@ -180,7 +173,6 @@ sub anabounce {
 #	push @$bounce, $_;
 
         if ($entete) {
-
             undef $entete;
 
             ## Parcour du paragraphe
@@ -188,22 +180,19 @@ sub anabounce {
             local $/ = "\n";
             my ($champ_courant, %champ);
             foreach (@paragraphe) {
-
                 if (/^(\S+):\s*(.*)$/) {
                     $champ_courant = $1;
                     $champ_courant =~ y/[A-Z]/[a-z]/;
                     $champ{$champ_courant} = $2;
                 } elsif (/^\s+(.*)$/) {
-
                     $champ{$champ_courant} .= " $1";
-
                 }
 
                 ## Le champ From:
-                if ($champ{from} =~ /([^\s<]+@[^\s>]+)/) {
-                    $$from = $1;
+                if (defined $champ{from}) {
+                    my @addrs = Mail::Address->parse($champ{from});
+                    $$from = $addrs[0]->address if @addrs;
                 }
-
             }
             local $/ = '';
 
@@ -224,7 +213,9 @@ sub anabounce {
                 $type = 34;
             }
 
-            if ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
+            unless (defined $champ{'x-failed-recipients'}) {
+                ;
+            } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
                 $info{$1}{error} = "";
             } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+),/) {
                 for my $xfr (split(/\s*,\s*/, $champ{'x-failed-recipients'}))
@@ -232,7 +223,6 @@ sub anabounce {
                     $info{$xfr}{error} = "";
                 }
             }
-
         } elsif (
             /^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m
             ) {
