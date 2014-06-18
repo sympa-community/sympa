@@ -228,6 +228,8 @@ while (!$end) {
         last if $end;
         next unless (-f "$queue/$file");
 
+        next if $file =~ /\.LOCK\z/;    # Skip lock.
+
         unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
             my @s = stat("$queue/$file");
             if (POSIX::S_ISREG($s[2])) {

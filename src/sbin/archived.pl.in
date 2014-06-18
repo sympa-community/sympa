@@ -216,6 +216,8 @@ while (!$end) {
         last if $end;
         next unless (-f "$queue/$file");
 
+        next if $file =~ /\.LOCK\z/;    # Skip lock.
+
         if ($file =~ /^\.remove\.((.*)\.(\d\d\d\d\-\d\d))\.\d+$/) {
             my $arclistdir = $1;
             my $listname   = $2;
