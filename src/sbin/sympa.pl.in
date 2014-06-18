@@ -1598,6 +1598,27 @@ sub DoFile {
         return undef;
     }
 
+    unless (defined $message->{'message_id'}
+        and length $message->{'message_id'}) {
+        Log::do_log('err', 'Message %s has no message ID', $message);
+        Log::db_log(
+            {
+                #'robot'        => $robot,
+                #'list'         => $listname,
+                'action'       => 'DoFile',
+                'parameters'   => $message->get_id,
+                'target_email' => "",
+                'msg_id'       => "",
+                'status'       => 'error',
+                'error_type'   => 'no_message_id',
+                'user_email'   => $message->{'sender'},
+                'client'       => $ip,
+                'daemon'       => $daemon_name
+            }
+        );
+        return undef;
+    }
+
     my $msg    = $message->{'msg'};
     my $hdr    = $msg->head;
     my $rcpt   = $message->{'rcpt'};
