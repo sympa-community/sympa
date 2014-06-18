@@ -30,7 +30,7 @@ use base qw(IO::File);
 
 use Fcntl qw();
 use File::NFSLock;
-$File::NFSLock::LOCK_EXTENSION = '.lock';
+$File::NFSLock::LOCK_EXTENSION = '.LOCK';
 
 our %lock_of;
 my $default_timeout    = 30;
