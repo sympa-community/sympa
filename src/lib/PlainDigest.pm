@@ -398,12 +398,13 @@ use base qw(HTML::FormatText);
 sub img_start {
     my ($self, $node) = @_;
 
-    my $alt = Encode::encode_utf8($node->attr('alt'));
+    my $alt = $node->attr('alt');
+    $alt = Encode::encode_utf8($alt) if defined $alt;
     $self->out(
         Encode::decode_utf8(
-            defined($alt)
-            ? $language->gettext_sprintf("[ Image%s ]", ":" . $alt)
-            : $language->gettext_sprintf("[Image%s]",   "")
+            (defined $alt and $alt =~ /\S/)
+            ? $language->gettext_sprintf("[Image:%s]", $alt)
+            : $language->gettext("[Image]")
         )
     );
 }
