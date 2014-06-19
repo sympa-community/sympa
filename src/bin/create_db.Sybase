@@ -205,63 +205,6 @@ go
 
 /* -------------------------------------------------------- */
 
-/* Table structure for table `oauthconsumer_sessions_table` */
- 
-
-create table oauthconsumer_sessions_table 
-( 
-	 access_secret_oauthconsumer 	varchar(100), 
-	 access_token_oauthconsumer 	varchar(100), 
-	 provider_oauthconsumer 	varchar(100), 
-	 tmp_secret_oauthconsumer 	varchar(100), 
-	 tmp_token_oauthconsumer 	varchar(100), 
-	 user_oauthconsumer 	varchar(100), 
-
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
-/* Table structure for table `oauthprovider_nonces_table` */
- 
-
-create table oauthprovider_nonces_table 
-( 
-	 id_nonce 	numeric, 
-	 id_oauthprovider 	numeric, 
-	 nonce_oauthprovider 	varchar(100), 
-	 time_oauthprovider 	numeric, 
-
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
-/* Table structure for table `oauthprovider_sessions_table` */
- 
-
-create table oauthprovider_sessions_table 
-( 
-	 accessgranted_oauthprovider 	tinyint(1), 
-	 callback_oauthprovider 	varchar(100), 
-	 consumer_oauthprovider 	varchar(100), 
-	 firsttime_oauthprovider 	numeric, 
-	 id_oauthprovider 	numeric, 
-	 isaccess_oauthprovider 	tinyint(1), 
-	 lasttime_oauthprovider 	numeric, 
-	 secret_oauthprovider 	varchar(32), 
-	 token_oauthprovider 	varchar(32), 
-	 user_oauthprovider 	varchar(100), 
-	 verifier_oauthprovider 	varchar(32), 
-
-)
-go 
-
-
-/* -------------------------------------------------------- */
-
 /* Table structure for table `one_time_ticket_table` */
  
 

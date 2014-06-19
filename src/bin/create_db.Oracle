@@ -210,63 +210,6 @@ CREATE TABLE notification_table (
 
 ## --------------------------------------------------------
 ##
-## Table structure for table `oauthconsumer_sessions_table`
-## 
-
-CREATE TABLE oauthconsumer_sessions_table ( 
-	 access_secret_oauthconsumer 	varchar2(100), 
-	 access_token_oauthconsumer 	varchar2(100), 
-	 provider_oauthconsumer 	varchar2(100), 
-	 tmp_secret_oauthconsumer 	varchar2(100), 
-	 tmp_token_oauthconsumer 	varchar2(100), 
-	 user_oauthconsumer 	varchar2(100), 
- 
- );
-
-
-
-
-## --------------------------------------------------------
-##
-## Table structure for table `oauthprovider_nonces_table`
-## 
-
-CREATE TABLE oauthprovider_nonces_table ( 
-	 id_nonce 	number, 
-	 id_oauthprovider 	number, 
-	 nonce_oauthprovider 	varchar2(100), 
-	 time_oauthprovider 	number, 
- 
- );
-
-
-
-
-## --------------------------------------------------------
-##
-## Table structure for table `oauthprovider_sessions_table`
-## 
-
-CREATE TABLE oauthprovider_sessions_table ( 
-	 accessgranted_oauthprovider 	tinyint(1), 
-	 callback_oauthprovider 	varchar2(100), 
-	 consumer_oauthprovider 	varchar2(100), 
-	 firsttime_oauthprovider 	number, 
-	 id_oauthprovider 	number, 
-	 isaccess_oauthprovider 	tinyint(1), 
-	 lasttime_oauthprovider 	number, 
-	 secret_oauthprovider 	varchar2(32), 
-	 token_oauthprovider 	varchar2(32), 
-	 user_oauthprovider 	varchar2(100), 
-	 verifier_oauthprovider 	varchar2(32), 
- 
- );
-
-
-
-
-## --------------------------------------------------------
-##
 ## Table structure for table `one_time_ticket_table`
 ## 
 
