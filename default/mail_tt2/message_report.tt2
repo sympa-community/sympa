@@ -1,4 +1,7 @@
 To: [% to %]
+[%################# -%]
+[%#### INTERN ERROR -%]
+[%################# -%]
 [% IF type == 'intern_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
@@ -7,16 +10,17 @@ Content-Transfer-Encoding: 8bit
 --[% boundary %]
 Content-Disposition: inline
 
-[% IF entry == 'forward' %]
+[% IF entry == 'forward' -%]
 [%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
-[% ELSE %]
+[% ELSE -%]
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' because of an internal server error.[%END%]
-[% END %]
-[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
+[% END -%]
 
-[%################ %]
-[%#### USER  ERROR %]
-[%################ %]
+[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END -%]
+
+[%################ -%]
+[%#### USER  ERROR -%]
+[%################ -%]
 [% ELSIF type == 'user_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
@@ -30,8 +34,8 @@ Content-Disposition: inline
 [% ELSE -%]
 [%|loc%]Impossible to distribute your message for the following reason:[%END%]
 [% END -%]
-
 [% IF entry == 'routing_error' -%]
+
 [%|loc(list.name,conf.sympa,list.host)%]The following message was sent to list '%1' and it seems to contain
 one or more commands like subscribe, unsubscribe, help, index, get, ...
 
@@ -44,7 +48,7 @@ interpreted by the software as a command. Please contact the list owner:
 %1-request@%3 so that he can take care of your message.
 
 Thank you for your attention.
-[%END%]
+[%END -%]
 [% ELSIF entry == 'message_too_large' -%]
 
 [%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
@@ -67,14 +71,16 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 
 [%|loc(key)%]Unable to access the message authenticated with key %1 because of a wrong format. The message may already been confirmed.[%END%]
 [% END -%]
-[% IF list.name %]
+[% IF list.name -%]
+
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
-[% ELSE %]
+[% ELSE -%]
+
 [%|loc(conf.host)%]For further information, please contact listmaster@%1[%END%]
-[% END %]
-[%##################### %]
-[%# AUTHORIZATION ERROR %]
-[%##################### %]
+[% END -%]
+[%##################### -%]
+[%# AUTHORIZATION ERROR -%]
+[%##################### -%]
 [% ELSIF type == 'authorization_reject' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution: Authorization denied[%END%][%END%]
 Content-Type: multipart/mixed; boundary="[% boundary %]"
@@ -86,66 +92,57 @@ Content-Disposition: inline
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected. 
 You are not allowed to send this message for the following reason:[%END%]
 
-[% SET reason = entry -%] [% PROCESS authorization_reject.tt2 %]
+[% SET reason = entry -%] [% PROCESS authorization_reject.tt2 -%]
+
 [%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
-[%##################### %]
-[%###### SUCCESS NOTICE %]
-[%##################### %]
+[%##################### -%]
+[%###### SUCCESS NOTICE -%]
+[%##################### -%]
 [% ELSIF type == 'success' -%]
 Subject: [% FILTER qencode %][%|loc%]Message distribution[%END%][%END%]
 
 [% IF entry == 'moderating_message' -%]
-
 [%|loc(list.name)%]Your message for list %1 has been forwarded to editor(s)[%END%]
-
 [% ELSIF entry == 'message_distributed' -%]
-
 [%|loc(key,list.name)%]Message %1 for list '%2' has been distributed.[%END%]
-
 [% ELSIF entry == 'message_in_distribution_spool' -%]
-
 [%|loc(key,list.name)%]Message %1 for list '%2' has been validated; it will be distributed soon.[%END%]
-
 [% ELSIF entry == 'message_rejected' -%]
-
 [%|loc(key,list.name)%]Message %1 for list '%2' has been rejected.[%END%]
-
 [% ELSIF entry == 'message_confirmed' -%]
-
 [%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed and distributed.[%END%]
-
 [% ELSIF entry == 'message_confirmed_and_in_distribution_spool' -%]
-
 [%|loc(key,list.name)%]Your message for list '%2' with the %1 ID has been confirmed; it will be distributed soon.[%END%]
-
 [% END -%]
-[%##################### %]
-[%###### PLUGINS        %]
-[%##################### %]
+[%##################### -%]
+[%###### PLUGINS        -%]
+[%##################### -%]
 [% ELSIF type == 'plugin' -%]
-  [%- TRY -%][%- INCLUDE $entry -%]
-  [%- CATCH -%]
+[%- TRY -%][%- INCLUDE $entry -%]
+[%- CATCH -%]
 Subject: [%FILTER qencode%][%|loc%]report message error on plugin[%END%][%END%]
 
 ENTRY=[% entry %]
 ERROR=[% error %]
-  [% END %]
+[% END -%]
 [% ELSE -%]
 Subject: oops
 
 [%type %]/[%entry%]
 [% END -%]
-[%##################### %]
-[%# Inserted MESSAGE    %]
-[%##################### %]
+[%##################### -%]
+[%# Inserted MESSAGE    -%]
+[%##################### -%]
 [%- IF msg -%]
+
 --[% boundary %]
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 
-[% msg %]
+[%# msg %]
 
 --[% boundary %]--
-[% END %]
+
+[% END -%]
