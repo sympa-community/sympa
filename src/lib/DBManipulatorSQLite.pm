@@ -387,10 +387,11 @@ sub delete_field {
     my $table = $param->{'table'};
     my $field = $param->{'field'};
 
+    return '' if $field eq 'temporary';
+
     Log::do_log('debug', 'Deleting field %s from table %s', $field, $table);
 
     ## SQLite does not support removal of columns
-
     my $report =
         "Could not remove field $field from table $table since SQLite does not support removal of columns";
     Log::do_log('info', '%s', $report);
@@ -772,13 +773,22 @@ sub _update_table {
         Log::do_log('err', 'Table "%s" does not exist', $table);
         return undef;
     }
+
+    my $statement_orig = $statement;
     $statement =~
         s/^\s*CREATE\s+TABLE\s+([\"\w]+)/CREATE TABLE ${table_saved}_new/;
     $statement =~ s/$regex/$replacement/;
+    if ($statement eq $statement_orig) {
+        Log::do_log('err', 'Table "%s" was not changed', $table);
+        return undef;
+    }
+    $statement =~ s/\btemporary\s+INT,\s*//;    # Omit "temporary" field.
+
     my $s = $statement;
     $s =~ s/\n\s*/ /g;
     $s =~ s/\t/ /g;
     Log::do_log('info', '%s', $s);
+
     unless ($self->do_query('%s', $statement)) {
         Log::do_log('err', 'Could not create temporary table "%s_new"',
             $table_saved);
@@ -846,8 +856,9 @@ sub _copy_table {
     my $table_new = shift;
     return undef unless defined $table and defined $table_new;
 
-    my $fields = join ', ',
+    my $fields = join ', ', grep { $_ ne 'temporary' }
         sort keys %{$self->get_fields({'table' => $table})};
+    $fields ||= 'temporary';
 
     my $sth;
     unless (
