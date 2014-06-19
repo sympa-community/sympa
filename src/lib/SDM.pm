@@ -371,8 +371,12 @@ sub check_fields {
                             $db_struct{Conf::get_robot_conf('*', 'db_type')}
                             {$t}{$f},
                         'notnull' => $not_null{$f},
-                        'autoinc' => ($autoincrement{$t} eq $f),
-                        'primary' => ($autoincrement{$t} eq $f),
+                        'autoinc' =>
+                            ($autoincrement{$t} and $autoincrement{$t} eq $f),
+                        'primary' => (
+                            scalar @{$primary{$t} || []} == 1
+                                and $primary{$t}->[0] eq $f
+                        ),
                     }
                 )
                 ) {
