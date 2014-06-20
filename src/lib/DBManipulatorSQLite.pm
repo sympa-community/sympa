@@ -128,8 +128,7 @@ sub is_autoinc {
 
     my $type = $self->_get_field_type($table, $field);
     return undef unless $type;
-    return $type =~ /\bAUTOINCREMENT\b/i
-        or $type =~ /\binteger PRIMARY KEY\b/i;
+    return ($type =~ /\binteger PRIMARY KEY\b/i) ? 1 : 0;
 }
 
 # Defines the field as an autoincrement field
@@ -739,7 +738,11 @@ sub _get_field_type {
     while ($l = $sth->fetchrow_hashref('NAME_lc')) {
         if (lc $l->{'name'} eq lc $field) {
             $sth->finish;
-            return $l->{'type'};
+            return
+                  $l->{'type'}
+                . ($l->{'pk'}         ? ' PRIMARY KEY'                : '')
+                . ($l->{'notnull'}    ? ' NOT NULL'                   : '')
+                . ($l->{'dflt_value'} ? " DEFAULT $l->{'dflt_value'}" : '');
         }
     }
     $sth->finish;
