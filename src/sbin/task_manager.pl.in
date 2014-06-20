@@ -1278,12 +1278,10 @@ sub purge_logs_table {
     #hour to hour
     for (my $i = $date_deb; $i <= $date_end; $i = $i + 3600) {
         push(@slots, $i);
-
     }
 
     for (my $j = 1; $j <= scalar(@slots); $j++) {
-
-        Log::aggregate_data($slots[$j - 1], $slots[$j]);
+        Log::aggregate_data($slots[$j - 1], $slots[$j] || $enddate);
     }
     #-------------------------------------------------------------------
 

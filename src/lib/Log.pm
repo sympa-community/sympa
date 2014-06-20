@@ -408,14 +408,18 @@ sub db_stat_counter_log {
     }
 
     unless (
-        SDM::do_query(
-            'INSERT INTO stat_counter_table (id_counter, beginning_date_counter, end_date_counter, data_counter, robot_counter, list_counter, variation_counter, total_counter) VALUES (%s, %d, %d, %s, %s, %s, %d, %d)',
+        SDM::do_prepared_query(
+            q{INSERT INTO stat_counter_table
+              (id_counter, beginning_date_counter, end_date_counter,
+               data_counter, robot_counter, list_counter, variation_counter,
+               total_counter)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)},
             $id,
             $date_deb,
             $date_fin,
-            SDM::quote($data),
-            SDM::quote($robot),
-            SDM::quote($list),
+            $data,
+            $robot,
+            $list,
             $variation,
             $total
         )
