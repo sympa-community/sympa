@@ -777,9 +777,10 @@ sub _update_table {
         return undef;
     }
 
-    my $statement_orig = $statement;
     $statement =~
         s/^\s*CREATE\s+TABLE\s+([\"\w]+)/CREATE TABLE ${table_saved}_new/;
+
+    my $statement_orig = $statement;
     $statement =~ s/$regex/$replacement/;
     if ($statement eq $statement_orig) {
         Log::do_log('err', 'Table "%s" was not changed', $table);
