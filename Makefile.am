@@ -37,11 +37,11 @@ check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 	     t/stub/Sympa/Constants.pm
 
 EXTRA_DIST = important_changes.pl \
-	     sympa.spec.in \
+	     sympa.spec.pl \
 	     sympa.spec \
 	     etc_README \
 	     $(check_SCRIPTS) $(check_DATA)
-CLEANFILES = previous_sympa_version sympa_wizard.pl.inst
+CLEANFILES = previous_sympa_version sympa.spec sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -152,3 +152,7 @@ importantchanges:
 uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
+
+sympa.spec: sympa.spec.pl src/lib/Sympa/Constants.pm Makefile
+	$(PERL) sympa.spec.pl > sympa.spec
+

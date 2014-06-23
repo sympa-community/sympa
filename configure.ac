@@ -625,6 +625,5 @@ AC_CONFIG_FILES([
     src/libexec/Makefile
     src/sbin/Makefile
     www/Makefile
-    sympa.spec
 ])
 AC_OUTPUT

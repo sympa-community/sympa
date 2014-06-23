@@ -1,3 +1,45 @@
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id$
+
+use lib qw(src/lib);
+use strict;
+use warnings;
+use Sympa::Constants;
+use Sympa::ModDef;
+
+my %m = %Sympa::ModDef::cpan_modules;
+my $requires =
+    sprintf('Requires: perl >= %s', $m{perl}->{required_version}) . "\n"
+    . join(
+    "\n",
+    map {
+        sprintf 'Requires: perl(%s)%s',
+            $_, $m{$_}->{required_version}
+            ? " >= $m{$_}->{required_version}"
+            : ''
+        } grep {
+        $_ ne 'perl' and $_ ne 'MHonArc::UTF8' and $m{$_}->{mandatory}
+        } sort {
+        lc $a cmp lc $b || $a cmp $b
+        } keys %m
+    )
+    . "\n"
+    . sprintf(
+    'Requires: mhonarc >= %s',
+    $m{'MHonArc::UTF8'}->{required_version}
+    );
+my $version = Sympa::Constants::VERSION();
+
+undef $/;
+$_ = <DATA>;
+s/\@VERSION\@/$version/;
+s/\@REQUIRES\@/$requires/;
+print $_;
+
+__END__
+# RPM spec file for Sympa.
+
 %define name    sympa
 %define version @VERSION@
 %define release 1
@@ -12,25 +54,7 @@ Group:    System Environment/Daemons
 URL:      http://www.sympa.org/
 Source:   http://www.sympa.org/distribution/%{name}-%{version}.tar.gz
 Requires: smtpdaemon
-Requires: perl >= 0:5.005
-Requires: perl-MailTools >= 1.14
-Requires: perl-MIME-Base64   >= 1.0
-Requires: perl-IO-stringy    >= 1.0
-Requires: perl-MIME-tools    >= 5.209
-Requires: perl-CGI    >= 2.52
-Requires: perl-DBI    >= 1.06
-Requires: perl-DB_File    >= 1.73
-Requires: perl-ldap >= 0.10
-Requires: perl-CipherSaber >= 0.50
-Requires: perl-FCGI    >= 0.48
-Requires: perl-Digest-MD5
-Requires: perl-Convert-ASN1
-Requires: perl-HTML-Parser
-Requires: perl-HTML-Tagset
-Requires: perl-IO-Socket-SSL
-Requires: perl-URI
-Requires: perl-libwww-perl
-Requires: MHonArc >= 2.4.6
+@REQUIRES@
 Requires: webserver
 Requires: openssl >= 0.9.5a
 Prereq: /usr/sbin/useradd
