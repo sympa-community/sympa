@@ -177,8 +177,7 @@ sub create_list_old {
     unless (check_owner_defined($param->{'owner'}, $param->{'owner_include'}))
     {
         Log::do_log('err',
-            'admin::create_list_old : problem in owner definition in this list creation'
-        );
+            'Problem in owner definition in this list creation');
         return undef;
     }
 
@@ -356,7 +355,7 @@ sub create_list_old {
     $return->{'list'} = $list;
 
     if ($list->{'admin'}{'status'} eq 'open') {
-        $return->{'aliases'} = install_aliases($list, $robot);
+        $return->{'aliases'} = install_aliases($list);
     } else {
         $return->{'aliases'} = 1;
     }
@@ -386,7 +385,7 @@ sub create_list_old {
 #         $param->{'owner_include'} array of hash :
 #              with key source obligatory
 #       - $family : the family object
-#       - $robot : the list's robot
+#       - $robot : the list's robot  ** No longer used.
 #       - $abort_on_error : won't create the list directory on
 #          tt2 process error (usefull for dynamic lists that
 #          throw exceptions)
@@ -415,8 +414,9 @@ sub create_list {
     }
 
     #robot
+    my $robot = $family->{'robot'};
     unless ($robot) {
-        Log::do_log('err', 'Missing param "robot"', $robot);
+        Log::do_log('err', 'Missing param "robot"');
         return undef;
     }
 
@@ -599,7 +599,7 @@ sub create_list {
     $return->{'list'} = $list;
 
     if ($list->{'admin'}{'status'} eq 'open') {
-        $return->{'aliases'} = install_aliases($list, $robot);
+        $return->{'aliases'} = install_aliases($list);
     } else {
         $return->{'aliases'} = 1;
     }
@@ -865,7 +865,7 @@ sub rename_list {
     ## If we are in 'copy' mode, create en new list
     if ($param{'mode'} eq 'copy') {
         unless (
-            $list = admin::clone_list_as_empty(
+            $list = clone_list_as_empty(
                 $list->{'name'},        $list->{'domain'},
                 $param{'new_listname'}, $param{'new_robot'},
                 $param{'user_email'}
@@ -1002,7 +1002,7 @@ sub rename_list {
     }
 
     if ($list->{'admin'}{'status'} eq 'open') {
-        $param{'aliases'} = admin::install_aliases($list, $robot);
+        $param{'aliases'} = install_aliases($list);
     }
 
     unless ($param{'mode'} eq 'copy') {
@@ -1365,7 +1365,7 @@ sub list_check_smtp {
     eval { require Net::SMTP; };
     if ($@) {
         Log::do_log('err',
-            "admin::list_check_smtp : Unable to use Net library, Net::SMTP required, install it (CPAN) first"
+            "Unable to use Net library, Net::SMTP required, install it (CPAN) first"
         );
         return undef;
     }
@@ -1392,14 +1392,13 @@ sub list_check_smtp {
 # Install sendmail aliases for $list
 #
 # IN  : - $list : object list
-#       - $robot : the list's robot
+#       - $robot : the list's robot ** No longer used
 # OUT : - undef if not applicable or aliases not installed
 #         1 (if ok) or
 ##########################################################
 sub install_aliases {
-    my $list  = shift;
-    my $robot = shift;
-    Log::do_log('debug', '(%s, %s)', $list->{'name'}, $robot);
+    Log::do_log('debug', '(%s)', @_);
+    my $list = shift;
 
     return 1
         if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~
@@ -1409,18 +1408,20 @@ sub install_aliases {
     my $output_file   = $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $$;
     my $error_output_file =
         $Conf::Conf{'tmpdir'} . '/aliasmanager.stderr.' . $$;
-    Log::do_log('debug2',
-        "admin::install_aliases : $alias_manager add $list->{'name'} $list->{'admin'}{'host'}"
-    );
+    Log::do_log('debug2', '%s add %s %s', $alias_manager, $list->{'name'},
+        $list->{'admin'}{'host'});
 
     unless (-x $alias_manager) {
         Log::do_log('err', 'Failed to install aliases: %s', $!);
         return undef;
     }
-    system(
-        "$alias_manager add $list->{'name'} $list->{'admin'}{'host'} >$output_file 2>  $error_output_file"
-    );
-    my $status = $? / 256;
+    #FIXME: 'host' parameter is passed to alias_manager: no 'domain'
+    # parameter to determine robot.
+    my $cmd = sprintf '%s add %s %s >%s 2> %s',
+        $alias_manager, $list->{'name'}, $list->{'admin'}{'host'},
+        $output_file, $error_output_file;
+    system($cmd);
+    my $status = $? >> 8;
     if ($status == 0) {
         Log::do_log('info', 'Aliases installed successfully');
         return 1;
@@ -1490,23 +1491,23 @@ sub install_aliases {
 # Remove sendmail aliases for $list
 #
 # IN  : - $list : object list
-#       - $robot : the list's robot
+#       - $robot : the list's robot  ** No longer used
 # OUT : - undef if not applicable
 #         1 (if ok) or
 #         $aliases : concated string of alias not removed
 #########################################################
 
 sub remove_aliases {
-    my $list  = shift;
-    my $robot = shift;
-    Log::do_log('info', '(%s, %s', $list->{'name'}, $robot);
+    Log::do_log('info', '(%s)', @_);
+    my $list = shift;
 
     return 1
         if Conf::get_robot_conf($list->{'domain'}, 'sendmail_aliases') =~
             /^none$/i;
 
     my $status = $list->remove_aliases();
-    my $suffix = Conf::get_robot_conf($robot, 'return_path_suffix');
+    my $suffix =
+        Conf::get_robot_conf($list->{'domain'}, 'return_path_suffix');
     my $aliases;
 
     unless ($status == 1) {
