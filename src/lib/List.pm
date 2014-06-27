@@ -4313,7 +4313,7 @@ sub delete_list_member {
         ## Include in exclusion_table only if option is set.
         if ($exclude == 1) {
             ## Insert in exclusion_table if $user->{'included'} eq '1'
-            insert_delete_exclusion($who, $name, $self->{'domain'}, 'insert');
+            $self->insert_delete_exclusion($who, 'insert');
 
         }
 
@@ -4538,62 +4538,58 @@ sub restore_suspended_subscription {
 }
 
 ######################################################################
-###  insert_delete_exclusion                                         #
-## Update the exclusion_table                                        #
+# insert_delete_exclusion                                            #
+# Update the exclusion_table                                         #
 ######################################################################
 # IN:                                                                #
 #   - email : the subscriber email                                   #
-#   - list : the name of the list                                    #
-#   - robot : the name of the domain                                 #
 #   - action : insert or delete                                      #
 # OUT:                                                               #
 #   - undef if something went wrong.                                 #
 #   - 1                                                              #
 ######################################################################
 sub insert_delete_exclusion {
-
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $self   = shift;
     my $email  = shift;
-    my $list   = shift;
-    my $robot  = shift;
     my $action = shift;
-    my $family = shift;
-    Log::do_log('info', '("%s", "%s", "%s", "%s", "%s")',
-        $email, $list, $robot, $action, $family);
+
+    die sprintf 'Invalid parameter: %s', $self
+        unless ref $self;    #prototype changed (6.2b)
+
+    my $name     = $self->{'name'};
+    my $robot_id = $self->{'domain'};
 
     my $r = 1;
 
     if ($action eq 'insert') {
         ## INSERT only if $user->{'included'} eq '1'
-
         my $options;
         $options->{'email'}  = $email;
         $options->{'name'}   = $list;
-        $options->{'domain'} = $robot;
+        $options->{'domain'} = $robot_id;
         my $user = get_list_member_no_object($options);
         my $date = time;
 
-        if ($user->{'included'} eq '1' or defined $family) {
+        if ($user->{'included'} eq '1') {
             ## Insert : list, user and date
             unless (
-                SDM::do_query(
-                    "INSERT INTO exclusion_table (list_exclusion, family_exclusion, robot_exclusion, user_exclusion, date_exclusion) VALUES (%s, %s, %s, %s, %s)",
-                    SDM::quote($list),
-                    SDM::quote($family),
-                    SDM::quote($robot),
-                    SDM::quote($email),
-                    SDM::quote($date)
+                SDM::do_prepared_query(
+                    q{INSERT INTO exclusion_table
+		      (list_exclusion, robot_exclusion, user_exclusion,
+		       date_exclusion)
+		     VALUES (?, ?, ?, ?)},
+                    $name, $robot_id, $email, $date
                 )
                 ) {
-                Log::do_log('err',
-                    'Unable to exclude user %s from liste %s@%s',
-                    $email, $list, $robot);
+                Log::do_log('err', 'Unable to exclude user %s from list %s',
+                    $email, $self);
                 return undef;
             }
         }
-
     } elsif ($action eq 'delete') {
         ## If $email is in exclusion_table, delete it.
-        my $data_excluded = get_exclusion($list, $robot);
+        my $data_excluded = $self->get_exclusion();
         my @users_excluded;
 
         my $key = 0;
@@ -4607,46 +4603,24 @@ sub insert_delete_exclusion {
         foreach my $users (@users_excluded) {
             if ($email eq $users) {
                 ## Delete : list, user and date
-                if (defined $family) {
-
-                    unless (
-                        $sth = SDM::do_query(
-                            "DELETE FROM exclusion_table WHERE (family_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)",
-                            SDM::quote($family),
-                            SDM::quote($robot),
-                            SDM::quote($email)
-                        )
-                        ) {
-                        Log::do_log(
-                            'err',
-                            'Unable to remove entry %s for family %s (robot %s) from table exclusion_table',
-                            $email,
-                            $family,
-                            $robot
-                        );
-                    }
-                } else {
-                    unless (
-                        $sth = SDM::do_query(
-                            "DELETE FROM exclusion_table WHERE (list_exclusion = %s AND robot_exclusion = %s AND user_exclusion = %s)",
-                            SDM::quote($list),
-                            SDM::quote($robot),
-                            SDM::quote($email)
-                        )
-                        ) {
-                        Log::do_log(
-                            'err',
-                            'Unable to remove entry %s for list %s@%s from table exclusion_table',
-                            $email,
-                            $family,
-                            $robot
-                        );
-                    }
+                unless (
+                    $sth = SDM::do_prepared_query(
+                        q{DELETE FROM exclusion_table
+			  WHERE list_exclusion = ? AND robot_exclusion = ? AND
+				user_exclusion = ?},
+                        $name, $robot_id, $email
+                    )
+                    ) {
+                    Log::do_log(
+                        'err',
+                        'Unable to remove entry %s for list %s from table exclusion_table',
+                        $email,
+                        $self
+                    );
                 }
                 $r = $sth->rows;
             }
         }
-
     } else {
         Log::do_log('err', 'Unknown action %s', $action);
         return undef;
@@ -4656,56 +4630,56 @@ sub insert_delete_exclusion {
 }
 
 ######################################################################
-###  get_exclusion                                                   #
-## Returns a hash with those excluded from the list and the date.    #
-##                                                                   #
+# get_exclusion                                                      #
+# Returns a hash with those excluded from the list and the date.     #
+#                                                                    #
 # IN:  - name : the name of the list                                 #
 # OUT: - data_exclu : * %data_exclu->{'emails'}->[]                  #
 #                     * %data_exclu->{'date'}->[]                    #
 ######################################################################
 sub get_exclusion {
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
 
-    my $name  = shift;
-    my $robot = shift;
-    Log::do_log('debug2', '(%s@%s)', $name, $robot);
+    die sprintf 'Invalid parameter: %s', $self
+        unless ref $self;    #prototype changed (6.2b)
 
-    my $list = List->new($name, $robot);
-    unless (defined $list) {
-        Log::do_log('err', 'List %s@%s does not exist', $name, $robot);
-        return undef;
-    }
+    my $name     = $self->name;
+    my $robot_id = $self->domain;
 
-    if (defined $list->{'admin'}{'family_name'}
-        && $list->{'admin'}{'family_name'} ne '') {
+    push @sth_stack, $sth;
+
+    if (    defined $self->{'admin'}{'family_name'}
+        and length $self->{'admin'}{'family_name'}) {
         unless (
-            $sth = SDM::do_query(
-                "SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE (list_exclusion = %s OR family_exclusion = %s) AND robot_exclusion=%s",
-                SDM::quote($name),
-                SDM::quote($list->{'admin'}{'family_name'}),
-                SDM::quote($robot)
+            $sth = SDM::do_prepared_query(
+                q{SELECT user_exclusion AS email, date_exclusion AS "date"
+		  FROM exclusion_table
+		  WHERE (list_exclusion = ? OR family_exclusion = ?) AND
+			robot_exclusion = ?},
+                $name, $self->{'admin'}{'family_name'}, $robot_id
             )
             ) {
             Log::do_log('err',
-                'Unable to retrieve excluded users for list %s@%s',
-                $name, $robot);
+                'Unable to retrieve excluded users for list %s', $self);
+            $sth = pop @sth_stack;
             return undef;
         }
     } else {
         unless (
-            $sth = SDM::do_query(
-                "SELECT user_exclusion AS email, date_exclusion AS date FROM exclusion_table WHERE list_exclusion = %s AND robot_exclusion=%s",
-                SDM::quote($name),
-                SDM::quote($robot)
+            $sth = SDM::do_prepared_query(
+                q{SELECT user_exclusion AS email, date_exclusion AS "date"
+		  FROM exclusion_table
+		  WHERE list_exclusion = ? AND robot_exclusion=?},
+                $name, $robot_id
             )
             ) {
             Log::do_log('err',
-                'Unable to retrieve excluded users for list %s@%s',
-                $name, $robot);
+                'Unable to retrieve excluded users for list %s', $self);
+            $sth = pop @sth_stack;
             return undef;
         }
     }
-
-    push @sth_stack, $sth;
 
     my @users;
     my @date;
@@ -4714,24 +4688,25 @@ sub get_exclusion {
         push @users, $data->{'email'};
         push @date,  $data->{'date'};
     }
-    ## in order to use the data, we add the emails and dates in differents
-    ## array
+    # In order to use the data, we add the emails and dates in different
+    # array
     my $data_exclu = {
         "emails" => \@users,
         "date"   => \@date
     };
-
     $sth->finish();
+
     $sth = pop @sth_stack;
 
     unless ($data_exclu) {
         Log::do_log('err',
-            'Unable to retrieve information from database for list %s@%s',
-            $name, $robot);
+            'Unable to retrieve information from database for list %s',
+            $self);
         return undef;
     }
     return $data_exclu;
 }
+
 
 ######################################################################
 ###  get_list_member                                                  #
@@ -6137,7 +6112,7 @@ sub add_list_member {
 
         # Delete from exclusion_table and force a sync_include if new_user was
         # excluded
-        if (insert_delete_exclusion($who, $name, $self->{'domain'}, 'delete'))
+        if ($self->insert_delete_exclusion($who, 'delete'))
         {
             $self->sync_include();
             if ($self->is_list_member($who)) {
@@ -12706,7 +12681,7 @@ CLASS must extend L<Sympa::Plugin::ListSource>
 
 =cut
 
-# We have own plugin administration, not using the ::Plugin::Manager
+# We have own plugin administration, not using the Sympa::Plugin::Manager
 # until all 'include_' labels are abstracted out into objects.
 my %plugins;
 

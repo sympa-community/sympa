@@ -6560,11 +6560,12 @@ sub do_family_signoff {
             $session->{'email'}, $in{'email'}, $in{'family'});
         return undef;
     }
-    unless (
-        List::insert_delete_exclusion(
+
+    my $family = Family->new($param->{'family'}, $robot_id);
+    unless ($family
+        and $family->insert_delete_exclusion(
             $in{'email'}, SympaSession::get_random(),
-            $robot,       'insert',
-            $in{'family'}
+            $robot,       'insert'
         )
         ) {
         report::reject_report_web('user', 'cannot_do_signoff');

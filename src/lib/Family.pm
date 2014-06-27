@@ -127,8 +127,8 @@ sub get_available_families {
             next;
         }
 
-        ## If we can create a Family object with what we find in the family
-        ## directory, then it is worth being added to the list.
+        # If we can create a Family object with what we find in the
+        # family directory, then it is worth being added to the list.
         foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
             if (my $family = Family->new($subdir, $robot)) {
                 $families{$subdir} = 1;
@@ -369,7 +369,7 @@ sub add_list {
         close FIC;
 
         # get list data
-        open(FIC, '<:raw', "$self->{'dir'}/_new_list.xml");
+        open(FIC, '<:raw', $self->{'dir'} . '/_new_list.xml');
         my $config = Config_XML->new(\*FIC);
         close FIC;
         unless (defined $config->createHash()) {
@@ -570,7 +570,7 @@ sub modify_list {
     close FIC;
 
     # get list data
-    open(FIC, '<:raw', "$self->{'dir'}/_mod_list.xml");
+    open(FIC, '<:raw', $self->{'dir'} . '/_mod_list.xml');
     my $config = Config_XML->new(\*FIC);
     close FIC;
     unless (defined $config->createHash()) {
@@ -995,7 +995,7 @@ sub instantiate {
         ## get data from list XML file. Stored into $config (class
         ## Config_XML).
         my $xml_fh;
-        open $xml_fh, '<:raw', "$self->{'dir'}" . "/" . $listname . ".xml";
+        open $xml_fh, '<:raw', $self->{'dir'} . "/" . $listname . ".xml";
         my $config = Config_XML->new($xml_fh);
         close $xml_fh;
         unless (defined $config->createHash()) {
@@ -1180,7 +1180,7 @@ sub instantiate {
         } else {
             ## get data from list xml file
             my $xml_fh;
-            open $xml_fh, '<:raw', "$list->{'dir'}/instance.xml";
+            open $xml_fh, '<:raw', $list->{'dir'} . '/instance.xml';
             my $config = Config_XML->new($xml_fh);
             close $xml_fh;
             unless (defined $config->createHash()) {
@@ -2731,14 +2731,15 @@ sub _set_status_changes {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
             $result->{'aliases'} =
-                admin::install_aliases($list, $self->{'robot'});
+                admin::install_aliases($list);
         }
     }
 
     if (   ($list->{'admin'}{'status'} eq 'pending')
         && (($old_status eq 'open') || ($old_status eq 'error_config'))) {
         $result->{'install_remove'} = 'remove';
-        $result->{'aliases'} = admin::remove_aliases($list, $self->{'robot'});
+        $result->{'aliases'} =
+            admin::remove_aliases($list, $self->{'robot'});
     }
 
 ##    ## subscribers
@@ -3155,6 +3156,47 @@ sub is_allowed_to_create_automatic_lists {
         Log::do_log('debug2',
             'Automatic list creation refused to user %s for family %s',
             $sender, $self->{'name'});
+        return undef;
+    }
+
+    return 1;
+}
+
+## Handle exclusion table for family
+sub insert_delete_exclusion {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $self   = shift;
+    my $email  = shift;
+    my $action = shift;
+
+    my $name  = $self->{'name'};
+    my $robot_id = $self->{'robot'};
+
+    if ($action eq 'insert') {
+        ##FXIME: Check if user belong to any list of family
+        my $date = time;
+
+        ## Insert: family, user and date
+        ## Add dummy list_exclusion column to satisfy constraint.
+        unless (
+            SDM::do_prepared_query(
+                q{INSERT INTO exclusion_table
+                  (list_exclusion, family_exclusion, robot_exclusion,
+                   user_exclusion, date_exclusion)
+                  VALUES (?, ?, ?, ?, ?)},
+                sprintf('family:%s', $name), $name, $robot_id, $email, $date
+            )
+            ) {
+            Log::do_log('err', 'Unable to exclude user %s from family %s',
+                $email, $self);
+            return undef;
+        }
+        return 1;
+    } elsif ($action eq 'delete') {
+        ##FIXME: Not implemented yet.
+        return undef;
+    } else {
+        Log::do_log('err', 'Unknown action %s', $action);
         return undef;
     }
 
