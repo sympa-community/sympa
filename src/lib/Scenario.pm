@@ -30,6 +30,7 @@ use Mail::Address;
 use Net::Netmask;
 
 use Conf;
+use confdef;
 use Sympa::Constants;
 use Sympa::Language;
 use Ldap;
@@ -448,14 +449,20 @@ sub request_action {
 
     } else {
         ## Global scenario (ie not related to a list) ; example : create_list
-
-        my $p = Conf::get_robot_conf($robot, $operation);
-        $scenario = Scenario->new(
-            'robot'    => $robot,
-            'function' => $operation,
-            'name'     => $p,
-            'options'  => $context->{'options'}
-        );
+        my @p;
+        if ((   @p =
+                grep { $_->{'name'} and $_->{'name'} eq $operation }
+                @confdef::params
+            )
+            and $p[0]->{'scenario'}
+            ) {
+            $scenario = Scenario->new(
+                'robot'    => $robot,
+                'function' => $operation,
+                'name'     => Conf::get_robot_conf($robot, $operation),
+                'options'  => $context->{'options'}
+            );
+        }
     }
 
     unless ((defined $scenario) && (defined $scenario->{'rules'})) {
@@ -759,8 +766,14 @@ sub verify {
 
         ## Config param
         elsif ($value =~ /\[conf\-\>([\w\-]+)\]/i) {
-            if (my $conf_value = Conf::get_robot_conf($robot, $1)) {
-
+            my $conf_key = $1;
+            my $conf_value;
+            if (scalar(
+                    grep { $_->{'name'} and $_->{'name'} eq $conf_key }
+                        @confdef::params
+                )
+                and $conf_value = Conf::get_robot_conf($robot, $conf_key)
+                ) {
                 $value =~ s/\[conf\-\>([\w\-]+)\]/$conf_value/;
             } else {
                 Log::do_log('debug',

@@ -49,6 +49,7 @@ use Sympa::Constants;
 ##   db     : 'db_first', 'file_first', 'no'
 ##   obfuscated: 1|0: FIXME FIXME
 ##   multiple: 1|0: If 1, the parameter can have mutiple values. Default is 0.
+##   scenario: 1|0: If 1, the parameter is the name of scenario
 
 our @params = (
     {'gettext_id' => 'Site customization'},
@@ -331,9 +332,11 @@ our @params = (
         'edit'       => '1',
         'gettext_comment' =>
             'This parameter is a scenario, check sympa documentation about scenarios if you want to define one',
+        'scenario' => '1',
     },
     {   'name'    => 'global_remind',
         'default' => 'listmaster',
+        'scenario' => '1',
     },
     {   'name'    => 'allow_subscribe_if_pending',
         'default' => 'on',
@@ -463,6 +466,7 @@ our @params = (
     {   'name'    => 'automatic_list_creation',
         'default' => 'public',
         'vhost'   => '1',
+        'scenario' => '1',
     },
     {   'name' => 'automatic_list_families',
         'gettext_id' =>
@@ -1324,6 +1328,7 @@ our @params = (
         'vhost' => '1',
         'file'  => 'sympa.conf',
         'edit'  => '1',
+        'scenario' => '1',
     },
 
     {'gettext_id' => 'Web interface parameters'},
