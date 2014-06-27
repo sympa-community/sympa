@@ -24494,8 +24494,7 @@ sub get_server_details {
     }
 
     ## Families
-    my @families = Family::get_available_families($robot);
-
+    my @families = sort map { $_->{'name'} } @{Family::get_families($robot)};
     if (@families) {
         $param->{'families'} = \@families;
     }

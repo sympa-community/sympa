@@ -79,9 +79,7 @@ This is the description of the subfunctions contained by Family.pm
 ## Class methods
 ################
 
-=pod 
-
-=head2 sub get_available_families(STRING $robot)
+=head2 sub get_families(Robot $robot)
 
 Returns the list of existing families in the Sympa installation.
 
@@ -89,15 +87,15 @@ Returns the list of existing families in the Sympa installation.
 
 =over 
 
-=item * I<$robot>, the name of the robot the family list of which we want to get.
+=item * I<$robot>, the robot the family list of which we want to get.
 
 =back 
 
-=head3 Return 
+=head3 Returns
 
 =over 
 
-=item * I<an array> containing all the robot's families names.
+=item * An arrayref containing all the robot's family names.
 
 =back 
 
@@ -113,14 +111,14 @@ Returns the list of existing families in the Sympa installation.
 
 =cut
 
-sub get_available_families {
-    my $robot = shift;
+sub get_families {
+    my $robot_id = shift;
 
-    my %families;
+    my @families;
 
     foreach my $dir (
-        reverse @{tools::get_search_path($robot, subdir => 'families')}) {
-        next unless (-d $dir);
+        reverse @{tools::get_search_path($robot_id, subdir => 'families')}) {
+        next unless -d $dir;
 
         unless (opendir FAMILIES, $dir) {
             Log::do_log('err', 'Can\'t open dir %s: %s', $dir, $!);
@@ -130,16 +128,31 @@ sub get_available_families {
         # If we can create a Family object with what we find in the
         # family directory, then it is worth being added to the list.
         foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
-            if (my $family = Family->new($subdir, $robot)) {
-                $families{$subdir} = 1;
+            next unless -d ("$dir/$subdir");
+            if (my $family = Family->new($subdir, $robot_id)) {
+                push @families, $family;
             }
         }
     }
 
-    return keys %families;
+    return \@families;
 }
 
-=pod 
+sub get_available_families {
+    my $robot_id = shift;
+    my $families;
+    my %hash;
+    if ($families = get_families($robot_id)) {
+        foreach my $family (@$families) {
+            if (ref $family eq 'Family') {
+                $hash{$family->{'name'}} = $family;
+            }
+        }
+        return %hash;
+    } else {
+        return undef;
+    }
+}
 
 =head1 Instance methods 
 
