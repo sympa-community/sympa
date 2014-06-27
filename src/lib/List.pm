@@ -42,6 +42,7 @@ use XML::LibXML;
 use Archive;
 use Auth;
 use Conf;
+use confdef;
 use Sympa::Constants;
 use Datasource;
 use Family;
@@ -10655,8 +10656,11 @@ sub _load_list_param {
     }
 
     ## Search configuration file
-    if (ref($value) && defined $value->{'conf'}) {
-        $value = Conf::get_robot_conf($robot, $value->{'conf'});
+    if (ref $value and $value->{'conf'} and
+        grep { $_->{'name'} and $_->{'name'} eq $value->{'conf'} }
+            @confdef::params) {
+        my $param = $value->{'conf'};
+        $value = Conf::get_robot_conf($robot, $param);
     }
 
     ## Synonyms
