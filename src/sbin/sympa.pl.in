@@ -3398,11 +3398,12 @@ sub DoCommand {
     my $auth_level = 'dkim' if ($message->{'dkim_pass'});
     $auth_level = $is_signed->{'subject'} if ($is_signed->{'subject'});
 
-    $success ||= Commands::parse($sender, $robot, $subject_field, $auth_level,
-        $message);
-
-    unless ($success and $success eq 'unknown_cmd') {
-        $cmd_found = 1;
+    if (defined $subject_field and $subject_field =~ /\S/) {
+        $success ||= Commands::parse($sender, $robot, $subject_field,
+                $auth_level, $message);
+        unless ($success and $success eq 'unknown_cmd') {
+            $cmd_found = 1;
+        }
     }
 
     ## Make multipart singlepart
