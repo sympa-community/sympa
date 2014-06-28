@@ -31,10 +31,10 @@ use File::Find qw();
 use File::Path qw();
 use POSIX qw();
 
-use Archive;
-use Auth;
+use Sympa::Archive;
+use Sympa::Auth;
 use Conf;
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
 use List;
@@ -1019,7 +1019,7 @@ sub upgrade {
 
             my %infile = ();
             ## load defaults
-            foreach my $p (@confdef::params) {
+            foreach my $p (@Sympa::ConfDef::params) {
                 next unless $p->{'name'};
                 next unless $p->{'file'};
                 next unless $p->{'file'} eq 'wwsympa.conf';
@@ -1037,7 +1037,7 @@ sub upgrade {
             close $fh;
 
             my $name;
-            foreach my $p (@confdef::params) {
+            foreach my $p (@Sympa::ConfDef::params) {
                 next unless $p->{'name'};
                 $name = $p->{'name'};
                 next unless exists $infile{$name};
@@ -1285,7 +1285,7 @@ sub upgrade {
                 }
             }
 
-            Archive::convert_single_message(
+            Sympa::Archive::convert_single_message(
                 $list, $message,
                 'destination_dir' => $destination_dir,
                 'attachement_url' =>
@@ -1495,7 +1495,9 @@ sub md5_encode_password {
                 q{UPDATE user_table
 	      SET password_user = %s
 	      WHERE email_user = %s},
-                SDM::quote(Auth::password_fingerprint($clear_password)),
+                SDM::quote(
+                    Sympa::Auth::password_fingerprint($clear_password)
+                ),
                 SDM::quote($user->{'email_user'})
             )
             ) {

@@ -22,14 +22,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Auth;
+package Sympa::Auth;
 
 use strict;
 use warnings;
 use POSIX qw();
 
 use Conf;
-use LDAPSource;
+use Sympa::LDAPSource;
 use List;
 use Log;
 use report;
@@ -233,7 +233,7 @@ sub ldap_authentication {
 
     ## bind in order to have the user's DN
     my $param = tools::dup_var($ldap);
-    my $ds    = LDAPSource->new($param);
+    my $ds    = Sympa::LDAPSource->new($param);
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
@@ -268,7 +268,7 @@ sub ldap_authentication {
     $param->{'ldap_bind_dn'}       = $DN[0];
     $param->{'ldap_bind_password'} = $pwd;
 
-    $ds = LDAPSource->new($param);
+    $ds = Sympa::LDAPSource->new($param);
 
     unless (defined $ds && ($ldap_passwd = $ds->connect())) {
         Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
@@ -361,7 +361,7 @@ sub get_email_by_net_id {
     my $ldap = @{$Conf::Conf{'auth_services'}{$robot}}[$auth_id];
 
     my $param = tools::dup_var($ldap);
-    my $ds    = LDAPSource->new($param);
+    my $ds    = Sympa::LDAPSource->new($param);
     my $ldap_anonymous;
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {

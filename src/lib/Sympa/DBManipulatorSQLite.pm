@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package DBManipulatorSQLite;
+package Sympa::DBManipulatorSQLite;
 
 use strict;
 use warnings;
@@ -31,7 +31,7 @@ use POSIX qw();
 
 use Log;
 
-use base qw(DBManipulatorDefault);
+use base qw(Sympa::DBManipulatorDefault);
 
 #######################################################
 ####### Beginning the RDBMS-specific code. ############

@@ -31,7 +31,7 @@ use Encode qw();
 use MIME::EncWords;
 use POSIX qw();
 
-use Bulk;
+use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use List;
@@ -930,8 +930,7 @@ sub sending {
 
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution
-
-        my $bulk_code = Bulk::store(
+        my $bulk_code = Sympa::Bulk::store(
             'message'          => $message,
             'rcpts'            => $rcpt,
             'from'             => $from,
@@ -954,8 +953,9 @@ sub sending {
                 {'listname' => $listname});
             return undef;
         }
-    } elsif (defined $send_spool)
-    { # in context wwsympa.fcgi do not send message to reciepients but copy it to standard spool
+    } elsif (defined $send_spool) {
+        # in context wwsympa.fcgi do not send message to reciepients but copy
+        # it to standard spool
         Log::do_log('debug', "NOT USING BULK");
 
         $sympa_email = Conf::get_robot_conf($robot, 'sympa');
@@ -1078,7 +1078,7 @@ sub smtpto {
         close(OUT);
         open(STDIN, "<&IN");
 
-        $from = '' if $from eq '<>'; # null sender
+        $from = '' if $from eq '<>';    # null sender
         if (!ref($rcpt)) {
             exec $sendmail, split(/\s+/, $sendmail_args), '-f', $from, $rcpt;
         } elsif (ref($rcpt) eq 'SCALAR') {
@@ -1087,7 +1087,7 @@ sub smtpto {
             exec $sendmail, split(/\s+/, $sendmail_args), '-f', $from, @$rcpt;
         }
 
-        exit 1;    ## Should never get there.
+        exit 1;                         ## Should never get there.
     }
     if ($log_smtp) {
         $str = "safefork: $sendmail $sendmail_args -f '$from' ";

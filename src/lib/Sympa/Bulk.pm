@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Bulk;
+package Sympa::Bulk;
 
 use strict;
 use warnings;
@@ -52,7 +52,7 @@ my $message_fingerprint;
 # create an empty Bulk
 #sub new {
 #    my $pkg = shift;
-#    my $packet = Bulk::next();;
+#    my $packet = Sympa::Bulk::next();;
 #    bless \$packet, $pkg;
 #    return $packet
 #}
@@ -389,7 +389,8 @@ sub store {
             }
 
             #log in stat_table to make statistics...
-            my $robot_domain = ($robot and $robot ne '*') ? $robot : $Conf::Conf{'domain'};
+            my $robot_domain =
+                ($robot and $robot ne '*') ? $robot : $Conf::Conf{'domain'};
             unless (index($message_sender, $robot_domain . '@') >= 0) {
                 # ignore messages sent by robot
                 unless (index($message_sender, $listname . '-request') >= 0) {
@@ -532,8 +533,7 @@ sub purge_bulkspool {
 
     my $count = 0;
     while (my $key = $sth->fetchrow_hashref('NAME_lc')) {
-        if (Bulk::remove_bulkspool_message('bulkspool', $key->{'messagekey'}))
-        {
+        if (remove_bulkspool_message('bulkspool', $key->{'messagekey'})) {
             $count++;
         } else {
             Log::do_log('err',
@@ -637,7 +637,7 @@ sub store_test {
             ) {
             return (($z - 1) * $size_increment);
         }
-        unless (Bulk::remove_bulkspool_message('bulkspool', $messagekey)) {
+        unless (remove_bulkspool_message('bulkspool', $messagekey)) {
             Log::do_log(
                 'err',
                 'Unable to remove test message (key = %s) from bulkspool_table',

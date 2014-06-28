@@ -30,7 +30,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Bulk;
+use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -255,11 +255,10 @@ while (!$end) {
             ## Start new processes if there remain at least
             ## 'bulk_fork_threshold' packets to send in the bulkmailer_table
             ## table
-            if ((   my $r_packets =
-                    Bulk::there_is_too_much_remaining_packets()
-                )
-                && ($#remaining_children + 1 < $Conf::Conf{'bulk_max_count'})
-                ) {
+            if (my $r_packets =
+                Sympa::Bulk::there_is_too_much_remaining_packets()
+                and $#remaining_children + 1 < $Conf::Conf{'bulk_max_count'})
+            {
 
                 ## disconnect from database before fork
                 ## to prevent DB handlers to be shared by different processes
@@ -308,9 +307,11 @@ while (!$end) {
     }
     ## If a child bulk process is running for long enough, stop it (if the
     ## number of remaining packets to send is reasonnable).
-    if (   ($main::daemon_usage eq 'DAEMON_SLAVE')
-        && (time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'})
-        && !(my $r_packets = Bulk::there_is_too_much_remaining_packets())) {
+    if (    $main::daemon_usage eq 'DAEMON_SLAVE'
+        and time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}
+        and
+        !(my $r_packets = Sympa::Bulk::there_is_too_much_remaining_packets()))
+    {
         Log::do_log('info',
             'Process %s didn\'t send any message since %s seconds, exiting',
             $$, $Conf::Conf{'bulk_lazytime'});
@@ -318,7 +319,7 @@ while (!$end) {
     }
 
     ## Go through the bulk_mailer table and process messages
-    if ($bulk = Bulk::next()) {
+    if ($bulk = Sympa::Bulk::next()) {
         if (!defined $messagekey or $bulk->{'messagekey'} ne $messagekey) {
             # current packet is not related to the same message as the
             # previous packet
@@ -326,7 +327,7 @@ while (!$end) {
 
             $messagekey = $bulk->{'messagekey'};
             $message_from_spool =
-                Bulk::message_from_spool($bulk->{'messagekey'});
+                Sympa::Bulk::message_from_spool($bulk->{'messagekey'});
 
             Log::do_log(
                 'notice',
@@ -347,15 +348,14 @@ while (!$end) {
                 Log::do_log(
                     'err',
                     'Internal error: current packet (messagekey= %s) contains a ref to a null message',
-                    $bulk->{'messagekey'}
+                    $messagekey
                 );
-                unless (
-                    Bulk::remove($bulk->{'messagekey'}, $bulk->{'packetid'}))
+                unless (Sympa::Bulk::remove($messagekey, $bulk->{'packetid'}))
                 {
                     Log::do_log(
                         'err',
                         'Failed to remove processed packet "%s", messagekey "%s"',
-                        $bulk->{'messagekey'},
+                        $messagekey,
                         $bulk->{'packetid'}
                     );
                 }
@@ -539,7 +539,8 @@ while (!$end) {
         }
 
         ## Remove packet once it has been processed
-        unless (Bulk::remove($bulk->{'messagekey'}, $bulk->{'packetid'})) {
+        unless (
+            Sympa::Bulk::remove($bulk->{'messagekey'}, $bulk->{'packetid'})) {
             Log::do_log('err',
                 'Failed to remove processed packet "%s", messagekey "%s"',
                 $bulk->{'messagekey'}, $bulk->{'packetid'});

@@ -29,7 +29,7 @@ use warnings;
 use DBI;
 
 use Conf;
-use Datasource;
+use Sympa::Datasource;
 use List;
 use Log;
 
@@ -47,54 +47,54 @@ sub new {
     Log::do_log('debug', 'Creating new SQLSource object for RDBMS "%s"',
         $param->{'db_type'});
     my $actualclass;
-    our @ISA = qw(Datasource);    #FIXME FIXME
+    our @ISA = qw(Sympa::Datasource);    #FIXME FIXME
     if ($param->{'db_type'} =~ /^mysql$/i) {
-        unless (eval "require DBManipulatorMySQL") {
+        unless (eval "require Sympa::DBManipulatorMySQL") {
             Log::do_log('err', 'Unable to use DBManipulatorMySQL module: %s',
                 $@);
             return undef;
         }
-        require DBManipulatorMySQL;
-        $actualclass = "DBManipulatorMySQL";
+        require Sympa::DBManipulatorMySQL;
+        $actualclass = "Sympa::DBManipulatorMySQL";
     } elsif ($param->{'db_type'} =~ /^sqlite$/i) {
-        unless (eval "require DBManipulatorSQLite") {
+        unless (eval "require Sympa::DBManipulatorSQLite") {
             Log::do_log('err', "Unable to use DBManipulatorSQLite module");
             return undef;
         }
-        require DBManipulatorSQLite;
+        require Sympa::DBManipulatorSQLite;
 
-        $actualclass = "DBManipulatorSQLite";
+        $actualclass = "Sympa::DBManipulatorSQLite";
     } elsif ($param->{'db_type'} =~ /^pg$/i) {
-        unless (eval "require DBManipulatorPostgres") {
+        unless (eval "require Sympa::DBManipulatorPostgres") {
             Log::do_log('err', "Unable to use DBManipulatorPostgres module");
             return undef;
         }
-        require DBManipulatorPostgres;
+        require Sympa::DBManipulatorPostgres;
 
-        $actualclass = "DBManipulatorPostgres";
+        $actualclass = "Sympa::DBManipulatorPostgres";
     } elsif ($param->{'db_type'} =~ /^oracle$/i) {
-        unless (eval "require DBManipulatorOracle") {
+        unless (eval "require Sympa::DBManipulatorOracle") {
             Log::do_log('err', "Unable to use DBManipulatorOracle module");
             return undef;
         }
-        require DBManipulatorOracle;
+        require Sympa::DBManipulatorOracle;
 
-        $actualclass = "DBManipulatorOracle";
+        $actualclass = "Sympa::DBManipulatorOracle";
     } elsif ($param->{'db_type'} =~ /^sybase$/i) {
-        unless (eval "require DBManipulatorSybase") {
+        unless (eval "require Sympa::DBManipulatorSybase") {
             Log::do_log('err', "Unable to use DBManipulatorSybase module");
             return undef;
         }
         require DBManipulatorSybase;
 
-        $actualclass = "DBManipulatorSybase";
+        $actualclass = "Sympa::DBManipulatorSybase";
     } else {
         ## We don't have a DB Manipulator for this RDBMS
         ## It might be an SQL source used to include list members/owners
         ## like CSV
-        require DBManipulatorDefault;
+        require Sympa::DBManipulatorDefault;
 
-        $actualclass = "DBManipulatorDefault";
+        $actualclass = "Sympa::DBManipulatorDefault";
     }
     $self = $pkg->SUPER::new($param);
 
@@ -363,16 +363,14 @@ sub establish_connection {
         ## We set Long preload length to two times global max message size
         ## (because of base64 encoding) instead of defaulting to 80 on Oracle
         ## and 32768 on Sybase.
-        ## This is to avoid error in Bulk::messageasstring when using Oracle
-        ## or
-        ## Sybase database:
+        ## This is to avoid error in Sympa::Bulk::messageasstring when using
+        ## Oracle or Sybase database:
         ##   bulk[pid]: internal error : current packet 'messagekey=
         ##   0c40f56e07d3c8ce34683b98d54b6575 contain a ref to a null message
         ## FIXME: would be better to use lists' setting, but
         ##  * list config is not load()-ed at this point, and
-        ##  * when invoked from Bulk::messageasstring, list settings is not
-        ##  even
-        ##    load()-ed later.
+        ##  * when invoked from Sympa::Bulk::messageasstring, list settings is
+        ##    not even load()-ed later.
         if (   $self->{'db_type'} eq 'Oracle'
             or $self->{'db_type'} eq 'Sybase') {
             $self->{'dbh'}->{LongReadLen} =

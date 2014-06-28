@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package DBManipulatorMySQL;
+package Sympa::DBManipulatorMySQL;
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ use warnings;
 
 use Log;
 
-use base qw(DBManipulatorDefault);
+use base qw(Sympa::DBManipulatorDefault);
 
 # Builds the string to be used by the DBI to connect to the database.
 #

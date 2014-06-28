@@ -2674,7 +2674,7 @@ sub search_fullpath {
 make an array of include path for tt2 parsing
 
 IN :
-      -$that(+) : ref(List) | ref(Family) | Robot | "*"
+      -$that(+) : ref(List) | ref(Sympa::Family) | Robot | "*"
       -%options : options
 
 Possible values for options:
@@ -2763,7 +2763,7 @@ sub _get_search_path {
                 unshift @search_path, $path_family;
             }
         }
-    } elsif (ref $that and ref $that eq 'Family') {
+    } elsif (ref $that and ref $that eq 'Sympa::Family') {
         my $path_family;
         @search_path = _get_search_path($that->{'robot'}, @_);
 

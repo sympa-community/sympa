@@ -267,7 +267,7 @@ while (!$end) {
 
                 my $message;
                 unless ($message =
-                    Archive::search_msgid("$arcpath/arctxt", $msgid)) {
+                    Sympa::Archive::search_msgid("$arcpath/arctxt", $msgid)) {
                     Log::do_log('err',
                         'No message with message ID %s found in %s/arctxt',
                         $msgid, $arcpath);
@@ -511,7 +511,8 @@ sub remove {
 # Rebuilds archives for the list the name of which is given in the argument
 # $adrlist.
 # * $adrlist, a character string containing the name of the list the archives
-# of which we want to rebuild.
+#   of which we want to rebuild.
+# Returns undef if something goes wrong.
 sub rebuild {
 
     my $adrlist = shift;
@@ -538,7 +539,7 @@ sub rebuild {
     my $arcpath = Conf::get_robot_conf($robot, 'arc_path');
     Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
 
-    my $tag = Archive::get_tag($list);
+    my $tag = Sympa::Archive::get_tag($list);
 
     my $mhonarc_ressources =
         tools::search_fullpath($list, 'mhonarc-ressources.tt2');
@@ -595,8 +596,8 @@ sub rebuild {
         }
         closedir HTML;
 
-        my $arcs_dir =
-            Archive::clean_archive_directory($robot, "/$adrlist/$arc/arctxt");
+        my $arcs_dir = Sympa::Archive::clean_archive_directory($robot,
+            "/$adrlist/$arc/arctxt");
         my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if ($arcs_dir);
 
         my $cmd =
@@ -660,7 +661,7 @@ sub rebuild {
             }
             closedir HTML;
             my $dir_to_rebuild = $arcpath . "/$adrlist/$arc/arctxt";
-            my $arcs_dir       = Archive::clean_archive_directory($robot,
+            my $arcs_dir = Sympa::Archive::clean_archive_directory($robot,
                 "/$adrlist/$arc/arctxt");
             if ($arcs_dir) {
                 $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'};
@@ -704,25 +705,25 @@ sub rebuild {
 }
 
 # Archives one message into one list archives directory.
-#* $file: a character string containing the message filename.
+# * $file: a character string containing the message filename.
 # * $listname: a character string containing the name of the list in which to
-# archive the message
+#   archive the message
 # * $robot: a character string containing the name of the virtual robot
-# hosting the list.
+#   hosting the list.
 # * $yyyy: a character string containing the year of the date when the message
-# is archived (i.e. now)
+#   is archived (i.e. now)
 # * $mm: a character string containing the month of the date when the message
-# is archived (i.e. now)
+#   is archived (i.e. now)
 # * $dd: a character string containing the day of the date when the message is
-# archived (i.e. now)
+#   archived (i.e. now)
 # * $hh: a character string containing the hour of the date when the message
-# is archived (i.e. now)
+#   is archived (i.e. now)
 # * $min: a character string containing the minute of the date when the
-# message is archived (i.e. now)
+#   message is archived (i.e. now)
 # * $ss: a character string containing the second of the date when the message
-# is archived (i.e. now)
+#   is archived (i.e. now)
+# Returns undef if something goes wrong.
 sub mail2arc {
-
     my ($file, $listname, $robot, $yyyy, $mm, $dd, $hh, $min, $ss) = @_;
     my $newfile;
 
@@ -733,7 +734,7 @@ sub mail2arc {
         return undef;
     }
 
-    my $tag = Archive::get_tag($list);
+    my $tag = Sympa::Archive::get_tag($list);
 
     if (   ($list->{'admin'}{'web_archive_spam_protection'} ne 'none')
         && ($list->{'admin'}{'web_archive_spam_protection'} ne 'cookie')) {
@@ -866,9 +867,8 @@ sub mail2arc {
 
         # prepare a temporary file with clean message content (htlm parts are
         # cleaned)
-        my $safe =
-            Archive::clean_archived_message($robot, "$arctxtdir/$newfile",
-            $output);
+        my $safe = Sympa::Archive::clean_archived_message($robot,
+            "$arctxtdir/$newfile", $output);
         unless ($safe) {
             Log::do_log('err', "Could not clean message, ignoring message");
             next;
@@ -974,7 +974,7 @@ sub create_idx {
 }
 
 # OBSOLETED.
-# Use Archive::get_tag().
+# Use Sympa::Archive::get_tag().
 sub get_tag {
     my $listname = shift;
 

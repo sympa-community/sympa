@@ -22,20 +22,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package LDAPSource;
+package Sympa::LDAPSource;
 
 use strict;
 use warnings;
 
 use Log;
 
-use base qw(Datasource);
+use base qw(Sympa::Datasource);
 
 sub new {
     my $pkg   = shift;
     my $param = shift;
     my $self  = $param;
-    Log::do_log('debug', 'Creating new LDAPSource object');
+    Log::do_log('debug', 'Creating new Sympa::LDAPSource object');
     ## Map equivalent parameters (depends on the calling context : included
     ## members, scenario, authN
     ## Also set defaults
@@ -86,7 +86,7 @@ sub new {
 #  connect
 ############################################################
 #  Connect to an LDAP directory. This could be called as
-#  a LDAPSource object member, or as a static sub.
+#  a Sympa::LDAPSource object member, or as a static sub.
 #
 # IN : -$options : ref to a hash. Options for the connection process.
 #         currently accepts 'keep_trying' : wait and retry until

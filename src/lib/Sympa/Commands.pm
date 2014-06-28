@@ -22,14 +22,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Commands;
+package Sympa::Commands;
 
 use strict;
 use warnings;
 use Mail::Address;
 use MIME::Parser;
 
-use Archive;
+use Sympa::Archive;
 use Conf;
 use Sympa::Language;
 use List;
@@ -513,7 +513,7 @@ sub last {
         return 'no_archive';
     }
     my $file;
-    unless ($file = Archive::last_path($list)) {
+    unless ($file = Sympa::Archive::last_path($list)) {
         report::reject_report_cmd('user', 'no_required_file', {}, $cmd_line);
         Log::do_log('info',
             'LAST %s from %s refused, archive file %s not found',
@@ -2447,7 +2447,7 @@ sub set {
     $what =~ /^\s*(\S+)\s+(\S+)\s*$/;
     my ($which, $mode) = ($1, $2);
     $which = (defined $which) ? lc $which : '';
-    $mode = (defined $mode) ? lc $mode : '';
+    $mode  = (defined $mode)  ? lc $mode  : '';
 
     ## Unknown command (should be checked....)
     unless ($mode =~

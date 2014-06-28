@@ -21,31 +21,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_modules_DATA = \
-	admin.pm \
-	Archive.pm \
-	Auth.pm \
+	Sympa/Admin.pm \
+	Sympa/Archive.pm \
+	Sympa/Auth.pm \
 	Bounce.pm \
-	Bulk.pm \
-	Commands.pm \
+	Sympa/Bulk.pm \
+	Sympa/Commands.pm \
 	Conf.pm \
-	confdef.pm \
-	Config_XML.pm \
+	Sympa/ConfDef.pm \
+	Sympa/Config_XML.pm \
 	Sympa/Constants.pm \
-	cookielib.pm \
+	Sympa/CookieLib.pm \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
-	Datasource.pm \
-	DBManipulatorDefault.pm \
-	DBManipulatorMySQL.pm \
-	DBManipulatorOracle.pm \
-	DBManipulatorPostgres.pm \
-	DBManipulatorSQLite.pm \
-	DBManipulatorSybase.pm \
-	Family.pm \
-	Fetch.pm \
+	Sympa/Datasource.pm \
+	Sympa/DBManipulatorDefault.pm \
+	Sympa/DBManipulatorMySQL.pm \
+	Sympa/DBManipulatorOracle.pm \
+	Sympa/DBManipulatorPostgres.pm \
+	Sympa/DBManipulatorSQLite.pm\
+	Sympa/DBManipulatorSybase.pm \
+	Sympa/Family.pm \
+	Sympa/Fetch.pm \
+	Sympa/HTML/FormatText.pm \
 	Sympa/Language.pm \
-	Ldap.pm \
-	LDAPSource.pm \
+	Sympa/LDAP.pm \
+	Sympa/LDAPSource.pm \
 	List.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \

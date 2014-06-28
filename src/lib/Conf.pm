@@ -30,7 +30,7 @@ use strict;
 use warnings;
 use Storable;
 
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
 use List;
@@ -58,13 +58,13 @@ my $sth;
 # parameters hash, keyed by parameter name
 our %params =
     map { $_->{name} => $_ }
-    grep { $_->{name} } @confdef::params;
+    grep { $_->{name} } @Sympa::ConfDef::params;
 
 # valid virtual host parameters, keyed by parameter name
 my %valid_robot_key_words;
 my %db_storable_parameters;
 my %optional_key_words;
-foreach my $hash (@confdef::params) {
+foreach my $hash (@Sympa::ConfDef::params) {
     $valid_robot_key_words{$hash->{'name'}} = 1 if ($hash->{'vhost'});
     $db_storable_parameters{$hash->{'name'}} = 1
         if (defined($hash->{'db'}) and $hash->{'db'} ne 'none');
@@ -421,8 +421,8 @@ sub get_robots_list {
 }
 
 ## Returns a hash containing the values of all the parameters of the group
-## (as defined in confdef.pm) whose name is given as argument, in the context
-## of the robot given as argument.
+## (as defined in Sympa::ConfDef) whose name is given as argument, in the
+## context of the robot given as argument.
 sub get_parameters_group {
     my ($robot, $group) = @_;
     Log::do_log('debug3', 'Getting parameters for group "%s"', $group);
@@ -548,7 +548,7 @@ sub conf_2_db {
     Log::do_log('debug2', '(%s)', @_);
     my $config_file = shift || get_sympa_conf();
 
-    my @conf_parameters = @confdef::params;
+    my @conf_parameters = @Sympa::ConfDef::params;
 
     # store in database robots parameters.
     # load only parameters that are in a robot.conf file (do not apply
@@ -1868,16 +1868,18 @@ sub _infer_server_specific_parameter_values {
         # dkim_signature_apply_ on nothing if dkim_feature is off
         # Sets empty array.
         $param->{'config_hash'}{'dkim_signature_apply_on'} = [''];
-    }else {
-        $param->{'config_hash'}{'dkim_signature_apply_on'} =~ s/\s//g ;
-        my @dkim = split(/,/, $param->{'config_hash'}{'dkim_signature_apply_on'});
+    } else {
+        $param->{'config_hash'}{'dkim_signature_apply_on'} =~ s/\s//g;
+        my @dkim =
+            split(/,/, $param->{'config_hash'}{'dkim_signature_apply_on'});
         $param->{'config_hash'}{'dkim_signature_apply_on'} = \@dkim;
     }
     unless ($param->{'config_hash'}{'dkim_signer_domain'}) {
-        $param->{'config_hash'}{'dkim_signer_domain'} = $param->{'config_hash'}{'domain'};
+        $param->{'config_hash'}{'dkim_signer_domain'} =
+            $param->{'config_hash'}{'domain'};
     }
 
-    $param->{'config_hash'}{'dmarc_protection_mode'} =~ s/\s//g ;
+    $param->{'config_hash'}{'dmarc_protection_mode'} =~ s/\s//g;
     my @dmarc = split(/,/, $param->{'config_hash'}{'dmarc_protection_mode'});
     $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
 
@@ -2228,7 +2230,7 @@ sub _load_single_robot_config {
             $robot_conf->{'dkim_signer_domain'} = $robot;
         }
 
-        $robot_conf->{'dmarc_protection_mode'} =~ s/\s//g ;
+        $robot_conf->{'dmarc_protection_mode'} =~ s/\s//g;
         my @dmarc = split(/,/, $robot_conf->{'dmarc_protection_mode'});
         $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
 
@@ -2496,7 +2498,7 @@ sub _create_robot_like_config_for_main_robot {
 sub _get_parameters_names_by_category {
     my $param_by_categories;
     my $current_category;
-    foreach my $entry (@confdef::params) {
+    foreach my $entry (@Sympa::ConfDef::params) {
         unless ($entry->{'name'}) {
             $current_category = $entry->{'gettext_id'};
         } else {
@@ -2540,7 +2542,7 @@ sub _load_wwsconf {
     my %default_conf =
         map { $_->{'name'} => $_->{'default'} }
         grep { exists $_->{'file'} and $_->{'file'} eq 'wwsympa.conf' }
-        @confdef::params;
+        @Sympa::ConfDef::params;
 
     my $conf = \%default_conf;
 

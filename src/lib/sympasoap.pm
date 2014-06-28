@@ -28,9 +28,10 @@ use strict;
 use warnings;
 use Encode qw();
 
+use Sympa::Admin;
+use Sympa::Auth;
 use Conf;
 use Log;
-use Auth;
 
 ## Define types of SOAP type listType
 my %types = (
@@ -171,8 +172,7 @@ sub login {
     ## Set an env var to find out if in a SOAP context
     $ENV{'SYMPA_SOAP'} = 1;
 
-    Log::do_log('debug', 'Call check_auth(%s, %s)', $robot, $email);
-    my $user = Auth::check_auth($robot, $email, $passwd);
+    my $user = Sympa::Auth::check_auth($robot, $email, $passwd);
 
     unless ($user) {
         Log::do_log('notice', 'Login authentication failed');
@@ -263,7 +263,7 @@ sub casLogin {
 
     ## Now fetch email attribute from LDAP
     unless ($email =
-        Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
+        Sympa::Auth::get_email_by_net_id($robot, $cas_id, {'uid' => $user})) {
         Log::do_log('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
@@ -372,7 +372,8 @@ sub authenticateRemoteAppAndRun {
             ->faultdetail('Use : <appname> <apppassword> <vars> <service>');
     }
     my $proxy_vars =
-        Auth::remote_app_check_password($appname, $apppassword, $robot);
+        Sympa::Auth::remote_app_check_password($appname, $apppassword,
+        $robot);
 
     unless (defined $proxy_vars) {
         Log::do_log('notice', 'Authentication failed');
@@ -668,7 +669,7 @@ sub createList {
 
     ## create liste
     my $resul =
-        admin::create_list_old($parameters, $template, $robot, "soap");
+        Sympa::Admin::create_list_old($parameters, $template, $robot, "soap");
     unless (defined $resul) {
         Log::do_log('info', 'Unable to create list %s@%s from %s',
             $listname, $robot, $sender);

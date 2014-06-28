@@ -34,7 +34,7 @@ Sympa allows lists creation and management by sets. These are the families, sets
 
 =cut 
 
-package Family;
+package Sympa::Family;
 
 use strict;
 use warnings;
@@ -42,9 +42,9 @@ use File::Copy qw();
 use Term::ProgressBar;
 use XML::LibXML;
 
-use admin;
+use Sympa::Admin;
 use Conf;
-use Config_XML;
+use Sympa::Config_XML;
 use Sympa::Constants;
 use Sympa::Language;
 use List;
@@ -105,7 +105,7 @@ Returns the list of existing families in the Sympa installation.
 
 =item * Log::do_log
 
-=item * Family::new
+=item * Sympa::Family::new
 
 =back 
 
@@ -125,11 +125,11 @@ sub get_families {
             next;
         }
 
-        # If we can create a Family object with what we find in the
+        # If we can create a Sympa::Family object with what we find in the
         # family directory, then it is worth being added to the list.
         foreach my $subdir (grep !/^\.\.?$/, readdir FAMILIES) {
             next unless -d ("$dir/$subdir");
-            if (my $family = Family->new($subdir, $robot_id)) {
+            if (my $family = Sympa::Family->new($subdir, $robot_id)) {
                 push @families, $family;
             }
         }
@@ -144,7 +144,7 @@ sub get_available_families {
     my %hash;
     if ($families = get_families($robot_id)) {
         foreach my $family (@$families) {
-            if (ref $family eq 'Family') {
+            if (ref $family eq 'Sympa::Family') {
                 $hash{$family->{'name'}} = $family;
             }
         }
@@ -165,13 +165,13 @@ sub get_available_families {
 
 =head2 sub new(STRING $name, STRING $robot)
 
-Creates a new Family object of name $name, belonging to the robot $robot.
+Creates a new Sympa::Family object of name $name, belonging to the robot $robot.
 
 =head3 Arguments 
 
 =over 
 
-=item * I<$class>, the class in which we're supposed to create the object (namely "Family"),
+=item * I<$class>, the class in which we're supposed to create the object (namely "Sympa::Family"),
 
 =item * I<$name>, a character string containing the family name,
 
@@ -183,7 +183,7 @@ Creates a new Family object of name $name, belonging to the robot $robot.
 
 =over 
 
-=item * I<$self>, the Family object 
+=item * I<$self>, the Sympa::Family object 
 
 =back 
 
@@ -191,9 +191,9 @@ Creates a new Family object of name $name, belonging to the robot $robot.
 
 =over 
 
-=item * Family::_check_obligatory_files
+=item * Sympa::Family::_check_obligatory_files
 
-=item * Family::_get_directory
+=item * Sympa::Family::_get_directory
 
 =item * Log::do_log
 
@@ -204,7 +204,7 @@ Creates a new Family object of name $name, belonging to the robot $robot.
 #########################################
 # new
 #########################################
-# constructor of the class Family :
+# constructor of the class Sympa::Family :
 #   check family existence (required files
 #   and directory)
 #
@@ -296,7 +296,7 @@ Adds a list to the family. List description can be passed either through a hash 
 
 =over 
 
-=item * I<$self>, the Family object,
+=item * I<$self>, the Sympa::Family object,
 
 =item * I<$data>, a file handle on an XML B<list> description file or a hash of data,
 
@@ -316,13 +316,13 @@ Adds a list to the family. List description can be passed either through a hash 
 
 =over 
 
-=item * admin::create_list
+=item * Sympa::Admin::create_list
 
 =item * Conf::get_robot_conf
 
-=item * Family::_copy_files
+=item * Sympa::Family::_copy_files
 
-=item * Family::check_param_constraint
+=item * Sympa::Family::check_param_constraint
 
 =item * List::has_include_data_sources
 
@@ -383,7 +383,7 @@ sub add_list {
 
         # get list data
         open(FIC, '<:raw', $self->{'dir'} . '/_new_list.xml');
-        my $config = Config_XML->new(\*FIC);
+        my $config = Sympa::Config_XML->new(\*FIC);
         close FIC;
         unless (defined $config->createHash()) {
             push @{$return->{'string_error'}},
@@ -395,7 +395,7 @@ sub add_list {
     }
 
     #list creation
-    my $result = admin::create_list($hash_list->{'config'},
+    my $result = Sympa::Admin::create_list($hash_list->{'config'},
         $self, $self->{'robot'}, $abort_on_error);
     unless (defined $result) {
         push @{$return->{'string_error'}},
@@ -492,7 +492,7 @@ Adds a list to the family.
 
 =over 
 
-=item * I<$self>, the Family object,
+=item * I<$self>, the Sympa::Family object,
 
 =item * I<$fh>, a file handle on the XML B<list> configuration file.
 
@@ -510,23 +510,23 @@ Adds a list to the family.
 
 =over 
 
-=item * admin::update_list
+=item * Sympa::Admin::update_list
 
 =item * Conf::get_robot_conf
 
-=item * Config_XML::new
+=item * Sympa::Config_XML::new
 
-=item * Config_XML::createHash
+=item * Sympa::Config_XML::createHash
 
-=item * Config_XML::getHash
+=item * Sympa::Config_XML::getHash
 
-=item * Family::_copy_files
+=item * Sympa::Family::_copy_files
 
-=item * Family::_get_customizing
+=item * Sympa::Family::_get_customizing
 
-=item * Family::_set_status_changes
+=item * Sympa::Family::_set_status_changes
 
-=item * Family::check_param_constraint
+=item * Sympa::Family::check_param_constraint
 
 =item * List::has_include_data_sources
 
@@ -584,7 +584,7 @@ sub modify_list {
 
     # get list data
     open(FIC, '<:raw', $self->{'dir'} . '/_mod_list.xml');
-    my $config = Config_XML->new(\*FIC);
+    my $config = Sympa::Config_XML->new(\*FIC);
     close FIC;
     unless (defined $config->createHash()) {
         push @{$return->{'string_error'}},
@@ -631,7 +631,7 @@ sub modify_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = admin::update_list($list, $hash_list->{'config'},
+    my $result = Sympa::Admin::update_list($list, $hash_list->{'config'},
         $self, $self->{'robot'});
     unless (defined $result) {
         Log::do_log('err', 'No object list resulting from updating list %s',
@@ -800,7 +800,7 @@ Closes every list family.
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -816,7 +816,7 @@ Closes every list family.
 
 =over 
 
-=item * Family::get_family_lists
+=item * Sympa::Family::get_family_lists
 
 =item * List::set_status_family_closed
 
@@ -898,7 +898,7 @@ Creates family lists or updates them if they exist already.
 
 =over 
 
-=item * I<$self>, the Family object corresponding to the family to create / update
+=item * I<$self>, the Sympa::Family object corresponding to the family to create / update
 
 =back 
 
@@ -918,23 +918,23 @@ Creates family lists or updates them if they exist already.
 
 =over 
 
-=item * admin::create_list
+=item * Sympa::Admin::create_list
 
-=item * Config_XML::createHash
+=item * Sympa::Config_XML::createHash
 
-=item * Config_XML::getHash
+=item * Sympa::Config_XML::getHash
 
-=item * Config_XML::new
+=item * Sympa::Config_XML::new
 
-=item * Family::_end_update_list
+=item * Sympa::Family::_end_update_list
 
-=item * Family::_initialize_instantiation
+=item * Sympa::Family::_initialize_instantiation
 
-=item * Family::_split_xml_file
+=item * Sympa::Family::_split_xml_file
 
-=item * Family::_update_existing_list
+=item * Sympa::Family::_update_existing_list
 
-=item * Family::get_hash_family_lists
+=item * Sympa::Family::get_hash_family_lists
 
 =item * List::new
 
@@ -1006,10 +1006,10 @@ sub instantiate {
         my $list = List->new($listname, $self->{'robot'});
 
         ## get data from list XML file. Stored into $config (class
-        ## Config_XML).
+        ## Sympa::Config_XML).
         my $xml_fh;
         open $xml_fh, '<:raw', $self->{'dir'} . "/" . $listname . ".xml";
-        my $config = Config_XML->new($xml_fh);
+        my $config = Sympa::Config_XML->new($xml_fh);
         close $xml_fh;
         unless (defined $config->createHash()) {
             push(
@@ -1067,7 +1067,7 @@ sub instantiate {
         } else {
 
             ## Create the list
-            my $result = admin::create_list($hash_list->{'config'},
+            my $result = Sympa::Admin::create_list($hash_list->{'config'},
                 $self, $self->{'robot'});
             unless (defined $result) {
                 push(
@@ -1194,7 +1194,7 @@ sub instantiate {
             ## get data from list xml file
             my $xml_fh;
             open $xml_fh, '<:raw', $list->{'dir'} . '/instance.xml';
-            my $config = Config_XML->new($xml_fh);
+            my $config = Sympa::Config_XML->new($xml_fh);
             close $xml_fh;
             unless (defined $config->createHash()) {
                 push(
@@ -1237,7 +1237,7 @@ Returns a string with informations summarizing the instantiation results.
 
 =over 
 
-=item * I<$self>, the Family object.
+=item * I<$self>, the Sympa::Family object.
 
 =back 
 
@@ -1439,7 +1439,7 @@ Checks the parameter constraints taken from param_constraint.conf file for the L
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list>, a List object corresponding to the list to chek.
 
@@ -1461,9 +1461,9 @@ Checks the parameter constraints taken from param_constraint.conf file for the L
 
 =over 
 
-=item * Family::check_values
+=item * Sympa::Family::check_values
 
-=item * Family::get_constraints
+=item * Sympa::Family::get_constraints
 
 =item * List::get_param_value
 
@@ -1561,7 +1561,7 @@ Returns a hash containing the values found in the param_constraint.conf file.
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -1577,7 +1577,7 @@ Returns a hash containing the values found in the param_constraint.conf file.
 
 =over 
 
-=item * Family::_load_param_constraint_conf
+=item * Sympa::Family::_load_param_constraint_conf
 
 =item * Log::do_log
 
@@ -1729,7 +1729,7 @@ Gets the constraints on parameter $param from the 'param_constraint.conf' file.
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$param>, a character string corresponding to the name of the parameter for which we want to gather constraints.
 
@@ -1803,7 +1803,7 @@ Returns a ref to an array whose values are the family lists' names.
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -1860,7 +1860,7 @@ Returns a ref to a hash whose keys are this family's lists' names. They are asso
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 =back 
 
 =head3 Return 
@@ -1982,7 +1982,7 @@ Gets the family directory, look for it in the robot, then in the site and finall
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -2106,7 +2106,7 @@ Initializes all the values used for instantiation and results description to emp
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -2201,7 +2201,7 @@ Splits the XML family file into XML list files. New list names are put in the ar
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$xml_fh>, a handle to the XML B<family> description file.
 
@@ -2264,7 +2264,7 @@ sub _split_xml_file {
     $root = $doc->documentElement();
     unless ($root->nodeName eq 'family') {
         Log::do_log('err',
-            "Family::_split_xml_file() : the root element must be called \"family\" "
+            "Sympa::Family::_split_xml_file() : the root element must be called \"family\" "
         );
         return undef;
     }
@@ -2348,7 +2348,7 @@ Updates an already existing list in the new family context
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list>, a List object corresponding to the list to update
 
@@ -2400,7 +2400,7 @@ sub _update_existing_list {
     my $old_status     = $list->{'admin'}{'status'};
 
     ## list config family updating
-    my $result = admin::update_list($list, $hash_list->{'config'},
+    my $result = Sympa::Admin::update_list($list, $hash_list->{'config'},
         $self, $self->{'robot'});
     unless (defined $result) {
         Log::do_log('err', 'No object list resulting from updating list %s',
@@ -2515,7 +2515,7 @@ Gets list customizations from the config_changes file and keeps on changes allow
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list>, a List object corresponding to the list we want to check
 
@@ -2545,9 +2545,9 @@ Gets list customizations from the config_changes file and keeps on changes allow
 
 =over 
 
-=item * Family::check_values
+=item * Sympa::Family::check_values
 
-=item * Family::get_constraints
+=item * Sympa::Family::get_constraints
 
 =item * List::get_config_changes
 
@@ -2670,7 +2670,7 @@ Sets changes (loads the users, installs or removes the aliases); deals with the 
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list>, a List object corresponding to the list the changes of which we want to set.
 
@@ -2698,9 +2698,9 @@ Sets changes (loads the users, installs or removes the aliases); deals with the 
 
 =over 
 
-=item * admin::install_aliases
+=item * Sympa::Admin::install_aliases
 
-=item * admin::remove_aliases
+=item * Sympa::Admin::remove_aliases
 
 =item * List::add_list_member
 
@@ -2743,8 +2743,7 @@ sub _set_status_changes {
     if ($list->{'admin'}{'status'} eq 'open') {
         unless ($old_status eq 'open') {
             $result->{'install_remove'} = 'install';
-            $result->{'aliases'} =
-                admin::install_aliases($list);
+            $result->{'aliases'} = Sympa::Admin::install_aliases($list);
         }
     }
 
@@ -2752,7 +2751,7 @@ sub _set_status_changes {
         && (($old_status eq 'open') || ($old_status eq 'error_config'))) {
         $result->{'install_remove'} = 'remove';
         $result->{'aliases'} =
-            admin::remove_aliases($list, $self->{'robot'});
+            Sympa::Admin::remove_aliases($list, $self->{'robot'});
     }
 
 ##    ## subscribers
@@ -2786,7 +2785,7 @@ Finishes to generate a list in a family context (for a new or an already existin
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list>, a List object corresponding to the list we want to finish the update.
 
@@ -2818,9 +2817,9 @@ Finishes to generate a list in a family context (for a new or an already existin
 
 =item * Conf::get_robot_conf
 
-=item * Family::_copy_files
+=item * Sympa::Family::_copy_files
 
-=item * Family::check_param_constraint
+=item * Sympa::Family::check_param_constraint
 
 =item * List::save_config
 
@@ -2903,7 +2902,7 @@ Copies the instance.xml file into the list directory. This file contains the cur
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =item * I<$list_dir>, a character string corresponding to the list directory
 
@@ -2974,7 +2973,7 @@ Loads the param_constraint.conf file into a hash
 
 =over 
 
-=item * I<$self>, the Family object
+=item * I<$self>, the Sympa::Family object
 
 =back 
 
@@ -3182,7 +3181,7 @@ sub insert_delete_exclusion {
     my $email  = shift;
     my $action = shift;
 
-    my $name  = $self->{'name'};
+    my $name     = $self->{'name'};
     my $robot_id = $self->{'robot'};
 
     if ($action eq 'insert') {

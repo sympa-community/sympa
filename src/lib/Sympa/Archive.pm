@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Archive;
+package Sympa::Archive;
 
 use strict;
 use warnings;
@@ -295,7 +295,7 @@ sub clean_archive_directory {
         foreach my $file (readdir(ARCDIR)) {
             next if ($file =~ /^\./);
             $files_left_uncleaned++
-                unless Archive::clean_archived_message($robot, $file, $file);
+                unless clean_archived_message($robot, $file, $file);
         }
         closedir DIR;
         if ($files_left_uncleaned) {

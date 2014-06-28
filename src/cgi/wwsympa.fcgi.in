@@ -54,17 +54,17 @@ use Sys::Syslog qw();
 use Time::Local qw();
 use Data::Dumper;
 
-use admin;
-use Auth;
+use Sympa::Admin;
+use Sympa::Auth;
 use Conf;
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
-use cookielib;
+use Sympa::CookieLib;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use List;
 use Log;
 use Sympa::Language;
-use LDAPSource;
+use Sympa::LDAPSource;
 use mail;
 use Marc::Search;
 use report;
@@ -1077,7 +1077,7 @@ while ($query = new_loop()) {
     }
 
     ## Free terminated sendmail processes
-    #    &smtp::reaper;
+    #    mail::reaper;
 
     ## Parse CGI parameters
     #    &CGI::ReadParse();
@@ -1323,7 +1323,7 @@ while ($query = new_loop()) {
     if (defined $automatic_list_families) {
         foreach my $key (keys %{$automatic_list_families}) {
             my $family;
-            if ($family = Family->new($key, $robot)) {
+            if ($family = Sympa::Family->new($key, $robot)) {
                 if ($family->is_allowed_to_create_automatic_lists(
                         (   'auth_level' => 'md5',
                             'sender'     => $session->{'email'},
@@ -1434,7 +1434,7 @@ while ($query = new_loop()) {
                     Log::do_log('notice', 'Login CAS OK server netid=%s',
                         $net_id);
                     $param->{'user'}{'email'} = lc(
-                        Auth::get_email_by_net_id(
+                        Sympa::Auth::get_email_by_net_id(
                             $robot, $cas_id, {'uid' => $net_id}
                         )
                     );
@@ -1520,7 +1520,7 @@ while ($query = new_loop()) {
         ##Cookie extern : sympa_altemails
         ## !!
         $param->{'alt_emails'} =
-            cookielib::check_cookie_extern($ENV{'HTTP_COOKIE'},
+            Sympa::CookieLib::check_cookie_extern($ENV{'HTTP_COOKIE'},
             $Conf::Conf{'cookie'}, $param->{'user'}{'email'});
 
         if ($param->{'user'}{'email'}) {
@@ -1829,7 +1829,7 @@ while ($query = new_loop()) {
 
                 unless ($number == 0) {
                     unless (
-                        cookielib::set_cookie_extern(
+                        Sympa::CookieLib::set_cookie_extern(
                             $Conf::Conf{'cookie'},
                             $param->{'cookie_domain'},
                             %{$param->{'alt_emails'}}
@@ -1840,9 +1840,11 @@ while ($query = new_loop()) {
                     }
                 }
             }
-        }    #elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/){
-        #   cookielib::set_cookie('unknown', $Conf::Conf{'cookie'}, $param->{'cookie_domain'}, 'now');
-        #}
+        }
+        # elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/) {
+        #     Sympa::CookieLib::set_cookie('unknown', $Conf::Conf{'cookie'},
+        #         $param->{'cookie_domain'}, 'now');
+        # }
     }
 
     ## Available languages
@@ -2313,7 +2315,8 @@ sub get_parameters {
         } elsif ($pname =~ /^custom_attribute(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_attribute'};
-            ##Log::do_log ('debug2', "get_parameters (custom_attribute) : ($p)($key) $pname $in{$p} ". Site->$key->{type});
+            # Log::do_log('debug2', '() (%s)(%s) %s %s %s', $p, $key, $name,
+            #     $in{$p}, $Conf::Conf{$key}->{type});
             $custom_attribute->{$key} = {value => $in{$p}};
             undef $in{$p};
         } elsif ($pname eq 'plugin' and $#tokens >= 2) {
@@ -3640,7 +3643,7 @@ sub do_ticket {
     wwslog('info', '(%s)', $in{'ticket'});
 
     $param->{'ticket_context'} =
-        Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
+        Sympa::Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
     $param->{'ticket_context'}{'printable_date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S",
         localtime($param->{'ticket_context'}{'date'}));
@@ -3795,7 +3798,8 @@ sub do_login {
         return 'loginrequest';
     }
 
-    unless ($data = Auth::check_auth($robot, $in{'email'}, $in{'passwd'})) {
+    unless ($data =
+        Sympa::Auth::check_auth($robot, $in{'email'}, $in{'passwd'})) {
         Log::do_log('notice', 'Authentication failed');
         web_db_log(
             {   'parameters'   => $in{'email'},
@@ -3849,7 +3853,7 @@ sub do_login {
 
     unless ($param->{'alt_emails'}{$email}) {
         unless (
-            cookielib::set_cookie_extern(
+            Sympa::CookieLib::set_cookie_extern(
                 $Conf::Conf{'cookie'}, $param->{'cookie_domain'},
                 %{$param->{'alt_emails'}}
             )
@@ -4059,8 +4063,8 @@ sub do_sso_login {
             if (defined $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                 {'internal_email_by_netid'}) {
                 wwslog('debug', 'Lookup email internal: %s', $sso_id);
-                if ($email =
-                    Auth::get_email_by_net_id($robot, $sso_id, \%ENV)) {
+                if ($email = Sympa::Auth::get_email_by_net_id(
+                    $robot, $sso_id, \%ENV)) {
                     $email_is_trusted = 1;
                 }
             }
@@ -4102,13 +4106,14 @@ sub do_sso_login {
                 $param->{'init_email'}    = $email;
 
                 ## Replace sendpassword with one time ticket
-                $param->{'one_time_ticket'} = Auth::create_one_time_ticket(
+                $param->{'one_time_ticket'} =
+                    Sympa::Auth::create_one_time_ticket(
                     $in{'email'},
                     $robot,
                     'sso_login/confirmemail?auth_service_name='
                         . $in{'auth_service_name'},
                     $ip
-                );
+                    );
 
                 unless (sendssopasswd($email)) {
                     report::reject_report_web('user', 'incorrect_email',
@@ -4172,7 +4177,8 @@ sub do_sso_login {
 
                 ## Validate the ticket
                 my $ticket_output =
-                    Auth::get_one_time_ticket($robot, $in{'ticket'}, $ip);
+                    Sympa::Auth::get_one_time_ticket($robot, $in{'ticket'},
+                    $ip);
                 unless ($ticket_output->{'result'} eq 'success') {
                     report::reject_report_web('user', 'auth_failed', {},
                         $param->{'action'});
@@ -4273,7 +4279,8 @@ sub do_sso_login {
                     return 'home';
                 }
 
-                $email = Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
+                $email =
+                    Sympa::Auth::get_email_by_net_id($robot, $sso_id, \%ENV);
             }
         }
 
@@ -4481,7 +4488,7 @@ sub is_ldap_user {
         next unless ($auth =~ /$ldap->{'regexp'}/i);
 
         my $param = tools::dup_var($ldap);
-        my $ds    = LDAPSource->new($param);
+        my $ds    = Sympa::LDAPSource->new($param);
 
         unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',
@@ -4610,7 +4617,10 @@ sub do_logout {
     $session->{'email'} = 'nobody';
 
     # no reason to alter the lang because user perform logout
-    # $param->{'lang'} = $param->{'cookie_lang'} = cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'}) || $list->{'admin'}{'lang'} || Conf::get_robot_conf($robot, 'lang');
+    # $param->{'lang'} = $param->{'cookie_lang'} =
+    #     Sympa::CookieLib::check_lang_cookie($ENV{'HTTP_COOKIE'})
+    #     || $list->{'admin'}{'lang'}
+    #     || Conf::get_robot_conf($robot, 'lang');
 
     if (defined $session->{'cas_server'}
         && (defined $Conf::Conf{'auth_services'}{$robot}
@@ -4858,7 +4868,7 @@ sub do_requestpasswd {
     }
 
     ## Check auth.conf before creating/sending a password
-    unless (Auth::may_use_sympa_native_auth($robot, $in{'email'})) {
+    unless (Sympa::Auth::may_use_sympa_native_auth($robot, $in{'email'})) {
         ## TODO: Error handling
         report::reject_report_web('user', 'passwd_reminder_not_allowed', {},
             $param->{'action'});
@@ -4866,8 +4876,8 @@ sub do_requestpasswd {
     }
     wwslog('debug', 'Sending one time ticket for %s', $in{'email'});
     $param->{'one_time_ticket'} =
-        Auth::create_one_time_ticket($in{'email'}, $robot, 'choosepasswd',
-        $ip);
+        Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
+        'choosepasswd', $ip);
     $param->{'request_from_host'} = $ip;
     unless ($param->{'newuser'} = Sympa::User::get_global_user($in{'email'}))
     {
@@ -6411,7 +6421,7 @@ sub do_subrequest {
 
         ## Need to send a password by email
         $param->{'one_time_ticket'} =
-            Auth::create_one_time_ticket($in{'email'}, $robot,
+            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
             'subscribe/' . $list->{'name'}, $ip);
         $param->{'login_error'}       = 'ticket_sent';
         $param->{'request_from_host'} = $ip;
@@ -6482,7 +6492,7 @@ sub do_auto_signoff {
     if ($list->is_list_member($in{'email'})) {
 
         my $ticket =
-            Auth::create_one_time_ticket($in{'email'}, $robot,
+            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
             'signoff/' . $list->{'name'}, $ip);
 
         my $tt2_param = {
@@ -6520,7 +6530,7 @@ sub do_family_signoff_request {
     return Conf::get_robot_conf($robot, 'default_home') unless $in{'email'};
 
     my $ticket =
-        Auth::create_one_time_ticket($in{'email'}, $robot,
+        Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
         'family_signoff/' . $in{'family'} . '/' . $in{'email'}, $ip);
 
     my $tt2_param = {
@@ -6561,7 +6571,7 @@ sub do_family_signoff {
         return undef;
     }
 
-    my $family = Family->new($param->{'family'}, $robot);
+    my $family = Sympa::Family->new($param->{'family'}, $robot);
     unless ($family
         and $family->insert_delete_exclusion($in{'email'}, 'insert')) {
         report::reject_report_web('user', 'cannot_do_signoff');
@@ -6789,7 +6799,7 @@ sub do_sigrequest {
     if ($list->is_list_member($in{'email'})) {
 
         my $ticket =
-            Auth::create_one_time_ticket($in{'email'}, $robot,
+            Sympa::Auth::create_one_time_ticket($in{'email'}, $robot,
             'signoff/' . $list->{'name'}, $ip);
 
         my $tt2_param = {
@@ -6991,7 +7001,7 @@ sub do_serveradmin {
 }
 
 sub do_edit_config {
-    my $editable_params = tools::dup_var(\@confdef::params);
+    my $editable_params = tools::dup_var(\@Sympa::ConfDef::params);
 
     get_server_details();
 
@@ -7456,7 +7466,7 @@ sub do_copy_template {
         } else {
             $param->{'tpl_lang_title'} = $tpl_lang;
             $param->{'tpl_lang_lang'} =
-                Sympa::Langage::caonic_lang($tpl_lang);
+                Sympa::Language::caonic_lang($tpl_lang);
         }
 
         $language->pop_lang;
@@ -9896,8 +9906,8 @@ sub do_arc {
         if ($in{'arc_file'} =~ /^(msg\d+)\.html$/) {
             ## If the file is a message, load the metadata to find out who is
             ## the author of the message
-            my $metadata =
-                Archive::load_html_message('file_path' => $arc_file_path);
+            my $metadata = Sympa::Archive::load_html_message(
+                'file_path' => $arc_file_path);
             $param->{'include_picture'} = tools::make_pictures_url(
                 'email' => $metadata->{'X-From'},
                 'list'  => $list
@@ -10946,9 +10956,11 @@ sub do_get_biggest_lists {
 ##	my $all_lists = List::get_lists($robot, { 'order' => [ '-total' ] });
 ##	$param->{'biggest_lists'} = [
 ##	    map { {
-##		'name' => $_->name,
-##		'subject' => $_->subject,
-##		'creation_date' => $language->gettext_strftime("%d %b %Y", localtime $_->creation->{'date_epoch'}),
+##		'name' => $_->{'name'},
+##		'subject' => $_->{'admin'}{'subject'},
+##		'creation_date' =>
+##                  $language->gettext_strftime("%d %b %Y",
+##                  localtime $_->creation->{'date_epoch'}),
 ##		'subscribers' => $_->total
 ##	    }; } @{$all_lists || []}
 ##	];
@@ -11038,7 +11050,7 @@ sub do_install_pending_list {
 
     ## create the aliases
     if ($in{'status'} eq 'open') {
-        my $aliases = admin::install_aliases($list, $robot);
+        my $aliases = Sympa::Admin::install_aliases($list);
         if ($aliases == 1) {
             $param->{'auto_aliases'} = 1;
         } else {
@@ -11160,7 +11172,7 @@ Creates a list using a list template
 
 =item * wwslog
 
-=item * admin::create_list_old
+=item * Sympa::Admin::create_list_old
 
 =item * check_param_in
 
@@ -11286,8 +11298,8 @@ sub do_create_list {
         return 'create_list_request';
     }
     my $resul =
-        admin::create_list_old($parameters, $in{'template'}, $robot, "web",
-        $param->{'user'}{'email'});
+        Sympa::Admin::create_list_old($parameters, $in{'template'}, $robot,
+        'web', $param->{'user'}{'email'});
     unless (defined $resul) {
         report::reject_report_web('intern', 'create_list', {},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
@@ -12189,7 +12201,7 @@ sub do_edit_list {
 
         ## If the list belongs to a family, gather all the constraints for
         ## each edited parameter.
-        if (ref($family) eq 'Family') {
+        if (ref($family) eq 'Sympa::Family') {
 
             if ((ref($pinfo->{$pname}{'format'}) ne 'HASH') && (!ref($pname)))
             {
@@ -12361,7 +12373,7 @@ sub do_edit_list {
 
                     ## If the list belongs to a family, check the possible
                     ## constraints on this parameter component.
-                    if (ref($family) eq 'Family') {
+                    if (ref($family) eq 'Sympa::Family') {
                         ## Test constraints only if the parameter component is
                         ## not a complex structure.
                         if (!ref($key)) {
@@ -12887,7 +12899,7 @@ sub _check_new_values {
     my $fake_list =
         bless {'domain' => $robot, 'admin' => $new_admin} => 'List';
     ## TODO: update parameter cache
-    my $uncompellable_param = Family::get_uncompellable_param();
+    my $uncompellable_param = Sympa::Family::get_uncompellable_param();
 
     if (ref($pinfo->{$pname}{'format'}) eq 'HASH') {    #composed parameter
 
@@ -13252,7 +13264,7 @@ Returns a reference to a hash containing the data used to edit the parameter (of
 
 =item * load_data_sources_list
 
-=item * Family::get_param_constraint
+=item * Sympa::Family::get_param_constraint
 
 =item * List::load_scenario_list
 
@@ -13279,7 +13291,7 @@ sub _prepare_data {
     ## Check if some family constraint modify the editing rights.
     my $restrict = 0;
     my $constraint;
-    if ((ref($family) eq 'Family') && ($may_edit eq 'write')) {
+    if ((ref($family) eq 'Sympa::Family') && ($may_edit eq 'write')) {
 
         if ($main_p && defined $pinfo->{$main_p}) {
             if (ref($pinfo->{$main_p}{'format'}) eq 'HASH') {
@@ -13627,7 +13639,7 @@ sub do_rename_list {
     wwslog('info', '(%s, %s, mode = %s)',
         $in{'new_listname'}, $in{'new_robot'}, $mode);
 
-    my $result = admin::rename_list(
+    my $result = Sympa::Admin::rename_list(
         list         => $list,
         new_listname => $in{'new_listname'},
         new_robot    => $in{'new_robot'},
@@ -13871,7 +13883,7 @@ sub do_restore_list {
 
     $list->savestats();
 
-    my $aliases = admin::install_aliases($list, $robot);
+    my $aliases = Sympa::Admin::install_aliases($list);
     if ($aliases == 1) {
         $param->{'auto_aliases'} = 1;
     } else {
@@ -21174,7 +21186,7 @@ sub do_change_email_request {
     wwslog('info', '(%s)', $in{'new_email'});
 
     unless (
-        $param->{'one_time_ticket'} = Auth::create_one_time_ticket(
+        $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
             $in{'new_email'},                            $robot,
             'change_email/' . $param->{'user'}{'email'}, $ip
         )
@@ -21277,7 +21289,7 @@ sub do_change_email {
     }
 
     ## Do the change_email
-    my ($status, $failed_for) = admin::change_user_email(
+    my ($status, $failed_for) = Sympa::Admin::change_user_email(
         current_email => $old_email,
         new_email     => $new_email,
         robot         => $robot
@@ -23851,7 +23863,7 @@ sub do_sync_include {
 sub do_review_family {
     wwslog('info', '');
 
-    my $family = Family->new($in{'family_name'}, $robot);
+    my $family = Sympa::Family->new($in{'family_name'}, $robot);
     unless (defined $family) {
         report::reject_report_web('user', 'unknown_family',
             {'family' => $in{'family_name'}},
@@ -24494,7 +24506,8 @@ sub get_server_details {
     }
 
     ## Families
-    my @families = sort map { $_->{'name'} } @{Family::get_families($robot)};
+    my @families =
+        sort map { $_->{'name'} } @{Sympa::Family::get_families($robot)};
     if (@families) {
         $param->{'families'} = \@families;
     }
@@ -24564,7 +24577,7 @@ sub do_automatic_lists_request {
     wwslog('notice', 'Starting');
     # check authorization
     my $family;
-    unless ($family = Family->new($in{'family'}, $robot)) {
+    unless ($family = Sympa::Family->new($in{'family'}, $robot)) {
         wwslog('err',
             'Failed to instantiate family %s. This family does not exist',
             $in{'family'});
@@ -24625,7 +24638,7 @@ sub do_automatic_lists {
     $list = List->new($listname, $robot);
     unless (defined $list) {
         ## Automatic creation of a mailing list, based on a family
-        unless ($family = Family->new($family_name, $robot)) {
+        unless ($family = Sympa::Family->new($family_name, $robot)) {
             Log::do_log('err',
                 "Failed to create the dynamic list $listname: family $family_name does not exist."
             );

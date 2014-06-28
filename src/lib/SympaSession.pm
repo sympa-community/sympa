@@ -29,7 +29,7 @@ use warnings;
 use CGI::Cookie;
 
 use Conf;
-use cookielib;
+use Sympa::CookieLib;
 use Sympa::Language;
 use Log;
 use SDM;
@@ -93,9 +93,8 @@ sub new {
             return undef;
         }
         if ($status eq 'not_found') {
-            Log::do_log('info',
-                'Ignoring unknown session cookie "%s"', $cookie
-            );    # start a session->new(may ne a fake cookie)
+            Log::do_log('info', 'Ignoring unknown session cookie "%s"',
+                $cookie);    # start a session->new(may ne a fake cookie)
             return (SympaSession->new($robot));
         }
     } else {
@@ -191,8 +190,7 @@ sub load {
     while ($new_session = $sth->fetchrow_hashref('NAME_lc')) {
         if ($counter > 0) {
             Log::do_log('err',
-                'The SQL statement did return more than one session'
-            );
+                'The SQL statement did return more than one session');
             $session->{'email'} = '';
             last;
         }
@@ -651,7 +649,8 @@ sub list_sessions {
 ## Subroutine to get session cookie value
 sub get_session_cookie {
     my $http_cookie = shift;
-    return cookielib::generic_get_cookie($http_cookie, 'sympa_session');
+    return Sympa::CookieLib::generic_get_cookie($http_cookie,
+        'sympa_session');
 }
 
 ## Generic subroutine to set a cookie

@@ -30,11 +30,11 @@ use Mail::Address;
 use Net::Netmask;
 
 use Conf;
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
-use Ldap;
-use LDAPSource;
+use Sympa::LDAP;
+use Sympa::LDAPSource;
 use List;
 use Log;
 use SQLSource;
@@ -452,7 +452,7 @@ sub request_action {
         my @p;
         if ((   @p =
                 grep { $_->{'name'} and $_->{'name'} eq $operation }
-                @confdef::params
+                @Sympa::ConfDef::params
             )
             and $p[0]->{'scenario'}
             ) {
@@ -770,7 +770,7 @@ sub verify {
             my $conf_value;
             if (scalar(
                     grep { $_->{'name'} and $_->{'name'} eq $conf_key }
-                        @confdef::params
+                        @Sympa::ConfDef::params
                 )
                 and $conf_value = Conf::get_robot_conf($robot, $conf_key)
                 ) {
@@ -1266,7 +1266,7 @@ sub verify {
     ## search rule
     if ($condition_key eq 'search') {
         my $val_search;
-        # we could search in the family if we got ref on Family object
+        # we could search in the family if we got ref on Sympa::Family object
         $val_search = search($list || $robot, $args[0], $context);
         return undef unless defined $val_search;
         if ($val_search == 1) {
@@ -1505,7 +1505,7 @@ sub search {
         my $time = time;
         my %ldap_conf;
 
-        return undef unless (%ldap_conf = Ldap::load($file));
+        return undef unless (%ldap_conf = Sympa::LDAP::load($file));
 
         my $filter = $ldap_conf{'filter'};
 
@@ -1551,7 +1551,7 @@ sub search {
 
         my $ldap;
         my $param = tools::dup_var(\%ldap_conf);
-        my $ds    = LDAPSource->new($param);
+        my $ds    = Sympa::LDAPSource->new($param);
 
         unless (defined $ds && ($ldap = $ds->connect())) {
             Log::do_log('err', 'Unable to connect to the LDAP server "%s"',

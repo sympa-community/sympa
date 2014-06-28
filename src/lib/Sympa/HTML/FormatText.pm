@@ -22,17 +22,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package DBManipulatorInformix;
+package Sympa::HTML::FormatText;
+
+# This is a subclass of the HTML::FormatText object.
+# This subclassing is done to allow internationalisation of some strings
 
 use strict;
-use warnings;
 
-use base qw(DBManipulatorDefault);
+use Sympa::Language;
 
-sub build_connect_string {
-    my $self = shift;
-    $self->{'connect_string'} =
-        "DBI:Informix:" . $self->{'db_name'} . "@" . $self->{'db_host'};
+use base qw(HTML::FormatText);
+
+my $language = Sympa::Language->instance;
+
+sub img_start {
+    my ($self, $node) = @_;
+
+    my $alt = $node->attr('alt');
+    $alt = Encode::encode_utf8($alt) if defined $alt;
+    $self->out(
+        Encode::decode_utf8(
+            (defined $alt and $alt =~ /\S/)
+            ? $language->gettext_sprintf("[Image:%s]", $alt)
+            : $language->gettext("[Image]")
+        )
+    );
 }
 
 1;

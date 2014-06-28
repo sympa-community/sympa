@@ -30,7 +30,7 @@ use Getopt::Long;
 use Pod::Usage;
 use Sys::Hostname qw();
 
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::ModDef;
 
@@ -141,7 +141,7 @@ sub create_configuration {
     }
 
     my $title;
-    foreach my $param (@confdef::params) {
+    foreach my $param (@Sympa::ConfDef::params) {
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};
@@ -196,7 +196,7 @@ sub edit_configuration {
         if $modfail;
 
     # complement required fields.
-    foreach my $param (@confdef::params) {
+    foreach my $param (@Sympa::ConfDef::params) {
         next unless $param->{'name'};
         if ($param->{'name'} eq 'domain') {
             $param->{'default'} = Sys::Hostname::hostname();
@@ -228,7 +228,7 @@ sub edit_configuration {
     my $http_host = "http://$domain";
 
     ## Edition mode
-    foreach my $param (@confdef::params) {
+    foreach my $param (@Sympa::ConfDef::params) {
         unless ($param->{'name'}) {
             $title = gettext($param->{'gettext_id'})
                 if $param->{'gettext_id'};

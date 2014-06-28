@@ -39,16 +39,16 @@ use Storable qw();
 use Time::Local qw();
 use XML::LibXML;
 
-use Archive;
-use Auth;
+use Sympa::Archive;
+use Sympa::Auth;
 use Conf;
-use confdef;
+use Sympa::ConfDef;
 use Sympa::Constants;
-use Datasource;
-use Family;
-use Fetch;
+use Sympa::Datasource;
+use Sympa::Family;
+use Sympa::Fetch;
 use Sympa::Language;
-use LDAPSource;
+use Sympa::LDAPSource;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
@@ -1298,15 +1298,16 @@ sub get_editors_email {
     return @rcpt;
 }
 
-## Returns an object Family if the list belongs to a family or undef
+## Returns an object Sympa::Family if the list belongs to a family or undef
 sub get_family {
     my $self = shift;
 
-    if (ref $self->{'family'} eq 'Family') {
+    if (ref $self->{'family'} eq 'Sympa::Family') {
         return $self->{'family'};
     } elsif ($self->{'admin'}{'family_name'}) {
         return $self->{'family'} =
-            Family->new($self->{'admin'}{'family_name'}, $self->{'domain'});
+            Sympa::Family->new($self->{'admin'}{'family_name'},
+            $self->{'domain'});
     } else {
         return undef;
     }
@@ -3252,7 +3253,7 @@ sub send_to_editor {
               $Conf::Conf{'viewmail_dir'} . '/mod/'
             . $self->get_list_id() . '/'
             . $modkey;
-        Archive::convert_single_message(
+        Sympa::Archive::convert_single_message(
             $self, $message,
             'destination_dir' => $destination_dir,
             'attachement_url' => join('/', '..', 'viewmod', $name, $modkey),
@@ -3344,7 +3345,7 @@ sub send_to_editor {
         # create a one time ticket that will be used as un md5 URL credential
 
         unless (
-            $param->{'one_time_ticket'} = Auth::create_one_time_ticket(
+            $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
                 $recipient, $robot, 'modindex/' . $name, 'mail'
             )
             ) {
@@ -3586,7 +3587,7 @@ sub archive_send {
     my $dir =
         Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
         . $self->get_list_id();
-    my $msg_list = Archive::scan_dir_archive($dir, $file);
+    my $msg_list = Sympa::Archive::scan_dir_archive($dir, $file);
 
     my $subject = 'File ' . $self->{'name'} . ' ' . $file;
     my $param   = {
@@ -3867,7 +3868,7 @@ sub send_notify_to_listmaster {
         foreach my $email (split(/\,/, $listmaster)) {
             my $cdata = tools::dup_var($data);
             $cdata->{'one_time_ticket'} =
-                Auth::create_one_time_ticket($email, $robot,
+                Sympa::Auth::create_one_time_ticket($email, $robot,
                 'get_pending_lists', $cdata->{'ip'});
             push @tosend,
                 {
@@ -3957,14 +3958,15 @@ sub send_notify_to_owner {
             $param->{'escaped_who'} = $param->{'who'};
             $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@to) {
-                $param->{'one_time_ticket'} = Auth::create_one_time_ticket(
+                $param->{'one_time_ticket'} =
+                    Sympa::Auth::create_one_time_ticket(
                     $owner,
                     $robot,
                     'search/'
                         . $self->{'name'} . '/'
                         . $param->{'escaped_who'},
                     $param->{'ip'}
-                );
+                    );
                 unless (
                     $self->send_file(
                         'listowner_notification', [$owner], $robot, $param
@@ -3988,7 +3990,7 @@ sub send_notify_to_owner {
             $param->{'escaped_who'} =~ s/\s/\%20/g;
             foreach my $owner (@to) {
                 $param->{'one_time_ticket'} =
-                    Auth::create_one_time_ticket($owner, $robot,
+                    Sympa::Auth::create_one_time_ticket($owner, $robot,
                     'subindex/' . $self->{'name'},
                     $param->{'ip'});
                 unless (
@@ -4286,7 +4288,7 @@ sub compute_auth {
 
 ## Delete a user in the user_table
 ##sub delete_global_user
-## DEPRECATED: Use User::delete_global_user() or $user->expire();
+## DEPRECATED: Use Sympa::User::delete_global_user() or $user->expire();
 
 ## Delete the indicate list member
 ## IN : - ref to array
@@ -4566,7 +4568,7 @@ sub insert_delete_exclusion {
         ## INSERT only if $user->{'included'} eq '1'
         my $options;
         $options->{'email'}  = $email;
-        $options->{'name'}   = $list;
+        $options->{'name'}   = $name;
         $options->{'domain'} = $robot_id;
         my $user = get_list_member_no_object($options);
         my $date = time;
@@ -4644,12 +4646,12 @@ sub get_exclusion {
     die sprintf 'Invalid parameter: %s', $self
         unless ref $self;    #prototype changed (6.2b)
 
-    my $name     = $self->name;
-    my $robot_id = $self->domain;
+    my $name     = $self->{'name'};
+    my $robot_id = $self->{'domain'};
 
     push @sth_stack, $sth;
 
-    if (    defined $self->{'admin'}{'family_name'}
+    if (defined $self->{'admin'}{'family_name'}
         and length $self->{'admin'}{'family_name'}) {
         unless (
             $sth = SDM::do_prepared_query(
@@ -4706,7 +4708,6 @@ sub get_exclusion {
     }
     return $data_exclu;
 }
-
 
 ######################################################################
 ###  get_list_member                                                  #
@@ -6112,8 +6113,7 @@ sub add_list_member {
 
         # Delete from exclusion_table and force a sync_include if new_user was
         # excluded
-        if ($self->insert_delete_exclusion($who, 'delete'))
-        {
+        if ($self->insert_delete_exclusion($who, 'delete')) {
             $self->sync_include();
             if ($self->is_list_member($who)) {
                 $self->{'add_outcome'}{'added_members'}++;
@@ -6748,7 +6748,7 @@ sub archive_exist {
     my $dir =
         Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
         . $self->get_list_id();
-    Archive::exist($dir, $file);
+    Sympa::Archive::exist($dir, $file);
 
 }
 
@@ -6761,7 +6761,7 @@ sub archive_ls {
         Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
         . $self->get_list_id();
 
-    Archive::list($dir) if ($self->is_archived());
+    Sympa::Archive::list($dir) if ($self->is_archived());
 }
 
 ## Archive
@@ -6781,7 +6781,7 @@ sub archive_msg {
             $msg = $message->{'orig_msg'};
         }
 
-        Archive::store_last($self, $msg);
+        Sympa::Archive::store_last($self, $msg);
 
         ## copie a message in outgoing spool using a unique file name based on
         ## listname
@@ -7140,7 +7140,7 @@ sub _include_users_remote_sympa_list {
     my $path = $param->{'path'};
     my $cert = $param->{'cert'} || 'list';
 
-    my $id = Datasource::_get_datasource_id($param);
+    my $id = Sympa::Datasource::_get_datasource_id($param);
 
     Log::do_log('debug', '(%s) https://%s:%s/%s using cert %s,',
         $self->{'name'}, $host, $port, $path, $cert);
@@ -7180,7 +7180,7 @@ sub _include_users_remote_sympa_list {
     my $email;
 
     foreach my $line (
-        Fetch::get_https(
+        Sympa::Fetch::get_https(
             $host, $port, $path,
             $cert_file,
             $key_file,
@@ -7276,7 +7276,7 @@ sub _include_users_list {
         return undef;
     }
 
-    my $id = Datasource::_get_datasource_id($includelistname);
+    my $id = Sympa::Datasource::_get_datasource_id($includelistname);
 
     for (
         my $user = $includelist->get_first_list_member();
@@ -7357,7 +7357,7 @@ sub _include_users_file {
     }
     Log::do_log('debug2', 'Including file %s', $filename);
 
-    my $id           = Datasource::_get_datasource_id($filename);
+    my $id           = Sympa::Datasource::_get_datasource_id($filename);
     my $lines        = 0;
     my $emails_found = 0;
     my $email_regexp = Sympa::Regexps::email();
@@ -7445,7 +7445,7 @@ sub _include_users_remote_file {
     Log::do_log('debug', '(%s)', $url);
 
     my $total = 0;
-    my $id    = Datasource::_get_datasource_id($param);
+    my $id    = Sympa::Datasource::_get_datasource_id($param);
 
     ## WebAgent package is part of Fetch.pm and inherites from LWP::UserAgent
 
@@ -7557,7 +7557,7 @@ sub _include_users_voot_group {
     Log::do_log('debug', '(%s, %s, %s)', $param->{'user'},
         $param->{'provider'}, $param->{'group'});
 
-    my $id = Datasource::_get_datasource_id($param);
+    my $id = Sympa::Datasource::_get_datasource_id($param);
 
     my $consumer = VOOTConsumer->new(
         user     => $param->{'user'},
@@ -8230,8 +8230,8 @@ sub _load_list_members_from_include {
 
             # Work with a copy of admin hash branch to avoid including
             # temporary variables into the actual admin hash.[bug #3182]
-            my $incl          = tools::dup_var($tmp_incl);
-            my $source_id     = Datasource::_get_datasource_id($tmp_incl);
+            my $incl      = tools::dup_var($tmp_incl);
+            my $source_id = Sympa::Datasource::_get_datasource_id($tmp_incl);
             my $source_is_new = defined $old_subs->{$source_id};
 
             # Get the list of users.
@@ -8279,7 +8279,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_query') {
-                my $source = LDAPSource->new($incl);
+                my $source = Sympa::LDAPSource->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
                     $included =
                         _include_users_ldap(\%users, $source_id, $source,
@@ -8301,7 +8301,7 @@ sub _load_list_members_from_include {
                     $included = 0;
                 }
             } elsif ($type eq 'include_ldap_2level_query') {
-                my $source = LDAPSource->new($incl);
+                my $source = Sympa::LDAPSource->new($incl);
                 if ($source->is_allowed_to_sync() || $source_is_new) {
                     my $result =
                         _include_users_ldap_2level(\%users, $source_id,
@@ -8487,12 +8487,12 @@ sub _load_list_admin_from_include {
                         \%option, 'untied',
                         $list_admin->{'sql_fetch_timeout'});
                 } elsif ($type eq 'include_ldap_query') {
-                    my $source = LDAPSource->new($incl);
+                    my $source = Sympa::LDAPSource->new($incl);
                     $included =
                         _include_users_ldap(\%admin_users, $incl, $source,
                         \%option);
                 } elsif ($type eq 'include_ldap_2level_query') {
-                    my $source = LDAPSource->new($incl);
+                    my $source = Sympa::LDAPSource->new($incl);
                     my $result =
                         _include_users_ldap_2level(\%admin_users, $incl,
                         $source, \%option);
@@ -8777,7 +8777,8 @@ sub _load_include_admin_user_file {
 }
 
 ## Returns a ref to an array containing the ids (as computed by
-## Datasource::_get_datasource_id) of the list of memebers given as argument.
+## Sympa::Datasource::_get_datasource_id) of the list of memebers given as
+## argument.
 sub get_list_of_sources_id {
     my $self                = shift;
     my $list_of_subscribers = shift;
@@ -8825,7 +8826,7 @@ sub sync_include_ca {
                 $source = SQLSource->new($incl);
             } elsif (($type eq 'include_ldap_ca')
                 or ($type eq 'include_ldap_2level_ca')) {
-                $source = LDAPSource->new($incl);
+                $source = Sympa::LDAPSource->new($incl);
             }
             next unless (defined($source));
             if ($source->is_allowed_to_sync()) {
@@ -10631,9 +10632,10 @@ sub _load_list_param {
     }
 
     ## Search configuration file
-    if (ref $value and $value->{'conf'} and
-        grep { $_->{'name'} and $_->{'name'} eq $value->{'conf'} }
-            @confdef::params) {
+    if (    ref $value
+        and $value->{'conf'}
+        and grep { $_->{'name'} and $_->{'name'} eq $value->{'conf'} }
+        @Sympa::ConfDef::params) {
         my $param = $value->{'conf'};
         $value = Conf::get_robot_conf($robot, $param);
     }
@@ -11945,7 +11947,7 @@ sub search_datasource {
 
         ## Go through sources
         foreach my $s (@{$self->{'admin'}{$p}}) {
-            if (Datasource::_get_datasource_id($s) eq $id) {
+            if (Sympa::Datasource::_get_datasource_id($s) eq $id) {
                 return {'type' => $p, 'def' => $s};
             }
         }

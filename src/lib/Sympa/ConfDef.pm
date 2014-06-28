@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package confdef;
+package Sympa::ConfDef;
 
 use strict;
 use warnings;
@@ -334,8 +334,8 @@ our @params = (
             'This parameter is a scenario, check sympa documentation about scenarios if you want to define one',
         'scenario' => '1',
     },
-    {   'name'    => 'global_remind',
-        'default' => 'listmaster',
+    {   'name'     => 'global_remind',
+        'default'  => 'listmaster',
         'scenario' => '1',
     },
     {   'name'    => 'allow_subscribe_if_pending',
@@ -463,9 +463,9 @@ our @params = (
         'default' => 'off',
         'vhost'   => '1',
     },
-    {   'name'    => 'automatic_list_creation',
-        'default' => 'public',
-        'vhost'   => '1',
+    {   'name'     => 'automatic_list_creation',
+        'default'  => 'public',
+        'vhost'    => '1',
         'scenario' => '1',
     },
     {   'name' => 'automatic_list_families',
@@ -1325,9 +1325,9 @@ our @params = (
         'default' => 'x-spam-status',
         'gettext_id' =>
             'Messages are supposed to be filtered by an antispam that add one more headers to messages. This parameter is used to select a special scenario in order to decide the message spam status: ham, spam or unsure. This parameter replace antispam_tag_header_name, antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp.',
-        'vhost' => '1',
-        'file'  => 'sympa.conf',
-        'edit'  => '1',
+        'vhost'    => '1',
+        'file'     => 'sympa.conf',
+        'edit'     => '1',
         'scenario' => '1',
     },
 
@@ -1416,17 +1416,16 @@ our @params = (
         'file'       => 'wwsympa.conf',
         'optional'   => 1,
     },
-    {
-        'name'     => 'one_time_ticket_lifetime',
-        'default'  => '2d',
-        'gettext_id'    => 'duration before the one time tickets are expired',
+    {   'name'       => 'one_time_ticket_lifetime',
+        'default'    => '2d',
+        'gettext_id' => 'duration before the one time tickets are expired',
     },
-    {
-        'name'     => 'one_time_ticket_lockout',
-        'default'  => 'one_time',
-        'gettext_id'    => 'Is access to the one time ticket restricted, if any users previously accessed? (one_time | remote_addr | open)',
-        'edit'     => '1',
-        'vhost'    => '1',
+    {   'name'    => 'one_time_ticket_lockout',
+        'default' => 'one_time',
+        'gettext_id' =>
+            'Is access to the one time ticket restricted, if any users previously accessed? (one_time | remote_addr | open)',
+        'edit'  => '1',
+        'vhost' => '1',
     },
     {   'name'       => 'password_case',
         'default'    => 'insensitive',

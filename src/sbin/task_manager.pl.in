@@ -32,7 +32,7 @@ use POSIX qw();
 use Template;
 use Time::Local qw();
 
-use Bulk;
+use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -1310,7 +1310,7 @@ sub purge_tables {
     Log::do_log('info', '');
     my $removed;
 
-    $removed = Bulk::purge_bulkspool();
+    $removed = Sympa::Bulk::purge_bulkspool();
     unless (defined $removed) {
         Log::do_log('err', 'Failed to purge bulkspool');
     }

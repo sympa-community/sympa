@@ -89,6 +89,7 @@ use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
 
+use Sympa::HTML::FormatText;
 use Sympa::Language;
 use tools;
 
@@ -334,7 +335,7 @@ sub _do_text_html {
         my $tree = HTML::TreeBuilder->new->parse($body);
         $tree->eof();
         my $formatter =
-            HTML::myFormatText->new(leftmargin => 0, rightmargin => 72);
+            Sympa::HTML::FormatText->new(leftmargin => 0, rightmargin => 72);
         $text = $formatter->format($tree);
         $tree->delete();
         $text = Encode::encode_utf8($text);
@@ -382,31 +383,6 @@ sub _getCharset {
 
     # get charset object.
     return MIME::Charset->new($charset);
-}
-
-package HTML::myFormatText;
-
-# This is a subclass of the HTML::FormatText object.
-# This subclassing is done to allow internationalisation of some strings
-
-use strict;
-
-use Sympa::Language;
-
-use base qw(HTML::FormatText);
-
-sub img_start {
-    my ($self, $node) = @_;
-
-    my $alt = $node->attr('alt');
-    $alt = Encode::encode_utf8($alt) if defined $alt;
-    $self->out(
-        Encode::decode_utf8(
-            (defined $alt and $alt =~ /\S/)
-            ? $language->gettext_sprintf("[Image:%s]", $alt)
-            : $language->gettext("[Image]")
-        )
-    );
 }
 
 1;
