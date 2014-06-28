@@ -865,7 +865,7 @@ while (!$end) {
                                     'notice',
                                     '%s has been removed from %s because abuse feedback report',
                                     $original_rcpt,
-                                    $list->name
+                                    $list
                                 );
                                 $list->send_notify_to_owner(
                                     'automatic_del',
@@ -876,10 +876,9 @@ while (!$end) {
                             } else {
                                 Log::do_log(
                                     'err',
-                                    'Ignore Feedback Report %s for list %s@%s: user %s not subscribed',
+                                    'Ignore Feedback Report %s for list %s: user %s not subscribed',
                                     $file,
-                                    $list->name,
-                                    $robot,
+                                    $list,
                                     $original_rcpt
                                 );
                                 $list->send_notify_to_owner('warn-signoff',
@@ -891,8 +890,7 @@ while (!$end) {
                                 'err',
                                 'Ignore Feedback Report %s for list %s@%s: user %s is not allowed to unsubscribe',
                                 $file,
-                                $list->name,
-                                $robot,
+                                $list,
                                 $original_rcpt
                             );
                         }
