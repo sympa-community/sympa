@@ -5445,7 +5445,7 @@ sub do_show_exclude {
     wwslog('info', '');
     # Get the emails of the exclude about a list and the date of their
     # insertion
-    my $data_exclu = List::get_exclusion($list->{'name'}, $list->{'domain'});
+    my $data_exclu = $list->get_exclusion();
 
     my $excluded;
     my $key = 0;
@@ -5513,7 +5513,7 @@ sub do_search {
         $emails{$i->{'email'}} = 1;
     }
 
-    my $data_exclu = List::get_exclusion($list->{'name'}, $list->{'domain'});
+    my $data_exclu = $list->get_exclusion();
     my $key = 0;
     ## Exclude users are searched too
     while (($data_exclu->{emails}->[$key]) && ($data_exclu->{date}->[$key])) {

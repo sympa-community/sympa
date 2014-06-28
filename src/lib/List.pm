@@ -9040,7 +9040,7 @@ sub sync_include {
     my @subscriber_exclusion;
 
     ## Gathering a list of emails for a the list in 'exclusion_table'
-    $data_exclu = get_exclusion($name, $self->{'domain'});
+    $data_exclu = $self->get_exclusion();
 
     my $key = 0;
     while ($data_exclu->{'emails'}->[$key]) {
