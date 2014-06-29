@@ -122,7 +122,7 @@ sub upgrade {
     ## This is especially useful for character encoding reasons
     Log::do_log('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = List::get_lists('*', {'reload_config' => 1});
+    my $all_lists = List::get_lists('*', 'reload_config' => 1);
 
     ## Empty the admin_table entries and recreate them
     Log::do_log('notice', 'Rebuilding the admin_table...');
@@ -258,7 +258,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists = List::get_lists($r, {'skip_sync_admin' => 1});
+            my $all_lists = List::get_lists($r, 'skip_sync_admin' => 1);
             foreach my $list (@$all_lists) {
 
                 foreach my $table ('subscriber', 'admin') {
@@ -944,7 +944,7 @@ sub upgrade {
         ## Caching all lists config subset to database
         Log::do_log('notice', 'Caching all lists config subset to database');
         List::_flush_list_db();
-        my $all_lists = List::get_lists('*', {'use_files' => 1});
+        my $all_lists = List::get_lists('*', 'reload_config' => 1);
         foreach my $list (@$all_lists) {
             $list->_update_list_db;
         }

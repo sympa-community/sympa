@@ -1110,7 +1110,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             }
         } else {
             Log::do_log('notice', "Loading ALL lists...");
-            my $all_lists = List::get_lists('*', {'reload_config' => 1});
+            my $all_lists = List::get_lists('*', 'reload_config' => 1);
         }
 
         exit 0;
@@ -1212,7 +1212,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             $list->_update_list_db;
         } else {
             List::_flush_list_db();
-            my $all_lists = List::get_lists('*', {'use_files' => 1});
+            my $all_lists = List::get_lists('*', 'reload_config' => 1);
             foreach my $list (@$all_lists) {
                 $list->_update_list_db;
             }

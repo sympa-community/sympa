@@ -915,68 +915,91 @@ my %full_db_struct = (
     },
     'list_table' => {
         'fields' => {
+            ## Identification
             'name_list' => => {
                 'struct'   => 'varchar(100)',
-                'doc'      => 'FIXME',
+                'doc'      => 'Name of the list',
                 'order'    => 1,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'robot_list' => {
-                'struct'   => 'varchar(100)',
-                'doc'      => 'FIXME',
-                'order'    => 2,
-                'primary'  => 1,
+                'struct'  => 'varchar(100)',
+                'doc'     => 'Name of the robot (domain) the list belongs to',
+                'order'   => 2,
+                'primary' => 1,
                 'not_null' => 1,
             },
-            'path_list' => {
+            ## basic profile
+            'family_list' => {
                 'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
+                'doc'    => 'Name of the family the list belongs to',
                 'order'  => 3,
             },
             'status_list' => {
                 'struct' =>
                     "enum('open','closed','pending','error_config','family_closed')",
-                'doc'   => 'FIXME',
+                'doc'   => 'Status of the list',
                 'order' => 4,
             },
             'creation_email_list' => {
                 'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
+                'doc'    => 'Email of user who created the list',
                 'order'  => 5,
             },
             'creation_epoch_list' => {
-                'struct' => 'datetime',
-                'doc'    => 'FIXME',
+                'struct' => 'int(11)',
+                'doc'    => 'UNIX time when the list was created',
                 'order'  => 6,
             },
-            'subject_list' => {
+            'update_email_list' => {
                 'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
+                'doc'    => 'Email of user who updated the list',
                 'order'  => 7,
+            },
+            'update_epoch_list' => {
+                'struct' => 'int(11)',
+                'doc'    => 'UNIX time when the list was updated',
+                'order'  => 8,
+            },
+            ## Other indices to help searching lists
+            'searchkey_list' => {
+                'struct' => 'varchar(255)',
+                'doc'    => 'Case-folded list subject to help searching',
+                'order'  => 10,
             },
             'web_archive_list' => {
                 'struct' => 'tinyint(1)',
-                'doc'    => 'FIXME',
-                'order'  => 8,
-            },
-            'topics_list' => {
-                'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
-                'order'  => 9,
-            },
-            'editors_list' => {
-                'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
-                'order'  => 10,
-            },
-            'owners_list' => {
-                'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
+                'doc'    => 'If the list has archives',
                 'order'  => 11,
             },
+            'topics_list' => {
+                'struct' => 'varchar(255)',
+                'doc' =>
+                    'Topics of the list, separated and enclosed by commas',
+                'order' => 12,
+            },
+            ## total cache
+            'total_list' => {
+                'struct' => 'int(7)',
+                'doc'    => 'Estimated number of subscribers',
+                'order'  => 90,
+            },
+#             ## cache management
+#             'cache_epoch_list' => {
+#                 'struct' => 'int(11)',
+#                 'doc'    => 'UNIX time of cache entry',
+#                 'order'  => 98,
+#             },
+#             ## admin cache
+#             'config_list' => {
+#                 'struct' => 'mediumblob',
+#                 'doc'    => 'Serialized list config',
+#                 'order'  => 99,
+#             },
         },
-        'doc'   => 'FIXME',
+        'doc' =>
+            'The list_table holds cached list config and some items to help searching lists.',
         'order' => 18,
     },
 );

@@ -1364,7 +1364,7 @@ sub purge_user_table {
     foreach my $r (keys %{$Conf::Conf{'robots'}}) {
         ## To prevent information loss by misconfiguration, we won't use
         ## list_table cache!
-        my $all_lists = List::get_lists($r, {'use_files' => 1});
+        my $all_lists = List::get_lists($r, 'reload_config' => 1);
         foreach my $list (@$all_lists) {
 
             ## Owners
@@ -1878,7 +1878,7 @@ sub process_bouncers {
         'none'            => \&none
     );
 
-    my $all_lists = List::get_lists();
+    my $all_lists = List::get_lists('*');
     foreach my $list (@$all_lists) {
         my $listname = $list->{'name'};
 

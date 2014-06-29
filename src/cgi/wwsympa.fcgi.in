@@ -10791,7 +10791,7 @@ sub do_get_pending_lists {
     get_server_details();
 
     my $all_lists =
-        List::get_lists($robot, {'filter_query' => ['status' => 'pending']});
+        List::get_lists($robot, 'filter' => ['status' => 'pending']);
     foreach my $list (@$all_lists) {
         $param->{'pending'}{$list->{'name'}}{'subject'} =
             $list->{'admin'}{'subject'};
@@ -10815,7 +10815,7 @@ sub do_get_closed_lists {
 
     my $all_lists =
         List::get_lists($robot,
-        {'filter_query' => ['status' => 'closed|family_closed']});
+        'filter' => ['status' => 'closed|family_closed']);
     foreach my $list (@$all_lists) {
         $param->{'closed'}{$list->{'name'}}{'subject'} =
             $list->{'admin'}{'subject'};
@@ -10953,7 +10953,7 @@ sub do_get_biggest_lists {
     }
 
 ## Not yet implemented.
-##	my $all_lists = List::get_lists($robot, { 'order' => [ '-total' ] });
+##	my $all_lists = List::get_lists($robot, 'order' => ['-total']);
 ##	$param->{'biggest_lists'} = [
 ##	    map { {
 ##		'name' => $_->{'name'},

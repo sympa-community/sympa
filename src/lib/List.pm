@@ -973,8 +973,6 @@ sub load {
     Log::do_log('debug2', '(%s, %s, %s)', $name, $robot,
         join('/', keys %$options));
 
-    my $users;
-
     ## Set of initializations ; only performed when the config is first loaded
     if ($options->{'first_access'}) {
 
@@ -1168,13 +1166,6 @@ sub load {
 
         $self->{'stats'} = $stats if (defined $stats);
         $self->{'total'} = $total if (defined $total);
-    }
-
-    $self->{'users'} = $users->{'users'} if ($users);
-    $self->{'ref'}   = $users->{'ref'}   if ($users);
-
-    if ($users && defined($users->{'total'})) {
-        $self->{'total'} = $users->{'total'};
     }
 
     $self->{'_mtime'} = {
@@ -9762,156 +9753,567 @@ sub store_digest {
     utime $oldtime, $oldtime, $filename unless ($newfile);
 }
 
-## List of lists hosted a robot
-## Returns a ref to an array of List objects
+=head1 NAME
+
+=over 4
+
+=item get_lists( [ $that, [ options, ... ] ] )
+
+I<Function>.
+List of lists hosted by a family, a robot or whole site.
+
+=over 4
+
+=item $that
+
+Robot, Sympa::Family object or site (default).
+
+=item options, ...
+
+Hash including options passed to List->new() (see load()) and any of
+following pairs:
+
+=over 4
+
+=item C<'filter' =E<gt> [ KEYS =E<gt> VALS, ... ]>
+
+Filter with list profiles.  When any of items specified by KEYS
+(separated by C<"|">) have any of values specified by VALS,
+condition by that pair is satisfied.
+KEYS prefixed by C<"!"> mean negated condition.
+Only lists satisfying all conditions of query are returned.
+Currently available keys and values are:
+
+=over 4
+
+=item 'creation' => TIME
+
+=item 'creation<' => TIME
+
+=item 'creation>' => TIME
+
+Creation date is equal to, earlier than or later than the date (UNIX time).
+
+=item 'member' => EMAIL
+
+=item 'owner' => EMAIL
+
+=item 'editor' => EMAIL
+
+Specified user is a subscriber, owner or editor of the list.
+
+=item 'name' => STRING
+
+=item 'name%' => STRING
+
+=item '%name%' => STRING
+
+Exact, prefixed or substring match against list name,
+case-insensitive.
+
+=item 'status' => "STATUS|..."
+
+Status of list.  One of 'open', 'closed', 'pending',
+'error_config' and 'family_closed'.
+
+=item 'subject' => STRING
+
+=item 'subject%' => STRING
+
+=item '%subject%' => STRING
+
+Exact, prefixed or substring match against list subject,
+case-insensitive (case folding is Unicode-aware).
+
+=item 'topics' => "TOPIC|..."
+
+Exact match against any of list topics.
+'others' or 'topicsless' means no topics.
+
+=item 'update' => TIME
+
+=item 'update<' => TIME
+
+=item 'update>' => TIME
+
+Date of last update is equal to, earlier than or later than the date (UNIX time).
+
+=begin comment
+
+=item 'web_archive' => ( 1 | 0 )
+
+Whether Web archive of the list is available.  1 or 0.
+
+=end comment
+
+=back
+
+=item C<'limit' =E<gt> NUMBER >
+
+Limit the number of results.
+C<0> means no limit (default).
+Note that this option may be applied prior to C<'order'> option.
+
+=item C<'order' =E<gt> [ KEY, ... ]>
+
+Subordinate sort key(s).  The results are sorted primarily by robot names
+then by other key(s).  Keys prefixed by C<"-"> mean descendent ordering.
+Available keys are:
+
+=over 4
+
+=item C<'creation'>
+
+Creation date.
+
+=item C<'name'>
+
+List name, case-insensitive.  It is the default.
+
+=item C<'total'>
+
+Estimated number of subscribers.
+
+=item C<'update'>
+
+Date of last update.
+
+=back
+
+=back
+
+=begin comment 
+
+##=item REQUESTED_LISTS
+##
+##Arrayref to name of requested lists, if any.
+
+=end comment
+
+=back
+
+Returns a ref to an array of List objects.
+
+=back
+
+=cut
+
 sub get_lists {
-    my $robot_context = shift || '*';
-    my $options       = shift || {};
-    my $requested_lists =
-        shift;    ## Optional parameter to load only a subset of all lists
-    my $use_files;
-    my $cond_perl;
-    my $cond_sql;
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $that = shift || '*';
+    my %options = @_;
 
-    my (@lists, $l, @robots);
-    Log::do_log('debug2', '(%s)', $robot_context);
+    my (@lists, @robot_ids, $family_name);
 
-    # Determin if files are used instead of list_table DB cache.
-    if ($Conf::Conf{'db_list_cache'} ne 'on' or defined $requested_lists) {
-        $use_files = 1;
+    if (ref $that and ref $that eq 'Sympa::Family') {
+        @robot_ids   = ($that->{'robot'});
+        $family_name = $that->{'name'};
+    } elsif (!ref $that and $that and $that ne '*') {
+        @robot_ids = ($that);
+    } elsif (!$that or $that eq '*') {
+        @robot_ids = get_robots();
     } else {
-        $use_files = $options->{'use_files'};
+        die 'bug in logic.  Ask developer';
     }
 
     # Build query: Perl expression for files and SQL expression for
     # list_table.
-    my @query       = (@{$options->{'filter_query'} || []});
+    my $cond_perl   = undef;
+    my $cond_sql    = undef;
+    my $which_role  = undef;
+    my $which_user  = undef;
+    my @query       = @{$options{'filter'} || []};
     my @clause_perl = ();
     my @clause_sql  = ();
+
+    ## get family lists
+    if ($family_name) {
+        push @clause_perl,
+            sprintf(
+            '$list->{"admin"}{"family_name"} and $list->{"admin"}{"family_name"} eq "%s"',
+            quotemeta $family_name);
+    }
+
     while (1 < scalar @query) {
         my @expr_perl = ();
         my @expr_sql  = ();
-        my @keys      = split /[|]/, shift @query;
-        my @vals      = split /[|]/, shift @query;
+
+        my $keys = shift @query;
+        next unless defined $keys and $keys =~ /\S/;
+        $keys =~ s/^(!?)\s*//;
+        my $negate = $1;
+        my @keys = split /[|]/, $keys;
+
+        my $vals = shift @query;
+        next unless defined $vals and length $vals;    # spaces are allowed
+        my @vals = split /[|]/, $vals;
 
         foreach my $k (@keys) {
             next unless $k =~ /\S/;
-            $k =~ s/^\s+//;
-            $k =~ s/\s+$//;
 
-            foreach my $v (@vals) {
-                if ($k eq 'web_archive') {
-                    push @expr_perl, sprintf 'is_web_archived($list) == %d',
-                        ($v + 0 ? 1 : 0);
-                } elsif ($k =~ /^(name|robot)$/) {
-                    push @expr_perl, sprintf '$list->{"%s"} eq "%s"',
-                        quotemeta $k, quotemeta $v;
-                } elsif ($k =~ /^(status|subject)$/) {
-                    push @expr_perl, sprintf '$list->{"admin"}{"%s"} eq "%s"',
-                        quotemeta $k, quotemeta $v;
+            my $cmpl = undef;
+            my ($prfx, $sffx) = ('', '');
+            $prfx = $1 if $k =~ s/^(%)//;
+            $sffx = $1 if $k =~ s/(%)$//;
+            if ($prfx or $sffx) {
+                unless ($sffx) {
+                    $cmpl = '%s eq "%s"';
+                } elsif ($prfx) {
+                    $cmpl = 'index(%s, "%s") >= 0';
                 } else {
-                    Log::do_log('err', 'Bug in logic. Ask developer');
+                    $cmpl = 'index(%s, "%s") == 0';
+                }
+            } elsif ($k =~ s/\s*([<>])\s*$//) {
+                $cmpl = '%s ' . $1 . ' %s';
+            }
+
+            ## query with single key and single value
+
+            if ($k =~ /^(member|owner|editor)$/) {
+                if (defined $which_role) {
+                    Log::do_log('err', 'bug in logic. Ask developer: $k=%s',
+                        $k);
                     return undef;
                 }
-                if ($k eq 'web_archive') {
-                    push @expr_sql, sprintf 'web_archive_list = %d',
-                        ($v + 0 ? 1 : 0);
+                $which_role = $k;
+                $which_user = $vals;
+                next;
+            }
+
+            ## query with single value
+
+            if ($k eq 'name' or $k eq 'subject') {
+                my ($vl, $ve, $key_perl, $key_sql);
+                if ($k eq 'name') {
+                    $key_perl = '$list->{"name"}';
+                    $key_sql  = 'name_list';
+                    $vl       = lc $vals;
                 } else {
-                    push @expr_sql, sprintf '%s_list = %s',
-                        $k, SDM::quote($v);
+                    $key_perl =
+                        'tools::foldcase($list->{"admin"}{"subject"})';
+                    $key_sql = 'searchkey_list';
+                    $vl      = tools::foldcase($vals);
+                }
+
+                ## Perl expression
+                $ve = $vl;
+                $ve =~ s/([^ \w\x80-\xFF])/\\$1/g;
+                push @expr_perl,
+                    sprintf(($cmpl ? $cmpl : '%s eq "%s"'), $key_perl, $ve);
+
+                ## SQL expression
+                if ($sffx or $prfx) {
+                    $ve = SDM::quote($vl);
+                    $ve =~ s/^["'](.*)['"]$/$1/;
+                    $ve =~ s/([%_])/\\$1/g;
+                    push @expr_sql,
+                        sprintf("%s LIKE '%s'", $key_sql, "$prfx$ve$sffx");
+                } else {
+                    push @expr_sql,
+                        sprintf('%s = %s', $key_sql, SDM::quote($vl));
+                }
+
+                next;
+            }
+
+            foreach my $v (@vals) {
+                ## Perl expressions
+                if ($k eq 'creation' or $k eq 'update') {
+                    push @expr_perl,
+                        sprintf(
+                        ($cmpl ? $cmpl : '%s == %s'),
+                        sprintf('$list->{"admin"}{"%s"}->{"date_epoch"}', $k),
+                        $v
+                        );
+#                 } elsif ($k eq 'web_archive') {
+#                     push @expr_perl,
+#                         sprintf('%s$list->is_web_archived',
+#                         ($v+0 ? '' : '! '));
+                } elsif ($k eq 'status') {
+                    my $ve = lc $v;
+                    $ve =~ s/([^ \w\x80-\xFF])/\\$1/g;
+                    push @expr_perl,
+                        sprintf('$list->{"admin"}{"status"} eq "%s"', $ve);
+                } elsif ($k eq 'topics') {
+                    my $ve = lc $v;
+                    if ($ve eq 'others' or $ve eq 'topicsless') {
+                        push @expr_perl,
+                            '! scalar(grep { $_ ne "others" } @{$list->{"admin"}{"topics"} || []})';
+                    } else {
+                        $ve =~ s/([^ \w\x80-\xFF])/\\$1/g;
+                        push @expr_perl,
+                            sprintf(
+                            'scalar(grep { $_ eq "%s" } @{$list->{"admin"}{"topics"} || []})',
+                            $ve);
+                    }
+                } else {
+                    Log::do_log('err', 'bug in logic. Ask developer: $k=%s',
+                        $k);
+                    return undef;
+                }
+
+                ## SQL expressions
+                if ($k eq 'creation' or $k eq 'update') {
+                    push @expr_sql,
+                        sprintf('%s_epoch_list %s %s',
+                        $k, ($cmpl ? $cmpl : '='), $v);
+#                 } elsif ($k eq 'web_archive') {
+#                     push @expr_sql,
+#                         sprintf('web_archive_list = %d', ($v+0 ? 1 : 0));
+                } elsif ($k eq 'status') {
+                    push @expr_sql,
+                        sprintf('%s_list = %s', $k, SDM::quote($v));
+                } elsif ($k eq 'topics') {
+                    my $ve = lc $v;
+                    if ($ve eq 'others' or $ve eq 'topicsless') {
+                        push @expr_sql, "topics_list = ''";
+                    } else {
+                        $ve = SDM::quote($ve);
+                        $ve =~ s/^["'](.*)['"]$/$1/;
+                        $ve =~ s/([%_])/\\$1/g;
+                        push @expr_sql,
+                            sprintf("topics_list LIKE '%%,%s,%%'", $ve);
+                    }
                 }
             }
         }
         if (scalar @expr_perl) {
-            push @clause_perl, join ' || ', @expr_perl;
-            push @clause_sql,  join ' OR ', @expr_sql;
+            push @clause_perl,
+                ($negate ? '! ' : '') . '(' . join(' || ', @expr_perl) . ')';
+            push @clause_sql,
+                ($negate ? 'NOT ' : '') . '(' . join(' OR ', @expr_sql) . ')';
         }
     }
+
     if (scalar @clause_perl) {
-        $cond_perl = join ' && ',  map {"($_)"} @clause_perl;
-        $cond_sql  = join ' AND ', map {"($_)"} @clause_sql;
-        Log::do_log('debug2', 'Query %s; %s', $cond_perl, $cond_sql);
+        $cond_perl = join ' && ',  @clause_perl;
+        $cond_sql  = join ' AND ', @clause_sql;
     } else {
         $cond_perl = undef;
         $cond_sql  = undef;
     }
+    Log::do_log('debug3', 'filter %s; %s', $cond_perl, $cond_sql);
 
-    if ($robot_context eq '*') {
-        @robots = get_robots();
-    } else {
-        push @robots, $robot_context;
-    }
+    ## Sort order
+    my $order_perl;
+    my $order_sql;
+    my $keys      = $options{'order'} || [];
+    my @keys_perl = ();
+    my @keys_sql  = ();
+    foreach my $key (@{$keys}) {
+        my $desc = ($key =~ s/^\s*-\s*//i);
 
-    foreach my $robot (@robots) {
-        ## Check cache first
-        if (defined $list_cache{'get_lists'}{$robot}) {
-            if (defined $cond_perl) {
-                foreach my $list (@{$list_cache{'get_lists'}{$robot}}) {
-                    next unless eval $cond_perl;
-                    push @lists, $list;
-                }
+        if ($key eq 'creation' or $key eq 'update') {
+            if ($desc) {
+                push @keys_perl,
+                    sprintf
+                    '$b->{"admin"}{"%s"}->{"date_epoch"} <=> $a->{"admin"}{"%s"}->{"date_epoch"}',
+                    $key,
+                    $key;
             } else {
-                push @lists, @{$list_cache{'get_lists'}{$robot}};
+                push @keys_perl,
+                    sprintf
+                    '$a->{"admin"}{"%s"}->{"date_epoch"} <=> $b->{"admin"}{"%s"}->{"date_epoch"}',
+                    $key,
+                    $key;
+            }
+        } elsif ($key eq 'name') {
+            if ($desc) {
+                push @keys_perl, '$b->{"name"} cmp $a->{"name"}';
+            } else {
+                push @keys_perl, '$a->{"name"} cmp $b->{"name"}';
+            }
+        } elsif ($key eq 'total') {
+            if ($desc) {
+                push @keys_perl, sprintf '$b->{"total"} <=> $a->{"total"}';
+            } else {
+                push @keys_perl, sprintf '$a->{"total"} <=> $b->{"total"}';
             }
         } else {
-            my $robot_dir = $Conf::Conf{'home'} . '/' . $robot;
-            $robot_dir = $Conf::Conf{'home'}
-                unless ((-d $robot_dir) || ($robot ne $Conf::Conf{'domain'}));
+            Log::do_log('err', 'bug in logic.  Ask developer: $key=%s', $key);
+            return undef;
+        }
 
-            unless (-d $robot_dir) {
-                Log::do_log('err', 'Unknown robot %s, Unable to open %s',
-                    $robot, $robot_dir);
-                return undef;
-            }
+        if ($key eq 'creation' or $key eq 'update') {
+            push @keys_sql,
+                sprintf '%s_epoch_list%s', $key, ($desc ? ' DESC' : '');
+        } else {
+            push @keys_sql, sprintf '%s_list%s', $key, ($desc ? ' DESC' : '');
+        }
+    }
+    $order_perl = join(' or ', @keys_perl) || undef;
+    push @keys_sql, 'name_list'
+        unless scalar grep { $_ =~ /name_list/ } @keys_sql;
+    $order_sql = join(', ', @keys_sql);
+    Log::do_log('debug3', 'order %s; %s', $order_perl, $order_sql);
 
-            ## Load only requested lists if $requested_list is set
-            ## otherwise load all lists
-            my @files;
-            if (defined($requested_lists)) {
-                @files = sort @{$requested_lists};
-            } elsif ($use_files) {
+    ## limit number of result
+    my $limit = $options{'limit'} || undef;
+    my $count = 0;
+
+    foreach my $robot_id (@robot_ids) {
+        if (!tools::smart_eq($Conf::Conf{'db_list_cache'}, 'on')
+            or $options{'reload_config'}) {
+            # Files are used instead of list_table DB cache.
+            my @requested_lists = ();
+
+            # filter by role
+            if (defined $which_role) {
+                my %r = ();
+
+                push @sth_stack, $sth;
+
+                if ($which_role eq 'member') {
+                    $sth = SDM::do_prepared_query(
+                        q{SELECT list_subscriber
+			  FROM subscriber_table
+			  WHERE robot_subscriber = ? AND user_subscriber = ?},
+                        $robot_id, $which_user
+                    );
+                } else {
+                    $sth = SDM::do_prepared_query(
+                        q{SELECT list_admin
+			  FROM admin_table
+			  WHERE robot_admin = ? AND user_admin = ? AND
+				role_admin = ?},
+                        $robot_id, $which_user, $which_role
+                    );
+                }
+                unless ($sth) {
+                    Log::do_log(
+                        'err',
+                        'failed to get lists with user %s as %s from database: %s',
+                        $which_user,
+                        $which_role,
+                        $@
+                    );
+                    $sth = pop @sth_stack;
+                    return undef;
+                }
+                my @row;
+                while (@row = $sth->fetchrow_array) {
+                    my $listname = $row[0];
+                    $r{$listname} = 1;
+                }
+                $sth->finish;
+
+                $sth = pop @sth_stack;
+
+                # none found
+                next unless %r;    # foreach my $robot_id
+                @requested_lists = keys %r;
+            } else {
+                # check existence of robot directory
+                my $robot_dir = $Conf::Conf{'home'} . '/' . $robot_id;
+                $robot_dir = $Conf::Conf{'home'}
+                    if !-d $robot_dir and $robot_id eq $Conf::Conf{'domain'};
+                next unless -d $robot_dir;
+
                 unless (opendir(DIR, $robot_dir)) {
                     Log::do_log('err', 'Unable to open %s', $robot_dir);
                     return undef;
                 }
-                @files = sort readdir(DIR);
+                @requested_lists =
+                    grep { !/^\.+$/ and -f "$robot_dir/$_/config" }
+                    readdir DIR;
                 closedir DIR;
-            } else {
-                # get list names from list cache table
-                my $where = sprintf 'robot_list = %s', SDM::quote($robot);
-                if (defined $cond_sql) {
-                    $where .= " AND $cond_sql";
-                }
-                my $files = get_lists_db($where);
-                @files = @{$files};
             }
 
-            foreach my $l (@files) {
-                next
-                    if (($l =~ /^\./o)
-                    || (!-d "$robot_dir/$l")
-                    || (!-f "$robot_dir/$l/config"));
-                $options->{'optional_sync_admin'} = 1;
-                my $list = List->new($l, $robot, $options);
+            my @l = ();
+            foreach my $listname (sort @requested_lists) {
+                ## create object
+                my $list = __PACKAGE__->new(
+                    $listname, $robot_id,
+                    {   skip_sync_admin => ($which_role ? 1 : 0),
+                        %options,
+                        skip_name_check => 1, #ToDo: implement it.
+                    });
+                next unless defined $list;
 
-                next unless (defined $list);
-
-                if ($use_files and defined $cond_perl) {
+                ## filter by condition
+                if (defined $cond_perl) {
                     next unless eval $cond_perl;
                 }
 
-                push @lists, $list;
-
-                ## Also feed the cache
-                ## Unless we only loaded a subset of all lists
-                ## ($requested_lists parameter used)
-                unless (defined $requested_lists or defined $cond_perl) {
-                    push @{$list_cache{'get_lists'}{$robot}}, $list;
-                }
-
+                push @l, $list;
+                last if $limit and $limit <= ++$count;
             }
+
+            ## sort
+            if ($order_perl) {
+                eval 'use sort "stable"';
+                push @lists, sort { eval $order_perl } @l;
+                eval 'use sort "defaults"';
+            } else {
+                push @lists, @l;
+            }
+        } else {
+            # Use list_table DB cache.
+            my @requested_lists;
+
+            my $table;
+            my $cond;
+            if (!defined $which_role) {
+                $table = 'list_table';
+                $cond  = '';
+            } elsif ($which_role eq 'member') {
+                $table = 'list_table, subscriber_table';
+                $cond  = sprintf q{robot_list = robot_subscriber AND
+                  name_list = list_subscriber AND
+                  user_subscriber = %s}, SDM::quote($which_user);
+            } else {
+                $table = 'list_table, admin_table';
+                $cond  = sprintf q{robot_list = robot_admin AND
+                  name_list = list_admin AND
+                  role_admin = %s AND
+                  user_admin = %s}, SDM::quote($which_role),
+                    SDM::quote($which_user);
+            }
+
+            push @sth_stack, $sth;
+
+            $sth = SDM::do_query(
+                q{SELECT name_list AS name
+                  FROM %s
+                  WHERE %s
+                  ORDER BY %s},
+                $table,
+                join(' AND ', grep {$_} ($cond_sql, $cond,
+                    sprintf 'robot_list = %s', SDM::quote($robot_id))
+                ),
+                $order_sql
+            );
+            unless ($sth) {
+                Log::do_log('err', 'Failed to get lists from %s', $table);
+                $sth = pop @sth_stack;
+                return undef;
+            }
+
+            @requested_lists =
+                map { ref $_ ? $_->[0] : $_}
+                @{$sth->fetchall_arrayref([0], ($limit || undef))};
+            $sth->finish;
+
+            $sth = pop @sth_stack;
+
+            foreach my $listname (@requested_lists) {
+                my $list = __PACKAGE__->new(
+                    $listname, $robot_id,
+                    {   skip_sync_admin => ($which_role ? 1 : 0),
+                        %options,
+                        skip_name_check => 1, #ToDo: implement it.
+                    }
+                );
+                next unless $list;
+
+                push @lists, $list;
+                last if $limit and $limit <= ++$count;
+            }
+
         }
-    }
+        last if $limit and $limit <= $count;
+    }    # foreach my $robot_id
+
     return \@lists;
 }
 
@@ -9936,86 +10338,6 @@ sub get_robots {
 
     push @robots, $Conf::Conf{'domain'} if ($use_default_robot);
     return @robots;
-}
-
-## List of lists in database mode which e-mail parameter is member of
-## Results concern ALL robots
-sub get_which_db {
-    my $email    = shift;
-    my $function = shift;
-    Log::do_log('debug3', '(%s, %s)', $email, $function);
-
-    my ($l, %which);
-
-    if ($function eq 'member') {
-        ## Get subscribers
-        push @sth_stack, $sth;
-
-        unless (
-            $sth = SDM::do_prepared_query(
-                q{SELECT list_subscriber, robot_subscriber, bounce_subscriber,
-                         reception_subscriber, topics_subscriber,
-                         include_sources_subscriber, subscribed_subscriber,
-                         included_subscriber
-                  FROM subscriber_table
-                  WHERE user_subscriber = ?},
-                $email
-            )
-            ) {
-            Log::do_log(
-                'err',
-                'Unable to get the list of lists the user %s is subscribed to',
-                $email
-            );
-            return undef;
-        }
-
-        while ($l = $sth->fetchrow_hashref('NAME_lc')) {
-            my ($name, $robot) =
-                ($l->{'list_subscriber'}, $l->{'robot_subscriber'});
-            $name =~ s/\s*$//;    ## usefull for PostgreSQL
-            $which{$robot}{$name}{'member'}    = 1;
-            $which{$robot}{$name}{'reception'} = $l->{'reception_subscriber'};
-            $which{$robot}{$name}{'bounce'}    = $l->{'bounce_subscriber'};
-            $which{$robot}{$name}{'topic'}     = $l->{'topic_subscriber'};
-            $which{$robot}{$name}{'included'}  = $l->{'included_subscriber'};
-            $which{$robot}{$name}{'subscribed'} =
-                $l->{'subscribed_subscriber'};
-            $which{$robot}{$name}{'include_sources'} =
-                $l->{'include_sources_subscriber'};
-        }
-        $sth->finish();
-        $sth = pop @sth_stack;
-
-    } else {
-        ## Get admin
-        push @sth_stack, $sth;
-
-        unless (
-            $sth = SDM::do_query(
-                "SELECT list_admin, robot_admin, role_admin FROM admin_table WHERE user_admin = %s",
-                SDM::quote($email)
-            )
-            ) {
-            Log::do_log(
-                'err',
-                'Unable to get the list of lists the user %s is subscribed to',
-                $email
-            );
-            return undef;
-        }
-
-        while ($l = $sth->fetchrow_hashref('NAME_lc')) {
-            $which{$l->{'robot_admin'}}{$l->{'list_admin'}}
-                {$l->{'role_admin'}} = 1;
-        }
-
-        $sth->finish();
-
-        $sth = pop @sth_stack;
-    }
-
-    return \%which;
 }
 
 ## get idp xref to locally validated email address
@@ -10121,91 +10443,36 @@ sub update_email_netidmap_db {
     return 1;
 }
 
-## get_which(<email>,<robot>,<type>)
-## Get lists of lists where <email> assumes this <type> (owner, editor or
-## member) of
-## function to any list in <robot>.
+=over 4
+
+=item get_which ( EMAIL, ROBOT, ROLE )
+
+I<Function>.
+Get a list of lists where EMAIL assumes this ROLE (owner, editor or member) of
+function to any list in ROBOT.
+
+=back
+
+=cut
+
 sub get_which {
-    my $email    = shift;
-    my $robot    = shift;
-    my $function = shift;
-    Log::do_log('debug2', '(%s, %s)', $email, $function);
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
+    my $email = tools::clean_email(shift);
+    my $robot_id = shift;
+    my $role  = shift;
 
-    my ($l, @which);
-
-    ## WHICH in Database
-    my $db_which = get_which_db($email, $function);
-    my $requested_lists;
-    @{$requested_lists} = keys %{$db_which->{$robot}};
-
-    ## This call is required too
-    my $all_lists = get_lists($robot, {}, $requested_lists);
-
-    foreach my $list (@$all_lists) {
-
-        my $l = $list->{'name'};
-        # next unless (($list->{'admin'}{'host'} eq $robot) || ($robot eq '*')) ;
-
-        ## Skip closed lists unless the user is Listmaster
-        if ($list->{'admin'}{'status'} =~ /closed/) {
-            next;
-        }
-
-        if ($function eq 'member') {
-            if ($db_which->{$robot}{$l}{'member'}) {
-                $list->{'user'}{'reception'} =
-                    $db_which->{$robot}{$l}{'reception'};
-                $list->{'user'}{'topic'}  = $db_which->{$robot}{$l}{'topic'};
-                $list->{'user'}{'bounce'} = $db_which->{$robot}{$l}{'bounce'};
-                $list->{'user'}{'subscribed'} =
-                    $db_which->{$robot}{$l}{'subscribed'};
-                $list->{'user'}{'included'} =
-                    $db_which->{$robot}{$l}{'included'};
-
-                push @which, $list;
-
-                ## Update cache
-                $list_cache{'is_list_member'}{$list->{'domain'}}{$l}{$email} =
-                    1;
-            } else {
-                ## Update cache
-                $list_cache{'is_list_member'}{$list->{'domain'}}{$l}{$email} =
-                    0;
-            }
-
-        } elsif ($function eq 'owner') {
-            if ($db_which->{$robot}{$l}{'owner'}) {
-                push @which, $list;
-
-                ## Update cache
-                $list_cache{'am_i'}{'owner'}{$list->{'domain'}}{$l}{$email} =
-                    1;
-            } else {
-                ## Update cache
-                $list_cache{'am_i'}{'owner'}{$list->{'domain'}}{$l}{$email} =
-                    0;
-            }
-        } elsif ($function eq 'editor') {
-            if ($db_which->{$robot}{$l}{'editor'}) {
-                push @which, $list;
-
-                ## Update cache
-                $list_cache{'am_i'}{'editor'}{$list->{'domain'}}{$l}{$email} =
-                    1;
-            } else {
-                ## Update cache
-                $list_cache{'am_i'}{'editor'}{$list->{'domain'}}{$l}{$email} =
-                    0;
-            }
-        } else {
-            Log::do_log('err',
-                "Internal error, unknown or undefined parameter $function  in get_which"
-            );
-            return undef;
-        }
+    unless ($role eq 'member' or $role eq 'owner' or $role eq 'editor') {
+        Sympa::Log::Syslog::do_log('err',
+            'Internal error, unknown or undefined parameter "%s"', $role);
+        return undef;
     }
 
-    return @which;
+    my $all_lists = get_lists(
+        $robot_id,
+        'filter' => [$role => $email, '! status' => 'closed|family_closed']
+    );
+
+    return @{$all_lists || []};
 }
 
 ## return total of messages awaiting moderation
@@ -10756,7 +11023,8 @@ sub _load_list_config_file {
 
     ## Set defaults to 1
     foreach my $pname (keys %$pinfo) {
-        $admin{'defaults'}{$pname} = 1 unless ($pinfo->{$pname}{'internal'});
+        $admin{'defaults'}{$pname} = 1
+            unless ($pinfo->{$pname}{'internal'});
     }
 
     ## Lock file
@@ -12496,36 +12764,6 @@ sub get_data {
     return $res;
 }
 
-## Support for list config caching in database
-sub get_lists_db {
-    my $where = shift || '';
-    Log::do_log('debug2', '(%s)', $where);
-
-    unless ($SDM::use_db) {
-        Log::do_log('info', 'Sympa not setup to use DBI');
-        return undef;
-    }
-
-    my $statement = 'SELECT name_list FROM list_table';
-    $statement .= " WHERE $where" if $where;
-
-    my ($l, @lists);
-
-    unless ($sth = SDM::do_query($statement)) {
-        Log::do_log('err',
-            "Unable to gather the list of lists from lists table");
-        return undef;
-    }
-    push @sth_stack, $sth;
-    while ($l = $sth->fetchrow_hashref) {
-        my $name = $l->{'name_list'};
-        push @lists, $name;
-    }
-    $sth = pop @sth_stack;
-
-    return \@lists;
-}
-
 sub _update_list_db {
     my ($self) = shift;
     my @admins;
@@ -12534,95 +12772,96 @@ sub _update_list_db {
     my $ed_txt;
 
     my $name        = $self->{'name'};
-    my $subject     = $self->{'admin'}{'subject'} || '';
+    my $searchkey   = tools::foldcase($self->{'admin'}{'subject'} || '');
     my $status      = $self->{'admin'}{'status'};
     my $robot       = $self->{'domain'};
-    my $web_archive = is_web_archived($self) || 0;
-    my $topics      = '';
-    if ($self->{'admin'}{'topics'}) {
-        $topics = join(',', @{$self->{'admin'}{'topics'}});
+
+    my $family = $self->{'admin'}{'family_name'};
+    $family = undef unless defined $family and length $family;
+
+    my $web_archive = $self->is_web_archived ? 1 : 0;
+    my $topics =
+        join ',', grep { defined $_ and length $_ and $_ ne 'others' }
+        @{$self->{'admin'}{'topics'} || []};
+    $topics = ",$topics," if length $topics;
+
+    my $creation_epoch = $self->{'admin'}{'creation'}->{'date_epoch'};
+    my $creation_email = $self->{'admin'}{'creation'}->{'email'};
+    my $update_epoch   = $self->{'admin'}{'update'}->{'date_epoch'};
+    my $update_email   = $self->{'admin'}{'update'}->{'email'};
+# This may be added too.
+#     my $latest_instantiation_epoch =
+#         $self->{'admin'}{'latest_instantiation'}->{'date_epoch'};
+#     my $latest_instantiation_email =
+#         $self->{'admin'}{'latest_instantiation'}->{'email'};
+
+# Not yet implemented.
+#     eval { $config = Storable::nfreeze($self->{'admin'}); };
+#     if ($@) {
+#         Log::do_log('err',
+#             'Failed to save the config to database. error: %s', $@);
+#         return undef;
+#     }
+
+    push @sth_stack, $sth;
+
+    # update database cache
+    # try INSERT then UPDATE
+    unless (
+        $sth = SDM::do_prepared_query(
+            q{UPDATE list_table
+              SET status_list = ?, name_list = ?, robot_list = ?,
+                  family_list = ?,
+                  creation_epoch_list = ?, creation_email_list = ?,
+                  update_epoch_list = ?, update_email_list = ?,
+                  searchkey_list = ?, web_archive_list = ?, topics_list = ?,
+              WHERE robot_list = ? AND name_list = ?},
+            $status, $name, $robot,
+            $family,
+            $creation_epoch, $creation_email,
+            $update_epoch,   $update_email,
+            $searchkey,      $web_archive, $topics,
+            $robot, $name
+        )
+        and $sth->rows
+        or $sth = SDM::do_prepared_query(
+            q{INSERT INTO list_table
+              (status_list, name_list, robot_list, family_list,
+               creation_epoch_list, creation_email_list,
+               update_epoch_list, update_email_list,
+               searchkey_list, web_archive_list, topics_list)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+            $status,         $name,        $robot,       $family,
+            $creation_epoch, $creation_email,
+            $update_epoch,   $update_email,
+            $searchkey,      $web_archive, $topics
+        )
+        and $sth->rows
+    ) {
+        Log::do_log('err', 'Unable to update list %s in database', $self);
+        $sth = pop @sth_stack;
+        return undef;
     }
 
-    foreach $i (@{$self->{'admin'}{'owner'}}) {
-        if (ref($i->{'email'})) {
-            push(@admins, @{$i->{'email'}});
-        } elsif ($i->{'email'}) {
-            push(@admins, $i->{'email'});
-        }
-    }
-    $adm_txt = join(',', @admins) || '';
-
-    undef @admins;
-    foreach $i (@{$self->{'admin'}{'editor'}}) {
-        if (ref($i->{'email'})) {
-            push(@admins, @{$i->{'email'}});
-        } elsif ($i->{'email'}) {
-            push(@admins, $i->{'email'});
-        }
-    }
-    $ed_txt = join(',', @admins) || '';
-
-    my $sth =
-        SDM::do_query('SELECT name_list FROM list_table WHERE name_list = %s',
-        SDM::quote($name));
-    if ($sth->fetch) {
-        unless (
-            SDM::do_query(
-                'UPDATE list_table SET status_list = %s, name_list = %s, robot_list = %s, subject_list = %s, web_archive_list = %d, topics_list = %s, owners_list = %s, editors_list = %s WHERE robot_list = %s AND name_list = %s',
-                SDM::quote($status),
-                SDM::quote($name),
-                SDM::quote($robot),
-                SDM::quote($subject),
-                ($web_archive ? 1 : 0),
-                SDM::quote($topics),
-                SDM::quote($adm_txt),
-                SDM::quote($ed_txt),
-                SDM::quote($robot),
-                SDM::quote($name)
-            )
-            ) {
-            Log::do_log('err', 'Unable to update list %s@%s in database',
-                $name, $robot);
-            return undef;
-        }
-    } else {
-        unless (
-            SDM::do_query(
-                'INSERT INTO list_table (status_list, name_list, robot_list, subject_list, web_archive_list, topics_list, owners_list, editors_list) VALUES (%s, %s, %s, %s, %d, %s, %s, %s)',
-                SDM::quote($status),
-                SDM::quote($name),
-                SDM::quote($robot),
-                SDM::quote($subject),
-                ($web_archive ? 1 : 0),
-                SDM::quote($topics),
-                SDM::quote($adm_txt),
-                SDM::quote($ed_txt)
-            )
-            ) {
-            Log::do_log('err', 'Unable to insert list %s@%s in database',
-                $name, $robot);
-            return undef;
-        }
-    }
+    $sth = pop @sth_stack;
 
     return 1;
 }
 
 sub _flush_list_db {
-    my ($listname) = shift;
-    my $statement;
+    my $listname = shift;
+
+    my $sth;
     unless ($listname) {
-        if ($Conf::Conf{'db_type'} eq 'SQLite') {
-            # SQLite does not have TRUNCATE TABLE.
-            $statement = "DELETE FROM list_table";
-        } else {
-            $statement = "TRUNCATE TABLE list_table";
-        }
+        # Do DELETE because SQLite does not have TRUNCATE TABLE.
+        $sth = SDM::do_prepared_query('DELETE FROM list_table');
     } else {
-        $statement = "DELETE FROM list_table WHERE name_list = %s";
+        $sth = SDM::do_prepared_query(
+            q{DELETE FROM list_table
+              WHERE name_list = ?}, $listname);
     }
 
-    unless ($sth = SDM::do_query($statement, SDM::quote($listname))) {
+    unless ($sth) {
         Log::do_log('err', 'Unable to flush lists table');
         return undef;
     }
