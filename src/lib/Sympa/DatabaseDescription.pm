@@ -1025,7 +1025,6 @@ sub full_db_struct {
 ## mediumblob     : Binary data with length upto 2^24 - 3 o.
 
 sub db_struct {
-
     my %db_struct;
     my %full_db_struct = full_db_struct();
 
@@ -1156,3 +1155,146 @@ our @former_indexes = (
 );
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::DatabaseDescription
+
+=head1 DESCRIPTION
+
+This module keeps structure of database used by Sympa software.
+
+=head2 Functions
+
+=over
+
+=item full_db_struct ()
+
+I<Function>.
+Returns a heshref containing definitions of all tables.
+Each item has the name of table as key and definition as value.
+
+Each definition is hashref containig following keys:
+
+=over
+
+=item fields
+
+=item doc
+
+=item order
+
+=back
+
+C<fields> item is hasref which may contain following items.
+
+=over
+
+=item struct
+
+Column data types.  Types are based on MySQL.
+Following types are recognized:
+
+=over
+
+=item varchar(X)
+
+Text with length upto X.  X must be lower than 2^16 - 2.
+
+=item int(1)
+
+Boolean, 1 or 0.
+
+=item int(11)
+
+Unix time (a.k.a. "epoch").
+
+=item int(X)
+
+Integer with columns upto X, -2^31 to 2^31 - 1.
+
+=item tinyint
+
+Integer, -2^7 to 2^7 - 1.
+
+=item smallint
+
+Integer, -2^15 to 2^15 - 1.
+
+=item bigint
+
+Integer, -2^63 to 2^63 - 1.
+
+=item double
+
+IEEE floating point number, 8 bytes.
+
+=item enum
+
+Keyword with length upto 20 o.
+
+=item text
+
+Text with length upto 500 o.
+
+=item longtext
+
+Text with length upto 2^32 - 4 o.
+
+=item datetime
+
+Timestamp.
+
+=item mediumblob
+
+Binary data with length upto 2^24 - 3 o.
+
+=back
+
+=item doc
+
+XXX
+
+=item primary
+
+XXX
+
+=item not_null
+
+XXX
+
+=back
+
+=item db_struct ()
+
+I<Function>.
+Returns a hashref definition by all types of RDBMS Sympa supports.
+Keys are types and values are definition with their field types
+converted according to types.
+
+=item not_null ()
+
+I<Function>.
+XXX
+
+=item autoincrement ()
+
+I<Function>.
+XXX
+
+=item primary ()
+
+I<Function>.
+XXX
+
+
+=back
+
+=head1 SEE ALSO
+
+L<SDM>.
+
+=cut

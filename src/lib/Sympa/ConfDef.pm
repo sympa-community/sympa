@@ -29,28 +29,6 @@ use warnings;
 
 use Sympa::Constants;
 
-## This defines the parameters to be edited :
-##   title  : Title for the group of parameters following
-##   name   : Name of the parameter
-##   file   : Conf file where the parameter is defined.  If omitted, the
-##            parameter won't be added automatically to the config file, even
-##            if a default is set.
-##            "wwsympa.conf" is a synonym of "sympa.conf".  It remains there
-##            in order to migrating older versions of config.
-##   default: Default value : DON'T SET AN EMPTY DEFAULT VALUE ! It's useless
-##            and can lead to errors on fresh install.
-##   gettext_id : Description of the parameter
-##   gettext_comment : Additionnal advice concerning the parameter
-##   sample : FIXME FIXME
-##   edit   : 1|0: FIXME FIXME
-##   optional: 1|0: FIXME FIXME
-##   vhost  : 1|0 : if 1, the parameter can have a specific value in a
-##            virtual host
-##   db     : 'db_first', 'file_first', 'no'
-##   obfuscated: 1|0: FIXME FIXME
-##   multiple: 1|0: If 1, the parameter can have mutiple values. Default is 0.
-##   scenario: 1|0: If 1, the parameter is the name of scenario
-
 our @params = (
     {'gettext_id' => 'Site customization'},
 
@@ -1544,3 +1522,106 @@ our @params = (
 );
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::ConfDef - Definition of site and robot configuration parameters
+
+=head1 DESCRIPTION
+
+This module keeps definition of configuration parameters for site default
+and each robot.
+
+=head2 Global variable
+
+=over
+
+=item @params
+
+Includes following items in order parameters are shown.
+
+=over
+
+=item C<{ gettext_id =E<gt> TITLE }>
+
+Title for the group of parameters following.
+
+=item C<{ name =E<gt> NAME, DEFINITIONS, ... }>
+
+Definition of parameter.  DEFINITIONS may contain following pairs.
+
+=over
+
+=item name =E<gt> NAME
+
+Name of the parameter.
+
+=item file =E<gt> FILE
+
+Conf file where the parameter is defined.  If omitted, the
+parameter won't be added automatically to the config file, even
+if a default is set.
+C<"wwsympa.conf"> is a synonym of C<"sympa.conf">.  It remains there
+in order to migrating older versions of config.
+
+=item default =E<gt> VALUE
+
+Default value.
+DON'T SET AN EMPTY DEFAULT VALUE! It's useless
+and can lead to errors on fresh install.
+
+=item gettext_id =E<gt> STRING
+
+Description of the parameter.
+
+=item gettext_comment =E<gt> STRING
+
+Additionnal advice concerning the parameter.
+
+=item sample =E<gt> STRING
+
+FIXME FIXME
+
+=item edit =E<gt> 1|0
+
+This defines the parameters to be edited.
+
+=item optional =E<gt> 1|0
+
+FIXME FIXME
+
+=item vhost =E<gt> 1|0
+
+If 1, the parameter can have a specific value in a
+virtual host.
+
+=item db =E<gt> OPTION
+
+'db_first', 'file_first' or 'no'.
+
+=item obfuscated =E<gt> 1|0
+
+FIXME FIXME
+
+=item multiple =E<gt> 1|0
+
+If 1, the parameter can have mutiple values. Default is 0.
+
+=item scenario =E<gt> 1|0
+
+If 1, the parameter is the name of scenario.
+
+=back
+
+=back
+
+=back
+
+=head1 SEE ALSO
+
+L<sympa.conf(5)>, L<robot.conf(5)>.
+
+=cut

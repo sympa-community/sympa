@@ -80,8 +80,12 @@ nobase_modules_DATA = \
 man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3PM = \
+	Sympa/ConfDef.pm \
+	Sympa/Constants.pm \
 	Sympa/Crash.pm \
+	Sympa/DatabaseDescription.pm \
 	Sympa/Language.pm \
+	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
 	Sympa/ModDef.pm \
 	Sympa/Regexps.pm \

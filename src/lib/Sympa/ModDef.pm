@@ -22,31 +22,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-=encoding utf-8
-
-=head1 NAME
-
-Sympa::ModDef - Definition of dependent modules
-
-=head1 DESCRIPTION
-
-This module keeps definition of modules required by Sympa.
-
-=cut
-
 package Sympa::ModDef;
 
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-
-## This defines the modules :
-##   required_version : Minimum version of package.
-##            Assume required_version = 1.0 if not specified.
-##   package_name : Name of CPAN module.
-##   mandatory : 1|0: if 1, the module is mandatory.  Default is 0.
-##   gettext_id : Usage of this package,
-##   gettext_comment : Description of prerequisites if any.
 
 our %cpan_modules = (
     'Archive::Zip' => {
@@ -387,3 +367,58 @@ $cpan_modules{'Unicode::CaseFold'} = {
     if 5.008 < $] and $] < 5.016;
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::ModDef - Definition of dependent modules
+
+=head1 DESCRIPTION
+
+This module keeps definition of modules required by Sympa.
+
+=head2 Global variable
+
+=over
+
+=item %cpan_modules
+
+This defines the modules.
+Each item has Perl package name as key and hashref containing pairs below
+as value.
+
+=over
+
+=item required_version =E<gt> STRING
+
+Minimum version of package.
+Assume required_version = '1.0' if not specified.
+
+=item package_name =E<gt> STRING
+
+Name of CPAN module.
+
+=item mandatory =E<gt> 1|0
+
+If 1, the module is mandatory.  Default is 0.
+
+=item gettext_id =E<gt> STRING
+
+Usage of this package,
+
+=item gettext_comment =E<gt> STRING
+
+Description of prerequisites if any.
+
+=back
+
+=back
+
+=head1 SEE ALSO
+
+sympa_wizard(1).
+
+=cut
+

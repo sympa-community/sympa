@@ -58,41 +58,6 @@ my %alias = (
     'max-size'        => 'max_size'
 );
 
-##############################################################
-## This hash COMPLETELY defines ALL list parameters
-## It is then used to load, save, view, edit list config files
-##############################################################
-## List parameters format accepts the following keywords :
-## format :      Regexp aplied to the configuration file entry;
-##               some common regexps are defined in %regexp
-## file_format : Config file format of the parameter might not be
-##               the same in memory
-## split_char:   Character used to separate multiple parameters
-## length :      Length of a scalar variable ; used in web forms
-## scenario :    tells that the parameter is a scenario, providing its name
-## default :     Default value for the param ; may be a configuration
-## parameter (conf)
-## synonym :     Defines synonyms for parameter values (for compatibility
-## reasons)
-## gettext_unit :Unit of the parameter ; this is used in web forms and refers
-## to translated
-##               strings in PO catalogs
-## occurrence :  Occurerence of the parameter in the config file
-##               possible values: 0-1 | 1 | 0-n | 1-n
-##               example : a list may have multiple owner
-## gettext_id :    Title reference in NLS catalogues
-## description : deescription text of a parameter
-## group :       Group of parameters
-## obsolete :    Obsolete parameter ; should not be displayed
-##               nor saved
-## obsolete_values : defined obsolete values for a parameter
-##                   these values should not get proposed on the web interface
-##                   edition form
-## order :       Order of parameters within paragraph
-## internal :    Indicates that the parameter is an internal parameter
-##               that should always be saved in the config file
-## field_type :  used to select passwords web input type
-###############################################################
 our %pinfo = (
 
     ### Global definition page ###
@@ -2209,3 +2174,124 @@ sub cleanup {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::ListDef - Definition of list configuration parameters
+
+=head1 DESCRIPTION
+
+This module keeps definition of configuration parameters for each list.
+
+=head2 Global variable
+
+=over
+
+=item %pinfo
+
+This hash COMPLETELY defines ALL list parameters.
+It is then used to load, save, view, edit list config files.
+
+List parameters format accepts the following keywords :
+
+=over
+
+=item format
+
+Regexp aplied to the configuration file entry;
+some common regexps are defined in L<Sympa::Regexps>.
+
+If the parameter is paragraph, value of this item is a hashref containing
+definitions of sub-parameters.
+
+=item file_format
+
+Config file format of the parameter might not be
+the same in memory.
+
+=item split_char
+
+Character used to separate multiple parameters.
+
+=item length
+
+Length of a scalar variable ; used in web forms.
+
+=item scenario
+
+Tells that the parameter is a scenario, providing its name.
+
+=item default
+
+Default value for the param ; may be a robot configuration
+parameter (conf).
+
+=item synonym
+
+Defines synonyms for parameter values (for compatibility
+reasons).
+
+=item gettext_unit
+
+Unit of the parameter ; this is used in web forms and refers
+to translated
+strings in NLS catalogs.
+
+=item occurrence
+
+Occurrence of the parameter in the config file
+possible values: C<0-1>, C<1>, C<0-n> and C<1-n>.
+Example: A list may have multiple owner.
+
+=item gettext_id
+
+Title reference in NLS catalogs.
+
+=item gettext_comment
+
+Deescription text of a parameter.
+
+=item group
+
+Group of parameters.
+
+=item obsolete
+
+Obsolete parameter ; should not be displayed
+nor saved.
+
+=item obsolete_values
+
+Defined obsolete values for a parameter.
+These values should not get proposed on the web interface
+edition form.
+
+=item order
+
+Order of parameters within paragraph.
+
+=item internal
+
+Indicates that the parameter is an internal parameter
+that should always be saved in the config file.
+
+=item field_type
+
+Used to select passwords web input type.
+
+=back
+
+=item @param_order
+
+XXX
+
+=back
+
+=head1 SEE ALSO
+
+L<config(5)>.
+
+=cut
