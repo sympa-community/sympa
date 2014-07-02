@@ -5524,7 +5524,7 @@ sub do_search {
     }
 
     my $data_exclu = $list->get_exclusion();
-    my $key = 0;
+    my $key        = 0;
     ## Exclude users are searched too
     while (($data_exclu->{emails}->[$key]) && ($data_exclu->{date}->[$key])) {
         my $email = $data_exclu->{'emails'}->[$key];
@@ -11219,7 +11219,24 @@ sub do_create_list {
             $param->{'action'});
     }
 
-    $param->{'create_action'} = $param->{'create_list'};
+    my $result = Scenario::request_action(
+        'create_list',
+        $param->{'auth_method'},
+        $robot,
+        {   'sender'             => $param->{'user'}{'email'},
+            'candidate_listname' => $in{'listname'},
+            'candidate_subject'  => $in{'subject'},
+            'candidate_template' => $in{'template'},
+            'candidate_info'     => $in{'info'},
+            'candidate_topics'   => $in{'topics'},
+            'remote_host'        => $param->{'remote_host'},
+            'remote_addr'        => $param->{'remote_addr'}
+        }
+    );
+    if (ref($result) eq 'HASH') {
+        $param->{'create_action'} = $result->{'action'};
+        $param->{'reason'}        = $result->{'reason'};
+    }
 
     wwslog('info', ', get action: %s', $param->{'create_action'});
 

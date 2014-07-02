@@ -542,7 +542,8 @@ sub request_action {
                 'Context uses auth method %s',
                 $rule->{'auth_method'}
             ) if $log_it;
-            my $result = verify($context, $rule->{'condition'}, $log_it);
+            my $result =
+                verify($context, $rule->{'condition'}, $rule, $log_it);
 
             ## Cope with errors
             if (!defined($result)) {
@@ -666,8 +667,8 @@ sub request_action {
 
 ## check if email respect some condition
 sub verify {
-    my ($context, $condition, $log_it) = @_;
-    Log::do_log('debug2', 'Condition %s, log %s', $condition, $log_it);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    my ($context, $condition, $rule, $log_it) = @_;
 
     my $robot = $context->{'robot_domain'};
 
@@ -1312,7 +1313,7 @@ sub verify {
     if ($condition_key =~ /^customcondition::(\w+)/o) {
         my $condition = $1;
 
-        my $res = verify_custom($condition, \@args, $robot, $list);
+        my $res = verify_custom($condition, \@args, $robot, $list, $rule);
         unless (defined $res) {
             if ($log_it) {
                 my $args_as_string = '';
@@ -1640,12 +1641,11 @@ sub search {
 
 # eval a custom perl module to verify a scenario condition
 sub verify_custom {
-    my ($condition, $args_ref, $robot, $list) = @_;
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my ($condition, $args_ref, $robot, $list, $rule) = @_;
     my $timeout = 3600;
 
     my $filter = join('*', @{$args_ref});
-    Log::do_log('debug2', '(%s, %s, %s, %s)',
-        $condition, $filter, $robot, $list);
     if (defined($persistent_cache{'named_filter'}{$condition}{$filter})
         && (time <=
             $persistent_cache{'named_filter'}{$condition}{$filter}{'update'} +
@@ -1679,8 +1679,10 @@ sub verify_custom {
             $condition, "$@", ref($@));
         return undef;
     }
-    my $res;
-    eval "\$res = CustomCondition::${condition}::verify(\@{\$args_ref});";
+    my $res = do {
+        local $_ = $rule;
+        eval "CustomCondition::${condition}::verify(\@{\$args_ref})";
+    };
     if ($@) {
         Log::do_log('err', 'Error evaluating %s: %s (%s)',
             $condition, "$@", ref($@));

@@ -624,6 +624,11 @@ sub createList {
         'create_list',
         'md5', $robot,
         {   'sender'                  => $sender,
+            'candidate_listname'      => $listname,
+            'candidate_subject'       => $subject,
+            'candidate_template'      => $template,
+            'candidate_info'          => $description,
+            'candidate_topics'        => $topics,
             'remote_host'             => $ENV{'REMOTE_HOST'},
             'remote_addr'             => $ENV{'REMOTE_ADDR'},
             'remote_application_name' => $ENV{'remote_application_name'}
