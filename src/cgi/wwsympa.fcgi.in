@@ -848,7 +848,7 @@ our %in_regexp = (
     'new_password' => '.+',
 
     ## Topics
-    'topic'    => '[\-\w\/]+',
+    'topic'    => '\@?[\-\w\/]+',
     'topics'   => '[\-\w\/]+',
     'subtopic' => '[\-\w\/]+',
 
@@ -1182,6 +1182,7 @@ while ($query = new_loop()) {
         'color_15',
         'reporting_spam_script_path',
         'automatic_list_families',
+        'your_lists_size',
         ) {
 
         $param->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
@@ -4964,26 +4965,50 @@ sub do_lists {
     my @lists;
     wwslog('info', '(%s, %s)', $in{'topic'}, $in{'subtopic'});
 
-    my %topics = List::load_topics($robot);
+    my $all_lists = [];
+    if ($in{'topic'} and $in{'topic'} eq '@which') {
+        my %lists = ();
+        foreach my $role ('member', 'owner', 'editor') {
+            foreach my $list (List::get_which(
+                $param->{'user'}{'email'}, $robot, $role)) {
+                $lists{$list->{'name'}} = $list;
+            }
+        }
+        $all_lists = [map { $lists{$_} } sort keys %lists];
+    } elsif ($in{'topic'}) {
+        my %topics = List::load_topics($robot);
 
-    if ($in{'topic'}) {
         $param->{'topic'} = $in{'topic'};
         if ($in{'subtopic'}) {
             $param->{'subtopic'} = $in{'subtopic'};
-            $param->{'subtitle'} = sprintf "%s / %s",
+            $param->{'subtitle'} = $language->gettext_sprintf('%s / %s',
                 $topics{$in{'topic'}}{'current_title'},
-                $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}
-                {'current_title'};
-            $param->{'subtitle'} ||= "$in{'topic'} / $in{'subtopic'}";
+                $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'}
+                || $in{'subtopic'});
         } else {
             $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'}
                 || $in{'topic'};
         }
+
+        ## Filter lists by topic.
+        ## topic argument 'topicsless' or 'other' means 'lists with topic
+        ## "other" or without topics'.
+        ## no topic argument; List all lists
+        my $options = {};
+        if ($in{'topic'}) {
+            if ($in{'subtopic'}) {
+                $options->{'filter'} =
+                    [ 'topics' => "$in{'topic'}/$in{'subtopic'}" ];
+            } else {
+                $options->{'filter'} = [ 'topics' => $in{'topic'} ];
+            }
+        }
+        $all_lists = List::get_lists($robot, $options);
+    } else {
+       $all_lists = List::get_lists($robot);
     }
 
-    my $all_lists = List::get_lists($robot);
     foreach my $list (@$all_lists) {
-
         my $sender = $param->{'user'}{'email'} || 'nobody';
 
         my $result = $list->check_list_authz(
@@ -5019,34 +5044,10 @@ sub do_lists {
             $list_info->{'is_subscriber'} = 1;
         }
 
-        ## Filter lists by topic.
-        ## topic argument 'topicsless' or 'other' means 'lists with topic
-        ## "other" or without topics'.
-        ## no topic argument; List all lists
-        if (!$in{'topic'}) {
-            $param->{'which'}{$list->{'name'}} = $list_info;
-        } elsif ($list->{'admin'}{'topics'}) {
-            foreach my $topic (@{$list->{'admin'}{'topics'}}) {
-                my @tree = split '/', $topic;
+        my $listname = $list->{'name'};
 
-                if (($in{'topic'} eq 'other' and !$in{'subtopic'})
-                    or $in{'topic'} eq 'topicsless') {
-                    $param->{'which'}{$list->{'name'}} = $list_info
-                        if $tree[0] eq 'other' and !$tree[1];
-                    next;
-                }
-
-                next if (($in{'topic'})    && ($tree[0] ne $in{'topic'}));
-                next if (($in{'subtopic'}) && ($tree[1] ne $in{'subtopic'}));
-
-                $param->{'which'}{$list->{'name'}} = $list_info;
-            }
-        } elsif (($in{'topic'} eq 'other' and !$in{'subtopic'})
-            or $in{'topic'} eq 'topicsless') {
-            $param->{'which'}{$list->{'name'}} = $list_info;
-        }
-    }
-    foreach my $listname (sort keys %{$param->{'which'}}) {
+        $param->{'which'} ||= {};
+        $param->{'which'}{$listname} = $list_info;
         if ($listname =~ /^([a-z])/) {
             push @{$param->{'orderedlist'}{$1}}, $listname;
         } else {
