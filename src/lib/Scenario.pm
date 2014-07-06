@@ -672,9 +672,12 @@ sub verify {
 
     my $robot = $context->{'robot_domain'};
 
-#    while (my($k,$v) = each %{$context}) {
-#	Log::do_log('debug3','Context->{%s} = %s', $k, $v);
-#    }
+    my $pinfo;
+    if ($robot) {
+        $pinfo = tools::get_list_params($robot);
+    } else {
+        $pinfo = {};
+    }
 
     unless (defined($context->{'sender'})) {
         Log::do_log('info',
@@ -787,20 +790,22 @@ sub verify {
                 # always false
                 return -1 * $negation;
             }
-
-            ## List param
-        } elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
+        }
+        ## List param
+        elsif ($value =~ /\[list\-\>([\w\-]+)\]/i) {
             my $param = $1;
 
-            if ($param =~ /^(name|total)$/) {
-                $value =~ s/\[list\-\>([\w\-]+)\]/$list->{$param}/;
+            if ($param eq 'name' or $param eq 'total') {
+                my $val = $list->{$param};
+                $value =~ s/\[list\-\>$param\]/$val/;
             } elsif ($param eq 'address') {
-                my $list_address = $list->get_list_address();
-                $value =~ s/\[list\-\>([\w\-]+)\]/$list_address/;
-
-            } elsif ($list->{'admin'}{$param}
-                and (!ref($list->{'admin'}{$param}))) {
-                $value =~ s/\[list\-\>([\w\-]+)\]/$list->{'admin'}{$param}/;
+                my $val = $list->get_list_address();
+                $value =~ s/\[list\-\>$param\]/$val/;
+            } elsif (exists $pinfo->{$param}
+                and !ref($list->{'admin'}{$param})) {
+                my $val = $list->{'admin'}{$param};
+                $val = '' unless defined $val;
+                $value =~ s/\[list\-\>$param\]/$val/;
             } else {
                 Log::do_log('err', 'Unknown list parameter %s in rule %s',
                     $value, $condition);
@@ -809,7 +814,6 @@ sub verify {
                     if $log_it;
                 return undef;
             }
-
         } elsif ($value =~ /\[env\-\>([\w\-]+)\]/i) {
 
             $value =~ s/\[env\-\>([\w\-]+)\]/$ENV{$1}/;
