@@ -4975,6 +4975,7 @@ sub do_lists {
             }
         }
         $all_lists = [map { $lists{$_} } sort keys %lists];
+        $param->{'subtitle'} = $language->gettext('Your lists');
     } elsif ($in{'topic'}) {
         my %topics = List::load_topics($robot);
 

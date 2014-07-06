@@ -7,6 +7,8 @@
   [%|loc(occurrence)%]%1 occurrence(s) found[%END%]<br /><br />
 [% ELSIF action == 'search_user' %]
   [%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]
+[% ELSIF subtitle %]
+  <strong>[% subtitle %]</strong>
 [% END %]
 
 [% IF which %]
