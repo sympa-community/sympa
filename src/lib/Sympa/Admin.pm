@@ -396,7 +396,7 @@ sub create_list_old {
 #           are not installed or 1(in status open)
 #######################################################
 sub create_list {
-    my ($param, $family, $robot, $abort_on_error) = @_;
+    my ($param, $family, $dummy, $abort_on_error) = @_;
     Log::do_log('info', '(%s, %s, %s)', $param->{'listname'},
         $family->{'name'}, $param->{'subject'});
 
