@@ -2002,9 +2002,11 @@ while ($query = new_loop()) {
     }
 
     # exit if wwsympa.fcgi itself has changed
-    if (tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
+    if ($ENV{'SCRIPT_FILENAME'}
+        and tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
         Log::do_log('notice',
-            "Exiting because $ENV{'SCRIPT_FILENAME'} has changed since fastcgi server started"
+            'Exiting because %s has changed since fastcgi server started',
+            $ENV{'SCRIPT_FILENAME'}
         );
         exit(0);
     }
