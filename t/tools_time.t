@@ -14,7 +14,7 @@ use tools; #Sympa::Tools::Time;
 setlocale(LC_ALL, 'C');
 
 # Fix our time zone for localtime().
-# Zone name (Europe/Paris) is used instead of abbreviated code (CST/CEST).
+# Zone name (Europe/Paris) is used instead of abbreviated code (CET/CEST).
 # Note that it depends on time zone database therefore may not be portable.
 $ENV{'TZ'} = 'Europe/Paris';
 POSIX::tzset();
