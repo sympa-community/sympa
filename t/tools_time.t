@@ -14,7 +14,9 @@ use tools; #Sympa::Tools::Time;
 setlocale(LC_ALL, 'C');
 
 # Fix our time zone for localtime().
-$ENV{'TZ'} = 'CEST-2';
+# Zone name (Europe/Paris) is used instead of abbreviated code (CST/CEST).
+# Note that it depends on time zone database therefore may not be portable.
+$ENV{'TZ'} = 'Europe/Paris';
 POSIX::tzset();
 
 my @epoch2yyyymmjj_hhmmss_tests = (
