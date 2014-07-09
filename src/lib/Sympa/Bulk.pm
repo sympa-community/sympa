@@ -74,7 +74,7 @@ sub next {
     my $limit_other  = '';
     ## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order =
-        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
+        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, verp_bulkmailer ASC';
     if (   $Conf::Conf{'db_type'} eq 'mysql'
         or $Conf::Conf{'db_type'} eq 'Pg'
         or $Conf::Conf{'db_type'} eq 'SQLite') {
