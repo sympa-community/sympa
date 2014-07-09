@@ -39,7 +39,7 @@ use MIME::Lite::HTML;
 use MIME::Parser;
 use POSIX qw();
 use Proc::ProcessTable;
-use Scalar::Util '1.22';     # looks_like_number() works.
+use Scalar::Util;
 use Sys::Hostname qw();
 use Text::LineFold;
 use Time::Local qw();

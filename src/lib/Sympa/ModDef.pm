@@ -208,6 +208,14 @@ our %cpan_modules = (
         package_name     => 'JSON-XS',
         'gettext_id'     => 'required when using the VOOT protocol',
     },
+    # The pure-perl version of Scalar::Util::looks_like_number() was unstable.
+    # To force using XS version, check existence of List::Util::XS.
+    'List::Util::XS' => {
+        required_version => '1.20',
+        package_name     => 'Scalar-List-Utils',
+        mandatory        => 1,
+        'gettext_id'     => 'set of various subroutines to handle scalar',
+    },
     'Locale::Messages' => {
         required_version => '1.22',
         package_name     => 'libintl-perl',
@@ -305,11 +313,7 @@ our %cpan_modules = (
         'gettext_id' =>
             'Used by the bulk.pl daemon to check the number of slave bulks running.',
     },
-    'Scalar::Util' => {
-        required_version => '1.22',
-        package_name     => 'Scalar-List-Utils',
-        'gettext_id'     => 'set of various subroutines to handle scalar',
-    },
+    # Scalar::Util is included in Scalar-List-Utils.
     'SOAP::Lite' => {
         required_version => '0.712',
         package_name     => 'SOAP-Lite',
