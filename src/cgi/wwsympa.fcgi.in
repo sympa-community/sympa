@@ -12589,21 +12589,17 @@ sub do_edit_list {
     ## Checking that list owner address is not set to one of the special
     ## addresses:
     if (exists $changed{'owner'}) {
-        my $listname = $list->{'name'};
-        my $host = $list->{'admin'}{'host'};
-
         my @special = ();
         push @special,
-            map { sprintf '%s%s@%s', $listname, $_, $host }
-            (Conf::get_robot_conf($robot, 'return_path_suffix'),
-                '-request', '-editor', '-subscribe', '-unsubscribe');
+            map { $list->get_list_address($_) }
+            qw(owner editor return_path subscribe unsubscribe);
         push @special,
-            map { sprintf '%s-%s@%s', $listname, lc $_, $host }
+            map { sprintf '%s-%s@%s',
+                $list->{'name'}, lc $_, $list->{'admin'}{'host'} }
             split /[,\s]+/,
                 Conf::get_robot_conf($robot, 'list_check_suffixes');
-        my $bounce_email_re =
-            quotemeta(Conf::get_robot_conf($robot, 'bounce_email_prefix'))
-            . "\\\+.*\\\@" . quotemeta($list->{'domain'});
+        my $bounce_email_re = quotemeta($list->get_bounce_address('ANY'));
+        $bounce_email_re =~ s/(?<=\\\+).*(?=\\\@)/.*/;
 
         foreach my $owner (@{$new_admin->{'owner'}}) {
             my $owner_email = lc $owner->{'email'};

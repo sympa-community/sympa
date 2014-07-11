@@ -12607,6 +12607,10 @@ sub get_list_address {
             . Conf::get_robot_conf($self->{'domain'}, 'return_path_suffix')
             . '@'
             . $self->{'admin'}{'host'};
+    } elsif ($type eq 'subscribe') {
+        return $self->{'name'} . '-subscribe' . '@' . $self->{'admin'}{'host'};
+    } elsif ($type eq 'unsubscribe') {
+        return $self->{'name'} . '-unsubscribe' . '@' . $self->{'admin'}{'host'};
     }
     Log::do_log('err', 'Unknown type of list address "%s".  Ask developer',
         $type);
