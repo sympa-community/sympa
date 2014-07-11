@@ -278,6 +278,13 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id' => 'provides libraries for manipulating MIME messages',
     },
+    'Net::CIDR' => {
+        required_version => '0.16',
+        package_name     => 'Net-CIDR',
+        mandatory        => 1,
+        'gettext_id' =>
+            'used to check netmask within Sympa autorization scenario rules',
+    },
     'Net::DNS' => {
         required_version => '0.65',
         package_name     => 'Net-DNS',
@@ -292,13 +299,6 @@ our %cpan_modules = (
         package_name => 'perl-ldap',
         'gettext_id' =>
             'required to query LDAP directories. Sympa can do LDAP-based authentication ; it can also build mailing lists with LDAP-extracted members.',
-    },
-    'Net::Netmask' => {
-        required_version => '1.9015',
-        package_name     => 'Net-Netmask',
-        mandatory        => 1,
-        'gettext_id' =>
-            'used to check netmask within Sympa autorization scenario rules',
     },
     'Net::SMTP' => {
         package_name => 'libnet',
@@ -425,4 +425,3 @@ Description of prerequisites if any.
 sympa_wizard(1).
 
 =cut
-

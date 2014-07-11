@@ -1050,7 +1050,6 @@ sub verify {
 
     ##### condition verify_netmask
     if ($condition_key eq 'verify_netmask') {
-
         ## Check that the IP address of the client is available
         ## Means we are in a web context
         unless (defined $ENV{'REMOTE_ADDR'}) {
@@ -1059,14 +1058,33 @@ sub verify {
                 if $log_it;
             return -1;   ## always skip this rule because we can't evaluate it
         }
-        my $block;
-        unless ($block = Net::Netmask->new2($args[0])) {
+
+        my @cidr;
+        if ($args[0] eq 'default' or $args[0] eq 'any') {
+            # Compatibility with Net::Netmask, adding IPv6 feature.
+            @cidr = ('0.0.0.0/0', '::/0');
+        } else {
+            if ($args[0] =~ /\A(\d+\.\d+\.\d+\.\d+):(\d+\.\d+\.\d+\.\d+)\z/) {
+                # Compatibility with Net::Netmask.
+                eval { @cidr = Net::CIDR::range2cidr("$1/$2"); };
+            } else {
+                eval { @cidr = Net::CIDR::range2cidr($args[0]); };
+            }
+            if ($@ or scalar(@cidr) != 1) {
+                # Compatibility with Net::Netmask: Should be single range.
+                @cidr = ();
+            } else {
+                @cidr = grep { Net::CIDR::cidrvalidate($_) } @cidr;
+            }
+        }
+        unless (@cidr) {
             Log::do_log('err',
-                'Error rule syntaxe: failed to parse netmask "%s"',
+                'Error rule syntax: failed to parse netmask "%s"',
                 $args[0]);
             return undef;
         }
-        if ($block->match($ENV{'REMOTE_ADDR'})) {
+
+        if (Net::CIDR::cidrlookup($ENV{'REMOTE_ADDR'}, @cidr)) {
             Log::do_log('info', 'REMOTE_ADDR %s matches %s (rule %s)',
                 $ENV{'REMOTE_ADDR'}, $args[0], $condition)
                 if $log_it;
