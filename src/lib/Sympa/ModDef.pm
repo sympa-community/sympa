@@ -245,7 +245,7 @@ our %cpan_modules = (
         required_version => '2.6.18',
         package_name     => 'MHonArc',
         mandatory        => 1,
-        'gettext_id'     => 'mhonarc is used to build Sympa web archives',
+        'gettext_id'     => 'MHonArc is used to build Sympa web archives',
     },
     'MIME::Base64' => {
         required_version => '3.03',

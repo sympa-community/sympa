@@ -503,9 +503,11 @@ sub remove {
     my $yyyy = $1;
     my $mm   = $2;
 
-    $msgid =~ s/\$/\\\$/g;
-    system
-        "$Conf::Conf{'mhonarc'}  -outdir $arcpath/$adrlist/$yyyy-$mm -rmm $msgid";
+    system(
+        Conf::get_robot_conf($robot, 'mhonarc'),
+        '-outdir' => "$arcpath/$adrlist/$yyyy-$mm",
+        '-rmm'    => $msgid
+    );
 }
 
 # Rebuilds archives for the list the name of which is given in the argument
@@ -600,14 +602,23 @@ sub rebuild {
             "/$adrlist/$arc/arctxt");
         my $dir_to_rebuild = $arcs_dir->{'dir_to_rebuild'} if ($arcs_dir);
 
-        my $cmd =
-            "$Conf::Conf{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\' -rcfile $mhonarc_ressources -outdir $arcpath/$adrlist/$yyyy-$mm  -definevars \"listname='$listname' hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base="
-            . Conf::get_robot_conf($robot, 'wwsympa_url')
-            . "/arc tag=$tag\" -umask $Conf::Conf{'umask'} $dir_to_rebuild";
+        my @cmd = (
+            Conf::get_robot_conf($robot, 'mhonarc'),
+            '-modifybodyaddresses',
+            '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+            '-rcfile'            => $mhonarc_ressources,
+            '-outdir'            => "$arcpath/$adrlist/$yyyy-$mm",
+            '-definevars'        => sprintf(
+                "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+                $listname, $hostname, $yyyy, $mm, $yyyy, $mm, $arcpath,
+                Conf::get_robot_conf($robot, 'wwsympa_url'), $tag
+            ),
+            '-umask' => $Conf::Conf{'umask'},
+            $dir_to_rebuild
+        );
 
-        Log::do_log('debug', 'System call: %s', $cmd);
-        my $exitcode = system($cmd);
-        $exitcode = $exitcode / 256;
+        Log::do_log('debug', 'System call: %s', join(' ', @cmd));
+        my $exitcode = system(@cmd) >> 8;
 
         # Delete temporary directory containing files with escaped HTML.
         if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
@@ -623,13 +634,15 @@ sub rebuild {
             );
             rmdir $arcpath . '/' . $adrlist . '/' . $arc . '/.mhonarc.lck';
 
-            $exitcode = system($cmd);
-            $exitcode = $exitcode / 256;
+            $exitcode = system(@cmd) >> 8;
         }
 
         if ($exitcode) {
-            Log::do_log('err', 'Command %s failed with exit code %s',
-                $cmd, $exitcode);
+            Log::do_log(
+                'err',
+                'Command %s failed with exit code %s',
+                join(' ', @cmd), $exitcode
+            );
         }
     } else {
         Log::do_log('notice', 'Rebuilding %s archive completely', $adrlist);
@@ -671,12 +684,21 @@ sub rebuild {
                 create_idx($arcdir);
             }
 
-            my $cmd =
-                "$Conf::Conf{'mhonarc'} -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $arcdir  -definevars \"listname=$listname hostname=$hostname yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base="
-                . Conf::get_robot_conf($robot, 'wwsympa_url')
-                . "/arc tag=$tag\" -umask $Conf::Conf{'umask'} $dir_to_rebuild";
-            my $exitcode = system($cmd);
-            $exitcode = $exitcode / 256;
+            my @cmd = (
+                Conf::get_robot_conf($robot, 'mhonarc'),
+                '-modifybodyaddresses',
+                '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+                '-rcfile'            => $mhonarc_ressources,
+                '-outdir'            => $arcdir,
+                '-definevars'        => sprintf(
+                    "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+                    $listname, $hostname, $yyyy, $mm, $yyyy, $mm, $arcpath,
+                    Conf::get_robot_conf($robot, 'wwsympa_url'), $tag
+                ),
+                '-umask' => $Conf::Conf{'umask'},
+                $dir_to_rebuild
+            );
+            my $exitcode = system(@cmd) >> 8;
 
             # Delete temporary directory containing files with escaped HTML.
             if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
@@ -692,12 +714,14 @@ sub rebuild {
                 );
                 rmdir $arcdir . '/.mhonarc.lck';
 
-                $exitcode = system($cmd);
-                $exitcode = $exitcode / 256;
+                $exitcode = system(@cmd) >> 8;
             }
             if ($exitcode) {
-                Log::do_log('err', 'Command %s failed with exit code %s',
-                    $cmd, $exitcode);
+                Log::do_log(
+                    'err',
+                    'Command %s failed with exit code %s',
+                    join(' ', @cmd), $exitcode
+                );
             }
 
         }
@@ -877,20 +901,38 @@ sub mail2arc {
         my $mhonarc_ressources =
             tools::search_fullpath($list, 'mhonarc-ressources.tt2');
 
-        Log::do_log('debug', 'Calling %s for list %s',
-            $Conf::Conf{'mhonarc'}, $list);
+        Log::do_log(
+            'debug',
+            'Calling %s for list %s',
+            Conf::get_robot_conf($robot, 'mhonarc'), $list
+        );
 
         # call mhonarc on cleaned message source to make clean htlm view of
         # message
-        my $cmd =
-            "$Conf::Conf{'mhonarc'} -add -modifybodyaddresses -addressmodifycode \'$ENV{'M2H_ADDRESSMODIFYCODE'}\'  -rcfile $mhonarc_ressources -outdir $monthdir  -definevars \"listname='$listname' hostname=$robot yyyy=$yyyy mois=$mm yyyymm=$yyyy-$mm wdir=$arcpath base="
-            . Conf::get_robot_conf($robot, 'wwsympa_url')
-            . "/arc tag=$tag\" -umask $Conf::Conf{'umask'} < $output";
+        my @cmd = (
+            Conf::get_robot_conf($robot, 'mhonarc'),
+            '-add',
+            '-modifybodyaddresses',
+            '-addressmodifycode' => $ENV{'M2H_ADDRESSMODIFYCODE'},
+            '-rcfile'            => $mhonarc_ressources,
+            '-outdir'            => $monthdir,
+            '-definevars'        => sprintf(
+                "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
+                $listname, $robot, $yyyy, $mm, $yyyy, $mm, $arcpath,
+                Conf::get_robot_conf($robot, 'wwsympa_url'), $tag
+            ),
+            '-umask' => $Conf::Conf{'umask'}
+        );
 
-        Log::do_log('debug', 'System call: %s', $cmd);
+        Log::do_log('debug', 'System call: %s', join(' ', @cmd));
 
-        my $exitcode = system($cmd);
-        $exitcode = $exitcode / 256;
+        my $savein;
+        unless (open $savein, '<&STDIN' and open STDIN, '<', $output) {
+            Log::do_log('err', 'Could not open %s: %s', $output, $!);
+            return undef;
+        }
+        my $exitcode = system(@cmd) >> 8;
+        open STDIN, '<&', $savein;
 
         # Delete temporary file containing escaped HTML.
         if ($output && -f $output) {
@@ -906,12 +948,20 @@ sub mail2arc {
             );
             rmdir $monthdir . '/.mhonarc.lck';
 
-            $exitcode = system($cmd);
-            $exitcode = $exitcode / 256;
+            my $savein;
+            unless (open $savein, '<&STDIN' and open STDIN, '<', $output) {
+                Log::do_log('err', 'Could not open %s: %s', $output, $!);
+                return undef;
+            }
+            $exitcode = system(@cmd) >> 8;
+            open STDIN, '<&', $savein;
         }
         if ($exitcode) {
-            Log::do_log('err', 'Command %s failed with exit code %s',
-                $cmd, $exitcode);
+            Log::do_log(
+                'err',
+                'Command %s failed with exit code %s',
+                join(' ', @cmd), $exitcode
+            );
         }
 
         save_idx("$monthdir/index", $newfile);

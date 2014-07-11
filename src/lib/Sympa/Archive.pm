@@ -426,8 +426,9 @@ sub convert_single_message {
     my $exitcode = system(
         Conf::get_robot_conf($robot, 'mhonarc'), '-single',
         '-rcfile' => $mhonarc_ressources,
-        '-definevars' =>
-            "listname='$listname' hostname=$hostname tag=$tag yyyy='' mois=''",
+        '-definevars' => sprintf(
+            "listname='%s' hostname=%s yyyy='' mois='' tag=%s",
+            $listname, $hostname, $tag),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
         '-attachmenturl' => $attachement_url,

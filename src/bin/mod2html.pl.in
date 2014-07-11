@@ -82,13 +82,19 @@ foreach my $msg (sort grep(!/^\./, readdir SPOOL)) {
 
         ## generate HTML
         chdir $tmp_dir;
-        my $mhonarc = Conf::get_robot_conf($robot, 'mhonarc');
-        open ARCMOD,
-            "$mhonarc  -single -rcfile $mhonarc_ressources -definevars listname=$name -definevars hostname=$host $modqueue/$name\_$modkey|";
-        open MSG, ">msg00000.html";
-        print MSG <ARCMOD>;
-        close MSG;
-        close ARCMOD;
+        my $saveout;
+        unless (open $saveout, '>&STDOUT'
+            and open STDOUT, '>', 'msg00000.html') {
+            die sprintf 'Could not open %s/msg00000.html: %s', $tmp_dir, $!;
+        }
+        system(
+            Conf::get_robot_conf($robot, 'mhonarc'),
+            '-single',
+            '-rcfile'     => $mhonarc_ressources,
+            '-definevars' => "listname='$name' hostname=$host",
+            "$modqueue/${name}_$modkey"
+        );
+        open STDOUT, '>&', $saveout;
         chdir $Conf::Conf{'home'};
     }
 }
