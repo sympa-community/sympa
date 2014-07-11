@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use base qw(IO::File);
 
-use Fcntl qw();
+use Fcntl qw( LOCK_EX LOCK_SH LOCK_NB );
 use File::NFSLock;
 $File::NFSLock::LOCK_EXTENSION = '.LOCK';
 
