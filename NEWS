@@ -3,6 +3,32 @@
 
 (See Changelog file for the full changes log)
 
+6.2a.40		July 11, 2014
+
+  Features:
+
+	[11145] src/bin/mod2html.pl.in, src/lib/Sympa/Archive.pm,
+	src/lib/Sympa/ConfDef.pm, src/lib/Sympa/ModDef.pm,
+	src/sbin/archived.pl.in:  Now "mhonarc" may be configured per robot.
+
+
+
+  Bug fixes:
+
+	[11147] web_tt2/javascript.tt2: [#9270] [Submitted by A. Bezverkhyy]
+	Fixing buggy getElementById behavior on IE8/9.
+
+	[11146] src/lib/Scenario.pm, src/lib/Sympa/ModDef.pm: [#9034][Reported
+	by D. Fournier, CNRS CRIC] Scenario: verify_netmask doesn't support
+	IPv6.  Use Net::CIDR instead of Net::Netmask to support it.
+
+	[11144] wwsympa/wwsympa.fcgi.in: [#9328][Submitted by F. Angebault]
+	Back button prints an error "Webpage has expired" on IE9.
+	On IE9, "Cache-Control: no-cache" HTTP response is treated as never
+	keep content.  Alternatively, "Cache-Control: max-age=0" may be used:
+	This workaround may not affect to other browsers.  For more details see
+	item #9328 in bug tracker.
+
 6.2a.39		July 08, 2014
 
   Features:
