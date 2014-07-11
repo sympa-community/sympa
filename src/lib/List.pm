@@ -6844,9 +6844,11 @@ sub is_archived {
 
 ## Is the list web archived?
 sub is_web_archived {
-    return 1 if (shift->{'admin'}{'web_archive'}{'access'});
+    my $self = shift;
+    return 1
+        if ref $self->{'admin'}{'web_archive'} eq 'HASH'
+        and $self->{'admin'}{'web_archive'}{'access'};
     return undef;
-
 }
 
 ## Returns 1 if the  digest  must be send

@@ -1645,12 +1645,11 @@ sub search {
             while (<FILE>) {
                 # Log::do_log('debug3', 'Eval rule %s', $_);
                 next if (/^\s*$/o || /^[\#\;]/o);
-                my $regexp = $_;
-                chomp $regexp;
-                $regexp =~ s/\*/.*/;
+                chomp;
+                my $regexp = "\Q$_\E";
+                $regexp =~ s/\\\*/.*/;
                 $regexp = '^' . $regexp . '$';
-                # Log::do_log('debug3', 'Eval %s =~ /%s/i',
-                # $sender,$regexp);
+                # Log::do_log('debug3', 'Eval %s =~ /%s/i', $sender,$regexp);
                 return 1 if ($sender =~ /$regexp/i);
             }
         }

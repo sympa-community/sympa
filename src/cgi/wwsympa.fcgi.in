@@ -2825,7 +2825,7 @@ sub send_html {
             DateTime->from_epoch(epoch => $param->{'header_date'})
             ->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
     }
-    print "Cache-control: no-cache\n" unless ($param->{'action'} eq 'arc');
+    print "Cache-control: max-age=0\n" unless $param->{'action'} eq 'arc';
     print "Content-Type: text/html; charset=utf-8\n";
     ## Workaround for Internet Explorer 8 or later.
     print "X-UA-Compatible: IE=100\n";
@@ -12584,6 +12584,46 @@ sub do_edit_list {
         ) {
         report::notice_report_web('subscribers_noticed_deleted_topics',
             {}, $param->{'action'});
+    }
+
+    ## Checking that list owner address is not set to one of the special
+    ## addresses:
+    if (exists $changed{'owner'}) {
+        my $listname = $list->{'name'};
+        my $host = $list->{'admin'}{'host'};
+
+        my @special = ();
+        push @special,
+            map { sprintf '%s%s@%s', $listname, $_, $host }
+            (Conf::get_robot_conf($robot, 'return_path_suffix'),
+                '-request', '-editor', '-subscribe', '-unsubscribe');
+        push @special,
+            map { sprintf '%s-%s@%s', $listname, lc $_, $host }
+            split /[,\s]+/,
+                Conf::get_robot_conf($robot, 'list_check_suffixes');
+        my $bounce_email_re =
+            quotemeta(Conf::get_robot_conf($robot, 'bounce_email_prefix'))
+            . "\\\+.*\\\@" . quotemeta($list->{'domain'});
+
+        foreach my $owner (@{$new_admin->{'owner'}}) {
+            my $owner_email = lc $owner->{'email'};
+
+            if (grep { $owner_email eq $_ } @special
+                or $owner_email =~ /^$bounce_email_re$/) {
+                ## generate an error and return
+                report::reject_report_web('user', 'incorrect_email',
+                    {'email' => $owner->{'email'}}, $param->{'action'},
+                    $list);
+                wwslog('info', 'do_edit_list: Reserved email address %s',
+                    $owner->{'email'});
+                web_db_log(
+                    {   'status' => 'error',
+                        'error_type' => 'incorrect_email',
+                        'parameters' => $owner->{'email'}
+                    });
+                return undef;
+            }
+        }
     }
 
     ## Delete selected params

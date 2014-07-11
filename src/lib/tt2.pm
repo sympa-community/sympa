@@ -135,6 +135,7 @@ my %template2textdomain = (
     'help_mail_commands.tt2' => 'web_help',
     'help_sendmsg.tt2'       => 'web_help',
     'help_shared.tt2'        => 'web_help',
+    'help_suspend.tt2'       => 'web_help',
     'help.tt2'               => 'web_help',
     'help_user_options.tt2'  => 'web_help',
     'help_user.tt2'          => 'web_help',
