@@ -15,7 +15,7 @@ plan tests => 19;
 my $lock;
 my $temp_dir  = File::Temp->newdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
 my $main_file = $temp_dir . '/file';
-my $lock_file = $main_file . '.LOCK';
+my $lock_file = $main_file . ',lock';
 
 eval {
     $lock = Sympa::LockedFile->new();

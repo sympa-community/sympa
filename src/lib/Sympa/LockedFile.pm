@@ -30,7 +30,18 @@ use base qw(IO::File);
 
 use Fcntl qw();
 use File::NFSLock;
-$File::NFSLock::LOCK_EXTENSION = '.LOCK';
+
+BEGIN {
+    no warnings 'redefine';
+
+    # Separate extensions with "," to avoid confusion with domain parts,
+    # and to ensure that file names related to lock contains ",lock".
+    $File::NFSLock::LOCK_EXTENSION = ',lock';
+    *File::NFSLock::rand_file = sub($) {
+        my $file = shift;
+        "$file,lock.". time()%10000 .'.'. $$ .'.'. int(rand()*10000);
+    };
+}
 
 our %lock_of;
 my $default_timeout    = 30;
