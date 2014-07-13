@@ -228,7 +228,7 @@ while (!$end) {
         last if $end;
         next unless (-f "$queue/$file");
 
-        next if $file =~ /\.LOCK\z/;    # Skip lock.
+        next if $file =~ /,lock/;    # Skip lock.
 
         unless ($file =~ /^(\S+)\.\d+\.\d+$/) {
             my @s = stat("$queue/$file");

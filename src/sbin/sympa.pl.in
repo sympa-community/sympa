@@ -1356,7 +1356,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             my $list;
             my ($t_listname, $t_robot);
 
-            next if $t_filename =~ /\.LOCK\z/;    # Skip lock.
+            next if $t_filename =~ /,lock/;    # Skip lock.
 
             ## test ever if it is an old bad file
             if ($t_filename =~ /^BAD\-/i) {
