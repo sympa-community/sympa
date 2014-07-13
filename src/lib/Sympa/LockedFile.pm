@@ -28,7 +28,6 @@ use strict;
 use warnings;
 use base qw(IO::File);
 
-use Fcntl qw();
 use File::NFSLock;
 
 BEGIN {
@@ -55,12 +54,12 @@ sub open {
 
     my $lock_type;
     if ($mode =~ /[+>aw]/) {
-        $lock_type = Fcntl::LOCK_EX;
+        $lock_type = File::NFSLock::LOCK_EX();
     } else {
-        $lock_type = Fcntl::LOCK_SH;
+        $lock_type = File::NFSLock::LOCK_SH();
     }
     if ($blocking_timeout < 0) {
-        $lock_type |= Fcntl::LOCK_NB;
+        $lock_type |= File::NFSLock::LOCK_NB();
     }
 
     my $lock = File::NFSLock->new(
@@ -183,7 +182,8 @@ Path of file to be locked and opened.
 
 Programs will block up to the number of seconds specified by this option
 before returning undef (could not get a lock).
-If negative value was given, programs will not block but fail immediately.
+If negative value was given, programs will not block but fail immediately
+(C<LOCK_NB>).
 
 Default is C<30>.
 
@@ -194,13 +194,15 @@ lock will be stolen.
 
 Mode to open file.
 If it implys any writing operations (C<'E<gt>'>, C<'E<gt>E<gt>'>,
-C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<Fcntl::LOCK_EX>),
-otherwise shared lock (C<Fcntl::LOCK_SH>).
+C<'+E<lt>'>, ...), trys to acquire exclusive lock (C<LOCK_EX>),
+otherwise shared lock (C<LOCK_SH>).
 
 Default is C<'E<lt>'>.
 
 Additionally, a special mode C<'+'> will acquire exclusive lock
 without opening file.  In this case the file does not have to exist.
+
+The numeric modes used for sysopen() (e.g. C<O_CREAT>) are not supported.
 
 =back
 
