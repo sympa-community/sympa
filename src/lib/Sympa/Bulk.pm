@@ -28,7 +28,7 @@ use strict;
 use warnings;
 use Encode;
 use Mail::Address;
-use Time::HiRes qw(time);
+use Time::HiRes qw();
 use MIME::Parser;
 use MIME::Base64;
 use Term::ProgressBar;
@@ -74,7 +74,7 @@ sub next {
     my $limit_other  = '';
     ## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order =
-        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, verp_bulkmailer ASC';
+        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
     if (   $Conf::Conf{'db_type'} eq 'mysql'
         or $Conf::Conf{'db_type'} eq 'Pg'
         or $Conf::Conf{'db_type'} eq 'SQLite') {
@@ -97,7 +97,7 @@ sub next {
 		  %s %s %s},
                 $limit_sybase, $limit_oracle, $order, $limit_other
             ),
-            int time
+            time
         )
         ) {
         Log::do_log('err',
@@ -411,7 +411,7 @@ sub store {
         }
     }
 
-    my $current_date = int(time);
+    my $current_date = Time::HiRes::time();
 
     # second : create each recipient packet in bulkmailer_table
     my $type = ref $rcpts;
@@ -473,21 +473,24 @@ sub store {
 
         } else {
             unless (
-                SDM::do_query(
-                    "INSERT INTO bulkmailer_table (messagekey_bulkmailer,messageid_bulkmailer,packetid_bulkmailer,receipients_bulkmailer,returnpath_bulkmailer,robot_bulkmailer,listname_bulkmailer, verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer, priority_message_bulkmailer, priority_packet_bulkmailer, reception_date_bulkmailer, delivery_date_bulkmailer) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                    SDM::quote($messagekey),
-                    SDM::quote($msg_id),
-                    SDM::quote($packetid),
-                    SDM::quote($rcptasstring),
-                    SDM::quote($from),
-                    SDM::quote($robot),
-                    SDM::quote($listname),
-                    $verp,
-                    SDM::quote($tracking),
-                    $merge,
+                SDM::do_prepared_query(
+                    q{INSERT INTO bulkmailer_table
+                      (messagekey_bulkmailer, messageid_bulkmailer,
+                       packetid_bulkmailer, receipients_bulkmailer,
+                       returnpath_bulkmailer,
+                       robot_bulkmailer, listname_bulkmailer,
+                       verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer,
+                       priority_message_bulkmailer,
+                       priority_packet_bulkmailer, reception_date_bulkmailer,
+                       delivery_date_bulkmailer)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                    $messagekey, $msg_id,
+                    $packetid,   $rcptasstring,
+                    $from,
+                    $robot, $listname,
+                    $verp, $tracking, $merge,
                     $priority_message,
-                    $priority_for_packet,
-                    $current_date,
+                    $priority_for_packet, SDM::AS_DOUBLE($current_date),
                     $delivery_date
                 )
                 ) {
@@ -580,21 +583,8 @@ sub store_test {
     my $robot            = 'notarobot';
     my $listname         = 'notalist';
     my $priority_message = 9;
-    my $delivery_date    = time;
     my $verp             = 'on';
     my $merge            = 1;
-
-    Log::do_log(
-        'debug',
-        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, merge = %s)',
-        $from,
-        $robot,
-        $listname,
-        $priority_message,
-        $delivery_date,
-        $verp,
-        $merge
-    );
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";
@@ -606,7 +596,7 @@ sub store_test {
     );
     $priority_message = 9;
 
-    my $messagekey = tools::md5_fingerprint(time());
+    my $messagekey = tools::md5_fingerprint(Time::HiRes::time());
     my $msg;
     $progress->max_update_rate(1);
     my $next_update = 0;
@@ -620,7 +610,7 @@ sub store_test {
             $msg .= 'a';
         }
         $msg = MIME::Base64::encode($msg);
-        my $time = time();
+        my $time = Time::HiRes::time();
         $progress->message(
             sprintf
                 "Test storing and removing of a %5d kB message (step %s out of %s)",
@@ -646,7 +636,7 @@ sub store_test {
         }
         $total += $z * $size_increment;
         $progress->message(sprintf ".........[OK. Done in %.2f sec]",
-            time() - $time);
+            Time::HiRes::time() - $time);
         $next_update = $progress->update($total + $even_part)
             if $total > $next_update && $total < $barmax;
         $result = $z * $size_increment;

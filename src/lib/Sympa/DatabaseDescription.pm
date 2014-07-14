@@ -333,7 +333,7 @@ my %full_db_struct = (
                 'order'  => 12,
             },
             'reception_date_bulkmailer' => {
-                'struct' => 'int(11)',
+                'struct' => 'double',
                 'doc'    => 'The date where the message was received',
                 'order'  => 13,
             },
