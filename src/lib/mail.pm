@@ -496,7 +496,7 @@ sub mail_message {
             'rcpt'          => \@sendtobypacket,
             'listname'      => $list->{'name'},
             'priority'      => $list->{'admin'}{'priority'},
-            'delivery_date' => $list->get_next_delivery_date,
+            'delivery_date' => ($list->get_next_delivery_date || $message->{'date'} || time),
             'robot'         => $robot,
             'encrypt'       => $message->{'smime_crypted'},
             'use_bulk'      => 1,

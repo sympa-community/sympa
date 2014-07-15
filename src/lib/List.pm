@@ -12173,20 +12173,11 @@ sub get_next_delivery_date {
     my $self = shift;
 
     my $dtime = $self->{'admin'}{'delivery_time'};
-    unless ($dtime and $dtime =~ /(\d?\d)\:(\d\d)/) {
-        # if delivery _time if not defined, the delivery time right now
-        return time();
-    }
-    my $h = $1;
-    my $m = $2;
-    unless ((($h == 24) && ($m == 0)) || (($h <= 23) && ($m <= 60))) {
-        Log::do_log('err',
-            "ignoring wrong parameter format delivery_time, delivery_tile must be smaller than 24:00"
-        );
-        return time();
-    }
-    my $date = time();
+    return undef unless $dtime;
+    my ($h, $m) = split /:/, $dtime, 2;
+    return undef unless $h == 24 and $m == 0 or $h <= 23 and $m <= 60;
 
+    my $date = time();
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) =
         localtime($date);
 
