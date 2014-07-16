@@ -353,7 +353,7 @@ sub upgrade {
     ## DB fields of enum type have been changed to int
     if (tools::lower_version($previous_version, '5.2a.1')) {
 
-        if (SDM::use_db() && $Conf::Conf{'db_type'} eq 'mysql') {
+        if ($SDM::use_db && $Conf::Conf{'db_type'} eq 'mysql') {
             my %check = (
                 'subscribed_subscriber' => 'subscriber_table',
                 'included_subscriber'   => 'subscriber_table',
