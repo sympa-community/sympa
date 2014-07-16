@@ -12811,7 +12811,7 @@ sub _update_list_db {
                   family_list = ?,
                   creation_epoch_list = ?, creation_email_list = ?,
                   update_epoch_list = ?, update_email_list = ?,
-                  searchkey_list = ?, web_archive_list = ?, topics_list = ?,
+                  searchkey_list = ?, web_archive_list = ?, topics_list = ?
               WHERE robot_list = ? AND name_list = ?},
             $status, $name, $robot,
             $family,
