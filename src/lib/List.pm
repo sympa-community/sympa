@@ -959,7 +959,7 @@ sub save_config {
     }
 
     if ($SDM::use_db) {
-        unless (_update_list_db()) {
+        unless ($self->_update_list_db) {
             Log::do_log('err', "Unable to update list_table");
         }
     }
