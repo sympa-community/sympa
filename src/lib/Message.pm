@@ -258,26 +258,26 @@ sub new {
     }
 
     ## S/MIME
-    if ($Conf::Conf{'openssl'}) {
-        ## Decrypt messages
-        if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
-            && ($hdr->get('Content-Type') !~ /signed-data/)) {
-            my ($dec, $dec_as_string) =
-                tools::smime_decrypt($self->{'msg'}, $self->{'list'});
+    if ($Conf::Conf{'openssl'} && $self->{'noxsympato'} ) {
+		## Decrypt messages
+		if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
+			&& ($hdr->get('Content-Type') !~ /signed-data/)) {
+			my ($dec, $dec_as_string) =
+				tools::smime_decrypt($self->{'msg'}, $self->{'list'});
 
-            unless (defined $dec) {
-                Log::do_log('debug', "Message could not be decrypted");
-                return undef;
-                ## We should the sender and/or the listmaster
-            }
+			unless (defined $dec) {
+				Log::do_log('debug', "Message could not be decrypted");
+				return undef;
+				## We should the sender and/or the listmaster
+			}
 
-            $self->{'smime_crypted'} = 'smime_crypted';
-            $self->{'orig_msg'}      = $self->{'msg'};
-            $self->{'msg'}           = $dec;
-            $self->{'msg_as_string'} = $dec_as_string;
-            $hdr                        = $dec->head;
-            Log::do_log('debug', 'Message has been decrypted');
-        }
+			$self->{'smime_crypted'} = 'smime_crypted';
+			$self->{'orig_msg'}      = $self->{'msg'};
+			$self->{'msg'}           = $dec;
+			$self->{'msg_as_string'} = $dec_as_string;
+			$hdr                        = $dec->head;
+			Log::do_log('debug', 'Message has been decrypted');
+		}
 
         ## Check S/MIME signatures
         if ($hdr->get('Content-Type') =~

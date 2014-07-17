@@ -1729,7 +1729,7 @@ sub smime_decrypt {
             if ($msg->head->get('Content-Transfer-Encoding'));
     }
 
-    return ($decryptedmsg, \$msg_as_string);
+    return ($decryptedmsg, $msg_as_string);
 }
 
 ## Make a multipart/alternative, a singlepart
