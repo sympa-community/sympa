@@ -391,7 +391,7 @@ sub mail_message {
 
     Log::do_log(
         'debug',
-        '(from: %s, , file:%s, %s, verp->%s, %d rcpt, last: %s)',
+        '(from: %s, file:%s, %s, verp->%s, %d rcpt, last: %s)',
         $from,
         $message->{'filename'},
         $message->{'smime_crypted'},
