@@ -425,9 +425,9 @@ while (!$end) {
 
             foreach $rcpt (@rcpts) {
                 my $message = Message->new(
-                    {   'messageasstring' => $messageasstring_init,
-                        'noxsympato'      => 'noxsympato'
-                    }
+                    $messageasstring_init,
+                    list         => $list,
+                    'noxsympato' => 'noxsympato'
                 );
                 my $entity = $message->as_entity;
                 my $notification_id;

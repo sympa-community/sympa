@@ -1261,7 +1261,8 @@ sub upgrade {
                 push @ignored, $filename;
                 next;
             }
-            my $message = Message->new({'file' => "$spooldir/$filename"});
+            my $message = Message->new_from_file("$spooldir/$filename",
+                list => $list);
             unless ($message) {
                 push @ignored, $filename;
                 next;

@@ -111,90 +111,106 @@ if something went wrong
 
 ## Creates a new object
 sub new {
+    Log::do_log('debug2', '(%s, ...)', @_);
+    my $class           = shift;
+    my $messageasstring = shift;
 
-    my $pkg   = shift;
-    my $datas = shift;
+    my $self = bless {@_} => $class;
 
-    my $file             = $datas->{'file'};
-    my $noxsympato       = $datas->{'noxsympato'};
-    my $messageasstring  = $datas->{'messageasstring'};
-    my $mimeentity       = $datas->{'mimeentity'};
-    my $message_in_spool = $datas->{'message_in_spool'};
+    if (ref $messageasstring) {
+        Log::do_log('err', 
+            'Deprecated: $messageasstring must be string, not %s',
+            $messageasstring);
+        return undef;
+    }
+    unless (defined $messageasstring and length $messageasstring) {
+        Log::do_log('err', 'Empty message');
+        return undef;
+    }
 
-    my $message;
-    Log::do_log('debug2', '(%s, %s)', $file, $noxsympato);
+    # Get attributes
 
-    if ($mimeentity) {
-        $message->{'msg'}     = $mimeentity;
-        $message->{'altered'} = '_ALTERED';
+    unless ($self->{'noxsympato'}) {
+        pos($messageasstring) = 0;
+        while ($messageasstring =~ /\G(X-Sympa-\w+): (.*?)\n(?![ \t])/cgs) {
+            my ($k, $v) = ($1, $2);
+            next unless length $v;
 
-        ## Bless Message object
-        bless $message, $pkg;
+            if ($k eq 'X-Sympa-To') {
+                $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
+            } elsif ($k eq 'X-Sympa-Checksum') {
+                $self->{'checksum'} = $v;
+            } elsif ($k eq 'X-Sympa-Family') {
+                $self->{'family'} = $v;
+            } elsif ($k eq 'X-Sympa-From') { # Compatibility. Use Return-Path:
+                $self->{'envelope_sender'} = $v;
+            } elsif ($k eq 'X-Sympa-Spam-Status') { # New in 6.2a.41
+                $self->{'spam_status'} = $v;
+            } else {
+                Log::do_log('err', 'Unknown meta information: "%s: %s"',
+                    $k, $v);
+            }
+        }
 
-        return $message;
+        # Ignore Unix From_
+        $messageasstring =~ /\GFrom (.*?)\n(?![ \t])/cgs;
+
+        # Get envelope sender from Return-Path:.
+        # If old style X-Sympa-From: has been found, omit Return-Path:.
+        #
+        # We trust in "Return-Path:" header field only at the top of message
+        # to prevent forgery.  To ensure it will be added to messages by MDA:
+        # - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
+        #               as 'Mlocal').
+        # - Postfix:
+        #   - local(8): Available by default.
+        #   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
+        # - Exim:       Set 'return_path_add' to true with pipe_transport.
+        # - qmail:      Use preline(1).
+        if ($messageasstring =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
+            and not exists $self->{'envelope_sender'}) {
+            my $addr = $1;
+            if ($addr =~ /<>/) {    # special: null envelope sender
+                $self->{'envelope_sender'} = '<>';
+            } else {
+                my @addrs = Mail::Address->parse($addr);
+                if (@addrs and tools::valid_email($addrs[0]->address)) {
+                    $self->{'envelope_sender'} = $addrs[0]->address;
+                }
+            }
+        }
+
+        # Strip attributes.
+        substr($messageasstring, 0, pos $messageasstring) = '';
     }
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
-
-    my $msg;
-
-    if ($message_in_spool) {
-        $messageasstring         = $message_in_spool->{'messageasstring'};
-        $message->{'messagekey'} = $message_in_spool->{'messagekey'};
-        $message->{'spoolname'}  = $message_in_spool->{'spoolname'};
-    }
-    if ($file) {
-        ## Parse message as a MIME::Entity
-        $message->{'filename'} = $file;
-        unless (open FILE, $file) {
-            Log::do_log('err', 'Cannot open message file %s: %s', $file, $!);
-            return undef;
-        }
-
-        # unless ($msg = $parser->read(\*FILE)) {
-        #    Log::do_log('err', 'Unable to parse message %s', $file);
-        #    close(FILE);
-        #    return undef;
-        #}
-        while (<FILE>) {
-            $messageasstring = $messageasstring . $_;
-        }
-        close(FILE);
-    }
-
-    $messageasstring = ${$messageasstring} if ref $messageasstring;
-
-    if (defined $messageasstring and length $messageasstring) {
-        $msg = $parser->parse_data(\$messageasstring);
-    }
-
+    my $msg = $parser->parse_data(\$messageasstring);
     unless ($msg) {
-        Log::do_log('err', 'Unable to parse message from file %s, skipping',
-            $file);
+        Log::do_log('err', 'Unable to parse message');
         return undef;
     }
 
-    $message->{'msg'}           = $msg;
-    $message->{'msg_as_string'} = $messageasstring;
-    $message->{'size'}          = length $messageasstring;
+    $self->{'msg'}           = $msg;
+    $self->{'msg_as_string'} = $messageasstring;
+    $self->{'size'}          = length $messageasstring;
 
-    my $hdr = $message->{'msg'}->head;
+    my $hdr = $self->{'msg'}->head;
 
-    $message->{'envelope_sender'} = _get_envelope_sender($message);
-    ($message->{'sender'}, $message->{'gecos'}) = _get_sender_email($message);
-    return undef unless defined $message->{'sender'};
+    ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
+    return undef unless defined $self->{'sender'};
 
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
     if (defined $subject and $subject =~ /\S/) {
         my @decoded_subject = MIME::EncWords::decode_mimewords($subject);
-        $message->{'subject_charset'} = 'US-ASCII';
+        $self->{'subject_charset'} = 'US-ASCII';
         foreach my $token (@decoded_subject) {
             unless ($token->[1]) {
                 # don't decode header including raw 8-bit bytes.
                 if ($token->[0] =~ /[^\x00-\x7F]/) {
-                    $message->{'subject_charset'} = undef;
+                    $self->{'subject_charset'} = undef;
                     last;
                 }
                 next;
@@ -202,89 +218,40 @@ sub new {
             my $cset = MIME::Charset->new($token->[1]);
             # don't decode header encoded with unknown charset.
             unless ($cset->decoder) {
-                $message->{'subject_charset'} = undef;
+                $self->{'subject_charset'} = undef;
                 last;
             }
             unless ($cset->output_charset eq 'US-ASCII') {
-                $message->{'subject_charset'} = $token->[1];
+                $self->{'subject_charset'} = $token->[1];
             }
         }
     } else {
-        $message->{'subject_charset'} = undef;
+        $self->{'subject_charset'} = undef;
     }
-    if ($message->{'subject_charset'}) {
-        $message->{'decoded_subject'} = tools::decode_header($hdr, 'Subject');
+    if ($self->{'subject_charset'}) {
+        $self->{'decoded_subject'} = tools::decode_header($hdr, 'Subject');
     } else {
         if ($subject) {
             chomp $subject;
             $subject =~ s/(\r\n|\r|\n)(?=[ \t])//g;
             $subject =~ s/\r\n|\r|\n/ /g;
         }
-        $message->{'decoded_subject'} = $subject;
+        $self->{'decoded_subject'} = $subject;
     }
 
-    ## Extract recepient address (X-Sympa-To)
-    $message->{'rcpt'} = $hdr->get('X-Sympa-To');
-    chomp $message->{'rcpt'} if defined $message->{'rcpt'};
-    unless (defined $noxsympato) {
+    unless ($self->{'noxsympato'}) {
         # message.pm can be used not only for message comming from queue
-        unless ($message->{'rcpt'}) {
-            Log::do_log('err',
-                'No X-Sympa-To found, ignoring message file %s', $file);
+        unless ($self->{'rcpt'}) {
+            Log::do_log('err', 'No X-Sympa-To found, ignoring message');
             return undef;
-        }
-
-        ## get listname & robot
-        my ($listname, $robot) = split(/\@/, $message->{'rcpt'});
-
-        $robot    = lc($robot);
-        $listname = lc($listname);
-        $robot ||= $Conf::Conf{'domain'};
-        my $spam_status =
-            Scenario::request_action('spam_status', 'smtp', $robot,
-            {'message' => $message});
-        $message->{'spam_status'} = 'unkown';
-        if (defined $spam_status) {
-            if (ref($spam_status) eq 'HASH') {
-                $message->{'spam_status'} = $spam_status->{'action'};
-            } else {
-                $message->{'spam_status'} = $spam_status;
-            }
-        }
-
-        my $conf_email = Conf::get_robot_conf($robot, 'email');
-        my $conf_host  = Conf::get_robot_conf($robot, 'host');
-        unless ($listname =~
-            /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i
-            ) {
-            my $list_check_regexp =
-                Conf::get_robot_conf($robot, 'list_check_regexp');
-            if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-                $listname = $1;
-            }
-
-            my $list = List->new($listname, $robot, {'just_try' => 1});
-            if ($list) {
-                $message->{'list'} = $list;
-            }
-        }
-        # verify DKIM signature
-        if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
-            $message->{'dkim_pass'} =
-                tools::dkim_verifier($message->{'msg_as_string'});
         }
     }
 
     ## valid X-Sympa-Checksum prove the message comes from web interface with
     ## authenticated sender
-    if ($hdr->get('X-Sympa-Checksum')) {
-        my $chksum = $hdr->get('X-Sympa-Checksum');
-        chomp $chksum;
-        my $rcpt = $hdr->get('X-Sympa-To');
-        chomp $rcpt;
-
-        if ($chksum eq tools::sympa_checksum($rcpt)) {
-            $message->{'md5_check'} = 1;
+    if ($self->{'checksum'}) {
+        if ($self->{'checksum'} eq tools::sympa_checksum($self->{'rcpt'})) {
+            $self->{'md5_check'} = 1;
         } else {
             Log::do_log('err', 'Incorrect X-Sympa-Checksum header');
         }
@@ -292,39 +259,37 @@ sub new {
 
     ## S/MIME
     if ($Conf::Conf{'openssl'}) {
-
         ## Decrypt messages
         if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
             && ($hdr->get('Content-Type') !~ /signed-data/)) {
             my ($dec, $dec_as_string) =
-                tools::smime_decrypt($message->{'msg'}, $message->{'list'});
+                tools::smime_decrypt($self->{'msg'}, $self->{'list'});
 
             unless (defined $dec) {
-                Log::do_log('debug', "Message %s could not be decrypted",
-                    $file);
+                Log::do_log('debug', "Message could not be decrypted");
                 return undef;
                 ## We should the sender and/or the listmaster
             }
 
-            $message->{'smime_crypted'} = 'smime_crypted';
-            $message->{'orig_msg'}      = $message->{'msg'};
-            $message->{'msg'}           = $dec;
-            $message->{'msg_as_string'} = $dec_as_string;
+            $self->{'smime_crypted'} = 'smime_crypted';
+            $self->{'orig_msg'}      = $self->{'msg'};
+            $self->{'msg'}           = $dec;
+            $self->{'msg_as_string'} = $dec_as_string;
             $hdr                        = $dec->head;
-            Log::do_log('debug', 'Message %s has been decrypted', $file);
+            Log::do_log('debug', 'Message has been decrypted');
         }
 
         ## Check S/MIME signatures
         if ($hdr->get('Content-Type') =~
             /multipart\/signed|application\/(x-)?pkcs7-mime/i) {
-            $message->{'protected'} =
-                1;    ## Messages that should not be altered (no footer)
-            my $signed = tools::smime_sign_check($message);
+            ## Messages that should not be altered (no footer)
+            $self->{'protected'} = 1;
+            my $signed = tools::smime_sign_check($self);
             if ($signed->{'body'}) {
-                $message->{'smime_signed'}  = 1;
-                $message->{'smime_subject'} = $signed->{'subject'};
+                $self->{'smime_signed'}  = 1;
+                $self->{'smime_subject'} = $signed->{'subject'};
                 Log::do_log('debug',
-                    'Message %s is signed, signature is checked', $file);
+                    'Message is signed, signature is checked');
             }
             ## Il faudrait traiter les cas d'erreur (0 différent de undef)
         }
@@ -332,48 +297,34 @@ sub new {
     ## TOPICS
     my $topics;
     if ($topics = $hdr->get('X-Sympa-Topic')) {
-        $message->{'topic'} = $topics;
+        $self->{'topic'} = $topics;
     }
 
     # Message ID
-    $message->{'message_id'} = _get_message_id($message);
+    $self->{'message_id'} = _get_message_id($self);
 
-    bless $message, $pkg;
-    return $message;
+    return $self;
 }
 
-## Get envelope sender (a.k.a. "UNIX From") from Return-Path: header field.
-##
-## We trust in "Return-Path:" header field only at the top of message
-## to prevent forgery.  To ensure it will be added to messages by MDA:
-##
-## - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
-##               as 'Mlocal').
-## - Postfix:
-##   - local(8): Available by default.
-##   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
-## - Exim:       Set 'return_path_add' to true with pipe_transport.
-## - qmail:      Use preline(1).
-##
-sub _get_envelope_sender {
-    my $message = shift;
+# Tentative: removed when refactoring finished.
+sub new_from_file {
+    my $class = shift;
+    my $file  = shift;
 
-    my $headers = $message->{'msg'}->head->header();
-    my $i       = 0;
-    $i++ while $headers->[$i] and $headers->[$i] =~ /^X-Sympa-/;
-    if ($headers->[$i] and $headers->[$i] =~ /^Return-Path:\s*(.+)$/) {
-        my $addr = $1;
-        if ($addr =~ /<>/) {    # special: null envelope sender
-            return '<>';
-        } else {
-            my @addrs = Mail::Address->parse($addr);
-            if (@addrs and tools::valid_email($addrs[0]->address)) {
-                return $addrs[0]->address;
-            }
-        }
+    open my $fh, '<', $file or return undef;
+    my $messageasstring = do { local $/; <$fh> };
+    close $fh;
+
+    my $self = $class->new($messageasstring, @_)
+        or return undef;
+
+    $self->{'filename'} = $file;
+    # Get file date
+    unless (exists $self->{'date'}) {
+        $self->{'date'} = tools::get_mtime($file);
     }
 
-    return undef;
+    return $self;
 }
 
 ## Get sender of the message according to header fields specified by
@@ -432,6 +383,100 @@ sub _get_message_id {
     my $self = shift;
 
     return tools::clean_msg_id($self->{'msg'}->head->get('Message-Id', 0));
+}
+
+=over 4
+
+=item to_string
+
+I<Serializer>.
+Returns serialized data of Message object.
+
+=back
+
+=cut
+
+sub to_string {
+    my $self = shift;
+
+    my $str = '';
+    if (ref $self->{'rcpt'} eq 'ARRAY' and @{$self->{'rcpt'}}) {
+        $str .= sprintf "X-Sympa-To: %s\n", join(',', @{$self->{'rcpt'}});
+    } elsif (defined $self->{'rcpt'} and length $self->{'rcpt'}) {
+        $str .= sprintf "X-Sympa-To: %s\n",
+            join(',', split(/\s*,\s*/, $self->{'rcpt'}));
+    }
+    if (defined $self->{'checksum'}) {
+        $str .= sprintf "X-Sympa-Checksum: %s\n", $self->{'checksum'};
+    }
+    if (defined $self->{'family'}) {
+        $str .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
+    }
+    if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
+        $str .= sprintf "X-Sympa-Spam-Status: %s\n", $self->{'spam_status'};
+    }
+    # This must be the last field of attribute headers.
+    if (defined $self->{'envelope_sender'}) {
+        my $val = $self->{'envelope_sender'};
+        $val = "<$val>" unless $val eq '<>';
+        $str .= sprintf "Return-Path: %s\n", $val;
+    }
+
+    $str .= $self->{'msg_as_string'};
+
+    return $str;
+}
+
+=over
+
+=item check_spam_status ( )
+
+I<Instance method>.
+Get spam status according to spam_status scenario.
+XXX
+
+=back
+
+=cut
+
+# NOTE: As this processes is needed for incoming messages only, it would be
+# moved to incoming pipeline class..
+sub check_spam_status {
+    my $self = shift;
+
+    my $robot_id = $self->{'list'}
+        ? $self->{'list'}->{'domain'}
+        : $self->{'robot'};
+
+    my $spam_status = Scenario::request_action('spam_status', 'smtp',
+        $robot_id || $Conf::Conf{'domain'}, {'message' => $self});
+    if (defined $spam_status) {
+        if (ref($spam_status) eq 'HASH') {
+            $self->{'spam_status'} = $spam_status->{'action'};
+        } else {
+            $self->{'spam_status'} = $spam_status;
+        }
+    } else {
+        $self->{'spam_status'} = 'unknown';
+    }
+}
+
+# FIXME: Same as check_spam_status(): This should be moved to pipeline.
+sub check_dkim_signature {
+    my $self = shift;
+
+    my $robot_id = $self->{'list'}
+        ? $self->{'list'}->{'domain'}
+        : $self->{'robot'};
+
+    # verify DKIM signature
+    if ($robot_id
+        and tools::smart_eq(
+            Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on'
+        )
+    ){
+        $self->{'dkim_pass'} = tools::dkim_verifier($self->as_string);
+    }
 }
 
 =over

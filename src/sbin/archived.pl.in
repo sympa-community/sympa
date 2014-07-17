@@ -282,14 +282,12 @@ while (!$end) {
                     # if sender of remove order is sender of the message to
                     # remove
 
-                    my $new_message;
-                    unless (
-                        $new_message = Message->new(
-                            {   'file'       => "$arcpath/arctxt/$message",
-                                'noxsympato' => 'noxsympato'
-                            }
-                        )
-                        ) {
+                    my $new_message = Message->new_from_file(
+                        "$arcpath/arctxt/$message",
+                        list         => $list,
+                        'noxsympato' => 'noxsympato'
+                    );
+                    unless ($new_message) {
                         Log::do_log('err',
                             "unable to load new message $arcpath/arctxt/$message"
                         );

@@ -1130,8 +1130,9 @@ sub dkim_sign {
         Log::do_log('err', 'Cannot sign (DKIM) message');
         return ($msg_as_string);
     }
-    my $message = Message->new(
-        {'file' => $temporary_file, 'noxsympato' => 'noxsympato'});
+    my $message = Message->new_from_file($temporary_file,
+        #XXX list => $list,
+        'noxsympato' => 'noxsympato');
     unless ($message) {
         Log::do_log('err', 'Unable to load %s as a message objet',
             $temporary_file);
@@ -3836,6 +3837,7 @@ sub clean_msg_id {
     return $msg_id;
 }
 
+#XXX NOT USED
 ## Change X-Sympa-To: header field in the message
 sub change_x_sympa_to {
     my ($file, $value) = @_;
@@ -4646,6 +4648,141 @@ sub lang2charset {
         }
     }
     return 'utf-8';              # the last resort
+}
+
+=over 4
+
+=item split_listname ( ROBOT_ID, MAILBOX )
+
+XXX @todo doc
+
+Note:
+For C<-request> and C<-owner> suffix, this function returns
+C<owner> and C<return_path> type, respectively.
+
+=back
+
+=cut
+
+#FIXME: This should be moved to such as Robot package.
+sub split_listname {
+    my $robot_id = shift || '*';
+    my $mailbox  = shift;
+    return unless defined $mailbox and length $mailbox;
+
+    my $return_path_suffix =
+        Conf::get_robot_conf($robot_id, 'return_path_suffix');
+    my $regexp = join(
+        '|',
+        map { quotemeta $_ }
+            grep { $_ and length $_ }
+            split(
+            /[\s,]+/, Conf::get_robot_conf($robot_id, 'list_check_suffixes')
+            )
+    );
+
+    if (    $mailbox eq 'sympa'
+        and $robot_id eq $Conf::Conf{'domain'}) {    # compat.
+        return (undef, 'sympa');
+    } elsif ($mailbox eq Conf::get_robot_conf($robot_id, 'email')
+        or $robot_id eq $Conf::Conf{'domain'}
+        and $mailbox eq $Conf::Conf{'email'}) {
+        return (undef, 'sympa');
+    } elsif ($mailbox eq Conf::get_robot_conf($robot_id, 'listmaster_email')
+        or $robot_id eq $Conf::Conf{'domain'}
+        and $mailbox eq $Conf::Conf{'listmaster_email'}) {
+        return (undef, 'listmaster');
+    } elsif ($mailbox =~ /^(\S+)$return_path_suffix$/) {    # -owner
+        return ($1, 'return_path');
+    } elsif (!$regexp) {
+        return ($mailbox);
+    } elsif ($mailbox =~ /^(\S+)-($regexp)$/) {
+        my ($name, $suffix) = ($1, $2);
+        my $type;
+
+        if ($suffix eq 'request') {    # -request
+            $type = 'owner';
+        } elsif ($suffix eq 'editor') {
+            $type = 'editor';
+        } elsif ($suffix eq 'subscribe') {
+            $type = 'subscribe';
+        } elsif ($suffix eq 'unsubscribe') {
+            $type = 'unsubscribe';
+        } else {
+            $name = $mailbox;
+            $type = 'UNKNOWN';
+        }
+        return ($name, $type);
+    } else {
+        return ($mailbox);
+    }
+}
+
+# Old name: SympaspoolClassic::analyze_file_name().
+# NOTE: This should be moved to Pipeline class.
+sub unmarshal_metadata {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $spool_dir       = shift;
+    my $marshalled      = shift;
+    my $metadata_regexp = shift;
+    my $metadata_keys   = shift;
+
+    my $data;
+    my @matches;
+    unless (@matches = ($marshalled =~ /$metadata_regexp/)) {
+        Log::do_log('err', 'File name %s does not have the proper format: %s',
+            $marshalled, $metadata_regexp);
+        return undef;
+    }
+    $data = {
+        messagekey => $marshalled,
+        map {
+            my $value = shift @matches;
+            (defined $value and length $value) ? ($_ => $value) : ();
+            } @{$metadata_keys}
+    };
+
+    my ($robot_id, $listname, $type, $list, $priority);
+
+    $robot_id = lc($data->{'domainpart'})
+        if Conf::valid_robot($data->{'domainpart'}, just_try => 1);
+    #FIXME: is this always needed?
+    ($listname, $type) =
+        tools::split_listname($robot_id || '*', $data->{'localpart'});
+    if (defined $listname) {
+        $list = List->new($listname, $robot_id || '*', {'just_try' => 1});
+    }
+
+    ## Get priority
+    #FIXME: is this always needed?
+    if (exists $data->{'priority'}) {
+	# Priority was given by metadata.
+	;
+    } elsif ($type and $type eq 'listmaster') {
+        ## highest priority
+        $priority = 0;
+    } elsif ($type and $type eq 'owner') {    # -request
+        $priority = Conf::get_robot_conf($robot_id, 'request_priority');
+    } elsif ($type and $type eq 'return_path') {    # -owner
+        $priority = Conf::get_robot_conf($robot_id, 'owner_priority');
+    } elsif ($type and $type eq 'sympa') {
+        $priority = Conf::get_robot_conf($robot_id, 'sympa_priority');
+    } elsif (ref $list eq 'List') {
+        $priority = $list->{'admin'}{'priority'};
+    } else {
+        $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');
+    }
+
+    $data->{'robot'}    = $robot_id if defined $robot_id;
+    $data->{'list'}     = $list if $list;
+    $data->{'listname'} = $listname if $listname;
+    $data->{'listtype'} = $type if defined $type;
+    $data->{'priority'} = $priority if defined $priority;
+
+    Log::do_log('debug3', 'messagekey=%s, list=%s, robot=%s, priority=%s',
+        $marshalled, $data->{'list'}, $data->{'robot'}, $data->{'priority'});
+
+    return $data;
 }
 
 1;

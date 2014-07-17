@@ -2665,7 +2665,7 @@ sub distribute {
     }
 
     ## Open and parse the file
-    my $message = Message->new({'file' => $file});
+    my $message = Message->new_from_file($file, list => $list);
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s', $file);
         report::reject_report_msg('user', 'unfound_message', $sender,
@@ -2832,7 +2832,7 @@ sub confirm {
         return 'wrong_auth';
     }
 
-    my $message = Message->new({'file' => $file});
+    my $message = Message->new_from_file($file, robot => $robot);
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s', $file);
         report::reject_report_msg('user', 'wrong_format_message', $sender,

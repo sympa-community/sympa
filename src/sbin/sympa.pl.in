@@ -1341,29 +1341,23 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         my $filename;
-        my $listname;
-        my $robot;
+        my $metadata;
 
+        # z and Z are a null priority, so file stay in queue and are
+        # processed only if renamed by administrator
         my $highest_priority = 'z';    ## lowest priority
-        my $t_spool =
-            $spool; ## in single mode we may have to supervise automatic spool
+        ## in single mode we may have to supervise automatic spool
+        my $t_spool = $spool;
 
         ## Scans files in queue
         ## Search file with highest priority
         foreach my $t_filename (@qfile) {
-            my $priority;
-            my $type;
-            my $list;
-            my ($t_listname, $t_robot);
-
             next if $t_filename =~ /,lock/;    # Skip lock.
 
             ## test ever if it is an old bad file
             if ($t_filename =~ /^BAD\-/i) {
                 if (tools::get_mtime("$t_spool/$t_filename") <
-                    time -
-                    Conf::get_robot_conf($robot, 'clean_delay_queue') * 86400)
-                {
+                    time - $Conf::Conf{'clean_delay_queue'} * 86400) {
                     unlink("$t_spool/$t_filename");
                     Log::do_log('notice',
                         "Deleting bad message %s because too old",
@@ -1372,61 +1366,20 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 next;
             }
 
-            ## z and Z are a null priority, so file stay in queue and are
-            ## processed
-            ## only if renamed by administrator
-            next unless ($t_filename =~ /^(\S+)\.\d+\.\w+$/);
-
             ## Don't process temporary files created by queue (T.xxx)
             next if ($t_filename =~ /^T\./);
 
-            ($t_listname, $t_robot) = split(/\@/, $1);
+            my $t_metadata = tools::unmarshal_metadata(
+                $t_spool, $t_filename,
+                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+\z},
+                [qw(localpart domainpart date)]
+            );
+            next unless $t_metadata;
 
-            $t_listname = lc($t_listname);
-            if ($t_robot) {
-                $t_robot = lc($t_robot);
-            } else {
-                $t_robot = lc(Conf::get_robot_conf($robot, 'host'));
-            }
-
-            my $list_check_regexp =
-                Conf::get_robot_conf($robot, 'list_check_regexp');
-
-            if ($t_listname =~ /^(\S+)-($list_check_regexp)$/) {
-                ($t_listname, $type) = ($1, $2);
-            }
-
-            # (sa) le terme "(\@$Conf::Conf{'host'})?" est inutile
-            #unless ($t_listname =~ /^(sympa|$Conf::Conf{'listmaster_email'}|$Conf::Conf{'email'})(\@$Conf::Conf{'host'})?$/i) {
-            #    $list = List->new($t_listname);
-            #}
-
-            my $email = Conf::get_robot_conf($robot, 'email');
-
-            if ($t_listname eq $Conf::Conf{'listmaster_email'}) {
-                ## highest priority
-                $priority = 0;
-            } elsif ($type and $type eq 'request') {
-                $priority = Conf::get_robot_conf($robot, 'request_priority');
-            } elsif ($type and $type eq 'owner') {
-                $priority = Conf::get_robot_conf($robot, 'owner_priority');
-            } elsif (
-                $t_listname =~ /^(sympa|$email)(\@$Conf::Conf{'host'})?$/i) {
-                $priority = Conf::get_robot_conf($robot, 'sympa_priority');
-            } else {
-                my $list =
-                    List->new($t_listname, $t_robot, {'just_try' => 1});
-                if ($list) {
-                    $priority = $list->{'admin'}{'priority'};
-                } else {
-                    $priority =
-                        Conf::get_robot_conf($robot, 'default_list_priority');
-                }
-            }
-
-            if (ord($priority) < ord($highest_priority)) {
-                $highest_priority = $priority;
+            if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
+                $highest_priority = $t_metadata->{'priority'};
                 $filename         = $t_filename;
+                $metadata         = $t_metadata;
             }
         }    ## END of spool lookup
 
@@ -1437,6 +1390,14 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             next;
         }
 
+        my $message =
+            Message->new_from_file("$t_spool/$filename", %$metadata);
+
+        my $robot =
+              $message->{'list'}
+            ? $message->{'list'}->{'domain'}
+            : $message->{'robot'};
+
         Log::do_log('debug', "Processing %s/%s with priority %s",
             $t_spool, $filename, $highest_priority);
 
@@ -1445,7 +1406,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             $default_lang);
 
         # Appel de la fonction de traitement des mails entrants
-        my $status = DoFile("$t_spool/$filename");
+        my $status = process_message($message);
 
         if (defined($status)) {
             Log::do_log('debug', "Finished %s", "$t_spool/$filename");
@@ -1557,7 +1518,7 @@ sub sighup {
 }
 
 ############################################################
-#  DoFile
+#  process_message
 ############################################################
 #  Handles a file received and files in the queue directory.
 #  This will read the file, separate the header and the body
@@ -1571,22 +1532,20 @@ sub sighup {
 #     | undef
 #
 ##############################################################
-sub DoFile {
-    my ($file) = @_;
-    Log::do_log('debug', '(%s)', $file);
+sub process_message {
+    Log::do_log('debug', '(%s)', @_);
+    my $message = shift;
 
     my $status;
 
-    my $message = Message->new({'file' => $file});
-
     unless (defined $message) {
-        Log::do_log('err', 'Unable to create Message object %s', $file);
+        Log::do_log('err', 'Unable to create Message object');
         Log::db_log(
             {
                 #'robot'        => $robot,
                 #'list'         => $listname,
-                'action'       => 'DoFile',
-                'parameters'   => "$file",
+                'action'       => 'process_message',
+                'parameters'   => '',
                 'target_email' => "",
                 'msg_id'       => '',
                 'status'       => 'error',
@@ -1606,7 +1565,7 @@ sub DoFile {
             {
                 #'robot'        => $robot,
                 #'list'         => $listname,
-                'action'       => 'DoFile',
+                'action'       => 'process_message',
                 'parameters'   => $message->get_id,
                 'target_email' => "",
                 'msg_id'       => "",
@@ -1623,18 +1582,16 @@ sub DoFile {
     my $msg    = $message->{'msg'};
     my $hdr    = $msg->head;
     my $rcpt   = $message->{'rcpt'};
-    my $from   = $hdr->get('From');
-    my $msg_id = $hdr->get('Message-ID');
+    my $msg_id = $message->{'message_id'};
 
     Log::do_log('notice', 'Processing %s; sender: %s; message ID: %s',
-        $file, $from, $msg_id);
+        $message, $message->{'sender'}, $message->{'message_id'});
 
-    ## get listname & robot
-    my ($listname, $robot) = split(/\@/, $rcpt);
-
-    $robot    = lc($robot);
-    $listname = lc($listname);
-    $robot ||= $Conf::Conf{'host'};
+    my $robot =
+          $message->{'list'}
+        ? $message->{'list'}->{'domain'}
+        : $message->{'robot'};
+    my $listname = $message->{'listname'};
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
@@ -1643,8 +1600,8 @@ sub DoFile {
         Log::db_log(
             {   'robot'        => $robot,
                 'list'         => $listname,
-                'action'       => 'DoFile',
-                'parameters'   => "$file",
+                'action'       => 'process_message',
+                'parameters'   => "",
                 'target_email' => "",
                 'msg_id'       => $msg_id,
                 'status'       => 'error',
@@ -1666,8 +1623,8 @@ sub DoFile {
         Log::db_log(
             {   'robot'        => $robot,
                 'list'         => $listname,
-                'action'       => 'DoFile',
-                'parameters'   => "$file",
+                'action'       => 'process_message',
+                'parameters'   => "",
                 'target_email' => "",
                 'msg_id'       => $msg_id,
                 'status'       => 'error',
@@ -1680,11 +1637,11 @@ sub DoFile {
         return undef;
     }
 
-    my $type;
-    my $list_check_regexp = Conf::get_robot_conf($robot, 'list_check_regexp');
-    if ($listname =~ /^(\S+)-($list_check_regexp)$/) {
-        ($listname, $type) = ($1, $2);
-    }
+    # Load spam status
+    $message->check_spam_status;
+    $message->check_dkim_signature;
+
+    my $type = $message->{'listtype'};
 
     if ($message->{'md5_check'}) {
         # message contain a valid checksum, it comes from wwsympa, so
@@ -1702,7 +1659,7 @@ sub DoFile {
 
             return DoSendMessage($message, '*');
         }
-        unless (List->new($listname, $robot, {'just_try' => 1})) {
+        unless ($message->{'list'}) {
             # Enable SMTP logging if required.
             $mail::log_smtp = $main::options{'mail'}
                 || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
@@ -1730,8 +1687,8 @@ sub DoFile {
     }
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
-    $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-Checksum');
+    delete $message->{'rcpt'};
+    delete $message->{'checksum'};
 
     ## Initialize command report
     report::init_report_cmd();
@@ -1740,10 +1697,8 @@ sub DoFile {
     #_amr ici on ne doit prendre que la première ligne !
     my ($dyn_list_family, $dyn_just_created);
     # we care of fake headers. If we put it, it's the 1st one.
-    if ($hdr->as_string() =~ /^X-Sympa-Family/mo) {
-        $dyn_list_family = $hdr->get('X-Sympa-Family');
-        chomp $dyn_list_family;
-    }
+    $dyn_list_family = $message->{'family'};
+
     if ($main::daemon_usage == Conf::DAEMON_CREATION && !$dyn_list_family) {
         Log::do_log('err',
             'internal server error : automatic lists creation daemon should never proceed messages without X-Sympa-Family header'
@@ -1753,21 +1708,15 @@ sub DoFile {
             {}, $sender, $robot, 1);
         return undef;
     }
-    $hdr->delete('X-Sympa-Family');
+    delete $message->{'family'};
 
+    my $list;
     my $list_address;
-    my $conf_email = Conf::get_robot_conf($robot, 'email');
-    my $conf_host  = Conf::get_robot_conf($robot, 'host');
 
-    my ($list, $host, $name);
-    if ($listname =~
-        /^(sympa|$Conf::Conf{'listmaster_email'}|$conf_email)(\@$conf_host)?$/i
-        ) {
-        $host         = $conf_host;
-        $name         = $listname;
-        $list_address = $name . '@' . $host;
+    if (tools::smart_eq($message->{'listtype'}, qr/\A(listmaster|sympa)\z/)) {
+        $list_address = $message->{'localpart'} . '@' . Conf::get_robot_conf($robot, 'host');
     } else {
-        $list = List->new($listname, $robot);
+        $list = $message->{'list'};
         unless (defined $list) {
             unless ($dyn_list_family) {
                 Log::do_log('err', 'List %s does not exist', $listname);
@@ -1783,8 +1732,8 @@ sub DoFile {
                 Log::db_log(
                     {   'robot'        => $robot,
                         'list'         => $listname,
-                        'action'       => 'DoFile',
-                        'parameters'   => "$file",
+                        'action'       => 'process_message',
+                        'parameters'   => "",
                         'target_email' => "",
                         'msg_id'       => $msg_id,
                         'status'       => 'error',
@@ -1801,8 +1750,11 @@ sub DoFile {
             my $dyn_family;
             unless ($dyn_family =
                 Sympa::Family->new($dyn_list_family, $robot)) {
-                Log::do_log('err',
-                    "Failed to process $file : family $dyn_list_family does not exist, impossible to create the dynamic list."
+                Log::do_log(
+                    'err',
+                    'Failed to process message %s: family %s does not exist, impossible to create the dynamic list',
+                    $message,
+                    $dyn_list_family
                 );
                 List::send_notify_to_listmaster(
                     'automatic_list_creation_failed',
@@ -1864,7 +1816,7 @@ sub DoFile {
                 Log::db_log(
                     {   'robot'      => $dyn_family->{'robot'},
                         'list'       => $listname,
-                        'action'     => 'DoFile',
+                        'action'     => 'process_message',
                         'parameters' => $hdr->get('Message-Id')
                             . ",$dyn_family->{'robot'}",
                         'target_email' => '',
@@ -1879,8 +1831,6 @@ sub DoFile {
                 return undef;
             }
         }
-        $host         = $list->{'admin'}{'host'};
-        $name         = $list->{'name'};
         $list_address = $list->get_list_address();
     }
     ## Loop prevention
@@ -1971,8 +1921,8 @@ sub DoFile {
         Log::db_log(
             {   'robot'        => $robot,
                 'list'         => $listname,
-                'action'       => 'DoFile',
-                'parameters'   => "$file",
+                'action'       => 'process_message',
+                'parameters'   => "",
                 'target_email' => "",
                 'msg_id'       => $msg_id,
                 'status'       => 'error',
@@ -1985,17 +1935,28 @@ sub DoFile {
         return undef;
 
     } elsif (!defined($rc)) {
-        List::send_notify_to_listmaster('antivirus_failed', $robot,
-            ["Could not scan $file; The message has been saved as BAD."]);
+        List::send_notify_to_listmaster(
+            'antivirus_failed',
+            $robot,
+            [   sprintf
+                    "Could not scan message %s; The message has been saved as BAD.",
+                $message->get_id
+            ]
+        );
 
         return undef;
     }
 
     if ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-        if (   ($rcpt =~ /^$Conf::Conf{'listmaster_email'}(\@(\S+))?$/)
-            || ($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i)
-            || ($type =~ /^(subscribe|unsubscribe)$/o)
-            || ($type =~ /^(request|owner|editor)$/o)) {
+        if ($type
+            and (  $type eq 'listmaster'
+                or $type eq 'sympa'
+                or $type eq 'subscribe'
+                or $type eq 'unsubscribe'
+                or $type eq 'owner'
+                or $type eq 'return_path'
+                or $type eq 'editor')
+            ) {
             Log::do_log('err',
                 'internal serveur error : distribution daemon should never proceed with command'
             );
@@ -2005,8 +1966,8 @@ sub DoFile {
             Log::db_log(
                 {   'robot'        => $robot,
                     'list'         => $listname,
-                    'action'       => 'DoFile',
-                    'parameters'   => "$file",
+                    'action'       => 'process_message',
+                    'parameters'   => "",
                     'target_email' => "",
                     'msg_id'       => $msg_id,
                     'status'       => 'error',
@@ -2044,8 +2005,8 @@ sub DoFile {
                 Log::db_log(
                     {   'robot'        => $robot,
                         'list'         => $listname,
-                        'action'       => 'DoFile',
-                        'parameters'   => "$file",
+                        'action'       => 'process_message',
+                        'parameters'   => "",
                         'target_email' => "",
                         'msg_id'       => $msg_id,
                         'status'       => 'error',
@@ -2094,8 +2055,8 @@ sub DoFile {
                 Log::db_log(
                     {   'robot'        => $robot,
                         'list'         => $listname,
-                        'action'       => 'DoFile',
-                        'parameters'   => "$file",
+                        'action'       => 'process_message',
+                        'parameters'   => "",
                         'target_email' => "",
                         'msg_id'       => $msg_id,
                         'status'       => 'error',
@@ -2163,20 +2124,21 @@ sub DoFile {
 
         ## Mail addressed to the robot and mail
         ## to <list>-subscribe or <list>-unsubscribe are commands
-    } elsif (($rcpt =~ /^(sympa|$conf_email)(\@\S+)?$/i)
-        or ($type and $type =~ /^(subscribe|unsubscribe)$/o)) {
+    } elsif ($type
+        and
+        ($type eq 'sympa' or $type eq 'subscribe' or $type eq 'unsubscribe'))
+    {
         $status = DoCommand($rcpt, $robot, $message);
 
         ## forward mails to <list>-request <list>-owner etc
-    } elsif ($type and $type =~ /^(request|owner|editor)$/o) {
+    } elsif ($type
+        and ($type eq 'owner' or $type eq 'return_path' or $type eq 'editor'))
+    {
         ## Simulate Smartlist behaviour with command in subject
-        if (($type eq 'request')
-            and (
-                tools::smart_eq(
-                    $subject_field,
-                    qr/^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i
-                )
-            )
+        if ($type eq 'owner'    # -request
+            and $subject_field
+            and $subject_field =~
+            /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i
             ) {
             my $command = $1;
 
@@ -2207,7 +2169,7 @@ sub DoFile {
                 List::send_notify_to_listmaster(
                     'loop_command',
                     Conf::get_robot_conf($robot, 'domain'),
-                    {'msg' => $file}
+                    {'msg' => $message->{'filename'}}
                 );
             }
 
@@ -2237,8 +2199,8 @@ sub DoFile {
         Log::db_log(
             {   'robot'        => $robot,
                 'list'         => $listname,
-                'action'       => 'DoFile',
-                'parameters'   => "$file",
+                'action'       => 'process_message',
+                'parameters'   => "",
                 'target_email' => "",
                 'msg_id'       => $msg_id,
                 'status'       => 'success',
@@ -2273,22 +2235,19 @@ sub DoSendMessage {
 
     my $hdr = $message->{'msg'}->head;
 
-    my $chksum = $hdr->get('X-Sympa-Checksum');
-    my $rcpt   = $hdr->get('X-Sympa-To');
-    my $from   = $hdr->get('X-Sympa-From');
-    chomp $rcpt;
-    chomp $chksum;
-    chomp $from;
+    my $chksum = $message->{'checksum'};
+    my $rcpt   = $message->{'rcpt'};
+    my $from   = $message->{'envelope_sender'};
 
     Log::do_log('info', "Processing web message for %s", $rcpt);
 
     my $string = $message->{'msg'}->as_string;
-    my $msg_id = $hdr->get('Message-ID');
-    my $sender = $hdr->get('From');
+    my $msg_id = $message->{'message_id'};
+    my $sender = $message->{'sender'};
 
-    $hdr->delete('X-Sympa-Checksum');
-    $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-From');
+    delete $message->{'checksum'};
+    delete $message->{'rcpt'};
+    delete $message->{'envelope_sender'};
 
     ## Multiple recepients
     my @rcpts = split /,/, $rcpt;
@@ -2348,7 +2307,7 @@ sub DoSendMessage {
 #  Message is forwarded according to $function
 #
 # IN : -$name : list name (+) if ($function <> 'listmaster')
-#      -$function (+): 'listmaster'|'request'|'editor'
+#      -$function (+): 'listmaster'|'owner'|'editor'
 #      -$robot (+): robot
 #      -$msg (+): ref(message object).
 #
@@ -2364,7 +2323,7 @@ sub DoForward {
     my $hdr        = $msg->head;
     my $messageid  = $hdr->get('Message-Id');
     my $msg_string = $msg->as_string;
-    my $sender     = $hdr->get('From');
+    my $sender     = $message->{'sender'};
     chomp $sender;
 
     if ($message->{'spam_status'} eq 'spam') {
@@ -2382,14 +2341,15 @@ sub DoForward {
     my ($list, $admin, $host, $recepient, $priority);
 
     if ($function eq 'listmaster') {
-        $recepient = $Conf::Conf{'listmaster_email'};
-        $host      = Conf::get_robot_conf($robot, 'host');
-        $priority  = 0;
+        $recepient =
+            $Conf::Conf{'listmaster_email'} . '@'
+            . Conf::get_robot_conf($robot, 'host');
+        $priority = 0;
     } else {
-        unless ($list = List->new($name, $robot)) {
+        unless ($list = $message->{'list'}) {
             Log::do_log(
                 'notice',
-                'Message for %s-%s ignored, unknown list %s (message ID: %s)',
+                'Message for %s function %s ignored, unknown list %s (message ID: %s)',
                 $name,
                 $function,
                 $name,
@@ -2418,8 +2378,7 @@ sub DoForward {
         }
 
         $admin     = $list->{'admin'};
-        $host      = $admin->{'host'};
-        $recepient = "$name-$function";
+        $recepient = $list->get_list_address($function);
         $priority  = $admin->{'priority'};
     }
 
@@ -2429,9 +2388,9 @@ sub DoForward {
         'Processing message for %s with priority %s, (message ID:%s)',
         $recepient, $priority, $messageid);
 
-    $hdr->add('X-Loop', "$name-$function\@$host");
-    $hdr->delete('X-Sympa-To');
-    $hdr->delete('X-Sympa-Family');
+    $hdr->add('X-Loop', $recepient);
+    delete $message->{'rcpt'};
+    delete $message->{'family'};
 
     if ($function eq "listmaster") {
         my $listmasters = Conf::get_robot_conf($robot, 'listmasters');
@@ -2439,7 +2398,7 @@ sub DoForward {
         Log::do_log('notice', 'Warning: No listmaster defined in sympa.conf')
             unless (@rcpt);
 
-    } elsif ($function eq "request") {
+    } elsif ($function eq "owner") {    # -request
         @rcpt = $list->get_owners_email();
 
         Log::do_log(
@@ -2463,14 +2422,14 @@ sub DoForward {
         if ($function ne "listmaster") {
             Log::do_log(
                 'err',
-                'No recipient available for %s-%s in list %s. Trying to proceed ignoring nomail option (message ID %s)',
+                'No recipient available for %s function %s in list %s. Trying to proceed ignoring nomail option (message ID %s)',
                 $name,
                 $function,
                 $name,
                 $messageid
             );
 
-            if ($function eq "request") {
+            if ($function eq 'owner') {    # -request
                 @rcpt = $list->get_owners_email({'ignore_nomail', 1});
 
                 Log::do_log('notice',
@@ -2496,12 +2455,17 @@ sub DoForward {
                 $name
             );
         } else {
-            Log::do_log('err',
-                'Message for %s-%s ignored, %s undefined in list %s',
-                $name, $function, $function, $name);
+            Log::do_log(
+                'err',
+                'Message for %s function %s ignored, %s undefined in list %s',
+                $name,
+                $function,
+                $function,
+                $name
+            );
             my $string =
                 sprintf
-                'Impossible to forward a message to %s-%s : undefined in this list',
+                'Impossible to forward a message to %s function %s : undefined in this list',
                 $name, $function;
             report::reject_report_msg(
                 'intern', $string, $sender,
@@ -2540,9 +2504,10 @@ sub DoForward {
             \@rcpt,   $robot
         )
         ) {
-        Log::do_log('err', 'Impossible to forward mail for %s-%s',
+        Log::do_log('err', 'Impossible to forward mail for %s function %s',
             $name, $function);
-        my $string = sprintf 'Impossible to forward a message for %s-%s',
+        my $string =
+            sprintf 'Impossible to forward a message for %s function %s',
             $name, $function;
         report::reject_report_msg(
             'intern', $string, $sender,
@@ -2620,7 +2585,7 @@ sub DoMessage {
     my $sender = $message->{'sender'};
 
     ## Search for the list
-    my $list = List->new($listname, $robot);
+    my $list = $message->{'list'};
 
     ## List unknown
     unless ($list) {

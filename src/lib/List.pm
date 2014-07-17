@@ -2557,8 +2557,7 @@ sub send_global_file {
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
 
-    my $r =
-        mail::mail_file($filename, $who, $data, $robot,
+    my $r = mail::mail_file($robot, $filename, $who, $data,
         $options->{'parse_and_return'});
     return $r if ($options->{'parse_and_return'});
 
@@ -2752,7 +2751,7 @@ sub send_file {
     # to support Sympa server on a machine without any MTA service
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
-    unless (mail::mail_file($filename, $who, $data, $self->{'domain'})) {
+    unless (mail::mail_file($self->{'domain'}, $filename, $who, $data)) {
         Log::do_log('err', 'Could not send template %s to %s',
             $filename, $who);
         return undef;
@@ -3575,10 +3574,7 @@ sub archive_send {
 
     return unless ($self->is_archived());
 
-    my $dir =
-        Conf::get_robot_conf($self->{'domain'}, 'arc_path') . '/'
-        . $self->get_list_id();
-    my $msg_list = Sympa::Archive::scan_dir_archive($dir, $file);
+    my $msg_list = Sympa::Archive::scan_dir_archive($self, $file);
 
     my $subject = 'File ' . $self->{'name'} . ' ' . $file;
     my $param   = {
@@ -3620,8 +3616,9 @@ sub archive_send_last {
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
 
-    my $mail = Message->new(
-        {'file' => "$dir/last_message", 'noxsympato' => 'noxsympato'});
+    my $mail = Message->new_from_file("$dir/last_message",
+        list => $self,
+        'noxsympato' => 'noxsympato');
     unless (defined $mail) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");
@@ -12169,6 +12166,8 @@ sub get_arc_size {
 }
 
 # return the date epoch for next delivery planified for a list
+# Note: As of 6.2a.41, returns undef if parameter is not set or invalid.
+#       Previously it returned current time.
 sub get_next_delivery_date {
     my $self = shift;
 

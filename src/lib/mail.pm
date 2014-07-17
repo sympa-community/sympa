@@ -113,17 +113,18 @@ sub set_send_spool {
 # OUT : 1 | undef
 ####################################################
 sub mail_file {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $robot                    = shift || '*';
+    my $filename                 = shift;
+    my $rcpt                     = shift;
+    my $data                     = shift;
+    my $return_message_as_string = shift;
 
-    my ($filename, $rcpt, $data, $robot, $return_message_as_string) = @_;
     my $header_possible = $data->{'header_possible'};
     my $sign_mode       = $data->{'sign_mode'};
 
-    Log::do_log('debug2', '(%s, %s, %s)', $filename, $rcpt, $sign_mode);
-
     my ($to, $message_as_string);
 
-    ## boolean
-    $header_possible = 0 unless (defined $header_possible);
     my %header_ok;    # hash containing no missing headers
     my $existing_headers = 0;    # the message already contains headers
 
@@ -318,9 +319,10 @@ sub mail_file {
     }
 
     my $message = Message->new(
-        {   'messageasstring' => "$headers$message_as_string",
-            'noxsympato'      => 'noxsympato',
-        }
+        "$headers$message_as_string",
+        #XXX list => $list,
+        robot        => $robot,
+        'noxsympato' => 'noxsympato',
     );
     return undef unless $message;
 
@@ -491,19 +493,20 @@ sub mail_message {
     return $numsmtp
         if (
         sendto(
-            'message'       => $message,
-            'from'          => $from,
-            'rcpt'          => \@sendtobypacket,
-            'listname'      => $list->{'name'},
-            'priority'      => $list->{'admin'}{'priority'},
-            'delivery_date' => ($list->get_next_delivery_date || $message->{'date'} || time),
-            'robot'         => $robot,
-            'encrypt'       => $message->{'smime_crypted'},
-            'use_bulk'      => 1,
-            'verp'          => $verp,
-            'dkim'          => $dkim,
-            'merge'         => $list->{'admin'}{'merge_feature'},
-            'tag_as_last'   => $tag_as_last
+            'message'  => $message,
+            'from'     => $from,
+            'rcpt'     => \@sendtobypacket,
+            'listname' => $list->{'name'},
+            'priority' => $list->{'admin'}{'priority'},
+            'delivery_date' =>
+                ($list->get_next_delivery_date || $message->{'date'} || time),
+            'robot'       => $robot,
+            'encrypt'     => $message->{'smime_crypted'},
+            'use_bulk'    => 1,
+            'verp'        => $verp,
+            'dkim'        => $dkim,
+            'merge'       => $list->{'admin'}{'merge_feature'},
+            'tag_as_last' => $tag_as_last
         )
         );
     return undef;
@@ -662,10 +665,10 @@ sub sendto {
                     )
                     and (
                         $encrypted_message = Message->new(
-                            {   'messsageasstring' =>
-                                    $encrypted_msg_as_string,
-                                'noxsympato' => 'noxsympato'
-                            }
+                            $encrypted_msg_as_string,
+                            #XXX list => $list,
+                            robot        => $robot,
+                            'noxsympato' => 'noxsympato'
                         )
                     )
                     ) {
@@ -832,11 +835,12 @@ sub sending {
         } else {
             $all_rcpt = $rcpt;
         }
-        printf TMP "X-Sympa-To: %s\n",       $all_rcpt;
-        printf TMP "X-Sympa-From: %s\n",     $from;
-        printf TMP "X-Sympa-Checksum: %s\n", tools::sympa_checksum($all_rcpt);
 
-        print TMP $message->{'msg_as_string'};
+        $message->{'rcpt'}            = $all_rcpt;
+        $message->{'envelope_sender'} = $from;
+        $message->{'checksum'}        = tools::sympa_checksum($all_rcpt);
+
+        printf TMP $message->to_string;
         close TMP;
         my $new_file = $sympa_file;
         $new_file =~ s/T\.//g;
@@ -968,6 +972,7 @@ sub smtpto {
     return ("mail::$fh");    ## Symbol for the write descriptor.
 }
 
+#XXX NOT USED
 ####################################################
 # send_in_spool      : not used but if needed ...
 ####################################################

@@ -8421,8 +8421,10 @@ sub do_modindex {
         my $id = $1;
 
         ## Load msg
-        my $message =
-            Message->new({'file' => "$Conf::Conf{'queuemod'}/$msg"});
+        my $message = Message->new_from_file(
+            $Conf::Conf{'queuemod'} . '/' . $msg,
+            list => $list
+        );
 
         unless (defined $message) {
             report::reject_report_web(
@@ -8916,8 +8918,7 @@ sub do_reject {
             last if (-f $file);
         }
         my $message = undef;
-        $message = Message->new({'file' => $file})
-            if $file;
+        $message = Message->new_from_file($file, list => $list) if $file;
         unless ($message) {
             report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
@@ -9103,8 +9104,7 @@ sub do_distribute {
         }
 
         my $message = undef;
-        $message = Message->new({'file' => $file})
-            if $file;
+        $message = Message->new_from_file($file, list => $list) if $file;
         unless ($message) {
             report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
@@ -9164,12 +9164,8 @@ sub do_distribute {
         'not_auto_submitted' => 1,
         'body'               => join("\n", @mail_command),
     };
-    unless (
-        mail::mail_file(
-            '', Conf::get_robot_conf($robot, 'sympa'),
-            $data, $robot
-        )
-        ) {
+    unless (mail::mail_file(
+        $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
         report::reject_report_web(
             'intern',
             'cannot_send_distribute',
@@ -9220,7 +9216,7 @@ sub do_add_frommod {
     foreach my $id (split /,/, $in{'id'}) {
         my $file =
             $Conf::Conf{'queuemod'} . '/' . $list->get_list_id() . '_' . $id;
-        my $message = Message->new({'file' => $file});
+        my $message = Message->new_from_file($file, list => $list);
         unless ($message) {
             report::reject_report_web('user', 'already_moderated', {},
                 $param->{'action'});
@@ -10325,10 +10321,9 @@ sub do_send_me {
     if ($msgfile) {
 
         unless (
-            $message = Message->new(
-                {   'file'       => "$arcpath/arctxt/$msgfile",
-                    'noxsympato' => 'noxsympato'
-                }
+            $message = Message->new_from_file("$arcpath/arctxt/$msgfile",
+                list => $list,
+                'noxsympato' => 'noxsympato'
             )
             ) {
             $param->{'status'} = 'message_err';
@@ -20991,12 +20986,8 @@ sub do_remind {
     };
 
     $data->{'not_auto_submitted'} = 1;
-    unless (
-        mail::mail_file(
-            '', Conf::get_robot_conf($robot, 'sympa'),
-            $data, $robot
-        )
-        ) {
+    unless (mail::mail_file(
+            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
         report::reject_report_web(
             'intern',
             'cannot_send_remind',
@@ -22215,7 +22206,7 @@ sub do_send_mail {
         if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
     $data->{'not_auto_submitted'} = 1;
     $data->{'not_a_list'} = 1 if ($in{'sub_action'} eq 'sendmailtome');
-    unless (mail::mail_file('', $to, $data, $robot)) {
+    unless (mail::mail_file($robot, '', $to, $data)) {
         report::reject_report_web(
             'intern',
             'cannot_send_mail',
@@ -22368,9 +22359,9 @@ sub do_tag_topic_by_sender {
     my $authqueue = Conf::get_robot_conf($robot, 'queueauth');
     my $filename  = "$authqueue\/$listname" . '@' . "$robot\_$in{'authkey'}";
 
-    my $mail;
-    unless ($mail =
-        Message->new({'file' => $filename, 'noxsympato' => 'noxsympato'})) {
+    my $mail = Message->new_from_file($filename, list => $list,
+        'noxsympato' => 'noxsympato');
+    unless ($mail) {
         report::reject_report_web('intern', 'cannot_parse_message',
             {'file' => $filename},
             $param->{'action'});
@@ -22439,12 +22430,8 @@ sub do_tag_topic_by_sender {
     }
 
     $data->{'not_auto_submitted'} = 1;
-    unless (
-        mail::mail_file(
-            '', Conf::get_robot_conf($robot, 'sympa'),
-            $data, $robot
-        )
-        ) {
+    unless (mail::mail_file(
+            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
         report::reject_report_web(
             'intern',
             'cannot_send_mail',

@@ -100,15 +100,14 @@ sub list {
 }
 
 sub scan_dir_archive {
+    Log::do_log('debug3', '(%s, %s)', @_);
+    my ($list, $month) = @_;
 
-    my ($dir, $month) = @_;
-
-    Log::do_log('info', '(%s, %s)', $dir, $month);
+    my $dir = Conf::get_robot_conf($list->{'domain'}, 'arc_path') . '/'
+        . $list->get_list_id();
 
     unless (opendir(DIR, "$dir/$month/arctxt")) {
-        Log::do_log('info',
-            "archive::scan_dir_archive($dir, $month): unable to open dir $dir/$month/arctxt"
-        );
+        Log::do_log('info', 'Unable to open dir %s/%s/arctxt', $dir, $month);
         return undef;
     }
 
@@ -116,31 +115,30 @@ sub scan_dir_archive {
     my $i       = 0;
     foreach my $file (sort readdir(DIR)) {
         next unless ($file =~ /^\d+$/);
-        Log::do_log('debug',
-            "archive::scan_dir_archive($dir, $month): start parsing message $dir/$month/arctxt/$file"
-        );
+        Log::do_log('debug', 'Start parsing message %s/%s/arctxt/%s',
+            $dir, $month, $file);
 
-        my $mail = Message->new(
-            {   'file'       => "$dir/$month/arctxt/$file",
-                'noxsympato' => 'noxsympato'
-            }
+        my $message = Message->new_from_file("$dir/$month/arctxt/$file",
+            list => $list,
+            'noxsympato' => 'noxsympato'
         );
-        unless (defined $mail) {
-            Log::do_log('err', 'Unable to create Message object %s', $file);
+        unless ($message) {
+            Log::do_log('err', 'Unable to create Message object from file %s',
+                $file);
             return undef;
         }
 
-        Log::do_log('debug', 'MAIL object: %s', $mail);
+        Log::do_log('debug', 'MAIL object: %s', $message);
 
         $i++;
         my $msg = {};
         $msg->{'id'} = $i;
 
-        $msg->{'subject'} = tools::decode_header($mail, 'Subject');
-        $msg->{'from'}    = tools::decode_header($mail, 'From');
-        $msg->{'date'}    = tools::decode_header($mail, 'Date');
+        $msg->{'subject'} = $message->{'decoded_subject'};
+        $msg->{'from'}    = tools::decode_header($message, 'From');
+        $msg->{'date'}    = tools::decode_header($message, 'Date');
 
-        $msg->{'full_msg'} = $mail->{'msg'}->as_string;
+        $msg->{'full_msg'} = $message->as_string;
 
         Log::do_log('debug', 'Adding message %s in archive to send',
             $msg->{'subject'});
@@ -322,8 +320,11 @@ sub clean_archived_message {
     my $input  = shift;
     my $output = shift;
 
-    my $msg;
-    unless ($msg = Message->new({'file' => $input, 'noxsympato' => 1})) {
+    my $msg = Message->new_from_file($input,
+        #XXX list => $list,
+        robot => $robot,
+        'noxsympato' => 1);
+    unless ($msg) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);
         return undef;
@@ -331,7 +332,7 @@ sub clean_archived_message {
 
     if ($msg->clean_html($robot)) {
         if (open TMP, ">$output") {
-            print TMP $msg->{'msg'}->as_string;
+            print TMP $msg->as_string;
             close TMP;
             return 1;
         } else {
