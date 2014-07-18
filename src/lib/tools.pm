@@ -4533,6 +4533,21 @@ sub decode_header {
     }
 }
 
+my $with_data_password;
+BEGIN {
+    eval 'use Data::Password';
+    $with_data_password = !$@;
+}
+my @validation_messages = (
+    { gettext_id => 'Not between %d and %d characters' },
+    { gettext_id => 'Not %d characters or greater' },
+    { gettext_id => 'Not less than or equal to %d characters' },
+    { gettext_id => 'contains bad characters' },
+    { gettext_id => 'contains less than %d character groups' },
+    { gettext_id => 'contains over %d leading characters in sequence' },
+    { gettext_id => "contains the dictionary word '%s'" },
+);
+
 sub password_validation {
     my ($password) = @_;
 
@@ -4540,7 +4555,7 @@ sub password_validation {
     return undef
         unless $pv
             and defined $password
-            and eval { require Data::Password; };
+            and $with_data_password;
 
     local (
         $Data::Password::DICTIONARY, $Data::Password::FOLLOWING,
@@ -4569,7 +4584,21 @@ sub password_validation {
             push @Data::Password::DICTIONARIES, $value;
         }
     }
-    return Data::Password::IsBadPassword($password);
+    my $output = Data::Password::IsBadPassword($password);
+    return undef unless $output;
+
+    # Translate result if possible.
+    my $language = Sympa::Language->instance;
+    foreach my $item (@validation_messages) {
+        my $format = $item->{'gettext_id'};
+        my $regexp = quotemeta $format;
+        $regexp =~ s/\\\%[sd]/(.+)/g;
+
+        my ($match, @args) = ($output =~ /($regexp)/i);
+        next unless $match;
+        return $language->gettext_sprintf($format, @args);
+    }
+    return $output;
 }
 
 #*******************************************
