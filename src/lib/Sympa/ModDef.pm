@@ -62,6 +62,12 @@ our %cpan_modules = (
         'gettext_id' =>
             'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
     },
+    'Data::Password' => {
+        required_version => '1.07',
+        package_name     => 'Data-Password',
+        'gettext_id' =>
+            'Used for configureable hardening of passwords via the password_validation sympa.conf directive.',
+    },
     # DateTime is used by DateTime::Format::Mail.
     'DateTime::Format::Mail' => {
         required_version => '0.28',

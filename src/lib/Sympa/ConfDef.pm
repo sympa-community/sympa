@@ -1472,11 +1472,11 @@ our @params = (
         'default' => 25,
         'file'    => 'wwsympa.conf',
     },
-    {
-        'name'       => 'your_lists_size',
-        'gettext_id' => 'Maximum number of lists listed in "Your lists" menu.  0 lists none.  negative value means unlimited.',
-        'vhost'      => '1',
-        'default'    => '10',
+    {   'name' => 'your_lists_size',
+        'gettext_id' =>
+            'Maximum number of lists listed in "Your lists" menu.  0 lists none.  negative value means unlimited.',
+        'vhost'   => '1',
+        'default' => '10',
     },
     {   'name'       => 'http_host',
         'gettext_id' => 'URL of a virtual host',
@@ -1485,6 +1485,15 @@ our @params = (
         'vhost'      => '1',
         'edit'       => '1',
         'file'       => 'sympa.conf',
+    },
+    {   'name' => 'password_validation',
+        'gettext_id' =>
+            'The password validation techniques to be used against user passwords that are added to mailing lists. Options come from Data::Password (http://search.cpan.org/~razinf/Data-Password-1.07/Password.pm#VARIABLES)',
+        'sample' =>
+            'MINLEN=8,GROUPS=3,DICTIONARY=4,DICTIONARIES=/pentest/dictionaries',
+        'edit'     => '1',
+        'file'     => 'sympa.conf',
+        'optional' => '1',
     },
 
 ## Not implemented yet.

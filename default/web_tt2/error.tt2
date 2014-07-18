@@ -79,6 +79,7 @@
   [% ELSIF u_err.msg == 'user_already_subscriber' %][%|loc(u_err.email,u_err.list)%]%1 is already subscribed to the list %2[%END%] 
   [% ELSIF u_err.msg == 'no_passwd' %][%|loc%]Please provide your password[%END%]
   [% ELSIF u_err.msg == 'diff_passwd' %][%|loc%]The passwords you typed do not match[%END%]
+  [% ELSIF u_err.msg == 'passwd_validation' %][%|loc(u_err.reason)%]The password you typed does not match this sites standards of strength: %1. Please pick a stronger password.[%END%]
   [% ELSIF u_err.msg == 'wrong_input_path' %][%|loc(u_err.tpl)%]Provided path is incorrect for template '%1'[%END%]
   [% ELSIF u_err.msg == 'cannot_open_file' %][%|loc(u_err.path)%]Cannot open file '%1'[%END%]
   [% ELSIF u_err.msg == 'listname_needed' %][%|loc%]You need to provide list name[%END%]

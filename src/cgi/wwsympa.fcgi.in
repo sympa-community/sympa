@@ -6162,6 +6162,15 @@ sub do_subscribe {
                 $u->{'gecos'}    = $param->{'user'}{'gecos'} || $in{'gecos'};
                 $u->{'date'}     = $u->{'update_date'} = time;
                 $u->{'password'} = $param->{'user'}{'password'};
+                if (my $reason = tools::password_validation($u->{'password'})) {
+                    report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
+                    wwslog('info','do_setpasswd: password validation');
+                    web_db_log({
+                        'status' => 'error',
+                        'error_type' => 'bad_parameter'
+                    });
+                    return undef;
+                }
                 $u->{'custom_attribute'} = $xml_custom_attribute
                     if (defined $xml_custom_attribute);
                 $u->{'lang'} = $param->{'user'}{'lang'} || $param->{'lang'};
@@ -6858,6 +6867,13 @@ sub do_setpasswd {
                 'error_type' => 'bad_parameter'
             }
         );
+        return undef;
+    }
+
+    if (my $reason = tools::password_validation($in{'newpasswd1'})) {
+        report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
+        wwslog('info','do_setpasswd: password validation');
+        web_db_log({'status' => 'error', 'error_type' => 'bad_parameter'});
         return undef;
     }
 
@@ -8169,7 +8185,15 @@ sub do_add {
         $u->{'gecos'}    = $user{$email} || $u2->{'gecos'};
         $u->{'date'}     = $u->{'update_date'} = time;
         $u->{'password'} = $u2->{'password'} || tools::tmp_passwd($email);
-        $u->{'lang'}     = $u2->{'lang'} || $list->{'admin'}{'lang'};
+        if (my $reason = tools::password_validation($u->{'password'})) {
+            report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
+            wwslog('info','do_setpasswd: password validation');
+            web_db_log({'status' => 'error',
+                'error_type' => 'bad_parameter'});
+            return undef;
+        }
+
+        $u->{'lang'} = $u2->{'lang'} || $list->{'admin'}{'lang'};
         if ($comma_emails) {
             $comma_emails = $comma_emails . ',' . $email;
         } else {

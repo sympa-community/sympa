@@ -4533,6 +4533,45 @@ sub decode_header {
     }
 }
 
+sub password_validation {
+    my ($password) = @_;
+
+    my $pv = $Conf::Conf{'password_validation'};
+    return undef
+        unless $pv
+            and defined $password
+            and eval { require Data::Password; };
+
+    local (
+        $Data::Password::DICTIONARY, $Data::Password::FOLLOWING,
+        $Data::Password::GROUPS,     $Data::Password::MINLEN,
+        $Data::Password::MAXLEN
+    );
+    local @Data::Password::DICTIONARIES = @Data::Password::DICTIONARIES;
+
+    my @techniques = split(/\s*,\s*/, $pv);
+    foreach my $technique (@techniques) {
+        my ($key, $value) = $technique =~ /([^=]+)=(.*)/;
+        $key = uc $key;
+
+        if ($key eq 'DICTIONARY') {
+            $Data::Password::DICTIONARY = $value;
+        } elsif ($key eq 'FOLLOWING') {
+            $Data::Password::FOLLOWING = $value;
+        } elsif ($key eq 'GROUPS') {
+            $Data::Password::GROUPS = $value;
+        } elsif ($key eq 'MINLEN') {
+            $Data::Password::MINLEN = $value;
+        } elsif ($key eq 'MAXLEN') {
+            $Data::Password::MAXLEN = $value;
+        } elsif ($key eq 'DICTIONARIES') {
+            # TODO: How do we handle a list of dictionaries?
+            push @Data::Password::DICTIONARIES, $value;
+        }
+    }
+    return Data::Password::IsBadPassword($password);
+}
+
 #*******************************************
 ## Function : foldcase
 ## Description : returns "fold-case" string suitable for case-insensitive
@@ -4700,7 +4739,7 @@ sub split_listname {
         my ($name, $suffix) = ($1, $2);
         my $type;
 
-        if ($suffix eq 'request') {    # -request
+        if ($suffix eq 'request') {                         # -request
             $type = 'owner';
         } elsif ($suffix eq 'editor') {
             $type = 'editor';
@@ -4756,8 +4795,8 @@ sub unmarshal_metadata {
     ## Get priority
     #FIXME: is this always needed?
     if (exists $data->{'priority'}) {
-	# Priority was given by metadata.
-	;
+        # Priority was given by metadata.
+        ;
     } elsif ($type and $type eq 'listmaster') {
         ## highest priority
         $priority = 0;
@@ -4774,9 +4813,9 @@ sub unmarshal_metadata {
     }
 
     $data->{'robot'}    = $robot_id if defined $robot_id;
-    $data->{'list'}     = $list if $list;
+    $data->{'list'}     = $list     if $list;
     $data->{'listname'} = $listname if $listname;
-    $data->{'listtype'} = $type if defined $type;
+    $data->{'listtype'} = $type     if defined $type;
     $data->{'priority'} = $priority if defined $priority;
 
     Log::do_log('debug3', 'messagekey=%s, list=%s, robot=%s, priority=%s',
