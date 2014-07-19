@@ -1352,6 +1352,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Scans files in queue
         ## Search file with highest priority
         foreach my $t_filename (@qfile) {
+            next unless -f "$t_spool/$t_filename";
             next if $t_filename =~ /,lock/;    # Skip lock.
 
             ## test ever if it is an old bad file
