@@ -263,8 +263,8 @@ sub store {
     my %data = @_;
 
     my $message = $data{'message'};
-    my $msg_id  = $message->{'msg'}->head->get('Message-ID');
-    chomp $msg_id;
+    # Compatibility. Enclosed by <...>.
+    my $msg_id  = '<' . $message->{'message_id'} . '>';
     my $rcpts            = $data{'rcpts'};
     my $from             = $data{'from'};
     my $robot            = $data{'robot'};
@@ -306,13 +306,8 @@ sub store {
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
 
-    my $msg = $message->{'msg'}->as_string;
-    if ($message->{'protected'}) {
-        $msg = $message->{'msg_as_string'};
-    }
-    my @sender_hdr =
-        Mail::Address->parse($message->{'msg'}->head->get('From'));
-    my $message_sender = $sender_hdr[0]->address;
+    my $msg = $message->as_string;
+    my $message_sender = $message->{'sender'};
 
     $msg = MIME::Base64::encode($msg);
 
@@ -498,7 +493,7 @@ sub store {
                     'err',
                     'Unable to add packet %s of message %s to database spool',
                     $packetid,
-                    $msg_id
+                    $message
                 );
                 return undef;
             }

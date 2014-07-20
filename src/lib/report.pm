@@ -140,16 +140,19 @@ sub reject_report_msg {
 # OUT : $msg_hash : ref(HASH) - the hashref
 #
 ##############################################################
+#FIXME: Is returned value by this function actually used?
 
 sub _get_msg_as_hash {
     my $msg_object = shift;
 
-    my ($msg_entity, $msg_hash);
+    my ($msg_entity, $msg_string, $msg_hash);
 
-    if (ref($msg_object) =~ /^MIME::Entity/) {    ## MIME-ttols object
+    if ($msg_object->isa('MIME::Entity')) {    ## MIME-Tools object
         $msg_entity = $msg_object;
-    } elsif (ref($msg_object) =~ /^Message/) {   ## Sympa's own Message object
-        $msg_entity = $msg_object->{'msg'};
+        $msg_string = $msg_entity->as_string;
+    } elsif (ref $msg_object eq 'Message') {   ## Sympa's own Message object
+        $msg_entity = $msg_object->as_entity;
+        $msg_string = $msg_object->as_string;
     } else {
         Log::do_log('err', 'Wrong type for msg parameter');
     }
@@ -169,7 +172,7 @@ sub _get_msg_as_hash {
     my $subject = $head->get('Subject');
     my $msg_id  = $head->get('Message-Id');
     $msg_hash = {
-        'full'       => $msg_entity->as_string,
+        'full'       => $msg_string,
         'body'       => $body_as_string,
         'from'       => $from,
         'subject'    => $subject,

@@ -2674,13 +2674,10 @@ sub distribute {
         return 'msg_not_found';
     }
 
-    my $msg = $message->{'msg'};
-    my $hdr = $msg->head;
+    my $msg_id     = $message->{'message_id'};
+    my $msg_string = $message->as_string;
 
-    my $msg_id     = $hdr->get('Message-Id');
-    my $msg_string = $msg->as_string;
-
-    $hdr->add('X-Validation-by', $sender);
+    $message->add_header('X-Validation-by', $sender);
 
     ## Distribute the message
     if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
@@ -2726,6 +2723,7 @@ sub distribute {
         );
 
         unless ($quiet) {
+            sleep 1;
             unless (
                 report::notice_report_msg(
                     'message_distributed', $sender,
@@ -2841,16 +2839,14 @@ sub confirm {
         return 'msg_not_found';
     }
 
-    my $msg  = $message->{'msg'};
     my $list = $message->{'list'};
     $language->set_lang($list->{'admin'}{'lang'});
 
     my $name  = $list->{'name'};
     my $bytes = -s $file;
-    my $hdr   = $msg->head;
 
-    my $msgid      = $hdr->get('Message-Id');
-    my $msg_string = $message->{'msg'}->as_string;
+    my $msgid      = $message->{'message_id'};
+    my $msg_string = $message->as_string;
 
     my $result = $list->check_list_authz(
         'send', 'md5',
@@ -2993,8 +2989,7 @@ sub confirm {
         return undef;
 
     } elsif ($action =~ /^do_it/) {
-
-        $hdr->add('X-Validation-by', $sender);
+        $message->add_header('X-Validation-by', $sender);
 
         ## Distribute the message
         if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
@@ -3173,8 +3168,8 @@ sub reject {
         my %context;
         $context{'subject'} = tools::decode_header($message, 'Subject');
         $context{'rejected_by'} = $sender;
-        $context{'editor_msg_body'} = $editor_msg->{'msg'}->body_as_string
-            if ($editor_msg);
+        $context{'editor_msg_body'} = $editor_msg->body_as_string
+            if $editor_msg;
 
         Log::do_log('debug2', 'Message %s by %s rejected sender %s',
             $context{'subject'}, $context{'rejected_by'}, $rejected_sender);

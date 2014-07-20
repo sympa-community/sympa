@@ -191,12 +191,13 @@ sub new {
         Log::do_log('err', 'Unable to parse message');
         return undef;
     }
+    my $hdr = $msg->head;
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $messageasstring, 2;
 
-    $self->{'msg'}           = $msg;
-    $self->{'msg_as_string'} = $messageasstring;
-    $self->{'size'}          = length $messageasstring;
-
-    my $hdr = $self->{'msg'}->head;
+    $self->{'msg'}  = $msg;
+    $self->{_head}  = $hdr;
+    $self->{_body}  = $body_string;
+    $self->{'size'} = length $messageasstring;
 
     ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
     return undef unless defined $self->{'sender'};
@@ -239,14 +240,6 @@ sub new {
         $self->{'decoded_subject'} = $subject;
     }
 
-    unless ($self->{'noxsympato'}) {
-        # message.pm can be used not only for message comming from queue
-        unless ($self->{'rcpt'}) {
-            Log::do_log('err', 'No X-Sympa-To found, ignoring message');
-            return undef;
-        }
-    }
-
     ## valid X-Sympa-Checksum prove the message comes from web interface with
     ## authenticated sender
     if ($self->{'checksum'}) {
@@ -262,20 +255,20 @@ sub new {
 		## Decrypt messages
 		if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
 			&& ($hdr->get('Content-Type') !~ /signed-data/)) {
-			my ($dec, $dec_as_string) =
-				tools::smime_decrypt($self->{'msg'}, $self->{'list'});
+			my ($dec_head, $dec_body_as_string) =
+				tools::smime_decrypt($self);
 
-			unless (defined $dec) {
+			unless ($dec_head) {
 				Log::do_log('debug', "Message could not be decrypted");
 				return undef;
 				## We should the sender and/or the listmaster
 			}
 
 			$self->{'smime_crypted'} = 'smime_crypted';
-			$self->{'orig_msg'}      = $self->{'msg'};
-			$self->{'msg'}           = $dec;
-			$self->{'msg_as_string'} = $dec_as_string;
-			$hdr                        = $dec->head;
+			$self->{'orig_msg_as_string'} = $self->as_string;
+                        $self->{_head} = $dec_head;
+			$self->{_body} = $dec_body_as_string;
+                        delete $self->{'msg'};    # Clear entity cache.
 			Log::do_log('debug', 'Message has been decrypted');
 		}
 
@@ -333,7 +326,7 @@ sub new_from_file {
 sub _get_sender_email {
     my $message = shift;
 
-    my $hdr = $message->{'msg'}->head;
+    my $hdr = $message->{_head};
 
     my $sender = undef;
     my $gecos  = undef;
@@ -382,7 +375,7 @@ sub _get_sender_email {
 sub _get_message_id {
     my $self = shift;
 
-    return tools::clean_msg_id($self->{'msg'}->head->get('Message-Id', 0));
+    return tools::clean_msg_id($self->{_head}->get('Message-Id', 0));
 }
 
 =over 4
@@ -422,9 +415,80 @@ sub to_string {
         $str .= sprintf "Return-Path: %s\n", $val;
     }
 
-    $str .= $self->{'msg_as_string'};
+    $str .= $self->as_string;
 
     return $str;
+}
+
+=over
+
+=item add_header ( $field, $value, [ $index ] )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+sub add_header {
+    my $self = shift;
+    $self->{_head}->add(@_);
+    delete $self->{'msg'};   # Clear entity cache.
+}
+
+=over
+
+=item delete_header ( $field, [ $index ] )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+sub delete_header {
+    my $self = shift;
+    $self->{_head}->delete(@_);
+    delete $self->{'msg'};   # Clear entity cache.
+}
+
+=over
+
+=item replace_header ( $field, $value, [ $index ] )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+sub replace_header {
+    my $self = shift;
+    $self->{_head}->replace(@_);
+    delete $self->{'msg'};   # Clear entity cache.
+}
+
+=over
+
+=item head
+
+I<Instance method>.
+Get header of the message as L<MIME::Head> instance.
+
+Note that returned value is real reference to internal data structure.
+Even if it was changed, string representaion of message won't be updated.
+Alternatively, use L</add_header>(), L</delete_header>() or
+L</replace_header() to modify header.
+
+=back
+
+=cut
+
+sub head {
+    shift->{_head};
 }
 
 =over
@@ -502,8 +566,9 @@ sub as_entity {
     my $self = shift;
 
     unless (defined $self->{'msg'}) {
-        my $string = $self->{'msg_as_string'};
-        return undef unless defined $string;
+        die 'Bug in logic.  Ask developer'
+            unless $self->{_head} and defined $self->{_body};
+        my $string = $self->{_head}->as_string . "\n" . $self->{_body};
 
         my $parser = MIME::Parser->new();
         $parser->output_to_core(1);
@@ -534,8 +599,9 @@ sub set_entity {
     my $new  = Storable::freeze($entity);
 
     if ($orig ne $new) {
-        $self->{'msg'}           = $entity;
-        $self->{'msg_as_string'} = $entity->as_string;
+        $self->{_head} = $entity->head;
+        $self->{_body} = $entity->body_as_string;
+        $self->{'msg'} = $entity;   # Also update entity cache.
     }
 
     return $entity;
@@ -555,13 +621,41 @@ Get a string representation of message in MIME-compliant format.
 sub as_string {
     my $self = shift;
 
-    unless (defined $self->{'msg_as_string'}) {
-        my $entity = $self->{'msg'};
-        return undef unless defined $entity;
+    die 'Bug in logic.  Ask developer'
+        unless $self->{_head} and defined $self->{_body};
+    return $self->{_head}->as_string . "\n" . $self->{_body};
+}
 
-        $self->{'msg_as_string'} = $entity->as_string;
-    }
-    return $self->{'msg_as_string'};
+=over
+
+=item body_as_string ( )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+sub body_as_string {
+    my $self = shift;
+    return $self->{_body};
+}
+
+=over
+
+=item header_as_string ( )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+sub header_as_string {
+    my $self = shift;
+    return $self->{_head}->as_string;
 }
 
 =over 4
@@ -586,8 +680,10 @@ sub get_header {
     my $self  = shift;
     my $field = shift;
     my $sep   = shift;
+    die sprintf 'Second argument is not index but separator: "%s"', $sep
+        if defined $sep and Scalar::Util::looks_like_number($sep);
 
-    my $hdr = $self->as_entity->head;
+    my $hdr = $self->{_head};
 
     if (defined $sep or wantarray) {
         my @values = grep {s/\A$field\s*:\s*//i}
@@ -693,10 +789,7 @@ sub add_topic {
     my ($self, $topic) = @_;
 
     $self->{'topic'} = $topic;
-    my $hdr = $self->{'msg'}->head;
-    $hdr->add('X-Sympa-Topic', $topic);
-
-    return 1;
+    $self->add_header('X-Sympa-Topic', $topic);
 }
 
 =over
@@ -754,9 +847,10 @@ XXX
 sub clean_html {
     my $self  = shift;
     my $robot = shift;
-    my $new_msg;
-    if ($new_msg = _fix_html_part($self->{'msg'}, $robot)) {
-        $self->{'msg'} = $new_msg;
+
+    my $entity = $self->as_entity->dup;
+    if ($entity = _fix_html_part($entity, $robot)) {
+        $self->set_entity($entity);
         return 1;
     }
     return 0;
@@ -1733,6 +1827,8 @@ Parameters:
 =item $attachments
 
 ref(ARRAY) - messages to be attached as subparts.
+
+=back
 
 Returns:
 

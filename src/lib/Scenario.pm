@@ -299,8 +299,6 @@ sub request_action {
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
     $context->{'robot_domain'} = $robot;
-    $context->{'msg'}          = $context->{'message'}->{'msg'}
-        if defined $context->{'message'};
     $context->{'msg_encrypted'} = 'smime'
         if defined $context->{'message'}
             and tools::smart_eq($context->{'message'}->{'smime_crypted'},
@@ -706,14 +704,15 @@ sub verify {
         $context->{'host'} = $list->{'admin'}{'host'};
     }
 
-    if (defined($context->{'msg'})) {
-        my $header   = $context->{'msg'}->head;
+    if ($context->{'message'}) {
         my $listname = $context->{'listname'};
         #FIXME: need more acculate test.
         unless (
             $listname
-            and index(lc join(', ', $header->get('To'), $header->get('Cc')),
-                lc $listname) >= 0
+            and index(lc join(', ',
+                $context->{'message'}->get_header('To'),
+                $context->{'message'}->get_header('Cc')
+                ), lc $listname) >= 0
             ) {
             $context->{'is_bcc'} = 1;
         } else {
@@ -843,17 +842,13 @@ sub verify {
         } elsif ($value =~
             /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
             ## SMTP header field.
-            ## "[msg_header->field] returns arrayref of field values,
+            ## "[msg_header->field]" returns arrayref of field values,
             ## preserving order. "[msg_header->field][index]" returns one
             ## field value.
             my $field_name = $2;
             my $index = (defined $3) ? $3 + 0 : undef;
-            if (defined($context->{'msg'})) {
-                my $headers = $context->{'msg'}->head->header();
-                my @fields = grep {$_} map {
-                    my ($h, $v) = split /\s*:\s*/, $_, 2;
-                    (lc $h eq lc $field_name) ? $v : undef;
-                } @{$headers || []};
+            if ($context->{'message'}) {
+                my @fields = $context->{'message'}->get_header($field_name);
                 ## Defaulting empty or missing fields to '', so that we can
                 ## test their value in Scenario, considering that, for an
                 ## incoming message, a missing field is equivalent to an empty
@@ -878,9 +873,12 @@ sub verify {
             }
 
         } elsif ($value =~ /\[msg_body\]/i) {
-            unless (defined($context->{'msg'})
-                && defined($context->{'msg'}->effective_type() =~ /^text/)
-                && defined($context->{'msg'}->bodyhandle)) {
+            unless ($context->{'message'}
+                and tools::smart_eq(
+                    $context->{'message'}->as_entity->effective_type,
+                    qr/^text/
+                )
+                and defined($context->{'message'}->as_entity->bodyhandle)) {
                 Log::do_log('info',
                     'No proper textual message body to evaluate rule %s',
                     $condition)
@@ -888,10 +886,10 @@ sub verify {
                 return -1 * $negation;
             }
 
-            $value = $context->{'msg'}->bodyhandle->as_string();
+            $value = $context->{'message'}->body_as_string;
 
         } elsif ($value =~ /\[msg_part\-\>body\]/i) {
-            unless (defined($context->{'msg'})) {
+            unless ($context->{'message'}) {
                 Log::do_log('info', 'No message to evaluate rule %s',
                     $condition)
                     if $log_it;
@@ -900,16 +898,15 @@ sub verify {
 
             my @bodies;
             ## FIXME:Should be recurcive...
-            foreach my $part ($context->{'msg'}->parts) {
-                next unless ($part->effective_type() =~ /^text/);
-                next unless (defined $part->bodyhandle);
+            foreach my $part ($context->{'message'}->as_entity->parts) {
+                next unless $part->effective_type =~ /^text/;
+                next unless defined $part->bodyhandle;
 
                 push @bodies, $part->bodyhandle->as_string();
             }
             $value = \@bodies;
-
         } elsif ($value =~ /\[msg_part\-\>type\]/i) {
-            unless (defined($context->{'msg'})) {
+            unless ($context->{'message'}) {
                 Log::do_log('info', 'No message to evaluate rule %s',
                     $condition)
                     if $log_it;
@@ -917,13 +914,13 @@ sub verify {
             }
 
             my @types;
-            foreach my $part ($context->{'msg'}->parts) {
+            foreach my $part ($context->{'message'}->as_entity->parts) {
                 push @types, $part->effective_type();
             }
             $value = \@types;
 
         } elsif ($value =~ /\[msg\-\>(\w+)\]/i) {
-            return -1 * $negation unless (defined($context->{'message'}));
+            return -1 * $negation unless $context->{'message'};
             my $message_field = $1;
             return -1 * $negation
                 unless (defined($context->{'message'}{$message_field}));

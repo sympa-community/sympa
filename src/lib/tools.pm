@@ -1146,15 +1146,11 @@ sub dkim_sign {
     }
     unlink($temporary_keyfile);
 
-    $message->{'msg'}
-        ->head->add('DKIM-signature', $dkim->signature->as_string);
+    $message->add_header('DKIM-signature', $dkim->signature->as_string);
 
     # Signing is done. Rebuilding message as string with original body
     # and new headers WITH DKIM line terminators.
-    my $head_string           = $message->{'msg'}->stringify_header();
-    my $new_message_as_string = $head_string . "\n" . $new_body;
-
-    return $new_message_as_string;
+    return $message->header_as_string . "\n" . $new_body;
 }
 
 # input object msg and listname, output signed message object
@@ -1303,23 +1299,11 @@ sub smime_sign_check {
     }
 
     if ($message->{'smime_crypted'}) {
-        $message->{'msg'}->head->print(\*MSGDUMP);
+        print MSGDUMP $message->header_as_string;
         print MSGDUMP "\n";
-        print MSGDUMP $message->{'msg_as_string'};
-    } elsif (!$message->{'filename'}) {
-        print MSGDUMP $message->{'msg_as_string'};
+        print MSGDUMP $message->as_string;
     } else {
-        unless (open MSG, $message->{'filename'}) {
-            Log::do_log(
-                'err',
-                'Unable to open file %s: %s',
-                $message->{'filename'}, $!
-            );
-            return undef;
-
-        }
-        print MSGDUMP <MSG>;
-        close MSG;
+        print MSGDUMP $message->as_string;
     }
     close MSGDUMP;
 
@@ -1373,14 +1357,11 @@ sub smime_sign_check {
     ## "S/MIME encryption : Yes/No"
     my $certbundle = "$Conf::Conf{tmpdir}/certbundle.$$";
     my $tmpcert    = "$Conf::Conf{tmpdir}/cert.$$";
-    my $nparts     = $message->{msg}->parts;
     my $extracted  = 0;
-    Log::do_log('debug2', 'Parsing %s parts', $nparts);
-    if ($nparts == 0) {    # could be opaque signing...
-        $extracted += smime_extract_certs($message->{msg}, $certbundle);
+    unless ($message->as_entity->parts) {    # could be opaque signing...
+        $extracted += smime_extract_certs($message->as_entity, $certbundle);
     } else {
-        for (my $i = 0; $i < $nparts; $i++) {
-            my $part = $message->{msg}->parts($i);
+        foreach my $part ($message->as_entity->parts) {
             $extracted += smime_extract_certs($part, $certbundle);
             last if $extracted;
         }
@@ -1489,10 +1470,13 @@ sub smime_sign_check {
 
 # input : msg object, return a new message object encrypted
 sub smime_encrypt {
-    my $msg_header = shift;
-    my $msg_body   = shift;
-    my $email      = shift;
-    my $list       = shift;
+    my $message = shift;
+    my $email   = shift;
+    my $list    = shift;
+
+    my $msg_header = $message->head;
+    # is $message->body_as_string respect base64 number of char per line ??
+    my $msg_body   = $message->body_as_string;
 
     my $usercert;
     my $dummy;
@@ -1600,24 +1584,30 @@ sub smime_encrypt {
     return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
 }
 
-# input : msg object for a list, return a new message object decrypted
+# Input: Message object.
+# Returns: New MIME::Head object and body.
+#
+# Note: Previously (<=6.2a.40), Input were MIME::Entity object and list;
+# returned new MIME::Entity object and string of body.
 sub smime_decrypt {
-    my $msg  = shift;
-    my $list = shift;                     ## the recipient of the msg
-    my $from = $msg->head->get('from');
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
 
-    Log::do_log('debug2', 'Message msg from %s, %s', $from, $list->{'name'});
+    my $list = $message->{'list'};    # the recipient of the msg
+    my $from = $message->get_header('From');
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
-    my $dir = $list->{'dir'};
-    unless ($dir) {
-        $dir = $Conf::Conf{home} . '/sympa';
+    my $dir;
+    if (ref $list eq 'List') {
+        $dir = $list->{'dir'};
+    } else {
+        $dir = $Conf::Conf{home} . '/sympa'; #FIXME
     }
     my ($certs, $keys) = smime_find_keys($dir, 'decrypt');
     unless (defined $certs && @$certs) {
         Log::do_log('err',
             'Unable to decrypt message: missing certificate file');
-        return undef;
+        return;
     }
 
     my $temporary_file =
@@ -1626,11 +1616,11 @@ sub smime_decrypt {
 
     ## dump the incomming message.
     if (!open(MSGDUMP, "> $temporary_file")) {
-        Log::do_log('info', 'Can\'t store message in file %s',
-            $temporary_file);
+        Log::do_log('info', 'Can\'t store message in file %s: %s',
+            $temporary_file, $!);
     }
-    $msg->print(\*MSGDUMP);
-    close(MSGDUMP);
+    print MSGDUMP $message->as_string;
+    close MSGDUMP;
 
     my ($decryptedmsg, $pass_option, $msg_as_string);
     if ($Conf::Conf{'key_passwd'} ne '') {
@@ -1648,7 +1638,7 @@ sub smime_decrypt {
             unless (POSIX::mkfifo($temporary_pwd, 0600)) {
                 Log::do_log('err', 'Unable to make fifo for %s',
                     $temporary_pwd);
-                return undef;
+                return;
             }
         }
 
@@ -1670,11 +1660,9 @@ sub smime_decrypt {
             unlink($temporary_pwd);
         }
 
-        while (<NEWMSG>) {
-            $msg_as_string .= $_;
-        }
+        $msg_as_string = do { local $/; <NEWMSG> };
         close NEWMSG;
-        my $status = $? / 256;
+        my $status = $? >> 8;
 
         unless ($status == 0) {
             Log::do_log(
@@ -1697,39 +1685,35 @@ sub smime_decrypt {
 
     unless (defined $decryptedmsg) {
         Log::do_log('err', 'Message could not be decrypted');
-        return undef;
+        return;
     }
 
     ## Now remove headers from $msg_as_string
-    my @msg_tab = split(/\n/, $msg_as_string);
-    my $line;
-    do { $line = shift(@msg_tab) } while ($line !~ /^\s*$/);
-    $msg_as_string = join("\n", @msg_tab);
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $msg_as_string, 2;
 
+    my $head = $descryptedmsg->head;
     ## foreach header defined in the incomming message but undefined in the
     ## decrypted message, add this header in the decrypted form.
     my $predefined_headers;
-    foreach my $header ($decryptedmsg->head->tags) {
-        $predefined_headers->{lc $header} = 1
-            if ($decryptedmsg->head->get($header));
+    foreach my $header ($head->tags) {
+        $predefined_headers->{lc $header} = 1 if $head->get($header);
     }
-    foreach my $header (split /\n(?![ \t])/, $msg->head->as_string) {
+    foreach my $header (split /\n(?![ \t])/, $message->header_as_string) {
         next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
         my ($tag, $val) = ($1, $2);
-        $decryptedmsg->head->add($tag, $val)
-            unless $predefined_headers->{lc $tag};
+        $head->add($tag, $val) unless $predefined_headers->{lc $tag};
     }
     ## Some headers from the initial message should not be restored
     ## Content-Disposition and Content-Transfer-Encoding if the result is
     ## multipart
-    $decryptedmsg->head->delete('Content-Disposition')
-        if ($msg->head->get('Content-Disposition'));
-    if ($decryptedmsg->head->get('Content-Type') =~ /multipart/) {
-        $decryptedmsg->head->delete('Content-Transfer-Encoding')
-            if ($msg->head->get('Content-Transfer-Encoding'));
+    $head->delete('Content-Disposition')
+        if $message->get_header('Content-Disposition');
+    if ($head->get('Content-Type') =~ /multipart/i) {
+        $head->delete('Content-Transfer-Encoding')
+            if $message->get_header('Content-Transfer-Encoding');
     }
 
-    return ($decryptedmsg, $msg_as_string);
+    return ($head, $body_string);
 }
 
 ## Make a multipart/alternative, a singlepart
@@ -2190,38 +2174,38 @@ sub split_mail {
     return 1;
 }
 
+# Note: this would be moved to incoming pipeline package.
 sub virus_infected {
-    my $mail = shift;
-    my $file = shift;
+    Log::do_log('debug2', '%s)', @_);
+    my $message = shift;
 
-    Log::do_log('debug2', 'Scan virus in %s', $file);
+    my $entity = $message->as_entity;
+    my $file   = $message->{'messagekey'};
 
     unless ($Conf::Conf{'antivirus_path'}) {
         Log::do_log('debug', 'Sympa not configured to scan virus in message');
         return 0;
     }
-    my @name = split(/\//, $file);
+    my ($name) = reverse split /\//, $file;
     my $work_dir = $Conf::Conf{'tmpdir'} . '/antivirus';
 
-    unless ((-d $work_dir) || (mkdir $work_dir, 0755)) {
-        Log::do_log('err', 'Unable to create tmp antivirus directory %s',
-            $work_dir);
+    unless (-d $work_dir or mkdir $work_dir, 0755) {
+        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %s',
+            $work_dir, $!);
         return undef;
     }
 
-    $work_dir = $Conf::Conf{'tmpdir'} . '/antivirus/' . $name[$#name];
+    $work_dir = $Conf::Conf{'tmpdir'} . '/antivirus/' . $name;
 
-    unless ((-d $work_dir) || mkdir($work_dir, 0755)) {
-        Log::do_log('err', 'Unable to create tmp antivirus directory %s',
-            $work_dir);
+    unless (-d $work_dir or mkdir $work_dir, 0755) {
+        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %s',
+            $work_dir, $!);
         return undef;
     }
 
-    #$mail->dump_skeleton;
-
-    ## Call the procedure of spliting mail
-    unless (split_mail($mail, 'msg', $work_dir)) {
-        Log::do_log('err', 'Could not split mail %s', $mail);
+    ## Call the procedure of splitting mail
+    unless (tools::split_mail($entity, 'msg', $work_dir)) {
+        Log::do_log('err', 'Could not split mail %s', $entity);
         return undef;
     }
 
@@ -2252,7 +2236,7 @@ sub virus_infected {
         }
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $? >> 8;
 
         ## uvscan status =12 or 13 (*256) => virus
         if (($status == 13) || ($status == 12)) {
@@ -4510,7 +4494,7 @@ sub decode_header {
 
     my $head;
     if (ref $msg eq 'Message') {
-        $head = $msg->{'msg'}->head;
+        $head = $msg->head;
     } elsif (ref $msg eq 'MIME::Entity') {
         $head = $msg->head;
     } elsif (ref $msg eq 'MIME::Head' or ref $msg eq 'Mail::Header') {
@@ -4798,7 +4782,8 @@ sub unmarshal_metadata {
     my $data;
     my @matches;
     unless (@matches = ($marshalled =~ /$metadata_regexp/)) {
-        Log::do_log('err', 'File name %s does not have the proper format: %s',
+        Log::do_log('debug',
+            'File name %s does not have the proper format: %s',
             $marshalled, $metadata_regexp);
         return undef;
     }

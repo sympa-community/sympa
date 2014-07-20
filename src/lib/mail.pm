@@ -405,14 +405,13 @@ sub mail_message {
     my $size    = 0;
     my $numsmtp = 0;
 
-    ## If message contain a footer or header added by Sympa  use the object
-    ## message else
-    ## Extract body from original file to preserve signature
-    my $msg_header = $message->{'msg'}->head;
-    ##FIXME: message may be encrypted.
-    my ($dummy, $msg_body) =
-        split /\r?\n\r?\n/, $message->{'msg_as_string'}, 2;
-    $message->{'body_as_string'} = $msg_body;
+#    ## If message contain a footer or header added by Sympa  use the object
+#    ## message else
+#    ## Extract body from original file to preserve signature
+#    ##FIXME: message may be encrypted.
+#    my ($dummy, $msg_body) =
+#        split /\r?\n\r?\n/, $message->as_string, 2;
+#    $message->{'body_as_string'} = $msg_body;
 
     my %rcpt_by_dom;
 
@@ -534,7 +533,7 @@ sub mail_forward {
     }
     ## Add an Auto-Submitted header field according to
     ## http://www.tools.ietf.org/html/draft-palme-autosub-01
-    $message->{'msg'}->head->add('Auto-Submitted', 'auto-forwarded');
+    $message->add_header('Auto-Submitted', 'auto-forwarded');
 
     unless (
         defined sending(
@@ -611,8 +610,6 @@ sub sendto {
     my %params = @_;
 
     my $message     = $params{'message'};
-    my $msg_header  = $message->{'msg'}->head;
-    my $msg_body    = $message->{'body_as_string'};
     my $from        = $params{'from'};
     my $rcpt        = $params{'rcpt'};
     my $listname    = $params{'listname'};
@@ -661,7 +658,7 @@ sub sendto {
                 my $encrypted_msg_as_string;
                 my $encrypted_message;
                 if ((   $encrypted_msg_as_string =
-                        tools::smime_encrypt($msg_header, $msg_body, $email)
+                        tools::smime_encrypt($message, $email)
                     )
                     and (
                         $encrypted_message = Message->new(
@@ -700,8 +697,6 @@ sub sendto {
             }
         }
     } else {
-        $message->{'msg_as_string'} =
-            $msg_header->as_string . "\n" . $msg_body;
         my $result = sending(
             'message'       => $message,
             'rcpt'          => $rcpt,
@@ -777,7 +772,6 @@ sub sending {
             return undef;
         }
     }
-    # my $msg_id = $message->{'msg'}->head->get('Message-ID'); chomp $msg_id;
 
     my $verpfeature =
         ($verp and ($verp eq 'on' or $verp eq 'mdn' or $verp eq 'dsn'));
@@ -853,7 +847,7 @@ sub sending {
     } else {    # send it now
         Log::do_log('debug', "NOT USING BULK");
         *SMTP = smtpto($from, $rcpt, $robot);
-        print SMTP $message->{'msg'}->as_string;
+        print SMTP $message->as_string;
         unless (close SMTP) {
             Log::do_log('err', 'Could not close safefork to sendmail');
             return undef;

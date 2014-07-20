@@ -8469,7 +8469,7 @@ sub do_modindex {
         $param->{'spool'}{$id}{'subject'} =
             tools::decode_header($message, 'Subject') || 'no_subject';
 
-        my $date = $message->{'msg'}->head->get('Date');
+        my $date = $message->get_header('Date');
         if ($date) {
             $param->{'spool'}{$id}{'date_smtp'} = $date;
             my $date_epoch = eval {
@@ -9016,7 +9016,7 @@ sub do_reject {
                 }
                 # Sending encrypted form in case a crypted message would be
                 # sent by error.
-                print SCRIPT $message->{'msg_as_string'};
+                print SCRIPT $message->as_string;
 
                 if (close(SCRIPT)) {
                     Log::do_log('info',

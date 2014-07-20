@@ -1570,16 +1570,12 @@ sub distribute_msg {
 
     Log::do_log(
         'debug2',
-        '(%s, %s, %s, %s, %s, %s, apply_dkim_signature=%s)',
-        $self->{'name'},
-        $message->{'msg'},
-        $message->{'size'},
-        $message->{'filename'},
-        $message->{'smime_crypted'},
+        '(%s, message=%s, apply_dkim_signature=%s)',
+        $self,
+        $message,
         $apply_dkim_signature
     );
 
-    my $hdr = $message->{'msg'}->head;
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
 
@@ -1589,8 +1585,7 @@ sub distribute_msg {
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $info_msg_topic;
     if ($self->is_there_msg_topic()) {
-        my $msg_id = $hdr->get('Message-ID');
-        chomp($msg_id);
+        my $msg_id = $message->{'message_id'};
         $info_msg_topic = $self->load_msg_topic_file($msg_id, $robot);
 
         # add X-Sympa-Topic header
@@ -1603,11 +1598,11 @@ sub distribute_msg {
     if ($self->{'admin'}{'dmarc_protection'}{'mode'}) {
         Log::do_log('debug', 'DMARC protection on');
         my $dkimdomain = $self->{'admin'}{'dmarc_protection'}{'domain_regex'};
-        my $originalFromHeader = $hdr->get('From');
+        my $originalFromHeader = $message->get_header('From');
         my $anonaddr;
         my @addresses = Mail::Address->parse($originalFromHeader);
         my @anonFrom;
-        my $dkimSignature = $hdr->get('DKIM-Signature');
+        my $dkimSignature = $message->get_header('DKIM-Signature');
         my $origFrom      = '';
         my $mungeFrom     = 0;
 
@@ -1713,7 +1708,7 @@ sub distribute_msg {
                                 'Will munge whatever DMARC policy is');
                             $mungeFrom = 1;
                         }
-                        $hdr->add(
+                        $message->add_header(
                             'X-Original-DMARC-Record',
                             "domain=$dom; " . $rr->string
                         );
@@ -1722,7 +1717,7 @@ sub distribute_msg {
                 }
             };
             if ($@) {
-                $hdr->add('X-DMARC-Error', $@);
+                $message->add_header('X-DMARC-Error', $@);
                 Log::do_log('error',
                     'No Net::DNS found. Trying to save the message by adding a X-DMARC-Error header'
                 );
@@ -1733,9 +1728,10 @@ sub distribute_msg {
             Log::do_log('debug', 'Will munge From field');
             # Remove any DKIM signatures we find
             if ($dkimSignature) {
-                $hdr->add('X-Original-DKIM-Signature', $dkimSignature);
-                $hdr->delete('DKIM-Signature');
-                $hdr->delete('DomainKey-Signature');
+                $message->add_header(
+                    'X-Original-DKIM-Signature', $dkimSignature);
+                $message->delete_header('DKIM-Signature');
+                $message->delete_header('DomainKey-Signature');
                 Log::do_log('debug',
                     'Removing previous DKIM and DomainKey signatures');
             }
@@ -1779,8 +1775,8 @@ sub distribute_msg {
                             $name);
                     }
                 }
-                $hdr->add('Reply-To', $addresses[0]->address)
-                    unless ($hdr->get('Reply-To'));
+                $message->add_header('Reply-To', $addresses[0]->address)
+                    unless $message->get_header('Reply-To');
             }
             # If the new From email address has a Phrase component, then
             # append it
@@ -1799,24 +1795,24 @@ sub distribute_msg {
                 $displayName, tools::lang2charset($language->get_lang),
                 $newComment);
 
-            $hdr->add('X-Original-From', "$originalFromHeader");
-            $hdr->replace('From', $newAddr);
+            $message->add_header('X-Original-From', "$originalFromHeader");
+            $message->replace_header('From', $newAddr);
         }
     }
 
     ## Hide the sender if the list is anonymoused
     if ($self->{'admin'}{'anonymous_sender'}) {
         foreach my $field (@{$Conf::Conf{'anonymous_header_fields'}}) {
-            $hdr->delete($field);
+            $message->delete_header($field);
         }
 
         # override From: and Message-ID: fields.
         # Note that corresponding Resent-*: fields will be removed.
-        $hdr->replace('From', $self->{'admin'}{'anonymous_sender'});
-        $hdr->delete('Resent-From');
+        $message->replace_header('From', $self->{'admin'}{'anonymous_sender'});
+        $message->delete_header('Resent-From');
         my $new_id = $self->{'name'} . '.' . $sequence . '@anonymous';
-        $hdr->replace('Message-Id', "<$new_id>");
-        $hdr->delete('Resent-Message-Id');
+        $message->replace_header('Message-Id', "<$new_id>");
+        $message->delete_header('Resent-Message-Id');
 
         # rename msg_topic filename
         if ($info_msg_topic) {
@@ -1862,7 +1858,7 @@ sub distribute_msg {
 
         ## Add subject tag
         #FIXME: Check parse error
-        $message->{'msg'}->head->delete('Subject');
+        $message->delete_header('Subject');
         my $parsed_tag;
         tt2::parse_tt2(
             {   'list' => {
@@ -1920,7 +1916,7 @@ sub distribute_msg {
                 . $after_tag;
         }
 
-        $message->{'msg'}->head->add('Subject', $subject_field);
+        $message->add_header('Subject', $subject_field);
     }
 
     ## Prepare tracking if list config allow it
@@ -1935,18 +1931,18 @@ sub distribute_msg {
     $apply_tracking = 'mdn'
         if $self->{'admin'}{'tracking'}->{'message_delivery_notification'} eq
             'on_demand'
-            and $hdr->get('Disposition-Notification-To');
+            and $message->get_header('Disposition-Notification-To');
 
     if ($apply_tracking ne 'off') {
         # remove notification request becuse a new one will be inserted if
         # needed
-        $hdr->delete('Disposition-Notification-To');
+        $message->delete_header('Disposition-Notification-To');
     }
 
     ## Remove unwanted headers if present.
     if ($self->{'admin'}{'remove_headers'}) {
         foreach my $field (@{$self->{'admin'}{'remove_headers'}}) {
-            $hdr->delete($field);
+            $message->delete_header($field);
         }
     }
 
@@ -1955,60 +1951,63 @@ sub distribute_msg {
 
     ## Change the reply-to header if necessary.
     if ($self->{'admin'}{'reply_to_header'}) {
-        unless ($hdr->get('Reply-To')
+        unless ($message->get_header('Reply-To')
             and $self->{'admin'}{'reply_to_header'}->{'apply'} ne 'forced') {
             my $reply;
 
-            $hdr->delete('Reply-To');
-            $hdr->delete('Resent-Reply-To');
+            $message->delete_header('Reply-To');
+            $message->delete_header('Resent-Reply-To');
 
             if ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'list') {
                 $reply = $self->get_list_address();
             } elsif (
                 $self->{'admin'}{'reply_to_header'}->{'value'} eq 'sender') {
-                $reply = $hdr->get('From');
+                #FIXME: Missing From: field?
+                $reply = $message->get_header('From');
             } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'all')
             {
-                $reply = $self->get_list_address() . ',' . $hdr->get('From');
+                #FIXME: Missing From: field?
+                $reply = $self->get_list_address()
+                    . ',' . $message->get_header('From');
             } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq
                 'other_email') {
                 $reply = $self->{'admin'}{'reply_to_header'}->{'other_email'};
             }
 
-            $hdr->add('Reply-To', $reply) if $reply;
+            $message->add_header('Reply-To', $reply) if $reply;
         }
     }
 
     ## Add/replace useful headers
 
     ## These fields should be added preserving existing ones.
-    $hdr->add('X-Loop',     $self->get_list_address());
-    $hdr->add('X-Sequence', $sequence);
+    $message->add_header('X-Loop',     $self->get_list_address());
+    $message->add_header('X-Sequence', $sequence);
     ## These fields should be overwritten if any of them already exist
-    $hdr->delete('Errors-To');
-    $hdr->add('Errors-to', $self->get_list_address('return_path'));
+    $message->delete_header('Errors-To');
+    $message->add_header('Errors-to', $self->get_list_address('return_path'));
     ## Two Precedence: fields are added (overwritten), as some MTAs recognize
     ## only one of them.
-    $hdr->delete('Precedence');
-    $hdr->add('Precedence', 'list');
-    $hdr->add('Precedence', 'bulk');
+    $message->delete_header('Precedence');
+    $message->add_header('Precedence', 'list');
+    $message->add_header('Precedence', 'bulk');
     ## The Sender: field should be added (overwritten) at least for DKIM
     ## compatibility.  Note that Resent-Sender: field will be removed.
-    $hdr->replace('Sender', $self->get_list_address('owner'));
-    $hdr->delete('Resent-Sender');
-    $hdr->replace('X-no-archive', 'yes');
+    $message->replace_header('Sender', $self->get_list_address('owner'));
+    $message->delete_header('Resent-Sender');
+    $message->replace_header('X-no-archive', 'yes');
 
     ## - add custom headers
     foreach my $i (@{$self->{'admin'}{'custom_header'}}) {
-        $hdr->add($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
+        $message->add_header($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
     }
 
     ## Add RFC 2919 header field
-    if ($hdr->get('List-Id')) {
-        Log::do_log('notice', 'Found List-Id: %s', $hdr->get('List-Id'));
-        $hdr->delete('List-ID');
+    if ($message->get_header('List-Id')) {
+        Log::do_log('notice', 'Found List-Id: %s', $message->get_header('List-Id'));
+        $message->delete_header('List-ID');
     }
-    $self->add_list_header($hdr, 'id');
+    $self->add_list_header($message, 'id');
 
     ## Add RFC 2369 header fields
     foreach my $field (
@@ -2018,18 +2017,18 @@ sub distribute_msg {
         ) {
         if (scalar grep { $_ eq $field }
             @{$self->{'admin'}{'rfc2369_header_fields'}}) {
-            $self->add_list_header($hdr, $field);
+            $self->add_list_header($message, $field);
         }
     }
 
     ## Add RFC5064 Archived-At SMTP header field
-    $self->add_list_header($hdr, 'archived_at');
+    $self->add_list_header($message, 'archived_at');
 
     ## Remove outgoing header fileds
     ## Useful to remove some header fields that Sympa has set
     if ($self->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$self->{'admin'}{'remove_outgoing_headers'}}) {
-            $hdr->delete($field);
+            $message->delete_header($field);
         }
     }
 
@@ -2412,7 +2411,7 @@ sub send_dsn {
     # Delivery result, "failed" or "delivered".
     my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
 
-    my $header = $message->as_entity()->head->as_string();
+    my $header = $message->header_as_string;
 
     my $date =
         (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
@@ -2785,8 +2784,7 @@ sub send_msg {
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
     my $apply_tracking       = $param{'apply_tracking'};
 
-    my $hdr                 = $message->{'msg'}->head;
-    my $original_message_id = $hdr->get('Message-Id');
+    my $original_message_id = $message->{'message_id'};
     my $name                = $self->{'name'};
     my $robot               = $self->{'domain'};
     my $admin               = $self->{'admin'};
@@ -2812,7 +2810,6 @@ sub send_msg {
     my $from = $self->get_list_address('return_path');
 
     #save the message before modifying it
-    my $saved_msg = $message->{'msg'}->dup;
     my $nbr_smtp  = 0;
     my $nbr_verp  = 0;
 
@@ -3082,8 +3079,8 @@ sub get_recipients_per_mode {
                 . tools::escape_chars($user->{'email'} . '@enc'))
             ) {
             ## Missing User certificate
-            my $subject = $message->{'msg'}->head->get('Subject');
-            my $sender  = $message->{'msg'}->head->get('From');
+            my $subject = $message->{'decoded_subject'};
+            my $sender  = $message->{'sender'};
             unless (
                 $self->send_file(
                     'x509-user-cert-missing',
@@ -3189,8 +3186,6 @@ sub get_recipients_per_mode {
 #################################################################
 sub send_to_editor {
     my ($self, $method, $message) = @_;
-    my $msg     = $message->{'msg'};
-    my $file    = $message->{'filename'};
     my $encrypt = 'smime_crypted' if $message->{'smime_crypted'};
     Log::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
         $self, $method, $message, $encrypt);
@@ -3228,12 +3223,7 @@ sub send_to_editor {
             Log::do_log('notice', 'Could Not open %s', $mod_file);
             return undef;
         }
-        unless (open(MSG, $file)) {
-            Log::do_log('notice', 'Could not open %s', $file);
-            return undef;
-        }
-        print OUT <MSG>;
-        close MSG;
+        print OUT $message->to_string;
         close OUT;
 
         # prepare HTML view of this message
@@ -3252,8 +3242,6 @@ sub send_to_editor {
 
     @rcpt = $self->get_editors_email();
 
-    my $hdr = $message->{'msg'}->head;
-
     ## Did we find a recipient?
     if ($#rcpt < 0) {
         Log::do_log(
@@ -3261,7 +3249,6 @@ sub send_to_editor {
             "No editor found for list %s. Trying to proceed ignoring nomail option",
             $self->{'name'}
         );
-        my $messageid = $hdr->get('Message-Id');
 
         @rcpt = $self->get_editors_email({'ignore_nomail', 1});
         Log::do_log('notice',
@@ -3273,21 +3260,21 @@ sub send_to_editor {
             Log::do_log(
                 'notice',
                 'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them',
-                $messageid,
-                $self->{'name'}
+                $message,
+                $self
             );
         } else {
             Log::do_log(
                 'err',
                 'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-                $messageid,
-                $self->{'name'}
+                $message,
+                $self
             );
             return undef;
         }
     }
 
-    my $subject = tools::decode_header($hdr, 'Subject');
+    my $subject = $message->{'decoded_subject'};
     my $param = {
         'modkey'         => $modkey,
         'boundary'       => $boundary,
@@ -3304,10 +3291,7 @@ sub send_to_editor {
 
     foreach my $recipient (@rcpt) {
         if ($encrypt and $encrypt eq 'smime_crypted') {
-            ## is $msg->body_as_string respect base64 number of char per line ??
-            my $cryptedmsg =
-                tools::smime_encrypt($msg->head, $msg->body_as_string,
-                $recipient);
+            my $cryptedmsg = tools::smime_encrypt($message, $recipient);
             unless ($cryptedmsg) {
                 Log::do_log('notice',
                     'Failed encrypted message for moderator');
@@ -3330,7 +3314,7 @@ sub send_to_editor {
             $param->{'msg_path'} = $crypted_file;
 
         } else {
-            $param->{'msg_path'} = $file;
+            $param->{'msg_path'} = $message->{'filename'}; #XXX FIXME
         }
         # create a one time ticket that will be used as un md5 URL credential
 
@@ -3383,10 +3367,10 @@ sub send_to_editor {
 #       | undef
 ####################################################
 sub send_auth {
+    Log::do_log('debug3', '(%s, %s)', @_);
     my ($self, $message) = @_;
-    my ($sender, $msg, $file) =
-        ($message->{'sender'}, $message->{'msg'}, $message->{'filename'});
-    Log::do_log('debug3', '(%s, %s)', $sender, $file);
+
+    my $sender = $message->{'sender'};
 
     ## Ensure 1 second elapsed since last message
     sleep(1);
@@ -3423,12 +3407,7 @@ sub send_auth {
         return undef;
     }
 
-    unless (open IN, $file) {
-        Log::do_log('notice', 'Cannot open file %s', $file);
-        return undef;
-    }
-
-    print OUT <IN>;
+    print OUT $message->to_string;
 
     close IN;
     close OUT;
@@ -3436,7 +3415,7 @@ sub send_auth {
     my $param = {
         'authkey'  => $authkey,
         'boundary' => "----------------- Message-Id: \<$messageid\>",
-        'file'     => $file
+        'file'     => $message->{'filename'}, #XXX FIXME
     };
 
     if ($self->is_there_msg_topic()) {
@@ -3616,10 +3595,10 @@ sub archive_send_last {
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
 
-    my $mail = Message->new_from_file("$dir/last_message",
+    my $message = Message->new_from_file("$dir/last_message",
         list => $self,
         'noxsympato' => 'noxsympato');
-    unless (defined $mail) {
+    unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");
         return undef;
@@ -3629,11 +3608,11 @@ sub archive_send_last {
     my $msg = {};
     $msg->{'id'} = 1;
 
-    $msg->{'subject'} = tools::decode_header($mail, 'Subject');
-    $msg->{'from'}    = tools::decode_header($mail, 'From');
-    $msg->{'date'}    = tools::decode_header($mail, 'Date');
+    $msg->{'subject'} = tools::decode_header($message, 'Subject');
+    $msg->{'from'}    = tools::decode_header($message, 'From');
+    $msg->{'date'}    = tools::decode_header($message, 'Date');
 
-    $msg->{'full_msg'} = $mail->{'msg'}->as_string;
+    $msg->{'full_msg'} = $message->as_string;
 
     push @msglist, $msg;
 
@@ -6761,30 +6740,29 @@ sub archive_msg {
     Log::do_log('debug2', 'For %s', $self->{'name'});
 
     if ($self->is_archived()) {
-        my $msg = $message->{'msg'};
+        my $msg_string = $message->as_string;
         if (    tools::smart_eq($message->{'smime_crypted'}, 'smime_crypted')
             and
             tools::smart_eq($self->{admin}{archive_crypted_msg}, 'original'))
         {
-            $msg = $message->{'orig_msg'};
+            $msg_string = $message->{'orig_msg_as_string'};
         }
 
-        Sympa::Archive::store_last($self, $msg);
+        Sympa::Archive::store_last($self, $msg_string);
 
         ## copie a message in outgoing spool using a unique file name based on
         ## listname
 
         ## ignoring message with a no-archive flag
-        if (ref($msg)
-            and !tools::smart_eq(
-                $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
-            and (  grep {/yes/i} $msg->head->get('X-no-archive')
+        if (!tools::smart_eq(
+            $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
+            and (  grep {/yes/i} $message->get_header('X-no-archive')
                 or grep {/no\-external\-archive/i}
-                $msg->head->get('Restrict'))
+                $message->get_header('Restrict'))
             ) {
             Log::do_log('info',
                 "Do not archive message with no-archive flag for list %s",
-                $self->get_list_id);
+                $self);
             return 1;
         }
 
@@ -6811,12 +6789,12 @@ sub archive_msg {
             return undef;
         }
         Log::do_log('debug', 'Put message in %s', $filename);
-        if (ref($msg)) {
-            $msg->print(\*OUT);
+        if (ref $msg_string) {
+            $msg_string->print(\*OUT);
         } else {
-            print OUT $msg;
+            print OUT $msg_string;
         }
-        close(OUT);
+        close OUT;
     }
 }
 
@@ -9742,11 +9720,8 @@ sub store_digest {
         # send the date of the next digest to the users
     }
 
-    my $msg = $message->{'msg'};
-    #$msg->head->delete('Received') if ($msg->head->get('received'));
-    $msg->print(\*OUT);
-    printf OUT "\n%s\n\n", tools::get_separator();
-    close(OUT);
+    printf OUT "%s\n%s\n\n", $message->as_string, tools::get_separator();
+    close OUT;
 
     #replace the old time
     utime $oldtime, $oldtime, $filename unless ($newfile);
@@ -12664,16 +12639,17 @@ FIXME @todo doc
 =cut
 
 sub add_list_header {
-    my $self  = shift;
-    my $hdr   = shift;
-    my $field = shift;
+    my $self    = shift;
+    my $message = shift;
+    my $field   = shift;
+
     my $robot = $self->{'domain'};
 
     if ($field eq 'id') {
-        $hdr->add('List-Id',
+        $message->add_header('List-Id',
             sprintf('<%s.%s>', $self->{'name'}, $self->{'admin'}{'host'}));
     } elsif ($field eq 'help') {
-        $hdr->add(
+        $message->add_header(
             'List-Help',
             sprintf(
                 '<mailto:%s@%s?subject=help>',
@@ -12682,7 +12658,7 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'unsubscribe') {
-        $hdr->add(
+        $message->add_header(
             'List-Unsubscribe',
             sprintf(
                 '<mailto:%s@%s?subject=unsubscribe%%20%s>',
@@ -12692,7 +12668,7 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'subscribe') {
-        $hdr->add(
+        $message->add_header(
             'List-Subscribe',
             sprintf(
                 '<mailto:%s@%s?subject=subscribe%%20%s>',
@@ -12702,15 +12678,15 @@ sub add_list_header {
             )
         );
     } elsif ($field eq 'post') {
-        $hdr->add('List-Post',
+        $message->add_header('List-Post',
             sprintf('<mailto:%s>', $self->get_list_address()));
     } elsif ($field eq 'owner') {
-        $hdr->add('List-Owner',
+        $message->add_header('List-Owner',
             sprintf('<mailto:%s>', $self->get_list_address('owner')));
     } elsif ($field eq 'archive') {
         if (Conf::get_robot_conf($robot, 'wwsympa_url')
             and $self->is_web_archived()) {
-            $hdr->add(
+            $message->add_header(
                 'List-Archive',
                 sprintf('<%s/arc/%s>',
                     Conf::get_robot_conf($robot, 'wwsympa_url'),
@@ -12729,8 +12705,9 @@ sub add_list_header {
                 sprintf '%s/arcsearch_id/%s/%s-%s/%s',
                 Conf::get_robot_conf($robot, 'wwsympa_url'),
                 $self->{'name'}, $yyyy, $mm,
-                tools::clean_msg_id($hdr->get('Message-Id'));
-            $hdr->add('Archived-At', '<' . $archived_msg_url . '>');
+                $message->{'message_id'}    #FIXME: Should be escaped.
+                ;
+            $message->add_header('Archived-At', '<' . $archived_msg_url . '>');
         } else {
             return 0;
         }
