@@ -1904,15 +1904,34 @@ sub _fix_utf8_parts {
 
     if ($entity->head->get('X-Sympa-Attach')) {    # Need re-attaching data.
         my $data = shift @{$attachments};
-        if (ref($data) ne 'MIME::Entity') {
+        if (ref $data eq 'MIME::Entity') {
+            $entity->parts([$data]);
+        } elsif (ref $data eq 'SCALAR' or ref $data eq 'ARRAY') {
             eval { $data = $parser->parse_data($data); };
             if ($@) {
                 Log::do_log('notice', 'Failed to parse MIME data');
                 $data = $parser->parse_data('');
             }
+            $entity->parts([$data]);
+        } else {
+            if (ref $data eq 'Message') {
+                $data = $data->as_string;
+            } elsif (ref $data) {
+                die sprintf 'Unsupported type for attachment: %s', ref $data;
+            } else {   # already stringified.
+                eval { $parser->parse_data($data); };   # check only.
+                if ($@) {
+                    Log::do_log('notice', 'Failed to parse MIME data');
+                    $data = '';
+                }
+            }
+            $parser->extract_nested_messages(0);   # Keep attachments intact.
+            $data =
+                $parser->parse_data($entity->head->as_string . "\n" . $data);
+            $parser->extract_nested_messages(1);
+            %$entity = %$data;
         }
         $entity->head->delete('X-Sympa-Attach');
-        $entity->parts([$data]);
     } elsif ($entity->parts) {
         my @newparts = ();
         foreach my $part ($entity->parts) {
