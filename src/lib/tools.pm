@@ -1691,7 +1691,7 @@ sub smime_decrypt {
     ## Now remove headers from $msg_as_string
     my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $msg_as_string, 2;
 
-    my $head = $descryptedmsg->head;
+    my $head = $decryptedmsg->head;
     ## foreach header defined in the incomming message but undefined in the
     ## decrypted message, add this header in the decrypted form.
     my $predefined_headers;
