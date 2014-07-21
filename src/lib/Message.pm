@@ -408,11 +408,9 @@ sub to_string {
     if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
         $str .= sprintf "X-Sympa-Spam-Status: %s\n", $self->{'spam_status'};
     }
-    # This must be the last field of attribute headers.
-    if (defined $self->{'envelope_sender'}) {
-        my $val = $self->{'envelope_sender'};
-        $val = "<$val>" unless $val eq '<>';
-        $str .= sprintf "Return-Path: %s\n", $val;
+    # This terminates pseudo-header part for attributes.
+    unless (defined $self->{'envelope_sender'}) {
+        $str .= "Return-Path: \n";
     }
 
     $str .= $self->as_string;
@@ -623,7 +621,14 @@ sub as_string {
 
     die 'Bug in logic.  Ask developer'
         unless $self->{_head} and defined $self->{_body};
-    return $self->{_head}->as_string . "\n" . $self->{_body};
+
+    my $return_path = '';
+    if (defined $self->{'envelope_sender'}) {
+        my $val = $self->{'envelope_sender'};
+        $val = "<$val>" unless $val eq '<>';
+        $return_path = sprintf "Return-Path: %s\n", $val;
+    }
+    return $return_path . $self->{_head}->as_string . "\n" . $self->{_body};
 }
 
 =over

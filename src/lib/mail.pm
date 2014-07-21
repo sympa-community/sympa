@@ -847,7 +847,12 @@ sub sending {
     } else {    # send it now
         Log::do_log('debug', "NOT USING BULK");
         *SMTP = smtpto($from, $rcpt, $robot);
-        print SMTP $message->as_string;
+
+        # Send message stripping Return-Path pseudo-header field.
+        my $msg_string = $message->as_string;
+        $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
+
+        print SMTP $msg_string;
         unless (close SMTP) {
             Log::do_log('err', 'Could not close safefork to sendmail');
             return undef;

@@ -504,7 +504,8 @@ while (!$end) {
                 *SMTP =
                     mail::smtpto($return_path, \$rcpt, $bulk->{'robot'},
                     $notification_id);
-                # Message with customized data
+                # Message with customized data, stripped Return-Path:.
+                $messageasstring =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
                 print SMTP $messageasstring;
                 close SMTP;
             }
@@ -534,6 +535,8 @@ while (!$end) {
             *SMTP =
                 mail::smtpto($bulk->{'returnpath'}, \@rcpts,
                 $bulk->{'robot'});
+            # Stripping Return-Path: pseudo-header field.
+            $messageasstring_init =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
             print SMTP $messageasstring_init;
             close SMTP;
         }

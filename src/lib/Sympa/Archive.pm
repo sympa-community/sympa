@@ -381,7 +381,7 @@ sub convert_single_message {
 
     my $msg_as_string;
     if (ref $message eq 'Message') {
-        $msg_as_string = $message->to_string; # Preserve Return-Path:.
+        $msg_as_string = $message->as_string;
     } elsif (ref $message eq 'HASH') {
         $msg_as_string = $message->{'messageasstring'};
     } else {
