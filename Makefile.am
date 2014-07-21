@@ -30,6 +30,7 @@ check_SCRIPTS = t/Language.t \
 		t/compile_executables.t \
 		t/tools_data.t \
 		t/tools_file.t \
+		t/Tools_SMIME.t \
 		t/tools_time.t
 check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 	     t/locale/cs/LC_MESSAGES/web_help.mo \

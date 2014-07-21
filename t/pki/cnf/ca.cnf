@@ -1,0 +1,52 @@
+[ req ]
+default_bits       = 2048
+distinguished_name = req_dn
+x509_extensions    = req_extensions
+prompt             = no
+
+[ req_dn ]
+organizationName       = sympa developpers
+organizationalUnitName = unit testing
+commonName             = Test CA
+emailAddress           = test@sympa.org
+
+[ req_extensions ]
+basicConstraints       = CA:true
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer
+keyUsage               = cRLSign,keyCertSign
+
+[ ca ]
+default_ca      = default_ca
+
+[ default_ca ]
+dir              = .
+certificate      = $dir/crt/ca.pem
+private_key      = $dir/key/ca.pem
+certs            = $dir/crt              # Where the issued certs are kept
+serial           = $dir/serial           # The current serial number
+database         = $dir/index.txt        # database index file.
+
+new_certs_dir    = $dir/new              # default place for new certs.
+crl_dir          = $dir/crl              # Where the issued crl are kept
+
+default_days     = 3650                  # how long to certify for
+default_crl_days = 30                    # how long before next CRL
+default_md       = sha1                  # which md to use.
+preserve         = no                    # keep passed DN ordering
+
+x509_extensions	 = ca_extensions
+policy           = ca_policy
+
+[ ca_policy ]
+organizationName       = match
+organizationalUnitName = supplied
+commonName             = supplied
+emailAddress           = supplied
+
+[ ca_extensions ]
+basicConstraints	= CA:FALSE
+subjectKeyIdentifier	= hash
+keyUsage                = digitalSignature,keyEncipherment
+extendedKeyUsage        = clientAuth,emailProtection
+subjectAltName          = email:copy
