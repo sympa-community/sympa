@@ -3290,34 +3290,18 @@ sub send_to_editor {
     }
 
     foreach my $recipient (@rcpt) {
+        my $new_message = Storable::dclone($message);
         if ($encrypt and $encrypt eq 'smime_crypted') {
-            my $cryptedmsg = tools::smime_encrypt($message, $recipient);
-            unless ($cryptedmsg) {
+            unless ($new_message->smime_encrypt($recipient)) {
                 Log::do_log('notice',
                     'Failed encrypted message for moderator');
                 #  send a generic error message : X509 cert missing
                 return undef;
             }
-
-            my $crypted_file =
-                  $Conf::Conf{'tmpdir'} . '/'
-                . $self->get_list_id()
-                . '.moderate.'
-                . $$;
-            unless (open CRYPTED, ">$crypted_file") {
-                Log::do_log('notice', 'Could not create file %s',
-                    $crypted_file);
-                return undef;
-            }
-            print CRYPTED $cryptedmsg;
-            close CRYPTED;
-            $param->{'msg_path'} = $crypted_file;
-
-        } else {
-            $param->{'msg_path'} = $message->{'filename'}; #XXX FIXME
         }
-        # create a one time ticket that will be used as un md5 URL credential
+        $param->{'msg'} = $new_message;
 
+        # create a one time ticket that will be used as un md5 URL credential
         unless (
             $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
                 $recipient, $robot, 'modindex/' . $name, 'mail'
@@ -3597,7 +3581,8 @@ sub archive_send_last {
 
     my $message = Message->new_from_file("$dir/last_message",
         list => $self,
-        'noxsympato' => 'noxsympato');
+        #XXX'noxsympato' => 'noxsympato'
+    );
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");

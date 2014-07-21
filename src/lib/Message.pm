@@ -916,6 +916,159 @@ sub _fix_html_part {
 
 =over
 
+=item smime_encrypt ( $email, [ $is_list ] )
+
+I<Instance method>.
+Encrypt message using certificate of user.
+
+Note that this method modifys Message object.
+
+Parameters:
+
+=over
+
+=item $email
+
+E-mail address of user.
+
+=item $is_list
+
+=back
+
+Returns:
+
+True value if encryption succeeded, or C<undef>.
+
+=back
+
+=cut
+
+# Old name: tools::smime_encrypt() which returns stringified message.
+# In trunk this is renamed to Message::encrypt().
+sub smime_encrypt {
+    my $message = shift;
+    my $email   = shift;
+    my $is_list = shift;
+
+    my $msg_header = $message->head;
+    # is $message->body_as_string respect base64 number of char per line ??
+    my $msg_body = $message->body_as_string;
+
+    my $usercert;
+    my $dummy;
+    my $cryptedmsg;
+    my $encrypted_body;
+
+    Log::do_log('debug2', '(%s, %s', $email, $is_list);
+    if ($is_list eq 'list') {
+        my $list = List->new($email);
+        ($usercert, $dummy) =
+            tools::smime_find_keys($list->{'dir'}, 'encrypt');
+    } else {
+        my $base =
+            "$Conf::Conf{'ssl_cert_dir'}/" . tools::escape_chars($email);
+        if (-f "$base\@enc") {
+            $usercert = "$base\@enc";
+        } else {
+            $usercert = "$base";
+        }
+    }
+    if (-r $usercert) {
+        my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . $email . "." . $$;
+
+        ## encrypt the incomming message parse it.
+        Log::do_log('debug3',
+            "$Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert"
+        );
+
+        if (!open(MSGDUMP,
+                "| $Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert"
+            )
+            ) {
+            Log::do_log('info', 'Can\'t encrypt message for recipient %s',
+                $email);
+        }
+        # don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted
+        # stuff that contains a whole header again... since MIME::Tools has
+        # got no function for this, we need to manually extract only the MIME
+        # headers...
+        #XXX$msg_header->print(\*MSGDUMP);
+        #XXXprintf MSGDUMP "\n%s", $msg_body;
+        my $mime_hdr = $msg_header->dup();
+        foreach my $t ($mime_hdr->tags()) {
+            $mime_hdr->delete($t) unless ($t =~ /^(mime|content)-/i);
+        }
+        $mime_hdr->print(\*MSGDUMP);
+
+        printf MSGDUMP "\n%s", $msg_body;
+        close(MSGDUMP);
+
+        my $status = $? / 256;
+        unless ($status == 0) {
+            Log::do_log(
+                'err',
+                'Unable to S/MIME encrypt message: %s',
+                $tools::openssl_errors{$status}
+            );
+            return undef;
+        }
+
+        ## Get as MIME object
+        open(NEWMSG, $temporary_file);
+        my $parser = MIME::Parser->new;
+        $parser->output_to_core(1);
+        unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
+            Log::do_log('notice', 'Unable to parse message');
+            return undef;
+        }
+        close NEWMSG;
+
+        ## Get body
+        open(NEWMSG, $temporary_file);
+        my $in_header = 1;
+        while (<NEWMSG>) {
+            if (!$in_header) {
+                $encrypted_body .= $_;
+            } else {
+                $in_header = 0 if (/^$/);
+            }
+        }
+        close NEWMSG;
+
+        unlink($temporary_file) unless ($main::options{'debug'});
+
+        ## foreach header defined in  the incomming message but undefined in
+        ## the
+        ## crypted message, add this header in the crypted form.
+        my $predefined_headers;
+        foreach my $header ($cryptedmsg->head->tags) {
+            $predefined_headers->{lc $header} = 1
+                if ($cryptedmsg->head->get($header));
+        }
+        foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
+            next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+            my ($tag, $val) = ($1, $2);
+            $cryptedmsg->head->add($tag, $val)
+                unless $predefined_headers->{lc $tag};
+        }
+
+    } else {
+        Log::do_log('notice',
+            'Unable to encrypt message to %s (missing certificat %s)',
+            $email, $usercert);
+        return undef;
+    }
+
+    #return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
+    $message->{_head} = $cryptedmsg->head;
+    $message->{_body} = $encrypted_body;
+    delete $message->{'msg'};    # Clear entity cache.
+
+    return $message;
+}
+
+=over
+
 =item personalize ( $list, [ $rcpt ], [ $data ] )
 
 I<Instance method>.

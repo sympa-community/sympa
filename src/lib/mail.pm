@@ -655,20 +655,8 @@ sub sendto {
                     return undef;
                 }
 
-                my $encrypted_msg_as_string;
-                my $encrypted_message;
-                if ((   $encrypted_msg_as_string =
-                        tools::smime_encrypt($message, $email)
-                    )
-                    and (
-                        $encrypted_message = Message->new(
-                            $encrypted_msg_as_string,
-                            #XXX list => $list,
-                            robot        => $robot,
-                            'noxsympato' => 'noxsympato'
-                        )
-                    )
-                    ) {
+                my $new_message = Storable::dclone($message);
+                unless ($new_message->smime_encrypt($email)) {
                     Log::do_log(
                         'err',
                         'Unable to encrypt message to list %s for recipient %s',
@@ -679,7 +667,7 @@ sub sendto {
                 }
                 unless (
                     sending(
-                        'message'       => $encrypted_message,
+                        'message'       => $new_message,
                         'rcpt'          => $email,
                         'from'          => $from,
                         'listname'      => $listname,
