@@ -256,7 +256,7 @@ sub new {
 		if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
 			&& ($hdr->get('Content-Type') !~ /signed-data/)) {
 			my ($dec_head, $dec_body_as_string) =
-				tools::smime_decrypt($self);
+                            $self->smime_decrypt;
 
 			unless ($dec_head) {
 				Log::do_log('debug', "Message could not be decrypted");
@@ -479,7 +479,7 @@ Get header of the message as L<MIME::Head> instance.
 Note that returned value is real reference to internal data structure.
 Even if it was changed, string representaion of message won't be updated.
 Alternatively, use L</add_header>(), L</delete_header>() or
-L</replace_header() to modify header.
+L</replace_header>() to modify header.
 
 =back
 
@@ -611,6 +611,10 @@ sub set_entity {
 
 I<Instance method>.
 Get a string representation of message in MIME-compliant format.
+
+Note that method like "set_string()" does not exist:
+You would be better to create new instance rather than replacing entire
+content.
 
 =back
 
@@ -916,6 +920,155 @@ sub _fix_html_part {
 
 =over
 
+=item smime_decrypt ( )
+
+I<Instance method>.
+Decrypt message using private key of user.
+
+Parameters:
+
+None.
+
+Returns:
+
+A list of decrypted header (L<MIME::Head> object) and string containing
+decrypted body.
+
+=back
+
+=cut
+
+# Old name: tools::smime_decrypt() which took MIME::Entity object and list;
+# returned new MIME::Entity object and string of body.
+sub smime_decrypt {
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
+
+    my $list = $message->{'list'};             # the recipient of the msg
+    my $from = $message->get_header('From');
+
+    ## an empty "list" parameter means mail to sympa@, listmaster@...
+    my $dir;
+    if (ref $list eq 'List') {
+        $dir = $list->{'dir'};
+    } else {
+        $dir = $Conf::Conf{home} . '/sympa';    #FIXME
+    }
+    my ($certs, $keys) = tools::smime_find_keys($dir, 'decrypt');
+    unless (defined $certs && @$certs) {
+        Log::do_log('err',
+            'Unable to decrypt message: missing certificate file');
+        return;
+    }
+
+    my $temporary_file =
+        $Conf::Conf{'tmpdir'} . "/" . $list->get_list_id() . "." . $$;
+    my $temporary_pwd = $Conf::Conf{'tmpdir'} . '/pass.' . $$;
+
+    ## dump the incoming message.
+    if (!open(MSGDUMP, "> $temporary_file")) {
+        Log::do_log('info', 'Can\'t store message in file %s: %s',
+            $temporary_file, $!);
+    }
+    print MSGDUMP $message->as_string;
+    close MSGDUMP;
+
+    my ($decryptedmsg, $pass_option, $msg_as_string);
+    if ($Conf::Conf{'key_passwd'} ne '') {
+        # if password is define in sympa.conf pass the password to OpenSSL
+        # using
+        $pass_option = "-passin file:$temporary_pwd";
+    }
+
+    ## try all keys/certs until one decrypts.
+    while (my $certfile = shift @$certs) {
+        my $keyfile = shift @$keys;
+        Log::do_log('debug', 'Trying decrypt with %s, %s',
+            $certfile, $keyfile);
+        if ($Conf::Conf{'key_passwd'} ne '') {
+            unless (POSIX::mkfifo($temporary_pwd, 0600)) {
+                Log::do_log('err', 'Unable to make fifo for %s',
+                    $temporary_pwd);
+                return;
+            }
+        }
+
+        Log::do_log('debug',
+            "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option"
+        );
+        open(NEWMSG,
+            "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |"
+        );
+
+        if ($Conf::Conf{'key_passwd'} ne '') {
+            unless (open(FIFO, "> $temporary_pwd")) {
+                Log::do_log('notice', 'Unable to open fifo for %s',
+                    $temporary_pwd);
+                return undef;
+            }
+            print FIFO $Conf::Conf{'key_passwd'};
+            close FIFO;
+            unlink($temporary_pwd);
+        }
+
+        $msg_as_string = do { local $/; <NEWMSG> };
+        close NEWMSG;
+        my $status = $? >> 8;
+
+        unless ($status == 0) {
+            Log::do_log(
+                'notice',
+                'Unable to decrypt S/MIME message: %s',
+                $tools::openssl_errors{$status}
+            );
+            next;
+        }
+
+        unlink($temporary_file) unless ($main::options{'debug'});
+
+        my $parser = MIME::Parser->new;
+        $parser->output_to_core(1);
+        unless ($decryptedmsg = $parser->parse_data($msg_as_string)) {
+            Log::do_log('notice', 'Unable to parse message');
+            last;
+        }
+    }
+
+    unless (defined $decryptedmsg) {
+        Log::do_log('err', 'Message could not be decrypted');
+        return;
+    }
+
+    ## Now remove headers from $msg_as_string
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $msg_as_string, 2;
+
+    my $head = $decryptedmsg->head;
+    ## foreach header defined in the incoming message but undefined in the
+    ## decrypted message, add this header in the decrypted form.
+    my $predefined_headers;
+    foreach my $header ($head->tags) {
+        $predefined_headers->{lc $header} = 1 if $head->get($header);
+    }
+    foreach my $header (split /\n(?![ \t])/, $message->header_as_string) {
+        next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+        my ($tag, $val) = ($1, $2);
+        $head->add($tag, $val) unless $predefined_headers->{lc $tag};
+    }
+    ## Some headers from the initial message should not be restored
+    ## Content-Disposition and Content-Transfer-Encoding if the result is
+    ## multipart
+    $head->delete('Content-Disposition')
+        if $message->get_header('Content-Disposition');
+    if ($head->get('Content-Type') =~ /multipart/i) {
+        $head->delete('Content-Transfer-Encoding')
+            if $message->get_header('Content-Transfer-Encoding');
+    }
+
+    return ($head, $body_string);
+}
+
+=over
+
 =item smime_encrypt ( $email, [ $is_list ] )
 
 I<Instance method>.
@@ -944,7 +1097,6 @@ True value if encryption succeeded, or C<undef>.
 =cut
 
 # Old name: tools::smime_encrypt() which returns stringified message.
-# In trunk this is renamed to Message::encrypt().
 sub smime_encrypt {
     my $message = shift;
     my $email   = shift;
