@@ -251,26 +251,9 @@ sub new {
     }
 
     ## S/MIME
-    if ($Conf::Conf{'openssl'} && $self->{'noxsympato'} ) {
-		## Decrypt messages
-		if (   ($hdr->get('Content-Type') =~ /application\/(x-)?pkcs7-mime/i)
-			&& ($hdr->get('Content-Type') !~ /signed-data/)) {
-			my ($dec_head, $dec_body_as_string) =
-                            $self->smime_decrypt;
-
-			unless ($dec_head) {
-				Log::do_log('debug', "Message could not be decrypted");
-				return undef;
-				## We should the sender and/or the listmaster
-			}
-
-			$self->{'smime_crypted'} = 'smime_crypted';
-			$self->{'orig_msg_as_string'} = $self->as_string;
-                        $self->{_head} = $dec_head;
-			$self->{_body} = $dec_body_as_string;
-                        delete $self->{'msg'};    # Clear entity cache.
-			Log::do_log('debug', 'Message has been decrypted');
-		}
+    if ($self->{'noxsympato'}) {
+        # Decrypt messages
+        $self->smime_decrypt;
     }
     ## TOPICS
     my $topics;
@@ -309,18 +292,18 @@ sub new_from_file {
 ## 'sender_headers' parameter.
 ## FIXME: S/MIME signer may not be same as the sender given by this function.
 sub _get_sender_email {
-    my $message = shift;
+    my $self = shift;
 
-    my $hdr = $message->{_head};
+    my $hdr = $self->{_head};
 
     my $sender = undef;
     my $gecos  = undef;
     foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
         if (lc $field eq 'return-path') {
             ## Try to get envelope sender
-            if (    $message->{'envelope_sender'}
-                and $message->{'envelope_sender'} ne '<>') {
-                $sender = lc($message->{'envelope_sender'});
+            if (    $self->{'envelope_sender'}
+                and $self->{'envelope_sender'} ne '<>') {
+                $sender = lc($self->{'envelope_sender'});
             }
         } elsif ($hdr->get($field)) {
             ## Try to get message header.
@@ -345,11 +328,11 @@ sub _get_sender_email {
     }
     unless (defined $sender) {
         Log::do_log('err', 'No valid sender address');
-        return undef;
+        return;
     }
     unless (tools::valid_email($sender)) {
         Log::do_log('err', 'Invalid sender address "%s"', $sender);
-        return undef;
+        return;
     }
 
     return ($sender, $gecos);
@@ -927,21 +910,33 @@ None.
 
 Returns:
 
-A list of decrypted header (L<MIME::Head> object) and string containing
-decrypted body.
+True value if message was decrypted.  Otherwise false value.
 
 =back
 
 =cut
 
-# Old name: tools::smime_decrypt() which took MIME::Entity object and list;
-# returned new MIME::Entity object and string of body.
+# Old name: tools::smime_decrypt() which took MIME::Entity object and list,
+# and won't modify Message object.
 sub smime_decrypt {
     Log::do_log('debug2', '(%s)', @_);
-    my $message = shift;
+    my $self = shift;
 
-    my $list = $message->{'list'};             # the recipient of the msg
-    my $from = $message->get_header('From');
+    unless (
+        $Conf::Conf{'openssl'}
+        and tools::smart_eq(
+            $self->{_head}->mime_attr('Content-Type'),
+            qr/application\/(x-)?pkcs7-mime/i
+        )
+        and !tools::smart_eq(
+            $self->{_head}->mime_attr('Content-Type.smime-type'),
+            qr/signed-data/i
+        )
+    ) {
+        return 0;
+    }
+
+    my $list = $self->{'list'};             # the recipient of the msg
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir;
@@ -954,7 +949,7 @@ sub smime_decrypt {
     unless (defined $certs && @$certs) {
         Log::do_log('err',
             'Unable to decrypt message: missing certificate file');
-        return;
+        return undef;
     }
 
     my $temporary_file =
@@ -966,11 +961,12 @@ sub smime_decrypt {
         Log::do_log('info', 'Can\'t store message in file %s: %s',
             $temporary_file, $!);
     }
-    print MSGDUMP $message->as_string;
+    print MSGDUMP $self->as_string;
     close MSGDUMP;
 
     my ($decryptedmsg, $pass_option, $msg_as_string);
-    if ($Conf::Conf{'key_passwd'} ne '') {
+    if (defined $Conf::Conf{'key_passwd'}
+        and length $Conf::Conf{'key_passwd'}) {
         # if password is define in sympa.conf pass the password to OpenSSL
         # using
         $pass_option = "-passin file:$temporary_pwd";
@@ -981,11 +977,12 @@ sub smime_decrypt {
         my $keyfile = shift @$keys;
         Log::do_log('debug', 'Trying decrypt with %s, %s',
             $certfile, $keyfile);
-        if ($Conf::Conf{'key_passwd'} ne '') {
+        if (defined $Conf::Conf{'key_passwd'}
+            and length $Conf::Conf{'key_passwd'}) {
             unless (POSIX::mkfifo($temporary_pwd, 0600)) {
                 Log::do_log('err', 'Unable to make fifo for %s',
                     $temporary_pwd);
-                return;
+                return undef;
             }
         }
 
@@ -996,7 +993,8 @@ sub smime_decrypt {
             "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |"
         );
 
-        if ($Conf::Conf{'key_passwd'} ne '') {
+        if (defined $Conf::Conf{'key_passwd'}
+            and length $Conf::Conf{'key_passwd'}) {
             unless (open(FIFO, "> $temporary_pwd")) {
                 Log::do_log('notice', 'Unable to open fifo for %s',
                     $temporary_pwd);
@@ -1032,7 +1030,7 @@ sub smime_decrypt {
 
     unless (defined $decryptedmsg) {
         Log::do_log('err', 'Message could not be decrypted');
-        return;
+        return undef;
     }
 
     ## Now remove headers from $msg_as_string
@@ -1045,7 +1043,7 @@ sub smime_decrypt {
     foreach my $header ($head->tags) {
         $predefined_headers->{lc $header} = 1 if $head->get($header);
     }
-    foreach my $header (split /\n(?![ \t])/, $message->header_as_string) {
+    foreach my $header (split /\n(?![ \t])/, $self->header_as_string) {
         next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
         my ($tag, $val) = ($1, $2);
         $head->add($tag, $val) unless $predefined_headers->{lc $tag};
@@ -1054,13 +1052,22 @@ sub smime_decrypt {
     ## Content-Disposition and Content-Transfer-Encoding if the result is
     ## multipart
     $head->delete('Content-Disposition')
-        if $message->get_header('Content-Disposition');
-    if ($head->get('Content-Type') =~ /multipart/i) {
+        if $self->get_header('Content-Disposition');
+    if (tools::smart_eq($head->mime_attr('Content-Type'), qr/multipart/i)) {
         $head->delete('Content-Transfer-Encoding')
-            if $message->get_header('Content-Transfer-Encoding');
+            if $self->get_header('Content-Transfer-Encoding');
     }
 
-    return ($head, $body_string);
+    # We should be the sender and/or the listmaster
+
+    $self->{'smime_crypted'} = 'smime_crypted';
+    $self->{'orig_msg_as_string'} = $self->as_string;
+    $self->{_head} = $head;
+    $self->{_body} = $body_string;
+    delete $self->{'msg'};    # Clear entity cache.
+    Log::do_log('debug', 'Message has been decrypted');
+
+    return $self;
 }
 
 =over
@@ -1094,13 +1101,13 @@ True value if encryption succeeded, or C<undef>.
 
 # Old name: tools::smime_encrypt() which returns stringified message.
 sub smime_encrypt {
-    my $message = shift;
+    my $self    = shift;
     my $email   = shift;
     my $is_list = shift;
 
-    my $msg_header = $message->head;
-    # is $message->body_as_string respect base64 number of char per line ??
-    my $msg_body = $message->body_as_string;
+    my $msg_header = $self->{_head};
+    # is $self->body_as_string respect base64 number of char per line ??
+    my $msg_body = $self->body_as_string;
 
     my $usercert;
     my $dummy;
@@ -1208,11 +1215,11 @@ sub smime_encrypt {
     }
 
     #return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
-    $message->{_head} = $cryptedmsg->head;
-    $message->{_body} = $encrypted_body;
-    delete $message->{'msg'};    # Clear entity cache.
+    $self->{_head} = $cryptedmsg->head;
+    $self->{_body} = $encrypted_body;
+    delete $self->{'msg'};    # Clear entity cache.
 
-    return $message;
+    return $self;
 }
 
 =over
@@ -1238,16 +1245,18 @@ A hashref including information of signer.
 # which won't alter Message object.
 sub check_smime_signature {
     Log::do_log('debug2', '(%s)', @_);
-    my $message = shift;
+    my $self = shift;
 
-    return undef
-        unless $message->get_header('Content-Type') =~
-            /multipart\/signed|application\/(x-)?pkcs7-mime/i;
+    return 0
+        unless tools::smart_eq(
+            $self->{_head}->mime_attr('Content-Type'),
+            qr/multipart\/signed|application\/(x-)?pkcs7-mime/i
+        );
 
     ## Messages that should not be altered (no footer)
-    $message->{'protected'} = 1;
+    $self->{'protected'} = 1;
 
-    my $sender = $message->{'sender'};
+    my $sender = $self->{'sender'};
 
     my $is_signed = {};
     $is_signed->{'body'}    = undef;
@@ -1279,12 +1288,10 @@ sub check_smime_signature {
         return undef;
     }
 
-    if ($message->{'smime_crypted'}) {
-        print MSGDUMP $message->header_as_string;
-        print MSGDUMP "\n";
-        print MSGDUMP $message->as_string;
+    if ($self->{'smime_crypted'}) {
+        print MSGDUMP $self->{'orig_msg_as_string'};
     } else {
-        print MSGDUMP $message->as_string;
+        print MSGDUMP $self->as_string;
     }
     close MSGDUMP;
 
@@ -1339,11 +1346,11 @@ sub check_smime_signature {
     my $certbundle = "$Conf::Conf{tmpdir}/certbundle.$$";
     my $tmpcert    = "$Conf::Conf{tmpdir}/cert.$$";
     my $extracted  = 0;
-    unless ($message->as_entity->parts) {    # could be opaque signing...
+    unless ($self->as_entity->parts) {    # could be opaque signing...
         $extracted +=
-            tools::smime_extract_certs($message->as_entity, $certbundle);
+            tools::smime_extract_certs($self->as_entity, $certbundle);
     } else {
-        foreach my $part ($message->as_entity->parts) {
+        foreach my $part ($self->as_entity->parts) {
             $extracted += tools::smime_extract_certs($part, $certbundle);
             last if $extracted;
         }
@@ -1450,8 +1457,8 @@ sub check_smime_signature {
     $is_signed->{'subject'} = $signer;
 
     if ($is_signed->{'body'}) {
-        $message->{'smime_signed'}  = 1;
-        $message->{'smime_subject'} = $is_signed->{'subject'};
+        $self->{'smime_signed'}  = 1;
+        $self->{'smime_subject'} = $is_signed->{'subject'};
         Log::do_log('debug', 'Message is signed, signature is checked');
     }
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
