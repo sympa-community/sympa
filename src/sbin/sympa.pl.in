@@ -1639,6 +1639,8 @@ sub process_message {
     # Load spam status
     $message->check_spam_status;
     $message->check_dkim_signature;
+    # Check S/MIME signatures
+    $message->check_smime_signature;
 
     my $type = $message->{'listtype'};
 
