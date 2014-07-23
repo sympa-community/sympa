@@ -65,6 +65,14 @@ use Scenario;
 use tools;
 use tt2;
 
+my %openssl_errors = (
+    1 => 'an error occurred parsing the command options',
+    2 => 'one of the input files could not be read',
+    3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
+    4 => 'an error occurred decrypting or verifying the message',
+    5 => 'the message was verified correctly but an error occurred writing out the signers certificates',
+);
+
 # Language context
 my $language = Sympa::Language->instance;
 
@@ -200,7 +208,7 @@ sub new {
     $self->{'size'} = length $messageasstring;
 
     ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
-    return undef unless defined $self->{'sender'};
+    #XXXreturn undef unless defined $self->{'sender'};
 
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
@@ -922,12 +930,11 @@ sub smime_decrypt {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
+    return 0 unless $Conf::Conf{'openssl'};
+    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     unless (
-        $Conf::Conf{'openssl'}
-        and tools::smart_eq(
-            $self->{_head}->mime_attr('Content-Type'),
-            qr/application\/(x-)?pkcs7-mime/i
-        )
+        ($content_type eq 'application/pkcs7-mime'
+        or $content_type eq 'application/x-pkcs7-mime')
         and !tools::smart_eq(
             $self->{_head}->mime_attr('Content-Type.smime-type'),
             qr/signed-data/i
@@ -1013,7 +1020,7 @@ sub smime_decrypt {
             Log::do_log(
                 'notice',
                 'Unable to decrypt S/MIME message: %s',
-                $tools::openssl_errors{$status}
+                $openssl_errors{$status} || $status
             );
             next;
         }
@@ -1163,7 +1170,7 @@ sub smime_encrypt {
             Log::do_log(
                 'err',
                 'Unable to S/MIME encrypt message: %s',
-                $tools::openssl_errors{$status}
+                $openssl_errors{$status} || $status
             );
             return undef;
         }
@@ -1247,11 +1254,16 @@ sub check_smime_signature {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    return 0
-        unless tools::smart_eq(
-            $self->{_head}->mime_attr('Content-Type'),
-            qr/multipart\/signed|application\/(x-)?pkcs7-mime/i
-        );
+    return 0 unless $Conf::Conf{'openssl'};
+    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
+    unless ($content_type eq 'multipart/signed'
+        or (($content_type eq 'application/pkcs7-mime'
+            or $content_type eq 'application/x-pkcs7-mime')
+            and tools::smart_eq(
+                $self->{_head}->mime_attr('Content-Type.smime-type'),
+                qr/signed-data/i))) {
+        return 0;
+    }
 
     ## Messages that should not be altered (no footer)
     $self->{'protected'} = 1;
@@ -1300,7 +1312,7 @@ sub check_smime_signature {
         Log::do_log(
             'err',
             'Unable to check S/MIME signature: %s',
-            $tools::openssl_errors{$status}
+            $openssl_errors{$status} || $status
         );
         return undef;
     }

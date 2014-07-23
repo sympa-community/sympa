@@ -65,16 +65,6 @@ my $cipher;
 my $separator =
     "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
 
-my %openssl_errors = (
-    1 => 'an error occurred parsing the command options',
-    2 => 'one of the input files could not be read',
-    3 =>
-        'an error occurred creating the PKCS#7 file or when reading the MIME message',
-    4 => 'an error occurred decrypting or verifying the message',
-    5 =>
-        'the message was verified correctly but an error occurred writing out the signers certificates'
-);
-
 ## Sets owner and/or access rights on a file.
 sub set_file_rights {
     my %param = @_;

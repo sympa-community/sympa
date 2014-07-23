@@ -1642,7 +1642,7 @@ sub process_message {
     # Check S/MIME signatures
     $message->check_smime_signature;
 
-    my $type = $message->{'listtype'};
+    # Now message content may be altered.
 
     if ($message->{'md5_check'}) {
         # message contain a valid checksum, it comes from wwsympa, so
@@ -1714,7 +1714,9 @@ sub process_message {
     my $list;
     my $list_address;
 
-    if (tools::smart_eq($message->{'listtype'}, qr/\A(listmaster|sympa)\z/)) {
+    my $type = $message->{'listtype'} || '';
+
+    if ($type eq 'listmaster' or $type eq 'sympa') {
         $list_address = $message->{'localpart'} . '@' . Conf::get_robot_conf($robot, 'host');
     } else {
         $list = $message->{'list'};
@@ -1948,14 +1950,13 @@ sub process_message {
     }
 
     if ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-        if ($type
-            and (  $type eq 'listmaster'
+        if ($type eq 'listmaster'
                 or $type eq 'sympa'
                 or $type eq 'subscribe'
                 or $type eq 'unsubscribe'
                 or $type eq 'owner'
                 or $type eq 'return_path'
-                or $type eq 'editor')
+                or $type eq 'editor'
             ) {
             Log::do_log('err',
                 'internal serveur error : distribution daemon should never proceed with command'
@@ -2124,16 +2125,13 @@ sub process_message {
 
         ## Mail addressed to the robot and mail
         ## to <list>-subscribe or <list>-unsubscribe are commands
-    } elsif ($type
-        and
-        ($type eq 'sympa' or $type eq 'subscribe' or $type eq 'unsubscribe'))
-    {
+    } elsif ($type eq 'sympa'
+        or $type eq 'subscribe'
+        or $type eq 'unsubscribe') {
         $status = DoCommand($rcpt, $robot, $message);
 
         ## forward mails to <list>-request <list>-owner etc
-    } elsif ($type
-        and ($type eq 'owner' or $type eq 'return_path' or $type eq 'editor'))
-    {
+    } elsif ($type eq 'owner' or $type eq 'return_path' or $type eq 'editor') {
         ## Simulate Smartlist behaviour with command in subject
         if ($type eq 'owner'    # -request
             and $subject_field
