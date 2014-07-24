@@ -501,6 +501,112 @@ sub check_spam_status {
 
 =over
 
+=item dkim_sign ( )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+# Old name: tools::dkim_sign() which took string and returned string.
+sub dkim_sign {
+    Log::do_log('(%s)', @_);
+    my $message = shift;
+    my %options = @_;
+
+    my $dkim_d          = $options{'dkim_d'};
+    my $dkim_i          = $options{'dkim_i'};
+    my $dkim_selector   = $options{'dkim_selector'};
+    my $dkim_privatekey = $options{'dkim_privatekey'};
+
+    unless ($dkim_selector) {
+        Log::do_log('err',
+            "DKIM selector is undefined, could not sign message");
+        return undef;
+    }
+    unless ($dkim_privatekey) {
+        Log::do_log('err',
+            "DKIM key file is undefined, could not sign message");
+        return undef;
+    }
+    unless ($dkim_d) {
+        Log::do_log('err',
+            "DKIM d= tag is undefined, could not sign message");
+        return undef;
+    }
+
+    my $temporary_keyfile = $Conf::Conf{'tmpdir'} . "/dkimkey." . $$;
+    if (!open(MSGDUMP, "> $temporary_keyfile")) {
+        Log::do_log('err', 'Can\'t store key in file %s', $temporary_keyfile);
+        return undef;
+    }
+    print MSGDUMP $dkim_privatekey;
+    close(MSGDUMP);
+
+    unless (eval "require Mail::DKIM::Signer") {
+        Log::do_log('err',
+            "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature"
+        );
+        return undef;
+    }
+    unless (eval "require Mail::DKIM::TextWrap") {
+        Log::do_log('err',
+            "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
+        );
+    }
+    my $dkim;
+    if ($dkim_i) {
+        # create a signer object
+        $dkim = Mail::DKIM::Signer->new(
+            Algorithm => "rsa-sha1",
+            Method    => "relaxed",
+            Domain    => $dkim_d,
+            Identity  => $dkim_i,
+            Selector  => $dkim_selector,
+            KeyFile   => $temporary_keyfile,
+        );
+    } else {
+        $dkim = Mail::DKIM::Signer->new(
+            Algorithm => "rsa-sha1",
+            Method    => "relaxed",
+            Domain    => $dkim_d,
+            Selector  => $dkim_selector,
+            KeyFile   => $temporary_keyfile,
+        );
+    }
+    unless ($dkim) {
+        Log::do_log('err', 'Can\'t create Mail::DKIM::Signer');
+        return undef;
+    }
+    # $new_body will store the body as fed to Mail::DKIM to reuse it
+    # when returning the message as string
+    my $msg_as_string = $message->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string .= "\r\n" unless $msg_as_string !~ /\r\n\z/;
+    $dkim->PRINT($msg_as_string);
+    unless ($dkim->CLOSE) {
+        Log::do_log('err', 'Cannot sign (DKIM) message');
+        return undef;
+    }
+    unlink $temporary_keyfile;
+
+    my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
+    $new_body =~ s/\r\n/\n/g;
+
+    # Signing is done. Rebuilding message as string with original body
+    # and new headers WITH DKIM line terminators.
+    # FIXME: DKIM-Signature field must be prepended to the header.
+    $message->add_header('DKIM-signature', $dkim->signature->as_string);
+    $message->{_body} = $new_body;
+    delete $message->{'msg'};    # Clear entity cache.
+
+    return $message;
+}
+
+=over
+
 =item check_dkim_signature ( )
 
 I<Instance method>.
@@ -525,6 +631,30 @@ sub check_dkim_signature {
         )
     ){
         $self->{'dkim_pass'} = tools::dkim_verifier($self->as_string);
+    }
+}
+
+=over
+
+=item remove_invalid_dkim_signature ( )
+
+I<Instance method>.
+XXX
+
+=back
+
+=cut
+
+# Old name: tools::remove_invalid_dkim_signature() which takes a message as
+# string and outputs idem without signature if invalid.
+sub remove_invalid_dkim_signature {
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
+
+    unless (tools::dkim_verifier($message->as_string)) {
+        Log::do_log('info',
+            'DKIM signature of message %s is invalid, removing', $message);
+        $message->delete_header('DKIM-Signature');
     }
 }
 
@@ -1657,6 +1787,14 @@ sub personalize {
     my $list = shift;
     my $rcpt = shift || undef;
     my $data = shift || {};
+
+    my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
+    if ($content_type eq 'multipart/encrypted'
+        or $content_type eq 'multipart/signed'
+        or $content_type eq 'application/pkcs7-mime'
+        or $content_type eq 'application/x-pkcs7-mime') {
+        return 1;
+    }
 
     my $entity = $self->as_entity->dup;
 
