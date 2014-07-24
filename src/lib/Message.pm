@@ -709,9 +709,8 @@ sub set_entity {
     my $entity = shift;
     return undef unless $entity;
 
-    local $Storable::canonical = 1;
-    my $orig = Storable::freeze($self->as_entity);
-    my $new  = Storable::freeze($entity);
+    my $orig = $self->as_entity->as_string;
+    my $new  = $entity->as_string;
 
     if ($orig ne $new) {
         $self->{_head} = $entity->head;
