@@ -581,7 +581,8 @@ sub dkim_sign {
         return undef;
     }
     # $new_body will store the body as fed to Mail::DKIM to reuse it
-    # when returning the message as string
+    # when returning the message as string.  Line terminaters must be
+    # normalized with CRLF.
     my $msg_as_string = $message->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string .= "\r\n" unless $msg_as_string !~ /\r\n\z/;
@@ -596,9 +597,9 @@ sub dkim_sign {
     $new_body =~ s/\r\n/\n/g;
 
     # Signing is done. Rebuilding message as string with original body
-    # and new headers WITH DKIM line terminators.
-    # FIXME: DKIM-Signature field must be prepended to the header.
-    $message->add_header('DKIM-signature', $dkim->signature->as_string);
+    # and new headers.
+    # Note that DKIM-Signature: field should be prepended to the header.
+    $message->add_header('DKIM-Signature', $dkim->signature->as_string, 0);
     $message->{_body} = $new_body;
     delete $message->{'msg'};    # Clear entity cache.
 
