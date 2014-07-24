@@ -740,8 +740,7 @@ content.
 sub as_string {
     my $self = shift;
 
-    die 'Bug in logic.  Ask developer'
-        unless $self->{_head} and defined $self->{_body};
+    die 'Bug in logic.  Ask developer' unless $self->{_head};
 
     my $return_path = '';
     if (defined $self->{'envelope_sender'}) {
@@ -749,7 +748,8 @@ sub as_string {
         $val = "<$val>" unless $val eq '<>';
         $return_path = sprintf "Return-Path: %s\n", $val;
     }
-    return $return_path . $self->{_head}->as_string . "\n" . $self->{_body};
+    return $return_path . $self->{_head}->as_string . "\n"
+        . (defined $self->{_body} ? $self->{_body} : '');
 }
 
 =over
