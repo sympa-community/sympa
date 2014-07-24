@@ -495,13 +495,10 @@ while (!$end) {
             # Initial message
             if ($new_message->{'dkim_d'}) {
                 $new_message->dkim_sign(
-                    {   'dkim_d' => $new_message->{'dkim_d'},
-                        'dkim_i' => $new_message->{'dkim_i'},
-                        'dkim_selector' =>
-                            $new_message->{'dkim_selector'},
-                        'dkim_privatekey' =>
-                            $new_message->{'dkim_privatekey'},
-                    }
+                    'dkim_d' => $new_message->{'dkim_d'},
+                    'dkim_i' => $new_message->{'dkim_i'},
+                    'dkim_selector' => $new_message->{'dkim_selector'},
+                    'dkim_privatekey' => $new_message->{'dkim_privatekey'},
                 );
             }
 
