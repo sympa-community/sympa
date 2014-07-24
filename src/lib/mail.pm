@@ -748,13 +748,9 @@ sub sending {
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
-    my $signed_msg;    # if signing
 
     if ($sign_mode and $sign_mode eq 'smime') {
-        if ($signed_msg =
-            tools::smime_sign($message->{'msg'}, $listname, $robot)) {
-            $message->{'msg'} = $signed_msg->dup;
-        } else {
+        unless ($message->smime_sign) {
             Log::do_log('notice', 'Unable to sign message from %s',
                 $listname);
             return undef;

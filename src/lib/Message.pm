@@ -1231,6 +1231,147 @@ sub smime_encrypt {
 
 =over
 
+=item smime_sign ( )
+
+I<Instance method>.
+XXX
+
+Parameters:
+
+None.
+
+Returns:
+
+True value if message was successfully signed.
+Otherwise false value.
+
+=back
+
+=cut
+
+# Old name: tools::smime_sign().
+sub smime_sign {
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
+
+    my $list = $message->{'list'};
+
+    #FIXME
+    return 1 unless $list;
+
+    my ($cert, $key) = tools::smime_find_keys($list->{dir}, 'sign');
+    my $temporary_file =
+        $Conf::Conf{'tmpdir'} . "/" . $list->get_list_id() . "." . $$;
+    my $temporary_pwd = $Conf::Conf{'tmpdir'} . '/pass.' . $$;
+
+    my ($signed_msg, $pass_option);
+    $pass_option = "-passin file:$temporary_pwd"
+        if defined $Conf::Conf{'key_passwd'}
+            and length $Conf::Conf{'key_passwd'};
+
+    ## Keep a set of header fields ONLY
+    ## OpenSSL only needs content type & encoding to generate a
+    ## multipart/signed msg
+    my $dup_head = $message->head->dup;
+    foreach my $field ($dup_head->tags) {
+        next if $field =~ /^(content-type|content-transfer-encoding)$/i;
+        $dup_head->delete($field);
+    }
+
+    ## dump the incoming message.
+    if (!open(MSGDUMP, "> $temporary_file")) {
+        Log::do_log('info', 'Can\'t store message in file %s',
+            $temporary_file);
+        return undef;
+    }
+    print MSGDUMP $dup_head->as_string;
+    print MSGDUMP "\n";
+    print MSGDUMP $message->body_as_string;
+    close MSGDUMP;
+
+    if (defined $Conf::Conf{'key_passwd'}
+        and length $Conf::Conf{'key_passwd'}) {
+        unless (POSIX::mkfifo($temporary_pwd, 0600)) {
+            Log::do_log('notice', 'Unable to make fifo for %s',
+                $temporary_pwd);
+        }
+    }
+    Log::do_log('debug',
+              "$Conf::Conf{'openssl'} smime -sign -rand $Conf::Conf{'tmpdir'}"
+            . "/rand -signer $cert $pass_option -inkey $key -in $temporary_file"
+    );
+    unless (
+        open(NEWMSG,
+            "$Conf::Conf{'openssl'} smime -sign  -rand $Conf::Conf{'tmpdir'}"
+                . "/rand -signer $cert $pass_option -inkey $key -in $temporary_file |"
+        )
+        ) {
+        Log::do_log('notice', 'Cannot sign message (open pipe)');
+        return undef;
+    }
+
+    if (defined $Conf::Conf{'key_passwd'}
+        and length $Conf::Conf{'key_passwd'}) {
+        unless (open(FIFO, "> $temporary_pwd")) {
+            Log::do_log('notice', 'Unable to open fifo for %s',
+                $temporary_pwd);
+        }
+
+        print FIFO $Conf::Conf{'key_passwd'};
+        close FIFO;
+        unlink($temporary_pwd);
+    }
+
+    my $new_message_as_string = do { local $/; <NEWMSG> };
+    close NEWMSG;
+    my $status = $? >> 8;
+    if ($status) {
+        Log::do_log(
+            'err',
+            'Unable to S/MIME sign message: %s',
+            $openssl_errors{$status} || $status
+        );
+        return undef;
+    }
+
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    unless ($signed_msg = $parser->parse_data($new_message_as_string)) {
+        Log::do_log('notice', 'Unable to parse message');
+        return undef;
+    }
+
+    unlink($temporary_file) unless ($main::options{'debug'});
+
+    ## foreach header defined in  the incoming message but undefined in the
+    ## crypted message, add this header in the crypted form.
+    my $head = $signed_msg->head;
+    my $predefined_headers;
+    foreach my $header ($head->tags) {
+        $predefined_headers->{lc $header} = 1
+            if $head->get($header);
+    }
+    foreach my $header (split /\n(?![ \t])/, $message->header_as_string) {
+        next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+        my ($tag, $val) = ($1, $2);
+        $head->add($tag, $val)
+            unless $predefined_headers->{lc $tag};
+    }
+
+    ## Keeping original message string in addition to updated headers.
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/,
+        $new_message_as_string, 2;
+
+    $message->{_head} = $head;
+    $message->{_body} = $body_string;
+    delete $message->{'msg'};    # Clear entity cache.
+    $message->check_smime_signature;
+
+    return $message;
+}
+
+=over
+
 =item check_smime_signature ( )
 
 I<Instance method>.
