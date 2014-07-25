@@ -889,7 +889,7 @@ sub mail2arc {
 
         # prepare a temporary file with clean message content (htlm parts are
         # cleaned)
-        my $safe = Sympa::Archive::clean_archived_message($robot,
+        my $safe = Sympa::Archive::clean_archived_message($robot,$list,
             "$arctxtdir/$newfile", $output);
         unless ($safe) {
             Log::do_log('err', "Could not clean message, ignoring message");

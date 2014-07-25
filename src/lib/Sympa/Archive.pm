@@ -317,11 +317,12 @@ sub clean_archive_directory {
 sub clean_archived_message {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
     my $robot  = shift;
+    my $list  = shift;
     my $input  = shift;
     my $output = shift;
 
     my $msg = Message->new_from_file($input,
-        #XXX list => $list,
+        list => $list,
         robot => $robot,
         'noxsympato' => 1);
     unless ($msg) {
