@@ -512,7 +512,7 @@ XXX
 
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
-    Log::do_log('(%s)', @_);
+    Log::do_log('debug','(%s)', @_);
     my $message = shift;
     my %options = @_;
 
