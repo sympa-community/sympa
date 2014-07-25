@@ -2794,11 +2794,11 @@ sub confirm {
     my $robot = shift;
     Log::do_log('debug', '(%s, %s)', $what, $robot);
 
-    $what =~ /^\s*(\S+)\s*$/;
-    my $key        = $1;
+    $what =~ /^\s*(\w+)\s*$/;
+    my $key        = $1 || '';
     my $start_time = time;    # get the time at the beginning
 
-    my $file;
+    my ($filename, $metadata);
     my $queueauth = Conf::get_robot_conf($robot, 'queueauth');
 
     unless (opendir DIR, $queueauth) {
@@ -2813,15 +2813,20 @@ sub confirm {
         return undef;
     }
 
-    # delete old file from the auth directory
-    foreach (grep (!/^\./, readdir(DIR))) {
-        if (/\_$key$/i) {
-            $file = "$queueauth\/$_";
-        }
+    # TODO: delete old file from the auth directory
+    foreach my $file (grep (!/^\./, readdir(DIR))) {
+        next unless $file =~ /\_$key$/i;
+        $filename = $queueauth . '/' . $file;
+        next unless -f $filename and -r $filename;
+
+        $metadata = tools::unmarshal_metadata($queueauth, $file,
+            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_(\w+)\z},
+            [qw(localpart domainpart authkey)]);
+        last if $metadata;
     }
     closedir DIR;
 
-    unless ($file && (-r $file)) {
+    unless ($metadata) {
         Log::do_log('info', 'CONFIRM %s from %s refused, auth failed',
             $key, $sender);
         report::reject_report_msg('user', 'unfound_file_message', $sender,
@@ -2830,9 +2835,9 @@ sub confirm {
         return 'wrong_auth';
     }
 
-    my $message = Message->new_from_file($file, robot => $robot);
-    unless (defined $message) {
-        Log::do_log('err', 'Unable to create Message object %s', $file);
+    my $message = Message->new_from_file($filename, %$metadata);
+    unless ($message) {
+        Log::do_log('err', 'Unable to create Message object %s', $filename);
         report::reject_report_msg('user', 'wrong_format_message', $sender,
             {'key' => $key},
             $robot, '', '');
@@ -2841,9 +2846,6 @@ sub confirm {
 
     my $list = $message->{'list'};
     $language->set_lang($list->{'admin'}{'lang'});
-
-    my $name  = $list->{'name'};
-    my $bytes = -s $file;
 
     my $msgid      = $message->{'message_id'};
     my $msg_string = $message->as_string;
@@ -2860,8 +2862,8 @@ sub confirm {
 
     unless (defined $action) {
         Log::do_log('err',
-            '(%s) Ignored because unable to evaluate scenario for list %s',
-            $msgid, $name);
+            'Message %s is ignored because unable to evaluate scenario for list %s',
+            $message, $list);
         report::reject_report_msg(
             'intern',
             'Message ignored because scenario "send" cannot be evaluated',
@@ -2882,7 +2884,7 @@ sub confirm {
                 'err',
                 'Calling to send_to_editor() function failed for user %s in list %s',
                 $sender,
-                $name
+                $list
             );
             report::reject_report_msg(
                 'intern',
@@ -2897,8 +2899,8 @@ sub confirm {
         }
 
         Log::do_log('info',
-            'Message with key %s for list %s from %s sent to editors',
-            $key, $name, $sender);
+            'Message %s with key %s for list %s from %s sent to editors',
+            $message, $key, $list, $sender);
 
         unless ($2 eq 'quiet') {
             unless (
@@ -2923,7 +2925,7 @@ sub confirm {
                 'err',
                 'Calling to send_to_editor() function failed for user %s in list %s',
                 $sender,
-                $name
+                $list
             );
             report::reject_report_msg(
                 'intern',
@@ -2938,8 +2940,8 @@ sub confirm {
         }
 
         Log::do_log('info',
-            'Message with key %s for list %s from %s sent to editors',
-            $name, $sender);
+            'Message %s with key %s for list %s from %s sent to editors',
+            $message, $list, $key, $sender);
 
         unless ($2 eq 'quiet') {
             unless (
@@ -2958,8 +2960,8 @@ sub confirm {
 
     } elsif ($action =~ /^reject(,(quiet))?/) {
         Log::do_log('notice',
-            'Message for %s from %s rejected, sender not allowed',
-            $name, $sender);
+            'Message %s for %s from %s rejected, sender not allowed',
+            $message, $list, $sender);
         unless ($2 eq 'quiet') {
             if (defined $result->{'tt2'}) {
                 unless (
@@ -3019,6 +3021,7 @@ sub confirm {
             }
 
             unless ($quiet || ($action =~ /quiet/i)) {
+                sleep 1;
                 unless (
                     report::notice_report_msg(
                         'message_confirmed', $sender,
@@ -3027,7 +3030,7 @@ sub confirm {
                     )
                     ) {
                     Log::do_log('notice',
-                        "Commands::confirm(): Unable to send template 'message_report', entry 'message_distributed' to $sender"
+                        'Unable to send template "message_report", entry "message_confirmed" to %s', $sender
                     );
                 }
             }
@@ -3039,7 +3042,7 @@ sub confirm {
             # this message is to be distributed but this daemon is dedicated
             # to commands -> move it to distribution spool
             unless (
-                $list->move_message($file, $Conf::Conf{'queuedistribute'})) {
+                $list->move_message($filename, $Conf::Conf{'queuedistribute'})) {
                 Log::do_log(
                     'err',
                     'Unable to move in spool for distribution message to list %s (daemon_usage = command)',
@@ -3060,15 +3063,15 @@ sub confirm {
 
             Log::do_log(
                 'info',
-                'Message for list %s from %s confirmed; file %s moved to spool %s for distribution message ID=%s',
-                $name,
+                'Message %s for list %s from %s confirmed; moved to spool %s for distribution message ID=%s',
+                $message,
+                $list,
                 $sender,
-                $file,
                 $Conf::Conf{'queuedistribute'},
                 $msgid
             );
         }
-        unlink($file);
+        unlink($filename);
 
         return 1;
     }
