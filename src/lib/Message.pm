@@ -521,7 +521,7 @@ XXX
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
     Log::do_log('debug','(%s)', @_);
-    my $message = shift;
+    my $self = shift;
     my %options = @_;
 
     my $dkim_d          = $options{'dkim_d'};
@@ -591,7 +591,7 @@ sub dkim_sign {
     # $new_body will store the body as fed to Mail::DKIM to reuse it
     # when returning the message as string.  Line terminaters must be
     # normalized with CRLF.
-    my $msg_as_string = $message->as_string;
+    my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
     $msg_as_string .= "\r\n" unless $msg_as_string !~ /\r\n\z/;
     $dkim->PRINT($msg_as_string);
@@ -607,11 +607,11 @@ sub dkim_sign {
     # Signing is done. Rebuilding message as string with original body
     # and new headers.
     # Note that DKIM-Signature: field should be prepended to the header.
-    $message->add_header('DKIM-Signature', $dkim->signature->as_string, 0);
-    $message->{_body} = $new_body;
-    delete $message->{'msg'};    # Clear entity cache.
+    $self->add_header('DKIM-Signature', $dkim->signature->as_string, 0);
+    $self->{_body} = $new_body;
+    delete $self->{'msg'};    # Clear entity cache.
 
-    return $message;
+    return $self;
 }
 
 =over
@@ -658,12 +658,12 @@ XXX
 # string and outputs idem without signature if invalid.
 sub remove_invalid_dkim_signature {
     Log::do_log('debug2', '(%s)', @_);
-    my $message = shift;
+    my $self = shift;
 
-    unless (tools::dkim_verifier($message->as_string)) {
+    unless (tools::dkim_verifier($self->as_string)) {
         Log::do_log('info',
-            'DKIM signature of message %s is invalid, removing', $message);
-        $message->delete_header('DKIM-Signature');
+            'DKIM signature of message %s is invalid, removing', $self);
+        $self->delete_header('DKIM-Signature');
     }
 }
 
@@ -973,7 +973,7 @@ sub get_topic {
 
 =over
 
-=item clean_html ( $robot )
+=item clean_html ( )
 
 I<Instance method>.
 XXX
@@ -984,7 +984,10 @@ XXX
 
 sub clean_html {
     my $self  = shift;
-    my $robot = shift;
+
+    my $robot = $self->{list}
+        ? $self->{list}->{'domain'}
+        : $self->{robot};
 
     my $entity = $self->as_entity->dup;
     if ($entity = _fix_html_part($entity, $robot)) {
@@ -1394,9 +1397,9 @@ Otherwise false value.
 # Old name: tools::smime_sign().
 sub smime_sign {
     Log::do_log('debug2', '(%s)', @_);
-    my $message = shift;
+    my $self = shift;
 
-    my $list = $message->{'list'};
+    my $list = $self->{'list'};
 
     #FIXME
     return 1 unless $list;
@@ -1414,7 +1417,7 @@ sub smime_sign {
     ## Keep a set of header fields ONLY
     ## OpenSSL only needs content type & encoding to generate a
     ## multipart/signed msg
-    my $dup_head = $message->head->dup;
+    my $dup_head = $self->head->dup;
     foreach my $field ($dup_head->tags) {
         next if $field =~ /^(content-type|content-transfer-encoding)$/i;
         $dup_head->delete($field);
@@ -1428,7 +1431,7 @@ sub smime_sign {
     }
     print MSGDUMP $dup_head->as_string;
     print MSGDUMP "\n";
-    print MSGDUMP $message->body_as_string;
+    print MSGDUMP $self->body_as_string;
     close MSGDUMP;
 
     if (defined $Conf::Conf{'key_passwd'}
@@ -1493,7 +1496,7 @@ sub smime_sign {
         $predefined_headers->{lc $header} = 1
             if $head->get($header);
     }
-    foreach my $header (split /\n(?![ \t])/, $message->header_as_string) {
+    foreach my $header (split /\n(?![ \t])/, $self->header_as_string) {
         next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
         my ($tag, $val) = ($1, $2);
         $head->add($tag, $val)
@@ -1504,12 +1507,12 @@ sub smime_sign {
     my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/,
         $new_message_as_string, 2;
 
-    $message->{_head} = $head;
-    $message->{_body} = $body_string;
-    delete $message->{'msg'};    # Clear entity cache.
-    $message->check_smime_signature;
+    $self->{_head} = $head;
+    $self->{_body} = $body_string;
+    delete $self->{'msg'};    # Clear entity cache.
+    $self->check_smime_signature;
 
-    return $message;
+    return $self;
 }
 
 =over

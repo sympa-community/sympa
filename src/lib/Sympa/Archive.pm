@@ -332,7 +332,7 @@ sub clean_archived_message {
         return undef;
     }
 
-    if ($message->clean_html($robot)) {
+    if ($message->clean_html) {
         if (open TMP, '>', $output) {
             print TMP $message->as_string;
             close TMP;
