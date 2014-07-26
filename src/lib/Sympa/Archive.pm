@@ -119,14 +119,15 @@ sub scan_dir_archive {
             $dir, $month, $file);
 
         my $message = Message->new_from_file("$dir/$month/arctxt/$file",
-            list => $list,
-            'noxsympato' => 'noxsympato'
+            list => $list
         );
         unless ($message) {
             Log::do_log('err', 'Unable to create Message object from file %s',
                 $file);
             return undef;
         }
+        # Decrypt message if possible
+        $message->smime_decrypt;
 
         Log::do_log('debug', 'MAIL object: %s', $message);
 
@@ -321,19 +322,19 @@ sub clean_archived_message {
     my $input  = shift;
     my $output = shift;
 
-    my $msg = Message->new_from_file($input,
+    my $message = Message->new_from_file($input,
         list => $list,
         robot => $robot,
-        'noxsympato' => 1);
-    unless ($msg) {
+    );
+    unless ($message) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);
         return undef;
     }
 
-    if ($msg->clean_html($robot)) {
-        if (open TMP, ">$output") {
-            print TMP $msg->as_string;
+    if ($message->clean_html($robot)) {
+        if (open TMP, '>', $output) {
+            print TMP $message->as_string;
             close TMP;
             return 1;
         } else {

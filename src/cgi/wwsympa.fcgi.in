@@ -10343,11 +10343,9 @@ sub do_send_me {
 
     my $message;
     if ($msgfile) {
-
         unless (
             $message = Message->new_from_file("$arcpath/arctxt/$msgfile",
                 list => $list,
-                'noxsympato' => 'noxsympato'
             )
             ) {
             $param->{'status'} = 'message_err';
@@ -10355,6 +10353,9 @@ sub do_send_me {
                 "$arcpath/arctxt/$msgfile");
             return undef;
         }
+        # Decrypt message if possible
+        $message->smime_decrypt;
+
         unless (
             mail::mail_forward(
                 $message,
@@ -22383,16 +22384,15 @@ sub do_tag_topic_by_sender {
     my $authqueue = Conf::get_robot_conf($robot, 'queueauth');
     my $filename  = "$authqueue\/$listname" . '@' . "$robot\_$in{'authkey'}";
 
-    my $mail = Message->new_from_file($filename, list => $list,
-        'noxsympato' => 'noxsympato');
-    unless ($mail) {
+    my $message = Message->new_from_file($filename, list => $list);
+    unless ($message) {
         report::reject_report_web('intern', 'cannot_parse_message',
             {'file' => $filename},
             $param->{'action'});
         wwslog('info', 'Cannot parse message %s', $filename);
         return undef;
     }
-    my $sender = $mail->{'sender'};
+    my $sender = $message->{'sender'};
 
     unless ($list->is_there_msg_topic()) {
         report::reject_report_web('user', 'no_topic', {}, $param->{'action'},

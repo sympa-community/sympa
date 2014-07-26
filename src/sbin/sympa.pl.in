@@ -1392,7 +1392,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         my $message =
-            Message->new_from_file("$t_spool/$filename", %$metadata);
+            Message->new_from_file($t_spool . '/' . $filename, %$metadata);
 
         my $robot =
               $message->{'list'}
@@ -1638,11 +1638,15 @@ sub process_message {
 
     # Load spam status
     $message->check_spam_status;
+    # Check DKIM signatures.
     $message->check_dkim_signature;
     # Check S/MIME signatures
     $message->check_smime_signature;
 
     # Now message content may be altered.
+
+    # Decrypt message if possible.
+    $message->smime_decrypt;
 
     if ($message->{'md5_check'}) {
         # message contain a valid checksum, it comes from wwsympa, so
@@ -3537,15 +3541,18 @@ sub SendDigest {
     foreach my $listaddress (@dfile) {
         my $filename = $Conf::Conf{'queuedigest'} . '/' . $listaddress;
 
-        my ($listname, $robot) = split /\@/, $listaddress;
-        my $list = List->new($listname, $robot);
-        unless ($list) {
-            Log::do_log('info',
-                'Unknown list %s, (robot %s), deleting digest file %s',
-                $filename, $listname, $robot);
+        my $metadata = tools::unmarshal_metadata($Conf::Conf{'queuedigest'},
+            $listaddress,
+            qr/\A([^\s\@]+)(?:\@([\w\.\-]+))?\z/,
+            [qw(localpart domainpart)]
+        );
+
+        unless ($metadata and $metadata->{'list'}) {
+            Log::do_log('info', 'Unknown list %s, deleting digest file',
+                $listaddress);
             Log::db_log(
-                {   'robot'        => $robot,
-                    'list'         => $list->{'name'},
+                {   #'robot'        => $robot,
+                    #'list'         => $list->{'name'},
                     'action'       => 'SendDigest',
                     'parameters'   => "$filename",
                     'target_email' => '',
@@ -3560,10 +3567,12 @@ sub SendDigest {
             unlink $filename;
             next;    # foreach my $listaddress
         }
+        my $list = $metadata->{'list'};
+        my $robot_id = $list->{'domain'};
 
         $language->set_lang(
             $list->{'admin'}{'lang'},
-            Conf::get_robot_conf($robot, 'lang'),
+            Conf::get_robot_conf($robot_id, 'lang'),
             $Conf::Conf{'lang'}, 'en'
         );
 
@@ -3578,7 +3587,7 @@ sub SendDigest {
             Log::do_log('info', 'Digest of the list %s sent (%d seconds)',
                 $list, time - $start_time);
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'SendDigest',
                     'parameters'   => "",

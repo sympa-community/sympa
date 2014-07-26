@@ -80,7 +80,7 @@ my $language = Sympa::Language->instance;
 
 =over
 
-=item new ( parameter =E<gt> value, ... )
+=item new ( $serialized, key =E<gt> value, ... )
 
 I<Constructor>.
 Creates a new Message object.
@@ -89,13 +89,13 @@ Parameters:
 
 =over 
 
-=item $file
+=item $serialized
 
-the message file
+Serialized message.
 
-=item $noxsympato
+=item key =E<gt> value, ...
 
-a boolean
+Metadata.
 
 =back 
 
@@ -138,7 +138,6 @@ sub new {
 
     # Get attributes
 
-    unless ($self->{'noxsympato'}) {
         pos($messageasstring) = 0;
         while ($messageasstring =~ /\G(X-Sympa-\w+): (.*?)\n(?![ \t])/cgs) {
             my ($k, $v) = ($1, $2);
@@ -159,10 +158,8 @@ sub new {
                     $k, $v);
             }
         }
-
         # Ignore Unix From_
         $messageasstring =~ /\GFrom (.*?)\n(?![ \t])/cgs;
-
         # Get envelope sender from Return-Path:.
         # If old style X-Sympa-From: has been found, omit Return-Path:.
         #
@@ -187,10 +184,10 @@ sub new {
                 }
             }
         }
-
         # Strip attributes.
         substr($messageasstring, 0, pos $messageasstring) = '';
-    }
+
+    # Check if message is parsable.
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
@@ -258,11 +255,6 @@ sub new {
         }
     }
 
-    ## S/MIME
-    if ($self->{'noxsympato'}) {
-        # Decrypt messages
-        $self->smime_decrypt;
-    }
     ## TOPICS
     my $topics;
     if ($topics = $hdr->get('X-Sympa-Topic')) {
@@ -356,17 +348,33 @@ sub _get_message_id {
 
 =over 4
 
-=item to_string
+=item to_string ( [ original =E<gt> 0|1 ] )
 
 I<Serializer>.
 Returns serialized data of Message object.
+
+Parameters:
+
+=over
+
+=item original =E<gt> 0|1
+
+If set to 1 and content has been decrypted, returns original content.
+Default is 0.
+
+=back
+
+Returns:
+
+Serialized representation of Message object.
 
 =back
 
 =cut
 
 sub to_string {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     my $str = '';
     if (ref $self->{'rcpt'} eq 'ARRAY' and @{$self->{'rcpt'}}) {
@@ -389,7 +397,7 @@ sub to_string {
         $str .= "Return-Path: \n";
     }
 
-    $str .= $self->as_string;
+    $str .= $self->as_string(%options);
 
     return $str;
 }
@@ -738,9 +746,13 @@ content.
 =cut
 
 sub as_string {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     die 'Bug in logic.  Ask developer' unless $self->{_head};
+
+    return $self->{'orig_msg_as_string'}
+        if $options{'original'} and $self->{'smime_crypted'};
 
     my $return_path = '';
     if (defined $self->{'envelope_sender'}) {

@@ -3579,15 +3579,15 @@ sub archive_send_last {
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
 
-    my $message = Message->new_from_file("$dir/last_message",
-        list => $self,
-        #XXX'noxsympato' => 'noxsympato'
-    );
+    my $message = Message->new_from_file($dir . '/last_message',
+        list => $self);
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");
         return undef;
     }
+    # Decrypt message if possible
+    $message->smime_decrypt;
 
     my @msglist;
     my $msg = {};
@@ -6725,13 +6725,9 @@ sub archive_msg {
     Log::do_log('debug2', 'For %s', $self->{'name'});
 
     if ($self->is_archived()) {
-        my $msg_string = $message->as_string;
-        if (    tools::smart_eq($message->{'smime_crypted'}, 'smime_crypted')
-            and
-            tools::smart_eq($self->{admin}{archive_crypted_msg}, 'original'))
-        {
-            $msg_string = $message->{'orig_msg_as_string'};
-        }
+        my $msg_string = $message->to_string(
+            original =>
+            tools::smart_eq($self->{admin}{archive_crypted_msg}, 'original'));
 
         Sympa::Archive::store_last($self, $msg_string);
 
@@ -6774,11 +6770,7 @@ sub archive_msg {
             return undef;
         }
         Log::do_log('debug', 'Put message in %s', $filename);
-        if (ref $msg_string) {
-            $msg_string->print(\*OUT);
-        } else {
-            print OUT $msg_string;
-        }
+        print OUT $msg_string;
         close OUT;
     }
 }
@@ -9705,7 +9697,7 @@ sub store_digest {
         # send the date of the next digest to the users
     }
 
-    printf OUT "%s\n%s\n\n", $message->as_string, tools::get_separator();
+    printf OUT "%s\n%s\n\n", $message->to_string, tools::get_separator();
     close OUT;
 
     #replace the old time
@@ -11665,7 +11657,7 @@ sub tag_topic {
     my $queuetopic = Conf::get_robot_conf($robot, 'queuetopic');
     my $list_id    = $self->get_list_id();
     $msg_id = tools::clean_msg_id($msg_id);
-    $msg_id =~ s/>$//;
+    $msg_id =~ s/>$//;    #FIXME: Message ID can contain hostile "/".
     my $file = $list_id . '.' . $msg_id;
 
     unless (open(FILE, ">$queuetopic/$file")) {

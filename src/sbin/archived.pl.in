@@ -265,8 +265,8 @@ while (!$end) {
                     next;
                 }
 
-                my $message;
-                unless ($message =
+                my $arc_file;
+                unless ($arc_file =
                     Sympa::Archive::search_msgid("$arcpath/arctxt", $msgid)) {
                     Log::do_log('err',
                         'No message with message ID %s found in %s/arctxt',
@@ -274,26 +274,27 @@ while (!$end) {
                     next;
                 }
 
+                # if not list owner, list editor nor listmaster, check if
+                # sender of remove order is sender of the message to be
+                # removed.
                 unless ($list->am_i('privileged_owner', $sender)
                     || $list->am_i('owner',  $sender)
                     || $list->am_i('editor', $sender)
                     || List::is_listmaster($sender, $list->{'domain'})) {
-                    # if not list owner or list editor or listmaster,n check
-                    # if sender of remove order is sender of the message to
-                    # remove
-
-                    my $new_message = Message->new_from_file(
-                        "$arcpath/arctxt/$message",
+                    # Analyze message to get sender from envelope sender and
+                    # sender_headers.
+                    my $arc_message = Message->new_from_file(
+                        "$arcpath/arctxt/$arc_file",
                         list         => $list,
-                        'noxsympato' => 'noxsympato'
                     );
-                    unless ($new_message) {
+                    unless ($arc_message) {
                         Log::do_log('err',
-                            "unable to load new message $arcpath/arctxt/$message"
+                            'Unable to load new message %s/arctxt/%s',
+                            $arcpath, $arc_file
                         );
                         next;
                     }
-                    my $messagesender = lc($new_message->{'sender'});
+                    my $messagesender = lc($arc_message->{'sender'});
 
                     unless ($sender eq $messagesender) {
                         Log::do_log('err',
@@ -320,12 +321,13 @@ while (!$end) {
 
                 unless (
                     rename(
-                        "$arcpath/arctxt/$message",
-                        "$arcpath/deleted/$message"
+                        "$arcpath/arctxt/$arc_file",
+                        "$arcpath/deleted/$arc_file"
                     )
                     ) {
                     Log::do_log('info',
-                        "remove_arc: unable to rename message $arcpath/arctxt/$message"
+                        'Unable to rename message %s/arctxt/%s',
+                        $arcpath, $arc_file
                     );
                     next;
                 }
