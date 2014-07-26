@@ -8,6 +8,9 @@
 ## It is now created by sympa.pl when the message is received.
 ## This script will create all missing HTML files in the moderation spool
 
+# Note: 6.2a.32 or earlier stored HTML view into modqueue.
+# 6.2b has dedicated directory specified by viewmail_dir parameter.
+
 use lib '--modulesdir--';
 use strict;
 use warnings;
@@ -38,64 +41,38 @@ $< = $> = (getpwnam(Sympa::Constants::USER))[2];
 # Sets the UMASK
 umask(oct($Conf::Conf{'umask'}));
 
+my $modspool = $Conf::Conf{'queuemod'};
+
 ## Loads message list
-unless (opendir SPOOL, $Conf::Conf{'queuemod'}) {
+unless ($modspool and opendir SPOOL, $modspool) {
     die "Unable to read spool";
 }
 
-foreach my $msg (sort grep(!/^\./, readdir SPOOL)) {
-    next if ($msg =~ /^\./);
+foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
+    next if $msg_file =~ /^\./;
 
-    $msg =~ /^(.*)\_([^\_]+)$/;
-    my ($listaddress, $modkey) = ($1, $2);
+    my $metadata = tools::unmarshal_metadata($modspool,
+        $msg_file,
+        qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
+        [qw(localpart domainpart modkey)]
+    );
+    next unless $metadata;
+    my $message = Message->new_from_file($modspool . '/' . $msg_file,
+        %$metadata);
+    next unless $message;
+    my $list = $message->{'list'};
 
-    if (-d "$Conf::Conf{'queuemod'}/.$msg") {
-        next;
-    }
+    print "Creating HTML version for $modspool/$msg_file\n";
 
-    print "Creating HTML version for $Conf::Conf{'queuemod'}/$msg\n";
-
-    my ($listname, $listrobot) = split /\@/, $listaddress;
-    my $self = List->new($listname, $listrobot);
-
-    my (@rcpt);
-    my $admin    = $self->{'admin'};
-    my $name     = $self->{'name'};
-    my $host     = $admin->{'host'};
-    my $robot    = $self->{'domain'};
-    my $modqueue = $Conf::Conf{'queuemod'};
-    unless ($name && $admin) {
-        print STDERR "Unkown list $listaddress, skipping\n";
-        next;
-    }
-
-    my $tmp_dir = "$modqueue\/.$name\_$modkey";
-    unless (-d $tmp_dir) {
-        unless (mkdir($tmp_dir, 0777)) {
-            die "May not create $tmp_dir";
-        }
-        my $mhonarc_ressources =
-            tools::search_fullpath($self, 'mhonarc-ressources.tt2');
-        unless ($mhonarc_ressources) {
-            die "Cannot find any MhOnArc ressource file";
-        }
-
-        ## generate HTML
-        chdir $tmp_dir;
-        my $saveout;
-        unless (open $saveout, '>&STDOUT'
-            and open STDOUT, '>', 'msg00000.html') {
-            die sprintf 'Could not open %s/msg00000.html: %s', $tmp_dir, $!;
-        }
-        system(
-            Conf::get_robot_conf($robot, 'mhonarc'),
-            '-single',
-            '-rcfile'     => $mhonarc_ressources,
-            '-definevars' => "listname='$name' hostname=$host",
-            "$modqueue/${name}_$modkey"
-        );
-        open STDOUT, '>&', $saveout;
-        chdir $Conf::Conf{'home'};
-    }
+    my $destination_dir =
+          $Conf::Conf{'viewmail_dir'} . '/mod/'
+        . $list->get_list_id() . '/'
+        . $metadata->{'modkey'};
+    Sympa::Archive::convert_single_message(
+        $list, $message,
+        'destination_dir' => $destination_dir,
+        'attachement_url' =>
+            join('/', '..', 'viewmod', $list->{'name'}, $metadata->{'modkey'}),
+    );
 }
 closedir SPOOL;
