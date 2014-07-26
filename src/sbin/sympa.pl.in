@@ -1636,17 +1636,18 @@ sub process_message {
         return undef;
     }
 
-    # Load spam status
+    # Load spam status.
     $message->check_spam_status;
     # Check DKIM signatures.
     $message->check_dkim_signature;
-    # Check S/MIME signatures
+    # Check S/MIME signature.
     $message->check_smime_signature;
+    # Decrypt message.  On success, check nested S/MIME signature.
+    if ($message->smime_decrypt and not $message->{'smime_signed'}) {
+        $message->check_smime_signature;
+    }
 
-    # Now message content may be altered.
-
-    # Decrypt message if possible.
-    $message->smime_decrypt;
+    # *** Now message content may be altered. ***
 
     if ($message->{'md5_check'}) {
         # message contain a valid checksum, it comes from wwsympa, so

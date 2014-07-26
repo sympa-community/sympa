@@ -1582,12 +1582,7 @@ sub check_smime_signature {
             $sender, $verify);
         return undef;
     }
-
-    if ($self->{'smime_crypted'}) {
-        print MSGDUMP $self->{'orig_msg_as_string'};
-    } else {
-        print MSGDUMP $self->as_string;
-    }
+    print MSGDUMP $self->as_string;
     close MSGDUMP;
 
     my $status = $? >> 8;
