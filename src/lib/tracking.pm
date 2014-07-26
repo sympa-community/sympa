@@ -26,6 +26,7 @@ package tracking;
 
 use strict;
 use warnings;
+use MIME::Base64 qw();
 
 use Log;
 use SDM;

@@ -34,6 +34,7 @@ use Encode::MIME::Header;    # for 'MIME-Q' encoding
 use File::Copy::Recursive;
 use File::Find;
 use HTML::StripScripts::Parser;
+use MIME::Base64 qw();
 use MIME::Decoder;
 use MIME::Lite::HTML;
 use MIME::Parser;
@@ -579,7 +580,7 @@ sub copy_dir {
             'Directory source "%s" doesn\'t exist. Copy impossible', $dir1);
         return undef;
     }
-    return (&File::Copy::Recursive::dircopy($dir1, $dir2));
+    return (File::Copy::Recursive::dircopy($dir1, $dir2));
 }
 
 #delete a directory and its content
@@ -1306,7 +1307,7 @@ sub crypt_password {
 
     ciphersaber_installed();
     return $inpasswd unless $cipher;
-    return ("crypt." . &MIME::Base64::encode($cipher->encrypt($inpasswd)));
+    return ("crypt." . MIME::Base64::encode($cipher->encrypt($inpasswd)));
 }
 
 ## decrypt a password
@@ -1323,7 +1324,7 @@ sub decrypt_password {
             'Password seems crypted while CipherSaber is not installed !');
         return $inpasswd;
     }
-    return ($cipher->decrypt(&MIME::Base64::decode($inpasswd)));
+    return ($cipher->decrypt(MIME::Base64::decode($inpasswd)));
 }
 
 sub load_mime_types {

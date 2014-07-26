@@ -38,7 +38,7 @@ package Sympa::Admin;
 
 use strict;
 use warnings;
-use File::Copy;
+use File::Copy qw();
 use IO::Scalar;
 
 use Conf;
@@ -898,7 +898,7 @@ sub rename_list {
 
     ## This code should be in List::rename()
     unless ($param{'mode'} eq 'copy') {
-        unless (move($list->{'dir'}, $new_dir)) {
+        unless (File::Copy::move($list->{'dir'}, $new_dir)) {
             Log::do_log('err', 'Unable to rename %s to %s: %m',
                 $list->{'dir'}, $new_dir);
             return 'internal';
@@ -913,7 +913,7 @@ sub rename_list {
             . $param{'new_listname'} . '@'
             . $param{'new_robot'};
         if (-d $arc_dir && $arc_dir ne $new_arc_dir) {
-            unless (move($arc_dir, $new_arc_dir)) {
+            unless (File::Copy::move($arc_dir, $new_arc_dir)) {
                 Log::do_log('err', 'Unable to rename archive %s', $arc_dir);
                 # continue even if there is some troubles with archives
                 # return undef;
@@ -927,7 +927,7 @@ sub rename_list {
             . $param{'new_listname'} . '@'
             . $param{'new_robot'};
         if (-d $bounce_dir && $bounce_dir ne $new_bounce_dir) {
-            unless (move($bounce_dir, $new_bounce_dir)) {
+            unless (File::Copy::move($bounce_dir, $new_bounce_dir)) {
                 Log::do_log('err',
                     "Unable to rename bounces from $bounce_dir to $new_bounce_dir"
                 );
@@ -1048,10 +1048,8 @@ sub rename_list {
                 }
 
                 ## Rename file
-                unless (
-                    move "$Conf::Conf{$spool}/$file",
-                    "$Conf::Conf{$spool}/$newfile"
-                    ) {
+                unless (File::Copy::move($Conf::Conf{$spool} . '/' . $file,
+                    $Conf::Conf{$spool} . '/' . $newfile)) {
                     Log::do_log(
                         'err',
                         'Unable to rename %s to %s: %s',
@@ -1071,10 +1069,9 @@ sub rename_list {
         }
         ## Digest spool
         if (-f "$Conf::Conf{'queuedigest'}/$old_listname") {
-            unless (
-                move "$Conf::Conf{'queuedigest'}/$old_listname",
-                "$Conf::Conf{'queuedigest'}/$param{'new_listname'}"
-                ) {
+            unless (File::Copy::move(
+                $Conf::Conf{'queuedigest'} . '/' . $old_listname,
+                $Conf::Conf{'queuedigest'} . '/' . $param{'new_listname'})) {
                 Log::do_log(
                     'err',
                     'Unable to rename %s to %s: %s',
@@ -1085,9 +1082,9 @@ sub rename_list {
                 next;
             }
         } elsif (-f "$Conf::Conf{'queuedigest'}/$old_listname\@$robot") {
-            unless (move "$Conf::Conf{'queuedigest'}/$old_listname\@$robot",
-                "$Conf::Conf{'queuedigest'}/$param{'new_listname'}\@$param{'new_robot'}"
-                ) {
+            unless (File::Copy::move(
+                $Conf::Conf{'queuedigest'} . '/' . $old_listname . '@' . $robot,
+                $Conf::Conf{'queuedigest'} . '/' . $param{'new_listname'} . '@' . $param{'new_robot'})) {
                 Log::do_log(
                     'err',
                     'Unable to rename %s to %s: %s',
@@ -1173,7 +1170,7 @@ sub clone_list_as_empty {
     # copy mandatory files
     foreach my $file ('config') {
         unless (
-            &File::Copy::copy(
+            File::Copy::copy(
                 $list->{'dir'} . '/' . $file,
                 $new_dir . '/' . $file
             )
@@ -1191,7 +1188,7 @@ sub clone_list_as_empty {
     {
         if (-f $list->{'dir'} . '/' . $file) {
             unless (
-                &File::Copy::copy(
+                File::Copy::copy(
                     $list->{'dir'} . '/' . $file,
                     $new_dir . '/' . $file
                 )

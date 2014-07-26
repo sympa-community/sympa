@@ -30,7 +30,7 @@ use Encode;
 use Mail::Address;
 use Time::HiRes qw();
 use MIME::Parser;
-use MIME::Base64;
+use MIME::Base64 qw();
 use Term::ProgressBar;
 use URI::Escape;
 use constant MAX => 100_000;
