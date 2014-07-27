@@ -877,23 +877,20 @@ sub mail2arc {
             $newfile = create_idx($monthdir) + 1;
         }
 
-        # savee arctxt dump of original message.
-        my $output = $Conf::Conf{'tmpdir'} . '/arc' . $newfile;
-        open ORIG, '<', "$queue/$file"
-            or die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file,
-            $!;
-        open DUMP, '>', "$arctxtdir/$newfile"
+        # Save arctxt dump of original message.
+        my $message = Message->new_from_file($queue . '/' . $file,
+            list => $list);
+        unless ($message) {
+            die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file, $!;
+        }
+        open my $fh, '>', "$arctxtdir/$newfile"
             or die sprintf 'Couldn\'t open file %s/%s: %s', $arctxtdir,
             $newfile, $!;
-        print DUMP join('', <ORIG>);
-        close ORIG;
-        close DUMP;
+        print $fh $message->as_string;
+        close $fh;
 
-        # prepare a temporary file with clean message content (htlm parts are
-        # cleaned)
-        my $safe = Sympa::Archive::clean_archived_message($robot,$list,
-            "$arctxtdir/$newfile", $output);
-        unless ($safe) {
+        # Prepare clean message content (HTML parts are cleaned)
+        unless ($message->clean_html) {
             Log::do_log('err', "Could not clean message, ignoring message");
             next;
         }
@@ -926,21 +923,17 @@ sub mail2arc {
 
         Log::do_log('debug', 'System call: %s', join(' ', @cmd));
 
-        my $savein;
-        unless (open $savein, '<&STDIN' and open STDIN, '<', $output) {
-            Log::do_log('err', 'Could not open %s: %s', $output, $!);
+        my $pipeout;
+        unless (open $pipeout, '|-', @cmd) {
+            Log::do_log('err', 'Could not open pipe: %m');
             return undef;
         }
-        my $exitcode = system(@cmd) >> 8;
-        open STDIN, '<&', $savein;
-
-        # Delete temporary file containing escaped HTML.
-        if ($output && -f $output) {
-            unlink $output;
-        }
+        print $pipeout $message->as_string;
+        close $pipeout;
+        my $status = $? >> 8;
 
         ## Remove lock if required
-        if ($exitcode == 75) {
+        if ($status == 75) {
             Log::do_log(
                 'notice',
                 'Removing lock directory %s',
@@ -948,19 +941,20 @@ sub mail2arc {
             );
             rmdir $monthdir . '/.mhonarc.lck';
 
-            my $savein;
-            unless (open $savein, '<&STDIN' and open STDIN, '<', $output) {
-                Log::do_log('err', 'Could not open %s: %s', $output, $!);
+            my $pipeout;
+            unless (open $pipeout, '|-', @cmd) {
+                Log::do_log('err', 'Could not open pipe: %m');
                 return undef;
             }
-            $exitcode = system(@cmd) >> 8;
-            open STDIN, '<&', $savein;
+            print $pipeout $message->as_string;
+            close $pipeout;
+            $status = $? >> 8;
         }
-        if ($exitcode) {
+        if ($status) {
             Log::do_log(
                 'err',
                 'Command %s failed with exit code %s',
-                join(' ', @cmd), $exitcode
+                join(' ', @cmd), $status
             );
         }
 
