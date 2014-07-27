@@ -139,7 +139,7 @@ sub new {
     # Get attributes
 
         pos($messageasstring) = 0;
-        while ($messageasstring =~ /\G(X-Sympa-\w+): (.*?)\n(?![ \t])/cgs) {
+        while ($messageasstring =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
             my ($k, $v) = ($1, $2);
             next unless length $v;
 
