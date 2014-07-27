@@ -9697,7 +9697,7 @@ sub store_digest {
         # send the date of the next digest to the users
     }
 
-    printf OUT "%s\n%s\n\n", $message->to_string, tools::get_separator();
+    printf OUT "%s\n%s\n\n", $message->as_string, tools::get_separator();
     close OUT;
 
     #replace the old time
