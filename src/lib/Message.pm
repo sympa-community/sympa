@@ -593,7 +593,7 @@ sub dkim_sign {
     # normalized with CRLF.
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
-    $msg_as_string .= "\r\n" unless $msg_as_string !~ /\r\n\z/;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
     $dkim->PRINT($msg_as_string);
     unless ($dkim->CLOSE) {
         Log::do_log('err', 'Cannot sign (DKIM) message');
