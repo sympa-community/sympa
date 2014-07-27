@@ -1441,16 +1441,10 @@ sub smime_sign {
                 $temporary_pwd);
         }
     }
-    Log::do_log('debug',
-              "$Conf::Conf{'openssl'} smime -sign -rand $Conf::Conf{'tmpdir'}"
-            . "/rand -signer $cert $pass_option -inkey $key -in $temporary_file"
-    );
-    unless (
-        open(NEWMSG,
-            "$Conf::Conf{'openssl'} smime -sign  -rand $Conf::Conf{'tmpdir'}"
-                . "/rand -signer $cert $pass_option -inkey $key -in $temporary_file |"
-        )
-        ) {
+    my $cmd = sprintf '%s smime -sign -singer %s %s -inkey %s -in %s',
+        $Conf::Conf{'openssl'}, $cert, $pass_option, $key, $temporary_file;
+    Log::do_log('debug', '%s', $cmd);
+    unless (open NEWMSG, "$cmd |") {
         Log::do_log('notice', 'Cannot sign message (open pipe)');
         return undef;
     }
