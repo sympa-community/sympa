@@ -309,7 +309,8 @@ while (!$end) {
     if (    $main::daemon_usage eq 'DAEMON_SLAVE'
         and time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}
         and
-        !(my $r_packets = Sympa::Bulk::there_is_too_much_remaining_packets())) {
+        !(my $r_packets = Sympa::Bulk::there_is_too_much_remaining_packets()))
+    {
         Log::do_log('info',
             'Process %s didn\'t send any message since %s seconds, exiting',
             $$, $Conf::Conf{'bulk_lazytime'});
@@ -327,8 +328,7 @@ while (!$end) {
             unless $robot
                 and $robot ne '*'
                 and Conf::valid_robot($robot);
-        my $list =
-            List->new($listname, $robot, {'just_try' => 1});
+        my $list = List->new($listname, $robot, {'just_try' => 1});
 
         if (!defined $messagekey or $bulk->{'messagekey'} ne $messagekey) {
             # current packet is not related to the same message as the
@@ -341,8 +341,8 @@ while (!$end) {
 
             $message = Message->new(
                 $message_from_spool->{'messageasstring'},
-                list => $list,
-                robot => $robot,
+                list              => $list,
+                robot             => $robot,
                 'dkim_d'          => $message_from_spool->{'dkim_d'},
                 'dkim_i'          => $message_from_spool->{'dkim_i'},
                 'dkim_selector'   => $message_from_spool->{'dkim_selector'},
@@ -356,11 +356,11 @@ while (!$end) {
                     $messagekey
                 );
                 Sympa::Bulk::remove($messagekey, $bulk->{'packetid'})
-                or Log::do_log(
-                        'err',
-                        'Failed to remove processed packet "%s", messagekey "%s"',
-                        $messagekey,
-                        $bulk->{'packetid'}
+                    or Log::do_log(
+                    'err',
+                    'Failed to remove processed packet "%s", messagekey "%s"',
+                    $messagekey,
+                    $bulk->{'packetid'}
                     );
             }
 
@@ -396,8 +396,7 @@ while (!$end) {
             'listname'  => $listname,
             'robot'     => $robot,
             #XXX'to'        => $bulk->{'recipients'}, #XXX Insecure
-            'wwsympa_url' =>
-                Conf::get_robot_conf($robot, 'wwsympa_url'),
+            'wwsympa_url' => Conf::get_robot_conf($robot, 'wwsympa_url'),
         };
 
         # It is the email of a subscriber, use it in the foreach
@@ -467,10 +466,11 @@ while (!$end) {
                     # apply dkim signature AFTER any other message
                     # transformation.
                     $new_message->dkim_sign(
-                        'dkim_d' => $new_message->{'dkim_d'},
-                        'dkim_i' => $new_message->{'dkim_i'},
+                        'dkim_d'        => $new_message->{'dkim_d'},
+                        'dkim_i'        => $new_message->{'dkim_i'},
                         'dkim_selector' => $new_message->{'dkim_selector'},
-                        'dkim_privatekey' => $new_message->{'dkim_privatekey'},
+                        'dkim_privatekey' =>
+                            $new_message->{'dkim_privatekey'},
                     );
                 }
 
@@ -495,9 +495,9 @@ while (!$end) {
             # Initial message
             if ($new_message->{'dkim_d'}) {
                 $new_message->dkim_sign(
-                    'dkim_d' => $new_message->{'dkim_d'},
-                    'dkim_i' => $new_message->{'dkim_i'},
-                    'dkim_selector' => $new_message->{'dkim_selector'},
+                    'dkim_d'          => $new_message->{'dkim_d'},
+                    'dkim_i'          => $new_message->{'dkim_i'},
+                    'dkim_selector'   => $new_message->{'dkim_selector'},
                     'dkim_privatekey' => $new_message->{'dkim_privatekey'},
                 );
             }

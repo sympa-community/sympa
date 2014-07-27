@@ -3779,18 +3779,19 @@ sub decode_header {
 }
 
 my $with_data_password;
+
 BEGIN {
     eval 'use Data::Password';
     $with_data_password = !$@;
 }
 my @validation_messages = (
-    { gettext_id => 'Not between %d and %d characters' },
-    { gettext_id => 'Not %d characters or greater' },
-    { gettext_id => 'Not less than or equal to %d characters' },
-    { gettext_id => 'contains bad characters' },
-    { gettext_id => 'contains less than %d character groups' },
-    { gettext_id => 'contains over %d leading characters in sequence' },
-    { gettext_id => "contains the dictionary word '%s'" },
+    {gettext_id => 'Not between %d and %d characters'},
+    {gettext_id => 'Not %d characters or greater'},
+    {gettext_id => 'Not less than or equal to %d characters'},
+    {gettext_id => 'contains bad characters'},
+    {gettext_id => 'contains less than %d character groups'},
+    {gettext_id => 'contains over %d leading characters in sequence'},
+    {gettext_id => "contains the dictionary word '%s'"},
 );
 
 sub password_validation {
@@ -3980,7 +3981,7 @@ C<owner> and C<return_path> type, respectively.
 #FIXME: This should be moved to such as Robot package.
 sub split_listname {
     my $robot_id = shift || '*';
-    my $mailbox  = shift;
+    my $mailbox = shift;
     return unless defined $mailbox and length $mailbox;
 
     my $return_path_suffix =

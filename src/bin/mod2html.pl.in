@@ -51,14 +51,14 @@ unless ($modspool and opendir SPOOL, $modspool) {
 foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
     next if $msg_file =~ /^\./;
 
-    my $metadata = tools::unmarshal_metadata($modspool,
-        $msg_file,
+    my $metadata = tools::unmarshal_metadata(
+        $modspool, $msg_file,
         qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
         [qw(localpart domainpart modkey)]
     );
     next unless $metadata;
-    my $message = Message->new_from_file($modspool . '/' . $msg_file,
-        %$metadata);
+    my $message =
+        Message->new_from_file($modspool . '/' . $msg_file, %$metadata);
     next unless $message;
     my $list = $message->{'list'};
 
@@ -71,8 +71,9 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
     Sympa::Archive::convert_single_message(
         $list, $message,
         'destination_dir' => $destination_dir,
-        'attachement_url' =>
-            join('/', '..', 'viewmod', $list->{'name'}, $metadata->{'modkey'}),
+        'attachement_url' => join(
+            '/', '..', 'viewmod', $list->{'name'}, $metadata->{'modkey'}
+        ),
     );
 }
 closedir SPOOL;

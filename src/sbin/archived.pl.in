@@ -283,15 +283,13 @@ while (!$end) {
                     || List::is_listmaster($sender, $list->{'domain'})) {
                     # Analyze message to get sender from envelope sender and
                     # sender_headers.
-                    my $arc_message = Message->new_from_file(
-                        "$arcpath/arctxt/$arc_file",
-                        list         => $list,
-                    );
+                    my $arc_message =
+                        Message->new_from_file("$arcpath/arctxt/$arc_file",
+                        list => $list,);
                     unless ($arc_message) {
                         Log::do_log('err',
                             'Unable to load new message %s/arctxt/%s',
-                            $arcpath, $arc_file
-                        );
+                            $arcpath, $arc_file);
                         next;
                     }
                     my $messagesender = lc($arc_message->{'sender'});
@@ -327,8 +325,7 @@ while (!$end) {
                     ) {
                     Log::do_log('info',
                         'Unable to rename message %s/arctxt/%s',
-                        $arcpath, $arc_file
-                    );
+                        $arcpath, $arc_file);
                     next;
                 }
 
@@ -772,10 +769,8 @@ sub mail2arc {
     #    chdir($arcpath);
 
     if ($Conf::Conf{'custom_archiver'}) {
-        my $status = system(
-            $Conf::Conf{'custom_archiver'},
-            "--list=$listname\@$robot", "--file=$queue/$file"
-        ) >> 8;
+        my $status = system($Conf::Conf{'custom_archiver'},
+            "--list=$listname\@$robot", "--file=$queue/$file") >> 8;
         if ($status) {
             Log::do_log('err', 'Custom archiver exits with code %d', $status);
         }
@@ -884,8 +879,8 @@ sub mail2arc {
         }
 
         # Save arctxt dump of original message.
-        my $message = Message->new_from_file($queue . '/' . $file,
-            list => $list);
+        my $message =
+            Message->new_from_file($queue . '/' . $file, list => $list);
         unless ($message) {
             die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file, $!;
         }

@@ -318,9 +318,10 @@ sub mail_file {
         $listname = $data->{'list'};
     }
 
-    my $message = Message->new($headers . $message_as_string,
+    my $message = Message->new(
+        $headers . $message_as_string,
         #XXX list => $list,
-        robot        => $robot
+        robot => $robot
     );
     return undef unless $message;
 

@@ -1298,8 +1298,10 @@ sub update_subscriber_msg_send {
 #get date of the last time we have aggregated data
 sub get_last_date_aggregation {
 
-    unless ($sth = SDM::do_query(
-        q{SELECT MAX(end_date_counter) FROM stat_counter_table})) {
+    unless (
+        $sth = SDM::do_query(
+            q{SELECT MAX(end_date_counter) FROM stat_counter_table})
+        ) {
         do_log('err', 'Unable to retrieve last date of aggregation');
         return undef;
     }

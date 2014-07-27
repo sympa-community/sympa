@@ -298,7 +298,7 @@ sub request_action {
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
-    $context->{'robot_domain'} = $robot;
+    $context->{'robot_domain'}  = $robot;
     $context->{'msg_encrypted'} = 'smime'
         if defined $context->{'message'}
             and tools::smart_eq($context->{'message'}->{'smime_crypted'},
@@ -709,10 +709,12 @@ sub verify {
         #FIXME: need more acculate test.
         unless (
             $listname
-            and index(lc join(', ',
-                $context->{'message'}->get_header('To'),
-                $context->{'message'}->get_header('Cc')
-                ), lc $listname) >= 0
+            and index(
+                lc join(', ',
+                    $context->{'message'}->get_header('To'),
+                    $context->{'message'}->get_header('Cc')),
+                lc $listname
+            ) >= 0
             ) {
             $context->{'is_bcc'} = 1;
         } else {
@@ -873,12 +875,13 @@ sub verify {
             }
 
         } elsif ($value =~ /\[msg_body\]/i) {
-            unless ($context->{'message'}
+            unless (
+                $context->{'message'}
                 and tools::smart_eq(
                     $context->{'message'}->as_entity->effective_type,
-                    qr/^text/
-                )
-                and defined($context->{'message'}->as_entity->bodyhandle)) {
+                    qr/^text/)
+                and defined($context->{'message'}->as_entity->bodyhandle)
+                ) {
                 Log::do_log('info',
                     'No proper textual message body to evaluate rule %s',
                     $condition)

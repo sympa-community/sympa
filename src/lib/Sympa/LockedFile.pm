@@ -36,9 +36,9 @@ BEGIN {
     # Separate extensions with "," to avoid confusion with domain parts,
     # and to ensure that file names related to lock contains ",lock".
     $File::NFSLock::LOCK_EXTENSION = ',lock';
-    *File::NFSLock::rand_file = sub($) {
+    *File::NFSLock::rand_file      = sub($) {
         my $file = shift;
-        "$file,lock.". time()%10000 .'.'. $$ .'.'. int(rand()*10000);
+        "$file,lock." . time() % 10000 . '.' . $$ . '.' . int(rand() * 10000);
     };
 }
 

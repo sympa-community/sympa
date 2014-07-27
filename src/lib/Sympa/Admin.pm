@@ -1048,8 +1048,12 @@ sub rename_list {
                 }
 
                 ## Rename file
-                unless (File::Copy::move($Conf::Conf{$spool} . '/' . $file,
-                    $Conf::Conf{$spool} . '/' . $newfile)) {
+                unless (
+                    File::Copy::move(
+                        $Conf::Conf{$spool} . '/' . $file,
+                        $Conf::Conf{$spool} . '/' . $newfile
+                    )
+                    ) {
                     Log::do_log(
                         'err',
                         'Unable to rename %s to %s: %s',
@@ -1069,9 +1073,12 @@ sub rename_list {
         }
         ## Digest spool
         if (-f "$Conf::Conf{'queuedigest'}/$old_listname") {
-            unless (File::Copy::move(
-                $Conf::Conf{'queuedigest'} . '/' . $old_listname,
-                $Conf::Conf{'queuedigest'} . '/' . $param{'new_listname'})) {
+            unless (
+                File::Copy::move(
+                    $Conf::Conf{'queuedigest'} . '/' . $old_listname,
+                    $Conf::Conf{'queuedigest'} . '/' . $param{'new_listname'}
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to rename %s to %s: %s',
@@ -1082,9 +1089,16 @@ sub rename_list {
                 next;
             }
         } elsif (-f "$Conf::Conf{'queuedigest'}/$old_listname\@$robot") {
-            unless (File::Copy::move(
-                $Conf::Conf{'queuedigest'} . '/' . $old_listname . '@' . $robot,
-                $Conf::Conf{'queuedigest'} . '/' . $param{'new_listname'} . '@' . $param{'new_robot'})) {
+            unless (
+                File::Copy::move(
+                    $Conf::Conf{'queuedigest'} . '/'
+                        . $old_listname . '@'
+                        . $robot,
+                    $Conf::Conf{'queuedigest'} . '/'
+                        . $param{'new_listname'} . '@'
+                        . $param{'new_robot'}
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to rename %s to %s: %s',
@@ -1425,10 +1439,10 @@ sub install_aliases {
         Log::do_log('err', 'Cannot open file %s: %s', $error_output_file, $!);
         open STDOUT, '>&', $saveout;
         return undef;
-    }        
-    my $status = system(
-        $alias_manager, 'add', $list->{'name'}, $list->{'admin'}{'host'}
-    ) >> 8;
+    }
+    my $status =
+        system($alias_manager, 'add', $list->{'name'},
+        $list->{'admin'}{'host'}) >> 8;
     open STDOUT, '>&', $saveout;
     open STDERR, '>&', $saveerr;
 

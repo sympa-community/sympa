@@ -68,9 +68,11 @@ use tt2;
 my %openssl_errors = (
     1 => 'an error occurred parsing the command options',
     2 => 'one of the input files could not be read',
-    3 => 'an error occurred creating the PKCS#7 file or when reading the MIME message',
+    3 =>
+        'an error occurred creating the PKCS#7 file or when reading the MIME message',
     4 => 'an error occurred decrypting or verifying the message',
-    5 => 'the message was verified correctly but an error occurred writing out the signers certificates',
+    5 =>
+        'the message was verified correctly but an error occurred writing out the signers certificates',
 );
 
 # Language context
@@ -126,7 +128,7 @@ sub new {
     my $self = bless {@_} => $class;
 
     if (ref $messageasstring) {
-        Log::do_log('err', 
+        Log::do_log('err',
             'Deprecated: $messageasstring must be string, not %s',
             $messageasstring);
         return undef;
@@ -138,54 +140,53 @@ sub new {
 
     # Get attributes
 
-        pos($messageasstring) = 0;
-        while ($messageasstring =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
-            my ($k, $v) = ($1, $2);
-            next unless length $v;
+    pos($messageasstring) = 0;
+    while ($messageasstring =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
+        my ($k, $v) = ($1, $2);
+        next unless length $v;
 
-            if ($k eq 'X-Sympa-To') {
-                $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
-            } elsif ($k eq 'X-Sympa-Checksum') {
-                $self->{'checksum'} = $v;
-            } elsif ($k eq 'X-Sympa-Family') {
-                $self->{'family'} = $v;
-            } elsif ($k eq 'X-Sympa-From') { # Compatibility. Use Return-Path:
-                $self->{'envelope_sender'} = $v;
-            } elsif ($k eq 'X-Sympa-Spam-Status') { # New in 6.2a.41
-                $self->{'spam_status'} = $v;
-            } else {
-                Log::do_log('err', 'Unknown meta information: "%s: %s"',
-                    $k, $v);
+        if ($k eq 'X-Sympa-To') {
+            $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
+        } elsif ($k eq 'X-Sympa-Checksum') {
+            $self->{'checksum'} = $v;
+        } elsif ($k eq 'X-Sympa-Family') {
+            $self->{'family'} = $v;
+        } elsif ($k eq 'X-Sympa-From') {    # Compatibility. Use Return-Path:
+            $self->{'envelope_sender'} = $v;
+        } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
+            $self->{'spam_status'} = $v;
+        } else {
+            Log::do_log('err', 'Unknown meta information: "%s: %s"', $k, $v);
+        }
+    }
+    # Ignore Unix From_
+    $messageasstring =~ /\GFrom (.*?)\n(?![ \t])/cgs;
+    # Get envelope sender from Return-Path:.
+    # If old style X-Sympa-From: has been found, omit Return-Path:.
+    #
+    # We trust in "Return-Path:" header field only at the top of message
+    # to prevent forgery.  To ensure it will be added to messages by MDA:
+    # - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
+    #               as 'Mlocal').
+    # - Postfix:
+    #   - local(8): Available by default.
+    #   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
+    # - Exim:       Set 'return_path_add' to true with pipe_transport.
+    # - qmail:      Use preline(1).
+    if ($messageasstring =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
+        and not exists $self->{'envelope_sender'}) {
+        my $addr = $1;
+        if ($addr =~ /<>/) {    # special: null envelope sender
+            $self->{'envelope_sender'} = '<>';
+        } else {
+            my @addrs = Mail::Address->parse($addr);
+            if (@addrs and tools::valid_email($addrs[0]->address)) {
+                $self->{'envelope_sender'} = $addrs[0]->address;
             }
         }
-        # Ignore Unix From_
-        $messageasstring =~ /\GFrom (.*?)\n(?![ \t])/cgs;
-        # Get envelope sender from Return-Path:.
-        # If old style X-Sympa-From: has been found, omit Return-Path:.
-        #
-        # We trust in "Return-Path:" header field only at the top of message
-        # to prevent forgery.  To ensure it will be added to messages by MDA:
-        # - Sendmail:   Add 'P' in the 'F=' flags of local mailer line (such
-        #               as 'Mlocal').
-        # - Postfix:
-        #   - local(8): Available by default.
-        #   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
-        # - Exim:       Set 'return_path_add' to true with pipe_transport.
-        # - qmail:      Use preline(1).
-        if ($messageasstring =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
-            and not exists $self->{'envelope_sender'}) {
-            my $addr = $1;
-            if ($addr =~ /<>/) {    # special: null envelope sender
-                $self->{'envelope_sender'} = '<>';
-            } else {
-                my @addrs = Mail::Address->parse($addr);
-                if (@addrs and tools::valid_email($addrs[0]->address)) {
-                    $self->{'envelope_sender'} = $addrs[0]->address;
-                }
-            }
-        }
-        # Strip attributes.
-        substr($messageasstring, 0, pos $messageasstring) = '';
+    }
+    # Strip attributes.
+    substr($messageasstring, 0, pos $messageasstring) = '';
 
     # Check if message is parsable.
 
@@ -416,7 +417,7 @@ XXX
 sub add_header {
     my $self = shift;
     $self->{_head}->add(@_);
-    delete $self->{_entity_cache};   # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
 }
 
 =over
@@ -433,7 +434,7 @@ XXX
 sub delete_header {
     my $self = shift;
     $self->{_head}->delete(@_);
-    delete $self->{_entity_cache};   # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
 }
 
 =over
@@ -450,7 +451,7 @@ XXX
 sub replace_header {
     my $self = shift;
     $self->{_head}->replace(@_);
-    delete $self->{_entity_cache};   # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
 }
 
 =over
@@ -490,12 +491,16 @@ XXX
 sub check_spam_status {
     my $self = shift;
 
-    my $robot_id = $self->{'list'}
+    my $robot_id =
+          $self->{'list'}
         ? $self->{'list'}->{'domain'}
         : $self->{'robot'};
 
-    my $spam_status = Scenario::request_action('spam_status', 'smtp',
-        $robot_id || $Conf::Conf{'domain'}, {'message' => $self});
+    my $spam_status = Scenario::request_action(
+        'spam_status', 'smtp',
+        $robot_id || $Conf::Conf{'domain'},
+        {'message' => $self}
+    );
     if (defined $spam_status) {
         if (ref($spam_status) eq 'HASH') {
             $self->{'spam_status'} = $spam_status->{'action'};
@@ -520,8 +525,8 @@ XXX
 
 # Old name: tools::dkim_sign() which took string and returned string.
 sub dkim_sign {
-    Log::do_log('debug','(%s)', @_);
-    my $self = shift;
+    Log::do_log('debug', '(%s)', @_);
+    my $self    = shift;
     my %options = @_;
 
     my $dkim_d          = $options{'dkim_d'};
@@ -558,8 +563,8 @@ sub dkim_sign {
     }
 
     # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
-    my $privatekey_string =
-        join '', grep {!/^---/ and $_} split /\r\n|\r|\n/, $dkim_privatekey;
+    my $privatekey_string = join '',
+        grep { !/^---/ and $_ } split /\r\n|\r|\n/, $dkim_privatekey;
     my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
     unless ($privatekey) {
         Log::do_log('err', 'Can\'t create Mail::DKIM::PrivateKey');
@@ -618,7 +623,8 @@ XXX
 sub check_dkim_signature {
     my $self = shift;
 
-    my $robot_id = $self->{'list'}
+    my $robot_id =
+          $self->{'list'}
         ? $self->{'list'}->{'domain'}
         : $self->{'robot'};
 
@@ -627,7 +633,7 @@ sub check_dkim_signature {
         and tools::smart_eq(
             Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on'
         )
-    ){
+        ) {
         $self->{'dkim_pass'} = tools::dkim_verifier($self->as_string);
     }
 }
@@ -711,9 +717,9 @@ sub set_entity {
     my $new  = $entity->as_string;
 
     if ($orig ne $new) {
-        $self->{_head}         = $entity->head;
-        $self->{_body}         = $entity->body_as_string;
-        $self->{_entity_cache} = $entity;   # Also update entity cache.
+        $self->{_head} = $entity->head;
+        $self->{_body} = $entity->body_as_string;
+        $self->{_entity_cache} = $entity;    # Also update entity cache.
     }
 
     return $entity;
@@ -749,7 +755,9 @@ sub as_string {
         $val = "<$val>" unless $val eq '<>';
         $return_path = sprintf "Return-Path: %s\n", $val;
     }
-    return $return_path . $self->{_head}->as_string . "\n"
+    return
+          $return_path
+        . $self->{_head}->as_string . "\n"
         . (defined $self->{_body} ? $self->{_body} : '');
 }
 
@@ -972,9 +980,10 @@ XXX
 =cut
 
 sub clean_html {
-    my $self  = shift;
+    my $self = shift;
 
-    my $robot = $self->{list}
+    my $robot =
+          $self->{list}
         ? $self->{list}->{'domain'}
         : $self->{robot};
 
@@ -1070,17 +1079,18 @@ sub smime_decrypt {
     return 0 unless $Conf::Conf{'openssl'};
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     unless (
-        ($content_type eq 'application/pkcs7-mime'
-        or $content_type eq 'application/x-pkcs7-mime')
+        (      $content_type eq 'application/pkcs7-mime'
+            or $content_type eq 'application/x-pkcs7-mime'
+        )
         and !tools::smart_eq(
             $self->{_head}->mime_attr('Content-Type.smime-type'),
             qr/signed-data/i
         )
-    ) {
+        ) {
         return 0;
     }
 
-    my $list = $self->{'list'};             # the recipient of the msg
+    my $list = $self->{'list'};    # the recipient of the msg
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my $dir;
@@ -1129,7 +1139,7 @@ sub smime_decrypt {
             '-in'    => $temporary_file,
             # if password is define in sympa.conf pass the password to OpenSSL
             # using
-            (length $key_passwd
+            (   length $key_passwd
                 ? ('-passin' => "file:$temporary_pwd")
                 : ()
             ),
@@ -1137,7 +1147,7 @@ sub smime_decrypt {
         );
         Log::do_log('debug', '%s', join ' ', @cmd);
 
-        my $pipein; 
+        my $pipein;
         unless (open $pipein, '-|', @cmd) {
             Log::do_log('err', 'Cannot open pipe: %m');
             unlink $temporary_file;
@@ -1215,10 +1225,10 @@ sub smime_decrypt {
 
     # We should be the sender and/or the listmaster
 
-    $self->{'smime_crypted'} = 'smime_crypted';
+    $self->{'smime_crypted'}      = 'smime_crypted';
     $self->{'orig_msg_as_string'} = $self->as_string;
-    $self->{_head} = $head;
-    $self->{_body} = $body_string;
+    $self->{_head}                = $head;
+    $self->{_body}                = $body_string;
     delete $self->{_entity_cache};    # Clear entity cache.
     Log::do_log('debug', 'Message has been decrypted');
 
@@ -1323,8 +1333,11 @@ sub smime_encrypt {
 
     my $status = $? >> 8;
     if ($status) {
-        Log::do_log('err', 'Unable to S/MIME encrypt message: %s',
-            $openssl_errors{$status} || $status);
+        Log::do_log(
+            'err',
+            'Unable to S/MIME encrypt message: %s',
+            $openssl_errors{$status} || $status
+        );
         return undef;
     }
 
@@ -1390,7 +1403,7 @@ sub smime_sign {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    my $list = $self->{'list'};
+    my $list       = $self->{'list'};
     my $key_passwd = $Conf::Conf{'key_passwd'};
     $key_passwd = '' unless defined $key_passwd;
 
@@ -1431,14 +1444,15 @@ sub smime_sign {
         }
     }
     my @cmd = (
-        $Conf::Conf{'openssl'}, 'smime', '-sign',
+        $Conf::Conf{'openssl'},
+        'smime', '-sign',
         '-singer' => $cert,
-        (length $key_passwd
+        (   length $key_passwd
             ? ('-passin' => "file:$temporary_pwd")
             : ()
         ),
         '-inkey' => $key,
-        '-in' => $temporary_file,
+        '-in'    => $temporary_file,
     );
     Log::do_log('debug', '%s', join ' ', @cmd);
     my $pipein;
@@ -1535,12 +1549,17 @@ sub check_smime_signature {
 
     return 0 unless $Conf::Conf{'openssl'};
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
-    unless ($content_type eq 'multipart/signed'
-        or (($content_type eq 'application/pkcs7-mime'
-            or $content_type eq 'application/x-pkcs7-mime')
+    unless (
+        $content_type eq 'multipart/signed'
+        or ((      $content_type eq 'application/pkcs7-mime'
+                or $content_type eq 'application/x-pkcs7-mime'
+            )
             and tools::smart_eq(
                 $self->{_head}->mime_attr('Content-Type.smime-type'),
-                qr/signed-data/i))) {
+                qr/signed-data/i
+            )
+        )
+        ) {
         return 0;
     }
 
@@ -1559,8 +1578,10 @@ sub check_smime_signature {
     ## to store the signer certificate for step two. I known, that's dirty.
 
     my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . 'smime-sender.' . $$;
-    my @cmd = (
-        $Conf::Conf{'openssl'}, 'smime', '-verify',
+    my @cmd            = (
+        $Conf::Conf{'openssl'},
+        'smime',
+        '-verify',
         ($Conf::Conf{'cafile'} ? ('-CAfile' => $Conf::Conf{'cafile'}) : ()),
         ($Conf::Conf{'capath'} ? ('-CApath' => $Conf::Conf{'capath'}) : ()),
         '-signer' => $temporary_file
@@ -1581,8 +1602,11 @@ sub check_smime_signature {
     open STDOUT, '>&', $saveout;
 
     if ($status) {
-        Log::do_log('err', 'Unable to check S/MIME signature: %s',
-            $openssl_errors{$status} || $status);
+        Log::do_log(
+            'err',
+            'Unable to check S/MIME signature: %s',
+            $openssl_errors{$status} || $status
+        );
         return undef;
     }
 
@@ -1606,12 +1630,17 @@ sub check_smime_signature {
     ## store the signer certificat
     unless (-d $Conf::Conf{'ssl_cert_dir'}) {
         if (mkdir $Conf::Conf{'ssl_cert_dir'}, 0775) {
-            Log::do_log('info', 'Creating user certificate directory %s',
-                $Conf::Conf{'ssl_cert_dir'});
+            Log::do_log(
+                'info',
+                'Creating user certificate directory %s',
+                $Conf::Conf{'ssl_cert_dir'}
+            );
         } else {
-            Log::do_log('err',
+            Log::do_log(
+                'err',
                 'Unable to create user certificate directory %s',
-                $Conf::Conf{'ssl_cert_dir'});
+                $Conf::Conf{'ssl_cert_dir'}
+            );
         }
     }
 
@@ -1694,7 +1723,9 @@ sub check_smime_signature {
     }
     close $fh;
     unless ($certs{both} or $certs{sign} or $certs{enc}) {
-        Log::do_log('err', "Could not extract certificate for %s",
+        Log::do_log(
+            'err',
+            "Could not extract certificate for %s",
             join(',', keys %{$signer->{'email'}})
         );
         return undef;
@@ -1778,7 +1809,7 @@ sub personalize {
     my $data = shift || {};
 
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
-    if ($content_type eq 'multipart/encrypted'
+    if (   $content_type eq 'multipart/encrypted'
         or $content_type eq 'multipart/signed'
         or $content_type eq 'application/pkcs7-mime'
         or $content_type eq 'application/x-pkcs7-mime') {
@@ -2754,14 +2785,14 @@ sub _fix_utf8_parts {
                 $data = $data->as_string;
             } elsif (ref $data) {
                 die sprintf 'Unsupported type for attachment: %s', ref $data;
-            } else {   # already stringified.
-                eval { $parser->parse_data($data); };   # check only.
+            } else {    # already stringified.
+                eval { $parser->parse_data($data); };    # check only.
                 if ($@) {
                     Log::do_log('notice', 'Failed to parse MIME data');
                     $data = '';
                 }
             }
-            $parser->extract_nested_messages(0);   # Keep attachments intact.
+            $parser->extract_nested_messages(0);    # Keep attachments intact.
             $data =
                 $parser->parse_data($entity->head->as_string . "\n" . $data);
             $parser->extract_nested_messages(1);

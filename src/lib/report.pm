@@ -150,7 +150,7 @@ sub _get_msg_as_hash {
     if ($msg_object->isa('MIME::Entity')) {    ## MIME-Tools object
         $msg_entity = $msg_object;
         $msg_string = $msg_entity->as_string;
-    } elsif (ref $msg_object eq 'Message') {   ## Sympa's own Message object
+    } elsif (ref $msg_object eq 'Message') {    ## Sympa's own Message object
         $msg_entity = $msg_object->as_entity;
         $msg_string = $msg_object->as_string;
     } else {

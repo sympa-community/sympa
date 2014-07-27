@@ -264,7 +264,7 @@ sub store {
 
     my $message = $data{'message'};
     # Compatibility. Enclosed by <...>.
-    my $msg_id  = '<' . $message->{'message_id'} . '>';
+    my $msg_id           = '<' . $message->{'message_id'} . '>';
     my $rcpts            = $data{'rcpts'};
     my $from             = $data{'from'};
     my $robot            = $data{'robot'};
@@ -306,7 +306,7 @@ sub store {
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
 
-    my $msg = $message->as_string;
+    my $msg            = $message->as_string;
     my $message_sender = $message->{'sender'};
 
     $msg = MIME::Base64::encode($msg);

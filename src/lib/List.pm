@@ -1568,13 +1568,8 @@ sub distribute_msg {
     my $message              = $param{'message'};
     my $apply_dkim_signature = $param{'apply_dkim_signature'};
 
-    Log::do_log(
-        'debug2',
-        '(%s, message=%s, apply_dkim_signature=%s)',
-        $self,
-        $message,
-        $apply_dkim_signature
-    );
+    Log::do_log('debug2', '(%s, message=%s, apply_dkim_signature=%s)',
+        $self, $message, $apply_dkim_signature);
 
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
@@ -1728,8 +1723,8 @@ sub distribute_msg {
             Log::do_log('debug', 'Will munge From field');
             # Remove any DKIM signatures we find
             if ($dkimSignature) {
-                $message->add_header(
-                    'X-Original-DKIM-Signature', $dkimSignature);
+                $message->add_header('X-Original-DKIM-Signature',
+                    $dkimSignature);
                 $message->delete_header('DKIM-Signature');
                 $message->delete_header('DomainKey-Signature');
                 Log::do_log('debug',
@@ -1808,7 +1803,8 @@ sub distribute_msg {
 
         # override From: and Message-ID: fields.
         # Note that corresponding Resent-*: fields will be removed.
-        $message->replace_header('From', $self->{'admin'}{'anonymous_sender'});
+        $message->replace_header('From',
+            $self->{'admin'}{'anonymous_sender'});
         $message->delete_header('Resent-From');
         my $new_id = $self->{'name'} . '.' . $sequence . '@anonymous';
         $message->replace_header('Message-Id', "<$new_id>");
@@ -1967,8 +1963,9 @@ sub distribute_msg {
             } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq 'all')
             {
                 #FIXME: Missing From: field?
-                $reply = $self->get_list_address()
-                    . ',' . $message->get_header('From');
+                $reply =
+                      $self->get_list_address() . ','
+                    . $message->get_header('From');
             } elsif ($self->{'admin'}{'reply_to_header'}->{'value'} eq
                 'other_email') {
                 $reply = $self->{'admin'}{'reply_to_header'}->{'other_email'};
@@ -2004,7 +2001,11 @@ sub distribute_msg {
 
     ## Add RFC 2919 header field
     if ($message->get_header('List-Id')) {
-        Log::do_log('notice', 'Found List-Id: %s', $message->get_header('List-Id'));
+        Log::do_log(
+            'notice',
+            'Found List-Id: %s',
+            $message->get_header('List-Id')
+        );
         $message->delete_header('List-ID');
     }
     $self->add_list_header($message, 'id');
@@ -2556,7 +2557,8 @@ sub send_global_file {
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
 
-    my $r = mail::mail_file($robot, $filename, $who, $data,
+    my $r =
+        mail::mail_file($robot, $filename, $who, $data,
         $options->{'parse_and_return'});
     return $r if ($options->{'parse_and_return'});
 
@@ -2810,8 +2812,8 @@ sub send_msg {
     my $from = $self->get_list_address('return_path');
 
     #save the message before modifying it
-    my $nbr_smtp  = 0;
-    my $nbr_verp  = 0;
+    my $nbr_smtp = 0;
+    my $nbr_verp = 0;
 
     # prepare verp parameter
     my $verp_rate = $self->{'admin'}{'verp_rate'};
@@ -3275,7 +3277,7 @@ sub send_to_editor {
     }
 
     my $subject = $message->{'decoded_subject'};
-    my $param = {
+    my $param   = {
         'modkey'         => $modkey,
         'boundary'       => $boundary,
         'msg_from'       => $message->{'sender'},
@@ -3399,7 +3401,7 @@ sub send_auth {
     my $param = {
         'authkey'  => $authkey,
         'boundary' => "----------------- Message-Id: \<$messageid\>",
-        'file'     => $message->{'filename'}, #XXX FIXME
+        'file' => $message->{'filename'},    #XXX FIXME
     };
 
     if ($self->is_there_msg_topic()) {
@@ -3579,8 +3581,8 @@ sub archive_send_last {
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
 
-    my $message = Message->new_from_file($dir . '/last_message',
-        list => $self);
+    my $message =
+        Message->new_from_file($dir . '/last_message', list => $self);
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");
@@ -6726,8 +6728,10 @@ sub archive_msg {
 
     if ($self->is_archived()) {
         my $msg_string = $message->to_string(
-            original =>
-            tools::smart_eq($self->{admin}{archive_crypted_msg}, 'original'));
+            original => tools::smart_eq(
+                $self->{admin}{archive_crypted_msg}, 'original'
+            )
+        );
 
         Sympa::Archive::store_last($self, $msg_string);
 
@@ -6736,7 +6740,7 @@ sub archive_msg {
 
         ## ignoring message with a no-archive flag
         if (!tools::smart_eq(
-            $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
+                $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
             and (  grep {/yes/i} $message->get_header('X-no-archive')
                 or grep {/no\-external\-archive/i}
                 $message->get_header('Restrict'))
@@ -6799,7 +6803,7 @@ sub is_web_archived {
     my $self = shift;
     return 1
         if ref $self->{'admin'}{'web_archive'} eq 'HASH'
-        and $self->{'admin'}{'web_archive'}{'access'};
+            and $self->{'admin'}{'web_archive'}{'access'};
     return undef;
 }
 
@@ -10174,11 +10178,13 @@ sub get_lists {
             foreach my $listname (sort @requested_lists) {
                 ## create object
                 my $list = __PACKAGE__->new(
-                    $listname, $robot_id,
+                    $listname,
+                    $robot_id,
                     {   skip_sync_admin => ($which_role ? 1 : 0),
                         %options,
-                        skip_name_check => 1, #ToDo: implement it.
-                    });
+                        skip_name_check => 1,    #ToDo: implement it.
+                    }
+                );
                 next unless defined $list;
 
                 ## filter by condition
@@ -10229,8 +10235,12 @@ sub get_lists {
                   WHERE %s
                   ORDER BY %s},
                 $table,
-                join(' AND ', grep {$_} ($cond_sql, $cond,
-                    sprintf 'robot_list = %s', SDM::quote($robot_id))
+                join(
+                    ' AND ',
+                    grep {$_} (
+                        $cond_sql,                 $cond,
+                        sprintf 'robot_list = %s', SDM::quote($robot_id)
+                    )
                 ),
                 $order_sql
             );
@@ -10241,7 +10251,7 @@ sub get_lists {
             }
 
             @requested_lists =
-                map { ref $_ ? $_->[0] : $_}
+                map { ref $_ ? $_->[0] : $_ }
                 @{$sth->fetchall_arrayref([0], ($limit || undef))};
             $sth->finish;
 
@@ -10249,10 +10259,11 @@ sub get_lists {
 
             foreach my $listname (@requested_lists) {
                 my $list = __PACKAGE__->new(
-                    $listname, $robot_id,
+                    $listname,
+                    $robot_id,
                     {   skip_sync_admin => ($which_role ? 1 : 0),
                         %options,
-                        skip_name_check => 1, #ToDo: implement it.
+                        skip_name_check => 1,    #ToDo: implement it.
                     }
                 );
                 next unless $list;
@@ -10408,9 +10419,9 @@ function to any list in ROBOT.
 
 sub get_which {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my $email = tools::clean_email(shift);
+    my $email    = tools::clean_email(shift);
     my $robot_id = shift;
-    my $role  = shift;
+    my $role     = shift;
 
     unless ($role eq 'member' or $role eq 'owner' or $role eq 'editor') {
         Sympa::Log::Syslog::do_log('err',
@@ -10418,10 +10429,9 @@ sub get_which {
         return undef;
     }
 
-    my $all_lists = get_lists(
-        $robot_id,
-        'filter' => [$role => $email, '! status' => 'closed|family_closed']
-    );
+    my $all_lists =
+        get_lists($robot_id,
+        'filter' => [$role => $email, '! status' => 'closed|family_closed']);
 
     return @{$all_lists || []};
 }
@@ -12396,9 +12406,9 @@ sub remove_aliases {
         return undef;
     }
 
-    my $status = system(
-        $alias_manager, 'del', $self->{'name'}, $self->{'admin'}{'host'}
-    ) >> 8;
+    my $status =
+        system($alias_manager, 'del', $self->{'name'},
+        $self->{'admin'}{'host'}) >> 8;
     if ($status) {
         Log::do_log('err', 'Failed to remove aliases; status %d: %s',
             $status, $!);
@@ -12550,9 +12560,15 @@ sub get_list_address {
             . '@'
             . $self->{'admin'}{'host'};
     } elsif ($type eq 'subscribe') {
-        return $self->{'name'} . '-subscribe' . '@' . $self->{'admin'}{'host'};
+        return
+              $self->{'name'}
+            . '-subscribe' . '@'
+            . $self->{'admin'}{'host'};
     } elsif ($type eq 'unsubscribe') {
-        return $self->{'name'} . '-unsubscribe' . '@' . $self->{'admin'}{'host'};
+        return
+              $self->{'name'}
+            . '-unsubscribe' . '@'
+            . $self->{'admin'}{'host'};
     }
     Log::do_log('err', 'Unknown type of list address "%s".  Ask developer',
         $type);
@@ -12684,7 +12700,8 @@ sub add_list_header {
                 $self->{'name'}, $yyyy, $mm,
                 $message->{'message_id'}    #FIXME: Should be escaped.
                 ;
-            $message->add_header('Archived-At', '<' . $archived_msg_url . '>');
+            $message->add_header('Archived-At',
+                '<' . $archived_msg_url . '>');
         } else {
             return 0;
         }
@@ -12721,17 +12738,17 @@ sub _update_list_db {
     my $adm_txt;
     my $ed_txt;
 
-    my $name        = $self->{'name'};
-    my $searchkey   = tools::foldcase($self->{'admin'}{'subject'} || '');
-    my $status      = $self->{'admin'}{'status'};
-    my $robot       = $self->{'domain'};
+    my $name      = $self->{'name'};
+    my $searchkey = tools::foldcase($self->{'admin'}{'subject'} || '');
+    my $status    = $self->{'admin'}{'status'};
+    my $robot     = $self->{'domain'};
 
     my $family = $self->{'admin'}{'family_name'};
     $family = undef unless defined $family and length $family;
 
     my $web_archive = $self->is_web_archived ? 1 : 0;
-    my $topics =
-        join ',', grep { defined $_ and length $_ and $_ ne 'others' }
+    my $topics = join ',',
+        grep { defined $_ and length $_ and $_ ne 'others' }
         @{$self->{'admin'}{'topics'} || []};
     $topics = ",$topics," if length $topics;
 
@@ -12770,8 +12787,8 @@ sub _update_list_db {
             $family,
             $creation_epoch, $creation_email,
             $update_epoch,   $update_email,
-            $searchkey,      $web_archive, $topics,
-            $robot, $name
+            $searchkey, $web_archive, $topics,
+            $robot,     $name
         )
         and $sth->rows
         or $sth = SDM::do_prepared_query(
@@ -12781,13 +12798,13 @@ sub _update_list_db {
                update_epoch_list, update_email_list,
                searchkey_list, web_archive_list, topics_list)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-            $status,         $name,        $robot,       $family,
+            $status,         $name, $robot, $family,
             $creation_epoch, $creation_email,
             $update_epoch,   $update_email,
-            $searchkey,      $web_archive, $topics
+            $searchkey, $web_archive, $topics
         )
         and $sth->rows
-    ) {
+        ) {
         Log::do_log('err', 'Unable to update list %s in database', $self);
         $sth = pop @sth_stack;
         return undef;
@@ -12808,7 +12825,8 @@ sub _flush_list_db {
     } else {
         $sth = SDM::do_prepared_query(
             q{DELETE FROM list_table
-              WHERE name_list = ?}, $listname);
+              WHERE name_list = ?}, $listname
+        );
     }
 
     unless ($sth) {

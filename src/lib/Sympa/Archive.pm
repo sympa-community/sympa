@@ -103,7 +103,8 @@ sub scan_dir_archive {
     Log::do_log('debug3', '(%s, %s)', @_);
     my ($list, $month) = @_;
 
-    my $dir = Conf::get_robot_conf($list->{'domain'}, 'arc_path') . '/'
+    my $dir =
+        Conf::get_robot_conf($list->{'domain'}, 'arc_path') . '/'
         . $list->get_list_id();
 
     unless (opendir(DIR, "$dir/$month/arctxt")) {
@@ -118,9 +119,8 @@ sub scan_dir_archive {
         Log::do_log('debug', 'Start parsing message %s/%s/arctxt/%s',
             $dir, $month, $file);
 
-        my $message = Message->new_from_file("$dir/$month/arctxt/$file",
-            list => $list
-        );
+        my $message =
+            Message->new_from_file("$dir/$month/arctxt/$file", list => $list);
         unless ($message) {
             Log::do_log('err', 'Unable to create Message object from file %s',
                 $file);
@@ -318,12 +318,13 @@ sub clean_archive_directory {
 sub clean_archived_message {
     Log::do_log('debug2', '(%s, %s, %s)', @_);
     my $robot  = shift;
-    my $list  = shift;
+    my $list   = shift;
     my $input  = shift;
     my $output = shift;
 
-    my $message = Message->new_from_file($input,
-        list => $list,
+    my $message = Message->new_from_file(
+        $input,
+        list  => $list,
         robot => $robot,
     );
     unless ($message) {
@@ -427,17 +428,20 @@ sub convert_single_message {
 
     my $tag      = get_tag($that);
     my $exitcode = system(
-        Conf::get_robot_conf($robot, 'mhonarc'), '-single',
-        '-rcfile' => $mhonarc_ressources,
+        Conf::get_robot_conf($robot, 'mhonarc'),
+        '-single',
+        '-rcfile'     => $mhonarc_ressources,
         '-definevars' => sprintf(
             "listname='%s' hostname=%s yyyy='' mois='' tag=%s",
-            $listname, $hostname, $tag),
+            $listname, $hostname, $tag
+        ),
         '-outdir'        => $destination_dir,
         '-attachmentdir' => $destination_dir,
         '-attachmenturl' => $attachement_url,
         '-umask'         => $Conf::Conf{'umask'},
         '-stdout'        => "$destination_dir/msg00000.html",
-        '--', $msg_file
+        '--',
+        $msg_file
     ) >> 8;
 
     # restore current wd

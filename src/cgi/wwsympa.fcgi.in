@@ -2006,8 +2006,7 @@ while ($query = new_loop()) {
         and tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
         Log::do_log('notice',
             'Exiting because %s has changed since fastcgi server started',
-            $ENV{'SCRIPT_FILENAME'}
-        );
+            $ENV{'SCRIPT_FILENAME'});
         exit(0);
     }
 
@@ -4066,8 +4065,9 @@ sub do_sso_login {
             if (defined $Conf::Conf{'auth_services'}{$robot}[$sso_id]
                 {'internal_email_by_netid'}) {
                 wwslog('debug', 'Lookup email internal: %s', $sso_id);
-                if ($email = Sympa::Auth::get_email_by_net_id(
-                    $robot, $sso_id, \%ENV)) {
+                if ($email =
+                    Sympa::Auth::get_email_by_net_id($robot, $sso_id, \%ENV))
+                {
                     $email_is_trusted = 1;
                 }
             }
@@ -4971,8 +4971,8 @@ sub do_lists {
     if ($in{'topic'} and $in{'topic'} eq '@which') {
         my %lists = ();
         foreach my $role ('member', 'owner', 'editor') {
-            foreach my $list (List::get_which(
-                $param->{'user'}{'email'}, $robot, $role)) {
+            foreach my $list (
+                List::get_which($param->{'user'}{'email'}, $robot, $role)) {
                 $lists{$list->{'name'}} = $list;
             }
         }
@@ -4984,10 +4984,12 @@ sub do_lists {
         $param->{'topic'} = $in{'topic'};
         if ($in{'subtopic'}) {
             $param->{'subtopic'} = $in{'subtopic'};
-            $param->{'subtitle'} = $language->gettext_sprintf('%s / %s',
+            $param->{'subtitle'} = $language->gettext_sprintf(
+                '%s / %s',
                 $topics{$in{'topic'}}{'current_title'},
                 $topics{$in{'topic'}}{'sub'}{$in{'subtopic'}}{'current_title'}
-                || $in{'subtopic'});
+                    || $in{'subtopic'}
+            );
         } else {
             $param->{'subtitle'} = $topics{$in{'topic'}}{'current_title'}
                 || $in{'topic'};
@@ -5001,14 +5003,14 @@ sub do_lists {
         if ($in{'topic'}) {
             if ($in{'subtopic'}) {
                 $options->{'filter'} =
-                    [ 'topics' => "$in{'topic'}/$in{'subtopic'}" ];
+                    ['topics' => "$in{'topic'}/$in{'subtopic'}"];
             } else {
-                $options->{'filter'} = [ 'topics' => $in{'topic'} ];
+                $options->{'filter'} = ['topics' => $in{'topic'}];
             }
         }
         $all_lists = List::get_lists($robot, $options);
     } else {
-       $all_lists = List::get_lists($robot);
+        $all_lists = List::get_lists($robot);
     }
 
     foreach my $list (@$all_lists) {
@@ -6162,13 +6164,17 @@ sub do_subscribe {
                 $u->{'gecos'}    = $param->{'user'}{'gecos'} || $in{'gecos'};
                 $u->{'date'}     = $u->{'update_date'} = time;
                 $u->{'password'} = $param->{'user'}{'password'};
-                if (my $reason = tools::password_validation($u->{'password'})) {
-                    report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
-                    wwslog('info','do_setpasswd: password validation');
-                    web_db_log({
-                        'status' => 'error',
-                        'error_type' => 'bad_parameter'
-                    });
+                if (my $reason = tools::password_validation($u->{'password'}))
+                {
+                    report::reject_report_web('user', 'passwd_validation',
+                        {'reason' => $reason},
+                        $param->{'action'});
+                    wwslog('info', 'do_setpasswd: password validation');
+                    web_db_log(
+                        {   'status'     => 'error',
+                            'error_type' => 'bad_parameter'
+                        }
+                    );
                     return undef;
                 }
                 $u->{'custom_attribute'} = $xml_custom_attribute
@@ -6871,8 +6877,10 @@ sub do_setpasswd {
     }
 
     if (my $reason = tools::password_validation($in{'newpasswd1'})) {
-        report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
-        wwslog('info','do_setpasswd: password validation');
+        report::reject_report_web('user', 'passwd_validation',
+            {'reason' => $reason},
+            $param->{'action'});
+        wwslog('info', 'do_setpasswd: password validation');
         web_db_log({'status' => 'error', 'error_type' => 'bad_parameter'});
         return undef;
     }
@@ -8186,10 +8194,15 @@ sub do_add {
         $u->{'date'}     = $u->{'update_date'} = time;
         $u->{'password'} = $u2->{'password'} || tools::tmp_passwd($email);
         if (my $reason = tools::password_validation($u->{'password'})) {
-            report::reject_report_web('user','passwd_validation',{'reason' => $reason},$param->{'action'});
-            wwslog('info','do_setpasswd: password validation');
-            web_db_log({'status' => 'error',
-                'error_type' => 'bad_parameter'});
+            report::reject_report_web('user', 'passwd_validation',
+                {'reason' => $reason},
+                $param->{'action'});
+            wwslog('info', 'do_setpasswd: password validation');
+            web_db_log(
+                {   'status'     => 'error',
+                    'error_type' => 'bad_parameter'
+                }
+            );
             return undef;
         }
 
@@ -8445,10 +8458,9 @@ sub do_modindex {
         my $id = $1;
 
         ## Load msg
-        my $message = Message->new_from_file(
-            $Conf::Conf{'queuemod'} . '/' . $msg,
-            list => $list
-        );
+        my $message =
+            Message->new_from_file($Conf::Conf{'queuemod'} . '/' . $msg,
+            list => $list);
 
         unless (defined $message) {
             report::reject_report_web(
@@ -9188,8 +9200,11 @@ sub do_distribute {
         'not_auto_submitted' => 1,
         'body'               => join("\n", @mail_command),
     };
-    unless (mail::mail_file(
-        $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
+    unless (
+        mail::mail_file(
+            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        )
+        ) {
         report::reject_report_web(
             'intern',
             'cannot_send_distribute',
@@ -10344,8 +10359,8 @@ sub do_send_me {
     my $message;
     if ($msgfile) {
         unless (
-            $message = Message->new_from_file("$arcpath/arctxt/$msgfile",
-                list => $list,
+            $message = Message->new_from_file(
+                "$arcpath/arctxt/$msgfile", list => $list,
             )
             ) {
             $param->{'status'} = 'message_err';
@@ -12613,11 +12628,12 @@ sub do_edit_list {
         push @special,
             map { $list->get_list_address($_) }
             qw(owner editor return_path subscribe unsubscribe);
-        push @special,
-            map { sprintf '%s-%s@%s',
-                $list->{'name'}, lc $_, $list->{'admin'}{'host'} }
+        push @special, map {
+            sprintf '%s-%s@%s',
+                $list->{'name'}, lc $_, $list->{'admin'}{'host'}
+            }
             split /[,\s]+/,
-                Conf::get_robot_conf($robot, 'list_check_suffixes');
+            Conf::get_robot_conf($robot, 'list_check_suffixes');
         my $bounce_email_re = quotemeta($list->get_bounce_address('ANY'));
         $bounce_email_re =~ s/(?<=\\\+).*(?=\\\@)/.*/;
 
@@ -12628,15 +12644,16 @@ sub do_edit_list {
                 or $owner_email =~ /^$bounce_email_re$/) {
                 ## generate an error and return
                 report::reject_report_web('user', 'incorrect_email',
-                    {'email' => $owner->{'email'}}, $param->{'action'},
-                    $list);
+                    {'email' => $owner->{'email'}},
+                    $param->{'action'}, $list);
                 wwslog('info', 'do_edit_list: Reserved email address %s',
                     $owner->{'email'});
                 web_db_log(
-                    {   'status' => 'error',
+                    {   'status'     => 'error',
                         'error_type' => 'incorrect_email',
                         'parameters' => $owner->{'email'}
-                    });
+                    }
+                );
                 return undef;
             }
         }
@@ -21011,8 +21028,11 @@ sub do_remind {
     };
 
     $data->{'not_auto_submitted'} = 1;
-    unless (mail::mail_file(
-            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
+    unless (
+        mail::mail_file(
+            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        )
+        ) {
         report::reject_report_web(
             'intern',
             'cannot_send_remind',
@@ -22454,8 +22474,11 @@ sub do_tag_topic_by_sender {
     }
 
     $data->{'not_auto_submitted'} = 1;
-    unless (mail::mail_file(
-            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data)) {
+    unless (
+        mail::mail_file(
+            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        )
+        ) {
         report::reject_report_web(
             'intern',
             'cannot_send_mail',

@@ -2795,7 +2795,7 @@ sub confirm {
     Log::do_log('debug', '(%s, %s)', $what, $robot);
 
     $what =~ /^\s*(\w+)\s*$/;
-    my $key        = $1 || '';
+    my $key = $1 || '';
     my $start_time = time;    # get the time at the beginning
 
     my ($filename, $metadata);
@@ -2819,9 +2819,11 @@ sub confirm {
         $filename = $queueauth . '/' . $file;
         next unless -f $filename and -r $filename;
 
-        $metadata = tools::unmarshal_metadata($queueauth, $file,
+        $metadata = tools::unmarshal_metadata(
+            $queueauth, $file,
             qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_(\w+)\z},
-            [qw(localpart domainpart authkey)]);
+            [qw(localpart domainpart authkey)]
+        );
         last if $metadata;
     }
     closedir DIR;
@@ -2861,9 +2863,12 @@ sub confirm {
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
-        Log::do_log('err',
+        Log::do_log(
+            'err',
             'Message %s is ignored because unable to evaluate scenario for list %s',
-            $message, $list);
+            $message,
+            $list
+        );
         report::reject_report_msg(
             'intern',
             'Message ignored because scenario "send" cannot be evaluated',
@@ -3029,8 +3034,10 @@ sub confirm {
                         $list
                     )
                     ) {
-                    Log::do_log('notice',
-                        'Unable to send template "message_report", entry "message_confirmed" to %s', $sender
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "message_report", entry "message_confirmed" to %s',
+                        $sender
                     );
                 }
             }
@@ -3042,7 +3049,10 @@ sub confirm {
             # this message is to be distributed but this daemon is dedicated
             # to commands -> move it to distribution spool
             unless (
-                $list->move_message($filename, $Conf::Conf{'queuedistribute'})) {
+                $list->move_message(
+                    $filename, $Conf::Conf{'queuedistribute'}
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to move in spool for distribution message to list %s (daemon_usage = command)',

@@ -127,4 +127,3 @@ If that is the case, executing this function will register handler again.
 Sympa::Crash appeared on Sympa 6.2.
 
 =cut
-
