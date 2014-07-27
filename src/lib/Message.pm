@@ -191,18 +191,18 @@ sub new {
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
-    my $msg = $parser->parse_data(\$messageasstring);
-    unless ($msg) {
+    my $entity = $parser->parse_data(\$messageasstring);
+    unless ($entity) {
         Log::do_log('err', 'Unable to parse message');
         return undef;
     }
-    my $hdr = $msg->head;
+    my $hdr = $entity->head;
     my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $messageasstring, 2;
 
-    $self->{'msg'}  = $msg;
-    $self->{_head}  = $hdr;
-    $self->{_body}  = $body_string;
-    $self->{'size'} = length $messageasstring;
+    $self->{_head}         = $hdr;
+    $self->{_body}         = $body_string;
+    $self->{_entity_cache} = $entity;
+    $self->{'size'}        = length $messageasstring;
 
     ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
     #XXXreturn undef unless defined $self->{'sender'};
@@ -416,7 +416,7 @@ XXX
 sub add_header {
     my $self = shift;
     $self->{_head}->add(@_);
-    delete $self->{'msg'};   # Clear entity cache.
+    delete $self->{_entity_cache};   # Clear entity cache.
 }
 
 =over
@@ -433,7 +433,7 @@ XXX
 sub delete_header {
     my $self = shift;
     $self->{_head}->delete(@_);
-    delete $self->{'msg'};   # Clear entity cache.
+    delete $self->{_entity_cache};   # Clear entity cache.
 }
 
 =over
@@ -450,7 +450,7 @@ XXX
 sub replace_header {
     my $self = shift;
     $self->{_head}->replace(@_);
-    delete $self->{'msg'};   # Clear entity cache.
+    delete $self->{_entity_cache};   # Clear entity cache.
 }
 
 =over
@@ -609,7 +609,7 @@ sub dkim_sign {
     # Note that DKIM-Signature: field should be prepended to the header.
     $self->add_header('DKIM-Signature', $dkim->signature->as_string, 0);
     $self->{_body} = $new_body;
-    delete $self->{'msg'};    # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
 
     return $self;
 }
@@ -689,16 +689,16 @@ Below is better way to modify message.
 sub as_entity {
     my $self = shift;
 
-    unless (defined $self->{'msg'}) {
+    unless (defined $self->{_entity_cache}) {
         die 'Bug in logic.  Ask developer'
             unless $self->{_head} and defined $self->{_body};
         my $string = $self->{_head}->as_string . "\n" . $self->{_body};
 
         my $parser = MIME::Parser->new();
         $parser->output_to_core(1);
-        $self->{'msg'} = $parser->parse_data(\$string);
+        $self->{_entity_cache} = $parser->parse_data(\$string);
     }
-    return $self->{'msg'};
+    return $self->{_entity_cache};
 }
 
 =over
@@ -722,9 +722,9 @@ sub set_entity {
     my $new  = $entity->as_string;
 
     if ($orig ne $new) {
-        $self->{_head} = $entity->head;
-        $self->{_body} = $entity->body_as_string;
-        $self->{'msg'} = $entity;   # Also update entity cache.
+        $self->{_head}         = $entity->head;
+        $self->{_body}         = $entity->body_as_string;
+        $self->{_entity_cache} = $entity;   # Also update entity cache.
     }
 
     return $entity;
@@ -1216,7 +1216,7 @@ sub smime_decrypt {
     $self->{'orig_msg_as_string'} = $self->as_string;
     $self->{_head} = $head;
     $self->{_body} = $body_string;
-    delete $self->{'msg'};    # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
     Log::do_log('debug', 'Message has been decrypted');
 
     return $self;
@@ -1369,7 +1369,7 @@ sub smime_encrypt {
     #return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
     $self->{_head} = $cryptedmsg->head;
     $self->{_body} = $encrypted_body;
-    delete $self->{'msg'};    # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
 
     return $self;
 }
@@ -1509,7 +1509,7 @@ sub smime_sign {
 
     $self->{_head} = $head;
     $self->{_body} = $body_string;
-    delete $self->{'msg'};    # Clear entity cache.
+    delete $self->{_entity_cache};    # Clear entity cache.
     $self->check_smime_signature;
 
     return $self;
