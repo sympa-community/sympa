@@ -1412,13 +1412,26 @@ sub install_aliases {
         Log::do_log('err', 'Failed to install aliases: %s', $!);
         return undef;
     }
+
     #FIXME: 'host' parameter is passed to alias_manager: no 'domain'
     # parameter to determine robot.
-    my $cmd = sprintf '%s add %s %s >%s 2> %s',
-        $alias_manager, $list->{'name'}, $list->{'admin'}{'host'},
-        $output_file, $error_output_file;
-    system($cmd);
-    my $status = $? >> 8;
+    my ($saveout, $saveerr);
+    unless (open $saveout, '>&STDOUT' and open STDOUT, '>', $output_file) {
+        Log::do_log('err', 'Cannot open file %s: %s', $output_file, $!);
+        return undef;
+    }
+    unless (open $saveerr, '>&STDERR'
+        and open STDERR, '>', $error_output_file) {
+        Log::do_log('err', 'Cannot open file %s: %s', $error_output_file, $!);
+        open STDOUT, '>&', $saveout;
+        return undef;
+    }        
+    my $status = system(
+        $alias_manager, 'add', $list->{'name'}, $list->{'admin'}{'host'}
+    ) >> 8;
+    open STDOUT, '>&', $saveout;
+    open STDERR, '>&', $saveerr;
+
     if ($status == 0) {
         Log::do_log('info', 'Aliases installed successfully');
         return 1;

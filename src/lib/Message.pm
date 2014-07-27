@@ -545,14 +545,6 @@ sub dkim_sign {
         return undef;
     }
 
-    my $temporary_keyfile = $Conf::Conf{'tmpdir'} . "/dkimkey." . $$;
-    if (!open(MSGDUMP, "> $temporary_keyfile")) {
-        Log::do_log('err', 'Can\'t store key in file %s', $temporary_keyfile);
-        return undef;
-    }
-    print MSGDUMP $dkim_privatekey;
-    close(MSGDUMP);
-
     unless (eval "require Mail::DKIM::Signer") {
         Log::do_log('err',
             "Failed to load Mail::DKIM::Signer Perl module, ignoring DKIM signature"
@@ -564,26 +556,24 @@ sub dkim_sign {
             "Failed to load Mail::DKIM::TextWrap Perl module, signature will not be pretty"
         );
     }
-    my $dkim;
-    if ($dkim_i) {
-        # create a signer object
-        $dkim = Mail::DKIM::Signer->new(
-            Algorithm => "rsa-sha1",
-            Method    => "relaxed",
-            Domain    => $dkim_d,
-            Identity  => $dkim_i,
-            Selector  => $dkim_selector,
-            KeyFile   => $temporary_keyfile,
-        );
-    } else {
-        $dkim = Mail::DKIM::Signer->new(
-            Algorithm => "rsa-sha1",
-            Method    => "relaxed",
-            Domain    => $dkim_d,
-            Selector  => $dkim_selector,
-            KeyFile   => $temporary_keyfile,
-        );
+
+    # DKIM::PrivateKey does never allow armour texts nor newlines.  Strip them.
+    my $privatekey_string =
+        join '', grep {!/^---/ and $_} split /\r\n|\r|\n/, $dkim_privatekey;
+    my $privatekey = Mail::DKIM::PrivateKey->load(Data => $privatekey_string);
+    unless ($privatekey) {
+        Log::do_log('err', 'Can\'t create Mail::DKIM::PrivateKey');
+        return undef;
     }
+    # create a signer object
+    my $dkim = Mail::DKIM::Signer->new(
+        Algorithm => "rsa-sha1",
+        Method    => "relaxed",
+        Domain    => $dkim_d,
+        Selector  => $dkim_selector,
+        Key       => $privatekey,
+        ($dkim_i ? (Identity => $dkim_i) : ()),
+    );
     unless ($dkim) {
         Log::do_log('err', 'Can\'t create Mail::DKIM::Signer');
         return undef;
@@ -599,7 +589,6 @@ sub dkim_sign {
         Log::do_log('err', 'Cannot sign (DKIM) message');
         return undef;
     }
-    unlink $temporary_keyfile;
 
     my ($dummy, $new_body) = split /\r\n\r\n/, $msg_as_string, 2;
     $new_body =~ s/\r\n/\n/g;
@@ -1075,6 +1064,9 @@ sub smime_decrypt {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
+    my $key_passwd = $Conf::Conf{'key_passwd'};
+    $key_passwd = '' unless defined $key_passwd;
+
     return 0 unless $Conf::Conf{'openssl'};
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     unless (
@@ -1116,21 +1108,14 @@ sub smime_decrypt {
     print MSGDUMP $self->as_string;
     close MSGDUMP;
 
-    my ($decryptedmsg, $pass_option, $msg_as_string);
-    if (defined $Conf::Conf{'key_passwd'}
-        and length $Conf::Conf{'key_passwd'}) {
-        # if password is define in sympa.conf pass the password to OpenSSL
-        # using
-        $pass_option = "-passin file:$temporary_pwd";
-    }
+    my ($decryptedmsg, $msg_as_string);
 
     ## try all keys/certs until one decrypts.
     while (my $certfile = shift @$certs) {
         my $keyfile = shift @$keys;
         Log::do_log('debug', 'Trying decrypt with %s, %s',
             $certfile, $keyfile);
-        if (defined $Conf::Conf{'key_passwd'}
-            and length $Conf::Conf{'key_passwd'}) {
+        if (length $key_passwd) {
             unless (POSIX::mkfifo($temporary_pwd, 0600)) {
                 Log::do_log('err', 'Unable to make fifo for %s',
                     $temporary_pwd);
@@ -1138,27 +1123,45 @@ sub smime_decrypt {
             }
         }
 
-        Log::do_log('debug',
-            "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option"
+        my @cmd = (
+            $Conf::Conf{'openssl'}, 'smime', '-decrypt',
+            '-recip' => $certfile,
+            '-in'    => $temporary_file,
+            # if password is define in sympa.conf pass the password to OpenSSL
+            # using
+            (length $key_passwd
+                ? ('-passin' => "file:$temporary_pwd")
+                : ()
+            ),
+            $keyfile,
         );
-        open(NEWMSG,
-            "$Conf::Conf{'openssl'} smime -decrypt -in $temporary_file -recip $certfile -inkey $keyfile $pass_option |"
-        );
+        Log::do_log('debug', '%s', join ' ', @cmd);
 
-        if (defined $Conf::Conf{'key_passwd'}
-            and length $Conf::Conf{'key_passwd'}) {
-            unless (open(FIFO, "> $temporary_pwd")) {
-                Log::do_log('notice', 'Unable to open fifo for %s',
-                    $temporary_pwd);
-                return undef;
+        my $pipein; 
+        unless (open $pipein, '-|', @cmd) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            unlink $temporary_file;
+            if (length $key_passwd) {
+                unlink $temporary_pwd;
             }
-            print FIFO $Conf::Conf{'key_passwd'};
-            close FIFO;
-            unlink($temporary_pwd);
+            return undef;
         }
 
-        $msg_as_string = do { local $/; <NEWMSG> };
-        close NEWMSG;
+        if (length $key_passwd) {
+            unless (open(FIFO, "> $temporary_pwd")) {
+                Log::do_log('notice', 'Unable to open fifo for %s: %m',
+                    $temporary_pwd);
+                unlink $temporary_file;
+                unlink $temporary_pwd;
+                return undef;
+            }
+            print FIFO $key_passwd;
+            close FIFO;
+            unlink $temporary_pwd;
+        }
+
+        $msg_as_string = do { local $/; <$pipein> };
+        close $pipein;
         my $status = $? >> 8;
 
         unless ($status == 0) {
@@ -1280,93 +1283,81 @@ sub smime_encrypt {
             $usercert = "$base";
         }
     }
-    if (-r $usercert) {
-        my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . $email . "." . $$;
-
-        ## encrypt the incomming message parse it.
-        Log::do_log('debug3',
-            "$Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert"
-        );
-
-        if (!open(MSGDUMP,
-                "| $Conf::Conf{'openssl'} smime -encrypt -out $temporary_file -des3 $usercert"
-            )
-            ) {
-            Log::do_log('info', 'Can\'t encrypt message for recipient %s',
-                $email);
-        }
-        # don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted
-        # stuff that contains a whole header again... since MIME::Tools has
-        # got no function for this, we need to manually extract only the MIME
-        # headers...
-        #XXX$msg_header->print(\*MSGDUMP);
-        #XXXprintf MSGDUMP "\n%s", $msg_body;
-        my $mime_hdr = $msg_header->dup();
-        foreach my $t ($mime_hdr->tags()) {
-            $mime_hdr->delete($t) unless ($t =~ /^(mime|content)-/i);
-        }
-        $mime_hdr->print(\*MSGDUMP);
-
-        printf MSGDUMP "\n%s", $msg_body;
-        close(MSGDUMP);
-
-        my $status = $? >> 8;
-        unless ($status == 0) {
-            Log::do_log(
-                'err',
-                'Unable to S/MIME encrypt message: %s',
-                $openssl_errors{$status} || $status
-            );
-            return undef;
-        }
-
-        ## Get as MIME object
-        open(NEWMSG, $temporary_file);
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-        unless ($cryptedmsg = $parser->read(\*NEWMSG)) {
-            Log::do_log('notice', 'Unable to parse message');
-            return undef;
-        }
-        close NEWMSG;
-
-        ## Get body
-        open(NEWMSG, $temporary_file);
-        my $in_header = 1;
-        while (<NEWMSG>) {
-            if (!$in_header) {
-                $encrypted_body .= $_;
-            } else {
-                $in_header = 0 if (/^$/);
-            }
-        }
-        close NEWMSG;
-
-        unlink($temporary_file) unless ($main::options{'debug'});
-
-        ## foreach header defined in  the incomming message but undefined in
-        ## the
-        ## crypted message, add this header in the crypted form.
-        my $predefined_headers;
-        foreach my $header ($cryptedmsg->head->tags) {
-            $predefined_headers->{lc $header} = 1
-                if ($cryptedmsg->head->get($header));
-        }
-        foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
-            next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
-            my ($tag, $val) = ($1, $2);
-            $cryptedmsg->head->add($tag, $val)
-                unless $predefined_headers->{lc $tag};
-        }
-
-    } else {
+    unless (-r $usercert) {
         Log::do_log('notice',
             'Unable to encrypt message to %s (missing certificat %s)',
             $email, $usercert);
         return undef;
     }
 
-    #return $cryptedmsg->head->as_string . "\n" . $encrypted_body;
+    my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . $email . "." . $$;
+
+    # encrypt the incoming message parse it.
+    my @cmd = (
+        $Conf::Conf{'openssl'}, 'smime', '-encrypt',
+        '-out' => $temporary_file,
+        '-des3', $usercert,
+    );
+    Log::do_log('debug3', '%s', join ' ', @cmd);
+
+    my $pipeout;
+    unless (open $pipeout, '|-', @cmd) {
+        Log::do_log('info', 'Can\'t encrypt message for recipient %s: %m',
+            $email);
+    }
+    # don't; cf RFC2633 3.1. netscape 4.7 at least can't parse encrypted
+    # stuff that contains a whole header again... since MIME::Tools has
+    # got no function for this, we need to manually extract only the MIME
+    # headers...
+    #XXX$msg_header->print(\*MSGDUMP);
+    #XXXprintf MSGDUMP "\n%s", $msg_body;
+    my $dup_head = $msg_header->dup();
+    foreach my $t ($dup_head->tags()) {
+        $dup_head->delete($t) unless ($t =~ /^(mime|content)-/i);
+    }
+
+    print $pipeout $dup_head->as_string;
+    print $pipeout "\n";
+    print $pipeout $msg_body;
+    close $pipeout;
+
+    my $status = $? >> 8;
+    if ($status) {
+        Log::do_log('err', 'Unable to S/MIME encrypt message: %s',
+            $openssl_errors{$status} || $status);
+        return undef;
+    }
+
+    ## Get as MIME object
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    unless ($cryptedmsg = $parser->parse_open($temporary_file)) {
+        Log::do_log('notice', 'Unable to parse message');
+        return undef;
+    }
+
+    ## Get body
+    open my $fh, '<', $temporary_file;
+    my $msg_string = do { local $/; <$fh> };
+    close $fh;
+    ($dummy, $encrypted_body) = split /(\A|\n)\r?\n/, $msg_string, 2;
+
+    unlink $temporary_file unless $main::options{'debug'};
+
+    # foreach header defined in  the incomming message but undefined in
+    # the crypted message, add this header in the crypted form.
+    my $predefined_headers;
+    foreach my $header ($cryptedmsg->head->tags) {
+        $predefined_headers->{lc $header} = 1
+            if $cryptedmsg->head->get($header);
+    }
+    foreach my $header (split /\n(?![ \t])/, $msg_header->as_string) {
+        next unless $header =~ /^([^\s:]+)\s*:\s*(.*)$/s;
+        my ($tag, $val) = ($1, $2);
+        $cryptedmsg->head->add($tag, $val)
+            unless $predefined_headers->{lc $tag};
+    }
+
     $self->{_head} = $cryptedmsg->head;
     $self->{_body} = $encrypted_body;
     delete $self->{_entity_cache};    # Clear entity cache.
@@ -1400,6 +1391,8 @@ sub smime_sign {
     my $self = shift;
 
     my $list = $self->{'list'};
+    my $key_passwd = $Conf::Conf{'key_passwd'};
+    $key_passwd = '' unless defined $key_passwd;
 
     #FIXME
     return 1 unless $list;
@@ -1409,10 +1402,7 @@ sub smime_sign {
         $Conf::Conf{'tmpdir'} . "/" . $list->get_list_id() . "." . $$;
     my $temporary_pwd = $Conf::Conf{'tmpdir'} . '/pass.' . $$;
 
-    my ($signed_msg, $pass_option);
-    $pass_option = "-passin file:$temporary_pwd"
-        if defined $Conf::Conf{'key_passwd'}
-            and length $Conf::Conf{'key_passwd'};
+    my $signed_msg;
 
     ## Keep a set of header fields ONLY
     ## OpenSSL only needs content type & encoding to generate a
@@ -1434,35 +1424,45 @@ sub smime_sign {
     print MSGDUMP $self->body_as_string;
     close MSGDUMP;
 
-    if (defined $Conf::Conf{'key_passwd'}
-        and length $Conf::Conf{'key_passwd'}) {
+    if (length $key_passwd) {
         unless (POSIX::mkfifo($temporary_pwd, 0600)) {
-            Log::do_log('notice', 'Unable to make fifo for %s',
+            Log::do_log('notice', 'Unable to make fifo for %s: %m',
                 $temporary_pwd);
         }
     }
-    my $cmd = sprintf '%s smime -sign -singer %s %s -inkey %s -in %s',
-        $Conf::Conf{'openssl'}, $cert, $pass_option, $key, $temporary_file;
-    Log::do_log('debug', '%s', $cmd);
-    unless (open NEWMSG, "$cmd |") {
-        Log::do_log('notice', 'Cannot sign message (open pipe)');
+    my @cmd = (
+        $Conf::Conf{'openssl'}, 'smime', '-sign',
+        '-singer' => $cert,
+        (length $key_passwd
+            ? ('-passin' => "file:$temporary_pwd")
+            : ()
+        ),
+        '-inkey' => $key,
+        '-in' => $temporary_file,
+    );
+    Log::do_log('debug', '%s', join ' ', @cmd);
+    my $pipein;
+    unless (open $pipein, '-|', @cmd) {
+        Log::do_log('notice', 'Cannot sign message (open pipe): %m');
+        unlink $temporary_file;
+        if (length $key_passwd) {
+            unlink $temporary_pwd;
+        }
         return undef;
     }
 
-    if (defined $Conf::Conf{'key_passwd'}
-        and length $Conf::Conf{'key_passwd'}) {
-        unless (open(FIFO, "> $temporary_pwd")) {
+    if (length $key_passwd) {
+        unless (open(FIFO, '>', $temporary_pwd)) {
             Log::do_log('notice', 'Unable to open fifo for %s',
                 $temporary_pwd);
         }
-
-        print FIFO $Conf::Conf{'key_passwd'};
+        print FIFO $key_passwd;
         close FIFO;
-        unlink($temporary_pwd);
+        unlink $temporary_pwd;
     }
 
-    my $new_message_as_string = do { local $/; <NEWMSG> };
-    close NEWMSG;
+    my $msg_string = do { local $/; <$pipein> };
+    close $pipein;
     my $status = $? >> 8;
     if ($status) {
         Log::do_log(
@@ -1475,12 +1475,12 @@ sub smime_sign {
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
-    unless ($signed_msg = $parser->parse_data($new_message_as_string)) {
+    unless ($signed_msg = $parser->parse_data($msg_string)) {
         Log::do_log('notice', 'Unable to parse message');
         return undef;
     }
 
-    unlink($temporary_file) unless ($main::options{'debug'});
+    unlink $temporary_file unless $main::options{'debug'};
 
     ## foreach header defined in  the incoming message but undefined in the
     ## crypted message, add this header in the crypted form.
@@ -1498,8 +1498,7 @@ sub smime_sign {
     }
 
     ## Keeping original message string in addition to updated headers.
-    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/,
-        $new_message_as_string, 2;
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $msg_string, 2;
 
     $self->{_head} = $head;
     $self->{_body} = $body_string;
@@ -1560,43 +1559,39 @@ sub check_smime_signature {
     ## to store the signer certificate for step two. I known, that's dirty.
 
     my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . 'smime-sender.' . $$;
-    my $trusted_ca_options = '';
-    $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} "
-        if ($Conf::Conf{'cafile'});
-    $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} "
-        if ($Conf::Conf{'capath'});
-    Log::do_log('debug',
-        "$Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer  $temporary_file"
+    my @cmd = (
+        $Conf::Conf{'openssl'}, 'smime', '-verify',
+        ($Conf::Conf{'cafile'} ? ('-CAfile' => $Conf::Conf{'cafile'}) : ()),
+        ($Conf::Conf{'capath'} ? ('-CApath' => $Conf::Conf{'capath'}) : ()),
+        '-signer' => $temporary_file
     );
+    Log::do_log('debug', '%s', join ' ', @cmd);
 
-    unless (
-        open(MSGDUMP,
-            "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options -signer $temporary_file > /dev/null"
-        )
-        ) {
-
+    my ($saveout, $pipeout);
+    open $saveout, '>&STDOUT' and open STDOUT, '>', '/dev/null';
+    unless (open $pipeout, '|-', @cmd) {
         Log::do_log('err', 'Unable to verify S/MIME signature from %s %s',
             $sender, $verify);
+        open STDOUT, '>&', $saveout;
         return undef;
     }
-    print MSGDUMP $self->as_string;
-    close MSGDUMP;
-
+    print $pipeout $self->as_string;
+    close $pipeout;
     my $status = $? >> 8;
-    unless ($status == 0) {
-        Log::do_log(
-            'err',
-            'Unable to check S/MIME signature: %s',
-            $openssl_errors{$status} || $status
-        );
+    open STDOUT, '>&', $saveout;
+
+    if ($status) {
+        Log::do_log('err', 'Unable to check S/MIME signature: %s',
+            $openssl_errors{$status} || $status);
         return undef;
     }
+
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email.
     my $signer = tools::smime_parse_cert({file => $temporary_file});
 
     unless ($signer->{'email'}{lc($sender)}) {
-        unlink($temporary_file) unless ($main::options{'debug'});
+        unlink $temporary_file unless $main::options{'debug'};
         Log::do_log('err',
             "S/MIME signed message, sender(%s) does NOT match signer(%s)",
             $sender, join(',', keys %{$signer->{'email'}}));
@@ -1610,16 +1605,13 @@ sub check_smime_signature {
     );
     ## store the signer certificat
     unless (-d $Conf::Conf{'ssl_cert_dir'}) {
-        if (mkdir($Conf::Conf{'ssl_cert_dir'}, 0775)) {
-            Log::do_log(
-                'info',
-                'Creating spool %s',
-                $Conf::Conf{'ssl_cert_dir'}
-            );
+        if (mkdir $Conf::Conf{'ssl_cert_dir'}, 0775) {
+            Log::do_log('info', 'Creating user certificate directory %s',
+                $Conf::Conf{'ssl_cert_dir'});
         } else {
             Log::do_log('err',
-                "Unable to create user certificat directory $Conf::Conf{'ssl_cert_dir'}"
-            );
+                'Unable to create user certificate directory %s',
+                $Conf::Conf{'ssl_cert_dir'});
         }
     }
 
@@ -1648,15 +1640,16 @@ sub check_smime_signature {
         return undef;
     }
 
-    unless (open(BUNDLE, $certbundle)) {
+    my $fh;
+    unless (open $fh, '<', $certbundle) {
         Log::do_log('err', 'Can\'t open cert bundle %s: %m', $certbundle);
         return undef;
     }
 
     ## read it in, split on "-----END CERTIFICATE-----"
     my $cert = '';
-    my (%certs);
-    while (<BUNDLE>) {
+    my %certs;
+    while (<$fh>) {
         $cert .= $_;
         if (/^-----END CERTIFICATE-----$/) {
             my $workcert = $cert;
@@ -1666,7 +1659,7 @@ sub check_smime_signature {
                 return undef;
             }
             print CERT $workcert;
-            close(CERT);
+            close CERT;
             my ($parsed) = tools::smime_parse_cert({file => $tmpcert});
             unless ($parsed) {
                 Log::do_log('err', 'No result from tools::smime_parse_cert');
@@ -1699,11 +1692,9 @@ sub check_smime_signature {
             last if (($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
         }
     }
-    close(BUNDLE);
-    if (!($certs{both} || ($certs{sign} || $certs{enc}))) {
-        Log::do_log(
-            'err',
-            "Could not extract certificate for %s",
+    close $fh;
+    unless ($certs{both} or $certs{sign} or $certs{enc}) {
+        Log::do_log('err', "Could not extract certificate for %s",
             join(',', keys %{$signer->{'email'}})
         );
         return undef;
@@ -1715,20 +1706,20 @@ sub check_smime_signature {
         my $fn =
             "$Conf::Conf{ssl_cert_dir}/" . tools::escape_chars(lc($sender));
         if ($c ne 'both') {
-            unlink($fn);    # just in case there's an old cert left...
+            unlink $fn;    # just in case there's an old cert left...
             $fn .= "\@$c";
         } else {
             unlink("$fn\@enc");
             unlink("$fn\@sign");
         }
         Log::do_log('debug', 'Saving %s cert in %s', $c, $fn);
-        unless (open(CERT, ">$fn")) {
+        unless (open CERT, '>', $fn) {
             Log::do_log('err', 'Unable to create certificate file %s: %m',
                 $fn);
             return undef;
         }
         print CERT $certs{$c};
-        close(CERT);
+        close CERT;
     }
 
     unless ($main::options{'debug'}) {
@@ -1737,19 +1728,13 @@ sub check_smime_signature {
         unlink($certbundle);
     }
 
-    $is_signed->{'body'} = 'smime';
-
     # future version should check if the subject was part of the SMIME
     # signature.
-    $is_signed->{'subject'} = $signer;
-
-    if ($is_signed->{'body'}) {
-        $self->{'smime_signed'}  = 1;
-        $self->{'smime_subject'} = $is_signed->{'subject'};
-        Log::do_log('debug', 'Message is signed, signature is checked');
-    }
+    $self->{'smime_signed'}  = 1;
+    $self->{'smime_subject'} = $signer;
+    Log::do_log('debug', 'Message is signed, signature is checked');
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
-    return $is_signed;
+    return {body => 'smime', subject => $signer};
 }
 
 =over

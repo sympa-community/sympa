@@ -772,7 +772,13 @@ sub mail2arc {
     #    chdir($arcpath);
 
     if ($Conf::Conf{'custom_archiver'}) {
-        `$Conf::Conf{'custom_archiver'} --list=$listname\@$robot --file=$queue/$file`;
+        my $status = system(
+            $Conf::Conf{'custom_archiver'},
+            "--list=$listname\@$robot", "--file=$queue/$file"
+        ) >> 8;
+        if ($status) {
+            Log::do_log('err', 'Custom archiver exits with code %d', $status);
+        }
         return 1;
     } else {
 
@@ -1086,7 +1092,7 @@ therefore archives should not be located in a public web directory.
 =head1 OPTIONS
 
 These programs follow the usual GNU command line syntax,
-with long options starting with two dashes (`-').  A summary of
+with long options starting with two dashes (C<-->).  A summary of
 options is included below.
 
 =over 5

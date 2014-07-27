@@ -12396,10 +12396,10 @@ sub remove_aliases {
         return undef;
     }
 
-    system(sprintf '%s del %s %s',
-        $alias_manager, $self->{'name'}, $self->{'admin'}{'host'});
-    my $status = $? >> 8;
-    unless ($status == 0) {
+    my $status = system(
+        $alias_manager, 'del', $self->{'name'}, $self->{'admin'}{'host'}
+    ) >> 8;
+    if ($status) {
         Log::do_log('err', 'Failed to remove aliases; status %d: %s',
             $status, $!);
         return undef;
