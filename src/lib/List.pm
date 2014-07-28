@@ -2077,6 +2077,7 @@ sub distribute_digest {
 
     my $listname = $self->{'name'};
     my $robot    = $self->{'domain'};
+    my $i;
 
     my $available_recipients = $self->get_digest_recipients_per_mode;
     unless ($available_recipients) {
@@ -2106,73 +2107,47 @@ sub distribute_digest {
         $param->{'replyto'} = "$param->{'to'}";
     }
 
-    my @list_of_mail;
+    my @list_of_message;
     my $old = $/;
     local $/ = "\n\n" . tools::get_separator() . "\n\n";
 
     ## Digest split in individual messages
     open DIGEST, $filename or return undef;
-    foreach (<DIGEST>) {
+    $i = 0;
+    foreach my $text (<DIGEST>) {
+        next unless $i++; # Skip introduction part.
 
-        my @text = split /\n/;
-        pop @text;
-        pop @text;
+        $text =~ s{$/\z}{};
+        $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
 
-        ## Restore carriage returns
-        foreach my $i (0 .. $#text) {
-            $text[$i] .= "\n";
-        }
+        my $message = Message->new($text, list => $self);
+        next unless $message;
 
-        my $parser = MIME::Parser->new;
-        $parser->output_to_core(1);
-        $parser->extract_uuencode(1);
-        $parser->extract_nested_messages(1);
-        # $parser->output_dir($Conf::Conf{'spool'} ."/tmp");
-        my $mail = $parser->parse_data(\@text);
-
-        next unless (defined $mail);
-
-        push @list_of_mail, $mail;
+        push @list_of_message, $message;
     }
     close DIGEST;
     local $/ = $old;
 
-    ## Deletes the introduction part
-    splice @list_of_mail, 0, 1;
-
     ## Digest index
     my @all_msg;
-    foreach my $i (0 .. $#list_of_mail) {
-        my $mail    = $list_of_mail[$i];
-        my $subject = tools::decode_header($mail, 'Subject');
-        my $from    = tools::decode_header($mail, 'From');
-        my $date    = tools::decode_header($mail, 'Date');
+    $i = 0;
+    foreach my $message (@list_of_message) {
+        $i++;
 
-        my $msg = {};
-        $msg->{'id'}      = $i + 1;
-        $msg->{'subject'} = $subject;
-        $msg->{'from'}    = $from;
-        $msg->{'date'}    = $date;
-
-        #$mail->tidy_body;
-
-        ## Commented because one Spam made Sympa die (MIME::tools 5.413)
-        #$mail->remove_sig;
-
-        $msg->{'full_msg'}   = $mail->as_string;
-        $msg->{'body'}       = $mail->body_as_string;
-        $msg->{'plain_body'} = $mail->PlainDigest::plain_body_as_string();
-        #$msg->{'body'} = $mail->bodyhandle->as_string();
-        chomp $msg->{'from'};
-        ## Should be extracted from Date:
-        $msg->{'month'} = POSIX::strftime("%Y-%m", localtime(time));
-        $msg->{'message_id'} =
-            tools::clean_msg_id($mail->head->get('Message-Id'));
-
-        ## Clean up Message-ID
-        $msg->{'message_id'} = tools::escape_chars($msg->{'message_id'});
-
-        #push @{$param->{'msg_list'}}, $msg ;
+        # Commented because one Spam made Sympa die (MIME::tools 5.413)
+        #$entity->remove_sig;
+        my $msg = {
+            'id'         => $i,
+            'subject'    => $message->{'decoded_subject'},
+            'from'       => tools::decode_header($message, 'From'),
+            'date'       => tools::decode_header($message, 'Date'),
+            'full_msg'   => $message->as_string,
+            'body'       => $message->body_as_string,
+            'plain_body' => $message->PlainDigest::plain_body_as_string,
+            # Should be extracted from Date:
+            'month'      => POSIX::strftime("%Y-%m", localtime time),
+            'message_id' => $message->{'message_id'},
+        };
         push @all_msg, $msg;
     }
 

@@ -88,6 +88,7 @@ use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
+use MIME::Parser;
 
 use Sympa::HTML::FormatText;
 use Sympa::Language;
@@ -100,10 +101,16 @@ my $language = Sympa::Language->instance;
 our $outstring;
 
 sub plain_body_as_string {
+    my $message = shift;
 
     local $outstring = "";
-    my ($topent, @paramlist) = @_;
-    my %params = @paramlist;
+
+    # Reparse message to extract UUEncode.
+    my $parser = MIME::Parser->new;
+    $parser->output_to_core(1);
+    $parser->extract_uuencode(1);
+    $parser->extract_nested_messages(1);
+    my $topent = $parser->parse_data($message->as_string);
 
     _do_toplevel($topent);
 
