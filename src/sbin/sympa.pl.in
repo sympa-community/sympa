@@ -51,9 +51,6 @@ use SDM;
 use tools;
 use Upgrade;
 
-# dirty global variables
-my $is_signed = {};
-
 ## Internal tuning
 # delay between each read of the digestqueue
 my $digestsleep = 5;
@@ -1787,10 +1784,11 @@ sub process_message {
                 return undef;
             }
 
-            my $auth_level = 'smtp';
-            $auth_level = 'dkim'  if $message->{'dkim_pass'};
-            $auth_level = 'md5'   if $message->{'md5_check'};
-            $auth_level = 'smime' if $message->{'smime_signed'};
+            my $auth_level =
+                  $message->{'smime_signed'} ? 'smime'
+                : $message->{'md5_check'}    ? 'md5'
+                : $message->{'dkim_pass'}    ? 'dkim'
+                :                              'smtp';
             if ($list = $dyn_family->create_automatic_list(
                     (   'listname'   => $listname,
                         'auth_level' => $auth_level,
@@ -1892,18 +1890,6 @@ sub process_message {
             return undef;
         }
         #}
-    }
-
-    ## S/MIME or DKIM signed messages
-    if ($message->{'smime_signed'}) {
-        $is_signed = {
-            # subject semantic is relater to X509 (subject is the private key
-            # owner, not the message Subject header !)
-            'subject' => $message->{'smime_subject'},
-            'body'    => 'smime'
-        };
-    } else {
-        undef $is_signed;
     }
 
     #  anti-virus
@@ -2779,10 +2765,11 @@ sub DoMessage {
     my $result;
 
     # the order of the following 3 lines is important ! SMIME > DKIM > SMTP
-    my $auth_method = 'smtp';
-    $auth_method = 'dkim'  if ($message->{'dkim_pass'});
-    $auth_method = 'md5'   if ($message->{'md5_check'});
-    $auth_method = 'smime' if ($is_signed->{'body'});
+    my $auth_method =
+          $message->{'smime_signed'} ? 'smime'
+        : $message->{'md5_check'}    ? 'md5'
+        : $message->{'dkim_pass'}    ? 'dkim'
+        :                              'smtp';
 
     $result = $list->check_list_authz('send', $auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
@@ -2840,12 +2827,10 @@ sub DoMessage {
                 if tools::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'}, 'any');
             $apply_dkim_signature = 'on'
-                if (
-                tools::is_in_array(
-                    $list->{'admin'}{'dkim_signature_apply_on'},
-                    'smime_authenticated_messages')
-                && ($is_signed->{'body'})
-                );
+                if tools::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'},
+                'smime_authenticated_messages')
+                and $message->{'smime_signed'};
             $apply_dkim_signature = 'on'
                 if tools::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'},
@@ -3327,9 +3312,7 @@ sub DoCommand {
             $listname, $command);
         # FIXME: at this point $message->{'dkim_pass'} does not verify that
         # Subject: is part of the signature. It SHOULD !
-        my $auth_level;
-        $auth_level = 'dkim'
-            if $message->{'dkim_pass'};
+        my $auth_level = $message->{'dkim_pass'} ? 'dkim' : undef;
 
         Sympa::Commands::parse($sender, $robot,
             sprintf('%s %s', $command, $listname),
@@ -3359,8 +3342,11 @@ sub DoCommand {
     my $re_regexp = Sympa::Regexps::re();
     $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
 
-    my $auth_level = 'dkim' if ($message->{'dkim_pass'});
-    $auth_level = $is_signed->{'subject'} if ($is_signed->{'subject'});
+    #FIXME
+    my $auth_level =
+          $message->{'smime_subject'} ? $message->{'smime_subject'}
+        : $message->{'dkim_pass'}     ? 'dkim'
+        :                               undef;
 
     if (defined $subject_field and $subject_field =~ /\S/) {
         $success ||= Sympa::Commands::parse($sender, $robot, $subject_field,
@@ -3458,10 +3444,11 @@ sub DoCommand {
             next if ($i =~ /^$/);       ## skip empty lines
             next if ($i =~ /^\s*\#/);
 
-            Log::do_log('debug2', 'Is_signed->body %s', $is_signed->{'body'});
-
-            $auth_level = 'dkim' if ($message->{'dkim_pass'});
-            $auth_level = $is_signed->{'body'} if ($is_signed->{'body'});
+            #FIXME
+            $auth_level =
+                  $message->{'smime_signed'} ? 'smime'
+                : $message->{'dkim_pass'}    ? 'dkim'
+                :                              $auth_level;
             $status = Sympa::Commands::parse($sender, $robot, $i, $auth_level,
                 $message);
 
