@@ -27,7 +27,7 @@ package Scenario;
 use strict;
 use warnings;
 use Mail::Address;
-use Net::Netmask;
+use Net::CIDR;
 
 use Conf;
 use Sympa::ConfDef;

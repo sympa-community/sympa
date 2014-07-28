@@ -26,7 +26,6 @@ package tools;
 
 use strict;
 use warnings;
-use Carp qw();
 #use Cwd qw();
 use Digest::MD5;
 use Encode::Guess;           ## Useful when encoding should be guessed
@@ -36,11 +35,11 @@ use File::Find;
 use HTML::StripScripts::Parser;
 use MIME::Base64 qw();
 use MIME::Decoder;
+use MIME::EncWords;
 use MIME::Lite::HTML;
-use MIME::Parser;
 use POSIX qw();
 use Proc::ProcessTable;
-use Scalar::Util;
+use Scalar::Util qw();
 use Sys::Hostname qw();
 use Text::LineFold;
 use Time::Local qw();
@@ -51,11 +50,12 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use List;
+use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
-use Message;
 use Sympa::Regexps;
 use SDM;
+use tools;
 
 ## RCS identification.
 #my $id = '@(#)$Id$';
@@ -347,10 +347,8 @@ sub safefork {
         ## FIXME:should send a mail to the listmaster
         sleep(10 * $i);
     }
-    Carp::croak(
-        sprintf('Exiting because cannot create new process in safefork: %s',
-            $err)
-    );
+    die sprintf 'Exiting because cannot create new process in safefork: %s',
+        $err;
     ## No return.
 }
 
@@ -894,7 +892,7 @@ sub get_dkim_parameters {
                 $list->{'admin'}{'dkim_parameters'}{'signer_identity'};
         } else {
             # RFC 4871 (page 21)
-            $data->{'i'} = $list->{'name'} . '-request@' . $robot;
+            $data->{'i'} = $list->get_list_address('owner');    # -request
         }
 
         $data->{'selector'} = $list->{'admin'}{'dkim_parameters'}{'selector'};
@@ -2076,7 +2074,7 @@ sub _get_search_path {
             @search_path = ($path_etcdir, $path_etcbindir);
         }
     } else {
-        Carp::croak('bug in logic.  Ask developer');
+        die 'bug in logic.  Ask developer';
     }
 
     return @search_path;
@@ -2275,7 +2273,7 @@ sub write_pid {
             group => Sympa::Constants::GROUP,
         )
         ) {
-        Carp::croak(sprintf('Unable to set rights on %s. Exiting.', $piddir));
+        die sprintf 'Unable to set rights on %s. Exiting.', $piddir;
         ## No return
     }
 
@@ -2284,10 +2282,8 @@ sub write_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
     unless ($lock_fh) {
-        Carp::croak(
-            sprintf('Unable to lock %s file in write mode. Exiting.',
-                $pidfile)
-        );
+        die sprintf 'Unable to lock %s file in write mode. Exiting.',
+            $pidfile;
     }
     ## If pidfile exists, read the PIDs
     if (-s $pidfile) {
@@ -2323,7 +2319,7 @@ sub write_pid {
         unless (truncate $lock_fh, 0) {
             ## Unlock pid file
             $lock_fh->close();
-            Carp::croak(sprintf('Could not truncate %s, exiting.', $pidfile));
+            die sprintf 'Could not truncate %s, exiting.', $pidfile;
         }
 
         print $lock_fh $pid . "\n";
@@ -2338,7 +2334,7 @@ sub write_pid {
         ) {
         ## Unlock pid file
         $lock_fh->close();
-        Carp::croak(sprintf('Unable to set rights on %s', $pidfile));
+        die sprintf 'Unable to set rights on %s', $pidfile;
     }
     ## Unlock pid file
     $lock_fh->close();

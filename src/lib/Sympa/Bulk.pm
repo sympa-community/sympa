@@ -26,22 +26,16 @@ package Sympa::Bulk;
 
 use strict;
 use warnings;
-use Encode;
-use Mail::Address;
-use Time::HiRes qw();
-use MIME::Parser;
 use MIME::Base64 qw();
+use MIME::Parser;
 use Term::ProgressBar;
-use URI::Escape;
+use Time::HiRes qw();
 use constant MAX => 100_000;
 
-use tools;
-use tt2;
-use Sympa::Language;
-use Log;
 use Conf;
-use List;
+use Log;
 use SDM;
+use tools;
 
 ## Database and SQL statement handlers
 my $sth;

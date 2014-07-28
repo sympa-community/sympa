@@ -49,31 +49,39 @@ use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use Archive::Zip qw();
 use DateTime;
 use DateTime::Format::Mail;
+use Encode qw();
+use MIME::EncWords;
 use MIME::Parser;
-use Sys::Syslog qw();
+use POSIX qw();
 use Time::Local qw();
-use Data::Dumper;
+use Data::Dumper;   # tentative
 
 use Sympa::Admin;
+use Sympa::Archive;
 use Sympa::Auth;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::CookieLib;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
-use List;
-use Log;
+use Sympa::Family;
 use Sympa::Language;
 use Sympa::LDAPSource;
+use List;
+use Log;
 use mail;
 use Marc::Search;
+use Message;
+use Sympa::Regexps;
 use report;
+use Scenario;
 use SDM;
 use SharedDocument;
 use SympaSession;
 use tools;
-use tt2;
 use tracking;
+use tt2;
+use Sympa::User;
 use wwslib;
 
 my $crypt_openssl_x509_ok;
@@ -10142,7 +10150,7 @@ sub do_latest_arc {
                         $msg_info{'year_month'} = $year_month;
                     } else {
                         $msg_info{$var} =
-                            &MIME::EncWords::decode_mimewords($msg_info{$var},
+                            MIME::EncWords::decode_mimewords($msg_info{$var},
                             Charset => 'utf8');
                         $msg_info{$var} = tools::escape_html($msg_info{$var});
                     }

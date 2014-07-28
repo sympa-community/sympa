@@ -38,6 +38,7 @@ package Sympa::Admin;
 
 use strict;
 use warnings;
+use Encode qw();
 use File::Copy qw();
 use IO::Scalar;
 
@@ -45,9 +46,14 @@ use Conf;
 use Sympa::Constants;
 use Sympa::Language;
 use List;
+use Sympa::LockedFile;
 use Log;
 use Sympa::Regexps;
+use Scenario;
+use SDM;
 use tools;
+use tt2;
+use Sympa::User;
 
 my $language = Sympa::Language->instance;
 

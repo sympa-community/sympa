@@ -30,10 +30,10 @@ use DateTime;
 use Encode qw();
 use MIME::EncWords;
 use POSIX qw();
+use Storable qw();
 
 use Sympa::Bulk;
 use Conf;
-use Sympa::Constants;
 use List;
 use Log;
 use Message;

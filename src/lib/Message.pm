@@ -58,6 +58,7 @@ use Storable qw();
 use URI::Escape qw();
 
 use Conf;
+use Sympa::Constants;
 use Sympa::Language;
 use List;
 use Log;
@@ -122,26 +123,25 @@ if something went wrong
 ## Creates a new object
 sub new {
     Log::do_log('debug2', '(%s, ...)', @_);
-    my $class           = shift;
-    my $messageasstring = shift;
+    my $class      = shift;
+    my $serialized = shift;
 
     my $self = bless {@_} => $class;
 
-    if (ref $messageasstring) {
-        Log::do_log('err',
-            'Deprecated: $messageasstring must be string, not %s',
-            $messageasstring);
+    if (ref $serialized) {
+        Log::do_log('err', 'Deprecated: $serialized must be string, not %s',
+            $serialized);
         return undef;
     }
-    unless (defined $messageasstring and length $messageasstring) {
+    unless (defined $serialized and length $serialized) {
         Log::do_log('err', 'Empty message');
         return undef;
     }
 
     # Get attributes
 
-    pos($messageasstring) = 0;
-    while ($messageasstring =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
+    pos($serialized) = 0;
+    while ($serialized =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
         my ($k, $v) = ($1, $2);
         next unless length $v;
 
@@ -160,7 +160,7 @@ sub new {
         }
     }
     # Ignore Unix From_
-    $messageasstring =~ /\GFrom (.*?)\n(?![ \t])/cgs;
+    $serialized =~ /\GFrom (.*?)\n(?![ \t])/cgs;
     # Get envelope sender from Return-Path:.
     # If old style X-Sympa-From: has been found, omit Return-Path:.
     #
@@ -173,7 +173,7 @@ sub new {
     #   - pipe(8):  Add 'R' in the 'flags=' attributes in master.cf.
     # - Exim:       Set 'return_path_add' to true with pipe_transport.
     # - qmail:      Use preline(1).
-    if ($messageasstring =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
+    if ($serialized =~ /\GReturn-Path: (.*?)\n(?![ \t])/cgs
         and not exists $self->{'envelope_sender'}) {
         my $addr = $1;
         if ($addr =~ /<>/) {    # special: null envelope sender
@@ -186,24 +186,24 @@ sub new {
         }
     }
     # Strip attributes.
-    substr($messageasstring, 0, pos $messageasstring) = '';
+    substr($serialized, 0, pos $serialized) = '';
 
     # Check if message is parsable.
 
     my $parser = MIME::Parser->new;
     $parser->output_to_core(1);
-    my $entity = $parser->parse_data(\$messageasstring);
+    my $entity = $parser->parse_data(\$serialized);
     unless ($entity) {
         Log::do_log('err', 'Unable to parse message');
         return undef;
     }
     my $hdr = $entity->head;
-    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $messageasstring, 2;
+    my ($dummy, $body_string) = split /(?:\A|\n)\r?\n/, $serialized, 2;
 
     $self->{_head}         = $hdr;
     $self->{_body}         = $body_string;
     $self->{_entity_cache} = $entity;
-    $self->{'size'}        = length $messageasstring;
+    $self->{'size'}        = length $serialized;
 
     ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
     #XXXreturn undef unless defined $self->{'sender'};
@@ -274,10 +274,10 @@ sub new_from_file {
     my $file  = shift;
 
     open my $fh, '<', $file or return undef;
-    my $messageasstring = do { local $/; <$fh> };
+    my $serialized = do { local $/; <$fh> };
     close $fh;
 
-    my $self = $class->new($messageasstring, @_)
+    my $self = $class->new($serialized, @_)
         or return undef;
 
     $self->{'filename'} = $file;
@@ -377,30 +377,32 @@ sub to_string {
     my $self    = shift;
     my %options = @_;
 
-    my $str = '';
+    my $serialized = '';
     if (ref $self->{'rcpt'} eq 'ARRAY' and @{$self->{'rcpt'}}) {
-        $str .= sprintf "X-Sympa-To: %s\n", join(',', @{$self->{'rcpt'}});
+        $serialized .= sprintf "X-Sympa-To: %s\n",
+            join(',', @{$self->{'rcpt'}});
     } elsif (defined $self->{'rcpt'} and length $self->{'rcpt'}) {
-        $str .= sprintf "X-Sympa-To: %s\n",
+        $serialized .= sprintf "X-Sympa-To: %s\n",
             join(',', split(/\s*,\s*/, $self->{'rcpt'}));
     }
     if (defined $self->{'checksum'}) {
-        $str .= sprintf "X-Sympa-Checksum: %s\n", $self->{'checksum'};
+        $serialized .= sprintf "X-Sympa-Checksum: %s\n", $self->{'checksum'};
     }
     if (defined $self->{'family'}) {
-        $str .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
+        $serialized .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
     }
     if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
-        $str .= sprintf "X-Sympa-Spam-Status: %s\n", $self->{'spam_status'};
+        $serialized .= sprintf "X-Sympa-Spam-Status: %s\n",
+            $self->{'spam_status'};
     }
     # This terminates pseudo-header part for attributes.
     unless (defined $self->{'envelope_sender'}) {
-        $str .= "Return-Path: \n";
+        $serialized .= "Return-Path: \n";
     }
 
-    $str .= $self->as_string(%options);
+    $serialized .= $self->as_string(%options);
 
-    return $str;
+    return $serialized;
 }
 
 =over
@@ -1759,7 +1761,9 @@ sub check_smime_signature {
         unlink($certbundle);
     }
 
-    # future version should check if the subject was part of the SMIME
+    # Subject semantic is related to X509 (subject is the private key owner,
+    # not the message Subject header!)
+    # TODO: Future version should check if the subject was part of the SMIME
     # signature.
     $self->{'smime_signed'}  = 1;
     $self->{'smime_subject'} = $signer;

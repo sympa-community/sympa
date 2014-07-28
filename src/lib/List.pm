@@ -26,6 +26,7 @@ package List;
 
 use strict;
 use warnings;
+use DateTime;
 use Digest::MD5 qw();
 use Encode qw();
 use HTTP::Request;
@@ -33,7 +34,6 @@ use IO::Scalar;
 use Mail::Address;
 use MIME::Charset;
 use MIME::EncWords;
-use MIME::Parser;
 use POSIX qw();
 use Storable qw();
 use Time::Local qw();
@@ -10399,7 +10399,7 @@ sub get_which {
     my $role     = shift;
 
     unless ($role eq 'member' or $role eq 'owner' or $role eq 'editor') {
-        Sympa::Log::Syslog::do_log('err',
+        Log::do_log('err',
             'Internal error, unknown or undefined parameter "%s"', $role);
         return undef;
     }
