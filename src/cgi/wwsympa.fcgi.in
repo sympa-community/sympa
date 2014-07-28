@@ -54,7 +54,7 @@ use MIME::EncWords;
 use MIME::Parser;
 use POSIX qw();
 use Time::Local qw();
-use Data::Dumper;   # tentative
+use Data::Dumper;    # tentative
 
 use Sympa::Admin;
 use Sympa::Archive;
@@ -1533,7 +1533,9 @@ while ($query = new_loop()) {
             $Conf::Conf{'cookie'}, $param->{'user'}{'email'});
 
         if ($param->{'user'}{'email'}) {
-#         $param->{'auth'} = $param->{'alt_emails'}{$param->{'user'}{'email'}} || 'classic';
+            #$param->{'auth'} =
+            #    $param->{'alt_emails'}{$param->{'user'}{'email'}}
+            #    || 'classic';
 
             if (Sympa::User::is_global_user($param->{'user'}{'email'})) {
                 $param->{'user'} =
@@ -1549,18 +1551,25 @@ while ($query = new_loop()) {
 
             ## Skip get_which if either in a list context or accessing the CSS
             unless ($in{'action'} eq 'css' || defined $in{'list'}) {
-                @{$param->{'get_which'}} =
-                    List::get_which($param->{'user'}{'email'},
-                    $robot, 'member');
-                @{$param->{'get_which_owner'}} =
-                    List::get_which($param->{'user'}{'email'},
-                    $robot, 'owner');
-                @{$param->{'get_which_editor'}} =
-                    List::get_which($param->{'user'}{'email'},
-                    $robot, 'editor');
+                ## get_which will be limited at most (your_lists_size + 1).
+                my $your_lists_size =
+                    Conf::get_robot_conf($robot, 'your_lists_size');
+                my %limit_which = ();
+                %limit_which = ('limit' => $your_lists_size + 1)
+                    if 0 <= $your_lists_size;
+                foreach my $role ('member', 'owner', 'editor') {
+                    $param->{"get_which_$role"} = List::get_lists(
+                        $robot,
+                        'filter' => [
+                            $role      => $param->{'user'}{'email'},
+                            '! status' => 'closed|family_closed'
+                        ],
+                        %limit_which
+                    );
+                }
+                ## for compatibility to <= 6.2a
+                $param->{'get_which'} = $param->{'get_which_member'};
             }
-#         }
-
         }
     }    ## END if RSS
 
@@ -1773,20 +1782,28 @@ while ($query = new_loop()) {
 
         ## Set cookies "your_subscribtions" unless in one list page
         if ($param->{'user'}{'email'} && ref($list) ne 'List') {
-
-            ## In case get_which was not set
-            @{$param->{'get_which'}} =
-                List::get_which($param->{'user'}{'email'}, $robot, 'member')
-                unless (defined $param->{'get_which'});
-            @{$param->{'get_which_owner'}} =
-                List::get_which($param->{'user'}{'email'}, $robot, 'owner')
-                unless (defined $param->{'get_which_owner'});
-            @{$param->{'get_which_editor'}} =
-                List::get_which($param->{'user'}{'email'}, $robot, 'editor')
-                unless (defined $param->{'get_which_editor'});
+            # In case get_which was not set.
+            # The get_which will be limited at most (your_lists_size + 1).
+            my $your_lists_size =
+                Conf::get_robot_conf($robot, 'your_lists_size');
+            my %limit_which = ();
+            %limit_which = ('limit' => $your_lists_size + 1)
+                if 0 <= $your_lists_size;
+            foreach my $role ('member', 'owner', 'editor') {
+                $param->{"get_which_$role"} = List::get_lists(
+                    $robot,
+                    'filter' => [
+                        $role      => $param->{'user'}{'email'},
+                        '! status' => 'closed|family_closed'
+                    ],
+                    %limit_which
+                ) unless defined $param->{"get_which_$role"};
+            }
+            ## for compatibility to <= 6.2a.
+            $param->{'get_which'} = $param->{'get_which_member'};
 
             ## Add lists information to 'which_info'
-            foreach my $list (@{$param->{'get_which'}}) {
+            foreach my $list (@{$param->{'get_which_member'}}) {
                 ## Evaluate AuthZ scenario first
                 my $result = $list->check_list_authz(
                     'visibility',
@@ -11516,7 +11533,14 @@ sub do_create_list_request {
         wwslog('info', 'Not allowed');
         return undef;
     }
-    $param->{'all_lists'} = List::get_lists($robot);
+
+    # load lists the user is administoring
+    if ($param->{'is_listmaster'}) {
+        $param->{'all_lists'} = List::get_lists($robot);
+    } else {
+        $param->{'all_lists'} =
+            [List::get_which($param->{'user'}{'email'}, $robot, 'owner')];
+    }
 
     my %topics;
     unless (%topics = List::load_topics($robot)) {
