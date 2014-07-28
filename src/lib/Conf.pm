@@ -816,7 +816,9 @@ sub checkfiles {
 
             # create picture dir
             if (get_robot_conf($robot, 'pictures_feature') eq 'on') {
-                my $pictures_dir = get_robot_conf($robot, 'pictures_path');
+                my $pictures_dir =
+                    get_robot_conf($robot, 'static_content_path')
+                    . '/pictures';
                 unless (-d $pictures_dir) {
                     unless (mkdir($pictures_dir, 0775)) {
                         Log::do_log('err', 'Unable to create directory %s',
@@ -1852,11 +1854,6 @@ sub _infer_server_specific_parameter_values {
     my $param = shift;
 
     $param->{'config_hash'}{'robot_name'} = '';
-
-    $param->{'config_hash'}{'pictures_url'} ||=
-        $param->{'config_hash'}{'static_content_url'} . '/pictures/';
-    $param->{'config_hash'}{'pictures_path'} ||=
-        $param->{'config_hash'}{'static_content_path'} . '/pictures/';
 
     unless ((defined $param->{'config_hash'}{'cafile'})
         || (defined $param->{'config_hash'}{'capath'})) {

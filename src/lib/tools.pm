@@ -125,63 +125,6 @@ sub _create_xss_parser {
     return $hss;
 }
 
-#*******************************************
-# Function : pictures_filename
-# Description : return the type of a pictures
-#               according to the user
-## IN : email, list
-#*******************************************
-sub pictures_filename {
-    my %parameters = @_;
-
-    my $login = md5_fingerprint($parameters{'email'});
-    my ($listname, $robot) =
-        ($parameters{'list'}{'name'}, $parameters{'list'}{'domain'});
-
-    my $filetype;
-    my $filename = undef;
-    foreach my $ext ('.gif', '.jpg', '.jpeg', '.png') {
-        if (  -f Conf::get_robot_conf($robot, 'pictures_path') . '/'
-            . $listname . '@'
-            . $robot . '/'
-            . $login
-            . $ext) {
-            my $file = $login . $ext;
-            $filename = $file;
-            last;
-        }
-    }
-    return $filename;
-}
-
-## Creation of pictures url
-## IN : email, list
-sub make_pictures_url {
-    my %parameters = @_;
-
-    my ($listname, $robot) =
-        ($parameters{'list'}{'name'}, $parameters{'list'}{'domain'});
-
-    my $url;
-    if (pictures_filename(
-            'email' => $parameters{'email'},
-            'list'  => $parameters{'list'}
-        )
-        ) {
-        $url =
-              Conf::get_robot_conf($robot, 'pictures_url')
-            . $listname . '@'
-            . $robot . '/'
-            . pictures_filename(
-            'email' => $parameters{'email'},
-            'list'  => $parameters{'list'}
-            );
-    } else {
-        $url = undef;
-    }
-    return $url;
-}
-
 ## Returns sanitized version (using StripScripts) of the string provided as
 ## argument.
 sub sanitize_html {

@@ -91,7 +91,13 @@ my $language = Sympa::Language->instance;
 
 =encoding utf-8
 
+=head1 NAME
+
+List - Mailing list
+
 =head1 CONSTRUCTOR
+
+=over
 
 =item new( [PHRASE] )
 
@@ -271,6 +277,8 @@ the statistics. OPTION can be 'text' or 'array'.
 
 Print the list information to the given file descriptor, or the
 currently selected descriptor.
+
+=back
 
 =cut
 
@@ -2115,7 +2123,7 @@ sub distribute_digest {
     open DIGEST, $filename or return undef;
     $i = 0;
     foreach my $text (<DIGEST>) {
-        next unless $i++; # Skip introduction part.
+        next unless $i++;    # Skip introduction part.
 
         $text =~ s{$/\z}{};
         $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
@@ -3992,39 +4000,103 @@ sub send_notify_to_owner {
     return 1;
 }
 
-#########################
-## Delete a member's picture file
-#########################
-# remove picture from user $2 in list $1
-#########################
+# Note: This would be moved to Robot package.
+sub get_picture_path {
+    my $self = shift;
+    return join '/',
+        Conf::get_robot_conf($self->{'domain'}, 'static_content_path'),
+        'pictures', $self->get_id, @_;
+}
+
+# Note: This would be moved to Robot package.
+sub get_picture_url {
+    my $self = shift;
+    return join '/',
+        Conf::get_robot_conf($self->{'domain'}, 'static_content_url'),
+        'pictures', $self->get_id, @_;
+}
+
+=over 4
+
+=item find_picture_filenames ( $email )
+
+Returns the type of a pictures according to the user.
+
+=back
+
+=cut
+
+# Old name: tools::pictures_filename()
+sub find_picture_filenames {
+    my $self  = shift;
+    my $email = shift;
+
+    my $login = tools::md5_fingerprint($email);
+    my @ret   = ();
+
+    foreach my $ext (qw{gif jpg jpeg png}) {
+        if (-f $self->get_picture_path($login . '.' . $ext)) {
+            push @ret, $login . '.' . $ext;
+        }
+    }
+    return @ret;
+}
+
+sub find_picture_paths {
+    my $self  = shift;
+    my $email = shift;
+
+    return
+        map { $self->get_picture_path($_) }
+        $self->find_picture_filenames($email);
+}
+
+=over
+
+=item find_picture_url ( $email )
+
+Find pictures URL
+
+=back
+
+=cut
+
+# Old name: tools::make_pictures_url().
+sub find_picture_url {
+    my $self  = shift;
+    my $email = shift;
+
+    my ($filename) = $self->find_picture_filenames($email);
+    return undef unless $filename;
+    return $self->get_picture_url($filename);
+}
+
+=over
+
+=item delete_list_member_picture ( $email )
+
+Deletes a member's picture file.
+
+=back
+
+=cut
+
 sub delete_list_member_picture {
-    my ($self, $email) = @_;
-    Log::do_log('debug2', '(%s)', $email);
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = shift;
 
-    my $fullfilename = undef;
-    my $filename     = tools::md5_fingerprint($email);
-
-    my $file =
-          Conf::get_robot_conf($self->{'domain'}, 'pictures_path') . '/'
-        . $self->get_list_id() . '/'
-        . $filename;
-    foreach my $ext ('.gif', '.jpg', '.jpeg', '.png') {
-        if (-f $file . $ext) {
-            $fullfilename = $file . $ext;
-            last;
+    my $ret = 1;
+    foreach my $path ($self->find_picture_paths($email)) {
+        unless (unlink $path) {
+            Log::do_log('err', 'Failed to delete %s', $path);
+            $ret = undef;
+        } else {
+            Log::do_log('debug3', 'File deleted successfully: %s', $path);
         }
     }
 
-    if (defined $fullfilename) {
-        unless (unlink($fullfilename)) {
-            Log::do_log('err', 'Failed to delete %s', $fullfilename);
-            return undef;
-        }
-
-        Log::do_log('notice', 'File deleted successfull: %s', $fullfilename);
-    }
-
-    return 1;
+    return $ret;
 }
 
 ####################################################
@@ -5799,35 +5871,15 @@ sub update_list_member {
 
     ## Rename picture on disk if user email changed
     if ($values->{'email'}) {
-        my $file_name = tools::md5_fingerprint($who);
-        my $picture_file_path =
-            Conf::get_robot_conf($self->{'domain'}, 'pictures_path') . '/'
-            . $self->get_list_id();
-
-        foreach my $extension ('gif', 'png', 'jpg', 'jpeg') {
-            if (-f $picture_file_path . '/' . $file_name . '.' . $extension) {
-                my $new_file_name =
-                    tools::md5_fingerprint($values->{'email'});
-                unless (
-                      rename $picture_file_path . '/'
-                    . $file_name . '.'
-                    . $extension,
-                    $picture_file_path . '/'
-                    . $new_file_name . '.'
-                    . $extension
-                    ) {
-                    Log::do_log(
-                        'err',
-                        'Failed to rename %s to %s: %s',
-                        $picture_file_path . '/'
-                            . $file_name . '.'
-                            . $extension,
-                        $picture_file_path . '/'
-                            . $new_file_name . '.'
-                            . $extension,
-                        $!
-                    );
-                }
+        foreach my $path ($self->find_picture_paths($who)) {
+            my $extension = [reverse split /\./, $path]->[0];
+            my $new_path = $self->get_picture_path(
+                tools::md5_fingerprint($values->{'email'}) . '.'
+                    . $extension);
+            unless (rename $path, $new_path) {
+                Log::do_log('err', 'Failed to rename %s to %s : %s',
+                    $path, $new_path, $!);
+                last;
             }
         }
     }
@@ -9683,8 +9735,6 @@ sub store_digest {
     utime $oldtime, $oldtime, $filename unless ($newfile);
 }
 
-=head1 NAME
-
 =over 4
 
 =item get_lists( [ $that, [ options, ... ] ] )
@@ -12598,7 +12648,7 @@ sub get_list_id { shift->get_id }
 
 =over 4
 
-=item add_list_header ( HEADER_OBJ, FIELD )
+=item add_list_header ( $message, $field_type )
 
 FIXME @todo doc
 

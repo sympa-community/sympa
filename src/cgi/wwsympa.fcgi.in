@@ -3053,7 +3053,7 @@ Use it to create a List object and initialize output parameters.
 
 =item * d_access_control
 
-=item * make_pictures_url
+=item * find_picture_url
 
 =item * wwslog
 
@@ -3172,10 +3172,8 @@ sub check_param_in {
                 $list->am_i('editor', $param->{'user'}{'email'});
             $param->{'is_priv'} = $param->{'is_owner'}
                 || $param->{'is_editor'};
-            $param->{'pictures_url'} = tools::make_pictures_url(
-                'email' => $param->{'user'}{'email'},
-                'list'  => $list
-            );
+            $param->{'pictures_url'} =
+                $list->find_picture_url($param->{'user'}{'email'});
 
             ## Checks if the user can post in this list.
             my $result = $list->check_list_authz(
@@ -9972,11 +9970,8 @@ sub do_arc {
             ## the author of the message
             my $metadata = Sympa::Archive::load_html_message(
                 'file_path' => $arc_file_path);
-            $param->{'include_picture'} = tools::make_pictures_url(
-                'email' => $metadata->{'X-From'},
-                'list'  => $list
-            );
-
+            $param->{'include_picture'} =
+                $list->find_picture_url($metadata->{'X-From'});
             $param->{'subtitle'} = $metadata->{'X-Subject'};
         }
 
@@ -11659,10 +11654,8 @@ sub do_editsubscriber {
     $param->{'current_subscriber'}{'update_date'} =
         $language->gettext_strftime("%d %b %Y",
         localtime($subscriber->{'update_date'}));
-    $param->{'current_subscriber'}{'pictures_url'} = tools::make_pictures_url(
-        'email' => $subscriber->{'email'},
-        'list'  => $list
-    );
+    $param->{'current_subscriber'}{'pictures_url'} =
+        $list->find_picture_url($subscriber->{'email'});
 
     ## Prefs
     $param->{'current_subscriber'}{'reception'}  ||= 'mail';
@@ -17755,42 +17748,37 @@ sub do_d_upload {
 
 ## Creation of a picture file
 sub creation_picture_file {
-    my ($root_dir, $path, $fname) = @_;
+    my $path  = shift;
+    my $fname = shift;
 
-    unless (-d $root_dir . '/' . $path) {
-        wwslog('notice', 'Create dir %s/%s/', $root_dir, $path);
+    unless (-d $path) {
+        wwslog('notice', 'Create dir %s/', $path);
 
-        unless (tools::mkdir_all($root_dir . '/' . $path, 0755)) {
-            wwslog('err',
-                "creation_picture_file : Unable to create dir $root_dir/$path/"
-            );
+        unless (tools::mkdir_all($path, 0755)) {
+            wwslog('err', 'Unable to create dir %s/', $path);
             return undef;
         }
 
-        unless (open(FF, ">$root_dir" . '/' . $path . '/index.html')) {
-            wwslog('err',
-                "creation_picture_file : Unable to create dir $root_dir/$path/index.html"
-            );
+        unless (open(FF, '>', $path . '/index.html')) {
+            wwslog('err', 'Unable to create dir %s/index.html', $path);
         }
-        chmod 0755, $root_dir . '/' . $path . '/index.html';
+        chmod 0644, $path . '/index.html';
         close FF;
     }
 
     my $fh = $query->upload('uploaded_file');
-    unless (open FILE, ">:bytes", "$root_dir/$path/$fname") {
+    unless (open FILE, '>:bytes', "$path/$fname") {
         report::reject_report_web('intern', 'cannot_upload',
             {'path' => "$path/$fname"},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('err',
-            "creation_picture_file : Cannot open file $root_dir/$path/$fname : $!"
-        );
+        wwslog('err', 'Cannot open file %s/%s: %m', $path, $fname);
         return undef;
     }
     while (<$fh>) {
         print FILE;
     }
     close FILE;
-    chmod 0755, "$root_dir/$path/$fname";
+    chmod 0644, "$path/$fname";
 }
 
 ## Creation of a shared file
@@ -21165,9 +21153,6 @@ sub do_upload_pictures {
         $filetype = undef;
     }
 
-    my $filename     = tools::md5_fingerprint($param->{'user'}{'email'});
-    my $fullfilename = $filename . '.' . $filetype;
-
     #uploaded file must have a name
     unless ($fname) {
         report::reject_report_web('user', 'no_name', {}, $param->{'action'});
@@ -21179,7 +21164,7 @@ sub do_upload_pictures {
         report::reject_report_web(
             'user',
             'cannot_upload',
-            {   'path'   => $fullfilename,
+            {   'path'   => $fname,
                 'reason' => "your file does not have an authorized format."
             },
             $param->{'action'}
@@ -21188,52 +21173,33 @@ sub do_upload_pictures {
         return 'suboptions';
     }
 
-    my $filetmp;
+    my $filename     = tools::md5_fingerprint($param->{'user'}{'email'});
+    my $fullfilename = $filename . '.' . $filetype;
 
+    my @filetmp;
     # check if there is not already a file for the user with a different
     # extension
-    foreach my $ext ('.gif', '.png', '.jpg', '.jpeg') {
-        my $file =
-              Conf::get_robot_conf($robot, 'pictures_path') . '/'
-            . $in{'list'} . '@'
-            . $robot . '/'
-            . $filename;
-        if (-f $file . $ext) {
-            rename($file . $ext, $file . $ext . '.tmp');
-            $filetmp = $file . $ext;
-            last;
-        }
+    foreach my $filetmp ($list->find_picture_paths($param->{'user'}{'email'}))
+    {
+        rename $filetmp, $filetmp . '.tmp';
+        push @filetmp, $filetmp;
     }
 
-    unless (
-        creation_picture_file(
-            Conf::get_robot_conf($robot, 'pictures_path'),
-            $param->{'list'} . '@' . $robot,
-            $fullfilename
-        )
-        ) {
+    my $picture_path = $list->get_picture_path($fullfilename);
+    unless (creation_picture_file($list->get_picture_path, $fullfilename)) {
         report::reject_report_web('user', 'upload_failed',
             {'path' => $fullfilename},
             $param->{'action'});
-        wwslog(
-            'err',
-            'Failed to create file %s/%s@%s%s',
-            Conf::get_robot_conf($robot, 'pictures_path'),
-            $param->{'list'}, $robot, $filename
-        );
+        wwslog('err', 'Failed to create file %s', $picture_path);
         return 'suboptions';
     }
-    my $uploadedfile =
-          Conf::get_robot_conf($robot, 'pictures_path') . '/'
-        . $in{'list'} . '@'
-        . $robot . '/'
-        . $fullfilename;
-    my @info = stat($uploadedfile);
-    my $size = $info[7];
 
-    unless ($size <= $Conf::Conf{'pictures_max_size'}) {
-        unlink($uploadedfile);
-        rename($filetmp . '.tmp', $filetmp);
+    my ($size) = (stat $picture_path)[7];
+    unless (Conf::get_robot_conf($robot, 'pictures_max_size') < $size) {
+        unlink $picture_path;
+        foreach my $filetmp (@filetmp) {
+            rename $filetmp . '.tmp', $filetmp;
+        }
         report::reject_report_web(
             'user',
             'cannot_upload',
@@ -21247,10 +21213,11 @@ sub do_upload_pictures {
     }
 
     # message of success
-    unlink($filetmp . '.tmp');
+    foreach my $filetmp (@filetmp) {
+        unlink $filetmp . '.tmp';
+    }
     wwslog('info', 'Upload of the pictures succeeded');
     return 'suboptions';
-
 }
 
 ## Delete a picture file
@@ -21261,7 +21228,7 @@ sub do_delete_pictures {
     my $email = $param->{'user'}{'email'};
 
     #deleted file must exist
-    unless (tools::pictures_filename('email' => $email, 'list' => $list)) {
+    unless ($list->find_picture_filenames($email)) {
         report::reject_report_web('user', 'no_name', {}, $param->{'action'},
             $list);
         wwslog('err', 'No file exists to delete');
@@ -21272,19 +21239,16 @@ sub do_delete_pictures {
         report::reject_report_web(
             'intern',
             'erase_file',
-            {   'file' => tools::pictures_filename(
-                    'email' => $email,
-                    'list'  => $list
-                )
-            },
+            {'file' => $list->find_picture_filenames($email)},
             $param->{'action'},
             $list,
             $param->{'user'}{'email'},
             $robot
         );
-        wwslog('err',
-            "do_delete_pictures : Failed to erase "
-                . tools::pictures_filename('email' => $email, 'list' => $list)
+        wwslog(
+            'err',
+            'Failed to erase %s',
+            $list->find_picture_filenames($email)
         );
         return undef;
     } else {
@@ -24269,10 +24233,7 @@ sub _prepare_subscriber {
 
     $user->{'email'} =~ /\@(.+)$/;
     $user->{'domain'}       = $1;
-    $user->{'pictures_url'} = tools::make_pictures_url(
-        'email' => $user->{'email'},
-        'list'  => $list
-    );
+    $user->{'pictures_url'} = $list->find_picture_url($user->{'email'});
 
     ## Escape some weird chars
     $user->{'escaped_email'} = tools::escape_chars($user->{'email'});
