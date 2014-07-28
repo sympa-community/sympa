@@ -54,7 +54,6 @@ use MIME::Entity;
 use MIME::EncWords;
 use MIME::Parser;
 use MIME::Tools;
-use Storable qw();
 use URI::Escape qw();
 
 use Conf;
@@ -345,6 +344,37 @@ sub _get_message_id {
     my $self = shift;
 
     return tools::clean_msg_id($self->{_head}->get('Message-Id', 0));
+}
+
+=over
+
+=item dup ( )
+
+I<Copy constructor>.
+Gets deep copy of instance.
+
+=back
+
+=cut
+
+sub dup {
+    my $self = shift;
+
+    my $clone = {};
+    foreach my $key (sort keys %$self) {
+        my $val = $self->{$key};
+        next unless defined $val;
+
+        unless (Scalar::Util::blessed($val)) {
+            $clone->{$key} = tools::dup_var($val);
+        } elsif ($val->can('dup') and !$val->isa('List')) {
+            $clone->{$key} = $val->dup;
+        } else {
+            $clone->{$key} = $val;
+        }
+    }
+
+    return bless $clone => ref($self);
 }
 
 =over 4
@@ -2002,7 +2032,7 @@ sub test_personalize {
     }
 
     foreach my $mode (sort keys %$available_recipients) {
-        my $message = Storable::dclone $self;
+        my $message = $self->dup;
         $message->prepare_message_according_to_mode($mode, $list);
 
         foreach my $rcpt (

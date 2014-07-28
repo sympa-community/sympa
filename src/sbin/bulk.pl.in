@@ -29,7 +29,6 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
-use Storable qw();
 
 use Sympa::Bulk;
 use Conf;
@@ -423,7 +422,7 @@ while (!$end) {
             my $key;
 
             foreach $rcpt (@rcpts) {
-                my $new_message = Storable::dclone($message);
+                my $new_message = $message->dup;
 
                 my $notification_id;
                 my $return_path;
@@ -487,7 +486,7 @@ while (!$end) {
                 close SMTP;
             }
         } else {
-            my $new_message = Storable::dclone($message);
+            my $new_message = $message->dup;
 
             # message doesn't need personalization, so can be sent by packet.
             if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {

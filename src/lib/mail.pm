@@ -30,7 +30,6 @@ use DateTime;
 use Encode qw();
 use MIME::EncWords;
 use POSIX qw();
-use Storable qw();
 
 use Sympa::Bulk;
 use Conf;
@@ -654,7 +653,7 @@ sub sendto {
                     return undef;
                 }
 
-                my $new_message = Storable::dclone($message);
+                my $new_message = $message->dup;
                 unless ($new_message->smime_encrypt($email)) {
                     Log::do_log(
                         'err',

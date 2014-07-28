@@ -2830,7 +2830,7 @@ sub send_msg {
     }
 
     foreach my $mode (sort keys %$available_recipients) {
-        my $new_message = Storable::dclone($message);
+        my $new_message = $message->dup;
         unless ($new_message->prepare_message_according_to_mode($mode, $self))
         {
             Log::do_log('err', "Failed to create Message object");
@@ -3267,7 +3267,7 @@ sub send_to_editor {
     }
 
     foreach my $recipient (@rcpt) {
-        my $new_message = Storable::dclone($message);
+        my $new_message = $message->dup;
         if ($encrypt and $encrypt eq 'smime_crypted') {
             unless ($new_message->smime_encrypt($recipient)) {
                 Log::do_log('notice',
