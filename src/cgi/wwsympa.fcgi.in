@@ -10931,21 +10931,16 @@ sub do_get_latest_lists {
 
 # get inactive lists
 sub do_get_inactive_lists {
-
     wwslog('info', '');
 
     ## Checking families and other virtual hosts.
     get_server_details();
 
     my @unordered_lists;
-    my $all_lists = List::get_lists($robot);
+    my $all_lists =
+        List::get_lists($robot,
+        filter => ['! status' => 'closed|family_closed']);
     foreach my $list (@$all_lists) {
-
-        ## skip closed lists
-        if ($list->{'admin'}{'status'} eq 'closed') {
-            next;
-        }
-
         my $last_message = 0;
 
         if (open COUNT, $list->{'dir'} . '/msg_count') {
@@ -12110,24 +12105,15 @@ sub do_search_list {
 
     ## Search key
     $param->{'filter'} = $in{'filter'};
-    my $searchkey = undef;
-    $searchkey = tools::foldcase($param->{'filter'})
-        if defined $param->{'filter'} and length $param->{'filter'};
 
     ## Members list
-    my $record    = 0;
-    my $all_lists = List::get_lists($robot);
+    my $record = 0;
+    my $all_lists =
+        List::get_lists($robot,
+        'filter' => ['%name%|%subject%' => $param->{'filter'}]);
     foreach my $list (@$all_lists) {
-        my $is_admin;
-        ## Search filter
-        my $subj = undef;
-        $subj = tools::foldcase($list->{'admin'}{'subject'})
-            if defined $list->{'admin'}{'subject'};
-        next
-            unless index($list->{'name'}, $searchkey) >= 0
-                or (defined $subj and index($subj, $searchkey) >= 0);
-
-        my $result = Scenario::request_action(
+        my $is_admin = 0;
+        my $result   = Scenario::request_action(
             $list,
             'visibility',
             $param->{'auth_method'},
