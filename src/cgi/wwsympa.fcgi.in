@@ -1805,7 +1805,8 @@ while ($query = new_loop()) {
             ## Add lists information to 'which_info'
             foreach my $list (@{$param->{'get_which_member'}}) {
                 ## Evaluate AuthZ scenario first
-                my $result = $list->check_list_authz(
+                my $result = Scenario::request_action(
+                    $list,
                     'visibility',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
@@ -3059,7 +3060,7 @@ Use it to create a List object and initialize output parameters.
 
 =item * List::am_i
 
-=item * List::check_list_authz
+=item * Scenario::request_action
 
 =item * List::get_mod_spool_size
 
@@ -3176,8 +3177,8 @@ sub check_param_in {
                 $list->find_picture_url($param->{'user'}{'email'});
 
             ## Checks if the user can post in this list.
-            my $result = $list->check_list_authz(
-                'send',
+            my $result = Scenario::request_action(
+                $list, 'send',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -3225,7 +3226,8 @@ sub check_param_in {
         }
 
         ## Check unsubscription authorization for the current user and list.
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'unsubscribe',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -3246,7 +3248,8 @@ sub check_param_in {
         }
 
         ## Check subscription authorization for the current user and list.
-        $result = $list->check_list_authz(
+        $result = Scenario::request_action(
+            $list,
             'subscribe',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -3272,9 +3275,9 @@ sub check_param_in {
 
     ## Check if the current user can create a list.
     my $result = Scenario::request_action(
+        $robot,
         'create_list',
         $param->{'auth_method'},
-        $robot,
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -3477,8 +3480,8 @@ sub check_param_out {
                 || $param->{'is_editor'};
 
             #May post:
-            my $result = $list->check_list_authz(
-                'send',
+            my $result = Scenario::request_action(
+                $list, 'send',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
                     'remote_host' => $param->{'remote_host'},
@@ -3522,8 +3525,8 @@ sub check_param_out {
             if ($param->{'may_signoff'} || $param->{'may_subscribe'});
 
         ## May review
-        my $result = $list->check_list_authz(
-            'review',
+        my $result = Scenario::request_action(
+            $list, 'review',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -3539,7 +3542,8 @@ sub check_param_out {
         $param->{'list_status'}    = $list->{'admin'}{'status'};
 
         ## May signoff
-        $result = $list->check_list_authz(
+        $result = Scenario::request_action(
+            $list,
             'unsubscribe',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -3561,7 +3565,8 @@ sub check_param_out {
         }
 
         ## May Subscribe
-        $result = $list->check_list_authz(
+        $result = Scenario::request_action(
+            $list,
             'subscribe',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -3576,8 +3581,8 @@ sub check_param_out {
 
 # SJS START
         ## May Add or del subscribers
-        my $result = $list->check_list_authz(
-            'add',
+        my $result = Scenario::request_action(
+            $list, 'add',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -3586,8 +3591,8 @@ sub check_param_out {
         );
         $main::action = $result->{'action'} if (ref($result) eq 'HASH');
         $param->{'may_add'} = 1 if ($main::action =~ /do_it/);
-        my $result = $list->check_list_authz(
-            'del',
+        my $result = Scenario::request_action(
+            $list, 'del',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -3603,7 +3608,8 @@ sub check_param_out {
             $param->{'is_archived'} = 1;
 
             ## Check if the current user may access web archives
-            my $result = $list->check_list_authz(
+            my $result = Scenario::request_action(
+                $list,
                 'web_archive.access',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
@@ -3622,8 +3628,8 @@ sub check_param_out {
 
             ## Check if web archive is publically accessible (useful
             ## information for RSS)
-            $result = $list->check_list_authz(
-                'web_archive.access',
+            $result = Scenario::request_action(
+                $list, 'web_archive.access',
                 $param->{'auth_method'},
                 {'sender' => 'nobody'}
             );
@@ -3638,8 +3644,8 @@ sub check_param_out {
         if ($list->get_shared_status() eq 'exist') {
             ## Check if shared is publically accessible (useful information
             ## for RSS)
-            my $result = $list->check_list_authz(
-                'shared_doc.d_read',
+            my $result = Scenario::request_action(
+                $list, 'shared_doc.d_read',
                 $param->{'auth_method'},
                 {'sender' => 'nobody'}
             );
@@ -4949,7 +4955,8 @@ sub do_which {
             List::get_which($param->{'user'}{'email'}, $robot, $role)) {
             my $l = $list->{'name'};
 
-            my $result = $list->check_list_authz(
+            my $result = Scenario::request_action(
+                $list,
                 'visibility',
                 $param->{'auth_method'},
                 {   'sender'      => $param->{'user'}{'email'},
@@ -5039,7 +5046,8 @@ sub do_lists {
     foreach my $list (@$all_lists) {
         my $sender = $param->{'user'}{'email'} || 'nobody';
 
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'visibility',
             $param->{'auth_method'},
             {   'sender'      => $sender,
@@ -6101,7 +6109,8 @@ sub do_subscribe {
             );
             return undef;
         }
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'subscribe',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -6501,7 +6510,8 @@ sub do_auto_signoff {
 
     ## If unsubscribe is forbidden, reject the request. Other
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'unsubscribe',
         $param->{'auth_method'},
         {   'sender'      => $in{'email'},
@@ -6713,7 +6723,8 @@ sub unsubscribe {
         return %report;
     }
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'unsubscribe',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
@@ -8149,8 +8160,8 @@ sub do_add {
             );
         }
 
-        my $result = $list->check_list_authz(
-            'add',
+        my $result = Scenario::request_action(
+            $list, 'add',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
                 'email'       => $in{'email'},
@@ -8319,8 +8330,8 @@ sub do_del {
 
     $in{'email'} = tools::unescape_chars($in{'email'});
 
-    my $result = $list->check_list_authz(
-        'del',
+    my $result = Scenario::request_action(
+        $list, 'del',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
             'email'       => $in{'email'},
@@ -9844,7 +9855,8 @@ sub do_arc {
     }
 
     ## check autorization for tracking
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'tracking.tracking',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
@@ -10517,7 +10529,8 @@ sub do_tracking {
         $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
 
     ## Access control
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'tracking.tracking',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
@@ -11279,9 +11292,9 @@ sub do_create_list {
     }
 
     my $result = Scenario::request_action(
+        $robot,
         'create_list',
         $param->{'auth_method'},
-        $robot,
         {   'sender'             => $param->{'user'}{'email'},
             'candidate_listname' => $in{'listname'},
             'candidate_subject'  => $in{'subject'},
@@ -11499,9 +11512,9 @@ sub do_create_list_request {
     wwslog('info', '');
 
     my $result = Scenario::request_action(
+        $robot,
         'create_list',
         $param->{'auth_method'},
-        $robot,
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -11818,9 +11831,9 @@ sub do_scenario_test {
         wwslog('debug3', 'Perform scenario_test');
 
         my $result = Scenario::request_action(
+            $robot,
             $operation,
             $in{'auth_method'},
-            $robot,
             {   'listname'    => $in{'listname'},
                 'sender'      => $in{'sender'},
                 'email'       => $in{'email'},
@@ -12114,7 +12127,8 @@ sub do_search_list {
             unless index($list->{'name'}, $searchkey) >= 0
                 or (defined $subj and index($subj, $searchkey) >= 0);
 
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'visibility',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -13689,9 +13703,9 @@ sub do_rename_list_request {
     wwslog('info', '');
 
     my $result = Scenario::request_action(
+        $robot,
         'create_list',
         $param->{'auth_method'},
-        $robot,
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -14182,7 +14196,8 @@ sub d_access_control {
 
     # if not privileged owner
     if ($mode_read) {
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'shared_doc.d_read',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -14200,7 +14215,8 @@ sub d_access_control {
     }
 
     if ($mode_edit) {
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'shared_doc.d_edit',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},
@@ -14271,8 +14287,8 @@ sub d_access_control {
             %desc_hash = get_desc_file($desc_file);
 
             if ($mode_read) {
-
-                my $result = $list->check_list_authz(
+                my $result = Scenario::request_action(
+                    $list,
                     'shared_doc.d_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
@@ -14292,7 +14308,8 @@ sub d_access_control {
             }
 
             if ($mode_edit) {
-                my $result = $list->check_list_authz(
+                my $result = Scenario::request_action(
+                    $list,
                     'shared_doc.d_edit',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
@@ -14769,7 +14786,8 @@ sub do_d_read {
                     # check access permission for reading
                     %desc_hash = get_desc_file("$path_doc/.desc");
 
-                    my $result = $list->check_list_authz(
+                    my $result = Scenario::request_action(
+                        $list,
                         'shared_doc.d_read',
                         $param->{'auth_method'},
                         {   'sender'      => $param->{'user'}{'email'},
@@ -14818,7 +14836,8 @@ sub do_d_read {
                         ## only authenticated users can edit a file
 
                         if ($param->{'user'}{'email'}) {
-                            my $result = $list->check_list_authz(
+                            my $result = Scenario::request_action(
+                                $list,
                                 'shared_doc.d_edit',
                                 $param->{'auth_method'},
                                 {   'sender' => $param->{'user'}{'email'},
@@ -14886,7 +14905,8 @@ sub do_d_read {
                     # check access permission
                     %desc_hash = get_desc_file("$doc/.desc.$d");
 
-                    my $result = $list->check_list_authz(
+                    my $result = Scenario::request_action(
+                        $list,
                         'shared_doc.d_read',
                         $param->{'auth_method'},
                         {   'sender'      => $param->{'user'}{'email'},
@@ -14956,7 +14976,8 @@ sub do_d_read {
                         ## Only authenticated users can edit files
 
                         if ($param->{'user'}{'email'}) {
-                            my $result = $list->check_list_authz(
+                            my $result = Scenario::request_action(
+                                $list,
                                 'shared_doc.d_edit',
                                 $param->{'auth_method'},
                                 {   'sender' => $param->{'user'}{'email'},
@@ -15363,7 +15384,8 @@ sub directory_browsing {
                 # check access permission for reading
                 my %desc_hash = get_desc_file("$path_d/.desc");
 
-                my $result = $list->check_list_authz(
+                my $result = Scenario::request_action(
+                    $list,
                     'shared_doc.d_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
@@ -15424,7 +15446,8 @@ sub directory_browsing {
                 # check access permission
                 %desc_hash = get_desc_file("$path_dir/.desc.$d");
 
-                my $result = $list->check_list_authz(
+                my $result = Scenario::request_action(
+                    $list,
                     'shared_doc.d_read',
                     $param->{'auth_method'},
                     {   'sender'      => $param->{'user'}{'email'},
@@ -20999,8 +21022,8 @@ sub do_remind {
     my $mail_command;
 
     ## Sympa will require a confirmation
-    my $result = $list->check_list_authz(
-        'remind', 'smtp',
+    my $result = Scenario::request_action(
+        $list, 'remind', 'smtp',
         {   'sender'      => $param->{'user'}{'email'},
             'remote_host' => $param->{'remote_host'},
             'remote_addr' => $param->{'remote_addr'}
@@ -22917,9 +22940,9 @@ sub export_topics {
         keys %topics
         ) {
         my $result = Scenario::request_action(
+            $robot,
             'topics_visibility',
             $param->{'auth_method'},
-            $robot,
             {   'topicname'   => $t,
                 'sender'      => $param->{'user'}{'email'},
                 'remote_host' => $param->{'remote_host'},
@@ -23832,7 +23855,8 @@ sub do_css {
 sub do_rss_request {
     wwslog('info', '');
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'visibility',
         $param->{'auth_method'},
         {   'sender'      => $param->{'user'}{'email'},
@@ -24551,8 +24575,8 @@ sub new_d_read {
 sub check_authz {
     my ($subname, $action) = @_;
 
-    my $result = $list->check_list_authz(
-        $action,
+    my $result = Scenario::request_action(
+        $list, $action,
         $param->{'auth_method'},
         {   'sender' => $param->{'user'}{'email'} || 'nobody',
             'remote_host' => $param->{'remote_host'},
@@ -24758,7 +24782,8 @@ sub do_automatic_lists {
 sub prevent_visibility_bypass {
     wwslog('debug2', 'Starting');
     if (defined $list and ref $list eq 'List') {
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'visibility',
             $param->{'auth_method'},
             {   'sender'      => $param->{'user'}{'email'},

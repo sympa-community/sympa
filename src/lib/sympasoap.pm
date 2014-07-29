@@ -31,7 +31,9 @@ use Encode qw();
 use Sympa::Admin;
 use Sympa::Auth;
 use Conf;
+use List;
 use Log;
+use Scenario;
 
 ## Define types of SOAP type listType
 my %types = (
@@ -90,7 +92,8 @@ sub lists {
         my $listname = $list->{'name'};
 
         my $result_item = {};
-        my $result      = $list->check_list_authz(
+        my $result      = Scenario::request_action(
+            $list,
             'visibility',
             'md5',
             {   'sender'                  => $sender,
@@ -483,8 +486,8 @@ sub info {
     # Part of the authorization code
     $user = Sympa::User::get_global_user($sender);
 
-    my $result = $list->check_list_authz(
-        'info', 'md5',
+    my $result = Scenario::request_action(
+        $list, 'info', 'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
         }
@@ -621,8 +624,9 @@ sub createList {
     }
     # check authorization
     my $result = Scenario::request_action(
+        $robot,
         'create_list',
-        'md5', $robot,
+        'md5',
         {   'sender'                  => $sender,
             'candidate_listname'      => $listname,
             'candidate_subject'       => $subject,
@@ -804,8 +808,8 @@ sub add {
 
     # check authorization
 
-    my $result = $list->check_list_authz(
-        'add', 'md5',
+    my $result = Scenario::request_action(
+        $list, 'add', 'md5',
         {   'sender'                  => $sender,
             'email'                   => $email,
             'remote_host'             => $ENV{'REMOTE_HOST'},
@@ -960,8 +964,8 @@ sub del {
 
     # check authorization
 
-    my $result = $list->check_list_authz(
-        'del', 'md5',
+    my $result = Scenario::request_action(
+        $list, 'del', 'md5',
         {   'sender'                  => $sender,
             'email'                   => $email,
             'remote_host'             => $ENV{'REMOTE_HOST'},
@@ -1085,8 +1089,8 @@ sub review {
     # Part of the authorization code
     $user = Sympa::User::get_global_user($sender);
 
-    my $result = $list->check_list_authz(
-        'review', 'md5',
+    my $result = Scenario::request_action(
+        $list, 'review', 'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
         }
@@ -1308,7 +1312,8 @@ sub signoff {
     # Part of the authorization code
     my $user = Sympa::User::get_global_user($sender);
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'unsubscribe',
         'md5',
         {   'email'                   => $sender,
@@ -1426,7 +1431,8 @@ sub subscribe {
     $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
 
     ## query what to do with this subscribtion request
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'subscribe',
         'md5',
         {   'sender'                  => $sender,
@@ -1607,7 +1613,8 @@ sub which {
         my $list_address;
         my $result_item;
 
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'visibility',
             'md5',
             {   'sender'                  => $sender,

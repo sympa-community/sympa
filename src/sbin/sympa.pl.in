@@ -47,6 +47,7 @@ use mail;
 use Message;
 use Sympa::Regexps;
 use report;
+use Scenario;
 use SDM;
 use tools;
 use Upgrade;
@@ -2771,7 +2772,7 @@ sub DoMessage {
         : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
-    $result = $list->check_list_authz('send', $auth_method, $context);
+    $result = Scenario::request_action($list, 'send', $auth_method, $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {

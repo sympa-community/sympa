@@ -285,12 +285,20 @@ sub _parse_scenario {
 #           (defined if $debug)
 ######################################################
 sub request_action {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $that        = shift;
     my $operation   = shift;
     my $auth_method = shift;
-    my $robot       = shift;
     my $context     = shift;
     my $debug       = shift;
-    Log::do_log('debug', '%s, %s, %s', $operation, $auth_method, $robot);
+
+    my ($list, $robot_id);
+    if (ref $that eq 'List') {
+        $list     = $that;
+        $robot_id = $that->{'domain'};
+    } else {
+        $robot_id = $that || '*';    #FIXME: really maybe Site?
+    }
 
     my $trace_scenario;
 
@@ -298,11 +306,10 @@ sub request_action {
     $context->{'sender'}      ||= 'nobody';
     $context->{'email'}       ||= $context->{'sender'};
     $context->{'remote_host'} ||= 'unknown_host';
-    $context->{'robot_domain'}  = $robot;
+    $context->{'robot_domain'}  = $robot_id;
     $context->{'msg_encrypted'} = 'smime'
         if defined $context->{'message'}
-            and tools::smart_eq($context->{'message'}->{'smime_crypted'},
-                'smime_crypted');
+            and $context->{'message'}->{'smime_crypted'};
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
         Log::do_log('info',
@@ -314,15 +321,15 @@ sub request_action {
 
     # this var is defined to control if log scenario is activated or not
     my $log_it;
-    my $loging_targets = Conf::get_robot_conf($robot, 'loging_for_module');
+    my $loging_targets = Conf::get_robot_conf($robot_id, 'loging_for_module');
     if ($loging_targets->{'scenario'}) {
         #activate log if no condition is defined
-        unless (Conf::get_robot_conf($robot, 'loging_condition')) {
+        unless (Conf::get_robot_conf($robot_id, 'loging_condition')) {
             $log_it = 1;
         } else {
             #activate log if ip or email match
             my $loging_conditions =
-                Conf::get_robot_conf($robot, 'loging_condition');
+                Conf::get_robot_conf($robot_id, 'loging_condition');
             if (   $loging_conditions->{'ip'} =~ /$context->{'remote_addr'}/
                 || $loging_conditions->{'email'} =~ /$context->{'email'}/i) {
                 Log::do_log(
@@ -337,29 +344,27 @@ sub request_action {
     }
 
     if ($log_it) {
-        if ($context->{'list_object'}) {
-            $trace_scenario =
-                  'scenario request '
-                . $operation
-                . ' for list '
-                . $context->{'list_object'}{'name'} . '@'
-                . $robot . ' :';
-            Log::do_log('info', 'Will evaluate scenario %s for list %s@%s',
-                $operation, $context->{'list_object'}{'name'}, $robot);
-        } else {
-            $trace_scenario =
-                  'scenario request '
-                . $operation
-                . ' for robot '
-                . $robot . ' :';
+        if ($list) {
+            $trace_scenario = sprintf 'scenario request %s for list %s :',
+                $operation, $list->get_list_id;
+            Log::do_log('info', 'Will evaluate scenario %s for list %s',
+                $operation, $list);
+        } elsif ($robot_id and $robot_id ne '*') {
+            $trace_scenario = sprintf 'scenario request %s for robot %s :',
+                $operation, $robot_id;
             Log::do_log('info', 'Will evaluate scenario %s for robot %s',
-                $operation, $robot);
+                $operation, $robot_id);
+        } else {
+            $trace_scenario = sprintf 'scenario request %s for site :',
+                $operation;
+            Log::do_log('info', 'Will evaluate scenario %s for site',
+                $operation);
         }
     }
 
     ## The current action relates to a list
-    if (defined $context->{'list_object'}) {
-        my $list = $context->{'list_object'};
+    if ($list) {
+        $context->{'list_object'} = $list;    #FIXME: for verify()
 
         ## The $operation refers to a list parameter of the same name
         ## The list parameter might be structured ('.' is a separator)
@@ -399,7 +404,7 @@ sub request_action {
 
         ## Create Scenario object
         $scenario = Scenario->new(
-            'robot'     => $robot,
+            'robot'     => $robot_id,
             'directory' => $list->{'dir'},
             'file_path' => $scenario_path,
             'options'   => $context->{'options'}
@@ -426,7 +431,7 @@ sub request_action {
 
             # loading of the structure
             $scenario = Scenario->new(
-                'robot'     => $robot,
+                'robot'     => $robot_id,
                 'directory' => $list->{'dir'},
                 'function'  => $operations[$#operations],
                 'name'      => $context->{'scenario'},
@@ -438,9 +443,10 @@ sub request_action {
         ## Topics
 
         $scenario = Scenario->new(
-            'robot'    => $robot,
+            'robot'    => $robot_id,
             'function' => 'topics_visibility',
-            'name' => $List::list_of_topics{$robot}{$context->{'topicname'}}
+            'name' =>
+                $List::list_of_topics{$robot_id}{$context->{'topicname'}}
                 {'visibility'},
             'options' => $context->{'options'}
         );
@@ -455,9 +461,9 @@ sub request_action {
             and $p[0]->{'scenario'}
             ) {
             $scenario = Scenario->new(
-                'robot'    => $robot,
+                'robot'    => $robot_id,
                 'function' => $operation,
-                'name'     => Conf::get_robot_conf($robot, $operation),
+                'name'     => Conf::get_robot_conf($robot_id, $operation),
                 'options'  => $context->{'options'}
             );
         }
@@ -481,13 +487,12 @@ sub request_action {
     ## Include include.<action>.header if found
     my %param = (
         'function' => 'include',
-        'robot'    => $robot,
+        'robot'    => $robot_id,
         'name'     => $operation . '.header',
         'options'  => $context->{'options'}
     );
-    $param{'directory'} = $context->{'list_object'}{'dir'}
-        if (defined $context->{'list_object'});
-    my $include_scenario = new Scenario %param;
+    $param{'directory'} = $list->{'dir'} if $list;
+    my $include_scenario = Scenario->new(%param);
     if (defined $include_scenario) {
         ## Add rules at the beginning of the array
         unshift @rules, @{$include_scenario->{'rules'}};
@@ -499,13 +504,12 @@ sub request_action {
             my $include_file = $1;
             my %param        = (
                 'function' => 'include',
-                'robot'    => $robot,
+                'robot'    => $robot_id,
                 'name'     => $include_file,
                 'options'  => $context->{'options'}
             );
-            $param{'directory'} = $context->{'list_object'}{'dir'}
-                if (defined $context->{'list_object'});
-            my $include_scenario = new Scenario %param;
+            $param{'directory'} = $list->{'dir'} if $list;
+            my $include_scenario = Scenario->new(%param);
             if (defined $include_scenario) {
                 ## Removes the include directive and replace it with included
                 ## rules
@@ -565,7 +569,7 @@ sub request_action {
                     return $return;
                 }
                 List::send_notify_to_listmaster('error-performing-condition',
-                    $robot,
+                    $robot_id,
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
             }

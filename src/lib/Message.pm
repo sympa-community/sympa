@@ -528,11 +528,9 @@ sub check_spam_status {
         ? $self->{'list'}->{'domain'}
         : $self->{'robot'};
 
-    my $spam_status = Scenario::request_action(
-        'spam_status', 'smtp',
-        $robot_id || $Conf::Conf{'domain'},
-        {'message' => $self}
-    );
+    my $spam_status =
+        Scenario::request_action($robot_id || $Conf::Conf{'domain'},
+        'spam_status', 'smtp', {'message' => $self});
     if (defined $spam_status) {
         if (ref($spam_status) eq 'HASH') {
             $self->{'spam_status'} = $spam_status->{'action'};

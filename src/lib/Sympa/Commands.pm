@@ -235,8 +235,8 @@ sub lists {
     foreach my $list (@$all_lists) {
         my $l = $list->{'name'};
 
-        my $result = $list->check_list_authz(
-            'visibility', 'smtp',    # 'smtp' isn't it a bug ?
+        my $result = Scenario::request_action(
+            $list, 'visibility', 'smtp',    # 'smtp' isn't it a bug ?
             {   'sender'  => $sender,
                 'message' => $message,
             }
@@ -328,8 +328,8 @@ sub stats {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
-        'review',
+    my $result = Scenario::request_action(
+        $list, 'review',
         $auth_method,
         {   'sender'  => $sender,
             'message' => $message,
@@ -661,8 +661,8 @@ sub review {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
-        'review',
+    my $result = Scenario::request_action(
+        $list, 'review',
         $auth_method,
         {   'sender'  => $sender,
             'message' => $message
@@ -884,7 +884,8 @@ sub subscribe {
 
     ## query what to do with this subscribtion request
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'subscribe',
         $auth_method,
         {   'sender'  => $sender,
@@ -1131,8 +1132,8 @@ sub info {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
-        'info',
+    my $result = Scenario::request_action(
+        $list, 'info',
         $auth_method,
         {   'sender'  => $sender,
             'message' => $message,
@@ -1272,7 +1273,8 @@ sub signoff {
             $l = $list->{'name'};
 
             ## Skip hidden lists
-            my $result = $list->check_list_authz(
+            my $result = Scenario::request_action(
+                $list,
                 'visibility',
                 'smtp',
                 {   'sender'  => $sender,
@@ -1335,7 +1337,8 @@ sub signoff {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
+    my $result = Scenario::request_action(
+        $list,
         'unsubscribe',
         $auth_method,
         {   'email'   => $email,
@@ -1546,8 +1549,8 @@ sub add {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
-        'add',
+    my $result = Scenario::request_action(
+        $list, 'add',
         $auth_method,
         {   'email'   => $email,
             'sender'  => $sender,
@@ -1741,8 +1744,8 @@ sub invite {
     return 'wrong_auth'
         unless (defined $auth_method);
 
-    my $result = $list->check_list_authz(
-        'invite',
+    my $result = Scenario::request_action(
+        $list, 'invite',
         $auth_method,
         {   'sender'  => $sender,
             'message' => $message,
@@ -1811,7 +1814,8 @@ sub invite {
             $context{'user'}{'gecos'} = $comment;
             $context{'requested_by'}  = $sender;
 
-            my $result = $list->check_list_authz(
+            my $result = Scenario::request_action(
+                $list,
                 'subscribe',
                 'smtp',
                 {   'sender'  => $sender,
@@ -2015,7 +2019,7 @@ sub remind {
     if ($listname eq '*') {
 
         $result =
-            Scenario::request_action('global_remind', $auth_method, $robot,
+            Scenario::request_action($robot, 'global_remind', $auth_method,
             {'sender' => $sender});
         $action = $result->{'action'} if (ref($result) eq 'HASH');
 
@@ -2025,8 +2029,8 @@ sub remind {
 
         $host = $list->{'admin'}{'host'};
 
-        $result = $list->check_list_authz(
-            'remind',
+        $result = Scenario::request_action(
+            $list, 'remind',
             $auth_method,
             {   'sender'  => $sender,
                 'message' => $message,
@@ -2153,7 +2157,8 @@ sub remind {
                 do {
                     my $email = lc($user->{'email'});
 
-                    my $result = $list->check_list_authz(
+                    my $result = Scenario::request_action(
+                        $list,
                         'visibility',
                         'smtp',
                         {   'sender'  => $sender,
@@ -2297,8 +2302,8 @@ sub del {
         unless (defined $auth_method);
 
     ## query what to do with this DEL request
-    my $result = $list->check_list_authz(
-        'del',
+    my $result = Scenario::request_action(
+        $list, 'del',
         $auth_method,
         {   'sender'  => $sender,
             'email'   => $who,
@@ -2467,7 +2472,8 @@ sub set {
             my $l = $list->{'name'};
 
             ## Skip hidden lists
-            my $result = $list->check_list_authz(
+            my $result = Scenario::request_action(
+                $list,
                 'visibility',
                 'smtp',
                 {   'sender'  => $sender,
@@ -2852,8 +2858,8 @@ sub confirm {
     my $msgid      = $message->{'message_id'};
     my $msg_string = $message->as_string;
 
-    my $result = $list->check_list_authz(
-        'send', 'md5',
+    my $result = Scenario::request_action(
+        $list, 'send', 'md5',
         {   'sender'  => $sender,
             'message' => $message,
         }
@@ -3393,7 +3399,8 @@ sub which {
         ##            next unless (defined $list);
         $listname = $list->{'name'};
 
-        my $result = $list->check_list_authz(
+        my $result = Scenario::request_action(
+            $list,
             'visibility',
             'smtp',
             {   'sender'  => $sender,

@@ -6504,19 +6504,8 @@ sub am_i {
 
 ## Check list authorizations
 ## Higher level sub for request_action
-sub check_list_authz {
-    my $self        = shift;
-    my $operation   = shift;
-    my $auth_method = shift;
-    my $context     = shift;
-    my $debug       = shift;
-    Log::do_log('debug', '%s, %s', $operation, $auth_method);
-
-    $context->{'list_object'} = $self;
-
-    return Scenario::request_action($operation, $auth_method,
-        $self->{'domain'}, $context, $debug);
-}
+# DEPRECATED; Use Scenario::request_action();
+#sub check_list_authz;
 
 ## Initialize internal list cache
 sub init_list_cache {

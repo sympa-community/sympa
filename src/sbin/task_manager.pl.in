@@ -1156,8 +1156,8 @@ sub delete_subs_cmd {
     foreach my $email (keys %{$Rvars->{$var}}) {
 
         Log::do_log('notice', '%s', $email);
-        my $result = $list->check_list_authz(
-            'del', 'smime',
+        my $result = Scenario::request_action(
+            $list, 'del', 'smime',
             {   'sender' => $Conf::Conf{'listmaster'},
                 'email'  => $email,
             }

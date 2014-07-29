@@ -45,6 +45,7 @@ use Sympa::Crash;    # Show traceback.
 use List;
 use Log;
 use mail;
+use Scenario;
 use Sympa::Regexps;
 use SDM;
 use tools;
@@ -352,8 +353,8 @@ while (!$end) {
                     unlink("$queue/$file");
                     next;
                 }
-                my $result = $list->check_list_authz(
-                    'del', 'smtp',
+                my $result = Scenario::request_action(
+                    $list, 'del', 'smtp',
                     {   'sender' => $Conf::Conf{'listmasters'}[0],
                         'email'  => $who
                     }
@@ -849,8 +850,8 @@ while (!$end) {
                     }
                     foreach my $list (@lists) {
                         my $result =
-                            $list->check_list_authz('unsubscribe', 'smtp',
-                            {'sender' => $original_rcpt});
+                            Scenario::request_action($list, 'unsubscribe',
+                            'smtp', {'sender' => $original_rcpt});
                         my $action;
                         $action = $result->{'action'}
                             if (ref($result) eq 'HASH');

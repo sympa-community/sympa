@@ -3134,9 +3134,9 @@ sub is_allowed_to_create_automatic_lists {
 
     # check authorization
     my $result = Scenario::request_action(
+        $self->{'robot'},
         'automatic_list_creation',
         $auth_level,
-        $self->{'robot'},
         {   'sender'             => $sender,
             'message'            => $message,
             'family'             => $self,
