@@ -23969,9 +23969,9 @@ sub do_review_family {
         return undef;
     }
 
-    my $all_lists = $family->get_family_lists();
-    foreach my $flist (@{$all_lists}) {
-        unless (defined $flist) {
+    my $all_lists = List::get_lists($family);
+    foreach my $flist (@{$all_lists || []}) {
+        unless ($flist) {
             wwslog('err', 'Incorrect list');
             next;
         }

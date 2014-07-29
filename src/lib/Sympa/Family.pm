@@ -839,7 +839,7 @@ sub close_family {
     my $self = shift;
     Log::do_log('info', '(%s)', $self->{'name'});
 
-    my $family_lists = $self->get_family_lists();
+    my $family_lists = List::get_lists($self);
     my @impossible_close;
     my @close_ok;
 
@@ -934,7 +934,7 @@ Creates family lists or updates them if they exist already.
 
 =item * Sympa::Family::_update_existing_list
 
-=item * Sympa::Family::get_hash_family_lists
+=item * List::get_lists
 
 =item * List::new
 
@@ -974,7 +974,8 @@ sub instantiate {
     $self->{'state'} = 'no_check';
 
     ## get the currently existing lists in the family
-    my $previous_family_lists = $self->get_hash_family_lists();
+    my $previous_family_lists =
+        {(map { $_->name => $_ } @{Sympa::List::get_lists($self) || []})};
 
     ## Splits the family description XML file into a set of list description
     ## xml files
@@ -1793,120 +1794,11 @@ sub get_param_constraint {
     }
 }
 
-=pod 
+# DEPRECATED: Use List::get_lists($family).
+#sub get_family_lists;
 
-=head2 sub get_family_lists()
-
-Returns a ref to an array whose values are the family lists' names.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<\@list_of_lists>, a ref to the array containing the family lists' names.
-
-=back 
-
-=head3 Calls
-
-=over 
-
-=item * Log::do_log
-
-=item * List::get_lists
-
-=back 
-
-=cut
-
-#########################################
-# get_family_lists
-#########################################
-# return the family's lists into an array
-#
-# IN  : -$self
-# OUT : -\@list_of_list
-#########################################
-sub get_family_lists {
-    my $self = shift;
-    my @list_of_lists;
-    Log::do_log('debug2', '(%s)', $self->{'name'});
-
-    my $all_lists = List::get_lists($self->{'robot'});
-    foreach my $list (@$all_lists) {
-        if (   (defined $list->{'admin'}{'family_name'})
-            && ($list->{'admin'}{'family_name'} eq $self->{'name'})) {
-            push(@list_of_lists, $list);
-        }
-    }
-    return \@list_of_lists;
-}
-
-=pod 
-
-=head2 sub get_hash_family_lists()
-
-Returns a ref to a hash whose keys are this family's lists' names. They are associated to the value "1".
-
-=head3 Arguments 
-
-=over 
-
-=item * I<$self>, the Sympa::Family object
-=back 
-
-=head3 Return 
-
-=over 
-
-=item * I<\%list_of_list>, a ref to a hash the keys of which are the family's lists' names.
-
-=back 
-
-=head3 Calls
-
-=over 
-
-=item * Log::do_log
-
-=item * List::get_lists
-
-=back 
-
-=cut
-
-#########################################
-# get_hash_family_lists
-#########################################
-# return the family's lists into a hash
-#
-# IN  : -$self
-# OUT : -\%list_of_list
-#########################################
-sub get_hash_family_lists {
-    my $self = shift;
-    my %list_of_lists;
-    Log::do_log('debug2', '(%s)', $self->{'name'});
-
-    my $all_lists = List::get_lists($self->{'robot'});
-    foreach my $list (@$all_lists) {
-        if (   (defined $list->{'admin'}{'family_name'})
-            && ($list->{'admin'}{'family_name'} eq $self->{'name'})) {
-            $list_of_lists{$list->{'name'}} = 1;
-        }
-    }
-    return \%list_of_lists;
-}
-
-=pod 
+# DEPRECATED: Use List::get_lists($family).
+#sub get_hash_family_lists;
 
 =head2 sub get_uncompellable_param()
 
