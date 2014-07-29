@@ -62,6 +62,12 @@ our %cpan_modules = (
         'gettext_id' =>
             'this module provides reversible encryption of user passwords in the database.  Useful when updating from old version with password reversible encryption, or if secure session cookies in non-SSL environments are required.',
     },
+    'Crypt::OpenSSL::X509' => {
+        required_version => '1.800.1',
+        package_name     => 'Crypt-OpenSSL-X509',
+        'gettext_id' =>
+            'required to extract user certificates for SSL clients and S/MIME messages.',
+    },
     'Data::Password' => {
         required_version => '1.07',
         package_name     => 'Data-Password',
