@@ -45,11 +45,12 @@ use IO::Scalar;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
-use List;
+use Sympa::List;
 use Sympa::LockedFile;
 use Log;
 use Sympa::Regexps;
-use Scenario;
+use Sympa::Robot;
+use Sympa::Scenario;
 use SDM;
 use tools;
 use tt2;
@@ -125,11 +126,11 @@ Creates a list. Used by the create_list() sub in sympa.pl and the do_create_list
 
 =item * Conf::get_robot_conf
 
-=item * List::create_shared
+=item * Sympa::List::create_shared
 
-=item * List::has_include_data_sources
+=item * Sympa::List::has_include_data_sources
 
-=item * List::sync_include
+=item * Sympa::List::sync_include
 
 =item * tools::search_fullpath
 
@@ -233,7 +234,7 @@ sub create_list_old {
     }
 
     ## Check this listname doesn't exist already.
-    if ($res || List->new($param->{'listname'}, $robot, {'just_try' => 1})) {
+    if ($res || Sympa::List->new($param->{'listname'}, $robot, {'just_try' => 1})) {
         Log::do_log('err',
             'Could not create already existing list %s on %s for',
             $param->{'listname'}, $robot);
@@ -332,7 +333,7 @@ sub create_list_old {
 
     ## Create list object
     my $list;
-    unless ($list = List->new($param->{'listname'}, $robot)) {
+    unless ($list = Sympa::List->new($param->{'listname'}, $robot)) {
         Log::do_log('err', 'Unable to create list %s', $param->{'listname'});
         return undef;
     }
@@ -574,7 +575,7 @@ sub create_list {
 
     ## Create list object
     my $list;
-    unless ($list = List->new($param->{'listname'}, $robot)) {
+    unless ($list = Sympa::List->new($param->{'listname'}, $robot)) {
         Log::do_log('err', 'Unable to create list %s', $param->{'listname'});
         return undef;
     }
@@ -681,7 +682,7 @@ sub update_list {
     $lock_fh->close;
 
     ## Create list object
-    unless ($list = List->new($param->{'listname'}, $robot)) {
+    unless ($list = Sympa::List->new($param->{'listname'}, $robot)) {
         Log::do_log('err', 'Unable to create list %s', $param->{'listname'});
         return undef;
     }
@@ -784,7 +785,7 @@ sub rename_list {
     ## Evaluate authorization scenario unless run as listmaster (sympa.pl)
     my ($result, $r_action, $reason);
     unless ($param{'options'}{'skip_authz'}) {
-        $result = Scenario::request_action(
+        $result = Sympa::Scenario::request_action(
             $param{'new_robot'},
             'create_list',
             $param{'auth_method'},
@@ -816,7 +817,7 @@ sub rename_list {
     if ($res
         || ($list->{'name'} ne $param{'new_listname'})
         &&    ## Do not test if listname did not change
-        (   List->new(
+        (   Sympa::List->new(
                 $param{'new_listname'}, $param{'new_robot'},
                 {'just_try' => 1}
             )
@@ -886,7 +887,7 @@ sub rename_list {
     # set list status to pending if creation list is moderated
     if ($r_action =~ /listmaster/) {
         $list->{'admin'}{'status'} = 'pending';
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'request_list_renaming',
             $list->{'domain'},
             {   'list'         => $list,
@@ -902,7 +903,7 @@ sub rename_list {
     ## Save config file for the new() later to reload it
     $list->save_config($param{'user_email'});
 
-    ## This code should be in List::rename()
+    ## This code should be in Sympa::List::rename()
     unless ($param{'mode'} eq 'copy') {
         unless (File::Copy::move($list->{'dir'}, $new_dir)) {
             Log::do_log('err', 'Unable to rename %s to %s: %m',
@@ -941,7 +942,7 @@ sub rename_list {
         }
 
         # if subscribtion are stored in database rewrite the database
-        List::rename_list_db($list, $param{'new_listname'},
+        Sympa::List::rename_list_db($list, $param{'new_listname'},
             $param{'new_robot'});
     }
     ## Move stats
@@ -988,7 +989,7 @@ sub rename_list {
     $param{'listname'} = $param{'new_listname'};
 
     unless (
-        $list = List->new(
+        $list = Sympa::List->new(
             $param{'new_listname'}, $param{'new_robot'},
             {'reload_config' => 1}
         )
@@ -1144,7 +1145,7 @@ sub clone_list_as_empty {
     my $email            = shift;
 
     my $list;
-    unless ($list = List->new($source_list_name, $source_robot)) {
+    unless ($list = Sympa::List->new($source_list_name, $source_robot)) {
         Log::do_log('err', 'New list failed %s %s',
             $source_list_name, $source_robot);
         return undef;
@@ -1226,7 +1227,7 @@ sub clone_list_as_empty {
     my $new_list;
     # now switch List object to new list, update some values
     unless ($new_list =
-        List->new($new_listname, $new_robot, {'reload_config' => 1})) {
+        Sympa::List->new($new_listname, $new_robot, {'reload_config' => 1})) {
         Log::do_log('info',
             "Admin::clone_list_as_empty : unable to load $new_listname while renamming"
         );
@@ -1580,7 +1581,7 @@ sub check_topics {
     my ($top, $subtop) = split /\//, $topic;
 
     my %topics;
-    unless (%topics = List::load_topics($robot)) {
+    unless (%topics = Sympa::Robot::load_topics($robot)) {
         Log::do_log('err', 'Unable to load list of topics');
     }
 
@@ -1608,17 +1609,17 @@ sub check_topics {
 sub change_user_email {
     my %in = @_;
 
+    my $robot_id = $in{'robot'};
+
     my @failed_for;
 
-    unless ($in{'current_email'} && $in{'new_email'} && $in{'robot'}) {
-        Log::do_log('err', 'Missing incoming parameter');
-        return undef;
+    unless ($in{'current_email'} and $in{'new_email'} and $in{'robot'}) {
+        die 'Missing incoming parameter';
     }
 
     ## Change email as list MEMBER
     foreach my $list (
-        List::get_which($in{'current_email'}, $in{'robot'}, 'member')) {
-
+        Sympa::List::get_which($in{'current_email'}, $robot_id, 'member')) {
         my $l = $list->{'name'};
 
         my $user_entry = $list->get_list_member($in{'current_email'});
@@ -1632,9 +1633,9 @@ sub change_user_email {
             foreach my $datasource_id (split(/,/, $user_entry->{'id'})) {
                 my $datasource = $list->search_datasource($datasource_id);
                 if (   !defined $datasource
-                    || $datasource->{'type'} ne 'include_list'
-                    || (   $datasource->{'def'} =~ /\@(.+)$/
-                        && $1 ne $in{'robot'})
+                    or $datasource->{'type'} ne 'include_list'
+                    or (   $datasource->{'def'} =~ /\@(.+)$/
+                        and $1 ne $robot_id)
                     ) {
                     $use_external_data_sources = 1;
                     last;
@@ -1689,16 +1690,15 @@ sub change_user_email {
     my %updated_lists;
     foreach my $role ('owner', 'editor') {
         foreach my $list (
-            List::get_which($in{'current_email'}, $in{'robot'}, $role)) {
-
+            Sympa::List::get_which($in{'current_email'}, $robot_id, $role)) {
             ## Check if admin is include via an external datasource
             my $admin_user =
                 $list->get_list_admin($role, $in{'current_email'});
             if ($admin_user->{'included'}) {
                 ## Notify listmaster
-                List::send_notify_to_listmaster(
+                Sympa::Robot::send_notify_to_listmaster(
                     'failed_to_change_included_admin',
-                    $in{'robot'},
+                    $robot_id,
                     {   'list'          => $list,
                         'current_email' => $in{'current_email'},
                         'new_email'     => $in{'new_email'},
@@ -1734,9 +1734,9 @@ sub change_user_email {
     }
     ## Notify listmasters that list owners/moderators email have changed
     if (keys %updated_lists) {
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'listowner_email_changed',
-            $in{'robot'},
+            $robot_id,
             {   'previous_email' => $in{'current_email'},
                 'new_email'      => $in{'new_email'},
                 'updated_lists'  => keys %updated_lists
@@ -1756,7 +1756,7 @@ sub change_user_email {
 
     ## Update netidmap_table
     unless (
-        List::update_email_netidmap_db(
+        Sympa::Robot::update_email_netidmap_db(
             $in{'robot'}, $in{'current_email'}, $in{'new_email'}
         )
         ) {

@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Scenario;
+package Sympa::Scenario;
 
 use strict;
 use warnings;
@@ -35,9 +35,10 @@ use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LDAP;
 use Sympa::LDAPSource;
-use List;
+use Sympa::List;
 use Log;
-use SQLSource;
+use Sympa::Robot;
+use Sympa::SQLSource;
 use tools;
 use Sympa::User;
 
@@ -293,7 +294,7 @@ sub request_action {
     my $debug       = shift;
 
     my ($list, $robot_id);
-    if (ref $that eq 'List') {
+    if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot_id = $that->{'domain'};
     } else {
@@ -312,9 +313,7 @@ sub request_action {
             and $context->{'message'}->{'smime_crypted'};
     ## Check that authorization method is one of those known by Sympa
     unless ($auth_method =~ /^(smtp|md5|pgp|smime|dkim)/) {
-        Log::do_log('info',
-            "fatal error : unknown auth method $auth_method in List::get_action"
-        );
+        Log::do_log('info', 'Unknown auth method %s', $auth_method);
         return undef;
     }
     my (@rules, $name, $scenario);
@@ -403,7 +402,7 @@ sub request_action {
         }
 
         ## Create Scenario object
-        $scenario = Scenario->new(
+        $scenario = Sympa::Scenario->new(
             'robot'     => $robot_id,
             'directory' => $list->{'dir'},
             'file_path' => $scenario_path,
@@ -430,7 +429,7 @@ sub request_action {
         if (defined $context->{'scenario'}) {
 
             # loading of the structure
-            $scenario = Scenario->new(
+            $scenario = Sympa::Scenario->new(
                 'robot'     => $robot_id,
                 'directory' => $list->{'dir'},
                 'function'  => $operations[$#operations],
@@ -442,11 +441,11 @@ sub request_action {
     } elsif ($context->{'topicname'}) {
         ## Topics
 
-        $scenario = Scenario->new(
+        $scenario = Sympa::Scenario->new(
             'robot'    => $robot_id,
             'function' => 'topics_visibility',
             'name' =>
-                $List::list_of_topics{$robot_id}{$context->{'topicname'}}
+                $Sympa::Robot::list_of_topics{$robot_id}{$context->{'topicname'}}
                 {'visibility'},
             'options' => $context->{'options'}
         );
@@ -460,7 +459,7 @@ sub request_action {
             )
             and $p[0]->{'scenario'}
             ) {
-            $scenario = Scenario->new(
+            $scenario = Sympa::Scenario->new(
                 'robot'    => $robot_id,
                 'function' => $operation,
                 'name'     => Conf::get_robot_conf($robot_id, $operation),
@@ -492,7 +491,7 @@ sub request_action {
         'options'  => $context->{'options'}
     );
     $param{'directory'} = $list->{'dir'} if $list;
-    my $include_scenario = Scenario->new(%param);
+    my $include_scenario = Sympa::Scenario->new(%param);
     if (defined $include_scenario) {
         ## Add rules at the beginning of the array
         unshift @rules, @{$include_scenario->{'rules'}};
@@ -509,7 +508,7 @@ sub request_action {
                 'options'  => $context->{'options'}
             );
             $param{'directory'} = $list->{'dir'} if $list;
-            my $include_scenario = Scenario->new(%param);
+            my $include_scenario = Sympa::Scenario->new(%param);
             if (defined $include_scenario) {
                 ## Removes the include directive and replace it with included
                 ## rules
@@ -568,7 +567,7 @@ sub request_action {
                     };
                     return $return;
                 }
-                List::send_notify_to_listmaster('error-performing-condition',
+                Sympa::Robot::send_notify_to_listmaster('error-performing-condition',
                     $robot_id,
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
@@ -683,7 +682,7 @@ sub verify {
 
     unless (defined($context->{'sender'})) {
         Log::do_log('info',
-            'Internal error, no sender find in List::verify, report authors');
+            'Internal error, no sender find.  Report authors');
         return undef;
     }
 
@@ -693,7 +692,7 @@ sub verify {
     my $list;
     if ($context->{'listname'} && !defined $context->{'list_object'}) {
         unless ($context->{'list_object'} =
-            List->new($context->{'listname'}, $robot)) {
+            Sympa::List->new($context->{'listname'}, $robot)) {
             Log::do_log('info',
                 "Unable to create List object for list $context->{'listname'}"
             );
@@ -1034,7 +1033,7 @@ sub verify {
                 grep {$_} Mail::Address->parse($args[0]);
         }
         foreach my $arg (@arg) {
-            if (List::is_listmaster($arg, $robot)) {
+            if (Sympa::Robot::is_listmaster($arg, $robot)) {
                 $ok = $arg;
                 last;
             }
@@ -1135,9 +1134,9 @@ sub verify {
 
         ## The list is local or in another local robot
         if ($args[0] =~ /\@/) {
-            $list2 = List->new($args[0]);
+            $list2 = Sympa::List->new($args[0]);
         } else {
-            $list2 = List->new($args[0], $robot);
+            $list2 = Sympa::List->new($args[0], $robot);
         }
 
         if (!$list2) {
@@ -1424,7 +1423,7 @@ sub search {
         unless ($sql_conf = Conf::load_sql_filter($file)) {
             $that->send_notify_to_owner('named_filter',
                 {'filter' => $filter_file})
-                if ref $that eq 'List';
+                if ref $that eq 'Sympa::List';
             return undef;
         }
 
@@ -1477,7 +1476,7 @@ sub search {
                 {'value'};
         }
 
-        my $ds = SQLSource->new($sql_conf->{'sql_named_filter_query'});
+        my $ds = Sympa::SQLSource->new($sql_conf->{'sql_named_filter_query'});
         unless (defined $ds && $ds->connect() && $ds->ping) {
             Log::do_log(
                 'notice',

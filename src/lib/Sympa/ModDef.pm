@@ -221,8 +221,8 @@ our %cpan_modules = (
         'gettext_id'     => 'required when using the VOOT protocol',
     },
     # The pure-perl version of Scalar::Util::looks_like_number() was unstable.
-    # To force using XS version, check existence of List::Util::XS.
-    'List::Util::XS' => {
+    # To force using XS version, check existence of Sympa::List::Util::XS.
+    'Sympa::List::Util::XS' => {
         required_version => '1.20',
         package_name     => 'Scalar-List-Utils',
         mandatory        => 1,
@@ -234,7 +234,7 @@ our %cpan_modules = (
         mandatory        => 1,
         'gettext_id'     => 'internationalization functions',
     },
-    'LWP' => {
+    'LWP::UserAgent' => {
         package_name => 'libwww-perl',
         mandatory    => 1,
         'gettext_id' => 'required when including members of a remote list',

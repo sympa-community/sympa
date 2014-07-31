@@ -49,16 +49,14 @@ use if (5.016 <= $]), qw(feature fc);
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
-use List;
+use Sympa::List;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
 use Sympa::Regexps;
+use Sympa::Robot;
 use SDM;
 use tools;
-
-## RCS identification.
-#my $id = '@(#)$Id$';
 
 ## global var to store a CipherSaber object
 my $cipher;
@@ -396,7 +394,7 @@ sub load_edit_list_conf {
     }
 
     if ($error_in_conf) {
-        List::send_notify_to_listmaster('edit_list_error', $robot, [$file]);
+        Sympa::Robot::send_notify_to_listmaster('edit_list_error', $robot, [$file]);
     }
 
     close FILE;
@@ -790,7 +788,7 @@ sub get_template_path {
 
     my $dir;
     if ($scope eq 'list') {
-        unless (ref $list eq 'List') {
+        unless (ref $list eq 'Sympa::List') {
             Log::do_log('err', 'Missing parameter "list"');
             return undef;
         }
@@ -822,7 +820,7 @@ sub get_dkim_parameters {
     my $keyfile;
     if ($listname) {
         # fetch dkim parameter in list context
-        my $list = List->new($listname, $robot);
+        my $list = Sympa::List->new($listname, $robot);
         unless ($list) {
             Log::do_log('err', "Could not load list %s@%s", $listname,
                 $robot);
@@ -1621,7 +1619,7 @@ sub virus_infected {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'virus_scan_failed',
             $Conf::Conf{'domain'},
             {   'filename'  => $file,
@@ -1914,7 +1912,7 @@ sub _get_search_path {
 
     my @search_path;
 
-    if (ref $that and ref $that eq 'List') {
+    if (ref $that and ref $that eq 'Sympa::List') {
         my $path_list;
         my $path_family;
         @search_path = _get_search_path($that->{'domain'}, @_);
@@ -2331,7 +2329,7 @@ sub send_crash_report {
     } else {
         $err_date = $language->gettext('(unknown date)');
     }
-    List::send_notify_to_listmaster(
+    Sympa::Robot::send_notify_to_listmaster(
         'crash',
         $Conf::Conf{'domain'},
         {   'crashed_process' => $data{'pname'},
@@ -2651,8 +2649,8 @@ sub dump_var {
                 dump_var($var->[$index], $level + 1, $fd);
             }
         } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Scenario'
-            || ref($var) eq 'List'
+            || ref($var) eq 'Sympa::Scenario'
+            || ref($var) eq 'Sympa::List'
             || ref($var) eq 'CGI::Fast') {
             foreach my $key (sort keys %{$var}) {
                 print $fd "\t" x $level . '_' . $key . '_' . "\n";
@@ -2686,8 +2684,8 @@ sub dump_html_var {
             }
             $html .= '</ul>';
         } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Scenario'
-            || ref($var) eq 'List') {
+            || ref($var) eq 'Sympa::Scenario'
+            || ref($var) eq 'Sympa::List') {
             $html .= '<ul>';
             foreach my $key (sort keys %{$var}) {
                 $html .= '<li>' . $key . '=';
@@ -2724,8 +2722,8 @@ sub dump_html_var2 {
             }
             $html .= '</ul>';
         } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Scenario'
-            || ref($var) eq 'List') {
+            || ref($var) eq 'Sympa::Scenario'
+            || ref($var) eq 'Sympa::List') {
             #$html .= " (".ref($var).') <ul>';
             $html .= '<ul>';
             foreach my $key (sort keys %{$var}) {
@@ -3395,7 +3393,7 @@ Saves a message file to the "bad/" spool of a given queue. Creates this director
 
 =over 
 
-=item * List::send_notify_to_listmaster
+=item * Sympa::Robot::send_notify_to_listmaster
 
 =back 
 
@@ -3413,7 +3411,7 @@ sub save_to_bad {
         unless (mkdir $queue . '/bad', 0775) {
             Log::do_log('notice', 'Unable to create %s/bad/ directory',
                 $queue);
-            List::send_notify_to_listmaster('unable_to_create_dir', $hostname,
+            Sympa::Robot::send_notify_to_listmaster('unable_to_create_dir', $hostname,
                 {'dir' => "$queue/bad"});
             return undef;
         }
@@ -3693,7 +3691,7 @@ sub decode_header {
     my $sep = shift || undef;
 
     my $head;
-    if (ref $msg eq 'Message') {
+    if (ref $msg eq 'Sympa::Message') {
         $head = $msg->head;
     } elsif (ref $msg eq 'MIME::Entity') {
         $head = $msg->head;
@@ -4004,7 +4002,7 @@ sub unmarshal_metadata {
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
     if (defined $listname) {
-        $list = List->new($listname, $robot_id || '*', {'just_try' => 1});
+        $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1});
     }
 
     ## Get priority
@@ -4021,7 +4019,7 @@ sub unmarshal_metadata {
         $priority = Conf::get_robot_conf($robot_id, 'owner_priority');
     } elsif ($type and $type eq 'sympa') {
         $priority = Conf::get_robot_conf($robot_id, 'sympa_priority');
-    } elsif (ref $list eq 'List') {
+    } elsif (ref $list eq 'Sympa::List') {
         $priority = $list->{'admin'}{'priority'};
     } else {
         $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');

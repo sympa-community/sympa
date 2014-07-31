@@ -19,7 +19,7 @@ use Sympa::Archive;
 use Conf;
 use Sympa::Constants;
 use Log;
-use Message;
+use Sympa::Message;
 use SDM;
 use tools;
 
@@ -59,7 +59,7 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
     );
     next unless $metadata;
     my $message =
-        Message->new_from_file($modspool . '/' . $msg_file, %$metadata);
+        Sympa::Message->new_from_file($modspool . '/' . $msg_file, %$metadata);
     next unless $message;
     my $list = $message->{'list'};
 

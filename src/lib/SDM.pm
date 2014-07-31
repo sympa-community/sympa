@@ -31,8 +31,9 @@ use Conf;
 use Sympa::Constants;
 use Sympa::DatabaseDescription;
 use Log;
-use List;
-use SQLSource;
+#use Sympa::List;
+#use Sympa::Robot;
+use Sympa::SQLSource;
 use tools;
 
 # db structure description has moved in Sympa/Constant.pm
@@ -148,12 +149,12 @@ sub connect_sympa_database {
             ($option ne 'just_try' && !$ENV{'GATEWAY_INTERFACE'}),
         'warn' => 1,
     };
-    unless ($db_source = SQLSource->new($db_conf)) {
-        Log::do_log('err', 'Unable to create SQLSource object');
+    unless ($db_source = Sympa::SQLSource->new($db_conf)) {
+        Log::do_log('err', 'Unable to create Sympa::SQLSource object');
         return undef;
     }
     ## Used to check that connecting to the Sympa database works and the
-    ## SQLSource object is created.
+    ## Sympa::SQLSource object is created.
     $use_db = 1;
 
     # Just in case, we connect to the database here. Probably not necessary.
@@ -330,10 +331,10 @@ sub probe_db {
     }
 
     ## Used by List subroutines to check that the DB is available
-    $List::use_db = 1;
+    $Sympa::List::use_db = 1;
 
     ## Notify listmaster
-    List::send_notify_to_listmaster(
+    Sympa::Robot::send_notify_to_listmaster(
         'db_struct_updated',
         Conf::get_robot_conf('*', 'domain'),
         {'report' => \@report}

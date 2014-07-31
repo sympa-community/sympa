@@ -31,7 +31,7 @@ use Time::Local;
 
 use Log;
 use Conf;
-use SympaSession;
+use Sympa::Session;
 use SDM;
 
 # this structure is used to define which session attributes are stored in a dedicated database col where others are compiled in col 'data_session'
@@ -80,7 +80,7 @@ sub load {
 
     unless ($challenge_id) {
         Log::do_log('err',
-            'Internal error, SympaSession::load called with undef id_challenge'
+            'Internal error.  undefined id_challenge'
         );
         return undef;
     }

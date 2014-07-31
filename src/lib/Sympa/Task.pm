@@ -27,7 +27,7 @@ package Task;
 use strict;
 use warnings;
 
-use List;
+use Sympa::List;
 use Log;
 use Sympa::Regexps;
 
@@ -61,7 +61,7 @@ sub new {
 
         if ($task->{'object'} ne '_global') {    # list task
             $task->{'list_object'} =
-                List->new($task->{'object'}, $task->{'domain'});
+                Sympa::List->new($task->{'object'}, $task->{'domain'});
             $task->{'domain'} = $task->{'list_object'}{'domain'};
         }
 
@@ -73,7 +73,7 @@ sub new {
         $task->{'object'} = $4;
 
         if ($task->{'object'} ne '_global') {    # list task
-            $task->{'list_object'} = List->new($task->{'object'});
+            $task->{'list_object'} = Sympa::List->new($task->{'object'});
             $task->{'domain'}      = $task->{'list_object'}{'domain'};
         }
     } else {

@@ -79,7 +79,7 @@
 # - Use MIME::EncWords instead of MIME::WordDecoder.
 # - Now HTML::FormatText is mandatory.  Remove Lynx support.
 
-package PlainDigest;
+package Sympa::PlainDigest;
 
 use strict;
 use warnings;

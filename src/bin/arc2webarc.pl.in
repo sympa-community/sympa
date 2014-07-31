@@ -30,7 +30,7 @@ use Getopt::Long;
 
 use Conf;
 use Sympa::Constants;
-use List;
+use Sympa::List;
 use SDM;
 
 my %month_idx = qw(jan 1
@@ -89,7 +89,7 @@ SDM::probe_db();
 
 chdir $Conf::Conf{'home'};
 
-my $list = List->new($listname, $robot)
+my $list = Sympa::List->new($listname, $robot)
     or die 'Cannot create List object';
 
 my $home_sympa;

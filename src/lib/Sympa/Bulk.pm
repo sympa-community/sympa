@@ -246,13 +246,12 @@ sub message_from_spool {
 
 }
 
-# DEPRECATED: Use Message::personalize().
+# DEPRECATED: Use Sympa::Message::personalize().
 # sub merge_msg;
 
-# DEPRECATED: Use Message::personalize_text().
-# sub merge_data;
+# DEPRECATED: Use Sympa::Message::personalize_text().
+# sub merge_data ($rcpt, $listname, $robot_id, $data, $body, \$message_output)
 
-##
 sub store {
     my %data = @_;
 

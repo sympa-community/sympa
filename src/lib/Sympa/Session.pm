@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package SympaSession;
+package Sympa::Session;
 
 use strict;
 use warnings;
@@ -95,7 +95,7 @@ sub new {
         if ($status eq 'not_found') {
             Log::do_log('info', 'Ignoring unknown session cookie "%s"',
                 $cookie);    # start a session->new(may ne a fake cookie)
-            return (SympaSession->new($robot));
+            return (Sympa::Session->new($robot));
         }
     } else {
         # create a new session context
@@ -118,9 +118,7 @@ sub load {
     Log::do_log('debug', '(%s)', $cookie);
 
     unless ($cookie) {
-        Log::do_log('err',
-            'Internal error, SympaSession::load called with undef id_session'
-        );
+        Log::do_log('err', 'Internal error.  Undefined id_session');
         return undef;
     }
 
@@ -157,10 +155,8 @@ sub load {
     } else {
         $id_session = decrypt_session_id($cookie);
         unless ($id_session) {
-            Log::do_log('err',
-                'Internal error, SympaSession::load called with undef id_session'
-            );
-            return 'not_found';
+            Log::do_log('err', 'Internal error.  Undefined id_session');
+            return undef;
         }
 
         ## Cookie may contain current or previous session ID.
@@ -536,9 +532,7 @@ sub purge_old_sessions {
     }
     my $anonymous_total = $sth->fetchrow;
     if ($anonymous_total == 0) {
-        Log::do_log('debug',
-            'SympaSession::purge_old_sessions no anonymous sessions to expire'
-        );
+        Log::do_log('debug', 'No anonymous sessions to expire');
         return $total;
     }
     unless ($sth = SDM::do_query($anonymous_statement)) {

@@ -2,7 +2,7 @@
 # vim:ft=perl:et:sw=4
 # $Id$
 
-package Marc;
+package Sympa::Marc;
 
 use strict;
 use warnings;

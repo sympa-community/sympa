@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package tracking;
+package Sympa::Tracking;
 
 use strict;
 use warnings;
@@ -207,7 +207,7 @@ sub db_insert_notification {
 #   find_notification_id_by_message
 ##############################################
 # return the tracking_id find by recipeint,message-id,listname and robot
-# tracking_id areinitialized by sympa.pl by List::distribute_msg
+# tracking_id areinitialized by sympa.pl by Sympa::List::distribute_msg
 #
 # used by bulk.pl in order to set return_path when tracking is required.
 #

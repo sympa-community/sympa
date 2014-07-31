@@ -34,13 +34,14 @@ use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
-use List;
+use Sympa::List;
 use Log;
-use mail;
-use Message;
+use Sympa::Mail;
+use Sympa::Message;
+use Sympa::Robot;
 use SDM;
 use tools;
-use tracking;
+use Sympa::Tracking;
 
 my $daemon_name           = Log::set_daemon($0);
 my $date_of_last_activity = time();
@@ -90,7 +91,7 @@ Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
 # Enable SMTP logging if required
 my $default_log_smtp = $main::options{'mail'}
     || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
-$mail::log_smtp = $default_log_smtp;
+$Sympa::Mail::log_smtp = $default_log_smtp;
 
 # setting log_level using conf unless it is set by calling option
 my $default_log_level;
@@ -189,13 +190,13 @@ $Conf::Conf{'maxsmtp'} =
 
 while (!$end) {
     # Enable SMTP logging if required.
-    $mail::log_smtp = $default_log_smtp;
+    $Sympa::Mail::log_smtp = $default_log_smtp;
     # setting log_level using conf unless it is set by calling option
     Log::set_log_level($default_log_level);
 
-    List::init_list_cache();
+    Sympa::List::init_list_cache();
     # Process grouped notifications
-    List::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
 
     my $bulk;
     my $message_from_spool;
@@ -328,7 +329,7 @@ while (!$end) {
             unless $robot
                 and $robot ne '*'
                 and Conf::valid_robot($robot);
-        my $list = List->new($listname, $robot, {'just_try' => 1});
+        my $list = Sympa::List->new($listname, $robot, {'just_try' => 1});
 
         if (!defined $messagekey or $bulk->{'messagekey'} ne $messagekey) {
             # current packet is not related to the same message as the
@@ -339,7 +340,7 @@ while (!$end) {
             $message_from_spool =
                 Sympa::Bulk::message_from_spool($bulk->{'messagekey'});
 
-            $message = Message->new(
+            $message = Sympa::Message->new(
                 $message_from_spool->{'messageasstring'},
                 list              => $list,
                 robot             => $robot,
@@ -377,7 +378,7 @@ while (!$end) {
         }
 
         # Enable SMTP logging if required.
-        $mail::log_smtp = $main::options{'mail'}
+        $Sympa::Mail::log_smtp = $main::options{'mail'}
             || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
             'on');
         # setting log_level using conf unless it is set by calling option
@@ -432,7 +433,7 @@ while (!$end) {
                     # tracking by MDN required tracking by DSN to
                     my $msgid = $new_message->{'message_id'};
                     $notification_id =
-                        tracking::find_notification_id_by_message($rcpt,
+                        Sympa::Tracking::find_notification_id_by_message($rcpt,
                         $msgid, $listname, $robot);
                     $return_path =
                         $list->get_bounce_address($rcpt, $notification_id);
@@ -447,7 +448,7 @@ while (!$end) {
                     unless ($new_message->personalize($list, $rcpt)) {
                         #FIXME: Mark packet as "bad".
                         Log::do_log('err', 'Erreur d appel personalize()');
-                        List::send_notify_to_listmaster(
+                        Sympa::Robot::send_notify_to_listmaster(
                             'bulk_failed',
                             $list->{'domain'},
                             {   'msg'  => $message,
@@ -476,8 +477,7 @@ while (!$end) {
 
                 # trace_smime($new_message, 'dkim');
 
-                *SMTP =
-                    mail::smtpto($return_path, \$rcpt, $bulk->{'robot'},
+                *SMTP = Sympa::Mail::smtpto($return_path, \$rcpt, $robot,
                     $notification_id);
                 # Message with customized data, stripped Return-Path:.
                 my $msg_string = $new_message->as_string;
@@ -504,9 +504,7 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            *SMTP =
-                mail::smtpto($bulk->{'returnpath'}, \@rcpts,
-                $bulk->{'robot'});
+            *SMTP = Sympa::Mail::smtpto($bulk->{'returnpath'}, \@rcpts, $robot);
             # Stripping Return-Path: pseudo-header field.
             my $msg_string = $new_message->as_string;
             $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
@@ -540,12 +538,11 @@ while (!$end) {
         ## Sleep for a while if bulk_mailer DB table is empty
         sleep $Conf::Conf{'bulk_sleep'};
     }
-    mail::reaper();
-
+    Sympa::Mail::reaper();
 }
 
 # Purge grouped notifications
-List::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
 
 Log::do_log('notice', 'Bulk.pl exited normally due to signal');
 tools::remove_pid('bulk', $$, $options);

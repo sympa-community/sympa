@@ -33,8 +33,8 @@ use Storable;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
-use List;
 use Log;
+use Sympa::Robot;
 use SDM;
 use tools;
 
@@ -756,7 +756,7 @@ sub checkfiles {
     if (defined $Conf{'cafile'} && $Conf{'cafile'}) {
         unless (-f $Conf{'cafile'} && -r $Conf{'cafile'}) {
             Log::do_log('err', 'Cannot access cafile %s', $Conf{'cafile'});
-            List::send_notify_to_listmaster('cannot_access_cafile',
+            Sympa::Robot::send_notify_to_listmaster('cannot_access_cafile',
                 $Conf{'domain'}, [$Conf{'cafile'}]);
             $config_err++;
         }
@@ -765,7 +765,7 @@ sub checkfiles {
     if (defined $Conf{'capath'} && $Conf{'capath'}) {
         unless (-d $Conf{'capath'} && -x $Conf{'capath'}) {
             Log::do_log('err', 'Cannot access capath %s', $Conf{'capath'});
-            List::send_notify_to_listmaster('cannot_access_capath',
+            Sympa::Robot::send_notify_to_listmaster('cannot_access_capath',
                 $Conf{'domain'}, [$Conf{'capath'}]);
             $config_err++;
         }
@@ -778,7 +778,7 @@ sub checkfiles {
             'Error in config: queuebounce and bounce_path parameters pointing to the same directory (%s)',
             $Conf{'queuebounce'}
         );
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'queuebounce_and_bounce_path_are_the_same',
             $Conf{'domain'}, [$Conf{'queuebounce'}]);
         $config_err++;
@@ -792,7 +792,7 @@ sub checkfiles {
             'Error in config: queue and queueautomatic parameters pointing to the same directory (%s)',
             $Conf{'queue'}
         );
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'queue_and_queueautomatic_are_the_same',
             $Conf{'domain'}, [$Conf{'queue'}]);
         $config_err++;
@@ -862,7 +862,7 @@ sub checkfiles {
         ## Create directory if required
         unless (-d $dir) {
             unless (tools::mkdir_all($dir, 0755)) {
-                List::send_notify_to_listmaster('cannot_mkdir', $robot,
+                Sympa::Robot::send_notify_to_listmaster('cannot_mkdir', $robot,
                     ["Could not create directory $dir: $!"]);
                 Log::do_log('err', 'Failed to create directory %s', $dir);
                 return undef;
@@ -888,7 +888,7 @@ sub checkfiles {
                 rename $dir . '/' . $css, $dir . '/' . $css . '.' . time;
 
                 unless (open(CSS, ">$dir/$css")) {
-                    List::send_notify_to_listmaster('cannot_open_file',
+                    Sympa::Robot::send_notify_to_listmaster('cannot_open_file',
                         $robot, ["Could not open file $dir/$css: $!"]);
                     Log::do_log(
                         'err',
@@ -905,7 +905,7 @@ sub checkfiles {
                     ) {
                     my $error = tt2::get_error();
                     $param->{'tt2_error'} = $error;
-                    List::send_notify_to_listmaster('web_tt2_error', $robot,
+                    Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
                         [$error]);
                     Log::do_log('err', 'Error while installing %s/%s',
                         $dir, $css);
@@ -922,7 +922,7 @@ sub checkfiles {
     }
     if ($css_updated) {
         ## Notify main listmaster
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'css_updated',
             $Conf{'domain'},
             [   "Static CSS files have been updated ; check log file for details"
@@ -2187,7 +2187,7 @@ sub _load_single_robot_config {
             $config_file);
         unless (-r $config_file) {
             Log::do_log('err', 'No read access on %s', $config_file);
-            List::send_notify_to_listmaster(
+            Sympa::Robot::send_notify_to_listmaster(
                 'cannot_access_robot_conf',
                 $Conf{'domain'},
                 [   "No read access on $config_file. you should change privileges on this file to activate this virtual host. "

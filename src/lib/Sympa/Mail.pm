@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package mail;
+package Sympa::Mail;
 
 use strict;
 use warnings;
@@ -33,9 +33,9 @@ use POSIX qw();
 
 use Sympa::Bulk;
 use Conf;
-use List;
 use Log;
-use Message;
+use Sympa::Message;
+use Sympa::Robot;
 use tools;
 use tt2;
 
@@ -311,13 +311,13 @@ sub mail_file {
     my $listname = '';
     if (ref($data->{'list'}) eq "HASH") {    # compatibility
         $listname = $data->{'list'}{'name'};
-    } elsif (ref($data->{'list'}) eq 'List') {
+    } elsif (ref($data->{'list'}) eq 'Sympa::List') {
         $listname = $data->{'list'}->{'name'};
     } elsif ($data->{'list'}) {
         $listname = $data->{'list'};
     }
 
-    my $message = Message->new(
+    my $message = Sympa::Message->new(
         $headers . $message_as_string,
         #XXX list => $list,
         robot => $robot
@@ -354,7 +354,7 @@ sub mail_file {
 ####################################################
 # distribute a message to a list, Crypting if needed
 #
-# IN : -$message(+) : ref(Message)
+# IN : -$message(+) : ref(Sympa::Message)
 #      -$from(+) : message from
 #      -$robot(+) : robot
 #      -{verp=>[on|off]} : a hash to introduce verp parameters, starting just
@@ -376,7 +376,7 @@ sub mail_message {
     my $host  = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
 
-    unless (ref $message and $message->isa('Message')) {
+    unless (ref $message and $message->isa('Sympa::Message')) {
         Log::do_log('err', 'Invalid message parameter');
         return undef;
     }
@@ -514,7 +514,7 @@ sub mail_message {
 ####################################################
 # forward a message.
 #
-# IN : -$mmessage(+) : ref(Message)
+# IN : -$mmessage(+) : ref(Sympa::Message)
 #      -$from(+) : message from
 #      -$rcpt(+) : ref(SCALAR) | ref(ARRAY)  - recepients
 #      -$robot(+) : robot
@@ -525,7 +525,7 @@ sub mail_forward {
     my ($message, $from, $rcpt, $robot) = @_;
     Log::do_log('debug2', '(%s, %s)', $from, $rcpt);
 
-    unless (ref $message eq 'Message') {
+    unless (ref $message eq 'Sympa::Message') {
         Log::do_log('err', 'Unexpected parameter type: %s', ref $message);
         return undef;
     }
@@ -551,7 +551,7 @@ sub mail_forward {
 #####################################################################
 # public reaper
 #####################################################################
-# Non blocking function called by : mail::smtpto(), sympa::main_loop
+# Non blocking function called by : Sympa::Mail::smtpto(), sympa::main_loop
 #  task_manager::INFINITE_LOOP scanning the queue,
 #  bounced::infinite_loop scanning the queue,
 # just to clean the defuncts list by waiting to any processes and
@@ -786,7 +786,7 @@ sub sending {
         unless (defined $bulk_code) {
             Log::do_log('err', 'Failed to store message for list %s',
                 $listname);
-            List::send_notify_to_listmaster('bulk_error', $robot,
+            Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot,
                 {'listname' => $listname});
             return undef;
         }
@@ -854,7 +854,7 @@ sub sending {
 #      $rcpt :(+) ref(SCALAR)|ref(ARRAY)- for SMTP "RCPT To:" field
 #      $robot :(+) robot
 #      $msgkey : a id of this message submission in notification table
-# OUT : mail::$fh - file handle on opened file for ouput, for SMTP "DATA"
+# OUT : Sympa::Mail::$fh - file handle on opened file for ouput, for SMTP "DATA"
 # field
 #       | undef
 #
@@ -867,7 +867,7 @@ sub smtpto {
         $from, $rcpt, $robot, $msgkey, $sign_mode);
 
     unless ($from) {
-        Log::do_log('err', 'Missing Return-Path in mail::smtpto()');
+        Log::do_log('err', 'Missing Return-Path');
     }
 
     if (ref($rcpt) eq 'SCALAR') {
@@ -950,7 +950,7 @@ sub smtpto {
     $opensmtp++;
     select(undef, undef, undef, 0.3)
         if ($opensmtp < Conf::get_robot_conf($robot, 'maxsmtp'));
-    return ("mail::$fh");    ## Symbol for the write descriptor.
+    return ("Sympa::Mail::$fh");    ## Symbol for the write descriptor.
 }
 
 #XXX NOT USED
@@ -1007,10 +1007,10 @@ sub send_in_spool {
     return $return;
 }
 
-#DEPRECATED: Use Message::reformat_utf8_message().
+#DEPRECATED: Use Sympa::Message::reformat_utf8_message().
 #sub reformat_message($;$$);
 
-#DEPRECATED. Moved to Message::_fix_utf8_parts as internal functioin.
+#DEPRECATED. Moved to Sympa::Message::_fix_utf8_parts as internal functioin.
 #sub fix_part;
 
 1;

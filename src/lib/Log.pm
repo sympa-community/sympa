@@ -31,7 +31,7 @@ use Scalar::Util;
 use Sys::Syslog qw();
 
 use Conf;
-use List;
+use Sympa::Robot;
 use SDM;
 use tools;
 
@@ -69,7 +69,7 @@ sub fatal_err {
     if ($@ && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
-            List::send_notify_to_listmaster(
+            Sympa::Robot::send_notify_to_listmaster(
                 'logs_failed', $Conf::Conf{'domain'}, [$@]
             )
             ) {
@@ -81,7 +81,7 @@ sub fatal_err {
     my $full_msg = sprintf $m, @_;
 
     ## Notify listmaster
-    List::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'},
+    Sympa::Robot::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'},
         [$full_msg]);
 
     printf STDERR "$m\n", @_;
@@ -203,7 +203,7 @@ sub do_log {
     };
     if ($@ and $warning_date < time - $warning_timeout) {
         $warning_date = time + $warning_timeout;
-        List::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'},
+        Sympa::Robot::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'},
             [$@]);
     }
 }
@@ -236,7 +236,7 @@ sub do_connect {
     if ($@ && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
-            List::send_notify_to_listmaster(
+            Sympa::Robot::send_notify_to_listmaster(
                 'logs_failed', $Conf::Conf{'domain'}, [$@]
             )
             ) {
@@ -357,7 +357,7 @@ sub db_stat_log {
     my $id        = $date . $random;
     my $read      = 0;
 
-    if (ref $list eq 'List') {
+    if (ref $list eq 'Sympa::List') {
         $list = $list->{'name'};
     } elsif ($list and $list =~ /(.+)\@(.+)/) {
         #remove the robot name of the list name

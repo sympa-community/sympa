@@ -208,7 +208,7 @@ sub optdesc {
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        return List->get_option_title($x, $type, $withval);
+        return Sympa::List->get_option_title($x, $type, $withval);
     };
 }
 

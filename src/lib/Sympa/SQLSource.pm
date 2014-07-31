@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package SQLSource;
+package Sympa::SQLSource;
 
 use strict;
 use warnings;
@@ -30,8 +30,8 @@ use DBI;
 
 use Conf;
 use Sympa::Datasource;
-use List;
 use Log;
+use Sympa::Robot;
 
 ## Structure to keep track of active connections/connection status
 ## Key : connect_string (includes server+port+dbname+DB type)
@@ -176,7 +176,7 @@ sub establish_connection {
         Log::do_log('err',
             "No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN"
         );
-        List::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},
+        Sympa::Robot::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},
             {'db_type' => $self->{'db_type'}});
         return undef;
     }
@@ -253,7 +253,7 @@ sub establish_connection {
                 unless (defined $db_connections{$self->{'connect_string'}}
                     && $db_connections{$self->{'connect_string'}}{'status'} eq
                     'failed') {
-                    List::send_notify_to_listmaster('no_db',
+                    Sympa::Robot::send_notify_to_listmaster('no_db',
                         $Conf::Conf{'domain'}, {});
                 }
             }
@@ -297,7 +297,7 @@ sub establish_connection {
                     'Connection to Database %s restored',
                     $self->{'connect_string'}
                 );
-                List::send_notify_to_listmaster('db_restored',
+                Sympa::Robot::send_notify_to_listmaster('db_restored',
                     $Conf::Conf{'domain'}, {});
             }
         }

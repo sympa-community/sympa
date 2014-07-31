@@ -47,34 +47,33 @@ nobase_modules_DATA = \
 	Sympa/Language.pm \
 	Sympa/LDAP.pm \
 	Sympa/LDAPSource.pm \
-	List.pm \
+	Sympa/List.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
 	Log.pm \
 	Sympa/ModDef.pm \
-	mail.pm \
-	Marc.pm \
-	Marc/Search.pm \
-	Message.pm \
-	PlainDigest.pm \
+	Sympa/Mail.pm \
+	Sympa/Marc.pm \
+	Sympa/Marc/Search.pm \
+	Sympa/Message.pm \
+	Sympa/PlainDigest.pm \
 	Sympa/Regexps.pm \
-	report.pm \
-	Robot.pm \
-	Scenario.pm \
+	Sympa/Report.pm \
+	Sympa/Robot.pm \
+	Sympa/Scenario.pm \
 	SDM.pm \
-	SharedDocument.pm \
-	SQLSource.pm \
-	SympaSession.pm \
-	sympasoap.pm \
-	SympaTransport.pm \
-	Task.pm \
+	Sympa/SharedDocument.pm \
+	Sympa/SQLSource.pm \
+	Sympa/Session.pm \
+	Sympa/SOAP.pm \
+	Sympa/SOAP/Transport.pm \
+	Sympa/Task.pm \
 	Sympa/Template/Compat.pm \
 	tools.pm \
-	tracking.pm \
+	Sympa/Tracking.pm \
 	tt2.pm \
-	Upgrade.pm \
+	Sympa/Upgrade.pm \
 	Sympa/User.pm \
-	WebAgent.pm \
 	wwslib.pm
 
 man3dir = $(mandir)/man3

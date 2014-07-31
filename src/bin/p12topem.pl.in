@@ -30,7 +30,7 @@ use Getopt::Long;
 
 use Conf;
 use Sympa::Constants;
-use List;
+use Sympa::List;
 use SDM;
 
 my $sympa_conf_file = Sympa::Constants::CONFIG;
@@ -73,7 +73,7 @@ if (   ($main::options{'help'} ne '')
 } else {
 
     if ($listname) {
-        my $self = List->new($listname, $robot);
+        my $self = Sympa::List->new($listname, $robot);
         $cert       = $self->{'dir'} . '/cert.pem';
         $privatekey = $self->{'dir'} . '/private_key';
         unless (-d $self->{'dir'}) {

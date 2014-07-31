@@ -30,11 +30,11 @@ use POSIX qw();
 
 use Conf;
 use Sympa::LDAPSource;
-use List;
 use Log;
-use report;
+use Sympa::Report;
+use Sympa::Robot;
 use SDM;
-use SympaSession;
+use Sympa::Session;
 use tools;
 use Sympa::User;
 
@@ -85,7 +85,7 @@ sub check_auth {
             };
 
         } else {
-            report::reject_report_web('user', 'incorrect_passwd', {})
+            Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
                 unless ($ENV{'SYMPA_SOAP'});
             Log::do_log('err', "Incorrect LDAP password");
             return undef;
@@ -138,7 +138,7 @@ sub authentication {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
-        report::reject_report_web('user', 'too_many_wrong_login', {})
+        Sympa::Report::reject_report_web('user', 'too_many_wrong_login', {})
             unless ($ENV{'SYMPA_SOAP'});
         Log::do_log('err',
             'Login is blocked: too many wrong password submission for %s',
@@ -190,7 +190,7 @@ sub authentication {
     Sympa::User::update_global_user($email,
         {wrong_login_count => $user->{'wrong_login_count'} + 1});
 
-    report::reject_report_web('user', 'incorrect_passwd', {})
+    Sympa::Report::reject_report_web('user', 'incorrect_passwd', {})
         unless ($ENV{'SYMPA_SOAP'});
     Log::do_log('err', 'Incorrect password for user %s', $email);
 
@@ -352,7 +352,7 @@ sub get_email_by_net_id {
         $netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 
         my $email =
-            List::get_netidtoemail_db($robot, $netid_cookie,
+            Sympa::Robot::get_netidtoemail_db($robot, $netid_cookie,
             $Conf::Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
 
         return $email;
@@ -450,9 +450,9 @@ sub create_one_time_ticket {
     my $remote_addr = shift;
     ## Value may be 'mail' if the IP address is not known
 
-    my $ticket = SympaSession::get_random();
-    Log::do_log('info', '(%s, %s, %s, %s) Value = %s',
-        $email, $robot, $data_string, $remote_addr, $ticket);
+    my $ticket = Sympa::Session::get_random();
+    #Log::do_log('info', '(%s, %s, %s, %s) Value = %s',
+    #    $email, $robot, $data_string, $remote_addr, $ticket);
 
     my $date = time;
     my $sth;

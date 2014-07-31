@@ -42,14 +42,15 @@ use Bounce;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
-use List;
+use Sympa::List;
 use Log;
-use mail;
-use Scenario;
+use Sympa::Mail;
+use Sympa::Robot;
+use Sympa::Scenario;
 use Sympa::Regexps;
 use SDM;
 use tools;
-use tracking;
+use Sympa::Tracking;
 
 ## Equivalents relative to RFC 1893
 my %equiv = (
@@ -212,9 +213,9 @@ while (!$end) {
 
     sleep $Conf::Conf{'sleep'};
 
-    List::init_list_cache();
+    Sympa::List::init_list_cache();
     # Process grouped notifications
-    List::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
 
     unless (opendir DIR, $queue) {
         die sprintf 'Can\'t open dir %s: %s', $queue, $!;
@@ -249,11 +250,11 @@ while (!$end) {
 
         if ($file =~ /^(\S+)\.\d+\.\d+$/) {
             my ($listname, $robot) = split(/\@/, $1);
-            $robot ||= List::search_list_among_robots($listname);
+            $robot ||= Sympa::List::search_list_among_robots($listname);
         }
 
         my ($listname, $robot) = split(/\@/, $1);
-        $robot ||= List::search_list_among_robots($listname);
+        $robot ||= Sympa::List::search_list_among_robots($listname);
 
         if (-z "$queue/$file") {
             Log::do_log('notice', 'Ignoring file %s/%s because empty file',
@@ -314,7 +315,7 @@ while (!$end) {
                 $local_part = $1;
                 $unique     = $2;
             } elsif ($local_part =~ /^(.*)\=\=a\=\=(.*)\=\=(.*)\=\=(.*)$/)
-            {    # tracking in use
+            {    # Tracking in use
 
                 $distribution_id = $4;
                 $local_part =~ /^(.*)\=\=(.*)$/;
@@ -339,7 +340,7 @@ while (!$end) {
                 Log::do_log('debug',
                     "VERP for a service message, try to remove the subscriber"
                 );
-                my $list = List->new($listname, $robot);
+                my $list = Sympa::List->new($listname, $robot);
                 unless ($list) {
                     Log::do_log('notice',
                         'Skipping bouncefile %s for unknown list %s@%s',
@@ -353,7 +354,7 @@ while (!$end) {
                     unlink("$queue/$file");
                     next;
                 }
-                my $result = Scenario::request_action(
+                my $result = Sympa::Scenario::request_action(
                     $list, 'del', 'smtp',
                     {   'sender' => $Conf::Conf{'listmasters'}[0],
                         'email'  => $who
@@ -419,7 +420,7 @@ while (!$end) {
             }    # close VERP + remind or welcome block
         }    # close VERP in use block
 
-        my $list = List->new($listname, $robot);
+        my $list = Sympa::List->new($listname, $robot);
         unless ($list) {
             Log::do_log('err',
                 'Skipping bouncefile %s for unknown list %s@%s',
@@ -573,7 +574,7 @@ while (!$end) {
                 }
             }
 
-            if (tracking::db_insert_notification(
+            if (Sympa::Tracking::db_insert_notification(
                     $distribution_id, 'DSN',
                     $dsn_status,      $arrival_date,
                     $notification_as_string
@@ -710,7 +711,7 @@ while (!$end) {
 
             Log::do_log('debug2', "Save in database...");
             unless (
-                tracking::db_insert_notification(
+                Sympa::Tracking::db_insert_notification(
                     $distribution_id, 'MDN', $mdn_status,
                     $date,            $notification_as_string
                 )
@@ -809,7 +810,7 @@ while (!$end) {
                         $listname =~ /(.*)\@(.*)/;
                         $listname = $1;
                         $robot    = $2;
-                        my $list = List->new($listname, $robot);
+                        my $list = Sympa::List->new($listname, $robot);
                         unless ($list) {
                             Log::do_log(
                                 'err',
@@ -831,7 +832,7 @@ while (!$end) {
                     } elsif ($feedback_type =~ /opt-out/
                         && (defined $original_rcpt)) {
                         @lists =
-                            List::get_which($original_rcpt, $robot, 'member');
+                            Sympa::List::get_which($original_rcpt, $robot, 'member');
                     } else {
                         Log::do_log(
                             'notice',
@@ -850,7 +851,7 @@ while (!$end) {
                     }
                     foreach my $list (@lists) {
                         my $result =
-                            Scenario::request_action($list, 'unsubscribe',
+                            Sympa::Scenario::request_action($list, 'unsubscribe',
                             'smtp', {'sender' => $original_rcpt});
                         my $action;
                         $action = $result->{'action'}
@@ -941,7 +942,7 @@ while (!$end) {
 
         # Fin section feedback report
         # else (not welcome or remind)
-        $list = List->new($listname, $robot);
+        $list = Sympa::List->new($listname, $robot);
         if (!$list) {
             Log::do_log('err',
                 'Skipping bouncefile %s for unknown list %s@%s',
@@ -1000,7 +1001,7 @@ while (!$end) {
             ## Bounce directory
             if (!-d $bounce_dir) {
                 unless (mkdir $bounce_dir, 0777) {
-                    List::send_notify_to_listmaster(
+                    Sympa::Robot::send_notify_to_listmaster(
                         'bounce_intern_error',
                         $Conf::Conf{'domain'},
                         {   'error' =>
@@ -1082,12 +1083,11 @@ while (!$end) {
     }
 
     ## Free zombie sendmail processes
-    mail::reaper();
-
+    Sympa::Mail::reaper();
 }
 
 # Purge grouped notifications
-List::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
 
 Log::do_log('notice', 'Bounced exited normally due to signal');
 tools::remove_pid('bounced', $$);
@@ -1249,7 +1249,7 @@ sub ignore_bounce {
         }
     );
     if ($notify) {
-        List::send_notify_to_listmaster(
+        Sympa::Robot::send_notify_to_listmaster(
             'bounce_management_failed',
             $robot,
             {   'file'  => $file,

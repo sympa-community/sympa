@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Upgrade;
+package Sympa::Upgrade;
 
 use strict;
 use warnings;
@@ -37,9 +37,10 @@ use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
-use List;
+use Sympa::List;
 use Log;
-use Message;
+use Sympa::Message;
+use Sympa::Robot;
 use SDM;
 use tools;
 
@@ -122,11 +123,11 @@ sub upgrade {
     ## This is especially useful for character encoding reasons
     Log::do_log('notice',
         'Rebuilding config.bin files for ALL lists...it may take a while...');
-    my $all_lists = List::get_lists('*', 'reload_config' => 1);
+    my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
 
     ## Empty the admin_table entries and recreate them
     Log::do_log('notice', 'Rebuilding the admin_table...');
-    List::delete_all_list_admin();
+    Sympa::List::delete_all_list_admin();
     foreach my $list (@$all_lists) {
         $list->sync_include_admin();
     }
@@ -144,7 +145,7 @@ sub upgrade {
         close EXEC;
 
         Log::do_log('notice', 'Rebuilding web archives...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             # FIXME: line below will always success
             next unless (defined $list->{'admin'}{'web_archive'});
@@ -165,7 +166,7 @@ sub upgrade {
     ## Initializing the new admin_table
     if (tools::lower_version($previous_version, '4.2b.4')) {
         Log::do_log('notice', 'Initializing the new admin_table...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             $list->sync_include_admin();
         }
@@ -194,7 +195,7 @@ sub upgrade {
         }
 
         ## Search in V. Robot Lists
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             if (-d "$list->{'dir'}/web_tt2") {
                 push @directories, "$list->{'dir'}/web_tt2";
@@ -231,7 +232,7 @@ sub upgrade {
     ## Clean buggy list config files
     if (tools::lower_version($previous_version, '5.1b')) {
         Log::do_log('notice', 'Cleaning buggy list config files...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             $list->save_config('listmaster@' . $list->{'domain'});
         }
@@ -240,7 +241,7 @@ sub upgrade {
     ## Fix a bug in Sympa 5.1
     if (tools::lower_version($previous_version, '5.1.2')) {
         Log::do_log('notice', 'Rename archives/log. files...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             my $l = $list->{'name'};
             if (-f $list->{'dir'} . '/archives/log.') {
@@ -258,7 +259,7 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists = List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists = Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
             foreach my $list (@$all_lists) {
 
                 foreach my $table ('subscriber', 'admin') {
@@ -277,7 +278,7 @@ sub upgrade {
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
                             $r
                         );
-                        List::send_notify_to_listmaster(
+                        Sympa::Robot::send_notify_to_listmaster(
                             'upgrade_failed',
                             $Conf::Conf{'domain'},
                             {   'error' =>
@@ -290,7 +291,7 @@ sub upgrade {
 
                 ## Force Sync_admin
                 $list =
-                    List->new($list->{'name'}, $list->{'domain'},
+                    Sympa::List->new($list->{'name'}, $list->{'domain'},
                     {'force_sync_admin' => 1});
             }
         }
@@ -315,7 +316,7 @@ sub upgrade {
 
             next unless ($listname && $listdomain);
 
-            my $list = new List $listname;
+            my $list = Sympa::List->new($listname);
             unless (defined $list) {
                 Log::do_log('notice', 'Skipping unknown list %s', $listname);
                 next;
@@ -453,7 +454,7 @@ sub upgrade {
                 if ($dir =~ /\@/);
 
             my $listname = $dir;
-            my $list     = new List $listname;
+            my $list     = Sympa::List->new($listname);
             unless (defined $list) {
                 Log::do_log('notice', 'Skipping unknown list %s', $listname);
                 next;
@@ -487,7 +488,7 @@ sub upgrade {
         Log::do_log('notice',
             'Update lists config using include_list parameter...');
 
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
 
             if (defined $list->{'admin'}{'include_list'}) {
@@ -495,7 +496,7 @@ sub upgrade {
                 my $changed       = 0;
                 foreach my $index (0 .. $#{$include_lists}) {
                     my $incl      = $include_lists->[$index];
-                    my $incl_list = List->new($incl);
+                    my $incl_list = Sympa::List->new($incl);
 
                     if (defined $incl_list
                         and $incl_list->{'domain'} ne $list->{'domain'}) {
@@ -539,14 +540,14 @@ sub upgrade {
                     $etc_dir . '/mhonarc-ressources.tt2',
                     $new_filename
                 );
-                List::send_notify_to_listmaster('file_removed',
+                Sympa::Robot::send_notify_to_listmaster('file_removed',
                     $Conf::Conf{'domain'},
                     [$etc_dir . '/mhonarc-ressources.tt2', $new_filename]);
             }
         }
 
         Log::do_log('notice', 'Rebuilding web archives...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             # FIXME: next line always success
             next unless (defined $list->{'admin'}{'web_archive'});
@@ -572,7 +573,7 @@ sub upgrade {
         Log::do_log('notice', 'Q-Encoding web documents filenames...');
 
         $language->push_lang($Conf::Conf{'lang'});
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             if (-d $list->{'dir'} . '/shared') {
                 Log::do_log(
@@ -660,7 +661,7 @@ sub upgrade {
         }
 
         ## Search in Lists
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             foreach my $f (
                 'config',   'info',
@@ -741,7 +742,7 @@ sub upgrade {
             'Looking for lists with user_data_source parameter set to file or database...'
         );
 
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
 
             if ($list->{'admin'}{'user_data_source'} eq 'file') {
@@ -752,7 +753,7 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                my @users = List::_load_list_members_file(
+                my @users = Sympa::List::_load_list_members_file(
                     "$list->{'dir'}/subscribers");
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
@@ -841,7 +842,7 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         Log::do_log('notice',
             'Fixing Q-encoding of web document filenames...');
-        my $all_lists = List::get_lists('*');
+        my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
             if (-d $list->{'dir'} . '/shared') {
                 Log::do_log(
@@ -897,7 +898,7 @@ sub upgrade {
             Log::do_log('err',
                 'Unable to gather informations from the exclusions table');
         }
-        my @robots = List::get_robots();
+        my @robots = Sympa::List::get_robots();
         while (my $data = $sth->fetchrow_hashref) {
             next
                 if (defined $data->{'robot_exclusion'}
@@ -906,7 +907,7 @@ sub upgrade {
             my $valid_robot = '';
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list = List->new($data->{'list_exclusion'}, $robot)) {
+                if (my $list = Sympa::List->new($data->{'list_exclusion'}, $robot)) {
                     if ($list->is_list_member($data->{'user_exclusion'})) {
                         push @valid_robot_candidates, $robot;
                     }
@@ -942,12 +943,13 @@ sub upgrade {
             }
         }
         ## Caching all lists config subset to database
-        Log::do_log('notice', 'Caching all lists config subset to database');
-        List::_flush_list_db();
-        my $all_lists = List::get_lists('*', 'reload_config' => 1);
+        Log::do_log('notice', 'Caching all list config to database...');
+        Sympa::List::_flush_list_db();
+        my $all_lists = Sympa::List::get_lists('*', 'reload_config' => 1);
         foreach my $list (@$all_lists) {
             $list->_update_list_db;
         }
+        Log::do_log('notice', '...done');
     }
 
     ## We have obsoleted wwsympa.conf.  It would be migrated to sympa.conf.
@@ -1256,13 +1258,13 @@ sub upgrade {
                 push @ignored, $filename;
                 next;
             }
-            my $list = List->new($listname, $robot_id);
+            my $list = Sympa::List->new($listname, $robot_id);
             unless ($list) {
                 push @ignored, $filename;
                 next;
             }
             my $message =
-                Message->new_from_file("$spooldir/$filename", list => $list);
+                Sympa::Message->new_from_file("$spooldir/$filename", list => $list);
             unless ($message) {
                 push @ignored, $filename;
                 next;
@@ -1446,12 +1448,9 @@ sub to_utf8 {
 #  This require to rewrite paassword in database. This upgrade IS NOT
 #  REVERSIBLE
 sub md5_encode_password {
-
     my $total = 0;
 
-    Log::do_log('notice',
-        'Upgrade::md5_encode_password() recoding password using md5 fingerprint'
-    );
+    Log::do_log('notice', 'Recoding password using md5 fingerprint');
 
     unless (SDM::check_db_connect('just_try')) {
         return undef;

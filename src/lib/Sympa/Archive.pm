@@ -33,7 +33,7 @@ use HTML::Entities qw();
 
 use Conf;
 use Log;
-use Message;
+use Sympa::Message;
 use tools;
 
 my $serial_number = 0;    # incremented on each archived mail
@@ -120,7 +120,7 @@ sub scan_dir_archive {
             $dir, $month, $file);
 
         my $message =
-            Message->new_from_file("$dir/$month/arctxt/$file", list => $list);
+            Sympa::Message->new_from_file("$dir/$month/arctxt/$file", list => $list);
         unless ($message) {
             Log::do_log('err', 'Unable to create Message object from file %s',
                 $file);
@@ -322,11 +322,8 @@ sub clean_archived_message {
     my $input  = shift;
     my $output = shift;
 
-    my $message = Message->new_from_file(
-        $input,
-        list  => $list,
-        robot => $robot,
-    );
+    my $message = Sympa::Message->new_from_file($input,
+        list => $list, robot => $robot);
     unless ($message) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);
@@ -368,7 +365,7 @@ sub convert_single_message {
     my $robot;
     my $listname;
     my $hostname;
-    if (ref $that eq 'List') {
+    if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot    = $that->{'domain'};
         $listname = $that->{'name'};
@@ -383,7 +380,7 @@ sub convert_single_message {
     }
 
     my $msg_as_string;
-    if (ref $message eq 'Message') {
+    if (ref $message eq 'Sympa::Message') {
         $msg_as_string = $message->as_string;
     } elsif (ref $message eq 'HASH') {
         $msg_as_string = $message->{'messageasstring'};
@@ -502,7 +499,7 @@ sub get_tag {
     my $that = shift;
 
     my $name;
-    if (ref $that eq 'List') {
+    if (ref $that eq 'Sympa::List') {
         $name = $that->{'name'};
     } elsif (!ref($that) and $that and $that ne '*') {
         $name = $that;

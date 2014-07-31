@@ -2,7 +2,7 @@
 # vim:ft=perl:et:sw=4
 # $Id$
 
-package Marc::Search;
+package Sympa::Marc::Search;
 
 use strict;
 use warnings;
@@ -10,7 +10,7 @@ use Encode qw();
 use File::Find qw();
 use HTML::Entities qw();
 
-use base qw(Marc);
+use base qw(Sympa::Marc);
 
 our $VERSION = "4.3+Sympa-6.2";
 our ($AUTOLOAD, @MSGFILES);

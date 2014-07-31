@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package sympasoap;
+package Sympa::SOAP;
 
 use strict;
 use warnings;
@@ -31,9 +31,10 @@ use Encode qw();
 use Sympa::Admin;
 use Sympa::Auth;
 use Conf;
-use List;
+use Sympa::List;
 use Log;
-use Scenario;
+use Sympa::Robot;
+use Sympa::Scenario;
 
 ## Define types of SOAP type listType
 my %types = (
@@ -86,13 +87,13 @@ sub lists {
 
     Log::do_log('info', '(%s, %s)', $topic, $subtopic);
 
-    my $all_lists = List::get_lists($robot);
+    my $all_lists = Sympa::List::get_lists($robot);
     foreach my $list (@$all_lists) {
 
         my $listname = $list->{'name'};
 
         my $result_item = {};
-        my $result      = Scenario::request_action(
+        my $result      = Sympa::Scenario::request_action(
             $list,
             'visibility',
             'md5',
@@ -184,10 +185,10 @@ sub login {
             ->faultdetail("Incorrect password for user $email or bad login");
     }
 
-    ## Create SympaSession object
+    ## Create Sympa::Session object
     my $session =
-        SympaSession->new($robot,
-        {'cookie' => SympaSession::encrypt_session_id($ENV{'SESSION_ID'})});
+        Sympa::Session->new($robot,
+        {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -197,7 +198,7 @@ sub login {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(SympaSession::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value(Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 sub casLogin {
@@ -274,10 +275,10 @@ sub casLogin {
             ->faultdetail("Could not get email address from LDAP directory");
     }
 
-    ## Create SympaSession object
+    ## Create Sympa::Session object
     my $session =
-        SympaSession->new($robot,
-        {'cookie' => SympaSession::encrypt_session_id($ENV{'SESSION_ID'})});
+        Sympa::Session->new($robot,
+        {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
     $session->store();
@@ -287,7 +288,7 @@ sub casLogin {
 
     ## Also return the cookie value
     return SOAP::Data->name('result')->type('string')
-        ->value(SympaSession::encrypt_session_id($ENV{'SESSION_ID'}));
+        ->value(Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'}));
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
@@ -310,7 +311,7 @@ sub authenticateAndRun {
     ## Provided email is not trusted, we fetch the user email from the
     ## session_table instead
     my $session =
-        SympaSession->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
     if (defined $session) {
         $email      = $session->{'email'};
         $session_id = $session->{'id_session'};
@@ -342,7 +343,7 @@ sub getUserEmailByCookie {
     }
 
     my $session =
-        SympaSession->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
 
     unless (defined $session && ($session->{'email'} ne 'unkown')) {
         Log::do_log('err', 'Failed to load session for %s', $cookie);
@@ -388,8 +389,8 @@ sub authenticateRemoteAppAndRun {
 
     foreach my $var (split(/,/, $vars)) {
         # check if the remote application is trusted proxy for this variable
-        # Log::do_log('notice', "sympasoap::authenticateRemoteAppAndRun:
-        # Remote application is trusted proxy for  $var");
+        # Log::do_log('notice',
+        #     'Remote application is trusted proxy for %s', $var);
 
         my ($id, $value) = split(/=/, $var);
         if (!defined $id) {
@@ -425,7 +426,7 @@ sub amI {
     }
 
     $listname = lc($listname);
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
 
     Log::do_log('debug', '(%s)', $listname);
 
@@ -471,7 +472,7 @@ sub info {
 
     Log::do_log('notice', '(%s)', $listname);
 
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info', 'Info %s from %s refused, list unknown',
             $listname, $sender);
@@ -481,12 +482,7 @@ sub info {
 
     my $sympa = Conf::get_robot_conf($robot, 'sympa');
 
-    my $user;
-
-    # Part of the authorization code
-    $user = Sympa::User::get_global_user($sender);
-
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list, 'info', 'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
@@ -592,7 +588,7 @@ sub createList {
 
     Log::do_log('debug', '(%s, %s)', $listname, $robot);
 
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     if ($list) {
         Log::do_log('info',
             'Create_list %s@%s from %s refused, list already exist',
@@ -623,7 +619,7 @@ sub createList {
             ->faultdetail("Missing required parameter(s) : $reject");
     }
     # check authorization
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $robot,
         'create_list',
         'md5',
@@ -689,7 +685,7 @@ sub createList {
 
     ## notify listmaster
     if ($param->{'create_action'} =~ /notify/) {
-        if (List::send_notify_to_listmaster(
+        if (Sympa::Robot::send_notify_to_listmaster(
                 'request_list_creation', $robot,
                 {'list' => $list, 'email' => $sender}
             )
@@ -728,7 +724,7 @@ sub closeList {
 
     Log::do_log('debug', '(%s, %s)', $listname, $robot);
 
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info', 'CloseList %s@%s from %s refused, unknown list',
             $listname, $robot, $sender);
@@ -737,7 +733,7 @@ sub closeList {
     }
 
     # check authorization
-    unless (($list->am_i('owner', $sender)) || (List::is_listmaster($sender)))
+    unless (($list->am_i('owner', $sender)) || (Sympa::Robot::is_listmaster($sender)))
     {
         Log::do_log('info', 'CloseList %s from %s not allowed',
             $listname, $sender);
@@ -798,7 +794,7 @@ sub add {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <email>');
     }
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info', 'Add %s@%s %s from %s refused, no such list',
             $listname, $robot, $email, $sender);
@@ -808,7 +804,7 @@ sub add {
 
     # check authorization
 
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list, 'add', 'md5',
         {   'sender'                  => $sender,
             'email'                   => $email,
@@ -954,7 +950,7 @@ sub del {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <email>');
     }
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info', 'Del %s@%s %s from %s refused, no such list',
             $listname, $robot, $email, $sender);
@@ -964,7 +960,7 @@ sub del {
 
     # check authorization
 
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list, 'del', 'md5',
         {   'sender'                  => $sender,
             'email'                   => $email,
@@ -1073,7 +1069,7 @@ sub review {
 
     Log::do_log('debug', '(%s, %s)', $listname, $robot);
 
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info',
             'Review %s from %s refused, list unknown to robot %s',
@@ -1089,7 +1085,7 @@ sub review {
     # Part of the authorization code
     $user = Sympa::User::get_global_user($sender);
 
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list, 'review', 'md5',
         {   'sender'                  => $sender,
             'remote_application_name' => $ENV{'remote_application_name'}
@@ -1172,7 +1168,7 @@ sub fullReview {
 
     Log::do_log('debug', '(%s, %s)', $listname, $robot);
 
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info',
             'Review %s from %s refused, list unknown to robot %s',
@@ -1285,7 +1281,7 @@ sub signoff {
     }
 
     my $l;
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
 
     ## Is this list defined
     unless ($list) {
@@ -1299,7 +1295,7 @@ sub signoff {
 
     if ($listname eq '*') {
         my $success;
-        foreach my $list (List::get_which($sender, $robot, 'member')) {
+        foreach my $list (Sympa::List::get_which($sender, $robot, 'member')) {
             my $l = $list->{'name'};
 
             $success ||= signoff($l, $sender);
@@ -1307,12 +1303,9 @@ sub signoff {
         return SOAP::Data->name('result')->value($success);
     }
 
-    $list = List->new($listname, $robot);
+    $list = Sympa::List->new($listname, $robot);
 
-    # Part of the authorization code
-    my $user = Sympa::User::get_global_user($sender);
-
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list,
         'unsubscribe',
         'md5',
@@ -1416,7 +1409,7 @@ sub subscribe {
 
     ## Load the list if not already done, and reject the
     ## subscription if this list is unknown to us.
-    my $list = List->new($listname, $robot);
+    my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info',
             'Subscribe to %s from %s refused, list unknown to robot %s',
@@ -1431,7 +1424,7 @@ sub subscribe {
     $gecos = "\"$gecos\"" if ($gecos =~ /[<>\(\)]/);
 
     ## query what to do with this subscribtion request
-    my $result = Scenario::request_action(
+    my $result = Sympa::Scenario::request_action(
         $list,
         'subscribe',
         'md5',
@@ -1517,7 +1510,7 @@ sub subscribe {
                 unless $list->add_list_member($u);
         }
 
-        if ($List::use_db) {
+        if ($Sympa::List::use_db) {
             my $u = Sympa::User->new($sender);
             unless ($u->lang) {
                 $u->lang($list->{'admin'}{'lang'});
@@ -1601,7 +1594,7 @@ sub which {
     my %listnames;
 
     foreach my $role ('member', 'owner', 'editor') {
-        foreach my $list (List::get_which($sender, $robot, $role)) {
+        foreach my $list (Sympa::List::get_which($sender, $robot, $role)) {
             my $name = $list->{'name'};
             $listnames{$name} = $list;
         }
@@ -1613,7 +1606,7 @@ sub which {
         my $list_address;
         my $result_item;
 
-        my $result = Scenario::request_action(
+        my $result = Sympa::Scenario::request_action(
             $list,
             'visibility',
             'md5',
@@ -1728,7 +1721,7 @@ sub get_reason_string {
         )
         ) {
         my $error = tt2::get_error();
-        List::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
+        Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
         Log::do_log('info', 'Error parsing');
         return '';
     }

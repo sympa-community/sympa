@@ -28,19 +28,14 @@ use strict;
 use warnings;
 use Getopt::Long;
 use SOAP::Lite;
-# Use this line for more debug facility
-#use SOAP::Lite +trace;
-use SOAP::Transport::HTTP;
-
-## Defines SOAP::Transport::HTTP::FCGI::Sympa with a modified handle()
-use SympaTransport;
 
 ## Sympa API
 use Conf;
-use List;
+use Sympa::List;
 use Log;
-use mail;
-use sympasoap;
+use Sympa::Mail;
+use Sympa::SOAP;
+use Sympa::SOAP::Transport;
 
 my $birthday = time;
 
@@ -71,22 +66,19 @@ unless (SDM::check_db_connect()) {
 
 ## The process should not fork for sending mail
 ## Messages will be spooled instead
-mail::set_send_spool($Conf::Conf{'queue'});
+Sympa::Mail::set_send_spool($Conf::Conf{'queue'});
 
 ## Loading all Lists at startup, in order to increase execution speed
 
-my $all_lists = List::get_lists('*');
-foreach my $list (@$all_lists) {
-    ## Nothing to do here
-}
+my $all_lists = Sympa::List::get_lists('*');
 
 ##############################################################################
 #    Soap part
 ##############################################################################
 
-my $server = SOAP::Transport::HTTP::FCGI::Sympa->new();
+my $server = Sympa::SOAP::Transport->new();
 
-#$server->dispatch_with({'urn:Sympa' => 'sympasoap'});
-$server->dispatch_to('--modulesdir--', 'sympasoap');
+#$server->dispatch_with({'urn:Sympa' => 'Sympa::SOAP'});
+$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
 
 $server->handle($birthday);

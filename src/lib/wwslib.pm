@@ -208,7 +208,7 @@ sub init_passwd {
                     $email, {'password' => $passwd}
                 )
                 ) {
-                report::reject_report_web('intern', 'update_user_db_failed',
+                Sympa::Report::reject_report_web('intern', 'update_user_db_failed',
                     {'user' => $email},
                     '', '', $email, $robot);
                 Log::do_log('info', 'Update failed');
@@ -226,7 +226,7 @@ sub init_passwd {
                 }
             )
             ) {
-            report::reject_report_web('intern', 'add_user_db_failed',
+            Sympa::Report::reject_report_web('intern', 'add_user_db_failed',
                 {'user' => $email},
                 '', '', $email, $robot);
             Log::do_log('info', 'Add failed');

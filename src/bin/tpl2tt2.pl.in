@@ -30,7 +30,7 @@ use warnings;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
-use List;
+use Sympa::List;
 use Log;
 use SDM;
 use Sympa::Template::Compat;
@@ -53,7 +53,7 @@ unless (Conf::load()) {
 }
 
 if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
-    unless ($List::use_db = SDM::probe_db()) {
+    unless ($Sympa::List::use_db = SDM::probe_db()) {
         die('Database %s defined in sympa.conf has not the right structure or is unreachable. If you don\'t use any database, comment db_xxx parameters in sympa.conf',
             $Conf::Conf{'db_name'}
         );
@@ -126,7 +126,7 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
     }
 
     ## Search in V. Robot Lists
-    my $listOfLists = List::get_lists($vr);
+    my $listOfLists = Sympa::List::get_lists($vr);
     foreach my $list (@$listOfLists) {
 
         push @directories, $list->{'dir'};

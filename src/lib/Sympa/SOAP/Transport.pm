@@ -22,14 +22,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package SOAP::Transport::HTTP::FCGI::Sympa;
+package Sympa::SOAP::Transport;
 
 use strict;
 use warnings;
 use SOAP::Transport::HTTP;
 
 use Log;
-use SympaSession;
+use Sympa::Session;
 
 # 'base' pragma doesn't work here
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
@@ -53,19 +53,19 @@ sub request {
         }
 
         ## Empty cache of the List.pm module
-        List::init_list_cache();
+        Sympa::List::init_list_cache();
 
         my $session;
         ## Existing session or new one
-        if (SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})) {
-            $session = SympaSession->new(
+        if (Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
+            $session = Sympa::Session->new(
                 $ENV{'SYMPA_ROBOT'},
                 {   'cookie' =>
-                        SympaSession::get_session_cookie($ENV{'HTTP_COOKIE'})
+                        Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})
                 }
             );
         } else {
-            $session = SympaSession->new($ENV{'SYMPA_ROBOT'}, {});
+            $session = Sympa::Session->new($ENV{'SYMPA_ROBOT'}, {});
             $session->store() if (defined $session);
             ## Note that id_session changes each time it is saved in the DB
             $session->renew()
@@ -92,7 +92,7 @@ sub response {
             my $expire = $main::param->{'user'}{'cookie_delay'}
                 || $Conf::Conf{'cookie_expire'};
             my $cookie =
-                SympaSession::soap_cookie2($ENV{'SESSION_ID'},
+                Sympa::Session::soap_cookie2($ENV{'SESSION_ID'},
                 $ENV{'SERVER_NAME'}, $expire);
             $response->headers->push_header('Set-Cookie2' => $cookie);
         }
