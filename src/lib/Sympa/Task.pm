@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Task;
+package Sympa::Task;
 
 use strict;
 use warnings;
@@ -35,7 +35,7 @@ my @task_list;
 my %task_by_list;
 my %task_by_model;
 
-## Creates a new Task object
+## Creates a new Sympa::Task object
 sub new {
     my ($pkg, $file) = @_;
     my $task;
@@ -85,13 +85,13 @@ sub new {
     $task->{'id'} = $task->{'list_object'}{'name'};
     $task->{'id'} .= '@' . $task->{'domain'} if (defined $task->{'domain'});
 
-    ## Bless Task object
+    ## Bless Sympa::Task object
     bless $task, $pkg;
 
     return $task;
 }
 
-## Build all Task objects
+## Build all Sympa::Task objects
 sub list_tasks {
     my $spool_task = shift;
 
@@ -109,10 +109,10 @@ sub list_tasks {
     undef %task_by_list;
     undef %task_by_model;
 
-    ## Create Task objects
+    ## Create Sympa::Task objects
     foreach my $t (@task_files) {
         next if ($t =~ /^\./);
-        my $task = Task->new($spool_task . '/' . $t);
+        my $task = Sympa::Task->new($spool_task . '/' . $t);
 
         ## Maintain list of tasks
         push @task_list, $task;
