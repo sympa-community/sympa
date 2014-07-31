@@ -444,9 +444,8 @@ sub request_action {
         $scenario = Sympa::Scenario->new(
             'robot'    => $robot_id,
             'function' => 'topics_visibility',
-            'name' =>
-                $Sympa::Robot::list_of_topics{$robot_id}{$context->{'topicname'}}
-                {'visibility'},
+            'name'     => $Sympa::Robot::list_of_topics{$robot_id}
+                {$context->{'topicname'}}{'visibility'},
             'options' => $context->{'options'}
         );
 
@@ -567,8 +566,8 @@ sub request_action {
                     };
                     return $return;
                 }
-                Sympa::Robot::send_notify_to_listmaster('error-performing-condition',
-                    $robot_id,
+                Sympa::Robot::send_notify_to_listmaster(
+                    'error-performing-condition', $robot_id,
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
             }

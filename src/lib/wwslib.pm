@@ -208,8 +208,8 @@ sub init_passwd {
                     $email, {'password' => $passwd}
                 )
                 ) {
-                Sympa::Report::reject_report_web('intern', 'update_user_db_failed',
-                    {'user' => $email},
+                Sympa::Report::reject_report_web('intern',
+                    'update_user_db_failed', {'user' => $email},
                     '', '', $email, $robot);
                 Log::do_log('info', 'Update failed');
                 return undef;

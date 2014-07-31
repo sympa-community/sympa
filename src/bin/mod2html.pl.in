@@ -58,8 +58,8 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
         [qw(localpart domainpart modkey)]
     );
     next unless $metadata;
-    my $message =
-        Sympa::Message->new_from_file($modspool . '/' . $msg_file, %$metadata);
+    my $message = Sympa::Message->new_from_file($modspool . '/' . $msg_file,
+        %$metadata);
     next unless $message;
     my $list = $message->{'list'};
 

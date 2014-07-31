@@ -234,7 +234,9 @@ sub create_list_old {
     }
 
     ## Check this listname doesn't exist already.
-    if ($res || Sympa::List->new($param->{'listname'}, $robot, {'just_try' => 1})) {
+    if ($res
+        || Sympa::List->new($param->{'listname'}, $robot, {'just_try' => 1}))
+    {
         Log::do_log('err',
             'Could not create already existing list %s on %s for',
             $param->{'listname'}, $robot);
@@ -1634,7 +1636,7 @@ sub change_user_email {
                 my $datasource = $list->search_datasource($datasource_id);
                 if (   !defined $datasource
                     or $datasource->{'type'} ne 'include_list'
-                    or (   $datasource->{'def'} =~ /\@(.+)$/
+                    or (    $datasource->{'def'} =~ /\@(.+)$/
                         and $1 ne $robot_id)
                     ) {
                     $use_external_data_sources = 1;

@@ -79,9 +79,7 @@ sub load {
     Log::do_log('debug', '(%s)', $id_challenge);
 
     unless ($challenge_id) {
-        Log::do_log('err',
-            'Internal error.  undefined id_challenge'
-        );
+        Log::do_log('err', 'Internal error.  undefined id_challenge');
         return undef;
     }
 

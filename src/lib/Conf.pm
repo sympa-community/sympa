@@ -862,8 +862,8 @@ sub checkfiles {
         ## Create directory if required
         unless (-d $dir) {
             unless (tools::mkdir_all($dir, 0755)) {
-                Sympa::Robot::send_notify_to_listmaster('cannot_mkdir', $robot,
-                    ["Could not create directory $dir: $!"]);
+                Sympa::Robot::send_notify_to_listmaster('cannot_mkdir',
+                    $robot, ["Could not create directory $dir: $!"]);
                 Log::do_log('err', 'Failed to create directory %s', $dir);
                 return undef;
             }
@@ -888,8 +888,9 @@ sub checkfiles {
                 rename $dir . '/' . $css, $dir . '/' . $css . '.' . time;
 
                 unless (open(CSS, ">$dir/$css")) {
-                    Sympa::Robot::send_notify_to_listmaster('cannot_open_file',
-                        $robot, ["Could not open file $dir/$css: $!"]);
+                    Sympa::Robot::send_notify_to_listmaster(
+                        'cannot_open_file', $robot,
+                        ["Could not open file $dir/$css: $!"]);
                     Log::do_log(
                         'err',
                         'Failed to open (write) file %s',
@@ -905,8 +906,8 @@ sub checkfiles {
                     ) {
                     my $error = tt2::get_error();
                     $param->{'tt2_error'} = $error;
-                    Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
-                        [$error]);
+                    Sympa::Robot::send_notify_to_listmaster('web_tt2_error',
+                        $robot, [$error]);
                     Log::do_log('err', 'Error while installing %s/%s',
                         $dir, $css);
                 }

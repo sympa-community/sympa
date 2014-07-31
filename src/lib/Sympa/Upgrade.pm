@@ -259,7 +259,8 @@ sub upgrade {
         );
 
         foreach my $r (keys %{$Conf::Conf{'robots'}}) {
-            my $all_lists = Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
+            my $all_lists =
+                Sympa::List::get_lists($r, 'skip_sync_admin' => 1);
             foreach my $list (@$all_lists) {
 
                 foreach my $table ('subscriber', 'admin') {
@@ -907,7 +908,8 @@ sub upgrade {
             my $valid_robot = '';
             my @valid_robot_candidates;
             foreach my $robot (@robots) {
-                if (my $list = Sympa::List->new($data->{'list_exclusion'}, $robot)) {
+                if (my $list =
+                    Sympa::List->new($data->{'list_exclusion'}, $robot)) {
                     if ($list->is_list_member($data->{'user_exclusion'})) {
                         push @valid_robot_candidates, $robot;
                     }
@@ -1264,7 +1266,8 @@ sub upgrade {
                 next;
             }
             my $message =
-                Sympa::Message->new_from_file("$spooldir/$filename", list => $list);
+                Sympa::Message->new_from_file("$spooldir/$filename",
+                list => $list);
             unless ($message) {
                 push @ignored, $filename;
                 next;

@@ -433,8 +433,8 @@ while (!$end) {
                     # tracking by MDN required tracking by DSN to
                     my $msgid = $new_message->{'message_id'};
                     $notification_id =
-                        Sympa::Tracking::find_notification_id_by_message($rcpt,
-                        $msgid, $listname, $robot);
+                        Sympa::Tracking::find_notification_id_by_message(
+                        $rcpt, $msgid, $listname, $robot);
                     $return_path =
                         $list->get_bounce_address($rcpt, $notification_id);
                     $new_message->replace_header(
@@ -504,7 +504,8 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            *SMTP = Sympa::Mail::smtpto($bulk->{'returnpath'}, \@rcpts, $robot);
+            *SMTP =
+                Sympa::Mail::smtpto($bulk->{'returnpath'}, \@rcpts, $robot);
             # Stripping Return-Path: pseudo-header field.
             my $msg_string = $new_message->as_string;
             $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;

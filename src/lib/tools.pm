@@ -394,7 +394,8 @@ sub load_edit_list_conf {
     }
 
     if ($error_in_conf) {
-        Sympa::Robot::send_notify_to_listmaster('edit_list_error', $robot, [$file]);
+        Sympa::Robot::send_notify_to_listmaster('edit_list_error', $robot,
+            [$file]);
     }
 
     close FILE;
@@ -3411,8 +3412,8 @@ sub save_to_bad {
         unless (mkdir $queue . '/bad', 0775) {
             Log::do_log('notice', 'Unable to create %s/bad/ directory',
                 $queue);
-            Sympa::Robot::send_notify_to_listmaster('unable_to_create_dir', $hostname,
-                {'dir' => "$queue/bad"});
+            Sympa::Robot::send_notify_to_listmaster('unable_to_create_dir',
+                $hostname, {'dir' => "$queue/bad"});
             return undef;
         }
         Log::do_log('debug', 'mkdir %s/bad', $queue);
@@ -4002,7 +4003,8 @@ sub unmarshal_metadata {
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
     if (defined $listname) {
-        $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1});
+        $list =
+            Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1});
     }
 
     ## Get priority

@@ -81,8 +81,8 @@ sub fatal_err {
     my $full_msg = sprintf $m, @_;
 
     ## Notify listmaster
-    Sympa::Robot::send_notify_to_listmaster('sympa_died', $Conf::Conf{'domain'},
-        [$full_msg]);
+    Sympa::Robot::send_notify_to_listmaster('sympa_died',
+        $Conf::Conf{'domain'}, [$full_msg]);
 
     printf STDERR "$m\n", @_;
     exit(1);
@@ -203,8 +203,8 @@ sub do_log {
     };
     if ($@ and $warning_date < time - $warning_timeout) {
         $warning_date = time + $warning_timeout;
-        Sympa::Robot::send_notify_to_listmaster('logs_failed', $Conf::Conf{'domain'},
-            [$@]);
+        Sympa::Robot::send_notify_to_listmaster('logs_failed',
+            $Conf::Conf{'domain'}, [$@]);
     }
 }
 

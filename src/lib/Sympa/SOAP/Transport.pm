@@ -60,8 +60,9 @@ sub request {
         if (Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
             $session = Sympa::Session->new(
                 $ENV{'SYMPA_ROBOT'},
-                {   'cookie' =>
-                        Sympa::Session::get_session_cookie($ENV{'HTTP_COOKIE'})
+                {   'cookie' => Sympa::Session::get_session_cookie(
+                        $ENV{'HTTP_COOKIE'}
+                    )
                 }
             );
         } else {

@@ -657,7 +657,8 @@ sub set_status_error_config {
         #$self->savestats();
         Log::do_log('err', 'The list "%s" is set in status error_config',
             $self->{'name'});
-        Sympa::Robot::send_notify_to_listmaster($message, $self->{'domain'}, \@param);
+        Sympa::Robot::send_notify_to_listmaster($message, $self->{'domain'},
+            \@param);
     }
 }
 
@@ -2140,13 +2141,14 @@ sub distribute_digest {
         # Commented because one Spam made Sympa die (MIME::tools 5.413)
         #$entity->remove_sig;
         my $msg = {
-            'id'         => $i,
-            'subject'    => $message->{'decoded_subject'},
-            'from'       => tools::decode_header($message, 'From'),
-            'date'       => tools::decode_header($message, 'Date'),
-            'full_msg'   => $message->as_string,
-            'body'       => $message->body_as_string,
-            'plain_body' => $message->Sympa::PlainDigest::plain_body_as_string,
+            'id'       => $i,
+            'subject'  => $message->{'decoded_subject'},
+            'from'     => tools::decode_header($message, 'From'),
+            'date'     => tools::decode_header($message, 'Date'),
+            'full_msg' => $message->as_string,
+            'body'     => $message->body_as_string,
+            'plain_body' =>
+                $message->Sympa::PlainDigest::plain_body_as_string,
             # Should be extracted from Date:
             'month'      => POSIX::strftime("%Y-%m", localtime time),
             'message_id' => $message->{'message_id'},
@@ -2431,7 +2433,8 @@ sub _generic_send_file {
     if (ref $that eq 'Sympa::List') {
         return $that->send_file($tpl, $who, $that->{'domain'}, $param);
     } else {
-        return Sympa::Robot::send_global_file($tpl, $who, $that, $param, $options);
+        return Sympa::Robot::send_global_file($tpl, $who, $that, $param,
+            $options);
     }
 }
 
@@ -2615,7 +2618,8 @@ sub send_file {
     # to support Sympa server on a machine without any MTA service
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
-    unless (Sympa::Mail::mail_file($self->{'domain'}, $filename, $who, $data)) {
+    unless (Sympa::Mail::mail_file($self->{'domain'}, $filename, $who, $data))
+    {
         Log::do_log('err', 'Could not send template %s to %s',
             $filename, $who);
         return undef;
@@ -3374,7 +3378,12 @@ sub request_auth {
 
         }
         $data->{'auto_submitted'} = 'auto-replied';
-        unless (Sympa::Robot::send_global_file('request_auth', $email, $robot, $data)) {
+        unless (
+            Sympa::Robot::send_global_file(
+                'request_auth',
+                $email, $robot, $data
+            )
+            ) {
             Log::do_log('notice',
                 'Unable to send template "request_auth" to %s', $email);
             return undef;
@@ -7034,7 +7043,8 @@ sub _include_users_remote_file {
     my $total = 0;
     my $id    = Sympa::Datasource::_get_datasource_id($param);
 
-    my $fetch = LWP::UserAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
+    my $fetch =
+        LWP::UserAgent->new(agent => 'Sympa/' . Sympa::Constants::VERSION);
     my $req = HTTP::Request->new(GET => $url);
 
     if (defined $param->{'user'} && defined $param->{'passwd'}) {
@@ -8897,8 +8907,8 @@ sub sync_include_admin {
                 Log::do_log('err',
                     'Could not get %ss from an include source for list %s',
                     $role, $name);
-                Sympa::Robot::send_notify_to_listmaster('sync_include_admin_failed',
-                    $self->{'domain'}, [$name]);
+                Sympa::Robot::send_notify_to_listmaster(
+                    'sync_include_admin_failed', $self->{'domain'}, [$name]);
                 return undef;
             }
 

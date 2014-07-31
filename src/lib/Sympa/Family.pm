@@ -597,8 +597,11 @@ sub modify_list {
 
     #getting list
     my $list;
-    unless ($list =
-        Sympa::List->new($hash_list->{'config'}{'listname'}, $self->{'robot'})) {
+    unless (
+        $list = Sympa::List->new(
+            $hash_list->{'config'}{'listname'}, $self->{'robot'}
+        )
+        ) {
         push @{$return->{'string_error'}},
             "The list $hash_list->{'config'}{'listname'} does not exist.";
         return $return;

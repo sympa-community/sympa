@@ -176,8 +176,8 @@ sub establish_connection {
         Log::do_log('err',
             "No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN"
         );
-        Sympa::Robot::send_notify_to_listmaster('missing_dbd', $Conf::Conf{'domain'},
-            {'db_type' => $self->{'db_type'}});
+        Sympa::Robot::send_notify_to_listmaster('missing_dbd',
+            $Conf::Conf{'domain'}, {'db_type' => $self->{'db_type'}});
         return undef;
     }
 

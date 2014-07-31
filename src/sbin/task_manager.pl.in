@@ -273,7 +273,8 @@ while (!$end) {
 
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        Sympa::Robot::send_notify_to_listmaster('intern_error', $Conf::Conf{'domain'},
+        Sympa::Robot::send_notify_to_listmaster('intern_error',
+            $Conf::Conf{'domain'},
             {'error' => "Failed to list task files in $spool_task"});
         Log::do_log('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -319,7 +320,9 @@ while (!$end) {
             my %used_list_models;    # stores which models already have a task
             foreach (@list_models) { $used_list_models{$_} = undef; }
 
-            foreach my $model (Sympa::Task::get_used_models($list->get_list_id())) {
+            foreach
+                my $model (Sympa::Task::get_used_models($list->get_list_id()))
+            {
                 $used_list_models{$model} = 1;
             }
 
@@ -351,7 +354,8 @@ while (!$end) {
     ## Execute existing tasks
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        Sympa::Robot::send_notify_to_listmaster('intern_error', $Conf::Conf{'domain'},
+        Sympa::Robot::send_notify_to_listmaster('intern_error',
+            $Conf::Conf{'domain'},
             {'error' => "Failed to list task files in $spool_task"});
         Log::do_log('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -1682,8 +1686,10 @@ sub chk_cert_expiration {
 
             if (!$log) {
                 unless (
-                    Sympa::Robot::send_global_file($template, $_, '', \%tpl_context))
-                {
+                    Sympa::Robot::send_global_file(
+                        $template, $_, '', \%tpl_context
+                    )
+                    ) {
                     Log::do_log('notice', 'Unable to send template %s to %s',
                         $template, $_);
                 }
@@ -1830,11 +1836,8 @@ sub eval_bouncers {
                     $user_ref->{'email'}, {'score' => $score}
                 )
                 ) {
-                Log::do_log(
-                    'err',
-                    'Error while updating DB for user %s',
-                    $user_ref->{'email'}
-                );
+                Log::do_log('err', 'Error while updating DB for user %s',
+                    $user_ref->{'email'});
                 next;
             }
         }

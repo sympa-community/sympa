@@ -157,8 +157,8 @@ sub send_global_file {
     return $r if ($options->{'parse_and_return'});
 
     unless ($r) {
-        Log::do_log('err', 'Could not send template %s to %s', $filename,
-            $who);
+        Log::do_log('err', 'Could not send template %s to %s',
+            $filename, $who);
         return undef;
     }
 
@@ -188,23 +188,22 @@ sub send_notify_to_listmaster {
                 keys %{$Sympa::Robot::listmaster_messages_stack{$robot}}) {
                 my $first_age =
                     time -
-                    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
-                    {'first'};
+                    $Sympa::Robot::listmaster_messages_stack{$robot}
+                    {$operation}{'first'};
                 my $last_age =
                     time -
-                    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
-                    {'last'};
+                    $Sympa::Robot::listmaster_messages_stack{$robot}
+                    {$operation}{'last'};
                 # not old enough to send and first not too old
                 next
                     unless ($purge or ($last_age > 30) or ($first_age > 60));
                 next
-                    unless (
-                    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
-                    {'messages'});
+                    unless ($Sympa::Robot::listmaster_messages_stack{$robot}
+                    {$operation}{'messages'});
 
                 my %messages =
-                    %{$Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
-                        {'messages'}};
+                    %{$Sympa::Robot::listmaster_messages_stack{$robot}
+                        {$operation}{'messages'}};
                 Log::do_log(
                     'info', 'Got messages about "%s" (%s)',
                     $operation, join(', ', keys %messages)
@@ -245,19 +244,23 @@ sub send_notify_to_listmaster {
                 }
 
                 Log::do_log('info', 'Cleaning stacked notifications');
-                delete $Sympa::Robot::listmaster_messages_stack{$robot}{$operation};
+                delete $Sympa::Robot::listmaster_messages_stack{$robot}
+                    {$operation};
             }
         }
         return 1;
     }
 
     my $stack = 0;
-    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'first'} = time
-        unless (
-        $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'first'});
+    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'first'} =
+        time
+        unless ($Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
+        {'first'});
     $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'counter'}++;
-    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'last'} = time;
-    if ($Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'counter'} > 3) {
+    $Sympa::Robot::listmaster_messages_stack{$robot}{$operation}{'last'} =
+        time;
+    if ($Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
+        {'counter'} > 3) {
         # stack if too much messages w/ same code
         $stack = 1;
     }
@@ -384,7 +387,8 @@ sub send_notify_to_listmaster {
             Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
                 $operation, $ts->{'email'}, $robot)
                 unless $operation eq 'logs_failed';
-            push @{$Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
+            push
+                @{$Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
                     {'messages'}{$ts->{'email'}}}, $r;
             return 1;
         }

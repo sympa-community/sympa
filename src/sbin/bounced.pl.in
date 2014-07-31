@@ -832,7 +832,8 @@ while (!$end) {
                     } elsif ($feedback_type =~ /opt-out/
                         && (defined $original_rcpt)) {
                         @lists =
-                            Sympa::List::get_which($original_rcpt, $robot, 'member');
+                            Sympa::List::get_which($original_rcpt, $robot,
+                            'member');
                     } else {
                         Log::do_log(
                             'notice',
@@ -851,8 +852,9 @@ while (!$end) {
                     }
                     foreach my $list (@lists) {
                         my $result =
-                            Sympa::Scenario::request_action($list, 'unsubscribe',
-                            'smtp', {'sender' => $original_rcpt});
+                            Sympa::Scenario::request_action($list,
+                            'unsubscribe', 'smtp',
+                            {'sender' => $original_rcpt});
                         my $action;
                         $action = $result->{'action'}
                             if (ref($result) eq 'HASH');

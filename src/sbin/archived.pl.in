@@ -280,12 +280,12 @@ while (!$end) {
                 unless ($list->am_i('privileged_owner', $sender)
                     or $list->am_i('owner',  $sender)
                     or $list->am_i('editor', $sender)
-                    or Sympa::Robot::is_listmaster($sender, $list->{'domain'})) {
+                    or Sympa::Robot::is_listmaster($sender, $list->{'domain'})
+                    ) {
                     # Analyze message to get sender from envelope sender and
                     # sender_headers.
-                    my $arc_message =
-                        Sympa::Message->new_from_file("$arcpath/arctxt/$arc_file",
-                        list => $list);
+                    my $arc_message = Sympa::Message->new_from_file(
+                        "$arcpath/arctxt/$arc_file", list => $list);
                     unless ($arc_message) {
                         Log::do_log('err',
                             'Unable to load new message %s/arctxt/%s',
@@ -412,8 +412,8 @@ while (!$end) {
                         'queue'    => $queue,
                     }
                 );
-                Sympa::Robot::send_notify_to_listmaster('archiving_failed', $hostname,
-                    {'file' => "$file", 'bad' => "$queue/bad"});
+                Sympa::Robot::send_notify_to_listmaster('archiving_failed',
+                    $hostname, {'file' => "$file", 'bad' => "$queue/bad"});
             }
             if (-f "$queue/$file") {
                 unless (unlink("$queue/$file")) {
@@ -869,8 +869,8 @@ sub mail2arc {
         if (!-d $basedir) {
             unless (mkdir $basedir, 0775) {
                 Log::do_log('err', 'Cannot create directory %s', $basedir);
-                Sympa::Robot::send_notify_to_listmaster('unable_to_create_dir',
-                    $robot, {'dir' => "$basedir"});
+                Sympa::Robot::send_notify_to_listmaster(
+                    'unable_to_create_dir', $robot, {'dir' => "$basedir"});
             }
             Log::do_log('debug', 'mkdir %s', $basedir);
         }
@@ -967,7 +967,8 @@ sub mail2arc {
 
         # Save arctxt dump of original message.
         my $message =
-            Sympa::Message->new_from_file($queue . '/' . $file, list => $list);
+            Sympa::Message->new_from_file($queue . '/' . $file,
+            list => $list);
         unless ($message) {
             die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file, $!;
         }

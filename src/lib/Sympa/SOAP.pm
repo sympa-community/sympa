@@ -186,8 +186,7 @@ sub login {
     }
 
     ## Create Sympa::Session object
-    my $session =
-        Sympa::Session->new($robot,
+    my $session = Sympa::Session->new($robot,
         {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
@@ -276,8 +275,7 @@ sub casLogin {
     }
 
     ## Create Sympa::Session object
-    my $session =
-        Sympa::Session->new($robot,
+    my $session = Sympa::Session->new($robot,
         {'cookie' => Sympa::Session::encrypt_session_id($ENV{'SESSION_ID'})});
     $ENV{'USER_EMAIL'} = $email;
     $session->{'email'} = $email;
@@ -733,8 +731,8 @@ sub closeList {
     }
 
     # check authorization
-    unless (($list->am_i('owner', $sender)) || (Sympa::Robot::is_listmaster($sender)))
-    {
+    unless (($list->am_i('owner', $sender))
+        || (Sympa::Robot::is_listmaster($sender))) {
         Log::do_log('info', 'CloseList %s from %s not allowed',
             $listname, $sender);
         die SOAP::Fault->faultcode('Client')->faultstring('Not allowed')
@@ -1721,7 +1719,8 @@ sub get_reason_string {
         )
         ) {
         my $error = tt2::get_error();
-        Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot, [$error]);
+        Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
+            [$error]);
         Log::do_log('info', 'Error parsing');
         return '';
     }

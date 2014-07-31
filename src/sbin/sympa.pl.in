@@ -664,8 +664,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         my $total = Sympa::List::lowercase_field('user_table', 'email_user');
 
         print STDERR "Working on subscriber_table...\n";
-        $total +=
-            Sympa::List::lowercase_field('subscriber_table', 'user_subscriber');
+        $total += Sympa::List::lowercase_field('subscriber_table',
+            'user_subscriber');
 
         unless (defined $total) {
             Log::fatal_err("Could not work on dabatase");
@@ -1024,7 +1024,10 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         unless (
-            Sympa::Upgrade::upgrade($main::options{'from'}, $main::options{'to'})) {
+            Sympa::Upgrade::upgrade(
+                $main::options{'from'}, $main::options{'to'}
+            )
+            ) {
             Log::do_log('err', "Migration from %s to %s failed",
                 $main::options{'from'}, $main::options{'to'});
             exit 1;
@@ -1099,7 +1102,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             Log::do_log('notice', 'Loading list %s...',
                 $main::options{'list'});
             my $list =
-                Sympa::List->new($main::options{'list'}, '', {'reload_config' => 1});
+                Sympa::List->new($main::options{'list'}, '',
+                {'reload_config' => 1});
             unless (defined $list) {
                 print STDERR
                     "Error : incorrect list name '$main::options{'list'}'\n";
@@ -1390,7 +1394,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         my $message =
-            Sympa::Message->new_from_file($t_spool . '/' . $filename, %$metadata);
+            Sympa::Message->new_from_file($t_spool . '/' . $filename,
+            %$metadata);
 
         my $robot =
               $message->{'list'}
@@ -2771,7 +2776,8 @@ sub DoMessage {
         : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
-    $result = Sympa::Scenario::request_action($list, 'send', $auth_method, $context);
+    $result = Sympa::Scenario::request_action($list, 'send', $auth_method,
+        $context);
     $action = $result->{'action'} if (ref($result) eq 'HASH');
 
     unless (defined $action) {
@@ -2863,7 +2869,7 @@ sub DoMessage {
             unless (defined($numsmtp)) {
                 Log::do_log('err', 'Unable to send message to list %s',
                     $listname);
-            Sympa::Report::reject_report_msg('intern', '', $sender,
+                Sympa::Report::reject_report_msg('intern', '', $sender,
                     {'msg_id' => $messageid, 'message' => $message},
                     $robot, $msg_string, $list);
                 Log::db_log(
@@ -3362,10 +3368,11 @@ sub DoCommand {
 
         unless (defined $status) {
             Log::do_log('err', 'Could not change multipart to singlepart');
-            Sympa::Report::global_report_cmd('user', 'error_content_type', {});
+            Sympa::Report::global_report_cmd('user', 'error_content_type',
+                {});
             Log::db_log(
                 {   'robot'        => $robot,
-                    'list'         => $rcpt, #FIXME
+                    'list'         => $rcpt,                     #FIXME
                     'action'       => 'DoCommand',
                     'parameters'   => "$rcpt,$robot,$message",
                     'target_email' => '',
@@ -3416,10 +3423,11 @@ sub DoCommand {
             Log::do_log('err',
                 "Ignoring message body not in text/plain, Content-type: %s",
                 $content_type);
-            Sympa::Report::global_report_cmd('user', 'error_content_type', {});
+            Sympa::Report::global_report_cmd('user', 'error_content_type',
+                {});
             Log::db_log(
                 {   'robot'        => $robot,
-                    'list'         => $rcpt, #FIXME
+                    'list'         => $rcpt,                     #FIXME
                     'action'       => 'DoCommand',
                     'parameters'   => "$rcpt,$robot,$message",
                     'target_email' => '',
@@ -3455,10 +3463,11 @@ sub DoCommand {
             $cmd_found = 1;    # if problem no_cmd_understood is sent here
             if ($status eq 'unknown_cmd') {
                 Log::do_log('notice', 'Unknown command found: %s', $i);
-                Sympa::Report::reject_report_cmd('user', 'not_understood', {}, $i);
+                Sympa::Report::reject_report_cmd('user', 'not_understood', {},
+                    $i);
                 Log::db_log(
                     {   'robot'        => $robot,
-                        'list'         => $rcpt, #FIXME
+                        'list'         => $rcpt,                     #FIXME
                         'action'       => 'DoCommand',
                         'parameters'   => "$rcpt,$robot,$message",
                         'target_email' => '',
@@ -3486,7 +3495,7 @@ sub DoCommand {
         Sympa::Report::global_report_cmd('user', 'no_cmd_found', {});
         Log::db_log(
             {   'robot'        => $robot,
-                'list'         => $rcpt, #FIXME
+                'list'         => $rcpt,                     #FIXME
                 'action'       => 'DoCommand',
                 'parameters'   => "$rcpt,$robot,$message",
                 'target_email' => '',
