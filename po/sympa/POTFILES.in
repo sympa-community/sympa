@@ -43,9 +43,9 @@ default/mail_tt2/which.tt2
 default/mail_tt2/x509-user-cert-missing.tt2
 default/mail_tt2/your_infected_msg.tt2
 src/bin/sympa_soap_client.pl.in
-src/lib/sympasoap.pm
+src/lib/Sympa/SOAP.pm
 src/cgi/sympa_soap_server.fcgi.in
-src/lib/SympaTransport.pm
+src/lib/Sympa/SOAP/Transport.pm
 src/libexec/alias_manager.pl.in
 src/sbin/bulk.pl.in
 default/create_list_templates/discussion_list/comment.tt2
@@ -291,8 +291,8 @@ src/sbin/bounced.pl.in
 src/lib/Bounce.pm
 #wwsympa/Challenge.pm
 src/lib/Sympa/CookieLib.pm
-src/lib/Marc.pm
-src/lib/SharedDocument.pm
-src/lib/SympaSession.pm
+src/lib/Sympa/Marc.pm
+src/lib/Sympa/SharedDocument.pm
+src/lib/Sympa/Session.pm
 src/lib/wwslib.pm
 src/cgi/wwsympa.fcgi.in
