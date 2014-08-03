@@ -1181,12 +1181,13 @@ sub sympa_checksum {
     );
 }
 
+BEGIN { eval 'use Crypt::CipherSaber'; }
+
 # create a cipher
 sub ciphersaber_installed {
     return $cipher if defined $cipher;
 
-    eval { require Crypt::CipherSaber; };
-    unless ($@) {
+    if ($Crypt::CipherSaber::VERSION) {
         $cipher = Crypt::CipherSaber->new($Conf::Conf{'cookie'});
     } else {
         $cipher = '';
