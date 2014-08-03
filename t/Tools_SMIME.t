@@ -17,17 +17,20 @@ use Conf;
 $Conf::Conf{'openssl'} = 'openssl';
 $Conf::Conf{'tmpdir'} = '/tmp';
 
-plan tests => 20;
+plan tests => 19;
+
+#ok(
+#    !tools::smime_find_keys('/no/where', 'sign'),
+#    'non existing directory'
+#);
+
+my $home_dir = File::Temp->newdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
+$Conf::Conf{'home'} = $home_dir;
+my $cert_dir = $home_dir . '/sympa';
+mkdir $cert_dir;
 
 ok(
-    !tools::smime_find_keys('/no/where', 'sign'),
-    'non existing directory'
-);
-
-my $cert_dir = File::Temp->newdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
-
-ok(
-    !tools::smime_find_keys($cert_dir, 'sign'),
+    !tools::smime_find_keys('*', 'sign'),
     'empty directory'
 );
 
@@ -41,7 +44,7 @@ my $signature_key_file = $cert_dir . '/private_key.sign';
 touch($generic_cert_file);
 
 ok(
-    !tools::smime_find_keys($cert_dir, 'sign'),
+    !tools::smime_find_keys('*', 'sign'),
     'directory with certificate only'
 );
 
@@ -50,7 +53,7 @@ unlink($generic_cert_file);
 touch($generic_key_file);
 
 ok(
-    !tools::smime_find_keys($cert_dir, 'sign'),
+    !tools::smime_find_keys('*', 'sign'),
     'directory with key only'
 );
 
@@ -60,19 +63,19 @@ touch($generic_cert_file);
 touch($generic_key_file);
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'sign') ],
+    [ tools::smime_find_keys('*', 'sign') ],
     [ $generic_cert_file, $generic_key_file ],
     'directory with generic key/certificate only, signature operation'
 );
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'encrypt') ],
+    [ tools::smime_find_keys('*', 'encrypt') ],
     [ $generic_cert_file, $generic_key_file ],
     'directory with generic key/certificate only, encryption operation'
 );
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'decrypt') ],
+    [ tools::smime_find_keys('*', 'decrypt') ],
     [ [ $generic_cert_file ], [ $generic_key_file ] ],
     'directory with generic key/certificate only, decryption operation'
 );
@@ -83,19 +86,19 @@ touch($encryption_cert_file);
 touch($encryption_key_file);
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'sign') ],
+    [ tools::smime_find_keys('*', 'sign') ],
     [ $signature_cert_file, $signature_key_file ],
     'directory with dedicated key/certificates, signature operation'
 );
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'encrypt') ],
+    [ tools::smime_find_keys('*', 'encrypt') ],
     [ $encryption_cert_file, $encryption_key_file ],
     'directory with dedicated key/certificates, encryption operation'
 );
 
 is_deeply(
-    [ tools::smime_find_keys($cert_dir, 'decrypt') ],
+    [ tools::smime_find_keys('*', 'decrypt') ],
     [
         [ $generic_cert_file, $encryption_cert_file, $signature_cert_file ],
         [ $generic_key_file, $encryption_key_file, $signature_key_file ],
@@ -104,17 +107,17 @@ is_deeply(
 );
 
 ok(
-    !tools::smime_parse_cert({}),
+    !tools::smime_parse_cert(),
     'neither text nor file given',
 );
 
 ok(
-    !tools::smime_parse_cert({file => '/no/where'}),
+    !tools::smime_parse_cert(file => '/no/where'),
     'non-existing file',
 );
 
 ok(
-    !tools::smime_parse_cert({text => ''}),
+    !tools::smime_parse_cert(text => ''),
     'empty string',
 );
 
@@ -133,21 +136,21 @@ my $cert_data   = {
 };
 
 is_deeply(
-    tools::smime_parse_cert({
+    tools::smime_parse_cert(
         file    => $cert_file,
         #tmpdir  => $ENV{TMP},
         #openssl => 'openssl'
-    }),
+    ),
     $cert_data,
     'user certificate file parsing'
 );
 
 is_deeply(
-    tools::smime_parse_cert({
+    tools::smime_parse_cert(
         text    => $cert_string,
         #tmpdir  => $ENV{TMP},
         #openssl => 'openssl'
-    }),
+    ),
     $cert_data,
     'user certificate string parsing'
 );
@@ -165,11 +168,11 @@ my $ca_cert_data   = {
 };
 
 is_deeply(
-    tools::smime_parse_cert({
+    tools::smime_parse_cert(
         file    => $ca_cert_file,
         #tmpdir  => $ENV{TMP},
         #openssl => 'openssl'
-    }),
+    ),
     $ca_cert_data,
     'CA certificate file parsing'
 );
@@ -187,11 +190,11 @@ ok(
 );
 ok(-f $out_file, 'certificate extraction file exists');
 is_deeply(
-    tools::smime_parse_cert({
+    tools::smime_parse_cert(
         file    => $out_file,
         #tmpdir  => $ENV{TMP},
         #openssl => 'openssl'
-    }),
+    ),
     $cert_data,
     'certificate extraction file has expected content'
 );

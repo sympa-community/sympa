@@ -10268,23 +10268,23 @@ sub _load_list_param {
     }
 }
 
+BEGIN { eval 'use Crypt::OpenSSL::X509'; }
+
 ## Load the certificat file
 sub get_cert {
-
+    Log::do_log('debug2', '(%s)', @_);
     my $self   = shift;
     my $format = shift;
 
     ## Default format is PEM (can be DER)
     $format ||= 'pem';
 
-    Log::do_log('debug2', '(%s)', $self->{'name'});
-
     # we only send the encryption certificate: this is what the user
     # needs to send mail to the list; if he ever gets anything signed,
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
-    my ($certs, $keys) = tools::smime_find_keys($self->{dir}, 'encrypt');
+    my ($certs, $keys) = tools::smime_find_keys($self, 'encrypt');
 
     my @cert;
     if ($format eq 'pem') {
@@ -10308,25 +10308,19 @@ sub get_cert {
             }
         }
         close CERT;
-    } elsif ($format eq 'der') {
-        unless (open CERT,
-            "$Conf::Conf{'openssl'} x509 -in $certs -outform DER|") {
-            Log::do_log('err', '%s x509 -in %s -outform DER|',
-                $Conf::Conf{'openssl'}, $certs);
-            Log::do_log('err',
-                "Sympa::List::get_cert(): Unable to open get $certs in DER format: $!"
-            );
+    } elsif ($format eq 'der' and $Crypt::OpenSSL::X509::VERSION) {
+        my $x509 = eval { Crypt::OpenSSL::X509->new_from_file($certs) };
+        unless ($x509) {
+            Log::do_log('err', 'Unable to open certificate %s: %m', $certs);
             return undef;
         }
-
-        @cert = <CERT>;
-        close CERT;
+        @cert = ($x509->as_string(Crypt::OpenSSL::X509::FORMAT_ASN1()));
     } else {
         Log::do_log('err', 'Unknown "%s" certificate format', $format);
         return undef;
     }
 
-    return @cert;
+    return join '', @cert;
 }
 
 ## Load a config file of a list

@@ -1123,13 +1123,8 @@ sub smime_decrypt {
     my $list = $self->{'list'};    # the recipient of the msg
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
-    my $dir;
-    if (ref $list eq 'Sympa::List') {
-        $dir = $list->{'dir'};
-    } else {
-        $dir = $Conf::Conf{home} . '/sympa';    #FIXME
-    }
-    my ($certs, $keys) = tools::smime_find_keys($dir, 'decrypt');
+    my ($certs, $keys) =
+        tools::smime_find_keys($self->{'list'} || '*', 'decrypt');
     unless (defined $certs && @$certs) {
         Log::do_log('err',
             'Unable to decrypt message: missing certificate file');
@@ -1313,7 +1308,7 @@ sub smime_encrypt {
     if ($is_list eq 'list') {
         my $list = Sympa::List->new($email);
         ($usercert, $dummy) =
-            tools::smime_find_keys($list->{'dir'}, 'encrypt');
+            tools::smime_find_keys($list, 'encrypt');
     } else {
         my $base =
             "$Conf::Conf{'ssl_cert_dir'}/" . tools::escape_chars($email);
@@ -1440,7 +1435,7 @@ sub smime_sign {
     #FIXME
     return 1 unless $list;
 
-    my ($cert, $key) = tools::smime_find_keys($list->{dir}, 'sign');
+    my ($cert, $key) = tools::smime_find_keys($list, 'sign');
     my $temporary_file =
         $Conf::Conf{'tmpdir'} . "/" . $list->get_list_id() . "." . $$;
     my $temporary_pwd = $Conf::Conf{'tmpdir'} . '/pass.' . $$;
@@ -1614,22 +1609,20 @@ sub check_smime_signature {
         '-verify',
         ($Conf::Conf{'cafile'} ? ('-CAfile' => $Conf::Conf{'cafile'}) : ()),
         ($Conf::Conf{'capath'} ? ('-CApath' => $Conf::Conf{'capath'}) : ()),
-        '-signer' => $temporary_file
+        '-signer' => $temporary_file,
+        '-out' => '/dev/null'
     );
     Log::do_log('debug', '%s', join ' ', @cmd);
 
-    my ($saveout, $pipeout);
-    open $saveout, '>&STDOUT' and open STDOUT, '>', '/dev/null';
+    my $pipeout;
     unless (open $pipeout, '|-', @cmd) {
         Log::do_log('err', 'Unable to verify S/MIME signature from %s %s',
             $sender, $verify);
-        open STDOUT, '>&', $saveout;
         return undef;
     }
     print $pipeout $self->as_string;
     close $pipeout;
     my $status = $? >> 8;
-    open STDOUT, '>&', $saveout;
 
     if ($status) {
         Log::do_log(
@@ -1642,7 +1635,7 @@ sub check_smime_signature {
 
     ## second step is the message signer match the sender
     ## a better analyse should be performed to extract the signer email.
-    my $signer = tools::smime_parse_cert({file => $temporary_file});
+    my $signer = tools::smime_parse_cert(file => $temporary_file);
 
     unless ($signer->{'email'}{lc($sender)}) {
         unlink $temporary_file unless $main::options{'debug'};

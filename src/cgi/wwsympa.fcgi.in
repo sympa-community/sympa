@@ -55,6 +55,7 @@ use MIME::Parser;
 use POSIX qw();
 use Time::Local qw();
 use Data::Dumper;    # tentative
+BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa::Admin;
 use Sympa::Archive;
@@ -84,17 +85,6 @@ use Sympa::Tracking;
 use tt2;
 use Sympa::User;
 use wwslib;
-
-my $crypt_openssl_x509_ok;
-
-BEGIN {
-    if (eval "require Crypt::OpenSSL::X509") {
-        require Crypt::OpenSSL::X509;
-        $crypt_openssl_x509_ok = 1;
-    } else {
-        $crypt_openssl_x509_ok = 0;
-    }
-}
 
 ## WWSympa librairies
 my %options;
@@ -1390,8 +1380,8 @@ while ($query = new_loop()) {
             } elsif ($ENV{'SSL_CLIENT_S_DN'} =~ /\+MAIL=([^\+\/]+)$/) {
                 ## Compatibility issue with old a-sign.at certs
                 $param->{'user'}{'email'} = lc($1);
-            } elsif ($crypt_openssl_x509_ok and exists($ENV{SSL_CLIENT_CERT}))
-            {
+            } elsif ($Crypt::OpenSSL::X509::VERSION
+                and exists($ENV{SSL_CLIENT_CERT})) {
                 ## this is the X509v3 SubjectAlternativeName, and does only
                 ## require "SSLOptions +ExportCertData" without patching
                 ## mod_ssl -- massar@unix-ag.uni-kl.de
@@ -1850,7 +1840,7 @@ while ($query = new_loop()) {
         }
         ## Set cookies unless client use https authentication
         if ($param->{'user'}{'email'}) {
-            if ($param->{'user'}{'email'} ne 'x509') {
+            if ($param->{'user'}{'email'} ne 'x509') { #FIXME FIXME FIXME
                 $session->{'auth'} ||= 'classic';
                 $param->{'cookie_set'} = 1;
 
@@ -4490,6 +4480,8 @@ sub do_sso_login_succeeded {
     }
 }
 
+BEGIN { eval 'use Net::LDAP'; }
+
 sub is_ldap_user {
     my $auth = shift;    ## User email or UID
     wwslog('debug2', '(%s)', $auth);
@@ -4510,13 +4502,12 @@ sub is_ldap_user {
         return undef;
     }
 
-    unless (eval "require Net::LDAP") {
+    unless ($Net::LDAP::VERSION) {
         wwslog('err',
             "Unable to use LDAP library, Net::LDAP required,install perl-ldap (CPAN) first"
         );
         return undef;
     }
-    require Net::LDAP;
 
     my ($ldap_anonymous, $filter);
 
@@ -21188,8 +21179,8 @@ sub do_remind {
 sub do_load_cert {
     wwslog('info', '(%s)', $param->{'list'});
 
-    my @cert = $list->get_cert('der');
-    unless (@cert) {
+    my $cert = $list->get_cert('der');
+    unless ($cert) {
         Sympa::Report::reject_report_web('user', 'missing_cert', {},
             $param->{'action'}, $list);
         wwslog('info', 'No cert for this list');
@@ -21205,10 +21196,7 @@ sub do_load_cert {
         $ct = 'application/pkix-cert';
     }
     $param->{'bypass'} = 'extreme';
-    print "Content-type: $ct\n\n";
-    foreach my $l (@cert) {
-        print "$l";
-    }
+    printf "Content-type: %s\n\n%s", $ct, $cert;
     return 1;
 }
 

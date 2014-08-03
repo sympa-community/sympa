@@ -2449,21 +2449,52 @@ sub remove_dir {
     return 1;
 }
 
-## find the appropriate S/MIME keys/certs for $oper in $dir.
-## $oper can be:
-## 'sign' -> return the preferred signing key/cert
-## 'decrypt' -> return a list of possible decryption keys/certs
-## 'encrypt' -> return the preferred encryption key/cert
-## returns ($certs, $keys)
-## for 'sign' and 'encrypt', these are strings containing the absolute
-## filename
-## for 'decrypt', these are arrayrefs containing absolute filenames
+=over
+
+=item smime_find_keys ( $that, $operation )
+
+Find the appropriate S/MIME keys/certs for $operation of $that.
+
+$operation can be:
+
+=over
+
+=item 'sign'
+
+return the preferred signing key/cert
+
+=item 'decrypt'
+
+return a list of possible decryption keys/certs
+
+=item 'encrypt'
+
+return the preferred encryption key/cert
+
+=back
+
+Returnss C<($certs, $keys)>.
+For 'sign' and 'encrypt', these are strings containing the absolute filename.
+For 'decrypt', these are arrayrefs containing absolute filenames.
+
+=back
+
+=cut
+
 sub smime_find_keys {
-    my ($dir, $oper) = @_;
-    Log::do_log('debug', '(%s, %s)', $dir, $oper);
+    Log::do_log('debug', '(%s, %s)', @_);
+    my $that = shift || '*';
+    my $operation = shift;
+
+    my $dir;
+    if (ref $that eq 'Sympa::List') {
+        $dir = $that->{'dir'};
+    } else {
+        $dir = $Conf::Conf{'home'} . '/sympa';    #FIXME
+    }
 
     my (%certs, %keys);
-    my $ext = ($oper eq 'sign' ? 'sign' : 'enc');
+    my $ext = ($operation eq 'sign' ? 'sign' : 'enc');
 
     unless (opendir(D, $dir)) {
         Log::do_log('err', 'Unable to opendir %s: %m', $dir);
@@ -2500,7 +2531,7 @@ sub smime_find_keys {
     }
 
     my ($certs, $keys);
-    if ($oper eq 'decrypt') {
+    if ($operation eq 'decrypt') {
         $certs = [sort keys %certs];
         $keys  = [sort keys %keys];
     } else {
@@ -2512,13 +2543,15 @@ sub smime_find_keys {
             $keys  = "$dir/private_key";
         } else {
             Log::do_log('info', '%s: no certs/keys found for %s', $dir,
-                $oper);
+                $operation);
             return undef;
         }
     }
 
     return ($certs, $keys);
 }
+
+BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 # IN: hashref:
 # file => filename
@@ -2530,86 +2563,34 @@ sub smime_find_keys {
 #  enc => true if v3 purpose is encryption
 #  sign => true if v3 purpose is signing
 sub smime_parse_cert {
-    my ($arg) = @_;
-    Log::do_log('debug', '(%s)', join('/', %{$arg}));
-
-    unless (ref($arg)) {
-        Log::do_log('err', 'Must be called with hashref, not %s', ref($arg));
-        return undef;
-    }
+    Log::do_log('debug3', '(%s => %s)', @_);
+    my %arg = @_;
 
     ## Load certificate
-    my @cert;
-    if ($arg->{'text'}) {
-        @cert = ($arg->{'text'});
-    } elsif ($arg->{file}) {
-        unless (open(PSC, "$arg->{file}")) {
-            Log::do_log('err', 'Open %s: %m', $arg->{file});
-            return undef;
-        }
-        @cert = <PSC>;
-        close(PSC);
+    my $x509;
+    if ($arg{'text'}) {
+        $x509 =
+            eval { Crypt::OpenSSL::X509->new_from_string($arg{'text'}) };
+    } elsif ($arg{'file'}) {
+        $x509 =
+            eval { Crypt::OpenSSL::X509->new_from_file($arg{'file'}) };
     } else {
         Log::do_log('err', 'Neither "text" nor "file" given');
         return undef;
     }
-
-    ## Extract information from cert
-    my ($tmpfile) = $Conf::Conf{'tmpdir'} . "/parse_cert.$$";
-    unless (
-        open(PSC,
-            "| $Conf::Conf{openssl} x509 -email -subject -purpose -noout > $tmpfile"
-        )
-        ) {
-        Log::do_log('err', 'Open |openssl: %m');
-        return undef;
-    }
-    print PSC join('', @cert);
-
-    unless (close(PSC)) {
-        Log::do_log('err', 'Close openssl: %m, %s', $@);
+    unless ($x509) {
+        Log::do_log('err', 'Cannot parse certificate');
         return undef;
     }
 
-    unless (open(PSC, "$tmpfile")) {
-        Log::do_log('err', 'Open %s: %m', $tmpfile);
-        return undef;
-    }
-
-    my (%res, $purpose_section);
-
-    while (<PSC>) {
-        ## First lines before subject are the email address(es)
-
-        if (/^subject=\s+(\S.+)\s*$/) {
-            $res{'subject'} = $1;
-
-        } elsif (!$res{'subject'} && /\@/) {
-            my $email_address = lc($_);
-            chomp $email_address;
-            $res{'email'}{$email_address} = 1;
-
-            ## Purpose section appears at the end of the output
-            ## because options order matters for openssl
-        } elsif (/^Certificate purposes:/) {
-            $purpose_section = 1;
-        } elsif ($purpose_section) {
-            if (/^S\/MIME signing : (\S+)/) {
-                $res{purpose}->{sign} = ($1 eq 'Yes');
-
-            } elsif (/^S\/MIME encryption : (\S+)/) {
-                $res{purpose}->{enc} = ($1 eq 'Yes');
-            }
-        }
-    }
-
-    ## OK, so there's CAs which put the email in the subjectAlternateName only
-    ## and ones that put it in the DN only...
-    if (!$res{email} && ($res{subject} =~ /\/email(address)?=([^\/]+)/)) {
-        $res{email} = $1;
-    }
-    close(PSC);
-    unlink($tmpfile);
+    my %res;
+    $res{subject} =
+        join '', map { '/' . $_->as_string } @{$x509->subject_name->entries};
+    $res{email}{lc($x509->email)} = 1 if $x509->email;
+    # Check key usage roughy.
+    my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
+    $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
+    $res{purpose}->{enc}  = $purposes{'Key Encipherment'} ? 1 : '';
     return \%res;
 }
 
@@ -2618,19 +2599,19 @@ sub smime_extract_certs {
     Log::do_log('debug2', '(%s)', $mime->mime_type);
 
     if ($mime->mime_type =~ /application\/(x-)?pkcs7-/) {
-        unless (
-            open(MSGDUMP,
-                      "| $Conf::Conf{openssl} pkcs7 -print_certs "
-                    . "-inform der > $outfile"
-            )
-            ) {
+        my $pipeout;
+        unless (open $pipeout,
+            '|-', $Conf::Conf{openssl}, 'pkcs7', '-print_certs',
+            '-inform' => 'der', '-out' => $outfile) {
             Log::do_log('err', 'Unable to run openssl pkcs7: %m');
             return 0;
         }
-        print MSGDUMP $mime->bodyhandle->as_string;
-        close(MSGDUMP);
-        if ($?) {
-            Log::do_log('err', 'Openssl pkcs7 returned an error:', $? / 256);
+        print $pipeout $mime->bodyhandle->as_string;
+        close $pipeout;
+        my $status = $? >> 8;
+        if ($status) {
+            Log::do_log('err', 'Openssl pkcs7 returned an error: %s',
+                $status);
             return 0;
         }
         return 1;
@@ -3716,12 +3697,8 @@ sub decode_header {
     }
 }
 
-my $with_data_password;
+BEGIN { 'use Data::Password'; }
 
-BEGIN {
-    eval 'use Data::Password';
-    $with_data_password = !$@;
-}
 my @validation_messages = (
     {gettext_id => 'Not between %d and %d characters'},
     {gettext_id => 'Not %d characters or greater'},
@@ -3739,7 +3716,7 @@ sub password_validation {
     return undef
         unless $pv
             and defined $password
-            and $with_data_password;
+            and $Data::Password::VERSION;
 
     local (
         $Data::Password::DICTIONARY, $Data::Password::FOLLOWING,
