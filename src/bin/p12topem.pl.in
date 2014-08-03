@@ -106,15 +106,19 @@ if (   ($main::options{'help'} ne '')
         die;
     }
 
+    my $pipeout;
+
     system 'stty', '-echo';
     printf "password to access to $p12input :";
     chop($inpass = <STDIN>);
     print "\n";
     system 'stty', 'echo';
-    open PASS,
-        "| $openssl pkcs12 -in $p12input -out $cert -nokeys -clcerts -passin stdin";
-    print PASS "$inpass\n";
-    close PASS;
+    open $pipeout, '|-', $openssl, 'pkcs12',
+        '-in'  => $p12input,
+        '-out' => $cert,
+        '-nokeys', '-clcerts', '-passin' => 'stdin';
+    print $pipeout "$inpass\n";
+    close $pipeout;
 
     unless ($outpass) {
         system 'stty', '-echo';
@@ -123,10 +127,14 @@ if (   ($main::options{'help'} ne '')
         print "\n";
         system 'stty', 'echo';
     }
-    open PASS,
-        "| $openssl pkcs12 -in $p12input -out $privatekey -nocerts -passin stdin -des3 -passout stdin";
-    print PASS "$inpass\n$outpass\n";
-    close PASS;
+    open $pipeout, '|-', $openssl, 'pkcs12',
+        '-in'  => $p12input,
+        '-out' => $privatekey,
+        '-nocerts',
+        '-passin' => 'stdin',
+        '-des3', '-passout' => 'stdin';
+    print $pipeout "$inpass\n$outpass\n";
+    close $pipeout;
 
     printf "$privatekey and  $cert created.\n";
     exit;
