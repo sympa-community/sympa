@@ -563,27 +563,10 @@ sub trace_smime {
     my $message = shift;
     my $where   = shift;
 
-    my $trusted_ca_options = '';
-    $trusted_ca_options = "-CAfile $Conf::Conf{'cafile'} "
-        if ($Conf::Conf{'cafile'});
-    $trusted_ca_options .= "-CApath $Conf::Conf{'capath'} "
-        if ($Conf::Conf{'capath'});
+    my $result = $message->check_smime_signature;
+    return if defined $result and $result == 0;
 
-    unless (
-        open(MSGDUMP,
-            "| $Conf::Conf{'openssl'} smime -verify  $trusted_ca_options > /dev/null"
-        )
-        ) {
-        Log::do_log('err', 'Unable to verify S/MIME signature');
-        return undef;
-    }
-
-    print MSGDUMP $message->as_string;
-
-    close MSGDUMP;
-
-    my $status = $? >> 8;
-    unless ($status == 0) {
+    unless ($result) {
         Log::do_log('debug', 'Signature S/MIME NOT OK (%s)', $where);
     } else {
         Log::do_log('debug', 'Signature S/MIME OK (%s)', $where);
