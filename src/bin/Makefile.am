@@ -41,6 +41,9 @@ perlscripts = \
 
 script_SCRIPTS = $(dbscripts) $(perlscripts)
 
+man1_MANS = \
+	mod2html.1
+
 EXTRA_DIST = $(dbscripts) \
 	arc2webarc.pl.in \
 	crypt_passwd.pl.in \
@@ -52,7 +55,7 @@ EXTRA_DIST = $(dbscripts) \
 	tpl2tt2.pl.in \
 	sympa_soap_client.pl.in
 
-CLEANFILES = $(perlscripts) $(bin_SCRIPTS)
+CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
 arc2webarc.pl crypt_passwd.pl init_comment.pl mod2html.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl: Makefile
 	rm -f $@
@@ -84,4 +87,4 @@ sympa_soap_client.pl: $(srcdir)/sympa_soap_client.pl.in
 .pl.1: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=1 --center="sympa $(VERSION)" \
-		--lax --release="$(VERSION)" $* $@
+		--lax --release="$(VERSION)" $< $@
