@@ -524,9 +524,9 @@ sub check_spam_status {
     my $self = shift;
 
     my $robot_id =
-          $self->{'list'}
-        ? $self->{'list'}->{'domain'}
-        : $self->{'robot'};
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
 
     my $spam_status =
         Sympa::Scenario::request_action($robot_id || $Conf::Conf{'domain'},
@@ -654,9 +654,9 @@ sub check_dkim_signature {
     my $self = shift;
 
     my $robot_id =
-          $self->{'list'}
-        ? $self->{'list'}->{'domain'}
-        : $self->{'robot'};
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
 
     # verify DKIM signature
     if ($robot_id
@@ -1013,9 +1013,9 @@ sub clean_html {
     my $self = shift;
 
     my $robot =
-          $self->{list}
-        ? $self->{list}->{'domain'}
-        : $self->{robot};
+        (ref $self->{context} eq 'Sympa::List')
+        ? $self->{context}->{'domain'}
+        : $self->{context};
 
     my $entity = $self->as_entity->dup;
     if ($entity = _fix_html_part($entity, $robot)) {
@@ -1120,11 +1120,11 @@ sub smime_decrypt {
         return 0;
     }
 
-    my $list = $self->{'list'};    # the recipient of the msg
+    my $list = $self->{context};    # the recipient of the msg
 
     ## an empty "list" parameter means mail to sympa@, listmaster@...
     my ($certs, $keys) =
-        tools::smime_find_keys($self->{'list'} || '*', 'decrypt');
+        tools::smime_find_keys($self->{context} || '*', 'decrypt');
     unless (defined $certs && @$certs) {
         Log::do_log('err',
             'Unable to decrypt message: missing certificate file');
@@ -1307,8 +1307,7 @@ sub smime_encrypt {
     Log::do_log('debug2', '(%s, %s', $email, $is_list);
     if ($is_list eq 'list') {
         my $list = Sympa::List->new($email);
-        ($usercert, $dummy) =
-            tools::smime_find_keys($list, 'encrypt');
+        ($usercert, $dummy) = tools::smime_find_keys($list, 'encrypt');
     } else {
         my $base =
             "$Conf::Conf{'ssl_cert_dir'}/" . tools::escape_chars($email);
@@ -1428,7 +1427,7 @@ sub smime_sign {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    my $list       = $self->{'list'};
+    my $list       = $self->{context};
     my $key_passwd = $Conf::Conf{'key_passwd'};
     $key_passwd = '' unless defined $key_passwd;
 
@@ -1610,7 +1609,7 @@ sub check_smime_signature {
         ($Conf::Conf{'cafile'} ? ('-CAfile' => $Conf::Conf{'cafile'}) : ()),
         ($Conf::Conf{'capath'} ? ('-CApath' => $Conf::Conf{'capath'}) : ()),
         '-signer' => $temporary_file,
-        '-out' => '/dev/null'
+        '-out'    => '/dev/null'
     );
     Log::do_log('debug', '%s', join ' ', @cmd);
 

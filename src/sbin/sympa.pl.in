@@ -1398,9 +1398,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             %$metadata);
 
         my $robot =
-              $message->{'list'}
-            ? $message->{'list'}->{'domain'}
-            : $message->{'robot'};
+            (ref $message->{context} eq 'Sympa::List')
+            ? $message->{context}->{'domain'}
+            : $message->{context};
 
         Log::do_log('debug', "Processing %s/%s with priority %s",
             $t_spool, $filename, $highest_priority);
@@ -1590,9 +1590,9 @@ sub process_message {
         $message, $message->{'sender'}, $message->{'message_id'});
 
     my $robot =
-          $message->{'list'}
-        ? $message->{'list'}->{'domain'}
-        : $message->{'robot'};
+        (ref $message->{context} eq 'Sympa::List')
+        ? $message->{context}->{'domain'}
+        : $message->{context};
     my $listname = $message->{'listname'};
 
     ## Ignoring messages with no sender
@@ -1668,7 +1668,7 @@ sub process_message {
 
             return DoSendMessage($message, '*');
         }
-        unless ($message->{'list'}) {
+        unless (ref $message->{context} eq 'Sympa::List') {
             # Enable SMTP logging if required.
             $Sympa::Mail::log_smtp = $main::options{'mail'}
                 || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
@@ -1729,8 +1729,8 @@ sub process_message {
             $message->{'localpart'} . '@'
             . Conf::get_robot_conf($robot, 'host');
     } else {
-        $list = $message->{'list'};
-        unless (defined $list) {
+        $list = $message->{context};
+        unless (ref $list eq 'Sympa::List') {
             unless ($dyn_list_family) {
                 Log::do_log('err', 'List %s does not exist', $listname);
                 Sympa::Report::reject_report_msg(
@@ -2341,7 +2341,8 @@ sub DoForward {
             . Conf::get_robot_conf($robot, 'host');
         $priority = 0;
     } else {
-        unless ($list = $message->{'list'}) {
+        $list = $message->{context};
+        unless (ref $list eq 'Sympa::List') {
             Log::do_log(
                 'notice',
                 'Message for %s function %s ignored, unknown list %s (message ID: %s)',
@@ -2576,10 +2577,10 @@ sub DoMessage {
     my $sender = $message->{'sender'};
 
     ## Search for the list
-    my $list = $message->{'list'};
+    my $list = $message->{context};
 
     ## List unknown
-    unless ($list) {
+    unless (ref $list eq 'Sympa::List') {
         Log::do_log('notice', 'Unknown list %s', $listname);
         my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
 
@@ -3549,7 +3550,7 @@ sub SendDigest {
             [qw(localpart domainpart)]
         );
 
-        unless ($metadata and $metadata->{'list'}) {
+        unless ($metadata and $metadata->{context}) {
             Log::do_log('info', 'Unknown list %s, deleting digest file',
                 $listaddress);
             Log::db_log(
@@ -3569,7 +3570,7 @@ sub SendDigest {
             unlink $filename;
             next;    # foreach my $listaddress
         }
-        my $list     = $metadata->{'list'};
+        my $list     = $metadata->{context};
         my $robot_id = $list->{'domain'};
 
         $language->set_lang(

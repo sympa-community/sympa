@@ -1267,7 +1267,7 @@ sub upgrade {
             }
             my $message =
                 Sympa::Message->new_from_file("$spooldir/$filename",
-                list => $list);
+                context => $list);
             unless ($message) {
                 push @ignored, $filename;
                 next;

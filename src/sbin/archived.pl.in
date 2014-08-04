@@ -285,7 +285,7 @@ while (!$end) {
                     # Analyze message to get sender from envelope sender and
                     # sender_headers.
                     my $arc_message = Sympa::Message->new_from_file(
-                        "$arcpath/arctxt/$arc_file", list => $list);
+                        "$arcpath/arctxt/$arc_file", context => $list);
                     unless ($arc_message) {
                         Log::do_log('err',
                             'Unable to load new message %s/arctxt/%s',
@@ -966,9 +966,8 @@ sub mail2arc {
         }
 
         # Save arctxt dump of original message.
-        my $message =
-            Sympa::Message->new_from_file($queue . '/' . $file,
-            list => $list);
+        my $message = Sympa::Message->new_from_file($queue . '/' . $file,
+            context => $list);
         unless ($message) {
             die sprintf 'Couldn\'t open file %s/%s: %s', $queue, $file, $!;
         }

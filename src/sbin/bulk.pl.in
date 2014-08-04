@@ -342,8 +342,7 @@ while (!$end) {
 
             $message = Sympa::Message->new(
                 $message_from_spool->{'messageasstring'},
-                list              => $list,
-                robot             => $robot,
+                context => ($list || $robot || '*'),
                 'dkim_d'          => $message_from_spool->{'dkim_d'},
                 'dkim_i'          => $message_from_spool->{'dkim_i'},
                 'dkim_selector'   => $message_from_spool->{'dkim_selector'},
@@ -369,7 +368,7 @@ while (!$end) {
                 'notice',
                 'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
                 $message,
-                ($message->{'list'} || $message->{'robot'}),
+                $message->{context},
                 $message->{'priority_message'},
                 time() - $message->{'delivery_date'}
             );

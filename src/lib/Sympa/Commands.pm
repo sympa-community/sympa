@@ -2694,7 +2694,7 @@ sub distribute {
     }
 
     ## Open and parse the file
-    my $message = Sympa::Message->new_from_file($file, list => $list);
+    my $message = Sympa::Message->new_from_file($file, context => $list);
     unless ($message) {
         Log::do_log('err', 'Unable to create Message object %s', $file);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
@@ -2875,7 +2875,7 @@ sub confirm {
         return 'msg_not_found';
     }
 
-    my $list = $message->{'list'};
+    my $list = $message->{context};
     $language->set_lang($list->{'admin'}{'lang'});
 
     my $msgid      = $message->{'message_id'};

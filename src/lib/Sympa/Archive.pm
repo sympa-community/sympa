@@ -121,7 +121,7 @@ sub scan_dir_archive {
 
         my $message =
             Sympa::Message->new_from_file("$dir/$month/arctxt/$file",
-            list => $list);
+            context => $list);
         unless ($message) {
             Log::do_log('err', 'Unable to create Message object from file %s',
                 $file);
@@ -323,11 +323,8 @@ sub clean_archived_message {
     my $input  = shift;
     my $output = shift;
 
-    my $message = Sympa::Message->new_from_file(
-        $input,
-        list  => $list,
-        robot => $robot
-    );
+    my $message =
+        Sympa::Message->new_from_file($input, context => ($list || $robot),);
     unless ($message) {
         Log::do_log('err', 'Unable to create a Message object with file %s',
             $input);

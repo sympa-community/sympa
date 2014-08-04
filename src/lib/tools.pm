@@ -2543,8 +2543,8 @@ sub smime_find_keys {
             $certs = "$dir/cert.pem";
             $keys  = "$dir/private_key";
         } else {
-            Log::do_log('info', '%s: no certs/keys found for %s', $dir,
-                $operation);
+            Log::do_log('info', '%s: no certs/keys found for %s',
+                $that, $operation);
             return undef;
         }
     }
@@ -2570,11 +2570,9 @@ sub smime_parse_cert {
     ## Load certificate
     my $x509;
     if ($arg{'text'}) {
-        $x509 =
-            eval { Crypt::OpenSSL::X509->new_from_string($arg{'text'}) };
+        $x509 = eval { Crypt::OpenSSL::X509->new_from_string($arg{'text'}) };
     } elsif ($arg{'file'}) {
-        $x509 =
-            eval { Crypt::OpenSSL::X509->new_from_file($arg{'file'}) };
+        $x509 = eval { Crypt::OpenSSL::X509->new_from_file($arg{'file'}) };
     } else {
         Log::do_log('err', 'Neither "text" nor "file" given');
         return undef;
@@ -2585,13 +2583,13 @@ sub smime_parse_cert {
     }
 
     my %res;
-    $res{subject} =
-        join '', map { '/' . $_->as_string } @{$x509->subject_name->entries};
+    $res{subject} = join '',
+        map { '/' . $_->as_string } @{$x509->subject_name->entries};
     $res{email}{lc($x509->email)} = 1 if $x509->email;
     # Check key usage roughy.
     my %purposes = $x509->extensions_by_name->{keyUsage}->hash_bit_string;
     $res{purpose}->{sign} = $purposes{'Digital Signature'} ? 1 : '';
-    $res{purpose}->{enc}  = $purposes{'Key Encipherment'} ? 1 : '';
+    $res{purpose}->{enc}  = $purposes{'Key Encipherment'}  ? 1 : '';
     return \%res;
 }
 
@@ -2601,9 +2599,12 @@ sub smime_extract_certs {
 
     if ($mime->mime_type =~ /application\/(x-)?pkcs7-/) {
         my $pipeout;
-        unless (open $pipeout,
+        unless (
+            open $pipeout,
             '|-', $Conf::Conf{openssl}, 'pkcs7', '-print_certs',
-            '-inform' => 'der', '-out' => $outfile) {
+            '-inform' => 'der',
+            '-out'    => $outfile
+            ) {
             Log::do_log('err', 'Unable to run openssl pkcs7: %m');
             return 0;
         }
@@ -4005,14 +4006,13 @@ sub unmarshal_metadata {
         $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');
     }
 
-    $data->{'robot'}    = $robot_id if defined $robot_id;
-    $data->{'list'}     = $list     if $list;
+    $data->{context} = $list || $robot_id || '*';
     $data->{'listname'} = $listname if $listname;
     $data->{'listtype'} = $type     if defined $type;
     $data->{'priority'} = $priority if defined $priority;
 
-    Log::do_log('debug3', 'messagekey=%s, list=%s, robot=%s, priority=%s',
-        $marshalled, $data->{'list'}, $data->{'robot'}, $data->{'priority'});
+    Log::do_log('debug3', 'messagekey=%s, context=%s, priority=%s',
+        $marshalled, $data->{context}, $data->{'priority'});
 
     return $data;
 }

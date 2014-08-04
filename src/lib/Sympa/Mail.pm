@@ -319,8 +319,7 @@ sub mail_file {
 
     my $message = Sympa::Message->new(
         $headers . $message_as_string,
-        #XXX list => $list,
-        robot => $robot
+        context => $robot,                   #FIXME: no list context
     );
     return undef unless $message;
 

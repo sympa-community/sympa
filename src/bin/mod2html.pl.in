@@ -53,7 +53,7 @@ foreach my $msg_file (sort grep(!/^\./, readdir SPOOL)) {
     my $message = Sympa::Message->new_from_file($modspool . '/' . $msg_file,
         %$metadata);
     next unless $message;
-    my $list = $message->{'list'};
+    my $list = $message->{context};
 
     print "Creating HTML version for $modspool/$msg_file\n";
 

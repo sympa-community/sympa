@@ -1840,7 +1840,7 @@ while ($query = new_loop()) {
         }
         ## Set cookies unless client use https authentication
         if ($param->{'user'}{'email'}) {
-            if ($param->{'user'}{'email'} ne 'x509') { #FIXME FIXME FIXME
+            if ($param->{'user'}{'email'} ne 'x509') {    #FIXME FIXME FIXME
                 $session->{'auth'} ||= 'classic';
                 $param->{'cookie_set'} = 1;
 
@@ -8509,7 +8509,7 @@ sub do_modindex {
         ## Load msg
         my $message = Sympa::Message->new_from_file(
             $Conf::Conf{'queuemod'} . '/' . $msg,
-            list => $list);
+            context => $list);
 
         unless (defined $message) {
             Sympa::Report::reject_report_web(
@@ -9004,7 +9004,7 @@ sub do_reject {
             last if (-f $file);
         }
         my $message = undef;
-        $message = Sympa::Message->new_from_file($file, list => $list)
+        $message = Sympa::Message->new_from_file($file, context => $list)
             if $file;
         unless ($message) {
             Sympa::Report::reject_report_web('user', 'already_moderated', {},
@@ -9191,7 +9191,7 @@ sub do_distribute {
         }
 
         my $message = undef;
-        $message = Sympa::Message->new_from_file($file, list => $list)
+        $message = Sympa::Message->new_from_file($file, context => $list)
             if $file;
         unless ($message) {
             Sympa::Report::reject_report_web('user', 'already_moderated', {},
@@ -9308,7 +9308,7 @@ sub do_add_frommod {
     foreach my $id (split /,/, $in{'id'}) {
         my $file =
             $Conf::Conf{'queuemod'} . '/' . $list->get_list_id() . '_' . $id;
-        my $message = Sympa::Message->new_from_file($file, list => $list);
+        my $message = Sympa::Message->new_from_file($file, context => $list);
 # Not yet implemented
 #        unless ($message) {
 #            # if the message has been accepted via WWSympa, it's in spool
@@ -10421,7 +10421,7 @@ sub do_send_me {
     if ($msgfile) {
         $message =
             Sympa::Message->new_from_file("$arcpath/arctxt/$msgfile",
-            list => $list);
+            context => $list);
         unless ($message) {
             $param->{'status'} = 'message_err';
             wwslog('info', 'Could not read file %s',
@@ -22485,7 +22485,7 @@ sub do_tag_topic_by_sender {
     my $authqueue = Conf::get_robot_conf($robot, 'queueauth');
     my $filename  = "$authqueue\/$listname" . '@' . "$robot\_$in{'authkey'}";
 
-    my $message = Sympa::Message->new_from_file($filename, list => $list);
+    my $message = Sympa::Message->new_from_file($filename, context => $list);
     unless ($message) {
         Sympa::Report::reject_report_web('intern',
             'cannot_parse_message retrived by key %s for list %s@%s',

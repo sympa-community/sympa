@@ -2124,7 +2124,7 @@ sub distribute_digest {
         $text =~ s{$/\z}{};
         $text =~ s/\r?\z/\n/ unless $text =~ /\n\z/;
 
-        my $message = Sympa::Message->new($text, list => $self);
+        my $message = Sympa::Message->new($text, context => $self);
         next unless $message;
 
         push @list_of_message, $message;
@@ -3453,8 +3453,8 @@ sub archive_send_last {
     return unless ($self->is_archived());
     my $dir = $self->{'dir'} . '/archives';
 
-    my $message =
-        Sympa::Message->new_from_file($dir . '/last_message', list => $self);
+    my $message = Sympa::Message->new_from_file($dir . '/last_message',
+        context => $self);
     unless (defined $message) {
         Log::do_log('err', 'Unable to create Message object %s',
             "$dir/last_message");
