@@ -220,7 +220,7 @@ sub message_from_spool {
 
     unless (
         $sth = SDM::do_query(
-            "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid, dkim_d_bulkspool AS  dkim_d,  dkim_i_bulkspool AS  dkim_i, dkim_privatekey_bulkspool AS dkim_privatekey, dkim_selector_bulkspool AS dkim_selector FROM bulkspool_table WHERE messagekey_bulkspool = %s",
+            "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid FROM bulkspool_table WHERE messagekey_bulkspool = %s",
             SDM::quote($messagekey)
         )
         ) {
@@ -236,11 +236,7 @@ sub message_from_spool {
     return (
         {   'messageasstring' =>
                 MIME::Base64::decode($message_from_spool->{'message'}),
-            'messageid'       => $message_from_spool->{'messageid'},
-            'dkim_d'          => $message_from_spool->{'dkim_d'},
-            'dkim_i'          => $message_from_spool->{'dkim_i'},
-            'dkim_selector'   => $message_from_spool->{'dkim_selector'},
-            'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
+            'messageid' => $message_from_spool->{'messageid'},
         }
     );
 
@@ -271,12 +267,11 @@ sub store {
     $verp = 0 unless ($verp);
     my $merge = $data{'merge'};
     $merge = 0 unless ($merge);
-    my $dkim        = $data{'dkim'};
     my $tag_as_last = $data{'tag_as_last'};
 
     Log::do_log(
         'debug',
-        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, tracking = %s, merge = %s, dkim: d= %s i=%s, last: %s)',
+        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, tracking = %s, merge = %s, last: %s)',
         $from,
         $robot,
         $listname,
@@ -285,8 +280,6 @@ sub store {
         $verp,
         $tracking,
         $merge,
-        $dkim->{'d'},
-        $dkim->{'i'},
         $tag_as_last
     );
 
@@ -299,7 +292,7 @@ sub store {
     my $parser = MIME::Parser->new();
     $parser->output_to_core(1);
 
-    my $msg            = $message->as_string;
+    my $msg            = $message->to_string;
     my $message_sender = $message->{'sender'};
 
     $msg = MIME::Base64::encode($msg);
@@ -345,33 +338,21 @@ sub store {
         if ($message_already_on_spool == 0) {
             my $statement = q{INSERT INTO bulkspool_table
 		  (messagekey_bulkspool, messageid_bulkspool,
-		   message_bulkspool, lock_bulkspool,
-		   dkim_d_bulkspool, dkim_i_bulkspool,
-		   dkim_selector_bulkspool, dkim_privatekey_bulkspool)
-		  VALUES (?, ?, ?, 1, ?, ?, ?, ?)};
+		   message_bulkspool, lock_bulkspool)
+		  VALUES (?, ?, ?, 1)};
             my $statementtrace = $statement;
             $statementtrace =~ s/\n\s*/ /g;
             $statementtrace =~ s/\?/\%s/g;
 
-            unless (
-                SDM::do_prepared_query(
-                    $statement,        $messagekey,
-                    $msg_id,           $msg,
-                    $dkim->{d},        $dkim->{i},
-                    $dkim->{selector}, $dkim->{private_key}
-                )
-                ) {
+            unless (SDM::do_prepared_query(
+                $statement, $messagekey, $msg_id, $msg)) {
                 Log::do_log(
                     'err',
                     'Unable to add message in bulkspool_table "%s"',
                     sprintf($statementtrace,
                         SDM::quote($messagekey),
                         SDM::quote($msg_id),
-                        SDM::quote(substr($msg, 0, 100)),
-                        SDM::quote($dkim->{d}),
-                        SDM::quote($dkim->{i}),
-                        SDM::quote($dkim->{selector}),
-                        SDM::quote(substr($dkim->{private_key}, 0, 30)))
+                        SDM::quote(substr($msg, 0, 100)))
                 );
                 return undef;
             }

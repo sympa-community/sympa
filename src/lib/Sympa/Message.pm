@@ -156,6 +156,8 @@ sub new {
             $self->{'envelope_sender'} = $v;
         } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
             $self->{'spam_status'} = $v;
+        } elsif ($k eq 'X-Sympa-Shelved') {        # New in 6.2a.41
+            $self->{'shelved'} = {map { ($_ => 1) } split /\s*,\s*/, $v};
         } else {
             Log::do_log('err', 'Unknown meta information: "%s: %s"', $k, $v);
         }
@@ -714,6 +716,12 @@ sub to_string {
     if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
         $serialized .= sprintf "X-Sympa-Spam-Status: %s\n",
             $self->{'spam_status'};
+    }
+    if (defined $self->{'shelved'} and %{$self->{'shelved'}}) {
+        $serialized .= sprintf "X-Sympa-Shelved: %s\n",
+            join(',',
+            grep { $self->{shelved}{$_} }
+            sort keys %{$self->{shelved}});
     }
     # This terminates pseudo-header part for attributes.
     unless (defined $self->{'envelope_sender'}) {
@@ -3091,13 +3099,26 @@ Get unique identifier of instance.
 sub get_id {
     my $self = shift;
 
+    my $id;
     # Tentative.  Alternatives for more general ID in the future.
-    return $self->{'messagekey'} if $self->{'messagekey'};
-    if ($self->{'filename'}) {
+    if ($self->{'messagekey'}) {
+        $id = $self->{'messagekey'};
+    } elsif ($self->{'filename'}) {
         my @parts = split /\//, $self->{'filename'};
-        return pop @parts;
+        $id = pop @parts;
+    } else {
+        $id = $self->{'message_id'};
     }
-    return $self->{'message_id'};
+
+    my $shelved;
+    if (%{$self->{shelved} || {}}) {
+        $shelved = sprintf 'shelved=%s',
+            join(',',
+            grep { $self->{shelved}{$_} }
+            sort keys %{$self->{shelved}});
+    }
+
+    return join '/', grep {$_} ($id, $shelved);
 }
 
 1;

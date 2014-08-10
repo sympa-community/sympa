@@ -1562,18 +1562,12 @@ sub _get_single_param_value {
 #
 # IN : -$self (+): ref(List)
 #      -$message (+): ref(Message)
-#      -$apply_dkim_signature : on | off
 # OUT : -$numsmtp : number of sendmail process
 ####################################################
 sub distribute_msg {
-    my $self  = shift;
-    my %param = @_;
-
-    my $message              = $param{'message'};
-    my $apply_dkim_signature = $param{'apply_dkim_signature'};
-
-    Log::do_log('debug2', '(%s, message=%s, apply_dkim_signature=%s)',
-        $self, $message, $apply_dkim_signature);
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $self    = shift;
+    my $message = shift;
 
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
@@ -2052,11 +2046,8 @@ sub distribute_msg {
     }
 
     ## Blindly send the message to all users.
-    my $numsmtp = $self->send_msg(
-        $message,
-        'apply_dkim_signature' => $apply_dkim_signature,
-        'apply_tracking'       => $apply_tracking
-    );
+    my $numsmtp =
+        $self->send_msg($message, 'apply_tracking' => $apply_tracking);
 
     $self->savestats() if (defined($numsmtp));
     return $numsmtp;
@@ -2604,34 +2595,26 @@ sub send_file {
 
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
         unless ($data->{'boundary'});
-    $data->{'sign_mode'} = $sign_mode;
-
-    if ((Conf::get_robot_conf($self->{'domain'}, 'dkim_feature') eq 'on')
-        && (Conf::get_robot_conf($self->{'domain'}, 'dkim_add_signature_to')
-            =~ /robot/)
-        ) {
-        $data->{'dkim'} =
-            tools::get_dkim_parameters({'robot' => $self->{'domain'}});
-    }
-    # use verp excepted for alarms. We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service
-    $data->{'use_bulk'} = 1
-        unless ($data->{'alarm'});
 
     my $message =
         Sympa::Message->new_from_template($self, $filename, $who, $data);
+
+    $message->{shelved}{dkim_sign} = 1
+        if Conf::get_robot_conf($self->{'domain'}, 'dkim_feature') eq 'on'
+            and
+            Conf::get_robot_conf($self->{'domain'}, 'dkim_add_signature_to')
+            =~ /robot/;
+    # use verp excepted for alarms. We should make this configurable in order
+    # to support Sympa server on a machine without any MTA service
+    my $use_bulk = 1 unless $data->{'alarm'};
+
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'   => $message,
-            'rcpt'      => $who,
-            'from'      => $data->{'return_path'},
-            'robot'     => $robot,
-            'listname'  => $self->{'name'},
+            $message, $who, $data->{'return_path'},
             'priority'  => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'sign_mode' => $data->{'sign_mode'},
-            'use_bulk'  => $data->{'use_bulk'},
-            'dkim'      => $data->{'dkim'},
+            'sign_mode' => $sign_mode,
+            'use_bulk'  => $use_bulk,
         )
         ) {
         Log::do_log('err', 'Could not send template %s to %s',
@@ -2653,7 +2636,7 @@ sub send_file {
 #
 #
 # IN : -$self (+): ref(List)
-#      -$message (+): ref(Message)
+#      -$message (+): ref(Message), possiblly {shelved}{dkim_sign} flag set.
 # OUT : -$numsmtp : number of sendmail process
 #       | 0 : no subscriber for sending message in list
 #       | undef
@@ -2664,8 +2647,7 @@ sub send_msg {
     my $message = shift;
     my %param   = @_;
 
-    my $apply_dkim_signature = $param{'apply_dkim_signature'};
-    my $apply_tracking       = $param{'apply_tracking'};
+    my $apply_tracking = $param{'apply_tracking'};
 
     my $original_message_id = $message->{'message_id'};
     my $robot               = $self->{'domain'};
@@ -2717,13 +2699,6 @@ sub send_msg {
         $tags_to_use->{'tag_noverp'} = 0;
     }
 
-    my $dkim_parameters;
-    # prepare dkim parameters
-    if ($apply_dkim_signature eq 'on') {
-        $dkim_parameters = tools::get_dkim_parameters(
-            {'robot' => $self->{'domain'}, 'listname' => $self->{'name'}});
-    }
-
     # Separate subscribers depending on user reception option and also if verp
     # a dicovered some bounce for them.
     # Storing the not empty subscribers' arrays into a hash.
@@ -2769,12 +2744,11 @@ sub send_msg {
 
         if ($#selected_tabrcpt > -1) {
             my $result = Sympa::Mail::mail_message(
-                'message'         => $new_message,
-                'rcpt'            => \@selected_tabrcpt,
-                'list'            => $self,
-                'verp'            => 'off',
-                'dkim_parameters' => $dkim_parameters,
-                'tag_as_last'     => $tags_to_use->{'tag_noverp'}
+                'message'     => $new_message,
+                'rcpt'        => \@selected_tabrcpt,
+                'list'        => $self,
+                'verp'        => 'off',
+                'tag_as_last' => $tags_to_use->{'tag_noverp'}
             );
             unless (defined $result) {
                 Log::do_log(
@@ -2821,12 +2795,11 @@ sub send_msg {
         ## prepare VERP sending.
         if (@verp_selected_tabrcpt) {
             my $result = Sympa::Mail::mail_message(
-                'message'         => $new_message,
-                'rcpt'            => \@verp_selected_tabrcpt,
-                'list'            => $self,
-                'verp'            => 'on',
-                'dkim_parameters' => $dkim_parameters,
-                'tag_as_last'     => $tags_to_use->{'tag_verp'}
+                'message'     => $new_message,
+                'rcpt'        => \@verp_selected_tabrcpt,
+                'list'        => $self,
+                'verp'        => 'on',
+                'tag_as_last' => $tags_to_use->{'tag_verp'}
             );
             unless (defined $result) {
                 Log::do_log(

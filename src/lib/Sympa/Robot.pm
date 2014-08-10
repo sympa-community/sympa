@@ -140,32 +140,26 @@ sub send_global_file {
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
         unless ($data->{'boundary'});
 
-    if (   (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on')
-        && (Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~ /robot/))
-    {
-        $data->{'dkim'} = tools::get_dkim_parameters({'robot' => $robot});
-    }
-
-    # use verp excepted for alarms. We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service
-    $data->{'use_bulk'} = 1
-        unless ($data->{'alarm'});
-
     my $message =
         Sympa::Message->new_from_template($robot, $filename, $who, $data);
     return $message->as_string if $options->{'parse_and_return'};
 
+    $message->{shelved}{dkim_sign} = 1
+        if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
+            and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
+            /robot/;
+    # use verp excepted for alarms. We should make this configurable in order
+    # to support Sympa server on a machine without any MTA service
+    my $use_bulk = 1 unless $data->{'alarm'};
+
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'   => $message,
-            'rcpt'      => $who,
-            'from'      => $data->{'return_path'},
-            'robot'     => $robot,
-            'priority'  => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'sign_mode' => $data->{'sign_mode'},
-            'use_bulk'  => $data->{'use_bulk'},
-            'dkim'      => $data->{'dkim'},
+            $message, $who,
+            $data->{'return_path'},
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+            'sign_mode' => $data->{'sign_mode'},    #FIXME: may not be set.
+            'use_bulk'  => $use_bulk,
         )
         ) {
         Log::do_log('err', 'Could not send template %s to %s',

@@ -104,7 +104,6 @@ sub mail_message {
     my $list        = $params{'list'};
     my $verp        = $params{'verp'};
     my @rcpt        = @{$params{'rcpt'}};
-    my $dkim        = $params{'dkim_parameters'};
     my $tag_as_last = $params{'tag_as_last'};
 
     my $host  = $list->{'admin'}{'host'};
@@ -235,7 +234,6 @@ sub mail_message {
             'encrypt'     => $message->{'smime_crypted'},
             'use_bulk'    => 1,
             'verp'        => $verp,
-            'dkim'        => $dkim,
             'merge'       => $list->{'admin'}{'merge_feature'},
             'tag_as_last' => $tag_as_last
         )
@@ -269,10 +267,7 @@ sub mail_forward {
 
     unless (
         defined sending(
-            'message'  => $message,
-            'rcpt'     => $rcpt,
-            'from'     => $from,
-            'robot'    => $robot,
+            $message, $rcpt, $from,
             'priority' => Conf::get_robot_conf($robot, 'request_priority'),
         )
         ) {
@@ -350,7 +345,6 @@ sub sendto {
     my $encrypt     = $params{'encrypt'};
     my $verp        = $params{'verp'};
     my $merge       = $params{'merge'};
-    my $dkim        = $params{'dkim'};
     my $use_bulk    = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
 
@@ -399,11 +393,7 @@ sub sendto {
                 }
                 unless (
                     sending(
-                        'message'       => $new_message,
-                        'rcpt'          => $email,
-                        'from'          => $from,
-                        'listname'      => $listname,
-                        'robot'         => $robot,
+                        $new_message, $email, $from,
                         'priority'      => $priority,
                         'delivery_date' => $delivery_date,
                         'use_bulk'      => $use_bulk,
@@ -418,17 +408,12 @@ sub sendto {
         }
     } else {
         my $result = sending(
-            'message'       => $message,
-            'rcpt'          => $rcpt,
-            'from'          => $from,
-            'listname'      => $listname,
-            'robot'         => $robot,
+            $message, $rcpt, $from,
             'priority'      => $priority,
             'delivery_date' => $delivery_date,
             'verp'          => $verp,
             'merge'         => $merge,
             'use_bulk'      => $use_bulk,
-            'dkim'          => $dkim,
             'tag_as_last'   => $tag_as_last
         );
         return $result;
@@ -444,39 +429,46 @@ sub sendto {
 # Signing if needed
 #
 #
-# IN : -$msg(+) : ref(MIME::Entity) | string - message to send
-#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY) - recepients
-#       (for SMTP : "RCPT To:" field)
-#      -$from(+) : for SMTP "MAIL From:" field , for
-#        spool sending : "X-Sympa-From" field
-#      -$robot(+) : robot
-#      -$listname : listname | ''
-#      -$sign_mode(+) : 'smime' | 'none' for signing
-#      -$verp
-#      -dkim : a hash for dkim parameters
+# IN : -$message: ref(Sympa::Message) - message to be sent
+#      -$rcpt: SCALAR | ref(ARRAY) - recipients for SMTP "RCPT To:" field.
+#      -$from: for SMTP, "MAIL From:" field; for spool sending, "X-Sympa-From"
+#              field
+#      -sign_mode => mode: 'smime' for signing
+#      -verp => 'on' | 'mdn' | 'dsn' | undef
+#      -merge => 'on' | 'off'
+#      -use_bulk => boolean
 #
 # OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
 #           | undef
 #
 ####################################################
 sub sending {
-    my %params           = @_;
-    my $message          = $params{'message'};
-    my $rcpt             = $params{'rcpt'};
-    my $from             = $params{'from'};
-    my $robot            = $params{'robot'};
-    my $listname         = $params{'listname'};
+    my $message = shift;
+    my $rcpt    = shift;
+    my $from    = shift;
+    my %params  = @_;
+
+    my $that = $message->{context};
+    my ($robot_id, $listname);
+    if (ref $that eq 'Sympa::List') {
+        $robot_id = $that->{'domain'};
+        $listname = $that->{'name'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
+
     my $sign_mode        = $params{'sign_mode'};
     my $sympa_email      = $params{'sympa_email'};
     my $priority_message = $params{'priority'};
     my $priority_packet =
-        Conf::get_robot_conf($robot, 'sympa_packet_priority');
+        Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date);
     my $verp        = $params{'verp'};
     my $merge       = $params{'merge'};
     my $use_bulk    = $params{'use_bulk'};
-    my $dkim        = $params{'dkim'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
@@ -505,7 +497,7 @@ sub sending {
             'message'          => $message,
             'rcpts'            => $rcpt,
             'from'             => $from,
-            'robot'            => $robot,
+            'robot'            => $robot_id,
             'listname'         => $listname,
             'priority_message' => $priority_message,
             'priority_packet'  => $priority_packet,
@@ -513,14 +505,13 @@ sub sending {
             'verp'             => $verpfeature,
             'tracking'         => $trackingfeature,
             'merge'            => $mergefeature,
-            'dkim'             => $dkim,
             'tag_as_last'      => $tag_as_last,
         );
 
         unless (defined $bulk_code) {
             Log::do_log('err', 'Failed to store message for list %s',
                 $listname);
-            Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot,
+            Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot_id,
                 {'listname' => $listname});
             return undef;
         }
@@ -529,7 +520,7 @@ sub sending {
         # it to standard spool
         Log::do_log('debug', "NOT USING BULK");
 
-        $sympa_email = Conf::get_robot_conf($robot, 'sympa');
+        $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
         $sympa_file =
             "$send_spool/T.$sympa_email." . time . '.' . int(rand(10000));
         unless (open TMP, ">$sympa_file") {
@@ -562,7 +553,7 @@ sub sending {
         }
     } else {    # send it now
         Log::do_log('debug', "NOT USING BULK");
-        *SMTP = smtpto($from, $rcpt, $robot);
+        *SMTP = smtpto($from, $rcpt, $robot_id);
 
         # Send message stripping Return-Path pseudo-header field.
         my $msg_string = $message->as_string;

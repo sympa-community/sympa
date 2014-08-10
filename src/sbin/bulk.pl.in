@@ -343,10 +343,6 @@ while (!$end) {
             $message = Sympa::Message->new(
                 $message_from_spool->{'messageasstring'},
                 context => ($list || $robot || '*'),
-                'dkim_d'          => $message_from_spool->{'dkim_d'},
-                'dkim_i'          => $message_from_spool->{'dkim_i'},
-                'dkim_selector'   => $message_from_spool->{'dkim_selector'},
-                'dkim_privatekey' => $message_from_spool->{'dkim_privatekey'},
                 %$bulk
             );
             unless ($message) {
@@ -414,6 +410,11 @@ while (!$end) {
         #  -5 remove existing signature if altered
         #  -6 dkim sign
 
+        my $dkim;
+        if ($message->{shelved}{dkim_sign}) {
+            $dkim = tools::get_dkim_parameters($message->{context});
+        }
+
         if (   $bulk->{'verp'}
             or $bulk->{'merge'}
             or $bulk->{'tracking'} eq 'dsn'
@@ -462,16 +463,16 @@ while (!$end) {
                 if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
                     $new_message->remove_invalid_dkim_signature;
                 }
-                if ($new_message->{'dkim_d'}) {
+                if ($new_message->{shelved}{dkim_sign} and $dkim) {
                     # apply dkim signature AFTER any other message
                     # transformation.
                     $new_message->dkim_sign(
-                        'dkim_d'        => $new_message->{'dkim_d'},
-                        'dkim_i'        => $new_message->{'dkim_i'},
-                        'dkim_selector' => $new_message->{'dkim_selector'},
-                        'dkim_privatekey' =>
-                            $new_message->{'dkim_privatekey'},
+                        'dkim_d'          => $dkim->{'d'},
+                        'dkim_i'          => $dkim->{'i'},
+                        'dkim_selector'   => $dkim->{'selector'},
+                        'dkim_privatekey' => $dkim->{'private_key'},
                     );
+                    delete $new_message->{shelved}{dkim_sign};
                 }
 
                 # trace_smime($new_message, 'dkim');
@@ -492,13 +493,14 @@ while (!$end) {
                 $new_message->remove_invalid_dkim_signature;
             }
             # Initial message
-            if ($new_message->{'dkim_d'}) {
+            if ($new_message->{shelved}{dkim_sign} and $dkim) {
                 $new_message->dkim_sign(
-                    'dkim_d'          => $new_message->{'dkim_d'},
-                    'dkim_i'          => $new_message->{'dkim_i'},
-                    'dkim_selector'   => $new_message->{'dkim_selector'},
-                    'dkim_privatekey' => $new_message->{'dkim_privatekey'},
+                    'dkim_d'          => $dkim->{'d'},
+                    'dkim_i'          => $dkim->{'i'},
+                    'dkim_selector'   => $dkim->{'selector'},
+                    'dkim_privatekey' => $dkim->{'private_key'},
                 );
+                delete $new_message->{shelved}{dkim_sign};
             }
 
             # trace_smime($new_message,'dkim 2');

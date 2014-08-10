@@ -9255,10 +9255,9 @@ sub do_distribute {
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'  => $message,
-            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
-            'from'     => Conf::get_robot_conf($robot, 'request'),
-            'robot'    => $robot,
+            $message,
+            Conf::get_robot_conf($robot, 'sympa'),
+            Conf::get_robot_conf($robot, 'request'),
             'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
@@ -21123,17 +21122,16 @@ sub do_remind {
         context => $robot);
     $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
     $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
-    $message->add_header('From',       $param->{'user'}{'email'});
-    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    $message->add_header('From', $param->{'user'}{'email'});
+    $message->add_header('To', Conf::get_robot_conf($robot, 'sympa'));
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'  => $message,
-            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
-            'from'     => Conf::get_robot_conf($robot, 'request'),
-            'robot'    => $robot,
+            $message,
+            Conf::get_robot_conf($robot, 'sympa'),
+            Conf::get_robot_conf($robot, 'request'),
             'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
@@ -22357,10 +22355,8 @@ sub do_send_mail {
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'  => $message,
-            'rcpt'     => $to,
-            'from'     => Conf::get_robot_conf($robot, 'sympa'),
-            'robot'    => $robot,
+            $message, $to,
+            Conf::get_robot_conf($robot, 'sympa'),
             'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
@@ -22576,17 +22572,16 @@ sub do_tag_topic_by_sender {
         context => $robot);
     $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
     $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
-    $message->add_header('From',       $sender);
-    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    $message->add_header('From', $sender);
+    $message->add_header('To', Conf::get_robot_conf($robot, 'sympa'));
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
     unless (
         $message
         and defined Sympa::Mail::sending(
-            'message'  => $message,
-            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
-            'from'     => Conf::get_robot_conf($robot, 'request'),
-            'robot'    => $robot,
+            $message,
+            Conf::get_robot_conf($robot, 'sympa'),
+            Conf::get_robot_conf($robot, 'request'),
             'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {

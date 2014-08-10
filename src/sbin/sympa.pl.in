@@ -2828,21 +2828,21 @@ sub DoMessage {
 
         if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
             || ($main::daemon_usage == Conf::DAEMON_ALL)) {
-
-            my $apply_dkim_signature = 'off';
-            $apply_dkim_signature = 'on'
+            $message->{shelved}{dkim_sign} = 1
                 if tools::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any');
-            $apply_dkim_signature = 'on'
-                if tools::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'smime_authenticated_messages')
-                and $message->{'smime_signed'};
-            $apply_dkim_signature = 'on'
-                if tools::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'dkim_authenticated_messages')
-                and $message->{'dkim_pass'};
+                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+                or (
+                tools::is_in_array(
+                    $list->{'admin'}{'dkim_signature_apply_on'},
+                    'smime_authenticated_messages')
+                and $message->{'smime_signed'}
+                )
+                or (
+                tools::is_in_array(
+                    $list->{'admin'}{'dkim_signature_apply_on'},
+                    'dkim_authenticated_messages')
+                and $message->{'dkim_pass'}
+                );
 
             ## Check TT2 syntax for merge_feature.
             unless ($message->test_personalize($list)) {
@@ -2858,10 +2858,7 @@ sub DoMessage {
 
             my $numsmtp;
             #XXX eval {
-            $numsmtp = $list->distribute_msg(
-                'message'              => $message,
-                'apply_dkim_signature' => $apply_dkim_signature
-            );
+            $numsmtp = $list->distribute_msg($message);
             #XXX };
             ## Keep track of known message IDs...if any
             $msgid_table{$list->get_list_id()}{$messageid} = time

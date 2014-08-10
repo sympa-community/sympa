@@ -232,30 +232,30 @@ my %full_db_struct = (
                     'when set to 1, this field prevents Sympa from processing the message',
                 'order' => 5,
             },
-            'dkim_privatekey_bulkspool' => {
-                'struct' => 'varchar(2000)',
-                'doc' =>
-                    'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
-                'order' => 6,
-            },
-            'dkim_selector_bulkspool' => {
-                'struct' => 'varchar(50)',
-                'doc' =>
-                    'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
-                'order' => 7,
-            },
-            'dkim_d_bulkspool' => {
-                'struct' => 'varchar(50)',
-                'doc' =>
-                    'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
-                'order' => 8,
-            },
-            'dkim_i_bulkspool' => {
-                'struct' => 'varchar(100)',
-                'doc' =>
-                    'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
-                'order' => 9,
-            },
+            #'dkim_privatekey_bulkspool' => {
+            #    'struct' => 'varchar(2000)',
+            #    'doc' =>
+            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
+            #    'order' => 6,
+            #},
+            #'dkim_selector_bulkspool' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc' =>
+            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
+            #    'order' => 7,
+            #},
+            #'dkim_d_bulkspool' => {
+            #    'struct' => 'varchar(50)',
+            #    'doc' =>
+            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
+            #    'order' => 8,
+            #},
+            #'dkim_i_bulkspool' => {
+            #    'struct' => 'varchar(100)',
+            #    'doc' =>
+            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
+            #    'order' => 9,
+            #},
         },
         'doc'   => 'This table contains the messages to be sent by bulk.pl',
         'order' => 3,

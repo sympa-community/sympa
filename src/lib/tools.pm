@@ -810,24 +810,23 @@ sub get_template_path {
 }
 
 sub get_dkim_parameters {
+    Log::do_log('debug2', '(%s)', @_);
+    my $that = shift;
 
-    my $params = shift;
-
-    my $robot    = $params->{'robot'};
-    my $listname = $params->{'listname'};
-    Log::do_log('debug2', '(%s, %s)', $robot, $listname);
+    my ($robot_id, $list);
+    if (ref $that eq 'Sympa::List') {
+        $robot_id = $that->{'domain'};
+        $list     = $that;
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
 
     my $data;
     my $keyfile;
-    if ($listname) {
+    if ($list) {
         # fetch dkim parameter in list context
-        my $list = Sympa::List->new($listname, $robot);
-        unless ($list) {
-            Log::do_log('err', "Could not load list %s@%s", $listname,
-                $robot);
-            return undef;
-        }
-
         $data->{'d'} = $list->{'admin'}{'dkim_parameters'}{'signer_domain'};
         if ($list->{'admin'}{'dkim_parameters'}{'signer_identity'}) {
             $data->{'i'} =
@@ -841,23 +840,21 @@ sub get_dkim_parameters {
         $keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'};
     } else {
         # in robot context
-        $data->{'d'} = Conf::get_robot_conf($robot, 'dkim_signer_domain');
-        $data->{'i'} = Conf::get_robot_conf($robot, 'dkim_signer_identity');
-        $data->{'selector'} = Conf::get_robot_conf($robot, 'dkim_selector');
-        $keyfile = Conf::get_robot_conf($robot, 'dkim_private_key_path');
+        $data->{'d'} = Conf::get_robot_conf($robot_id, 'dkim_signer_domain');
+        $data->{'i'} =
+            Conf::get_robot_conf($robot_id, 'dkim_signer_identity');
+        $data->{'selector'} =
+            Conf::get_robot_conf($robot_id, 'dkim_selector');
+        $keyfile = Conf::get_robot_conf($robot_id, 'dkim_private_key_path');
     }
-    unless (open(KEY, $keyfile)) {
-        Log::do_log(
-            'err',
-            "Could not read dkim private key %s",
-            Conf::get_robot_conf($robot, 'dkim_signer_selector')
-        );
+    my $fh;
+    unless (open $fh, '<', $keyfile) {
+        Log::do_log('err', 'Could not read dkim private key %s: %m',
+            $keyfile);
         return undef;
     }
-    while (<KEY>) {
-        $data->{'private_key'} .= $_;
-    }
-    close(KEY);
+    $data->{'private_key'} = do { local $/; <$fh> };
+    close $fh;
 
     return $data;
 }

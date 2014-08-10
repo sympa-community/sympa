@@ -2712,18 +2712,13 @@ sub distribute {
     if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
         || ($main::daemon_usage == Conf::DAEMON_ALL)) {
         my $numsmtp;
-        my $apply_dkim_signature = 'off';
-        $apply_dkim_signature = 'on'
+        $message->{shelved}{dkim_sign} = 1
             if tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
-            'any');
-        $apply_dkim_signature = 'on'
-            if tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
+            'any')
+            or tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
             'editor_validated_messages');
 
-        $numsmtp = $list->distribute_msg(
-            'message'              => $message,
-            'apply_dkim_signature' => $apply_dkim_signature
-        );
+        $numsmtp = $list->distribute_msg($message);
         unless (defined $numsmtp) {
             Log::do_log('err', 'Unable to send message to list %s', $name);
             Sympa::Report::reject_report_msg('intern', '', $sender,
@@ -3031,20 +3026,14 @@ sub confirm {
         if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
             || ($main::daemon_usage == Conf::DAEMON_ALL)) {
             my $numsmtp;
-            my $apply_dkim_signature = 'off';
-            $apply_dkim_signature = 'on'
+            $message->{shelved}{dkim_sign} = 1
                 if tools::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any');
-            $apply_dkim_signature = 'on'
-                if tools::is_in_array(
+                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+                or tools::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'},
                 'md5_authenticated_messages');
 
-            $numsmtp = $list->distribute_msg(
-                'message'              => $message,
-                'apply_dkim_signature' => $apply_dkim_signature
-            );
-
+            $numsmtp = $list->distribute_msg($message);
             unless (defined $numsmtp) {
                 Log::do_log('err', 'Unable to send message to list %s',
                     $list->{'name'});
