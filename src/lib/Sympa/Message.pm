@@ -975,6 +975,7 @@ sub remove_invalid_dkim_signature {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
+    return unless $self->get_header('DKIM-Signature');
     unless (tools::dkim_verifier($self->as_string)) {
         Log::do_log('info',
             'DKIM signature of message %s is invalid, removing', $self);
