@@ -350,6 +350,294 @@ sub _get_message_id {
 
 =over
 
+=item new_from_template ( $that, $filename, $rcpt, $data )
+
+I<Constructor>.
+XXX
+
+Parameters:
+
+=over
+
+=item $that
+
+Content: Sympa::List, robot or '*'.
+
+=item $filename
+
+tt2 filename (with .tt2) or C<''>.
+
+=item $rcpt
+
+Scalar or arrayref: SMTP "RCPT To:" field.
+
+=item $data
+
+Hashref used to parse tt2 file, with keys:
+
+=over
+
+=item return_path
+
+SMTP "MAIL From:" field if send by smtp, "X-Sympa-From:" field if send by spool
+
+=item to
+
+"To:" header field
+
+=item lang
+
+tt2 language if $filename
+
+=item from
+
+"From:" field if not a full msg
+
+=item subject
+
+"Subject:" field if not a full msg
+
+=item replyto
+
+"Reply-to:" field if not a full msg
+
+=item body
+
+Body message if $filename is C<''>.
+
+=item headers
+
+Hashref with keys are headers mail
+
+=back
+
+=item $robot
+
+=back
+
+Returns:
+
+New L<Sympa::Message> instance, of C<undef> if something went wrong.
+
+=back
+
+=cut
+
+# Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring().
+sub new_from_template {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
+    my $class    = shift;
+    my $that     = shift || '*';
+    my $filename = shift;
+    my $rcpt     = shift;
+    my $data     = shift;
+
+    my $robot_id =
+          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+        : ($that and $that ne '*') ? $that
+        :                            '*';
+
+    my $header_possible = $data->{'header_possible'};
+
+    my ($to, $message_as_string);
+
+    my %header_ok;    # hash containing no missing headers
+    my $existing_headers = 0;    # the message already contains headers
+
+    ## We may receive a list of recipients
+    if (ref($rcpt)) {
+        unless (ref($rcpt) eq 'ARRAY') {
+            Log::do_log('notice', 'Wrong type of reference for rcpt');
+            return undef;
+        }
+    }
+
+    ## Charset for encoding
+    $data->{'charset'} ||= tools::lang2charset($data->{'lang'});
+
+    ## TT2 file parsing
+    #FIXME: Check TT2 parse error
+    if ($filename =~ /\.tt2$/) {
+        my $output;
+        my @path = split /\//, $filename;
+        tt2::parse_tt2($data, $path[$#path], \$output);  #FIXME: include path?
+        $message_as_string .= join('', $output);
+        $header_possible = 1;
+    } else {                                             # or not
+        $message_as_string .= $data->{'body'};
+    }
+
+    # Does the message include headers ?
+    if ($data->{'headers'}) {
+        foreach my $field (keys %{$data->{'headers'}}) {
+            $field =~ tr/A-Z/a-z/;
+            $header_ok{$field} = 1;
+        }
+    }
+    if ($header_possible) {
+        foreach my $line (split(/\n/, $message_as_string)) {
+            last if ($line =~ /^\s*$/);
+            if ($line =~ /^[\w-]+:\s*/) {
+                ## A header field
+                $existing_headers = 1;
+            } elsif ($existing_headers && ($line =~ /^\s/)) {
+                ## Following of a header field
+                next;
+            } else {
+                last;
+            }
+
+            foreach my $header (
+                qw(message-id date to from subject reply-to
+                mime-version content-type content-transfer-encoding)
+                ) {
+                if ($line =~ /^$header\s*:/i) {
+                    $header_ok{$header} = 1;
+                    last;
+                }
+            }
+        }
+    }
+
+    ## ADD MISSING HEADERS
+    my $headers = "";
+
+    unless ($header_ok{'message-id'}) {
+        $headers .=
+            sprintf("Message-Id: %s\n", tools::get_message_id($robot_id));
+    }
+
+    unless ($header_ok{'date'}) {
+        # Format current time.
+        # If setting local timezone fails, fallback to UTC.
+        my $date =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+        $headers .= sprintf "Date: %s\n", $date;
+    }
+
+    unless ($header_ok{'to'}) {
+        # Currently, bare e-mail address is assumed.  Complex ones such as
+        # "phrase" <email> won't be allowed.
+        if (ref($rcpt)) {
+            if ($data->{'to'}) {
+                $to = $data->{'to'};
+            } else {
+                $to = join(",\n   ", @{$rcpt});
+            }
+        } else {
+            $to = $rcpt;
+        }
+        $headers .= "To: $to\n";
+    }
+    unless ($header_ok{'from'}) {
+        if (   !defined $data->{'from'}
+            or $data->{'from'} eq 'sympa'
+            or $data->{'from'} eq $data->{'conf'}{'sympa'}) {
+            $headers .= 'From: '
+                . tools::addrencode(
+                $data->{'conf'}{'sympa'},
+                $data->{'conf'}{'gecos'},
+                $data->{'charset'}
+                ) . "\n";
+        } else {
+            $headers .= "From: "
+                . MIME::EncWords::encode_mimewords(
+                Encode::decode('utf8', $data->{'from'}),
+                'Encoding' => 'A',
+                'Charset'  => $data->{'charset'},
+                'Field'    => 'From'
+                ) . "\n";
+        }
+    }
+    unless ($header_ok{'subject'}) {
+        $headers .= "Subject: "
+            . MIME::EncWords::encode_mimewords(
+            Encode::decode('utf8', $data->{'subject'}),
+            'Encoding' => 'A',
+            'Charset'  => $data->{'charset'},
+            'Field'    => 'Subject'
+            ) . "\n";
+    }
+    unless ($header_ok{'reply-to'}) {
+        $headers .= "Reply-to: "
+            . MIME::EncWords::encode_mimewords(
+            Encode::decode('utf8', $data->{'replyto'}),
+            'Encoding' => 'A',
+            'Charset'  => $data->{'charset'},
+            'Field'    => 'Reply-to'
+            )
+            . "\n"
+            if ($data->{'replyto'});
+    }
+    if ($data->{'headers'}) {
+        foreach my $field (keys %{$data->{'headers'}}) {
+            $headers .=
+                $field . ': '
+                . MIME::EncWords::encode_mimewords(
+                Encode::decode('utf8', $data->{'headers'}{$field}),
+                'Encoding' => 'A',
+                'Charset'  => $data->{'charset'},
+                'Field'    => $field
+                ) . "\n";
+        }
+    }
+    unless ($header_ok{'mime-version'}) {
+        $headers .= "MIME-Version: 1.0\n";
+    }
+    unless ($header_ok{'content-type'}) {
+        $headers .=
+            "Content-Type: text/plain; charset=" . $data->{'charset'} . "\n";
+    }
+    unless ($header_ok{'content-transfer-encoding'}) {
+        $headers .= "Content-Transfer-Encoding: 8bit\n";
+    }
+
+    ## Determine what value the Auto-Submitted header field should take
+    ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
+    ## the header filed can have one of the following values:
+    ## auto-generated, auto-replied, auto-forwarded.
+    ## The header should not be set when wwsympa sends a command/mail to
+    ## sympa.pl through its spool
+    unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
+        ## Default value is 'auto-generated'
+        my $header_value = $data->{'auto_submitted'} || 'auto-generated';
+        $headers .= "Auto-Submitted: $header_value\n";
+    }
+
+    unless ($existing_headers) {
+        $headers .= "\n";
+    }
+
+    ## All these data provide mail attachements in service messages
+    my @msgs = ();
+    if (ref($data->{'msg_list'}) eq 'ARRAY') {
+        @msgs =
+            map { $_->{'msg'} || $_->{'full_msg'} } @{$data->{'msg_list'}};
+    } elsif ($data->{'spool'}) {
+        @msgs = @{$data->{'spool'}};
+    } elsif ($data->{'msg'}) {
+        push @msgs, $data->{'msg'};
+    } elsif ($data->{'msg_path'} and open IN, '<' . $data->{'msg_path'}) {
+        push @msgs, join('', <IN>);
+        close IN;
+    } elsif ($data->{'file'} and open IN, '<' . $data->{'file'}) {
+        push @msgs, join('', <IN>);
+        close IN;
+    }
+
+    my $self = $class->new($headers . $message_as_string, context => $that);
+    return undef unless $self;
+
+    unless ($self->reformat_utf8_message(\@msgs, $data->{'charset'})) {
+        Log::do_log('err', 'Failed to reformat message');
+    }
+
+    return $self;
+}
+
+=over
+
 =item dup ( )
 
 I<Copy constructor>.
@@ -1251,7 +1539,7 @@ sub smime_encrypt {
     my $entity;
 
     Log::do_log('debug2', '(%s, %s', $email, $is_list);
-    if ($is_list eq 'list') { #FIXME: Not in case
+    if ($is_list eq 'list') {    #FIXME: Not in case
         my $list = Sympa::List->new($email);
         my $dummy;
         ($certfile, $dummy) = tools::smime_find_keys($list, 'encrypt');
@@ -1294,9 +1582,9 @@ sub smime_encrypt {
     }
 
     #FIXME: is $self->body_as_string respect base64 number of char per line ??
-    my $msg_string =
-        eval { $smime->encrypt(
-            $dup_head->as_string . "\n" . $self->body_as_string) };
+    my $msg_string = eval {
+        $smime->encrypt($dup_head->as_string . "\n" . $self->body_as_string);
+    };
     unless (defined $msg_string) {
         Log::do_log('err', 'Unable to S/MIME encrypt message: %s', $@);
         return undef;

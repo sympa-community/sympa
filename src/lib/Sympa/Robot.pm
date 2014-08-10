@@ -151,12 +151,23 @@ sub send_global_file {
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
 
-    my $r =
-        Sympa::Mail::mail_file($robot, $filename, $who, $data,
-        $options->{'parse_and_return'});
-    return $r if ($options->{'parse_and_return'});
+    my $message =
+        Sympa::Message->new_from_template($robot, $filename, $who, $data);
+    return $message->as_string if $options->{'parse_and_return'};
 
-    unless ($r) {
+    unless (
+        $message
+        and defined Sympa::Mail::sending(
+            'message'   => $message,
+            'rcpt'      => $who,
+            'from'      => $data->{'return_path'},
+            'robot'     => $robot,
+            'priority'  => Conf::get_robot_conf($robot, 'sympa_priority'),
+            'sign_mode' => $data->{'sign_mode'},
+            'use_bulk'  => $data->{'use_bulk'},
+            'dkim'      => $data->{'dkim'},
+        )
+        ) {
         Log::do_log('err', 'Could not send template %s to %s',
             $filename, $who);
         return undef;

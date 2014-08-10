@@ -9242,19 +9242,24 @@ sub do_distribute {
                 . $id);
     }
 
-    #FIXME: commands should be injected into incoming spool directly.
-    my $data = {
-        'headers' => {
-            'Message-ID'     => tools::get_message_id($robot),
-            'X-Sympa-NoWrap' => 'yes'
-        },
-        'from'               => $param->{'user'}{'email'},
-        'not_auto_submitted' => 1,
-        'body'               => join("\n", @mail_command),
-    };
+    #FIXME: Commands should be injected into incoming spool directly.
+    #FIXME: Message should have sufficient authentication level.
+    my $message =
+        Sympa::Message->new(sprintf("\n\n%s\n", join("\n", @mail_command)),
+        context => $robot);
+    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
+    $message->add_header('Message-ID', tools::get_message_id($robot));
+    $message->add_header('From',       $param->{'user'}{'email'});
+    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
     unless (
-        Sympa::Mail::mail_file(
-            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        $message
+        and defined Sympa::Mail::sending(
+            'message'  => $message,
+            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
+            'from'     => Conf::get_robot_conf($robot, 'request'),
+            'robot'    => $robot,
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
         Sympa::Report::reject_report_web(
@@ -21111,20 +21116,25 @@ sub do_remind {
         $mail_command = sprintf "REMIND %s", $param->{'list'};
     }
 
+    #FIXME: Commands should be injected into incoming spool directly.
+    #FIXME: Message should have sufficient authentication level.
     my $time = time;
-    my $data = {
-        'headers' => {
-            'Message-ID'     => '<' . $time . '@wwsympa>',
-            'X-Sympa-NoWrap' => 'yes'
-        },
-        'from' => $param->{'user'}{'email'},
-        'body' => $mail_command
-    };
+    my $message = Sympa::Message->new(sprintf("\n\n%s\n", $mail_command),
+        context => $robot);
+    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
+    $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
+    $message->add_header('From',       $param->{'user'}{'email'});
+    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
-    $data->{'not_auto_submitted'} = 1;
     unless (
-        Sympa::Mail::mail_file(
-            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        $message
+        and defined Sympa::Mail::sending(
+            'message'  => $message,
+            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
+            'from'     => Conf::get_robot_conf($robot, 'request'),
+            'robot'    => $robot,
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
         Sympa::Report::reject_report_web(
@@ -22325,21 +22335,35 @@ sub do_send_mail {
         }
     }
 
-    my $data = {
-        'headers' => {'Message-ID' => $in{'message_id'}},
-        'subject' => $in{'subject'},
-        'return_path'     => Conf::get_robot_conf($robot, 'sympa'),
-        'to'              => $to,
-        'body'            => "From: $from\n" . $in{'body'},
-        'sign_mode'       => '',
-        'header_possible' => '1'
-    };
-
-    $data->{'headers'}{'In-Reply-To'} = $in{'in_reply_to'}
-        if (($in{'in_reply_to'}) && $in{'in_reply_to'} ne '<>');
-    $data->{'not_auto_submitted'} = 1;
-    $data->{'not_a_list'} = 1 if $in{'sub_action'} eq 'sendmailtome';
-    unless (Sympa::Mail::mail_file($robot, '', $to, $data)) {
+    #FIXME: Message should have sufficient authentication level.
+    my $message = Sympa::Message->new_from_template(
+        $list, '', $to,
+        {   'headers' => {
+                'Message-ID' => $in{'message_id'},
+                (     ($in{'in_reply_to'} and $in{'in_reply_to'} ne '<>')
+                    ? ('In-Reply-To' => $in{'in_reply_to'})
+                    : ()
+                ),
+            },
+            'subject'            => $in{'subject'},
+            'return_path'        => Conf::get_robot_conf($robot, 'sympa'),
+            'to'                 => $to,
+            'from'               => $from,
+            'body'               => $in{'body'},
+            'not_auto_submitted' => 1,
+            'not_a_list' => ($in{'sub_action'} eq 'sendmailtome'),  #not used?
+        },
+    );
+    unless (
+        $message
+        and defined Sympa::Mail::sending(
+            'message'  => $message,
+            'rcpt'     => $to,
+            'from'     => Conf::get_robot_conf($robot, 'sympa'),
+            'robot'    => $robot,
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+        )
+        ) {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_send_mail',
@@ -22525,18 +22549,6 @@ sub do_tag_topic_by_sender {
     my $filetopic =
         $list->tag_topic($in{'message_id'}, $list_topics, 'sender');
 
-    ## CONFIRM
-    my $time = time;
-    my $data = {
-        'headers' => {
-            'Message-ID'     => '<' . $time . '@wwsympa>',
-            'X-Sympa-NoWrap' => 'yes'
-        },
-        'from' => $sender
-    };
-
-    $data->{'body'} = sprintf("QUIET CONFIRM %s\n", $in{'authkey'});
-
     my $queueauth = Conf::get_robot_conf($robot, 'queueauth');
     my $filemsg = "$queueauth/$list->{'name'}_$in{'authkey'}";
 
@@ -22555,10 +22567,27 @@ sub do_tag_topic_by_sender {
         return undef;
     }
 
-    $data->{'not_auto_submitted'} = 1;
+    ## CONFIRM
+    #FIXME: Commands should be injected into incoming spool directly.
+    #FIXME: Message should have sufficient authentication level.
+    my $time = time;
+    my $message =
+        Sympa::Message->new(sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
+        context => $robot);
+    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
+    $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
+    $message->add_header('From',       $sender);
+    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
+
     unless (
-        Sympa::Mail::mail_file(
-            $robot, '', Conf::get_robot_conf($robot, 'sympa'), $data
+        $message
+        and defined Sympa::Mail::sending(
+            'message'  => $message,
+            'rcpt'     => Conf::get_robot_conf($robot, 'sympa'),
+            'from'     => Conf::get_robot_conf($robot, 'request'),
+            'robot'    => $robot,
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
         )
         ) {
         Sympa::Report::reject_report_web(

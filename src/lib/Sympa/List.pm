@@ -2467,7 +2467,6 @@ sub send_file {
     my ($self, $tpl, $who, $robot, $context) = @_;
     Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
 
-    my $name = $self->{'name'};
     my $sign_mode;
 
     my $data = tools::dup_var($context);
@@ -2574,7 +2573,7 @@ sub send_file {
 
     $data->{'sender'} ||= $who;
     $data->{'list'}{'lang'}    = $self->{'admin'}{'lang'};
-    $data->{'list'}{'name'}    = $name;
+    $data->{'list'}{'name'}    = $self->{'name'};
     $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot;
     $data->{'list'}{'host'}    = $self->{'admin'}{'host'};
     $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
@@ -2618,8 +2617,23 @@ sub send_file {
     # to support Sympa server on a machine without any MTA service
     $data->{'use_bulk'} = 1
         unless ($data->{'alarm'});
-    unless (Sympa::Mail::mail_file($self->{'domain'}, $filename, $who, $data))
-    {
+
+    my $message =
+        Sympa::Message->new_from_template($self, $filename, $who, $data);
+    unless (
+        $message
+        and defined Sympa::Mail::sending(
+            'message'   => $message,
+            'rcpt'      => $who,
+            'from'      => $data->{'return_path'},
+            'robot'     => $robot,
+            'listname'  => $self->{'name'},
+            'priority'  => Conf::get_robot_conf($robot, 'sympa_priority'),
+            'sign_mode' => $data->{'sign_mode'},
+            'use_bulk'  => $data->{'use_bulk'},
+            'dkim'      => $data->{'dkim'},
+        )
+        ) {
         Log::do_log('err', 'Could not send template %s to %s',
             $filename, $who);
         return undef;
@@ -2654,7 +2668,6 @@ sub send_msg {
     my $apply_tracking       = $param{'apply_tracking'};
 
     my $original_message_id = $message->{'message_id'};
-    my $name                = $self->{'name'};
     my $robot               = $self->{'domain'};
     my $admin               = $self->{'admin'};
     my $total               = $self->get_total('nocache');
@@ -2664,7 +2677,7 @@ sub send_msg {
     }
 
     unless ($total > 0) {
-        Log::do_log('info', 'No subscriber in list %s', $name);
+        Log::do_log('info', 'No subscriber in list %s', $self);
         return 0;
     }
 
@@ -2843,7 +2856,6 @@ sub get_recipients_per_mode {
     my $message = shift;
     my %options = @_;
 
-    my $name  = $self->{'name'};
     my $robot = $self->{'domain'};
 
     my $sender_line = $message->as_entity->head->get('From');
