@@ -34,7 +34,9 @@ plan tests => 19;
 #    'non existing directory'
 #);
 
-my $home_dir = File::Temp->newdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
+my $home_dir =
+    File::Temp->newdir("test.$$.XXXXX",
+    CLEANUP => ($ENV{TEST_DEBUG} ? 0 : 1));
 $Conf::Conf{'home'} = $home_dir;
 my $cert_dir = $home_dir . '/sympa';
 mkdir $cert_dir;
@@ -174,7 +176,8 @@ SKIP: {
     );
 }
 
-my $parser   = MIME::Parser->new();
+my $parser = MIME::Parser->new();
+$parser->output_to_core(1);
 my $entity   = $parser->parse_open('t/samples/signed.eml');
 my $out_file = $cert_dir . '/out';
 SKIP: {
