@@ -404,7 +404,7 @@ while (!$end) {
 
         # message transformation must be done in the folowing order
         #  -1 headers modifications (done in sympa.pl)
-        #  -2 merge
+        #  -2 personalize (a.k.a. "merge")
         #  -3 smime sign
         #  -4 smime encrypt
         #  -5 remove existing signature if altered
@@ -415,8 +415,8 @@ while (!$end) {
             $dkim = tools::get_dkim_parameters($message->{context});
         }
 
-        if (   $bulk->{'verp'}
-            or $bulk->{'merge'}
+        if (   $message->{shelved}{merge}
+            or $bulk->{'verp'}
             or $bulk->{'tracking'} eq 'dsn'
             or $bulk->{'tracking'} eq 'mdn') {
             # message needs personalization
@@ -444,7 +444,7 @@ while (!$end) {
                 } else {    # VERP
                     $return_path = $list->get_bounce_address($rcpt);
                 }
-                if ($bulk->{'merge'}) {
+                if ($new_message->{shelved}{merge}) {
                     unless ($new_message->personalize($list, $rcpt)) {
                         #FIXME: Mark packet as "bad".
                         Log::do_log('err', 'Erreur d appel personalize()');
@@ -458,6 +458,7 @@ while (!$end) {
 
                         last;    # foreach $rcpt
                     }
+                    delete $new_message->{shelved}{merge};
                 }
 
                 if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {

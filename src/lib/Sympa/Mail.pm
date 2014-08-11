@@ -106,7 +106,6 @@ sub mail_message {
     my @rcpt        = @{$params{'rcpt'}};
     my $tag_as_last = $params{'tag_as_last'};
 
-    my $host  = $list->{'admin'}{'host'};
     my $robot = $list->{'domain'};
 
     unless (ref $message and $message->isa('Sympa::Message')) {
@@ -115,10 +114,7 @@ sub mail_message {
     }
 
     # normal return_path (ie used if verp is not enabled)
-    my $from =
-          $list->{'name'}
-        . Conf::get_robot_conf($robot, 'return_path_suffix') . '@'
-        . $host;
+    my $from = $list->get_list_address('return_path');
 
     Log::do_log(
         'debug',
@@ -135,14 +131,6 @@ sub mail_message {
     my ($i, $j, $nrcpt);
     my $size    = 0;
     my $numsmtp = 0;
-
-#    ## If message contain a footer or header added by Sympa  use the object
-#    ## message else
-#    ## Extract body from original file to preserve signature
-#    ##FIXME: message may be encrypted.
-#    my ($dummy, $msg_body) =
-#        split /\r?\n\r?\n/, $message->as_string, 2;
-#    $message->{'body_as_string'} = $msg_body;
 
     my %rcpt_by_dom;
 
@@ -220,6 +208,9 @@ sub mail_message {
         push @sendtobypacket, \@tab;
     }
 
+    $message->{shelved}{merge} = 1
+        if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+
     return $numsmtp
         if (
         sendto(
@@ -234,7 +225,6 @@ sub mail_message {
             'encrypt'     => $message->{'smime_crypted'},
             'use_bulk'    => 1,
             'verp'        => $verp,
-            'merge'       => $list->{'admin'}{'merge_feature'},
             'tag_as_last' => $tag_as_last
         )
         );
@@ -344,7 +334,6 @@ sub sendto {
     my $priority    = $params{'priority'};
     my $encrypt     = $params{'encrypt'};
     my $verp        = $params{'verp'};
-    my $merge       = $params{'merge'};
     my $use_bulk    = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
 
@@ -369,9 +358,10 @@ sub sendto {
     my $msg;
 
     if ($encrypt and $encrypt eq 'smime_crypted') {
-        # encrypt message for each rcpt and send the message
-        # this MUST be moved to the bulk mailer. This way, merge will be
-        # applied after the SMIME encryption is applied ! This is a bug !
+        # Encrypt message for each recipient and send the message.
+        # This MUST be moved to the bulk mailer.  This way, personalize
+        # (merge) will be applied after the S/MIME encryption is applied!
+        # This is a bug!
         foreach my $bulk_of_rcpt (@{$rcpt}) {
             foreach my $email (@{$bulk_of_rcpt}) {
                 if ($email !~ /@/) {
@@ -412,7 +402,6 @@ sub sendto {
             'priority'      => $priority,
             'delivery_date' => $delivery_date,
             'verp'          => $verp,
-            'merge'         => $merge,
             'use_bulk'      => $use_bulk,
             'tag_as_last'   => $tag_as_last
         );
@@ -435,7 +424,6 @@ sub sendto {
 #              field
 #      -sign_mode => mode: 'smime' for signing
 #      -verp => 'on' | 'mdn' | 'dsn' | undef
-#      -merge => 'on' | 'off'
 #      -use_bulk => boolean
 #
 # OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
@@ -467,7 +455,6 @@ sub sending {
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date);
     my $verp        = $params{'verp'};
-    my $merge       = $params{'merge'};
     my $use_bulk    = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
@@ -489,7 +476,6 @@ sub sending {
     } else {
         $trackingfeature = '';
     }
-    my $mergefeature = ($merge and $merge eq 'on');
 
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution
@@ -504,7 +490,6 @@ sub sending {
             'delivery_date'    => $delivery_date,
             'verp'             => $verpfeature,
             'tracking'         => $trackingfeature,
-            'merge'            => $mergefeature,
             'tag_as_last'      => $tag_as_last,
         );
 

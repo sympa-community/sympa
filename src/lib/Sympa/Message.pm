@@ -2071,7 +2071,7 @@ sub _merge_msg {
     if ($entity->parts) {
         foreach my $part ($entity->parts) {
             unless (_merge_msg($part, $list, $rcpt, $data)) {
-                Log::do_log('err', 'Failed to merge message part');
+                Log::do_log('err', 'Failed to personalize message part');
                 return undef;
             }
         }

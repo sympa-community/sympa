@@ -316,12 +316,12 @@ my %full_db_struct = (
                 'doc' => 'Is DSN or MDM requiered when sending this message?',
                 'order' => 9,
             },
-            'merge_bulkmailer' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
-                'order' => 10,
-            },
+            #'merge_bulkmailer' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
+            #    'order' => 10,
+            #},
             'priority_message_bulkmailer' => {
                 'struct' => 'smallint(10)',
                 'doc'    => 'FIXME',

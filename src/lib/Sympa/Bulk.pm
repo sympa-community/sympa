@@ -135,13 +135,27 @@ sub next {
 
     # select the packet that has been locked previously
     #FIXME: A column name is recEipients_bulkmailer.
-    unless (
-        $sth = SDM::do_query(
-            "SELECT messagekey_bulkmailer AS messagekey, messageid_bulkmailer AS messageid, packetid_bulkmailer AS packetid, receipients_bulkmailer AS recipients, returnpath_bulkmailer AS returnpath, listname_bulkmailer AS listname, robot_bulkmailer AS robot, priority_message_bulkmailer AS priority_message, priority_packet_bulkmailer AS priority_packet, verp_bulkmailer AS verp, tracking_bulkmailer AS tracking, merge_bulkmailer as merge, reception_date_bulkmailer AS reception_date, delivery_date_bulkmailer AS delivery_date FROM bulkmailer_table WHERE lock_bulkmailer=%s %s",
-            SDM::quote($lock),
+    $sth = SDM::do_prepared_query(
+        sprintf(
+            q{SELECT messagekey_bulkmailer AS messagekey,
+                     messageid_bulkmailer AS messageid,
+                     packetid_bulkmailer AS packetid,
+                     receipients_bulkmailer AS recipients,
+                     returnpath_bulkmailer AS returnpath,
+                     listname_bulkmailer AS listname,
+                     robot_bulkmailer AS robot,
+                     priority_message_bulkmailer AS priority_message,
+                     priority_packet_bulkmailer AS priority_packet,
+                     verp_bulkmailer AS verp, tracking_bulkmailer AS tracking,
+                     reception_date_bulkmailer AS reception_date,
+                     delivery_date_bulkmailer AS delivery_date
+              FROM bulkmailer_table
+              WHERE lock_bulkmailer=? %s},
             $order
-        )
-        ) {
+        ),
+        $lock
+    );
+    unless ($sth) {
         Log::do_log('err',
             'Unable to retrieve informations for packet %s of message %s',
             $packet->{'packetid'}, $packet->{'messagekey'});
@@ -265,13 +279,12 @@ sub store {
     my $tracking         = $data{'tracking'};
     $tracking = '' unless (($tracking eq 'dsn') || ($tracking eq 'mdn'));
     $verp = 0 unless ($verp);
-    my $merge = $data{'merge'};
-    $merge = 0 unless ($merge);
     my $tag_as_last = $data{'tag_as_last'};
 
     Log::do_log(
         'debug',
-        '(<msg>, <rcpts>, from = %s, robot = %s, listname= %s, priority_message = %s, delivery_date= %s, verp = %s, tracking = %s, merge = %s, last: %s)',
+        '(%s, <rcpts>, from=%s, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, verp=%s, tracking=%s, last=%s)',
+        $message,
         $from,
         $robot,
         $listname,
@@ -279,7 +292,6 @@ sub store {
         $delivery_date,
         $verp,
         $tracking,
-        $merge,
         $tag_as_last
     );
 
@@ -344,8 +356,11 @@ sub store {
             $statementtrace =~ s/\n\s*/ /g;
             $statementtrace =~ s/\?/\%s/g;
 
-            unless (SDM::do_prepared_query(
-                $statement, $messagekey, $msg_id, $msg)) {
+            unless (
+                SDM::do_prepared_query(
+                    $statement, $messagekey, $msg_id, $msg
+                )
+                ) {
                 Log::do_log(
                     'err',
                     'Unable to add message in bulkspool_table "%s"',
@@ -448,16 +463,16 @@ sub store {
                        packetid_bulkmailer, receipients_bulkmailer,
                        returnpath_bulkmailer,
                        robot_bulkmailer, listname_bulkmailer,
-                       verp_bulkmailer, tracking_bulkmailer, merge_bulkmailer,
+                       verp_bulkmailer, tracking_bulkmailer,
                        priority_message_bulkmailer,
                        priority_packet_bulkmailer, reception_date_bulkmailer,
                        delivery_date_bulkmailer)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
                     $messagekey, $msg_id,
                     $packetid,   $rcptasstring,
                     $from,
                     $robot, $listname,
-                    $verp, $tracking, $merge,
+                    $verp,  $tracking,
                     $priority_message,
                     $priority_for_packet, SDM::AS_DOUBLE($current_date),
                     $delivery_date
@@ -553,7 +568,6 @@ sub store_test {
     my $listname         = 'notalist';
     my $priority_message = 9;
     my $verp             = 'on';
-    my $merge            = 1;
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";
