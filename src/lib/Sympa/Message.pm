@@ -157,7 +157,12 @@ sub new {
         } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
             $self->{'spam_status'} = $v;
         } elsif ($k eq 'X-Sympa-Shelved') {        # New in 6.2a.41
-            $self->{'shelved'} = {map { ($_ => 1) } split /\s*,\s*/, $v};
+            $self->{'shelved'} = {
+                map {
+                    my ($ak, $av) = split /=/, $_, 2;
+                    ($ak => ($av || 1))
+                    } split(/\s*;\s*/, $v)
+            };
         } else {
             Log::do_log('err', 'Unknown meta information: "%s: %s"', $k, $v);
         }
@@ -719,7 +724,15 @@ sub to_string {
     }
     if (defined $self->{'shelved'} and %{$self->{'shelved'}}) {
         $serialized .= sprintf "X-Sympa-Shelved: %s\n",
-            join(',',
+            join('; ',
+            map {
+                my $v = $self->{shelved}{$_};
+                if ("$v" eq '1') {
+                    $_;
+                } else {
+                    sprintf '%s=%s', $_, $v;
+                }
+            }
             grep { $self->{shelved}{$_} }
             sort keys %{$self->{shelved}});
     }
@@ -3112,8 +3125,16 @@ sub get_id {
 
     my $shelved;
     if (%{$self->{shelved} || {}}) {
-        $shelved = sprintf 'shelved=%s',
-            join(',',
+        $shelved = sprintf 'shelved:%s',
+            join(';',
+            map {
+                my $v = $self->{shelved}{$_};
+                if ("$v" eq '1') {
+                    $_;
+                } else {
+                    sprintf '%s=%s', $_, $v;
+                }
+            }
             grep { $self->{shelved}{$_} }
             sort keys %{$self->{shelved}});
     }

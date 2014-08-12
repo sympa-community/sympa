@@ -68,7 +68,7 @@ sub next {
     my $limit_other  = '';
     ## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order =
-        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC, verp_bulkmailer ASC';
+        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC';
     if (   $Conf::Conf{'db_type'} eq 'mysql'
         or $Conf::Conf{'db_type'} eq 'Pg'
         or $Conf::Conf{'db_type'} eq 'SQLite') {
@@ -146,7 +146,6 @@ sub next {
                      robot_bulkmailer AS robot,
                      priority_message_bulkmailer AS priority_message,
                      priority_packet_bulkmailer AS priority_packet,
-                     verp_bulkmailer AS verp, tracking_bulkmailer AS tracking,
                      reception_date_bulkmailer AS reception_date,
                      delivery_date_bulkmailer AS delivery_date
               FROM bulkmailer_table
@@ -275,23 +274,17 @@ sub store {
     my $priority_message = $data{'priority_message'};
     my $priority_packet  = $data{'priority_packet'};
     my $delivery_date    = $data{'delivery_date'};
-    my $verp             = $data{'verp'};
-    my $tracking         = $data{'tracking'};
-    $tracking = '' unless (($tracking eq 'dsn') || ($tracking eq 'mdn'));
-    $verp = 0 unless ($verp);
-    my $tag_as_last = $data{'tag_as_last'};
+    my $tag_as_last      = $data{'tag_as_last'};
 
     Log::do_log(
         'debug',
-        '(%s, <rcpts>, from=%s, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, verp=%s, tracking=%s, last=%s)',
+        '(%s, <rcpts>, from=%s, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, last=%s)',
         $message,
         $from,
         $robot,
         $listname,
         $priority_message,
         $delivery_date,
-        $verp,
-        $tracking,
         $tag_as_last
     );
 
@@ -463,16 +456,14 @@ sub store {
                        packetid_bulkmailer, receipients_bulkmailer,
                        returnpath_bulkmailer,
                        robot_bulkmailer, listname_bulkmailer,
-                       verp_bulkmailer, tracking_bulkmailer,
                        priority_message_bulkmailer,
                        priority_packet_bulkmailer, reception_date_bulkmailer,
                        delivery_date_bulkmailer)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
                     $messagekey, $msg_id,
                     $packetid,   $rcptasstring,
                     $from,
                     $robot, $listname,
-                    $verp,  $tracking,
                     $priority_message,
                     $priority_for_packet, SDM::AS_DOUBLE($current_date),
                     $delivery_date
@@ -567,7 +558,6 @@ sub store_test {
     my $robot            = 'notarobot';
     my $listname         = 'notalist';
     my $priority_message = 9;
-    my $verp             = 'on';
 
     print "maxtest: $maxtest\n";
     print "barmax: $barmax\n";

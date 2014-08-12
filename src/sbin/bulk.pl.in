@@ -416,9 +416,7 @@ while (!$end) {
         }
 
         if (   $message->{shelved}{merge}
-            or $bulk->{'verp'}
-            or $bulk->{'tracking'} eq 'dsn'
-            or $bulk->{'tracking'} eq 'mdn') {
+            or $message->{shelved}{tracking}) {
             # message needs personalization
             my $key;
 
@@ -428,8 +426,10 @@ while (!$end) {
                 my $notification_id;
                 my $return_path;
 
-                if (   $bulk->{'tracking'} eq 'dsn'
-                    or $bulk->{'tracking'} eq 'mdn') {
+                if (tools::smart_eq(
+                        $new_message->{shelved}{tracking}, qr/dsn|mdn/
+                    )
+                    ) {
                     # tracking by MDN required tracking by DSN to
                     my $msgid = $new_message->{'message_id'};
                     $notification_id =
@@ -439,7 +439,7 @@ while (!$end) {
                         $list->get_bounce_address($rcpt, $notification_id);
                     $new_message->replace_header(
                         'Disposition-Notification-To', $return_path)
-                        if $bulk->{'tracking'} eq 'mdn';
+                        if $new_message->{shelved}{tracking} =~ /mdn/;
                     # trace_smime($new_message, 'tracking');
                 } else {    # VERP
                     $return_path = $list->get_bounce_address($rcpt);

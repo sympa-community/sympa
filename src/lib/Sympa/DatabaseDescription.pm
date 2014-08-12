@@ -305,17 +305,17 @@ my %full_db_struct = (
                 'doc'    => '',
                 'order'  => 7,
             },
-            'verp_bulkmailer' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'A boolean to specify if VERP is requiered, in this cas return_path will be formated using verp form',
-                'order' => 8,
-            },
-            'tracking_bulkmailer' => {
-                'struct' => "enum('mdn','dsn')",
-                'doc' => 'Is DSN or MDM requiered when sending this message?',
-                'order' => 9,
-            },
+            #'verp_bulkmailer' => {
+            #    'struct' => 'int(1)',
+            #    'doc' =>
+            #        'A boolean to specify if VERP is requiered, in this case return_path will be formatted using VERP form',
+            #    'order' => 8,
+            #},
+            #'tracking_bulkmailer' => {
+            #    'struct' => "enum('mdn','dsn')",
+            #    'doc' => 'Is DSN or MDN requiered when sending this message?',
+            #    'order' => 9,
+            #},
             #'merge_bulkmailer' => {
             #    'struct' => 'int(1)',
             #    'doc' =>

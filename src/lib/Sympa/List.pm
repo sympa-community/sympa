@@ -831,15 +831,14 @@ sub update_stats {
     return $stats->[0];
 }
 
-## Extract a set of rcpt for which verp must be use from a rcpt_tab.
-## Input  :  percent : the rate of subscribers that must be threaded using
-## verp
-##           xseq    : the message sequence number
-##           @rcpt   : a tab of emails
-## return :  a tab of rcpt for which rcpt must be use depending on the message
-## sequence number, this way every subscriber is "verped" from time to time
-##           input table @rcpt is spliced : rcpt for which verp must be used
-##           are extracted from this table
+# Extract a set of rcpt for which VERP must be use from a rcpt_tab.
+# Input  :  percent : the rate of subscribers that must be threaded using VERP
+#           xseq    : the message sequence number
+#           @rcpt   : a tab of emails
+# return :  a tab of recipients for which recipients must be used depending on
+#           the message sequence number, this way every subscriber is "VERPed"
+#           from time to time input table @rcpt is spliced: recipients for
+#           which VERP must be used are extracted from this table
 sub extract_verp_rcpt {
     my $percent     = shift;
     my $xseq        = shift;
@@ -856,11 +855,9 @@ sub extract_verp_rcpt {
         if ($percent =~ /^(\d+)\%/) {
             $nbpart = 100 / $1;
         } else {
-            Log::do_log(
-                'err',
-                'Wrong format for parameter extract_verp: %s. Can\'t process VERP',
-                $percent
-            );
+            Log::do_log('err',
+                'Wrong format for parameter: %s. Can\'t process VERP',
+                $percent);
             return undef;
         }
 
@@ -1914,20 +1911,24 @@ sub distribute_msg {
     }
 
     ## Prepare tracking if list config allow it
-    my $apply_tracking = 'off';
+    my @apply_tracking = ();
 
-    $apply_tracking = 'dsn'
-        if $self->{'admin'}{'tracking'}->{'delivery_status_notification'} eq
-            'on';
-    $apply_tracking = 'mdn'
-        if $self->{'admin'}{'tracking'}->{'message_delivery_notification'} eq
-            'on';
-    $apply_tracking = 'mdn'
-        if $self->{'admin'}{'tracking'}->{'message_delivery_notification'} eq
-            'on_demand'
-            and $message->get_header('Disposition-Notification-To');
+    push @apply_tracking, 'dsn'
+        if tools::smart_eq(
+        $self->{'admin'}{'tracking'}->{'delivery_status_notification'}, 'on');
+    push @apply_tracking, 'mdn'
+        if tools::smart_eq(
+        $self->{'admin'}{'tracking'}->{'message_delivery_notification'}, 'on')
+        or (
+        tools::smart_eq(
+            $self->{'admin'}{'tracking'}->{'message_delivery_notification'},
+            'on_demand')
+        and $message->get_header('Disposition-Notification-To')
+        );
 
-    if ($apply_tracking ne 'off') {
+    if (@apply_tracking) {
+        $message->{shelved}{tracking} = join '+', @apply_tracking;
+
         # remove notification request becuse a new one will be inserted if
         # needed
         $message->delete_header('Disposition-Notification-To');
@@ -2046,8 +2047,7 @@ sub distribute_msg {
     }
 
     ## Blindly send the message to all users.
-    my $numsmtp =
-        $self->send_msg($message, 'apply_tracking' => $apply_tracking);
+    my $numsmtp = $self->send_msg($message);
 
     $self->savestats() if (defined($numsmtp));
     return $numsmtp;
@@ -2604,8 +2604,8 @@ sub send_file {
             and
             Conf::get_robot_conf($self->{'domain'}, 'dkim_add_signature_to')
             =~ /robot/;
-    # use verp excepted for alarms. We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service
+    # Use VERP excepted for alarms.  We should make this configurable in order
+    # to support Sympa server on a machine without any MTA service.
     my $use_bulk = 1 unless $data->{'alarm'};
 
     unless (
@@ -2647,8 +2647,6 @@ sub send_msg {
     my $message = shift;
     my %param   = @_;
 
-    my $apply_tracking = $param{'apply_tracking'};
-
     my $original_message_id = $message->{'message_id'};
     my $robot               = $self->{'domain'};
     my $admin               = $self->{'admin'};
@@ -2679,15 +2677,15 @@ sub send_msg {
 
     # prepare verp parameter
     my $verp_rate = $self->{'admin'}{'verp_rate'};
-    # force verp if tracking is requested.
+    # force VERP if tracking is requested.
     $verp_rate = '100%'
-        if (($apply_tracking eq 'dsn') || ($apply_tracking eq 'mdn'));
+        if tools::smart_eq($message->{shelved}{tracking}, qr/dsn|mdn/);
 
     my $xsequence = $self->{'stats'}->[0];
     my $tags_to_use;
 
     # Define messages which can be tagged as first or last according to the
-    # verp rate.
+    # VERP rate.
     # If the VERP is 100%, then all the messages are VERP. Don't try to tag
     # not VERP
     # messages as they won't even exist.
@@ -2699,7 +2697,7 @@ sub send_msg {
         $tags_to_use->{'tag_noverp'} = 0;
     }
 
-    # Separate subscribers depending on user reception option and also if verp
+    # Separate subscribers depending on user reception option and also if VERP
     # a dicovered some bounce for them.
     # Storing the not empty subscribers' arrays into a hash.
     my $available_recipients = $self->get_recipients_per_mode($message);
@@ -2740,20 +2738,18 @@ sub send_msg {
         my @verp_selected_tabrcpt =
             extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
             \@possible_verptabrcpt);
-        my $verp = 'off';
 
         if ($#selected_tabrcpt > -1) {
             my $result = Sympa::Mail::mail_message(
                 'message'     => $new_message,
                 'rcpt'        => \@selected_tabrcpt,
                 'list'        => $self,
-                'verp'        => 'off',
                 'tag_as_last' => $tags_to_use->{'tag_noverp'}
             );
             unless (defined $result) {
                 Log::do_log(
                     'err',
-                    'Could not send message to distribute from %s (verp desabled)',
+                    'Could not send message to distribute from %s (VERP disabled)',
                     $from
                 );
                 return undef;
@@ -2769,10 +2765,9 @@ sub send_msg {
             );
         }
 
-        $verp = 'on';
+        $new_message->{shelved}{tracking} ||= 'verp';
 
-        if (($apply_tracking eq 'dsn') || ($apply_tracking eq 'mdn')) {
-            $verp = $apply_tracking;
+        if ($new_message->{shelved}{tracking} =~ /dsn|mdn/) {
             Sympa::Tracking::db_init_notification_table(
                 'listname' => $self->{'name'},
                 'robot'    => $robot,
@@ -2798,13 +2793,12 @@ sub send_msg {
                 'message'     => $new_message,
                 'rcpt'        => \@verp_selected_tabrcpt,
                 'list'        => $self,
-                'verp'        => 'on',
                 'tag_as_last' => $tags_to_use->{'tag_verp'}
             );
             unless (defined $result) {
                 Log::do_log(
                     'err',
-                    'Could not send message to distribute from %s (verp enabled)',
+                    'Could not send message to distribute from %s (VERP enabled)',
                     $from
                 );
                 return undef;

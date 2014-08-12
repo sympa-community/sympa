@@ -148,7 +148,7 @@ sub send_global_file {
         if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
             and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
             /robot/;
-    # use verp excepted for alarms. We should make this configurable in order
+    # use VERP excepted for alarms. We should make this configurable in order
     # to support Sympa server on a machine without any MTA service
     my $use_bulk = 1 unless $data->{'alarm'};
 

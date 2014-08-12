@@ -438,19 +438,13 @@ while (!$end) {
         # ---
         # If the DSN notification is correct and the tracking mode is enable,
         # it will be inserted in the database
-        my $tracking_in_use;
-        $tracking_in_use = 1
-            if (
-            $list->{'admin'}{'tracking'}{'delivery_status_notification'} eq
-            "on");
-        $tracking_in_use = 1
-            if (
-            $list->{'admin'}{'tracking'}{'message_delivery_notification'} eq
-            "on");
-        $tracking_in_use = 1
-            if (
-            $list->{'admin'}{'tracking'}{'message_delivery_notification'} eq
-            "on_demand");
+        my $tracking_in_use = 1
+            if tools::smart_eq(
+            $list->{'admin'}{'tracking'}{'delivery_status_notification'},
+            'on')
+            or tools::smart_eq(
+            $list->{'admin'}{'tracking'}{'message_delivery_notification'},
+            qr/\A(on|on_demand)\z/);
 
         my $eff_type = $entity->effective_type || '';
         my $report_type =
@@ -596,15 +590,14 @@ while (!$end) {
             }
         }
         # ---
-        # If the MDN notification is correct and the tracking mode is enable,
+        # If the MDN notification is correct and the tracking mode is enabled,
         # it will be inserted in the database
         if (    $eff_type eq 'multipart/report'
             and $report_type eq 'disposition-notification'
-            and ($list->{'admin'}{'tracking'}{'message_delivery_notification'}
-                eq "on"
-                or
-                $list->{'admin'}{'tracking'}{'message_delivery_notification'}
-                eq "on_demand")
+            and tools::smart_eq(
+                $list->{'admin'}{'tracking'}{'message_delivery_notification'},
+                qr/\A(on|on_demand)\z/
+            )
             ) {
 
             my @parts = $entity->parts();
@@ -1158,9 +1151,9 @@ sub canonicalize_status {
 
 ## update subscriber information
 # $bouncefor : the email address the bounce is related for (may be extracted
-# using verp)
+#              using VERP)
 # $rcpt : the email address recognized in the bounce itself. In most case
-# $rcpt eq $bouncefor
+#         $rcpt eq $bouncefor
 
 sub update_subscriber_bounce_history {
 

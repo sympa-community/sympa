@@ -91,8 +91,6 @@ sub set_send_spool {
 # IN : -$message(+) : ref(Sympa::Message)
 #      -$from(+) : message from
 #      -$robot(+) : robot
-#      -{verp=>[on|off]} : a hash to introduce verp parameters, starting just
-#      on or off, later will probably introduce optionnal parameters
 #      -@rcpt(+) : recepients
 # OUT : -$numsmtp : number of sendmail process | undef
 #
@@ -102,7 +100,6 @@ sub mail_message {
     my %params      = @_;
     my $message     = $params{'message'};
     my $list        = $params{'list'};
-    my $verp        = $params{'verp'};
     my @rcpt        = @{$params{'rcpt'}};
     my $tag_as_last = $params{'tag_as_last'};
 
@@ -113,17 +110,17 @@ sub mail_message {
         return undef;
     }
 
-    # normal return_path (ie used if verp is not enabled)
+    # normal return_path (ie used if VERP is not enabled)
     my $from = $list->get_list_address('return_path');
 
     Log::do_log(
         'debug',
-        '(from: %s, file:%s, %s, verp->%s, %d rcpt, last: %s)',
+        '(%s, from=%s, filename=%s, smime_crypted=%s, rcpt=%d, last=%s)',
+        $message,
         $from,
         $message->{'filename'},
         $message->{'smime_crypted'},
-        $verp,
-        $#rcpt + 1,
+        scalar(@rcpt),
         $tag_as_last
     );
     return 0 unless @rcpt;
@@ -224,7 +221,6 @@ sub mail_message {
             'robot'       => $robot,
             'encrypt'     => $message->{'smime_crypted'},
             'use_bulk'    => 1,
-            'verp'        => $verp,
             'tag_as_last' => $tag_as_last
         )
         );
@@ -317,7 +313,6 @@ sub reaper {
 #     $listname : use only to format return_path if VERP on
 #     $robot(+) : robot
 #     $encrypt : 'smime_crypted' | undef
-#     $verp : 1| undef
 #     $use_bulk : if defined,  send message using bulk
 #
 # OUT : 1 - call to sending
@@ -333,17 +328,16 @@ sub sendto {
     my $robot       = $params{'robot'};
     my $priority    = $params{'priority'};
     my $encrypt     = $params{'encrypt'};
-    my $verp        = $params{'verp'};
     my $use_bulk    = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
 
     Log::do_log(
         'debug',
-        '(from: %s, listname: %s, encrypt: %s, verp: %s, priority = %s, last: %s, use_bulk: %s',
+        '(%s, from=%s, listname=%s, encrypt=%s, priority=%s, last=%s, use_bulk=%s',
+        $message,
         $from,
         $listname,
         $encrypt,
-        $verp,
         $priority,
         $tag_as_last,
         $use_bulk
@@ -401,7 +395,6 @@ sub sendto {
             $message, $rcpt, $from,
             'priority'      => $priority,
             'delivery_date' => $delivery_date,
-            'verp'          => $verp,
             'use_bulk'      => $use_bulk,
             'tag_as_last'   => $tag_as_last
         );
@@ -423,7 +416,6 @@ sub sendto {
 #      -$from: for SMTP, "MAIL From:" field; for spool sending, "X-Sympa-From"
 #              field
 #      -sign_mode => mode: 'smime' for signing
-#      -verp => 'on' | 'mdn' | 'dsn' | undef
 #      -use_bulk => boolean
 #
 # OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
@@ -454,7 +446,6 @@ sub sending {
         Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date);
-    my $verp        = $params{'verp'};
     my $use_bulk    = $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
@@ -468,15 +459,6 @@ sub sending {
         }
     }
 
-    my $verpfeature =
-        ($verp and ($verp eq 'on' or $verp eq 'mdn' or $verp eq 'dsn'));
-    my $trackingfeature;
-    if ($verp and ($verp eq 'mdn' or $verp eq 'dsn')) {
-        $trackingfeature = $verp;
-    } else {
-        $trackingfeature = '';
-    }
-
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution
         my $bulk_code = Sympa::Bulk::store(
@@ -488,8 +470,6 @@ sub sending {
             'priority_message' => $priority_message,
             'priority_packet'  => $priority_packet,
             'delivery_date'    => $delivery_date,
-            'verp'             => $verpfeature,
-            'tracking'         => $trackingfeature,
             'tag_as_last'      => $tag_as_last,
         );
 
