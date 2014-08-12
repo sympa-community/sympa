@@ -128,7 +128,8 @@ my $cert_data = {
 };
 
 SKIP: {
-    skip 'openssl is not supported', 2 unless $Conf::Conf{'openssl'};
+    skip 'Crypt::OpenSSL::X509 not installed', 2
+        unless $Crypt::OpenSSL::X509::VERSION;
 
     is_deeply(
         tools::smime_parse_cert(
@@ -163,7 +164,8 @@ my $ca_cert_data = {
 };
 
 SKIP: {
-    skip 'openssl is not supported', 1 unless $Conf::Conf{'openssl'};
+    skip 'Crypt::OpenSSL::X509 not installed', 1
+        unless $Crypt::OpenSSL::X509::VERSION;
 
     is_deeply(
         tools::smime_parse_cert(
@@ -181,7 +183,8 @@ $parser->output_to_core(1);
 my $entity   = $parser->parse_open('t/samples/signed.eml');
 my $out_file = $cert_dir . '/out';
 SKIP: {
-    skip 'openssl not supported', 4 unless $Conf::Conf{'openssl'};
+    skip 'either Crypt::OpenSSL::X509 or openssl not installed', 4
+        unless $Crypt::OpenSSL::X509::VERSION and $Conf::Conf{'openssl'};
 
     ok( !tools::smime_extract_certs($entity->parts(0), $out_file, 'openssl'),
         "certificate extraction from text part doesn't work"
