@@ -44,11 +44,12 @@ use SDM;
 #
 ##############################################
 sub get_recipients_status {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my $msgid    = shift;
     my $listname = shift;
     my $robot    = shift;
 
-    Log::do_log('debug2', '(%s, %s, %s)', $msgid, $listname, $robot);
+    $msgid = tools::clean_msg_id($msgid);
 
     my $sth;
     my $pk;
@@ -56,13 +57,20 @@ sub get_recipients_status {
     # the message->head method return message-id including <blabla@dom> where
     # mhonarc return blabla@dom that's why we test both of them
     unless (
-        $sth = SDM::do_query(
-            "SELECT recipient_notification AS recipient,  reception_option_notification AS reception_option, status_notification AS status, arrival_date_notification AS arrival_date, type_notification as type, message_notification as notification_message FROM notification_table WHERE (list_notification = %s AND robot_notification = %s AND (message_id_notification = %s OR CONCAT('<',message_id_notification,'>') = %s OR message_id_notification = %s ))",
-            SDM::quote($listname),
-            SDM::quote($robot),
-            SDM::quote($msgid),
-            SDM::quote($msgid),
-            SDM::quote('<' . $msgid . '>')
+        $sth = SDM::do_prepared_query(
+            q{SELECT recipient_notification AS recipient,
+                     reception_option_notification AS reception_option,
+                     status_notification AS status,
+                     arrival_date_notification AS arrival_date,
+                     type_notification as type,
+                     message_notification as notification_message
+              FROM notification_table
+              WHERE list_notification = ? AND robot_notification = ? AND
+                    (message_id_notification = ? OR
+                     message_id_notification = ?)},
+            $listname, $robot,
+            $msgid,
+            '<' . $msgid . '>'
         )
         ) {
         Log::do_log(
@@ -214,14 +222,14 @@ sub db_insert_notification {
 ##############################################
 
 sub find_notification_id_by_message {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $recipient = shift;
     my $msgid     = shift;
-    chomp $msgid;
-    my $listname = shift;
-    my $robot    = shift;
+    my $listname  = shift;
+    my $robot     = shift;
 
-    Log::do_log('debug2', '(%s, %s, %s, %s)',
-        $recipient, $msgid, $listname, $robot);
+    $msgid = tools::clean_msg_id($msgid);
+
     my $pk;
 
     my $sth;
@@ -229,14 +237,17 @@ sub find_notification_id_by_message {
     # the message->head method return message-id including <blabla@dom> where
     # mhonarc return blabla@dom that's why we test both of them
     unless (
-        $sth = SDM::do_query(
-            "SELECT pk_notification FROM notification_table WHERE ( recipient_notification = %s AND list_notification = %s AND robot_notification = %s AND (message_id_notification = %s OR CONCAT('<',message_id_notification,'>') = %s OR message_id_notification = %s ))",
-            SDM::quote($recipient),
-            SDM::quote($listname),
-            SDM::quote($robot),
-            SDM::quote($msgid),
-            SDM::quote($msgid),
-            SDM::quote('<' . $msgid . '>')
+        $sth = SDM::do_prepared_query(
+            q{SELECT pk_notification
+              FROM notification_table
+              WHERE recipient_notification = ? AND
+                    list_notification = ? AND robot_notification = ? AND
+                    (message_id_notification = ? OR
+                     message_id_notification = ?)},
+            $recipient,
+            $listname, $robot,
+            $msgid,
+            '<' . $msgid . '>'
         )
         ) {
         Log::do_log(
