@@ -92,6 +92,8 @@ sub get_recipients_status {
         }
         push @pk_notifs, $pk_notif;
     }
+    $sth->finish;
+
     return \@pk_notifs;
 }
 
@@ -262,6 +264,8 @@ sub find_notification_id_by_message {
     }
 
     my @pk_notifications = $sth->fetchrow_array;
+    $sth->finish;
+
     if ($#pk_notifications > 0) {
         Log::do_log(
             'err',
