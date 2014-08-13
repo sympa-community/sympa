@@ -416,6 +416,7 @@ while (!$end) {
         }
 
         if (   $message->{shelved}{merge}
+            or $message->{shelved}{smime_encrypt}
             or $message->{shelved}{tracking}) {
             # message needs personalization
             my $key;
@@ -461,6 +462,27 @@ while (!$end) {
                     delete $new_message->{shelved}{merge};
                 }
 
+                if ($new_message->{shelved}{smime_sign}) {
+                    $new_message->smime_sign;
+                    delete $new_message->{shelved}{smime_sign};
+                }
+
+                if ($new_message->{shelved}{smime_encrypt}) {
+                    unless ($new_message->smime_encrypt($rcpt)) {
+                        #FIXME: Mark packet as "bad".
+                        Log::do_log(
+                            'err',
+                            'Unable to encrypt message %s from %s for recipient %s',
+                            $new_message,
+                            $list,
+                            $rcpt
+                        );
+
+                        last;    # foreach $rcpt
+                    }
+                    delete $new_message->{shelved}{smime_encrypt};
+                }
+
                 if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
                     $new_message->remove_invalid_dkim_signature;
                 }
@@ -487,9 +509,14 @@ while (!$end) {
                 close SMTP;
             }
         } else {
+            # message doesn't need personalization, so can be sent by packet.
             my $new_message = $message->dup;
 
-            # message doesn't need personalization, so can be sent by packet.
+            if ($new_message->{shelved}{smime_sign}) {
+                $new_message->smime_sign;
+                delete $new_message->{shelved}{smime_sign};
+            }
+
             if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
                 $new_message->remove_invalid_dkim_signature;
             }

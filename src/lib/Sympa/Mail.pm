@@ -205,25 +205,54 @@ sub mail_message {
         push @sendtobypacket, \@tab;
     }
 
+    # Shelve personalization.
     $message->{shelved}{merge} = 1
         if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
+    # Since message for each recipient should be encrypted by bulk mailer,
+    # check if encryption will be successful.
+    if ($message->{'smime_crypted'}) {
+        foreach my $bulk_of_rcpt (@sendtobypacket) {
+            foreach my $email (@{$bulk_of_rcpt}) {
+                if ($email !~ /@/) {
+                    Log::do_log('err',
+                        'incorrect call for encrypt with incorrect number of recipient'
+                    );
+                    return undef;
+                }
+
+                my $new_message = $message->dup;
+                unless ($new_message->smime_encrypt($email)) {
+                    Log::do_log(
+                        'err',
+                        'Unable to encrypt message to list %s for recipient %s',
+                        $list,
+                        $email
+                    );
+                    return undef;
+                }
+            }
+        }
+
+        $message->{shelved}{smime_encrypt} = 1;
+    }
+
+    # if not specified, delivery time is right now (used for sympa messages
+    # etc.)
+    my $delivery_date =
+           $list->get_next_delivery_date
+        || $message->{'date'}
+        || time;
+
     return $numsmtp
-        if (
-        sendto(
-            'message'  => $message,
-            'from'     => $from,
-            'rcpt'     => \@sendtobypacket,
-            'listname' => $list->{'name'},
-            'priority' => $list->{'admin'}{'priority'},
-            'delivery_date' =>
-                ($list->get_next_delivery_date || $message->{'date'} || time),
-            'robot'       => $robot,
-            'encrypt'     => $message->{'smime_crypted'},
-            'use_bulk'    => 1,
-            'tag_as_last' => $tag_as_last
-        )
+        if sending(
+        $message, \@sendtobypacket, $from,
+        'priority'      => $list->{'admin'}{'priority'},
+        'delivery_date' => $delivery_date,
+        'use_bulk'      => 1,
+        'tag_as_last'   => $tag_as_last
         );
+
     return undef;
 }
 
@@ -298,110 +327,8 @@ sub reaper {
     return $i;
 }
 
-### PRIVATE FUNCTIONS ###
-
-####################################################
-# sendto
-####################################################
-# send messages, S/MIME encryption if needed,
-# grouped sending (or not if encryption)
-#
-# IN: $msg_header (+): message header : MIME::Head object
-#     $msg_body (+): message body
-#     $from (+): message from
-#     $rcpt(+) : ref(SCALAR) | ref(ARRAY) - message recepients
-#     $listname : use only to format return_path if VERP on
-#     $robot(+) : robot
-#     $encrypt : 'smime_crypted' | undef
-#     $use_bulk : if defined,  send message using bulk
-#
-# OUT : 1 - call to sending
-#
-####################################################
-sub sendto {
-    my %params = @_;
-
-    my $message     = $params{'message'};
-    my $from        = $params{'from'};
-    my $rcpt        = $params{'rcpt'};
-    my $listname    = $params{'listname'};
-    my $robot       = $params{'robot'};
-    my $priority    = $params{'priority'};
-    my $encrypt     = $params{'encrypt'};
-    my $use_bulk    = $params{'use_bulk'};
-    my $tag_as_last = $params{'tag_as_last'};
-
-    Log::do_log(
-        'debug',
-        '(%s, from=%s, listname=%s, encrypt=%s, priority=%s, last=%s, use_bulk=%s',
-        $message,
-        $from,
-        $listname,
-        $encrypt,
-        $priority,
-        $tag_as_last,
-        $use_bulk
-    );
-
-    my $delivery_date = $params{'delivery_date'};
-    # if not specified, delivery tile is right now (used for sympa messages
-    # etc)
-    $delivery_date = time()
-        unless $delivery_date;
-
-    my $msg;
-
-    if ($encrypt and $encrypt eq 'smime_crypted') {
-        # Encrypt message for each recipient and send the message.
-        # This MUST be moved to the bulk mailer.  This way, personalize
-        # (merge) will be applied after the S/MIME encryption is applied!
-        # This is a bug!
-        foreach my $bulk_of_rcpt (@{$rcpt}) {
-            foreach my $email (@{$bulk_of_rcpt}) {
-                if ($email !~ /@/) {
-                    Log::do_log('err',
-                        'incorrect call for encrypt with incorrect number of recipient'
-                    );
-                    return undef;
-                }
-
-                my $new_message = $message->dup;
-                unless ($new_message->smime_encrypt($email)) {
-                    Log::do_log(
-                        'err',
-                        'Unable to encrypt message to list %s for recipient %s',
-                        $listname,
-                        $email
-                    );
-                    return undef;
-                }
-                unless (
-                    sending(
-                        $new_message, $email, $from,
-                        'priority'      => $priority,
-                        'delivery_date' => $delivery_date,
-                        'use_bulk'      => $use_bulk,
-                        'tag_as_last'   => $tag_as_last
-                    )
-                    ) {
-                    Log::do_log('err', 'Failed to send encrypted message');
-                    return undef;
-                }
-                $tag_as_last = 0;
-            }
-        }
-    } else {
-        my $result = sending(
-            $message, $rcpt, $from,
-            'priority'      => $priority,
-            'delivery_date' => $delivery_date,
-            'use_bulk'      => $use_bulk,
-            'tag_as_last'   => $tag_as_last
-        );
-        return $result;
-    }
-    return 1;
-}
+#DEPRECATED.  Use mail_message().
+#sub sendto;
 
 ####################################################
 # sending
@@ -415,7 +342,6 @@ sub sendto {
 #      -$rcpt: SCALAR | ref(ARRAY) - recipients for SMTP "RCPT To:" field.
 #      -$from: for SMTP, "MAIL From:" field; for spool sending, "X-Sympa-From"
 #              field
-#      -sign_mode => mode: 'smime' for signing
 #      -use_bulk => boolean
 #
 # OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
@@ -439,8 +365,6 @@ sub sending {
         $robot_id = '*';
     }
 
-    my $sign_mode        = $params{'sign_mode'};
-    my $sympa_email      = $params{'sympa_email'};
     my $priority_message = $params{'priority'};
     my $priority_packet =
         Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
@@ -450,14 +374,6 @@ sub sending {
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
-
-    if ($sign_mode and $sign_mode eq 'smime') {
-        unless ($message->smime_sign) {
-            Log::do_log('notice', 'Unable to sign message from %s',
-                $listname);
-            return undef;
-        }
-    }
 
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution
@@ -485,7 +401,7 @@ sub sending {
         # it to standard spool
         Log::do_log('debug', "NOT USING BULK");
 
-        $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
+        my $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
         $sympa_file =
             "$send_spool/T.$sympa_email." . time . '.' . int(rand(10000));
         unless (open TMP, ">$sympa_file") {
@@ -550,21 +466,17 @@ sub sending {
 #
 ##############################################################################
 sub smtpto {
-    my ($from, $rcpt, $robot, $msgkey, $sign_mode) = @_;
-
-    Log::do_log('debug2',
-        '(from: %s, rcpt:%s, robot:%s, msgkey:%s, sign_mode: %s)',
-        $from, $rcpt, $robot, $msgkey, $sign_mode);
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    my ($from, $rcpt, $robot, $msgkey) = @_;
 
     unless ($from) {
         Log::do_log('err', 'Missing Return-Path');
     }
 
     if (ref($rcpt) eq 'SCALAR') {
-        Log::do_log('debug2', '(%s, %s, %s)', $from, $$rcpt, $sign_mode);
+        Log::do_log('debug2', '(%s, %s)', $from, $$rcpt);
     } elsif (ref($rcpt) eq 'ARRAY') {
-        Log::do_log('debug2', '(%s, %s, %s)', $from, join(',', @{$rcpt}),
-            $sign_mode);
+        Log::do_log('debug2', '(%s, %s)', $from, join(',', @{$rcpt}));
     }
 
     my ($pid, $str);

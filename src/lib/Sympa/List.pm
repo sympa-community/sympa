@@ -2458,8 +2458,6 @@ sub send_file {
     my ($self, $tpl, $who, $robot, $context) = @_;
     Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
 
-    my $sign_mode;
-
     my $data = tools::dup_var($context);
 
     ## Any recipients
@@ -2571,26 +2569,21 @@ sub send_file {
     $data->{'list'}{'owner'}   = $self->get_owners();
     $data->{'list'}{'dir'}     = $self->{'dir'};
 
-    ## Sign mode
-    if (   $Conf::Conf{'openssl'}
-        && (-r $self->{'dir'} . '/cert.pem')
-        && (-r $self->{'dir'} . '/private_key')) {
-        $sign_mode = 'smime';
-    }
+    # Sign mode
+    my $smime_sign = tools::smime_find_keys($self, 'sign');
 
     # if the list have it's private_key and cert sign the message
-    # . used only for the welcome message, could be usefull in other case?
+    # . used only for the welcome message, could be useful in other case?
     # . a list should have several certificates and use if possible a
-    # certificate
-    #   issued by the same CA as the recipient CA if it exists
-    if ($sign_mode and $sign_mode eq 'smime') {
+    #   certificate issued by the same CA as the recipient CA if it exists
+    if ($smime_sign) {
         $data->{'fromlist'} = $self->get_list_address();
         $data->{'replyto'}  = $self->get_list_address('owner');
     } else {
         $data->{'fromlist'} = $self->get_list_address('owner');
     }
 
-    $data->{'from'} = $data->{'fromlist'} unless ($data->{'from'});
+    $data->{'from'} ||= $data->{'fromlist'};
     $data->{'return_path'} ||= $self->get_list_address('return_path');
 
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
@@ -2599,6 +2592,10 @@ sub send_file {
     my $message =
         Sympa::Message->new_from_template($self, $filename, $who, $data);
 
+    # Shelve S/MIME signing.
+    $message->{shelved}{smime_sign} = 1
+        if $smime_sign;
+    # Shelve DKIM signing.
     $message->{shelved}{dkim_sign} = 1
         if Conf::get_robot_conf($self->{'domain'}, 'dkim_feature') eq 'on'
             and
@@ -2612,9 +2609,8 @@ sub send_file {
         $message
         and defined Sympa::Mail::sending(
             $message, $who, $data->{'return_path'},
-            'priority'  => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'sign_mode' => $sign_mode,
-            'use_bulk'  => $use_bulk,
+            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+            'use_bulk' => $use_bulk,
         )
         ) {
         Log::do_log('err', 'Could not send template %s to %s',

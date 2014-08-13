@@ -129,6 +129,10 @@ sub send_global_file {
     }
 
     $data->{'sender'} = $who;
+
+    # Sign mode
+    my $smime_sign = tools::smime_find_keys($robot, 'sign');
+
     $data->{'conf'}{'version'} = $main::Version;
     $data->{'from'} = "$data->{'conf'}{'email'}\@$data->{'conf'}{'host'}"
         unless ($data->{'from'});
@@ -144,6 +148,10 @@ sub send_global_file {
         Sympa::Message->new_from_template($robot, $filename, $who, $data);
     return $message->as_string if $options->{'parse_and_return'};
 
+    # Shelve S/MIME signing.
+    $message->{shelved}{smime_sign} = 1
+        if $smime_sign;
+    # Shelve DKIM signing.
     $message->{shelved}{dkim_sign} = 1
         if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
             and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
@@ -155,11 +163,9 @@ sub send_global_file {
     unless (
         $message
         and defined Sympa::Mail::sending(
-            $message, $who,
-            $data->{'return_path'},
+            $message, $who, $data->{'return_path'},
             'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'sign_mode' => $data->{'sign_mode'},    #FIXME: may not be set.
-            'use_bulk'  => $use_bulk,
+            'use_bulk' => $use_bulk,
         )
         ) {
         Log::do_log('err', 'Could not send template %s to %s',
