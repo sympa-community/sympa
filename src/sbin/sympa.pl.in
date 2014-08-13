@@ -2858,7 +2858,7 @@ sub DoMessage {
 
             my $numsmtp;
             #XXX eval {
-            $numsmtp = $list->distribute_msg($message);
+            $numsmtp = Sympa::List::distribute_msg($message);
             #XXX };
             ## Keep track of known message IDs...if any
             $msgid_table{$list->get_list_id()}{$messageid} = time

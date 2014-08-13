@@ -1561,10 +1561,12 @@ sub _get_single_param_value {
 #      -$message (+): ref(Message)
 # OUT : -$numsmtp : number of sendmail process
 ####################################################
+# Note: This would be moved to Pipeline package.
 sub distribute_msg {
-    Log::do_log('debug2', '(%s, %s)', @_);
-    my $self    = shift;
+    Log::do_log('debug2', '(%s)', @_);
     my $message = shift;
+
+    my $self = $message->{context};
 
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
@@ -2047,7 +2049,7 @@ sub distribute_msg {
     }
 
     ## Blindly send the message to all users.
-    my $numsmtp = $self->send_msg($message);
+    my $numsmtp = send_msg($message);
 
     $self->savestats() if (defined($numsmtp));
     return $numsmtp;
@@ -2637,11 +2639,13 @@ sub send_file {
 #       | 0 : no subscriber for sending message in list
 #       | undef
 ####################################################
+# Note: this would be moved to Pipeline package.
 sub send_msg {
-    Log::do_log('debug2', '(%s, %s, %s => %s, %s => %s)', @_);
-    my $self    = shift;
+    Log::do_log('debug2', '(%s, %s => %s, %s => %s)', @_);
     my $message = shift;
     my %param   = @_;
+
+    my $self = $message->{context};
 
     my $original_message_id = $message->{'message_id'};
     my $robot               = $self->{'domain'};
@@ -2736,12 +2740,9 @@ sub send_msg {
             \@possible_verptabrcpt);
 
         if ($#selected_tabrcpt > -1) {
-            my $result = Sympa::Mail::mail_message(
-                'message'     => $new_message,
-                'rcpt'        => \@selected_tabrcpt,
-                'list'        => $self,
-                'tag_as_last' => $tags_to_use->{'tag_noverp'}
-            );
+            my $result =
+                Sympa::Mail::mail_message($new_message, \@selected_tabrcpt,
+                'tag_as_last' => $tags_to_use->{'tag_noverp'});
             unless (defined $result) {
                 Log::do_log(
                     'err',
@@ -2785,12 +2786,10 @@ sub send_msg {
 
         ## prepare VERP sending.
         if (@verp_selected_tabrcpt) {
-            my $result = Sympa::Mail::mail_message(
-                'message'     => $new_message,
-                'rcpt'        => \@verp_selected_tabrcpt,
-                'list'        => $self,
-                'tag_as_last' => $tags_to_use->{'tag_verp'}
-            );
+            my $result =
+                Sympa::Mail::mail_message($new_message,
+                \@verp_selected_tabrcpt,
+                'tag_as_last' => $tags_to_use->{'tag_verp'});
             unless (defined $result) {
                 Log::do_log(
                     'err',

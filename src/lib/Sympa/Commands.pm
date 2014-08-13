@@ -2718,7 +2718,7 @@ sub distribute {
             or tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
             'editor_validated_messages');
 
-        $numsmtp = $list->distribute_msg($message);
+        $numsmtp = Sympa::List::distribute_msg($message);
         unless (defined $numsmtp) {
             Log::do_log('err', 'Unable to send message to list %s', $name);
             Sympa::Report::reject_report_msg('intern', '', $sender,
@@ -3033,7 +3033,7 @@ sub confirm {
                 $list->{'admin'}{'dkim_signature_apply_on'},
                 'md5_authenticated_messages');
 
-            $numsmtp = $list->distribute_msg($message);
+            $numsmtp = Sympa::List::distribute_msg($message);
             unless (defined $numsmtp) {
                 Log::do_log('err', 'Unable to send message to list %s',
                     $list->{'name'});

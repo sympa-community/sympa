@@ -89,21 +89,21 @@ sub set_send_spool {
 # distribute a message to a list, Crypting if needed
 #
 # IN : -$message(+) : ref(Sympa::Message)
-#      -$from(+) : message from
-#      -$robot(+) : robot
-#      -@rcpt(+) : recepients
+#      -\@rcpt(+) : recepients
 # OUT : -$numsmtp : number of sendmail process | undef
 #
 ####################################################
+# Note: This would be moved to Pipeline package.
 sub mail_message {
+    Log::do_log('debug2', '(%s, %s, %s => %s)', @_);
+    my $message = shift;
+    my @rcpt    = @{shift || []};
+    my %params  = @_;
 
-    my %params      = @_;
-    my $message     = $params{'message'};
-    my $list        = $params{'list'};
-    my @rcpt        = @{$params{'rcpt'}};
     my $tag_as_last = $params{'tag_as_last'};
 
-    my $robot = $list->{'domain'};
+    my $list     = $message->{context};
+    my $robot_id = $list->{'domain'};
 
     unless (ref $message and $message->isa('Sympa::Message')) {
         Log::do_log('err', 'Invalid message parameter');
@@ -112,17 +112,6 @@ sub mail_message {
 
     # normal return_path (ie used if VERP is not enabled)
     my $from = $list->get_list_address('return_path');
-
-    Log::do_log(
-        'debug',
-        '(%s, from=%s, filename=%s, smime_crypted=%s, rcpt=%d, last=%s)',
-        $message,
-        $from,
-        $message->{'filename'},
-        $message->{'smime_crypted'},
-        scalar(@rcpt),
-        $tag_as_last
-    );
     return 0 unless @rcpt;
 
     my ($i, $j, $nrcpt);
@@ -135,8 +124,8 @@ sub mail_message {
     my @sendtobypacket;
 
     my $cmd_size =
-        length(Conf::get_robot_conf($robot, 'sendmail')) + 1 +
-        length(Conf::get_robot_conf($robot, 'sendmail_args')) +
+        length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
+        length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
         length(' -N success,delay,failure -V ') + 32 +
         length(" -f $from ");
     my $db_type = $Conf::Conf{'db_type'};
@@ -167,14 +156,14 @@ sub mail_message {
             or
             # number of different domains
             (       $j
-                and $#sendto >= Conf::get_robot_conf($robot, 'avg')
+                and $#sendto >= Conf::get_robot_conf($robot_id, 'avg')
                 and lc "$k[0] $k[1]" ne lc "$l[0] $l[1]"
             )
             or
             # number of recipients in general, and ARG_MAX limitation
             (   $#sendto >= 0
                 and (  $cmd_size + $size + length($i) + 5 > $max_arg
-                    or $nrcpt >= Conf::get_robot_conf($robot, 'nrcpt'))
+                    or $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
             )
             or
             # length of recipients field stored into bulkmailer table
