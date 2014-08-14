@@ -448,91 +448,86 @@ sub sending {
 # IN : $from :(+) for SMTP "MAIL From:" field
 #      $rcpt :(+) ref(SCALAR)|ref(ARRAY)- for SMTP "RCPT To:" field
 #      $robot :(+) robot
-#      $msgkey : a id of this message submission in notification table
-# OUT : Sympa::Mail::$fh - file handle on opened file for ouput, for SMTP "DATA"
-# field
-#       | undef
+#      $envid : an ID of this message submission in notification table
+# OUT : Sympa::Mail::$fh - file handle on opened file for ouput, for SMTP
+#       "DATA" field.  Otherwise undef
 #
 ##############################################################################
 sub smtpto {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
-    my ($from, $rcpt, $robot, $msgkey) = @_;
+    my ($from, $rcpt, $robot, $envid) = @_;
 
     unless ($from) {
         Log::do_log('err', 'Missing Return-Path');
     }
 
     if (ref($rcpt) eq 'SCALAR') {
-        Log::do_log('debug2', '(%s, %s)', $from, $$rcpt);
+        Log::do_log('debug3', '(%s, %s)', $from, $$rcpt);
     } elsif (ref($rcpt) eq 'ARRAY') {
-        Log::do_log('debug2', '(%s, %s)', $from, join(',', @{$rcpt}));
+        Log::do_log('debug3', '(%s, %s)', $from, join(',', @{$rcpt}));
     }
 
     my ($pid, $str);
 
-    ## Escape "-" at beginning of recepient addresses
-    ## prevent sendmail from taking it as argument
-
-    if (ref($rcpt) eq 'SCALAR') {
-        $$rcpt =~ s/^-/\\-/;
-    } elsif (ref($rcpt) eq 'ARRAY') {
-        my @emails = @$rcpt;
-        foreach my $i (0 .. $#emails) {
-            $rcpt->[$i] =~ s/^-/\\-/;
-        }
-    }
-
-    ## Check how many open smtp's we have, if too many wait for a few
-    ## to terminate and then do our job.
+    # Check how many open smtp's we have, if too many wait for a few
+    # to terminate and then do our job.
 
     Log::do_log('debug3', 'Open = %s', $opensmtp);
     while ($opensmtp > Conf::get_robot_conf($robot, 'maxsmtp')) {
         Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
             $opensmtp);
-        last if (reaper(0) == -1);    ## Blocking call to the reaper.
+        last if reaper(0) == -1;    # Blocking call to the reaper.
     }
 
     *IN  = ++$fh;
     *OUT = ++$fh;
 
     if (!pipe(IN, OUT)) {
-        die "Unable to create a channel in smtpto: $!";
-        ## No return
+        die sprintf 'Unable to create a channel in smtpto: %s', $!;
+        # No return
     }
     $pid = tools::safefork();
     $pid{$pid} = 0;
 
-    my $sendmail      = Conf::get_robot_conf($robot, 'sendmail');
-    my $sendmail_args = Conf::get_robot_conf($robot, 'sendmail_args');
-    if ($msgkey) {
-        $sendmail_args .= ' -N success,delay,failure -V ' . $msgkey;
+    my $sendmail = Conf::get_robot_conf($robot, 'sendmail');
+    my @sendmail_args = split /\s+/,
+        Conf::get_robot_conf($robot, 'sendmail_args');
+    if (defined $envid and length $envid) {
+        # Postfix clone of sendmail command doesn't allow spaces between
+        # "-V" and envid.
+        push @sendmail_args, '-N', 'success,delay,failure', "-V$envid";
     }
     if ($pid == 0) {
-
         close(OUT);
         open(STDIN, "<&IN");
 
         $from = '' if $from eq '<>';    # null sender
+        # Terminate options by "--" to prevent addresses beginning with "-"
+        # being treated as options.
         if (!ref($rcpt)) {
-            exec $sendmail, split(/\s+/, $sendmail_args), '-f', $from, $rcpt;
+            exec $sendmail, @sendmail_args, '-f', $from, '--', $rcpt;
         } elsif (ref($rcpt) eq 'SCALAR') {
-            exec $sendmail, split(/\s+/, $sendmail_args), '-f', $from, $$rcpt;
+            exec $sendmail, @sendmail_args, '-f', $from, '--', $$rcpt;
         } elsif (ref($rcpt) eq 'ARRAY') {
-            exec $sendmail, split(/\s+/, $sendmail_args), '-f', $from, @$rcpt;
+            exec $sendmail, @sendmail_args, '-f', $from, '--', @$rcpt;
         }
 
-        exit 1;                         ## Should never get there.
+        exit 1;                         # Should never get there.
     }
     if ($log_smtp) {
-        $str = "safefork: $sendmail $sendmail_args -f '$from' ";
-        if (!ref($rcpt)) {
-            $str .= $rcpt;
-        } elsif (ref($rcpt) eq 'SCALAR') {
-            $str .= $$rcpt;
+        my $r;
+        if (!ref $rcpt) {
+            $r = $rcpt;
+        } elsif (ref $rcpt eq 'SCALAR') {
+            $r = $$rcpt;
         } else {
-            $str .= join(' ', @$rcpt);
+            $r = join(' ', @$rcpt);
         }
-        Log::do_log('notice', '%s', $str);
+        Log::do_log(
+            'debug3', 'safefork: %s %s -f \'%s\' -- %s',
+            $sendmail, join(' ', @sendmail_args),
+            $from, $r
+        );
     }
     unless (close(IN)) {
         Log::do_log('err', 'Could not close safefork');
@@ -540,8 +535,8 @@ sub smtpto {
     }
     $opensmtp++;
     select(undef, undef, undef, 0.3)
-        if ($opensmtp < Conf::get_robot_conf($robot, 'maxsmtp'));
-    return ("Sympa::Mail::$fh");    ## Symbol for the write descriptor.
+        if $opensmtp < Conf::get_robot_conf($robot, 'maxsmtp');
+    return ("Sympa::Mail::$fh");    # Symbol for the write descriptor.
 }
 
 #XXX NOT USED
