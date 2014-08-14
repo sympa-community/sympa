@@ -140,7 +140,6 @@ sub next {
             q{SELECT messagekey_bulkmailer AS messagekey,
                      packetid_bulkmailer AS packetid,
                      receipients_bulkmailer AS recipients,
-                     returnpath_bulkmailer AS returnpath,
                      listname_bulkmailer AS listname,
                      robot_bulkmailer AS robot,
                      priority_message_bulkmailer AS priority_message,
@@ -265,7 +264,6 @@ sub store {
     # Compatibility. Enclosed by <...>.
     my $msg_id           = '<' . $message->{'message_id'} . '>';
     my $rcpts            = $data{'rcpts'};
-    my $from             = $data{'from'};
     my $robot            = $data{'robot'};
     my $listname         = $data{'listname'};
     my $priority_message = $data{'priority_message'};
@@ -275,9 +273,8 @@ sub store {
 
     Log::do_log(
         'debug',
-        '(%s, <rcpts>, from=%s, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, last=%s)',
+        '(%s, <rcpts>, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, last=%s)',
         $message,
-        $from,
         $robot,
         $listname,
         $priority_message,
@@ -441,19 +438,17 @@ sub store {
                     q{INSERT INTO bulkmailer_table
                       (messagekey_bulkmailer,
                        packetid_bulkmailer, receipients_bulkmailer,
-                       returnpath_bulkmailer,
                        robot_bulkmailer, listname_bulkmailer,
                        priority_message_bulkmailer,
-                       priority_packet_bulkmailer, reception_date_bulkmailer,
-                       delivery_date_bulkmailer)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                       priority_packet_bulkmailer,
+                       reception_date_bulkmailer, delivery_date_bulkmailer)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)},
                     $messagekey,
                     $packetid, $rcptasstring,
-                    $from,
-                    $robot, $listname,
+                    $robot,    $listname,
                     $priority_message,
-                    $priority_for_packet, SDM::AS_DOUBLE($current_date),
-                    $delivery_date
+                    $priority_for_packet,
+                    SDM::AS_DOUBLE($current_date), $delivery_date
                 )
                 ) {
                 Log::do_log(
@@ -541,7 +536,6 @@ sub store_test {
     my $barmax           = $size_increment * $steps * ($steps + 1) / 2;
     my $even_part        = $barmax / $steps;
     my $rcpts            = 'nobody@cru.fr';
-    my $from             = 'sympa-test@notadomain';
     my $robot            = 'notarobot';
     my $listname         = 'notalist';
     my $priority_message = 9;
@@ -557,7 +551,7 @@ sub store_test {
     $priority_message = 9;
 
     my $messagekey = tools::md5_fingerprint(Time::HiRes::time());
-    my $msg;
+    my $msg = '';
     $progress->max_update_rate(1);
     my $next_update = 0;
     my $total       = 0;
@@ -579,10 +573,11 @@ sub store_test {
         );
         #
         unless (
-            SDM::do_query(
-                "INSERT INTO bulkspool_table (messagekey_bulkspool, message_bulkspool, lock_bulkspool) VALUES (%s, %s, '1')",
-                SDM::quote($messagekey),
-                SDM::quote($msg)
+            SDM::do_prepared_query(
+                q{INSERT INTO bulkspool_table
+                  (messagekey_bulkspool, message_bulkspool, lock_bulkspool)
+                  VALUES (?, ?, 1)},
+                $messagekey, $msg
             )
             ) {
             return (($z - 1) * $size_increment);

@@ -534,8 +534,8 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            *SMTP =
-                Sympa::Mail::smtpto($bulk->{'returnpath'}, \@rcpts, $robot);
+            *SMTP = Sympa::Mail::smtpto($message->{'envelope_sender'},
+                \@rcpts, $robot);
             # Stripping Return-Path: pseudo-header field.
             my $msg_string = $new_message->as_string;
             $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;

@@ -289,12 +289,12 @@ my %full_db_struct = (
                     'the comma separated list of recipient email for this message',
                 'order' => 4,
             },
-            'returnpath_bulkmailer' => {
-                'struct' => 'varchar(100)',
-                'doc' =>
-                    'the return path value that must be set when sending the message',
-                'order' => 5,
-            },
+            #'returnpath_bulkmailer' => {
+            #    'struct' => 'varchar(100)',
+            #    'doc' =>
+            #        'the return path value that must be set when sending the message',
+            #    'order' => 5,
+            #},
             'robot_bulkmailer' => {
                 'struct' => 'varchar(80)',
                 'doc'    => '',

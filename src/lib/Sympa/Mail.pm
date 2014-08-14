@@ -366,10 +366,12 @@ sub sending {
 
     if ($use_bulk) {
         # in that case use bulk tables to prepare message distribution
+
+        $message->{envelope_sender} = $from;
+
         my $bulk_code = Sympa::Bulk::store(
             'message'          => $message,
             'rcpts'            => $rcpt,
-            'from'             => $from,
             'robot'            => $robot_id,
             'listname'         => $listname,
             'priority_message' => $priority_message,
