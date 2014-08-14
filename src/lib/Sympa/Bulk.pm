@@ -138,7 +138,6 @@ sub next {
     $sth = SDM::do_prepared_query(
         sprintf(
             q{SELECT messagekey_bulkmailer AS messagekey,
-                     messageid_bulkmailer AS messageid,
                      packetid_bulkmailer AS packetid,
                      receipients_bulkmailer AS recipients,
                      returnpath_bulkmailer AS returnpath,
@@ -224,17 +223,21 @@ sub messageasstring {
     }
     return $msg;
 }
-#################################"
+
 # fetch message from bulkspool_table by key
 #
-sub message_from_spool {
+# Old name: Sympa::Bulk::message_from_spool()
+sub fetch_content {
+    Log::do_log('debug', '(%s)', @_);
     my $messagekey = shift;
     Log::do_log('debug', '(messagekey: %s)', $messagekey);
 
     unless (
-        $sth = SDM::do_query(
-            "SELECT message_bulkspool AS message, messageid_bulkspool AS messageid FROM bulkspool_table WHERE messagekey_bulkspool = %s",
-            SDM::quote($messagekey)
+        $sth = SDM::do_prepared_query(
+            q{SELECT message_bulkspool
+              FROM bulkspool_table
+              WHERE messagekey_bulkspool = ?},
+            $messagekey
         )
         ) {
         Log::do_log('err',
@@ -243,16 +246,10 @@ sub message_from_spool {
         return undef;
     }
 
-    my $message_from_spool = $sth->fetchrow_hashref('NAME_lc');
+    my ($msg_string_encoded) = $sth->fetchrow_array;
     $sth->finish;
 
-    return (
-        {   'messageasstring' =>
-                MIME::Base64::decode($message_from_spool->{'message'}),
-            'messageid' => $message_from_spool->{'messageid'},
-        }
-    );
-
+    return MIME::Base64::decode($msg_string_encoded);
 }
 
 # DEPRECATED: Use Sympa::Message::personalize().
@@ -341,27 +338,17 @@ sub store {
 
         # if message is not found in bulkspool_table store it
         if ($message_already_on_spool == 0) {
-            my $statement = q{INSERT INTO bulkspool_table
-		  (messagekey_bulkspool, messageid_bulkspool,
-		   message_bulkspool, lock_bulkspool)
-		  VALUES (?, ?, ?, 1)};
-            my $statementtrace = $statement;
-            $statementtrace =~ s/\n\s*/ /g;
-            $statementtrace =~ s/\?/\%s/g;
-
             unless (
                 SDM::do_prepared_query(
-                    $statement, $messagekey, $msg_id, $msg
+                    q{INSERT INTO bulkspool_table
+                      (messagekey_bulkspool, message_bulkspool, lock_bulkspool)
+                      VALUES (?, ?, 1)},
+                    $messagekey, $msg
                 )
                 ) {
-                Log::do_log(
-                    'err',
-                    'Unable to add message in bulkspool_table "%s"',
-                    sprintf($statementtrace,
-                        SDM::quote($messagekey),
-                        SDM::quote($msg_id),
-                        SDM::quote(substr($msg, 0, 100)))
-                );
+                Log::do_log('err',
+                    'Unable to add message <%s> in bulkspool_table',
+                    $messagekey,);
                 return undef;
             }
 
@@ -452,16 +439,16 @@ sub store {
             unless (
                 SDM::do_prepared_query(
                     q{INSERT INTO bulkmailer_table
-                      (messagekey_bulkmailer, messageid_bulkmailer,
+                      (messagekey_bulkmailer,
                        packetid_bulkmailer, receipients_bulkmailer,
                        returnpath_bulkmailer,
                        robot_bulkmailer, listname_bulkmailer,
                        priority_message_bulkmailer,
                        priority_packet_bulkmailer, reception_date_bulkmailer,
                        delivery_date_bulkmailer)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
-                    $messagekey, $msg_id,
-                    $packetid,   $rcptasstring,
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                    $messagekey,
+                    $packetid, $rcptasstring,
                     $from,
                     $robot, $listname,
                     $priority_message,

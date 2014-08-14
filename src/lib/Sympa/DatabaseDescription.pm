@@ -221,11 +221,11 @@ my %full_db_struct = (
                 'doc'    => 'message as string b64 encoded',
                 'order'  => 2,
             },
-            'messageid_bulkspool' => {
-                'struct' => 'varchar(300)',
-                'doc'    => 'stored to list spool content faster',
-                'order'  => 4,
-            },
+            #'messageid_bulkspool' => {
+            #    'struct' => 'varchar(300)',
+            #    'doc'    => 'stored to list spool content faster',
+            #    'order'  => 4,
+            #},
             'lock_bulkspool' => {
                 'struct' => 'int(1)',
                 'doc' =>
@@ -277,11 +277,11 @@ my %full_db_struct = (
                 'not_null' => 1,
                 'order'    => 2,
             },
-            'messageid_bulkmailer' => {
-                'struct' => 'varchar(200)',
-                'doc'    => 'The message Id',
-                'order'  => 3,
-            },
+            #'messageid_bulkmailer' => {
+            #    'struct' => 'varchar(200)',
+            #    'doc'    => 'The message Id',
+            #    'order'  => 3,
+            #},
             ##FIXME: column name is "recEipients_bulkmailer"
             'receipients_bulkmailer' => {
                 'struct' => 'text',

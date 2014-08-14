@@ -154,15 +154,17 @@ sub new {
             $self->{'family'} = $v;
         } elsif ($k eq 'X-Sympa-From') {    # Compatibility. Use Return-Path:
             $self->{'envelope_sender'} = $v;
-        } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
-            $self->{'spam_status'} = $v;
-        } elsif ($k eq 'X-Sympa-Shelved') {        # New in 6.2a.41
+        } elsif ($k eq 'X-Sympa-Message-ID') {    # New in 6.2a.41
+            $self->{'message_id'} = $v;
+        } elsif ($k eq 'X-Sympa-Shelved') {       # New in 6.2a.41
             $self->{'shelved'} = {
                 map {
                     my ($ak, $av) = split /=/, $_, 2;
                     ($ak => ($av || 1))
                     } split(/\s*;\s*/, $v)
             };
+        } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
+            $self->{'spam_status'} = $v;
         } else {
             Log::do_log('err', 'Unknown meta information: "%s: %s"', $k, $v);
         }
@@ -271,7 +273,9 @@ sub new {
     }
 
     # Message ID
-    $self->{'message_id'} = _get_message_id($self);
+    unless (exists $self->{'message_id'}) {
+        $self->{'message_id'} = _get_message_id($self);
+    }
 
     return $self;
 }
@@ -718,23 +722,25 @@ sub to_string {
     if (defined $self->{'family'}) {
         $serialized .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
     }
+    if (defined $self->{'message_id'}) {    # New in 6.2a.41
+        $serialized .= sprintf "X-Sympa-Message-ID: %s\n",
+            $self->{'message_id'};
+    }
+    if (%{$self->{'shelved'} || {}}) {      # New in 6.2a.41
+        $serialized .= sprintf "X-Sympa-Shelved: %s\n", join(
+            '; ',
+            map {
+                my $v = $self->{shelved}{$_};
+                ("$v" eq '1') ? $_ : sprintf('%s=%s', $_, $v);
+                }
+                grep {
+                $self->{shelved}{$_}
+                } sort keys %{$self->{shelved}}
+        );
+    }
     if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
         $serialized .= sprintf "X-Sympa-Spam-Status: %s\n",
             $self->{'spam_status'};
-    }
-    if (defined $self->{'shelved'} and %{$self->{'shelved'}}) {
-        $serialized .= sprintf "X-Sympa-Shelved: %s\n",
-            join('; ',
-            map {
-                my $v = $self->{shelved}{$_};
-                if ("$v" eq '1') {
-                    $_;
-                } else {
-                    sprintf '%s=%s', $_, $v;
-                }
-            }
-            grep { $self->{shelved}{$_} }
-            sort keys %{$self->{shelved}});
     }
     # This terminates pseudo-header part for attributes.
     unless (defined $self->{'envelope_sender'}) {
@@ -3119,24 +3125,22 @@ sub get_id {
     } elsif ($self->{'filename'}) {
         my @parts = split /\//, $self->{'filename'};
         $id = pop @parts;
-    } else {
+    } elsif (exists $self->{'message_id'}) {
         $id = $self->{'message_id'};
     }
 
     my $shelved;
     if (%{$self->{shelved} || {}}) {
-        $shelved = sprintf 'shelved:%s',
-            join(';',
+        $shelved = sprintf 'shelved:%s', join(
+            ';',
             map {
                 my $v = $self->{shelved}{$_};
-                if ("$v" eq '1') {
-                    $_;
-                } else {
-                    sprintf '%s=%s', $_, $v;
+                ("$v" eq '1') ? $_ : sprintf('%s=%s', $_, $v);
                 }
-            }
-            grep { $self->{shelved}{$_} }
-            sort keys %{$self->{shelved}});
+                grep {
+                $self->{shelved}{$_}
+                } sort keys %{$self->{shelved}}
+        );
     }
 
     return join '/', grep {$_} ($id, $shelved);

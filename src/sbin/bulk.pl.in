@@ -199,7 +199,6 @@ while (!$end) {
     Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
 
     my $bulk;
-    my $message_from_spool;
 
     unless ($main::options{'foreground'}) {
         ##
@@ -337,11 +336,10 @@ while (!$end) {
             # so it is needed to fetch the new message from message_table
 
             $messagekey = $bulk->{'messagekey'};
-            $message_from_spool =
-                Sympa::Bulk::message_from_spool($bulk->{'messagekey'});
-
+            my $msg_string =
+                Sympa::Bulk::fetch_content($bulk->{'messagekey'});
             $message = Sympa::Message->new(
-                $message_from_spool->{'messageasstring'},
+                $msg_string,
                 context => ($list || $robot || '*'),
                 %$bulk
             );
@@ -385,10 +383,13 @@ while (!$end) {
 
         #HASH which will contain the attributes of the subscriber
         my $data;
-        # Initialization of the HASH : $data. It will be used by parse_tt2 to
+        # Initialization of the HASH $data. It will be used by parse_tt2 to
         # personalized messages.
+        # Note that message ID which can be anonymized should be taken from
+        # message header instead of {message_id} attribute.
+        my $msg_id = tools::clean_msg_id($message->get_header('Message-ID'));
         $data = {
-            'messageid' => $message->{'message_id'},
+            'messageid' => $msg_id,
             'listname'  => $listname,
             'robot'     => $robot,
             #XXX'to'        => $bulk->{'recipients'}, #XXX Insecure
@@ -554,11 +555,9 @@ while (!$end) {
             Conf::get_robot_conf($robot, 'sympa_packet_priority') + 5) {
             Log::do_log(
                 'notice',
-                'Done sending message "%s" (key "%s") to list "%s@%s" (priority %s) in %s seconds since scheduled expedition date',
-                $bulk->{'messageid'},
-                $bulk->{'messagekey'},
-                $bulk->{'listname'},
-                $bulk->{'robot'},
+                'Done sending message %s to %s (priority %s) in %s seconds since scheduled expedition date',
+                $message,
+                ($list || $robot),
                 $bulk->{'priority_message'},
                 time() - $bulk->{'delivery_date'}
             );
