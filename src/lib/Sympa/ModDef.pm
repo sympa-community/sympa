@@ -69,10 +69,10 @@ our %cpan_modules = (
             'required to extract user certificates for SSL clients and S/MIME messages.',
     },
     'Crypt::SMIME' => {
-        required_version => '0.09',
+        required_version => '0.15',
         package_name => 'Crypt-SMIME',
         'gettext_id' =>
-            'required to sign, encrypt or decrypt S/MIME messages.',
+            'required to sign, verify, encrypt and decrypt S/MIME messages.',
     },
     'Data::Password' => {
         required_version => '1.07',

@@ -45,15 +45,17 @@ package Sympa::Message;
 
 use strict;
 use warnings;
+use DateTime;
 use Encode qw();
 use HTML::Entities qw();
 use Mail::Address;
 use MIME::Charset;
 use MIME::Decoder;
-use MIME::Entity;
 use MIME::EncWords;
+use MIME::Entity;
 use MIME::Parser;
 use MIME::Tools;
+use Scalar::Util qw();
 use URI::Escape qw();
 
 BEGIN { eval 'use Crypt::SMIME'; }
@@ -66,16 +68,6 @@ use Log;
 use Sympa::Scenario;
 use tools;
 use tt2;
-
-my %openssl_errors = (
-    1 => 'an error occurred parsing the command options',
-    2 => 'one of the input files could not be read',
-    3 =>
-        'an error occurred creating the PKCS#7 file or when reading the MIME message',
-    4 => 'an error occurred decrypting or verifying the message',
-    5 =>
-        'the message was verified correctly but an error occurred writing out the signers certificates',
-);
 
 # Language context
 my $language = Sympa::Language->instance;
@@ -1680,10 +1672,10 @@ sub test_smime_encrypt {
     foreach my $mode (sort keys %$available_recipients) {
         next
             if $mode eq 'notice'
-            or $mode eq 'digest'
-            or $mode eq 'digestplain'
-            or $mode eq 'summary'
-            or $mode eq 'nomail';
+                or $mode eq 'digest'
+                or $mode eq 'digestplain'
+                or $mode eq 'summary'
+                or $mode eq 'nomail';
 
         foreach my $rcpt (
             @{$available_recipients->{$mode}{'verp'}   || []},
@@ -1826,7 +1818,7 @@ sub check_smime_signature {
     Log::do_log('debug2', '(%s)', @_);
     my $self = shift;
 
-    return 0 unless $Conf::Conf{'openssl'};
+    return 0 unless $Crypt::SMIME::VERSION;
     my $content_type = lc($self->{_head}->mime_attr('Content-Type') || '');
     unless (
         $content_type eq 'multipart/signed'
@@ -1847,204 +1839,78 @@ sub check_smime_signature {
 
     my $sender = $self->{'sender'};
 
-    my $is_signed = {};
-    $is_signed->{'body'}    = undef;
-    $is_signed->{'subject'} = undef;
-
-    my $verify;
-
-    ## first step is the msg signing OK ; /tmp/sympa-smime.$$ is created
-    ## to store the signer certificate for step two. I known, that's dirty.
-
-    my $temporary_file = $Conf::Conf{'tmpdir'} . "/" . 'smime-sender.' . $$;
-    my @cmd            = (
-        $Conf::Conf{'openssl'},
-        'smime',
-        '-verify',
-        ($Conf::Conf{'cafile'} ? ('-CAfile' => $Conf::Conf{'cafile'}) : ()),
-        ($Conf::Conf{'capath'} ? ('-CApath' => $Conf::Conf{'capath'}) : ()),
-        '-signer' => $temporary_file,
-        '-out'    => '/dev/null'
-    );
-    Log::do_log('debug', '%s', join ' ', @cmd);
-
-    my $pipeout;
-    unless (open $pipeout, '|-', @cmd) {
-        Log::do_log('err', 'Unable to verify S/MIME signature from %s %s',
-            $sender, $verify);
-        return undef;
-    }
-    print $pipeout $self->as_string;
-    close $pipeout;
-    my $status = $? >> 8;
-
-    if ($status) {
-        Log::do_log(
-            'err',
-            'Unable to check S/MIME signature: %s',
-            $openssl_errors{$status} || $status
-        );
+    # First step is to check if message signing is OK.
+    my $smime = Crypt::SMIME->new;
+    eval { # Crypt::SMIME >= 0.15 is required.
+        $smime->setPublicKeyStore(grep { defined $_ }
+                ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
+    };
+    unless (eval { $smime->check($self->as_string) }) {
+        Log::do_log('err', '%s: Unable to verify S/MIME signature: %s',
+            $self, $@);
         return undef;
     }
 
-    ## second step is the message signer match the sender
-    ## a better analyse should be performed to extract the signer email.
-    my $signer = tools::smime_parse_cert(file => $temporary_file);
-
-    unless ($signer->{'email'}{lc($sender)}) {
-        unlink $temporary_file unless $main::options{'debug'};
-        Log::do_log('err',
-            "S/MIME signed message, sender(%s) does NOT match signer(%s)",
-            $sender, join(',', keys %{$signer->{'email'}}));
-        return undef;
-    }
-
-    Log::do_log(
-        'debug',
-        "S/MIME signed message, signature checked and sender match signer(%s)",
-        join(',', keys %{$signer->{'email'}})
-    );
-    ## store the signer certificat
-    unless (-d $Conf::Conf{'ssl_cert_dir'}) {
-        if (mkdir $Conf::Conf{'ssl_cert_dir'}, 0775) {
-            Log::do_log(
-                'info',
-                'Creating user certificate directory %s',
-                $Conf::Conf{'ssl_cert_dir'}
-            );
-        } else {
-            Log::do_log(
-                'err',
-                'Unable to create user certificate directory %s',
-                $Conf::Conf{'ssl_cert_dir'}
-            );
-        }
-    }
-
-    ## It gets a bit complicated now. openssl smime -signer only puts
-    ## the _signing_ certificate into the given file; to get all included
-    ## certs, we need to extract them from the signature proper, and then
-    ## we need to check if they are for our user (CA and intermediate certs
-    ## are also included), and look at the purpose:
-    ## "S/MIME signing : Yes/No"
-    ## "S/MIME encryption : Yes/No"
-    my $certbundle = "$Conf::Conf{tmpdir}/certbundle.$$";
-    my $tmpcert    = "$Conf::Conf{tmpdir}/cert.$$";
-    my $extracted  = 0;
-    unless ($self->as_entity->parts) {    # could be opaque signing...
-        $extracted +=
-            tools::smime_extract_certs($self->as_entity, $certbundle);
-    } else {
-        foreach my $part ($self->as_entity->parts) {
-            $extracted += tools::smime_extract_certs($part, $certbundle);
-            last if $extracted;
-        }
-    }
-
-    unless ($extracted) {
-        Log::do_log('err', "No application/x-pkcs7-* parts found");
-        return undef;
-    }
-
-    my $fh;
-    unless (open $fh, '<', $certbundle) {
-        Log::do_log('err', 'Can\'t open cert bundle %s: %m', $certbundle);
-        return undef;
-    }
-
-    ## read it in, split on "-----END CERTIFICATE-----"
-    my $cert = '';
+    # Second step is to check the signer of message matches the sender.
+    # We need to check which certificate is for our user (CA and intermediate
+    # certs are also included), and look at the purpose:
+    # S/MIME signing and/or S/MIME encryption.
+    #FIXME: A better analyse should be performed to extract the signer email.
     my %certs;
-    while (<$fh>) {
-        $cert .= $_;
-        if (/^-----END CERTIFICATE-----$/) {
-            my $workcert = $cert;
-            $cert = '';
-            unless (open(CERT, ">$tmpcert")) {
-                Log::do_log('err', 'Can\'t create %s: %m', $tmpcert);
-                return undef;
-            }
-            print CERT $workcert;
-            close CERT;
-            my ($parsed) = tools::smime_parse_cert({file => $tmpcert});
-            unless ($parsed) {
-                Log::do_log('err', 'No result from tools::smime_parse_cert');
-                return undef;
-            }
-            unless ($parsed->{'email'}) {
-                Log::do_log('debug', 'No email in cert for %s, skipping',
-                    $parsed->{subject});
-                next;
-            }
+    my $signers = Crypt::SMIME::getSigners($self->as_string);
+    foreach my $cert (@{$signers || []}) {
+        my $parsed = tools::smime_parse_cert($cert);
+        next unless $parsed;
+        next unless $parsed->{'email'}{lc $sender};
 
-            Log::do_log(
-                'debug2',
-                "Found cert for <%s>",
-                join(',', keys %{$parsed->{'email'}})
-            );
-            if ($parsed->{'email'}{lc($sender)}) {
-                if (   $parsed->{'purpose'}{'sign'}
-                    && $parsed->{'purpose'}{'enc'}) {
-                    $certs{'both'} = $workcert;
-                    Log::do_log('debug', 'Found a signing + encryption cert');
-                } elsif ($parsed->{'purpose'}{'sign'}) {
-                    $certs{'sign'} = $workcert;
-                    Log::do_log('debug', 'Found a signing cert');
-                } elsif ($parsed->{'purpose'}{'enc'}) {
-                    $certs{'enc'} = $workcert;
-                    Log::do_log('debug', 'Found an encryption cert');
-                }
-            }
-            last if (($certs{'both'}) || ($certs{'sign'} && $certs{'enc'}));
+        if ($parsed->{'purpose'}{'sign'} and $parsed->{'purpose'}{'enc'}) {
+            $certs{'both'} = $cert;
+            Log::do_log('debug', 'Found a signing + encryption cert');
+        } elsif ($parsed->{'purpose'}{'sign'}) {
+            $certs{'sign'} = $cert;
+            Log::do_log('debug', 'Found a signing cert');
+        } elsif ($parsed->{'purpose'}{'enc'}) {
+            $certs{'enc'} = $cert;
+            Log::do_log('debug', 'Found an encryption cert');
         }
+        last if $certs{'both'} or ($certs{'sign'} and $certs{'enc'});
     }
-    close $fh;
     unless ($certs{both} or $certs{sign} or $certs{enc}) {
-        Log::do_log(
-            'err',
-            "Could not extract certificate for %s",
-            join(',', keys %{$signer->{'email'}})
-        );
+        Log::do_log('err', '%s: Could not extract certificate for %s',
+            $self, $sender);
         return undef;
     }
-    ## OK, now we have the certs, either a combined sign+encryption one
-    ## or a pair of single-purpose. save them, as email@addr if combined,
-    ## or as email@addr@sign / email@addr@enc for split certs.
+
+    # OK, now we have the certs, either a combined sign+encryption one
+    # or a pair of single-purpose. save them, as email@addr if combined,
+    # or as email@addr@sign / email@addr@enc for split certs.
     foreach my $c (keys %certs) {
-        my $fn =
+        my $filename =
             "$Conf::Conf{ssl_cert_dir}/" . tools::escape_chars(lc($sender));
         if ($c ne 'both') {
-            unlink $fn;    # just in case there's an old cert left...
-            $fn .= "\@$c";
+            unlink $filename;    # just in case there's an old cert left...
+            $filename .= "\@$c";
         } else {
-            unlink("$fn\@enc");
-            unlink("$fn\@sign");
+            unlink("$filename\@enc");
+            unlink("$filename\@sign");
         }
-        Log::do_log('debug', 'Saving %s cert in %s', $c, $fn);
-        unless (open CERT, '>', $fn) {
+        Log::do_log('debug', 'Saving %s cert in %s', $c, $filename);
+        my $fh;
+        unless (open $fh, '>', $filename) {
             Log::do_log('err', 'Unable to create certificate file %s: %m',
-                $fn);
+                $filename);
             return undef;
         }
-        print CERT $certs{$c};
-        close CERT;
+        print $fh $certs{$c};
+        close $fh;
     }
 
-    unless ($main::options{'debug'}) {
-        unlink($temporary_file);
-        unlink($tmpcert);
-        unlink($certbundle);
-    }
-
-    # Subject semantic is related to X509 (subject is the private key owner,
-    # not the message Subject header!)
-    # TODO: Future version should check if the subject was part of the SMIME
-    # signature.
-    $self->{'smime_signed'}  = 1;
-    $self->{'smime_subject'} = $signer;
-    Log::do_log('debug', 'Message is signed, signature is checked');
+    # TODO: Future version should check if the subject of certificate was part
+    # of the SMIME signature.
+    $self->{'smime_signed'} = 1;
+    Log::do_log('debug3', '%s is signed, signature is checked', $self);
     ## Il faudrait traiter les cas d'erreur (0 différent de undef)
-    return {body => 'smime', subject => $signer};
+    return 1;
 }
 
 =over

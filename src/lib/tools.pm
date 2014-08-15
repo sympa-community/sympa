@@ -2590,6 +2590,9 @@ sub smime_parse_cert {
     return \%res;
 }
 
+# NO LONGER USED
+# However, this function may be useful because it can extract messages openssl
+# can not (e.g. signature part not encoded by BASE64).
 sub smime_extract_certs {
     my ($mime, $outfile) = @_;
     Log::do_log('debug2', '(%s)', $mime->mime_type);
