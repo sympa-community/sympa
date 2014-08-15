@@ -1116,15 +1116,15 @@ our @params = (
 
     {'gettext_id' => 'S/MIME configuration'},
 
-    {   'name'       => 'openssl',
-        'sample'     => '/usr/bin/ssl',
-        'gettext_id' => 'Path to OpenSSL',
-        'file'       => 'sympa.conf',
-        'edit'       => '1',
-        'gettext_comment' =>
-            'Sympa recognizes S/MIME if OpenSSL is installed',
-        'optional' => '1',
-    },
+#    {   'name'       => 'openssl',
+#        'sample'     => '/usr/bin/ssl',
+#        'gettext_id' => 'Path to OpenSSL',
+#        'file'       => 'sympa.conf',
+#        'edit'       => '1',
+#        'gettext_comment' =>
+#            'Sympa recognizes S/MIME if OpenSSL is installed',
+#        'optional' => '1',
+#    },
     {   'name'       => 'capath',
         'optional'   => '1',
         'sample'     => Sympa::Constants::SYSCONFDIR . '/ssl.crt',

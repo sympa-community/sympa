@@ -13,21 +13,7 @@ use Test::More;
 #use Sympa::Tools::File;
 use tools;    # Sympa::Tools::SMIME;
 
-use Conf;
-delete $Conf::Conf{'openssl'};
-foreach my $path (
-    split(/:/, $ENV{PATH} || ''),
-    qw(/usr/local/bin /usr/local/ssl/bin /opt/local/bin /usr/sfw/bin /usr/bin)
-    ) {
-    my $openssl = $path . '/openssl';
-    if (-x $openssl) {
-        $Conf::Conf{'openssl'} = $openssl;
-        last;
-    }
-}
-$Conf::Conf{'tmpdir'} = '/tmp';
-
-plan tests => 19;
+plan tests => 15;
 
 #ok(
 #    !tools::smime_find_keys('/no/where', 'sign'),
@@ -131,25 +117,11 @@ SKIP: {
     skip 'Crypt::OpenSSL::X509 not installed', 2
         unless $Crypt::OpenSSL::X509::VERSION;
 
-    is_deeply(
-        tools::smime_parse_cert(
-            file => $cert_file,
-            #tmpdir  => $ENV{TMP},
-            #openssl => 'openssl'
-        ),
-        $cert_data,
-        'user certificate file parsing'
-    );
+    is_deeply(tools::smime_parse_cert(file => $cert_file,),
+        $cert_data, 'user certificate file parsing');
 
-    is_deeply(
-        tools::smime_parse_cert(
-            text => $cert_string,
-            #tmpdir  => $ENV{TMP},
-            #openssl => 'openssl'
-        ),
-        $cert_data,
-        'user certificate string parsing'
-    );
+    is_deeply(tools::smime_parse_cert(text => $cert_string,),
+        $cert_data, 'user certificate string parsing');
 }
 
 my $ca_cert_file = 't/pki/crt/ca.pem';
@@ -167,41 +139,8 @@ SKIP: {
     skip 'Crypt::OpenSSL::X509 not installed', 1
         unless $Crypt::OpenSSL::X509::VERSION;
 
-    is_deeply(
-        tools::smime_parse_cert(
-            file => $ca_cert_file,
-            #tmpdir  => $ENV{TMP},
-            #openssl => 'openssl'
-        ),
-        $ca_cert_data,
-        'CA certificate file parsing'
-    );
-}
-
-my $parser = MIME::Parser->new();
-$parser->output_to_core(1);
-my $entity   = $parser->parse_open('t/samples/signed.eml');
-my $out_file = $cert_dir . '/out';
-SKIP: {
-    skip 'either Crypt::OpenSSL::X509 or openssl not installed', 4
-        unless $Crypt::OpenSSL::X509::VERSION and $Conf::Conf{'openssl'};
-
-    ok( !tools::smime_extract_certs($entity->parts(0), $out_file, 'openssl'),
-        "certificate extraction from text part doesn't work"
-    );
-    ok( tools::smime_extract_certs($entity->parts(1), $out_file, 'openssl'),
-        "certificate extraction from signature part does work"
-    );
-    ok(-f $out_file, 'certificate extraction file exists');
-    is_deeply(
-        tools::smime_parse_cert(
-            file => $out_file,
-            #tmpdir  => $ENV{TMP},
-            #openssl => 'openssl'
-        ),
-        $cert_data,
-        'certificate extraction file has expected content'
-    );
+    is_deeply(tools::smime_parse_cert(file => $ca_cert_file,),
+        $ca_cert_data, 'CA certificate file parsing');
 }
 
 sub touch {

@@ -49,7 +49,18 @@ if ($Conf::Conf{'db_name'} and $Conf::Conf{'db_type'}) {
     }
 }
 
-my $openssl    = $Conf::Conf{'openssl'};
+my $openssl;
+foreach my $path (
+    split(/:/, $ENV{PATH} || ''),
+    qw(/usr/local/bin /usr/local/ssl/bin /opt/local/bin /usr/sfw/bin /usr/bin)
+    ) {
+    my $file = $path . '/openssl';
+    if (-x $file) {
+        $openssl = $file;
+        last;
+    }
+}
+
 my $home_sympa = $Conf::Conf{'home'};
 my $outpass    = $Conf::Conf{'key_passwd'};
 my $etc_dir    = $Conf::Conf{'etc'};
@@ -101,8 +112,7 @@ if (   ($main::options{'help'} ne '')
     }
 
     unless ($openssl) {
-        printf
-            "You must first configure Sympa to use openssl. Check the parameter openssl in sympa.conf\n";
+        printf "You must set PATH environment variable to use openssl command line utility.\n";
         die;
     }
 

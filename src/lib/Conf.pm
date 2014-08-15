@@ -99,6 +99,7 @@ my %old_params = (
     'email_gecos'      => 'gecos',              # 6.2a.?? - 6.2a.33
     'lock_method'      => '',                   # 5.3b.3 - 6.2a.33
     'html_editor_file' => 'html_editor_url',    # 6.2a
+    'openssl'          => '',                   # ?? - 6.2a.40
 );
 
 ## These parameters now have a hard-coded value
