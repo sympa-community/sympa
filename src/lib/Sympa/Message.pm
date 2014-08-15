@@ -1859,7 +1859,7 @@ sub check_smime_signature {
     my %certs;
     my $signers = Crypt::SMIME::getSigners($self->as_string);
     foreach my $cert (@{$signers || []}) {
-        my $parsed = tools::smime_parse_cert($cert);
+        my $parsed = tools::smime_parse_cert(text => $cert);
         next unless $parsed;
         next unless $parsed->{'email'}{lc $sender};
 
