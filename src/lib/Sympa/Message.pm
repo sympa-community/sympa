@@ -1649,6 +1649,55 @@ sub smime_encrypt {
     return $self;
 }
 
+=over 4
+
+=item test_smime_encrypt ( $list )
+
+I<Instance method>.
+Test if S/MIME signing can be performed successfully over all subscribers
+of list.
+
+Parameters:
+
+Returns:
+
+C<1> if succeed, or C<undef>.
+
+=back
+
+=cut
+
+sub test_smime_encrypt {
+    my $self = shift;
+    my $list = shift;
+
+    return undef
+        unless $Crypt::SMIME::VERSION;
+
+    # Get available recipients to test.
+    my $available_recipients = $list->get_recipients_per_mode($self) || {};
+
+    foreach my $mode (sort keys %$available_recipients) {
+        next
+            if $mode eq 'notice'
+            or $mode eq 'digest'
+            or $mode eq 'digestplain'
+            or $mode eq 'summary'
+            or $mode eq 'nomail';
+
+        foreach my $rcpt (
+            @{$available_recipients->{$mode}{'verp'}   || []},
+            @{$available_recipients->{$mode}{'noverp'} || []}
+            ) {
+            my $message = $self->dup;
+            unless ($message->smime_encrypt($rcpt)) {
+                return undef;
+            }
+        }
+    }
+    return 1;
+}
+
 =over
 
 =item smime_sign ( )

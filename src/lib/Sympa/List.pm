@@ -2334,6 +2334,8 @@ my %diag_messages = (
     '5.6.5' => 'Conversion Failed',
     # virus found
     '5.7.0' => 'Other or undefined security status',
+    # failed to re-encrypt decrypted message
+    '5.7.5' => 'Cryptographic failure',
 );
 
 sub send_dsn {

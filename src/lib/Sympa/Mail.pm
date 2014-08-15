@@ -197,34 +197,9 @@ sub mail_message {
     # Shelve personalization.
     $message->{shelved}{merge} = 1
         if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
-
-    # Since message for each recipient should be encrypted by bulk mailer,
-    # check if encryption will be successful.
-    if ($message->{'smime_crypted'}) {
-        foreach my $bulk_of_rcpt (@sendtobypacket) {
-            foreach my $email (@{$bulk_of_rcpt}) {
-                if ($email !~ /@/) {
-                    Log::do_log('err',
-                        'incorrect call for encrypt with incorrect number of recipient'
-                    );
-                    return undef;
-                }
-
-                my $new_message = $message->dup;
-                unless ($new_message->smime_encrypt($email)) {
-                    Log::do_log(
-                        'err',
-                        'Unable to encrypt message to list %s for recipient %s',
-                        $list,
-                        $email
-                    );
-                    return undef;
-                }
-            }
-        }
-
-        $message->{shelved}{smime_encrypt} = 1;
-    }
+    # Shelve re-encryption with S/MIME.
+    $message->{shelved}{smime_encrypt} = 1
+        if $message->{'smime_crypted'};
 
     # if not specified, delivery time is right now (used for sympa messages
     # etc.)
