@@ -30,7 +30,7 @@ use MIME::Base64 qw();
 use MIME::Parser;
 use Term::ProgressBar;
 use Time::HiRes qw();
-use constant MAX => 100_000;
+#use constant MAX => 100_000;
 
 use Conf;
 use Log;
@@ -258,34 +258,32 @@ sub fetch_content {
 # sub merge_data ($rcpt, $listname, $robot_id, $data, $body, \$message_output)
 
 sub store {
-    my %data = @_;
+    Log::do_log('debug2', '(%s, ...)', @_);
+    my $message = shift;
+    my %data    = @_;
 
-    my $message = $data{'message'};
-    # Compatibility. Enclosed by <...>.
-    my $msg_id           = '<' . $message->{'message_id'} . '>';
-    my $rcpts            = $data{'rcpts'};
-    my $robot            = $data{'robot'};
-    my $listname         = $data{'listname'};
+    my $rcpt             = $data{'rcpts'};
     my $priority_message = $data{'priority_message'};
     my $priority_packet  = $data{'priority_packet'};
     my $delivery_date    = $data{'delivery_date'};
     my $tag_as_last      = $data{'tag_as_last'};
 
-    Log::do_log(
-        'debug',
-        '(%s, <rcpts>, robot=%s, listname=%s, priority_message=%s, delivery_date=%s, last=%s)',
-        $message,
-        $robot,
-        $listname,
-        $priority_message,
-        $delivery_date,
-        $tag_as_last
-    );
+    my ($list, $robot_id);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $list     = $message->{context};
+        $robot_id = $list->{'domain'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot_id = $message->{context};
+    } else {
+        $robot_id = '*';
+    }
 
-    $priority_message = Conf::get_robot_conf($robot, 'sympa_priority')
-        unless ($priority_message);
-    $priority_packet = Conf::get_robot_conf($robot, 'sympa_packet_priority')
-        unless ($priority_packet);
+    # Compatibility. Enclosed by <...>.
+    my $msg_id = '<' . $message->{'message_id'} . '>';
+
+    $priority_message ||= Conf::get_robot_conf($robot_id, 'sympa_priority');
+    $priority_packet ||=
+        Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
 
     #creation of a MIME entity to extract the real sender of a message
     my $parser = MIME::Parser->new();
@@ -351,14 +349,18 @@ sub store {
 
             #log in stat_table to make statistics...
             my $robot_domain =
-                ($robot and $robot ne '*') ? $robot : $Conf::Conf{'domain'};
+                ($robot_id and $robot_id ne '*')
+                ? $robot_id
+                : $Conf::Conf{'domain'};
             unless (index($message_sender, $robot_domain . '@') >= 0) {
                 # ignore messages sent by robot
-                unless (index($message_sender, $listname . '-request') >= 0) {
+                unless (
+                    index($message_sender, $list->{'name'} . '-request') >= 0)
+                {
                     # ignore messages of requests
                     Log::db_stat_log(
-                        {   'robot'     => $robot,
-                            'list'      => $listname,
+                        {   'robot'     => $robot_id,
+                            'list'      => $list->{'name'},
                             'operation' => 'send_mail',
                             'parameter' => length($msg),
                             'mail'      => $message_sender,
@@ -375,26 +377,23 @@ sub store {
     my $current_date = Time::HiRes::time();
 
     # second : create each recipient packet in bulkmailer_table
-    my $type = ref $rcpts;
-
-    unless (ref $rcpts) {
-        my @tab = ($rcpts);
-        my @tabtab;
-        push @tabtab, \@tab;
-        $rcpts = \@tabtab;
+    my @rcpts;
+    unless (ref $rcpt) {
+        @rcpts = ([$rcpt]);
+    } else {
+        @rcpts = get_recipient_tabs_by_domain($list, @{$rcpt || []});
     }
 
     my $priority_for_packet;
     my $already_tagged = 0;
     # Initialize counter used to check wether we are copying the last packet.
     my $packet_rank = 0;
-    foreach my $packet (@{$rcpts}) {
+    foreach my $packet (@rcpts) {
         $priority_for_packet = $priority_packet;
         if ($tag_as_last && !$already_tagged) {
             $priority_for_packet = $priority_packet + 5;
             $already_tagged      = 1;
         }
-        $type = ref $packet;
         my $rcptasstring;
         if (ref $packet eq 'ARRAY') {
             $rcptasstring = join ',', @{$packet};
@@ -403,9 +402,6 @@ sub store {
         }
         my $packetid = tools::md5_fingerprint($rcptasstring);
         my $packet_already_exist;
-        if (ref($listname) =~ /List/i) {
-            $listname = $listname->{'name'};
-        }
         if ($message_already_on_spool) {
             ## search if this packet is already in spool database : mailfile
             ## may perform multiple submission of exactly the same message
@@ -445,7 +441,7 @@ sub store {
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)},
                     $messagekey,
                     $packetid, $rcptasstring,
-                    $robot,    $listname,
+                    $robot_id, $list->{'name'},
                     $priority_message,
                     $priority_for_packet,
                     SDM::AS_DOUBLE($current_date), $delivery_date
@@ -475,6 +471,102 @@ sub store {
         return undef;
     }
     return 1;
+}
+
+# Old name: (part of) Sympa::Mail::mail_message().
+sub get_recipient_tabs_by_domain {
+    my $list = shift;
+    my @rcpt = @_;
+
+    # normal return_path (ie used if VERP is not enabled)
+    #my $from = $list->get_list_address('return_path');
+    return unless @rcpt;
+
+    my $robot_id = $list->{'domain'};
+
+    my ($i, $j, $nrcpt);
+    my $size = 0;
+    #my $numsmtp = 0;
+
+    my %rcpt_by_dom;
+
+    my @sendto;
+    my @sendtobypacket;
+
+    #my $cmd_size =
+    #    length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
+    #    length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
+    #    length(' -N success,delay,failure -V ') + 32 +
+    #    length(" -f $from ");
+    #my $db_type = $Conf::Conf{'db_type'};
+
+    while (defined($i = shift @rcpt)) {
+        my @k = reverse split /[\.@]/, $i;
+        my @l = reverse split /[\.@]/, (defined $j ? $j : '@');
+
+        my $dom;
+        if ($i =~ /\@(.*)$/) {
+            $dom = $1;
+            chomp $dom;
+        }
+        $rcpt_by_dom{$dom} += 1;
+        Log::do_log(
+            'debug2',
+            'Domain: %s; rcpt by dom: %s; limit for this domain: %s',
+            $dom,
+            $rcpt_by_dom{$dom},
+            $Conf::Conf{'nrcpt_by_domain'}{$dom}
+        );
+
+        if (
+            # number of recipients by each domain
+            (   defined $Conf::Conf{'nrcpt_by_domain'}{$dom}
+                and $rcpt_by_dom{$dom} >= $Conf::Conf{'nrcpt_by_domain'}{$dom}
+            )
+            or
+            # number of different domains
+            (       $j
+                and scalar(@sendto) > Conf::get_robot_conf($robot_id, 'avg')
+                and lc "$k[0] $k[1]" ne lc "$l[0] $l[1]"
+            )
+            or
+            # number of recipients in general
+            (@sendto and $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
+            #or
+            ## ARG_MAX limitation
+            #(   @sendto
+            #    and $cmd_size + $size + length($i) + 5 > $max_arg
+            #)
+            #or
+            ## length of recipients field stored into bulkmailer table
+            ## (these limits might be relaxed by future release of Sympa)
+            #($db_type eq 'mysql' and $size + length($i) + 5 > 65535)
+            #or
+            #($db_type !~ /^(mysql|SQLite)$/ and $size + length($i) + 5 > 500)
+            ) {
+            undef %rcpt_by_dom;
+            # do not replace this line by "push @sendtobypacket, \@sendto" !!!
+            my @tab = @sendto;
+            push @sendtobypacket, \@tab;
+            #$numsmtp++;
+            $nrcpt = $size = 0;
+            @sendto = ();
+        }
+
+        $nrcpt++;
+        $size += length($i) + 5;
+        push(@sendto, $i);
+        $j = $i;
+    }
+
+    if (@sendto) {
+        #$numsmtp++;
+        my @tab = @sendto;
+        # do not replace this line by push @sendtobypacket, \@sendto !!!
+        push @sendtobypacket, \@tab;
+    }
+
+    return @sendtobypacket;
 }
 
 ## remove file that are not referenced by any packet
@@ -535,7 +627,6 @@ sub store_test {
     my $size_increment   = $divider * $maxtest / $steps;
     my $barmax           = $size_increment * $steps * ($steps + 1) / 2;
     my $even_part        = $barmax / $steps;
-    my $rcpts            = 'nobody@cru.fr';
     my $robot            = 'notarobot';
     my $listname         = 'notalist';
     my $priority_message = 9;
@@ -551,7 +642,7 @@ sub store_test {
     $priority_message = 9;
 
     my $messagekey = tools::md5_fingerprint(Time::HiRes::time());
-    my $msg = '';
+    my $msg        = '';
     $progress->max_update_rate(1);
     my $next_update = 0;
     my $total       = 0;

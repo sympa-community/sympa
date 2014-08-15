@@ -2743,7 +2743,7 @@ sub send_msg {
 
         if ($#selected_tabrcpt > -1) {
             my $result =
-                Sympa::Mail::mail_message($new_message, \@selected_tabrcpt,
+                _mail_message($new_message, \@selected_tabrcpt,
                 'tag_as_last' => $tags_to_use->{'tag_noverp'});
             unless (defined $result) {
                 Log::do_log(
@@ -2789,8 +2789,7 @@ sub send_msg {
         ## prepare VERP sending.
         if (@verp_selected_tabrcpt) {
             my $result =
-                Sympa::Mail::mail_message($new_message,
-                \@verp_selected_tabrcpt,
+                _mail_message($new_message, \@verp_selected_tabrcpt,
                 'tag_as_last' => $tags_to_use->{'tag_verp'});
             unless (defined $result) {
                 Log::do_log(
@@ -2813,6 +2812,48 @@ sub send_msg {
         }
     }
     return $nbr_smtp;
+}
+
+# distribute a message to a list, Crypting if needed
+#
+# IN : -$message(+) : ref(Sympa::Message)
+#      -\@rcpt(+) : recepients
+# OUT : -$numsmtp : number of sendmail process | undef
+#
+# Old name: Sympa::Mail::mail_message()
+# Note: Now this is a subroutine of send_msg() and it would be moved to
+# Pipeline package.
+sub _mail_message {
+    Log::do_log('debug2', '(%s, %s, %s => %s)', @_);
+    my $message = shift;
+    my $rcpt    = shift;
+    my %params  = @_;
+
+    my $tag_as_last = $params{'tag_as_last'};
+
+    my $list = $message->{context};
+
+    # Shelve personalization.
+    $message->{shelved}{merge} = 1
+        if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+    # Shelve re-encryption with S/MIME.
+    $message->{shelved}{smime_encrypt} = 1
+        if $message->{'smime_crypted'};
+
+    # if not specified, delivery time is right now (used for sympa messages
+    # etc.)
+    my $delivery_date =
+           $list->get_next_delivery_date
+        || $message->{'date'}
+        || time;
+
+    return sending(
+        $message, $rcpt, $list->get_list_address('return_path'),
+        'priority'      => $list->{'admin'}{'priority'},
+        'delivery_date' => $delivery_date,
+        'use_bulk'      => 1,
+        'tag_as_last'   => $tag_as_last
+    ) || undef;
 }
 
 sub get_recipients_per_mode {
