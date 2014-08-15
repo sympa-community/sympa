@@ -81,41 +81,8 @@ sub set_send_spool {
 #sub mail_message($message, $rcpt, [tag_as_last => 1]);
 # DEPRECATED: this is now a subroutine of Sympa::List::send_msg().
 
-####################################################
-# public mail_forward
-####################################################
-# forward a message.
-#
-# IN : -$mmessage(+) : ref(Sympa::Message)
-#      -$from(+) : message from
-#      -$rcpt(+) : ref(SCALAR) | ref(ARRAY)  - recepients
-#      -$robot(+) : robot
-# OUT : 1 | undef
-#
-####################################################
-sub mail_forward {
-    my ($message, $from, $rcpt, $robot) = @_;
-    Log::do_log('debug2', '(%s, %s)', $from, $rcpt);
-
-    unless (ref $message eq 'Sympa::Message') {
-        Log::do_log('err', 'Unexpected parameter type: %s', ref $message);
-        return undef;
-    }
-    ## Add an Auto-Submitted header field according to
-    ## http://www.tools.ietf.org/html/draft-palme-autosub-01
-    $message->add_header('Auto-Submitted', 'auto-forwarded');
-
-    unless (
-        defined sending(
-            $message, $rcpt, $from,
-            'priority' => Conf::get_robot_conf($robot, 'request_priority'),
-        )
-        ) {
-        Log::do_log('err', 'From %s impossible to send', $from);
-        return undef;
-    }
-    return 1;
-}
+#sub mail_forward($message, $from, $rcpt, $robot);
+#DEPRECATED: This is no longer used.
 
 #####################################################################
 # public reaper

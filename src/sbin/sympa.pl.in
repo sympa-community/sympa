@@ -2248,7 +2248,7 @@ sub DoSendMessage {
     ## Multiple recepients
     my @rcpts = split /,/, $rcpt;
 
-    unless (Sympa::Mail::mail_forward($message, $from, \@rcpts, $robot)) {
+    unless (defined Sympa::Mail::sending($message, \@rcpts, $from)) {
         Log::do_log('err', 'Impossible to forward mail from %s', $from);
         Sympa::Report::reject_report_msg(
             'intern',
@@ -2493,9 +2493,8 @@ sub DoForward {
     }
 
     unless (
-        Sympa::Mail::mail_forward(
-            $message, Conf::get_robot_conf($robot, 'request'),
-            \@rcpt,   $robot
+        defined Sympa::Mail::sending(
+            $message, \@rcpt, Conf::get_robot_conf($robot, 'request')
         )
         ) {
         Log::do_log('err', 'Impossible to forward mail for %s function %s',

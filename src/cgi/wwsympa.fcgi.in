@@ -10436,10 +10436,10 @@ sub do_send_me {
         $message->smime_decrypt;
 
         unless (
-            Sympa::Mail::mail_forward(
+            defined Sympa::Mail::sending(
                 $message,
-                Conf::get_robot_conf($robot, 'sympa'),
-                \$param->{'user'}{'email'}, $robot
+                $param->{'user'}{'email'},
+                Conf::get_robot_conf($robot, 'sympa')
             )
             ) {
             $param->{'status'} = 'message_err';
