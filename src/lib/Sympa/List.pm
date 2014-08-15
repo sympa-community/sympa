@@ -2847,7 +2847,7 @@ sub _mail_message {
         || $message->{'date'}
         || time;
 
-    return sending(
+    return Sympa::Mail::sending(
         $message, $rcpt, $list->get_list_address('return_path'),
         'priority'      => $list->{'admin'}{'priority'},
         'delivery_date' => $delivery_date,
