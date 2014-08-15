@@ -56,7 +56,6 @@ Source:   http://www.sympa.org/distribution/%{name}-%{version}.tar.gz
 Requires: smtpdaemon
 @REQUIRES@
 Requires: webserver
-Requires: openssl >= 0.9.5a
 Prereq: /usr/sbin/useradd
 Prereq: /usr/sbin/groupadd
 BuildRoot: %{_tmppath}/%{name}-%{version}
