@@ -2985,12 +2985,9 @@ sub DoMessage {
         # Check if re-encryption will be successful.
         if ($message->{'smime_crypted'}
             and not $message->test_smime_encrypt($list)) {
-            Log::do_log(
-                'err',
+            Log::do_log('err',
                 'Failed to encrypt. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
+                $message, $list);
             $list->send_dsn($message, {}, '5.7.5');
             return undef;
         }
@@ -3061,12 +3058,9 @@ sub DoMessage {
         # Check if re-encryption will be successful.
         if ($message->{'smime_crypted'}
             and not $message->test_smime_encrypt($list)) {
-            Log::do_log(
-                'err',
+            Log::do_log('err',
                 'Failed to encrypt. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
+                $message, $list);
             $list->send_dsn($message, {}, '5.7.5');
             return undef;
         }
@@ -3141,12 +3135,9 @@ sub DoMessage {
         # Check if re-encryption will be successful.
         if ($message->{'smime_crypted'}
             and not $message->test_smime_encrypt($list)) {
-            Log::do_log(
-                'err',
+            Log::do_log('err',
                 'Failed to encrypt. Message %s for list %s was rejected',
-                $message,
-                $list
-            );
+                $message, $list);
             $list->send_dsn($message, {}, '5.7.5');
             return undef;
         }
@@ -3396,9 +3387,9 @@ sub DoCommand {
 
     #FIXME
     my $auth_level =
-          $message->{'smime_subject'} ? $message->{'smime_subject'}
-        : $message->{'dkim_pass'}     ? 'dkim'
-        :                               undef;
+          $message->{'smime_signed'} ? 'smime'
+        : $message->{'dkim_pass'}    ? 'dkim'
+        :                              undef;
 
     if (defined $subject_field and $subject_field =~ /\S/) {
         $success ||= Sympa::Commands::parse($sender, $robot, $subject_field,
