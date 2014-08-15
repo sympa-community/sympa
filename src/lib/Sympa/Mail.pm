@@ -26,18 +26,13 @@ package Sympa::Mail;
 
 use strict;
 use warnings;
-use DateTime;
-use Encode qw();
-use MIME::EncWords;
 use POSIX qw();
 
 use Sympa::Bulk;
 use Conf;
 use Log;
-use Sympa::Message;
 use Sympa::Robot;
 use tools;
-use tt2;
 
 my $opensmtp = 0;
 my $fh       = 'fh0000000000';    ## File handle for the stream.
@@ -83,142 +78,8 @@ sub set_send_spool {
 #sub mail_file($robot, $filename, $rcpt, $data, $return_message_as_string);
 ##DEPRECATED: Use Sympa::Message->new_from_template() & sending().
 
-####################################################
-# public mail_message
-####################################################
-# distribute a message to a list, Crypting if needed
-#
-# IN : -$message(+) : ref(Sympa::Message)
-#      -\@rcpt(+) : recepients
-# OUT : -$numsmtp : number of sendmail process | undef
-#
-####################################################
-# Note: This would be moved to Pipeline package.
-sub mail_message {
-    Log::do_log('debug2', '(%s, %s, %s => %s)', @_);
-    my $message = shift;
-    my @rcpt    = @{shift || []};
-    my %params  = @_;
-
-    my $tag_as_last = $params{'tag_as_last'};
-
-    my $list     = $message->{context};
-    my $robot_id = $list->{'domain'};
-
-    unless (ref $message and $message->isa('Sympa::Message')) {
-        Log::do_log('err', 'Invalid message parameter');
-        return undef;
-    }
-
-    # normal return_path (ie used if VERP is not enabled)
-    my $from = $list->get_list_address('return_path');
-    return 0 unless @rcpt;
-
-    my ($i, $j, $nrcpt);
-    my $size    = 0;
-    my $numsmtp = 0;
-
-    my %rcpt_by_dom;
-
-    my @sendto;
-    my @sendtobypacket;
-
-    my $cmd_size =
-        length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
-        length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
-        length(' -N success,delay,failure -V ') + 32 +
-        length(" -f $from ");
-    my $db_type = $Conf::Conf{'db_type'};
-
-    while (defined($i = shift(@rcpt))) {
-        my @k = reverse split /[\.@]/, $i;
-        my @l = reverse split /[\.@]/, (defined $j ? $j : '@');
-
-        my $dom;
-        if ($i =~ /\@(.*)$/) {
-            $dom = $1;
-            chomp $dom;
-        }
-        $rcpt_by_dom{$dom} += 1;
-        Log::do_log(
-            'debug2',
-            'Domain: %s; rcpt by dom: %s; limit for this domain: %s',
-            $dom,
-            $rcpt_by_dom{$dom},
-            $Conf::Conf{'nrcpt_by_domain'}{$dom}
-        );
-
-        if (
-            # number of recipients by each domain
-            (   defined $Conf::Conf{'nrcpt_by_domain'}{$dom}
-                and $rcpt_by_dom{$dom} >= $Conf::Conf{'nrcpt_by_domain'}{$dom}
-            )
-            or
-            # number of different domains
-            (       $j
-                and $#sendto >= Conf::get_robot_conf($robot_id, 'avg')
-                and lc "$k[0] $k[1]" ne lc "$l[0] $l[1]"
-            )
-            or
-            # number of recipients in general, and ARG_MAX limitation
-            (   $#sendto >= 0
-                and (  $cmd_size + $size + length($i) + 5 > $max_arg
-                    or $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
-            )
-            or
-            # length of recipients field stored into bulkmailer table
-            # (these limits might be relaxed by future release of Sympa)
-            ($db_type eq 'mysql' and $size + length($i) + 5 > 65535)
-            or
-            ($db_type !~ /^(mysql|SQLite)$/ and $size + length($i) + 5 > 500)
-            ) {
-            undef %rcpt_by_dom;
-            # do not replace this line by "push @sendtobypacket, \@sendto" !!!
-            my @tab = @sendto;
-            push @sendtobypacket, \@tab;
-            $numsmtp++;
-            $nrcpt = $size = 0;
-            @sendto = ();
-        }
-
-        $nrcpt++;
-        $size += length($i) + 5;
-        push(@sendto, $i);
-        $j = $i;
-    }
-
-    if ($#sendto >= 0) {
-        $numsmtp++;
-        my @tab = @sendto;
-        # do not replace this line by push @sendtobypacket, \@sendto !!!
-        push @sendtobypacket, \@tab;
-    }
-
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
-        if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
-    # Shelve re-encryption with S/MIME.
-    $message->{shelved}{smime_encrypt} = 1
-        if $message->{'smime_crypted'};
-
-    # if not specified, delivery time is right now (used for sympa messages
-    # etc.)
-    my $delivery_date =
-           $list->get_next_delivery_date
-        || $message->{'date'}
-        || time;
-
-    return $numsmtp
-        if sending(
-        $message, \@sendtobypacket, $from,
-        'priority'      => $list->{'admin'}{'priority'},
-        'delivery_date' => $delivery_date,
-        'use_bulk'      => 1,
-        'tag_as_last'   => $tag_as_last
-        );
-
-    return undef;
-}
+#sub mail_message($message, $rcpt, [tag_as_last => 1]);
+# DEPRECATED: this is now a subroutine of Sympa::List::send_msg().
 
 ####################################################
 # public mail_forward
@@ -345,10 +206,8 @@ sub sending {
         $message->{envelope_sender} = $from;
 
         my $bulk_code = Sympa::Bulk::store(
-            'message'          => $message,
+            $message,
             'rcpts'            => $rcpt,
-            'robot'            => $robot_id,
-            'listname'         => $listname,
             'priority_message' => $priority_message,
             'priority_packet'  => $priority_packet,
             'delivery_date'    => $delivery_date,
@@ -356,8 +215,7 @@ sub sending {
         );
 
         unless (defined $bulk_code) {
-            Log::do_log('err', 'Failed to store message for list %s',
-                $listname);
+            Log::do_log('err', 'Failed to store message for %s', $that);
             Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot_id,
                 {'listname' => $listname});
             return undef;
@@ -430,6 +288,7 @@ sub sending {
 #       "DATA" field.  Otherwise undef
 #
 ##############################################################################
+# TODO: Split rcpt by max length of command line (_SC_ARG_MAX).
 sub smtpto {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my ($from, $rcpt, $robot, $envid) = @_;
