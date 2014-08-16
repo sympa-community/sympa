@@ -2485,7 +2485,7 @@ For 'decrypt', these are arrayrefs containing absolute filenames.
 =cut
 
 sub smime_find_keys {
-    Log::do_log('debug', '(%s, %s)', @_);
+    Log::do_log('debug2', '(%s, %s)', @_);
     my $that = shift || '*';
     my $operation = shift;
 
@@ -2500,7 +2500,6 @@ sub smime_find_keys {
     my $ext = ($operation eq 'sign' ? 'sign' : 'enc');
 
     unless (opendir(D, $dir)) {
-        Log::do_log('err', 'Unable to opendir %s: %m', $dir);
         return undef;
     }
 
@@ -2517,7 +2516,7 @@ sub smime_find_keys {
         my $k = $c;
         $k =~ s/\/cert\.pem/\/private_key/;
         unless ($keys{$k}) {
-            Log::do_log('notice', '%s exists, but matching %s doesn\'t',
+            Log::do_log('debug3', '%s exists, but matching %s doesn\'t',
                 $c, $k);
             delete $certs{$c};
         }
@@ -2527,7 +2526,7 @@ sub smime_find_keys {
         my $c = $k;
         $c =~ s/\/private_key/\/cert\.pem/;
         unless ($certs{$c}) {
-            Log::do_log('notice', '%s exists, but matching %s doesn\'t',
+            Log::do_log('debug3', '%s exists, but matching %s doesn\'t',
                 $k, $c);
             delete $keys{$k};
         }
@@ -2545,12 +2544,13 @@ sub smime_find_keys {
             $certs = "$dir/cert.pem";
             $keys  = "$dir/private_key";
         } else {
-            Log::do_log('info', '%s: no certs/keys found for %s',
+            Log::do_log('debug3', '%s: no certs/keys found for %s',
                 $that, $operation);
             return undef;
         }
     }
 
+    Log::do_log('debug3', '%s: certs/keys for %s found', $that, $operation);
     return ($certs, $keys);
 }
 
