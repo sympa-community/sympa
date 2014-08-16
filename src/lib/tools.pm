@@ -835,7 +835,6 @@ sub get_dkim_parameters {
             # RFC 4871 (page 21)
             $data->{'i'} = $list->get_list_address('owner');    # -request
         }
-
         $data->{'selector'} = $list->{'admin'}{'dkim_parameters'}{'selector'};
         $keyfile = $list->{'admin'}{'dkim_parameters'}{'private_key_path'};
     } else {
@@ -847,6 +846,12 @@ sub get_dkim_parameters {
             Conf::get_robot_conf($robot_id, 'dkim_selector');
         $keyfile = Conf::get_robot_conf($robot_id, 'dkim_private_key_path');
     }
+
+    return undef
+        unless defined $data->{'d'}
+            and defined $data->{'selector'}
+            and defined $keyfile;
+
     my $fh;
     unless (open $fh, '<', $keyfile) {
         Log::do_log('err', 'Could not read dkim private key %s: %m',
