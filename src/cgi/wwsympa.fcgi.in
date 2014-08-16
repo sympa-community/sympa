@@ -10434,12 +10434,27 @@ sub do_send_me {
         }
         # Decrypt message if possible
         $message->smime_decrypt;
+        # FIXME FIXME: try re-encrypt if needed, and reject request if failed.
+
+        # Add or remove several headers.
+        # TODO:more headers may be added. cf. Sympa::List::distribute_msg().
+        $message->add_header('X-Loop', $list->get_list_address());
+        $message->delete_header('Errors-To');
+        $message->add_header('Errors-To',
+            $list->get_list_address('return_path'));
+        $message->delete_header('Precedence');
+        $message->add_header('Precedence', 'list');
+        $message->add_header('Precedence', 'bulk');
+        $message->replace_header('Sender', $list->get_list_address('owner'));
+        $message->delete_header('Resent-Sender');
+        $message->replace_header('X-no-archive', 'yes');
 
         unless (
             defined Sympa::Mail::sending(
-                $message,
-                $param->{'user'}{'email'},
-                Conf::get_robot_conf($robot, 'sympa')
+                $message, $param->{'user'}{'email'},
+                $list->get_list_address('return_path'),
+                'priority' => $list->{'admin'}{'priority'},
+                use_bulk   => 1
             )
             ) {
             $param->{'status'} = 'message_err';

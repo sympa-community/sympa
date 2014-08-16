@@ -1983,14 +1983,15 @@ sub distribute_msg {
     $message->add_header('X-Sequence', $sequence);
     ## These fields should be overwritten if any of them already exist
     $message->delete_header('Errors-To');
-    $message->add_header('Errors-to', $self->get_list_address('return_path'));
+    $message->add_header('Errors-To', $self->get_list_address('return_path'));
     ## Two Precedence: fields are added (overwritten), as some MTAs recognize
     ## only one of them.
     $message->delete_header('Precedence');
     $message->add_header('Precedence', 'list');
     $message->add_header('Precedence', 'bulk');
-    ## The Sender: field should be added (overwritten) at least for DKIM
-    ## compatibility.  Note that Resent-Sender: field will be removed.
+    # The Sender: field should be added (overwritten) at least for DKIM or
+    # Sender ID (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender:
+    # field will be removed.
     $message->replace_header('Sender', $self->get_list_address('owner'));
     $message->delete_header('Resent-Sender');
     $message->replace_header('X-no-archive', 'yes');
