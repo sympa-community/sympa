@@ -27,6 +27,7 @@ package Sympa::Upgrade;
 use strict;
 use warnings;
 use Encode qw();
+use English qw(-no_match_vars);
 use File::Find qw();
 use File::Path qw();
 use POSIX qw();
@@ -54,7 +55,7 @@ sub get_previous_version {
 
     if (-f $version_file) {
         unless (open VFILE, $version_file) {
-            Log::do_log('err', 'Unable to open %s: %s', $version_file, $!);
+            Log::do_log('err', 'Unable to open %s: %m', $version_file);
             return undef;
         }
         while (<VFILE>) {
@@ -79,10 +80,9 @@ sub update_version {
     unless (open VFILE, ">$version_file") {
         Log::do_log(
             'err',
-            'Unable to write %s; sympa.pl needs write access on %s directory: %s',
+            'Unable to write %s; sympa.pl needs write access on %s directory: %m',
             $version_file,
-            $Conf::Conf{'etc'},
-            $!
+            $Conf::Conf{'etc'}
         );
         return undef;
     }
@@ -206,7 +206,8 @@ sub upgrade {
 
         foreach my $d (@directories) {
             unless (opendir DIR, $d) {
-                printf STDERR "Error: Cannot read %s directory : %s", $d, $!;
+                printf STDERR "Error: Cannot read %s directory: %s", $d,
+                    $ERRNO;
                 next;
             }
 
@@ -220,7 +221,8 @@ sub upgrade {
         foreach my $tpl (@templates) {
             unless (rename $tpl, "$tpl.oldtemplate") {
                 printf STDERR
-                    "Error : failed to rename $tpl to $tpl.oldtemplate : $!\n";
+                    "Error : failed to rename %s to %s.oldtemplate: %s\n",
+                    $tpl, $tpl, $ERRNO;
                 next;
             }
 
@@ -339,8 +341,8 @@ sub upgrade {
                     next;
                 } else {
                     unless (rename $old_path, $new_path) {
-                        Log::do_log('err', 'Failed to rename %s to %s: %s',
-                            $old_path, $new_path, $!);
+                        Log::do_log('err', 'Failed to rename %s to %s: %m',
+                            $old_path, $new_path);
                         next;
                     }
                     Log::do_log('notice', "Renamed %s to %s",
@@ -472,8 +474,8 @@ sub upgrade {
                 next;
             } else {
                 unless (rename $old_path, $new_path) {
-                    Log::do_log('err', 'Failed to rename %s to %s: %s',
-                        $old_path, $new_path, $!);
+                    Log::do_log('err', 'Failed to rename %s to %s: %m',
+                        $old_path, $new_path);
                     next;
                 }
                 Log::do_log('notice', "Renamed %s to %s",
@@ -875,8 +877,8 @@ sub upgrade {
                             $orig_f, $new_f);
                         unless (rename $orig_f, $new_f) {
                             Log::do_log('err',
-                                'Failed to rename %s to %s: %s',
-                                $orig_f, $new_f, $!);
+                                'Failed to rename %s to %s: %m',
+                                $orig_f, $new_f);
                             next;
                         }
                         $count++;
@@ -1094,7 +1096,7 @@ sub upgrade {
 
         ## Add contents to sympa.conf
         if (%migrated) {
-            open $fh, '<', $sympa_conf or die $!;
+            open $fh, '<', $sympa_conf or die $ERRNO;
             @newconf = <$fh>;
             close $fh;
             $newconf[$#newconf] .= "\n" unless $newconf[$#newconf] =~ /\n\z/;
@@ -1186,13 +1188,13 @@ sub upgrade {
         $language->pop_lang;
 
         if (%migrated) {
-            warn sprintf 'Unable to rename %s : %s', $sympa_conf, $!
+            warn sprintf 'Unable to rename %s: %s', $sympa_conf, $ERRNO
                 unless rename $sympa_conf, "$sympa_conf.$date";
             ## Write new config files
             my $umask = umask 037;
             unless (open $fh, '>', $sympa_conf) {
                 umask $umask;
-                die sprintf 'Unable to open %s : %s', $sympa_conf, $!;
+                die sprintf 'Unable to open %s: %s', $sympa_conf, $ERRNO;
             }
             umask $umask;
             chown [getpwnam(Sympa::Constants::USER)]->[2],
@@ -1208,7 +1210,7 @@ sub upgrade {
 
         if (-r $wwsympa_conf) {
             ## Keep old config file
-            warn sprintf 'Unable to rename %s : %s', $wwsympa_conf, $!
+            warn sprintf 'Unable to rename %s: %s', $wwsympa_conf, $ERRNO
                 unless rename $wwsympa_conf, "$wwsympa_conf.$date";
             printf
                 "%s will NO LONGER be used.\nPrevious version has been saved as %s.\n",
@@ -1396,12 +1398,12 @@ sub to_utf8 {
         if ($text =~ /[^\x20-\x7E]/) {
             my $t = $text;
             eval { Encode::decode('UTF-8', $t, Encode::FB_CROAK); };
-            if ($@) {
+            if ($EVAL_ERROR) {
                 eval {
                     $t = $text;
                     Encode::from_to($t, $charset, "UTF-8", Encode::FB_CROAK);
                 };
-                if ($@) {
+                if ($EVAL_ERROR) {
                     Log::do_log('err',
                         "Template %s cannot be converted from %s to UTF-8",
                         $charset, $file);

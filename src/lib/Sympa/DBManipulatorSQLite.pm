@@ -27,6 +27,7 @@ package Sympa::DBManipulatorSQLite;
 use strict;
 use warnings;
 use DBI qw();
+use English qw(-no_match_vars);
 use POSIX qw();
 
 use Log;
@@ -655,11 +656,11 @@ sub do_query {
             $rc = $self->{'dbh'}->rollback;
         }
     };
-    if ($@ or !$rc) {
+    if ($EVAL_ERROR or !$rc) {
         Log::do_log(
             'err',
             'Could not unlock database: %s',
-            $@ || sprintf('(%s) %s',
+            $EVAL_ERROR || sprintf('(%s) %s',
                 $self->{'dbh'}->err, $self->{'dbh'}->errstr)
         );
         return undef;
@@ -697,11 +698,11 @@ sub do_prepared_query {
             $rc = $self->{'dbh'}->rollback;
         }
     };
-    if ($@ or !$rc) {
+    if ($EVAL_ERROR or !$rc) {
         Log::do_log(
             'err',
             'Could not unlock database: %s',
-            $@ || sprintf('(%s) %s',
+            $EVAL_ERROR || sprintf('(%s) %s',
                 $self->{'dbh'}->err, $self->{'dbh'}->errstr)
         );
         return undef;
@@ -767,7 +768,7 @@ sub _update_table {
     my $statement;
     my $table_saved = sprintf '%s_%s_%d', $table,
         POSIX::strftime("%Y%m%d%H%M%S", gmtime $^T),
-        $$;
+        $PID;
     my $report;
 
     ## create temporary table with new structure

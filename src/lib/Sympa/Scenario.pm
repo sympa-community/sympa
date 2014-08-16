@@ -26,6 +26,7 @@ package Sympa::Scenario;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use Mail::Address;
 use Net::CIDR;
 
@@ -1252,8 +1253,8 @@ sub verify {
                 }
             };
         }
-        if ($@) {
-            Log::do_log('err', 'Cannot evaluate match: %s', $@);
+        if ($EVAL_ERROR) {
+            Log::do_log('err', 'Cannot evaluate match: %s', $EVAL_ERROR);
             return undef;
         }
         if ($r) {
@@ -1697,18 +1698,18 @@ sub verify_custom {
     }
     Log::do_log('notice', 'Use module %s for custom condition', $file);
     eval { require "$file"; };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log('err', 'Error requiring %s: %s (%s)',
-            $condition, "$@", ref($@));
+            $condition, "$EVAL_ERROR", ref($EVAL_ERROR));
         return undef;
     }
     my $res = do {
         local $_ = $rule;
         eval "CustomCondition::${condition}::verify(\@{\$args_ref})";
     };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log('err', 'Error evaluating %s: %s (%s)',
-            $condition, "$@", ref($@));
+            $condition, "$EVAL_ERROR", ref($EVAL_ERROR));
         return undef;
     }
 

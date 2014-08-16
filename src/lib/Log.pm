@@ -26,6 +26,7 @@ package Log;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use POSIX qw();
 use Scalar::Util;
 use Sys::Syslog qw();
@@ -60,17 +61,17 @@ our $last_date_aggregation;
 
 sub fatal_err {
     my $m     = shift;
-    my $errno = $!;
+    my $errno = $ERRNO;
 
     eval {
         Sys::Syslog::syslog('err', $m, @_);
         Sys::Syslog::syslog('err', "Exiting.");
     };
-    if ($@ && ($warning_date < time - $warning_timeout)) {
+    if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
             Sympa::Robot::send_notify_to_listmaster(
-                'logs_failed', $Conf::Conf{'domain'}, [$@]
+                'logs_failed', $Conf::Conf{'domain'}, [$EVAL_ERROR]
             )
             ) {
             print STDERR "No logs available, can't send warning message";
@@ -91,7 +92,7 @@ sub fatal_err {
 sub do_log {
     my $level   = shift;
     my $message = shift;
-    my $errno   = $!;
+    my $errno   = $ERRNO;
 
     unless (exists $levels{$level}) {
         do_log('err', 'Invalid $level: "%s"', $level);
@@ -201,10 +202,10 @@ sub do_log {
             Sys::Syslog::syslog($level, '%s', $message);
         }
     };
-    if ($@ and $warning_date < time - $warning_timeout) {
+    if ($EVAL_ERROR and $warning_date < time - $warning_timeout) {
         $warning_date = time + $warning_timeout;
         Sympa::Robot::send_notify_to_listmaster('logs_failed',
-            $Conf::Conf{'domain'}, [$@]);
+            $Conf::Conf{'domain'}, [$EVAL_ERROR]);
     }
 }
 
@@ -230,14 +231,14 @@ sub do_connect {
     # process inherit the openlog with parameters from parent process
     Sys::Syslog::closelog;
     eval {
-        Sys::Syslog::openlog("$log_service\[$$\]", 'ndelay,nofatal',
+        Sys::Syslog::openlog("$log_service\[$PID\]", 'ndelay,nofatal',
             $log_facility);
     };
-    if ($@ && ($warning_date < time - $warning_timeout)) {
+    if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
             Sympa::Robot::send_notify_to_listmaster(
-                'logs_failed', $Conf::Conf{'domain'}, [$@]
+                'logs_failed', $Conf::Conf{'domain'}, [$EVAL_ERROR]
             )
             ) {
             print STDERR "No logs available, can't send warning message";

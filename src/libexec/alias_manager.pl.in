@@ -30,6 +30,9 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
+use English qw(-no_match_vars);
+use Getopt::Long;
+use Pod::Usage;
 use POSIX;
 
 use Conf;
@@ -39,6 +42,13 @@ use tools;
 use tt2;
 
 $ENV{'PATH'} = '';
+
+my %options;
+GetOptions(\%main::options, 'help|h');
+
+if ($main::options{'help'}) {
+    pod2usage(0);
+}
 
 ## Load Sympa.conf
 unless (defined Conf::load()) {
@@ -132,7 +142,7 @@ if ($operation eq 'add') {
     unless ($file) {
         unless (system($alias_wrapper, "--domain=$domain") == 0) {
             if ($? == -1) {
-                print STDERR "Failed to execute newaliases: $!\n";
+                print STDERR "Failed to execute newaliases: $ERRNO\n";
             } else {
                 printf STDERR "newaliases exited with status %d\n", ($? >> 8);
             }
@@ -207,7 +217,7 @@ if ($operation eq 'add') {
     unless ($file) {
         unless (system($alias_wrapper, "--domain=$domain") == 0) {
             if ($? == -1) {
-                print STDERR "Failed to execute newaliases: $!\n";
+                print STDERR "Failed to execute newaliases: $ERRNO\n";
             } else {
                 printf STDERR "newaliases exited with status %d\n", ($? >> 8);
             }

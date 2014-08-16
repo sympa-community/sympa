@@ -660,7 +660,7 @@ sub data_structure_uptodate {
 
     if (-f $version_file) {
         unless (open VFILE, $version_file) {
-            Log::do_log('err', 'Unable to open %s: %s', $version_file, $!);
+            Log::do_log('err', 'Unable to open %s: %m', $version_file);
             return undef;
         }
         while (<VFILE>) {

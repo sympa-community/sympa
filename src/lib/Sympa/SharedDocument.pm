@@ -227,8 +227,8 @@ sub new {
         unless (opendir DIR, $document->{'absolute_path'}) {
             Log::do_log(
                 'err',
-                'Cannot open %s: %s',
-                $document->{'absolute_path'}, $!
+                'Cannot open %s: %m',
+                $document->{'absolute_path'}
             );
             return undef;
         }

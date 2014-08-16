@@ -29,6 +29,7 @@ use warnings;
 use DateTime;
 use Digest::MD5 qw();
 use Encode qw();
+use English;    # FIXME: drop $PREMATCH usage
 use HTTP::Request;
 use IO::Scalar;
 use LWP::UserAgent;
@@ -746,8 +747,8 @@ sub increment_msg_count {
         $count{$today} = 1;
     }
 
-    unless (open(MSG_COUNT, ">$file.$$")) {
-        Log::do_log('err', 'Unable to create "%s.%s": %s', $file, $$, $!);
+    unless (open(MSG_COUNT, ">$file.$PID")) {
+        Log::do_log('err', 'Unable to create "%s.%s": %m', $file, $PID);
         return undef;
     }
     foreach my $key (sort { $a <=> $b } keys %count) {
@@ -755,8 +756,8 @@ sub increment_msg_count {
     }
     close MSG_COUNT;
 
-    unless (rename("$file.$$", $file)) {
-        Log::do_log('err', 'Unable to write "%s": %s', $file, $!);
+    unless (rename("$file.$PID", $file)) {
+        Log::do_log('err', 'Unable to write "%s": %m', $file);
         return undef;
     }
     return 1;
@@ -1403,8 +1404,8 @@ sub _load_config_changes_file {
 
     unless (open(FILE, "$self->{'dir'}/config_changes")) {
         Log::do_log('err',
-            'File %s/config_changes exists, but unable to open it: %s',
-            $self->{'dir'}, $_);
+            'File %s/config_changes exists, but unable to open it: %m',
+            $self->{'dir'});
         return undef;
     }
 
@@ -1442,9 +1443,9 @@ sub _save_config_changes_file {
             $self->{'name'});
         return undef;
     }
-    unless (open(FILE, ">$self->{'dir'}/config_changes")) {
-        Log::do_log('err', '(%s) Unable to create file %s/config_changes: %s',
-            $self->{'name'}, $self->{'dir'}, $_);
+    unless (open FILE, '>', $self->{'dir'} . '/config_changes') {
+        Log::do_log('err', 'Unable to create file %s/config_changes: %m',
+            $self->{'dir'});
         return undef;
     }
 
@@ -1878,7 +1879,7 @@ sub distribute_msg {
         # truncate multiple "Re:" and equivalents.
         my $re_regexp = Sympa::Regexps::re();
         if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
-            ($before_tag, $after_tag) = ($1, $');    #'
+            ($before_tag, $after_tag) = ($1, $POSTMATCH);    #'
         } else {
             ($before_tag, $after_tag) = ('', $subject_field);
         }
@@ -4956,7 +4957,7 @@ sub parseCustomAttribute {
     }
 
     unless (defined $tree) {
-        Log::do_log('err', "Failed to parse XML data: %s", $@);
+        Log::do_log('err', "Failed to parse XML data: %s", $EVAL_ERROR);
         return undef;
     }
 
@@ -5256,11 +5257,7 @@ sub get_info {
     my $info;
 
     unless (open INFO, "$self->{'dir'}/info") {
-        Log::do_log(
-            'err',
-            'Could not open %s: %s',
-            $self->{'dir'} . '/info', $!
-        );
+        Log::do_log('err', 'Could not open %s: %m', $self->{'dir'} . '/info');
         return undef;
     }
 
@@ -5546,8 +5543,8 @@ sub update_list_member {
                 tools::md5_fingerprint($values->{'email'}) . '.'
                     . $extension);
             unless (rename $path, $new_path) {
-                Log::do_log('err', 'Failed to rename %s to %s : %s',
-                    $path, $new_path, $!);
+                Log::do_log('err', 'Failed to rename %s to %s : %m',
+                    $path, $new_path);
                 last;
             }
         }
@@ -6623,7 +6620,7 @@ sub _load_task_title {
     my $titles = {};
 
     unless (open TASK, '<', $file) {
-        Log::do_log('err', 'Unable to open file "%s"', $file);
+        Log::do_log('err', 'Unable to open file "%s": %m', $file);
         return undef;
     }
 
@@ -6720,7 +6717,7 @@ sub _load_list_members_file {
     open(L, $file) || return undef;
 
     ## Process the lines
-    local $/;
+    local $RS;
     my $data = <L>;
 
     my @users;
@@ -8209,7 +8206,7 @@ sub _load_include_admin_user_file {
         }
 
         ## Just in case...
-        local $/ = "\n";
+        local $RS = "\n";
 
         ## Split in paragraphs
         my $i = 0;
@@ -9801,7 +9798,7 @@ sub get_lists {
                         'failed to get lists with user %s as %s from database: %s',
                         $which_user,
                         $which_role,
-                        $@
+                        $EVAL_ERROR
                     );
                     $sth = pop @sth_stack;
                     return undef;
@@ -10353,7 +10350,7 @@ sub _load_list_config_file {
     my (@paragraphs);
 
     ## Just in case...
-    local $/ = "\n";
+    local $RS = "\n";
 
     ## Set defaults to 1
     foreach my $pname (keys %$pinfo) {
@@ -10987,7 +10984,7 @@ sub compute_topic {
                 my $body = $part->bodyhandle->as_string();
                 my $converted;
                 eval { $converted = $charset->encode($body); };
-                if ($@) {
+                if ($EVAL_ERROR) {
                     $converted = $body;
                     $converted =~ s/[^\x01-\x7F]/?/g;
                 }
@@ -11585,11 +11582,8 @@ sub remove_task {
     my $task = shift;
 
     unless (opendir(DIR, $Conf::Conf{'queuetask'})) {
-        Log::do_log(
-            'err',
-            'Can\'t open dir %s: %s',
-            $Conf::Conf{'queuetask'}, $!
-        );
+        Log::do_log('err', 'Can\'t open dir %s: %m',
+            $Conf::Conf{'queuetask'});
         return undef;
     }
     my @tasks = grep !/^\.\.?$/, readdir DIR;
@@ -11599,8 +11593,8 @@ sub remove_task {
         if ($task_file =~
             /^(\d+)\.\w*\.$task\.$self->{'name'}\@$self->{'domain'}$/) {
             unless (unlink("$Conf::Conf{'queuetask'}/$task_file")) {
-                Log::do_log('err', 'Unable to remove task file %s: %s',
-                    $task_file, $!);
+                Log::do_log('err', 'Unable to remove task file %s: %m',
+                    $task_file);
                 return undef;
             }
             Log::do_log('notice', 'Removing task file %s', $task_file);
@@ -11783,8 +11777,8 @@ sub remove_aliases {
         system($alias_manager, 'del', $self->{'name'},
         $self->{'admin'}{'host'}) >> 8;
     if ($status) {
-        Log::do_log('err', 'Failed to remove aliases; status %d: %s',
-            $status, $!);
+        Log::do_log('err', 'Failed to remove aliases; status %d: %m',
+            $status);
         return undef;
     }
 
@@ -11846,7 +11840,7 @@ sub create_shared {
     }
 
     unless (mkdir($dir, 0777)) {
-        Log::do_log('err', 'Unable to create %s: %s', $dir, $!);
+        Log::do_log('err', 'Unable to create %s: %m', $dir);
         return undef;
     }
 

@@ -39,6 +39,7 @@ package Sympa::Admin;
 use strict;
 use warnings;
 use Encode qw();
+use English qw(-no_match_vars);
 use File::Copy qw();
 use IO::Scalar;
 
@@ -274,7 +275,8 @@ sub create_list_old {
 
     ## Check the privileges on the list directory
     unless (mkdir($list_dir, 0777)) {
-        Log::do_log('err', 'Unable to create %s: %s', $list_dir, $?);
+        Log::do_log('err', 'Unable to create %s: %s', $list_dir,
+            $CHILD_ERROR);
         return undef;
     }
 
@@ -302,8 +304,7 @@ sub create_list_old {
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
     unless ($lock_fh) {
-        Log::do_log('err', 'Impossible to create %s/config: %s',
-            $list_dir, $!);
+        Log::do_log('err', 'Impossible to create %s/config: %m', $list_dir);
         return undef;
     }
     ## Use an intermediate handler to encode to filesystem_encoding
@@ -324,7 +325,7 @@ sub create_list_old {
 
     ## info file creation.
     unless (open INFO, '>', "$list_dir/info") {
-        Log::do_log('err', 'Impossible to create %s/info: %s', $list_dir, $!);
+        Log::do_log('err', 'Impossible to create %s/info: %m', $list_dir);
     }
     if (defined $param->{'description'}) {
         Encode::from_to($param->{'description'},
@@ -510,7 +511,8 @@ sub create_list {
     }
 
     unless (-r $list_dir || mkdir($list_dir, 0777)) {
-        Log::do_log('err', 'Unable to create %s: %s', $list_dir, $?);
+        Log::do_log('err', 'Unable to create %s: %s', $list_dir,
+            $CHILD_ERROR);
         return undef;
     }
 
@@ -525,8 +527,7 @@ sub create_list {
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list_dir . '/config', 5, '>');
     unless ($lock_fh) {
-        Log::do_log('err', 'Impossible to create %s/config: %s',
-            $list_dir, $!);
+        Log::do_log('err', 'Impossible to create %s/config: %m', $list_dir);
         return undef;
     }
     #tt2::parse_tt2($param, 'config.tt2', $lock_fh, [$family->{'dir'}]);
@@ -541,7 +542,7 @@ sub create_list {
     $param->{'description'} =~ s/\r\n|\r/\n/g;
 
     unless (open INFO, '>', "$list_dir/info") {
-        Log::do_log('err', 'Impossible to create %s/info: %s', $list_dir, $!);
+        Log::do_log('err', 'Impossible to create %s/info: %m', $list_dir);
     }
     if (defined $param->{'description'}) {
         print INFO $param->{'description'};
@@ -567,8 +568,8 @@ sub create_list {
                     $param->{'listname'}, $family->{'name'}, $robot, $file);
             }
             unless (open FILE, '>', "$list_dir/$file") {
-                Log::do_log('err', 'Impossible to create %s/%s: %s',
-                    $list_dir, $file, $!);
+                Log::do_log('err', 'Impossible to create %s/%s: %m',
+                    $list_dir, $file);
             }
             print FILE $file_content;
             close FILE;
@@ -1025,8 +1026,8 @@ sub rename_list {
             'queuesubscribe', 'queueautomatic'
             ) {
             unless (opendir(DIR, $Conf::Conf{$spool})) {
-                Log::do_log('err', 'Unable to open "%s" spool: %s',
-                    $Conf::Conf{$spool}, $!);
+                Log::do_log('err', 'Unable to open "%s" spool: %m',
+                    $Conf::Conf{$spool});
             }
 
             foreach my $file (sort readdir(DIR)) {
@@ -1065,10 +1066,9 @@ sub rename_list {
                     ) {
                     Log::do_log(
                         'err',
-                        'Unable to rename %s to %s: %s',
+                        'Unable to rename %s to %s: %m',
                         "$Conf::Conf{$spool}/$newfile",
-                        "$Conf::Conf{$spool}/$newfile",
-                        $!
+                        "$Conf::Conf{$spool}/$newfile"
                     );
                     next;
                 }
@@ -1090,10 +1090,9 @@ sub rename_list {
                 ) {
                 Log::do_log(
                     'err',
-                    'Unable to rename %s to %s: %s',
+                    'Unable to rename %s to %s: %m',
                     "$Conf::Conf{'queuedigest'}/$old_listname",
-                    "$Conf::Conf{'queuedigest'}/$param{'new_listname'}",
-                    $!
+                    "$Conf::Conf{'queuedigest'}/$param{'new_listname'}"
                 );
                 next;
             }
@@ -1110,10 +1109,9 @@ sub rename_list {
                 ) {
                 Log::do_log(
                     'err',
-                    'Unable to rename %s to %s: %s',
+                    'Unable to rename %s to %s: %m',
                     "$Conf::Conf{'queuedigest'}/$old_listname\@$robot",
-                    "$Conf::Conf{'queuedigest'}/$param{'new_listname'}\@$param{'new_robot'}",
-                    $!
+                    "$Conf::Conf{'queuedigest'}/$param{'new_listname'}\@$param{'new_robot'}"
                 );
                 next;
             }
@@ -1169,7 +1167,7 @@ sub clone_list_as_empty {
     }
 
     unless (mkdir $new_dir, 0775) {
-        Log::do_log('err', 'Failed to create directory %s: %s', $new_dir, $!);
+        Log::do_log('err', 'Failed to create directory %s: %m', $new_dir);
         return undef;
     }
     chmod 0775, $new_dir;
@@ -1183,8 +1181,8 @@ sub clone_list_as_empty {
                 ) {
                 Log::do_log(
                     'err',
-                    'Failed to copy_directory %s: %s',
-                    $new_dir . '/' . $subdir, $!
+                    'Failed to copy_directory %s: %m',
+                    $new_dir . '/' . $subdir
                 );
                 return undef;
             }
@@ -1200,8 +1198,8 @@ sub clone_list_as_empty {
             ) {
             Log::do_log(
                 'err',
-                'Failed to copy %s: %s',
-                $new_dir . '/' . $file, $!
+                'Failed to copy %s: %m',
+                $new_dir . '/' . $file
             );
             return undef;
         }
@@ -1218,8 +1216,8 @@ sub clone_list_as_empty {
                 ) {
                 Log::do_log(
                     'err',
-                    'Failed to copy %s: %s',
-                    $new_dir . '/' . $file, $!
+                    'Failed to copy %s: %m',
+                    $new_dir . '/' . $file
                 );
                 return undef;
             }
@@ -1383,7 +1381,7 @@ sub list_check_smtp {
     push @addresses, "$list\@" . $domain;
 
     eval { require Net::SMTP; };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log('err',
             "Unable to use Net library, Net::SMTP required, install it (CPAN) first"
         );
@@ -1425,14 +1423,14 @@ sub install_aliases {
             /^none$/i;
 
     my $alias_manager = $Conf::Conf{'alias_manager'};
-    my $output_file   = $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $$;
+    my $output_file = $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $PID;
     my $error_output_file =
-        $Conf::Conf{'tmpdir'} . '/aliasmanager.stderr.' . $$;
+        $Conf::Conf{'tmpdir'} . '/aliasmanager.stderr.' . $PID;
     Log::do_log('debug2', '%s add %s %s', $alias_manager, $list->{'name'},
         $list->{'admin'}{'host'});
 
     unless (-x $alias_manager) {
-        Log::do_log('err', 'Failed to install aliases: %s', $!);
+        Log::do_log('err', 'Failed to install aliases: %m');
         return undef;
     }
 
@@ -1440,12 +1438,12 @@ sub install_aliases {
     # parameter to determine robot.
     my ($saveout, $saveerr);
     unless (open $saveout, '>&STDOUT' and open STDOUT, '>', $output_file) {
-        Log::do_log('err', 'Cannot open file %s: %s', $output_file, $!);
+        Log::do_log('err', 'Cannot open file %s: %m', $output_file);
         return undef;
     }
     unless (open $saveerr, '>&STDERR'
         and open STDERR, '>', $error_output_file) {
-        Log::do_log('err', 'Cannot open file %s: %s', $error_output_file, $!);
+        Log::do_log('err', 'Cannot open file %s: %m', $error_output_file);
         open STDOUT, '>&', $saveout;
         return undef;
     }

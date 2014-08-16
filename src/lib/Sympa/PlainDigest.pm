@@ -84,6 +84,7 @@ package Sympa::PlainDigest;
 use strict;
 use warnings;
 use Encode qw();
+use English qw(-no_match_vars);
 use HTML::TreeBuilder;
 use Mail::Address;
 use MIME::Charset;
@@ -269,7 +270,7 @@ sub _do_text_plain {
         $charset->encoder('utf8');
         $thispart = $charset->encode($thispart);
     };
-    if ($@) {
+    if ($EVAL_ERROR) {
         # mmm, what to do if it fails?
         $outstring .= $language->gettext_sprintf(
             "** Warning: Message part using unrecognised character set %s\n    Some characters may be lost or incorrect **\n\n",
@@ -347,7 +348,7 @@ sub _do_text_html {
         $tree->delete();
         $text = Encode::encode_utf8($text);
     };
-    if ($@) {
+    if ($EVAL_ERROR) {
         $outstring .= $language->gettext(
             "\n[** Unable to process HTML message part **]\n");
         return 1;

@@ -30,6 +30,7 @@ use warnings;
 use Digest::MD5;
 use Encode::Guess;           ## Useful when encoding should be guessed
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
+use English;                 # FIXME: drop $MATCH and $PREMATCH usage
 use File::Copy::Recursive;
 use File::Find;
 use HTML::StripScripts::Parser;
@@ -91,14 +92,14 @@ sub set_file_rights {
         $gid = -1;
     }
     unless (chown($uid, $gid, $param{'file'})) {
-        Log::do_log('err', "Can't give ownership of file %s to %s.%s: %s",
-            $param{'file'}, $param{'user'}, $param{'group'}, $!);
+        Log::do_log('err', "Can't give ownership of file %s to %s.%s: %m",
+            $param{'file'}, $param{'user'}, $param{'group'});
         return undef;
     }
     if ($param{'mode'}) {
         unless (chmod($param{'mode'}, $param{'file'})) {
-            Log::do_log('err', "Can't change rights of file %s: %s",
-                $Conf::Conf{'db_name'}, $!);
+            Log::do_log('err', "Can't change rights of file %s: %m",
+                $Conf::Conf{'db_name'});
             return undef;
         }
     }
@@ -282,7 +283,7 @@ sub safefork {
         my ($pid) = fork;
         return $pid if (defined($pid));
 
-        $err = "$!";
+        $err = $ERRNO;
         Log::do_log('warn', 'Cannot create new process in safefork: %s',
             $err);
         ## FIXME:should send a mail to the listmaster
@@ -537,12 +538,12 @@ sub del_dir {
         }
         closedir DIR;
         unless (rmdir $dir) {
-            Log::do_log('err', 'Unable to delete directory %s: $!', $dir);
+            Log::do_log('err', 'Unable to delete directory %s: %m', $dir);
         }
     } else {
         Log::do_log(
             'err',
-            'Unable to open directory %s to delete the files it contains: $!',
+            'Unable to open directory %s to delete the files it contains: %m',
             $dir
         );
     }
@@ -858,7 +859,7 @@ sub get_dkim_parameters {
             $keyfile);
         return undef;
     }
-    $data->{'private_key'} = do { local $/; <$fh> };
+    $data->{'private_key'} = do { local $RS; <$fh> };
     close $fh;
 
     return $data;
@@ -882,7 +883,7 @@ sub dkim_verifier {
         return undef;
     }
 
-    my $temporary_file = $Conf::Conf{'tmpdir'} . "/dkim." . $$;
+    my $temporary_file = $Conf::Conf{'tmpdir'} . "/dkim." . $PID;
     if (!open(MSGDUMP, "> $temporary_file")) {
         Log::do_log('err', 'Can\'t store message in file %s',
             $temporary_file);
@@ -1394,16 +1395,16 @@ sub virus_infected {
     my $work_dir = $Conf::Conf{'tmpdir'} . '/antivirus';
 
     unless (-d $work_dir or mkdir $work_dir, 0755) {
-        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %s',
-            $work_dir, $!);
+        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %m',
+            $work_dir);
         return undef;
     }
 
     $work_dir = $Conf::Conf{'tmpdir'} . '/antivirus/' . $name;
 
     unless (-d $work_dir or mkdir $work_dir, 0755) {
-        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %s',
-            $work_dir, $!);
+        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %m',
+            $work_dir);
         return undef;
     }
 
@@ -1476,7 +1477,7 @@ sub virus_infected {
         }
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         ## uvscan status = 1 | 2 (*256) => virus
         if ((($status == 1) or ($status == 2)) and not($virusfound)) {
@@ -1485,7 +1486,7 @@ sub virus_infected {
 
         ## F-Secure
     } elsif ($Conf::Conf{'antivirus_path'} =~ /\/fsav$/) {
-        my $dbdir = $`;
+        my $dbdir = $PREMATCH;
 
         # impossible to look for viruses with no option set
         unless ($Conf::Conf{'antivirus_args'}) {
@@ -1506,7 +1507,7 @@ sub virus_infected {
 
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         ## fsecure status =3 (*256) => virus
         if (($status == 3) and not($virusfound)) {
@@ -1529,7 +1530,7 @@ sub virus_infected {
 
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         Log::do_log('debug2', 'Status: ' . $status);
 
@@ -1558,7 +1559,7 @@ sub virus_infected {
         }
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         ## uvscan status =3 (*256) => virus
         if (($status >= 3) and not($virusfound)) {
@@ -1585,7 +1586,7 @@ sub virus_infected {
         }
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         ## sweep status =3 (*256) => virus
         if (($status == 3) and not($virusfound)) {
@@ -1609,7 +1610,7 @@ sub virus_infected {
         }
         close ANTIVIR;
 
-        my $status = $? / 256;
+        my $status = $CHILD_ERROR / 256;
 
         ## Clamscan status =1 (*256) => virus
         if (($status == 1) and not($virusfound)) {
@@ -2108,8 +2109,8 @@ sub qencode_hierarchy {
         ## Rename the file using utf8
         Log::do_log('notice', "Renaming %s to %s", $orig_f, $new_f);
         unless (rename $orig_f, $new_f) {
-            Log::do_log('err', 'Failed to rename %s to %s: %s',
-                $orig_f, $new_f, $!);
+            Log::do_log('err', 'Failed to rename %s to %s: %m',
+                $orig_f, $new_f);
             next;
         }
         $count++;
@@ -2122,7 +2123,7 @@ sub qencode_hierarchy {
 sub dump_encoding {
     my $out = shift;
 
-    $out =~ s/./sprintf('%02x', ord($&)).' '/eg;
+    $out =~ s/./sprintf('%02x', ord($MATCH)).' '/eg;
     return $out;
 }
 
@@ -2156,7 +2157,7 @@ sub remove_pid {
         unless (@pids) {
             ## Release the lock
             unless (unlink $pidfile) {
-                Log::do_log('err', "Failed to remove %s: %s", $pidfile, $!);
+                Log::do_log('err', "Failed to remove %s: %m", $pidfile);
                 $lock_fh->close;
                 return undef;
             }
@@ -2167,14 +2168,14 @@ sub remove_pid {
         }
     } else {
         unless (unlink $pidfile) {
-            Log::do_log('err', "Failed to remove %s: %s", $pidfile, $!);
+            Log::do_log('err', "Failed to remove %s: %m", $pidfile);
             $lock_fh->close;
             return undef;
         }
         my $err_file = $Conf::Conf{'tmpdir'} . '/' . $pid . '.stderr';
         if (-f $err_file) {
             unless (unlink $err_file) {
-                Log::do_log('err', "Failed to remove %s: %s", $err_file, $!);
+                Log::do_log('err', "Failed to remove %s: %m", $err_file);
                 $lock_fh->close;
                 return undef;
             }
@@ -2354,7 +2355,7 @@ sub get_message_id {
         $domain = $Conf::Conf{'domain'};
     }
 
-    return sprintf '<sympa.%d.%d.%d@%s>', time, $$, int(rand(999)), $domain;
+    return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, int(rand(999)), $domain;
 }
 
 sub get_dir_size {
@@ -2615,7 +2616,7 @@ sub smime_extract_certs {
         }
         print $pipeout $mime->bodyhandle->as_string;
         close $pipeout;
-        my $status = $? >> 8;
+        my $status = $CHILD_ERROR >> 8;
         if ($status) {
             Log::do_log('err', 'Openssl pkcs7 returned an error: %s',
                 $status);
@@ -3015,14 +3016,14 @@ sub change_x_sympa_to {
 
     ## Change X-Sympa-To
     unless (open FILE, $file) {
-        Log::do_log('err', 'Unable to open "%s": %s', $file, $!);
+        Log::do_log('err', 'Unable to open "%s": %m', $file);
         next;
     }
     my @content = <FILE>;
     close FILE;
 
     unless (open FILE, ">$file") {
-        Log::do_log('err', 'Unable to open "%s": %s', "$file", $!);
+        Log::do_log('err', 'Unable to open "%s": %m', "$file");
         next;
     }
     foreach (@content) {
@@ -3415,9 +3416,9 @@ sub save_to_bad {
     unless (rename($queue . '/' . $file, $queue . '/bad/' . $file)) {
         Log::do_log(
             'notice',
-            'Could not rename %s to %s: %s',
+            'Could not rename %s to %s: %m',
             $queue . '/' . $file,
-            $queue . '/bad/' . $file, $!
+            $queue . '/bad/' . $file
         );
         return undef;
     }
@@ -3479,7 +3480,7 @@ sub CleanSpool {
     Log::do_log('debug', '(%s, %s)', $spool_dir, $clean_delay);
 
     unless (opendir(DIR, $spool_dir)) {
-        Log::do_log('err', 'Unable to open "%s" spool: %s', $spool_dir, $!);
+        Log::do_log('err', 'Unable to open "%s" spool: %m', $spool_dir);
         return undef;
     }
 
@@ -3496,8 +3497,8 @@ sub CleanSpool {
                     "$spool_dir/$f");
             } elsif (-d "$spool_dir/$f") {
                 unless (tools::remove_dir("$spool_dir/$f")) {
-                    Log::do_log('err', 'Cannot remove old directory %s: %s',
-                        "$spool_dir/$f", $!);
+                    Log::do_log('err', 'Cannot remove old directory %s: %m',
+                        "$spool_dir/$f");
                     next;
                 }
                 Log::do_log('notice', 'Deleting old directory %s',
@@ -3513,7 +3514,7 @@ sub CleanSpool {
 # hostname(20) and pid(10) are truncated in order to store lockname in
 # database varchar(30)
 sub get_lockname {
-    return substr(substr(Sys::Hostname::hostname(), 0, 20) . $$, 0, 30);
+    return substr(substr(Sys::Hostname::hostname(), 0, 20) . $PID, 0, 30);
 }
 
 ## compare 2 scalars, string/numeric independant
@@ -3523,13 +3524,13 @@ sub smart_lessthan {
     $stra =~ s/\s+$//;
     $strb =~ s/^\s+//;
     $strb =~ s/\s+$//;
-    $! = 0;
+    $ERRNO = 0;
     my ($numa, $unparsed) = POSIX::strtod($stra);
     my $numb;
     $numb = POSIX::strtod($strb)
-        unless ($! || $unparsed != 0);
+        unless ($ERRNO || $unparsed != 0);
 
-    if (($stra eq '') || ($strb eq '') || ($unparsed != 0) || $!) {
+    if (($stra eq '') || ($strb eq '') || ($unparsed != 0) || $ERRNO) {
         return $stra lt $strb;
     } else {
         return $stra < $strb;
@@ -3545,7 +3546,7 @@ sub get_pids_in_pid_file {
 
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
     unless ($lock_fh) {
-        Log::do_log('err', 'Unable to open PID file %s:%s', $pidfile, $!);
+        Log::do_log('err', 'Unable to open PID file %s: %m', $pidfile);
         return undef;
     }
     my $l = <$lock_fh>;
@@ -3660,7 +3661,7 @@ sub get_children_processes_list {
     Log::do_log('debug3', '');
     my @children;
     for my $p (@{Proc::ProcessTable->new->table}) {
-        if ($p->ppid == $$) {
+        if ($p->ppid == $PID) {
             push @children, $p->pid;
         }
     }

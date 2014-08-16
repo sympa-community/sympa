@@ -38,6 +38,7 @@ package Sympa::Family;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use File::Copy qw();
 use Term::ProgressBar;
 use XML::LibXML;
@@ -122,7 +123,7 @@ sub get_families {
         next unless -d $dir;
 
         unless (opendir FAMILIES, $dir) {
-            Log::do_log('err', 'Can\'t open dir %s: %s', $dir, $!);
+            Log::do_log('err', 'Can\'t open dir %s: %m', $dir);
             next;
         }
 
@@ -368,14 +369,10 @@ sub add_list {
         $hash_list = {config => $data};
     } else {
         #copy the xml file in another file
-        unless (open(FIC, '>', "$self->{'dir'}/_new_list.xml")) {
-            Log::do_log(
-                'err',
-                '(%s) Impossible to create the temp file %s/_new_list.xml: %s',
-                $self->{'name'},
-                $self->{'dir'},
-                $!
-            );
+        unless (open FIC, '>', $self->{'dir'} . '/_new_list.xml') {
+            Log::do_log('err',
+                'Impossible to create the temp file %s/_new_list.xml: %m',
+                $self->{'dir'});
         }
         while (<$data>) {
             print FIC ($_);
@@ -424,7 +421,8 @@ sub add_list {
         $list->set_status_error_config('error_copy_file', $list->{'name'},
             $self->{'name'});
         push @{$return->{'string_info'}},
-            "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config";
+            'Impossible to create file %s/config_changes : %s, the list is set in status error_config',
+            $list->{'dir'}, $ERRNO;
     }
     close FILE;
 
@@ -573,10 +571,10 @@ sub modify_list {
     $return->{'string_error'} = undef;    ## fatal errors
 
     #copy the xml file in another file
-    unless (open(FIC, '>', "$self->{'dir'}/_mod_list.xml")) {
+    unless (open FIC, '>', $self->{'dir'} . '/_mod_list.xml') {
         Log::do_log('err',
-            '(%s) Impossible to create the temp file %s/_mod_list.xml: %s',
-            $self->{'name'}, $self->{'dir'}, $!);
+            'Impossible to create the temp file %s/_mod_list.xml: %m',
+            $self->{'dir'});
     }
     while (<$fh>) {
         print FIC ($_);
@@ -662,7 +660,8 @@ sub modify_list {
 
         unless (open INFO, '>', "$list->{'dir'}/info") {
             push @{$return->{'string_info'}},
-                "Impossible to create new $list->{'dir'}/info file : $!";
+                sprintf('Impossible to create new %s/info file: %s',
+                $list->{'dir'}, $ERRNO);
         }
         print INFO $hash_list->{'config'}{'description'};
         close INFO;
@@ -732,7 +731,9 @@ sub modify_list {
         $list->set_status_error_config('error_copy_file', $list->{'name'},
             $self->{'name'});
         push @{$return->{'string_info'}},
-            "Impossible to create file $list->{'dir'}/config_changes : $!, the list is set in status error_config.";
+            sprintf
+            'Impossible to create file %s/config_changes : %s, the list is set in status error_config.',
+            $list->{'dir'}, $ERRNO;
     }
     close FILE;
 
@@ -1000,9 +1001,9 @@ sub instantiate {
     $progress->max_update_rate(1);
     my $next_update = 0;
     my $aliasmanager_output_file =
-        $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $$;
+        $Conf::Conf{'tmpdir'} . '/aliasmanager.stdout.' . $PID;
     my $output_file =
-        $Conf::Conf{'tmpdir'} . '/instantiate_family.stdout.' . $$;
+        $Conf::Conf{'tmpdir'} . '/instantiate_family.stdout.' . $PID;
     my $output = '';
 
     ## EACH FAMILY LIST
@@ -1103,10 +1104,10 @@ sub instantiate {
             }
 
             # config_changes
-            unless (open FILE, '>', "$list->{'dir'}/config_changes") {
+            unless (open FILE, '>', $list->{'dir'} . '/config_changes') {
                 Log::do_log('err',
-                    'Impossible to create file %s/config_changes: %s',
-                    $list->{'dir'}, $!);
+                    'Impossible to create file %s/config_changes: %m',
+                    $list->{'dir'});
                 push(
                     @{$self->{'generated_lists'}{'file_error'}},
                     $list->{'name'}
@@ -2317,9 +2318,9 @@ sub _update_existing_list {
     unless ($config_changes->{'file'}{'info'}) {
         $hash_list->{'config'}{'description'} =~ s/\r\n|\r/\n/g;
 
-        unless (open INFO, '>', "$list->{'dir'}/info") {
-            Log::do_log('err', 'Impossible to open %s/info: %s',
-                $list->{'dir'}, $!);
+        unless (open INFO, '>', $list->{'dir'} . '/info') {
+            Log::do_log('err', 'Impossible to open %s/info: %m',
+                $list->{'dir'});
         }
         print INFO $hash_list->{'config'}{'description'};
         close INFO;
@@ -2384,9 +2385,9 @@ sub _update_existing_list {
 
     }
 
-    unless (open FILE, '>', "$list->{'dir'}/config_changes") {
-        Log::do_log('err', 'Impossible to open file %s/config_changes: %s',
-            $list->{'dir'}, $!);
+    unless (open FILE, '>', $list->{'dir'} . '/config_changes') {
+        Log::do_log('err', 'Impossible to open file %s/config_changes: %m',
+            $list->{'dir'});
         push(@{$self->{'generated_lists'}{'file_error'}}, $list->{'name'});
         $list->set_status_error_config('error_copy_file', $list->{'name'},
             $self->{'name'});
@@ -2852,8 +2853,8 @@ sub _copy_files {
     if (defined $file) {
         unless (File::Copy::copy("$dir/$file", "$list_dir/instance.xml")) {
             Log::do_log('err',
-                '(%s) Impossible to copy %s/%s into %s/instance.xml: %s',
-                $self->{'name'}, $dir, $file, $list_dir, $!);
+                'Impossible to copy %s/%s into %s/instance.xml: %m',
+                $self->{'name'}, $dir, $file, $list_dir);
             return undef;
         }
     }
@@ -2921,15 +2922,15 @@ sub _load_param_constraint_conf {
     }
 
     unless (open(FILE, $file)) {
-        Log::do_log('err', 'File %s exists, but unable to open it: %s',
-            $file, $_);
+        Log::do_log('err', 'File %s exists, but unable to open it: %m',
+            $file);
         return undef;
     }
 
     my $error = 0;
 
     ## Just in case...
-    local $/ = "\n";
+    local $RS = "\n";
 
     while (<FILE>) {
         next if /^\s*(\#.*|\s*)$/;

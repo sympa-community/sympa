@@ -47,6 +47,7 @@ use strict;
 use warnings;
 use DateTime;
 use Encode qw();
+use English qw(-no_match_vars);
 use HTML::Entities qw();
 use Mail::Address;
 use MIME::Charset;
@@ -278,7 +279,7 @@ sub new_from_file {
     my $file  = shift;
 
     open my $fh, '<', $file or return undef;
-    my $serialized = do { local $/; <$fh> };
+    my $serialized = do { local $RS; <$fh> };
     close $fh;
 
     my $self = $class->new($serialized, @_)
@@ -1450,11 +1451,11 @@ sub smime_decrypt {
 
         my ($cert, $key);
         if (open my $fh, '<', $certfile) {
-            $cert = do { local $/; <$fh> };
+            $cert = do { local $RS; <$fh> };
             close $fh;
         }
         if (open my $fh, '<', $keyfile) {
-            $key = do { local $/; <$fh> };
+            $key = do { local $RS; <$fh> };
             close $fh;
         }
 
@@ -1581,7 +1582,7 @@ sub smime_encrypt {
 
     my $cert;
     if (open my $fh, '<', $certfile) {
-        $cert = do { local $/; <$fh> };
+        $cert = do { local $RS; <$fh> };
         close $fh;
     }
 
@@ -1606,7 +1607,8 @@ sub smime_encrypt {
         $smime->encrypt($dup_head->as_string . "\n" . $self->body_as_string);
     };
     unless (defined $msg_string) {
-        Log::do_log('err', 'Unable to S/MIME encrypt message: %s', $@);
+        Log::do_log('err', 'Unable to S/MIME encrypt message: %s',
+            $EVAL_ERROR);
         return undef;
     }
 
@@ -1737,11 +1739,11 @@ sub smime_sign {
 
     my ($cert, $key);
     if (open my $fh, '<', $certfile) {
-        $cert = do { local $/; <$fh> };
+        $cert = do { local $RS; <$fh> };
         close $fh;
     }
     if (open my $fh, '<', $keyfile) {
-        $key = do { local $/; <$fh> };
+        $key = do { local $RS; <$fh> };
         close $fh;
     }
 
@@ -1756,7 +1758,7 @@ sub smime_sign {
         $smime->sign($dup_head->as_string . "\n" . $self->body_as_string);
     };
     unless (defined $msg_string) {
-        Log::do_log('err', 'Unable to S/MIME sign message: %s', $@);
+        Log::do_log('err', 'Unable to S/MIME sign message: %s', $EVAL_ERROR);
         return undef;
     }
 
@@ -1841,13 +1843,13 @@ sub check_smime_signature {
 
     # First step is to check if message signing is OK.
     my $smime = Crypt::SMIME->new;
-    eval { # Crypt::SMIME >= 0.15 is required.
+    eval {    # Crypt::SMIME >= 0.15 is required.
         $smime->setPublicKeyStore(grep { defined $_ }
                 ($Conf::Conf{'cafile'}, $Conf::Conf{'capath'}));
     };
     unless (eval { $smime->check($self->as_string) }) {
         Log::do_log('err', '%s: Unable to verify S/MIME signature: %s',
-            $self, $@);
+            $self, $EVAL_ERROR);
         return undef;
     }
 
@@ -2051,7 +2053,7 @@ sub _merge_msg {
 
         ## Only decodable bodies are allowed.
         eval { $utf8_body = Encode::encode_utf8($in_cset->decode($body, 1)); };
-        if ($@) {
+        if ($EVAL_ERROR) {
             Log::do_log('err', 'Cannot decode by charset "%s"', $charset);
             return undef;
         }
@@ -2096,7 +2098,7 @@ sub _merge_msg {
         unless ($io
             and $io->print($body)
             and $io->close) {
-            Log::do_log('err', 'Can\'t write in Entity: %s', $!);
+            Log::do_log('err', 'Can\'t write in Entity: %m');
             return undef;
         }
         $entity->sync_headers(Length => 'COMPUTE')
@@ -2414,7 +2416,7 @@ sub _decorate_parts {
             if ($header =~ /\.mime$/) {
                 my $header_part;
                 eval { $header_part = $parser->parse_in($header); };
-                if ($@) {
+                if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $header, $parser->last_error);
                 } else {
@@ -2440,7 +2442,7 @@ sub _decorate_parts {
             if ($footer =~ /\.mime$/) {
                 my $footer_part;
                 eval { $footer_part = $parser->parse_in($footer); };
-                if ($@) {
+                if ($EVAL_ERROR) {
                     Log::do_log('err', 'Failed to parse MIME data %s: %s',
                         $footer, $parser->last_error);
                 } else {
@@ -2520,7 +2522,7 @@ sub _append_parts {
             # Save new body.
             $io = $bodyh->open('w');
             unless (defined $io) {
-                Log::do_log('err', 'Failed to save message: %s', "$!");
+                Log::do_log('err', 'Failed to save message: %m');
                 return undef;
             }
             $io->print($body);
@@ -2594,7 +2596,7 @@ sub _append_footer_header_to_part {
         $header_msg = Encode::decode_utf8($header_msg, 1);
         $footer_msg = Encode::decode_utf8($footer_msg, 1);
     };
-    return undef if $@;
+    return undef if $EVAL_ERROR;
 
     my $new_body;
     if ($eff_type eq 'text/plain') {
@@ -2661,7 +2663,7 @@ sub _append_footer_header_to_part {
         # metadata in HTML won't be altered.
         # Problem: FB_HTMLCREF of several codecs are broken.
         eval { $body = $in_cset->encode($new_body, Encode::FB_HTMLCREF); };
-        return undef if $@;
+        return undef if $EVAL_ERROR;
     }
 
     return $body;
@@ -2920,7 +2922,7 @@ sub _fix_utf8_parts {
             $entity->parts([$data]);
         } elsif (ref $data eq 'SCALAR' or ref $data eq 'ARRAY') {
             eval { $data = $parser->parse_data($data); };
-            if ($@) {
+            if ($EVAL_ERROR) {
                 Log::do_log('notice', 'Failed to parse MIME data');
                 $data = $parser->parse_data('');
             }
@@ -2932,7 +2934,7 @@ sub _fix_utf8_parts {
                 die sprintf 'Unsupported type for attachment: %s', ref $data;
             } else {    # already stringified.
                 eval { $parser->parse_data($data); };    # check only.
-                if ($@) {
+                if ($EVAL_ERROR) {
                     Log::do_log('notice', 'Failed to parse MIME data');
                     $data = '';
                 }

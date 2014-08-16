@@ -61,7 +61,7 @@ sub load {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config)) {
-        Log::do_log('err', 'Unable to open %s: %s', $config, $!);
+        Log::do_log('err', 'Unable to open %s: %m', $config);
         return undef;
     }
 

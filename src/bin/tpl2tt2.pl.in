@@ -26,6 +26,7 @@
 use lib '--modulesdir--';
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 
 use Conf;
 use Sympa::Constants;
@@ -38,7 +39,7 @@ use tools;
 
 my %options;
 
-$| = 1;
+$OUTPUT_AUTOFLUSH = 1;
 
 ## Check UID
 #unless (getlogin() eq Sympa::Constants::USER) {
@@ -144,7 +145,7 @@ foreach my $vr (keys %{$Conf::Conf{'robots'}}) {
 foreach my $d (@directories) {
 
     unless (opendir DIR, $d) {
-        printf STDERR "Error: Cannot read %s directory : %s\n", $d, $!;
+        printf STDERR "Error: Cannot read %s directory : %s\n", $d, $ERRNO;
         next;
     }
 
@@ -213,7 +214,8 @@ foreach my $tpl (@templates) {
     unless (-d $dest_path) {
         printf "Creating $dest_path directory\n";
         unless (my_mkdir($dest_path)) {
-            printf STDERR "Error : Cannot create $dest_path directory : $!\n";
+            printf STDERR "Error : Cannot create %s directory: %s\n",
+                $dest_path, $ERRNO;
             next;
         }
         unless (
@@ -237,8 +239,8 @@ foreach my $tpl (@templates) {
 
     ## Rename old files to .converted
     unless (rename $tpl, "$tpl.converted") {
-        printf STDERR
-            "Error : failed to rename $tpl to $tpl.converted : $!\n";
+        printf STDERR "Error : failed to rename %s to %s.converted: %s\n",
+            $tpl, $tpl, $ERRNO;
         next;
     }
 }
@@ -251,12 +253,12 @@ sub convert {
 
     ## Convert tpl file
     unless (open TPL, $in_file) {
-        print STDERR "Cannot open $in_file : $!\n";
+        print STDERR "Cannot open $in_file : $ERRNO\n";
         return undef;
     }
     if ($out_file) {
         unless (open TT2, ">$out_file") {
-            print STDERR "Cannot create $out_file : $!\n";
+            print STDERR "Cannot create $out_file : $ERRNO\n";
             return undef;
         }
     }
@@ -300,14 +302,15 @@ sub my_mkdir {
 
         unless (-d $root_path) {
             unless (mkdir($root_path, 0777)) {
-                printf STDERR
-                    "Error : Cannot create $root_path directory : $!\n";
+                printf STDERR "Error : Cannot create directory %s: %s\n",
+                    $root_path, $ERRNO;
                 return undef;
             }
         }
 
         unless (mkdir($path, 0777)) {
-            printf STDERR "Error : Cannot create $path directory : $!\n";
+            printf STDERR "Error : Cannot create directory %s: %s\n", $path,
+                $ERRNO;
             return undef;
         }
     } else {

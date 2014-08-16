@@ -26,6 +26,7 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use File::Copy qw();
 use Getopt::Long;
 use MIME::Charset;
@@ -197,7 +198,7 @@ if ($main::options{'help'}) {
 
     ## Change working directory.
     if (!chdir($Conf::Conf{'home'})) {
-        printf STDERR "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $!;
+        printf STDERR "Can't chdir to %s: %s\n", $Conf::Conf{'home'}, $ERRNO;
         exit 1;
     }
 
@@ -420,8 +421,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
             $service);
 
-        Log::do_log('debug', 'Running server %s for %s purpose', $$,
-            $service);
+        Log::do_log('debug', 'Running server %s for %s purpose',
+            $PID, $service);
         unless ($main::options{'batch'}) {
 
             ## Create and write the PID file
@@ -435,15 +436,15 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             ## dedicated file
             my $options;
             $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-            tools::write_pid($file, $$, $options);
+            tools::write_pid($file, $PID, $options);
             unless ($options->{'stderr_to_tty'}) {
-                tools::direct_stderr_to_file(('pid' => $$));
+                tools::direct_stderr_to_file(('pid' => $PID));
             }
         }
 
         # Set the User ID & Group ID for the process
-        $( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
-        $< = $> = (getpwnam(Sympa::Constants::USER))[2];
+        $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
+        $UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
 
         ## Required on FreeBSD to change ALL IDs
         ## (effective UID + real UID + saved UID)
@@ -451,8 +452,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
         ## Check if the UID has correctly been set (useful on OS X)
-        unless (($( == (getgrnam(Sympa::Constants::GROUP))[2])
-            && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
+        unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
+            && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
             Log::fatal_err(
                 "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
             );
@@ -526,7 +527,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         # There may be multiple aliases files.  Give each of them suffixed
         # name.
         my ($basename, %robots_of, %sympa_aliases);
-        $basename = sprintf '%s/sympa_aliases.%s', $Conf::Conf{'tmpdir'}, $$;
+        $basename = sprintf '%s/sympa_aliases.%s', $Conf::Conf{'tmpdir'},
+            $PID;
 
         foreach my $robot (@robots) {
             my $file = Conf::get_robot_conf($robot, 'sendmail_aliases');
@@ -962,7 +964,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
 
         unless (open INFILE, $main::options{'input_file'}) {
-            print STDERR "\n Impossible to open input file  : $! \n";
+            print STDERR "\n Impossible to open input file  : $ERRNO \n";
             exit 1;
         }
 
@@ -1473,7 +1475,7 @@ Log::do_log('notice', 'Sympa exited normally due to signal');
 my $file = 'sympa';
 $file = 'sympa-distribute' if $main::daemon_usage == Conf::DAEMON_MESSAGE;
 $file = 'sympa-creation'   if $main::daemon_usage == Conf::DAEMON_CREATION;
-tools::remove_pid($file, $$);
+tools::remove_pid($file, $PID);
 
 exit(0);
 

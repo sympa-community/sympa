@@ -307,8 +307,8 @@ sub clean_archive_directory {
     } else {
         Log::do_log(
             'err',
-            'Unable to open directory %s: %s',
-            $answer->{'dir_to_rebuild'}, $!
+            'Unable to open directory %s: %m',
+            $answer->{'dir_to_rebuild'}
         );
         tools::del_dir($answer->{'cleaned_dir'});
         return undef;

@@ -28,11 +28,13 @@ package Conf;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use Storable;
 
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::Language;
+use Sympa::LockedFile;
 use Log;
 use Sympa::Robot;
 use SDM;
@@ -807,9 +809,8 @@ sub checkfiles {
                 unless (open(FF, ">$dir" . '/index.html')) {
                     Log::do_log(
                         'err',
-                        'Unable to create %s/index.html as an empty file to protect directory: %s',
-                        $dir,
-                        $!
+                        'Unable to create %s/index.html as an empty file to protect directory: %m',
+                        $dir
                     );
                 }
                 close FF;
@@ -864,8 +865,8 @@ sub checkfiles {
         unless (-d $dir) {
             unless (tools::mkdir_all($dir, 0755)) {
                 Sympa::Robot::send_notify_to_listmaster('cannot_mkdir',
-                    $robot, ["Could not create directory $dir: $!"]);
-                Log::do_log('err', 'Failed to create directory %s', $dir);
+                    $robot, ["Could not create directory $dir: $ERRNO"]);
+                Log::do_log('err', 'Failed to create directory %s: %m', $dir);
                 return undef;
             }
         }
@@ -891,10 +892,10 @@ sub checkfiles {
                 unless (open(CSS, ">$dir/$css")) {
                     Sympa::Robot::send_notify_to_listmaster(
                         'cannot_open_file', $robot,
-                        ["Could not open file $dir/$css: $!"]);
+                        ["Could not open file $dir/$css: $ERRNO"]);
                     Log::do_log(
                         'err',
-                        'Failed to open (write) file %s',
+                        'Failed to open (write) file %s: %m',
                         $dir . '/' . $css
                     );
                     return undef;
@@ -1090,7 +1091,7 @@ sub _load_auth {
 
     ## Open the configuration file or return and read the lines.
     unless (open(IN, $config_file)) {
-        Log::do_log('notice', 'Unable to open %s: %s', $config_file, $!);
+        Log::do_log('notice', 'Unable to open %s: %m', $config_file);
         return undef;
     }
 
@@ -1148,7 +1149,7 @@ sub _load_auth {
                     }
 
                     eval "require AuthCAS";
-                    if ($@) {
+                    if ($EVAL_ERROR) {
                         Log::do_log('err',
                             'Failed to load AuthCAS perl module');
                         return undef;
@@ -1263,8 +1264,8 @@ sub load_charset {
     return {} unless $config_file;
 
     unless (open CONFIG, $config_file) {
-        Log::do_log('err', 'Unable to read configuration file %s: %s',
-            $config_file, $!);
+        Log::do_log('err', 'Unable to read configuration file %s: %m',
+            $config_file);
         return {};
     }
     while (<CONFIG>) {
@@ -1276,7 +1277,7 @@ sub load_charset {
         unless ($cset) {
             Log::do_log('err',
                 'Charset name is missing in configuration file %s line %d',
-                $config_file, $.);
+                $config_file, $NR);
             next;
         }
         # canonicalize lang if possible.
@@ -1301,7 +1302,7 @@ sub load_nrcpt_by_domain {
 
     ## Open the configuration file or return and read the lines.
     unless (open IN, '<', $config_file) {
-        Log::do_log('err', 'Unable to open %s: %s', $config_file, $!);
+        Log::do_log('err', 'Unable to open %s: %m', $config_file);
         return;
     }
     while (<IN>) {
@@ -1505,7 +1506,7 @@ sub load_generic_conf_file {
     my (@paragraphs);
 
     ## Just in case...
-    local $/ = "\n";
+    local $RS = "\n";
 
     ## Set defaults to 1
     foreach my $pname (keys %structure) {
@@ -2148,7 +2149,7 @@ sub _check_cpan_modules_required_by_config {
     ## Some parameters require CPAN modules
     if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
         eval "require Mail::DKIM";
-        if ($@) {
+        if ($EVAL_ERROR) {
             Log::do_log('notice',
                 'Failed to load Mail::DKIM perl module ; setting "dkim_feature" to "off"'
             );
@@ -2371,11 +2372,11 @@ sub _save_binary_cache {
     }
 
     eval { Storable::store_fd($param->{'conf_to_save'}, $lock_fh); };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log(
             'err',
             'Failed to save the binary config %s. error: %s',
-            $param->{'target_file'}, $@
+            $param->{'target_file'}, $EVAL_ERROR
         );
         unless ($lock_fh->close()) {
             return undef;
@@ -2389,11 +2390,11 @@ sub _save_binary_cache {
             $param->{'target_file'}
         );
     };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log(
             'err',
             'Failed to change owner of the binary file %s. error: %s',
-            $param->{'target_file'}, $@
+            $param->{'target_file'}, $EVAL_ERROR
         );
         unless ($lock_fh->close()) {
             return undef;
@@ -2419,11 +2420,11 @@ sub _load_binary_cache {
     }
 
     eval { $result = Storable::fd_retrieve($lock_fh); };
-    if ($@) {
+    if ($EVAL_ERROR) {
         Log::do_log(
             'err',
             'Failed to load the binary config %s. error: %s',
-            $param->{'config_file'}, $@
+            $param->{'config_file'}, $EVAL_ERROR
         );
         unless ($lock_fh->close()) {
             return undef;

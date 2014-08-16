@@ -48,7 +48,7 @@ if (-t) {
     no warnings;
 
     eval { require Encode::Locale; };
-    unless ($@
+    unless ($EVAL_ERROR
         or Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN) eq
         'ascii'
         or Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT) eq
@@ -66,7 +66,7 @@ if ($modfail) {
     *gettext = sub {shift};
 
     eval { require Text::Wrap; };
-    if ($@) {
+    if ($EVAL_ERROR) {
         *tools::wrap_text = sub {"$_[1]$_[0]\n"};
     } else {
         $Text::Wrap::columns = 78;
@@ -128,7 +128,7 @@ sub create_configuration {
     }
 
     unless (open NEWF, '>', $conf) {
-        die "Unable to open $conf : $!";
+        die "Unable to open $conf: $ERRNO";
     }
 
     if ($options{create} eq 'sympa.conf') {
@@ -318,15 +318,16 @@ sub edit_configuration {
 
         ## Keep old config file
         unless (rename $sympa_conf, $sympa_conf . '.' . $date) {
-            warn
-                sprintf(gettext("Unable to rename %s : %s"), $sympa_conf, $!);
+            warn sprintf(gettext("Unable to rename %s : %s"),
+                $sympa_conf, $ERRNO);
         }
 
         ## Write new config file
         my $umask = umask 037;
         unless (open(SYMPA, "> $sympa_conf")) {
             umask $umask;
-            die sprintf(gettext("Unable to open %s : %s"), $sympa_conf, $!);
+            die sprintf(gettext("Unable to open %s : %s"),
+                $sympa_conf, $ERRNO);
         }
         umask $umask;
         chown [getpwnam(Sympa::Constants::USER)]->[2],
@@ -412,7 +413,7 @@ sub check_modules {
         printf("%-20s %-15s", $mod, $cpan_modules->{$mod}{package_name});
 
         eval "require $mod";
-        if ($@) {
+        if ($EVAL_ERROR) {
             ### not installed
             print "was not found on this system.\n";
             install_module($mod, {'default' => $default}, $cpan_modules);

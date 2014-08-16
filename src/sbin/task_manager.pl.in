@@ -27,6 +27,7 @@ use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use DateTime;
+use English qw(-no_match_vars);
 use Getopt::Long;
 use LWP::UserAgent;
 use Pod::Usage;
@@ -132,22 +133,22 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-tools::write_pid('task_manager', $$, $options);
+tools::write_pid('task_manager', $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    tools::direct_stderr_to_file(('pid' => $$));
+    tools::direct_stderr_to_file(('pid' => $PID));
 }
 
 ## Set the UserID & GroupID for the process
-$( = $) = (getgrnam(Sympa::Constants::GROUP))[2];
-$< = $> = (getpwnam(Sympa::Constants::USER))[2];
+$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
+$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
 
 ## Required on FreeBSD to change ALL IDs(effective UID + real UID + saved UID)
 POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
 POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
 
 ## Check if the UID has correctly been set (usefull on OS X)
-unless (($( == (getgrnam(Sympa::Constants::GROUP))[2])
-    && ($< == (getpwnam(Sympa::Constants::USER))[2])) {
+unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
+    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
     Log::fatal_err(
         "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo."
     );
@@ -384,8 +385,8 @@ while (!$end) {
                     'Removing task file %s because the list is not opened',
                     $task_file);
                 unless (unlink $task_file) {
-                    Log::do_log('err', 'Unable to remove task file %s: %s',
-                        $task_file, $!);
+                    Log::do_log('err', 'Unable to remove task file %s: %m',
+                        $task_file);
                     next;
                 }
                 next;
@@ -398,8 +399,7 @@ while (!$end) {
                         $task_file);
                     unless (unlink $task_file) {
                         Log::do_log('err',
-                            'Unable to remove task file %s: %s',
-                            $task_file, $!);
+                            'Unable to remove task file %s: %m', $task_file);
                         next;
                     }
                     next;
@@ -411,8 +411,7 @@ while (!$end) {
                         $task_file);
                     unless (unlink $task_file) {
                         Log::do_log('err',
-                            'Unable to remove task file %s: %s',
-                            $task_file, $!);
+                            'Unable to remove task file %s: %m', $task_file);
                         next;
                     }
                     next;
@@ -433,7 +432,7 @@ while (!$end) {
 Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
 
 Log::do_log('notice', 'Task_manager exited normally due to signal');
-tools::remove_pid('task_manager', $$);
+tools::remove_pid('task_manager', $PID);
 
 exit(0);
 
@@ -841,8 +840,8 @@ sub execute {
         Log::do_log('err', 'Error while processing task, removing %s',
             $task_file);
         unless (unlink($task_file)) {
-            Log::do_log('err', 'Unable to remove task file %s: %s',
-                $task_file, $!);
+            Log::do_log('err', 'Unable to remove task file %s: %m',
+                $task_file);
             return undef;
         }
         return undef;
@@ -851,8 +850,8 @@ sub execute {
         Log::do_log('notice', 'The task %s is now useless. Removing it',
             $task_file);
         unless (unlink($task_file)) {
-            Log::do_log('err', 'Unable to remove task file %s: %s',
-                $task_file, $!);
+            Log::do_log('err', 'Unable to remove task file %s: %m',
+                $task_file);
             return undef;
         }
     }
@@ -2070,7 +2069,6 @@ sub sigterm {
 
 ## sort task name by their epoch date
 sub epoch_sort {
-
     $a =~ /(\d+)\..+/;
     my $date1 = $1;
     $b =~ /(\d+)\..+/;

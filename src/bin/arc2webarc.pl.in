@@ -26,6 +26,7 @@
 use lib '--modulesdir--';
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use Getopt::Long;
 
 use Conf;
@@ -58,7 +59,7 @@ my $msg_count = 0;
 #$main::options{'debug'} = 1;
 #$main::options{'debug2'} = 1 if ($main::options{'debug'});
 
-$| = 1;
+$OUTPUT_AUTOFLUSH = 1;
 
 my %opt;
 unless (GetOptions(\%opt, 'input-directory=s')) {
@@ -72,7 +73,7 @@ my $listname = $ARGV[0];
 my $robot    = $ARGV[1];
 
 ## Check UID
-unless ([getpwuid $<]->[0] eq Sympa::Constants::USER) {
+unless ([getpwuid $UID]->[0] eq Sympa::Constants::USER) {
     printf
         "You should run this script as user \"%s\", ignore ? (y/CR)",
         Sympa::Constants::USER;

@@ -26,6 +26,7 @@ package Sympa::Mail;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
 use POSIX qw();
 
 use Sympa::Bulk;
@@ -38,7 +39,7 @@ my $opensmtp = 0;
 my $fh       = 'fh0000000000';    ## File handle for the stream.
 
 my $max_arg = eval { POSIX::_SC_ARG_MAX(); };
-if ($@) {
+if ($EVAL_ERROR) {
     $max_arg = 4096;
     printf STDERR <<'EOF', $max_arg;
 Your system does not conform to the POSIX P1003.1 standard, or
@@ -286,7 +287,7 @@ sub smtpto {
     *OUT = ++$fh;
 
     if (!pipe(IN, OUT)) {
-        die sprintf 'Unable to create a channel in smtpto: %s', $!;
+        die sprintf 'Unable to create a channel in smtpto: %s', $ERRNO;
         # No return
     }
     $pid = tools::safefork();

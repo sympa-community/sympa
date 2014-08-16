@@ -313,7 +313,6 @@ sub store {
         $message_already_on_spool = 1;
 
     } else {
-
         ## search if this message is already in spool database : mailfile may
         ## perform multiple submission of exactly the same message
         unless (
