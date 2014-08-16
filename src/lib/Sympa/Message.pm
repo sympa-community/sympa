@@ -998,7 +998,7 @@ sub remove_invalid_dkim_signature {
     my $self = shift;
 
     return unless $self->get_header('DKIM-Signature');
-    unless (tools::dkim_verifier($self->as_string)) {
+    unless (Sympa::Tools::DKIM::verifier($self->as_string)) {
         Log::do_log('info',
             'DKIM signature of message %s is invalid, removing', $self);
         $self->delete_header('DKIM-Signature');
