@@ -36,6 +36,7 @@ use Log;
 use Sympa::Mail;
 use SDM;
 use tools;
+use Sympa::Tools::SMIME;
 use tt2;
 use Sympa::User;
 
@@ -131,7 +132,7 @@ sub send_global_file {
     $data->{'sender'} = $who;
 
     # Sign mode
-    my $smime_sign = tools::smime_find_keys($robot, 'sign');
+    my $smime_sign = Sympa::Tools::SMIME::find_keys($robot, 'sign');
 
     $data->{'conf'}{'version'} = $main::Version;
     $data->{'from'} = "$data->{'conf'}{'email'}\@$data->{'conf'}{'host'}"

@@ -68,6 +68,8 @@ use Sympa::List;
 use Log;
 use Sympa::Scenario;
 use tools;
+use Sympa::Tools::DKIM;
+use Sympa::Tools::SMIME;
 use tt2;
 
 # Language context
@@ -974,7 +976,7 @@ sub check_dkim_signature {
             Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on'
         )
         ) {
-        $self->{'dkim_pass'} = tools::dkim_verifier($self->as_string);
+        $self->{'dkim_pass'} = Sympa::Tools::DKIM::verifier($self->as_string);
     }
 }
 
@@ -1434,7 +1436,7 @@ sub smime_decrypt {
 
     #FIXME: an empty "context" parameter means mail to sympa@, listmaster@...
     my ($certs, $keys) =
-        tools::smime_find_keys($self->{context} || '*', 'decrypt');
+        Sympa::Tools::SMIME::find_keys($self->{context} || '*', 'decrypt');
     unless (defined $certs and @$certs) {
         Log::do_log('err',
             'Unable to decrypt message: missing certificate file');
@@ -1563,7 +1565,8 @@ sub smime_encrypt {
     if ($is_list eq 'list') {    #FIXME: Not in case
         my $list = Sympa::List->new($email);
         my $dummy;
-        ($certfile, $dummy) = tools::smime_find_keys($list, 'encrypt');
+        ($certfile, $dummy) =
+            Sympa::Tools::SMIME::find_keys($list, 'encrypt');
     } else {
         my $base =
             "$Conf::Conf{'ssl_cert_dir'}/" . tools::escape_chars($email);
@@ -1724,7 +1727,7 @@ sub smime_sign {
     #FIXME
     return 1 unless $list;
 
-    my ($certfile, $keyfile) = tools::smime_find_keys($list, 'sign');
+    my ($certfile, $keyfile) = Sympa::Tools::SMIME::find_keys($list, 'sign');
 
     my $signed_msg;
 
@@ -1861,7 +1864,7 @@ sub check_smime_signature {
     my %certs;
     my $signers = Crypt::SMIME::getSigners($self->as_string);
     foreach my $cert (@{$signers || []}) {
-        my $parsed = tools::smime_parse_cert(text => $cert);
+        my $parsed = Sympa::Tools::SMIME::parse_cert(text => $cert);
         next unless $parsed;
         next unless $parsed->{'email'}{lc $sender};
 

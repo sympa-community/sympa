@@ -42,6 +42,7 @@ use Sympa::Message;
 use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::DKIM;
 use Sympa::Tracking;
 
 my $daemon_name           = Log::set_daemon($0);
@@ -415,7 +416,8 @@ while (!$end) {
 
         my $dkim;
         if ($message->{shelved}{dkim_sign}) {
-            $dkim = tools::get_dkim_parameters($message->{context});
+            $dkim =
+                Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
         }
 
         if (   $message->{shelved}{merge}

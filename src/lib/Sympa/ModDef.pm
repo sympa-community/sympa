@@ -70,7 +70,7 @@ our %cpan_modules = (
     },
     'Crypt::SMIME' => {
         required_version => '0.15',
-        package_name => 'Crypt-SMIME',
+        package_name     => 'Crypt-SMIME',
         'gettext_id' =>
             'required to sign, verify, encrypt and decrypt S/MIME messages.',
     },
@@ -92,12 +92,6 @@ our %cpan_modules = (
         package_name     => 'DateTime-TimeZone',
         mandatory        => 1,
         'gettext_id'     => 'used to decode date and time in message headers',
-    },
-    'DB_File' => {
-        required_version => '1.75',
-        package_name     => 'DB_File',
-        mandatory        => 1,
-        'gettext_id'     => 'used for maintaining snapshots of list members',
     },
     'DBD::ODBC' => {
         package_name => 'DBD-ODBC',

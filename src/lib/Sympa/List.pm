@@ -64,6 +64,7 @@ use SDM;
 use Sympa::SQLSource;
 use Sympa::Task;
 use tools;
+use Sympa::Tools::SMIME;
 use Sympa::Tracking;
 use tt2;
 use Sympa::User;
@@ -520,9 +521,6 @@ my %list_status = (
 my %list_of_lists  = ();
 my %list_of_robots = ();
 my %edit_list_conf = ();
-
-use DB_File;
-$DB_BTREE->{compare} = \&_compare_addresses;
 
 ## Creates an object.
 sub new {
@@ -2576,7 +2574,7 @@ sub send_file {
     $data->{'list'}{'dir'}     = $self->{'dir'};
 
     # Sign mode
-    my $smime_sign = tools::smime_find_keys($self, 'sign');
+    my $smime_sign = Sympa::Tools::SMIME::find_keys($self, 'sign');
 
     # if the list have it's private_key and cert sign the message
     # . used only for the welcome message, could be useful in other case?
@@ -9310,20 +9308,6 @@ sub _save_list_members_file {
     return 1;
 }
 
-sub _compare_addresses {
-    my ($a, $b) = @_;
-
-    my ($ra, $rb);
-
-    $a =~ tr/A-Z/a-z/;
-    $b =~ tr/A-Z/a-z/;
-
-    $ra = reverse $a;
-    $rb = reverse $b;
-
-    return ($ra cmp $rb);
-}
-
 ## Does the real job : stores the message given as an argument into
 ## the digest of the list.
 sub store_digest {
@@ -10299,7 +10283,7 @@ sub get_cert {
     # it will have the respective cert attached anyways.
     # (the problem is that netscape, opera and IE can't only
     # read the first cert in a file)
-    my ($certs, $keys) = tools::smime_find_keys($self, 'encrypt');
+    my ($certs, $keys) = Sympa::Tools::SMIME::find_keys($self, 'encrypt');
 
     my @cert;
     if ($format eq 'pem') {

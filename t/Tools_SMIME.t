@@ -11,12 +11,12 @@ use MIME::Parser;
 use Test::More;
 
 #use Sympa::Tools::File;
-use tools;    # Sympa::Tools::SMIME;
+use Sympa::Tools::SMIME;
 
 plan tests => 15;
 
 #ok(
-#    !tools::smime_find_keys('/no/where', 'sign'),
+#    !Sympa::Tools::SMIME::find_keys('/no/where', 'sign'),
 #    'non existing directory'
 #);
 
@@ -27,7 +27,7 @@ $Conf::Conf{'home'} = $home_dir;
 my $cert_dir = $home_dir . '/sympa';
 mkdir $cert_dir;
 
-ok(!tools::smime_find_keys('*', 'sign'), 'empty directory');
+ok(!Sympa::Tools::SMIME::find_keys('*', 'sign'), 'empty directory');
 
 my $generic_cert_file    = $cert_dir . '/cert.pem';
 my $generic_key_file     = $cert_dir . '/private_key';
@@ -38,13 +38,14 @@ my $signature_key_file   = $cert_dir . '/private_key.sign';
 
 touch($generic_cert_file);
 
-ok(!tools::smime_find_keys('*', 'sign'), 'directory with certificate only');
+ok(!Sympa::Tools::SMIME::find_keys('*', 'sign'),
+    'directory with certificate only');
 
 unlink($generic_cert_file);
 
 touch($generic_key_file);
 
-ok(!tools::smime_find_keys('*', 'sign'), 'directory with key only');
+ok(!Sympa::Tools::SMIME::find_keys('*', 'sign'), 'directory with key only');
 
 unlink($generic_key_file);
 
@@ -52,19 +53,19 @@ touch($generic_cert_file);
 touch($generic_key_file);
 
 is_deeply(
-    [tools::smime_find_keys('*', 'sign')],
+    [Sympa::Tools::SMIME::find_keys('*', 'sign')],
     [$generic_cert_file, $generic_key_file],
     'directory with generic key/certificate only, signature operation'
 );
 
 is_deeply(
-    [tools::smime_find_keys('*', 'encrypt')],
+    [Sympa::Tools::SMIME::find_keys('*', 'encrypt')],
     [$generic_cert_file, $generic_key_file],
     'directory with generic key/certificate only, encryption operation'
 );
 
 is_deeply(
-    [tools::smime_find_keys('*', 'decrypt')],
+    [Sympa::Tools::SMIME::find_keys('*', 'decrypt')],
     [[$generic_cert_file], [$generic_key_file]],
     'directory with generic key/certificate only, decryption operation'
 );
@@ -75,30 +76,32 @@ touch($encryption_cert_file);
 touch($encryption_key_file);
 
 is_deeply(
-    [tools::smime_find_keys('*', 'sign')],
+    [Sympa::Tools::SMIME::find_keys('*', 'sign')],
     [$signature_cert_file, $signature_key_file],
     'directory with dedicated key/certificates, signature operation'
 );
 
 is_deeply(
-    [tools::smime_find_keys('*', 'encrypt')],
+    [Sympa::Tools::SMIME::find_keys('*', 'encrypt')],
     [$encryption_cert_file, $encryption_key_file],
     'directory with dedicated key/certificates, encryption operation'
 );
 
 is_deeply(
-    [tools::smime_find_keys('*', 'decrypt')],
+    [Sympa::Tools::SMIME::find_keys('*', 'decrypt')],
     [   [$generic_cert_file, $encryption_cert_file, $signature_cert_file],
         [$generic_key_file,  $encryption_key_file,  $signature_key_file],
     ],
     'directory with dedicated key/certificates, decryption operation'
 );
 
-ok(!tools::smime_parse_cert(), 'neither text nor file given',);
+ok(!Sympa::Tools::SMIME::parse_cert(), 'neither text nor file given',);
 
-ok(!tools::smime_parse_cert(file => '/no/where'), 'non-existing file',);
+ok( !Sympa::Tools::SMIME::parse_cert(file => '/no/where'),
+    'non-existing file',
+);
 
-ok(!tools::smime_parse_cert(text => ''), 'empty string',);
+ok(!Sympa::Tools::SMIME::parse_cert(text => ''), 'empty string',);
 
 my $cert_file = 't/pki/crt/rousse.pem';
 #my $cert_string = Sympa::Tools::File::slurp_file($cert_file);
@@ -117,10 +120,10 @@ SKIP: {
     skip 'Crypt::OpenSSL::X509 not installed', 2
         unless $Crypt::OpenSSL::X509::VERSION;
 
-    is_deeply(tools::smime_parse_cert(file => $cert_file,),
+    is_deeply(Sympa::Tools::SMIME::parse_cert(file => $cert_file,),
         $cert_data, 'user certificate file parsing');
 
-    is_deeply(tools::smime_parse_cert(text => $cert_string,),
+    is_deeply(Sympa::Tools::SMIME::parse_cert(text => $cert_string,),
         $cert_data, 'user certificate string parsing');
 }
 
@@ -139,7 +142,7 @@ SKIP: {
     skip 'Crypt::OpenSSL::X509 not installed', 1
         unless $Crypt::OpenSSL::X509::VERSION;
 
-    is_deeply(tools::smime_parse_cert(file => $ca_cert_file,),
+    is_deeply(Sympa::Tools::SMIME::parse_cert(file => $ca_cert_file,),
         $ca_cert_data, 'CA certificate file parsing');
 }
 
