@@ -1378,7 +1378,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
             my $t_metadata = tools::unmarshal_metadata(
                 $t_spool, $t_filename,
-                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+\z},
+                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
                 [qw(localpart domainpart date)]
             );
             next unless $t_metadata;
