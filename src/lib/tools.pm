@@ -43,6 +43,7 @@ use Proc::ProcessTable;
 use Scalar::Util qw();
 use Sys::Hostname qw();
 use Text::LineFold;
+use Time::HiRes qw();
 use Time::Local qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
@@ -3673,7 +3674,7 @@ sub split_listname {
 }
 
 # Old name: SympaspoolClassic::analyze_file_name().
-# NOTE: This should be moved to Pipeline class.
+# NOTE: This should be moved to Spool class.
 sub unmarshal_metadata {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $spool_dir       = shift;
@@ -3738,6 +3739,96 @@ sub unmarshal_metadata {
         $marshalled, $data->{context}, $data->{'priority'});
 
     return $data;
+}
+
+# NOTE: This should be moved to Spool class.
+sub marshal_metadata {
+    my $message         = shift;
+    my $metadata_format = shift;
+    my $metadata_keys   = shift;
+
+    # Currently only "sympa@DOMAIN" and "listname@DOMAIN" are supported.
+    my ($localpart, $domainpart);
+    if (ref $message->{context} eq 'Sympa::List') {
+        $localpart  = $message->{context}->{'name'};
+        $domainpart = $message->{context}->{'domain'};
+    } else {
+        my $robot_id = $message->{context} || '*';
+        $localpart  = Conf::get_robot_conf($robot_id, 'email');
+        $domainpart = Conf::get_robot_conf($robot_id, 'domain');
+    }
+
+    my @args = map {
+        if ($_ eq 'localpart') {
+            $localpart;
+        } elsif ($_ eq 'domainpart') {
+            $domainpart;
+        } elsif ($_ eq 'PID') {
+            $PID;
+        } elsif ($_ eq 'RAND') {
+            int rand 10000;
+        } elsif ($_ eq 'TIME') {
+            Time::HiRes::time();
+        } elsif (exists $message->{$_}
+            and defined $message->{$_}
+            and !ref($message->{$_})) {
+            $message->{$_};
+        } else {
+            '';
+        }
+    } @{$metadata_keys};
+
+    # Set "C" locale so that decimal point for "%f" will be ".".
+    my $locale_numeric = POSIX::setlocale(POSIX::LC_NUMERIC());
+    POSIX::setlocale(POSIX::LC_NUMERIC(), 'C');
+    my $marshalled = sprintf $metadata_format, @args;
+    POSIX::setlocale(POSIX::LC_NUMERIC(), $locale_numeric);
+    return $marshalled;
+}
+
+# NOTE: This should be moved to Spool class.
+sub store_spool {
+    my $spool_dir       = shift;
+    my $message         = shift;
+    my $metadata_format = shift;
+    my $metadata_keys   = shift;
+
+    # At first content is stored into temporary file that has unique name and
+    # is referred only by this function.
+    my $tmppath = $spool_dir . '/T.sympa.' . time . '.' . $PID;
+    my $fh;
+    unless (open $fh, '>', $tmppath) {
+        die sprintf 'Cannot create %s: %s', $tmppath, $ERRNO;
+    }
+    print $fh $message->to_string;
+    close $fh;
+
+    # Rename temporary path to the file name including metadata.
+    # Will retry up to five times.
+    my $tries;
+    for ($tries = 0; $tries < 5; $tries++) {
+        my $marshalled =
+            marshal_metadata($message, $metadata_format, $metadata_keys);
+        my $path = $spool_dir . '/' . $marshalled;
+
+        my $lock;
+        unless ($lock = Sympa::LockedFile->new($path, -1, '+')) {
+            next;
+        }
+        if (-e $path) {
+            $lock->close;
+            next;
+        }
+
+        unless (rename $tmppath, $path) {
+            die sprintf 'Cannot create %s: %s', $path, $ERRNO;
+        }
+        $lock->close;
+        return $marshalled;
+    }
+
+    unlink $tmppath;
+    return undef;
 }
 
 1;

@@ -9246,23 +9246,21 @@ sub do_distribute {
                 . $id);
     }
 
-    #FIXME: Commands should be injected into incoming spool directly.
+    # Commands are injected into incoming spool directly.
     #FIXME: Message should have sufficient authentication level.
-    my $message =
-        Sympa::Message->new(sprintf("\n\n%s\n", join("\n", @mail_command)),
-        context => $robot);
-    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
-    $message->add_header('Message-ID', tools::get_message_id($robot));
-    $message->add_header('From',       $param->{'user'}{'email'});
-    $message->add_header('To',         Conf::get_robot_conf($robot, 'sympa'));
+    my $message = Sympa::Message->new(
+        sprintf("\n\n%s\n", join("\n", @mail_command)),
+        context         => $robot,
+        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        sender          => $param->{'user'}{'email'},
+        message_id      => tools::get_message_id($robot)
+    );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
+
     unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message,
-            Conf::get_robot_conf($robot, 'sympa'),
-            Conf::get_robot_conf($robot, 'request'),
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+        tools::store_spool(
+            $Conf::Conf{'queue'}, $message,
+            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
         )
         ) {
         Sympa::Report::reject_report_web(
@@ -21139,24 +21137,22 @@ sub do_remind {
         $mail_command = sprintf "REMIND %s", $param->{'list'};
     }
 
-    #FIXME: Commands should be injected into incoming spool directly.
+    # Commands are injected into incoming spool directly.
     #FIXME: Message should have sufficient authentication level.
-    my $time = time;
-    my $message = Sympa::Message->new(sprintf("\n\n%s\n", $mail_command),
-        context => $robot);
-    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
-    $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
-    $message->add_header('From', $param->{'user'}{'email'});
-    $message->add_header('To', Conf::get_robot_conf($robot, 'sympa'));
+    my $time    = time;
+    my $message = Sympa::Message->new(
+        sprintf("\n\n%s\n", $mail_command),
+        context         => $robot,
+        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        sender          => $param->{'user'}{'email'},
+        message_id      => sprintf('<%s@wwsympa>', $time)
+    );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
     unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message,
-            Conf::get_robot_conf($robot, 'sympa'),
-            Conf::get_robot_conf($robot, 'request'),
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+        tools::store_spool(
+            $Conf::Conf{'queue'}, $message,
+            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
         )
         ) {
         Sympa::Report::reject_report_web(
@@ -22358,7 +22354,11 @@ sub do_send_mail {
         }
     }
 
-    #FIXME: Message should have sufficient authentication level.
+    #FIXME:
+    # - Message bound for list should be injected into incoming spool directly.
+    #   In this case message should have sufficient authentication level.
+    # - Message bound for user should be injected into bulk spool, not using
+    #   $send_spool.
     my $message = Sympa::Message->new_from_template(
         $list, '', $to,
         {   'headers' => {
@@ -22589,25 +22589,22 @@ sub do_tag_topic_by_sender {
     }
 
     ## CONFIRM
-    #FIXME: Commands should be injected into incoming spool directly.
+    # Commands are injected into incoming spool directly.
     #FIXME: Message should have sufficient authentication level.
-    my $time = time;
-    my $message =
-        Sympa::Message->new(sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
-        context => $robot);
-    $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
-    $message->add_header('Message-ID', sprintf '<%s@wwsympa>', $time);
-    $message->add_header('From', $sender);
-    $message->add_header('To', Conf::get_robot_conf($robot, 'sympa'));
+    my $time    = time;
+    my $message = Sympa::Message->new(
+        sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
+        context         => $robot,
+        envelope_sender => Conf::get_robot_conf($robot, 'request'),
+        sender          => $sender,
+        message_id      => sprintf('<%s@wwsympa>', $time)
+    );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
     unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message,
-            Conf::get_robot_conf($robot, 'sympa'),
-            Conf::get_robot_conf($robot, 'request'),
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+        tools::store_spool(
+            $Conf::Conf{'queue'}, $message,
+            '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
         )
         ) {
         Sympa::Report::reject_report_web(

@@ -151,6 +151,8 @@ sub new {
             $self->{'envelope_sender'} = $v;
         } elsif ($k eq 'X-Sympa-Message-ID') {    # New in 6.2a.41
             $self->{'message_id'} = $v;
+        } elsif ($k eq 'X-Sympa-Sender') {        # New in 6.2a.41
+            $self->{'sender'} = $v;
         } elsif ($k eq 'X-Sympa-Shelved') {       # New in 6.2a.41
             $self->{'shelved'} = {
                 map {
@@ -210,8 +212,9 @@ sub new {
     $self->{_entity_cache} = $entity;
     $self->{'size'}        = length $serialized;
 
-    ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
-    #XXXreturn undef unless defined $self->{'sender'};
+    unless (exists $self->{'sender'} and defined $self->{'sender'}) {
+        ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
+    }
 
     ## Store decoded subject and its original charset
     my $subject = $hdr->get('Subject');
@@ -335,7 +338,7 @@ sub _get_sender_email {
         last if defined $sender;
     }
     unless (defined $sender) {
-        Log::do_log('err', 'No valid sender address');
+        Log::do_log('debug3', 'No valid sender address');
         return;
     }
     unless (tools::valid_email($sender)) {
@@ -721,6 +724,9 @@ sub to_string {
         $serialized .= sprintf "X-Sympa-Message-ID: %s\n",
             $self->{'message_id'};
     }
+    if (defined $self->{'sender'}) {        # New in 6.2a.41
+        $serialized .= sprintf "X-Sympa-Sender: %s\n", $self->{'sender'};
+    }
     if (%{$self->{'shelved'} || {}}) {      # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Shelved: %s\n", join(
             '; ',
@@ -974,7 +980,7 @@ sub check_dkim_signature {
         : $self->{context};
     return
         unless tools::smart_eq(
-            Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
+        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
 
     my $dkim;
     unless ($dkim = Mail::DKIM::Verifier->new()) {
