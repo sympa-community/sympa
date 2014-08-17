@@ -9246,13 +9246,14 @@ sub do_distribute {
                 . $id);
     }
 
-    # Commands are injected into incoming spool directly.
-    #FIXME: Message should have sufficient authentication level.
+    # Commands are injected into incoming spool directly with "md5"
+    # authentication level.
     my $message = Sympa::Message->new(
         sprintf("\n\n%s\n", join("\n", @mail_command)),
         context         => $robot,
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
         sender          => $param->{'user'}{'email'},
+        md5_check       => 1,
         message_id      => tools::get_message_id($robot)
     );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
@@ -21137,14 +21138,15 @@ sub do_remind {
         $mail_command = sprintf "REMIND %s", $param->{'list'};
     }
 
-    # Commands are injected into incoming spool directly.
-    #FIXME: Message should have sufficient authentication level.
+    # Commands are injected into incoming spool directly with "md5"
+    # authentication level.
     my $time    = time;
     my $message = Sympa::Message->new(
         sprintf("\n\n%s\n", $mail_command),
         context         => $robot,
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
         sender          => $param->{'user'}{'email'},
+        md5_check       => 1,
         message_id      => sprintf('<%s@wwsympa>', $time)
     );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
@@ -22116,7 +22118,6 @@ sub do_send_mail {
     # the list or to me.
     # First if : send to the list
     if ($in{'sub_action'} eq 'sendmailtolist') {
-
         # In archive we hide email replacing @ by ' '. Here we must do the
         # reverse transformation
         $in{'to'} =~ s/ /\@/g;
@@ -22377,41 +22378,72 @@ sub do_send_mail {
             'not_a_list' => ($in{'sub_action'} eq 'sendmailtome'),  #not used?
         },
     );
-    unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message, $to,
-            Conf::get_robot_conf($robot, 'sympa'),
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
-        )
-        ) {
-        Sympa::Report::reject_report_web(
-            'intern',
-            'cannot_send_mail',
-            {   'from'     => $param->{'user'}{'email'},
-                'listname' => $list->{'name'}
-            },
-            $param->{'action'},
-            $list,
-            $param->{'user'}{'email'},
-            $robot
-        );
-        wwslog('err', 'Failed to send message for $to list');
-        web_db_log(
-            {   'robot'        => $robot,
-                'list'         => $list->{'name'},
-                'action'       => $param->{'action'},
-                'parameters'   => "",
-                'target_email' => "",
-                'msg_id'       => '',
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $param->{'user'}{'email'},
-                'client'       => $ip,
-                'daemon'       => $daemon_name
-            }
-        );
-        return undef;
+    if ($in{'sub_action'} eq 'sendmailtome') {
+        unless (
+            defined Sympa::Mail::sending(
+                $message, $to,
+                Conf::get_robot_conf($robot, 'sympa'),
+                'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
+                use_bulk   => 1,
+            )
+            ) {
+            Sympa::Report::reject_report_web(
+                'intern',
+                'cannot_send_mail',
+                {   'from'     => $param->{'user'}{'email'},
+                    'listname' => $list->{'name'}
+                },
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
+            wwslog('err', 'Failed to send message for %s', $to);
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => $to,
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'internal',
+                    'user_email'   => $param->{'user'}{'email'},
+                    'client'       => $ip,
+                    'daemon'       => $daemon_name
+                }
+            );
+            return undef;
+        }
+    } elsif ($in{'sub_action'} eq 'sendmailtolist') {
+        $message->{sender}    = $param->{'user'}{'email'};
+        $message->{md5_check} = 1;
+
+        unless (
+            tools::store_spool(
+                $Conf::Conf{'queue'}, $message, '%s@%s.%ld.%ld,%d',
+                [qw(localpart domainpart TIME PID RAND)]
+            )
+            ) {
+            Sympa::Report::reject_report_web(
+                'intern',
+                'cannot_send_mail',
+                {   'from'     => $param->{'user'}{'email'},
+                    'listname' => $list->{'name'}
+                },
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
+            wwslog('err', 'Failed to send message for list %s', $list);
+            web_db_log(
+                {   'parameters' => $to,
+                    'status'     => 'error',
+                    'error_type' => 'internal'
+                }
+            );
+        }
     }
 
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
@@ -22589,14 +22621,15 @@ sub do_tag_topic_by_sender {
     }
 
     ## CONFIRM
-    # Commands are injected into incoming spool directly.
-    #FIXME: Message should have sufficient authentication level.
+    # Commands are injected into incoming spool directly with "md5"
+    # authentication level.
     my $time    = time;
     my $message = Sympa::Message->new(
         sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
         context         => $robot,
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
         sender          => $sender,
+        md5_check       => 1,
         message_id      => sprintf('<%s@wwsympa>', $time)
     );
     $message->add_header('Content-Type', 'text/plain; Charset=utf-8');

@@ -149,6 +149,13 @@ sub new {
             $self->{'family'} = $v;
         } elsif ($k eq 'X-Sympa-From') {    # Compatibility. Use Return-Path:
             $self->{'envelope_sender'} = $v;
+        } elsif ($k eq 'X-Sympa-Auth-Level') {     # New in 6.2a.41
+            if ($v eq 'md5') {
+                $self->{'md5_check'} = 1;
+            } else {
+                Log::do_log('err',
+                    'Unknown authentication level "%s", ignored', $v);
+            }
         } elsif ($k eq 'X-Sympa-Message-ID') {    # New in 6.2a.41
             $self->{'message_id'} = $v;
         } elsif ($k eq 'X-Sympa-Sender') {        # New in 6.2a.41
@@ -719,6 +726,10 @@ sub to_string {
     }
     if (defined $self->{'family'}) {
         $serialized .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
+    }
+    if (defined $self->{'md5_check'}
+        and length $self->{'md5_check'}) {   # New in 6.2a.41
+        $serialized .= sprintf "X-Sympa-Auth-Level: %s\n", 'md5';
     }
     if (defined $self->{'message_id'}) {    # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Message-ID: %s\n",

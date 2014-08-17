@@ -1600,7 +1600,7 @@ sub process_message {
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
     unless ($message->{'md5_check'} or $sender) {
-        Log::do_log('err', 'No From found in message, skipping');
+        Log::do_log('err', 'No sender found in message %s', $message);
         Log::db_log(
             {   'robot'        => $robot,
                 'list'         => $listname,
@@ -1654,38 +1654,6 @@ sub process_message {
 
     # *** Now message content may be altered. ***
 
-    if ($message->{'md5_check'}) {
-        # message contain a valid checksum, it comes from wwsympa, so
-        #  mail it without other proceding unless it is for a valid list
-        unless (Conf::valid_robot($robot, {'just_try' => 1})) {
-            # Enable SMTP logging if required.
-            $Sympa::Mail::log_smtp = $main::options{'mail'}
-                || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
-            # setting log_level using conf unless it is set by calling option
-            Log::set_log_level(
-                (defined $main::options{'log_level'})
-                ? $main::options{'log_level'}
-                : $Conf::Conf{'log_level'}
-            );
-
-            return DoSendMessage($message, '*');
-        }
-        unless (ref $message->{context} eq 'Sympa::List') {
-            # Enable SMTP logging if required.
-            $Sympa::Mail::log_smtp = $main::options{'mail'}
-                || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
-                'on');
-            # setting log_level using conf unless it is set by calling option
-            Log::set_log_level(
-                (defined $main::options{'log_level'})
-                ? $main::options{'log_level'}
-                : Conf::get_robot_conf($robot, 'log_level')
-            );
-
-            return DoSendMessage($message, $robot);
-        }
-    }
-
     # Enable SMTP logging if required.
     $Sympa::Mail::log_smtp = $main::options{'mail'}
         || Conf::get_robot_conf($robot, 'log_smtp');
@@ -1695,6 +1663,14 @@ sub process_message {
         Log::do_log('debug',
             'Setting log level with %s configuration (or sympa.conf): %d',
             $robot, Conf::get_robot_conf($robot, 'log_level'));
+    }
+
+    # Compatibility: Message contains a valid checksum.  It comes from
+    # WWSympa of Sympa 6.2a.40 or earlier.  Mail it without other processing
+    # unless it is for a valid list.
+    if ($message->{checksum} and $message->{md5_check}) {
+        return DoSendMessage($message)
+            unless ref $message->{context} eq 'Sympa::List';
     }
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
@@ -2221,17 +2197,17 @@ sub process_message {
 ############################################################
 #  Send a message pushed in spool by another process.
 #
-# IN : -$msg (+): ref(MIME::Entity)
-#      -$robot (+) :robot
+# IN : -$msg (+): ref(Sympa::Message)
 #
 # OUT : 1
 #     | undef
 #
 ##############################################################
 sub DoSendMessage {
+    Log::do_log('debug2', '');
     my $message = shift;
-    my $robot   = shift;
-    Log::do_log('debug', '');
+
+    my $robot_id = $message->{'context'} || '*';
 
     my $chksum = $message->{'checksum'};
     my $rcpt   = $message->{'rcpt'};
@@ -2253,7 +2229,7 @@ sub DoSendMessage {
     unless (
         defined Sympa::Mail::sending(
             $message, \@rcpts, $from,
-            'priority' => Conf::get_robot_conf($robot, 'request_priority'),
+            'priority' => Conf::get_robot_conf($robot_id, 'request_priority'),
             use_bulk   => 1
         )
         ) {
@@ -2263,12 +2239,12 @@ sub DoSendMessage {
             'Impossible to forward a message pushed in spool by another process than sympa.pl.',
             $sender,
             {'msg_id' => $msg_id, 'message' => $message->as_entity},
-            $robot,
+            $robot_id,
             $string,
             ''
         );
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $rcpt,
                 'action'       => 'sendMessage',
                 'parameters'   => "$msg_id,$rcpt",
@@ -2286,7 +2262,7 @@ sub DoSendMessage {
 
     Log::do_log('info', "Message for %s sent", $rcpt);
     Log::db_log(
-        {   'robot'        => $robot,
+        {   'robot'        => $robot_id,
             'list'         => $rcpt,
             'action'       => 'sendMessage',
             'parameters'   => "$msg_id,$rcpt",
