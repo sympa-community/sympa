@@ -3795,7 +3795,8 @@ sub store_spool {
 
     # At first content is stored into temporary file that has unique name and
     # is referred only by this function.
-    my $tmppath = $spool_dir . '/T.sympa.' . time . '.' . $PID;
+    my $tmppath = sprintf '%s/T.sympa@_tempfile.%s.%ld.%ld',
+        $spool_dir, Sys::Hostname::hostname(), time, $PID;
     my $fh;
     unless (open $fh, '>', $tmppath) {
         die sprintf 'Cannot create %s: %s', $tmppath, $ERRNO;
