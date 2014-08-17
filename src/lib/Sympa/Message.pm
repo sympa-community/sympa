@@ -926,7 +926,7 @@ sub dkim_sign {
         return undef;
     }
     # $new_body will store the body as fed to Mail::DKIM to reuse it
-    # when returning the message as string.  Line terminaters must be
+    # when returning the message as string.  Line terminators must be
     # normalized with CRLF.
     my $msg_as_string = $self->as_string;
     $msg_as_string =~ s/\r?\n/\r\n/g;
@@ -961,23 +961,45 @@ XXX
 
 =cut
 
-# FIXME: Same as check_spam_status(): This should be moved to pipeline.
+BEGIN { eval 'use Mail::DKIM::Verifier'; }
+
 sub check_dkim_signature {
     my $self = shift;
+
+    return unless $Mail::DKIM::Verifier::VERSION;
 
     my $robot_id =
         (ref $self->{context} eq 'Sympa::List')
         ? $self->{context}->{'domain'}
         : $self->{context};
+    return
+        unless tools::smart_eq(
+            Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
 
-    # verify DKIM signature
-    if ($robot_id
-        and tools::smart_eq(
-            Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on'
-        )
-        ) {
-        $self->{'dkim_pass'} = Sympa::Tools::DKIM::verifier($self->as_string);
+    my $dkim;
+    unless ($dkim = Mail::DKIM::Verifier->new()) {
+        Log::do_log('err', 'Could not create Mail::DKIM::Verifier');
+        return;
     }
+
+    # Line terminators must be normalized with CRLF.
+    my $msg_as_string = $self->as_string;
+    $msg_as_string =~ s/\r?\n/\r\n/g;
+    $msg_as_string =~ s/\r?\z/\r\n/ unless $msg_as_string =~ /\n\z/;
+    $dkim->PRINT($msg_as_string);
+    unless ($dkim->CLOSE) {
+        Log::do_log('err', 'Cannot verify signature of (DKIM) message');
+        return;
+    }
+
+    #FIXME: Identity of signatures would be checked.
+    foreach my $signature ($dkim->signatures) {
+        if ($signature->result_detail eq 'pass') {
+            $self->{'dkim_pass'} = 1;
+            return;
+        }
+    }
+    delete $self->{'dkim_pass'};
 }
 
 =over
@@ -998,7 +1020,9 @@ sub remove_invalid_dkim_signature {
     my $self = shift;
 
     return unless $self->get_header('DKIM-Signature');
-    unless (Sympa::Tools::DKIM::verifier($self->as_string)) {
+
+    $self->check_dkim_signature;
+    unless ($self->{'dkim_pass'}) {
         Log::do_log('info',
             'DKIM signature of message %s is invalid, removing', $self);
         $self->delete_header('DKIM-Signature');
@@ -1811,7 +1835,9 @@ None
 
 Returns:
 
-A hashref including information of signer.
+1 if signature is successfully verified.
+0 otherwise.
+C<undef> if something went wrong.
 
 =back
 

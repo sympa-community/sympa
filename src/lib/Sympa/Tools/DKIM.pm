@@ -31,6 +31,7 @@ use English qw(-no_match_vars);
 use Conf;
 use Log;
 
+# Old name: tools::get_dkim_parameters().
 sub get_dkim_parameters {
     Log::do_log('debug2', '(%s)', @_);
     my $that = shift;
@@ -86,59 +87,8 @@ sub get_dkim_parameters {
     return $data;
 }
 
-# input a msg as string, output the dkim status
-sub verifier {
-    my $msg_as_string = shift;
-    my $dkim;
-
-    Log::do_log('debug', 'DKIM verifier');
-    unless (eval "require Mail::DKIM::Verifier") {
-        Log::do_log('err',
-            "Failed to load Mail::DKIM::verifier perl module, ignoring DKIM signature"
-        );
-        return undef;
-    }
-
-    unless ($dkim = Mail::DKIM::Verifier->new()) {
-        Log::do_log('err', 'Could not create Mail::DKIM::Verifier');
-        return undef;
-    }
-
-    my $temporary_file = $Conf::Conf{'tmpdir'} . "/dkim." . $PID;
-    if (!open(MSGDUMP, "> $temporary_file")) {
-        Log::do_log('err', 'Can\'t store message in file %s',
-            $temporary_file);
-        return undef;
-    }
-    print MSGDUMP $msg_as_string;
-
-    unless (close(MSGDUMP)) {
-        Log::do_log('err', 'Unable to dump message in temporary file %s',
-            $temporary_file);
-        return undef;
-    }
-
-    unless (open(MSGDUMP, "$temporary_file")) {
-        Log::do_log('err', 'Can\'t read message in file %s', $temporary_file);
-        return undef;
-    }
-
-    # this documented method is pretty but dont validate signatures, why ?
-    # $dkim->load(\*MSGDUMP);
-    while (<MSGDUMP>) {
-        chomp;
-        s/\015$//;
-        $dkim->PRINT("$_\015\012");
-    }
-
-    $dkim->CLOSE;
-    close(MSGDUMP);
-    unlink($temporary_file);
-
-    foreach my $signature ($dkim->signatures) {
-        return 1 if ($signature->result_detail eq "pass");
-    }
-    return undef;
-}
+# Old name: tools::dkim_verifier().
+#DEPRECATED: Use Sympa::Message::check_dkim_signature().
+#sub verifier($msg_as_string);
 
 1;
