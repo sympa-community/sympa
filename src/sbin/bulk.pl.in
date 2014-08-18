@@ -327,11 +327,13 @@ while (!$end) {
         # In such case fallback to site-wide robot.
         my $listname = $bulk->{'listname'};
         my $robot    = $bulk->{'robot'};
+        my $list;
         $robot = $Conf::Conf{'domain'}
             unless $robot
                 and $robot ne '*'
                 and Conf::valid_robot($robot);
-        my $list = Sympa::List->new($listname, $robot, {'just_try' => 1});
+        $list = Sympa::List->new($listname, $robot, {'just_try' => 1})
+            if defined $listname and length $listname;
 
         if (!defined $messagekey or $bulk->{'messagekey'} ne $messagekey) {
             # current packet is not related to the same message as the

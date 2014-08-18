@@ -351,23 +351,24 @@ sub store {
                 ($robot_id and $robot_id ne '*')
                 ? $robot_id
                 : $Conf::Conf{'domain'};
-            unless (index($message_sender, $robot_domain . '@') >= 0) {
-                # ignore messages sent by robot
-                unless (
-                    index($message_sender, $list->{'name'} . '-request') >= 0)
-                {
-                    # ignore messages of requests
-                    Log::db_stat_log(
-                        {   'robot'     => $robot_id,
-                            'list'      => $list->{'name'},
-                            'operation' => 'send_mail',
-                            'parameter' => length($msg),
-                            'mail'      => $message_sender,
-                            'client'    => '',
-                            'daemon'    => 'sympa.pl'
-                        }
-                    );
-                }
+
+            # Ignore messages sent by robot or -request
+            # FIMXE: Is it effective?
+            unless (not $list
+                and $message_sender eq
+                Conf::get_robot_conf($robot_id, 'sympa')
+                or $list
+                and $message_sender eq $list->get_list_address('owner')) {
+                Log::db_stat_log(
+                    {   'robot'     => $robot_id,
+                        'list'      => ($list ? $list->{'name'} : undef),
+                        'operation' => 'send_mail',
+                        'parameter' => length($msg),
+                        'mail'      => $message_sender,
+                        'client'    => '',
+                        'daemon'    => 'sympa.pl'
+                    }
+                );
             }
             $message_fingerprint = $messagekey;
         }
