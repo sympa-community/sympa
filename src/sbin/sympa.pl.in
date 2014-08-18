@@ -1399,6 +1399,15 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             Sympa::Message->new_from_file($t_spool . '/' . $filename,
             %$metadata);
 
+        # Compatibility: Message with checksum by Sympa <=6.2a.40
+        # They should be migrated.
+        if ($message->{checksum}) {
+            Log::do_log('err',
+                '%s: Message with old format.  Run upgrade_send_spool.pl',
+                $message);
+            next;
+        }
+
         my $robot =
             (ref $message->{context} eq 'Sympa::List')
             ? $message->{context}->{'domain'}
@@ -1663,14 +1672,6 @@ sub process_message {
         Log::do_log('debug',
             'Setting log level with %s configuration (or sympa.conf): %d',
             $robot, Conf::get_robot_conf($robot, 'log_level'));
-    }
-
-    # Compatibility: Message contains a valid checksum.  It comes from
-    # WWSympa of Sympa 6.2a.40 or earlier.  Mail it without other processing
-    # unless it is for a valid list.
-    if ($message->{checksum} and $message->{md5_check}) {
-        return DoSendMessage($message)
-            unless ref $message->{context} eq 'Sympa::List';
     }
 
     ## Strip of the initial X-Sympa-To and X-Sympa-Checksum internal headers
@@ -2192,92 +2193,8 @@ sub process_message {
     return $status;
 }
 
-############################################################
-#  DoSendMessage
-############################################################
-#  Send a message pushed in spool by another process.
-#
-# IN : -$msg (+): ref(Sympa::Message)
-#
-# OUT : 1
-#     | undef
-#
-##############################################################
-sub DoSendMessage {
-    Log::do_log('debug2', '');
-    my $message = shift;
-
-    my $robot_id = $message->{'context'} || '*';
-
-    my $chksum = $message->{'checksum'};
-    my $rcpt   = $message->{'rcpt'};
-    my $from   = $message->{'envelope_sender'};
-
-    Log::do_log('info', "Processing web message for %s", $rcpt);
-
-    my $string = $message->as_string;
-    my $msg_id = $message->{'message_id'};
-    my $sender = $message->{'sender'};
-
-    delete $message->{'checksum'};
-    delete $message->{'rcpt'};
-    #XXXdelete $message->{'envelope_sender'};
-
-    ## Multiple recepients
-    my @rcpts = split /,/, $rcpt;
-
-    unless (
-        defined Sympa::Mail::sending(
-            $message, \@rcpts, $from,
-            'priority' => Conf::get_robot_conf($robot_id, 'request_priority'),
-            use_bulk   => 1
-        )
-        ) {
-        Log::do_log('err', 'Impossible to forward mail from %s', $from);
-        Sympa::Report::reject_report_msg(
-            'intern',
-            'Impossible to forward a message pushed in spool by another process than sympa.pl.',
-            $sender,
-            {'msg_id' => $msg_id, 'message' => $message->as_entity},
-            $robot_id,
-            $string,
-            ''
-        );
-        Log::db_log(
-            {   'robot'        => $robot_id,
-                'list'         => $rcpt,
-                'action'       => 'sendMessage',
-                'parameters'   => "$msg_id,$rcpt",
-                'target_email' => '',
-                'msg_id'       => $msg_id,
-                'status'       => 'error',
-                'error_type'   => 'internal',
-                'user_email'   => $sender,
-                'client'       => $ip,
-                'daemon'       => $daemon_name
-            }
-        );
-        return undef;
-    }
-
-    Log::do_log('info', "Message for %s sent", $rcpt);
-    Log::db_log(
-        {   'robot'        => $robot_id,
-            'list'         => $rcpt,
-            'action'       => 'sendMessage',
-            'parameters'   => "$msg_id,$rcpt",
-            'target_email' => '',
-            'msg_id'       => $msg_id,
-            'status'       => 'succes',
-            'error_type'   => '',
-            'user_email'   => $sender,
-            'client'       => $ip,
-            'daemon'       => $daemon_name
-        }
-    );
-
-    return 1;
-}
+#sub DoSendMessage($message);
+#DEPRECATED: Run upgrade_send_spool.pl to migrate message with old format.
 
 ############################################################
 #  DoForward

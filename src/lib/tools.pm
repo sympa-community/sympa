@@ -1066,14 +1066,9 @@ sub tmp_passwd {
 }
 
 # Check sum used to authenticate communication from wwsympa to sympa
-sub sympa_checksum {
-    my $rcpt = shift;
-    return (
-        substr(
-            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $rcpt)), -10
-        )
-    );
-}
+# DEPRECATED: No longer used: This is moved to upgrade_send_spool.pl to be
+# used for migrating old spool.
+#sub sympa_checksum($rcpt);
 
 BEGIN { eval 'use Crypt::CipherSaber'; }
 

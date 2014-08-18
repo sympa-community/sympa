@@ -143,7 +143,7 @@ sub new {
 
         if ($k eq 'X-Sympa-To') {
             $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
-        } elsif ($k eq 'X-Sympa-Checksum') {
+        } elsif ($k eq 'X-Sympa-Checksum') { # To migrate format <= 6.2a.40
             $self->{'checksum'} = $v;
         } elsif ($k eq 'X-Sympa-Family') {
             $self->{'family'} = $v;
@@ -259,16 +259,6 @@ sub new {
             $subject =~ s/\r\n|\r|\n/ /g;
         }
         $self->{'decoded_subject'} = $subject;
-    }
-
-    ## valid X-Sympa-Checksum prove the message comes from web interface with
-    ## authenticated sender
-    if ($self->{'checksum'}) {
-        if ($self->{'checksum'} eq tools::sympa_checksum($self->{'rcpt'})) {
-            $self->{'md5_check'} = 1;
-        } else {
-            Log::do_log('err', 'Incorrect X-Sympa-Checksum header');
-        }
     }
 
     ## TOPICS

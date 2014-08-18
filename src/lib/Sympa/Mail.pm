@@ -54,27 +54,14 @@ EOF
 
 my %pid = ();
 
-my $send_spool;    ## for calling context
+our $always_use_bulk;    ## for calling context
 
 our $log_smtp;     # SMTP logging is enabled or not
 
 ### PUBLIC FUNCTIONS ###
 
-####################################################
-# public set_send_spool
-####################################################
-# set in global $send_spool, the concerned spool for
-# sending message when it is not done by smtpto
-#
-# IN : $spool (+): spool concerned by sending
-# OUT :
-#
-####################################################
-sub set_send_spool {
-    my $spool = pop;
-
-    $send_spool = $spool;
-}
+#sub set_send_spool($spool_dir);
+#DEPRECATED: No longer used.
 
 #sub mail_file($robot, $filename, $rcpt, $data, $return_message_as_string);
 ##DEPRECATED: Use Sympa::Message->new_from_template() & sending().
@@ -163,7 +150,7 @@ sub sending {
         Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date);
-    my $use_bulk    = $params{'use_bulk'};
+    my $use_bulk    = $always_use_bulk || $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
@@ -186,42 +173,6 @@ sub sending {
             Log::do_log('err', 'Failed to store message for %s', $that);
             Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot_id,
                 {'listname' => $listname});
-            return undef;
-        }
-    } elsif (defined $send_spool) {
-        # in context wwsympa.fcgi do not send message to reciepients but copy
-        # it to standard spool
-        Log::do_log('debug', "NOT USING BULK");
-
-        my $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
-        $sympa_file =
-            "$send_spool/T.$sympa_email." . time . '.' . int(rand(10000));
-        unless (open TMP, ">$sympa_file") {
-            Log::do_log('notice', 'Cannot create %s: %s', $sympa_file, $!);
-            return undef;
-        }
-
-        my $all_rcpt;
-        if (ref($rcpt) eq 'SCALAR') {
-            $all_rcpt = $$rcpt;
-        } elsif (ref($rcpt) eq 'ARRAY') {
-            $all_rcpt = join(',', @{$rcpt});
-        } else {
-            $all_rcpt = $rcpt;
-        }
-
-        $message->{'rcpt'}            = $all_rcpt;
-        $message->{'envelope_sender'} = $from;
-        $message->{'checksum'}        = tools::sympa_checksum($all_rcpt);
-
-        printf TMP $message->to_string;
-        close TMP;
-        my $new_file = $sympa_file;
-        $new_file =~ s/T\.//g;
-
-        unless (rename $sympa_file, $new_file) {
-            Log::do_log('notice', 'Cannot rename %s to %s: %s',
-                $sympa_file, $new_file, $!);
             return undef;
         }
     } else {    # send it now
@@ -343,59 +294,8 @@ sub smtpto {
     return ("Sympa::Mail::$fh");    # Symbol for the write descriptor.
 }
 
-#XXX NOT USED
-####################################################
-# send_in_spool      : not used but if needed ...
-####################################################
-# send a message by putting it in global $send_spool
-#
-# IN : $rcpt (+): ref(SCALAR)|ref(ARRAY) - recepients
-#      $robot(+) : robot
-#      $sympa_email : for the file name
-#      $XSympaFrom : for "X-Sympa-From" field
-# OUT : $return->
-#        -filename : name of temporary file
-#         needing to be renamed
-#        -fh : file handle opened for writing
-#         on
-####################################################
-sub send_in_spool {
-    my ($rcpt, $robot, $sympa_email, $XSympaFrom) = @_;
-    Log::do_log('debug3', '(%s, %s, %s)', $XSympaFrom, $rcpt);
-
-    unless ($sympa_email) {
-        $sympa_email = Conf::get_robot_conf($robot, 'sympa');
-    }
-
-    unless ($XSympaFrom) {
-        $XSympaFrom = Conf::get_robot_conf($robot, 'sympa');
-    }
-
-    my $sympa_file =
-        "$send_spool/T.$sympa_email." . time . '.' . int(rand(10000));
-
-    my $all_rcpt;
-    if (ref($rcpt) eq "ARRAY") {
-        $all_rcpt = join(',', @$rcpt);
-    } else {
-        $all_rcpt = $$rcpt;
-    }
-
-    unless (open TMP, ">$sympa_file") {
-        Log::do_log('notice', 'Cannot create %s: %s', $sympa_file, $!);
-        return undef;
-    }
-
-    printf TMP "X-Sympa-To: %s\n",       $all_rcpt;
-    printf TMP "X-Sympa-From: %s\n",     $XSympaFrom;
-    printf TMP "X-Sympa-Checksum: %s\n", tools::sympa_checksum($all_rcpt);
-
-    my $return;
-    $return->{'filename'} = $sympa_file;
-    $return->{'fh'}       = \*TMP;
-
-    return $return;
-}
+#This has never been used.
+#sub send_in_spool($rcpt, $robot, $sympa_email, $XSympaFrom);
 
 #DEPRECATED: Use Sympa::Message::reformat_utf8_message().
 #sub reformat_message($;$$);

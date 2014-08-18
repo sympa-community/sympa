@@ -129,7 +129,7 @@ if (eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
 }
 
-Sympa::Mail::set_send_spool($Conf::Conf{'queue'});
+$Sympa::Bulk::always_use_bulk = 1; #FIXME: Should instantiate Sympa::Bulk.
 
 if ($Conf::Conf{'use_fast_cgi'}) {
     require CGI::Fast;
