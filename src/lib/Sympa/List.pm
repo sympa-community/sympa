@@ -2601,10 +2601,9 @@ sub send_file {
         if $smime_sign;
     # Shelve DKIM signing.
     $message->{shelved}{dkim_sign} = 1
-        if Conf::get_robot_conf($self->{'domain'}, 'dkim_feature') eq 'on'
-            and
-            Conf::get_robot_conf($self->{'domain'}, 'dkim_add_signature_to')
-            =~ /robot/;
+        if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
+            and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
+            /list/;
     # Use VERP excepted for alarms.  We should make this configurable in order
     # to support Sympa server on a machine without any MTA service.
     my $use_bulk = 1 unless $data->{'alarm'};
