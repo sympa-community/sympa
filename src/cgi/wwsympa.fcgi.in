@@ -52,6 +52,7 @@ use DateTime::Format::Mail;
 use Encode qw();
 use English;    # FIXME: drop $MATCH usage
 use MIME::EncWords;
+use MIME::Lite::HTML;
 use MIME::Parser;
 use POSIX qw();
 use Time::Local qw();
@@ -22112,7 +22113,6 @@ sub do_send_mail {
     wwslog('info', '');
 
     my $to;
-    my $message = $param->{'message'};
 
     # Send the message to the list or to the sender as clicking the send to
     # the list or to me.
@@ -22123,7 +22123,7 @@ sub do_send_mail {
         $in{'to'} =~ s/ /\@/g;
         $to = $in{'to'};
 
-        unless ($in{'to'}) {
+        unless ($to) {
             unless ($param->{'list'}) {
                 Sympa::Report::reject_report_web('user', 'missing_arg',
                     {'argument' => 'list'},
@@ -22170,6 +22170,9 @@ sub do_send_mail {
         }
     }
 
+    # Determine user's character set.
+    my $charset = tools::lang2charset($language->get_lang);
+
     # Take the sender mail
     my $from = $param->{'user'}{'email'};
 
@@ -22181,12 +22184,19 @@ sub do_send_mail {
     }
 
     if (defined $param->{'subscriber'}) {
-        $from = tools::addrencode(
-            $from,
-            $param->{'subscriber'}{'gecos'},
-            tools::lang2charset($language->get_lang)
-        );
+        $from =
+            tools::addrencode($from, $param->{'subscriber'}{'gecos'},
+            $charset);
     }
+
+    # Encode subject.
+    my $encoded_subject = MIME::EncWords::encode_mimewords(
+        Encode::decode_utf8($in{'subject'}),
+        Charset     => $charset,
+        Encoding    => 'A',
+        Field       => 'Subject',
+        Replacement => 'FALLBACK'
+    ) if defined $in{'subject'} and $in{'subject'} =~ /\S/;
 
     ##--------------- TOPICS --------------------
     my $list_topics;
@@ -22230,22 +22240,23 @@ sub do_send_mail {
     }
 
     ##--------------- send an html page or a message -------------------
+    my $message;
+
     if ($in{'html_news_letter'}) {
         # url and uploaded_file should not be both empty -> missing argument
-        if ($in{'url'} =~ /^\s*$/ && $in{'uploaded_file'} =~ /^\s*$/) {
+        unless ($in{'url'} =~ /\S/ or $in{'uploaded_file'} =~ /\S/) {
             Sympa::Report::reject_report_web('user', 'missing_post_source',
                 {}, $param->{'action'});
-            ($Log::log_level >= 0)
-                && wwslog('info', 'Missing url and uploaded file');
+            wwslog('info', 'Missing URL and uploaded file');
             return 'compose_mail';
         }
 
         # url and uploaded_file should not be both filled: we could not chooe
         # which one to use.
-        if ($in{'url'} =~ /\S/ && $in{'uploaded_file'} =~ /\S/) {
+        if ($in{'url'} =~ /\S/ and $in{'uploaded_file'} =~ /\S/) {
             Sympa::Report::reject_report_web('user',
                 'two_post_sources_defined', {}, $param->{'action'});
-            ($Log::log_level >= 0) && wwslog(
+            wwslog(
                 'info',
                 'User specified both an URL (%s) and a file to upload (%s). Can\'t choose between them',
                 $in{'url'},
@@ -22292,24 +22303,21 @@ sub do_send_mail {
             $page_source = 'file://' . $page_source;
         }
 
-        my $html_part_body = tools::create_html_part_from_web_page(
-            {   'From'    => $from,
-                'To'      => $to,
-                'Headers' => {
-                    'In-Reply-To' => $in{'in_reply_to'},
-                    'Message-ID'  => $in{'message_id'}
-                },
-                'return_path' => Conf::get_robot_conf($robot, 'sympa'),
-                'Subject'     => $in{'subject'},
-                'source'      => $page_source,
-            }
+        # Generate message from page source.
+        # FIXME: Always UTF-8 is assumed: Pages by other charset are broken.
+        my $mail_html = MIME::Lite::HTML->new(
+            HTMLCharset    => 'utf-8',
+            TextCharset    => 'utf-8',
+            TextEncoding   => '8bit',
+            HTMLEncoding   => '8bit',
+            remove_jscript => '1',             #delete the scripts in the html
         );
-        if (defined $html_part_body) {
-            $in{'body'} = $html_part_body;
-        } else {
+        # parse return the MIME::Lite part to send
+        my $part = $mail_html->parse($page_source) if $mail_html;
+        unless ($part) {
             Sympa::Report::reject_report_web('user', 'unable_to_parse', {},
                 $param->{'action'});
-            ($Log::log_level >= 0) && wwslog(
+            wwslog(
                 'info',
                 'A MIME part could not be created with the supplied data, %s, %s',
                 $in{'url'},
@@ -22317,13 +22325,22 @@ sub do_send_mail {
             );
             return undef;
         }
+        $message = Sympa::Message->new($part->as_string, context => $list);
+        $message->add_header('To'          => $to);
+        $message->add_header('Message-Id'  => $in{'message_id'});
+        $message->add_header('In-Reply-To' => $in{'in_reply_to'})
+            if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
+        $message->add_header('Subject' => $encoded_subject)
+            if defined $encoded_subject;
+        $message->add_header('From' => $from);
+        $message->reformat_utf8_message([], 'utf-8');
     } else {
         ## Message body should not be empty
         if ($in{'body'} =~ /^\s*$/) {
             Sympa::Report::reject_report_web('user', 'missing_arg',
                 {'argument' => 'body'},
                 $param->{'action'});
-            ($Log::log_level >= 0) && wwslog('info', 'Missing body');
+            wwslog('info', 'Missing body');
             web_db_log(
                 {   'robot'        => $robot,
                     'list'         => $list->{'name'},
@@ -22341,13 +22358,21 @@ sub do_send_mail {
             return undef;
         }
 
-        $in{'body'} = "\n" . $in{'body'};
+        $message = Sympa::Message->new("\n" . $in{'body'}, context => $list);
+        $message->add_header('To'          => $to);
+        $message->add_header('Message-Id'  => $in{'message_id'});
+        $message->add_header('In-Reply-To' => $in{'in_reply_to'})
+            if $in{'in_reply_to'} and $in{'in_reply_to'} ne '<>';
+        $message->add_header('Subject' => $encoded_subject)
+            if defined $encoded_subject;
+        $message->add_header('From' => $from);
+        $message->reformat_utf8_message([], $charset);
     }
 
     ## Roughly check TT2 syntax for merge_feature.
     if (tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on')) {
-        unless (defined Sympa::Message::personalize_text($in{'body'}, $list))
-        {
+        my $new_message = $message->dup;
+        unless (defined $new_message->personalize($list)) {
             Sympa::Report::reject_report_web('user', 'merge_failed',
                 {'error' => tt2::get_error()},
                 $param->{'action'});
@@ -22355,29 +22380,9 @@ sub do_send_mail {
         }
     }
 
-    #FIXME:
-    # - Message bound for list should be injected into incoming spool directly.
-    #   In this case message should have sufficient authentication level.
-    # - Message bound for user should be injected into bulk spool, not using
-    #   $send_spool.
-    my $message = Sympa::Message->new_from_template(
-        $list, '', $to,
-        {   'headers' => {
-                'Message-ID' => $in{'message_id'},
-                (     ($in{'in_reply_to'} and $in{'in_reply_to'} ne '<>')
-                    ? ('In-Reply-To' => $in{'in_reply_to'})
-                    : ()
-                ),
-            },
-            'subject'            => $in{'subject'},
-            'return_path'        => Conf::get_robot_conf($robot, 'sympa'),
-            'to'                 => $to,
-            'from'               => $from,
-            'body'               => $in{'body'},
-            'not_auto_submitted' => 1,
-            'not_a_list' => ($in{'sub_action'} eq 'sendmailtome'),  #not used?
-        },
-    );
+    # - Message bound for list will be injected into incoming spool directly.
+    #   In this case message will have "md5" authentication level.
+    # - Message bound for user will be injected into bulk spool.
     if ($in{'sub_action'} eq 'sendmailtome') {
         unless (
             defined Sympa::Mail::sending(
@@ -22416,8 +22421,9 @@ sub do_send_mail {
             return undef;
         }
     } elsif ($in{'sub_action'} eq 'sendmailtolist') {
-        $message->{sender}    = $param->{'user'}{'email'};
-        $message->{md5_check} = 1;
+        $message->{envelope_sender} = $param->{'user'}{'email'};
+        $message->{sender}          = $param->{'user'}{'email'};
+        $message->{md5_check}       = 1;
 
         unless (
             tools::store_spool(
@@ -22623,8 +22629,8 @@ sub do_tag_topic_by_sender {
     ## CONFIRM
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
-    my $time    = time;
-    my $message = Sympa::Message->new(
+    my $time        = time;
+    my $cmd_message = Sympa::Message->new(
         sprintf("\n\nQUIET CONFIRM %s\n", $in{'authkey'}),
         context         => $robot,
         envelope_sender => Conf::get_robot_conf($robot, 'request'),
@@ -22632,11 +22638,11 @@ sub do_tag_topic_by_sender {
         md5_check       => 1,
         message_id      => sprintf('<%s@wwsympa>', $time)
     );
-    $message->add_header('Content-Type', 'text/plain; Charset=utf-8');
+    $cmd_message->add_header('Content-Type', 'text/plain; Charset=utf-8');
 
     unless (
         tools::store_spool(
-            $Conf::Conf{'queue'}, $message,
+            $Conf::Conf{'queue'}, $cmd_message,
             '%s@%s.%ld.%ld,%d', [qw(localpart domainpart TIME PID RAND)]
         )
         ) {

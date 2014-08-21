@@ -37,7 +37,6 @@ use HTML::StripScripts::Parser;
 use MIME::Base64 qw();
 use MIME::Decoder;
 use MIME::EncWords;
-use MIME::Lite::HTML;
 use POSIX qw();
 use Proc::ProcessTable;
 use Scalar::Util qw();
@@ -3344,31 +3343,8 @@ sub addrencode {
 }
 
 # Generate a newsletter from an HTML URL or a file path.
-sub create_html_part_from_web_page {
-    my $param = shift;
-    Log::do_log('debug', "Creating HTML MIME part. Source: %s",
-        $param->{'source'});
-    my $mailHTML = MIME::Lite::HTML->new(
-        {   From         => $param->{'From'},
-            To           => $param->{'To'},
-            Headers      => $param->{'Headers'},
-            Subject      => $param->{'Subject'},
-            HTMLCharset  => 'utf-8',
-            TextCharset  => 'utf-8',
-            TextEncoding => '8bit',
-            HTMLEncoding => '8bit',
-            remove_jscript => '1',    #delete the scripts in the html
-        }
-    );
-    # parse return the MIME::Lite part to send
-    my $part = $mailHTML->parse($param->{'source'});
-    unless (defined($part)) {
-        Log::do_log('err', 'Unable to convert file %s to a MIME part',
-            $param->{'source'});
-        return undef;
-    }
-    return $part->as_string;
-}
+#sub create_html_part_from_web_page($param);
+#DEPRECATED: No longer used.
 
 sub get_children_processes_list {
     Log::do_log('debug3', '');
