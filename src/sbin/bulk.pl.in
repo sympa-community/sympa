@@ -449,8 +449,14 @@ while (!$end) {
                         'Disposition-Notification-To', $return_path)
                         if $new_message->{shelved}{tracking} =~ /mdn/;
                     # trace_smime($new_message, 'tracking');
-                } else {    # VERP
+                } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                     $return_path = $list->get_bounce_address($rcpt);
+                } elsif ($new_message->{envelope_sender}) {
+                    $return_path = $new_message->{envelope_sender};
+                } elsif ($list) {
+                    $return_path = $list->get_list_address('return_path');
+                } else {
+                    $return_path = Conf::get_robot_conf($robot, 'request');
                 }
                 if ($new_message->{shelved}{merge}) {
                     unless ($new_message->personalize($list, $rcpt)) {
