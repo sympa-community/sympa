@@ -1911,6 +1911,68 @@ sub _get_search_path {
     return @search_path;
 }
 
+=over
+
+=item send_file
+
+    # To send site-global (not relative to a list or a robot)
+    # message
+    Site->send_file($template, $who, ...);
+    # To send global (not relative to a list, but relative to a
+    # robot) message
+    $robot->send_file($template, $who, ...);
+    # To send message relative to a list
+    $list->send_file($template, $who, ...);
+
+Send a message to user(s).
+Find the tt2 file according to $tpl, set up
+$data for the next parsing (with $context and
+configuration)
+Message is signed if the list has a key and a
+certificate
+
+Note: List::send_global_file() was deprecated.
+
+=back
+
+=cut
+
+sub send_file {
+    Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
+    my $that    = shift;
+    my $tpl     = shift;
+    my $who     = shift;
+    my $context = shift || {};
+    my %options = @_;
+
+    my $message =
+        Sympa::Message->new_from_template($that, $tpl, $who, $context,
+        %options);
+    # Use bulk excepted for alarms.  We should make this configurable in order
+    # to support Sympa server on a machine without any MTA service.
+    my $use_bulk = 1 unless $options{'alarm'};
+
+    my $return_path;
+    if (ref $that eq 'Sympa::List') {
+        $return_path = $that->get_list_address('return_path');
+    } else {
+        $return_path = Conf::get_robot_conf($that || '*', 'request');
+    }
+    unless (
+        $message
+        and defined Sympa::Mail::sending(
+            $message, $who, $return_path,
+            #'priority' => Conf::get_robot_conf($robot_id, 'sympa_priority'),
+            'use_bulk' => $use_bulk,
+        )
+        ) {
+        Log::do_log('err', 'Could not send template %s to %s', $tpl, $who);
+        return undef;
+    }
+
+    return 1;
+}
+
 ## Find a file in an ordered list of directories
 sub find_file {
     my ($filename, @directories) = @_;

@@ -4806,7 +4806,8 @@ sub sendssopasswd {
     $param->{'init_passwd'} = 1
         if ($param->{'user'}{'password'} =~ /^init/);
 
-    Sympa::Robot::send_global_file('sendssopasswd', $email, $robot, $param);
+    #FIXME: check error
+    tools::send_file($robot, 'sendssopasswd', $email, $param);
 
     $param->{'email'} = $email;
     web_db_log(
@@ -4922,11 +4923,8 @@ sub do_requestpasswd {
     }
     if ($param->{'one_time_ticket'}) {
         $param->{'login_error'} = 'ticket_sent';
-        unless (
-            Sympa::Robot::send_global_file(
-                'sendpasswd', $in{'email'}, $robot, $param
-            )
-            ) {
+        unless (tools::send_file($robot, 'sendpasswd', $in{'email'}, $param))
+        {
             wwslog('notice', 'Unable to send template "sendpasswd" to %s',
                 $in{'email'});
             $param->{'login_error'} = 'unable_to_send_ticket';
@@ -6263,13 +6261,14 @@ sub do_subscribe {
 
             unless ($sub_is =~ /quiet/i) {
                 unless (
-                    $list->send_file(
-                        'welcome', $param->{'user'}{'email'},
-                        $robot, {}
+                    $list->send_probe_to_user(
+                        'welcome', $param->{'user'}{'email'}
                     )
                     ) {
-                    wwslog('notice',
-                        "Unable to send template 'welcome' to $param->{'user'}{'email'}"
+                    wwslog(
+                        'notice',
+                        'Unable to send "welcome" probe to %s',
+                        $param->{'user'}{'email'}
                     );
                 }
             }
@@ -6493,11 +6492,8 @@ sub do_subrequest {
             $param->{'newuser'}{'escaped_email'} =
                 tools::escape_chars($param->{'newuser'}{'email'});
         }
-        unless (
-            Sympa::Robot::send_global_file(
-                'sendpasswd', $in{'email'}, $robot, $param
-            )
-            ) {
+        unless (tools::send_file($robot, 'sendpasswd', $in{'email'}, $param))
+        {
             wwslog('notice', 'Unable to send template "sendpasswd" to %s',
                 $in{'email'});
             $param->{'login_error'} = 'unable_to_send_ticket';
@@ -6566,8 +6562,8 @@ sub do_auto_signoff {
             'ip'              => $ip,
         };
         unless (
-            Sympa::Robot::send_global_file(
-                'user_notification', $in{'email'}, $robot, $tt2_param
+            tools::send_file(
+                $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
             Log::do_log('notice',
@@ -6604,8 +6600,8 @@ sub do_family_signoff_request {
         'ip'              => $ip,
     };
     unless (
-        Sympa::Robot::send_global_file(
-            'user_notification', $in{'email'}, $robot, $tt2_param
+        tools::send_file(
+            $robot, 'user_notification', $in{'email'}, $tt2_param
         )
         ) {
         Log::do_log('notice',
@@ -6820,7 +6816,7 @@ sub unsubscribe {
         ];
 
         unless (
-            $list->send_file('bye', $authenticated_email_address, $robot, {}))
+            tools::send_file($list, 'bye', $authenticated_email_address, {}))
         {
             wwslog('notice',
                 "Unable to send template 'bye' to $authenticated_email_address"
@@ -6876,8 +6872,8 @@ sub do_sigrequest {
             'email'           => $in{'email'}
         };
         unless (
-            Sympa::Robot::send_global_file(
-                'user_notification', $in{'email'}, $robot, $tt2_param
+            tools::send_file(
+                $robot, 'user_notification', $in{'email'}, $tt2_param
             )
             ) {
             Log::do_log('notice',
@@ -8269,9 +8265,8 @@ sub do_add {
         push @added_users, $email;
 
         unless ($in{'quiet'} || $add_is =~ /quiet/i) {
-            unless ($list->send_file('welcome', $email, $robot, {})) {
-                wwslog('err', 'Unable to send template "welcome" to %s',
-                    $email);
+            unless ($list->send_probe_to_user('welcome', $email)) {
+                wwslog('err', 'Unable to send "welcome" probe to %s', $email);
             }
         }
     }
@@ -8425,7 +8420,7 @@ sub do_del {
             $email, $param->{'list'});
 
         unless ($in{'quiet'}) {
-            unless ($list->send_file('removed', $email, $robot, {})) {
+            unless (tools::send_file($list, 'removed', $email, {})) {
                 wwslog('notice', 'Unable to send template "removed" to %s',
                     $email);
             }
@@ -8861,8 +8856,8 @@ sub do_d_install_shared {
 
             my $sender = $desc_hash{'email'};
             unless (
-                $list->send_file(
-                    'd_install_shared', $sender, $robot, \%context
+                tools::send_file(
+                    $list, 'd_install_shared', $sender, \%context
                 )
                 ) {
                 wwslog('notice',
@@ -8911,8 +8906,8 @@ sub do_d_reject_shared {
             $sender = $desc_hash{'email'};
 
             unless (
-                $list->send_file(
-                    'd_reject_shared', $sender, $robot, \%context
+                tools::send_file(
+                    $list, 'd_reject_shared', $sender, \%context
                 )
                 ) {
                 wwslog('notice',
@@ -9036,9 +9031,9 @@ sub do_reject {
                     $context{'rejected_by'}   = $param->{'user'}{'email'};
                     $context{'template_used'} = $in{'message_template'};
                     unless (
-                        $list->send_file(
-                            $in{'message_template'},    #FIXME
-                            $rejected_sender, $robot, \%context
+                        tools::send_file(
+                            $list,            $in{'message_template'},  #FIXME
+                            $rejected_sender, \%context
                         )
                         ) {
                         wwslog('notice',
@@ -11194,13 +11189,12 @@ sub do_install_pending_list {
     my @listmasters = split /\s*,\s*/,
         Conf::get_robot_conf($robot, 'listmaster');
     if ($in{'status'} eq 'open') {
-        unless ($list->send_file('list_created', \@listmasters, $robot, {})) {
+        unless (tools::send_file($list, 'list_created', \@listmasters, {})) {
             wwslog('notice',
                 'Unable to send template "list_created" to listmaster');
         }
     } elsif ($in{'status'} eq 'closed') {
-        unless ($list->send_file('list_rejected', \@listmasters, $robot, {}))
-        {
+        unless (tools::send_file($list, 'list_rejected', \@listmasters, {})) {
             wwslog('notice',
                 'Unable to send template "list_rejected" to listmaster');
         }
@@ -11213,8 +11207,8 @@ sub do_install_pending_list {
             next unless ($i->{'email'});
             if ($in{'status'} eq 'open') {
                 unless (
-                    $list->send_file(
-                        'list_created', $i->{'email'}, $robot, {}
+                    tools::send_file(
+                        $list, 'list_created', $i->{'email'}, {}
                     )
                     ) {
                     wwslog('notice',
@@ -11223,8 +11217,8 @@ sub do_install_pending_list {
                 }
             } elsif ($in{'status'} eq 'closed') {
                 unless (
-                    $list->send_file(
-                        'list_rejected', $i->{'email'}, $robot, {}
+                    tools::send_file(
+                        $list, 'list_rejected', $i->{'email'}, {}
                     )
                     ) {
                     wwslog('notice',
@@ -21399,8 +21393,8 @@ sub do_change_email_request {
         'to'              => $in{'new_email'},
     };
     unless (
-        Sympa::Robot::send_global_file(
-            'user_notification', $in{'new_email'}, $robot, $tt2_param
+        tools::send_file(
+            $robot, 'user_notification', $in{'new_email'}, $tt2_param
         )
         ) {
         Log::do_log('notice',
@@ -22310,7 +22304,7 @@ sub do_send_mail {
             TextCharset    => 'utf-8',
             TextEncoding   => '8bit',
             HTMLEncoding   => '8bit',
-            remove_jscript => '1',             #delete the scripts in the html
+            remove_jscript => '1',       #delete the scripts in the html
         );
         # parse return the MIME::Lite part to send
         my $part = $mail_html->parse($page_source) if $mail_html;

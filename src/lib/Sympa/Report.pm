@@ -101,18 +101,13 @@ sub reject_report_msg {
     }
 
     if (ref($list) eq 'Sympa::List') {
-        unless ($list->send_file('message_report', $user, $robot, $param)) {
+        unless (tools::send_file($list, 'message_report', $user, $param)) {
             Log::do_log('notice',
                 "Sympa::Report::reject_report_msg(): Unable to send template 'message_report' to '$user'"
             );
         }
     } else {
-        unless (
-            Sympa::Robot::send_global_file(
-                'message_report',
-                $user, $robot, $param
-            )
-            ) {
+        unless (tools::send_file($robot, 'message_report', $user, $param)) {
             Log::do_log('notice',
                 "Sympa::Report::reject_report_msg(): Unable to send template 'message_report' to '$user'"
             );
@@ -231,18 +226,13 @@ sub notice_report_msg {
     }
 
     if (ref($list) eq 'Sympa::List') {
-        unless ($list->send_file('message_report', $user, $robot, $param)) {
+        unless (tools::send_file($list, 'message_report', $user, $param)) {
             Log::do_log('notice',
                 "Sympa::Report::notice_report_msg(): Unable to send template 'message_report' to '$user'"
             );
         }
     } else {
-        unless (
-            Sympa::Robot::send_global_file(
-                'message_report',
-                $user, $robot, $param
-            )
-            ) {
+        unless (tools::send_file($robot, 'message_report', $user, $param)) {
             Log::do_log('notice',
                 "Sympa::Report::notice_report_msg(): Unable to send template 'message_report' to '$user'"
             );
@@ -365,12 +355,7 @@ sub send_report_cmd {
         'globals'           => \@global_error_cmd,
     };
 
-    unless (
-        Sympa::Robot::send_global_file(
-            'command_report',
-            $sender, $robot, $data
-        )
-        ) {
+    unless (tools::send_file($robot, 'command_report', $sender, $data)) {
         Log::do_log('notice',
             "Sympa::Report::send_report_cmd() : Unable to send template 'command_report' to $sender"
         );

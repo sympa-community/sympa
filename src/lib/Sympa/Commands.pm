@@ -192,8 +192,7 @@ sub help {
     $data->{'subject'}        = $language->gettext("User guide");
     $data->{'auto_submitted'} = 'auto-replied';
 
-    unless (
-        Sympa::Robot::send_global_file("helpfile", $sender, $robot, $data)) {
+    unless (tools::send_file($robot, "helpfile", $sender, $data)) {
         Log::do_log('notice', 'Unable to send template "helpfile" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '', {}, $cmd_line,
@@ -273,7 +272,7 @@ sub lists {
     $data->{'lists'}          = $lists;
     $data->{'auto_submitted'} = 'auto-replied';
 
-    unless (Sympa::Robot::send_global_file('lists', $sender, $robot, $data)) {
+    unless (tools::send_file($robot, 'lists', $sender, $data)) {
         Log::do_log('notice', 'Unable to send template "lists" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '', {}, $cmd_line,
@@ -351,9 +350,9 @@ sub stats {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                $list->send_file(
-                    $result->{'tt2'}, $sender,
-                    $robot, {'auto_submitted' => 'auto-replied'}
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
                 )
                 ) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
@@ -379,9 +378,10 @@ sub stats {
         );
 
         unless (
-            $list->send_file(
+            tools::send_file(
+                $list,
                 'stats_report',
-                $sender, $robot,
+                $sender,
                 {   'stats'   => \%stats,
                     'subject' => "STATS $list->{'name'}",  # compat <= 6.1.17.
                     'auto_submitted' => 'auto-replied'
@@ -601,8 +601,8 @@ sub index {
 
     my @l = $list->archive_ls();
     unless (
-        $list->send_file(
-            'index_archive', $sender, $robot,
+        tools::send_file(
+            $list, 'index_archive', $sender,
             {'archives' => \@l, 'auto_submitted' => 'auto-replied'}
         )
         ) {
@@ -704,9 +704,9 @@ sub review {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                $list->send_file(
-                    $result->{'tt2'}, $sender,
-                    $robot, {'auto_submitted' => 'auto-replied'}
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
                 )
                 ) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
@@ -745,8 +745,8 @@ sub review {
             }
         } while ($user = $list->get_next_list_member());
         unless (
-            $list->send_file(
-                'review', $sender, $robot,
+            tools::send_file(
+                $list, 'review', $sender,
                 {   'users'   => \@users,
                     'total'   => $list->get_total(),
                     'subject' => "REVIEW $listname",    # Compat <= 6.1.17.
@@ -919,9 +919,9 @@ sub subscribe {
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
             unless (
-                $list->send_file(
-                    $result->{'tt2'}, $sender,
-                    $robot, {'auto_submitted' => 'auto-replied'}
+                tools::send_file(
+                    $list, $result->{'tt2'},
+                    $sender, {'auto_submitted' => 'auto-replied'}
                 )
                 ) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
@@ -1061,9 +1061,9 @@ sub subscribe {
 
         ## Now send the welcome file to the user
         unless ($quiet || ($action =~ /quiet/i)) {
-            unless ($list->send_file('welcome', $sender, $robot, {})) {
-                Log::do_log('notice',
-                    'Unable to send template "welcome" to %s', $sender);
+            unless ($list->send_probe_to_user('welcome', $sender)) {
+                Log::do_log('notice', 'Unable to send "welcome" probe to %s',
+                    $sender);
             }
         }
 
@@ -1166,7 +1166,7 @@ sub info {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1221,7 +1221,7 @@ sub info {
         my $wwsympa_url = Conf::get_robot_conf($robot, 'wwsympa_url');
         $data->{'url'} = $wwsympa_url . '/info/' . $list->{'name'};
 
-        unless ($list->send_file('info_report', $sender, $robot, $data)) {
+        unless (tools::send_file($list, 'info_report', $sender, $data)) {
             Log::do_log('notice',
                 'Unable to send template "info_report" to %s', $sender);
             Sympa::Report::reject_report_cmd('intern_quiet', '',
@@ -1374,7 +1374,7 @@ sub signoff {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1488,7 +1488,7 @@ sub signoff {
 
         unless ($quiet || ($action =~ /quiet/i)) {
             ## Send bye file to subscriber
-            unless ($list->send_file('bye', $email, $robot, {})) {
+            unless (tools::send_file($list, 'bye', $email, {})) {
                 Log::do_log('notice', 'Unable to send template "bye" to %s',
                     $email);
             }
@@ -1586,7 +1586,7 @@ sub add {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1669,9 +1669,9 @@ sub add {
         ## Now send the welcome file to the user if it exists and notification
         ## is supposed to be sent.
         unless ($quiet || $action =~ /quiet/i) {
-            unless ($list->send_file('welcome', $email, $robot, {})) {
-                Log::do_log('notice',
-                    'Unable to send template "welcome" to %s', $email);
+            unless ($list->send_probe_to_user('welcome', $email)) {
+                Log::do_log('notice', 'Unable to send "welcome" probe to %s',
+                    $email);
             }
         }
 
@@ -1782,7 +1782,7 @@ sub invite {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -1858,7 +1858,7 @@ sub invite {
                 $context{'subject'} = $command;
                 $context{'url'}     = "mailto:$sympa?subject=$command";
                 $context{'url'} =~ s/\s/%20/g;
-                unless ($list->send_file('invite', $email, $robot, \%context))
+                unless (tools::send_file($list, 'invite', $email, \%context))
                 {
                     Log::do_log('notice',
                         'Unable to send template "invite" to %s', $email);
@@ -1888,7 +1888,7 @@ sub invite {
                 $context{'subject'} = "sub $which $comment";
                 $context{'url'} = "mailto:$sympa?subject=$context{'subject'}";
                 $context{'url'} =~ s/\s/%20/g;
-                unless ($list->send_file('invite', $email, $robot, \%context))
+                unless (tools::send_file($list, 'invite', $email, \%context))
                 {
                     Log::do_log('notice',
                         'Unable to send template "invite" to %s', $email);
@@ -1926,9 +1926,8 @@ sub invite {
                 );
                 if (defined $result->{'tt2'}) {
                     unless (
-                        $list->send_file(
-                            $result->{'tt2'},
-                            $sender, $robot, {}
+                        tools::send_file(
+                            $list, $result->{'tt2'}, $sender, {}
                         )
                         ) {
                         Log::do_log('notice',
@@ -2073,7 +2072,7 @@ sub remind {
         Log::do_log('info', 'Remind for list %s from %s refused',
             $listname, $sender);
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
 
@@ -2135,12 +2134,11 @@ sub remind {
             }
 
             do {
-                unless (
-                    $list->send_file('remind', $user->{'email'}, $robot, {}))
+                unless ($list->send_probe_to_user('remind', $user->{'email'}))
                 {
                     Log::do_log('notice',
-                        "Unable to send template 'remind' to $user->{'email'}"
-                    );
+                        'Unable to send "remind" probe to %s',
+                        $user->{'email'});
                     Sympa::Report::reject_report_cmd('intern_quiet', '',
                         {'listname' => $listname},
                         $cmd_line, $sender, $robot);
@@ -2231,13 +2229,13 @@ sub remind {
                 $context{'user'}{'password'} =
                     $global_info{$email}{'password'};
                 $context{'user'}{'gecos'} = $global_info{$email}{'gecos'};
-                $context{'use_bulk'} = 1;
                 @{$context{'lists'}} = @{$global_subscription{$email}};
-                $context{'use_bulk'} = 1;
+                $context{'use_bulk'} = 1;    #Is it used?
 
+                #FIXME: needs VERP?
                 unless (
-                    Sympa::Robot::send_global_file(
-                        'global_remind', $email, $robot, \%context
+                    tools::send_file(
+                        $robot, 'global_remind', $email, \%context
                     )
                     ) {
                     Log::do_log('notice',
@@ -2345,7 +2343,7 @@ sub del {
 
     if ($action =~ /reject/i) {
         if (defined $result->{'tt2'}) {
-            unless ($list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+            unless (tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                 Log::do_log('notice', 'Unable to send template "%s" to %s',
                     $result->{'tt2'}, $sender);
                 Sympa::Report::reject_report_cmd('auth', $result->{'reason'},
@@ -2410,7 +2408,7 @@ sub del {
         ## Send a notice to the removed user, unless the owner indicated
         ## quiet del.
         unless ($quiet || $action =~ /quiet/i) {
-            unless ($list->send_file('removed', $who, $robot, {})) {
+            unless (tools::send_file($list, 'removed', $who, {})) {
                 Log::do_log('notice',
                     'Unable to send template "removed" to %s', $who);
             }
@@ -2994,7 +2992,7 @@ sub confirm {
         unless ($2 eq 'quiet') {
             if (defined $result->{'tt2'}) {
                 unless (
-                    $list->send_file($result->{'tt2'}, $sender, $robot, {})) {
+                    tools::send_file($list, $result->{'tt2'}, $sender, {})) {
                     Log::do_log('notice',
                         "Commands::confirm(): Unable to send template '$result->{'tt2'}' to $sender"
                     );
@@ -3208,8 +3206,8 @@ sub reject {
         ## Notify author of message
         unless ($quiet) {
             unless (
-                $list->send_file(
-                    'reject', $rejected_sender, $robot, \%context
+                tools::send_file(
+                    $list, 'reject', $rejected_sender, \%context
                 )
                 ) {
                 Log::do_log('notice',
@@ -3360,9 +3358,10 @@ sub modindex {
     }
 
     unless (
-        $list->send_file(
+        tools::send_file(
+            $list,
             'modindex',
-            $sender, $robot,
+            $sender,
             {   'spool' => \@spool,    #FIXME: Use msg_list.
                 'total' => $n,
                 'boundary1' => "==main $now[6].$now[5].$now[4].$now[3]==",
@@ -3461,7 +3460,7 @@ sub which {
         $data->{'is_editor'} = 1;
     }
 
-    unless (Sympa::Robot::send_global_file('which', $sender, $robot, $data)) {
+    unless (tools::send_file($robot, 'which', $sender, $data)) {
         Log::do_log('notice', 'Unable to send template "which" to %s',
             $sender);
         Sympa::Report::reject_report_cmd('intern_quiet', '',

@@ -982,8 +982,8 @@ sub send_msg {
             Log::do_log('notice', '--> message sent to %s', $email);
             if (!$log) {
                 unless (
-                    Sympa::Robot::send_global_file(
-                        $template, $email,, '', $Rvars->{$var}{$email}
+                    tools::send_file(
+                        '*', $template, $email, $Rvars->{$var}{$email}
                     )
                     ) {
                     Log::do_log('notice', 'Unable to send template %s to %s',
@@ -998,9 +998,8 @@ sub send_msg {
             Log::do_log('notice', '--> message sent to %s', $email);
             if (!$log) {
                 unless (
-                    $list->send_file(
-                        $template,         $email,
-                        $list->{'domain'}, $Rvars->{$var}{$email}
+                    tools::send_file(
+                        $list, $template, $email, $Rvars->{$var}{$email}
                     )
                     ) {
                     Log::do_log('notice', 'Unable to send template %s to %s',
@@ -1686,10 +1685,7 @@ sub chk_cert_expiration {
 
             if (!$log) {
                 unless (
-                    Sympa::Robot::send_global_file(
-                        $template, $cert, '', \%tpl_context
-                    )
-                    ) {
+                    tools::send_file('*', $template, $cert, \%tpl_context)) {
                     Log::do_log('notice', 'Unable to send template %s to %s',
                         $template, $cert);
                 }

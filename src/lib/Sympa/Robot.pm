@@ -52,130 +52,9 @@ our %mtime;
 
 our %listmaster_messages_stack;
 
-####################################################
-# send_global_file
-####################################################
-#  Send a global (not relative to a list)
-#  message to a user.
-#  Find the tt2 file according to $tpl, set up
-#  $data for the next parsing (with $context and
-#  configuration )
-#
-# IN : -$tpl (+): template file name (file.tt2),
-#         without tt2 extension
-#      -$who (+): SCALAR |ref(ARRAY) - recipient(s)
-#      -$robot (+): robot
-#      -$context : ref(HASH) - for the $data set up
-#         to parse file tt2, keys can be :
-#         -user : ref(HASH), keys can be :
-#           -email
-#           -lang
-#           -password
-#         -auto_submitted auto-generated|auto-replied|auto-forwarded
-#         -...
-#      -$options : ref(HASH) - options
-# OUT : 1 | undef
-#
-####################################################
-sub send_global_file {
-    my ($tpl, $who, $robot, $context, $options) = @_;
-    Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
-
-    my $data = tools::dup_var($context);
-
-    unless ($data->{'user'}) {
-        $data->{'user'} = Sympa::User::get_global_user($who)
-            unless ($options->{'skip_db'});
-        $data->{'user'}{'email'} = $who unless (defined $data->{'user'});
-    }
-    unless ($data->{'user'}{'password'}) {
-        $data->{'user'}{'password'} = tools::tmp_passwd($who);
-    }
-
-    ## Lang
-    $language->push_lang(
-        $data->{'lang'},
-        $data->{'user'}{'lang'},
-        Conf::get_robot_conf($robot, 'lang')
-    );
-    $data->{'lang'} = $language->get_lang;
-    $language->pop_lang;
-
-    ## What file
-    my $tt2_include_path = tools::get_search_path(
-        $robot,
-        subdir => 'mail_tt2',
-        lang   => $data->{'lang'}
-    );
-
-    foreach my $d (@{$tt2_include_path}) {
-        tt2::add_include_path($d);
-    }
-
-    my @path = tt2::get_include_path();
-    my $filename = tools::find_file($tpl . '.tt2', @path);
-
-    unless (defined $filename) {
-        Log::do_log('err', 'Could not find template %s.tt2 in %s',
-            $tpl, join(':', @path));
-        return undef;
-    }
-
-    foreach my $p (
-        'email',   'gecos',      'host',        'sympa',
-        'request', 'listmaster', 'wwsympa_url', 'title',
-        'listmaster_email'
-        ) {
-        $data->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
-    }
-
-    $data->{'sender'} = $who;
-
-    # Sign mode
-    my $smime_sign = Sympa::Tools::SMIME::find_keys($robot, 'sign');
-
-    $data->{'conf'}{'version'} = $main::Version;
-    $data->{'from'} = "$data->{'conf'}{'email'}\@$data->{'conf'}{'host'}"
-        unless ($data->{'from'});
-    $data->{'robot_domain'} = $robot;
-    unless (tools::smart_eq($data->{'return_path'}, '<>')) {
-        $data->{'return_path'} = Conf::get_robot_conf($robot, 'request');
-    }
-
-    $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
-        unless ($data->{'boundary'});
-
-    my $message =
-        Sympa::Message->new_from_template($robot, $filename, $who, $data);
-    return $message->as_string if $options->{'parse_and_return'};
-
-    # Shelve S/MIME signing.
-    $message->{shelved}{smime_sign} = 1
-        if $smime_sign;
-    # Shelve DKIM signing.
-    $message->{shelved}{dkim_sign} = 1
-        if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
-            and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
-            /robot/;
-    # use VERP excepted for alarms. We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service
-    my $use_bulk = 1 unless $data->{'alarm'};
-
-    unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message, $who, $data->{'return_path'},
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'use_bulk' => $use_bulk,
-        )
-        ) {
-        Log::do_log('err', 'Could not send template %s to %s',
-            $filename, $who);
-        return undef;
-    }
-
-    return 1;
-}
+# MOVED: Use tools::send_file(), or Sympa::Message::new_from_template() with
+# Sympa::Mail::sending().
+# sub send_global_file($tpl, $who, $robot, $context, $options);
 
 ####################################################
 # send_notify_to_listmaster
@@ -226,23 +105,32 @@ sub send_notify_to_listmaster {
                     my $param = {
                         to                    => $email,
                         auto_submitted        => 'auto-generated',
-                        alarm                 => 1,
                         operation             => $operation,
                         notification_messages => $messages{$email},
                         boundary              => '----------=_'
                             . tools::get_message_id($robot)
                     };
 
-                    my $options = {};
-                    $options->{'skip_db'} = 1
-                        if (($operation eq 'no_db')
-                        || ($operation eq 'db_restored'));
-
                     Log::do_log('info', 'Send messages to %s', $email);
+
+                    # Skip DB access because DB is not accessible
+                    $email = [$email]
+                        if not ref $email
+                            and (  $operation eq 'no_db'
+                                or $operation eq 'db_restored');
+
+                    my $message =
+                        Sympa::Message->new_from_template($robot,
+                        'listmaster_groupednotifications',
+                        $email, $param);
                     unless (
-                        send_global_file(
-                            'listmaster_groupednotifications',
-                            $email, $robot, $param, $options
+                        $message
+                        and Sympa::Mail::sending(
+                            $message, $email,
+                            Conf::get_robot_conf($robot, 'request'),
+                            priority => Conf::get_robot_conf(
+                                $robot, 'sympa_priority'
+                            )
                         )
                         ) {
                         Log::do_log(
@@ -288,10 +176,10 @@ sub send_notify_to_listmaster {
         die 'missing incoming parameter "$robot"';
     }
 
-    my $host       = Conf::get_robot_conf($robot, 'host');
-    my $listmaster = Conf::get_robot_conf($robot, 'listmaster');
-    my $to         = "$Conf::Conf{'listmaster_email'}\@$host";
-    my $options = {};    ## options for send_global_file()
+    my $host = Conf::get_robot_conf($robot, 'host');
+    my $listmaster =
+        [split /\s*,\s*/, Conf::get_robot_conf($robot, 'listmaster')];
+    my $to = "$Conf::Conf{'listmaster_email'}\@$host";
 
     if ((ref($data) ne 'HASH') and (ref($data) ne 'ARRAY')) {
         Log::do_log(
@@ -329,7 +217,6 @@ sub send_notify_to_listmaster {
 
     if ($operation eq 'automatic_bounce_management') {
         ## Automatic action done on bouncing addresses
-        delete $data->{'alarm'};
         my $list = Sympa::List->new($data->{'list'}{'name'}, $robot);
         unless (defined $list) {
             Log::do_log(
@@ -339,10 +226,15 @@ sub send_notify_to_listmaster {
             ) unless $operation eq 'logs_failed';
             return undef;
         }
+        my $message = Sympa::Message->new_from_template($list,
+            'listmaster_notification', $to, $data);
         unless (
-            $list->send_file(
-                'listmaster_notification',
-                $listmaster, $robot, $data, $options
+            $message
+            and Sympa::Mail::sending(
+                $message, $listmaster,
+                $list->get_list_address('return_path'),
+                priority => Conf::get_robot_conf($robot, 'sympa_priority'),
+                use_bulk => 1
             )
             ) {
             Log::do_log(
@@ -356,11 +248,8 @@ sub send_notify_to_listmaster {
         return 1;
     }
 
-    if (($operation eq 'no_db') || ($operation eq 'db_restored')) {
-        ## No DataBase |  DataBase restored
+    if ($operation eq 'no_db' or $operation eq 'db_restored') {
         $data->{'db_name'} = Conf::get_robot_conf($robot, 'db_name');
-        ## Skip DB access because DB is not accessible
-        $options->{'skip_db'} = 1;
     }
 
     if ($operation eq 'loop_command') {
@@ -371,7 +260,7 @@ sub send_notify_to_listmaster {
 
     if (   ($operation eq 'request_list_creation')
         or ($operation eq 'request_list_renaming')) {
-        foreach my $email (split(/\,/, $listmaster)) {
+        foreach my $email (@$listmaster) {
             my $cdata = tools::dup_var($data);
             $cdata->{'one_time_ticket'} =
                 Sympa::Auth::create_one_time_ticket($email, $robot,
@@ -391,19 +280,30 @@ sub send_notify_to_listmaster {
     }
 
     foreach my $ts (@tosend) {
-        $options->{'parse_and_return'} = 1 if ($stack);
-        my $r =
-            send_global_file('listmaster_notification', $ts->{'email'},
-            $robot, $ts->{'data'}, $options);
+        my $email = $ts->{'email'};
+        # Skip DB access because DB is not accessible
+        $email = [$email]
+            if not ref $email
+                and ($operation eq 'no_db' or $operation eq 'db_restored');
+
+        my $notif_message =
+            Sympa::Message->new_from_template($robot,
+            'listmaster_notification', $email, $ts->{'data'});
         if ($stack) {
             Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
                 $operation, $ts->{'email'}, $robot)
                 unless $operation eq 'logs_failed';
             push
                 @{$Sympa::Robot::listmaster_messages_stack{$robot}{$operation}
-                    {'messages'}{$ts->{'email'}}}, $r;
+                    {'messages'}{$ts->{'email'}}}, $notif_message->as_string;
             return 1;
         }
+        my $r = Sympa::Mail::sending(
+            $notif_message,
+            $ts->{'email'},
+            Conf::get_robot_conf($robot, 'request'),
+            priority => Conf::get_robot_conf($robot, 'sympa_priority')
+        );
 
         unless ($r) {
             Log::do_log(

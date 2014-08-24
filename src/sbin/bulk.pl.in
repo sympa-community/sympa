@@ -449,6 +449,12 @@ while (!$end) {
                         'Disposition-Notification-To', $return_path)
                         if $new_message->{shelved}{tracking} =~ /mdn/;
                     # trace_smime($new_message, 'tracking');
+                } elsif (
+                    tools::smart_eq($new_message->{shelved}{tracking}, 'w')) {
+                    $return_path = $list->get_bounce_address($rcpt, 'w');
+                } elsif (
+                    tools::smart_eq($new_message->{shelved}{tracking}, 'r')) {
+                    $return_path = $list->get_bounce_address($rcpt, 'r');
                 } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                     $return_path = $list->get_bounce_address($rcpt);
                 } elsif ($new_message->{envelope_sender}) {
@@ -458,6 +464,7 @@ while (!$end) {
                 } else {
                     $return_path = Conf::get_robot_conf($robot, 'request');
                 }
+
                 if ($new_message->{shelved}{merge}) {
                     unless ($new_message->personalize($list, $rcpt)) {
                         #FIXME: Mark packet as "bad".
@@ -525,6 +532,16 @@ while (!$end) {
             # message doesn't need personalization, so can be sent by packet.
             my $new_message = $message->dup;
 
+            my $return_path;
+
+            if ($new_message->{envelope_sender}) {
+                $return_path = $new_message->{envelope_sender};
+            } elsif ($list) {
+                $return_path = $list->get_list_address('return_path');
+            } else {
+                $return_path = Conf::get_robot_conf($robot, 'request');
+            }
+
             if ($new_message->{shelved}{smime_sign}) {
                 $new_message->smime_sign;
                 delete $new_message->{shelved}{smime_sign};
@@ -546,8 +563,7 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            *SMTP = Sympa::Mail::smtpto($message->{'envelope_sender'},
-                \@rcpts, $robot);
+            *SMTP = Sympa::Mail::smtpto($return_path, \@rcpts, $robot);
             # Stripping Return-Path: pseudo-header field.
             my $msg_string = $new_message->as_string;
             $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;

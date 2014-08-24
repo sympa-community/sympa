@@ -1882,9 +1882,10 @@ sub process_message {
     if ($rc) {
         if (Conf::get_robot_conf($robot, 'antivirus_notify') eq 'sender') {
             unless (
-                Sympa::Robot::send_global_file(
+                tools::send_file(
+                    $robot,
                     'your_infected_msg',
-                    $sender, $robot,
+                    $sender,
                     {   'virus_name' => $rc,
                         'recipient'  => $list_address,
                         'lang'       => Conf::get_robot_conf($robot, 'lang'),
@@ -2254,9 +2255,10 @@ sub DoForward {
             );
             my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
             unless (
-                Sympa::Robot::send_global_file(
+                tools::send_file(
+                    $robot,
                     'list_unknown',
-                    $sender, $robot,
+                    $sender,
                     {   'list' => $name,
                         'date' => POSIX::strftime(
                             "%d %b %Y  %H:%M",
@@ -2496,9 +2498,10 @@ sub DoMessage {
         my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
 
         unless (
-            Sympa::Robot::send_global_file(
+            tools::send_file(
+                $robot,
                 'list_unknown',
-                $sender, $robot,
+                $sender,
                 {   'list' => $which,
                     'date' =>
                         POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
@@ -3121,9 +3124,9 @@ sub DoMessage {
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
             if (defined $result->{'tt2'}) {
                 unless (
-                    $list->send_file(
-                        $result->{'tt2'}, $sender, $robot,
-                        {'auto_submitted' => 'auto-replied'}
+                    tools::send_file(
+                        $list, $result->{'tt2'},
+                        $sender, {'auto_submitted' => 'auto-replied'}
                     )
                     ) {
                     Log::do_log('notice',

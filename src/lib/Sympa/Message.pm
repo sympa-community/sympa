@@ -143,13 +143,13 @@ sub new {
 
         if ($k eq 'X-Sympa-To') {
             $self->{'rcpt'} = join ',', split(/\s*,\s*/, $v);
-        } elsif ($k eq 'X-Sympa-Checksum') { # To migrate format <= 6.2a.40
+        } elsif ($k eq 'X-Sympa-Checksum') {    # To migrate format <= 6.2a.40
             $self->{'checksum'} = $v;
         } elsif ($k eq 'X-Sympa-Family') {
             $self->{'family'} = $v;
         } elsif ($k eq 'X-Sympa-From') {    # Compatibility. Use Return-Path:
             $self->{'envelope_sender'} = $v;
-        } elsif ($k eq 'X-Sympa-Auth-Level') {     # New in 6.2a.41
+        } elsif ($k eq 'X-Sympa-Auth-Level') {    # New in 6.2a.41
             if ($v eq 'md5') {
                 $self->{'md5_check'} = 1;
             } else {
@@ -429,8 +429,179 @@ New L<Sympa::Message> instance, of C<undef> if something went wrong.
 
 =cut
 
-# Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring().
+# Old names: (part of) mail::mail_file(), mail::parse_tt2_messageasstring(),
+# List::send_file(), List::send_global_file().
 sub new_from_template {
+    Log::do_log('debug2', '(%s, %s, %s, %s, %s, ...)', @_);
+    my $class   = shift;
+    my $that    = shift;
+    my $tpl     = shift;
+    my $who     = shift;
+    my $context = shift;
+    my %options = @_;
+
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $robot_id = $that->{'domain'};
+        $list     = $that;
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
+
+    my $data = tools::dup_var($context);
+
+    ## Any recipients
+    if (not $who or (ref $who and !@$who)) {
+        Log::do_log('err', 'No recipient for sending %s', $tpl);
+        return undef;
+    }
+
+    ## Unless multiple recipients
+    unless (ref $who) {
+        unless ($data->{'user'}) {
+            $data->{'user'} = Sympa::User->new($who);
+        }
+
+        if ($list) {
+            # FIXME: Don't overwrite date & update_date.  Format datetime on
+            # the template.
+            my $subscriber = tools::dup_var($list->get_list_member($who));
+            if ($subscriber) {
+                $data->{'subscriber'}{'date'} =
+                    $language->gettext_strftime("%d %b %Y",
+                    localtime($subscriber->{'date'}));
+                $data->{'subscriber'}{'update_date'} =
+                    $language->gettext_strftime("%d %b %Y",
+                    localtime($subscriber->{'update_date'}));
+                if ($subscriber->{'bounce'}) {
+                    $subscriber->{'bounce'} =~
+                        /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
+
+                    $data->{'subscriber'}{'first_bounce'} =
+                        $language->gettext_strftime("%d %b %Y", localtime $1);
+                }
+            }
+        }
+
+        unless ($data->{'user'}{'password'}) {
+            $data->{'user'}{'password'} = tools::tmp_passwd($who);
+        }
+
+    }
+
+    # Lang
+    $language->push_lang(
+        $data->{'lang'},
+        $data->{'user'}{'lang'},
+        ($list ? $list->{'admin'}{'lang'} : undef),
+        Conf::get_robot_conf($robot_id, 'lang'), 'en'
+    );
+    $data->{'lang'} = $language->get_lang;
+    $language->pop_lang;
+
+    if ($list) {
+        # Trying to use custom_vars
+        if (defined $list->{'admin'}{'custom_vars'}) {
+            $data->{'custom_vars'} = {};
+            foreach my $var (@{$list->{'admin'}{'custom_vars'}}) {
+                $data->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
+            }
+        }
+    }
+
+    ## What file
+    my $tt2_include_path = tools::get_search_path(
+        $that,
+        subdir => 'mail_tt2',
+        lang   => $data->{'lang'}
+    );
+
+    if ($list) {
+        # list directory to get the 'info' file
+        push @{$tt2_include_path}, $list->{'dir'};
+        # list archives to include the last message
+        push @{$tt2_include_path}, $list->{'dir'} . '/archives';
+    }
+
+    foreach my $d (@{$tt2_include_path}) {
+        tt2::add_include_path($d);
+    }
+
+    foreach my $p (
+        'email',   'gecos',      'host',        'sympa',
+        'request', 'listmaster', 'wwsympa_url', 'title',
+        'listmaster_email'
+        ) {
+        $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
+    }
+    $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
+
+    my @path = tt2::get_include_path();
+    my $filename = tools::find_file($tpl . '.tt2', @path);
+
+    unless (defined $filename) {
+        Log::do_log('err', 'Could not find template %s.tt2 in %s',
+            $tpl, join(':', @path));
+        return undef;
+    }
+
+    $data->{'sender'} ||= $who;
+
+    if ($list) {
+        $data->{'list'}{'lang'}    = $list->{'admin'}{'lang'};
+        $data->{'list'}{'name'}    = $list->{'name'};
+        $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot_id;
+        $data->{'list'}{'host'}    = $list->{'admin'}{'host'};
+        $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
+        $data->{'list'}{'owner'}   = $list->get_owners();
+        $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
+    }
+
+    # Sign mode
+    my $smime_sign = Sympa::Tools::SMIME::find_keys($that, 'sign');
+
+    if ($list) {
+        # if the list have it's private_key and cert sign the message
+        # . used only for the welcome message, could be useful in other case?
+        # . a list should have several certificates and use if possible a
+        #   certificate issued by the same CA as the recipient CA if it exists
+        if ($smime_sign) {
+            $data->{'fromlist'} = $list->get_list_address();
+            $data->{'replyto'}  = $list->get_list_address('owner');
+        } else {
+            $data->{'fromlist'} = $list->get_list_address('owner');
+        }
+
+        $data->{'from'} ||= $data->{'fromlist'};
+    } else {
+        $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
+
+        $data->{'from'} ||= Conf::get_robot_conf($robot_id, 'sympa');
+    }
+    $data->{'boundary'} = '----------=_' . tools::get_message_id($robot_id)
+        unless $data->{'boundary'};
+
+    my $message = $class->_new_from_template($that, $filename, $who, $data);
+
+    # Shelve S/MIME signing.
+    $message->{shelved}{smime_sign} = 1
+        if $smime_sign;
+    # Shelve DKIM signing.
+    if (Conf::get_robot_conf($robot_id, 'dkim_feature') eq 'on') {
+        my $dkim_add_signature_to =
+            Conf::get_robot_conf($robot_id, 'dkim_add_signature_to');
+        if ($list and $dkim_add_signature_to =~ /list/
+            or not $list and $dkim_add_signature_to =~ /robot/) {
+            $message->{shelved}{dkim_sign} = 1;
+        }
+    }
+
+    return $message;
+}
+
+sub _new_from_template {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $class    = shift;
     my $that     = shift || '*';
@@ -718,17 +889,17 @@ sub to_string {
         $serialized .= sprintf "X-Sympa-Family: %s\n", $self->{'family'};
     }
     if (defined $self->{'md5_check'}
-        and length $self->{'md5_check'}) {   # New in 6.2a.41
+        and length $self->{'md5_check'}) {    # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Auth-Level: %s\n", 'md5';
     }
-    if (defined $self->{'message_id'}) {    # New in 6.2a.41
+    if (defined $self->{'message_id'}) {      # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Message-ID: %s\n",
             $self->{'message_id'};
     }
-    if (defined $self->{'sender'}) {        # New in 6.2a.41
+    if (defined $self->{'sender'}) {          # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Sender: %s\n", $self->{'sender'};
     }
-    if (%{$self->{'shelved'} || {}}) {      # New in 6.2a.41
+    if (%{$self->{'shelved'} || {}}) {        # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Shelved: %s\n", join(
             '; ',
             map {
@@ -740,7 +911,7 @@ sub to_string {
                 } sort keys %{$self->{shelved}}
         );
     }
-    if (defined $self->{'spam_status'}) {    # New in 6.2a.41.
+    if (defined $self->{'spam_status'}) {     # New in 6.2a.41.
         $serialized .= sprintf "X-Sympa-Spam-Status: %s\n",
             $self->{'spam_status'};
     }

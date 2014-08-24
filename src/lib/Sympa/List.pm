@@ -2175,9 +2175,9 @@ sub distribute_digest {
         if (exists $available_recipients->{'digest'}) {
             ## Send digest
             unless (
-                $self->send_file(
-                    'digest', $available_recipients->{'digest'},
-                    $robot,   $param
+                tools::send_file(
+                    $self,                             'digest',
+                    $available_recipients->{'digest'}, $param
                 )
                 ) {
                 Log::do_log(
@@ -2192,9 +2192,9 @@ sub distribute_digest {
         if (exists $available_recipients->{'digestplain'}) {
             ## Send digest-plain
             unless (
-                $self->send_file(
-                    'digest_plain', $available_recipients->{'digestplain'},
-                    $robot,         $param
+                tools::send_file(
+                    $self,                                  'digest_plain',
+                    $available_recipients->{'digestplain'}, $param
                 )
                 ) {
                 Log::do_log(
@@ -2208,9 +2208,9 @@ sub distribute_digest {
         ## send summary
         if (exists $available_recipients->{'summary'}) {
             unless (
-                $self->send_file(
-                    'summary', $available_recipients->{'summary'},
-                    $robot,    $param
+                tools::send_file(
+                    $self,                              'summary',
+                    $available_recipients->{'summary'}, $param
                 )
                 ) {
                 Log::do_log(
@@ -2393,20 +2393,27 @@ sub send_dsn {
         (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
         ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
+    my $dsn_message = Sympa::Message->new_from_template(
+        $that, 'dsn', $sender,
+        {   %$param,
+            'recipient'       => $recipient,
+            'to'              => $sender,
+            'date'            => $date,
+            'header'          => $header,
+            'auto_submitted'  => 'auto-replied',
+            'action'          => $action,
+            'status'          => $status,
+            'diagnostic_code' => $diag,
+        }
+    );
+    $dsn_message->{envelope_sender} = '<>';
+
     unless (
-        _generic_send_file(
-            $that, 'dsn', $sender,
-            {   %$param,
-                'recipient'       => $recipient,
-                'to'              => $sender,
-                'date'            => $date,
-                'header'          => $header,
-                'auto_submitted'  => 'auto-replied',
-                'action'          => $action,
-                'status'          => $status,
-                'diagnostic_code' => $diag,
-                'return_path'     => '<>'
-            }
+        $dsn_message
+        and Sympa::Mail::sending(
+            $dsn_message, $sender, '<>',
+            #priority => ...,
+            use_bulk => 1
         )
         ) {
         Log::do_log('err', 'Unable to send DSN to %s', $sender);
@@ -2416,213 +2423,8 @@ sub send_dsn {
     return 1;
 }
 
-# NOTE: send_file() and Sympa::Robot::send_global_file() should be merged.
-sub _generic_send_file {
-    Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
-    my $that    = shift;
-    my $tpl     = shift;
-    my $who     = shift;
-    my $param   = shift;
-    my $options = shift;
-
-    if (ref $that eq 'Sympa::List') {
-        return $that->send_file($tpl, $who, $that->{'domain'}, $param);
-    } else {
-        return Sympa::Robot::send_global_file($tpl, $who, $that, $param,
-            $options);
-    }
-}
-
-####################################################
-# send_file
-####################################################
-#  Send a message to user(s), relative to a list.
-#  Find the tt2 file according to $tpl, set up
-#  $data for the next parsing (with $context and
-#  configuration)
-#  Message is signed if the list has a key and a
-#  certificate
-#
-# IN : -$self (+): ref(List)
-#      -$tpl (+): template file name (file.tt2),
-#         without tt2 extension
-#      -$who (+): SCALAR |ref(ARRAY) - recipient(s)
-#      -$robot (+): robot
-#      -$context : ref(HASH) - for the $data set up
-#         to parse file tt2, keys can be :
-#         -user : ref(HASH), keys can be :
-#           -email
-#           -lang
-#           -password
-#         -auto_submitted auto-generated|auto-replied|auto-forwarded
-#         -...
-# OUT : 1 | undef
-####################################################
-sub send_file {
-    my ($self, $tpl, $who, $robot, $context) = @_;
-    Log::do_log('debug2', '(%s, %s, %s)', $tpl, $who, $robot);
-
-    my $data = tools::dup_var($context);
-
-    ## Any recipients
-    if (   (ref($who) && ($#{$who} < 0))
-        || (!ref($who) && ($who eq ''))) {
-        Log::do_log('err', 'No recipient for sending %s', $tpl);
-        return undef;
-    }
-
-    ## Unless multiple recipients
-    unless (ref($who)) {
-        unless ($data->{'user'}) {
-            unless ($data->{'user'} = Sympa::User::get_global_user($who)) {
-                $data->{'user'}{'email'} = $who;
-                $data->{'user'}{'lang'}  = $self->{'admin'}{'lang'};
-            }
-        }
-
-        # FIXME: Don't overwrite date & update_date.  Format datetime on the
-        # template.
-        $data->{'subscriber'} = tools::dup_var($self->get_list_member($who));
-
-        if ($data->{'subscriber'}) {
-            $data->{'subscriber'}{'date'} =
-                $language->gettext_strftime("%d %b %Y",
-                localtime($data->{'subscriber'}{'date'}));
-            $data->{'subscriber'}{'update_date'} =
-                $language->gettext_strftime("%d %b %Y",
-                localtime($data->{'subscriber'}{'update_date'}));
-            if ($data->{'subscriber'}{'bounce'}) {
-                $data->{'subscriber'}{'bounce'} =~
-                    /^(\d+)\s+(\d+)\s+(\d+)(\s+(.*))?$/;
-
-                $data->{'subscriber'}{'first_bounce'} =
-                    $language->gettext_strftime("%d %b %Y", localtime $1);
-            }
-        }
-
-        unless ($data->{'user'}{'password'}) {
-            $data->{'user'}{'password'} = tools::tmp_passwd($who);
-        }
-
-        ## Unique return-path VERP
-        if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
-            and $tpl eq 'welcome') {
-            $data->{'return_path'} = $self->get_bounce_address($who, 'w');
-        } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
-            and $tpl eq 'remind') {
-            $data->{'return_path'} = $self->get_bounce_address($who, 'r');
-        }
-    }
-
-    ## Lang
-    $language->push_lang(
-        $data->{'user'}{'lang'},
-        $self->{'admin'}{'lang'},
-        Conf::get_robot_conf($robot, 'lang')
-    );
-    $data->{'lang'} = $language->get_lang;
-    $language->pop_lang;
-
-    ## Trying to use custom_vars
-    if (defined $self->{'admin'}{'custom_vars'}) {
-        $data->{'custom_vars'} = {};
-        foreach my $var (@{$self->{'admin'}{'custom_vars'}}) {
-            $data->{'custom_vars'}{$var->{'name'}} = $var->{'value'};
-        }
-    }
-
-    ## What file
-    my $tt2_include_path = tools::get_search_path(
-        $self,
-        subdir => 'mail_tt2',
-        lang   => $data->{'lang'}
-    );
-
-    push @{$tt2_include_path},
-        $self->{'dir'};    ## list directory to get the 'info' file
-    push @{$tt2_include_path}, $self->{'dir'}
-        . '/archives';     ## list archives to include the last message
-
-    foreach my $d (@{$tt2_include_path}) {
-        tt2::add_include_path($d);
-    }
-
-    foreach my $p (
-        'email',   'gecos',      'host',        'sympa',
-        'request', 'listmaster', 'wwsympa_url', 'title',
-        'listmaster_email'
-        ) {
-        $data->{'conf'}{$p} = Conf::get_robot_conf($robot, $p);
-    }
-
-    my @path = tt2::get_include_path();
-    my $filename = tools::find_file($tpl . '.tt2', @path);
-
-    unless (defined $filename) {
-        Log::do_log('err', 'Could not find template %s.tt2 in %s',
-            $tpl, join(':', @path));
-        return undef;
-    }
-
-    $data->{'sender'} ||= $who;
-    $data->{'list'}{'lang'}    = $self->{'admin'}{'lang'};
-    $data->{'list'}{'name'}    = $self->{'name'};
-    $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot;
-    $data->{'list'}{'host'}    = $self->{'admin'}{'host'};
-    $data->{'list'}{'subject'} = $self->{'admin'}{'subject'};
-    $data->{'list'}{'owner'}   = $self->get_owners();
-    $data->{'list'}{'dir'}     = $self->{'dir'};
-
-    # Sign mode
-    my $smime_sign = Sympa::Tools::SMIME::find_keys($self, 'sign');
-
-    # if the list have it's private_key and cert sign the message
-    # . used only for the welcome message, could be useful in other case?
-    # . a list should have several certificates and use if possible a
-    #   certificate issued by the same CA as the recipient CA if it exists
-    if ($smime_sign) {
-        $data->{'fromlist'} = $self->get_list_address();
-        $data->{'replyto'}  = $self->get_list_address('owner');
-    } else {
-        $data->{'fromlist'} = $self->get_list_address('owner');
-    }
-
-    $data->{'from'} ||= $data->{'fromlist'};
-    $data->{'return_path'} ||= $self->get_list_address('return_path');
-
-    $data->{'boundary'} = '----------=_' . tools::get_message_id($robot)
-        unless ($data->{'boundary'});
-
-    my $message =
-        Sympa::Message->new_from_template($self, $filename, $who, $data);
-
-    # Shelve S/MIME signing.
-    $message->{shelved}{smime_sign} = 1
-        if $smime_sign;
-    # Shelve DKIM signing.
-    $message->{shelved}{dkim_sign} = 1
-        if Conf::get_robot_conf($robot, 'dkim_feature') eq 'on'
-            and Conf::get_robot_conf($robot, 'dkim_add_signature_to') =~
-            /list/;
-    # Use VERP excepted for alarms.  We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service.
-    my $use_bulk = 1 unless $data->{'alarm'};
-
-    unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message, $who, $data->{'return_path'},
-            'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
-            'use_bulk' => $use_bulk,
-        )
-        ) {
-        Log::do_log('err', 'Could not send template %s to %s',
-            $filename, $who);
-        return undef;
-    }
-
-    return 1;
-}
+#MOVED: Use tools::send_file() or Sympa::List::send_probe_to_user().
+# sub send_file($self, $tpl, $who, $robot, $context);
 
 ####################################################
 # send_msg
@@ -2967,10 +2769,10 @@ sub get_recipients_per_mode {
             my $subject = $message->{'decoded_subject'};
             my $sender  = $message->{'sender'};
             unless (
-                $self->send_file(
+                tools::send_file(
+                    $self,
                     'x509-user-cert-missing',
                     $user->{'email'},
-                    $robot,
                     {   'mail' =>
                             {'subject' => $subject, 'sender' => $sender},
                         'auto_submitted' => 'auto-generated'
@@ -3205,11 +3007,7 @@ sub send_to_editor {
         tt2::allow_absolute_path();
         $param->{'auto_submitted'} = 'auto-forwarded';
 
-        unless (
-            $self->send_file(
-                'moderate', $recipient, $self->{'domain'}, $param
-            )
-            ) {
+        unless (tools::send_file($self, 'moderate', $recipient, $param)) {
             Log::do_log('notice', 'Unable to send template "moderate" to %s',
                 $recipient);
             return undef;
@@ -3293,7 +3091,7 @@ sub send_auth {
 
     tt2::allow_absolute_path();
     $param->{'auto_submitted'} = 'auto-replied';
-    unless ($self->send_file('send_auth', $sender, $robot, $param)) {
+    unless (tools::send_file($self, 'send_auth', $sender, $param)) {
         Log::do_log('notice', 'Unable to send template "send_auth" to %s',
             $sender);
         return undef;
@@ -3379,7 +3177,7 @@ sub request_auth {
 
         $data->{'command_escaped'} = tt2::escape_url($data->{'command'});
         $data->{'auto_submitted'}  = 'auto-replied';
-        unless ($self->send_file('request_auth', $email, $robot, $data)) {
+        unless (tools::send_file($self, 'request_auth', $email, $data)) {
             Log::do_log('notice',
                 'Unable to send template "request_auth" to %s', $email);
             return undef;
@@ -3394,12 +3192,7 @@ sub request_auth {
 
         }
         $data->{'auto_submitted'} = 'auto-replied';
-        unless (
-            Sympa::Robot::send_global_file(
-                'request_auth',
-                $email, $robot, $data
-            )
-            ) {
+        unless (tools::send_file($robot, 'request_auth', $email, $data)) {
             Log::do_log('notice',
                 'Unable to send template "request_auth" to %s', $email);
             return undef;
@@ -3443,8 +3236,7 @@ sub archive_send {
 #    open TMP2, ">/tmp/digdump"; tools::dump_var($param, 0, \*TMP2); close
 #    TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
-    unless ($self->send_file('get_archive', $who, $self->{'domain'}, $param))
-    {
+    unless (tools::send_file($self, 'get_archive', $who, $param)) {
         Log::do_log('notice', 'Unable to send template "archive_send" to %s',
             $who);
         return undef;
@@ -3505,8 +3297,7 @@ sub archive_send_last {
 #    open TMP2, ">/tmp/digdump"; tools::dump_var($param, 0, \*TMP2); close
 #    TMP2;
 
-    unless ($self->send_file('get_archive', $who, $self->{'domain'}, $param))
-    {
+    unless (tools::send_file($self, 'get_archive', $who, $param)) {
         Log::do_log('notice', 'Unable to send template "archive_send" to %s',
             $who);
         return undef;
@@ -3572,8 +3363,8 @@ sub send_notify_to_owner {
                     $param->{'ip'}
                     );
                 unless (
-                    $self->send_file(
-                        'listowner_notification', [$owner], $robot, $param
+                    tools::send_file(
+                        $self, 'listowner_notification', [$owner], $param
                     )
                     ) {
                     Log::do_log(
@@ -3598,8 +3389,8 @@ sub send_notify_to_owner {
                     'subindex/' . $self->{'name'},
                     $param->{'ip'});
                 unless (
-                    $self->send_file(
-                        'listowner_notification', [$owner], $robot, $param
+                    tools::send_file(
+                        $self, 'listowner_notification', [$owner], $param
                     )
                     ) {
                     Log::do_log(
@@ -3621,9 +3412,8 @@ sub send_notify_to_owner {
                 $param->{'rate'} = int($param->{'rate'} * 10) / 10;
             }
             unless (
-                $self->send_file(
-                    'listowner_notification',
-                    \@to, $robot, $param
+                tools::send_file(
+                    $self, 'listowner_notification', \@to, $param
                 )
                 ) {
                 Log::do_log(
@@ -3646,7 +3436,7 @@ sub send_notify_to_owner {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            $self->send_file('listowner_notification', \@to, $robot, $data)) {
+            tools::send_file($self, 'listowner_notification', \@to, $data)) {
             Log::do_log(
                 'notice',
                 'Unable to send template "listowner_notification" to %s list owner',
@@ -3805,7 +3595,7 @@ sub send_notify_to_editor {
         $param->{'type'} = $operation;
 
         unless (
-            $self->send_file('listeditor_notification', \@to, $robot, $param))
+            tools::send_file($self, 'listeditor_notification', \@to, $param))
         {
             Log::do_log(
                 'notice',
@@ -3826,8 +3616,7 @@ sub send_notify_to_editor {
             $data->{"param$i"} = $param->[$i];
         }
         unless (
-            $self->send_file('listeditor_notification', \@to, $robot, $data))
-        {
+            tools::send_file($self, 'listeditor_notification', \@to, $data)) {
             Log::do_log('notice',
                 'Unable to send template "listeditor_notification" to %s list editor'
             );
@@ -3884,8 +3673,7 @@ sub send_notify_to_user {
         if ($operation eq 'auto_notify_bouncers') {
         }
 
-        unless ($self->send_file('user_notification', $user, $robot, $param))
-        {
+        unless (tools::send_file($self, 'user_notification', $user, $param)) {
             Log::do_log('notice',
                 'Unable to send template "user_notification" to %s', $user);
             return undef;
@@ -3899,7 +3687,7 @@ sub send_notify_to_user {
         for my $i (0 .. $#{$param}) {
             $data->{"param$i"} = $param->[$i];
         }
-        unless ($self->send_file('user_notification', $user, $robot, $data)) {
+        unless (tools::send_file($self, 'user_notification', $user, $data)) {
             Log::do_log('notice',
                 'Unable to send template "user_notification" to %s', $user);
             return undef;
@@ -3912,9 +3700,52 @@ sub send_notify_to_user {
     }
     return 1;
 }
-#
-#
-#
+
+=over
+
+=item send_probe_to_user
+
+XXX
+
+=back
+
+=cut
+
+sub send_probe_to_user {
+    my $self = shift;
+    my $type = shift;
+    my $who  = shift;
+
+    my $message = Sympa::Message->new_from_template($self, $type, $who, {});
+
+    # Shelve VERP for welcome or remind message if necessary
+    if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
+        and $type eq 'welcome') {
+        $message->{shelved}{tracking} = 'w';
+    } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
+        and $type eq 'remind') {
+        $message->{shelved}{tracking} = 'r';
+    } else {
+        #FIXME: Return-Path would be better to be -request address, isn't it?
+        $message->{envelope_sender} = $self->get_list_address('return_path');
+    }
+
+    unless (
+        $message
+        and defined Sympa::Mail::sending(
+            $message, $who, $self->get_list_address('return_path'),
+            'priority' =>
+                Conf::get_robot_conf($self->{'domain'}, 'sympa_priority'),
+            'use_bulk' => 1,
+        )
+        ) {
+        Log::do_log('err', 'Could not send template %s to %s', $type, $who);
+        return undef;
+    }
+
+    return 1;
+}
+
 ### END functions for sending messages ###
 
 ## genererate a md5 checksum using private cookie and parameters
@@ -8709,10 +8540,7 @@ sub sync_include {
                     if ($self->{'admin'}{'inclusion_notification_feature'} eq
                         'on') {
                         unless (
-                            $self->send_file(
-                                'removed', $email, $self->{'domain'}, {}
-                            )
-                            ) {
+                            tools::send_file($self, 'removed', $email, {})) {
                             Log::do_log('err',
                                 "Unable to send template 'removed' to $email"
                             );
@@ -8823,14 +8651,10 @@ sub sync_include {
                 if ($self->{'admin'}{'inclusion_notification_feature'} eq
                     'on') {
                     unless (
-                        $self->send_file(
-                            'welcome', $u->{'email'},
-                            $self->{'domain'}, {}
-                        )
-                        ) {
+                        $self->send_probe_to_user('welcome', $u->{'email'})) {
                         Log::do_log('err',
-                            "Unable to send template 'welcome' to $u->{'email'}"
-                        );
+                            'Unable to send "welcome" probe to %s',
+                            $u->{'email'});
                     }
                 }
             }
