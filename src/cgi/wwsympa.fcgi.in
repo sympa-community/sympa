@@ -60,6 +60,7 @@ use Data::Dumper;    # tentative
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
 use Sympa::Admin;
+use Sympa::Alarm;
 use Sympa::Archive;
 use Sympa::Auth;
 use Conf;
@@ -1028,7 +1029,7 @@ while ($query = new_loop()) {
     Sympa::List::init_list_cache();
 
     # Process grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Alarm::flush();
 
     ## Check effective ID
     unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -1310,8 +1311,8 @@ while ($query = new_loop()) {
     # affected to another anonymous session.
     undef $ENV{'HTTP_COOKIE'};
     unless (defined $session) {
-        Sympa::Robot::send_notify_to_listmaster(
-            'failed_to_create_web_session', $robot);
+        tools::send_notify_to_listmaster($robot,
+            'failed_to_create_web_session', {});
         wwslog('info', 'Failed to create session');
         $session = Sympa::Session->new($robot, {});
     }
@@ -1979,7 +1980,7 @@ while ($query = new_loop()) {
             ) {
             my $error = tt2::get_error();
             $param->{'tt2_error'} = $error;
-            Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
+            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
 
@@ -2013,7 +2014,7 @@ while ($query = new_loop()) {
             ) {
             my $error = tt2::get_error();
             $param->{'tt2_error'} = $error;
-            Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
+            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
 # 	 close FILE;
@@ -2037,7 +2038,7 @@ while ($query = new_loop()) {
 }
 
 # Purge grouped notifications
-Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Alarm::flush('purge');
 
 ##############################################################
 #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/
@@ -3007,7 +3008,7 @@ sub send_html {
             # "Not Found" response for random help page.
             print "Status: 404 Not Found\n";
         } else {
-            Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
+            tools::send_notify_to_listmaster($robot, 'web_tt2_error',
                 [$error]);
         }
 
@@ -8056,8 +8057,8 @@ sub do_skinsedit {
                 tt2::parse_tt2($param, 'css.tt2', \*CSS, $tt2_include_path)) {
                 my $error = tt2::get_error();
                 $param->{'tt2_error'} = $error;
-                Sympa::Robot::send_notify_to_listmaster('web_tt2_error',
-                    $robot, [$error]);
+                tools::send_notify_to_listmaster($robot, 'web_tt2_error',
+                    [$error]);
                 wwslog('info', 'Error while installing %s', $css_file);
             }
             close(CSS);
@@ -11292,7 +11293,7 @@ Creates a list using a list template
 
 =item * check_param_in
 
-=item * Sympa::Robot::send_notify_to_listmaster
+=item * tools::send_notify_to_listmaster
 
 =item * Sympa::Report::reject_report_web
 
@@ -11482,13 +11483,8 @@ sub do_create_list {
     if ($param->{'create_action'} =~ /notify/) {
         wwslog('info', 'Notify listmaster');
 
-        Sympa::Robot::send_notify_to_listmaster(
-            'request_list_creation',
-            $robot,
-            {   'list'  => $list,
-                'email' => $param->{'user'}{'email'}
-            }
-        );
+        tools::send_notify_to_listmaster($list, 'request_list_creation',
+            {'email' => $param->{'user'}{'email'}});
     }
 
     web_db_log(
@@ -21524,11 +21520,10 @@ sub do_change_email {
             my $admin_user = $list->get_list_admin($role, $old_email);
             if ($admin_user->{'included'}) {
                 ## Notify listmaster
-                Sympa::Robot::send_notify_to_listmaster(
+                tools::send_notify_to_listmaster(
+                    $list,
                     'failed_to_change_included_admin',
-                    $robot,
-                    {   'list'          => $list,
-                        'current_email' => $old_email,
+                    {   'current_email' => $old_email,
                         'new_email'     => $new_email,
                         'datasource' =>
                             $list->get_datasource_name($admin_user->{'id'})
@@ -21569,9 +21564,9 @@ sub do_change_email {
     }
     ## Notify listmasters that list owners/moderators email have changed
     if (keys %updated_lists) {
-        Sympa::Robot::send_notify_to_listmaster(
-            'listowner_email_changed',
+        tools::send_notify_to_listmaster(
             $robot,
+            'listowner_email_changed',
             {   'list'           => $list,
                 'previous_email' => $old_email,
                 'new_email'      => $new_email,
@@ -23996,8 +23991,7 @@ sub do_css {
     unless (tt2::parse_tt2($param, 'css.tt2', \*STDOUT, $tt2_include_path)) {
         my $error = tt2::get_error();
         $param->{'tt2_error'} = $error;
-        Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
-            [$error]);
+        tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         wwslog('info', '/%s: error', $in{'file'});
     }
 
@@ -24846,9 +24840,9 @@ sub do_automatic_lists_request {
         wwslog('err',
             'Failed to instantiate family %s. This family does not exist',
             $in{'family'});
-        Sympa::Robot::send_notify_to_listmaster(
-            'automatic_list_creation_failed',
+        tools::send_notify_to_listmaster(
             $robot,
+            'automatic_list_creation_failed',
             [   "Failed to instantiate family $in{'family'}. This family does not exist."
             ]
         );
@@ -24907,9 +24901,9 @@ sub do_automatic_lists {
             Log::do_log('err',
                 "Failed to create the dynamic list $listname: family $family_name does not exist."
             );
-            Sympa::Robot::send_notify_to_listmaster(
-                'automatic_list_creation_failed',
+            tools::send_notify_to_listmaster(
                 $robot,
+                'automatic_list_creation_failed',
                 [   "Failed to create the dynamic list $listname: family $family_name does not exist."
                 ]
             );
@@ -24926,9 +24920,11 @@ sub do_automatic_lists {
             ) {
             Log::do_log('err', 'Failed to create the dynamic list %s',
                 $listname);
-            Sympa::Robot::send_notify_to_listmaster(
+            tools::send_notify_to_listmaster(
+                $robot,
                 'automatic_list_creation_failed',
-                $robot, ["Failed to create the dynamic list $listname."]);
+                ["Failed to create the dynamic list $listname."]
+            );
             return undef;
         }
     }

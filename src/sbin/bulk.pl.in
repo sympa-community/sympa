@@ -31,6 +31,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa::Alarm;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
@@ -198,7 +199,7 @@ while (!$end) {
 
     Sympa::List::init_list_cache();
     # Process grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Alarm::flush();
 
     my $bulk;
 
@@ -469,13 +470,8 @@ while (!$end) {
                     unless ($new_message->personalize($list, $rcpt)) {
                         #FIXME: Mark packet as "bad".
                         Log::do_log('err', 'Erreur d appel personalize()');
-                        Sympa::Robot::send_notify_to_listmaster(
-                            'bulk_failed',
-                            $list->{'domain'},
-                            {   'msg'  => $message,
-                                'list' => $list,
-                            }
-                        );
+                        tools::send_notify_to_listmaster($list, 'bulk_failed',
+                            {'message_id' => $message->get_id});
 
                         last;    # foreach $rcpt
                     }
@@ -599,7 +595,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Bulk.pl exited normally due to signal');
 tools::remove_pid('bulk', $PID, $options);

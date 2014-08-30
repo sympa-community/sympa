@@ -39,6 +39,7 @@ use MIME::Parser;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa::Alarm;
 use Bounce;
 use Conf;
 use Sympa::Constants;
@@ -216,7 +217,7 @@ while (!$end) {
 
     Sympa::List::init_list_cache();
     # Process grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Alarm::flush();
 
     unless (opendir DIR, $queue) {
         die sprintf 'Can\'t open dir %s: %s', $queue, $!;
@@ -953,7 +954,7 @@ while (!$end) {
             next;
         } else {
             Log::do_log('debug', 'Processing bouncefile %s for list %s',
-                $file, $listname);
+                $file, $list);
 
             unless (open BOUNCE, "$queue/$file") {
                 Log::do_log('notice', 'Could not open %s/%s: %s',
@@ -997,18 +998,19 @@ while (!$end) {
             ## Bounce directory
             if (!-d $bounce_dir) {
                 unless (mkdir $bounce_dir, 0777) {
-                    Sympa::Robot::send_notify_to_listmaster(
+                    tools::send_notify_to_listmaster(
+                        $list,
                         'bounce_intern_error',
-                        $Conf::Conf{'domain'},
-                        {   'error' =>
-                                "Failed to list create bounce directory $bounce_dir"
+                        {   'error' => sprintf(
+                                'Failed to list create bounce directory %s: %s',
+                                $bounce_dir, $ERRNO
+                            )
                         }
                     );
                     Log::do_log(
                         'err',
-                        'Could not create %s: %s bounced dir, check bounce_path in wwsympa.conf',
-                        $bounce_dir,
-                        $!
+                        'Could not create bounce dirirectory %s: %m.  Check bounce_path in sympa.conf',
+                        $bounce_dir
                     );
                     exit;
                 }
@@ -1049,7 +1051,7 @@ while (!$end) {
                     my $escaped_from = tools::escape_chars($from);
                     Log::do_log('info',
                         'No address found in message from %s for list %s',
-                        $from, $list->{'name'});
+                        $from, $list);
                     ignore_bounce(
                         {   'file'  => $file,
                             'robot' => $robot,
@@ -1083,7 +1085,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Bounced exited normally due to signal');
 tools::remove_pid('bounced', $PID);
@@ -1245,9 +1247,9 @@ sub ignore_bounce {
         }
     );
     if ($notify) {
-        Sympa::Robot::send_notify_to_listmaster(
-            'bounce_management_failed',
+        tools::send_notify_to_listmaster(
             $robot,
+            'bounce_management_failed',
             {   'file'  => $file,
                 'bad'   => "$queue/bad",
                 'error' => $error,

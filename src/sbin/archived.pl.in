@@ -36,6 +36,7 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -196,7 +197,7 @@ print "queue : $queue\n";
 while (!$end) {
     Sympa::List::init_list_cache();
     # Process grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Alarm::flush();
 
     unless (opendir(DIR, $queue)) {
         die sprintf 'Can\'t open dir %s: %s', $queue, $!;
@@ -388,10 +389,10 @@ while (!$end) {
                 next;
             }
 
-            my ($listname, $hostname);
+            my ($listname, $robot_id);
             if ($adrlist =~ /^(.*)\@(.*)$/) {
                 $listname = $1;
-                $hostname = $2;
+                $robot_id = $2;
             } else {
                 Log::do_log('err', 'Match of list address "%s" failed',
                     $adrlist);
@@ -402,18 +403,19 @@ while (!$end) {
                 $adrlist);
             unless (
                 mail2arc(
-                    $file, $listname, $hostname, $yyyy, $mm,
+                    $file, $listname, $robot_id, $yyyy, $mm,
                     $dd,   $hh,       $min,      $ss
                 )
                 ) {
                 tools::save_to_bad(
                     {   'file'     => $file,
-                        'hostname' => $hostname,
+                        'hostname' => $robot_id,
                         'queue'    => $queue,
                     }
                 );
-                Sympa::Robot::send_notify_to_listmaster('archiving_failed',
-                    $hostname, {'file' => "$file", 'bad' => "$queue/bad"});
+                tools::send_notify_to_listmaster($robot_id,
+                    'archiving_failed',
+                    {'file' => "$file", 'bad' => "$queue/bad"});
             }
             if (-f "$queue/$file") {
                 unless (unlink("$queue/$file")) {
@@ -433,7 +435,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Alarm::flush('purge');
 
 # Free zombie sendmail processes
 Sympa::Mail::reaper();
@@ -564,16 +566,16 @@ sub rebuild {
         $arc     = $2;
     }
 
-    my ($listname, $hostname);
+    my ($listname, $robot_id);
     if ($adrlist =~ /^(.*)\@(.*)$/) {
         $listname = $1;
-        $hostname = $2;
+        $robot_id = $2;
     } else {
         Log::do_log('err', 'Match of list address "%s" failed', $adrlist);
         return undef;
     }
 
-    my $list    = Sympa::List->new($listname, $hostname);
+    my $list    = Sympa::List->new($listname, $robot_id);
     my $robot   = $list->{'domain'};
     my $arcpath = Conf::get_robot_conf($robot, 'arc_path');
     Log::do_log('debug3', "Rebuilding %s archive (%s)", $adrlist, $2);
@@ -647,7 +649,7 @@ sub rebuild {
             '-outdir'            => "$arcpath/$adrlist/$yyyy-$mm",
             '-definevars'        => sprintf(
                 "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
-                $listname, $hostname, $yyyy, $mm, $yyyy, $mm, $arcpath,
+                $listname, $robot_id, $yyyy, $mm, $yyyy, $mm, $arcpath,
                 Conf::get_robot_conf($robot, 'wwsympa_url'), $tag
             ),
             '-umask' => $Conf::Conf{'umask'},
@@ -729,7 +731,7 @@ sub rebuild {
                 '-outdir'            => $arcdir,
                 '-definevars'        => sprintf(
                     "listname='%s' hostname=%s yyyy=%s mois=%s yyyymm=%s-%s wdir=%s base=%s/arc tag=%s",
-                    $listname, $hostname, $yyyy, $mm, $yyyy, $mm, $arcpath,
+                    $listname, $robot_id, $yyyy, $mm, $yyyy, $mm, $arcpath,
                     Conf::get_robot_conf($robot, 'wwsympa_url'), $tag
                 ),
                 '-umask' => $Conf::Conf{'umask'},
@@ -765,7 +767,7 @@ sub rebuild {
     }
 }
 
-=head2 sub mail2arc(STRING $file,STRING $listname,STRING $hostname,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
+=head2 sub mail2arc(STRING $file,STRING $listname,STRING $robot_id,STRING $yyyy,STRING $mm,STRING $dd,STRING $hh,STRING $min,STRING $ss)
 
 Archives one message into one list archives directory.
 
@@ -869,8 +871,8 @@ sub mail2arc {
         if (!-d $basedir) {
             unless (mkdir $basedir, 0775) {
                 Log::do_log('err', 'Cannot create directory %s', $basedir);
-                Sympa::Robot::send_notify_to_listmaster(
-                    'unable_to_create_dir', $robot, {'dir' => "$basedir"});
+                tools::send_notify_to_listmaster($robot,
+                    'unable_to_create_dir', {'dir' => "$basedir"});
             }
             Log::do_log('debug', 'mkdir %s', $basedir);
         }

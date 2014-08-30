@@ -334,11 +334,9 @@ sub probe_db {
     $Sympa::List::use_db = 1;
 
     ## Notify listmaster
-    Sympa::Robot::send_notify_to_listmaster(
-        'db_struct_updated',
-        Conf::get_robot_conf('*', 'domain'),
-        {'report' => \@report}
-    ) if @report;
+    tools::send_notify_to_listmaster('*', 'db_struct_updated',
+        {'report' => \@report})
+        if @report;
 
     return 1;
 }

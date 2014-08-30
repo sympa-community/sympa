@@ -56,7 +56,7 @@ my %pid = ();
 
 our $always_use_bulk;    ## for calling context
 
-our $log_smtp;     # SMTP logging is enabled or not
+our $log_smtp;           # SMTP logging is enabled or not
 
 ### PUBLIC FUNCTIONS ###
 
@@ -135,10 +135,10 @@ sub sending {
     my %params  = @_;
 
     my $that = $message->{context};
-    my ($robot_id, $listname);
+    my ($list, $robot_id);
     if (ref $that eq 'Sympa::List') {
+        $list     = $that;
         $robot_id = $that->{'domain'};
-        $listname = $that->{'name'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
     } else {
@@ -150,7 +150,7 @@ sub sending {
         Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
     my $delivery_date = $params{'delivery_date'};
     $delivery_date = time() unless ($delivery_date);
-    my $use_bulk    = $always_use_bulk || $params{'use_bulk'};
+    my $use_bulk = $always_use_bulk || $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
@@ -170,9 +170,15 @@ sub sending {
         );
 
         unless (defined $bulk_code) {
-            Log::do_log('err', 'Failed to store message for %s', $that);
-            Sympa::Robot::send_notify_to_listmaster('bulk_error', $robot_id,
-                {'listname' => $listname});
+            Log::do_log('err', 'Failed to store message %s for %s',
+                $message, $that);
+            tools::send_notify_to_listmaster(
+                $that,
+                'bulk_error',
+                {   ($list ? (listname => $list->{'name'}) : ()),    #compat.
+                    'message_id' => $message->get_id,
+                }
+            );
             return undef;
         }
     } else {    # send it now

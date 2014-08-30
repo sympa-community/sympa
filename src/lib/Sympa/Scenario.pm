@@ -567,8 +567,9 @@ sub request_action {
                     };
                     return $return;
                 }
-                Sympa::Robot::send_notify_to_listmaster(
-                    'error-performing-condition', $robot_id,
+                # FIXME: Add entry to listmaster_mnotification.tt2
+                tools::send_notify_to_listmaster($robot_id,
+                    'error_performing_condition',
                     [$context->{'listname'} . "  " . $rule->{'condition'}]);
                 return undef;
             }

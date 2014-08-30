@@ -70,8 +70,8 @@ sub fatal_err {
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
-            Sympa::Robot::send_notify_to_listmaster(
-                'logs_failed', $Conf::Conf{'domain'}, [$EVAL_ERROR]
+            tools::send_notify_to_listmaster(
+                '*', 'logs_failed', [$EVAL_ERROR]
             )
             ) {
             print STDERR "No logs available, can't send warning message";
@@ -82,8 +82,8 @@ sub fatal_err {
     my $full_msg = sprintf $m, @_;
 
     ## Notify listmaster
-    Sympa::Robot::send_notify_to_listmaster('sympa_died',
-        $Conf::Conf{'domain'}, [$full_msg]);
+    #FIXME: Add entry to listmaster_notification.tt2
+    tools::send_notify_to_listmaster('*', 'sympa_died', [$full_msg]);
 
     printf STDERR "$m\n", @_;
     exit(1);
@@ -204,8 +204,8 @@ sub do_log {
     };
     if ($EVAL_ERROR and $warning_date < time - $warning_timeout) {
         $warning_date = time + $warning_timeout;
-        Sympa::Robot::send_notify_to_listmaster('logs_failed',
-            $Conf::Conf{'domain'}, [$EVAL_ERROR]);
+        #FIXIME: Add entry to listmaster_notification.tt2
+        tools::send_notify_to_listmaster('*', 'logs_failed', [$EVAL_ERROR]);
     }
 }
 
@@ -237,8 +237,8 @@ sub do_connect {
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         $warning_date = time + $warning_timeout;
         unless (
-            Sympa::Robot::send_notify_to_listmaster(
-                'logs_failed', $Conf::Conf{'domain'}, [$EVAL_ERROR]
+            tools::send_notify_to_listmaster(
+                '*', 'logs_failed', [$EVAL_ERROR]
             )
             ) {
             print STDERR "No logs available, can't send warning message";

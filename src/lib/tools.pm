@@ -47,6 +47,7 @@ use Time::Local qw();
 use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
 use if (5.016 <= $]), qw(feature fc);
 
+use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
@@ -395,8 +396,7 @@ sub load_edit_list_conf {
     }
 
     if ($error_in_conf) {
-        Sympa::Robot::send_notify_to_listmaster('edit_list_error', $robot,
-            [$file]);
+        tools::send_notify_to_listmaster($robot, 'edit_list_error', [$file]);
     }
 
     close FILE;
@@ -1509,9 +1509,9 @@ sub virus_infected {
 
     ## Error while running antivir, notify listmaster
     if ($error_msg) {
-        Sympa::Robot::send_notify_to_listmaster(
+        tools::send_notify_to_listmaster(
+            '*',
             'virus_scan_failed',
-            $Conf::Conf{'domain'},
             {   'filename'  => $file,
                 'error_msg' => $error_msg
             }
@@ -1973,6 +1973,119 @@ sub send_file {
     return 1;
 }
 
+# Sends a notice to listmaster by parsing
+# listmaster_notification.tt2 template
+#
+# IN : -$operation (+): notification type
+#      -$robot (+): robot
+#      -$param(+) : ref(HASH) | ref(ARRAY)
+#       values for template parsing
+#
+# OUT : 1 | undef
+#
+
+# Old name: List::send_notify_to_listmaster()
+# Note: this would be moved to Site package.
+sub send_notify_to_listmaster {
+    Log::do_log('debug2', '(%s, %s, %s)', @_) unless $_[1] eq 'logs_failed';
+    my $that      = shift;
+    my $operation = shift;
+    my $data      = shift;
+
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $list     = $that;
+        $robot_id = $list->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
+
+    my $listmaster =
+        [split /\s*,\s*/, Conf::get_robot_conf($robot_id, 'listmaster')];
+    my $to =
+          Conf::get_robot_conf($robot_id, 'listmaster_email') . '@'
+        . Conf::get_robot_conf($robot_id, 'host');
+
+    if (ref $data ne 'HASH' and ref $data ne 'ARRAY') {
+        die
+            'Error on incoming parameter "$data", it must be a ref on HASH or a ref on ARRAY';
+    }
+
+    if (ref $data ne 'HASH') {
+        my $d = {};
+        foreach my $i ((0 .. $#{$data})) {
+            $d->{"param$i"} = $data->[$i];
+        }
+        $data = $d;
+    }
+
+    $data->{'to'}             = $to;
+    $data->{'type'}           = $operation;
+    $data->{'auto_submitted'} = 'auto-generated';
+
+    my @tosend;
+
+    if ($operation eq 'no_db' or $operation eq 'db_restored') {
+        $data->{'db_name'} = Conf::get_robot_conf($robot_id, 'db_name');
+    }
+
+    if ($operation eq 'loop_command') {
+        ## Loop detected in Sympa
+        $data->{'boundary'} =
+            '----------=_' . tools::get_message_id($robot_id);
+        tt2::allow_absolute_path();
+    }
+
+    if (   $operation eq 'request_list_creation'
+        or $operation eq 'request_list_renaming') {
+        foreach my $email (@$listmaster) {
+            my $cdata = tools::dup_var($data);
+            $cdata->{'one_time_ticket'} =
+                Sympa::Auth::create_one_time_ticket($email, $robot_id,
+                'get_pending_lists', $cdata->{'ip'});
+            push @tosend,
+                {
+                email => $email,
+                data  => $cdata
+                };
+        }
+    } else {
+        push @tosend,
+            {
+            email => $listmaster,
+            data  => $data
+            };
+    }
+
+    foreach my $ts (@tosend) {
+        my $email = $ts->{'email'};
+        # Skip DB access because DB is not accessible
+        $email = [$email]
+            if not ref $email
+                and ($operation eq 'no_db' or $operation eq 'db_restored');
+
+        my $notif_message =
+            Sympa::Message->new_from_template($that,
+            'listmaster_notification', $to, $ts->{'data'});
+        $notif_message->{rcpt} = $email;
+
+        unless ($notif_message
+            and defined Sympa::Alarm::store($notif_message, $operation)) {
+            Log::do_log(
+                'notice',
+                'Unable to send template "listmaster_notification" to %s listmaster %s',
+                $robot_id,
+                $listmaster
+            ) unless $operation eq 'logs_failed';
+            return undef;
+        }
+    }
+
+    return 1;
+}
+
 ## Find a file in an ordered list of directories
 sub find_file {
     my ($filename, @directories) = @_;
@@ -2281,9 +2394,8 @@ sub send_crash_report {
     } else {
         $err_date = $language->gettext('(unknown date)');
     }
-    Sympa::Robot::send_notify_to_listmaster(
-        'crash',
-        $Conf::Conf{'domain'},
+    tools::send_notify_to_listmaster(
+        '*', 'crash',
         {   'crashed_process' => $data{'pname'},
             'crash_err'       => \@err_output,
             'crash_date'      => $err_date,
@@ -3157,7 +3269,7 @@ Saves a message file to the "bad/" spool of a given queue. Creates this director
 
 =over 
 
-=item * Sympa::Robot::send_notify_to_listmaster
+=item * tools::send_notify_to_listmaster
 
 =back 
 
@@ -3168,15 +3280,15 @@ sub save_to_bad {
     my $param = shift;
 
     my $file     = $param->{'file'};
-    my $hostname = $param->{'hostname'};
+    my $robot_id = $param->{'hostname'};
     my $queue    = $param->{'queue'};
 
     if (!-d $queue . '/bad') {
         unless (mkdir $queue . '/bad', 0775) {
             Log::do_log('notice', 'Unable to create %s/bad/ directory',
                 $queue);
-            Sympa::Robot::send_notify_to_listmaster('unable_to_create_dir',
-                $hostname, {'dir' => "$queue/bad"});
+            tools::send_notify_to_listmaster($robot_id,
+                'unable_to_create_dir', {'dir' => "$queue/bad"});
             return undef;
         }
         Log::do_log('debug', 'mkdir %s/bad', $queue);

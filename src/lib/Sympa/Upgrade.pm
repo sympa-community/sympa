@@ -281,9 +281,9 @@ sub upgrade {
                             'Unable to fille the robot_admin and robot_subscriber fields in database for robot %s',
                             $r
                         );
-                        Sympa::Robot::send_notify_to_listmaster(
+                        tools::send_notify_to_listmaster(
+                            '*',
                             'upgrade_failed',
-                            $Conf::Conf{'domain'},
                             {   'error' =>
                                     $SDM::db_source->{'db_handler'}->errstr
                             }
@@ -543,8 +543,7 @@ sub upgrade {
                     $etc_dir . '/mhonarc-ressources.tt2',
                     $new_filename
                 );
-                Sympa::Robot::send_notify_to_listmaster('file_removed',
-                    $Conf::Conf{'domain'},
+                tools::send_notify_to_listmaster('*', 'file_removed',
                     [$etc_dir . '/mhonarc-ressources.tt2', $new_filename]);
             }
         }

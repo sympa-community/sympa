@@ -68,7 +68,7 @@ sub _crash_handler {
     # Cleanup.
     # If any of corresponding modules have not been loaded, they are ignored.
     eval { Log::do_log('err', 'DIED: %s', $mess); };
-    eval { Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1); };
+    eval { Sympa::Alarm::flush('purge'); };
     eval { SDM::db_disconnect(); };       # unlock database
     eval { Sys::Syslog::closelog(); };    # flush log
     eval { Log::set_log_level(-1); };     # disable log

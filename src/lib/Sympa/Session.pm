@@ -464,10 +464,8 @@ sub renew {
 ## remove old sessions from a particular robot or from all robots.
 ## delay is a parameter in seconds
 sub purge_old_sessions {
-
+    Log::do_log('debug2', '(%s)', @_);
     my $robot = shift;
-
-    Log::do_log('info', '(%s, %s)', $robot);
 
     my $delay = tools::duration_conv($Conf::Conf{'session_table_ttl'});
     my $anonymous_delay =

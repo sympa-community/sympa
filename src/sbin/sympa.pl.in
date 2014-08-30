@@ -33,6 +33,7 @@ use MIME::Charset;
 use Pod::Usage;
 use POSIX qw();
 
+use Sympa::Alarm;
 use Sympa::Admin;
 use Sympa::Bulk;
 use Sympa::Commands;
@@ -1283,7 +1284,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         Sympa::List::init_list_cache();
         # Process grouped notifications
-        Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+        Sympa::Alarm::flush();
 
         if (!opendir(DIR, $spool)) {
             die sprintf 'Can\'t open dir %s: %s', $spool, $!;
@@ -1470,7 +1471,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     }    ## END of infinite loop
 
     # Purge grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+    Sympa::Alarm::flush('purge');
 
 ## Dump of User files in DB
 #Sympa::List::dump();
@@ -1748,9 +1749,9 @@ sub process_message {
                     $message,
                     $dyn_list_family
                 );
-                Sympa::Robot::send_notify_to_listmaster(
-                    'automatic_list_creation_failed',
+                tools::send_notify_to_listmaster(
                     $robot,
+                    'automatic_list_creation_failed',
                     {   'family' => $dyn_list_family,
                         'robot'  => $robot,
                         'msg_id' => $msg_id,
@@ -1787,9 +1788,9 @@ sub process_message {
                 Log::do_log('err',
                     'Unable to create list %s. Message %s ignored',
                     $listname, $message);
-                Sympa::Robot::send_notify_to_listmaster(
-                    'automatic_list_creation_failed',
+                tools::send_notify_to_listmaster(
                     $dyn_family->{'robot'},
+                    'automatic_list_creation_failed',
                     {   'listname' => $listname,
                         'family'   => $dyn_list_family,
                         'robot'    => $robot,
@@ -1918,9 +1919,9 @@ sub process_message {
         return undef;
 
     } elsif (!defined($rc)) {
-        Sympa::Robot::send_notify_to_listmaster(
-            'antivirus_failed',
+        tools::send_notify_to_listmaster(
             $robot,
+            'antivirus_failed',
             [   sprintf
                     "Could not scan message %s; The message has been saved as BAD.",
                 $message->get_id
@@ -2144,11 +2145,8 @@ sub process_message {
             if ($loop_info{$sender}{'count'} ==
                 $Conf::Conf{'loop_command_max'}) {
                 ## Notify listmaster
-                Sympa::Robot::send_notify_to_listmaster(
-                    'loop_command',
-                    Conf::get_robot_conf($robot, 'domain'),
-                    {'msg' => $message->{'filename'}}
-                );
+                tools::send_notify_to_listmaster($robot, 'loop_command',
+                    {'msg' => $message});
             }
 
             ## Too many reports sent => message skipped !!

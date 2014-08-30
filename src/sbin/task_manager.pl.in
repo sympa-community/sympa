@@ -37,6 +37,7 @@ use Time::Local qw();
 
 BEGIN { eval 'use Crypt::OpenSSL::X509'; }
 
+use Sympa::Alarm;
 use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
@@ -275,12 +276,11 @@ while (!$end) {
     Sympa::List::init_list_cache();
 
     # Process grouped notifications
-    Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, 1);
+    Sympa::Alarm::flush();
 
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        Sympa::Robot::send_notify_to_listmaster('intern_error',
-            $Conf::Conf{'domain'},
+        tools::send_notify_to_listmaster('*', 'intern_error',
             {'error' => "Failed to list task files in $spool_task"});
         Log::do_log('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -360,8 +360,7 @@ while (!$end) {
     ## Execute existing tasks
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
-        Sympa::Robot::send_notify_to_listmaster('intern_error',
-            $Conf::Conf{'domain'},
+        tools::send_notify_to_listmaster('*', 'intern_error',
             {'error' => "Failed to list task files in $spool_task"});
         Log::do_log('err', "Failed to list task files in %s", $spool_task);
         exit -1;
@@ -429,7 +428,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Robot::send_notify_to_listmaster(undef, undef, undef, undef, 1);
+Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Task_manager exited normally due to signal');
 tools::remove_pid('task_manager', $PID);
@@ -1940,11 +1939,11 @@ sub process_bouncers {
 
         ## then, calling action foreach level
         for (my $level = $max_level; ($level >= 1); $level--) {
-
             my $action =
                 $list->{'admin'}{'bouncers_level' . $level}{'action'};
             my $notification =
                 $list->{'admin'}{'bouncers_level' . $level}{'notification'};
+            my $robot_id = $list->{'domain'};
 
             if (@{$bouncers[$level] || []}) {
                 ## calling action subroutine with (list,email list) in
@@ -1960,21 +1959,51 @@ sub process_bouncers {
 
                 ## calling notification subroutine with (list,action, email
                 ## list) in parameter
-
+                my ($rcpt, $to);
+                if ($notification eq 'owner') {
+                    $rcpt = [$list->get_owners_email];
+                    $to   = $list->get_list_address('owner');
+                } elsif ($notification eq 'listmaster') {
+                    $rcpt = [
+                        split /\s*,\s*/,
+                        Conf::get_robot_conf($robot_id, 'listmaster')
+                    ];
+                    $to =
+                          Conf::get_robot_conf($robot_id, 'listmaster_email')
+                        . '@'
+                        . Conf::get_robot_conf($robot_id, 'host');
+                }
+                next unless $to;
                 my $param = {
-                    'listname'  => $listname,
+                    auto_submitted => 'auto-generated',
+                    list           => {
+                        name => $list->{'name'},
+                        host => $list->{'domain'},    #FIXME: Use 'host'
+                        subject => $list->{'admin'}{'subject'},
+                    },
+                    #'listname'  => $listname, # No longer used (<=6.1)
                     'action'    => $action,
                     'user_list' => \@{$bouncers[$level]},
                     'total'     => $#{$bouncers[$level]} + 1
                 };
-
-                if ($notification eq 'listmaster') {
-                    Sympa::Robot::send_notify_to_listmaster(
-                        'automatic_bounce_management', $list->{'domain'},
-                        $param);
-                } elsif ($notification eq 'owner') {
-                    $list->send_notify_to_owner('automatic_bounce_management',
-                        $param);
+                my $message = Sympa::Message->new_from_template($list,
+                    'automatic_bounce_management', $to, $param);
+                unless (
+                    $message
+                    and defined Sympa::Mail::sending(
+                        $message, $rcpt,
+                        $list->get_list_address('return_path'),
+                        priority =>
+                            Conf::get_robot_conf($robot_id, 'sympa_priority'),
+                        use_bulk => 1
+                    )
+                    ) {
+                    Log::do_log(
+                        'err',
+                        'Unable to send template "automatic_bounce_management" to %s',
+                        $to
+                    );
+                    #XXXreturn undef;
                 }
             }
         }
@@ -2100,9 +2129,9 @@ sub error {
         "An error has occurred during the execution of the task $task_file :
                  $message";
     Log::do_log('err', '%s', $message);
-    change_label($task_file, 'ERROR') unless ($task_file eq '');
-    Sympa::Robot::send_notify_to_listmaster('error in task',
-        $Conf::Conf{'domain'}, \@param);
+    change_label($task_file, 'ERROR') unless $task_file eq '';
+    #FIXME: Coresponding mail template would be added.
+    tools::send_notify_to_listmaster('*', 'error_in_task', \@param);
 }
 
 sub sync_include {

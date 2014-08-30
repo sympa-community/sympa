@@ -78,12 +78,15 @@ Subject: [% FILTER qencode %][%|loc%]DataBase connection restored[%END%][%END%]
 
 [%|loc(db_name)%]Connection to database %1 restored.[%END%]
 
-
 [% ELSIF type == 'bulk_error' -%]
 Subject: [% FILTER qencode %][%|loc%]Bulk mailer error[%END%][%END%]
 
-[%|loc(listname)%]Sympa failed to store a message for list %1 in the bulk mailer. You should check log files !![%END%]
+[%|loc(message_id)%]Sympa failed to store a message <%1> in the bulk mailer. You should check log files !![%END%]
 
+[% ELSIF type == 'bulk_failed' -%]
+Subject: [% FILTER qencode %][%|loc%]Bulk mailer error[%END%][%END%]
+
+[%|loc(message_id)%]Sympa failed to process a message <%1> in the bulk spool. You should check log files!![%END%]
 
 [% ELSIF type == 'loop_command' -%]
 Subject: [% FILTER qencode %][%|loc%]Loop detected[%END%][%END%]
@@ -152,22 +155,6 @@ Subject: [% FILTER qencode %][%|loc%]incorrect format of edit_list.conf[%END%][%
 [%|loc(param0)%]Refer to documentation to adapt %1.[%END%]
 [%|loc(param0)%]Until then we recommend your remove %1;
 default configuration will be used.[%END%]
-
-[% ELSIF type == 'subscribers_limit_exceeded' -%]
-Subject: [% FILTER qencode %][%|loc(listname)%]Limit of users count reached for list %1[%END%][%END%]
-
-[%|loc(listname,max_number_of_subscribers)%]Sympa could not include subscribers to list %1 because the maximum number of users was reached for this list. This limit is defined to %2.[%END%]
-[% ELSIF type == 'sync_include_failed' -%]
-Subject: [% FILTER qencode %][%|loc(listname)%]subscribers update failed for list %1[%END%][%END%]
-
-[%|loc%]Sympa could not include subscribers from the following external data sources:[%END%]
-
-[% FOREACH e IN errors %]
-[%|loc(e.name,e.type)%]Include of datasource %1 (type %2) failed.[% END %]
-[% END %]
-
-[%|loc%]Check Sympa log files for more precise information[%END%]
-
 
 [% ELSIF type == 'sync_include_admin_failed' -%]
 Subject: [% FILTER qencode %][%|loc(param0)%]admins update failed for list %1[%END%][%END%]
@@ -264,33 +251,12 @@ Subject: [% FILTER qencode %][%|loc(param0)%]list %1 in status error_config[%END
 [%|loc%]The list status has been set to error_config.[%END%]
 [%|loc%]Check Sympa log files for more precise information.[%END%]
 
-
-[% ELSIF type == 'automatic_bounce_management' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]List %1 automatic bounce management[%END%][%END%]
-
-[% IF action == 'notify_bouncers' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-notified that they might be removed from list %2:[%END%]
-[% ELSIF action == 'remove_bouncers' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-removed from list %2:[%END%]
-[% ELSIF action == 'none' -%]
-[%|loc(total,list.name)%]Because we received MANY non-delivery reports, the %1 subscribers listed below have been
-selected by Sympa as severe bouncing addresses:[%END%]
-[%END%]
-
-[% FOREACH user IN user_list -%]
-[% user %]
-[% END %]
-
-[%|loc%]Managing bouncing subscribers:[%END%] [% conf.wwsympa_url %]/reviewbouncing/[% list.name %]
-
 [%# INTERNAL SERVER ERROR  : MAIL -%]
 [% ELSIF type == 'mail_intern_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
+Subject: [% FILTER qencode %][%|loc%]Listmaster: internal server error [%END%][%END%]
 
 [%|loc(who)%] User %1 has encountered an internal server error[%END%]
-([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%conf.host%][%END%])[%|loc%]:[%END%]
+([%action%][% IF msg_id %] - MSG_ID[%|loc%]:[%END%] [%msg_id%][%END%][% IF cmd %] - COMMAND[%|loc%]:[%END%] [%cmd%][%END%][% IF list.name %] - LIST[%|loc%]:[%END%] [%list.name%]@[%list.host%][%END%])[%|loc%]:[%END%]
 
 [%IF error%][%error%]
 [%END%]  
@@ -300,7 +266,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server erro
 [% ELSIF type == 'bounce_intern_error' -%]
 Subject: [% FILTER qencode %][%|loc(list.name)%]Listmaster: internal server error [%END%][%END%]
 
-[%|loc(error)%]The following error occurred whila managing bounces: %&[%END%]
+[%|loc(error)%]The following error occurred while managing bounces: %1[%END%]
 
 [%|loc%]See logs for more details.[%END%]
 

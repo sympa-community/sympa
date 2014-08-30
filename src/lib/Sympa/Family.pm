@@ -2892,7 +2892,7 @@ Loads the param_constraint.conf file into a hash
 
 =item * Log::do_log
 
-=item * Sympa::Robot::send_notify_to_listmaster
+=item * tools::send_notify_to_listmaster
 
 =back 
 
@@ -2963,8 +2963,8 @@ sub _load_param_constraint_conf {
         }
     }
     if ($error) {
-        Sympa::Robot::send_notify_to_listmaster('param_constraint_conf_error',
-            $self->{'robot'}, [$file]);
+        tools::send_notify_to_listmaster($self->{'robot'},
+            'param_constraint_conf_error', [$file]);
     }
     close FILE;
 

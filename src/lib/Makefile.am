@@ -25,6 +25,7 @@ nobase_modules_DATA = \
 	Sympa/Archive.pm \
 	Sympa/Auth.pm \
 	Bounce.pm \
+	Sympa/Alarm.pm \
 	Sympa/Bulk.pm \
 	Sympa/Commands.pm \
 	Conf.pm \

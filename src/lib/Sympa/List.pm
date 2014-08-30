@@ -654,10 +654,9 @@ sub set_status_error_config {
         ## No more save config in error...
         #$self->save_config("listmaster\@$host");
         #$self->savestats();
-        Log::do_log('err', 'The list "%s" is set in status error_config',
-            $self->{'name'});
-        Sympa::Robot::send_notify_to_listmaster($message, $self->{'domain'},
-            \@param);
+        Log::do_log('err', 'The list %s is set in status error_config',
+            $self);
+        tools::send_notify_to_listmaster($self, $message, \@param);
     }
 }
 
@@ -8416,9 +8415,8 @@ sub sync_include {
                 $self
             );
             $errors_occurred = 1;
-            Sympa::Robot::send_notify_to_listmaster('sync_include_failed',
-                $self->{domain},
-                {'errors' => \@errors, 'listname' => $self->{'name'}});
+            tools::send_notify_to_listmaster($self, 'sync_include_failed',
+                {'errors' => \@errors});
             foreach my $e (@errors) {
                 my $plugin = $self->isPlugin($e->{type}) or next;
                 my $source = $plugin->listSource;
@@ -8742,9 +8740,9 @@ sub sync_include_admin {
             unless (defined $new_admin_users_include) {
                 Log::do_log('err',
                     'Could not get %ss from an include source for list %s',
-                    $role, $name);
-                Sympa::Robot::send_notify_to_listmaster(
-                    'sync_include_admin_failed', $self->{'domain'}, [$name]);
+                    $role, $self);
+                tools::send_notify_to_listmaster($self,
+                    'sync_include_admin_failed', {});
                 return undef;
             }
 

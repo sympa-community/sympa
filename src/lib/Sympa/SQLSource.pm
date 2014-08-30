@@ -177,8 +177,8 @@ sub establish_connection {
         Log::do_log('err',
             "No Database Driver installed for $self->{'db_type'} ; you should download and install DBD::$self->{'db_type'} from CPAN"
         );
-        Sympa::Robot::send_notify_to_listmaster('missing_dbd',
-            $Conf::Conf{'domain'}, {'db_type' => $self->{'db_type'}});
+        tools::send_notify_to_listmaster('*', 'missing_dbd',
+            {'db_type' => $self->{'db_type'}});
         return undef;
     }
 
@@ -254,8 +254,7 @@ sub establish_connection {
                 unless (defined $db_connections{$self->{'connect_string'}}
                     && $db_connections{$self->{'connect_string'}}{'status'} eq
                     'failed') {
-                    Sympa::Robot::send_notify_to_listmaster('no_db',
-                        $Conf::Conf{'domain'}, {});
+                    tools::send_notify_to_listmaster('*', 'no_db', {});
                 }
             }
             if ($self->{'reconnect_options'}{'keep_trying'}) {
@@ -298,8 +297,7 @@ sub establish_connection {
                     'Connection to Database %s restored',
                     $self->{'connect_string'}
                 );
-                Sympa::Robot::send_notify_to_listmaster('db_restored',
-                    $Conf::Conf{'domain'}, {});
+                tools::send_notify_to_listmaster('*', 'db_restored', {});
             }
         }
 

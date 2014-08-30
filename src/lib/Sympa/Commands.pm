@@ -249,13 +249,12 @@ sub lists {
         unless (defined $action) {
             my $error =
                 "Unable to evaluate scenario 'visibility' for list $l";
-            Sympa::Robot::send_notify_to_listmaster(
+            tools::send_notify_to_listmaster(
+                $list,
                 'intern_error',
-                $robot,
                 {   'error'          => $error,
                     'who'            => $sender,
                     'cmd'            => $cmd_line,
-                    'list'           => $list,
                     'action'         => 'Command process',
                     'auto_submitted' => 'auto-replied'
                 }
@@ -1303,13 +1302,12 @@ sub signoff {
             unless (defined $action) {
                 my $error =
                     "Unable to evaluate scenario 'visibility' for list $l";
-                Sympa::Robot::send_notify_to_listmaster(
+                tools::send_notify_to_listmaster(
+                    $list,
                     'intern_error',
-                    $robot,
                     {   'error'  => $error,
                         'who'    => $sender,
                         'cmd'    => $cmd_line,
-                        'list'   => $list,
                         'action' => 'Command process'
                     }
                 );
@@ -2189,13 +2187,12 @@ sub remind {
                     unless (defined $action) {
                         my $error =
                             "Unable to evaluate scenario 'visibility' for list $listname";
-                        Sympa::Robot::send_notify_to_listmaster(
+                        tools::send_notify_to_listmaster(
+                            $list,
                             'intern_error',
-                            $robot,
                             {   'error'  => $error,
                                 'who'    => $sender,
                                 'cmd'    => $cmd_line,
-                                'list'   => $list,
                                 'action' => 'Command process'
                             }
                         );
@@ -2508,13 +2505,12 @@ sub set {
             unless (defined $action) {
                 my $error =
                     "Unable to evaluate scenario 'visibility' for list $l";
-                Sympa::Robot::send_notify_to_listmaster(
+                tools::send_notify_to_listmaster(
+                    $list,
                     'intern_error',
-                    $robot,
                     {   'error'  => $error,
                         'who'    => $sender,
                         'cmd'    => $cmd_line,
-                        'list'   => $list,
                         'action' => 'Command process'
                     }
                 );
@@ -3426,13 +3422,12 @@ sub which {
         unless (defined $action) {
             my $error =
                 "Unable to evaluate scenario 'visibility' for list $listname";
-            Sympa::Robot::send_notify_to_listmaster(
+            tools::send_notify_to_listmaster(
+                $list,
                 'intern_error',
-                $robot,
                 {   'error'  => $error,
                     'who'    => $sender,
                     'cmd'    => $cmd_line,
-                    'list'   => $list,
                     'action' => 'Command process'
                 }
             );

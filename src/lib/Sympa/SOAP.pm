@@ -673,7 +673,8 @@ sub createList {
     ## create liste
     my $resul =
         Sympa::Admin::create_list_old($parameters, $template, $robot, "soap");
-    unless (defined $resul) {
+    unless (defined $resul
+        and $list = Sympa::List->new($listname, $robot)) {
         Log::do_log('info', 'Unable to create list %s@%s from %s',
             $listname, $robot, $sender);
         die SOAP::Fault->faultcode('Server')
@@ -683,9 +684,8 @@ sub createList {
 
     ## notify listmaster
     if ($param->{'create_action'} =~ /notify/) {
-        if (Sympa::Robot::send_notify_to_listmaster(
-                'request_list_creation', $robot,
-                {'list' => $list, 'email' => $sender}
+        if (tools::send_notify_to_listmaster(
+                $list, 'request_list_creation', {'email' => $sender}
             )
             ) {
             Log::do_log('info', 'Notify listmaster for list creation');
@@ -1714,8 +1714,7 @@ sub get_reason_string {
         )
         ) {
         my $error = tt2::get_error();
-        Sympa::Robot::send_notify_to_listmaster('web_tt2_error', $robot,
-            [$error]);
+        tools::send_notify_to_listmaster($robot, 'web_tt2_error', [$error]);
         Log::do_log('info', 'Error parsing');
         return '';
     }

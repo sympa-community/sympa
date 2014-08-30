@@ -890,11 +890,10 @@ sub rename_list {
     # set list status to pending if creation list is moderated
     if ($r_action =~ /listmaster/) {
         $list->{'admin'}{'status'} = 'pending';
-        Sympa::Robot::send_notify_to_listmaster(
+        tools::send_notify_to_listmaster(
+            $list,
             'request_list_renaming',
-            $list->{'domain'},
-            {   'list'         => $list,
-                'new_listname' => $param{'new_listname'},
+            {   'new_listname' => $param{'new_listname'},
                 'old_listname' => $old_listname,
                 'email'        => $param{'user_email'},
                 'mode'         => $param{'mode'}
@@ -1696,11 +1695,10 @@ sub change_user_email {
                 $list->get_list_admin($role, $in{'current_email'});
             if ($admin_user->{'included'}) {
                 ## Notify listmaster
-                Sympa::Robot::send_notify_to_listmaster(
+                tools::send_notify_to_listmaster(
+                    $list,
                     'failed_to_change_included_admin',
-                    $robot_id,
-                    {   'list'          => $list,
-                        'current_email' => $in{'current_email'},
+                    {   'current_email' => $in{'current_email'},
                         'new_email'     => $in{'new_email'},
                         'datasource' =>
                             $list->get_datasource_name($admin_user->{'id'})
@@ -1734,9 +1732,9 @@ sub change_user_email {
     }
     ## Notify listmasters that list owners/moderators email have changed
     if (keys %updated_lists) {
-        Sympa::Robot::send_notify_to_listmaster(
-            'listowner_email_changed',
+        tools::send_notify_to_listmaster(
             $robot_id,
+            'listowner_email_changed',
             {   'previous_email' => $in{'current_email'},
                 'new_email'      => $in{'new_email'},
                 'updated_lists'  => keys %updated_lists
