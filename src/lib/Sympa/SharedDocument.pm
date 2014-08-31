@@ -30,6 +30,8 @@ use warnings;
 use Log;
 use Sympa::Scenario;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 
 ## Creates a new object
 sub new {
@@ -96,7 +98,7 @@ sub new {
 
     ## Date
     $document->{'date_epoch'} =
-        tools::get_mtime($document->{'absolute_path'});
+        Sympa::Tools::File::get_mtime($document->{'absolute_path'});
 
     # Size of the doc
     $document->{'size'} = (-s $document->{'absolute_path'}) / 1000;
@@ -262,8 +264,7 @@ sub dump {
     my $self = shift;
     my $fd   = shift;
 
-    tools::dump_var($self, 0, $fd);
-
+    Sympa::Tools::Data::dump_var($self, 0, $fd);
 }
 
 sub dup {

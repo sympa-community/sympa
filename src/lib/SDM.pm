@@ -35,6 +35,7 @@ use Log;
 #use Sympa::Robot;
 use Sympa::SQLSource;
 use tools;
+use Sympa::Tools::Data;
 
 # db structure description has moved in Sympa/Constant.pm
 my %db_struct = Sympa::DatabaseDescription::db_struct();
@@ -698,7 +699,7 @@ sub check_db_field_type {
         ($effective_type, $effective_size) = ($1, $3);
     }
 
-    if (tools::smart_eq($effective_type, $required_type)
+    if (Sympa::Tools::Data::smart_eq($effective_type, $required_type)
         and (not defined $required_size or $effective_size >= $required_size))
     {
         return 1;

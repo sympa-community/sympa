@@ -44,6 +44,8 @@ use Sympa::Message;
 use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::File;
+use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
 
@@ -819,7 +821,7 @@ sub upgrade {
                     . $subdir
                     . '/OTHER';
                 if (-d $other_dir) {
-                    tools::remove_dir($other_dir);
+                    Sympa::Tools::File::remove_dir($other_dir);
                     Log::do_log('notice', 'Directory %s removed', $other_dir);
                 }
             }
@@ -854,7 +856,8 @@ sub upgrade {
                 );
 
                 my @all_files;
-                tools::list_dir($list->{'dir'}, \@all_files, 'utf-8');
+                Sympa::Tools::File::list_dir($list->{'dir'}, \@all_files,
+                    'utf-8');
 
                 my $count;
                 foreach my $f_struct (reverse @all_files) {
@@ -1113,7 +1116,7 @@ sub upgrade {
                 next unless scalar keys %newconf;
 
                 push @newconf,
-                    tools::wrap_text(
+                    Sympa::Tools::Text::wrap_text(
                     $language->gettext(
                         "Migrated Parameters\nFollowing parameters were migrated from wwsympa.conf."
                     ),
@@ -1122,7 +1125,7 @@ sub upgrade {
                     . "\n"
                     if $type eq 'add';
                 push @newconf,
-                    tools::wrap_text(
+                    Sympa::Tools::Text::wrap_text(
                     $language->gettext(
                         "Overrididing Parameters\nFollowing parameters existed both in sympa.conf and  wwsympa.conf.  Previous release of Sympa used those in wwsympa.conf.  Comment-out ones you wish to be disabled."
                     ),
@@ -1131,7 +1134,7 @@ sub upgrade {
                     . "\n"
                     if $type eq 'override';
                 push @newconf,
-                    tools::wrap_text(
+                    Sympa::Tools::Text::wrap_text(
                     $language->gettext(
                         "Duplicate of sympa.conf\nThese parameters were found in both sympa.conf and wwsympa.conf.  Previous release of Sympa used those in sympa.conf.  Uncomment ones you wish to be enabled."
                     ),
@@ -1140,7 +1143,7 @@ sub upgrade {
                     . "\n"
                     if $type eq 'duplicate';
                 push @newconf,
-                    tools::wrap_text(
+                    Sympa::Tools::Text::wrap_text(
                     $language->gettext(
                         "Old Parameters\nThese parameters are no longer used."
                     ),
@@ -1149,7 +1152,7 @@ sub upgrade {
                     . "\n"
                     if $type eq 'obsolete';
                 push @newconf,
-                    tools::wrap_text(
+                    Sympa::Tools::Text::wrap_text(
                     $language->gettext(
                         "Unknown Parameters\nThough these parameters were found in wwsympa.conf, they were ignored.  You may simply remove them."
                     ),
@@ -1162,12 +1165,12 @@ sub upgrade {
                     my ($param, $v) = @{$newconf{$k}};
 
                     push @newconf,
-                        tools::wrap_text(
+                        Sympa::Tools::Text::wrap_text(
                         $language->gettext($param->{'gettext_id'}),
                         '## ', '## ')
                         if $param->{'gettext_id'};
                     push @newconf,
-                        tools::wrap_text(
+                        Sympa::Tools::Text::wrap_text(
                         $language->gettext($param->{'gettext_comment'}),
                         '## ', '## ')
                         if $param->{'gettext_comment'};
@@ -1230,7 +1233,7 @@ sub upgrade {
         unless (-d "$viewmail_dir/mod") {
             my @dirs = File::Path::mkpath("$viewmail_dir/mod");
             foreach my $dir (@dirs) {
-                tools::set_file_rights(
+                Sympa::Tools::File::set_file_rights(
                     'file'  => $dir,
                     'user'  => Sympa::Constants::USER(),
                     'group' => Sympa::Constants::GROUP(),
@@ -1284,7 +1287,7 @@ sub upgrade {
             } else {
                 my @dirs = File::Path::mkpath($destination_dir);
                 foreach my $dir (@dirs) {
-                    tools::set_file_rights(
+                    Sympa::Tools::File::set_file_rights(
                         'file'  => $dir,
                         'user'  => Sympa::Constants::USER(),
                         'group' => Sympa::Constants::GROUP(),
@@ -1300,7 +1303,7 @@ sub upgrade {
             );
             File::Find::find(
                 sub {
-                    tools::set_file_rights(
+                    Sympa::Tools::File::set_file_rights(
                         'file'  => $File::Find::name,
                         'user'  => Sympa::Constants::USER(),
                         'group' => Sympa::Constants::GROUP(),
@@ -1427,7 +1430,7 @@ sub to_utf8 {
         print TEMPLATE $text;
         close TEMPLATE;
         unless (
-            tools::set_file_rights(
+            Sympa::Tools::File::set_file_rights(
                 file  => $file,
                 user  => Sympa::Constants::USER,
                 group => Sympa::Constants::GROUP,

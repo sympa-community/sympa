@@ -34,6 +34,7 @@ use Sympa::Language;
 use Log;
 use SDM;
 use tools;
+use Sympa::Tools::Data;
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
@@ -390,7 +391,7 @@ sub get_global_user {
         }
         ## Turn data_user into a hash
         if ($user->{'data'}) {
-            my %prefs = tools::string_2_hash($user->{'data'});
+            my %prefs = Sympa::Tools::Data::string_2_hash($user->{'data'});
             $user->{'prefs'} = \%prefs;
         }
     }

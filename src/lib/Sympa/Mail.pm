@@ -32,7 +32,6 @@ use POSIX qw();
 use Sympa::Bulk;
 use Conf;
 use Log;
-use Sympa::Robot;
 use tools;
 
 my $opensmtp = 0;

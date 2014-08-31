@@ -36,6 +36,7 @@ use Conf;
 use Log;
 use SDM;
 use tools;
+use Sympa::Tools::Daemon;
 
 ## Database and SQL statement handlers
 my $sth;
@@ -60,7 +61,7 @@ sub next {
     Log::do_log('debug', '');
 
     # lock next packet
-    my $lock = tools::get_lockname();
+    my $lock = Sympa::Tools::Daemon::get_lockname();
 
     my $order;
     my $limit_oracle = '';

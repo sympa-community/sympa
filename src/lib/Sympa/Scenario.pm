@@ -41,6 +41,9 @@ use Log;
 use Sympa::Robot;
 use Sympa::SQLSource;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
+use Sympa::Tools::Time;
 use Sympa::User;
 
 my %all_scenarios;
@@ -71,7 +74,7 @@ sub new {
 
     ## Determine the file path of the scenario
 
-    if (tools::smart_eq($parameters{'file_path'}, 'ERROR')) {
+    if (Sympa::Tools::Data::smart_eq($parameters{'file_path'}, 'ERROR')) {
         return $all_scenarios{$scenario->{'file_path'}};
     }
 
@@ -124,7 +127,7 @@ sub new {
 
         ## Use cache unless file has changed on disk
         if ($all_scenarios{$scenario->{'file_path'}}{'date'} >=
-            tools::get_mtime($scenario->{'file_path'})) {
+            Sympa::Tools::File::get_mtime($scenario->{'file_path'})) {
             return $all_scenarios{$scenario->{'file_path'}};
         }
     }
@@ -881,7 +884,7 @@ sub verify {
         } elsif ($value =~ /\[msg_body\]/i) {
             unless (
                 $context->{'message'}
-                and tools::smart_eq(
+                and Sympa::Tools::Data::smart_eq(
                     $context->{'message'}->as_entity->effective_type,
                     qr/^text/)
                 and defined($context->{'message'}->as_entity->bodyhandle)
@@ -1105,8 +1108,8 @@ sub verify {
     if ($condition_key =~ /^(older|newer)$/) {
 
         $negation *= -1 if ($condition_key eq 'newer');
-        my $arg0 = tools::epoch_conv($args[0]);
-        my $arg1 = tools::epoch_conv($args[1]);
+        my $arg0 = Sympa::Tools::Time::epoch_conv($args[0]);
+        my $arg1 = Sympa::Tools::Time::epoch_conv($args[1]);
 
         Log::do_log('debug3', '%s(%d, %d)', $condition_key, $arg0, $arg1);
         if ($arg0 <= $arg1) {
@@ -1379,7 +1382,7 @@ sub verify {
         if (ref($args[0])) {
             foreach my $arg (@{$args[0]}) {
                 Log::do_log('debug3', 'Arg: %s', $arg);
-                if (tools::smart_lessthan($arg, $args[1])) {
+                if (Sympa::Tools::Data::smart_lessthan($arg, $args[1])) {
                     Log::do_log('info', '"%s" is less than "%s" (rule %s)',
                         $arg, $args[1], $condition)
                         if $log_it;
@@ -1387,7 +1390,7 @@ sub verify {
                 }
             }
         } else {
-            if (tools::smart_lessthan($args[0], $args[1])) {
+            if (Sympa::Tools::Data::smart_lessthan($args[0], $args[1])) {
                 Log::do_log('info', '"%s" is less than "%s" (rule %s)',
                     $args[0], $args[1], $condition)
                     if $log_it;
@@ -1577,7 +1580,7 @@ sub search {
         }
 
         my $ldap;
-        my $param = tools::dup_var(\%ldap_conf);
+        my $param = Sympa::Tools::Data::dup_var(\%ldap_conf);
         my $ds    = Sympa::LDAPSource->new($param);
 
         unless (defined $ds && ($ldap = $ds->connect())) {
@@ -1724,7 +1727,7 @@ sub verify_custom {
 
 sub dump_all_scenarios {
     open TMP, ">/tmp/all_scenarios";
-    tools::dump_var(\%all_scenarios, 0, \*TMP);
+    Sympa::Tools::Data::dump_var(\%all_scenarios, 0, \*TMP);
     close TMP;
 }
 

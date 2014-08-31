@@ -36,9 +36,10 @@ use Sympa::Constants;
 use Sympa::Language;
 use Sympa::LockedFile;
 use Log;
-use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 
 =head1 NAME
 
@@ -650,7 +651,7 @@ sub checkfiles_as_root {
             $Conf{'sendmail_aliases'}
         );
         unless (
-            tools::set_file_rights(
+            Sympa::Tools::File::set_file_rights(
                 file  => $Conf{'sendmail_aliases'},
                 user  => Sympa::Constants::USER,
                 group => Sympa::Constants::GROUP,
@@ -674,7 +675,7 @@ sub checkfiles_as_root {
             }
 
             unless (
-                tools::set_file_rights(
+                Sympa::Tools::File::set_file_rights(
                     file  => $dir,
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
@@ -720,7 +721,7 @@ sub checkfiles {
                 $config_err++;
             }
             unless (
-                tools::set_file_rights(
+                Sympa::Tools::File::set_file_rights(
                     file  => $Conf{$qdir},
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
@@ -743,7 +744,7 @@ sub checkfiles {
                 $config_err++;
             }
             unless (
-                tools::set_file_rights(
+                Sympa::Tools::File::set_file_rights(
                     file  => $subdir,
                     user  => Sympa::Constants::USER,
                     group => Sympa::Constants::GROUP,
@@ -865,7 +866,7 @@ sub checkfiles {
 
         ## Create directory if required
         unless (-d $dir) {
-            unless (tools::mkdir_all($dir, 0755)) {
+            unless (Sympa::Tools::File::mkdir_all($dir, 0755)) {
                 tools::send_notify_to_listmaster($robot, 'cannot_mkdir',
                     ["Could not create directory $dir: $ERRNO"]);
                 Log::do_log('err', 'Failed to create directory %s: %m', $dir);
@@ -1448,9 +1449,10 @@ sub load_trusted_application {
     return undef unless (-r $config_file);
 
     return undef unless (-r $config_file);
-    # open TMP,
-    # ">/tmp/dump1";tools::dump_var(load_generic_conf_file($config_file,\
-    # %trusted_applications);, 0,\*TMP);close TMP;
+    # open TMP, ">/tmp/dump1";
+    # Sympa::Tools::Data::dump_var(load_generic_conf_file($config_file,
+    # \%trusted_applications);, 0,\*TMP);
+    # close TMP;
     return (load_generic_conf_file($config_file, \%trusted_applications));
 
 }
@@ -1866,7 +1868,11 @@ sub _infer_server_specific_parameter_values {
             Sympa::Constants::DEFAULTDIR . '/ca-bundle.crt';
     }
 
-    unless (tools::smart_eq($param->{'config_hash'}{'dkim_feature'}, 'on')) {
+    unless (
+        Sympa::Tools::Data::smart_eq(
+            $param->{'config_hash'}{'dkim_feature'}, 'on'
+        )
+        ) {
         # dkim_signature_apply_ on nothing if dkim_feature is off
         # Sets empty array.
         $param->{'config_hash'}{'dkim_signature_apply_on'} = [''];
@@ -2307,7 +2313,7 @@ sub _set_listmasters_entry {
 sub _check_double_url_usage {
     my $param = shift;
     my ($host, $path);
-    if (tools::smart_eq(
+    if (Sympa::Tools::Data::smart_eq(
             $param->{'config_hash'}{'http_host'},
             qr/^([^\/]+)(\/.*)$/
         )
@@ -2460,7 +2466,7 @@ sub _save_config_hash_to_binary {
 
 sub _source_has_not_changed {
     my $param    = shift;
-    my $is_older = tools::a_is_older_than_b(
+    my $is_older = Sympa::Tools::File::a_is_older_than_b(
         {   'a_file' => $param->{'config_file'},
             'b_file' => $param->{'config_file'} . $binary_file_extension,
         }
@@ -2491,7 +2497,7 @@ sub _get_config_file_name {
 
 sub _create_robot_like_config_for_main_robot {
     return if (defined $Conf::Conf{'robots'}{$Conf::Conf{'domain'}});
-    my $main_conf_no_robots = tools::dup_var(\%Conf);
+    my $main_conf_no_robots = Sympa::Tools::Data::dup_var(\%Conf);
     delete $main_conf_no_robots->{'robots'};
     _remove_unvalid_robot_entry(
         {'config_hash' => $main_conf_no_robots, 'quiet' => 1});

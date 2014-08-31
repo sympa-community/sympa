@@ -94,6 +94,7 @@ use MIME::Parser;
 use Sympa::HTML::FormatText;
 use Sympa::Language;
 use tools;
+use Sympa::Tools::Text;
 
 use base qw(MIME::Entity);    #FIXME FIXME
 
@@ -118,7 +119,7 @@ sub plain_body_as_string {
     # clean up after ourselves
     $topent->purge;
 
-    return tools::wrap_text($outstring, '', '');
+    return Sympa::Tools::Text::wrap_text($outstring, '', '');
 }
 
 sub _do_toplevel {
@@ -241,7 +242,7 @@ sub _do_message {
     $headers .= $language->gettext_sprintf("Subject: %s\n", $subject)
         if $subject;
     $headers .= "\n";
-    $outstring .= tools::wrap_text($headers, '', '    ');
+    $outstring .= Sympa::Tools::Text::wrap_text($headers, '', '    ');
 
     _do_toplevel($msgent);
 

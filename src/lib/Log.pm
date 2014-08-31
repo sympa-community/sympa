@@ -32,9 +32,9 @@ use Scalar::Util;
 use Sys::Syslog qw();
 
 use Conf;
-use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::Time;
 
 my ($log_facility, $log_socket_type, $log_service, $sth, @sth_stack,
     $rows_nb);
@@ -684,8 +684,9 @@ sub aggregate_data {
 
     #store reslults in stat_counter_table
     foreach my $key_op (keys(%$aggregated_data)) {
-
-        #open TMP2, ">/tmp/digdump"; tools::dump_var($aggregated_data->{$key_op}, 0, \*TMP2); close TMP2;
+        # open TMP2, ">/tmp/digdump";
+        # Sympa::Tools::Data::dump_var($aggregated_data->{$key_op}, 0, \*TMP2);
+        # close TMP2;
 
         #store send mail data-------------------------------
         if ($key_op eq 'send_mail') {
@@ -1318,7 +1319,7 @@ sub agregate_daily_data {
     my $first_date = $param->{'first_date'} || time;
     my $last_date  = $param->{'last_date'}  || time;
     foreach my $begin_date (sort keys %{$param->{'hourly_data'}}) {
-        my $reftime = tools::get_midnight_time($begin_date);
+        my $reftime = Sympa::Tools::Time::get_midnight_time($begin_date);
         unless (defined $param->{'first_date'}) {
             $first_date = $reftime if ($reftime < $first_date);
         }

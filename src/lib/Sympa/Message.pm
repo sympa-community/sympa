@@ -68,8 +68,11 @@ use Sympa::List;
 use Log;
 use Sympa::Scenario;
 use tools;
+use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
+use Sympa::Tools::File;
 use Sympa::Tools::SMIME;
+use Sympa::Tools::Text;
 use tt2;
 
 # Language context
@@ -290,7 +293,7 @@ sub new_from_file {
     $self->{'filename'} = $file;
     # Get file date
     unless (exists $self->{'date'}) {
-        $self->{'date'} = tools::get_mtime($file);
+        $self->{'date'} = Sympa::Tools::File::get_mtime($file);
     }
 
     return $self;
@@ -450,7 +453,7 @@ sub new_from_template {
         $robot_id = '*';
     }
 
-    my $data = tools::dup_var($context);
+    my $data = Sympa::Tools::Data::dup_var($context);
 
     ## Any recipients
     if (not $who or (ref $who and !@$who)) {
@@ -467,7 +470,8 @@ sub new_from_template {
         if ($list) {
             # FIXME: Don't overwrite date & update_date.  Format datetime on
             # the template.
-            my $subscriber = tools::dup_var($list->get_list_member($who));
+            my $subscriber =
+                Sympa::Tools::Data::dup_var($list->get_list_member($who));
             if ($subscriber) {
                 $data->{'subscriber'}{'date'} =
                     $language->gettext_strftime("%d %b %Y",
@@ -539,7 +543,7 @@ sub new_from_template {
     $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
 
     my @path = tt2::get_include_path();
-    my $filename = tools::find_file($tpl . '.tt2', @path);
+    my $filename = Sympa::Tools::File::find_file($tpl . '.tt2', @path);
 
     unless (defined $filename) {
         Log::do_log('err', 'Could not find template %s.tt2 in %s',
@@ -833,7 +837,7 @@ sub dup {
         next unless defined $val;
 
         unless (Scalar::Util::blessed($val)) {
-            $clone->{$key} = tools::dup_var($val);
+            $clone->{$key} = Sympa::Tools::Data::dup_var($val);
         } elsif ($val->can('dup') and !$val->isa('Sympa::List')) {
             $clone->{$key} = $val->dup;
         } else {
@@ -1151,7 +1155,7 @@ sub check_dkim_signature {
         ? $self->{context}->{'domain'}
         : $self->{context};
     return
-        unless tools::smart_eq(
+        unless Sympa::Tools::Data::smart_eq(
         Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
 
     my $dkim;
@@ -1628,7 +1632,7 @@ sub smime_decrypt {
         (      $content_type eq 'application/pkcs7-mime'
             or $content_type eq 'application/x-pkcs7-mime'
         )
-        and !tools::smart_eq(
+        and !Sympa::Tools::Data::smart_eq(
             $self->{_head}->mime_attr('Content-Type.smime-type'),
             qr/signed-data/i
         )
@@ -1706,7 +1710,11 @@ sub smime_decrypt {
     # multipart
     $head->delete('Content-Disposition')
         if $self->get_header('Content-Disposition');
-    if (tools::smart_eq($head->mime_attr('Content-Type'), qr/multipart/i)) {
+    if (Sympa::Tools::Data::smart_eq(
+            $head->mime_attr('Content-Type'),
+            qr/multipart/i
+        )
+        ) {
         $head->delete('Content-Transfer-Encoding')
             if $self->get_header('Content-Transfer-Encoding');
     }
@@ -2034,7 +2042,7 @@ sub check_smime_signature {
         or ((      $content_type eq 'application/pkcs7-mime'
                 or $content_type eq 'application/x-pkcs7-mime'
             )
-            and tools::smart_eq(
+            and Sympa::Tools::Data::smart_eq(
                 $self->{_head}->mime_attr('Content-Type.smime-type'),
                 qr/signed-data/i
             )
@@ -2340,7 +2348,8 @@ sub test_personalize {
     my $list = shift;
 
     return 1
-        unless tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+        unless Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+        'on');
 
     # Get available recipients to test.
     my $available_recipients = $list->get_recipients_per_mode($self) || {};
@@ -2960,8 +2969,8 @@ sub _urlize_one_part {
         my $ct = $entity->effective_type || 'text/plain';
         printf OFILE "Content-type: %s", $ct;
         printf OFILE "; Charset=%s", $head->mime_attr('Content-Type.Charset')
-            if tools::smart_eq($head->mime_attr('Content-Type.Charset'),
-            qr/\S/);
+            if Sympa::Tools::Data::smart_eq(
+            $head->mime_attr('Content-Type.Charset'), qr/\S/);
         print OFILE "\n\n";
     } else {
         Log::do_log('notice', 'Unable to open %s/%s/%s',
@@ -3176,7 +3185,7 @@ sub _fix_utf8_parts {
         } elsif ($eff_type eq 'text/plain'
             and lc($head->mime_attr('Content-type.Format') || '') ne 'flowed')
         {
-            $wrap = tools::wrap_text($body);
+            $wrap = Sympa::Tools::Text::wrap_text($body);
         }
 
         my $charset = $head->mime_attr("Content-Type.Charset") || $defcharset;

@@ -37,6 +37,8 @@ use Template;
 use Sympa::Constants;
 use Sympa::Language;
 use Sympa::Template::Compat;
+use tools;
+use Sympa::Tools::Text;
 
 my $last_error;
 my @other_include_path;
@@ -187,7 +189,7 @@ sub wrap {
     return sub {
         my $text = shift;
         my $nl   = $text =~ /\n$/;
-        my $ret  = tools::wrap_text($text, $init, $subs, $cols);
+        my $ret  = Sympa::Tools::Text::wrap_text($text, $init, $subs, $cols);
         $ret =~ s/\n$// unless $nl;
         $ret;
     };

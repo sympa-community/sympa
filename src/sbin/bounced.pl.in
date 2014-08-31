@@ -52,6 +52,8 @@ use Sympa::Scenario;
 use Sympa::Regexps;
 use SDM;
 use tools;
+use Sympa::Tools::Daemon;
+use Sympa::Tools::Data;
 use Sympa::Tracking;
 
 ## Equivalents relative to RFC 1893
@@ -147,9 +149,9 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the PID file
-tools::write_pid('bounced', $PID, $options);
+Sympa::Tools::Daemon::write_pid('bounced', $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    tools::direct_stderr_to_file(('pid' => $PID));
+    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
 }
 
 if ($main::options{'log_level'}) {
@@ -441,10 +443,10 @@ while (!$end) {
         # If the DSN notification is correct and the tracking mode is enable,
         # it will be inserted in the database
         my $tracking_in_use = 1
-            if tools::smart_eq(
+            if Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'tracking'}{'delivery_status_notification'},
             'on')
-            or tools::smart_eq(
+            or Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'tracking'}{'message_delivery_notification'},
             qr/\A(on|on_demand)\z/);
 
@@ -596,7 +598,7 @@ while (!$end) {
         # it will be inserted in the database
         if (    $eff_type eq 'multipart/report'
             and $report_type eq 'disposition-notification'
-            and tools::smart_eq(
+            and Sympa::Tools::Data::smart_eq(
                 $list->{'admin'}{'tracking'}{'message_delivery_notification'},
                 qr/\A(on|on_demand)\z/
             )
@@ -1088,7 +1090,7 @@ while (!$end) {
 Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Bounced exited normally due to signal');
-tools::remove_pid('bounced', $PID);
+Sympa::Tools::Daemon::remove_pid('bounced', $PID);
 
 exit(0);
 

@@ -54,6 +54,7 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use Sympa::Scenario;
 use tools;
+use Sympa::Tools::File;
 
 my $language = Sympa::Language->instance;
 
@@ -1605,7 +1606,8 @@ sub get_constraints {
     Log::do_log('debug3', '(%s)', $self->{'name'});
 
     ## load param_constraint.conf
-    my $time_file = tools::get_mtime("$self->{'dir'}/param_constraint.conf");
+    my $time_file =
+        Sympa::Tools::File::get_mtime("$self->{'dir'}/param_constraint.conf");
     unless (defined($self->{'param_constraint_conf'})
         and $self->{'mtime'}{'param_constraint_conf'} >= $time_file) {
         $self->{'param_constraint_conf'} =
@@ -2974,11 +2976,6 @@ sub _load_param_constraint_conf {
             delete $constraint->{$forbidden};
         }
     }
-
-###########################"
-    #   open TMP, ">/tmp/dump1";
-    #   tools::dump_var ($constraint, 0, \*TMP);
-    #    close TMP;
 
     return $constraint;
 }

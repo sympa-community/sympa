@@ -28,17 +28,12 @@ use strict;
 use warnings;
 use Encode qw();
 
-use Sympa::Auth;
 use Conf;
 use Sympa::Language;
-#use Sympa::List;
 use Log;
-use Sympa::Mail;
 use SDM;
 use tools;
-use Sympa::Tools::SMIME;
-use tt2;
-use Sympa::User;
+use Sympa::Tools::File;
 
 # Language context
 my $language = Sympa::Language->instance;
@@ -199,7 +194,8 @@ sub load_topics {
 
     ## Load if not loaded or changed on disk
     if (!$list_of_topics{$robot}
-        or tools::get_mtime($conf_file) > $mtime{'topics'}{$robot}) {
+        or Sympa::Tools::File::get_mtime($conf_file) >
+        $mtime{'topics'}{$robot}) {
 
         ## delete previous list of topics
         %list_of_topics = ();
@@ -244,7 +240,7 @@ sub load_topics {
             $topic = {};
         }
 
-        $mtime{'topics'}{$robot} = tools::get_mtime($conf_file);
+        $mtime{'topics'}{$robot} = Sympa::Tools::File::get_mtime($conf_file);
 
         unless ($#rough_data > -1) {
             Log::do_log('notice', 'No topic defined in %s', $conf_file);

@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package wwslib;
+package Sympa::Tools::WWW;
 
 use strict;
 use warnings;
@@ -118,54 +118,13 @@ our %bounce_status = (
     '7.7' => 'Message integrity failure'
 );
 
-## if Crypt::CipherSaber installed store the cipher object
-my $cipher;
-
 ## Load WWSympa configuration file
 ##sub load_config
 ## MOVED: use Conf::_load_wwsconf().
 
 ## Load HTTPD MIME Types
-sub load_mime_types {
-    my $types = {};
-
-    my @localisation = (
-        '/etc/mime.types',            '/usr/local/apache/conf/mime.types',
-        '/etc/httpd/conf/mime.types', $Conf::Conf{'etc'} . '/mime.types'
-    );
-
-    foreach my $loc (@localisation) {
-        next unless (-r $loc);
-
-        unless (open(CONF, $loc)) {
-            Log::do_log('err', 'Unable to open %s', $loc);
-            return undef;
-        }
-    }
-
-    while (<CONF>) {
-        next if /^\s*\#/;
-
-        if (/^(\S+)\s+(.+)\s*$/i) {
-            my ($k, $v) = ($1, $2);
-
-            my @extensions = split / /, $v;
-
-            ## provides file extention, given the content-type
-            if ($#extensions >= 0) {
-                $types->{$k} = $extensions[0];
-            }
-
-            foreach my $ext (@extensions) {
-                $types->{$ext} = $k;
-            }
-            next;
-        }
-    }
-
-    close FILE;
-    return $types;
-}
+# DUPLICATE: Use tools::load_mime_types().
+#sub load_mime_types();
 
 ## Returns user information extracted from the cookie
 # Deprecated.  Use cookielib::check_cookie().
@@ -183,11 +142,8 @@ sub new_passwd {
 }
 
 ## Basic check of an email address
-sub valid_email {
-    my $email = shift;
-
-    $email =~ /^([\w\-\_\.\/\+\=]+|\".*\")\@[\w\-]+(\.[\w\-]+)+$/;
-}
+# DUPLICATE: Use tools::valid_email().
+#sub valid_email($email);
 
 # 6.2b: added $robot parameter.
 sub init_passwd {

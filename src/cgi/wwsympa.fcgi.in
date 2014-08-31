@@ -84,10 +84,13 @@ use SDM;
 use Sympa::SharedDocument;
 use Sympa::Session;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
+use Sympa::Tools::Text;
+use Sympa::Tools::WWW;
 use Sympa::Tracking;
 use tt2;
 use Sympa::User;
-use wwslib;
 
 ## WWSympa librairies
 my %options;
@@ -138,7 +141,7 @@ if ($Conf::Conf{'use_fast_cgi'}) {
 } else {
     require CGI;
 }
-my $mime_types = wwslib::load_mime_types();
+my $mime_types = tools::load_mime_types();
 
 # hash of all the description files already loaded
 # format :
@@ -1431,7 +1434,7 @@ while ($query = new_loop()) {
                     $Conf::Conf{'auth_services'}{$robot}[$cas_id]
                     {'cas_server'};
 
-                my $service_url = wwslib::get_my_url();
+                my $service_url = Sympa::Tools::WWW::get_my_url();
                 $service_url =~ s/(\?|&)ticket\=.+$//;
 
                 my $net_id = $cas_server->validateST($service_url, $ticket);
@@ -1490,7 +1493,7 @@ while ($query = new_loop()) {
                     # before redirect update the list of already checked cas
                     # server to prevent loop
                     my $cas_server = $auth_service->{'cas_server'};
-                    my $return_url = wwslib::get_my_url();
+                    my $return_url = Sympa::Tools::WWW::get_my_url();
 
                     ## Append the current CAS server ID to the list of checked
                     ## CAS servers
@@ -1893,8 +1896,8 @@ while ($query = new_loop()) {
     }
     $language->pop_lang;
 
-    $param->{'html_dumpvars'} = tools::dump_html_var($param)
-        if ($session->{'dumpvars'});
+    $param->{'html_dumpvars'} = Sympa::Tools::Data::dump_html_var($param)
+        if $session->{'dumpvars'};
 
     # if bypass is defined select the content-type from various vars
     if ($param->{'bypass'}) {
@@ -2028,7 +2031,8 @@ while ($query = new_loop()) {
 
     # exit if wwsympa.fcgi itself has changed
     if ($ENV{'SCRIPT_FILENAME'}
-        and tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
+        and Sympa::Tools::File::get_mtime($ENV{'SCRIPT_FILENAME'}) >
+        $birthday) {
         Log::do_log('notice',
             'Exiting because %s has changed since fastcgi server started',
             $ENV{'SCRIPT_FILENAME'});
@@ -2406,7 +2410,7 @@ sub get_parameters {
                     wwslog('err', 'Failed to create %s: %s',
                         $dump_file, $ERRNO);
                 }
-                tools::dump_var(\%in, 0, \*DUMP);
+                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
                 close DUMP;
 
                 Sympa::Report::reject_report_web('user', 'syntax_errors',
@@ -2678,7 +2682,7 @@ sub get_parameters_old {
                     wwslog('err', 'Failed to create %s: %s',
                         $dump_file, $ERRNO);
                 }
-                tools::dump_var(\%in, 0, \*DUMP);
+                Sympa::Tools::Data::dump_var(\%in, 0, \*DUMP);
                 close DUMP;
 
                 Sympa::Report::reject_report_web('user', 'syntax_errors',
@@ -2895,8 +2899,8 @@ sub send_html {
     }
 
     # XSS escaping applied to all outgoing parameters.
-    ## Escape parameters on a copy to avoid altering usefull data.
-    my $param_copy = tools::dup_var($param);
+    ## Escape parameters on a copy to avoid altering useful data.
+    my $param_copy = Sympa::Tools::Data::dup_var($param);
     if (defined $param_copy) {
         unless (
             tools::sanitize_var(
@@ -3514,7 +3518,7 @@ sub check_param_out {
             if ($ENV{'REQUEST_METHOD'} eq 'GET'
                 && !$auth_action{$in{'action'}}) {
                 $param->{'referer'} =
-                    tools::escape_chars(wwslib::get_my_url());
+                    tools::escape_chars(Sympa::Tools::WWW::get_my_url());
             } else {
                 ## Keep the previous value of the referer
                 $param->{'referer'} = $in{'referer'};
@@ -3666,8 +3670,8 @@ sub check_param_out {
 
     ## If parameter has the Unicode Perl flag, then switch to utf-8
     ## this switch is applied recursively
-    tools::recursive_transformation($param, \&tools::unicode_to_utf8);
-
+    Sympa::Tools::Data::recursive_transformation($param,
+        \&tools::unicode_to_utf8);
 }
 
 ## ticket : this action is used if someone submits a one time ticket
@@ -3932,14 +3936,24 @@ sub do_login {
 
     if ($session->{'review_page_size'}) {
         # user did choose a specific page size upgrade prefs
-        Sympa::User::update_global_user($param->{'user'}{'email'},
-            {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+        Sympa::User::update_global_user(
+            $param->{'user'}{'email'},
+            {   data => Sympa::Tools::Data::hash_2_string(
+                    $param->{'user'}{'prefs'}
+                )
+            }
+        );
     }
 
     if ($session->{'shared_mode'}) {
         # user did choose a shared expert/standard mode
-        Sympa::User::update_global_user($param->{'user'}{'email'},
-            {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+        Sympa::User::update_global_user(
+            $param->{'user'}{'email'},
+            {   data => Sympa::Tools::Data::hash_2_string(
+                    $param->{'user'}{'prefs'}
+                )
+            }
+        );
     }
 
     if ($in{'newpasswd1'} && $in{'newpasswd2'}) {
@@ -4522,7 +4536,7 @@ sub is_ldap_user {
         # auth service parameter
         next unless ($auth =~ /$ldap->{'regexp'}/i);
 
-        my $param = tools::dup_var($ldap);
+        my $param = Sympa::Tools::Data::dup_var($ldap);
         my $ds    = Sympa::LDAPSource->new($param);
 
         unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
@@ -4667,7 +4681,7 @@ sub do_logout {
             {'cas_server'};
 
         $in{'action'} = 'redirect';
-        my $return_url = wwslib::get_my_url();
+        my $return_url = Sympa::Tools::WWW::get_my_url();
         $return_url =~ s/\/logout//;
 
         $param->{'redirect_to'} =
@@ -5367,8 +5381,13 @@ sub do_review {
         if ($param->{'user'}{'prefs'}{'review_page_size'} ne $in{'size'}) {
             # update user pref  as soon as connected user change page size
             $param->{'user'}{'prefs'}{'review_page_size'} = $in{'size'};
-            Sympa::User::update_global_user($param->{'user'}{'email'},
-                {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+            Sympa::User::update_global_user(
+                $param->{'user'}{'email'},
+                {   data => Sympa::Tools::Data::hash_2_string(
+                        $param->{'user'}{'prefs'}
+                    )
+                }
+            );
         }
     } else {
         $size =
@@ -5535,7 +5554,7 @@ sub do_search {
     ## Search key
     $param->{'filter'} = $in{'filter'};
     my $searchkey = undef;
-    $searchkey = tools::foldcase($param->{'filter'})
+    $searchkey = Sympa::Tools::Text::foldcase($param->{'filter'})
         if defined $param->{'filter'} and length $param->{'filter'};
 
     my $record = 0;
@@ -5554,7 +5573,8 @@ sub do_search {
 
         if (defined $searchkey) {
             my $gecos = undef;
-            $gecos = tools::foldcase($i->{'gecos'}) if defined $i->{'gecos'};
+            $gecos = Sympa::Tools::Text::foldcase($i->{'gecos'})
+                if defined $i->{'gecos'};
             next
                 unless index($i->{'email'}, $searchkey) >= 0
                     or (defined $gecos and index($gecos, $searchkey) >= 0);
@@ -5631,12 +5651,14 @@ sub do_pref {
 
     ## Find nearest expiration period
     my $selected = 0;
-    foreach my $p (sort { $b <=> $a } keys %wwslib::cookie_period) {
+    foreach my $p (sort { $b <=> $a } keys %Sympa::Tools::WWW::cookie_period)
+    {
         my $entry = {'value' => $p};
 
         ## Set description from NLS
         $entry->{'desc'} =
-            $language->gettext($wwslib::cookie_period{$p}{'gettext_id'});
+            $language->gettext(
+            $Sympa::Tools::WWW::cookie_period{$p}{'gettext_id'});
 
         ## Choose nearest delay
         if ((!$selected) && $param->{'user'}{'cookie_delay'} >= $p) {
@@ -6045,7 +6067,7 @@ sub do_setpref {
 sub do_viewfile {
     wwslog('info', '');
 
-    unless (defined $wwslib::filenames{$in{'file'}}) {
+    unless (defined $Sympa::Tools::WWW::filenames{$in{'file'}}) {
         Sympa::Report::reject_report_web('user', 'file_not_editable',
             {'file' => $in{'file'}},
             $param->{'action'});
@@ -6682,7 +6704,7 @@ sub do_signoff {
         }
 
         ## No passwd
-        wwslib::init_passwd($robot, $in{'email'},
+        Sympa::Tools::WWW::init_passwd($robot, $in{'email'},
             {'lang' => $param->{'lang'}});
 
         $param->{'user'}{'email'} = $in{'email'};
@@ -7012,9 +7034,10 @@ sub do_admin {
         next
             unless (
             $list->may_edit($f, $param->{'user'}{'email'}) eq 'write');
-        if ($wwslib::filenames{$f}{'gettext_id'}) {
+        if ($Sympa::Tools::WWW::filenames{$f}{'gettext_id'}) {
             $param->{'files'}{$f}{'complete'} =
-                $language->gettext($wwslib::filenames{$f}{'gettext_id'});
+                $language->gettext(
+                $Sympa::Tools::WWW::filenames{$f}{'gettext_id'});
         } else {
             $param->{'files'}{$f}{'complete'} = $f;
         }
@@ -7043,9 +7066,10 @@ sub do_serveradmin {
         'invite.tt2',     'reject.tt2',
         'your_infected_msg.tt2'
         ) {
-        if ($wwslib::filenames{$f}{'gettext_id'}) {
+        if ($Sympa::Tools::WWW::filenames{$f}{'gettext_id'}) {
             $param->{'lists_default_files'}{$f}{'complete'} =
-                $language->gettext($wwslib::filenames{$f}{'gettext_id'});
+                $language->gettext(
+                $Sympa::Tools::WWW::filenames{$f}{'gettext_id'});
         } else {
             $param->{'lists_default_files'}{$f}{'complete'} = $f;
         }
@@ -7063,7 +7087,8 @@ sub do_serveradmin {
         'list_aliases.tt2'
         ) {
         $param->{'server_files'}{$f}{'complete'} =
-            $language->gettext($wwslib::filenames{$f}{'gettext_id'});
+            $language->gettext(
+            $Sympa::Tools::WWW::filenames{$f}{'gettext_id'});
         $param->{'server_files'}{$f}{'selected'} = '';
     }
     $param->{'server_files'}{'helpfile.tt2'}{'selected'} =
@@ -7074,7 +7099,8 @@ sub do_serveradmin {
 }
 
 sub do_edit_config {
-    my $editable_params = tools::dup_var(\@Sympa::ConfDef::params);
+    my $editable_params =
+        Sympa::Tools::Data::dup_var(\@Sympa::ConfDef::params);
 
     get_server_details();
 
@@ -7325,7 +7351,8 @@ sub do_remove_template {
         tools::get_template_path($in{'webormail'}, $robot, $in{'scope'},
         $in{'template_name'}, $in{'tpl_lang'}, $list);
 
-    my $template_old_path = tools::shift_file($template_path, 10);
+    my $template_old_path =
+        Sympa::Tools::File::shift_file($template_path, 10);
     unless ($template_old_path) {
         Sympa::Report::reject_report_web('intern', 'remove_failed',
             {'path' => $template_path},
@@ -7475,7 +7502,8 @@ sub do_copy_template {
     }
 
     unless ($param->{'template_path_out'}
-        and tools::mk_parent_dir($param->{'template_path_out'})) {
+        and Sympa::Tools::File::mk_parent_dir($param->{'template_path_out'}))
+    {
         Sympa::Report::reject_report_web(
             'intern',
             'cannot_open_file',
@@ -7580,7 +7608,8 @@ sub do_manage_template {
 
     if ($in{'subaction'} eq 'save') {
         ## create the parent directory if it doesn't already exist
-        unless (tools::mk_parent_dir($param->{'template_path'})) {
+        unless (Sympa::Tools::File::mk_parent_dir($param->{'template_path'}))
+        {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_open_file',
@@ -7660,7 +7689,7 @@ sub do_manage_template {
             return undef;
         }
         ## create the parent directory if it doesn't already exist
-        unless (tools::mk_parent_dir($new_template_path)) {
+        unless (Sympa::Tools::File::mk_parent_dir($new_template_path)) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_open_file',
@@ -8664,7 +8693,7 @@ sub do_modindex {
         $doc->{'size'}          = (-s $d) / 1000;
         $doc->{'date'} =
             $language->gettext_strftime("%d %b %Y",
-            localtime tools::get_mtime($d));
+            localtime Sympa::Tools::File::get_mtime($d));
         $doc->{'author'} = $desc_hash{'email'};
         $doc->{'path'}   = $path;
 
@@ -9112,7 +9141,7 @@ sub do_reject {
             #XXreturn undef;
         }
         # clean HTML view of the message
-        tools::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
+        Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
                 . $list->get_list_id() . '/'
                 . $id);
     }
@@ -9238,7 +9267,7 @@ sub do_distribute {
             );
         }
         # clean HTML view of the message
-        tools::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
+        Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
                 . $list->get_list_id() . '/'
                 . $id);
     }
@@ -9540,9 +9569,10 @@ sub do_editfile {
                     $filename_for_auth, $param->{'user'}{'email'}
                 ) eq 'write'
                 );
-            if ($wwslib::filenames{$f}{'gettext_id'}) {
+            if ($Sympa::Tools::WWW::filenames{$f}{'gettext_id'}) {
                 $param->{'files'}{$f}{'complete'} =
-                    $language->gettext($wwslib::filenames{$f}{'gettext_id'});
+                    $language->gettext(
+                    $Sympa::Tools::WWW::filenames{$f}{'gettext_id'});
             } else {
                 $param->{'files'}{$f}{'complete'} = $f;
             }
@@ -9551,7 +9581,7 @@ sub do_editfile {
         return 1;
     }
 
-    unless (defined $wwslib::filenames{$in{'file'}}) {
+    unless (defined $Sympa::Tools::WWW::filenames{$in{'file'}}) {
         Sympa::Report::reject_report_web('user', 'file_not_editable',
             {'file' => $in{'file'}},
             $param->{'action'});
@@ -9567,7 +9597,8 @@ sub do_editfile {
 
     $param->{'file'} = $in{'file'};
     $param->{'complete'} =
-        $language->gettext($wwslib::filenames{$in{'file'}}{'gettext_id'});
+        $language->gettext(
+        $Sympa::Tools::WWW::filenames{$in{'file'}}{'gettext_id'});
 
     my $subdir = '';
     if ($in{'file'} =~ /\.tt2$/) {
@@ -10005,8 +10036,12 @@ sub do_arc {
                 # he consult archives
                 $param->{'user'}{'prefs'}{'arc_mode'} =
                     $session->{'arc_mode'};
-                Sympa::User::update_global_user($param->{'user'}{'email'},
-                    {data => tools::hash_2_string($param->{'user'}{'prefs'})}
+                Sympa::User::update_global_user(
+                    $param->{'user'}{'email'},
+                    {   data => Sympa::Tools::Data::hash_2_string(
+                            $param->{'user'}{'prefs'}
+                        )
+                    }
                 );
             }
         }
@@ -10038,7 +10073,7 @@ sub do_arc {
         $param->{'file'} = $arc_file_path;
     }
 
-    $param->{'date'} = tools::get_mtime($arc_file_path);
+    $param->{'date'} = Sympa::Tools::File::get_mtime($arc_file_path);
     # send page as static if client is a bot. That's prevent crawling all
     # archices every weeks by google, yahoo and others bots
     if ($session->{'is_a_crawler'}) {
@@ -11145,7 +11180,7 @@ sub do_install_pending_list {
     $list->{'admin'}{'status'} = $in{'status'};
 
     #    open TMP, ">/tmp/dump1";
-    #    tools::dump_var ($list->{'admin'}, 0, \*TMP);
+    #    Sympa::Tools::Data::dump_var ($list->{'admin'}, 0, \*TMP);
     #    close TMP;
 
     unless ($list->save_config($param->{'user'}{'email'})) {
@@ -11163,7 +11198,7 @@ sub do_install_pending_list {
     }
 
     #    open TMP, ">/tmp/dump2";
-    #    tools::dump_var ($list->{'admin'}, 0, \*TMP);
+    #    Sympa::Tools::Data::dump_var ($list->{'admin'}, 0, \*TMP);
     #    close TMP;
 
     ## create the aliases
@@ -11753,8 +11788,9 @@ sub do_editsubscriber {
             $language->gettext_strftime("%d %b %Y", localtime($bounce[1]));
         $param->{'current_subscriber'}{'bounce_count'} = $bounce[2];
         if ($bounce[3] =~ /^(\d+\.(\d+\.\d+))$/) {
-            $subscriber->{'bounce_code'}   = $1;
-            $subscriber->{'bounce_status'} = $wwslib::bounce_status{$2};
+            $subscriber->{'bounce_code'} = $1;
+            $subscriber->{'bounce_status'} =
+                $Sympa::Tools::WWW::bounce_status{$2};
         }
 
         $param->{'previous_action'} = $in{'previous_action'};
@@ -12947,9 +12983,9 @@ sub do_edit_list {
     ## Save stats
     $list->savestats();
 
-#      print "Content-type: text/plain\n\n";
-    #    tools::dump_var($list->{'admin'}{'msg_topic'},0);
-    #    tools::dump_var($param->{'param'},0);
+    #      print "Content-type: text/plain\n\n";
+    #    Sympa::Tools::Data::dump_var($list->{'admin'}{'msg_topic'},0);
+    #    Sympa::Tools::Data::dump_var($param->{'param'},0);
 
     Sympa::Report::notice_report_web('list_config_updated', {},
         $param->{'action'});
@@ -13056,9 +13092,9 @@ sub do_edit_list_request {
     }
 
     #    print "Content-type: text/plain\n\n";
-    #    tools::dump_var(\%pinfo,0);
-    #    tools::dump_var($list->{'admin'},0);
-    #    tools::dump_var($param->{'param'},0);
+    #    Sympa::Tools::Data::dump_var(\%pinfo,0);
+    #    Sympa::Tools::Data::dump_var($list->{'admin'},0);
+    #    Sympa::Tools::Data::dump_var($param->{'param'},0);
 
     $param->{'serial'} = $list->{'admin'}{'serial'};
 
@@ -13226,7 +13262,7 @@ Prepares config data to be sent in the edition form. Adds to the parameters arra
 
 =item * Sympa::Report::reject_report_web
 
-=item * tools::dup_var
+=item * Sympa::Tools::Data::dup_var
 
 =back 
 
@@ -13236,7 +13272,7 @@ Prepares config data to be sent in the edition form. Adds to the parameters arra
 ## edition form
 sub _prepare_edit_form {
     my $list        = shift;
-    my $list_config = tools::dup_var($list->{'admin'});
+    my $list_config = Sympa::Tools::Data::dup_var($list->{'admin'});
     my $family;
     my $is_form_editable = '0';
 
@@ -14155,7 +14191,7 @@ sub synchronize {
     my $path       = shift;
     my $date_epoch = shift;
 
-    return $date_epoch == tools::get_mtime($path);
+    return $date_epoch == Sympa::Tools::File::get_mtime($path);
 }
 
 #*******************************************
@@ -14781,7 +14817,7 @@ sub do_d_read {
         }
         $param->{'doc_date'} =
             $language->gettext_strftime("%d %b %Y",
-            localtime tools::get_mtime($doc));
+            localtime Sympa::Tools::File::get_mtime($doc));
 
         # listing of all the shared documents of the directory
         unless (opendir DIR, "$doc") {
@@ -14854,7 +14890,8 @@ sub do_d_read {
                     if (   ($user eq $desc_hash{'email'})
                         || ($may_control)
                         || ($action =~ /do_it/i)) {
-                        my $date_epoch = tools::get_mtime($path_doc);
+                        my $date_epoch =
+                            Sympa::Tools::File::get_mtime($path_doc);
                         $subdirs{$d}{'date_epoch'} = $date_epoch;
                         $subdirs{$d}{'date'} =
                             $language->gettext_strftime("%d %b %Y",
@@ -15095,7 +15132,8 @@ sub do_d_read {
                             tools::escape_docname($d, '/');
 
                         # last update
-                        my $date_epoch = tools::get_mtime($path_doc);
+                        my $date_epoch =
+                            Sympa::Tools::File::get_mtime($path_doc);
                         $files{$d}{'date_epoch'} = $date_epoch;
                         $files{$d}{'date'} =
                             $language->gettext_strftime("%d %b %Y",
@@ -15188,8 +15226,13 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-            Sympa::User::update_global_user($param->{'user'}{'email'},
-                {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+            Sympa::User::update_global_user(
+                $param->{'user'}{'email'},
+                {   data => Sympa::Tools::Data::hash_2_string(
+                        $param->{'user'}{'prefs'}
+                    )
+                }
+            );
         }
         $param->{'expert_page'} = 1;
 
@@ -15198,8 +15241,13 @@ sub do_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-            Sympa::User::update_global_user($param->{'user'}{'email'},
-                {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+            Sympa::User::update_global_user(
+                $param->{'user'}{'email'},
+                {   data => Sympa::Tools::Data::hash_2_string(
+                        $param->{'user'}{'prefs'}
+                    )
+                }
+            );
         }
         $param->{'expert_page'} = 0;
     } else {
@@ -15212,7 +15260,7 @@ sub do_d_read {
     }
 
     #open TMP, ">/tmp/dump1";
-    #tools::dump_var($param, 0,\*TMP);
+    #Sympa::Tools::Data::dump_var($param, 0,\*TMP);
     #close TMP;
 
     web_db_log(
@@ -15471,7 +15519,7 @@ sub directory_browsing {
             my %file_info;
 
             ## last update
-            my $date_epoch = tools::get_mtime($path_d);
+            my $date_epoch = Sympa::Tools::File::get_mtime($path_d);
             $file_info{'date_epoch'} = $date_epoch;
 
             if ($file_info{'date_epoch'} < $oldest_day) {
@@ -15751,7 +15799,7 @@ sub do_d_editfile {
     }
 
     ## Synchronization
-    my $date_epoch = tools::get_mtime("$shareddir/$path");
+    my $date_epoch = Sympa::Tools::File::get_mtime("$shareddir/$path");
     $param->{'serial_file'} = $date_epoch;
     ## parameters of the current directory
     $param->{'doc_date'} =
@@ -15910,7 +15958,7 @@ sub do_d_properties {
     }
 
     ## Synchronization
-    my $date_epoch = tools::get_mtime("$shareddir/$path");
+    my $date_epoch = Sympa::Tools::File::get_mtime("$shareddir/$path");
     $param->{'serial_file'} = $date_epoch;
     ## parameters of the current directory
     $param->{'doc_date'} =
@@ -16975,7 +17023,7 @@ sub do_d_upload {
         creation_shared_file($shareddir, $path, $tmpname);
         creation_desc_file($shareddir, $path, $tmpname, %access_file);
 
-        $param->{'serial_file'} = tools::get_mtime($longname);
+        $param->{'serial_file'} = Sympa::Tools::File::get_mtime($longname);
         $param->{'path'}        = $path;
         $param->{'shortname'}   = $fname;
 
@@ -17839,7 +17887,7 @@ sub creation_picture_file {
     unless (-d $path) {
         wwslog('notice', 'Create dir %s/', $path);
 
-        unless (tools::mkdir_all($path, 0755)) {
+        unless (Sympa::Tools::File::mkdir_all($path, 0755)) {
             wwslog('err', 'Unable to create dir %s/', $path);
             return undef;
         }
@@ -17882,7 +17930,7 @@ sub creation_shared_file {
 
     }
     unless (
-        wwslib::upload_file_to_server(
+        Sympa::Tools::WWW::upload_file_to_server(
             {   'query'       => $query,
                 'file_field'  => 'uploaded_file',
                 'destination' => "$shareddir/$path/$fname",
@@ -18308,7 +18356,7 @@ sub do_d_unzip {
     }
 
     ## remove tmp directories and files
-#     tools::remove_dir($zip_abs_dir);
+    #     Sympa::Tools::File::remove_dir($zip_abs_dir);
 
     $in{'list'} = $listname;
 
@@ -20511,7 +20559,7 @@ sub do_d_control {
 
     ## other info
     $param->{'doc_date'} = $language->gettext_strftime("%d %b %y  %H:%M",
-        localtime tools::get_mtime("$shareddir/$path"));
+        localtime Sympa::Tools::File::get_mtime("$shareddir/$path"));
 
     # template parameters
     $param->{'list'}         = $list_name;
@@ -22079,7 +22127,7 @@ sub do_compose_mail {
     }
 
     $param->{'merge_feature'} =
-        tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+        Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
 
     return 1;
 }
@@ -22259,7 +22307,7 @@ sub do_send_mail {
                 Conf::get_robot_conf($robot, 'tmpdir') . '/'
                 . $in{'uploaded_file'};
             unless (
-                wwslib::upload_file_to_server(
+                Sympa::Tools::WWW::upload_file_to_server(
                     {   'query'       => $query,
                         'file_field'  => 'uploaded_file',
                         'destination' => $page_source,
@@ -22359,7 +22407,8 @@ sub do_send_mail {
     }
 
     ## Roughly check TT2 syntax for merge_feature.
-    if (tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on')) {
+    if (Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'}, 'on'))
+    {
         my $new_message = $message->dup;
         unless (defined $new_message->personalize($list)) {
             Sympa::Report::reject_report_web('user', 'merge_failed',
@@ -23955,8 +24004,8 @@ sub do_arc_delete {
                 . $dir);
     }
 
-    unless (tools::remove_dir(@abs_dirs)) {
-        wwslog('info', 'Error while Calling tools::remove_dir');
+    unless (Sympa::Tools::File::remove_dir(@abs_dirs)) {
+        wwslog('info', 'Error while Calling Sympa::Tools::File::remove_dir');
     }
 
     Sympa::Report::notice_report_web('performed', {}, $param->{'action'});
@@ -24680,8 +24729,13 @@ sub new_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'expert') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'expert';
-            Sympa::User::update_global_user($param->{'user'}{'email'},
-                {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+            Sympa::User::update_global_user(
+                $param->{'user'}{'email'},
+                {   data => Sympa::Tools::Data::hash_2_string(
+                        $param->{'user'}{'prefs'}
+                    )
+                }
+            );
         }
         $param->{'expert_page'} = 1;
 
@@ -24690,8 +24744,13 @@ sub new_d_read {
         if ($param->{'user'}{'prefs'}{'shared_mode'} ne 'basic') {
             # update user pref  as soon as connected user change shared mode
             $param->{'user'}{'prefs'}{'shared_mode'} = 'basic';
-            Sympa::User::update_global_user($param->{'user'}{'email'},
-                {data => tools::hash_2_string($param->{'user'}{'prefs'})});
+            Sympa::User::update_global_user(
+                $param->{'user'}{'email'},
+                {   data => Sympa::Tools::Data::hash_2_string(
+                        $param->{'user'}{'prefs'}
+                    )
+                }
+            );
         }
         $param->{'expert_page'} = 0;
     } else {

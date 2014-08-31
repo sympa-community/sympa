@@ -71,13 +71,18 @@ nobase_modules_DATA = \
 	Sympa/Task.pm \
 	Sympa/Template/Compat.pm \
 	tools.pm \
+	Sympa/Tools/Daemon.pm \
+	Sympa/Tools/Data.pm \
 	Sympa/Tools/DKIM.pm \
+	Sympa/Tools/File.pm \
 	Sympa/Tools/SMIME.pm \
+	Sympa/Tools/Text.pm \
+	Sympa/Tools/Time.pm \
+	Sympa/Tools/WWW.pm \
 	Sympa/Tracking.pm \
 	tt2.pm \
 	Sympa/Upgrade.pm \
-	Sympa/User.pm \
-	wwslib.pm
+	Sympa/User.pm
 
 man3dir = $(mandir)/man3
 man3ext = 3Sympa

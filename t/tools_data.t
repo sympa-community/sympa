@@ -8,7 +8,7 @@ use warnings;
 
 use Test::More;
 
-use tools; #Sympa::Tools::Data;
+use Sympa::Tools::Data;
 
 my @array_from_string_tests = (
     [ 'foo,bar,baz'       => [ qw/foo bar baz/ ] ],
@@ -124,7 +124,7 @@ plan tests =>
 
 foreach my $test (@array_from_string_tests) {
     is_deeply(
-        tools::get_array_from_splitted_string($test->[0]),
+        Sympa::Tools::Data::get_array_from_splitted_string($test->[0]),
         $test->[1],
         "get_array_from_splitted_string $test->[0]"
     );
@@ -132,7 +132,7 @@ foreach my $test (@array_from_string_tests) {
 
 foreach my $test (@string_2_hash_tests) {
     is_deeply(
-        { tools::string_2_hash($test->[0]) },
+        { Sympa::Tools::Data::string_2_hash($test->[0]) },
         $test->[1],
         "string_2_hash $test->[0]"
     );
@@ -140,7 +140,7 @@ foreach my $test (@string_2_hash_tests) {
 
 foreach my $test (@hash_2_string_tests) {
     like(
-        tools::hash_2_string($test->[0]),
+        Sympa::Tools::Data::hash_2_string($test->[0]),
         $test->[1],
         "hash_2_string"
     );
@@ -148,21 +148,21 @@ foreach my $test (@hash_2_string_tests) {
 
 foreach my $test (@smart_lessthan_ok_tests) {
     ok(
-        tools::smart_lessthan(@{$test->[0]}),
+        Sympa::Tools::Data::smart_lessthan(@{$test->[0]}),
         "smart_lessthan $test->[0]->[0], $test->[0]->[1]"
     );
 }
 
 foreach my $test (@smart_lessthan_nok_tests) {
     ok(
-        !tools::smart_lessthan(@{$test->[0]}),
+        !Sympa::Tools::Data::smart_lessthan(@{$test->[0]}),
         "smart_lessthan $test->[0]->[0], $test->[0]->[1]"
     );
 }
 
 foreach my $test (@diff_on_arrays_tests) {
     # normalize result to enforce constant ordering despite hash randomization
-    my $result = tools::diff_on_arrays(@{$test->[0]});
+    my $result = Sympa::Tools::Data::diff_on_arrays(@{$test->[0]});
     foreach my $key (qw/union intersection added deleted/) {
         $result->{$key} = [ sort @{$result->{$key}} ];
     }
@@ -176,7 +176,7 @@ foreach my $test (@diff_on_arrays_tests) {
 
 my $transformation = sub { return $_[0] . $_[0] };
 foreach my $test (@recursive_transformation_tests) {
-    tools::recursive_transformation($test->[0], $transformation);
+    Sympa::Tools::Data::recursive_transformation($test->[0], $transformation);
     is_deeply(
         $test->[0],
         $test->[1],
@@ -185,5 +185,5 @@ foreach my $test (@recursive_transformation_tests) {
 }
 
 foreach my $test (@smart_eq_tests) {
-    is(tools::smart_eq(@{$test->[0]}), $test->[1]);
+    is(Sympa::Tools::Data::smart_eq(@{$test->[0]}), $test->[1]);
 }

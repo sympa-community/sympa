@@ -36,6 +36,8 @@ use Sympa::Robot;
 use SDM;
 use Sympa::Session;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::Time;
 use Sympa::User;
 
 ## return the password finger print (this proc allow futur replacement of md5
@@ -232,7 +234,7 @@ sub ldap_authentication {
     $filter =~ s/\[sender\]/$auth/ig;
 
     ## bind in order to have the user's DN
-    my $param = tools::dup_var($ldap);
+    my $param = Sympa::Tools::Data::dup_var($ldap);
     my $ds    = Sympa::LDAPSource->new($param);
 
     unless (defined $ds && ($ldap_anonymous = $ds->connect())) {
@@ -264,7 +266,7 @@ sub ldap_authentication {
 
     ## Duplicate structure first
     ## Then set the bind_dn and password according to the current user
-    $param                         = tools::dup_var($ldap);
+    $param                         = Sympa::Tools::Data::dup_var($ldap);
     $param->{'ldap_bind_dn'}       = $DN[0];
     $param->{'ldap_bind_password'} = $pwd;
 
@@ -360,7 +362,7 @@ sub get_email_by_net_id {
 
     my $ldap = @{$Conf::Conf{'auth_services'}{$robot}}[$auth_id];
 
-    my $param = tools::dup_var($ldap);
+    my $param = Sympa::Tools::Data::dup_var($ldap);
     my $ds    = Sympa::LDAPSource->new($param);
     my $ldap_anonymous;
 
@@ -523,7 +525,7 @@ sub get_one_time_ticket {
     my $lockout = Conf::get_robot_conf($robot, 'one_time_ticket_lockout')
         || 'open';
     my $lifetime =
-        tools::duration_conv(
+        Sympa::Tools::Time::duration_conv(
         Conf::get_robot_conf($robot, 'one_time_ticket_lifetime') || 0);
 
     if ($lockout eq 'one_time' and $ticket->{'status'} ne 'open') {

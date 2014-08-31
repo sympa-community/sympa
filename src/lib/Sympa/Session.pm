@@ -34,6 +34,8 @@ use Sympa::Language;
 use Log;
 use SDM;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::Time;
 
 # this structure is used to define which session attributes are stored in a
 # dedicated database col where others are compiled in col 'data_session'
@@ -209,7 +211,7 @@ sub load {
         );
     }
 
-    my %datas = tools::string_2_hash($session->{'data'});
+    my %datas = Sympa::Tools::Data::string_2_hash($session->{'data'});
 
     ## canonicalize lang if possible.
     $datas{'lang'} = Sympa::Language::canonic_lang($datas{'lang'})
@@ -250,7 +252,7 @@ sub store {
         next unless ($var);
         $hash{$var} = $self->{$var};
     }
-    my $data_string = tools::hash_2_string(\%hash);
+    my $data_string = Sympa::Tools::Data::hash_2_string(\%hash);
     my $time        = time;
 
     ## If this is a new session, then perform an INSERT
@@ -351,7 +353,7 @@ sub renew {
         next unless ($var);
         $hash{$var} = $self->{$var};
     }
-    my $data_string = tools::hash_2_string(\%hash);
+    my $data_string = Sympa::Tools::Data::hash_2_string(\%hash);
 
     my $sth;
     ## Cookie may contain previous session ID.
@@ -467,9 +469,10 @@ sub purge_old_sessions {
     Log::do_log('debug2', '(%s)', @_);
     my $robot = shift;
 
-    my $delay = tools::duration_conv($Conf::Conf{'session_table_ttl'});
-    my $anonymous_delay =
-        tools::duration_conv($Conf::Conf{'anonymous_session_table_ttl'});
+    my $delay =
+        Sympa::Tools::Time::duration_conv($Conf::Conf{'session_table_ttl'});
+    my $anonymous_delay = Sympa::Tools::Time::duration_conv(
+        $Conf::Conf{'anonymous_session_table_ttl'});
 
     unless ($delay) {
         Log::do_log('info', '(%s) Exit with delay null', $robot);
@@ -548,8 +551,8 @@ sub purge_old_tickets {
     Log::do_log('debug2', '(%s)', @_);
     my $robot = shift;
 
-    my $delay =
-        tools::duration_conv($Conf::Conf{'one_time_ticket_table_ttl'});
+    my $delay = Sympa::Tools::Time::duration_conv(
+        $Conf::Conf{'one_time_ticket_table_ttl'});
 
     unless ($delay) {
         Log::do_log('info', '(%s) Exit with delay null', $robot);

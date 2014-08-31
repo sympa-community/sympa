@@ -31,7 +31,7 @@ use HTTP::Cookies;
 #use SOAP::Lite +trace;
 use SOAP::Lite;
 
-use tools;
+use Sympa::Tools::Data;
 
 my ($reponse, @ret, $val, %fault);
 
@@ -318,7 +318,7 @@ sub print_result {
         } else {
             @ret = $r->result;
         }
-        tools::dump_var(\@ret, 0, \*STDOUT);
+        Sympa::Tools::Data::dump_var(\@ret, 0, \*STDOUT);
     }
 
     return 1;

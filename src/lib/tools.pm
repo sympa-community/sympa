@@ -28,26 +28,19 @@ use strict;
 use warnings;
 #use Cwd qw();
 use Digest::MD5;
-use Encode::Guess;           ## Useful when encoding should be guessed
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
 use English;                 # FIXME: drop $MATCH and $PREMATCH usage
-use File::Copy::Recursive;
-use File::Find;
 use HTML::StripScripts::Parser;
 use MIME::Base64 qw();
 use MIME::Decoder;
 use MIME::EncWords;
 use POSIX qw();
-use Proc::ProcessTable;
 use Scalar::Util qw();
 use Sys::Hostname qw();
-use Text::LineFold;
 use Time::HiRes qw();
-use Time::Local qw();
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
-use if (5.016 <= $]), qw(feature fc);
 
 use Sympa::Alarm;
+use Sympa::Auth;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
@@ -55,57 +48,17 @@ use Sympa::List;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
+use Sympa::Mail;
+use Sympa::Message;
 use Sympa::Regexps;
-use Sympa::Robot;
-use SDM;
-use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 
 ## global var to store a CipherSaber object
 my $cipher;
 
 my $separator =
     "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
-
-## Sets owner and/or access rights on a file.
-sub set_file_rights {
-    my %param = @_;
-    my ($uid, $gid);
-
-    if ($param{'user'}) {
-        unless ($uid = (getpwnam($param{'user'}))[2]) {
-            Log::do_log('err', "User %s can't be found in passwd file",
-                $param{'user'});
-            return undef;
-        }
-    } else {
-        #
-        # "A value of -1 is interpreted by most systems to leave that value unchanged".
-        $uid = -1;
-    }
-    if ($param{'group'}) {
-        unless ($gid = (getgrnam($param{'group'}))[2]) {
-            Log::do_log('err', "Group %s can't be found", $param{'group'});
-            return undef;
-        }
-    } else {
-        #
-        # "A value of -1 is interpreted by most systems to leave that value unchanged".
-        $gid = -1;
-    }
-    unless (chown($uid, $gid, $param{'file'})) {
-        Log::do_log('err', "Can't give ownership of file %s to %s.%s: %m",
-            $param{'file'}, $param{'user'}, $param{'group'});
-        return undef;
-    }
-    if ($param{'mode'}) {
-        unless (chmod($param{'mode'}, $param{'file'})) {
-            Log::do_log('err', "Can't change rights of file %s: %m",
-                $Conf::Conf{'db_name'});
-            return undef;
-        }
-    }
-    return 1;
-}
 
 ## Returns an HTML::StripScripts::Parser object built with  the parameters
 ## provided as arguments.
@@ -248,16 +201,8 @@ sub sanitize_var {
     return 1;
 }
 
-## Sorts the list of addresses by domain name
-## Input : users hash
-## Sort by domain.
-sub sortbydomain {
-    my ($x, $y) = @_;
-    $x = join('.', reverse(split(/[@\.]/, $x)));
-    $y = join('.', reverse(split(/[@\.]/, $y)));
-    #print "$x $y\n";
-    $x cmp $y;
-}
+# DEPRECATED: No longer used.
+#sub sortbydomain($x, $y);
 
 ## Sort subroutine to order files in sympa spool by date
 sub by_date {
@@ -508,170 +453,6 @@ sub get_list_list_tpl {
     }
 
     return ($list_templates);
-}
-
-#copy a directory and its content
-sub copy_dir {
-    my $dir1 = shift;
-    my $dir2 = shift;
-    Log::do_log('debug', 'Copy directory %s to %s', $dir1, $dir2);
-
-    unless (-d $dir1) {
-        Log::do_log('err',
-            'Directory source "%s" doesn\'t exist. Copy impossible', $dir1);
-        return undef;
-    }
-    return (File::Copy::Recursive::dircopy($dir1, $dir2));
-}
-
-#delete a directory and its content
-sub del_dir {
-    Log::do_log('debug3', '(%s)', @_);
-    my $dir = shift;
-
-    if (opendir DIR, $dir) {
-        for (readdir DIR) {
-            next if /^\.{1,2}$/;
-            my $path = "$dir/$_";
-            unlink $path   if -f $path;
-            del_dir($path) if -d $path;
-        }
-        closedir DIR;
-        unless (rmdir $dir) {
-            Log::do_log('err', 'Unable to delete directory %s: %m', $dir);
-        }
-    } else {
-        Log::do_log(
-            'err',
-            'Unable to open directory %s to delete the files it contains: %m',
-            $dir
-        );
-    }
-}
-
-#to be used before creating a file in a directory that may not exist already.
-sub mk_parent_dir {
-    my $file = shift;
-    $file =~ /^(.*)\/([^\/])*$/;
-    my $dir = $1;
-
-    return 1 if (-d $dir);
-    mkdir_all($dir, 0755);
-}
-
-## Recursively create directory and all parent directories
-sub mkdir_all {
-    my ($path, $mode) = @_;
-    my $status = 1;
-
-    ## Change umask to fully apply modes of mkdir()
-    my $saved_mask = umask;
-    umask 0000;
-
-    return undef if ($path eq '');
-    return 1 if (-d $path);
-
-    ## Compute parent path
-    my @token = split /\//, $path;
-    pop @token;
-    my $parent_path = join '/', @token;
-
-    unless (-d $parent_path) {
-        unless (mkdir_all($parent_path, $mode)) {
-            $status = undef;
-        }
-    }
-
-    if (defined $status) {    ## Don't try if parent dir could not be created
-        unless (mkdir($path, $mode)) {
-            $status = undef;
-        }
-    }
-
-    ## Restore umask
-    umask $saved_mask;
-
-    return $status;
-}
-
-# shift file renaming it with date. If count is defined, keep $count file and
-# unlink others
-sub shift_file {
-    my $file  = shift;
-    my $count = shift;
-    Log::do_log('debug', '(%s, %s)', $file, $count);
-
-    unless (-f $file) {
-        Log::do_log('info', 'Unknown file %s', $file);
-        return undef;
-    }
-
-    my @date = localtime(time);
-    my $file_extention = POSIX::strftime("%Y:%m:%d:%H:%M:%S", @date);
-
-    unless (rename($file, $file . '.' . $file_extention)) {
-        Log::do_log('err', 'Cannot rename file %s to %s.%s',
-            $file, $file, $file_extention);
-        return undef;
-    }
-    if ($count) {
-        $file =~ /^(.*)\/([^\/])*$/;
-        my $dir = $1;
-
-        unless (opendir(DIR, $dir)) {
-            Log::do_log('err', 'Cannot read dir %s', $dir);
-            return ($file . '.' . $file_extention);
-        }
-        my $i = 0;
-        foreach my $oldfile (reverse(sort (grep (/^$file\./, readdir(DIR)))))
-        {
-            $i++;
-            if ($count lt $i) {
-                if (unlink($oldfile)) {
-                    Log::do_log('info', 'Unlink %s', $oldfile);
-                } else {
-                    Log::do_log('info', 'Unable to unlink %s', $oldfile);
-                }
-            }
-        }
-    }
-    return ($file . '.' . $file_extention);
-}
-
-=over
-
-=item get_mtime ( $file )
-
-Gets modification time of the file.
-
-Parameter:
-
-=over
-
-=item $file
-
-Full path of file.
-
-=back
-
-Returns:
-
-Modification time as UNIX time.
-If the file is not found or is not readable, returns C<POSIX::INT_MIN>.
-In case of other error, returns C<undef>.
-
-=back
-
-=cut
-
-sub get_mtime {
-    my $file = shift;
-    die 'Missing parameter $file' unless $file;
-
-    return POSIX::INT_MIN() unless -e $file and -r $file;
-
-    my @stat = stat $file;
-    return $stat[9];
 }
 
 sub get_templates_list {
@@ -942,34 +723,6 @@ sub unicode_to_utf8 {
     return $s;
 }
 
-## This applies recursively to a data structure
-## The transformation subroutine is passed as a ref
-sub recursive_transformation {
-    my ($var, $subref) = @_;
-
-    return unless (ref($var));
-
-    if (ref($var) eq 'ARRAY') {
-        foreach my $index (0 .. $#{$var}) {
-            if (ref($var->[$index])) {
-                recursive_transformation($var->[$index], $subref);
-            } else {
-                $var->[$index] = &{$subref}($var->[$index]);
-            }
-        }
-    } elsif (ref($var) eq 'HASH') {
-        foreach my $key (sort keys %{$var}) {
-            if (ref($var->{$key})) {
-                recursive_transformation($var->{$key}, $subref);
-            } else {
-                $var->{$key} = &{$subref}($var->{$key});
-            }
-        }
-    }
-
-    return;
-}
-
 ## Q-Encode web file name
 sub qencode_filename {
     my $filename = shift;
@@ -1161,14 +914,14 @@ sub load_mime_types {
 
     my @localisation = (
         '/etc/mime.types',            '/usr/local/apache/conf/mime.types',
-        '/etc/httpd/conf/mime.types', 'mime.types'
+        '/etc/httpd/conf/mime.types', $Conf::Conf{'etc'} . '/mime.types'
     );
 
     foreach my $loc (@localisation) {
         next unless (-r $loc);
 
         unless (open(CONF, $loc)) {
-            print STDERR "load_mime_types: unable to open $loc\n";
+            Log::do_log('err', 'Unable to open %s', $loc);
             return undef;
         }
     }
@@ -1533,128 +1286,6 @@ sub virus_infected {
 
 }
 
-## subroutines for epoch and human format date processings
-
-## convert an epoch date into a readable date scalar
-sub adate {
-
-    my $epoch = $_[0];
-    my @date  = localtime($epoch);
-    my $date  = POSIX::strftime("%e %a %b %Y  %H h %M min %S s", @date);
-
-    return $date;
-}
-
-## Return the epoch date corresponding to the last midnight before date given
-## as argument.
-sub get_midnight_time {
-
-    my $epoch = $_[0];
-    Log::do_log('debug3', 'Getting midnight time for: %s', $epoch);
-    my @date = localtime($epoch);
-    return $epoch - $date[0] - $date[1] * 60 - $date[2] * 3600;
-}
-
-## convert a human format date into an epoch date
-sub epoch_conv {
-
-    my $arg = $_[0];             # argument date to convert
-    my $time = $_[1] || time;    # the epoch current date
-
-    Log::do_log('debug3', '(%s, %d)', $arg, $time);
-
-    my $result;
-
-    # decomposition of the argument date
-    my $date;
-    my $duration;
-    my $op;
-
-    if ($arg =~ /^(.+)(\+|\-)(.+)$/) {
-        $date     = $1;
-        $duration = $3;
-        $op       = $2;
-    } else {
-        $date     = $arg;
-        $duration = '';
-        $op       = '+';
-    }
-
-    #conversion
-    $date = date_conv($date, $time);
-    $duration = duration_conv($duration, $date);
-
-    if   ($op eq '+') { $result = $date + $duration; }
-    else              { $result = $date - $duration; }
-
-    return $result;
-}
-
-sub date_conv {
-
-    my $arg  = $_[0];
-    my $time = $_[1];
-
-    if (($arg eq 'execution_date')) {    # execution date
-        return time;
-    }
-
-    if ($arg =~ /^\d+$/) {               # already an epoch date
-        return $arg;
-    }
-
-    if ($arg =~ /^(\d\d\d\dy)(\d+m)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/) {
-        # absolute date
-
-        my @date = ($6, $5, $4, $3, $2, $1);
-        foreach my $part (@date) {
-            $part =~ s/[a-z]+$// if $part;
-            $part ||= 0;
-            $part += 0;
-        }
-        $date[3] = 1 if $date[3] == 0;
-        $date[4]-- if $date[4] != 0;
-        $date[5] -= 1900;
-
-        return Time::Local::timelocal(@date);
-    }
-
-    return time;
-}
-
-sub duration_conv {
-
-    my $arg        = $_[0];
-    my $start_date = $_[1];
-
-    return 0 unless $arg;
-
-    my @date =
-        ($arg =~ /(\d+y)?(\d+m)?(\d+w)?(\d+d)?(\d+h)?(\d+min)?(\d+sec)?$/i);
-    foreach my $part (@date) {
-        $part =~ s/[a-z]+$// if $part;    ## Remove trailing units
-        $part ||= 0;
-    }
-
-    my $duration =
-        $date[6] + 60 *
-        ($date[5] +
-            60 * ($date[4] + 24 * ($date[3] + 7 * $date[2] + 365 * $date[0]))
-        );
-
-    # specific processing for the months because their duration varies
-    my @months = (
-        31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
-        31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
-    );
-    my $start = (defined $start_date) ? (localtime($start_date))[4] : 0;
-    for (my $i = 0; $i < $date[1]; $i++) {
-        $duration += $months[$start + $i] * 60 * 60 * 24;
-    }
-
-    return $duration;
-}
-
 =head3 Finding config files and templates
 
 =over 4
@@ -1749,7 +1380,7 @@ sub search_fullpath {
 make an array of include path for tt2 parsing
 
 IN :
-      -$that(+) : ref(List) | ref(Sympa::Family) | Robot | "*"
+      -$that(+) : ref(Sympa::List) | ref(Sympa::Family) | Robot | "*"
       -%options : options
 
 Possible values for options:
@@ -2041,7 +1672,7 @@ sub send_notify_to_listmaster {
     if (   $operation eq 'request_list_creation'
         or $operation eq 'request_list_renaming') {
         foreach my $email (@$listmaster) {
-            my $cdata = tools::dup_var($data);
+            my $cdata = Sympa::Tools::Data::dup_var($data);
             $cdata->{'one_time_ticket'} =
                 Sympa::Auth::create_one_time_ticket($email, $robot_id,
                 'get_pending_lists', $cdata->{'ip'});
@@ -2086,60 +1717,6 @@ sub send_notify_to_listmaster {
     return 1;
 }
 
-## Find a file in an ordered list of directories
-sub find_file {
-    my ($filename, @directories) = @_;
-    Log::do_log('debug3', '(%s, %s)', $filename, join(':', @directories));
-
-    foreach my $d (@directories) {
-        if (-f "$d/$filename") {
-            return "$d/$filename";
-        }
-    }
-
-    return undef;
-}
-
-## Recursively list the content of a directory
-## Return an array of hash, each entry with directory + filename + encoding
-sub list_dir {
-    my $dir               = shift;
-    my $all               = shift;
-    my $original_encoding = shift; ## Suspected original encoding of filenames
-
-    my $size = 0;
-
-    if (opendir(DIR, $dir)) {
-        foreach my $file (sort grep (!/^\.\.?$/, readdir(DIR))) {
-
-            ## Guess filename encoding
-            my ($encoding, $guess);
-            my $decoder =
-                Encode::Guess::guess_encoding($file, $original_encoding,
-                'utf-8');
-            if (ref $decoder) {
-                $encoding = $decoder->name;
-            } else {
-                $guess = $decoder;
-            }
-
-            push @$all,
-                {
-                'directory' => $dir,
-                'filename'  => $file,
-                'encoding'  => $encoding,
-                'guess'     => $guess
-                };
-            if (-d "$dir/$file") {
-                list_dir($dir . '/' . $file, $all, $original_encoding);
-            }
-        }
-        closedir DIR;
-    }
-
-    return 1;
-}
-
 ## Q-encode a complete file hierarchy
 ## Usefull to Q-encode subshared documents
 sub qencode_hierarchy {
@@ -2148,7 +1725,7 @@ sub qencode_hierarchy {
 
     my $count;
     my @all_files;
-    tools::list_dir($dir, \@all_files, $original_encoding);
+    Sympa::Tools::File::list_dir($dir, \@all_files, $original_encoding);
 
     foreach my $f_struct (reverse @all_files) {
 
@@ -2179,72 +1756,8 @@ sub qencode_hierarchy {
     return $count;
 }
 
-## Dumps the value of each character of the inuput string
-sub dump_encoding {
-    my $out = shift;
-
-    $out =~ s/./sprintf('%02x', ord($MATCH)).' '/eg;
-    return $out;
-}
-
-## Remove PID file and STDERR output
-sub remove_pid {
-    my ($name, $pid, $options) = @_;
-
-    my $piddir  = Sympa::Constants::PIDDIR;
-    my $pidfile = $piddir . '/' . $name . '.pid';
-
-    my @pids;
-
-    # Lock pid file
-    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+<');
-    unless ($lock_fh) {
-        Log::do_log('err', 'Could not open %s to remove PID %s',
-            $pidfile, $pid);
-        return undef;
-    }
-
-    ## If in multi_process mode (bulk.pl for instance can have child
-    ## processes) then the PID file contains a list of space-separated PIDs
-    ## on a single line
-    if ($options->{'multiple_process'}) {
-        # Read pid file
-        seek $lock_fh, 0, 0;
-        my $l = <$lock_fh>;
-        @pids = grep { /^[0-9]+$/ and $_ != $pid } split(/\s+/, $l);
-
-        ## If no PID left, then remove the file
-        unless (@pids) {
-            ## Release the lock
-            unless (unlink $pidfile) {
-                Log::do_log('err', "Failed to remove %s: %m", $pidfile);
-                $lock_fh->close;
-                return undef;
-            }
-        } else {
-            seek $lock_fh, 0, 0;
-            truncate $lock_fh, 0;
-            print $lock_fh join(' ', @pids) . "\n";
-        }
-    } else {
-        unless (unlink $pidfile) {
-            Log::do_log('err', "Failed to remove %s: %m", $pidfile);
-            $lock_fh->close;
-            return undef;
-        }
-        my $err_file = $Conf::Conf{'tmpdir'} . '/' . $pid . '.stderr';
-        if (-f $err_file) {
-            unless (unlink $err_file) {
-                Log::do_log('err', "Failed to remove %s: %m", $err_file);
-                $lock_fh->close;
-                return undef;
-            }
-        }
-    }
-
-    $lock_fh->close;
-    return 1;
-}
+# DEPRECATED: No longer used.
+#sub dump_encoding($out);
 
 # input user agent string and IP. return 1 if suspected to be a crawler.
 # initial version based on rawlers_dtection.conf file only
@@ -2258,150 +1771,12 @@ sub is_a_crawler {
 #	return ($Conf::Conf{$robot}{'crawlers_detection'}{'user_agent_string'}{$context->{'user_agent_string'}});
 #    }
 
-    # open (TMP, ">> /tmp/dump1"); print TMP "dump de la conf dans is_a_crawler : \n"; tools::dump_var($Conf::Conf{'crawlers_detection'}, 0,\*TMP);     close TMP;
+    # open (TMP, ">> /tmp/dump1");
+    # print TMP "dump de la conf dans is_a_crawler : \n";
+    # Sympa::Tools::Data::dump_var($Conf::Conf{'crawlers_detection'}, 0,\*TMP);
+    # close TMP;
     return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}
         {$context->{'user_agent_string'}};
-}
-
-sub write_pid {
-    my ($name, $pid, $options) = @_;
-
-    my $piddir  = Sympa::Constants::PIDDIR;
-    my $pidfile = $piddir . '/' . $name . '.pid';
-
-    ## Create piddir
-    mkdir($piddir, 0755) unless (-d $piddir);
-
-    unless (
-        tools::set_file_rights(
-            file  => $piddir,
-            user  => Sympa::Constants::USER,
-            group => Sympa::Constants::GROUP,
-        )
-        ) {
-        die sprintf 'Unable to set rights on %s. Exiting.', $piddir;
-        ## No return
-    }
-
-    my @pids;
-
-    # Lock pid file
-    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
-    unless ($lock_fh) {
-        die sprintf 'Unable to lock %s file in write mode. Exiting.',
-            $pidfile;
-    }
-    ## If pidfile exists, read the PIDs
-    if (-s $pidfile) {
-        # Read pid file
-        seek $lock_fh, 0, 0;
-        my $l = <$lock_fh>;
-        @pids = grep {/^[0-9]+$/} split(/\s+/, $l);
-    }
-
-    ## If we can have multiple instances for the process.
-    ## Print other pids + this one
-    if ($options->{'multiple_process'}) {
-        ## Print other pids + this one
-        push(@pids, $pid);
-
-        seek $lock_fh, 0, 0;
-        truncate $lock_fh, 0;
-        print $lock_fh join(' ', @pids) . "\n";
-    } else {
-        ## The previous process died suddenly, without pidfile cleanup
-        ## Send a notice to listmaster with STDERR of the previous process
-        if (@pids) {
-            my $other_pid = $pids[0];
-            Log::do_log('notice',
-                'Previous process %s died suddenly; notifying listmaster',
-                $other_pid);
-            my $pname = $0;
-            $pname =~ s/.*\/(\w+)/$1/;
-            send_crash_report(('pid' => $other_pid, 'pname' => $pname));
-        }
-
-        seek $lock_fh, 0, 0;
-        unless (truncate $lock_fh, 0) {
-            ## Unlock pid file
-            $lock_fh->close();
-            die sprintf 'Could not truncate %s, exiting.', $pidfile;
-        }
-
-        print $lock_fh $pid . "\n";
-    }
-
-    unless (
-        tools::set_file_rights(
-            file  => $pidfile,
-            user  => Sympa::Constants::USER,
-            group => Sympa::Constants::GROUP,
-        )
-        ) {
-        ## Unlock pid file
-        $lock_fh->close();
-        die sprintf 'Unable to set rights on %s', $pidfile;
-    }
-    ## Unlock pid file
-    $lock_fh->close();
-
-    return 1;
-}
-
-sub direct_stderr_to_file {
-    my %data = @_;
-    ## Error output is stored in a file with PID-based name
-    ## Usefull if process crashes
-    open(STDERR, '>>',
-        $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr');
-    unless (
-        tools::set_file_rights(
-            file  => $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr',
-            user  => Sympa::Constants::USER,
-            group => Sympa::Constants::GROUP,
-        )
-        ) {
-        Log::do_log(
-            'err',
-            'Unable to set rights on %s',
-            $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr'
-        );
-        return undef;
-    }
-    return 1;
-}
-
-# Send content of $pid.stderr to listmaster for process whose pid is $pid.
-sub send_crash_report {
-    my %data = @_;
-    Log::do_log('debug', 'Sending crash report for process %s', $data{'pid'}),
-        my $err_file = $Conf::Conf{'tmpdir'} . '/' . $data{'pid'} . '.stderr';
-
-    my $language = Sympa::Language->instance;
-    my (@err_output, $err_date);
-    if (-f $err_file) {
-        open(ERR, $err_file);
-        @err_output = map { chomp $_; $_; } <ERR>;
-        close ERR;
-
-        my $err_date_epoch = (stat $err_file)[9];
-        if (defined $err_date_epoch) {
-            $err_date = $language->gettext_strftime("%d %b %Y  %H:%M",
-                localtime $err_date_epoch);
-        } else {
-            $err_date = $language->gettext('(unknown date)');
-        }
-    } else {
-        $err_date = $language->gettext('(unknown date)');
-    }
-    tools::send_notify_to_listmaster(
-        '*', 'crash',
-        {   'crashed_process' => $data{'pname'},
-            'crash_err'       => \@err_output,
-            'crash_date'      => $err_date,
-            'pid'             => $data{'pid'}
-        }
-    );
 }
 
 sub get_message_id {
@@ -2415,26 +1790,6 @@ sub get_message_id {
     }
 
     return sprintf '<sympa.%d.%d.%d@%s>', time, $PID, int(rand(999)), $domain;
-}
-
-sub get_dir_size {
-    my $dir = shift;
-
-    my $size = 0;
-
-    if (opendir(DIR, $dir)) {
-        foreach my $file (sort grep (!/^\./, readdir(DIR))) {
-            if (-d "$dir/$file") {
-                $size += get_dir_size("$dir/$file");
-            } else {
-                my @info = stat "$dir/$file";
-                $size += $info[7];
-            }
-        }
-        closedir DIR;
-    }
-
-    return $size;
 }
 
 ## Basic check of an email address
@@ -2484,392 +1839,11 @@ sub get_canonical_email {
     return $email;
 }
 
-## Function for Removing a non-empty directory
-## It takes a variale number of arguments :
-## it can be a list of directory
-## or few direcoty paths
-sub remove_dir {
+#DEPRECATED: No longer used.
+# sub dump_html_var2($var);
 
-    Log::do_log('debug2', '');
-
-    foreach my $current_dir (@_) {
-        finddepth({wanted => \&del, no_chdir => 1}, $current_dir);
-    }
-
-    sub del {
-        my $name = $File::Find::name;
-
-        if (!-l && -d _) {
-            unless (rmdir($name)) {
-                Log::do_log('err', 'Error while removing dir %s', $name);
-            }
-        } else {
-            unless (unlink($name)) {
-                Log::do_log('err', 'Error while removing file %s', $name);
-            }
-        }
-    }
-    return 1;
-}
-
-## Dump a variable's content
-sub dump_var {
-    my ($var, $level, $fd) = @_;
-
-    return undef unless ($fd);
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$var}) {
-                print $fd "\t" x $level . $index . "\n";
-                dump_var($var->[$index], $level + 1, $fd);
-            }
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Sympa::Scenario'
-            || ref($var) eq 'Sympa::List'
-            || ref($var) eq 'CGI::Fast') {
-            foreach my $key (sort keys %{$var}) {
-                print $fd "\t" x $level . '_' . $key . '_' . "\n";
-                dump_var($var->{$key}, $level + 1, $fd);
-            }
-        } else {
-            printf $fd "\t" x $level . "'%s'" . "\n", ref($var);
-        }
-    } else {
-        if (defined $var) {
-            print $fd "\t" x $level . "'$var'" . "\n";
-        } else {
-            print $fd "\t" x $level . "UNDEF\n";
-        }
-    }
-}
-
-## Dump a variable's content
-sub dump_html_var {
-    my ($var) = shift;
-    my $html = '';
-
-    if (ref($var)) {
-
-        if (ref($var) eq 'ARRAY') {
-            $html .= '<ul>';
-            foreach my $index (0 .. $#{$var}) {
-                $html .= '<li> ' . $index . ':';
-                $html .= dump_html_var($var->[$index]);
-                $html .= '</li>';
-            }
-            $html .= '</ul>';
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Sympa::Scenario'
-            || ref($var) eq 'Sympa::List') {
-            $html .= '<ul>';
-            foreach my $key (sort keys %{$var}) {
-                $html .= '<li>' . $key . '=';
-                $html .= dump_html_var($var->{$key});
-                $html .= '</li>';
-            }
-            $html .= '</ul>';
-        } else {
-            $html .= 'EEEEEEEEEEEEEEEEEEEEE' . ref($var);
-        }
-    } else {
-        if (defined $var) {
-            $html .= escape_html($var);
-        } else {
-            $html .= 'UNDEF';
-        }
-    }
-    return $html;
-}
-
-## Dump a variable's content
-sub dump_html_var2 {
-    my ($var) = shift;
-
-    my $html = '';
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            $html .= 'ARRAY <ul>';
-            foreach my $index (0 .. $#{$var}) {
-                $html .= '<li> ' . $index;
-                $html .= dump_html_var($var->[$index]);
-                $html .= '</li>';
-            }
-            $html .= '</ul>';
-        } elsif (ref($var) eq 'HASH'
-            || ref($var) eq 'Sympa::Scenario'
-            || ref($var) eq 'Sympa::List') {
-            #$html .= " (".ref($var).') <ul>';
-            $html .= '<ul>';
-            foreach my $key (sort keys %{$var}) {
-                $html .= '<li>' . $key . '=';
-                $html .= dump_html_var($var->{$key});
-                $html .= '</li>';
-            }
-            $html .= '</ul>';
-        } else {
-            $html .= sprintf "<li>'%s'</li>", ref($var);
-        }
-    } else {
-        if (defined $var) {
-            $html .= '<li>' . $var . '</li>';
-        } else {
-            $html .= '<li>UNDEF</li>';
-        }
-    }
-    return $html;
-}
-
-sub remove_empty_entries {
-    my ($var) = @_;
-    my $not_empty = 0;
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            foreach my $index (0 .. $#{$var}) {
-                my $status = remove_empty_entries($var->[$index]);
-                $var->[$index] = undef unless ($status);
-                $not_empty ||= $status;
-            }
-        } elsif (ref($var) eq 'HASH') {
-            foreach my $key (sort keys %{$var}) {
-                my $status = remove_empty_entries($var->{$key});
-                $var->{$key} = undef unless ($status);
-                $not_empty ||= $status;
-            }
-        }
-    } else {
-        if (defined $var && $var) {
-            $not_empty = 1;
-        }
-    }
-
-    return $not_empty;
-}
-
-## Duplictate a complex variable
-sub dup_var {
-    my ($var) = @_;
-
-    if (ref($var)) {
-        if (ref($var) eq 'ARRAY') {
-            my $new_var = [];
-            foreach my $index (0 .. $#{$var}) {
-                $new_var->[$index] = dup_var($var->[$index]);
-            }
-            return $new_var;
-        } elsif (ref($var) eq 'HASH') {
-            my $new_var = {};
-            foreach my $key (sort keys %{$var}) {
-                $new_var->{$key} = dup_var($var->{$key});
-            }
-            return $new_var;
-        }
-    }
-
-    return $var;
-}
-
-####################################################
-# get_array_from_splitted_string
-####################################################
-# return an array made on a string splited by ','.
-# It removes spaces.
-#
-#
-# IN : -$string (+): string to split
-#
-# OUT : -ref(ARRAY)
-#
-######################################################
-sub get_array_from_splitted_string {
-    my ($string) = @_;
-    my @array;
-
-    foreach my $word (split /,/, $string) {
-        $word =~ s/^\s+//;
-        $word =~ s/\s+$//;
-        push @array, $word;
-    }
-
-    return \@array;
-}
-
-####################################################
-# diff_on_arrays
-####################################################
-# Makes set operation on arrays (seen as set, with no double) :
-#  - deleted : A \ B
-#  - added : B \ A
-#  - intersection : A /\ B
-#  - union : A \/ B
-#
-# IN : -$setA : ref(ARRAY) - set
-#      -$setB : ref(ARRAY) - set
-#
-# OUT : -ref(HASH) with keys :
-#          deleted, added, intersection, union
-#
-#######################################################
-sub diff_on_arrays {
-    my ($setA, $setB) = @_;
-    my $result = {
-        'intersection' => [],
-        'union'        => [],
-        'added'        => [],
-        'deleted'      => []
-    };
-    my %deleted;
-    my %added;
-    my %intersection;
-    my %union;
-
-    my %hashA;
-    my %hashB;
-
-    foreach my $eltA (@$setA) {
-        $hashA{$eltA}   = 1;
-        $deleted{$eltA} = 1;
-        $union{$eltA}   = 1;
-    }
-
-    foreach my $eltB (@$setB) {
-        $hashB{$eltB} = 1;
-        $added{$eltB} = 1;
-
-        if ($hashA{$eltB}) {
-            $intersection{$eltB} = 1;
-            $deleted{$eltB}      = 0;
-        } else {
-            $union{$eltB} = 1;
-        }
-    }
-
-    foreach my $eltA (@$setA) {
-        if ($hashB{$eltA}) {
-            $added{$eltA} = 0;
-        }
-    }
-
-    foreach my $elt (keys %deleted) {
-        next unless $elt;
-        push @{$result->{'deleted'}}, $elt if ($deleted{$elt});
-    }
-    foreach my $elt (keys %added) {
-        next unless $elt;
-        push @{$result->{'added'}}, $elt if ($added{$elt});
-    }
-    foreach my $elt (keys %intersection) {
-        next unless $elt;
-        push @{$result->{'intersection'}}, $elt if ($intersection{$elt});
-    }
-    foreach my $elt (keys %union) {
-        next unless $elt;
-        push @{$result->{'union'}}, $elt if ($union{$elt});
-    }
-
-    return $result;
-
-}
-
-####################################################
-# is_in_array
-####################################################
-# Test if a value is on an array
-#
-# IN : -$setA : ref(ARRAY) - set
-#      -$value : a serached value
-#
-# OUT : boolean
-#######################################################
-sub is_in_array {
-    my $set = shift;
-    die 'missing parameter "$value"' unless @_;
-    my $value = shift;
-
-    if (defined $value) {
-        foreach my $elt (@{$set || []}) {
-            next unless defined $elt;
-            return 1 if $elt eq $value;
-        }
-    } else {
-        foreach my $elt (@{$set || []}) {
-            return 1 unless defined $elt;
-        }
-    }
-
-    return undef;
-}
-
-####################################################
-# a_is_older_than_b
-####################################################
-# Compares the last modifications date of two files
-#
-# IN : - a hash with two entries:
-#
-#        * a_file : the full path to a file
-#        * b_file : the full path to a file
-#
-# OUT : 1 if the last modification date of "a_file" is older than
-# "b_file"'s, 0 otherwise.
-#       return undef if the comparison could not be carried on.
-#######################################################
-sub a_is_older_than_b {
-    my $param = shift;
-
-    return undef unless -r $param->{'a_file'} and -r $param->{'b_file'};
-    return (tools::get_mtime($param->{'a_file'}) <
-            tools::get_mtime($param->{'b_file'})) ? 1 : 0;
-}
-
-=over
-
-=item smart_eq ( $a, $b )
-
-I<Function>.
-Check if two strings are identical.
-
-Parameters:
-
-=over
-
-=item $a, $b
-
-Operands.
-
-If both of them are undefined, they are equal.
-If only one of them is undefined, the are not equal.
-If C<$b> is a L<Regexp> object and it matches to C<$a>, they are equal.
-Otherwise, they are compared as strings.
-
-=back
-
-Returns:
-
-If arguments matched, true value.  Otherwise false value.
-
-=back
-
-=cut
-
-sub smart_eq {
-    die 'missing argument' if scalar @_ < 2;
-    my ($a, $b) = @_;
-
-    if (defined $a and defined $b) {
-        if (ref $b eq 'Regexp') {
-            return 1 if $a =~ $b;
-        } else {
-            return 1 if $a eq $b;
-        }
-    } elsif (!defined $a and !defined $b) {
-        return 1;
-    }
-
-    return undef;
-}
+#DEPRECATED: No longer used.
+# sub remove_empty_entries($var);
 
 ####################################################
 # clean_msg_id
@@ -2924,40 +1898,8 @@ sub change_x_sympa_to {
 }
 
 ## Compare 2 versions of Sympa
-sub higher_version {
-    my ($v1, $v2) = @_;
-
-    my @tab1 = split /\./, $v1;
-    my @tab2 = split /\./, $v2;
-
-    my $max = $#tab1;
-    $max = $#tab2 if ($#tab2 > $#tab1);
-
-    for my $i (0 .. $max) {
-
-        if ($tab1[0] =~ /^(\d*)a$/) {
-            $tab1[0] = $1 - 0.5;
-        } elsif ($tab1[0] =~ /^(\d*)b$/) {
-            $tab1[0] = $1 - 0.25;
-        }
-
-        if ($tab2[0] =~ /^(\d*)a$/) {
-            $tab2[0] = $1 - 0.5;
-        } elsif ($tab2[0] =~ /^(\d*)b$/) {
-            $tab2[0] = $1 - 0.25;
-        }
-
-        if ($tab1[0] eq $tab2[0]) {
-            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
-            shift @tab1;
-            shift @tab2;
-            next;
-        }
-        return ($tab1[0] > $tab2[0]);
-    }
-
-    return 0;
-}
+# DEPRECATED: Never used.
+# sub higher_version($v1, $v2);
 
 ## Compare 2 versions of Sympa
 sub lower_version {
@@ -3050,53 +1992,8 @@ sub add_in_blacklist {
 
 }
 
-############################################################
-#  get_fingerprint                                         #
-############################################################
-#  Used in 2 cases :                                       #
-#  - check the md5 in the url                              #
-#  - create an md5 to put in a url                         #
-#                                                          #
-#  Use : get_db_random()                                   #
-#        init_db_random()                                  #
-#        md5_fingerprint()                                 #
-#                                                          #
-# IN : $email : email of the subscriber                    #
-#      $fingerprint : the fingerprint in the url (1st case)#
-#                                                          #
-# OUT : $fingerprint : a md5 for create an url             #
-#     | 1 : if the md5 in the url is true                  #
-#     | undef                                              #
-#                                                          #
-############################################################
-sub get_fingerprint {
-
-    my $email       = shift;
-    my $fingerprint = shift;
-    my $random;
-    my $random_email;
-
-    unless ($random = get_db_random()) { # si un random existe : get_db_random
-        $random = init_db_random();      # sinon init_db_random
-    }
-
-    $random_email = ($random . $email);
-
-    if ($fingerprint) {    #si on veut vérifier le fingerprint dans l'url
-
-        if ($fingerprint eq md5_fingerprint($random_email)) {
-            return 1;
-        } else {
-            return undef;
-        }
-
-    } else { #si on veut créer une url de type http://.../sympa/unsub/$list/$email/get_fingerprint($email)
-
-        $fingerprint = md5_fingerprint($random_email);
-        return $fingerprint;
-
-    }
-}
+# DEPRECATED: No longer used.
+# sub get_fingerprint($email, $fingerprint);
 
 ############################################################
 #  md5_fingerprint                                         #
@@ -3123,58 +2020,11 @@ sub md5_fingerprint {
     return (unpack("H*", $digestmd5->digest));
 }
 
-############################################################
-#  get_db_random                                           #
-############################################################
-#  This function returns $random                           #
-#  which is stored in the database                         #
-#                                                          #
-# IN : -                                                   #
-#                                                          #
-# OUT : $random : the random stored in the database        #
-#     | undef                                              #
-#                                                          #
-############################################################
-sub get_db_random {
+# DEPRECATED: No longer used.
+# sub get_db_random();
 
-    my $sth;
-    unless ($sth = SDM::do_query("SELECT random FROM fingerprint_table")) {
-        Log::do_log('err',
-            'Unable to retrieve random value from fingerprint_table');
-        return undef;
-    }
-    my $random = $sth->fetchrow_hashref('NAME_lc');
-
-    return $random;
-
-}
-
-############################################################
-#  init_db_random                                          #
-############################################################
-#  This function initializes $random used in               #
-#  get_fingerprint if there is no value in the database    #
-#                                                          #
-# IN : -                                                   #
-#                                                          #
-# OUT : $random : the random initialized in the database   #
-#     | undef                                              #
-#                                                          #
-############################################################
-sub init_db_random {
-
-    my $range   = 89999999999999999999;
-    my $minimum = 10000000000000000000;
-
-    my $random = int(rand($range)) + $minimum;
-
-    unless (
-        SDM::do_query('INSERT INTO fingerprint_table VALUES (%d)', $random)) {
-        Log::do_log('err', 'Unable to set random value in fingerprint_table');
-        return undef;
-    }
-    return $random;
-}
+# DEPRECATED: No longer used.
+# sub init_db_random();
 
 sub get_separator {
     return $separator;
@@ -3191,44 +2041,6 @@ sub get_regexp {
         return '\w+';    ## default is a very strict regexp
     }
 
-}
-
-## convert a string formated as var1="value1";var2="value2"; into a hash.
-## Used when extracting from session table some session properties or when
-## extracting users preference from user table
-## Current encoding is NOT compatible with encoding of values with '"'
-##
-sub string_2_hash {
-    my $data = shift;
-    my %hash;
-
-    pos($data) = 0;
-    while ($data =~ /\G;?(\w+)\=\"((\\[\"\\]|[^\"])*)\"(?=(;|\z))/g) {
-        my ($var, $val) = ($1, $2);
-        $val =~ s/\\([\"\\])/$1/g;
-        $hash{$var} = $val;
-    }
-
-    return (%hash);
-
-}
-## convert a hash into a string formated as var1="value1";var2="value2"; into
-## a hash
-sub hash_2_string {
-    my $refhash = shift;
-
-    return undef unless ref $refhash eq 'HASH';
-
-    my $data_string;
-    foreach my $var (keys %$refhash) {
-        next unless length $var;
-        my $val = $refhash->{$var};
-        $val = '' unless defined $val;
-
-        $val =~ s/([\"\\])/\\$1/g;
-        $data_string .= ';' . $var . '="' . $val . '"';
-    }
-    return ($data_string);
 }
 
 =pod 
@@ -3312,165 +2124,9 @@ sub save_to_bad {
     return 1;
 }
 
-=pod 
-
-=head2 sub CleanSpool(STRING $spool_dir, INT $clean_delay)
-
-Clean all messages in spool $spool_dir older than $clean_delay.
-
-=head3 Arguments 
-
-=over 
-
-=item * I<spool_dir> : a string corresponding to the path to the spool to clean;
-
-=item * I<clean_delay> : the delay between the moment we try to clean spool and the last modification date of a file.
-
-=back
-
-=back 
-
-=head3 Return 
-
-=over
-
-=item * 1 if the spool was cleaned withou troubles.
-
-=item * undef if something went wrong.
-
-=back 
-
-=head3 Calls 
-
-=over 
-
-=item * tools::remove_dir
-
-=back 
-
-=cut 
-
-############################################################
-#  CleanSpool
-############################################################
-#  Cleans files older than $clean_delay from spool $spool_dir
-#
-# IN : -$spool_dir (+): the spool directory
-#      -$clean_delay (+): delay in days
-#
-# OUT : 1
-#
-##############################################################
-sub CleanSpool {
-    my ($spool_dir, $clean_delay) = @_;
-    Log::do_log('debug', '(%s, %s)', $spool_dir, $clean_delay);
-
-    unless (opendir(DIR, $spool_dir)) {
-        Log::do_log('err', 'Unable to open "%s" spool: %m', $spool_dir);
-        return undef;
-    }
-
-    my @qfile = sort grep (!/^\.+$/, readdir(DIR));
-    closedir DIR;
-
-    my ($curlist, $moddelay);
-    foreach my $f (@qfile) {
-        if (tools::get_mtime("$spool_dir/$f") <
-            time - $clean_delay * 60 * 60 * 24) {
-            if (-f "$spool_dir/$f") {
-                unlink("$spool_dir/$f");
-                Log::do_log('notice', 'Deleting old file %s',
-                    "$spool_dir/$f");
-            } elsif (-d "$spool_dir/$f") {
-                unless (tools::remove_dir("$spool_dir/$f")) {
-                    Log::do_log('err', 'Cannot remove old directory %s: %m',
-                        "$spool_dir/$f");
-                    next;
-                }
-                Log::do_log('notice', 'Deleting old directory %s',
-                    "$spool_dir/$f");
-            }
-        }
-    }
-
-    return 1;
-}
-
-# return a lockname that is a uniq id of a processus (hostname + pid) ;
-# hostname(20) and pid(10) are truncated in order to store lockname in
-# database varchar(30)
-sub get_lockname {
-    return substr(substr(Sys::Hostname::hostname(), 0, 20) . $PID, 0, 30);
-}
-
-## compare 2 scalars, string/numeric independant
-sub smart_lessthan {
-    my ($stra, $strb) = @_;
-    $stra =~ s/^\s+//;
-    $stra =~ s/\s+$//;
-    $strb =~ s/^\s+//;
-    $strb =~ s/\s+$//;
-    $ERRNO = 0;
-    my ($numa, $unparsed) = POSIX::strtod($stra);
-    my $numb;
-    $numb = POSIX::strtod($strb)
-        unless ($ERRNO || $unparsed != 0);
-
-    if (($stra eq '') || ($strb eq '') || ($unparsed != 0) || $ERRNO) {
-        return $stra lt $strb;
-    } else {
-        return $stra < $strb;
-    }
-}
-
-## Returns the list of pid identifiers in the pid file.
-sub get_pids_in_pid_file {
-    my $name = shift;
-
-    my $piddir  = Sympa::Constants::PIDDIR;
-    my $pidfile = $piddir . '/' . $name . '.pid';
-
-    my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
-    unless ($lock_fh) {
-        Log::do_log('err', 'Unable to open PID file %s: %m', $pidfile);
-        return undef;
-    }
-    my $l = <$lock_fh>;
-    my @pids = grep {/^[0-9]+$/} split(/\s+/, $l);
-    $lock_fh->close;
-    return \@pids;
-}
-
 ## Returns the counf of numbers found in the string given as argument.
-sub count_numbers_in_string {
-    my $str   = shift;
-    my $count = 0;
-    $count++ while $str =~ /(\d+\s+)/g;
-    return $count;
-}
-
-#*******************************************
-# Function : wrap_text
-# Description : return line-wrapped text.
-## IN : text, init, subs, cols
-#*******************************************
-sub wrap_text {
-    my $text = shift;
-    my $init = shift;
-    my $subs = shift;
-    my $cols = shift;
-    $cols = 78 unless defined $cols;
-    return $text unless $cols;
-
-    $text = Text::LineFold->new(
-        Language      => Sympa::Language->instance->get_lang,
-        OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
-        Prep          => 'NONBREAKURI',
-        ColumnsMax    => $cols
-    )->fold($init, $subs, $text);
-
-    return $text;
-}
+# DEPRECATED: No longer used.
+# sub count_numbers_in_string($str);
 
 #*******************************************
 # Function : addrencode
@@ -3519,17 +2175,6 @@ sub addrencode {
 # Generate a newsletter from an HTML URL or a file path.
 #sub create_html_part_from_web_page($param);
 #DEPRECATED: No longer used.
-
-sub get_children_processes_list {
-    Log::do_log('debug3', '');
-    my @children;
-    for my $p (@{Proc::ProcessTable->new->table}) {
-        if ($p->ppid == $PID) {
-            push @children, $p->pid;
-        }
-    }
-    return @children;
-}
 
 #*******************************************
 # Function : decode_header
@@ -3633,25 +2278,6 @@ sub password_validation {
     return $output;
 }
 
-#*******************************************
-## Function : foldcase
-## Description : returns "fold-case" string suitable for case-insensitive
-## match.
-### IN : str
-##*******************************************
-sub foldcase {
-    my $str = shift;
-    return '' unless defined $str and length $str;
-
-    if ($] <= 5.008) {
-        # Perl 5.8.0 does not support Unicode::CaseFold. Use lc() instead.
-        return Encode::encode_utf8(lc(Encode::decode_utf8($str)));
-    } else {
-        # later supports it. Perl 5.16.0 and later have built-in fc().
-        return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
-    }
-}
-
 sub fix_children {
 }
 
@@ -3708,7 +2334,7 @@ Returns hashref to list parameter information.
 sub get_list_params {
     my $robot_id = shift;
 
-    my $pinfo = tools::dup_var(\%Sympa::ListDef::pinfo);
+    my $pinfo = Sympa::Tools::Data::dup_var(\%Sympa::ListDef::pinfo);
     $pinfo->{'lang'}{'format'} = [tools::get_supported_languages($robot_id)];
 
     return $pinfo;

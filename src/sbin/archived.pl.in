@@ -49,6 +49,9 @@ use Sympa::Regexps;
 use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::Daemon;
+use Sympa::Tools::File;
+use Sympa::Tools::Time;
 
 my $daemon_name = Log::set_daemon($0);
 my $ip          = $ENV{'REMOTE_HOST'};
@@ -118,9 +121,9 @@ my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 
 ## Create and write the PID file
-tools::write_pid('archived', $PID, $options);
+Sympa::Tools::Daemon::write_pid('archived', $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    tools::direct_stderr_to_file(('pid' => $PID));
+    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
 }
 
 # setting log_level using conf unless it is set by calling option
@@ -308,7 +311,7 @@ while (!$end) {
                 remove($arclistdir, $msgid);
 
                 my $url_dir = $list->{'dir'} . '/urlized/' . $msgid;
-                tools::remove_dir($url_dir);
+                Sympa::Tools::File::remove_dir($url_dir);
 
                 unless (-d "$arcpath/deleted") {
                     unless (mkdir("$arcpath/deleted", 0777)) {
@@ -339,8 +342,7 @@ while (!$end) {
                 my @files = grep(/^\d+$/, readdir(DIR));
                 closedir(DIR);
                 if ($#files == -1) {
-                    tools::remove_dir($arcpath);
-                } else {
+                    Sympa::Tools::File::remove_dir($arcpath);
                 }
             }
             close REMOVE;
@@ -441,7 +443,7 @@ Sympa::Alarm::flush('purge');
 Sympa::Mail::reaper();
 
 Log::do_log('notice', 'Archived exited normally due to signal');
-tools::remove_pid('archived', $PID);
+Sympa::Tools::Daemon::remove_pid('archived', $PID);
 
 exit(0);
 
@@ -548,7 +550,7 @@ Rebuilds archives for the list the name of which is given in the argument $adrli
 
 =item * tools::get_filename
 
-=item * tools::remove_dir
+=item * Sympa::Tools::File::remove_dir
 
 =back 
 
@@ -609,7 +611,7 @@ sub rebuild {
             close(DIR);
             if ($#files == -1) {
                 Log::do_log('notice', "Removing empty directory %s", $arcdir);
-                tools::remove_dir($arcdir);
+                Sympa::Tools::File::remove_dir($arcdir);
                 next;
             }
 
@@ -661,7 +663,7 @@ sub rebuild {
 
         # Delete temporary directory containing files with escaped HTML.
         if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
-            tools::del_dir($arcs_dir->{'cleaned_dir'});
+            Sympa::Tools::File::del_dir($arcs_dir->{'cleaned_dir'});
         }
 
         ## Remove lock if required
@@ -741,7 +743,7 @@ sub rebuild {
 
             # Delete temporary directory containing files with escaped HTML.
             if ($arcs_dir && -d $arcs_dir->{'cleaned_dir'}) {
-                tools::del_dir($arcs_dir->{'cleaned_dir'});
+                Sympa::Tools::File::del_dir($arcs_dir->{'cleaned_dir'});
             }
 
             ## Remove lock if required
@@ -827,7 +829,7 @@ Archives one message into one list archives directory.
 
 =item * tools::get_filename
 
-=item * tools::remove_dir
+=item * Sympa::Tools::File::remove_dir
 
 =back 
 
@@ -933,7 +935,7 @@ sub mail2arc {
                         $list->{'admin'}{'web_archive'}{'max_month'}) {
                         Log::do_log('info', 'Removing %s/%s/%s',
                             $arcpath, $list->get_list_id(), $archives[$i]);
-                        tools::remove_dir($arcpath . '/'
+                        Sympa::Tools::File::remove_dir($arcpath . '/'
                                 . $list->get_list_id() . '/'
                                 . $archives[$i]);
                         $i++;
@@ -1130,7 +1132,7 @@ sub directory_check {
             return undef;
         }
         unless (
-            tools::set_file_rights(
+            Sympa::Tools::File::set_file_rights(
                 file  => $dir,
                 user  => Sympa::Constants::USER,
                 group => Sympa::Constants::GROUP,

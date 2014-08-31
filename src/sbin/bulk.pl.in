@@ -43,6 +43,8 @@ use Sympa::Message;
 use Sympa::Robot;
 use SDM;
 use tools;
+use Sympa::Tools::Daemon;
+use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tracking;
 
@@ -93,7 +95,7 @@ Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
 
 # Enable SMTP logging if required
 my $default_log_smtp = $main::options{'mail'}
-    || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+    || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
 $Sympa::Mail::log_smtp = $default_log_smtp;
 
 # setting log_level using conf unless it is set by calling option
@@ -141,9 +143,9 @@ $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
 $options->{'multiple_process'} = 0;
 
 # Save the PID number
-tools::write_pid('bulk', $PID, $options);
+Sympa::Tools::Daemon::write_pid('bulk', $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    tools::direct_stderr_to_file(('pid' => $PID));
+    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
 }
 ## Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
@@ -214,7 +216,8 @@ while (!$end) {
         if (   ($main::daemon_usage eq 'DAEMON_MASTER')
             && (time() - $last_check_date > $timeout)) {
             ## Clean up PID file (in case some child bulks would have died)
-            my @actual_children = tools::get_children_processes_list();
+            my @actual_children =
+                Sympa::Tools::Daemon::get_children_processes_list();
             my @remaining_children;
             my %dead_children = %created_children;
             foreach my $apid (@actual_children) {
@@ -229,7 +232,8 @@ while (!$end) {
                 Log::do_log('debug2',
                     'Some childs of current process disappeared. Checking whether they shut down cleanly or not.'
                 );
-                my $pids_in_pfile = tools::get_pids_in_pid_file('bulk');
+                my $pids_in_pfile =
+                    Sympa::Tools::Daemon::get_pids_in_pid_file('bulk');
                 foreach my $fpid (@{$pids_in_pfile}) {
                     if (defined $dead_children{$fpid}) {
                         Log::do_log(
@@ -239,19 +243,21 @@ while (!$end) {
                         );
                         my $pname = $0;
                         $pname =~ s/.*\/(\w+)/$1/;
-                        tools::send_crash_report(
+                        Sympa::Tools::Daemon::send_crash_report(
                             ('pid' => $fpid, 'pname' => $pname));
-                        tools::remove_pid('bulk', $fpid, $options);
+                        Sympa::Tools::Daemon::remove_pid('bulk', $fpid,
+                            $options);
                         delete $dead_children{$fpid};
                         push @dc, $fpid;
                     }
                 }
             }
-            my $pids_in_pfile = tools::get_pids_in_pid_file('bulk');
+            my $pids_in_pfile =
+                Sympa::Tools::Daemon::get_pids_in_pid_file('bulk');
             unless (defined($pids_in_pfile)) {
-                tools::write_pid('bulk', $PID, $options);
+                Sympa::Tools::Daemon::write_pid('bulk', $PID, $options);
                 close STDERR;
-                tools::direct_stderr_to_file(('pid' => $PID));
+                Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
                 $pids_in_pfile = [$PID];
             }
             ## Start new processes if there remain at least
@@ -285,13 +291,15 @@ while (!$end) {
                                 'Starting bulk child daemon, PID %s',
                                 $child_pid);
                             # Saves the pid number
-                            tools::write_pid('bulk', $child_pid, $options);
+                            Sympa::Tools::Daemon::write_pid('bulk',
+                                $child_pid, $options);
                             $created_children{$child_pid} = 1;
                             sleep 1;
                         } else {
                             ## We're in a child bulk process
                             close STDERR;
-                            tools::direct_stderr_to_file(('pid' => $PID));
+                            Sympa::Tools::Daemon::direct_stderr_to_file(
+                                ('pid' => $PID));
                             $date_of_last_activity = time();
                             $main::daemon_usage =
                                 'DAEMON_SLAVE';    # automatic lists creation
@@ -378,8 +386,8 @@ while (!$end) {
 
         # Enable SMTP logging if required.
         $Sympa::Mail::log_smtp = $main::options{'mail'}
-            || tools::smart_eq(Conf::get_robot_conf($robot, 'log_smtp'),
-            'on');
+            || Sympa::Tools::Data::smart_eq(
+            Conf::get_robot_conf($robot, 'log_smtp'), 'on');
         # setting log_level using conf unless it is set by calling option
         Log::set_log_level(
             (defined $main::options{'log_level'})
@@ -435,7 +443,7 @@ while (!$end) {
                 my $notification_id;
                 my $return_path;
 
-                if (tools::smart_eq(
+                if (Sympa::Tools::Data::smart_eq(
                         $new_message->{shelved}{tracking}, qr/dsn|mdn/
                     )
                     ) {
@@ -451,10 +459,16 @@ while (!$end) {
                         if $new_message->{shelved}{tracking} =~ /mdn/;
                     # trace_smime($new_message, 'tracking');
                 } elsif (
-                    tools::smart_eq($new_message->{shelved}{tracking}, 'w')) {
+                    Sympa::Tools::Data::smart_eq(
+                        $new_message->{shelved}{tracking}, 'w'
+                    )
+                    ) {
                     $return_path = $list->get_bounce_address($rcpt, 'w');
                 } elsif (
-                    tools::smart_eq($new_message->{shelved}{tracking}, 'r')) {
+                    Sympa::Tools::Data::smart_eq(
+                        $new_message->{shelved}{tracking}, 'r'
+                    )
+                    ) {
                     $return_path = $list->get_bounce_address($rcpt, 'r');
                 } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
                     $return_path = $list->get_bounce_address($rcpt);
@@ -598,7 +612,7 @@ while (!$end) {
 Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Bulk.pl exited normally due to signal');
-tools::remove_pid('bulk', $PID, $options);
+Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
 
 exit(0);
 

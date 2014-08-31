@@ -9,7 +9,7 @@ use warnings;
 use POSIX qw(setlocale LC_ALL LC_CTYPE);
 use Test::More;
 
-use tools; #Sympa::Tools::Time;
+use Sympa::Tools::Time;
 
 setlocale(LC_ALL, 'C');
 
@@ -76,7 +76,7 @@ plan tests =>
 
 #foreach my $test (@epoch2yyyymmjj_hhmmss_tests) {
 #    is(
-#        tools::epoch2yyyymmjj_hhmmss($test->[0]),
+#        Sympa::Tools::Time::epoch2yyyymmjj_hhmmss($test->[0]),
 #        $test->[1],
 #        "epoch2yyyymmjj_hhmmss $test->[0]"
 #    );
@@ -84,7 +84,7 @@ plan tests =>
 
 foreach my $test (@adate_tests) {
     is(
-        tools::adate($test->[0]),
+        Sympa::Tools::Time::adate($test->[0]),
         $test->[1],
         "adate $test->[0]"
     );
@@ -92,7 +92,7 @@ foreach my $test (@adate_tests) {
 
 foreach my $test (@get_midnight_time_tests) {
     is(
-        tools::get_midnight_time($test->[0]),
+        Sympa::Tools::Time::get_midnight_time($test->[0]),
         $test->[1],
         "get_midnight_time $test->[0]"
     );
@@ -100,7 +100,7 @@ foreach my $test (@get_midnight_time_tests) {
 
 foreach my $test (@date_conv_tests) {
     is(
-        tools::date_conv(@{$test->[0]}),
+        Sympa::Tools::Time::date_conv(@{$test->[0]}),
         $test->[1],
         $test->[2] || "date_conv $test->[0]"
     );
@@ -108,7 +108,7 @@ foreach my $test (@date_conv_tests) {
 
 foreach my $test (@duration_conv_tests) {
     is(
-        tools::duration_conv(@{$test->[0]}),
+        Sympa::Tools::Time::duration_conv(@{$test->[0]}),
         $test->[1],
         "duration_conv $test->[0]"
     );
@@ -116,7 +116,7 @@ foreach my $test (@duration_conv_tests) {
 
 foreach my $test (@epoch_conv_tests) {
     is(
-        tools::epoch_conv(@{$test->[0]}),
+        Sympa::Tools::Time::epoch_conv(@{$test->[0]}),
         $test->[1],
         "epoch_conv $test->[0]"
     );

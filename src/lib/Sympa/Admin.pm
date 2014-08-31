@@ -54,12 +54,11 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use tools;
+use Sympa::Tools::File;
 use tt2;
 use Sympa::User;
 
 my $language = Sympa::Language->instance;
-
-=pod 
 
 =head1 SUBFUNCTIONS 
 
@@ -1173,7 +1172,7 @@ sub clone_list_as_empty {
     foreach my $subdir ('etc', 'web_tt2', 'mail_tt2', 'data_sources') {
         if (-d $new_dir . '/' . $subdir) {
             unless (
-                tools::copy_dir(
+                Sympa::Tools::File::copy_dir(
                     $list->{'dir'} . '/' . $subdir,
                     $new_dir . '/' . $subdir
                 )

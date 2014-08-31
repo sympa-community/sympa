@@ -30,6 +30,7 @@ use SOAP::Transport::HTTP;
 
 use Log;
 use Sympa::Session;
+use Sympa::Tools::File;
 
 # 'base' pragma doesn't work here
 our @ISA = qw(SOAP::Transport::HTTP::FCGI);
@@ -116,7 +117,8 @@ sub handle ($$) {
 
         $r2 = $self->SOAP::Transport::HTTP::CGI::handle;
 
-        if (tools::get_mtime($ENV{'SCRIPT_FILENAME'}) > $birthday) {
+        if (Sympa::Tools::File::get_mtime($ENV{'SCRIPT_FILENAME'}) >
+            $birthday) {
             exit(0);
         }
         # print

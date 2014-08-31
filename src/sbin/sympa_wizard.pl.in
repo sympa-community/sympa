@@ -39,8 +39,11 @@ my $modfail;      # any of required modules are not installed.
 
 BEGIN {
     $with_CPAN = eval { require CPAN; };
-    $modfail =
-        !eval { require Conf; require Sympa::Language; require tools; };
+    $modfail = !eval {
+        require Conf;
+        require Sympa::Language;
+        require Sympa::Tools::Text;
+    };
 }
 
 # Detect console encoding.
@@ -67,10 +70,10 @@ if ($modfail) {
 
     eval { require Text::Wrap; };
     if ($EVAL_ERROR) {
-        *tools::wrap_text = sub {"$_[1]$_[0]\n"};
+        *Sympa::Tools::Text::wrap_text = sub {"$_[1]$_[0]\n"};
     } else {
         $Text::Wrap::columns = 78;
-        *tools::wrap_text =
+        *Sympa::Tools::Text::wrap_text =
             sub { Text::Wrap::wrap($_[1], $_[2], $_[0]) . "\n"; };
     }
 } else {
@@ -159,11 +162,13 @@ sub create_configuration {
         printf NEWF "## %s\n", $param->{'name'};
 
         if ($param->{'gettext_id'}) {
-            print NEWF tools::wrap_text(gettext($param->{'gettext_id'}),
+            print NEWF Sympa::Tools::Text::wrap_text(
+                gettext($param->{'gettext_id'}),
                 '## ', '## ');
         }
 
-        print NEWF tools::wrap_text(gettext($param->{'gettext_comment'}),
+        print NEWF Sympa::Tools::Text::wrap_text(
+            gettext($param->{'gettext_comment'}),
             '## ', '## ')
             if $param->{'gettext_comment'};
 
@@ -263,8 +268,9 @@ sub edit_configuration {
             print "\n\n** $title **\n" if $title;
 
             print "\n";
-            print tools::wrap_text($query || '', '* ', '  ');
-            print tools::wrap_text($advice, '  ... ', '  ') if $advice;
+            print Sympa::Tools::Text::wrap_text($query || '', '* ', '  ');
+            print Sympa::Tools::Text::wrap_text($advice, '  ... ', '  ')
+                if $advice;
             printf(gettext('%s [%s] : '), $name, $current_value);
             $new_value = <STDIN>;
             chomp $new_value;
@@ -291,17 +297,21 @@ sub edit_configuration {
         if ($new_value eq '') {
             next unless $sample;
 
-            push @new_sympa_conf, tools::wrap_text($query, '## ', '## ');
+            push @new_sympa_conf,
+                Sympa::Tools::Text::wrap_text($query, '## ', '## ');
 
             if (defined $advice and length $advice) {
-                push @new_sympa_conf, tools::wrap_text($advice, '## ', '## ');
+                push @new_sympa_conf,
+                    Sympa::Tools::Text::wrap_text($advice, '## ', '## ');
             }
 
             push @new_sympa_conf, "# $name\t$sample\n\n";
         } else {
-            push @new_sympa_conf, tools::wrap_text($query, '## ', '## ');
+            push @new_sympa_conf,
+                Sympa::Tools::Text::wrap_text($query, '## ', '## ');
             if (defined $advice and length $advice) {
-                push @new_sympa_conf, tools::wrap_text($advice, '## ', '## ');
+                push @new_sympa_conf,
+                    Sympa::Tools::Text::wrap_text($advice, '## ', '## ');
             }
 
             if ($current_value ne $new_value) {
@@ -477,14 +487,14 @@ sub install_module {
     }
 
     unless ($options->{'force'}) {
-        print tools::wrap_text(
+        print Sympa::Tools::Text::wrap_text(
             sprintf(
                 gettext('-> Usage of this module: %s') . "\n",
                 gettext($cpan_modules->{$module}{'gettext_id'})
             ),
             '', '   '
         ) if ($cpan_modules->{$module}{'gettext_id'});
-        print tools::wrap_text(
+        print Sympa::Tools::Text::wrap_text(
             sprintf(
                 gettext('-> Prerequisites: %s') . "\n",
                 gettext($cpan_modules->{$module}{'gettext_comment'})

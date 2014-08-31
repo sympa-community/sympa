@@ -64,7 +64,10 @@ use SDM;
 use Sympa::SQLSource;
 use Sympa::Task;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 use Sympa::Tools::SMIME;
+use Sympa::Tools::Text;
 use Sympa::Tracking;
 use tt2;
 use Sympa::User;
@@ -889,8 +892,8 @@ sub dump {
 
     # Note: "subscribers" file was deprecated.
     $self->{'_mtime'} = {
-        'config' => tools::get_mtime($self->{'dir'} . '/config'),
-        'stats'  => tools::get_mtime($self->{'dir'} . '/stats'),
+        'config' => Sympa::Tools::File::get_mtime($self->{'dir'} . '/config'),
+        'stats'  => Sympa::Tools::File::get_mtime($self->{'dir'} . '/stats'),
     };
 
     return 1;
@@ -1028,11 +1031,13 @@ sub load {
         $last_time_stats  = POSIX::INT_MIN();
     }
 
-    my $time_config      = tools::get_mtime("$self->{'dir'}/config");
-    my $time_config_bin  = tools::get_mtime("$self->{'dir'}/config.bin");
-    my $time_stats       = tools::get_mtime("$self->{'dir'}/stats");
-    my $main_config_time = tools::get_mtime(Sympa::Constants::CONFIG);
-    # my $web_config_time  = tools::get_mtime(Sympa::Constants::WWSCONFIG);
+    my $time_config = Sympa::Tools::File::get_mtime("$self->{'dir'}/config");
+    my $time_config_bin =
+        Sympa::Tools::File::get_mtime("$self->{'dir'}/config.bin");
+    my $time_stats = Sympa::Tools::File::get_mtime("$self->{'dir'}/stats");
+    my $main_config_time =
+        Sympa::Tools::File::get_mtime(Sympa::Constants::CONFIG);
+    # my $web_config_time  = Sympa::Tools::File::get_mtime(Sympa::Constants::WWSCONFIG);
     my $config_reloaded = 0;
     my $admin;
 
@@ -1317,7 +1322,8 @@ sub get_config_changes {
     }
 
     ## load config_changes
-    my $time_file = tools::get_mtime("$self->{'dir'}/config_changes");
+    my $time_file =
+        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -1361,7 +1367,8 @@ sub update_config_changes {
     }
 
     ## load config_changes
-    my $time_file = tools::get_mtime("$self->{'dir'}/config_changes");
+    my $time_file =
+        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
     unless (defined $self->{'config_changes'}
         && ($self->{'config_changes'}{'mtime'} >= $time_file)) {
         unless ($self->{'config_changes'} =
@@ -1424,7 +1431,7 @@ sub _load_config_changes_file {
     close FILE;
 
     $config_changes->{'mtime'} =
-        tools::get_mtime("$self->{'dir'}/config_changes");
+        Sympa::Tools::File::get_mtime("$self->{'dir'}/config_changes");
 
     return $config_changes;
 }
@@ -1602,7 +1609,7 @@ sub distribute_msg {
         }
 
         # Will this message be processed?
-        if (tools::is_in_array(
+        if (Sympa::Tools::Data::is_in_array(
                 $self->{'admin'}{'dmarc_protection'}{'mode'}, 'all'
             )
             ) {
@@ -1611,7 +1618,7 @@ sub distribute_msg {
         }
         if (   !$mungeFrom
             and $dkimSignature
-            and tools::is_in_array(
+            and Sympa::Tools::Data::is_in_array(
                 $self->{'admin'}{'dmarc_protection'}{'mode'},
                 'dkim_signature'
             )
@@ -1622,7 +1629,7 @@ sub distribute_msg {
         if (   !$mungeFrom
             and $origFrom
             and $dkimdomain
-            and tools::is_in_array(
+            and Sympa::Tools::Data::is_in_array(
                 $self->{'admin'}{'dmarc_protection'}{'mode'},
                 'domain_regex'
             )
@@ -1634,12 +1641,12 @@ sub distribute_msg {
         if (   !$mungeFrom
             and $origFrom
             and (
-                tools::is_in_array(
+                Sympa::Tools::Data::is_in_array(
                     $self->{'admin'}{'dmarc_protection'}{'mode'},
                     'dmarc_reject')
-                or tools::is_in_array(
+                or Sympa::Tools::Data::is_in_array(
                     $self->{'admin'}{'dmarc_protection'}{'mode'}, 'dmarc_any')
-                or tools::is_in_array(
+                or Sympa::Tools::Data::is_in_array(
                     $self->{'admin'}{'dmarc_protection'}{'mode'},
                     'dmarc_quarantine'
                 )
@@ -1661,7 +1668,7 @@ sub distribute_msg {
                         my $rr (grep { $_->type eq 'TXT' } $packet->answer) {
                         next if ($rr->string !~ /v=DMARC/);
                         if (!$mungeFrom
-                            and tools::is_in_array(
+                            and Sympa::Tools::Data::is_in_array(
                                 $self->{'admin'}{'dmarc_protection'}{'mode'},
                                 'dmarc_reject'
                             )
@@ -1675,7 +1682,7 @@ sub distribute_msg {
                             }
                         }
                         if (!$mungeFrom
-                            and tools::is_in_array(
+                            and Sympa::Tools::Data::is_in_array(
                                 $self->{'admin'}{'dmarc_protection'}{'mode'},
                                 'dmarc_quarantine'
                             )
@@ -1689,7 +1696,7 @@ sub distribute_msg {
                             }
                         }
                         if (!$mungeFrom
-                            and tools::is_in_array(
+                            and Sympa::Tools::Data::is_in_array(
                                 $self->{'admin'}{'dmarc_protection'}{'mode'},
                                 'dmarc_any'
                             )
@@ -1914,13 +1921,13 @@ sub distribute_msg {
     my @apply_tracking = ();
 
     push @apply_tracking, 'dsn'
-        if tools::smart_eq(
+        if Sympa::Tools::Data::smart_eq(
         $self->{'admin'}{'tracking'}->{'delivery_status_notification'}, 'on');
     push @apply_tracking, 'mdn'
-        if tools::smart_eq(
+        if Sympa::Tools::Data::smart_eq(
         $self->{'admin'}{'tracking'}->{'message_delivery_notification'}, 'on')
         or (
-        tools::smart_eq(
+        Sympa::Tools::Data::smart_eq(
             $self->{'admin'}{'tracking'}->{'message_delivery_notification'},
             'on_demand')
         and $message->get_header('Disposition-Notification-To')
@@ -2036,8 +2043,11 @@ sub distribute_msg {
     ## store msg in digest if list accept digest mode (encrypted message can't
     ## be included in digest)
     if ($self->is_digest()
-        and not tools::smart_eq($message->{'smime_crypted'}, 'smime_crypted'))
-    {
+        and not Sympa::Tools::Data::smart_eq(
+            $message->{'smime_crypted'},
+            'smime_crypted'
+        )
+        ) {
         $self->store_digest($message);
     }
 
@@ -2481,7 +2491,8 @@ sub send_msg {
     my $verp_rate = $self->{'admin'}{'verp_rate'};
     # force VERP if tracking is requested.
     $verp_rate = '100%'
-        if tools::smart_eq($message->{shelved}{tracking}, qr/dsn|mdn/);
+        if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
+        qr/dsn|mdn/);
 
     my $xsequence = $self->{'stats'}->[0];
     my $tags_to_use;
@@ -2635,7 +2646,8 @@ sub _mail_message {
 
     # Shelve personalization.
     $message->{shelved}{merge} = 1
-        if tools::smart_eq($list->{'admin'}{'merge_feature'}, 'on');
+        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+        'on');
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1
         if $message->{'smime_crypted'};
@@ -3232,8 +3244,9 @@ sub archive_send {
     $param->{'boundary2'} = tools::get_message_id($self->{'domain'});
     $param->{'from'}      = Conf::get_robot_conf($self->{'domain'}, 'sympa');
 
-#    open TMP2, ">/tmp/digdump"; tools::dump_var($param, 0, \*TMP2); close
-#    TMP2;
+    # open TMP2, ">/tmp/digdump";
+    # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
+    # close TMP2;
     $param->{'auto_submitted'} = 'auto-replied';
     unless (tools::send_file($self, 'get_archive', $who, $param)) {
         Log::do_log('notice', 'Unable to send template "archive_send" to %s',
@@ -3293,8 +3306,9 @@ sub archive_send_last {
     $param->{'boundary2'} = tools::get_message_id($self->{'domain'});
     $param->{'from'}      = Conf::get_robot_conf($self->{'domain'}, 'sympa');
     $param->{'auto_submitted'} = 'auto-replied';
-#    open TMP2, ">/tmp/digdump"; tools::dump_var($param, 0, \*TMP2); close
-#    TMP2;
+    # open TMP2, ">/tmp/digdump";
+    # Sympa::Tools::Data::dump_var($param, 0, \*TMP2);
+    # close TMP2;
 
     unless (tools::send_file($self, 'get_archive', $who, $param)) {
         Log::do_log('notice', 'Unable to send template "archive_send" to %s',
@@ -5609,7 +5623,9 @@ sub add_list_member {
         );
 
         ## Crypt password if it was not crypted
-        unless (tools::smart_eq($new_user->{'password'}, qr/^crypt/)) {
+        unless (
+            Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
+        {
             $new_user->{'password'} =
                 tools::crypt_password($new_user->{'password'});
         }
@@ -6003,7 +6019,7 @@ sub may_edit {
     # server, robot, family or list context)
     my $edit_conf_file = tools::search_fullpath($self, 'edit_list.conf');
     if (!$edit_list_conf{$edit_conf_file}
-        or tools::get_mtime($edit_conf_file) >
+        or Sympa::Tools::File::get_mtime($edit_conf_file) >
         $Sympa::Robot::mtime{'edit_list_conf'}{$edit_conf_file}) {
 
         $edit_conf = $edit_list_conf{$edit_conf_file} =
@@ -6217,7 +6233,7 @@ sub archive_msg {
 
     if ($self->is_archived()) {
         my $msg_string = $message->to_string(
-            original => tools::smart_eq(
+            original => Sympa::Tools::Data::smart_eq(
                 $self->{admin}{archive_crypted_msg}, 'original'
             )
         );
@@ -6228,7 +6244,7 @@ sub archive_msg {
         ## listname
 
         ## ignoring message with a no-archive flag
-        if (!tools::smart_eq(
+        if (!Sympa::Tools::Data::smart_eq(
                 $Conf::Conf{'ignore_x_no_archive_header_feature'}, 'on')
             and (  grep {/yes/i} $message->get_header('X-no-archive')
                 or grep {/no\-external\-archive/i}
@@ -6320,9 +6336,9 @@ sub get_nextdigest {
     my @days = @{$digest->{'days'}};
     my ($hh, $mm) = ($digest->{'hour'}, $digest->{'minute'});
 
-    my @now        = localtime time;
-    my $today      = $now[6];                                 # current day
-    my @timedigest = localtime tools::get_mtime($filename);
+    my @now   = localtime time;
+    my $today = $now[6];          # current day
+    my @timedigest = localtime Sympa::Tools::File::get_mtime($filename);
 
     ## Should we send a digest today
     my $send_digest = 0;
@@ -6394,7 +6410,7 @@ sub load_scenario_list {
 
     ## Return a copy of the data to prevent unwanted changes in the central
     ## scenario data structure
-    return tools::dup_var(\%list_of_scenario);
+    return Sympa::Tools::Data::dup_var(\%list_of_scenario);
 }
 
 sub load_task_list {
@@ -7666,7 +7682,7 @@ sub _load_list_members_from_include {
 
             # Work with a copy of admin hash branch to avoid including
             # temporary variables into the actual admin hash.[bug #3182]
-            my $incl      = tools::dup_var($tmp_incl);
+            my $incl      = Sympa::Tools::Data::dup_var($tmp_incl);
             my $source_id = Sympa::Datasource::_get_datasource_id($tmp_incl);
             my $source_is_new = defined $old_subs->{$source_id};
 
@@ -7902,7 +7918,7 @@ sub _load_list_admin_from_include {
 
                 # Work with a copy of admin hash branch to avoid including
                 # temporary variables into the actual admin hash. [bug #3182]
-                my $incl = tools::dup_var($tmp_incl);
+                my $incl = Sympa::Tools::Data::dup_var($tmp_incl);
 
                 # get the list of admin users
                 # does it need to define a 'default_admin_user_option'?
@@ -8255,7 +8271,7 @@ sub sync_include_ca {
         foreach my $tmp_incl (@{$admin->{$type}}) {
             ## Work with a copy of admin hash branch to avoid including
             ## temporary variables into the actual admin hash.[bug #3182]
-            my $incl   = tools::dup_var($tmp_incl);
+            my $incl   = Sympa::Tools::Data::dup_var($tmp_incl);
             my $source = undef;
             my $srcca  = undef;
             if ($type eq 'include_sql_ca') {
@@ -9152,7 +9168,7 @@ sub store_digest {
     }
 
     $newfile = !(-e $filename);
-    my $oldtime = tools::get_mtime($filename) unless $newfile;
+    my $oldtime = Sympa::Tools::File::get_mtime($filename) unless $newfile;
 
     open(OUT, ">> $filename") || return;
     if ($newfile) {
@@ -9408,9 +9424,9 @@ sub get_lists {
                     $vl       = lc $vals;
                 } else {
                     $key_perl =
-                        'tools::foldcase($list->{"admin"}{"subject"})';
+                        'Sympa::Tools::Text::foldcase($list->{"admin"}{"subject"})';
                     $key_sql = 'searchkey_list';
-                    $vl      = tools::foldcase($vals);
+                    $vl      = Sympa::Tools::Text::foldcase($vals);
                 }
 
                 ## Perl expression
@@ -9570,7 +9586,7 @@ sub get_lists {
     my $count = 0;
 
     foreach my $robot_id (@robot_ids) {
-        if (!tools::smart_eq($Conf::Conf{'db_list_cache'}, 'on')
+        if (!Sympa::Tools::Data::smart_eq($Conf::Conf{'db_list_cache'}, 'on')
             or $options{'reload_config'}) {
             # Files are used instead of list_table DB cache.
             my @requested_lists = ();
@@ -10756,8 +10772,8 @@ sub compute_topic {
     ## TAGGING BY KEYWORDS
     # getting keywords
     foreach my $topic (@{$self->{'admin'}{'msg_topic'} || []}) {
-        my $list_keyw =
-            tools::get_array_from_splitted_string($topic->{'keywords'});
+        my $list_keyw = Sympa::Tools::Data::get_array_from_splitted_string(
+            $topic->{'keywords'});
 
         foreach my $keyw (@{$list_keyw}) {
             $keywords{$keyw} = $topic->{'name'};
@@ -10798,11 +10814,11 @@ sub compute_topic {
         }
     }
     # foldcase string
-    $mail_string = tools::foldcase($mail_string);
+    $mail_string = Sympa::Tools::Text::foldcase($mail_string);
 
     # parsing
     foreach my $keyw (keys %keywords) {
-        if (index($mail_string, tools::foldcase($keyw)) >= 0) {
+        if (index($mail_string, Sympa::Tools::Text::foldcase($keyw)) >= 0) {
             $topic_hash{$keywords{$keyw}} = 1;
         }
     }
@@ -10956,7 +10972,8 @@ sub modifying_msg_topic_for_list_members {
     }
 
     my $msg_topic_changes =
-        tools::diff_on_arrays(\@old_msg_topic_name, \@new_msg_topic_name);
+        Sympa::Tools::Data::diff_on_arrays(\@old_msg_topic_name,
+        \@new_msg_topic_name);
 
     if ($#{$msg_topic_changes->{'deleted'}} >= 0) {
 
@@ -10967,9 +10984,9 @@ sub modifying_msg_topic_for_list_members {
             ) {
 
             if ($subscriber->{'reception'} eq 'mail') {
-                my $topics = tools::diff_on_arrays(
+                my $topics = Sympa::Tools::Data::diff_on_arrays(
                     $msg_topic_changes->{'deleted'},
-                    tools::get_array_from_splitted_string(
+                    Sympa::Tools::Data::get_array_from_splitted_string(
                         $subscriber->{'topics'}
                     )
                 );
@@ -11035,7 +11052,8 @@ sub select_list_members_for_topic {
     my $msg_topics;
 
     if ($string_topic) {
-        $msg_topics = tools::get_array_from_splitted_string($string_topic);
+        $msg_topics =
+            Sympa::Tools::Data::get_array_from_splitted_string($string_topic);
     }
 
     foreach my $user (@$subscribers) {
@@ -11052,16 +11070,18 @@ sub select_list_members_for_topic {
             push @selected_users, $user;
             next;
         }
-        my $user_topics =
-            tools::get_array_from_splitted_string($info_user->{'topics'});
+        my $user_topics = Sympa::Tools::Data::get_array_from_splitted_string(
+            $info_user->{'topics'});
 
         if ($string_topic) {
-            my $result = tools::diff_on_arrays($msg_topics, $user_topics);
+            my $result =
+                Sympa::Tools::Data::diff_on_arrays($msg_topics, $user_topics);
             if ($#{$result->{'intersection'}} >= 0) {
                 push @selected_users, $user;
             }
         } else {
-            my $result = tools::diff_on_arrays(['other'], $user_topics);
+            my $result =
+                Sympa::Tools::Data::diff_on_arrays(['other'], $user_topics);
             if ($#{$result->{'intersection'}} >= 0) {
                 push @selected_users, $user;
             }
@@ -11292,14 +11312,15 @@ sub delete_subscription_request {
 sub get_shared_size {
     my $self = shift;
 
-    return tools::get_dir_size("$self->{'dir'}/shared");
+    return Sympa::Tools::File::get_dir_size($self->{'dir'} . '/shared');
 }
 
 sub get_arc_size {
     my $self = shift;
     my $dir  = shift;
 
-    return tools::get_dir_size($dir . '/' . $self->get_list_id());
+    return Sympa::Tools::File::get_dir_size(
+        $dir . '/' . $self->get_list_id());
 }
 
 # return the date epoch for next delivery planified for a list
@@ -11523,8 +11544,8 @@ sub purge {
 
     if ($self->{'name'}) {
         my $arc_dir = Conf::get_robot_conf($self->{'domain'}, 'arc_path');
-        tools::remove_dir($arc_dir . '/' . $self->get_list_id());
-        tools::remove_dir($self->get_bounce_dir());
+        Sympa::Tools::File::remove_dir($arc_dir . '/' . $self->get_list_id());
+        Sympa::Tools::File::remove_dir($self->get_bounce_dir());
     }
 
     ## Clean list table if needed
@@ -11544,7 +11565,7 @@ sub purge {
     ## Clean memory cache
     delete $list_of_lists{$self->{'domain'}}{$self->{'name'}};
 
-    tools::remove_dir($self->{'dir'});
+    Sympa::Tools::File::remove_dir($self->{'dir'});
 
     #log ind stat table to make statistics
     Log::db_stat_log(
@@ -11910,10 +11931,11 @@ sub _update_list_db {
     my $adm_txt;
     my $ed_txt;
 
-    my $name      = $self->{'name'};
-    my $searchkey = tools::foldcase($self->{'admin'}{'subject'} || '');
-    my $status    = $self->{'admin'}{'status'};
-    my $robot     = $self->{'domain'};
+    my $name = $self->{'name'};
+    my $searchkey =
+        Sympa::Tools::Text::foldcase($self->{'admin'}{'subject'} || '');
+    my $status = $self->{'admin'}{'status'};
+    my $robot  = $self->{'domain'};
 
     my $family = $self->{'admin'}{'family_name'};
     $family = undef unless defined $family and length $family;

@@ -40,6 +40,8 @@ use Sympa::Report;
 use Sympa::Robot;
 use Sympa::Scenario;
 use tools;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 use Sympa::User;
 
 my %comms = (
@@ -2707,9 +2709,10 @@ sub distribute {
         || ($main::daemon_usage == Conf::DAEMON_ALL)) {
         my $numsmtp;
         $message->{shelved}{dkim_sign} = 1
-            if tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
-            'any')
-            or tools::is_in_array($list->{'admin'}{'dkim_signature_apply_on'},
+            if Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
+            or Sympa::Tools::Data::is_in_array(
+            $list->{'admin'}{'dkim_signature_apply_on'},
             'editor_validated_messages');
 
         $numsmtp = Sympa::List::distribute_msg($message);
@@ -3021,9 +3024,9 @@ sub confirm {
             || ($main::daemon_usage == Conf::DAEMON_ALL)) {
             my $numsmtp;
             $message->{shelved}{dkim_sign} = 1
-                if tools::is_in_array(
+                if Sympa::Tools::Data::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-                or tools::is_in_array(
+                or Sympa::Tools::Data::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'},
                 'md5_authenticated_messages');
 
@@ -3233,7 +3236,7 @@ sub reject {
     close(IN);
     Log::do_log('info', 'REJECT %s %s from %s accepted (%d seconds)',
         $name, $sender, $key, time - $time_command);
-    tools::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
+    Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'
             . $list->get_list_id() . '/'
             . $key);
     unlink($file);
@@ -3308,8 +3311,8 @@ sub modindex {
                     Conf::get_robot_conf($robot, 'clean_delay_queuemod');
             }
 
-            if (tools::get_mtime("$modqueue/$i") < (time - $moddelay * 86400))
-            {
+            if (Sympa::Tools::File::get_mtime("$modqueue/$i") <
+                (time - $moddelay * 86400)) {
                 unlink("$modqueue/$i");
                 Log::do_log('notice',
                     'Deleting unmoderated message %s, too old', $i);

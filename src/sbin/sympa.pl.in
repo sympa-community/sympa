@@ -53,6 +53,9 @@ use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use tools;
+use Sympa::Tools::Daemon;
+use Sympa::Tools::Data;
+use Sympa::Tools::File;
 use Sympa::Upgrade;
 
 ## Internal tuning
@@ -248,7 +251,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
     # Enable SMTP logging if required
     $Sympa::Mail::log_smtp = $main::options{'mail'}
-        || tools::smart_eq($Conf::Conf{'log_smtp'}, 'on');
+        || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
 
     # setting log_level using conf unless it is set by calling option
     if (defined $main::options{'log_level'}) {
@@ -290,11 +293,25 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         ## Function never returns.
     }
 
-    if (tools::smart_eq($main::options{'service'}, 'process_message')) {
+    if (Sympa::Tools::Data::smart_eq(
+            $main::options{'service'},
+            'process_message'
+        )
+        ) {
         $main::daemon_usage = Conf::DAEMON_MESSAGE;
-    } elsif (tools::smart_eq($main::options{'service'}, 'process_command')) {
+    } elsif (
+        Sympa::Tools::Data::smart_eq(
+            $main::options{'service'},
+            'process_command'
+        )
+        ) {
         $main::daemon_usage = Conf::DAEMON_COMMAND;
-    } elsif (tools::smart_eq($main::options{'service'}, 'process_creation')) {
+    } elsif (
+        Sympa::Tools::Data::smart_eq(
+            $main::options{'service'},
+            'process_creation'
+        )
+        ) {
         $main::daemon_usage = Conf::DAEMON_CREATION;
     } else {
         # default is to run one sympa.pl server for commands, messages and
@@ -437,9 +454,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             ## dedicated file
             my $options;
             $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-            tools::write_pid($file, $PID, $options);
+            Sympa::Tools::Daemon::write_pid($file, $PID, $options);
             unless ($options->{'stderr_to_tty'}) {
-                tools::direct_stderr_to_file(('pid' => $PID));
+                Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
             }
         }
 
@@ -1308,32 +1325,32 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             if ($index_cleanqueue++ >= 100) {
                 $index_cleanqueue = 0;
                 if (-e "$spool/bad") {
-                    tools::CleanSpool("$spool/bad",
+                    Sympa::Tools::File::CleanDir("$spool/bad",
                         $Conf::Conf{'clean_delay_queue'});
                 }
-                tools::CleanSpool($Conf::Conf{'queuemod'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'queuemod'},
                     $Conf::Conf{'clean_delay_queuemod'});
                 if (-e $Conf::Conf{'queueoutgoing'} . '/bad') {
-                    tools::CleanSpool(
+                    Sympa::Tools::File::CleanDir(
                         $Conf::Conf{'queueoutgoing'} . '/bad',
                         $Conf::Conf{'clean_delay_queueoutgoing'}
                     );
                 }
                 if (-e $Conf::Conf{'queuebounce'} . '/bad') {
-                    tools::CleanSpool(
+                    Sympa::Tools::File::CleanDir(
                         $Conf::Conf{'queuebounce'} . '/bad',
                         $Conf::Conf{'clean_delay_queuebounce'}
                     );
                 }
-                tools::CleanSpool($Conf::Conf{'queueauth'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'queueauth'},
                     $Conf::Conf{'clean_delay_queueauth'});
-                tools::CleanSpool($Conf::Conf{'queuetopic'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'queuetopic'},
                     $Conf::Conf{'clean_delay_queuetopic'});
-                tools::CleanSpool($Conf::Conf{'tmpdir'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'tmpdir'},
                     $Conf::Conf{'clean_delay_tmpdir'});
-                tools::CleanSpool($Conf::Conf{'queuesubscribe'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'queuesubscribe'},
                     $Conf::Conf{'clean_delay_queuesubscribe'});
-                tools::CleanSpool($Conf::Conf{'queueautomatic'},
+                Sympa::Tools::File::CleanDir($Conf::Conf{'queueautomatic'},
                     $Conf::Conf{'clean_delay_queueautomatic'});
             }
         }
@@ -1364,7 +1381,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
             ## test ever if it is an old bad file
             if ($t_filename =~ /^BAD\-/i) {
-                if (tools::get_mtime("$t_spool/$t_filename") <
+                if (Sympa::Tools::File::get_mtime("$t_spool/$t_filename") <
                     time - $Conf::Conf{'clean_delay_queue'} * 86400) {
                     unlink("$t_spool/$t_filename");
                     Log::do_log('notice',
@@ -1485,7 +1502,7 @@ Log::do_log('notice', 'Sympa exited normally due to signal');
 my $file = 'sympa';
 $file = 'sympa-distribute' if $main::daemon_usage == Conf::DAEMON_MESSAGE;
 $file = 'sympa-creation'   if $main::daemon_usage == Conf::DAEMON_CREATION;
-tools::remove_pid($file, $PID);
+Sympa::Tools::Daemon::remove_pid($file, $PID);
 
 exit(0);
 
@@ -1828,7 +1845,7 @@ sub process_message {
         $list_address = $list->get_list_address();
     }
     ## Loop prevention
-    if (tools::smart_eq(
+    if (Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'reject_mail_from_automates_feature'}, 'on'
         )
         ) {
@@ -2741,16 +2758,16 @@ sub DoMessage {
         if (   ($main::daemon_usage == Conf::DAEMON_MESSAGE)
             || ($main::daemon_usage == Conf::DAEMON_ALL)) {
             $message->{shelved}{dkim_sign} = 1
-                if tools::is_in_array(
+                if Sympa::Tools::Data::is_in_array(
                 $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
                 or (
-                tools::is_in_array(
+                Sympa::Tools::Data::is_in_array(
                     $list->{'admin'}{'dkim_signature_apply_on'},
                     'smime_authenticated_messages')
                 and $message->{'smime_signed'}
                 )
                 or (
-                tools::is_in_array(
+                Sympa::Tools::Data::is_in_array(
                     $list->{'admin'}{'dkim_signature_apply_on'},
                     'dkim_authenticated_messages')
                 and $message->{'dkim_pass'}

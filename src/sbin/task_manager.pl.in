@@ -52,6 +52,8 @@ use SDM;
 use Sympa::Session;
 use Sympa::Task;
 use tools;
+use Sympa::Tools::Daemon;
+use Sympa::Tools::Time;
 use Sympa::Tracking;
 use Sympa::User;
 
@@ -134,9 +136,9 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
 ## If process is running in foreground, don't write STDERR to a dedicated file
 my $options;
 $options->{'stderr_to_tty'} = 1 if ($main::options{'foreground'});
-tools::write_pid('task_manager', $PID, $options);
+Sympa::Tools::Daemon::write_pid('task_manager', $PID, $options);
 unless ($options->{'stderr_to_tty'}) {
-    tools::direct_stderr_to_file(('pid' => $PID));
+    Sympa::Tools::Daemon::direct_stderr_to_file(('pid' => $PID));
 }
 
 ## Set the UserID & GroupID for the process
@@ -269,8 +271,8 @@ foreach (keys %asgn_commands) {
 
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
-    my $current_date = time;                          # current epoch date
-    my $rep          = tools::adate($current_date);
+    my $current_date = time;    # current epoch date
+    my $rep = Sympa::Tools::Time::adate($current_date);
 
     ## Empty cache of the List.pm module
     Sympa::List::init_list_cache();
@@ -431,7 +433,7 @@ while (!$end) {
 Sympa::Alarm::flush('purge');
 
 Log::do_log('notice', 'Task_manager exited normally due to signal');
-tools::remove_pid('task_manager', $PID);
+Sympa::Tools::Daemon::remove_pid('task_manager', $PID);
 
 exit(0);
 
@@ -1016,7 +1018,7 @@ sub next_cmd {
 
     my @tab = @{$Rarguments};
     # conversion of the date argument into epoch format
-    my $date = tools::epoch_conv($tab[0], $task->{'date'});
+    my $date = Sympa::Tools::Time::epoch_conv($tab[0], $task->{'date'});
     my $label = $tab[1];
 
     Log::do_log('notice',
@@ -1068,7 +1070,7 @@ sub next_cmd {
     }
 
 #    my $new_task = "$date.$label.$name[2].$name[3]";
-    my $human_date = tools::adate($date);
+    my $human_date = Sympa::Tools::Time::adate($date);
 #    my $new_task_file = "$spool_task/$new_task";
 #    unless (rename ($filename, $new_task_file)) {
 #	error ($filename,
@@ -1100,7 +1102,7 @@ sub select_subs {
     );
     $condition =~ /(\w+)\(([^\)]*)\)/;
     if ($2) {    # conversion of the date argument into epoch format
-        my $date = tools::epoch_conv($2, $task->{'date'});
+        my $date = Sympa::Tools::Time::epoch_conv($2, $task->{'date'});
         $condition = "$1($date)";
     }
 
@@ -1582,7 +1584,7 @@ sub chk_cert_expiration {
     my $execution_date = $task->{'date'};
     my @tab            = @{$Rarguments};
     my $template       = $tab[0];
-    my $limit          = tools::duration_conv($tab[1], $execution_date);
+    my $limit = Sympa::Tools::Time::duration_conv($tab[1], $execution_date);
 
     Log::do_log('notice',
         "line $context->{'line_number'} : chk_cert_expiration (@{$Rarguments})"
@@ -1705,7 +1707,7 @@ sub update_crl {
     return 1 unless $Conf::Conf{'openssl'};
 
     my @tab = @{$Rarguments};
-    my $limit = tools::epoch_conv($tab[1], $task->{'date'});
+    my $limit = Sympa::Tools::Time::epoch_conv($tab[1], $task->{'date'});
     # file where CA URLs are stored
     my $CA_file = $Conf::Conf{'home'} . '/' . $tab[0];
     Log::do_log(
