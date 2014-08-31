@@ -272,7 +272,6 @@ foreach (keys %asgn_commands) {
 ###### INFINITE LOOP SCANING THE QUEUE (unless a sig TERM is received) ######
 while (!$end) {
     my $current_date = time;    # current epoch date
-    my $rep = Sympa::Tools::Time::adate($current_date);
 
     ## Empty cache of the List.pm module
     Sympa::List::init_list_cache();
@@ -1070,7 +1069,7 @@ sub next_cmd {
     }
 
 #    my $new_task = "$date.$label.$name[2].$name[3]";
-    my $human_date = Sympa::Tools::Time::adate($date);
+    my $human_date = POSIX::strftime('%Y-%m-%d %H:%M:%S', localtime $date);
 #    my $new_task_file = "$spool_task/$new_task";
 #    unless (rename ($filename, $new_task_file)) {
 #	error ($filename,

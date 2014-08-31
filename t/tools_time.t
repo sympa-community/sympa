@@ -67,8 +67,8 @@ my @epoch_conv_tests = (
 );
 
 plan tests =>
-    ##@epoch2yyyymmjj_hhmmss_tests + # Recently unavailable
-    @adate_tests                 +
+    # @epoch2yyyymmjj_hhmmss_tests + # Recently unavailable
+    # @adate_tests                 + # Recently unavailable
     @get_midnight_time_tests     +
     @date_conv_tests             +
     @duration_conv_tests         +
@@ -82,13 +82,13 @@ plan tests =>
 #    );
 #}
 
-foreach my $test (@adate_tests) {
-    is(
-        Sympa::Tools::Time::adate($test->[0]),
-        $test->[1],
-        "adate $test->[0]"
-    );
-}
+#foreach my $test (@adate_tests) {
+#    is(
+#        Sympa::Tools::Time::adate($test->[0]),
+#        $test->[1],
+#        "adate $test->[0]"
+#    );
+#}
 
 foreach my $test (@get_midnight_time_tests) {
     is(

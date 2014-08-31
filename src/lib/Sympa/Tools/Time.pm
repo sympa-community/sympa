@@ -34,19 +34,12 @@ use Log;
 ## subroutines for epoch and human format date processings
 
 ## convert an epoch date into a readable date scalar
-# Note: This is used only at one place.
-sub adate {
-
-    my $epoch = $_[0];
-    my @date  = localtime($epoch);
-    my $date  = POSIX::strftime("%e %a %b %Y  %H h %M min %S s", @date);
-
-    return $date;
-}
+# DEPRECATED: No longer used.
+#sub adate($epoch);
 
 ## Return the epoch date corresponding to the last midnight before date given
 ## as argument.
-# Note: This is used only at one place.
+# Note: This is used only once.
 sub get_midnight_time {
 
     my $epoch = $_[0];
