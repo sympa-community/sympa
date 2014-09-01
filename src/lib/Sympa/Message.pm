@@ -414,6 +414,8 @@ tt2 language if $filename
 
 Body message if $filename is C<''>.
 
+Note: This feature has been deprecated.
+
 =item headers
 
 Hashref with keys are headers mail
@@ -442,6 +444,9 @@ sub new_from_template {
     my $who     = shift;
     my $context = shift;
     my %options = @_;
+
+    die 'Parameter $tpl is not defined'
+        unless defined $tpl and length $tpl;
 
     my ($list, $robot_id);
     if (ref $that eq 'Sympa::List') {
@@ -515,24 +520,6 @@ sub new_from_template {
         }
     }
 
-    ## What file
-    my $tt2_include_path = tools::get_search_path(
-        $that,
-        subdir => 'mail_tt2',
-        lang   => $data->{'lang'}
-    );
-
-    if ($list) {
-        # list directory to get the 'info' file
-        push @{$tt2_include_path}, $list->{'dir'};
-        # list archives to include the last message
-        push @{$tt2_include_path}, $list->{'dir'} . '/archives';
-    }
-
-    foreach my $d (@{$tt2_include_path}) {
-        tt2::add_include_path($d);
-    }
-
     foreach my $p (
         'email',   'gecos',      'host',        'sympa',
         'request', 'listmaster', 'wwsympa_url', 'title',
@@ -541,15 +528,6 @@ sub new_from_template {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
     $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
-
-    my @path = tt2::get_include_path();
-    my $filename = Sympa::Tools::File::find_file($tpl . '.tt2', @path);
-
-    unless (defined $filename) {
-        Log::do_log('err', 'Could not find template %s.tt2 in %s',
-            $tpl, join(':', @path));
-        return undef;
-    }
 
     $data->{'sender'} ||= $who;
 
@@ -587,7 +565,8 @@ sub new_from_template {
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot_id)
         unless $data->{'boundary'};
 
-    my $message = $class->_new_from_template($that, $filename, $who, $data);
+    my $message =
+        $class->_new_from_template($that, $tpl . '.tt2', $who, $data);
 
     # Shelve S/MIME signing.
     $message->{shelved}{smime_sign} = 1
@@ -613,40 +592,41 @@ sub _new_from_template {
     my $rcpt     = shift;
     my $data     = shift;
 
-    my $robot_id =
-          (ref $that eq 'Sympa::List') ? $that->{'domain'}
-        : ($that and $that ne '*') ? $that
-        :                            '*';
+    my ($list, $robot_id);
+    if (ref $that eq 'Sympa::List') {
+        $list     = $that;
+        $robot_id = $list->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot_id = $that;
+    } else {
+        $robot_id = '*';
+    }
 
-    my $header_possible = $data->{'header_possible'};
-
-    my ($to, $message_as_string);
-
+    my $message_as_string;
     my %header_ok;    # hash containing no missing headers
     my $existing_headers = 0;    # the message already contains headers
 
     ## We may receive a list of recipients
-    if (ref($rcpt)) {
-        unless (ref($rcpt) eq 'ARRAY') {
-            Log::do_log('notice', 'Wrong type of reference for rcpt');
-            return undef;
-        }
-    }
+    die sprintf 'Wrong type of reference for $rcpt: %s', ref $rcpt
+        if ref $rcpt and ref $rcpt ne 'ARRAY';
 
     ## Charset for encoding
     $data->{'charset'} ||= tools::lang2charset($data->{'lang'});
 
     ## TT2 file parsing
     #FIXME: Check TT2 parse error
-    if ($filename =~ /\.tt2$/) {
-        my $output;
-        my @path = split /\//, $filename;
-        tt2::parse_tt2($data, $path[$#path], \$output);  #FIXME: include path?
-        $message_as_string .= join('', $output);
-        $header_possible = 1;
-    } else {                                             # or not
-        $message_as_string .= $data->{'body'};
+    my $tt2_include_path = tools::get_search_path(
+        $that,
+        subdir => 'mail_tt2',
+        lang   => $data->{'lang'}
+    );
+    if ($list) {
+        # list directory to get the 'info' file
+        push @{$tt2_include_path}, $list->{'dir'};
+        # list archives to include the last message
+        push @{$tt2_include_path}, $list->{'dir'} . '/archives';
     }
+    tt2::parse_tt2($data, $filename, \$message_as_string, $tt2_include_path);
 
     # Does the message include headers ?
     if ($data->{'headers'}) {
@@ -655,27 +635,26 @@ sub _new_from_template {
             $header_ok{$field} = 1;
         }
     }
-    if ($header_possible) {
-        foreach my $line (split(/\n/, $message_as_string)) {
-            last if ($line =~ /^\s*$/);
-            if ($line =~ /^[\w-]+:\s*/) {
-                ## A header field
-                $existing_headers = 1;
-            } elsif ($existing_headers && ($line =~ /^\s/)) {
-                ## Following of a header field
-                next;
-            } else {
-                last;
-            }
 
-            foreach my $header (
-                qw(message-id date to from subject reply-to
-                mime-version content-type content-transfer-encoding)
-                ) {
-                if ($line =~ /^$header\s*:/i) {
-                    $header_ok{$header} = 1;
-                    last;
-                }
+    foreach my $line (split /\n/, $message_as_string) {
+        last if ($line =~ /^\s*$/);
+        if ($line =~ /^[\w-]+:\s*/) {
+            ## A header field
+            $existing_headers = 1;
+        } elsif ($existing_headers and $line =~ /^\s/) {
+            ## Following of a header field
+            next;
+        } else {
+            last;
+        }
+
+        foreach my $header (
+            qw(message-id date to from subject reply-to
+            mime-version content-type content-transfer-encoding)
+            ) {
+            if ($line =~ /^$header\s*:/i) {
+                $header_ok{$header} = 1;
+                last;
             }
         }
     }
@@ -698,6 +677,7 @@ sub _new_from_template {
     }
 
     unless ($header_ok{'to'}) {
+        my $to;
         # Currently, bare e-mail address is assumed.  Complex ones such as
         # "phrase" <email> won't be allowed.
         if (ref($rcpt)) {
@@ -776,9 +756,9 @@ sub _new_from_template {
 
     ## Determine what value the Auto-Submitted header field should take
     ## See http://www.tools.ietf.org/html/draft-palme-autosub-01
-    ## the header filed can have one of the following values:
+    ## the header field can have one of the following values:
     ## auto-generated, auto-replied, auto-forwarded.
-    ## The header should not be set when wwsympa sends a command/mail to
+    ## The header should not be set when WWSympa sends a command to
     ## sympa.pl through its spool
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'

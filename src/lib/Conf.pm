@@ -167,8 +167,7 @@ sub load {
     my $config_err = 0;
     my %line_numbered_config;
 
-    if (_source_has_not_changed({'config_file' => $config_file})
-        && !$return_result) {
+    if (_source_has_not_changed($config_file) and !$return_result) {
         if (my $tmp_conf = _load_binary_cache(
                 {'config_file' => $config_file . $binary_file_extension}
             )
@@ -2188,8 +2187,7 @@ sub _load_single_robot_config {
     my $config_err;
     my $config_file  = "$Conf{'etc'}/$robot/robot.conf";
     my $force_reload = $param->{'force_reload'};
-    if (!$force_reload
-        && _source_has_not_changed({'config_file' => $config_file})) {
+    if (!$force_reload and _source_has_not_changed($config_file)) {
         $force_reload = 0;
     }
     if (!$force_reload) {
@@ -2465,13 +2463,13 @@ sub _save_config_hash_to_binary {
 }
 
 sub _source_has_not_changed {
-    my $param    = shift;
-    my $is_older = Sympa::Tools::File::a_is_older_than_b(
-        {   'a_file' => $param->{'config_file'},
-            'b_file' => $param->{'config_file'} . $binary_file_extension,
-        }
-    );
-    return 1 if (defined $is_older && $is_older == 1);
+    my $file = shift;
+
+    my $file_bin = $file . $binary_file_extension;
+    return 1 if
+        -r $file and -r $file_bin and 
+        Sympa::Tools::File::get_mtime($file) <
+        Sympa::Tools::File::get_mtime($file_bin);
     return 0;
 }
 

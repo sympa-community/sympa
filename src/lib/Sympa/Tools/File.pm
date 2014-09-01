@@ -45,8 +45,8 @@ sub set_file_rights {
             return undef;
         }
     } else {
-        #
-        # "A value of -1 is interpreted by most systems to leave that value unchanged".
+        # "A value of -1 is interpreted by most systems to leave that value
+        # unchanged".
         $uid = -1;
     }
     if ($param{'group'}) {
@@ -160,7 +160,7 @@ sub mkdir_all {
 
 # shift file renaming it with date. If count is defined, keep $count file and
 # unlink others
-# Note: This is used on just one place.
+# Note: This is used only once.
 sub shift_file {
     my $file  = shift;
     my $count = shift;
@@ -240,19 +240,8 @@ sub get_mtime {
 }
 
 ## Find a file in an ordered list of directories
-# Note: This is used just on one place.
-sub find_file {
-    my ($filename, @directories) = @_;
-    Log::do_log('debug3', '(%s, %s)', $filename, join(':', @directories));
-
-    foreach my $d (@directories) {
-        if (-f "$d/$filename") {
-            return "$d/$filename";
-        }
-    }
-
-    return undef;
-}
+#DEPRECATED: No longer used.
+#sub find_file($filename, @directories);
 
 ## Recursively list the content of a directory
 ## Return an array of hash, each entry with directory + filename + encoding
@@ -342,28 +331,8 @@ sub remove_dir {
     return 1;
 }
 
-####################################################
-# a_is_older_than_b
-####################################################
-# Compares the last modifications date of two files
-#
-# IN : - a hash with two entries:
-#
-#        * a_file : the full path to a file
-#        * b_file : the full path to a file
-#
-# OUT : 1 if the last modification date of "a_file" is older than
-# "b_file"'s, 0 otherwise.
-#       return undef if the comparison could not be carried on.
-#######################################################
-# Note: This is used at just one place.
-sub a_is_older_than_b {
-    my $param = shift;
-
-    return undef unless -r $param->{'a_file'} and -r $param->{'b_file'};
-    return (Sympa::Tools::File::get_mtime($param->{'a_file'}) <
-            Sympa::Tools::File::get_mtime($param->{'b_file'})) ? 1 : 0;
-}
+#DEPRECATED: No longer used.
+#sub a_is_older_than_b({a_file => file, b_file => file);
 
 =over
 
