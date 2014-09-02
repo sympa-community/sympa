@@ -1715,7 +1715,7 @@ sub distribute_msg {
             };
             if ($@) {
                 $message->add_header('X-DMARC-Error', $@);
-                Log::do_log('error',
+                Log::do_log('err',
                     'No Net::DNS found. Trying to save the message by adding a X-DMARC-Error header'
                 );
             }
@@ -8317,7 +8317,7 @@ sub sync_include_ca {
             ) {
             Log::do_log('debug', 'Updated user %s', $email);
         } else {
-            Log::do_log('error', 'Could not update user %s', $email);
+            Log::do_log('err', 'Could not update user %s', $email);
         }
     }
 
@@ -8362,7 +8362,7 @@ sub purge_ca {
             ) {
             Log::do_log('debug', 'Updated user %s', $email);
         } else {
-            Log::do_log('error', 'Could not update user %s', $email);
+            Log::do_log('err', 'Could not update user %s', $email);
         }
     }
 
