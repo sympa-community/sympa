@@ -32,7 +32,6 @@ nobase_modules_DATA = \
 	Sympa/ConfDef.pm \
 	Sympa/Config_XML.pm \
 	Sympa/Constants.pm \
-	Sympa/CookieLib.pm \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
 	Sympa/Datasource.pm \

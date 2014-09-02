@@ -162,6 +162,7 @@ sub dup_var {
 # OUT : -ref(ARRAY)
 #
 ######################################################
+# Note: This is used only by Sympa::List.
 sub get_array_from_splitted_string {
     my ($string) = @_;
     my @array;

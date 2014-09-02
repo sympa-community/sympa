@@ -27,9 +27,9 @@ package Sympa::Session;
 use strict;
 use warnings;
 use CGI::Cookie;
+use Digest::MD5;
 
 use Conf;
-use Sympa::CookieLib;
 use Sympa::Language;
 use Log;
 use SDM;
@@ -95,8 +95,9 @@ sub new {
             return undef;
         }
         if ($status eq 'not_found') {
+            # Start a Sympa::Session->new(may be a fake cookie).
             Log::do_log('info', 'Ignoring unknown session cookie "%s"',
-                $cookie);    # start a session->new(may ne a fake cookie)
+                $cookie);
             return (Sympa::Session->new($robot));
         }
     } else {
@@ -644,8 +645,7 @@ sub list_sessions {
 ## Subroutine to get session cookie value
 sub get_session_cookie {
     my $http_cookie = shift;
-    return Sympa::CookieLib::generic_get_cookie($http_cookie,
-        'sympa_session');
+    return Sympa::Session::_generic_get_cookie($http_cookie, 'sympa_session');
 }
 
 ## Generic subroutine to set a cookie
@@ -782,6 +782,128 @@ sub decrypt_session_id {
         return $cookie;
     }
     return unpack 'H*', $cipher->decrypt(pack 'H*', $cookie);
+}
+
+## Generic subroutine to set a cookie
+# DEPRECATED: No longer used.  Use CGI::Cookie::new().
+# Old name: cookielib::generic_set_cookie()
+#sub generic_set_cookie(
+#    name=>NAME, value=>VALUE, expires=>EXPIRES, domain=>DOMAIN, path=>PATH);
+
+# Sets an HTTP cookie to be sent to a SOAP client
+# DEPRECATED: Use Sympa::Session::soap_cookie2().
+#sub set_cookie_soap($session_id, $http_domain, $expire);
+
+## returns Message Authentication Check code
+# Old name: cookielib::get_mac(), Sympa::CookieLib::get_mac().
+sub _get_mac {
+    my $email  = shift;
+    my $secret = shift;
+    Log::do_log('debug3', '(%s, %s)', $email, $secret);
+
+    unless ($secret) {
+        Log::do_log('err',
+            'Failure missing server secret for cookie MD5 digest');
+        return undef;
+    }
+    unless ($email) {
+        Log::do_log('err',
+            'Failure missing email address or cookie MD5 digest');
+        return undef;
+    }
+
+    my $md5 = Digest::MD5->new;
+
+    $md5->reset;
+    $md5->add($email . $secret);
+
+    return substr(unpack("H*", $md5->digest), -8);
+
+}
+
+# Old name:
+# cookielib::set_cookie_extern(), Sympa::CookieLib::set_cookie_extern().
+sub set_cookie_extern {
+    my ($secret, $http_domain, %alt_emails) = @_;
+    my $expiration;
+    my $cookie;
+    my $value;
+
+    my @mails;
+    foreach my $mail (keys %alt_emails) {
+        my $string = $mail . ':' . $alt_emails{$mail};
+        push(@mails, $string);
+    }
+    my $emails = join(',', @mails);
+
+    $value = sprintf '%s&%s', $emails, _get_mac($emails, $secret);
+
+    if ($http_domain eq 'localhost') {
+        $http_domain = "";
+    }
+
+    $cookie = CGI::Cookie->new(
+        -name    => 'sympa_altemails',
+        -value   => $value,
+        -expires => '+1y',
+        -domain  => $http_domain,
+        -path    => '/'
+    );
+    ## Send cookie to the client
+    printf "Set-Cookie: %s\n", $cookie->as_string;
+    #Log::do_log('notice','%s',$cookie->as_string);
+    return 1;
+}
+
+###############################
+# Subroutines to read cookies #
+###############################
+
+## Generic subroutine to get a cookie value
+# Old name:
+# cookielib::generic_get_cookie(), Sympa::CookieLib::generic_get_cookie().
+sub _generic_get_cookie {
+    my $http_cookie = shift;
+    my $cookie_name = shift;
+
+    if ($http_cookie and $http_cookie =~ /\S+/g) {
+        my %cookies = CGI::Cookie->parse($http_cookie);
+        foreach my $cookie (values %cookies) {
+            next unless $cookie->name eq $cookie_name;
+            return ($cookie->value);
+        }
+    }
+    return undef;
+}
+
+## Returns user information extracted from the cookie
+# DEPRECATED: No longer used.
+# Old name: cookielib::check_cookie().
+#sub check_cookie(($http_cookie, $secret);
+
+# Old name:
+# cookielib::check_cookie_extern(), Sympa::CookieLib::check_cookie_extern().
+sub check_cookie_extern {
+    my ($http_cookie, $secret, $user_email) = @_;
+
+    my $extern_value = _generic_get_cookie($http_cookie, 'sympa_altemails');
+
+    if ($extern_value and $extern_value =~ /^(\S+)&(\w+)$/) {
+        return undef unless (_get_mac($1, $secret) eq $2);
+
+        my %alt_emails;
+        foreach my $element (split(/,/, $1)) {
+            my @array = split(/:/, $element);
+            $alt_emails{$array[0]} = $array[1];
+        }
+
+        my $e = lc($user_email);
+        unless ($alt_emails{$e}) {
+            return undef;
+        }
+        return (\%alt_emails);
+    }
+    return undef;
 }
 
 1;

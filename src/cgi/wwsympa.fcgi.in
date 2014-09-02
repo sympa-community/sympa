@@ -66,7 +66,6 @@ use Sympa::Auth;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
-use Sympa::CookieLib;
 use Sympa::Crash Hook => \&_crash_handler;    # Show traceback.
 use Sympa::Family;
 use Sympa::Language;
@@ -81,8 +80,8 @@ use Sympa::Report;
 use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
-use Sympa::SharedDocument;
 use Sympa::Session;
+use Sympa::SharedDocument;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
@@ -1529,7 +1528,7 @@ while ($query = new_loop()) {
         ##Cookie extern : sympa_altemails
         ## !!
         $param->{'alt_emails'} =
-            Sympa::CookieLib::check_cookie_extern($ENV{'HTTP_COOKIE'},
+            Sympa::Session::check_cookie_extern($ENV{'HTTP_COOKIE'},
             $Conf::Conf{'cookie'}, $param->{'user'}{'email'});
 
         if ($param->{'user'}{'email'}) {
@@ -1858,7 +1857,7 @@ while ($query = new_loop()) {
 
                 unless ($number == 0) {
                     unless (
-                        Sympa::CookieLib::set_cookie_extern(
+                        Sympa::Session::set_cookie_extern(
                             $Conf::Conf{'cookie'},
                             $param->{'cookie_domain'},
                             %{$param->{'alt_emails'}}
@@ -1871,7 +1870,7 @@ while ($query = new_loop()) {
             }
         }
         # elsif ($ENV{'HTTP_COOKIE'} =~ /sympauser\=/) {
-        #     Sympa::CookieLib::set_cookie('unknown', $Conf::Conf{'cookie'},
+        #     cookielib::set_cookie('unknown', $Conf::Conf{'cookie'},
         #         $param->{'cookie_domain'}, 'now');
         # }
     }
@@ -3889,7 +3888,7 @@ sub do_login {
 
     unless ($param->{'alt_emails'}{$email}) {
         unless (
-            Sympa::CookieLib::set_cookie_extern(
+            Sympa::Session::set_cookie_extern(
                 $Conf::Conf{'cookie'}, $param->{'cookie_domain'},
                 %{$param->{'alt_emails'}}
             )
@@ -4667,7 +4666,7 @@ sub do_logout {
 
     # no reason to alter the lang because user perform logout
     # $param->{'lang'} = $param->{'cookie_lang'} =
-    #     Sympa::CookieLib::check_lang_cookie($ENV{'HTTP_COOKIE'})
+    #     cookielib::check_lang_cookie($ENV{'HTTP_COOKIE'})
     #     || $list->{'admin'}{'lang'}
     #     || Conf::get_robot_conf($robot, 'lang');
 

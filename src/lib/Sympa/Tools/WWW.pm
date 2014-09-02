@@ -127,7 +127,7 @@ our %bounce_status = (
 #sub load_mime_types();
 
 ## Returns user information extracted from the cookie
-# Deprecated.  Use cookielib::check_cookie().
+# Deprecated.  Use Sympa::Session->new etc.
 #sub get_email_from_cookie;
 
 sub new_passwd {
