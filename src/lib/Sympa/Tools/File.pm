@@ -360,14 +360,6 @@ Returns:
 
 =back 
 
-Calls::
-
-=over 
-
-=item * Sympa::Tools::File::remove_dir
-
-=back 
-
 =back
 
 =cut 

@@ -488,14 +488,6 @@ Returns a tag derived from the listname.
 
 =back
 
-=head3 Calls 
-
-=over 
-
-=item * Digest::MD5::md5_hex
-
-=back 
-
 =cut 
 
 sub get_tag {

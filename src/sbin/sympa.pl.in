@@ -56,6 +56,7 @@ use tools;
 use Sympa::Tools::Daemon;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Password;
 use Sympa::Upgrade;
 
 ## Internal tuning
@@ -270,7 +271,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         );
     }
 
-    tools::ciphersaber_installed();
+    Sympa::Tools::Password::ciphersaber_installed();
 
     if (tools::cookie_changed($Conf::Conf{'cookie'})) {
         Log::fatal_err(

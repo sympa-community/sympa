@@ -31,7 +31,6 @@ use Digest::MD5;
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
 use English;                 # FIXME: drop $MATCH and $PREMATCH usage
 use HTML::StripScripts::Parser;
-use MIME::Base64 qw();
 use MIME::Decoder;
 use MIME::EncWords;
 use POSIX qw();
@@ -53,9 +52,6 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
-
-## global var to store a CipherSaber object
-my $cipher;
 
 my $separator =
     "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
@@ -806,35 +802,10 @@ sub unescape_html {
     return $s;
 }
 
-sub tmp_passwd {
-    my $email = shift;
-
-    return (
-        'init'
-            . substr(
-            Digest::MD5::md5_hex(join('/', $Conf::Conf{'cookie'}, $email)), -8
-            )
-    );
-}
-
 # Check sum used to authenticate communication from wwsympa to sympa
 # DEPRECATED: No longer used: This is moved to upgrade_send_spool.pl to be
 # used for migrating old spool.
 #sub sympa_checksum($rcpt);
-
-BEGIN { eval 'use Crypt::CipherSaber'; }
-
-# create a cipher
-sub ciphersaber_installed {
-    return $cipher if defined $cipher;
-
-    if ($Crypt::CipherSaber::VERSION) {
-        $cipher = Crypt::CipherSaber->new($Conf::Conf{'cookie'});
-    } else {
-        $cipher = '';
-    }
-    return $cipher;
-}
 
 # create a cipher
 sub cookie_changed {
@@ -881,32 +852,6 @@ sub cookie_changed {
         close COOK;
         return (0);
     }
-}
-
-## encrypt a password
-sub crypt_password {
-    my $inpasswd = shift;
-
-    ciphersaber_installed();
-    return $inpasswd unless $cipher;
-    return ("crypt." . MIME::Base64::encode($cipher->encrypt($inpasswd)));
-}
-
-## decrypt a password
-sub decrypt_password {
-    my $inpasswd = shift;
-    Log::do_log('debug2', '(%s)', $inpasswd);
-
-    return $inpasswd unless ($inpasswd =~ /^crypt\.(.*)$/);
-    $inpasswd = $1;
-
-    ciphersaber_installed();
-    unless ($cipher) {
-        Log::do_log('info',
-            'Password seems crypted while CipherSaber is not installed !');
-        return $inpasswd;
-    }
-    return ($cipher->decrypt(MIME::Base64::decode($inpasswd)));
 }
 
 sub load_mime_types {
@@ -2074,14 +2019,6 @@ Saves a message file to the "bad/" spool of a given queue. Creates this director
 =item * 1 if the file was correctly saved to the "bad/" directory;
 
 =item * undef if something went wrong.
-
-=back 
-
-=head3 Calls 
-
-=over 
-
-=item * tools::send_notify_to_listmaster
 
 =back 
 

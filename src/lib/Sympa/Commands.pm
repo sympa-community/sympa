@@ -42,6 +42,7 @@ use Sympa::Scenario;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Password;
 use Sympa::User;
 
 my %comms = (
@@ -1056,7 +1057,8 @@ sub subscribe {
         if ($Sympa::List::use_db) {
             my $u = Sympa::User->new($sender);
             $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-            $u->password(tools::tmp_passwd($sender)) unless $u->password;
+            $u->password(Sympa::Tools::Password::tmp_passwd($sender))
+                unless $u->password;
             $u->save;
         }
 
@@ -1662,7 +1664,8 @@ sub add {
         if ($Sympa::List::use_db) {
             my $u = Sympa::User->new($email);
             $u->lang($list->{'admin'}{'lang'}) unless $u->lang;
-            $u->password(tools::tmp_passwd($email)) unless $u->password;
+            $u->password(Sympa::Tools::Password::tmp_passwd($email))
+                unless $u->password;
             $u->save;
         }
 

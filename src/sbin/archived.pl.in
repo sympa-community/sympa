@@ -534,26 +534,6 @@ Rebuilds archives for the list the name of which is given in the argument $adrli
 
 =back 
 
-=head3 Calls 
-
-=over 
-
-=item * Sympa::Archive::get_tag
-
-=item * set_hidden_mode
-
-=item * unset_hidden_mode
-
-=item * Sympa::List::new
-
-=item * Log::do_log
-
-=item * tools::get_filename
-
-=item * Sympa::Tools::File::remove_dir
-
-=back 
-
 =cut 
 
 sub rebuild {
@@ -802,34 +782,6 @@ Archives one message into one list archives directory.
 =over 
 
 =item * I<undef> if something goes wrong.
-
-=back 
-
-=head3 Calls 
-
-=over 
-
-=item * Sympa::Archive::get_tag
-
-=item * save_idx
-
-=item * set_hidden_mode
-
-=item * unset_hidden_mode
-
-=item * Sympa::List::get_arc_size
-
-=item * Sympa::List::get_list_id
-
-=item * Sympa::List::new
-
-=item * Sympa::List::send_notify_to_owner
-
-=item * Log::do_log
-
-=item * tools::get_filename
-
-=item * Sympa::Tools::File::remove_dir
 
 =back 
 

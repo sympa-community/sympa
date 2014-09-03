@@ -71,6 +71,7 @@ use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::DKIM;
 use Sympa::Tools::File;
+use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use tt2;
@@ -495,7 +496,8 @@ sub new_from_template {
         }
 
         unless ($data->{'user'}{'password'}) {
-            $data->{'user'}{'password'} = tools::tmp_passwd($who);
+            $data->{'user'}{'password'} =
+                Sympa::Tools::Password::tmp_passwd($who);
         }
 
     }

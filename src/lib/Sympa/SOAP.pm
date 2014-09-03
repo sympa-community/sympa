@@ -35,6 +35,7 @@ use Sympa::List;
 use Log;
 use Sympa::Robot;
 use Sympa::Scenario;
+use Sympa::Tools::Password;
 
 ## Define types of SOAP type listType
 my %types = (
@@ -865,7 +866,7 @@ sub add {
             }
             $u->{'password'} = $u2->{'password'};
         } else {
-            $u->{'password'} = &tools::tmp_passwd($email);
+            $u->{'password'} = Sympa::Tools::Password::tmp_passwd($email);
         }
 
         $u->{'lang'} = $u2->lang || $list->{'admin'}{'lang'};

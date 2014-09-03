@@ -66,6 +66,7 @@ use Sympa::Task;
 use tools;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
@@ -5626,8 +5627,8 @@ sub add_list_member {
         unless (
             Sympa::Tools::Data::smart_eq($new_user->{'password'}, qr/^crypt/))
         {
-            $new_user->{'password'} =
-                tools::crypt_password($new_user->{'password'});
+            $new_user->{'password'} = Sympa::Tools::Password::crypt_password(
+                $new_user->{'password'});
         }
 
         $list_cache{'is_list_member'}{$self->{'domain'}}{$name}{$who} = undef;

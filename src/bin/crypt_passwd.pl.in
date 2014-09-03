@@ -30,10 +30,11 @@ use warnings;
 use Conf;
 use Sympa::Constants;
 use SDM;
-use tools;
+use Sympa::Tools::Password;
 
 die "Crypt::CipherSaber not installed ; cannot crypt passwords"
-    unless tools::ciphersaber_installed();
+    unless Sympa::Tools::Password::ciphersaber_installed();
+use Sympa::Tools::Password;
 
 ## Load sympa config
 Conf::load(Sympa::Constants::CONFIG) or die 'config_error';
@@ -59,7 +60,8 @@ while ($user = $sth->fetchrow_hashref('NAME_lc')) {
 
     printf "\n%s", $user->{'email_user'};
 
-    my $crypted_password = tools::crypt_password($user->{'password_user'});
+    my $crypted_password =
+        Sympa::Tools::Password::crypt_password($user->{'password_user'});
 
     printf " => %s", $crypted_password;
 

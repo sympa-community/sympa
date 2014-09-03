@@ -35,6 +35,7 @@ use Log;
 use SDM;
 use tools;
 use Sympa::Tools::Data;
+use Sympa::Tools::Password;
 
 ## Database and SQL statement handlers
 my ($sth, @sth_stack);
@@ -367,7 +368,7 @@ sub get_global_user {
         ## decrypt password
         if ($user->{'password'}) {
             $user->{'password'} =
-                tools::decrypt_password($user->{'password'});
+                Sympa::Tools::Password::decrypt_password($user->{'password'});
         }
 
         ## Canonicalize lang if possible

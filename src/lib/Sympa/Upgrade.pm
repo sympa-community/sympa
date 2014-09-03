@@ -45,7 +45,9 @@ use Sympa::Robot;
 use SDM;
 use tools;
 use Sympa::Tools::File;
+use Sympa::Tools::Password;
 use Sympa::Tools::Text;
+use Sympa::Tools::Password;
 
 my $language = Sympa::Language->instance;
 
@@ -1488,8 +1490,8 @@ sub md5_encode_password {
         next if ($user->{'password_user'} =~ /^$/);
 
         if ($user->{'password_user'} =~ /^crypt.(.*)$/) {
-            $clear_password =
-                tools::decrypt_password($user->{'password_user'});
+            $clear_password = Sympa::Tools::Password::decrypt_password(
+                $user->{'password_user'});
         } else {    ## Old style cleartext passwords
             $clear_password = $user->{'password_user'};
         }
