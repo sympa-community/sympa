@@ -1044,8 +1044,8 @@ sub rename_list {
                 }
 
                 ## Change X-Sympa-To
-                tools::change_x_sympa_to("$Conf::Conf{$spool}/$newfile",
-                    "$param{'new_listname'}\@$param{'new_robot'}");
+                #tools::change_x_sympa_to("$Conf::Conf{$spool}/$newfile",
+                #    "$param{'new_listname'}\@$param{'new_robot'}");
             }
 
             close DIR;

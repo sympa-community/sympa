@@ -1807,35 +1807,11 @@ sub clean_msg_id {
     return $msg_id;
 }
 
-#XXX NOT USED
-## Change X-Sympa-To: header field in the message
-sub change_x_sympa_to {
-    my ($file, $value) = @_;
+# Change X-Sympa-To: header field in the message
+# DEPRECATED: No longer used
+# sub change_x_sympa_to($file, $value);
 
-    ## Change X-Sympa-To
-    unless (open FILE, $file) {
-        Log::do_log('err', 'Unable to open "%s": %m', $file);
-        next;
-    }
-    my @content = <FILE>;
-    close FILE;
-
-    unless (open FILE, ">$file") {
-        Log::do_log('err', 'Unable to open "%s": %m', "$file");
-        next;
-    }
-    foreach (@content) {
-        if (/^X-Sympa-To:/i) {
-            $_ = "X-Sympa-To: $value\n";
-        }
-        print FILE;
-    }
-    close FILE;
-
-    return 1;
-}
-
-## Compare 2 versions of Sympa
+# Compare 2 versions of Sympa
 # DEPRECATED: Never used.
 # sub higher_version($v1, $v2);
 

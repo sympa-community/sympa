@@ -1613,7 +1613,6 @@ sub process_message {
         return undef;
     }
 
-    my $rcpt   = $message->{'rcpt'};
     my $msg_id = $message->{'message_id'};
 
     Log::do_log('notice', 'Processing %s; sender: %s; message ID: %s',
@@ -2119,33 +2118,30 @@ sub process_message {
         );
         $status = 1;
 
-    } elsif ($rcpt =~ /^listmaster(\@(\S+))?$/) {
+    } elsif ($type eq 'listmaster') {
         $status = DoForward('sympa', 'listmaster', $robot, $message);
-
-        ## Mail addressed to the robot and mail
-        ## to <list>-subscribe or <list>-unsubscribe are commands
-    } elsif ($type eq 'sympa'
-        or $type eq 'subscribe'
-        or $type eq 'unsubscribe') {
-        $status = DoCommand($rcpt, $robot, $message);
-
-        ## forward mails to <list>-request <list>-owner etc
-    } elsif ($type eq 'owner' or $type eq 'return_path' or $type eq 'editor')
-    {
-        ## Simulate Smartlist behaviour with command in subject
-        if ($type eq 'owner'    # -request
-            and $subject_field
+    } elsif ($type eq 'sympa') {
+        # Mail addressed to the robot is command.
+        $status = DoCommand('sympa', $robot, $message);
+    } elsif ($type eq 'subscribe' or $type eq 'unsubscribe') {
+        # Mail to <list>-subscribe or <list>-unsubscribe is command.
+        $status = DoCommand("$listname-$type", $robot, $message);
+    } elsif ($type eq 'owner') {    # -request
+        # Forward mails to <list>-request.
+        # Simulate Smartlist behaviour with command in subject
+        if (    $subject_field
             and $subject_field =~
-            /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i
-            ) {
+            /^\s*(subscribe|unsubscribe)(\s*$listname)?\s*$/i) {
             my $command = $1;
-
             $status = DoCommand("$listname-$command", $robot, $message);
         } else {
-            $status = DoForward($listname, $type, $robot, $message);
+            $status = DoForward($listname, 'owner', $robot, $message);
         }
+    } elsif ($type eq 'return_path' or $type eq 'editor') {
+        # Forward mails to <list>-owner etc.
+        $status = DoForward($listname, $type, $robot, $message);
     } else {
-        $status = DoMessage($rcpt, $message, $robot);
+        $status = DoMessage($message);
     }
 
     ## Mail back the result.
@@ -2493,11 +2489,21 @@ sub DoForward {
 #
 ####################################################
 sub DoMessage {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my ($which, $message, $robot) = @_;
+    Log::do_log('debug2', '(%s)', @_);
+    my $message = shift;
 
-    ## List and host.
-    my ($listname, $host) = split(/[@\s]+/, $which);
+    my ($list, $robot_id, $listname);
+    if (ref($message->{context}) eq 'Sympa::List') {
+        $list     = $message->{context};
+        $robot_id = $list->{'domain'};
+        $listname = $list->{'name'};
+    } elsif ($message->{context} and $message->{context} ne '*') {
+        $robot_id = $message->{context};
+        $listname = $message->{'localpart'};
+    } else {
+        $robot_id = '*';
+        $listname = $message->{'localpart'};
+    }
 
     my $messageid  = $message->{'message_id'};
     my $msg        = $message->as_entity;        #FIMXE: not required.
@@ -2505,20 +2511,17 @@ sub DoMessage {
 
     my $sender = $message->{'sender'};
 
-    ## Search for the list
-    my $list = $message->{context};
-
     ## List unknown
-    unless (ref $list eq 'Sympa::List') {
+    unless ($list) {
         Log::do_log('notice', 'Unknown list %s', $listname);
-        my $sympa_email = Conf::get_robot_conf($robot, 'sympa');
+        my $sympa_email = Conf::get_robot_conf($robot_id, 'sympa');
 
         unless (
             tools::send_file(
-                $robot,
+                $robot_id,
                 'list_unknown',
                 $sender,
-                {   'list' => $which,
+                {   'list' => $listname,
                     'date' =>
                         POSIX::strftime("%d %b %Y  %H:%M", localtime(time)),
                     'boundary'       => $sympa_email . time,
@@ -2533,31 +2536,32 @@ sub DoMessage {
         return undef;
     }
 
-    ($listname, $host) = ($list->{'name'}, $list->{'admin'}{'host'});
-
     my $start_time = time;
 
     $language->set_lang(
         $list->{'admin'}{'lang'},
-        Conf::get_robot_conf($robot, 'lang'),
+        Conf::get_robot_conf($robot_id, 'lang'),
         $Conf::Conf{'lang'}, 'en'
     );
 
     ## Now check if the sender is an authorized address.
 
-    Log::do_log('info', "Processing message for %s with priority %s, %s",
-        $listname, $list->{'admin'}{'priority'}, $messageid);
+    Log::do_log('info', "Processing message %s for %s with priority %s, <%s>",
+        $message, $list, $list->{'admin'}{'priority'}, $messageid);
 
     #FIXME: Might reject message when no message ID found.
     if ($messageid and $msgid_table{$list->get_list_id()}{$messageid}) {
-        Log::do_log('err',
-            'Found known Message-ID, ignoring message which would cause a loop'
+        Log::do_log(
+            'err',
+            'Found known Message-ID <%s>, ignoring message %s which would cause a loop',
+            $messageid,
+            $message
         );
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -2573,18 +2577,18 @@ sub DoMessage {
     # Reject messages with commands
     if ($Conf::Conf{'misaddressed_commands'} =~ /reject/i) {
         ## Check the message for commands and catch them.
-        if (tools::checkcommand($msg, $sender, $robot)) {
+        if (tools::checkcommand($msg, $sender, $robot_id)) {
             Log::do_log('err',
                 'sympa::DoMessage(): Found command in message, ignoring message'
             );
             Sympa::Report::reject_report_msg('user', 'routing_error', $sender,
                 {'message' => $message},
-                $robot, $msg_string, $list);
+                $robot_id, $msg_string, $list);
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'DoMessage',
-                    'parameters'   => "$which,$messageid,$robot",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'error',
@@ -2603,12 +2607,12 @@ sub DoMessage {
         Log::do_log('err', 'List config is undefined');
         Sympa::Report::reject_report_msg('intern', '', $sender,
             {'message' => $message},
-            $robot, $msg_string, $list);
+            $robot_id, $msg_string, $list);
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -2624,7 +2628,8 @@ sub DoMessage {
     my $customheader = $admin->{'custom_header'};
 
     ## Check if the message is too large
-    # my $max_size = $list->get_max_size() ||  Conf::get_robot_conf($robot,'max_size');
+    # my $max_size = $list->get_max_size()
+    #     || Conf::get_robot_conf($robot_id, 'max_size');
     my $max_size = $list->get_max_size();
 
     if ($max_size && $message->{'size'} > $max_size) {
@@ -2638,13 +2643,14 @@ sub DoMessage {
             {   'msg_size' => int($message->{'size'} / 1024),
                 'max_size' => int($max_size / 1024)
             },
-            $robot, '', $list
+            $robot_id,
+            '', $list
         );
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -2667,7 +2673,8 @@ sub DoMessage {
     ## list msg topic
     if ($list->is_there_msg_topic()) {
 
-        my $info_msg_topic = $list->load_msg_topic_file($messageid, $robot);
+        my $info_msg_topic =
+            $list->load_msg_topic_file($messageid, $robot_id);
 
         # is msg already tagged ?
         if (ref($info_msg_topic) eq "HASH") {
@@ -2723,15 +2730,15 @@ sub DoMessage {
             'Message ignored because scenario "send" cannot be evaluated',
             $sender,
             {'msg_id' => $messageid, 'message' => $message},
-            $robot,
+            $robot_id,
             $msg_string,
             $list
         );
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -2811,12 +2818,12 @@ sub DoMessage {
                     $listname);
                 Sympa::Report::reject_report_msg('intern', '', $sender,
                     {'msg_id' => $messageid, 'message' => $message},
-                    $robot, $msg_string, $list);
+                    $robot_id, $msg_string, $list);
                 Log::db_log(
-                    {   'robot'        => $robot,
+                    {   'robot'        => $robot_id,
                         'list'         => $list->{'name'},
                         'action'       => 'DoMessage',
-                        'parameters'   => "$which,$messageid,$robot",
+                        'parameters'   => $message->get_id,
                         'target_email' => '',
                         'msg_id'       => $messageid,
                         'status'       => 'error',
@@ -2830,7 +2837,8 @@ sub DoMessage {
             }
             Log::do_log(
                 'info',
-                'Message for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+                'Message %s for %s from %s accepted (%d seconds, %d sessions, %d subscribers), message ID=%s, size=%d',
+                $message,
                 $listname,
                 $sender,
                 time - $start_time,
@@ -2858,12 +2866,12 @@ sub DoMessage {
                 );
                 Sympa::Report::reject_report_msg('intern', '', $sender,
                     {'msg_id' => $messageid, 'message' => $message},
-                    $robot, $msg_string, $list);
+                    $robot_id, $msg_string, $list);
                 Log::db_log(
-                    {   'robot'        => $robot,
+                    {   'robot'        => $robot_id,
                         'list'         => $list->{'name'},
                         'action'       => 'DoMessage',
-                        'parameters'   => "$which,$messageid,$robot",
+                        'parameters'   => $message->get_id,
                         'target_email' => '',
                         'msg_id'       => $messageid,
                         'status'       => 'error',
@@ -2884,10 +2892,10 @@ sub DoMessage {
                 $messageid
             );
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'DoMessage',
-                    'parameters'   => "$which,$messageid,$robot",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'success',
@@ -2922,26 +2930,23 @@ sub DoMessage {
             return undef;
         }
 
-        my $key = $list->send_auth($message);
+        my $key = Sympa::List::send_confirm_to_sender($message);
 
         unless (defined $key) {
-            Log::do_log(
-                'err',
-                'Calling to send_auth function failed for user %s in list %s',
-                $sender,
-                $list->{'name'}
-            );
+            Log::do_log('err',
+                'Failed to send confirmation of %s for %s to sender %s',
+                $message, $list, $sender);
             Sympa::Report::reject_report_msg(
                 'intern', 'The request authentication sending failed',
                 $sender, {'msg_id' => $messageid, 'message' => $message},
-                $robot, $msg_string,
+                $robot_id, $msg_string,
                 $list
             );
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'DoMessage',
-                    'parameters'   => "$which,$messageid,$robot",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'error',
@@ -2957,10 +2962,10 @@ sub DoMessage {
             'Message for %s from %s kept for authentication with key %s',
             $listname, $sender, $key);
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'success',
@@ -2995,29 +3000,30 @@ sub DoMessage {
             return undef;
         }
 
-        my $key = $list->send_to_editor('md5', $message);
+        my $key = Sympa::List::send_confirm_to_editor($message, 'md5');
 
         unless (defined $key) {
             Log::do_log(
                 'err',
-                'Calling to send_to_editor() function failed for user %s in list %s',
+                'Failed to moderation request of %s from %s for list %s to editor(s)',
+                $message,
                 $sender,
-                $list->{'name'}
+                $list
             );
             Sympa::Report::reject_report_msg(
                 'intern',
                 'The request moderation sending to moderator failed.',
                 $sender,
                 {'msg_id' => $messageid, 'message' => $message},
-                $robot,
+                $robot_id,
                 $msg_string,
                 $list
             );
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'DoMessage',
-                    'parameters'   => "$which,$messageid,$robot",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'error',
@@ -3030,20 +3036,23 @@ sub DoMessage {
             return undef;
         }
 
-        Log::do_log('info', 'Key %s for list %s from %s sent to editors, %s',
-            $key, $listname, $sender, $message->{'filename'});
+        Log::do_log('info',
+            'Key %s of message %s for list %s from %s sent to editors',
+            $key, $message, $listname, $sender);
 
         # do not report to the sender if the message was tagged as a spam
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
             unless (
                 Sympa::Report::notice_report_msg(
                     'moderating_message', $sender,
-                    {'message' => $message}, $robot,
+                    {'message' => $message}, $robot_id,
                     $list
                 )
                 ) {
-                Log::do_log('notice',
-                    "sympa::DoMessage(): Unable to send template 'message_report', entry 'moderating_message' to $sender"
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "message_report", entry "moderating_message" to %s',
+                    $sender
                 );
             }
         }
@@ -3072,29 +3081,30 @@ sub DoMessage {
             return undef;
         }
 
-        my $key = $list->send_to_editor('smtp', $message);
+        my $key = Sympa::List::send_confirm_to_editor($message, 'smtp');
 
         unless (defined $key) {
             Log::do_log(
                 'err',
-                'Calling to send_to_editor() function failed for user %s in list %s',
+                'Failed to send moderation request of %s by %s for list %s to editor(s)',
+                $message,
                 $sender,
-                $list->{'name'}
+                $list
             );
             Sympa::Report::reject_report_msg(
                 'intern',
                 'The request moderation sending to moderator failed.',
                 $sender,
                 {'msg_id' => $messageid, 'message' => $message},
-                $robot,
+                $robot_id,
                 $msg_string,
                 $list
             );
             Log::db_log(
-                {   'robot'        => $robot,
+                {   'robot'        => $robot_id,
                     'list'         => $list->{'name'},
                     'action'       => 'DoMessage',
-                    'parameters'   => "$which,$messageid,$robot",
+                    'parameters'   => $message->get_id,
                     'target_email' => '',
                     'msg_id'       => $messageid,
                     'status'       => 'error',
@@ -3107,15 +3117,15 @@ sub DoMessage {
             return undef;
         }
 
-        Log::do_log('info', 'Message for %s from %s sent to editors',
-            $listname, $sender);
+        Log::do_log('info', 'Message %s for %s from %s sent to editors',
+            $message, $listname, $sender);
 
         # do not report to the sender if the message was tagged as a spam
         unless ($quiet or $message->{'spam_status'} eq 'spam') {
             unless (
                 Sympa::Report::notice_report_msg(
                     'moderating_message', $sender,
-                    {'message' => $message}, $robot,
+                    {'message' => $message}, $robot_id,
                     $list
                 )
                 ) {
@@ -3154,21 +3164,23 @@ sub DoMessage {
                     Sympa::Report::reject_report_msg(
                         'auth', $result->{'reason'},
                         $sender, {'message' => $message},
-                        $robot, $msg_string,
+                        $robot_id, $msg_string,
                         $list
                     )
                     ) {
-                    Log::do_log('notice',
-                        "sympa::DoMessage(): Unable to send template 'message_report', type 'auth' to $sender"
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "message_report", type "auth" to %s',
+                        $sender
                     );
                 }
             }
         }
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',
@@ -3185,14 +3197,14 @@ sub DoMessage {
         Sympa::Report::reject_report_msg(
             'intern', 'Unknown action returned by the scenario "send"',
             $sender, {'msg_id' => $messageid, 'message' => $message},
-            $robot, $msg_string,
+            $robot_id, $msg_string,
             $list
         );
         Log::db_log(
-            {   'robot'        => $robot,
+            {   'robot'        => $robot_id,
                 'list'         => $list->{'name'},
                 'action'       => 'DoMessage',
-                'parameters'   => "$which,$messageid,$robot",
+                'parameters'   => $message->get_id,
                 'target_email' => '',
                 'msg_id'       => $messageid,
                 'status'       => 'error',

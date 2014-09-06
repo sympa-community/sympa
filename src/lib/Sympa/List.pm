@@ -141,17 +141,9 @@ sequence number. Does nothing if no stats.
 Send a message to the list owners telling that someone
 wanted to subscribe to the list.
 
-=item send_to_editor ( MSG )
-    
-Send a Mail::Internet type object to the editor (for approval).
-
 =item send_msg ( MSG )
 
 Sends the Mail::Internet message to the list.
-
-=item send_file ( FILE, USER, GECOS )
-
-Sends the file to the USER. FILE may only be welcome for now.
 
 =item delete_list_member ( ARRAY )
 
@@ -2866,31 +2858,50 @@ sub get_recipients_per_mode {
 
 ###   SERVICE MESSAGES   ###
 
-###############################################################
-# send_to_editor
-###############################################################
-# Sends a message to the list editor to ask him for moderation
-# ( in moderation context : editor or editorkey). The message
-# to moderate is set in spool queuemod with name containing
-# a key (reference send to editor for moderation)
-# In context of msg_topic defined the editor must tag it
-# for the moderation (on Web interface)
-#
-# IN : -$self(+) : ref(List)
-#      -$method : 'md5' - for "editorkey" | 'smtp' - for "editor"
-#      -$message(+) : ref(Message) - the message to moderatte
-# OUT : $modkey : the moderation key for naming message waiting
-#         for moderation in spool queuemod
-#       | undef
-#################################################################
+=over
+
+=item send_confirm_to_editor ( $message, $method )
+
+Send a L<Sympa::Message> object to the editor (for approval).
+
+Sends a message to the list editor to ask him for moderation
+(in moderation context : editor or editorkey). The message
+to moderate is set in moderation spool with name containing
+a key (reference send to editor for moderation).
+In context of msg_topic defined the editor must tag it
+for the moderation (on Web interface).
+
+Parameters:
+
+=over
+
+=item $message
+
+Sympa::Message instance - the message to moderate.
+
+=item $method
+
+'md5' - for "editorkey", 'smtp' - for "editor".
+
+=back
+
+Returns:
+
+The moderation key for naming message waiting for moderation in moderation spool, or C<undef>.
+
+=back
+
+=cut
+
+# Old name: List::send_to_editor().
 # Note: This would be moved to Pipeline package.
-sub send_to_editor {
-    Log::do_log('debug2', '(%s, %s, %s)', @_);
-    my ($self, $method, $message) = @_;
+sub send_confirm_to_editor {
+    Log::do_log('debug2', '(%s, %s)', @_);
+    my $message = shift;
+    my $method  = shift;
 
     my ($i, @rcpt);
     my $list     = $message->{context};
-    my $robot_id = $self->{'domain'};
     my $modqueue = $Conf::Conf{'queuemod'};
 
     my $modkey = undef;
@@ -2991,7 +3002,7 @@ sub send_to_editor {
         # create a one time ticket that will be used as un md5 URL credential
         unless (
             $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
-                $recipient,                    $robot_id,
+                $recipient,                    $list->{'domain'},
                 'modindex/' . $list->{'name'}, 'mail'
             )
             ) {
@@ -3019,27 +3030,40 @@ sub send_to_editor {
     return $modkey;
 }
 
-####################################################
-# send_auth
-####################################################
-# Sends an authentication request for a sent message to distribute.
-# The message for distribution is copied in the authqueue
-# spool in order to wait for confirmation by its sender.
-# This message is named with a key.
-# In context of msg_topic defined, the sender must tag it
-# for the confirmation
-#
-# IN : -$self (+): ref(List)
-#      -$message (+): ref(Message)
-#
-# OUT : $authkey : the key for naming message waiting
-#         for confirmation (or tagging) in spool queueauth
-#       | undef
-####################################################
+=over
+
+=item send_confirm_to_sender ( $message )
+
+Sends an authentication request for a sent message to distribute.
+The message for distribution is copied in the auth
+spool in order to wait for confirmation by its sender.
+This message is named with a key.
+In context of msg_topic defined, the sender must tag it
+for the confirmation
+
+Parameter:
+
+=over;
+
+=item $message
+
+L<Sympa::Message> instance.
+
+=back
+
+Returns:
+
+The key for naming message waiting for confirmation (or tagging) in auth spool, or C<undef>.
+
+=back
+
+=cut
+
+# Old name: List::send_auth().
 # Note: This would be moved to Pipeline package.
-sub send_auth {
-    Log::do_log('debug3', '(%s, %s)', @_);
-    my ($self, $message) = @_;
+sub send_confirm_to_sender {
+    Log::do_log('debug3', '(%s)', @_);
+    my $message = shift;
 
     my $list   = $message->{context};
     my $sender = $message->{'sender'};
