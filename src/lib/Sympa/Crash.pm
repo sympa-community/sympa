@@ -26,6 +26,36 @@ package Sympa::Crash;
 
 use strict;
 use warnings;
+use Carp qw();
+use Encode qw();
+use Scalar::Util qw();
+
+BEGIN {
+    no warnings;
+
+    *Carp::format_arg = sub {
+        my $arg = shift;
+
+        if (Scalar::Util::blessed($arg) and $arg->can('get_id')) {
+            $arg = sprintf('%s <%s>', ref $arg, $arg->get_id);
+        } elsif (ref $arg) {
+            $arg =
+                defined($overload::VERSION) ? overload::StrVal($arg) : "$arg";
+        } elsif (defined $arg) {
+            unless (Scalar::Util::looks_like_number($arg)) {
+                $arg = Carp::str_len_trim($arg, $Carp::MaxArgLen);
+                $arg =~ s/([\\\'])/\\$1/g;
+                $arg = "'$arg'";
+            }
+        } else {
+            $arg = 'undef';
+        }
+
+        $arg =~ s/([^\x20-\x7E])/sprintf "\\x{%x}", ord $1/eg;
+        Encode::_utf8_off($arg);
+        return $arg;
+    };
+}
 
 our $hook;
 
