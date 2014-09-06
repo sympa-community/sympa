@@ -104,10 +104,9 @@ Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 
-[% INSERT $msg IF msg %]
+[%# Message is attached here. #%]
 
 --[% boundary %]--
-
 
 [% ELSIF type == 'virus_scan_failed' -%]
 Subject: [% FILTER qencode %][%|loc%]Antivirus scan failed[%END%][%END%]

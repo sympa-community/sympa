@@ -12,10 +12,10 @@ Content-Disposition: inline
 [%|loc(list.name,msg_from)%]One new message from list %1 from %2 arrived. [%END%]
 [%- IF spam_status == 'spam' -%][%|loc%]This message has been tagged as spam[%END%][% END %]
 
+[% IF method == 'md5' -%]
 [%|loc(mod_spool_size)%]They are %1 messages awaiting moderation.[%END%] 
 [%|loc%]To browse the awaiting messages, you should click on the following link:[%END%] <[% conf.wwsympa_url %]/ticket/[% one_time_ticket %]>
 
-[% IF method == 'md5' -%]
 [% IF request_topic -%][%|loc()%]This mailing list is configured to require topics; that's probably why this message went through the moderation process.[%END%]
 
 [%END -%]
@@ -23,7 +23,7 @@ Content-Disposition: inline
 [%|loc%]Because the new message is suspected to be a spam it is not attached to this one. You must use the web interface to reject or validate it.[%END%]
 
 [% ELSE -%]
-[% IF ! request_topic -%]
+[% IF method == 'md5' && ! request_topic -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
 <[% FILTER escape_url %]mailto:[%conf.sympa%]?subject=DISTRIBUTE [%list.name%] [%modkey%][% END %]>
 [%|loc(conf.email,conf.host)%]Or send a message to %1@%2 with the following subject:[%END%]
@@ -42,7 +42,8 @@ Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
 X-Sympa-Attach: yes
 
-[%# msg_as_string %]
+[%# Message is attached here. #%]
+
 --[% boundary %]--
 [%- END %]
 [%- END %]

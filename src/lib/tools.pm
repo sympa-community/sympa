@@ -1607,13 +1607,6 @@ sub send_notify_to_listmaster {
         $data->{'db_name'} = Conf::get_robot_conf($robot_id, 'db_name');
     }
 
-    if ($operation eq 'loop_command') {
-        ## Loop detected in Sympa
-        $data->{'boundary'} =
-            '----------=_' . tools::get_message_id($robot_id);
-        tt2::allow_absolute_path();
-    }
-
     if (   $operation eq 'request_list_creation'
         or $operation eq 'request_list_renaming') {
         foreach my $email (@$listmaster) {
@@ -2473,6 +2466,8 @@ sub marshal_metadata {
             $domainpart;
         } elsif ($_ eq 'PID') {
             $PID;
+        } elsif ($_ eq 'AUTHKEY') {
+            Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart);
         } elsif ($_ eq 'RAND') {
             int rand 10000;
         } elsif ($_ eq 'TIME') {

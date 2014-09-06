@@ -2883,118 +2883,106 @@ sub get_recipients_per_mode {
 #         for moderation in spool queuemod
 #       | undef
 #################################################################
+# Note: This would be moved to Pipeline package.
 sub send_to_editor {
+    Log::do_log('debug2', '(%s, %s, %s)', @_);
     my ($self, $method, $message) = @_;
-    my $encrypt = 'smime_crypted' if $message->{'smime_crypted'};
-    Log::do_log('debug2', '(%s, %s, %s, encrypt=%s)',
-        $self, $method, $message, $encrypt);
 
     my ($i, @rcpt);
-    my $name     = $self->{'name'};
-    my $host     = $self->{'admin'}{'host'};
-    my $robot    = $self->{'domain'};
+    my $list     = $message->{context};
+    my $robot_id = $self->{'domain'};
     my $modqueue = $Conf::Conf{'queuemod'};
 
-    my @now = localtime(time);
-    my $messageid =
-          $now[6]
-        . $now[5]
-        . $now[4]
-        . $now[3]
-        . $now[2]
-        . $now[1] . "."
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6)) . "\@"
-        . $host;
-    my $modkey =
-        Digest::MD5::md5_hex(join('/', $self->get_cookie(), $messageid));
-    my $boundary = "__ \<$messageid\>";
-
+    my $modkey = undef;
     ## Keeps a copy of the message
     if ($method eq 'md5') {
         ## move message to spool  mod
-        my $mod_file = $modqueue . '/' . $self->get_list_id() . '_' . $modkey;
-        unless (open OUT, '>', $mod_file) {
-            Log::do_log('notice', 'Could Not open %s', $mod_file);
+        #FIXME FIXME: Message stored into moderation spool is decrypted!
+        my $marshalled =
+            tools::store_spool($modqueue, $message, '%s@%s_%s',
+            [qw(localpart domainpart AUTHKEY)]);
+        unless ($marshalled) {
+            Log::do_log('err', 'Cannot create authkey of %s for %s',
+                $message, $list);
             return undef;
         }
-        print OUT $message->to_string;
-        close OUT;
+        Log::do_log('info', '%s is stored in mod spool as <%s>',
+            $message, $marshalled);
+        $modkey = ${
+            tools::unmarshal_metadata(
+                $modqueue, $marshalled,
+                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
+                [qw(localpart domainpart authkey)]
+            )
+            }{authkey};
 
         # prepare HTML view of this message
         # Note: 6.2a.32 or earlier stored HTML view into modqueue.
         # 6.2b has dedicated directory specified by viewmail_dir parameter.
         my $destination_dir =
               $Conf::Conf{'viewmail_dir'} . '/mod/'
-            . $self->get_list_id() . '/'
+            . $list->get_list_id() . '/'
             . $modkey;
         Sympa::Archive::convert_single_message(
-            $self, $message,
+            $list, $message,
             'destination_dir' => $destination_dir,
-            'attachement_url' => join('/', '..', 'viewmod', $name, $modkey),
+            'attachement_url' =>
+                join('/', '..', 'viewmod', $list->{'name'}, $modkey),
         );
     }
 
-    @rcpt = $self->get_editors_email();
+    @rcpt = $list->get_editors_email();
 
     ## Did we find a recipient?
-    if ($#rcpt < 0) {
+    unless (@rcpt) {
         Log::do_log(
             'notice',
             "No editor found for list %s. Trying to proceed ignoring nomail option",
-            $self->{'name'}
+            $list
         );
 
-        @rcpt = $self->get_editors_email({'ignore_nomail', 1});
+        @rcpt = $list->get_editors_email({'ignore_nomail', 1});
         Log::do_log('notice',
-            'Warning: No owner and editor defined at all in list %s', $name)
-            unless (@rcpt);
+            'Warning: No owner and editor defined at all in list %s', $list)
+            unless @rcpt;
 
         ## Could we find a recipient by ignoring the "nomail" option?
-        if ($#rcpt >= 0) {
+        if (@rcpt) {
             Log::do_log(
                 'notice',
                 'All the intended recipients of message %s in list %s have set the "nomail" option. Ignoring it and sending it to all of them',
                 $message,
-                $self
+                $list
             );
         } else {
             Log::do_log(
                 'err',
                 'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
                 $message,
-                $self
+                $list
             );
             return undef;
         }
     }
 
-    my $subject = $message->{'decoded_subject'};
-    my $param   = {
+    my $param = {
         'modkey'         => $modkey,
-        'boundary'       => $boundary,
         'msg_from'       => $message->{'sender'},
-        'subject'        => $subject,
+        'subject'        => $message->{'decoded_subject'},
         'spam_status'    => $message->{'spam_status'},
-        'mod_spool_size' => $self->get_mod_spool_size(),
-        'method'         => $method
+        'mod_spool_size' => $list->get_mod_spool_size,
+        'method'         => $method,
+        'request_topic'  => $list->is_there_msg_topic,
+        'auto_submitted' => 'auto-forwarded',
     };
-
-    if ($self->is_there_msg_topic()) {
-        $param->{'request_topic'} = 1;
-    }
 
     foreach my $recipient (@rcpt) {
         my $new_message = $message->dup;
-        if ($encrypt and $encrypt eq 'smime_crypted') {
+        if ($new_message->{'smime_crypted'}) {
             unless ($new_message->smime_encrypt($recipient)) {
                 Log::do_log('notice',
                     'Failed encrypted message for moderator');
-                #  send a generic error message : X509 cert missing
+                # FIXME: send a generic error message : X509 cert missing
                 return undef;
             }
         }
@@ -3003,11 +2991,15 @@ sub send_to_editor {
         # create a one time ticket that will be used as un md5 URL credential
         unless (
             $param->{'one_time_ticket'} = Sympa::Auth::create_one_time_ticket(
-                $recipient, $robot, 'modindex/' . $name, 'mail'
+                $recipient,                    $robot_id,
+                'modindex/' . $list->{'name'}, 'mail'
             )
             ) {
-            Log::do_log('notice',
-                "Unable to create one_time_ticket for $recipient, service modindex/$name"
+            Log::do_log(
+                'notice',
+                'Unable to create one_time_ticket for %s, service modindex/%s',
+                $recipient,
+                $list->{'name'}
             );
         } else {
             Log::do_log(
@@ -3016,10 +3008,9 @@ sub send_to_editor {
                 $param->{'one_time_ticket'}
             );
         }
-        tt2::allow_absolute_path();
-        $param->{'auto_submitted'} = 'auto-forwarded';
 
-        unless (tools::send_file($self, 'moderate', $recipient, $param)) {
+        #XXX tt2::allow_absolute_path();
+        unless (tools::send_file($list, 'moderate', $recipient, $param)) {
             Log::do_log('notice', 'Unable to send template "moderate" to %s',
                 $recipient);
             return undef;
@@ -3045,65 +3036,48 @@ sub send_to_editor {
 #         for confirmation (or tagging) in spool queueauth
 #       | undef
 ####################################################
+# Note: This would be moved to Pipeline package.
 sub send_auth {
     Log::do_log('debug3', '(%s, %s)', @_);
     my ($self, $message) = @_;
 
+    my $list   = $message->{context};
     my $sender = $message->{'sender'};
 
     ## Ensure 1 second elapsed since last message
     sleep(1);
 
     my ($i, @rcpt);
-    my $admin     = $self->{'admin'};
-    my $name      = $self->{'name'};
-    my $host      = $admin->{'host'};
-    my $robot     = $self->{'domain'};
     my $authqueue = $Conf::Conf{'queueauth'};
-    return undef unless ($name && $admin);
 
-    my @now = localtime(time);
-    my $messageid =
-          $now[6]
-        . $now[5]
-        . $now[4]
-        . $now[3]
-        . $now[2]
-        . $now[1] . "."
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6))
-        . int(rand(6)) . "\@"
-        . $host;
-    my $authkey =
-        Digest::MD5::md5_hex(join('/', $self->get_cookie(), $messageid));
-
-    my $auth_file = $authqueue . '/' . $self->get_list_id() . '_' . $authkey;
-    unless (open OUT, ">$auth_file") {
-        Log::do_log('notice', 'Cannot create file %s', $auth_file);
+    my $authkey;
+    #FIXME FIXME: Message stored into auth spool is decrypted!
+    my $marshalled =
+        tools::store_spool($authqueue, $message, '%s@%s_%s',
+        [qw(localpart domainpart AUTHKEY)]);
+    unless ($marshalled) {
+        Log::do_log('err', 'Cannot create authkey %s for %s', $authkey,
+            $list);
         return undef;
     }
-
-    print OUT $message->to_string;
-
-    close IN;
-    close OUT;
+    $authkey = ${
+        tools::unmarshal_metadata(
+            $authqueue, $marshalled,
+            qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?_([^_]+)\z},
+            [qw(localpart domainpart authkey)]
+        )
+        }{authkey};
 
     my $param = {
-        'authkey'  => $authkey,
-        'boundary' => "----------------- Message-Id: \<$messageid\>",
-        'file' => $message->{'filename'},    #XXX FIXME
+        'authkey'        => $authkey,
+        'msg'            => $message->as_string(original => 1),    # encrypted
+        'request_topic'  => $list->is_there_msg_topic,
+        'auto_submitted' => 'auto-replied',
+        #'file' => $message->{'filename'},    # obsoleted (<=6.1)
     };
 
-    if ($self->is_there_msg_topic()) {
-        $param->{'request_topic'} = 1;
-    }
-
-    tt2::allow_absolute_path();
-    $param->{'auto_submitted'} = 'auto-replied';
-    unless (tools::send_file($self, 'send_auth', $sender, $param)) {
+    #XXX tt2::allow_absolute_path();
+    unless (tools::send_file($list, 'send_auth', $sender, $param)) {
         Log::do_log('notice', 'Unable to send template "send_auth" to %s',
             $sender);
         return undef;
