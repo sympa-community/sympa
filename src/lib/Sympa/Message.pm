@@ -255,9 +255,11 @@ sub new {
         $self->{'subject_charset'} = undef;
     }
     if ($self->{'subject_charset'}) {
-        $self->{'decoded_subject'} = tools::decode_header($hdr, 'Subject');
+        chomp $subject;
+        $self->{'decoded_subject'} =
+            MIME::EncWords::decode_mimewords($subject, Charset => 'UTF-8');
     } else {
-        if ($subject) {
+        if (defined $subject) {
             chomp $subject;
             $subject =~ s/(\r\n|\r|\n)(?=[ \t])//g;
             $subject =~ s/\r\n|\r|\n/ /g;
@@ -1368,6 +1370,45 @@ sub get_header {
 
 =over
 
+=item get_decoded_header ( $tag, [ $sep ] )
+
+I<Instance method>.
+Returns header value decoded to UTF-8 or undef.
+Trailing newline will be removed.
+If $sep is given, returns all occurrences joined by it.
+
+=back
+
+=cut
+
+# Old name: tools::decode_header() which can take Message, MIME::Entity,
+# MIME::Head or Mail::Header object as argument.
+sub get_decoded_header {
+    my $self = shift;
+    my $tag  = shift;
+    my $sep  = shift;
+
+    my $head = $self->head;
+
+    if (defined $sep) {
+        my @values = $head->get($tag);
+        return undef unless scalar @values;
+        foreach my $val (@values) {
+            $val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
+            chomp $val;
+        }
+        return join $sep, @values;
+    } else {
+        my $val = $head->get($tag);
+        return undef unless defined $val;
+        $val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
+        chomp $val;
+        return $val;
+    }
+}
+
+=over
+
 =item dump ( $output )
 
 I<Instance method>.
@@ -2174,7 +2215,7 @@ sub personalize {
         $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
         $data->{'headers'}{$key} = $value;
     }
-    $data->{'subject'} = tools::decode_header($headers, 'Subject');
+    $data->{'subject'} = $self->{'decoded_subject'};
 
     unless (defined _merge_msg($entity, $list, $rcpt, $data)) {
         return undef;
@@ -2214,9 +2255,12 @@ sub _merge_msg {
     } elsif (MIME::Tools::textual_type($eff_type)) {
         my ($charset, $in_cset, $bodyh, $body, $utf8_body);
 
+        my ($descr) = ($entity->head->get('Content-Description', 0));
+        chomp $descr if $descr;
+        $descr = MIME::EncWords::decode_mimewords($descr, Charset => 'UTF-8');
+
         $data->{'part'} = {
-            description =>
-                tools::decode_header($entity, 'Content-Description'),
+            description => $descr,
             disposition =>
                 lc($entity->head->mime_attr('Content-Disposition') || ''),
             encoding => $enc,
@@ -2491,7 +2535,7 @@ sub prepare_message_according_to_mode {
         ##Prepare message for txt reception mode
         my $entity = $self->as_entity->dup;
 
-        if (tools::as_singlepart($entity, 'text/plain')) {
+        if (_as_singlepart($entity, 'text/plain')) {
             Log::do_log('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
@@ -2501,7 +2545,7 @@ sub prepare_message_according_to_mode {
         ##Prepare message for html reception mode
         my $entity = $self->as_entity->dup;
 
-        if (tools::as_singlepart($entity, 'text/html')) {
+        if (_as_singlepart($entity, 'text/html')) {
             Log::do_log('notice', 'Multipart message changed to singlepart');
         }
         ## Add a footer
@@ -3217,6 +3261,102 @@ sub _fix_utf8_parts {
         $entity->sync_headers(Length => 'COMPUTE');
     }
     return $entity;
+}
+
+=over
+
+=item get_plain_body ( )
+
+I<Instance method>.
+Get decoded content of text/plain part.
+The text will be converted to UTF-8.
+
+=back
+
+=cut
+
+sub get_plain_body {
+    Log::do_log('debug2', '(%s)', @_);
+    my $self = shift;
+
+    my $entity = $self->as_entity->dup;
+    return undef unless _as_singlepart($entity, 'text/plain');
+    return undef unless $entity->bodyhandle;
+    my $body = $entity->bodyhandle->as_string;
+
+    ## Get charset
+    my $cset =
+        MIME::Charset->new($entity->head->mime_attr('Content-Type.Charset')
+            || 'NONE');
+    unless ($cset->decoder) {
+        # Charset is unknown.  Detect 7-bit charset.
+        $cset = MIME::Charset->new(MIME::Charset::detect_7bit_charset($body));
+    }
+    if ($cset->decoder) {
+        $cset->encoder('UTF-8');
+    } else {
+        $cset = MIME::Charset->new('US-ASCII');
+    }
+
+    return $cset->encode($body);
+}
+
+# Make multipart/alternative message to singlepart.
+# Old name: tools::as_singlepart(), Sympa::Tools::Message::as_singlepart().
+sub _as_singlepart {
+    my $entity         = shift;
+    my $preferred_type = shift;
+    my $loops          = shift || 0;
+
+    my $done = 0;
+
+    $loops++;
+    return undef unless $entity;
+    return undef if 4 < $loops;
+
+    my $eff_type = lc($entity->effective_type || 'text/plain');
+    if ($eff_type eq lc $preferred_type) {
+        $done = 1;
+    } elsif ($eff_type eq 'multipart/alternative') {
+        foreach my $part ($entity->parts) {
+            my $eff_type = lc($part->effective_type || 'text/plain');
+            if ($eff_type eq lc $preferred_type
+                or (    $eff_type eq 'multipart/related'
+                    and $part->parts
+                    and lc($part->parts(0)->effective_type || 'text/plain') eq
+                    $preferred_type)
+                ) {
+                ## Only keep the first matching part
+                $entity->parts([$part]);
+                $entity->make_singlepart();
+                $done = 1;
+                last;
+            }
+        }
+    } elsif ($eff_type eq 'multipart/signed') {
+        my @parts = $entity->parts();
+        ## Only keep the first part
+        $entity->parts([$parts[0]]);
+        $entity->make_singlepart();
+
+        $done ||= _as_singlepart($entity, $preferred_type, $loops);
+
+    } elsif ($eff_type =~ /^multipart/) {
+        foreach my $part ($entity->parts) {
+            next unless $part;    ## Skip empty parts
+
+            my $eff_type = lc($part->effective_type || 'text/plain');
+            if ($eff_type eq 'multipart/alternative') {
+                if (_as_singlepart($part, $preferred_type, $loops)) {
+                    $entity->parts([$part]);
+                    $entity->make_singlepart();
+                    $done = 1;
+                }
+            }
+        }
+    }
+
+    return $done;
 }
 
 =over

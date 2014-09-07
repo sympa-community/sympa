@@ -587,66 +587,9 @@ sub get_template_path {
     return $dir . '/' . $tpl;
 }
 
-## Make a multipart/alternative, a singlepart
-sub as_singlepart {
-    Log::do_log('debug2', '');
-    my ($msg, $preferred_type, $loops) = @_;
-    my $done = 0;
-    $loops++;
-
-    unless (defined $msg) {
-        Log::do_log('err', "Undefined message parameter");
-        return undef;
-    }
-
-    if ($loops > 4) {
-        Log::do_log('err', 'Could not change multipart to singlepart');
-        return undef;
-    }
-
-    if ($msg->effective_type() =~ /^$preferred_type$/) {
-        $done = 1;
-    } elsif ($msg->effective_type() =~ /^multipart\/alternative/) {
-        foreach my $part ($msg->parts) {
-            if (($part->effective_type() =~ /^$preferred_type$/)
-                || (   ($part->effective_type() =~ /^multipart\/related$/)
-                    && $part->parts
-                    && ($part->parts(0)->effective_type() =~
-                        /^$preferred_type$/)
-                )
-                ) {
-                ## Only keep the first matching part
-                $msg->parts([$part]);
-                $msg->make_singlepart();
-                $done = 1;
-                last;
-            }
-        }
-    } elsif ($msg->effective_type() =~ /multipart\/signed/) {
-        my @parts = $msg->parts();
-        ## Only keep the first part
-        $msg->parts([$parts[0]]);
-        $msg->make_singlepart();
-
-        $done ||= as_singlepart($msg, $preferred_type, $loops);
-
-    } elsif ($msg->effective_type() =~ /^multipart/) {
-        foreach my $part ($msg->parts) {
-
-            next unless (defined $part);    ## Skip empty parts
-
-            if ($part->effective_type() =~ /^multipart\/alternative/) {
-                if (as_singlepart($part, $preferred_type, $loops)) {
-                    $msg->parts([$part]);
-                    $msg->make_singlepart();
-                    $done = 1;
-                }
-            }
-        }
-    }
-
-    return $done;
-}
+## Make a multipart/alternative to a singlepart
+# DEPRECATED: Use Sympa::Message::_as_singlepart().
+#sub as_singlepart($msg, $preferred_type, $loops);
 
 ## Escape characters before using a string within a regexp parameter
 ## Escaped characters are : @ $ [ ] ( ) ' ! '\' * . + ?
@@ -895,7 +838,9 @@ sub load_mime_types {
     return $types;
 }
 
-sub split_mail {
+# Old name: tools::_split_mail(), Sympa::Tools::Message::split_mail().
+# This is used by virus_infected() only.
+sub _split_mail {
     my $message  = shift;
     my $pathname = shift;
     my $dir      = shift;
@@ -908,7 +853,7 @@ sub split_mail {
         || ($message->mime_type eq 'message/rfc822')) {
 
         for (my $i = 0; $i < $message->parts; $i++) {
-            split_mail($message->parts($i), $pathname . '.' . $i, $dir);
+            _split_mail($message->parts($i), $pathname . '.' . $i, $dir);
         }
     } else {
         my $fileExt;
@@ -992,7 +937,7 @@ sub virus_infected {
     }
 
     ## Call the procedure of splitting mail
-    unless (tools::split_mail($entity, 'msg', $work_dir)) {
+    unless (_split_mail($entity, 'msg', $work_dir)) {
         Log::do_log('err', 'Could not split mail %s', $entity);
         return undef;
     }
@@ -2082,42 +2027,8 @@ sub addrencode {
 #sub create_html_part_from_web_page($param);
 #DEPRECATED: No longer used.
 
-#*******************************************
-# Function : decode_header
-# Description : return header value decoded to UTF-8 or undef.
-#               trailing newline will be removed.
-#               If sep is given, return all occurrences joined by it.
-## IN : msg, tag, [sep]
-#*******************************************
-sub decode_header {
-    my $msg = shift;
-    my $tag = shift;
-    my $sep = shift || undef;
-
-    my $head;
-    if (ref $msg eq 'Sympa::Message') {
-        $head = $msg->head;
-    } elsif (ref $msg eq 'MIME::Entity') {
-        $head = $msg->head;
-    } elsif (ref $msg eq 'MIME::Head' or ref $msg eq 'Mail::Header') {
-        $head = $msg;
-    }
-    if (defined $sep) {
-        my @values = $head->get($tag);
-        return undef unless scalar @values;
-        foreach my $val (@values) {
-            $val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
-            chomp $val;
-        }
-        return join $sep, @values;
-    } else {
-        my $val = $head->get($tag);
-        return undef unless defined $val;
-        $val = MIME::EncWords::decode_mimewords($val, Charset => 'UTF-8');
-        chomp $val;
-        return $val;
-    }
-}
+#DEPRECATED: Use Sympa::Message::get_decoded_header().
+#sub decode_header($msg, $tag, $sep=undef);
 
 BEGIN { 'use Data::Password'; }
 

@@ -3236,7 +3236,6 @@ sub DoMessage {
 sub DoCommand {
     Log::do_log('debug', '(%s, %s, %s)', @_);
     my ($rcpt, $robot, $message) = @_;
-    my $msg = $message->as_entity;
 
     ## boolean
     my $cmd_found = 0;
@@ -3341,67 +3340,15 @@ sub DoCommand {
         }
     }
 
-    ## Make multipart singlepart
-    if ($msg->is_multipart()) {
-        my $status = tools::as_singlepart($msg, 'text/plain');
-
-        unless (defined $status) {
-            Log::do_log('err', 'Could not change multipart to singlepart');
-            Sympa::Report::global_report_cmd('user', 'error_content_type',
-                {});
-            Log::db_log(
-                {   'robot'        => $robot,
-                    'list'         => $rcpt,                     #FIXME
-                    'action'       => 'DoCommand',
-                    'parameters'   => "$rcpt,$robot,$message",
-                    'target_email' => '',
-                    'msg_id'       => $messageid,
-                    'status'       => 'error',
-                    'error_type'   => 'error_content_type',
-                    'user_email'   => $sender,
-                    'client'       => $ip,
-                    'daemon'       => $daemon_name
-                }
-            );
-            return undef;
-        }
-
-        if ($status) {
-            Log::do_log('notice', 'Multipart message changed to singlepart');
-        }
-    }
-
     my $i;
     my $size;
 
     ## Process the body of the message
     ## unless subject contained commands or message has no body
-    if ((!$cmd_found) && (defined $msg->bodyhandle)) {
-        ## check Content-type
-        my $mime         = $msg->head->get('Mime-Version');
-        my $content_type = $msg->effective_type;
-        ## Get charset
-        my $cset =
-            MIME::Charset->new($msg->head->mime_attr('Content-Type.Charset'));
-        unless ($cset->decoder) {
-            # Charset is unknown.  Detect 7-bit charset.
-            my ($dummy, $charset) =
-                MIME::Charset::body_encode($msg->bodyhandle->as_string,
-                '', Detect7Bit => 'YES');
-            $cset = MIME::Charset->new($charset);
-        }
-        if ($cset->decoder) {
-            $cset->encoder('UTF-8');
-        } else {
-            $cset = MIME::Charset->new('US-ASCII');
-        }
-
-        unless ($content_type =~ /^text/i and !$mime
-            or !$content_type
-            or $content_type =~ /text\/plain/i) {
-            Log::do_log('err',
-                "Ignoring message body not in text/plain, Content-type: %s",
-                $content_type);
+    unless ($cmd_found) {
+        my $body = $message->get_plain_body;
+        unless (defined $body) {
+            Log::do_log('err', 'Could not change multipart to singlepart');
             Sympa::Report::global_report_cmd('user', 'error_content_type',
                 {});
             Log::db_log(
@@ -3421,15 +3368,11 @@ sub DoCommand {
             return $success;
         }
 
-        my @body = $msg->bodyhandle->as_lines();
-        foreach $i (@body) {
-            $i = $cset->encode($i);
-
-            last if ($i =~ /^-- $/);    ## ignore signature
-            last if ($i =~ /^-- $/);    ## ignore signature
+        foreach $i (split /\r\n|\r|\n/, $body) {
+            last if $i =~ /^-- $/;    ## ignore signature
             $i =~ s/^\s*>?\s*(.*)\s*$/$1/g;
-            next if ($i =~ /^$/);       ## skip empty lines
-            next if ($i =~ /^\s*\#/);
+            next unless length $i;    ## skip empty lines
+            next if $i =~ /^\s*\#/;
 
             #FIXME
             $auth_level =

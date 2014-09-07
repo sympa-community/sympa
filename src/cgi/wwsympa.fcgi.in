@@ -8525,8 +8525,8 @@ sub do_modindex {
         }
 
         $param->{'spool'}{$id}{'size'} = int($message->{'size'} / 1024 + 0.5);
-        $param->{'spool'}{$id}{'subject'} =
-            tools::decode_header($message, 'Subject') || 'no_subject';
+        $param->{'spool'}{$id}{'subject'} = $message->{'decoded_subject'}
+            || 'no_subject';
 
         my $date = $message->get_header('Date');
         if ($date) {
@@ -9024,8 +9024,7 @@ sub do_reject {
             if ($rejected_sender) {
                 unless ($in{'message_template'} eq 'reject_quiet') {
                     my %context;
-                    $context{'subject'} =
-                        tools::decode_header($message, 'Subject');
+                    $context{'subject'}       = $message->{'decoded_subject'};
                     $context{'rejected_by'}   = $param->{'user'}{'email'};
                     $context{'template_used'} = $in{'message_template'};
                     unless (
@@ -22429,33 +22428,25 @@ sub do_request_topic {
         last if (-f $filename);
     }
 
-    my $parser = MIME::Parser->new;
-    $parser->output_to_core(1);
-
-    unless (open FILE, "$filename") {
+    my $message = Sympa::Message->new_from_file($filename, context => $list);
+    unless ($message) {
         Sympa::Report::reject_report_web('intern', 'cannot_open_file',
             {'file' => $filename},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
         wwslog('notice', 'Cannot open file %s', $filename);
         return undef;
     }
-    my $msg  = $parser->parse(\*FILE);
-    my $head = $msg->head();
-    # headers will be encoded later.
-    $param->{'subject'}    = tools::decode_header($head, 'Subject');
-    $param->{'subject'}    = tools::escape_html($param->{'subject'});
-    $param->{'from'}       = tools::decode_header($head, 'From');
-    $param->{'from'}       = tools::escape_html($param->{'from'});
-    $param->{'date'}       = tools::decode_header($head, 'Date');
-    $param->{'date'}       = tools::escape_html($param->{'date'});
-    $param->{'message_id'} = tools::clean_msg_id($head->get('Message-Id'));
 
-    my $body = $msg->bodyhandle();
-    if ($body) {
-        $param->{'body'} = $body->as_string();
-    } else {
-        $param->{'body'} = '';
-    }
+    # headers will be encoded later.
+    $param->{'subject'}    = $message->{'decoded_subject'};
+    $param->{'subject'}    = tools::escape_html($param->{'subject'});   #XXX
+    $param->{'from'}       = $message->get_decoded_header('From');
+    $param->{'from'}       = tools::escape_html($param->{'from'});      #XXX
+    $param->{'date'}       = $message->get_decoded_header('Date');
+    $param->{'date'}       = tools::escape_html($param->{'date'});      #XXX
+    $param->{'message_id'} = $message->{'message_id'};
+    $param->{'body'}       = $message->get_plain_body;                  #FIXME
+
     $param->{'topic_required'} = $list->is_msg_topic_tagging_required();
 
     return 1;

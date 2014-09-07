@@ -2138,8 +2138,8 @@ sub distribute_digest {
         my $msg = {
             'id'       => $i,
             'subject'  => $message->{'decoded_subject'},
-            'from'     => tools::decode_header($message, 'From'),
-            'date'     => tools::decode_header($message, 'Date'),
+            'from'     => $message->get_decoded_header('From'),
+            'date'     => $message->get_decoded_header('Date'),
             'full_msg' => $message->as_string,
             'body'     => $message->body_as_string,
             'plain_body' =>
@@ -3286,9 +3286,9 @@ sub archive_send_last {
     my $msg = {};
     $msg->{'id'} = 1;
 
-    $msg->{'subject'} = tools::decode_header($message, 'Subject');
-    $msg->{'from'}    = tools::decode_header($message, 'From');
-    $msg->{'date'}    = tools::decode_header($message, 'Date');
+    $msg->{'subject'} = $message->{'decoded_subject'};
+    $msg->{'from'}    = $message->get_decoded_header('From');
+    $msg->{'date'}    = $message->get_decoded_header('Date');
 
     $msg->{'full_msg'} = $message->as_string;
 

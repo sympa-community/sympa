@@ -3152,29 +3152,10 @@ sub reject {
     ## For compatibility concerns
     foreach my $list_id ($list->get_list_id(), $list->{'name'}) {
         $file = $modqueue . '/' . $list_id . '_' . $key;
-        last if (-f $file);
+        last if -f $file;
     }
 
-    my $msg;
-    my $parser = MIME::Parser->new;
-    $parser->output_to_core(1);
-
-    unless ($msg = $parser->read(\*IN)) {
-        Log::do_log('notice', 'Unable to parse message');
-        Sympa::Report::reject_report_msg('intern', '', $sender, {}, $robot,
-            '', $list);
-        return undef;
-    }
-
-    close(IN);
-
-    my $bytes        = -s $file;
-    my $hdr          = $msg->head;
-    my $customheader = $list->{'admin'}{'custom_header'};
-    my $to_field     = $hdr->get('To');
-
-    ## Open the file
-    if (!open(IN, $file)) {
+    unless ($file and -f $file) {
         Log::do_log('info', 'REJECT %s %s from %s refused, auth failed',
             $which, $key, $sender);
         Sympa::Report::reject_report_msg('user', 'unfound_message', $sender,
@@ -3183,22 +3164,19 @@ sub reject {
         return 'wrong_auth';
     }
 
-    my $message;
-    $parser = MIME::Parser->new;
-    $parser->output_to_core(1);
-    unless ($message = $parser->read(\*IN)) {
+    my $message = Sympa::Message->new_from_file($file, context => $list);
+    unless ($message) {
         Log::do_log('notice', 'Unable to parse message');
         Sympa::Report::reject_report_msg('intern', '', $sender, {}, $robot,
             '', $list);
         return undef;
     }
 
-    my @sender_hdr = Mail::Address->parse($message->head->get('From'));
-    unless ($#sender_hdr == -1) {
-        my $rejected_sender = $sender_hdr[0]->address;
+    if ($message->{'sender'}) {
+        my $rejected_sender = $message->{'sender'};
         my %context;
-        $context{'subject'} = tools::decode_header($message, 'Subject');
-        $context{'rejected_by'} = $sender;
+        $context{'subject'}         = $message->{'decoded_subject'};
+        $context{'rejected_by'}     = $sender;
         $context{'editor_msg_body'} = $editor_msg->body_as_string
             if $editor_msg;
 
@@ -3216,7 +3194,7 @@ sub reject {
                     'Unable to send template "reject" to %s',
                     $rejected_sender);
                 Sympa::Report::reject_report_msg('intern_quiet', '', $sender,
-                    {'listname' => $list->{'name'}, 'message' => $msg},
+                    {'listname' => $list->{'name'}, 'message' => $message},
                     $robot, '', $list);
             }
         }
@@ -3225,7 +3203,7 @@ sub reject {
         unless (
             Sympa::Report::notice_report_msg(
                 'message_rejected', $sender,
-                {'key' => $key, 'message' => $msg}, $robot,
+                {'key' => $key, 'message' => $message}, $robot,
                 $list
             )
             ) {
@@ -3236,7 +3214,6 @@ sub reject {
 
     }
 
-    close(IN);
     Log::do_log('info', 'REJECT %s %s from %s accepted (%d seconds)',
         $name, $sender, $key, time - $time_command);
     Sympa::Tools::File::remove_dir($Conf::Conf{'viewmail_dir'} . '/mod/'

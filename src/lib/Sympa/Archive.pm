@@ -138,8 +138,8 @@ sub scan_dir_archive {
         $msg->{'id'} = $i;
 
         $msg->{'subject'} = $message->{'decoded_subject'};
-        $msg->{'from'}    = tools::decode_header($message, 'From');
-        $msg->{'date'}    = tools::decode_header($message, 'Date');
+        $msg->{'from'}    = $message->get_decoded_header('From');
+        $msg->{'date'}    = $message->get_decoded_header('Date');
 
         $msg->{'full_msg'} = $message->as_string;
 

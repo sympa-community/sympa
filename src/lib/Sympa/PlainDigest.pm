@@ -93,7 +93,6 @@ use MIME::Parser;
 
 use Sympa::HTML::FormatText;
 use Sympa::Language;
-use tools;
 use Sympa::Tools::Text;
 
 use base qw(MIME::Entity);    #FIXME FIXME
@@ -195,32 +194,31 @@ sub _do_message {
         return undef;
     }
 
-    my $from =
-        $msgent->head->get('From')
-        ? tools::decode_header($msgent, 'From')
-        : $language->gettext("[Unknown]");
-    my $subject =
-        $msgent->head->get('Subject')
-        ? tools::decode_header($msgent, 'Subject')
-        : '';
-    my $date =
-        $msgent->head->get('Date')
-        ? tools::decode_header($msgent, 'Date')
-        : '';
-    my $to =
-        $msgent->head->get('To')
-        ? tools::decode_header($msgent, 'To', ', ')
-        : '';
-    my $cc =
-        $msgent->head->get('Cc')
-        ? tools::decode_header($msgent, 'Cc', ', ')
-        : '';
-
-    chomp $from;
-    chomp $to;
-    chomp $cc;
-    chomp $subject;
-    chomp $date;
+    # Get decoded headers.
+    # Note that MIME::Head::get() returns empty array if requested fields are
+    # not found.
+    my ($from) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('From', 0));
+    $from = $language->gettext("[Unknown]")
+        unless defined $from and length $from;
+    my ($subject) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Subject', 0));
+    my ($date) = map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Date', 0));
+    my $to = join ', ', map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('To'));
+    my $cc = join ', ', map {
+        chomp $_;
+        MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
+    } ($msgent->head->get('Cc'));
 
     my @fromline = Mail::Address->parse($msgent->head->get('From'));
     my $name;
