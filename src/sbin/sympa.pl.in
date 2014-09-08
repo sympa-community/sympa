@@ -29,7 +29,6 @@ use warnings;
 use English qw(-no_match_vars);
 use File::Copy qw();
 use Getopt::Long;
-use MIME::Charset;
 use Pod::Usage;
 use POSIX qw();
 
@@ -49,7 +48,6 @@ use Sympa::Mail;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
-use Sympa::Robot;
 use Sympa::Scenario;
 use SDM;
 use tools;
@@ -1896,7 +1894,7 @@ sub process_message {
     }
 
     #  anti-virus
-    my $rc = tools::virus_infected($message);
+    my $rc = $message->check_virus_infection;
     if ($rc) {
         if (Conf::get_robot_conf($robot, 'antivirus_notify') eq 'sender') {
             unless (

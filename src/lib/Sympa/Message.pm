@@ -47,7 +47,7 @@ use strict;
 use warnings;
 use DateTime;
 use Encode qw();
-use English qw(-no_match_vars);
+use English;    # FIXME: drop $PREMATCH usage
 use HTML::Entities qw();
 use Mail::Address;
 use MIME::Charset;
@@ -75,6 +75,7 @@ use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use tt2;
+use Sympa::User;
 
 # Language context
 my $language = Sympa::Language->instance;
@@ -3357,6 +3358,308 @@ sub _as_singlepart {
     }
 
     return $done;
+}
+
+=over
+
+=item check_virus_infection ()
+
+I<Instance method>.
+XXX
+
+Returns:
+
+The name of malware the message contains, if any;
+C<"unknown"> for unidentified malware;
+C<undef> if checking failed;
+otherwise C<0>.
+
+=back
+
+=cut
+
+# Note: this would be moved to incoming pipeline package.
+# Old names: tools::virus_infected(), Sympa::Tools::Message::virus_infected().
+sub check_virus_infection {
+    Log::do_log('debug2', '%s)', @_);
+    my $self = shift;
+
+    my $entity = $self->as_entity;
+
+    unless ($Conf::Conf{'antivirus_path'}) {
+        Log::do_log('debug', 'Sympa not configured to scan virus in message');
+        return 0;
+    }
+
+    my $subdir = [split /\//, $self->get_id]->[0];
+    my $work_dir = join '/', $Conf::Conf{'tmpdir'}, 'antivirus', $subdir;
+    unless (-d $work_dir or Sympa::Tools::File::mkdir_all($work_dir, 0755)) {
+        Log::do_log('err', 'Unable to create tmp antivirus directory %s: %m',
+            $work_dir);
+        return undef;
+    }
+
+    ## Call the procedure of splitting mail
+    unless (_split_mail($entity, $work_dir)) {
+        Log::do_log('err', 'Could not split mail %s', $self);
+        return undef;
+    }
+
+    my $virusfound = 0;
+    my $error_msg;
+    my $result;
+
+    if ($Conf::Conf{'antivirus_path'} =~ /\/uvscan$/) {
+        # McAfee
+
+        # impossible to look for viruses with no option set
+        unless ($Conf::Conf{'antivirus_args'}) {
+            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            return undef;
+        }
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        while (<$pipein>) {
+            $result .= $_;
+            chomp $result;
+            if (   (/^\s*Found the\s+(.*)\s*virus.*$/i)
+                || (/^\s*Found application\s+(.*)\.\s*$/i)) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## uvscan status = 12 or 13 (*256) => virus
+        if ($status == 13 or $status == 12) {
+            $virusfound ||= "unknown";
+        }
+
+        ## Meaning of the codes
+        ##  12 : The program tried to clean a file, and that clean failed for
+        ##  some reason and the file is still infected.
+        ##  13 : One or more viruses or hostile objects (such as a Trojan
+        ##  horse, joke program,  or  a  test file) were found.
+        ##  15 : The programs self-check failed; the program might be infected
+        ##  or damaged.
+        ##  19 : The program succeeded in cleaning all infected files.
+
+        $error_msg = $result
+            if $status != 0
+                and $status != 12
+                and $status != 13
+                and $status != 19;
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/vscan$/) {
+        # Trend Micro
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        while (<$pipein>) {
+            if (/Found virus (\S+) /i) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## uvscan status = 1 | 2 (*256) => virus
+        if ($status == 1 or $status == 2) {
+            $virusfound ||= "unknown";
+        }
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/fsav$/) {
+        # F-Secure
+        my $dbdir = $PREMATCH;
+
+        # impossible to look for viruses with no option set
+        unless ($Conf::Conf{'antivirus_args'}) {
+            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            return undef;
+        }
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'}, '--databasedirectory', $dbdir,
+            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        while (<$pipein>) {
+            if (/infection:\s+(.*)/) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## fsecure status = 3 (*256) => virus
+        if ($status == 3) {
+            $virusfound ||= "unknown";
+        }
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /f-prot\.sh$/) {
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        while (<$pipein>) {
+            if (/Infection:\s+(.*)/) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## f-prot status = 3 (*256) => virus
+        if ($status == 3) {
+            $virusfound ||= "unknown";
+        }
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /kavscanner/) {
+        # Kaspersky
+
+        # impossible to look for viruses with no option set
+        unless ($Conf::Conf{'antivirus_args'}) {
+            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            return undef;
+        }
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        while (<$pipein>) {
+            if (/infected:\s+(.*)/) {
+                $virusfound = $1;
+            } elsif (/suspicion:\s+(.*)/i) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## uvscan status = 3 (*256) => virus
+        if ($status >= 3) {
+            $virusfound ||= "unknown";
+        }
+
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/sweep$/) {
+        # Sophos Antivirus... by liuk@publinet.it
+
+        # impossible to look for viruses with no option set
+        unless ($Conf::Conf{'antivirus_args'}) {
+            Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
+            return undef;
+        }
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        while (<$pipein>) {
+            if (/Virus\s+(.*)/) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## sweep status = 3 (*256) => virus
+        if ($status == 3) {
+            $virusfound ||= "unknown";
+        }
+
+        ## Clam antivirus
+    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/clamd?scan$/) {
+        # Clam antivirus
+        my $result;
+
+        my $pipein;
+        open $pipein, '-|',
+            $Conf::Conf{'antivirus_path'},
+            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        while (<ANTIVIR>) {
+            $result .= $_;
+            chomp $result;
+            if (/^\S+:\s(.*)\sFOUND$/) {
+                $virusfound = $1;
+            }
+        }
+        close $pipein;
+        my $status = $CHILD_ERROR >> 8;
+
+        ## Clamscan status = 1 (*256) => virus
+        if ($status == 1) {
+            $virusfound ||= "unknown";
+        }
+        $error_msg = $result
+            if $status != 0 and $status != 1;
+    }
+
+    ## Error while running antivir, notify listmaster
+    if ($error_msg) {
+        tools::send_notify_to_listmaster(
+            '*',
+            'virus_scan_failed',
+            {   'filename'  => $work_dir,
+                'error_msg' => $error_msg
+            }
+        );
+    }
+
+    ## if debug mode is active, the working directory is kept
+    unless ($main::options{'debug'}) {
+        opendir DIR, $work_dir;
+        my @list = readdir DIR;
+        closedir DIR;
+        foreach my $file (@list) {
+            unlink "$work_dir/$file";
+        }
+        rmdir $work_dir;
+    }
+
+    return $virusfound;
+}
+
+# Old name: tools::split_mail(), Sympa::Tools::Message::split_mail().
+# Currently this is used by check_virus_infection() only.
+sub _split_mail {
+    my $entity = shift;
+    my $dir    = shift;
+
+    my $i = 0;
+    foreach my $part (grep { $_ and $_->bodyhandle } $entity->parts_DFS) {
+        my $head = $part->head;
+        my $fileExt;
+
+        if (    $head->mime_attr('Content-Type.Name')
+            and $head->mime_attr('Content-Type.Name') =~
+            /\.([.\w]*\w)\s*\"*$/) {
+            $fileExt = $1;
+        } elsif ($head->recommended_filename
+            and $head->recommended_filename =~ /\.([.\w]*\w)\s*\"*$/) {
+            $fileExt = $1;
+            # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
+            $fileExt = Encode::encode_utf8($fileExt)
+                if Encode::is_utf8($fileExt);
+        } else {
+            my $mime_types = tools::load_mime_types();
+            $fileExt = $mime_types->{$head->mime_type} || 'bin';
+        }
+
+        ## Store body in file
+        my $fh;
+        unless (open $fh, '>', sprintf('%s/msg%03d.%s', $dir, $i, $fileExt)) {
+            Log::do_log('err', 'Unable to create %s/msg%03d.%s: %m',
+                $dir, $i, $fileExt);
+            return undef;
+        }
+        print $fh $part->bodyhandle->as_string;
+        close $fh;
+
+        $i++;
+    }
+
+    return 1;
 }
 
 =over
