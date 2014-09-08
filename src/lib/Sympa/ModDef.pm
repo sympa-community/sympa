@@ -221,8 +221,8 @@ our %cpan_modules = (
         'gettext_id'     => 'required when using the VOOT protocol',
     },
     # The pure-perl version of Scalar::Util::looks_like_number() was unstable.
-    # To force using XS version, check existence of Sympa::List::Util::XS.
-    'Sympa::List::Util::XS' => {
+    # To force using XS version, check existence of List::Util::XS.
+    'List::Util::XS' => {
         required_version => '1.20',
         package_name     => 'Scalar-List-Utils',
         mandatory        => 1,
