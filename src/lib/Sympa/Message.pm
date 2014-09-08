@@ -51,7 +51,6 @@ use English;    # FIXME: drop $PREMATCH usage
 use HTML::Entities qw();
 use Mail::Address;
 use MIME::Charset;
-use MIME::Decoder;
 use MIME::EncWords;
 use MIME::Entity;
 use MIME::Parser;
@@ -2974,64 +2973,49 @@ sub _urlize_one_part {
     my $head     = $entity->head;
     my $encoding = $head->mime_encoding;
 
-    ##  name of the linked file
-    my $fileExt = $mime_types->{$head->mime_type};
-    if ($fileExt) {
-        $fileExt = '.' . $fileExt;
-    }
+    # name of the linked file
     my $filename;
-
     if ($head->recommended_filename) {
         $filename = $head->recommended_filename;
         # MIME-tools >= 5.501 returns Unicode value ("utf8 flag" on).
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        $filename = "msg.$i" . $fileExt;
+        my $fileExt = $mime_types->{$entity->effective_type || ''} || 'bin';
+        $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
+    my $file = "$expl/$dir/$filename";
 
-    ##create the linked file
-    ## Store body in file
-    if (open OFILE, ">$expl/$dir/$filename") {
-        my $ct = $entity->effective_type || 'text/plain';
-        printf OFILE "Content-type: %s", $ct;
-        printf OFILE "; Charset=%s", $head->mime_attr('Content-Type.Charset')
-            if Sympa::Tools::Data::smart_eq(
-            $head->mime_attr('Content-Type.Charset'), qr/\S/);
-        print OFILE "\n\n";
-    } else {
-        Log::do_log('notice', 'Unable to open %s/%s/%s',
-            $expl, $dir, $filename);
+    # Create the linked file
+    # Store body in file
+    my $fh;
+    unless (open $fh, '>', $file) {
+        Log::do_log('err', 'Unable to open %s: %m', $file);
         return undef;
     }
-
-    if ($encoding =~
-        /^(binary|7bit|8bit|base64|quoted-printable|x-uu|x-uuencode|x-gzip64)$/
-        ) {
-        open TMP, ">$expl/$dir/$filename.$encoding";
-        $entity->print_body(\*TMP);
-        close TMP;
-
-        open BODY, "$expl/$dir/$filename.$encoding";
-        my $decoder = MIME::Decoder->new($encoding);
-        $decoder->decode(\*BODY, \*OFILE);
-        unlink "$expl/$dir/$filename.$encoding";
+    if ($entity->bodyhandle) {
+        my $ct = $entity->effective_type || 'text/plain';
+        printf $fh "Content-Type: %s", $ct;
+        printf $fh "; Charset=%s", $head->mime_attr('Content-Type.Charset')
+        if Sympa::Tools::Data::smart_eq(
+            $head->mime_attr('Content-Type.Charset'), qr/\S/);
+        print $fh "\n\n";
+        print $fh $entity->bodyhandle->as_string;
     } else {
-        $entity->print_body(\*OFILE);
+        my $ct = $entity->effective_type || 'application/octet-stream';
+        printf $fh "Content-Type: %s", $ct;
+        print $fh "\n\n";
+        print $fh $entity->body_as_string;
     }
-    close(OFILE);
-    my $file = "$expl/$dir/$filename";
-    my $size = (-s $file);
+    close $fh;
+
+    my $size = -s $file;
 
     ## Only URLize files with a moderate size
     if ($size < $Conf::Conf{'urlize_min_size'}) {
-        unlink "$expl/$dir/$filename";
+        unlink $file;
         return undef;
     }
-
-    ## Delete files created twice or more (with Content-Type.name and Content-
-    ## Disposition.filename)
-    $entity->purge;
 
     (my $file_name = $filename) =~ s/\./\_/g;
     # do NOT escape '/' chars
@@ -3577,7 +3561,7 @@ sub check_virus_infection {
         open $pipein, '-|',
             $Conf::Conf{'antivirus_path'},
             split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
-        while (<ANTIVIR>) {
+        while (<$pipein>) {
             $result .= $_;
             chomp $result;
             if (/^\S+:\s(.*)\sFOUND$/) {
