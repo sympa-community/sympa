@@ -51,23 +51,21 @@ sub store {
     }
 
     $listmaster_messages_stack{$robot_id}{$operation}{'first'} = time
-        unless $listmaster_messages_stack{$robot_id}{$operation} {'first'};
+        unless $listmaster_messages_stack{$robot_id}{$operation}{'first'};
     $listmaster_messages_stack{$robot_id}{$operation}{'counter'}++;
     $listmaster_messages_stack{$robot_id}{$operation}{'last'} = time;
 
     if ($listmaster_messages_stack{$robot_id}{$operation}{'counter'} > 3) {
         # stack if too much messages w/ same code
-            Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
-                $operation, $email, $robot_id)
-                unless $operation eq 'logs_failed';
-            push
-                @{$listmaster_messages_stack{$robot_id}{$operation}
-                    {'messages'}{$email}}, $message->as_string;
-            return 1;
+        Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
+            $operation, $email, $robot_id)
+            unless $operation eq 'logs_failed';
+        push @{$listmaster_messages_stack{$robot_id}{$operation}{'messages'}
+                {$email}}, $message->as_string;
+        return 1;
     } else {
         return Sympa::Mail::sending(
-            $message,
-            $email,
+            $message, $email,
             Conf::get_robot_conf($robot_id, 'request'),
             priority => Conf::get_robot_conf($robot_id, 'sympa_priority')
         );
@@ -77,77 +75,78 @@ sub store {
 sub flush {
     my $purge = shift;
 
-        foreach my $robot_id (keys %listmaster_messages_stack) {
-            foreach my $operation (
-                keys %{$listmaster_messages_stack{$robot_id}}) {
-                my $first_age =
-                    time -
-                    $listmaster_messages_stack{$robot_id}{$operation}{'first'};
-                my $last_age =
-                    time -
-                    $listmaster_messages_stack{$robot_id}{$operation}{'last'};
-                # not old enough to send and first not too old
-                next
-                    unless $purge or $last_age > 30 or $first_age > 60;
-                next
-                    unless $listmaster_messages_stack{$robot_id}{$operation}{'messages'};
+    foreach my $robot_id (keys %listmaster_messages_stack) {
+        foreach my $operation (keys %{$listmaster_messages_stack{$robot_id}})
+        {
+            my $first_age = time -
+                $listmaster_messages_stack{$robot_id}{$operation}{'first'};
+            my $last_age = time -
+                $listmaster_messages_stack{$robot_id}{$operation}{'last'};
+            # not old enough to send and first not too old
+            next
+                unless $purge
+                    or $last_age > 30
+                    or $first_age > 60;
+            next
+                unless $listmaster_messages_stack{$robot_id}{$operation}
+                {'messages'};
 
-                my %messages =
-                    %{$listmaster_messages_stack{$robot_id}{$operation}{'messages'}};
-                Log::do_log(
-                    'info', 'Got messages about "%s" (%s)',
-                    $operation, join(', ', keys %messages)
-                );
+            my %messages =
+                %{$listmaster_messages_stack{$robot_id}{$operation}
+                    {'messages'}};
+            Log::do_log(
+                'info', 'Got messages about "%s" (%s)',
+                $operation, join(', ', keys %messages)
+            );
 
-                ##### bulk send
-                foreach my $email (keys %messages) {
-                    my $param = {
-                        to                    => $email,
-                        auto_submitted        => 'auto-generated',
-                        operation             => $operation,
-                        notification_messages => $messages{$email},
-                        boundary              => '----------=_'
-                            . tools::get_message_id($robot_id)
-                    };
+            ##### bulk send
+            foreach my $email (keys %messages) {
+                my $param = {
+                    to                    => $email,
+                    auto_submitted        => 'auto-generated',
+                    operation             => $operation,
+                    notification_messages => $messages{$email},
+                    boundary              => '----------=_'
+                        . tools::get_message_id($robot_id)
+                };
 
-                    Log::do_log('info', 'Send messages to %s', $email);
+                Log::do_log('info', 'Send messages to %s', $email);
 
-                    # Skip DB access because DB is not accessible
-                    $email = [$email]
-                        if not ref $email
-                            and (  $operation eq 'no_db'
-                                or $operation eq 'db_restored');
+                # Skip DB access because DB is not accessible
+                $email = [$email]
+                    if not ref $email
+                        and (  $operation eq 'no_db'
+                            or $operation eq 'db_restored');
 
-                    my $message =
-                        Sympa::Message->new_from_template($robot_id,
-                        'listmaster_groupednotifications',
-                        $email, $param);
-                    unless (
-                        $message
-                        and defined Sympa::Mail::sending(
-                            $message, $email,
-                            Conf::get_robot_conf($robot_id, 'request'),
-                            priority => Conf::get_robot_conf(
-                                $robot_id, 'sympa_priority'
-                            )
-                        )
-                        ) {
-                        Log::do_log(
-                            'notice',
-                            'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
-                            $robot_id,
-                            $email
-                        ) unless $operation eq 'logs_failed';
-                        return undef;
-                    }
+                my $message =
+                    Sympa::Message->new_from_template($robot_id,
+                    'listmaster_groupednotifications',
+                    $email, $param);
+                unless (
+                    $message
+                    and defined Sympa::Mail::sending(
+                        $message,
+                        $email,
+                        Conf::get_robot_conf($robot_id, 'request'),
+                        priority =>
+                            Conf::get_robot_conf($robot_id, 'sympa_priority')
+                    )
+                    ) {
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
+                        $robot_id,
+                        $email
+                    ) unless $operation eq 'logs_failed';
+                    return undef;
                 }
-
-                Log::do_log('info', 'Cleaning stacked notifications');
-                delete $listmaster_messages_stack{$robot_id}
-                    {$operation};
             }
+
+            Log::do_log('info', 'Cleaning stacked notifications');
+            delete $listmaster_messages_stack{$robot_id}{$operation};
         }
-        return 1;
+    }
+    return 1;
 }
 
 1;
@@ -178,4 +177,3 @@ XXX
 L<Sympa::Alarm> appeared on Sympa 6.2.
 
 =cut
-
