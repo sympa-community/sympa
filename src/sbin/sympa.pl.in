@@ -2790,18 +2790,6 @@ sub DoMessage {
                 $list->send_dsn($message, {}, '5.6.5');
                 return undef;
             }
-            # Check if re-encryption will be successful.
-            if ($message->{'smime_crypted'}
-                and not $message->test_smime_encrypt($list)) {
-                Log::do_log(
-                    'err',
-                    'Failed to encrypt. Message %s for list %s was rejected',
-                    $message,
-                    $list
-                );
-                $list->send_dsn($message, {}, '5.7.5');
-                return undef;
-            }
 
             my $numsmtp;
             #XXX eval {
@@ -2918,15 +2906,6 @@ sub DoMessage {
             $list->send_dsn($message, {}, '5.6.5');
             return undef;
         }
-        # Check if re-encryption will be successful.
-        if ($message->{'smime_crypted'}
-            and not $message->test_smime_encrypt($list)) {
-            Log::do_log('err',
-                'Failed to encrypt. Message %s for list %s was rejected',
-                $message, $list);
-            $list->send_dsn($message, {}, '5.7.5');
-            return undef;
-        }
 
         my $key = Sympa::List::send_confirm_to_sender($message);
 
@@ -2986,15 +2965,6 @@ sub DoMessage {
                 $list
             );
             $list->send_dsn($message, {}, '5.6.5');
-            return undef;
-        }
-        # Check if re-encryption will be successful.
-        if ($message->{'smime_crypted'}
-            and not $message->test_smime_encrypt($list)) {
-            Log::do_log('err',
-                'Failed to encrypt. Message %s for list %s was rejected',
-                $message, $list);
-            $list->send_dsn($message, {}, '5.7.5');
             return undef;
         }
 
@@ -3067,15 +3037,6 @@ sub DoMessage {
                 $list
             );
             $list->send_dsn($message, {}, '5.6.5');
-            return undef;
-        }
-        # Check if re-encryption will be successful.
-        if ($message->{'smime_crypted'}
-            and not $message->test_smime_encrypt($list)) {
-            Log::do_log('err',
-                'Failed to encrypt. Message %s for list %s was rejected',
-                $message, $list);
-            $list->send_dsn($message, {}, '5.7.5');
             return undef;
         }
 
