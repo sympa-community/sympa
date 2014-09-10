@@ -78,7 +78,7 @@ my $all_lists = Sympa::List::get_lists('*');
 
 my $server = Sympa::SOAP::Transport->new();
 
-#$server->dispatch_with({'urn:Sympa' => 'Sympa::SOAP'});
-$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
+$server->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'});
+#$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
 
 $server->handle($birthday);
