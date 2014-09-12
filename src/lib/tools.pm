@@ -1131,9 +1131,6 @@ sub send_file {
     my $message =
         Sympa::Message->new_from_template($that, $tpl, $who, $context,
         %options);
-    # Use bulk excepted for alarms.  We should make this configurable in order
-    # to support Sympa server on a machine without any MTA service.
-    my $use_bulk = 1 unless $options{'alarm'};
 
     my $return_path;
     if (ref $that eq 'Sympa::List') {
@@ -1146,7 +1143,7 @@ sub send_file {
         and defined Sympa::Mail::sending(
             $message, $who, $return_path,
             #'priority' => Conf::get_robot_conf($robot_id, 'sympa_priority'),
-            'use_bulk' => $use_bulk,
+            'use_bulk' => 1,
         )
         ) {
         Log::do_log('err', 'Could not send template %s to %s', $tpl, $who);
