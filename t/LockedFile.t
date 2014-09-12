@@ -10,7 +10,7 @@ use Test::More;
 
 use Sympa::LockedFile;
 
-plan tests => 19;
+plan tests => 23;
 
 my $lock;
 my $temp_dir  = File::Temp->newdir(CLEANUP => $ENV{TEST_DEBUG} ? 0 : 1);
@@ -40,11 +40,20 @@ can_ok($lock, 'close');
 ok(-f $lock_file, "underlying lock file does exist");
 
 ok($lock->open($main_file), 'locking locked file, unspecified mode');
+is($lock->last_error, undef);
+
 ##ok($lock->open($main_file, 0, 'Anything'), 'locking, irrelevant mode');
+
 ok($lock->open($main_file, 0, '<'), 'locking locked file, read mode');
+is($lock->last_error, undef);
+
 ok(!$lock->open($main_file, 2, '>'), 'prevented locking, write mode');
+isnt($lock->last_error, undef);
+
 ok(!$lock->open($main_file, -1, '>'),
     'prevented non-blocking locking, write mode');
+isnt($lock->last_error, undef);
+
 ok($lock->close, 'unlocking');
 ok($lock->open($main_file, 0, '>'), 'locking unlocked file, write mode');
 

@@ -26,6 +26,8 @@ package Sympa::LockedFile;
 
 use strict;
 use warnings;
+use English qw(-no_match_vars);
+
 use base qw(IO::File);
 
 use File::NFSLock;
@@ -38,11 +40,17 @@ BEGIN {
     $File::NFSLock::LOCK_EXTENSION = ',lock';
     *File::NFSLock::rand_file      = sub($) {
         my $file = shift;
-        "$file,lock." . time() % 10000 . '.' . $$ . '.' . int(rand() * 10000);
+        return
+              $file 
+            . ',lock.'
+            . time() % 10000 . '.'
+            . $PID . '.'
+            . int(rand() * 10000);
     };
 }
 
 our %lock_of;
+our $last_error;
 my $default_timeout    = 30;
 my $stale_lock_timeout = 20 * 60;    # TODO should become a config parameter
 
@@ -62,6 +70,8 @@ sub open {
         $lock_type |= File::NFSLock::LOCK_NB();
     }
 
+    undef $last_error;
+
     my $lock = File::NFSLock->new(
         {   file               => $file,
             lock_type          => $lock_type,
@@ -70,11 +80,13 @@ sub open {
         }
     );
     unless ($lock) {
+        $last_error = $File::NFSLock::errstr || 'Unknown error';
         return undef;
     }
 
     if ($mode ne '+') {
         unless ($self->SUPER::open($file, $mode)) {
+            $last_error = $ERRNO || 'Unknown error';
             $lock->unlock;    # make sure unlock to occur immediately.
             return undef;
         }
@@ -83,6 +95,8 @@ sub open {
     $lock_of{$self + 0} = $lock;    # register lock object, i.e. keep locking.
     return 1;
 }
+
+sub last_error { $last_error; }
 
 sub close {
     my $self = shift;
@@ -99,6 +113,22 @@ sub close {
     $lock_of{$self + 0}->unlock;    # make sure unlock to occur immediately.
     delete $lock_of{$self + 0};     # lock object will be destructed.
     return $ret;
+}
+
+sub unlink {
+    my $self = shift;
+
+    die 'Lock not found' unless exists $lock_of{$self + 0};
+
+    undef $last_error;
+    if ($lock_of{$self + 0}->{file}) {
+        unless (unlink $lock_of{$self + 0}->{file}) {
+            $last_error = $ERRNO;
+            return undef;
+        }
+    }
+
+    return $self->close;
 }
 
 # Destruct inside reference to lock object so that it will be released.
@@ -157,6 +187,18 @@ See open().
 Returns:
 
 New object or, if something went wrong, false value.
+
+=item Sympa::LockedFile->last_error ( )
+
+Get a string describing the most recent error.
+
+Parameters:
+
+None.
+
+Returns:
+
+String or, if recent operation was success, C<undef>. 
 
 =back
 
@@ -232,6 +274,22 @@ If close succeeded, returns true value, otherwise false value.
 If filehandle had not been locked by current process,
 this method will safely close it and die.
 
+=item $fh->unlink ( )
+
+Deletes file and releases lock on it.
+
+Parameters:
+
+None.
+
+Returns:
+
+If unlink sucessded, returns true value, otherwise false value and
+does not release lock.
+
+If filehandle had not been locked by current process,
+this method will die without deleting file.
+
 =back
 
 =head1 SEE ALSO
@@ -246,6 +304,7 @@ Lock module written by Olivier SalaE<252>n appeared on Sympa 5.3.
 
 Support for NFS was added by Kazuo Moriwaka.
 
-L<Sympa::LockedFile> module was initially written by IKEDA Soji.
+Rewritten L<Sympa::LockedFile> module was initially written by IKEDA Soji
+for Sympa 6.2.
 
 =cut
