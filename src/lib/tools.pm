@@ -1241,7 +1241,7 @@ sub send_notify_to_listmaster {
 
         my $notif_message =
             Sympa::Message->new_from_template($that,
-            'listmaster_notification', $to, $ts->{'data'});
+            'listmaster_notification', $email, $ts->{'data'});
         $notif_message->{rcpt} = $email;
 
         unless ($notif_message
