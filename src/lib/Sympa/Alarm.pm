@@ -170,7 +170,42 @@ Sympa::Alarm - Spool on memory for listmaster notification
 
 =head1 DESCRIPTION
 
-XXX
+L<Sympa::Alarm> implements on-memory spool for listmaster notification.
+
+=head2 Functions
+
+=over
+
+=item store ( $message, $operation )
+
+Stores a message of a operation to spool.
+
+Parameters:
+
+=over
+
+=item $message
+
+L<Sympa::Message> object to be stored.
+
+=item $operation
+
+A string specifys tag of the message.
+
+=back
+
+Returns:
+
+True value if succeed, otherwise C<undef>.
+
+=item flush ( [ purge ] )
+
+Sends compiled messages in spool.
+
+If true value is given as optional argument, all messages in spool will be
+sent.
+
+=back
 
 =head1 HISTORY
 

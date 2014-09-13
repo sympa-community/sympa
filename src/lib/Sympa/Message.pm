@@ -83,7 +83,7 @@ my $language = Sympa::Language->instance;
 
 =over
 
-=item new ( $serialized, key =E<gt> value, ... )
+=item new ( $serialized, context =E<gt> $that, KEY =E<gt> value, ... )
 
 I<Constructor>.
 Creates a new Message object.
@@ -95,6 +95,10 @@ Parameters:
 =item $serialized
 
 Serialized message.
+
+=item context =E<gt> object
+
+Context.  L<Sympa::List> object, Robot or C<'*'>.
 
 =item key =E<gt> value, ...
 
@@ -3640,6 +3644,139 @@ sub get_id {
 }
 
 1;
+__END__
+
+=head2 Attributes and Context
+
+These are accessible as hash elements of objects.
+
+=over
+
+=item {context}
+
+Context of the message, L<Sympa::List> object, robot or C<'*'>.
+
+=item {rcpt}
+
+Currently unavailable.
+
+=item {checksum}
+
+No longer used.  It is kept for compatibility with Sympa 6.1.x or earlier.
+See also L<upgrade_send_spool(1)>.
+
+=item {family}
+
+Name of family (see L<Sympa::Family>) the message corresponds to.
+This is given by L<familyqueue(8)> program.
+
+=item {envelope_sender}
+
+Envelope sender, a.k.a. "Unix From".
+This is not always same as {sender} attribute
+nor the content of C<From:> field.
+
+C<'E<lt>E<gt>'> is used for "null envelope sender".
+
+=item {md5_check}
+
+True value indicates that the message has been authenticated by C<md5> level
+(password authemtication).
+
+=item {message_id}
+
+Original message ID of the message
+
+=item {sender}
+
+Actual sender of the message.
+This is determined according to C<sender_header> configuration parameter.
+
+=item {shelved}
+
+Shelved processing.
+Hashref with multiple items.
+XXX
+
+=item {spam_status}
+
+Result of spam check.
+This is set by L</check_spam_status>() method.
+
+=back
+
+XXX
+
+=head2 Serialization
+
+L<Sympa::Message> object includes number of slots as hash items:
+metadata, context, attributes and message content.
+
+B<Metadata> is given by spool.
+On spool based on filesystem, it is typically encoded into file names.
+For example a file name
+
+  listname-owner@domain.name.143599229.12345
+
+encodes the metadata
+
+  localpart  => 'listname',
+  listtype   => 'return_path',
+  domainpart => 'domain.name',
+  date       => 143599229,
+
+Metadata always includes information of B<context>: List, Robot or
+Site.  For example:
+
+- Incoming post bound for E<lt>listname@domain.nameE<gt>:
+
+  context    => Sympa::List <listname@domain.name>,
+
+- Incoming command message bound for E<lt>sympa@domain.nameE<gt>:
+
+  context    => 'domain.name',
+
+- Message sent from Sympa to super-listmaster(s):
+
+  context    => '*'
+
+Context is determined when the object is instantiated, and never
+changed through its lifetime.
+Thus, constructor of objects should take context object as an
+argument.
+
+Logically, objects are stored into physical spool as B<serialized form>
+and deserialized when they are fetched from spool.
+B<Attributes> will be serialized and deserialized along with raw message
+content.
+Attributes are encoded in C<X-Sympa-*:> pseudo-header fields and
+C<Return-Path:> header field.
+Below is an example of serialized form.
+
+  X-Sympa-Message-ID: 23456789.12345@domain.name  : {message_id} attribute
+  X-Sympa-Sender: user01@user.sympa.test          : {sender} attribute
+  X-Sympa-Shelved: dkim_sign; tracking=mdn        : {shelved} attribute
+  X-Sympa-Spam-Status: ham                        : {spam_status} attribute
+  Return-Path: sympa-request@domain.name          : {envelope_sender} attribute
+  Message-Id: <123456789.12345@domain.name>       :   ---
+  From: User <user@other.host.dom>                :    |
+  To: User <user@some.host.name>                  :    |
+  Subject: Howdy world                            :    | Raw message content
+  X-Sympa-Topic: sometopic                        :    |
+                                                  :    |
+  Bonjour, le monde.                              :    |
+                                                  :   ---
+
+On the messages in msg and bounce spools,
+C<Return-Path:> header fields are given by MDA,
+and C<X-Sympa-*:> header fields are given by queue programs.  On other
+spools, they are given by components of Sympa.
+
+Pseudo-header fields I<should> appear at beginning of serialized content.
+Fields appear at other places (e.g. C<X-Sympa-Topic:> field above) are not
+attributes but are the part of raw message content.
+
+Pseudo-header fields I<should not> be included in actually sent messages.
 
 =head1 HISTORY
 
