@@ -49,6 +49,7 @@ use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use Archive::Zip qw();
 use DateTime;
 use DateTime::Format::Mail;
+use Digest::MD5;
 use Encode qw();
 use English;    # FIXME: drop $MATCH usage
 use MIME::EncWords;
@@ -21185,7 +21186,7 @@ sub do_upload_pictures {
         return 'suboptions';
     }
 
-    my $filename     = tools::md5_fingerprint($param->{'user'}{'email'});
+    my $filename     = Digest::MD5::md5_hex($param->{'user'}{'email'});
     my $fullfilename = $filename . '.' . $filetype;
 
     my @filetmp;

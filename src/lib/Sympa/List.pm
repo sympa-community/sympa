@@ -3491,7 +3491,7 @@ sub find_picture_filenames {
     my $self  = shift;
     my $email = shift;
 
-    my $login = tools::md5_fingerprint($email);
+    my $login = Digest::MD5::md5_hex($email);
     my @ret   = ();
 
     foreach my $ext (qw{gif jpg jpeg png}) {
@@ -5367,7 +5367,7 @@ sub update_list_member {
         foreach my $path ($self->find_picture_paths($who)) {
             my $extension = [reverse split /\./, $path]->[0];
             my $new_path = $self->get_picture_path(
-                tools::md5_fingerprint($values->{'email'}) . '.'
+                Digest::MD5::md5_hex($values->{'email'}) . '.'
                     . $extension);
             unless (rename $path, $new_path) {
                 Log::do_log('err', 'Failed to rename %s to %s : %m',

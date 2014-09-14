@@ -26,6 +26,7 @@
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
+use Digest::MD5;
 use English qw(-no_match_vars);
 use File::Copy qw();
 use Getopt::Long;
@@ -606,7 +607,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         }
         exit 0;
     } elsif ($main::options{'md5_digest'}) {
-        my $md5 = tools::md5_fingerprint($main::options{'md5_digest'});
+        my $md5 = Digest::MD5::md5_hex($main::options{'md5_digest'});
         printf "md5 digest : $md5 \n";
 
         exit 0;

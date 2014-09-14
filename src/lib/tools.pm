@@ -1500,30 +1500,8 @@ sub add_in_blacklist {
 # DEPRECATED: No longer used.
 # sub get_fingerprint($email, $fingerprint);
 
-############################################################
-#  md5_fingerprint                                         #
-############################################################
-#  The algorithm MD5 (Message Digest 5) is a cryptographic #
-#  hash function which permit to obtain                    #
-#  the fingerprint of a file/data                          #
-#                                                          #
-# IN : a string                                            #
-#                                                          #
-# OUT : md5 digest                                         #
-#     | undef                                              #
-#                                                          #
-############################################################
-sub md5_fingerprint {
-
-    my $input_string = shift;
-    return undef unless (defined $input_string);
-    chomp $input_string;
-
-    my $digestmd5 = Digest::MD5->new;
-    $digestmd5->reset;
-    $digestmd5->add($input_string);
-    return (unpack("H*", $digestmd5->digest));
-}
+# DEPRECATED: Use Digest::MD5::md5_hex.
+#sub md5_fingerprint($input_string);
 
 # DEPRECATED: No longer used.
 # sub get_db_random();

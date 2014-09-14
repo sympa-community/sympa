@@ -26,6 +26,7 @@ package Sympa::Bulk;
 
 use strict;
 use warnings;
+use Digest::MD5;
 use MIME::Base64 qw();
 use MIME::Parser;
 use Term::ProgressBar;
@@ -35,7 +36,6 @@ use Time::HiRes qw();
 use Conf;
 use Log;
 use SDM;
-use tools;
 use Sympa::Tools::Daemon;
 
 ## Database and SQL statement handlers
@@ -290,7 +290,7 @@ sub store {
     ##-----------------------------##
 
     my $msg        = MIME::Base64::encode($message->to_string);
-    my $messagekey = tools::md5_fingerprint($msg);
+    my $messagekey = Digest::MD5::md5_hex($msg);
 
     # first store the message in bulk_spool_table
     # because as soon as packet are created bulk.pl may distribute them
@@ -394,7 +394,7 @@ sub store {
         } else {
             $rcptasstring = $packet;
         }
-        my $packetid = tools::md5_fingerprint($rcptasstring);
+        my $packetid = Digest::MD5::md5_hex($rcptasstring);
         my $packet_already_exist;
         if ($message_already_on_spool) {
             ## search if this packet is already in spool database : mailfile
@@ -635,7 +635,7 @@ sub store_test {
     );
     $priority_message = 9;
 
-    my $messagekey = tools::md5_fingerprint(Time::HiRes::time());
+    my $messagekey = Digest::MD5::md5_hex(Time::HiRes::time());
     my $msg        = '';
     $progress->max_update_rate(1);
     my $next_update = 0;
