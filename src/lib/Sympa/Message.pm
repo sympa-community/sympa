@@ -369,7 +369,7 @@ sub _get_message_id {
 =item new_from_template ( $that, $filename, $rcpt, $data )
 
 I<Constructor>.
-XXX
+Create L<Sympa::Message> object from template.
 
 Parameters:
 
@@ -381,15 +381,18 @@ Content: Sympa::List, robot or '*'.
 
 =item $filename
 
-tt2 filename (with .tt2) or C<''>.
+Template filename (without extension).
 
 =item $rcpt
 
 Scalar or arrayref: SMTP "RCPT To:" field.
 
+If it is a scalar, trys to retrieve information of the user
+(See also L<Sympa::User>.
+
 =item $data
 
-Hashref used to parse tt2 file, with keys:
+Hashref used to parse template file, with keys:
 
 =over
 
@@ -397,13 +400,17 @@ Hashref used to parse tt2 file, with keys:
 
 SMTP "MAIL From:" field if send by smtp, "X-Sympa-From:" field if send by spool
 
+Note: This parameter is obsoleted.  Currently, {envelope_sender} attribute of
+object is taken from the context.
+
 =item to
 
 "To:" header field
 
 =item lang
 
-tt2 language if $filename
+Language tag used for parsing template.
+See also L<Sympa::Language>.
 
 =item from
 
@@ -425,17 +432,15 @@ Note: This feature has been deprecated.
 
 =item headers
 
-Hashref with keys are headers mail
+Additional headers, hashref with keys are field names.
 
 =back
-
-=item $robot
 
 =back
 
 Returns:
 
-New L<Sympa::Message> instance, of C<undef> if something went wrong.
+New L<Sympa::Message> instance, or C<undef> if something went wrong.
 
 =back
 
@@ -587,6 +592,14 @@ sub new_from_template {
             or not $list and $dkim_add_signature_to =~ /robot/) {
             $message->{shelved}{dkim_sign} = 1;
         }
+    }
+
+    # Set default envelope sender.
+    if ($list) {
+        $message->{envelope_sender} = $list->get_list_address('return_path');
+    } else {
+        $message->{envelope_sender} =
+            Conf::get_robot_conf($robot_id, 'request');
     }
 
     return $message;
@@ -843,7 +856,7 @@ sub dup {
 I<Serializer>.
 Returns serialized data of Message object.
 
-Parameters:
+Parameter:
 
 =over
 
@@ -993,8 +1006,8 @@ sub head {
 =item check_spam_status ( )
 
 I<Instance method>.
-Get spam status according to spam_status scenario.
-XXX
+Gets spam status according to spam_status scenario
+and sets it as {smap_status} attribute.
 
 =back
 
@@ -1125,7 +1138,8 @@ sub dkim_sign {
 =item check_dkim_signature ( )
 
 I<Instance method>.
-XXX
+Checks DKIM signature of the message
+and sets or clears {dkim_pass} item of the message object.
 
 =back
 
@@ -1211,7 +1225,7 @@ Even if it was changed, string representaion of message won't be updated.
 Below is better way to modify message.
 
     my $entity = $message->as_entity->dup;
-    # Mofify entity...
+    # ... Modify $entity...
     $message->set_entity($entity);
 
 =back
@@ -1268,6 +1282,17 @@ sub set_entity {
 
 I<Instance method>.
 Get a string representation of message in MIME-compliant format.
+
+Parameter:
+
+=over
+
+=item original =E<gt> 0|1
+
+If set to 1 and content has been decrypted, returns original content.
+Default is 0.
+
+=back
 
 Note that method like "set_string()" does not exist:
 You would be better to create new instance rather than replacing entire
@@ -1442,7 +1467,8 @@ if everything's alright
 
 =cut 
 
-## Dump the Message object
+# Dump the Message object
+# Currently not used.
 sub dump {
     my ($self, $output) = @_;
 #    my $output ||= \*STDERR;
@@ -1549,7 +1575,7 @@ sub get_topic {
 =item clean_html ( )
 
 I<Instance method>.
-XXX
+Encode HTML parts of the message by UTF-8 and strip scripts included in them.
 
 =back
 
@@ -1638,6 +1664,8 @@ None.
 Returns:
 
 True value if message was decrypted.  Otherwise false value.
+
+If decrypting succeeded, {smime_crypted} item is set.
 
 =back
 
@@ -2952,7 +2980,7 @@ sub _urlize_one_part {
         my $ct = $entity->effective_type || 'text/plain';
         printf $fh "Content-Type: %s", $ct;
         printf $fh "; Charset=%s", $head->mime_attr('Content-Type.Charset')
-        if Sympa::Tools::Data::smart_eq(
+            if Sympa::Tools::Data::smart_eq(
             $head->mime_attr('Content-Type.Charset'), qr/\S/);
         print $fh "\n\n";
         print $fh $entity->bodyhandle->as_string;
@@ -3646,15 +3674,41 @@ sub get_id {
 1;
 __END__
 
-=head2 Attributes and Context
+=head2 Context and Metadata
 
-These are accessible as hash elements of objects.
+Context and metadata given to constructor are accessible as hash elements of
+object.  These are typically used.
 
 =over
 
 =item {context}
 
 Context of the message, L<Sympa::List> object, robot or C<'*'>.
+
+=item {date}
+
+The UNIX time messages was initially accepted, or the time message should be
+delivered.
+
+=item {domainpart}
+
+=item {listtype}
+
+=item {localpart}
+
+Domain, type and local part of context.
+
+=item {priority}
+
+Priority of the message.
+
+=back
+
+=head2 Attributes
+
+These are accessible as hash elements of objects.
+
+=over
 
 =item {rcpt}
 
@@ -3681,7 +3735,7 @@ C<'E<lt>E<gt>'> is used for "null envelope sender".
 =item {md5_check}
 
 True value indicates that the message has been authenticated by C<md5> level
-(password authemtication).
+(password authentication).
 
 =item {message_id}
 
