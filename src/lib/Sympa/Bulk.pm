@@ -69,7 +69,7 @@ sub next {
     my $limit_other  = '';
     ## Only the first record found is locked, thanks to the "LIMIT 1" clause
     $order =
-        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC';
+        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC, tag_bulkmailer ASC';
     if (   $Conf::Conf{'db_type'} eq 'mysql'
         or $Conf::Conf{'db_type'} eq 'Pg'
         or $Conf::Conf{'db_type'} eq 'SQLite') {
@@ -81,6 +81,7 @@ sub next {
     }
 
     # Select the most prioritary packet to lock.
+    # As rows not assigned tag should be upgraded, they are skipped.
     unless (
         $sth = SDM::do_prepared_query(
             sprintf(
@@ -88,7 +89,8 @@ sub next {
 		         packetid_bulkmailer AS packetid
 		  FROM bulkmailer_table
 		  WHERE lock_bulkmailer IS NULL AND
-		        delivery_date_bulkmailer <= ?
+		        delivery_date_bulkmailer <= ? AND
+		        tag_bulkmailer IS NOT NULL
 		  %s %s %s},
                 $limit_sybase, $limit_oracle, $order, $limit_other
             ),
@@ -146,9 +148,11 @@ sub next {
                      priority_message_bulkmailer AS "priority",
                      priority_packet_bulkmailer AS priority_packet,
                      reception_date_bulkmailer AS reception_date,
-                     delivery_date_bulkmailer AS "date"
+                     delivery_date_bulkmailer AS "date",
+                     tag_bulkmailer AS "tag"
               FROM bulkmailer_table
-              WHERE lock_bulkmailer = ? %s},
+              WHERE lock_bulkmailer = ? AND tag_bulkmailer IS NOT NULL
+              %s},
             $order
         ),
         $lock
@@ -378,16 +382,9 @@ sub store {
         @rcpts = get_recipient_tabs_by_domain($list, @{$rcpt || []});
     }
 
-    my $priority_for_packet;
-    my $already_tagged = 0;
     # Initialize counter used to check wether we are copying the last packet.
     my $packet_rank = 0;
     foreach my $packet (@rcpts) {
-        $priority_for_packet = $priority_packet;
-        if ($tag_as_last and not $already_tagged) {
-            $priority_for_packet = $priority_packet + 5;
-            $already_tagged      = 1;
-        }
         my $rcptasstring;
         if (ref $packet eq 'ARRAY') {
             $rcptasstring = join ',', @{$packet};
@@ -431,14 +428,16 @@ sub store {
                        robot_bulkmailer, listname_bulkmailer,
                        priority_message_bulkmailer,
                        priority_packet_bulkmailer,
-                       reception_date_bulkmailer, delivery_date_bulkmailer)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)},
+                       reception_date_bulkmailer, delivery_date_bulkmailer,
+                       tag_bulkmailer)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)},
                     $messagekey,
                     $packetid, $rcptasstring,
                     $robot_id, $list->{'name'},
                     $priority_message,
-                    $priority_for_packet,
-                    SDM::AS_DOUBLE($current_date), $delivery_date
+                    $priority_packet,
+                    SDM::AS_DOUBLE($current_date), $delivery_date,
+                    ($tag_as_last ? 'last' : '0')
                 )
                 ) {
                 Log::do_log(
@@ -451,6 +450,8 @@ sub store {
             }
         }
         $packet_rank++;
+
+        undef $tag_as_last;
     }
     # last : unlock message in bulkspool_table so it is now possible to remove
     # this message if no packet has a ref on it

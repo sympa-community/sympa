@@ -348,6 +348,11 @@ my %full_db_struct = (
                     'A lock. It is set as process-number @ hostname so multiple bulkmailer can handle this spool',
                 'order' => 15,
             },
+            'tag_bulkmailer' => {
+                'struct' => 'varchar(10)',
+                'doc' => 'Additional tag used to sort packets',
+                'order' => 16,
+            },
         },
         'doc' =>
             'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',

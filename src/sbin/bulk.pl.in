@@ -589,8 +589,7 @@ while (!$end) {
                 $bulk->{'messagekey'}, $bulk->{'packetid'});
         }
 
-        if ($bulk->{'priority_packet'} ==
-            Conf::get_robot_conf($robot, 'sympa_packet_priority') + 5) {
+        if ($bulk->{'tag'} eq 'last') {
             Log::do_log(
                 'notice',
                 'Done sending message %s to %s (priority %s) in %s seconds since scheduled expedition date',
