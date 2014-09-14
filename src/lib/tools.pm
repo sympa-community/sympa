@@ -801,41 +801,37 @@ sub load_mime_types {
     my $types = {};
 
     my @localisation = (
-        '/etc/mime.types',            '/usr/local/apache/conf/mime.types',
-        '/etc/httpd/conf/mime.types', $Conf::Conf{'etc'} . '/mime.types'
+        tools::search_fullpath('*', 'mime.types'),
+        '/etc/mime.types', '/usr/local/apache/conf/mime.types',
+        '/etc/httpd/conf/mime.types',
     );
 
     foreach my $loc (@localisation) {
-        next unless (-r $loc);
+        my $fh;
+        next unless $loc and open $fh, '<', $loc;
 
-        unless (open(CONF, $loc)) {
-            Log::do_log('err', 'Unable to open %s', $loc);
-            return undef;
-        }
-    }
+        foreach my $line (<$fh>) {
+            next if $line =~ /^\s*\#/;
+            chomp $line;
 
-    while (<CONF>) {
-        next if /^\s*\#/;
+            my ($k, $v) = split /\s+/, $line, 2;
+            next unless $k and $v and $v =~ /\S/;
 
-        if (/^(\S+)\s+(.+)\s*$/i) {
-            my ($k, $v) = ($1, $2);
-
-            my @extensions = split / /, $v;
-
-            ## provides file extention, given the content-type
-            if ($#extensions >= 0) {
+            my @extensions = split /\s+/, $v;
+            # provides file extention, given the content-type
+            if (@extensions) {
                 $types->{$k} = $extensions[0];
             }
-
             foreach my $ext (@extensions) {
                 $types->{$ext} = $k;
             }
-            next;
         }
+
+        close $fh;
+        return $types;
     }
 
-    close FILE;
-    return $types;
+    return undef;
 }
 
 =head3 Finding config files and templates
