@@ -126,13 +126,8 @@ sub process {
             unless $options{dry_run};
         Log::do_log('info', '%s: Moved to msg spool', $message);
     } else {
-        Sympa::Bulk::store(
-            $message,
-            rcpts            => [split /\s*,\s*/, $message->{rcpt}],
-            priority_message => $message->{'priority'},
-            delivery_date    => $message->{'date'},
-            tag_as_last      => 1,
-        ) unless $options{dry_run};
+        Sympa::Bulk::store($message, [split /\s*,\s*/, $message->{rcpt}])
+            unless $options{dry_run};
         Log::do_log('info', '%s: Moved to bulk spool', $message);
     }
     return 1;

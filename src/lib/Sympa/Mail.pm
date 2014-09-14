@@ -119,9 +119,8 @@ sub reaper {
 #
 # IN : -$message: ref(Sympa::Message) - message to be sent
 #      -$rcpt: SCALAR | ref(ARRAY) - recipients for SMTP "RCPT To:" field.
-#      -$from: for SMTP, "MAIL From:" field; for spool sending, "X-Sympa-From"
-#              field
-#      -use_bulk => boolean
+#      -$message->{envelope_sender}: for SMTP, "MAIL From:" field; for spool
+#              sending, "Return-Path" field
 #
 # OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
 #           | undef
@@ -130,7 +129,6 @@ sub reaper {
 sub sending {
     my $message = shift;
     my $rcpt    = shift;
-    my $from    = shift;
     my %params  = @_;
 
     my $that = $message->{context};
@@ -144,31 +142,13 @@ sub sending {
         $robot_id = '*';
     }
 
-    my $priority_message = $params{'priority'};
-    my $priority_packet =
-        Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
-    my $delivery_date = $params{'delivery_date'};
-    $delivery_date = time() unless ($delivery_date);
-    my $use_bulk = $always_use_bulk || $params{'use_bulk'};
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
     my $fh;
 
-    if ($use_bulk) {
+    if ($always_use_bulk) {
         # in that case use bulk tables to prepare message distribution
-
-        $message->{envelope_sender} = $from;
-
-        my $bulk_code = Sympa::Bulk::store(
-            $message,
-            'rcpts'            => $rcpt,
-            'priority_message' => $priority_message,
-            'priority_packet'  => $priority_packet,
-            'delivery_date'    => $delivery_date,
-            'tag_as_last'      => $tag_as_last,
-        );
-
-        unless (defined $bulk_code) {
+        unless (defined Sympa::Bulk::store($message, $rcpt)) {
             Log::do_log('err', 'Failed to store message %s for %s',
                 $message, $that);
             tools::send_notify_to_listmaster(
@@ -182,7 +162,7 @@ sub sending {
         }
     } else {    # send it now
         Log::do_log('debug', "NOT USING BULK");
-        *SMTP = smtpto($from, $rcpt, $robot_id);
+        *SMTP = smtpto($message->{envelope_sender}, $rcpt, $robot_id);
 
         # Send message stripping Return-Path pseudo-header field.
         my $msg_string = $message->as_string;
@@ -204,7 +184,7 @@ sub sending {
 # descriptor in the smtp table which can be imported by other parties.
 # Before, waits for number of children process < number allowed by sympa.conf
 #
-# IN : $from :(+) for SMTP "MAIL From:" field
+# IN : $return_path :(+) for SMTP "MAIL From:" field
 #      $rcpt :(+) ref(SCALAR)|ref(ARRAY)- for SMTP "RCPT To:" field
 #      $robot :(+) robot
 #      $envid : an ID of this message submission in notification table
@@ -215,16 +195,16 @@ sub sending {
 # TODO: Split rcpt by max length of command line (_SC_ARG_MAX).
 sub smtpto {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
-    my ($from, $rcpt, $robot, $envid) = @_;
+    my ($return_path, $rcpt, $robot, $envid) = @_;
 
-    unless ($from) {
+    unless ($return_path) {
         Log::do_log('err', 'Missing Return-Path');
     }
 
     if (ref($rcpt) eq 'SCALAR') {
-        Log::do_log('debug3', '(%s, %s)', $from, $$rcpt);
+        Log::do_log('debug3', '(%s, %s)', $return_path, $$rcpt);
     } elsif (ref($rcpt) eq 'ARRAY') {
-        Log::do_log('debug3', '(%s, %s)', $from, join(',', @{$rcpt}));
+        Log::do_log('debug3', '(%s, %s)', $return_path, join(',', @{$rcpt}));
     }
 
     my ($pid, $str);
@@ -261,18 +241,18 @@ sub smtpto {
         close(OUT);
         open(STDIN, "<&IN");
 
-        $from = '' if $from eq '<>';    # null sender
+        $return_path = '' if $return_path eq '<>';    # null sender
         # Terminate options by "--" to prevent addresses beginning with "-"
         # being treated as options.
         if (!ref($rcpt)) {
-            exec $sendmail, @sendmail_args, '-f', $from, '--', $rcpt;
+            exec $sendmail, @sendmail_args, '-f', $return_path, '--', $rcpt;
         } elsif (ref($rcpt) eq 'SCALAR') {
-            exec $sendmail, @sendmail_args, '-f', $from, '--', $$rcpt;
+            exec $sendmail, @sendmail_args, '-f', $return_path, '--', $$rcpt;
         } elsif (ref($rcpt) eq 'ARRAY') {
-            exec $sendmail, @sendmail_args, '-f', $from, '--', @$rcpt;
+            exec $sendmail, @sendmail_args, '-f', $return_path, '--', @$rcpt;
         }
 
-        exit 1;                         # Should never get there.
+        exit 1;    # Should never get there.
     }
     if ($log_smtp) {
         my $r;
@@ -286,7 +266,7 @@ sub smtpto {
         Log::do_log(
             'debug3', 'safefork: %s %s -f \'%s\' -- %s',
             $sendmail, join(' ', @sendmail_args),
-            $from, $r
+            $return_path, $r
         );
     }
     unless (close(IN)) {

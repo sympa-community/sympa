@@ -377,8 +377,8 @@ while (!$end) {
                 'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
                 $message,
                 $message->{context},
-                $message->{'priority_message'},
-                time() - $message->{'delivery_date'}
+                $message->{'priority'},
+                time() - $message->{'date'}
             );
             # trace_smime($message, 'init');
             $messagekey = $bulk->{'messagekey'};
@@ -596,8 +596,8 @@ while (!$end) {
                 'Done sending message %s to %s (priority %s) in %s seconds since scheduled expedition date',
                 $message,
                 ($list || $robot),
-                $bulk->{'priority_message'},
-                time() - $bulk->{'delivery_date'}
+                $message->{'priority'},
+                time() - $message->{'date'}
             );
         }
         $date_of_last_activity = time();

@@ -143,12 +143,12 @@ sub next {
                      receipients_bulkmailer AS recipients,
                      listname_bulkmailer AS listname,
                      robot_bulkmailer AS robot,
-                     priority_message_bulkmailer AS priority_message,
+                     priority_message_bulkmailer AS "priority",
                      priority_packet_bulkmailer AS priority_packet,
                      reception_date_bulkmailer AS reception_date,
-                     delivery_date_bulkmailer AS delivery_date
+                     delivery_date_bulkmailer AS "date"
               FROM bulkmailer_table
-              WHERE lock_bulkmailer=? %s},
+              WHERE lock_bulkmailer = ? %s},
             $order
         ),
         $lock
@@ -261,13 +261,10 @@ sub fetch_content {
 sub store {
     Log::do_log('debug2', '(%s, ...)', @_);
     my $message = shift;
+    my $rcpt    = shift;
     my %data    = @_;
 
-    my $rcpt             = $data{'rcpts'};
-    my $priority_message = $data{'priority_message'};
-    my $priority_packet  = $data{'priority_packet'};
-    my $delivery_date    = $data{'delivery_date'};
-    my $tag_as_last      = $data{'tag_as_last'};
+    my $tag_as_last = $data{'tag_as_last'};
 
     my ($list, $robot_id);
     if (ref $message->{context} eq 'Sympa::List') {
@@ -279,24 +276,20 @@ sub store {
         $robot_id = '*';
     }
 
-    # Compatibility. Enclosed by <...>.
-    my $msg_id = '<' . $message->{'message_id'} . '>';
-
-    $priority_message ||= Conf::get_robot_conf($robot_id, 'sympa_priority');
-    $priority_packet ||=
+    my $priority_message = $message->{priority};
+    $priority_message =
+          $list
+        ? $list->{admin}{priority}
+        : Conf::get_robot_conf($robot_id, 'sympa_priority')
+        unless defined $priority_message and length $priority_message;
+    my $priority_packet =
         Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
-
-    #creation of a MIME entity to extract the real sender of a message
-    my $parser = MIME::Parser->new();
-    $parser->output_to_core(1);
-
-    my $msg            = $message->to_string;
-    my $message_sender = $message->{'sender'};
-
-    $msg = MIME::Base64::encode($msg);
+    my $delivery_date = $message->{date};
+    $delivery_date = time() unless defined $delivery_date;
 
     ##-----------------------------##
 
+    my $msg        = MIME::Base64::encode($message->to_string);
     my $messagekey = tools::md5_fingerprint($msg);
 
     # first store the message in bulk_spool_table
@@ -356,16 +349,16 @@ sub store {
             # Ignore messages sent by robot or -request
             # FIMXE: Is it effective?
             unless (not $list
-                and $message_sender eq
+                and $message->{sender} eq
                 Conf::get_robot_conf($robot_id, 'sympa')
                 or $list
-                and $message_sender eq $list->get_list_address('owner')) {
+                and $message->{sender} eq $list->get_list_address('owner')) {
                 Log::db_stat_log(
                     {   'robot'     => $robot_id,
                         'list'      => ($list ? $list->{'name'} : undef),
                         'operation' => 'send_mail',
-                        'parameter' => length($msg),
-                        'mail'      => $message_sender,
+                        'parameter' => $message->{size},
+                        'mail'      => $message->{sender},
                         'client'    => '',
                         'daemon'    => 'sympa.pl'
                     }
@@ -391,7 +384,7 @@ sub store {
     my $packet_rank = 0;
     foreach my $packet (@rcpts) {
         $priority_for_packet = $priority_packet;
-        if ($tag_as_last && !$already_tagged) {
+        if ($tag_as_last and not $already_tagged) {
             $priority_for_packet = $priority_packet + 5;
             $already_tagged      = 1;
         }
@@ -471,7 +464,7 @@ sub store {
             $messagekey);
         return undef;
     }
-    return 1;
+    return $messagekey;
 }
 
 # Old name: (part of) Sympa::Mail::mail_message().

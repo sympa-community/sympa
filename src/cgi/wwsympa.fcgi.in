@@ -10452,14 +10452,11 @@ sub do_send_me {
         $message->delete_header('Resent-Sender');
         $message->replace_header('X-no-archive', 'yes');
 
+        # Overwrite original envelope sender.  It is REQUIRED for delivery.
+        $message->{envelope_sender} = $list->get_list_address('return_path');
+
         unless (
-            defined Sympa::Mail::sending(
-                $message, $param->{'user'}{'email'},
-                $list->get_list_address('return_path'),
-                'priority' => $list->{'admin'}{'priority'},
-                use_bulk   => 1
-            )
-            ) {
+            defined Sympa::Bulk::store($message, $param->{'user'}{'email'})) {
             $param->{'status'} = 'message_err';
             wwslog(
                 'err',
@@ -22295,14 +22292,11 @@ sub do_send_mail {
     #   In this case message will have "md5" authentication level.
     # - Message bound for user will be injected into bulk spool.
     if ($in{'sub_action'} eq 'sendmailtome') {
-        unless (
-            defined Sympa::Mail::sending(
-                $message, $to,
-                Conf::get_robot_conf($robot, 'sympa'),
-                'priority' => Conf::get_robot_conf($robot, 'sympa_priority'),
-                use_bulk   => 1,
-            )
-            ) {
+        #FIXME: envelope sender would be sympa-request address, isn't it?
+        $message->{envelope_sender} = Conf::get_robot_conf($robot, 'sympa');
+        $message->{priority} = Conf::get_robot_conf($robot, 'sympa_priority');
+
+        unless (defined Sympa::Bulk::store($message, $to)) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_send_mail',

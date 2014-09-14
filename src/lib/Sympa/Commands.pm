@@ -2232,7 +2232,6 @@ sub remind {
                     $global_info{$email}{'password'};
                 $context{'user'}{'gecos'} = $global_info{$email}{'gecos'};
                 @{$context{'lists'}} = @{$global_subscription{$email}};
-                $context{'use_bulk'} = 1;    #Is it used?
 
                 #FIXME: needs VERP?
                 unless (

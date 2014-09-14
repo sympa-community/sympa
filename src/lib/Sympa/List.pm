@@ -2408,16 +2408,11 @@ sub send_dsn {
             'diagnostic_code' => $diag,
         }
     );
-    $dsn_message->{envelope_sender} = '<>';
-
-    unless (
-        $dsn_message
-        and Sympa::Mail::sending(
-            $dsn_message, $sender, '<>',
-            #priority => ...,
-            use_bulk => 1
-        )
-        ) {
+    if ($dsn_message) {
+        # Set envelope sender.  DSN _must_ have null envelope sender.
+        $dsn_message->{envelope_sender} = '<>';
+    }
+    unless ($dsn_message and Sympa::Bulk::store($dsn_message, $sender)) {
         Log::do_log('err', 'Unable to send DSN to %s', $sender);
         return undef;
     }
@@ -2557,8 +2552,8 @@ sub send_msg {
                 );
                 return undef;
             }
-            $tags_to_use->{'tag_noverp'} = 0 if ($result > 0);
-            $nbr_smtp += $result;
+            $tags_to_use->{'tag_noverp'} = 0 if $result;
+            $nbr_smtp++;
         } else {
             Log::do_log(
                 'notice',
@@ -2603,9 +2598,9 @@ sub send_msg {
                 );
                 return undef;
             }
-            $tags_to_use->{'tag_verp'} = 0 if ($result > 0);
-            $nbr_smtp += $result;
-            $nbr_verp += $result;
+            $tags_to_use->{'tag_verp'} = 0 if $result;
+            $nbr_smtp++;
+            $nbr_verp++;
         } else {
             Log::do_log(
                 'notice',
@@ -2647,18 +2642,14 @@ sub _mail_message {
 
     # if not specified, delivery time is right now (used for sympa messages
     # etc.)
-    my $delivery_date =
-           $list->get_next_delivery_date
-        || $message->{'date'}
-        || time;
+    my $delivery_date = $list->get_next_delivery_date;
+    $message->{'date'} = $delivery_date if defined $delivery_date;
 
-    return Sympa::Mail::sending(
-        $message, $rcpt, $list->get_list_address('return_path'),
-        'priority'      => $list->{'admin'}{'priority'},
-        'delivery_date' => $delivery_date,
-        'use_bulk'      => 1,
-        'tag_as_last'   => $tag_as_last
-    ) || undef;
+    # Overwrite original envelope sender.  It is REQUIRED for delivery.
+    $message->{envelope_sender} = $list->get_list_address('return_path');
+
+    return Sympa::Bulk::store($message, $rcpt, tag_as_last => $tag_as_last)
+        || undef;
 }
 
 sub get_recipients_per_mode {
@@ -3729,28 +3720,24 @@ sub send_probe_to_user {
     my $who  = shift;
 
     my $message = Sympa::Message->new_from_template($self, $type, $who, {});
-
-    # Shelve VERP for welcome or remind message if necessary
-    if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
-        and $type eq 'welcome') {
-        $message->{shelved}{tracking} = 'w';
-    } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
-        and $type eq 'remind') {
-        $message->{shelved}{tracking} = 'r';
-    } else {
-        #FIXME: Return-Path would be better to be -request address, isn't it?
-        $message->{envelope_sender} = $self->get_list_address('return_path');
+    if ($message) {
+        # Shelve VERP for welcome or remind message if necessary
+        if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
+            and $type eq 'welcome') {
+            $message->{shelved}{tracking} = 'w';
+        } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
+            and $type eq 'remind') {
+            $message->{shelved}{tracking} = 'r';
+        } else {
+            #FIXME: Currently, Return-Path for '*_return_path' parameter with
+            # 'owner' value is LIST-owner address.  LIST-request address would
+            # be better, isn't it?
+        }
+        #FIXME: Why overwrite priority?
+        $message->{priority} =
+            Conf::get_robot_conf($self->{'domain'}, 'sympa_priority');
     }
-
-    unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message, $who, $self->get_list_address('return_path'),
-            'priority' =>
-                Conf::get_robot_conf($self->{'domain'}, 'sympa_priority'),
-            'use_bulk' => 1,
-        )
-        ) {
+    unless ($message and defined Sympa::Bulk::store($message, $who)) {
         Log::do_log('err', 'Could not send template %s to %s', $type, $who);
         return undef;
     }

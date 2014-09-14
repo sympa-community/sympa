@@ -1132,20 +1132,7 @@ sub send_file {
         Sympa::Message->new_from_template($that, $tpl, $who, $context,
         %options);
 
-    my $return_path;
-    if (ref $that eq 'Sympa::List') {
-        $return_path = $that->get_list_address('return_path');
-    } else {
-        $return_path = Conf::get_robot_conf($that || '*', 'request');
-    }
-    unless (
-        $message
-        and defined Sympa::Mail::sending(
-            $message, $who, $return_path,
-            #'priority' => Conf::get_robot_conf($robot_id, 'sympa_priority'),
-            'use_bulk' => 1,
-        )
-        ) {
+    unless ($message and defined Sympa::Bulk::store($message, $who)) {
         Log::do_log('err', 'Could not send template %s to %s', $tpl, $who);
         return undef;
     }

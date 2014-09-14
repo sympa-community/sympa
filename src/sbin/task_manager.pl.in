@@ -1989,16 +1989,8 @@ sub process_bouncers {
                 };
                 my $message = Sympa::Message->new_from_template($list,
                     'automatic_bounce_management', $to, $param);
-                unless (
-                    $message
-                    and defined Sympa::Mail::sending(
-                        $message, $rcpt,
-                        $list->get_list_address('return_path'),
-                        priority =>
-                            Conf::get_robot_conf($robot_id, 'sympa_priority'),
-                        use_bulk => 1
-                    )
-                    ) {
+                unless ($message
+                    and defined Sympa::Bulk::store($message, $rcpt)) {
                     Log::do_log(
                         'err',
                         'Unable to send template "automatic_bounce_management" to %s',

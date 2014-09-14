@@ -64,11 +64,14 @@ sub store {
                 {$email}}, $message->as_string;
         return 1;
     } else {
-        return Sympa::Mail::sending(
-            $message, $email,
-            Conf::get_robot_conf($robot_id, 'request'),
-            priority => Conf::get_robot_conf($robot_id, 'sympa_priority')
-        );
+        # Overwrite envelope sender
+        $message->{envelope_sender} =
+            Conf::get_robot_conf($robot_id, 'request');
+        #FIXME: Priority would better to be '0', isn't it?
+        $message->{priority} =
+            Conf::get_robot_conf($robot_id, 'sympa_priority');
+
+        return Sympa::Mail::sending($message, $email);
     }
 }
 
@@ -122,16 +125,8 @@ sub flush {
                     Sympa::Message->new_from_template($robot_id,
                     'listmaster_groupednotifications',
                     $email, $param);
-                unless (
-                    $message
-                    and defined Sympa::Mail::sending(
-                        $message,
-                        $email,
-                        Conf::get_robot_conf($robot_id, 'request'),
-                        priority =>
-                            Conf::get_robot_conf($robot_id, 'sympa_priority')
-                    )
-                    ) {
+                unless ($message
+                    and defined Sympa::Mail::sending($message, $email)) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
