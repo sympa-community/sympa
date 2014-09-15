@@ -2746,7 +2746,6 @@ sub distribute {
         );
 
         unless ($quiet) {
-            sleep 1;
             unless (
                 Sympa::Report::notice_report_msg(
                     'message_distributed', $sender,
@@ -2754,8 +2753,10 @@ sub distribute {
                     $list
                 )
                 ) {
-                Log::do_log('notice',
-                    "Commands::distribute(): Unable to send template 'message_report', entry 'message_distributed' to $sender"
+                Log::do_log(
+                    'notice',
+                    'Unable to send template "message_report", entry "message_distributed" to %s',
+                    $sender
                 );
             }
         }
@@ -3043,7 +3044,6 @@ sub confirm {
             }
 
             unless ($quiet || ($action =~ /quiet/i)) {
-                sleep 1;
                 unless (
                     Sympa::Report::notice_report_msg(
                         'message_confirmed', $sender,

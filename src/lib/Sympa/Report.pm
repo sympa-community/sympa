@@ -27,8 +27,10 @@ package Sympa::Report;
 use strict;
 use warnings;
 
+use Sympa::Bulk;
 use Log;
-use Sympa::Robot;
+use Sympa::Message;
+use tools;
 
 ### MESSAGE DIFFUSION REPORT ###
 
@@ -57,6 +59,8 @@ use Sympa::Robot;
 sub reject_report_msg {
     my ($type, $error, $user, $param, $robot, $msg_string, $list) = @_;
     Log::do_log('debug2', '(%s, %s, %s)', $type, $error, $user);
+
+    undef $list unless ref $list eq 'Sympa::List';
 
     unless ($type eq 'intern'
         or $type eq 'intern_quiet'
@@ -100,18 +104,16 @@ sub reject_report_msg {
         $param->{'original_msg'} = _get_msg_as_hash($param->{'message'});
     }
 
-    if (ref($list) eq 'Sympa::List') {
-        unless (tools::send_file($list, 'message_report', $user, $param)) {
-            Log::do_log('notice',
-                "Sympa::Report::reject_report_msg(): Unable to send template 'message_report' to '$user'"
-            );
-        }
-    } else {
-        unless (tools::send_file($robot, 'message_report', $user, $param)) {
-            Log::do_log('notice',
-                "Sympa::Report::reject_report_msg(): Unable to send template 'message_report' to '$user'"
-            );
-        }
+    my $report_message = Sympa::Message->new_from_template(($list || $robot),
+        'message_report', $user, $param);
+    if ($report_message) {
+        # Ensure 1 second elapsed since last message
+        $report_message->{'date'} = time + 1;
+    }
+    unless ($report_message
+        and defined Sympa::Bulk::store($report_message, $user)) {
+        Log::do_log('notice',
+            'Unable to send template "message_report" to "%s"', $user);
     }
 
     if ($type eq 'intern') {
@@ -200,6 +202,8 @@ sub _get_msg_as_hash {
 sub notice_report_msg {
     my ($entry, $user, $param, $robot, $list) = @_;
 
+    undef $list unless ref $list eq 'Sympa::List';
+
     $param->{'to'}             = $user;
     $param->{'type'}           = 'success';
     $param->{'entry'}          = $entry;
@@ -224,18 +228,16 @@ sub notice_report_msg {
         $param->{'original_msg'} = _get_msg_as_hash($param->{'message'});
     }
 
-    if (ref($list) eq 'Sympa::List') {
-        unless (tools::send_file($list, 'message_report', $user, $param)) {
-            Log::do_log('notice',
-                "Sympa::Report::notice_report_msg(): Unable to send template 'message_report' to '$user'"
-            );
-        }
-    } else {
-        unless (tools::send_file($robot, 'message_report', $user, $param)) {
-            Log::do_log('notice',
-                "Sympa::Report::notice_report_msg(): Unable to send template 'message_report' to '$user'"
-            );
-        }
+    my $report_message = Sympa::Message->new_from_template(($list || $robot),
+        'message_report', $user, $param);
+    if ($report_message) {
+        # Ensure 1 second elapsed since last message
+        $report_message->{'date'} = time + 1;
+    }
+    unless ($report_message
+        and defined Sympa::Bulk::store($report_message, $user)) {
+        Log::do_log('notice',
+            'Unable to send template "message_report" to "%s"', $user);
     }
 
     return 1;
@@ -354,10 +356,17 @@ sub send_report_cmd {
         'globals'           => \@global_error_cmd,
     };
 
-    unless (tools::send_file($robot, 'command_report', $sender, $data)) {
+    my $report_message =
+        Sympa::Message->new_from_template($robot, 'command_report', $sender,
+        $data);
+    if ($report_message) {
+        # Ensure 1 second elapsed since last message
+        $report_message->{'date'} = time + 1;
+    }
+    unless ($report_message
+        and defined Sympa::Bulk::store($report_message, $sender)) {
         Log::do_log('notice',
-            "Sympa::Report::send_report_cmd() : Unable to send template 'command_report' to $sender"
-        );
+            'Unable to send template "command_report" to %s', $sender);
     }
 
     init_report_cmd();

@@ -3011,8 +3011,15 @@ sub send_confirm_to_editor {
             );
         }
 
-        #XXX tt2::allow_absolute_path();
-        unless (tools::send_file($list, 'moderate', $recipient, $param)) {
+        my $confirm_message =
+            Sympa::Message->new_from_template($list, 'moderate', $recipient,
+            $param);
+        if ($confirm_message) {
+            # Ensure 1 second elapsed since last message
+            $confirm_message->{'date'} = time + 1;
+        }
+        unless ($confirm_message
+            and defined Sympa::Bulk::store($confirm_message, $recipient)) {
             Log::do_log('notice', 'Unable to send template "moderate" to %s',
                 $recipient);
             return undef;
@@ -3059,9 +3066,6 @@ sub send_confirm_to_sender {
     my $list   = $message->{context};
     my $sender = $message->{'sender'};
 
-    ## Ensure 1 second elapsed since last message
-    sleep(1);
-
     my ($i, @rcpt);
     my $authqueue = $Conf::Conf{'queueauth'};
 
@@ -3091,8 +3095,15 @@ sub send_confirm_to_sender {
         #'file' => $message->{'filename'},    # obsoleted (<=6.1)
     };
 
-    #XXX tt2::allow_absolute_path();
-    unless (tools::send_file($list, 'send_auth', $sender, $param)) {
+    my $confirm_message =
+        Sympa::Message->new_from_template($list, 'send_auth', $sender,
+        $param);
+    if ($confirm_message) {
+        # Ensure 1 second elapsed since last message
+        $confirm_message->{'date'} = time + 1;
+    }
+    unless ($confirm_message
+        and defined Sympa::Bulk::store($confirm_message, $sender)) {
         Log::do_log('notice', 'Unable to send template "send_auth" to %s',
             $sender);
         return undef;
@@ -5367,8 +5378,7 @@ sub update_list_member {
         foreach my $path ($self->find_picture_paths($who)) {
             my $extension = [reverse split /\./, $path]->[0];
             my $new_path = $self->get_picture_path(
-                Digest::MD5::md5_hex($values->{'email'}) . '.'
-                    . $extension);
+                Digest::MD5::md5_hex($values->{'email'}) . '.' . $extension);
             unless (rename $path, $new_path) {
                 Log::do_log('err', 'Failed to rename %s to %s : %m',
                     $path, $new_path);

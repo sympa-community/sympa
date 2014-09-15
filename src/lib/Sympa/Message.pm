@@ -602,9 +602,13 @@ sub new_from_template {
             Conf::get_robot_conf($robot_id, 'request');
     }
 
+    # Set default delivery date.
+    $message->{'date'} = time;
+
     return $message;
 }
 
+#TODO: This would be merged in new_from_template() because used only by it.
 sub _new_from_template {
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)', @_);
     my $class    = shift;
