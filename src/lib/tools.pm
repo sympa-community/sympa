@@ -223,17 +223,15 @@ sub safefork {
     my $err;
     for ($i = 1; $i < 4; $i++) {
         my ($pid) = fork;
-        return $pid if (defined($pid));
+        return $pid if defined $pid;
 
         $err = $ERRNO;
-        Log::do_log('warn', 'Cannot create new process in safefork: %s',
-            $err);
-        ## FIXME:should send a mail to the listmaster
+        Log::do_log('err', 'Cannot create new process: %s', $err);
+        #FIXME:should send a mail to the listmaster
         sleep(10 * $i);
     }
-    die sprintf 'Exiting because cannot create new process in safefork: %s',
-        $err;
-    ## No return.
+    die sprintf 'Exiting because cannot create new process: %s', $err;
+    # No return.
 }
 
 ####################################################

@@ -80,12 +80,12 @@ sub list {
     my (@l,        $i);
 
     unless (-d "$name") {
-        Log::do_log('warning', '(%s) Failed, no directory %s', $name, $name);
+        Log::do_log('err', '(%s) Failed, no directory %s', $name, $name);
 #      @l = ($msg::no_archives_available);
         return @l;
     }
     unless (opendir(DIR, "$name")) {
-        Log::do_log('warning', '(%s) Failed, cannot open directory %s',
+        Log::do_log('err', '(%s) Failed, cannot open directory %s',
             $name, $name);
 #	@l = ($msg::no_archives_available);
         return @l;
