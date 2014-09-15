@@ -1171,7 +1171,7 @@ sub fullReview {
             ->faultdetail("List $listname unknown");
     }
 
-    unless ($list->is_listmaster($sender, $robot)
+    unless (Sympa::Robot::is_listmaster($sender, $robot)
         || $list->am_i('owner', $sender)) {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Not enough privileges')
