@@ -1897,7 +1897,10 @@ sub process_message {
     #  anti-virus
     my $rc = $message->check_virus_infection;
     if ($rc) {
-        if (Conf::get_robot_conf($robot, 'antivirus_notify') eq 'sender') {
+        if (tools::smart_eq(
+                Conf::get_robot_conf($robot, 'antivirus_notify'), 'sender'
+            )
+            ) {
             unless (
                 tools::send_file(
                     $robot,

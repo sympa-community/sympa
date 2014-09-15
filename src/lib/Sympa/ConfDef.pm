@@ -736,7 +736,7 @@ our @params = (
     {   'name'    => 'tmpdir',
         'default' => Sympa::Constants::SPOOLDIR . '/tmp',
         'gettext_id' =>
-            'Temporary directory used by OpenSSL, antivirus plugins, MHonArc etc.',
+            'Temporary directory used by antivirus plugins, MHonArc etc.',
     },
     {   name    => 'viewmail_dir',
         default => Sympa::Constants::SPOOLDIR . '/viewmail',
@@ -1253,6 +1253,7 @@ our @params = (
         'optional'   => '1',
         'sample'     => '/usr/local/uvscan/uvscan',
         'gettext_id' => 'Path to the antivirus scanner engine',
+        'vhost'      => '1',
         'file'       => 'sympa.conf',
         'edit'       => '1',
         'gettext_comment' =>
@@ -1262,11 +1263,13 @@ our @params = (
         'optional'   => '1',
         'sample'     => '--secure --summary --dat /usr/local/uvscan',
         'gettext_id' => 'Antivirus plugin command argument',
+        'vhost'      => '1',
         'file'       => 'sympa.conf',
         'edit'       => '1',
     },
     {   'name'    => 'antivirus_notify',
         'default' => 'sender',
+        'vhost'   => '1',
     },
 
     {'gettext_id' => 'Tag based spam filtering'},

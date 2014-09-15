@@ -3355,9 +3355,20 @@ sub check_virus_infection {
     Log::do_log('debug2', '%s)', @_);
     my $self = shift;
 
-    my $entity = $self->as_entity;
+    my $robot_id;
+    if (ref $self->{context} eq 'Sympa::List') {
+        $robot_id = $self->{context}->{'domain'};
+    } elsif ($self->{context} and $self->{context} ne '*') {
+        $robot_id = $self->{context};
+    } else {
+        $robot_id = '*';
+    }
 
-    unless ($Conf::Conf{'antivirus_path'}) {
+    my $antivirus_path = Conf::get_robot_conf($robot_id, 'antivirus_path');
+    my @antivirus_args = split /\s+/,
+        (Conf::get_robot_conf($robot_id, 'antivirus_args') || '');
+
+    unless ($antivirus_path) {
         Log::do_log('debug', 'Sympa not configured to scan virus in message');
         return 0;
     }
@@ -3371,7 +3382,7 @@ sub check_virus_infection {
     }
 
     ## Call the procedure of splitting mail
-    unless (_split_mail($entity, $work_dir)) {
+    unless ($self->_split_mail($work_dir)) {
         Log::do_log('err', 'Could not split mail %s', $self);
         return undef;
     }
@@ -3380,19 +3391,17 @@ sub check_virus_infection {
     my $error_msg;
     my $result;
 
-    if ($Conf::Conf{'antivirus_path'} =~ /\/uvscan$/) {
+    if ($antivirus_path =~ /\/uvscan$/) {
         # McAfee
 
         # impossible to look for viruses with no option set
-        unless ($Conf::Conf{'antivirus_args'}) {
+        unless (@antivirus_args) {
             Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             $result .= $_;
             chomp $result;
@@ -3423,13 +3432,11 @@ sub check_virus_infection {
                 and $status != 12
                 and $status != 13
                 and $status != 19;
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/vscan$/) {
+    } elsif ($antivirus_path =~ /\/vscan$/) {
         # Trend Micro
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             if (/Found virus (\S+) /i) {
                 $virusfound = $1;
@@ -3442,20 +3449,20 @@ sub check_virus_infection {
         if ($status == 1 or $status == 2) {
             $virusfound ||= "unknown";
         }
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/fsav$/) {
+    } elsif ($antivirus_path =~ /\/fsav$/) {
         # F-Secure
         my $dbdir = $PREMATCH;
 
         # impossible to look for viruses with no option set
-        unless ($Conf::Conf{'antivirus_args'}) {
+        unless (@antivirus_args) {
             Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'}, '--databasedirectory', $dbdir,
-            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        open $pipein, '-|', $antivirus_path,
+            '--databasedirectory' => $dbdir,
+            @antivirus_args, $work_dir;
         while (<$pipein>) {
             if (/infection:\s+(.*)/) {
                 $virusfound = $1;
@@ -3468,11 +3475,9 @@ sub check_virus_infection {
         if ($status == 3) {
             $virusfound ||= "unknown";
         }
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /f-prot\.sh$/) {
+    } elsif ($antivirus_path =~ /f-prot\.sh$/) {
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             if (/Infection:\s+(.*)/) {
                 $virusfound = $1;
@@ -3485,19 +3490,17 @@ sub check_virus_infection {
         if ($status == 3) {
             $virusfound ||= "unknown";
         }
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /kavscanner/) {
+    } elsif ($antivirus_path =~ /kavscanner/) {
         # Kaspersky
 
         # impossible to look for viruses with no option set
-        unless ($Conf::Conf{'antivirus_args'}) {
+        unless (@antivirus_args) {
             Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             if (/infected:\s+(.*)/) {
                 $virusfound = $1;
@@ -3513,19 +3516,17 @@ sub check_virus_infection {
             $virusfound ||= "unknown";
         }
 
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/sweep$/) {
+    } elsif ($antivirus_path =~ /\/sweep$/) {
         # Sophos Antivirus... by liuk@publinet.it
 
         # impossible to look for viruses with no option set
-        unless ($Conf::Conf{'antivirus_args'}) {
+        unless (@antivirus_args) {
             Log::do_log('err', 'Missing "antivirus_args" in sympa.conf');
             return undef;
         }
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'}), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             if (/Virus\s+(.*)/) {
                 $virusfound = $1;
@@ -3540,14 +3541,12 @@ sub check_virus_infection {
         }
 
         ## Clam antivirus
-    } elsif ($Conf::Conf{'antivirus_path'} =~ /\/clamd?scan$/) {
+    } elsif ($antivirus_path =~ /\/clamd?scan$/) {
         # Clam antivirus
         my $result;
 
         my $pipein;
-        open $pipein, '-|',
-            $Conf::Conf{'antivirus_path'},
-            split(/\s+/, $Conf::Conf{'antivirus_args'} || ''), $work_dir;
+        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
         while (<$pipein>) {
             $result .= $_;
             chomp $result;
@@ -3594,11 +3593,13 @@ sub check_virus_infection {
 # Old name: tools::split_mail(), Sympa::Tools::Message::split_mail().
 # Currently this is used by check_virus_infection() only.
 sub _split_mail {
-    my $entity = shift;
-    my $dir    = shift;
+    my $self = shift;
+    my $dir  = shift;
 
     my $i = 0;
-    foreach my $part (grep { $_ and $_->bodyhandle } $entity->parts_DFS) {
+    foreach
+        my $part (grep { $_ and $_->bodyhandle } $self->as_entity->parts_DFS)
+    {
         my $head = $part->head;
         my $fileExt;
 
