@@ -61,10 +61,12 @@ Subject: [% FILTER qencode %][%|loc%]Upgrade procedures failed[%END%][%END%]
 
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [% FILTER qencode %][%|loc%]Database structure updated[%END%][%END%]
+X-Sympa-NoWrap: yes
 
-[%|loc(db_name)%]The database structure has been updated; check log file for further details: [%END%]
+[%|wrap(0,0)%][%|loc(db_name)%]The database structure has been updated; check log file for further details: [%END%][%END#wrap%]
+
 [% FOREACH report_item IN report -%]
-  [% report_item %]
+[% report_item %]
 [% END %]
 
 [% ELSIF type == 'css_updated' -%]
