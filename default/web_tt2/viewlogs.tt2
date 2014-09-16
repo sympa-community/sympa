@@ -160,12 +160,12 @@
 	  [%|loc%]Error type[%END%]
 	</th>
 
-	[% IF sortby == 'email' %]
+	[% IF sortby == 'user_email' %]
   	    <th class="sortby">
 	    [%|loc%]User Email[%END%]
 	[% ELSE %]
 	    <th>	    
-	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/email">[%|loc%]User Email[%END%]</a>
+	    <a href="[% path_cgi %]/viewlogs/[% list %]/1/[% size %]/user_email">[%|loc%]User Email[%END%]</a>
 	[% END %]
 	</th>
 

@@ -23450,7 +23450,7 @@ sub do_viewlogs {
 
     $param->{'page'} = int($in{'page'}) || 1;
     $param->{'size'} = int($in{'size'}) || $Conf::Conf{'viewlogs_page_size'};
-    $param->{'sortby'} = $in{'sortby'} || 'email';
+    $param->{'sortby'} = $in{'sortby'} || 'user_email';
 
     $param->{'total_results'} = 0;
 
