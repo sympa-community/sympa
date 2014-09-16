@@ -1886,8 +1886,8 @@ sub _infer_server_specific_parameter_values {
             $param->{'config_hash'}{'domain'};
     }
 
-    $param->{'config_hash'}{'dmarc_protection_mode'} =~ s/\s//g;
-    my @dmarc = split(/,/, $param->{'config_hash'}{'dmarc_protection_mode'});
+    my @dmarc = split /\s*,\s*/,
+        ($param->{'config_hash'}{'dmarc_protection_mode'} || '');
     $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
 
     ## Set Regexp for accepted list suffixes
@@ -2466,10 +2466,11 @@ sub _source_has_not_changed {
     my $file = shift;
 
     my $file_bin = $file . $binary_file_extension;
-    return 1 if
-        -r $file and -r $file_bin and 
-        Sympa::Tools::File::get_mtime($file) <
-        Sympa::Tools::File::get_mtime($file_bin);
+    return 1
+        if -r $file
+            and -r $file_bin
+            and Sympa::Tools::File::get_mtime($file) <
+            Sympa::Tools::File::get_mtime($file_bin);
     return 0;
 }
 
