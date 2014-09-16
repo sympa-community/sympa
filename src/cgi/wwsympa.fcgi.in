@@ -64,6 +64,7 @@ use Sympa::Admin;
 use Sympa::Alarm;
 use Sympa::Archive;
 use Sympa::Auth;
+use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -135,7 +136,7 @@ if (eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
 }
 
-$Sympa::Mail::always_use_bulk = 1;    #FIXME: Should instantiate Sympa::Bulk.
+$Sympa::Mail::always_use_bulk = 1;    #FIXME: Should instantiate Sympa::Mail.
 
 if ($Conf::Conf{'use_fast_cgi'}) {
     require CGI::Fast;
@@ -2617,9 +2618,6 @@ sub get_parameters_old {
         ## Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
         ## and EIMS:
         $in{$p} =~ s/\r\n|\r/\n/g;
-
-        #XXX## Convert from the web encoding to unicode string
-        #XXX$in{$p} = Encode::decode('utf8', $in{$p});
 
         my @tokens = split(/\./, $p);
         my $pname = $tokens[0];
@@ -23450,7 +23448,18 @@ sub do_viewlogs {
 
     $param->{'page'} = int($in{'page'}) || 1;
     $param->{'size'} = int($in{'size'}) || $Conf::Conf{'viewlogs_page_size'};
-    $param->{'sortby'} = $in{'sortby'} || 'user_email';
+
+    # Unknown sort key as 'date'.
+    my $sortby = $in{'sortby'};
+    unless (
+        $sortby
+        and grep { $sortby eq $_ }
+        qw(date robot list action parameters target_email msg_id
+        status error_type user_email client daemon)
+        ) {
+        $sortby = 'date';
+    }
+    $param->{'sortby'} = $sortby;
 
     $param->{'total_results'} = 0;
 
@@ -24691,8 +24700,8 @@ sub get_server_details {
     }
 }
 
-## Set Sympa parameters in $param->{'conf'}
-
+# Set Sympa parameters in $param->{'conf'}
+# Note: This have not been used yet.
 sub get_safe_robot_conf {
     $param->{'conf'} = {};
     foreach my $p (
