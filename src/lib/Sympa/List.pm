@@ -607,8 +607,7 @@ sub new {
             && $list->{'admin'}{'status'} ne 'error_config') {
             Log::do_log('err', 'The list "%s" has got no owner defined',
                 $list->{'name'});
-            $list->set_status_error_config('no_owner_defined',
-                $list->{'name'});
+            $list->set_status_error_config('no_owner_defined');
         }
     }
 
@@ -640,19 +639,22 @@ sub search_list_among_robots {
 
 ## set the list in status error_config and send a notify to listmaster
 sub set_status_error_config {
-    my ($self, $message, @param) = @_;
-    Log::do_log('debug3', '');
+    Log::do_log('debug2', '(%s, %s, ...)', @_);
+    my ($self, $msg, @param) = @_;
 
-    unless ($self->{'admin'}{'status'} eq 'error_config') {
+    unless ($self->{'admin'}
+        and $self->{'admin'}{'status'} eq 'error_config') {
         $self->{'admin'}{'status'} = 'error_config';
 
-        #my $host = Conf::get_robot_conf($self->{'domain'}, 'host');
-        ## No more save config in error...
-        #$self->save_config("listmaster\@$host");
-        #$self->savestats();
-        Log::do_log('err', 'The list %s is set in status error_config',
-            $self);
-        tools::send_notify_to_listmaster($self, $message, \@param);
+        # No more save config in error...
+        # $self->save_config(tools::get_address($self->{'domain'},
+        #     'listmaster'));
+        # $self->savestats();
+        Log::do_log('err',
+            'The list %s is set in status error_config: %s(%s)',
+            $self, $msg, join(', ', @param));
+        tools::send_notify_to_listmaster($self, $msg,
+            [$self->{'name'}, @param]);
     }
 }
 
@@ -1095,8 +1097,7 @@ sub load {
                 'Impossible to load list config file for list % set in status error_config',
                 $self->{'name'}
             );
-            $self->set_status_error_config('load_admin_file_error',
-                $self->{'name'});
+            $self->set_status_error_config('load_admin_file_error');
             $lock_fh->close();
             return undef;
         }
@@ -1118,11 +1119,11 @@ sub load {
                 Log::do_log(
                     'err',
                     'Impossible to get list %s family: %s. The list is set in status error_config',
-                    $self->{'name'},
+                    $self,
                     $self->{'admin'}{'family_name'}
                 );
                 $self->set_status_error_config('no_list_family',
-                    $self->{'name'}, $admin->{'family_name'});
+                    $self->{'admin'}{'family_name'});
                 return undef;
             }
             my $error = $family->check_param_constraint($self);
@@ -1133,7 +1134,7 @@ sub load {
                     $self->{'name'}
                 );
                 $self->set_status_error_config('no_check_rules_family',
-                    $self->{'name'}, $family->{'name'});
+                    $family->{'name'});
             }
             if (ref($error) eq 'ARRAY') {
                 Log::do_log(
@@ -1143,7 +1144,7 @@ sub load {
                     $family->{'name'}
                 );
                 $self->set_status_error_config('no_respect_rules_family',
-                    $self->{'name'}, $family->{'name'});
+                    $family->{'name'});
             }
         }
     }
