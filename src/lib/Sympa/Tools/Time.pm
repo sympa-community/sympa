@@ -29,8 +29,6 @@ use warnings;
 use POSIX qw();
 use Time::Local qw();
 
-use Log;
-
 ## subroutines for epoch and human format date processings
 
 ## convert an epoch date into a readable date scalar
@@ -41,20 +39,15 @@ use Log;
 ## as argument.
 # Note: This is used only once.
 sub get_midnight_time {
-
     my $epoch = $_[0];
-    Log::do_log('debug3', 'Getting midnight time for: %s', $epoch);
     my @date = localtime($epoch);
     return $epoch - $date[0] - $date[1] * 60 - $date[2] * 3600;
 }
 
 ## convert a human format date into an epoch date
 sub epoch_conv {
-
     my $arg = $_[0];             # argument date to convert
     my $time = $_[1] || time;    # the epoch current date
-
-    Log::do_log('debug3', '(%s, %d)', $arg, $time);
 
     my $result;
 

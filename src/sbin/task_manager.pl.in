@@ -46,7 +46,7 @@ use Sympa::Language;
 use Sympa::List;
 use Log;
 use Sympa::Mail;
-use Sympa::Robot;
+use Sympa::Message;
 use Sympa::Scenario;
 use SDM;
 use Sympa::Session;
@@ -1926,7 +1926,7 @@ sub process_bouncers {
             ) {
 
             ## Skip included users (cannot be removed)
-            next if ($user_ref->{'is_included'});
+            next if $user_ref->{'is_included'}; #FIXME: there is no such key.
 
             for (my $level = $max_level; ($level >= 1); $level--) {
 

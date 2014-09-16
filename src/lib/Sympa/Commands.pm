@@ -37,7 +37,6 @@ use Log;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
-use Sympa::Robot;
 use Sympa::Scenario;
 use tools;
 use Sympa::Tools::Data;

@@ -41,7 +41,6 @@ use Sympa::Language;
 use Sympa::List;
 use Log;
 use Sympa::Message;
-use Sympa::Robot;
 use SDM;
 use tools;
 use Sympa::Tools::File;

@@ -51,7 +51,6 @@ use Sympa::Language;
 use Sympa::List;
 use Log;
 use Sympa::Regexps;
-use Sympa::Robot;
 use Sympa::Scenario;
 use tools;
 use Sympa::Tools::File;

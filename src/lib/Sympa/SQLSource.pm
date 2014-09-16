@@ -32,7 +32,6 @@ use English qw(-no_match_vars);
 use Conf;
 use Sympa::Datasource;
 use Log;
-use Sympa::Robot;
 
 ## Structure to keep track of active connections/connection status
 ## Key : connect_string (includes server+port+dbname+DB type)

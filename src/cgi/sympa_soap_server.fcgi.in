@@ -66,7 +66,7 @@ unless (SDM::check_db_connect()) {
 
 ## The process should not fork for sending mail
 ## Messages will be spooled instead
-$Sympa::Mail::always_use_bulk = 1;    #FIXME: Should instantiate Sympa::Bulk.
+$Sympa::Mail::always_use_bulk = 1;    #FIXME: Should instantiate Sympa::Mail.
 
 ## Loading all Lists at startup, in order to increase execution speed
 

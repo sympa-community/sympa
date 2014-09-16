@@ -35,7 +35,11 @@ use Sympa::List;
 use Log;
 use Sympa::Robot;
 use Sympa::Scenario;
+use Sympa::Session;
+use tools;
 use Sympa::Tools::Password;
+use tt2;
+use Sympa::User;
 
 ## Define types of SOAP type listType
 my %types = (

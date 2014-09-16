@@ -585,11 +585,10 @@ sub new_from_template {
     $data->{'boundary'} = '----------=_' . tools::get_message_id($robot_id)
         unless $data->{'boundary'};
 
-    my $message =
-        $class->_new_from_template($that, $tpl . '.tt2', $who, $data);
+    my $self = $class->_new_from_template($that, $tpl . '.tt2', $who, $data);
 
     # Shelve S/MIME signing.
-    $message->{shelved}{smime_sign} = 1
+    $self->{shelved}{smime_sign} = 1
         if $smime_sign;
     # Shelve DKIM signing.
     if (Conf::get_robot_conf($robot_id, 'dkim_feature') eq 'on') {
@@ -597,22 +596,22 @@ sub new_from_template {
             Conf::get_robot_conf($robot_id, 'dkim_add_signature_to');
         if ($list and $dkim_add_signature_to =~ /list/
             or not $list and $dkim_add_signature_to =~ /robot/) {
-            $message->{shelved}{dkim_sign} = 1;
+            $self->{shelved}{dkim_sign} = 1;
         }
     }
 
     # Set default envelope sender.
     if ($list) {
-        $message->{envelope_sender} = $list->get_list_address('return_path');
+        $self->{envelope_sender} = $list->get_list_address('return_path');
     } else {
-        $message->{envelope_sender} =
+        $self->{envelope_sender} =
             Conf::get_robot_conf($robot_id, 'request');
     }
 
     # Set default delivery date.
-    $message->{'date'} = time;
+    $self->{'date'} = time;
 
-    return $message;
+    return $self;
 }
 
 #TODO: This would be merged in new_from_template() because used only by it.

@@ -32,7 +32,6 @@ use Sympa::Constants;
 use Sympa::DatabaseDescription;
 use Log;
 #use Sympa::List;
-#use Sympa::Robot;
 use Sympa::SQLSource;
 use tools;
 use Sympa::Tools::Data;
