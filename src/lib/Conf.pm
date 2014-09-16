@@ -2237,8 +2237,8 @@ sub _load_single_robot_config {
             $robot_conf->{'dkim_signer_domain'} = $robot;
         }
 
-        $robot_conf->{'dmarc_protection_mode'} =~ s/\s//g;
-        my @dmarc = split(/,/, $robot_conf->{'dmarc_protection_mode'});
+        my @dmarc =
+            split /\s*,\s*/, ($robot_conf->{'dmarc_protection_mode'} || '');
         $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
 
         _set_listmasters_entry({'config_hash' => $robot_conf});
