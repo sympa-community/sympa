@@ -142,7 +142,8 @@ sub new {
         return undef;
     }
 
-    # Get attributes
+    # Get attributes from pseudo-header fields at the top of serialized
+    # message.  Note that field names are case-sensitive.
 
     pos($serialized) = 0;
     while ($serialized =~ /\G(X-Sympa-[-\w]+): (.*?)\n(?![ \t])/cgs) {
@@ -168,17 +169,20 @@ sub new {
             $self->{'message_id'} = $v;
         } elsif ($k eq 'X-Sympa-Sender') {        # New in 6.2a.41
             $self->{'sender'} = $v;
-        } elsif ($k eq 'X-Sympa-Shelved') {       # New in 6.2a.41
+        } elsif ($k eq 'X-Sympa-Display-Name') {    # New in 6.2a.41
+            $self->{'gecos'} = $v;
+        } elsif ($k eq 'X-Sympa-Shelved') {         # New in 6.2a.41
             $self->{'shelved'} = {
                 map {
                     my ($ak, $av) = split /=/, $_, 2;
                     ($ak => ($av || 1))
                     } split(/\s*;\s*/, $v)
             };
-        } elsif ($k eq 'X-Sympa-Spam-Status') {    # New in 6.2a.41
+        } elsif ($k eq 'X-Sympa-Spam-Status') {     # New in 6.2a.41
             $self->{'spam_status'} = $v;
         } else {
-            Log::do_log('err', 'Unknown meta information: "%s: %s"', $k, $v);
+            Log::do_log('err', 'Unknown attribute information: "%s: %s"',
+                $k, $v);
         }
     }
     # Ignore Unix From_
@@ -337,6 +341,9 @@ sub _get_sender_email {
                 if (defined $phrase and length $phrase) {
                     $gecos = MIME::EncWords::decode_mimewords($phrase,
                         Charset => 'UTF-8');
+                    # Eliminate hostile characters.
+                    $gecos =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+                    $gecos =~ s/[\0\r\n]+//g;
                 }
                 last;
             }
@@ -345,7 +352,7 @@ sub _get_sender_email {
         last if defined $sender;
     }
     unless (defined $sender) {
-        Log::do_log('debug3', 'No valid sender address');
+        #Log::do_log('debug3', 'No valid sender address');
         return;
     }
     unless (tools::valid_email($sender)) {
@@ -907,6 +914,10 @@ sub to_string {
     }
     if (defined $self->{'sender'}) {          # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Sender: %s\n", $self->{'sender'};
+    }
+    if (defined $self->{'gecos'}
+        and length $self->{'gecos'}) {        # New in 6.2a.41
+        $serialized .= sprintf "X-Sympa-Display-Name: %s\n", $self->{'gecos'};
     }
     if (%{$self->{'shelved'} || {}}) {        # New in 6.2a.41
         $serialized .= sprintf "X-Sympa-Shelved: %s\n", join(
@@ -3715,19 +3726,10 @@ These are accessible as hash elements of objects.
 
 =over
 
-=item {rcpt}
-
-Currently unavailable.
-
 =item {checksum}
 
 No longer used.  It is kept for compatibility with Sympa 6.1.x or earlier.
 See also L<upgrade_send_spool(1)>.
-
-=item {family}
-
-Name of family (see L<Sympa::Family>) the message corresponds to.
-This is given by L<familyqueue(8)> program.
 
 =item {envelope_sender}
 
@@ -3736,6 +3738,15 @@ This is not always same as {sender} attribute
 nor the content of C<From:> field.
 
 C<'E<lt>E<gt>'> is used for "null envelope sender".
+
+=item {family}
+
+Name of family (see L<Sympa::Family>) the message corresponds to.
+This is given by L<familyqueue(8)> program.
+
+=item {gecos}
+
+Display name of actual sender (see {sender} below), if any.
 
 =item {md5_check}
 
@@ -3746,10 +3757,15 @@ True value indicates that the message has been authenticated by C<md5> level
 
 Original message ID of the message
 
+=item {rcpt}
+
+Currently unavailable.
+
 =item {sender}
 
 Actual sender of the message.
 This is determined according to C<sender_header> configuration parameter.
+See also {envelope_sender} above.
 
 =item {shelved}
 
@@ -3814,11 +3830,12 @@ Below is an example of serialized form.
 
   X-Sympa-Message-ID: 23456789.12345@domain.name  : {message_id} attribute
   X-Sympa-Sender: user01@user.sympa.test          : {sender} attribute
+  X-Sympa-Display-Name: Infant                    : {gecos} attribute
   X-Sympa-Shelved: dkim_sign; tracking=mdn        : {shelved} attribute
   X-Sympa-Spam-Status: ham                        : {spam_status} attribute
   Return-Path: sympa-request@domain.name          : {envelope_sender} attribute
   Message-Id: <123456789.12345@domain.name>       :   ---
-  From: User <user@other.host.dom>                :    |
+  From: Infant <user@other.host.dom>              :    |
   To: User <user@some.host.name>                  :    |
   Subject: Howdy world                            :    | Raw message content
   X-Sympa-Topic: sometopic                        :    |
