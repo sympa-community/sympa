@@ -156,7 +156,7 @@ webtemplate_DATA = active_lists.tt2 \
 		   view_template.tt2 \
 		   your_lists.tt2
 
-localetemplates = ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2
+localetemplates = ja/css.tt2 ko/css.tt2 zh-CN/css.tt2 zh-TW/css.tt2
 
 EXTRA_DIST = $(webtemplate_DATA) $(localetemplates)
 

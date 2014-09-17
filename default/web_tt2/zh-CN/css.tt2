@@ -3,7 +3,7 @@
 This style sheet will override any portion of main CSS, not fully replacing it.
 So this may be used for locale-specific customization.
 -%]
-/* begin zh_TW/css.tt2 */
+/* begin zh-CN/css.tt2 */
 @media screen {  }
 [%# Enlarge fonts. %]
 body {
@@ -12,9 +12,9 @@ body {
 }
 [%# Overriding default font family. %]
 * {
-    font-family:"儷黑 Pro", "LiHei Pro", "Apple LiGothic", "微軟正黑體", "Microsoft JhengHei", sans-serif;
+    font-family:"儷黑 Pro", "LiHei Pro Medium", "华文黑体", STHeiti, Hei, "微软雅黑", "Microsoft YaHei", "MS Hei", "黑体", SimHei, "文泉驿微米黑", "WenQuanYi Micro Hei", sans-serif;
 }
-[%# Overriding "serif!important" %]
+[%# Overriding serif !important. %]
 #bandeau_top #Identity,
 #bandeau_top #Identity_not_connect,
 #bandeau_top #Identity_not_connect label,
@@ -22,6 +22,6 @@ body {
 #bandeau_top a,
 #bandeau_top .login,
 #bandeau_top .remember {
-    font-family:"儷宋 Pro", "LiSong Pro", "Apple LiSung Light", PMingLiu, "PMingLiu-ExtB", serif !important;
+    font-family:"儷宋 Pro", "LiSong Pro Light", "华文仿宋", STFangsong, Song, "仿宋_GB2312", FangSong, "宋体", SimSun, serif !important;
 }
-/* end zh_TW/css.tt2 */
+/* end zh-CN/css.tt2 */

@@ -308,10 +308,10 @@ nobase_default_DATA = \
 	web_tt2/viewmod.tt2 \
 	web_tt2/view_template.tt2 \
 	web_tt2/your_lists.tt2 \
-	web_tt2/ja_JP/css.tt2 \
-	web_tt2/ko_KR/css.tt2 \
-	web_tt2/zh_CN/css.tt2 \
-	web_tt2/zh_TW/css.tt2 \
+	web_tt2/ja/css.tt2 \
+	web_tt2/ko/css.tt2 \
+	web_tt2/zh-CN/css.tt2 \
+	web_tt2/zh-TW/css.tt2 \
 	mail_tt2/authorization_reject.tt2 \
 	mail_tt2/bye.tt2 \
 	mail_tt2/certif_warning.tt2 \
