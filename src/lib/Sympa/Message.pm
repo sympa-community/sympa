@@ -1902,7 +1902,7 @@ sub smime_encrypt {
         return undef;
     }
 
-    my ($dummy, $body_string) = split /(\A|\n)\r?\n/, $msg_string, 2;
+    my ($dummy, $body_string) = split /\n\r?\n/, $msg_string, 2;
 
     # foreach header defined in  the incomming message but undefined in
     # the crypted message, add this header in the crypted form.
