@@ -811,7 +811,7 @@ our %in_regexp = (
     'dump'             => '[^<>\\\*\$]+',     # contents email + gecos
 
     ## Search
-    'filter'   => '[^<>\\\[\]\(\)\$\n]+',     # search list
+    'filter'   => '.*',                       # search list
     'key_word' => '.*',
     'format'   => '[^<>\\\$\n]+',             # dump format/filter string
 
@@ -12104,16 +12104,10 @@ sub do_edit_attributes {
 sub do_search_list {
     wwslog('info', '(%s)', $in{'filter'});
 
-    unless ($in{'filter'}) {
+    unless (defined $in{'filter'} and length $in{'filter'}) {
         Sympa::Report::reject_report_web('user', 'no_filter', {},
             $param->{'action'});
         wwslog('info', 'No filter');
-        return undef;
-    } elsif ($in{'filter'} =~ /[<>\\\*\$]/) {
-        Sympa::Report::reject_report_web('user', 'syntax_errors',
-            {'params' => 'filter'},
-            $param->{'action'});
-        wwslog('err', 'Syntax error');
         return undef;
     }
 
