@@ -2900,17 +2900,32 @@ sub send_confirm_to_editor {
     ## Keeps a copy of the message
     if ($method eq 'md5') {
         ## move message to spool  mod
-        #FIXME FIXME: Message stored into moderation spool is decrypted!
+        # If crypted, store the crypted form of the message (keep decrypted form for HTML view).
+        my $message_in_spool = $message;
+        if($message_in_spool->{smime_crypted}) {
+			my $entity;
+			## Get as MIME object
+			my $parser = MIME::Parser->new;
+			$parser->output_to_core(1);
+			unless ($entity = $parser->parse_data($message_in_spool->{orig_msg_as_string})) {
+				Log::do_log('notice', 'Unable to parse message');
+				return undef;
+			}
+
+			my ($dummy, $body_string) = split /\n\r?\n/, $message_in_spool->{orig_msg_as_string}, 2;
+			$message_in_spool->{_body} = $body_string;
+			$message_in_spool->{_head} = $entity->head();
+		}
         my $marshalled =
-            tools::store_spool($modqueue, $message, '%s@%s_%s',
+            tools::store_spool($modqueue, $message_in_spool, '%s@%s_%s',
             [qw(localpart domainpart AUTHKEY)]);
         unless ($marshalled) {
             Log::do_log('err', 'Cannot create authkey of %s for %s',
-                $message, $list);
+                $message_in_spool, $list);
             return undef;
         }
         Log::do_log('info', '%s is stored in mod spool as <%s>',
-            $message, $marshalled);
+            $message_in_spool, $marshalled);
         $modkey = ${
             tools::unmarshal_metadata(
                 $modqueue, $marshalled,

@@ -2700,6 +2700,9 @@ sub distribute {
         return 'msg_not_found';
     }
 
+    # Decrypt message.
+    $message->smime_decrypt;
+    
     my $msg_id     = $message->{'message_id'};
     my $msg_string = $message->as_string;
 

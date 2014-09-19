@@ -2009,7 +2009,7 @@ sub store_spool {
     unless (open $fh, '>', $tmppath) {
         die sprintf 'Cannot create %s: %s', $tmppath, $ERRNO;
     }
-    print $fh $message->to_string;
+    print $fh $message->to_string();
     close $fh;
 
     # Rename temporary path to the file name including metadata.
