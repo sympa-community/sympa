@@ -88,7 +88,7 @@ our %cpan_modules = (
         'gettext_id'     => 'used to decode date and time in message headers',
     },
     'DateTime::TimeZone' => {
-        required_version => '1.10',
+        required_version => '1.08',
         package_name     => 'DateTime-TimeZone',
         mandatory        => 1,
         'gettext_id'     => 'used to decode date and time in message headers',
