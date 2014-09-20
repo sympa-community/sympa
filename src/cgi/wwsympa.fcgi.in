@@ -10602,9 +10602,10 @@ sub do_tracking {
 
     # is tracking configured for this list ?
     unless (
-           ($list->{admin}{tracking}{delivery_status_notification} eq 'on')
-        || ($list->{admin}{tracking}{message_delivery_notification} eq 'on')
-        || ($list->{admin}{tracking}{message_delivery_notification} eq
+        ($list->{admin}{tracking}{delivery_status_notification} eq 'on')
+        || ($list->{admin}{tracking}{message_disposition_notification} eq
+            'on')
+        || ($list->{admin}{tracking}{message_disposition_notification} eq
             'on_demand')
         ) {
         wwslog('err', 'List not configured for tracking');

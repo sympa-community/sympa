@@ -446,8 +446,9 @@ while (!$end) {
             $list->{'admin'}{'tracking'}{'delivery_status_notification'},
             'on')
             or Sympa::Tools::Data::smart_eq(
-            $list->{'admin'}{'tracking'}{'message_delivery_notification'},
-            qr/\A(on|on_demand)\z/);
+            $list->{'admin'}{'tracking'}{'message_disposition_notification'},
+            qr/\A(on|on_demand)\z/
+            );
 
         my $eff_type = $entity->effective_type || '';
         my $report_type =
@@ -598,7 +599,8 @@ while (!$end) {
         if (    $eff_type eq 'multipart/report'
             and $report_type eq 'disposition-notification'
             and Sympa::Tools::Data::smart_eq(
-                $list->{'admin'}{'tracking'}{'message_delivery_notification'},
+                $list->{'admin'}{'tracking'}
+                    {'message_disposition_notification'},
                 qr/\A(on|on_demand)\z/
             )
             ) {

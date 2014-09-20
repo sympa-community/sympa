@@ -344,7 +344,7 @@ my %list_option = (
 
     # pictures_feature, dkim_feature, merge_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
-    # tracking.message_delivery_notification
+    # tracking.message_disposition_notification
     'on'  => {'gettext_id' => 'enabled'},
     'off' => {'gettext_id' => 'disabled'},
 
@@ -467,7 +467,7 @@ my %list_option = (
     'original'  => {'gettext_id' => 'original messages'},
     'decrypted' => {'gettext_id' => 'decrypted messages'},
 
-    # tracking.message_delivery_notification
+    # tracking.message_disposition_notification
     'on_demand' => {'gettext_id' => 'on demand'},
 
     # dmarc_protection.mode
@@ -1922,11 +1922,13 @@ sub distribute_msg {
         $self->{'admin'}{'tracking'}->{'delivery_status_notification'}, 'on');
     push @apply_tracking, 'mdn'
         if Sympa::Tools::Data::smart_eq(
-        $self->{'admin'}{'tracking'}->{'message_delivery_notification'}, 'on')
+        $self->{'admin'}{'tracking'}->{'message_disposition_notification'},
+        'on')
         or (
         Sympa::Tools::Data::smart_eq(
-            $self->{'admin'}{'tracking'}->{'message_delivery_notification'},
-            'on_demand')
+            $self->{'admin'}{'tracking'}
+                ->{'message_disposition_notification'}, 'on_demand'
+        )
         and $message->get_header('Disposition-Notification-To')
         );
 

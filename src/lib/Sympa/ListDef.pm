@@ -800,13 +800,13 @@ our %pinfo = (
                 'default' =>
                     {'conf' => 'tracking_delivery_status_notification'}
             },
-            'message_delivery_notification' => {
+            'message_disposition_notification' => {
                 'order' => 2,
                 'gettext_id' =>
-                    "tracking message by message delivery notification",
+                    "tracking message by message disposition notification",
                 'format' => ['on', 'on_demand', 'off'],
                 'default' =>
-                    {'conf' => 'tracking_message_delivery_notification'}
+                    {'conf' => 'tracking_message_disposition_notification'}
             },
             'tracking' => {
                 'order'      => 3,

@@ -901,7 +901,7 @@ our @params = (
     {   'name'    => 'tracking_delivery_status_notification',
         'default' => 'off',
     },
-    {   'name'    => 'tracking_message_delivery_notification',
+    {   'name'    => 'tracking_message_disposition_notification',
         'default' => 'off',
     },
     {   'name'     => 'default_remind_task',
