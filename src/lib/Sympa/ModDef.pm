@@ -215,11 +215,6 @@ our %cpan_modules = (
         'gettext_id' => 'required when including members of a remote list',
     },
     # Net::SSLeay is included in IO-Socket-SSL.
-    'JSON::XS' => {
-        required_version => '2.32',
-        package_name     => 'JSON-XS',
-        'gettext_id'     => 'required when using the VOOT protocol',
-    },
     # The pure-perl version of Scalar::Util::looks_like_number() was unstable.
     # To force using XS version, check existence of List::Util::XS.
     'List::Util::XS' => {
