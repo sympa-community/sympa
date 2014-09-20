@@ -56,6 +56,7 @@ use Sympa::LockedFile;
 use Log;
 use Sympa::Mail;
 use Sympa::Message;
+use Sympa::Message::Plugin;
 use Sympa::PlainDigest;
 use Sympa::Regexps;
 use Sympa::Robot;
@@ -1565,6 +1566,8 @@ sub distribute_msg {
     Log::do_log('debug2', '(%s)', @_);
     my $message = shift;
 
+    Sympa::Message::Plugin::execute('pre_distribute', $message);
+
     my $self = $message->{context};
 
     my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
@@ -1944,6 +1947,8 @@ sub distribute_msg {
 
     ## Archives
     $self->archive_msg($message);
+
+    Sympa::Message::Plugin::execute('post_archive', $message);
 
     ## Change the reply-to header if necessary.
     if ($self->{'admin'}{'reply_to_header'}) {

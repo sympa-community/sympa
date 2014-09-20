@@ -545,6 +545,23 @@ our %pinfo = (
         'split_char' => ','
     },
 
+    'message_hook' => {
+        'group'      => 'sending',
+        'gettext_id' => 'Hook modules for message processing',
+        'format'     => {
+            'pre_distribute' => {
+                'order'      => 1,
+                'gettext_id' => 'A hook on the messages before distribution',
+                'format'     => '(::|\w)+',
+            },
+            'post_archive' => {
+                'order'      => 2,
+                'gettext_id' => 'A hook on the messages just after archiving',
+                'format'     => '(::|\w)+',
+            },
+        },
+    },
+
     ### Command page ###
 
     'info' => {

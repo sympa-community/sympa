@@ -56,6 +56,8 @@ nobase_modules_DATA = \
 	Sympa/Marc.pm \
 	Sympa/Marc/Search.pm \
 	Sympa/Message.pm \
+	Sympa/Message/Plugin.pm \
+	Sympa/Message/Plugin/FixEncoding.pm \
 	Sympa/PlainDigest.pm \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \
@@ -96,6 +98,8 @@ MAN3PM = \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
 	Sympa/Message.pm \
+	Sympa/Message/Plugin.pm \
+	Sympa/Message/Plugin/FixEncoding.pm \
 	Sympa/ModDef.pm \
 	Sympa/Regexps.pm \
 	Sympa/User.pm
