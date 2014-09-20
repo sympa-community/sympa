@@ -2000,6 +2000,7 @@ sub store_spool {
     my $message         = shift;
     my $metadata_format = shift;
     my $metadata_keys   = shift;
+    my %options         = @_;
 
     # At first content is stored into temporary file that has unique name and
     # is referred only by this function.
@@ -2009,7 +2010,7 @@ sub store_spool {
     unless (open $fh, '>', $tmppath) {
         die sprintf 'Cannot create %s: %s', $tmppath, $ERRNO;
     }
-    print $fh $message->to_string();
+    print $fh $message->to_string(original => $options{original});
     close $fh;
 
     # Rename temporary path to the file name including metadata.

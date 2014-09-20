@@ -2701,6 +2701,7 @@ sub distribute {
     }
 
     # Decrypt message.
+    # If encrypted, it will be re-encrypted by succeeding process.
     $message->smime_decrypt;
     
     my $msg_id     = $message->{'message_id'};
