@@ -1897,26 +1897,28 @@ sub process_message {
     #  anti-virus
     my $rc = $message->check_virus_infection;
     if ($rc) {
-        if (Sympa::Tools::Data::smart_eq(
-                Conf::get_robot_conf($robot, 'antivirus_notify'), 'sender'
-            )
-            ) {
-            unless (
-                tools::send_file(
-                    $robot,
-                    'your_infected_msg',
-                    $sender,
-                    {   'virus_name' => $rc,
-                        'recipient'  => $list_address,
-                        'lang'       => Conf::get_robot_conf($robot, 'lang'),
-                        'auto_submitted' => 'auto-replied'
-                    }
-                )
-                ) {
-                Log::do_log('notice',
-                    'Unable to send template "your infected_msg" to %s',
-                    $sender);
-            }
+        my $antivirus_notify =
+            Conf::get_robot_conf($robot, 'antivirus_notify') || 'none';
+        if ($antivirus_notify eq 'sender') {
+            tools::send_file(
+                $robot,
+                'your_infected_msg',
+                $sender,
+                {   'virus_name'     => $rc,
+                    'recipient'      => $list_address,
+                    'lang'           => Conf::get_robot_conf($robot, 'lang'),
+                    'auto_submitted' => 'auto-replied'
+                }
+            );
+        } elsif ($antivirus_notify eq 'delivery_status') {
+            $list->send_dsn(
+                $message,
+                {   'virus_name' => $rc,
+                    'recipient'  => $list_address,
+                    'from'       => $message->{sender}
+                },
+                '5.7.0'
+            );
         }
         Log::do_log('notice',
             "Message for %s from %s ignored, virus %s found",

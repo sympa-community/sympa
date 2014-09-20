@@ -12,6 +12,8 @@ Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
 Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
 [% ELSIF status == '5.6.5' -%]
 Subject: [% FILTER qencode %][%|loc%]Cannot personalize message[%END%][%END%]
+[% ELSIF status == '5.7.0' -%]
+Subject: [% FILTER qencode %][%|loc%]A virus in your mail[%END%][%END%]
 [% ELSE -%]
 Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
 [% END %]
@@ -45,8 +47,16 @@ Note: Because binary files have to be encoded in less-efficient ASCII format bef
 [%   ELSIF status == '5.6.5' -%]
 [%|loc%]Your message cannot be personalized.  Please check template syntax.[%END%]
 
-[%   ELSIF status == '5.7.5' -%]
-[%|loc%]Your encrypted message bound for one or more subscribers of this list cannot be encrypted again.  Probably because they have not sent certificates of their own.[%END%]
+[%   ELSIF status == '5.7.0' -%]
+    [%|loc%]***** V I R U S    A L E R T *****[%END%]
+
+[%|loc(virus_name,recipient,from)%]Our viruschecker found a virus named %1 in a message addressed to %2 and that seems to be yours (From: %3).[%END%]
+
+[%|loc%]We stopped delivery of this email.[%END%]
+
+[%|loc%]It may be useful to check your system for viruses.
+
+Note, however, that many viruses fake sender's e-mail address, so it is possible that the virus didn't come from your computer. In that case, please disregard this message.[%END%]
 
 [%   ELSE -%]
 [%|loc%]The following address is not a known mailing list:[%END%]

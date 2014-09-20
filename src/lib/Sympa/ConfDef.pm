@@ -1267,9 +1267,13 @@ our @params = (
         'file'       => 'sympa.conf',
         'edit'       => '1',
     },
-    {   'name'    => 'antivirus_notify',
+    {   'name' => 'antivirus_notify',
+        'gettext_id' =>
+            'Notify sender if virus checker detects malicious content',
         'default' => 'sender',
         'vhost'   => '1',
+        'gettext_comment' =>
+            '"sender" to notify originator of the message, "delivery_status" to send delivery status, or "none"',
     },
 
     {'gettext_id' => 'Tag based spam filtering'},
