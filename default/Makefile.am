@@ -390,6 +390,7 @@ install-data-hook:
 		$(LN_S) -f $$file `echo $$file | $(SED) -e 's/\.[^.]*$$/.default/'`; \
 	done
 	cd $(DESTDIR)$(defaultdir)/web_tt2; \
+	rm -f ja_JP/css.tt2 ko_KR/css.tt2 zh_CN/css.tt2 zh_TW/css.tt2; \
 	$(LN_S) -f review.tt2 search.tt2; \
 	$(LN_S) -f lists.tt2 which.tt2; \
 	$(LN_S) -f lists.tt2 search_list.tt2; \
