@@ -453,6 +453,7 @@ our @params = (
         'optional' => '1',
         'vhost'    => '1',
     },
+    #FIXME: Is it currently available?
     {   'name' => 'automatic_list_prefix',
         'gettext_id' =>
             'Defines the prefix allowing to recognize that a list is an automatic list.',
