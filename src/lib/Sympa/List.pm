@@ -3080,11 +3080,13 @@ sub send_confirm_to_sender {
     my ($i, @rcpt);
     my $authqueue = $Conf::Conf{'queueauth'};
 
+    # If crypted, store the crypted form of the message.
     my $authkey;
-    #FIXME FIXME: Message stored into auth spool is decrypted!
-    my $marshalled =
-        tools::store_spool($authqueue, $message, '%s@%s_%s',
-        [qw(localpart domainpart AUTHKEY)]);
+    my $marshalled = tools::store_spool(
+        $authqueue, $message, '%s@%s_%s',
+        [qw(localpart domainpart AUTHKEY)],
+        original => 1
+    );
     unless ($marshalled) {
         Log::do_log('err', 'Cannot create authkey %s for %s', $authkey,
             $list);

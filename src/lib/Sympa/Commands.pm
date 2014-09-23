@@ -2703,7 +2703,7 @@ sub distribute {
     # Decrypt message.
     # If encrypted, it will be re-encrypted by succeeding process.
     $message->smime_decrypt;
-    
+
     my $msg_id     = $message->{'message_id'};
     my $msg_string = $message->as_string;
 
@@ -2873,6 +2873,10 @@ sub confirm {
         return 'msg_not_found';
     }
 
+    # Decrpyt message.
+    # If encrypted, it will be re-encrypted by succeeding processes.
+    $message->smime_decrypt;
+
     my $list = $message->{context};
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -2909,12 +2913,13 @@ sub confirm {
     }
 
     if ($action =~ /^editorkey(\s?,\s?(quiet))?/) {
-        my $key = $list->send_to_editor('md5', $message);
+        my $key = Sympa::List::send_confirm_to_editor($message, 'md5');
 
         unless (defined $key) {
             Log::do_log(
                 'err',
-                'Calling to send_to_editor() function failed for user %s in list %s',
+                'Failed to moderation request %s from %s for list %s to editor(s)',
+                $message,
                 $sender,
                 $list
             );
@@ -2950,12 +2955,13 @@ sub confirm {
         return 1;
 
     } elsif ($action =~ /editor(\s?,\s?(quiet))?/) {
-        my $key = $list->send_to_editor('smtp', $message);
+        my $key = Sympa::List::send_confirm_to_editor($message, 'smtp');
 
         unless (defined $key) {
             Log::do_log(
                 'err',
-                'Calling to send_to_editor() function failed for user %s in list %s',
+                'Failed to moderation request of %s from %s for list %s to editor(s)',
+                $message,
                 $sender,
                 $list
             );
