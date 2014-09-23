@@ -2993,10 +2993,18 @@ sub send_confirm_to_editor {
         my $new_message = $message->dup;
         if ($new_message->{'smime_crypted'}) {
             unless ($new_message->smime_encrypt($recipient)) {
-                Log::do_log('notice',
-                    'Failed encrypted message for moderator');
-                # FIXME: send a generic error message : X509 cert missing
-                return undef;
+                # If encryption failed, attach a generic error message:
+                # X509 cert missing.
+                $new_message = Sympa::Message->new_from_template(
+                    $list,
+                    'x509-user-cert-missing',
+                    $recipient,
+                    {   'mail' => {
+                            'sender'  => $message->{sender},
+                            'subject' => $message->{decoded_subject},
+                        },
+                    }
+                );
             }
         }
         $param->{'msg'} = $new_message;
