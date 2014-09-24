@@ -22211,10 +22211,11 @@ sub do_send_mail {
             TextCharset    => 'utf-8',
             TextEncoding   => '8bit',
             HTMLEncoding   => '8bit',
+            IncludeType    => 'cid',
             remove_jscript => '1',       #delete the scripts in the html
         );
         # parse return the MIME::Lite part to send
-        my $part = $mail_html->parse($page_source) if $mail_html;
+        my $part = eval { $mail_html->parse($page_source) } if $mail_html;
         unless ($part) {
             Sympa::Report::reject_report_web('user', 'unable_to_parse', {},
                 $param->{'action'});
