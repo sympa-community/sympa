@@ -265,7 +265,7 @@ sub checkcommand {
     if ($subject) {
         if ($Conf::Conf{'misaddressed_commands_regexp'}
             && ($subject =~
-                /^$Conf::Conf{'misaddressed_commands_regexp'}\b/im)) {
+                /^$Conf::Conf{'misaddressed_commands_regexp'}$/im)) {
             return 1;
         }
     }
