@@ -11310,6 +11310,21 @@ sub do_create_list {
         }
     }
 
+    # Check length.
+    if (Sympa::Constants::LIST_LEN() < length($in{'listname'})) {
+        Sympa::Report::reject_report_web('user', 'wrong_value',
+            {'argument' => 'listname'},
+            $param->{'action'});
+        wwslog('info', 'Too long listname');
+        web_db_log(
+            {   'parameters' => $in{'listname'},
+                'status'     => 'error',
+                'error_type' => 'wrong_value',     #FIXME
+            }
+        );
+        return 'create_list_request';
+    }
+
     ## Lowercase listname if required
     if ($in{'listname'} =~ /[A-Z]/) {
         $in{'listname'} = lc($in{'listname'});

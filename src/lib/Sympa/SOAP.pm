@@ -31,6 +31,7 @@ use Encode qw();
 use Sympa::Admin;
 use Sympa::Auth;
 use Conf;
+use Sympa::Constants;
 use Sympa::List;
 use Log;
 use Sympa::Robot;
@@ -587,6 +588,12 @@ sub createList {
         die SOAP::Fault->faultcode('Client')
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list>');
+    }
+
+    # Check length.
+    if (Sympa::Constants::LIST_LEN() < length $listname) {
+        die SOAP::Fault->faultcode('Client')->faultstring('Too long value')
+            ->faultdetail('List name is too long');
     }
 
     Log::do_log('debug', '(%s, %s)', $listname, $robot);

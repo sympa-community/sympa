@@ -27,25 +27,32 @@ package Sympa::DatabaseDescription;
 use strict;
 use warnings;
 
+use Sympa::Constants;
+
+my $email_struct  = sprintf 'varchar(%d)', Sympa::Constants::EMAIL_LEN();
+my $family_struct = sprintf 'varchar(%d)', Sympa::Constants::FAMILY_LEN();
+my $list_struct   = sprintf 'varchar(%d)', Sympa::Constants::LIST_LEN();
+my $robot_struct  = sprintf 'varchar(%d)', Sympa::Constants::ROBOT_LEN();
+
 my %full_db_struct = (
     'subscriber_table' => {
         'fields' => {
             'user_subscriber' => {
-                'struct'   => 'varchar(100)',
+                'struct'   => $email_struct,
                 'doc'      => 'email of subscriber',
                 'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 1
             },
             'list_subscriber' => {
-                'struct'   => 'varchar(50)',
+                'struct'   => $list_struct,
                 'doc'      => 'list name of a subscription',
                 'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 2
             },
             'robot_subscriber' => {
-                'struct'   => 'varchar(80)',
+                'struct'   => $robot_struct,
                 'doc'      => 'robot (domain) of the list',
                 'primary'  => 1,
                 'not_null' => 1,
@@ -85,7 +92,7 @@ my %full_db_struct = (
                 'order'  => 9,
             },
             'bounce_address_subscriber' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => 'FIXME',
                 'order'  => 10,
             },
@@ -154,7 +161,7 @@ my %full_db_struct = (
     'user_table' => {
         'fields' => {
             'email_user' => {
-                'struct'   => 'varchar(100)',
+                'struct'   => $email_struct,
                 'doc'      => 'email user is the key',
                 'primary'  => 1,
                 'not_null' => 1,
@@ -251,7 +258,7 @@ my %full_db_struct = (
             #    'order' => 8,
             #},
             #'dkim_i_bulkspool' => {
-            #    'struct' => 'varchar(100)',
+            #    'struct' => $email_struct,
             #    'doc' =>
             #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
             #    'order' => 9,
@@ -290,18 +297,18 @@ my %full_db_struct = (
                 'order' => 4,
             },
             #'returnpath_bulkmailer' => {
-            #    'struct' => 'varchar(100)',
+            #    'struct' => $email_struct,
             #    'doc' =>
             #        'the return path value that must be set when sending the message',
             #    'order' => 5,
             #},
             'robot_bulkmailer' => {
-                'struct' => 'varchar(80)',
+                'struct' => $robot_struct,
                 'doc'    => '',
                 'order'  => 6,
             },
             'listname_bulkmailer' => {
-                'struct' => 'varchar(50)',
+                'struct' => $list_struct,
                 'doc'    => '',
                 'order'  => 7,
             },
@@ -350,8 +357,8 @@ my %full_db_struct = (
             },
             'tag_bulkmailer' => {
                 'struct' => 'varchar(10)',
-                'doc' => 'Additional tag used to sort packets',
-                'order' => 16,
+                'doc'    => 'Additional tag used to sort packets',
+                'order'  => 16,
             },
         },
         'doc' =>
@@ -361,28 +368,31 @@ my %full_db_struct = (
     'exclusion_table' => {
         'fields' => {
             'list_exclusion' => {
-                'struct'   => 'varchar(50)',
+                # "family:" and family name.
+                'struct' => sprintf(
+                    'varchar(%d)', Sympa::Constants::FAMILY_LEN() + 7
+                ),
                 'doc'      => '',
                 'order'    => 1,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'robot_exclusion' => {
-                'struct'   => 'varchar(50)',
+                'struct'   => $robot_struct,
                 'doc'      => '',
                 'order'    => 2,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'user_exclusion' => {
-                'struct'   => 'varchar(100)',
+                'struct'   => $email_struct,
                 'doc'      => '',
                 'order'    => 3,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'family_exclusion' => {
-                'struct'  => 'varchar(50)',
+                'struct'  => $family_struct,
                 'doc'     => '',
                 'primary' => 1,
                 'order'   => 4,
@@ -437,12 +447,12 @@ my %full_db_struct = (
                 'order' => 6,
             },
             'robot_session' => {
-                'struct' => 'varchar(80)',
+                'struct' => $robot_struct,
                 'doc' => 'The virtual host in which the session was created',
                 'order' => 7,
             },
             'email_session' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => 'the email associated to this session',
                 'order'  => 8,
             },
@@ -470,11 +480,11 @@ my %full_db_struct = (
                 'primary' => 1,
             },
             'email_one_time_ticket' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => '',
             },
             'robot_one_time_ticket' => {
-                'struct' => 'varchar(80)',
+                'struct' => $robot_struct,
                 'doc'    => '',
             },
             'date_one_time_ticket' => {
@@ -515,7 +525,7 @@ my %full_db_struct = (
                 'order' => 2,
             },
             'recipient_notification' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc' =>
                     'email address of recipient for which a DSN or MDM was received',
                 'order' => 3,
@@ -547,12 +557,12 @@ my %full_db_struct = (
                 'order'  => 8,
             },
             'list_notification' => {
-                'struct' => 'varchar(50)',
+                'struct' => $list_struct,
                 'doc'    => 'The listname the messaage was issued for',
                 'order'  => 9,
             },
             'robot_notification' => {
-                'struct' => 'varchar(80)',
+                'struct' => $robot_struct,
                 'doc'    => 'The robot the message is related to',
                 'order'  => 10,
             },
@@ -576,7 +586,7 @@ my %full_db_struct = (
                 'order'    => 1,
             },
             'user_email_logs' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc' =>
                     'e-mail address of the message sender or email of identified web interface user (or soap user)',
                 'order' => 2,
@@ -588,13 +598,13 @@ my %full_db_struct = (
                 'order'    => 3,
             },
             'robot_logs' => {
-                'struct' => 'varchar(80)',
+                'struct' => $robot_struct,
                 'doc' =>
                     'name of the robot in which context the action was executed',
                 'order' => 4,
             },
             'list_logs' => {
-                'struct' => 'varchar(50)',
+                'struct' => $list_struct,
                 'doc' =>
                     'name of the mailing-list in which context the action was executed',
                 'order' => 5,
@@ -613,7 +623,7 @@ my %full_db_struct = (
                 'order' => 7,
             },
             'target_email_logs' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => 'e-mail address (if any) targeted by the message',
                 'order'  => 8,
             },
@@ -669,7 +679,7 @@ my %full_db_struct = (
                 'not_null' => 1,
             },
             'email_stat' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => '',
                 'order'  => 3,
             },
@@ -680,7 +690,7 @@ my %full_db_struct = (
                 'not_null' => 1,
             },
             'list_stat' => {
-                'struct' => 'varchar(150)',
+                'struct' => $list_struct,
                 'doc'    => '',
                 'order'  => 5,
             },
@@ -695,7 +705,7 @@ my %full_db_struct = (
                 'order'  => 7,
             },
             'robot_stat' => {
-                'struct'   => 'varchar(80)',
+                'struct'   => $robot_struct,
                 'doc'      => '',
                 'order'    => 8,
                 'not_null' => 1,
@@ -743,13 +753,13 @@ my %full_db_struct = (
                 'order'    => 3,
             },
             'robot_counter' => {
-                'struct'   => 'varchar(80)',
+                'struct'   => $robot_struct,
                 'doc'      => '',
                 'not_null' => 1,
                 'order'    => 4,
             },
             'list_counter' => {
-                'struct' => 'varchar(150)',
+                'struct' => $list_struct,
                 'doc'    => '',
                 'order'  => 5,
             },
@@ -772,21 +782,21 @@ my %full_db_struct = (
         'fields' => {
 
             'user_admin' => {
-                'struct'   => 'varchar(100)',
+                'struct'   => $email_struct,
                 'primary'  => 1,
                 'not_null' => 1,
                 'doc'      => 'List admin email',
                 'order'    => 1,
             },
             'list_admin' => {
-                'struct'   => 'varchar(50)',
+                'struct'   => $list_struct,
                 'primary'  => 1,
                 'not_null' => 1,
                 'doc'      => 'Listname',
                 'order'    => 2,
             },
             'robot_admin' => {
-                'struct'   => 'varchar(80)',
+                'struct'   => $robot_struct,
                 'primary'  => 1,
                 'not_null' => 1,
                 'doc'      => 'List domain',
@@ -879,12 +889,12 @@ my %full_db_struct = (
                 'order'    => 2,
             },
             'email_netidmap' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => '',
                 'order'  => 4,
             },
             'robot_netidmap' => {
-                'struct'   => 'varchar(80)',
+                'struct'   => $robot_struct,
                 'doc'      => '',
                 'primary'  => 1,
                 'not_null' => 1,
@@ -897,7 +907,7 @@ my %full_db_struct = (
     'conf_table' => {
         'fields' => {
             'robot_conf' => {
-                'struct'  => 'varchar(80)',
+                'struct'  => $robot_struct,
                 'doc'     => '',
                 'primary' => 1,
                 'order'   => 1,
@@ -922,14 +932,14 @@ my %full_db_struct = (
         'fields' => {
             ## Identification
             'name_list' => => {
-                'struct'   => 'varchar(100)',
+                'struct'   => $list_struct,
                 'doc'      => 'Name of the list',
                 'order'    => 1,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'robot_list' => {
-                'struct'  => 'varchar(100)',
+                'struct'  => $robot_struct,
                 'doc'     => 'Name of the robot (domain) the list belongs to',
                 'order'   => 2,
                 'primary' => 1,
@@ -937,7 +947,7 @@ my %full_db_struct = (
             },
             ## basic profile
             'family_list' => {
-                'struct' => 'varchar(100)',
+                'struct' => $family_struct,
                 'doc'    => 'Name of the family the list belongs to',
                 'order'  => 3,
             },
@@ -948,7 +958,7 @@ my %full_db_struct = (
                 'order' => 4,
             },
             'creation_email_list' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => 'Email of user who created the list',
                 'order'  => 5,
             },
@@ -958,7 +968,7 @@ my %full_db_struct = (
                 'order'  => 6,
             },
             'update_email_list' => {
-                'struct' => 'varchar(100)',
+                'struct' => $email_struct,
                 'doc'    => 'Email of user who updated the list',
                 'order'  => 7,
             },

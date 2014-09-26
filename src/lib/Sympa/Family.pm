@@ -346,6 +346,14 @@ sub add_list {
         $hash_list = $config->getHash();
     }
 
+    # Check length
+    if (Sympa::Constants::LIST_LEN() <
+        length($hash_list->{'config'}{'listname'})) {
+        Log::do_log('err', 'Too long value of param "listname"');
+        push @{$return->{'string_error'}}, 'Too long list name';
+        return $return;
+    }
+
     #list creation
     my $result = Sympa::Admin::create_list($hash_list->{'config'},
         $self, $self->{'robot'}, $abort_on_error);
@@ -897,8 +905,8 @@ sub instantiate {
         ## stores the list config into the hash referenced by $hash_list.
         my $hash_list = $config->getHash();
 
-        ## LIST ALREADY EXISTING
         if ($list) {
+            ## LIST ALREADY EXISTING
 
             delete $previous_family_lists->{$list->{'name'}};
 
@@ -933,9 +941,17 @@ sub instantiate {
                 next;
             }
             $list = $result;
-
-            ## FIRST LIST CREATION
         } else {
+            # FIRST LIST CREATION
+
+            # Check length
+            if (Sympa::Constants::LIST_LEN() <
+                length($hash_list->{'config'}{'listname'})) {
+                Log::do_log('err', 'Too long value of param "listname"');
+                push @{$self->{'errors'}{'create_list'}},
+                    $hash_list->{'config'}{'listname'};
+                next;
+            }
 
             ## Create the list
             my $result = Sympa::Admin::create_list($hash_list->{'config'},

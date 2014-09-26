@@ -891,6 +891,14 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         close INFILE;
 
+        # Check length.
+        if ($hash->{'config'}{'listname'}
+            and Sympa::Constants::LIST_LEN() <
+            length($hash->{'config'}{'listname'})) {
+            print STDERR "Too long list name\n";
+            exit 1;
+        }
+
         my $resul =
             Sympa::Admin::create_list_old($hash->{'config'}, $hash->{'type'},
             $robot, "command_line");
