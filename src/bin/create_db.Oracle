@@ -197,8 +197,14 @@ CREATE TABLE notification_table (
 	 CONSTRAINT ind_notification PRIMARY KEY (pk_notification)
  );
 
+CREATE SEQUENCE seq_pk_notification;
 
-
+CREATE TRIGGER trg_pk_notification BEFORE INSERT ON notification_table
+FOR EACH ROW BEGIN
+	 SELECT seq_pk_notification.nextval INTO :new.pk_notification
+	 FROM dual;
+END;
+/
 
 -- --------------------------------------------------------
 -- 
