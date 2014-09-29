@@ -103,9 +103,15 @@ sub get_formatted_date {
     my $param = shift;
     Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $param->{'target'}, $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $param->{'target'}, $param->{'target'};
     } else {
         Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
@@ -125,10 +131,12 @@ sub is_autoinc {
         $param->{'field'}, $param->{'table'});
     my $sth;
     unless (
-        $sth = $self->do_query(
-            "SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",
+        $sth = $self->do_prepqred_query(
+            q{SELECT trigger_name
+              FROM user_triggers
+              WHERE table_name = ? AND trigger_name = ?},
             $param->{'table'},
-            $param->{'field'}
+            'trg_' . $param->{'field'}
         )
         ) {
         Log::do_log('err',
@@ -136,8 +144,7 @@ sub is_autoinc {
             $param->{'field'}, $param->{'table'});
         return undef;
     }
-    my $ref = $sth->fetchrow_hashref('NAME_lc');
-    return ($ref->{'field'} eq $param->{'field'});
+    return $sth->rows == 1;
 }
 
 # Defines the field as an autoincrement field
@@ -227,15 +234,27 @@ sub get_fields {
         $param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
-    unless ($sth = $self->do_query("SHOW FIELDS FROM %s", $param->{'table'}))
-    {
+    unless (
+        $sth = $self->do_prepared_query(
+            q{SELECT column_name, data_type, data_length
+              FROM all_tab_columns
+              WHERE table_name = ?}, uc($param->{'table'})
+        )
+        ) {
         Log::do_log('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-        $result{$ref->{'field'}} = $ref->{'type'};
+        my $type;
+        if (defined $ref->{'data_length'}) {
+            $type = sprintf '%s(%s)', lc($ref->{'data_type'}),
+                $ref->{'data_length'};
+        } else {
+            $type = lc($ref->{'data_type'});
+        }
+        $result{$ref->{'column_name'}} = $type;
     }
     return \%result;
 }

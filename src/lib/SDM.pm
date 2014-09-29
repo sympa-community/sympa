@@ -186,6 +186,12 @@ sub probe_db {
     Log::do_log('debug3', 'Checking database structure');
     my (%checked, $table);
 
+    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    return 1
+        unless $db_type eq 'mysql'
+            or $db_type eq 'Pg'
+            or $db_type eq 'SQLite';
+
     unless (check_db_connect()) {
         Log::do_log('err',
             'Could not check the database structure.  Make sure that database connection is available'
