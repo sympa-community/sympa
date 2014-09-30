@@ -187,10 +187,10 @@ sub probe_db {
     my (%checked, $table);
 
     my $db_type = Conf::get_robot_conf('*', 'db_type');
-    return 1
-        unless $db_type eq 'mysql'
-            or $db_type eq 'Pg'
-            or $db_type eq 'SQLite';
+    my $update_db_field_types =
+        Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
+    my $may_update = $update_db_field_types eq 'auto'
+        && ($db_type eq 'mysql' || $db_type eq 'Pg' || $db_type eq 'SQLite');
 
     unless (check_db_connect()) {
         Log::do_log('err',
@@ -220,7 +220,9 @@ sub probe_db {
             $found = 1 if ($t1 eq $t2);
         }
         unless ($found) {
-            if (my $rep = $db_source->add_table({'table' => $t1})) {
+            my $rep;
+            if (    $may_update
+                and $rep = $db_source->add_table({'table' => $t1})) {
                 push @report, $rep;
                 Log::do_log(
                     'notice', 'Table %s created in database %s',
@@ -238,7 +240,6 @@ sub probe_db {
     ## Check tables structure if we could get it
     ## Only performed with mysql , Pg and SQLite
     if (%real_struct) {
-
         foreach my $t (keys %{$db_struct{'mysql'}}) {
             unless ($real_struct{$t}) {
                 Log::do_log(
@@ -246,7 +247,7 @@ sub probe_db {
                     'Table "%s" not found in database "%s"; you should create it with create_db.%s script',
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    Conf::get_robot_conf('*', 'db_type')
+                    $db_type
                 );
                 return undef;
             }
@@ -266,7 +267,7 @@ sub probe_db {
                 return undef;
             }
             ## Remove temporary DB field
-            if ($real_struct{$t}{'temporary'}) {
+            if ($may_update and $real_struct{$t}{'temporary'}) {
                 $db_source->delete_field(
                     {   'table' => $t,
                         'field' => 'temporary',
@@ -275,31 +276,24 @@ sub probe_db {
                 delete $real_struct{$t}{'temporary'};
             }
 
-            if (   (Conf::get_robot_conf('*', 'db_type') eq 'mysql')
-                || (Conf::get_robot_conf('*', 'db_type') eq 'Pg')
-                || (Conf::get_robot_conf('*', 'db_type') eq 'SQLite')) {
-                ## Check that primary key has the right structure.
-                unless (
-                    check_primary_key({'table' => $t, 'report' => \@report}))
-                {
-                    Log::do_log(
-                        'err',
-                        'Unable to check the valifity of primary key for table %s. Aborting',
-                        $t
-                    );
-                    return undef;
-                }
+            ## Check that primary key has the right structure.
+            unless (check_primary_key({'table' => $t, 'report' => \@report}))
+            {
+                Log::do_log(
+                    'err',
+                    'Unable to check the validity of primary key for table %s. Aborting',
+                    $t
+                );
+                return undef;
+            }
 
-                unless (check_indexes({'table' => $t, 'report' => \@report}))
-                {
-                    Log::do_log(
-                        'err',
-                        'Unable to check the valifity of indexes for table %s. Aborting',
-                        $t
-                    );
-                    return undef;
-                }
-
+            unless (check_indexes({'table' => $t, 'report' => \@report})) {
+                Log::do_log(
+                    'err',
+                    'Unable to check the valifity of indexes for table %s. Aborting',
+                    $t
+                );
+                return undef;
             }
         }
         # add autoincrement if needed
@@ -309,12 +303,12 @@ sub probe_db {
                     {'table' => $table, 'field' => $autoincrement{$table}}
                 )
                 ) {
-                if ($db_source->set_autoinc(
-                        {   'table' => $table,
-                            'field' => $autoincrement{$table},
-                            'field_type' =>
-                                $db_struct{$Conf::Conf{'db_type'}}->{$table}
-                                ->{$autoincrement{$table}}
+                if ($may_update
+                    and $db_source->set_autoinc(
+                        {   'table'      => $table,
+                            'field'      => $autoincrement{$table},
+                            'field_type' => $db_struct{$db_type}->{$table}
+                                ->{$autoincrement{$table}},
                         }
                     )
                     ) {
@@ -353,8 +347,13 @@ sub check_fields {
     my %real_struct = %{$param->{'real_struct'}};
     my $report_ref  = $param->{'report'};
 
-    foreach my $f (
-        sort keys %{$db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}}) {
+    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    my $update_db_field_types =
+        Conf::get_robot_conf('*', 'update_db_field_types') || 'off';
+    my $may_update = $update_db_field_types eq 'auto'
+        && ($db_type eq 'mysql' || $db_type eq 'Pg' || $db_type eq 'SQLite');
+
+    foreach my $f (sort keys %{$db_struct{$db_type}{$t}}) {
         unless ($real_struct{$t}{$f}) {
             push @{$report_ref},
                 sprintf(
@@ -369,12 +368,11 @@ sub check_fields {
             );
 
             my $rep;
-            if ($rep = $db_source->add_field(
-                    {   'table' => $t,
-                        'field' => $f,
-                        'type' =>
-                            $db_struct{Conf::get_robot_conf('*', 'db_type')}
-                            {$t}{$f},
+            if ($may_update
+                and $rep = $db_source->add_field(
+                    {   'table'   => $t,
+                        'field'   => $f,
+                        'type'    => $db_struct{$db_type}{$t}{$f},
                         'notnull' => $not_null{$f},
                         'autoinc' =>
                             ($autoincrement{$t} and $autoincrement{$t} eq $f),
@@ -396,22 +394,19 @@ sub check_fields {
         }
 
         ## Change DB types if different and if update_db_types enabled
-        if (Conf::get_robot_conf('*', 'update_db_field_types') eq 'auto') {
+        if ($may_update) {
             unless (
                 check_db_field_type(
                     effective_format => $real_struct{$t}{$f},
-                    required_format =>
-                        $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}
-                        {$f}
+                    required_format  => $db_struct{$db_type}{$t}{$f}
                 )
                 ) {
                 push @{$report_ref},
                     sprintf(
                     "Field '%s'  (table '%s' ; database '%s') does NOT have awaited type (%s). Attempting to change it...",
-                    $f,
-                    $t,
+                    $f, $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}{$f}
+                    $db_struct{$db_type}{$t}{$f}
                     );
 
                 Log::do_log(
@@ -420,16 +415,16 @@ sub check_fields {
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}{$f},
+                    $db_struct{$db_type}{$t}{$f},
                     $real_struct{$t}{$f}
                 );
 
                 my $rep;
-                if ($rep = $db_source->update_field(
-                        {   'table' => $t,
-                            'field' => $f,
-                            'type'  => $db_struct{Conf::get_robot_conf('*',
-                                    'db_type')}{$t}{$f},
+                if ($may_update
+                    and $rep = $db_source->update_field(
+                        {   'table'   => $t,
+                            'field'   => $f,
+                            'type'    => $db_struct{$db_type}{$t}{$f},
                             'notnull' => $not_null{$f},
                         }
                     )
@@ -442,15 +437,14 @@ sub check_fields {
                 }
             }
         } else {
-            unless ($real_struct{$t}{$f} eq
-                $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}{$f}) {
+            unless ($real_struct{$t}{$f} eq $db_struct{$db_type}{$t}{$f}) {
                 Log::do_log(
                     'err',
                     'Field "%s" (table "%s"; database "%s") does NOT have awaited type (%s)',
                     $f,
                     $t,
                     Conf::get_robot_conf('*', 'db_name'),
-                    $db_struct{Conf::get_robot_conf('*', 'db_type')}{$t}{$f}
+                    $db_struct{$db_type}{$t}{$f}
                 );
                 Log::do_log('err',
                     'Sympa\'s database structure may have change since last update ; please check RELEASE_NOTES'
@@ -466,6 +460,13 @@ sub check_primary_key {
     my $param      = shift;
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
+
+    #FIXME
+    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    return 1
+        unless $db_type eq 'mysql'
+            or $db_type eq 'Pg'
+            or $db_type eq 'SQLite';
 
     my $list_of_keys = join ',', @{$primary{$t}};
     my $key_as_string = "$t [$list_of_keys]";
@@ -540,6 +541,14 @@ sub check_indexes {
     my $t          = $param->{'table'};
     my $report_ref = $param->{'report'};
     Log::do_log('debug', 'Checking indexes for table %s', $t);
+
+    #FIXME
+    my $db_type = Conf::get_robot_conf('*', 'db_type');
+    return 1
+        unless $db_type eq 'mysql'
+            or $db_type eq 'Pg'
+            or $db_type eq 'SQLite';
+
     ## drop previous index if this index is not a primary key and was defined
     ## by a previous Sympa version
     my %index_columns = %{$db_source->get_indexes({'table' => $t})};

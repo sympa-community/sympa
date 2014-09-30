@@ -212,22 +212,22 @@ sub establish_connection {
         return $db_connections{$self->{'connect_string'}}{'dbh'};
 
     } else {
+        # Set environment variables
+        # Used by Oracle (ORACLE_HOME) etc.
 
-        ## Set environment variables
-        ## Used by Oracle (ORACLE_HOME)
-
-        ## Client encoding derived from the environment variable.
-        ## Set this before parsing db_env to allow override if one knows what
-        ## she is doing.
-        ## Note: on mysql and Pg, "SET NAMES" will be executed below; on
-        ## SQLite,
-        ## no need to set encoding.
+        # Client encoding derived from the environment variable.
+        # Set this before parsing db_env to allow override if one knows what
+        # she is doing.
+        # Note: on mysql and Pg, "SET NAMES" will be executed below; on
+        # SQLite, no need to set encoding.
         if ($self->{'db_type'} eq 'Oracle') {
-            ## NLS_LANG.  This needs to be set before connecting, otherwise
-            ## it's
-            ## useless.  Underscore (_) and dot (.) are a vital part as
-            ## NLS_LANG
-            ## has the syntax "language_territory.charset".
+            # NLS_LANG.  This needs to be set before connecting, otherwise
+            # it's useless.  Underscore (_) and dot (.) are a vital part as
+            # NLS_LANG has the syntax "language_territory.charset".
+            #
+            # NOTE: "UTF8" should be overridden by "AL32UTF8" on Oracle 9i
+            # or later (use db_env).  Former can't correctly handle characters
+            # beyond BMP.
             $ENV{'NLS_LANG'} = '_.UTF8';
         } elsif ($self->{'db_type'} eq 'Sybase') {
             $ENV{'SYBASE_CHARSET'} = 'utf8';
