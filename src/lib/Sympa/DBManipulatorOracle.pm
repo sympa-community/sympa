@@ -28,6 +28,7 @@ use strict;
 use warnings;
 ##use Data::Dumper;
 
+use Sympa::DBManipulatorOracle::St;
 use Log;
 
 use base qw(Sympa::DBManipulatorDefault);
@@ -46,6 +47,24 @@ our %date_format = (
             'to_date(to_char(floor(%s/86400) + to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) || \':\' ||to_char(mod(%s,86400)), \'J:SSSSS\')',
     }
 );
+
+sub do_query {
+    my $self = shift;
+    my $ret  = $self->SUPER::do_query(@_);
+    if ($ret) {
+        bless $ret => 'Sympa::DBManipulatorOracle::St';
+    }
+    return $ret;
+}
+
+sub do_prepared_query {
+    my $self = shift;
+    my $ret  = $self->SUPER::do_prepared_query(@_);
+    if ($ret) {
+        bless $ret => 'Sympa::DBManipulatorOracle::St';
+    }
+    return $ret;
+}
 
 # Builds the string to be used by the DBI to connect to the database.
 #
