@@ -30,6 +30,8 @@ use Encode qw();
 use English qw(-no_match_vars);
 use File::Find qw();
 use File::Path qw();
+use File::Basename;
+use Fcntl ':mode';
 use POSIX qw();
 
 use Sympa::Archive;

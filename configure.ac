@@ -60,7 +60,7 @@ if test "$fhs" = "yes"; then
     spooldir=$localstatedir/spool/sympa
     arcdir=$localstatedir/lib/sympa/arc
     bouncedir=$localstatedir/lib/sympa/bounce
-    confdir=$sysconfdir
+    confdir=$sysconfdir/sympa
 else
     # redefine default values for some standard variables,
     # but only if no value was given
@@ -91,7 +91,7 @@ else
     staticdir=$prefix/static_content
     arcdir=$prefix/arc
     bouncedir=$prefix/bounce
-    confdir=/etc
+    confdir=/etc/sympa
 fi
  
 # substitute custom variables

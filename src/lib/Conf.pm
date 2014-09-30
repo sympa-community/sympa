@@ -2421,7 +2421,7 @@ sub _load_binary_cache {
 
     my $lock_fh = Sympa::LockedFile->new($param->{'config_file'}, 2, '<');
     unless ($lock_fh) {
-        Log::do_log('err', 'Could not create new lock');
+        Log::do_log('err', 'Could not create new lock, error was : %s', Sympa::LockedFile::last_error());
         return undef;
     }
 
