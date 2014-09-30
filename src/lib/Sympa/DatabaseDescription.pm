@@ -1056,7 +1056,7 @@ sub db_struct {
             $trans_o =~ s/^bigint.*/number/g;
             $trans_o =~ s/^smallint.*/number/g;
             $trans_o =~ s/^tinyint.*/number/g;
-            $trans_o =~ s/^double/float(24)/g;
+            $trans_o =~ s/^double/number/g;
             $trans_o =~ s/^enum.*/varchar2(20)/g;
             $trans_o =~ s/^text.*/varchar2(500)/g;
             $trans_o =~ s/^longtext.*/long/g;

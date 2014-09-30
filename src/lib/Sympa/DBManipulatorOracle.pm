@@ -150,12 +150,12 @@ sub is_autoinc {
         $param->{'field'}, $param->{'table'});
     my $sth;
     unless (
-        $sth = $self->do_prepqred_query(
+        $sth = $self->do_prepared_query(
             q{SELECT trigger_name
               FROM user_triggers
               WHERE table_name = ? AND trigger_name = ?},
-            $param->{'table'},
-            'trg_' . $param->{'field'}
+            uc($param->{'table'}),
+            uc('trg_' . $param->{'field'})
         )
         ) {
         Log::do_log('err',
@@ -266,14 +266,17 @@ sub get_fields {
         return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
+        my $data_type   = lc($ref->{'data_type'});
+        my $data_length = $ref->{'data_length'};
         my $type;
-        if (defined $ref->{'data_length'}) {
-            $type = sprintf '%s(%s)', lc($ref->{'data_type'}),
-                $ref->{'data_length'};
+        if (   not $data_length
+            or $data_type eq 'number' and $data_length == 22
+            or $data_type eq 'date') {
+            $type = $data_type;
         } else {
-            $type = lc($ref->{'data_type'});
+            $type = sprintf '%s(%s)', $data_type, $data_length;
         }
-        $result{$ref->{'column_name'}} = $type;
+        $result{lc($ref->{'column_name'})} = $type;
     }
     return \%result;
 }

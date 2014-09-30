@@ -56,7 +56,7 @@ CREATE TABLE bulkmailer_table (
 	 priority_message_bulkmailer 	number, 
 	 priority_packet_bulkmailer 	number, 
 	 receipients_bulkmailer 	varchar2(500), 
-	 reception_date_bulkmailer 	float(24), 
+	 reception_date_bulkmailer 	number, 
 	 robot_bulkmailer 	varchar2(80), 
 	 tag_bulkmailer 	varchar2(10), 
 	 CONSTRAINT ind_bulkmailer PRIMARY KEY (messagekey_bulkmailer, packetid_bulkmailer)
@@ -125,7 +125,7 @@ CREATE TABLE list_table (
 	 robot_list 	varchar2(80), 
 	 searchkey_list	varchar2(255),
 	 status_list 	varchar2(20), 
-	 topics_list 	varchar2(100), 
+	 topics_list 	varchar2(255), 
 	 total_list	number,
 	 update_email_list	varchar2(100),
 	 update_epoch_list	number,
