@@ -130,8 +130,16 @@ sub is_autoinc {
     my $seqname = $param->{'table'} . '_' . $param->{'field'} . '_seq';
     my $sth;
     unless (
-        $sth = $self->do_query(
-            "SELECT relname FROM pg_class WHERE relname = '%s' AND relkind = 'S'  AND relnamespace IN ( SELECT oid  FROM pg_namespace WHERE nspname NOT LIKE 'pg_%' AND nspname != 'information_schema' )",
+        $sth = $self->do_prepared_query(
+            q{SELECT relname
+              FROM pg_class
+              WHERE relname = ? AND relkind = 'S' AND
+                    relnamespace IN (
+                                     SELECT oid
+                                     FROM pg_namespace
+                                     WHERE nspname NOT LIKE 'pg_%' AND
+                                           nspname != 'information_schema'
+                                    )},
             $seqname
         )
         ) {
@@ -179,7 +187,7 @@ sub set_autoinc {
         ) {
         Log::do_log(
             'err',
-            'Unable to set default value of field %s in table %s as next value of sequence table %',
+            'Unable to set default value of field %s in table %s as next value of sequence table %s',
             $param->{'field'},
             $param->{'table'},
             $seqname
@@ -615,7 +623,11 @@ sub get_indexes {
     my $sth;
     unless (
         $sth = $self->do_query(
-            "SELECT c.oid FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relname ~ \'^(%s)$\' AND pg_catalog.pg_table_is_visible(c.oid)",
+            q{SELECT c.oid
+              FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n
+              ON n.oid = c.relnamespace
+              WHERE c.relname ~ '^(%s)$' AND
+                    pg_catalog.pg_table_is_visible(c.oid)},
             $param->{'table'}
         )
         ) {
