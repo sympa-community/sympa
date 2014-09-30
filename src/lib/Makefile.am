@@ -38,6 +38,7 @@ nobase_modules_DATA = \
 	Sympa/DBManipulatorDefault.pm \
 	Sympa/DBManipulatorMySQL.pm \
 	Sympa/DBManipulatorOracle.pm \
+	Sympa/DBManipulatorOracle/St.pm \
 	Sympa/DBManipulatorPostgres.pm \
 	Sympa/DBManipulatorSQLite.pm\
 	Sympa/DBManipulatorSybase.pm \
