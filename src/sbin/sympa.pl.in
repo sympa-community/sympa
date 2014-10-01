@@ -3493,7 +3493,7 @@ sub SendDigest {
             [qw(localpart domainpart)]
         );
 
-        unless ($metadata and $metadata->{context}) {
+        unless ($metadata and $metadata->{context} and ref $metadata->{context}) {
             Log::do_log('info', 'Unknown list %s, deleting digest file',
                 $listaddress);
             Log::db_log(
