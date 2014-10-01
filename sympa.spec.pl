@@ -14,12 +14,13 @@ my $requires =
     . join(
     "\n",
     map {
-        sprintf 'Requires: perl(%s)%s',
+        sprintf '%sRequires: perl(%s)%s',
+            ($m{$_}->{mandatory} ? '' : '#'),
             $_, $m{$_}->{required_version}
             ? " >= $m{$_}->{required_version}"
             : ''
         } grep {
-        $_ ne 'perl' and $_ ne 'MHonArc::UTF8' and $m{$_}->{mandatory}
+        $_ ne 'perl' and $_ ne 'MHonArc::UTF8'
         } sort {
         lc $a cmp lc $b || $a cmp $b
         } keys %m
@@ -80,7 +81,7 @@ encryption.
     --libdir=%{_libdir} \
     --sysconfdir=%{_sysconfdir}/sympa \
     --localstatedir=%{_localstatedir} \
-    --with-confdir=%{_sysconfdir} \
+    --with-confdir=%{_sysconfdir}/sympa \
     --with-initdir=%{_initrddir} \
     --with-smrshdir=%{_sysconfdir}/smrsh
 make DESTDIR=%{buildroot}
@@ -125,6 +126,6 @@ fi
 %{_datadir}/sympa
 %{_datadir}/locale/*/*/*
 %{_sysconfdir}/smrsh/*
-%config(noreplace) %{_sysconfdir}/sympa.conf
+%config(noreplace) %{_sysconfdir}/sympa/sympa.conf
 %config(noreplace) %{_sysconfdir}/sympa
 %{_initrddir}/sympa
