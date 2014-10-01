@@ -38,11 +38,13 @@ check_DATA = t/locale/cs/LC_MESSAGES/sympa.mo \
 	     t/stub/Sympa/Constants.pm
 
 EXTRA_DIST = important_changes.pl \
+	     META.json.pl \
+	     META.json \
 	     sympa.spec.pl \
 	     sympa.spec \
 	     etc_README \
 	     $(check_SCRIPTS) $(check_DATA)
-CLEANFILES = previous_sympa_version sympa.spec sympa_wizard.pl.inst
+CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
 
 MSGFMT=@MSGFMT@
 .po.mo:
@@ -90,6 +92,8 @@ installconfig: installdir sympa_wizard.pl.inst
 		if [ ! -d $(DESTDIR)$(confdir) ]; then \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
 		fi; \
+		chown $(USER) $(DESTDIR)$(confdir) || /bin/true; \
+		chgrp $(GROUP) $(DESTDIR)$(confdir) || /bin/true; \
 		$(PERL) sympa_wizard.pl.inst \
 			--create sympa.conf \
 			--target $(DESTDIR)$(confdir)/sympa.conf \
@@ -154,6 +158,11 @@ uninstall-hook:
 	rm -f $(DESTDIR)$(confdir)/sympa.conf
 	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
 
-sympa.spec: sympa.spec.pl src/lib/Sympa/Constants.pm Makefile
+META.json: META.json.pl Makefile
+	cd src/lib; $(MAKE) Sympa/Constants.pm
+	$(PERL) META.json.pl > META.json
+
+sympa.spec: sympa.spec.pl Makefile
+	cd src/lib; $(MAKE) Sympa/Constants.pm
 	$(PERL) sympa.spec.pl > sympa.spec
 
