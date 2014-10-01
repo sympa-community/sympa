@@ -2549,8 +2549,16 @@ sub prepare_message_according_to_mode {
         _decorate_parts($entity, $list);
         $self->set_entity($entity);
     } elsif ($mode eq 'urlize') {
-        ##Prepare message for urlize reception mode
-        my $entity = $self->as_entity->dup;
+        # Prepare message for urlize reception mode.
+        # Not extract message/rfc822 parts.
+        my $parser = MIME::Parser->new;
+        $parser->extract_nested_messages(0);
+        $parser->extract_uuencode(1);
+        $parser->output_to_core(1);
+
+        my $msg_string = $self->as_string;
+        $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
+        my $entity = $parser->parse_data($msg_string);
 
         _urlize_parts($entity, $list, $self->{'message_id'});
         ## Add a footer
