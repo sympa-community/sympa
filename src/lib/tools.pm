@@ -1907,7 +1907,7 @@ sub unmarshal_metadata {
     my ($robot_id, $listname, $type, $list, $priority);
 
     $robot_id = lc($data->{'domainpart'})
-        if Conf::valid_robot($data->{'domainpart'}, just_try => 1);
+        if Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
     #FIXME: is this always needed?
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
