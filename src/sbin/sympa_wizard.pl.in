@@ -30,10 +30,6 @@ use Getopt::Long;
 use Pod::Usage;
 use Sys::Hostname qw();
 
-use File::Path;
-use File::Basename;
-use Fcntl ':mode';
-
 use Sympa::ConfDef;
 use Sympa::Constants;
 use Sympa::ModDef;
@@ -133,29 +129,6 @@ sub create_configuration {
         print STDERR "$conf file already exists, exiting\n";
         exit 1;
     }
-    
-    # Try to create config path
-    my ($file, $dir, $suffix) = File::Basename::fileparse($conf);
-    my $error;
-    File::Path::make_path($dir, {mode => 0755, owner => 'sympa', group => 'sympa', error => \$error});
-    
-    if(@$error) {
-		my $diag = pop @$error;
-		my ($target, $error) = %$diag;
-		die "Unable to create $target: $error";
-	}
-	
-	# Check ownership of config folder
-	my @stat = stat($dir);
-	my $user = (getpwuid $stat[4])[0];
-	if($user ne 'sympa') {
-		die "Config dir $dir exists but is not owned by sympa (owned by $user)";
-	}
-	
-	# Check permissions on config folder
-	if(($stat[2] & Fcntl::S_IRWXU) != Fcntl::S_IRWXU) {
-		die "Config dir $dir exists, but sympa does not have rwx permissions on it";
-	}
 
     unless (open NEWF, '>', $conf) {
         die "Unable to open $conf: $ERRNO";
