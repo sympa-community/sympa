@@ -38,11 +38,6 @@ use base qw(Sympa::DBManipulatorDefault);
 ####### Beginning the RDBMS-specific code. ############
 #######################################################
 
-our %date_format = (
-    'read'  => {'SQLite' => 'strftime(\'%%s\',%s,\'utc\')'},
-    'write' => {'SQLite' => 'datetime(%d,\'unixepoch\',\'localtime\')'}
-);
-
 # Builds the string to be used by the DBI to connect to the database.
 #
 # IN: Nothing
@@ -258,6 +253,8 @@ sub get_fields {
             $type = 'none';
         } elsif ($type =~ /real|floa|doub/) {
             $type = 'real';
+        } elsif ($type =~ /timestamp/) { # for compatibility to SQLite 2.
+            $type = 'timestamp';
         } else {
             $type = 'numeric';
         }
@@ -280,6 +277,7 @@ sub update_field {
     my $param   = shift;
     my $table   = $param->{'table'};
     my $field   = $param->{'field'};
+    my $type    = $param->{'type'};
     my $options = '';
     if ($param->{'notnull'}) {
         $options .= ' NOT NULL ';
@@ -287,16 +285,26 @@ sub update_field {
     my $report;
 
     Log::do_log('debug', 'Updating field %s in table %s (%s%s)',
-        $field, $table, $param->{'type'}, $options);
+        $field, $table, $type, $options);
+
     my $r = $self->_update_table($table, qr(\b$field\s[^,]+),
-        "$field\t$param->{'type'}$options");
+        "$field\t$type$options");
     unless (defined $r) {
         Log::do_log('err', 'Could not update field %s in table %s (%s%s)',
-            $field, $table, $param->{'type'}, $options);
+            $field, $table, $type, $options);
         return undef;
     }
     $report = $r;
     Log::do_log('info', '%s', $r);
+
+    # Conversion between timestamp and number is not obvious.
+    # So convert explicitly.
+    my $fields = $self->get_fields({'table' => $table});
+    if ($fields->{$field} eq 'timestamp' and $type =~ /^number/i) {
+        $self->do_query('UPDATE %s SET %s = strftime(\'%%s\', %s, \'utc\')',
+            $table, $field, $field);
+    }
+
     $report .= "\nTable $table, field $field updated";
     Log::do_log('info', 'Table %s, field %s updated', $table, $field);
 
