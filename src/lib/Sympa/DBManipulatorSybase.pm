@@ -36,11 +36,6 @@ use base qw(Sympa::DBManipulatorDefault);
 ####### Beginning the RDBMS-specific code. ############
 #######################################################
 
-our %date_format = (
-    'read'  => {'Sybase' => 'datediff(second, \'01/01/1970\',%s)',},
-    'write' => {'Sybase' => 'dateadd(second,%s,\'01/01/1970\')',}
-);
-
 # Builds the string to be used by the DBI to connect to the database.
 #
 # IN: Nothing
@@ -95,9 +90,9 @@ sub get_formatted_date {
     my $param = shift;
     Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
+        return sprintf 'datediff(second, \'01/01/1970\',%s)', $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')', $param->{'target'};
     } else {
         Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;

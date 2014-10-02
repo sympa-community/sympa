@@ -35,11 +35,6 @@ use base qw(Sympa::DBManipulatorDefault);
 ####### Beginning the RDBMS-specific code. ############
 #######################################################
 
-our %date_format = (
-    'read'  => {'Pg' => 'date_part(\'epoch\',%s)',},
-    'write' => {'Pg' => '\'epoch\'::timestamp with time zone + \'%d sec\'',}
-);
-
 # Builds the string to be used by the DBI to connect to the database.
 #
 # IN: Nothing
