@@ -37,17 +37,6 @@ use base qw(Sympa::DBManipulatorDefault);
 ####### Beginning the RDBMS-specific code. ############
 #######################################################
 
-our %date_format = (
-    'read' => {
-        'Oracle' =>
-            '((to_number(to_char(%s,\'J\')) - to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) * 86400) +to_number(to_char(%s,\'SSSSS\'))',
-    },
-    'write' => {
-        'Oracle' =>
-            'to_date(to_char(floor(%s/86400) + to_number(to_char(to_date(\'01/01/1970\',\'dd/mm/yyyy\'), \'J\'))) || \':\' ||to_char(mod(%s,86400)), \'J:SSSSS\')',
-    }
-);
-
 sub do_query {
     my $self = shift;
     my $ret  = $self->SUPER::do_query(@_);
@@ -151,7 +140,7 @@ sub is_autoinc {
     my $sth;
     unless (
         $sth = $self->do_prepared_query(
-            q{SELECT trigger_name
+            q{SELECT COUNT(trigger_name)
               FROM user_triggers
               WHERE table_name = ? AND trigger_name = ?},
             uc($param->{'table'}),
@@ -163,7 +152,7 @@ sub is_autoinc {
             $param->{'field'}, $param->{'table'});
         return undef;
     }
-    return $sth->rows == 1;
+    return $sth->fetchrow_array;
 }
 
 # Defines the field as an autoincrement field
@@ -172,6 +161,7 @@ sub is_autoinc {
 # * 'table' : the name of the table to add
 #
 # OUT: 1 if the autoincrement could be set, undef otherwise.
+#FIXME: Currently not works.
 sub set_autoinc {
     my $self  = shift;
     my $param = shift;
@@ -291,6 +281,7 @@ sub get_fields {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub update_field {
     my $self  = shift;
     my $param = shift;
@@ -339,6 +330,7 @@ sub update_field {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub add_field {
     my $self  = shift;
     my $param = shift;
@@ -388,6 +380,7 @@ sub add_field {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub delete_field {
     my $self  = shift;
     my $param = shift;
@@ -429,19 +422,24 @@ sub get_primary_key {
 
     my %found_keys;
     my $sth;
-    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s", $param->{'table'}))
-    {
+    unless ($sth = $self->do_prepared_query(
+        q{SELECT cols.column_name
+          FROM all_cons_columns cols, all_constraints cons
+          WHERE cons.constraint_type = 'P' AND
+                cols.constraint_name = cons.constraint_name AND
+                cols.owner = cons.owner AND
+                cols.table_name = cons.table_name AND
+                cons.table_name = ?},
+        uc($param->{'table'}))) {
         Log::do_log('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
 
-    my $test_request_result = $sth->fetchall_hashref('field');
-    foreach my $scannedResult (keys %$test_request_result) {
-        if ($test_request_result->{$scannedResult}{'key'} eq "PRI") {
-            $found_keys{$scannedResult} = 1;
-        }
+    my $field;
+    while ($field = $sth->fetchrow_array) {
+        $found_keys{lc $field} = 1;
     }
     return \%found_keys;
 }
@@ -454,6 +452,7 @@ sub get_primary_key {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -485,6 +484,7 @@ sub unset_primary_key {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub set_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -523,6 +523,7 @@ sub set_primary_key {
 #	a second level hash in which each key is the name of the field indexed.
 #      Returns undef if something went wrong.
 #
+#FIXME: Currently not works.
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
@@ -559,6 +560,7 @@ sub get_indexes {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub unset_index {
     my $self  = shift;
     my $param = shift;
@@ -594,6 +596,7 @@ sub unset_index {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
+#FIXME: Currently not works.
 sub set_index {
     my $self  = shift;
     my $param = shift;

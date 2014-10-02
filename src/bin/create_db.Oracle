@@ -1,6 +1,11 @@
 ## ORACLE Database creation script
 
-/Bases/oracle/product/7.3.4.1/bin/sqlplus loginsystem/passwdoracle <<-!
+# Environment variables (NLS_LANG, ORACLE_HOME, ORACLE_SID, ...) have to be
+# set appropriately.
+# You might want to change "loginsystem", "passwordoracle" and tablespaces
+# below according to configuration of database server.
+
+$ORACLE_HOME/bin/sqlplus loginsystem/passwdoracle <<-!
 create user SYMPA identified by SYMPA default tablespace TABLESP
 temporary tablespace TEMP;
  grant create session to SYMPA;
@@ -13,7 +18,7 @@ temporary tablespace TEMP;
  grant resource to SYMPA;
 !
 
-/Bases/oracle/product/7.3.4.1/bin/sqlplus SYMPA/SYMPA <<-!
+$ORACLE_HOME/bin/sqlplus SYMPA/SYMPA <<-!
 
 
 -- --------------------------------------------------------

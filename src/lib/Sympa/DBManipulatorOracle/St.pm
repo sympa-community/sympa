@@ -60,6 +60,43 @@ sub fetchrow_hashref {
     $values;
 }
 
+sub fetchall_arrayref {
+    my $self   = shift;
+    my $allvalues = $self->SUPER::fetchall_arrayref(@_);
+    return undef unless $allvalues;
+
+    if (ref $_[0] eq 'HASH') {
+        foreach my $values (@$allvalues) {
+            foreach my $value (values %$values) {
+                Encode::_utf8_off($value)
+                    if defined $value and Encode::is_utf8($value);
+            }
+        }
+    } else {
+        foreach my $values (@$allvalues) {
+            foreach my $value (@$values) {
+                Encode::_utf8_off($value)
+                    if defined $value and Encode::is_utf8($value);
+            }
+        }
+    }
+    $allvalues;
+}
+
+sub fetchall_hashref {
+    my $self      = shift;
+    my $allvalues = $self->SUPER::fetchall_hashref(@_);
+    return undef unless $allvalues;
+
+    foreach my $values (values %$allvalues) {
+        foreach my $value (values %$values) {
+            Encode::_utf8_off($value)
+                if defined $value and Encode::is_utf8($value);
+        }
+    }
+    $allvalues;
+}
+
 1;
 __END__
 
