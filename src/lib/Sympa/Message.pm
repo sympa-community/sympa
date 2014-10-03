@@ -604,8 +604,7 @@ sub new_from_template {
     if ($list) {
         $self->{envelope_sender} = $list->get_list_address('return_path');
     } else {
-        $self->{envelope_sender} =
-            Conf::get_robot_conf($robot_id, 'request');
+        $self->{envelope_sender} = Conf::get_robot_conf($robot_id, 'request');
     }
 
     # Set default delivery date.
@@ -2628,7 +2627,7 @@ sub _decorate_parts {
 
     if ($type eq 'append') {
         ## append footer/header
-        my ($footer_msg, $header_msg);
+        my ($footer_msg, $header_msg) = ('', '');
         if ($header and -s $header) {
             open HEADER, $header;
             $header_msg = join '', <HEADER>;
@@ -3419,7 +3418,11 @@ sub check_virus_infection {
         }
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             $result .= $_;
             chomp $result;
@@ -3454,7 +3457,11 @@ sub check_virus_infection {
         # Trend Micro
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             if (/Found virus (\S+) /i) {
                 $virusfound = $1;
@@ -3478,9 +3485,14 @@ sub check_virus_infection {
         }
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path,
+        unless (
+            open $pipein, '-|', $antivirus_path,
             '--databasedirectory' => $dbdir,
-            @antivirus_args, $work_dir;
+            @antivirus_args, $work_dir
+            ) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             if (/infection:\s+(.*)/) {
                 $virusfound = $1;
@@ -3495,7 +3507,11 @@ sub check_virus_infection {
         }
     } elsif ($antivirus_path =~ /f-prot\.sh$/) {
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             if (/Infection:\s+(.*)/) {
                 $virusfound = $1;
@@ -3518,7 +3534,11 @@ sub check_virus_infection {
         }
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             if (/infected:\s+(.*)/) {
                 $virusfound = $1;
@@ -3544,7 +3564,11 @@ sub check_virus_infection {
         }
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             if (/Virus\s+(.*)/) {
                 $virusfound = $1;
@@ -3564,7 +3588,11 @@ sub check_virus_infection {
         my $result;
 
         my $pipein;
-        open $pipein, '-|', $antivirus_path, @antivirus_args, $work_dir;
+        unless (open $pipein, '-|', $antivirus_path, @antivirus_args,
+            $work_dir) {
+            Log::do_log('err', 'Cannot open pipe: %m');
+            return undef;
+        }
         while (<$pipein>) {
             $result .= $_;
             chomp $result;
