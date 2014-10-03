@@ -1908,12 +1908,16 @@ sub unmarshal_metadata {
 
     $robot_id = lc($data->{'domainpart'})
         if Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
-    #FIXME: is this always needed?
     ($listname, $type) =
         tools::split_listname($robot_id || '*', $data->{'localpart'});
     if (defined $listname) {
         $list =
             Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1});
+        # Context with unknown list
+        unless ($list) {
+            Log::do_log('err', 'Unknown list %s@%s', $listname, $robot_id);
+            return undef;
+        }
     }
 
     ## Get priority
