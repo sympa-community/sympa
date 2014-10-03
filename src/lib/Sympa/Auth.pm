@@ -552,7 +552,7 @@ sub get_one_time_ticket {
         unless (
             $sth = SDM::do_prepared_query(
                 q{UPDATE one_time_ticket_table
-                  SET status_one_time_ticket = ?,
+                  SET status_one_time_ticket = ?
                   WHERE ticket_one_time_ticket = ? AND
                         robot_one_time_ticket = ?},
                 $addr, $ticket_number, $robot
