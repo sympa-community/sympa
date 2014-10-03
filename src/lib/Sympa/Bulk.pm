@@ -28,7 +28,6 @@ use strict;
 use warnings;
 use Digest::MD5;
 use MIME::Base64 qw();
-use MIME::Parser;
 use Term::ProgressBar;
 use Time::HiRes qw();
 #use constant MAX => 100_000;

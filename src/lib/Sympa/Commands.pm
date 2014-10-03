@@ -26,8 +26,6 @@ package Sympa::Commands;
 
 use strict;
 use warnings;
-use Mail::Address;
-use MIME::Parser;
 
 use Sympa::Archive;
 use Conf;
