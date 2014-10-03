@@ -1272,15 +1272,20 @@ sub purge_logs_table {
 
     my $sth;
     unless (
-        $sth = SDM::do_query(
-            "SELECT date_stat FROM stat_table WHERE read_stat = 0 ORDER BY date_stat ASC LIMIT 1"
+        $sth = SDM::do_prepared_query(
+            q{SELECT date_stat
+              FROM stat_table
+              WHERE read_stat = 0
+              ORDER BY date_stat ASC}
         )
         ) {
         Log::do_log('err', 'Unable to retrieve oldest non processed stat');
         return undef;
     }
     my @res = $sth->fetchrow_array;
-    return unless ($#res >= 0);
+    $sth->finish;    # Fetch only the oldest row.
+
+    return unless @res;
     my $date_deb = $res[0] - ($res[0] % 3600);
 
     #hour to hour
@@ -1926,7 +1931,7 @@ sub process_bouncers {
             ) {
 
             ## Skip included users (cannot be removed)
-            next if $user_ref->{'is_included'}; #FIXME: there is no such key.
+            next if $user_ref->{'is_included'};  #FIXME: there is no such key.
 
             for (my $level = $max_level; ($level >= 1); $level--) {
 
