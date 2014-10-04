@@ -10436,7 +10436,6 @@ sub do_send_me {
         }
         # Decrypt message if possible
         $message->smime_decrypt;
-        # FIXME FIXME: try re-encrypt if needed, and reject request if failed.
 
         # Add or remove several headers.
         # TODO:more headers may be added. cf. Sympa::List::distribute_msg().
@@ -10450,6 +10449,27 @@ sub do_send_me {
         $message->replace_header('Sender', $list->get_list_address('owner'));
         $message->delete_header('Resent-Sender');
         $message->replace_header('X-no-archive', 'yes');
+
+        # Check if re-encryption is possible.
+        if ($message->{'smime_crypted'}) {
+            unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
+                # If encryption failed, send a generic error message:
+                # X509 cert missing.
+                $message = Sympa::Message->new_from_template(
+                    $list,
+                    'x509-user-cert-missing',
+                    $param->{'user'}{'email'},
+                    {   'mail' => {
+                            'sender'  => $message->{sender},
+                            'subject' => $message->{decoded_subject},
+                        },
+                    }
+                );
+            } else {
+                # Otherwise shelve re-encryption with S/MIME.
+                $message->{shelved}{smime_encrypt} = 1;
+            }
+        }
 
         # Overwrite original envelope sender.  It is REQUIRED for delivery.
         $message->{envelope_sender} = $list->get_list_address('return_path');
