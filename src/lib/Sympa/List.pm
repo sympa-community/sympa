@@ -2667,13 +2667,6 @@ sub get_recipients_per_mode {
 
     my $robot = $self->{'domain'};
 
-    my $sender_line = $message->as_entity->head->get('From');
-    my @sender_hdr  = Mail::Address->parse($sender_line);
-    my %sender_hash;
-    foreach my $email (@sender_hdr) {
-        $sender_hash{lc($email->address)} = 1;
-    }
-
     my (@tabrcpt_mail,        @tabrcpt_mail_verp,
         @tabrcpt_notice,      @tabrcpt_notice_verp,
         @tabrcpt_txt,         @tabrcpt_txt_verp,
@@ -2720,6 +2713,11 @@ sub get_recipients_per_mode {
                 $self->restore_suspended_subscription($user->{'email'});
             }
         }
+
+        # Check if "not_me" reception mode is set.
+        next
+            if $user->{'reception'} eq 'not_me'
+                and $message->{sender} eq $user->{'email'};
 
         # Recipients who won't receive encrypted messages.
         if ($user->{'reception'} eq 'digestplain') {
@@ -2794,13 +2792,9 @@ sub get_recipients_per_mode {
             }
         } else {
             if ($user->{'bounce_score'}) {
-                push @tabrcpt_mail_verp, $user->{'email'}
-                    unless ($sender_hash{$user->{'email'}})
-                    && ($user->{'reception'} eq 'not_me');
+                push @tabrcpt_mail_verp, $user->{'email'};
             } else {
-                push @tabrcpt_mail, $user->{'email'}
-                    unless ($sender_hash{$user->{'email'}})
-                    && ($user->{'reception'} eq 'not_me');
+                push @tabrcpt_mail, $user->{'email'};
             }
         }
     }
