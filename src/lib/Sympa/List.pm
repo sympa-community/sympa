@@ -2701,8 +2701,9 @@ sub get_recipients_per_mode {
                 domain => $self->{'domain'},
             }
         );
-        ## test to know if the rcpt suspended her subscription for this list
-        ## if yes, don't send the message
+
+        # test to know if the rcpt suspended her subscription for this list
+        # if yes, don't send the message
         if (    $user_data
             and defined $user_data->{'suspend'}
             and $user_data->{'suspend'} + 0) {
@@ -2719,6 +2720,8 @@ sub get_recipients_per_mode {
                 $self->restore_suspended_subscription($user->{'email'});
             }
         }
+
+        # Recipients who won't receive encrypted messages.
         if ($user->{'reception'} eq 'digestplain') {
             # digest digestplain, nomail and summary reception option are
             # initialized for tracking feature only
@@ -2739,36 +2742,15 @@ sub get_recipients_per_mode {
             } else {
                 push @tabrcpt_notice, $user->{'email'};
             }
-        } elsif ($user->{'reception'} eq 'txt') {
-            if ($user->{'bounce_address'}) {
-                push @tabrcpt_txt_verp, $user->{'email'};
-            } else {
-                push @tabrcpt_txt, $user->{'email'};
-            }
-        } elsif ($user->{'reception'} eq 'html') {
-            if ($user->{'bounce_address'}) {
-                push @tabrcpt_html_verp, $user->{'email'};
-            } else {
-                if ($user->{'bounce_address'}) {
-                    push @tabrcpt_html_verp, $user->{'email'};
-                } else {
-                    push @tabrcpt_html, $user->{'email'};
-                }
-            }
-        } elsif ($user->{'reception'} eq 'urlize') {
-            if ($user->{'bounce_address'}) {
-                push @tabrcpt_urlize_verp, $user->{'email'};
-            } else {
-                push @tabrcpt_urlize, $user->{'email'};
-            }
-        } elsif (
-            $message->{'smime_crypted'}
-            && (!-r $Conf::Conf{'ssl_cert_dir'} . '/'
-                . tools::escape_chars($user->{'email'})
-                && !-r $Conf::Conf{'ssl_cert_dir'} . '/'
-                . tools::escape_chars($user->{'email'} . '@enc'))
-            ) {
-            ## Missing User certificate
+            next;
+        }
+
+        # Message should be re-encrypted, however, user certificate is missing.
+        if ($message->{'smime_crypted'}
+            and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
+            . tools::escape_chars($user->{'email'})
+            and not -r $Conf::Conf{'ssl_cert_dir'} . '/'
+            . tools::escape_chars($user->{'email'} . '@enc')) {
             my $subject = $message->{'decoded_subject'};
             my $sender  = $message->{'sender'};
             unless (
@@ -2787,6 +2769,28 @@ sub get_recipients_per_mode {
                     'Unable to send template "x509-user-cert-missing" to %s',
                     $user->{'email'}
                 );
+            }
+            next;
+        }
+
+        # Otherwise it may be shelved encryption.
+        if ($user->{'reception'} eq 'txt') {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_txt_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_txt, $user->{'email'};
+            }
+        } elsif ($user->{'reception'} eq 'html') {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_html_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_html, $user->{'email'};
+            }
+        } elsif ($user->{'reception'} eq 'urlize') {
+            if ($user->{'bounce_address'}) {
+                push @tabrcpt_urlize_verp, $user->{'email'};
+            } else {
+                push @tabrcpt_urlize, $user->{'email'};
             }
         } else {
             if ($user->{'bounce_score'}) {
