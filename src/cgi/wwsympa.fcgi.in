@@ -10450,6 +10450,10 @@ sub do_send_me {
         $message->delete_header('Resent-Sender');
         $message->replace_header('X-no-archive', 'yes');
 
+        # Shelve personalization.
+        $message->{shelved}{merge} = 1
+            if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+            'on');
         # Check if re-encryption is possible.
         if ($message->{'smime_crypted'}) {
             unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
