@@ -53,7 +53,7 @@ my %fields = (
 
 sub new {
     my $class = shift;
-    my $self  = Marc->new(\%fields);
+    my $self  = Sympa::Marc->new(\%fields);
     bless $self, $class;
     return $self;
 }
