@@ -300,13 +300,12 @@ sub store {
                 'Unable to update session information in database');
             return undef;
         }
-        if ($sth->rows) {
-            my $new_id = $sth->fetchrow;
-            $sth->finish;
-            if ($new_id) {
-                $self->{'prev_id'}    = $self->{'id_session'};
-                $self->{'id_session'} = $new_id;
-            }
+        my $new_id;
+        ($new_id) = $sth->fetchrow_array;
+        $sth->finish;
+        if ($new_id) {
+            $self->{'prev_id'}    = $self->{'id_session'};
+            $self->{'id_session'} = $new_id;
         }
 
         ## Update the new session in the DB
@@ -371,18 +370,16 @@ sub renew {
             $self->{'id_session'});
         return undef;
     }
-
-    if ($sth->rows) {
-        my $new_id = $sth->fetchrow;
-        $sth->finish;
-        if ($new_id) {
-            $self->{'prev_id'}    = $self->{'id_session'};
-            $self->{'id_session'} = $new_id;
-        }
+    my $new_id;
+    ($new_id) = $sth->fetchrow_array;
+    $sth->finish;
+    if ($new_id) {
+        $self->{'prev_id'}    = $self->{'id_session'};
+        $self->{'id_session'} = $new_id;
     }
 
     ## Renew the session ID in order to prevent session hijacking
-    my $new_id = get_random();
+    $new_id = get_random();
 
     ## Do refresh the session ID when remote address was changed or refresh
     ## interval was past.  Conditions also are checked by SQL so that

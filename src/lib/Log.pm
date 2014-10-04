@@ -600,11 +600,10 @@ sub get_first_db_log {
     }
 
     my $log = $sth->fetchrow_hashref('NAME_lc');
-    $rows_nb = $sth->rows;
 
     ## If no rows returned, return an empty hash
     ## Required to differenciate errors and empty results
-    if ($rows_nb == 0) {
+    unless ($log) {
         return {};
     }
 
