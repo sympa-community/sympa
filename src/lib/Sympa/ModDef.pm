@@ -99,7 +99,7 @@ our %cpan_modules = (
             'ODBC database driver, required if you connect to a database via ODBC.',
     },
     'DBD::Oracle' => {
-        required_version => '0.90',
+        required_version => '1.02',
         package_name     => 'DBD-Oracle',
         'gettext_id' =>
             'Oracle database driver, required if you connect to a Oracle database.',
