@@ -1886,9 +1886,13 @@ sub _infer_server_specific_parameter_values {
             $param->{'config_hash'}{'domain'};
     }
 
-    my @dmarc = split /\s*,\s*/,
+    my @dmarc = split /[,\s]+/,
         ($param->{'config_hash'}{'dmarc_protection_mode'} || '');
-    $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
+    if (@dmarc) {
+        $param->{'config_hash'}{'dmarc_protection_mode'} = \@dmarc;
+    } else {
+        delete $param->{'config_hash'}{'dmarc_protection_mode'};
+    }
 
     ## Set Regexp for accepted list suffixes
     if (defined($param->{'config_hash'}{'list_check_suffixes'})) {
@@ -2237,9 +2241,13 @@ sub _load_single_robot_config {
             $robot_conf->{'dkim_signer_domain'} = $robot;
         }
 
-        my @dmarc =
-            split /\s*,\s*/, ($robot_conf->{'dmarc_protection_mode'} || '');
-        $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
+        my @dmarc = split /[,\s]+/,
+            ($robot_conf->{'dmarc_protection_mode'} || '');
+        if (@dmarc) {
+            $robot_conf->{'dmarc_protection_mode'} = \@dmarc;
+        } else {
+            delete $robot_conf->{'dmarc_protection_mode'};
+        }
 
         _set_listmasters_entry({'config_hash' => $robot_conf});
 
@@ -2421,7 +2429,11 @@ sub _load_binary_cache {
 
     my $lock_fh = Sympa::LockedFile->new($param->{'config_file'}, 2, '<');
     unless ($lock_fh) {
-        Log::do_log('err', 'Could not create new lock, error was : %s', Sympa::LockedFile::last_error());
+        Log::do_log(
+            'err',
+            'Could not create new lock, error was : %s',
+            Sympa::LockedFile::last_error()
+        );
         return undef;
     }
 
