@@ -142,10 +142,6 @@ sequence number. Does nothing if no stats.
 Send a message to the list owners telling that someone
 wanted to subscribe to the list.
 
-=item send_msg ( MSG )
-
-Sends the Mail::Internet message to the list.
-
 =item delete_list_member ( ARRAY )
 
 Delete the indicated users from the list.
@@ -1562,6 +1558,7 @@ sub _get_single_param_value {
 # OUT : -$numsmtp : number of sendmail process
 ####################################################
 # Note: This would be moved to Pipeline package.
+# Note: send_msg() has been merged to this method.
 sub distribute_msg {
     Log::do_log('debug2', '(%s)', @_);
     my $message = shift;
@@ -1570,7 +1567,6 @@ sub distribute_msg {
 
     my $self = $message->{context};
 
-    my ($name, $host) = ($self->{'name'}, $self->{'admin'}{'host'});
     my $robot = $self->{'domain'};
 
     ## Update the stats, and returns the new X-Sequence, if any.
@@ -1762,11 +1758,11 @@ sub distribute_msg {
                     if ($newComment and $newComment =~ /\S/) {
                         $newComment = $language->gettext_sprintf(
                             '%s via %s Mailing List',
-                            $newComment, $name);
+                            $newComment, $self->{'name'});
                     } else {
                         $newComment =
                             $language->gettext_sprintf('via %s Mailing List',
-                            $name);
+                            $self->{'name'});
                     }
                 }
                 $message->add_header('Reply-To', $addresses[0]->address)
@@ -2058,11 +2054,204 @@ sub distribute_msg {
         $self->on_the_fly_sync_include('use_ttl' => 1);
     }
 
-    ## Blindly send the message to all users.
-    my $numsmtp = send_msg($message);
+    ##
+    ## Below is the code of former send_msg().
+    ##
 
-    $self->savestats() if (defined($numsmtp));
-    return $numsmtp;
+    ## Blindly send the message to all users.
+
+    my $total               = $self->get_total('nocache');
+
+    unless ($total > 0) {
+        Log::do_log('info', 'No subscriber in list %s', $self);
+        $self->savestats;
+        return 0;
+    }
+
+    ## Bounce rate
+    my $rate = $self->get_total_bouncing() * 100 / $total;
+    if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
+        $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
+    }
+
+    #save the message before modifying it
+    my $nbr_smtp = 0;
+
+    # prepare verp parameter
+    my $verp_rate = $self->{'admin'}{'verp_rate'};
+    # force VERP if tracking is requested.
+    $verp_rate = '100%'
+        if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
+        qr/dsn|mdn/);
+
+    my $xsequence = $self->{'stats'}->[0];
+    my $tags_to_use;
+
+    # Define messages which can be tagged as first or last according to the
+    # VERP rate.
+    # If the VERP is 100%, then all the messages are VERP. Don't try to tag
+    # not VERP
+    # messages as they won't even exist.
+    if ($verp_rate eq '0%') {
+        $tags_to_use->{'tag_verp'}   = 0;
+        $tags_to_use->{'tag_noverp'} = 1;
+    } else {
+        $tags_to_use->{'tag_verp'}   = 1;
+        $tags_to_use->{'tag_noverp'} = 0;
+    }
+
+    # Separate subscribers depending on user reception option and also if VERP
+    # a dicovered some bounce for them.
+    # Storing the not empty subscribers' arrays into a hash.
+    my $available_recipients = $self->get_recipients_per_mode($message);
+    unless ($available_recipients) {
+        Log::do_log('info', 'No subscriber for sending msg in list %s',
+            $self);
+        $self->savestats;
+        return 0;
+    }
+
+    foreach my $mode (sort keys %$available_recipients) {
+        my $new_message = $message->dup;
+        unless ($new_message->prepare_message_according_to_mode($mode, $self))
+        {
+            Log::do_log('err', "Failed to create Message object");
+            return undef;
+        }
+
+        ## TOPICS
+        my @selected_tabrcpt;
+        my @possible_verptabrcpt;
+        if ($self->is_there_msg_topic()) {
+            @selected_tabrcpt =
+                $self->select_list_members_for_topic(
+                $new_message->get_topic(),
+                $available_recipients->{$mode}{'noverp'} || []);
+            @possible_verptabrcpt =
+                $self->select_list_members_for_topic(
+                $new_message->get_topic(),
+                $available_recipients->{$mode}{'verp'} || []);
+        } else {
+            @selected_tabrcpt =
+                @{$available_recipients->{$mode}{'noverp'} || []};
+            @possible_verptabrcpt =
+                @{$available_recipients->{$mode}{'verp'} || []};
+        }
+
+        ## Preparing VERP recipients.
+        my @verp_selected_tabrcpt =
+            extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
+            \@possible_verptabrcpt);
+
+        # Prepare non-VERP sending.
+        if (@selected_tabrcpt) {
+            my $result =
+                _mail_message($new_message, \@selected_tabrcpt,
+                'tag_as_last' => $tags_to_use->{'tag_noverp'});
+            unless (defined $result) {
+                Log::do_log(
+                    'err',
+                    'Could not send message to distribute to list %s (VERP disabled)', $self
+                );
+                return undef;
+            }
+            $tags_to_use->{'tag_noverp'} = 0 if $result;
+            $nbr_smtp++;
+        } else {
+            Log::do_log(
+                'notice',
+                'No non VERP subscribers left to distribute message to list %s',
+                $self
+            );
+        }
+
+        $new_message->{shelved}{tracking} ||= 'verp';
+
+        if ($new_message->{shelved}{tracking} =~ /dsn|mdn/) {
+            Sympa::Tracking::db_init_notification_table(
+                'listname' => $self->{'name'},
+                'robot'    => $robot,
+                # what ever the message is transformed because of the
+                # reception option, tracking use the original message id
+                'msgid'            => $new_message->{message_id},
+                'rcpt'             => \@verp_selected_tabrcpt,
+                'reception_option' => $mode,
+            );
+
+        }
+
+        # Ignore those reception option where mail must not ne sent.
+        next
+            if $mode eq 'digest'
+                or $mode eq 'digestlplain'
+                or $mode eq 'summary'
+                or $mode eq 'nomail';
+
+        ## prepare VERP sending.
+        if (@verp_selected_tabrcpt) {
+            my $result =
+                _mail_message($new_message, \@verp_selected_tabrcpt,
+                'tag_as_last' => $tags_to_use->{'tag_verp'});
+            unless (defined $result) {
+                Log::do_log(
+                    'err',
+                    'Could not send message to distribute to list %s (VERP enabled)',
+                    $self
+                );
+                return undef;
+            }
+            $tags_to_use->{'tag_verp'} = 0 if $result;
+            $nbr_smtp++;
+        } else {
+            Log::do_log(
+                'notice',
+                'No VERP subscribers left to distribute message to list %s',
+                $self
+            );
+        }
+    }
+
+    $self->savestats;
+    return $nbr_smtp;
+}
+
+# distribute a message to a list, Crypting if needed
+#
+# IN : -$message(+) : ref(Sympa::Message)
+#      -\@rcpt(+) : recepients
+# OUT : -$numsmtp : number of sendmail process | undef
+#
+# Old name: Sympa::Mail::mail_message()
+# Note: Now this is a subroutine of distribute_msg() and it would be moved to
+# Pipeline package.
+sub _mail_message {
+    Log::do_log('debug2', '(%s, %s, %s => %s)', @_);
+    my $message = shift;
+    my $rcpt    = shift;
+    my %params  = @_;
+
+    my $tag_as_last = $params{'tag_as_last'};
+
+    my $list = $message->{context};
+
+    # Shelve personalization.
+    $message->{shelved}{merge} = 1
+        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+        'on');
+    # Shelve re-encryption with S/MIME.
+    $message->{shelved}{smime_encrypt} = 1
+        if $message->{'smime_crypted'};
+
+    # if not specified, delivery time is right now (used for sympa messages
+    # etc.)
+    my $delivery_date = $list->get_next_delivery_date;
+    $message->{'date'} = $delivery_date if defined $delivery_date;
+
+    # Overwrite original envelope sender.  It is REQUIRED for delivery.
+    $message->{envelope_sender} = $list->get_list_address('return_path');
+
+    return Sympa::Bulk::store($message, $rcpt, tag_as_last => $tag_as_last)
+        || undef;
 }
 
 ####################################################
@@ -2431,234 +2620,8 @@ sub send_dsn {
 #MOVED: Use tools::send_file() or Sympa::List::send_probe_to_user().
 # sub send_file($self, $tpl, $who, $robot, $context);
 
-####################################################
-# send_msg
-####################################################
-# selects subscribers according to their reception
-# mode in order to distribute a message to a list
-# and sends the message to them. For subscribers in reception mode 'mail',
-# and in a msg topic context, selects only one who are subscribed to the topic
-# of the message.
-#
-#
-# IN : -$self (+): ref(List)
-#      -$message (+): ref(Message), possiblly {shelved}{dkim_sign} flag set.
-# OUT : -$numsmtp : number of sendmail process
-#       | 0 : no subscriber for sending message in list
-#       | undef
-####################################################
-# Note: this would be moved to Pipeline package.
-sub send_msg {
-    Log::do_log('debug2', '(%s, %s => %s, %s => %s)', @_);
-    my $message = shift;
-    my %param   = @_;
-
-    my $self = $message->{context};
-
-    my $original_message_id = $message->{'message_id'};
-    my $robot               = $self->{'domain'};
-    my $admin               = $self->{'admin'};
-    my $total               = $self->get_total('nocache');
-
-    unless (ref $message eq 'Sympa::Message') {
-        die 'Invalid message paramater';
-    }
-
-    unless ($total > 0) {
-        Log::do_log('info', 'No subscriber in list %s', $self);
-        return 0;
-    }
-
-    ## Bounce rate
-    my $rate = $self->get_total_bouncing() * 100 / $total;
-    if ($rate > $self->{'admin'}{'bounce'}{'warn_rate'}) {
-        $self->send_notify_to_owner('bounce_rate', {'rate' => $rate});
-    }
-
-    ## Who is the enveloppe sender?
-    my $host = $self->{'admin'}{'host'};
-    my $from = $self->get_list_address('return_path');
-
-    #save the message before modifying it
-    my $nbr_smtp = 0;
-    my $nbr_verp = 0;
-
-    # prepare verp parameter
-    my $verp_rate = $self->{'admin'}{'verp_rate'};
-    # force VERP if tracking is requested.
-    $verp_rate = '100%'
-        if Sympa::Tools::Data::smart_eq($message->{shelved}{tracking},
-        qr/dsn|mdn/);
-
-    my $xsequence = $self->{'stats'}->[0];
-    my $tags_to_use;
-
-    # Define messages which can be tagged as first or last according to the
-    # VERP rate.
-    # If the VERP is 100%, then all the messages are VERP. Don't try to tag
-    # not VERP
-    # messages as they won't even exist.
-    if ($verp_rate eq '0%') {
-        $tags_to_use->{'tag_verp'}   = 0;
-        $tags_to_use->{'tag_noverp'} = 1;
-    } else {
-        $tags_to_use->{'tag_verp'}   = 1;
-        $tags_to_use->{'tag_noverp'} = 0;
-    }
-
-    # Separate subscribers depending on user reception option and also if VERP
-    # a dicovered some bounce for them.
-    # Storing the not empty subscribers' arrays into a hash.
-    my $available_recipients = $self->get_recipients_per_mode($message);
-    unless ($available_recipients) {
-        Log::do_log('info', 'No subscriber for sending msg in list %s',
-            $self);
-        return 0;
-    }
-
-    foreach my $mode (sort keys %$available_recipients) {
-        my $new_message = $message->dup;
-        unless ($new_message->prepare_message_according_to_mode($mode, $self))
-        {
-            Log::do_log('err', "Failed to create Message object");
-            return undef;
-        }
-
-        ## TOPICS
-        my @selected_tabrcpt;
-        my @possible_verptabrcpt;
-        if ($self->is_there_msg_topic()) {
-            @selected_tabrcpt =
-                $self->select_list_members_for_topic(
-                $new_message->get_topic(),
-                $available_recipients->{$mode}{'noverp'} || []);
-            @possible_verptabrcpt =
-                $self->select_list_members_for_topic(
-                $new_message->get_topic(),
-                $available_recipients->{$mode}{'verp'} || []);
-        } else {
-            @selected_tabrcpt =
-                @{$available_recipients->{$mode}{'noverp'} || []};
-            @possible_verptabrcpt =
-                @{$available_recipients->{$mode}{'verp'} || []};
-        }
-
-        ## Preparing VERP recipients.
-        my @verp_selected_tabrcpt =
-            extract_verp_rcpt($verp_rate, $xsequence, \@selected_tabrcpt,
-            \@possible_verptabrcpt);
-
-        if ($#selected_tabrcpt > -1) {
-            my $result =
-                _mail_message($new_message, \@selected_tabrcpt,
-                'tag_as_last' => $tags_to_use->{'tag_noverp'});
-            unless (defined $result) {
-                Log::do_log(
-                    'err',
-                    'Could not send message to distribute from %s (VERP disabled)',
-                    $from
-                );
-                return undef;
-            }
-            $tags_to_use->{'tag_noverp'} = 0 if $result;
-            $nbr_smtp++;
-        } else {
-            Log::do_log(
-                'notice',
-                'No non VERP subscribers left to distribute message from %s to list %s',
-                $from,
-                $self->{'name'}
-            );
-        }
-
-        $new_message->{shelved}{tracking} ||= 'verp';
-
-        if ($new_message->{shelved}{tracking} =~ /dsn|mdn/) {
-            Sympa::Tracking::db_init_notification_table(
-                'listname' => $self->{'name'},
-                'robot'    => $robot,
-                # what ever the message is transformed because of the
-                # reception option, tracking use the original message id
-                'msgid'            => $original_message_id,
-                'rcpt'             => \@verp_selected_tabrcpt,
-                'reception_option' => $mode,
-            );
-
-        }
-
-        # Ignore those reception option where mail must not ne sent.
-        next
-            if $mode eq 'digest'
-                or $mode eq 'digestlplain'
-                or $mode eq 'summary'
-                or $mode eq 'nomail';
-
-        ## prepare VERP sending.
-        if (@verp_selected_tabrcpt) {
-            my $result =
-                _mail_message($new_message, \@verp_selected_tabrcpt,
-                'tag_as_last' => $tags_to_use->{'tag_verp'});
-            unless (defined $result) {
-                Log::do_log(
-                    'err',
-                    'Could not send message to distribute from %s (VERP enabled)',
-                    $from
-                );
-                return undef;
-            }
-            $tags_to_use->{'tag_verp'} = 0 if $result;
-            $nbr_smtp++;
-            $nbr_verp++;
-        } else {
-            Log::do_log(
-                'notice',
-                'No VERP subscribers left to distribute message from %s to list %s',
-                $from,
-                $self->{'name'}
-            );
-        }
-    }
-    return $nbr_smtp;
-}
-
-# distribute a message to a list, Crypting if needed
-#
-# IN : -$message(+) : ref(Sympa::Message)
-#      -\@rcpt(+) : recepients
-# OUT : -$numsmtp : number of sendmail process | undef
-#
-# Old name: Sympa::Mail::mail_message()
-# Note: Now this is a subroutine of send_msg() and it would be moved to
-# Pipeline package.
-sub _mail_message {
-    Log::do_log('debug2', '(%s, %s, %s => %s)', @_);
-    my $message = shift;
-    my $rcpt    = shift;
-    my %params  = @_;
-
-    my $tag_as_last = $params{'tag_as_last'};
-
-    my $list = $message->{context};
-
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
-        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
-    # Shelve re-encryption with S/MIME.
-    $message->{shelved}{smime_encrypt} = 1
-        if $message->{'smime_crypted'};
-
-    # if not specified, delivery time is right now (used for sympa messages
-    # etc.)
-    my $delivery_date = $list->get_next_delivery_date;
-    $message->{'date'} = $delivery_date if defined $delivery_date;
-
-    # Overwrite original envelope sender.  It is REQUIRED for delivery.
-    $message->{envelope_sender} = $list->get_list_address('return_path');
-
-    return Sympa::Bulk::store($message, $rcpt, tag_as_last => $tag_as_last)
-        || undef;
-}
+#DEPRECATED: Merged to List::distribute_msg().
+# sub send_msg($message);
 
 sub get_recipients_per_mode {
     my $self    = shift;

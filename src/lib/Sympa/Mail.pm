@@ -66,7 +66,7 @@ our $log_smtp;           # SMTP logging is enabled or not
 ##DEPRECATED: Use Sympa::Message->new_from_template() & sending().
 
 #sub mail_message($message, $rcpt, [tag_as_last => 1]);
-# DEPRECATED: this is now a subroutine of Sympa::List::send_msg().
+# DEPRECATED: this is now a subroutine of Sympa::List::distribute_msg().
 
 #sub mail_forward($message, $from, $rcpt, $robot);
 #DEPRECATED: This is no longer used.
