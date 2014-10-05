@@ -22325,12 +22325,20 @@ sub do_send_mail {
     # - Message bound for list will be injected into incoming spool directly.
     #   In this case message will have "md5" authentication level.
     # - Message bound for user will be injected into bulk spool.
-    if ($in{'sub_action'} eq 'sendmailtome') {
-        #FIXME: envelope sender would be sympa-request address, isn't it?
-        $message->{envelope_sender} = Conf::get_robot_conf($robot, 'sympa');
-        $message->{priority} = Conf::get_robot_conf($robot, 'sympa_priority');
+    #FIXME: Check destinations: they should be list, original sender, user or
+    # other_email.
+    my @to_list = grep { $_ eq $list->get_list_address } split /\s*,\s*/, $to;
+    my @to_user =
+        grep { $_ and $_ ne $list->get_list_address } split /\s*,\s*/, $to;
 
-        unless (defined Sympa::Bulk::store($message, $to)) {
+    if (@to_user) {
+        my $u_message = $message->dup;
+        #FIXME: envelope sender would be sympa-request address, isn't it?
+        $u_message->{envelope_sender} = Conf::get_robot_conf($robot, 'sympa');
+        $u_message->{priority} =
+            Conf::get_robot_conf($robot, 'sympa_priority');
+
+        unless (defined Sympa::Bulk::store($u_message, [@to_user])) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_send_mail',
@@ -22359,14 +22367,17 @@ sub do_send_mail {
             );
             return undef;
         }
-    } elsif ($in{'sub_action'} eq 'sendmailtolist') {
-        $message->{envelope_sender} = $param->{'user'}{'email'};
-        $message->{sender}          = $param->{'user'}{'email'};
-        $message->{md5_check}       = 1;
+    }
+    #FIXME: Check privileges.
+    if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
+        my $l_message = $message->dup;
+        $l_message->{envelope_sender} = $param->{'user'}{'email'};
+        $l_message->{sender}          = $param->{'user'}{'email'};
+        $l_message->{md5_check}       = 1;
 
         unless (
             tools::store_spool(
-                $Conf::Conf{'queue'}, $message, '%s@%s.%ld.%ld,%d',
+                $Conf::Conf{'queue'}, $l_message, '%s@%s.%ld.%ld,%d',
                 [qw(localpart domainpart TIME PID RAND)]
             )
             ) {
@@ -22383,11 +22394,12 @@ sub do_send_mail {
             );
             wwslog('err', 'Failed to send message for list %s', $list);
             web_db_log(
-                {   'parameters' => $to,
+                {   'parameters' => join(',', @to_list),
                     'status'     => 'error',
                     'error_type' => 'internal'
                 }
             );
+            return undef;
         }
     }
 
