@@ -52,7 +52,9 @@ BEGIN {
 our %lock_of;
 our $last_error;
 my $default_timeout    = 30;
-my $stale_lock_timeout = 20 * 60;    # TODO should become a config parameter
+my $stale_lock_timeout = 20 * 60;    # TODO might become a config parameter
+
+sub last_error { $last_error; }
 
 sub open {
     my $self             = shift;
@@ -96,8 +98,6 @@ sub open {
     return 1;
 }
 
-sub last_error { $last_error; }
-
 sub close {
     my $self = shift;
 
@@ -113,6 +113,47 @@ sub close {
     $lock_of{$self + 0}->unlock;    # make sure unlock to occur immediately.
     delete $lock_of{$self + 0};     # lock object will be destructed.
     return $ret;
+}
+
+sub extend {
+    my $self = shift;
+
+    die 'Lock not fould' unless exists $lock_of{$self + 0};
+
+    undef $last_error;
+    unless (utime undef, undef, $lock_of{$self + 0}->{lock_file}) {
+        $last_error = $ERRNO;
+        return undef;
+    }
+
+    return 1;
+}
+
+sub rename {
+    my $self     = shift;
+    my $destfile = shift;
+
+    die 'Lock not found' unless exists $lock_of{$self + 0};
+
+    undef $last_error;
+    my $lock = $lock_of{$self + 0};
+
+    unless ($lock->{lock_type} & File::NFSLock::LOCK_EX()) {
+        $last_error = 'Not the exclusive lock';
+        return undef;
+    }
+
+    my $dest = (ref $self)->new($destfile, -1, '+') or return undef;
+    unless (rename $lock->{file}, $destfile) {
+        my $error = $ERRNO;
+        $dest->close;
+        $last_error = $error;
+        return undef;
+    }
+    $self->close;
+    $dest->close;
+
+    return 1;
 }
 
 sub unlink {
@@ -135,7 +176,7 @@ sub unlink {
 # Corresponding filehandle will be closed automatically.
 sub DESTROY {
     my $self = shift;
-    delete $lock_of{$self + 0};     # lock object will be destructed.
+    delete $lock_of{$self + 0};    # lock object will be destructed.
 }
 
 1;
@@ -171,11 +212,11 @@ Sympa::LockedFile - Filehandle with locking
 
 This class implements a filehadle with locking.
 
-=head2 Class Method
+=head2 Class Methods
 
 =over
 
-=item Sympa::LockedFile->new ( [ $file, [ $blocking_timeout, [ $mode ] ] ] )
+=item new ( [ $file, [ $blocking_timeout, [ $mode ] ] ] )
 
 Creates new object.
 If any of optional parameters are specified, opens a file acquiring lock.
@@ -188,7 +229,7 @@ Returns:
 
 New object or, if something went wrong, false value.
 
-=item Sympa::LockedFile->last_error ( )
+=item last_error ( )
 
 Get a string describing the most recent error.
 
@@ -208,7 +249,7 @@ Instances of L<Sympa::LockedFile> support the methods provided by L<IO::File>.
 
 =over
 
-=item $fh->open ( $file, [ $blocking_timeout, [ $mode ] ] )
+=item open ( $file, [ $blocking_timeout, [ $mode ] ] )
 
 Opens a file specified by $file acquiring lock.
 
@@ -259,7 +300,7 @@ In both cases returns false value.
 
 =over
 
-=item $fh->close ( )
+=item close ( )
 
 Closes filehandle and releases lock on it.
 
@@ -274,7 +315,52 @@ If close succeeded, returns true value, otherwise false value.
 If filehandle had not been locked by current process,
 this method will safely close it and die.
 
-=item $fh->unlink ( )
+=back
+
+Following methods are specific to this module.
+
+=over
+
+=item extend ( )
+
+Extends stale lock timeout.
+The lock will never be stolen in 1200 seconds again.
+
+Parameters:
+
+None.
+
+Returns:
+
+If extension succeeded, returns true value, otherwise false value.
+
+If filehandle had not been locked by current process,
+this method will die doing nothing.
+
+=item rename ( $destfile )
+
+Renames file, closes filehandle and releases lock on it.
+Filehandle must have acquired exclusive lock.
+
+Parameter:
+
+=over
+
+=item $destfile
+
+Destination path of renaming.
+
+=back
+
+Returns:
+
+If renaming succeeded, returns true value, otherwise false value
+and does not release lock.
+
+If filehandle had not been locked by current process,
+this method will die doing nothing.
+
+=item unlink ( )
 
 Deletes file and releases lock on it.
 
@@ -284,7 +370,7 @@ None.
 
 Returns:
 
-If unlink sucessded, returns true value, otherwise false value and
+If unlink succeeded, returns true value, otherwise false value and
 does not release lock.
 
 If filehandle had not been locked by current process,
