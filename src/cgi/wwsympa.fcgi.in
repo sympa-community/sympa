@@ -22085,28 +22085,28 @@ sub do_send_mail {
                 );
                 return undef;
             }
-            unless ($param->{'may_post'}) {
-                Sympa::Report::reject_report_web('auth',
-                    $param->{'may_post_reason'},
-                    {}, $param->{'action'}, $list);
-                wwslog('info', 'May not send message');
-                web_db_log(
-                    {   'robot'        => $robot,
-                        'list'         => $list->{'name'},
-                        'action'       => $param->{'action'},
-                        'parameters'   => "",
-                        'target_email' => "",
-                        'msg_id'       => '',
-                        'status'       => 'error',
-                        'error_type'   => 'authorization',
-                        'user_email'   => $param->{'user'}{'email'},
-                        'client'       => $ip,
-                        'daemon'       => $daemon_name
-                    }
-                );
-                return undef;
-            }
             $to = $list->get_list_address();
+        }
+        unless ($param->{'may_post'}) {
+            Sympa::Report::reject_report_web('auth',
+                $param->{'may_post_reason'},
+                {}, $param->{'action'}, $list);
+            wwslog('info', 'May not send message');
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => "",
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'authorization',
+                    'user_email'   => $param->{'user'}{'email'},
+                    'client'       => $ip,
+                    'daemon'       => $daemon_name
+                }
+            );
+            return undef;
         }
     }
 
@@ -22368,7 +22368,7 @@ sub do_send_mail {
             return undef;
         }
     }
-    #FIXME: Check privileges.
+
     if (@to_list and $in{'sub_action'} eq 'sendmailtolist') {
         my $l_message = $message->dup;
         $l_message->{envelope_sender} = $param->{'user'}{'email'};
