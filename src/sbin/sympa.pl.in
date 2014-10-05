@@ -1461,11 +1461,22 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             ## Don't process temporary files created by queue (T.xxx)
             next if ($t_filename =~ /^T\./);
 
-            my $t_metadata = tools::unmarshal_metadata(
-                $t_spool, $t_filename,
-                qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
-                [qw(localpart domainpart date)]
-            );
+            my $t_metadata;
+            if ($main::daemon_usage == Conf::DAEMON_CREATION) {
+                $t_metadata = tools::unmarshal_metadata(
+                    $t_spool,
+                    $t_filename,
+                    qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+                    [qw(automatic_listname domainpart date)]
+                );
+            } else {
+                $t_metadata = tools::unmarshal_metadata(
+                    $t_spool,
+                    $t_filename,
+                    qr{\A([^\s\@]+)(?:\@([\w\.\-]+))?\.(\d+)\.\w+(?:,.*)?\z},
+                    [qw(localpart domainpart date)]
+                );
+            }
             next unless $t_metadata;
 
             if (ord($t_metadata->{'priority'}) < ord($highest_priority)) {
@@ -1688,7 +1699,9 @@ sub process_message {
         (ref $message->{context} eq 'Sympa::List')
         ? $message->{context}->{'domain'}
         : $message->{context};
-    my $listname = $message->{'listname'};
+    my $listname           = $message->{'listname'};
+    my $automatic_listname = $message->{'automatic_listname'}
+        if $main::daemon_usage == Conf::DAEMON_CREATION();
 
     ## Ignoring messages with no sender
     my $sender = $message->{'sender'};
@@ -1795,19 +1808,22 @@ sub process_message {
         $list = $message->{context};
         unless (ref $list eq 'Sympa::List') {
             unless ($dyn_list_family) {
-                Log::do_log('err', 'List %s does not exist', $listname);
+                Log::do_log('err', 'List %s does not exist',
+                    $automatic_listname);
                 Sympa::Report::reject_report_msg(
                     'user',
                     'list_unknown',
                     $sender,
-                    {'listname' => $listname, 'message' => $message},
+                    {   'listname' => $automatic_listname,
+                        'message'  => $message
+                    },
                     $robot,
                     $message->as_string,
                     ''
                 );
                 Log::db_log(
                     {   'robot'        => $robot,
-                        'list'         => $listname,
+                        'list'         => $automatic_listname,
                         'action'       => 'process_message',
                         'parameters'   => "",
                         'target_email' => "",
@@ -1845,7 +1861,9 @@ sub process_message {
                     'user',
                     'list_unknown',
                     $sender,
-                    {'listname' => $listname, 'message' => $message},
+                    {   'listname' => $automatic_listname,
+                        'message'  => $message
+                    },
                     $robot,
                     $message->as_string,
                     ''
@@ -1859,22 +1877,24 @@ sub process_message {
                 : $message->{'dkim_pass'}    ? 'dkim'
                 :                              'smtp';
             if ($list = $dyn_family->create_automatic_list(
-                    (   'listname'   => $listname,
+                    (   'listname'   => $automatic_listname,
                         'auth_level' => $auth_level,
                         'sender'     => $sender,
                         'message'    => $message
                     )
                 )
                 ) {
+                # Overwrite context of the message.
+                $message->{context} = $list;
                 $dyn_just_created = 1;
             } else {
                 Log::do_log('err',
                     'Unable to create list %s. Message %s ignored',
-                    $listname, $message);
+                    $automatic_listname, $message);
                 tools::send_notify_to_listmaster(
                     $dyn_family->{'robot'},
                     'automatic_list_creation_failed',
-                    {   'listname' => $listname,
+                    {   'listname' => $automatic_listname,
                         'family'   => $dyn_list_family,
                         'robot'    => $robot,
                         'msg_id'   => $msg_id,
@@ -1885,14 +1905,16 @@ sub process_message {
                     'user',
                     'dyn_cant_create',
                     $sender,
-                    {'listname' => $listname, 'message' => $message},
+                    {   'listname' => $automatic_listname,
+                        'message'  => $message
+                    },
                     $robot,
                     $message->as_string,
                     ''
                 );
                 Log::db_log(
                     {   'robot'      => $dyn_family->{'robot'},
-                        'list'       => $listname,
+                        'list'       => $automatic_listname,
                         'action'     => 'process_message',
                         'parameters' => $msg_id . ","
                             . $dyn_family->{'robot'},
@@ -2060,21 +2082,21 @@ sub process_message {
                 Log::do_log(
                     'err',
                     'Failed to synchronize list members of dynamic list %s from %s family',
-                    $listname,
+                    $list,
                     $dyn_list_family
                 );
                 Sympa::Report::reject_report_msg(
                     'user',
                     'dyn_cant_create',
                     $sender,
-                    {'listname' => $listname, 'message' => $message},
+                    {'listname' => $list->{'name'}, 'message' => $message},
                     $robot,
                     $message->as_string,
                     ''
                 );
                 Log::db_log(
                     {   'robot'        => $robot,
-                        'list'         => $listname,
+                        'list'         => $list->{'name'},
                         'action'       => 'process_message',
                         'parameters'   => "",
                         'target_email' => "",
@@ -2099,7 +2121,7 @@ sub process_message {
                         Log::do_log(
                             'err',
                             'La liste a été trouvée dans la list_of_lists',
-                            $listname,
+                            $list,
                             $dyn_list_family
                         );
                     }
@@ -2109,14 +2131,15 @@ sub process_message {
             unless ($list->get_total() > 0) {
                 Log::do_log('err',
                     'Dynamic list %s from %s family has ZERO subscribers',
-                    $listname, $dyn_list_family);
+                    $list, $dyn_list_family);
                 Sympa::Report::reject_report_msg(
                     'user',
                     'list_unknown',
                     $sender,
-                    {   'listname' => $listname,
-                        'list'     => {'name' => $listname, 'host' => $robot},
-                        'message'  => $message
+                    {   'listname' => $list->{'name'},
+                        'list' =>
+                            {'name' => $list->{'name'}, 'host' => $robot},
+                        'message' => $message
                     },
                     $robot,
                     $message->as_string,
@@ -2124,7 +2147,7 @@ sub process_message {
                 );
                 Log::db_log(
                     {   'robot'        => $robot,
-                        'list'         => $listname,
+                        'list'         => $list->{'name'},
                         'action'       => 'process_message',
                         'parameters'   => "",
                         'target_email' => "",
@@ -2149,7 +2172,7 @@ sub process_message {
                         Log::do_log(
                             'err',
                             'La liste a été trouvée dans la list_of_lists',
-                            $listname,
+                            $list,
                             $dyn_list_family
                         );
                     }
@@ -2158,7 +2181,7 @@ sub process_message {
             }
             Log::do_log('info',
                 'Successfully create list %s with %s subscribers',
-                $listname, $list->get_total());
+                $list, $list->get_total());
         }
     }
 
@@ -2171,22 +2194,32 @@ sub process_message {
             Log::do_log(
                 'err',
                 'Unable to move in spool for processing message to list %s (daemon_usage = creation)',
-                $listname
+                $list
             );
             Sympa::Report::reject_report_msg('intern', '', $sender,
                 {'msg_id' => $msg_id, 'message' => $message},
                 $robot, $message->as_string, $list);
             return undef;
         }
-        Log::do_log(
-            'info',
-            ($dyn_just_created ? 'After automatic list creation, ' : '')
-                . 'Message for %s from %s moved in spool %s for processing message-id=%s',
-            $listname,
-            $sender,
-            $Conf::Conf{'queue'},
-            $msg_id
-        );
+        if ($dyn_just_created) {
+            Log::do_log(
+                'info',
+                'After automatic list creation, Message for %s from %s moved in spool %s for processing message-id=%s',
+                $list,
+                $sender,
+                $Conf::Conf{'queue'},
+                $msg_id
+            );
+        } else {
+            Log::do_log(
+                'info',
+                'Message for %s from %s moved in spool %s for processing message-id=%s',
+                $list,
+                $sender,
+                $Conf::Conf{'queue'},
+                $msg_id
+            );
+        }
         $status = 1;
 
     } elsif ($type eq 'listmaster') {
