@@ -422,15 +422,18 @@ sub get_primary_key {
 
     my %found_keys;
     my $sth;
-    unless ($sth = $self->do_prepared_query(
-        q{SELECT cols.column_name
-          FROM all_cons_columns cols, all_constraints cons
-          WHERE cons.constraint_type = 'P' AND
-                cols.constraint_name = cons.constraint_name AND
-                cols.owner = cons.owner AND
-                cols.table_name = cons.table_name AND
-                cons.table_name = ?},
-        uc($param->{'table'}))) {
+    unless (
+        $sth = $self->do_prepared_query(
+            q{SELECT cols.column_name
+              FROM all_cons_columns cols, all_constraints cons
+              WHERE cons.constraint_type = 'P' AND
+                    cols.constraint_name = cons.constraint_name AND
+                    cols.owner = cons.owner AND
+                    cols.table_name = cons.table_name AND
+                    cons.table_name = ?},
+            uc($param->{'table'})
+        )
+        ) {
         Log::do_log('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -452,17 +455,22 @@ sub get_primary_key {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
-#FIXME: Currently not works.
+# Currently not work
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
     Log::do_log('debug', 'Removing primary key from table %s',
         $param->{'table'});
 
+    return undef;    # Currently disabled.
+
     my $sth;
-    unless ($sth =
-        $self->do_query("ALTER TABLE %s DROP PRIMARY KEY", $param->{'table'}))
-    {
+    unless (
+        $sth = $self->do_query(
+            q{ALTER TABLE %s
+              DROP PRIMARY KEY CASCADE}, $param->{'table'}
+        )
+        ) {
         Log::do_log('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -484,7 +492,7 @@ sub unset_primary_key {
 # OUT: A character string report of the operation done or undef if something
 # went wrong.
 #
-#FIXME: Currently not works.
+# Currently not work
 sub set_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -493,10 +501,17 @@ sub set_primary_key {
     my $fields = join ',', @{$param->{'fields'}};
     Log::do_log('debug', 'Setting primary key for table %s (%s)',
         $param->{'table'}, $fields);
+    my $pkname = $param->{'table'};
+    $pkname =~ s/_table\z//;
+    $pkname = "ind_$pkname";
+
+    return undef;    # Currently disabled.
+
     unless (
         $sth = $self->do_query(
-            "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
-            $fields
+            q{ALTER TABLE %s
+              ADD CONSTRAINT %s PRIMARY KEY (%s)}, $param->{'table'},
+            $pkname,                               $fields
         )
         ) {
         Log::do_log(

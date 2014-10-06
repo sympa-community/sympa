@@ -353,6 +353,13 @@ sub check_fields {
     my $may_update = $update_db_field_types eq 'auto'
         && ($db_type eq 'mysql' || $db_type eq 'Pg' || $db_type eq 'SQLite');
 
+    #FIXME:
+    return 1
+        unless $db_type eq 'mysql'
+            or $db_type eq 'Pg'
+            or $db_type eq 'SQLite'
+            or $db_type eq 'Oracle';
+
     foreach my $f (sort keys %{$db_struct{$db_type}{$t}}) {
         unless ($real_struct{$t}{$f}) {
             push @{$report_ref},
@@ -466,7 +473,8 @@ sub check_primary_key {
     return 1
         unless $db_type eq 'mysql'
             or $db_type eq 'Pg'
-            or $db_type eq 'SQLite';
+            or $db_type eq 'SQLite'
+            or $db_type eq 'Oracle';
 
     my $list_of_keys = join ',', @{$primary{$t}};
     my $key_as_string = "$t [$list_of_keys]";
