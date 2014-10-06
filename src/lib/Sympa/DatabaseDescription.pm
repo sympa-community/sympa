@@ -1050,7 +1050,9 @@ sub db_struct {
             my $trans_pg  = $trans;
             my $trans_syb = $trans;
             my $trans_sq  = $trans;
-# Oracle
+            my $trans_od  = $trans;
+
+            # Oracle
             $trans_o =~ s/^varchar/varchar2/g;
             $trans_o =~ s/^int.*/number/g;
             $trans_o =~ s/^bigint.*/number/g;
@@ -1062,7 +1064,8 @@ sub db_struct {
             $trans_o =~ s/^longtext.*/long/g;
             $trans_o =~ s/^datetime.*/date/g;
             $trans_o =~ s/^mediumblob/blob/g;
-#Postgresql
+
+            # PostgreSQL
             $trans_pg =~ s/^int(1)/smallint/g;
             $trans_pg =~ s/^int\(?.*\)?/int4/g;
             $trans_pg =~ s/^smallint.*/int4/g;
@@ -1074,7 +1077,8 @@ sub db_struct {
             $trans_pg =~ s/^datetime.*/timestamptz/g;
             $trans_pg =~ s/^enum.*/varchar(15)/g;
             $trans_pg =~ s/^mediumblob/bytea/g;
-#Sybase
+
+            # Sybase
             $trans_syb =~ s/^int.*/numeric/g;
             $trans_syb =~ s/^text.*/varchar(500)/g;
             $trans_syb =~ s/^smallint.*/numeric/g;
@@ -1083,7 +1087,8 @@ sub db_struct {
             $trans_syb =~ s/^longtext.*/text/g;
             $trans_syb =~ s/^enum.*/varchar(15)/g;
             $trans_syb =~ s/^mediumblob/long binary/g;
-#Sqlite
+
+            # SQLite
             $trans_sq =~ s/^varchar.*/text/g;
             $trans_sq =~ s/^.*int\(1\).*/numeric/g;
             $trans_sq =~ s/^int.*/integer/g;
@@ -1096,11 +1101,20 @@ sub db_struct {
             $trans_sq =~ s/^enum.*/text/g;
             $trans_sq =~ s/^mediumblob/none/g;
 
+            # ODBC
+            $trans_od =~ s/^double/real/g;
+            $trans_od =~ s/^enum.*/varchar(20)/g;
+            $trans_od =~ s/^text.*/varchar(500)/g;
+            $trans_od =~ s/^longtext.*/text/g;
+            $trans_od =~ s/^datetime/timestamp/g;
+            $trans_od =~ s/^mediumblob/longvarbinary/g;
+
             $db_struct{'mysql'}{$table}{$field}  = $trans;
             $db_struct{'Pg'}{$table}{$field}     = $trans_pg;
             $db_struct{'Oracle'}{$table}{$field} = $trans_o;
             $db_struct{'Sybase'}{$table}{$field} = $trans_syb;
             $db_struct{'SQLite'}{$table}{$field} = $trans_sq;
+            $db_struct{'ODBC'}{$table}{$field}   = $trans_od;
         }
     }
     return %db_struct;
