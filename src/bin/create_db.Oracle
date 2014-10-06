@@ -44,7 +44,7 @@ CREATE TABLE admin_table (
 	 CONSTRAINT ind_admin PRIMARY KEY (robot_admin, list_admin, role_admin, user_admin)
  );
 
-
+CREATE INDEX admin_user_index ON admin_table (user_admin);
 
 
 -- --------------------------------------------------------
@@ -291,7 +291,7 @@ CREATE TABLE stat_table (
 	 CONSTRAINT ind_stat PRIMARY KEY (id_stat)
  );
 
-
+CREATE INDEX stats_user_index ON stat_table (email_stat);
 
 
 -- --------------------------------------------------------
@@ -323,7 +323,7 @@ CREATE TABLE subscriber_table (
 	 CONSTRAINT ind_subscriber PRIMARY KEY (robot_subscriber, list_subscriber, user_subscriber)
  );
 
-
+CREATE INDEX subscriber_user_index ON subscriber_table (user_subscriber);
 
 
 -- --------------------------------------------------------
