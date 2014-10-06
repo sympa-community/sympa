@@ -501,6 +501,8 @@ sub check_primary_key {
                 )
                 ) {
                 push @{$report_ref}, $rep;
+            } else {
+                return undef;
             }
         } elsif ($should_update->{'existing_key_correct'}) {
             Log::do_log('debug',
@@ -511,6 +513,8 @@ sub check_primary_key {
             my $rep = undef;
             if ($rep = $db_source->unset_primary_key({'table' => $t})) {
                 push @{$report_ref}, $rep;
+            } else {
+                return undef;
             }
             ## Add primary key
             $rep = undef;
@@ -519,27 +523,13 @@ sub check_primary_key {
                 )
                 ) {
                 push @{$report_ref}, $rep;
+            } else {
+                return undef;
             }
         }
     } else {
-        Log::do_log(
-            'err',
-            'Unable to evaluate table %s primary key. Trying to reset primary key anyway',
-            $t
-        );
-        ## drop previous primary key
-        my $rep = undef;
-        if ($rep = $db_source->unset_primary_key({'table' => $t})) {
-            push @{$report_ref}, $rep;
-        }
-        ## Add primary key
-        $rep = undef;
-        if ($rep = $db_source->set_primary_key(
-                {'table' => $t, 'fields' => $primary{$t}}
-            )
-            ) {
-            push @{$report_ref}, $rep;
-        }
+        Log::do_log('err', 'Unable to evaluate table %s primary key', $t);
+        return undef;
     }
     return 1;
 }
@@ -615,6 +605,8 @@ sub check_indexes {
                     )
                     ) {
                     push @{$report_ref}, $rep;
+                } else {
+                    return undef;
                 }
             } elsif ($index_check->{'existing_key_correct'}) {
                 Log::do_log('debug',
@@ -641,32 +633,14 @@ sub check_indexes {
                     )
                     ) {
                     push @{$report_ref}, $rep;
+                } else {
+                    return undef;
                 }
             }
         } else {
-            Log::do_log(
-                'err',
-                'Unable to evaluate index %s in table %s. Trying to reset index anyway',
-                $t,
-                $idx
-            );
-            ## drop previous index
-            my $rep = undef;
-            if ($rep =
-                $db_source->unset_index({'table' => $t, 'index' => $idx})) {
-                push @{$report_ref}, $rep;
-            }
-            ## Add index
-            $rep = undef;
-            if ($rep = $db_source->set_index(
-                    {   'table'      => $t,
-                        'index_name' => $idx,
-                        'fields'     => $indexes{$t}{$idx}
-                    }
-                )
-                ) {
-                push @{$report_ref}, $rep;
-            }
+            Log::do_log('err', 'Unable to evaluate index %s in table %s',
+                $idx, $t);
+            return undef;
         }
     }
     return 1;
