@@ -144,6 +144,9 @@ sub rename {
     }
 
     my $dest = (ref $self)->new($destfile, -1, '+') or return undef;
+    if (defined $self->fileno) {
+        $self->SUPER::close;
+    }
     unless (rename $lock->{file}, $destfile) {
         my $error = $ERRNO;
         $dest->close;
