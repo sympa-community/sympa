@@ -4821,17 +4821,15 @@ sub createXMLCustomAttribute {
 sub get_first_list_admin {
     my ($self, $role, $data) = @_;
 
-    my ($sortby, $offset, $rows, $sql_regexp);
+    my ($sortby, $sql_regexp);
     $sortby = $data->{'sortby'};
     ## Sort may be domain, email, date
     $sortby ||= 'domain';
-    $offset     = $data->{'offset'};
-    $rows       = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
     my $fh;
 
     Log::do_log('debug2', '(%s, %s, %s, %s, %s)',
-        $self->{'name'}, $role, $sortby, $offset, $rows);
+        $self->{'name'}, $role, $sortby);
 
     my $name = $self->{'name'};
     my $statement;
@@ -4884,12 +4882,6 @@ sub get_first_list_admin {
 
     } elsif ($sortby eq 'email') {
         $statement .= ' ORDER BY gecos';
-    }
-
-    ## LIMIT clause
-    if (defined($rows) and defined($offset)) {
-        $statement .= SDM::get_substring_clause(
-            {'rows_count' => $rows, 'offset' => $offset});
     }
 
     unless ($sth = SDM::do_query($statement)) {
