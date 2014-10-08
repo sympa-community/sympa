@@ -62,37 +62,21 @@ sub next {
     # lock next packet
     my $lock = Sympa::Tools::Daemon::get_lockname();
 
-    my $order;
-    my $limit_oracle = '';
-    my $limit_sybase = '';
-    my $limit_other  = '';
-    ## Only the first record found is locked, thanks to the "LIMIT 1" clause
-    $order =
-        'ORDER BY priority_message_bulkmailer ASC, priority_packet_bulkmailer ASC, delivery_date_bulkmailer ASC, reception_date_bulkmailer ASC, tag_bulkmailer ASC';
-    if (   $Conf::Conf{'db_type'} eq 'mysql'
-        or $Conf::Conf{'db_type'} eq 'Pg'
-        or $Conf::Conf{'db_type'} eq 'SQLite') {
-        $limit_other = 'LIMIT 1';
-    } elsif ($Conf::Conf{'db_type'} eq 'Oracle') {
-        $limit_oracle = 'AND rownum <= 1';
-    } elsif ($Conf::Conf{'db_type'} eq 'Sybase') {
-        $limit_sybase = 'TOP 1';
-    }
-
     # Select the most prioritary packet to lock.
     # As rows not assigned tag should be upgraded, they are skipped.
     unless (
         $sth = SDM::do_prepared_query(
-            sprintf(
-                q{SELECT %s messagekey_bulkmailer AS messagekey,
-		         packetid_bulkmailer AS packetid
-		  FROM bulkmailer_table
-		  WHERE lock_bulkmailer IS NULL AND
-		        delivery_date_bulkmailer <= ? AND
-		        tag_bulkmailer IS NOT NULL
-		  %s %s %s},
-                $limit_sybase, $limit_oracle, $order, $limit_other
-            ),
+            q{SELECT messagekey_bulkmailer AS messagekey,
+                     packetid_bulkmailer AS packetid
+              FROM bulkmailer_table
+              WHERE lock_bulkmailer IS NULL AND
+                    delivery_date_bulkmailer <= ? AND
+                    tag_bulkmailer IS NOT NULL
+              ORDER BY priority_message_bulkmailer ASC,
+                       priority_packet_bulkmailer ASC,
+                       delivery_date_bulkmailer ASC,
+                       reception_date_bulkmailer ASC,
+                       tag_bulkmailer ASC},
             time
         )
         ) {
@@ -101,17 +85,21 @@ sub next {
         return undef;
     }
 
-    my $packet;
-    unless ($packet = $sth->fetchrow_hashref('NAME_lc')) {
+    # Only the first record found is locked.
+    my $packet = $sth->fetchrow_hashref('NAME_lc');
+    $sth->finish;
+    unless ($packet) {
         return undef;
     }
 
-    my $sth;
     # Lock the packet previously selected.
     unless (
-        $sth = SDM::do_query(
-            "UPDATE bulkmailer_table SET lock_bulkmailer=%s WHERE messagekey_bulkmailer='%s' AND packetid_bulkmailer='%s' AND lock_bulkmailer IS NULL",
-            SDM::quote($lock),
+        $sth = SDM::do_prepared_query(
+            q{UPDATE bulkmailer_table
+              SET lock_bulkmailer = ?
+              WHERE messagekey_bulkmailer = ? AND packetid_bulkmailer = ? AND
+                    lock_bulkmailer IS NULL},
+            $lock,
             $packet->{'messagekey'},
             $packet->{'packetid'}
         )
@@ -138,22 +126,23 @@ sub next {
     # select the packet that has been locked previously
     #FIXME: A column name is recEipients_bulkmailer.
     $sth = SDM::do_prepared_query(
-        sprintf(
-            q{SELECT messagekey_bulkmailer AS messagekey,
-                     packetid_bulkmailer AS packetid,
-                     receipients_bulkmailer AS recipients,
-                     listname_bulkmailer AS listname,
-                     robot_bulkmailer AS robot,
-                     priority_message_bulkmailer AS "priority",
-                     priority_packet_bulkmailer AS priority_packet,
-                     reception_date_bulkmailer AS reception_date,
-                     delivery_date_bulkmailer AS "date",
-                     tag_bulkmailer AS "tag"
-              FROM bulkmailer_table
-              WHERE lock_bulkmailer = ? AND tag_bulkmailer IS NOT NULL
-              %s},
-            $order
-        ),
+        q{SELECT messagekey_bulkmailer AS messagekey,
+                 packetid_bulkmailer AS packetid,
+                 receipients_bulkmailer AS recipients,
+                 listname_bulkmailer AS listname,
+                 robot_bulkmailer AS robot,
+                 priority_message_bulkmailer AS "priority",
+                 priority_packet_bulkmailer AS priority_packet,
+                 reception_date_bulkmailer AS reception_date,
+                 delivery_date_bulkmailer AS "date",
+                 tag_bulkmailer AS "tag"
+          FROM bulkmailer_table
+          WHERE lock_bulkmailer = ? AND tag_bulkmailer IS NOT NULL
+          ORDER BY priority_message_bulkmailer ASC,
+                   priority_packet_bulkmailer ASC,
+                   delivery_date_bulkmailer ASC,
+                   reception_date_bulkmailer ASC,
+                   tag_bulkmailer ASC},
         $lock
     );
     unless ($sth) {
@@ -164,6 +153,7 @@ sub next {
     }
 
     my $result = $sth->fetchrow_hashref('NAME_lc');
+    $sth->finish;
 
     return $result;
 
