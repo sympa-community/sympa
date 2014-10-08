@@ -63,21 +63,8 @@ sub get_substring_clause {
         . $param->{'substring_length'} . "))";
 }
 
-# Returns an SQL clause to be inserted in a query.
-# This clause will limit the number of records returned by the query to
-# $param->{'rows_count'}. If $param->{'offset'} is provided, an offset of
-# $param->{'offset'} rows is done from the first record before selecting
-# the rows to return.
-sub get_limit_clause {
-    my $self  = shift;
-    my $param = shift;
-    Log::do_log('debug', 'Building limit 1 caluse');
-    if ($param->{'offset'}) {
-        return "LIMIT " . $param->{'offset'} . "," . $param->{'rows_count'};
-    } else {
-        return "LIMIT " . $param->{'rows_count'};
-    }
-}
+# DEPRECATED.
+#sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
 # Returns a character string corresponding to the expression to use in a query
 # involving a date.

@@ -732,19 +732,8 @@ sub get_substring_clause {
     }
 }
 
-sub get_limit_clause {
-    my $param = shift;
-    if (defined $db_source) {
-        return ' ' . $db_source->get_limit_clause($param) . ' ';
-    } else {
-        if (check_db_connect()) {
-            return ' ' . $db_source->get_limit_clause($param) . ' ';
-        } else {
-            Log::do_log('err', 'Unable to get a handle to Sympa database');
-            return undef;
-        }
-    }
-}
+# DEPRECATED.
+#sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
 ## Returns a character string corresponding to the expression to use in
 ## a read query (e.g. SELECT) for the field given as argument.
