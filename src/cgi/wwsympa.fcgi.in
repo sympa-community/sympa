@@ -5391,12 +5391,6 @@ sub do_review {
         $offset = 0;
     }
 
-    ## We might not use LIMIT clause
-    my ($limit_not_used, $count);
-    unless (($Conf::Conf{'db_type'} =~ /^(Pg|mysql$)/)) {
-        $limit_not_used = 1;
-    }
-
     ## Additional DB fields
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
@@ -5414,32 +5408,24 @@ sub do_review {
     }
 
     ## Members list
-    $count = -1;
+    my $count = 0;
     for (
         my $i = $list->get_first_list_member(
             {   'sortby' => $sortby,
                 'offset' => $offset,
-                'rows'   => $size
             }
         );
         $i;
         $i = $list->get_next_list_member()
         ) {
-
         ## some review pages may be empty while viewed by subscribers
-        next
-            if (($i->{'visibility'} eq 'conceal')
-            and (!$param->{'is_priv'}));
-
-        if ($limit_not_used) {
-            $count++;
-            next unless (($count >= $offset) && ($count <= $offset + $size));
-        }
+        next if $i->{'visibility'} eq 'conceal' and not $param->{'is_priv'};
 
         ## Add user
         _prepare_subscriber($i, \@additional_fields, \%sources);
-
         push @{$param->{'members'}}, $i;
+
+        last if $size <= ++$count;
     }
 
     if ($param->{'page'} > 1) {

@@ -2060,7 +2060,7 @@ sub distribute_msg {
 
     ## Blindly send the message to all users.
 
-    my $total               = $self->get_total('nocache');
+    my $total = $self->get_total('nocache');
 
     unless ($total > 0) {
         Log::do_log('info', 'No subscriber in list %s', $self);
@@ -2151,7 +2151,8 @@ sub distribute_msg {
             unless (defined $result) {
                 Log::do_log(
                     'err',
-                    'Could not send message to distribute to list %s (VERP disabled)', $self
+                    'Could not send message to distribute to list %s (VERP disabled)',
+                    $self
                 );
                 return undef;
             }
@@ -2203,11 +2204,9 @@ sub distribute_msg {
             $tags_to_use->{'tag_verp'} = 0 if $result;
             $nbr_smtp++;
         } else {
-            Log::do_log(
-                'notice',
+            Log::do_log('notice',
                 'No VERP subscribers left to distribute message to list %s',
-                $self
-            );
+                $self);
         }
     }
 
@@ -4648,16 +4647,14 @@ sub get_list_admin {
 sub get_first_list_member {
     my ($self, $data) = @_;
 
-    my ($sortby, $offset, $rows, $sql_regexp);
+    my ($sortby, $offset, $sql_regexp);
     $sortby = $data->{'sortby'};
     ## Sort may be domain, email, date
     $sortby ||= 'domain';
     $offset     = $data->{'offset'};
-    $rows       = $data->{'rows'};
     $sql_regexp = $data->{'sql_regexp'};
 
-    Log::do_log('debug2', '(%s, %s, %s, %s)',
-        $self->{'name'}, $sortby, $offset, $rows);
+    Log::do_log('debug2', '(%s, %s, %s)', $self->{'name'}, $sortby, $offset);
 
     my $name = $self->{'name'};
     my $statement;
@@ -4713,16 +4710,26 @@ sub get_first_list_member {
     }
     push @sth_stack, $sth;
 
-    ## LIMIT clause
-    if (defined($rows) and defined($offset)) {
-        $statement .= SDM::get_limit_clause(
-            {'rows_count' => $rows, 'offset' => $offset});
-    }
-
     unless ($sth = SDM::do_query($statement)) {
         Log::do_log('err', 'Unable to get members of list %s@%s',
             $name, $self->{'domain'});
         return undef;
+    }
+
+    # Offset
+    # Note: Several RDBMSs don't support nonstandard OFFSET clause, OTOH
+    # some others don't support standard ROW_NUMBER function.
+    # Instead, fetch unneccessary rows and discard them.
+    if (defined $offset) {
+        my $remainder = $offset;
+        while (1000 < $remainder) {
+            $remainder -= 1000;
+            my $rows = $sth->fetchrow_arrayref([qw(email)], 1000);
+            last unless $rows and @$rows;
+        }
+        if ($remainder) {
+            $sth->fetchrow_arrayref([qw(email)], $remainder);
+        }
     }
 
     my $user = $sth->fetchrow_hashref('NAME_lc');
