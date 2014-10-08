@@ -191,3 +191,529 @@ sub AS_BLOB {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::DBManipulatorDefault - Base class of database drivers for Sympa
+
+=head1 SYNOPSIS
+
+  package Sympa::DBManipulatorFOO;
+  use base qw(Sympa::DBManipulatorDefault);
+
+=head1 DESCRIPTION
+
+L<Sympa::DBManipulatorDefault> is the base class of driver classes for
+Sympa Database Manager (SDM).
+
+=head2 Instance methods subclasses should implement.
+
+=over
+
+=item build_connect_string ( )
+
+I<Mandatory>.
+Builds the string to be used by the DBI to connect to the database.
+
+Parameter:
+
+None.
+
+Returns:
+
+String representing data source name (DSN).
+
+=item get_substring_clause ( { source_field => $source_field,
+separator => $separator, substring_length => $substring_length } )
+
+I<Mandatory>.
+Returns an SQL clause to be inserted in a query.
+This clause will compute a substring of max length
+
+Parameters:
+
+=over
+
+=item $separator
+
+Substring starts from the first character equal to this parameter.
+
+=item $source_field
+
+Search separator in the value of this field.
+
+=item $substring_length
+
+Max length of result.
+
+=back
+
+Returns:
+
+Resulting substring.
+
+=item get_limit_clause ( )
+
+This method was deprecated.
+
+=item get_formatted_date ( { mode => $mode, target => $target } )
+
+I<Mandatory>.
+Returns a character string corresponding to the expression to use in a query
+involving a date.
+
+Parameters:
+
+=over
+
+=item $mode
+
+authorized values:
+
+=over
+
+=item C<'write'>
+
+The sub returns the expression to use in 'INSERT' or 'UPDATE' queries.
+
+=item C<'read'>
+
+The sub returns the expression to use in 'SELECT' queries.
+
+=back
+
+=item $target
+
+The name of the field or the value to be used in the query.
+
+=back
+
+Returns:
+
+The formatted date or C<undef> if the date format mode is unknown.
+
+=item is_autoinc ( { table => $table, field => $field } )
+
+I<Required to probe database structure>.
+Checks whether a field is an auto-increment field or not.
+
+Parameters:
+
+=over
+
+=item $field
+
+The name of the field to test
+
+=item $table
+
+The name of the table to add
+
+=back
+
+Returns:
+
+True if the field is an auto-increment field, false otherwise
+
+=item set_autoinc ( { table => $table, field => $field } )
+
+I<Required to update database structure>.
+Defines the field as an auto-increment field.
+
+Parameters:
+
+=over
+
+=item $field
+
+The name of the field to set.
+
+=item $table
+
+The name of the table to add.
+
+=back
+
+Returns:
+
+C<1> if the auto-increment could be set, C<undef> otherwise.
+
+=item get_tables ( )
+
+I<Required to probe database structure>.
+Returns the list of the tables in the database.
+
+Parameters:
+
+None.
+
+Returns:
+
+A ref to an array containing the list of the tables names in the
+database, C<undef> if something went wrong.
+
+=item add_table ( { table => $table } )
+
+I<Required to update database structure>.
+Adds a table to the database.
+
+Parameter:
+
+=over
+
+=item $table
+
+The name of the table to add
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item get_fields ( { table => $table } )
+
+I<Required to probe database structure>.
+Returns a ref to an hash containing the description of the fields in a table
+from the database.
+
+Parameters:
+
+=over
+
+=item $table
+
+The name of the table whose fields are requested.
+
+=back
+
+Returns:
+
+A hash in which the keys are the field names and the values are the field type.
+
+Returns C<undef> if something went wrong.
+
+=item update_field ( { table => $table, field => $field, type => $type, ... } )
+
+I<Required to update database structure>.
+Changes the type of a field in a table from the database.
+
+Parameters:
+
+=over
+
+=item $field
+
+The name of the field to update.
+
+=item $table
+
+The name of the table whose fields will be updated.
+
+=item $type
+
+The type of the field to add.
+
+=item $notnull
+
+Specifies that the field must not be null
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item add_field ( { table => $table, field => $field, type => $type, ... } )
+
+I<Required to update database structure>.
+Adds a field in a table from the database.
+
+Parameters:
+
+=over
+
+=item $field
+
+The name of the field to add.
+
+=item $table
+
+The name of the table where the field will be added.
+
+=item $type
+
+The type of the field to add.
+
+=item $notnull
+
+Specifies that the field must not be null.
+
+=item $autoinc
+
+Specifies that the field must be auto-incremental.
+
+=item $primary
+
+Specifies that the field is a key.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item delete_field ( { table => $table, field => $field } )
+
+I<Required to update database structure>.
+Deletes a field from a table in the database.
+
+Parameters:
+
+=over
+
+=item $field
+
+The name of the field to delete
+
+=item $table
+
+The name of the table where the field will be deleted.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item get_primary_key ( { table => $table } )
+
+I<Required to probe database structure>.
+Returns the list fields being part of a table's primary key.
+
+=over
+
+=item $table
+
+The name of the table for which the primary keys are requested.
+
+=back
+
+Returns:
+
+A ref to a hash in which each key is the name of a primary key or C<undef>
+if something went wrong.
+
+=item unset_primary_key ( { table => $table } )
+
+I<Required to update database structure>.
+Drops the primary key of a table.
+
+Parameter:
+
+=over
+
+=item $table
+
+The name of the table for which the primary keys must be
+dropped.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item set_primary_key ( { table => $table, fields => $fields } )
+
+I<Required to update database structure>.
+Sets the primary key of a table.
+
+Parameters:
+
+=over
+
+=item $table
+
+The name of the table for which the primary keys must be
+defined.
+
+=item $fields
+
+A ref to an array containing the names of the fields used
+in the key.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item get_indexes ( { table => $table } )
+
+I<Required to probe database structure>.
+Returns a ref to a hash in which each key is the name of an index.
+
+Parameter:
+
+=over
+
+=item $table
+
+The name of the table for which the indexes are requested.
+
+=back
+
+Returns:
+
+A ref to a hash in which each key is the name of an index.  These key
+point to a second level hash in which each key is the name of the field
+indexed.  Returns C<undef> if something went wrong.
+
+=item unset_index ( { table => $table, index => $index } )
+
+I<Required to update database structure>.
+Drops an index of a table.
+
+Parameters:
+
+=over
+
+=item $table
+
+The name of the table for which the index must be dropped.
+
+=item $index
+
+The name of the index to be dropped.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item set_index ( { table => $table, index_name => $index_name,
+fields => $fields } )
+
+I<Required to update database structure>.
+Sets an index in a table.
+
+Parameters:
+
+=over
+
+=item $table
+
+The name of the table for which the index must be defined.
+
+=item $fields
+
+A ref to an array containing the names of the fields used
+in the index.
+
+=item $index_name
+
+The name of the index to be defined.
+
+=back
+
+Returns:
+
+A character string report of the operation done or C<undef> if something
+went wrong.
+
+=item do_query ( $query, $parameters, ... )
+
+I<Overridable>.
+TBD.
+
+Parameters:
+
+TBD.
+
+Returns:
+
+TBD.
+
+=item do_prepared_query ( $query, $parameters, ... )
+
+I<Overridable>.
+TBD.
+
+Parameters:
+
+TBD.
+
+Returns:
+
+TBD.
+
+=item AS_DOUBLE ( $value )
+
+I<Overridable>.
+Helper functions to return the DOUBLE binding type and value used by
+L</do_prepared_query>().
+Overridden by inherited classes.
+
+Parameter:
+
+=over
+
+=item $value
+
+=back
+
+Parameter value
+
+Returns:
+
+One of:
+
+=over
+
+=item *
+
+An array C<( { sql_type =E<gt> SQL_type }, value )>.
+
+=item *
+
+Single value (i.e. an array with single item), if special
+treatment won't be needed.
+
+=item *
+
+Empty array C<()> if arguments were not given.
+
+=back
+
+=item AS_BLOB ( $value )
+
+I<Overridable>.
+Helper functions to return the BLOB (binary large object) binding type and
+value used by L</do_prepared_query>().
+Overridden by inherited classes.
+
+See L</AS_DOUBLE> for more details.
+
+=back
+
+=head1 SEE ALSO
+
+L<SDM>, L<Sympa::DatabaseDescription>.
+
+=head1 HISTORY
+
+Sympa Database Manager appeared on Sympa 6.2.
+
+=cut
