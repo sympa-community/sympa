@@ -31,6 +31,28 @@ use Conf;
 use Sympa::Constants;
 use Log;
 
+# hash of the icons linked with a type of file
+# application file
+my %icons = (
+    'unknown'        => 'unknown.png',
+    'folder'         => 'folder.png',
+    'current_folder' => 'folder.open.png',
+    'application'    => 'unknown.png',
+    'octet-stream'   => 'binary.png',
+    'audio'          => 'sound1.png',
+    'image'          => 'image2.png',
+    'text'           => 'text.png',
+    'video'          => 'movie.png',
+    'father'         => 'back.png',
+    'sort'           => 'down.png',
+    'url'            => 'link.png',
+    'left'           => 'left.png',
+    'right'          => 'right.png',
+);
+
+# lazy loading on demand
+my %mime_types;
+
 ## Cookie expiration periods with corresponding entry in NLS
 our %cookie_period = (
     0     => {'gettext_id' => "session"},
@@ -123,7 +145,7 @@ our %bounce_status = (
 ## MOVED: use Conf::_load_wwsconf().
 
 ## Load HTTPD MIME Types
-# DUPLICATE: Use tools::load_mime_types().
+# Moved to _load_mime_types().
 #sub load_mime_types();
 
 ## Returns user information extracted from the cookie
@@ -467,6 +489,62 @@ sub select_my_files {
         }
     }
     return @new_dir;
+}
+
+sub get_icon {
+    my $robot = shift || '*';
+    my $type = shift;
+
+    return undef unless defined $icons{$type};
+    return
+          Conf::get_robot_conf($robot, 'static_content_url')
+        . '/icons.'
+        . $icons{$type};
+}
+
+sub get_mime_type {
+    my $type = shift;
+
+    %mime_types = _load_mime_types() unless %mime_types;
+
+    return $mime_types{$type};
+}
+
+sub _load_mime_types {
+    my %types = ();
+
+    my @localisation = (
+        tools::search_fullpath('*', 'mime.types'),
+        '/etc/mime.types', '/usr/local/apache/conf/mime.types',
+        '/etc/httpd/conf/mime.types',
+    );
+
+    foreach my $loc (@localisation) {
+        my $fh;
+        next unless $loc and open $fh, '<', $loc;
+
+        foreach my $line (<$fh>) {
+            next if $line =~ /^\s*\#/;
+            chomp $line;
+
+            my ($k, $v) = split /\s+/, $line, 2;
+            next unless $k and $v and $v =~ /\S/;
+
+            my @extensions = split /\s+/, $v;
+            # provides file extention, given the content-type
+            if (@extensions) {
+                $types{$k} = $extensions[0];
+            }
+            foreach my $ext (@extensions) {
+                $types{$ext} = $k;
+            }
+        }
+
+        close $fh;
+        return %types;
+    }
+
+    return;
 }
 
 1;

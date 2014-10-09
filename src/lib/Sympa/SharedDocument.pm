@@ -47,6 +47,8 @@ sub new {
         return undef;
     }
 
+    my $robot_id = $list->{'domain'};
+
     $document->{'root_path'} = $list->{'dir'} . '/shared';
 
     $document->{'path'} = Sympa::Tools::WWW::no_slash_end($path);
@@ -181,8 +183,7 @@ sub new {
 
     ### File, directory or URL ?
     if ($document->{'type'} eq 'url') {
-
-        $document->{'icon'} = &main::get_icon('url');
+        $document->{'icon'} = Sympa::Tools::WWW::get_icon($robot_id, 'url');
 
         open DOC, $document->{'absolute_path'};
         my $url = <DOC>;
@@ -194,8 +195,8 @@ sub new {
             $document->{'anchor'} = $1;
         }
     } elsif ($document->{'type'} eq 'file') {
-
-        if (my $type = &main::get_mime_type($document->{'file_extension'})) {
+        if (my $type =
+            Sympa::Tools::WWW::get_mime_type($document->{'file_extension'})) {
             # type of the file and apache icon
             if ($type =~ /^([\w\-]+)\/([\w\-]+)$/) {
                 my ($mimet, $subt) = ($1, $2);
@@ -206,24 +207,27 @@ sub new {
                     }
                     $type = "$subt file";
                 }
-                $document->{'icon'} = &main::get_icon($mimet)
-                    || &main::get_icon('unknown');
+                $document->{'icon'} =
+                       Sympa::Tools::WWW::get_icon($robot_id, $mimet)
+                    || Sympa::Tools::WWW::get_icon($robot_id, 'unknown');
             }
         } else {
             # unknown file type
-            $document->{'icon'} = &main::get_icon('unknown');
+            $document->{'icon'} =
+                Sympa::Tools::WWW::get_icon($robot_id, 'unknown');
         }
 
         ## HTML file
         if ($document->{'file_extension'} =~ /^html?$/i) {
             $document->{'html'} = 1;
-            $document->{'icon'} = &main::get_icon('text');
+            $document->{'icon'} =
+                Sympa::Tools::WWW::get_icon($robot_id, 'text');
         }
 
         ## Directory
     } else {
-
-        $document->{'icon'} = &main::get_icon('folder');
+        $document->{'icon'} =
+            Sympa::Tools::WWW::get_icon($robot_id, 'folder');
 
         # listing of all the shared documents of the directory
         unless (opendir DIR, $document->{'absolute_path'}) {

@@ -73,6 +73,7 @@ use Sympa::Tools::File;
 use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
+use Sympa::Tools::WWW;
 use tt2;
 use Sympa::User;
 
@@ -2950,12 +2951,10 @@ sub _urlize_parts {
     }
 
     my $wwsympa_url = Conf::get_robot_conf($list->{'domain'}, 'wwsympa_url');
-    my $mime_types  = tools::load_mime_types();
     my @parts       = ();
     my $i           = 0;
     foreach my $part ($entity->parts) {
-        my $p = _urlize_one_part($part->dup, $list, $dir1, $i, $mime_types,
-            $wwsympa_url);
+        my $p = _urlize_one_part($part->dup, $list, $dir1, $i, $wwsympa_url);
         if (defined $p) {
             push @parts, $p;
             $i++;
@@ -2976,7 +2975,6 @@ sub _urlize_one_part {
     my $list        = shift;
     my $dir         = shift;
     my $i           = shift;
-    my $mime_types  = shift;
     my $wwsympa_url = shift;
 
     my $expl     = $list->{'dir'} . '/urlized';
@@ -2993,7 +2991,9 @@ sub _urlize_one_part {
         $filename = Encode::encode_utf8($filename)
             if Encode::is_utf8($filename);
     } else {
-        my $fileExt = $mime_types->{$entity->effective_type || ''} || 'bin';
+        my $fileExt =
+            Sympa::Tools::WWW::get_mime_type($entity->effective_type || '')
+            || 'bin';
         $filename = sprintf 'msg.%d.%s', $i, $fileExt;
     }
     my $file = "$expl/$dir/$filename";
@@ -3668,8 +3668,8 @@ sub _split_mail {
             $fileExt = Encode::encode_utf8($fileExt)
                 if Encode::is_utf8($fileExt);
         } else {
-            my $mime_types = tools::load_mime_types();
-            $fileExt = $mime_types->{$head->mime_type} || 'bin';
+            $fileExt = Sympa::Tools::WWW::get_mime_type($head->mime_type)
+                || 'bin';
         }
 
         ## Store body in file

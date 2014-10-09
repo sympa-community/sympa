@@ -767,42 +767,8 @@ sub cookie_changed {
     }
 }
 
-sub load_mime_types {
-    my $types = {};
-
-    my @localisation = (
-        tools::search_fullpath('*', 'mime.types'),
-        '/etc/mime.types', '/usr/local/apache/conf/mime.types',
-        '/etc/httpd/conf/mime.types',
-    );
-
-    foreach my $loc (@localisation) {
-        my $fh;
-        next unless $loc and open $fh, '<', $loc;
-
-        foreach my $line (<$fh>) {
-            next if $line =~ /^\s*\#/;
-            chomp $line;
-
-            my ($k, $v) = split /\s+/, $line, 2;
-            next unless $k and $v and $v =~ /\S/;
-
-            my @extensions = split /\s+/, $v;
-            # provides file extention, given the content-type
-            if (@extensions) {
-                $types->{$k} = $extensions[0];
-            }
-            foreach my $ext (@extensions) {
-                $types->{$ext} = $k;
-            }
-        }
-
-        close $fh;
-        return $types;
-    }
-
-    return undef;
-}
+# Moved to Sympa::Tools::WWW:_load_mime_types()
+#sub load_mime_types();
 
 =head3 Finding config files and templates
 
