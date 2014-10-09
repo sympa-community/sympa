@@ -22,14 +22,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorPostgres;
+package Sympa::DatabaseDriver::PostgreSQL;
 
 use strict;
 use warnings;
 
 use Log;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;
@@ -593,10 +593,10 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorPostgres - Database driver for PostgreSQL
+Sympa::DatabaseDriver::PostgreSQL - Database driver for PostgreSQL
 
 =head1 SEE ALSO
 
-L<Sympa::DBManipulatorDefault>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<SDM>.
 
 =cut

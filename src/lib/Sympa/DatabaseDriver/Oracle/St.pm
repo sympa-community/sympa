@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorOracle::St;
+package Sympa::DatabaseDriver::Oracle::St;
 
 use strict;
 use warnings;
@@ -61,7 +61,7 @@ sub fetchrow_hashref {
 }
 
 sub fetchall_arrayref {
-    my $self   = shift;
+    my $self      = shift;
     my $allvalues = $self->SUPER::fetchall_arrayref(@_);
     return undef unless $allvalues;
 
@@ -104,7 +104,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorOracle::St - Correcting behavior of DBD::Oracle
+Sympa::DatabaseDriver::Oracle::St - Correcting behavior of DBD::Oracle
 
 =head1 DESCRIPTION
 
@@ -112,11 +112,11 @@ If C<NLS_LANG> environment variable is properly set with charset
 C<AL32UTF8> (or C<UTF8>), L<DBD::Oracle> handles character values as
 Unicode, i.e. "utf8 flags" are set.  This behavior is not desirable for Sympa.
 
-Sympa::DBManipulatorOracle::St overrides functions of DBI statement handle
+Sympa::DatabaseDriver::Oracle::St overrides functions of DBI statement handle
 object to reset utf8 flags.
 
 =head1 HISTORY
 
-L<Sympa::DBManipulatorOracle::St> appears on Sympa 6.2.
+L<Sympa::DatabaseDriver::Oracle::St> appears on Sympa 6.2.
 
 =cut

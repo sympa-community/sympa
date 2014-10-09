@@ -34,15 +34,15 @@ nobase_modules_DATA = \
 	Sympa/Constants.pm \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
+	Sympa/DatabaseDriver.pm \
+	Sympa/DatabaseDriver/MySQL.pm \
+	Sympa/DatabaseDriver/ODBC.pm \
+	Sympa/DatabaseDriver/Oracle.pm \
+	Sympa/DatabaseDriver/Oracle/St.pm \
+	Sympa/DatabaseDriver/PostgreSQL.pm \
+	Sympa/DatabaseDriver/SQLite.pm\
+	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/Datasource.pm \
-	Sympa/DBManipulatorDefault.pm \
-	Sympa/DBManipulatorMySQL.pm \
-	Sympa/DBManipulatorODBC.pm \
-	Sympa/DBManipulatorOracle.pm \
-	Sympa/DBManipulatorOracle/St.pm \
-	Sympa/DBManipulatorPostgres.pm \
-	Sympa/DBManipulatorSQLite.pm\
-	Sympa/DBManipulatorSybase.pm \
 	Sympa/Family.pm \
 	Sympa/Fetch.pm \
 	Sympa/HTML/FormatText.pm \

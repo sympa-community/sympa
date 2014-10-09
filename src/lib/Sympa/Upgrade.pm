@@ -104,7 +104,7 @@ sub upgrade {
     Log::do_log('debug3', '(%s, %s)', @_);
     my ($previous_version, $new_version) = @_;
 
-    if (tools::lower_version($new_version, $previous_version)) {
+    if (lower_version($new_version, $previous_version)) {
         Log::do_log('notice',
             'Installing  older version of Sympa ; no upgrade operation is required'
         );
@@ -138,7 +138,7 @@ sub upgrade {
     }
 
     ## Migration to tt2
-    if (tools::lower_version($previous_version, '4.2b')) {
+    if (lower_version($previous_version, '4.2b')) {
 
         Log::do_log('notice', 'Migrating templates to TT2 format...');
 
@@ -169,7 +169,7 @@ sub upgrade {
     }
 
     ## Initializing the new admin_table
-    if (tools::lower_version($previous_version, '4.2b.4')) {
+    if (lower_version($previous_version, '4.2b.4')) {
         Log::do_log('notice', 'Initializing the new admin_table...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
@@ -178,7 +178,7 @@ sub upgrade {
     }
 
     ## Move old-style web templates out of the include_path
-    if (tools::lower_version($previous_version, '5.0.1')) {
+    if (lower_version($previous_version, '5.0.1')) {
         Log::do_log('notice',
             'Old web templates HTML structure is not compliant with latest ones.'
         );
@@ -237,7 +237,7 @@ sub upgrade {
     }
 
     ## Clean buggy list config files
-    if (tools::lower_version($previous_version, '5.1b')) {
+    if (lower_version($previous_version, '5.1b')) {
         Log::do_log('notice', 'Cleaning buggy list config files...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
@@ -246,7 +246,7 @@ sub upgrade {
     }
 
     ## Fix a bug in Sympa 5.1
-    if (tools::lower_version($previous_version, '5.1.2')) {
+    if (lower_version($previous_version, '5.1.2')) {
         Log::do_log('notice', 'Rename archives/log. files...');
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
@@ -258,7 +258,7 @@ sub upgrade {
         }
     }
 
-    if (tools::lower_version($previous_version, '5.2a.1')) {
+    if (lower_version($previous_version, '5.2a.1')) {
 
         ## Fill the robot_subscriber and robot_admin fields in DB
         Log::do_log('notice',
@@ -360,7 +360,7 @@ sub upgrade {
     }
 
     ## DB fields of enum type have been changed to int
-    if (tools::lower_version($previous_version, '5.2a.1')) {
+    if (lower_version($previous_version, '5.2a.1')) {
 
         if ($SDM::use_db && $Conf::Conf{'db_type'} eq 'mysql') {
             my %check = (
@@ -440,7 +440,7 @@ sub upgrade {
     }
 
     ## Rename bounce sub-directories
-    if (tools::lower_version($previous_version, '5.2a.1')) {
+    if (lower_version($previous_version, '5.2a.1')) {
 
         Log::do_log('notice',
             'Renaming bounce sub-directories adding list domain...');
@@ -491,7 +491,7 @@ sub upgrade {
     }
 
     ## Update lists config using 'include_list'
-    if (tools::lower_version($previous_version, '5.2a.1')) {
+    if (lower_version($previous_version, '5.2a.1')) {
 
         Log::do_log('notice',
             'Update lists config using include_list parameter...');
@@ -527,7 +527,7 @@ sub upgrade {
     }
 
     ## New mhonarc ressource file with utf-8 recoding
-    if (tools::lower_version($previous_version, '5.3a.6')) {
+    if (lower_version($previous_version, '5.3a.6')) {
 
         Log::do_log('notice',
             'Looking for customized mhonarc-ressources.tt2 files...');
@@ -576,7 +576,7 @@ sub upgrade {
     ## Changed shared documents name encoding
     ## They are Q-encoded therefore easier to store on any filesystem with any
     ## encoding
-    if (tools::lower_version($previous_version, '5.3a.8')) {
+    if (lower_version($previous_version, '5.3a.8')) {
         Log::do_log('notice', 'Q-Encoding web documents filenames...');
 
         $language->push_lang($Conf::Conf{'lang'});
@@ -612,7 +612,7 @@ sub upgrade {
     ## We now support UTF-8 only for custom templates, config files, headers
     ## and footers, info files
     ## + web_tt2, scenari, create_list_templatee, families
-    if (tools::lower_version($previous_version, '5.3b.3')) {
+    if (lower_version($previous_version, '5.3b.3')) {
         Log::do_log('notice', 'Encoding all custom files to UTF-8...');
 
         my (@directories, @files);
@@ -743,7 +743,7 @@ sub upgrade {
 
     ## giving up subscribers flat files ; moving subscribers to the DB
     ## Also giving up old 'database' mode
-    if (tools::lower_version($previous_version, '5.4a.1')) {
+    if (lower_version($previous_version, '5.4a.1')) {
 
         Log::do_log('notice',
             'Looking for lists with user_data_source parameter set to file or database...'
@@ -810,7 +810,7 @@ sub upgrade {
         }
     }
 
-    if (tools::lower_version($previous_version, '5.5a.1')) {
+    if (lower_version($previous_version, '5.5a.1')) {
 
         ## Remove OTHER/ subdirectories in bounces
         Log::do_log('notice', "Removing obsolete OTHER/ bounce directories");
@@ -841,7 +841,7 @@ sub upgrade {
 
     }
 
-    if (tools::lower_version($previous_version, '6.1b.5')) {
+    if (lower_version($previous_version, '6.1b.5')) {
         ## Encoding of shared documents was not consistent with recent
         ## versions of MIME::Encode
         ## MIME::EncWords::encode_mimewords() used to encode characters -!*+/
@@ -898,7 +898,7 @@ sub upgrade {
         }
 
     }
-    if (tools::lower_version($previous_version, '6.1.11')) {
+    if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
         Log::do_log('notice', 'Fixing robot column of exclusion table');
         my $sth;
@@ -962,7 +962,7 @@ sub upgrade {
     }
 
     ## We have obsoleted wwsympa.conf.  It would be migrated to sympa.conf.
-    if (tools::lower_version($previous_version, '6.2b.1')) {
+    if (lower_version($previous_version, '6.2b.1')) {
         my $sympa_conf   = Conf::get_sympa_conf();
         my $wwsympa_conf = Conf::get_wwsympa_conf();
         my $fh;
@@ -1224,7 +1224,7 @@ sub upgrade {
     }
 
     # Create HTML view of pending messages
-    if (tools::lower_version($previous_version, '6.2b.1')) {
+    if (lower_version($previous_version, '6.2b.1')) {
         my $spooldir     = $Conf::Conf{'queuemod'};
         my $viewmail_dir = $Conf::Conf{'viewmail_dir'};
         my @ignored      = ();
@@ -1530,6 +1530,43 @@ sub md5_encode_password {
         );
     }
     return $total;
+}
+
+## Compare 2 versions of Sympa
+# Old name: tools::lower_version().
+sub lower_version {
+    my ($v1, $v2) = @_;
+
+    my @tab1 = split /\./, $v1;
+    my @tab2 = split /\./, $v2;
+
+    my $max = $#tab1;
+    $max = $#tab2 if ($#tab2 > $#tab1);
+
+    for my $i (0 .. $max) {
+
+        if ($tab1[0] =~ /^(\d*)a$/) {
+            $tab1[0] = $1 - 0.5;
+        } elsif ($tab1[0] =~ /^(\d*)b$/) {
+            $tab1[0] = $1 - 0.25;
+        }
+
+        if ($tab2[0] =~ /^(\d*)a$/) {
+            $tab2[0] = $1 - 0.5;
+        } elsif ($tab2[0] =~ /^(\d*)b$/) {
+            $tab2[0] = $1 - 0.25;
+        }
+
+        if ($tab1[0] eq $tab2[0]) {
+            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
+            shift @tab1;
+            shift @tab2;
+            next;
+        }
+        return ($tab1[0] < $tab2[0]);
+    }
+
+    return 0;
 }
 
 1;

@@ -3396,7 +3396,8 @@ sub check_param_out {
             $param->{'owner'}{$o->{'email'}}{'visibility'} =
                 $o->{'visibility'};
             $param->{'owner'}{$o->{'email'}}{'mailto'} =
-                mailto($list, $o->{'email'}, $o->{'gecos'});
+                Sympa::Tools::WWW::mailto($list, $o->{'email'},
+                $o->{'gecos'});
             (   $param->{'owner'}{$o->{'email'}}{'local'},
                 $param->{'owner'}{$o->{'email'}}{'domain'}
             ) = split('@', $o->{'email'});
@@ -3414,7 +3415,8 @@ sub check_param_out {
                 $param->{'editor'}{$e->{'email'}}{'visibility'} =
                     $e->{'visibility'};
                 $param->{'editor'}{$e->{'email'}}{'mailto'} =
-                    mailto($list, $e->{'email'}, $e->{'gecos'});
+                    Sympa::Tools::WWW::mailto($list, $e->{'email'},
+                    $e->{'gecos'});
                 (   $param->{'editor'}{$e->{'email'}}{'local'},
                     $param->{'editor'}{$e->{'email'}}{'domain'}
                 ) = split('@', $e->{'email'});
@@ -8626,15 +8628,17 @@ sub do_modindex {
         my $long_path = $1;           # path without the filename
         my $fname     = $3;           # the filename with .moderate
         my $path      = $long_path;
-        $path =~ s/^.*\/shared//; #the path for the user, without the filename
-        my $visible_fname =
-            make_visible_path($fname);    # the filename without .moderate
+        # The path for the user, without the filename
+        $path =~ s/^.*\/shared//;
+        # The filename without .moderate
+        my $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
         my $visible_path = $path;
-        $visible_path = make_visible_path($visible_path);
+        $visible_path = Sympa::Tools::WWW::make_visible_path($visible_path);
 
         my %desc_hash;
         if ($d && (-e "$long_path.desc.$fname")) {
-            %desc_hash = get_desc_file("$long_path.desc.$fname");
+            %desc_hash =
+                Sympa::Tools::WWW::get_desc_file("$long_path.desc.$fname");
         }
 
         my $doc = {};
@@ -8688,7 +8692,7 @@ sub do_d_install_shared {
             $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
             $slash_path    = $1;
             $fname         = $3;
-            $visible_fname = make_visible_path($fname);
+            $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
 
             if (-e "$file") {
                 if (-e "$shareddir$slash_path$visible_fname") {
@@ -8718,8 +8722,8 @@ sub do_d_install_shared {
         if ($fname =~ /^\.(.+)\.moderate$/) {
             $new_fname = $1;
         }
-        my $visible_path = make_visible_path($slash_path);
-        $visible_fname = make_visible_path($fname);
+        my $visible_path = Sympa::Tools::WWW::make_visible_path($slash_path);
+        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
 
         if (-e "$file") {
 
@@ -8833,7 +8837,7 @@ sub do_d_install_shared {
 
             my %desc_hash;
             if ($id && (-e "$shareddir$slash_path.desc.$visible_fname")) {
-                %desc_hash = get_desc_file(
+                %desc_hash = Sympa::Tools::WWW::get_desc_file(
                     "$shareddir$slash_path.desc.$visible_fname");
             }
 
@@ -8871,8 +8875,8 @@ sub do_d_reject_shared {
         $id =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
         $slash_path    = $1;
         $fname         = $3;
-        $visible_fname = make_visible_path($fname);
-        my $visible_path = make_visible_path($slash_path);
+        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
+        my $visible_path = Sympa::Tools::WWW::make_visible_path($slash_path);
 
         unless ($in{'quiet'}) {
 
@@ -8883,8 +8887,8 @@ sub do_d_reject_shared {
 
             my %desc_hash;
             if ($id && (-e "$shareddir$slash_path.desc.$fname")) {
-                %desc_hash =
-                    get_desc_file("$shareddir$slash_path.desc.$fname");
+                %desc_hash = Sympa::Tools::WWW::get_desc_file(
+                    "$shareddir$slash_path.desc.$fname");
             }
             $sender = $desc_hash{'email'};
 
@@ -10758,8 +10762,7 @@ sub do_arcsearch {
     my @clean_words = split(/\s+/, $in{'key_word'});
     my @words = @clean_words;
     foreach my $w (@words) {
-        $w = tools::escape_regexp($w);
-        $w =~ s,/,\\/,g;
+        $w =~ s/([^\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;    # Escape non-words.
         $w = '\b' . $w . '\b'
             if $in{'match'} eq 'exact';
     }
@@ -10879,8 +10882,7 @@ sub do_arcsearch_id {
     $search->clean_words($in{'msgid'});
     my @words = split(/\s+/, $in{'msgid'});
     foreach my $w (@words) {
-        $w = tools::escape_regexp($w);
-        $w =~ s,/,\\/,g;
+        $w =~ s/([^\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;    # Escape non-words.
     }
     $search->words(\@words);
 
@@ -14015,58 +14017,8 @@ sub do_restore_list {
     return 'admin';
 }
 
-sub get_desc_file {
-    my $file = shift;
-    my $ligne;
-    my %hash;
-
-    open DESC_FILE, "$file";
-
-    while ($ligne = <DESC_FILE>) {
-        if ($ligne =~ /^title\s*$/) {
-            #case title of the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                $ligne =~ /^\s*(\S.*\S)\s*/;
-                $hash{'title'} = $hash{'title'} . $1 . " ";
-            }
-        }
-
-        if ($ligne =~ /^creation\s*$/) {
-            #case creation of the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                if ($ligne =~ /^\s*email\s*(\S*)\s*/) {
-                    $hash{'email'} = $1;
-                }
-                if ($ligne =~ /^\s*date_epoch\s*(\d*)\s*/) {
-                    $hash{'date'} = $1;
-                }
-
-            }
-        }
-
-        if ($ligne =~ /^access\s*$/) {
-            #case access scenari for the document
-            while ($ligne = <DESC_FILE>) {
-                last if ($ligne =~ /^\s*$/);
-                if ($ligne =~ /^\s*read\s*(\S*)\s*/) {
-                    $hash{'read'} = $1;
-                }
-                if ($ligne =~ /^\s*edit\s*(\S*)\s*/) {
-                    $hash{'edit'} = $1;
-                }
-
-            }
-        }
-
-    }
-
-    close DESC_FILE;
-
-    return %hash;
-
-}
+# Moved to Sympa::Tools::WWW::get_desc_file().
+#sub get_desc_file ($file, $ligne);
 
 sub do_show_cert {
     return 1;
@@ -14208,7 +14160,7 @@ sub d_access_control {
         }
 
         #edit = 0, 0.5 or 1
-        $may_edit = find_edit_mode($action);
+        $may_edit = Sympa::Tools::WWW::find_edit_mode($action);
         $why_not_edit = '' if ($may_edit);
     }
 
@@ -14261,7 +14213,7 @@ sub d_access_control {
             # a description file was found
             # loading of acces information
 
-            %desc_hash = get_desc_file($desc_file);
+            %desc_hash = Sympa::Tools::WWW::get_desc_file($desc_file);
 
             if ($mode_read) {
                 my $result = Sympa::Scenario::request_action(
@@ -14302,8 +14254,10 @@ sub d_access_control {
                 }
 
                 # $may_edit = 0, 0.5 or 1
-                my $may_action_edit = find_edit_mode($action_edit);
-                $may_edit = merge_edit($may_edit, $may_action_edit);
+                my $may_action_edit =
+                    Sympa::Tools::WWW::find_edit_mode($action_edit);
+                $may_edit = Sympa::Tools::WWW::merge_edit($may_edit,
+                    $may_action_edit);
                 $why_not_edit = '' if ($may_edit);
 
             }
@@ -14350,40 +14304,6 @@ sub d_access_control {
 #     }
 
     return %result;
-}
-
-## return the mode of editing included in $action : 0, 0.5 or 1
-sub find_edit_mode {
-    my $action = shift;
-
-    my $result;
-    if ($action =~ /editor/i) {
-        $result = 0.5;
-    } elsif ($action =~ /do_it/i) {
-        $result = 1;
-    } else {
-        $result = 0;
-    }
-    return $result;
-}
-
-## return the mode of editing : 0, 0.5 or 1 :
-#  do the merging between 2 args of right access edit  : "0" > "0.5" > "1"
-#  instead of a "and" between two booleans : the most restrictive right is
-#  imposed
-sub merge_edit {
-    my $arg1 = shift;
-    my $arg2 = shift;
-    my $result;
-
-    if ($arg1 == 0 || $arg2 == 0) {
-        $result = 0;
-    } elsif ($arg1 == 0.5 || $arg2 == 0.5) {
-        $result = 0.5;
-    } else {
-        $result = 1;
-    }
-    return $result;
 }
 
 # create the root shared document
@@ -14558,10 +14478,10 @@ sub do_d_read {
     my $list_name = $list->{'name'};
 
     # relative path / directory shared of the document
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     # moderation
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     # path of the shared directory
     my $shareddir = $list->{'dir'} . '/shared';
@@ -14700,7 +14620,7 @@ sub do_d_read {
 
         ## parameters of the current directory
         if ($path && (-e "$doc/.desc")) {
-            my %desc_hash = get_desc_file("$doc/.desc");
+            my %desc_hash = Sympa::Tools::WWW::get_desc_file("$doc/.desc");
             $param->{'doc_owner'} = $desc_hash{'email'};
             $param->{'doc_title'} = $desc_hash{'title'};
         }
@@ -14727,7 +14647,9 @@ sub do_d_read {
         my @tmpdir = readdir DIR;
         closedir DIR;
 
-        my $dir = get_directory_content(\@tmpdir, $param->{'user'}{'email'},
+        my $dir =
+            Sympa::Tools::WWW::get_directory_content(\@tmpdir,
+            $param->{'user'}{'email'},
             $list, $doc);
 
         # empty directory?
@@ -14761,7 +14683,8 @@ sub do_d_read {
                 if (-e "$path_doc/.desc") {
 
                     # check access permission for reading
-                    %desc_hash = get_desc_file("$path_doc/.desc");
+                    %desc_hash =
+                        Sympa::Tools::WWW::get_desc_file("$path_doc/.desc");
 
                     my $result = Sympa::Scenario::request_action(
                         $list,
@@ -14789,7 +14712,8 @@ sub do_d_read {
                         # Case read authorized : fill the hash
                         $subdirs{$d}{'icon'} = $icon_table{'folder'};
 
-                        $subdirs{$d}{'doc'} = make_visible_path($d);
+                        $subdirs{$d}{'doc'} =
+                            Sympa::Tools::WWW::make_visible_path($d);
                         $subdirs{$d}{'escaped_doc'} =
                             tools::escape_docname($d, '/');
 
@@ -14805,7 +14729,8 @@ sub do_d_read {
                         if ($desc_hash{'email'}) {
                             $subdirs{$d}{'author'} = $desc_hash{'email'};
                             $subdirs{$d}{'author_mailto'} =
-                                mailto($list, $desc_hash{'email'});
+                                Sympa::Tools::WWW::mailto($list,
+                                $desc_hash{'email'});
                             $subdirs{$d}{'author_known'} = 1;
                         }
 
@@ -14829,9 +14754,10 @@ sub do_d_read {
                                 if (ref($result) eq 'HASH');
                             #may_action_edit = 0, 0.5 or 1
                             my $may_action_edit =
-                                find_edit_mode($action_edit);
-                            $may_action_edit =
-                                merge_edit($may_action_edit, $may_edit);
+                                Sympa::Tools::WWW::find_edit_mode(
+                                $action_edit);
+                            $may_action_edit = Sympa::Tools::WWW::merge_edit(
+                                $may_action_edit, $may_edit);
 
                             if ($may_control
                                 || ($user eq $desc_hash{'email'})) {
@@ -14881,7 +14807,8 @@ sub do_d_read {
                     $def_desc = 1;
 
                     # check access permission
-                    %desc_hash = get_desc_file("$doc/.desc.$d");
+                    %desc_hash =
+                        Sympa::Tools::WWW::get_desc_file("$doc/.desc.$d");
 
                     my $result = Sympa::Scenario::request_action(
                         $list,
@@ -14913,9 +14840,10 @@ sub do_d_read {
                         my $url = <DOC>;
                         close DOC;
                         chomp $url;
-                        $files{$d}{'url'}    = $url;
-                        $files{$d}{'anchor'} = make_visible_path($d);
-                        $files{$d}{'icon'}   = $icon_table{'url'};
+                        $files{$d}{'url'} = $url;
+                        $files{$d}{'anchor'} =
+                            Sympa::Tools::WWW::make_visible_path($d);
+                        $files{$d}{'icon'} = $icon_table{'url'};
 
                         ## MIME - TYPES : icons for template
                     } elsif (my $type = $mime_types->{$3}) {
@@ -14969,9 +14897,10 @@ sub do_d_read {
                                 if (ref($result) eq 'HASH');
                             #may_action_edit = 0, 0.5 or 1
                             my $may_action_edit =
-                                find_edit_mode($action_edit);
-                            $may_action_edit =
-                                merge_edit($may_action_edit, $may_edit);
+                                Sympa::Tools::WWW::find_edit_mode(
+                                $action_edit);
+                            $may_action_edit = Sympa::Tools::WWW::merge_edit(
+                                $may_action_edit, $may_edit);
 
                             if ($may_control
                                 || ($user eq $desc_hash{'email'})) {
@@ -14999,7 +14928,8 @@ sub do_d_read {
                                 $files{$d}{'author'} = $desc_hash{'email'};
                                 $files{$d}{'author_known'} = 1;
                                 $files{$d}{'author_mailto'} =
-                                    mailto($list, $desc_hash{'email'});
+                                    Sympa::Tools::WWW::mailto($list,
+                                    $desc_hash{'email'});
                             }
                         } else {
                             if ($may_edit != 0) {
@@ -15012,10 +14942,12 @@ sub do_d_read {
                         # name of the file
                         if ($d =~ /^(\.).*(.moderate)$/) {
                             # file not yet moderated can be seen by its author
-                            $files{$d}{'doc'}      = make_visible_path($d);
+                            $files{$d}{'doc'} =
+                                Sympa::Tools::WWW::make_visible_path($d);
                             $files{$d}{'moderate'} = 1;
                         } else {
-                            $files{$d}{'doc'} = make_visible_path($d);
+                            $files{$d}{'doc'} =
+                                Sympa::Tools::WWW::make_visible_path($d);
                         }
                         $files{$d}{'escaped_doc'} =
                             tools::escape_docname($d, '/');
@@ -15078,7 +15010,8 @@ sub do_d_read {
             # Parameters for the description
             if (-e "$doc/.desc") {
                 $param->{'serial_desc'} = (stat "$doc/.desc")[9];
-                my %desc_hash = get_desc_file("$doc/.desc");
+                my %desc_hash =
+                    Sympa::Tools::WWW::get_desc_file("$doc/.desc");
                 $param->{'description'} = $desc_hash{'title'};
             }
 
@@ -15159,85 +15092,6 @@ sub do_d_read {
     );
 
     return 1;
-}
-
-## return a ref on an array of file (or subdirecties) to show to user
-sub get_directory_content {
-    my $tmpdir = shift;
-    my $user   = shift;
-    my $list   = shift;
-    my $doc    = shift;
-
-    # array of file not hidden
-    my @dir = grep !/^\./, @$tmpdir;
-
-    # array with documents not yet moderated
-    my @moderate_dir = grep (/(\.moderate)$/, @$tmpdir);
-    @moderate_dir = grep (!/^\.desc\./, @moderate_dir);
-
-    # the editor can see file not yet moderated
-    # a user can see file not yet moderated if he is th owner of these files
-    if ($list->am_i('editor', $user)) {
-        push(@dir, @moderate_dir);
-    } else {
-        my @privatedir = select_my_files($user, $doc, \@moderate_dir);
-        push(@dir, @privatedir);
-    }
-
-    return \@dir;
-}
-
-## return an array that contains only file from @$refdir that belongs to $user
-sub select_my_files {
-    my ($user, $path, $refdir) = @_;
-    my @new_dir;
-
-    foreach my $d (@$refdir) {
-        if (-e "$path/.desc.$d") {
-            my %desc_hash = get_desc_file("$path/.desc.$d");
-            if ($user eq $desc_hash{'email'}) {
-                $new_dir[$#new_dir + 1] = $d;
-            }
-        }
-    }
-    return @new_dir;
-}
-
-## Useful function to get off the slash at the end of the path
-## at its end
-sub no_slash_end {
-    my $path = shift;
-
-    ## supress ending '/'
-    $path =~ s/\/+$//;
-
-    return $path;
-}
-
-## return a visible path from a moderated file or not
-sub make_visible_path {
-    my $path = shift;
-
-    my $visible_path = $path;
-
-    if ($path =~ /\.url(\.moderate)?$/) {
-        if ($path =~ /^([^\/]*\/)*([^\/]+)\.([^\/]+)$/) {
-            $visible_path =~ s/\.moderate$//;
-            $visible_path =~ s/^\.//;
-            $visible_path =~ s/\.url$//;
-        }
-
-    } elsif ($path =~ /\.moderate$/) {
-        if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-            my $name = $3;
-            $name =~ s/^\.//;
-            $name =~ s/\.moderate//;
-            $visible_path = "$2" . "$name";
-        }
-    }
-
-    ## Qdecode the visible path
-    return tools::qdecode_filename($visible_path);
 }
 
 ## Access to latest shared documents
@@ -15371,7 +15225,8 @@ sub directory_browsing {
         if (-d $path_d) {
             if (-e "$path_d/.desc") {
                 # check access permission for reading
-                my %desc_hash = get_desc_file("$path_d/.desc");
+                my %desc_hash =
+                    Sympa::Tools::WWW::get_desc_file("$path_d/.desc");
 
                 my $result = Sympa::Scenario::request_action(
                     $list,
@@ -15433,7 +15288,8 @@ sub directory_browsing {
                 $def_desc = 1;
 
                 # check access permission
-                %desc_hash = get_desc_file("$path_dir/.desc.$d");
+                %desc_hash =
+                    Sympa::Tools::WWW::get_desc_file("$path_dir/.desc.$d");
 
                 my $result = Sympa::Scenario::request_action(
                     $list,
@@ -15464,9 +15320,10 @@ sub directory_browsing {
                     my $url = <DOC>;
                     close DOC;
                     chomp $url;
-                    $file_info{'url'}    = $url;
-                    $file_info{'anchor'} = make_visible_path($d);
-                    $file_info{'icon'}   = $icon_table{'url'};
+                    $file_info{'url'} = $url;
+                    $file_info{'anchor'} =
+                        Sympa::Tools::WWW::make_visible_path($d);
+                    $file_info{'icon'} = $icon_table{'url'};
 
                     ## MIME - TYPES : icons for template
                 } elsif (my $type = $mime_types->{$3}) {
@@ -15495,12 +15352,13 @@ sub directory_browsing {
                 }
 
                 ## name of the file
-                $file_info{'name'} = make_visible_path($d);
+                $file_info{'name'} = Sympa::Tools::WWW::make_visible_path($d);
                 $file_info{'escaped_name'} = tools::escape_docname($d, '/');
 
                 ## content_directory
                 if ($dir) {
-                    $file_info{'content_dir'} = make_visible_path($dir);
+                    $file_info{'content_dir'} =
+                        Sympa::Tools::WWW::make_visible_path($dir);
                 } else {
                     $file_info{'content_dir'} = "/";
                 }
@@ -15539,11 +15397,11 @@ sub do_d_editfile {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     my $list_name    = $list->{'name'};
     my $shareddir    = $list->{'dir'} . '/shared';
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     $param->{'directory'} = -d "$shareddir/$path";
 
@@ -15680,7 +15538,7 @@ sub do_d_editfile {
     }
 
     if (-e $descfile) {
-        my %desc_hash = get_desc_file($descfile);
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file($descfile);
         $param->{'desc'}      = $desc_hash{'title'};
         $param->{'doc_owner'} = $desc_hash{'email'};
         ## Synchronization
@@ -15717,11 +15575,11 @@ sub do_d_properties {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     my $list_name    = $list->{'name'};
     my $shareddir    = $list->{'dir'} . '/shared';
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     $param->{'directory'} = -d "$shareddir/$path";
 
@@ -15829,7 +15687,7 @@ sub do_d_properties {
     $param->{'escaped_father'} =
         tools::escape_docname($param->{'father'}, '/');
 
-    $param->{'fname'} = make_visible_path($3);
+    $param->{'fname'} = Sympa::Tools::WWW::make_visible_path($3);
     # Description of the file
     my $descfile;
     if (-d "$shareddir/$path") {
@@ -15839,7 +15697,7 @@ sub do_d_properties {
     }
 
     if (-e $descfile) {
-        my %desc_hash = get_desc_file($descfile);
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file($descfile);
         $param->{'desc'}      = $desc_hash{'title'};
         $param->{'doc_owner'} = $desc_hash{'email'};
         ## Synchronization
@@ -15876,8 +15734,8 @@ sub do_d_describe {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path         = no_slash_end($in{'path'});
-    my $visible_path = make_visible_path($path);
+    my $path         = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
     my $list_name    = $list->{'name'};
     my $shareddir    = $list->{'dir'} . '/shared';
 
@@ -15973,7 +15831,7 @@ sub do_d_describe {
 
         if (-r "$desc_file") {
             # if description file already exists : open it and modify it
-            my %desc_hash = get_desc_file("$desc_file");
+            my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
 
             # Synchronization
             unless (synchronize($desc_file, $in{'serial'})) {
@@ -16057,7 +15915,7 @@ sub do_d_describe {
 
         }
 
-        $in{'path'} = no_slash_end($dir);
+        $in{'path'} = Sympa::Tools::WWW::no_slash_end($dir);
     }
 
     web_db_log(
@@ -16080,14 +15938,14 @@ sub do_d_savefile {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     if (   $in{'url'}
         && $in{'previous_action'} eq 'd_read') {
         $path .= '/' . $in{'name_doc'} . '.url';
     }
 
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     my $moderated;
     if ($visible_path ne $path) {
@@ -16224,7 +16082,8 @@ sub do_d_savefile {
     if (-e "$shareddir/$dir.desc.$file") {
 
         # if description file already exists : open it and modify it
-        my %desc_hash = get_desc_file("$shareddir/$dir.desc.$file");
+        my %desc_hash =
+            Sympa::Tools::WWW::get_desc_file("$shareddir/$dir.desc.$file");
 
         open DESC, ">$shareddir/$dir.desc.$file";
 
@@ -16370,9 +16229,9 @@ sub do_d_overwrite {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
@@ -16527,7 +16386,8 @@ sub do_d_overwrite {
 
     if (-e "$shareddir/$dir.desc.$file") {
         # if description file already exists: open it and modify it
-        my %desc_hash = get_desc_file("$shareddir/$dir.desc.$file");
+        my %desc_hash =
+            Sympa::Tools::WWW::get_desc_file("$shareddir/$dir.desc.$file");
 
         open DESC, ">$shareddir/$dir.desc.$file";
 
@@ -16666,7 +16526,7 @@ sub do_d_upload {
     my ($fname, $visible_fname);
     if ($fn =~ /([^\/\\]+)$/) {
         $fname         = tools::qencode_filename($1);
-        $visible_fname = make_visible_path($fname);
+        $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
     }
 
     # param from d_upload.tt2
@@ -16676,8 +16536,8 @@ sub do_d_upload {
     wwslog('info', '(%s/%s)', $in{'path'}, $fname);
 
     # Variables
-    my $path         = no_slash_end($in{'path'});
-    my $visible_path = make_visible_path($path);
+    my $path         = Sympa::Tools::WWW::no_slash_end($in{'path'});
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     # path of the shared directory
     my $shareddir = $list->{'dir'} . '/shared';
@@ -16874,7 +16734,8 @@ sub do_d_upload {
             my $timeold = time - $info[10];
 
             if ($timeold <= 300) {
-                my %desc_hash = get_desc_file($longtmpdesc);
+                my %desc_hash =
+                    Sympa::Tools::WWW::get_desc_file($longtmpdesc);
 
                 unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
                     Sympa::Report::reject_report_web(
@@ -16932,7 +16793,7 @@ sub do_d_upload {
 
     if (-e "$longmodname") {
 
-        my %desc_hash = get_desc_file("$longmoddesc");
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$longmoddesc");
         $file_moderated = 1;
 
         unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
@@ -17903,7 +17764,7 @@ sub do_d_unzip {
     wwslog('info', '(%s/%s)', $in{'path'}, $fname);
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     # path of the shared directory
     my $shareddir = $list->{'dir'} . '/shared';
@@ -18341,9 +18202,9 @@ sub d_install_file_hierarchy {
     my ($tmp_dir, $shareddir, $path, $access_dir) = @_;
     wwslog('debug2', '(%s, %s)', $tmp_dir, $path);
 
-    $tmp_dir   = no_slash_end($tmp_dir);
-    $shareddir = no_slash_end($shareddir);
-    $path      = no_slash_end($path);
+    $tmp_dir   = Sympa::Tools::WWW::no_slash_end($tmp_dir);
+    $shareddir = Sympa::Tools::WWW::no_slash_end($shareddir);
+    $path      = Sympa::Tools::WWW::no_slash_end($path);
 
     my $fatal_error = 0;
 
@@ -18493,9 +18354,9 @@ sub d_copy_rec_dir {
     my ($from, $path, $dest_dir, $dname) = @_;
     wwslog('debug3', '(%s, %s, %s)', $from, $dest_dir, $dname);
 
-    $from     = no_slash_end($from);
-    $path     = no_slash_end($path);
-    $dest_dir = no_slash_end($dest_dir);
+    $from     = Sympa::Tools::WWW::no_slash_end($from);
+    $path     = Sympa::Tools::WWW::no_slash_end($path);
+    $dest_dir = Sympa::Tools::WWW::no_slash_end($dest_dir);
 
     my $fatal_error = 0;
 
@@ -18861,9 +18722,9 @@ sub d_copy_file {
     my ($from, $path, $dest_dir, $fname, $access_dir) = @_;
     wwslog('debug3', '(%s, %s, %s', $from, $dest_dir, $fname);
 
-    $from     = no_slash_end($from);
-    $path     = no_slash_end($path);
-    $dest_dir = no_slash_end($dest_dir);
+    $from     = Sympa::Tools::WWW::no_slash_end($from);
+    $path     = Sympa::Tools::WWW::no_slash_end($path);
+    $dest_dir = Sympa::Tools::WWW::no_slash_end($dest_dir);
 
     my $may;
     unless ($may = d_test_existing_and_rights($path, $fname, $dest_dir)) {
@@ -18996,8 +18857,8 @@ sub d_copy_file {
             my @info    = stat "$dest_dir/.$fname.duplicate";
             my $timeold = time - $info[10];
             if ($timeold <= 300) {
-                my %desc_hash =
-                    get_desc_file("$dest_dir/.desc..$fname.duplicate");
+                my %desc_hash = Sympa::Tools::WWW::get_desc_file(
+                    "$dest_dir/.desc..$fname.duplicate");
                 unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
                     Sympa::Report::reject_report_web(
                         'user',
@@ -19039,7 +18900,8 @@ sub d_copy_file {
         }
 
         if (-e "$dest_dir/.$fname.moderate") {
-            my %desc_hash = get_desc_file("$dest_dir/.$fname.moderate");
+            my %desc_hash = Sympa::Tools::WWW::get_desc_file(
+                "$dest_dir/.$fname.moderate");
 
             unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
                 Sympa::Report::reject_report_web(
@@ -19104,7 +18966,7 @@ sub d_copy_file {
             return 1;
         }
 
-        my $visible_fname = make_visible_path($fname);
+        my $visible_fname = Sympa::Tools::WWW::make_visible_path($fname);
 
         unless (open DEST_FILE, ">$dest_dir/$fname") {
             Sympa::Report::reject_report_web(
@@ -19248,9 +19110,9 @@ sub d_copy_file {
 sub d_test_existing_and_rights {
     my ($path, $name, $dest_dir) = @_;
 
-    $path     = no_slash_end($path);
-    $name     = no_slash_end($name);
-    $dest_dir = no_slash_end($dest_dir);
+    $path     = Sympa::Tools::WWW::no_slash_end($path);
+    $name     = Sympa::Tools::WWW::no_slash_end($name);
+    $dest_dir = Sympa::Tools::WWW::no_slash_end($dest_dir);
 
     my $return;
 
@@ -19283,13 +19145,13 @@ sub do_d_delete {
     wwslog('info', '(%s)', $in{'path'});
 
     #useful variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     #Current directory and document to delete
     $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-    my $current_directory = no_slash_end($1);
+    my $current_directory = Sympa::Tools::WWW::no_slash_end($1);
     my $document          = $3;
 
     # path of the shared directory
@@ -19548,10 +19410,10 @@ sub do_d_rename {
     wwslog('info', '(%s)', $in{'path'});
 
     #useful variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     #moderation
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
     my $moderate;
     if ($path =~ /\.moderate$/) {
         $moderate = 1;
@@ -19560,7 +19422,7 @@ sub do_d_rename {
     #Current directory and document to delete
     my $current_directory;
     if ($path =~ /^(.*)\/([^\/]+)$/) {
-        $current_directory = no_slash_end($1);
+        $current_directory = Sympa::Tools::WWW::no_slash_end($1);
     } else {
         $current_directory = '.';
     }
@@ -19862,7 +19724,7 @@ sub do_d_create_dir {
     wwslog('info', '(%s)', $in{'name_doc'});
 
     #useful variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
@@ -20043,7 +19905,7 @@ sub do_d_create_dir {
         my $desc =
             "$shareddir/$path/" . ".desc.." . "$name_doc" . ".moderate";
         $desc =~ s/\/+/\//g;
-        my %desc_hash = get_desc_file("$desc");
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc");
 
         unless ($desc_hash{'email'} eq $param->{'user'}{'email'}) {
             Sympa::Report::reject_report_web(
@@ -20303,7 +20165,7 @@ sub do_d_control {
     wwslog('info', '%s', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
 
@@ -20311,7 +20173,7 @@ sub do_d_control {
     my $shareddir = $list->{'dir'} . '/shared';
 
     #moderation
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     unless ($path) {
         Sympa::Report::reject_report_web('user', 'missing_arg',
@@ -20412,7 +20274,7 @@ sub do_d_control {
 
     #Current directory
     if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = no_slash_end($1);
+        $param->{'father'} = Sympa::Tools::WWW::no_slash_end($1);
     } else {
         $param->{'father'} = '';
     }
@@ -20434,7 +20296,7 @@ sub do_d_control {
     if (-e $desc_file) {
         ## Synchronization
         $param->{'serial_desc'} = (stat $desc_file)[9];
-        my %desc_hash = get_desc_file("$desc_file");
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
         # rights for read and edit
         $read = $desc_hash{'read'};
         $edit = $desc_hash{'edit'};
@@ -20487,7 +20349,7 @@ sub do_d_control {
 
     ## father directory
     if ($path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/) {
-        $param->{'father'} = no_slash_end($1);
+        $param->{'father'} = Sympa::Tools::WWW::no_slash_end($1);
     } else {
         $param->{'father'} = '';
     }
@@ -20524,7 +20386,7 @@ sub do_d_change_access {
     wwslog('info', '(%s)', $in{'path'});
 
     # Variables
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     my $list_name = $list->{'name'};
 
@@ -20631,7 +20493,7 @@ sub do_d_change_access {
 
     if (-e "$desc_file") {
         # if description file already exists : open it and modify it
-        my %desc_hash = get_desc_file("$desc_file");
+        my %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
 
         # Synchronization
         unless (synchronize($desc_file, $in{'serial'})) {
@@ -20738,10 +20600,10 @@ sub do_d_set_owner {
     # Variables
     my $desc_file;
 
-    my $path = no_slash_end($in{'path'});
+    my $path = Sympa::Tools::WWW::no_slash_end($in{'path'});
 
     #moderation
-    my $visible_path = make_visible_path($path);
+    my $visible_path = Sympa::Tools::WWW::make_visible_path($path);
 
     #my $list_name = $in{'list'};
     my $list_name = $list->{'name'};
@@ -20873,7 +20735,7 @@ sub do_d_set_owner {
 
     if (-e "$desc_file") {
         # if description file already exists : open it and modify it
-        %desc_hash = get_desc_file("$desc_file");
+        %desc_hash = Sympa::Tools::WWW::get_desc_file("$desc_file");
 
         # Synchronization
         unless (synchronize($desc_file, $in{'serial'})) {
@@ -20993,7 +20855,7 @@ sub do_d_set_owner {
     unless ($access{'may'}{'control'}) {
         ## father directory
         $path =~ /^(([^\/]*\/)*)([^\/]+)(\/?)$/;
-        $in{'path'} = no_slash_end($1);
+        $in{'path'} = Sympa::Tools::WWW::no_slash_end($1);
         return 'd_read';
     }
 
@@ -21996,7 +21858,7 @@ sub do_compose_mail {
             $param->{'recipients'}{$recipient}{'domain_to'}
         ) = split('@', $recipient);
     }
-    $param->{'mailto'} = mailto($list, $param->{'to'});
+    $param->{'mailto'} = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     # headers will be encoded later.
     #XXX$param->{'subject'}= &MIME::Words::encode_mimewords($in{'subject'});
     $param->{'subject'}     = $in{'subject'};
@@ -22441,7 +22303,7 @@ sub do_request_topic {
     }
 
     $param->{'to'}      = $list->get_list_address();
-    $param->{'mailto'}  = mailto($list, $param->{'to'});
+    $param->{'mailto'}  = Sympa::Tools::WWW::mailto($list, $param->{'to'});
     $param->{'authkey'} = $in{'authkey'};
 
     my $listname  = $list->{'name'};

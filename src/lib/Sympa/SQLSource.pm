@@ -49,60 +49,66 @@ sub new {
     my $actualclass;
     our @ISA = qw(Sympa::Datasource);    #FIXME FIXME
     if ($param->{'db_type'} =~ /^mysql$/i) {
-        unless (eval "require Sympa::DBManipulatorMySQL") {
-            Log::do_log('err', 'Unable to use DBManipulatorMySQL module: %s',
+        unless (eval "require Sympa::DatabaseDriver::MySQL") {
+            Log::do_log('err',
+                'Unable to use Sympa::DatabaseDriver::MySQL module: %s',
                 $EVAL_ERROR);
             return undef;
         }
-        require Sympa::DBManipulatorMySQL;
-        $actualclass = "Sympa::DBManipulatorMySQL";
+        require Sympa::DatabaseDriver::MySQL;
+        $actualclass = "Sympa::DatabaseDriver::MySQL";
     } elsif ($param->{'db_type'} =~ /^sqlite$/i) {
-        unless (eval "require Sympa::DBManipulatorSQLite") {
-            Log::do_log('err', "Unable to use DBManipulatorSQLite module");
+        unless (eval "require Sympa::DatabaseDriver::SQLite") {
+            Log::do_log('err',
+                "Unable to use Sympa::DatabaseDriver::SQLite module");
             return undef;
         }
-        require Sympa::DBManipulatorSQLite;
+        require Sympa::DatabaseDriver::SQLite;
 
-        $actualclass = "Sympa::DBManipulatorSQLite";
+        $actualclass = "Sympa::DatabaseDriver::SQLite";
     } elsif ($param->{'db_type'} =~ /^pg$/i) {
-        unless (eval "require Sympa::DBManipulatorPostgres") {
-            Log::do_log('err', "Unable to use DBManipulatorPostgres module");
+        unless (eval "require Sympa::DatabaseDriver::PostgreSQL") {
+            Log::do_log('err',
+                "Unable to use Sympa::DatabaseDriver::PostgreSQL module");
             return undef;
         }
-        require Sympa::DBManipulatorPostgres;
+        require Sympa::DatabaseDriver::PostgreSQL;
 
-        $actualclass = "Sympa::DBManipulatorPostgres";
+        $actualclass = "Sympa::DatabaseDriver::PostgreSQL";
     } elsif ($param->{'db_type'} =~ /^oracle$/i) {
-        unless (eval "require Sympa::DBManipulatorOracle") {
-            Log::do_log('err', "Unable to use DBManipulatorOracle module");
+        unless (eval "require Sympa::DatabaseDriver::Oracle") {
+            Log::do_log('err',
+                "Unable to use Sympa::DatabaseDriver::Oracle module");
             return undef;
         }
-        require Sympa::DBManipulatorOracle;
+        require Sympa::DatabaseDriver::Oracle;
 
-        $actualclass = "Sympa::DBManipulatorOracle";
+        $actualclass = "Sympa::DatabaseDriver::Oracle";
     } elsif ($param->{'db_type'} =~ /^sybase$/i) {
-        unless (eval "require Sympa::DBManipulatorSybase") {
-            Log::do_log('err', "Unable to use DBManipulatorSybase module");
+        unless (eval "require Sympa::DatabaseDriver::Sybase") {
+            Log::do_log('err',
+                "Unable to use Sympa::DatabaseDriver::Sybase module");
             return undef;
         }
-        require DBManipulatorSybase;
+        require Sympa::DatabaseDriver::Sybase;
 
-        $actualclass = "Sympa::DBManipulatorSybase";
+        $actualclass = "Sympa::DatabaseDriver::Sybase";
     } elsif ($param->{'db_type'} =~ /^odbc$/i) {
-        unless (eval "require Sympa::DBManipulatorODBC") {
-            Log::do_log('err', 'Unable to use DBManipulatorODBC module');
+        unless (eval "require Sympa::DatabaseDriver::ODBC") {
+            Log::do_log('err',
+                'Unable to use Sympa::DatabaseDriver::ODBC module');
             return undef;
         }
-        require DBManipulatorODBC;
+        require Sympa::DatabaseDriver::ODBC;
 
-        $actualclass = 'Sympa::DBManipulatorODBC';
+        $actualclass = 'Sympa::DatabaseDriver::ODBC';
     } else {
         ## We don't have a DB Manipulator for this RDBMS
         ## It might be an SQL source used to include list members/owners
         ## like CSV
-        require Sympa::DBManipulatorDefault;
+        require Sympa::DatabaseDriver;
 
-        $actualclass = "Sympa::DBManipulatorDefault";
+        $actualclass = "Sympa::DatabaseDriver";
     }
     $self = $pkg->SUPER::new($param);
 

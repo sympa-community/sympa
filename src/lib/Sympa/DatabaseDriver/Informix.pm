@@ -22,12 +22,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorInformix;
+package Sympa::DatabaseDriver::Informix;
 
 use strict;
 use warnings;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;

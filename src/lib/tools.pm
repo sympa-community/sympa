@@ -213,26 +213,8 @@ sub by_date {
 
 }
 
-## Safefork does several tries before it gives up.
-## Do 3 trials and wait 10 seconds * $i between each.
-## Exit with a fatal error is fork failed after all
-## tests have been exhausted.
-sub safefork {
-    my ($i, $pid);
-
-    my $err;
-    for ($i = 1; $i < 4; $i++) {
-        my ($pid) = fork;
-        return $pid if defined $pid;
-
-        $err = $ERRNO;
-        Log::do_log('err', 'Cannot create new process: %s', $err);
-        #FIXME:should send a mail to the listmaster
-        sleep(10 * $i);
-    }
-    die sprintf 'Exiting because cannot create new process: %s', $err;
-    # No return.
-}
+# Moved to Sympa::Mail::safefork().
+#sub safefork ($i, $pid);
 
 ####################################################
 # checkcommand
@@ -264,8 +246,8 @@ sub checkcommand {
 
     if ($subject) {
         if ($Conf::Conf{'misaddressed_commands_regexp'}
-            && ($subject =~
-                /^$Conf::Conf{'misaddressed_commands_regexp'}$/im)) {
+            && ($subject =~ /^$Conf::Conf{'misaddressed_commands_regexp'}$/im)
+            ) {
             return 1;
         }
     }
@@ -591,18 +573,8 @@ sub get_template_path {
 
 ## Escape characters before using a string within a regexp parameter
 ## Escaped characters are : @ $ [ ] ( ) ' ! '\' * . + ?
-sub escape_regexp {
-    my $s = shift;
-    my @escaped =
-        ("\\", '@', '$', '[', ']', '(', ')', "'", '!', '*', '.', '+', '?');
-    my $backslash = "\\";    ## required in regexp
-
-    foreach my $escaped_char (@escaped) {
-        $s =~ s/$backslash$escaped_char/\\$escaped_char/g;
-    }
-
-    return $s;
-}
+# DEPRECATED: Use "s/([\x00-\x1F\s\w\x7F-\xFF])/\\$1/g;".
+#sub escape_regexp ($s);
 
 # Escape weird characters
 # FIXME: Should not use.
@@ -1401,40 +1373,8 @@ sub clean_msg_id {
 # sub higher_version($v1, $v2);
 
 ## Compare 2 versions of Sympa
-sub lower_version {
-    my ($v1, $v2) = @_;
-
-    my @tab1 = split /\./, $v1;
-    my @tab2 = split /\./, $v2;
-
-    my $max = $#tab1;
-    $max = $#tab2 if ($#tab2 > $#tab1);
-
-    for my $i (0 .. $max) {
-
-        if ($tab1[0] =~ /^(\d*)a$/) {
-            $tab1[0] = $1 - 0.5;
-        } elsif ($tab1[0] =~ /^(\d*)b$/) {
-            $tab1[0] = $1 - 0.25;
-        }
-
-        if ($tab2[0] =~ /^(\d*)a$/) {
-            $tab2[0] = $1 - 0.5;
-        } elsif ($tab2[0] =~ /^(\d*)b$/) {
-            $tab2[0] = $1 - 0.25;
-        }
-
-        if ($tab1[0] eq $tab2[0]) {
-            #printf "\t%s = %s\n",$tab1[0],$tab2[0];
-            shift @tab1;
-            shift @tab2;
-            next;
-        }
-        return ($tab1[0] < $tab2[0]);
-    }
-
-    return 0;
-}
+# Moved to Sympa::Upgrade::lower_version().
+#sub lower_version ($v1, $v2);
 
 sub add_in_blacklist {
     my $entry = shift;

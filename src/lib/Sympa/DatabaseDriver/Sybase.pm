@@ -22,38 +22,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorOracle;
+package Sympa::DatabaseDriver::Sybase;
 
 use strict;
 use warnings;
 ##use Data::Dumper;
 
-use Sympa::DBManipulatorOracle::St;
 use Log;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;
-    $self->{'connect_string'} = "DBI:Oracle:";
-    if ($self->{'db_host'} && $self->{'db_name'}) {
-        $self->{'connect_string'} .=
-            "host=$self->{'db_host'};sid=$self->{'db_name'}";
-    }
+    $self->{'connect_string'} =
+        "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
 }
 
 sub get_substring_clause {
     my $self  = shift;
     my $param = shift;
     return
-          "substr("
+          "substring("
         . $param->{'source_field'}
-        . ",instr("
-        . $param->{'source_field'} . ",'"
-        . $param->{'separator'} . "')+1)";
+        . ",charindex('"
+        . $param->{'separator'} . "',"
+        . $param->{'source_field'} . ")+1,"
+        . $param->{'substring_length'} . ")";
 }
 
-#DEPRECATED.
+# DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
 sub get_formatted_date {
@@ -61,15 +58,11 @@ sub get_formatted_date {
     my $param = shift;
     Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-        return
-            sprintf
-            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
-            $param->{'target'}, $param->{'target'};
+        return sprintf 'datediff(second, \'01/01/1970\',%s)',
+            $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
-        return
-            sprintf
-            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
-            $param->{'target'}, $param->{'target'};
+        return sprintf 'dateadd(second,%s,\'01/01/1970\')',
+            $param->{'target'};
     } else {
         Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
@@ -83,12 +76,10 @@ sub is_autoinc {
         $param->{'field'}, $param->{'table'});
     my $sth;
     unless (
-        $sth = $self->do_prepared_query(
-            q{SELECT COUNT(trigger_name)
-              FROM user_triggers
-              WHERE table_name = ? AND trigger_name = ?},
-            uc($param->{'table'}),
-            uc('trg_' . $param->{'field'})
+        $sth = $self->do_query(
+            "SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",
+            $param->{'table'},
+            $param->{'field'}
         )
         ) {
         Log::do_log('err',
@@ -96,10 +87,10 @@ sub is_autoinc {
             $param->{'field'}, $param->{'table'});
         return undef;
     }
-    return $sth->fetchrow_array;
+    my $ref = $sth->fetchrow_hashref('NAME_lc');
+    return ($ref->{'field'} eq $param->{'field'});
 }
 
-#FIXME: Currently not works.
 sub set_autoinc {
     my $self  = shift;
     my $param = shift;
@@ -121,11 +112,14 @@ sub set_autoinc {
 
 sub get_tables {
     my $self = shift;
-    Log::do_log('debug', 'Retrieving all tables in database %s',
-        $self->{'db_name'});
     my @raw_tables;
     my $sth;
-    unless ($sth = $self->do_query("SELECT table_name FROM user_tables")) {
+    unless (
+        $sth = $self->do_query(
+            "SELECT name FROM %s..sysobjects WHERE type='U'",
+            $self->{'db_name'}
+        )
+        ) {
         Log::do_log('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
@@ -160,35 +154,19 @@ sub get_fields {
         $param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
-    unless (
-        $sth = $self->do_prepared_query(
-            q{SELECT column_name, data_type, data_length
-              FROM all_tab_columns
-              WHERE table_name = ?}, uc($param->{'table'})
-        )
-        ) {
+    unless ($sth = $self->do_query("SHOW FIELDS FROM %s", $param->{'table'}))
+    {
         Log::do_log('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-        my $data_type   = lc($ref->{'data_type'});
-        my $data_length = $ref->{'data_length'};
-        my $type;
-        if (   not $data_length
-            or $data_type eq 'number' and $data_length == 22
-            or $data_type eq 'date') {
-            $type = $data_type;
-        } else {
-            $type = sprintf '%s(%s)', $data_type, $data_length;
-        }
-        $result{lc($ref->{'column_name'})} = $type;
+        $result{$ref->{'field'}} = $ref->{'type'};
     }
     return \%result;
 }
 
-#FIXME: Currently not works.
 sub update_field {
     my $self  = shift;
     my $param = shift;
@@ -225,7 +203,6 @@ sub update_field {
     return $report;
 }
 
-#FIXME: Currently not works.
 sub add_field {
     my $self  = shift;
     my $param = shift;
@@ -267,7 +244,6 @@ sub add_field {
     return $report;
 }
 
-#FIXME: Currently not works.
 sub delete_field {
     my $self  = shift;
     my $param = shift;
@@ -302,47 +278,33 @@ sub get_primary_key {
 
     my %found_keys;
     my $sth;
-    unless (
-        $sth = $self->do_prepared_query(
-            q{SELECT cols.column_name
-              FROM all_cons_columns cols, all_constraints cons
-              WHERE cons.constraint_type = 'P' AND
-                    cols.constraint_name = cons.constraint_name AND
-                    cols.owner = cons.owner AND
-                    cols.table_name = cons.table_name AND
-                    cons.table_name = ?},
-            uc($param->{'table'})
-        )
-        ) {
+    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s", $param->{'table'}))
+    {
         Log::do_log('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
 
-    my $field;
-    while ($field = $sth->fetchrow_array) {
-        $found_keys{lc $field} = 1;
+    my $test_request_result = $sth->fetchall_hashref('field');
+    foreach my $scannedResult (keys %$test_request_result) {
+        if ($test_request_result->{$scannedResult}{'key'} eq "PRI") {
+            $found_keys{$scannedResult} = 1;
+        }
     }
     return \%found_keys;
 }
 
-# Currently not work
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
     Log::do_log('debug', 'Removing primary key from table %s',
         $param->{'table'});
 
-    return undef;    # Currently disabled.
-
     my $sth;
-    unless (
-        $sth = $self->do_query(
-            q{ALTER TABLE %s
-              DROP PRIMARY KEY CASCADE}, $param->{'table'}
-        )
-        ) {
+    unless ($sth =
+        $self->do_query("ALTER TABLE %s DROP PRIMARY KEY", $param->{'table'}))
+    {
         Log::do_log('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -354,7 +316,6 @@ sub unset_primary_key {
     return $report;
 }
 
-# Currently not work
 sub set_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -363,17 +324,10 @@ sub set_primary_key {
     my $fields = join ',', @{$param->{'fields'}};
     Log::do_log('debug', 'Setting primary key for table %s (%s)',
         $param->{'table'}, $fields);
-    my $pkname = $param->{'table'};
-    $pkname =~ s/_table\z//;
-    $pkname = "ind_$pkname";
-
-    return undef;    # Currently disabled.
-
     unless (
         $sth = $self->do_query(
-            q{ALTER TABLE %s
-              ADD CONSTRAINT %s PRIMARY KEY (%s)}, $param->{'table'},
-            $pkname,                               $fields
+            "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
+            $fields
         )
         ) {
         Log::do_log(
@@ -391,7 +345,6 @@ sub set_primary_key {
     return $report;
 }
 
-#FIXME: Currently not works.
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
@@ -420,7 +373,6 @@ sub get_indexes {
     return \%found_indexes;
 }
 
-#FIXME: Currently not works.
 sub unset_index {
     my $self  = shift;
     my $param = shift;
@@ -446,7 +398,6 @@ sub unset_index {
     return $report;
 }
 
-#FIXME: Currently not works.
 sub set_index {
     my $self  = shift;
     my $param = shift;
@@ -480,30 +431,6 @@ sub set_index {
     return $report;
 }
 
-sub do_query {
-    my $self = shift;
-    my $ret  = $self->SUPER::do_query(@_);
-    if ($ret) {
-        bless $ret => 'Sympa::DBManipulatorOracle::St';
-    }
-    return $ret;
-}
-
-sub do_prepared_query {
-    my $self = shift;
-    my $ret  = $self->SUPER::do_prepared_query(@_);
-    if ($ret) {
-        bless $ret => 'Sympa::DBManipulatorOracle::St';
-    }
-    return $ret;
-}
-
-sub AS_BLOB {
-    return ({'ora_type' => DBD::Oracle::ORA_BLOB()} => $_[1])
-        if scalar @_ > 1;
-    return ();
-}
-
 1;
 __END__
 
@@ -511,10 +438,10 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorOracle - Database driver for Oracle Database
+Sympa::DatabaseDriver::Sybase - Database driver for Adaptive Server Enterprise
 
 =head1 SEE ALSO
 
-L<Sympa::DBManipulatorDefault>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<SDM>.
 
 =cut

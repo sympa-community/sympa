@@ -226,7 +226,7 @@ sub smtpto {
         die sprintf 'Unable to create a channel in smtpto: %s', $ERRNO;
         # No return
     }
-    $pid = tools::safefork();
+    $pid = safefork();
     $pid{$pid} = 0;
 
     my $sendmail = Conf::get_robot_conf($robot, 'sendmail');
@@ -287,5 +287,27 @@ sub smtpto {
 
 #DEPRECATED. Moved to Sympa::Message::_fix_utf8_parts as internal functioin.
 #sub fix_part;
+
+## Safefork does several tries before it gives up.
+## Do 3 trials and wait 10 seconds * $i between each.
+## Exit with a fatal error is fork failed after all
+## tests have been exhausted.
+# Old name: tools::safefork().
+sub safefork {
+    my ($i, $pid);
+
+    my $err;
+    for ($i = 1; $i < 4; $i++) {
+        my ($pid) = fork;
+        return $pid if defined $pid;
+
+        $err = $ERRNO;
+        Log::do_log('err', 'Cannot create new process: %s', $err);
+        #FIXME:should send a mail to the listmaster
+        sleep(10 * $i);
+    }
+    die sprintf 'Exiting because cannot create new process: %s', $err;
+    # No return.
+}
 
 1;

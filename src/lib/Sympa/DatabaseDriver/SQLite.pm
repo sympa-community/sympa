@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorSQLite;
+package Sympa::DatabaseDriver::SQLite;
 
 use strict;
 use warnings;
@@ -32,7 +32,7 @@ use POSIX qw();
 
 use Log;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;
@@ -776,10 +776,10 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorSQLite - Database driver for SQLite
+Sympa::DatabaseDriver::SQLite - Database driver for SQLite
 
 =head1 SEE ALSO
 
-L<Sympa::DBManipulatorDefault>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<SDM>.
 
 =cut

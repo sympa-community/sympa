@@ -22,39 +22,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorMySQL;
+package Sympa::DatabaseDriver::Oracle;
 
 use strict;
 use warnings;
-#use Data::Dumper;
+##use Data::Dumper;
 
+use Sympa::DatabaseDriver::Oracle::St;
 use Log;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;
-    Log::do_log('debug', 'Building connection string to database %s',
-        $self->{'db_name'});
-    $self->{'connect_string'} =
-        "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
+    $self->{'connect_string'} = "DBI:Oracle:";
+    if ($self->{'db_host'} && $self->{'db_name'}) {
+        $self->{'connect_string'} .=
+            "host=$self->{'db_host'};sid=$self->{'db_name'}";
+    }
 }
 
 sub get_substring_clause {
     my $self  = shift;
     my $param = shift;
-    Log::do_log('debug', 'Building substring caluse');
     return
-          "REVERSE(SUBSTRING("
+          "substr("
         . $param->{'source_field'}
-        . " FROM position('"
-        . $param->{'separator'} . "' IN "
-        . $param->{'source_field'}
-        . ") FOR "
-        . $param->{'substring_length'} . "))";
+        . ",instr("
+        . $param->{'source_field'} . ",'"
+        . $param->{'separator'} . "')+1)";
 }
 
-# DEPRECATED.
+#DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
 sub get_formatted_date {
@@ -62,9 +61,15 @@ sub get_formatted_date {
     my $param = shift;
     Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
+        return
+            sprintf
+            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
+            $param->{'target'}, $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
+        return
+            sprintf
+            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
+            $param->{'target'}, $param->{'target'};
     } else {
         Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
@@ -78,10 +83,12 @@ sub is_autoinc {
         $param->{'field'}, $param->{'table'});
     my $sth;
     unless (
-        $sth = $self->do_query(
-            "SHOW FIELDS FROM `%s` WHERE Extra ='auto_increment' and Field = '%s'",
-            $param->{'table'},
-            $param->{'field'}
+        $sth = $self->do_prepared_query(
+            q{SELECT COUNT(trigger_name)
+              FROM user_triggers
+              WHERE table_name = ? AND trigger_name = ?},
+            uc($param->{'table'}),
+            uc('trg_' . $param->{'field'})
         )
         ) {
         Log::do_log('err',
@@ -89,24 +96,19 @@ sub is_autoinc {
             $param->{'field'}, $param->{'table'});
         return undef;
     }
-    my $ref = $sth->fetchrow_hashref('NAME_lc');
-    return ($ref->{'field'} eq $param->{'field'});
+    return $sth->fetchrow_array;
 }
 
+#FIXME: Currently not works.
 sub set_autoinc {
     my $self  = shift;
     my $param = shift;
-    my $field_type =
-        defined($param->{'field_type'})
-        ? $param->{'field_type'}
-        : 'BIGINT( 20 )';
     Log::do_log('debug', 'Setting field %s.%s as autoincremental',
         $param->{'field'}, $param->{'table'});
     unless (
         $self->do_query(
-            "ALTER TABLE `%s` CHANGE `%s` `%s` %s NOT NULL AUTO_INCREMENT",
-            $param->{'table'}, $param->{'field'},
-            $param->{'field'}, $field_type
+            "ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",
+            $param->{'table'}, $param->{'field'}, $param->{'field'}
         )
         ) {
         Log::do_log('err',
@@ -122,24 +124,17 @@ sub get_tables {
     Log::do_log('debug', 'Retrieving all tables in database %s',
         $self->{'db_name'});
     my @raw_tables;
-    my @result;
-    unless (@raw_tables = $self->{'dbh'}->tables()) {
+    my $sth;
+    unless ($sth = $self->do_query("SELECT table_name FROM user_tables")) {
         Log::do_log('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
         return undef;
     }
-
-    foreach my $t (@raw_tables) {
-        # Clean table names that would look like `databaseName`.`tableName`
-        # (mysql)
-        $t =~ s/^\`[^\`]+\`\.//;
-        # Clean table names that could be surrounded by `` (recent DBD::mysql
-        # release)
-        $t =~ s/^\`(.+)\`$/$1/;
-        push @result, $t;
+    while (my $table = $sth->fetchrow()) {
+        push @raw_tables, lc($table);
     }
-    return \@result;
+    return \@raw_tables;
 }
 
 sub add_table {
@@ -148,11 +143,8 @@ sub add_table {
     Log::do_log('debug', 'Adding table %s to database %s',
         $param->{'table'}, $self->{'db_name'});
     unless (
-        $self->do_query(
-            "CREATE TABLE %s (temporary INT) DEFAULT CHARACTER SET utf8",
-            $param->{'table'}
-        )
-        ) {
+        $self->do_query("CREATE TABLE %s (temporary INT)", $param->{'table'}))
+    {
         Log::do_log('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -168,19 +160,35 @@ sub get_fields {
         $param->{'table'}, $self->{'db_name'});
     my $sth;
     my %result;
-    unless ($sth = $self->do_query("SHOW FIELDS FROM %s", $param->{'table'}))
-    {
+    unless (
+        $sth = $self->do_prepared_query(
+            q{SELECT column_name, data_type, data_length
+              FROM all_tab_columns
+              WHERE table_name = ?}, uc($param->{'table'})
+        )
+        ) {
         Log::do_log('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
     while (my $ref = $sth->fetchrow_hashref('NAME_lc')) {
-        $result{$ref->{'field'}} = $ref->{'type'};
+        my $data_type   = lc($ref->{'data_type'});
+        my $data_length = $ref->{'data_length'};
+        my $type;
+        if (   not $data_length
+            or $data_type eq 'number' and $data_length == 22
+            or $data_type eq 'date') {
+            $type = $data_type;
+        } else {
+            $type = sprintf '%s(%s)', $data_type, $data_length;
+        }
+        $result{lc($ref->{'column_name'})} = $type;
     }
     return \%result;
 }
 
+#FIXME: Currently not works.
 sub update_field {
     my $self  = shift;
     my $param = shift;
@@ -217,6 +225,7 @@ sub update_field {
     return $report;
 }
 
+#FIXME: Currently not works.
 sub add_field {
     my $self  = shift;
     my $param = shift;
@@ -258,6 +267,7 @@ sub add_field {
     return $report;
 }
 
+#FIXME: Currently not works.
 sub delete_field {
     my $self  = shift;
     my $param = shift;
@@ -292,33 +302,47 @@ sub get_primary_key {
 
     my %found_keys;
     my $sth;
-    unless ($sth = $self->do_query("SHOW COLUMNS FROM %s", $param->{'table'}))
-    {
+    unless (
+        $sth = $self->do_prepared_query(
+            q{SELECT cols.column_name
+              FROM all_cons_columns cols, all_constraints cons
+              WHERE cons.constraint_type = 'P' AND
+                    cols.constraint_name = cons.constraint_name AND
+                    cols.owner = cons.owner AND
+                    cols.table_name = cons.table_name AND
+                    cons.table_name = ?},
+            uc($param->{'table'})
+        )
+        ) {
         Log::do_log('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
     }
 
-    my $test_request_result = $sth->fetchall_hashref('field');
-    foreach my $scannedResult (keys %$test_request_result) {
-        if ($test_request_result->{$scannedResult}{'key'} eq "PRI") {
-            $found_keys{$scannedResult} = 1;
-        }
+    my $field;
+    while ($field = $sth->fetchrow_array) {
+        $found_keys{lc $field} = 1;
     }
     return \%found_keys;
 }
 
+# Currently not work
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
     Log::do_log('debug', 'Removing primary key from table %s',
         $param->{'table'});
 
+    return undef;    # Currently disabled.
+
     my $sth;
-    unless ($sth =
-        $self->do_query("ALTER TABLE %s DROP PRIMARY KEY", $param->{'table'}))
-    {
+    unless (
+        $sth = $self->do_query(
+            q{ALTER TABLE %s
+              DROP PRIMARY KEY CASCADE}, $param->{'table'}
+        )
+        ) {
         Log::do_log('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -330,6 +354,7 @@ sub unset_primary_key {
     return $report;
 }
 
+# Currently not work
 sub set_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -338,10 +363,17 @@ sub set_primary_key {
     my $fields = join ',', @{$param->{'fields'}};
     Log::do_log('debug', 'Setting primary key for table %s (%s)',
         $param->{'table'}, $fields);
+    my $pkname = $param->{'table'};
+    $pkname =~ s/_table\z//;
+    $pkname = "ind_$pkname";
+
+    return undef;    # Currently disabled.
+
     unless (
         $sth = $self->do_query(
-            "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
-            $fields
+            q{ALTER TABLE %s
+              ADD CONSTRAINT %s PRIMARY KEY (%s)}, $param->{'table'},
+            $pkname,                               $fields
         )
         ) {
         Log::do_log(
@@ -359,6 +391,7 @@ sub set_primary_key {
     return $report;
 }
 
+#FIXME: Currently not works.
 sub get_indexes {
     my $self  = shift;
     my $param = shift;
@@ -387,6 +420,7 @@ sub get_indexes {
     return \%found_indexes;
 }
 
+#FIXME: Currently not works.
 sub unset_index {
     my $self  = shift;
     my $param = shift;
@@ -412,6 +446,7 @@ sub unset_index {
     return $report;
 }
 
+#FIXME: Currently not works.
 sub set_index {
     my $self  = shift;
     my $param = shift;
@@ -445,9 +480,26 @@ sub set_index {
     return $report;
 }
 
-## For DOUBLE type.
-sub AS_DOUBLE {
-    return ({'mysql_type' => DBD::mysql::FIELD_TYPE_DOUBLE()} => $_[1])
+sub do_query {
+    my $self = shift;
+    my $ret  = $self->SUPER::do_query(@_);
+    if ($ret) {
+        bless $ret => 'Sympa::DatabaseDriver::Oracle::St';
+    }
+    return $ret;
+}
+
+sub do_prepared_query {
+    my $self = shift;
+    my $ret  = $self->SUPER::do_prepared_query(@_);
+    if ($ret) {
+        bless $ret => 'Sympa::DatabaseDriver::Oracle::St';
+    }
+    return $ret;
+}
+
+sub AS_BLOB {
+    return ({'ora_type' => DBD::Oracle::ORA_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
 }
@@ -459,10 +511,10 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorMySQL - Database driver for MySQL / MariaDB
+Sympa::DatabaseDriver::Oracle - Database driver for Oracle Database
 
 =head1 SEE ALSO
 
-L<Sympa::DBManipulatorDefault>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<SDM>.
 
 =cut

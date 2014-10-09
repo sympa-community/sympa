@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorDefault;
+package Sympa::DatabaseDriver;
 
 use strict;
 use warnings;
@@ -197,16 +197,16 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorDefault - Base class of database drivers for Sympa
+Sympa::DatabaseDriver - Base class of database drivers for Sympa
 
 =head1 SYNOPSIS
 
-  package Sympa::DBManipulatorFOO;
-  use base qw(Sympa::DBManipulatorDefault);
+  package Sympa::DatabaseDriver::FOO;
+  use base qw(Sympa::DatabaseDriver);
 
 =head1 DESCRIPTION
 
-L<Sympa::DBManipulatorDefault> is the base class of driver classes for
+L<Sympa::DatabaseDriver> is the base class of driver classes for
 Sympa Database Manager (SDM).
 
 =head2 Instance methods subclasses should implement.

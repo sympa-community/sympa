@@ -22,32 +22,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::DBManipulatorSybase;
+package Sympa::DatabaseDriver::MySQL;
 
 use strict;
 use warnings;
-##use Data::Dumper;
+#use Data::Dumper;
 
 use Log;
 
-use base qw(Sympa::DBManipulatorDefault);
+use base qw(Sympa::DatabaseDriver);
 
 sub build_connect_string {
     my $self = shift;
+    Log::do_log('debug', 'Building connection string to database %s',
+        $self->{'db_name'});
     $self->{'connect_string'} =
-        "DBI:Sybase:database=$self->{'db_name'};server=$self->{'db_host'}";
+        "DBI:$self->{'db_type'}:$self->{'db_name'}:$self->{'db_host'}";
 }
 
 sub get_substring_clause {
     my $self  = shift;
     my $param = shift;
+    Log::do_log('debug', 'Building substring caluse');
     return
-          "substring("
+          "REVERSE(SUBSTRING("
         . $param->{'source_field'}
-        . ",charindex('"
-        . $param->{'separator'} . "',"
-        . $param->{'source_field'} . ")+1,"
-        . $param->{'substring_length'} . ")";
+        . " FROM position('"
+        . $param->{'separator'} . "' IN "
+        . $param->{'source_field'}
+        . ") FOR "
+        . $param->{'substring_length'} . "))";
 }
 
 # DEPRECATED.
@@ -58,11 +62,9 @@ sub get_formatted_date {
     my $param = shift;
     Log::do_log('debug', 'Building SQL date formatting');
     if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'datediff(second, \'01/01/1970\',%s)',
-            $param->{'target'};
+        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
     } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf 'dateadd(second,%s,\'01/01/1970\')',
-            $param->{'target'};
+        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
     } else {
         Log::do_log('err', "Unknown date format mode %s", $param->{'mode'});
         return undef;
@@ -94,12 +96,17 @@ sub is_autoinc {
 sub set_autoinc {
     my $self  = shift;
     my $param = shift;
+    my $field_type =
+        defined($param->{'field_type'})
+        ? $param->{'field_type'}
+        : 'BIGINT( 20 )';
     Log::do_log('debug', 'Setting field %s.%s as autoincremental',
         $param->{'field'}, $param->{'table'});
     unless (
         $self->do_query(
-            "ALTER TABLE `%s` CHANGE `%s` `%s` BIGINT( 20 ) NOT NULL AUTO_INCREMENT",
-            $param->{'table'}, $param->{'field'}, $param->{'field'}
+            "ALTER TABLE `%s` CHANGE `%s` `%s` %s NOT NULL AUTO_INCREMENT",
+            $param->{'table'}, $param->{'field'},
+            $param->{'field'}, $field_type
         )
         ) {
         Log::do_log('err',
@@ -112,23 +119,27 @@ sub set_autoinc {
 
 sub get_tables {
     my $self = shift;
+    Log::do_log('debug', 'Retrieving all tables in database %s',
+        $self->{'db_name'});
     my @raw_tables;
-    my $sth;
-    unless (
-        $sth = $self->do_query(
-            "SELECT name FROM %s..sysobjects WHERE type='U'",
-            $self->{'db_name'}
-        )
-        ) {
+    my @result;
+    unless (@raw_tables = $self->{'dbh'}->tables()) {
         Log::do_log('err',
             'Unable to retrieve the list of tables from database %s',
             $self->{'db_name'});
         return undef;
     }
-    while (my $table = $sth->fetchrow()) {
-        push @raw_tables, lc($table);
+
+    foreach my $t (@raw_tables) {
+        # Clean table names that would look like `databaseName`.`tableName`
+        # (mysql)
+        $t =~ s/^\`[^\`]+\`\.//;
+        # Clean table names that could be surrounded by `` (recent DBD::mysql
+        # release)
+        $t =~ s/^\`(.+)\`$/$1/;
+        push @result, $t;
     }
-    return \@raw_tables;
+    return \@result;
 }
 
 sub add_table {
@@ -137,8 +148,11 @@ sub add_table {
     Log::do_log('debug', 'Adding table %s to database %s',
         $param->{'table'}, $self->{'db_name'});
     unless (
-        $self->do_query("CREATE TABLE %s (temporary INT)", $param->{'table'}))
-    {
+        $self->do_query(
+            "CREATE TABLE %s (temporary INT) DEFAULT CHARACTER SET utf8",
+            $param->{'table'}
+        )
+        ) {
         Log::do_log('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -431,6 +445,13 @@ sub set_index {
     return $report;
 }
 
+## For DOUBLE type.
+sub AS_DOUBLE {
+    return ({'mysql_type' => DBD::mysql::FIELD_TYPE_DOUBLE()} => $_[1])
+        if scalar @_ > 1;
+    return ();
+}
+
 1;
 __END__
 
@@ -438,10 +459,10 @@ __END__
 
 =head1 NAME
 
-Sympa::DBManipulatorSybase - Database driver for Adaptive Server Enterprise
+Sympa::DatabaseDriver::MySQL - Database driver for MySQL / MariaDB
 
 =head1 SEE ALSO
 
-L<Sympa::DBManipulatorDefault>, L<SDM>.
+L<Sympa::DatabaseDriver>, L<SDM>.
 
 =cut
