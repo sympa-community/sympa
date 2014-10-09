@@ -96,6 +96,14 @@ MAN3PM = \
 	Sympa/Constants.pm \
 	Sympa/Crash.pm \
 	Sympa/DatabaseDescription.pm \
+	Sympa/DatabaseDriver.pm \
+	Sympa/DatabaseDriver/MySQL.pm \
+	Sympa/DatabaseDriver/ODBC.pm \
+	Sympa/DatabaseDriver/Oracle.pm \
+	Sympa/DatabaseDriver/Oracle/St.pm \
+	Sympa/DatabaseDriver/PostgreSQL.pm \
+	Sympa/DatabaseDriver/SQLite.pm\
+	Sympa/DatabaseDriver/Sybase.pm \
 	Sympa/Language.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
