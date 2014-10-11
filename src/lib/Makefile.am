@@ -107,6 +107,7 @@ MAN3PM = \
 	Sympa/Language.pm \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
+	Sympa/Mailer.pm \
 	Sympa/Message.pm \
 	Sympa/Message/Plugin.pm \
 	Sympa/Message/Plugin/FixEncoding.pm \

@@ -31,10 +31,8 @@ use base qw(Class::Singleton);
 use English qw(-no_match_vars);
 use POSIX qw();
 
-use Sympa::Bulk;
 use Conf;
 use Log;
-use tools;
 
 my $max_arg;
 eval { $max_arg = POSIX::sysconf(POSIX::_SC_ARG_MAX()); };
@@ -42,38 +40,16 @@ if ($EVAL_ERROR) {
     $max_arg = 4096;
 }
 
-=head2 CLASS METHODS
-
-=over
-
-=item instance ( %parameters )
-
-Creates a new L<Sympa::Mailer> object.
-
-Returns:
-
-A new L<Sympa::Mailer> object, or I<undef> for failure.
-
-=back
-
-=cut
-
 # Constructor for Class::Singleton.
 sub _new_instance {
-    my $class  = shift;
-    my %params = @_;
+    my $class = shift;
 
     bless {
-        pids            => {},
-        opensmtp        => 0,
-        always_use_bulk => undef,    # for calling context
-        log_smtp        => undef,    # SMTP logging is enabled or not
+        pids     => {},
+        opensmtp => 0,
+        log_smtp => undef,    # SMTP logging is enabled or not
     } => $class;
 }
-
-=head2 Instance methods
-
-=cut
 
 #sub set_send_spool($spool_dir);
 #DEPRECATED: No longer used.
@@ -86,30 +62,6 @@ sub _new_instance {
 
 #sub mail_forward($message, $from, $rcpt, $robot);
 #DEPRECATED: This is no longer used.
-
-=over
-
-=item reaper ( [ $block ] )
-
-Non blocking function called by: main loop of sympa, task_manager, bounced
-etc., just to clean the defuncts list by waiting to any processes and
-decrementing the counter.
-
-Parameter:
-
-=over
-
-=item $block
-
-=back
-
-Returns:
-
-PID.
-
-=back
-
-=cut
 
 sub reaper {
     my $self  = shift;
@@ -139,125 +91,10 @@ sub reaper {
 #DEPRECATED.
 #sub sendto;
 
-=over
-
-=item send_message ( $message, $rcpt, [ tag_as_last => 1 )
-
-Sends a message using sendmail or puting it
-in bulk spool according to the context.
-
-Shelves signing if needed.
-
-Parameters:
-
-=over
-
-=item $message
-
-L<Sympa::Message> instance, message to be sent.
-
-=item $rcpt
-
-Scalar or arrayref, recipients for SMTP "RCPT To:" field.
-
-=item $message->{envelope_sender}
-
-For SMTP, "MAIL From:" field; for spool, "Return-Path" field.
-
-=back
-
-Returns:
-
-1 if sendmail was called.  0 if pushed in spool.  Otherwise C<undef>.
-
-=back
-
-=cut
-
-# Old name: mail::sending(), Sympa::Mail::sending().
-sub send_message {
-    my $self    = shift;
-    my $message = shift;
-    my $rcpt    = shift;
-    my %params  = @_;
-
-    my $that = $message->{context};
-    my ($list, $robot_id);
-    if (ref $that eq 'Sympa::List') {
-        $list     = $that;
-        $robot_id = $that->{'domain'};
-    } elsif ($that and $that ne '*') {
-        $robot_id = $that;
-    } else {
-        $robot_id = '*';
-    }
-
-    my $tag_as_last = $params{'tag_as_last'};
-    my $sympa_file;
-
-    if ($self->{always_use_bulk}) {
-        # in that case use bulk tables to prepare message distribution
-        unless (defined Sympa::Bulk::store($message, $rcpt)) {
-            Log::do_log('err', 'Failed to store message %s for %s',
-                $message, $that);
-            tools::send_notify_to_listmaster(
-                $that,
-                'bulk_error',
-                {   ($list ? (listname => $list->{'name'}) : ()),    #compat.
-                    'message_id' => $message->get_id,
-                }
-            );
-            return undef;
-        }
-    } else {    # send it now
-        Log::do_log('debug', "NOT USING BULK");
-        unless ($self->store($message, $rcpt)) {
-            Log::do_log('err', 'Could not close safefork to sendmail');
-            return undef;
-        }
-    }
-    return 1;
-}
-
-=over
-
-=item store ( $message, $rcpt, [ envid =E<gt> $envid ] )
-
-Makes a sendmail ready for the recipients given as argument, uses a file
-descriptor in the smtp table which can be imported by other parties.
-Before, waits for number of children process < number allowed by sympa.conf
-
-Parameters:
-
-=over
-
-=item $message
-
-Message to be sent.
-
-=item $message->{envelope_sender}
-
-SMTP "MAIL From:" field.
-
-=item $rcpt
-
-Scalar, scalarref or arrayref, for SMTP "RCPT To:" field.
-
-=item $envid
-
-An ID of this message submission in notification table.
-See also L<Sympa::Tracking>.
-
-=back
-
-Returns:
-
-Filehandle on opened pipe to ouput SMTP "DATA" field.
-Otherwise C<undef>.
-
-=back
-
-=cut
+# DEPRECATED.  Use Sympa::Mailer::store() or Sympa::Bulk::store().
+# Old name:
+# mail::sending(), Sympa::Mail::sending(), Sympa::Mailer::send_message().
+#sub send_message ($self, $message, $rcpt, %params);
 
 sub store {
     my $self    = shift;
@@ -416,3 +253,96 @@ sub _safefork {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Mailer - Store messages to sendmail
+
+=head1 DESCRIPTION
+
+L<Sympa::Mailer> implements the class to invoke sendmail processes and
+store messages to them.
+
+=head2 Methods
+
+=over
+
+=item instance ( )
+
+I<Constructor>.
+Creates a singleton instance of L<Sympa::Mailer> object.
+
+Returns:
+
+A new L<Sympa::Mailer> instance, or I<undef> for failure.
+
+=item reaper ( [ $block ] )
+
+I<Instance method>.
+Non blocking function called by: main loop of sympa, task_manager, bounced
+etc., just to clean the defuncts list by waiting to any processes and
+decrementing the counter.
+
+Parameter:
+
+=over
+
+=item $block
+
+TBD
+
+=back
+
+Returns:
+
+PID.
+
+=item store ( $message, $rcpt, [ envid =E<gt> $envid ] )
+
+I<Instance method>.
+Makes a sendmail ready for the recipients given as argument, uses a file
+descriptor in the smtp table which can be imported by other parties.
+Before, waits for number of children process < number allowed by sympa.conf
+
+Parameters:
+
+=over
+
+=item $message
+
+Message to be sent.
+
+=item $message->{envelope_sender}
+
+SMTP "MAIL FROM:" field.
+
+=item $rcpt
+
+Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
+
+=item $envid
+
+An envelope ID of this message submission in notification table.
+See also L<Sympa::Tracking>.
+
+=back
+
+Returns:
+
+Filehandle on opened pipe to ouput SMTP "DATA" field.
+Otherwise C<undef>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Sympa::Alarm>, L<Sympa::Bulk>, L<Sympa::Message>.
+
+=head1 HISTORY
+
+L<Sympa::Mailer>, the rewrite of mail.pm, appeared on Sympa 6.2.
+
+=cut

@@ -27,12 +27,14 @@ package Sympa::Alarm;
 use strict;
 use warnings;
 
+use Sympa::Bulk;
 use Conf;
 use Log;
 use Sympa::Mailer;
 use Sympa::Message;
 use tools;
 
+our $use_bulk;    #FIXME: Instantiate Sympa::Alarm instead.
 our %listmaster_messages_stack;
 
 sub store {
@@ -71,7 +73,11 @@ sub store {
         $message->{priority} =
             Conf::get_robot_conf($robot_id, 'sympa_priority');
 
-        return Sympa::Mailer->instance->send_message($message, $email);
+        if ($use_bulk) {
+            return Sympa::Bulk::store($message, $email);
+        } else {
+            return Sympa::Mailer->instance->store($message, $email);
+        }
     }
 }
 
@@ -125,8 +131,23 @@ sub flush {
                     Sympa::Message->new_from_template($robot_id,
                     'listmaster_groupednotifications',
                     $email, $param);
-                unless ($message
-                    and defined Sympa::Mailer->instance->send_message($message, $email)) {
+                unless ($message) {
+                    Log::do_log(
+                        'notice',
+                        'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
+                        $robot_id,
+                        $email
+                    ) unless $operation eq 'logs_failed';
+                    return undef;
+                }
+                my $status;
+                if ($use_bulk) {
+                    $status = Sympa::Bulk::store($message, $email);
+                } else {
+                    $status =
+                        Sympa::Mailer->instance->store($message, $email);
+                }
+                unless (defined $status) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',

@@ -294,7 +294,7 @@ my $signal = 0;
 local $main::daemon_usage;
 
 my $language = Sympa::Language->instance;
-my $mailer = Sympa::Mailer->instance;
+my $mailer   = Sympa::Mailer->instance;
 
 while ($signal ne 'term') {    #as long as a signal is not received }
     ## Load sympa.conf.
@@ -2523,10 +2523,8 @@ sub DoForward {
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = Conf::get_robot_conf($robot, 'request');
-    #FIXME: Why overwrite priority?
-    $message->{priority} = Conf::get_robot_conf($robot, 'request_priority');
 
-    unless (defined $mailer->send_message($message, \@rcpt)) {
+    unless (defined $mailer->store($message, \@rcpt)) {
         Log::do_log('err', 'Impossible to forward mail for %s function %s',
             $name, $function);
         my $string =

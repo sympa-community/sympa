@@ -74,7 +74,6 @@ use Sympa::Language;
 use Sympa::LDAPSource;
 use Sympa::List;
 use Log;
-use Sympa::Mailer;
 use Sympa::Marc::Search;
 use Sympa::Message;
 use Sympa::Regexps;
@@ -136,7 +135,7 @@ if (eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
 }
 
-Sympa::Mailer->instance->{always_use_bulk} = 1;
+$Sympa::Alarm::use_bulk = 1;    #FIXME: Instantiate Sympa::Alarm instead.
 
 if ($Conf::Conf{'use_fast_cgi'}) {
     require CGI::Fast;
@@ -1058,9 +1057,6 @@ while ($query = new_loop()) {
     foreach my $k (keys %::changed_params) {
         Log::do_log('debug3', 'Changed Param: %s', $k);
     }
-
-    ## Free terminated sendmail processes
-    # Sympa::Mailer->instance->reaper();
 
     ## Parse CGI parameters
     #    &CGI::ReadParse();
