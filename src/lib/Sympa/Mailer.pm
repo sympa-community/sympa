@@ -104,6 +104,9 @@ sub store {
 
     my $return_path = $message->{envelope_sender};
     my $envid       = $params{envid};
+    my $logging     = $params{logging};
+    $logging = 1 unless defined $logging;
+
     my $robot_id;
     if (ref $message->{context} eq 'Sympa::List') {
         $robot_id = $message->{context}->{'domain'};
@@ -148,6 +151,17 @@ sub store {
             return undef;
         }
         $numsmtp++;
+    }
+
+    if ($logging) {
+        Log::do_log(
+            'notice',
+            'Done sending message %s for %s (priority %s) in %s seconds since scheduled expedition date',
+            $message,
+            $message->{context},
+            $message->{'priority'},
+            time() - $message->{'date'}
+        );
     }
 
     return $numsmtp;
@@ -307,7 +321,8 @@ Returns:
 
 PID.
 
-=item store ( $message, $rcpt, [ envid =E<gt> $envid ] )
+=item store ( $message, $rcpt,
+[ envid =E<gt> $envid ], [ logging =E<gt> $logging ] )
 
 I<Instance method>.
 Makes a sendmail ready for the recipients given as argument, uses a file
@@ -333,6 +348,10 @@ Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
 
 An envelope ID of this message submission in notification table.
 See also L<Sympa::Tracking>.
+
+=item $logging
+
+TBD
 
 =back
 

@@ -2092,11 +2092,11 @@ sub distribute_msg {
     # not VERP
     # messages as they won't even exist.
     if ($verp_rate eq '0%') {
-        $tags_to_use->{'tag_verp'}   = 0;
-        $tags_to_use->{'tag_noverp'} = 1;
+        $tags_to_use->{'tag_verp'}   = '0';
+        $tags_to_use->{'tag_noverp'} = 'z';
     } else {
-        $tags_to_use->{'tag_verp'}   = 1;
-        $tags_to_use->{'tag_noverp'} = 0;
+        $tags_to_use->{'tag_verp'}   = 'z';
+        $tags_to_use->{'tag_noverp'} = '0';
     }
 
     # Separate subscribers depending on user reception option and also if VERP
@@ -2146,7 +2146,7 @@ sub distribute_msg {
         if (@selected_tabrcpt) {
             my $result =
                 _mail_message($new_message, \@selected_tabrcpt,
-                'tag_as_last' => $tags_to_use->{'tag_noverp'});
+                tag => $tags_to_use->{'tag_noverp'});
             unless (defined $result) {
                 Log::do_log(
                     'err',
@@ -2155,7 +2155,7 @@ sub distribute_msg {
                 );
                 return undef;
             }
-            $tags_to_use->{'tag_noverp'} = 0 if $result;
+            $tags_to_use->{'tag_noverp'} = '0' if $result;
             $nbr_smtp++;
         } else {
             Log::do_log(
@@ -2191,7 +2191,7 @@ sub distribute_msg {
         if (@verp_selected_tabrcpt) {
             my $result =
                 _mail_message($new_message, \@verp_selected_tabrcpt,
-                'tag_as_last' => $tags_to_use->{'tag_verp'});
+                tag => $tags_to_use->{'tag_verp'});
             unless (defined $result) {
                 Log::do_log(
                     'err',
@@ -2200,7 +2200,7 @@ sub distribute_msg {
                 );
                 return undef;
             }
-            $tags_to_use->{'tag_verp'} = 0 if $result;
+            $tags_to_use->{'tag_verp'} = '0' if $result;
             $nbr_smtp++;
         } else {
             Log::do_log('notice',
@@ -2228,7 +2228,7 @@ sub _mail_message {
     my $rcpt    = shift;
     my %params  = @_;
 
-    my $tag_as_last = $params{'tag_as_last'};
+    my $tag = $params{tag};
 
     my $list = $message->{context};
 
@@ -2248,7 +2248,7 @@ sub _mail_message {
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = $list->get_list_address('return_path');
 
-    return Sympa::Bulk::store($message, $rcpt, tag_as_last => $tag_as_last)
+    return Sympa::Bulk::store($message, $rcpt, tag => $tag)
         || undef;
 }
 

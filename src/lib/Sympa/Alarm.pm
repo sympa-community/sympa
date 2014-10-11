@@ -37,6 +37,8 @@ use tools;
 our $use_bulk;    #FIXME: Instantiate Sympa::Alarm instead.
 our %listmaster_messages_stack;
 
+my $mailer = Sympa::Mailer->instance;
+
 sub store {
     my $message   = shift;
     my $operation = shift;
@@ -76,7 +78,7 @@ sub store {
         if ($use_bulk) {
             return Sympa::Bulk::store($message, $email);
         } else {
-            return Sympa::Mailer->instance->store($message, $email);
+            return $mailer->store($message, $email);
         }
     }
 }
@@ -144,8 +146,7 @@ sub flush {
                 if ($use_bulk) {
                     $status = Sympa::Bulk::store($message, $email);
                 } else {
-                    $status =
-                        Sympa::Mailer->instance->store($message, $email);
+                    $status = $mailer->store($message, $email);
                 }
                 unless (defined $status) {
                     Log::do_log(

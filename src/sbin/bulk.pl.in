@@ -527,7 +527,7 @@ while (!$end) {
                 # trace_smime($new_message, 'dkim');
 
                 $new_message->{envelope_sender} = $return_path;
-                $mailer->store($new_message, $rcpt, envid => $envid);
+                $mailer->store($new_message, $rcpt, envid => $envid, logging => $bulk->{tag});
             }
         } else {
             # message doesn't need personalization, so can be sent by packet.
@@ -565,7 +565,7 @@ while (!$end) {
             # trace_smime($new_message,'dkim 2');
 
             $new_message->{envelope_sender} = $return_path;
-            $mailer->store($new_message, [@rcpts]);
+            $mailer->store($new_message, [@rcpts], logging => $bulk->{tag});
         }
 
         ## Remove packet once it has been processed
@@ -576,16 +576,6 @@ while (!$end) {
                 $bulk->{'messagekey'}, $bulk->{'packetid'});
         }
 
-        if ($bulk->{'tag'} eq 'last') {
-            Log::do_log(
-                'notice',
-                'Done sending message %s to %s (priority %s) in %s seconds since scheduled expedition date',
-                $message,
-                ($list || $robot),
-                $message->{'priority'},
-                time() - $message->{'date'}
-            );
-        }
         $date_of_last_activity = time();
     } else {
         ## Sleep for a while if bulk_mailer DB table is empty

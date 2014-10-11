@@ -257,7 +257,8 @@ sub store {
     my $rcpt    = shift;
     my %data    = @_;
 
-    my $tag_as_last = $data{'tag_as_last'};
+    my $tag = $data{'tag'};
+    $tag = 's' unless defined $tag;
 
     my ($list, $robot_id);
     if (ref $message->{context} eq 'Sympa::List') {
@@ -426,7 +427,7 @@ sub store {
                     $priority_message,
                     $priority_packet,
                     SDM::AS_DOUBLE($current_date), $delivery_date,
-                    ($tag_as_last ? 'last' : '0')
+                    $tag
                 )
                 ) {
                 Log::do_log(
@@ -440,7 +441,7 @@ sub store {
         }
         $packet_rank++;
 
-        undef $tag_as_last;
+        $tag = '0';
     }
     # last : unlock message in bulkspool_table so it is now possible to remove
     # this message if no packet has a ref on it
