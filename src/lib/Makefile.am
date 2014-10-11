@@ -53,13 +53,13 @@ nobase_modules_DATA = \
 	Sympa/ListDef.pm \
 	Sympa/LockedFile.pm \
 	Log.pm \
-	Sympa/ModDef.pm \
-	Sympa/Mail.pm \
+	Sympa/Mailer.pm \
 	Sympa/Marc.pm \
 	Sympa/Marc/Search.pm \
 	Sympa/Message.pm \
 	Sympa/Message/Plugin.pm \
 	Sympa/Message/Plugin/FixEncoding.pm \
+	Sympa/ModDef.pm \
 	Sympa/PlainDigest.pm \
 	Sympa/Regexps.pm \
 	Sympa/Report.pm \

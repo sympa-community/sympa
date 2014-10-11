@@ -38,7 +38,7 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::List;
 use Log;
-use Sympa::Mail;
+use Sympa::Mailer;
 use Sympa::Message;
 use SDM;
 use tools;
@@ -92,10 +92,12 @@ unless (Conf::load()) {
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
     'bulk');
 
+my $mailer = Sympa::Mailer->instance;
+
 # Enable SMTP logging if required
 my $default_log_smtp = $main::options{'mail'}
     || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
-$Sympa::Mail::log_smtp = $default_log_smtp;
+$mailer->{log_smtp} = $default_log_smtp;
 
 # setting log_level using conf unless it is set by calling option
 my $default_log_level;
@@ -177,9 +179,6 @@ $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = \&sigterm;
 my $end = 0;
 
-my $opensmtp = 0;
-my $fh       = 'fh0000000000';    ## File handle for the stream.
-
 my $message;
 my $messagekey;    # the key of the current message in the message_table
 
@@ -194,7 +193,7 @@ $Conf::Conf{'maxsmtp'} =
 
 while (!$end) {
     # Enable SMTP logging if required.
-    $Sympa::Mail::log_smtp = $default_log_smtp;
+    $mailer->{log_smtp} = $default_log_smtp;
     # setting log_level using conf unless it is set by calling option
     Log::set_log_level($default_log_level);
 
@@ -384,7 +383,7 @@ while (!$end) {
         }
 
         # Enable SMTP logging if required.
-        $Sympa::Mail::log_smtp = $main::options{'mail'}
+        $mailer->{log_smtp} = $main::options{'mail'}
             || Sympa::Tools::Data::smart_eq(
             Conf::get_robot_conf($robot, 'log_smtp'), 'on');
         # setting log_level using conf unless it is set by calling option
@@ -529,13 +528,13 @@ while (!$end) {
 
                 # trace_smime($new_message, 'dkim');
 
-                *SMTP = Sympa::Mail::smtpto($return_path, \$rcpt, $robot,
+                my $pipeout = $mailer->get_sendmail_handle($return_path, \$rcpt, $robot,
                     $notification_id);
                 # Message with customized data, stripped Return-Path:.
                 my $msg_string = $new_message->as_string;
                 $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
-                print SMTP $msg_string;
-                close SMTP;
+                print $pipeout $msg_string;
+                close $pipeout;
             }
         } else {
             # message doesn't need personalization, so can be sent by packet.
@@ -572,12 +571,12 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            *SMTP = Sympa::Mail::smtpto($return_path, \@rcpts, $robot);
+            my $pipeout = $mailer->get_sendmail_handle($return_path, \@rcpts, $robot);
             # Stripping Return-Path: pseudo-header field.
             my $msg_string = $new_message->as_string;
             $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
-            print SMTP $msg_string;
-            close SMTP;
+            print $pipeout $msg_string;
+            close $pipeout;
         }
 
         ## Remove packet once it has been processed
@@ -603,7 +602,7 @@ while (!$end) {
         ## Sleep for a while if bulk_mailer DB table is empty
         sleep $Conf::Conf{'bulk_sleep'};
     }
-    Sympa::Mail::reaper();
+    $mailer->reaper();
 }
 
 # Purge grouped notifications

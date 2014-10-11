@@ -48,7 +48,7 @@ our %mtime;
 our %listmaster_messages_stack;
 
 # MOVED: Use tools::send_file(), or Sympa::Message::new_from_template() with
-# Sympa::Mail::sending().
+# Sympa::Mailer::send_message().
 # sub send_global_file($tpl, $who, $robot, $context, $options);
 
 # MOVED: Use tools::send_notify_to_listmaster() or Sympa::Alarm::flush().

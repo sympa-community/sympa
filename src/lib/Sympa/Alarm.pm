@@ -29,7 +29,7 @@ use warnings;
 
 use Conf;
 use Log;
-use Sympa::Mail;
+use Sympa::Mailer;
 use Sympa::Message;
 use tools;
 
@@ -71,7 +71,7 @@ sub store {
         $message->{priority} =
             Conf::get_robot_conf($robot_id, 'sympa_priority');
 
-        return Sympa::Mail::sending($message, $email);
+        return Sympa::Mailer->instance->send_message($message, $email);
     }
 }
 
@@ -126,7 +126,7 @@ sub flush {
                     'listmaster_groupednotifications',
                     $email, $param);
                 unless ($message
-                    and defined Sympa::Mail::sending($message, $email)) {
+                    and defined Sympa::Mailer->instance->send_message($message, $email)) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',

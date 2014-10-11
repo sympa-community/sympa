@@ -46,7 +46,7 @@ use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
 use Sympa::List;
 use Log;
-use Sympa::Mail;
+use Sympa::Mailer;
 use Sympa::Regexps;
 use Sympa::Scenario;
 use SDM;
@@ -1084,7 +1084,7 @@ while (!$end) {
     }
 
     ## Free zombie sendmail processes
-    Sympa::Mail::reaper();
+    Sympa::Mailer->instance->reaper();
 }
 
 # Purge grouped notifications

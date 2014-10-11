@@ -22,10 +22,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::Mail;
+package Sympa::Mailer;
 
 use strict;
 use warnings;
+use base qw(Class::Singleton);
+
 use English qw(-no_match_vars);
 use POSIX qw();
 
@@ -34,36 +36,52 @@ use Conf;
 use Log;
 use tools;
 
-my $opensmtp = 0;
-my $fh       = 'fh0000000000';    ## File handle for the stream.
-
-my $max_arg = eval { POSIX::_SC_ARG_MAX(); };
+my $max_arg;
+eval {
+    $max_arg = POSIX::sysconf( POSIX::_SC_ARG_MAX() );
+};
 if ($EVAL_ERROR) {
     $max_arg = 4096;
-    printf STDERR <<'EOF', $max_arg;
-Your system does not conform to the POSIX P1003.1 standard, or
-your Perl system does not define the _SC_ARG_MAX constant in its POSIX
-library. You must modify the smtp.pm module in order to set a value
-for variable %s.
-
-EOF
-} else {
-    $max_arg = POSIX::sysconf($max_arg);
 }
 
-my %pid = ();
+=head2 CLASS METHODS
 
-our $always_use_bulk;    ## for calling context
+=over
 
-our $log_smtp;           # SMTP logging is enabled or not
+=item instance ( %parameters )
 
-### PUBLIC FUNCTIONS ###
+Creates a new L<Sympa::Mailer> object.
+
+Returns:
+
+A new L<Sympa::Mailer> object, or I<undef> for failure.
+
+=back
+
+=cut
+
+# Constructor for Class::Singleton.
+sub _new_instance {
+    my $class = shift;
+    my %params = @_;
+
+    bless {
+        pids => {},
+        opensmtp => 0,
+        always_use_bulk => undef, # for calling context
+        log_smtp => undef, # SMTP logging is enabled or not
+    } => $class;
+}
+
+=head2 Instance methods
+
+=cut
 
 #sub set_send_spool($spool_dir);
 #DEPRECATED: No longer used.
 
 #sub mail_file($robot, $filename, $rcpt, $data, $return_message_as_string);
-##DEPRECATED: Use Sympa::Message->new_from_template() & sending().
+##DEPRECATED: Use Sympa::Message->new_from_template() & send_message().
 
 #sub mail_message($message, $rcpt, [tag_as_last => 1]);
 # DEPRECATED: this is now a subroutine of Sympa::List::distribute_msg().
@@ -71,62 +89,96 @@ our $log_smtp;           # SMTP logging is enabled or not
 #sub mail_forward($message, $from, $rcpt, $robot);
 #DEPRECATED: This is no longer used.
 
-#####################################################################
-# public reaper
-#####################################################################
-# Non blocking function called by : Sympa::Mail::smtpto(), sympa::main_loop
-#  task_manager::INFINITE_LOOP scanning the queue,
-#  bounced::infinite_loop scanning the queue,
-# just to clean the defuncts list by waiting to any processes and
-#  decrementing the counter.
-#
-# IN : $block
-# OUT : $i
-#####################################################################
+=over
+
+=item reaper ( [ $block ] )
+
+Non blocking function called by: Sympa::Mail::get_sendmail_handle() and
+main loop of sympa, task_manager, bounced etc.,
+just to clean the defuncts list by waiting to any processes and
+decrementing the counter.
+
+Parameter:
+
+=over
+
+=item $block
+
+=back
+
+Returns:
+
+PID.
+
+=back
+
+=cut
+
 sub reaper {
+    my $self = shift;
     my $block = shift;
     my $i;
 
-    $block = 1 unless (defined($block));
+    $block = 1 unless defined $block;
     while (($i = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
         $block = 1;
-        if (!defined($pid{$i})) {
+        unless (defined($self->{pids}->{$i})) {
             Log::do_log('debug2', 'Reaper waited %s, unknown process to me',
                 $i);
             next;
         }
-        $opensmtp--;
-        delete($pid{$i});
+        $self->{opensmtp}--;
+        delete $self->{pids}->{$i};
     }
     Log::do_log(
         'debug2',
         'Reaper unwaited pids: %s Open = %s',
-        join(' ', sort keys %pid), $opensmtp
+        join(' ', sort keys %{$self->{pids}}), $self->{opensmtp}
     );
     return $i;
 }
 
-#DEPRECATED.  Use mail_message().
+#DEPRECATED.
 #sub sendto;
 
-####################################################
-# sending
-####################################################
-# send a message using smpto function or puting it
-# in spool according to the context
-# Signing if needed
-#
-#
-# IN : -$message: ref(Sympa::Message) - message to be sent
-#      -$rcpt: SCALAR | ref(ARRAY) - recipients for SMTP "RCPT To:" field.
-#      -$message->{envelope_sender}: for SMTP, "MAIL From:" field; for spool
-#              sending, "Return-Path" field
-#
-# OUT : 1 - call to smtpto (sendmail) | 0 - push in spool
-#           | undef
-#
-####################################################
-sub sending {
+=over
+
+=item send_message ( $message, $rcpt, [ tag_as_last => 1 )
+
+Sends a message using sendmail or puting it
+in bulk spool according to the context.
+
+Shelves signing if needed.
+
+Parameters:
+
+=over
+
+=item $message
+
+L<Sympa::Message> instance, message to be sent.
+
+=item $rcpt
+
+Scalar or arrayref, recipients for SMTP "RCPT To:" field.
+
+=item $message->{envelope_sender}
+
+For SMTP, "MAIL From:" field; for spool, "Return-Path" field.
+
+=back
+
+Returns:
+
+1 if sendmail was called.  0 if pushed in spool.  Otherwise C<undef>.
+
+=back
+
+=cut
+
+# Old name: mail::sending(), Sympa::Mail::sending().
+sub send_message {
+    my $self = shift;
     my $message = shift;
     my $rcpt    = shift;
     my %params  = @_;
@@ -144,9 +196,8 @@ sub sending {
 
     my $tag_as_last = $params{'tag_as_last'};
     my $sympa_file;
-    my $fh;
 
-    if ($always_use_bulk) {
+    if ($self->{always_use_bulk}) {
         # in that case use bulk tables to prepare message distribution
         unless (defined Sympa::Bulk::store($message, $rcpt)) {
             Log::do_log('err', 'Failed to store message %s for %s',
@@ -162,14 +213,14 @@ sub sending {
         }
     } else {    # send it now
         Log::do_log('debug', "NOT USING BULK");
-        *SMTP = smtpto($message->{envelope_sender}, $rcpt, $robot_id);
+        my $pipeout = $self->get_sendmail_handle($message->{envelope_sender}, $rcpt, $robot_id);
 
         # Send message stripping Return-Path pseudo-header field.
         my $msg_string = $message->as_string;
         $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
 
-        print SMTP $msg_string;
-        unless (close SMTP) {
+        print $pipeout $msg_string;
+        unless (close $pipeout) {
             Log::do_log('err', 'Could not close safefork to sendmail');
             return undef;
         }
@@ -177,24 +228,35 @@ sub sending {
     return 1;
 }
 
-##############################################################################
-# smtpto
-##############################################################################
-# Makes a sendmail ready for the recipients given as argument, uses a file
-# descriptor in the smtp table which can be imported by other parties.
-# Before, waits for number of children process < number allowed by sympa.conf
-#
-# IN : $return_path :(+) for SMTP "MAIL From:" field
-#      $rcpt :(+) ref(SCALAR)|ref(ARRAY)- for SMTP "RCPT To:" field
-#      $robot :(+) robot
-#      $envid : an ID of this message submission in notification table
-# OUT : Sympa::Mail::$fh - file handle on opened file for ouput, for SMTP
-#       "DATA" field.  Otherwise undef
-#
-##############################################################################
+=over
+
+=item get_sendmail_handle ( $return_path, $rcpt, $robot, [ $envid ] )
+
+Makes a sendmail ready for the recipients given as argument, uses a file
+descriptor in the smtp table which can be imported by other parties.
+Before, waits for number of children process < number allowed by sympa.conf
+
+Parameters:
+
+ $return_path :(+) for SMTP "MAIL From:" field
+ $rcpt :(+) ref(SCALAR)|ref(ARRAY)- for SMTP "RCPT To:" field
+ $robot :(+) robot
+ $envid : an ID of this message submission in notification table
+
+Returns:
+
+Filehandle on opened file for ouput, for SMTP "DATA" field.
+Otherwise C<undef>.
+
+=back
+
+=cut
+
 # TODO: Split rcpt by max length of command line (_SC_ARG_MAX).
-sub smtpto {
+# Old name: mail::smtpto(), Sympa::Mail::smtpto().
+sub get_sendmail_handle {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    my $self = shift;
     my ($return_path, $rcpt, $robot, $envid) = @_;
 
     unless ($return_path) {
@@ -212,22 +274,20 @@ sub smtpto {
     # Check how many open smtp's we have, if too many wait for a few
     # to terminate and then do our job.
 
-    Log::do_log('debug3', 'Open = %s', $opensmtp);
-    while ($opensmtp > Conf::get_robot_conf($robot, 'maxsmtp')) {
+    Log::do_log('debug3', 'Open = %s', $self->{opensmtp});
+    while ($self->{opensmtp} > Conf::get_robot_conf($robot, 'maxsmtp')) {
         Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
-            $opensmtp);
-        last if reaper(0) == -1;    # Blocking call to the reaper.
+            $self->{opensmtp});
+        last if $self->reaper(0) == -1;    # Blocking call to the reaper.
     }
 
-    *IN  = ++$fh;
-    *OUT = ++$fh;
-
-    if (!pipe(IN, OUT)) {
-        die sprintf 'Unable to create a channel in smtpto: %s', $ERRNO;
+    my ($in, $out);
+    unless (pipe $in, $out) {
+        die sprintf 'Unable to create a channel in get_sendmail_handle: %s', $ERRNO;
         # No return
     }
-    $pid = safefork();
-    $pid{$pid} = 0;
+    $pid = _safefork();
+    $self->{pids}->{$pid} = 0;
 
     my $sendmail = Conf::get_robot_conf($robot, 'sendmail');
     my @sendmail_args = split /\s+/,
@@ -238,8 +298,9 @@ sub smtpto {
         push @sendmail_args, '-N', 'success,delay,failure', "-V$envid";
     }
     if ($pid == 0) {
-        close(OUT);
-        open(STDIN, "<&IN");
+        # Child
+        close $out;
+        open STDIN, '<&', $in;
 
         $return_path = '' if $return_path eq '<>';    # null sender
         # Terminate options by "--" to prevent addresses beginning with "-"
@@ -254,7 +315,9 @@ sub smtpto {
 
         exit 1;    # Should never get there.
     }
-    if ($log_smtp) {
+
+    # Parent
+    if ($self->{log_smtp}) {
         my $r;
         if (!ref $rcpt) {
             $r = $rcpt;
@@ -264,19 +327,20 @@ sub smtpto {
             $r = join(' ', @$rcpt);
         }
         Log::do_log(
-            'debug3', 'safefork: %s %s -f \'%s\' -- %s',
+            'debug3', '%s %s -f \'%s\' -- %s',
             $sendmail, join(' ', @sendmail_args),
             $return_path, $r
         );
     }
-    unless (close(IN)) {
+    unless (close $in) {
         Log::do_log('err', 'Could not close safefork');
         return undef;
     }
-    $opensmtp++;
+    $self->{opensmtp}++;
     select(undef, undef, undef, 0.3)
-        if $opensmtp < Conf::get_robot_conf($robot, 'maxsmtp');
-    return ("Sympa::Mail::$fh");    # Symbol for the write descriptor.
+        if $self->{opensmtp} < Conf::get_robot_conf($robot, 'maxsmtp');
+
+    return $out;
 }
 
 #This has never been used.
@@ -293,7 +357,7 @@ sub smtpto {
 ## Exit with a fatal error is fork failed after all
 ## tests have been exhausted.
 # Old name: tools::safefork().
-sub safefork {
+sub _safefork {
     my ($i, $pid);
 
     my $err;

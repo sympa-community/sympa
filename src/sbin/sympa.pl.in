@@ -45,7 +45,7 @@ use Sympa::Family;
 use Sympa::Language;
 use Sympa::List;
 use Log;
-use Sympa::Mail;
+use Sympa::Mailer;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Report;
@@ -294,6 +294,7 @@ my $signal = 0;
 local $main::daemon_usage;
 
 my $language = Sympa::Language->instance;
+my $mailer = Sympa::Mailer->instance;
 
 while ($signal ne 'term') {    #as long as a signal is not received }
     ## Load sympa.conf.
@@ -309,7 +310,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         'sympa');
 
     # Enable SMTP logging if required
-    $Sympa::Mail::log_smtp = $main::options{'mail'}
+    $mailer->{log_smtp} = $main::options{'mail'}
         || Sympa::Tools::Data::smart_eq($Conf::Conf{'log_smtp'}, 'on');
 
     # setting log_level using conf unless it is set by calling option
@@ -1429,7 +1430,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             $latest_msgid_table_cleanup = time;
         }
 
-        Sympa::Mail::reaper();    # finish terminated process
+        $mailer->reaper();    # finish terminated process
 
         my $filename;
         my $metadata;
@@ -1614,16 +1615,16 @@ sub sigterm {
 #
 ###########################################################
 sub sighup {
-    if ($Sympa::Mail::log_smtp) {
+    if ($mailer->{log_smtp}) {
         Log::do_log('notice',
             'signal HUP received, switch of the "-mail" logging option and continue current task'
         );
-        undef $Sympa::Mail::log_smtp;
+        $mailer->{log_smtp} = undef;
     } else {
         Log::do_log('notice',
             'signal HUP received, switch on the "-mail" logging option and continue current task'
         );
-        $Sympa::Mail::log_smtp = 1;
+        $mailer->{log_smtp} = 1;
     }
     $signal = 'hup';
 }
@@ -1761,7 +1762,7 @@ sub process_message {
     # *** Now message content may be altered. ***
 
     # Enable SMTP logging if required.
-    $Sympa::Mail::log_smtp = $main::options{'mail'}
+    $mailer->{log_smtp} = $main::options{'mail'}
         || Conf::get_robot_conf($robot, 'log_smtp');
     # setting log_level using conf unless it is set by calling option
     unless (defined $main::options{'log_level'}) {
@@ -2525,7 +2526,7 @@ sub DoForward {
     #FIXME: Why overwrite priority?
     $message->{priority} = Conf::get_robot_conf($robot, 'request_priority');
 
-    unless (defined Sympa::Mail::sending($message, \@rcpt)) {
+    unless (defined $mailer->send_message($message, \@rcpt)) {
         Log::do_log('err', 'Impossible to forward mail for %s function %s',
             $name, $function);
         my $string =

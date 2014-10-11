@@ -47,7 +47,6 @@ use Sympa::List;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
-use Sympa::Mail;
 use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
@@ -213,7 +212,7 @@ sub by_date {
 
 }
 
-# Moved to Sympa::Mail::safefork().
+# Moved to Sympa::Mailer::_safefork().
 #sub safefork ($i, $pid);
 
 ####################################################

@@ -54,7 +54,6 @@ use Sympa::LDAPSource;
 use Sympa::ListDef;
 use Sympa::LockedFile;
 use Log;
-use Sympa::Mail;
 use Sympa::Message;
 use Sympa::Message::Plugin;
 use Sympa::PlainDigest;
