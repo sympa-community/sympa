@@ -438,7 +438,7 @@ while (!$end) {
             foreach $rcpt (@rcpts) {
                 my $new_message = $message->dup;
 
-                my $notification_id;
+                my $envid;
                 my $return_path;
 
                 if (Sympa::Tools::Data::smart_eq(
@@ -447,11 +447,9 @@ while (!$end) {
                     ) {
                     # tracking by MDN required tracking by DSN to
                     my $msgid = $new_message->{'message_id'};
-                    $notification_id =
-                        Sympa::Tracking::find_notification_id_by_message(
+                    $envid = Sympa::Tracking::find_notification_id_by_message(
                         $rcpt, $msgid, $listname, $robot);
-                    $return_path =
-                        $list->get_bounce_address($rcpt, $notification_id);
+                    $return_path = $list->get_bounce_address($rcpt, $envid);
                     $new_message->replace_header(
                         'Disposition-Notification-To', $return_path)
                         if $new_message->{shelved}{tracking} =~ /mdn/;
@@ -528,13 +526,8 @@ while (!$end) {
 
                 # trace_smime($new_message, 'dkim');
 
-                my $pipeout = $mailer->get_sendmail_handle($return_path, \$rcpt, $robot,
-                    $notification_id);
-                # Message with customized data, stripped Return-Path:.
-                my $msg_string = $new_message->as_string;
-                $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
-                print $pipeout $msg_string;
-                close $pipeout;
+                $new_message->{envelope_sender} = $return_path;
+                $mailer->store($new_message, $rcpt, envid => $envid);
             }
         } else {
             # message doesn't need personalization, so can be sent by packet.
@@ -571,12 +564,8 @@ while (!$end) {
 
             # trace_smime($new_message,'dkim 2');
 
-            my $pipeout = $mailer->get_sendmail_handle($return_path, \@rcpts, $robot);
-            # Stripping Return-Path: pseudo-header field.
-            my $msg_string = $new_message->as_string;
-            $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
-            print $pipeout $msg_string;
-            close $pipeout;
+            $new_message->{envelope_sender} = $return_path;
+            $mailer->store($new_message, [@rcpts]);
         }
 
         ## Remove packet once it has been processed
