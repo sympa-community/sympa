@@ -82,7 +82,7 @@ sub reaper {
     Log::do_log(
         'debug2',
         'Reaper unwaited pids: %s Open = %s',
-        join(' ', sort keys %{$self->{pids}}),
+        join(' ', sort {$a <=> $b} keys %{$self->{pids}}),
         $self->{opensmtp}
     );
     return $i;
@@ -113,21 +113,48 @@ sub store {
         $robot_id = '*';
     }
 
-    my $pipeout =
-        $self->_get_sendmail_handle($return_path, $rcpt, $robot_id, $envid);
+    my @all_rcpt;
+    unless (ref $rcpt) {
+        @all_rcpt = ($rcpt);
+    } elsif (ref $rcpt eq 'SCALAR') {
+        @all_rcpt = ($$rcpt);
+    } elsif (ref $rcpt eq 'ARRAY') {
+        @all_rcpt = @$rcpt;
+    }
+
     # Stripping Return-Path: pseudo-header field.
     my $msg_string = $message->as_string;
     $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
-    print $pipeout $msg_string;
-    unless (close $pipeout) {
-        return undef;
+
+    my $min_cmd_size =
+        length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
+        length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
+        length(' -N success,delay,failure -V') + 32 +
+        length(" -f $return_path");
+    my $numsmtp = 0;
+    while (@all_rcpt) {
+        # Split rcpt by max length of command line (_SC_ARG_MAX).
+        my $cmd_size = $min_cmd_size + 1 + length($all_rcpt[0]);
+        my @rcpt = (shift @all_rcpt);
+        while (@all_rcpt
+            and ($cmd_size += 1 + length($all_rcpt[0])) <= $max_arg) {
+            push @rcpt, (shift @all_rcpt);
+        }
+
+        my $pipeout = $self->_get_sendmail_handle(
+            $return_path, [@rcpt], $robot_id, $envid);
+        print $pipeout $msg_string;
+        unless (close $pipeout) {
+            return undef;
+        }
+        $numsmtp++;
     }
 
-    return 1;
+    return $numsmtp;
 }
 
-# TODO: Split rcpt by max length of command line (_SC_ARG_MAX).
-# Old name: mail::smtpto(), Sympa::Mail::smtpto().
+# Old names: mail::smtpto(), Sympa::Mail::smtpto(),
+# Sympa::Mailer::get_sendmail_handle().
 # Note: Use store().
 sub _get_sendmail_handle {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
@@ -138,13 +165,7 @@ sub _get_sendmail_handle {
         Log::do_log('err', 'Missing Return-Path');
     }
 
-    unless (ref $rcpt) {
-        Log::do_log('debug3', '(%s, %s)', $return_path, $rcpt);
-    } elsif (ref $rcpt eq 'SCALAR') {
-        Log::do_log('debug3', '(%s, %s)', $return_path, $$rcpt);
-    } elsif (ref $rcpt eq 'ARRAY') {
-        Log::do_log('debug3', '(%s, %s)', $return_path, join(',', @{$rcpt}));
-    }
+    Log::do_log('debug3', '(%s, %s)', $return_path, join(',', @$rcpt));
 
     my ($pid, $str);
 
@@ -182,31 +203,17 @@ sub _get_sendmail_handle {
         $return_path = '' if $return_path eq '<>';    # null sender
         # Terminate options by "--" to prevent addresses beginning with "-"
         # being treated as options.
-        unless (ref $rcpt) {
-            exec $sendmail, @sendmail_args, '-f', $return_path, '--', $rcpt;
-        } elsif (ref($rcpt) eq 'SCALAR') {
-            exec $sendmail, @sendmail_args, '-f', $return_path, '--', $$rcpt;
-        } elsif (ref($rcpt) eq 'ARRAY') {
-            exec $sendmail, @sendmail_args, '-f', $return_path, '--', @$rcpt;
-        }
+        exec $sendmail, @sendmail_args, '-f', $return_path, '--', @$rcpt;
 
         exit 1;    # Should never get there.
     }
 
     # Parent
     if ($self->{log_smtp}) {
-        my $r;
-        if (!ref $rcpt) {
-            $r = $rcpt;
-        } elsif (ref $rcpt eq 'SCALAR') {
-            $r = $$rcpt;
-        } else {
-            $r = join(' ', @$rcpt);
-        }
         Log::do_log(
             'debug3', '%s %s -f \'%s\' -- %s',
             $sendmail, join(' ', @sendmail_args),
-            $return_path, $r
+            $return_path, join(' ', @$rcpt)
         );
     }
     unless (close $in) {
@@ -315,9 +322,8 @@ Parameters:
 
 Message to be sent.
 
-=item $message->{envelope_sender}
-
-SMTP "MAIL FROM:" field.
+{envelope_sender} attribute of the message will be used as SMTP "MAIL FROM:"
+field.
 
 =item $rcpt
 

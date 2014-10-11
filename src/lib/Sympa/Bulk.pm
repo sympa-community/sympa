@@ -462,26 +462,18 @@ sub get_recipient_tabs_by_domain {
     my $list = shift;
     my @rcpt = @_;
 
-    # normal return_path (ie used if VERP is not enabled)
-    #my $from = $list->get_list_address('return_path');
     return unless @rcpt;
 
     my $robot_id = $list->{'domain'};
 
     my ($i, $j, $nrcpt);
     my $size = 0;
-    #my $numsmtp = 0;
 
     my %rcpt_by_dom;
 
     my @sendto;
     my @sendtobypacket;
 
-    #my $cmd_size =
-    #    length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
-    #    length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
-    #    length(' -N success,delay,failure -V ') + 32 +
-    #    length(" -f $from ");
     #my $db_type = $Conf::Conf{'db_type'};
 
     while (defined($i = shift @rcpt)) {
@@ -517,11 +509,6 @@ sub get_recipient_tabs_by_domain {
             # number of recipients in general
             (@sendto and $nrcpt >= Conf::get_robot_conf($robot_id, 'nrcpt'))
             #or
-            ## ARG_MAX limitation
-            #(   @sendto
-            #    and $cmd_size + $size + length($i) + 5 > $max_arg
-            #)
-            #or
             ## length of recipients field stored into bulkmailer table
             ## (these limits might be relaxed by future release of Sympa)
             #($db_type eq 'mysql' and $size + length($i) + 5 > 65535)
@@ -532,7 +519,6 @@ sub get_recipient_tabs_by_domain {
             # do not replace this line by "push @sendtobypacket, \@sendto" !!!
             my @tab = @sendto;
             push @sendtobypacket, \@tab;
-            #$numsmtp++;
             $nrcpt = $size = 0;
             @sendto = ();
         }
@@ -544,7 +530,6 @@ sub get_recipient_tabs_by_domain {
     }
 
     if (@sendto) {
-        #$numsmtp++;
         my @tab = @sendto;
         # do not replace this line by push @sendtobypacket, \@sendto !!!
         push @sendtobypacket, \@tab;
