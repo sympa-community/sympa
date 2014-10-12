@@ -172,7 +172,7 @@ foreach my $robot (@{Conf::get_robots_list()}) {
         }
     } else {
         Log::do_log('err',
-            'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in wwsympa.conf.'
+            'Robot %s has no archives directory. Check arc_path parameter in this robot.conf and in sympa.conf.'
         );
         exit -1;
     }

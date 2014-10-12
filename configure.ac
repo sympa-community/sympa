@@ -117,7 +117,7 @@ AC_ARG_WITH(
     confdir,
     AS_HELP_STRING(
 	[--with-confdir=DIR],
-	[sympa main configuration files (sympa.conf and wwsympa.conf) @<:@SYSCONFDIR@:>@]
+	[Directory of Sympa main configuration file (sympa.conf) @<:@SYSCONFDIR/sympa@:>@]
     ),
     [
 	confdir="$withval"
@@ -399,7 +399,7 @@ AC_ARG_WITH(
     [user],
     AS_HELP_STRING(
 	[--with-user=LOGIN],
-	[set sympa user name @<:@sympa@:>@]
+	[set Sympa user name @<:@sympa@:>@]
     ),
     [USER="$withval"]
 )
@@ -410,7 +410,7 @@ AC_ARG_WITH(
     [group],
     AS_HELP_STRING(
 	[--with-group=LOGIN],
-	[set sympa group name @<:@sympa@:>@]
+	[set Sympa group name @<:@sympa@:>@]
     ),
     [GROUP="$withval"]
 )
