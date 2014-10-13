@@ -140,7 +140,7 @@ AC_ARG_WITH(
     bindir,
     AS_HELP_STRING(
 	[--with-bindir=DIR],
-	[obsolete option, those binaries are now installed in libexecdir]
+	[obsolete option, those binaries are now installed in LIBEXECDIR]
     ),
     [AC_MSG_WARN([obsolete --with-bindir option used])]
 )
@@ -173,7 +173,7 @@ AC_ARG_WITH(
     cgidir,
     AS_HELP_STRING(
 	[--with-cgidir=DIR],
-	[CGI scripts @<:@LIBDIR/sympa/cgi@:>@]
+	[CGI scripts @<:@PREFIX/bin@:>@]
     ),
     [execcgidir="$withval"]
 )
@@ -194,7 +194,7 @@ AC_ARG_WITH(
     libdir,
     AS_HELP_STRING(
 	[--with-libdir=DIR]
-	[obsolete option, perl modules are now installed with data]
+	[obsolete option, Perl modules are now installed with data]
     ),
     [
 	AC_MSG_WARN([obsolete --with-libdir option used])
@@ -205,7 +205,7 @@ AC_ARG_WITH(
     localedir,
     AS_HELP_STRING(
 	[--with-localedir=DIR],
-	[Internationalization catalogues directory @<:@LOCALSTATEDIR/locale@:>@]
+	[Internationalization catalogues directory @<:@PREFIX/locale@:>@]
     ),
     [
      localedir="$withval"
@@ -228,7 +228,7 @@ AC_ARG_WITH(
     docdir,
     AS_HELP_STRING(
 	[--with-docdir=DIR],
-	[documentations]
+	[Documentations]
     ),
     [
 	docdir="$withval"
@@ -367,18 +367,18 @@ AC_ARG_WITH(
 )
 if test -n "$PERL"; then
     # user-supplied value
-    AC_MSG_CHECKING([user-supplied perl interpreter])
+    AC_MSG_CHECKING([user-supplied Perl interpreter])
     if test -f "$PERL"; then
 	:
     else
 	AC_MSG_RESULT([non-existing])
-	AC_MSG_ERROR([invalid value $PERL for perl interpreter])
+	AC_MSG_ERROR([invalid value $PERL for Perl interpreter])
     fi
     if test -x "$PERL"; then
 	:
     else
 	AC_MSG_RESULT([non-executable])
-	AC_MSG_ERROR([invalid value $PERL for perl interpreter])
+	AC_MSG_ERROR([invalid value $PERL for Perl interpreter])
     fi
     AC_MSG_RESULT([$PERL])
 else
