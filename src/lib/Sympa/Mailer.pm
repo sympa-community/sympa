@@ -82,7 +82,7 @@ sub reaper {
     Log::do_log(
         'debug2',
         'Reaper unwaited pids: %s Open = %s',
-        join(' ', sort {$a <=> $b} keys %{$self->{pids}}),
+        join(' ', sort { $a <=> $b } keys %{$self->{pids}}),
         $self->{opensmtp}
     );
     return $i;
@@ -104,8 +104,8 @@ sub store {
 
     my $return_path = $message->{envelope_sender};
     my $envid       = $params{envid};
-    my $logging     = $params{logging};
-    $logging = 1 unless defined $logging;
+    my $tag         = $params{tag};
+    my $logging = (not defined $tag or $tag eq 's' or $tag eq 'z') ? 1 : 0;
 
     my $robot_id;
     if (ref $message->{context} eq 'Sympa::List') {
@@ -138,14 +138,15 @@ sub store {
     while (@all_rcpt) {
         # Split rcpt by max length of command line (_SC_ARG_MAX).
         my $cmd_size = $min_cmd_size + 1 + length($all_rcpt[0]);
-        my @rcpt = (shift @all_rcpt);
+        my @rcpt     = (shift @all_rcpt);
         while (@all_rcpt
             and ($cmd_size += 1 + length($all_rcpt[0])) <= $max_arg) {
             push @rcpt, (shift @all_rcpt);
         }
 
-        my $pipeout = $self->_get_sendmail_handle(
-            $return_path, [@rcpt], $robot_id, $envid);
+        my $pipeout =
+            $self->_get_sendmail_handle($return_path, [@rcpt], $robot_id,
+            $envid);
         print $pipeout $msg_string;
         unless (close $pipeout) {
             return undef;
@@ -226,7 +227,7 @@ sub _get_sendmail_handle {
     if ($self->{log_smtp}) {
         Log::do_log(
             'debug3', '%s %s -f \'%s\' -- %s',
-            $sendmail, join(' ', @sendmail_args),
+            $sendmail,    join(' ', @sendmail_args),
             $return_path, join(' ', @$rcpt)
         );
     }
@@ -322,7 +323,7 @@ Returns:
 PID.
 
 =item store ( $message, $rcpt,
-[ envid =E<gt> $envid ], [ logging =E<gt> $logging ] )
+[ envid =E<gt> $envid ], [ tag =E<gt> $tag ] )
 
 I<Instance method>.
 Makes a sendmail ready for the recipients given as argument, uses a file
@@ -349,7 +350,7 @@ Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
 An envelope ID of this message submission in notification table.
 See also L<Sympa::Tracking>.
 
-=item $logging
+=item $tag
 
 TBD
 

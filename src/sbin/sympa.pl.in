@@ -35,7 +35,6 @@ use POSIX qw();
 
 use Sympa::Alarm;
 use Sympa::Admin;
-use Sympa::Bulk;
 use Sympa::Commands;
 use Conf;
 use Sympa::Config_XML;
@@ -902,20 +901,9 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         exit 0;
 
     } elsif ($main::options{'test_database_message_buffer'}) {
-        my $size = 0;
         printf
-            "Sympa is going to store messages bigger and bigger to test the limit with its database. This may be very long \n";
-        ## will test message until a 21 Mo message.
-        $size = Sympa::Bulk::store_test(21000);
-        if ($size == 21000) {
-            printf
-                "The maximum message size ($size Ko) testing was successful \n";
-        } else {
-            printf
-                "maximun message size that can be stored in database : $size Ko\n";
-        }
+            "Deprecated.  Size of messages no longer limited by database packet size.\n";
         exit 1;
-
     } elsif ($main::options{'conf_2_db'}) {
 
         printf
@@ -1408,6 +1396,12 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                     Sympa::Tools::File::CleanDir(
                         $Conf::Conf{'queuebounce'} . '/bad',
                         $Conf::Conf{'clean_delay_queuebounce'}
+                    );
+                }
+                if (-e $Conf::Conf{'queuebulk'} . '/bad') {
+                    Sympa::Tools::File::CleanDir(
+                        $Conf::Conf{'queuebulk'} . '/bad',
+                        $Conf::Conf{'clean_delay_queuebulk'}
                     );
                 }
                 Sympa::Tools::File::CleanDir($Conf::Conf{'queueauth'},

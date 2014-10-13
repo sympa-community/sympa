@@ -711,7 +711,7 @@ sub checkfiles {
         'queueauth',      'queueoutgoing',
         'queuebounce',    'queuesubscribe',
         'queuetask',      'queuedistribute',
-        'tmpdir'
+        'queuebulk',      'tmpdir'
         ) {
         unless (-d $Conf{$qdir}) {
             Log::do_log('info', 'Creating spool %s', $Conf{$qdir});
@@ -734,7 +734,8 @@ sub checkfiles {
     }
 
     ## Also create associated bad/ spools
-    foreach my $qdir ('queue', 'queuedistribute', 'queueautomatic') {
+    foreach
+        my $qdir ('queue', 'queuedistribute', 'queueautomatic', 'queuebulk') {
         my $subdir = $Conf{$qdir} . '/bad';
         unless (-d $subdir) {
             Log::do_log('info', 'Creating spool %s', $subdir);

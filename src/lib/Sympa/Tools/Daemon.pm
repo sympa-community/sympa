@@ -240,9 +240,8 @@ sub send_crash_report {
 # return a lockname that is a uniq id of a processus (hostname + pid) ;
 # hostname(20) and pid(10) are truncated in order to store lockname in
 # database varchar(30)
-sub get_lockname {
-    return substr(substr(Sys::Hostname::hostname(), 0, 20) . $PID, 0, 30);
-}
+# DEPRECATED: No longer used.
+#sub get_lockname();
 
 ## Returns the list of pid identifiers in the pid file.
 sub get_pids_in_pid_file {

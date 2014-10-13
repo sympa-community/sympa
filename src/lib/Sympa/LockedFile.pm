@@ -129,6 +129,15 @@ sub extend {
     return 1;
 }
 
+sub basename {
+    my $self = shift;
+
+    die 'Lock not found' unless exists $lock_of{$self + 0};
+
+    my ($basename) = reverse split '/', $lock_of{$self + 0}->{file};
+    return $basename;
+}
+
 sub rename {
     my $self     = shift;
     my $destfile = shift;
@@ -323,6 +332,10 @@ this method will safely close it and die.
 Following methods are specific to this module.
 
 =over
+
+=item basename ( )
+
+Gets base name of locked file.
 
 =item extend ( )
 

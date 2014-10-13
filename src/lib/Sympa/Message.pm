@@ -3761,6 +3761,18 @@ Domain, type and local part of context.
 
 Priority of the message.
 
+=item {tag}
+
+Tag of packet used by bulk spool to control logging.
+C<'0'> is the first message of multiple packet.
+C<'z'> is the last.
+C<'s'> is the single message with single packet.
+
+=item {time}
+
+The Unix time in floating point number when the message was stored into the
+spool.  This is used by bulk spool.
+
 =back
 
 =head2 Attributes
@@ -3780,7 +3792,7 @@ Envelope sender, a.k.a. "Unix From".
 This is not always same as {sender} attribute
 nor the content of C<From:> field.
 
-C<'E<lt>E<gt>'> is used for "null envelope sender".
+C<'E<lt>E<gt>'> will be used for "null envelope sender".
 
 =item {family}
 
@@ -3795,14 +3807,15 @@ Display name of actual sender (see {sender} below), if any.
 
 True value indicates that the message has been authenticated by C<md5> level
 (password authentication).
+This is set by web mailer of WWSympa and used by incoming spool.
 
 =item {message_id}
 
-Original message ID of the message
+Original message ID of the message.
 
 =item {rcpt}
 
-Currently unavailable.
+Recipients for delivery.  This is used by bulk spool.
 
 =item {sender}
 
@@ -3886,10 +3899,10 @@ Below is an example of serialized form.
   Bonjour, le monde.                              :    |
                                                   :   ---
 
-On the messages in msg and bounce spools,
-C<Return-Path:> header fields are given by MDA,
-and C<X-Sympa-*:> header fields are given by queue programs.  On other
-spools, they are given by components of Sympa.
+On msg, automatic and bounce spools,
+C<Return-Path:> header fields are given by MDA
+and C<X-Sympa-*:> header fields are given by queue programs.
+On other spools, they are given by components of Sympa.
 
 Pseudo-header fields I<should> appear at beginning of serialized content.
 Fields appear at other places (e.g. C<X-Sympa-Topic:> field above) are not

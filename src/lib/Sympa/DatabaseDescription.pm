@@ -214,157 +214,157 @@ my %full_db_struct = (
             'The user_table is mainly used to manage login from web interface. A subscriber may not appear in the user_table if he never log through the web interface.',
         'order' => 2,
     },
-    'bulkspool_table' => {
-        'fields' => {
-            'messagekey_bulkspool' => {
-                'struct'   => 'varchar(33)',
-                'doc'      => 'primary key',
-                'primary'  => 1,
-                'not_null' => 1,
-                'order'    => 1,
-            },
-            'message_bulkspool' => {
-                'struct' => 'longtext',
-                'doc'    => 'message as string b64 encoded',
-                'order'  => 2,
-            },
-            #'messageid_bulkspool' => {
-            #    'struct' => 'varchar(300)',
-            #    'doc'    => 'stored to list spool content faster',
-            #    'order'  => 4,
-            #},
-            'lock_bulkspool' => {
-                'struct' => 'int(1)',
-                'doc' =>
-                    'when set to 1, this field prevents Sympa from processing the message',
-                'order' => 5,
-            },
-            #'dkim_privatekey_bulkspool' => {
-            #    'struct' => 'varchar(2000)',
-            #    'doc' =>
-            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
-            #    'order' => 6,
-            #},
-            #'dkim_selector_bulkspool' => {
-            #    'struct' => 'varchar(50)',
-            #    'doc' =>
-            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
-            #    'order' => 7,
-            #},
-            #'dkim_d_bulkspool' => {
-            #    'struct' => 'varchar(50)',
-            #    'doc' =>
-            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
-            #    'order' => 8,
-            #},
-            #'dkim_i_bulkspool' => {
-            #    'struct' => $email_struct,
-            #    'doc' =>
-            #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
-            #    'order' => 9,
-            #},
-        },
-        'doc'   => 'This table contains the messages to be sent by bulk.pl',
-        'order' => 3,
-    },
-    'bulkmailer_table' => {
-        'fields' => {
-            'messagekey_bulkmailer' => {
-                'struct' => 'varchar(80)',
-                'doc' =>
-                    'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_bulkspool',
-                'primary'  => 1,
-                'not_null' => 1,
-                'order'    => 1,
-            },
-            'packetid_bulkmailer' => {
-                'struct'   => 'varchar(33)',
-                'doc'      => 'An id for the packet',
-                'primary'  => 1,
-                'not_null' => 1,
-                'order'    => 2,
-            },
-            #'messageid_bulkmailer' => {
-            #    'struct' => 'varchar(200)',
-            #    'doc'    => 'The message Id',
-            #    'order'  => 3,
-            #},
-            ##FIXME: column name is "recEipients_bulkmailer"
-            'receipients_bulkmailer' => {
-                'struct' => 'text',
-                'doc' =>
-                    'the comma separated list of recipient email for this message',
-                'order' => 4,
-            },
-            #'returnpath_bulkmailer' => {
-            #    'struct' => $email_struct,
-            #    'doc' =>
-            #        'the return path value that must be set when sending the message',
-            #    'order' => 5,
-            #},
-            'robot_bulkmailer' => {
-                'struct' => $robot_struct,
-                'doc'    => '',
-                'order'  => 6,
-            },
-            'listname_bulkmailer' => {
-                'struct' => $list_struct,
-                'doc'    => '',
-                'order'  => 7,
-            },
-            #'verp_bulkmailer' => {
-            #    'struct' => 'int(1)',
-            #    'doc' =>
-            #        'A boolean to specify if VERP is requiered, in this case return_path will be formatted using VERP form',
-            #    'order' => 8,
-            #},
-            #'tracking_bulkmailer' => {
-            #    'struct' => "enum('mdn','dsn')",
-            #    'doc' => 'Is DSN or MDN requiered when sending this message?',
-            #    'order' => 9,
-            #},
-            #'merge_bulkmailer' => {
-            #    'struct' => 'int(1)',
-            #    'doc' =>
-            #        'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
-            #    'order' => 10,
-            #},
-            'priority_message_bulkmailer' => {
-                'struct' => 'smallint(10)',
-                'doc'    => 'FIXME',
-                'order'  => 11,
-            },
-            'priority_packet_bulkmailer' => {
-                'struct' => 'smallint(10)',
-                'doc'    => 'FIXME',
-                'order'  => 12,
-            },
-            'reception_date_bulkmailer' => {
-                'struct' => 'double',
-                'doc'    => 'The date where the message was received',
-                'order'  => 13,
-            },
-            'delivery_date_bulkmailer' => {
-                'struct' => 'int(11)',
-                'doc'    => 'The date the message was sent',
-                'order'  => 14,
-            },
-            'lock_bulkmailer' => {
-                'struct' => 'varchar(30)',
-                'doc' =>
-                    'A lock. It is set as process-number @ hostname so multiple bulkmailer can handle this spool',
-                'order' => 15,
-            },
-            'tag_bulkmailer' => {
-                'struct' => 'varchar(10)',
-                'doc'    => 'Additional tag used to sort packets',
-                'order'  => 16,
-            },
-        },
-        'doc' =>
-            'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',
-        'order' => 4,
-    },
+    #'bulkspool_table' => {
+    #    'fields' => {
+    #        'messagekey_bulkspool' => {
+    #            'struct'   => 'varchar(33)',
+    #            'doc'      => 'primary key',
+    #            'primary'  => 1,
+    #            'not_null' => 1,
+    #            'order'    => 1,
+    #        },
+    #        'message_bulkspool' => {
+    #            'struct' => 'longtext',
+    #            'doc'    => 'message as string b64 encoded',
+    #            'order'  => 2,
+    #        },
+    #        #'messageid_bulkspool' => {
+    #        #    'struct' => 'varchar(300)',
+    #        #    'doc'    => 'stored to list spool content faster',
+    #        #    'order'  => 4,
+    #        #},
+    #        'lock_bulkspool' => {
+    #            'struct' => 'int(1)',
+    #            'doc' =>
+    #                'when set to 1, this field prevents Sympa from processing the message',
+    #            'order' => 5,
+    #        },
+    #        #'dkim_privatekey_bulkspool' => {
+    #        #    'struct' => 'varchar(2000)',
+    #        #    'doc' =>
+    #        #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, private key to sign message',
+    #        #    'order' => 6,
+    #        #},
+    #        #'dkim_selector_bulkspool' => {
+    #        #    'struct' => 'varchar(50)',
+    #        #    'doc' =>
+    #        #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM selector to sign message',
+    #        #    'order' => 7,
+    #        #},
+    #        #'dkim_d_bulkspool' => {
+    #        #    'struct' => 'varchar(50)',
+    #        #    'doc' =>
+    #        #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, the d DKIM parameter',
+    #        #    'order' => 8,
+    #        #},
+    #        #'dkim_i_bulkspool' => {
+    #        #    'struct' => $email_struct,
+    #        #    'doc' =>
+    #        #        'DKIM parameter stored for bulk daemon because bulk ignore list parameters, DKIM i signature parameter',
+    #        #    'order' => 9,
+    #        #},
+    #    },
+    #    'doc'   => 'This table contains the messages to be sent by bulk.pl',
+    #    'order' => 3,
+    #},
+    #'bulkmailer_table' => {
+    #    'fields' => {
+    #        'messagekey_bulkmailer' => {
+    #            'struct' => 'varchar(80)',
+    #            'doc' =>
+    #                'A pointer to a message in spool_table.It must be a value of a line in table spool_table with same value as messagekey_bulkspool',
+    #            'primary'  => 1,
+    #            'not_null' => 1,
+    #            'order'    => 1,
+    #        },
+    #        'packetid_bulkmailer' => {
+    #            'struct'   => 'varchar(33)',
+    #            'doc'      => 'An id for the packet',
+    #            'primary'  => 1,
+    #            'not_null' => 1,
+    #            'order'    => 2,
+    #        },
+    #        #'messageid_bulkmailer' => {
+    #        #    'struct' => 'varchar(200)',
+    #        #    'doc'    => 'The message Id',
+    #        #    'order'  => 3,
+    #        #},
+    #        ##FIXME: column name is "recEipients_bulkmailer"
+    #        'receipients_bulkmailer' => {
+    #            'struct' => 'text',
+    #            'doc' =>
+    #                'the comma separated list of recipient email for this message',
+    #            'order' => 4,
+    #        },
+    #        #'returnpath_bulkmailer' => {
+    #        #    'struct' => $email_struct,
+    #        #    'doc' =>
+    #        #        'the return path value that must be set when sending the message',
+    #        #    'order' => 5,
+    #        #},
+    #        'robot_bulkmailer' => {
+    #            'struct' => $robot_struct,
+    #            'doc'    => '',
+    #            'order'  => 6,
+    #        },
+    #        'listname_bulkmailer' => {
+    #            'struct' => $list_struct,
+    #            'doc'    => '',
+    #            'order'  => 7,
+    #        },
+    #        #'verp_bulkmailer' => {
+    #        #    'struct' => 'int(1)',
+    #        #    'doc' =>
+    #        #        'A boolean to specify if VERP is requiered, in this case return_path will be formatted using VERP form',
+    #        #    'order' => 8,
+    #        #},
+    #        #'tracking_bulkmailer' => {
+    #        #    'struct' => "enum('mdn','dsn')",
+    #        #    'doc' => 'Is DSN or MDN requiered when sending this message?',
+    #        #    'order' => 9,
+    #        #},
+    #        #'merge_bulkmailer' => {
+    #        #    'struct' => 'int(1)',
+    #        #    'doc' =>
+    #        #        'Boolean, if true, the message is to be parsed as a TT2 template foreach recipient',
+    #        #    'order' => 10,
+    #        #},
+    #        'priority_message_bulkmailer' => {
+    #            'struct' => 'smallint(10)',
+    #            'doc'    => 'FIXME',
+    #            'order'  => 11,
+    #        },
+    #        'priority_packet_bulkmailer' => {
+    #            'struct' => 'smallint(10)',
+    #            'doc'    => 'FIXME',
+    #            'order'  => 12,
+    #        },
+    #        'reception_date_bulkmailer' => {
+    #            'struct' => 'double',
+    #            'doc'    => 'The date where the message was received',
+    #            'order'  => 13,
+    #        },
+    #        'delivery_date_bulkmailer' => {
+    #            'struct' => 'int(11)',
+    #            'doc'    => 'The date the message was sent',
+    #            'order'  => 14,
+    #        },
+    #        'lock_bulkmailer' => {
+    #            'struct' => 'varchar(30)',
+    #            'doc' =>
+    #                'A lock. It is set as process-number @ hostname so multiple bulkmailer can handle this spool',
+    #            'order' => 15,
+    #        },
+    #        'tag_bulkmailer' => {
+    #            'struct' => 'varchar(10)',
+    #            'doc'    => 'Additional tag used to sort packets',
+    #            'order'  => 16,
+    #        },
+    #    },
+    #    'doc' =>
+    #        'storage of recipients with a ref to a message in spool_table. So a very simple process can distribute them',
+    #    'order' => 4,
+    #},
     'exclusion_table' => {
         'fields' => {
             'list_exclusion' => {

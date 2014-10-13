@@ -1321,11 +1321,11 @@ sub purge_tables {
     Log::do_log('info', '');
     my $removed;
 
-    $removed = Sympa::Bulk::purge_bulkspool();
-    unless (defined $removed) {
-        Log::do_log('err', 'Failed to purge bulkspool');
-    }
-    Log::do_log('notice', '%s rows removed in bulkspool_table', $removed);
+    # $removed = Sympa::Bulk::purge_bulkspool();
+    # unless (defined $removed) {
+    #     Log::do_log('err', 'Failed to purge bulkspool');
+    # }
+    # Log::do_log('notice', '%s rows removed in bulkspool_table', $removed);
     #
     $removed = 0;
     foreach my $robot (keys %{$Conf::Conf{'robots'}}) {
