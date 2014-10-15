@@ -48,8 +48,13 @@ sub next {
     unless ($metadatas) {
         my $dh;
         die $ERRNO unless opendir $dh, $spool_dir;
-        $metadatas =
-            [sort grep { !/^\./ and -f ($spool_dir . '/' . $_) } readdir $dh];
+        $metadatas = [
+            sort grep {
+                        !/,lock/
+                    and !/^(?:\.|T\.|BAD-)/
+                    and -f ($spool_dir . '/' . $_)
+                } readdir $dh
+        ];
         closedir $dh;
     }
     unless (@{$metadatas}) {
@@ -57,30 +62,27 @@ sub next {
         return;
     }
 
+    my ($lock_fh, $metadata, $message);
     while (my $marshalled = shift @{$metadatas}) {
-        next if $marshalled =~ /,lock/;    # Skip locks
-        next if $marshalled =~ /^T\./;     # Skip temporary files
-        next if $marshalled =~ /^BAD-/;    # Skip bad messages
         # Try locking message.  Those locked or removed by other process will
         # be skipped.
-        my $lock_fh =
+        $lock_fh =
             Sympa::LockedFile->new($spool_dir . '/' . $marshalled, -1, '+<');
         next unless $lock_fh;
 
         # FIXME: The list or the robot that injected packet can no longer be
         # available.
-        my $metadata = tools::unmarshal_metadata(
+        $metadata = tools::unmarshal_metadata(
             $spool_dir,
             $marshalled,
             qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+)(?:,.*)?\z},
             [qw(priority packet_priority date time localpart domainpart tag)]
         );
 
-        # Skip messages not yet to be delivered.
-        next unless $metadata->{date} <= time;
-
-        my $message;
         if ($metadata) {
+            # Skip messages not yet to be delivered.
+            next unless $metadata->{date} <= time;
+
             my $msg_string = do { local $RS; <$lock_fh> };
             $message = Sympa::Message->new($msg_string, %$metadata);
         }
