@@ -129,11 +129,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
     if (open(TTY, "/dev/tty")) {
         close(TTY);
     }
-    setpgrp(0, 0);
-    if ((my $child_pid = fork) != 0) {
+    setpgrp 0, 0;
+    my $child_pid = fork;
+    if ($child_pid) {
         Log::do_log('info', 'Starting bulk master daemon, PID %s',
             $child_pid);
-        exit(0);
+        exit 0;
+    } elsif (not defined $child_pid) {
+        die sprintf 'Cannot fork: %s', $ERRNO;
     }
 }
 Log::do_openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'},
@@ -586,7 +589,7 @@ while (!$end) {
 # Purge grouped notifications
 Sympa::Alarm::flush('purge');
 
-Log::do_log('notice', 'Bulk.pl exited normally due to signal');
+Log::do_log('notice', 'Bulk exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);
 
 exit(0);

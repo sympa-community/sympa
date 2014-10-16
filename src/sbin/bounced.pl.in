@@ -128,18 +128,19 @@ unless (SDM::check_db_connect()) {
 
 ## Put ourselves in background if not in debug mode.
 unless ($main::options{'debug'} || $main::options{'foreground'}) {
-
     open(STDERR, ">> /dev/null");
     open(STDOUT, ">> /dev/null");
     if (open(TTY, "/dev/tty")) {
         ioctl(TTY, 0x20007471, 0);    # XXX s/b TIOCNOTTY()
         close(TTY);
     }
-    setpgrp(0, 0);
-    if ((my $child_pid = fork) != 0) {
-        print STDOUT "Starting bounce daemon, pid $_\n";
-
-        exit(0);
+    setpgrp 0, 0;
+    my $child_pid = fork;
+    if ($child_pid) {
+        Log::do_log('info', 'Starting bounced daemon, PID %s', $child_pid);
+        exit 0;
+    } elsif (not defined $child_pid) {
+        die sprintf 'Cannot fork: %s', $ERRNO;
     }
 }
 
@@ -198,7 +199,7 @@ unless (chdir($Conf::Conf{'home'})) {
         $!;
 }
 
-Log::do_log('notice', 'Bounced Started');
+Log::do_log('notice', 'Bounced %s Started', Sympa::Constants::VERSION());
 
 ## Catch signals, in order to exit cleanly, whenever possible.
 $SIG{'TERM'} = 'sigterm';

@@ -126,10 +126,14 @@ unless ($main::options{'debug'} || $main::options{'foreground'}) {
         close(TTY);
     }
 
-    setpgrp(0, 0);
-    if ((my $child_pid = fork) != 0) {
-        print STDOUT "Starting task_manager daemon, PID $_\n";
-        exit(0);
+    setpgrp 0, 0;
+    my $child_pid = fork;
+    if ($child_pid) {
+        Log::do_log('info', 'Starting task_manager daemon, PID %s',
+            $child_pid);
+        exit 0;
+    } elsif (not defined $child_pid) {
+        die sprintf 'Cannot fork: %s', $ERRNO;
     }
 }
 
@@ -169,6 +173,9 @@ unless (chdir($Conf::Conf{'home'})) {
 $SIG{'TERM'} = 'sigterm';
 $SIG{'INT'}  = \&sigterm;
 my $end = 0;
+
+# Most initializations have now been done.
+Log::do_log('notice', 'Task_Manager %s Started', Sympa::Constants::VERSION());
 
 ###### VARIABLES DECLARATION ######
 
@@ -431,7 +438,7 @@ while (!$end) {
 # Purge grouped notifications
 Sympa::Alarm::flush('purge');
 
-Log::do_log('notice', 'Task_manager exited normally due to signal');
+Log::do_log('notice', 'Task_Manager exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('task_manager', $PID);
 
 exit(0);

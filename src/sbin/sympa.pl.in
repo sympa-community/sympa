@@ -405,15 +405,13 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             ## required
             if (($Conf::Conf{'automatic_list_feature'} eq 'on')
                 || $main::daemon_usage == Conf::DAEMON_CREATION) {
-                Log::do_log('debug',
-                    "Starting server for automatic lists creation");
-                if ((my $child_pid = fork) != 0) {
+                my $child_pid = fork;
+                if ($child_pid) {
                     Log::do_log('notice',
-                        "Server for automatic lists creation started, pid $child_pid"
-                    );
-                    Log::do_log('debug',
-                        "Server for automatic lists creation started, pid $child_pid, exiting from initial process"
-                    );
+                        'Sympa for automatic list creation started, PID %s',
+                        $child_pid);
+                } elsif (not defined $child_pid) {
+                    Log::do_log('err', 'Cannot fork: %m');
                 } else {
                     ## We're in the specialized child process
                     $main::daemon_usage =
@@ -422,43 +420,37 @@ while ($signal ne 'term') {    #as long as a signal is not received }
             }
 
             unless ($main::daemon_usage == Conf::DAEMON_CREATION) {
-
                 ## A single process that handles both messages and commands
                 ## The distribute/ spool is not used
-                if (   $Conf::Conf{'distribution_mode'} eq 'single'
-                    && $main::daemon_usage == Conf::DAEMON_ALL) {
-                    my $purpose = 'all';
-                    Log::do_log('debug', 'Starting server for %s purpose',
-                        $purpose);
-                    if ((my $child_pid = fork) != 0) {
-                        Log::do_log('info', 'Server started for %s, PID %s',
-                            $purpose, $child_pid);
-                        Log::do_log('debug',
-                            "$purpose server started, pid $child_pid, exiting from initial process"
-                        );
-                        exit(0);
+                if (    $Conf::Conf{'distribution_mode'} eq 'single'
+                    and $main::daemon_usage == Conf::DAEMON_ALL) {
+                    my $child_pid = fork;
+                    if ($child_pid) {
+                        Log::do_log('info',
+                            'Sympa for all purpose started, PID %s',
+                            $child_pid);
+                        exit 0;
+                    } elsif (not defined $child_pid) {
+                        die sprintf 'Cannot fork: %s', $ERRNO;
                     }
 
                     ## Starting a dedicated process if sympa.pl is started
                     ## with a --service argument
                 } elsif ($main::daemon_usage == Conf::DAEMON_COMMAND
                     || $main::daemon_usage == Conf::DAEMON_COMMAND) {
-
                     my $purpose;
                     if ($main::daemon_usage == Conf::DAEMON_COMMAND) {
-                        $purpose = 'command';
+                        $purpose = 'commands';
                     } elsif ($main::daemon_usage == Conf::DAEMON_MESSAGE) {
-                        $purpose = 'message';
+                        $purpose = 'messages';
                     }
-                    Log::do_log('debug', 'Starting server for %s purpose',
-                        $purpose);
-                    if ((my $child_pid = fork) != 0) {
-                        Log::do_log('info', 'Server started for %s, PID %s',
+                    my $child_pid = fork;
+                    if ($child_pid) {
+                        Log::do_log('info', 'Sympa for %s started, PID %s',
                             $purpose, $child_pid);
-                        Log::do_log('debug',
-                            "$purpose server started, pid $child_pid, exiting from initial process"
-                        );
-                        exit(0);
+                        exit 0;
+                    } elsif (not defined $child_pid) {
+                        die sprintf 'Cannot fork: %s', $ERRNO;
                     }
 
                     ## Sympa forks to have 2 dedicated processes for
@@ -466,23 +458,23 @@ while ($signal ne 'term') {    #as long as a signal is not received }
                 } else {
                     # fork sympa.pl dedicated to commands
                     $main::daemon_usage = Conf::DAEMON_COMMAND;
-                    Log::do_log('debug', "Starting server for commands");
-                    if ((my $child_pid = fork) != 0) {
+                    my $child_pid = fork;
+                    if ($child_pid) {
                         Log::do_log('info',
-                            'Server for commands started, PID %s',
-                            $child_pid);
+                            'Sympa for commands started, PID %s', $child_pid);
                         # main process continue in order to fork
                         $main::daemon_usage = Conf::DAEMON_MESSAGE;
-                        Log::do_log('debug', "Starting server for messages");
-                        if ((my $child_pid = fork) != 0) {
+                        my $child_pid = fork;
+                        if ($child_pid) {
                             Log::do_log('notice',
-                                "Server for messages started, pid $child_pid"
-                            );
-                            Log::do_log('debug',
-                                "Server for messages started, pid $child_pid, exiting from initial process"
-                            );
-                            exit(0);    # exit from main process
+                                'Sympa for messages started, PID %s',
+                                $child_pid);
+                            exit 0;    # exit from main process
+                        } elsif (not defined $child_pid) {
+                            die sprintf 'Cannot fork: %s', $ERRNO;
                         }
+                    } elsif (not defined $child_pid) {
+                        die sprintf 'Cannot fork: %s', $ERRNO;
                     }
                 }
             }
@@ -540,7 +532,8 @@ while ($signal ne 'term') {    #as long as a signal is not received }
         umask(oct($Conf::Conf{'umask'}));
 
         ## Most initializations have now been done.
-        Log::do_log('notice', "Sympa %s started", Sympa::Constants::VERSION);
+        Log::do_log('notice', 'Sympa %s Started',
+            Sympa::Constants::VERSION());
     } else {
         Log::do_log('notice', "Sympa %s reload config",
             Sympa::Constants::VERSION);
