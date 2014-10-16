@@ -706,7 +706,7 @@ sub check_db_field_type {
 
 sub quote {
     my $param = shift;
-    if (defined $db_source) {
+    if ($db_source and $db_source->{dbh}) {
         return $db_source->quote($param);
     } else {
         if (check_db_connect()) {
@@ -720,7 +720,7 @@ sub quote {
 
 sub get_substring_clause {
     my $param = shift;
-    if (defined $db_source) {
+    if ($db_source and $db_source->{dbh}) {
         return $db_source->get_substring_clause($param);
     } else {
         if (check_db_connect()) {
@@ -742,7 +742,7 @@ sub get_substring_clause {
 ##
 sub get_canonical_write_date {
     my $param = shift;
-    if (defined $db_source) {
+    if ($db_source and $db_source->{dbh}) {
         return $db_source->get_canonical_write_date($param);
     } else {
         if (check_db_connect()) {
@@ -761,7 +761,7 @@ sub get_canonical_write_date {
 ##
 sub get_canonical_read_date {
     my $param = shift;
-    if (defined $db_source) {
+    if ($db_source and $db_source->{dbh}) {
         return $db_source->get_canonical_read_date($param);
     } else {
         if (check_db_connect()) {
