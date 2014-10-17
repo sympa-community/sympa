@@ -26,6 +26,7 @@ package Sympa::Bulk;
 
 use strict;
 use warnings;
+use Cwd qw();
 use English qw(no_match_vars);
 use Time::HiRes qw();
 
@@ -43,19 +44,22 @@ our $metadatas;
 # Next lock the packet to prevent multiple proccessing of a single packet
 
 sub next {
-    my $spool_dir = $Conf::Conf{'queuebulk'};
+    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
+    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
 
     unless ($metadatas) {
-        my $dh;
-        die $ERRNO unless opendir $dh, $spool_dir;
+        my $cwd = Cwd::getcwd();
+        unless (chdir $pct_spool_dir) {
+            die sprintf 'Cannot chdir to %s: %s', $pct_spool_dir, $ERRNO;
+        }
         $metadatas = [
             sort grep {
                         !/,lock/
-                    and !/^(?:\.|T\.|BAD-)/
-                    and -f ($spool_dir . '/' . $_)
-                } readdir $dh
+                    and !m{(?:\A|/)(?:\.|T\.|BAD-)}
+                    and -f ($pct_spool_dir . '/' . $_)
+                } glob '*/*'
         ];
-        closedir $dh;
+        chdir $cwd;
     }
     unless (@{$metadatas}) {
         undef $metadatas;
@@ -64,27 +68,37 @@ sub next {
 
     my ($lock_fh, $metadata, $message);
     while (my $marshalled = shift @{$metadatas}) {
-        # Try locking message.  Those locked or removed by other process will
+        # Try locking packet.  Those locked or removed by other process will
         # be skipped.
-        $lock_fh =
-            Sympa::LockedFile->new($spool_dir . '/' . $marshalled, -1, '+<');
+        $lock_fh = Sympa::LockedFile->new($pct_spool_dir . '/' . $marshalled,
+            -1, '+<');
         next unless $lock_fh;
 
         # FIXME: The list or the robot that injected packet can no longer be
         # available.
         $metadata = tools::unmarshal_metadata(
-            $spool_dir,
+            $pct_spool_dir,
             $marshalled,
-            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+)(?:,.*)?\z},
-            [qw(priority packet_priority date time localpart domainpart tag)]
+            qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
+            [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
+            ]
         );
 
         if ($metadata) {
             # Skip messages not yet to be delivered.
             next unless $metadata->{date} <= time;
 
-            my $msg_string = do { local $RS; <$lock_fh> };
-            $message = Sympa::Message->new($msg_string, %$metadata);
+            my $msg_file = tools::marshal_metadata(
+                $metadata,
+                '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
+                [   qw(priority packet_priority date time localpart domainpart tag pid rand)
+                ]
+            );
+            $message = Sympa::Message->new_from_file($msg_spool_dir . '/' . $msg_file, %$metadata);
+            if ($message) {
+                my $rcpt_string = do { local $RS; <$lock_fh> };
+                $message->{rcpt} = [split /\n+/, $rcpt_string];
+            }
         }
 
         # Though message might not be deserialized, anyway return the result.
@@ -97,21 +111,35 @@ sub next {
 sub remove {
     my $lock_fh = shift;
 
-    return $lock_fh->unlink;
+    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
+    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
+    my $marshalled    = $lock_fh->basename(1);
+
+    if ($lock_fh->unlink) {
+        if (rmdir($pct_spool_dir . '/' . $marshalled)) {    # No more packet.
+            unlink($msg_spool_dir . '/' . $marshalled);
+        }
+        return 1;
+    }
+    return undef;
 }
 
 # quarantine a packet.
 sub quarantine {
     my $lock_fh = shift;
 
-    my $spool_dir = $Conf::Conf{'queuebulk'};
-    my $bad_dir   = $spool_dir . '/bad';
+    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
+    my $bad_dir = $Conf::Conf{'queuebulk'} . '/bad/' . $lock_fh->basename(1);
     my $bad_file;
 
     $bad_file = $bad_dir . '/' . $lock_fh->basename;
+    mkdir $bad_dir unless -d $bad_dir;
     return 1 if -d $bad_dir and $lock_fh->rename($bad_file);
 
-    $bad_file = $spool_dir . '/BAD-' . $lock_fh->basename;
+    $bad_file =
+          $pct_spool_dir . '/BAD-'
+        . $lock_fh->basename(1) . '-'
+        . $lock_fh->basename;
     return $lock_fh->rename($bad_file);
 }
 
@@ -135,7 +163,9 @@ sub store {
     my $rcpt    = shift;
     my %options = @_;
 
-    my $spool_dir = $Conf::Conf{'queuebulk'};
+    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
+    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
+
     my ($list, $robot_id);
     if (ref($message->{context}) eq 'Sympa::List') {
         $list     = $message->{context};
@@ -160,7 +190,28 @@ sub store {
     $message->{date} = time unless defined $message->{date};
     $message->{time} = Time::HiRes::time();
 
-    # second : create each recipient packet in bulkmailer_table
+    # First, store the message in bulk/msg spool, because as soon as packets
+    # are created bulk.pl may distribute them.
+
+    my $marshalled = tools::store_spool(
+        $msg_spool_dir,
+        $message,
+        '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
+        [   qw(priority packet_priority date time localpart domainpart tag PID RAND)
+        ],
+        %options
+    );
+    return unless $marshalled;
+
+    unless (mkdir($pct_spool_dir . '/' . $marshalled)) {
+        Log::do_log('err', 'Cannot mkdir %s/%s: %m',
+            $pct_spool_dir, $marshalled);
+        unlink($msg_spool_dir . '/' . $marshalled);
+        return;
+    }
+
+    # Second, create each recipient packet in bulk/pct spool.
+
     my @rcpts;
     unless (ref $rcpt) {
         @rcpts = ([$rcpt]);
@@ -168,21 +219,21 @@ sub store {
         @rcpts = _get_recipient_tabs_by_domain($robot_id, @{$rcpt || []});
     }
 
-    my $marshalled;
-    my $serial = ($message->{tag} eq '0') ? 1 : 0;
-    foreach my $packet (@rcpts) {
-        $message->{rcpt} = $packet;
+    my $serial = $message->{tag};
+    foreach my $rcpt (@rcpts) {
+        my $lock_fh = Sympa::LockedFile->new(
+            $pct_spool_dir . '/' . $marshalled . '/' . $serial,
+            5, '>>');
+        return unless $lock_fh;
 
-        $marshalled = tools::store_spool(
-            $spool_dir,
-            $message,
-            '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
-            [   qw(priority packet_priority date time localpart domainpart tag PID RAND)
-            ],
-            %options
-        );
-        return unless $marshalled;
-        $message->{tag} = $serial++;
+        print $lock_fh join("\n", @{$rcpt}) . "\n";
+        $lock_fh->close;
+
+        if (length $serial == 1) {    # '0', 's' or 'z'.
+            $serial = '0001';
+        } else {
+            $serial++;
+        }
     }
 
     Log::do_log('notice', 'Message %s is stored into bulk spool as <%s>',

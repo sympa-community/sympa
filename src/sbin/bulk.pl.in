@@ -347,7 +347,7 @@ while (!$end) {
             $robot = '*';
         }
 
-        if ($message->{tag} eq '0' or $message->{tag} eq 's') {
+        if ($message->{serial} eq '0' or $message->{serial} eq 's') {
             Log::do_log(
                 'notice',
                 'Start sending message %s to %s (priority %s) (starting %s seconds after scheduled expedition date)',
@@ -386,7 +386,7 @@ while (!$end) {
         };
 
         # Contain all the subscribers
-        my @rcpts = split /,/, $message->{rcpt};
+        my @rcpts = @{$message->{rcpt}};
         ## Use an intermediate handler to encode to filesystem_encoding
         my $user;
 
@@ -506,7 +506,7 @@ while (!$end) {
                     defined $mailer->store(
                         $new_message, $rcpt,
                         envid => $envid,
-                        tag   => $new_message->{tag}
+                        tag   => $new_message->{serial}
                     )
                     ) {
                     Log::do_log('err',
@@ -555,7 +555,7 @@ while (!$end) {
             $new_message->{envelope_sender} = $return_path;
             unless (
                 defined $mailer->store(
-                    $new_message, [@rcpts], tag => $new_message->{tag}
+                    $new_message, [@rcpts], tag => $new_message->{serial}
                 )
                 ) {
                 Log::do_log('err',

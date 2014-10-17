@@ -131,11 +131,12 @@ sub extend {
 
 sub basename {
     my $self = shift;
+    my $level = shift || 0;
 
     die 'Lock not found' unless exists $lock_of{$self + 0};
 
-    my ($basename) = reverse split '/', $lock_of{$self + 0}->{file};
-    return $basename;
+    my @paths = reverse split '/', $lock_of{$self + 0}->{file};
+    return $paths[$level];
 }
 
 sub rename {
@@ -333,7 +334,7 @@ Following methods are specific to this module.
 
 =over
 
-=item basename ( )
+=item basename ( [ $level ] )
 
 Gets base name of locked file.
 

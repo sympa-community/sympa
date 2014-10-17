@@ -732,7 +732,25 @@ sub checkfiles {
             }
         }
     }
-
+    foreach my $qsubdir (qw(msg pct)) {
+        my $qdir = $Conf{'queuebulk'} . '/' . $qsubdir;
+        unless (-d $qdir) {
+            unless (mkdir $qdir) {
+                Log::do_log('err', 'Unable to create spool %s', $qdir);
+                $config_err++;
+            }
+            unless (
+                Sympa::Tools::File::set_file_rights(
+                    file  => $qdir,
+                    user  => Sympa::Constants::USER,
+                    group => Sympa::Constants::GROUP,
+                )
+                ) {
+                Log::do_log('err', 'Unable to set rights on %s', $qdir);
+                $config_err++;
+            }
+        }
+    }
     ## Also create associated bad/ spools
     foreach
         my $qdir ('queue', 'queuedistribute', 'queueautomatic', 'queuebulk') {
