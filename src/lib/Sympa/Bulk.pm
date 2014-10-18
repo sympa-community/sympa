@@ -39,10 +39,6 @@ use tools;
 # Cache of spool.
 our $metadatas;
 
-# Get next packet to process, order is controled by priority, then by
-# packet_priority, then by delivery date, then by reception date.
-# Next lock the packet to prevent multiple proccessing of a single packet
-
 sub next {
     my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
     my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
@@ -107,24 +103,6 @@ sub next {
     return;
 }
 
-# remove a packet by packet ID. return false if packet could not be removed.
-sub remove {
-    my $lock_fh = shift;
-
-    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
-    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
-    my $marshalled    = $lock_fh->basename(1);
-
-    if ($lock_fh->unlink) {
-        if (rmdir($pct_spool_dir . '/' . $marshalled)) {    # No more packet.
-            unlink($msg_spool_dir . '/' . $marshalled);
-        }
-        return 1;
-    }
-    return undef;
-}
-
-# quarantine a packet.
 sub quarantine {
     my $lock_fh = shift;
 
@@ -141,6 +119,22 @@ sub quarantine {
         . $lock_fh->basename(1) . '-'
         . $lock_fh->basename;
     return $lock_fh->rename($bad_file);
+}
+
+sub remove {
+    my $lock_fh = shift;
+
+    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
+    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
+    my $marshalled    = $lock_fh->basename(1);
+
+    if ($lock_fh->unlink) {
+        if (rmdir($pct_spool_dir . '/' . $marshalled)) {    # No more packet.
+            unlink($msg_spool_dir . '/' . $marshalled);
+        }
+        return 1;
+    }
+    return undef;
 }
 
 # DEPRECATED: No longer used.
@@ -316,10 +310,8 @@ sub _get_recipient_tabs_by_domain {
 # DEPRECATED: No longer used.
 #sub purge_bulkspool();
 
-## Returns 1 if the number of remaining packets in the bulkmailer table
-## exceeds
-## the value of the 'bulk_fork_threshold' config parameter.
-sub there_is_too_much_remaining_packets {
+# Old name: Bulk::there_is_too_much_remaining_packets().
+sub too_much_remaining_packets {
     Log::do_log('debug3', '');
     my $remaining_packets = scalar @{$metadatas || []};
     if ($remaining_packets > Conf::get_robot_conf('*', 'bulk_fork_threshold'))
@@ -331,3 +323,139 @@ sub there_is_too_much_remaining_packets {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::Bulk - Spool for bulk sending
+
+=head1 SYNOPSIS
+
+TBD
+
+=head1 DESCRIPTION
+
+L<Sympa::Bulk> implements the spool for bulk sending.
+
+=head2 Functions
+
+=over
+
+=item next ( )
+
+Gets next packet to process, order is controled by priority, then by
+packet_priority, then by delivery date, then by reception date.
+Packet will be locked to prevent multiple proccessing of a single packet.
+
+Parameters:
+
+None.
+
+Returns:
+
+Two-elements list of L<Sympa::Message> instance and filehandle locking
+a packet.
+
+=item quarantine ( $handle )
+
+Quarantines a packet.
+Packet will be moved into bad/ subdirectory of the spool.
+
+Parameter:
+
+=over
+
+=item $handle
+
+Filehandle, L<Sympa::LockedFile> instance, locking packet.
+
+=back
+
+Returns:
+
+True value if packet could be quarantined.
+Otherwise false value.
+
+=item remove ( $handle )
+
+Removes a packet.
+If the packet is the last one of bulk sending,
+corresponding message will also be removed from spool.
+
+Parameter:
+
+=over
+
+=item $handle
+
+Filehandle, L<Sympa::LockedFile> instance, locking packet.
+
+=back
+
+Returns:
+
+True value if packet could be removed.
+Otherwise false value.
+
+=item store ( $message, $rcpt, [ original =E<gt> $original ],
+[ tag =E<gt> $tag ] )
+
+Stores the message into message spool.
+Recipients will be splitted into multiple packets and
+stored into packet spool.
+
+Parameters:
+
+=over
+
+=item $message
+
+Message to be stored.
+
+{envelope_sender} attribute of the message will be used as SMTP "MAIL FROM:"
+field.
+
+=item $rcpt
+
+Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
+
+=item original =E<gt> $original
+
+TBD
+
+=item tag =E<gt> $tag
+
+TBD
+
+=back
+
+Returns:
+
+If storing succeeded, marshalled metadata (file name) of the message.
+Otherwise C<undef>.
+
+=item too_much_remaining_packets ( )
+
+Returns true value if the number of remaining packets exceeds
+the value of the C<bulk_fork_threshold> config parameter.
+
+=back
+
+=head1 SEE ALSO
+
+L<bulk(8)>, L<Sympa::Mailer>, L<Sympa::Message>.
+
+=head1 HISTORY
+
+L<Bulk> module initially written by Serge Aumont appeared on Sympa 6.0.
+It used database tables to store and fetch packets and messages.
+
+Support for DKIM signing was added on Sympa 6.1.
+
+Rewritten L<Sympa::Bulk> appeared on Sympa 6.2, using spools based on
+filesystem.
+
+=cut
+

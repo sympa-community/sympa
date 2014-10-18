@@ -92,6 +92,7 @@ man3dir = $(mandir)/man3
 man3ext = 3Sympa
 MAN3PM = \
 	Sympa/Alarm.pm \
+	Sympa/Bulk.pm \
 	Sympa/ConfDef.pm \
 	Sympa/Constants.pm \
 	Sympa/Crash.pm \
