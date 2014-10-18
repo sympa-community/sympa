@@ -804,6 +804,11 @@ sub add {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <email>');
     }
+    unless (tools::valid_email($email)) {
+        my $error = "Invalid email address provided: '$email'";
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Unable to add user')->faultdetail($error);
+    }
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
         Log::do_log('info', 'Add %s@%s %s from %s refused, no such list',

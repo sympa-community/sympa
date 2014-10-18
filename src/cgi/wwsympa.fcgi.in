@@ -8381,6 +8381,11 @@ sub do_del {
                     $email);
             }
         }
+        web_db_log(
+            {   'target_email' => $email,
+                'status'       => 'success'
+            }
+        );
     }
 
     $total = $list->delete_list_member(
@@ -8410,11 +8415,6 @@ sub do_del {
 
     Sympa::Report::notice_report_web('del_performed', {'total' => $total},
         $param->{'action'});
-    web_db_log(
-        {   'target_email' => $in{'email'},
-            'status'       => 'success'
-        }
-    );
 
     $param->{'is_subscriber'} = 1;
     $param->{'may_signoff'}   = 1;
