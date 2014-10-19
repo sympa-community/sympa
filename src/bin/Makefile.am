@@ -38,12 +38,14 @@ perlscripts = \
 	mod2html.pl \
 	tpl2tt2.pl \
 	sympa_soap_client.pl \
+	upgrade_bulk_spool.pl \
 	upgrade_send_spool.pl
 
 script_SCRIPTS = $(dbscripts) $(perlscripts)
 
 man1_MANS = \
 	mod2html.1 \
+	upgrade_bulk_spool.1 \
 	upgrade_send_spool.1
 
 EXTRA_DIST = $(dbscripts) \
@@ -56,11 +58,12 @@ EXTRA_DIST = $(dbscripts) \
 	testlogs.pl.in \
 	tpl2tt2.pl.in \
 	sympa_soap_client.pl.in \
+	upgrade_bulk_spool.pl.in \
 	upgrade_send_spool.pl.in
 
 CLEANFILES = $(perlscripts) $(bin_SCRIPTS) $(man1_MANS)
 
-arc2webarc.pl crypt_passwd.pl init_comment.pl mod2html.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_send_spool.pl: Makefile
+arc2webarc.pl crypt_passwd.pl init_comment.pl mod2html.pl p12topem.pl testldap.pl testlogs.pl tpl2tt2.pl sympa_soap_client.pl upgrade_bulk_spool.pl upgrade_send_spool.pl: Makefile
 	rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--PERL--|$(PERL)|' \
@@ -86,6 +89,7 @@ testldap.pl: $(srcdir)/testldap.pl.in
 testlogs.pl: $(srcdir)/testlogs.pl.in
 tpl2tt2.pl: $(srcdir)/tpl2tt2.pl.in
 sympa_soap_client.pl: $(srcdir)/sympa_soap_client.pl.in
+upgrade_bulk_spool.pl: $(srcdir)/upgrade_bulk_spool.pl.in
 upgrade_send_spool.pl: $(srcdir)/upgrade_send_spool.pl.in
 
 .pl.1: Makefile

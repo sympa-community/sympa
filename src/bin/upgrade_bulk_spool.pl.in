@@ -1,0 +1,258 @@
+#! --PERL--
+# -*- indent-tabs-mode: nil; -*-
+# vim:ft=perl:et:sw=4
+# $Id: arc2webarc.pl.in 11316 2014-08-16 08:28:26Z sikeda $
+
+# Sympa - SYsteme de Multi-Postage Automatique
+#
+# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
+# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
+# Copyright (c) 2011, 2012, 2013, 2014 GIP RENATER
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use lib '--modulesdir--';
+use strict;
+use warnings;
+use English qw(-no_match_vars);
+use Getopt::Long;
+use MIME::Base64 qw();
+use Pod::Usage;
+
+use Sympa::Bulk;
+use Conf;
+use Sympa::Constants;
+use Log;
+use SDM;
+
+my %options;
+unless (GetOptions(\%options, 'help|h', 'dry_run', 'version|v')) {
+    pod2usage(-exitval => 1, -output => \*STDERR);
+}
+if ($main::options{'help'}) {
+    pod2usage(0);
+} elsif ($main::options{'version'}) {
+    printf "Sympa %s\n", Sympa::Constants::VERSION;
+    exit 0;
+}
+
+# Load sympa.conf
+unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
+    die sprintf
+        'Unable to load Sympa configuration, file %s or one of the virtual host robot.conf files contain errors. Exiting',
+        Conf::get_sympa_conf();
+}
+
+# Set the User ID & Group ID for the process
+$GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
+$UID = $EUID = (getpwnam(Sympa::Constants::USER))[2];
+# Required on FreeBSD to change ALL IDs (effective UID + real UID + saved UID)
+POSIX::setuid((getpwnam(Sympa::Constants::USER))[2]);
+POSIX::setgid((getgrnam(Sympa::Constants::GROUP))[2]);
+# Check if the UID has correctly been set (useful on OS X)
+unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
+    && ($UID == (getpwnam(Sympa::Constants::USER))[2])) {
+    die
+        "Failed to change process user ID and group ID. Note that on some OS Perl scripts can't change their real UID. In such circumstances Sympa should be run via sudo.";
+}
+# Sets the UMASK
+umask(oct($Conf::Conf{'umask'}));
+
+Log::do_openlog(
+    $Conf::Conf{'log_facility'},
+    $Conf::Conf{'log_socket_type'},
+    'upgrade_bulk_spool'
+);
+Log::set_log_level($Conf::Conf{'log_level'});
+Log::do_log(
+    'info',
+    'Configuration file read, default log level %s',
+    $Conf::Conf{'log_level'}
+);
+
+process();
+exit 0;
+
+sub process {
+    my $sth = SDM::do_prepared_query(
+        q{SELECT *
+	  FROM bulkmailer_table
+	  WHERE returnpath_bulkmailer IS NOT NULL}
+    );
+    unless ($sth) {
+        die
+            'Cannot execute SQL query.  Database is inaccessible or bulk spool of your Sympa is up-to-date';
+    }
+    my ($row_mailer, $row_spool);
+    while ($row_mailer = $sth->fetchrow_hashref('NAME_lc')) {
+        my ($list, $robot_id);
+        $list = Sympa::List->new(
+            $row_mailer->{listname_bulkmailer},
+            $row_mailer->{robot_bulkmailer},
+            {just_try => 1}
+        );
+        if ($list) {
+            $robot_id = $list->{'domain'};
+        } else {
+            $robot_id = $row_mailer->{robot_bulkmailer} || '*';
+        }
+        my $packet_priority =
+            Conf::get_robot_conf($robot_id, 'sympa_packet_priority');
+
+        # Fetch message
+        my $messagekey = $row_mailer->{messagekey_bulkmailer};
+        my $sth2       = SDM::do_prepared_query(
+            q{SELECT *
+	      FROM bulkspool_table
+	      WHERE messagekey_bulkspool = ?},
+            $messagekey
+        );
+        unless ($sth2) {
+            die 'Fatal: Cannot execute SQL query';
+        }
+        $row_spool = $sth2->fetrow_hashref('NAME_lc');
+        $sth2->finish;
+        unless ($row_spool) {
+            Log::do_log('err', '%s: No messages found.  Skipping',
+                $messagekey);
+            $sth2->finish;
+            next;
+        }
+
+        # Update message and messagekey.
+        my $msg_string =
+            MIME::Base64::decode($row_spool->{message_bulkspool});
+        my $message = Sympa::Message->new(
+            $msg_string,
+            context => ($list || $robot_id),
+            messagekey => $messagekey
+        );
+
+        $message->{date} = $row_mailer->{delivery_date_bulkmailer}  || time;
+        $message->{time} = $row_mailer->{reception_date_bulkmailer} || time;
+
+        $message->{priority} = $row_mailer->{priority_message_bulkmailer};
+        $message->{packet_priority} = $packet_priority;
+        if ($packet_priority lt $row_mailer->{priority_packet_bulkmailer}) {
+            $message->{tag} = 'z';
+        } else {
+            $message->{tag} = '0';
+        }
+
+        $message->{shelved}{dkim_sign} = 1
+            if $row_spool->{dkim_privatekey_bulkspool};
+        $message->{message_id} = $row_spool->{messageid_bulkspool}
+            if $row_spool->{messageid_bulkspool};
+        $message->{envelope_sender} = $row_mailer->{returnpath_bulkmailer};
+        $message->{shelved}{tracking} = 'verp'
+            if $row_mailer->{verp_bulkmailer};
+        $message->{shelved}{tracking} = $row_mailer->{tracking_bulkmailer}
+            if $row_mailer->{tracking_bulkmailer};
+        $message->{shelved}{merge} = 1 if $row_mailer->{merge_bulkmailer};
+
+        # Not a typo: column name was recEipients_bulkmailer.
+        my $rcpt_string = $row_mailer->{receipients_bulkmailer};
+        my $rcpt        = [split /,/ . $rcpt_string];
+
+        my $marshalled;
+        if ($options{dry_run}) {
+            $marshalled =
+                Sympa::Bulk::store($message, $rcpt, tag => $message->{tag});
+        } else {
+            $marshalled = tools::marshal_metadata(
+                $message,
+                '%s.%s.%d.%f.%s@%s_%s,?????,????',
+                [   qw(priority packet_priority date time localpart domainpart tag)
+                ]
+            );
+        }
+        unless ($marshalled) {
+            Log::do_log(
+                'err',
+                'Packet %s of message %s could not be migrated into new spool',
+                $row_mailer->{packetid_bulkmailer},
+                $message
+            );
+            next;
+        } else {
+            Log::do_log(
+                'notice',
+                'Packet %s of message %s was migrated into new spool',
+                $row_mailer->{packetid_bulkmailer}, $message
+            );
+        }
+    }
+}
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+upgrade_bulk_spool, upgrade_bulk_spool.pl - Migrating messages in bulk tables
+
+=head1 SYNOMSIS
+
+  upgrade_bulk_spool.pl [ --dry_run ]
+
+=head1 DESCRIPTION
+
+On Sympa earlier than 6.2, messages for bulk sending were stored into
+bulk spool based on database tables.
+Recent release of Sympa stores outbound messages into the spool based on
+filesystem or sends them by Mailer directly.
+This program migrates messages with old format in appropriate spool.
+
+=head1 OPTIONS
+
+=over
+
+=item --dry_run
+
+Shows what will be done but won't really perform upgrade process.
+
+=back
+
+=head1 RETURN VALUE
+
+This program exits with status 0 if processing secceeded.
+Otherwise exits with non-zero status.
+
+=head1 CONFIGURATION OPTIONS
+
+Following site configuration parameters in F<--CONFIG--> or
+robot configuration parameters in C<robot.conf> are referred.
+
+=over
+
+=item db_type, db_name etc.
+
+=item queuebulk
+
+=item sympa_packet_priority
+
+=item umask
+
+=back
+
+=head1 SEE ALSO
+
+L<sympa.conf(5)>, L<Sympa::Bulk>, L<Sympa::Message>.
+
+=head1 HISTORY
+
+upgrade_bulk_spool.pl appeared on Sympa 6.2.
+
+=cut
