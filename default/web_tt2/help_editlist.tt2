@@ -178,14 +178,5 @@
       [% END %]
     </dd>
 [% END %]
-[% FOREACH key IN plugins('help_editlist') %]
-  [% IF param(key) %]
-<dt><a name="[% key %]"></a>
-    <strong>[% param(key).value.title %]</strong> ([% key %])[%|helploc%]:[%END%]
-<dd>[% TRY %][% INCLUDE $key %]
-    [% CATCH %][% key %]
-    [%END%]</dd>
-  [%END%]
-[%END]
 </dl>
 <!-- end help_editlist.tt2 -->
