@@ -1160,10 +1160,13 @@ sub send_notify_to_listmaster {
         my $notif_message =
             Sympa::Message->new_from_template($that,
             'listmaster_notification', $email, $ts->{'data'});
-        $notif_message->{rcpt} = $email;
 
-        unless ($notif_message
-            and defined Sympa::Alarm::store($notif_message, $operation)) {
+        unless (
+            $notif_message
+            and defined Sympa::Alarm->instance->store(
+                $notif_message, $email, operation => $operation
+            )
+            ) {
             Log::do_log(
                 'notice',
                 'Unable to send template "listmaster_notification" to %s listmaster %s',

@@ -1350,7 +1350,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
 
         Sympa::List::init_list_cache();
         # Process grouped notifications
-        Sympa::Alarm::flush();
+        Sympa::Alarm->instance->flush;
 
         if (!opendir(DIR, $spool)) {
             die sprintf 'Can\'t open dir %s: %s', $spool, $!;
@@ -1554,7 +1554,7 @@ while ($signal ne 'term') {    #as long as a signal is not received }
     }    ## END of infinite loop
 
     # Purge grouped notifications
-    Sympa::Alarm::flush('purge');
+    Sympa::Alarm->instance->flush(purge => 1);
 
 ## Dump of User files in DB
 #Sympa::List::dump();

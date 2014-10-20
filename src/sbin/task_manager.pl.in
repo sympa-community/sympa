@@ -284,7 +284,7 @@ while (!$end) {
     Sympa::List::init_list_cache();
 
     # Process grouped notifications
-    Sympa::Alarm::flush();
+    Sympa::Alarm->instance->flush;
 
     ## List all tasks
     unless (Sympa::Task::list_tasks($spool_task)) {
@@ -436,7 +436,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm::flush('purge');
+Sympa::Alarm->instance->flush(purge => 1);
 
 Log::do_log('notice', 'Task_Manager exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('task_manager', $PID);

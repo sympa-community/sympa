@@ -202,7 +202,7 @@ while (!$end) {
 
     Sympa::List::init_list_cache();
     # Process grouped notifications
-    Sympa::Alarm::flush();
+    Sympa::Alarm->instance->flush;
 
     my ($message, $handle);
 
@@ -584,7 +584,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm::flush('purge');
+Sympa::Alarm->instance->flush(purge => 1);
 
 Log::do_log('notice', 'Bulk exited normally due to signal');
 Sympa::Tools::Daemon::remove_pid('bulk', $PID, $options);

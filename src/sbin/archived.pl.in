@@ -202,7 +202,7 @@ print "queue : $queue\n";
 while (!$end) {
     Sympa::List::init_list_cache();
     # Process grouped notifications
-    Sympa::Alarm::flush();
+    Sympa::Alarm->instance->flush;
 
     unless (opendir(DIR, $queue)) {
         die sprintf 'Can\'t open dir %s: %s', $queue, $!;
@@ -439,7 +439,7 @@ while (!$end) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm::flush('purge');
+Sympa::Alarm->instance->flush(purge => 1);
 
 # Free zombie sendmail processes
 Sympa::Mailer->instance->reaper();

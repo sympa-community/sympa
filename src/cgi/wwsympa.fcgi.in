@@ -135,7 +135,7 @@ if (eval "require Sympa::Plugin::Manager") {
     $plugins = Sympa::Plugin::Manager->new(application => 'website');
 }
 
-$Sympa::Alarm::use_bulk = 1;    #FIXME: Instantiate Sympa::Alarm instead.
+Sympa::Alarm->instance->{use_bulk} = 1;
 
 if ($Conf::Conf{'use_fast_cgi'}) {
     require CGI::Fast;
@@ -1007,7 +1007,7 @@ while ($query = new_loop()) {
     Sympa::List::init_list_cache();
 
     # Process grouped notifications
-    Sympa::Alarm::flush();
+    Sympa::Alarm->instance->flush;
 
     ## Check effective ID
     unless ($EUID eq (getpwnam(Sympa::Constants::USER))[2]) {
@@ -2015,7 +2015,7 @@ while ($query = new_loop()) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm::flush('purge');
+Sympa::Alarm->instance->flush(purge => 1);
 
 ##############################################################
 #-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/#-#\#|#/

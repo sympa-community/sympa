@@ -34,16 +34,28 @@ use Sympa::Mailer;
 use Sympa::Message;
 use tools;
 
-our $use_bulk;    #FIXME: Instantiate Sympa::Alarm instead.
-our %listmaster_messages_stack;
+use base qw(Class::Singleton);
 
 my $mailer = Sympa::Mailer->instance;
 
-sub store {
-    my $message   = shift;
-    my $operation = shift;
+# Constructor for Class::Singleton.
+sub _new_instance {
+    my $class = shift;
 
-    my $email = $message->{rcpt};
+    bless {
+        use_bulk => undef,
+        stack    => {},
+    };
+}
+
+sub store {
+    my $self    = shift;
+    my $message = shift;
+    my $rcpt    = shift;
+    my %options = @_;
+
+    my $use_bulk  = $self->{use_bulk};
+    my $operation = $options{operation};
 
     my $robot_id;
     if (ref $message->{context} eq 'Sympa::List') {
@@ -54,18 +66,23 @@ sub store {
         $robot_id = '*';
     }
 
-    $listmaster_messages_stack{$robot_id}{$operation}{'first'} = time
-        unless $listmaster_messages_stack{$robot_id}{$operation}{'first'};
-    $listmaster_messages_stack{$robot_id}{$operation}{'counter'}++;
-    $listmaster_messages_stack{$robot_id}{$operation}{'last'} = time;
+    $self->{stack}->{$robot_id}{$operation}{'first'} = time
+        unless $self->{stack}->{$robot_id}{$operation}{'first'};
+    $self->{stack}->{$robot_id}{$operation}{'counter'}++;
+    $self->{stack}->{$robot_id}{$operation}{'last'} = time;
 
-    if ($listmaster_messages_stack{$robot_id}{$operation}{'counter'} > 3) {
+    if ($self->{stack}->{$robot_id}{$operation}{'counter'} > 3) {
+        my @rcpts = ref $rcpt ? @$rcpt : ($rcpt);
+
         # stack if too much messages w/ same code
         Log::do_log('info', 'Stacking message about "%s" for %s (%s)',
-            $operation, $email, $robot_id)
+            $operation, join(', ', @rcpts), $robot_id)
             unless $operation eq 'logs_failed';
-        push @{$listmaster_messages_stack{$robot_id}{$operation}{'messages'}
-                {$email}}, $message->as_string;
+        foreach my $rcpt (@rcpts) {
+            push
+                @{$self->{stack}->{$robot_id}{$operation}{'messages'}{$rcpt}},
+                $message->as_string;
+        }
         return 1;
     } else {
         # Overwrite envelope sender
@@ -76,91 +93,91 @@ sub store {
             Conf::get_robot_conf($robot_id, 'sympa_priority');
 
         if ($use_bulk) {
-            return Sympa::Bulk::store($message, $email);
+            return Sympa::Bulk::store($message, $rcpt);
         } else {
-            return $mailer->store($message, $email);
+            return $mailer->store($message, $rcpt);
         }
     }
 }
 
 sub flush {
-    my $purge = shift;
+    my $self    = shift;
+    my %options = @_;
 
-    foreach my $robot_id (keys %listmaster_messages_stack) {
-        foreach my $operation (keys %{$listmaster_messages_stack{$robot_id}})
-        {
-            my $first_age = time -
-                $listmaster_messages_stack{$robot_id}{$operation}{'first'};
-            my $last_age = time -
-                $listmaster_messages_stack{$robot_id}{$operation}{'last'};
+    my $use_bulk = $self->{use_bulk};
+    my $purge    = $options{purge};
+
+    foreach my $robot_id (keys %{$self->{stack}}) {
+        foreach my $operation (keys %{$self->{stack}->{$robot_id}}) {
+            my $first_age =
+                time - $self->{stack}->{$robot_id}{$operation}{'first'};
+            my $last_age =
+                time - $self->{stack}->{$robot_id}{$operation}{'last'};
             # not old enough to send and first not too old
             next
                 unless $purge
                     or $last_age > 30
                     or $first_age > 60;
             next
-                unless $listmaster_messages_stack{$robot_id}{$operation}
-                {'messages'};
+                unless $self->{stack}->{$robot_id}{$operation}{'messages'};
 
             my %messages =
-                %{$listmaster_messages_stack{$robot_id}{$operation}
-                    {'messages'}};
+                %{$self->{stack}->{$robot_id}{$operation}{'messages'}};
             Log::do_log(
                 'info', 'Got messages about "%s" (%s)',
                 $operation, join(', ', keys %messages)
             );
 
             ##### bulk send
-            foreach my $email (keys %messages) {
+            foreach my $rcpt (keys %messages) {
                 my $param = {
-                    to                    => $email,
+                    to                    => $rcpt,
                     auto_submitted        => 'auto-generated',
                     operation             => $operation,
-                    notification_messages => $messages{$email},
+                    notification_messages => $messages{$rcpt},
                     boundary              => '----------=_'
                         . tools::get_message_id($robot_id)
                 };
 
-                Log::do_log('info', 'Send messages to %s', $email);
+                Log::do_log('info', 'Send messages to %s', $rcpt);
 
                 # Skip DB access because DB is not accessible
-                $email = [$email]
-                    if not ref $email
-                        and (  $operation eq 'no_db'
-                            or $operation eq 'db_restored');
+                $rcpt = [$rcpt]
+                    if $operation eq 'no_db'
+                        or $operation eq 'db_restored';
 
                 my $message =
                     Sympa::Message->new_from_template($robot_id,
                     'listmaster_groupednotifications',
-                    $email, $param);
+                    $rcpt, $param);
                 unless ($message) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
                         $robot_id,
-                        $email
+                        $rcpt
                     ) unless $operation eq 'logs_failed';
                     return undef;
                 }
                 my $status;
                 if ($use_bulk) {
-                    $status = Sympa::Bulk::store($message, $email);
+                    $status = Sympa::Bulk::store($message, $rcpt);
                 } else {
-                    $status = $mailer->store($message, $email);
+                    $status = $mailer->store($message, $rcpt);
                 }
                 unless (defined $status) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',
                         $robot_id,
-                        $email
+                        $rcpt
                     ) unless $operation eq 'logs_failed';
                     return undef;
                 }
             }
 
             Log::do_log('info', 'Cleaning stacked notifications');
-            delete $listmaster_messages_stack{$robot_id}{$operation};
+            delete $self->{stack}->{$robot_id}{$operation};
         }
     }
     return 1;
@@ -180,21 +197,31 @@ Sympa::Alarm - Spool on memory for listmaster notification
 
     use Sympa::Alarm;
     
-    Sympa::Alarm::store($message, $operation);
+    Sympa::Alarm->instance->store($message, $rcpt, $operation);
     
-    Sympa::Alarm::flush();
-    Sympa::Alarm::flush(1);
+    Sympa::Alarm->instance->flush();
+    Sympa::Alarm->instance->flush(purge => 1);
 
 =head1 DESCRIPTION
 
 L<Sympa::Alarm> implements on-memory spool for listmaster notification.
 
-=head2 Functions
+=head2 Methods
 
 =over
 
-=item store ( $message, $operation )
+=item instance ( )
 
+I<Constructor>.
+Creates a singleton instance of L<Sympa::Alarm> object.
+
+Returns:
+
+A new L<Sympa::Alarm> instance, or undef for failure.
+
+=item store ( $message, $rcpt, operation => $operation )
+
+I<Instance method>.
 Stores a message of a operation to spool.
 
 Parameters:
@@ -205,7 +232,11 @@ Parameters:
 
 L<Sympa::Message> object to be stored.
 
-=item $operation
+=item $rcpt
+
+Arrayref or scalar.  Recipient of notification.
+
+=item operation => $operation
 
 A string specifys tag of the message.
 
@@ -215,12 +246,28 @@ Returns:
 
 True value if succeed, otherwise C<undef>.
 
-=item flush ( [ purge ] )
+=item flush ( [ purge => $purge ] )
 
+I<Instance method>.
 Sends compiled messages in spool.
 
 If true value is given as optional argument, all messages in spool will be
 sent.
+
+=back
+
+=head2 Attributes
+
+The instance of L<Sympa::Alarm> has followin attribute.
+
+=over
+
+=item {use_bulk}
+
+If set to be true, messages to be sent will be stored into spool
+instead of being stored to sendmail.
+
+Default is false.
 
 =back
 
