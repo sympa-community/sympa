@@ -43,6 +43,7 @@ use XML::LibXML;
 
 use Sympa::Archive;
 use Sympa::Auth;
+use Sympa::Bulk;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -2248,7 +2249,7 @@ sub _mail_message {
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = $list->get_list_address('return_path');
 
-    return Sympa::Bulk::store($message, $rcpt, tag => $tag)
+    return Sympa::Bulk->new->store($message, $rcpt, tag => $tag)
         || undef;
 }
 
@@ -2607,7 +2608,7 @@ sub send_dsn {
         # Set envelope sender.  DSN _must_ have null envelope sender.
         $dsn_message->{envelope_sender} = '<>';
     }
-    unless ($dsn_message and Sympa::Bulk::store($dsn_message, $sender)) {
+    unless ($dsn_message and Sympa::Bulk->new->store($dsn_message, $sender)) {
         Log::do_log('err', 'Unable to send DSN to %s', $sender);
         return undef;
     }
@@ -2948,6 +2949,7 @@ sub send_confirm_to_editor {
         'auto_submitted' => 'auto-forwarded',
     };
 
+    my $bulk = Sympa::Bulk->new;
     foreach my $recipient (@rcpt) {
         my $new_message = $message->dup;
         if ($new_message->{'smime_crypted'}) {
@@ -2997,7 +2999,7 @@ sub send_confirm_to_editor {
             $confirm_message->{'date'} = time + 1;
         }
         unless ($confirm_message
-            and defined Sympa::Bulk::store($confirm_message, $recipient)) {
+            and defined $bulk->store($confirm_message, $recipient)) {
             Log::do_log('notice', 'Unable to send template "moderate" to %s',
                 $recipient);
             return undef;
@@ -3083,7 +3085,7 @@ sub send_confirm_to_sender {
         $confirm_message->{'date'} = time + 1;
     }
     unless ($confirm_message
-        and defined Sympa::Bulk::store($confirm_message, $sender)) {
+        and defined Sympa::Bulk->new->store($confirm_message, $sender)) {
         Log::do_log('notice', 'Unable to send template "send_auth" to %s',
             $sender);
         return undef;
@@ -3728,7 +3730,7 @@ sub send_probe_to_user {
         $message->{priority} =
             Conf::get_robot_conf($self->{'domain'}, 'sympa_priority');
     }
-    unless ($message and defined Sympa::Bulk::store($message, $who)) {
+    unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
         Log::do_log('err', 'Could not send template %s to %s', $type, $who);
         return undef;
     }

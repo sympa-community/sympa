@@ -40,6 +40,7 @@ use Time::HiRes qw();
 
 use Sympa::Alarm;
 use Sympa::Auth;
+use Sympa::Bulk;
 use Conf;
 use Sympa::Constants;
 use Sympa::Language;
@@ -1063,7 +1064,7 @@ sub send_file {
         Sympa::Message->new_from_template($that, $tpl, $who, $context,
         %options);
 
-    unless ($message and defined Sympa::Bulk::store($message, $who)) {
+    unless ($message and defined Sympa::Bulk->new->store($message, $who)) {
         Log::do_log('err', 'Could not send template %s to %s', $tpl, $who);
         return undef;
     }

@@ -194,6 +194,8 @@ $options->{'multiple_process'} = 1;
 $Conf::Conf{'maxsmtp'} =
     int($Conf::Conf{'maxsmtp'} / $Conf::Conf{'bulk_max_count'});
 
+my $bulk = Sympa::Bulk->new;
+
 while (!$end) {
     # Enable SMTP logging if required.
     $mailer->{log_smtp} = $default_log_smtp;
@@ -264,7 +266,7 @@ while (!$end) {
             ## Start new processes if there remain at least
             ## 'bulk_fork_threshold' packets to send in the bulkmailer_table
             ## table
-            if (my $r_packets = Sympa::Bulk::too_much_remaining_packets()
+            if (my $r_packets = $bulk->too_much_remaining_packets()
                 and scalar(@remaining_children) <
                 $Conf::Conf{'bulk_max_count'}) {
                 ## disconnect from database before fork
@@ -322,7 +324,7 @@ while (!$end) {
     ## number of remaining packets to send is reasonnable).
     if (    $main::daemon_usage eq 'DAEMON_SLAVE'
         and time() - $date_of_last_activity > $Conf::Conf{'bulk_lazytime'}
-        and !(my $r_packets = Sympa::Bulk::too_much_remaining_packets())) {
+        and !(my $r_packets = $bulk->too_much_remaining_packets())) {
         Log::do_log('info',
             'Process %s didn\'t send any message since %s seconds, exiting',
             $PID, $Conf::Conf{'bulk_lazytime'});
@@ -330,7 +332,7 @@ while (!$end) {
     }
 
     ## Go through the bulk_mailer table and process messages
-    ($message, $handle) = Sympa::Bulk::next();
+    ($message, $handle) = $bulk->next();
     if ($message and $handle) {
         # Get list/robot context.
         my ($list, $robot, $listname);
@@ -454,7 +456,7 @@ while (!$end) {
                         tools::send_notify_to_listmaster($list, 'bulk_failed',
                             {'message_id' => $message->get_id});
                         # Quarantine packet into bad spool.
-                        Sympa::Bulk::quarantine($handle);
+                        $bulk->quarantine($handle);
                         last;    # foreach $rcpt
                     }
                     delete $new_message->{shelved}{merge};
@@ -475,7 +477,7 @@ while (!$end) {
                             $rcpt
                         );
                         # Quarantine packet into bad spool.
-                        Sympa::Bulk::quarantine($handle);
+                        $bulk->quarantine($handle);
                         last;    # foreach $rcpt
                     }
                     delete $new_message->{shelved}{smime_encrypt};
@@ -509,7 +511,7 @@ while (!$end) {
                     Log::do_log('err',
                         'Failed to store message %s into mailer: %m',
                         $new_message);
-                    Sympa::Bulk::quarantine($handle);
+                    $bulk->quarantine($handle);
                     undef $handle;
                     last;    # foreach my $rcpt (@rcpts)
                 }
@@ -558,14 +560,14 @@ while (!$end) {
                 Log::do_log('err',
                     'Failed to store message %s into mailer: %m',
                     $new_message);
-                Sympa::Bulk::quarantine($handle);
+                $bulk->quarantine($handle);
                 undef $handle;
             }
         }
 
         ## Remove packet once it has been processed
         if ($handle) {
-            unless (Sympa::Bulk::remove($handle)) {
+            unless ($bulk->remove($handle)) {
                 Log::do_log('err', 'Failed to remove processed packet %s',
                     $message);
             }
@@ -574,7 +576,7 @@ while (!$end) {
         $date_of_last_activity = time();
     } elsif ($handle) {
         Log::do_log('err', 'Cannot parse message <%s>', $handle->basename);
-        Sympa::Bulk::quarantine($handle);
+        $bulk->quarantine($handle);
         next;
     } else {
         ## Sleep for a while if bulk_mailer DB table is empty

@@ -111,7 +111,7 @@ sub reject_report_msg {
         $report_message->{'date'} = time + 1;
     }
     unless ($report_message
-        and defined Sympa::Bulk::store($report_message, $user)) {
+        and defined Sympa::Bulk->new->store($report_message, $user)) {
         Log::do_log('notice',
             'Unable to send template "message_report" to "%s"', $user);
     }
@@ -235,7 +235,7 @@ sub notice_report_msg {
         $report_message->{'date'} = time + 1;
     }
     unless ($report_message
-        and defined Sympa::Bulk::store($report_message, $user)) {
+        and defined Sympa::Bulk->new->store($report_message, $user)) {
         Log::do_log('notice',
             'Unable to send template "message_report" to "%s"', $user);
     }
@@ -364,7 +364,7 @@ sub send_report_cmd {
         $report_message->{'date'} = time + 1;
     }
     unless ($report_message
-        and defined Sympa::Bulk::store($report_message, $sender)) {
+        and defined Sympa::Bulk->new->store($report_message, $sender)) {
         Log::do_log('notice',
             'Unable to send template "command_report" to %s', $sender);
     }

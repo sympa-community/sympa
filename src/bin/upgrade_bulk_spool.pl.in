@@ -86,6 +86,8 @@ process();
 exit 0;
 
 sub process {
+    my $bulk = Sympa::Bulk->new;
+
     my $sth = SDM::do_prepared_query(
         q{SELECT *
 	  FROM bulkmailer_table
@@ -169,7 +171,7 @@ sub process {
         my $marshalled;
         if ($options{dry_run}) {
             $marshalled =
-                Sympa::Bulk::store($message, $rcpt, tag => $message->{tag});
+                $bulk->store($message, $rcpt, tag => $message->{tag});
         } else {
             $marshalled = tools::marshal_metadata(
                 $message,

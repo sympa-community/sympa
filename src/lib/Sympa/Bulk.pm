@@ -37,43 +37,54 @@ use Sympa::Message;
 use tools;
 
 # Cache of spool.
-our $metadatas;
+
+sub new {
+    my $class = shift;
+
+    bless {
+        msg_directory => $Conf::Conf{'queuebulk'} . '/msg',
+        pct_directory => $Conf::Conf{'queuebulk'} . '/pct',
+        bad_directory => $Conf::Conf{'queuebulk'} . '/bad',
+        metadatas     => undef,
+    } => $class;
+}
 
 sub next {
-    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
-    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
+    my $self = shift;
 
-    unless ($metadatas) {
+    unless ($self->{metadatas}) {
         my $cwd = Cwd::getcwd();
-        unless (chdir $pct_spool_dir) {
-            die sprintf 'Cannot chdir to %s: %s', $pct_spool_dir, $ERRNO;
+        unless (chdir $self->{pct_directory}) {
+            die sprintf 'Cannot chdir to %s: %s', $self->{pct_directory},
+                $ERRNO;
         }
-        $metadatas = [
+        $self->{metadatas} = [
             sort grep {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
-                    and -f ($pct_spool_dir . '/' . $_)
+                    and -f ($self->{pct_directory} . '/' . $_)
                 } glob '*/*'
         ];
         chdir $cwd;
     }
-    unless (@{$metadatas}) {
-        undef $metadatas;
+    unless (@{$self->{metadatas}}) {
+        undef $self->{metadatas};
         return;
     }
 
     my ($lock_fh, $metadata, $message);
-    while (my $marshalled = shift @{$metadatas}) {
+    while (my $marshalled = shift @{$self->{metadatas}}) {
         # Try locking packet.  Those locked or removed by other process will
         # be skipped.
-        $lock_fh = Sympa::LockedFile->new($pct_spool_dir . '/' . $marshalled,
+        $lock_fh =
+            Sympa::LockedFile->new($self->{pct_directory} . '/' . $marshalled,
             -1, '+<');
         next unless $lock_fh;
 
         # FIXME: The list or the robot that injected packet can no longer be
         # available.
         $metadata = tools::unmarshal_metadata(
-            $pct_spool_dir,
+            $self->{pct_directory},
             $marshalled,
             qr{\A(\w+)\.(\w+)\.(\d+)\.(\d+\.\d+)\.([^\s\@]*)\@([\w\.\-*]*)_(\w+),(\d+),(\d+)/(\w+)\z},
             [   qw(priority packet_priority date time localpart domainpart tag pid rand serial)
@@ -90,7 +101,8 @@ sub next {
                 [   qw(priority packet_priority date time localpart domainpart tag pid rand)
                 ]
             );
-            $message = Sympa::Message->new_from_file($msg_spool_dir . '/' . $msg_file, %$metadata);
+            $message = Sympa::Message->new_from_file(
+                $self->{msg_directory} . '/' . $msg_file, %$metadata);
             if ($message) {
                 my $rcpt_string = do { local $RS; <$lock_fh> };
                 $message->{rcpt} = [split /\n+/, $rcpt_string];
@@ -104,10 +116,10 @@ sub next {
 }
 
 sub quarantine {
+    my $self    = shift;
     my $lock_fh = shift;
 
-    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
-    my $bad_dir = $Conf::Conf{'queuebulk'} . '/bad/' . $lock_fh->basename(1);
+    my $bad_dir = $self->{bad_directory} . '/' . $lock_fh->basename(1);
     my $bad_file;
 
     $bad_file = $bad_dir . '/' . $lock_fh->basename;
@@ -115,22 +127,22 @@ sub quarantine {
     return 1 if -d $bad_dir and $lock_fh->rename($bad_file);
 
     $bad_file =
-          $pct_spool_dir . '/BAD-'
+          $self->{pct_directory} . '/BAD-'
         . $lock_fh->basename(1) . '-'
         . $lock_fh->basename;
     return $lock_fh->rename($bad_file);
 }
 
 sub remove {
+    my $self    = shift;
     my $lock_fh = shift;
 
-    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
-    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
-    my $marshalled    = $lock_fh->basename(1);
+    my $marshalled = $lock_fh->basename(1);
 
     if ($lock_fh->unlink) {
-        if (rmdir($pct_spool_dir . '/' . $marshalled)) {    # No more packet.
-            unlink($msg_spool_dir . '/' . $marshalled);
+        if (rmdir($self->{pct_directory} . '/' . $marshalled)) {
+            # No more packet.
+            unlink($self->{msg_directory} . '/' . $marshalled);
         }
         return 1;
     }
@@ -152,13 +164,10 @@ sub remove {
 # sub merge_data ($rcpt, $listname, $robot_id, $data, $body, \$message_output)
 
 sub store {
-    Log::do_log('debug2', '(%s, ...)', @_);
+    my $self    = shift;
     my $message = shift->dup;
     my $rcpt    = shift;
     my %options = @_;
-
-    my $msg_spool_dir = $Conf::Conf{'queuebulk'} . '/msg';
-    my $pct_spool_dir = $Conf::Conf{'queuebulk'} . '/pct';
 
     my ($list, $robot_id);
     if (ref($message->{context}) eq 'Sympa::List') {
@@ -188,7 +197,7 @@ sub store {
     # are created bulk.pl may distribute them.
 
     my $marshalled = tools::store_spool(
-        $msg_spool_dir,
+        $self->{msg_directory},
         $message,
         '%s.%s.%d.%f.%s@%s_%s,%ld,%d',
         [   qw(priority packet_priority date time localpart domainpart tag PID RAND)
@@ -197,10 +206,13 @@ sub store {
     );
     return unless $marshalled;
 
-    unless (mkdir($pct_spool_dir . '/' . $marshalled)) {
-        Log::do_log('err', 'Cannot mkdir %s/%s: %m',
-            $pct_spool_dir, $marshalled);
-        unlink($msg_spool_dir . '/' . $marshalled);
+    unless (mkdir($self->{pct_directory} . '/' . $marshalled)) {
+        Log::do_log(
+            'err',
+            'Cannot mkdir %s/%s: %m',
+            $self->{pct_directory}, $marshalled
+        );
+        unlink($self->{msg_directory} . '/' . $marshalled);
         return;
     }
 
@@ -216,7 +228,7 @@ sub store {
     my $serial = $message->{tag};
     foreach my $rcpt (@rcpts) {
         my $lock_fh = Sympa::LockedFile->new(
-            $pct_spool_dir . '/' . $marshalled . '/' . $serial,
+            $self->{pct_directory} . '/' . $marshalled . '/' . $serial,
             5, '>>');
         return unless $lock_fh;
 
@@ -312,8 +324,9 @@ sub _get_recipient_tabs_by_domain {
 
 # Old name: Bulk::there_is_too_much_remaining_packets().
 sub too_much_remaining_packets {
-    Log::do_log('debug3', '');
-    my $remaining_packets = scalar @{$metadatas || []};
+    my $self = shift;
+
+    my $remaining_packets = scalar @{$self->{metadatas} || []};
     if ($remaining_packets > Conf::get_robot_conf('*', 'bulk_fork_threshold'))
     {
         return $remaining_packets;
@@ -339,14 +352,21 @@ TBD
 
 L<Sympa::Bulk> implements the spool for bulk sending.
 
-=head2 Functions
+=head2 Methods
 
 =over
 
+=item new ( )
+
+I<Constructor>.
+Creates new instance of L<Sympa::Bulk>.
+
 =item next ( )
 
-Gets next packet to process, order is controled by priority, then by
-packet_priority, then by delivery date, then by reception date.
+I<Instance method>.
+Gets next packet to process, order is controled by message priority, then by
+packet priority, then by delivery date, then by reception date.
+Packets with future delivery date are ignored.
 Packet will be locked to prevent multiple proccessing of a single packet.
 
 Parameters:
@@ -360,6 +380,7 @@ a packet.
 
 =item quarantine ( $handle )
 
+I<Instance method>.
 Quarantines a packet.
 Packet will be moved into bad/ subdirectory of the spool.
 
@@ -380,6 +401,7 @@ Otherwise false value.
 
 =item remove ( $handle )
 
+I<Instance method>.
 Removes a packet.
 If the packet is the last one of bulk sending,
 corresponding message will also be removed from spool.
@@ -402,6 +424,7 @@ Otherwise false value.
 =item store ( $message, $rcpt, [ original =E<gt> $original ],
 [ tag =E<gt> $tag ] )
 
+I<Instance method>.
 Stores the message into message spool.
 Recipients will be splitted into multiple packets and
 stored into packet spool.
@@ -412,14 +435,31 @@ Parameters:
 
 =item $message
 
-Message to be stored.
+Message to be stored.  Following attributes are referred:
 
-{envelope_sender} attribute of the message will be used as SMTP "MAIL FROM:"
-field.
+=over
+
+=item {envelope_sender}
+
+SMTP "MAIL FROM:" field.
+
+=item {priority}
+
+Message priority.
+
+=item {packet_priority}
+
+Packet priority.
+
+=item {date}
+
+Unix time when the message would be delivered.
+
+=back
 
 =item $rcpt
 
-Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
+Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field(s).
 
 =item original =E<gt> $original
 
@@ -438,6 +478,7 @@ Otherwise C<undef>.
 
 =item too_much_remaining_packets ( )
 
+I<Instance method>.
 Returns true value if the number of remaining packets exceeds
 the value of the C<bulk_fork_threshold> config parameter.
 
@@ -458,4 +499,3 @@ Rewritten L<Sympa::Bulk> appeared on Sympa 6.2, using spools based on
 filesystem.
 
 =cut
-

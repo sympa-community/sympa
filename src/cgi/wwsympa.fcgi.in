@@ -973,6 +973,8 @@ my $query;
 
 my $birthday = time;
 
+my $bulk = Sympa::Bulk->new;
+
 Log::do_log('info', 'WWSympa started, process %d', $PID);
 
 # Now internal encoding is same as input/output.
@@ -1049,9 +1051,6 @@ while ($query = new_loop()) {
     Sympa::Crash::register_handler();
 
     ## Get params in a hash
-    #    foreach ($query->param) {
-    #      $in{$_} = $query->param($_);
-    #    }
     %in = $query->Vars;
 
     foreach my $k (keys %::changed_params) {
@@ -10438,8 +10437,7 @@ sub do_send_me {
         # Overwrite original envelope sender.  It is REQUIRED for delivery.
         $message->{envelope_sender} = $list->get_list_address('return_path');
 
-        unless (
-            defined Sympa::Bulk::store($message, $param->{'user'}{'email'})) {
+        unless (defined $bulk->store($message, $param->{'user'}{'email'})) {
             $param->{'status'} = 'message_err';
             wwslog(
                 'err',
@@ -22165,7 +22163,7 @@ sub do_send_mail {
         $u_message->{priority} =
             Conf::get_robot_conf($robot, 'sympa_priority');
 
-        unless (defined Sympa::Bulk::store($u_message, [@to_user])) {
+        unless (defined $bulk->store($u_message, [@to_user])) {
             Sympa::Report::reject_report_web(
                 'intern',
                 'cannot_send_mail',

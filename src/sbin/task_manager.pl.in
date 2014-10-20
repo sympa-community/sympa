@@ -179,6 +179,7 @@ Log::do_log('notice', 'Task_Manager %s Started', Sympa::Constants::VERSION());
 
 ###### VARIABLES DECLARATION ######
 
+my $bulk       = Sympa::Bulk->new;
 my $spool_task = $Conf::Conf{'queuetask'};
 my $cert_dir   = $Conf::Conf{'ssl_cert_dir'};
 my @tasks;    # list of tasks in the spool
@@ -2001,8 +2002,7 @@ sub process_bouncers {
                 };
                 my $message = Sympa::Message->new_from_template($list,
                     'automatic_bounce_management', $to, $param);
-                unless ($message
-                    and defined Sympa::Bulk::store($message, $rcpt)) {
+                unless ($message and defined $bulk->store($message, $rcpt)) {
                     Log::do_log(
                         'err',
                         'Unable to send template "automatic_bounce_management" to %s',

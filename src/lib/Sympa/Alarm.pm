@@ -36,8 +36,6 @@ use tools;
 
 use base qw(Class::Singleton);
 
-my $mailer = Sympa::Mailer->instance;
-
 # Constructor for Class::Singleton.
 sub _new_instance {
     my $class = shift;
@@ -54,7 +52,8 @@ sub store {
     my $rcpt    = shift;
     my %options = @_;
 
-    my $use_bulk  = $self->{use_bulk};
+    my $mailer =
+        $self->{use_bulk} ? Sympa::Bulk->new : Sympa::Mailer->instance;
     my $operation = $options{operation};
 
     my $robot_id;
@@ -92,11 +91,7 @@ sub store {
         $message->{priority} =
             Conf::get_robot_conf($robot_id, 'sympa_priority');
 
-        if ($use_bulk) {
-            return Sympa::Bulk::store($message, $rcpt);
-        } else {
-            return $mailer->store($message, $rcpt);
-        }
+        return $mailer->store($message, $rcpt);
     }
 }
 
@@ -104,8 +99,9 @@ sub flush {
     my $self    = shift;
     my %options = @_;
 
-    my $use_bulk = $self->{use_bulk};
-    my $purge    = $options{purge};
+    my $mailer =
+        $self->{use_bulk} ? Sympa::Bulk->new : Sympa::Mailer->instance;
+    my $purge = $options{purge};
 
     foreach my $robot_id (keys %{$self->{stack}}) {
         foreach my $operation (keys %{$self->{stack}->{$robot_id}}) {
@@ -159,13 +155,7 @@ sub flush {
                     ) unless $operation eq 'logs_failed';
                     return undef;
                 }
-                my $status;
-                if ($use_bulk) {
-                    $status = Sympa::Bulk::store($message, $rcpt);
-                } else {
-                    $status = $mailer->store($message, $rcpt);
-                }
-                unless (defined $status) {
+                unless (defined $mailer->store($message, $rcpt)) {
                     Log::do_log(
                         'notice',
                         'Unable to send template "listmaster_groupnotification" to %s listmaster %s',

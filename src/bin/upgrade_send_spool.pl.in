@@ -66,6 +66,8 @@ unless (($GID == (getgrnam(Sympa::Constants::GROUP))[2])
 # Sets the UMASK
 umask(oct($Conf::Conf{'umask'}));
 
+my $bulk = Sympa::Bulk->new;
+
 my $spool_dir = $Conf::Conf{'queue'};
 
 my ($dh, $filename);
@@ -126,7 +128,7 @@ sub process {
             unless $options{dry_run};
         Log::do_log('info', '%s: Moved to msg spool', $message);
     } else {
-        Sympa::Bulk::store($message, [split /\s*,\s*/, $message->{rcpt}])
+        $bulk->store($message, [split /\s*,\s*/, $message->{rcpt}])
             unless $options{dry_run};
         Log::do_log('info', '%s: Moved to bulk spool', $message);
     }
