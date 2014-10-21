@@ -1570,16 +1570,15 @@ sub expire_bounce {
                     $email,
                     $listname,
                     POSIX::strftime(
-                        "%d %b %Y",
+                        "%Y-%m-%d",
                         localtime(
                             $list->get_latest_distribution_date() * 3600 * 24
                         )
                     ),
                     POSIX::strftime(
-                        "%d %b %Y", localtime($u->{'last_bounce'})
+                        "%Y-%m-%d", localtime($u->{'last_bounce'})
                     )
                 );
-
             }
         }
     }
