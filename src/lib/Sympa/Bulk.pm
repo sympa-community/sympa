@@ -27,26 +27,56 @@ package Sympa::Bulk;
 use strict;
 use warnings;
 use Cwd qw();
-use English qw(no_match_vars);
+use English qw(-no_match_vars);
 use Time::HiRes qw();
 
 use Conf;
+use Sympa::Constants;
 use Sympa::LockedFile;
 use Log;
 use Sympa::Message;
 use tools;
-
-# Cache of spool.
+use Sympa::Tools::File;
 
 sub new {
     my $class = shift;
 
-    bless {
+    my $self = bless {
         msg_directory => $Conf::Conf{'queuebulk'} . '/msg',
         pct_directory => $Conf::Conf{'queuebulk'} . '/pct',
         bad_directory => $Conf::Conf{'queuebulk'} . '/bad',
         metadatas     => undef,
     } => $class;
+
+    $self->_create_spool;
+
+    return $self;
+}
+
+sub _create_spool {
+    my $self = shift;
+
+    my $umask = umask oct $Conf::Conf{'umask'};
+    foreach my $directory (
+        (   $Conf::Conf{queuebulk}, $self->{msg_directory},
+            $self->{pct_directory}, $self->{bad_directory}
+        )
+        ) {
+        unless (-d $directory) {
+            Log::do_log('info', 'Creating spool %s', $directory);
+            unless (
+                mkdir($directory, 0755)
+                and Sympa::Tools::File::set_file_rights(
+                    file  => $directory,
+                    user  => Sympa::Constants::USER(),
+                    group => Sympa::Constants::GROUP()
+                )
+                ) {
+                die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
+            }
+        }
+    }
+    umask $umask;
 }
 
 sub next {
