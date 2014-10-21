@@ -532,7 +532,7 @@ sub get_first_db_log {
                 $tab_date_from[1] - 1,
                 $tab_date_from[2] - 1900
             );
-            $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",
+            $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_from2;
         }
         if ($select->{'date_to'}) {
@@ -543,7 +543,7 @@ sub get_first_db_log {
                 $tab_date_to[2] - 1900
             );
 
-            $statement .= sprintf "AND date_logs BETWEEN '%s' AND '%s' ",
+            $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_to;
         }
     }
@@ -651,8 +651,10 @@ sub aggregate_data {
     my $aggregated_data;
 
     unless (
-        $sth = SDM::do_query(
-            "SELECT * FROM stat_table WHERE (date_stat BETWEEN '%s' AND '%s') AND (read_stat = 0)",
+        $sth = SDM::do_prepared_query(
+            q{SELECT *
+              FROM stat_table
+              WHERE date_stat >= ? AND date_stat <= ? AND read_stat = 0},
             $begin_date,
             $end_date
         )
@@ -669,8 +671,10 @@ sub aggregate_data {
 
     #the line is read, so update the read_stat from 0 to 1
     unless (
-        $sth = SDM::do_query(
-            "UPDATE stat_table SET read_stat = 1 WHERE (date_stat BETWEEN '%s' AND '%s')",
+        $sth = SDM::do_prepared_query(
+            q{UPDATE stat_table
+              SET read_stat = 1
+              WHERE date_stat >= ? AND date_stat <= ?},
             $begin_date,
             $end_date
         )
@@ -733,12 +737,9 @@ sub aggregate_data {
 
         #store added subscribers--------------------------------
         if ($key_op eq 'add_subscriber') {
-
             foreach my $key_robot (keys(%{$aggregated_data->{$key_op}})) {
-
                 foreach my $key_list (
                     keys(%{$aggregated_data->{$key_op}->{$key_robot}})) {
-
                     db_stat_counter_log(
                         {   'begin_date' => $begin_date,
                             'end_date'   => $end_date,
@@ -983,17 +984,14 @@ sub aggregate_data {
 #called by subroutine aggregate_data
 #get in parameter the result of db request and put in an hash data we need.
 sub deal_data {
-
     my $result_request = shift;
     my %data;
 
     #on parcours caque ligne correspondant a un nuplet
     #each $id correspond to an hash
     foreach my $id (keys(%$result_request)) {
-
         # ---test about send_mail---
         if ($result_request->{$id}->{'operation_stat'} eq 'send_mail') {
-
             #test if send_mail value exists already or not, if not, create it
             unless (exists($data{'send_mail'})) {
                 $data{'send_mail'} = undef;
