@@ -108,15 +108,6 @@ sub store {
     my $tag         = $params{tag};
     my $logging = (not defined $tag or $tag eq 's' or $tag eq 'z') ? 1 : 0;
 
-    my $robot_id;
-    if (ref $message->{context} eq 'Sympa::List') {
-        $robot_id = $message->{context}->{'domain'};
-    } elsif ($message->{context} and $message->{context} ne '*') {
-        $robot_id = $message->{context};
-    } else {
-        $robot_id = '*';
-    }
-
     my @all_rcpt;
     unless (ref $rcpt) {
         @all_rcpt = ($rcpt);
