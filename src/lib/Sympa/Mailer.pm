@@ -45,9 +45,10 @@ sub _new_instance {
     my $class = shift;
 
     bless {
-        pids     => {},
-        opensmtp => 0,
-        log_smtp => undef,    # SMTP logging is enabled or not
+        pids       => {},
+        opensmtp   => 0,
+        redundancy => 1,        # Process redundancy (used by bulk.pl).
+        log_smtp   => undef,    # SMTP logging is enabled or not.
     } => $class;
 }
 
@@ -130,8 +131,8 @@ sub store {
     $msg_string =~ s/\AReturn-Path: (.*?)\n(?![ \t])//s;
 
     my $min_cmd_size =
-        length(Conf::get_robot_conf($robot_id, 'sendmail')) + 1 +
-        length(Conf::get_robot_conf($robot_id, 'sendmail_args')) +
+        length($Conf::Conf{'sendmail'}) + 1 +
+        length($Conf::Conf{'sendmail_args'}) +
         length(' -N success,delay,failure -V') + 32 +
         length(" -f $return_path");
     my $numsmtp = 0;
@@ -145,8 +146,7 @@ sub store {
         }
 
         my $pipeout =
-            $self->_get_sendmail_handle($return_path, [@rcpt], $robot_id,
-            $envid);
+            $self->_get_sendmail_handle($return_path, [@rcpt], $envid);
         print $pipeout $msg_string;
         unless (close $pipeout) {
             return undef;
@@ -174,7 +174,7 @@ sub store {
 sub _get_sendmail_handle {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $self = shift;
-    my ($return_path, $rcpt, $robot, $envid) = @_;
+    my ($return_path, $rcpt, $envid) = @_;
 
     unless ($return_path) {
         Log::do_log('err', 'Missing Return-Path');
@@ -186,9 +186,11 @@ sub _get_sendmail_handle {
 
     # Check how many open smtp's we have, if too many wait for a few
     # to terminate and then do our job.
+    my $maxsmtp =
+        int($Conf::Conf{'maxsmtp'} / ($self->{redundancy} || 1)) || 1;
 
     Log::do_log('debug3', 'Open = %s', $self->{opensmtp});
-    while ($self->{opensmtp} > Conf::get_robot_conf($robot, 'maxsmtp')) {
+    while ($self->{opensmtp} > $maxsmtp) {
         Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
             $self->{opensmtp});
         last if $self->reaper(0) == -1;    # Blocking call to the reaper.
@@ -202,9 +204,8 @@ sub _get_sendmail_handle {
     $pid = _safefork();
     $self->{pids}->{$pid} = 0;
 
-    my $sendmail = Conf::get_robot_conf($robot, 'sendmail');
-    my @sendmail_args = split /\s+/,
-        Conf::get_robot_conf($robot, 'sendmail_args');
+    my $sendmail = $Conf::Conf{'sendmail'};
+    my @sendmail_args = split /\s+/, $Conf::Conf{'sendmail_args'};
     if (defined $envid and length $envid) {
         # Postfix clone of sendmail command doesn't allow spaces between
         # "-V" and envid.
@@ -237,7 +238,7 @@ sub _get_sendmail_handle {
     }
     $self->{opensmtp}++;
     select(undef, undef, undef, 0.3)
-        if $self->{opensmtp} < Conf::get_robot_conf($robot, 'maxsmtp');
+        if $self->{opensmtp} < $maxsmtp;
 
     return $out;
 }

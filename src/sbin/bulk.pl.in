@@ -190,9 +190,7 @@ my $last_check_date = 0;
 my %created_children;
 
 $options->{'multiple_process'} = 1;
-#FIXME: Overwriting configuration on memory.
-$Conf::Conf{'maxsmtp'} =
-    int($Conf::Conf{'maxsmtp'} / $Conf::Conf{'bulk_max_count'});
+$mailer->{redundancy} = $Conf::Conf{'bulk_max_count'} || 1;
 
 my $bulk = Sympa::Bulk->new;
 
