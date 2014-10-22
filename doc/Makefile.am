@@ -22,7 +22,6 @@
 nobase_doc_DATA = \
 	README.charset \
 	README.perltidy \
-	README.postfix \
 	dot.perltidyrc \
 	samples/README \
 	samples/trusted_applications.conf \
