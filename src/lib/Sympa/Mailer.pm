@@ -45,8 +45,8 @@ sub _new_instance {
     my $class = shift;
 
     bless {
-        pids       => {},
-        opensmtp   => 0,
+        _pids      => {},
+        _opensmtp  => 0,
         redundancy => 1,        # Process redundancy (used by bulk.pl).
         log_smtp   => undef,    # SMTP logging is enabled or not.
     } => $class;
@@ -72,19 +72,19 @@ sub reaper {
     $block = 1 unless defined $block;
     while (($i = waitpid(-1, $block ? POSIX::WNOHANG() : 0)) > 0) {
         $block = 1;
-        unless (defined($self->{pids}->{$i})) {
+        unless (defined($self->{_pids}->{$i})) {
             Log::do_log('debug2', 'Reaper waited %s, unknown process to me',
                 $i);
             next;
         }
-        $self->{opensmtp}--;
-        delete $self->{pids}->{$i};
+        $self->{_opensmtp}--;
+        delete $self->{_pids}->{$i};
     }
     Log::do_log(
         'debug2',
-        'Reaper unwaited pids: %s Open = %s',
-        join(' ', sort { $a <=> $b } keys %{$self->{pids}}),
-        $self->{opensmtp}
+        'Reaper unwaited PIDs: %s Open = %s',
+        join(' ', sort { $a <=> $b } keys %{$self->{_pids}}),
+        $self->{_opensmtp}
     );
     return $i;
 }
@@ -180,10 +180,10 @@ sub _get_sendmail_handle {
     my $maxsmtp =
         int($Conf::Conf{'maxsmtp'} / ($self->{redundancy} || 1)) || 1;
 
-    Log::do_log('debug3', 'Open = %s', $self->{opensmtp});
-    while ($self->{opensmtp} > $maxsmtp) {
+    Log::do_log('debug3', 'Open = %s', $self->{_opensmtp});
+    while ($self->{_opensmtp} > $maxsmtp) {
         Log::do_log('debug3', 'Too many open SMTP (%s), calling reaper',
-            $self->{opensmtp});
+            $self->{_opensmtp});
         last if $self->reaper(0) == -1;    # Blocking call to the reaper.
     }
 
@@ -193,7 +193,7 @@ sub _get_sendmail_handle {
         # No return
     }
     $pid = _safefork();
-    $self->{pids}->{$pid} = 0;
+    $self->{_pids}->{$pid} = 0;
 
     my $sendmail = $Conf::Conf{'sendmail'};
     my @sendmail_args = split /\s+/, $Conf::Conf{'sendmail_args'};
@@ -218,18 +218,22 @@ sub _get_sendmail_handle {
     # Parent
     if ($self->{log_smtp}) {
         Log::do_log(
-            'debug3', '%s %s -f \'%s\' -- %s',
-            $sendmail,    join(' ', @sendmail_args),
-            $return_path, join(' ', @$rcpt)
+            'notice',
+            'Forked process %d: %s %s -f \'%s\' -- %s',
+            $pid,
+            $sendmail,
+            join(' ', @sendmail_args),
+            $return_path,
+            join(' ', @$rcpt)
         );
     }
     unless (close $in) {
-        Log::do_log('err', 'Could not close safefork');
+        Log::do_log('err', 'Could not close forked process %d', $pid);
         return undef;
     }
-    $self->{opensmtp}++;
+    $self->{_opensmtp}++;
     select(undef, undef, undef, 0.3)
-        if $self->{opensmtp} < $maxsmtp;
+        if $self->{_opensmtp} < $maxsmtp;
 
     return $out;
 }
@@ -337,12 +341,12 @@ field.
 
 Scalar, scalarref or arrayref, for SMTP "RCPT TO:" field.
 
-=item $envid
+=item envid =E<gt> $envid
 
 An envelope ID of this message submission in notification table.
 See also L<Sympa::Tracking>.
 
-=item $tag
+=item tag =E<gt> $tag
 
 TBD
 
@@ -352,6 +356,22 @@ Returns:
 
 Filehandle on opened pipe to ouput SMTP "DATA" field.
 Otherwise C<undef>.
+
+=back
+
+=head2 Attributes
+
+L<Sympa::Mailer> instance has following attributes:
+
+=over
+
+=item {log_smtp}
+
+If true value is set, each invokation of sendmail process will be logged.
+
+=item {redundancy}
+
+TBD.
 
 =back
 

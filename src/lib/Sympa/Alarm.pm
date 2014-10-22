@@ -42,8 +42,8 @@ sub _new_instance {
 
     bless {
         use_bulk => undef,
-        stack    => {},
-    };
+        _stack   => {},
+    } => $class;
 }
 
 sub store {
@@ -65,12 +65,12 @@ sub store {
         $robot_id = '*';
     }
 
-    $self->{stack}->{$robot_id}{$operation}{'first'} = time
-        unless $self->{stack}->{$robot_id}{$operation}{'first'};
-    $self->{stack}->{$robot_id}{$operation}{'counter'}++;
-    $self->{stack}->{$robot_id}{$operation}{'last'} = time;
+    $self->{_stack}->{$robot_id}{$operation}{'first'} = time
+        unless $self->{_stack}->{$robot_id}{$operation}{'first'};
+    $self->{_stack}->{$robot_id}{$operation}{'counter'}++;
+    $self->{_stack}->{$robot_id}{$operation}{'last'} = time;
 
-    if ($self->{stack}->{$robot_id}{$operation}{'counter'} > 3) {
+    if ($self->{_stack}->{$robot_id}{$operation}{'counter'} > 3) {
         my @rcpts = ref $rcpt ? @$rcpt : ($rcpt);
 
         # stack if too much messages w/ same code
@@ -78,8 +78,8 @@ sub store {
             $operation, join(', ', @rcpts), $robot_id)
             unless $operation eq 'logs_failed';
         foreach my $rcpt (@rcpts) {
-            push
-                @{$self->{stack}->{$robot_id}{$operation}{'messages'}{$rcpt}},
+            push @{$self->{_stack}
+                    ->{$robot_id}{$operation}{'messages'}{$rcpt}},
                 $message->as_string;
         }
         return 1;
@@ -103,22 +103,22 @@ sub flush {
         $self->{use_bulk} ? Sympa::Bulk->new : Sympa::Mailer->instance;
     my $purge = $options{purge};
 
-    foreach my $robot_id (keys %{$self->{stack}}) {
-        foreach my $operation (keys %{$self->{stack}->{$robot_id}}) {
+    foreach my $robot_id (keys %{$self->{_stack}}) {
+        foreach my $operation (keys %{$self->{_stack}->{$robot_id}}) {
             my $first_age =
-                time - $self->{stack}->{$robot_id}{$operation}{'first'};
+                time - $self->{_stack}->{$robot_id}{$operation}{'first'};
             my $last_age =
-                time - $self->{stack}->{$robot_id}{$operation}{'last'};
+                time - $self->{_stack}->{$robot_id}{$operation}{'last'};
             # not old enough to send and first not too old
             next
                 unless $purge
                     or $last_age > 30
                     or $first_age > 60;
             next
-                unless $self->{stack}->{$robot_id}{$operation}{'messages'};
+                unless $self->{_stack}->{$robot_id}{$operation}{'messages'};
 
             my %messages =
-                %{$self->{stack}->{$robot_id}{$operation}{'messages'}};
+                %{$self->{_stack}->{$robot_id}{$operation}{'messages'}};
             Log::do_log(
                 'info', 'Got messages about "%s" (%s)',
                 $operation, join(', ', keys %messages)
@@ -167,7 +167,7 @@ sub flush {
             }
 
             Log::do_log('info', 'Cleaning stacked notifications');
-            delete $self->{stack}->{$robot_id}{$operation};
+            delete $self->{_stack}->{$robot_id}{$operation};
         }
     }
     return 1;
@@ -246,9 +246,9 @@ sent.
 
 =back
 
-=head2 Attributes
+=head2 Attribute
 
-The instance of L<Sympa::Alarm> has followin attribute.
+The instance of L<Sympa::Alarm> has following attribute.
 
 =over
 

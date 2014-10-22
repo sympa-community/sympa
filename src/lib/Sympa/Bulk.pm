@@ -45,7 +45,7 @@ sub new {
         msg_directory => $Conf::Conf{'queuebulk'} . '/msg',
         pct_directory => $Conf::Conf{'queuebulk'} . '/pct',
         bad_directory => $Conf::Conf{'queuebulk'} . '/bad',
-        metadatas     => undef,
+        _metadatas    => undef,
     } => $class;
 
     $self->_create_spool;
@@ -82,13 +82,13 @@ sub _create_spool {
 sub next {
     my $self = shift;
 
-    unless ($self->{metadatas}) {
+    unless ($self->{_metadatas}) {
         my $cwd = Cwd::getcwd();
         unless (chdir $self->{pct_directory}) {
             die sprintf 'Cannot chdir to %s: %s', $self->{pct_directory},
                 $ERRNO;
         }
-        $self->{metadatas} = [
+        $self->{_metadatas} = [
             sort grep {
                         !/,lock/
                     and !m{(?:\A|/)(?:\.|T\.|BAD-)}
@@ -97,13 +97,13 @@ sub next {
         ];
         chdir $cwd;
     }
-    unless (@{$self->{metadatas}}) {
-        undef $self->{metadatas};
+    unless (@{$self->{_metadatas}}) {
+        undef $self->{_metadatas};
         return;
     }
 
     my ($lock_fh, $metadata, $message);
-    while (my $marshalled = shift @{$self->{metadatas}}) {
+    while (my $marshalled = shift @{$self->{_metadatas}}) {
         # Try locking packet.  Those locked or removed by other process will
         # be skipped.
         $lock_fh =
@@ -356,7 +356,7 @@ sub _get_recipient_tabs_by_domain {
 sub too_much_remaining_packets {
     my $self = shift;
 
-    my $remaining_packets = scalar @{$self->{metadatas} || []};
+    my $remaining_packets = scalar @{$self->{_metadatas} || []};
     if ($remaining_packets > Conf::get_robot_conf('*', 'bulk_fork_threshold'))
     {
         return $remaining_packets;
@@ -465,7 +465,7 @@ Parameters:
 
 =item $message
 
-Message to be stored.  Following attributes are referred:
+Message to be stored.  Following attributes and metadata are referred:
 
 =over
 
@@ -479,11 +479,15 @@ Message priority.
 
 =item {packet_priority}
 
-Packet priority.
+Packet priority, assigned as C<sympa_packet_priority> parameter by each robot.
 
 =item {date}
 
 Unix time when the message would be delivered.
+
+=item {time}
+
+Unix time in floating point number when the message was stored.
 
 =back
 
