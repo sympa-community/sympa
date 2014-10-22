@@ -126,47 +126,26 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
     etcdir,
-    AS_HELP_STRING(
-	[--with-etcdir=DIR],
-	[obsolete option, use --sysconfdir instead]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-etcdir option used])
-	sysconfdir="$withval"
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-etcdir option used. use --sysconfdir instead.])]
 )
 
 AC_ARG_WITH(
     bindir,
-    AS_HELP_STRING(
-	[--with-bindir=DIR],
-	[obsolete option, those binaries are now installed in LIBEXECDIR]
-    ),
-    [AC_MSG_WARN([obsolete --with-bindir option used])]
+    [],
+    [AC_MSG_ERROR([obsolete --with-bindir option used. those binaries are now installed in LIBEXECDIR.])]
 )
 
 AC_ARG_WITH(
     sbindir,
-    AS_HELP_STRING(
-	[--with-sbindir=DIR],
-	[obsolete option, use --sbindir instead]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-sbindir option used])
-	sbindir="$withval"
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-sbindir option used. use --sbindir instead.])]
 )
 
 AC_ARG_WITH(
     libexecdir,
-    AS_HELP_STRING(
-	[--with-libexecdir=DIR],
-	[obsolete option, use --libexecdir instead]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-libexecdir option used])
-	libexecdir="$withval"
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-libexecdir option used. use --libexecdir instead.])]
 )
 
 AC_ARG_WITH(
@@ -180,25 +159,14 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
     datadir,
-    AS_HELP_STRING(
-	[--with-datadir=DIR]
-	[obsolete option, use --datadir instead]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-datadir option used])
-	datadir="$withval"
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-datadir option used. use --datadir instead.])]
 )
 
 AC_ARG_WITH(
     libdir,
-    AS_HELP_STRING(
-	[--with-libdir=DIR]
-	[obsolete option, Perl modules are now installed with data]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-libdir option used])
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-libdir option used. use --with-modulesdir instead.])]
 )
 
 AC_ARG_WITH(
@@ -214,14 +182,8 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
     mandir,
-    AS_HELP_STRING(
-	[--with-mandir=DIR],
-	[obsolete option, use --mandir instead]
-    ),
-    [
-     AC_MSG_WARN([obsolete --with-mandir option used])
-     mandir="$withval"
-     ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-mandir option used. use --mandir instead.])]
 )
 
 AC_ARG_WITH(
@@ -237,13 +199,8 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
     sampledir,
-    AS_HELP_STRING(
-	[--with-sampledir=DIR],
-	[obsolete option, samples are now installed with documentation]
-    ),
-    [
-	AC_MSG_WARN([obsolete --with-sampledir option used])
-    ]
+    [],
+    [AC_MSG_ERROR([obsolete --with-sampledir option used. samples are now installed with documentation.])]
 )
 
 AC_ARG_WITH(
