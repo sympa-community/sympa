@@ -10767,12 +10767,19 @@ sub compute_topic {
         $mail_string = $message->{'decoded_subject'} . "\n";
     }
     unless ($self->{'admin'}{'msg_topic_keywords_apply_on'} eq 'subject') {
+        my $entity = $message->as_entity;
+        my $eff_type = $entity->effective_type || '';
+        if ($eff_type eq 'multipart/signed' and $entity->parts) {
+            $entity = $entity->parts(0);
+        }
+        #FIXME: Should also handle application/pkcs7-mime format.
+
         # get bodies of any text/* parts, not digging nested subparts.
         my @parts;
-        if ($message->as_entity()->parts) {
-            @parts = $message->as_entity()->parts;
+        if ($entity->parts) {
+            @parts = $entity->parts;
         } else {
-            @parts = ($message->as_entity());
+            @parts = ($entity);
         }
         foreach my $part (@parts) {
             next unless $part->effective_type =~ /^text\//i;
