@@ -10409,10 +10409,13 @@ sub do_send_me {
         $message->delete_header('Resent-Sender');
         $message->replace_header('X-no-archive', 'yes');
 
+        # Add footer/header.
+        $message->decorate;
         # Shelve personalization.
         $message->{shelved}{merge} = 1
             if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
             'on');
+
         # Check if re-encryption is possible.
         if ($message->{'smime_crypted'}) {
             unless ($message->dup->smime_encrypt($param->{'user'}{'email'})) {
@@ -22154,7 +22157,65 @@ sub do_send_mail {
     # other_email.
     my @to_list = grep { $_ eq $list->get_list_address } split /\s*,\s*/, $to;
     my @to_user =
-        grep { $_ and $_ ne $list->get_list_address } split /\s*,\s*/, $to;
+        grep {
+                $_
+            and $_ ne $list->get_list_address
+            and $_ ne $param->{'user'}{'email'}
+        } split /\s*,\s*/, $to;
+    my @to_me =
+        grep {
+                $_
+            and $_ ne $list->get_list_address
+            and $_ eq $param->{'user'}{'email'}
+        } split /\s*,\s*/, $to;
+
+    if (@to_me) {
+        my $u_message = $message->dup;
+
+        # Since some users may send message to themselves to test message
+        # decoration and/or personalization, add such processing.
+        # - Add footer / header.
+        $u_message->decorate;
+        # - Shelve personalization.
+        $u_message->{shelved}{merge} = 1
+            if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
+            'on');
+
+        $u_message->{envelope_sender} =
+            Conf::get_robot_conf($robot, 'request');
+        $u_message->{priority} =
+            Conf::get_robot_conf($robot, 'sympa_priority');
+
+        unless (defined $bulk->store($u_message, [@to_me])) {
+            Sympa::Report::reject_report_web(
+                'intern',
+                'cannot_send_mail',
+                {   'from'     => $param->{'user'}{'email'},
+                    'listname' => $list->{'name'}
+                },
+                $param->{'action'},
+                $list,
+                $param->{'user'}{'email'},
+                $robot
+            );
+            wwslog('err', 'Failed to send message for %s', $to);
+            web_db_log(
+                {   'robot'        => $robot,
+                    'list'         => $list->{'name'},
+                    'action'       => $param->{'action'},
+                    'parameters'   => $to,
+                    'target_email' => "",
+                    'msg_id'       => '',
+                    'status'       => 'error',
+                    'error_type'   => 'internal',
+                    'user_email'   => $param->{'user'}{'email'},
+                    'client'       => $ip,
+                    'daemon'       => $daemon_name
+                }
+            );
+            return undef;
+        }
+    }
 
     if (@to_user) {
         my $u_message = $message->dup;

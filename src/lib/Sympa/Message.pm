@@ -1819,6 +1819,8 @@ E-mail address of user.
 
 =item $is_list
 
+Currently not used.
+
 =back
 
 Returns:
@@ -2571,8 +2573,30 @@ sub prepare_message_according_to_mode {
     return $self;
 }
 
-# Add footer/header to a message.
-# Old name: Sympa::List::add_parts() or Message::add_parts(), n.b. not add_part().
+=over
+
+=item decorate ( )
+
+I<Instance method>.
+Add footer/header to a message.
+
+=back
+
+=cut
+
+sub decorate {
+    my $self = shift;
+
+    my $list = $self->{context};
+    return undef unless ref($self->{context}) eq 'Sympa::List';
+
+    my $entity = $self->as_entity->dup;
+    _decorate_parts($entity, $list);
+    $self->set_entity($entity);
+}
+
+# Old name:
+# Sympa::List::add_parts() or Message::add_parts(), n.b. not add_part().
 sub _decorate_parts {
     Log::do_log('debug3', '(%s, %s)');
     my $entity = shift;
