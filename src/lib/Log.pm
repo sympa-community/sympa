@@ -1124,7 +1124,7 @@ sub deal_data {
         if ($result_request->{$id}->{'operation_stat'} eq 'purge list') {
 
             unless (exists($data{'purge_list'})) {
-                $data{'purge_list'} = 0;
+                $data{'purge_list'} = {};
             }
 
             my $r_name =
