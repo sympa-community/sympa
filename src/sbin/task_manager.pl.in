@@ -1258,7 +1258,7 @@ sub exec_cmd {
 
 sub purge_logs_table {
     # If a log is older then $list->get_latest_distribution_date()-$delai expire the log
-    my ($task, $Rarguments, $context) = @_;
+    my ($task, $context) = @_;
     my $date;
     my $execution_date = $task->{'date'};
     my @slots          = ();
