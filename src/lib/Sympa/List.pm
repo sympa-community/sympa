@@ -26,7 +26,6 @@ package Sympa::List;
 
 use strict;
 use warnings;
-use DateTime;
 use Digest::MD5 qw();
 use Encode qw();
 use English;    # FIXME: drop $PREMATCH usage
@@ -2487,134 +2486,8 @@ sub get_digest_recipients_per_mode {
 
 ###   TEMPLATE SENDING  ###
 
-=over 4
-
-=item send_dsn ( $that, $message, [ { key => val, ... }, [ $status, [ $diag ] ] ] )
-
-    # To send site-wide DSN
-    send_dsn('*', $message, {'recipient' => $rcpt},
-        '5.1.2', 'Unknown robot');
-    # To send DSN related to a robot
-    send_dsn($robot, $message, {'listname' => $name},
-        '5.1.1', 'Unknown list');
-    # To send DSN specific to a list
-    send_dsn($list, $message, {}, '2.1.5', 'Success');
-
-Sends a delivery status notification (DSN) to SENDER
-by parsing dsn.tt2 template.
-
-=back
-
-=cut
-
-# Default diagnostic messages taken from IANA registry:
-# http://www.iana.org/assignments/smtp-enhanced-status-codes/
-# They should be modified to fit in Sympa.
-my %diag_messages = (
-    'default' => 'Other undefined Status',
-    # success
-    '2.1.5' => 'Destination address valid',
-    # no available family, dynamic list creation failed, etc.
-    '4.2.1' => 'Mailbox disabled, not accepting messages',
-    # no subscribers in dynamic list
-    '4.2.4' => 'Mailing list expansion problem',
-    # unknown list address
-    '5.1.1' => 'Bad destination mailbox address',
-    # unknown robot
-    '5.1.2' => 'Bad destination system address',
-    # too large
-    '5.2.3' => 'Message length exceeds administrative limit',
-    # misconfigured family list
-    '5.3.5' => 'System incorrectly configured',
-    # loop detected
-    '5.4.6' => 'Routing loop detected',
-    # failed to personalize (merge_feature)
-    '5.6.5' => 'Conversion Failed',
-    # virus found
-    '5.7.0' => 'Other or undefined security status',
-    # failed to re-encrypt decrypted message
-    '5.7.5' => 'Cryptographic failure',
-);
-
-sub send_dsn {
-    my $that    = shift;
-    my $message = shift;
-    my $param   = shift || {};
-    my $status  = shift;
-    my $diag    = shift;
-
-    unless (ref $message eq 'Sympa::Message') {
-        Log::do_log('err', 'object %s is not Message', $message);
-        return undef;
-    }
-
-    my $sender;
-    if (defined($sender = $message->{'envelope_sender'})) {
-        ## Won't reply to message with null envelope sender.
-        return 0 if $sender eq '<>';
-    } elsif (!defined($sender = $message->{'sender'})) {
-        Log::do_log('err', 'No sender found');
-        return undef;
-    }
-
-    my $recipient = '';
-    if (ref $that eq 'Sympa::List') {
-        $recipient = $that->get_list_address;
-        $status ||= '5.1.1';
-    } elsif (!ref $that and $that and $that ne '*') {
-        if ($param->{'listname'}) {
-            if ($param->{'function'}) {
-                $recipient = sprintf '%s-%s@%s', $param->{'listname'},
-                    $param->{'function'}, Conf::get_robot_conf($that, 'host');
-            } else {
-                $recipient = sprintf '%s@%s', $param->{'listname'},
-                    Conf::get_robot_conf($that, 'host');
-            }
-        }
-        $recipient ||= $param->{'recipient'};
-        $status ||= '5.1.1';
-    } elsif ($that eq '*') {
-        $recipient = $param->{'recipient'};
-        $status ||= '5.1.2';
-    } else {
-        die 'bug in logic.  Ask developer';
-    }
-
-    # Diagnostic message.
-    $diag ||= $diag_messages{$status} || $diag_messages{'default'};
-    # Delivery result, "failed" or "delivered".
-    my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
-
-    my $header = $message->header_as_string;
-
-    my $date =
-        (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
-        ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
-
-    my $dsn_message = Sympa::Message->new_from_template(
-        $that, 'dsn', $sender,
-        {   %$param,
-            'recipient'       => $recipient,
-            'to'              => $sender,
-            'date'            => $date,
-            'header'          => $header,
-            'auto_submitted'  => 'auto-replied',
-            'action'          => $action,
-            'status'          => $status,
-            'diagnostic_code' => $diag,
-        }
-    );
-    if ($dsn_message) {
-        # Set envelope sender.  DSN _must_ have null envelope sender.
-        $dsn_message->{envelope_sender} = '<>';
-    }
-    unless ($dsn_message and Sympa::Bulk->new->store($dsn_message, $sender)) {
-        Log::do_log('err', 'Unable to send DSN to %s', $sender);
-        return undef;
-    }
-
-    return 1;
-}
+# MOVED to tools::send_dsn().
+#sub send_dsn;
 
 #MOVED: Use tools::send_file() or Sympa::List::send_probe_to_user().
 # sub send_file($self, $tpl, $who, $robot, $context);

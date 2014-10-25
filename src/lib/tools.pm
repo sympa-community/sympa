@@ -27,6 +27,7 @@ package tools;
 use strict;
 use warnings;
 #use Cwd qw();
+use DateTime;
 use Digest::MD5;
 use Encode qw();
 use Encode::MIME::Header;    # for 'MIME-Q' encoding
@@ -811,6 +812,7 @@ Authenticaton key.
 =cut
 
 # Old name: List::compute_auth().
+# Note: this would be moved to Site package.
 sub compute_auth {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $that  = shift;
@@ -892,6 +894,7 @@ C<1> or C<undef>.
 =cut
 
 # Old name: List::request_auth().
+# Note: this would be moved to Site package.
 sub request_auth {
     Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
     my $that  = shift;
@@ -1008,6 +1011,7 @@ If C<lang_only> option is set, paths without I<lang> subdirectory is omitted.
 
 =cut
 
+# Note: this would be moved to Site package.
 sub search_fullpath {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $that    = shift;
@@ -1091,6 +1095,7 @@ rather than locale name.
 
 =cut
 
+# Note: this would be moved to Site package.
 sub get_search_path {
     Log::do_log('debug3', '(%s, %s, %s)', @_);
     my $that    = shift;
@@ -1231,9 +1236,142 @@ sub _get_search_path {
     return @search_path;
 }
 
+=head3 Sending Notifications
+
+=over 4
+
+=item send_dsn ( $that, $message,
+[ { key => val, ... }, [ $status, [ $diag ] ] ] )
+
+    # To send site-wide DSN
+    send_dsn('*', $message, {'recipient' => $rcpt},
+        '5.1.2', 'Unknown robot');
+    # To send DSN related to a robot
+    send_dsn($robot, $message, {'listname' => $name},
+        '5.1.1', 'Unknown list');
+    # To send DSN specific to a list
+    send_dsn($list, $message, {}, '2.1.5', 'Success');
+
+Sends a delivery status notification (DSN) to SENDER
+by parsing dsn.tt2 template.
+
+=back
+
+=cut
+
+# Default diagnostic messages taken from IANA registry:
+# http://www.iana.org/assignments/smtp-enhanced-status-codes/
+# They should be modified to fit in Sympa.
+my %diag_messages = (
+    'default' => 'Other undefined Status',
+    # success
+    '2.1.5' => 'Destination address valid',
+    # no available family, dynamic list creation failed, etc.
+    '4.2.1' => 'Mailbox disabled, not accepting messages',
+    # no subscribers in dynamic list
+    '4.2.4' => 'Mailing list expansion problem',
+    # unknown list address
+    '5.1.1' => 'Bad destination mailbox address',
+    # unknown robot
+    '5.1.2' => 'Bad destination system address',
+    # too large
+    '5.2.3' => 'Message length exceeds administrative limit',
+    # misconfigured family list
+    '5.3.5' => 'System incorrectly configured',
+    # loop detected
+    '5.4.6' => 'Routing loop detected',
+    # failed to personalize (merge_feature)
+    '5.6.5' => 'Conversion Failed',
+    # virus found
+    '5.7.0' => 'Other or undefined security status',
+    # failed to re-encrypt decrypted message
+    '5.7.5' => 'Cryptographic failure',
+);
+
+# Note: this would be moved to Site package.
+sub send_dsn {
+    my $that    = shift;
+    my $message = shift;
+    my $param   = shift || {};
+    my $status  = shift;
+    my $diag    = shift;
+
+    unless (ref $message eq 'Sympa::Message') {
+        Log::do_log('err', 'object %s is not Message', $message);
+        return undef;
+    }
+
+    my $sender;
+    if (defined($sender = $message->{'envelope_sender'})) {
+        ## Won't reply to message with null envelope sender.
+        return 0 if $sender eq '<>';
+    } elsif (!defined($sender = $message->{'sender'})) {
+        Log::do_log('err', 'No sender found');
+        return undef;
+    }
+
+    my $recipient = '';
+    if (ref $that eq 'Sympa::List') {
+        $recipient = $that->get_list_address;
+        $status ||= '5.1.1';
+    } elsif (!ref $that and $that and $that ne '*') {
+        if ($param->{'listname'}) {
+            if ($param->{'function'}) {
+                $recipient = sprintf '%s-%s@%s', $param->{'listname'},
+                    $param->{'function'}, Conf::get_robot_conf($that, 'host');
+            } else {
+                $recipient = sprintf '%s@%s', $param->{'listname'},
+                    Conf::get_robot_conf($that, 'host');
+            }
+        }
+        $recipient ||= $param->{'recipient'};
+        $status ||= '5.1.1';
+    } elsif ($that eq '*') {
+        $recipient = $param->{'recipient'};
+        $status ||= '5.1.2';
+    } else {
+        die 'bug in logic.  Ask developer';
+    }
+
+    # Diagnostic message.
+    $diag ||= $diag_messages{$status} || $diag_messages{'default'};
+    # Delivery result, "failed" or "delivered".
+    my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
+
+    my $header = $message->header_as_string;
+
+    my $date =
+        (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+        ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
+
+    my $dsn_message = Sympa::Message->new_from_template(
+        $that, 'dsn', $sender,
+        {   %$param,
+            'recipient'       => $recipient,
+            'to'              => $sender,
+            'date'            => $date,
+            'header'          => $header,
+            'auto_submitted'  => 'auto-replied',
+            'action'          => $action,
+            'status'          => $status,
+            'diagnostic_code' => $diag,
+        }
+    );
+    if ($dsn_message) {
+        # Set envelope sender.  DSN _must_ have null envelope sender.
+        $dsn_message->{envelope_sender} = '<>';
+    }
+    unless ($dsn_message and Sympa::Bulk->new->store($dsn_message, $sender)) {
+        Log::do_log('err', 'Unable to send DSN to %s', $sender);
+        return undef;
+    }
+
+    return 1;
+}
+
 =over
 
-=item send_file
+=item send_file ( $that, $tpl, $who, [ $context, [ options... ] ] )
 
     # To send site-global (not relative to a list or a robot)
     # message
@@ -1257,6 +1395,8 @@ Note: List::send_global_file() was deprecated.
 
 =cut
 
+# Old name: List::send_file(), List::send_global_file().
+# Note: this would be moved to Site package.
 sub send_file {
     Log::do_log('debug2', '(%s, %s, %s, ...)', @_);
     my $that    = shift;
@@ -1277,16 +1417,46 @@ sub send_file {
     return 1;
 }
 
-# Sends a notice to listmaster by parsing
-# listmaster_notification.tt2 template
-#
-# IN : -$operation (+): notification type
-#      -$robot (+): robot
-#      -$param(+) : ref(HASH) | ref(ARRAY)
-#       values for template parsing
-#
-# OUT : 1 | undef
-#
+=over 4
+
+=item send_notify_to_listmaster ( $that, $operation, $data )
+
+    # To send notify to super listmaster(s)
+    Site->send_notify_to_listmaster('css_updated', ...);
+    # To send notify to normal (per-robot) listmaster(s)
+    $robot->send_notify_to_listmaster('web_tt2_error', ...);
+    # To send notify to normal listmaster(s) of robot the list belongs to.
+    $list->send_notify_to_listmaster('request_list_creation', ...);
+
+Sends a notice to (super or normal) listmaster by parsing
+listmaster_notification.tt2 template.
+
+Parameters:
+
+=over
+
+=item $self
+
+L<Sympa::List>, Robot or Site.
+
+=item $operation
+
+Notification type.
+
+=item $param
+
+Hashref or arrayref.
+Values for template parsing.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=back
+
+=cut
 
 # Old name: List::send_notify_to_listmaster()
 # Note: this would be moved to Site package.
