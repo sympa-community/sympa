@@ -2716,10 +2716,8 @@ sub DoMessage {
 
     my $customheader = $admin->{'custom_header'};
 
-    ## Check if the message is too large
-    # my $max_size = $list->get_max_size()
-    #     || Conf::get_robot_conf($robot_id, 'max_size');
-    my $max_size = $list->get_max_size();
+    # Check if the message is too large
+    my $max_size = $list->{'admin'}{'max_size'};
 
     if ($max_size && $message->{'size'} > $max_size) {
         Log::do_log('info',
