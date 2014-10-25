@@ -1461,17 +1461,16 @@ sub subscribe {
     if ($action =~ /owner/i) {
 
         ## Send a notice to the owners.
-        my $keyauth = $list->compute_auth($sender, 'add');
+        my $keyauth = tools::compute_auth($list, $sender, 'add');
         $list->send_notify_to_owner(
             'subrequest',
             {   'who'     => $sender,
-                'keyauth' => $list->compute_auth($sender, 'add'),
+                'keyauth' => tools::compute_auth($list, $sender, 'add'),
                 'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                 'gecos'   => $gecos
             }
         );
 
-#      $list->send_sub_to_owner($sender, $keyauth, Conf::get_robot_conf($robot, 'sympa'), $gecos);
         $list->store_subscription_request($sender, $gecos);
         Log::do_log('info', '%s from %s forwarded to the owners of the list',
             $listname, $sender);
@@ -1479,7 +1478,7 @@ sub subscribe {
     }
     if ($action =~ /request_auth/i) {
         my $cmd = 'subscribe';
-        $list->request_auth($sender, $cmd, $robot, $gecos);
+        tools::request_auth($list, $sender, $cmd, $gecos);
         Log::do_log('info', '%s from %s, auth requested', $listname, $sender);
         return SOAP::Data->name('result')->type('boolean')->value(1);
     }

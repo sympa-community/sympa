@@ -6097,9 +6097,10 @@ sub do_subscribe {
 
             $list->send_notify_to_owner(
                 'subrequest',
-                {   'who' => $param->{'user'}{'email'},
-                    'keyauth' =>
-                        $list->compute_auth($param->{'user'}{'email'}, 'add'),
+                {   'who'     => $param->{'user'}{'email'},
+                    'keyauth' => tools::compute_auth(
+                        $list, $param->{'user'}{'email'}, 'add'
+                    ),
                     'replyto' => Conf::get_robot_conf($robot, 'sympa'),
                     'custom_attribute' => $in{custom_attribute},
                     'gecos'            => $param->{'user'}{'gecos'},
@@ -6714,9 +6715,10 @@ sub unsubscribe {
     } elsif ($sig_is =~ /owner/) {
         $list->send_notify_to_owner(
             'sigrequest',
-            {   'who' => $param->{'user'}{'email'},
-                'keyauth' =>
-                    $list->compute_auth($param->{'user'}{'email'}, 'del')
+            {   'who'     => $param->{'user'}{'email'},
+                'keyauth' => tools::compute_auth(
+                    $list, $param->{'user'}{'email'}, 'del'
+                )
             }
         );
         wwslog('info', 'Signoff sent to owner');

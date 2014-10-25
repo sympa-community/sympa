@@ -52,6 +52,7 @@ use Sympa::Message;
 use Sympa::Regexps;
 use Sympa::Tools::Data;
 use Sympa::Tools::File;
+use tt2;
 
 my $separator =
     "------- CUT --- CUT --- CUT --- CUT --- CUT --- CUT --- CUT -------";
@@ -769,6 +770,210 @@ sub cookie_changed {
 
 # Moved to Sympa::Tools::WWW:_load_mime_types()
 #sub load_mime_types();
+
+=head3 Handling the Authentication Token
+
+=over
+
+=item compute_auth
+
+    # To compute site-wide token
+    Site->compute_auth('user@dom.ain', 'remind');
+    # To cpmpute a token specific to a list
+    $list->compute_auth('user@dom.ain', 'subscribe');
+
+Genererate a MD5 checksum using private cookie and parameters.
+
+Parameters:
+
+=over
+
+=item $that
+
+L<Sympa::List>, Robot or Site.
+
+=item $email
+
+Recipient (the person who asked for the command).
+
+=item $cmd
+
+XXX
+
+=back
+
+Returns:
+
+Authenticaton key.
+
+=back
+
+=cut
+
+# Old name: List::compute_auth().
+sub compute_auth {
+    Log::do_log('debug3', '(%s, %s, %s)', @_);
+    my $that  = shift;
+    my $email = shift;
+    my $cmd   = shift;
+
+    my ($list, $robot);
+    if (ref $that eq 'Sympa::List') {
+        $list = $that;
+    } elsif ($that and $that ne '*') {
+        $robot = $that;
+    } else {
+        $robot = '*';
+    }
+
+    $email =~ y/[A-Z]/[a-z]/;
+    $cmd   =~ y/[A-Z]/[a-z]/;
+
+    my ($cookie, $key, $listname);
+
+    if ($list) {
+        $listname = $list->{'name'};
+        $cookie   = $list->{'admin'}{'cookie'}
+            || Conf::get_robot_conf($robot, 'cookie');
+    } else {
+        $listname = '';
+        $cookie = Conf::get_robot_conf($robot, 'cookie');
+    }
+
+    $key = substr(
+        Digest::MD5::md5_hex(join('/', $cookie, $listname, $email, $cmd)),
+        -8);
+
+    return $key;
+}
+
+=over
+
+=item request_auth
+
+    # To send robot or site auth request
+    Site->request_auth('user@dom.ain', 'remind');
+    # To send auth request specific to a list
+    $list->request_auth('user@dom.ain', 'subscribe'):
+
+Sends an authentification request for a requested
+command.
+
+Parameters:
+
+=over
+
+=item $that
+
+L<Sympa::List>, Robot or Site.
+
+=item $email
+
+Recipient (the person who asked for the command)
+
+=item $cmd
+
+'signoff', 'subscribe', 'add', 'del' or 'remind' if $that is List.
+'remind' else.
+
+=item @param
+
+[0] is used if $cmd is subscribe|add|del|invite.
+[1] is used if $cmd is C<'add'>.
+
+=back
+
+Returns:
+
+C<1> or C<undef>.
+
+=back
+
+=cut
+
+# Old name: List::request_auth().
+sub request_auth {
+    Log::do_log('debug2', '(%s, %s, %s, %s)', @_);
+    my $that  = shift;
+    my $email = shift;
+    my $cmd   = shift;
+    my @param = @_;
+
+    my ($list, $robot);
+    if (ref $that eq 'Sympa::List') {
+        $list  = $that;
+        $robot = $that->{'domain'};
+    } elsif ($that and $that ne '*') {
+        $robot = $that;
+    } else {
+        $robot = '*';
+    }
+
+    my $keyauth;
+    my $data = {'to' => $email};
+
+    if ($list) {
+        my $listname = $list->{'name'};
+        $data->{'list_context'} = 1;
+
+        if ($cmd =~ /signoff$/) {
+            $keyauth = tools::compute_auth($list, $email, 'signoff');
+            $data->{'command'} = "auth $keyauth $cmd $listname $email";
+            $data->{'type'}    = 'signoff';
+
+        } elsif ($cmd =~ /subscribe$/) {
+            $keyauth = tools::compute_auth($list, $email, 'subscribe');
+            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            $data->{'type'}    = 'subscribe';
+
+        } elsif ($cmd =~ /add$/) {
+            $keyauth = tools::compute_auth($list, $param[0], 'add');
+            $data->{'command'} =
+                "auth $keyauth $cmd $listname $param[0] $param[1]";
+            $data->{'type'} = 'add';
+
+        } elsif ($cmd =~ /del$/) {
+            my $keyauth = tools::compute_auth($list, $param[0], 'del');
+            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            $data->{'type'}    = 'del';
+
+        } elsif ($cmd eq 'remind') {
+            my $keyauth = tools::compute_auth($list, '', 'remind');
+            $data->{'command'} = "auth $keyauth $cmd $listname";
+            $data->{'type'}    = 'remind';
+
+        } elsif ($cmd eq 'invite') {
+            my $keyauth = tools::compute_auth($list, $param[0], 'invite');
+            $data->{'command'} = "auth $keyauth $cmd $listname $param[0]";
+            $data->{'type'}    = 'invite';
+        }
+
+        $data->{'command_escaped'} = tt2::escape_url($data->{'command'});
+        $data->{'auto_submitted'}  = 'auto-replied';
+        unless (tools::send_file($list, 'request_auth', $email, $data)) {
+            Log::do_log('notice',
+                'Unable to send template "request_auth" to %s', $email);
+            return undef;
+        }
+
+    } else {
+        if ($cmd eq 'remind') {
+            my $keyauth = tools::compute_auth('*', '', $cmd);
+            $data->{'command'}         = "auth $keyauth $cmd *";
+            $data->{'command_escaped'} = tt2::escape_url($data->{'command'});
+            $data->{'type'}            = 'remind';
+
+        }
+        $data->{'auto_submitted'} = 'auto-replied';
+        unless (tools::send_file($robot, 'request_auth', $email, $data)) {
+            Log::do_log('notice',
+                'Unable to send template "request_auth" to %s', $email);
+            return undef;
+        }
+    }
+
+    return 1;
+}
 
 =head3 Finding config files and templates
 
